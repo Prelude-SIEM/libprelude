@@ -1,13 +1,12 @@
 SUBDIRS = include
-INCLUDES = -I$(top_srcdir) -I$(srcdir)/include @INCLTDL@
 
-DEFS = 	-DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\"	\
-	-DPRELUDE_SPOOL_DIR=\"@prelude_spool_dir@\" 	\
-	@libprelude_cflags@ @PTHREAD_CFLAGS@
+AM_CPPFLAGS = @PTHREAD_CFLAGS@ @INCLTDL@ @libprelude_cflags@ -I$(srcdir)/include \
+	      -DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\" -DPRELUDE_SPOOL_DIR=\"@prelude_spool_dir@\"
+
 
 libpreludeincludedir = $(includedir)/
-libprelude_la_LIBADD = @libprelude_libs@ @LIBLTDL@ @PTHREAD_LIBS@
-libprelude_la_LDFLAGS = -no-undefined -version-info @libprelude_soname@ @PTHREAD_CFLAGS@
+libprelude_la_LIBADD = @libprelude_libs@ @LIBLTDL@
+libprelude_la_LDFLAGS = -no-undefined -version-info @libprelude_soname@
 lib_LTLIBRARIES = libprelude.la
 
 AM_YFLAGS = -d
