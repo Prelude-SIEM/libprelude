@@ -149,6 +149,8 @@ int tls_certificates_load(const char *keyfile, const char *certfile, gnutls_cert
         }
         
         ret = load_individual_cert(fd, &key, cred);
+                
+        tls_unload_file(&key);
         fclose(fd);
         
         return ret;
