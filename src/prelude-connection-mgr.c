@@ -164,24 +164,6 @@ static void expand_timeout(prelude_timer_t *timer)
 
 
 
-static void file_error(prelude_client_t *client, const char *cfgline) 
-{       
-        log(LOG_INFO, "\nBasic file configuration does not exist. Please run :\n"
-            "sensor-adduser --sensorname %s --uid %d --gid %d\n"
-            "program on the sensor host to create an account for this sensor.\n\n"
-            
-            "Be aware that you should also pass the \"--manager-addr\" option with the\n"
-            "manager address as argument. \"sensor-adduser\" should be called for\n"
-            "each configured manager address. Here is the configuration line :\n\n%s\n\n", 
-            prelude_client_get_name(client), prelude_client_get_uid(client),
-            prelude_client_get_gid(client), cfgline);
-
-        exit(1);
-}
-
-
-
-
 static int process_request(prelude_connection_t *cnx) 
 {
         prelude_msg_t *msg = NULL;
@@ -246,7 +228,7 @@ static void check_for_data_cb(void *arg)
                 ret = FD_ISSET(fd, &rfds);
                 if ( ! ret )
                         continue;
-
+                
                 ret = process_request(cnx);
                 if ( ret <= 0 )
                         FD_CLR(fd, &mgr->fds);
@@ -472,7 +454,7 @@ static cnx_t *new_connection(prelude_client_t *client, cnx_list_t *clist, prelud
                  prelude_connection_get_daddr(cnx), prelude_connection_get_dport(cnx));
         
         new->failover = prelude_failover_new(dirname);
-        if ( ! new->failover )
+        if ( ! new->failover ) 
                 return NULL;
         
         prelude_linked_object_add((prelude_linked_object_t *) new->cnx, &clist->parent->all_cnx);
