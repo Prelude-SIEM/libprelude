@@ -1,3 +1,10 @@
+2002-07-25  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* docs/api/Makefile.am: 
+	remove check for gtk-doc on make dist... As we cannot
+	force distcheck to pass the --enable-gtkdoc configure
+	argument, it would fail anyway.
+
 2002-07-23  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/sensor.c (setup_manager_addr): dup manager_cfg_line.

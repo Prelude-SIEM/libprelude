@@ -165,15 +165,8 @@ uninstall-local:
 #
 # Require gtk-doc when making dist
 #
-if ENABLE_GTK_DOC
-dist-check-gtkdoc:
-else
-dist-check-gtkdoc:
-	@echo "*** gtk-doc must be installed and enabled in order to make dist"
-	@false
-endif
 
-dist-hook: dist-check-gtkdoc dist-hook-local
+dist-hook: dist-hook-local
 	mkdir $(distdir)/tmpl
 	mkdir $(distdir)/sgml
 	mkdir $(distdir)/html
