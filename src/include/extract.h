@@ -24,8 +24,10 @@
 #ifndef _LIBPRELUDE_EXTRACT_H
 #define _LIBPRELUDE_EXTRACT_H
 
-
 #ifdef NEED_ALIGNED_ACCESS
+
+#include <string.h> /* for memmove */
+
 
 /*
  * Using memmove make the generated code substencially slower,
