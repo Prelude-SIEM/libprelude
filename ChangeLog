@@ -1,3 +1,10 @@
+2001-08-24  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/alert-common.c (read_alert):
+	Return an error if socket_read_nowait() returned 0.
+        This prevent a possible report server if the sensor is interupted
+        while sending an alert.
+
 2001-08-23  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/auth-common.c (auth_file_exist_or_create): 

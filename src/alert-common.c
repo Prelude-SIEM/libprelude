@@ -78,7 +78,7 @@ static int read_alert(int fd, alert_t *alert,
                 goto err;
         
         ret = socket_read_nowait(fd, plugin_name(p), plugin_name_len(p), my_read);
-        if ( ret < 0 ) {
+        if ( ret <= 0 ) {
                 free(plugin_name(p));
                 goto err;
         }
