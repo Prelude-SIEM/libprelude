@@ -1,3 +1,8 @@
+2003-01-21  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/ssl-gencrypto.c (prelude_ssl_gen_crypto): 
+	fix compilation with OpenSSL 0.9.7.
+
 2002-12-18  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-message.c (prelude_msg_dynamic_new): 

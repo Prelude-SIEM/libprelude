@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002 Jeremie Brebec / Toussaint Mathieu
+* Copyright (C) 2001, 2002, 2003 Jeremie Brebec / Toussaint Mathieu
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <time.h>
 #include <string.h>
 #include <sys/types.h>
@@ -41,7 +42,6 @@
 #include <openssl/x509v3.h>
 #include <openssl/objects.h>
 #include <openssl/pem.h>
-#include <openssl/e_os.h>
 
 #include "prelude-log.h"
 #include "prelude-path.h"
@@ -182,7 +182,7 @@ static int make_REQ(X509_REQ * req, EVP_PKEY * pkey)
 
 
 
-static void MS_CALLBACK req_cb(int p, int n, void *arg)
+static void req_cb(int p, int n, void *arg)
 {
 
 	char c = 'B';
@@ -330,7 +330,7 @@ int prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int cryp
 	int ret, fd;
 	X509 *x509ss = NULL;
 	EVP_PKEY *pkey = NULL;
-	EVP_CIPHER *cipher = NULL;
+	const EVP_CIPHER *cipher = NULL;
 
         if ( crypt )
                 cipher = EVP_des_ede3_cbc();
