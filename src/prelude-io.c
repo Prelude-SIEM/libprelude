@@ -312,6 +312,9 @@ static int tls_close(prelude_io_t *pio)
         do {
                 ret = gnutls_bye(pio->fd_ptr, GNUTLS_SHUT_RDWR);
         } while ( ret < 0 && (ret = tls_check_error(pio, ret)) == 0 );
+
+        if ( ret < 0 )
+                return ret;
         
         gnutls_deinit(pio->fd_ptr);
         
