@@ -306,7 +306,7 @@ sub	send
     my	$self = shift;
     my	$message = shift || return 0;
 
-    Prelude::idmef_send_message($$self, $$message);
+    Prelude::idmef_write_message($$self, $$message);
 
     return 1;
 }

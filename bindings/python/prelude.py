@@ -406,7 +406,7 @@ class IDMEFMessage:
         if not msgbuf:
             raise Error()
 
-        _prelude.idmef_send_message(msgbuf, self.res)
+        _prelude.idmef_write_message(msgbuf, self.res)
         _prelude.prelude_msgbuf_close(msgbuf)
 
 
