@@ -87,6 +87,7 @@ typedef struct cnx {
          * Timer for client reconnection.
          */
         prelude_timer_t timer;
+        prelude_bool_t timer_started;
         
         prelude_failover_t *failover;
         
@@ -156,8 +157,10 @@ static void notify_event(prelude_connection_mgr_t *mgr,
 
 static void init_cnx_timer(cnx_t *cnx)
 {        
-        if ( cnx->parent->parent->flags & PRELUDE_CONNECTION_MGR_FLAGS_RECONNECT ) 
+        if ( cnx->parent->parent->flags & PRELUDE_CONNECTION_MGR_FLAGS_RECONNECT ) {
+                cnx->timer_started = TRUE;
                 prelude_timer_init(&cnx->timer);
+        }
 }
 
 
@@ -172,9 +175,11 @@ static void connection_list_destroy(cnx_list_t *clist)
                 for ( cnx = clist->and; cnx != NULL; cnx = bkp ) {
                         bkp = cnx->and;
 
-                        if ( ! (prelude_connection_get_state(cnx->cnx) & PRELUDE_CONNECTION_ESTABLISHED) )
-                             prelude_timer_destroy(&cnx->timer);
-
+                        if ( cnx->timer_started ) {
+                                cnx->timer_started = FALSE;
+                                prelude_timer_destroy(&cnx->timer);
+                        }
+                        
                         prelude_linked_object_del((prelude_linked_object_t *) cnx->cnx);
 
                         prelude_connection_destroy(cnx->cnx);
@@ -254,10 +259,8 @@ static void check_for_data_cb(void *arg)
                         FD_CLR(fd, &mgr->fds);
         }
         
-        if ( mgr->connection_string_changed ) {
-                prelude_timer_destroy(&mgr->timer);
+        if ( mgr->connection_string_changed )
                 prelude_connection_mgr_init(mgr);
-        }
 }
 
 
@@ -467,7 +470,8 @@ static cnx_t *new_connection(prelude_client_profile_t *cp, cnx_list_t *clist,
         }
         
         new->parent = clist;
-
+        new->timer_started = FALSE;
+        
         if ( flags & PRELUDE_CONNECTION_MGR_FLAGS_RECONNECT ) {
                 prelude_timer_set_data(&new->timer, new);
                 prelude_timer_set_expire(&new->timer, INITIAL_EXPIRATION_TIME);
