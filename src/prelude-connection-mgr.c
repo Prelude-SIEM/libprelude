@@ -53,7 +53,6 @@
 #include "prelude-getopt-wide.h"
 #include "prelude-failover.h"
 #include "extract.h"
-#include "prelude-timer-config.h"
 
 #define other_error -2
 #define communication_error -1
