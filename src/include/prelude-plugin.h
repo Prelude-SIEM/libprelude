@@ -29,10 +29,27 @@
 #include "prelude-option.h"
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
-         
+
+
+#define PRELUDE_PLUGIN_API_VERSION 1
+
+
+typedef struct prelude_plugin_entry prelude_plugin_entry_t;
 typedef struct prelude_plugin_instance prelude_plugin_instance_t;
+
+
+#define PRELUDE_PLUGIN_GENERIC               \
+        prelude_plugin_entry_t *_pe;         \
+        char *name;                          \
+        void (*destroy)(prelude_plugin_instance_t *pi, prelude_string_t *err)
+
+         
+typedef struct {
+        PRELUDE_PLUGIN_GENERIC;
+} prelude_plugin_generic_t;
+
 
 
 /*
@@ -40,7 +57,6 @@ typedef struct prelude_plugin_instance prelude_plugin_instance_t;
  * without having the end program depend on ltdl.
  */
 extern const void *lt_preloaded_symbols[];
-
 
 #define PRELUDE_PLUGIN_SET_PRELOADED_SYMBOLS()                     \
         prelude_plugin_set_preloaded_symbols(lt_preloaded_symbols)
@@ -50,7 +66,7 @@ extern const void *lt_preloaded_symbols[];
 static int prefix ## _set_ ## name(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)  \
 {                                                                                                \
         char *dup;                                                                               \
-        type *ptr = prelude_plugin_instance_get_data(context);                                   \
+        type *ptr = prelude_plugin_instance_get_plugin_data(context);                            \
                                                                                                  \
         dup = strdup(optarg);                                                                    \
         if ( ! dup )                                                                             \
@@ -67,7 +83,7 @@ static int prefix ## _set_ ## name(prelude_option_t *opt, const char *optarg, pr
                                                                                                  \
 static int prefix ## _get_ ## name(prelude_option_t *opt, prelude_string_t *out, void *context)  \
 {                                                                                                \
-        type *ptr = prelude_plugin_instance_get_data(context);                                   \
+        type *ptr = prelude_plugin_instance_get_plugin_data(context);                            \
         if ( ptr->name )                                                                         \
                 prelude_string_cat(out, ptr->name);                                              \
                                                                                                  \
@@ -75,85 +91,51 @@ static int prefix ## _get_ ## name(prelude_option_t *opt, prelude_string_t *out,
 }
 
 
-
-
-
-#define PRELUDE_PLUGIN_GENERIC               \
-        char *name; int namelen;             \
-        char *author; int authorlen;         \
-        char *contact; int contactlen;       \
-        char *desc; int desclen;             \
-        void (*destroy)(prelude_plugin_instance_t *pi, prelude_string_t *err)
-
-
-typedef struct {
-        PRELUDE_PLUGIN_GENERIC;
-} prelude_plugin_generic_t;
-
-
-#define prelude_plugin_name(p) (p)->name
-#define prelude_plugin_name_len(p) (p)->namelen
-
-#define prelude_plugin_author(p) (p)->author
-#define prelude_plugin_author_len(p) (p)->authorlen
-
-#define prelude_plugin_contact(p) (p)->contact
-#define prelude_plugin_contact_len(p) (p)->contactlen
-
-#define prelude_plugin_desc(p) (p)->desc
-#define prelude_plugin_desc_len(p) (p)->desclen
-
-
 /*
  *
  */
-#define prelude_plugin_set_name(p, str) prelude_plugin_name(p) = (str); \
-                                prelude_plugin_name_len(p) = sizeof((str))
+#define prelude_plugin_get_name(p) (p)->name
 
-#define prelude_plugin_set_author(p, str) prelude_plugin_author(p) = (str); \
-                                  prelude_plugin_author_len(p) = sizeof((str))
-
-#define prelude_plugin_set_contact(p, str) prelude_plugin_contact(p) = (str); \
-                                   prelude_plugin_contact_len(p) = sizeof((str))
-
-#define prelude_plugin_set_desc(p, str) prelude_plugin_desc(p) = (str); \
-                                prelude_plugin_desc_len(p) = sizeof((str))
+#define prelude_plugin_set_name(p, str) (p)->name = (str)
 
 #define prelude_plugin_set_destroy_func(p, func) (p)->destroy = func
+
 
 
 
 /*
  * Plugin need to call this function in order to get registered.
  */
+void prelude_plugin_entry_set_plugin(prelude_plugin_entry_t *pe, prelude_plugin_generic_t *pl);
 
-int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
-                                         prelude_option_t *opt, int (*commit)(prelude_plugin_instance_t *pi,
-                                                                              prelude_string_t *err));
+int prelude_plugin_set_activation_option(prelude_plugin_entry_t *pe, prelude_option_t *opt,
+                                         int (*commit)(prelude_plugin_instance_t *pi, prelude_string_t *err));
 
-int prelude_plugin_subscribe(prelude_plugin_instance_t *pi);
+int prelude_plugin_instance_subscribe(prelude_plugin_instance_t *pi);
 
-int prelude_plugin_new_instance(prelude_plugin_instance_t **pi, prelude_plugin_generic_t *plugin, const char *name, void *data);
+int prelude_plugin_instance_unsubscribe(prelude_plugin_instance_t *pi);
 
 
-int prelude_plugin_unsubscribe(prelude_plugin_instance_t *pi);
+int prelude_plugin_new_instance(prelude_plugin_instance_t **pi,
+                                prelude_plugin_generic_t *plugin, const char *name, void *data);
 
 
 /*
  *
  */
-prelude_plugin_generic_t *prelude_plugin_search_by_name(const char *name);
+prelude_plugin_generic_t *prelude_plugin_search_by_name(prelude_list_t *head, const char *name);
 
-prelude_plugin_instance_t *prelude_plugin_search_instance_by_name(const char *pname, const char *iname);
+prelude_plugin_instance_t *prelude_plugin_search_instance_by_name(prelude_list_t *head,
+                                                                  const char *pname, const char *iname);
 
 
 void prelude_plugin_instance_set_data(prelude_plugin_instance_t *pi, void *data);
 
 void *prelude_plugin_instance_get_data(prelude_plugin_instance_t *pi);
 
-void prelude_plugin_instance_set_private_data(prelude_plugin_instance_t *pi, void *data);
+void prelude_plugin_instance_set_plugin_data(prelude_plugin_instance_t *pi, void *data);
 
-void *prelude_plugin_instance_get_private_data(prelude_plugin_instance_t *pi);
+void *prelude_plugin_instance_get_plugin_data(prelude_plugin_instance_t *pi);
 
 const char *prelude_plugin_instance_get_name(prelude_plugin_instance_t *pi);
 
@@ -167,7 +149,8 @@ prelude_plugin_generic_t *prelude_plugin_instance_get_plugin(prelude_plugin_inst
  * have the ability to use plugin_register_for_use to tell it want
  * to use this plugin.
  */
-int prelude_plugin_load_from_dir(const char *dirname, const char *symbol, void *ptr,
+int prelude_plugin_load_from_dir(prelude_list_t *head,
+                                 const char *dirname, const char *symbol, void *ptr,
                                  int (*subscribe)(prelude_plugin_instance_t *p),
                                  void (*unsubscribe)(prelude_plugin_instance_t *pi));
 
@@ -175,11 +158,12 @@ int prelude_plugin_load_from_dir(const char *dirname, const char *symbol, void *
 /*
  * Call this if you want to use this plugin.
  */ 
-int prelude_plugin_add(prelude_plugin_instance_t *pi, prelude_list_t *h, const char *infos);
+int prelude_plugin_instance_add(prelude_plugin_instance_t *pi, prelude_list_t *h);
 
-void prelude_plugin_del(prelude_plugin_instance_t *pi);
+void prelude_plugin_instance_del(prelude_plugin_instance_t *pi);
 
-void prelude_plugin_instance_compute_time(prelude_plugin_instance_t *pi, struct timeval *start, struct timeval *end);
+void prelude_plugin_instance_compute_time(prelude_plugin_instance_t *pi,
+                                          struct timeval *start, struct timeval *end);
 
 
 int prelude_plugin_instance_call_commit_func(prelude_plugin_instance_t *pi, prelude_string_t *err);
@@ -188,7 +172,7 @@ prelude_bool_t prelude_plugin_instance_has_commit_func(prelude_plugin_instance_t
 
 void prelude_plugin_set_preloaded_symbols(void *symlist);
 
-prelude_plugin_generic_t *prelude_plugin_get_next(prelude_list_t **iter);
+prelude_plugin_generic_t *prelude_plugin_get_next(prelude_list_t *head, prelude_list_t **iter);
 
 void prelude_plugin_unload(prelude_plugin_generic_t *plugin);
 

@@ -80,6 +80,7 @@ struct prelude_option {
         const char *input_validation_regex;
         enum { string, integer, boolean } input_type;
 
+        void *data;
         void *private_data;
         
         prelude_list_t value_list;
@@ -1136,16 +1137,30 @@ const char *prelude_option_get_value(prelude_option_t *opt)
 
 
 
-void prelude_option_set_private_data(prelude_option_t *opt, void *data) 
+void _prelude_option_set_private_data(prelude_option_t *opt, void *data) 
 {
         opt->private_data = data;
 }
 
 
 
-void *prelude_option_get_private_data(prelude_option_t *opt) 
+void *_prelude_option_get_private_data(prelude_option_t *opt) 
 {
         return opt->private_data;
+}
+
+
+
+void prelude_option_set_data(prelude_option_t *opt, void *data) 
+{
+        opt->data = data;
+}
+
+
+
+void *prelude_option_get_data(prelude_option_t *opt) 
+{
+        return opt->data;
 }
 
 

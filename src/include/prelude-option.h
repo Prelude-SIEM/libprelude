@@ -95,9 +95,13 @@ char prelude_option_get_shortname(prelude_option_t *opt);
 
 const char *prelude_option_get_longname(prelude_option_t *opt);
 
-void prelude_option_set_private_data(prelude_option_t *opt, void *data);
+void _prelude_option_set_private_data(prelude_option_t *opt, void *data);
 
-void *prelude_option_get_private_data(prelude_option_t *opt);
+void *_prelude_option_get_private_data(prelude_option_t *opt);
+
+         void prelude_option_set_data(prelude_option_t *opt, void *data);
+
+void *prelude_option_get_data(prelude_option_t *opt);
 
 
 int prelude_option_invoke_commit(prelude_option_t *opt, const char *ctname, prelude_string_t *value, void *context);
