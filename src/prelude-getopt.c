@@ -605,9 +605,11 @@ static int get_option_from_optlist(prelude_list_t *optlist, prelude_list_t *cb_l
                 if ( ret == prelude_option_error || ret == prelude_option_end )
                         return ret;
         }
-        
-        return parse_argument(cb_list, optlist, filename, argc, argv, &argv_index, 0); 
 
+        if ( argc ) 
+                return parse_argument(cb_list, optlist, filename, argc, argv, &argv_index, 0);
+
+        return 0;
 }
 
 
