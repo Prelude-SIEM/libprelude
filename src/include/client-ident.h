@@ -28,4 +28,6 @@ int prelude_client_ident_send(prelude_io_t *fd, int client_type);
 
 int prelude_client_ident_init(const char *sname);
 
+void prelude_client_set_analyzer_id(uint64_t id);
+
 #endif /* _LIBPRELUDE_CLIENT_IDENT_H */

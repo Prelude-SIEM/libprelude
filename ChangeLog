@@ -1,3 +1,21 @@
+2002-06-01  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/ssl-gencrypto.c (add_DN_object): 
+	use X509_NAME_add_entry() together with 
+	X509_NAME_ENTRY_create_by_NID() so that we work on 
+	with older OpenSSL version.
+
+	* src/client-ident.c (prelude_client_set_analyzer_id): 
+	new function.
+
+	* sensor-adduser/sensor-adduser.c (setup_sensor_files): 
+	don't call generate_sensor_ident here. Take the ident
+	as argument.
+	
+	(main): generate the ident here, and use the 
+	prelude_client_set_analyzer_id function so that the ident
+	will be used to generate the SSL certificate subject.
+
 2002-05-31  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/sensor.c (setup_heartbeat_repeat_time): 

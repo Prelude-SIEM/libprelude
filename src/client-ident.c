@@ -166,3 +166,9 @@ uint64_t prelude_client_get_analyzerid(void)
         return sensor_ident;
 }
 
+
+
+void prelude_client_set_analyzer_id(uint64_t id) 
+{
+        sensor_ident = id;
+}

@@ -78,7 +78,7 @@ static int get_full_hostname(char *buf, size_t len)
 {
         int ret, i;
         
-        ret = gethostname(buf, len - 1);
+        ret = gethostname(buf, len);
         if ( ret < 0 ) {
                 fprintf(stderr, "couldn't get system hostname.\n");
                 return -1;
@@ -99,31 +99,34 @@ static int get_full_hostname(char *buf, size_t len)
 
 
 
-static int add_DN_object(X509_NAME *n, char *text, int nid, int min, int max)
+static int add_DN_object(X509_NAME *name, char *text, int nid, int min, int max)
 {
         int ret;
         struct timeval tv;
+        X509_NAME_ENTRY *entry;
         char buf[1024], host[256];
+
+        get_full_hostname(host, sizeof(host));
         
-        buf[0] = '\0';
-
-        ret = get_full_hostname(host, sizeof(host));
-        if ( ret < 0 ) 
-                return -1;        
-
         gettimeofday(&tv, NULL);
         srand(getpid() * tv.tv_usec);
-        
-        ret = snprintf(buf, sizeof(buf), "%s:%s:%llu:%d", host, prelude_get_sensor_name(),
+
+        ret = snprintf(buf, sizeof(buf), "%s:%s:%llu:%d", host,
+                       prelude_get_sensor_name(),
                        prelude_client_get_analyzerid(), rand());
         
 	if ( req_check_len(ret, min, max) < 0)
 		return -1;
         
-        ret = X509_NAME_add_entry_by_NID(n, nid, MBSTRING_ASC, (unsigned char *) buf, -1, -1, 0);
+	entry = X509_NAME_ENTRY_create_by_NID(NULL, nid, V_ASN1_APP_CHOOSE,
+                                              (unsigned char *)buf, -1);
+        
+	ret = X509_NAME_add_entry(name, entry, 0, 0);
 	if ( ! ret )
 		return -1;
         
+        X509_NAME_ENTRY_free(entry);
+
 	return 0;
 }
 

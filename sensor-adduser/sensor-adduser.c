@@ -46,6 +46,7 @@
 #include "plaintext.h"
 #include "ssl-register.h"
 #include "config.h"
+#include "client-ident.h"
 
 
 static uint16_t port = 5553;
@@ -381,12 +382,10 @@ static int register_sensor_ident(const char *sname, uint64_t *ident)
 
 
 
-static int setup_sensor_files(void) 
+static int setup_sensor_files(const char *hostname, uint64_t sensor_ident) 
 {
         int fd, ret;
         char buf[256];
-        uint64_t ident;
-        char hostname[256];
 
         prelude_get_backup_filename(buf, sizeof(buf));
 
@@ -406,14 +405,11 @@ static int setup_sensor_files(void)
                 return -1;
         }
 
-        gethostname(hostname, sizeof(hostname));
-        ident = generate_sensor_ident(sensor_name, hostname);
-
-        ret = register_sensor_ident(sensor_name, &ident);
+        ret = register_sensor_ident(sensor_name, &sensor_ident);
         if ( ret == 0 )
-                fprintf(stderr, "Allocated ident for %s@%s: %llu.\n", sensor_name, hostname, ident);
+                fprintf(stderr, "Allocated ident for %s@%s: %llu.\n", sensor_name, hostname, sensor_ident);
         else
-                fprintf(stderr, "Using already allocated ident for %s@%s: %llu.\n", sensor_name, hostname, ident);
+                fprintf(stderr, "Using already allocated ident for %s@%s: %llu.\n", sensor_name, hostname, sensor_ident);
 
         return 0;
 }
@@ -428,6 +424,7 @@ int main(int argc, char **argv)
         prelude_io_t *fd;
         struct in_addr in;
         char buf[256], *pass;
+        uint64_t sensor_ident;
         int have_ssl = 0, have_plaintext = 0;
 
         ret = handle_argument(argc, argv);
@@ -466,6 +463,14 @@ int main(int argc, char **argv)
         if ( ret < 0 )
                 return -1;
 
+        gethostname(buf, sizeof(buf));
+        sensor_ident = generate_sensor_ident(sensor_name, buf);
+
+        /*
+         * this will be used for SSL subject generation.
+         */
+        prelude_client_set_analyzer_id(sensor_ident);
+        
 #ifdef HAVE_SSL
         if ( have_ssl && strcmp(inet_ntoa(in), "127.0.0.1") != 0 ) {
                 ret = ssl_add_certificate(fd, pass, strlen(pass), sensor_uid);
@@ -487,7 +492,7 @@ int main(int argc, char **argv)
         if ( ret < 0 )
                 exit(ret);
         
-        exit(setup_sensor_files());
+        exit(setup_sensor_files(buf, sensor_ident));
 }
 
 
