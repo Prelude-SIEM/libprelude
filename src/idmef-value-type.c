@@ -348,7 +348,7 @@ static void data_destroy(idmef_value_type_t *type)
 
 
 
-static idmef_value_type_operation_t ops_tbl[] = {
+static const idmef_value_type_operation_t ops_tbl[] = {
         { 0, 0, NULL, NULL, NULL, NULL, NULL, NULL},
         { sizeof(int8_t), INTEGER_RELATION, generic_copy,
           generic_clone, NULL, generic_compare, int8_read, int8_write             },
