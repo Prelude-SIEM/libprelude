@@ -94,9 +94,9 @@
 54	PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS	Insufficient credentials for requested operation
 
 55	PRELUDE_ERROR_IDMEF_CRITERIA_PARSE	Could not parse IDMEF criteria
+56	PRELUDE_ERROR_IDMEF_CRITERION_UNSUPPORTED_OPERATOR	Unsupported criterion operator
 
-
-#55 to 16381 are free to be used.
+#57 to 16381 are free to be used.
 
 16382	PRELUDE_ERROR_UNKNOWN_ERRNO		Unknown system error
 
