@@ -108,10 +108,10 @@ struct prelude_plugin_instance {
          * Instance running time and count.
          */
         double time;
-        uint32_t count;
+        unsigned count;
 
-        int already_used;
-        int already_subscribed;
+        unsigned int already_used;
+        prelude_bool_t already_subscribed;
 };
 
 
@@ -223,7 +223,7 @@ static int subscribe_instance(prelude_plugin_instance_t *pi)
         if ( pi->entry->subscribe )
                 ret = pi->entry->subscribe(pi);
 
-        pi->already_subscribed = 1;
+        pi->already_subscribed = TRUE;
         
         return ret;
 }
@@ -709,6 +709,8 @@ prelude_plugin_instance_t *prelude_plugin_search_instance_by_name(const char *pn
 void prelude_plugin_del(prelude_plugin_instance_t *pi) 
 {
         assert(pi->already_used);
+        
+        pi->already_used--;
         prelude_linked_object_del((prelude_linked_object_t *) pi);
 }
 
