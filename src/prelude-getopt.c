@@ -624,14 +624,21 @@ int prelude_option_parse_arguments(void **context, prelude_option_t *option,
                                    const char *filename, int argc, char **argv) 
 {
         int ret;
+        prelude_list_t tmpl;
         prelude_optlist_t optlist;
         PRELUDE_LIST_HEAD(cb_list);
 
         PRELUDE_INIT_LIST_HEAD(&optlist.optlist);
         
         if ( option ) {
+                tmpl.prev = option->list.prev;
+                tmpl.next = option->list.next;
+                
                 prelude_list_add_tail(&option->list, &optlist.optlist);
                 get_option_from_optlist(&optlist, &cb_list, filename, argc, argv);
+
+                option->list.prev = tmpl.prev;
+                option->list.next = tmpl.next;
         } else
                 get_option_from_optlist(root_optlist, &cb_list, filename, argc, argv);
         
