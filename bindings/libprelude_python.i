@@ -219,6 +219,9 @@ PyObject *swig_python_data(idmef_data_t *data)
 			value_obj = PyString_FromString(* $3);
 			break;
 		}
+	} else {
+		value_obj = Py_None;
+		Py_INCREF(Py_None);
 	}
 
 	PyTuple_SetItem(tuple, 3, value_obj);
@@ -258,6 +261,7 @@ PyObject *swig_python_data(idmef_data_t *data)
 %typemap(python, argout) idmef_value_t **ret {
 	if ( PyInt_AsLong($result) == 0 ) {
 		$result = Py_None;
+		Py_INCREF(Py_None);
 
 	} else {
 		$result = SWIG_NewPointerObj((void *) * $1, SWIGTYPE_p_idmef_value_t, 0);
