@@ -22,7 +22,6 @@ libprelude_revision=0
 libprelude_age=1
 
 libprelude_soname=$libprelude_current:$libprelude_revision:$libprelude_age
-
 AC_SUBST(libprelude_soname)
  
 AM_INIT_AUTOMAKE(libprelude, $libprelude_version)
@@ -32,6 +31,7 @@ AM_CONFIG_HEADER(config.h)
 AM_DISABLE_STATIC
 
 AM_MAINTAINER_MODE
+gl_EARLY
 
 dnl setup libltdl
 
@@ -68,7 +68,17 @@ AC_SUBST(pthread_cflags)
 AC_SUBST(libprelude_libs)
 AC_SUBST(libprelude_cflags)
 
-AC_CHECK_FUNCS(strndup)
+
+dnl **************************************************
+dnl * Check for missing function replacement         *
+dnl **************************************************
+AC_MSG_RESULT([***
+*** Setting up gnulib compatbility files...
+])
+gl_SOURCE_BASE(libmissing)
+gl_M4_BASE(libmissing/m4)
+dnl gl_MODULES(snprintf vsnprintf strdup strndup)
+gl_INIT
 
 
 dnl **************************************************
@@ -299,6 +309,14 @@ fi
 
 
 dnl **************************************************
+dnl * Swig support                                   *
+dnl **************************************************
+
+AC_CHECK_PROG(enable_swig, swig, yes, no)
+AM_CONDITIONAL(HAVE_SWIG, test x$enable_swig = xyes)
+
+
+dnl **************************************************
 dnl * Perl support                                   *
 dnl **************************************************
 
@@ -312,22 +330,13 @@ fi
 AM_CONDITIONAL(HAVE_PERL, test x$enable_perl = xyes)
 
 
-
-dnl **************************************************
-dnl * Swig support                                   *
-dnl **************************************************
-
-AC_CHECK_PROG(enable_swig, swig, yes, no)
-AM_CONDITIONAL(HAVE_SWIG, test x$enable_swig = xyes)
-
-
 dnl **************************************************
 dnl * Python support                                 *
 dnl **************************************************
 
 
-AC_ARG_ENABLE(python, [  --enable-python  
-Enable Python binding [default=auto]], enable_python="$enableval", enable_python=yes)
+AC_ARG_ENABLE(python, [  --enable-python  Enable Python binding [default=auto]], 
+		      enable_python="$enableval", enable_python="yes")
 
 if test x$enable_python = xyes; then
    AC_CHECK_PROG(enable_python, python, yes, no)
@@ -418,6 +427,8 @@ Makefile
 client.conf
 global.conf
 libprelude-config
+
+libmissing/Makefile
 
 src/Makefile
 src/include/Makefile
