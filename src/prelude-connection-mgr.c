@@ -253,7 +253,7 @@ static void check_for_data_cb(void *arg)
                 if ( ret < 0 )
                         FD_CLR(fd, &mgr->fds);
         }
-
+        
         if ( mgr->connection_string_changed ) {
                 prelude_timer_destroy(&mgr->timer);
                 prelude_connection_mgr_init(mgr);
@@ -785,8 +785,8 @@ int prelude_connection_mgr_init(prelude_connection_mgr_t *new)
         prelude_timer_set_data(&new->timer, new);
         prelude_timer_set_expire(&new->timer, 1);
         prelude_timer_set_callback(&new->timer, check_for_data_cb);
-        
-        if ( ret < 0 && new->event_handler ) {
+                
+        if ( new->event_handler && ! new->timer_started ) {                
                 new->timer_started = TRUE;
                 prelude_timer_init(&new->timer);
         }
@@ -947,7 +947,7 @@ int prelude_connection_mgr_tell_connection_alive(prelude_connection_mgr_t *mgr, 
 int prelude_connection_mgr_set_connection_string(prelude_connection_mgr_t *mgr, const char *cfgstr)
 {
         char *new;
-
+        
         new = strdup(cfgstr);
         if ( ! new )
                 return prelude_error_from_errno(errno);
