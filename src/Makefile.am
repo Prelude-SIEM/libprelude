@@ -27,7 +27,9 @@ libprelude_la_SOURCES = 		\
 	prelude-ident.c			\
 	sensor.c			\
 	client-ident.c			\
-	common.c
+	common.c			\
+	idmef-tree-func.c		\
+	idmef-msg-send.c		
 
 
 libprelude_la_LIBADD = ../libmissing/libmissing.a @LIBS@

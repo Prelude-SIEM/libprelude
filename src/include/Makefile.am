@@ -3,6 +3,8 @@ includedir = $(prefix)/include/libprelude
 include_HEADERS = config-engine.h 		\
 		  idmef-message-id.h		\
 		  idmef-tree.h			\
+		  idmef-tree-func.h		\
+		  idmef-msg-send.h		\
 		  plugin-common.h		\
 		  plugin-common-prv.h		\
 		  ssl-gencrypto.h		\
@@ -26,8 +28,7 @@ include_HEADERS = config-engine.h 		\
 		  prelude-ident.h		\
 		  sensor.h			\
 		  threads.h			\
-		  extract.h
-
+		  extract.h			
 
 
 noinst_HEADERS = ssl.h auth.h client-ident.h

@@ -35,7 +35,7 @@
  * Additional Data class
  */
 typedef enum {
-        boolean   = 0,
+        string    = 0,
         byte      = 1,
         character = 2,
         date_time = 3,
@@ -43,7 +43,7 @@ typedef enum {
         ntpstamps = 5,
         portlist  = 6,
         real      = 7,
-        string    = 8,
+        boolean   = 8,
         xml       = 9,
 } idmef_additional_data_type_t;
 
@@ -102,7 +102,7 @@ typedef struct {
         uint64_t ident;
         idmef_userid_type_t type;
         const char *name;
-        const char *number;
+        uint32_t number;
 } idmef_userid_t;
 
 
@@ -344,8 +344,8 @@ typedef struct {
  * Time class
  */
 typedef struct {
-        const char *ntpstamp;
-        const char *time;
+        uint32_t sec;
+        uint32_t usec;
 } idmef_time_t;
 
 #define idmef_create_time_t idmef_time_t
@@ -484,6 +484,17 @@ typedef enum {
 
 
 typedef struct {
+
+        /*
+         * specific to prelude
+         */
+        int msglen;
+        int msgcount;
+        
+
+        /*
+         * end of specific things.
+         */
         const char *version;
 
         idmef_message_type_t type;
