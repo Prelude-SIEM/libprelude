@@ -44,7 +44,7 @@ typedef enum {
 typedef struct prelude_connection prelude_connection_t;
 
 
-void prelude_connection_destroy(prelude_connection_t *cnx);
+void prelude_connection_destroy(prelude_connection_t *conn);
 
 int prelude_connection_send(prelude_connection_t *cnx, prelude_msg_t *msg);
 
