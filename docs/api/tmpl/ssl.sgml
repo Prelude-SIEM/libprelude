@@ -1,0 +1,61 @@
+<!-- ##### SECTION Title ##### -->
+ssl
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO MANAGERS_CERT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO SENSORS_CERT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MANAGER_KEY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO SENSORS_KEY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION ssl_init_client ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION ssl_connect_server ##### -->
+<para>
+
+</para>
+
+@socket: 
+@Returns: 
+
+

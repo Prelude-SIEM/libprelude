@@ -1,0 +1,128 @@
+<!-- ##### SECTION Title ##### -->
+timer
+
+<!-- ##### SECTION Short_Description ##### -->
+Asynchronous timer API
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Timer may be used by Prelude program in order to be notified asynchronously
+when a timer previously set expire.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### TYPEDEF prelude_timer_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO timer_expire ##### -->
+<para>
+
+</para>
+
+@timer: 
+
+
+<!-- ##### MACRO timer_data ##### -->
+<para>
+
+</para>
+
+@timer: 
+
+
+<!-- ##### MACRO timer_func ##### -->
+<para>
+
+</para>
+
+@timer: 
+
+
+<!-- ##### MACRO timer_set_expire ##### -->
+<para>
+
+</para>
+
+@timer: 
+@x: 
+
+
+<!-- ##### MACRO timer_set_data ##### -->
+<para>
+
+</para>
+
+@timer: 
+@x: 
+
+
+<!-- ##### MACRO timer_set_callback ##### -->
+<para>
+
+</para>
+
+@timer: 
+@x: 
+
+
+<!-- ##### FUNCTION timer_init ##### -->
+<para>
+
+</para>
+
+@timer: 
+
+
+<!-- ##### FUNCTION timer_destroy_current ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION timer_reset_current ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION timer_reset ##### -->
+<para>
+
+</para>
+
+@timer: 
+
+
+<!-- ##### FUNCTION timer_destroy ##### -->
+<para>
+
+</para>
+
+@timer: 
+
+
+<!-- ##### FUNCTION timer_elapsed ##### -->
+<para>
+
+</para>
+
+@timer: 
+@tv: 
+
+
+<!-- ##### FUNCTION prelude_wake_up_timer ##### -->
+<para>
+
+</para>
+
+
+

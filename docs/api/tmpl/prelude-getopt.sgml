@@ -1,0 +1,128 @@
+<!-- ##### SECTION Title ##### -->
+prelude-getopt
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO CLI_HOOK ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO CFG_HOOK ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO prelude_option_success ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO prelude_option_end ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO prelude_option_error ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### ENUM prelude_option_argument_t ##### -->
+<para>
+
+</para>
+
+@required_argument: 
+@optionnal_argument: 
+@no_argument: 
+
+<!-- ##### FUNCTION prelude_option_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_add ##### -->
+<para>
+
+</para>
+
+@optlist: 
+@flags: 
+@shortopt: 
+@longopt: 
+@desc: 
+@has_arg: 
+@set: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_wide_add ##### -->
+<para>
+
+</para>
+
+@optlist: 
+@flags: 
+@shortopt: 
+@longopt: 
+@desc: 
+@has_arg: 
+@set: 
+@get: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_parse_arguments ##### -->
+<para>
+
+</para>
+
+@optlist: 
+@filename: 
+@argc: 
+@argv: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_print ##### -->
+<para>
+
+</para>
+
+@optlist: 
+@flags: 
+
+
+<!-- ##### FUNCTION prelude_option_destroy ##### -->
+<para>
+
+</para>
+
+@optlist: 
+
+

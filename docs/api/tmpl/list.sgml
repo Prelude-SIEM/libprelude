@@ -1,0 +1,66 @@
+<!-- ##### SECTION Title ##### -->
+list
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO LIST_H ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO LIST_HEAD_INIT ##### -->
+<para>
+
+</para>
+
+@name: 
+
+
+<!-- ##### MACRO LIST_HEAD ##### -->
+<para>
+
+</para>
+
+@name: 
+
+
+<!-- ##### MACRO INIT_LIST_HEAD ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
+<!-- ##### MACRO list_entry ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@type: 
+@member: 
+
+
+<!-- ##### MACRO list_for_each ##### -->
+<para>
+
+</para>
+
+@pos: 
+@head: 
+
+

@@ -1,0 +1,52 @@
+<!-- ##### SECTION Title ##### -->
+ssl-gencrypto
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO SSL_GENCRYPTO_H ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO DEFAULT_KEY_LENGTH ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION prelude_ssl_gen_crypto ##### -->
+<para>
+
+</para>
+
+@keysize: 
+@expire: 
+@keyout: 
+@crypt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_ssl_ask_settings ##### -->
+<para>
+
+</para>
+
+@keysize: 
+@expire: 
+@store_crypted: 
+
+

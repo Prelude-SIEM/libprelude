@@ -1,0 +1,61 @@
+<!-- ##### SECTION Title ##### -->
+prelude-auth
+
+<!-- ##### SECTION Short_Description ##### -->
+Prelude Auth plaintext authentication module.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Prelude Auth is to be used by a Prelude client to authenticate to a
+peer, only if the connection is plaintext.
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO SENSORS_AUTH_FILE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MANAGER_AUTH_FILE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION prelude_auth_create_account ##### -->
+<para>
+
+</para>
+
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_auth_send ##### -->
+<para>
+
+</para>
+
+@fd: 
+@addr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_auth_recv ##### -->
+<para>
+
+</para>
+
+@fd: 
+@addr: 
+@Returns: 
+
+

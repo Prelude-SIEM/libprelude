@@ -1,0 +1,145 @@
+<!-- ##### SECTION Title ##### -->
+prelude-io
+
+<!-- ##### SECTION Short_Description ##### -->
+
+I/O method abstraction.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The Prelude I/O API is a simple abstraction for using I/O in a generic
+way in Prelude. Prelude I/O provide operation for FILE, socket, and SSL I/O
+as well as some read / write / forward operation.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION prelude_io_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_io_destroy ##### -->
+<para>
+
+</para>
+
+@pio: 
+
+
+<!-- ##### FUNCTION prelude_io_set_file_io ##### -->
+<para>
+
+</para>
+
+@pio: 
+@fd: 
+
+
+<!-- ##### FUNCTION prelude_io_set_ssl_io ##### -->
+<para>
+
+</para>
+
+@pio: 
+@ssl: 
+
+
+<!-- ##### FUNCTION prelude_io_set_socket_io ##### -->
+<para>
+
+</para>
+
+@pio: 
+@fd: 
+
+
+<!-- ##### FUNCTION prelude_io_close ##### -->
+<para>
+
+</para>
+
+@pio: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_io_read ##### -->
+<para>
+
+</para>
+
+@pio: 
+@buf: 
+@count: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_io_read_wait ##### -->
+<para>
+
+</para>
+
+@pio: 
+@buf: 
+@count: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_io_read_delimited ##### -->
+<para>
+
+</para>
+
+@pio: 
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_io_write ##### -->
+<para>
+
+</para>
+
+@pio: 
+@buf: 
+@count: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_io_write_delimited ##### -->
+<para>
+
+</para>
+
+@pio: 
+@buf: 
+@count: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_io_forward ##### -->
+<para>
+
+</para>
+
+@dst: 
+@src: 
+@count: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_io_get_fd ##### -->
+<para>
+
+</para>
+
+@pio: 
+@Returns: 
+
+

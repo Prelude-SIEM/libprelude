@@ -1,0 +1,255 @@
+<!-- ##### SECTION Title ##### -->
+idmef-tree
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO IDMEF_VERSION ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### ENUM idmef_additional_data_type_t ##### -->
+<para>
+
+</para>
+
+@boolean: 
+@byte: 
+@character: 
+@date_time: 
+@integer: 
+@ntpstamps: 
+@portlist: 
+@real: 
+@string: 
+@xml: 
+
+<!-- ##### TYPEDEF idmef_additional_data_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM idmef_classification_origin_t ##### -->
+<para>
+
+</para>
+
+@origin_unknown: 
+@bugtraqid: 
+@cve: 
+@vendor_specific: 
+
+<!-- ##### TYPEDEF idmef_classification_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM idmef_userid_type_t ##### -->
+<para>
+
+</para>
+
+@current_user: 
+@original_user: 
+@target_user: 
+@user_privs: 
+@current_group: 
+@group_privs: 
+
+<!-- ##### TYPEDEF idmef_userid_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM idmef_user_category_t ##### -->
+<para>
+
+</para>
+
+@cat_unknown: 
+@application: 
+@os_device: 
+
+<!-- ##### TYPEDEF idmef_user_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM idmef_address_category_t ##### -->
+<para>
+
+</para>
+
+@addr_unknown: 
+@atm: 
+@e_mail: 
+@lotus_notes: 
+@mac: 
+@sna: 
+@vm: 
+@ipv4_addr: 
+@ipv4_addr_hex: 
+@ipv4_net: 
+@ipv4_net_mask: 
+@ipv6_addr: 
+@ipv6_addr_hex: 
+@ipv6_net: 
+@ipv6_net_mask: 
+
+<!-- ##### TYPEDEF idmef_address_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF idmef_process_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF idmef_webservice_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF idmef_snmpservice_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF specific ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM idmef_node_category_t ##### -->
+<para>
+
+</para>
+
+@node_unknown: 
+@ads: 
+@afs: 
+@coda: 
+@dfs: 
+@dns: 
+@kerberos: 
+@nds: 
+@nis: 
+@nisplus: 
+@nt: 
+@wfw: 
+
+<!-- ##### TYPEDEF idmef_node_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM idmef_spoofed_t ##### -->
+<para>
+
+</para>
+
+@unknown: 
+@yes: 
+@no: 
+
+<!-- ##### TYPEDEF idmef_source_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF idmef_target_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF idmef_analyzer_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF idmef_time_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF idmef_tool_alert_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF idmef_correlation_alert_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF idmef_overflow_alert_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM idmef_alert_type_t ##### -->
+<para>
+
+</para>
+
+@idmef_tool_alert: 
+@idmef_correlation_alert: 
+@idmef_overflow_alert: 
+
+<!-- ##### TYPEDEF detail ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF idmef_heartbeat_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM idmef_message_type_t ##### -->
+<para>
+
+</para>
+
+@idmef_alert_message: 
+@idmef_heartbeat_message: 
+
+<!-- ##### TYPEDEF message ##### -->
+<para>
+
+</para>
+
+

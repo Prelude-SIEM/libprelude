@@ -28,6 +28,9 @@ void prelude_client_mgr_broadcast(prelude_client_mgr_t *cmgr, prelude_msg_t *msg
 
 void prelude_client_mgr_broadcast_async(prelude_client_mgr_t *cmgr, prelude_msg_t *msg);
 
+void prelude_client_mgr_get_manager_list(prelude_client_mgr_t *mgr,
+                                         int (*cb)(const char *addr, uint16_t port));
+
 prelude_client_mgr_t *prelude_client_mgr_new(const char *identifier, const char *cfgline);
 
 

@@ -1,0 +1,1465 @@
+<FUNCTION>
+<NAME>prelude_io_new</NAME>
+<RETURNS>prelude_io_t  *</RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_io_destroy</NAME>
+<RETURNS>void  </RETURNS>
+prelude_io_t *pio
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_io_set_file_io</NAME>
+<RETURNS>void  </RETURNS>
+prelude_io_t *pio, int fd
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_io_set_ssl_io</NAME>
+<RETURNS>void  </RETURNS>
+prelude_io_t *pio, void *ssl
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_io_set_socket_io</NAME>
+<RETURNS>void  </RETURNS>
+prelude_io_t *pio, int fd
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_io_close</NAME>
+<RETURNS>int  </RETURNS>
+prelude_io_t *pio
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_io_read</NAME>
+<RETURNS>ssize_t  </RETURNS>
+prelude_io_t *pio, void *buf, size_t count
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_io_read_wait</NAME>
+<RETURNS>ssize_t  </RETURNS>
+prelude_io_t *pio, void *buf, size_t count
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_io_read_delimited</NAME>
+<RETURNS>ssize_t  </RETURNS>
+prelude_io_t *pio, void **buf
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_io_write</NAME>
+<RETURNS>ssize_t  </RETURNS>
+prelude_io_t *pio, const void *buf, size_t count
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_io_write_delimited</NAME>
+<RETURNS>int  </RETURNS>
+prelude_io_t *pio, const void *buf, uint16_t count
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_io_forward</NAME>
+<RETURNS>ssize_t  </RETURNS>
+prelude_io_t *dst, prelude_io_t *src, size_t count
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_io_get_fd</NAME>
+<RETURNS>int  </RETURNS>
+prelude_io_t *pio
+</FUNCTION>
+<FUNCTION>
+<NAME>plugin_load_from_dir</NAME>
+<RETURNS>int  </RETURNS>
+const char *dirname, int (*cb)(plugin_container_t *p)
+</FUNCTION>
+<FUNCTION>
+<NAME>plugin_register_for_use</NAME>
+<RETURNS>int  </RETURNS>
+plugin_container_t *pc, struct list_head *h, const char *infos
+</FUNCTION>
+<FUNCTION>
+<NAME>plugin_print_stats</NAME>
+<RETURNS>void  </RETURNS>
+plugin_container_t *pc
+</FUNCTION>
+<FUNCTION>
+<NAME>plugins_print_stats</NAME>
+<RETURNS>void  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>plugins_print_opts</NAME>
+<RETURNS>void  </RETURNS>
+const char *dirname
+</FUNCTION>
+<FUNCTION>
+<NAME>plugin_set_args</NAME>
+<RETURNS>void  </RETURNS>
+int ac, char **av
+</FUNCTION>
+<FUNCTION>
+<NAME>plugin_get_highest_id</NAME>
+<RETURNS>int  </RETURNS>
+void
+</FUNCTION>
+<MACRO>
+<NAME>plugin_run</NAME>
+#define plugin_run(pc, type, member, arg...) do {                              \
+        struct timeval start, end;                                             \
+                                                                               \
+        gettimeofday(&start, NULL);                                            \
+        ((type *)pc->plugin)->member(arg);                                     \
+        gettimeofday(&end, NULL);                                              \
+        pc->p_time += (double) end.tv_sec + (double) (end.tv_usec * 1e-6);     \
+        pc->p_time -= (double) start.tv_sec + (double) (start.tv_usec * 1e-6); \
+        pc->p_count++;                                                         \
+} while (0)
+</MACRO>
+<MACRO>
+<NAME>plugin_run_with_return_value</NAME>
+#define plugin_run_with_return_value(pc, type, member, ret, arg...) do {       \
+        struct timeval start, end;                                             \
+                                                                               \
+        gettimeofday(&start, NULL);                                            \
+        ret = ((type *)pc->plugin)->member(arg);                               \
+        gettimeofday(&end, NULL);                                              \
+        pc->p_time += (double) end.tv_sec + (double) (end.tv_usec * 1e-6);     \
+        pc->p_time -= (double) start.tv_sec + (double) (start.tv_usec * 1e-6); \
+        pc->p_count++;                                                         \
+} while (0)
+</MACRO>
+<FUNCTION>
+<NAME>variable_set</NAME>
+<RETURNS>int  </RETURNS>
+char *variable, char *value
+</FUNCTION>
+<FUNCTION>
+<NAME>variable_unset</NAME>
+<RETURNS>int  </RETURNS>
+const char *variable
+</FUNCTION>
+<FUNCTION>
+<NAME>variable_get</NAME>
+<RETURNS>char  *</RETURNS>
+const char *variable
+</FUNCTION>
+<MACRO>
+<NAME>MANAGERS_CERT</NAME>
+#define MANAGERS_CERT CONFIG_DIR"/managers.cert"
+</MACRO>
+<MACRO>
+<NAME>SENSORS_CERT</NAME>
+#define SENSORS_CERT CONFIG_DIR"/sensors.cert"
+</MACRO>
+<MACRO>
+<NAME>MANAGER_KEY</NAME>
+#define MANAGER_KEY CONFIG_DIR"/manager.key"
+</MACRO>
+<MACRO>
+<NAME>SENSORS_KEY</NAME>
+#define SENSORS_KEY CONFIG_DIR"/sensors.key"
+</MACRO>
+<FUNCTION>
+<NAME>ssl_init_client</NAME>
+<RETURNS>int  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>ssl_connect_server</NAME>
+<RETURNS>SSL  *</RETURNS>
+int socket
+</FUNCTION>
+<MACRO>
+<NAME>SENSORS_AUTH_FILE</NAME>
+#define SENSORS_AUTH_FILE CONFIG_DIR"/prelude-sensors.auth"
+</MACRO>
+<MACRO>
+<NAME>MANAGER_AUTH_FILE</NAME>
+#define MANAGER_AUTH_FILE CONFIG_DIR"/prelude-manager.auth"
+</MACRO>
+<FUNCTION>
+<NAME>prelude_auth_create_account</NAME>
+<RETURNS>int  </RETURNS>
+const char *filename
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_auth_send</NAME>
+<RETURNS>int  </RETURNS>
+prelude_io_t *fd, const char *addr
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_auth_recv</NAME>
+<RETURNS>int  </RETURNS>
+prelude_io_t *fd, const char *addr
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_destroy</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_t *client
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_new</NAME>
+<RETURNS>prelude_client_t  *</RETURNS>
+const char *addr, uint16_t port
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_send_msg</NAME>
+<RETURNS>int  </RETURNS>
+prelude_client_t *client, prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_connect</NAME>
+<RETURNS>int  </RETURNS>
+prelude_client_t *client
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_forward</NAME>
+<RETURNS>ssize_t  </RETURNS>
+prelude_client_t *client, prelude_io_t *src, size_t count
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_get_inet_address</NAME>
+<RETURNS>int  </RETURNS>
+prelude_client_t *client,struct sockaddr_in *saddr, struct sockaddr_in *daddr
+</FUNCTION>
+<USER_FUNCTION>
+<NAME>prelude_async_func_t</NAME>
+<RETURNS>void </RETURNS>
+void *object, void *data
+</USER_FUNCTION>
+<MACRO>
+<NAME>PRELUDE_ASYNC_OBJECT</NAME>
+#define PRELUDE_ASYNC_OBJECT                   \
+        PRELUDE_LINKED_OBJECT;                 \
+        void *data;                            \
+        prelude_async_func_t func;             \
+        pthread_mutex_t mutex
+</MACRO>
+<TYPEDEF>
+<NAME>prelude_async_object_t</NAME>
+typedef struct {
+        PRELUDE_ASYNC_OBJECT;
+} prelude_async_object_t;
+</TYPEDEF>
+<FUNCTION>
+<NAME>prelude_async_init</NAME>
+<RETURNS>int  </RETURNS>
+int use_thread
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_async_add</NAME>
+<RETURNS>void  </RETURNS>
+prelude_async_object_t *obj
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_async_del</NAME>
+<RETURNS>void  </RETURNS>
+prelude_async_object_t *obj
+</FUNCTION>
+<MACRO>
+<NAME>PRELUDE_LINKED_OBJECT</NAME>
+#define PRELUDE_LINKED_OBJECT \
+        struct list_head list
+</MACRO>
+<TYPEDEF>
+<NAME>prelude_linked_object_t</NAME>
+typedef struct {
+        PRELUDE_LINKED_OBJECT;
+} prelude_linked_object_t;
+</TYPEDEF>
+<MACRO>
+<NAME>prelude_list_get_object</NAME>
+#define prelude_list_get_object(listentry, type)  \
+        (type *) list_entry(listentry, prelude_linked_object_t, list)
+</MACRO>
+<MACRO>
+<NAME>SSL_REGISTRATION_MSG_H</NAME>
+#define SSL_REGISTRATION_MSG_H
+</MACRO>
+<MACRO>
+<NAME>HEAD</NAME>
+#define HEAD "PRELUDE_REGISTRATION_REQUEST"
+</MACRO>
+<MACRO>
+<NAME>HEADLENGTH</NAME>
+#define HEADLENGTH 29
+</MACRO>
+<MACRO>
+<NAME>ACK</NAME>
+#define ACK "REGISTRATION_COMPLETE"
+</MACRO>
+<MACRO>
+<NAME>ACKLENGTH</NAME>
+#define ACKLENGTH 21
+</MACRO>
+<MACRO>
+<NAME>BUFMAXSIZE</NAME>
+#define BUFMAXSIZE 1400
+</MACRO>
+<MACRO>
+<NAME>PADMAXSIZE</NAME>
+#define PADMAXSIZE 7
+</MACRO>
+<MACRO>
+<NAME>SYSTEM_ERROR</NAME>
+#define SYSTEM_ERROR          -1
+</MACRO>
+<MACRO>
+<NAME>NOT_INSTALL_MSG</NAME>
+#define NOT_INSTALL_MSG       -2
+</MACRO>
+<MACRO>
+<NAME>INSTALL_MSG_CORRUPTED</NAME>
+#define INSTALL_MSG_CORRUPTED -3
+</MACRO>
+<MACRO>
+<NAME>WRONG_SIZE</NAME>
+#define WRONG_SIZE            -4
+</MACRO>
+<MACRO>
+<NAME>SUCCESS</NAME>
+#define SUCCESS                0
+</MACRO>
+<FUNCTION>
+<NAME>save_cert</NAME>
+<RETURNS>int  </RETURNS>
+const char *filename, char *cert, int certlen
+</FUNCTION>
+<FUNCTION>
+<NAME>x509_to_msg</NAME>
+<RETURNS>int  </RETURNS>
+X509 * x509, char *msg, int msglen,des_key_schedule * key1, des_key_schedule * key2
+</FUNCTION>
+<FUNCTION>
+<NAME>load_x509</NAME>
+<RETURNS>X509  *</RETURNS>
+const char *certfilename
+</FUNCTION>
+<FUNCTION>
+<NAME>build_install_msg</NAME>
+<RETURNS>int  </RETURNS>
+BUF_MEM * input, char *output, int outputlen,des_key_schedule * key1, des_key_schedule * key2
+</FUNCTION>
+<FUNCTION>
+<NAME>analyse_install_msg</NAME>
+<RETURNS>int  </RETURNS>
+char *input, int inputlen, char *output,int outpulen, des_key_schedule * key1,des_key_schedule * key2
+</FUNCTION>
+<FUNCTION>
+<NAME>des_generate_2key</NAME>
+<RETURNS>int  </RETURNS>
+des_key_schedule * key1, des_key_schedule * key2,int verify
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_ssl_recv_cert</NAME>
+<RETURNS>int  </RETURNS>
+prelude_io_t *pio, char *out, int outlen,des_key_schedule *skey1, des_key_schedule *skey2
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_ssl_send_cert</NAME>
+<RETURNS>int  </RETURNS>
+prelude_io_t *pio, const char *filename,des_key_schedule *skey1, des_key_schedule *skey2
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_ssl_save_cert</NAME>
+<RETURNS>int  </RETURNS>
+const char *filename, char *cert, int certlen
+</FUNCTION>
+<FUNCTION>
+<NAME>config_get</NAME>
+<RETURNS>const char  *</RETURNS>
+config_t *cfg, const char *section, const char *entry
+</FUNCTION>
+<FUNCTION>
+<NAME>config_set</NAME>
+<RETURNS>int  </RETURNS>
+config_t *cfg, const char *section, const char *entry, const char *val
+</FUNCTION>
+<FUNCTION>
+<NAME>config_open</NAME>
+<RETURNS>config_t  *</RETURNS>
+const char *filename
+</FUNCTION>
+<FUNCTION>
+<NAME>config_close</NAME>
+<RETURNS>int  </RETURNS>
+config_t *cfg
+</FUNCTION>
+<TYPEDEF>
+<NAME>prelude_timer_t</NAME>
+typedef struct {
+        struct list_head list;
+
+        long expire;
+        struct timeval start;
+
+        void *data;
+        void (*function)(void *data);
+} prelude_timer_t;
+</TYPEDEF>
+<MACRO>
+<NAME>timer_expire</NAME>
+#define timer_expire(timer) (timer)->expire
+</MACRO>
+<MACRO>
+<NAME>timer_data</NAME>
+#define timer_data(timer) (timer)->data
+</MACRO>
+<MACRO>
+<NAME>timer_func</NAME>
+#define timer_func(timer) (timer)->function
+</MACRO>
+<MACRO>
+<NAME>timer_set_expire</NAME>
+#define timer_set_expire(timer, x) timer_expire((timer)) = (x)
+</MACRO>
+<MACRO>
+<NAME>timer_set_data</NAME>
+#define timer_set_data(timer, x) timer_data((timer)) = (x)
+</MACRO>
+<MACRO>
+<NAME>timer_set_callback</NAME>
+#define timer_set_callback(timer, x) timer_func((timer)) = (x)
+</MACRO>
+<FUNCTION>
+<NAME>timer_init</NAME>
+<RETURNS>void  </RETURNS>
+prelude_timer_t *timer
+</FUNCTION>
+<FUNCTION>
+<NAME>timer_destroy_current</NAME>
+<RETURNS>void  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>timer_reset_current</NAME>
+<RETURNS>void  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>timer_reset</NAME>
+<RETURNS>void  </RETURNS>
+prelude_timer_t *timer
+</FUNCTION>
+<FUNCTION>
+<NAME>timer_destroy</NAME>
+<RETURNS>void  </RETURNS>
+prelude_timer_t *timer
+</FUNCTION>
+<FUNCTION>
+<NAME>timer_elapsed</NAME>
+<RETURNS>void  </RETURNS>
+prelude_timer_t *timer, struct timeval *tv
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_wake_up_timer</NAME>
+<RETURNS>void  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_log_use_syslog</NAME>
+<RETURNS>void  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_log</NAME>
+<RETURNS>void  </RETURNS>
+int priority, const char *file, const char *function, int line, const char *fmt, ...
+</FUNCTION>
+<MACRO>
+<NAME>log</NAME>
+#define log(priority, args...) \
+        prelude_log(priority, __FILE__, __FUNCTION__, __LINE__, args)
+</MACRO>
+<MACRO>
+<NAME>do_init</NAME>
+#define do_init(func, name) do {                         \
+        log(LOG_INFO, "- %s\n", name);                   \
+        if ( (func) < 0 )                                \
+                exit(1);                                 \
+} while(0);
+</MACRO>
+<MACRO>
+<NAME>do_init_nofail</NAME>
+#define do_init_nofail(func, name) do {                  \
+        log(LOG_INFO, "- %s\n", name);                   \
+        (func);                                          \
+} while(0);
+</MACRO>
+<FUNCTION>
+<NAME>prelude_client_mgr_broadcast</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_mgr_t *cmgr, prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_mgr_broadcast_async</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_mgr_t *cmgr, prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_mgr_get_manager_list</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_mgr_t *mgr,int (*cb)(const char *addr, uint16_t port)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_mgr_new</NAME>
+<RETURNS>prelude_client_mgr_t  *</RETURNS>
+const char *identifier, const char *cfgline
+</FUNCTION>
+<MACRO>
+<NAME>PLUGIN_GENERIC</NAME>
+#define PLUGIN_GENERIC                 \
+        char *name; int namelen;       \
+        char *author; int authorlen;   \
+        char *contact; int contactlen; \
+        char *desc; int desclen
+</MACRO>
+<TYPEDEF>
+<NAME>plugin_generic_t</NAME>
+typedef struct {
+        PLUGIN_GENERIC;
+} plugin_generic_t;
+</TYPEDEF>
+<MACRO>
+<NAME>plugin_name</NAME>
+#define plugin_name(p) (p)->name
+</MACRO>
+<MACRO>
+<NAME>plugin_name_len</NAME>
+#define plugin_name_len(p) (p)->namelen
+</MACRO>
+<MACRO>
+<NAME>plugin_author</NAME>
+#define plugin_author(p) (p)->author
+</MACRO>
+<MACRO>
+<NAME>plugin_author_len</NAME>
+#define plugin_author_len(p) (p)->authorlen
+</MACRO>
+<MACRO>
+<NAME>plugin_contact</NAME>
+#define plugin_contact(p) (p)->contact
+</MACRO>
+<MACRO>
+<NAME>plugin_contact_len</NAME>
+#define plugin_contact_len(p) (p)->contactlen
+</MACRO>
+<MACRO>
+<NAME>plugin_desc</NAME>
+#define plugin_desc(p) (p)->desc
+</MACRO>
+<MACRO>
+<NAME>plugin_desc_len</NAME>
+#define plugin_desc_len(p) (p)->desclen
+</MACRO>
+<MACRO>
+<NAME>plugin_set_name</NAME>
+#define plugin_set_name(p, str) plugin_name(p) = (str); \
+                                plugin_name_len(p) = sizeof((str))
+</MACRO>
+<MACRO>
+<NAME>plugin_set_author</NAME>
+#define plugin_set_author(p, str) plugin_author(p) = (str); \
+                                  plugin_author_len(p) = sizeof((str))
+</MACRO>
+<MACRO>
+<NAME>plugin_set_contact</NAME>
+#define plugin_set_contact(p, str) plugin_contact(p) = (str); \
+                                   plugin_contact_len(p) = sizeof((str))
+</MACRO>
+<MACRO>
+<NAME>plugin_set_desc</NAME>
+#define plugin_set_desc(p, str) plugin_desc(p) = (str); \
+                                plugin_desc_len(p) = sizeof((str))
+</MACRO>
+<FUNCTION>
+<NAME>plugin_register</NAME>
+<RETURNS>int  </RETURNS>
+plugin_generic_t *plugin
+</FUNCTION>
+<FUNCTION>
+<NAME>plugin_request_new_id</NAME>
+<RETURNS>int  </RETURNS>
+void
+</FUNCTION>
+<TYPEDEF>
+<NAME>plugin_option_t</NAME>
+typedef struct {
+        const char *name;
+        int has_arg;
+        int *flag;
+        int val;
+        
+        void (*cb)(const char *optarg);
+        int called;
+} plugin_option_t;
+</TYPEDEF>
+<FUNCTION>
+<NAME>plugin_config_get</NAME>
+<RETURNS>void  </RETURNS>
+plugin_generic_t *plugin, plugin_option_t *cfg, const char *conffile
+</FUNCTION>
+<MACRO>
+<NAME>LIST_H</NAME>
+#define LIST_H
+</MACRO>
+<MACRO>
+<NAME>LIST_HEAD_INIT</NAME>
+#define LIST_HEAD_INIT(name) { &(name), &(name) }
+</MACRO>
+<MACRO>
+<NAME>LIST_HEAD</NAME>
+#define LIST_HEAD(name) \
+	struct list_head name = LIST_HEAD_INIT(name)
+</MACRO>
+<MACRO>
+<NAME>INIT_LIST_HEAD</NAME>
+#define INIT_LIST_HEAD(ptr) do { \
+	(ptr)->next = (ptr); (ptr)->prev = (ptr); \
+} while (0)
+</MACRO>
+<MACRO>
+<NAME>list_entry</NAME>
+#define list_entry(ptr, type, member) \
+	((type *)((void *)(ptr) - (void *)(&((type *)0)->member)))
+</MACRO>
+<MACRO>
+<NAME>list_for_each</NAME>
+#define list_for_each(pos, head) \
+	for (pos = (head)->next; pos != (head); pos = pos->next)
+</MACRO>
+<FUNCTION>
+<NAME>prelude_sensor_send_alert</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_sensor_init</NAME>
+<RETURNS>int  </RETURNS>
+const char *filename, int argc, char **argv
+</FUNCTION>
+<MACRO>
+<NAME>SSL_GENCRYPTO_H</NAME>
+#define SSL_GENCRYPTO_H
+</MACRO>
+<MACRO>
+<NAME>DEFAULT_KEY_LENGTH</NAME>
+#define DEFAULT_KEY_LENGTH	512
+</MACRO>
+<FUNCTION>
+<NAME>prelude_ssl_gen_crypto</NAME>
+<RETURNS>X509  *</RETURNS>
+int keysize, int expire, const char *keyout, int crypt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_ssl_ask_settings</NAME>
+<RETURNS>void  </RETURNS>
+int *keysize, int *expire, int *store_crypted
+</FUNCTION>
+<MACRO>
+<NAME>pthread_create</NAME>
+  #define pthread_create prelude_thread_create
+</MACRO>
+<FUNCTION>
+<NAME>prelude_thread_create</NAME>
+<RETURNS>int  </RETURNS>
+pthread_t *thread, pthread_attr_t *attr,void *(start_routine)(void *), void *arg
+</FUNCTION>
+<MACRO>
+<NAME>CLI_HOOK</NAME>
+#define CLI_HOOK 0x1 /* Option to be hooked to command line */
+</MACRO>
+<MACRO>
+<NAME>CFG_HOOK</NAME>
+#define CFG_HOOK 0x2 /* Option to be hooked to config file  */
+</MACRO>
+<MACRO>
+<NAME>prelude_option_success</NAME>
+#define prelude_option_success 0
+</MACRO>
+<MACRO>
+<NAME>prelude_option_end</NAME>
+#define prelude_option_end 1
+</MACRO>
+<MACRO>
+<NAME>prelude_option_error</NAME>
+#define prelude_option_error -1
+</MACRO>
+<ENUM>
+<NAME>prelude_option_argument_t</NAME>
+typedef enum {
+        required_argument,
+        optionnal_argument,
+        no_argument,
+} prelude_option_argument_t;
+</ENUM>
+<FUNCTION>
+<NAME>prelude_option_new</NAME>
+<RETURNS>prelude_optlist_t  *</RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_add</NAME>
+<RETURNS>prelude_option_t  *</RETURNS>
+prelude_optlist_t *optlist, int flags,char shortopt, const char *longopt, const char *desc,prelude_option_argument_t has_arg, int (*set)(const char *optarg)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_wide_add</NAME>
+<RETURNS>prelude_option_t  *</RETURNS>
+prelude_optlist_t *optlist, int flags,char shortopt, const char *longopt, const char *desc,prelude_option_argument_t has_arg, int (*set)(const char *optarg),int (*get)(char *buf, size_t size)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_parse_arguments</NAME>
+<RETURNS>int  </RETURNS>
+prelude_optlist_t *optlist,const char *filename, int argc, char **argv
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_print</NAME>
+<RETURNS>void  </RETURNS>
+prelude_optlist_t *optlist, int flags
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_destroy</NAME>
+<RETURNS>void  </RETURNS>
+prelude_optlist_t *optlist
+</FUNCTION>
+<MACRO>
+<NAME>IDMEF_VERSION</NAME>
+#define IDMEF_VERSION "0.5"
+</MACRO>
+<ENUM>
+<NAME>idmef_additional_data_type_t</NAME>
+typedef enum {
+        boolean   = 0,
+        byte      = 1,
+        character = 2,
+        date_time = 3,
+        integer   = 4,
+        ntpstamps = 5,
+        portlist  = 6,
+        real      = 7,
+        string    = 8,
+        xml       = 9,
+} idmef_additional_data_type_t;
+</ENUM>
+<TYPEDEF>
+<NAME>idmef_additional_data_t</NAME>
+typedef struct {
+        struct list_head list;
+        idmef_additional_data_type_t type;
+        const char *meaning;
+        const char *data;
+} idmef_additional_data_t;
+</TYPEDEF>
+<ENUM>
+<NAME>idmef_classification_origin_t</NAME>
+typedef enum {
+        origin_unknown  = 0,
+        bugtraqid       = 1,
+        cve             = 2,
+        vendor_specific = 3,
+} idmef_classification_origin_t;
+</ENUM>
+<TYPEDEF>
+<NAME>idmef_classification_t</NAME>
+typedef struct {
+        struct list_head list;
+        idmef_classification_origin_t origin;
+        const char *name;
+        const char *url;
+} idmef_classification_t;
+</TYPEDEF>
+<ENUM>
+<NAME>idmef_userid_type_t</NAME>
+typedef enum {
+        current_user  = 0,
+        original_user = 1,
+        target_user   = 2,
+        user_privs    = 3,
+        current_group = 4,
+        group_privs   = 5,
+} idmef_userid_type_t;
+</ENUM>
+<TYPEDEF>
+<NAME>idmef_userid_t</NAME>
+typedef struct {
+        struct list_head list;
+        
+        const char *ident;
+        idmef_userid_type_t type;
+        const char *name;
+        const char *number;
+} idmef_userid_t;
+</TYPEDEF>
+<ENUM>
+<NAME>idmef_user_category_t</NAME>
+typedef enum {
+        cat_unknown  = 0,
+        application  = 1,
+        os_device    = 2,
+} idmef_user_category_t;
+</ENUM>
+<TYPEDEF>
+<NAME>idmef_user_t</NAME>
+typedef struct {
+        const char *ident;
+        idmef_user_category_t category;
+        struct list_head userid_list;
+} idmef_user_t;
+</TYPEDEF>
+<ENUM>
+<NAME>idmef_address_category_t</NAME>
+typedef enum {
+        addr_unknown  = 0,
+        atm           = 1,
+        e_mail        = 2,
+        lotus_notes   = 3,
+        mac           = 4,
+        sna           = 5,
+        vm            = 6,
+        ipv4_addr     = 7,
+        ipv4_addr_hex = 8,
+        ipv4_net      = 9,
+        ipv4_net_mask = 10,
+        ipv6_addr     = 11,
+        ipv6_addr_hex = 12,
+        ipv6_net      = 13,
+        ipv6_net_mask = 14,
+} idmef_address_category_t;
+</ENUM>
+<TYPEDEF>
+<NAME>idmef_address_t</NAME>
+typedef struct {
+        struct list_head list;
+        
+        const char *ident;
+        idmef_address_category_t category;
+        const char *vlan_name;
+        int vlan_num;
+        const char *address;
+        const char *netmask;
+} idmef_address_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>idmef_process_t</NAME>
+typedef struct {
+        const char *ident;
+        const char *name;
+        uint32_t pid;
+        const char *path;
+        const char **arg;
+        const char **env;
+} idmef_process_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>idmef_webservice_t</NAME>
+typedef struct {
+        const char *url;
+        const char *cgi;
+        const char *method;
+        const char *arg;
+} idmef_webservice_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>idmef_snmpservice_t</NAME>
+typedef struct {
+        const char *oid;
+        const char *community;
+        const char *command;
+} idmef_snmpservice_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>specific</NAME>
+typedef struct {
+        const char *ident;
+        const char *name;
+        uint16_t port;
+        const char *portlist;
+        const char *protocol;
+
+        union {
+                idmef_webservice_t *web;
+                idmef_snmpservice_t *snmp;
+        } specific;
+        
+</TYPEDEF>
+<ENUM>
+<NAME>idmef_node_category_t</NAME>
+typedef enum {
+        node_unknown = 0,
+        ads          = 1,
+        afs          = 2,
+        coda         = 3,
+        dfs          = 4,
+        dns          = 5,
+        kerberos     = 6,
+        nds          = 7,
+        nis          = 8,
+        nisplus      = 9,
+        nt           = 10,
+        wfw          = 11,
+} idmef_node_category_t;
+</ENUM>
+<TYPEDEF>
+<NAME>idmef_node_t</NAME>
+typedef struct {
+        const char *ident;
+        idmef_node_category_t category;
+        const char *location;
+        const char *name;
+        struct list_head address_list;
+} idmef_node_t;
+</TYPEDEF>
+<ENUM>
+<NAME>idmef_spoofed_t</NAME>
+typedef enum {
+        unknown = 0,
+        yes     = 1,
+        no      = 2,
+} idmef_spoofed_t;
+</ENUM>
+<TYPEDEF>
+<NAME>idmef_source_t</NAME>
+typedef struct {
+        struct list_head list;
+        
+        const char *ident;
+        idmef_spoofed_t spoofed;
+        const char *interface;
+
+        idmef_node_t node;
+        idmef_user_t user;
+        idmef_process_t process;
+        idmef_service_t service;
+        
+} idmef_source_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>idmef_target_t</NAME>
+typedef struct {
+        struct list_head list;
+        
+        const char *ident;
+        idmef_spoofed_t decoy;
+        const char *interface;
+
+        idmef_node_t node;
+        idmef_user_t user;
+        idmef_process_t process;
+        idmef_service_t service;
+        
+} idmef_target_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>idmef_analyzer_t</NAME>
+typedef struct {
+        const char *analyzerid;
+        const char *manufacturer;
+        const char *model;
+        const char *version;
+        const char *class;
+
+        idmef_node_t node;
+        idmef_process_t process;
+} idmef_analyzer_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>idmef_time_t</NAME>
+typedef struct {
+        const char *ntpstamp;
+        const char *time;
+} idmef_time_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>idmef_tool_alert_t</NAME>
+typedef struct {
+        const char *name;
+        const char *command;
+        const char **analyzerid;
+} idmef_tool_alert_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>idmef_correlation_alert_t</NAME>
+typedef struct {
+        const char *name;
+        const char **alertident;
+} idmef_correlation_alert_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>idmef_overflow_alert_t</NAME>
+typedef struct {
+        const char *program;
+        uint32_t size;
+        const unsigned char *buffer;
+} idmef_overflow_alert_t;
+</TYPEDEF>
+<ENUM>
+<NAME>idmef_alert_type_t</NAME>
+typedef enum {
+        idmef_tool_alert        = 0,
+        idmef_correlation_alert = 1,
+        idmef_overflow_alert    = 2,
+} idmef_alert_type_t;
+</ENUM>
+<TYPEDEF>
+<NAME>detail</NAME>
+typedef struct {
+        const char *ident;
+        const char *impact;
+        const char *action;
+    
+        idmef_analyzer_t analyzer;
+    
+        idmef_time_t create_time;
+        idmef_time_t detect_time;
+        idmef_time_t analyzer_time;
+
+        struct list_head source_list;
+        struct list_head target_list;
+        struct list_head classification_list;
+        struct list_head additional_data_list;
+
+        idmef_alert_type_t type;
+        union {
+                idmef_tool_alert_t *tool_alert;
+                idmef_correlation_alert_t *correlation_alert;
+                idmef_overflow_alert_t *overflow_alert;
+        } detail;
+        
+</TYPEDEF>
+<TYPEDEF>
+<NAME>idmef_heartbeat_t</NAME>
+typedef struct {
+        const char *ident;
+
+        idmef_analyzer_t analyzer;
+        idmef_time_t analyzer_time;
+
+        struct list_head additional_data_list;
+} idmef_heartbeat_t;
+</TYPEDEF>
+<ENUM>
+<NAME>idmef_message_type_t</NAME>
+typedef enum {
+        idmef_alert_message     = 0,
+        idmef_heartbeat_message = 1,
+} idmef_message_type_t;
+</ENUM>
+<TYPEDEF>
+<NAME>message</NAME>
+typedef struct {
+        const char *version;
+
+        idmef_message_type_t type;
+        union {
+                idmef_alert_t *alert;
+                idmef_heartbeat_t *heartbeat;
+        } message;
+        
+</TYPEDEF>
+<MACRO>
+<NAME>PRELUDE_MSG_PRIORITY_HIGH</NAME>
+#define PRELUDE_MSG_PRIORITY_HIGH 0
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_PRIORITY_MID</NAME>
+#define PRELUDE_MSG_PRIORITY_MID  1
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_PRIORITY_LOW</NAME>
+#define PRELUDE_MSG_PRIORITY_LOW  2
+</MACRO>
+<FUNCTION>
+<NAME>prelude_msg_read</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msg_t **msg, prelude_io_t *pio
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_forward</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_get</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_new</NAME>
+<RETURNS>prelude_msg_t  *</RETURNS>
+size_t msgcount, size_t msglen, uint8_t tag, uint8_t priority
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_set</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_write</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msg_t *msg, prelude_io_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_get_tag</NAME>
+<RETURNS>uint8_t  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_get_version</NAME>
+<RETURNS>uint8_t  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_get_priority</NAME>
+<RETURNS>uint8_t  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_get_datalen</NAME>
+<RETURNS>uint32_t  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_destroy</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<TYPEDEF>
+<NAME>bm_string_t</NAME>
+typedef struct {
+
+	char *pattern;
+	int length;
+
+	int *bad_character_shift;
+	int *good_suffix_shift;
+
+} bm_string_t;
+</TYPEDEF>
+<FUNCTION>
+<NAME>BoyerMoore_Init</NAME>
+<RETURNS>bm_string_t  *</RETURNS>
+ char *y, int n
+</FUNCTION>
+<FUNCTION>
+<NAME>BoyerMoore_MakeCaseInsensitive</NAME>
+<RETURNS>void  </RETURNS>
+ bm_string_t *string
+</FUNCTION>
+<FUNCTION>
+<NAME>BoyerMoore_StringMatching</NAME>
+<RETURNS>int  </RETURNS>
+char *y, int n, char *x, int m,int bm_bc[], int bm_gs[]
+</FUNCTION>
+<FUNCTION>
+<NAME>BoyerMoore_CI_StringMatching</NAME>
+<RETURNS>int  </RETURNS>
+char *y, int n, char *x, int m,int bm_bc[], int bm_gs[]
+</FUNCTION>
+<FUNCTION>
+<NAME>BoyerMoore_GoodSuffixShift</NAME>
+<RETURNS>void  </RETURNS>
+char *x, int m, int bm_gs[]
+</FUNCTION>
+<FUNCTION>
+<NAME>BoyerMoore_BadCharacterShift</NAME>
+<RETURNS>void  </RETURNS>
+char *x, int m, int bm_bc[]
+</FUNCTION>
+<MACRO>
+<NAME>MSG_END_OF_TAG</NAME>
+#define MSG_END_OF_TAG 254
+</MACRO>
+<MACRO>
+<NAME>MSG_ALERT_TAG</NAME>
+#define MSG_ALERT_TAG 0
+</MACRO>
+<MACRO>
+<NAME>MSG_ALERT_IDENT</NAME>
+#define MSG_ALERT_IDENT 1
+</MACRO>
+<MACRO>
+<NAME>MSG_ALERT_ACTION</NAME>
+#define MSG_ALERT_ACTION 2
+</MACRO>
+<MACRO>
+<NAME>MSG_ALERT_IMPACT</NAME>
+#define MSG_ALERT_IMPACT 3
+</MACRO>
+<MACRO>
+<NAME>MSG_ALERT_CREATE_TIME</NAME>
+#define MSG_ALERT_CREATE_TIME 4
+</MACRO>
+<MACRO>
+<NAME>MSG_ALERT_DETECT_TIME</NAME>
+#define MSG_ALERT_DETECT_TIME 5
+</MACRO>
+<MACRO>
+<NAME>MSG_ALERT_ANALYZER_TIME</NAME>
+#define MSG_ALERT_ANALYZER_TIME 6
+</MACRO>
+<MACRO>
+<NAME>MSG_SOURCE_TAG</NAME>
+#define MSG_SOURCE_TAG 7
+</MACRO>
+<MACRO>
+<NAME>MSG_SOURCE_IDENT</NAME>
+#define MSG_SOURCE_IDENT 8
+</MACRO>
+<MACRO>
+<NAME>MSG_SOURCE_SPOOFED</NAME>
+#define MSG_SOURCE_SPOOFED 9
+</MACRO>
+<MACRO>
+<NAME>MSG_SOURCE_INTERFACE</NAME>
+#define MSG_SOURCE_INTERFACE 10
+</MACRO>
+<MACRO>
+<NAME>MSG_NODE_TAG</NAME>
+#define MSG_NODE_TAG 11
+</MACRO>
+<MACRO>
+<NAME>MSG_NODE_IDENT</NAME>
+#define MSG_NODE_IDENT 12
+</MACRO>
+<MACRO>
+<NAME>MSG_NODE_CATEGORY</NAME>
+#define MSG_NODE_CATEGORY 13
+</MACRO>
+<MACRO>
+<NAME>MSG_NODE_LOCATION</NAME>
+#define MSG_NODE_LOCATION 14
+</MACRO>
+<MACRO>
+<NAME>MSG_NODE_NAME</NAME>
+#define MSG_NODE_NAME 15
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDRESS_TAG</NAME>
+#define MSG_ADDRESS_TAG 16
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDRESS_IDENT</NAME>
+#define MSG_ADDRESS_IDENT 17
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDRESS_CATEGORY</NAME>
+#define MSG_ADDRESS_CATEGORY 18
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDRESS_VLAN_NAME</NAME>
+#define MSG_ADDRESS_VLAN_NAME 19
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDRESS_VLAN_NUM</NAME>
+#define MSG_ADDRESS_VLAN_NUM 20
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDRESS_ADDRESS</NAME>
+#define MSG_ADDRESS_ADDRESS 21
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDRESS_NETMASK</NAME>
+#define MSG_ADDRESS_NETMASK 22
+</MACRO>
+<MACRO>
+<NAME>MSG_USER_TAG</NAME>
+#define MSG_USER_TAG 23
+</MACRO>
+<MACRO>
+<NAME>MSG_USER_IDENT</NAME>
+#define MSG_USER_IDENT 24
+</MACRO>
+<MACRO>
+<NAME>MSG_USER_CATEGORY</NAME>
+#define MSG_USER_CATEGORY 25
+</MACRO>
+<MACRO>
+<NAME>MSG_USERID_TAG</NAME>
+#define MSG_USERID_TAG 26
+</MACRO>
+<MACRO>
+<NAME>MSG_USERID_IDENT</NAME>
+#define MSG_USERID_IDENT 27
+</MACRO>
+<MACRO>
+<NAME>MSG_USERID_TYPE</NAME>
+#define MSG_USERID_TYPE 28
+</MACRO>
+<MACRO>
+<NAME>MSG_USERID_NAME</NAME>
+#define MSG_USERID_NAME 29
+</MACRO>
+<MACRO>
+<NAME>MSG_USERID_NUMBER</NAME>
+#define MSG_USERID_NUMBER 30
+</MACRO>
+<MACRO>
+<NAME>MSG_PROCESS_TAG</NAME>
+#define MSG_PROCESS_TAG 31
+</MACRO>
+<MACRO>
+<NAME>MSG_PROCESS_IDENT</NAME>
+#define MSG_PROCESS_IDENT 32
+</MACRO>
+<MACRO>
+<NAME>MSG_PROCESS_NAME</NAME>
+#define MSG_PROCESS_NAME 33
+</MACRO>
+<MACRO>
+<NAME>MSG_PROCESS_PID</NAME>
+#define MSG_PROCESS_PID 34
+</MACRO>
+<MACRO>
+<NAME>MSG_PROCESS_PATH</NAME>
+#define MSG_PROCESS_PATH 35
+</MACRO>
+<MACRO>
+<NAME>MSG_PROCESS_ARG</NAME>
+#define MSG_PROCESS_ARG 36
+</MACRO>
+<MACRO>
+<NAME>MSG_PROCESS_ENV</NAME>
+#define MSG_PROCESS_ENV 37
+</MACRO>
+<MACRO>
+<NAME>MSG_SERVICE_TAG</NAME>
+#define MSG_SERVICE_TAG 38
+</MACRO>
+<MACRO>
+<NAME>MSG_SERVICE_IDENT</NAME>
+#define MSG_SERVICE_IDENT 39
+</MACRO>
+<MACRO>
+<NAME>MSG_SERVICE_NAME</NAME>
+#define MSG_SERVICE_NAME 40
+</MACRO>
+<MACRO>
+<NAME>MSG_SERVICE_PORT</NAME>
+#define MSG_SERVICE_PORT 41
+</MACRO>
+<MACRO>
+<NAME>MSG_SERVICE_PORTLIST</NAME>
+#define MSG_SERVICE_PORTLIST 42
+</MACRO>
+<MACRO>
+<NAME>MSG_SERVICE_PROTOCOL</NAME>
+#define MSG_SERVICE_PROTOCOL 43
+</MACRO>
+<MACRO>
+<NAME>MSG_WEBSERVICE_TAG</NAME>
+#define MSG_WEBSERVICE_TAG 44
+</MACRO>
+<MACRO>
+<NAME>MSG_WEBSERVICE_URL</NAME>
+#define MSG_WEBSERVICE_URL 45
+</MACRO>
+<MACRO>
+<NAME>MSG_WEBSERVICE_CGI</NAME>
+#define MSG_WEBSERVICE_CGI 46
+</MACRO>
+<MACRO>
+<NAME>MSG_WEBSERVICE_METHOD</NAME>
+#define MSG_WEBSERVICE_METHOD 47
+</MACRO>
+<MACRO>
+<NAME>MSG_WEBSERVICE_ARG</NAME>
+#define MSG_WEBSERVICE_ARG 48
+</MACRO>
+<MACRO>
+<NAME>MSG_SNMPSERVICE_TAG</NAME>
+#define MSG_SNMPSERVICE_TAG 49
+</MACRO>
+<MACRO>
+<NAME>MSG_SNMPSERVICE_OID</NAME>
+#define MSG_SNMPSERVICE_OID 50
+</MACRO>
+<MACRO>
+<NAME>MSG_SNMPSERVICE_COMMUNITY</NAME>
+#define MSG_SNMPSERVICE_COMMUNITY 51
+</MACRO>
+<MACRO>
+<NAME>MSG_SNMPSERVICE_COMMAND</NAME>
+#define MSG_SNMPSERVICE_COMMAND 52
+</MACRO>
+<MACRO>
+<NAME>MSG_CLASSIFICATION_TAG</NAME>
+#define MSG_CLASSIFICATION_TAG 53
+</MACRO>
+<MACRO>
+<NAME>MSG_CLASSIFICATION_ORIGIN</NAME>
+#define MSG_CLASSIFICATION_ORIGIN 54
+</MACRO>
+<MACRO>
+<NAME>MSG_CLASSIFICATION_NAME</NAME>
+#define MSG_CLASSIFICATION_NAME 55
+</MACRO>
+<MACRO>
+<NAME>MSG_CLASSIFICATION_URL</NAME>
+#define MSG_CLASSIFICATION_URL 56
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDITIONALDATA_TAG</NAME>
+#define MSG_ADDITIONALDATA_TAG 57
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDITIONALDATA_TYPE</NAME>
+#define MSG_ADDITIONALDATA_TYPE 58
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDITIONALDATA_MEANING</NAME>
+#define MSG_ADDITIONALDATA_MEANING 59
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDITIONALDATA_DATA</NAME>
+#define MSG_ADDITIONALDATA_DATA 60
+</MACRO>
+<MACRO>
+<NAME>MSG_ANALYZER_TAG</NAME>
+#define MSG_ANALYZER_TAG 61
+</MACRO>
+<MACRO>
+<NAME>MSG_ANALYZER_ID</NAME>
+#define MSG_ANALYZER_ID  62
+</MACRO>
+<MACRO>
+<NAME>MSG_ANALYZER_MANUFACTURER</NAME>
+#define MSG_ANALYZER_MANUFACTURER 63
+</MACRO>
+<MACRO>
+<NAME>MSG_ANALYZER_MODEL</NAME>
+#define MSG_ANALYZER_MODEL 64
+</MACRO>
+<MACRO>
+<NAME>MSG_ANALYZER_VERSION</NAME>
+#define MSG_ANALYZER_VERSION 65
+</MACRO>
+<MACRO>
+<NAME>MSG_ANALYZER_CLASS</NAME>
+#define MSG_ANALYZER_CLASS 66
+</MACRO>
+<MACRO>
+<NAME>MSG_TARGET_TAG</NAME>
+#define MSG_TARGET_TAG 67
+</MACRO>
+<MACRO>
+<NAME>MSG_TARGET_IDENT</NAME>
+#define MSG_TARGET_IDENT 68
+</MACRO>
+<MACRO>
+<NAME>MSG_TARGET_DECOY</NAME>
+#define MSG_TARGET_DECOY 69
+</MACRO>
+<MACRO>
+<NAME>MSG_TARGET_INTERFACE</NAME>
+#define MSG_TARGET_INTERFACE 70
+</MACRO>
+<MACRO>
+<NAME>MSG_OWN_FORMAT</NAME>
+#define MSG_OWN_FORMAT 71
+</MACRO>
+<MACRO>
+<NAME>MSG_FORMAT_PRELUDE_NIDS</NAME>
+#define MSG_FORMAT_PRELUDE_NIDS 0
+</MACRO>
+<FUNCTION>
+<NAME>daemon_start</NAME>
+<RETURNS>int  </RETURNS>
+const char *lockfile
+</FUNCTION>

@@ -1,0 +1,53 @@
+<!-- ##### SECTION Title ##### -->
+prelude-client-mgr
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION prelude_client_mgr_broadcast ##### -->
+<para>
+
+</para>
+
+@cmgr: 
+@msg: 
+
+
+<!-- ##### FUNCTION prelude_client_mgr_broadcast_async ##### -->
+<para>
+
+</para>
+
+@cmgr: 
+@msg: 
+
+
+<!-- ##### FUNCTION prelude_client_mgr_get_manager_list ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@cb: 
+
+
+<!-- ##### FUNCTION prelude_client_mgr_new ##### -->
+<para>
+
+</para>
+
+@identifier: 
+@cfgline: 
+@Returns: 
+
+

@@ -1,0 +1,162 @@
+<!-- ##### SECTION Title ##### -->
+plugin-common
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO PLUGIN_GENERIC ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### TYPEDEF plugin_generic_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO plugin_name ##### -->
+<para>
+
+</para>
+
+@p: 
+
+
+<!-- ##### MACRO plugin_name_len ##### -->
+<para>
+
+</para>
+
+@p: 
+
+
+<!-- ##### MACRO plugin_author ##### -->
+<para>
+
+</para>
+
+@p: 
+
+
+<!-- ##### MACRO plugin_author_len ##### -->
+<para>
+
+</para>
+
+@p: 
+
+
+<!-- ##### MACRO plugin_contact ##### -->
+<para>
+
+</para>
+
+@p: 
+
+
+<!-- ##### MACRO plugin_contact_len ##### -->
+<para>
+
+</para>
+
+@p: 
+
+
+<!-- ##### MACRO plugin_desc ##### -->
+<para>
+
+</para>
+
+@p: 
+
+
+<!-- ##### MACRO plugin_desc_len ##### -->
+<para>
+
+</para>
+
+@p: 
+
+
+<!-- ##### MACRO plugin_set_name ##### -->
+<para>
+
+</para>
+
+@p: 
+@str: 
+
+
+<!-- ##### MACRO plugin_set_author ##### -->
+<para>
+
+</para>
+
+@p: 
+@str: 
+
+
+<!-- ##### MACRO plugin_set_contact ##### -->
+<para>
+
+</para>
+
+@p: 
+@str: 
+
+
+<!-- ##### MACRO plugin_set_desc ##### -->
+<para>
+
+</para>
+
+@p: 
+@str: 
+
+
+<!-- ##### FUNCTION plugin_register ##### -->
+<para>
+
+</para>
+
+@plugin: 
+@Returns: 
+
+
+<!-- ##### FUNCTION plugin_request_new_id ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### TYPEDEF plugin_option_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION plugin_config_get ##### -->
+<para>
+
+</para>
+
+@plugin: 
+@cfg: 
+@conffile: 
+
+

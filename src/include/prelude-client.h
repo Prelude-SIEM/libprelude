@@ -34,5 +34,7 @@ int prelude_client_connect(prelude_client_t *client);
 
 ssize_t prelude_client_forward(prelude_client_t *client, prelude_io_t *src, size_t count);
 
-void prelude_client_get_address(prelude_client_t *client, char **addr, uint16_t *port);
+int prelude_client_get_inet_address(prelude_client_t *client,
+                                    struct sockaddr_in *saddr, struct sockaddr_in *daddr);
+
 

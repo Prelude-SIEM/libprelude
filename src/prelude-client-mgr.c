@@ -199,6 +199,10 @@ static void client_timer_expire(void *data)
                  * is dead, emmit backuped report.
                  */
                 timer_destroy(&client->timer);
+
+                
+                    //prelude_client_get_connection_infos(client->client);
+                
                 if ( --client->parent->dead == 0 ) 
                         flush_backup_if_needed(client->parent);
         }
@@ -507,6 +511,44 @@ void prelude_client_mgr_broadcast_async(prelude_client_mgr_t *cmgr, prelude_msg_
         prelude_async_set_callback((prelude_async_object_t *)msg, &broadcast_async_cb);
         prelude_async_set_data((prelude_async_object_t *)msg, cmgr);
         prelude_async_add((prelude_async_object_t *)msg);
+}
+
+
+
+
+/**
+ * prelude_client_mgr_get_manager_list:
+ * @mgr: Pointer on a #prelude_client_mgr_t object.
+ * @cb: callback to call for each manager address.
+ *
+ * This function will call the provided callback @cb,
+ * with every Manager address / port pair contained in the Manager list.
+ */
+void prelude_client_mgr_get_manager_list(prelude_client_mgr_t *mgr,
+                                         int (*cb)(const char *addr, uint16_t port)) 
+{
+        int ret;
+        char *addr;
+        uint16_t port;
+        client_t *client;
+        client_list_t *clist;
+        struct list_head *tmp, *tmp2;
+        
+
+        list_for_each(tmp, &mgr->or_list) {
+                clist = list_entry(tmp, client_list_t, list);
+                
+                list_for_each(tmp2, &clist->client_list) {
+
+                        client = list_entry(tmp, client_t, list);
+
+                        prelude_client_get_address(client->client, &addr, &port);
+
+                        ret = cb(addr, port);
+                        if ( ret < 0 )
+                                return;
+                }            
+        }
 }
 
 

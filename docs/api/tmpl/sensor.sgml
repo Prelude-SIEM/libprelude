@@ -1,0 +1,35 @@
+<!-- ##### SECTION Title ##### -->
+sensor
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION prelude_sensor_send_alert ##### -->
+<para>
+
+</para>
+
+@msg: 
+
+
+<!-- ##### FUNCTION prelude_sensor_init ##### -->
+<para>
+
+</para>
+
+@filename: 
+@argc: 
+@argv: 
+@Returns: 
+
+

@@ -1,0 +1,63 @@
+<!-- ##### SECTION Title ##### -->
+prelude-async
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### USER_FUNCTION prelude_async_func_t ##### -->
+<para>
+
+</para>
+
+@object: 
+@data: 
+
+
+<!-- ##### MACRO PRELUDE_ASYNC_OBJECT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### TYPEDEF prelude_async_object_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION prelude_async_init ##### -->
+<para>
+
+</para>
+
+@use_thread: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_async_add ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### FUNCTION prelude_async_del ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+

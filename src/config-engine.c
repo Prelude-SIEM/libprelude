@@ -476,8 +476,8 @@ static const char *get_variable_content(config_t *cfg, const char *variable)
  * @section: Section to gather the entry from.
  * @entry: Entry to gather the value from.
  *
- * Get value for the entry 'entry', in the optionnal section
- * specified by 'section', in the config file represented in the 'cfg'
+ * Get value associated with @entry, in the optionnaly soecified
+ * @section, in the configuration file represented by the @cfg
  * abstract data type.
  *
  * If the value gathered start with a '$', which mean it is

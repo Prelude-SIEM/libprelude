@@ -1,0 +1,534 @@
+<!-- ##### SECTION Title ##### -->
+idmef-message-id
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO MSG_END_OF_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ALERT_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ALERT_IDENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ALERT_ACTION ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ALERT_IMPACT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ALERT_CREATE_TIME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ALERT_DETECT_TIME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ALERT_ANALYZER_TIME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SOURCE_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SOURCE_IDENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SOURCE_SPOOFED ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SOURCE_INTERFACE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_NODE_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_NODE_IDENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_NODE_CATEGORY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_NODE_LOCATION ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_NODE_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ADDRESS_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ADDRESS_IDENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ADDRESS_CATEGORY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ADDRESS_VLAN_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ADDRESS_VLAN_NUM ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ADDRESS_ADDRESS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ADDRESS_NETMASK ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_USER_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_USER_IDENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_USER_CATEGORY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_USERID_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_USERID_IDENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_USERID_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_USERID_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_USERID_NUMBER ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_PROCESS_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_PROCESS_IDENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_PROCESS_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_PROCESS_PID ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_PROCESS_PATH ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_PROCESS_ARG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_PROCESS_ENV ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SERVICE_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SERVICE_IDENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SERVICE_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SERVICE_PORT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SERVICE_PORTLIST ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SERVICE_PROTOCOL ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_WEBSERVICE_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_WEBSERVICE_URL ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_WEBSERVICE_CGI ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_WEBSERVICE_METHOD ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_WEBSERVICE_ARG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SNMPSERVICE_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SNMPSERVICE_OID ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SNMPSERVICE_COMMUNITY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SNMPSERVICE_COMMAND ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_CLASSIFICATION_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_CLASSIFICATION_ORIGIN ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_CLASSIFICATION_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_CLASSIFICATION_URL ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ADDITIONALDATA_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ADDITIONALDATA_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ADDITIONALDATA_MEANING ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ADDITIONALDATA_DATA ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ANALYZER_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ANALYZER_ID ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ANALYZER_MANUFACTURER ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ANALYZER_MODEL ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ANALYZER_VERSION ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ANALYZER_CLASS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_TARGET_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_TARGET_IDENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_TARGET_DECOY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_TARGET_INTERFACE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_OWN_FORMAT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_FORMAT_PRELUDE_NIDS ##### -->
+<para>
+
+</para>
+
+
+

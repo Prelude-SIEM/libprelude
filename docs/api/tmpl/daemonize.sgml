@@ -1,0 +1,25 @@
+<!-- ##### SECTION Title ##### -->
+daemonize
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION daemon_start ##### -->
+<para>
+
+</para>
+
+@lockfile: 
+@Returns: 
+
+

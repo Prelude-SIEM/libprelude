@@ -1,0 +1,299 @@
+<!-- ##### SECTION ./tmpl/acconfig.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/acconfig.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/acconfig.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/acconfig.sgml:Title ##### -->
+acconfig
+
+
+<!-- ##### SECTION ./tmpl/config.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/config.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/config.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/config.sgml:Title ##### -->
+config
+
+
+<!-- ##### SECTION ./tmpl/getopt_long.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/getopt_long.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/getopt_long.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/getopt_long.sgml:Title ##### -->
+getopt_long
+
+
+<!-- ##### SECTION ./tmpl/libmissing.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/libmissing.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/libmissing.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/libmissing.sgml:Title ##### -->
+libmissing
+
+
+<!-- ##### SECTION ./tmpl/ssl-register.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/ssl-register.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/ssl-register.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/ssl-register.sgml:Title ##### -->
+ssl-register
+
+
+<!-- ##### MACRO HAVE_CRYPT ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_DIRENT_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_DLFCN_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_GETOPT_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_GETOPT_LONG ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_GETTIMEOFDAY ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_INTTYPES_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_MEMORY_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_SELECT ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_SOCKET ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_SSL ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_STDINT_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_STDLIB_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_STRDUP ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_STRERROR ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_STRINGS_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_STRING_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_STRSTR ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_SYS_STAT_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_SYS_TYPES_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_UNISTD_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_VPRINTF ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PACKAGE ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO RETSIGTYPE ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO STDC_HEADERS ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TIME_WITH_SYS_TIME ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO VERSION ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION getopt_long ##### -->
+<para>
+
+</para>
+
+@argc: 
+@argv: 
+@optstring: 
+@longopts: 
+@longindex: 
+@Returns: 
+
+<!-- ##### MACRO no_argument ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO optional_argument ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO required_argument ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION ssl_add_certificate ##### -->
+<para>
+
+</para>
+
+@Returns: 
+

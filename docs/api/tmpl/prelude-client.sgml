@@ -1,0 +1,75 @@
+<!-- ##### SECTION Title ##### -->
+prelude-client
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION prelude_client_destroy ##### -->
+<para>
+
+</para>
+
+@client: 
+
+
+<!-- ##### FUNCTION prelude_client_new ##### -->
+<para>
+
+</para>
+
+@addr: 
+@port: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_send_msg ##### -->
+<para>
+
+</para>
+
+@client: 
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_connect ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_forward ##### -->
+<para>
+
+</para>
+
+@client: 
+@src: 
+@count: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_get_inet_address ##### -->
+<para>
+
+</para>
+
+@client: 
+@saddr: 
+@daddr: 
+@Returns: 
+
+
