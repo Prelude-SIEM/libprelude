@@ -39,5 +39,6 @@
 7	PRELUDE_ERROR_SOURCE_CONNECTION		prelude-connection
 8	PRELUDE_ERROR_SOURCE_CONNECTION_MGR	prelude-connection-mgr
 
+255	PRELUDE_ERROR_SOURCE_PRELUDEDB		libpreludedb
 # 8 to 255 are free to be used.
 	PRELUDE_ERROR_SOURCE_DIM		Unknown source
