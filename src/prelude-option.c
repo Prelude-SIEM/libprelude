@@ -184,8 +184,8 @@ static prelude_option_t *search_option(prelude_option_t *root,
                 return root;
         
         prelude_list_for_each(&root->optlist, tmp) {
-                item = prelude_list_entry(tmp, prelude_option_t, list);
-                
+                item = prelude_linked_object_get_object(tmp);
+                                
                 if ( walk_children || (! item->longopt && ! item->shortopt) ) {
                         ret = search_option(item, optname, type, walk_children);
                         if ( ret )
@@ -756,7 +756,7 @@ static void construct_option_msg(prelude_bool_t parent_need_context,
 	prelude_option_context_t *oc;
                         
         prelude_list_for_each(&root->optlist, tmp) {
-                opt = prelude_list_entry(tmp, prelude_option_t, list);
+                opt = prelude_linked_object_get_object(tmp);
                                 
                 prelude_list_for_each(&opt->context_list, tmp2) {
                         oc = prelude_list_entry(tmp2, prelude_option_context_t, list);
@@ -859,7 +859,7 @@ static void print_options(prelude_option_t *root, prelude_option_type_t type, in
         
         prelude_list_for_each(&root->optlist, tmp) {
                 
-                opt = prelude_list_entry(tmp, prelude_option_t, list);
+                opt = prelude_linked_object_get_object(tmp);
 
                 /*
                  * If type is not there, continue.
@@ -957,16 +957,16 @@ void prelude_option_destroy(prelude_option_t *option)
                 option = root_optlist;
         
         prelude_list_for_each_safe(&option->optlist, tmp, bkp) {
-                opt = prelude_list_entry(tmp, prelude_option_t, list);
+                opt = prelude_linked_object_get_object(tmp);
                 prelude_option_destroy(opt);
         }
 
         if ( option ) {                
                 if ( option->value )
                         free(option->value);
-
-                if ( ! prelude_list_is_empty(&option->list) )
-                        prelude_list_del(&option->list);
+                
+                if ( ! prelude_list_is_empty(&option->_list) )
+                        prelude_linked_object_del((prelude_linked_object_t *) option);
                 
                 free(option);
         }
@@ -1087,10 +1087,10 @@ prelude_list_t *prelude_option_get_optlist(prelude_option_t *opt)
 
 prelude_option_t *prelude_option_get_next(prelude_option_t *start, prelude_option_t *cur)
 {
-        prelude_list_t *tmp = (cur) ? &cur->list : NULL;
+        prelude_list_t *tmp = (cur) ? &cur->_list : NULL;
 
         prelude_list_for_each_continue(&start->optlist, tmp)
-                return prelude_list_entry(tmp, prelude_option_t, list);
+                return prelude_linked_object_get_object(tmp);
 
         return NULL;
 }
@@ -1251,10 +1251,9 @@ int prelude_option_new(prelude_option_t *parent, prelude_option_t **retopt)
                                 return prelude_error_from_errno(errno);
                         
                         root_optlist->parent = parent;
-                        prelude_list_init(&root_optlist->list);
                         prelude_list_init(&root_optlist->optlist);
                         prelude_list_init(&root_optlist->context_list);
-
+                        prelude_list_init(&root_optlist->_list);
                 }
                 
                 parent = root_optlist;
@@ -1267,7 +1266,7 @@ int prelude_option_new(prelude_option_t *parent, prelude_option_t **retopt)
         new->parent = parent;
         prelude_list_init(&new->optlist);
         prelude_list_init(&new->context_list);
-        prelude_list_add_tail(&parent->optlist, &new->list);
+        prelude_linked_object_add_tail(&parent->optlist, (prelude_linked_object_t *) new);
 
         return 0;
 }

@@ -29,7 +29,7 @@
 
 
 #define PRELUDE_LINKED_OBJECT   \
-        prelude_list_t list;    \
+        prelude_list_t _list;   \
         unsigned int _object_id
 
 
@@ -41,21 +41,29 @@ typedef struct {
 
 static inline void prelude_linked_object_del(prelude_linked_object_t *obj) 
 {
-        prelude_list_del(&obj->list);
+        prelude_list_del(&obj->_list);
+}
+
+
+
+static inline void prelude_linked_object_del_init(prelude_linked_object_t *obj) 
+{
+        prelude_list_del(&obj->_list);
+        prelude_list_init(&obj->_list);
 }
 
 
 
 static inline void prelude_linked_object_add(prelude_list_t *head, prelude_linked_object_t *obj) 
 {
-        prelude_list_add(head, &obj->list);
+        prelude_list_add(head, &obj->_list);
 }
 
 
 
 static inline void prelude_linked_object_add_tail(prelude_list_t *head, prelude_linked_object_t *obj) 
 {
-        prelude_list_add_tail(head, &obj->list);
+        prelude_list_add_tail(head, &obj->_list);
 }
 
 
@@ -73,7 +81,7 @@ static inline unsigned int prelude_linked_object_get_id(prelude_linked_object_t 
 
 
 #define prelude_linked_object_get_object(object)  \
-        (void *) prelude_list_entry(object, prelude_linked_object_t, list)
+        (void *) prelude_list_entry(object, prelude_linked_object_t, _list)
 
 
 #endif /* _LIBPRELUDE_PRELUDE_LINKED_OBJECT_H */
