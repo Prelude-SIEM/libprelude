@@ -57,8 +57,9 @@ typedef struct {
 
 
 typedef struct {
+        prelude_list_t list;
+        
         void *handle;
-        prelude_list_t list;        
         prelude_list_t instance_list;
 
         char *tmp_instance_name;
