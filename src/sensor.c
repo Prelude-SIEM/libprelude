@@ -82,7 +82,8 @@ static int setup_manager_addr(const char *optarg)
 static int parse_argument(const char *filename, int argc, char **argv) 
 {
         int ret;
-
+        int old_flags;
+        
         opts = prelude_option_new();
         if ( ! opts )
                 return -1;
@@ -92,9 +93,22 @@ static int parse_argument(const char *filename, int argc, char **argv)
 
         prelude_option_add(opts, CLI_HOOK|CFG_HOOK, 'h', "help",
                            "Print this help", no_argument, print_help);
-        
+
+        /*
+         * When parsing our own option, we don't want libprelude to whine
+         * about unknow argument on command line (theses can be the own application
+         * arguments).
+         */
+        prelude_option_set_warnings(~(OPT_INVAL|OPT_INVAL_ARG), &old_flags);
+
         ret = prelude_option_parse_arguments(opts, filename, argc, argv);
 
+        /*
+         * Restore old option flags.
+         */
+        prelude_option_set_warnings(old_flags, NULL);
+
+        
         prelude_option_destroy(opts);
 
         if ( ret < 0 )

@@ -1,3 +1,19 @@
+2001-12-29  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/sensor.c (parse_argument): set warning flags to 0 before 
+	internally parsing argument to see if libprelude option were passed.
+	Then restore the old warnings flags.
+
+	* src/prelude-getopt.c (option_err): new function only
+	print error if the passed flag is set in the global flags.
+
+	* src/sensor.c (parse_argument): When parsing our own 
+	(libprelude) option set, don't print warning about unknow option
+	which can be option from the sensor that initialise us.
+
+	* src/prelude-getopt.c (prelude_option_set_warnings): 
+	new function. Set/Get current warning flags for option parsing.
+
 2001-12-28  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/plugin-common.c (plugin_print_stats): remove

@@ -85,3 +85,8 @@ prelude_msg_t *prelude_option_wide_get_msg(prelude_optlist_t *optlist);
 void prelude_option_destroy(prelude_optlist_t *optlist);
 
 
+
+#define OPT_INVAL     0x1
+#define OPT_INVAL_ARG 0x2
+
+void prelude_option_set_warnings(int flags, int *old_flags);

@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <inttypes.h>
 
 #include "prelude-io.h"
@@ -76,6 +77,27 @@ struct prelude_option_wide {
         enum { string, integer, boolean } input_type;
         int (*get)(char *ibuf, size_t size);
 };
+
+
+
+/*
+ * Warning are turned on by default.
+ */
+static int warnings_flags = OPT_INVAL|OPT_INVAL_ARG;
+
+
+
+static void option_err(int flag, const char *fmt, ...) 
+{
+        if ( warnings_flags & flag ) {
+                va_list ap;
+                
+                va_start(ap, fmt);
+                vfprintf(stderr, fmt, ap);
+                va_end(ap);
+        }
+}
+
 
 
 
@@ -193,7 +215,7 @@ static int lookup_variable_if_needed(const char **optarg)
                 
         *optarg = variable_get(*optarg + 1);
         if ( ! *optarg ) {
-                log(LOG_INFO, "couldn't lookup variable %s.\n", *optarg + 1);
+                log(LOG_ERR, "couldn't lookup variable %s.\n", *optarg + 1);
                 return -1;
         }
         
@@ -254,7 +276,7 @@ static int parse_argument(prelude_optlist_t *optlist,
                 
                 old = arg = argv[optlist->argv_index++];                
                 if ( *arg != '-' ) {
-                        fprintf(stderr, "Invalid argument : \"%s\".\n", arg);
+                        option_err(OPT_INVAL_ARG, "Invalid argument : \"%s\".\n", arg);
                         continue;
                 }
 
@@ -266,7 +288,7 @@ static int parse_argument(prelude_optlist_t *optlist,
                          * Do not stop parsing, this can not be an error (for exemple
                          * if the option is handled by another part of the application.
                          */
-                        log(LOG_INFO, "Invalid option : \"%s\".\n", old);
+                        option_err(OPT_INVAL, "Invalid option : \"%s\".\n", old);
                 } else {
                         const char *optarg = NULL;
                         
@@ -298,6 +320,8 @@ static int parse_argument(prelude_optlist_t *optlist,
                                 return -1;
                 }
         }
+        
+        optlist->argv_index = 0; /* reset to 0 */
 
         return 0;
 }
@@ -584,13 +608,21 @@ void prelude_option_destroy(prelude_optlist_t *optlist)
 
 
 
-
-
-
-
-
-
-
-
-
-
+/**
+ * prelude_option_set_warnings;
+ * @flags: bitwise OR of flags.
+ * @old_flags: Pointer to an integer where to store old flags to.
+ *
+ * Set current warnings flags to @flags (unless @flags is 0).
+ *
+ * Uppon return, the variable pointed to by @old_flags is updated
+ * to contain the old flags unless it point to NULL.
+ */
+void prelude_option_set_warnings(int flags, int *old_flags) 
+{
+        if ( old_flags ) 
+                *old_flags = warnings_flags;
+        
+        if ( flags != 0 ) 
+                warnings_flags = flags;
+}
