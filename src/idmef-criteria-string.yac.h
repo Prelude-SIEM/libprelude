@@ -60,13 +60,13 @@
 
 
 #if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
-#line 66 "idmef-criteria-string.yac.y"
+#line 69 "idmef-criteria-string.yac.y"
 typedef union YYSTYPE {
 	char *str;
+        int operator;
 	idmef_criterion_t *criterion;
 	idmef_criteria_t *criteria;
-	idmef_relation_t relation;
-	idmef_operator_t operator;
+	idmef_value_relation_t relation;
 } YYSTYPE;
 /* Line 1240 of yacc.c.  */
 #line 72 "y.tab.h"

@@ -116,6 +116,9 @@ struct parser_control {
 	void *scanner; /* yyscan_t scanner */
 };
 
+#define operator_or 1
+#define operator_and 2
+ 
 #define YYPARSE_PARAM param
 #define YYLEX_PARAM ((struct parser_control *) param)->scanner
 
@@ -140,16 +143,16 @@ static void yyerror (char *s);
 #endif
 
 #if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
-#line 66 "idmef-criteria-string.yac.y"
+#line 69 "idmef-criteria-string.yac.y"
 typedef union YYSTYPE {
 	char *str;
+        int operator;
 	idmef_criterion_t *criterion;
 	idmef_criteria_t *criteria;
-	idmef_relation_t relation;
-	idmef_operator_t operator;
+	idmef_value_relation_t relation;
 } YYSTYPE;
 /* Line 191 of yacc.c.  */
-#line 152 "idmef-criteria-string.yac.c"
+#line 155 "idmef-criteria-string.yac.c"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1
@@ -161,7 +164,7 @@ typedef union YYSTYPE {
 
 
 /* Line 214 of yacc.c.  */
-#line 164 "idmef-criteria-string.yac.c"
+#line 167 "idmef-criteria-string.yac.c"
 
 #if ! defined (yyoverflow) || YYERROR_VERBOSE
 
@@ -258,18 +261,18 @@ union yyalloc
 #endif
 
 /* YYFINAL -- State number of the termination state. */
-#define YYFINAL  21
+#define YYFINAL  20
 /* YYLAST -- Last index in YYTABLE.  */
 #define YYLAST   21
 
 /* YYNTOKENS -- Number of terminals. */
 #define YYNTOKENS  17
 /* YYNNTS -- Number of nonterminals. */
-#define YYNNTS  8
+#define YYNNTS  7
 /* YYNRULES -- Number of rules. */
-#define YYNRULES  21
+#define YYNRULES  20
 /* YYNRULES -- Number of states. */
-#define YYNSTATES  28
+#define YYNSTATES  27
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
@@ -315,27 +318,27 @@ static const unsigned char yytranslate[] =
    YYRHS.  */
 static const unsigned char yyprhs[] =
 {
-       0,     0,     3,     5,     7,     9,    13,    15,    19,    23,
-      25,    28,    30,    32,    34,    36,    38,    40,    42,    44,
-      46,    48
+       0,     0,     3,     5,     7,    11,    13,    17,    21,    23,
+      26,    28,    30,    32,    34,    36,    38,    40,    42,    44,
+      46
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS. */
 static const yysigned_char yyrhs[] =
 {
-      18,     0,    -1,    19,    -1,    20,    -1,    21,    -1,    20,
-      24,    21,    -1,    22,    -1,    15,    19,    16,    -1,     3,
-      23,     3,    -1,     3,    -1,    12,     3,    -1,     4,    -1,
-       5,    -1,     6,    -1,     7,    -1,     8,    -1,     9,    -1,
-      10,    -1,    11,    -1,    12,    -1,    13,    -1,    14,    -1
+      18,     0,    -1,    19,    -1,    20,    -1,    19,    23,    20,
+      -1,    21,    -1,    15,    19,    16,    -1,     3,    22,     3,
+      -1,     3,    -1,    12,     3,    -1,     4,    -1,     5,    -1,
+       6,    -1,     7,    -1,     8,    -1,     9,    -1,    10,    -1,
+      11,    -1,    12,    -1,    13,    -1,    14,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const unsigned short yyrline[] =
 {
-       0,   102,   102,   108,   124,   127,   137,   146,   151,   193,
-     218,   245,   246,   247,   248,   249,   250,   251,   252,   253,
-     256,   257
+       0,   104,   104,   110,   113,   141,   151,   156,   198,   223,
+     250,   251,   252,   253,   254,   255,   256,   257,   258,   261,
+     262
 };
 #endif
 
@@ -350,7 +353,7 @@ static const char *const yytname[] =
   "TOK_RELATION_LESS_OR_EQUAL", "TOK_RELATION_EQUAL", 
   "TOK_RELATION_NOT_EQUAL", "TOK_RELATION_IS_NULL", "TOK_OPERATOR_AND", 
   "TOK_OPERATOR_OR", "'('", "')'", "$accept", "input", "criteria", 
-  "criteria_list", "criteria_base", "criterion", "relation", "operator", 0
+  "criteria_base", "criterion", "relation", "operator", 0
 };
 #endif
 
@@ -367,17 +370,17 @@ static const unsigned short yytoknum[] =
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const unsigned char yyr1[] =
 {
-       0,    17,    18,    19,    20,    20,    21,    21,    22,    22,
-      22,    23,    23,    23,    23,    23,    23,    23,    23,    23,
-      24,    24
+       0,    17,    18,    19,    19,    20,    20,    21,    21,    21,
+      22,    22,    22,    22,    22,    22,    22,    22,    22,    23,
+      23
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const unsigned char yyr2[] =
 {
-       0,     2,     1,     1,     1,     3,     1,     3,     3,     1,
-       2,     1,     1,     1,     1,     1,     1,     1,     1,     1,
-       1,     1
+       0,     2,     1,     1,     3,     1,     3,     3,     1,     2,
+       1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
+       1
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -385,31 +388,31 @@ static const unsigned char yyr2[] =
    means the default is an error.  */
 static const unsigned char yydefact[] =
 {
-       0,     9,     0,     0,     0,     2,     3,     4,     6,    11,
-      12,    13,    14,    15,    16,    17,    18,    19,     0,    10,
-       0,     1,    20,    21,     0,     8,     7,     5
+       0,     8,     0,     0,     0,     2,     3,     5,    10,    11,
+      12,    13,    14,    15,    16,    17,    18,     0,     9,     0,
+       1,    19,    20,     0,     7,     6,     4
 };
 
 /* YYDEFGOTO[NTERM-NUM]. */
 static const yysigned_char yydefgoto[] =
 {
-      -1,     4,     5,     6,     7,     8,    18,    24
+      -1,     4,     5,     6,     7,    17,    23
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -18
+#define YYPACT_NINF -14
 static const yysigned_char yypact[] =
 {
-      -3,     9,     0,    -3,     4,   -18,   -12,   -18,   -18,   -18,
-     -18,   -18,   -18,   -18,   -18,   -18,   -18,   -18,     2,   -18,
-     -10,   -18,   -18,   -18,    -3,   -18,   -18,   -18
+      -3,     9,     0,    -3,     7,    -8,   -14,   -14,   -14,   -14,
+     -14,   -14,   -14,   -14,   -14,   -14,   -14,     5,   -14,   -12,
+     -14,   -14,   -14,    -3,   -14,   -14,   -14
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yysigned_char yypgoto[] =
 {
-     -18,   -18,     5,   -18,   -17,   -18,   -18,   -18
+     -14,   -14,     8,   -13,   -14,   -14,   -14
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -419,15 +422,15 @@ static const yysigned_char yypgoto[] =
 #define YYTABLE_NINF -1
 static const unsigned char yytable[] =
 {
-       1,    22,    23,    19,    21,    25,    26,    27,    20,     2,
-       0,     0,     3,     9,    10,    11,    12,    13,    14,    15,
-      16,    17
+       1,    21,    22,    18,    25,    21,    22,    20,    24,     2,
+      26,    19,     3,     8,     9,    10,    11,    12,    13,    14,
+      15,    16
 };
 
-static const yysigned_char yycheck[] =
+static const unsigned char yycheck[] =
 {
-       3,    13,    14,     3,     0,     3,    16,    24,     3,    12,
-      -1,    -1,    15,     4,     5,     6,     7,     8,     9,    10,
+       3,    13,    14,     3,    16,    13,    14,     0,     3,    12,
+      23,     3,    15,     4,     5,     6,     7,     8,     9,    10,
       11,    12
 };
 
@@ -435,9 +438,9 @@ static const yysigned_char yycheck[] =
    symbol of state STATE-NUM.  */
 static const unsigned char yystos[] =
 {
-       0,     3,    12,    15,    18,    19,    20,    21,    22,     4,
-       5,     6,     7,     8,     9,    10,    11,    12,    23,     3,
-      19,     0,    13,    14,    24,     3,    16,    21
+       0,     3,    12,    15,    18,    19,    20,    21,     4,     5,
+       6,     7,     8,     9,    10,    11,    12,    22,     3,    19,
+       0,    13,    14,    23,     3,    16,    20
 };
 
 #if ! defined (YYSIZE_T) && defined (__SIZE_TYPE__)
@@ -1048,7 +1051,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 102 "idmef-criteria-string.yac.y"
+#line 104 "idmef-criteria-string.yac.y"
     {
 							((struct parser_control *) param)->criteria = yyvsp[0].criteria;
 	
@@ -1056,44 +1059,44 @@ yyreduce:
     break;
 
   case 3:
-#line 108 "idmef-criteria-string.yac.y"
-    {
-							idmef_criteria_t *criteria;
-
-							criteria = idmef_criteria_new();
-							if ( ! criteria )
-								YYABORT;
-
-							criteria->criteria.next = &(yyvsp[0].criteria)->list;
-							criteria->criteria.prev = (yyvsp[0].criteria)->list.prev;
-							(yyvsp[0].criteria)->list.prev->next = &criteria->criteria;
-							(yyvsp[0].criteria)->list.prev = &criteria->criteria;
-
-							yyval.criteria = criteria;
-						}
-    break;
-
-  case 4:
-#line 124 "idmef-criteria-string.yac.y"
+#line 110 "idmef-criteria-string.yac.y"
     {
 							yyval.criteria = yyvsp[0].criteria;
 						}
     break;
 
-  case 5:
-#line 127 "idmef-criteria-string.yac.y"
-    {
-							idmef_criteria_t *criteria_last;
+  case 4:
+#line 113 "idmef-criteria-string.yac.y"
+    {                                                        
+                                                        if ( yyvsp[-1].operator == operator_or ) {
+                                                                printf("OR ");
+                                                                idmef_criteria_print(yyvsp[-2].criteria);
+                                                                printf(" WITH ");
+                                                                idmef_criteria_print(yyvsp[0].criteria);
+                                                                printf("\n");
+                                                                idmef_criteria_or_criteria(yyvsp[-2].criteria, yyvsp[0].criteria);
 
-							criteria_last = list_entry((yyvsp[-2].criteria)->list.prev, idmef_criteria_t, list);
-							criteria_last->operator = yyvsp[-1].operator;
-							list_add_tail(&(yyvsp[0].criteria)->list, &(yyvsp[-2].criteria)->list);
-							yyval.criteria = yyvsp[-2].criteria;
+                                                                printf("RESULT: ");
+                                                                idmef_criteria_print(yyvsp[-2].criteria);
+                                                                printf("\n\n");
+                                                        } else {
+                                                                printf("AND ");
+                                                                idmef_criteria_print(yyvsp[-2].criteria);
+                                                                printf(" WITH ");
+                                                                idmef_criteria_print(yyvsp[0].criteria);
+                                                                printf("\n");
+                                                                idmef_criteria_and_criteria(yyvsp[-2].criteria, yyvsp[0].criteria);
+                                                                printf("RESULT: ");
+                                                                idmef_criteria_print(yyvsp[-2].criteria);
+                                                                printf("\n\n");
+                                                        }
+                                                        
+                                                        yyval.criteria = yyvsp[-2].criteria;
 						}
     break;
 
-  case 6:
-#line 137 "idmef-criteria-string.yac.y"
+  case 5:
+#line 141 "idmef-criteria-string.yac.y"
     {
 							idmef_criteria_t *criteria;
 
@@ -1102,22 +1105,23 @@ yyreduce:
 								YYABORT;
 							criteria->criterion = yyvsp[0].criterion;
 							yyval.criteria = criteria;
+                                                        
 						}
     break;
 
-  case 7:
-#line 146 "idmef-criteria-string.yac.y"
+  case 6:
+#line 151 "idmef-criteria-string.yac.y"
     {
 							yyval.criteria = yyvsp[-1].criteria;
 						}
     break;
 
-  case 8:
-#line 151 "idmef-criteria-string.yac.y"
+  case 7:
+#line 156 "idmef-criteria-string.yac.y"
     {
 							idmef_object_t *object = NULL;
 							idmef_criterion_value_t *value = NULL;
-							idmef_relation_t relation;
+							idmef_value_relation_t relation;
 							idmef_criterion_t *criterion;
 
 							object = idmef_object_new_fast(yyvsp[-2].str);
@@ -1140,7 +1144,7 @@ yyreduce:
 
 							relation = yyvsp[-1].relation;
 
-							criterion = idmef_criterion_new(object, relation, value);
+							criterion = idmef_criterion_new(object, value, relation);
 							if ( ! criterion ) {
 								log(LOG_ERR, "cannot build criterion for "
 								    "object: %s and value: %s\n", yyvsp[-2].str, yyvsp[0].str);
@@ -1153,13 +1157,42 @@ yyreduce:
 
 							free(yyvsp[-2].str);
 							free(yyvsp[0].str);
+                                                        
+							yyval.criterion = criterion;
+						}
+    break;
+
+  case 8:
+#line 198 "idmef-criteria-string.yac.y"
+    {
+							idmef_object_t *object;
+							idmef_criterion_t *criterion;
+                                                        
+							object = idmef_object_new_fast(yyvsp[0].str);
+							if ( ! object ) {
+								log(LOG_ERR, "cannot build object '%s'\n", yyvsp[0].str);
+								free(yyvsp[0].str);
+								YYABORT;
+							}
+
+							criterion = idmef_criterion_new(object, NULL, IDMEF_VALUE_RELATION_IS_NOT_NULL);
+							if ( ! criterion ) {
+								log(LOG_ERR,
+								    "cannot build criterion for object: '%s' and value: NULL\n",
+								    yyvsp[0].str);
+								free(yyvsp[0].str);
+								idmef_object_destroy(object);
+								YYABORT;
+							}
+
+							free(yyvsp[0].str);
 
 							yyval.criterion = criterion;
 						}
     break;
 
   case 9:
-#line 193 "idmef-criteria-string.yac.y"
+#line 223 "idmef-criteria-string.yac.y"
     {
 							idmef_object_t *object;
 							idmef_criterion_t *criterion;
@@ -1171,7 +1204,7 @@ yyreduce:
 								YYABORT;
 							}
 
-							criterion = idmef_criterion_new(object, relation_is_not_null, NULL);
+							criterion = idmef_criterion_new(object, NULL, IDMEF_VALUE_RELATION_IS_NULL);
 							if ( ! criterion ) {
 								log(LOG_ERR,
 								    "cannot build criterion for object: '%s' and value: NULL\n",
@@ -1188,86 +1221,57 @@ yyreduce:
     break;
 
   case 10:
-#line 218 "idmef-criteria-string.yac.y"
-    {
-							idmef_object_t *object;
-							idmef_criterion_t *criterion;
-
-							object = idmef_object_new_fast(yyvsp[0].str);
-							if ( ! object ) {
-								log(LOG_ERR, "cannot build object '%s'\n", yyvsp[0].str);
-								free(yyvsp[0].str);
-								YYABORT;
-							}
-
-							criterion = idmef_criterion_new(object, relation_is_null, NULL);
-							if ( ! criterion ) {
-								log(LOG_ERR,
-								    "cannot build criterion for object: '%s' and value: NULL\n",
-								    yyvsp[0].str);
-								free(yyvsp[0].str);
-								idmef_object_destroy(object);
-								YYABORT;
-							}
-
-							free(yyvsp[0].str);
-
-							yyval.criterion = criterion;
-						}
+#line 250 "idmef-criteria-string.yac.y"
+    { yyval.relation = IDMEF_VALUE_RELATION_SUBSTR; }
     break;
 
   case 11:
-#line 245 "idmef-criteria-string.yac.y"
-    { yyval.relation = relation_substring; }
+#line 251 "idmef-criteria-string.yac.y"
+    { yyval.relation = IDMEF_VALUE_RELATION_REGEX; }
     break;
 
   case 12:
-#line 246 "idmef-criteria-string.yac.y"
-    { yyval.relation = relation_regexp; }
+#line 252 "idmef-criteria-string.yac.y"
+    { yyval.relation = IDMEF_VALUE_RELATION_GREATER; }
     break;
 
   case 13:
-#line 247 "idmef-criteria-string.yac.y"
-    { yyval.relation = relation_greater; }
+#line 253 "idmef-criteria-string.yac.y"
+    { yyval.relation = IDMEF_VALUE_RELATION_GREATER|IDMEF_VALUE_RELATION_EQUAL; }
     break;
 
   case 14:
-#line 248 "idmef-criteria-string.yac.y"
-    { yyval.relation = relation_greater_or_equal; }
+#line 254 "idmef-criteria-string.yac.y"
+    { yyval.relation = IDMEF_VALUE_RELATION_LESSER; }
     break;
 
   case 15:
-#line 249 "idmef-criteria-string.yac.y"
-    { yyval.relation = relation_less; }
+#line 255 "idmef-criteria-string.yac.y"
+    { yyval.relation = IDMEF_VALUE_RELATION_LESSER|IDMEF_VALUE_RELATION_EQUAL; }
     break;
 
   case 16:
-#line 250 "idmef-criteria-string.yac.y"
-    { yyval.relation = relation_less_or_equal; }
+#line 256 "idmef-criteria-string.yac.y"
+    { yyval.relation = IDMEF_VALUE_RELATION_EQUAL; }
     break;
 
   case 17:
-#line 251 "idmef-criteria-string.yac.y"
-    { yyval.relation = relation_equal; }
+#line 257 "idmef-criteria-string.yac.y"
+    { yyval.relation = IDMEF_VALUE_RELATION_NOT_EQUAL; }
     break;
 
   case 18:
-#line 252 "idmef-criteria-string.yac.y"
-    { yyval.relation = relation_not_equal; }
+#line 258 "idmef-criteria-string.yac.y"
+    { yyval.relation = IDMEF_VALUE_RELATION_IS_NULL; }
     break;
 
   case 19:
-#line 253 "idmef-criteria-string.yac.y"
-    { yyval.relation = relation_is_null; }
-    break;
-
-  case 20:
-#line 256 "idmef-criteria-string.yac.y"
+#line 261 "idmef-criteria-string.yac.y"
     { yyval.operator = operator_and; }
     break;
 
-  case 21:
-#line 257 "idmef-criteria-string.yac.y"
+  case 20:
+#line 262 "idmef-criteria-string.yac.y"
     { yyval.operator = operator_or; }
     break;
 
@@ -1275,7 +1279,7 @@ yyreduce:
     }
 
 /* Line 999 of yacc.c.  */
-#line 1278 "idmef-criteria-string.yac.c"
+#line 1282 "idmef-criteria-string.yac.c"
 
   yyvsp -= yylen;
   yyssp -= yylen;
@@ -1469,7 +1473,7 @@ yyreturn:
 }
 
 
-#line 260 "idmef-criteria-string.yac.y"
+#line 265 "idmef-criteria-string.yac.y"
 
 
 
@@ -1482,10 +1486,10 @@ static void yyerror(char *s)  /* Called by yyparse on error */
 
 idmef_criteria_t *idmef_criteria_new_string(const char *str)
 {
-	int len;
+        int retval;
+	size_t len;
 	char *buffer;
 	struct parser_control parser_control;
-	int retval;
 
 	/* 
 	 * yy_scan_buffer wants buffer terminated by a DOUBLE null character
@@ -1506,13 +1510,15 @@ idmef_criteria_t *idmef_criteria_new_string(const char *str)
 	yy_scan_buffer(buffer, len + 2, parser_control.scanner);
 
 	retval = yyparse(&parser_control);
-
+        
 	yylex_destroy(parser_control.scanner);
 	free(buffer);
 
 	if ( retval != 0 ) {
-		idmef_criteria_destroy(parser_control.criteria);
-		return NULL;
+                if ( parser_control.criteria )
+                        idmef_criteria_destroy(parser_control.criteria);
+
+                return NULL;
 	}
 
 	return parser_control.criteria;
