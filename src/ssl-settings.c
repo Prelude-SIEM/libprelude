@@ -33,7 +33,6 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include <assert.h>
 #include <errno.h>
 
 #include <openssl/des.h>

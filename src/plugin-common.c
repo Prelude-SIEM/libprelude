@@ -30,7 +30,6 @@
 #include <dirent.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <assert.h>
 
 #include "config.h"
 #include "list.h"
