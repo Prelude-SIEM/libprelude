@@ -460,6 +460,8 @@ prelude_client_t *prelude_client_new(prelude_client_capability_t capability)
                 return NULL;
         }
 
+        new->uid = getuid();
+        new->gid = getgid();
         new->capability = capability;
         
         return new;
