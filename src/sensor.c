@@ -143,7 +143,7 @@ static int setup_analyzer_node_address_category(prelude_option_t *opt, const cha
 static int setup_analyzer_node_address_address(prelude_option_t *opt, const char *arg)
 {
         idmef_string_t *address;
-
+        
 	address = idmef_address_get_address(node_address);
 	if ( ! address ) {
 		log(LOG_ERR, "cannot create address address\n");
@@ -519,8 +519,6 @@ int prelude_analyzer_fill_infos(idmef_analyzer_t *analyzer)
 {
         struct utsname uts;
 	idmef_process_t *process;
-	idmef_node_t *node;
-        idmef_address_t *address_ptr, *address_new;
 	idmef_string_t *ostype_string;
 	idmef_string_t *osversion_string;
 
@@ -539,12 +537,6 @@ int prelude_analyzer_fill_infos(idmef_analyzer_t *analyzer)
 	process = idmef_analyzer_new_process(analyzer);
         if ( ! process ) {
                 log(LOG_ERR, "cannot create process field of analyzer\n");
-                return -1;
-        }
-        
-        node = idmef_analyzer_new_node(analyzer);
-        if ( ! node ) {
-                log(LOG_ERR, "cannot create node field of analyzer\n");
                 return -1;
         }
 
@@ -586,33 +578,8 @@ int prelude_analyzer_fill_infos(idmef_analyzer_t *analyzer)
                 idmef_string_set_dup(path_string, process_path);
 	}
 
-	/*
-         * As the sensor may call idmef_message_free(),
-         * and call this function again, we have to copy all the data.
-         */
-	/*
-	 * FIXME: this part will be rewritten using refcount when it will be
-	 * implemented in idmef-tree-wrap
-	 */
-	
-	if ( analyzer_node ) {
-
-		memcpy(node, analyzer_node, sizeof(*node));
-		INIT_LIST_HEAD(&node->address_list);
-
-		address_ptr = NULL;
-		while ( (address_ptr = idmef_node_get_next_address(node, address_ptr)) ) {
-
-			address_new = calloc(1, sizeof(*address_new));
-			if ( ! address_new ) {
-				log(LOG_ERR, "memory exhausted.\n");
-				return -1;
-			}
-
-			memcpy(address_new, address_ptr, sizeof(*address_new));
-			idmef_node_set_address(node, address_new);
-		}
-	}
-
+        if ( analyzer_node )
+                idmef_analyzer_set_node(analyzer, idmef_node_ref(analyzer_node));
+        
         return 0;
 }

@@ -1,3 +1,14 @@
+2004-01-14  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/sensor.c (prelude_analyzer_fill_infos): 
+	remove crappy bugged code trying to copy the node
+	to the analyzer, and use a simple refcount.
+
+2004-01-13  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/daemonize.c (prelude_daemonize): 
+	nicer output...
+
 2004-01-14  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
 	* src/idmef-time.c:

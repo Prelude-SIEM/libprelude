@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 1999 - 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 1999 - 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -179,7 +179,7 @@ int prelude_daemonize(const char *lockfile)
                 if ( lockfile )
                         lockfile_write_pid(fd, pid);
                 
-                log(LOG_INFO, "Daemon started, PID is %d.\n", (int) pid);
+                log(LOG_INFO, "- Starting as daemon: PID is %d.\n", (int) pid);
 		exit(0);
         }
         
