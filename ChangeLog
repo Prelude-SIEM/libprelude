@@ -1,3 +1,15 @@
+2002-05-14  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-message.c (set_data): 
+	check call_alloc_cb return value. Avoid a possible NULL
+	pointer dereference on out of memory condition.
+
+	* src/prelude-message-buffered.c: 
+	remove unused send_msg_cb member.
+
+	(flush_msg_cb): print an error if prelude_msg_dynamic_new() 
+	return NULL.
+
 2002-05-14 Vincent Glaume <glaume@enseirb.fr>
 
 	* src/include/prelude-path.h:

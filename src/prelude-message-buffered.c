@@ -38,7 +38,6 @@
 struct prelude_message_buffered {
         int async_send;
         prelude_msg_t *msg;
-        prelude_msg_t *(*send_msg_cb)(prelude_msg_t *msg);
 };
 
 
@@ -49,7 +48,11 @@ static prelude_msg_t *flush_msg_cb(void *data)
 
         if ( msgbuf->async_send ) {
                 prelude_sensor_send_msg_async(msgbuf->msg);
+
                 msgbuf->msg = prelude_msg_dynamic_new(0, 0, data, flush_msg_cb);
+                if ( ! msgbuf->msg ) 
+                        log(LOG_ERR, "memory exhausted.\n");
+                
         } else {
                 prelude_sensor_send_msg(msgbuf->msg);
                 prelude_msg_recycle(msgbuf->msg);

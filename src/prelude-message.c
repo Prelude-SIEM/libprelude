@@ -151,6 +151,8 @@ inline static int set_data(prelude_msg_t **m, const void *buf, size_t size)
                  * one... or use synchronous send and reuse the same message.
                  */
                 *m = msg = call_alloc_cb(msg);
+                if ( ! msg )
+                        return -1;
                 
                 return set_data(m, buf, size);
         }
