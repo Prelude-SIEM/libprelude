@@ -48,12 +48,27 @@
 #include "prelude-auth.h"
 #include "sensor.h"
 #include "client-ident.h"
+#include "timer.h"
+
+
+/*
+ * send an heartbeat every hours.
+ */
+#define DEFAULT_HEARTBEAT_REPEAT_TIME 60 * 60
 
 
 /*
  * Path to the defalt sensor configuration file.
  */
 #define DEFAULT_SENSOR_CONFIG SENSORS_CONFIG_DIR"/sensors-default.conf"
+
+/*
+ * default heartbeat repeat time is 60 minutes.
+ */
+static void *heartbeat_data;
+static prelude_timer_t heartbeat_timer;
+static int heartbeat_repeat_time = 60 * 60;
+static void (*send_heartbeat_cb)(void *data) = NULL;
 
 static prelude_client_mgr_t *manager_list = NULL;
 
@@ -64,7 +79,16 @@ static int setup_manager_addr(const char *arg)
         manager_list = prelude_client_mgr_new(PRELUDE_CLIENT_TYPE_SENSOR, arg);
         if ( ! manager_list ) 
                 return prelude_option_error;
-        
+                
+        return prelude_option_success;
+}
+
+
+
+
+static int setup_heartbeat_repeat_time(const char *arg) 
+{
+        heartbeat_repeat_time = atoi(arg) * 60;
         return prelude_option_success;
 }
 
@@ -79,10 +103,14 @@ static int parse_argument(const char *filename, int argc, char **argv)
         /*
          * Declare library options.
          */
-        prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 'm', "manager-addr",
+        prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "manager-addr",
                            "Address where manager is listening (addr:port)",
                            required_argument, setup_manager_addr, NULL);
 
+        prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "heartbeat-time",
+                           "Send hearbeat at the specified time (default 60 minutes)",
+                           required_argument, setup_heartbeat_repeat_time, NULL);
+        
         /*
          * When parsing our own option, we don't want libprelude to whine
          * about unknow argument on command line (theses can be the own application
@@ -227,4 +255,59 @@ void prelude_sensor_notify_mgr_connection(void (*cb)(struct list_head *clist))
 {
         prelude_client_mgr_notify_connection(manager_list, cb);
 }
+
+
+
+
+int prelude_heartbeat_send(void *null) 
+{        
+        if ( ! send_heartbeat_cb ) 
+                return -1;
+        
+        /*
+         * trigger the application callback.
+         */
+        send_heartbeat_cb(heartbeat_data);
+        
+        /*
+         * reset our timer.
+         */
+        timer_reset(&heartbeat_timer);
+
+        return 0;
+}
+
+
+
+/**
+ * prelude_heartbeat_register_cb:
+ * @cb: callback function for heartbeat sending.
+ * @data: Pointer to data to be passed to the callback.
+ *
+ * prelude_heartbeat_register_cb() will make @cb called
+ * each time the heartbeat timeout expire.
+ */
+void prelude_heartbeat_register_cb(void (*cb)(void *data), void *data) 
+{
+        heartbeat_data = data;
+        send_heartbeat_cb = cb;
+        
+        timer_set_callback(&heartbeat_timer, prelude_heartbeat_send);
+        timer_set_expire(&heartbeat_timer, heartbeat_repeat_time);
+        timer_init(&heartbeat_timer);
+
+        send_heartbeat_cb(NULL);
+}
+
+
+
+
+
+
+
+
+
+
+
+
 

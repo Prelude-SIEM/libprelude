@@ -1,5 +1,21 @@
 2002-05-31  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/sensor.c (setup_heartbeat_repeat_time): 
+	impl - set heartbeat timer timeout.
+	
+	(prelude_heartbeat_register_cb): new function,
+	setup the heartbeat timer and callback, and
+	send an initial heartbeat.
+
+	(prelude_heartbeat_send): new function, send
+	an hearbeat.
+
+	(parse_argument): stop providing short option,
+	there is much chance that we'll conflict with the apps.
+
+	(parse_argument): new global option, "heartbeat-time",
+	to set timer heartbeat timeout.
+
 	* src/idmef-msg-send.c (idmef_send_alert): 
 	fix a typo, send analyzer time instead of sending
 	twice detect time.

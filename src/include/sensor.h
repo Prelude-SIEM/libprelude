@@ -42,4 +42,8 @@ struct list_head *prelude_sensor_get_client_list(void);
 
 void prelude_sensor_notify_mgr_connection(void (*cb)(struct list_head *clist));
 
+void prelude_heartbeat_register_cb(void (*cb)(void *data), void *data);
+
+int prelude_heartbeat_send(void *null);
+
 #endif /* _LIBPRELUDE_SENSOR_H */
