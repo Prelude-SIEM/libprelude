@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -34,5 +34,12 @@ int prelude_client_connect(prelude_client_t *client);
 
 ssize_t prelude_client_forward(prelude_client_t *client, prelude_io_t *src, size_t count);
 
-void prelude_client_get_address(prelude_client_t *client, char **addr, uint16_t *port);
+const char *prelude_client_get_saddr(prelude_client_t *client);
 
+const char *prelude_client_get_daddr(prelude_client_t *client);
+
+uint16_t prelude_client_get_sport(prelude_client_t *client);
+
+uint16_t prelude_client_get_dport(prelude_client_t *client);
+
+int prelude_client_is_alive(prelude_client_t *client);

@@ -650,6 +650,18 @@ int priority, const char *file, const char *function, int line, const char *fmt,
         (func);                                          \
 } while(0);
 </MACRO>
+<TYPEDEF>
+<NAME>prelude_client_notification_t</NAME>
+typedef struct {
+        const char *saddr;
+        uint16_t sport;
+
+        const char *daddr;
+        uint16_t dport;
+        
+        struct list_head list;
+} prelude_client_notification_t;
+</TYPEDEF>
 <FUNCTION>
 <NAME>prelude_client_mgr_broadcast</NAME>
 <RETURNS>void  </RETURNS>

@@ -100,11 +100,12 @@ struct prelude_client_mgr {
          * and write occur atomically.
          */
         prelude_io_t *backup_fd_read;
-        prelude_io_t *backup_fd_write; 
+        prelude_io_t *backup_fd_write;
+    
+        void (*notify_cb)(struct list_head *clist);
+        struct list_head all_client;
         struct list_head or_list;
 };
-
-
 
 
 
@@ -190,6 +191,7 @@ static void client_timer_expire(void *data)
 {
         int ret;
         client_t *client = data;
+        prelude_client_mgr_t *mgr = client->parent->parent;
         
         ret = prelude_client_connect(client->client);
         if ( ret < 0 ) {
@@ -210,9 +212,17 @@ static void client_timer_expire(void *data)
                 
                 if ( --client->parent->dead == 0 ) {
                         ret = flush_backup_if_needed(client->parent);
-                        if ( ret == communication_error )
+                        if ( ret == communication_error ) {
                                 timer_init(&client->timer);
+                                return;
+                        }
                 }
+
+                /*
+                 * notify the user about a new connection.
+                 */
+                if ( mgr->notify_cb )
+                        mgr->notify_cb(&mgr->all_client);
         }
 }
 
@@ -260,6 +270,8 @@ static int add_new_client(client_list_t *clist, char *addr)
                 return -1;
         }
 
+        prelude_list_add((prelude_linked_object_t *) new->client, &clist->parent->all_client);
+        
         timer_set_data(&new->timer, new);
         timer_set_expire(&new->timer, INITIAL_EXPIRATION_TIME);
         timer_set_callback(&new->timer, client_timer_expire);
@@ -403,7 +415,7 @@ static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline)
 
         if ( ! working_and ) 
                 log(LOG_INFO, "Can't contact configured Manager - Enabling failsafe mode.\n");
-
+                
         return 0;
 }
 
@@ -528,6 +540,10 @@ static int broadcast_message(prelude_msg_t *msg, client_list_t *clist)
                 if ( ret < 0 ) {
                         clist->dead++;
                         timer_init(&c->timer);
+                        
+                        if ( clist->parent->notify_cb )
+                                clist->parent->notify_cb(&clist->parent->all_client);
+
                         return -1;
                 }
         }
@@ -609,7 +625,6 @@ static void broadcast_async_cb(void *obj, void *data)
 
 
 
-
 /**
  * prelude_client_mgr_broadcast_msg:
  * @cmgr: Pointer on a client manager object.
@@ -650,8 +665,10 @@ prelude_client_mgr_t *prelude_client_mgr_new(const char *cfgline)
                 log(LOG_ERR, "memory exhausted.\n");
                 return NULL;
         }
-        
+
+        new->notify_cb = NULL;
         INIT_LIST_HEAD(&new->or_list);
+        INIT_LIST_HEAD(&new->all_client);
         
         /*
          * Setup a backup file descriptor for this client Manager.
@@ -682,3 +699,20 @@ prelude_client_mgr_t *prelude_client_mgr_new(const char *cfgline)
         
         return new;
 }
+
+
+
+
+void prelude_client_mgr_notify_connection(prelude_client_mgr_t *mgr, void (*callback)(struct list_head *clist)) 
+{
+        mgr->notify_cb = callback;
+}
+
+
+
+
+struct list_head *prelude_client_mgr_get_client_list(prelude_client_mgr_t *mgr) 
+{
+        return &mgr->all_client;
+}
+

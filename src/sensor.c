@@ -41,6 +41,7 @@
 
 #ifdef HAVE_SSL
 #include <openssl/ssl.h>
+#include "ssl-register.h"
 #include "ssl.h"
 #endif
 
@@ -232,3 +233,30 @@ void prelude_sensor_send_alert(prelude_msg_t *msg)
 {
         prelude_client_mgr_broadcast_async(manager_list, msg);
 }
+
+
+
+/**
+ * prelude_sensor_get_client_list:
+ *
+ * Returns: a list of Manager connection (prelude_client_t).
+ */
+struct list_head *prelude_sensor_get_client_list(void)
+{
+        return prelude_client_mgr_get_client_list(manager_list);
+}
+
+
+
+/**
+ * prelude_sensor_notify_mgr_connection:
+ * @cb: Callback function to call on notice.
+ *
+ * Tell the prelude library to call the @cb callback whenever the connection
+ * state change.
+ */
+void prelude_sensor_notify_mgr_connection(void (*cb)(struct list_head *clist)) 
+{
+        prelude_client_mgr_notify_connection(manager_list, cb);
+}
+

@@ -21,6 +21,7 @@
 *
 *****/
 
+
 typedef struct prelude_client_mgr prelude_client_mgr_t;
 
 
@@ -30,4 +31,6 @@ void prelude_client_mgr_broadcast_async(prelude_client_mgr_t *cmgr, prelude_msg_
 
 prelude_client_mgr_t *prelude_client_mgr_new(const char *cfgline);
 
+void prelude_client_mgr_notify_connection(prelude_client_mgr_t *mgr, void (*callback)(struct list_head *clist));
 
+struct list_head *prelude_client_mgr_get_client_list(prelude_client_mgr_t *mgr);

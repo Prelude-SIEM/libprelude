@@ -65,7 +65,7 @@ static int resolve_addr(const char *hostname, struct in_addr *addr)
         struct hostent *h;
 
         /*
-         * This is not a hostname. No need to resolve.
+         * This is not an hostname. No need to resolve.
          */
         ret = inet_aton(hostname, addr);
         if ( ret != 0 ) 
@@ -75,7 +75,7 @@ static int resolve_addr(const char *hostname, struct in_addr *addr)
         if ( ! h )
                 return -1;
 
-        assert(h->h_length >= sizeof(*addr));
+        assert(h->h_length <= sizeof(*addr));
         
         memcpy(addr, h->h_addr, h->h_length);
                 

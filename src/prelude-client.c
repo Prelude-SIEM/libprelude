@@ -43,6 +43,7 @@
 #endif
 
 #include "list.h"
+#include "prelude-list.h"
 #include "common.h"
 #include "config-engine.h"
 #include "plugin-common.h"
@@ -62,9 +63,13 @@
 
 
 struct prelude_client {
-        char *addr;
-        uint16_t port;
+        PRELUDE_LINKED_OBJECT;
         
+        char *saddr;
+        uint16_t sport;
+
+        char *daddr;
+        uint16_t dport;
         
         /*
          * This pointer point to the object suitable
@@ -374,11 +379,22 @@ static int get_manager_setup(prelude_io_t *fd, int *have_ssl, int *have_plaintex
 
 static int start_inet_connection(prelude_client_t *client) 
 {
-        int ret = -1, have_ssl  = 0, have_plaintext = 0, sock;
+        int len, ret = -1;
+        struct sockaddr_in addr;
+        int have_ssl  = 0, have_plaintext = 0, sock;
         
-        sock = inet_connect(client->addr, client->port);
+        sock = inet_connect(client->daddr, client->dport);
         if ( sock < 0 )
                 return -1;
+
+        len = sizeof(addr);
+        ret = getsockname(sock, (struct sockaddr *) &addr, &len);
+        if ( ret < 0 ) 
+                log(LOG_ERR, "couldn't get connection informations.\n");
+        else {
+                client->saddr = strdup(inet_ntoa(addr.sin_addr));
+                client->sport = ntohs(addr.sin_port);
+        }
 
         prelude_io_set_sys_io(client->fd, sock);
         
@@ -387,7 +403,7 @@ static int start_inet_connection(prelude_client_t *client)
                 close(sock);
                 return -1;
         }
-
+                
 #ifdef HAVE_SSL
         if ( have_ssl ) {
                 ret = handle_ssl_connection(client, sock);
@@ -402,10 +418,10 @@ static int start_inet_connection(prelude_client_t *client)
                 log(LOG_INFO, "couldn't agree on a protocol to use.\n");
                 ret = -1;
         }
-
  end:
         if ( ret < 0 )
                 close(sock);
+        
         return ret;
 }
 
@@ -450,7 +466,7 @@ static int do_connect(prelude_client_t *client)
 {
         int ret;
         
-        ret = strcmp(client->addr, "unix");
+        ret = strcmp(client->daddr, "unix");
 	if ( ret == 0 ) {
 		ret = start_unix_connection(client);
         } else {
@@ -481,7 +497,10 @@ void prelude_client_destroy(prelude_client_t *client)
         prelude_io_close(client->fd);
         prelude_io_destroy(client->fd);
 
-        free(client->addr);
+        if ( client->saddr )
+                free(client->saddr);
+        
+        free(client->daddr);
         free(client);
 }
 
@@ -497,9 +516,12 @@ prelude_client_t *prelude_client_new(const char *addr, uint16_t port)
         new = malloc(sizeof(*new));
         if (! new )
                 return NULL;
-
-        new->port = port;
-        new->addr = strdup(addr);
+        
+        new->saddr = NULL;
+        new->sport = 0;
+        new->daddr = strdup(addr);
+        new->dport = port;
+        
         new->connection_broken = 0;
         
         new->fd = prelude_io_new();
@@ -564,12 +586,75 @@ int prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
 
 
 
-
-void prelude_client_get_address(prelude_client_t *client, char **addr, uint16_t *port) 
+/**
+ * prelude_client_get_saddr:
+ * @client: Pointer to a client object.
+ *
+ *
+ * Returns: the source address used to connect, or NULL
+ * if an error occured.
+ */
+const char *prelude_client_get_saddr(prelude_client_t *client) 
 {
-        *addr = client->addr;
-        *port = client->port;
+        return client->saddr;
 }
+
+
+
+/**
+ * prelude_client_get_daddr:
+ * @client: Pointer to a client object.
+ *
+ *
+ * Returns: the destination address used to connect.
+ */
+const char *prelude_client_get_daddr(prelude_client_t *client) 
+{
+        return client->daddr;
+}
+
+
+
+/**
+ * prelude_client_get_sport:
+ * @client: Pointer to a client object.
+ *
+ *
+ * Returns: the source port used to connect.
+ */
+uint16_t prelude_client_get_sport(prelude_client_t *client) 
+{
+        return client->sport;
+}
+
+
+
+/**
+ * prelude_client_get_sport:
+ * @client: Pointer to a client object.
+ *
+ *
+ * Returns: the destination port used to connect.
+ */
+uint16_t prelude_client_get_dport(prelude_client_t *client) 
+{
+        return client->dport;
+}
+
+
+
+/**
+ * prelude_client_is_alive:
+ * @client; Pointer to a client object.
+ *
+ * Returns: 0 if the connection associated with @client is alive,
+ * -1 if it is not.
+ */
+int prelude_client_is_alive(prelude_client_t *client) 
+{
+        return (client->connection_broken == 1) ? -1 : 0;
+}
+
 
 
 
@@ -579,7 +664,6 @@ ssize_t prelude_client_forward(prelude_client_t *client, prelude_io_t *src, size
 
         if ( client->connection_broken == 1 )
                 return -1;
-
         
         ret = prelude_io_forward(client->fd, src, count);
         if ( ret < 0 ) {

@@ -1,5 +1,14 @@
 2002-01-17  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/prelude-client.c: prelude_client_t is a linked object.
+	New helper function to get client informations.
+
+	* src/sensor.c: wrapper for the new client-mgr function.
+
+	* src/prelude-client-mgr.c: 
+	ability to return the whole client list, and to notify uppon client change
+	throught a callback.
+
 	* libprelude-config.in: 
 	* configure.ac: updated. Libprelude is not linked to the
 	needed library anymore. It's up to the application to do so.

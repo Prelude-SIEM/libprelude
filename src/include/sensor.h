@@ -32,3 +32,7 @@ uint64_t prelude_sensor_get_ident(void);
 void prelude_sensor_set_ident(uint64_t *ident);
 
 void prelude_set_sensor_name(const char *sname);
+
+struct list_head *prelude_sensor_get_client_list(void);
+
+void prelude_sensor_notify_mgr_connection(void (*cb)(struct list_head *clist));
