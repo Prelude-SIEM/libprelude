@@ -99,7 +99,13 @@ static int wait_connection(prelude_client_profile_t *cp, int sock, int keepalive
         int csock, ret;
         socklen_t len;
         prelude_io_t *fd;
+        struct sockaddr *sa;
+        unsigned short *port;
+#ifndef HAVE_IPV6
         struct sockaddr_in addr;
+#else
+        struct sockaddr_in6 addr;
+#endif
 
         ret = prelude_io_new(&fd);
         if ( ret < 0 ) {
@@ -110,22 +116,27 @@ static int wait_connection(prelude_client_profile_t *cp, int sock, int keepalive
         
         do {
                 fprintf(stderr, "\n  - Waiting for install request from peer...\n");
+                sa = (struct sockaddr *) &addr;
                 len = sizeof(addr);
 
-                csock = accept(sock, (struct sockaddr *) &addr, &len);
+#ifdef HAVE_IPV6
+                port = &addr.sin6_port;
+#else
+                port = &addr.sin_port;
+#endif
+                csock = accept(sock, sa, &len);
                 if ( csock < 0 ) {
                         fprintf(stderr, "accept returned an error: %s.\n", strerror(errno));
                         return -1;
                 }
                 
-                prelude_inet_ntop(addr.sin_family, &addr.sin_addr.s_addr, buf, sizeof(buf));
-                fprintf(stderr, "  - Connection from %s:%u.\n", buf, addr.sin_port);
-
+                prelude_inet_ntop(sa->sa_family, prelude_inet_sockaddr_get_inaddr(sa), buf, sizeof(buf));
+                fprintf(stderr, "  - Connection from %s:%u.\n", buf, *port);
                 prelude_io_set_sys_io(fd, csock);
                 
-                ret = handle_client_connection(cp, fd, cred, key, cacrt, crt, buf);
+                ret = handle_client_connection(cp, fd, cred, key, cacrt, crt);
                 if ( ret == 0 )
-                        fprintf(stderr, "  - %s:%u successfully registered.\n", buf, addr.sin_port);
+                        fprintf(stderr, "  - %s:%u successfully registered.\n", buf, *port);
                 
                 prelude_io_close(fd);
                 
