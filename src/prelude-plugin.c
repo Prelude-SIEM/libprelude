@@ -459,8 +459,6 @@ static int libltdl_load_cb(const char *filename, lt_ptr ptr)
 /**
  * prelude_plugin_load_from_dir:
  * @dirname: The directory to load the plugin from.
- * @argc: Argument count for the plugin.
- * @argv: Argument vector for the plugin.
  * @subscribe: Pointer to a callback function for plugin subscribtion.
  * @unsubscribe: Pointer to a callback function for plugin un-subscribtion.
  *  

@@ -42,10 +42,8 @@ struct prelude_ident {
 
 /**
  * prelude_ident_new:
- * @filename: Pointer to a filename where the ident should be stored.
  *
- * Create a new #prelude_ident_t object. The current ident is set to 0
- * if there was no ident associated with this file, or the current ident.
+ * Create a new #prelude_ident_t object with an unique value.
  *
  * Returns: a new #prelude_ident_t object, or NULL if an error occured.
  */

@@ -731,11 +731,10 @@ static prelude_connection_mgr_t *connection_mgr_new(prelude_client_t *client)
 
 /**
  * prelude_connection_mgr_new:
- * @type: type of the manager to add.
+ * @client: Use of this object.
  * @cfgline: Manager configuration string.
  *
- * prelude_connection_mgr_new() initialize a new Client Manager object.
- * The @filename argument will be the backup file associated with this object.
+ * prelude_connection_mgr_new() initialize a new Connection Manager object.
  *
  * Returns: a pointer on a #prelude_connection_mgr_t object, or NULL
  * if an error occured.

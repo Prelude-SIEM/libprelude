@@ -898,8 +898,7 @@ void prelude_msg_set_data(prelude_msg_t *msg, void *data)
  * prelude_msg_is_fragment:
  * @msg: Pointer on a #prelude_msg_t object.
  *
- * prelude_msg_is_fragment() return true if @msg only contain
- * a fragment of message.
+ * Returns: true if @msg only contain a fragment of message.
  */
 int prelude_msg_is_fragment(prelude_msg_t *msg)
 {
@@ -912,8 +911,7 @@ int prelude_msg_is_fragment(prelude_msg_t *msg)
  * prelude_msg_is_empty:
  * @msg: Pointer on a #prelude_msg_t object.
  *
- * prelude_msg_is_empty() return true if @msg doesn't contain
- * any data to send.
+ * Returns: true if @msg doesn't contain any data to send.
  */
 int prelude_msg_is_empty(prelude_msg_t *msg)
 {
