@@ -288,8 +288,8 @@ static int idmef_path_get_internal(idmef_value_t **value, idmef_path_t *path,
  * @message: Pointer to a #idmef_message_t object.
  * @ret: Address where to store the retrieved #idmef_value_t.
  *
- * This function retrieve the value for @path within @message,
- * and store it into the provided @ret address of type #idmef_value_t.
+ * This function retrieves the value for @path within @message,
+ * and stores it into the provided @ret address of type #idmef_value_t.
  *
  * Returns: The number of element retrieved, or a negative value if an error occured.
  */
@@ -306,7 +306,7 @@ int idmef_path_get(idmef_path_t *path, idmef_message_t *message, idmef_value_t *
  * @message: Pointer to a #idmef_message_t object.
  * @value: Pointer to a #idmef_value_t object.
  *
- * This function set the provided @value for @path within @message.
+ * This function sets the provided @value for @path within @message.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -489,7 +489,7 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
  * @path: Address where to store the created #idmef_path_t object.
  * @buffer: Name of the path to create.
  *
- * Create a #idmef_path_t object pointing to @buffer, and store it within @path.
+ * Creates a #idmef_path_t object pointing to @buffer, and stores it within @path.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -542,8 +542,8 @@ int idmef_path_new_fast(idmef_path_t **path, const char *buffer)
  * @format: Format string.
  * @args: Pointer to a variable argument list.
  *
- * Create a #idmef_path_t object pointing to the provided format
- * string @format and @args, and store it within @path.
+ * Creates an #idmef_path_t object pointing to the provided format
+ * string @format and @args, and stores it within @path.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -567,8 +567,8 @@ int idmef_path_new_v(idmef_path_t **path, const char *format, va_list args)
  * @format: Format string.
  * @...: Arguments list.
  *
- * Create a #idmef_path_t object pointing to the provided format
- * string @format and @..., and store it within @path.
+ * Creates an #idmef_path_t object pointing to the provided format
+ * string @format and @..., and stores it within @path.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -591,7 +591,7 @@ int idmef_path_new(idmef_path_t **path, const char *format, ...)
  * @path: Pointer to an #idmef_path_t object.
  * @depth: Depth of @path to retrieve the #idmef_class_id_t from.
  *
- * Retrieve the #idmef_class_id_t value for the element of @path
+ * Retrieves the #idmef_class_id_t value for the element of @path
  * located at @depth. If depth is -1, the last element depth is addressed.
  *
  * Returns: The #idmef_class_id_t for the elemnt, or a negative value if an error occured.
@@ -614,7 +614,7 @@ idmef_class_id_t idmef_path_get_class(const idmef_path_t *path, int depth)
  * @path: Pointer to an #idmef_path_t object.
  * @depth: Depth of @path to retrieve the #idmef_value_type_id_t from.
  *
- * Retrieve the #idmef_value_type_id_t identifying the type of value
+ * Retrieves the #idmef_value_type_id_t identifying the type of value
  * acceptable for this path element, for the @path element located at
  * @depth. If depth is -1, the last element depth is addressed.
  *
@@ -649,7 +649,7 @@ static inline int invalidate(idmef_path_t *path)
          * is the only entity that has pointer to it.
          *
          * The path should have refcount equal to 1 or 2.
-         * If the refcount is equal to 1, it means that only the caller
+         * If refcount is equal to 1, it means that only the caller
          * has the pointer to the path, so we can modify it.
          *
          * If refcount is equal to 2, that means that the path
@@ -691,7 +691,7 @@ static inline int invalidate(idmef_path_t *path)
  * @depth: Depth of @path to set @index for.
  * @index: Index for the provided element @depth.
  *
- * Modify @index for the element located at @depth of the provided @path.
+ * Modifies @index for the element located at @depth of provided @path.
  * This function is only applicable for element that accept listed value.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -729,7 +729,7 @@ int idmef_path_set_index(idmef_path_t *path, unsigned int depth, unsigned int in
  * @path: Pointer to an #idmef_path_t object.
  * @depth: Depth of @path to undefine the index for.
  *
- * Modify the element located at @depth of the provided @path so that it's
+ * Modifies the element located at @depth of provided @path so that it's
  * index is undefined.
  *
  * This function is only applicable for element that accept listed value.
@@ -748,8 +748,8 @@ int idmef_path_undefine_index(idmef_path_t *path, unsigned int depth)
  * @path: Pointer to an #idmef_path_t object.
  * @depth: Depth of @path to retrieve the index from.
  *
- * Get the current index for element located at @depth of @path.
- * This function is only applicable for element that accept listed value.
+ * Gets the current index for element located at @depth of @path.
+ * This function is only applicable for element that accepts listed value.
  *
  * Returns: The element index, or a negative value if an error occured.
  */
@@ -775,7 +775,7 @@ int idmef_path_get_index(const idmef_path_t *path, unsigned int depth)
  * @child_name: Name of the child element to create.
  * @index: Index for @child_name, if applicable.
  *
- * Modify @path so that it point to the child node identified by @child_name,
+ * Modifies @path so that it points to the child node identified by @child_name,
  * children of the current path. That is if the path is currently pointing to
  * alert.classification, and @child_name is set to "text", @path will be
  * modified to point to alert.classification.text.
@@ -827,7 +827,7 @@ int idmef_path_make_child(idmef_path_t *path, const char *child_name, unsigned i
  * idmef_path_make_parent:
  * @path: Pointer to an #idmef_path_t object.
  *
- * Remove the last element of the path. That is, if @path is currently pointing to
+ * Removes the last element of the path. That is, if @path is currently pointing to
  * alert.classification, @path will be modified to point to alert.
  *
  * Returns: 0 on success, or a negative value if an error occured.
@@ -863,7 +863,7 @@ int idmef_path_make_parent(idmef_path_t *path)
  * idmef_path_destroy:
  * @path: Pointer to an #idmef_path_t object.
  *
- * Destroy the provided @path object.
+ * Destroys the provided @path object.
  */
 void idmef_path_destroy(idmef_path_t *path)
 {        
@@ -887,7 +887,7 @@ void idmef_path_destroy(idmef_path_t *path)
  * @p2: Pointer to another #idmef_path_t object.
  * @depth: Maximum depth to use for path comparison.
  *
- * Compare @p1 and @p2 elements up to @depth.
+ * Compares @p1 and @p2 elements up to @depth.
  *
  * Returns: 0 if both element match, a negative value otherwise.
  */
@@ -914,7 +914,7 @@ int idmef_path_ncompare(const idmef_path_t *p1, const idmef_path_t *p2, unsigned
  * @p1: Pointer to an #idmef_path_t object.
  * @p2: Pointer to another #idmef_path_t object.
  *
- * Compare @p1 and @p2 elements.
+ * Compares @p1 and @p2 elements.
  *
  * Returns: 0 if both element match, a negative value otherwise.
  */
@@ -934,7 +934,7 @@ int idmef_path_compare(const idmef_path_t *p1, const idmef_path_t *p2)
  * @src: Pointer to an #idmef_path_t object.
  * @dst: Address where to store the copy of @src.
  *
- * Clone @src and store the result in the provided @dst address.
+ * Clones @src and stores the result in the provided @dst address.
  *
  * Returns: 0 on success, a negative value otherwise.
  */
@@ -961,9 +961,9 @@ int idmef_path_clone(const idmef_path_t *src, idmef_path_t **dst)
  * idmef_path_ref:
  * @path: Pointer to an #idmef_path_t object.
  *
- * Increase @path reference count.
+ * Increases @path reference count.
  *
- * idmef_path_destroy() will destroy the refcount until it reach 0,
+ * idmef_path_destroy() will destroy the refcount until it reaches 0,
  * at which point the path will be destroyed.
  *
  * Returns: The provided @path is returned.
@@ -983,7 +983,7 @@ idmef_path_t *idmef_path_ref(idmef_path_t *path)
  * idmef_path_is_ambiguous:
  * @path: Pointer to an #idmef_path_t object.
  *
- * Return TRUE if @path contain elements that are supposed
+ * Returns TRUE if @path contain elements that are supposed
  * to be listed, but for which no index were provided.
  *
  * Returns: TRUE if the object is ambiguous, FALSE otherwise.
@@ -1040,7 +1040,7 @@ unsigned int idmef_path_get_depth(const idmef_path_t *path)
  * @path: Pointer to an #idmef_path_t object.
  * @depth: Depth of the @path element to get the name from.
  *
- * Return the full path name if the provided @depth is -1, or the specific
+ * Returns the full path name if the provided @depth is -1, or the specific
  * element name if depth is set. That is, for a @path pointing to
  * "alert.classification.text": A depth of -1 would return "alert.classification.text";
  * a depth of 0 would return "alert"; a depth of 1 would return "classification"; and
