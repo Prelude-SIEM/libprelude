@@ -112,27 +112,6 @@ AC_ARG_ENABLE(profiling, [  --enable-profiling Enable Gprof profiling - with thr
 if test x$enable_profiling = xyes ; then
 	CFLAGS="$CFLAGS -pg"	
 	AC_DEFINE(ENABLE_PROFILING)
-
-	dnl *** for gcc3 ***
-	
-	cat > conftest.c << EOF 
-
-	int main(void)
-	{
-		exit(0);
-	}
-EOF
-
-	AC_MSG_CHECKING(whether compiler support -fprofile-arcs)
-
-        ${CC-cc} -o conftest $CFLAGS $CPPFLAGS $LDFLAGS conftest.c $LIBS >/dev/null 2>&1
-	if test -x conftest ; then
-        	CFLAGS="$CFLAGS -fprofile-arcs";
-		AC_MSG_RESULT(yes);
-		rm -f conftest;
-	else
-		AC_MSG_RESULT(no);
-	fi
 fi
 
 
