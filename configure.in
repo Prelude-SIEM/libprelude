@@ -42,7 +42,7 @@ AM_PROG_LIBTOOL
 
 AC_SUBST(INCLTDL)
 AC_SUBST(LIBLTDL)
-
+AC_SUBST(LIBADD_DL)
 
 
 dnl Checks for programs.
