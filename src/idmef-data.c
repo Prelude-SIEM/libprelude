@@ -237,7 +237,7 @@ int idmef_data_new_char_string_dup_fast(idmef_data_t **data, const char *str, si
  * @src: Source #idmef_data_t object.
  * @dst: Destination #idmef_data_t object.
  *
- * Make @dst reference the same buffer as @src.
+ * Makes @dst reference the same buffer as @src.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -261,8 +261,8 @@ int idmef_data_copy_ref(const idmef_data_t *src, idmef_data_t *dst)
  * @src: Source #idmef_data_t object.
  * @dst: Destination #idmef_data_t object.
  *
- * Copy @src to @dst, including the associated buffer
- * this is an alternative to idmef_data_clone().
+ * Copies @src to @dst, including the associated buffer.
+ * This is an alternative to idmef_data_clone().
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -338,7 +338,7 @@ idmef_data_type_t idmef_data_get_type(const idmef_data_t *data)
  * idmef_data_get_len:
  * @data: Pointer to an #idmef_data_t object.
  *
- * Returns: the len of data contained within @data object.
+ * Returns: the length of data contained within @data object.
  */
 size_t idmef_data_get_len(const idmef_data_t *data)
 {
@@ -438,8 +438,8 @@ static int bytes_to_string(prelude_string_t *out, const unsigned char *src, size
  * @data: Pointer to an #idmef_data_t object.
  * @out: Pointer to a #prelude_string_t to store the formated data into.
  *
- * Format the data contained within @data to be printable,
- * and store the result in the provided @out buffer.
+ * Formats data contained within @data to be printable,
+ * and stores the result in the provided @out buffer.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -486,7 +486,7 @@ int idmef_data_to_string(const idmef_data_t *data, prelude_string_t *out)
 
 
 /*
- *  This function cannot be declared static because its invoked
+ *  This function cannot be declared static because it is invoked
  *  from idmef-tree-wrap.c
  */
 void idmef_data_destroy_internal(idmef_data_t *ptr)
@@ -509,7 +509,7 @@ void idmef_data_destroy_internal(idmef_data_t *ptr)
  * idmef_data_destroy:
  * @data: Pointer to an #idmef_data_t object.
  *
- * Free @data. The buffer pointed to by @data will be freed if
+ * Frees @data. The buffer pointed by @data will be freed if
  * the @data object is marked as _dup or _nodup.
  */
 void idmef_data_destroy(idmef_data_t *data)
