@@ -14,5 +14,5 @@ void prelude_perror(prelude_error_t error, const char *fmt, ...)
 	vsnprintf(buf, sizeof(buf), fmt, ap);
 	va_end(ap);
 	
-	log(LOG_INFO, "%s: %s: %s.\n", prelude_strsource(error), buf, prelude_strerror(error));
+	prelude_log(PRELUDE_LOG_WARN, "%s: %s: %s.\n", prelude_strsource(error), buf, prelude_strerror(error));
 }

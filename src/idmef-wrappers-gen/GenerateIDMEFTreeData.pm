@@ -117,8 +117,8 @@ sub	footer
 typedef struct \{
 	char *name;
 	children_list_t *children_list;
-	void *(*get_child)(void *ptr, idmef_child_t child);
-	void *(*new_child)(void *ptr, idmef_child_t child, int n);
+	int (*get_child)(void *ptr, idmef_child_t child, void **ret);
+	int (*new_child)(void *ptr, idmef_child_t child, int n, void **ret);
 	int (*to_numeric)(const char *name);
 	const char *(*to_string)(int val);
 \} object_data_t;

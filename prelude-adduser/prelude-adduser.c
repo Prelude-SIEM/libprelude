@@ -39,6 +39,7 @@
 #include "common.h"
 #include "libmissing.h"
 #include "config-engine.h"
+#include "prelude-error.h"
 #include "prelude-inttypes.h"
 #include "prelude-client.h"
 #include "prelude-option.h"
@@ -88,7 +89,6 @@ static void permission_warning(void)
         while ( getchar() != '\n' );
 }
 
-        
 
 
 static void print_delete_help(void)
@@ -162,7 +162,7 @@ static void print_add_help(void)
 
 
 
-static int set_uid(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)
+static int set_uid(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         uid_set = 1;
         prelude_client_profile_set_uid(profile, atoi(optarg));
@@ -171,7 +171,7 @@ static int set_uid(void *context, prelude_option_t *opt, const char *optarg, pre
 
 
 
-static int set_gid(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)
+static int set_gid(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         gid_set = 1;
         prelude_client_profile_set_gid(profile, atoi(optarg));
@@ -180,17 +180,28 @@ static int set_gid(void *context, prelude_option_t *opt, const char *optarg, pre
 
 
 
-static int set_server_keepalive(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)
+static int set_server_keepalive(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
 	server_keepalive = 1;
 	return 0;
 }
 
 
-static int set_server_prompt_passwd(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)
+static int set_server_prompt_passwd(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
 	server_prompt_passwd = 1;
 	return 0;
+}
+
+
+
+static void setup_permission_options(prelude_option_t *parent)
+{
+        prelude_option_add(parent, NULL, PRELUDE_OPTION_TYPE_CLI, 'u', "uid",
+                           NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_uid, NULL);
+
+        prelude_option_add(parent, NULL, PRELUDE_OPTION_TYPE_CLI, 'g', "gid",
+                           NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_gid, NULL);
 }
 
 
@@ -524,14 +535,12 @@ static int add_cmd(int argc, char **argv)
         gnutls_x509_privkey key;
 
         ret = _prelude_client_profile_new(&profile);
+        ret = prelude_option_new(NULL, &opt);
+        setup_permission_options(opt);
         
-        opt = prelude_option_new(NULL);
-        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'u', "uid", NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_uid, NULL);
-        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'g', "gid", NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_gid, NULL);
-
         argc -= 2;
         
-        ret = prelude_option_parse_arguments(NULL, opt, NULL, &argc, &argv[2], &err);
+        ret = prelude_option_read(opt, NULL, &argc, &argv[2], &err, NULL);
         if ( ret < 0 )
                 return -1;
 
@@ -602,14 +611,12 @@ static int register_cmd(int argc, char **argv)
         char *ptr, *addr = strdup(argv[3]);
 
         ret = _prelude_client_profile_new(&profile);
-
-        opt = prelude_option_new(NULL);
-        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'u', "uid", NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_uid, NULL);
-        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'g', "gid", NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_gid, NULL);
+        ret = prelude_option_new(NULL, &opt);
+        setup_permission_options(opt);
 
         argc -= 3;
         
-        ret = prelude_option_parse_arguments(NULL, opt, NULL, &argc, &argv[3], &err);
+        ret = prelude_option_read(opt, NULL, &argc, &argv[3], &err, NULL);
         if ( ret < 0 )
                 return -1;
         
@@ -680,21 +687,20 @@ static int registration_server_cmd(int argc, char **argv)
         gnutls_x509_privkey key;
         gnutls_x509_crt ca_crt, crt;
         
-        opt = prelude_option_new(NULL);
         ret = _prelude_client_profile_new(&profile);
+        ret = prelude_option_new(NULL, &opt);
         
-        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'k', "keepalive", NULL,
+        prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 'k', "keepalive", NULL,
                            PRELUDE_OPTION_ARGUMENT_NONE, set_server_keepalive, NULL);
 		
-	prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'p', "prompt", NULL,
+	prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 'p', "prompt", NULL,
                            PRELUDE_OPTION_ARGUMENT_NONE, set_server_prompt_passwd, NULL);
         
-        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'u', "uid", NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_uid, NULL);
-        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'g', "gid", NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_gid, NULL);
-
+        setup_permission_options(opt);
+        
         argc -= 2;
         
-        ret = prelude_option_parse_arguments(NULL, opt, NULL, &argc, &argv[2], &err);
+        ret = prelude_option_read(opt, NULL, &argc, &argv[2], &err, NULL);
         if ( ret < 0 )
                 return -1;
         
@@ -724,7 +730,7 @@ static int print_help(struct cmdtbl *tbl)
         int i;
         
         fprintf(stderr, "Usage prelude-adduser <subcommand> [options] [args]\n");
-        fprintf(stderr, "Type \"prelude-adduser help <subcommand>\" for help on a specific subcommand.\n\n");
+        fprintf(stderr, "Type \"prelude-adduser <subcommand>\" for help on a specific subcommand.\n\n");
         fprintf(stderr, "Available subcommands:\n");
         
         for ( i = 0; tbl[i].cmd; i++ )
@@ -816,14 +822,10 @@ int main(int argc, char **argv)
 
         if ( argc == 1 )
                 print_help(tbl);
-        
+
         for ( k = 0; k < argc; k++ )
                 if ( *argv[k] == '-' )
                         break;
-
-        ret = read_tls_setting();
-        if ( ret < 0 )
-                return -1;
 
         ret = -1;
         gnutls_global_init();
@@ -837,6 +839,11 @@ int main(int argc, char **argv)
                         tbl[i].help_func();
                         exit(1);
                 }
+
+                
+                ret = read_tls_setting();
+                if ( ret < 0 )
+                        return -1;
                 
                 ret = tbl[i].cmd_func(argc, argv);
                 break;

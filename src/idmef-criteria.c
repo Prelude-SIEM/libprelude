@@ -30,31 +30,47 @@
 
 #include "libmissing.h"
 #include "prelude-log.h"
+#include "prelude-error.h"
 #include "prelude-inttypes.h"
 
 #include "idmef.h"
-#include "idmef-util.h"
 #include "idmef-criteria.h"
 
 
+struct idmef_criterion {
+	idmef_path_t *path;
+	idmef_criterion_value_t *value;
+	idmef_value_relation_t relation;
+};
 
-static int idmef_criterion_check_object_value(idmef_object_t *object,
-					      idmef_criterion_value_t *value)
+
+struct idmef_criteria {
+	prelude_list_t list;
+        
+	idmef_criterion_t *criterion;
+        struct idmef_criteria *or;
+        struct idmef_criteria *and;
+};
+
+
+
+static int idmef_criterion_check_path_value(idmef_path_t *path,
+                                            idmef_criterion_value_t *value)
 {
         int ret = 0;
         idmef_value_t *fixed;
 	idmef_value_type_id_t type;
 
-	type = idmef_object_get_value_type(object);
+	type = idmef_path_get_value_type(path);
 
 	switch ( idmef_criterion_value_get_type(value) ) {
                 
-	case idmef_criterion_value_type_fixed: 
+	case IDMEF_CRITERION_VALUE_TYPE_FIXED: 
 		fixed = idmef_criterion_value_get_fixed(value);
 		ret = (idmef_value_get_type(fixed) == type);
 		break;
 
-	case idmef_criterion_value_type_non_linear_time:
+	case IDMEF_CRITERION_VALUE_TYPE_NON_LINEAR_TIME:
 		ret = (type == IDMEF_VALUE_TYPE_TIME);
 		break;
                 
@@ -151,10 +167,11 @@ static int idmef_criterion_check_relation(idmef_criterion_value_t *value,
 					  idmef_value_relation_t relation)
 {
 	switch ( idmef_criterion_value_get_type(value) ) {
-	case idmef_criterion_value_type_fixed:
+
+        case IDMEF_CRITERION_VALUE_TYPE_FIXED:
 		return idmef_value_check_relation(idmef_criterion_value_get_fixed(value), relation);
 
-	case idmef_criterion_value_type_non_linear_time:
+	case IDMEF_CRITERION_VALUE_TYPE_NON_LINEAR_TIME:
 		return idmef_criterion_check_relation_value_non_linear_value
 			(idmef_criterion_value_get_non_linear_time(value), relation);
 	}
@@ -165,11 +182,11 @@ static int idmef_criterion_check_relation(idmef_criterion_value_t *value,
 
 
 
-static int idmef_criterion_check(idmef_object_t *object,
+static int idmef_criterion_check(idmef_path_t *path,
 				 idmef_criterion_value_t *value,
                                  idmef_value_relation_t relation)
 {
-	if ( idmef_criterion_check_object_value(object, value) < 0 )
+	if ( idmef_criterion_check_path_value(path, value) < 0 )
 		return -1;
         
 	return idmef_criterion_check_relation(value, relation);
@@ -177,36 +194,30 @@ static int idmef_criterion_check(idmef_object_t *object,
 
 
 
-idmef_criterion_t *idmef_criterion_new(idmef_object_t *object,
-				       idmef_criterion_value_t *value,
-                                       idmef_value_relation_t relation)
+int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
+                        idmef_criterion_value_t *value, idmef_value_relation_t relation)
 {
-	idmef_criterion_t *criterion;
+        int ret;
         
-	if ( value && idmef_criterion_check(object, value, relation) < 0 )
-		return NULL;
+        if ( value && (ret = idmef_criterion_check(path, value, relation)) < 0 )
+		return ret;
 
-	criterion = calloc(1, sizeof(*criterion));
-	if ( ! criterion ) {
-		log(LOG_ERR, "memory exhausted.\n");
-		return NULL;
-	}
+	*criterion = calloc(1, sizeof(**criterion));
+	if ( ! *criterion )
+		return prelude_error_from_errno(errno);
 
-	criterion->object = object;
-	criterion->relation = relation;
-	criterion->value = value;
+	(*criterion)->path = path;
+	(*criterion)->relation = relation;
+	(*criterion)->value = value;
 
-	return criterion;
+	return 0;
 }
 
 
 
 void idmef_criterion_destroy(idmef_criterion_t *criterion)
 {
-	if ( ! criterion )
-		return;
-
-	idmef_object_destroy(criterion->object);
+	idmef_path_destroy(criterion->path);
 
 	if ( criterion->value ) /* can be NULL if relation is is_null or is_not_null */
 		idmef_criterion_value_destroy(criterion->value);
@@ -216,41 +227,46 @@ void idmef_criterion_destroy(idmef_criterion_t *criterion)
 
 
 
-idmef_criterion_t *idmef_criterion_clone(idmef_criterion_t *criterion)
+int idmef_criterion_clone(idmef_criterion_t *criterion, idmef_criterion_t **dst)
 {
-	idmef_object_t *object;
+        int ret;
+	idmef_path_t *path;
 	idmef_criterion_value_t *value;
 
-	if ( ! criterion )
-		return NULL;
+	ret = idmef_path_clone(criterion->path, &path);
+	if ( ret < 0 )
+		return ret;
 
-	object = idmef_object_clone(criterion->object);
-	if ( ! object )
-		return NULL;
+	ret = idmef_criterion_value_clone(criterion->value, &value);
+	if ( ret < 0 ) {
+                idmef_path_destroy(path);
+		return ret;
+        }
 
-	value = idmef_criterion_value_clone(criterion->value);
-	if ( ! value )
-		return NULL;
-
-	return idmef_criterion_new(object, value, criterion->relation);
+	return idmef_criterion_new(dst, path, value, criterion->relation);
 }
 
 
 
-void idmef_criterion_print(const idmef_criterion_t *criterion)
+int idmef_criterion_print(const idmef_criterion_t *criterion, prelude_io_t *fd)
 {
-        const char *operator;
-        
-        operator = idmef_value_relation_to_string(criterion->relation);
-        assert(operator);
+        int ret;
+        prelude_string_t *out;
 
-        if ( ! criterion->value ) {
-	        printf("%s %s", operator, idmef_object_get_name(criterion->object));
-                return;
+        ret = prelude_string_new(&out);
+        if ( ret < 0 )
+                return ret;
+
+        ret = idmef_criterion_to_string(criterion, out);
+        if ( ret < 0 ) {
+                prelude_string_destroy(out);
+                return ret;
         }
 
-        printf("%s %s ", idmef_object_get_name(criterion->object), operator);
-	idmef_criterion_value_print(criterion->value);
+        ret = prelude_io_write(fd, prelude_string_get_string(out), prelude_string_get_len(out));
+        prelude_string_destroy(out);
+
+        return ret;
 }
 
 
@@ -263,18 +279,18 @@ int idmef_criterion_to_string(const idmef_criterion_t *criterion, prelude_string
         assert(operator);
 
         if ( ! criterion->value )
-                return prelude_string_sprintf(out, "%s %s", operator, idmef_object_get_name(criterion->object));
+                return prelude_string_sprintf(out, "%s %s", operator, idmef_path_get_name(criterion->path));
 
-        prelude_string_sprintf(out, "%s %s ", idmef_object_get_name(criterion->object), operator);
+        prelude_string_sprintf(out, "%s %s ", idmef_path_get_name(criterion->path), operator);
 
         return idmef_criterion_value_to_string(criterion->value, out);
 }
 
 
 
-idmef_object_t *idmef_criterion_get_object(idmef_criterion_t *criterion)
+idmef_path_t *idmef_criterion_get_path(idmef_criterion_t *criterion)
 {
-	return criterion ? criterion->object : NULL;
+	return criterion->path;
 }
 
 
@@ -302,8 +318,11 @@ int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message
         int ret = 0;
 	idmef_value_t *value;
 	
-	value = idmef_object_get(message, criterion->object);
-	if ( ! value ) 
+	ret = idmef_path_get(criterion->path, message, &value);
+        if ( ret < 0 )
+                return ret;
+        
+        if ( ! value ) 
 		return (criterion->relation == IDMEF_VALUE_RELATION_IS_NULL) ? 0 : -1;
         
         if ( ! criterion->value )
@@ -311,13 +330,13 @@ int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message
         
 	switch ( idmef_criterion_value_get_type(criterion->value) ) {
                 
-        case idmef_criterion_value_type_fixed:
+        case IDMEF_CRITERION_VALUE_TYPE_FIXED:
         	ret = idmef_value_match(value,
                                         idmef_criterion_value_get_fixed(criterion->value),
                                         criterion->relation);
 		break;
 		
-	case idmef_criterion_value_type_non_linear_time:
+	case IDMEF_CRITERION_VALUE_TYPE_NON_LINEAR_TIME:
 		/* not supported for the moment */
                 ret = -1;
 		break;
@@ -330,61 +349,67 @@ int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message
 
 
 
-idmef_criteria_t *idmef_criteria_new(void)
+int idmef_criteria_new(idmef_criteria_t **criteria)
 {
-	idmef_criteria_t *criteria;
+        *criteria = calloc(1, sizeof(**criteria));
+	if ( ! *criteria )
+		return prelude_error_from_errno(errno);
 
-	criteria = calloc(1, sizeof(*criteria));
-	if ( ! criteria ) {
-		log(LOG_ERR, "out of memory!\n");
-		return NULL;
-	}
+        (*criteria)->or = NULL;
+        (*criteria)->and = NULL;
 
-        criteria->or = NULL;
-        criteria->and = NULL;
-
-	return criteria;
+	return 0;
 }
 
 
 
 void idmef_criteria_destroy(idmef_criteria_t *criteria)
 {
-        if ( ! criteria )
-                return;
-        
-        idmef_criterion_destroy(criteria->criterion);
+	if ( criteria->criterion )
+		idmef_criterion_destroy(criteria->criterion);
 
-        idmef_criteria_destroy(criteria->or);
-        idmef_criteria_destroy(criteria->and);
+	if ( criteria->or )
+		idmef_criteria_destroy(criteria->or);
+
+	if ( criteria->and )
+		idmef_criteria_destroy(criteria->and);
         
 	free(criteria);
 }
 
 
 
-idmef_criteria_t *idmef_criteria_clone(idmef_criteria_t *src)
+int idmef_criteria_clone(idmef_criteria_t *src, idmef_criteria_t **dst)
 {
+        int ret;
         idmef_criteria_t *new;
-
-        if ( ! src )
-                return NULL;
         
-        new = malloc(sizeof(*new));
-        if ( ! new ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
+        new = *dst = malloc(sizeof(*new));
+        if ( ! new )
+                return prelude_error_from_errno(errno);
 
         memcpy(new, src, sizeof(*new));
         
-        new->or = idmef_criteria_clone(src->or);
-        new->and = idmef_criteria_clone(src->and);
-        new->criterion = idmef_criterion_clone(src->criterion);
+        ret = idmef_criteria_clone(src->or, &new->or);
+        if ( ret < 0 ) {
+                idmef_criteria_destroy(new);
+                return ret;
+        }
         
-        return new;
+        ret = idmef_criteria_clone(src->and, &new->and);
+        if ( ret < 0 ) {
+                idmef_criteria_destroy(new);
+                return ret;
+        }
+        
+        ret = idmef_criterion_clone(src->criterion, &new->criterion);
+        if ( ret < 0 ) {
+                idmef_criteria_destroy(new);
+                return ret;
+        }
+        
+        return 0;
 }
-
 
 
 
@@ -402,28 +427,23 @@ idmef_criteria_t *idmef_criteria_get_and(idmef_criteria_t *criteria)
 
 
 
-
-
-void idmef_criteria_print(idmef_criteria_t *criteria)
+int idmef_criteria_print(idmef_criteria_t *criteria, prelude_io_t *fd)
 {
-        if ( ! criteria )
-                return;
+        int ret;
+        prelude_string_t *out;
 
-        if ( criteria->or )
-                printf("((");
-        
-        idmef_criterion_print(criteria->criterion);
+        ret = prelude_string_new(&out);
+        if ( ret < 0 )
+                return ret;
 
-        if ( criteria->and ) {
-                printf(" && ");
-                idmef_criteria_print(criteria->and);
-        }
-        
-        if ( criteria->or ) {
-                printf(") || (");
-                idmef_criteria_print(criteria->or);
-                printf("))");
-        }
+        ret = idmef_criteria_to_string(criteria, out);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_io_write(fd, prelude_string_get_string(out), prelude_string_get_len(out));
+        prelude_string_destroy(out);
+
+        return ret;
 }
 
 
@@ -454,16 +474,16 @@ int idmef_criteria_to_string(idmef_criteria_t *criteria, prelude_string_t *out)
 
 
 
-int idmef_criteria_is_criterion(idmef_criteria_t *criteria)
+prelude_bool_t idmef_criteria_is_criterion(idmef_criteria_t *criteria)
 {
-	return criteria ? (criteria->criterion != NULL) : -1;
+	return (criteria->criterion != NULL) ? TRUE : FALSE;
 }
 
 
 
 idmef_criterion_t *idmef_criteria_get_criterion(idmef_criteria_t *criteria)
 {
-	return criteria ? criteria->criterion : NULL;
+	return criteria->criterion;
 }
 
 
@@ -482,20 +502,30 @@ void idmef_criteria_or_criteria(idmef_criteria_t *criteria, idmef_criteria_t *cr
 
 
 
-void idmef_criteria_and_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2)
+int idmef_criteria_and_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2)
 {
-        idmef_criteria_t *last = NULL;
+        int ret;
+        idmef_criteria_t *new, *last = NULL;
         
         while ( criteria ) {
                 last = criteria;
-
-                if ( criteria->or )
-                        idmef_criteria_and_criteria(criteria->or, idmef_criteria_clone(criteria2));
+                
+                if ( criteria->or ) {
+                        ret = idmef_criteria_clone(criteria2, &new);
+                        if ( ret < 0 )
+                                return ret;
+                        
+                        ret = idmef_criteria_and_criteria(criteria->or, new);
+                        if ( ret < 0 )
+                                return ret;
+                }
                 
                 criteria = criteria->and;
         }
         
         last->and = criteria2;
+
+        return 0;
 }
 
 

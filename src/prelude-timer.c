@@ -43,7 +43,7 @@
 
 
 static int count = 0;
-static PRELUDE_LIST_HEAD(timer_list);
+static PRELUDE_LIST(timer_list);
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
@@ -122,7 +122,7 @@ static void walk_and_wake_up_timer(time_t now)
         
         timer_lock_list();
 
-        prelude_list_for_each_safe(tmp, bkp, &timer_list) {
+        prelude_list_for_each_safe(&timer_list, tmp, bkp) {
                 timer = prelude_list_entry(tmp, prelude_timer_t, list);
 
                 ret = wake_up_if_needed(timer, now);
@@ -149,7 +149,7 @@ static prelude_list_t *search_previous_forward(prelude_timer_t *timer, time_t ex
         prelude_timer_t *cur;
         prelude_list_t *tmp, *prev = NULL;
         
-        prelude_list_for_each(tmp, &timer_list) {
+        prelude_list_for_each(&timer_list, tmp) {
                 cur = prelude_list_entry(tmp, prelude_timer_t, list);
 
                 hop++;
@@ -307,8 +307,10 @@ static prelude_list_t *search_previous_timer(prelude_timer_t *timer)
 
 static void timer_destroy_unlocked(prelude_timer_t *timer) 
 {
-        count--;
-        prelude_list_del(&timer->list);
+        if ( ! prelude_list_is_empty(&timer->list) ) {
+                count--;
+                prelude_list_del_init(&timer->list);
+        }
 }
 
 
@@ -321,12 +323,12 @@ static void timer_init_unlocked(prelude_timer_t *timer)
         count++;
         timer->start_time = time(NULL);
         
-        if ( ! prelude_list_empty(&timer_list) ) {
+        if ( ! prelude_list_is_empty(&timer_list) )
                 prev = search_previous_timer(timer);
-        } else
+        else
                 prev = &timer_list;
 
-        prelude_list_add(&timer->list, prev);
+        prelude_list_add(prev, &timer->list);
 }
 
 
@@ -344,6 +346,21 @@ void prelude_timer_init(prelude_timer_t *timer)
         timer_init_unlocked(timer);
 }
 
+
+
+/**
+ * prelude_timer_init_list:
+ * @timer: Pointer to a #prelude_timer_t object.
+ *
+ * Initialize @timer list member. This is useful if
+ * you're going to call prelude_timer_destroy() on timer
+ * for which prelude_timer_init() was never called.
+ *
+ */
+void prelude_timer_init_list(prelude_timer_t *timer)
+{
+        prelude_list_init(&timer->list);
+}
 
 
 

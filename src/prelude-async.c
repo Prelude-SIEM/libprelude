@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001-2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001-2005 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -38,7 +38,7 @@
 
 
 
-static PRELUDE_LIST_HEAD(joblist);
+static PRELUDE_LIST(joblist);
 
 
 static int async_flags = 0;
@@ -88,11 +88,11 @@ static void wait_timer_and_data(void)
 
                 old_async_flags = async_flags;
                 
-                while ( prelude_list_empty(&joblist) && ret != ETIMEDOUT
+                while ( prelude_list_is_empty(&joblist) && ret != ETIMEDOUT
                         && ! stop_processing && async_flags == old_async_flags )
                         ret = pthread_cond_timedwait(&cond, &mutex, &ts);
                 
-                if ( prelude_list_empty(&joblist) && stop_processing ) {
+                if ( prelude_list_is_empty(&joblist) && stop_processing ) {
                         pthread_mutex_unlock(&mutex);
                         pthread_exit(NULL);
                 }
@@ -126,10 +126,10 @@ static void wait_data(void)
         pthread_mutex_lock(&mutex);
         old_async_flags = async_flags;
         
-        while ( prelude_list_empty(&joblist) && ! stop_processing && async_flags == old_async_flags ) 
+        while ( prelude_list_is_empty(&joblist) && ! stop_processing && async_flags == old_async_flags ) 
                 pthread_cond_wait(&cond, &mutex);
 
-        if ( prelude_list_empty(&joblist) && stop_processing ) {
+        if ( prelude_list_is_empty(&joblist) && stop_processing ) {
                 pthread_mutex_unlock(&mutex);
                 pthread_exit(NULL);
         }
@@ -149,13 +149,13 @@ static void *async_thread(void *arg)
 
         ret = sigfillset(&set);
         if ( ret < 0 ) {
-                log(LOG_ERR, "sigfillset returned an error.\n");
+                prelude_log(PRELUDE_LOG_ERR, "sigfillset returned an error.\n");
                 return NULL;
         }
         
         ret = pthread_sigmask(SIG_BLOCK, &set, NULL);
         if ( ret < 0 ) {
-                log(LOG_ERR, "pthread_sigmask returned an error.\n");
+                prelude_log(PRELUDE_LOG_ERR, "pthread_sigmask returned an error.\n");
                 return NULL;
         }
 
@@ -167,7 +167,7 @@ static void *async_thread(void *arg)
                         wait_data();
                 
                 pthread_mutex_lock(&mutex);
-                next = ( prelude_list_empty(&joblist) ) ? NULL : joblist.next;
+                next = ( prelude_list_is_empty(&joblist) ) ? NULL : joblist.next;
                 pthread_mutex_unlock(&mutex);
                 
                 while ( next ) {
@@ -178,7 +178,8 @@ static void *async_thread(void *arg)
                         next = ( tmp->next != &joblist ) ? tmp->next : NULL;
                         pthread_mutex_unlock(&mutex);
                         
-                        obj = prelude_linked_object_get_object(tmp, prelude_async_object_t);
+                        obj = prelude_linked_object_get_object(tmp);
+                        
                         prelude_async_del(obj);
                         obj->func(obj, obj->data);                     
                 }
@@ -197,7 +198,7 @@ static void prelude_async_exit(void)
 
         pthread_mutex_unlock(&mutex);
 
-        log(LOG_INFO, "Waiting for asynchronous operation to finish.\n");
+        prelude_log(PRELUDE_LOG_INFO, "Waiting asynchronous operation to finish.\n");
         
         pthread_join(thread, NULL);
         
@@ -262,7 +263,7 @@ int prelude_async_init(void)
 void prelude_async_add(prelude_async_object_t *obj) 
 {
         pthread_mutex_lock(&mutex);
-        prelude_linked_object_add_tail((prelude_linked_object_t *)obj, &joblist);
+        prelude_linked_object_add_tail(&joblist, (prelude_linked_object_t *) obj);
         pthread_cond_signal(&cond);
         pthread_mutex_unlock(&mutex);
 }
@@ -279,7 +280,7 @@ void prelude_async_add(prelude_async_object_t *obj)
 void prelude_async_del(prelude_async_object_t *obj) 
 {
         pthread_mutex_lock(&mutex);
-        prelude_linked_object_del((prelude_linked_object_t *)obj);
+        prelude_linked_object_del((prelude_linked_object_t *) obj);
         pthread_mutex_unlock(&mutex);
 }
 

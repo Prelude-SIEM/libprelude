@@ -24,8 +24,6 @@ tls-auth
 @crypt: 
 @peer_analyzerid: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@client: 
 
 
 <!-- ##### FUNCTION tls_auth_init ##### -->
@@ -36,7 +34,5 @@ tls-auth
 @cp: 
 @cred: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@client: 
 
 

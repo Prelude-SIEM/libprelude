@@ -7,26 +7,6 @@ prelude-client
 <!-- ##### SECTION Long_Description ##### -->
 <para>
 
-<example>
-<title>Creating a new analyzer.</title>
-<programlisting>
-int main(int argc, char **argv)
-{
-        prelude_client_t *client;
-
-        client = prelude_client_new(PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF);
-        if ( ! client )
-                return -1;
-
-        ret = prelude_client_init(client, "MyAnalyzerName", "/etc/MyAnalyzerName.conf", argc, argv);
-        if ( ret < 0 )
-                exit(1);
-
-        exit(0);
-}
-</programlisting>
-</example>
-
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -95,8 +75,6 @@ int main(int argc, char **argv)
 @capability: 
 @profile: 
 @config: 
-@argc: 
-@argv: 
 @Returns: 
 
 
@@ -195,9 +173,10 @@ int main(int argc, char **argv)
 
 </para>
 
-@client: 
-@err: 
+@error: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@client: 
 
 
 <!-- ##### FUNCTION prelude_client_get_profile ##### -->

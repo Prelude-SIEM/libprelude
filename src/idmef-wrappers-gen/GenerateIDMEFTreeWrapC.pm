@@ -33,7 +33,7 @@ sub	header
     $self->output("
 /*****
 *
-* Copyright (C) 2001-2004 Yoann Vandoorselaere <yoann\@prelude-ids.org>
+* Copyright (C) 2001-2005 Yoann Vandoorselaere <yoann\@prelude-ids.org>
 * Copyright (C) 2003,2004 Nicolas Delon <nicolas\@prelude-ids.org>
 * All Rights Reserved
 *
@@ -67,6 +67,9 @@ sub	header
 #include \"prelude-list.h\"
 #include \"prelude-msg.h\"
 #include \"prelude-string.h\"
+
+#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_IDMEF_TREE_WRAP
+#include \"prelude-error.h\"
 
 #include \"idmef-time.h\"
 #include \"idmef-data.h\"
@@ -132,41 +135,40 @@ sub	struct_constructor
     $self->output("
 /**
  * idmef_$struct->{short_typename}_new:
- * 
+ * \@ret: Pointer where to store the created #$struct->{typename} object.
+ *
  * Create a new #$struct->{typename} object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-$struct->{typename} *idmef_$struct->{short_typename}_new(void)
+int idmef_$struct->{short_typename}_new($struct->{typename} **ret)
 \{
-	$struct->{typename} *ret;
-
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 ");
 
     if ( $struct->{is_listed} ) {
 	$self->output("
-	PRELUDE_INIT_LIST_HEAD(&ret->list);
+	prelude_list_init(&(*ret)->list);
 ");
     }
 
     if ( $struct->{refcount} ) {
 	$self->output("
-	ret->refcount = 1;
+	(*ret)->refcount = 1;
 ");
     }
 
     foreach my $field ( map { $_->{metatype} & &METATYPE_LIST ? $_ : () } @{ $struct->{field_list} } ) {
 	$self->output("
-	PRELUDE_INIT_LIST_HEAD(&ret->$field->{name});
+	prelude_list_init(&(*ret)->$field->{name});
     
 ");
 
     }
     $self->output("
-	return ret;
+	return 0;
 
 \}
 ");
@@ -180,7 +182,7 @@ sub	struct_get_child
     my	$n = 0;
 
     $self->output("
-void *idmef_$struct->{short_typename}_get_child(void *p, idmef_child_t child)
+int idmef_$struct->{short_typename}_get_child(void *p, idmef_child_t child, void **childptr)
 \{
 	$struct->{typename} *ptr = p;
 	
@@ -193,23 +195,23 @@ void *idmef_$struct->{short_typename}_get_child(void *p, idmef_child_t child)
 
 	    $self->output("
 		case $n:
-			return &ptr->$field->{name};
+                        *childptr = &ptr->$field->{name};
+			return 0;
 ");
 	} elsif ( $field->{metatype} & &METATYPE_UNION ) {
 
 	    $self->output("
 		case ${n}:
-			return idmef_$struct->{short_typename}_get_$field->{var}_value(ptr);
+			return idmef_$struct->{short_typename}_get_$field->{var}_value(ptr, (idmef_value_t **) childptr);
 ");
 
 	    $n++;
 
 	    foreach my $member ( @{ $field->{member_list} } ) {
 		$self->output("
-		case $n: 
-			if ( ptr->$field->{var} == $member->{value} ) 
-				return ptr->$field->{name}.$member->{name};
-			return NULL;   	   
+		case $n:
+                        *childptr = ( ptr->$field->{var} == $member->{value} ) ? ptr->$field->{name}.$member->{name} : NULL;
+			return 0;   	   
 ");
 		$n++;
 	    }
@@ -217,14 +219,16 @@ void *idmef_$struct->{short_typename}_get_child(void *p, idmef_child_t child)
 
 	    $self->output("
 		case $n:
-			return idmef_$struct->{short_typename}_get_$field->{short_name}_value(ptr);
+			return idmef_$struct->{short_typename}_get_$field->{short_name}_value(ptr, (idmef_value_t **) childptr);
+
 ");
 	} else {
 	    my $refer = $field->{ptr} ? "" : "&";
 
 	    $self->output("
 		case ${n}:
-			return ${refer}ptr->$field->{name};
+                        *childptr = ${refer}ptr->$field->{name};
+                        return 0;
 ");
 	}
 
@@ -233,11 +237,8 @@ void *idmef_$struct->{short_typename}_get_child(void *p, idmef_child_t child)
 
     $self->output("
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	\}
-
-	return NULL;
-
 \}
 ");
 }
@@ -250,7 +251,7 @@ sub	struct_new_child
     my	$n = 0;
 
     $self->output("
-void *idmef_$struct->{short_typename}_new_child(void *p, idmef_child_t child, int n)
+int idmef_$struct->{short_typename}_new_child(void *p, idmef_child_t child, int n, void **ret)
 \{
 	$struct->{typename} *ptr = p;
     
@@ -263,34 +264,34 @@ void *idmef_$struct->{short_typename}_new_child(void *p, idmef_child_t child, in
 	    $self->output("
 		case $n: \{
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) \{
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_$struct->{short_typename}_new_$field->{short_name}(ptr);
+				 retval = idmef_$struct->{short_typename}_new_$field->{short_name}(ptr, ($field->{typename} **) ret);
 			\} else \{
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->$field->{name}) \{
-			    		entry = prelude_list_entry(tmp, $field->{typename}, list);
+				prelude_list_for_each(&ptr->$field->{name}, tmp) \{
+			    		*ret = prelude_list_entry(tmp, $field->{typename}, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				\}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) \{
-			    		entry = idmef_$struct->{short_typename}_new_$field->{short_name}(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_$struct->{short_typename}_new_$field->{short_name}(ptr, ($field->{typename} **) ret);
+					if ( retval < 0 )
+						return retval;
 				\}
 			\}
 			
-			return entry;
+			return 0;
 		\}
 ");
 	} elsif ( $field->{metatype} & &METATYPE_UNION ) {
@@ -300,7 +301,7 @@ void *idmef_$struct->{short_typename}_new_child(void *p, idmef_child_t child, in
 	    foreach my $member ( @{ $field->{member_list} } ) {
 		$self->output("
 		case $n:
-			return idmef_$struct->{short_typename}_new_$member->{name}(ptr);
+			return idmef_$struct->{short_typename}_new_$member->{name}(ptr, ($member->{typename} **) ret);
 ");
 		$n++;
 	    }
@@ -308,7 +309,7 @@ void *idmef_$struct->{short_typename}_new_child(void *p, idmef_child_t child, in
 	} elsif ( $field->{metatype} & &METATYPE_NORMAL ) {
 	    $self->output("
 		case $n:
-			return idmef_$struct->{short_typename}_new_$field->{name}(ptr);
+			return idmef_$struct->{short_typename}_new_$field->{name}(ptr, ($field->{typename} **) ret);
 ");
 	}
 	
@@ -317,10 +318,8 @@ void *idmef_$struct->{short_typename}_new_child(void *p, idmef_child_t child, in
 
     $self->output("
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	\}
-
-	return NULL;
 \}
 ");
 }
@@ -337,10 +336,8 @@ static void idmef_$struct->{short_typename}_destroy_internal($struct->{typename}
 ");
 
     $self->output("
-       if ( ! prelude_list_empty(&ptr->list) ) \{
-               prelude_list_del(&ptr->list);
-               PRELUDE_INIT_LIST_HEAD(&ptr->list);
-       \}
+       if ( ! prelude_list_is_empty(&ptr->list) )
+               prelude_list_del_init(&ptr->list);
     ") if ( $struct->{is_listed} );
 
     foreach my $field ( @{ $struct->{field_list} } ) {
@@ -359,7 +356,7 @@ static void idmef_$struct->{short_typename}_destroy_internal($struct->{typename}
 		prelude_list_t *n, *tmp;
 		$field->{typename} *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->$field->{name}) \{
+		prelude_list_for_each_safe(&ptr->$field->{name}, tmp, n) \{
 			entry = prelude_list_entry(tmp, $field->{typename}, list);
 			$destroy_func(entry);
 		\}
@@ -549,33 +546,38 @@ $field->{typename} ${ptr}idmef_$struct->{short_typename}_get_${name}($struct->{t
 
     if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
 	$self->output("
-idmef_value_t *idmef_$struct->{short_typename}_get_${name}_value($struct->{typename} *ptr)
+int idmef_$struct->{short_typename}_get_${name}_value($struct->{typename} *ptr, idmef_value_t **value)
 \{");
 	if ( $field->{metatype} & &METATYPE_OPTIONAL_INT ) {
 	    $self->output("
-	return ptr->$field->{name}_is_set ? idmef_value_new_$field->{value_type}(ptr->$field->{name}) : NULL;
+        if ( ! ptr->$field->{name}_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_$field->{value_type}(value, ptr->$field->{name});
 ");
 	    
 	} else {
-	    $self->output("
-	idmef_value_t *value;");
-
 	    if ( $field->{ptr} ) {
 		$self->output("
-	if ( ! ptr->$field->{name} )
-		return NULL;
+	if ( ! ptr->$field->{name} ) {
+                *value = NULL;
+		return 0;
+        }
 ");
 	    }
 
 	    $self->output("
+        int ret;
 
-	value = idmef_value_new_$field->{value_type}(${refer}ptr->$field->{name});
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_$field->{value_type}(value, ${refer}ptr->$field->{name});
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;");
+	return 0;");
 	}
 
 	$self->output("
@@ -584,31 +586,38 @@ idmef_value_t *idmef_$struct->{short_typename}_get_${name}_value($struct->{typen
 
     } elsif ( $field->{metatype} & &METATYPE_STRUCT ) {
 	$self->output("
-idmef_value_t *idmef_$struct->{short_typename}_get_${name}_value($struct->{typename} *ptr)
+int idmef_$struct->{short_typename}_get_${name}_value($struct->{typename} *ptr, idmef_value_t **value)
 \{");
 
 	if ( $field->{ptr} ) {
 	    $self->output("
-	if ( ! ptr->$field->{name} )
-		return NULL;
+	if ( ! ptr->$field->{name} ) {
+		*value = NULL;
+                return 0;
+        }
 ");
 	}
 
 	$self->output("
-	return idmef_value_new_object(${refer}ptr->$field->{name}, IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ");
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ", ${refer}ptr->$field->{name});
 \}
 ");
 
     } elsif ( $field->{metatype} & &METATYPE_ENUM ) {
-	my $value_func = "idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ", ptr->$field->{name})";
+	my $value_func = "idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ", ptr->$field->{name})";
 
 	$self->output("
-idmef_value_t *idmef_$struct->{short_typename}_get_${name}_value($struct->{typename} *ptr)
+int idmef_$struct->{short_typename}_get_${name}_value($struct->{typename} *ptr, idmef_value_t **value)
 \{");
 
 	if ( $field->{metatype} & &METATYPE_OPTIONAL_INT ) {
 	    $self->output("
-	return ptr->$field->{name}_is_set ? $value_func : NULL;");
+        if ( ! ptr->$field->{name}_is_set ) \{
+              *value = NULL;
+              return 0;
+        \}
+
+	return $value_func;");
 	} else {
 	    $self->output("
 	return $value_func;
@@ -707,15 +716,15 @@ void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr
 /**
  * idmef_$struct->{short_typename}_new_${name}:
  * \@ptr: pointer to a #$struct->{typename} object.
+ * \@ret: pointer to an address where to store the created #$field->{typename} object.
  *
  * Create a new ${name} object, children of #$struct->{typename}.
  * If \@ptr already contain a #$field->{typename} object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-$field->{typename} *idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr)
+int idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr, $field->{typename} **ret)
 \{");
-
     if ( $field->{metatype} & &METATYPE_OPTIONAL_INT ) {
 	$self->output("
 	ptr->$field->{name}_is_set = 1;
@@ -727,10 +736,14 @@ $field->{typename} *idmef_$struct->{short_typename}_new_${name}($struct->{typena
 	    if ( $field->{ptr} ) {
 
 		$self->output("
+        int retval;
+
 	if ( ptr->$field->{name} )
 		$field->{short_typename}_destroy(ptr->$field->{name});
 		
-	ptr->$field->{name} = $field->{short_typename}_new();
+	retval = $field->{short_typename}_new(&ptr->$field->{name});
+        if ( retval < 0 )
+               return retval;
 ");
 	    } else {
 
@@ -753,8 +766,10 @@ $field->{typename} *idmef_$struct->{short_typename}_new_${name}($struct->{typena
     } else {
 	if ( $field->{metatype} & &METATYPE_STRUCT && $field->{ptr} ) {
 	    $self->output("
+        int retval;
+
 	if ( ! ptr->$field->{name} )
-		ptr->$field->{name} = idmef_$field->{short_typename}_new();
+		retval = idmef_$field->{short_typename}_new(&ptr->$field->{name});
 ");
 	}
     }
@@ -762,7 +777,8 @@ $field->{typename} *idmef_$struct->{short_typename}_new_${name}($struct->{typena
     $refer = $field->{ptr} ? "" : "&";
 
     $self->output("
-	return ${refer}ptr->$field->{name};
+        *ret = ${refer}ptr->$field->{name};
+	return 0;
 \}
 ");
 }
@@ -790,9 +806,9 @@ $field->{typename} idmef_$struct->{short_typename}_get_$field->{var}($struct->{t
 ");
 
     $self->output("
-idmef_value_t *idmef_$struct->{short_typename}_get_$field->{var}_value($struct->{typename} *ptr)
+int idmef_$struct->{short_typename}_get_$field->{var}_value($struct->{typename} *ptr, idmef_value_t **value)
 \{
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ", ptr->$field->{var});
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ", ptr->$field->{var});
 \}
 ");
 
@@ -847,11 +863,15 @@ void idmef_$struct->{short_typename}_set_$member->{name}($struct->{typename} *pt
 	
 
 	$self->output("
-idmef_value_t *idmef_$struct->{short_typename}_get_$member->{name}_value($struct->{typename} *ptr)
+int idmef_$struct->{short_typename}_get_$member->{name}_value($struct->{typename} *ptr, idmef_value_t **value)
 \{
-	return ((ptr->$field->{var} == $member->{value}) ?
-		idmef_value_new_object(ptr->$field->{name}.$member->{name}, IDMEF_OBJECT_TYPE_" . uc("$member->{short_typename}") . ") :
-		NULL);
+        if ( ptr->$field->{var} != $member->{value} ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_" . uc("$member->{short_typename}") . ",
+                                      ptr->$field->{name}.$member->{name});                        
 \}
 ");
 
@@ -859,14 +879,17 @@ idmef_value_t *idmef_$struct->{short_typename}_get_$member->{name}_value($struct
 /**
  * idmef_$struct->{short_typename}_new_$member->{name}:
  * \@ptr: pointer to a #$struct->{typename} object.
+ * \@ret: pointer where to store the created #$member->{typename} object.
  *
- * Create a new $member->{name} object, children of #$struct->{typename}.
+ * Create a new $member->{typename} object, children of #$struct->{typename}.
  * If \@ptr already contain a #$member->{typename} object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-$member->{typename} *idmef_$struct->{short_typename}_new_$member->{name}($struct->{typename} *ptr)
+int idmef_$struct->{short_typename}_new_$member->{name}($struct->{typename} *ptr, $member->{typename} **ret)
 \{
+        int retval;
+
 	switch ( ptr->$field->{var} ) \{
 ");
 	foreach my $other_member ( @{ $field->{member_list} } ) {
@@ -874,7 +897,8 @@ $member->{typename} *idmef_$struct->{short_typename}_new_$member->{name}($struct
 	    if ( $other_member == $member ) {
 		$self->output("
 		case $member->{value}:
-			return ptr->$field->{name}.$member->{name};
+                        *ret = ptr->$field->{name}.$member->{name};
+			return 0;
 "); 
 	    } else {
 		$self->output("
@@ -890,10 +914,14 @@ $member->{typename} *idmef_$struct->{short_typename}_new_$member->{name}($struct
 			break;
 	\}
 
-	ptr->$field->{name}.$member->{name} = idmef_$member->{short_typename}_new();
-	ptr->$field->{var} = $member->{value};
+        retval = idmef_$member->{short_typename}_new(ret);
+        if ( retval < 0 )
+                return retval;
 
-	return ptr->$field->{name}.$member->{name};
+	ptr->$field->{var} = $member->{value};
+        ptr->$field->{name}.$member->{name} = *ret;
+
+	return 0;
 \}
 ");
     }
@@ -905,7 +933,7 @@ sub	struct_field_list
     my	$tree = shift;
     my	$struct = shift;
     my	$field = shift;
-    my	$new_field_function = "$field->{short_typename}_new()";
+    my	$new_field_function = "$field->{short_typename}_new(ret)";
 
     $new_field_function = "idmef_${new_field_function}" if ( ! ($field->{metatype} & &METATYPE_PRIMITIVE) );
 
@@ -923,7 +951,12 @@ sub	struct_field_list
  */
 $field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object)
 \{
-    	return prelude_list_get_next(object, &ptr->$field->{name}, $field->{typename}, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->$field->{name}, tmp)
+                return prelude_list_entry(tmp, $field->{typename}, list);
+
+        return NULL;
 \}
 
 /**
@@ -935,74 +968,78 @@ $field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name
  */
 void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object)
 \{
-	prelude_list_add_tail(&object->list, &ptr->$field->{name});
+	prelude_list_add_tail(&ptr->$field->{name}, &object->list);
 \}
 
 /**
- * idmef_$struct->{short_typename}_new_$field:
+ * idmef_$struct->{short_typename}_new_$field->{short_name}:
  * \@ptr: pointer to a #$struct->{typename} object.
- * 
- * Create a new $field children of \@ptr,
+ * \@ret: pointer to an address where to store the created #$field->{typename} object.
+ *
+ * Create a new #$field->{typename} children of \@ptr,
  * and add it to the tail of \@ptr list of #$field->{typename} object.
  * 
- * Returns: a pointer to the created #$field->{typename} object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-$field->{typename} *idmef_$struct->{short_typename}_new_$field->{short_name}($struct->{typename} *ptr)
-\{
-	$field->{typename} *object;
+int idmef_$struct->{short_typename}_new_$field->{short_name}($struct->{typename} *ptr, $field->{typename} **ret)
+\{	
+        int retval;
+
+	retval = $new_field_function;
+	if ( retval < 0 )
+		return retval;
 	
-	object = $new_field_function;
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->$field->{name}, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->$field->{name});
-	
-	return object;
+	return 0;
 \}
 
-idmef_value_t *idmef_$struct->{short_typename}_get_$field->{short_name}_value($struct->{typename} *ptr)
+
+int idmef_$struct->{short_typename}_get_$field->{short_name}_value($struct->{typename} *ptr, idmef_value_t **value)
 \{
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	$field->{typename} *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->$field->{name}) \{
+	prelude_list_for_each(&ptr->$field->{name}, tmp) \{
 		entry = prelude_list_entry(tmp, $field->{typename}, list);
 ");
 
     if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
 	$self->output("
-		val = idmef_value_new_$field->{value_type}(entry);
-		if ( ! val ) \{
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_$field->{value_type}(&val, entry);
+		if ( ret < 0 ) \{
+			idmef_value_destroy(*value);
+			return ret;
 		\}
 		idmef_value_dont_have_own_data(val);
 ");
 
     } else {
 	$self->output("
-		val = idmef_value_new_object(entry, IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ");
-		if ( ! val ) \{
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ", entry);
+		if ( ret < 0 ) \{
+			idmef_value_destroy(*value);
+			return ret;
 		\}
 ");
     }
 
     $self->output("
-		if ( idmef_value_list_add(list_val, val) < 0 ) \{
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) \{
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		\}
 	\}
 	
-	return list_val;
+	return 0;
 \}
 
 ");
@@ -1076,8 +1113,7 @@ $enum->{typename} idmef_$enum->{short_typename}_to_numeric(const char *name)
     }
 
     $self->output("
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 \}	
 ");
 

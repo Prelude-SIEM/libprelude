@@ -2,7 +2,7 @@
 prelude-ident
 
 <!-- ##### SECTION Short_Description ##### -->
-Persistant identity handling
+
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -47,7 +47,5 @@ Persistant identity handling
 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@filename: 
 
 

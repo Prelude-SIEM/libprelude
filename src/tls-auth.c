@@ -33,10 +33,12 @@
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
 
+#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_CONNECTION
+#include "prelude-error.h"
+
 #include "prelude-log.h"
 #include "prelude-client.h"
 #include "prelude-message-id.h"
-#include "prelude-error.h"
 #include "prelude-extract.h"
 
 #include "tls-util.h"
@@ -59,17 +61,22 @@ static int read_auth_result(prelude_io_t *fd, uint64_t *analyzerid)
         } while ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN );
 
         if ( ret < 0 )
-                return -1;
+                return ret;
         
         if ( prelude_msg_get_tag(msg) != PRELUDE_MSG_AUTH ) {
                 prelude_msg_destroy(msg);
-                return -1;
+                return prelude_error(PRELUDE_ERROR_INVAL_MESSAGE);
         }
         
         ret = prelude_msg_get(msg, &tag, &len, &buf);
-        if ( ret < 0 || tag != PRELUDE_MSG_AUTH_SUCCEED ) {
+        if ( ret < 0 ) {
                 prelude_msg_destroy(msg);
-                return -1;
+                return ret;
+        }
+
+        if ( tag != PRELUDE_MSG_AUTH_SUCCEED ) {
+                prelude_msg_destroy(msg);
+                return prelude_error(PRELUDE_ERROR_TLS_REMOTE_AUTH);
         }
         
         ret = prelude_extract_uint64_safe(analyzerid, buf, len);
@@ -86,26 +93,26 @@ static int verify_certificate(gnutls_session session)
         
 	ret = gnutls_certificate_verify_peers(session);
 	if ( ret < 0 ) {
-                log(LOG_INFO, "- TLS certificate error: %s.\n", gnutls_strerror(ret));
+                prelude_log(PRELUDE_LOG_WARN, "- TLS certificate error: %s.\n", gnutls_strerror(ret));
                 return -1;
         }
         
 	if ( ret == GNUTLS_E_NO_CERTIFICATE_FOUND ) {
-		log(LOG_INFO, "- TLS certificate error: server did not send any certificate.\n");
+		prelude_log(PRELUDE_LOG_WARN, "- TLS certificate error: server did not send any certificate.\n");
 		return -1;
 	}
 
         if ( ret & GNUTLS_CERT_SIGNER_NOT_FOUND) {
-		log(LOG_INFO, "- TLS certificate error: server certificate issuer is unknown.\n");
+		prelude_log(PRELUDE_LOG_WARN, "- TLS certificate error: server certificate issuer is unknown.\n");
                 return -1;
         }
         
         if ( ret & GNUTLS_CERT_INVALID ) {
-                log(LOG_INFO, "- TLS certificate error: server certificate is NOT trusted.\n");
+                prelude_log(PRELUDE_LOG_WARN, "- TLS certificate error: server certificate is NOT trusted.\n");
                 return -1;
         }
 
-        log(LOG_INFO, "- TLS certificate: server certificate is trusted.\n");
+        prelude_log(PRELUDE_LOG_INFO, "- TLS certificate: server certificate is trusted.\n");
 
         return 0;
 }
@@ -117,9 +124,15 @@ static int handle_gnutls_error(gnutls_session session, int ret)
 {
         int last_alert;
         
-        if ( ret == GNUTLS_E_WARNING_ALERT_RECEIVED || ret == GNUTLS_E_FATAL_ALERT_RECEIVED ) {
+        if ( ret == GNUTLS_E_WARNING_ALERT_RECEIVED ) {
                 last_alert = gnutls_alert_get(session);
-                log(LOG_INFO, "- Received alert: %s.\n", gnutls_alert_get_name(last_alert));
+                prelude_log(PRELUDE_LOG_WARN, "- TLS: received warning alert: %s.\n", gnutls_alert_get_name(last_alert));
+                return 0;
+        }
+        
+        else if ( ret == GNUTLS_E_FATAL_ALERT_RECEIVED ) {
+                last_alert = gnutls_alert_get(session);
+                prelude_log(PRELUDE_LOG_ERR, "- TLS: received fatal alert: %s.\n", gnutls_alert_get_name(last_alert));
                 return -1;
         }
 
@@ -150,15 +163,15 @@ int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int cryp
         } while ( ret < 0 && handle_gnutls_error(session, ret) == 0 );
         
         if ( ret < 0 ) {
-                log(LOG_INFO, "- TLS handshake failed: %s.\n", gnutls_strerror(ret));
                 gnutls_deinit(session);
-                return -1;
+                prelude_log(PRELUDE_LOG_WARN, "- TLS handshake failed: %s.\n", gnutls_strerror(ret));
+                return prelude_error(PRELUDE_ERROR_TLS_HANDSHAKE);
         }
 
         ret = verify_certificate(session);
         if ( ret < 0 ) {
                 gnutls_deinit(session);
-                return -1;
+                return prelude_error(PRELUDE_ERROR_TLS_INVALID_CERTIFICATE);
         }
         
         prelude_io_set_tls_io(io, session);
@@ -166,7 +179,7 @@ int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int cryp
         ret = read_auth_result(io, analyzerid);
         if ( ret < 0 ) {
                 gnutls_deinit(session);
-                return -1;
+                return ret;
         }
 
         if ( ! crypt ) {
@@ -176,13 +189,13 @@ int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int cryp
                 } while ( ret < 0 && ret == GNUTLS_E_INTERRUPTED );
 
                 if ( ret < 0 )
-                        log(LOG_ERR, "gnutls_bye() error: %s.\n", gnutls_strerror(ret));
+                        prelude_log(PRELUDE_LOG_WARN, "gnutls bye failed with error: %s.\n", gnutls_strerror(ret));
                 
                 gnutls_deinit(session);
                 prelude_io_set_sys_io(io, fd);
         }
         
-        return ret;
+        return 0;
 }
 
 
@@ -202,7 +215,7 @@ int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *
         
         ret = access(certfile, F_OK);
         if ( ret < 0 )
-                return prelude_error_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS_CERTIFICATE);
+                return prelude_error_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS_CERTIFICATE_FILE);
 
         ret = tls_certificates_load(keyfile, certfile, *cred);
         if ( ret < 0 )

@@ -25,9 +25,9 @@
 #ifndef _LIBPRELUDE_IDMEF_TYPE_H
 #define _LIBPRELUDE_IDMEF_TYPE_H
 
-typedef int32_t idmef_object_type_t;
+typedef int idmef_object_type_t;
 
-typedef int16_t idmef_child_t;
+typedef int idmef_child_t;
 
 #include "idmef-value.h"
 
@@ -51,9 +51,9 @@ int idmef_type_enum_to_numeric(idmef_object_type_t type, const char *val);
 
 const char *idmef_type_enum_to_string(idmef_object_type_t type, int val);
 
-void *idmef_type_get_child(void *ptr, idmef_object_type_t type, idmef_child_t child);
+int idmef_type_get_child(void *ptr, idmef_object_type_t type, idmef_child_t child, void **childptr);
 
-void *idmef_type_new_child(void *ptr, idmef_object_type_t type, idmef_child_t child, int n);
+int idmef_type_new_child(void *ptr, idmef_object_type_t type, idmef_child_t child, int n, void **childptr);
 
 char *idmef_type_get_name(idmef_object_type_t type);
 

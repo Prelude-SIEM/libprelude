@@ -83,8 +83,6 @@ common
 
 @gmt_offset: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@time_local: 
 
 
 <!-- ##### FUNCTION prelude_timegm ##### -->

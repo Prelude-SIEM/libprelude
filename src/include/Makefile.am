@@ -11,18 +11,16 @@ include_HEADERS = common.h			\
 		  idmef-data.h			\
 		  idmef-message-id.h		\
 		  idmef-message-id-format.h	\
-		  idmef-object.h		\
-		  idmef-object-value.h		\
+		  idmef-message-read.h		\
+		  idmef-message-print.h		\
+		  idmef-message-write.h		\
+		  idmef-path.h			\
 		  idmef-time.h			\
 		  idmef-tree-data.h		\
 		  idmef-tree-wrap.h		\
 		  idmef-type.h			\
 		  idmef-value.h			\
 		  idmef-value-type.h		\
-		  idmef-util.h			\
-		  idmef-message-read.h		\
-		  idmef-message-print.h		\
-		  idmef-message-write.h		\
 		  prelude.h			\
 		  prelude-async.h		\
 		  prelude-extract.h		\
@@ -33,7 +31,7 @@ include_HEADERS = common.h			\
 		  prelude-client.h		\
 		  prelude-client-profile.h	\
 		  prelude-connection.h		\
-		  prelude-connection-mgr.h	\
+		  prelude-connection-pool.h	\
 		  prelude-failover.h		\
 		  prelude-ident.h		\
 		  prelude-inet.h		\

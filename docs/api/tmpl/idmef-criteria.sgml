@@ -19,7 +19,8 @@ idmef-criteria
 
 </para>
 
-@object: 
+@criterion: 
+@path: 
 @value: 
 @relation: 
 @Returns: 
@@ -38,7 +39,8 @@ idmef-criteria
 
 </para>
 
-@criterion: 
+@src: 
+@dst: 
 @Returns: 
 
 
@@ -48,6 +50,8 @@ idmef-criteria
 </para>
 
 @criterion: 
+@fd: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_criterion_to_string ##### -->
@@ -58,12 +62,9 @@ idmef-criteria
 @criterion: 
 @out: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@buffer: 
-@size: 
 
 
-<!-- ##### FUNCTION idmef_criterion_get_object ##### -->
+<!-- ##### FUNCTION idmef_criterion_get_path ##### -->
 <para>
 
 </para>
@@ -105,6 +106,7 @@ idmef-criteria
 
 </para>
 
+@criteria: 
 @Returns: 
 
 
@@ -121,7 +123,8 @@ idmef-criteria
 
 </para>
 
-@criteria: 
+@src: 
+@dst: 
 @Returns: 
 
 
@@ -131,6 +134,8 @@ idmef-criteria
 </para>
 
 @criteria: 
+@fd: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_criteria_to_string ##### -->
@@ -141,9 +146,6 @@ idmef-criteria
 @criteria: 
 @out: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@buffer: 
-@size: 
 
 
 <!-- ##### FUNCTION idmef_criteria_is_criterion ##### -->
@@ -189,6 +191,7 @@ idmef-criteria
 
 @criteria: 
 @criteria2: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_criteria_match ##### -->

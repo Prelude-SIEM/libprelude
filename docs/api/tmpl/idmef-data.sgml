@@ -57,6 +57,7 @@ idmef-data
 
 </para>
 
+@data: 
 @Returns: 
 
 
@@ -74,6 +75,7 @@ idmef-data
 
 </para>
 
+@data: 
 @c: 
 @Returns: 
 
@@ -83,6 +85,7 @@ idmef-data
 
 </para>
 
+@data: 
 @i: 
 @Returns: 
 
@@ -92,6 +95,7 @@ idmef-data
 
 </para>
 
+@data: 
 @i: 
 @Returns: 
 
@@ -101,6 +105,7 @@ idmef-data
 
 </para>
 
+@data: 
 @i: 
 @Returns: 
 
@@ -110,6 +115,7 @@ idmef-data
 
 </para>
 
+@data: 
 @f: 
 @Returns: 
 
@@ -164,6 +170,7 @@ idmef-data
 
 </para>
 
+@nd: 
 @type: 
 @data: 
 @len: 
@@ -175,6 +182,7 @@ idmef-data
 
 </para>
 
+@nd: 
 @type: 
 @data: 
 @len: 
@@ -186,6 +194,7 @@ idmef-data
 
 </para>
 
+@nd: 
 @type: 
 @data: 
 @len: 
@@ -244,6 +253,7 @@ idmef-data
 
 </para>
 
+@data: 
 @str: 
 @len: 
 @Returns: 
@@ -417,8 +427,8 @@ idmef-data
 
 </para>
 
-@dst: 
 @src: 
+@dst: 
 @Returns: 
 
 
@@ -427,8 +437,8 @@ idmef-data
 
 </para>
 
-@dst: 
 @src: 
+@dst: 
 @Returns: 
 
 
@@ -437,7 +447,8 @@ idmef-data
 
 </para>
 
-@data: 
+@src: 
+@dst: 
 @Returns: 
 
 
@@ -465,8 +476,6 @@ idmef-data
 </para>
 
 @data: 
-<!-- # Unused Parameters # -->
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_data_get_char ##### -->
@@ -549,9 +558,6 @@ idmef-data
 @data: 
 @out: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@buf: 
-@size: 
 
 
 <!-- ##### FUNCTION idmef_data_destroy_internal ##### -->

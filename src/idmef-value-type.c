@@ -29,6 +29,7 @@
 #include "libmissing.h"
 #include "prelude-inttypes.h"
 #include "prelude-string.h"
+#include "prelude-error.h"
 
 #include "idmef-time.h"
 #include "idmef-data.h"
@@ -50,15 +51,15 @@
                          IDMEF_VALUE_RELATION_EQUAL|IDMEF_VALUE_RELATION_NOT_EQUAL
 
 
-#define GENERIC_ONE_BASE_RW_FUNC(scanfmt, printfmt, name, type)                    \
-        static int name ## _read(idmef_value_type_t *dst, const char *buf)         \
-        {                                                                          \
-                return sscanf(buf, (scanfmt), &(dst)->data. name ##_val);          \
-        }                                                                          \
-                                                                                   \
-        static int name ## _write(idmef_value_type_t *src, prelude_string_t *out)  \
-        {                                                                          \
-                return prelude_string_sprintf(out, (printfmt), src->data.name ##_val);     \
+#define GENERIC_ONE_BASE_RW_FUNC(scanfmt, printfmt, name, type)                          \
+        static int name ## _read(idmef_value_type_t *dst, const char *buf)               \
+        {                                                                                \
+                return sscanf(buf, (scanfmt), &(dst)->data. name ##_val);                \
+        }                                                                                \
+                                                                                         \
+        static int name ## _write(const idmef_value_type_t *src, prelude_string_t *out)  \
+        {                                                                                \
+                return prelude_string_sprintf(out, (printfmt), src->data.name ##_val);   \
         }
 
 
@@ -71,7 +72,7 @@
 		return sscanf(buf, (fmt_dec), &(dst)->data. name ##_val);               \
 	}										\
 											\
-        static int name ## _write(idmef_value_type_t *src, prelude_string_t *out)	\
+        static int name ## _write(const idmef_value_type_t *src, prelude_string_t *out)	\
         {										\
                 return prelude_string_sprintf(out, (fmt_dec), src->data.name ##_val);	\
         }
@@ -83,14 +84,14 @@ typedef struct {
 
         idmef_value_relation_t relation;
         
-        int (*copy)(void *dst, idmef_value_type_t *src, size_t size);
-        int (*clone)(idmef_value_type_t *dst, idmef_value_type_t *src, size_t size);
+        int (*copy)(const idmef_value_type_t *src, void *dst, size_t size);
+        int (*clone)(const idmef_value_type_t *src, idmef_value_type_t *dst, size_t size);
         
         void (*destroy)(idmef_value_type_t *type);
-        int (*compare)(idmef_value_type_t *t1, idmef_value_type_t *t2, size_t size, idmef_value_relation_t relation);
+        int (*compare)(const idmef_value_type_t *t1, const idmef_value_type_t *t2, size_t size, idmef_value_relation_t relation);
         
         int (*read)(idmef_value_type_t *dst, const char *buf);
-        int (*write)(idmef_value_type_t *src, prelude_string_t *out);
+        int (*write)(const idmef_value_type_t *src, prelude_string_t *out);
 
 } idmef_value_type_operation_t;
 
@@ -113,7 +114,7 @@ GENERIC_ONE_BASE_RW_FUNC("%lf", "%f", double, double)
 /*
  * generic functions.
  */
-static int generic_copy(void *dst, idmef_value_type_t *src, size_t size)
+static int generic_copy(const idmef_value_type_t *src, void *dst, size_t size)
 {
         memcpy(dst, &src->data, size);
         return 0;
@@ -122,7 +123,7 @@ static int generic_copy(void *dst, idmef_value_type_t *src, size_t size)
 
 
 
-static int generic_clone(idmef_value_type_t *dst, idmef_value_type_t *src, size_t size)
+static int generic_clone(const idmef_value_type_t *src, idmef_value_type_t *dst, size_t size)
 {
         memcpy(&dst->data, &src->data, size);
         return 0;
@@ -130,7 +131,7 @@ static int generic_clone(idmef_value_type_t *dst, idmef_value_type_t *src, size_
 
 
 
-static int generic_compare(idmef_value_type_t *t1, idmef_value_type_t *t2,
+static int generic_compare(const idmef_value_type_t *t1, const idmef_value_type_t *t2,
                            size_t size, idmef_value_relation_t relation)
 {
         int ret;
@@ -155,8 +156,8 @@ static int generic_compare(idmef_value_type_t *t1, idmef_value_type_t *t2,
 /*
  * time specific function.
  */
-static int time_compare(idmef_value_type_t *t1, idmef_value_type_t *t2, size_t size,
-                        idmef_value_relation_t relation)
+static int time_compare(const idmef_value_type_t *t1, const idmef_value_type_t *t2,
+                        size_t size, idmef_value_relation_t relation)
 {
 	double time1 = idmef_time_get_sec(t1->data.time_val) + idmef_time_get_usec(t1->data.time_val) * 1e-6;
 	double time2 = idmef_time_get_sec(t2->data.time_val) + idmef_time_get_usec(t2->data.time_val) * 1e-6;
@@ -177,40 +178,38 @@ static int time_compare(idmef_value_type_t *t1, idmef_value_type_t *t2, size_t s
 
 static int time_read(idmef_value_type_t *dst, const char *buf)
 {
-        dst->data.time_val = idmef_time_new_from_ntpstamp(buf);
-        if ( dst->data.time_val )
+        int ret;
+        
+        ret = idmef_time_new_from_ntpstamp(&dst->data.time_val, buf);
+        if ( ret == 0 )
                 return 0;
         
-	dst->data.time_val = idmef_time_new_from_string(buf);
-        if ( dst->data.time_val )
+	ret = idmef_time_new_from_string(&dst->data.time_val, buf);
+        if ( ret == 0 )
                 return 0;
-
-        return -1;
+        
+        return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE);
 }
 
 
 
-static int time_write(idmef_value_type_t *src, prelude_string_t *out)
+static int time_write(const idmef_value_type_t *src, prelude_string_t *out)
 {
 	return idmef_time_to_string(src->data.time_val, out);
 }
 
 
 
-static int time_copy(void *dst, idmef_value_type_t *src, size_t size)
+static int time_copy(const idmef_value_type_t *src, void *dst, size_t size)
 {
-        return idmef_time_copy(dst, src->data.time_val);
+        return idmef_time_copy(src->data.time_val, dst);
 }
 
 
 
-static int time_clone(idmef_value_type_t *dst, idmef_value_type_t *src, size_t size)
+static int time_clone(const idmef_value_type_t *src, idmef_value_type_t *dst, size_t size)
 {
-        dst->data.time_val = idmef_time_clone(src->data.time_val);
-        if ( ! dst->data.time_val )
-                return -1;
-
-        return 0;
+        return idmef_time_clone(src->data.time_val, &dst->data.time_val);
 }
 
 
@@ -225,8 +224,8 @@ static void time_destroy(idmef_value_type_t *type)
 /*
  *
  */
-static int string_compare(idmef_value_type_t *t1, idmef_value_type_t *t2, size_t size,
-                          idmef_value_relation_t relation)
+static int string_compare(const idmef_value_type_t *t1, const idmef_value_type_t *t2,
+                          size_t size, idmef_value_relation_t relation)
 {
         const char *s1, *s2;
         
@@ -249,29 +248,21 @@ static int string_compare(idmef_value_type_t *t1, idmef_value_type_t *t2, size_t
 
 static int string_read(idmef_value_type_t *dst, const char *buf)
 {        
-        dst->data.string_val = prelude_string_new_dup(buf);
-        if ( ! dst->data.string_val )
-                return -1;
-
-        return 0;        
+        return prelude_string_new_dup(&dst->data.string_val, buf);
 }
 
 
 
-static int string_copy(void *dst, idmef_value_type_t *src, size_t size)
-{        
-        return prelude_string_copy_dup(dst, src->data.string_val);
+static int string_copy(const idmef_value_type_t *src, void *dst, size_t size)
+{
+        return prelude_string_copy_dup(src->data.string_val, dst);
 }
 
 
 
-static int string_clone(idmef_value_type_t *dst, idmef_value_type_t *src, size_t size)
+static int string_clone(const idmef_value_type_t *src, idmef_value_type_t *dst, size_t size)
 {        
-        dst->data.string_val = prelude_string_clone(src->data.string_val);
-        if ( ! dst->data.string_val )
-                return -1;
-
-        return 0;
+        return prelude_string_clone(src->data.string_val, &dst->data.string_val);
 }
 
 
@@ -282,7 +273,7 @@ static void string_destroy(idmef_value_type_t *type)
 
 
 
-static int string_write(idmef_value_type_t *src, prelude_string_t *out)
+static int string_write(const idmef_value_type_t *src, prelude_string_t *out)
 {
         return prelude_string_sprintf(out, "%s",
                                       prelude_string_get_string(src->data.string_val));
@@ -293,7 +284,7 @@ static int string_write(idmef_value_type_t *src, prelude_string_t *out)
 /*
  * data specific functions
  */
-static int data_compare(idmef_value_type_t *t1, idmef_value_type_t *t2,
+static int data_compare(const idmef_value_type_t *t1, const idmef_value_type_t *t2,
                         size_t len, idmef_value_relation_t relation)
 {
         int ret;
@@ -324,36 +315,28 @@ static int data_compare(idmef_value_type_t *t1, idmef_value_type_t *t2,
 
 static int data_read(idmef_value_type_t *dst, const char *src)
 {
-        dst->data.data_val = idmef_data_new_char_string_dup_fast(src, strlen(src));
-        if ( ! dst->data.data_val )
-                return -1;
-
-        return 0;
+        return idmef_data_new_char_string_dup_fast(&dst->data.data_val, src, strlen(src));
 }
 
 
 
-static int data_write(idmef_value_type_t *src, prelude_string_t *out)
+static int data_write(const idmef_value_type_t *src, prelude_string_t *out)
 {
         return idmef_data_to_string(src->data.data_val, out);
 }
 
 
 
-static int data_copy(void *dst, idmef_value_type_t *src, size_t size)
+static int data_copy(const idmef_value_type_t *src, void *dst, size_t size)
 {
-        return idmef_data_copy_dup(dst, src->data.data_val);
+        return idmef_data_copy_dup(src->data.data_val, dst);
 }
 
 
 
-static int data_clone(idmef_value_type_t *dst, idmef_value_type_t *src, size_t size)
+static int data_clone(const idmef_value_type_t *src, idmef_value_type_t *dst, size_t size)
 {
-        dst->data.data_val = idmef_data_clone(src->data.data_val);
-        if ( ! dst->data.data_val )
-                return -1;
-
-        return 0;
+        return idmef_data_clone(src->data.data_val, &dst->data.data_val);
 }
 
 
@@ -404,7 +387,7 @@ static idmef_value_type_operation_t ops_tbl[] = {
 static int is_type_valid(idmef_value_type_id_t type) 
 {
         if ( type < 0 || type > (sizeof(ops_tbl) / sizeof(*ops_tbl)) )
-                return -1;
+                return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_UNKNOWN);
 
         return 0;
 }
@@ -412,50 +395,51 @@ static int is_type_valid(idmef_value_type_id_t type)
 
 
 
-int idmef_value_type_clone(idmef_value_type_t *dst, idmef_value_type_t *src)
+int idmef_value_type_clone(const idmef_value_type_t *src, idmef_value_type_t *dst)
 {
         int ret;
-
+        
         assert(dst->id == src->id);
         
         ret = is_type_valid(dst->id);
         if ( ret < 0 )
-                return -1;
+                return ret;
 
         if ( ! ops_tbl[dst->id].clone )
-                return -1;
+                return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_CLONE_UNAVAILABLE);
 
-        return ops_tbl[dst->id].clone(dst, src, ops_tbl[dst->id].len);
+        return ops_tbl[dst->id].clone(src, dst, ops_tbl[dst->id].len);
 }
 
 
 
 
-int idmef_value_type_copy(void *dst, idmef_value_type_t *src)
+int idmef_value_type_copy(const idmef_value_type_t *src, void *dst)
 {
         int ret;
 
         ret = is_type_valid(src->id);
         if ( ret < 0 )
-                return -1;
+                return ret;
 
         if ( ! ops_tbl[src->id].copy )
-                return -1;
+                return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COPY_UNAVAILABLE);
         
-        return ops_tbl[src->id].copy(dst, src, ops_tbl[src->id].len);
+        return ops_tbl[src->id].copy(src, dst, ops_tbl[src->id].len);
 }
 
 
 
 
-int idmef_value_type_compare(idmef_value_type_t *type1,
-                             idmef_value_type_t *type2,
+int idmef_value_type_compare(const idmef_value_type_t *type1,
+                             const idmef_value_type_t *type2,
                              idmef_value_relation_t relation)
 {
         int ret;
 
-        assert(type1->id == type2->id);
-                
+        if ( type1->id != type2->id )
+                return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_MISMATCH);
+                        
         ret = is_type_valid(type1->id);
         if ( ret < 0 )
                 return ret;
@@ -463,7 +447,7 @@ int idmef_value_type_compare(idmef_value_type_t *type1,
         assert(relation & ops_tbl[type1->id].relation);
         
         if ( ! ops_tbl[type1->id].compare )
-                return -1;
+                return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_UNAVAILABLE);
         
         return ops_tbl[type1->id].compare(type1, type2, ops_tbl[type1->id].len, relation);
 }
@@ -480,7 +464,7 @@ int idmef_value_type_read(idmef_value_type_t *dst, const char *buf)
                 return ret;
 
         if ( ! ops_tbl[dst->id].read )
-                return -1;
+                return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_READ_UNAVAILABLE);
         
         return ops_tbl[dst->id].read(dst, buf);
 }
@@ -488,7 +472,7 @@ int idmef_value_type_read(idmef_value_type_t *dst, const char *buf)
 
 
 
-int idmef_value_type_write(idmef_value_type_t *src, prelude_string_t *out)
+int idmef_value_type_write(const idmef_value_type_t *src, prelude_string_t *out)
 {
         int ret;
         
@@ -497,7 +481,7 @@ int idmef_value_type_write(idmef_value_type_t *src, prelude_string_t *out)
                 return ret;
 
         if ( ! ops_tbl[src->id].write )
-                return -1;
+                return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_WRITE_UNAVAILABLE);
         
         return ops_tbl[src->id].write(src, out);
 }
@@ -521,7 +505,7 @@ void idmef_value_type_destroy(idmef_value_type_t *type)
 
 
 
-int idmef_value_type_check_relation(idmef_value_type_t *type, idmef_value_relation_t relation)
+int idmef_value_type_check_relation(const idmef_value_type_t *type, idmef_value_relation_t relation)
 {
         int ret;
         

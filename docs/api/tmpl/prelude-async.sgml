@@ -57,8 +57,6 @@ prelude-async
 </para>
 
 @Returns: 
-<!-- # Unused Parameters # -->
-@use_thread: 
 
 
 <!-- ##### FUNCTION prelude_async_get_flags ##### -->

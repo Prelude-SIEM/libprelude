@@ -42,7 +42,7 @@ typedef enum {
 	IDMEF_DATA_TYPE_FLOAT        = 5,
 	IDMEF_DATA_TYPE_CHAR_STRING  = 6,
 	IDMEF_DATA_TYPE_BYTE_STRING  = 7
-}	idmef_data_type_t;
+} idmef_data_type_t;
 
 
 typedef struct {
@@ -67,16 +67,16 @@ typedef struct {
 
 
 
-idmef_data_t *idmef_data_new(void);
+int idmef_data_new(idmef_data_t **data);
 
 idmef_data_t *idmef_data_ref(idmef_data_t *data);
 
 
-idmef_data_t *idmef_data_new_char(char c);
-idmef_data_t *idmef_data_new_byte(uint8_t i);
-idmef_data_t *idmef_data_new_uint32(uint32_t i);
-idmef_data_t *idmef_data_new_uint64(uint64_t i);
-idmef_data_t *idmef_data_new_float(float f);
+int idmef_data_new_char(idmef_data_t **data, char c);
+int idmef_data_new_byte(idmef_data_t **data, uint8_t i);
+int idmef_data_new_uint32(idmef_data_t **data, uint32_t i);
+int idmef_data_new_uint64(idmef_data_t **data, uint64_t i);
+int idmef_data_new_float(idmef_data_t **data, float f);
 
 
 void idmef_data_set_char(idmef_data_t *data, char c);
@@ -86,9 +86,9 @@ void idmef_data_set_uint64(idmef_data_t *data, uint64_t i);
 void idmef_data_set_float(idmef_data_t *data, float f);
 
 
-idmef_data_t *idmef_data_new_ptr_ref_fast(idmef_data_type_t type, const void *data, size_t len);
-idmef_data_t *idmef_data_new_ptr_dup_fast(idmef_data_type_t type, const void *data, size_t len);
-idmef_data_t *idmef_data_new_ptr_nodup_fast(idmef_data_type_t type, void *data, size_t len);
+int idmef_data_new_ptr_ref_fast(idmef_data_t **nd, idmef_data_type_t type, const void *data, size_t len);
+int idmef_data_new_ptr_dup_fast(idmef_data_t **nd, idmef_data_type_t type, const void *data, size_t len);
+int idmef_data_new_ptr_nodup_fast(idmef_data_t **nd, idmef_data_type_t type, void *data, size_t len);
 
 
 int idmef_data_set_ptr_ref_fast(idmef_data_t *data, idmef_data_type_t type, const void *ptr, size_t len);
@@ -96,7 +96,7 @@ int idmef_data_set_ptr_dup_fast(idmef_data_t *data, idmef_data_type_t type, cons
 int idmef_data_set_ptr_nodup_fast(idmef_data_t *data, idmef_data_type_t type, void *ptr, size_t len);
 
 int idmef_data_set_char_string_dup_fast(idmef_data_t *data, const char *str, size_t len);
-idmef_data_t *idmef_data_new_char_string_dup_fast(const char *str, size_t len);
+int idmef_data_new_char_string_dup_fast(idmef_data_t **data, const char *str, size_t len);
 
 
 
@@ -164,11 +164,11 @@ idmef_data_t *idmef_data_new_char_string_dup_fast(const char *str, size_t len);
 
 void idmef_data_destroy(idmef_data_t *data);
 
-int idmef_data_copy_ref(idmef_data_t *dst, const idmef_data_t *src);
+int idmef_data_copy_ref(const idmef_data_t *src, idmef_data_t *dst);
 
-int idmef_data_copy_dup(idmef_data_t *dst, const idmef_data_t *src);
+int idmef_data_copy_dup(const idmef_data_t *src, idmef_data_t *dst);
 
-idmef_data_t *idmef_data_clone(const idmef_data_t *data);
+int idmef_data_clone(const idmef_data_t *src, idmef_data_t **dst);
 
 idmef_data_type_t idmef_data_get_type(const idmef_data_t *data);
 

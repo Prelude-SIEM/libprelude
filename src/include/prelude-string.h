@@ -25,7 +25,13 @@
 #define _LIBPRELUDE_PRELUDE_STRING_H
 
 #include <stdarg.h>
+
 #include "prelude-list.h"
+#include "prelude-inttypes.h"
+
+#define idmef_type_string 0
+#define prelude_type_string 0
+
 
 struct prelude_string {
 	prelude_list_t list;
@@ -46,49 +52,44 @@ struct prelude_string {
 
 typedef struct prelude_string prelude_string_t;
 
-/*
- * Make sure that this ID does not conflict with any in idmef-tree-wrap.h
- */
-#define idmef_type_string 0
 
+int prelude_string_new(prelude_string_t **string);
 
-prelude_string_t *prelude_string_new(void);
+int prelude_string_new_nodup(prelude_string_t **string, char *str);
 
-prelude_string_t *prelude_string_new_nodup(char *str);
+int prelude_string_new_ref(prelude_string_t **string, const char *str);
 
-prelude_string_t *prelude_string_new_ref(const char *str);
+int prelude_string_new_dup(prelude_string_t **string, const char *str);
 
-prelude_string_t *prelude_string_new_dup(const char *str);
-
-prelude_string_t *prelude_string_new_dup_fast(const char *str, size_t len);
+int prelude_string_new_dup_fast(prelude_string_t **string, const char *str, size_t len);
 
 void prelude_string_destroy(prelude_string_t *string);
 
 void prelude_string_destroy_internal(prelude_string_t *string);
 
-prelude_string_t *prelude_string_new_nodup_fast(char *str, size_t len);
+int prelude_string_new_nodup_fast(prelude_string_t **string, char *str, size_t len);
 
-prelude_string_t *prelude_string_new_ref_fast(const char *str, size_t len);
+int prelude_string_new_ref_fast(prelude_string_t **string, const char *str, size_t len);
 
-int prelude_string_set_dup_fast(prelude_string_t *string, const char *str, size_t len);
+int prelude_string_set_dup_fast(prelude_string_t *string, const char *buf, size_t len);
 
-int prelude_string_set_dup(prelude_string_t *string, const char *str);
+int prelude_string_set_dup(prelude_string_t *string, const char *buf);
 
-int prelude_string_set_nodup_fast(prelude_string_t *string, char *str, size_t len);
+int prelude_string_set_nodup_fast(prelude_string_t *string, char *buf, size_t len);
 
-int prelude_string_set_nodup(prelude_string_t *string, char *str);
+int prelude_string_set_nodup(prelude_string_t *string, char *buf);
 
-int prelude_string_set_ref_fast(prelude_string_t *string, const char *str, size_t len);
+int prelude_string_set_ref_fast(prelude_string_t *string, const char *buf, size_t len);
 
-int prelude_string_set_ref(prelude_string_t *string, const char *str);
+int prelude_string_set_ref(prelude_string_t *string, const char *buf);
 
-int prelude_string_copy_ref(prelude_string_t *dst, const prelude_string_t *src);
+int prelude_string_copy_ref(const prelude_string_t *src, prelude_string_t *dst);
 
-int prelude_string_copy_dup(prelude_string_t *dst, const prelude_string_t *src);
+int prelude_string_copy_dup(const prelude_string_t *src, prelude_string_t *dst);
 
 prelude_string_t *prelude_string_ref(prelude_string_t *string);
 
-prelude_string_t *prelude_string_clone(const prelude_string_t *src);
+int prelude_string_clone(const prelude_string_t *src, prelude_string_t **dst);
 
 size_t prelude_string_get_len(const prelude_string_t *string);
 
@@ -96,9 +97,9 @@ const char *prelude_string_get_string_or_default(const prelude_string_t *string,
 
 const char *prelude_string_get_string(const prelude_string_t *string);
 
-char *prelude_string_get_string_released(prelude_string_t *string);
+int prelude_string_get_string_released(prelude_string_t *string, char **outptr);
 
-int prelude_string_is_empty(const prelude_string_t *string);
+prelude_bool_t prelude_string_is_empty(const prelude_string_t *string);
 
 void prelude_string_clear(prelude_string_t *string);
 
@@ -106,17 +107,17 @@ void prelude_string_clear(prelude_string_t *string);
 /*
  * string operation
  */
-int prelude_string_cat(prelude_string_t *string, const char *str);
-int prelude_string_ncat(prelude_string_t *string, const char *str, size_t len);
+int prelude_string_cat(prelude_string_t *dst, const char *str);
+int prelude_string_ncat(prelude_string_t *dst, const char *str, size_t len);
 
 int prelude_string_sprintf(prelude_string_t *string, const char *fmt, ...);
 int prelude_string_vprintf(prelude_string_t *string, const char *fmt, va_list ap);
 
                                                          
-#define prelude_string_set_constant(istr, str) 			\
-	prelude_string_set_ref_fast(istr, (str), sizeof((str)) - 1)
+#define prelude_string_set_constant(string, str) 			\
+	prelude_string_set_ref_fast((string), (str), sizeof((str)) - 1)
 
-#define prelude_string_new_constant(str)		       	\
-	prelude_string_new_ref_fast((str), sizeof((str)) - 1)
+#define prelude_string_new_constant(string, str)	            	\
+	prelude_string_new_ref_fast((string), (str), sizeof((str)) - 1)
                                                          
 #endif /* _LIBPRELUDE_PRELUDE_STRING_H */

@@ -19,6 +19,7 @@ prelude-hash
 
 </para>
 
+@hash: 
 @hash_func: 
 @key_cmp_func: 
 @key_destroy_func: 

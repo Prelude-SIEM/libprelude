@@ -66,9 +66,6 @@ prelude-connection-mgr
 @cp: 
 @capability: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@client: 
-@cfgline: 
 
 
 <!-- ##### FUNCTION prelude_connection_mgr_notify_connection ##### -->
@@ -97,10 +94,6 @@ prelude-connection-mgr
 @mgr: 
 @cnx: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@mgr_ptr: 
-@flags: 
-@use_timer: 
 
 
 <!-- ##### FUNCTION prelude_connection_mgr_set_connection_dead ##### -->

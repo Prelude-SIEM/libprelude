@@ -1,7 +1,7 @@
 
 /*****
 *
-* Copyright (C) 2001-2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001-2005 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * Copyright (C) 2003,2004 Nicolas Delon <nicolas@prelude-ids.org>
 * All Rights Reserved
 *
@@ -35,6 +35,9 @@
 #include "prelude-list.h"
 #include "prelude-msg.h"
 #include "prelude-string.h"
+
+#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_IDMEF_TREE_WRAP
+#include "prelude-error.h"
 
 #include "idmef-time.h"
 #include "idmef-data.h"
@@ -111,8 +114,7 @@ idmef_additional_data_type_t idmef_additional_data_type_to_numeric(const char *n
 	if ( strcasecmp(name, "xml" ) == 0)
 		return IDMEF_ADDITIONAL_DATA_TYPE_XML;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -205,8 +207,7 @@ idmef_reference_origin_t idmef_reference_origin_to_numeric(const char *name)
 	if ( strcasecmp(name, "osvdb" ) == 0)
 		return IDMEF_REFERENCE_ORIGIN_OSVDB;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -301,8 +302,7 @@ idmef_user_id_type_t idmef_user_id_type_to_numeric(const char *name)
 	if ( strcasecmp(name, "other-privs" ) == 0)
 		return IDMEF_USER_ID_TYPE_OTHER_PRIVS;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -375,8 +375,7 @@ idmef_user_category_t idmef_user_category_to_numeric(const char *name)
 	if ( strcasecmp(name, "os-device" ) == 0)
 		return IDMEF_USER_CATEGORY_OS_DEVICE;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -471,8 +470,7 @@ idmef_address_category_t idmef_address_category_to_numeric(const char *name)
 	if ( strcasecmp(name, "ipv6-net-mask" ) == 0)
 		return IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -609,8 +607,7 @@ idmef_service_type_t idmef_service_type_to_numeric(const char *name)
 	if ( strcasecmp(name, "snmp" ) == 0)
 		return IDMEF_SERVICE_TYPE_SNMP;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -713,8 +710,7 @@ idmef_node_category_t idmef_node_category_to_numeric(const char *name)
 	if ( strcasecmp(name, "wfw" ) == 0)
 		return IDMEF_NODE_CATEGORY_WFW;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -805,8 +801,7 @@ idmef_source_spoofed_t idmef_source_spoofed_to_numeric(const char *name)
 	if ( strcasecmp(name, "no" ) == 0)
 		return IDMEF_SOURCE_SPOOFED_NO;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -918,8 +913,7 @@ idmef_checksum_algorithm_t idmef_checksum_algorithm_to_numeric(const char *name)
 	if ( strcasecmp(name, "gost" ) == 0)
 		return IDMEF_CHECKSUM_ALGORITHM_GOST;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1000,8 +994,7 @@ idmef_file_category_t idmef_file_category_to_numeric(const char *name)
 	if ( strcasecmp(name, "original" ) == 0)
 		return IDMEF_FILE_CATEGORY_ORIGINAL;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1071,8 +1064,7 @@ idmef_file_fstype_t idmef_file_fstype_to_numeric(const char *name)
 	if ( strcasecmp(name, "iso9660" ) == 0)
 		return IDMEF_FILE_FSTYPE_ISO9660;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1184,8 +1176,7 @@ idmef_linkage_category_t idmef_linkage_category_to_numeric(const char *name)
 	if ( strcasecmp(name, "symbolic-link" ) == 0)
 		return IDMEF_LINKAGE_CATEGORY_SYMBOLIC_LINK;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1259,8 +1250,7 @@ idmef_target_decoy_t idmef_target_decoy_to_numeric(const char *name)
 	if ( strcasecmp(name, "no" ) == 0)
 		return IDMEF_TARGET_DECOY_NO;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1363,8 +1353,7 @@ idmef_impact_severity_t idmef_impact_severity_to_numeric(const char *name)
 	if ( strcasecmp(name, "info" ) == 0)
 		return IDMEF_IMPACT_SEVERITY_INFO;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1416,8 +1405,7 @@ idmef_impact_completion_t idmef_impact_completion_to_numeric(const char *name)
 	if ( strcasecmp(name, "succeeded" ) == 0)
 		return IDMEF_IMPACT_COMPLETION_SUCCEEDED;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1475,8 +1463,7 @@ idmef_impact_type_t idmef_impact_type_to_numeric(const char *name)
 	if ( strcasecmp(name, "user" ) == 0)
 		return IDMEF_IMPACT_TYPE_USER;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1549,8 +1536,7 @@ idmef_action_category_t idmef_action_category_to_numeric(const char *name)
 	if ( strcasecmp(name, "taken-offline" ) == 0)
 		return IDMEF_ACTION_CATEGORY_TAKEN_OFFLINE;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1616,8 +1602,7 @@ idmef_confidence_rating_t idmef_confidence_rating_to_numeric(const char *name)
 	if ( strcasecmp(name, "high" ) == 0)
 		return IDMEF_CONFIDENCE_RATING_HIGH;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1725,8 +1710,7 @@ idmef_alert_type_t idmef_alert_type_to_numeric(const char *name)
 	if ( strcasecmp(name, "overflow" ) == 0)
 		return IDMEF_ALERT_TYPE_OVERFLOW;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1815,8 +1799,7 @@ idmef_message_type_t idmef_message_type_to_numeric(const char *name)
 	if ( strcasecmp(name, "heartbeat" ) == 0)
 		return IDMEF_MESSAGE_TYPE_HEARTBEAT;
 
-
-	return -1;
+	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1866,24 +1849,23 @@ struct idmef_message {
 
 /**
  * idmef_additional_data_new:
- * 
+ * @ret: Pointer where to store the created #idmef_additional_data_t object.
+ *
  * Create a new #idmef_additional_data_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_additional_data_t *idmef_additional_data_new(void)
+int idmef_additional_data_new(idmef_additional_data_t **ret)
 {
-	idmef_additional_data_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	prelude_list_init(&(*ret)->list);
 
-	PRELUDE_INIT_LIST_HEAD(&ret->list);
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	return ret;
+	return 0;
 
 }
 
@@ -1903,58 +1885,54 @@ idmef_additional_data_t *idmef_additional_data_ref(idmef_additional_data_t *ptr)
 	return ptr;
 }
 
-void *idmef_additional_data_get_child(void *p, idmef_child_t child)
+int idmef_additional_data_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_additional_data_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_additional_data_get_type_value(ptr);
+			return idmef_additional_data_get_type_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_additional_data_get_meaning_value(ptr);
+			return idmef_additional_data_get_meaning_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_additional_data_get_data_value(ptr);
+			return idmef_additional_data_get_data_value(ptr, (idmef_value_t **) childptr);
+
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_additional_data_new_child(void *p, idmef_child_t child, int n)
+int idmef_additional_data_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_additional_data_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_additional_data_new_type(ptr);
+			return idmef_additional_data_new_type(ptr, (idmef_additional_data_type_t **) ret);
 
 		case 1:
-			return idmef_additional_data_new_meaning(ptr);
+			return idmef_additional_data_new_meaning(ptr, (prelude_string_t **) ret);
 
 		case 2:
-			return idmef_additional_data_new_data(ptr);
+			return idmef_additional_data_new_data(ptr, (idmef_data_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_additional_data_destroy_internal(idmef_additional_data_t *ptr)
 {
 
-       if ( ! prelude_list_empty(&ptr->list) ) {
-               prelude_list_del(&ptr->list);
-               PRELUDE_INIT_LIST_HEAD(&ptr->list);
-       }
+       if ( ! prelude_list_is_empty(&ptr->list) )
+               prelude_list_del_init(&ptr->list);
     
 	if ( ptr->meaning ) {
 		prelude_string_destroy(ptr->meaning);
@@ -1997,9 +1975,9 @@ idmef_additional_data_type_t idmef_additional_data_get_type(idmef_additional_dat
 	return ptr->type;
 }
 
-idmef_value_t *idmef_additional_data_get_type_value(idmef_additional_data_t *ptr)
+int idmef_additional_data_get_type_value(idmef_additional_data_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_ADDITIONAL_DATA_TYPE, ptr->type);
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_ADDITIONAL_DATA_TYPE, ptr->type);
 
 }
 
@@ -2021,15 +1999,17 @@ void idmef_additional_data_set_type(idmef_additional_data_t *ptr, idmef_addition
 /**
  * idmef_additional_data_new_type:
  * @ptr: pointer to a #idmef_additional_data_t object.
+ * @ret: pointer to an address where to store the created #idmef_additional_data_type_t object.
  *
  * Create a new type object, children of #idmef_additional_data_t.
  * If @ptr already contain a #idmef_additional_data_type_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_additional_data_type_t *idmef_additional_data_new_type(idmef_additional_data_t *ptr)
+int idmef_additional_data_new_type(idmef_additional_data_t *ptr, idmef_additional_data_type_t **ret)
 {
-	return &ptr->type;
+        *ret = &ptr->type;
+	return 0;
 }
 
 /**
@@ -2045,20 +2025,22 @@ prelude_string_t *idmef_additional_data_get_meaning(idmef_additional_data_t *ptr
 	return ptr->meaning;
 }
 
-idmef_value_t *idmef_additional_data_get_meaning_value(idmef_additional_data_t *ptr)
+int idmef_additional_data_get_meaning_value(idmef_additional_data_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->meaning )
-		return NULL;
+	if ( ! ptr->meaning ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->meaning);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->meaning);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -2082,20 +2064,26 @@ void idmef_additional_data_set_meaning(idmef_additional_data_t *ptr, prelude_str
 /**
  * idmef_additional_data_new_meaning:
  * @ptr: pointer to a #idmef_additional_data_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new meaning object, children of #idmef_additional_data_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_additional_data_new_meaning(idmef_additional_data_t *ptr)
+int idmef_additional_data_new_meaning(idmef_additional_data_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->meaning )
 		prelude_string_destroy(ptr->meaning);
 		
-	ptr->meaning = prelude_string_new();
+	retval = prelude_string_new(&ptr->meaning);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->meaning;
+        *ret = ptr->meaning;
+	return 0;
 }
 
 /**
@@ -2111,17 +2099,17 @@ idmef_data_t *idmef_additional_data_get_data(idmef_additional_data_t *ptr)
 	return &ptr->data;
 }
 
-idmef_value_t *idmef_additional_data_get_data_value(idmef_additional_data_t *ptr)
+int idmef_additional_data_get_data_value(idmef_additional_data_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_data(&ptr->data);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_data(value, &ptr->data);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -2144,39 +2132,40 @@ void idmef_additional_data_set_data(idmef_additional_data_t *ptr, idmef_data_t *
 /**
  * idmef_additional_data_new_data:
  * @ptr: pointer to a #idmef_additional_data_t object.
+ * @ret: pointer to an address where to store the created #idmef_data_t object.
  *
  * Create a new data object, children of #idmef_additional_data_t.
  * If @ptr already contain a #idmef_data_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_data_t *idmef_additional_data_new_data(idmef_additional_data_t *ptr)
+int idmef_additional_data_new_data(idmef_additional_data_t *ptr, idmef_data_t **ret)
 {
 	idmef_data_destroy_internal(&ptr->data);
 
-	return &ptr->data;
+        *ret = &ptr->data;
+	return 0;
 }
 
 /**
  * idmef_reference_new:
- * 
+ * @ret: Pointer where to store the created #idmef_reference_t object.
+ *
  * Create a new #idmef_reference_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_reference_t *idmef_reference_new(void)
+int idmef_reference_new(idmef_reference_t **ret)
 {
-	idmef_reference_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	prelude_list_init(&(*ret)->list);
 
-	PRELUDE_INIT_LIST_HEAD(&ret->list);
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	return ret;
+	return 0;
 
 }
 
@@ -2196,64 +2185,61 @@ idmef_reference_t *idmef_reference_ref(idmef_reference_t *ptr)
 	return ptr;
 }
 
-void *idmef_reference_get_child(void *p, idmef_child_t child)
+int idmef_reference_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_reference_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_reference_get_origin_value(ptr);
+			return idmef_reference_get_origin_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_reference_get_name_value(ptr);
+			return idmef_reference_get_name_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_reference_get_url_value(ptr);
+			return idmef_reference_get_url_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 3:
-			return idmef_reference_get_meaning_value(ptr);
+			return idmef_reference_get_meaning_value(ptr, (idmef_value_t **) childptr);
+
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_reference_new_child(void *p, idmef_child_t child, int n)
+int idmef_reference_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_reference_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_reference_new_origin(ptr);
+			return idmef_reference_new_origin(ptr, (idmef_reference_origin_t **) ret);
 
 		case 1:
-			return idmef_reference_new_name(ptr);
+			return idmef_reference_new_name(ptr, (prelude_string_t **) ret);
 
 		case 2:
-			return idmef_reference_new_url(ptr);
+			return idmef_reference_new_url(ptr, (prelude_string_t **) ret);
 
 		case 3:
-			return idmef_reference_new_meaning(ptr);
+			return idmef_reference_new_meaning(ptr, (prelude_string_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_reference_destroy_internal(idmef_reference_t *ptr)
 {
 
-       if ( ! prelude_list_empty(&ptr->list) ) {
-               prelude_list_del(&ptr->list);
-               PRELUDE_INIT_LIST_HEAD(&ptr->list);
-       }
+       if ( ! prelude_list_is_empty(&ptr->list) )
+               prelude_list_del_init(&ptr->list);
     
 	prelude_string_destroy_internal(&ptr->name);
 
@@ -2298,9 +2284,9 @@ idmef_reference_origin_t idmef_reference_get_origin(idmef_reference_t *ptr)
 	return ptr->origin;
 }
 
-idmef_value_t *idmef_reference_get_origin_value(idmef_reference_t *ptr)
+int idmef_reference_get_origin_value(idmef_reference_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_REFERENCE_ORIGIN, ptr->origin);
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_REFERENCE_ORIGIN, ptr->origin);
 
 }
 
@@ -2322,15 +2308,17 @@ void idmef_reference_set_origin(idmef_reference_t *ptr, idmef_reference_origin_t
 /**
  * idmef_reference_new_origin:
  * @ptr: pointer to a #idmef_reference_t object.
+ * @ret: pointer to an address where to store the created #idmef_reference_origin_t object.
  *
  * Create a new origin object, children of #idmef_reference_t.
  * If @ptr already contain a #idmef_reference_origin_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_reference_origin_t *idmef_reference_new_origin(idmef_reference_t *ptr)
+int idmef_reference_new_origin(idmef_reference_t *ptr, idmef_reference_origin_t **ret)
 {
-	return &ptr->origin;
+        *ret = &ptr->origin;
+	return 0;
 }
 
 /**
@@ -2346,17 +2334,17 @@ prelude_string_t *idmef_reference_get_name(idmef_reference_t *ptr)
 	return &ptr->name;
 }
 
-idmef_value_t *idmef_reference_get_name_value(idmef_reference_t *ptr)
+int idmef_reference_get_name_value(idmef_reference_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_string(&ptr->name);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, &ptr->name);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -2379,17 +2367,19 @@ void idmef_reference_set_name(idmef_reference_t *ptr, prelude_string_t *name)
 /**
  * idmef_reference_new_name:
  * @ptr: pointer to a #idmef_reference_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new name object, children of #idmef_reference_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_reference_new_name(idmef_reference_t *ptr)
+int idmef_reference_new_name(idmef_reference_t *ptr, prelude_string_t **ret)
 {
 	prelude_string_destroy_internal(&ptr->name);
 
-	return &ptr->name;
+        *ret = &ptr->name;
+	return 0;
 }
 
 /**
@@ -2405,17 +2395,17 @@ prelude_string_t *idmef_reference_get_url(idmef_reference_t *ptr)
 	return &ptr->url;
 }
 
-idmef_value_t *idmef_reference_get_url_value(idmef_reference_t *ptr)
+int idmef_reference_get_url_value(idmef_reference_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_string(&ptr->url);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, &ptr->url);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -2438,17 +2428,19 @@ void idmef_reference_set_url(idmef_reference_t *ptr, prelude_string_t *url)
 /**
  * idmef_reference_new_url:
  * @ptr: pointer to a #idmef_reference_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new url object, children of #idmef_reference_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_reference_new_url(idmef_reference_t *ptr)
+int idmef_reference_new_url(idmef_reference_t *ptr, prelude_string_t **ret)
 {
 	prelude_string_destroy_internal(&ptr->url);
 
-	return &ptr->url;
+        *ret = &ptr->url;
+	return 0;
 }
 
 /**
@@ -2464,20 +2456,22 @@ prelude_string_t *idmef_reference_get_meaning(idmef_reference_t *ptr)
 	return ptr->meaning;
 }
 
-idmef_value_t *idmef_reference_get_meaning_value(idmef_reference_t *ptr)
+int idmef_reference_get_meaning_value(idmef_reference_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->meaning )
-		return NULL;
+	if ( ! ptr->meaning ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->meaning);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->meaning);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -2501,43 +2495,48 @@ void idmef_reference_set_meaning(idmef_reference_t *ptr, prelude_string_t *meani
 /**
  * idmef_reference_new_meaning:
  * @ptr: pointer to a #idmef_reference_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new meaning object, children of #idmef_reference_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_reference_new_meaning(idmef_reference_t *ptr)
+int idmef_reference_new_meaning(idmef_reference_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->meaning )
 		prelude_string_destroy(ptr->meaning);
 		
-	ptr->meaning = prelude_string_new();
+	retval = prelude_string_new(&ptr->meaning);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->meaning;
+        *ret = ptr->meaning;
+	return 0;
 }
 
 /**
  * idmef_classification_new:
- * 
+ * @ret: Pointer where to store the created #idmef_classification_t object.
+ *
  * Create a new #idmef_classification_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_classification_t *idmef_classification_new(void)
+int idmef_classification_new(idmef_classification_t **ret)
 {
-	idmef_classification_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	PRELUDE_INIT_LIST_HEAD(&ret->reference_list);
+	prelude_list_init(&(*ret)->reference_list);
     
 
-	return ret;
+	return 0;
 
 }
 
@@ -2557,78 +2556,76 @@ idmef_classification_t *idmef_classification_ref(idmef_classification_t *ptr)
 	return ptr;
 }
 
-void *idmef_classification_get_child(void *p, idmef_child_t child)
+int idmef_classification_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_classification_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_classification_get_ident_value(ptr);
+			return idmef_classification_get_ident_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_classification_get_text_value(ptr);
+			return idmef_classification_get_text_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return &ptr->reference_list;
+                        *childptr = &ptr->reference_list;
+			return 0;
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_classification_new_child(void *p, idmef_child_t child, int n)
+int idmef_classification_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_classification_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_classification_new_ident(ptr);
+			return idmef_classification_new_ident(ptr, (uint64_t **) ret);
 
 		case 1:
-			return idmef_classification_new_text(ptr);
+			return idmef_classification_new_text(ptr, (prelude_string_t **) ret);
 
 		case 2: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_classification_new_reference(ptr);
+				 retval = idmef_classification_new_reference(ptr, (idmef_reference_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->reference_list) {
-			    		entry = prelude_list_entry(tmp, idmef_reference_t, list);
+				prelude_list_for_each(&ptr->reference_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, idmef_reference_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_classification_new_reference(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_classification_new_reference(ptr, (idmef_reference_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_classification_destroy_internal(idmef_classification_t *ptr)
@@ -2640,7 +2637,7 @@ static void idmef_classification_destroy_internal(idmef_classification_t *ptr)
 		prelude_list_t *n, *tmp;
 		idmef_reference_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->reference_list) {
+		prelude_list_for_each_safe(&ptr->reference_list, tmp, n) {
 			entry = prelude_list_entry(tmp, idmef_reference_t, list);
 			idmef_reference_destroy(entry);
 		}
@@ -2680,17 +2677,17 @@ uint64_t idmef_classification_get_ident(idmef_classification_t *ptr)
 	return ptr->ident;
 }
 
-idmef_value_t *idmef_classification_get_ident_value(idmef_classification_t *ptr)
+int idmef_classification_get_ident_value(idmef_classification_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_uint64(ptr->ident);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_uint64(value, ptr->ident);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -2711,15 +2708,17 @@ void idmef_classification_set_ident(idmef_classification_t *ptr, uint64_t ident)
 /**
  * idmef_classification_new_ident:
  * @ptr: pointer to a #idmef_classification_t object.
+ * @ret: pointer to an address where to store the created #uint64_t object.
  *
  * Create a new ident object, children of #idmef_classification_t.
  * If @ptr already contain a #uint64_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint64_t *idmef_classification_new_ident(idmef_classification_t *ptr)
+int idmef_classification_new_ident(idmef_classification_t *ptr, uint64_t **ret)
 {
-	return &ptr->ident;
+        *ret = &ptr->ident;
+	return 0;
 }
 
 /**
@@ -2735,17 +2734,17 @@ prelude_string_t *idmef_classification_get_text(idmef_classification_t *ptr)
 	return &ptr->text;
 }
 
-idmef_value_t *idmef_classification_get_text_value(idmef_classification_t *ptr)
+int idmef_classification_get_text_value(idmef_classification_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_string(&ptr->text);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, &ptr->text);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -2768,17 +2767,19 @@ void idmef_classification_set_text(idmef_classification_t *ptr, prelude_string_t
 /**
  * idmef_classification_new_text:
  * @ptr: pointer to a #idmef_classification_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new text object, children of #idmef_classification_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_classification_new_text(idmef_classification_t *ptr)
+int idmef_classification_new_text(idmef_classification_t *ptr, prelude_string_t **ret)
 {
 	prelude_string_destroy_internal(&ptr->text);
 
-	return &ptr->text;
+        *ret = &ptr->text;
+	return 0;
 }
 
 /**
@@ -2794,7 +2795,12 @@ prelude_string_t *idmef_classification_new_text(idmef_classification_t *ptr)
  */
 idmef_reference_t *idmef_classification_get_next_reference(idmef_classification_t *ptr, idmef_reference_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->reference_list, idmef_reference_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->reference_list, tmp)
+                return prelude_list_entry(tmp, idmef_reference_t, list);
+
+        return NULL;
 }
 
 /**
@@ -2806,81 +2812,84 @@ idmef_reference_t *idmef_classification_get_next_reference(idmef_classification_
  */
 void idmef_classification_set_reference(idmef_classification_t *ptr, idmef_reference_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->reference_list);
+	prelude_list_add_tail(&ptr->reference_list, &object->list);
 }
 
 /**
- * idmef_classification_new_HASH(0x80233b94):
+ * idmef_classification_new_reference:
  * @ptr: pointer to a #idmef_classification_t object.
- * 
- * Create a new HASH(0x80233b94) children of @ptr,
+ * @ret: pointer to an address where to store the created #idmef_reference_t object.
+ *
+ * Create a new #idmef_reference_t children of @ptr,
  * and add it to the tail of @ptr list of #idmef_reference_t object.
  * 
- * Returns: a pointer to the created #idmef_reference_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_reference_t *idmef_classification_new_reference(idmef_classification_t *ptr)
-{
-	idmef_reference_t *object;
+int idmef_classification_new_reference(idmef_classification_t *ptr, idmef_reference_t **ret)
+{	
+        int retval;
+
+	retval = idmef_reference_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = idmef_reference_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->reference_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->reference_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_classification_get_reference_value(idmef_classification_t *ptr)
+
+int idmef_classification_get_reference_value(idmef_classification_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	idmef_reference_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->reference_list) {
+	prelude_list_for_each(&ptr->reference_list, tmp) {
 		entry = prelude_list_entry(tmp, idmef_reference_t, list);
 
-		val = idmef_value_new_object(entry, IDMEF_OBJECT_TYPE_REFERENCE);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_REFERENCE, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
 /**
  * idmef_user_id_new:
- * 
+ * @ret: Pointer where to store the created #idmef_user_id_t object.
+ *
  * Create a new #idmef_user_id_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_user_id_t *idmef_user_id_new(void)
+int idmef_user_id_new(idmef_user_id_t **ret)
 {
-	idmef_user_id_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	prelude_list_init(&(*ret)->list);
 
-	PRELUDE_INIT_LIST_HEAD(&ret->list);
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	return ret;
+	return 0;
 
 }
 
@@ -2900,64 +2909,61 @@ idmef_user_id_t *idmef_user_id_ref(idmef_user_id_t *ptr)
 	return ptr;
 }
 
-void *idmef_user_id_get_child(void *p, idmef_child_t child)
+int idmef_user_id_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_user_id_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_user_id_get_ident_value(ptr);
+			return idmef_user_id_get_ident_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_user_id_get_name_value(ptr);
+			return idmef_user_id_get_name_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_user_id_get_type_value(ptr);
+			return idmef_user_id_get_type_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 3:
-			return idmef_user_id_get_number_value(ptr);
+			return idmef_user_id_get_number_value(ptr, (idmef_value_t **) childptr);
+
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_user_id_new_child(void *p, idmef_child_t child, int n)
+int idmef_user_id_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_user_id_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_user_id_new_ident(ptr);
+			return idmef_user_id_new_ident(ptr, (uint64_t **) ret);
 
 		case 1:
-			return idmef_user_id_new_name(ptr);
+			return idmef_user_id_new_name(ptr, (prelude_string_t **) ret);
 
 		case 2:
-			return idmef_user_id_new_type(ptr);
+			return idmef_user_id_new_type(ptr, (idmef_user_id_type_t **) ret);
 
 		case 3:
-			return idmef_user_id_new_number(ptr);
+			return idmef_user_id_new_number(ptr, (uint32_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_user_id_destroy_internal(idmef_user_id_t *ptr)
 {
 
-       if ( ! prelude_list_empty(&ptr->list) ) {
-               prelude_list_del(&ptr->list);
-               PRELUDE_INIT_LIST_HEAD(&ptr->list);
-       }
+       if ( ! prelude_list_is_empty(&ptr->list) )
+               prelude_list_del_init(&ptr->list);
     
 	if ( ptr->name ) {
 		prelude_string_destroy(ptr->name);
@@ -2998,17 +3004,17 @@ uint64_t idmef_user_id_get_ident(idmef_user_id_t *ptr)
 	return ptr->ident;
 }
 
-idmef_value_t *idmef_user_id_get_ident_value(idmef_user_id_t *ptr)
+int idmef_user_id_get_ident_value(idmef_user_id_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_uint64(ptr->ident);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_uint64(value, ptr->ident);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -3029,15 +3035,17 @@ void idmef_user_id_set_ident(idmef_user_id_t *ptr, uint64_t ident)
 /**
  * idmef_user_id_new_ident:
  * @ptr: pointer to a #idmef_user_id_t object.
+ * @ret: pointer to an address where to store the created #uint64_t object.
  *
  * Create a new ident object, children of #idmef_user_id_t.
  * If @ptr already contain a #uint64_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint64_t *idmef_user_id_new_ident(idmef_user_id_t *ptr)
+int idmef_user_id_new_ident(idmef_user_id_t *ptr, uint64_t **ret)
 {
-	return &ptr->ident;
+        *ret = &ptr->ident;
+	return 0;
 }
 
 /**
@@ -3053,20 +3061,22 @@ prelude_string_t *idmef_user_id_get_name(idmef_user_id_t *ptr)
 	return ptr->name;
 }
 
-idmef_value_t *idmef_user_id_get_name_value(idmef_user_id_t *ptr)
+int idmef_user_id_get_name_value(idmef_user_id_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->name )
-		return NULL;
+	if ( ! ptr->name ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->name);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->name);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -3090,20 +3100,26 @@ void idmef_user_id_set_name(idmef_user_id_t *ptr, prelude_string_t *name)
 /**
  * idmef_user_id_new_name:
  * @ptr: pointer to a #idmef_user_id_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new name object, children of #idmef_user_id_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_user_id_new_name(idmef_user_id_t *ptr)
+int idmef_user_id_new_name(idmef_user_id_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->name )
 		prelude_string_destroy(ptr->name);
 		
-	ptr->name = prelude_string_new();
+	retval = prelude_string_new(&ptr->name);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->name;
+        *ret = ptr->name;
+	return 0;
 }
 
 /**
@@ -3119,9 +3135,9 @@ idmef_user_id_type_t idmef_user_id_get_type(idmef_user_id_t *ptr)
 	return ptr->type;
 }
 
-idmef_value_t *idmef_user_id_get_type_value(idmef_user_id_t *ptr)
+int idmef_user_id_get_type_value(idmef_user_id_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_USER_ID_TYPE, ptr->type);
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_USER_ID_TYPE, ptr->type);
 
 }
 
@@ -3143,15 +3159,17 @@ void idmef_user_id_set_type(idmef_user_id_t *ptr, idmef_user_id_type_t type)
 /**
  * idmef_user_id_new_type:
  * @ptr: pointer to a #idmef_user_id_t object.
+ * @ret: pointer to an address where to store the created #idmef_user_id_type_t object.
  *
  * Create a new type object, children of #idmef_user_id_t.
  * If @ptr already contain a #idmef_user_id_type_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_user_id_type_t *idmef_user_id_new_type(idmef_user_id_t *ptr)
+int idmef_user_id_new_type(idmef_user_id_t *ptr, idmef_user_id_type_t **ret)
 {
-	return &ptr->type;
+        *ret = &ptr->type;
+	return 0;
 }
 
 /**
@@ -3167,9 +3185,14 @@ uint32_t *idmef_user_id_get_number(idmef_user_id_t *ptr)
 	return ptr->number_is_set ? &ptr->number : NULL;
 }
 
-idmef_value_t *idmef_user_id_get_number_value(idmef_user_id_t *ptr)
+int idmef_user_id_get_number_value(idmef_user_id_t *ptr, idmef_value_t **value)
 {
-	return ptr->number_is_set ? idmef_value_new_uint32(ptr->number) : NULL;
+        if ( ! ptr->number_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_uint32(value, ptr->number);
 
 }
 
@@ -3192,40 +3215,41 @@ void idmef_user_id_set_number(idmef_user_id_t *ptr, uint32_t number)
 /**
  * idmef_user_id_new_number:
  * @ptr: pointer to a #idmef_user_id_t object.
+ * @ret: pointer to an address where to store the created #uint32_t object.
  *
  * Create a new number object, children of #idmef_user_id_t.
  * If @ptr already contain a #uint32_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint32_t *idmef_user_id_new_number(idmef_user_id_t *ptr)
+int idmef_user_id_new_number(idmef_user_id_t *ptr, uint32_t **ret)
 {
 	ptr->number_is_set = 1;
 
-	return &ptr->number;
+        *ret = &ptr->number;
+	return 0;
 }
 
 /**
  * idmef_user_new:
- * 
+ * @ret: Pointer where to store the created #idmef_user_t object.
+ *
  * Create a new #idmef_user_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_user_t *idmef_user_new(void)
+int idmef_user_new(idmef_user_t **ret)
 {
-	idmef_user_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	PRELUDE_INIT_LIST_HEAD(&ret->user_id_list);
+	prelude_list_init(&(*ret)->user_id_list);
     
 
-	return ret;
+	return 0;
 
 }
 
@@ -3245,78 +3269,76 @@ idmef_user_t *idmef_user_ref(idmef_user_t *ptr)
 	return ptr;
 }
 
-void *idmef_user_get_child(void *p, idmef_child_t child)
+int idmef_user_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_user_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_user_get_ident_value(ptr);
+			return idmef_user_get_ident_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_user_get_category_value(ptr);
+			return idmef_user_get_category_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return &ptr->user_id_list;
+                        *childptr = &ptr->user_id_list;
+			return 0;
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_user_new_child(void *p, idmef_child_t child, int n)
+int idmef_user_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_user_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_user_new_ident(ptr);
+			return idmef_user_new_ident(ptr, (uint64_t **) ret);
 
 		case 1:
-			return idmef_user_new_category(ptr);
+			return idmef_user_new_category(ptr, (idmef_user_category_t **) ret);
 
 		case 2: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_user_new_user_id(ptr);
+				 retval = idmef_user_new_user_id(ptr, (idmef_user_id_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->user_id_list) {
-			    		entry = prelude_list_entry(tmp, idmef_user_id_t, list);
+				prelude_list_for_each(&ptr->user_id_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, idmef_user_id_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_user_new_user_id(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_user_new_user_id(ptr, (idmef_user_id_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_user_destroy_internal(idmef_user_t *ptr)
@@ -3326,7 +3348,7 @@ static void idmef_user_destroy_internal(idmef_user_t *ptr)
 		prelude_list_t *n, *tmp;
 		idmef_user_id_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->user_id_list) {
+		prelude_list_for_each_safe(&ptr->user_id_list, tmp, n) {
 			entry = prelude_list_entry(tmp, idmef_user_id_t, list);
 			idmef_user_id_destroy(entry);
 		}
@@ -3366,17 +3388,17 @@ uint64_t idmef_user_get_ident(idmef_user_t *ptr)
 	return ptr->ident;
 }
 
-idmef_value_t *idmef_user_get_ident_value(idmef_user_t *ptr)
+int idmef_user_get_ident_value(idmef_user_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_uint64(ptr->ident);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_uint64(value, ptr->ident);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -3397,15 +3419,17 @@ void idmef_user_set_ident(idmef_user_t *ptr, uint64_t ident)
 /**
  * idmef_user_new_ident:
  * @ptr: pointer to a #idmef_user_t object.
+ * @ret: pointer to an address where to store the created #uint64_t object.
  *
  * Create a new ident object, children of #idmef_user_t.
  * If @ptr already contain a #uint64_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint64_t *idmef_user_new_ident(idmef_user_t *ptr)
+int idmef_user_new_ident(idmef_user_t *ptr, uint64_t **ret)
 {
-	return &ptr->ident;
+        *ret = &ptr->ident;
+	return 0;
 }
 
 /**
@@ -3421,9 +3445,9 @@ idmef_user_category_t idmef_user_get_category(idmef_user_t *ptr)
 	return ptr->category;
 }
 
-idmef_value_t *idmef_user_get_category_value(idmef_user_t *ptr)
+int idmef_user_get_category_value(idmef_user_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_USER_CATEGORY, ptr->category);
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_USER_CATEGORY, ptr->category);
 
 }
 
@@ -3445,15 +3469,17 @@ void idmef_user_set_category(idmef_user_t *ptr, idmef_user_category_t category)
 /**
  * idmef_user_new_category:
  * @ptr: pointer to a #idmef_user_t object.
+ * @ret: pointer to an address where to store the created #idmef_user_category_t object.
  *
  * Create a new category object, children of #idmef_user_t.
  * If @ptr already contain a #idmef_user_category_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_user_category_t *idmef_user_new_category(idmef_user_t *ptr)
+int idmef_user_new_category(idmef_user_t *ptr, idmef_user_category_t **ret)
 {
-	return &ptr->category;
+        *ret = &ptr->category;
+	return 0;
 }
 
 /**
@@ -3469,7 +3495,12 @@ idmef_user_category_t *idmef_user_new_category(idmef_user_t *ptr)
  */
 idmef_user_id_t *idmef_user_get_next_user_id(idmef_user_t *ptr, idmef_user_id_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->user_id_list, idmef_user_id_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->user_id_list, tmp)
+                return prelude_list_entry(tmp, idmef_user_id_t, list);
+
+        return NULL;
 }
 
 /**
@@ -3481,81 +3512,84 @@ idmef_user_id_t *idmef_user_get_next_user_id(idmef_user_t *ptr, idmef_user_id_t 
  */
 void idmef_user_set_user_id(idmef_user_t *ptr, idmef_user_id_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->user_id_list);
+	prelude_list_add_tail(&ptr->user_id_list, &object->list);
 }
 
 /**
- * idmef_user_new_HASH(0x8023762c):
+ * idmef_user_new_user_id:
  * @ptr: pointer to a #idmef_user_t object.
- * 
- * Create a new HASH(0x8023762c) children of @ptr,
+ * @ret: pointer to an address where to store the created #idmef_user_id_t object.
+ *
+ * Create a new #idmef_user_id_t children of @ptr,
  * and add it to the tail of @ptr list of #idmef_user_id_t object.
  * 
- * Returns: a pointer to the created #idmef_user_id_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_user_id_t *idmef_user_new_user_id(idmef_user_t *ptr)
-{
-	idmef_user_id_t *object;
+int idmef_user_new_user_id(idmef_user_t *ptr, idmef_user_id_t **ret)
+{	
+        int retval;
+
+	retval = idmef_user_id_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = idmef_user_id_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->user_id_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->user_id_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_user_get_user_id_value(idmef_user_t *ptr)
+
+int idmef_user_get_user_id_value(idmef_user_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	idmef_user_id_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->user_id_list) {
+	prelude_list_for_each(&ptr->user_id_list, tmp) {
 		entry = prelude_list_entry(tmp, idmef_user_id_t, list);
 
-		val = idmef_value_new_object(entry, IDMEF_OBJECT_TYPE_USER_ID);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_USER_ID, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
 /**
  * idmef_address_new:
- * 
+ * @ret: Pointer where to store the created #idmef_address_t object.
+ *
  * Create a new #idmef_address_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_address_t *idmef_address_new(void)
+int idmef_address_new(idmef_address_t **ret)
 {
-	idmef_address_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	prelude_list_init(&(*ret)->list);
 
-	PRELUDE_INIT_LIST_HEAD(&ret->list);
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	return ret;
+	return 0;
 
 }
 
@@ -3575,76 +3609,75 @@ idmef_address_t *idmef_address_ref(idmef_address_t *ptr)
 	return ptr;
 }
 
-void *idmef_address_get_child(void *p, idmef_child_t child)
+int idmef_address_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_address_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_address_get_ident_value(ptr);
+			return idmef_address_get_ident_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_address_get_category_value(ptr);
+			return idmef_address_get_category_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_address_get_vlan_name_value(ptr);
+			return idmef_address_get_vlan_name_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 3:
-			return idmef_address_get_vlan_num_value(ptr);
+			return idmef_address_get_vlan_num_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 4:
-			return idmef_address_get_address_value(ptr);
+			return idmef_address_get_address_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 5:
-			return idmef_address_get_netmask_value(ptr);
+			return idmef_address_get_netmask_value(ptr, (idmef_value_t **) childptr);
+
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_address_new_child(void *p, idmef_child_t child, int n)
+int idmef_address_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_address_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_address_new_ident(ptr);
+			return idmef_address_new_ident(ptr, (uint64_t **) ret);
 
 		case 1:
-			return idmef_address_new_category(ptr);
+			return idmef_address_new_category(ptr, (idmef_address_category_t **) ret);
 
 		case 2:
-			return idmef_address_new_vlan_name(ptr);
+			return idmef_address_new_vlan_name(ptr, (prelude_string_t **) ret);
 
 		case 3:
-			return idmef_address_new_vlan_num(ptr);
+			return idmef_address_new_vlan_num(ptr, (int32_t **) ret);
 
 		case 4:
-			return idmef_address_new_address(ptr);
+			return idmef_address_new_address(ptr, (prelude_string_t **) ret);
 
 		case 5:
-			return idmef_address_new_netmask(ptr);
+			return idmef_address_new_netmask(ptr, (prelude_string_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_address_destroy_internal(idmef_address_t *ptr)
 {
 
-       if ( ! prelude_list_empty(&ptr->list) ) {
-               prelude_list_del(&ptr->list);
-               PRELUDE_INIT_LIST_HEAD(&ptr->list);
-       }
+       if ( ! prelude_list_is_empty(&ptr->list) )
+               prelude_list_del_init(&ptr->list);
     
 	if ( ptr->vlan_name ) {
 		prelude_string_destroy(ptr->vlan_name);
@@ -3692,17 +3725,17 @@ uint64_t idmef_address_get_ident(idmef_address_t *ptr)
 	return ptr->ident;
 }
 
-idmef_value_t *idmef_address_get_ident_value(idmef_address_t *ptr)
+int idmef_address_get_ident_value(idmef_address_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_uint64(ptr->ident);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_uint64(value, ptr->ident);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -3723,15 +3756,17 @@ void idmef_address_set_ident(idmef_address_t *ptr, uint64_t ident)
 /**
  * idmef_address_new_ident:
  * @ptr: pointer to a #idmef_address_t object.
+ * @ret: pointer to an address where to store the created #uint64_t object.
  *
  * Create a new ident object, children of #idmef_address_t.
  * If @ptr already contain a #uint64_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint64_t *idmef_address_new_ident(idmef_address_t *ptr)
+int idmef_address_new_ident(idmef_address_t *ptr, uint64_t **ret)
 {
-	return &ptr->ident;
+        *ret = &ptr->ident;
+	return 0;
 }
 
 /**
@@ -3747,9 +3782,9 @@ idmef_address_category_t idmef_address_get_category(idmef_address_t *ptr)
 	return ptr->category;
 }
 
-idmef_value_t *idmef_address_get_category_value(idmef_address_t *ptr)
+int idmef_address_get_category_value(idmef_address_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_ADDRESS_CATEGORY, ptr->category);
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_ADDRESS_CATEGORY, ptr->category);
 
 }
 
@@ -3771,15 +3806,17 @@ void idmef_address_set_category(idmef_address_t *ptr, idmef_address_category_t c
 /**
  * idmef_address_new_category:
  * @ptr: pointer to a #idmef_address_t object.
+ * @ret: pointer to an address where to store the created #idmef_address_category_t object.
  *
  * Create a new category object, children of #idmef_address_t.
  * If @ptr already contain a #idmef_address_category_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_address_category_t *idmef_address_new_category(idmef_address_t *ptr)
+int idmef_address_new_category(idmef_address_t *ptr, idmef_address_category_t **ret)
 {
-	return &ptr->category;
+        *ret = &ptr->category;
+	return 0;
 }
 
 /**
@@ -3795,20 +3832,22 @@ prelude_string_t *idmef_address_get_vlan_name(idmef_address_t *ptr)
 	return ptr->vlan_name;
 }
 
-idmef_value_t *idmef_address_get_vlan_name_value(idmef_address_t *ptr)
+int idmef_address_get_vlan_name_value(idmef_address_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->vlan_name )
-		return NULL;
+	if ( ! ptr->vlan_name ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->vlan_name);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->vlan_name);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -3832,20 +3871,26 @@ void idmef_address_set_vlan_name(idmef_address_t *ptr, prelude_string_t *vlan_na
 /**
  * idmef_address_new_vlan_name:
  * @ptr: pointer to a #idmef_address_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new vlan_name object, children of #idmef_address_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_address_new_vlan_name(idmef_address_t *ptr)
+int idmef_address_new_vlan_name(idmef_address_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->vlan_name )
 		prelude_string_destroy(ptr->vlan_name);
 		
-	ptr->vlan_name = prelude_string_new();
+	retval = prelude_string_new(&ptr->vlan_name);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->vlan_name;
+        *ret = ptr->vlan_name;
+	return 0;
 }
 
 /**
@@ -3861,9 +3906,14 @@ int32_t *idmef_address_get_vlan_num(idmef_address_t *ptr)
 	return ptr->vlan_num_is_set ? &ptr->vlan_num : NULL;
 }
 
-idmef_value_t *idmef_address_get_vlan_num_value(idmef_address_t *ptr)
+int idmef_address_get_vlan_num_value(idmef_address_t *ptr, idmef_value_t **value)
 {
-	return ptr->vlan_num_is_set ? idmef_value_new_int32(ptr->vlan_num) : NULL;
+        if ( ! ptr->vlan_num_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_int32(value, ptr->vlan_num);
 
 }
 
@@ -3886,17 +3936,19 @@ void idmef_address_set_vlan_num(idmef_address_t *ptr, int32_t vlan_num)
 /**
  * idmef_address_new_vlan_num:
  * @ptr: pointer to a #idmef_address_t object.
+ * @ret: pointer to an address where to store the created #int32_t object.
  *
  * Create a new vlan_num object, children of #idmef_address_t.
  * If @ptr already contain a #int32_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-int32_t *idmef_address_new_vlan_num(idmef_address_t *ptr)
+int idmef_address_new_vlan_num(idmef_address_t *ptr, int32_t **ret)
 {
 	ptr->vlan_num_is_set = 1;
 
-	return &ptr->vlan_num;
+        *ret = &ptr->vlan_num;
+	return 0;
 }
 
 /**
@@ -3912,17 +3964,17 @@ prelude_string_t *idmef_address_get_address(idmef_address_t *ptr)
 	return &ptr->address;
 }
 
-idmef_value_t *idmef_address_get_address_value(idmef_address_t *ptr)
+int idmef_address_get_address_value(idmef_address_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_string(&ptr->address);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, &ptr->address);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -3945,17 +3997,19 @@ void idmef_address_set_address(idmef_address_t *ptr, prelude_string_t *address)
 /**
  * idmef_address_new_address:
  * @ptr: pointer to a #idmef_address_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new address object, children of #idmef_address_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_address_new_address(idmef_address_t *ptr)
+int idmef_address_new_address(idmef_address_t *ptr, prelude_string_t **ret)
 {
 	prelude_string_destroy_internal(&ptr->address);
 
-	return &ptr->address;
+        *ret = &ptr->address;
+	return 0;
 }
 
 /**
@@ -3971,20 +4025,22 @@ prelude_string_t *idmef_address_get_netmask(idmef_address_t *ptr)
 	return ptr->netmask;
 }
 
-idmef_value_t *idmef_address_get_netmask_value(idmef_address_t *ptr)
+int idmef_address_get_netmask_value(idmef_address_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->netmask )
-		return NULL;
+	if ( ! ptr->netmask ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->netmask);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->netmask);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -4008,46 +4064,51 @@ void idmef_address_set_netmask(idmef_address_t *ptr, prelude_string_t *netmask)
 /**
  * idmef_address_new_netmask:
  * @ptr: pointer to a #idmef_address_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new netmask object, children of #idmef_address_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_address_new_netmask(idmef_address_t *ptr)
+int idmef_address_new_netmask(idmef_address_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->netmask )
 		prelude_string_destroy(ptr->netmask);
 		
-	ptr->netmask = prelude_string_new();
+	retval = prelude_string_new(&ptr->netmask);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->netmask;
+        *ret = ptr->netmask;
+	return 0;
 }
 
 /**
  * idmef_process_new:
- * 
+ * @ret: Pointer where to store the created #idmef_process_t object.
+ *
  * Create a new #idmef_process_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_process_t *idmef_process_new(void)
+int idmef_process_new(idmef_process_t **ret)
 {
-	idmef_process_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	PRELUDE_INIT_LIST_HEAD(&ret->arg_list);
+	prelude_list_init(&(*ret)->arg_list);
     
 
-	PRELUDE_INIT_LIST_HEAD(&ret->env_list);
+	prelude_list_init(&(*ret)->env_list);
     
 
-	return ret;
+	return 0;
 
 }
 
@@ -4067,125 +4128,126 @@ idmef_process_t *idmef_process_ref(idmef_process_t *ptr)
 	return ptr;
 }
 
-void *idmef_process_get_child(void *p, idmef_child_t child)
+int idmef_process_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_process_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_process_get_ident_value(ptr);
+			return idmef_process_get_ident_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_process_get_name_value(ptr);
+			return idmef_process_get_name_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_process_get_pid_value(ptr);
+			return idmef_process_get_pid_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 3:
-			return idmef_process_get_path_value(ptr);
+			return idmef_process_get_path_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 4:
-			return &ptr->arg_list;
+                        *childptr = &ptr->arg_list;
+			return 0;
 
 		case 5:
-			return &ptr->env_list;
+                        *childptr = &ptr->env_list;
+			return 0;
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_process_new_child(void *p, idmef_child_t child, int n)
+int idmef_process_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_process_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_process_new_ident(ptr);
+			return idmef_process_new_ident(ptr, (uint64_t **) ret);
 
 		case 1:
-			return idmef_process_new_name(ptr);
+			return idmef_process_new_name(ptr, (prelude_string_t **) ret);
 
 		case 2:
-			return idmef_process_new_pid(ptr);
+			return idmef_process_new_pid(ptr, (uint32_t **) ret);
 
 		case 3:
-			return idmef_process_new_path(ptr);
+			return idmef_process_new_path(ptr, (prelude_string_t **) ret);
 
 		case 4: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_process_new_arg(ptr);
+				 retval = idmef_process_new_arg(ptr, (prelude_string_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->arg_list) {
-			    		entry = prelude_list_entry(tmp, prelude_string_t, list);
+				prelude_list_for_each(&ptr->arg_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, prelude_string_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_process_new_arg(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_process_new_arg(ptr, (prelude_string_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		case 5: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_process_new_env(ptr);
+				 retval = idmef_process_new_env(ptr, (prelude_string_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->env_list) {
-			    		entry = prelude_list_entry(tmp, prelude_string_t, list);
+				prelude_list_for_each(&ptr->env_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, prelude_string_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_process_new_env(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_process_new_env(ptr, (prelude_string_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_process_destroy_internal(idmef_process_t *ptr)
@@ -4202,7 +4264,7 @@ static void idmef_process_destroy_internal(idmef_process_t *ptr)
 		prelude_list_t *n, *tmp;
 		prelude_string_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->arg_list) {
+		prelude_list_for_each_safe(&ptr->arg_list, tmp, n) {
 			entry = prelude_list_entry(tmp, prelude_string_t, list);
 			prelude_string_destroy(entry);
 		}
@@ -4212,7 +4274,7 @@ static void idmef_process_destroy_internal(idmef_process_t *ptr)
 		prelude_list_t *n, *tmp;
 		prelude_string_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->env_list) {
+		prelude_list_for_each_safe(&ptr->env_list, tmp, n) {
 			entry = prelude_list_entry(tmp, prelude_string_t, list);
 			prelude_string_destroy(entry);
 		}
@@ -4252,17 +4314,17 @@ uint64_t idmef_process_get_ident(idmef_process_t *ptr)
 	return ptr->ident;
 }
 
-idmef_value_t *idmef_process_get_ident_value(idmef_process_t *ptr)
+int idmef_process_get_ident_value(idmef_process_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_uint64(ptr->ident);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_uint64(value, ptr->ident);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -4283,15 +4345,17 @@ void idmef_process_set_ident(idmef_process_t *ptr, uint64_t ident)
 /**
  * idmef_process_new_ident:
  * @ptr: pointer to a #idmef_process_t object.
+ * @ret: pointer to an address where to store the created #uint64_t object.
  *
  * Create a new ident object, children of #idmef_process_t.
  * If @ptr already contain a #uint64_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint64_t *idmef_process_new_ident(idmef_process_t *ptr)
+int idmef_process_new_ident(idmef_process_t *ptr, uint64_t **ret)
 {
-	return &ptr->ident;
+        *ret = &ptr->ident;
+	return 0;
 }
 
 /**
@@ -4307,17 +4371,17 @@ prelude_string_t *idmef_process_get_name(idmef_process_t *ptr)
 	return &ptr->name;
 }
 
-idmef_value_t *idmef_process_get_name_value(idmef_process_t *ptr)
+int idmef_process_get_name_value(idmef_process_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_string(&ptr->name);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, &ptr->name);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -4340,17 +4404,19 @@ void idmef_process_set_name(idmef_process_t *ptr, prelude_string_t *name)
 /**
  * idmef_process_new_name:
  * @ptr: pointer to a #idmef_process_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new name object, children of #idmef_process_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_process_new_name(idmef_process_t *ptr)
+int idmef_process_new_name(idmef_process_t *ptr, prelude_string_t **ret)
 {
 	prelude_string_destroy_internal(&ptr->name);
 
-	return &ptr->name;
+        *ret = &ptr->name;
+	return 0;
 }
 
 /**
@@ -4366,9 +4432,14 @@ uint32_t *idmef_process_get_pid(idmef_process_t *ptr)
 	return ptr->pid_is_set ? &ptr->pid : NULL;
 }
 
-idmef_value_t *idmef_process_get_pid_value(idmef_process_t *ptr)
+int idmef_process_get_pid_value(idmef_process_t *ptr, idmef_value_t **value)
 {
-	return ptr->pid_is_set ? idmef_value_new_uint32(ptr->pid) : NULL;
+        if ( ! ptr->pid_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_uint32(value, ptr->pid);
 
 }
 
@@ -4391,17 +4462,19 @@ void idmef_process_set_pid(idmef_process_t *ptr, uint32_t pid)
 /**
  * idmef_process_new_pid:
  * @ptr: pointer to a #idmef_process_t object.
+ * @ret: pointer to an address where to store the created #uint32_t object.
  *
  * Create a new pid object, children of #idmef_process_t.
  * If @ptr already contain a #uint32_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint32_t *idmef_process_new_pid(idmef_process_t *ptr)
+int idmef_process_new_pid(idmef_process_t *ptr, uint32_t **ret)
 {
 	ptr->pid_is_set = 1;
 
-	return &ptr->pid;
+        *ret = &ptr->pid;
+	return 0;
 }
 
 /**
@@ -4417,20 +4490,22 @@ prelude_string_t *idmef_process_get_path(idmef_process_t *ptr)
 	return ptr->path;
 }
 
-idmef_value_t *idmef_process_get_path_value(idmef_process_t *ptr)
+int idmef_process_get_path_value(idmef_process_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->path )
-		return NULL;
+	if ( ! ptr->path ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->path);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->path);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -4454,20 +4529,26 @@ void idmef_process_set_path(idmef_process_t *ptr, prelude_string_t *path)
 /**
  * idmef_process_new_path:
  * @ptr: pointer to a #idmef_process_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new path object, children of #idmef_process_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_process_new_path(idmef_process_t *ptr)
+int idmef_process_new_path(idmef_process_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->path )
 		prelude_string_destroy(ptr->path);
 		
-	ptr->path = prelude_string_new();
+	retval = prelude_string_new(&ptr->path);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->path;
+        *ret = ptr->path;
+	return 0;
 }
 
 /**
@@ -4483,7 +4564,12 @@ prelude_string_t *idmef_process_new_path(idmef_process_t *ptr)
  */
 prelude_string_t *idmef_process_get_next_arg(idmef_process_t *ptr, prelude_string_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->arg_list, prelude_string_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->arg_list, tmp)
+                return prelude_list_entry(tmp, prelude_string_t, list);
+
+        return NULL;
 }
 
 /**
@@ -4495,59 +4581,63 @@ prelude_string_t *idmef_process_get_next_arg(idmef_process_t *ptr, prelude_strin
  */
 void idmef_process_set_arg(idmef_process_t *ptr, prelude_string_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->arg_list);
+	prelude_list_add_tail(&ptr->arg_list, &object->list);
 }
 
 /**
- * idmef_process_new_HASH(0x8023c030):
+ * idmef_process_new_arg:
  * @ptr: pointer to a #idmef_process_t object.
- * 
- * Create a new HASH(0x8023c030) children of @ptr,
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
+ *
+ * Create a new #prelude_string_t children of @ptr,
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
- * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_process_new_arg(idmef_process_t *ptr)
-{
-	prelude_string_t *object;
+int idmef_process_new_arg(idmef_process_t *ptr, prelude_string_t **ret)
+{	
+        int retval;
+
+	retval = prelude_string_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = prelude_string_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->arg_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->arg_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_process_get_arg_value(idmef_process_t *ptr)
+
+int idmef_process_get_arg_value(idmef_process_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	prelude_string_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->arg_list) {
+	prelude_list_for_each(&ptr->arg_list, tmp) {
 		entry = prelude_list_entry(tmp, prelude_string_t, list);
 
-		val = idmef_value_new_string(entry);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_string(&val, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 		idmef_value_dont_have_own_data(val);
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
@@ -4564,7 +4654,12 @@ idmef_value_t *idmef_process_get_arg_value(idmef_process_t *ptr)
  */
 prelude_string_t *idmef_process_get_next_env(idmef_process_t *ptr, prelude_string_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->env_list, prelude_string_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->env_list, tmp)
+                return prelude_list_entry(tmp, prelude_string_t, list);
+
+        return NULL;
 }
 
 /**
@@ -4576,83 +4671,86 @@ prelude_string_t *idmef_process_get_next_env(idmef_process_t *ptr, prelude_strin
  */
 void idmef_process_set_env(idmef_process_t *ptr, prelude_string_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->env_list);
+	prelude_list_add_tail(&ptr->env_list, &object->list);
 }
 
 /**
- * idmef_process_new_HASH(0x8023c09c):
+ * idmef_process_new_env:
  * @ptr: pointer to a #idmef_process_t object.
- * 
- * Create a new HASH(0x8023c09c) children of @ptr,
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
+ *
+ * Create a new #prelude_string_t children of @ptr,
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
- * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_process_new_env(idmef_process_t *ptr)
-{
-	prelude_string_t *object;
+int idmef_process_new_env(idmef_process_t *ptr, prelude_string_t **ret)
+{	
+        int retval;
+
+	retval = prelude_string_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = prelude_string_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->env_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->env_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_process_get_env_value(idmef_process_t *ptr)
+
+int idmef_process_get_env_value(idmef_process_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	prelude_string_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->env_list) {
+	prelude_list_for_each(&ptr->env_list, tmp) {
 		entry = prelude_list_entry(tmp, prelude_string_t, list);
 
-		val = idmef_value_new_string(entry);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_string(&val, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 		idmef_value_dont_have_own_data(val);
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
 /**
  * idmef_web_service_new:
- * 
+ * @ret: Pointer where to store the created #idmef_web_service_t object.
+ *
  * Create a new #idmef_web_service_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_web_service_t *idmef_web_service_new(void)
+int idmef_web_service_new(idmef_web_service_t **ret)
 {
-	idmef_web_service_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	PRELUDE_INIT_LIST_HEAD(&ret->arg_list);
+	prelude_list_init(&(*ret)->arg_list);
     
 
-	return ret;
+	return 0;
 
 }
 
@@ -4672,84 +4770,83 @@ idmef_web_service_t *idmef_web_service_ref(idmef_web_service_t *ptr)
 	return ptr;
 }
 
-void *idmef_web_service_get_child(void *p, idmef_child_t child)
+int idmef_web_service_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_web_service_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_web_service_get_url_value(ptr);
+			return idmef_web_service_get_url_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_web_service_get_cgi_value(ptr);
+			return idmef_web_service_get_cgi_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_web_service_get_http_method_value(ptr);
+			return idmef_web_service_get_http_method_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 3:
-			return &ptr->arg_list;
+                        *childptr = &ptr->arg_list;
+			return 0;
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_web_service_new_child(void *p, idmef_child_t child, int n)
+int idmef_web_service_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_web_service_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_web_service_new_url(ptr);
+			return idmef_web_service_new_url(ptr, (prelude_string_t **) ret);
 
 		case 1:
-			return idmef_web_service_new_cgi(ptr);
+			return idmef_web_service_new_cgi(ptr, (prelude_string_t **) ret);
 
 		case 2:
-			return idmef_web_service_new_http_method(ptr);
+			return idmef_web_service_new_http_method(ptr, (prelude_string_t **) ret);
 
 		case 3: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_web_service_new_arg(ptr);
+				 retval = idmef_web_service_new_arg(ptr, (prelude_string_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->arg_list) {
-			    		entry = prelude_list_entry(tmp, prelude_string_t, list);
+				prelude_list_for_each(&ptr->arg_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, prelude_string_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_web_service_new_arg(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_web_service_new_arg(ptr, (prelude_string_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_web_service_destroy_internal(idmef_web_service_t *ptr)
@@ -4771,7 +4868,7 @@ static void idmef_web_service_destroy_internal(idmef_web_service_t *ptr)
 		prelude_list_t *n, *tmp;
 		prelude_string_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->arg_list) {
+		prelude_list_for_each_safe(&ptr->arg_list, tmp, n) {
 			entry = prelude_list_entry(tmp, prelude_string_t, list);
 			prelude_string_destroy(entry);
 		}
@@ -4811,17 +4908,17 @@ prelude_string_t *idmef_web_service_get_url(idmef_web_service_t *ptr)
 	return &ptr->url;
 }
 
-idmef_value_t *idmef_web_service_get_url_value(idmef_web_service_t *ptr)
+int idmef_web_service_get_url_value(idmef_web_service_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_string(&ptr->url);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, &ptr->url);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -4844,17 +4941,19 @@ void idmef_web_service_set_url(idmef_web_service_t *ptr, prelude_string_t *url)
 /**
  * idmef_web_service_new_url:
  * @ptr: pointer to a #idmef_web_service_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new url object, children of #idmef_web_service_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_web_service_new_url(idmef_web_service_t *ptr)
+int idmef_web_service_new_url(idmef_web_service_t *ptr, prelude_string_t **ret)
 {
 	prelude_string_destroy_internal(&ptr->url);
 
-	return &ptr->url;
+        *ret = &ptr->url;
+	return 0;
 }
 
 /**
@@ -4870,20 +4969,22 @@ prelude_string_t *idmef_web_service_get_cgi(idmef_web_service_t *ptr)
 	return ptr->cgi;
 }
 
-idmef_value_t *idmef_web_service_get_cgi_value(idmef_web_service_t *ptr)
+int idmef_web_service_get_cgi_value(idmef_web_service_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->cgi )
-		return NULL;
+	if ( ! ptr->cgi ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->cgi);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->cgi);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -4907,20 +5008,26 @@ void idmef_web_service_set_cgi(idmef_web_service_t *ptr, prelude_string_t *cgi)
 /**
  * idmef_web_service_new_cgi:
  * @ptr: pointer to a #idmef_web_service_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new cgi object, children of #idmef_web_service_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_web_service_new_cgi(idmef_web_service_t *ptr)
+int idmef_web_service_new_cgi(idmef_web_service_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->cgi )
 		prelude_string_destroy(ptr->cgi);
 		
-	ptr->cgi = prelude_string_new();
+	retval = prelude_string_new(&ptr->cgi);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->cgi;
+        *ret = ptr->cgi;
+	return 0;
 }
 
 /**
@@ -4936,20 +5043,22 @@ prelude_string_t *idmef_web_service_get_http_method(idmef_web_service_t *ptr)
 	return ptr->http_method;
 }
 
-idmef_value_t *idmef_web_service_get_http_method_value(idmef_web_service_t *ptr)
+int idmef_web_service_get_http_method_value(idmef_web_service_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->http_method )
-		return NULL;
+	if ( ! ptr->http_method ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->http_method);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->http_method);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -4973,20 +5082,26 @@ void idmef_web_service_set_http_method(idmef_web_service_t *ptr, prelude_string_
 /**
  * idmef_web_service_new_http_method:
  * @ptr: pointer to a #idmef_web_service_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new http_method object, children of #idmef_web_service_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_web_service_new_http_method(idmef_web_service_t *ptr)
+int idmef_web_service_new_http_method(idmef_web_service_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->http_method )
 		prelude_string_destroy(ptr->http_method);
 		
-	ptr->http_method = prelude_string_new();
+	retval = prelude_string_new(&ptr->http_method);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->http_method;
+        *ret = ptr->http_method;
+	return 0;
 }
 
 /**
@@ -5002,7 +5117,12 @@ prelude_string_t *idmef_web_service_new_http_method(idmef_web_service_t *ptr)
  */
 prelude_string_t *idmef_web_service_get_next_arg(idmef_web_service_t *ptr, prelude_string_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->arg_list, prelude_string_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->arg_list, tmp)
+                return prelude_list_entry(tmp, prelude_string_t, list);
+
+        return NULL;
 }
 
 /**
@@ -5014,80 +5134,83 @@ prelude_string_t *idmef_web_service_get_next_arg(idmef_web_service_t *ptr, prelu
  */
 void idmef_web_service_set_arg(idmef_web_service_t *ptr, prelude_string_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->arg_list);
+	prelude_list_add_tail(&ptr->arg_list, &object->list);
 }
 
 /**
- * idmef_web_service_new_HASH(0x8023ce20):
+ * idmef_web_service_new_arg:
  * @ptr: pointer to a #idmef_web_service_t object.
- * 
- * Create a new HASH(0x8023ce20) children of @ptr,
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
+ *
+ * Create a new #prelude_string_t children of @ptr,
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
- * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_web_service_new_arg(idmef_web_service_t *ptr)
-{
-	prelude_string_t *object;
+int idmef_web_service_new_arg(idmef_web_service_t *ptr, prelude_string_t **ret)
+{	
+        int retval;
+
+	retval = prelude_string_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = prelude_string_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->arg_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->arg_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_web_service_get_arg_value(idmef_web_service_t *ptr)
+
+int idmef_web_service_get_arg_value(idmef_web_service_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	prelude_string_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->arg_list) {
+	prelude_list_for_each(&ptr->arg_list, tmp) {
 		entry = prelude_list_entry(tmp, prelude_string_t, list);
 
-		val = idmef_value_new_string(entry);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_string(&val, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 		idmef_value_dont_have_own_data(val);
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
 /**
  * idmef_snmp_service_new:
- * 
+ * @ret: Pointer where to store the created #idmef_snmp_service_t object.
+ *
  * Create a new #idmef_snmp_service_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_snmp_service_t *idmef_snmp_service_new(void)
+int idmef_snmp_service_new(idmef_snmp_service_t **ret)
 {
-	idmef_snmp_service_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	return ret;
+	return 0;
 
 }
 
@@ -5107,67 +5230,68 @@ idmef_snmp_service_t *idmef_snmp_service_ref(idmef_snmp_service_t *ptr)
 	return ptr;
 }
 
-void *idmef_snmp_service_get_child(void *p, idmef_child_t child)
+int idmef_snmp_service_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_snmp_service_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_snmp_service_get_oid_value(ptr);
+			return idmef_snmp_service_get_oid_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_snmp_service_get_community_value(ptr);
+			return idmef_snmp_service_get_community_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_snmp_service_get_security_name_value(ptr);
+			return idmef_snmp_service_get_security_name_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 3:
-			return idmef_snmp_service_get_context_name_value(ptr);
+			return idmef_snmp_service_get_context_name_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 4:
-			return idmef_snmp_service_get_context_engine_id_value(ptr);
+			return idmef_snmp_service_get_context_engine_id_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 5:
-			return idmef_snmp_service_get_command_value(ptr);
+			return idmef_snmp_service_get_command_value(ptr, (idmef_value_t **) childptr);
+
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_snmp_service_new_child(void *p, idmef_child_t child, int n)
+int idmef_snmp_service_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_snmp_service_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_snmp_service_new_oid(ptr);
+			return idmef_snmp_service_new_oid(ptr, (prelude_string_t **) ret);
 
 		case 1:
-			return idmef_snmp_service_new_community(ptr);
+			return idmef_snmp_service_new_community(ptr, (prelude_string_t **) ret);
 
 		case 2:
-			return idmef_snmp_service_new_security_name(ptr);
+			return idmef_snmp_service_new_security_name(ptr, (prelude_string_t **) ret);
 
 		case 3:
-			return idmef_snmp_service_new_context_name(ptr);
+			return idmef_snmp_service_new_context_name(ptr, (prelude_string_t **) ret);
 
 		case 4:
-			return idmef_snmp_service_new_context_engine_id(ptr);
+			return idmef_snmp_service_new_context_engine_id(ptr, (prelude_string_t **) ret);
 
 		case 5:
-			return idmef_snmp_service_new_command(ptr);
+			return idmef_snmp_service_new_command(ptr, (prelude_string_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_snmp_service_destroy_internal(idmef_snmp_service_t *ptr)
@@ -5237,20 +5361,22 @@ prelude_string_t *idmef_snmp_service_get_oid(idmef_snmp_service_t *ptr)
 	return ptr->oid;
 }
 
-idmef_value_t *idmef_snmp_service_get_oid_value(idmef_snmp_service_t *ptr)
+int idmef_snmp_service_get_oid_value(idmef_snmp_service_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->oid )
-		return NULL;
+	if ( ! ptr->oid ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->oid);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->oid);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -5274,20 +5400,26 @@ void idmef_snmp_service_set_oid(idmef_snmp_service_t *ptr, prelude_string_t *oid
 /**
  * idmef_snmp_service_new_oid:
  * @ptr: pointer to a #idmef_snmp_service_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new oid object, children of #idmef_snmp_service_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_snmp_service_new_oid(idmef_snmp_service_t *ptr)
+int idmef_snmp_service_new_oid(idmef_snmp_service_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->oid )
 		prelude_string_destroy(ptr->oid);
 		
-	ptr->oid = prelude_string_new();
+	retval = prelude_string_new(&ptr->oid);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->oid;
+        *ret = ptr->oid;
+	return 0;
 }
 
 /**
@@ -5303,20 +5435,22 @@ prelude_string_t *idmef_snmp_service_get_community(idmef_snmp_service_t *ptr)
 	return ptr->community;
 }
 
-idmef_value_t *idmef_snmp_service_get_community_value(idmef_snmp_service_t *ptr)
+int idmef_snmp_service_get_community_value(idmef_snmp_service_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->community )
-		return NULL;
+	if ( ! ptr->community ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->community);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->community);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -5340,20 +5474,26 @@ void idmef_snmp_service_set_community(idmef_snmp_service_t *ptr, prelude_string_
 /**
  * idmef_snmp_service_new_community:
  * @ptr: pointer to a #idmef_snmp_service_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new community object, children of #idmef_snmp_service_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_snmp_service_new_community(idmef_snmp_service_t *ptr)
+int idmef_snmp_service_new_community(idmef_snmp_service_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->community )
 		prelude_string_destroy(ptr->community);
 		
-	ptr->community = prelude_string_new();
+	retval = prelude_string_new(&ptr->community);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->community;
+        *ret = ptr->community;
+	return 0;
 }
 
 /**
@@ -5369,20 +5509,22 @@ prelude_string_t *idmef_snmp_service_get_security_name(idmef_snmp_service_t *ptr
 	return ptr->security_name;
 }
 
-idmef_value_t *idmef_snmp_service_get_security_name_value(idmef_snmp_service_t *ptr)
+int idmef_snmp_service_get_security_name_value(idmef_snmp_service_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->security_name )
-		return NULL;
+	if ( ! ptr->security_name ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->security_name);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->security_name);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -5406,20 +5548,26 @@ void idmef_snmp_service_set_security_name(idmef_snmp_service_t *ptr, prelude_str
 /**
  * idmef_snmp_service_new_security_name:
  * @ptr: pointer to a #idmef_snmp_service_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new security_name object, children of #idmef_snmp_service_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_snmp_service_new_security_name(idmef_snmp_service_t *ptr)
+int idmef_snmp_service_new_security_name(idmef_snmp_service_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->security_name )
 		prelude_string_destroy(ptr->security_name);
 		
-	ptr->security_name = prelude_string_new();
+	retval = prelude_string_new(&ptr->security_name);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->security_name;
+        *ret = ptr->security_name;
+	return 0;
 }
 
 /**
@@ -5435,20 +5583,22 @@ prelude_string_t *idmef_snmp_service_get_context_name(idmef_snmp_service_t *ptr)
 	return ptr->context_name;
 }
 
-idmef_value_t *idmef_snmp_service_get_context_name_value(idmef_snmp_service_t *ptr)
+int idmef_snmp_service_get_context_name_value(idmef_snmp_service_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->context_name )
-		return NULL;
+	if ( ! ptr->context_name ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->context_name);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->context_name);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -5472,20 +5622,26 @@ void idmef_snmp_service_set_context_name(idmef_snmp_service_t *ptr, prelude_stri
 /**
  * idmef_snmp_service_new_context_name:
  * @ptr: pointer to a #idmef_snmp_service_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new context_name object, children of #idmef_snmp_service_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_snmp_service_new_context_name(idmef_snmp_service_t *ptr)
+int idmef_snmp_service_new_context_name(idmef_snmp_service_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->context_name )
 		prelude_string_destroy(ptr->context_name);
 		
-	ptr->context_name = prelude_string_new();
+	retval = prelude_string_new(&ptr->context_name);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->context_name;
+        *ret = ptr->context_name;
+	return 0;
 }
 
 /**
@@ -5501,20 +5657,22 @@ prelude_string_t *idmef_snmp_service_get_context_engine_id(idmef_snmp_service_t 
 	return ptr->context_engine_id;
 }
 
-idmef_value_t *idmef_snmp_service_get_context_engine_id_value(idmef_snmp_service_t *ptr)
+int idmef_snmp_service_get_context_engine_id_value(idmef_snmp_service_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->context_engine_id )
-		return NULL;
+	if ( ! ptr->context_engine_id ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->context_engine_id);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->context_engine_id);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -5538,20 +5696,26 @@ void idmef_snmp_service_set_context_engine_id(idmef_snmp_service_t *ptr, prelude
 /**
  * idmef_snmp_service_new_context_engine_id:
  * @ptr: pointer to a #idmef_snmp_service_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new context_engine_id object, children of #idmef_snmp_service_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_snmp_service_new_context_engine_id(idmef_snmp_service_t *ptr)
+int idmef_snmp_service_new_context_engine_id(idmef_snmp_service_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->context_engine_id )
 		prelude_string_destroy(ptr->context_engine_id);
 		
-	ptr->context_engine_id = prelude_string_new();
+	retval = prelude_string_new(&ptr->context_engine_id);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->context_engine_id;
+        *ret = ptr->context_engine_id;
+	return 0;
 }
 
 /**
@@ -5567,20 +5731,22 @@ prelude_string_t *idmef_snmp_service_get_command(idmef_snmp_service_t *ptr)
 	return ptr->command;
 }
 
-idmef_value_t *idmef_snmp_service_get_command_value(idmef_snmp_service_t *ptr)
+int idmef_snmp_service_get_command_value(idmef_snmp_service_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->command )
-		return NULL;
+	if ( ! ptr->command ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->command);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->command);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -5604,40 +5770,45 @@ void idmef_snmp_service_set_command(idmef_snmp_service_t *ptr, prelude_string_t 
 /**
  * idmef_snmp_service_new_command:
  * @ptr: pointer to a #idmef_snmp_service_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new command object, children of #idmef_snmp_service_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_snmp_service_new_command(idmef_snmp_service_t *ptr)
+int idmef_snmp_service_new_command(idmef_snmp_service_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->command )
 		prelude_string_destroy(ptr->command);
 		
-	ptr->command = prelude_string_new();
+	retval = prelude_string_new(&ptr->command);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->command;
+        *ret = ptr->command;
+	return 0;
 }
 
 /**
  * idmef_service_new:
- * 
+ * @ret: Pointer where to store the created #idmef_service_t object.
+ *
  * Create a new #idmef_service_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_service_t *idmef_service_new(void)
+int idmef_service_new(idmef_service_t **ret)
 {
-	idmef_service_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	return ret;
+	return 0;
 
 }
 
@@ -5657,98 +5828,99 @@ idmef_service_t *idmef_service_ref(idmef_service_t *ptr)
 	return ptr;
 }
 
-void *idmef_service_get_child(void *p, idmef_child_t child)
+int idmef_service_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_service_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_service_get_ident_value(ptr);
+			return idmef_service_get_ident_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_service_get_ip_version_value(ptr);
+			return idmef_service_get_ip_version_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_service_get_name_value(ptr);
+			return idmef_service_get_name_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 3:
-			return idmef_service_get_port_value(ptr);
+			return idmef_service_get_port_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 4:
-			return idmef_service_get_iana_protocol_number_value(ptr);
+			return idmef_service_get_iana_protocol_number_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 5:
-			return idmef_service_get_iana_protocol_name_value(ptr);
+			return idmef_service_get_iana_protocol_name_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 6:
-			return idmef_service_get_portlist_value(ptr);
+			return idmef_service_get_portlist_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 7:
-			return idmef_service_get_protocol_value(ptr);
+			return idmef_service_get_protocol_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 8:
-			return idmef_service_get_type_value(ptr);
+			return idmef_service_get_type_value(ptr, (idmef_value_t **) childptr);
 
-		case 9: 
-			if ( ptr->type == IDMEF_SERVICE_TYPE_WEB ) 
-				return ptr->specific.web_service;
-			return NULL;   	   
+		case 9:
+                        *childptr = ( ptr->type == IDMEF_SERVICE_TYPE_WEB ) ? ptr->specific.web_service : NULL;
+			return 0;   	   
 
-		case 10: 
-			if ( ptr->type == IDMEF_SERVICE_TYPE_SNMP ) 
-				return ptr->specific.snmp_service;
-			return NULL;   	   
+		case 10:
+                        *childptr = ( ptr->type == IDMEF_SERVICE_TYPE_SNMP ) ? ptr->specific.snmp_service : NULL;
+			return 0;   	   
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_service_new_child(void *p, idmef_child_t child, int n)
+int idmef_service_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_service_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_service_new_ident(ptr);
+			return idmef_service_new_ident(ptr, (uint64_t **) ret);
 
 		case 1:
-			return idmef_service_new_ip_version(ptr);
+			return idmef_service_new_ip_version(ptr, (uint8_t **) ret);
 
 		case 2:
-			return idmef_service_new_name(ptr);
+			return idmef_service_new_name(ptr, (prelude_string_t **) ret);
 
 		case 3:
-			return idmef_service_new_port(ptr);
+			return idmef_service_new_port(ptr, (uint16_t **) ret);
 
 		case 4:
-			return idmef_service_new_iana_protocol_number(ptr);
+			return idmef_service_new_iana_protocol_number(ptr, (uint8_t **) ret);
 
 		case 5:
-			return idmef_service_new_iana_protocol_name(ptr);
+			return idmef_service_new_iana_protocol_name(ptr, (prelude_string_t **) ret);
 
 		case 6:
-			return idmef_service_new_portlist(ptr);
+			return idmef_service_new_portlist(ptr, (prelude_string_t **) ret);
 
 		case 7:
-			return idmef_service_new_protocol(ptr);
+			return idmef_service_new_protocol(ptr, (prelude_string_t **) ret);
 
 		case 9:
-			return idmef_service_new_web_service(ptr);
+			return idmef_service_new_web_service(ptr, (idmef_web_service_t **) ret);
 
 		case 10:
-			return idmef_service_new_snmp_service(ptr);
+			return idmef_service_new_snmp_service(ptr, (idmef_snmp_service_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_service_destroy_internal(idmef_service_t *ptr)
@@ -5824,17 +5996,17 @@ uint64_t idmef_service_get_ident(idmef_service_t *ptr)
 	return ptr->ident;
 }
 
-idmef_value_t *idmef_service_get_ident_value(idmef_service_t *ptr)
+int idmef_service_get_ident_value(idmef_service_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_uint64(ptr->ident);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_uint64(value, ptr->ident);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -5855,15 +6027,17 @@ void idmef_service_set_ident(idmef_service_t *ptr, uint64_t ident)
 /**
  * idmef_service_new_ident:
  * @ptr: pointer to a #idmef_service_t object.
+ * @ret: pointer to an address where to store the created #uint64_t object.
  *
  * Create a new ident object, children of #idmef_service_t.
  * If @ptr already contain a #uint64_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint64_t *idmef_service_new_ident(idmef_service_t *ptr)
+int idmef_service_new_ident(idmef_service_t *ptr, uint64_t **ret)
 {
-	return &ptr->ident;
+        *ret = &ptr->ident;
+	return 0;
 }
 
 /**
@@ -5879,9 +6053,14 @@ uint8_t *idmef_service_get_ip_version(idmef_service_t *ptr)
 	return ptr->ip_version_is_set ? &ptr->ip_version : NULL;
 }
 
-idmef_value_t *idmef_service_get_ip_version_value(idmef_service_t *ptr)
+int idmef_service_get_ip_version_value(idmef_service_t *ptr, idmef_value_t **value)
 {
-	return ptr->ip_version_is_set ? idmef_value_new_uint8(ptr->ip_version) : NULL;
+        if ( ! ptr->ip_version_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_uint8(value, ptr->ip_version);
 
 }
 
@@ -5904,17 +6083,19 @@ void idmef_service_set_ip_version(idmef_service_t *ptr, uint8_t ip_version)
 /**
  * idmef_service_new_ip_version:
  * @ptr: pointer to a #idmef_service_t object.
+ * @ret: pointer to an address where to store the created #uint8_t object.
  *
  * Create a new ip_version object, children of #idmef_service_t.
  * If @ptr already contain a #uint8_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint8_t *idmef_service_new_ip_version(idmef_service_t *ptr)
+int idmef_service_new_ip_version(idmef_service_t *ptr, uint8_t **ret)
 {
 	ptr->ip_version_is_set = 1;
 
-	return &ptr->ip_version;
+        *ret = &ptr->ip_version;
+	return 0;
 }
 
 /**
@@ -5930,20 +6111,22 @@ prelude_string_t *idmef_service_get_name(idmef_service_t *ptr)
 	return ptr->name;
 }
 
-idmef_value_t *idmef_service_get_name_value(idmef_service_t *ptr)
+int idmef_service_get_name_value(idmef_service_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->name )
-		return NULL;
+	if ( ! ptr->name ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->name);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->name);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -5967,20 +6150,26 @@ void idmef_service_set_name(idmef_service_t *ptr, prelude_string_t *name)
 /**
  * idmef_service_new_name:
  * @ptr: pointer to a #idmef_service_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new name object, children of #idmef_service_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_service_new_name(idmef_service_t *ptr)
+int idmef_service_new_name(idmef_service_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->name )
 		prelude_string_destroy(ptr->name);
 		
-	ptr->name = prelude_string_new();
+	retval = prelude_string_new(&ptr->name);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->name;
+        *ret = ptr->name;
+	return 0;
 }
 
 /**
@@ -5996,9 +6185,14 @@ uint16_t *idmef_service_get_port(idmef_service_t *ptr)
 	return ptr->port_is_set ? &ptr->port : NULL;
 }
 
-idmef_value_t *idmef_service_get_port_value(idmef_service_t *ptr)
+int idmef_service_get_port_value(idmef_service_t *ptr, idmef_value_t **value)
 {
-	return ptr->port_is_set ? idmef_value_new_uint16(ptr->port) : NULL;
+        if ( ! ptr->port_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_uint16(value, ptr->port);
 
 }
 
@@ -6021,17 +6215,19 @@ void idmef_service_set_port(idmef_service_t *ptr, uint16_t port)
 /**
  * idmef_service_new_port:
  * @ptr: pointer to a #idmef_service_t object.
+ * @ret: pointer to an address where to store the created #uint16_t object.
  *
  * Create a new port object, children of #idmef_service_t.
  * If @ptr already contain a #uint16_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint16_t *idmef_service_new_port(idmef_service_t *ptr)
+int idmef_service_new_port(idmef_service_t *ptr, uint16_t **ret)
 {
 	ptr->port_is_set = 1;
 
-	return &ptr->port;
+        *ret = &ptr->port;
+	return 0;
 }
 
 /**
@@ -6047,9 +6243,14 @@ uint8_t *idmef_service_get_iana_protocol_number(idmef_service_t *ptr)
 	return ptr->iana_protocol_number_is_set ? &ptr->iana_protocol_number : NULL;
 }
 
-idmef_value_t *idmef_service_get_iana_protocol_number_value(idmef_service_t *ptr)
+int idmef_service_get_iana_protocol_number_value(idmef_service_t *ptr, idmef_value_t **value)
 {
-	return ptr->iana_protocol_number_is_set ? idmef_value_new_uint8(ptr->iana_protocol_number) : NULL;
+        if ( ! ptr->iana_protocol_number_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_uint8(value, ptr->iana_protocol_number);
 
 }
 
@@ -6072,17 +6273,19 @@ void idmef_service_set_iana_protocol_number(idmef_service_t *ptr, uint8_t iana_p
 /**
  * idmef_service_new_iana_protocol_number:
  * @ptr: pointer to a #idmef_service_t object.
+ * @ret: pointer to an address where to store the created #uint8_t object.
  *
  * Create a new iana_protocol_number object, children of #idmef_service_t.
  * If @ptr already contain a #uint8_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint8_t *idmef_service_new_iana_protocol_number(idmef_service_t *ptr)
+int idmef_service_new_iana_protocol_number(idmef_service_t *ptr, uint8_t **ret)
 {
 	ptr->iana_protocol_number_is_set = 1;
 
-	return &ptr->iana_protocol_number;
+        *ret = &ptr->iana_protocol_number;
+	return 0;
 }
 
 /**
@@ -6098,20 +6301,22 @@ prelude_string_t *idmef_service_get_iana_protocol_name(idmef_service_t *ptr)
 	return ptr->iana_protocol_name;
 }
 
-idmef_value_t *idmef_service_get_iana_protocol_name_value(idmef_service_t *ptr)
+int idmef_service_get_iana_protocol_name_value(idmef_service_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->iana_protocol_name )
-		return NULL;
+	if ( ! ptr->iana_protocol_name ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->iana_protocol_name);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->iana_protocol_name);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -6135,20 +6340,26 @@ void idmef_service_set_iana_protocol_name(idmef_service_t *ptr, prelude_string_t
 /**
  * idmef_service_new_iana_protocol_name:
  * @ptr: pointer to a #idmef_service_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new iana_protocol_name object, children of #idmef_service_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_service_new_iana_protocol_name(idmef_service_t *ptr)
+int idmef_service_new_iana_protocol_name(idmef_service_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->iana_protocol_name )
 		prelude_string_destroy(ptr->iana_protocol_name);
 		
-	ptr->iana_protocol_name = prelude_string_new();
+	retval = prelude_string_new(&ptr->iana_protocol_name);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->iana_protocol_name;
+        *ret = ptr->iana_protocol_name;
+	return 0;
 }
 
 /**
@@ -6164,20 +6375,22 @@ prelude_string_t *idmef_service_get_portlist(idmef_service_t *ptr)
 	return ptr->portlist;
 }
 
-idmef_value_t *idmef_service_get_portlist_value(idmef_service_t *ptr)
+int idmef_service_get_portlist_value(idmef_service_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->portlist )
-		return NULL;
+	if ( ! ptr->portlist ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->portlist);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->portlist);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -6201,20 +6414,26 @@ void idmef_service_set_portlist(idmef_service_t *ptr, prelude_string_t *portlist
 /**
  * idmef_service_new_portlist:
  * @ptr: pointer to a #idmef_service_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new portlist object, children of #idmef_service_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_service_new_portlist(idmef_service_t *ptr)
+int idmef_service_new_portlist(idmef_service_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->portlist )
 		prelude_string_destroy(ptr->portlist);
 		
-	ptr->portlist = prelude_string_new();
+	retval = prelude_string_new(&ptr->portlist);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->portlist;
+        *ret = ptr->portlist;
+	return 0;
 }
 
 /**
@@ -6230,20 +6449,22 @@ prelude_string_t *idmef_service_get_protocol(idmef_service_t *ptr)
 	return ptr->protocol;
 }
 
-idmef_value_t *idmef_service_get_protocol_value(idmef_service_t *ptr)
+int idmef_service_get_protocol_value(idmef_service_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->protocol )
-		return NULL;
+	if ( ! ptr->protocol ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->protocol);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->protocol);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -6267,20 +6488,26 @@ void idmef_service_set_protocol(idmef_service_t *ptr, prelude_string_t *protocol
 /**
  * idmef_service_new_protocol:
  * @ptr: pointer to a #idmef_service_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new protocol object, children of #idmef_service_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_service_new_protocol(idmef_service_t *ptr)
+int idmef_service_new_protocol(idmef_service_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->protocol )
 		prelude_string_destroy(ptr->protocol);
 		
-	ptr->protocol = prelude_string_new();
+	retval = prelude_string_new(&ptr->protocol);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->protocol;
+        *ret = ptr->protocol;
+	return 0;
 }
 
 /** 
@@ -6296,9 +6523,9 @@ idmef_service_type_t idmef_service_get_type(idmef_service_t *ptr)
 	return ptr->type;
 }
 
-idmef_value_t *idmef_service_get_type_value(idmef_service_t *ptr)
+int idmef_service_get_type_value(idmef_service_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_SERVICE_TYPE, ptr->type);
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_SERVICE_TYPE, ptr->type);
 }
 
 /** 
@@ -6343,28 +6570,36 @@ void idmef_service_set_web_service(idmef_service_t *ptr, idmef_web_service_t *we
 	ptr->type = IDMEF_SERVICE_TYPE_WEB;
 }
 
-idmef_value_t *idmef_service_get_web_service_value(idmef_service_t *ptr)
+int idmef_service_get_web_service_value(idmef_service_t *ptr, idmef_value_t **value)
 {
-	return ((ptr->type == IDMEF_SERVICE_TYPE_WEB) ?
-		idmef_value_new_object(ptr->specific.web_service, IDMEF_OBJECT_TYPE_WEB_SERVICE) :
-		NULL);
+        if ( ptr->type != IDMEF_SERVICE_TYPE_WEB ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_WEB_SERVICE,
+                                      ptr->specific.web_service);                        
 }
 
 /**
  * idmef_service_new_web_service:
  * @ptr: pointer to a #idmef_service_t object.
+ * @ret: pointer where to store the created #idmef_web_service_t object.
  *
- * Create a new web_service object, children of #idmef_service_t.
+ * Create a new idmef_web_service_t object, children of #idmef_service_t.
  * If @ptr already contain a #idmef_web_service_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_web_service_t *idmef_service_new_web_service(idmef_service_t *ptr)
+int idmef_service_new_web_service(idmef_service_t *ptr, idmef_web_service_t **ret)
 {
+        int retval;
+
 	switch ( ptr->type ) {
 
 		case IDMEF_SERVICE_TYPE_WEB:
-			return ptr->specific.web_service;
+                        *ret = ptr->specific.web_service;
+			return 0;
 
 		case IDMEF_SERVICE_TYPE_SNMP:
 			idmef_snmp_service_destroy(ptr->specific.snmp_service);
@@ -6374,10 +6609,14 @@ idmef_web_service_t *idmef_service_new_web_service(idmef_service_t *ptr)
 			break;
 	}
 
-	ptr->specific.web_service = idmef_web_service_new();
-	ptr->type = IDMEF_SERVICE_TYPE_WEB;
+        retval = idmef_web_service_new(ret);
+        if ( retval < 0 )
+                return retval;
 
-	return ptr->specific.web_service;
+	ptr->type = IDMEF_SERVICE_TYPE_WEB;
+        ptr->specific.web_service = *ret;
+
+	return 0;
 }
 
 /** 
@@ -6422,24 +6661,31 @@ void idmef_service_set_snmp_service(idmef_service_t *ptr, idmef_snmp_service_t *
 	ptr->type = IDMEF_SERVICE_TYPE_SNMP;
 }
 
-idmef_value_t *idmef_service_get_snmp_service_value(idmef_service_t *ptr)
+int idmef_service_get_snmp_service_value(idmef_service_t *ptr, idmef_value_t **value)
 {
-	return ((ptr->type == IDMEF_SERVICE_TYPE_SNMP) ?
-		idmef_value_new_object(ptr->specific.snmp_service, IDMEF_OBJECT_TYPE_SNMP_SERVICE) :
-		NULL);
+        if ( ptr->type != IDMEF_SERVICE_TYPE_SNMP ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_SNMP_SERVICE,
+                                      ptr->specific.snmp_service);                        
 }
 
 /**
  * idmef_service_new_snmp_service:
  * @ptr: pointer to a #idmef_service_t object.
+ * @ret: pointer where to store the created #idmef_snmp_service_t object.
  *
- * Create a new snmp_service object, children of #idmef_service_t.
+ * Create a new idmef_snmp_service_t object, children of #idmef_service_t.
  * If @ptr already contain a #idmef_snmp_service_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_snmp_service_t *idmef_service_new_snmp_service(idmef_service_t *ptr)
+int idmef_service_new_snmp_service(idmef_service_t *ptr, idmef_snmp_service_t **ret)
 {
+        int retval;
+
 	switch ( ptr->type ) {
 
 		case IDMEF_SERVICE_TYPE_WEB:
@@ -6447,39 +6693,43 @@ idmef_snmp_service_t *idmef_service_new_snmp_service(idmef_service_t *ptr)
 			break;
 
 		case IDMEF_SERVICE_TYPE_SNMP:
-			return ptr->specific.snmp_service;
+                        *ret = ptr->specific.snmp_service;
+			return 0;
 
 		default:
 			break;
 	}
 
-	ptr->specific.snmp_service = idmef_snmp_service_new();
-	ptr->type = IDMEF_SERVICE_TYPE_SNMP;
+        retval = idmef_snmp_service_new(ret);
+        if ( retval < 0 )
+                return retval;
 
-	return ptr->specific.snmp_service;
+	ptr->type = IDMEF_SERVICE_TYPE_SNMP;
+        ptr->specific.snmp_service = *ret;
+
+	return 0;
 }
 
 /**
  * idmef_node_new:
- * 
+ * @ret: Pointer where to store the created #idmef_node_t object.
+ *
  * Create a new #idmef_node_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_node_t *idmef_node_new(void)
+int idmef_node_new(idmef_node_t **ret)
 {
-	idmef_node_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	PRELUDE_INIT_LIST_HEAD(&ret->address_list);
+	prelude_list_init(&(*ret)->address_list);
     
 
-	return ret;
+	return 0;
 
 }
 
@@ -6499,90 +6749,90 @@ idmef_node_t *idmef_node_ref(idmef_node_t *ptr)
 	return ptr;
 }
 
-void *idmef_node_get_child(void *p, idmef_child_t child)
+int idmef_node_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_node_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_node_get_ident_value(ptr);
+			return idmef_node_get_ident_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_node_get_category_value(ptr);
+			return idmef_node_get_category_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_node_get_location_value(ptr);
+			return idmef_node_get_location_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 3:
-			return idmef_node_get_name_value(ptr);
+			return idmef_node_get_name_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 4:
-			return &ptr->address_list;
+                        *childptr = &ptr->address_list;
+			return 0;
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_node_new_child(void *p, idmef_child_t child, int n)
+int idmef_node_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_node_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_node_new_ident(ptr);
+			return idmef_node_new_ident(ptr, (uint64_t **) ret);
 
 		case 1:
-			return idmef_node_new_category(ptr);
+			return idmef_node_new_category(ptr, (idmef_node_category_t **) ret);
 
 		case 2:
-			return idmef_node_new_location(ptr);
+			return idmef_node_new_location(ptr, (prelude_string_t **) ret);
 
 		case 3:
-			return idmef_node_new_name(ptr);
+			return idmef_node_new_name(ptr, (prelude_string_t **) ret);
 
 		case 4: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_node_new_address(ptr);
+				 retval = idmef_node_new_address(ptr, (idmef_address_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->address_list) {
-			    		entry = prelude_list_entry(tmp, idmef_address_t, list);
+				prelude_list_for_each(&ptr->address_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, idmef_address_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_node_new_address(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_node_new_address(ptr, (idmef_address_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_node_destroy_internal(idmef_node_t *ptr)
@@ -6602,7 +6852,7 @@ static void idmef_node_destroy_internal(idmef_node_t *ptr)
 		prelude_list_t *n, *tmp;
 		idmef_address_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->address_list) {
+		prelude_list_for_each_safe(&ptr->address_list, tmp, n) {
 			entry = prelude_list_entry(tmp, idmef_address_t, list);
 			idmef_address_destroy(entry);
 		}
@@ -6642,17 +6892,17 @@ uint64_t idmef_node_get_ident(idmef_node_t *ptr)
 	return ptr->ident;
 }
 
-idmef_value_t *idmef_node_get_ident_value(idmef_node_t *ptr)
+int idmef_node_get_ident_value(idmef_node_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_uint64(ptr->ident);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_uint64(value, ptr->ident);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -6673,15 +6923,17 @@ void idmef_node_set_ident(idmef_node_t *ptr, uint64_t ident)
 /**
  * idmef_node_new_ident:
  * @ptr: pointer to a #idmef_node_t object.
+ * @ret: pointer to an address where to store the created #uint64_t object.
  *
  * Create a new ident object, children of #idmef_node_t.
  * If @ptr already contain a #uint64_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint64_t *idmef_node_new_ident(idmef_node_t *ptr)
+int idmef_node_new_ident(idmef_node_t *ptr, uint64_t **ret)
 {
-	return &ptr->ident;
+        *ret = &ptr->ident;
+	return 0;
 }
 
 /**
@@ -6697,9 +6949,9 @@ idmef_node_category_t idmef_node_get_category(idmef_node_t *ptr)
 	return ptr->category;
 }
 
-idmef_value_t *idmef_node_get_category_value(idmef_node_t *ptr)
+int idmef_node_get_category_value(idmef_node_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_NODE_CATEGORY, ptr->category);
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_NODE_CATEGORY, ptr->category);
 
 }
 
@@ -6721,15 +6973,17 @@ void idmef_node_set_category(idmef_node_t *ptr, idmef_node_category_t category)
 /**
  * idmef_node_new_category:
  * @ptr: pointer to a #idmef_node_t object.
+ * @ret: pointer to an address where to store the created #idmef_node_category_t object.
  *
  * Create a new category object, children of #idmef_node_t.
  * If @ptr already contain a #idmef_node_category_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_node_category_t *idmef_node_new_category(idmef_node_t *ptr)
+int idmef_node_new_category(idmef_node_t *ptr, idmef_node_category_t **ret)
 {
-	return &ptr->category;
+        *ret = &ptr->category;
+	return 0;
 }
 
 /**
@@ -6745,20 +6999,22 @@ prelude_string_t *idmef_node_get_location(idmef_node_t *ptr)
 	return ptr->location;
 }
 
-idmef_value_t *idmef_node_get_location_value(idmef_node_t *ptr)
+int idmef_node_get_location_value(idmef_node_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->location )
-		return NULL;
+	if ( ! ptr->location ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->location);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->location);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -6782,20 +7038,26 @@ void idmef_node_set_location(idmef_node_t *ptr, prelude_string_t *location)
 /**
  * idmef_node_new_location:
  * @ptr: pointer to a #idmef_node_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new location object, children of #idmef_node_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_node_new_location(idmef_node_t *ptr)
+int idmef_node_new_location(idmef_node_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->location )
 		prelude_string_destroy(ptr->location);
 		
-	ptr->location = prelude_string_new();
+	retval = prelude_string_new(&ptr->location);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->location;
+        *ret = ptr->location;
+	return 0;
 }
 
 /**
@@ -6811,20 +7073,22 @@ prelude_string_t *idmef_node_get_name(idmef_node_t *ptr)
 	return ptr->name;
 }
 
-idmef_value_t *idmef_node_get_name_value(idmef_node_t *ptr)
+int idmef_node_get_name_value(idmef_node_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->name )
-		return NULL;
+	if ( ! ptr->name ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->name);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->name);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -6848,20 +7112,26 @@ void idmef_node_set_name(idmef_node_t *ptr, prelude_string_t *name)
 /**
  * idmef_node_new_name:
  * @ptr: pointer to a #idmef_node_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new name object, children of #idmef_node_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_node_new_name(idmef_node_t *ptr)
+int idmef_node_new_name(idmef_node_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->name )
 		prelude_string_destroy(ptr->name);
 		
-	ptr->name = prelude_string_new();
+	retval = prelude_string_new(&ptr->name);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->name;
+        *ret = ptr->name;
+	return 0;
 }
 
 /**
@@ -6877,7 +7147,12 @@ prelude_string_t *idmef_node_new_name(idmef_node_t *ptr)
  */
 idmef_address_t *idmef_node_get_next_address(idmef_node_t *ptr, idmef_address_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->address_list, idmef_address_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->address_list, tmp)
+                return prelude_list_entry(tmp, idmef_address_t, list);
+
+        return NULL;
 }
 
 /**
@@ -6889,81 +7164,84 @@ idmef_address_t *idmef_node_get_next_address(idmef_node_t *ptr, idmef_address_t 
  */
 void idmef_node_set_address(idmef_node_t *ptr, idmef_address_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->address_list);
+	prelude_list_add_tail(&ptr->address_list, &object->list);
 }
 
 /**
- * idmef_node_new_HASH(0x802432ec):
+ * idmef_node_new_address:
  * @ptr: pointer to a #idmef_node_t object.
- * 
- * Create a new HASH(0x802432ec) children of @ptr,
+ * @ret: pointer to an address where to store the created #idmef_address_t object.
+ *
+ * Create a new #idmef_address_t children of @ptr,
  * and add it to the tail of @ptr list of #idmef_address_t object.
  * 
- * Returns: a pointer to the created #idmef_address_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_address_t *idmef_node_new_address(idmef_node_t *ptr)
-{
-	idmef_address_t *object;
+int idmef_node_new_address(idmef_node_t *ptr, idmef_address_t **ret)
+{	
+        int retval;
+
+	retval = idmef_address_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = idmef_address_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->address_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->address_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_node_get_address_value(idmef_node_t *ptr)
+
+int idmef_node_get_address_value(idmef_node_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	idmef_address_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->address_list) {
+	prelude_list_for_each(&ptr->address_list, tmp) {
 		entry = prelude_list_entry(tmp, idmef_address_t, list);
 
-		val = idmef_value_new_object(entry, IDMEF_OBJECT_TYPE_ADDRESS);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_ADDRESS, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
 /**
  * idmef_source_new:
- * 
+ * @ret: Pointer where to store the created #idmef_source_t object.
+ *
  * Create a new #idmef_source_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_source_t *idmef_source_new(void)
+int idmef_source_new(idmef_source_t **ret)
 {
-	idmef_source_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	prelude_list_init(&(*ret)->list);
 
-	PRELUDE_INIT_LIST_HEAD(&ret->list);
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	return ret;
+	return 0;
 
 }
 
@@ -6983,82 +7261,82 @@ idmef_source_t *idmef_source_ref(idmef_source_t *ptr)
 	return ptr;
 }
 
-void *idmef_source_get_child(void *p, idmef_child_t child)
+int idmef_source_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_source_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_source_get_ident_value(ptr);
+			return idmef_source_get_ident_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_source_get_spoofed_value(ptr);
+			return idmef_source_get_spoofed_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_source_get_interface_value(ptr);
+			return idmef_source_get_interface_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 3:
-			return ptr->node;
+                        *childptr = ptr->node;
+                        return 0;
 
 		case 4:
-			return ptr->user;
+                        *childptr = ptr->user;
+                        return 0;
 
 		case 5:
-			return ptr->process;
+                        *childptr = ptr->process;
+                        return 0;
 
 		case 6:
-			return ptr->service;
+                        *childptr = ptr->service;
+                        return 0;
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_source_new_child(void *p, idmef_child_t child, int n)
+int idmef_source_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_source_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_source_new_ident(ptr);
+			return idmef_source_new_ident(ptr, (uint64_t **) ret);
 
 		case 1:
-			return idmef_source_new_spoofed(ptr);
+			return idmef_source_new_spoofed(ptr, (idmef_source_spoofed_t **) ret);
 
 		case 2:
-			return idmef_source_new_interface(ptr);
+			return idmef_source_new_interface(ptr, (prelude_string_t **) ret);
 
 		case 3:
-			return idmef_source_new_node(ptr);
+			return idmef_source_new_node(ptr, (idmef_node_t **) ret);
 
 		case 4:
-			return idmef_source_new_user(ptr);
+			return idmef_source_new_user(ptr, (idmef_user_t **) ret);
 
 		case 5:
-			return idmef_source_new_process(ptr);
+			return idmef_source_new_process(ptr, (idmef_process_t **) ret);
 
 		case 6:
-			return idmef_source_new_service(ptr);
+			return idmef_source_new_service(ptr, (idmef_service_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_source_destroy_internal(idmef_source_t *ptr)
 {
 
-       if ( ! prelude_list_empty(&ptr->list) ) {
-               prelude_list_del(&ptr->list);
-               PRELUDE_INIT_LIST_HEAD(&ptr->list);
-       }
+       if ( ! prelude_list_is_empty(&ptr->list) )
+               prelude_list_del_init(&ptr->list);
     
 	if ( ptr->interface ) {
 		prelude_string_destroy(ptr->interface);
@@ -7119,17 +7397,17 @@ uint64_t idmef_source_get_ident(idmef_source_t *ptr)
 	return ptr->ident;
 }
 
-idmef_value_t *idmef_source_get_ident_value(idmef_source_t *ptr)
+int idmef_source_get_ident_value(idmef_source_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_uint64(ptr->ident);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_uint64(value, ptr->ident);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -7150,15 +7428,17 @@ void idmef_source_set_ident(idmef_source_t *ptr, uint64_t ident)
 /**
  * idmef_source_new_ident:
  * @ptr: pointer to a #idmef_source_t object.
+ * @ret: pointer to an address where to store the created #uint64_t object.
  *
  * Create a new ident object, children of #idmef_source_t.
  * If @ptr already contain a #uint64_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint64_t *idmef_source_new_ident(idmef_source_t *ptr)
+int idmef_source_new_ident(idmef_source_t *ptr, uint64_t **ret)
 {
-	return &ptr->ident;
+        *ret = &ptr->ident;
+	return 0;
 }
 
 /**
@@ -7174,9 +7454,9 @@ idmef_source_spoofed_t idmef_source_get_spoofed(idmef_source_t *ptr)
 	return ptr->spoofed;
 }
 
-idmef_value_t *idmef_source_get_spoofed_value(idmef_source_t *ptr)
+int idmef_source_get_spoofed_value(idmef_source_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_SOURCE_SPOOFED, ptr->spoofed);
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_SOURCE_SPOOFED, ptr->spoofed);
 
 }
 
@@ -7198,15 +7478,17 @@ void idmef_source_set_spoofed(idmef_source_t *ptr, idmef_source_spoofed_t spoofe
 /**
  * idmef_source_new_spoofed:
  * @ptr: pointer to a #idmef_source_t object.
+ * @ret: pointer to an address where to store the created #idmef_source_spoofed_t object.
  *
  * Create a new spoofed object, children of #idmef_source_t.
  * If @ptr already contain a #idmef_source_spoofed_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_source_spoofed_t *idmef_source_new_spoofed(idmef_source_t *ptr)
+int idmef_source_new_spoofed(idmef_source_t *ptr, idmef_source_spoofed_t **ret)
 {
-	return &ptr->spoofed;
+        *ret = &ptr->spoofed;
+	return 0;
 }
 
 /**
@@ -7222,20 +7504,22 @@ prelude_string_t *idmef_source_get_interface(idmef_source_t *ptr)
 	return ptr->interface;
 }
 
-idmef_value_t *idmef_source_get_interface_value(idmef_source_t *ptr)
+int idmef_source_get_interface_value(idmef_source_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->interface )
-		return NULL;
+	if ( ! ptr->interface ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->interface);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->interface);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -7259,20 +7543,26 @@ void idmef_source_set_interface(idmef_source_t *ptr, prelude_string_t *interface
 /**
  * idmef_source_new_interface:
  * @ptr: pointer to a #idmef_source_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new interface object, children of #idmef_source_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_source_new_interface(idmef_source_t *ptr)
+int idmef_source_new_interface(idmef_source_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->interface )
 		prelude_string_destroy(ptr->interface);
 		
-	ptr->interface = prelude_string_new();
+	retval = prelude_string_new(&ptr->interface);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->interface;
+        *ret = ptr->interface;
+	return 0;
 }
 
 /**
@@ -7288,12 +7578,14 @@ idmef_node_t *idmef_source_get_node(idmef_source_t *ptr)
 	return ptr->node;
 }
 
-idmef_value_t *idmef_source_get_node_value(idmef_source_t *ptr)
+int idmef_source_get_node_value(idmef_source_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->node )
-		return NULL;
+	if ( ! ptr->node ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->node, IDMEF_OBJECT_TYPE_NODE);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_NODE, ptr->node);
 }
 
 /**
@@ -7317,18 +7609,22 @@ void idmef_source_set_node(idmef_source_t *ptr, idmef_node_t *node)
 /**
  * idmef_source_new_node:
  * @ptr: pointer to a #idmef_source_t object.
+ * @ret: pointer to an address where to store the created #idmef_node_t object.
  *
  * Create a new node object, children of #idmef_source_t.
  * If @ptr already contain a #idmef_node_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_node_t *idmef_source_new_node(idmef_source_t *ptr)
+int idmef_source_new_node(idmef_source_t *ptr, idmef_node_t **ret)
 {
-	if ( ! ptr->node )
-		ptr->node = idmef_node_new();
+        int retval;
 
-	return ptr->node;
+	if ( ! ptr->node )
+		retval = idmef_node_new(&ptr->node);
+
+        *ret = ptr->node;
+	return 0;
 }
 
 /**
@@ -7344,12 +7640,14 @@ idmef_user_t *idmef_source_get_user(idmef_source_t *ptr)
 	return ptr->user;
 }
 
-idmef_value_t *idmef_source_get_user_value(idmef_source_t *ptr)
+int idmef_source_get_user_value(idmef_source_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->user )
-		return NULL;
+	if ( ! ptr->user ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->user, IDMEF_OBJECT_TYPE_USER);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_USER, ptr->user);
 }
 
 /**
@@ -7373,18 +7671,22 @@ void idmef_source_set_user(idmef_source_t *ptr, idmef_user_t *user)
 /**
  * idmef_source_new_user:
  * @ptr: pointer to a #idmef_source_t object.
+ * @ret: pointer to an address where to store the created #idmef_user_t object.
  *
  * Create a new user object, children of #idmef_source_t.
  * If @ptr already contain a #idmef_user_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_user_t *idmef_source_new_user(idmef_source_t *ptr)
+int idmef_source_new_user(idmef_source_t *ptr, idmef_user_t **ret)
 {
-	if ( ! ptr->user )
-		ptr->user = idmef_user_new();
+        int retval;
 
-	return ptr->user;
+	if ( ! ptr->user )
+		retval = idmef_user_new(&ptr->user);
+
+        *ret = ptr->user;
+	return 0;
 }
 
 /**
@@ -7400,12 +7702,14 @@ idmef_process_t *idmef_source_get_process(idmef_source_t *ptr)
 	return ptr->process;
 }
 
-idmef_value_t *idmef_source_get_process_value(idmef_source_t *ptr)
+int idmef_source_get_process_value(idmef_source_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->process )
-		return NULL;
+	if ( ! ptr->process ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->process, IDMEF_OBJECT_TYPE_PROCESS);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_PROCESS, ptr->process);
 }
 
 /**
@@ -7429,18 +7733,22 @@ void idmef_source_set_process(idmef_source_t *ptr, idmef_process_t *process)
 /**
  * idmef_source_new_process:
  * @ptr: pointer to a #idmef_source_t object.
+ * @ret: pointer to an address where to store the created #idmef_process_t object.
  *
  * Create a new process object, children of #idmef_source_t.
  * If @ptr already contain a #idmef_process_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_process_t *idmef_source_new_process(idmef_source_t *ptr)
+int idmef_source_new_process(idmef_source_t *ptr, idmef_process_t **ret)
 {
-	if ( ! ptr->process )
-		ptr->process = idmef_process_new();
+        int retval;
 
-	return ptr->process;
+	if ( ! ptr->process )
+		retval = idmef_process_new(&ptr->process);
+
+        *ret = ptr->process;
+	return 0;
 }
 
 /**
@@ -7456,12 +7764,14 @@ idmef_service_t *idmef_source_get_service(idmef_source_t *ptr)
 	return ptr->service;
 }
 
-idmef_value_t *idmef_source_get_service_value(idmef_source_t *ptr)
+int idmef_source_get_service_value(idmef_source_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->service )
-		return NULL;
+	if ( ! ptr->service ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->service, IDMEF_OBJECT_TYPE_SERVICE);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_SERVICE, ptr->service);
 }
 
 /**
@@ -7485,43 +7795,46 @@ void idmef_source_set_service(idmef_source_t *ptr, idmef_service_t *service)
 /**
  * idmef_source_new_service:
  * @ptr: pointer to a #idmef_source_t object.
+ * @ret: pointer to an address where to store the created #idmef_service_t object.
  *
  * Create a new service object, children of #idmef_source_t.
  * If @ptr already contain a #idmef_service_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_service_t *idmef_source_new_service(idmef_source_t *ptr)
+int idmef_source_new_service(idmef_source_t *ptr, idmef_service_t **ret)
 {
-	if ( ! ptr->service )
-		ptr->service = idmef_service_new();
+        int retval;
 
-	return ptr->service;
+	if ( ! ptr->service )
+		retval = idmef_service_new(&ptr->service);
+
+        *ret = ptr->service;
+	return 0;
 }
 
 /**
  * idmef_file_access_new:
- * 
+ * @ret: Pointer where to store the created #idmef_file_access_t object.
+ *
  * Create a new #idmef_file_access_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_file_access_t *idmef_file_access_new(void)
+int idmef_file_access_new(idmef_file_access_t **ret)
 {
-	idmef_file_access_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	prelude_list_init(&(*ret)->list);
 
-	PRELUDE_INIT_LIST_HEAD(&ret->list);
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	PRELUDE_INIT_LIST_HEAD(&ret->permission_list);
+	prelude_list_init(&(*ret)->permission_list);
     
 
-	return ret;
+	return 0;
 
 }
 
@@ -7541,81 +7854,76 @@ idmef_file_access_t *idmef_file_access_ref(idmef_file_access_t *ptr)
 	return ptr;
 }
 
-void *idmef_file_access_get_child(void *p, idmef_child_t child)
+int idmef_file_access_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_file_access_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return &ptr->user_id;
+                        *childptr = &ptr->user_id;
+                        return 0;
 
 		case 1:
-			return &ptr->permission_list;
+                        *childptr = &ptr->permission_list;
+			return 0;
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_file_access_new_child(void *p, idmef_child_t child, int n)
+int idmef_file_access_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_file_access_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_file_access_new_user_id(ptr);
+			return idmef_file_access_new_user_id(ptr, (idmef_user_id_t **) ret);
 
 		case 1: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_file_access_new_permission(ptr);
+				 retval = idmef_file_access_new_permission(ptr, (prelude_string_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->permission_list) {
-			    		entry = prelude_list_entry(tmp, prelude_string_t, list);
+				prelude_list_for_each(&ptr->permission_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, prelude_string_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_file_access_new_permission(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_file_access_new_permission(ptr, (prelude_string_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_file_access_destroy_internal(idmef_file_access_t *ptr)
 {
 
-       if ( ! prelude_list_empty(&ptr->list) ) {
-               prelude_list_del(&ptr->list);
-               PRELUDE_INIT_LIST_HEAD(&ptr->list);
-       }
+       if ( ! prelude_list_is_empty(&ptr->list) )
+               prelude_list_del_init(&ptr->list);
     
 	idmef_user_id_destroy_internal(&ptr->user_id);
 
@@ -7623,7 +7931,7 @@ static void idmef_file_access_destroy_internal(idmef_file_access_t *ptr)
 		prelude_list_t *n, *tmp;
 		prelude_string_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->permission_list) {
+		prelude_list_for_each_safe(&ptr->permission_list, tmp, n) {
 			entry = prelude_list_entry(tmp, prelude_string_t, list);
 			prelude_string_destroy(entry);
 		}
@@ -7663,9 +7971,9 @@ idmef_user_id_t *idmef_file_access_get_user_id(idmef_file_access_t *ptr)
 	return &ptr->user_id;
 }
 
-idmef_value_t *idmef_file_access_get_user_id_value(idmef_file_access_t *ptr)
+int idmef_file_access_get_user_id_value(idmef_file_access_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_object(&ptr->user_id, IDMEF_OBJECT_TYPE_USER_ID);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_USER_ID, &ptr->user_id);
 }
 
 /**
@@ -7688,15 +7996,17 @@ void idmef_file_access_set_user_id(idmef_file_access_t *ptr, idmef_user_id_t *us
 /**
  * idmef_file_access_new_user_id:
  * @ptr: pointer to a #idmef_file_access_t object.
+ * @ret: pointer to an address where to store the created #idmef_user_id_t object.
  *
  * Create a new user_id object, children of #idmef_file_access_t.
  * If @ptr already contain a #idmef_user_id_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_user_id_t *idmef_file_access_new_user_id(idmef_file_access_t *ptr)
+int idmef_file_access_new_user_id(idmef_file_access_t *ptr, idmef_user_id_t **ret)
 {
-	return &ptr->user_id;
+        *ret = &ptr->user_id;
+	return 0;
 }
 
 /**
@@ -7712,7 +8022,12 @@ idmef_user_id_t *idmef_file_access_new_user_id(idmef_file_access_t *ptr)
  */
 prelude_string_t *idmef_file_access_get_next_permission(idmef_file_access_t *ptr, prelude_string_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->permission_list, prelude_string_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->permission_list, tmp)
+                return prelude_list_entry(tmp, prelude_string_t, list);
+
+        return NULL;
 }
 
 /**
@@ -7724,80 +8039,83 @@ prelude_string_t *idmef_file_access_get_next_permission(idmef_file_access_t *ptr
  */
 void idmef_file_access_set_permission(idmef_file_access_t *ptr, prelude_string_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->permission_list);
+	prelude_list_add_tail(&ptr->permission_list, &object->list);
 }
 
 /**
- * idmef_file_access_new_HASH(0x80244fb8):
+ * idmef_file_access_new_permission:
  * @ptr: pointer to a #idmef_file_access_t object.
- * 
- * Create a new HASH(0x80244fb8) children of @ptr,
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
+ *
+ * Create a new #prelude_string_t children of @ptr,
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
- * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_file_access_new_permission(idmef_file_access_t *ptr)
-{
-	prelude_string_t *object;
+int idmef_file_access_new_permission(idmef_file_access_t *ptr, prelude_string_t **ret)
+{	
+        int retval;
+
+	retval = prelude_string_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = prelude_string_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->permission_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->permission_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_file_access_get_permission_value(idmef_file_access_t *ptr)
+
+int idmef_file_access_get_permission_value(idmef_file_access_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	prelude_string_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->permission_list) {
+	prelude_list_for_each(&ptr->permission_list, tmp) {
 		entry = prelude_list_entry(tmp, prelude_string_t, list);
 
-		val = idmef_value_new_string(entry);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_string(&val, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 		idmef_value_dont_have_own_data(val);
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
 /**
  * idmef_inode_new:
- * 
+ * @ret: Pointer where to store the created #idmef_inode_t object.
+ *
  * Create a new #idmef_inode_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_inode_t *idmef_inode_new(void)
+int idmef_inode_new(idmef_inode_t **ret)
 {
-	idmef_inode_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	return ret;
+	return 0;
 
 }
 
@@ -7817,67 +8135,68 @@ idmef_inode_t *idmef_inode_ref(idmef_inode_t *ptr)
 	return ptr;
 }
 
-void *idmef_inode_get_child(void *p, idmef_child_t child)
+int idmef_inode_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_inode_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_inode_get_change_time_value(ptr);
+			return idmef_inode_get_change_time_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_inode_get_number_value(ptr);
+			return idmef_inode_get_number_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_inode_get_major_device_value(ptr);
+			return idmef_inode_get_major_device_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 3:
-			return idmef_inode_get_minor_device_value(ptr);
+			return idmef_inode_get_minor_device_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 4:
-			return idmef_inode_get_c_major_device_value(ptr);
+			return idmef_inode_get_c_major_device_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 5:
-			return idmef_inode_get_c_minor_device_value(ptr);
+			return idmef_inode_get_c_minor_device_value(ptr, (idmef_value_t **) childptr);
+
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_inode_new_child(void *p, idmef_child_t child, int n)
+int idmef_inode_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_inode_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_inode_new_change_time(ptr);
+			return idmef_inode_new_change_time(ptr, (idmef_time_t **) ret);
 
 		case 1:
-			return idmef_inode_new_number(ptr);
+			return idmef_inode_new_number(ptr, (uint32_t **) ret);
 
 		case 2:
-			return idmef_inode_new_major_device(ptr);
+			return idmef_inode_new_major_device(ptr, (uint32_t **) ret);
 
 		case 3:
-			return idmef_inode_new_minor_device(ptr);
+			return idmef_inode_new_minor_device(ptr, (uint32_t **) ret);
 
 		case 4:
-			return idmef_inode_new_c_major_device(ptr);
+			return idmef_inode_new_c_major_device(ptr, (uint32_t **) ret);
 
 		case 5:
-			return idmef_inode_new_c_minor_device(ptr);
+			return idmef_inode_new_c_minor_device(ptr, (uint32_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_inode_destroy_internal(idmef_inode_t *ptr)
@@ -7922,20 +8241,22 @@ idmef_time_t *idmef_inode_get_change_time(idmef_inode_t *ptr)
 	return ptr->change_time;
 }
 
-idmef_value_t *idmef_inode_get_change_time_value(idmef_inode_t *ptr)
+int idmef_inode_get_change_time_value(idmef_inode_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->change_time )
-		return NULL;
+	if ( ! ptr->change_time ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_time(ptr->change_time);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_time(value, ptr->change_time);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -7959,20 +8280,26 @@ void idmef_inode_set_change_time(idmef_inode_t *ptr, idmef_time_t *change_time)
 /**
  * idmef_inode_new_change_time:
  * @ptr: pointer to a #idmef_inode_t object.
+ * @ret: pointer to an address where to store the created #idmef_time_t object.
  *
  * Create a new change_time object, children of #idmef_inode_t.
  * If @ptr already contain a #idmef_time_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_time_t *idmef_inode_new_change_time(idmef_inode_t *ptr)
+int idmef_inode_new_change_time(idmef_inode_t *ptr, idmef_time_t **ret)
 {
+        int retval;
+
 	if ( ptr->change_time )
 		idmef_time_destroy(ptr->change_time);
 		
-	ptr->change_time = idmef_time_new();
+	retval = idmef_time_new(&ptr->change_time);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->change_time;
+        *ret = ptr->change_time;
+	return 0;
 }
 
 /**
@@ -7988,9 +8315,14 @@ uint32_t *idmef_inode_get_number(idmef_inode_t *ptr)
 	return ptr->number_is_set ? &ptr->number : NULL;
 }
 
-idmef_value_t *idmef_inode_get_number_value(idmef_inode_t *ptr)
+int idmef_inode_get_number_value(idmef_inode_t *ptr, idmef_value_t **value)
 {
-	return ptr->number_is_set ? idmef_value_new_uint32(ptr->number) : NULL;
+        if ( ! ptr->number_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_uint32(value, ptr->number);
 
 }
 
@@ -8013,17 +8345,19 @@ void idmef_inode_set_number(idmef_inode_t *ptr, uint32_t number)
 /**
  * idmef_inode_new_number:
  * @ptr: pointer to a #idmef_inode_t object.
+ * @ret: pointer to an address where to store the created #uint32_t object.
  *
  * Create a new number object, children of #idmef_inode_t.
  * If @ptr already contain a #uint32_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint32_t *idmef_inode_new_number(idmef_inode_t *ptr)
+int idmef_inode_new_number(idmef_inode_t *ptr, uint32_t **ret)
 {
 	ptr->number_is_set = 1;
 
-	return &ptr->number;
+        *ret = &ptr->number;
+	return 0;
 }
 
 /**
@@ -8039,9 +8373,14 @@ uint32_t *idmef_inode_get_major_device(idmef_inode_t *ptr)
 	return ptr->major_device_is_set ? &ptr->major_device : NULL;
 }
 
-idmef_value_t *idmef_inode_get_major_device_value(idmef_inode_t *ptr)
+int idmef_inode_get_major_device_value(idmef_inode_t *ptr, idmef_value_t **value)
 {
-	return ptr->major_device_is_set ? idmef_value_new_uint32(ptr->major_device) : NULL;
+        if ( ! ptr->major_device_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_uint32(value, ptr->major_device);
 
 }
 
@@ -8064,17 +8403,19 @@ void idmef_inode_set_major_device(idmef_inode_t *ptr, uint32_t major_device)
 /**
  * idmef_inode_new_major_device:
  * @ptr: pointer to a #idmef_inode_t object.
+ * @ret: pointer to an address where to store the created #uint32_t object.
  *
  * Create a new major_device object, children of #idmef_inode_t.
  * If @ptr already contain a #uint32_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint32_t *idmef_inode_new_major_device(idmef_inode_t *ptr)
+int idmef_inode_new_major_device(idmef_inode_t *ptr, uint32_t **ret)
 {
 	ptr->major_device_is_set = 1;
 
-	return &ptr->major_device;
+        *ret = &ptr->major_device;
+	return 0;
 }
 
 /**
@@ -8090,9 +8431,14 @@ uint32_t *idmef_inode_get_minor_device(idmef_inode_t *ptr)
 	return ptr->minor_device_is_set ? &ptr->minor_device : NULL;
 }
 
-idmef_value_t *idmef_inode_get_minor_device_value(idmef_inode_t *ptr)
+int idmef_inode_get_minor_device_value(idmef_inode_t *ptr, idmef_value_t **value)
 {
-	return ptr->minor_device_is_set ? idmef_value_new_uint32(ptr->minor_device) : NULL;
+        if ( ! ptr->minor_device_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_uint32(value, ptr->minor_device);
 
 }
 
@@ -8115,17 +8461,19 @@ void idmef_inode_set_minor_device(idmef_inode_t *ptr, uint32_t minor_device)
 /**
  * idmef_inode_new_minor_device:
  * @ptr: pointer to a #idmef_inode_t object.
+ * @ret: pointer to an address where to store the created #uint32_t object.
  *
  * Create a new minor_device object, children of #idmef_inode_t.
  * If @ptr already contain a #uint32_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint32_t *idmef_inode_new_minor_device(idmef_inode_t *ptr)
+int idmef_inode_new_minor_device(idmef_inode_t *ptr, uint32_t **ret)
 {
 	ptr->minor_device_is_set = 1;
 
-	return &ptr->minor_device;
+        *ret = &ptr->minor_device;
+	return 0;
 }
 
 /**
@@ -8141,9 +8489,14 @@ uint32_t *idmef_inode_get_c_major_device(idmef_inode_t *ptr)
 	return ptr->c_major_device_is_set ? &ptr->c_major_device : NULL;
 }
 
-idmef_value_t *idmef_inode_get_c_major_device_value(idmef_inode_t *ptr)
+int idmef_inode_get_c_major_device_value(idmef_inode_t *ptr, idmef_value_t **value)
 {
-	return ptr->c_major_device_is_set ? idmef_value_new_uint32(ptr->c_major_device) : NULL;
+        if ( ! ptr->c_major_device_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_uint32(value, ptr->c_major_device);
 
 }
 
@@ -8166,17 +8519,19 @@ void idmef_inode_set_c_major_device(idmef_inode_t *ptr, uint32_t c_major_device)
 /**
  * idmef_inode_new_c_major_device:
  * @ptr: pointer to a #idmef_inode_t object.
+ * @ret: pointer to an address where to store the created #uint32_t object.
  *
  * Create a new c_major_device object, children of #idmef_inode_t.
  * If @ptr already contain a #uint32_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint32_t *idmef_inode_new_c_major_device(idmef_inode_t *ptr)
+int idmef_inode_new_c_major_device(idmef_inode_t *ptr, uint32_t **ret)
 {
 	ptr->c_major_device_is_set = 1;
 
-	return &ptr->c_major_device;
+        *ret = &ptr->c_major_device;
+	return 0;
 }
 
 /**
@@ -8192,9 +8547,14 @@ uint32_t *idmef_inode_get_c_minor_device(idmef_inode_t *ptr)
 	return ptr->c_minor_device_is_set ? &ptr->c_minor_device : NULL;
 }
 
-idmef_value_t *idmef_inode_get_c_minor_device_value(idmef_inode_t *ptr)
+int idmef_inode_get_c_minor_device_value(idmef_inode_t *ptr, idmef_value_t **value)
 {
-	return ptr->c_minor_device_is_set ? idmef_value_new_uint32(ptr->c_minor_device) : NULL;
+        if ( ! ptr->c_minor_device_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_uint32(value, ptr->c_minor_device);
 
 }
 
@@ -8217,39 +8577,40 @@ void idmef_inode_set_c_minor_device(idmef_inode_t *ptr, uint32_t c_minor_device)
 /**
  * idmef_inode_new_c_minor_device:
  * @ptr: pointer to a #idmef_inode_t object.
+ * @ret: pointer to an address where to store the created #uint32_t object.
  *
  * Create a new c_minor_device object, children of #idmef_inode_t.
  * If @ptr already contain a #uint32_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint32_t *idmef_inode_new_c_minor_device(idmef_inode_t *ptr)
+int idmef_inode_new_c_minor_device(idmef_inode_t *ptr, uint32_t **ret)
 {
 	ptr->c_minor_device_is_set = 1;
 
-	return &ptr->c_minor_device;
+        *ret = &ptr->c_minor_device;
+	return 0;
 }
 
 /**
  * idmef_checksum_new:
- * 
+ * @ret: Pointer where to store the created #idmef_checksum_t object.
+ *
  * Create a new #idmef_checksum_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_checksum_t *idmef_checksum_new(void)
+int idmef_checksum_new(idmef_checksum_t **ret)
 {
-	idmef_checksum_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	prelude_list_init(&(*ret)->list);
 
-	PRELUDE_INIT_LIST_HEAD(&ret->list);
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	return ret;
+	return 0;
 
 }
 
@@ -8269,58 +8630,54 @@ idmef_checksum_t *idmef_checksum_ref(idmef_checksum_t *ptr)
 	return ptr;
 }
 
-void *idmef_checksum_get_child(void *p, idmef_child_t child)
+int idmef_checksum_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_checksum_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_checksum_get_value_value(ptr);
+			return idmef_checksum_get_value_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_checksum_get_key_value(ptr);
+			return idmef_checksum_get_key_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_checksum_get_algorithm_value(ptr);
+			return idmef_checksum_get_algorithm_value(ptr, (idmef_value_t **) childptr);
+
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_checksum_new_child(void *p, idmef_child_t child, int n)
+int idmef_checksum_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_checksum_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_checksum_new_value(ptr);
+			return idmef_checksum_new_value(ptr, (prelude_string_t **) ret);
 
 		case 1:
-			return idmef_checksum_new_key(ptr);
+			return idmef_checksum_new_key(ptr, (prelude_string_t **) ret);
 
 		case 2:
-			return idmef_checksum_new_algorithm(ptr);
+			return idmef_checksum_new_algorithm(ptr, (idmef_checksum_algorithm_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_checksum_destroy_internal(idmef_checksum_t *ptr)
 {
 
-       if ( ! prelude_list_empty(&ptr->list) ) {
-               prelude_list_del(&ptr->list);
-               PRELUDE_INIT_LIST_HEAD(&ptr->list);
-       }
+       if ( ! prelude_list_is_empty(&ptr->list) )
+               prelude_list_del_init(&ptr->list);
     
 	prelude_string_destroy_internal(&ptr->value);
 
@@ -8363,17 +8720,17 @@ prelude_string_t *idmef_checksum_get_value(idmef_checksum_t *ptr)
 	return &ptr->value;
 }
 
-idmef_value_t *idmef_checksum_get_value_value(idmef_checksum_t *ptr)
+int idmef_checksum_get_value_value(idmef_checksum_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_string(&ptr->value);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, &ptr->value);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -8396,17 +8753,19 @@ void idmef_checksum_set_value(idmef_checksum_t *ptr, prelude_string_t *value)
 /**
  * idmef_checksum_new_value:
  * @ptr: pointer to a #idmef_checksum_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new value object, children of #idmef_checksum_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_checksum_new_value(idmef_checksum_t *ptr)
+int idmef_checksum_new_value(idmef_checksum_t *ptr, prelude_string_t **ret)
 {
 	prelude_string_destroy_internal(&ptr->value);
 
-	return &ptr->value;
+        *ret = &ptr->value;
+	return 0;
 }
 
 /**
@@ -8422,20 +8781,22 @@ prelude_string_t *idmef_checksum_get_key(idmef_checksum_t *ptr)
 	return ptr->key;
 }
 
-idmef_value_t *idmef_checksum_get_key_value(idmef_checksum_t *ptr)
+int idmef_checksum_get_key_value(idmef_checksum_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->key )
-		return NULL;
+	if ( ! ptr->key ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->key);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->key);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -8459,20 +8820,26 @@ void idmef_checksum_set_key(idmef_checksum_t *ptr, prelude_string_t *key)
 /**
  * idmef_checksum_new_key:
  * @ptr: pointer to a #idmef_checksum_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new key object, children of #idmef_checksum_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_checksum_new_key(idmef_checksum_t *ptr)
+int idmef_checksum_new_key(idmef_checksum_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->key )
 		prelude_string_destroy(ptr->key);
 		
-	ptr->key = prelude_string_new();
+	retval = prelude_string_new(&ptr->key);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->key;
+        *ret = ptr->key;
+	return 0;
 }
 
 /**
@@ -8488,9 +8855,9 @@ idmef_checksum_algorithm_t idmef_checksum_get_algorithm(idmef_checksum_t *ptr)
 	return ptr->algorithm;
 }
 
-idmef_value_t *idmef_checksum_get_algorithm_value(idmef_checksum_t *ptr)
+int idmef_checksum_get_algorithm_value(idmef_checksum_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_CHECKSUM_ALGORITHM, ptr->algorithm);
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_CHECKSUM_ALGORITHM, ptr->algorithm);
 
 }
 
@@ -8512,46 +8879,47 @@ void idmef_checksum_set_algorithm(idmef_checksum_t *ptr, idmef_checksum_algorith
 /**
  * idmef_checksum_new_algorithm:
  * @ptr: pointer to a #idmef_checksum_t object.
+ * @ret: pointer to an address where to store the created #idmef_checksum_algorithm_t object.
  *
  * Create a new algorithm object, children of #idmef_checksum_t.
  * If @ptr already contain a #idmef_checksum_algorithm_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_checksum_algorithm_t *idmef_checksum_new_algorithm(idmef_checksum_t *ptr)
+int idmef_checksum_new_algorithm(idmef_checksum_t *ptr, idmef_checksum_algorithm_t **ret)
 {
-	return &ptr->algorithm;
+        *ret = &ptr->algorithm;
+	return 0;
 }
 
 /**
  * idmef_file_new:
- * 
+ * @ret: Pointer where to store the created #idmef_file_t object.
+ *
  * Create a new #idmef_file_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_file_t *idmef_file_new(void)
+int idmef_file_new(idmef_file_t **ret)
 {
-	idmef_file_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	prelude_list_init(&(*ret)->list);
 
-	PRELUDE_INIT_LIST_HEAD(&ret->list);
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	PRELUDE_INIT_LIST_HEAD(&ret->file_access_list);
+	prelude_list_init(&(*ret)->file_access_list);
     
 
-	PRELUDE_INIT_LIST_HEAD(&ret->linkage_list);
+	prelude_list_init(&(*ret)->linkage_list);
     
 
-	PRELUDE_INIT_LIST_HEAD(&ret->checksum_list);
+	prelude_list_init(&(*ret)->checksum_list);
     
 
-	return ret;
+	return 0;
 
 }
 
@@ -8571,211 +8939,218 @@ idmef_file_t *idmef_file_ref(idmef_file_t *ptr)
 	return ptr;
 }
 
-void *idmef_file_get_child(void *p, idmef_child_t child)
+int idmef_file_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_file_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_file_get_ident_value(ptr);
+			return idmef_file_get_ident_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_file_get_name_value(ptr);
+			return idmef_file_get_name_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_file_get_path_value(ptr);
+			return idmef_file_get_path_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 3:
-			return idmef_file_get_create_time_value(ptr);
+			return idmef_file_get_create_time_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 4:
-			return idmef_file_get_modify_time_value(ptr);
+			return idmef_file_get_modify_time_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 5:
-			return idmef_file_get_access_time_value(ptr);
+			return idmef_file_get_access_time_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 6:
-			return idmef_file_get_data_size_value(ptr);
+			return idmef_file_get_data_size_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 7:
-			return idmef_file_get_disk_size_value(ptr);
+			return idmef_file_get_disk_size_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 8:
-			return &ptr->file_access_list;
+                        *childptr = &ptr->file_access_list;
+			return 0;
 
 		case 9:
-			return &ptr->linkage_list;
+                        *childptr = &ptr->linkage_list;
+			return 0;
 
 		case 10:
-			return ptr->inode;
+                        *childptr = ptr->inode;
+                        return 0;
 
 		case 11:
-			return &ptr->checksum_list;
+                        *childptr = &ptr->checksum_list;
+			return 0;
 
 		case 12:
-			return idmef_file_get_category_value(ptr);
+			return idmef_file_get_category_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 13:
-			return idmef_file_get_fstype_value(ptr);
+			return idmef_file_get_fstype_value(ptr, (idmef_value_t **) childptr);
+
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_file_new_child(void *p, idmef_child_t child, int n)
+int idmef_file_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_file_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_file_new_ident(ptr);
+			return idmef_file_new_ident(ptr, (uint64_t **) ret);
 
 		case 1:
-			return idmef_file_new_name(ptr);
+			return idmef_file_new_name(ptr, (prelude_string_t **) ret);
 
 		case 2:
-			return idmef_file_new_path(ptr);
+			return idmef_file_new_path(ptr, (prelude_string_t **) ret);
 
 		case 3:
-			return idmef_file_new_create_time(ptr);
+			return idmef_file_new_create_time(ptr, (idmef_time_t **) ret);
 
 		case 4:
-			return idmef_file_new_modify_time(ptr);
+			return idmef_file_new_modify_time(ptr, (idmef_time_t **) ret);
 
 		case 5:
-			return idmef_file_new_access_time(ptr);
+			return idmef_file_new_access_time(ptr, (idmef_time_t **) ret);
 
 		case 6:
-			return idmef_file_new_data_size(ptr);
+			return idmef_file_new_data_size(ptr, (uint64_t **) ret);
 
 		case 7:
-			return idmef_file_new_disk_size(ptr);
+			return idmef_file_new_disk_size(ptr, (uint64_t **) ret);
 
 		case 8: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_file_new_file_access(ptr);
+				 retval = idmef_file_new_file_access(ptr, (idmef_file_access_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->file_access_list) {
-			    		entry = prelude_list_entry(tmp, idmef_file_access_t, list);
+				prelude_list_for_each(&ptr->file_access_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, idmef_file_access_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_file_new_file_access(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_file_new_file_access(ptr, (idmef_file_access_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		case 9: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_file_new_linkage(ptr);
+				 retval = idmef_file_new_linkage(ptr, (idmef_linkage_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->linkage_list) {
-			    		entry = prelude_list_entry(tmp, idmef_linkage_t, list);
+				prelude_list_for_each(&ptr->linkage_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, idmef_linkage_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_file_new_linkage(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_file_new_linkage(ptr, (idmef_linkage_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		case 10:
-			return idmef_file_new_inode(ptr);
+			return idmef_file_new_inode(ptr, (idmef_inode_t **) ret);
 
 		case 11: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_file_new_checksum(ptr);
+				 retval = idmef_file_new_checksum(ptr, (idmef_checksum_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->checksum_list) {
-			    		entry = prelude_list_entry(tmp, idmef_checksum_t, list);
+				prelude_list_for_each(&ptr->checksum_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, idmef_checksum_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_file_new_checksum(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_file_new_checksum(ptr, (idmef_checksum_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		case 12:
-			return idmef_file_new_category(ptr);
+			return idmef_file_new_category(ptr, (idmef_file_category_t **) ret);
 
 		case 13:
-			return idmef_file_new_fstype(ptr);
+			return idmef_file_new_fstype(ptr, (idmef_file_fstype_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_file_destroy_internal(idmef_file_t *ptr)
 {
 
-       if ( ! prelude_list_empty(&ptr->list) ) {
-               prelude_list_del(&ptr->list);
-               PRELUDE_INIT_LIST_HEAD(&ptr->list);
-       }
+       if ( ! prelude_list_is_empty(&ptr->list) )
+               prelude_list_del_init(&ptr->list);
     
 	prelude_string_destroy_internal(&ptr->name);
 
@@ -8800,7 +9175,7 @@ static void idmef_file_destroy_internal(idmef_file_t *ptr)
 		prelude_list_t *n, *tmp;
 		idmef_file_access_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->file_access_list) {
+		prelude_list_for_each_safe(&ptr->file_access_list, tmp, n) {
 			entry = prelude_list_entry(tmp, idmef_file_access_t, list);
 			idmef_file_access_destroy(entry);
 		}
@@ -8810,7 +9185,7 @@ static void idmef_file_destroy_internal(idmef_file_t *ptr)
 		prelude_list_t *n, *tmp;
 		idmef_linkage_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->linkage_list) {
+		prelude_list_for_each_safe(&ptr->linkage_list, tmp, n) {
 			entry = prelude_list_entry(tmp, idmef_linkage_t, list);
 			idmef_linkage_destroy(entry);
 		}
@@ -8825,7 +9200,7 @@ static void idmef_file_destroy_internal(idmef_file_t *ptr)
 		prelude_list_t *n, *tmp;
 		idmef_checksum_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->checksum_list) {
+		prelude_list_for_each_safe(&ptr->checksum_list, tmp, n) {
 			entry = prelude_list_entry(tmp, idmef_checksum_t, list);
 			idmef_checksum_destroy(entry);
 		}
@@ -8865,17 +9240,17 @@ uint64_t idmef_file_get_ident(idmef_file_t *ptr)
 	return ptr->ident;
 }
 
-idmef_value_t *idmef_file_get_ident_value(idmef_file_t *ptr)
+int idmef_file_get_ident_value(idmef_file_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_uint64(ptr->ident);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_uint64(value, ptr->ident);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -8896,15 +9271,17 @@ void idmef_file_set_ident(idmef_file_t *ptr, uint64_t ident)
 /**
  * idmef_file_new_ident:
  * @ptr: pointer to a #idmef_file_t object.
+ * @ret: pointer to an address where to store the created #uint64_t object.
  *
  * Create a new ident object, children of #idmef_file_t.
  * If @ptr already contain a #uint64_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint64_t *idmef_file_new_ident(idmef_file_t *ptr)
+int idmef_file_new_ident(idmef_file_t *ptr, uint64_t **ret)
 {
-	return &ptr->ident;
+        *ret = &ptr->ident;
+	return 0;
 }
 
 /**
@@ -8920,17 +9297,17 @@ prelude_string_t *idmef_file_get_name(idmef_file_t *ptr)
 	return &ptr->name;
 }
 
-idmef_value_t *idmef_file_get_name_value(idmef_file_t *ptr)
+int idmef_file_get_name_value(idmef_file_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_string(&ptr->name);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, &ptr->name);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -8953,17 +9330,19 @@ void idmef_file_set_name(idmef_file_t *ptr, prelude_string_t *name)
 /**
  * idmef_file_new_name:
  * @ptr: pointer to a #idmef_file_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new name object, children of #idmef_file_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_file_new_name(idmef_file_t *ptr)
+int idmef_file_new_name(idmef_file_t *ptr, prelude_string_t **ret)
 {
 	prelude_string_destroy_internal(&ptr->name);
 
-	return &ptr->name;
+        *ret = &ptr->name;
+	return 0;
 }
 
 /**
@@ -8979,17 +9358,17 @@ prelude_string_t *idmef_file_get_path(idmef_file_t *ptr)
 	return &ptr->path;
 }
 
-idmef_value_t *idmef_file_get_path_value(idmef_file_t *ptr)
+int idmef_file_get_path_value(idmef_file_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_string(&ptr->path);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, &ptr->path);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -9012,17 +9391,19 @@ void idmef_file_set_path(idmef_file_t *ptr, prelude_string_t *path)
 /**
  * idmef_file_new_path:
  * @ptr: pointer to a #idmef_file_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new path object, children of #idmef_file_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_file_new_path(idmef_file_t *ptr)
+int idmef_file_new_path(idmef_file_t *ptr, prelude_string_t **ret)
 {
 	prelude_string_destroy_internal(&ptr->path);
 
-	return &ptr->path;
+        *ret = &ptr->path;
+	return 0;
 }
 
 /**
@@ -9038,20 +9419,22 @@ idmef_time_t *idmef_file_get_create_time(idmef_file_t *ptr)
 	return ptr->create_time;
 }
 
-idmef_value_t *idmef_file_get_create_time_value(idmef_file_t *ptr)
+int idmef_file_get_create_time_value(idmef_file_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->create_time )
-		return NULL;
+	if ( ! ptr->create_time ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_time(ptr->create_time);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_time(value, ptr->create_time);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -9075,20 +9458,26 @@ void idmef_file_set_create_time(idmef_file_t *ptr, idmef_time_t *create_time)
 /**
  * idmef_file_new_create_time:
  * @ptr: pointer to a #idmef_file_t object.
+ * @ret: pointer to an address where to store the created #idmef_time_t object.
  *
  * Create a new create_time object, children of #idmef_file_t.
  * If @ptr already contain a #idmef_time_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_time_t *idmef_file_new_create_time(idmef_file_t *ptr)
+int idmef_file_new_create_time(idmef_file_t *ptr, idmef_time_t **ret)
 {
+        int retval;
+
 	if ( ptr->create_time )
 		idmef_time_destroy(ptr->create_time);
 		
-	ptr->create_time = idmef_time_new();
+	retval = idmef_time_new(&ptr->create_time);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->create_time;
+        *ret = ptr->create_time;
+	return 0;
 }
 
 /**
@@ -9104,20 +9493,22 @@ idmef_time_t *idmef_file_get_modify_time(idmef_file_t *ptr)
 	return ptr->modify_time;
 }
 
-idmef_value_t *idmef_file_get_modify_time_value(idmef_file_t *ptr)
+int idmef_file_get_modify_time_value(idmef_file_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->modify_time )
-		return NULL;
+	if ( ! ptr->modify_time ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_time(ptr->modify_time);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_time(value, ptr->modify_time);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -9141,20 +9532,26 @@ void idmef_file_set_modify_time(idmef_file_t *ptr, idmef_time_t *modify_time)
 /**
  * idmef_file_new_modify_time:
  * @ptr: pointer to a #idmef_file_t object.
+ * @ret: pointer to an address where to store the created #idmef_time_t object.
  *
  * Create a new modify_time object, children of #idmef_file_t.
  * If @ptr already contain a #idmef_time_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_time_t *idmef_file_new_modify_time(idmef_file_t *ptr)
+int idmef_file_new_modify_time(idmef_file_t *ptr, idmef_time_t **ret)
 {
+        int retval;
+
 	if ( ptr->modify_time )
 		idmef_time_destroy(ptr->modify_time);
 		
-	ptr->modify_time = idmef_time_new();
+	retval = idmef_time_new(&ptr->modify_time);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->modify_time;
+        *ret = ptr->modify_time;
+	return 0;
 }
 
 /**
@@ -9170,20 +9567,22 @@ idmef_time_t *idmef_file_get_access_time(idmef_file_t *ptr)
 	return ptr->access_time;
 }
 
-idmef_value_t *idmef_file_get_access_time_value(idmef_file_t *ptr)
+int idmef_file_get_access_time_value(idmef_file_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->access_time )
-		return NULL;
+	if ( ! ptr->access_time ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_time(ptr->access_time);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_time(value, ptr->access_time);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -9207,20 +9606,26 @@ void idmef_file_set_access_time(idmef_file_t *ptr, idmef_time_t *access_time)
 /**
  * idmef_file_new_access_time:
  * @ptr: pointer to a #idmef_file_t object.
+ * @ret: pointer to an address where to store the created #idmef_time_t object.
  *
  * Create a new access_time object, children of #idmef_file_t.
  * If @ptr already contain a #idmef_time_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_time_t *idmef_file_new_access_time(idmef_file_t *ptr)
+int idmef_file_new_access_time(idmef_file_t *ptr, idmef_time_t **ret)
 {
+        int retval;
+
 	if ( ptr->access_time )
 		idmef_time_destroy(ptr->access_time);
 		
-	ptr->access_time = idmef_time_new();
+	retval = idmef_time_new(&ptr->access_time);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->access_time;
+        *ret = ptr->access_time;
+	return 0;
 }
 
 /**
@@ -9236,9 +9641,14 @@ uint64_t *idmef_file_get_data_size(idmef_file_t *ptr)
 	return ptr->data_size_is_set ? &ptr->data_size : NULL;
 }
 
-idmef_value_t *idmef_file_get_data_size_value(idmef_file_t *ptr)
+int idmef_file_get_data_size_value(idmef_file_t *ptr, idmef_value_t **value)
 {
-	return ptr->data_size_is_set ? idmef_value_new_uint64(ptr->data_size) : NULL;
+        if ( ! ptr->data_size_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_uint64(value, ptr->data_size);
 
 }
 
@@ -9261,17 +9671,19 @@ void idmef_file_set_data_size(idmef_file_t *ptr, uint64_t data_size)
 /**
  * idmef_file_new_data_size:
  * @ptr: pointer to a #idmef_file_t object.
+ * @ret: pointer to an address where to store the created #uint64_t object.
  *
  * Create a new data_size object, children of #idmef_file_t.
  * If @ptr already contain a #uint64_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint64_t *idmef_file_new_data_size(idmef_file_t *ptr)
+int idmef_file_new_data_size(idmef_file_t *ptr, uint64_t **ret)
 {
 	ptr->data_size_is_set = 1;
 
-	return &ptr->data_size;
+        *ret = &ptr->data_size;
+	return 0;
 }
 
 /**
@@ -9287,9 +9699,14 @@ uint64_t *idmef_file_get_disk_size(idmef_file_t *ptr)
 	return ptr->disk_size_is_set ? &ptr->disk_size : NULL;
 }
 
-idmef_value_t *idmef_file_get_disk_size_value(idmef_file_t *ptr)
+int idmef_file_get_disk_size_value(idmef_file_t *ptr, idmef_value_t **value)
 {
-	return ptr->disk_size_is_set ? idmef_value_new_uint64(ptr->disk_size) : NULL;
+        if ( ! ptr->disk_size_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_uint64(value, ptr->disk_size);
 
 }
 
@@ -9312,17 +9729,19 @@ void idmef_file_set_disk_size(idmef_file_t *ptr, uint64_t disk_size)
 /**
  * idmef_file_new_disk_size:
  * @ptr: pointer to a #idmef_file_t object.
+ * @ret: pointer to an address where to store the created #uint64_t object.
  *
  * Create a new disk_size object, children of #idmef_file_t.
  * If @ptr already contain a #uint64_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint64_t *idmef_file_new_disk_size(idmef_file_t *ptr)
+int idmef_file_new_disk_size(idmef_file_t *ptr, uint64_t **ret)
 {
 	ptr->disk_size_is_set = 1;
 
-	return &ptr->disk_size;
+        *ret = &ptr->disk_size;
+	return 0;
 }
 
 /**
@@ -9338,7 +9757,12 @@ uint64_t *idmef_file_new_disk_size(idmef_file_t *ptr)
  */
 idmef_file_access_t *idmef_file_get_next_file_access(idmef_file_t *ptr, idmef_file_access_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->file_access_list, idmef_file_access_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->file_access_list, tmp)
+                return prelude_list_entry(tmp, idmef_file_access_t, list);
+
+        return NULL;
 }
 
 /**
@@ -9350,58 +9774,62 @@ idmef_file_access_t *idmef_file_get_next_file_access(idmef_file_t *ptr, idmef_fi
  */
 void idmef_file_set_file_access(idmef_file_t *ptr, idmef_file_access_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->file_access_list);
+	prelude_list_add_tail(&ptr->file_access_list, &object->list);
 }
 
 /**
- * idmef_file_new_HASH(0x8024a8bc):
+ * idmef_file_new_file_access:
  * @ptr: pointer to a #idmef_file_t object.
- * 
- * Create a new HASH(0x8024a8bc) children of @ptr,
+ * @ret: pointer to an address where to store the created #idmef_file_access_t object.
+ *
+ * Create a new #idmef_file_access_t children of @ptr,
  * and add it to the tail of @ptr list of #idmef_file_access_t object.
  * 
- * Returns: a pointer to the created #idmef_file_access_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_file_access_t *idmef_file_new_file_access(idmef_file_t *ptr)
-{
-	idmef_file_access_t *object;
+int idmef_file_new_file_access(idmef_file_t *ptr, idmef_file_access_t **ret)
+{	
+        int retval;
+
+	retval = idmef_file_access_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = idmef_file_access_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->file_access_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->file_access_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_file_get_file_access_value(idmef_file_t *ptr)
+
+int idmef_file_get_file_access_value(idmef_file_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	idmef_file_access_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->file_access_list) {
+	prelude_list_for_each(&ptr->file_access_list, tmp) {
 		entry = prelude_list_entry(tmp, idmef_file_access_t, list);
 
-		val = idmef_value_new_object(entry, IDMEF_OBJECT_TYPE_FILE_ACCESS);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_FILE_ACCESS, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
@@ -9418,7 +9846,12 @@ idmef_value_t *idmef_file_get_file_access_value(idmef_file_t *ptr)
  */
 idmef_linkage_t *idmef_file_get_next_linkage(idmef_file_t *ptr, idmef_linkage_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->linkage_list, idmef_linkage_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->linkage_list, tmp)
+                return prelude_list_entry(tmp, idmef_linkage_t, list);
+
+        return NULL;
 }
 
 /**
@@ -9430,58 +9863,62 @@ idmef_linkage_t *idmef_file_get_next_linkage(idmef_file_t *ptr, idmef_linkage_t 
  */
 void idmef_file_set_linkage(idmef_file_t *ptr, idmef_linkage_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->linkage_list);
+	prelude_list_add_tail(&ptr->linkage_list, &object->list);
 }
 
 /**
- * idmef_file_new_HASH(0x8024a928):
+ * idmef_file_new_linkage:
  * @ptr: pointer to a #idmef_file_t object.
- * 
- * Create a new HASH(0x8024a928) children of @ptr,
+ * @ret: pointer to an address where to store the created #idmef_linkage_t object.
+ *
+ * Create a new #idmef_linkage_t children of @ptr,
  * and add it to the tail of @ptr list of #idmef_linkage_t object.
  * 
- * Returns: a pointer to the created #idmef_linkage_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_linkage_t *idmef_file_new_linkage(idmef_file_t *ptr)
-{
-	idmef_linkage_t *object;
+int idmef_file_new_linkage(idmef_file_t *ptr, idmef_linkage_t **ret)
+{	
+        int retval;
+
+	retval = idmef_linkage_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = idmef_linkage_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->linkage_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->linkage_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_file_get_linkage_value(idmef_file_t *ptr)
+
+int idmef_file_get_linkage_value(idmef_file_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	idmef_linkage_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->linkage_list) {
+	prelude_list_for_each(&ptr->linkage_list, tmp) {
 		entry = prelude_list_entry(tmp, idmef_linkage_t, list);
 
-		val = idmef_value_new_object(entry, IDMEF_OBJECT_TYPE_LINKAGE);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_LINKAGE, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
@@ -9498,12 +9935,14 @@ idmef_inode_t *idmef_file_get_inode(idmef_file_t *ptr)
 	return ptr->inode;
 }
 
-idmef_value_t *idmef_file_get_inode_value(idmef_file_t *ptr)
+int idmef_file_get_inode_value(idmef_file_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->inode )
-		return NULL;
+	if ( ! ptr->inode ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->inode, IDMEF_OBJECT_TYPE_INODE);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_INODE, ptr->inode);
 }
 
 /**
@@ -9527,18 +9966,22 @@ void idmef_file_set_inode(idmef_file_t *ptr, idmef_inode_t *inode)
 /**
  * idmef_file_new_inode:
  * @ptr: pointer to a #idmef_file_t object.
+ * @ret: pointer to an address where to store the created #idmef_inode_t object.
  *
  * Create a new inode object, children of #idmef_file_t.
  * If @ptr already contain a #idmef_inode_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_inode_t *idmef_file_new_inode(idmef_file_t *ptr)
+int idmef_file_new_inode(idmef_file_t *ptr, idmef_inode_t **ret)
 {
-	if ( ! ptr->inode )
-		ptr->inode = idmef_inode_new();
+        int retval;
 
-	return ptr->inode;
+	if ( ! ptr->inode )
+		retval = idmef_inode_new(&ptr->inode);
+
+        *ret = ptr->inode;
+	return 0;
 }
 
 /**
@@ -9554,7 +9997,12 @@ idmef_inode_t *idmef_file_new_inode(idmef_file_t *ptr)
  */
 idmef_checksum_t *idmef_file_get_next_checksum(idmef_file_t *ptr, idmef_checksum_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->checksum_list, idmef_checksum_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->checksum_list, tmp)
+                return prelude_list_entry(tmp, idmef_checksum_t, list);
+
+        return NULL;
 }
 
 /**
@@ -9566,58 +10014,62 @@ idmef_checksum_t *idmef_file_get_next_checksum(idmef_file_t *ptr, idmef_checksum
  */
 void idmef_file_set_checksum(idmef_file_t *ptr, idmef_checksum_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->checksum_list);
+	prelude_list_add_tail(&ptr->checksum_list, &object->list);
 }
 
 /**
- * idmef_file_new_HASH(0x8024aa18):
+ * idmef_file_new_checksum:
  * @ptr: pointer to a #idmef_file_t object.
- * 
- * Create a new HASH(0x8024aa18) children of @ptr,
+ * @ret: pointer to an address where to store the created #idmef_checksum_t object.
+ *
+ * Create a new #idmef_checksum_t children of @ptr,
  * and add it to the tail of @ptr list of #idmef_checksum_t object.
  * 
- * Returns: a pointer to the created #idmef_checksum_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_checksum_t *idmef_file_new_checksum(idmef_file_t *ptr)
-{
-	idmef_checksum_t *object;
+int idmef_file_new_checksum(idmef_file_t *ptr, idmef_checksum_t **ret)
+{	
+        int retval;
+
+	retval = idmef_checksum_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = idmef_checksum_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->checksum_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->checksum_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_file_get_checksum_value(idmef_file_t *ptr)
+
+int idmef_file_get_checksum_value(idmef_file_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	idmef_checksum_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->checksum_list) {
+	prelude_list_for_each(&ptr->checksum_list, tmp) {
 		entry = prelude_list_entry(tmp, idmef_checksum_t, list);
 
-		val = idmef_value_new_object(entry, IDMEF_OBJECT_TYPE_CHECKSUM);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_CHECKSUM, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
@@ -9634,9 +10086,9 @@ idmef_file_category_t idmef_file_get_category(idmef_file_t *ptr)
 	return ptr->category;
 }
 
-idmef_value_t *idmef_file_get_category_value(idmef_file_t *ptr)
+int idmef_file_get_category_value(idmef_file_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_FILE_CATEGORY, ptr->category);
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_FILE_CATEGORY, ptr->category);
 
 }
 
@@ -9658,15 +10110,17 @@ void idmef_file_set_category(idmef_file_t *ptr, idmef_file_category_t category)
 /**
  * idmef_file_new_category:
  * @ptr: pointer to a #idmef_file_t object.
+ * @ret: pointer to an address where to store the created #idmef_file_category_t object.
  *
  * Create a new category object, children of #idmef_file_t.
  * If @ptr already contain a #idmef_file_category_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_file_category_t *idmef_file_new_category(idmef_file_t *ptr)
+int idmef_file_new_category(idmef_file_t *ptr, idmef_file_category_t **ret)
 {
-	return &ptr->category;
+        *ret = &ptr->category;
+	return 0;
 }
 
 /**
@@ -9682,9 +10136,14 @@ idmef_file_fstype_t *idmef_file_get_fstype(idmef_file_t *ptr)
 	return ptr->fstype_is_set ? &ptr->fstype : NULL;
 }
 
-idmef_value_t *idmef_file_get_fstype_value(idmef_file_t *ptr)
+int idmef_file_get_fstype_value(idmef_file_t *ptr, idmef_value_t **value)
 {
-	return ptr->fstype_is_set ? idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_FILE_FSTYPE, ptr->fstype) : NULL;
+        if ( ! ptr->fstype_is_set ) {
+              *value = NULL;
+              return 0;
+        }
+
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_FILE_FSTYPE, ptr->fstype);
 }
 
 /**
@@ -9706,39 +10165,40 @@ void idmef_file_set_fstype(idmef_file_t *ptr, idmef_file_fstype_t fstype)
 /**
  * idmef_file_new_fstype:
  * @ptr: pointer to a #idmef_file_t object.
+ * @ret: pointer to an address where to store the created #idmef_file_fstype_t object.
  *
  * Create a new fstype object, children of #idmef_file_t.
  * If @ptr already contain a #idmef_file_fstype_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_file_fstype_t *idmef_file_new_fstype(idmef_file_t *ptr)
+int idmef_file_new_fstype(idmef_file_t *ptr, idmef_file_fstype_t **ret)
 {
 	ptr->fstype_is_set = 1;
 
-	return &ptr->fstype;
+        *ret = &ptr->fstype;
+	return 0;
 }
 
 /**
  * idmef_linkage_new:
- * 
+ * @ret: Pointer where to store the created #idmef_linkage_t object.
+ *
  * Create a new #idmef_linkage_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_linkage_t *idmef_linkage_new(void)
+int idmef_linkage_new(idmef_linkage_t **ret)
 {
-	idmef_linkage_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	prelude_list_init(&(*ret)->list);
 
-	PRELUDE_INIT_LIST_HEAD(&ret->list);
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	return ret;
+	return 0;
 
 }
 
@@ -9758,64 +10218,61 @@ idmef_linkage_t *idmef_linkage_ref(idmef_linkage_t *ptr)
 	return ptr;
 }
 
-void *idmef_linkage_get_child(void *p, idmef_child_t child)
+int idmef_linkage_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_linkage_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_linkage_get_category_value(ptr);
+			return idmef_linkage_get_category_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_linkage_get_name_value(ptr);
+			return idmef_linkage_get_name_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_linkage_get_path_value(ptr);
+			return idmef_linkage_get_path_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 3:
-			return ptr->file;
+                        *childptr = ptr->file;
+                        return 0;
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_linkage_new_child(void *p, idmef_child_t child, int n)
+int idmef_linkage_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_linkage_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_linkage_new_category(ptr);
+			return idmef_linkage_new_category(ptr, (idmef_linkage_category_t **) ret);
 
 		case 1:
-			return idmef_linkage_new_name(ptr);
+			return idmef_linkage_new_name(ptr, (prelude_string_t **) ret);
 
 		case 2:
-			return idmef_linkage_new_path(ptr);
+			return idmef_linkage_new_path(ptr, (prelude_string_t **) ret);
 
 		case 3:
-			return idmef_linkage_new_file(ptr);
+			return idmef_linkage_new_file(ptr, (idmef_file_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_linkage_destroy_internal(idmef_linkage_t *ptr)
 {
 
-       if ( ! prelude_list_empty(&ptr->list) ) {
-               prelude_list_del(&ptr->list);
-               PRELUDE_INIT_LIST_HEAD(&ptr->list);
-       }
+       if ( ! prelude_list_is_empty(&ptr->list) )
+               prelude_list_del_init(&ptr->list);
     
 	prelude_string_destroy_internal(&ptr->name);
 
@@ -9860,9 +10317,9 @@ idmef_linkage_category_t idmef_linkage_get_category(idmef_linkage_t *ptr)
 	return ptr->category;
 }
 
-idmef_value_t *idmef_linkage_get_category_value(idmef_linkage_t *ptr)
+int idmef_linkage_get_category_value(idmef_linkage_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_LINKAGE_CATEGORY, ptr->category);
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_LINKAGE_CATEGORY, ptr->category);
 
 }
 
@@ -9884,15 +10341,17 @@ void idmef_linkage_set_category(idmef_linkage_t *ptr, idmef_linkage_category_t c
 /**
  * idmef_linkage_new_category:
  * @ptr: pointer to a #idmef_linkage_t object.
+ * @ret: pointer to an address where to store the created #idmef_linkage_category_t object.
  *
  * Create a new category object, children of #idmef_linkage_t.
  * If @ptr already contain a #idmef_linkage_category_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_linkage_category_t *idmef_linkage_new_category(idmef_linkage_t *ptr)
+int idmef_linkage_new_category(idmef_linkage_t *ptr, idmef_linkage_category_t **ret)
 {
-	return &ptr->category;
+        *ret = &ptr->category;
+	return 0;
 }
 
 /**
@@ -9908,17 +10367,17 @@ prelude_string_t *idmef_linkage_get_name(idmef_linkage_t *ptr)
 	return &ptr->name;
 }
 
-idmef_value_t *idmef_linkage_get_name_value(idmef_linkage_t *ptr)
+int idmef_linkage_get_name_value(idmef_linkage_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_string(&ptr->name);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, &ptr->name);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -9941,17 +10400,19 @@ void idmef_linkage_set_name(idmef_linkage_t *ptr, prelude_string_t *name)
 /**
  * idmef_linkage_new_name:
  * @ptr: pointer to a #idmef_linkage_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new name object, children of #idmef_linkage_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_linkage_new_name(idmef_linkage_t *ptr)
+int idmef_linkage_new_name(idmef_linkage_t *ptr, prelude_string_t **ret)
 {
 	prelude_string_destroy_internal(&ptr->name);
 
-	return &ptr->name;
+        *ret = &ptr->name;
+	return 0;
 }
 
 /**
@@ -9967,17 +10428,17 @@ prelude_string_t *idmef_linkage_get_path(idmef_linkage_t *ptr)
 	return &ptr->path;
 }
 
-idmef_value_t *idmef_linkage_get_path_value(idmef_linkage_t *ptr)
+int idmef_linkage_get_path_value(idmef_linkage_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_string(&ptr->path);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, &ptr->path);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -10000,17 +10461,19 @@ void idmef_linkage_set_path(idmef_linkage_t *ptr, prelude_string_t *path)
 /**
  * idmef_linkage_new_path:
  * @ptr: pointer to a #idmef_linkage_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new path object, children of #idmef_linkage_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_linkage_new_path(idmef_linkage_t *ptr)
+int idmef_linkage_new_path(idmef_linkage_t *ptr, prelude_string_t **ret)
 {
 	prelude_string_destroy_internal(&ptr->path);
 
-	return &ptr->path;
+        *ret = &ptr->path;
+	return 0;
 }
 
 /**
@@ -10026,12 +10489,14 @@ idmef_file_t *idmef_linkage_get_file(idmef_linkage_t *ptr)
 	return ptr->file;
 }
 
-idmef_value_t *idmef_linkage_get_file_value(idmef_linkage_t *ptr)
+int idmef_linkage_get_file_value(idmef_linkage_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->file )
-		return NULL;
+	if ( ! ptr->file ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->file, IDMEF_OBJECT_TYPE_FILE);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_FILE, ptr->file);
 }
 
 /**
@@ -10055,43 +10520,46 @@ void idmef_linkage_set_file(idmef_linkage_t *ptr, idmef_file_t *file)
 /**
  * idmef_linkage_new_file:
  * @ptr: pointer to a #idmef_linkage_t object.
+ * @ret: pointer to an address where to store the created #idmef_file_t object.
  *
  * Create a new file object, children of #idmef_linkage_t.
  * If @ptr already contain a #idmef_file_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_file_t *idmef_linkage_new_file(idmef_linkage_t *ptr)
+int idmef_linkage_new_file(idmef_linkage_t *ptr, idmef_file_t **ret)
 {
-	if ( ! ptr->file )
-		ptr->file = idmef_file_new();
+        int retval;
 
-	return ptr->file;
+	if ( ! ptr->file )
+		retval = idmef_file_new(&ptr->file);
+
+        *ret = ptr->file;
+	return 0;
 }
 
 /**
  * idmef_target_new:
- * 
+ * @ret: Pointer where to store the created #idmef_target_t object.
+ *
  * Create a new #idmef_target_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_target_t *idmef_target_new(void)
+int idmef_target_new(idmef_target_t **ret)
 {
-	idmef_target_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	prelude_list_init(&(*ret)->list);
 
-	PRELUDE_INIT_LIST_HEAD(&ret->list);
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	PRELUDE_INIT_LIST_HEAD(&ret->file_list);
+	prelude_list_init(&(*ret)->file_list);
     
 
-	return ret;
+	return 0;
 
 }
 
@@ -10111,117 +10579,118 @@ idmef_target_t *idmef_target_ref(idmef_target_t *ptr)
 	return ptr;
 }
 
-void *idmef_target_get_child(void *p, idmef_child_t child)
+int idmef_target_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_target_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_target_get_ident_value(ptr);
+			return idmef_target_get_ident_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_target_get_decoy_value(ptr);
+			return idmef_target_get_decoy_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_target_get_interface_value(ptr);
+			return idmef_target_get_interface_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 3:
-			return ptr->node;
+                        *childptr = ptr->node;
+                        return 0;
 
 		case 4:
-			return ptr->user;
+                        *childptr = ptr->user;
+                        return 0;
 
 		case 5:
-			return ptr->process;
+                        *childptr = ptr->process;
+                        return 0;
 
 		case 6:
-			return ptr->service;
+                        *childptr = ptr->service;
+                        return 0;
 
 		case 7:
-			return &ptr->file_list;
+                        *childptr = &ptr->file_list;
+			return 0;
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_target_new_child(void *p, idmef_child_t child, int n)
+int idmef_target_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_target_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_target_new_ident(ptr);
+			return idmef_target_new_ident(ptr, (uint64_t **) ret);
 
 		case 1:
-			return idmef_target_new_decoy(ptr);
+			return idmef_target_new_decoy(ptr, (idmef_target_decoy_t **) ret);
 
 		case 2:
-			return idmef_target_new_interface(ptr);
+			return idmef_target_new_interface(ptr, (prelude_string_t **) ret);
 
 		case 3:
-			return idmef_target_new_node(ptr);
+			return idmef_target_new_node(ptr, (idmef_node_t **) ret);
 
 		case 4:
-			return idmef_target_new_user(ptr);
+			return idmef_target_new_user(ptr, (idmef_user_t **) ret);
 
 		case 5:
-			return idmef_target_new_process(ptr);
+			return idmef_target_new_process(ptr, (idmef_process_t **) ret);
 
 		case 6:
-			return idmef_target_new_service(ptr);
+			return idmef_target_new_service(ptr, (idmef_service_t **) ret);
 
 		case 7: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_target_new_file(ptr);
+				 retval = idmef_target_new_file(ptr, (idmef_file_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->file_list) {
-			    		entry = prelude_list_entry(tmp, idmef_file_t, list);
+				prelude_list_for_each(&ptr->file_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, idmef_file_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_target_new_file(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_target_new_file(ptr, (idmef_file_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_target_destroy_internal(idmef_target_t *ptr)
 {
 
-       if ( ! prelude_list_empty(&ptr->list) ) {
-               prelude_list_del(&ptr->list);
-               PRELUDE_INIT_LIST_HEAD(&ptr->list);
-       }
+       if ( ! prelude_list_is_empty(&ptr->list) )
+               prelude_list_del_init(&ptr->list);
     
 	prelude_string_destroy_internal(&ptr->interface);
 
@@ -10249,7 +10718,7 @@ static void idmef_target_destroy_internal(idmef_target_t *ptr)
 		prelude_list_t *n, *tmp;
 		idmef_file_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->file_list) {
+		prelude_list_for_each_safe(&ptr->file_list, tmp, n) {
 			entry = prelude_list_entry(tmp, idmef_file_t, list);
 			idmef_file_destroy(entry);
 		}
@@ -10289,17 +10758,17 @@ uint64_t idmef_target_get_ident(idmef_target_t *ptr)
 	return ptr->ident;
 }
 
-idmef_value_t *idmef_target_get_ident_value(idmef_target_t *ptr)
+int idmef_target_get_ident_value(idmef_target_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_uint64(ptr->ident);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_uint64(value, ptr->ident);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -10320,15 +10789,17 @@ void idmef_target_set_ident(idmef_target_t *ptr, uint64_t ident)
 /**
  * idmef_target_new_ident:
  * @ptr: pointer to a #idmef_target_t object.
+ * @ret: pointer to an address where to store the created #uint64_t object.
  *
  * Create a new ident object, children of #idmef_target_t.
  * If @ptr already contain a #uint64_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint64_t *idmef_target_new_ident(idmef_target_t *ptr)
+int idmef_target_new_ident(idmef_target_t *ptr, uint64_t **ret)
 {
-	return &ptr->ident;
+        *ret = &ptr->ident;
+	return 0;
 }
 
 /**
@@ -10344,9 +10815,9 @@ idmef_target_decoy_t idmef_target_get_decoy(idmef_target_t *ptr)
 	return ptr->decoy;
 }
 
-idmef_value_t *idmef_target_get_decoy_value(idmef_target_t *ptr)
+int idmef_target_get_decoy_value(idmef_target_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_TARGET_DECOY, ptr->decoy);
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_TARGET_DECOY, ptr->decoy);
 
 }
 
@@ -10368,15 +10839,17 @@ void idmef_target_set_decoy(idmef_target_t *ptr, idmef_target_decoy_t decoy)
 /**
  * idmef_target_new_decoy:
  * @ptr: pointer to a #idmef_target_t object.
+ * @ret: pointer to an address where to store the created #idmef_target_decoy_t object.
  *
  * Create a new decoy object, children of #idmef_target_t.
  * If @ptr already contain a #idmef_target_decoy_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_target_decoy_t *idmef_target_new_decoy(idmef_target_t *ptr)
+int idmef_target_new_decoy(idmef_target_t *ptr, idmef_target_decoy_t **ret)
 {
-	return &ptr->decoy;
+        *ret = &ptr->decoy;
+	return 0;
 }
 
 /**
@@ -10392,17 +10865,17 @@ prelude_string_t *idmef_target_get_interface(idmef_target_t *ptr)
 	return &ptr->interface;
 }
 
-idmef_value_t *idmef_target_get_interface_value(idmef_target_t *ptr)
+int idmef_target_get_interface_value(idmef_target_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_string(&ptr->interface);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, &ptr->interface);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -10425,17 +10898,19 @@ void idmef_target_set_interface(idmef_target_t *ptr, prelude_string_t *interface
 /**
  * idmef_target_new_interface:
  * @ptr: pointer to a #idmef_target_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new interface object, children of #idmef_target_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_target_new_interface(idmef_target_t *ptr)
+int idmef_target_new_interface(idmef_target_t *ptr, prelude_string_t **ret)
 {
 	prelude_string_destroy_internal(&ptr->interface);
 
-	return &ptr->interface;
+        *ret = &ptr->interface;
+	return 0;
 }
 
 /**
@@ -10451,12 +10926,14 @@ idmef_node_t *idmef_target_get_node(idmef_target_t *ptr)
 	return ptr->node;
 }
 
-idmef_value_t *idmef_target_get_node_value(idmef_target_t *ptr)
+int idmef_target_get_node_value(idmef_target_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->node )
-		return NULL;
+	if ( ! ptr->node ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->node, IDMEF_OBJECT_TYPE_NODE);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_NODE, ptr->node);
 }
 
 /**
@@ -10480,18 +10957,22 @@ void idmef_target_set_node(idmef_target_t *ptr, idmef_node_t *node)
 /**
  * idmef_target_new_node:
  * @ptr: pointer to a #idmef_target_t object.
+ * @ret: pointer to an address where to store the created #idmef_node_t object.
  *
  * Create a new node object, children of #idmef_target_t.
  * If @ptr already contain a #idmef_node_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_node_t *idmef_target_new_node(idmef_target_t *ptr)
+int idmef_target_new_node(idmef_target_t *ptr, idmef_node_t **ret)
 {
-	if ( ! ptr->node )
-		ptr->node = idmef_node_new();
+        int retval;
 
-	return ptr->node;
+	if ( ! ptr->node )
+		retval = idmef_node_new(&ptr->node);
+
+        *ret = ptr->node;
+	return 0;
 }
 
 /**
@@ -10507,12 +10988,14 @@ idmef_user_t *idmef_target_get_user(idmef_target_t *ptr)
 	return ptr->user;
 }
 
-idmef_value_t *idmef_target_get_user_value(idmef_target_t *ptr)
+int idmef_target_get_user_value(idmef_target_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->user )
-		return NULL;
+	if ( ! ptr->user ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->user, IDMEF_OBJECT_TYPE_USER);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_USER, ptr->user);
 }
 
 /**
@@ -10536,18 +11019,22 @@ void idmef_target_set_user(idmef_target_t *ptr, idmef_user_t *user)
 /**
  * idmef_target_new_user:
  * @ptr: pointer to a #idmef_target_t object.
+ * @ret: pointer to an address where to store the created #idmef_user_t object.
  *
  * Create a new user object, children of #idmef_target_t.
  * If @ptr already contain a #idmef_user_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_user_t *idmef_target_new_user(idmef_target_t *ptr)
+int idmef_target_new_user(idmef_target_t *ptr, idmef_user_t **ret)
 {
-	if ( ! ptr->user )
-		ptr->user = idmef_user_new();
+        int retval;
 
-	return ptr->user;
+	if ( ! ptr->user )
+		retval = idmef_user_new(&ptr->user);
+
+        *ret = ptr->user;
+	return 0;
 }
 
 /**
@@ -10563,12 +11050,14 @@ idmef_process_t *idmef_target_get_process(idmef_target_t *ptr)
 	return ptr->process;
 }
 
-idmef_value_t *idmef_target_get_process_value(idmef_target_t *ptr)
+int idmef_target_get_process_value(idmef_target_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->process )
-		return NULL;
+	if ( ! ptr->process ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->process, IDMEF_OBJECT_TYPE_PROCESS);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_PROCESS, ptr->process);
 }
 
 /**
@@ -10592,18 +11081,22 @@ void idmef_target_set_process(idmef_target_t *ptr, idmef_process_t *process)
 /**
  * idmef_target_new_process:
  * @ptr: pointer to a #idmef_target_t object.
+ * @ret: pointer to an address where to store the created #idmef_process_t object.
  *
  * Create a new process object, children of #idmef_target_t.
  * If @ptr already contain a #idmef_process_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_process_t *idmef_target_new_process(idmef_target_t *ptr)
+int idmef_target_new_process(idmef_target_t *ptr, idmef_process_t **ret)
 {
-	if ( ! ptr->process )
-		ptr->process = idmef_process_new();
+        int retval;
 
-	return ptr->process;
+	if ( ! ptr->process )
+		retval = idmef_process_new(&ptr->process);
+
+        *ret = ptr->process;
+	return 0;
 }
 
 /**
@@ -10619,12 +11112,14 @@ idmef_service_t *idmef_target_get_service(idmef_target_t *ptr)
 	return ptr->service;
 }
 
-idmef_value_t *idmef_target_get_service_value(idmef_target_t *ptr)
+int idmef_target_get_service_value(idmef_target_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->service )
-		return NULL;
+	if ( ! ptr->service ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->service, IDMEF_OBJECT_TYPE_SERVICE);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_SERVICE, ptr->service);
 }
 
 /**
@@ -10648,18 +11143,22 @@ void idmef_target_set_service(idmef_target_t *ptr, idmef_service_t *service)
 /**
  * idmef_target_new_service:
  * @ptr: pointer to a #idmef_target_t object.
+ * @ret: pointer to an address where to store the created #idmef_service_t object.
  *
  * Create a new service object, children of #idmef_target_t.
  * If @ptr already contain a #idmef_service_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_service_t *idmef_target_new_service(idmef_target_t *ptr)
+int idmef_target_new_service(idmef_target_t *ptr, idmef_service_t **ret)
 {
-	if ( ! ptr->service )
-		ptr->service = idmef_service_new();
+        int retval;
 
-	return ptr->service;
+	if ( ! ptr->service )
+		retval = idmef_service_new(&ptr->service);
+
+        *ret = ptr->service;
+	return 0;
 }
 
 /**
@@ -10675,7 +11174,12 @@ idmef_service_t *idmef_target_new_service(idmef_target_t *ptr)
  */
 idmef_file_t *idmef_target_get_next_file(idmef_target_t *ptr, idmef_file_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->file_list, idmef_file_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->file_list, tmp)
+                return prelude_list_entry(tmp, idmef_file_t, list);
+
+        return NULL;
 }
 
 /**
@@ -10687,79 +11191,82 @@ idmef_file_t *idmef_target_get_next_file(idmef_target_t *ptr, idmef_file_t *obje
  */
 void idmef_target_set_file(idmef_target_t *ptr, idmef_file_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->file_list);
+	prelude_list_add_tail(&ptr->file_list, &object->list);
 }
 
 /**
- * idmef_target_new_HASH(0x8024f650):
+ * idmef_target_new_file:
  * @ptr: pointer to a #idmef_target_t object.
- * 
- * Create a new HASH(0x8024f650) children of @ptr,
+ * @ret: pointer to an address where to store the created #idmef_file_t object.
+ *
+ * Create a new #idmef_file_t children of @ptr,
  * and add it to the tail of @ptr list of #idmef_file_t object.
  * 
- * Returns: a pointer to the created #idmef_file_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_file_t *idmef_target_new_file(idmef_target_t *ptr)
-{
-	idmef_file_t *object;
+int idmef_target_new_file(idmef_target_t *ptr, idmef_file_t **ret)
+{	
+        int retval;
+
+	retval = idmef_file_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = idmef_file_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->file_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->file_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_target_get_file_value(idmef_target_t *ptr)
+
+int idmef_target_get_file_value(idmef_target_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	idmef_file_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->file_list) {
+	prelude_list_for_each(&ptr->file_list, tmp) {
 		entry = prelude_list_entry(tmp, idmef_file_t, list);
 
-		val = idmef_value_new_object(entry, IDMEF_OBJECT_TYPE_FILE);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_FILE, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
 /**
  * idmef_analyzer_new:
- * 
+ * @ret: Pointer where to store the created #idmef_analyzer_t object.
+ *
  * Create a new #idmef_analyzer_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_analyzer_t *idmef_analyzer_new(void)
+int idmef_analyzer_new(idmef_analyzer_t **ret)
 {
-	idmef_analyzer_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	return ret;
+	return 0;
 
 }
 
@@ -10779,97 +11286,103 @@ idmef_analyzer_t *idmef_analyzer_ref(idmef_analyzer_t *ptr)
 	return ptr;
 }
 
-void *idmef_analyzer_get_child(void *p, idmef_child_t child)
+int idmef_analyzer_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_analyzer_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_analyzer_get_analyzerid_value(ptr);
+			return idmef_analyzer_get_analyzerid_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_analyzer_get_name_value(ptr);
+			return idmef_analyzer_get_name_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_analyzer_get_manufacturer_value(ptr);
+			return idmef_analyzer_get_manufacturer_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 3:
-			return idmef_analyzer_get_model_value(ptr);
+			return idmef_analyzer_get_model_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 4:
-			return idmef_analyzer_get_version_value(ptr);
+			return idmef_analyzer_get_version_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 5:
-			return idmef_analyzer_get_class_value(ptr);
+			return idmef_analyzer_get_class_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 6:
-			return idmef_analyzer_get_ostype_value(ptr);
+			return idmef_analyzer_get_ostype_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 7:
-			return idmef_analyzer_get_osversion_value(ptr);
+			return idmef_analyzer_get_osversion_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 8:
-			return ptr->node;
+                        *childptr = ptr->node;
+                        return 0;
 
 		case 9:
-			return ptr->process;
+                        *childptr = ptr->process;
+                        return 0;
 
 		case 10:
-			return ptr->analyzer;
+                        *childptr = ptr->analyzer;
+                        return 0;
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_analyzer_new_child(void *p, idmef_child_t child, int n)
+int idmef_analyzer_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_analyzer_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_analyzer_new_analyzerid(ptr);
+			return idmef_analyzer_new_analyzerid(ptr, (uint64_t **) ret);
 
 		case 1:
-			return idmef_analyzer_new_name(ptr);
+			return idmef_analyzer_new_name(ptr, (prelude_string_t **) ret);
 
 		case 2:
-			return idmef_analyzer_new_manufacturer(ptr);
+			return idmef_analyzer_new_manufacturer(ptr, (prelude_string_t **) ret);
 
 		case 3:
-			return idmef_analyzer_new_model(ptr);
+			return idmef_analyzer_new_model(ptr, (prelude_string_t **) ret);
 
 		case 4:
-			return idmef_analyzer_new_version(ptr);
+			return idmef_analyzer_new_version(ptr, (prelude_string_t **) ret);
 
 		case 5:
-			return idmef_analyzer_new_class(ptr);
+			return idmef_analyzer_new_class(ptr, (prelude_string_t **) ret);
 
 		case 6:
-			return idmef_analyzer_new_ostype(ptr);
+			return idmef_analyzer_new_ostype(ptr, (prelude_string_t **) ret);
 
 		case 7:
-			return idmef_analyzer_new_osversion(ptr);
+			return idmef_analyzer_new_osversion(ptr, (prelude_string_t **) ret);
 
 		case 8:
-			return idmef_analyzer_new_node(ptr);
+			return idmef_analyzer_new_node(ptr, (idmef_node_t **) ret);
 
 		case 9:
-			return idmef_analyzer_new_process(ptr);
+			return idmef_analyzer_new_process(ptr, (idmef_process_t **) ret);
 
 		case 10:
-			return idmef_analyzer_new_analyzer(ptr);
+			return idmef_analyzer_new_analyzer(ptr, (idmef_analyzer_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_analyzer_destroy_internal(idmef_analyzer_t *ptr)
@@ -10959,17 +11472,17 @@ uint64_t idmef_analyzer_get_analyzerid(idmef_analyzer_t *ptr)
 	return ptr->analyzerid;
 }
 
-idmef_value_t *idmef_analyzer_get_analyzerid_value(idmef_analyzer_t *ptr)
+int idmef_analyzer_get_analyzerid_value(idmef_analyzer_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_uint64(ptr->analyzerid);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_uint64(value, ptr->analyzerid);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -10990,15 +11503,17 @@ void idmef_analyzer_set_analyzerid(idmef_analyzer_t *ptr, uint64_t analyzerid)
 /**
  * idmef_analyzer_new_analyzerid:
  * @ptr: pointer to a #idmef_analyzer_t object.
+ * @ret: pointer to an address where to store the created #uint64_t object.
  *
  * Create a new analyzerid object, children of #idmef_analyzer_t.
  * If @ptr already contain a #uint64_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint64_t *idmef_analyzer_new_analyzerid(idmef_analyzer_t *ptr)
+int idmef_analyzer_new_analyzerid(idmef_analyzer_t *ptr, uint64_t **ret)
 {
-	return &ptr->analyzerid;
+        *ret = &ptr->analyzerid;
+	return 0;
 }
 
 /**
@@ -11014,20 +11529,22 @@ prelude_string_t *idmef_analyzer_get_name(idmef_analyzer_t *ptr)
 	return ptr->name;
 }
 
-idmef_value_t *idmef_analyzer_get_name_value(idmef_analyzer_t *ptr)
+int idmef_analyzer_get_name_value(idmef_analyzer_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->name )
-		return NULL;
+	if ( ! ptr->name ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->name);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->name);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -11051,20 +11568,26 @@ void idmef_analyzer_set_name(idmef_analyzer_t *ptr, prelude_string_t *name)
 /**
  * idmef_analyzer_new_name:
  * @ptr: pointer to a #idmef_analyzer_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new name object, children of #idmef_analyzer_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_analyzer_new_name(idmef_analyzer_t *ptr)
+int idmef_analyzer_new_name(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->name )
 		prelude_string_destroy(ptr->name);
 		
-	ptr->name = prelude_string_new();
+	retval = prelude_string_new(&ptr->name);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->name;
+        *ret = ptr->name;
+	return 0;
 }
 
 /**
@@ -11080,20 +11603,22 @@ prelude_string_t *idmef_analyzer_get_manufacturer(idmef_analyzer_t *ptr)
 	return ptr->manufacturer;
 }
 
-idmef_value_t *idmef_analyzer_get_manufacturer_value(idmef_analyzer_t *ptr)
+int idmef_analyzer_get_manufacturer_value(idmef_analyzer_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->manufacturer )
-		return NULL;
+	if ( ! ptr->manufacturer ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->manufacturer);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->manufacturer);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -11117,20 +11642,26 @@ void idmef_analyzer_set_manufacturer(idmef_analyzer_t *ptr, prelude_string_t *ma
 /**
  * idmef_analyzer_new_manufacturer:
  * @ptr: pointer to a #idmef_analyzer_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new manufacturer object, children of #idmef_analyzer_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_analyzer_new_manufacturer(idmef_analyzer_t *ptr)
+int idmef_analyzer_new_manufacturer(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->manufacturer )
 		prelude_string_destroy(ptr->manufacturer);
 		
-	ptr->manufacturer = prelude_string_new();
+	retval = prelude_string_new(&ptr->manufacturer);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->manufacturer;
+        *ret = ptr->manufacturer;
+	return 0;
 }
 
 /**
@@ -11146,20 +11677,22 @@ prelude_string_t *idmef_analyzer_get_model(idmef_analyzer_t *ptr)
 	return ptr->model;
 }
 
-idmef_value_t *idmef_analyzer_get_model_value(idmef_analyzer_t *ptr)
+int idmef_analyzer_get_model_value(idmef_analyzer_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->model )
-		return NULL;
+	if ( ! ptr->model ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->model);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->model);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -11183,20 +11716,26 @@ void idmef_analyzer_set_model(idmef_analyzer_t *ptr, prelude_string_t *model)
 /**
  * idmef_analyzer_new_model:
  * @ptr: pointer to a #idmef_analyzer_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new model object, children of #idmef_analyzer_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_analyzer_new_model(idmef_analyzer_t *ptr)
+int idmef_analyzer_new_model(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->model )
 		prelude_string_destroy(ptr->model);
 		
-	ptr->model = prelude_string_new();
+	retval = prelude_string_new(&ptr->model);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->model;
+        *ret = ptr->model;
+	return 0;
 }
 
 /**
@@ -11212,20 +11751,22 @@ prelude_string_t *idmef_analyzer_get_version(idmef_analyzer_t *ptr)
 	return ptr->version;
 }
 
-idmef_value_t *idmef_analyzer_get_version_value(idmef_analyzer_t *ptr)
+int idmef_analyzer_get_version_value(idmef_analyzer_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->version )
-		return NULL;
+	if ( ! ptr->version ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->version);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->version);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -11249,20 +11790,26 @@ void idmef_analyzer_set_version(idmef_analyzer_t *ptr, prelude_string_t *version
 /**
  * idmef_analyzer_new_version:
  * @ptr: pointer to a #idmef_analyzer_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new version object, children of #idmef_analyzer_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_analyzer_new_version(idmef_analyzer_t *ptr)
+int idmef_analyzer_new_version(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->version )
 		prelude_string_destroy(ptr->version);
 		
-	ptr->version = prelude_string_new();
+	retval = prelude_string_new(&ptr->version);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->version;
+        *ret = ptr->version;
+	return 0;
 }
 
 /**
@@ -11278,20 +11825,22 @@ prelude_string_t *idmef_analyzer_get_class(idmef_analyzer_t *ptr)
 	return ptr->class;
 }
 
-idmef_value_t *idmef_analyzer_get_class_value(idmef_analyzer_t *ptr)
+int idmef_analyzer_get_class_value(idmef_analyzer_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->class )
-		return NULL;
+	if ( ! ptr->class ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->class);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->class);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -11315,20 +11864,26 @@ void idmef_analyzer_set_class(idmef_analyzer_t *ptr, prelude_string_t *class)
 /**
  * idmef_analyzer_new_class:
  * @ptr: pointer to a #idmef_analyzer_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new class object, children of #idmef_analyzer_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_analyzer_new_class(idmef_analyzer_t *ptr)
+int idmef_analyzer_new_class(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->class )
 		prelude_string_destroy(ptr->class);
 		
-	ptr->class = prelude_string_new();
+	retval = prelude_string_new(&ptr->class);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->class;
+        *ret = ptr->class;
+	return 0;
 }
 
 /**
@@ -11344,20 +11899,22 @@ prelude_string_t *idmef_analyzer_get_ostype(idmef_analyzer_t *ptr)
 	return ptr->ostype;
 }
 
-idmef_value_t *idmef_analyzer_get_ostype_value(idmef_analyzer_t *ptr)
+int idmef_analyzer_get_ostype_value(idmef_analyzer_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->ostype )
-		return NULL;
+	if ( ! ptr->ostype ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->ostype);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->ostype);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -11381,20 +11938,26 @@ void idmef_analyzer_set_ostype(idmef_analyzer_t *ptr, prelude_string_t *ostype)
 /**
  * idmef_analyzer_new_ostype:
  * @ptr: pointer to a #idmef_analyzer_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new ostype object, children of #idmef_analyzer_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_analyzer_new_ostype(idmef_analyzer_t *ptr)
+int idmef_analyzer_new_ostype(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->ostype )
 		prelude_string_destroy(ptr->ostype);
 		
-	ptr->ostype = prelude_string_new();
+	retval = prelude_string_new(&ptr->ostype);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->ostype;
+        *ret = ptr->ostype;
+	return 0;
 }
 
 /**
@@ -11410,20 +11973,22 @@ prelude_string_t *idmef_analyzer_get_osversion(idmef_analyzer_t *ptr)
 	return ptr->osversion;
 }
 
-idmef_value_t *idmef_analyzer_get_osversion_value(idmef_analyzer_t *ptr)
+int idmef_analyzer_get_osversion_value(idmef_analyzer_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->osversion )
-		return NULL;
+	if ( ! ptr->osversion ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->osversion);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->osversion);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -11447,20 +12012,26 @@ void idmef_analyzer_set_osversion(idmef_analyzer_t *ptr, prelude_string_t *osver
 /**
  * idmef_analyzer_new_osversion:
  * @ptr: pointer to a #idmef_analyzer_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new osversion object, children of #idmef_analyzer_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_analyzer_new_osversion(idmef_analyzer_t *ptr)
+int idmef_analyzer_new_osversion(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->osversion )
 		prelude_string_destroy(ptr->osversion);
 		
-	ptr->osversion = prelude_string_new();
+	retval = prelude_string_new(&ptr->osversion);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->osversion;
+        *ret = ptr->osversion;
+	return 0;
 }
 
 /**
@@ -11476,12 +12047,14 @@ idmef_node_t *idmef_analyzer_get_node(idmef_analyzer_t *ptr)
 	return ptr->node;
 }
 
-idmef_value_t *idmef_analyzer_get_node_value(idmef_analyzer_t *ptr)
+int idmef_analyzer_get_node_value(idmef_analyzer_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->node )
-		return NULL;
+	if ( ! ptr->node ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->node, IDMEF_OBJECT_TYPE_NODE);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_NODE, ptr->node);
 }
 
 /**
@@ -11505,18 +12078,22 @@ void idmef_analyzer_set_node(idmef_analyzer_t *ptr, idmef_node_t *node)
 /**
  * idmef_analyzer_new_node:
  * @ptr: pointer to a #idmef_analyzer_t object.
+ * @ret: pointer to an address where to store the created #idmef_node_t object.
  *
  * Create a new node object, children of #idmef_analyzer_t.
  * If @ptr already contain a #idmef_node_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_node_t *idmef_analyzer_new_node(idmef_analyzer_t *ptr)
+int idmef_analyzer_new_node(idmef_analyzer_t *ptr, idmef_node_t **ret)
 {
-	if ( ! ptr->node )
-		ptr->node = idmef_node_new();
+        int retval;
 
-	return ptr->node;
+	if ( ! ptr->node )
+		retval = idmef_node_new(&ptr->node);
+
+        *ret = ptr->node;
+	return 0;
 }
 
 /**
@@ -11532,12 +12109,14 @@ idmef_process_t *idmef_analyzer_get_process(idmef_analyzer_t *ptr)
 	return ptr->process;
 }
 
-idmef_value_t *idmef_analyzer_get_process_value(idmef_analyzer_t *ptr)
+int idmef_analyzer_get_process_value(idmef_analyzer_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->process )
-		return NULL;
+	if ( ! ptr->process ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->process, IDMEF_OBJECT_TYPE_PROCESS);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_PROCESS, ptr->process);
 }
 
 /**
@@ -11561,18 +12140,22 @@ void idmef_analyzer_set_process(idmef_analyzer_t *ptr, idmef_process_t *process)
 /**
  * idmef_analyzer_new_process:
  * @ptr: pointer to a #idmef_analyzer_t object.
+ * @ret: pointer to an address where to store the created #idmef_process_t object.
  *
  * Create a new process object, children of #idmef_analyzer_t.
  * If @ptr already contain a #idmef_process_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_process_t *idmef_analyzer_new_process(idmef_analyzer_t *ptr)
+int idmef_analyzer_new_process(idmef_analyzer_t *ptr, idmef_process_t **ret)
 {
-	if ( ! ptr->process )
-		ptr->process = idmef_process_new();
+        int retval;
 
-	return ptr->process;
+	if ( ! ptr->process )
+		retval = idmef_process_new(&ptr->process);
+
+        *ret = ptr->process;
+	return 0;
 }
 
 /**
@@ -11588,12 +12171,14 @@ idmef_analyzer_t *idmef_analyzer_get_analyzer(idmef_analyzer_t *ptr)
 	return ptr->analyzer;
 }
 
-idmef_value_t *idmef_analyzer_get_analyzer_value(idmef_analyzer_t *ptr)
+int idmef_analyzer_get_analyzer_value(idmef_analyzer_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->analyzer )
-		return NULL;
+	if ( ! ptr->analyzer ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->analyzer, IDMEF_OBJECT_TYPE_ANALYZER);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_ANALYZER, ptr->analyzer);
 }
 
 /**
@@ -11617,40 +12202,43 @@ void idmef_analyzer_set_analyzer(idmef_analyzer_t *ptr, idmef_analyzer_t *analyz
 /**
  * idmef_analyzer_new_analyzer:
  * @ptr: pointer to a #idmef_analyzer_t object.
+ * @ret: pointer to an address where to store the created #idmef_analyzer_t object.
  *
  * Create a new analyzer object, children of #idmef_analyzer_t.
  * If @ptr already contain a #idmef_analyzer_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_analyzer_t *idmef_analyzer_new_analyzer(idmef_analyzer_t *ptr)
+int idmef_analyzer_new_analyzer(idmef_analyzer_t *ptr, idmef_analyzer_t **ret)
 {
-	if ( ! ptr->analyzer )
-		ptr->analyzer = idmef_analyzer_new();
+        int retval;
 
-	return ptr->analyzer;
+	if ( ! ptr->analyzer )
+		retval = idmef_analyzer_new(&ptr->analyzer);
+
+        *ret = ptr->analyzer;
+	return 0;
 }
 
 /**
  * idmef_alertident_new:
- * 
+ * @ret: Pointer where to store the created #idmef_alertident_t object.
+ *
  * Create a new #idmef_alertident_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_alertident_t *idmef_alertident_new(void)
+int idmef_alertident_new(idmef_alertident_t **ret)
 {
-	idmef_alertident_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	prelude_list_init(&(*ret)->list);
 
-	PRELUDE_INIT_LIST_HEAD(&ret->list);
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	return ret;
+	return 0;
 
 }
 
@@ -11670,52 +12258,47 @@ idmef_alertident_t *idmef_alertident_ref(idmef_alertident_t *ptr)
 	return ptr;
 }
 
-void *idmef_alertident_get_child(void *p, idmef_child_t child)
+int idmef_alertident_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_alertident_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_alertident_get_alertident_value(ptr);
+			return idmef_alertident_get_alertident_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_alertident_get_analyzerid_value(ptr);
+			return idmef_alertident_get_analyzerid_value(ptr, (idmef_value_t **) childptr);
+
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_alertident_new_child(void *p, idmef_child_t child, int n)
+int idmef_alertident_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_alertident_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_alertident_new_alertident(ptr);
+			return idmef_alertident_new_alertident(ptr, (uint64_t **) ret);
 
 		case 1:
-			return idmef_alertident_new_analyzerid(ptr);
+			return idmef_alertident_new_analyzerid(ptr, (uint64_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_alertident_destroy_internal(idmef_alertident_t *ptr)
 {
 
-       if ( ! prelude_list_empty(&ptr->list) ) {
-               prelude_list_del(&ptr->list);
-               PRELUDE_INIT_LIST_HEAD(&ptr->list);
-       }
+       if ( ! prelude_list_is_empty(&ptr->list) )
+               prelude_list_del_init(&ptr->list);
     
 
 	/* free() should be done by the caller */
@@ -11751,17 +12334,17 @@ uint64_t idmef_alertident_get_alertident(idmef_alertident_t *ptr)
 	return ptr->alertident;
 }
 
-idmef_value_t *idmef_alertident_get_alertident_value(idmef_alertident_t *ptr)
+int idmef_alertident_get_alertident_value(idmef_alertident_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_uint64(ptr->alertident);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_uint64(value, ptr->alertident);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -11782,15 +12365,17 @@ void idmef_alertident_set_alertident(idmef_alertident_t *ptr, uint64_t alertiden
 /**
  * idmef_alertident_new_alertident:
  * @ptr: pointer to a #idmef_alertident_t object.
+ * @ret: pointer to an address where to store the created #uint64_t object.
  *
  * Create a new alertident object, children of #idmef_alertident_t.
  * If @ptr already contain a #uint64_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint64_t *idmef_alertident_new_alertident(idmef_alertident_t *ptr)
+int idmef_alertident_new_alertident(idmef_alertident_t *ptr, uint64_t **ret)
 {
-	return &ptr->alertident;
+        *ret = &ptr->alertident;
+	return 0;
 }
 
 /**
@@ -11806,9 +12391,14 @@ uint64_t *idmef_alertident_get_analyzerid(idmef_alertident_t *ptr)
 	return ptr->analyzerid_is_set ? &ptr->analyzerid : NULL;
 }
 
-idmef_value_t *idmef_alertident_get_analyzerid_value(idmef_alertident_t *ptr)
+int idmef_alertident_get_analyzerid_value(idmef_alertident_t *ptr, idmef_value_t **value)
 {
-	return ptr->analyzerid_is_set ? idmef_value_new_uint64(ptr->analyzerid) : NULL;
+        if ( ! ptr->analyzerid_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_uint64(value, ptr->analyzerid);
 
 }
 
@@ -11831,37 +12421,38 @@ void idmef_alertident_set_analyzerid(idmef_alertident_t *ptr, uint64_t analyzeri
 /**
  * idmef_alertident_new_analyzerid:
  * @ptr: pointer to a #idmef_alertident_t object.
+ * @ret: pointer to an address where to store the created #uint64_t object.
  *
  * Create a new analyzerid object, children of #idmef_alertident_t.
  * If @ptr already contain a #uint64_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint64_t *idmef_alertident_new_analyzerid(idmef_alertident_t *ptr)
+int idmef_alertident_new_analyzerid(idmef_alertident_t *ptr, uint64_t **ret)
 {
 	ptr->analyzerid_is_set = 1;
 
-	return &ptr->analyzerid;
+        *ret = &ptr->analyzerid;
+	return 0;
 }
 
 /**
  * idmef_impact_new:
- * 
+ * @ret: Pointer where to store the created #idmef_impact_t object.
+ *
  * Create a new #idmef_impact_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_impact_t *idmef_impact_new(void)
+int idmef_impact_new(idmef_impact_t **ret)
 {
-	idmef_impact_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	return ret;
+	return 0;
 
 }
 
@@ -11881,55 +12472,54 @@ idmef_impact_t *idmef_impact_ref(idmef_impact_t *ptr)
 	return ptr;
 }
 
-void *idmef_impact_get_child(void *p, idmef_child_t child)
+int idmef_impact_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_impact_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_impact_get_severity_value(ptr);
+			return idmef_impact_get_severity_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_impact_get_completion_value(ptr);
+			return idmef_impact_get_completion_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_impact_get_type_value(ptr);
+			return idmef_impact_get_type_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 3:
-			return idmef_impact_get_description_value(ptr);
+			return idmef_impact_get_description_value(ptr, (idmef_value_t **) childptr);
+
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_impact_new_child(void *p, idmef_child_t child, int n)
+int idmef_impact_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_impact_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_impact_new_severity(ptr);
+			return idmef_impact_new_severity(ptr, (idmef_impact_severity_t **) ret);
 
 		case 1:
-			return idmef_impact_new_completion(ptr);
+			return idmef_impact_new_completion(ptr, (idmef_impact_completion_t **) ret);
 
 		case 2:
-			return idmef_impact_new_type(ptr);
+			return idmef_impact_new_type(ptr, (idmef_impact_type_t **) ret);
 
 		case 3:
-			return idmef_impact_new_description(ptr);
+			return idmef_impact_new_description(ptr, (prelude_string_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_impact_destroy_internal(idmef_impact_t *ptr)
@@ -11974,9 +12564,14 @@ idmef_impact_severity_t *idmef_impact_get_severity(idmef_impact_t *ptr)
 	return ptr->severity_is_set ? &ptr->severity : NULL;
 }
 
-idmef_value_t *idmef_impact_get_severity_value(idmef_impact_t *ptr)
+int idmef_impact_get_severity_value(idmef_impact_t *ptr, idmef_value_t **value)
 {
-	return ptr->severity_is_set ? idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_IMPACT_SEVERITY, ptr->severity) : NULL;
+        if ( ! ptr->severity_is_set ) {
+              *value = NULL;
+              return 0;
+        }
+
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_IMPACT_SEVERITY, ptr->severity);
 }
 
 /**
@@ -11998,17 +12593,19 @@ void idmef_impact_set_severity(idmef_impact_t *ptr, idmef_impact_severity_t seve
 /**
  * idmef_impact_new_severity:
  * @ptr: pointer to a #idmef_impact_t object.
+ * @ret: pointer to an address where to store the created #idmef_impact_severity_t object.
  *
  * Create a new severity object, children of #idmef_impact_t.
  * If @ptr already contain a #idmef_impact_severity_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_impact_severity_t *idmef_impact_new_severity(idmef_impact_t *ptr)
+int idmef_impact_new_severity(idmef_impact_t *ptr, idmef_impact_severity_t **ret)
 {
 	ptr->severity_is_set = 1;
 
-	return &ptr->severity;
+        *ret = &ptr->severity;
+	return 0;
 }
 
 /**
@@ -12024,9 +12621,14 @@ idmef_impact_completion_t *idmef_impact_get_completion(idmef_impact_t *ptr)
 	return ptr->completion_is_set ? &ptr->completion : NULL;
 }
 
-idmef_value_t *idmef_impact_get_completion_value(idmef_impact_t *ptr)
+int idmef_impact_get_completion_value(idmef_impact_t *ptr, idmef_value_t **value)
 {
-	return ptr->completion_is_set ? idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_IMPACT_COMPLETION, ptr->completion) : NULL;
+        if ( ! ptr->completion_is_set ) {
+              *value = NULL;
+              return 0;
+        }
+
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_IMPACT_COMPLETION, ptr->completion);
 }
 
 /**
@@ -12048,17 +12650,19 @@ void idmef_impact_set_completion(idmef_impact_t *ptr, idmef_impact_completion_t 
 /**
  * idmef_impact_new_completion:
  * @ptr: pointer to a #idmef_impact_t object.
+ * @ret: pointer to an address where to store the created #idmef_impact_completion_t object.
  *
  * Create a new completion object, children of #idmef_impact_t.
  * If @ptr already contain a #idmef_impact_completion_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_impact_completion_t *idmef_impact_new_completion(idmef_impact_t *ptr)
+int idmef_impact_new_completion(idmef_impact_t *ptr, idmef_impact_completion_t **ret)
 {
 	ptr->completion_is_set = 1;
 
-	return &ptr->completion;
+        *ret = &ptr->completion;
+	return 0;
 }
 
 /**
@@ -12074,9 +12678,9 @@ idmef_impact_type_t idmef_impact_get_type(idmef_impact_t *ptr)
 	return ptr->type;
 }
 
-idmef_value_t *idmef_impact_get_type_value(idmef_impact_t *ptr)
+int idmef_impact_get_type_value(idmef_impact_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_IMPACT_TYPE, ptr->type);
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_IMPACT_TYPE, ptr->type);
 
 }
 
@@ -12098,15 +12702,17 @@ void idmef_impact_set_type(idmef_impact_t *ptr, idmef_impact_type_t type)
 /**
  * idmef_impact_new_type:
  * @ptr: pointer to a #idmef_impact_t object.
+ * @ret: pointer to an address where to store the created #idmef_impact_type_t object.
  *
  * Create a new type object, children of #idmef_impact_t.
  * If @ptr already contain a #idmef_impact_type_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_impact_type_t *idmef_impact_new_type(idmef_impact_t *ptr)
+int idmef_impact_new_type(idmef_impact_t *ptr, idmef_impact_type_t **ret)
 {
-	return &ptr->type;
+        *ret = &ptr->type;
+	return 0;
 }
 
 /**
@@ -12122,20 +12728,22 @@ prelude_string_t *idmef_impact_get_description(idmef_impact_t *ptr)
 	return ptr->description;
 }
 
-idmef_value_t *idmef_impact_get_description_value(idmef_impact_t *ptr)
+int idmef_impact_get_description_value(idmef_impact_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->description )
-		return NULL;
+	if ( ! ptr->description ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->description);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->description);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -12159,42 +12767,47 @@ void idmef_impact_set_description(idmef_impact_t *ptr, prelude_string_t *descrip
 /**
  * idmef_impact_new_description:
  * @ptr: pointer to a #idmef_impact_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new description object, children of #idmef_impact_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_impact_new_description(idmef_impact_t *ptr)
+int idmef_impact_new_description(idmef_impact_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->description )
 		prelude_string_destroy(ptr->description);
 		
-	ptr->description = prelude_string_new();
+	retval = prelude_string_new(&ptr->description);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->description;
+        *ret = ptr->description;
+	return 0;
 }
 
 /**
  * idmef_action_new:
- * 
+ * @ret: Pointer where to store the created #idmef_action_t object.
+ *
  * Create a new #idmef_action_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_action_t *idmef_action_new(void)
+int idmef_action_new(idmef_action_t **ret)
 {
-	idmef_action_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	prelude_list_init(&(*ret)->list);
 
-	PRELUDE_INIT_LIST_HEAD(&ret->list);
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	return ret;
+	return 0;
 
 }
 
@@ -12214,52 +12827,47 @@ idmef_action_t *idmef_action_ref(idmef_action_t *ptr)
 	return ptr;
 }
 
-void *idmef_action_get_child(void *p, idmef_child_t child)
+int idmef_action_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_action_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_action_get_category_value(ptr);
+			return idmef_action_get_category_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_action_get_description_value(ptr);
+			return idmef_action_get_description_value(ptr, (idmef_value_t **) childptr);
+
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_action_new_child(void *p, idmef_child_t child, int n)
+int idmef_action_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_action_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_action_new_category(ptr);
+			return idmef_action_new_category(ptr, (idmef_action_category_t **) ret);
 
 		case 1:
-			return idmef_action_new_description(ptr);
+			return idmef_action_new_description(ptr, (prelude_string_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_action_destroy_internal(idmef_action_t *ptr)
 {
 
-       if ( ! prelude_list_empty(&ptr->list) ) {
-               prelude_list_del(&ptr->list);
-               PRELUDE_INIT_LIST_HEAD(&ptr->list);
-       }
+       if ( ! prelude_list_is_empty(&ptr->list) )
+               prelude_list_del_init(&ptr->list);
     
 	if ( ptr->description ) {
 		prelude_string_destroy(ptr->description);
@@ -12300,9 +12908,9 @@ idmef_action_category_t idmef_action_get_category(idmef_action_t *ptr)
 	return ptr->category;
 }
 
-idmef_value_t *idmef_action_get_category_value(idmef_action_t *ptr)
+int idmef_action_get_category_value(idmef_action_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_ACTION_CATEGORY, ptr->category);
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_ACTION_CATEGORY, ptr->category);
 
 }
 
@@ -12324,15 +12932,17 @@ void idmef_action_set_category(idmef_action_t *ptr, idmef_action_category_t cate
 /**
  * idmef_action_new_category:
  * @ptr: pointer to a #idmef_action_t object.
+ * @ret: pointer to an address where to store the created #idmef_action_category_t object.
  *
  * Create a new category object, children of #idmef_action_t.
  * If @ptr already contain a #idmef_action_category_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_action_category_t *idmef_action_new_category(idmef_action_t *ptr)
+int idmef_action_new_category(idmef_action_t *ptr, idmef_action_category_t **ret)
 {
-	return &ptr->category;
+        *ret = &ptr->category;
+	return 0;
 }
 
 /**
@@ -12348,20 +12958,22 @@ prelude_string_t *idmef_action_get_description(idmef_action_t *ptr)
 	return ptr->description;
 }
 
-idmef_value_t *idmef_action_get_description_value(idmef_action_t *ptr)
+int idmef_action_get_description_value(idmef_action_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->description )
-		return NULL;
+	if ( ! ptr->description ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->description);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->description);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -12385,40 +12997,45 @@ void idmef_action_set_description(idmef_action_t *ptr, prelude_string_t *descrip
 /**
  * idmef_action_new_description:
  * @ptr: pointer to a #idmef_action_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new description object, children of #idmef_action_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_action_new_description(idmef_action_t *ptr)
+int idmef_action_new_description(idmef_action_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->description )
 		prelude_string_destroy(ptr->description);
 		
-	ptr->description = prelude_string_new();
+	retval = prelude_string_new(&ptr->description);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->description;
+        *ret = ptr->description;
+	return 0;
 }
 
 /**
  * idmef_confidence_new:
- * 
+ * @ret: Pointer where to store the created #idmef_confidence_t object.
+ *
  * Create a new #idmef_confidence_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_confidence_t *idmef_confidence_new(void)
+int idmef_confidence_new(idmef_confidence_t **ret)
 {
-	idmef_confidence_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	return ret;
+	return 0;
 
 }
 
@@ -12438,43 +13055,40 @@ idmef_confidence_t *idmef_confidence_ref(idmef_confidence_t *ptr)
 	return ptr;
 }
 
-void *idmef_confidence_get_child(void *p, idmef_child_t child)
+int idmef_confidence_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_confidence_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_confidence_get_rating_value(ptr);
+			return idmef_confidence_get_rating_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_confidence_get_confidence_value(ptr);
+			return idmef_confidence_get_confidence_value(ptr, (idmef_value_t **) childptr);
+
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_confidence_new_child(void *p, idmef_child_t child, int n)
+int idmef_confidence_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_confidence_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_confidence_new_rating(ptr);
+			return idmef_confidence_new_rating(ptr, (idmef_confidence_rating_t **) ret);
 
 		case 1:
-			return idmef_confidence_new_confidence(ptr);
+			return idmef_confidence_new_confidence(ptr, (float **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_confidence_destroy_internal(idmef_confidence_t *ptr)
@@ -12514,9 +13128,9 @@ idmef_confidence_rating_t idmef_confidence_get_rating(idmef_confidence_t *ptr)
 	return ptr->rating;
 }
 
-idmef_value_t *idmef_confidence_get_rating_value(idmef_confidence_t *ptr)
+int idmef_confidence_get_rating_value(idmef_confidence_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_CONFIDENCE_RATING, ptr->rating);
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_CONFIDENCE_RATING, ptr->rating);
 
 }
 
@@ -12538,15 +13152,17 @@ void idmef_confidence_set_rating(idmef_confidence_t *ptr, idmef_confidence_ratin
 /**
  * idmef_confidence_new_rating:
  * @ptr: pointer to a #idmef_confidence_t object.
+ * @ret: pointer to an address where to store the created #idmef_confidence_rating_t object.
  *
  * Create a new rating object, children of #idmef_confidence_t.
  * If @ptr already contain a #idmef_confidence_rating_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_confidence_rating_t *idmef_confidence_new_rating(idmef_confidence_t *ptr)
+int idmef_confidence_new_rating(idmef_confidence_t *ptr, idmef_confidence_rating_t **ret)
 {
-	return &ptr->rating;
+        *ret = &ptr->rating;
+	return 0;
 }
 
 /**
@@ -12562,9 +13178,14 @@ float *idmef_confidence_get_confidence(idmef_confidence_t *ptr)
 	return ptr->confidence_is_set ? &ptr->confidence : NULL;
 }
 
-idmef_value_t *idmef_confidence_get_confidence_value(idmef_confidence_t *ptr)
+int idmef_confidence_get_confidence_value(idmef_confidence_t *ptr, idmef_value_t **value)
 {
-	return ptr->confidence_is_set ? idmef_value_new_float(ptr->confidence) : NULL;
+        if ( ! ptr->confidence_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_float(value, ptr->confidence);
 
 }
 
@@ -12587,40 +13208,41 @@ void idmef_confidence_set_confidence(idmef_confidence_t *ptr, float confidence)
 /**
  * idmef_confidence_new_confidence:
  * @ptr: pointer to a #idmef_confidence_t object.
+ * @ret: pointer to an address where to store the created #float object.
  *
  * Create a new confidence object, children of #idmef_confidence_t.
  * If @ptr already contain a #float object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-float *idmef_confidence_new_confidence(idmef_confidence_t *ptr)
+int idmef_confidence_new_confidence(idmef_confidence_t *ptr, float **ret)
 {
 	ptr->confidence_is_set = 1;
 
-	return &ptr->confidence;
+        *ret = &ptr->confidence;
+	return 0;
 }
 
 /**
  * idmef_assessment_new:
- * 
+ * @ret: Pointer where to store the created #idmef_assessment_t object.
+ *
  * Create a new #idmef_assessment_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_assessment_t *idmef_assessment_new(void)
+int idmef_assessment_new(idmef_assessment_t **ret)
 {
-	idmef_assessment_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	PRELUDE_INIT_LIST_HEAD(&ret->action_list);
+	prelude_list_init(&(*ret)->action_list);
     
 
-	return ret;
+	return 0;
 
 }
 
@@ -12640,78 +13262,76 @@ idmef_assessment_t *idmef_assessment_ref(idmef_assessment_t *ptr)
 	return ptr;
 }
 
-void *idmef_assessment_get_child(void *p, idmef_child_t child)
+int idmef_assessment_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_assessment_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return ptr->impact;
+                        *childptr = ptr->impact;
+                        return 0;
 
 		case 1:
-			return &ptr->action_list;
+                        *childptr = &ptr->action_list;
+			return 0;
 
 		case 2:
-			return ptr->confidence;
+                        *childptr = ptr->confidence;
+                        return 0;
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_assessment_new_child(void *p, idmef_child_t child, int n)
+int idmef_assessment_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_assessment_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_assessment_new_impact(ptr);
+			return idmef_assessment_new_impact(ptr, (idmef_impact_t **) ret);
 
 		case 1: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_assessment_new_action(ptr);
+				 retval = idmef_assessment_new_action(ptr, (idmef_action_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->action_list) {
-			    		entry = prelude_list_entry(tmp, idmef_action_t, list);
+				prelude_list_for_each(&ptr->action_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, idmef_action_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_assessment_new_action(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_assessment_new_action(ptr, (idmef_action_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		case 2:
-			return idmef_assessment_new_confidence(ptr);
+			return idmef_assessment_new_confidence(ptr, (idmef_confidence_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_assessment_destroy_internal(idmef_assessment_t *ptr)
@@ -12726,7 +13346,7 @@ static void idmef_assessment_destroy_internal(idmef_assessment_t *ptr)
 		prelude_list_t *n, *tmp;
 		idmef_action_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->action_list) {
+		prelude_list_for_each_safe(&ptr->action_list, tmp, n) {
 			entry = prelude_list_entry(tmp, idmef_action_t, list);
 			idmef_action_destroy(entry);
 		}
@@ -12771,12 +13391,14 @@ idmef_impact_t *idmef_assessment_get_impact(idmef_assessment_t *ptr)
 	return ptr->impact;
 }
 
-idmef_value_t *idmef_assessment_get_impact_value(idmef_assessment_t *ptr)
+int idmef_assessment_get_impact_value(idmef_assessment_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->impact )
-		return NULL;
+	if ( ! ptr->impact ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->impact, IDMEF_OBJECT_TYPE_IMPACT);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_IMPACT, ptr->impact);
 }
 
 /**
@@ -12800,18 +13422,22 @@ void idmef_assessment_set_impact(idmef_assessment_t *ptr, idmef_impact_t *impact
 /**
  * idmef_assessment_new_impact:
  * @ptr: pointer to a #idmef_assessment_t object.
+ * @ret: pointer to an address where to store the created #idmef_impact_t object.
  *
  * Create a new impact object, children of #idmef_assessment_t.
  * If @ptr already contain a #idmef_impact_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_impact_t *idmef_assessment_new_impact(idmef_assessment_t *ptr)
+int idmef_assessment_new_impact(idmef_assessment_t *ptr, idmef_impact_t **ret)
 {
-	if ( ! ptr->impact )
-		ptr->impact = idmef_impact_new();
+        int retval;
 
-	return ptr->impact;
+	if ( ! ptr->impact )
+		retval = idmef_impact_new(&ptr->impact);
+
+        *ret = ptr->impact;
+	return 0;
 }
 
 /**
@@ -12827,7 +13453,12 @@ idmef_impact_t *idmef_assessment_new_impact(idmef_assessment_t *ptr)
  */
 idmef_action_t *idmef_assessment_get_next_action(idmef_assessment_t *ptr, idmef_action_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->action_list, idmef_action_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->action_list, tmp)
+                return prelude_list_entry(tmp, idmef_action_t, list);
+
+        return NULL;
 }
 
 /**
@@ -12839,58 +13470,62 @@ idmef_action_t *idmef_assessment_get_next_action(idmef_assessment_t *ptr, idmef_
  */
 void idmef_assessment_set_action(idmef_assessment_t *ptr, idmef_action_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->action_list);
+	prelude_list_add_tail(&ptr->action_list, &object->list);
 }
 
 /**
- * idmef_assessment_new_HASH(0x802568b8):
+ * idmef_assessment_new_action:
  * @ptr: pointer to a #idmef_assessment_t object.
- * 
- * Create a new HASH(0x802568b8) children of @ptr,
+ * @ret: pointer to an address where to store the created #idmef_action_t object.
+ *
+ * Create a new #idmef_action_t children of @ptr,
  * and add it to the tail of @ptr list of #idmef_action_t object.
  * 
- * Returns: a pointer to the created #idmef_action_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_action_t *idmef_assessment_new_action(idmef_assessment_t *ptr)
-{
-	idmef_action_t *object;
+int idmef_assessment_new_action(idmef_assessment_t *ptr, idmef_action_t **ret)
+{	
+        int retval;
+
+	retval = idmef_action_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = idmef_action_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->action_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->action_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_assessment_get_action_value(idmef_assessment_t *ptr)
+
+int idmef_assessment_get_action_value(idmef_assessment_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	idmef_action_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->action_list) {
+	prelude_list_for_each(&ptr->action_list, tmp) {
 		entry = prelude_list_entry(tmp, idmef_action_t, list);
 
-		val = idmef_value_new_object(entry, IDMEF_OBJECT_TYPE_ACTION);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_ACTION, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
@@ -12907,12 +13542,14 @@ idmef_confidence_t *idmef_assessment_get_confidence(idmef_assessment_t *ptr)
 	return ptr->confidence;
 }
 
-idmef_value_t *idmef_assessment_get_confidence_value(idmef_assessment_t *ptr)
+int idmef_assessment_get_confidence_value(idmef_assessment_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->confidence )
-		return NULL;
+	if ( ! ptr->confidence ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->confidence, IDMEF_OBJECT_TYPE_CONFIDENCE);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_CONFIDENCE, ptr->confidence);
 }
 
 /**
@@ -12936,41 +13573,44 @@ void idmef_assessment_set_confidence(idmef_assessment_t *ptr, idmef_confidence_t
 /**
  * idmef_assessment_new_confidence:
  * @ptr: pointer to a #idmef_assessment_t object.
+ * @ret: pointer to an address where to store the created #idmef_confidence_t object.
  *
  * Create a new confidence object, children of #idmef_assessment_t.
  * If @ptr already contain a #idmef_confidence_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_confidence_t *idmef_assessment_new_confidence(idmef_assessment_t *ptr)
+int idmef_assessment_new_confidence(idmef_assessment_t *ptr, idmef_confidence_t **ret)
 {
-	if ( ! ptr->confidence )
-		ptr->confidence = idmef_confidence_new();
+        int retval;
 
-	return ptr->confidence;
+	if ( ! ptr->confidence )
+		retval = idmef_confidence_new(&ptr->confidence);
+
+        *ret = ptr->confidence;
+	return 0;
 }
 
 /**
  * idmef_tool_alert_new:
- * 
+ * @ret: Pointer where to store the created #idmef_tool_alert_t object.
+ *
  * Create a new #idmef_tool_alert_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_tool_alert_t *idmef_tool_alert_new(void)
+int idmef_tool_alert_new(idmef_tool_alert_t **ret)
 {
-	idmef_tool_alert_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	PRELUDE_INIT_LIST_HEAD(&ret->alertident_list);
+	prelude_list_init(&(*ret)->alertident_list);
     
 
-	return ret;
+	return 0;
 
 }
 
@@ -12990,78 +13630,76 @@ idmef_tool_alert_t *idmef_tool_alert_ref(idmef_tool_alert_t *ptr)
 	return ptr;
 }
 
-void *idmef_tool_alert_get_child(void *p, idmef_child_t child)
+int idmef_tool_alert_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_tool_alert_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_tool_alert_get_name_value(ptr);
+			return idmef_tool_alert_get_name_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_tool_alert_get_command_value(ptr);
+			return idmef_tool_alert_get_command_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return &ptr->alertident_list;
+                        *childptr = &ptr->alertident_list;
+			return 0;
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_tool_alert_new_child(void *p, idmef_child_t child, int n)
+int idmef_tool_alert_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_tool_alert_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_tool_alert_new_name(ptr);
+			return idmef_tool_alert_new_name(ptr, (prelude_string_t **) ret);
 
 		case 1:
-			return idmef_tool_alert_new_command(ptr);
+			return idmef_tool_alert_new_command(ptr, (prelude_string_t **) ret);
 
 		case 2: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_tool_alert_new_alertident(ptr);
+				 retval = idmef_tool_alert_new_alertident(ptr, (idmef_alertident_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->alertident_list) {
-			    		entry = prelude_list_entry(tmp, idmef_alertident_t, list);
+				prelude_list_for_each(&ptr->alertident_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, idmef_alertident_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_tool_alert_new_alertident(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_tool_alert_new_alertident(ptr, (idmef_alertident_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_tool_alert_destroy_internal(idmef_tool_alert_t *ptr)
@@ -13078,7 +13716,7 @@ static void idmef_tool_alert_destroy_internal(idmef_tool_alert_t *ptr)
 		prelude_list_t *n, *tmp;
 		idmef_alertident_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->alertident_list) {
+		prelude_list_for_each_safe(&ptr->alertident_list, tmp, n) {
 			entry = prelude_list_entry(tmp, idmef_alertident_t, list);
 			idmef_alertident_destroy(entry);
 		}
@@ -13118,17 +13756,17 @@ prelude_string_t *idmef_tool_alert_get_name(idmef_tool_alert_t *ptr)
 	return &ptr->name;
 }
 
-idmef_value_t *idmef_tool_alert_get_name_value(idmef_tool_alert_t *ptr)
+int idmef_tool_alert_get_name_value(idmef_tool_alert_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_string(&ptr->name);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, &ptr->name);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -13151,17 +13789,19 @@ void idmef_tool_alert_set_name(idmef_tool_alert_t *ptr, prelude_string_t *name)
 /**
  * idmef_tool_alert_new_name:
  * @ptr: pointer to a #idmef_tool_alert_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new name object, children of #idmef_tool_alert_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_tool_alert_new_name(idmef_tool_alert_t *ptr)
+int idmef_tool_alert_new_name(idmef_tool_alert_t *ptr, prelude_string_t **ret)
 {
 	prelude_string_destroy_internal(&ptr->name);
 
-	return &ptr->name;
+        *ret = &ptr->name;
+	return 0;
 }
 
 /**
@@ -13177,20 +13817,22 @@ prelude_string_t *idmef_tool_alert_get_command(idmef_tool_alert_t *ptr)
 	return ptr->command;
 }
 
-idmef_value_t *idmef_tool_alert_get_command_value(idmef_tool_alert_t *ptr)
+int idmef_tool_alert_get_command_value(idmef_tool_alert_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->command )
-		return NULL;
+	if ( ! ptr->command ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_string(ptr->command);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, ptr->command);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -13214,20 +13856,26 @@ void idmef_tool_alert_set_command(idmef_tool_alert_t *ptr, prelude_string_t *com
 /**
  * idmef_tool_alert_new_command:
  * @ptr: pointer to a #idmef_tool_alert_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new command object, children of #idmef_tool_alert_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_tool_alert_new_command(idmef_tool_alert_t *ptr)
+int idmef_tool_alert_new_command(idmef_tool_alert_t *ptr, prelude_string_t **ret)
 {
+        int retval;
+
 	if ( ptr->command )
 		prelude_string_destroy(ptr->command);
 		
-	ptr->command = prelude_string_new();
+	retval = prelude_string_new(&ptr->command);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->command;
+        *ret = ptr->command;
+	return 0;
 }
 
 /**
@@ -13243,7 +13891,12 @@ prelude_string_t *idmef_tool_alert_new_command(idmef_tool_alert_t *ptr)
  */
 idmef_alertident_t *idmef_tool_alert_get_next_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->alertident_list, idmef_alertident_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->alertident_list, tmp)
+                return prelude_list_entry(tmp, idmef_alertident_t, list);
+
+        return NULL;
 }
 
 /**
@@ -13255,82 +13908,85 @@ idmef_alertident_t *idmef_tool_alert_get_next_alertident(idmef_tool_alert_t *ptr
  */
 void idmef_tool_alert_set_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->alertident_list);
+	prelude_list_add_tail(&ptr->alertident_list, &object->list);
 }
 
 /**
- * idmef_tool_alert_new_HASH(0x80257d44):
+ * idmef_tool_alert_new_alertident:
  * @ptr: pointer to a #idmef_tool_alert_t object.
- * 
- * Create a new HASH(0x80257d44) children of @ptr,
+ * @ret: pointer to an address where to store the created #idmef_alertident_t object.
+ *
+ * Create a new #idmef_alertident_t children of @ptr,
  * and add it to the tail of @ptr list of #idmef_alertident_t object.
  * 
- * Returns: a pointer to the created #idmef_alertident_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_alertident_t *idmef_tool_alert_new_alertident(idmef_tool_alert_t *ptr)
-{
-	idmef_alertident_t *object;
+int idmef_tool_alert_new_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t **ret)
+{	
+        int retval;
+
+	retval = idmef_alertident_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = idmef_alertident_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->alertident_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->alertident_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_tool_alert_get_alertident_value(idmef_tool_alert_t *ptr)
+
+int idmef_tool_alert_get_alertident_value(idmef_tool_alert_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	idmef_alertident_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->alertident_list) {
+	prelude_list_for_each(&ptr->alertident_list, tmp) {
 		entry = prelude_list_entry(tmp, idmef_alertident_t, list);
 
-		val = idmef_value_new_object(entry, IDMEF_OBJECT_TYPE_ALERTIDENT);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_ALERTIDENT, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
 /**
  * idmef_correlation_alert_new:
- * 
+ * @ret: Pointer where to store the created #idmef_correlation_alert_t object.
+ *
  * Create a new #idmef_correlation_alert_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_correlation_alert_t *idmef_correlation_alert_new(void)
+int idmef_correlation_alert_new(idmef_correlation_alert_t **ret)
 {
-	idmef_correlation_alert_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	PRELUDE_INIT_LIST_HEAD(&ret->alertident_list);
+	prelude_list_init(&(*ret)->alertident_list);
     
 
-	return ret;
+	return 0;
 
 }
 
@@ -13350,72 +14006,69 @@ idmef_correlation_alert_t *idmef_correlation_alert_ref(idmef_correlation_alert_t
 	return ptr;
 }
 
-void *idmef_correlation_alert_get_child(void *p, idmef_child_t child)
+int idmef_correlation_alert_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_correlation_alert_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_correlation_alert_get_name_value(ptr);
+			return idmef_correlation_alert_get_name_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return &ptr->alertident_list;
+                        *childptr = &ptr->alertident_list;
+			return 0;
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_correlation_alert_new_child(void *p, idmef_child_t child, int n)
+int idmef_correlation_alert_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_correlation_alert_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_correlation_alert_new_name(ptr);
+			return idmef_correlation_alert_new_name(ptr, (prelude_string_t **) ret);
 
 		case 1: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_correlation_alert_new_alertident(ptr);
+				 retval = idmef_correlation_alert_new_alertident(ptr, (idmef_alertident_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->alertident_list) {
-			    		entry = prelude_list_entry(tmp, idmef_alertident_t, list);
+				prelude_list_for_each(&ptr->alertident_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, idmef_alertident_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_correlation_alert_new_alertident(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_correlation_alert_new_alertident(ptr, (idmef_alertident_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_correlation_alert_destroy_internal(idmef_correlation_alert_t *ptr)
@@ -13427,7 +14080,7 @@ static void idmef_correlation_alert_destroy_internal(idmef_correlation_alert_t *
 		prelude_list_t *n, *tmp;
 		idmef_alertident_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->alertident_list) {
+		prelude_list_for_each_safe(&ptr->alertident_list, tmp, n) {
 			entry = prelude_list_entry(tmp, idmef_alertident_t, list);
 			idmef_alertident_destroy(entry);
 		}
@@ -13467,17 +14120,17 @@ prelude_string_t *idmef_correlation_alert_get_name(idmef_correlation_alert_t *pt
 	return &ptr->name;
 }
 
-idmef_value_t *idmef_correlation_alert_get_name_value(idmef_correlation_alert_t *ptr)
+int idmef_correlation_alert_get_name_value(idmef_correlation_alert_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_string(&ptr->name);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, &ptr->name);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -13500,17 +14153,19 @@ void idmef_correlation_alert_set_name(idmef_correlation_alert_t *ptr, prelude_st
 /**
  * idmef_correlation_alert_new_name:
  * @ptr: pointer to a #idmef_correlation_alert_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new name object, children of #idmef_correlation_alert_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_correlation_alert_new_name(idmef_correlation_alert_t *ptr)
+int idmef_correlation_alert_new_name(idmef_correlation_alert_t *ptr, prelude_string_t **ret)
 {
 	prelude_string_destroy_internal(&ptr->name);
 
-	return &ptr->name;
+        *ret = &ptr->name;
+	return 0;
 }
 
 /**
@@ -13526,7 +14181,12 @@ prelude_string_t *idmef_correlation_alert_new_name(idmef_correlation_alert_t *pt
  */
 idmef_alertident_t *idmef_correlation_alert_get_next_alertident(idmef_correlation_alert_t *ptr, idmef_alertident_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->alertident_list, idmef_alertident_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->alertident_list, tmp)
+                return prelude_list_entry(tmp, idmef_alertident_t, list);
+
+        return NULL;
 }
 
 /**
@@ -13538,79 +14198,82 @@ idmef_alertident_t *idmef_correlation_alert_get_next_alertident(idmef_correlatio
  */
 void idmef_correlation_alert_set_alertident(idmef_correlation_alert_t *ptr, idmef_alertident_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->alertident_list);
+	prelude_list_add_tail(&ptr->alertident_list, &object->list);
 }
 
 /**
- * idmef_correlation_alert_new_HASH(0x80257f24):
+ * idmef_correlation_alert_new_alertident:
  * @ptr: pointer to a #idmef_correlation_alert_t object.
- * 
- * Create a new HASH(0x80257f24) children of @ptr,
+ * @ret: pointer to an address where to store the created #idmef_alertident_t object.
+ *
+ * Create a new #idmef_alertident_t children of @ptr,
  * and add it to the tail of @ptr list of #idmef_alertident_t object.
  * 
- * Returns: a pointer to the created #idmef_alertident_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_alertident_t *idmef_correlation_alert_new_alertident(idmef_correlation_alert_t *ptr)
-{
-	idmef_alertident_t *object;
+int idmef_correlation_alert_new_alertident(idmef_correlation_alert_t *ptr, idmef_alertident_t **ret)
+{	
+        int retval;
+
+	retval = idmef_alertident_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = idmef_alertident_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->alertident_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->alertident_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_correlation_alert_get_alertident_value(idmef_correlation_alert_t *ptr)
+
+int idmef_correlation_alert_get_alertident_value(idmef_correlation_alert_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	idmef_alertident_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->alertident_list) {
+	prelude_list_for_each(&ptr->alertident_list, tmp) {
 		entry = prelude_list_entry(tmp, idmef_alertident_t, list);
 
-		val = idmef_value_new_object(entry, IDMEF_OBJECT_TYPE_ALERTIDENT);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_ALERTIDENT, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
 /**
  * idmef_overflow_alert_new:
- * 
+ * @ret: Pointer where to store the created #idmef_overflow_alert_t object.
+ *
  * Create a new #idmef_overflow_alert_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_overflow_alert_t *idmef_overflow_alert_new(void)
+int idmef_overflow_alert_new(idmef_overflow_alert_t **ret)
 {
-	idmef_overflow_alert_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	return ret;
+	return 0;
 
 }
 
@@ -13630,49 +14293,47 @@ idmef_overflow_alert_t *idmef_overflow_alert_ref(idmef_overflow_alert_t *ptr)
 	return ptr;
 }
 
-void *idmef_overflow_alert_get_child(void *p, idmef_child_t child)
+int idmef_overflow_alert_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_overflow_alert_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_overflow_alert_get_program_value(ptr);
+			return idmef_overflow_alert_get_program_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_overflow_alert_get_size_value(ptr);
+			return idmef_overflow_alert_get_size_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 2:
-			return idmef_overflow_alert_get_buffer_value(ptr);
+			return idmef_overflow_alert_get_buffer_value(ptr, (idmef_value_t **) childptr);
+
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_overflow_alert_new_child(void *p, idmef_child_t child, int n)
+int idmef_overflow_alert_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_overflow_alert_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_overflow_alert_new_program(ptr);
+			return idmef_overflow_alert_new_program(ptr, (prelude_string_t **) ret);
 
 		case 1:
-			return idmef_overflow_alert_new_size(ptr);
+			return idmef_overflow_alert_new_size(ptr, (uint32_t **) ret);
 
 		case 2:
-			return idmef_overflow_alert_new_buffer(ptr);
+			return idmef_overflow_alert_new_buffer(ptr, (idmef_data_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_overflow_alert_destroy_internal(idmef_overflow_alert_t *ptr)
@@ -13719,17 +14380,17 @@ prelude_string_t *idmef_overflow_alert_get_program(idmef_overflow_alert_t *ptr)
 	return &ptr->program;
 }
 
-idmef_value_t *idmef_overflow_alert_get_program_value(idmef_overflow_alert_t *ptr)
+int idmef_overflow_alert_get_program_value(idmef_overflow_alert_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_string(&ptr->program);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, &ptr->program);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -13752,17 +14413,19 @@ void idmef_overflow_alert_set_program(idmef_overflow_alert_t *ptr, prelude_strin
 /**
  * idmef_overflow_alert_new_program:
  * @ptr: pointer to a #idmef_overflow_alert_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new program object, children of #idmef_overflow_alert_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_overflow_alert_new_program(idmef_overflow_alert_t *ptr)
+int idmef_overflow_alert_new_program(idmef_overflow_alert_t *ptr, prelude_string_t **ret)
 {
 	prelude_string_destroy_internal(&ptr->program);
 
-	return &ptr->program;
+        *ret = &ptr->program;
+	return 0;
 }
 
 /**
@@ -13778,9 +14441,14 @@ uint32_t *idmef_overflow_alert_get_size(idmef_overflow_alert_t *ptr)
 	return ptr->size_is_set ? &ptr->size : NULL;
 }
 
-idmef_value_t *idmef_overflow_alert_get_size_value(idmef_overflow_alert_t *ptr)
+int idmef_overflow_alert_get_size_value(idmef_overflow_alert_t *ptr, idmef_value_t **value)
 {
-	return ptr->size_is_set ? idmef_value_new_uint32(ptr->size) : NULL;
+        if ( ! ptr->size_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_uint32(value, ptr->size);
 
 }
 
@@ -13803,17 +14471,19 @@ void idmef_overflow_alert_set_size(idmef_overflow_alert_t *ptr, uint32_t size)
 /**
  * idmef_overflow_alert_new_size:
  * @ptr: pointer to a #idmef_overflow_alert_t object.
+ * @ret: pointer to an address where to store the created #uint32_t object.
  *
  * Create a new size object, children of #idmef_overflow_alert_t.
  * If @ptr already contain a #uint32_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint32_t *idmef_overflow_alert_new_size(idmef_overflow_alert_t *ptr)
+int idmef_overflow_alert_new_size(idmef_overflow_alert_t *ptr, uint32_t **ret)
 {
 	ptr->size_is_set = 1;
 
-	return &ptr->size;
+        *ret = &ptr->size;
+	return 0;
 }
 
 /**
@@ -13829,20 +14499,22 @@ idmef_data_t *idmef_overflow_alert_get_buffer(idmef_overflow_alert_t *ptr)
 	return ptr->buffer;
 }
 
-idmef_value_t *idmef_overflow_alert_get_buffer_value(idmef_overflow_alert_t *ptr)
+int idmef_overflow_alert_get_buffer_value(idmef_overflow_alert_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->buffer )
-		return NULL;
+	if ( ! ptr->buffer ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_data(ptr->buffer);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_data(value, ptr->buffer);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -13866,249 +14538,256 @@ void idmef_overflow_alert_set_buffer(idmef_overflow_alert_t *ptr, idmef_data_t *
 /**
  * idmef_overflow_alert_new_buffer:
  * @ptr: pointer to a #idmef_overflow_alert_t object.
+ * @ret: pointer to an address where to store the created #idmef_data_t object.
  *
  * Create a new buffer object, children of #idmef_overflow_alert_t.
  * If @ptr already contain a #idmef_data_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_data_t *idmef_overflow_alert_new_buffer(idmef_overflow_alert_t *ptr)
+int idmef_overflow_alert_new_buffer(idmef_overflow_alert_t *ptr, idmef_data_t **ret)
 {
+        int retval;
+
 	if ( ptr->buffer )
 		idmef_data_destroy(ptr->buffer);
 		
-	ptr->buffer = idmef_data_new();
+	retval = idmef_data_new(&ptr->buffer);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->buffer;
+        *ret = ptr->buffer;
+	return 0;
 }
 
 /**
  * idmef_alert_new:
- * 
+ * @ret: Pointer where to store the created #idmef_alert_t object.
+ *
  * Create a new #idmef_alert_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_alert_t *idmef_alert_new(void)
+int idmef_alert_new(idmef_alert_t **ret)
 {
-	idmef_alert_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
-
-	PRELUDE_INIT_LIST_HEAD(&ret->source_list);
+	prelude_list_init(&(*ret)->source_list);
     
 
-	PRELUDE_INIT_LIST_HEAD(&ret->target_list);
+	prelude_list_init(&(*ret)->target_list);
     
 
-	PRELUDE_INIT_LIST_HEAD(&ret->additional_data_list);
+	prelude_list_init(&(*ret)->additional_data_list);
     
 
-	return ret;
+	return 0;
 
 }
 
-void *idmef_alert_get_child(void *p, idmef_child_t child)
+int idmef_alert_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_alert_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_alert_get_messageid_value(ptr);
+			return idmef_alert_get_messageid_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return ptr->analyzer;
+                        *childptr = ptr->analyzer;
+                        return 0;
 
 		case 2:
-			return idmef_alert_get_create_time_value(ptr);
+			return idmef_alert_get_create_time_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 3:
-			return ptr->classification;
+                        *childptr = ptr->classification;
+                        return 0;
 
 		case 4:
-			return idmef_alert_get_detect_time_value(ptr);
+			return idmef_alert_get_detect_time_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 5:
-			return idmef_alert_get_analyzer_time_value(ptr);
+			return idmef_alert_get_analyzer_time_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 6:
-			return &ptr->source_list;
+                        *childptr = &ptr->source_list;
+			return 0;
 
 		case 7:
-			return &ptr->target_list;
+                        *childptr = &ptr->target_list;
+			return 0;
 
 		case 8:
-			return ptr->assessment;
+                        *childptr = ptr->assessment;
+                        return 0;
 
 		case 9:
-			return &ptr->additional_data_list;
+                        *childptr = &ptr->additional_data_list;
+			return 0;
 
 		case 10:
-			return idmef_alert_get_type_value(ptr);
+			return idmef_alert_get_type_value(ptr, (idmef_value_t **) childptr);
 
-		case 11: 
-			if ( ptr->type == IDMEF_ALERT_TYPE_TOOL ) 
-				return ptr->detail.tool_alert;
-			return NULL;   	   
+		case 11:
+                        *childptr = ( ptr->type == IDMEF_ALERT_TYPE_TOOL ) ? ptr->detail.tool_alert : NULL;
+			return 0;   	   
 
-		case 12: 
-			if ( ptr->type == IDMEF_ALERT_TYPE_CORRELATION ) 
-				return ptr->detail.correlation_alert;
-			return NULL;   	   
+		case 12:
+                        *childptr = ( ptr->type == IDMEF_ALERT_TYPE_CORRELATION ) ? ptr->detail.correlation_alert : NULL;
+			return 0;   	   
 
-		case 13: 
-			if ( ptr->type == IDMEF_ALERT_TYPE_OVERFLOW ) 
-				return ptr->detail.overflow_alert;
-			return NULL;   	   
+		case 13:
+                        *childptr = ( ptr->type == IDMEF_ALERT_TYPE_OVERFLOW ) ? ptr->detail.overflow_alert : NULL;
+			return 0;   	   
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_alert_new_child(void *p, idmef_child_t child, int n)
+int idmef_alert_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_alert_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_alert_new_messageid(ptr);
+			return idmef_alert_new_messageid(ptr, (uint64_t **) ret);
 
 		case 1:
-			return idmef_alert_new_analyzer(ptr);
+			return idmef_alert_new_analyzer(ptr, (idmef_analyzer_t **) ret);
 
 		case 2:
-			return idmef_alert_new_create_time(ptr);
+			return idmef_alert_new_create_time(ptr, (idmef_time_t **) ret);
 
 		case 3:
-			return idmef_alert_new_classification(ptr);
+			return idmef_alert_new_classification(ptr, (idmef_classification_t **) ret);
 
 		case 4:
-			return idmef_alert_new_detect_time(ptr);
+			return idmef_alert_new_detect_time(ptr, (idmef_time_t **) ret);
 
 		case 5:
-			return idmef_alert_new_analyzer_time(ptr);
+			return idmef_alert_new_analyzer_time(ptr, (idmef_time_t **) ret);
 
 		case 6: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_alert_new_source(ptr);
+				 retval = idmef_alert_new_source(ptr, (idmef_source_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->source_list) {
-			    		entry = prelude_list_entry(tmp, idmef_source_t, list);
+				prelude_list_for_each(&ptr->source_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, idmef_source_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_alert_new_source(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_alert_new_source(ptr, (idmef_source_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		case 7: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_alert_new_target(ptr);
+				 retval = idmef_alert_new_target(ptr, (idmef_target_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->target_list) {
-			    		entry = prelude_list_entry(tmp, idmef_target_t, list);
+				prelude_list_for_each(&ptr->target_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, idmef_target_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_alert_new_target(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_alert_new_target(ptr, (idmef_target_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		case 8:
-			return idmef_alert_new_assessment(ptr);
+			return idmef_alert_new_assessment(ptr, (idmef_assessment_t **) ret);
 
 		case 9: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_alert_new_additional_data(ptr);
+				 retval = idmef_alert_new_additional_data(ptr, (idmef_additional_data_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->additional_data_list) {
-			    		entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
+				prelude_list_for_each(&ptr->additional_data_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, idmef_additional_data_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_alert_new_additional_data(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_alert_new_additional_data(ptr, (idmef_additional_data_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		case 11:
-			return idmef_alert_new_tool_alert(ptr);
+			return idmef_alert_new_tool_alert(ptr, (idmef_tool_alert_t **) ret);
 
 		case 12:
-			return idmef_alert_new_correlation_alert(ptr);
+			return idmef_alert_new_correlation_alert(ptr, (idmef_correlation_alert_t **) ret);
 
 		case 13:
-			return idmef_alert_new_overflow_alert(ptr);
+			return idmef_alert_new_overflow_alert(ptr, (idmef_overflow_alert_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_alert_destroy_internal(idmef_alert_t *ptr)
@@ -14140,7 +14819,7 @@ static void idmef_alert_destroy_internal(idmef_alert_t *ptr)
 		prelude_list_t *n, *tmp;
 		idmef_source_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->source_list) {
+		prelude_list_for_each_safe(&ptr->source_list, tmp, n) {
 			entry = prelude_list_entry(tmp, idmef_source_t, list);
 			idmef_source_destroy(entry);
 		}
@@ -14150,7 +14829,7 @@ static void idmef_alert_destroy_internal(idmef_alert_t *ptr)
 		prelude_list_t *n, *tmp;
 		idmef_target_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->target_list) {
+		prelude_list_for_each_safe(&ptr->target_list, tmp, n) {
 			entry = prelude_list_entry(tmp, idmef_target_t, list);
 			idmef_target_destroy(entry);
 		}
@@ -14165,7 +14844,7 @@ static void idmef_alert_destroy_internal(idmef_alert_t *ptr)
 		prelude_list_t *n, *tmp;
 		idmef_additional_data_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->additional_data_list) {
+		prelude_list_for_each_safe(&ptr->additional_data_list, tmp, n) {
 			entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
 			idmef_additional_data_destroy(entry);
 		}
@@ -14223,17 +14902,17 @@ uint64_t idmef_alert_get_messageid(idmef_alert_t *ptr)
 	return ptr->messageid;
 }
 
-idmef_value_t *idmef_alert_get_messageid_value(idmef_alert_t *ptr)
+int idmef_alert_get_messageid_value(idmef_alert_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_uint64(ptr->messageid);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_uint64(value, ptr->messageid);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -14254,15 +14933,17 @@ void idmef_alert_set_messageid(idmef_alert_t *ptr, uint64_t messageid)
 /**
  * idmef_alert_new_messageid:
  * @ptr: pointer to a #idmef_alert_t object.
+ * @ret: pointer to an address where to store the created #uint64_t object.
  *
  * Create a new messageid object, children of #idmef_alert_t.
  * If @ptr already contain a #uint64_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint64_t *idmef_alert_new_messageid(idmef_alert_t *ptr)
+int idmef_alert_new_messageid(idmef_alert_t *ptr, uint64_t **ret)
 {
-	return &ptr->messageid;
+        *ret = &ptr->messageid;
+	return 0;
 }
 
 /**
@@ -14278,12 +14959,14 @@ idmef_analyzer_t *idmef_alert_get_analyzer(idmef_alert_t *ptr)
 	return ptr->analyzer;
 }
 
-idmef_value_t *idmef_alert_get_analyzer_value(idmef_alert_t *ptr)
+int idmef_alert_get_analyzer_value(idmef_alert_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->analyzer )
-		return NULL;
+	if ( ! ptr->analyzer ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->analyzer, IDMEF_OBJECT_TYPE_ANALYZER);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_ANALYZER, ptr->analyzer);
 }
 
 /**
@@ -14307,18 +14990,22 @@ void idmef_alert_set_analyzer(idmef_alert_t *ptr, idmef_analyzer_t *analyzer)
 /**
  * idmef_alert_new_analyzer:
  * @ptr: pointer to a #idmef_alert_t object.
+ * @ret: pointer to an address where to store the created #idmef_analyzer_t object.
  *
  * Create a new analyzer object, children of #idmef_alert_t.
  * If @ptr already contain a #idmef_analyzer_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_analyzer_t *idmef_alert_new_analyzer(idmef_alert_t *ptr)
+int idmef_alert_new_analyzer(idmef_alert_t *ptr, idmef_analyzer_t **ret)
 {
-	if ( ! ptr->analyzer )
-		ptr->analyzer = idmef_analyzer_new();
+        int retval;
 
-	return ptr->analyzer;
+	if ( ! ptr->analyzer )
+		retval = idmef_analyzer_new(&ptr->analyzer);
+
+        *ret = ptr->analyzer;
+	return 0;
 }
 
 /**
@@ -14334,17 +15021,17 @@ idmef_time_t *idmef_alert_get_create_time(idmef_alert_t *ptr)
 	return &ptr->create_time;
 }
 
-idmef_value_t *idmef_alert_get_create_time_value(idmef_alert_t *ptr)
+int idmef_alert_get_create_time_value(idmef_alert_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_time(&ptr->create_time);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_time(value, &ptr->create_time);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -14367,17 +15054,19 @@ void idmef_alert_set_create_time(idmef_alert_t *ptr, idmef_time_t *create_time)
 /**
  * idmef_alert_new_create_time:
  * @ptr: pointer to a #idmef_alert_t object.
+ * @ret: pointer to an address where to store the created #idmef_time_t object.
  *
  * Create a new create_time object, children of #idmef_alert_t.
  * If @ptr already contain a #idmef_time_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_time_t *idmef_alert_new_create_time(idmef_alert_t *ptr)
+int idmef_alert_new_create_time(idmef_alert_t *ptr, idmef_time_t **ret)
 {
 	idmef_time_destroy_internal(&ptr->create_time);
 
-	return &ptr->create_time;
+        *ret = &ptr->create_time;
+	return 0;
 }
 
 /**
@@ -14393,12 +15082,14 @@ idmef_classification_t *idmef_alert_get_classification(idmef_alert_t *ptr)
 	return ptr->classification;
 }
 
-idmef_value_t *idmef_alert_get_classification_value(idmef_alert_t *ptr)
+int idmef_alert_get_classification_value(idmef_alert_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->classification )
-		return NULL;
+	if ( ! ptr->classification ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->classification, IDMEF_OBJECT_TYPE_CLASSIFICATION);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_CLASSIFICATION, ptr->classification);
 }
 
 /**
@@ -14422,18 +15113,22 @@ void idmef_alert_set_classification(idmef_alert_t *ptr, idmef_classification_t *
 /**
  * idmef_alert_new_classification:
  * @ptr: pointer to a #idmef_alert_t object.
+ * @ret: pointer to an address where to store the created #idmef_classification_t object.
  *
  * Create a new classification object, children of #idmef_alert_t.
  * If @ptr already contain a #idmef_classification_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_classification_t *idmef_alert_new_classification(idmef_alert_t *ptr)
+int idmef_alert_new_classification(idmef_alert_t *ptr, idmef_classification_t **ret)
 {
-	if ( ! ptr->classification )
-		ptr->classification = idmef_classification_new();
+        int retval;
 
-	return ptr->classification;
+	if ( ! ptr->classification )
+		retval = idmef_classification_new(&ptr->classification);
+
+        *ret = ptr->classification;
+	return 0;
 }
 
 /**
@@ -14449,20 +15144,22 @@ idmef_time_t *idmef_alert_get_detect_time(idmef_alert_t *ptr)
 	return ptr->detect_time;
 }
 
-idmef_value_t *idmef_alert_get_detect_time_value(idmef_alert_t *ptr)
+int idmef_alert_get_detect_time_value(idmef_alert_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->detect_time )
-		return NULL;
+	if ( ! ptr->detect_time ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_time(ptr->detect_time);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_time(value, ptr->detect_time);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -14486,20 +15183,26 @@ void idmef_alert_set_detect_time(idmef_alert_t *ptr, idmef_time_t *detect_time)
 /**
  * idmef_alert_new_detect_time:
  * @ptr: pointer to a #idmef_alert_t object.
+ * @ret: pointer to an address where to store the created #idmef_time_t object.
  *
  * Create a new detect_time object, children of #idmef_alert_t.
  * If @ptr already contain a #idmef_time_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_time_t *idmef_alert_new_detect_time(idmef_alert_t *ptr)
+int idmef_alert_new_detect_time(idmef_alert_t *ptr, idmef_time_t **ret)
 {
+        int retval;
+
 	if ( ptr->detect_time )
 		idmef_time_destroy(ptr->detect_time);
 		
-	ptr->detect_time = idmef_time_new();
+	retval = idmef_time_new(&ptr->detect_time);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->detect_time;
+        *ret = ptr->detect_time;
+	return 0;
 }
 
 /**
@@ -14515,20 +15218,22 @@ idmef_time_t *idmef_alert_get_analyzer_time(idmef_alert_t *ptr)
 	return ptr->analyzer_time;
 }
 
-idmef_value_t *idmef_alert_get_analyzer_time_value(idmef_alert_t *ptr)
+int idmef_alert_get_analyzer_time_value(idmef_alert_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->analyzer_time )
-		return NULL;
+	if ( ! ptr->analyzer_time ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_time(ptr->analyzer_time);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_time(value, ptr->analyzer_time);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -14552,20 +15257,26 @@ void idmef_alert_set_analyzer_time(idmef_alert_t *ptr, idmef_time_t *analyzer_ti
 /**
  * idmef_alert_new_analyzer_time:
  * @ptr: pointer to a #idmef_alert_t object.
+ * @ret: pointer to an address where to store the created #idmef_time_t object.
  *
  * Create a new analyzer_time object, children of #idmef_alert_t.
  * If @ptr already contain a #idmef_time_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_time_t *idmef_alert_new_analyzer_time(idmef_alert_t *ptr)
+int idmef_alert_new_analyzer_time(idmef_alert_t *ptr, idmef_time_t **ret)
 {
+        int retval;
+
 	if ( ptr->analyzer_time )
 		idmef_time_destroy(ptr->analyzer_time);
 		
-	ptr->analyzer_time = idmef_time_new();
+	retval = idmef_time_new(&ptr->analyzer_time);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->analyzer_time;
+        *ret = ptr->analyzer_time;
+	return 0;
 }
 
 /**
@@ -14581,7 +15292,12 @@ idmef_time_t *idmef_alert_new_analyzer_time(idmef_alert_t *ptr)
  */
 idmef_source_t *idmef_alert_get_next_source(idmef_alert_t *ptr, idmef_source_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->source_list, idmef_source_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->source_list, tmp)
+                return prelude_list_entry(tmp, idmef_source_t, list);
+
+        return NULL;
 }
 
 /**
@@ -14593,58 +15309,62 @@ idmef_source_t *idmef_alert_get_next_source(idmef_alert_t *ptr, idmef_source_t *
  */
 void idmef_alert_set_source(idmef_alert_t *ptr, idmef_source_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->source_list);
+	prelude_list_add_tail(&ptr->source_list, &object->list);
 }
 
 /**
- * idmef_alert_new_HASH(0x8025ab20):
+ * idmef_alert_new_source:
  * @ptr: pointer to a #idmef_alert_t object.
- * 
- * Create a new HASH(0x8025ab20) children of @ptr,
+ * @ret: pointer to an address where to store the created #idmef_source_t object.
+ *
+ * Create a new #idmef_source_t children of @ptr,
  * and add it to the tail of @ptr list of #idmef_source_t object.
  * 
- * Returns: a pointer to the created #idmef_source_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_source_t *idmef_alert_new_source(idmef_alert_t *ptr)
-{
-	idmef_source_t *object;
+int idmef_alert_new_source(idmef_alert_t *ptr, idmef_source_t **ret)
+{	
+        int retval;
+
+	retval = idmef_source_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = idmef_source_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->source_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->source_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_alert_get_source_value(idmef_alert_t *ptr)
+
+int idmef_alert_get_source_value(idmef_alert_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	idmef_source_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->source_list) {
+	prelude_list_for_each(&ptr->source_list, tmp) {
 		entry = prelude_list_entry(tmp, idmef_source_t, list);
 
-		val = idmef_value_new_object(entry, IDMEF_OBJECT_TYPE_SOURCE);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_SOURCE, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
@@ -14661,7 +15381,12 @@ idmef_value_t *idmef_alert_get_source_value(idmef_alert_t *ptr)
  */
 idmef_target_t *idmef_alert_get_next_target(idmef_alert_t *ptr, idmef_target_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->target_list, idmef_target_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->target_list, tmp)
+                return prelude_list_entry(tmp, idmef_target_t, list);
+
+        return NULL;
 }
 
 /**
@@ -14673,58 +15398,62 @@ idmef_target_t *idmef_alert_get_next_target(idmef_alert_t *ptr, idmef_target_t *
  */
 void idmef_alert_set_target(idmef_alert_t *ptr, idmef_target_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->target_list);
+	prelude_list_add_tail(&ptr->target_list, &object->list);
 }
 
 /**
- * idmef_alert_new_HASH(0x8025ab8c):
+ * idmef_alert_new_target:
  * @ptr: pointer to a #idmef_alert_t object.
- * 
- * Create a new HASH(0x8025ab8c) children of @ptr,
+ * @ret: pointer to an address where to store the created #idmef_target_t object.
+ *
+ * Create a new #idmef_target_t children of @ptr,
  * and add it to the tail of @ptr list of #idmef_target_t object.
  * 
- * Returns: a pointer to the created #idmef_target_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_target_t *idmef_alert_new_target(idmef_alert_t *ptr)
-{
-	idmef_target_t *object;
+int idmef_alert_new_target(idmef_alert_t *ptr, idmef_target_t **ret)
+{	
+        int retval;
+
+	retval = idmef_target_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = idmef_target_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->target_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->target_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_alert_get_target_value(idmef_alert_t *ptr)
+
+int idmef_alert_get_target_value(idmef_alert_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	idmef_target_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->target_list) {
+	prelude_list_for_each(&ptr->target_list, tmp) {
 		entry = prelude_list_entry(tmp, idmef_target_t, list);
 
-		val = idmef_value_new_object(entry, IDMEF_OBJECT_TYPE_TARGET);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_TARGET, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
@@ -14741,12 +15470,14 @@ idmef_assessment_t *idmef_alert_get_assessment(idmef_alert_t *ptr)
 	return ptr->assessment;
 }
 
-idmef_value_t *idmef_alert_get_assessment_value(idmef_alert_t *ptr)
+int idmef_alert_get_assessment_value(idmef_alert_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->assessment )
-		return NULL;
+	if ( ! ptr->assessment ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->assessment, IDMEF_OBJECT_TYPE_ASSESSMENT);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_ASSESSMENT, ptr->assessment);
 }
 
 /**
@@ -14770,18 +15501,22 @@ void idmef_alert_set_assessment(idmef_alert_t *ptr, idmef_assessment_t *assessme
 /**
  * idmef_alert_new_assessment:
  * @ptr: pointer to a #idmef_alert_t object.
+ * @ret: pointer to an address where to store the created #idmef_assessment_t object.
  *
  * Create a new assessment object, children of #idmef_alert_t.
  * If @ptr already contain a #idmef_assessment_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_assessment_t *idmef_alert_new_assessment(idmef_alert_t *ptr)
+int idmef_alert_new_assessment(idmef_alert_t *ptr, idmef_assessment_t **ret)
 {
-	if ( ! ptr->assessment )
-		ptr->assessment = idmef_assessment_new();
+        int retval;
 
-	return ptr->assessment;
+	if ( ! ptr->assessment )
+		retval = idmef_assessment_new(&ptr->assessment);
+
+        *ret = ptr->assessment;
+	return 0;
 }
 
 /**
@@ -14797,7 +15532,12 @@ idmef_assessment_t *idmef_alert_new_assessment(idmef_alert_t *ptr)
  */
 idmef_additional_data_t *idmef_alert_get_next_additional_data(idmef_alert_t *ptr, idmef_additional_data_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->additional_data_list, idmef_additional_data_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->additional_data_list, tmp)
+                return prelude_list_entry(tmp, idmef_additional_data_t, list);
+
+        return NULL;
 }
 
 /**
@@ -14809,58 +15549,62 @@ idmef_additional_data_t *idmef_alert_get_next_additional_data(idmef_alert_t *ptr
  */
 void idmef_alert_set_additional_data(idmef_alert_t *ptr, idmef_additional_data_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->additional_data_list);
+	prelude_list_add_tail(&ptr->additional_data_list, &object->list);
 }
 
 /**
- * idmef_alert_new_HASH(0x8025ac94):
+ * idmef_alert_new_additional_data:
  * @ptr: pointer to a #idmef_alert_t object.
- * 
- * Create a new HASH(0x8025ac94) children of @ptr,
+ * @ret: pointer to an address where to store the created #idmef_additional_data_t object.
+ *
+ * Create a new #idmef_additional_data_t children of @ptr,
  * and add it to the tail of @ptr list of #idmef_additional_data_t object.
  * 
- * Returns: a pointer to the created #idmef_additional_data_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_additional_data_t *idmef_alert_new_additional_data(idmef_alert_t *ptr)
-{
-	idmef_additional_data_t *object;
+int idmef_alert_new_additional_data(idmef_alert_t *ptr, idmef_additional_data_t **ret)
+{	
+        int retval;
+
+	retval = idmef_additional_data_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = idmef_additional_data_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->additional_data_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->additional_data_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_alert_get_additional_data_value(idmef_alert_t *ptr)
+
+int idmef_alert_get_additional_data_value(idmef_alert_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	idmef_additional_data_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->additional_data_list) {
+	prelude_list_for_each(&ptr->additional_data_list, tmp) {
 		entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
 
-		val = idmef_value_new_object(entry, IDMEF_OBJECT_TYPE_ADDITIONAL_DATA);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_ADDITIONAL_DATA, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
@@ -14877,9 +15621,9 @@ idmef_alert_type_t idmef_alert_get_type(idmef_alert_t *ptr)
 	return ptr->type;
 }
 
-idmef_value_t *idmef_alert_get_type_value(idmef_alert_t *ptr)
+int idmef_alert_get_type_value(idmef_alert_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_ALERT_TYPE, ptr->type);
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_ALERT_TYPE, ptr->type);
 }
 
 /** 
@@ -14928,28 +15672,36 @@ void idmef_alert_set_tool_alert(idmef_alert_t *ptr, idmef_tool_alert_t *tool_ale
 	ptr->type = IDMEF_ALERT_TYPE_TOOL;
 }
 
-idmef_value_t *idmef_alert_get_tool_alert_value(idmef_alert_t *ptr)
+int idmef_alert_get_tool_alert_value(idmef_alert_t *ptr, idmef_value_t **value)
 {
-	return ((ptr->type == IDMEF_ALERT_TYPE_TOOL) ?
-		idmef_value_new_object(ptr->detail.tool_alert, IDMEF_OBJECT_TYPE_TOOL_ALERT) :
-		NULL);
+        if ( ptr->type != IDMEF_ALERT_TYPE_TOOL ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_TOOL_ALERT,
+                                      ptr->detail.tool_alert);                        
 }
 
 /**
  * idmef_alert_new_tool_alert:
  * @ptr: pointer to a #idmef_alert_t object.
+ * @ret: pointer where to store the created #idmef_tool_alert_t object.
  *
- * Create a new tool_alert object, children of #idmef_alert_t.
+ * Create a new idmef_tool_alert_t object, children of #idmef_alert_t.
  * If @ptr already contain a #idmef_tool_alert_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_tool_alert_t *idmef_alert_new_tool_alert(idmef_alert_t *ptr)
+int idmef_alert_new_tool_alert(idmef_alert_t *ptr, idmef_tool_alert_t **ret)
 {
+        int retval;
+
 	switch ( ptr->type ) {
 
 		case IDMEF_ALERT_TYPE_TOOL:
-			return ptr->detail.tool_alert;
+                        *ret = ptr->detail.tool_alert;
+			return 0;
 
 		case IDMEF_ALERT_TYPE_CORRELATION:
 			idmef_correlation_alert_destroy(ptr->detail.correlation_alert);
@@ -14963,10 +15715,14 @@ idmef_tool_alert_t *idmef_alert_new_tool_alert(idmef_alert_t *ptr)
 			break;
 	}
 
-	ptr->detail.tool_alert = idmef_tool_alert_new();
-	ptr->type = IDMEF_ALERT_TYPE_TOOL;
+        retval = idmef_tool_alert_new(ret);
+        if ( retval < 0 )
+                return retval;
 
-	return ptr->detail.tool_alert;
+	ptr->type = IDMEF_ALERT_TYPE_TOOL;
+        ptr->detail.tool_alert = *ret;
+
+	return 0;
 }
 
 /** 
@@ -15015,24 +15771,31 @@ void idmef_alert_set_correlation_alert(idmef_alert_t *ptr, idmef_correlation_ale
 	ptr->type = IDMEF_ALERT_TYPE_CORRELATION;
 }
 
-idmef_value_t *idmef_alert_get_correlation_alert_value(idmef_alert_t *ptr)
+int idmef_alert_get_correlation_alert_value(idmef_alert_t *ptr, idmef_value_t **value)
 {
-	return ((ptr->type == IDMEF_ALERT_TYPE_CORRELATION) ?
-		idmef_value_new_object(ptr->detail.correlation_alert, IDMEF_OBJECT_TYPE_CORRELATION_ALERT) :
-		NULL);
+        if ( ptr->type != IDMEF_ALERT_TYPE_CORRELATION ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_CORRELATION_ALERT,
+                                      ptr->detail.correlation_alert);                        
 }
 
 /**
  * idmef_alert_new_correlation_alert:
  * @ptr: pointer to a #idmef_alert_t object.
+ * @ret: pointer where to store the created #idmef_correlation_alert_t object.
  *
- * Create a new correlation_alert object, children of #idmef_alert_t.
+ * Create a new idmef_correlation_alert_t object, children of #idmef_alert_t.
  * If @ptr already contain a #idmef_correlation_alert_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_correlation_alert_t *idmef_alert_new_correlation_alert(idmef_alert_t *ptr)
+int idmef_alert_new_correlation_alert(idmef_alert_t *ptr, idmef_correlation_alert_t **ret)
 {
+        int retval;
+
 	switch ( ptr->type ) {
 
 		case IDMEF_ALERT_TYPE_TOOL:
@@ -15040,7 +15803,8 @@ idmef_correlation_alert_t *idmef_alert_new_correlation_alert(idmef_alert_t *ptr)
 			break;
 
 		case IDMEF_ALERT_TYPE_CORRELATION:
-			return ptr->detail.correlation_alert;
+                        *ret = ptr->detail.correlation_alert;
+			return 0;
 
 		case IDMEF_ALERT_TYPE_OVERFLOW:
 			idmef_overflow_alert_destroy(ptr->detail.overflow_alert);
@@ -15050,10 +15814,14 @@ idmef_correlation_alert_t *idmef_alert_new_correlation_alert(idmef_alert_t *ptr)
 			break;
 	}
 
-	ptr->detail.correlation_alert = idmef_correlation_alert_new();
-	ptr->type = IDMEF_ALERT_TYPE_CORRELATION;
+        retval = idmef_correlation_alert_new(ret);
+        if ( retval < 0 )
+                return retval;
 
-	return ptr->detail.correlation_alert;
+	ptr->type = IDMEF_ALERT_TYPE_CORRELATION;
+        ptr->detail.correlation_alert = *ret;
+
+	return 0;
 }
 
 /** 
@@ -15102,24 +15870,31 @@ void idmef_alert_set_overflow_alert(idmef_alert_t *ptr, idmef_overflow_alert_t *
 	ptr->type = IDMEF_ALERT_TYPE_OVERFLOW;
 }
 
-idmef_value_t *idmef_alert_get_overflow_alert_value(idmef_alert_t *ptr)
+int idmef_alert_get_overflow_alert_value(idmef_alert_t *ptr, idmef_value_t **value)
 {
-	return ((ptr->type == IDMEF_ALERT_TYPE_OVERFLOW) ?
-		idmef_value_new_object(ptr->detail.overflow_alert, IDMEF_OBJECT_TYPE_OVERFLOW_ALERT) :
-		NULL);
+        if ( ptr->type != IDMEF_ALERT_TYPE_OVERFLOW ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_OVERFLOW_ALERT,
+                                      ptr->detail.overflow_alert);                        
 }
 
 /**
  * idmef_alert_new_overflow_alert:
  * @ptr: pointer to a #idmef_alert_t object.
+ * @ret: pointer where to store the created #idmef_overflow_alert_t object.
  *
- * Create a new overflow_alert object, children of #idmef_alert_t.
+ * Create a new idmef_overflow_alert_t object, children of #idmef_alert_t.
  * If @ptr already contain a #idmef_overflow_alert_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_overflow_alert_t *idmef_alert_new_overflow_alert(idmef_alert_t *ptr)
+int idmef_alert_new_overflow_alert(idmef_alert_t *ptr, idmef_overflow_alert_t **ret)
 {
+        int retval;
+
 	switch ( ptr->type ) {
 
 		case IDMEF_ALERT_TYPE_TOOL:
@@ -15131,124 +15906,128 @@ idmef_overflow_alert_t *idmef_alert_new_overflow_alert(idmef_alert_t *ptr)
 			break;
 
 		case IDMEF_ALERT_TYPE_OVERFLOW:
-			return ptr->detail.overflow_alert;
+                        *ret = ptr->detail.overflow_alert;
+			return 0;
 
 		default:
 			break;
 	}
 
-	ptr->detail.overflow_alert = idmef_overflow_alert_new();
-	ptr->type = IDMEF_ALERT_TYPE_OVERFLOW;
+        retval = idmef_overflow_alert_new(ret);
+        if ( retval < 0 )
+                return retval;
 
-	return ptr->detail.overflow_alert;
+	ptr->type = IDMEF_ALERT_TYPE_OVERFLOW;
+        ptr->detail.overflow_alert = *ret;
+
+	return 0;
 }
 
 /**
  * idmef_heartbeat_new:
- * 
+ * @ret: Pointer where to store the created #idmef_heartbeat_t object.
+ *
  * Create a new #idmef_heartbeat_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_heartbeat_t *idmef_heartbeat_new(void)
+int idmef_heartbeat_new(idmef_heartbeat_t **ret)
 {
-	idmef_heartbeat_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
-
-	PRELUDE_INIT_LIST_HEAD(&ret->additional_data_list);
+	prelude_list_init(&(*ret)->additional_data_list);
     
 
-	return ret;
+	return 0;
 
 }
 
-void *idmef_heartbeat_get_child(void *p, idmef_child_t child)
+int idmef_heartbeat_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_heartbeat_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_heartbeat_get_messageid_value(ptr);
+			return idmef_heartbeat_get_messageid_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return ptr->analyzer;
+                        *childptr = ptr->analyzer;
+                        return 0;
 
 		case 2:
-			return idmef_heartbeat_get_create_time_value(ptr);
+			return idmef_heartbeat_get_create_time_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 3:
-			return idmef_heartbeat_get_analyzer_time_value(ptr);
+			return idmef_heartbeat_get_analyzer_time_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 4:
-			return &ptr->additional_data_list;
+                        *childptr = &ptr->additional_data_list;
+			return 0;
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_heartbeat_new_child(void *p, idmef_child_t child, int n)
+int idmef_heartbeat_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_heartbeat_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_heartbeat_new_messageid(ptr);
+			return idmef_heartbeat_new_messageid(ptr, (uint64_t **) ret);
 
 		case 1:
-			return idmef_heartbeat_new_analyzer(ptr);
+			return idmef_heartbeat_new_analyzer(ptr, (idmef_analyzer_t **) ret);
 
 		case 2:
-			return idmef_heartbeat_new_create_time(ptr);
+			return idmef_heartbeat_new_create_time(ptr, (idmef_time_t **) ret);
 
 		case 3:
-			return idmef_heartbeat_new_analyzer_time(ptr);
+			return idmef_heartbeat_new_analyzer_time(ptr, (idmef_time_t **) ret);
 
 		case 4: {
                         int i, j;
+                        int retval;
 			prelude_list_t *tmp;
-			void *entry = NULL;
 
 			if ( n < 0 ) {
 				 /* n < 0 denotes that we just have to add a list element */
 				
-				 entry = idmef_heartbeat_new_additional_data(ptr);
+				 retval = idmef_heartbeat_new_additional_data(ptr, (idmef_additional_data_t **) ret);
 			} else {
 				/* n >= 0, so the new element has to be n-th in the list  */
 			
 				/* get n-th element of the list */
 				i = 0;
-				prelude_list_for_each(tmp, &ptr->additional_data_list) {
-			    		entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
+				prelude_list_for_each(&ptr->additional_data_list, tmp) {
+			    		*ret = prelude_list_entry(tmp, idmef_additional_data_t, list);
 					if ( i++ == n )
-						return entry;
+						return 0;
 				
 				}
 			
 				/* we must add n-i list elements */
 				for ( j = i; j <= n; j++ ) {
-			    		entry = idmef_heartbeat_new_additional_data(ptr);
-					if ( ! entry )
-						return NULL; /* out of memory? */
+			    		retval = idmef_heartbeat_new_additional_data(ptr, (idmef_additional_data_t **) ret);
+					if ( retval < 0 )
+						return retval;
 				}
 			}
 			
-			return entry;
+			return 0;
 		}
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_heartbeat_destroy_internal(idmef_heartbeat_t *ptr)
@@ -15270,7 +16049,7 @@ static void idmef_heartbeat_destroy_internal(idmef_heartbeat_t *ptr)
 		prelude_list_t *n, *tmp;
 		idmef_additional_data_t *entry;
 
-		prelude_list_for_each_safe(tmp, n, &ptr->additional_data_list) {
+		prelude_list_for_each_safe(&ptr->additional_data_list, tmp, n) {
 			entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
 			idmef_additional_data_destroy(entry);
 		}
@@ -15307,17 +16086,17 @@ uint64_t idmef_heartbeat_get_messageid(idmef_heartbeat_t *ptr)
 	return ptr->messageid;
 }
 
-idmef_value_t *idmef_heartbeat_get_messageid_value(idmef_heartbeat_t *ptr)
+int idmef_heartbeat_get_messageid_value(idmef_heartbeat_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_uint64(ptr->messageid);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_uint64(value, ptr->messageid);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -15338,15 +16117,17 @@ void idmef_heartbeat_set_messageid(idmef_heartbeat_t *ptr, uint64_t messageid)
 /**
  * idmef_heartbeat_new_messageid:
  * @ptr: pointer to a #idmef_heartbeat_t object.
+ * @ret: pointer to an address where to store the created #uint64_t object.
  *
  * Create a new messageid object, children of #idmef_heartbeat_t.
  * If @ptr already contain a #uint64_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-uint64_t *idmef_heartbeat_new_messageid(idmef_heartbeat_t *ptr)
+int idmef_heartbeat_new_messageid(idmef_heartbeat_t *ptr, uint64_t **ret)
 {
-	return &ptr->messageid;
+        *ret = &ptr->messageid;
+	return 0;
 }
 
 /**
@@ -15362,12 +16143,14 @@ idmef_analyzer_t *idmef_heartbeat_get_analyzer(idmef_heartbeat_t *ptr)
 	return ptr->analyzer;
 }
 
-idmef_value_t *idmef_heartbeat_get_analyzer_value(idmef_heartbeat_t *ptr)
+int idmef_heartbeat_get_analyzer_value(idmef_heartbeat_t *ptr, idmef_value_t **value)
 {
-	if ( ! ptr->analyzer )
-		return NULL;
+	if ( ! ptr->analyzer ) {
+		*value = NULL;
+                return 0;
+        }
 
-	return idmef_value_new_object(ptr->analyzer, IDMEF_OBJECT_TYPE_ANALYZER);
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_ANALYZER, ptr->analyzer);
 }
 
 /**
@@ -15391,18 +16174,22 @@ void idmef_heartbeat_set_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t *anal
 /**
  * idmef_heartbeat_new_analyzer:
  * @ptr: pointer to a #idmef_heartbeat_t object.
+ * @ret: pointer to an address where to store the created #idmef_analyzer_t object.
  *
  * Create a new analyzer object, children of #idmef_heartbeat_t.
  * If @ptr already contain a #idmef_analyzer_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_analyzer_t *idmef_heartbeat_new_analyzer(idmef_heartbeat_t *ptr)
+int idmef_heartbeat_new_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t **ret)
 {
-	if ( ! ptr->analyzer )
-		ptr->analyzer = idmef_analyzer_new();
+        int retval;
 
-	return ptr->analyzer;
+	if ( ! ptr->analyzer )
+		retval = idmef_analyzer_new(&ptr->analyzer);
+
+        *ret = ptr->analyzer;
+	return 0;
 }
 
 /**
@@ -15418,17 +16205,17 @@ idmef_time_t *idmef_heartbeat_get_create_time(idmef_heartbeat_t *ptr)
 	return &ptr->create_time;
 }
 
-idmef_value_t *idmef_heartbeat_get_create_time_value(idmef_heartbeat_t *ptr)
+int idmef_heartbeat_get_create_time_value(idmef_heartbeat_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_time(&ptr->create_time);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_time(value, &ptr->create_time);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -15451,17 +16238,19 @@ void idmef_heartbeat_set_create_time(idmef_heartbeat_t *ptr, idmef_time_t *creat
 /**
  * idmef_heartbeat_new_create_time:
  * @ptr: pointer to a #idmef_heartbeat_t object.
+ * @ret: pointer to an address where to store the created #idmef_time_t object.
  *
  * Create a new create_time object, children of #idmef_heartbeat_t.
  * If @ptr already contain a #idmef_time_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_time_t *idmef_heartbeat_new_create_time(idmef_heartbeat_t *ptr)
+int idmef_heartbeat_new_create_time(idmef_heartbeat_t *ptr, idmef_time_t **ret)
 {
 	idmef_time_destroy_internal(&ptr->create_time);
 
-	return &ptr->create_time;
+        *ret = &ptr->create_time;
+	return 0;
 }
 
 /**
@@ -15477,20 +16266,22 @@ idmef_time_t *idmef_heartbeat_get_analyzer_time(idmef_heartbeat_t *ptr)
 	return ptr->analyzer_time;
 }
 
-idmef_value_t *idmef_heartbeat_get_analyzer_time_value(idmef_heartbeat_t *ptr)
+int idmef_heartbeat_get_analyzer_time_value(idmef_heartbeat_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
-	if ( ! ptr->analyzer_time )
-		return NULL;
+	if ( ! ptr->analyzer_time ) {
+                *value = NULL;
+		return 0;
+        }
 
+        int ret;
 
-	value = idmef_value_new_time(ptr->analyzer_time);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_time(value, ptr->analyzer_time);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -15514,20 +16305,26 @@ void idmef_heartbeat_set_analyzer_time(idmef_heartbeat_t *ptr, idmef_time_t *ana
 /**
  * idmef_heartbeat_new_analyzer_time:
  * @ptr: pointer to a #idmef_heartbeat_t object.
+ * @ret: pointer to an address where to store the created #idmef_time_t object.
  *
  * Create a new analyzer_time object, children of #idmef_heartbeat_t.
  * If @ptr already contain a #idmef_time_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_time_t *idmef_heartbeat_new_analyzer_time(idmef_heartbeat_t *ptr)
+int idmef_heartbeat_new_analyzer_time(idmef_heartbeat_t *ptr, idmef_time_t **ret)
 {
+        int retval;
+
 	if ( ptr->analyzer_time )
 		idmef_time_destroy(ptr->analyzer_time);
 		
-	ptr->analyzer_time = idmef_time_new();
+	retval = idmef_time_new(&ptr->analyzer_time);
+        if ( retval < 0 )
+               return retval;
 
-	return ptr->analyzer_time;
+        *ret = ptr->analyzer_time;
+	return 0;
 }
 
 /**
@@ -15543,7 +16340,12 @@ idmef_time_t *idmef_heartbeat_new_analyzer_time(idmef_heartbeat_t *ptr)
  */
 idmef_additional_data_t *idmef_heartbeat_get_next_additional_data(idmef_heartbeat_t *ptr, idmef_additional_data_t *object)
 {
-    	return prelude_list_get_next(object, &ptr->additional_data_list, idmef_additional_data_t, list);
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->additional_data_list, tmp)
+                return prelude_list_entry(tmp, idmef_additional_data_t, list);
+
+        return NULL;
 }
 
 /**
@@ -15555,79 +16357,82 @@ idmef_additional_data_t *idmef_heartbeat_get_next_additional_data(idmef_heartbea
  */
 void idmef_heartbeat_set_additional_data(idmef_heartbeat_t *ptr, idmef_additional_data_t *object)
 {
-	prelude_list_add_tail(&object->list, &ptr->additional_data_list);
+	prelude_list_add_tail(&ptr->additional_data_list, &object->list);
 }
 
 /**
- * idmef_heartbeat_new_HASH(0x8025bee8):
+ * idmef_heartbeat_new_additional_data:
  * @ptr: pointer to a #idmef_heartbeat_t object.
- * 
- * Create a new HASH(0x8025bee8) children of @ptr,
+ * @ret: pointer to an address where to store the created #idmef_additional_data_t object.
+ *
+ * Create a new #idmef_additional_data_t children of @ptr,
  * and add it to the tail of @ptr list of #idmef_additional_data_t object.
  * 
- * Returns: a pointer to the created #idmef_additional_data_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_additional_data_t *idmef_heartbeat_new_additional_data(idmef_heartbeat_t *ptr)
-{
-	idmef_additional_data_t *object;
+int idmef_heartbeat_new_additional_data(idmef_heartbeat_t *ptr, idmef_additional_data_t **ret)
+{	
+        int retval;
+
+	retval = idmef_additional_data_new(ret);
+	if ( retval < 0 )
+		return retval;
 	
-	object = idmef_additional_data_new();
-	if ( ! object )
-		return NULL;
+	prelude_list_add_tail(&ptr->additional_data_list, &(*ret)->list);
 	
-	prelude_list_add_tail(&object->list, &ptr->additional_data_list);
-	
-	return object;
+	return 0;
 }
 
-idmef_value_t *idmef_heartbeat_get_additional_data_value(idmef_heartbeat_t *ptr)
+
+int idmef_heartbeat_get_additional_data_value(idmef_heartbeat_t *ptr, idmef_value_t **value)
 {
+        int ret;
+	idmef_value_t *val;
         prelude_list_t *tmp;
-	idmef_value_t *val, *list_val;
 	idmef_additional_data_t *entry;
 	
-	list_val = idmef_value_new_list();
-	if ( ! list_val )
-		return NULL;
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
 	
-	prelude_list_for_each(tmp, &ptr->additional_data_list) {
+	prelude_list_for_each(&ptr->additional_data_list, tmp) {
 		entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
 
-		val = idmef_value_new_object(entry, IDMEF_OBJECT_TYPE_ADDITIONAL_DATA);
-		if ( ! val ) {
-			idmef_value_destroy(list_val);
-			return NULL;
+		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_ADDITIONAL_DATA, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
 		}
 
-		if ( idmef_value_list_add(list_val, val) < 0 ) {
-			idmef_value_destroy(list_val);
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
 			idmef_value_destroy(val);
-			return NULL;
+			return ret;
 		}
 	}
 	
-	return list_val;
+	return 0;
 }
 
 
 /**
  * idmef_message_new:
- * 
+ * @ret: Pointer where to store the created #idmef_message_t object.
+ *
  * Create a new #idmef_message_t object.
  *
- * Returns: a pointer to the newly created object, or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
-idmef_message_t *idmef_message_new(void)
+int idmef_message_new(idmef_message_t **ret)
 {
-	idmef_message_t *ret;
+	*ret = calloc(1, sizeof(**ret));
+	if ( ! *ret )
+		return prelude_error_from_errno(errno);
 
-	ret = calloc(1, sizeof(*ret));
-	if ( ! ret )
-		return NULL;
+	(*ret)->refcount = 1;
 
-	ret->refcount = 1;
-
-	return ret;
+	return 0;
 
 }
 
@@ -15647,56 +16452,50 @@ idmef_message_t *idmef_message_ref(idmef_message_t *ptr)
 	return ptr;
 }
 
-void *idmef_message_get_child(void *p, idmef_child_t child)
+int idmef_message_get_child(void *p, idmef_child_t child, void **childptr)
 {
 	idmef_message_t *ptr = p;
 	
 	switch ( child ) {
 
 		case 0:
-			return idmef_message_get_version_value(ptr);
+			return idmef_message_get_version_value(ptr, (idmef_value_t **) childptr);
+
 
 		case 1:
-			return idmef_message_get_type_value(ptr);
+			return idmef_message_get_type_value(ptr, (idmef_value_t **) childptr);
 
-		case 2: 
-			if ( ptr->type == IDMEF_MESSAGE_TYPE_ALERT ) 
-				return ptr->message.alert;
-			return NULL;   	   
+		case 2:
+                        *childptr = ( ptr->type == IDMEF_MESSAGE_TYPE_ALERT ) ? ptr->message.alert : NULL;
+			return 0;   	   
 
-		case 3: 
-			if ( ptr->type == IDMEF_MESSAGE_TYPE_HEARTBEAT ) 
-				return ptr->message.heartbeat;
-			return NULL;   	   
+		case 3:
+                        *childptr = ( ptr->type == IDMEF_MESSAGE_TYPE_HEARTBEAT ) ? ptr->message.heartbeat : NULL;
+			return 0;   	   
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
-
 }
 
-void *idmef_message_new_child(void *p, idmef_child_t child, int n)
+int idmef_message_new_child(void *p, idmef_child_t child, int n, void **ret)
 {
 	idmef_message_t *ptr = p;
     
 	switch ( child ) {
 
 		case 0:
-			return idmef_message_new_version(ptr);
+			return idmef_message_new_version(ptr, (prelude_string_t **) ret);
 
 		case 2:
-			return idmef_message_new_alert(ptr);
+			return idmef_message_new_alert(ptr, (idmef_alert_t **) ret);
 
 		case 3:
-			return idmef_message_new_heartbeat(ptr);
+			return idmef_message_new_heartbeat(ptr, (idmef_heartbeat_t **) ret);
 
 		default:
-			return NULL;
+			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
-
-	return NULL;
 }
 
 static void idmef_message_destroy_internal(idmef_message_t *ptr)
@@ -15737,17 +16536,17 @@ prelude_string_t *idmef_message_get_version(idmef_message_t *ptr)
 	return &ptr->version;
 }
 
-idmef_value_t *idmef_message_get_version_value(idmef_message_t *ptr)
+int idmef_message_get_version_value(idmef_message_t *ptr, idmef_value_t **value)
 {
-	idmef_value_t *value;
+        int ret;
 
-	value = idmef_value_new_string(&ptr->version);
-	if ( ! value )
-		return NULL;
+	ret = idmef_value_new_string(value, &ptr->version);
+	if ( ret < 0 )
+		return ret;
 
-	idmef_value_dont_have_own_data(value);
+	idmef_value_dont_have_own_data(*value);
 
-	return value;
+	return 0;
 }
 
 /**
@@ -15770,17 +16569,19 @@ void idmef_message_set_version(idmef_message_t *ptr, prelude_string_t *version)
 /**
  * idmef_message_new_version:
  * @ptr: pointer to a #idmef_message_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new version object, children of #idmef_message_t.
  * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_string_t *idmef_message_new_version(idmef_message_t *ptr)
+int idmef_message_new_version(idmef_message_t *ptr, prelude_string_t **ret)
 {
 	prelude_string_destroy_internal(&ptr->version);
 
-	return &ptr->version;
+        *ret = &ptr->version;
+	return 0;
 }
 
 /** 
@@ -15796,9 +16597,9 @@ idmef_message_type_t idmef_message_get_type(idmef_message_t *ptr)
 	return ptr->type;
 }
 
-idmef_value_t *idmef_message_get_type_value(idmef_message_t *ptr)
+int idmef_message_get_type_value(idmef_message_t *ptr, idmef_value_t **value)
 {
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_MESSAGE_TYPE, ptr->type);
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_MESSAGE_TYPE, ptr->type);
 }
 
 /** 
@@ -15843,28 +16644,36 @@ void idmef_message_set_alert(idmef_message_t *ptr, idmef_alert_t *alert)
 	ptr->type = IDMEF_MESSAGE_TYPE_ALERT;
 }
 
-idmef_value_t *idmef_message_get_alert_value(idmef_message_t *ptr)
+int idmef_message_get_alert_value(idmef_message_t *ptr, idmef_value_t **value)
 {
-	return ((ptr->type == IDMEF_MESSAGE_TYPE_ALERT) ?
-		idmef_value_new_object(ptr->message.alert, IDMEF_OBJECT_TYPE_ALERT) :
-		NULL);
+        if ( ptr->type != IDMEF_MESSAGE_TYPE_ALERT ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_ALERT,
+                                      ptr->message.alert);                        
 }
 
 /**
  * idmef_message_new_alert:
  * @ptr: pointer to a #idmef_message_t object.
+ * @ret: pointer where to store the created #idmef_alert_t object.
  *
- * Create a new alert object, children of #idmef_message_t.
+ * Create a new idmef_alert_t object, children of #idmef_message_t.
  * If @ptr already contain a #idmef_alert_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_alert_t *idmef_message_new_alert(idmef_message_t *ptr)
+int idmef_message_new_alert(idmef_message_t *ptr, idmef_alert_t **ret)
 {
+        int retval;
+
 	switch ( ptr->type ) {
 
 		case IDMEF_MESSAGE_TYPE_ALERT:
-			return ptr->message.alert;
+                        *ret = ptr->message.alert;
+			return 0;
 
 		case IDMEF_MESSAGE_TYPE_HEARTBEAT:
 			idmef_heartbeat_destroy(ptr->message.heartbeat);
@@ -15874,10 +16683,14 @@ idmef_alert_t *idmef_message_new_alert(idmef_message_t *ptr)
 			break;
 	}
 
-	ptr->message.alert = idmef_alert_new();
-	ptr->type = IDMEF_MESSAGE_TYPE_ALERT;
+        retval = idmef_alert_new(ret);
+        if ( retval < 0 )
+                return retval;
 
-	return ptr->message.alert;
+	ptr->type = IDMEF_MESSAGE_TYPE_ALERT;
+        ptr->message.alert = *ret;
+
+	return 0;
 }
 
 /** 
@@ -15922,24 +16735,31 @@ void idmef_message_set_heartbeat(idmef_message_t *ptr, idmef_heartbeat_t *heartb
 	ptr->type = IDMEF_MESSAGE_TYPE_HEARTBEAT;
 }
 
-idmef_value_t *idmef_message_get_heartbeat_value(idmef_message_t *ptr)
+int idmef_message_get_heartbeat_value(idmef_message_t *ptr, idmef_value_t **value)
 {
-	return ((ptr->type == IDMEF_MESSAGE_TYPE_HEARTBEAT) ?
-		idmef_value_new_object(ptr->message.heartbeat, IDMEF_OBJECT_TYPE_HEARTBEAT) :
-		NULL);
+        if ( ptr->type != IDMEF_MESSAGE_TYPE_HEARTBEAT ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_HEARTBEAT,
+                                      ptr->message.heartbeat);                        
 }
 
 /**
  * idmef_message_new_heartbeat:
  * @ptr: pointer to a #idmef_message_t object.
+ * @ret: pointer where to store the created #idmef_heartbeat_t object.
  *
- * Create a new heartbeat object, children of #idmef_message_t.
+ * Create a new idmef_heartbeat_t object, children of #idmef_message_t.
  * If @ptr already contain a #idmef_heartbeat_t object, then it is destroyed.
  *
- * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-idmef_heartbeat_t *idmef_message_new_heartbeat(idmef_message_t *ptr)
+int idmef_message_new_heartbeat(idmef_message_t *ptr, idmef_heartbeat_t **ret)
 {
+        int retval;
+
 	switch ( ptr->type ) {
 
 		case IDMEF_MESSAGE_TYPE_ALERT:
@@ -15947,16 +16767,21 @@ idmef_heartbeat_t *idmef_message_new_heartbeat(idmef_message_t *ptr)
 			break;
 
 		case IDMEF_MESSAGE_TYPE_HEARTBEAT:
-			return ptr->message.heartbeat;
+                        *ret = ptr->message.heartbeat;
+			return 0;
 
 		default:
 			break;
 	}
 
-	ptr->message.heartbeat = idmef_heartbeat_new();
-	ptr->type = IDMEF_MESSAGE_TYPE_HEARTBEAT;
+        retval = idmef_heartbeat_new(ret);
+        if ( retval < 0 )
+                return retval;
 
-	return ptr->message.heartbeat;
+	ptr->type = IDMEF_MESSAGE_TYPE_HEARTBEAT;
+        ptr->message.heartbeat = *ret;
+
+	return 0;
 }
 
 void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg)

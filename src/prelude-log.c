@@ -48,7 +48,17 @@ static char *strip_return(char *buf, size_t len)
 
 
 
-static void syslog_log(prelude_log_priority_t priority, const char *file,
+static FILE *get_out_fd(prelude_log_t priority)
+{
+        if ( priority > PRELUDE_LOG_INFO )
+                return stderr;
+        else
+                return stdout;
+}
+
+
+
+static void syslog_log(prelude_log_t priority, const char *file,
                        const char *function, int line, const char *fmt, va_list *ap) 
 {
         int len, ret;
@@ -56,7 +66,7 @@ static void syslog_log(prelude_log_priority_t priority, const char *file,
 
         while (*fmt == '\n') fmt++;
         
-        if ( priority == PRELUDE_LOG_PRIORITY_ERROR ) {
+        if ( priority == PRELUDE_LOG_ERR ) {
                 
                 len = vsnprintf(buf, sizeof(buf), fmt, *ap);
                 if ( len < 0 || len >= sizeof(buf) )
@@ -88,26 +98,21 @@ static void syslog_log(prelude_log_priority_t priority, const char *file,
 
 
 
-static void standard_log(prelude_log_priority_t priority, const char *file,
+static void standard_log(prelude_log_t priority, const char *file,
                          const char *function, int line, const char *fmt, va_list *ap)
 {
-        FILE *out;
-        
-        if ( priority == PRELUDE_LOG_PRIORITY_ERROR ) {
-                out = stderr;                
+        FILE *out = get_out_fd(priority);
 
-                if ( global_prefix )
-                        fprintf(out, "%s", global_prefix);
-
+        if ( global_prefix )
+                fprintf(out, "%s", global_prefix);                
+                
+        if ( priority == PRELUDE_LOG_ERR ) {
                 if ( errno )
                         fprintf(out, "%s:%s:%d: %s: ", file, function, line, strerror(errno));
                 else
                         fprintf(out, "%s:%s:%d: ", file, function, line);
                         
-        } else {
-                out = stdout;
-                if ( global_prefix ) fprintf(out, "%s", global_prefix);
-        }
+        } 
         
         vfprintf(out, fmt, *ap);
 }
@@ -115,13 +120,13 @@ static void standard_log(prelude_log_priority_t priority, const char *file,
 
 
 
-void prelude_log_v(prelude_log_priority_t priority, const char *file,
+void prelude_log_v(prelude_log_t priority, const char *file,
                    const char *function, int line, const char *fmt, va_list ap) 
 {        
         if ( log_flags & PRELUDE_LOG_FLAGS_SYSLOG )
                 syslog_log(priority, file, function, line, fmt, &ap);
 
-        else if ( ! (log_flags & PRELUDE_LOG_FLAGS_QUIET) || priority == PRELUDE_LOG_PRIORITY_ERROR )
+        else if ( ! (log_flags & PRELUDE_LOG_FLAGS_QUIET) || priority > PRELUDE_LOG_INFO )
                 standard_log(priority, file, function, line, fmt, &ap);
         
         errno = 0;
@@ -141,8 +146,8 @@ void prelude_log_v(prelude_log_priority_t priority, const char *file,
  * This function should not be called directly.
  * Use the #log macro defined in prelude-log.h
  */
-void prelude_log(prelude_log_priority_t priority, const char *file,
-                 const char *function, int line, const char *fmt, ...) 
+void _prelude_log(prelude_log_t priority, const char *file,
+                  const char *function, int line, const char *fmt, ...) 
 {
         va_list ap;
         
@@ -150,21 +155,6 @@ void prelude_log(prelude_log_priority_t priority, const char *file,
         prelude_log_v(priority, file, function, line, fmt, ap);        
         va_end(ap);
 }
-
-
-
-/**
- * prelude_log_use_syslog:
- *
- * Tell the Prelude standard logger to log throught syslog.
- * (this is usefull in case the program using the log function
- * is a daemon).
- */
-void prelude_log_use_syslog(void) 
-{
-        log_flags |= PRELUDE_LOG_FLAGS_SYSLOG;
-}
-
 
 
 /**

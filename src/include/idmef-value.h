@@ -32,29 +32,31 @@
 
 typedef struct idmef_value idmef_value_t;
 
-#include "idmef-object.h"
+#include "idmef-path.h"
 
 
-idmef_value_t *idmef_value_new_int8(int8_t val);
-idmef_value_t *idmef_value_new_uint8(uint8_t val);
-idmef_value_t *idmef_value_new_int16(int16_t val);
-idmef_value_t *idmef_value_new_uint16(uint16_t val);
-idmef_value_t *idmef_value_new_int32(int32_t val);
-idmef_value_t *idmef_value_new_uint32(uint32_t val);
-idmef_value_t *idmef_value_new_int64(int64_t val);
-idmef_value_t *idmef_value_new_uint64(uint64_t val);
-idmef_value_t *idmef_value_new_float(float val);
-idmef_value_t *idmef_value_new_double(double val);
-idmef_value_t *idmef_value_new_string(prelude_string_t *string);
-idmef_value_t *idmef_value_new_time(idmef_time_t *time);
-idmef_value_t *idmef_value_new_data(idmef_data_t *data);
-idmef_value_t *idmef_value_new_object(void *object, idmef_object_type_t object_type);
-idmef_value_t *idmef_value_new_list(void);
-idmef_value_t *idmef_value_new_enum(idmef_object_type_t type, const char *buf);
-idmef_value_t *idmef_value_new_enum_string(idmef_object_type_t type, const char *buf);
-idmef_value_t *idmef_value_new_enum_numeric(idmef_object_type_t type, int val);
-idmef_value_t *idmef_value_new_for_object(idmef_object_t *object, const char *buf);
-idmef_value_t *idmef_value_new_generic(idmef_value_type_id_t type, const char *buf);
+int idmef_value_new_int8(idmef_value_t **value, int8_t val);
+int idmef_value_new_uint8(idmef_value_t **value, uint8_t val);
+int idmef_value_new_int16(idmef_value_t **value, int16_t val);
+int idmef_value_new_uint16(idmef_value_t **value, uint16_t val);
+int idmef_value_new_int32(idmef_value_t **value, int32_t val);
+int idmef_value_new_uint32(idmef_value_t **value, uint32_t val);
+int idmef_value_new_int64(idmef_value_t **value, int64_t val);
+int idmef_value_new_uint64(idmef_value_t **value, uint64_t val);
+int idmef_value_new_float(idmef_value_t **value, float val);
+int idmef_value_new_double(idmef_value_t **value, double val);
+int idmef_value_new_string(idmef_value_t **value, prelude_string_t *string);
+int idmef_value_new_time(idmef_value_t **value, idmef_time_t *time);
+int idmef_value_new_data(idmef_value_t **value, idmef_data_t *data);
+int idmef_value_new_object(idmef_value_t **value, idmef_object_type_t object_type, void *ptr);
+int idmef_value_new_list(idmef_value_t **value);
+int idmef_value_new_enum(idmef_value_t **value, idmef_object_type_t type, const char *buf);
+int idmef_value_new_enum_from_string(idmef_value_t **value, idmef_object_type_t type, const char *buf);
+int idmef_value_new_enum_from_numeric(idmef_value_t **value, idmef_object_type_t type, int val);
+
+int idmef_value_new(idmef_value_t **value, idmef_value_type_id_t type, void *ptr);
+int idmef_value_new_from_path(idmef_value_t **value, idmef_path_t *path, const char *buf);
+int idmef_value_new_from_string(idmef_value_t **value, idmef_value_type_id_t type, const char *buf);
 
 int8_t idmef_value_get_int8(idmef_value_t *val);
 uint8_t idmef_value_get_uint8(idmef_value_t *val);
@@ -73,8 +75,8 @@ idmef_data_t *idmef_value_get_data(idmef_value_t *val);
 prelude_string_t *idmef_value_get_string(idmef_value_t *val);
 
 int idmef_value_list_add(idmef_value_t *list, idmef_value_t *new);
-int idmef_value_is_list(idmef_value_t *list);
-int idmef_value_list_empty(idmef_value_t *list);
+prelude_bool_t idmef_value_is_list(idmef_value_t *list);
+prelude_bool_t idmef_value_list_is_empty(idmef_value_t *list);
 
 int idmef_value_have_own_data(idmef_value_t *value);
 int idmef_value_dont_have_own_data(idmef_value_t *value);
@@ -90,13 +92,13 @@ idmef_value_t *idmef_value_get_nth(idmef_value_t *val, int n);
 
 int idmef_value_get_count(idmef_value_t *val);
 
-idmef_value_t *idmef_value_clone(idmef_value_t *val);
+int idmef_value_clone(idmef_value_t *val, idmef_value_t **dst);
 
 idmef_value_t *idmef_value_ref(idmef_value_t *val);
 
 int idmef_value_to_string(idmef_value_t *val, prelude_string_t *out);
 
-int idmef_value_get(void *res, idmef_value_t *val);
+int idmef_value_get(idmef_value_t *val, void *res);
 
 int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_value_relation_t relation);
 

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002-2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2002-2005 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -181,16 +181,12 @@ int prelude_open_persistant_tmpfile(const char *filename, int flags, mode_t mode
         if ( fd >= 0 )
                 return fd;
 
-        if ( errno != EEXIST ) {
-                log(LOG_ERR, "couldn't open %s.\n", filename);
-                return -1;
-        }
+        if ( errno != EEXIST )
+                return prelude_error_from_errno(errno);
                 
         ret = lstat(filename, &st);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't get FD stat.\n");
-                return -1;
-        }
+        if ( ret < 0 )
+                return prelude_error_from_errno(errno);
 
         /*
          * There is a race between the lstat() and this open() call.
@@ -201,13 +197,11 @@ int prelude_open_persistant_tmpfile(const char *filename, int flags, mode_t mode
                 return open(filename, O_CREAT | flags, mode);
         
         else if ( S_ISLNK(st.st_mode) ) {
-                log(LOG_INFO, "- symlink attack detected for %s. Overriding.\n", filename);
+                prelude_log(PRELUDE_LOG_WARN, "- symlink attack detected for %s. Overriding.\n", filename);
                 
                 ret = unlink(filename);
-                if ( ret < 0 ) {
-                        log(LOG_ERR, "couldn't unlink %s.\n", filename);
-                        return -1;
-                }
+                if ( ret < 0 )
+                        return prelude_error_from_errno(errno);
                 
                 return prelude_open_persistant_tmpfile(filename, flags, mode);
                 
@@ -349,10 +343,8 @@ int prelude_get_gmt_offset(uint32_t *gmtoff)
 	time_t t = 0;
 	struct tm tm_local;
 
-	if ( ! localtime_r(&t, &tm_local) ) {
-		log(LOG_ERR, "localtime_r failed.\n");
-		return -1;
-	}
+	if ( ! localtime_r(&t, &tm_local) )
+		return prelude_error_from_errno(errno);
 
 	*gmtoff = tm_local.tm_hour * 3600 + tm_local.tm_min * 60 + tm_local.tm_sec;
 

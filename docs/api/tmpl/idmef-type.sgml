@@ -132,6 +132,8 @@ idmef-type
 @ptr: 
 @type: 
 @child: 
+@childptr: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_type_new_child ##### -->
@@ -143,6 +145,8 @@ idmef-type
 @type: 
 @child: 
 @n: 
+@childptr: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_type_get_name ##### -->

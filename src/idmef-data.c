@@ -28,6 +28,7 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include "prelude-error.h"
 #include "prelude-inttypes.h"
 #include "prelude-string.h"
 #include "idmef-data.h"
@@ -45,17 +46,17 @@
 
 
 #define IDMEF_DATA_DECL(idmef_data_type, c_type, name)		\
-idmef_data_t *idmef_data_new_ ## name(c_type val)		\
+int idmef_data_new_ ## name(idmef_data_t **nd, c_type val)     	\
 {								\
-        idmef_data_t *ptr;					\
+        int ret;              					\
 								\
-        ptr = idmef_data_new();					\
-        if ( ! ptr )						\
-                return NULL;					\
+        ret = idmef_data_new(nd);	       			\
+        if ( ret < 0 )						\
+                return ret;					\
 								\
-        idmef_data_set_ ## name(ptr, val);			\
+        idmef_data_set_ ## name(*nd, val);			\
 								\
-        return ptr;						\
+        return ret;						\
 }								\
 								\
 void idmef_data_set_ ## name(idmef_data_t *ptr, c_type val)	\
@@ -79,26 +80,16 @@ IDMEF_DATA_DECL(IDMEF_DATA_TYPE_UINT64, uint64_t, uint64)
 IDMEF_DATA_DECL(IDMEF_DATA_TYPE_FLOAT, float, float)
 
 
-
-/**
- * idmef_data_new:
- *
- * Allocate a new idmef_data_t object.
- *
- * Returns: A new idmef_data_t object, or NULL if an error occured.
- */
-idmef_data_t *idmef_data_new(void)
+int idmef_data_new(idmef_data_t **data)
 {
-        idmef_data_t *ret;
+        *data = calloc(1, sizeof(**data));
+        if ( ! *data )
+                return prelude_error_from_errno(errno);
 
-        ret = calloc(1, sizeof(*ret));
-        if ( ! ret )
-                return NULL;
+        (*data)->refcount = 1;
+        (*data)->flags |= IDMEF_DATA_OWN_STRUCTURE;
 
-        ret->refcount = 1;
-        ret->flags |= IDMEF_DATA_OWN_STRUCTURE;
-
-        return ret;
+        return 0;
 }
 
 
@@ -160,56 +151,53 @@ int idmef_data_set_ptr_nodup_fast(idmef_data_t *data, idmef_data_type_t type, vo
 
 
 
-idmef_data_t *idmef_data_new_ptr_ref_fast(idmef_data_type_t type, const void *ptr, size_t len)
+int idmef_data_new_ptr_ref_fast(idmef_data_t **data, idmef_data_type_t type, const void *ptr, size_t len)
 {
-	idmef_data_t *data;
+        int ret;
+        
+	ret = idmef_data_new(data);
+	if ( ret < 0 )
+		return ret;
 
-	data = idmef_data_new();
-	if ( ! data )
-		return NULL;
+        ret = idmef_data_set_ptr_ref_fast(*data, type, ptr, len);
+        if ( ret < 0 )
+		idmef_data_destroy(*data);
 
-	if ( idmef_data_set_ptr_ref_fast(data, type, ptr, len) < 0 ) {
-		idmef_data_destroy(data);
-		return NULL;
-	}
-
-	return data;
+	return ret;
 }
 
 
 
-idmef_data_t *idmef_data_new_ptr_dup_fast(idmef_data_type_t type, const void *ptr, size_t len)
+int idmef_data_new_ptr_dup_fast(idmef_data_t **data, idmef_data_type_t type, const void *ptr, size_t len)
 {
-	idmef_data_t *data;
+        int ret;
 
-	data = idmef_data_new();
-	if ( ! data )
-		return NULL;
+        ret = idmef_data_new(data);
+	if ( ret < 0 )
+		return ret;
 
-	if ( idmef_data_set_ptr_dup_fast(data, type, ptr, len) < 0 ) {
-		idmef_data_destroy(data);
-		return NULL;
-	}
+        ret = idmef_data_set_ptr_dup_fast(*data, type, ptr, len);
+        if ( ret < 0 )
+		idmef_data_destroy(*data);
 
-	return data;
+        return ret;
 }
 
 
 
-idmef_data_t *idmef_data_new_ptr_nodup_fast(idmef_data_type_t type, void *ptr, size_t len)
+int idmef_data_new_ptr_nodup_fast(idmef_data_t **data, idmef_data_type_t type, void *ptr, size_t len)
 {
-	idmef_data_t *data;
+        int ret;
+        
+        ret = idmef_data_new(data);
+	if ( ret < 0 )
+		return ret;
 
-	data = idmef_data_new();
-	if ( ! data )
-		return NULL;
-	
-	if ( idmef_data_set_ptr_nodup_fast(data, type, ptr, len) < 0 ) {
-		idmef_data_destroy(data);
-		return NULL;
-	}
+        ret = idmef_data_set_ptr_nodup_fast(*data, type, ptr, len);
+        if ( ret < 0 )
+		idmef_data_destroy(*data);
 
-	return data;
+        return ret;
 }
 
 
@@ -227,34 +215,33 @@ int idmef_data_set_char_string_dup_fast(idmef_data_t *data, const char *str, siz
 
 
 
-idmef_data_t *idmef_data_new_char_string_dup_fast(const char *str, size_t len)
+int idmef_data_new_char_string_dup_fast(idmef_data_t **data, const char *str, size_t len)
 {
-	idmef_data_t *data;
+        int ret;
 
-	data = idmef_data_new();
-	if ( ! data )
-		return NULL;
+        ret = idmef_data_new(data);
+	if ( ret < 0 )
+		return ret;
+        
+        ret = idmef_data_set_char_string_dup_fast(*data, str, len);
+        if ( ret < 0 )
+		idmef_data_destroy(*data);
 
-	if ( idmef_data_set_char_string_dup_fast(data, str, len) < 0 ) {
-		idmef_data_destroy(data);
-		return NULL;
-	}
-
-	return data;		
+	return ret;		
 }
 
 
 
 /**
  * idmef_data_copy_ref:
- * @dst: Destination #idmef_data_t object.
  * @src: Source #idmef_data_t object.
+ * @dst: Destination #idmef_data_t object.
  *
  * Make @dst reference the same buffer as @src.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
-int idmef_data_copy_ref(idmef_data_t *dst, const idmef_data_t *src)
+int idmef_data_copy_ref(const idmef_data_t *src, idmef_data_t *dst)
 {
         idmef_data_destroy_internal(dst);
 
@@ -271,15 +258,15 @@ int idmef_data_copy_ref(idmef_data_t *dst, const idmef_data_t *src)
 
 /**
  * idmef_data_copy_dup:
- * @dst: Destination #idmef_data_t object.
  * @src: Source #idmef_data_t object.
+ * @dst: Destination #idmef_data_t object.
  *
  * Copy @src to @dst, including the associated buffer
  * this is an alternative to idmef_data_clone().
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
-int idmef_data_copy_dup(idmef_data_t *dst, const idmef_data_t *src)
+int idmef_data_copy_dup(const idmef_data_t *src, idmef_data_t *dst)
 {
         idmef_data_destroy_internal(dst);
 
@@ -291,6 +278,7 @@ int idmef_data_copy_dup(idmef_data_t *dst, const idmef_data_t *src)
 		dst->data.rw_data = malloc(src->len);
 		if ( ! dst->data.rw_data )
 			return -1;
+                
 		memcpy(dst->data.rw_data, src->data.ro_data, src->len);
 	} else {
 		dst->data = src->data;
@@ -301,28 +289,18 @@ int idmef_data_copy_dup(idmef_data_t *dst, const idmef_data_t *src)
 
 
 
-
-/**
- * idmef_data_clone:
- * @data: Pointer to an #idmef_data_t object.
- *
- * Make up an exact copy of the @data object, and it's content.
- *
- * Returns: A new #idmef_data_t object, or NULL if an error occured.
- */
-idmef_data_t *idmef_data_clone(const idmef_data_t *data)
+int idmef_data_clone(const idmef_data_t *src, idmef_data_t **dst)
 {
-        idmef_data_t *ret;
+        int ret;
+
+        ret = idmef_data_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        ret = idmef_data_copy_dup(src, *dst);
+	if ( ret < 0 )
+                idmef_data_destroy(*dst);
         
-        ret = idmef_data_new();
-        if ( ! ret )
-                return NULL;
-
-	if ( idmef_data_copy_dup(ret, data) < 0 ) {
-		idmef_data_destroy(ret);
-		return NULL;
-	}
-
 	return ret;
 }
 

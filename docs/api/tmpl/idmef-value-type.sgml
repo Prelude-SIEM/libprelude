@@ -65,8 +65,8 @@ idmef-value-type
 
 </para>
 
-@dst: 
 @src: 
+@dst: 
 @Returns: 
 
 
@@ -88,9 +88,6 @@ idmef-value-type
 @src: 
 @out: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@buf: 
-@size: 
 
 
 <!-- ##### FUNCTION idmef_value_type_destroy ##### -->
@@ -106,8 +103,8 @@ idmef-value-type
 
 </para>
 
-@dst: 
 @src: 
+@dst: 
 @Returns: 
 
 

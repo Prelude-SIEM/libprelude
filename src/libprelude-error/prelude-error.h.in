@@ -68,14 +68,14 @@ prelude_error_code_t prelude_error_code_from_errno(int err);
 
 static inline prelude_error_t prelude_error_make(prelude_error_source_t source, prelude_error_code_t code)
 {
-	return (code == PRELUDE_ERROR_NO_ERROR) ? PRELUDE_ERROR_NO_ERROR : -((source << PRELUDE_ERROR_SOURCE_SHIFT) | code);
+	return (code == PRELUDE_ERROR_NO_ERROR) ? PRELUDE_ERROR_GENERIC : -((source << PRELUDE_ERROR_SOURCE_SHIFT) | code);
 }
 
 
 static inline prelude_error_t prelude_error_make_from_errno(prelude_error_source_t source, int err)
 {
 	prelude_error_code_t code = prelude_error_code_from_errno(err);
-	return (code == PRELUDE_ERROR_NO_ERROR) ? PRELUDE_ERROR_NO_ERROR : -((source << PRELUDE_ERROR_SOURCE_SHIFT) | code);
+	return (code == PRELUDE_ERROR_NO_ERROR) ? PRELUDE_ERROR_GENERIC : -((source << PRELUDE_ERROR_SOURCE_SHIFT) | code);
 }
 
 

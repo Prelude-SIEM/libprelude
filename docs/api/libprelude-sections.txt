@@ -1053,17 +1053,13 @@ PRELUDE_MSG_OPTION_HOP
 
 <SECTION>
 <FILE>prelude-log</FILE>
-log
-LOG_ERR
-LOG_INFO
-prelude_log_priority_t
+prelude_log
+prelude_log_t
 prelude_log_flags_t
 prelude_log_get_flags
 prelude_log_set_flags
-prelude_log_use_syslog
 prelude_log_get_prefix
 prelude_log_set_prefix
-prelude_log
 prelude_log_v
 </SECTION>
 
@@ -1211,6 +1207,7 @@ prelude_connection_new_msgbuf
 <SECTION>
 <FILE>prelude-string</FILE>
 idmef_type_string
+prelude_type_string
 prelude_string_new
 prelude_string_new_nodup
 prelude_string_new_ref
@@ -1513,18 +1510,15 @@ prelude_inet_ntop
 
 <SECTION>
 <FILE>prelude-list</FILE>
-PRELUDE_LIST_HEAD_INIT
-PRELUDE_LIST_HEAD
-PRELUDE_INIT_LIST_HEAD
+PRELUDE_LIST
 prelude_list_entry
-prelude_list_get_next
-prelude_list_get_next_safe
 prelude_list_for_each_continue_safe
 prelude_list_for_each_continue
 prelude_list_for_each
 prelude_list_for_each_safe
 prelude_list_for_each_reversed
-prelude_list_for_each_reversed_safe
+prelude_list_get_next
+prelude_list_get_next_safe
 </SECTION>
 
 <SECTION>
@@ -1644,7 +1638,7 @@ idmef_criterion_destroy
 idmef_criterion_clone
 idmef_criterion_print
 idmef_criterion_to_string
-idmef_criterion_get_object
+idmef_criterion_get_path
 idmef_criterion_get_value
 idmef_criterion_get_relation
 idmef_criterion_match
@@ -1751,7 +1745,6 @@ idmef_criterion_value_non_linear_time_get_wday
 idmef_criterion_value_non_linear_time_get_hour
 idmef_criterion_value_non_linear_time_get_min
 idmef_criterion_value_non_linear_time_get_sec
-idmef_criterion_value_non_linear_time_print
 idmef_criterion_value_non_linear_time_to_string
 idmef_criterion_value_new_fixed
 idmef_criterion_value_new_non_linear_time
@@ -1769,6 +1762,30 @@ idmef_criterion_value_to_string
 <FILE>tls-auth</FILE>
 tls_auth_connection
 tls_auth_init
+</SECTION>
+
+<SECTION>
+<FILE>idmef-path</FILE>
+idmef_path_get
+idmef_path_set
+idmef_path_new
+idmef_path_new_v
+idmef_path_new_fast
+idmef_path_get_type
+idmef_path_get_value_type
+idmef_path_set_number
+idmef_path_undefine_number
+idmef_path_get_number
+idmef_path_make_child
+idmef_path_make_parent
+idmef_path_destroy
+idmef_path_compare
+idmef_path_clone
+idmef_path_ref
+idmef_path_get_numeric
+idmef_path_get_name
+idmef_path_is_ambiguous
+idmef_path_has_lists
 </SECTION>
 
 <SECTION>
@@ -1882,7 +1899,6 @@ idmef_additional_data_data_to_string
 
 <SECTION>
 <FILE>idmef-time</FILE>
-idmef_object_type_time
 idmef_time_ref
 idmef_time_new
 idmef_time_new_from_gettimeofday
@@ -2127,10 +2143,11 @@ idmef_value_new_data
 idmef_value_new_object
 idmef_value_new_list
 idmef_value_new_enum
-idmef_value_new_enum_string
-idmef_value_new_enum_numeric
-idmef_value_new_for_object
-idmef_value_new_generic
+idmef_value_new_enum_from_string
+idmef_value_new_enum_from_numeric
+idmef_value_new
+idmef_value_new_from_path
+idmef_value_new_from_string
 idmef_value_get_int8
 idmef_value_get_uint8
 idmef_value_get_int16
@@ -2147,7 +2164,7 @@ idmef_value_get_data
 idmef_value_get_string
 idmef_value_list_add
 idmef_value_is_list
-idmef_value_list_empty
+idmef_value_list_is_empty
 idmef_value_have_own_data
 idmef_value_dont_have_own_data
 idmef_value_get_type
@@ -2169,42 +2186,6 @@ idmef_value_destroy
 <SECTION>
 <FILE>daemonize</FILE>
 prelude_daemonize
-</SECTION>
-
-<SECTION>
-<FILE>idmef-object</FILE>
-idmef_object_get
-idmef_object_set
-idmef_object_new
-idmef_object_new_v
-idmef_object_new_fast
-idmef_object_get_type
-idmef_object_get_value_type
-idmef_object_set_number
-idmef_object_undefine_number
-idmef_object_get_number
-idmef_object_make_child
-idmef_object_make_parent
-idmef_object_destroy
-idmef_object_compare
-idmef_object_clone
-idmef_object_ref
-idmef_object_get_numeric
-idmef_object_get_name
-idmef_object_is_ambiguous
-idmef_object_has_lists
-</SECTION>
-
-<SECTION>
-<FILE>idmef-object-value</FILE>
-idmef_object_value_new
-idmef_object_value_get_object
-idmef_object_value_get_value
-idmef_object_value_destroy
-idmef_object_value_list_new
-idmef_object_value_list_add
-idmef_object_value_list_get_next
-idmef_object_value_list_destroy
 </SECTION>
 
 <SECTION>

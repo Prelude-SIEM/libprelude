@@ -191,9 +191,9 @@ static int print_data(idmef_data_t *data, prelude_io_t *fd)
         int ret;
         prelude_string_t *out;
 
-        out = prelude_string_new();
-        if ( ! out )
-                return -1;
+        ret = prelude_string_new(&out);
+        if ( ret < 0 )
+                return ret;
 
         ret = idmef_data_to_string(data, out);
 	if ( ret < 0 ) {

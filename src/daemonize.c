@@ -34,6 +34,7 @@
 #include "libmissing.h"
 #include "daemonize.h"
 #include "prelude-log.h"
+#include "prelude-error.h"
 
 
 #ifndef PATH_MAX
@@ -51,13 +52,13 @@ static void lockfile_unlink(void)
 
         ret = unlink(slockfile);
         if ( ret < 0 )
-                log(LOG_ERR, "couldn't delete %s.\n", slockfile);
+                prelude_log(PRELUDE_LOG_ERR, "couldn't delete lockfile %s.\n", slockfile);
 }
 
 
 
 
-static const char *get_absolute_filename(const char *lockfile)  
+static int get_absolute_filename(const char *lockfile)  
 {
         if ( *lockfile == '/' )
                 snprintf(slockfile, sizeof(slockfile), "%s", lockfile);
@@ -70,15 +71,13 @@ static const char *get_absolute_filename(const char *lockfile)
                  * deletion on exit() will not work because of the chdir("/") call.
                  * That's why we want to conver it to an absolute path.
                  */
-                if ( ! getcwd(dir, sizeof(dir)) ) {
-                        log(LOG_ERR, "couldn't get current working directory.\n");
-                        return NULL;
-                }
+                if ( ! getcwd(dir, sizeof(dir)) )
+                        return prelude_error_from_errno(errno);
                 
                 snprintf(slockfile, sizeof(slockfile), "%s/%s", dir, lockfile);
         }
         
-        return slockfile;
+        return 0;
 }
 
 
@@ -90,10 +89,8 @@ static int lockfile_get_exclusive(const char *lockfile)
         struct flock lock;
 
         fd = open(lockfile, O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR);
-        if ( fd < 0 ) {                
-                log(LOG_ERR, "couldn't open %s for writing.\n", lockfile);
-                return -1;
-        }
+        if ( fd < 0 )
+                return prelude_error_from_errno(errno);
 
         lock.l_type = F_WRLCK;    /* write lock */
         lock.l_start = 0;         /* from offset 0 */
@@ -102,13 +99,11 @@ static int lockfile_get_exclusive(const char *lockfile)
         
         ret = fcntl(fd, F_SETLK, &lock);
         if ( ret < 0 ) {
-                if ( errno == EACCES || errno == EAGAIN ) 
-                        log(LOG_INFO, "program is already running.\n");
-                else
-                        log(LOG_ERR, "couldn't set write lock.\n");
-
+                if ( errno == EACCES || errno == EAGAIN )
+                        return prelude_error(PRELUDE_ERROR_DAEMONIZE_LOCK_HELD);
+                
                 close(fd);
-                return -1;
+                return prelude_error_from_errno(errno);
         }
 
         /*
@@ -128,18 +123,14 @@ static int lockfile_write_pid(int fd, pid_t pid)
          * Reset file size to 0.
          */
         ret = ftruncate(fd, 0);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't truncate lockfile to 0 byte.\n");
-                return -1;
-        }
+        if ( ret < 0 )
+                return prelude_error_from_errno(errno);
         
         snprintf(buf, sizeof(buf), "%d\n", (int) pid);
         
         ret = write(fd, buf, strlen(buf));
-        if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't write PID to lockfile.\n");
-                return -1;
-        }
+        if ( ret < 0 )
+                return prelude_error_from_errno(errno);
 
         return 0;
 }
@@ -161,30 +152,30 @@ static int lockfile_write_pid(int fd, pid_t pid)
 int prelude_daemonize(const char *lockfile)
 {
 	pid_t pid;
-        int fd = 0;
+        int fd = 0, ret;
         
         if ( lockfile ) {
-                lockfile = get_absolute_filename(lockfile);
-                if ( ! lockfile )
-                        return -1;
+                ret = get_absolute_filename(lockfile);
+                if ( ret < 0 )
+                        return ret;
                 
-                fd = lockfile_get_exclusive(lockfile);
+                fd = lockfile_get_exclusive(slockfile);
                 if ( fd < 0 )
-                        return -1;
-                
+                        return fd;
         }
         
         pid = fork();
-        if ( pid < 0 ) {
-                log(LOG_ERR, "fork failed.\n");
-                return -1;
-        }
+        if ( pid < 0 )
+                return prelude_error_from_errno(errno);
 
         else if ( pid ) {
-                if ( lockfile )
-                        lockfile_write_pid(fd, pid);
+
+                if ( lockfile ) {
+                        ret = lockfile_write_pid(fd, pid);
+                        if ( ret < 0 )
+                                return ret;
+                }
                 
-                log(LOG_INFO, "- Starting as daemon: PID is %d.\n", (int) pid);
                 _exit(0);
         }
         

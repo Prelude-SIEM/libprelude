@@ -79,7 +79,7 @@ static int load_individual_cert(FILE *fd, gnutls_datum *key, gnutls_certificate_
 
                 ret = gnutls_certificate_set_x509_key_mem(cred, &cert, key, GNUTLS_X509_FMT_PEM);
                 if ( ret < 0 ) {
-                        log(LOG_ERR, "error importing certificate: %s.\n", gnutls_strerror(ret));
+                        prelude_log(PRELUDE_LOG_WARN, "error importing certificate: %s.\n", gnutls_strerror(ret));
                         goto out;
                 }
                 
@@ -143,7 +143,7 @@ int tls_certificates_load(const char *keyfile, const char *certfile, gnutls_cert
         fd = fopen(certfile, "r");
         if ( ! fd ) {
                 tls_unload_file(&key);
-                return prelude_error(PRELUDE_ERROR_TLS_CERTIFICATE);
+                return prelude_error(PRELUDE_ERROR_TLS_CERTIFICATE_FILE);
         }
         
         ret = load_individual_cert(fd, &key, cred);

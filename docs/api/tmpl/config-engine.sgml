@@ -2,12 +2,11 @@
 config-engine
 
 <!-- ##### SECTION Short_Description ##### -->
-API for accessing a Prelude configuration file.
+
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-The config_engine API is a simple abstraction providing get() and set() 
-method to access your configuration file. 
+
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -68,6 +67,7 @@ method to access your configuration file.
 
 </para>
 
+@ret: 
 @filename: 
 @Returns: 
 

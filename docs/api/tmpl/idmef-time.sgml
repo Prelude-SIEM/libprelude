@@ -14,13 +14,6 @@ idmef-time
 
 </para>
 
-<!-- ##### MACRO idmef_object_type_time ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### FUNCTION idmef_time_ref ##### -->
 <para>
 
@@ -35,6 +28,7 @@ idmef-time
 
 </para>
 
+@time: 
 @Returns: 
 
 
@@ -43,6 +37,7 @@ idmef-time
 
 </para>
 
+@time: 
 @Returns: 
 
 
@@ -51,6 +46,7 @@ idmef-time
 
 </para>
 
+@time: 
 @buf: 
 @Returns: 
 
@@ -60,6 +56,7 @@ idmef-time
 
 </para>
 
+@time: 
 @buf: 
 @Returns: 
 
@@ -86,6 +83,7 @@ idmef-time
 </para>
 
 @src: 
+@dst: 
 @Returns: 
 
 
@@ -94,8 +92,8 @@ idmef-time
 
 </para>
 
-@dst: 
 @src: 
+@dst: 
 @Returns: 
 
 
@@ -190,9 +188,6 @@ idmef-time
 @time: 
 @out: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@outptr: 
-@size: 
 
 
 <!-- ##### FUNCTION idmef_time_to_ntpstamp ##### -->
@@ -203,9 +198,6 @@ idmef-time
 @time: 
 @out: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@outptr: 
-@size: 
 
 
 <!-- ##### MACRO IDMEF_TIME_MAX_STRING_SIZE ##### -->

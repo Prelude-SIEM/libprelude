@@ -29,7 +29,7 @@
 #include <string.h>
 
 #include "prelude-list.h"
-#include "prelude-log.h"
+#include "prelude-error.h"
 #include "variable.h"
 
 
@@ -41,7 +41,7 @@ typedef struct {
 
 
 
-static PRELUDE_LIST_HEAD(variable_list);
+static PRELUDE_LIST(variable_list);
 
 
 
@@ -51,7 +51,7 @@ static variable_t *search_entry(const char *variable)
         prelude_list_t *tmp;
         variable_t *item = NULL;
         
-        prelude_list_for_each(tmp, &variable_list) {
+        prelude_list_for_each(&variable_list, tmp) {
                 item = prelude_list_entry(tmp, variable_t, list);
 
                 ret = strcasecmp(item->variable, variable);
@@ -71,10 +71,8 @@ static int create_entry(char *variable, char *value)
         variable_t *item;
 
         item = malloc(sizeof(*item));
-        if ( ! item ) {
-                log(LOG_ERR, "failed to allocate memory.\n");
-                return -1;
-        }
+        if ( ! item )
+                return prelude_error_from_errno(errno);
 
         item->variable = variable;
         item->value = value;

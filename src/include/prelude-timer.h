@@ -50,11 +50,12 @@ typedef struct {
 #define prelude_timer_set_data(timer, x) prelude_timer_get_data((timer)) = (x)
 #define prelude_timer_set_callback(timer, x) prelude_timer_get_callback((timer)) = (x)
 
-
 /*
  * Init a timer (add it to the timer list).
  */
 void prelude_timer_init(prelude_timer_t *timer);
+
+void prelude_timer_init_list(prelude_timer_t *timer);
 
 
 /*

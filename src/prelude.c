@@ -26,7 +26,7 @@
 #include <stdio.h>
 
 #include "prelude.h"
-#include "idmef-object.h"
+#include "idmef-path.h"
 #include "prelude-option.h"
 
 
@@ -111,7 +111,7 @@ void prelude_deinit(void)
         while ( (plugin = prelude_plugin_get_next(&iter)) )
                 prelude_plugin_unload(plugin);
         
-        _idmef_object_cache_destroy();
+        _idmef_path_cache_destroy();
         prelude_option_destroy(NULL);
         gnutls_global_deinit();
 }

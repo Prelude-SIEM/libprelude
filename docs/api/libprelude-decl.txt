@@ -76,16 +76,16 @@ extern YYSTYPE yylval;
 <MACRO>
 <NAME>msgidxof</NAME>
 #define msgidxof(code) (0 ? -1 \
-  : ((code >= 0) && (code <= 21)) ? (code - 0) \
-  : ((code >= 16382) && (code <= 16382)) ? (code - 16360) \
-  : 16383 - 16360)
+  : ((code >= 0) && (code <= 49)) ? (code - 0) \
+  : ((code >= 16382) && (code <= 16382)) ? (code - 16332) \
+  : 16383 - 16332)
 </MACRO>
 <MACRO>
 <NAME>msgidxof</NAME>
 #define msgidxof(code) (0 ? -1 \
-  : ((code >= 0) && (code <= 21)) ? (code - 0) \
-  : ((code >= 16382) && (code <= 16382)) ? (code - 16360) \
-  : 16383 - 16360)
+  : ((code >= 0) && (code <= 49)) ? (code - 0) \
+  : ((code >= 16382) && (code <= 16382)) ? (code - 16332) \
+  : 16383 - 16332)
 </MACRO>
 <MACRO>
 <NAME>gettext</NAME>
@@ -133,8 +133,9 @@ extern YYSTYPE yylval;
 <MACRO>
 <NAME>msgidxof</NAME>
 #define msgidxof(code) (0 ? -1 \
-  : ((code >= 0) && (code <= 8)) ? (code - 0) \
-  : 9 - 0)
+  : ((code >= 0) && (code <= 13)) ? (code - 0) \
+  : ((code >= 255) && (code <= 255)) ? (code - 241) \
+  : 256 - 241)
 </MACRO>
 <MACRO>
 <NAME>errnos_msgidxof</NAME>
@@ -145,8 +146,9 @@ extern YYSTYPE yylval;
 <MACRO>
 <NAME>msgidxof</NAME>
 #define msgidxof(code) (0 ? -1 \
-  : ((code >= 0) && (code <= 8)) ? (code - 0) \
-  : 9 - 0)
+  : ((code >= 0) && (code <= 13)) ? (code - 0) \
+  : ((code >= 255) && (code <= 255)) ? (code - 241) \
+  : 256 - 241)
 </MACRO>
 <ENUM>
 <NAME>prelude_error_source_t</NAME>
@@ -160,6 +162,12 @@ typedef enum {
     PRELUDE_ERROR_SOURCE_EXTRACT = 6,
     PRELUDE_ERROR_SOURCE_CONNECTION = 7,
     PRELUDE_ERROR_SOURCE_CONNECTION_MGR = 8,
+    PRELUDE_ERROR_SOURCE_CONFIG_ENGINE = 9,
+    PRELUDE_ERROR_SOURCE_STRING = 10,
+    PRELUDE_ERROR_SOURCE_IDMEF_TREE_WRAP = 11,
+    PRELUDE_ERROR_SOURCE_IDMEF_PATH = 12,
+    PRELUDE_ERROR_SOURCE_IDMEF_TYPE = 13,
+    PRELUDE_ERROR_SOURCE_PRELUDEDB = 255,
 
 	PRELUDE_ERROR_SOURCE_DIM = 256
 } prelude_error_source_t;
@@ -177,7 +185,7 @@ typedef enum {
     PRELUDE_ERROR_BACKUP_DIRECTORY = 7,
     PRELUDE_ERROR_ANALYZERID_FILE = 8,
     PRELUDE_ERROR_ANALYZERID_PARSE = 9,
-    PRELUDE_ERROR_TLS_CERTIFICATE = 10,
+    PRELUDE_ERROR_TLS_CERTIFICATE_FILE = 10,
     PRELUDE_ERROR_TLS_CERTIFICATE_PARSE = 11,
     PRELUDE_ERROR_TLS_KEY = 12,
     PRELUDE_ERROR_IDMEF_UNKNOWN_TAG = 13,
@@ -189,6 +197,34 @@ typedef enum {
     PRELUDE_ERROR_INVAL_CHAR = 19,
     PRELUDE_ERROR_INVAL_IDMEF_TIME = 20,
     PRELUDE_ERROR_CONNECTION_STRING = 21,
+    PRELUDE_ERROR_IDMEF_VALUE_TYPE_UNKNOWN = 22,
+    PRELUDE_ERROR_IDMEF_VALUE_TYPE_COPY_UNAVAILABLE = 23,
+    PRELUDE_ERROR_IDMEF_VALUE_TYPE_CLONE_UNAVAILABLE = 24,
+    PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_UNAVAILABLE = 25,
+    PRELUDE_ERROR_IDMEF_VALUE_TYPE_READ_UNAVAILABLE = 26,
+    PRELUDE_ERROR_IDMEF_VALUE_TYPE_WRITE_UNAVAILABLE = 27,
+    PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_MISMATCH = 28,
+    PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE = 29,
+    PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN = 30,
+    PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD = 31,
+    PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_NAME = 32,
+    PRELUDE_ERROR_IDMEF_PATH_LENGTH = 33,
+    PRELUDE_ERROR_IDMEF_PATH_DEPTH = 34,
+    PRELUDE_ERROR_IDMEF_PATH_PARENT_ROOT = 35,
+    PRELUDE_ERROR_IDMEF_PATH_NTH = 36,
+    PRELUDE_ERROR_IDMEF_PATH_MISS_INDEX = 37,
+    PRELUDE_ERROR_IDMEF_PATH_INTEGRITY = 38,
+    PRELUDE_ERROR_IDMEF_PATH_INDEX_RESERVED = 39,
+    PRELUDE_ERROR_IDMEF_PATH_INDEX_FORBIDDEN = 40,
+    PRELUDE_ERROR_IDMEF_PATH_INDEX_UNDEFINED = 41,
+    PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING = 42,
+    PRELUDE_ERROR_DAEMONIZE_LOCK_HELD = 43,
+    PRELUDE_ERROR_PLUGIN_LTDL_INIT = 44,
+    PRELUDE_ERROR_TLS_HANDSHAKE = 45,
+    PRELUDE_ERROR_TLS_INVALID_CERTIFICATE = 46,
+    PRELUDE_ERROR_TLS_REMOTE_AUTH = 47,
+    PRELUDE_ERROR_STRING_NOT_NULL_TERMINATED = 48,
+    PRELUDE_ERROR_CANT_RESOLVE = 49,
     PRELUDE_ERROR_UNKNOWN_ERRNO = 16382,
 
 #define PRELUDE_ERROR_SYSTEM_ERROR    (1 << 15)
@@ -458,8 +494,8 @@ struct prelude_linked_object_t
 </STRUCT>
 <MACRO>
 <NAME>prelude_linked_object_get_object</NAME>
-#define prelude_linked_object_get_object(listentry, type)  \
-        (type *) prelude_list_entry(listentry, prelude_linked_object_t, list)
+#define prelude_linked_object_get_object(object)  \
+        (void *) prelude_list_entry(object, prelude_linked_object_t, list)
 </MACRO>
 <ENUM>
 <NAME>idmef_additional_data_type_t</NAME>
@@ -490,8 +526,8 @@ idmef_additional_data_type_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_new</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_ref</NAME>
@@ -500,13 +536,13 @@ idmef_additional_data_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_destroy</NAME>
@@ -525,13 +561,13 @@ idmef_additional_data_t *ptr, idmef_additional_data_type_t type
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_get_type_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_additional_data_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_new_type</NAME>
-<RETURNS>idmef_additional_data_type_t  *</RETURNS>
-idmef_additional_data_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *ptr, idmef_additional_data_type_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_get_meaning</NAME>
@@ -545,13 +581,13 @@ idmef_additional_data_t *ptr, prelude_string_t *meaning
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_get_meaning_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_additional_data_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_new_meaning</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_additional_data_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_get_data</NAME>
@@ -565,13 +601,13 @@ idmef_additional_data_t *ptr, idmef_data_t *data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_get_data_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_additional_data_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_new_data</NAME>
-<RETURNS>idmef_data_t  *</RETURNS>
-idmef_additional_data_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *ptr, idmef_data_t **ret
 </FUNCTION>
 <ENUM>
 <NAME>idmef_reference_origin_t</NAME>
@@ -597,8 +633,8 @@ idmef_reference_origin_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_new</NAME>
-<RETURNS>idmef_reference_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_reference_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_ref</NAME>
@@ -607,13 +643,13 @@ idmef_reference_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_destroy</NAME>
@@ -632,13 +668,13 @@ idmef_reference_t *ptr, idmef_reference_origin_t origin
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_get_origin_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_reference_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_reference_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_new_origin</NAME>
-<RETURNS>idmef_reference_origin_t  *</RETURNS>
-idmef_reference_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_reference_t *ptr, idmef_reference_origin_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_get_name</NAME>
@@ -652,13 +688,13 @@ idmef_reference_t *ptr, prelude_string_t *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_get_name_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_reference_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_reference_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_new_name</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_reference_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_reference_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_get_url</NAME>
@@ -672,13 +708,13 @@ idmef_reference_t *ptr, prelude_string_t *url
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_get_url_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_reference_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_reference_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_new_url</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_reference_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_reference_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_get_meaning</NAME>
@@ -692,18 +728,18 @@ idmef_reference_t *ptr, prelude_string_t *meaning
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_get_meaning_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_reference_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_reference_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_new_meaning</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_reference_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_reference_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_new</NAME>
-<RETURNS>idmef_classification_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_classification_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_ref</NAME>
@@ -712,13 +748,13 @@ idmef_classification_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_destroy</NAME>
@@ -737,13 +773,13 @@ idmef_classification_t *ptr, uint64_t ident
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_get_ident_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_classification_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_classification_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_new_ident</NAME>
-<RETURNS>uint64_t  *</RETURNS>
-idmef_classification_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_classification_t *ptr, uint64_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_get_text</NAME>
@@ -757,13 +793,13 @@ idmef_classification_t *ptr, prelude_string_t *text
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_get_text_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_classification_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_classification_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_new_text</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_classification_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_classification_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_get_next_reference</NAME>
@@ -777,13 +813,13 @@ idmef_classification_t *ptr, idmef_reference_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_new_reference</NAME>
-<RETURNS>idmef_reference_t  *</RETURNS>
-idmef_classification_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_classification_t *ptr, idmef_reference_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_get_reference_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_classification_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_classification_t *ptr, idmef_value_t **value
 </FUNCTION>
 <ENUM>
 <NAME>idmef_user_id_type_t</NAME>
@@ -810,8 +846,8 @@ idmef_user_id_type_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_new</NAME>
-<RETURNS>idmef_user_id_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_user_id_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_ref</NAME>
@@ -820,13 +856,13 @@ idmef_user_id_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_destroy</NAME>
@@ -845,13 +881,13 @@ idmef_user_id_t *ptr, uint64_t ident
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_get_ident_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_user_id_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_user_id_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_new_ident</NAME>
-<RETURNS>uint64_t  *</RETURNS>
-idmef_user_id_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_user_id_t *ptr, uint64_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_get_name</NAME>
@@ -865,13 +901,13 @@ idmef_user_id_t *ptr, prelude_string_t *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_get_name_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_user_id_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_user_id_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_new_name</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_user_id_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_user_id_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_get_type</NAME>
@@ -885,13 +921,13 @@ idmef_user_id_t *ptr, idmef_user_id_type_t type
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_get_type_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_user_id_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_user_id_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_new_type</NAME>
-<RETURNS>idmef_user_id_type_t  *</RETURNS>
-idmef_user_id_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_user_id_t *ptr, idmef_user_id_type_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_get_number</NAME>
@@ -905,13 +941,13 @@ idmef_user_id_t *ptr, uint32_t number
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_get_number_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_user_id_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_user_id_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_new_number</NAME>
-<RETURNS>uint32_t  *</RETURNS>
-idmef_user_id_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_user_id_t *ptr, uint32_t **ret
 </FUNCTION>
 <ENUM>
 <NAME>idmef_user_category_t</NAME>
@@ -934,8 +970,8 @@ idmef_user_category_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_new</NAME>
-<RETURNS>idmef_user_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_user_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_ref</NAME>
@@ -944,13 +980,13 @@ idmef_user_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_destroy</NAME>
@@ -969,13 +1005,13 @@ idmef_user_t *ptr, uint64_t ident
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_get_ident_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_user_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_user_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_new_ident</NAME>
-<RETURNS>uint64_t  *</RETURNS>
-idmef_user_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_user_t *ptr, uint64_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_get_category</NAME>
@@ -989,13 +1025,13 @@ idmef_user_t *ptr, idmef_user_category_t category
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_get_category_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_user_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_user_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_new_category</NAME>
-<RETURNS>idmef_user_category_t  *</RETURNS>
-idmef_user_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_user_t *ptr, idmef_user_category_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_get_next_user_id</NAME>
@@ -1009,13 +1045,13 @@ idmef_user_t *ptr, idmef_user_id_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_new_user_id</NAME>
-<RETURNS>idmef_user_id_t  *</RETURNS>
-idmef_user_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_user_t *ptr, idmef_user_id_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_get_user_id_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_user_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_user_t *ptr, idmef_value_t **value
 </FUNCTION>
 <ENUM>
 <NAME>idmef_address_category_t</NAME>
@@ -1050,8 +1086,8 @@ idmef_address_category_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_new</NAME>
-<RETURNS>idmef_address_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_address_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_ref</NAME>
@@ -1060,13 +1096,13 @@ idmef_address_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_destroy</NAME>
@@ -1085,13 +1121,13 @@ idmef_address_t *ptr, uint64_t ident
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_get_ident_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_address_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_address_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_new_ident</NAME>
-<RETURNS>uint64_t  *</RETURNS>
-idmef_address_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_address_t *ptr, uint64_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_get_category</NAME>
@@ -1105,13 +1141,13 @@ idmef_address_t *ptr, idmef_address_category_t category
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_get_category_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_address_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_address_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_new_category</NAME>
-<RETURNS>idmef_address_category_t  *</RETURNS>
-idmef_address_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_address_t *ptr, idmef_address_category_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_get_vlan_name</NAME>
@@ -1125,13 +1161,13 @@ idmef_address_t *ptr, prelude_string_t *vlan_name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_get_vlan_name_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_address_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_address_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_new_vlan_name</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_address_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_address_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_get_vlan_num</NAME>
@@ -1145,13 +1181,13 @@ idmef_address_t *ptr, int32_t vlan_num
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_get_vlan_num_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_address_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_address_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_new_vlan_num</NAME>
-<RETURNS>int32_t  *</RETURNS>
-idmef_address_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_address_t *ptr, int32_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_get_address</NAME>
@@ -1165,13 +1201,13 @@ idmef_address_t *ptr, prelude_string_t *address
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_get_address_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_address_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_address_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_new_address</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_address_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_address_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_get_netmask</NAME>
@@ -1185,18 +1221,18 @@ idmef_address_t *ptr, prelude_string_t *netmask
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_get_netmask_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_address_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_address_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_new_netmask</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_address_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_address_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_new</NAME>
-<RETURNS>idmef_process_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_process_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_ref</NAME>
@@ -1205,13 +1241,13 @@ idmef_process_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_destroy</NAME>
@@ -1230,13 +1266,13 @@ idmef_process_t *ptr, uint64_t ident
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_get_ident_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_process_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_process_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_new_ident</NAME>
-<RETURNS>uint64_t  *</RETURNS>
-idmef_process_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_process_t *ptr, uint64_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_get_name</NAME>
@@ -1250,13 +1286,13 @@ idmef_process_t *ptr, prelude_string_t *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_get_name_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_process_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_process_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_new_name</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_process_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_process_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_get_pid</NAME>
@@ -1270,13 +1306,13 @@ idmef_process_t *ptr, uint32_t pid
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_get_pid_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_process_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_process_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_new_pid</NAME>
-<RETURNS>uint32_t  *</RETURNS>
-idmef_process_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_process_t *ptr, uint32_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_get_path</NAME>
@@ -1290,13 +1326,13 @@ idmef_process_t *ptr, prelude_string_t *path
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_get_path_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_process_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_process_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_new_path</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_process_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_process_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_get_next_arg</NAME>
@@ -1310,13 +1346,13 @@ idmef_process_t *ptr, prelude_string_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_new_arg</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_process_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_process_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_get_arg_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_process_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_process_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_get_next_env</NAME>
@@ -1330,18 +1366,18 @@ idmef_process_t *ptr, prelude_string_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_new_env</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_process_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_process_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_get_env_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_process_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_process_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_new</NAME>
-<RETURNS>idmef_web_service_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_web_service_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_ref</NAME>
@@ -1350,13 +1386,13 @@ idmef_web_service_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_destroy</NAME>
@@ -1375,13 +1411,13 @@ idmef_web_service_t *ptr, prelude_string_t *url
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_get_url_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_web_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_web_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_new_url</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_web_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_web_service_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_get_cgi</NAME>
@@ -1395,13 +1431,13 @@ idmef_web_service_t *ptr, prelude_string_t *cgi
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_get_cgi_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_web_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_web_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_new_cgi</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_web_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_web_service_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_get_http_method</NAME>
@@ -1415,13 +1451,13 @@ idmef_web_service_t *ptr, prelude_string_t *http_method
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_get_http_method_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_web_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_web_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_new_http_method</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_web_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_web_service_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_get_next_arg</NAME>
@@ -1435,18 +1471,18 @@ idmef_web_service_t *ptr, prelude_string_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_new_arg</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_web_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_web_service_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_get_arg_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_web_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_web_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_new</NAME>
-<RETURNS>idmef_snmp_service_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_snmp_service_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_ref</NAME>
@@ -1455,13 +1491,13 @@ idmef_snmp_service_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_destroy</NAME>
@@ -1480,13 +1516,13 @@ idmef_snmp_service_t *ptr, prelude_string_t *oid
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_get_oid_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_snmp_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_snmp_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_new_oid</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_snmp_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_snmp_service_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_get_community</NAME>
@@ -1500,13 +1536,13 @@ idmef_snmp_service_t *ptr, prelude_string_t *community
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_get_community_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_snmp_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_snmp_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_new_community</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_snmp_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_snmp_service_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_get_security_name</NAME>
@@ -1520,13 +1556,13 @@ idmef_snmp_service_t *ptr, prelude_string_t *security_name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_get_security_name_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_snmp_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_snmp_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_new_security_name</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_snmp_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_snmp_service_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_get_context_name</NAME>
@@ -1540,13 +1576,13 @@ idmef_snmp_service_t *ptr, prelude_string_t *context_name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_get_context_name_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_snmp_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_snmp_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_new_context_name</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_snmp_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_snmp_service_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_get_context_engine_id</NAME>
@@ -1560,13 +1596,13 @@ idmef_snmp_service_t *ptr, prelude_string_t *context_engine_id
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_get_context_engine_id_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_snmp_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_snmp_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_new_context_engine_id</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_snmp_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_snmp_service_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_get_command</NAME>
@@ -1580,13 +1616,13 @@ idmef_snmp_service_t *ptr, prelude_string_t *command
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_get_command_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_snmp_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_snmp_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_new_command</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_snmp_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_snmp_service_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <ENUM>
 <NAME>idmef_service_type_t</NAME>
@@ -1609,8 +1645,8 @@ idmef_service_type_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_new</NAME>
-<RETURNS>idmef_service_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_service_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_ref</NAME>
@@ -1619,13 +1655,13 @@ idmef_service_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_destroy</NAME>
@@ -1644,13 +1680,13 @@ idmef_service_t *ptr, uint64_t ident
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_ident_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_new_ident</NAME>
-<RETURNS>uint64_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, uint64_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_ip_version</NAME>
@@ -1664,13 +1700,13 @@ idmef_service_t *ptr, uint8_t ip_version
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_ip_version_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_new_ip_version</NAME>
-<RETURNS>uint8_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, uint8_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_name</NAME>
@@ -1684,13 +1720,13 @@ idmef_service_t *ptr, prelude_string_t *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_name_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_new_name</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_port</NAME>
@@ -1704,13 +1740,13 @@ idmef_service_t *ptr, uint16_t port
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_port_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_new_port</NAME>
-<RETURNS>uint16_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, uint16_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_iana_protocol_number</NAME>
@@ -1724,13 +1760,13 @@ idmef_service_t *ptr, uint8_t iana_protocol_number
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_iana_protocol_number_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_new_iana_protocol_number</NAME>
-<RETURNS>uint8_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, uint8_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_iana_protocol_name</NAME>
@@ -1744,13 +1780,13 @@ idmef_service_t *ptr, prelude_string_t *iana_protocol_name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_iana_protocol_name_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_new_iana_protocol_name</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_portlist</NAME>
@@ -1764,13 +1800,13 @@ idmef_service_t *ptr, prelude_string_t *portlist
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_portlist_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_new_portlist</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_protocol</NAME>
@@ -1784,13 +1820,13 @@ idmef_service_t *ptr, prelude_string_t *protocol
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_protocol_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_new_protocol</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_type</NAME>
@@ -1799,8 +1835,8 @@ idmef_service_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_type_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_web_service</NAME>
@@ -1814,13 +1850,13 @@ idmef_service_t *ptr, idmef_web_service_t *web_service
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_web_service_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_new_web_service</NAME>
-<RETURNS>idmef_web_service_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, idmef_web_service_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_snmp_service</NAME>
@@ -1834,13 +1870,13 @@ idmef_service_t *ptr, idmef_snmp_service_t *snmp_service
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_get_snmp_service_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_new_snmp_service</NAME>
-<RETURNS>idmef_snmp_service_t  *</RETURNS>
-idmef_service_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_service_t *ptr, idmef_snmp_service_t **ret
 </FUNCTION>
 <ENUM>
 <NAME>idmef_node_category_t</NAME>
@@ -1873,8 +1909,8 @@ idmef_node_category_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_new</NAME>
-<RETURNS>idmef_node_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_node_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_ref</NAME>
@@ -1883,13 +1919,13 @@ idmef_node_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_destroy</NAME>
@@ -1908,13 +1944,13 @@ idmef_node_t *ptr, uint64_t ident
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_get_ident_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_node_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_node_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_new_ident</NAME>
-<RETURNS>uint64_t  *</RETURNS>
-idmef_node_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_node_t *ptr, uint64_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_get_category</NAME>
@@ -1928,13 +1964,13 @@ idmef_node_t *ptr, idmef_node_category_t category
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_get_category_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_node_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_node_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_new_category</NAME>
-<RETURNS>idmef_node_category_t  *</RETURNS>
-idmef_node_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_node_t *ptr, idmef_node_category_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_get_location</NAME>
@@ -1948,13 +1984,13 @@ idmef_node_t *ptr, prelude_string_t *location
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_get_location_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_node_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_node_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_new_location</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_node_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_node_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_get_name</NAME>
@@ -1968,13 +2004,13 @@ idmef_node_t *ptr, prelude_string_t *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_get_name_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_node_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_node_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_new_name</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_node_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_node_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_get_next_address</NAME>
@@ -1988,13 +2024,13 @@ idmef_node_t *ptr, idmef_address_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_new_address</NAME>
-<RETURNS>idmef_address_t  *</RETURNS>
-idmef_node_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_node_t *ptr, idmef_address_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_get_address_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_node_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_node_t *ptr, idmef_value_t **value
 </FUNCTION>
 <ENUM>
 <NAME>idmef_source_spoofed_t</NAME>
@@ -2017,8 +2053,8 @@ idmef_source_spoofed_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_new</NAME>
-<RETURNS>idmef_source_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_source_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_ref</NAME>
@@ -2027,13 +2063,13 @@ idmef_source_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_destroy</NAME>
@@ -2052,13 +2088,13 @@ idmef_source_t *ptr, uint64_t ident
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_get_ident_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_source_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_source_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_new_ident</NAME>
-<RETURNS>uint64_t  *</RETURNS>
-idmef_source_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_source_t *ptr, uint64_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_get_spoofed</NAME>
@@ -2072,13 +2108,13 @@ idmef_source_t *ptr, idmef_source_spoofed_t spoofed
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_get_spoofed_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_source_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_source_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_new_spoofed</NAME>
-<RETURNS>idmef_source_spoofed_t  *</RETURNS>
-idmef_source_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_source_t *ptr, idmef_source_spoofed_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_get_interface</NAME>
@@ -2092,13 +2128,13 @@ idmef_source_t *ptr, prelude_string_t *interface
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_get_interface_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_source_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_source_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_new_interface</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_source_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_source_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_get_node</NAME>
@@ -2112,13 +2148,13 @@ idmef_source_t *ptr, idmef_node_t *node
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_get_node_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_source_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_source_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_new_node</NAME>
-<RETURNS>idmef_node_t  *</RETURNS>
-idmef_source_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_source_t *ptr, idmef_node_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_get_user</NAME>
@@ -2132,13 +2168,13 @@ idmef_source_t *ptr, idmef_user_t *user
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_get_user_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_source_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_source_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_new_user</NAME>
-<RETURNS>idmef_user_t  *</RETURNS>
-idmef_source_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_source_t *ptr, idmef_user_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_get_process</NAME>
@@ -2152,13 +2188,13 @@ idmef_source_t *ptr, idmef_process_t *process
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_get_process_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_source_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_source_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_new_process</NAME>
-<RETURNS>idmef_process_t  *</RETURNS>
-idmef_source_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_source_t *ptr, idmef_process_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_get_service</NAME>
@@ -2172,18 +2208,18 @@ idmef_source_t *ptr, idmef_service_t *service
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_get_service_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_source_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_source_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_new_service</NAME>
-<RETURNS>idmef_service_t  *</RETURNS>
-idmef_source_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_source_t *ptr, idmef_service_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_access_new</NAME>
-<RETURNS>idmef_file_access_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_file_access_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_access_ref</NAME>
@@ -2192,13 +2228,13 @@ idmef_file_access_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_access_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_access_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_access_destroy</NAME>
@@ -2217,13 +2253,13 @@ idmef_file_access_t *ptr, idmef_user_id_t *user_id
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_access_get_user_id_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_file_access_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_access_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_access_new_user_id</NAME>
-<RETURNS>idmef_user_id_t  *</RETURNS>
-idmef_file_access_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_access_t *ptr, idmef_user_id_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_access_get_next_permission</NAME>
@@ -2237,18 +2273,18 @@ idmef_file_access_t *ptr, prelude_string_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_access_new_permission</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_file_access_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_access_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_access_get_permission_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_file_access_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_access_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_new</NAME>
-<RETURNS>idmef_inode_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_inode_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_ref</NAME>
@@ -2257,13 +2293,13 @@ idmef_inode_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_destroy</NAME>
@@ -2282,13 +2318,13 @@ idmef_inode_t *ptr, idmef_time_t *change_time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_get_change_time_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_inode_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_inode_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_new_change_time</NAME>
-<RETURNS>idmef_time_t  *</RETURNS>
-idmef_inode_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_inode_t *ptr, idmef_time_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_get_number</NAME>
@@ -2302,13 +2338,13 @@ idmef_inode_t *ptr, uint32_t number
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_get_number_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_inode_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_inode_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_new_number</NAME>
-<RETURNS>uint32_t  *</RETURNS>
-idmef_inode_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_inode_t *ptr, uint32_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_get_major_device</NAME>
@@ -2322,13 +2358,13 @@ idmef_inode_t *ptr, uint32_t major_device
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_get_major_device_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_inode_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_inode_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_new_major_device</NAME>
-<RETURNS>uint32_t  *</RETURNS>
-idmef_inode_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_inode_t *ptr, uint32_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_get_minor_device</NAME>
@@ -2342,13 +2378,13 @@ idmef_inode_t *ptr, uint32_t minor_device
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_get_minor_device_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_inode_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_inode_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_new_minor_device</NAME>
-<RETURNS>uint32_t  *</RETURNS>
-idmef_inode_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_inode_t *ptr, uint32_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_get_c_major_device</NAME>
@@ -2362,13 +2398,13 @@ idmef_inode_t *ptr, uint32_t c_major_device
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_get_c_major_device_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_inode_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_inode_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_new_c_major_device</NAME>
-<RETURNS>uint32_t  *</RETURNS>
-idmef_inode_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_inode_t *ptr, uint32_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_get_c_minor_device</NAME>
@@ -2382,13 +2418,13 @@ idmef_inode_t *ptr, uint32_t c_minor_device
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_get_c_minor_device_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_inode_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_inode_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_new_c_minor_device</NAME>
-<RETURNS>uint32_t  *</RETURNS>
-idmef_inode_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_inode_t *ptr, uint32_t **ret
 </FUNCTION>
 <ENUM>
 <NAME>idmef_checksum_algorithm_t</NAME>
@@ -2418,8 +2454,8 @@ idmef_checksum_algorithm_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_checksum_new</NAME>
-<RETURNS>idmef_checksum_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_checksum_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_checksum_ref</NAME>
@@ -2428,13 +2464,13 @@ idmef_checksum_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_checksum_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_checksum_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_checksum_destroy</NAME>
@@ -2453,13 +2489,13 @@ idmef_checksum_t *ptr, prelude_string_t *value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_checksum_get_value_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_checksum_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_checksum_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_checksum_new_value</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_checksum_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_checksum_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_checksum_get_key</NAME>
@@ -2473,13 +2509,13 @@ idmef_checksum_t *ptr, prelude_string_t *key
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_checksum_get_key_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_checksum_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_checksum_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_checksum_new_key</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_checksum_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_checksum_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_checksum_get_algorithm</NAME>
@@ -2493,13 +2529,13 @@ idmef_checksum_t *ptr, idmef_checksum_algorithm_t algorithm
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_checksum_get_algorithm_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_checksum_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_checksum_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_checksum_new_algorithm</NAME>
-<RETURNS>idmef_checksum_algorithm_t  *</RETURNS>
-idmef_checksum_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_checksum_t *ptr, idmef_checksum_algorithm_t **ret
 </FUNCTION>
 <ENUM>
 <NAME>idmef_file_category_t</NAME>
@@ -2547,8 +2583,8 @@ idmef_file_fstype_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_new</NAME>
-<RETURNS>idmef_file_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_file_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_ref</NAME>
@@ -2557,13 +2593,13 @@ idmef_file_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_destroy</NAME>
@@ -2582,13 +2618,13 @@ idmef_file_t *ptr, uint64_t ident
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_ident_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_new_ident</NAME>
-<RETURNS>uint64_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, uint64_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_name</NAME>
@@ -2602,13 +2638,13 @@ idmef_file_t *ptr, prelude_string_t *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_name_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_new_name</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_path</NAME>
@@ -2622,13 +2658,13 @@ idmef_file_t *ptr, prelude_string_t *path
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_path_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_new_path</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_create_time</NAME>
@@ -2642,13 +2678,13 @@ idmef_file_t *ptr, idmef_time_t *create_time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_create_time_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_new_create_time</NAME>
-<RETURNS>idmef_time_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_time_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_modify_time</NAME>
@@ -2662,13 +2698,13 @@ idmef_file_t *ptr, idmef_time_t *modify_time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_modify_time_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_new_modify_time</NAME>
-<RETURNS>idmef_time_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_time_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_access_time</NAME>
@@ -2682,13 +2718,13 @@ idmef_file_t *ptr, idmef_time_t *access_time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_access_time_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_new_access_time</NAME>
-<RETURNS>idmef_time_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_time_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_data_size</NAME>
@@ -2702,13 +2738,13 @@ idmef_file_t *ptr, uint64_t data_size
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_data_size_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_new_data_size</NAME>
-<RETURNS>uint64_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, uint64_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_disk_size</NAME>
@@ -2722,13 +2758,13 @@ idmef_file_t *ptr, uint64_t disk_size
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_disk_size_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_new_disk_size</NAME>
-<RETURNS>uint64_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, uint64_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_next_file_access</NAME>
@@ -2742,13 +2778,13 @@ idmef_file_t *ptr, idmef_file_access_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_new_file_access</NAME>
-<RETURNS>idmef_file_access_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_file_access_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_file_access_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_next_linkage</NAME>
@@ -2762,13 +2798,13 @@ idmef_file_t *ptr, idmef_linkage_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_new_linkage</NAME>
-<RETURNS>idmef_linkage_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_linkage_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_linkage_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_inode</NAME>
@@ -2782,13 +2818,13 @@ idmef_file_t *ptr, idmef_inode_t *inode
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_inode_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_new_inode</NAME>
-<RETURNS>idmef_inode_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_inode_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_next_checksum</NAME>
@@ -2802,13 +2838,13 @@ idmef_file_t *ptr, idmef_checksum_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_new_checksum</NAME>
-<RETURNS>idmef_checksum_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_checksum_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_checksum_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_category</NAME>
@@ -2822,13 +2858,13 @@ idmef_file_t *ptr, idmef_file_category_t category
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_category_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_new_category</NAME>
-<RETURNS>idmef_file_category_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_file_category_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_fstype</NAME>
@@ -2842,13 +2878,13 @@ idmef_file_t *ptr, idmef_file_fstype_t fstype
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_get_fstype_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_new_fstype</NAME>
-<RETURNS>idmef_file_fstype_t  *</RETURNS>
-idmef_file_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_file_t *ptr, idmef_file_fstype_t **ret
 </FUNCTION>
 <ENUM>
 <NAME>idmef_linkage_category_t</NAME>
@@ -2874,8 +2910,8 @@ idmef_linkage_category_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_new</NAME>
-<RETURNS>idmef_linkage_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_linkage_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_ref</NAME>
@@ -2884,13 +2920,13 @@ idmef_linkage_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_destroy</NAME>
@@ -2909,13 +2945,13 @@ idmef_linkage_t *ptr, idmef_linkage_category_t category
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_get_category_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_linkage_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_linkage_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_new_category</NAME>
-<RETURNS>idmef_linkage_category_t  *</RETURNS>
-idmef_linkage_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_linkage_t *ptr, idmef_linkage_category_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_get_name</NAME>
@@ -2929,13 +2965,13 @@ idmef_linkage_t *ptr, prelude_string_t *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_get_name_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_linkage_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_linkage_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_new_name</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_linkage_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_linkage_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_get_path</NAME>
@@ -2949,13 +2985,13 @@ idmef_linkage_t *ptr, prelude_string_t *path
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_get_path_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_linkage_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_linkage_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_new_path</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_linkage_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_linkage_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_get_file</NAME>
@@ -2969,13 +3005,13 @@ idmef_linkage_t *ptr, idmef_file_t *file
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_get_file_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_linkage_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_linkage_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_new_file</NAME>
-<RETURNS>idmef_file_t  *</RETURNS>
-idmef_linkage_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_linkage_t *ptr, idmef_file_t **ret
 </FUNCTION>
 <ENUM>
 <NAME>idmef_target_decoy_t</NAME>
@@ -2998,8 +3034,8 @@ idmef_target_decoy_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_new</NAME>
-<RETURNS>idmef_target_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_target_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_ref</NAME>
@@ -3008,13 +3044,13 @@ idmef_target_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_destroy</NAME>
@@ -3033,13 +3069,13 @@ idmef_target_t *ptr, uint64_t ident
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_get_ident_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_target_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_target_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_new_ident</NAME>
-<RETURNS>uint64_t  *</RETURNS>
-idmef_target_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_target_t *ptr, uint64_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_get_decoy</NAME>
@@ -3053,13 +3089,13 @@ idmef_target_t *ptr, idmef_target_decoy_t decoy
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_get_decoy_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_target_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_target_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_new_decoy</NAME>
-<RETURNS>idmef_target_decoy_t  *</RETURNS>
-idmef_target_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_target_t *ptr, idmef_target_decoy_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_get_interface</NAME>
@@ -3073,13 +3109,13 @@ idmef_target_t *ptr, prelude_string_t *interface
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_get_interface_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_target_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_target_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_new_interface</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_target_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_target_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_get_node</NAME>
@@ -3093,13 +3129,13 @@ idmef_target_t *ptr, idmef_node_t *node
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_get_node_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_target_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_target_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_new_node</NAME>
-<RETURNS>idmef_node_t  *</RETURNS>
-idmef_target_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_target_t *ptr, idmef_node_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_get_user</NAME>
@@ -3113,13 +3149,13 @@ idmef_target_t *ptr, idmef_user_t *user
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_get_user_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_target_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_target_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_new_user</NAME>
-<RETURNS>idmef_user_t  *</RETURNS>
-idmef_target_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_target_t *ptr, idmef_user_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_get_process</NAME>
@@ -3133,13 +3169,13 @@ idmef_target_t *ptr, idmef_process_t *process
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_get_process_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_target_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_target_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_new_process</NAME>
-<RETURNS>idmef_process_t  *</RETURNS>
-idmef_target_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_target_t *ptr, idmef_process_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_get_service</NAME>
@@ -3153,13 +3189,13 @@ idmef_target_t *ptr, idmef_service_t *service
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_get_service_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_target_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_target_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_new_service</NAME>
-<RETURNS>idmef_service_t  *</RETURNS>
-idmef_target_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_target_t *ptr, idmef_service_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_get_next_file</NAME>
@@ -3173,18 +3209,18 @@ idmef_target_t *ptr, idmef_file_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_new_file</NAME>
-<RETURNS>idmef_file_t  *</RETURNS>
-idmef_target_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_target_t *ptr, idmef_file_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_get_file_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_target_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_target_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_new</NAME>
-<RETURNS>idmef_analyzer_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_ref</NAME>
@@ -3193,13 +3229,13 @@ idmef_analyzer_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_destroy</NAME>
@@ -3218,13 +3254,13 @@ idmef_analyzer_t *ptr, uint64_t analyzerid
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_analyzerid_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_new_analyzerid</NAME>
-<RETURNS>uint64_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, uint64_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_name</NAME>
@@ -3238,13 +3274,13 @@ idmef_analyzer_t *ptr, prelude_string_t *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_name_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_new_name</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_manufacturer</NAME>
@@ -3258,13 +3294,13 @@ idmef_analyzer_t *ptr, prelude_string_t *manufacturer
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_manufacturer_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_new_manufacturer</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_model</NAME>
@@ -3278,13 +3314,13 @@ idmef_analyzer_t *ptr, prelude_string_t *model
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_model_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_new_model</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_version</NAME>
@@ -3298,13 +3334,13 @@ idmef_analyzer_t *ptr, prelude_string_t *version
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_version_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_new_version</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_class</NAME>
@@ -3318,13 +3354,13 @@ idmef_analyzer_t *ptr, prelude_string_t *class
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_class_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_new_class</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_ostype</NAME>
@@ -3338,13 +3374,13 @@ idmef_analyzer_t *ptr, prelude_string_t *ostype
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_ostype_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_new_ostype</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_osversion</NAME>
@@ -3358,13 +3394,13 @@ idmef_analyzer_t *ptr, prelude_string_t *osversion
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_osversion_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_new_osversion</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_node</NAME>
@@ -3378,13 +3414,13 @@ idmef_analyzer_t *ptr, idmef_node_t *node
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_node_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_new_node</NAME>
-<RETURNS>idmef_node_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, idmef_node_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_process</NAME>
@@ -3398,13 +3434,13 @@ idmef_analyzer_t *ptr, idmef_process_t *process
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_process_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_new_process</NAME>
-<RETURNS>idmef_process_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, idmef_process_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_analyzer</NAME>
@@ -3418,18 +3454,18 @@ idmef_analyzer_t *ptr, idmef_analyzer_t *analyzer
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_get_analyzer_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_new_analyzer</NAME>
-<RETURNS>idmef_analyzer_t  *</RETURNS>
-idmef_analyzer_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *ptr, idmef_analyzer_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alertident_new</NAME>
-<RETURNS>idmef_alertident_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_alertident_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alertident_ref</NAME>
@@ -3438,13 +3474,13 @@ idmef_alertident_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alertident_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alertident_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alertident_destroy</NAME>
@@ -3463,13 +3499,13 @@ idmef_alertident_t *ptr, uint64_t alertident
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alertident_get_alertident_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_alertident_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alertident_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alertident_new_alertident</NAME>
-<RETURNS>uint64_t  *</RETURNS>
-idmef_alertident_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alertident_t *ptr, uint64_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alertident_get_analyzerid</NAME>
@@ -3483,13 +3519,13 @@ idmef_alertident_t *ptr, uint64_t analyzerid
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alertident_get_analyzerid_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_alertident_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alertident_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alertident_new_analyzerid</NAME>
-<RETURNS>uint64_t  *</RETURNS>
-idmef_alertident_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alertident_t *ptr, uint64_t **ret
 </FUNCTION>
 <ENUM>
 <NAME>idmef_impact_severity_t</NAME>
@@ -3553,8 +3589,8 @@ idmef_impact_type_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_new</NAME>
-<RETURNS>idmef_impact_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_impact_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_ref</NAME>
@@ -3563,13 +3599,13 @@ idmef_impact_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_destroy</NAME>
@@ -3588,13 +3624,13 @@ idmef_impact_t *ptr, idmef_impact_severity_t severity
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_get_severity_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_impact_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_impact_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_new_severity</NAME>
-<RETURNS>idmef_impact_severity_t  *</RETURNS>
-idmef_impact_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_impact_t *ptr, idmef_impact_severity_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_get_completion</NAME>
@@ -3608,13 +3644,13 @@ idmef_impact_t *ptr, idmef_impact_completion_t completion
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_get_completion_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_impact_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_impact_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_new_completion</NAME>
-<RETURNS>idmef_impact_completion_t  *</RETURNS>
-idmef_impact_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_impact_t *ptr, idmef_impact_completion_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_get_type</NAME>
@@ -3628,13 +3664,13 @@ idmef_impact_t *ptr, idmef_impact_type_t type
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_get_type_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_impact_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_impact_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_new_type</NAME>
-<RETURNS>idmef_impact_type_t  *</RETURNS>
-idmef_impact_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_impact_t *ptr, idmef_impact_type_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_get_description</NAME>
@@ -3648,13 +3684,13 @@ idmef_impact_t *ptr, prelude_string_t *description
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_get_description_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_impact_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_impact_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_new_description</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_impact_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_impact_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <ENUM>
 <NAME>idmef_action_category_t</NAME>
@@ -3678,8 +3714,8 @@ idmef_action_category_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_action_new</NAME>
-<RETURNS>idmef_action_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_action_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_action_ref</NAME>
@@ -3688,13 +3724,13 @@ idmef_action_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_action_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_action_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_action_destroy</NAME>
@@ -3713,13 +3749,13 @@ idmef_action_t *ptr, idmef_action_category_t category
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_action_get_category_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_action_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_action_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_action_new_category</NAME>
-<RETURNS>idmef_action_category_t  *</RETURNS>
-idmef_action_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_action_t *ptr, idmef_action_category_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_action_get_description</NAME>
@@ -3733,13 +3769,13 @@ idmef_action_t *ptr, prelude_string_t *description
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_action_get_description_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_action_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_action_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_action_new_description</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_action_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_action_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <ENUM>
 <NAME>idmef_confidence_rating_t</NAME>
@@ -3763,8 +3799,8 @@ idmef_confidence_rating_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_confidence_new</NAME>
-<RETURNS>idmef_confidence_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_confidence_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_confidence_ref</NAME>
@@ -3773,13 +3809,13 @@ idmef_confidence_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_confidence_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_confidence_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_confidence_destroy</NAME>
@@ -3798,13 +3834,13 @@ idmef_confidence_t *ptr, idmef_confidence_rating_t rating
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_confidence_get_rating_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_confidence_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_confidence_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_confidence_new_rating</NAME>
-<RETURNS>idmef_confidence_rating_t  *</RETURNS>
-idmef_confidence_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_confidence_t *ptr, idmef_confidence_rating_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_confidence_get_confidence</NAME>
@@ -3818,18 +3854,18 @@ idmef_confidence_t *ptr, float confidence
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_confidence_get_confidence_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_confidence_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_confidence_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_confidence_new_confidence</NAME>
-<RETURNS>float  *</RETURNS>
-idmef_confidence_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_confidence_t *ptr, float **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_new</NAME>
-<RETURNS>idmef_assessment_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_assessment_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_ref</NAME>
@@ -3838,13 +3874,13 @@ idmef_assessment_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_destroy</NAME>
@@ -3863,13 +3899,13 @@ idmef_assessment_t *ptr, idmef_impact_t *impact
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_get_impact_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_assessment_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_assessment_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_new_impact</NAME>
-<RETURNS>idmef_impact_t  *</RETURNS>
-idmef_assessment_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_assessment_t *ptr, idmef_impact_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_get_next_action</NAME>
@@ -3883,13 +3919,13 @@ idmef_assessment_t *ptr, idmef_action_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_new_action</NAME>
-<RETURNS>idmef_action_t  *</RETURNS>
-idmef_assessment_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_assessment_t *ptr, idmef_action_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_get_action_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_assessment_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_assessment_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_get_confidence</NAME>
@@ -3903,18 +3939,18 @@ idmef_assessment_t *ptr, idmef_confidence_t *confidence
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_get_confidence_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_assessment_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_assessment_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_new_confidence</NAME>
-<RETURNS>idmef_confidence_t  *</RETURNS>
-idmef_assessment_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_assessment_t *ptr, idmef_confidence_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_new</NAME>
-<RETURNS>idmef_tool_alert_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_tool_alert_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_ref</NAME>
@@ -3923,13 +3959,13 @@ idmef_tool_alert_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_destroy</NAME>
@@ -3948,13 +3984,13 @@ idmef_tool_alert_t *ptr, prelude_string_t *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_get_name_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_tool_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_tool_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_new_name</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_tool_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_tool_alert_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_get_command</NAME>
@@ -3968,13 +4004,13 @@ idmef_tool_alert_t *ptr, prelude_string_t *command
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_get_command_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_tool_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_tool_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_new_command</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_tool_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_tool_alert_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_get_next_alertident</NAME>
@@ -3988,18 +4024,18 @@ idmef_tool_alert_t *ptr, idmef_alertident_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_new_alertident</NAME>
-<RETURNS>idmef_alertident_t  *</RETURNS>
-idmef_tool_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_tool_alert_t *ptr, idmef_alertident_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_get_alertident_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_tool_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_tool_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_correlation_alert_new</NAME>
-<RETURNS>idmef_correlation_alert_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_correlation_alert_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_correlation_alert_ref</NAME>
@@ -4008,13 +4044,13 @@ idmef_correlation_alert_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_correlation_alert_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_correlation_alert_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_correlation_alert_destroy</NAME>
@@ -4033,13 +4069,13 @@ idmef_correlation_alert_t *ptr, prelude_string_t *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_correlation_alert_get_name_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_correlation_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_correlation_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_correlation_alert_new_name</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_correlation_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_correlation_alert_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_correlation_alert_get_next_alertident</NAME>
@@ -4053,18 +4089,18 @@ idmef_correlation_alert_t *ptr, idmef_alertident_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_correlation_alert_new_alertident</NAME>
-<RETURNS>idmef_alertident_t  *</RETURNS>
-idmef_correlation_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_correlation_alert_t *ptr, idmef_alertident_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_correlation_alert_get_alertident_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_correlation_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_correlation_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_new</NAME>
-<RETURNS>idmef_overflow_alert_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_overflow_alert_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_ref</NAME>
@@ -4073,13 +4109,13 @@ idmef_overflow_alert_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_destroy</NAME>
@@ -4098,13 +4134,13 @@ idmef_overflow_alert_t *ptr, prelude_string_t *program
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_get_program_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_overflow_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_overflow_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_new_program</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_overflow_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_overflow_alert_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_get_size</NAME>
@@ -4118,13 +4154,13 @@ idmef_overflow_alert_t *ptr, uint32_t size
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_get_size_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_overflow_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_overflow_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_new_size</NAME>
-<RETURNS>uint32_t  *</RETURNS>
-idmef_overflow_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_overflow_alert_t *ptr, uint32_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_get_buffer</NAME>
@@ -4138,13 +4174,13 @@ idmef_overflow_alert_t *ptr, idmef_data_t *buffer
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_get_buffer_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_overflow_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_overflow_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_new_buffer</NAME>
-<RETURNS>idmef_data_t  *</RETURNS>
-idmef_overflow_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_overflow_alert_t *ptr, idmef_data_t **ret
 </FUNCTION>
 <ENUM>
 <NAME>idmef_alert_type_t</NAME>
@@ -4168,18 +4204,18 @@ idmef_alert_type_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_new</NAME>
-<RETURNS>idmef_alert_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_alert_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_destroy</NAME>
@@ -4198,13 +4234,13 @@ idmef_alert_t *ptr, uint64_t messageid
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_messageid_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_new_messageid</NAME>
-<RETURNS>uint64_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, uint64_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_analyzer</NAME>
@@ -4218,13 +4254,13 @@ idmef_alert_t *ptr, idmef_analyzer_t *analyzer
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_analyzer_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_new_analyzer</NAME>
-<RETURNS>idmef_analyzer_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_analyzer_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_create_time</NAME>
@@ -4238,13 +4274,13 @@ idmef_alert_t *ptr, idmef_time_t *create_time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_create_time_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_new_create_time</NAME>
-<RETURNS>idmef_time_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_time_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_classification</NAME>
@@ -4258,13 +4294,13 @@ idmef_alert_t *ptr, idmef_classification_t *classification
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_classification_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_new_classification</NAME>
-<RETURNS>idmef_classification_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_classification_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_detect_time</NAME>
@@ -4278,13 +4314,13 @@ idmef_alert_t *ptr, idmef_time_t *detect_time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_detect_time_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_new_detect_time</NAME>
-<RETURNS>idmef_time_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_time_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_analyzer_time</NAME>
@@ -4298,13 +4334,13 @@ idmef_alert_t *ptr, idmef_time_t *analyzer_time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_analyzer_time_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_new_analyzer_time</NAME>
-<RETURNS>idmef_time_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_time_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_next_source</NAME>
@@ -4318,13 +4354,13 @@ idmef_alert_t *ptr, idmef_source_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_new_source</NAME>
-<RETURNS>idmef_source_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_source_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_source_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_next_target</NAME>
@@ -4338,13 +4374,13 @@ idmef_alert_t *ptr, idmef_target_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_new_target</NAME>
-<RETURNS>idmef_target_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_target_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_target_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_assessment</NAME>
@@ -4358,13 +4394,13 @@ idmef_alert_t *ptr, idmef_assessment_t *assessment
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_assessment_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_new_assessment</NAME>
-<RETURNS>idmef_assessment_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_assessment_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_next_additional_data</NAME>
@@ -4378,13 +4414,13 @@ idmef_alert_t *ptr, idmef_additional_data_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_new_additional_data</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_additional_data_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_additional_data_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_type</NAME>
@@ -4393,8 +4429,8 @@ idmef_alert_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_type_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_tool_alert</NAME>
@@ -4408,13 +4444,13 @@ idmef_alert_t *ptr, idmef_tool_alert_t *tool_alert
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_tool_alert_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_new_tool_alert</NAME>
-<RETURNS>idmef_tool_alert_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_tool_alert_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_correlation_alert</NAME>
@@ -4428,13 +4464,13 @@ idmef_alert_t *ptr, idmef_correlation_alert_t *correlation_alert
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_correlation_alert_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_new_correlation_alert</NAME>
-<RETURNS>idmef_correlation_alert_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_correlation_alert_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_overflow_alert</NAME>
@@ -4448,28 +4484,28 @@ idmef_alert_t *ptr, idmef_overflow_alert_t *overflow_alert
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_get_overflow_alert_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_new_overflow_alert</NAME>
-<RETURNS>idmef_overflow_alert_t  *</RETURNS>
-idmef_alert_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_alert_t *ptr, idmef_overflow_alert_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_new</NAME>
-<RETURNS>idmef_heartbeat_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_heartbeat_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_destroy</NAME>
@@ -4488,13 +4524,13 @@ idmef_heartbeat_t *ptr, uint64_t messageid
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_get_messageid_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_heartbeat_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_heartbeat_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_new_messageid</NAME>
-<RETURNS>uint64_t  *</RETURNS>
-idmef_heartbeat_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_heartbeat_t *ptr, uint64_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_get_analyzer</NAME>
@@ -4508,13 +4544,13 @@ idmef_heartbeat_t *ptr, idmef_analyzer_t *analyzer
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_get_analyzer_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_heartbeat_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_heartbeat_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_new_analyzer</NAME>
-<RETURNS>idmef_analyzer_t  *</RETURNS>
-idmef_heartbeat_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_heartbeat_t *ptr, idmef_analyzer_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_get_create_time</NAME>
@@ -4528,13 +4564,13 @@ idmef_heartbeat_t *ptr, idmef_time_t *create_time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_get_create_time_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_heartbeat_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_heartbeat_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_new_create_time</NAME>
-<RETURNS>idmef_time_t  *</RETURNS>
-idmef_heartbeat_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_heartbeat_t *ptr, idmef_time_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_get_analyzer_time</NAME>
@@ -4548,13 +4584,13 @@ idmef_heartbeat_t *ptr, idmef_time_t *analyzer_time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_get_analyzer_time_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_heartbeat_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_heartbeat_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_new_analyzer_time</NAME>
-<RETURNS>idmef_time_t  *</RETURNS>
-idmef_heartbeat_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_heartbeat_t *ptr, idmef_time_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_get_next_additional_data</NAME>
@@ -4568,13 +4604,13 @@ idmef_heartbeat_t *ptr, idmef_additional_data_t *object
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_new_additional_data</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-idmef_heartbeat_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_heartbeat_t *ptr, idmef_additional_data_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_get_additional_data_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_heartbeat_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_heartbeat_t *ptr, idmef_value_t **value
 </FUNCTION>
 <ENUM>
 <NAME>idmef_message_type_t</NAME>
@@ -4596,8 +4632,8 @@ idmef_message_type_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_new</NAME>
-<RETURNS>idmef_message_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_message_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_ref</NAME>
@@ -4606,13 +4642,13 @@ idmef_message_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *p, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *p, idmef_child_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_destroy</NAME>
@@ -4631,13 +4667,13 @@ idmef_message_t *ptr, prelude_string_t *version
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_get_version_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_message_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_message_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_new_version</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-idmef_message_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_message_t *ptr, prelude_string_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_get_type</NAME>
@@ -4646,8 +4682,8 @@ idmef_message_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_get_type_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_message_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_message_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_get_alert</NAME>
@@ -4661,13 +4697,13 @@ idmef_message_t *ptr, idmef_alert_t *alert
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_get_alert_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_message_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_message_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_new_alert</NAME>
-<RETURNS>idmef_alert_t  *</RETURNS>
-idmef_message_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_message_t *ptr, idmef_alert_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_get_heartbeat</NAME>
@@ -4681,13 +4717,13 @@ idmef_message_t *ptr, idmef_heartbeat_t *heartbeat
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_get_heartbeat_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_message_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_message_t *ptr, idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_new_heartbeat</NAME>
-<RETURNS>idmef_heartbeat_t  *</RETURNS>
-idmef_message_t *ptr
+<RETURNS>int  </RETURNS>
+idmef_message_t *ptr, idmef_heartbeat_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_set_pmsg</NAME>
@@ -5131,29 +5167,22 @@ const char *variable
 #define PRELUDE_MSG_OPTION_HOP              20
 </MACRO>
 <MACRO>
-<NAME>log</NAME>
-#define log(priority, ...) \
-        prelude_log(priority, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
-</MACRO>
-<MACRO>
-<NAME>LOG_ERR</NAME>
- #define LOG_ERR 1
-</MACRO>
-<MACRO>
-<NAME>LOG_INFO</NAME>
- #define LOG_INFO 0
+<NAME>prelude_log</NAME>
+#define prelude_log(priority, ...) \
+        _prelude_log(priority, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
 </MACRO>
 <ENUM>
-<NAME>prelude_log_priority_t</NAME>
+<NAME>prelude_log_t</NAME>
 typedef enum {
-        PRELUDE_LOG_PRIORITY_INFO   = LOG_INFO,
-        PRELUDE_LOG_PRIORITY_ERROR  = LOG_ERR,
-} prelude_log_priority_t;
+        PRELUDE_LOG_INFO,
+        PRELUDE_LOG_WARN,
+        PRELUDE_LOG_ERR ,
+} prelude_log_t;
 </ENUM>
 <ENUM>
 <NAME>prelude_log_flags_t</NAME>
 typedef enum {
-        PRELUDE_LOG_FLAGS_QUIET  = 0x01,
+        PRELUDE_LOG_FLAGS_QUIET  = 0x01, /* Drop PRELUDE_LOG_PRIORITY_INFO */
         PRELUDE_LOG_FLAGS_SYSLOG = 0x02
 } prelude_log_flags_t;
 </ENUM>
@@ -5168,11 +5197,6 @@ void
 prelude_log_flags_t flags
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_log_use_syslog</NAME>
-<RETURNS>void  </RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
 <NAME>prelude_log_get_prefix</NAME>
 <RETURNS>char  *</RETURNS>
 void
@@ -5183,14 +5207,9 @@ void
 char *prefix
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_log</NAME>
-<RETURNS>void  </RETURNS>
-prelude_log_priority_t priority, const char *file,const char *function, int line, const char *fmt, ...
-</FUNCTION>
-<FUNCTION>
 <NAME>prelude_log_v</NAME>
 <RETURNS>void  </RETURNS>
-prelude_log_priority_t priority, const char *file,const char *function, int line, const char *fmt, va_list ap
+prelude_log_t priority, const char *file,const char *function, int line, const char *fmt, va_list ap
 </FUNCTION>
 <MACRO>
 <NAME>PRELUDE_MSG_PRIORITY_HIGH</NAME>
@@ -5316,8 +5335,8 @@ prelude_msg_t *msg, void *data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_new_string</NAME>
-<RETURNS>idmef_criteria_t  *</RETURNS>
-const char *str
+<RETURNS>int  </RETURNS>
+idmef_criteria_t **criteria, const char *str
 </FUNCTION>
 <MACRO>
 <NAME>TS_MASK</NAME>
@@ -5483,7 +5502,7 @@ prelude_option_t *opt, prelude_option_type_t type, int descoff
 <FUNCTION>
 <NAME>prelude_option_wide_send_msg</NAME>
 <RETURNS>int  </RETURNS>
-void *context, prelude_msgbuf_t *msgbuf
+prelude_msgbuf_t *msgbuf, void *context
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_destroy</NAME>
@@ -5493,12 +5512,12 @@ prelude_option_t *option
 <FUNCTION>
 <NAME>prelude_option_parse_arguments</NAME>
 <RETURNS>int  </RETURNS>
-void *context, prelude_option_t *option,const char *filename, int *argc, char **argv, prelude_string_t **err
+prelude_option_t *option, const char **filename,int *argc, char **argv, prelude_string_t **err, void *context
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_add</NAME>
-<RETURNS>prelude_option_t  *</RETURNS>
-prelude_option_t *parent, prelude_option_type_t type,char shortopt, const char *longopt, const char *desc,prelude_option_argument_t has_arg,int (*set)(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err),int (*get)(void *context, prelude_option_t *opt, prelude_string_t *out)
+<RETURNS>int  </RETURNS>
+prelude_option_t *parent, prelude_option_t **retopt, prelude_option_type_t type,char shortopt, const char *longopt, const char *desc, prelude_option_argument_t has_arg,int (*set)(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context),int (*get)(prelude_option_t *opt, prelude_string_t *out, void *context)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_set_type</NAME>
@@ -5538,32 +5557,32 @@ prelude_option_t *opt
 <FUNCTION>
 <NAME>prelude_option_invoke_commit</NAME>
 <RETURNS>int  </RETURNS>
-void *context, prelude_option_t *opt, const char *ctname, prelude_string_t *value
+prelude_option_t *opt, const char *ctname, prelude_string_t *value, void *context
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_invoke_set</NAME>
 <RETURNS>int  </RETURNS>
-void **context, prelude_option_t *opt, const char *ctname, prelude_string_t *value
+prelude_option_t *opt, const char *ctname, prelude_string_t *value, void **context
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_invoke_get</NAME>
 <RETURNS>int  </RETURNS>
-void *context, prelude_option_t *opt, const char *ctname, prelude_string_t *value
+prelude_option_t *opt, const char *ctname, prelude_string_t *value, void *context
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_invoke_destroy</NAME>
 <RETURNS>int  </RETURNS>
-void *context, prelude_option_t *opt, const char *ctname, prelude_string_t *value
+prelude_option_t *opt, const char *ctname, prelude_string_t *value, void *context
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_new_root</NAME>
-<RETURNS>prelude_option_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+prelude_option_t **retopt
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_new</NAME>
-<RETURNS>prelude_option_t  *</RETURNS>
-prelude_option_t *parent
+<RETURNS>int  </RETURNS>
+prelude_option_t *parent, prelude_option_t **retopt
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_set_longopt</NAME>
@@ -5647,7 +5666,7 @@ prelude_option_t *start, prelude_option_t *cur
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_has_optlist</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>prelude_bool_t  </RETURNS>
 prelude_option_t *opt
 </FUNCTION>
 <FUNCTION>
@@ -5658,7 +5677,7 @@ prelude_option_t *opt
 <FUNCTION>
 <NAME>prelude_option_set_destroy_callback</NAME>
 <RETURNS>void  </RETURNS>
-prelude_option_t *opt,int (*destroy)(void *context,prelude_option_t *opt,prelude_string_t *out)
+prelude_option_t *opt,int (*destroy)(prelude_option_t *opt,prelude_string_t *out, void *context)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_get_destroy_callback</NAME>
@@ -5668,7 +5687,7 @@ prelude_option_t *opt
 <FUNCTION>
 <NAME>prelude_option_set_set_callback</NAME>
 <RETURNS>void  </RETURNS>
-prelude_option_t *opt,int (*set)(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)
+prelude_option_t *opt,int (*set)(prelude_option_t *opt,const char *optarg, prelude_string_t *err, void *context)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_get_set_callback</NAME>
@@ -5678,7 +5697,7 @@ prelude_option_t *opt
 <FUNCTION>
 <NAME>prelude_option_set_get_callback</NAME>
 <RETURNS>void  </RETURNS>
-prelude_option_t *opt,int (*get)(void *context, prelude_option_t *opt, prelude_string_t *out)
+prelude_option_t *opt,int (*get)(prelude_option_t *opt, prelude_string_t *out, void *context)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_get_get_callback</NAME>
@@ -5688,7 +5707,7 @@ prelude_option_t *opt
 <FUNCTION>
 <NAME>prelude_option_set_commit_callback</NAME>
 <RETURNS>void  </RETURNS>
-prelude_option_t *opt, int (*commit)(void *context,prelude_option_t *opt,prelude_string_t *out)
+prelude_option_t *opt, int (*commit)(prelude_option_t *opt,prelude_string_t *out,void *context)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_get_commit_callback</NAME>
@@ -5703,7 +5722,7 @@ prelude_option_t *opt, void *context
 <FUNCTION>
 <NAME>prelude_option_new_context</NAME>
 <RETURNS>int  </RETURNS>
-prelude_option_context_t **ctx, prelude_option_t *opt, const char *name, void *data
+prelude_option_t *opt, prelude_option_context_t **ctx, const char *name, void *data
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_context_destroy</NAME>
@@ -5724,14 +5743,12 @@ typedef enum {
         PRELUDE_CONNECTION_CAPABILITY_RECV_CM    = 0x04
 } prelude_connection_capability_t;
 </ENUM>
-<MACRO>
-<NAME>PRELUDE_CONNECTION_ESTABLISHED</NAME>
-#define PRELUDE_CONNECTION_ESTABLISHED    0x01
-</MACRO>
-<MACRO>
-<NAME>PRELUDE_CONNECTION_OWN_FD</NAME>
-#define PRELUDE_CONNECTION_OWN_FD         0x02
-</MACRO>
+<ENUM>
+<NAME>prelude_connection_state_t</NAME>
+typedef enum {
+        PRELUDE_CONNECTION_STATE_ESTABLISHED     = 0x01,
+} prelude_connection_state_t;
+</ENUM>
 <FUNCTION>
 <NAME>prelude_connection_destroy</NAME>
 <RETURNS>void  </RETURNS>
@@ -5745,7 +5762,7 @@ prelude_connection_t *cnx, prelude_msg_t *msg
 <FUNCTION>
 <NAME>prelude_connection_recv</NAME>
 <RETURNS>int  </RETURNS>
-prelude_connection_t *cnx, prelude_msg_t **msg
+prelude_connection_t *cnx, prelude_msg_t **outmsg
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_connection_connect</NAME>
@@ -5758,23 +5775,23 @@ prelude_connection_t *cnx,prelude_client_profile_t *profile,prelude_connection_c
 prelude_connection_t *cnx, prelude_io_t *src, size_t count
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_connection_get_saddr</NAME>
+<NAME>prelude_connection_get_local_addr</NAME>
 <RETURNS>const char  *</RETURNS>
 prelude_connection_t *cnx
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_connection_get_daddr</NAME>
+<NAME>prelude_connection_get_local_port</NAME>
+<RETURNS>unsigned int  </RETURNS>
+prelude_connection_t *cnx
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_get_peer_addr</NAME>
 <RETURNS>const char  *</RETURNS>
 prelude_connection_t *cnx
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_connection_get_sport</NAME>
-<RETURNS>uint16_t  </RETURNS>
-prelude_connection_t *cnx
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_get_dport</NAME>
-<RETURNS>uint16_t  </RETURNS>
+<NAME>prelude_connection_get_peer_port</NAME>
+<RETURNS>unsigned int  </RETURNS>
 prelude_connection_t *cnx
 </FUNCTION>
 <FUNCTION>
@@ -5793,18 +5810,23 @@ prelude_connection_t *cnx
 prelude_connection_t *cnx
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_connection_set_fd</NAME>
+<NAME>prelude_connection_set_fd_ref</NAME>
+<RETURNS>void  </RETURNS>
+prelude_connection_t *cnx, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_set_fd_nodup</NAME>
 <RETURNS>void  </RETURNS>
 prelude_connection_t *cnx, prelude_io_t *fd
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_connection_set_state</NAME>
 <RETURNS>void  </RETURNS>
-prelude_connection_t *cnx, int state
+prelude_connection_t *cnx, prelude_connection_state_t state
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_connection_get_state</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>prelude_connection_state_t  </RETURNS>
 prelude_connection_t *cnx
 </FUNCTION>
 <FUNCTION>
@@ -5818,9 +5840,9 @@ prelude_connection_t *cnx, void *data
 prelude_connection_t *cnx
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_connection_get_socket_filename</NAME>
-<RETURNS>void  </RETURNS>
-char *buf, size_t size, uint16_t port
+<NAME>prelude_connection_get_default_socket_filename</NAME>
+<RETURNS>const char  *</RETURNS>
+void
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_connection_get_peer_analyzerid</NAME>
@@ -5835,7 +5857,7 @@ prelude_connection_t *cnx, uint64_t analyzerid
 <FUNCTION>
 <NAME>prelude_connection_new</NAME>
 <RETURNS>int  </RETURNS>
-prelude_connection_t **ret, const char *addr, uint16_t port
+prelude_connection_t **ret, const char *addr
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_connection_new_msgbuf</NAME>
@@ -5846,30 +5868,34 @@ prelude_connection_t *connection, prelude_msgbuf_t **msgbuf
 <NAME>idmef_type_string</NAME>
 #define idmef_type_string 0
 </MACRO>
+<MACRO>
+<NAME>prelude_type_string</NAME>
+#define prelude_type_string 0
+</MACRO>
 <FUNCTION>
 <NAME>prelude_string_new</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+prelude_string_t **string
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_new_nodup</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-char *str
+<RETURNS>int  </RETURNS>
+prelude_string_t **string, char *str
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_new_ref</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-const char *str
+<RETURNS>int  </RETURNS>
+prelude_string_t **string, const char *str
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_new_dup</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-const char *str
+<RETURNS>int  </RETURNS>
+prelude_string_t **string, const char *str
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_new_dup_fast</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-const char *str, size_t len
+<RETURNS>int  </RETURNS>
+prelude_string_t **string, const char *str, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_destroy</NAME>
@@ -5883,53 +5909,53 @@ prelude_string_t *string
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_new_nodup_fast</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-char *str, size_t len
+<RETURNS>int  </RETURNS>
+prelude_string_t **string, char *str, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_new_ref_fast</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-const char *str, size_t len
+<RETURNS>int  </RETURNS>
+prelude_string_t **string, const char *str, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_set_dup_fast</NAME>
 <RETURNS>int  </RETURNS>
-prelude_string_t *string, const char *str, size_t len
+prelude_string_t *string, const char *buf, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_set_dup</NAME>
 <RETURNS>int  </RETURNS>
-prelude_string_t *string, const char *str
+prelude_string_t *string, const char *buf
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_set_nodup_fast</NAME>
 <RETURNS>int  </RETURNS>
-prelude_string_t *string, char *str, size_t len
+prelude_string_t *string, char *buf, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_set_nodup</NAME>
 <RETURNS>int  </RETURNS>
-prelude_string_t *string, char *str
+prelude_string_t *string, char *buf
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_set_ref_fast</NAME>
 <RETURNS>int  </RETURNS>
-prelude_string_t *string, const char *str, size_t len
+prelude_string_t *string, const char *buf, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_set_ref</NAME>
 <RETURNS>int  </RETURNS>
-prelude_string_t *string, const char *str
+prelude_string_t *string, const char *buf
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_copy_ref</NAME>
 <RETURNS>int  </RETURNS>
-prelude_string_t *dst, const prelude_string_t *src
+const prelude_string_t *src, prelude_string_t *dst
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_copy_dup</NAME>
 <RETURNS>int  </RETURNS>
-prelude_string_t *dst, const prelude_string_t *src
+const prelude_string_t *src, prelude_string_t *dst
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_ref</NAME>
@@ -5938,8 +5964,8 @@ prelude_string_t *string
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_clone</NAME>
-<RETURNS>prelude_string_t  *</RETURNS>
-const prelude_string_t *src
+<RETURNS>int  </RETURNS>
+const prelude_string_t *src, prelude_string_t **dst
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_get_len</NAME>
@@ -5958,12 +5984,12 @@ const prelude_string_t *string
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_get_string_released</NAME>
-<RETURNS>char  *</RETURNS>
-prelude_string_t *string
+<RETURNS>int  </RETURNS>
+prelude_string_t *string, char **outptr
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_is_empty</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>prelude_bool_t  </RETURNS>
 const prelude_string_t *string
 </FUNCTION>
 <FUNCTION>
@@ -5974,12 +6000,12 @@ prelude_string_t *string
 <FUNCTION>
 <NAME>prelude_string_cat</NAME>
 <RETURNS>int  </RETURNS>
-prelude_string_t *string, const char *str
+prelude_string_t *dst, const char *str
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_ncat</NAME>
 <RETURNS>int  </RETURNS>
-prelude_string_t *string, const char *str, size_t len
+prelude_string_t *dst, const char *str, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_sprintf</NAME>
@@ -5993,13 +6019,13 @@ prelude_string_t *string, const char *fmt, va_list ap
 </FUNCTION>
 <MACRO>
 <NAME>prelude_string_set_constant</NAME>
-#define prelude_string_set_constant(istr, str) 			\
-	prelude_string_set_ref_fast(istr, (str), sizeof((str)) - 1)
+#define prelude_string_set_constant(string, str) 			\
+	prelude_string_set_ref_fast((string), (str), sizeof((str)) - 1)
 </MACRO>
 <MACRO>
 <NAME>prelude_string_new_constant</NAME>
-#define prelude_string_new_constant(str)		       	\
-	prelude_string_new_ref_fast((str), sizeof((str)) - 1)
+#define prelude_string_new_constant(string, str)	            	\
+	prelude_string_new_ref_fast((string), (str), sizeof((str)) - 1)
 </MACRO>
 <FUNCTION>
 <NAME>idmef_additional_data_print</NAME>
@@ -6423,7 +6449,7 @@ prelude_client_t *client
 <FUNCTION>
 <NAME>prelude_client_new</NAME>
 <RETURNS>int  </RETURNS>
-prelude_client_t **client,prelude_connection_capability_t capability,const char *profile, const char *config,int *argc, char **argv
+prelude_client_t **client,prelude_connection_capability_t capability,const char *profile, const char *config
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_client_get_analyzer</NAME>
@@ -6478,7 +6504,7 @@ prelude_client_t *client
 <FUNCTION>
 <NAME>prelude_client_is_setup_needed</NAME>
 <RETURNS>prelude_bool_t  </RETURNS>
-prelude_client_t *client, prelude_error_t err
+int error
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_client_get_profile</NAME>
@@ -6699,8 +6725,8 @@ prelude_plugin_instance_t *pi
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_plugin_new_instance</NAME>
-<RETURNS>prelude_plugin_instance_t  *</RETURNS>
-prelude_plugin_generic_t *plugin, const char *name, void *data
+<RETURNS>int  </RETURNS>
+prelude_plugin_instance_t **pi, prelude_plugin_generic_t *plugin, const char *name, void *data
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_plugin_unsubscribe</NAME>
@@ -6750,7 +6776,7 @@ prelude_plugin_instance_t *pi
 <FUNCTION>
 <NAME>prelude_plugin_load_from_dir</NAME>
 <RETURNS>int  </RETURNS>
-const char *dirname,int (*subscribe)(prelude_plugin_instance_t *p),void (*unsubscribe)(prelude_plugin_instance_t *pi)
+const char *dirname, const char *symbol, void *data,int (*subscribe)(prelude_plugin_instance_t *p),void (*unsubscribe)(prelude_plugin_instance_t *pi)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_plugin_add</NAME>
@@ -6808,14 +6834,9 @@ prelude_plugin_generic_t *plugin
         (((type *)prelude_plugin_instance_get_plugin(pi))->member(arg))
 </MACRO>
 <FUNCTION>
-<NAME>prelude_plugin_init</NAME>
-<RETURNS>prelude_plugin_generic_t  *</RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
 <NAME>prelude_hash_new</NAME>
-<RETURNS>prelude_hash_t  *</RETURNS>
-unsigned int (*hash_func)(const void *),int (*key_cmp_func)(const void *, const void *),void (*key_destroy_func)(void *),void (*value_destroy_func)(void *)
+<RETURNS>int  </RETURNS>
+prelude_hash_t **hash,unsigned int (*hash_func)(const void *),int (*key_cmp_func)(const void *, const void *),void (*key_destroy_func)(void *),void (*value_destroy_func)(void *)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_hash_destroy</NAME>
@@ -6864,12 +6885,12 @@ prelude_failover_t *failover, prelude_msg_t **out
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_failover_get_deleted_msg_count</NAME>
-<RETURNS>unsigned int  </RETURNS>
+<RETURNS>unsigned long  </RETURNS>
 prelude_failover_t *failover
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_failover_get_available_msg_count</NAME>
-<RETURNS>unsigned int  </RETURNS>
+<RETURNS>unsigned long  </RETURNS>
 prelude_failover_t *failover
 </FUNCTION>
 <MACRO>
@@ -7074,10 +7095,6 @@ idmef_heartbeat_t *heartbeat, prelude_msg_t *msg
 <RETURNS>int  </RETURNS>
 idmef_message_t *message, prelude_msg_t *msg
 </FUNCTION>
-<MACRO>
-<NAME>AI_CANONNAME</NAME>
- #define AI_CANONNAME 0x01
-</MACRO>
 <FUNCTION>
 <NAME>prelude_inet_addr_is_loopback</NAME>
 <RETURNS>int  </RETURNS>
@@ -7089,39 +7106,14 @@ int af, void *addr
 struct sockaddr *sa
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_inet_gai_strerror</NAME>
-<RETURNS>const char  *</RETURNS>
-int errcode
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_inet_freeaddrinfo</NAME>
-<RETURNS>void  </RETURNS>
-prelude_addrinfo_t *info
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_inet_getaddrinfo</NAME>
-<RETURNS>int  </RETURNS>
-const char *node, const char *service,const prelude_addrinfo_t *hints, prelude_addrinfo_t **res
-</FUNCTION>
-<FUNCTION>
 <NAME>prelude_inet_ntop</NAME>
 <RETURNS>const char  *</RETURNS>
 int af, const void *src, char *dst, size_t cnt
 </FUNCTION>
 <MACRO>
-<NAME>PRELUDE_LIST_HEAD_INIT</NAME>
-#define PRELUDE_LIST_HEAD_INIT(name) { &(name), &(name) }
-</MACRO>
-<MACRO>
-<NAME>PRELUDE_LIST_HEAD</NAME>
-#define PRELUDE_LIST_HEAD(name) \
-	prelude_list_t name = PRELUDE_LIST_HEAD_INIT(name)
-</MACRO>
-<MACRO>
-<NAME>PRELUDE_INIT_LIST_HEAD</NAME>
-#define PRELUDE_INIT_LIST_HEAD(ptr) do { \
-	(ptr)->next = (ptr); (ptr)->prev = (ptr); \
-} while (0)
+<NAME>PRELUDE_LIST</NAME>
+#define PRELUDE_LIST(name) \
+	prelude_list_t name = { &(name), &(name) }
 </MACRO>
 <MACRO>
 <NAME>prelude_list_entry</NAME>
@@ -7129,8 +7121,38 @@ int af, const void *src, char *dst, size_t cnt
 	((type *)((unsigned long)(ptr) - (unsigned long)(&((type *)0)->member)))
 </MACRO>
 <MACRO>
+<NAME>prelude_list_for_each_continue_safe</NAME>
+#define prelude_list_for_each_continue_safe(head, pos, bkp)     \
+        for ( (pos) = (((bkp) == NULL) ? (head)->next : (bkp)); \
+              ((bkp) = (pos)->next), (pos) != (head);           \
+              (pos) = (bkp))
+</MACRO>
+<MACRO>
+<NAME>prelude_list_for_each_continue</NAME>
+#define prelude_list_for_each_continue(head, pos)                     \
+        for ( (pos) = (((pos) == NULL) ? (head)->next : (pos)->next); \
+              (pos) != (head);                                        \
+              (pos) = (pos)->next)
+</MACRO>
+<MACRO>
+<NAME>prelude_list_for_each</NAME>
+#define prelude_list_for_each(head, pos) \
+	for (pos = (head)->next; pos != (head); pos = pos->next)
+</MACRO>
+<MACRO>
+<NAME>prelude_list_for_each_safe</NAME>
+#define prelude_list_for_each_safe(head, pos, n) \
+        for (pos = (head)->next, n = pos->next; pos != (head); \
+                pos = n, n = pos->next)
+</MACRO>
+<MACRO>
+<NAME>prelude_list_for_each_reversed</NAME>
+#define prelude_list_for_each_reversed(head, pos) \
+        for (pos = (head)->prev; pos != (head); pos = pos->prev)
+</MACRO>
+<MACRO>
 <NAME>prelude_list_get_next</NAME>
-#define prelude_list_get_next(pos, list, class, member) \
+#define prelude_list_get_next(list, pos, class, member) \
         pos ? \
                 ((pos)->member.next == (list)) ? NULL : \
                                 prelude_list_entry((pos)->member.next, class, member) \
@@ -7140,7 +7162,7 @@ int af, const void *src, char *dst, size_t cnt
 </MACRO>
 <MACRO>
 <NAME>prelude_list_get_next_safe</NAME>
-#define prelude_list_get_next_safe(pos, bkp, list, class, member)                                                                \
+#define prelude_list_get_next_safe(list, pos, bkp, class, member)                                                                \
         pos ?                                                                                                            \
               (((pos) = bkp),                                                                                            \
                ((bkp) = (! (bkp) || (bkp)->member.next == list) ? NULL : prelude_list_entry((pos)->member.next, class, member)), \
@@ -7149,42 +7171,6 @@ int af, const void *src, char *dst, size_t cnt
               (((pos) = ((list)->next == list) ? NULL : prelude_list_entry((list)->next, class, member)),                        \
                ((bkp) = (! (pos) ||(pos)->member.next == list ) ? NULL : prelude_list_entry((pos)->member.next, class, member)), \
                (pos))
-</MACRO>
-<MACRO>
-<NAME>prelude_list_for_each_continue_safe</NAME>
-#define prelude_list_for_each_continue_safe(pos, bkp, head)     \
-        for ( (pos) = (((bkp) == NULL) ? (head)->next : (bkp)); \
-              ((bkp) = (pos)->next), (pos) != (head);           \
-              (pos) = (bkp))
-</MACRO>
-<MACRO>
-<NAME>prelude_list_for_each_continue</NAME>
-#define prelude_list_for_each_continue(pos, head)                     \
-        for ( (pos) = (((pos) == NULL) ? (head)->next : (pos)->next); \
-              (pos) != (head);                                        \
-              (pos) = (pos)->next)
-</MACRO>
-<MACRO>
-<NAME>prelude_list_for_each</NAME>
-#define prelude_list_for_each(pos, head) \
-	for (pos = (head)->next; pos != (head); pos = pos->next)
-</MACRO>
-<MACRO>
-<NAME>prelude_list_for_each_safe</NAME>
-#define prelude_list_for_each_safe(pos, n, head) \
-        for (pos = (head)->next, n = pos->next; pos != (head); \
-                pos = n, n = pos->next)
-</MACRO>
-<MACRO>
-<NAME>prelude_list_for_each_reversed</NAME>
-#define prelude_list_for_each_reversed(pos, head) \
-        for (pos = (head)->prev; pos != (head); pos = pos->prev)
-</MACRO>
-<MACRO>
-<NAME>prelude_list_for_each_reversed_safe</NAME>
-#define prelude_list_for_each_reversed_safe(pos, n, head) \
-        for (pos = (head)->prev, n = pos->prev; pos != (head); \
-                 pos = n, n = pos->prev)
 </MACRO>
 <MACRO>
 <NAME>INT8_MIN</NAME>
@@ -7344,7 +7330,7 @@ typedef enum {
 <FUNCTION>
 <NAME>prelude_init</NAME>
 <RETURNS>int  </RETURNS>
-void
+int *argc, char **argv
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_deinit</NAME>
@@ -7378,8 +7364,8 @@ config_t *cfg, const char *section, const char *entry, const char *val
 </FUNCTION>
 <FUNCTION>
 <NAME>config_open</NAME>
-<RETURNS>config_t  *</RETURNS>
-const char *filename
+<RETURNS>int  </RETURNS>
+config_t **ret, const char *filename
 </FUNCTION>
 <FUNCTION>
 <NAME>config_close</NAME>
@@ -7593,8 +7579,8 @@ prelude_connection_mgr_t *mgr,prelude_connection_mgr_event_t events,int (*callba
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_new</NAME>
-<RETURNS>idmef_criterion_t  *</RETURNS>
-idmef_object_t *object,idmef_criterion_value_t *value, idmef_value_relation_t relation
+<RETURNS>int  </RETURNS>
+idmef_criterion_t **criterion, idmef_path_t *path,idmef_criterion_value_t *value, idmef_value_relation_t relation
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_destroy</NAME>
@@ -7603,13 +7589,13 @@ idmef_criterion_t *criterion
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_clone</NAME>
-<RETURNS>idmef_criterion_t  *</RETURNS>
-idmef_criterion_t *criterion
+<RETURNS>int  </RETURNS>
+idmef_criterion_t *src, idmef_criterion_t **dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_print</NAME>
-<RETURNS>void  </RETURNS>
-const idmef_criterion_t *criterion
+<RETURNS>int  </RETURNS>
+const idmef_criterion_t *criterion, prelude_io_t *fd
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_to_string</NAME>
@@ -7617,8 +7603,8 @@ const idmef_criterion_t *criterion
 const idmef_criterion_t *criterion, prelude_string_t *out
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_criterion_get_object</NAME>
-<RETURNS>idmef_object_t  *</RETURNS>
+<NAME>idmef_criterion_get_path</NAME>
+<RETURNS>idmef_path_t  *</RETURNS>
 idmef_criterion_t *criterion
 </FUNCTION>
 <FUNCTION>
@@ -7638,8 +7624,8 @@ idmef_criterion_t *criterion, idmef_message_t *message
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_new</NAME>
-<RETURNS>idmef_criteria_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_criteria_t **criteria
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_destroy</NAME>
@@ -7648,13 +7634,13 @@ idmef_criteria_t *criteria
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_clone</NAME>
-<RETURNS>idmef_criteria_t  *</RETURNS>
-idmef_criteria_t *criteria
+<RETURNS>int  </RETURNS>
+idmef_criteria_t *src, idmef_criteria_t **dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_criteria_t *criteria
+<RETURNS>int  </RETURNS>
+idmef_criteria_t *criteria, prelude_io_t *fd
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_to_string</NAME>
@@ -7663,7 +7649,7 @@ idmef_criteria_t *criteria, prelude_string_t *out
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_is_criterion</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>prelude_bool_t  </RETURNS>
 idmef_criteria_t *criteria
 </FUNCTION>
 <FUNCTION>
@@ -7683,7 +7669,7 @@ idmef_criteria_t *criteria, idmef_criteria_t *criteria2
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_and_criteria</NAME>
-<RETURNS>void  </RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_criteria_t *criteria, idmef_criteria_t *criteria2
 </FUNCTION>
 <FUNCTION>
@@ -7716,7 +7702,7 @@ typedef enum {
 	IDMEF_DATA_TYPE_FLOAT        = 5,
 	IDMEF_DATA_TYPE_CHAR_STRING  = 6,
 	IDMEF_DATA_TYPE_BYTE_STRING  = 7
-}	idmef_data_type_t;
+} idmef_data_type_t;
 </ENUM>
 <STRUCT>
 <NAME>data</NAME>
@@ -7740,8 +7726,8 @@ struct data
 </STRUCT>
 <FUNCTION>
 <NAME>idmef_data_new</NAME>
-<RETURNS>idmef_data_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_data_t **data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_ref</NAME>
@@ -7750,28 +7736,28 @@ idmef_data_t *data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_new_char</NAME>
-<RETURNS>idmef_data_t  *</RETURNS>
-char c
+<RETURNS>int  </RETURNS>
+idmef_data_t **data, char c
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_new_byte</NAME>
-<RETURNS>idmef_data_t  *</RETURNS>
-uint8_t i
+<RETURNS>int  </RETURNS>
+idmef_data_t **data, uint8_t i
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_new_uint32</NAME>
-<RETURNS>idmef_data_t  *</RETURNS>
-uint32_t i
+<RETURNS>int  </RETURNS>
+idmef_data_t **data, uint32_t i
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_new_uint64</NAME>
-<RETURNS>idmef_data_t  *</RETURNS>
-uint64_t i
+<RETURNS>int  </RETURNS>
+idmef_data_t **data, uint64_t i
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_new_float</NAME>
-<RETURNS>idmef_data_t  *</RETURNS>
-float f
+<RETURNS>int  </RETURNS>
+idmef_data_t **data, float f
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_set_char</NAME>
@@ -7800,18 +7786,18 @@ idmef_data_t *data, float f
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_new_ptr_ref_fast</NAME>
-<RETURNS>idmef_data_t  *</RETURNS>
-idmef_data_type_t type, const void *data, size_t len
+<RETURNS>int  </RETURNS>
+idmef_data_t **nd, idmef_data_type_t type, const void *data, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_new_ptr_dup_fast</NAME>
-<RETURNS>idmef_data_t  *</RETURNS>
-idmef_data_type_t type, const void *data, size_t len
+<RETURNS>int  </RETURNS>
+idmef_data_t **nd, idmef_data_type_t type, const void *data, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_new_ptr_nodup_fast</NAME>
-<RETURNS>idmef_data_t  *</RETURNS>
-idmef_data_type_t type, void *data, size_t len
+<RETURNS>int  </RETURNS>
+idmef_data_t **nd, idmef_data_type_t type, void *data, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_set_ptr_ref_fast</NAME>
@@ -7835,8 +7821,8 @@ idmef_data_t *data, const char *str, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_new_char_string_dup_fast</NAME>
-<RETURNS>idmef_data_t  *</RETURNS>
-const char *str, size_t len
+<RETURNS>int  </RETURNS>
+idmef_data_t **data, const char *str, size_t len
 </FUNCTION>
 <MACRO>
 <NAME>idmef_data_new_char_string_ref_fast</NAME>
@@ -7931,17 +7917,17 @@ idmef_data_t *data
 <FUNCTION>
 <NAME>idmef_data_copy_ref</NAME>
 <RETURNS>int  </RETURNS>
-idmef_data_t *dst, const idmef_data_t *src
+const idmef_data_t *src, idmef_data_t *dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_copy_dup</NAME>
 <RETURNS>int  </RETURNS>
-idmef_data_t *dst, const idmef_data_t *src
+const idmef_data_t *src, idmef_data_t *dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_clone</NAME>
-<RETURNS>idmef_data_t  *</RETURNS>
-const idmef_data_t *data
+<RETURNS>int  </RETURNS>
+const idmef_data_t *src, idmef_data_t **dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_get_type</NAME>
@@ -8011,19 +7997,19 @@ idmef_data_t *data
 <ENUM>
 <NAME>idmef_criterion_value_type_t</NAME>
 typedef enum {
-	idmef_criterion_value_type_fixed = 0,
-	idmef_criterion_value_type_non_linear_time = 1
-}	idmef_criterion_value_type_t;
+	IDMEF_CRITERION_VALUE_TYPE_FIXED = 0,
+	IDMEF_CRITERION_VALUE_TYPE_NON_LINEAR_TIME = 1
+} idmef_criterion_value_type_t;
 </ENUM>
 <FUNCTION>
 <NAME>idmef_criterion_value_non_linear_time_new</NAME>
-<RETURNS>idmef_criterion_value_non_linear_time_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_criterion_value_non_linear_time_t **time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_non_linear_time_new_string</NAME>
-<RETURNS>idmef_criterion_value_non_linear_time_t  *</RETURNS>
-const char *buf
+<RETURNS>int  </RETURNS>
+idmef_criterion_value_non_linear_time_t **time, const char *buf
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_non_linear_time_destroy</NAME>
@@ -8032,8 +8018,8 @@ idmef_criterion_value_non_linear_time_t *time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_non_linear_time_clone</NAME>
-<RETURNS>idmef_criterion_value_non_linear_time_t  *</RETURNS>
-const idmef_criterion_value_non_linear_time_t *src
+<RETURNS>int  </RETURNS>
+const idmef_criterion_value_non_linear_time_t *src,idmef_criterion_value_non_linear_time_t **dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_non_linear_time_set_year</NAME>
@@ -8116,29 +8102,24 @@ idmef_criterion_value_non_linear_time_t *time
 idmef_criterion_value_non_linear_time_t *time
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_criterion_value_non_linear_time_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_criterion_value_non_linear_time_t *time
-</FUNCTION>
-<FUNCTION>
 <NAME>idmef_criterion_value_non_linear_time_to_string</NAME>
 <RETURNS>int  </RETURNS>
 idmef_criterion_value_non_linear_time_t *time,prelude_string_t *out
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_new_fixed</NAME>
-<RETURNS>idmef_criterion_value_t  *</RETURNS>
-idmef_value_t *value
+<RETURNS>int  </RETURNS>
+idmef_criterion_value_t **cv, idmef_value_t *value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_new_non_linear_time</NAME>
-<RETURNS>idmef_criterion_value_t  *</RETURNS>
-idmef_criterion_value_non_linear_time_t *time
+<RETURNS>int  </RETURNS>
+idmef_criterion_value_t **cv, idmef_criterion_value_non_linear_time_t *time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_new_generic</NAME>
-<RETURNS>idmef_criterion_value_t  *</RETURNS>
-idmef_object_t *object, const char *buf
+<RETURNS>int  </RETURNS>
+idmef_criterion_value_t **cv, idmef_path_t *path, const char *buf
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_destroy</NAME>
@@ -8147,8 +8128,8 @@ idmef_criterion_value_t *value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_clone</NAME>
-<RETURNS>idmef_criterion_value_t  *</RETURNS>
-const idmef_criterion_value_t *src
+<RETURNS>int  </RETURNS>
+const idmef_criterion_value_t *src, idmef_criterion_value_t **dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_get_type</NAME>
@@ -8167,8 +8148,8 @@ idmef_criterion_value_t *time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_criterion_value_t *value
+<RETURNS>int  </RETURNS>
+idmef_criterion_value_t *value, prelude_io_t *fd
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_to_string</NAME>
@@ -8184,6 +8165,106 @@ prelude_client_profile_t *cp, prelude_io_t *io, int crypt, uint64_t *peer_analyz
 <NAME>tls_auth_init</NAME>
 <RETURNS>int  </RETURNS>
 prelude_client_profile_t *cp, gnutls_certificate_credentials *cred
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_get</NAME>
+<RETURNS>int  </RETURNS>
+idmef_path_t *object, idmef_message_t *message, idmef_value_t **ret
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_set</NAME>
+<RETURNS>int  </RETURNS>
+idmef_path_t *object, idmef_message_t *message, idmef_value_t *value
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_new</NAME>
+<RETURNS>int  </RETURNS>
+idmef_path_t **object, const char *format, ...
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_new_v</NAME>
+<RETURNS>int  </RETURNS>
+idmef_path_t **object, const char *format, va_list args
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_new_fast</NAME>
+<RETURNS>int  </RETURNS>
+idmef_path_t **object, const char *buffer
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_get_type</NAME>
+<RETURNS>idmef_object_type_t  </RETURNS>
+idmef_path_t *object
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_get_value_type</NAME>
+<RETURNS>idmef_value_type_id_t  </RETURNS>
+idmef_path_t *object
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_set_number</NAME>
+<RETURNS>int  </RETURNS>
+idmef_path_t *object, unsigned int depth, unsigned int number
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_undefine_number</NAME>
+<RETURNS>int  </RETURNS>
+idmef_path_t *object, unsigned int depth
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_get_number</NAME>
+<RETURNS>int  </RETURNS>
+idmef_path_t *object, unsigned int depth
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_make_child</NAME>
+<RETURNS>int  </RETURNS>
+idmef_path_t *object, const char *child_name, unsigned int n
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_make_parent</NAME>
+<RETURNS>int  </RETURNS>
+idmef_path_t *object
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_destroy</NAME>
+<RETURNS>void  </RETURNS>
+idmef_path_t *object
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_compare</NAME>
+<RETURNS>int  </RETURNS>
+idmef_path_t *o1, idmef_path_t *o2
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_clone</NAME>
+<RETURNS>int  </RETURNS>
+const idmef_path_t *src, idmef_path_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_ref</NAME>
+<RETURNS>idmef_path_t  *</RETURNS>
+idmef_path_t *object
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_get_numeric</NAME>
+<RETURNS>char  *</RETURNS>
+idmef_path_t *object
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_get_name</NAME>
+<RETURNS>const char  *</RETURNS>
+idmef_path_t *object
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_is_ambiguous</NAME>
+<RETURNS>prelude_bool_t  </RETURNS>
+idmef_path_t *object
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_has_lists</NAME>
+<RETURNS>int  </RETURNS>
+idmef_path_t *object
 </FUNCTION>
 <STRUCT>
 <NAME>children_list_t</NAME>
@@ -8201,36 +8282,36 @@ struct object_data_t
 {
 	char *name;
 	children_list_t *children_list;
-	void *(*get_child)(void *ptr, idmef_child_t child);
-	void *(*new_child)(void *ptr, idmef_child_t child, int n);
+	int (*get_child)(void *ptr, idmef_child_t child, void **ret);
+	int (*new_child)(void *ptr, idmef_child_t child, int n, void **ret);
 	int (*to_numeric)(const char *name);
 	const char *(*to_string)(int val);
 };
 </STRUCT>
 <FUNCTION>
 <NAME>idmef_additional_data_new_real</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-float data
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t **ret, float data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_new_byte</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-uint8_t byte
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t **ret, uint8_t byte
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_new_integer</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-uint32_t data
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t **ret, uint32_t data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_new_boolean</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-prelude_bool_t data
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t **ret, prelude_bool_t data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_new_character</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-char data
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t **ret, char data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_set_real</NAME>
@@ -8259,18 +8340,18 @@ idmef_additional_data_t *ptr, char data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_new_ptr_ref_fast</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-idmef_additional_data_type_t type,const unsigned char *data, size_t len
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t **nd,idmef_additional_data_type_t type,const unsigned char *data, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_new_ptr_dup_fast</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-idmef_additional_data_type_t type,const unsigned char *data, size_t len
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t **nd,idmef_additional_data_type_t type,const unsigned char *data, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_new_ptr_nodup_fast</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-idmef_additional_data_type_t type,unsigned char *data, size_t len
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t **nd,idmef_additional_data_type_t type,unsigned char *data, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_set_ptr_ref_fast</NAME>
@@ -8294,8 +8375,8 @@ idmef_additional_data_t *data, idmef_additional_data_type_t type,const char *str
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_new_str_dup_fast</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-idmef_additional_data_type_t type, const char *str,size_t len
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str, size_t len
 </FUNCTION>
 <MACRO>
 <NAME>idmef_additional_data_new_string_ref_fast</NAME>
@@ -8634,18 +8715,18 @@ idmef_additional_data_t *data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_clone</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-idmef_additional_data_t *data
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *src, idmef_additional_data_t **dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_copy_ref</NAME>
 <RETURNS>int  </RETURNS>
-idmef_additional_data_t *dst, idmef_additional_data_t *src
+idmef_additional_data_t *src, idmef_additional_data_t *dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_copy_dup</NAME>
 <RETURNS>int  </RETURNS>
-idmef_additional_data_t *dst, idmef_additional_data_t *src
+idmef_additional_data_t *src, idmef_additional_data_t *dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_get_real</NAME>
@@ -8682,10 +8763,6 @@ idmef_additional_data_t *data
 <RETURNS>int  </RETURNS>
 idmef_additional_data_t *ad, prelude_string_t *out
 </FUNCTION>
-<MACRO>
-<NAME>idmef_object_type_time</NAME>
-#define idmef_object_type_time 1
-</MACRO>
 <FUNCTION>
 <NAME>idmef_time_ref</NAME>
 <RETURNS>idmef_time_t  *</RETURNS>
@@ -8693,23 +8770,23 @@ idmef_time_t *time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_time_new</NAME>
-<RETURNS>idmef_time_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_time_t **time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_time_new_from_gettimeofday</NAME>
-<RETURNS>idmef_time_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_time_t **time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_time_new_from_string</NAME>
-<RETURNS>idmef_time_t  *</RETURNS>
-const char *buf
+<RETURNS>int  </RETURNS>
+idmef_time_t **time, const char *buf
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_time_new_from_ntpstamp</NAME>
-<RETURNS>idmef_time_t  *</RETURNS>
-const char *buf
+<RETURNS>int  </RETURNS>
+idmef_time_t **time, const char *buf
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_time_destroy_internal</NAME>
@@ -8723,13 +8800,13 @@ idmef_time_t *time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_time_clone</NAME>
-<RETURNS>idmef_time_t  *</RETURNS>
-const idmef_time_t *src
+<RETURNS>int  </RETURNS>
+const idmef_time_t *src, idmef_time_t **dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_time_copy</NAME>
 <RETURNS>int  </RETURNS>
-idmef_time_t *dst, const idmef_time_t *src
+const idmef_time_t *src, idmef_time_t *dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_time_set_from_time</NAME>
@@ -8796,11 +8873,11 @@ const idmef_time_t *time, prelude_string_t *out
 </MACRO>
 <TYPEDEF>
 <NAME>idmef_object_type_t</NAME>
-typedef int32_t idmef_object_type_t;
+typedef int idmef_object_type_t;
 </TYPEDEF>
 <TYPEDEF>
 <NAME>idmef_child_t</NAME>
-typedef int16_t idmef_child_t;
+typedef int idmef_child_t;
 </TYPEDEF>
 <FUNCTION>
 <NAME>idmef_type_find_child</NAME>
@@ -8854,13 +8931,13 @@ idmef_object_type_t type, int val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_type_get_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *ptr, idmef_object_type_t type, idmef_child_t child
+<RETURNS>int  </RETURNS>
+void *ptr, idmef_object_type_t type, idmef_child_t child, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_type_new_child</NAME>
-<RETURNS>void  *</RETURNS>
-void *ptr, idmef_object_type_t type, idmef_child_t child, int n
+<RETURNS>int  </RETURNS>
+void *ptr, idmef_object_type_t type, idmef_child_t child, int n, void **childptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_type_get_name</NAME>
@@ -9618,6 +9695,11 @@ struct prelude_timer_t
 prelude_timer_t *timer
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_timer_init_list</NAME>
+<RETURNS>void  </RETURNS>
+prelude_timer_t *timer
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_timer_reset</NAME>
 <RETURNS>void  </RETURNS>
 prelude_timer_t *timer
@@ -9654,103 +9736,108 @@ void
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new_int8</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-int8_t val
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, int8_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new_uint8</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-uint8_t val
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, uint8_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new_int16</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-int16_t val
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, int16_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new_uint16</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-uint16_t val
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, uint16_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new_int32</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-int32_t val
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, int32_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new_uint32</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-uint32_t val
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, uint32_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new_int64</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-int64_t val
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, int64_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new_uint64</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-uint64_t val
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, uint64_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new_float</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-float val
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, float val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new_double</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-double val
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, double val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new_string</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-prelude_string_t *string
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, prelude_string_t *string
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new_time</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_time_t *time
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, idmef_time_t *time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new_data</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_data_t *data
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, idmef_data_t *data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new_object</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-void *object, idmef_object_type_t object_type
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, idmef_object_type_t object_type, void *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new_list</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+idmef_value_t **value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new_enum</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_object_type_t type, const char *buf
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, idmef_object_type_t type, const char *buf
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_value_new_enum_string</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_object_type_t type, const char *buf
+<NAME>idmef_value_new_enum_from_string</NAME>
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, idmef_object_type_t type, const char *buf
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_value_new_enum_numeric</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_object_type_t type, int val
+<NAME>idmef_value_new_enum_from_numeric</NAME>
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, idmef_object_type_t type, int val
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_value_new_for_object</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_object_t *object, const char *buf
+<NAME>idmef_value_new</NAME>
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, idmef_value_type_id_t type, void *ptr
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_value_new_generic</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_value_type_id_t type, const char *buf
+<NAME>idmef_value_new_from_path</NAME>
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, idmef_path_t *path, const char *buf
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_new_from_string</NAME>
+<RETURNS>int  </RETURNS>
+idmef_value_t **value, idmef_value_type_id_t type, const char *buf
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_int8</NAME>
@@ -9829,12 +9916,12 @@ idmef_value_t *list, idmef_value_t *new
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_is_list</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>prelude_bool_t  </RETURNS>
 idmef_value_t *list
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_value_list_empty</NAME>
-<RETURNS>int  </RETURNS>
+<NAME>idmef_value_list_is_empty</NAME>
+<RETURNS>prelude_bool_t  </RETURNS>
 idmef_value_t *list
 </FUNCTION>
 <FUNCTION>
@@ -9879,8 +9966,8 @@ idmef_value_t *val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_clone</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_value_t *val
+<RETURNS>int  </RETURNS>
+idmef_value_t *val, idmef_value_t **dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_ref</NAME>
@@ -9895,7 +9982,7 @@ idmef_value_t *val, prelude_string_t *out
 <FUNCTION>
 <NAME>idmef_value_get</NAME>
 <RETURNS>int  </RETURNS>
-void *res, idmef_value_t *val
+idmef_value_t *val, void *res
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_match</NAME>
@@ -9921,146 +10008,6 @@ idmef_value_t *val
 <NAME>prelude_daemonize</NAME>
 <RETURNS>int  </RETURNS>
 const char *lockfile
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_get</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_message_t *message,idmef_object_t *object
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_set</NAME>
-<RETURNS>int  </RETURNS>
-idmef_message_t *message, idmef_object_t *object, idmef_value_t *value
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_new</NAME>
-<RETURNS>idmef_object_t  *</RETURNS>
-const char * format, ...
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_new_v</NAME>
-<RETURNS>idmef_object_t  *</RETURNS>
-const char * format, va_list args
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_new_fast</NAME>
-<RETURNS>idmef_object_t  *</RETURNS>
-const char *buffer
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_get_type</NAME>
-<RETURNS>idmef_object_type_t  </RETURNS>
-idmef_object_t *object
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_get_value_type</NAME>
-<RETURNS>idmef_value_type_id_t  </RETURNS>
-idmef_object_t *object
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_set_number</NAME>
-<RETURNS>int  </RETURNS>
-idmef_object_t *object, uint8_t depth, uint8_t number
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_undefine_number</NAME>
-<RETURNS>int  </RETURNS>
-idmef_object_t *object, uint8_t depth
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_get_number</NAME>
-<RETURNS>int  </RETURNS>
-idmef_object_t *object, uint8_t depth
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_make_child</NAME>
-<RETURNS>int  </RETURNS>
-idmef_object_t *object, const char *child_name, int n
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_make_parent</NAME>
-<RETURNS>int  </RETURNS>
-idmef_object_t *object
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_destroy</NAME>
-<RETURNS>void  </RETURNS>
-idmef_object_t *object
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_compare</NAME>
-<RETURNS>int  </RETURNS>
-idmef_object_t *o1, idmef_object_t *o2
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_clone</NAME>
-<RETURNS>idmef_object_t  *</RETURNS>
-idmef_object_t *object
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_ref</NAME>
-<RETURNS>idmef_object_t  *</RETURNS>
-idmef_object_t *object
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_get_numeric</NAME>
-<RETURNS>char  *</RETURNS>
-idmef_object_t *object
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_get_name</NAME>
-<RETURNS>const char  *</RETURNS>
-idmef_object_t *object
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_is_ambiguous</NAME>
-<RETURNS>int  </RETURNS>
-idmef_object_t *object
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_has_lists</NAME>
-<RETURNS>int  </RETURNS>
-idmef_object_t *object
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_value_new</NAME>
-<RETURNS>idmef_object_value_t  *</RETURNS>
-idmef_object_t *object, idmef_value_t *value
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_value_get_object</NAME>
-<RETURNS>idmef_object_t  *</RETURNS>
-idmef_object_value_t *objval
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_value_get_value</NAME>
-<RETURNS>idmef_value_t  *</RETURNS>
-idmef_object_value_t *objval
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_value_destroy</NAME>
-<RETURNS>void  </RETURNS>
-idmef_object_value_t *objval
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_value_list_new</NAME>
-<RETURNS>idmef_object_value_list_t  *</RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_value_list_add</NAME>
-<RETURNS>int  </RETURNS>
-idmef_object_value_list_t *list, idmef_object_value_t *objval
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_value_list_get_next</NAME>
-<RETURNS>idmef_object_value_t  *</RETURNS>
-idmef_object_value_list_t *list
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_object_value_list_destroy</NAME>
-<RETURNS>void  </RETURNS>
-idmef_object_value_list_t *list
 </FUNCTION>
 <ENUM>
 <NAME>idmef_value_relation_t</NAME>
@@ -10109,7 +10056,7 @@ struct idmef_value_type_t
 <FUNCTION>
 <NAME>idmef_value_type_copy</NAME>
 <RETURNS>int  </RETURNS>
-void *dst, idmef_value_type_t *src
+const idmef_value_type_t *src, void *dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_type_read</NAME>
@@ -10119,7 +10066,7 @@ idmef_value_type_t *dst, const char *buf
 <FUNCTION>
 <NAME>idmef_value_type_write</NAME>
 <RETURNS>int  </RETURNS>
-idmef_value_type_t *src, prelude_string_t *out
+const idmef_value_type_t *src, prelude_string_t *out
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_type_destroy</NAME>
@@ -10129,17 +10076,17 @@ idmef_value_type_t *type
 <FUNCTION>
 <NAME>idmef_value_type_clone</NAME>
 <RETURNS>int  </RETURNS>
-idmef_value_type_t *dst, idmef_value_type_t *src
+const idmef_value_type_t *src, idmef_value_type_t *dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_type_compare</NAME>
 <RETURNS>int  </RETURNS>
-idmef_value_type_t *type1, idmef_value_type_t *type2, idmef_value_relation_t relation
+const idmef_value_type_t *type1, const idmef_value_type_t *type2, idmef_value_relation_t relation
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_type_check_relation</NAME>
 <RETURNS>int  </RETURNS>
-idmef_value_type_t *type, idmef_value_relation_t relation
+const idmef_value_type_t *type, idmef_value_relation_t relation
 </FUNCTION>
 <FUNCTION>
 <NAME>tls_unload_file</NAME>

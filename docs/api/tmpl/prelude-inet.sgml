@@ -14,13 +14,6 @@ prelude-inet
 
 </para>
 
-<!-- ##### MACRO AI_CANONNAME ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### FUNCTION prelude_inet_addr_is_loopback ##### -->
 <para>
 
@@ -37,35 +30,6 @@ prelude-inet
 </para>
 
 @sa: 
-
-
-<!-- ##### FUNCTION prelude_inet_gai_strerror ##### -->
-<para>
-
-</para>
-
-@errcode: 
-@Returns: 
-
-
-<!-- ##### FUNCTION prelude_inet_freeaddrinfo ##### -->
-<para>
-
-</para>
-
-@info: 
-
-
-<!-- ##### FUNCTION prelude_inet_getaddrinfo ##### -->
-<para>
-
-</para>
-
-@node: 
-@service: 
-@hints: 
-@res: 
-@Returns: 
 
 
 <!-- ##### FUNCTION prelude_inet_ntop ##### -->

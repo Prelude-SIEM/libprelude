@@ -3,13 +3,10 @@ prelude-io
 
 <!-- ##### SECTION Short_Description ##### -->
 
-I/O method abstraction.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-The Prelude I/O API is a simple abstraction for using I/O in a generic
-way in Prelude. Prelude I/O provide operation for FILE, socket, and SSL I/O
-as well as some read / write / forward operation.
+
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -24,8 +21,6 @@ as well as some read / write / forward operation.
 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@pio: 
 
 
 <!-- ##### FUNCTION prelude_io_destroy ##### -->

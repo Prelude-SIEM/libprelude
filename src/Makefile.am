@@ -27,7 +27,7 @@ libprelude_la_SOURCES = 		\
 	prelude-client.c		\
 	prelude-client-profile.c	\
 	prelude-connection.c		\
-	prelude-connection-mgr.c	\
+	prelude-connection-pool.c	\
 	prelude-failover.c		\
 	prelude-hash.c			\
 	prelude-ident.c			\
@@ -42,20 +42,18 @@ libprelude_la_SOURCES = 		\
 	prelude-string.c		\
 	prelude-timer.c			\
 	idmef-additional-data.c		\
-	idmef-util.c			\
-	idmef-time.c			\
-	idmef-data.c			\
-	idmef-tree-wrap.c		\
-	idmef-type.c			\
-	idmef-object.c			\
-	idmef-value.c			\
-	idmef-value-type.c		\
-	idmef-object-value.c		\
 	idmef-criteria.c		\
 	idmef-criteria-string.yac.y	\
 	idmef-criteria-string.lex.l	\
 	idmef-criterion-value.c		\
+	idmef-data.c			\
 	idmef-message-print.c		\
 	idmef-message-read.c		\
-	idmef-message-write.c		
+	idmef-message-write.c		\
+	idmef-path.c			\
+	idmef-time.c			\
+	idmef-tree-wrap.c		\
+	idmef-type.c			\
+	idmef-value.c			\
+	idmef-value-type.c		
 

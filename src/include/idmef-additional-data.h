@@ -27,11 +27,11 @@
 /*
  * basic type
  */
-idmef_additional_data_t *idmef_additional_data_new_real(float data);
-idmef_additional_data_t *idmef_additional_data_new_byte(uint8_t byte);
-idmef_additional_data_t *idmef_additional_data_new_integer(uint32_t data);
-idmef_additional_data_t *idmef_additional_data_new_boolean(prelude_bool_t data);
-idmef_additional_data_t *idmef_additional_data_new_character(char data);
+int idmef_additional_data_new_real(idmef_additional_data_t **ret, float data);
+int idmef_additional_data_new_byte(idmef_additional_data_t **ret, uint8_t byte);
+int idmef_additional_data_new_integer(idmef_additional_data_t **ret, uint32_t data);
+int idmef_additional_data_new_boolean(idmef_additional_data_t **ret, prelude_bool_t data);
+int idmef_additional_data_new_character(idmef_additional_data_t **ret, char data);
 
 void idmef_additional_data_set_real(idmef_additional_data_t *ptr, float data);
 void idmef_additional_data_set_byte(idmef_additional_data_t *ptr, uint8_t byte);
@@ -40,12 +40,17 @@ void idmef_additional_data_set_boolean(idmef_additional_data_t *ptr, prelude_boo
 void idmef_additional_data_set_character(idmef_additional_data_t *ptr, char data);
 
 
-idmef_additional_data_t *idmef_additional_data_new_ptr_ref_fast(idmef_additional_data_type_t type,
-                                                                const unsigned char *data, size_t len);
-idmef_additional_data_t *idmef_additional_data_new_ptr_dup_fast(idmef_additional_data_type_t type,
-                                                                const unsigned char *data, size_t len);
-idmef_additional_data_t *idmef_additional_data_new_ptr_nodup_fast(idmef_additional_data_type_t type,
-                                                                unsigned char *data, size_t len);
+int idmef_additional_data_new_ptr_ref_fast(idmef_additional_data_t **nd,
+                                           idmef_additional_data_type_t type,
+                                           const unsigned char *data, size_t len);
+
+int idmef_additional_data_new_ptr_dup_fast(idmef_additional_data_t **nd,
+                                           idmef_additional_data_type_t type,
+                                           const unsigned char *data, size_t len);
+
+int idmef_additional_data_new_ptr_nodup_fast(idmef_additional_data_t **nd,
+                                             idmef_additional_data_type_t type,
+                                             unsigned char *data, size_t len);
 
 int idmef_additional_data_set_ptr_ref_fast(idmef_additional_data_t *ad,
                                             idmef_additional_data_type_t type, const unsigned char *data, size_t len);
@@ -64,8 +69,8 @@ int idmef_additional_data_set_ptr_nodup_fast(idmef_additional_data_t *ad,
 int idmef_additional_data_set_str_dup_fast(idmef_additional_data_t *data, idmef_additional_data_type_t type,
                                             const char *str, size_t len);
 
-idmef_additional_data_t *idmef_additional_data_new_str_dup_fast(idmef_additional_data_type_t type, const char *str,
-                                            size_t len);
+int idmef_additional_data_new_str_dup_fast(idmef_additional_data_t **nd,
+                                           idmef_additional_data_type_t type, const char *str, size_t len);
 
 #define idmef_additional_data_new_string_ref_fast(data, len) \
         idmef_additional_data_new_ptr_ref_fast(IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
@@ -289,9 +294,9 @@ idmef_additional_data_t *idmef_additional_data_new_str_dup_fast(idmef_additional
  * copy / clone / destroy
  */
 void idmef_additional_data_destroy_internal(idmef_additional_data_t *data);
-idmef_additional_data_t *idmef_additional_data_clone(idmef_additional_data_t *data);
-int idmef_additional_data_copy_ref(idmef_additional_data_t *dst, idmef_additional_data_t *src);
-int idmef_additional_data_copy_dup(idmef_additional_data_t *dst, idmef_additional_data_t *src);
+int idmef_additional_data_clone(idmef_additional_data_t *src, idmef_additional_data_t **dst);
+int idmef_additional_data_copy_ref(idmef_additional_data_t *src, idmef_additional_data_t *dst);
+int idmef_additional_data_copy_dup(idmef_additional_data_t *src, idmef_additional_data_t *dst);
 
 /*
  * Accessors

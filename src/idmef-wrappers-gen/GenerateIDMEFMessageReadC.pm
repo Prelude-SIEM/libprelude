@@ -72,7 +72,6 @@ sub	header
 #include \"idmef-tree-wrap.h\"
 
 #include \"idmef-message-read.h\"
-#include \"idmef-util.h\"
 
 #define prelude_extract_string_safe(out, buf, len, msg) extract_string_safe_f(__FUNCTION__, __LINE__, out, buf, len)
 
@@ -82,25 +81,23 @@ static inline int extract_string_safe_f(const char *f, int line, prelude_string_
          * we use len - 1 since len is supposed to include \0 to avoid making a dup.
          */
 
-        *out = prelude_string_new_ref_fast(buf, len - 1);
-        if ( ! *out ) \
-                return prelude_error_from_errno(errno);
-
-        return 0;
+        return prelude_string_new_ref_fast(out, buf, len - 1);
 \}
 
 
 static inline int prelude_extract_time_safe(idmef_time_t **out, void *buf, size_t len, prelude_msg_t *msg)
 \{
+        int ret;
+
         /*
          * sizeof(sec) + sizeof(usec) + sizeof(gmt offset).
          */
         if ( len != 12 )
                 return prelude_error_make(PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_IDMEF_TIME);
 
-        *out = idmef_time_new();
-        if ( ! *out )
-                return prelude_error_from_errno(errno);
+        ret = idmef_time_new(out);
+        if ( ret < 0 )
+                return ret;
 
         idmef_time_set_sec(*out, prelude_extract_uint32(buf));
         idmef_time_set_usec(*out, prelude_extract_uint32(buf + 4));
@@ -134,7 +131,7 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, size_
 		if ( ret < 0 )
 			return ret;
 
-		*out = idmef_data_new_char(tmp);
+		ret = idmef_data_new_char(out, tmp);
 		break;
 	\}
 
@@ -145,7 +142,7 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, size_
 		if ( ret < 0 )
 			return ret;
 
-		*out = idmef_data_new_byte(tmp);
+		ret = idmef_data_new_byte(out, tmp);
 		break;
 	\}
 
@@ -156,7 +153,7 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, size_
 		if ( ret < 0 )
 			return ret;
 
-		*out = idmef_data_new_uint32(tmp);
+		ret = idmef_data_new_uint32(out, tmp);
 		break;
 	\}
 
@@ -167,7 +164,7 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, size_
                 if ( ret < 0 )
 			return ret;
 
-		*out = idmef_data_new_uint64(tmp);
+		ret = idmef_data_new_uint64(out, tmp);
 		break;
 	\}
 
@@ -178,12 +175,12 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, size_
 		if ( ret < 0 )
 			return ret;
 
-		*out = idmef_data_new_float(tmp);
+		ret = idmef_data_new_float(out, tmp);
 		break;
 	\}
 
         case IDMEF_DATA_TYPE_BYTE_STRING: \{
-                *out = idmef_data_new_ptr_ref_fast(type, buf, len);
+                ret = idmef_data_new_ptr_ref_fast(out, type, buf, len);
                 break;
         \}
 
@@ -194,7 +191,7 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, size_
 		if ( ret < 0 )
 			return ret;
 
-		*out = idmef_data_new_ptr_ref_fast(type, tmp, len);
+		ret = idmef_data_new_ptr_ref_fast(out, type, tmp, len);
 		break;		
 	\}
 
@@ -202,7 +199,7 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, size_
 		/* nop */;
 	\}
 
-	return *out ? 0 : prelude_error_from_errno(errno);
+	return ret;
 \}
 
 
@@ -246,11 +243,12 @@ sub	struct_field_struct
 
     $self->output("
 			case MSG_",  uc($field->{short_typename}), "_TAG", ": \{
+                                int ret;
 				$field->{typename} *tmp;
 
-				tmp = idmef_$struct->{short_typename}_new_${name}($struct->{short_typename});
-				if ( ! tmp)
-					return prelude_error_from_errno(errno);
+				ret = idmef_$struct->{short_typename}_new_${name}($struct->{short_typename}, &tmp);
+				if ( ret < 0 )
+					return ret;
 
                                 ret = idmef_$field->{short_typename}_read(tmp, msg);
 				if ( ret < 0 )

@@ -52,6 +52,8 @@
 
 typedef struct {
         int count;
+        void *data;
+        const char *symbol;
         int (*subscribe)(prelude_plugin_instance_t *pc);
         void (*unsubscribe)(prelude_plugin_instance_t *pc);
 } libltdl_data_t;
@@ -70,7 +72,8 @@ typedef struct {
         void (*unsubscribe)(prelude_plugin_instance_t *pc);
         
         int (*commit_instance)(prelude_plugin_instance_t *pi, prelude_string_t *out);
-        int (*create_instance)(prelude_plugin_instance_t *pi, prelude_option_t *opt, const char *optarg, prelude_string_t *err);
+        int (*create_instance)(prelude_option_t *opt,
+                               const char *optarg, prelude_string_t *err, void *context);
 } plugin_entry_t;
 
 
@@ -127,7 +130,7 @@ struct prelude_plugin_instance {
  *        Contain shared plugin data.
  */
 
-static PRELUDE_LIST_HEAD(all_plugins);
+static PRELUDE_LIST(all_plugins);
 static prelude_bool_t ltdl_need_init = TRUE;
 
 
@@ -136,7 +139,7 @@ static plugin_entry_t *search_plugin_entry(prelude_plugin_generic_t *plugin)
         plugin_entry_t *pe;
         prelude_list_t *tmp;
         
-        prelude_list_for_each_reversed(tmp, &all_plugins) {
+        prelude_list_for_each_reversed(&all_plugins, tmp) {
                 pe = prelude_list_entry(tmp, plugin_entry_t, list);
                 
                 if ( pe->plugin == NULL || pe->plugin == plugin )
@@ -154,7 +157,7 @@ static plugin_entry_t *search_plugin_entry_by_name(const char *name)
         plugin_entry_t *pe;
         prelude_list_t *tmp;
         
-        prelude_list_for_each(tmp, &all_plugins) {
+        prelude_list_for_each(&all_plugins, tmp) {
                 pe = prelude_list_entry(tmp, plugin_entry_t, list);
 
                 if ( pe->plugin && strcasecmp(pe->plugin->name, name) == 0 ) 
@@ -172,7 +175,7 @@ static prelude_plugin_instance_t *search_instance_from_entry(plugin_entry_t *pe,
         prelude_list_t *tmp;
         prelude_plugin_instance_t *pi;
         
-        prelude_list_for_each(tmp, &pe->instance_list) {
+        prelude_list_for_each(&pe->instance_list, tmp) {
                 pi = prelude_list_entry(tmp, prelude_plugin_instance_t, int_list);
                 
                 if ( strcasecmp(pi->name, name) == 0 )
@@ -184,32 +187,29 @@ static prelude_plugin_instance_t *search_instance_from_entry(plugin_entry_t *pe,
 
 
 
-static prelude_plugin_instance_t *create_instance(plugin_entry_t *pe, const char *name, void *data) 
+static int create_instance(prelude_plugin_instance_t **npi, plugin_entry_t *pe, const char *name, void *data) 
 {
         prelude_plugin_instance_t *pi;
                         
-        pi = calloc(1, sizeof(*pi));
-        if ( ! pi ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
+        *npi = pi = calloc(1, sizeof(*pi));
+        if ( ! pi )
+                return prelude_error_from_errno(errno);
 
         if ( ! name || *name == 0 )
                 name = DEFAULT_INSTANCE_NAME;
         
         pi->name = strdup(name);
         if ( ! pi->name ) {
-                log(LOG_ERR, "memory exhausted.\n");
                 free(pi);
-                return NULL;
+                return prelude_error_from_errno(errno);
         }
 
         pi->entry = pe;
         pi->data = data;
         
-        prelude_list_add_tail(&pi->int_list, &pe->instance_list);
+        prelude_list_add_tail(&pe->instance_list, &pi->int_list);
         
-        return pi;
+        return 0;
 }
 
 
@@ -242,7 +242,7 @@ static void destroy_instance(prelude_plugin_instance_t *instance)
 
 
 
-static int plugin_desactivate(void *context, prelude_option_t *opt, prelude_string_t *out)
+static int plugin_desactivate(prelude_option_t *opt, prelude_string_t *out, void *context)
 {
         prelude_plugin_instance_t *pi = context;
         
@@ -270,7 +270,8 @@ static int plugin_desactivate(void *context, prelude_option_t *opt, prelude_stri
 
 
 
-static int intercept_plugin_activation_option(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)
+static int intercept_plugin_activation_option(prelude_option_t *opt, const char *optarg,
+                                              prelude_string_t *err, void *context)
 {
         int ret = 0;
         plugin_entry_t *pe;
@@ -285,17 +286,19 @@ static int intercept_plugin_activation_option(void *context, prelude_option_t *o
                 
         pi = search_instance_from_entry(pe, optarg);
         if ( ! pi ) {
-                pi = create_instance(pe, optarg, NULL);
-                if ( ! pi )
-                        return -1;
-              
-                ret = prelude_option_new_context(&octx, opt, optarg, pi);
+                ret = create_instance(&pi, pe, optarg, NULL);
                 if ( ret < 0 )
-                        destroy_instance(pi);
+                        return ret;
                 
-                ret = pi->entry->create_instance(pi, opt, optarg, err);
+                ret = pi->entry->create_instance(opt, optarg, err, pi);
                 if ( ret < 0 )
-                        return -1;
+                        return ret;
+                
+                ret = prelude_option_new_context(opt, &octx, optarg, pi);
+                if ( ret < 0 ) {
+                        destroy_instance(pi);
+                        return ret;
+                }
                 
                 if ( ! pe->commit_instance )
                         ret = subscribe_instance(pi);
@@ -306,7 +309,7 @@ static int intercept_plugin_activation_option(void *context, prelude_option_t *o
 
 
 
-static int intercept_plugin_commit_option(void *context, prelude_option_t *opt, prelude_string_t *out)
+static int intercept_plugin_commit_option(prelude_option_t *opt, prelude_string_t *out, void *context)
 {
         int ret;
         plugin_entry_t *pe;
@@ -336,22 +339,18 @@ static int intercept_plugin_commit_option(void *context, prelude_option_t *opt, 
  * Initialize a new plugin entry, and add it to
  * the entry list.
  */
-static plugin_entry_t *add_plugin_entry(void) 
-{
-        plugin_entry_t *pe;
-        
-        pe = calloc(1, sizeof(*pe));
-        if ( ! pe ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
+static int add_plugin_entry(plugin_entry_t **pe) 
+{        
+        *pe = calloc(1, sizeof(**pe));
+        if ( ! *pe )
+                return prelude_error_from_errno(errno);
 
-        pe->plugin = NULL;
-        PRELUDE_INIT_LIST_HEAD(&pe->instance_list);
+        (*pe)->plugin = NULL;
         
-        prelude_list_add_tail(&pe->list, &all_plugins);
+        prelude_list_init(&(*pe)->instance_list);
+        prelude_list_add_tail(&all_plugins, &(*pe)->list);
         
-        return pe;
+        return 0;
 }
 
 
@@ -362,28 +361,23 @@ static plugin_entry_t *add_plugin_entry(void)
  * linked in several part of the program, and that the container
  * contain not shared information).
  */
-static prelude_plugin_instance_t *copy_instance(prelude_plugin_instance_t *pi) 
-{
-        prelude_plugin_instance_t *new;
-        
-        new = malloc(sizeof(*new));
-        if ( ! new ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
+static int copy_instance(prelude_plugin_instance_t **dst, prelude_plugin_instance_t *src) 
+{        
+        *dst = malloc(sizeof(**dst));
+        if ( ! *dst )
+                return prelude_error_from_errno(errno);
 
-        memcpy(new, pi, sizeof(*new));
+        memcpy(*dst, src, sizeof(**dst));
 
-        new->name = strdup(pi->name);
-        if ( ! new->name ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                free(new);
-                return NULL;
+        (*dst)->name = strdup(src->name);
+        if ( ! (*dst)->name ) {
+                free(*dst);
+                return prelude_error_from_errno(errno);
         }
         
-        prelude_list_add_tail(&new->int_list, &pi->entry->instance_list);
+        prelude_list_add_tail(&src->entry->instance_list, &(*dst)->int_list);
         
-        return new;
+        return 0;
 }
 
 
@@ -392,47 +386,48 @@ static prelude_plugin_instance_t *copy_instance(prelude_plugin_instance_t *pi)
 /*
  * Load a single plugin pointed to by 'filename'.
  */
-static int plugin_load_single(const char *filename,
+static int plugin_load_single(const char *filename, const char *symbol, void *data,
                               int (*subscribe)(prelude_plugin_instance_t *pc),
                               void (*unsubscribe)(prelude_plugin_instance_t *pc)) 
 {
+        int ret;
         void *handle;
         plugin_entry_t *pe;
         prelude_plugin_generic_t *plugin;
-        prelude_plugin_generic_t *(*plugin_init)(void);
+        int (*plugin_init)(prelude_plugin_generic_t **pl, void *data);
         
         handle = lt_dlopenext(filename);
         if ( ! handle ) {
-                log(LOG_INFO, "couldn't open %s : %s.\n", filename, lt_dlerror());
+                prelude_log(PRELUDE_LOG_WARN, "couldn't open %s : %s.\n", filename, lt_dlerror());
                 return -1;
         }
         
-        plugin_init = lt_dlsym(handle, "prelude_plugin_init");
+        plugin_init = lt_dlsym(handle, symbol);
         if ( ! plugin_init ) {
-                log(LOG_INFO, "couldn't load %s : %s.\n", filename, lt_dlerror());
+                prelude_log(PRELUDE_LOG_WARN, "couldn't find symbol %s in %s: %s.\n", symbol, filename, lt_dlerror());
                 lt_dlclose(handle);
                 return -1;
         }
-        
-        pe = add_plugin_entry();
-        if ( ! pe ) {
+
+        ret = add_plugin_entry(&pe);
+        if ( ret < 0 ) {
                 lt_dlclose(handle);
-                return -1;
+                return ret;
         }
 
         pe->handle = handle;
         pe->subscribe = subscribe;
         pe->unsubscribe = unsubscribe;
         
-        plugin = plugin_init();
-        if ( ! plugin ) {
-                log(LOG_ERR, "plugin returned an error.\n");
+        ret = plugin_init(&plugin, data);
+        if ( ret < 0 ) {
+                prelude_log(PRELUDE_LOG_WARN, "%s initialization failure.\n", filename);
                 prelude_list_del(&pe->list);
                 lt_dlclose(handle);
                 free(pe);
-                return -1;
+                return ret;
         }
-        
+                
         pe->plugin = plugin;
         
         return 0;
@@ -445,7 +440,7 @@ static int libltdl_load_cb(const char *filename, lt_ptr ptr)
         int ret;
         libltdl_data_t *data = ptr;
 
-        ret = plugin_load_single(filename, data->subscribe, data->unsubscribe);
+        ret = plugin_load_single(filename, data->symbol, data->data, data->subscribe, data->unsubscribe);
         if ( ret == 0 )
                 data->count++;
 
@@ -472,7 +467,7 @@ static int libltdl_load_cb(const char *filename, lt_ptr ptr)
  *
  * Returns: The number of loaded plugins on success, -1 on error.
  */
-int prelude_plugin_load_from_dir(const char *dirname,
+int prelude_plugin_load_from_dir(const char *dirname, const char *symbol, void *ptr,
                                  int (*subscribe)(prelude_plugin_instance_t *p),
                                  void (*unsubscribe)(prelude_plugin_instance_t *pc)) 
 {
@@ -482,15 +477,15 @@ int prelude_plugin_load_from_dir(const char *dirname,
         if ( ltdl_need_init ) {
 
                 ret = lt_dlinit();
-                if ( ret < 0 ) {
-                        log(LOG_ERR, "error initializing libltdl.\n");
-                        return -1;
-                }
+                if ( ret < 0 )
+                        return prelude_error(PRELUDE_ERROR_PLUGIN_LTDL_INIT);
 
                 ltdl_need_init = FALSE;
         }
 
         data.count = 0;
+        data.data = ptr;
+        data.symbol = symbol;
         data.subscribe = subscribe;
         data.unsubscribe = unsubscribe;
         
@@ -540,32 +535,29 @@ int prelude_plugin_unsubscribe(prelude_plugin_instance_t *pi)
  *
  * Returns: 0 on success or -1 if an error occured.
  */
-prelude_plugin_instance_t *prelude_plugin_new_instance(prelude_plugin_generic_t *plugin, const char *name, void *data)
+int prelude_plugin_new_instance(prelude_plugin_instance_t **pi,
+                                prelude_plugin_generic_t *plugin, const char *name, void *data)
 {
+        int ret = 0;
         plugin_entry_t *pe;
-        prelude_plugin_instance_t *pi;
 
         if ( ! name || ! *name )
                 name = DEFAULT_INSTANCE_NAME;
                 
         pe = search_plugin_entry(plugin);        
         if ( ! pe )
-                return NULL;
+                return -1;
 
         /*
          * might be NULL in case the plugin subscribe from the commit function.
          */
         pe->plugin = plugin;
         
-        pi = search_instance_from_entry(pe, name);
-        if ( ! pi ) {
+        *pi = search_instance_from_entry(pe, name);
+        if ( ! *pi )
+                ret = create_instance(pi, pe, name, NULL);
                 
-                pi = create_instance(pe, name, NULL);
-                if ( ! pi )
-                        return NULL;
-        }
-        
-        return pi;
+        return ret;
 }
 
 
@@ -627,13 +619,16 @@ int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
  */
 int prelude_plugin_add(prelude_plugin_instance_t *pi, prelude_list_t *h, const char *infos) 
 {
-        if ( pi->already_used++ && ! (pi = copy_instance(pi)) ) {
-                log(LOG_ERR, "couldn't duplicate plugin container.\n");
-                return -1;
+        int ret;
+        
+        if ( pi->already_used++ ) {
+                ret = copy_instance(&pi, pi);
+                if ( ret < 0 )
+                        return ret;
         }
         
         pi->infos = infos;
-        prelude_linked_object_add_tail((prelude_linked_object_t *) pi, h);
+        prelude_linked_object_add_tail(h, (prelude_linked_object_t *) pi);
         
         return 0;
 }
@@ -760,9 +755,9 @@ int prelude_plugin_instance_call_commit_func(prelude_plugin_instance_t *pi, prel
 
 
 
-int prelude_plugin_instance_has_commit_func(prelude_plugin_instance_t *pi)
+prelude_bool_t prelude_plugin_instance_has_commit_func(prelude_plugin_instance_t *pi)
 {
-        return (pi->entry->commit_instance) ? 1 : 0;
+        return (pi->entry->commit_instance) ? TRUE : FALSE;
 }
 
 
@@ -779,7 +774,7 @@ prelude_plugin_generic_t *prelude_plugin_get_next(prelude_list_t **iter)
         plugin_entry_t *pe;
         prelude_list_t *tmp;
 
-        prelude_list_for_each_continue_safe(tmp, *iter, &all_plugins) {
+        prelude_list_for_each_continue_safe(&all_plugins, tmp, *iter) {
                 pe = prelude_list_entry(tmp, plugin_entry_t, list);
                 return pe->plugin;
         }
@@ -794,7 +789,7 @@ void prelude_plugin_unload(prelude_plugin_generic_t *plugin)
         plugin_entry_t *pe;
         prelude_list_t *tmp, *bkp;
         
-        prelude_list_for_each_safe(tmp, bkp, &all_plugins) {
+        prelude_list_for_each_safe(&all_plugins, tmp, bkp) {
                 pe = prelude_list_entry(tmp, plugin_entry_t, list);
 
                 if ( ! plugin || pe->plugin == plugin ) {
@@ -804,7 +799,7 @@ void prelude_plugin_unload(prelude_plugin_generic_t *plugin)
                 }
         }
 
-        if ( prelude_list_empty(&all_plugins) && ! ltdl_need_init ) {
+        if ( prelude_list_is_empty(&all_plugins) && ! ltdl_need_init ) {
                 lt_dlexit();
                 ltdl_need_init = TRUE;
         }

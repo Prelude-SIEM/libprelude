@@ -33,32 +33,31 @@
 #include "prelude-inttypes.h"
 #include "prelude-string.h"
 
+#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_IDMEF_TYPE
+#include "prelude-error.h"
+
 #include "idmef-time.h"
 #include "idmef-data.h"
-
 #include "idmef-value.h"
 #include "idmef-type.h"
 
 #include "idmef-tree-wrap.h"
 #include "idmef-tree-data.h"
-#include "idmef-object.h"
-
+#include "idmef-path.h"
 
 
 idmef_child_t idmef_type_find_child(idmef_object_type_t type, const char *name)
 {
+        idmef_child_t i;
 	children_list_t *list;
-	idmef_child_t i;
-	
-	if ( type < 0 )
-		return -1;
-	
+                
 	list = object_data[type].children_list;
-	for ( i = 0; list[i].name; i++ )                
-		if (strcasecmp(list[i].name, name) == 0)
-			return i;
         
-	return -1;
+	for ( i = 0; list[i].name; i++ )                
+		if ( strcasecmp(list[i].name, name) == 0)
+			return i;
+
+	return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_NAME);
 }
 
 
@@ -67,9 +66,9 @@ idmef_child_t idmef_type_find_child(idmef_object_type_t type, const char *name)
 int idmef_type_child_is_list(idmef_object_type_t type, idmef_child_t child)
 {
 	children_list_t *c;
-
-	if ( ( type < 0 ) || ( child < 0 ) )
-		return -1;
+        
+	if ( type < 0 || child < 0 )
+		return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
 	
 	c = &object_data[type].children_list[child];
 	
@@ -82,9 +81,9 @@ int idmef_type_child_is_list(idmef_object_type_t type, idmef_child_t child)
 idmef_value_type_id_t idmef_type_get_child_type(idmef_object_type_t type, idmef_child_t child)
 {
 	children_list_t *c;
-
-	if ( ( type < 0 ) || ( child < 0 ) )
-		return -1;
+        
+	if ( type < 0 || child < 0 )
+		return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
 	
 	c = &object_data[type].children_list[child];
 	
@@ -98,8 +97,8 @@ idmef_object_type_t idmef_type_get_child_object_type(idmef_object_type_t type, i
 {
 	children_list_t *c;
 
-	if ( ( type < 0 ) || ( child < 0 ) )
-		return -1;
+	if ( type < 0 || child < 0 )
+		return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
 	
 	c = &object_data[type].children_list[child];
 	
@@ -112,8 +111,8 @@ idmef_object_type_t idmef_type_get_child_enum_type(idmef_object_type_t type, idm
 {
 	children_list_t *c;
 
-	if ( ( type < 0 ) || ( child < 0 ) )
-		return -1;
+	if ( type < 0 || child < 0 )
+		return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
 	
 	c = &object_data[type].children_list[child];
 	
@@ -127,7 +126,7 @@ char *idmef_type_get_child_name(idmef_object_type_t type, idmef_child_t child)
 {
 	children_list_t *c;
 
-	if ( ( type < 0 ) || ( child < 0 ) )
+	if ( type < 0 || child < 0 )
 		return NULL;
 	
 	c = &object_data[type].children_list[child];
@@ -153,7 +152,7 @@ idmef_object_type_t idmef_type_find(const char *name)
 int idmef_type_is_enum(idmef_object_type_t type)
 {
     	if ( type < 0 )
-	    	return -1;
+		return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
 	
 	return ( object_data[type].to_string ) ? 1 : 0;
 }
@@ -161,33 +160,33 @@ int idmef_type_is_enum(idmef_object_type_t type)
 
 int idmef_type_enum_to_numeric(idmef_object_type_t type, const char *val)
 {
-    	return ( type < 0 ) ? -1 : object_data[type].to_numeric(val);
+    	return (type < 0) ? prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN) : object_data[type].to_numeric(val);
 }
 
 
 const char *idmef_type_enum_to_string(idmef_object_type_t type, int val)
 {
-	return ( type < 0 ) ? NULL : object_data[type].to_string(val);
+	return (type < 0) ? NULL : object_data[type].to_string(val);
 }
 
 
-void *idmef_type_get_child(void *ptr, idmef_object_type_t type, idmef_child_t child)
+int idmef_type_get_child(void *ptr, idmef_object_type_t type, idmef_child_t child, void **childptr)
 {
-	if ( ( type < 0 ) || ( child < 0 ) )
-		return NULL;
-
-	return object_data[type].get_child(ptr, child);
+	if ( type < 0 || child < 0 )
+		return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
+        
+	return object_data[type].get_child(ptr, child, childptr);
 }
 
 
 
 
-void *idmef_type_new_child(void *ptr, idmef_object_type_t type, idmef_child_t child, int n)
+int idmef_type_new_child(void *ptr, idmef_object_type_t type, idmef_child_t child, int n, void **childptr)
 {
-	if ( ( type < 0 ) || ( child < 0 ) )
-	    	return NULL;
-	
-	return object_data[type].new_child(ptr, child, n);
+	if ( type < 0 || child < 0 )
+                return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
+
+	return object_data[type].new_child(ptr, child, n, childptr);
 }
 
 
@@ -195,5 +194,5 @@ void *idmef_type_new_child(void *ptr, idmef_object_type_t type, idmef_child_t ch
 
 char *idmef_type_get_name(idmef_object_type_t type)
 {
-	return ( type < 0 ) ? NULL : object_data[type].name;
+	return (type < 0) ? NULL : object_data[type].name;
 }

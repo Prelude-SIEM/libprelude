@@ -175,20 +175,21 @@ int idmef_time_set_from_string(idmef_time_t *time, const char *buf)
 
 
 
-idmef_time_t *idmef_time_new_from_string(const char *buf)
+int idmef_time_new_from_string(idmef_time_t **time, const char *buf)
 {
-        idmef_time_t *time;
+        int ret;
+        
+        ret = idmef_time_new(time);
+        if ( ret < 0 )
+                return ret;
 
-        time = idmef_time_new();
-        if ( ! time )
-                return NULL;
-
-        if ( idmef_time_set_from_string(time, buf) < 0 ) {
-                free(time);
-                return NULL;
+        ret = idmef_time_set_from_string(*time, buf);
+        if ( ret < 0 ) {
+                free(*time);
+                return ret;
         }
 
-        return time;
+        return 0;
 }
 
 
@@ -281,45 +282,66 @@ int idmef_time_to_string(const idmef_time_t *time, prelude_string_t *out)
 
 
 
-idmef_time_t *idmef_time_new_from_ntpstamp(const char *buf)
+int idmef_time_new_from_ntpstamp(idmef_time_t **time, const char *buf)
 {
-        idmef_time_t *time;
+        int ret;
 
-        time = idmef_time_new();
-        if ( ! time )
-                return NULL;
+        ret = idmef_time_new(time);
+        if ( ret < 0 )
+                return ret;
 
-        if ( idmef_time_set_from_ntpstamp(time, buf) < 0 ) {
-                free(time);
-                return NULL;
+        ret = idmef_time_set_from_ntpstamp(*time, buf);
+        if ( ret < 0 ) {
+                free(*time);
+                return ret;
         }
 
-        return time;    
+        return 0; 
 }
 
 
 
-idmef_time_t *idmef_time_new_from_gettimeofday(void)
+int idmef_time_set_from_timeval(idmef_time_t *time, const struct timeval *tv)
 {
-        struct timeval tv;
-        idmef_time_t *time;
-	uint32_t gmtoff;
+        int ret;
+        uint32_t gmtoff;
 
-        if ( gettimeofday(&tv, NULL) == -1 )
-                return NULL;
-	
-	if ( prelude_get_gmt_offset(&gmtoff) < 0 )
-		return NULL;
+        ret = prelude_get_gmt_offset(&gmtoff);
+        if ( ret < 0 )
+                return ret;
 
-        time = idmef_time_new();
-        if ( ! time )
-                return NULL;
-
+        time->sec = tv->tv_sec;
+        time->usec = tv->tv_usec;
         time->gmt_offset = gmtoff;
-        time->sec = tv.tv_sec;
-        time->usec = tv.tv_usec;
-                
-        return time;    
+
+        return 0;
+}
+
+
+
+int idmef_time_new_from_timeval(idmef_time_t **time, const struct timeval *tv)
+{
+        int ret;
+	
+        ret = idmef_time_new(time);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_time_set_from_timeval(*time, tv);
+}
+
+
+
+int idmef_time_new_from_gettimeofday(idmef_time_t **time)
+{
+        int ret;
+        struct timeval tv;
+
+        ret = gettimeofday(&tv, NULL);
+        if ( ret < 0 )
+                return prelude_error_from_errno(errno);
+
+        return idmef_time_new_from_timeval(time, &tv);
 }
 
 
@@ -334,32 +356,28 @@ idmef_time_t *idmef_time_ref(idmef_time_t *time)
 
 
 
-idmef_time_t *idmef_time_new(void)
+int idmef_time_new(idmef_time_t **time)
 {
-        idmef_time_t *time; 
-
-        time = calloc(1, sizeof(*time));
-        if ( ! time )
-                log(LOG_ERR, "memory exhausted.\n");
-
-        time->refcount = 1;
+        *time = calloc(1, sizeof(**time));
+        if ( ! *time )
+                return prelude_error_from_errno(errno);
         
-        return time;
+        (*time)->refcount = 1;
+        
+        return 0;
 }
 
 
 
-idmef_time_t *idmef_time_clone(const idmef_time_t *src)
+int idmef_time_clone(const idmef_time_t *src, idmef_time_t **dst)
 {
-        idmef_time_t *ret;
+        int ret;
+        
+        ret = idmef_time_new(dst);
+        if ( ret < 0 )
+                return ret;
 
-        ret = idmef_time_new();
-        if ( ! ret )
-                return NULL;
-
-	idmef_time_copy(ret, src);
-	
-        return ret;
+	return idmef_time_copy(src, *dst);
 }
 
 
@@ -420,7 +438,7 @@ uint32_t idmef_time_get_usec(const idmef_time_t *time)
 
 
 
-int idmef_time_copy(idmef_time_t *dst, const idmef_time_t *src)
+int idmef_time_copy(const idmef_time_t *src, idmef_time_t *dst)
 {
         dst->sec = src->sec;
         dst->usec = src->usec;

@@ -286,8 +286,8 @@ children_list_t idmef_message_children_list[] = {
 typedef struct {
 	char *name;
 	children_list_t *children_list;
-	void *(*get_child)(void *ptr, idmef_child_t child);
-	void *(*new_child)(void *ptr, idmef_child_t child, int n);
+	int (*get_child)(void *ptr, idmef_child_t child, void **ret);
+	int (*new_child)(void *ptr, idmef_child_t child, int n, void **ret);
 	int (*to_numeric)(const char *name);
 	const char *(*to_string)(int val);
 } object_data_t;
@@ -298,7 +298,11 @@ object_data_t object_data[] = {
         { "(unassigned)", NULL, NULL, NULL }, /* ID: 1 */
         { "(unassigned)", NULL, NULL, NULL }, /* ID: 2 */
         { "additional_data_type", NULL, NULL, NULL, idmef_additional_data_type_to_numeric, idmef_additional_data_type_to_string}, /* ID: 3 */
-        { "additional_data", idmef_additional_data_children_list, idmef_additional_data_get_child, idmef_additional_data_new_child, NULL, NULL }, /* ID: 4 */
+        { "additional_data",
+          idmef_additional_data_children_list,
+          idmef_additional_data_get_child,
+          idmef_additional_data_new_child,
+          NULL, NULL }, /* ID: 4 */
         { "reference_origin", NULL, NULL, NULL, idmef_reference_origin_to_numeric, idmef_reference_origin_to_string}, /* ID: 5 */
         { "classification", idmef_classification_children_list, idmef_classification_get_child, idmef_classification_new_child, NULL, NULL }, /* ID: 6 */
         { "user_id_type", NULL, NULL, NULL, idmef_user_id_type_to_numeric, idmef_user_id_type_to_string}, /* ID: 7 */
@@ -348,5 +352,4 @@ object_data_t object_data[] = {
         { "(unassigned)", NULL, NULL, NULL }, /* ID: 51 */
         { "checksum", idmef_checksum_children_list, idmef_checksum_get_child, idmef_checksum_new_child, NULL, NULL }, /* ID: 52 */
         { "checksum_algorithm", NULL, NULL, NULL, idmef_checksum_algorithm_to_numeric, idmef_checksum_algorithm_to_string}, /* ID: 53 */
-        { NULL, NULL, NULL, NULL }
 };

@@ -26,7 +26,7 @@
 
 #include "prelude-log.h"
 #include "prelude-list.h"
-
+#include "prelude-error.h"
 #include "prelude-hash.h"
 
 
@@ -64,7 +64,7 @@ static unsigned int default_hash_func(const void *key)
         if ( hv )
                 for ( ptr += 1; *ptr; ptr++ )
                         hv = (hv << 5) - hv + *ptr;
-
+        
         return hv;
         
 }
@@ -93,7 +93,7 @@ static hash_elem_t *hash_elem_get(prelude_hash_t *hash, const void *key)
 
         list = hash->lists + hash_value_calc(hash, key);
 
-        prelude_list_for_each(ptr, list) {
+        prelude_list_for_each(list, ptr) {
                 hash_elem = prelude_list_entry(ptr, hash_elem_t, list);
                 if ( hash->key_cmp_func(key, hash_elem->key) == 0 )
                         return hash_elem;
@@ -120,27 +120,25 @@ static void hash_elem_value_destroy(prelude_hash_t *hash, hash_elem_t *hash_elem
 
 
 
-prelude_hash_t *prelude_hash_new(unsigned int (*hash_func)(const void *),
-                                 int (*key_cmp_func)(const void *, const void *),
-                                 void (*key_destroy_func)(void *),
-                                 void (*value_destroy_func)(void *))
+int prelude_hash_new(prelude_hash_t **nhash,
+                     unsigned int (*hash_func)(const void *),
+                     int (*key_cmp_func)(const void *, const void *),
+                     void (*key_destroy_func)(void *),
+                     void (*value_destroy_func)(void *))
 {
         prelude_hash_t *hash;
         int cnt;
 
-        hash = calloc(1, sizeof (*hash));
-        if ( ! hash ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
+        *nhash = hash = calloc(1, sizeof (*hash));
+        if ( ! hash )
+                return prelude_error_from_errno(errno);
 
         hash->lists_size = HASH_DEFAULT_SIZE;
 
-	hash->lists = calloc(hash->lists_size, sizeof (*hash->lists));
+	hash->lists = calloc(hash->lists_size, sizeof(*hash->lists));
 	if ( ! hash->lists ) {
-		log(LOG_ERR, "memory exhausted.\n");
 		free(hash);
-		return NULL;
+		return prelude_error_from_errno(errno);
 	}
 
 	hash->hash_func = hash_func ? hash_func : default_hash_func;
@@ -149,9 +147,9 @@ prelude_hash_t *prelude_hash_new(unsigned int (*hash_func)(const void *),
 	hash->value_destroy_func = value_destroy_func;
 
 	for ( cnt = 0; cnt < hash->lists_size; cnt++ )
-		PRELUDE_INIT_LIST_HEAD(hash->lists + cnt);
+		prelude_list_init(hash->lists + cnt);
 
-	return hash;
+	return 0;
 }
 
 
@@ -167,7 +165,7 @@ void prelude_hash_destroy(prelude_hash_t *hash)
 	for ( cnt = 0; cnt < hash->lists_size; cnt++ ) {
 		list = hash->lists + cnt;
 
-		prelude_list_for_each_safe(ptr, tmp, list) {
+		prelude_list_for_each_safe(list, ptr, tmp) {
 			hash_elem = prelude_list_entry(ptr, hash_elem_t, list);
                         
 			hash_elem_key_destroy(hash, hash_elem);
@@ -189,7 +187,7 @@ int prelude_hash_set(prelude_hash_t *hash, void *key, void *value)
 	prelude_list_t *list;
 
 	hash_elem = hash_elem_get(hash, key);
-
+        
 	if ( hash_elem ) {
 		hash_elem_key_destroy(hash, hash_elem);
 		hash_elem_value_destroy(hash, hash_elem);
@@ -198,17 +196,15 @@ int prelude_hash_set(prelude_hash_t *hash, void *key, void *value)
 		return 0;
 	}
 
-	hash_elem = calloc(1, sizeof (*hash_elem));
-	if ( ! hash_elem ) {
-		log(LOG_ERR, "memory exhausted.");
-		return -1;
-	}
+	hash_elem = calloc(1, sizeof(*hash_elem));
+	if ( ! hash_elem )
+		return prelude_error_from_errno(errno);
 
 	hash_elem->key = key;
 	hash_elem->value = value;
 
 	list = hash->lists + hash_value_calc(hash, key);
-	prelude_list_add(&hash_elem->list, list);
+	prelude_list_add(list, &hash_elem->list);
 
 	return 1;
 }

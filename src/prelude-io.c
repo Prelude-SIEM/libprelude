@@ -260,13 +260,13 @@ static int tls_check_error(prelude_io_t *pio, int ret)
         
         else if ( ret == GNUTLS_E_WARNING_ALERT_RECEIVED ) {
                 alert = gnutls_alert_get_name(gnutls_alert_get(pio->fd_ptr));
-                log(LOG_INFO, "- TLS: received warning alert: %s.\n", alert);
+                prelude_log(PRELUDE_LOG_WARN, "- TLS: received warning alert: %s.\n", alert);
                 return 0;
         }
         
         else if ( ret == GNUTLS_E_FATAL_ALERT_RECEIVED ) {
                 alert = gnutls_alert_get_name(gnutls_alert_get(pio->fd_ptr));
-                log(LOG_INFO, "- TLS: received fatal alert: %s.\n", alert);
+                prelude_log(PRELUDE_LOG_ERR, "- TLS: received fatal alert: %s.\n", alert);
         }
 
         return prelude_error(PRELUDE_ERROR_TLS);
@@ -506,24 +506,23 @@ ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf)
         
         ret = prelude_io_read_wait(pio, &msglen, sizeof(msglen));
         if ( ret <= 0 ) {
-                log(LOG_ERR, "couldn't read len message of %d bytes.\n", sizeof(msglen));
+                prelude_log(PRELUDE_LOG_ERR, "couldn't read len message of %d bytes.\n", sizeof(msglen));
                 return ret;
         }
 
         count = ntohs(msglen);
 
         *buf = malloc(count);
-        if ( ! *buf ) {
-                log(LOG_ERR, "couldn't allocate %d bytes.\n", count);
-                return -1;
-        }       
+        if ( ! *buf )
+                return prelude_error_from_errno(errno);
         
         ret = prelude_io_read_wait(pio, *buf, count);
-        if ( ret <= 0 ) {
-                log(LOG_ERR, "couldn't read %d bytes.\n", count);
-                return ret;
-        }
+        if ( ret < 0 )
+                return prelude_error_from_errno(errno);
 
+        if ( ret == 0 )
+                return prelude_error(PRELUDE_ERROR_EOF);
+        
         return count;
 }
 

@@ -89,18 +89,18 @@ typedef struct {
 } idmef_value_type_t;
 
 
-int idmef_value_type_copy(void *dst, idmef_value_type_t *src);
+int idmef_value_type_copy(const idmef_value_type_t *src, void *dst);
 
 int idmef_value_type_read(idmef_value_type_t *dst, const char *buf);
 
-int idmef_value_type_write(idmef_value_type_t *src, prelude_string_t *out);
+int idmef_value_type_write(const idmef_value_type_t *src, prelude_string_t *out);
 
 void idmef_value_type_destroy(idmef_value_type_t *type);
 
-int idmef_value_type_clone(idmef_value_type_t *dst, idmef_value_type_t *src);
+int idmef_value_type_clone(const idmef_value_type_t *src, idmef_value_type_t *dst);
 
-int idmef_value_type_compare(idmef_value_type_t *type1, idmef_value_type_t *type2, idmef_value_relation_t relation);
+int idmef_value_type_compare(const idmef_value_type_t *type1, const idmef_value_type_t *type2, idmef_value_relation_t relation);
 
-int idmef_value_type_check_relation(idmef_value_type_t *type, idmef_value_relation_t relation);
+int idmef_value_type_check_relation(const idmef_value_type_t *type, idmef_value_relation_t relation);
 
 #endif

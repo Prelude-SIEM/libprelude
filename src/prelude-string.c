@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2004, 2005 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -39,7 +39,8 @@
 #include "prelude-inttypes.h"
 #include "prelude-string.h"
 
-#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_STRING
+#include "prelude-error.h"
 
 
 #define CHUNK_SIZE 1024
@@ -68,8 +69,9 @@
 inline static int check_string_f(const char *f, int l, const char *str, size_t len)
 {
         if ( str[len] != 0 ) {
+                printf("str=%s\n", str);
                 fprintf(stderr, "*** %s:%d: warning, string is not NULL terminated.\n", f, l);
-                return -1;
+                return prelude_error(PRELUDE_ERROR_STRING_NOT_NULL_TERMINATED);
         }
 
         return 0;
@@ -83,7 +85,7 @@ static int string_buf_alloc(prelude_string_t *string, size_t len)
          */
         string->data.rwbuf = malloc(len + 1);
         if ( ! string->data.rwbuf ) 
-                return -1;
+                return prelude_error_from_errno(errno);
         
         string->index = len;
         string->size = len + 1;
@@ -107,7 +109,7 @@ static int allocate_more_chunk_if_needed(prelude_string_t *s, size_t needed_len)
 {
         char *ptr;
         size_t len;
-
+        
         if ( needed_len )
                 len = MAX(needed_len - (s->size - s->index), CHUNK_SIZE);
         else
@@ -116,19 +118,14 @@ static int allocate_more_chunk_if_needed(prelude_string_t *s, size_t needed_len)
         if ( s->flags & PRELUDE_STRING_CAN_REALLOC ) {
                 
                 ptr = prelude_realloc(s->data.rwbuf, s->size + len);
-                if ( ! ptr ) {
-                        log(LOG_ERR, "memory exhausted.\n");
-                        return -1;
-                }
+                if ( ! ptr )
+                        return prelude_error_from_errno(errno);
         }
 
-        else {                        
-                                
+        else {             
                 ptr = malloc(s->size + len);
-                if ( ! ptr ) {
-                        log(LOG_ERR, "memory exhausted.\n");
-                        return -1;
-                }
+                if ( ! ptr )
+                        return prelude_error_from_errno(errno);
                 
                 if ( s->data.robuf )
                         memcpy(ptr, s->data.robuf, s->index + 1);
@@ -144,27 +141,38 @@ static int allocate_more_chunk_if_needed(prelude_string_t *s, size_t needed_len)
 
 
 
-/*
- * creates an empty data
+/**
+ * prelude_string_new:
+ * @string: Pointer where to store the created #prelude_string_t.
+ *
+ * Create a new #prelude_string_t object, and store in in @string.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
  */        
-prelude_string_t *prelude_string_new(void)
+int prelude_string_new(prelude_string_t **string)
 {
-        prelude_string_t *ret;
-
-        ret = calloc(1, sizeof(*ret));
-        if ( ! ret )
-                return NULL;
+        *string = calloc(1, sizeof(**string));
+        if ( ! *string )
+                return prelude_error_from_errno(errno);
         
-        ret->refcount = 1;
-        PRELUDE_INIT_LIST_HEAD(&ret->list);
-        ret->flags = PRELUDE_STRING_OWN_STRUCTURE;
-
-        return ret;
+        (*string)->refcount = 1;
+        prelude_list_init(&(*string)->list);
+        (*string)->flags = PRELUDE_STRING_OWN_STRUCTURE;
+        
+        return 0;
 }
 
 
 
 
+/**
+ * prelude_string_ref:
+ * @string: Pointer to a #prelude_string_t object to reference.
+ *
+ * Increase @string reference count.
+ *
+ * Returns: @string.
+ */
 prelude_string_t *prelude_string_ref(prelude_string_t *data)
 {
         data->refcount++;
@@ -173,102 +181,186 @@ prelude_string_t *prelude_string_ref(prelude_string_t *data)
 
 
 
-prelude_string_t *prelude_string_new_dup_fast(const char *str, size_t len)
+/**
+ * prelude_string_new_dup_fast:
+ * @string: Pointer where to store the created #prelude_string_t object.
+ * @str: Initial string value.
+ * @len: Lenght of @str.
+ *
+ * Create a new #prelude_string_t object with a copy of @str as it's
+ * initial value.  The copy is owned by the @string and will be freed
+ * upon prelude_string_destroy().
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int prelude_string_new_dup_fast(prelude_string_t **string, const char *str, size_t len)
 {
-        prelude_string_t *ret;
+        int ret;
+        
+        ret = check_string(str, len);
+        if ( ret < 0 )
+                return ret;
+        
+        ret = prelude_string_new(string);
+        if ( ret < 0 )
+                return ret;
 
-        if ( check_string(str, len) < 0 )
-                return NULL;
+        ret = string_buf_alloc(*string, len);
+        if ( ret < 0 )
+                return ret;
         
-        ret = prelude_string_new();
-        if ( ! ret )
-                return NULL;
-
-        if ( string_buf_alloc(ret, len) < 0 )
-                return NULL;
-        
-        string_buf_copy(ret, str, len);
-        
-        ret->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
+        string_buf_copy(*string, str, len);
+        (*string)->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
                 
-        return ret;
+        return 0;
 }
 
 
 
-prelude_string_t *prelude_string_new_dup(const char *str)
+/**
+ * prelude_string_new_dup:
+ * @string: Pointer where to store the created #prelude_string_t object.
+ * @str: Initial string value.
+ *
+ * Create a new #prelude_string_t object with a copy of @str as it's
+ * initial value. The copy is owned by the @string and will be freed
+ * upon prelude_string_destroy().
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int prelude_string_new_dup(prelude_string_t **string, const char *str)
 {
-        return prelude_string_new_dup_fast(str, strlen(str));
+        return prelude_string_new_dup_fast(string, str, strlen(str));
 }
 
 
 
-prelude_string_t *prelude_string_new_nodup_fast(char *str, size_t len)
+/**
+ * prelude_string_new_nodup_fast:
+ * @string: Pointer where to store the created #prelude_string_t object.
+ * @str: Initial string value.
+ * @len: Lenght of @str.
+ *
+ * Create a new #prelude_string_t object with a reference to @str as
+ * initial value.  @str is owned by @string and will be freed upon
+ * prelude_string_destroy().
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int prelude_string_new_nodup_fast(prelude_string_t **string, char *str, size_t len)
 {
-        prelude_string_t *ret;
+        int ret;
+
+        ret = check_string(str, len);
+        if ( ret < 0 )
+                return ret;
+                        
+        ret = prelude_string_new(string);
+        if ( ret < 0 )
+                return ret;
+
+        (*string)->index = len;
+        (*string)->size = len + 1;
+        (*string)->data.rwbuf = str;
+        (*string)->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
         
-        if ( check_string(str, len) < 0 )
-                return NULL;
-                
-        ret = prelude_string_new();
-        if ( ! ret )
-                return NULL;
-
-        ret->index = len;
-        ret->size = len + 1;
-        ret->data.rwbuf = str;
-
-        ret->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
-        
-        return ret;
+        return 0;
 }
 
 
 
-prelude_string_t *prelude_string_new_nodup(char *str)
+/**
+ * prelude_string_new_nodup:
+ * @string: Pointer where to store the created #prelude_string_t object.
+ * @str: Initial string value.
+ *
+ * Create a new #prelude_string_t object with a reference to @str as
+ * initial value.  @str is owned by @string and will be freed upon
+ * prelude_string_destroy().
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int prelude_string_new_nodup(prelude_string_t **string, char *str)
 {
-        return prelude_string_new_nodup_fast(str, strlen(str));
+        return prelude_string_new_nodup_fast(string, str, strlen(str));
 }
 
 
 
-prelude_string_t *prelude_string_new_ref_fast(const char *buf, size_t len)
+/**
+ * prelude_string_new_ref_fast:
+ * @string: Pointer where to store the created #prelude_string_t object.
+ * @str: Initial string value.
+ * @len: Length of @str.
+ *
+ * Create a new #prelude_string_t object with a reference to @str as
+ * initial value. @str won't be freed upon prelude_string_destroy().
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int prelude_string_new_ref_fast(prelude_string_t **string, const char *buf, size_t len)
 {
-        prelude_string_t *ret;
+        int ret;
 
-        if ( check_string(buf, len) < 0 )
-                return NULL;
+        ret = check_string(buf, len);
+        if ( ret < 0 )
+                return ret;
         
-        ret = prelude_string_new();
-        if ( ! ret )
-                return NULL;
+        ret = prelude_string_new(string);
+        if ( ret < 0 )
+                return ret;
 
-        ret->index = len;
-        ret->size = len + 1;
-        ret->data.robuf = buf;
+        (*string)->index = len;
+        (*string)->size = len + 1;
+        (*string)->data.robuf = buf;
         
-        return ret;
+        return 0;
 }
 
 
 
-prelude_string_t *prelude_string_new_ref(const char *str)
+/**
+ * prelude_string_new_ref:
+ * @string: Pointer where to store the created #prelude_string_t object.
+ * @str: Initial string value.
+ *
+ * Create a new #prelude_string_t object with a reference to @str as
+ * initial value. @str won't be freed upon prelude_string_destroy().
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int prelude_string_new_ref(prelude_string_t **string, const char *str)
 {
-        return prelude_string_new_ref_fast(str, strlen(str));
+        return prelude_string_new_ref_fast(string, str, strlen(str));
 }
 
 
 
+/**
+ * prelude_string_set_dup_fast:
+ * @string: Pointer to a #prelude_string_t object.
+ * @buf: String to store in @string.
+ * @len: Lenght of @buf.
+ *
+ * Store a copy of the string pointed by @buf in @string.
+ * The @buf copy will be freed upon prelude_string_destroy().
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
 int prelude_string_set_dup_fast(prelude_string_t *string, const char *buf, size_t len)
 {
-        if ( check_string(buf, len) < 0 )
-                return -1;
+        int ret;
+        
+        ret = check_string(buf, len);
+        if ( ret < 0 )
+                return ret;
         
         prelude_string_destroy_internal(string);
-        
-        if ( string_buf_alloc(string, len) < 0 )
-                return -1;
 
+        ret = string_buf_alloc(string, len);
+        if ( ret < 0 )
+                return ret;
+        
         string_buf_copy(string, buf, len);
         string->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
         
@@ -277,6 +369,16 @@ int prelude_string_set_dup_fast(prelude_string_t *string, const char *buf, size_
 
 
 
+/**
+ * prelude_string_set_dup:
+ * @string: Pointer to a #prelude_string_t object.
+ * @buf: String to store in @string.
+ *
+ * Store a copy of the string pointed by @buf in @string.
+ * The @buf copy will be freed upon prelude_string_destroy().
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
 int prelude_string_set_dup(prelude_string_t *string, const char *buf)
 {
         return prelude_string_set_dup_fast(string, buf, strlen(buf));
@@ -284,10 +386,24 @@ int prelude_string_set_dup(prelude_string_t *string, const char *buf)
 
 
 
+/**
+ * prelude_string_set_nodup_fast:
+ * @string: Pointer to a #prelude_string_t object.
+ * @buf: String to store in @string.
+ * @len: Lenght of @buf.
+ *
+ * Store a reference to the string pointed by @buf in @string.
+ * The referenced @buf will be freed upon prelude_string_destroy().
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
 int prelude_string_set_nodup_fast(prelude_string_t *string, char *buf, size_t len)
 {
-        if ( check_string(buf, len) < 0 )
-                return -1;
+        int ret;
+
+        ret = check_string(buf, len);
+        if ( ret < 0 )
+                return ret;
                 
         prelude_string_destroy_internal(string);
 
@@ -303,6 +419,16 @@ int prelude_string_set_nodup_fast(prelude_string_t *string, char *buf, size_t le
 
 
 
+/**
+ * prelude_string_set_nodup:
+ * @string: Pointer to a #prelude_string_t object.
+ * @buf: String to store in @string.
+ *
+ * Store a reference to the string pointed by @buf in @string.
+ * The referenced @buf will be freed upon prelude_string_destroy().
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
 int prelude_string_set_nodup(prelude_string_t *string, char *buf)
 {
         return prelude_string_set_nodup_fast(string, buf, strlen(buf));
@@ -310,12 +436,25 @@ int prelude_string_set_nodup(prelude_string_t *string, char *buf)
 
 
 
-
+/**
+ * prelude_string_set_ref_fast:
+ * @string: Pointer to a #prelude_string_t object.
+ * @buf: String to store in @string.
+ * @len: Lenght of @buf.
+ *
+ * Store a reference to the string pointed by @buf in @string.
+ * The referenced @buf value won't be modified or freed.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
 int prelude_string_set_ref_fast(prelude_string_t *string, const char *buf, size_t len)
 {
-        if ( check_string(buf, len) < 0 )
-                return -1;
-        
+        int ret;
+                
+        ret = check_string(buf, len);
+        if ( ret < 0 )
+                return ret;
+                
         prelude_string_destroy_internal(string);
 
         string->index = len;
@@ -329,6 +468,16 @@ int prelude_string_set_ref_fast(prelude_string_t *string, const char *buf, size_
 
 
 
+/**
+ * prelude_string_set_ref:
+ * @string: Pointer to a #prelude_string_t object.
+ * @buf: String to store in @string.
+ *
+ * Store a reference to the string pointed by @buf in @string.
+ * The referenced @buf value won't be modified or freed.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
 int prelude_string_set_ref(prelude_string_t *string, const char *buf)
 {
         return prelude_string_set_ref_fast(string, buf, strlen(buf));
@@ -336,11 +485,19 @@ int prelude_string_set_ref(prelude_string_t *string, const char *buf)
 
 
 
-/*
- * just make a pointer copy of the embedded data
+
+/**
+ * prelude_string_copy_ref:
+ * @src: Pointer to a #prelude_string_t object to copy data from.
+ * @dst: Pointer to a #prelude_string_t object to copy data to.
+ *
+ * Reference @src content within @dst.
+ * The referenced content won't be modified or freed.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-int prelude_string_copy_ref(prelude_string_t *dst, const prelude_string_t *src)
-{
+int prelude_string_copy_ref(const prelude_string_t *src, prelude_string_t *dst)
+{        
         prelude_string_destroy_internal(dst);
 
         dst->size = src->size;
@@ -354,54 +511,78 @@ int prelude_string_copy_ref(prelude_string_t *dst, const prelude_string_t *src)
 
 
 
-/*
- * also copy the content of the embedded data
+/**
+ * prelude_string_copy_dup:
+ * @src: Pointer to a #prelude_string_t object to copy data from.
+ * @dst: Pointer to a #prelude_string_t object to copy data to.
+ *
+ * Copy @src content within @dst.
+ * The content is owned by @src and independent of @dst.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-int prelude_string_copy_dup(prelude_string_t *dst, const prelude_string_t *src)
+int prelude_string_copy_dup(const prelude_string_t *src, prelude_string_t *dst)
 {
         prelude_string_destroy_internal(dst);
 
         dst->data.rwbuf = malloc(src->size);
         if ( ! dst->data.rwbuf )
-                return -1;
+                return prelude_error_from_errno(errno);
         
         dst->size = src->size;
         dst->index = src->index;
         dst->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
         
         string_buf_copy(dst, src->data.robuf, src->index);
-                
+        
         return 0;
 }
 
 
 
-
-prelude_string_t *prelude_string_clone(const prelude_string_t *string)
+/**
+ * prelude_string_clone:
+ * @src: Pointer to an existing #prelude_string_t object.
+ * @dst: Pointer to an address where to store the created #prelude_string_t object.
+ *
+ * Clone @src within a new #prelude_string_t object stored into @dst.
+ * Data carried by @dst and @src are independant.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
+int prelude_string_clone(const prelude_string_t *src, prelude_string_t **dst)
 {
-        prelude_string_t *ret;
+        int ret;
         
-        ret = prelude_string_new();
-        if ( ! ret )
-                return NULL;
-
-        ret->data.rwbuf = malloc(string->size);
-        if ( ! ret->data.rwbuf ) {
-                free(ret);
-                return NULL;
+        ret = prelude_string_new(dst);
+        if ( ret < 0 )
+                return ret;
+        
+        (*dst)->data.rwbuf = malloc(src->size);
+        if ( ! (*dst)->data.rwbuf ) {
+                free(*dst);
+                return prelude_error_from_errno(errno);
         }
 
-        ret->size = string->size;
-        ret->index = string->index;
-        ret->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
+        (*dst)->size = src->size;
+        (*dst)->index = src->index;
+        (*dst)->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
 
-        string_buf_copy(ret, string->data.robuf, string->index);
+        string_buf_copy(*dst, src->data.robuf, src->index);
         
-        return ret;
+        return 0;
 }
 
 
 
+/**
+ * prelude_string_get_len:
+ * @string: Pointer to a #prelude_string_t object.
+ *
+ * Return the length of the string carried by @string object.
+ *
+ * Returns: The length of the string owned by @string.
+ */
 size_t prelude_string_get_len(const prelude_string_t *string)
 {
         return string->index;
@@ -409,6 +590,17 @@ size_t prelude_string_get_len(const prelude_string_t *string)
 
 
 
+/**
+ * prelude_string_get_string_or_default:
+ * @string: Pointer to a #prelude_string_t object.
+ * @def: Default value to a return in case @string is empty.
+ *
+ * Return the string carried on by @string object, or @def if it is empty.
+ * There should be no operation done on the returned string since it is still
+ * owned by @string.
+ *
+ * Returns: The string owned by @string or @def.
+ */
 const char *prelude_string_get_string_or_default(const prelude_string_t *string, const char *def)
 {
         return string->data.robuf ? string->data.robuf : def;
@@ -416,39 +608,71 @@ const char *prelude_string_get_string_or_default(const prelude_string_t *string,
 
 
 
+/**
+ * prelude_string_get_string:
+ * @string: Pointer to a #prelude_string_t object.
+ *
+ * Return the string carried on by @string object.
+ * There should be no operation done on the returned string since
+ * it is still owned by @string.
+ *
+ * Returns: The string owned by @string if any.
+ */
 const char *prelude_string_get_string(const prelude_string_t *string)
 {
-        return string->data.robuf;
+        return string ? string->data.robuf : NULL;
 }
 
 
 
-char *prelude_string_get_string_released(prelude_string_t *string)
-{
-        char *ptr;
 
-        if ( ! string->index )
-                return NULL;
-
-        if ( ! (string->flags & PRELUDE_STRING_CAN_REALLOC) )
-                return strdup(string->data.robuf);
+/**
+ * prelude_string_get_string_released:
+ * @string: Pointer to a #prelude_string_t object.
+ * @outptr: Pointer to an address where to store the released string.
+ *
+ * Get @string content, and release it so that further operation on
+ * @string won't modify the returned content.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
+int prelude_string_get_string_released(prelude_string_t *string, char **outptr)
+{        
+        *outptr = NULL;
         
-        ptr = prelude_realloc(string->data.rwbuf, string->index + 1);
-        if ( ! ptr )
-                return NULL;
+        if ( ! string->index )
+                return 0;
+
+        if ( ! (string->flags & PRELUDE_STRING_CAN_REALLOC) ) {
+                *outptr = strdup(string->data.robuf);
+                return (*outptr) ? 0 : prelude_error_from_errno(errno);
+        }
+        
+        *outptr = prelude_realloc(string->data.rwbuf, string->index + 1);
+        if ( ! *outptr )
+                return prelude_error_from_errno(errno);
 
         string->size = 0;
         string->index = 0;
         string->data.rwbuf = NULL;
         
-        return ptr;
+        return 0;
 }
 
 
 
-int prelude_string_is_empty(const prelude_string_t *string)
+
+/**
+ * prelude_string_is_empty:
+ * @string: Pointer to a #prelude_string_t object.
+ *
+ * Check whether @string is empty.
+ *
+ * Returns: TRUE if @string is empty, FALSE otherwise.
+ */
+prelude_bool_t prelude_string_is_empty(const prelude_string_t *string)
 {
-        return (string->index == 0);
+        return (string->index == 0) ? TRUE : FALSE;
 }
 
 
@@ -471,33 +695,55 @@ void prelude_string_destroy_internal(prelude_string_t *string)
 
 
 
-
+/**
+ * prelude_string_destroy:
+ * @string: Pointer to a #prelude_string_t object.
+ *
+ * Decrease refcount and destroy @string.
+ * @string content content is destroyed if applicable (dup and nodup,
+ * or a referenced string that have been modified.
+ */
 void prelude_string_destroy(prelude_string_t *string)
-{
+{        
         if ( --string->refcount )
                 return;
-
-        if ( ! prelude_list_empty(&string->list) ) {
-                prelude_list_del(&string->list);
-                PRELUDE_INIT_LIST_HEAD(&string->list);
-        }
+        
+        if ( ! prelude_list_is_empty(&string->list) )
+                prelude_list_del_init(&string->list);
         
         prelude_string_destroy_internal(string);
-
+        
         if ( string->flags & PRELUDE_STRING_OWN_STRUCTURE )
                 free(string);
 }
 
 
 
-int prelude_string_vprintf(prelude_string_t *s, const char *fmt, va_list ap)
+
+/**
+ * prelude_string_vprintf:
+ * @string: Pointer to a #prelude_string_t object.
+ * @fmt: Format string to use.
+ * @ap: Variable argument list.
+ *
+ * Produce output according to @fmt, storing argument provided in @ap
+ * variable argument list, and write the output to the given @string.
+ * See sprintf(3) for more information on @fmt format.
+ *
+ * Returns: The number of characters written, or a negative value if an error occured.
+ */
+int prelude_string_vprintf(prelude_string_t *string, const char *fmt, va_list ap)
 {
         int ret;
 
-        if ( ! (s->flags & PRELUDE_STRING_CAN_REALLOC) && allocate_more_chunk_if_needed(s, 0) < 0 )
-                return -1;
+        if ( ! (string->flags & PRELUDE_STRING_CAN_REALLOC) ) {
+
+                ret = allocate_more_chunk_if_needed(string, 0);
+                if ( ret < 0 )
+                        return ret;
+        }
         
-        ret = vsnprintf(s->data.rwbuf + s->index, s->size - s->index, fmt, ap);
+        ret = vsnprintf(string->data.rwbuf + string->index, string->size - string->index, fmt, ap);
         
         /*
          * From sprintf(3) on GNU/Linux:
@@ -510,19 +756,32 @@ int prelude_string_vprintf(prelude_string_t *s, const char *fmt, va_list ap)
          * ing the trailing '\0') which would have  been  written  to
          * the final string if enough space had been available.)
          */
-        if ( ret >= 0 && ret < s->size - s->index ) {
-                s->index += ret;
+        if ( ret >= 0 && ret < string->size - string->index ) {
+                string->index += ret;
                 return ret;
         }
 
-        if ( allocate_more_chunk_if_needed(s, (ret < 0) ? 0 : ret + 1) < 0 )
-		return -1;
+        ret = allocate_more_chunk_if_needed(string, (ret < 0) ? 0 : ret + 1);
+        if ( ret < 0 )
+		return ret;
         
-        return prelude_string_vprintf(s, fmt, ap);
+        return prelude_string_vprintf(string, fmt, ap);
 }
 
 
 
+
+/**
+ * prelude_string_sprintf:
+ * @string: Pointer to a #prelude_string_t object.
+ * @fmt: Format string to use.
+ * @...: Variable argument list.
+ *
+ * Produce output according to @fmt, and write output to the given
+ * @string. See snprintf(3) to learn more about @fmt format.
+ *
+ * Returns: The number of characters written, or a negative value if an error occured.
+ */
 int prelude_string_sprintf(prelude_string_t *string, const char *fmt, ...)
 {
 	int ret;
@@ -537,33 +796,66 @@ int prelude_string_sprintf(prelude_string_t *string, const char *fmt, ...)
 
 
 
-int prelude_string_ncat(prelude_string_t *s, const char *str, size_t len)
-{        
-	if ( s->flags & PRELUDE_STRING_CAN_REALLOC && len < s->size - s->index ) {
+/**
+ * prelude_string_cat:
+ * @dst: Pointer to a #prelude_string_t object.
+ * @str: Pointer to a string.
+ * @len: Length of @str to copy.
+ *
+ * The prelude_string_ncat() function appends @len characters from @str to
+ * the @dst #prelude_string_t object over-writing the `\0' character at the
+ * end of @dst, and then adds a termi-nating `\0' character.
+ *
+ * Returns: @len, or a negative value if an error occured.
+ */
+int prelude_string_ncat(prelude_string_t *dst, const char *str, size_t len)
+{
+        int ret;
+        
+	if ( dst->flags & PRELUDE_STRING_CAN_REALLOC && len < dst->size - dst->index ) {
                 
-                memcpy(s->data.rwbuf + s->index, str, len);
+                memcpy(dst->data.rwbuf + dst->index, str, len);
 
-                s->index += len;
-                s->data.rwbuf[s->index] = '\0';
+                dst->index += len;
+                dst->data.rwbuf[dst->index] = '\0';
 
 		return len;
 	}
-        
-	if ( allocate_more_chunk_if_needed(s, len + 1) < 0 )
-                return -1;
 
-	return prelude_string_ncat(s, str, len);
+        ret = allocate_more_chunk_if_needed(dst, len + 1);
+	if ( ret < 0 )
+                return ret;
+
+	return prelude_string_ncat(dst, str, len);
 }
 
 
 
-int prelude_string_cat(prelude_string_t *string, const char *str)
+/**
+ * prelude_string_cat:
+ * @dst: Pointer to a #prelude_string_t object.
+ * @str: Pointer to a string.
+ *
+ * The prelude_string_cat() function appends the @str string to the @dst
+ * prelude_string_t object over-writing the `\0' character at the end of
+ * @dst, and then adds a termi-nating `\0' character. 
+ *
+ * Returns: @len, or a negative value if an error occured.
+ */
+int prelude_string_cat(prelude_string_t *dst, const char *str)
 {
-	return prelude_string_ncat(string, str, strlen(str));
+	return prelude_string_ncat(dst, str, strlen(str));
 }
 
 
 
+
+/**
+ * prelude_string_clear:
+ * @string: Pointer to a #prelude_string_t object.
+ *
+ * Reset @string content to zero.
+ */
 void prelude_string_clear(prelude_string_t *string)
 {
         string->index = 0;

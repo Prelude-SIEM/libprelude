@@ -69,26 +69,26 @@ const char *idmef_additional_data_type_to_string(idmef_additional_data_type_t va
 
 typedef struct idmef_additional_data idmef_additional_data_t;
 
-idmef_additional_data_t *idmef_additional_data_new(void);
+int idmef_additional_data_new(idmef_additional_data_t **ret);
 idmef_additional_data_t *idmef_additional_data_ref(idmef_additional_data_t *ptr);
-void *idmef_additional_data_get_child(void *p, idmef_child_t child);
-void *idmef_additional_data_new_child(void *p, idmef_child_t child, int n);
+int idmef_additional_data_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_additional_data_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_additional_data_destroy(idmef_additional_data_t *ptr);
 idmef_additional_data_type_t idmef_additional_data_get_type(idmef_additional_data_t *ptr);
 void idmef_additional_data_set_type(idmef_additional_data_t *ptr, idmef_additional_data_type_t type);
-idmef_value_t *idmef_additional_data_get_type_value(idmef_additional_data_t *ptr);
-idmef_additional_data_type_t *idmef_additional_data_new_type(idmef_additional_data_t *ptr);
+int idmef_additional_data_get_type_value(idmef_additional_data_t *ptr, idmef_value_t **value);
+int idmef_additional_data_new_type(idmef_additional_data_t *ptr, idmef_additional_data_type_t **ret);
 
 prelude_string_t *idmef_additional_data_get_meaning(idmef_additional_data_t *ptr);
 void idmef_additional_data_set_meaning(idmef_additional_data_t *ptr, prelude_string_t *meaning);
-idmef_value_t *idmef_additional_data_get_meaning_value(idmef_additional_data_t *ptr);
-prelude_string_t *idmef_additional_data_new_meaning(idmef_additional_data_t *ptr);
+int idmef_additional_data_get_meaning_value(idmef_additional_data_t *ptr, idmef_value_t **value);
+int idmef_additional_data_new_meaning(idmef_additional_data_t *ptr, prelude_string_t **ret);
 
 idmef_data_t *idmef_additional_data_get_data(idmef_additional_data_t *ptr);
 void idmef_additional_data_set_data(idmef_additional_data_t *ptr, idmef_data_t *data);
-idmef_value_t *idmef_additional_data_get_data_value(idmef_additional_data_t *ptr);
-idmef_data_t *idmef_additional_data_new_data(idmef_additional_data_t *ptr);
+int idmef_additional_data_get_data_value(idmef_additional_data_t *ptr, idmef_value_t **value);
+int idmef_additional_data_new_data(idmef_additional_data_t *ptr, idmef_data_t **ret);
 
 typedef enum {
         IDMEF_REFERENCE_ORIGIN_ERROR = -1,
@@ -122,31 +122,31 @@ const char *idmef_reference_origin_to_string(idmef_reference_origin_t val);
 
 typedef struct idmef_reference idmef_reference_t;
 
-idmef_reference_t *idmef_reference_new(void);
+int idmef_reference_new(idmef_reference_t **ret);
 idmef_reference_t *idmef_reference_ref(idmef_reference_t *ptr);
-void *idmef_reference_get_child(void *p, idmef_child_t child);
-void *idmef_reference_new_child(void *p, idmef_child_t child, int n);
+int idmef_reference_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_reference_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_reference_destroy(idmef_reference_t *ptr);
 idmef_reference_origin_t idmef_reference_get_origin(idmef_reference_t *ptr);
 void idmef_reference_set_origin(idmef_reference_t *ptr, idmef_reference_origin_t origin);
-idmef_value_t *idmef_reference_get_origin_value(idmef_reference_t *ptr);
-idmef_reference_origin_t *idmef_reference_new_origin(idmef_reference_t *ptr);
+int idmef_reference_get_origin_value(idmef_reference_t *ptr, idmef_value_t **value);
+int idmef_reference_new_origin(idmef_reference_t *ptr, idmef_reference_origin_t **ret);
 
 prelude_string_t *idmef_reference_get_name(idmef_reference_t *ptr);
 void idmef_reference_set_name(idmef_reference_t *ptr, prelude_string_t *name);
-idmef_value_t *idmef_reference_get_name_value(idmef_reference_t *ptr);
-prelude_string_t *idmef_reference_new_name(idmef_reference_t *ptr);
+int idmef_reference_get_name_value(idmef_reference_t *ptr, idmef_value_t **value);
+int idmef_reference_new_name(idmef_reference_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_reference_get_url(idmef_reference_t *ptr);
 void idmef_reference_set_url(idmef_reference_t *ptr, prelude_string_t *url);
-idmef_value_t *idmef_reference_get_url_value(idmef_reference_t *ptr);
-prelude_string_t *idmef_reference_new_url(idmef_reference_t *ptr);
+int idmef_reference_get_url_value(idmef_reference_t *ptr, idmef_value_t **value);
+int idmef_reference_new_url(idmef_reference_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_reference_get_meaning(idmef_reference_t *ptr);
 void idmef_reference_set_meaning(idmef_reference_t *ptr, prelude_string_t *meaning);
-idmef_value_t *idmef_reference_get_meaning_value(idmef_reference_t *ptr);
-prelude_string_t *idmef_reference_new_meaning(idmef_reference_t *ptr);
+int idmef_reference_get_meaning_value(idmef_reference_t *ptr, idmef_value_t **value);
+int idmef_reference_new_meaning(idmef_reference_t *ptr, prelude_string_t **ret);
 
 
 
@@ -164,26 +164,26 @@ prelude_string_t *idmef_reference_new_meaning(idmef_reference_t *ptr);
 
 typedef struct idmef_classification idmef_classification_t;
 
-idmef_classification_t *idmef_classification_new(void);
+int idmef_classification_new(idmef_classification_t **ret);
 idmef_classification_t *idmef_classification_ref(idmef_classification_t *ptr);
-void *idmef_classification_get_child(void *p, idmef_child_t child);
-void *idmef_classification_new_child(void *p, idmef_child_t child, int n);
+int idmef_classification_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_classification_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_classification_destroy(idmef_classification_t *ptr);
 uint64_t idmef_classification_get_ident(idmef_classification_t *ptr);
 void idmef_classification_set_ident(idmef_classification_t *ptr, uint64_t ident);
-idmef_value_t *idmef_classification_get_ident_value(idmef_classification_t *ptr);
-uint64_t *idmef_classification_new_ident(idmef_classification_t *ptr);
+int idmef_classification_get_ident_value(idmef_classification_t *ptr, idmef_value_t **value);
+int idmef_classification_new_ident(idmef_classification_t *ptr, uint64_t **ret);
 
 prelude_string_t *idmef_classification_get_text(idmef_classification_t *ptr);
 void idmef_classification_set_text(idmef_classification_t *ptr, prelude_string_t *text);
-idmef_value_t *idmef_classification_get_text_value(idmef_classification_t *ptr);
-prelude_string_t *idmef_classification_new_text(idmef_classification_t *ptr);
+int idmef_classification_get_text_value(idmef_classification_t *ptr, idmef_value_t **value);
+int idmef_classification_new_text(idmef_classification_t *ptr, prelude_string_t **ret);
 
 idmef_reference_t *idmef_classification_get_next_reference(idmef_classification_t *ptr, idmef_reference_t *object);
 void idmef_classification_set_reference(idmef_classification_t *ptr, idmef_reference_t *object);
-idmef_reference_t *idmef_classification_new_reference(idmef_classification_t *ptr);
-idmef_value_t *idmef_classification_get_reference_value(idmef_classification_t *ptr);
+int idmef_classification_new_reference(idmef_classification_t *ptr, idmef_reference_t **ret);
+int idmef_classification_get_reference_value(idmef_classification_t *ptr, idmef_value_t **value);
 
 typedef enum {
         IDMEF_USER_ID_TYPE_ORIGINAL_ERROR = -1,
@@ -217,31 +217,31 @@ const char *idmef_user_id_type_to_string(idmef_user_id_type_t val);
 
 typedef struct idmef_user_id idmef_user_id_t;
 
-idmef_user_id_t *idmef_user_id_new(void);
+int idmef_user_id_new(idmef_user_id_t **ret);
 idmef_user_id_t *idmef_user_id_ref(idmef_user_id_t *ptr);
-void *idmef_user_id_get_child(void *p, idmef_child_t child);
-void *idmef_user_id_new_child(void *p, idmef_child_t child, int n);
+int idmef_user_id_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_user_id_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_user_id_destroy(idmef_user_id_t *ptr);
 uint64_t idmef_user_id_get_ident(idmef_user_id_t *ptr);
 void idmef_user_id_set_ident(idmef_user_id_t *ptr, uint64_t ident);
-idmef_value_t *idmef_user_id_get_ident_value(idmef_user_id_t *ptr);
-uint64_t *idmef_user_id_new_ident(idmef_user_id_t *ptr);
+int idmef_user_id_get_ident_value(idmef_user_id_t *ptr, idmef_value_t **value);
+int idmef_user_id_new_ident(idmef_user_id_t *ptr, uint64_t **ret);
 
 prelude_string_t *idmef_user_id_get_name(idmef_user_id_t *ptr);
 void idmef_user_id_set_name(idmef_user_id_t *ptr, prelude_string_t *name);
-idmef_value_t *idmef_user_id_get_name_value(idmef_user_id_t *ptr);
-prelude_string_t *idmef_user_id_new_name(idmef_user_id_t *ptr);
+int idmef_user_id_get_name_value(idmef_user_id_t *ptr, idmef_value_t **value);
+int idmef_user_id_new_name(idmef_user_id_t *ptr, prelude_string_t **ret);
 
 idmef_user_id_type_t idmef_user_id_get_type(idmef_user_id_t *ptr);
 void idmef_user_id_set_type(idmef_user_id_t *ptr, idmef_user_id_type_t type);
-idmef_value_t *idmef_user_id_get_type_value(idmef_user_id_t *ptr);
-idmef_user_id_type_t *idmef_user_id_new_type(idmef_user_id_t *ptr);
+int idmef_user_id_get_type_value(idmef_user_id_t *ptr, idmef_value_t **value);
+int idmef_user_id_new_type(idmef_user_id_t *ptr, idmef_user_id_type_t **ret);
 
 uint32_t *idmef_user_id_get_number(idmef_user_id_t *ptr);
 void idmef_user_id_set_number(idmef_user_id_t *ptr, uint32_t number);
-idmef_value_t *idmef_user_id_get_number_value(idmef_user_id_t *ptr);
-uint32_t *idmef_user_id_new_number(idmef_user_id_t *ptr);
+int idmef_user_id_get_number_value(idmef_user_id_t *ptr, idmef_value_t **value);
+int idmef_user_id_new_number(idmef_user_id_t *ptr, uint32_t **ret);
 
 typedef enum {
         IDMEF_USER_CATEGORY_ERROR = -1,
@@ -269,26 +269,26 @@ const char *idmef_user_category_to_string(idmef_user_category_t val);
 
 typedef struct idmef_user idmef_user_t;
 
-idmef_user_t *idmef_user_new(void);
+int idmef_user_new(idmef_user_t **ret);
 idmef_user_t *idmef_user_ref(idmef_user_t *ptr);
-void *idmef_user_get_child(void *p, idmef_child_t child);
-void *idmef_user_new_child(void *p, idmef_child_t child, int n);
+int idmef_user_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_user_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_user_destroy(idmef_user_t *ptr);
 uint64_t idmef_user_get_ident(idmef_user_t *ptr);
 void idmef_user_set_ident(idmef_user_t *ptr, uint64_t ident);
-idmef_value_t *idmef_user_get_ident_value(idmef_user_t *ptr);
-uint64_t *idmef_user_new_ident(idmef_user_t *ptr);
+int idmef_user_get_ident_value(idmef_user_t *ptr, idmef_value_t **value);
+int idmef_user_new_ident(idmef_user_t *ptr, uint64_t **ret);
 
 idmef_user_category_t idmef_user_get_category(idmef_user_t *ptr);
 void idmef_user_set_category(idmef_user_t *ptr, idmef_user_category_t category);
-idmef_value_t *idmef_user_get_category_value(idmef_user_t *ptr);
-idmef_user_category_t *idmef_user_new_category(idmef_user_t *ptr);
+int idmef_user_get_category_value(idmef_user_t *ptr, idmef_value_t **value);
+int idmef_user_new_category(idmef_user_t *ptr, idmef_user_category_t **ret);
 
 idmef_user_id_t *idmef_user_get_next_user_id(idmef_user_t *ptr, idmef_user_id_t *object);
 void idmef_user_set_user_id(idmef_user_t *ptr, idmef_user_id_t *object);
-idmef_user_id_t *idmef_user_new_user_id(idmef_user_t *ptr);
-idmef_value_t *idmef_user_get_user_id_value(idmef_user_t *ptr);
+int idmef_user_new_user_id(idmef_user_t *ptr, idmef_user_id_t **ret);
+int idmef_user_get_user_id_value(idmef_user_t *ptr, idmef_value_t **value);
 
 typedef enum {
         IDMEF_ADDRESS_CATEGORY_ERROR = -1,
@@ -332,41 +332,41 @@ const char *idmef_address_category_to_string(idmef_address_category_t val);
 
 typedef struct idmef_address idmef_address_t;
 
-idmef_address_t *idmef_address_new(void);
+int idmef_address_new(idmef_address_t **ret);
 idmef_address_t *idmef_address_ref(idmef_address_t *ptr);
-void *idmef_address_get_child(void *p, idmef_child_t child);
-void *idmef_address_new_child(void *p, idmef_child_t child, int n);
+int idmef_address_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_address_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_address_destroy(idmef_address_t *ptr);
 uint64_t idmef_address_get_ident(idmef_address_t *ptr);
 void idmef_address_set_ident(idmef_address_t *ptr, uint64_t ident);
-idmef_value_t *idmef_address_get_ident_value(idmef_address_t *ptr);
-uint64_t *idmef_address_new_ident(idmef_address_t *ptr);
+int idmef_address_get_ident_value(idmef_address_t *ptr, idmef_value_t **value);
+int idmef_address_new_ident(idmef_address_t *ptr, uint64_t **ret);
 
 idmef_address_category_t idmef_address_get_category(idmef_address_t *ptr);
 void idmef_address_set_category(idmef_address_t *ptr, idmef_address_category_t category);
-idmef_value_t *idmef_address_get_category_value(idmef_address_t *ptr);
-idmef_address_category_t *idmef_address_new_category(idmef_address_t *ptr);
+int idmef_address_get_category_value(idmef_address_t *ptr, idmef_value_t **value);
+int idmef_address_new_category(idmef_address_t *ptr, idmef_address_category_t **ret);
 
 prelude_string_t *idmef_address_get_vlan_name(idmef_address_t *ptr);
 void idmef_address_set_vlan_name(idmef_address_t *ptr, prelude_string_t *vlan_name);
-idmef_value_t *idmef_address_get_vlan_name_value(idmef_address_t *ptr);
-prelude_string_t *idmef_address_new_vlan_name(idmef_address_t *ptr);
+int idmef_address_get_vlan_name_value(idmef_address_t *ptr, idmef_value_t **value);
+int idmef_address_new_vlan_name(idmef_address_t *ptr, prelude_string_t **ret);
 
 int32_t *idmef_address_get_vlan_num(idmef_address_t *ptr);
 void idmef_address_set_vlan_num(idmef_address_t *ptr, int32_t vlan_num);
-idmef_value_t *idmef_address_get_vlan_num_value(idmef_address_t *ptr);
-int32_t *idmef_address_new_vlan_num(idmef_address_t *ptr);
+int idmef_address_get_vlan_num_value(idmef_address_t *ptr, idmef_value_t **value);
+int idmef_address_new_vlan_num(idmef_address_t *ptr, int32_t **ret);
 
 prelude_string_t *idmef_address_get_address(idmef_address_t *ptr);
 void idmef_address_set_address(idmef_address_t *ptr, prelude_string_t *address);
-idmef_value_t *idmef_address_get_address_value(idmef_address_t *ptr);
-prelude_string_t *idmef_address_new_address(idmef_address_t *ptr);
+int idmef_address_get_address_value(idmef_address_t *ptr, idmef_value_t **value);
+int idmef_address_new_address(idmef_address_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_address_get_netmask(idmef_address_t *ptr);
 void idmef_address_set_netmask(idmef_address_t *ptr, prelude_string_t *netmask);
-idmef_value_t *idmef_address_get_netmask_value(idmef_address_t *ptr);
-prelude_string_t *idmef_address_new_netmask(idmef_address_t *ptr);
+int idmef_address_get_netmask_value(idmef_address_t *ptr, idmef_value_t **value);
+int idmef_address_new_netmask(idmef_address_t *ptr, prelude_string_t **ret);
 
 
 
@@ -386,41 +386,41 @@ prelude_string_t *idmef_address_new_netmask(idmef_address_t *ptr);
 
 typedef struct idmef_process idmef_process_t;
 
-idmef_process_t *idmef_process_new(void);
+int idmef_process_new(idmef_process_t **ret);
 idmef_process_t *idmef_process_ref(idmef_process_t *ptr);
-void *idmef_process_get_child(void *p, idmef_child_t child);
-void *idmef_process_new_child(void *p, idmef_child_t child, int n);
+int idmef_process_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_process_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_process_destroy(idmef_process_t *ptr);
 uint64_t idmef_process_get_ident(idmef_process_t *ptr);
 void idmef_process_set_ident(idmef_process_t *ptr, uint64_t ident);
-idmef_value_t *idmef_process_get_ident_value(idmef_process_t *ptr);
-uint64_t *idmef_process_new_ident(idmef_process_t *ptr);
+int idmef_process_get_ident_value(idmef_process_t *ptr, idmef_value_t **value);
+int idmef_process_new_ident(idmef_process_t *ptr, uint64_t **ret);
 
 prelude_string_t *idmef_process_get_name(idmef_process_t *ptr);
 void idmef_process_set_name(idmef_process_t *ptr, prelude_string_t *name);
-idmef_value_t *idmef_process_get_name_value(idmef_process_t *ptr);
-prelude_string_t *idmef_process_new_name(idmef_process_t *ptr);
+int idmef_process_get_name_value(idmef_process_t *ptr, idmef_value_t **value);
+int idmef_process_new_name(idmef_process_t *ptr, prelude_string_t **ret);
 
 uint32_t *idmef_process_get_pid(idmef_process_t *ptr);
 void idmef_process_set_pid(idmef_process_t *ptr, uint32_t pid);
-idmef_value_t *idmef_process_get_pid_value(idmef_process_t *ptr);
-uint32_t *idmef_process_new_pid(idmef_process_t *ptr);
+int idmef_process_get_pid_value(idmef_process_t *ptr, idmef_value_t **value);
+int idmef_process_new_pid(idmef_process_t *ptr, uint32_t **ret);
 
 prelude_string_t *idmef_process_get_path(idmef_process_t *ptr);
 void idmef_process_set_path(idmef_process_t *ptr, prelude_string_t *path);
-idmef_value_t *idmef_process_get_path_value(idmef_process_t *ptr);
-prelude_string_t *idmef_process_new_path(idmef_process_t *ptr);
+int idmef_process_get_path_value(idmef_process_t *ptr, idmef_value_t **value);
+int idmef_process_new_path(idmef_process_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_process_get_next_arg(idmef_process_t *ptr, prelude_string_t *object);
 void idmef_process_set_arg(idmef_process_t *ptr, prelude_string_t *object);
-prelude_string_t *idmef_process_new_arg(idmef_process_t *ptr);
-idmef_value_t *idmef_process_get_arg_value(idmef_process_t *ptr);
+int idmef_process_new_arg(idmef_process_t *ptr, prelude_string_t **ret);
+int idmef_process_get_arg_value(idmef_process_t *ptr, idmef_value_t **value);
 
 prelude_string_t *idmef_process_get_next_env(idmef_process_t *ptr, prelude_string_t *object);
 void idmef_process_set_env(idmef_process_t *ptr, prelude_string_t *object);
-prelude_string_t *idmef_process_new_env(idmef_process_t *ptr);
-idmef_value_t *idmef_process_get_env_value(idmef_process_t *ptr);
+int idmef_process_new_env(idmef_process_t *ptr, prelude_string_t **ret);
+int idmef_process_get_env_value(idmef_process_t *ptr, idmef_value_t **value);
 
 
 
@@ -437,31 +437,31 @@ idmef_value_t *idmef_process_get_env_value(idmef_process_t *ptr);
 
 typedef struct idmef_web_service idmef_web_service_t;
 
-idmef_web_service_t *idmef_web_service_new(void);
+int idmef_web_service_new(idmef_web_service_t **ret);
 idmef_web_service_t *idmef_web_service_ref(idmef_web_service_t *ptr);
-void *idmef_web_service_get_child(void *p, idmef_child_t child);
-void *idmef_web_service_new_child(void *p, idmef_child_t child, int n);
+int idmef_web_service_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_web_service_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_web_service_destroy(idmef_web_service_t *ptr);
 prelude_string_t *idmef_web_service_get_url(idmef_web_service_t *ptr);
 void idmef_web_service_set_url(idmef_web_service_t *ptr, prelude_string_t *url);
-idmef_value_t *idmef_web_service_get_url_value(idmef_web_service_t *ptr);
-prelude_string_t *idmef_web_service_new_url(idmef_web_service_t *ptr);
+int idmef_web_service_get_url_value(idmef_web_service_t *ptr, idmef_value_t **value);
+int idmef_web_service_new_url(idmef_web_service_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_web_service_get_cgi(idmef_web_service_t *ptr);
 void idmef_web_service_set_cgi(idmef_web_service_t *ptr, prelude_string_t *cgi);
-idmef_value_t *idmef_web_service_get_cgi_value(idmef_web_service_t *ptr);
-prelude_string_t *idmef_web_service_new_cgi(idmef_web_service_t *ptr);
+int idmef_web_service_get_cgi_value(idmef_web_service_t *ptr, idmef_value_t **value);
+int idmef_web_service_new_cgi(idmef_web_service_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_web_service_get_http_method(idmef_web_service_t *ptr);
 void idmef_web_service_set_http_method(idmef_web_service_t *ptr, prelude_string_t *http_method);
-idmef_value_t *idmef_web_service_get_http_method_value(idmef_web_service_t *ptr);
-prelude_string_t *idmef_web_service_new_http_method(idmef_web_service_t *ptr);
+int idmef_web_service_get_http_method_value(idmef_web_service_t *ptr, idmef_value_t **value);
+int idmef_web_service_new_http_method(idmef_web_service_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_web_service_get_next_arg(idmef_web_service_t *ptr, prelude_string_t *object);
 void idmef_web_service_set_arg(idmef_web_service_t *ptr, prelude_string_t *object);
-prelude_string_t *idmef_web_service_new_arg(idmef_web_service_t *ptr);
-idmef_value_t *idmef_web_service_get_arg_value(idmef_web_service_t *ptr);
+int idmef_web_service_new_arg(idmef_web_service_t *ptr, prelude_string_t **ret);
+int idmef_web_service_get_arg_value(idmef_web_service_t *ptr, idmef_value_t **value);
 
 
 
@@ -480,41 +480,41 @@ idmef_value_t *idmef_web_service_get_arg_value(idmef_web_service_t *ptr);
 
 typedef struct idmef_snmp_service idmef_snmp_service_t;
 
-idmef_snmp_service_t *idmef_snmp_service_new(void);
+int idmef_snmp_service_new(idmef_snmp_service_t **ret);
 idmef_snmp_service_t *idmef_snmp_service_ref(idmef_snmp_service_t *ptr);
-void *idmef_snmp_service_get_child(void *p, idmef_child_t child);
-void *idmef_snmp_service_new_child(void *p, idmef_child_t child, int n);
+int idmef_snmp_service_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_snmp_service_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_snmp_service_destroy(idmef_snmp_service_t *ptr);
 prelude_string_t *idmef_snmp_service_get_oid(idmef_snmp_service_t *ptr);
 void idmef_snmp_service_set_oid(idmef_snmp_service_t *ptr, prelude_string_t *oid);
-idmef_value_t *idmef_snmp_service_get_oid_value(idmef_snmp_service_t *ptr);
-prelude_string_t *idmef_snmp_service_new_oid(idmef_snmp_service_t *ptr);
+int idmef_snmp_service_get_oid_value(idmef_snmp_service_t *ptr, idmef_value_t **value);
+int idmef_snmp_service_new_oid(idmef_snmp_service_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_snmp_service_get_community(idmef_snmp_service_t *ptr);
 void idmef_snmp_service_set_community(idmef_snmp_service_t *ptr, prelude_string_t *community);
-idmef_value_t *idmef_snmp_service_get_community_value(idmef_snmp_service_t *ptr);
-prelude_string_t *idmef_snmp_service_new_community(idmef_snmp_service_t *ptr);
+int idmef_snmp_service_get_community_value(idmef_snmp_service_t *ptr, idmef_value_t **value);
+int idmef_snmp_service_new_community(idmef_snmp_service_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_snmp_service_get_security_name(idmef_snmp_service_t *ptr);
 void idmef_snmp_service_set_security_name(idmef_snmp_service_t *ptr, prelude_string_t *security_name);
-idmef_value_t *idmef_snmp_service_get_security_name_value(idmef_snmp_service_t *ptr);
-prelude_string_t *idmef_snmp_service_new_security_name(idmef_snmp_service_t *ptr);
+int idmef_snmp_service_get_security_name_value(idmef_snmp_service_t *ptr, idmef_value_t **value);
+int idmef_snmp_service_new_security_name(idmef_snmp_service_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_snmp_service_get_context_name(idmef_snmp_service_t *ptr);
 void idmef_snmp_service_set_context_name(idmef_snmp_service_t *ptr, prelude_string_t *context_name);
-idmef_value_t *idmef_snmp_service_get_context_name_value(idmef_snmp_service_t *ptr);
-prelude_string_t *idmef_snmp_service_new_context_name(idmef_snmp_service_t *ptr);
+int idmef_snmp_service_get_context_name_value(idmef_snmp_service_t *ptr, idmef_value_t **value);
+int idmef_snmp_service_new_context_name(idmef_snmp_service_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_snmp_service_get_context_engine_id(idmef_snmp_service_t *ptr);
 void idmef_snmp_service_set_context_engine_id(idmef_snmp_service_t *ptr, prelude_string_t *context_engine_id);
-idmef_value_t *idmef_snmp_service_get_context_engine_id_value(idmef_snmp_service_t *ptr);
-prelude_string_t *idmef_snmp_service_new_context_engine_id(idmef_snmp_service_t *ptr);
+int idmef_snmp_service_get_context_engine_id_value(idmef_snmp_service_t *ptr, idmef_value_t **value);
+int idmef_snmp_service_new_context_engine_id(idmef_snmp_service_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_snmp_service_get_command(idmef_snmp_service_t *ptr);
 void idmef_snmp_service_set_command(idmef_snmp_service_t *ptr, prelude_string_t *command);
-idmef_value_t *idmef_snmp_service_get_command_value(idmef_snmp_service_t *ptr);
-prelude_string_t *idmef_snmp_service_new_command(idmef_snmp_service_t *ptr);
+int idmef_snmp_service_get_command_value(idmef_snmp_service_t *ptr, idmef_value_t **value);
+int idmef_snmp_service_new_command(idmef_snmp_service_t *ptr, prelude_string_t **ret);
 
 typedef enum {
         IDMEF_SERVICE_TYPE_ERROR = -1,
@@ -556,63 +556,63 @@ const char *idmef_service_type_to_string(idmef_service_type_t val);
 
 typedef struct idmef_service idmef_service_t;
 
-idmef_service_t *idmef_service_new(void);
+int idmef_service_new(idmef_service_t **ret);
 idmef_service_t *idmef_service_ref(idmef_service_t *ptr);
-void *idmef_service_get_child(void *p, idmef_child_t child);
-void *idmef_service_new_child(void *p, idmef_child_t child, int n);
+int idmef_service_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_service_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_service_destroy(idmef_service_t *ptr);
 uint64_t idmef_service_get_ident(idmef_service_t *ptr);
 void idmef_service_set_ident(idmef_service_t *ptr, uint64_t ident);
-idmef_value_t *idmef_service_get_ident_value(idmef_service_t *ptr);
-uint64_t *idmef_service_new_ident(idmef_service_t *ptr);
+int idmef_service_get_ident_value(idmef_service_t *ptr, idmef_value_t **value);
+int idmef_service_new_ident(idmef_service_t *ptr, uint64_t **ret);
 
 uint8_t *idmef_service_get_ip_version(idmef_service_t *ptr);
 void idmef_service_set_ip_version(idmef_service_t *ptr, uint8_t ip_version);
-idmef_value_t *idmef_service_get_ip_version_value(idmef_service_t *ptr);
-uint8_t *idmef_service_new_ip_version(idmef_service_t *ptr);
+int idmef_service_get_ip_version_value(idmef_service_t *ptr, idmef_value_t **value);
+int idmef_service_new_ip_version(idmef_service_t *ptr, uint8_t **ret);
 
 prelude_string_t *idmef_service_get_name(idmef_service_t *ptr);
 void idmef_service_set_name(idmef_service_t *ptr, prelude_string_t *name);
-idmef_value_t *idmef_service_get_name_value(idmef_service_t *ptr);
-prelude_string_t *idmef_service_new_name(idmef_service_t *ptr);
+int idmef_service_get_name_value(idmef_service_t *ptr, idmef_value_t **value);
+int idmef_service_new_name(idmef_service_t *ptr, prelude_string_t **ret);
 
 uint16_t *idmef_service_get_port(idmef_service_t *ptr);
 void idmef_service_set_port(idmef_service_t *ptr, uint16_t port);
-idmef_value_t *idmef_service_get_port_value(idmef_service_t *ptr);
-uint16_t *idmef_service_new_port(idmef_service_t *ptr);
+int idmef_service_get_port_value(idmef_service_t *ptr, idmef_value_t **value);
+int idmef_service_new_port(idmef_service_t *ptr, uint16_t **ret);
 
 uint8_t *idmef_service_get_iana_protocol_number(idmef_service_t *ptr);
 void idmef_service_set_iana_protocol_number(idmef_service_t *ptr, uint8_t iana_protocol_number);
-idmef_value_t *idmef_service_get_iana_protocol_number_value(idmef_service_t *ptr);
-uint8_t *idmef_service_new_iana_protocol_number(idmef_service_t *ptr);
+int idmef_service_get_iana_protocol_number_value(idmef_service_t *ptr, idmef_value_t **value);
+int idmef_service_new_iana_protocol_number(idmef_service_t *ptr, uint8_t **ret);
 
 prelude_string_t *idmef_service_get_iana_protocol_name(idmef_service_t *ptr);
 void idmef_service_set_iana_protocol_name(idmef_service_t *ptr, prelude_string_t *iana_protocol_name);
-idmef_value_t *idmef_service_get_iana_protocol_name_value(idmef_service_t *ptr);
-prelude_string_t *idmef_service_new_iana_protocol_name(idmef_service_t *ptr);
+int idmef_service_get_iana_protocol_name_value(idmef_service_t *ptr, idmef_value_t **value);
+int idmef_service_new_iana_protocol_name(idmef_service_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_service_get_portlist(idmef_service_t *ptr);
 void idmef_service_set_portlist(idmef_service_t *ptr, prelude_string_t *portlist);
-idmef_value_t *idmef_service_get_portlist_value(idmef_service_t *ptr);
-prelude_string_t *idmef_service_new_portlist(idmef_service_t *ptr);
+int idmef_service_get_portlist_value(idmef_service_t *ptr, idmef_value_t **value);
+int idmef_service_new_portlist(idmef_service_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_service_get_protocol(idmef_service_t *ptr);
 void idmef_service_set_protocol(idmef_service_t *ptr, prelude_string_t *protocol);
-idmef_value_t *idmef_service_get_protocol_value(idmef_service_t *ptr);
-prelude_string_t *idmef_service_new_protocol(idmef_service_t *ptr);
+int idmef_service_get_protocol_value(idmef_service_t *ptr, idmef_value_t **value);
+int idmef_service_new_protocol(idmef_service_t *ptr, prelude_string_t **ret);
 
 idmef_service_type_t idmef_service_get_type(idmef_service_t *ptr);
-idmef_value_t *idmef_service_get_type_value(idmef_service_t *ptr);
+int idmef_service_get_type_value(idmef_service_t *ptr, idmef_value_t **value);
 idmef_web_service_t *idmef_service_get_web_service(idmef_service_t *ptr);
 void idmef_service_set_web_service(idmef_service_t *ptr, idmef_web_service_t *web_service);
-idmef_value_t *idmef_service_get_web_service_value(idmef_service_t *ptr);
-idmef_web_service_t *idmef_service_new_web_service(idmef_service_t *ptr);
+int idmef_service_get_web_service_value(idmef_service_t *ptr, idmef_value_t **value);
+int idmef_service_new_web_service(idmef_service_t *ptr, idmef_web_service_t **ret);
 
 idmef_snmp_service_t *idmef_service_get_snmp_service(idmef_service_t *ptr);
 void idmef_service_set_snmp_service(idmef_service_t *ptr, idmef_snmp_service_t *snmp_service);
-idmef_value_t *idmef_service_get_snmp_service_value(idmef_service_t *ptr);
-idmef_snmp_service_t *idmef_service_new_snmp_service(idmef_service_t *ptr);
+int idmef_service_get_snmp_service_value(idmef_service_t *ptr, idmef_value_t **value);
+int idmef_service_new_snmp_service(idmef_service_t *ptr, idmef_snmp_service_t **ret);
 
 typedef enum {
         IDMEF_NODE_CATEGORY_ERROR = -1,
@@ -652,36 +652,36 @@ const char *idmef_node_category_to_string(idmef_node_category_t val);
 
 typedef struct idmef_node idmef_node_t;
 
-idmef_node_t *idmef_node_new(void);
+int idmef_node_new(idmef_node_t **ret);
 idmef_node_t *idmef_node_ref(idmef_node_t *ptr);
-void *idmef_node_get_child(void *p, idmef_child_t child);
-void *idmef_node_new_child(void *p, idmef_child_t child, int n);
+int idmef_node_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_node_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_node_destroy(idmef_node_t *ptr);
 uint64_t idmef_node_get_ident(idmef_node_t *ptr);
 void idmef_node_set_ident(idmef_node_t *ptr, uint64_t ident);
-idmef_value_t *idmef_node_get_ident_value(idmef_node_t *ptr);
-uint64_t *idmef_node_new_ident(idmef_node_t *ptr);
+int idmef_node_get_ident_value(idmef_node_t *ptr, idmef_value_t **value);
+int idmef_node_new_ident(idmef_node_t *ptr, uint64_t **ret);
 
 idmef_node_category_t idmef_node_get_category(idmef_node_t *ptr);
 void idmef_node_set_category(idmef_node_t *ptr, idmef_node_category_t category);
-idmef_value_t *idmef_node_get_category_value(idmef_node_t *ptr);
-idmef_node_category_t *idmef_node_new_category(idmef_node_t *ptr);
+int idmef_node_get_category_value(idmef_node_t *ptr, idmef_value_t **value);
+int idmef_node_new_category(idmef_node_t *ptr, idmef_node_category_t **ret);
 
 prelude_string_t *idmef_node_get_location(idmef_node_t *ptr);
 void idmef_node_set_location(idmef_node_t *ptr, prelude_string_t *location);
-idmef_value_t *idmef_node_get_location_value(idmef_node_t *ptr);
-prelude_string_t *idmef_node_new_location(idmef_node_t *ptr);
+int idmef_node_get_location_value(idmef_node_t *ptr, idmef_value_t **value);
+int idmef_node_new_location(idmef_node_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_node_get_name(idmef_node_t *ptr);
 void idmef_node_set_name(idmef_node_t *ptr, prelude_string_t *name);
-idmef_value_t *idmef_node_get_name_value(idmef_node_t *ptr);
-prelude_string_t *idmef_node_new_name(idmef_node_t *ptr);
+int idmef_node_get_name_value(idmef_node_t *ptr, idmef_value_t **value);
+int idmef_node_new_name(idmef_node_t *ptr, prelude_string_t **ret);
 
 idmef_address_t *idmef_node_get_next_address(idmef_node_t *ptr, idmef_address_t *object);
 void idmef_node_set_address(idmef_node_t *ptr, idmef_address_t *object);
-idmef_address_t *idmef_node_new_address(idmef_node_t *ptr);
-idmef_value_t *idmef_node_get_address_value(idmef_node_t *ptr);
+int idmef_node_new_address(idmef_node_t *ptr, idmef_address_t **ret);
+int idmef_node_get_address_value(idmef_node_t *ptr, idmef_value_t **value);
 
 typedef enum {
         IDMEF_SOURCE_SPOOFED_ERROR = -1,
@@ -717,46 +717,46 @@ const char *idmef_source_spoofed_to_string(idmef_source_spoofed_t val);
 
 typedef struct idmef_source idmef_source_t;
 
-idmef_source_t *idmef_source_new(void);
+int idmef_source_new(idmef_source_t **ret);
 idmef_source_t *idmef_source_ref(idmef_source_t *ptr);
-void *idmef_source_get_child(void *p, idmef_child_t child);
-void *idmef_source_new_child(void *p, idmef_child_t child, int n);
+int idmef_source_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_source_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_source_destroy(idmef_source_t *ptr);
 uint64_t idmef_source_get_ident(idmef_source_t *ptr);
 void idmef_source_set_ident(idmef_source_t *ptr, uint64_t ident);
-idmef_value_t *idmef_source_get_ident_value(idmef_source_t *ptr);
-uint64_t *idmef_source_new_ident(idmef_source_t *ptr);
+int idmef_source_get_ident_value(idmef_source_t *ptr, idmef_value_t **value);
+int idmef_source_new_ident(idmef_source_t *ptr, uint64_t **ret);
 
 idmef_source_spoofed_t idmef_source_get_spoofed(idmef_source_t *ptr);
 void idmef_source_set_spoofed(idmef_source_t *ptr, idmef_source_spoofed_t spoofed);
-idmef_value_t *idmef_source_get_spoofed_value(idmef_source_t *ptr);
-idmef_source_spoofed_t *idmef_source_new_spoofed(idmef_source_t *ptr);
+int idmef_source_get_spoofed_value(idmef_source_t *ptr, idmef_value_t **value);
+int idmef_source_new_spoofed(idmef_source_t *ptr, idmef_source_spoofed_t **ret);
 
 prelude_string_t *idmef_source_get_interface(idmef_source_t *ptr);
 void idmef_source_set_interface(idmef_source_t *ptr, prelude_string_t *interface);
-idmef_value_t *idmef_source_get_interface_value(idmef_source_t *ptr);
-prelude_string_t *idmef_source_new_interface(idmef_source_t *ptr);
+int idmef_source_get_interface_value(idmef_source_t *ptr, idmef_value_t **value);
+int idmef_source_new_interface(idmef_source_t *ptr, prelude_string_t **ret);
 
 idmef_node_t *idmef_source_get_node(idmef_source_t *ptr);
 void idmef_source_set_node(idmef_source_t *ptr, idmef_node_t *node);
-idmef_value_t *idmef_source_get_node_value(idmef_source_t *ptr);
-idmef_node_t *idmef_source_new_node(idmef_source_t *ptr);
+int idmef_source_get_node_value(idmef_source_t *ptr, idmef_value_t **value);
+int idmef_source_new_node(idmef_source_t *ptr, idmef_node_t **ret);
 
 idmef_user_t *idmef_source_get_user(idmef_source_t *ptr);
 void idmef_source_set_user(idmef_source_t *ptr, idmef_user_t *user);
-idmef_value_t *idmef_source_get_user_value(idmef_source_t *ptr);
-idmef_user_t *idmef_source_new_user(idmef_source_t *ptr);
+int idmef_source_get_user_value(idmef_source_t *ptr, idmef_value_t **value);
+int idmef_source_new_user(idmef_source_t *ptr, idmef_user_t **ret);
 
 idmef_process_t *idmef_source_get_process(idmef_source_t *ptr);
 void idmef_source_set_process(idmef_source_t *ptr, idmef_process_t *process);
-idmef_value_t *idmef_source_get_process_value(idmef_source_t *ptr);
-idmef_process_t *idmef_source_new_process(idmef_source_t *ptr);
+int idmef_source_get_process_value(idmef_source_t *ptr, idmef_value_t **value);
+int idmef_source_new_process(idmef_source_t *ptr, idmef_process_t **ret);
 
 idmef_service_t *idmef_source_get_service(idmef_source_t *ptr);
 void idmef_source_set_service(idmef_source_t *ptr, idmef_service_t *service);
-idmef_value_t *idmef_source_get_service_value(idmef_source_t *ptr);
-idmef_service_t *idmef_source_new_service(idmef_source_t *ptr);
+int idmef_source_get_service_value(idmef_source_t *ptr, idmef_value_t **value);
+int idmef_source_new_service(idmef_source_t *ptr, idmef_service_t **ret);
 
 
 
@@ -773,21 +773,21 @@ idmef_service_t *idmef_source_new_service(idmef_source_t *ptr);
 
 typedef struct idmef_file_access idmef_file_access_t;
 
-idmef_file_access_t *idmef_file_access_new(void);
+int idmef_file_access_new(idmef_file_access_t **ret);
 idmef_file_access_t *idmef_file_access_ref(idmef_file_access_t *ptr);
-void *idmef_file_access_get_child(void *p, idmef_child_t child);
-void *idmef_file_access_new_child(void *p, idmef_child_t child, int n);
+int idmef_file_access_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_file_access_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_file_access_destroy(idmef_file_access_t *ptr);
 idmef_user_id_t *idmef_file_access_get_user_id(idmef_file_access_t *ptr);
 void idmef_file_access_set_user_id(idmef_file_access_t *ptr, idmef_user_id_t *user_id);
-idmef_value_t *idmef_file_access_get_user_id_value(idmef_file_access_t *ptr);
-idmef_user_id_t *idmef_file_access_new_user_id(idmef_file_access_t *ptr);
+int idmef_file_access_get_user_id_value(idmef_file_access_t *ptr, idmef_value_t **value);
+int idmef_file_access_new_user_id(idmef_file_access_t *ptr, idmef_user_id_t **ret);
 
 prelude_string_t *idmef_file_access_get_next_permission(idmef_file_access_t *ptr, prelude_string_t *object);
 void idmef_file_access_set_permission(idmef_file_access_t *ptr, prelude_string_t *object);
-prelude_string_t *idmef_file_access_new_permission(idmef_file_access_t *ptr);
-idmef_value_t *idmef_file_access_get_permission_value(idmef_file_access_t *ptr);
+int idmef_file_access_new_permission(idmef_file_access_t *ptr, prelude_string_t **ret);
+int idmef_file_access_get_permission_value(idmef_file_access_t *ptr, idmef_value_t **value);
 
 
 
@@ -806,41 +806,41 @@ idmef_value_t *idmef_file_access_get_permission_value(idmef_file_access_t *ptr);
 
 typedef struct idmef_inode idmef_inode_t;
 
-idmef_inode_t *idmef_inode_new(void);
+int idmef_inode_new(idmef_inode_t **ret);
 idmef_inode_t *idmef_inode_ref(idmef_inode_t *ptr);
-void *idmef_inode_get_child(void *p, idmef_child_t child);
-void *idmef_inode_new_child(void *p, idmef_child_t child, int n);
+int idmef_inode_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_inode_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_inode_destroy(idmef_inode_t *ptr);
 idmef_time_t *idmef_inode_get_change_time(idmef_inode_t *ptr);
 void idmef_inode_set_change_time(idmef_inode_t *ptr, idmef_time_t *change_time);
-idmef_value_t *idmef_inode_get_change_time_value(idmef_inode_t *ptr);
-idmef_time_t *idmef_inode_new_change_time(idmef_inode_t *ptr);
+int idmef_inode_get_change_time_value(idmef_inode_t *ptr, idmef_value_t **value);
+int idmef_inode_new_change_time(idmef_inode_t *ptr, idmef_time_t **ret);
 
 uint32_t *idmef_inode_get_number(idmef_inode_t *ptr);
 void idmef_inode_set_number(idmef_inode_t *ptr, uint32_t number);
-idmef_value_t *idmef_inode_get_number_value(idmef_inode_t *ptr);
-uint32_t *idmef_inode_new_number(idmef_inode_t *ptr);
+int idmef_inode_get_number_value(idmef_inode_t *ptr, idmef_value_t **value);
+int idmef_inode_new_number(idmef_inode_t *ptr, uint32_t **ret);
 
 uint32_t *idmef_inode_get_major_device(idmef_inode_t *ptr);
 void idmef_inode_set_major_device(idmef_inode_t *ptr, uint32_t major_device);
-idmef_value_t *idmef_inode_get_major_device_value(idmef_inode_t *ptr);
-uint32_t *idmef_inode_new_major_device(idmef_inode_t *ptr);
+int idmef_inode_get_major_device_value(idmef_inode_t *ptr, idmef_value_t **value);
+int idmef_inode_new_major_device(idmef_inode_t *ptr, uint32_t **ret);
 
 uint32_t *idmef_inode_get_minor_device(idmef_inode_t *ptr);
 void idmef_inode_set_minor_device(idmef_inode_t *ptr, uint32_t minor_device);
-idmef_value_t *idmef_inode_get_minor_device_value(idmef_inode_t *ptr);
-uint32_t *idmef_inode_new_minor_device(idmef_inode_t *ptr);
+int idmef_inode_get_minor_device_value(idmef_inode_t *ptr, idmef_value_t **value);
+int idmef_inode_new_minor_device(idmef_inode_t *ptr, uint32_t **ret);
 
 uint32_t *idmef_inode_get_c_major_device(idmef_inode_t *ptr);
 void idmef_inode_set_c_major_device(idmef_inode_t *ptr, uint32_t c_major_device);
-idmef_value_t *idmef_inode_get_c_major_device_value(idmef_inode_t *ptr);
-uint32_t *idmef_inode_new_c_major_device(idmef_inode_t *ptr);
+int idmef_inode_get_c_major_device_value(idmef_inode_t *ptr, idmef_value_t **value);
+int idmef_inode_new_c_major_device(idmef_inode_t *ptr, uint32_t **ret);
 
 uint32_t *idmef_inode_get_c_minor_device(idmef_inode_t *ptr);
 void idmef_inode_set_c_minor_device(idmef_inode_t *ptr, uint32_t c_minor_device);
-idmef_value_t *idmef_inode_get_c_minor_device_value(idmef_inode_t *ptr);
-uint32_t *idmef_inode_new_c_minor_device(idmef_inode_t *ptr);
+int idmef_inode_get_c_minor_device_value(idmef_inode_t *ptr, idmef_value_t **value);
+int idmef_inode_new_c_minor_device(idmef_inode_t *ptr, uint32_t **ret);
 
 
 typedef struct idmef_linkage idmef_linkage_t;
@@ -879,26 +879,26 @@ const char *idmef_checksum_algorithm_to_string(idmef_checksum_algorithm_t val);
 
 typedef struct idmef_checksum idmef_checksum_t;
 
-idmef_checksum_t *idmef_checksum_new(void);
+int idmef_checksum_new(idmef_checksum_t **ret);
 idmef_checksum_t *idmef_checksum_ref(idmef_checksum_t *ptr);
-void *idmef_checksum_get_child(void *p, idmef_child_t child);
-void *idmef_checksum_new_child(void *p, idmef_child_t child, int n);
+int idmef_checksum_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_checksum_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_checksum_destroy(idmef_checksum_t *ptr);
 prelude_string_t *idmef_checksum_get_value(idmef_checksum_t *ptr);
 void idmef_checksum_set_value(idmef_checksum_t *ptr, prelude_string_t *value);
-idmef_value_t *idmef_checksum_get_value_value(idmef_checksum_t *ptr);
-prelude_string_t *idmef_checksum_new_value(idmef_checksum_t *ptr);
+int idmef_checksum_get_value_value(idmef_checksum_t *ptr, idmef_value_t **value);
+int idmef_checksum_new_value(idmef_checksum_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_checksum_get_key(idmef_checksum_t *ptr);
 void idmef_checksum_set_key(idmef_checksum_t *ptr, prelude_string_t *key);
-idmef_value_t *idmef_checksum_get_key_value(idmef_checksum_t *ptr);
-prelude_string_t *idmef_checksum_new_key(idmef_checksum_t *ptr);
+int idmef_checksum_get_key_value(idmef_checksum_t *ptr, idmef_value_t **value);
+int idmef_checksum_new_key(idmef_checksum_t *ptr, prelude_string_t **ret);
 
 idmef_checksum_algorithm_t idmef_checksum_get_algorithm(idmef_checksum_t *ptr);
 void idmef_checksum_set_algorithm(idmef_checksum_t *ptr, idmef_checksum_algorithm_t algorithm);
-idmef_value_t *idmef_checksum_get_algorithm_value(idmef_checksum_t *ptr);
-idmef_checksum_algorithm_t *idmef_checksum_new_algorithm(idmef_checksum_t *ptr);
+int idmef_checksum_get_algorithm_value(idmef_checksum_t *ptr, idmef_value_t **value);
+int idmef_checksum_new_algorithm(idmef_checksum_t *ptr, idmef_checksum_algorithm_t **ret);
 
 typedef enum {
         IDMEF_FILE_CATEGORY_ERROR = -1,
@@ -964,81 +964,81 @@ const char *idmef_file_fstype_to_string(idmef_file_fstype_t val);
 
 typedef struct idmef_file idmef_file_t;
 
-idmef_file_t *idmef_file_new(void);
+int idmef_file_new(idmef_file_t **ret);
 idmef_file_t *idmef_file_ref(idmef_file_t *ptr);
-void *idmef_file_get_child(void *p, idmef_child_t child);
-void *idmef_file_new_child(void *p, idmef_child_t child, int n);
+int idmef_file_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_file_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_file_destroy(idmef_file_t *ptr);
 uint64_t idmef_file_get_ident(idmef_file_t *ptr);
 void idmef_file_set_ident(idmef_file_t *ptr, uint64_t ident);
-idmef_value_t *idmef_file_get_ident_value(idmef_file_t *ptr);
-uint64_t *idmef_file_new_ident(idmef_file_t *ptr);
+int idmef_file_get_ident_value(idmef_file_t *ptr, idmef_value_t **value);
+int idmef_file_new_ident(idmef_file_t *ptr, uint64_t **ret);
 
 prelude_string_t *idmef_file_get_name(idmef_file_t *ptr);
 void idmef_file_set_name(idmef_file_t *ptr, prelude_string_t *name);
-idmef_value_t *idmef_file_get_name_value(idmef_file_t *ptr);
-prelude_string_t *idmef_file_new_name(idmef_file_t *ptr);
+int idmef_file_get_name_value(idmef_file_t *ptr, idmef_value_t **value);
+int idmef_file_new_name(idmef_file_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_file_get_path(idmef_file_t *ptr);
 void idmef_file_set_path(idmef_file_t *ptr, prelude_string_t *path);
-idmef_value_t *idmef_file_get_path_value(idmef_file_t *ptr);
-prelude_string_t *idmef_file_new_path(idmef_file_t *ptr);
+int idmef_file_get_path_value(idmef_file_t *ptr, idmef_value_t **value);
+int idmef_file_new_path(idmef_file_t *ptr, prelude_string_t **ret);
 
 idmef_time_t *idmef_file_get_create_time(idmef_file_t *ptr);
 void idmef_file_set_create_time(idmef_file_t *ptr, idmef_time_t *create_time);
-idmef_value_t *idmef_file_get_create_time_value(idmef_file_t *ptr);
-idmef_time_t *idmef_file_new_create_time(idmef_file_t *ptr);
+int idmef_file_get_create_time_value(idmef_file_t *ptr, idmef_value_t **value);
+int idmef_file_new_create_time(idmef_file_t *ptr, idmef_time_t **ret);
 
 idmef_time_t *idmef_file_get_modify_time(idmef_file_t *ptr);
 void idmef_file_set_modify_time(idmef_file_t *ptr, idmef_time_t *modify_time);
-idmef_value_t *idmef_file_get_modify_time_value(idmef_file_t *ptr);
-idmef_time_t *idmef_file_new_modify_time(idmef_file_t *ptr);
+int idmef_file_get_modify_time_value(idmef_file_t *ptr, idmef_value_t **value);
+int idmef_file_new_modify_time(idmef_file_t *ptr, idmef_time_t **ret);
 
 idmef_time_t *idmef_file_get_access_time(idmef_file_t *ptr);
 void idmef_file_set_access_time(idmef_file_t *ptr, idmef_time_t *access_time);
-idmef_value_t *idmef_file_get_access_time_value(idmef_file_t *ptr);
-idmef_time_t *idmef_file_new_access_time(idmef_file_t *ptr);
+int idmef_file_get_access_time_value(idmef_file_t *ptr, idmef_value_t **value);
+int idmef_file_new_access_time(idmef_file_t *ptr, idmef_time_t **ret);
 
 uint64_t *idmef_file_get_data_size(idmef_file_t *ptr);
 void idmef_file_set_data_size(idmef_file_t *ptr, uint64_t data_size);
-idmef_value_t *idmef_file_get_data_size_value(idmef_file_t *ptr);
-uint64_t *idmef_file_new_data_size(idmef_file_t *ptr);
+int idmef_file_get_data_size_value(idmef_file_t *ptr, idmef_value_t **value);
+int idmef_file_new_data_size(idmef_file_t *ptr, uint64_t **ret);
 
 uint64_t *idmef_file_get_disk_size(idmef_file_t *ptr);
 void idmef_file_set_disk_size(idmef_file_t *ptr, uint64_t disk_size);
-idmef_value_t *idmef_file_get_disk_size_value(idmef_file_t *ptr);
-uint64_t *idmef_file_new_disk_size(idmef_file_t *ptr);
+int idmef_file_get_disk_size_value(idmef_file_t *ptr, idmef_value_t **value);
+int idmef_file_new_disk_size(idmef_file_t *ptr, uint64_t **ret);
 
 idmef_file_access_t *idmef_file_get_next_file_access(idmef_file_t *ptr, idmef_file_access_t *object);
 void idmef_file_set_file_access(idmef_file_t *ptr, idmef_file_access_t *object);
-idmef_file_access_t *idmef_file_new_file_access(idmef_file_t *ptr);
-idmef_value_t *idmef_file_get_file_access_value(idmef_file_t *ptr);
+int idmef_file_new_file_access(idmef_file_t *ptr, idmef_file_access_t **ret);
+int idmef_file_get_file_access_value(idmef_file_t *ptr, idmef_value_t **value);
 
 idmef_linkage_t *idmef_file_get_next_linkage(idmef_file_t *ptr, idmef_linkage_t *object);
 void idmef_file_set_linkage(idmef_file_t *ptr, idmef_linkage_t *object);
-idmef_linkage_t *idmef_file_new_linkage(idmef_file_t *ptr);
-idmef_value_t *idmef_file_get_linkage_value(idmef_file_t *ptr);
+int idmef_file_new_linkage(idmef_file_t *ptr, idmef_linkage_t **ret);
+int idmef_file_get_linkage_value(idmef_file_t *ptr, idmef_value_t **value);
 
 idmef_inode_t *idmef_file_get_inode(idmef_file_t *ptr);
 void idmef_file_set_inode(idmef_file_t *ptr, idmef_inode_t *inode);
-idmef_value_t *idmef_file_get_inode_value(idmef_file_t *ptr);
-idmef_inode_t *idmef_file_new_inode(idmef_file_t *ptr);
+int idmef_file_get_inode_value(idmef_file_t *ptr, idmef_value_t **value);
+int idmef_file_new_inode(idmef_file_t *ptr, idmef_inode_t **ret);
 
 idmef_checksum_t *idmef_file_get_next_checksum(idmef_file_t *ptr, idmef_checksum_t *object);
 void idmef_file_set_checksum(idmef_file_t *ptr, idmef_checksum_t *object);
-idmef_checksum_t *idmef_file_new_checksum(idmef_file_t *ptr);
-idmef_value_t *idmef_file_get_checksum_value(idmef_file_t *ptr);
+int idmef_file_new_checksum(idmef_file_t *ptr, idmef_checksum_t **ret);
+int idmef_file_get_checksum_value(idmef_file_t *ptr, idmef_value_t **value);
 
 idmef_file_category_t idmef_file_get_category(idmef_file_t *ptr);
 void idmef_file_set_category(idmef_file_t *ptr, idmef_file_category_t category);
-idmef_value_t *idmef_file_get_category_value(idmef_file_t *ptr);
-idmef_file_category_t *idmef_file_new_category(idmef_file_t *ptr);
+int idmef_file_get_category_value(idmef_file_t *ptr, idmef_value_t **value);
+int idmef_file_new_category(idmef_file_t *ptr, idmef_file_category_t **ret);
 
 idmef_file_fstype_t *idmef_file_get_fstype(idmef_file_t *ptr);
 void idmef_file_set_fstype(idmef_file_t *ptr, idmef_file_fstype_t fstype);
-idmef_value_t *idmef_file_get_fstype_value(idmef_file_t *ptr);
-idmef_file_fstype_t *idmef_file_new_fstype(idmef_file_t *ptr);
+int idmef_file_get_fstype_value(idmef_file_t *ptr, idmef_value_t **value);
+int idmef_file_new_fstype(idmef_file_t *ptr, idmef_file_fstype_t **ret);
 
 typedef enum {
         IDMEF_LINKAGE_CATEGORY_ERROR = -1,
@@ -1069,31 +1069,31 @@ const char *idmef_linkage_category_to_string(idmef_linkage_category_t val);
  * } TYPE_ID(idmef_linkage_t, 28);
  */
 
-idmef_linkage_t *idmef_linkage_new(void);
+int idmef_linkage_new(idmef_linkage_t **ret);
 idmef_linkage_t *idmef_linkage_ref(idmef_linkage_t *ptr);
-void *idmef_linkage_get_child(void *p, idmef_child_t child);
-void *idmef_linkage_new_child(void *p, idmef_child_t child, int n);
+int idmef_linkage_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_linkage_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_linkage_destroy(idmef_linkage_t *ptr);
 idmef_linkage_category_t idmef_linkage_get_category(idmef_linkage_t *ptr);
 void idmef_linkage_set_category(idmef_linkage_t *ptr, idmef_linkage_category_t category);
-idmef_value_t *idmef_linkage_get_category_value(idmef_linkage_t *ptr);
-idmef_linkage_category_t *idmef_linkage_new_category(idmef_linkage_t *ptr);
+int idmef_linkage_get_category_value(idmef_linkage_t *ptr, idmef_value_t **value);
+int idmef_linkage_new_category(idmef_linkage_t *ptr, idmef_linkage_category_t **ret);
 
 prelude_string_t *idmef_linkage_get_name(idmef_linkage_t *ptr);
 void idmef_linkage_set_name(idmef_linkage_t *ptr, prelude_string_t *name);
-idmef_value_t *idmef_linkage_get_name_value(idmef_linkage_t *ptr);
-prelude_string_t *idmef_linkage_new_name(idmef_linkage_t *ptr);
+int idmef_linkage_get_name_value(idmef_linkage_t *ptr, idmef_value_t **value);
+int idmef_linkage_new_name(idmef_linkage_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_linkage_get_path(idmef_linkage_t *ptr);
 void idmef_linkage_set_path(idmef_linkage_t *ptr, prelude_string_t *path);
-idmef_value_t *idmef_linkage_get_path_value(idmef_linkage_t *ptr);
-prelude_string_t *idmef_linkage_new_path(idmef_linkage_t *ptr);
+int idmef_linkage_get_path_value(idmef_linkage_t *ptr, idmef_value_t **value);
+int idmef_linkage_new_path(idmef_linkage_t *ptr, prelude_string_t **ret);
 
 idmef_file_t *idmef_linkage_get_file(idmef_linkage_t *ptr);
 void idmef_linkage_set_file(idmef_linkage_t *ptr, idmef_file_t *file);
-idmef_value_t *idmef_linkage_get_file_value(idmef_linkage_t *ptr);
-idmef_file_t *idmef_linkage_new_file(idmef_linkage_t *ptr);
+int idmef_linkage_get_file_value(idmef_linkage_t *ptr, idmef_value_t **value);
+int idmef_linkage_new_file(idmef_linkage_t *ptr, idmef_file_t **ret);
 
 typedef enum {
         IDMEF_TARGET_DECOY_ERROR = -1,
@@ -1129,51 +1129,51 @@ const char *idmef_target_decoy_to_string(idmef_target_decoy_t val);
 
 typedef struct idmef_target idmef_target_t;
 
-idmef_target_t *idmef_target_new(void);
+int idmef_target_new(idmef_target_t **ret);
 idmef_target_t *idmef_target_ref(idmef_target_t *ptr);
-void *idmef_target_get_child(void *p, idmef_child_t child);
-void *idmef_target_new_child(void *p, idmef_child_t child, int n);
+int idmef_target_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_target_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_target_destroy(idmef_target_t *ptr);
 uint64_t idmef_target_get_ident(idmef_target_t *ptr);
 void idmef_target_set_ident(idmef_target_t *ptr, uint64_t ident);
-idmef_value_t *idmef_target_get_ident_value(idmef_target_t *ptr);
-uint64_t *idmef_target_new_ident(idmef_target_t *ptr);
+int idmef_target_get_ident_value(idmef_target_t *ptr, idmef_value_t **value);
+int idmef_target_new_ident(idmef_target_t *ptr, uint64_t **ret);
 
 idmef_target_decoy_t idmef_target_get_decoy(idmef_target_t *ptr);
 void idmef_target_set_decoy(idmef_target_t *ptr, idmef_target_decoy_t decoy);
-idmef_value_t *idmef_target_get_decoy_value(idmef_target_t *ptr);
-idmef_target_decoy_t *idmef_target_new_decoy(idmef_target_t *ptr);
+int idmef_target_get_decoy_value(idmef_target_t *ptr, idmef_value_t **value);
+int idmef_target_new_decoy(idmef_target_t *ptr, idmef_target_decoy_t **ret);
 
 prelude_string_t *idmef_target_get_interface(idmef_target_t *ptr);
 void idmef_target_set_interface(idmef_target_t *ptr, prelude_string_t *interface);
-idmef_value_t *idmef_target_get_interface_value(idmef_target_t *ptr);
-prelude_string_t *idmef_target_new_interface(idmef_target_t *ptr);
+int idmef_target_get_interface_value(idmef_target_t *ptr, idmef_value_t **value);
+int idmef_target_new_interface(idmef_target_t *ptr, prelude_string_t **ret);
 
 idmef_node_t *idmef_target_get_node(idmef_target_t *ptr);
 void idmef_target_set_node(idmef_target_t *ptr, idmef_node_t *node);
-idmef_value_t *idmef_target_get_node_value(idmef_target_t *ptr);
-idmef_node_t *idmef_target_new_node(idmef_target_t *ptr);
+int idmef_target_get_node_value(idmef_target_t *ptr, idmef_value_t **value);
+int idmef_target_new_node(idmef_target_t *ptr, idmef_node_t **ret);
 
 idmef_user_t *idmef_target_get_user(idmef_target_t *ptr);
 void idmef_target_set_user(idmef_target_t *ptr, idmef_user_t *user);
-idmef_value_t *idmef_target_get_user_value(idmef_target_t *ptr);
-idmef_user_t *idmef_target_new_user(idmef_target_t *ptr);
+int idmef_target_get_user_value(idmef_target_t *ptr, idmef_value_t **value);
+int idmef_target_new_user(idmef_target_t *ptr, idmef_user_t **ret);
 
 idmef_process_t *idmef_target_get_process(idmef_target_t *ptr);
 void idmef_target_set_process(idmef_target_t *ptr, idmef_process_t *process);
-idmef_value_t *idmef_target_get_process_value(idmef_target_t *ptr);
-idmef_process_t *idmef_target_new_process(idmef_target_t *ptr);
+int idmef_target_get_process_value(idmef_target_t *ptr, idmef_value_t **value);
+int idmef_target_new_process(idmef_target_t *ptr, idmef_process_t **ret);
 
 idmef_service_t *idmef_target_get_service(idmef_target_t *ptr);
 void idmef_target_set_service(idmef_target_t *ptr, idmef_service_t *service);
-idmef_value_t *idmef_target_get_service_value(idmef_target_t *ptr);
-idmef_service_t *idmef_target_new_service(idmef_target_t *ptr);
+int idmef_target_get_service_value(idmef_target_t *ptr, idmef_value_t **value);
+int idmef_target_new_service(idmef_target_t *ptr, idmef_service_t **ret);
 
 idmef_file_t *idmef_target_get_next_file(idmef_target_t *ptr, idmef_file_t *object);
 void idmef_target_set_file(idmef_target_t *ptr, idmef_file_t *object);
-idmef_file_t *idmef_target_new_file(idmef_target_t *ptr);
-idmef_value_t *idmef_target_get_file_value(idmef_target_t *ptr);
+int idmef_target_new_file(idmef_target_t *ptr, idmef_file_t **ret);
+int idmef_target_get_file_value(idmef_target_t *ptr, idmef_value_t **value);
 
 
 
@@ -1201,66 +1201,66 @@ idmef_value_t *idmef_target_get_file_value(idmef_target_t *ptr);
 
 typedef struct idmef_analyzer idmef_analyzer_t;
 
-idmef_analyzer_t *idmef_analyzer_new(void);
+int idmef_analyzer_new(idmef_analyzer_t **ret);
 idmef_analyzer_t *idmef_analyzer_ref(idmef_analyzer_t *ptr);
-void *idmef_analyzer_get_child(void *p, idmef_child_t child);
-void *idmef_analyzer_new_child(void *p, idmef_child_t child, int n);
+int idmef_analyzer_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_analyzer_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_analyzer_destroy(idmef_analyzer_t *ptr);
 uint64_t idmef_analyzer_get_analyzerid(idmef_analyzer_t *ptr);
 void idmef_analyzer_set_analyzerid(idmef_analyzer_t *ptr, uint64_t analyzerid);
-idmef_value_t *idmef_analyzer_get_analyzerid_value(idmef_analyzer_t *ptr);
-uint64_t *idmef_analyzer_new_analyzerid(idmef_analyzer_t *ptr);
+int idmef_analyzer_get_analyzerid_value(idmef_analyzer_t *ptr, idmef_value_t **value);
+int idmef_analyzer_new_analyzerid(idmef_analyzer_t *ptr, uint64_t **ret);
 
 prelude_string_t *idmef_analyzer_get_name(idmef_analyzer_t *ptr);
 void idmef_analyzer_set_name(idmef_analyzer_t *ptr, prelude_string_t *name);
-idmef_value_t *idmef_analyzer_get_name_value(idmef_analyzer_t *ptr);
-prelude_string_t *idmef_analyzer_new_name(idmef_analyzer_t *ptr);
+int idmef_analyzer_get_name_value(idmef_analyzer_t *ptr, idmef_value_t **value);
+int idmef_analyzer_new_name(idmef_analyzer_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_analyzer_get_manufacturer(idmef_analyzer_t *ptr);
 void idmef_analyzer_set_manufacturer(idmef_analyzer_t *ptr, prelude_string_t *manufacturer);
-idmef_value_t *idmef_analyzer_get_manufacturer_value(idmef_analyzer_t *ptr);
-prelude_string_t *idmef_analyzer_new_manufacturer(idmef_analyzer_t *ptr);
+int idmef_analyzer_get_manufacturer_value(idmef_analyzer_t *ptr, idmef_value_t **value);
+int idmef_analyzer_new_manufacturer(idmef_analyzer_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_analyzer_get_model(idmef_analyzer_t *ptr);
 void idmef_analyzer_set_model(idmef_analyzer_t *ptr, prelude_string_t *model);
-idmef_value_t *idmef_analyzer_get_model_value(idmef_analyzer_t *ptr);
-prelude_string_t *idmef_analyzer_new_model(idmef_analyzer_t *ptr);
+int idmef_analyzer_get_model_value(idmef_analyzer_t *ptr, idmef_value_t **value);
+int idmef_analyzer_new_model(idmef_analyzer_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_analyzer_get_version(idmef_analyzer_t *ptr);
 void idmef_analyzer_set_version(idmef_analyzer_t *ptr, prelude_string_t *version);
-idmef_value_t *idmef_analyzer_get_version_value(idmef_analyzer_t *ptr);
-prelude_string_t *idmef_analyzer_new_version(idmef_analyzer_t *ptr);
+int idmef_analyzer_get_version_value(idmef_analyzer_t *ptr, idmef_value_t **value);
+int idmef_analyzer_new_version(idmef_analyzer_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_analyzer_get_class(idmef_analyzer_t *ptr);
 void idmef_analyzer_set_class(idmef_analyzer_t *ptr, prelude_string_t *class);
-idmef_value_t *idmef_analyzer_get_class_value(idmef_analyzer_t *ptr);
-prelude_string_t *idmef_analyzer_new_class(idmef_analyzer_t *ptr);
+int idmef_analyzer_get_class_value(idmef_analyzer_t *ptr, idmef_value_t **value);
+int idmef_analyzer_new_class(idmef_analyzer_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_analyzer_get_ostype(idmef_analyzer_t *ptr);
 void idmef_analyzer_set_ostype(idmef_analyzer_t *ptr, prelude_string_t *ostype);
-idmef_value_t *idmef_analyzer_get_ostype_value(idmef_analyzer_t *ptr);
-prelude_string_t *idmef_analyzer_new_ostype(idmef_analyzer_t *ptr);
+int idmef_analyzer_get_ostype_value(idmef_analyzer_t *ptr, idmef_value_t **value);
+int idmef_analyzer_new_ostype(idmef_analyzer_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_analyzer_get_osversion(idmef_analyzer_t *ptr);
 void idmef_analyzer_set_osversion(idmef_analyzer_t *ptr, prelude_string_t *osversion);
-idmef_value_t *idmef_analyzer_get_osversion_value(idmef_analyzer_t *ptr);
-prelude_string_t *idmef_analyzer_new_osversion(idmef_analyzer_t *ptr);
+int idmef_analyzer_get_osversion_value(idmef_analyzer_t *ptr, idmef_value_t **value);
+int idmef_analyzer_new_osversion(idmef_analyzer_t *ptr, prelude_string_t **ret);
 
 idmef_node_t *idmef_analyzer_get_node(idmef_analyzer_t *ptr);
 void idmef_analyzer_set_node(idmef_analyzer_t *ptr, idmef_node_t *node);
-idmef_value_t *idmef_analyzer_get_node_value(idmef_analyzer_t *ptr);
-idmef_node_t *idmef_analyzer_new_node(idmef_analyzer_t *ptr);
+int idmef_analyzer_get_node_value(idmef_analyzer_t *ptr, idmef_value_t **value);
+int idmef_analyzer_new_node(idmef_analyzer_t *ptr, idmef_node_t **ret);
 
 idmef_process_t *idmef_analyzer_get_process(idmef_analyzer_t *ptr);
 void idmef_analyzer_set_process(idmef_analyzer_t *ptr, idmef_process_t *process);
-idmef_value_t *idmef_analyzer_get_process_value(idmef_analyzer_t *ptr);
-idmef_process_t *idmef_analyzer_new_process(idmef_analyzer_t *ptr);
+int idmef_analyzer_get_process_value(idmef_analyzer_t *ptr, idmef_value_t **value);
+int idmef_analyzer_new_process(idmef_analyzer_t *ptr, idmef_process_t **ret);
 
 idmef_analyzer_t *idmef_analyzer_get_analyzer(idmef_analyzer_t *ptr);
 void idmef_analyzer_set_analyzer(idmef_analyzer_t *ptr, idmef_analyzer_t *analyzer);
-idmef_value_t *idmef_analyzer_get_analyzer_value(idmef_analyzer_t *ptr);
-idmef_analyzer_t *idmef_analyzer_new_analyzer(idmef_analyzer_t *ptr);
+int idmef_analyzer_get_analyzer_value(idmef_analyzer_t *ptr, idmef_value_t **value);
+int idmef_analyzer_new_analyzer(idmef_analyzer_t *ptr, idmef_analyzer_t **ret);
 
 
 
@@ -1277,21 +1277,21 @@ idmef_analyzer_t *idmef_analyzer_new_analyzer(idmef_analyzer_t *ptr);
 
 typedef struct idmef_alertident idmef_alertident_t;
 
-idmef_alertident_t *idmef_alertident_new(void);
+int idmef_alertident_new(idmef_alertident_t **ret);
 idmef_alertident_t *idmef_alertident_ref(idmef_alertident_t *ptr);
-void *idmef_alertident_get_child(void *p, idmef_child_t child);
-void *idmef_alertident_new_child(void *p, idmef_child_t child, int n);
+int idmef_alertident_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_alertident_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_alertident_destroy(idmef_alertident_t *ptr);
 uint64_t idmef_alertident_get_alertident(idmef_alertident_t *ptr);
 void idmef_alertident_set_alertident(idmef_alertident_t *ptr, uint64_t alertident);
-idmef_value_t *idmef_alertident_get_alertident_value(idmef_alertident_t *ptr);
-uint64_t *idmef_alertident_new_alertident(idmef_alertident_t *ptr);
+int idmef_alertident_get_alertident_value(idmef_alertident_t *ptr, idmef_value_t **value);
+int idmef_alertident_new_alertident(idmef_alertident_t *ptr, uint64_t **ret);
 
 uint64_t *idmef_alertident_get_analyzerid(idmef_alertident_t *ptr);
 void idmef_alertident_set_analyzerid(idmef_alertident_t *ptr, uint64_t analyzerid);
-idmef_value_t *idmef_alertident_get_analyzerid_value(idmef_alertident_t *ptr);
-uint64_t *idmef_alertident_new_analyzerid(idmef_alertident_t *ptr);
+int idmef_alertident_get_analyzerid_value(idmef_alertident_t *ptr, idmef_value_t **value);
+int idmef_alertident_new_analyzerid(idmef_alertident_t *ptr, uint64_t **ret);
 
 typedef enum {
         IDMEF_IMPACT_SEVERITY_ERROR = -1,
@@ -1348,31 +1348,31 @@ const char *idmef_impact_type_to_string(idmef_impact_type_t val);
 
 typedef struct idmef_impact idmef_impact_t;
 
-idmef_impact_t *idmef_impact_new(void);
+int idmef_impact_new(idmef_impact_t **ret);
 idmef_impact_t *idmef_impact_ref(idmef_impact_t *ptr);
-void *idmef_impact_get_child(void *p, idmef_child_t child);
-void *idmef_impact_new_child(void *p, idmef_child_t child, int n);
+int idmef_impact_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_impact_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_impact_destroy(idmef_impact_t *ptr);
 idmef_impact_severity_t *idmef_impact_get_severity(idmef_impact_t *ptr);
 void idmef_impact_set_severity(idmef_impact_t *ptr, idmef_impact_severity_t severity);
-idmef_value_t *idmef_impact_get_severity_value(idmef_impact_t *ptr);
-idmef_impact_severity_t *idmef_impact_new_severity(idmef_impact_t *ptr);
+int idmef_impact_get_severity_value(idmef_impact_t *ptr, idmef_value_t **value);
+int idmef_impact_new_severity(idmef_impact_t *ptr, idmef_impact_severity_t **ret);
 
 idmef_impact_completion_t *idmef_impact_get_completion(idmef_impact_t *ptr);
 void idmef_impact_set_completion(idmef_impact_t *ptr, idmef_impact_completion_t completion);
-idmef_value_t *idmef_impact_get_completion_value(idmef_impact_t *ptr);
-idmef_impact_completion_t *idmef_impact_new_completion(idmef_impact_t *ptr);
+int idmef_impact_get_completion_value(idmef_impact_t *ptr, idmef_value_t **value);
+int idmef_impact_new_completion(idmef_impact_t *ptr, idmef_impact_completion_t **ret);
 
 idmef_impact_type_t idmef_impact_get_type(idmef_impact_t *ptr);
 void idmef_impact_set_type(idmef_impact_t *ptr, idmef_impact_type_t type);
-idmef_value_t *idmef_impact_get_type_value(idmef_impact_t *ptr);
-idmef_impact_type_t *idmef_impact_new_type(idmef_impact_t *ptr);
+int idmef_impact_get_type_value(idmef_impact_t *ptr, idmef_value_t **value);
+int idmef_impact_new_type(idmef_impact_t *ptr, idmef_impact_type_t **ret);
 
 prelude_string_t *idmef_impact_get_description(idmef_impact_t *ptr);
 void idmef_impact_set_description(idmef_impact_t *ptr, prelude_string_t *description);
-idmef_value_t *idmef_impact_get_description_value(idmef_impact_t *ptr);
-prelude_string_t *idmef_impact_new_description(idmef_impact_t *ptr);
+int idmef_impact_get_description_value(idmef_impact_t *ptr, idmef_value_t **value);
+int idmef_impact_new_description(idmef_impact_t *ptr, prelude_string_t **ret);
 
 typedef enum {
         IDMEF_ACTION_CATEGORY_ERROR = -1,
@@ -1402,21 +1402,21 @@ const char *idmef_action_category_to_string(idmef_action_category_t val);
 
 typedef struct idmef_action idmef_action_t;
 
-idmef_action_t *idmef_action_new(void);
+int idmef_action_new(idmef_action_t **ret);
 idmef_action_t *idmef_action_ref(idmef_action_t *ptr);
-void *idmef_action_get_child(void *p, idmef_child_t child);
-void *idmef_action_new_child(void *p, idmef_child_t child, int n);
+int idmef_action_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_action_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_action_destroy(idmef_action_t *ptr);
 idmef_action_category_t idmef_action_get_category(idmef_action_t *ptr);
 void idmef_action_set_category(idmef_action_t *ptr, idmef_action_category_t category);
-idmef_value_t *idmef_action_get_category_value(idmef_action_t *ptr);
-idmef_action_category_t *idmef_action_new_category(idmef_action_t *ptr);
+int idmef_action_get_category_value(idmef_action_t *ptr, idmef_value_t **value);
+int idmef_action_new_category(idmef_action_t *ptr, idmef_action_category_t **ret);
 
 prelude_string_t *idmef_action_get_description(idmef_action_t *ptr);
 void idmef_action_set_description(idmef_action_t *ptr, prelude_string_t *description);
-idmef_value_t *idmef_action_get_description_value(idmef_action_t *ptr);
-prelude_string_t *idmef_action_new_description(idmef_action_t *ptr);
+int idmef_action_get_description_value(idmef_action_t *ptr, idmef_value_t **value);
+int idmef_action_new_description(idmef_action_t *ptr, prelude_string_t **ret);
 
 typedef enum {
         IDMEF_CONFIDENCE_RATING_ERROR = -1,
@@ -1445,21 +1445,21 @@ const char *idmef_confidence_rating_to_string(idmef_confidence_rating_t val);
 
 typedef struct idmef_confidence idmef_confidence_t;
 
-idmef_confidence_t *idmef_confidence_new(void);
+int idmef_confidence_new(idmef_confidence_t **ret);
 idmef_confidence_t *idmef_confidence_ref(idmef_confidence_t *ptr);
-void *idmef_confidence_get_child(void *p, idmef_child_t child);
-void *idmef_confidence_new_child(void *p, idmef_child_t child, int n);
+int idmef_confidence_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_confidence_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_confidence_destroy(idmef_confidence_t *ptr);
 idmef_confidence_rating_t idmef_confidence_get_rating(idmef_confidence_t *ptr);
 void idmef_confidence_set_rating(idmef_confidence_t *ptr, idmef_confidence_rating_t rating);
-idmef_value_t *idmef_confidence_get_rating_value(idmef_confidence_t *ptr);
-idmef_confidence_rating_t *idmef_confidence_new_rating(idmef_confidence_t *ptr);
+int idmef_confidence_get_rating_value(idmef_confidence_t *ptr, idmef_value_t **value);
+int idmef_confidence_new_rating(idmef_confidence_t *ptr, idmef_confidence_rating_t **ret);
 
 float *idmef_confidence_get_confidence(idmef_confidence_t *ptr);
 void idmef_confidence_set_confidence(idmef_confidence_t *ptr, float confidence);
-idmef_value_t *idmef_confidence_get_confidence_value(idmef_confidence_t *ptr);
-float *idmef_confidence_new_confidence(idmef_confidence_t *ptr);
+int idmef_confidence_get_confidence_value(idmef_confidence_t *ptr, idmef_value_t **value);
+int idmef_confidence_new_confidence(idmef_confidence_t *ptr, float **ret);
 
 
 
@@ -1476,26 +1476,26 @@ float *idmef_confidence_new_confidence(idmef_confidence_t *ptr);
 
 typedef struct idmef_assessment idmef_assessment_t;
 
-idmef_assessment_t *idmef_assessment_new(void);
+int idmef_assessment_new(idmef_assessment_t **ret);
 idmef_assessment_t *idmef_assessment_ref(idmef_assessment_t *ptr);
-void *idmef_assessment_get_child(void *p, idmef_child_t child);
-void *idmef_assessment_new_child(void *p, idmef_child_t child, int n);
+int idmef_assessment_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_assessment_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_assessment_destroy(idmef_assessment_t *ptr);
 idmef_impact_t *idmef_assessment_get_impact(idmef_assessment_t *ptr);
 void idmef_assessment_set_impact(idmef_assessment_t *ptr, idmef_impact_t *impact);
-idmef_value_t *idmef_assessment_get_impact_value(idmef_assessment_t *ptr);
-idmef_impact_t *idmef_assessment_new_impact(idmef_assessment_t *ptr);
+int idmef_assessment_get_impact_value(idmef_assessment_t *ptr, idmef_value_t **value);
+int idmef_assessment_new_impact(idmef_assessment_t *ptr, idmef_impact_t **ret);
 
 idmef_action_t *idmef_assessment_get_next_action(idmef_assessment_t *ptr, idmef_action_t *object);
 void idmef_assessment_set_action(idmef_assessment_t *ptr, idmef_action_t *object);
-idmef_action_t *idmef_assessment_new_action(idmef_assessment_t *ptr);
-idmef_value_t *idmef_assessment_get_action_value(idmef_assessment_t *ptr);
+int idmef_assessment_new_action(idmef_assessment_t *ptr, idmef_action_t **ret);
+int idmef_assessment_get_action_value(idmef_assessment_t *ptr, idmef_value_t **value);
 
 idmef_confidence_t *idmef_assessment_get_confidence(idmef_assessment_t *ptr);
 void idmef_assessment_set_confidence(idmef_assessment_t *ptr, idmef_confidence_t *confidence);
-idmef_value_t *idmef_assessment_get_confidence_value(idmef_assessment_t *ptr);
-idmef_confidence_t *idmef_assessment_new_confidence(idmef_assessment_t *ptr);
+int idmef_assessment_get_confidence_value(idmef_assessment_t *ptr, idmef_value_t **value);
+int idmef_assessment_new_confidence(idmef_assessment_t *ptr, idmef_confidence_t **ret);
 
 
 
@@ -1512,26 +1512,26 @@ idmef_confidence_t *idmef_assessment_new_confidence(idmef_assessment_t *ptr);
 
 typedef struct idmef_tool_alert idmef_tool_alert_t;
 
-idmef_tool_alert_t *idmef_tool_alert_new(void);
+int idmef_tool_alert_new(idmef_tool_alert_t **ret);
 idmef_tool_alert_t *idmef_tool_alert_ref(idmef_tool_alert_t *ptr);
-void *idmef_tool_alert_get_child(void *p, idmef_child_t child);
-void *idmef_tool_alert_new_child(void *p, idmef_child_t child, int n);
+int idmef_tool_alert_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_tool_alert_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_tool_alert_destroy(idmef_tool_alert_t *ptr);
 prelude_string_t *idmef_tool_alert_get_name(idmef_tool_alert_t *ptr);
 void idmef_tool_alert_set_name(idmef_tool_alert_t *ptr, prelude_string_t *name);
-idmef_value_t *idmef_tool_alert_get_name_value(idmef_tool_alert_t *ptr);
-prelude_string_t *idmef_tool_alert_new_name(idmef_tool_alert_t *ptr);
+int idmef_tool_alert_get_name_value(idmef_tool_alert_t *ptr, idmef_value_t **value);
+int idmef_tool_alert_new_name(idmef_tool_alert_t *ptr, prelude_string_t **ret);
 
 prelude_string_t *idmef_tool_alert_get_command(idmef_tool_alert_t *ptr);
 void idmef_tool_alert_set_command(idmef_tool_alert_t *ptr, prelude_string_t *command);
-idmef_value_t *idmef_tool_alert_get_command_value(idmef_tool_alert_t *ptr);
-prelude_string_t *idmef_tool_alert_new_command(idmef_tool_alert_t *ptr);
+int idmef_tool_alert_get_command_value(idmef_tool_alert_t *ptr, idmef_value_t **value);
+int idmef_tool_alert_new_command(idmef_tool_alert_t *ptr, prelude_string_t **ret);
 
 idmef_alertident_t *idmef_tool_alert_get_next_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t *object);
 void idmef_tool_alert_set_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t *object);
-idmef_alertident_t *idmef_tool_alert_new_alertident(idmef_tool_alert_t *ptr);
-idmef_value_t *idmef_tool_alert_get_alertident_value(idmef_tool_alert_t *ptr);
+int idmef_tool_alert_new_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t **ret);
+int idmef_tool_alert_get_alertident_value(idmef_tool_alert_t *ptr, idmef_value_t **value);
 
 
 
@@ -1547,21 +1547,21 @@ idmef_value_t *idmef_tool_alert_get_alertident_value(idmef_tool_alert_t *ptr);
 
 typedef struct idmef_correlation_alert idmef_correlation_alert_t;
 
-idmef_correlation_alert_t *idmef_correlation_alert_new(void);
+int idmef_correlation_alert_new(idmef_correlation_alert_t **ret);
 idmef_correlation_alert_t *idmef_correlation_alert_ref(idmef_correlation_alert_t *ptr);
-void *idmef_correlation_alert_get_child(void *p, idmef_child_t child);
-void *idmef_correlation_alert_new_child(void *p, idmef_child_t child, int n);
+int idmef_correlation_alert_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_correlation_alert_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_correlation_alert_destroy(idmef_correlation_alert_t *ptr);
 prelude_string_t *idmef_correlation_alert_get_name(idmef_correlation_alert_t *ptr);
 void idmef_correlation_alert_set_name(idmef_correlation_alert_t *ptr, prelude_string_t *name);
-idmef_value_t *idmef_correlation_alert_get_name_value(idmef_correlation_alert_t *ptr);
-prelude_string_t *idmef_correlation_alert_new_name(idmef_correlation_alert_t *ptr);
+int idmef_correlation_alert_get_name_value(idmef_correlation_alert_t *ptr, idmef_value_t **value);
+int idmef_correlation_alert_new_name(idmef_correlation_alert_t *ptr, prelude_string_t **ret);
 
 idmef_alertident_t *idmef_correlation_alert_get_next_alertident(idmef_correlation_alert_t *ptr, idmef_alertident_t *object);
 void idmef_correlation_alert_set_alertident(idmef_correlation_alert_t *ptr, idmef_alertident_t *object);
-idmef_alertident_t *idmef_correlation_alert_new_alertident(idmef_correlation_alert_t *ptr);
-idmef_value_t *idmef_correlation_alert_get_alertident_value(idmef_correlation_alert_t *ptr);
+int idmef_correlation_alert_new_alertident(idmef_correlation_alert_t *ptr, idmef_alertident_t **ret);
+int idmef_correlation_alert_get_alertident_value(idmef_correlation_alert_t *ptr, idmef_value_t **value);
 
 
 
@@ -1578,26 +1578,26 @@ idmef_value_t *idmef_correlation_alert_get_alertident_value(idmef_correlation_al
 
 typedef struct idmef_overflow_alert idmef_overflow_alert_t;
 
-idmef_overflow_alert_t *idmef_overflow_alert_new(void);
+int idmef_overflow_alert_new(idmef_overflow_alert_t **ret);
 idmef_overflow_alert_t *idmef_overflow_alert_ref(idmef_overflow_alert_t *ptr);
-void *idmef_overflow_alert_get_child(void *p, idmef_child_t child);
-void *idmef_overflow_alert_new_child(void *p, idmef_child_t child, int n);
+int idmef_overflow_alert_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_overflow_alert_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_overflow_alert_destroy(idmef_overflow_alert_t *ptr);
 prelude_string_t *idmef_overflow_alert_get_program(idmef_overflow_alert_t *ptr);
 void idmef_overflow_alert_set_program(idmef_overflow_alert_t *ptr, prelude_string_t *program);
-idmef_value_t *idmef_overflow_alert_get_program_value(idmef_overflow_alert_t *ptr);
-prelude_string_t *idmef_overflow_alert_new_program(idmef_overflow_alert_t *ptr);
+int idmef_overflow_alert_get_program_value(idmef_overflow_alert_t *ptr, idmef_value_t **value);
+int idmef_overflow_alert_new_program(idmef_overflow_alert_t *ptr, prelude_string_t **ret);
 
 uint32_t *idmef_overflow_alert_get_size(idmef_overflow_alert_t *ptr);
 void idmef_overflow_alert_set_size(idmef_overflow_alert_t *ptr, uint32_t size);
-idmef_value_t *idmef_overflow_alert_get_size_value(idmef_overflow_alert_t *ptr);
-uint32_t *idmef_overflow_alert_new_size(idmef_overflow_alert_t *ptr);
+int idmef_overflow_alert_get_size_value(idmef_overflow_alert_t *ptr, idmef_value_t **value);
+int idmef_overflow_alert_new_size(idmef_overflow_alert_t *ptr, uint32_t **ret);
 
 idmef_data_t *idmef_overflow_alert_get_buffer(idmef_overflow_alert_t *ptr);
 void idmef_overflow_alert_set_buffer(idmef_overflow_alert_t *ptr, idmef_data_t *buffer);
-idmef_value_t *idmef_overflow_alert_get_buffer_value(idmef_overflow_alert_t *ptr);
-idmef_data_t *idmef_overflow_alert_new_buffer(idmef_overflow_alert_t *ptr);
+int idmef_overflow_alert_get_buffer_value(idmef_overflow_alert_t *ptr, idmef_value_t **value);
+int idmef_overflow_alert_new_buffer(idmef_overflow_alert_t *ptr, idmef_data_t **ret);
 
 typedef enum {
         IDMEF_ALERT_TYPE_ERROR = -1,
@@ -1643,77 +1643,77 @@ const char *idmef_alert_type_to_string(idmef_alert_type_t val);
 
 typedef struct idmef_alert idmef_alert_t;
 
-idmef_alert_t *idmef_alert_new(void);
-void *idmef_alert_get_child(void *p, idmef_child_t child);
-void *idmef_alert_new_child(void *p, idmef_child_t child, int n);
+int idmef_alert_new(idmef_alert_t **ret);
+int idmef_alert_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_alert_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_alert_destroy(idmef_alert_t *ptr);
 uint64_t idmef_alert_get_messageid(idmef_alert_t *ptr);
 void idmef_alert_set_messageid(idmef_alert_t *ptr, uint64_t messageid);
-idmef_value_t *idmef_alert_get_messageid_value(idmef_alert_t *ptr);
-uint64_t *idmef_alert_new_messageid(idmef_alert_t *ptr);
+int idmef_alert_get_messageid_value(idmef_alert_t *ptr, idmef_value_t **value);
+int idmef_alert_new_messageid(idmef_alert_t *ptr, uint64_t **ret);
 
 idmef_analyzer_t *idmef_alert_get_analyzer(idmef_alert_t *ptr);
 void idmef_alert_set_analyzer(idmef_alert_t *ptr, idmef_analyzer_t *analyzer);
-idmef_value_t *idmef_alert_get_analyzer_value(idmef_alert_t *ptr);
-idmef_analyzer_t *idmef_alert_new_analyzer(idmef_alert_t *ptr);
+int idmef_alert_get_analyzer_value(idmef_alert_t *ptr, idmef_value_t **value);
+int idmef_alert_new_analyzer(idmef_alert_t *ptr, idmef_analyzer_t **ret);
 
 idmef_time_t *idmef_alert_get_create_time(idmef_alert_t *ptr);
 void idmef_alert_set_create_time(idmef_alert_t *ptr, idmef_time_t *create_time);
-idmef_value_t *idmef_alert_get_create_time_value(idmef_alert_t *ptr);
-idmef_time_t *idmef_alert_new_create_time(idmef_alert_t *ptr);
+int idmef_alert_get_create_time_value(idmef_alert_t *ptr, idmef_value_t **value);
+int idmef_alert_new_create_time(idmef_alert_t *ptr, idmef_time_t **ret);
 
 idmef_classification_t *idmef_alert_get_classification(idmef_alert_t *ptr);
 void idmef_alert_set_classification(idmef_alert_t *ptr, idmef_classification_t *classification);
-idmef_value_t *idmef_alert_get_classification_value(idmef_alert_t *ptr);
-idmef_classification_t *idmef_alert_new_classification(idmef_alert_t *ptr);
+int idmef_alert_get_classification_value(idmef_alert_t *ptr, idmef_value_t **value);
+int idmef_alert_new_classification(idmef_alert_t *ptr, idmef_classification_t **ret);
 
 idmef_time_t *idmef_alert_get_detect_time(idmef_alert_t *ptr);
 void idmef_alert_set_detect_time(idmef_alert_t *ptr, idmef_time_t *detect_time);
-idmef_value_t *idmef_alert_get_detect_time_value(idmef_alert_t *ptr);
-idmef_time_t *idmef_alert_new_detect_time(idmef_alert_t *ptr);
+int idmef_alert_get_detect_time_value(idmef_alert_t *ptr, idmef_value_t **value);
+int idmef_alert_new_detect_time(idmef_alert_t *ptr, idmef_time_t **ret);
 
 idmef_time_t *idmef_alert_get_analyzer_time(idmef_alert_t *ptr);
 void idmef_alert_set_analyzer_time(idmef_alert_t *ptr, idmef_time_t *analyzer_time);
-idmef_value_t *idmef_alert_get_analyzer_time_value(idmef_alert_t *ptr);
-idmef_time_t *idmef_alert_new_analyzer_time(idmef_alert_t *ptr);
+int idmef_alert_get_analyzer_time_value(idmef_alert_t *ptr, idmef_value_t **value);
+int idmef_alert_new_analyzer_time(idmef_alert_t *ptr, idmef_time_t **ret);
 
 idmef_source_t *idmef_alert_get_next_source(idmef_alert_t *ptr, idmef_source_t *object);
 void idmef_alert_set_source(idmef_alert_t *ptr, idmef_source_t *object);
-idmef_source_t *idmef_alert_new_source(idmef_alert_t *ptr);
-idmef_value_t *idmef_alert_get_source_value(idmef_alert_t *ptr);
+int idmef_alert_new_source(idmef_alert_t *ptr, idmef_source_t **ret);
+int idmef_alert_get_source_value(idmef_alert_t *ptr, idmef_value_t **value);
 
 idmef_target_t *idmef_alert_get_next_target(idmef_alert_t *ptr, idmef_target_t *object);
 void idmef_alert_set_target(idmef_alert_t *ptr, idmef_target_t *object);
-idmef_target_t *idmef_alert_new_target(idmef_alert_t *ptr);
-idmef_value_t *idmef_alert_get_target_value(idmef_alert_t *ptr);
+int idmef_alert_new_target(idmef_alert_t *ptr, idmef_target_t **ret);
+int idmef_alert_get_target_value(idmef_alert_t *ptr, idmef_value_t **value);
 
 idmef_assessment_t *idmef_alert_get_assessment(idmef_alert_t *ptr);
 void idmef_alert_set_assessment(idmef_alert_t *ptr, idmef_assessment_t *assessment);
-idmef_value_t *idmef_alert_get_assessment_value(idmef_alert_t *ptr);
-idmef_assessment_t *idmef_alert_new_assessment(idmef_alert_t *ptr);
+int idmef_alert_get_assessment_value(idmef_alert_t *ptr, idmef_value_t **value);
+int idmef_alert_new_assessment(idmef_alert_t *ptr, idmef_assessment_t **ret);
 
 idmef_additional_data_t *idmef_alert_get_next_additional_data(idmef_alert_t *ptr, idmef_additional_data_t *object);
 void idmef_alert_set_additional_data(idmef_alert_t *ptr, idmef_additional_data_t *object);
-idmef_additional_data_t *idmef_alert_new_additional_data(idmef_alert_t *ptr);
-idmef_value_t *idmef_alert_get_additional_data_value(idmef_alert_t *ptr);
+int idmef_alert_new_additional_data(idmef_alert_t *ptr, idmef_additional_data_t **ret);
+int idmef_alert_get_additional_data_value(idmef_alert_t *ptr, idmef_value_t **value);
 
 idmef_alert_type_t idmef_alert_get_type(idmef_alert_t *ptr);
-idmef_value_t *idmef_alert_get_type_value(idmef_alert_t *ptr);
+int idmef_alert_get_type_value(idmef_alert_t *ptr, idmef_value_t **value);
 idmef_tool_alert_t *idmef_alert_get_tool_alert(idmef_alert_t *ptr);
 void idmef_alert_set_tool_alert(idmef_alert_t *ptr, idmef_tool_alert_t *tool_alert);
-idmef_value_t *idmef_alert_get_tool_alert_value(idmef_alert_t *ptr);
-idmef_tool_alert_t *idmef_alert_new_tool_alert(idmef_alert_t *ptr);
+int idmef_alert_get_tool_alert_value(idmef_alert_t *ptr, idmef_value_t **value);
+int idmef_alert_new_tool_alert(idmef_alert_t *ptr, idmef_tool_alert_t **ret);
 
 idmef_correlation_alert_t *idmef_alert_get_correlation_alert(idmef_alert_t *ptr);
 void idmef_alert_set_correlation_alert(idmef_alert_t *ptr, idmef_correlation_alert_t *correlation_alert);
-idmef_value_t *idmef_alert_get_correlation_alert_value(idmef_alert_t *ptr);
-idmef_correlation_alert_t *idmef_alert_new_correlation_alert(idmef_alert_t *ptr);
+int idmef_alert_get_correlation_alert_value(idmef_alert_t *ptr, idmef_value_t **value);
+int idmef_alert_new_correlation_alert(idmef_alert_t *ptr, idmef_correlation_alert_t **ret);
 
 idmef_overflow_alert_t *idmef_alert_get_overflow_alert(idmef_alert_t *ptr);
 void idmef_alert_set_overflow_alert(idmef_alert_t *ptr, idmef_overflow_alert_t *overflow_alert);
-idmef_value_t *idmef_alert_get_overflow_alert_value(idmef_alert_t *ptr);
-idmef_overflow_alert_t *idmef_alert_new_overflow_alert(idmef_alert_t *ptr);
+int idmef_alert_get_overflow_alert_value(idmef_alert_t *ptr, idmef_value_t **value);
+int idmef_alert_new_overflow_alert(idmef_alert_t *ptr, idmef_overflow_alert_t **ret);
 
 
 
@@ -1732,35 +1732,35 @@ idmef_overflow_alert_t *idmef_alert_new_overflow_alert(idmef_alert_t *ptr);
 
 typedef struct idmef_heartbeat idmef_heartbeat_t;
 
-idmef_heartbeat_t *idmef_heartbeat_new(void);
-void *idmef_heartbeat_get_child(void *p, idmef_child_t child);
-void *idmef_heartbeat_new_child(void *p, idmef_child_t child, int n);
+int idmef_heartbeat_new(idmef_heartbeat_t **ret);
+int idmef_heartbeat_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_heartbeat_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_heartbeat_destroy(idmef_heartbeat_t *ptr);
 uint64_t idmef_heartbeat_get_messageid(idmef_heartbeat_t *ptr);
 void idmef_heartbeat_set_messageid(idmef_heartbeat_t *ptr, uint64_t messageid);
-idmef_value_t *idmef_heartbeat_get_messageid_value(idmef_heartbeat_t *ptr);
-uint64_t *idmef_heartbeat_new_messageid(idmef_heartbeat_t *ptr);
+int idmef_heartbeat_get_messageid_value(idmef_heartbeat_t *ptr, idmef_value_t **value);
+int idmef_heartbeat_new_messageid(idmef_heartbeat_t *ptr, uint64_t **ret);
 
 idmef_analyzer_t *idmef_heartbeat_get_analyzer(idmef_heartbeat_t *ptr);
 void idmef_heartbeat_set_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t *analyzer);
-idmef_value_t *idmef_heartbeat_get_analyzer_value(idmef_heartbeat_t *ptr);
-idmef_analyzer_t *idmef_heartbeat_new_analyzer(idmef_heartbeat_t *ptr);
+int idmef_heartbeat_get_analyzer_value(idmef_heartbeat_t *ptr, idmef_value_t **value);
+int idmef_heartbeat_new_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t **ret);
 
 idmef_time_t *idmef_heartbeat_get_create_time(idmef_heartbeat_t *ptr);
 void idmef_heartbeat_set_create_time(idmef_heartbeat_t *ptr, idmef_time_t *create_time);
-idmef_value_t *idmef_heartbeat_get_create_time_value(idmef_heartbeat_t *ptr);
-idmef_time_t *idmef_heartbeat_new_create_time(idmef_heartbeat_t *ptr);
+int idmef_heartbeat_get_create_time_value(idmef_heartbeat_t *ptr, idmef_value_t **value);
+int idmef_heartbeat_new_create_time(idmef_heartbeat_t *ptr, idmef_time_t **ret);
 
 idmef_time_t *idmef_heartbeat_get_analyzer_time(idmef_heartbeat_t *ptr);
 void idmef_heartbeat_set_analyzer_time(idmef_heartbeat_t *ptr, idmef_time_t *analyzer_time);
-idmef_value_t *idmef_heartbeat_get_analyzer_time_value(idmef_heartbeat_t *ptr);
-idmef_time_t *idmef_heartbeat_new_analyzer_time(idmef_heartbeat_t *ptr);
+int idmef_heartbeat_get_analyzer_time_value(idmef_heartbeat_t *ptr, idmef_value_t **value);
+int idmef_heartbeat_new_analyzer_time(idmef_heartbeat_t *ptr, idmef_time_t **ret);
 
 idmef_additional_data_t *idmef_heartbeat_get_next_additional_data(idmef_heartbeat_t *ptr, idmef_additional_data_t *object);
 void idmef_heartbeat_set_additional_data(idmef_heartbeat_t *ptr, idmef_additional_data_t *object);
-idmef_additional_data_t *idmef_heartbeat_new_additional_data(idmef_heartbeat_t *ptr);
-idmef_value_t *idmef_heartbeat_get_additional_data_value(idmef_heartbeat_t *ptr);
+int idmef_heartbeat_new_additional_data(idmef_heartbeat_t *ptr, idmef_additional_data_t **ret);
+int idmef_heartbeat_get_additional_data_value(idmef_heartbeat_t *ptr, idmef_value_t **value);
 
 typedef enum {
         IDMEF_MESSAGE_TYPE_ERROR = -1,
@@ -1794,28 +1794,28 @@ const char *idmef_message_type_to_string(idmef_message_type_t val);
 
 typedef struct idmef_message idmef_message_t;
 
-idmef_message_t *idmef_message_new(void);
+int idmef_message_new(idmef_message_t **ret);
 idmef_message_t *idmef_message_ref(idmef_message_t *ptr);
-void *idmef_message_get_child(void *p, idmef_child_t child);
-void *idmef_message_new_child(void *p, idmef_child_t child, int n);
+int idmef_message_get_child(void *p, idmef_child_t child, void **childptr);
+int idmef_message_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_message_destroy(idmef_message_t *ptr);
 prelude_string_t *idmef_message_get_version(idmef_message_t *ptr);
 void idmef_message_set_version(idmef_message_t *ptr, prelude_string_t *version);
-idmef_value_t *idmef_message_get_version_value(idmef_message_t *ptr);
-prelude_string_t *idmef_message_new_version(idmef_message_t *ptr);
+int idmef_message_get_version_value(idmef_message_t *ptr, idmef_value_t **value);
+int idmef_message_new_version(idmef_message_t *ptr, prelude_string_t **ret);
 
 idmef_message_type_t idmef_message_get_type(idmef_message_t *ptr);
-idmef_value_t *idmef_message_get_type_value(idmef_message_t *ptr);
+int idmef_message_get_type_value(idmef_message_t *ptr, idmef_value_t **value);
 idmef_alert_t *idmef_message_get_alert(idmef_message_t *ptr);
 void idmef_message_set_alert(idmef_message_t *ptr, idmef_alert_t *alert);
-idmef_value_t *idmef_message_get_alert_value(idmef_message_t *ptr);
-idmef_alert_t *idmef_message_new_alert(idmef_message_t *ptr);
+int idmef_message_get_alert_value(idmef_message_t *ptr, idmef_value_t **value);
+int idmef_message_new_alert(idmef_message_t *ptr, idmef_alert_t **ret);
 
 idmef_heartbeat_t *idmef_message_get_heartbeat(idmef_message_t *ptr);
 void idmef_message_set_heartbeat(idmef_message_t *ptr, idmef_heartbeat_t *heartbeat);
-idmef_value_t *idmef_message_get_heartbeat_value(idmef_message_t *ptr);
-idmef_heartbeat_t *idmef_message_new_heartbeat(idmef_message_t *ptr);
+int idmef_message_get_heartbeat_value(idmef_message_t *ptr, idmef_value_t **value);
+int idmef_message_new_heartbeat(idmef_message_t *ptr, idmef_heartbeat_t **ret);
 
 
 void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg);

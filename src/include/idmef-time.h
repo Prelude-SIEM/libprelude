@@ -26,8 +26,6 @@
 
 #include <time.h>
 
-#define idmef_object_type_time 1
-
 struct idmef_time {
         int refcount;
         uint32_t sec;
@@ -38,16 +36,17 @@ struct idmef_time {
 typedef struct idmef_time idmef_time_t;
 
 idmef_time_t *idmef_time_ref(idmef_time_t *time);
-idmef_time_t *idmef_time_new(void);
-idmef_time_t *idmef_time_new_from_gettimeofday(void);
-idmef_time_t *idmef_time_new_from_string(const char *buf);
-idmef_time_t *idmef_time_new_from_ntpstamp(const char *buf);
+int idmef_time_new(idmef_time_t **time);
+int idmef_time_new_from_gettimeofday(idmef_time_t **time);
+int idmef_time_new_from_string(idmef_time_t **time, const char *buf);
+int idmef_time_new_from_ntpstamp(idmef_time_t **time, const char *buf);
+int idmef_time_new_from_timeval(idmef_time_t **time, const struct timeval *tv);
 
 void idmef_time_destroy_internal(idmef_time_t *time);
 void idmef_time_destroy(idmef_time_t *time);
 
-idmef_time_t *idmef_time_clone(const idmef_time_t *src);
-int idmef_time_copy(idmef_time_t *dst, const idmef_time_t *src);
+int idmef_time_clone(const idmef_time_t *src, idmef_time_t **dst);
+int idmef_time_copy(const idmef_time_t *src, idmef_time_t *dst);
 
 void idmef_time_set_from_time(idmef_time_t *time, const time_t *t);
 void idmef_time_set_sec(idmef_time_t *time, uint32_t sec);
@@ -60,6 +59,7 @@ int32_t idmef_time_get_gmt_offset(const idmef_time_t *time);
 
 int idmef_time_set_from_string(idmef_time_t *time, const char *buf);
 int idmef_time_set_from_ntpstamp(idmef_time_t *time, const char *buf);
+int idmef_time_set_from_timeval(idmef_time_t *time, const struct timeval *tv);
 
 int idmef_time_to_string(const idmef_time_t *time, prelude_string_t *out);
 int idmef_time_to_ntpstamp(const idmef_time_t *time, prelude_string_t *out);

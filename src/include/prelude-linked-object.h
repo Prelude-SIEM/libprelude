@@ -45,21 +45,21 @@ static inline void prelude_linked_object_del(prelude_linked_object_t *obj)
 
 
 
-static inline void prelude_linked_object_add(prelude_linked_object_t *obj, prelude_list_t *head) 
+static inline void prelude_linked_object_add(prelude_list_t *head, prelude_linked_object_t *obj) 
 {
-        prelude_list_add(&obj->list, head);
+        prelude_list_add(head, &obj->list);
 }
 
 
 
-static inline void prelude_linked_object_add_tail(prelude_linked_object_t *obj, prelude_list_t *head) 
+static inline void prelude_linked_object_add_tail(prelude_list_t *head, prelude_linked_object_t *obj) 
 {
-        prelude_list_add_tail(&obj->list, head);
+        prelude_list_add_tail(head, &obj->list);
 }
 
 
-#define prelude_linked_object_get_object(listentry, type)  \
-        (type *) prelude_list_entry(listentry, prelude_linked_object_t, list)
+#define prelude_linked_object_get_object(object)  \
+        (void *) prelude_list_entry(object, prelude_linked_object_t, list)
 
 
 #endif /* _LIBPRELUDE_PRELUDE_LINKED_OBJECT_H */

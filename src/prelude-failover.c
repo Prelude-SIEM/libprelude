@@ -21,6 +21,8 @@
 *
 *****/
 
+#include "config.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -37,11 +39,8 @@
 #include "prelude-msg.h"
 #include "prelude-failover.h"
 
-#define PRELUDE_ERROR_DEFAULT_SOURCE PRELUDE_ERROR_SOURCE_FAILOVER
+#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_FAILOVER
 #include "prelude-error.h"
-
-#define MIN(x, y) (((x) < (y)) ? (x) : (y))
-#define MAX(x, y) (((x) > (y)) ? (x) : (y))
 
 
 struct prelude_failover {
@@ -55,12 +54,12 @@ struct prelude_failover {
         /*
          * Newer allocated index for a saved message.
          */
-        unsigned int newer_index;
+        unsigned long newer_index;
 
         /*
          * Older allocated index for a saved message.
          */
-        unsigned int older_index;
+        unsigned long older_index;
 
         /*
          *
@@ -72,16 +71,16 @@ struct prelude_failover {
 
 
 static int open_failover_fd(prelude_failover_t *failover,
-                            char *filename, size_t size, int index, int flags)
+                            char *filename, size_t size, unsigned long index, int flags)
 {
         int fd;
 
-        snprintf(filename, size, "%s/%u", failover->directory, index);
+        snprintf(filename, size, "%s/%lu", failover->directory, index);
         
         fd = open(filename, flags, S_IRUSR|S_IWUSR);
         if ( fd < 0 ) {
-                log(LOG_ERR, "couldn't open %s for writing.\n", filename);
-                return -1;
+                prelude_log(PRELUDE_LOG_WARN, "couldn't open %s for writing: %s.\n", filename, strerror(errno));
+                return prelude_error_from_errno(errno);
         }
 
         prelude_io_set_sys_io(failover->fd, fd);
@@ -96,8 +95,8 @@ static int get_current_directory_index(prelude_failover_t *failover, const char 
 {
         int ret;
         DIR *dir;
-        uint32_t tmp;
         struct stat st;
+        unsigned long tmp;
         char filename[256];
         struct dirent *item;
         
@@ -109,7 +108,7 @@ static int get_current_directory_index(prelude_failover_t *failover, const char 
 
         while ( (item = readdir(dir)) ) {
 
-                ret = sscanf(item->d_name, "%u", &tmp);
+                ret = sscanf(item->d_name, "%lu", &tmp);
                 if ( ret != 1 )
                         continue;
                 
@@ -139,7 +138,7 @@ static int get_current_directory_index(prelude_failover_t *failover, const char 
 
 
 
-static int failover_apply_quota(prelude_failover_t *failover, prelude_msg_t *new, unsigned int older_index)
+static int failover_apply_quota(prelude_failover_t *failover, prelude_msg_t *new, unsigned long older_index)
 {
         int ret;
         struct stat st;
@@ -153,11 +152,11 @@ static int failover_apply_quota(prelude_failover_t *failover, prelude_msg_t *new
         /*
          * check length of the oldest entry.
          */
-        snprintf(filename, sizeof(filename), "%s/%u", failover->directory, older_index);
+        snprintf(filename, sizeof(filename), "%s/%lu", failover->directory, older_index);
         
         ret = stat(filename, &st);
         if ( ret < 0 ) {
-                log(LOG_ERR, "error trying to stat %s.\n", filename);
+                prelude_log(PRELUDE_LOG_WARN, "error trying to stat %s.\n", filename);
                 return -1;
         }
         
@@ -177,7 +176,7 @@ static void delete_current(prelude_failover_t *failover)
         if ( (failover->older_index - 1) == 0 )
                 return;
         
-        snprintf(filename, sizeof(filename), "%s/%u", failover->directory, failover->older_index - 1);
+        snprintf(filename, sizeof(filename), "%s/%lu", failover->directory, failover->older_index - 1);
         unlink(filename);
         
         failover->cur_size -= failover->to_be_deleted_size;
@@ -213,10 +212,10 @@ int prelude_failover_save_msg(prelude_failover_t *failover, prelude_msg_t *msg)
                 failover->newer_index--;
                 flags = O_APPEND|O_WRONLY;
         }
-
-        ret = open_failover_fd(failover, filename, sizeof(filename), failover->newer_index, flags);
+        
+        ret = open_failover_fd(failover, filename, sizeof(filename), failover->newer_index, flags);        
         if ( ret < 0 ) 
-                return -1;
+                return ret;
         
         do {
                 size = prelude_msg_write(msg, failover->fd);
@@ -225,9 +224,9 @@ int prelude_failover_save_msg(prelude_failover_t *failover, prelude_msg_t *msg)
         prelude_io_close(failover->fd);
 
         if ( size < 0 ) {
-                log(LOG_ERR, "error writing message to %s.\n", prelude_msg_is_fragment(msg));
+                prelude_log(PRELUDE_LOG_WARN, "error writing message to %s.\n", filename);
                 unlink(filename);
-                return -1;
+                return ret;
         }
         
         failover->cur_size += size;
@@ -266,10 +265,12 @@ ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg
         prelude_io_close(failover->fd);
         
         if ( ret < 0 ) {
-                log(LOG_INFO, "prelude-failover: error reading message index=%d: %s.\n",
-                    failover->older_index, prelude_strerror(ret));
+                prelude_log(PRELUDE_LOG_ERR, "prelude-failover: error reading message index=%d: %s.\n",
+                            failover->older_index, prelude_strerror(ret));
+
                 failover->older_index++;
                 failover->to_be_deleted_size = get_file_size(filename);
+
                 return ret;
         }
 
@@ -305,12 +306,12 @@ int prelude_failover_new(prelude_failover_t **out, const char *dirname)
                 return prelude_error_from_errno(errno);
         }
 
-        ret = mkdir(dirname, S_IRWXU|S_IRWXG);
+        ret = mkdir(dirname, S_IRWXU|S_IRWXG);        
         if ( ret < 0 && errno != EEXIST ) {
                 prelude_failover_destroy(new);
                 return prelude_error_from_errno(errno);
         }
- 
+        
         ret = get_current_directory_index(new, dirname);
         if ( ret < 0 ) {
                 prelude_failover_destroy(new);
@@ -318,7 +319,7 @@ int prelude_failover_new(prelude_failover_t **out, const char *dirname)
         }
 
         *out = new;
-        
+
         return 0;
 }
 
@@ -341,14 +342,15 @@ void prelude_failover_set_quota(prelude_failover_t *failover, size_t limit)
 
 
 
-unsigned int prelude_failover_get_deleted_msg_count(prelude_failover_t *failover)
+unsigned long prelude_failover_get_deleted_msg_count(prelude_failover_t *failover)
 {
-        return failover->newer_index - (failover->newer_index - (failover->older_index - 1));
+        unsigned long available = prelude_failover_get_available_msg_count(failover);
+        return (failover->newer_index - 1) - available;
 }
 
 
 
-unsigned int prelude_failover_get_available_msg_count(prelude_failover_t *failover)
+unsigned long prelude_failover_get_available_msg_count(prelude_failover_t *failover)
 {
         return failover->newer_index - failover->older_index;
 }

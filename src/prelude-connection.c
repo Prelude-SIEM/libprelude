@@ -61,8 +61,16 @@
 #include "tls-auth.h"
 
 
+#define PRELUDE_CONNECTION_OWN_FD 0x02
+
+
 /*
- * Path to the Prelude Unix socket.
+ * Default port to connect to.
+ */
+#define DEFAULT_PORT 5554
+
+/*
+ * Path to the default Unix socket.
  */
 #define UNIX_SOCKET "/tmp/.prelude-unix"
 
@@ -72,24 +80,20 @@ struct prelude_connection {
         PRELUDE_LINKED_OBJECT;
         
         char *saddr;
-        uint16_t sport;
+        unsigned int sport;
 
         char *daddr;
-        uint16_t dport;
+        unsigned int dport;
         
         socklen_t sa_len;
         struct sockaddr *sa;
         
-        /*
-         * This pointer point to the object suitable
-         * for writing to the Manager.
-         */
         prelude_io_t *fd;
-
-        uint8_t state;
         uint64_t peer_analyzerid;
 
         void *data;
+
+        prelude_connection_state_t state;
 };
 
 
@@ -127,11 +131,11 @@ static int connection_write_msgbuf(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
 
 static void auth_error(prelude_connection_t *cnx, prelude_client_profile_t *cp) 
 {        
-        log(LOG_INFO, "\nTLS authentication failed. Please run :\n"
-            "prelude-adduser register %s %s --uid %d --gid %d\n"
-            "program on the sensor host to create an account for this sensor.\n\n",
-            prelude_client_profile_get_name(cp), cnx->daddr,
-            prelude_client_profile_get_uid(cp), prelude_client_profile_get_gid(cp));
+        prelude_log(PRELUDE_LOG_WARN, "\nTLS authentication failed. Please run :\n"
+                    "prelude-adduser register %s %s --uid %d --gid %d\n"
+                    "program on the sensor host to create an account for this sensor.\n\n",
+                    prelude_client_profile_get_name(cp), cnx->daddr,
+                    prelude_client_profile_get_uid(cp), prelude_client_profile_get_gid(cp));
 }
 
 
@@ -222,16 +226,11 @@ static int handle_authentication(prelude_connection_t *cnx, prelude_client_profi
         
         ret = tls_auth_connection(cp, cnx->fd, crypt, &cnx->peer_analyzerid);
         if ( ret < 0 ) {
-                /*
-                 * SSL authentication failed,
-                 * tell the user how to setup SSL auth and exit.
-                 */
-                log(LOG_INFO, "- TLS authentication failed with Prelude Manager.\n");
                 auth_error(cnx, cp);
-                return -1;
+                return ret;
         }
 
-        log(LOG_INFO, "- TLS authentication succeed with Prelude Manager.\n");
+        prelude_log(PRELUDE_LOG_INFO, "- TLS authentication succeed with Prelude Manager.\n");
 
         return 0;
 }
@@ -250,6 +249,14 @@ static int start_inet_connection(prelude_connection_t *cnx, prelude_client_profi
         if ( sock < 0 )
                 return sock;
 
+        prelude_io_set_sys_io(cnx->fd, sock);
+        
+        ret = handle_authentication(cnx, profile, 1);
+        if ( ret < 0 ) {
+                close(sock);
+                return ret;
+        }
+        
         /*
          * Get information about the connection,
          * because the sensor might want to know source addr/port used.
@@ -258,17 +265,11 @@ static int start_inet_connection(prelude_connection_t *cnx, prelude_client_profi
 
         ret = getsockname(sock, (struct sockaddr *) &addr, &len);
         if ( ret < 0 ) 
-                log(LOG_ERR, "couldn't get connection informations.\n");
+                prelude_log(PRELUDE_LOG_ERR, "couldn't get connection informations.\n");
         else {
                 cnx->saddr = strdup(inet_ntoa(addr.sin_addr));
                 cnx->sport = ntohs(addr.sin_port);
         }
-        
-        prelude_io_set_sys_io(cnx->fd, sock);
-        
-        ret = handle_authentication(cnx, profile, 1);
-        if ( ret < 0 )
-                close(sock);
         
         return ret;
 }
@@ -301,12 +302,11 @@ static int do_connect(prelude_connection_t *cnx, prelude_client_profile_t *profi
         int ret;
         
         if ( cnx->sa->sa_family == AF_UNIX ) {
-                log(LOG_INFO, "- Connecting to %s (UNIX) prelude Manager server.\n",
-                    ((struct sockaddr_un *) cnx->sa)->sun_path);
+                prelude_log(PRELUDE_LOG_INFO, "- Connecting to %s (UNIX) prelude Manager server.\n",
+                            ((struct sockaddr_un *) cnx->sa)->sun_path);
 		ret = start_unix_connection(cnx, profile);
         } else {
-                log(LOG_INFO, "- Connecting to %s port %d prelude Manager server.\n",
-                    cnx->daddr, cnx->dport);
+                prelude_log(PRELUDE_LOG_INFO, "- Connecting to %s prelude Manager server.\n", cnx->daddr);
                 ret = start_inet_connection(cnx, profile);
         }
         
@@ -318,13 +318,13 @@ static int do_connect(prelude_connection_t *cnx, prelude_client_profile_t *profi
 
 static void close_connection_fd(prelude_connection_t *cnx) 
 {        
-        if ( ! (cnx->state & PRELUDE_CONNECTION_ESTABLISHED) )
+        if ( ! (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) )
                 return;
-
+        
         if ( cnx->saddr )
                 free(cnx->saddr);
         
-        cnx->state &= ~PRELUDE_CONNECTION_ESTABLISHED;
+        cnx->state &= ~PRELUDE_CONNECTION_STATE_ESTABLISHED;
         prelude_io_close(cnx->fd);
 }
 
@@ -340,48 +340,102 @@ static void destroy_connection_fd(prelude_connection_t *cnx)
 
 
 
-static int resolve_addr(prelude_connection_t *cnx, const char *addr, uint16_t port) 
+static prelude_bool_t is_unix_addr(prelude_connection_t *cnx, const char *addr)
 {
         int ret;
-        prelude_addrinfo_t *ai, hints;
-        char service[sizeof("00000")];
+        const char *ptr;
+        
+        ret = strncmp(addr, "unix", 4);
+        if ( ret != 0 )
+                return FALSE;
+        
+        ptr = strchr(addr, ':');
+        if ( ptr && *(ptr + 1) )
+                cnx->daddr = strdup(ptr + 1);
+        else
+                cnx->daddr = strdup(UNIX_SOCKET);
+        
+        return TRUE;
+}
 
+
+
+static int do_getaddrinfo(prelude_connection_t *cnx, struct addrinfo **ai, const char *addr)
+{
+        int ret;
+        struct addrinfo hints;
+        char buf[1024], *ptr;
+        unsigned int port = DEFAULT_PORT;
+        
+        ptr = strrchr(addr, ':');
+        if ( ptr ) {
+                *ptr = 0;
+                port = atoi(ptr + 1);
+        }
+                        
         memset(&hints, 0, sizeof(hints));
+        snprintf(buf, sizeof(buf), "%u", port);
         
         hints.ai_family = PF_UNSPEC;
         hints.ai_socktype = SOCK_STREAM;
         hints.ai_protocol = IPPROTO_TCP;
+        
+        ret = getaddrinfo(addr, buf, &hints, ai);
+        if ( ret != 0 ) {
+                prelude_log(PRELUDE_LOG_WARN, "could not resolve %s: %s.\n",
+                            addr, (ret == EAI_SYSTEM) ? strerror(errno) : gai_strerror(ret));
+                return prelude_error(PRELUDE_ERROR_CANT_RESOLVE);
+        }
+        
+        snprintf(buf, sizeof(buf), "%s:%d", addr, port);
+        
+        if ( ptr ) *ptr = ':';
+        cnx->daddr = strdup(buf);
+        
+        return 0;
+}
 
-        snprintf(service, sizeof(service), "%u", port);
+
+
+static int resolve_addr(prelude_connection_t *cnx, const char *addr) 
+{
+        struct addrinfo *ai;
+        struct sockaddr_un *un;
+        int ret, ai_family, ai_addrlen;
         
-        ret = prelude_inet_getaddrinfo(addr, service, &hints, &ai);        
-        if ( ret < 0 )
-                return prelude_error_from_errno(ret);
-        
-        ret = prelude_inet_addr_is_loopback(ai->ai_family, prelude_inet_sockaddr_get_inaddr(ai->ai_addr));
-        if ( ret == 0 ) {                
-                ai->ai_family = AF_UNIX;
-                ai->ai_addrlen = sizeof(struct sockaddr_un);
+        if ( ! addr || is_unix_addr(cnx, addr) ) {
+                ai_family = AF_UNIX;
+                ai_addrlen = sizeof(*un);
         }
 
-        cnx->sa = malloc(ai->ai_addrlen);
+        else {
+                ret = do_getaddrinfo(cnx, &ai, addr);
+                if ( ret < 0 )
+                        return ret;
+
+                ai_family = ai->ai_family;
+                ai_addrlen = ai->ai_addrlen;
+        }
+
+        cnx->sa = malloc(ai_addrlen);
         if ( ! cnx->sa ) {
-                prelude_inet_freeaddrinfo(ai);
+                freeaddrinfo(ai);
                 return prelude_error_from_errno(errno);
         }
 
-        cnx->sa_len = ai->ai_addrlen;
-        cnx->sa->sa_family = ai->ai_family;
-
-        if ( ai->ai_family != AF_UNIX )
-                memcpy(cnx->sa, ai->ai_addr, ai->ai_addrlen);
-        else {
-                struct sockaddr_un *un = (struct sockaddr_un *) cnx->sa;
-                prelude_connection_get_socket_filename(un->sun_path, sizeof(un->sun_path), port);
-        }
+        cnx->sa_len = ai_addrlen;
+        cnx->sa->sa_family = ai_family;
                 
-        prelude_inet_freeaddrinfo(ai);
+        if ( ai_family != AF_UNIX ) {
+                memcpy(cnx->sa, ai->ai_addr, ai->ai_addrlen);
+                freeaddrinfo(ai);
+        }
 
+        else {
+                un = (struct sockaddr_un *) cnx->sa;
+                strncpy(un->sun_path, cnx->daddr, sizeof(un->sun_path));
+        }
+        
         return 0;
 }
 
@@ -396,10 +450,7 @@ void prelude_connection_destroy(prelude_connection_t *cnx)
 	free(cnx->sa);
         
         destroy_connection_fd(cnx);
-        
-        if ( cnx->saddr )
-                free(cnx->saddr);
-        
+                
         free(cnx->daddr);
         free(cnx);
 }
@@ -407,14 +458,14 @@ void prelude_connection_destroy(prelude_connection_t *cnx)
 
 
 
-int prelude_connection_new(prelude_connection_t **out, const char *addr, uint16_t port) 
+int prelude_connection_new(prelude_connection_t **out, const char *addr)
 {
         int ret;
         prelude_connection_t *new;
         
         signal(SIGPIPE, SIG_IGN);
 
-        new = malloc(sizeof(*new));
+        new = calloc(1, sizeof(*new));
         if ( ! new )
                 return prelude_error_from_errno(errno);
         
@@ -424,21 +475,17 @@ int prelude_connection_new(prelude_connection_t **out, const char *addr, uint16_
                 return ret;
         }
 
-        if ( strcmp(addr, "unix") != 0 ) {
-                ret = resolve_addr(new, addr, port);                
+        if ( addr ) {
+                ret = resolve_addr(new, addr);                
                 if ( ret < 0 ) {
                         prelude_io_destroy(new->fd);
                         free(new);
-                        return ret;
+                        return prelude_error(PRELUDE_ERROR_CANT_RESOLVE);
                 }
         }
         
-        new->saddr = NULL;
-        new->sport = 0;
-        new->daddr = strdup(addr);
-        new->dport = port;
         new->state = PRELUDE_CONNECTION_OWN_FD;
-
+        
         *out = new;
         
         return 0;
@@ -446,20 +493,21 @@ int prelude_connection_new(prelude_connection_t **out, const char *addr, uint16_
 
 
 
-
-void prelude_connection_set_fd(prelude_connection_t *cnx, prelude_io_t *fd) 
-{
+void prelude_connection_set_fd_ref(prelude_connection_t *cnx, prelude_io_t *fd) 
+{        
         destroy_connection_fd(cnx);        
         cnx->fd = fd;
-
-        /*
-         * The caller is responssible for fd closing/destruction.
-         * Unless it specify otherwise using prelude_connection_set_state().
-         */
         cnx->state &= ~PRELUDE_CONNECTION_OWN_FD;
 }
 
 
+
+void prelude_connection_set_fd_nodup(prelude_connection_t *cnx, prelude_io_t *fd) 
+{        
+        destroy_connection_fd(cnx);        
+        cnx->fd = fd;
+        cnx->state |= PRELUDE_CONNECTION_OWN_FD;
+}
 
 
 int prelude_connection_connect(prelude_connection_t *conn,
@@ -490,7 +538,7 @@ int prelude_connection_connect(prelude_connection_t *conn,
         if ( ret < 0 )
                 goto err;
 
-        conn->state |= PRELUDE_CONNECTION_ESTABLISHED;
+        conn->state |= PRELUDE_CONNECTION_STATE_ESTABLISHED;
         
         return ret;
         
@@ -514,8 +562,8 @@ void prelude_connection_close(prelude_connection_t *cnx)
 int prelude_connection_send(prelude_connection_t *cnx, prelude_msg_t *msg) 
 {
         ssize_t ret;
-        
-        if ( ! (cnx->state & PRELUDE_CONNECTION_ESTABLISHED) )
+                
+        if ( ! (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) )
                 return -1;
 
         ret = prelude_msg_write(msg, cnx->fd);
@@ -539,7 +587,7 @@ int prelude_connection_recv(prelude_connection_t *cnx, prelude_msg_t **msg)
 {
         int ret;
         
-        if ( ! (cnx->state & PRELUDE_CONNECTION_ESTABLISHED) )
+        if ( ! (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) )
                 return -1;
 
         ret = prelude_msg_read(msg, cnx->fd);
@@ -576,54 +624,30 @@ prelude_io_t *prelude_connection_get_fd(prelude_connection_t *cnx)
 
 
 /**
- * prelude_connection_get_saddr:
+ * prelude_connection_get_local_addr:
  * @cnx: Pointer to a #prelude_connection_t object.
  *
- * Returns: the source address used to connect.
+ * Returns: the local address used to connect.
  */
-const char *prelude_connection_get_saddr(prelude_connection_t *cnx) 
+const char *prelude_connection_get_local_addr(prelude_connection_t *cnx) 
 {
         return cnx->saddr;
 }
 
 
 
-/**
- * prelude_connection_get_daddr:
- * @cnx: Pointer to a #prelude_connection_t object.
- *
- * Returns: the destination address used to connect.
- */
-const char *prelude_connection_get_daddr(prelude_connection_t *cnx) 
-{
-        return cnx->daddr;
-}
-
-
 
 /**
- * prelude_connection_get_sport:
+ * prelude_connection_get_local_port:
  * @cnx: Pointer to a #prelude_connection_t object.
  *
- * Returns: the source port used to connect.
+ * Returns: the local port used to connect.
  */
-uint16_t prelude_connection_get_sport(prelude_connection_t *cnx) 
+unsigned int prelude_connection_get_local_port(prelude_connection_t *cnx) 
 {
         return cnx->sport;
 }
 
-
-
-/**
- * prelude_connection_get_sport:
- * @cnx: Pointer to a #prelude_connection_t object.
- *
- * Returns: the destination port used to connect.
- */
-uint16_t prelude_connection_get_dport(prelude_connection_t *cnx) 
-{
-        return cnx->dport;
-}
 
 
 
@@ -635,12 +659,12 @@ uint16_t prelude_connection_get_dport(prelude_connection_t *cnx)
  */
 prelude_bool_t prelude_connection_is_alive(prelude_connection_t *cnx) 
 {
-        return (cnx->state & PRELUDE_CONNECTION_ESTABLISHED) ? TRUE : FALSE;
+        return (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) ? TRUE : FALSE;
 }
 
 
 
-void prelude_connection_set_state(prelude_connection_t *cnx, int state) 
+void prelude_connection_set_state(prelude_connection_t *cnx, prelude_connection_state_t state) 
 {
         cnx->state = state;
 }
@@ -648,7 +672,7 @@ void prelude_connection_set_state(prelude_connection_t *cnx, int state)
 
 
 
-int prelude_connection_get_state(prelude_connection_t *cnx)
+prelude_connection_state_t prelude_connection_get_state(prelude_connection_t *cnx)
 {
         return cnx->state;
 }
@@ -660,23 +684,40 @@ ssize_t prelude_connection_forward(prelude_connection_t *cnx, prelude_io_t *src,
 {
         ssize_t ret;
 
-        if ( ! (cnx->state & PRELUDE_CONNECTION_ESTABLISHED) )
+        if ( ! (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) )
                 return -1;
         
         ret = prelude_io_forward(cnx->fd, src, count);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "error forwarding message to Manager.\n");
+        if ( ret < 0 )
                 close_connection_fd(cnx);
-        }
 
+        ret = is_tcp_connection_still_established(cnx->fd);
+        if ( ret < 0 ) {
+                close_connection_fd(cnx);
+                return ret;
+        }
+        
         return ret;
 }
 
 
 
-void prelude_connection_get_socket_filename(char *buf, size_t size, uint16_t port) 
+const char *prelude_connection_get_default_socket_filename(void) 
 {
-        snprintf(buf, size, "%s-%u", UNIX_SOCKET, port);
+        return UNIX_SOCKET;
+}
+
+
+
+unsigned int prelude_connection_get_peer_port(prelude_connection_t *cnx)
+{
+        return cnx->dport;
+}
+
+
+const char *prelude_connection_get_peer_addr(prelude_connection_t *cnx)
+{
+        return cnx->daddr;
 }
 
 

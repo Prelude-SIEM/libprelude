@@ -19,6 +19,7 @@ idmef-value
 
 </para>
 
+@value: 
 @val: 
 @Returns: 
 
@@ -28,6 +29,7 @@ idmef-value
 
 </para>
 
+@value: 
 @val: 
 @Returns: 
 
@@ -37,6 +39,7 @@ idmef-value
 
 </para>
 
+@value: 
 @val: 
 @Returns: 
 
@@ -46,6 +49,7 @@ idmef-value
 
 </para>
 
+@value: 
 @val: 
 @Returns: 
 
@@ -55,6 +59,7 @@ idmef-value
 
 </para>
 
+@value: 
 @val: 
 @Returns: 
 
@@ -64,6 +69,7 @@ idmef-value
 
 </para>
 
+@value: 
 @val: 
 @Returns: 
 
@@ -73,6 +79,7 @@ idmef-value
 
 </para>
 
+@value: 
 @val: 
 @Returns: 
 
@@ -82,6 +89,7 @@ idmef-value
 
 </para>
 
+@value: 
 @val: 
 @Returns: 
 
@@ -91,6 +99,7 @@ idmef-value
 
 </para>
 
+@value: 
 @val: 
 @Returns: 
 
@@ -100,6 +109,7 @@ idmef-value
 
 </para>
 
+@value: 
 @val: 
 @Returns: 
 
@@ -109,6 +119,7 @@ idmef-value
 
 </para>
 
+@value: 
 @string: 
 @Returns: 
 
@@ -118,6 +129,7 @@ idmef-value
 
 </para>
 
+@value: 
 @time: 
 @Returns: 
 
@@ -127,6 +139,7 @@ idmef-value
 
 </para>
 
+@value: 
 @data: 
 @Returns: 
 
@@ -136,8 +149,9 @@ idmef-value
 
 </para>
 
-@object: 
+@value: 
 @object_type: 
+@ptr: 
 @Returns: 
 
 
@@ -146,6 +160,7 @@ idmef-value
 
 </para>
 
+@value: 
 @Returns: 
 
 
@@ -154,46 +169,62 @@ idmef-value
 
 </para>
 
+@value: 
 @type: 
 @buf: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_value_new_enum_string ##### -->
+<!-- ##### FUNCTION idmef_value_new_enum_from_string ##### -->
 <para>
 
 </para>
 
+@value: 
 @type: 
 @buf: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_value_new_enum_numeric ##### -->
+<!-- ##### FUNCTION idmef_value_new_enum_from_numeric ##### -->
 <para>
 
 </para>
 
+@value: 
 @type: 
 @val: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_value_new_for_object ##### -->
+<!-- ##### FUNCTION idmef_value_new ##### -->
 <para>
 
 </para>
 
-@object: 
+@value: 
+@type: 
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_from_path ##### -->
+<para>
+
+</para>
+
+@value: 
+@path: 
 @buf: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_value_new_generic ##### -->
+<!-- ##### FUNCTION idmef_value_new_from_string ##### -->
 <para>
 
 </para>
 
+@value: 
 @type: 
 @buf: 
 @Returns: 
@@ -344,7 +375,7 @@ idmef-value
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_value_list_empty ##### -->
+<!-- ##### FUNCTION idmef_value_list_is_empty ##### -->
 <para>
 
 </para>
@@ -433,6 +464,7 @@ idmef-value
 </para>
 
 @val: 
+@dst: 
 @Returns: 
 
 
@@ -453,9 +485,6 @@ idmef-value
 @val: 
 @out: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@buf: 
-@len: 
 
 
 <!-- ##### FUNCTION idmef_value_get ##### -->
@@ -463,8 +492,8 @@ idmef-value
 
 </para>
 
-@res: 
 @val: 
+@res: 
 @Returns: 
 
 

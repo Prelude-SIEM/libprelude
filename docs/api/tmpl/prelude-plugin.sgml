@@ -179,6 +179,7 @@ prelude-plugin
 
 </para>
 
+@pi: 
 @plugin: 
 @name: 
 @data: 
@@ -271,6 +272,8 @@ prelude-plugin
 </para>
 
 @dirname: 
+@symbol: 
+@data: 
 @subscribe: 
 @unsubscribe: 
 @Returns: 
@@ -367,13 +370,5 @@ prelude-plugin
 @type: 
 @member: 
 @arg...: 
-
-
-<!-- ##### FUNCTION prelude_plugin_init ##### -->
-<para>
-
-</para>
-
-@Returns: 
 
 

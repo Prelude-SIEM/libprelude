@@ -36,8 +36,8 @@ int prelude_failover_save_msg(prelude_failover_t *failover, prelude_msg_t *msg);
 
 ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg_t **out);
 
-unsigned int prelude_failover_get_deleted_msg_count(prelude_failover_t *failover);
+unsigned long prelude_failover_get_deleted_msg_count(prelude_failover_t *failover);
 
-unsigned int prelude_failover_get_available_msg_count(prelude_failover_t *failover);
+unsigned long prelude_failover_get_available_msg_count(prelude_failover_t *failover);
 
 #endif

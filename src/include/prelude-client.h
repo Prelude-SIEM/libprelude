@@ -42,15 +42,15 @@ typedef struct prelude_client prelude_client_t;
 #include "prelude-client-profile.h"
 #include "prelude-ident.h"
 #include "prelude-connection.h"
-#include "prelude-connection-mgr.h"
+#include "prelude-connection-pool.h"
 #include "idmef.h"
 
 
 prelude_ident_t *prelude_client_get_unique_ident(prelude_client_t *client);
 
-void prelude_client_set_manager_list(prelude_client_t *client, prelude_connection_mgr_t *mgrlist);
+void prelude_client_set_manager_list(prelude_client_t *client, prelude_connection_pool_t *pool);
 
-prelude_connection_mgr_t *prelude_client_get_manager_list(prelude_client_t *client);
+prelude_connection_pool_t *prelude_client_get_manager_list(prelude_client_t *client);
 
 int prelude_client_start(prelude_client_t *client);
 
@@ -78,7 +78,7 @@ const char *prelude_client_get_config_filename(prelude_client_t *client);
 
 void prelude_client_print_setup_error(prelude_client_t *client);
 
-prelude_bool_t prelude_client_is_setup_needed(prelude_client_t *client, int error);
+prelude_bool_t prelude_client_is_setup_needed(int error);
 
 prelude_client_profile_t *prelude_client_get_profile(prelude_client_t *client);
 

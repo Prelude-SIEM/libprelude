@@ -39,18 +39,18 @@
 
 
 #define IDMEF_ADDITIONAL_DATA_DECL(d_type, d_name, ad_type, c_type, name)		\
-idmef_additional_data_t *idmef_additional_data_new_ ## name(c_type val)			\
-{											\
-	idmef_additional_data_t *ptr;							\
+int idmef_additional_data_new_ ## name(idmef_additional_data_t **ret, c_type val)	\
+{                                                                                       \
+        int retval;                                                                     \
 											\
-	ptr = idmef_additional_data_new();						\
-	if ( ! ptr )									\
-		return NULL;								\
+	retval = idmef_additional_data_new(ret);		       			\
+	if ( retval < 0 )					      			\
+		return retval;								\
 											\
-        idmef_additional_data_set_type(ptr, ad_type);					\
-	idmef_data_set_ ## d_name(idmef_additional_data_get_data(ptr), val);		\
+        idmef_additional_data_set_type(*ret, ad_type);					\
+	idmef_data_set_ ## d_name(idmef_additional_data_get_data(*ret), val);		\
 											\
-	return ptr;									\
+	return retval;									\
 }											\
 											\
 void idmef_additional_data_set_ ## name(idmef_additional_data_t *ptr, c_type val)	\
@@ -121,77 +121,89 @@ static idmef_data_type_t idmef_additional_data_type_to_data_type(idmef_additiona
 
 
 
-idmef_additional_data_t *idmef_additional_data_new_ptr_ref_fast(idmef_additional_data_type_t type,
-                                                                const unsigned char *ptr, size_t len) 
+int idmef_additional_data_new_ptr_ref_fast(idmef_additional_data_t **nd,
+                                           idmef_additional_data_type_t type,
+                                           const unsigned char *ptr, size_t len) 
 {
-        idmef_additional_data_t *new;
-
-        if ( check_type(type, ptr, len) < 0 )
-                return NULL;
+        int ret;
+        idmef_data_type_t dtype;
         
-        new = idmef_additional_data_new();
-        if ( ! new )
-                return NULL;
+        ret = check_type(type, ptr, len);
+        if ( ret < 0 )
+                return ret;
+                
+        ret = idmef_additional_data_new(nd);
+        if ( ret < 0 )
+                return ret;
 
-	idmef_additional_data_set_type(new, type);
-
-	if ( idmef_data_set_ptr_ref_fast(idmef_additional_data_get_data(new), 
-					 idmef_additional_data_type_to_data_type(type), ptr, len) < 0 ) {
-		idmef_additional_data_destroy(new);
-		return NULL;
+	idmef_additional_data_set_type(*nd, type);
+        dtype = idmef_additional_data_type_to_data_type(type);
+        
+        ret = idmef_data_set_ptr_ref_fast(idmef_additional_data_get_data(*nd), dtype, ptr, len);
+	if ( ret < 0 ) {
+		idmef_additional_data_destroy(*nd);
+		return ret;
 	}
 
-        return new;
+        return 0;
 }
 
 
 
-idmef_additional_data_t *idmef_additional_data_new_ptr_dup_fast(idmef_additional_data_type_t type,
-                                                                const unsigned char *ptr, size_t len) 
+int idmef_additional_data_new_ptr_dup_fast(idmef_additional_data_t **nd,
+                                           idmef_additional_data_type_t type,
+                                           const unsigned char *ptr, size_t len) 
 {
-        idmef_additional_data_t *new;
-
-        if ( check_type(type, ptr, len) < 0 )
-                return NULL;
+        int ret;
+        idmef_data_type_t dtype;
         
-        new = idmef_additional_data_new();
-        if ( ! new )
-                return NULL;
+        ret = check_type(type, ptr, len);
+        if ( ret < 0 )
+                return ret;
+                
+        ret = idmef_additional_data_new(nd);
+        if ( ret < 0 )
+                return ret;
 
-	idmef_additional_data_set_type(new, type);
+	idmef_additional_data_set_type(*nd, type);
+        dtype = idmef_additional_data_type_to_data_type(type);
 
-	if ( idmef_data_set_ptr_dup_fast(idmef_additional_data_get_data(new), 
-					 idmef_additional_data_type_to_data_type(type), ptr, len) < 0 ) {
-		idmef_additional_data_destroy(new);
-		return NULL;
+        ret = idmef_data_set_ptr_dup_fast(idmef_additional_data_get_data(*nd), dtype, ptr, len);
+	if ( ret < 0 ) {
+		idmef_additional_data_destroy(*nd);
+		return ret;
 	}
 
-        return new;
+        return 0;
 }
 
 
 
-idmef_additional_data_t *idmef_additional_data_new_ptr_nodup_fast(idmef_additional_data_type_t type,
-                                                                  unsigned char *ptr, size_t len) 
+int idmef_additional_data_new_ptr_nodup_fast(idmef_additional_data_t **nd,
+                                             idmef_additional_data_type_t type,
+                                             unsigned char *ptr, size_t len) 
 {
-        idmef_additional_data_t *new;
-
-        if ( check_type(type, ptr, len) < 0 )
-                return NULL;
+        int ret;
+        idmef_data_type_t dtype;
         
-        new = idmef_additional_data_new();
-        if ( ! new )
-                return NULL;
+        ret = check_type(type, ptr, len);
+        if ( ret < 0 )
+                return ret;
+                
+        ret = idmef_additional_data_new(nd);
+        if ( ret < 0 )
+                return ret;
 
-	idmef_additional_data_set_type(new, type);
+	idmef_additional_data_set_type(*nd, type);
+        dtype = idmef_additional_data_type_to_data_type(type);
 
-	if ( idmef_data_set_ptr_dup_fast(idmef_additional_data_get_data(new), 
-					 idmef_additional_data_type_to_data_type(type), ptr, len) < 0 ) {
-		idmef_additional_data_destroy(new);
-		return NULL;
+        ret = idmef_data_set_ptr_nodup_fast(idmef_additional_data_get_data(*nd), dtype, ptr, len);
+	if ( ret < 0 ) {
+		idmef_additional_data_destroy(*nd);
+		return ret;
 	}
 
-        return new;
+        return ret;
 }
 
 
@@ -199,8 +211,11 @@ idmef_additional_data_t *idmef_additional_data_new_ptr_nodup_fast(idmef_addition
 int idmef_additional_data_set_ptr_ref_fast(idmef_additional_data_t *data,
                                            idmef_additional_data_type_t type, const unsigned char *ptr, size_t len)
 {
-        if ( check_type(type, ptr, len) < 0 )
-                return -1;
+        int ret;
+
+        ret = check_type(type, ptr, len);
+        if ( ret < 0 )
+                return ret;
 
 	idmef_additional_data_set_type(data, type);
 
@@ -213,8 +228,11 @@ int idmef_additional_data_set_ptr_ref_fast(idmef_additional_data_t *data,
 int idmef_additional_data_set_ptr_dup_fast(idmef_additional_data_t *data,
                                            idmef_additional_data_type_t type, const unsigned char *ptr, size_t len)
 {
-        if ( check_type(type, ptr, len) < 0 )
-                return -1;
+        int ret;
+
+        ret = check_type(type, ptr, len);
+        if ( ret < 0 )
+                return ret;
 
 	idmef_additional_data_set_type(data, type);
 
@@ -227,8 +245,11 @@ int idmef_additional_data_set_ptr_dup_fast(idmef_additional_data_t *data,
 int idmef_additional_data_set_ptr_nodup_fast(idmef_additional_data_t *data,
                                              idmef_additional_data_type_t type, unsigned char *ptr, size_t len)
 {
-        if ( check_type(type, ptr, len) < 0 )
-                return -1;
+        int ret;
+
+        ret = check_type(type, ptr, len);
+        if ( ret < 0 )
+                return ret;
 
 	idmef_additional_data_set_type(data, type);
 
@@ -240,43 +261,48 @@ int idmef_additional_data_set_ptr_nodup_fast(idmef_additional_data_t *data,
 
 int idmef_additional_data_set_str_dup_fast(idmef_additional_data_t *data, idmef_additional_data_type_t type,
 					   const char *str, size_t len)
-{
+{        
 	idmef_additional_data_set_type(data, type);
-
 	return idmef_data_set_char_string_dup_fast(idmef_additional_data_get_data(data), str, len);
 						   
 }
 
 
 
-idmef_additional_data_t *idmef_additional_data_new_str_dup_fast(idmef_additional_data_type_t type, const char *str, size_t len)
+int idmef_additional_data_new_str_dup_fast(idmef_additional_data_t **nd,
+                                           idmef_additional_data_type_t type, const char *str, size_t len)
 {
-	idmef_additional_data_t *ad;
+        int ret;
 
-	ad = idmef_additional_data_new();
-	if ( ! ad )
-		return NULL;
+	ret = idmef_additional_data_new(nd);
+	if ( ret < 0 )
+		return ret;
 
-	if ( idmef_additional_data_set_str_dup_fast(ad, type, str, len) < 0 ) {
-		idmef_additional_data_destroy(ad);
-		return NULL;
+        ret = idmef_additional_data_set_str_dup_fast(*nd, type, str, len);
+	if ( ret < 0 ) {
+		idmef_additional_data_destroy(*nd);
+		return ret;
 	}
 
-	return ad;		
+	return 0;
 }
+
 
 
 /*
  * just make a pointer copy of the embedded data
  */
-int idmef_additional_data_copy_ref(idmef_additional_data_t *dst, idmef_additional_data_t *src)
+int idmef_additional_data_copy_ref(idmef_additional_data_t *src, idmef_additional_data_t *dst)
 {
-	if ( prelude_string_copy_ref(idmef_additional_data_get_meaning(dst), idmef_additional_data_get_meaning(src)) < 0 )
-		return -1;
+        int ret;
 
+        ret = prelude_string_copy_ref(idmef_additional_data_get_meaning(src), idmef_additional_data_get_meaning(dst));
+        if ( ret < 0 )
+                return ret;
+        
 	idmef_additional_data_set_type(dst, idmef_additional_data_get_type(src));
 
-	return idmef_data_copy_ref(idmef_additional_data_get_data(dst), idmef_additional_data_get_data(src));
+	return idmef_data_copy_ref(idmef_additional_data_get_data(src), idmef_additional_data_get_data(dst));
 }
 
 
@@ -284,30 +310,34 @@ int idmef_additional_data_copy_ref(idmef_additional_data_t *dst, idmef_additiona
 /*
  * also copy the content of the embedded data
  */
-int idmef_additional_data_copy_dup(idmef_additional_data_t *dst, idmef_additional_data_t *src)
+int idmef_additional_data_copy_dup(idmef_additional_data_t *src, idmef_additional_data_t *dst)
 {
-	if ( prelude_string_copy_dup(idmef_additional_data_get_meaning(dst), idmef_additional_data_get_meaning(src)) < 0 )
-		return -1;
+        int ret;
+
+        ret = prelude_string_copy_dup(idmef_additional_data_get_meaning(src), idmef_additional_data_get_meaning(dst));
+        if ( ret < 0 )
+		return ret;
 
 	idmef_additional_data_set_type(dst, idmef_additional_data_get_type(src));
 
-	return idmef_data_copy_dup(idmef_additional_data_get_data(dst), idmef_additional_data_get_data(src));
+	return idmef_data_copy_dup(idmef_additional_data_get_data(src), idmef_additional_data_get_data(dst));
 }
 
 
 
 
-idmef_additional_data_t *idmef_additional_data_clone(idmef_additional_data_t *data)
+int idmef_additional_data_clone(idmef_additional_data_t *src, idmef_additional_data_t **dst)
 {
-        idmef_additional_data_t *ret;
+        int ret;
         
-        ret = idmef_additional_data_new();
-        if ( ! ret )
-                return NULL;
+        ret = idmef_additional_data_new(dst);
+        if ( ret < 0 )
+                return ret;
 
-	if ( idmef_additional_data_copy_dup(ret, data) < 0 ) {
-		idmef_additional_data_destroy(ret);
-		return NULL;
+        ret = idmef_additional_data_copy_dup(src, *dst);
+	if ( ret < 0 ) {
+		idmef_additional_data_destroy(*dst);
+		return ret;
 	}
 
         return ret;

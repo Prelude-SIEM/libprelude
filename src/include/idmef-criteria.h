@@ -25,53 +25,34 @@
 #ifndef _LIBPRELUDE_IDMEF_CRITERIA_H
 #define _LIBPRELUDE_IDMEF_CRITERIA_H
 
-/*
- * These structures are public because both idmef-criteria.c and
- * idmef-criteria-string.[yc] need them, otherwise they must not
- * be accessed directly
- */
-
-typedef struct idmef_criterion {
-	idmef_object_t *object;
-	idmef_criterion_value_t *value;
-	idmef_value_relation_t relation;
-} idmef_criterion_t;
+typedef struct idmef_criteria idmef_criteria_t;
+typedef struct idmef_criterion idmef_criterion_t;
 
 
-typedef struct idmef_criteria {
-	prelude_list_t list;
-        
-	idmef_criterion_t *criterion;
-        
-        struct idmef_criteria *or;
-        struct idmef_criteria *and;
-} idmef_criteria_t;
-
-
-idmef_criterion_t *idmef_criterion_new(idmef_object_t *object,
-                                       idmef_criterion_value_t *value, idmef_value_relation_t relation);
+int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
+                        idmef_criterion_value_t *value, idmef_value_relation_t relation);
 
 void idmef_criterion_destroy(idmef_criterion_t *criterion);
-idmef_criterion_t *idmef_criterion_clone(idmef_criterion_t *criterion);
-void idmef_criterion_print(const idmef_criterion_t *criterion);
+int idmef_criterion_clone(idmef_criterion_t *src, idmef_criterion_t **dst);
+int idmef_criterion_print(const idmef_criterion_t *criterion, prelude_io_t *fd);
 int idmef_criterion_to_string(const idmef_criterion_t *criterion, prelude_string_t *out);
-idmef_object_t *idmef_criterion_get_object(idmef_criterion_t *criterion);
+idmef_path_t *idmef_criterion_get_path(idmef_criterion_t *criterion);
 idmef_criterion_value_t *idmef_criterion_get_value(idmef_criterion_t *criterion);
 idmef_value_relation_t idmef_criterion_get_relation(idmef_criterion_t *criterion);
 int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message);
 
-idmef_criteria_t *idmef_criteria_new(void);
+int idmef_criteria_new(idmef_criteria_t **criteria);
 void idmef_criteria_destroy(idmef_criteria_t *criteria);
-idmef_criteria_t *idmef_criteria_clone(idmef_criteria_t *criteria);
-void idmef_criteria_print(idmef_criteria_t *criteria);
+int idmef_criteria_clone(idmef_criteria_t *src, idmef_criteria_t **dst);
+int idmef_criteria_print(idmef_criteria_t *criteria, prelude_io_t *fd);
 int idmef_criteria_to_string(idmef_criteria_t *criteria, prelude_string_t *out);
-int idmef_criteria_is_criterion(idmef_criteria_t *criteria);
+prelude_bool_t idmef_criteria_is_criterion(idmef_criteria_t *criteria);
 idmef_criterion_t *idmef_criteria_get_criterion(idmef_criteria_t *criteria);
 void idmef_criteria_set_criterion(idmef_criteria_t *criteria, idmef_criterion_t *criterion);
 
 void idmef_criteria_or_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2);
 
-void idmef_criteria_and_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2);
+int idmef_criteria_and_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2);
 
 int idmef_criteria_match(idmef_criteria_t *criteria, idmef_message_t *message);
 

@@ -43,7 +43,7 @@ extern const void *lt_preloaded_symbols[];
 
 
 #define PRELUDE_PLUGIN_OPTION_DECLARE_STRING_CB(prefix, type, name)                              \
-static int prefix ## _set_ ## name(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)  \
+static int prefix ## _set_ ## name(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)  \
 {                                                                                                \
         char *dup;                                                                               \
         type *ptr = prelude_plugin_instance_get_data(context);                                   \
@@ -61,7 +61,7 @@ static int prefix ## _set_ ## name(void *context, prelude_option_t *opt, const c
 }                                                                                                \
                                                                                                  \
                                                                                                  \
-static int prefix ## _get_ ## name(void *context, prelude_option_t *opt, prelude_string_t *out)  \
+static int prefix ## _get_ ## name(prelude_option_t *opt, prelude_string_t *out, void *context)  \
 {                                                                                                \
         type *ptr = prelude_plugin_instance_get_data(context);                                   \
         if ( ptr->name )                                                                         \
@@ -129,7 +129,7 @@ int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
 
 int prelude_plugin_subscribe(prelude_plugin_instance_t *pi);
 
-prelude_plugin_instance_t *prelude_plugin_new_instance(prelude_plugin_generic_t *plugin, const char *name, void *data);
+int prelude_plugin_new_instance(prelude_plugin_instance_t **pi, prelude_plugin_generic_t *plugin, const char *name, void *data);
 
 
 int prelude_plugin_unsubscribe(prelude_plugin_instance_t *pi);
@@ -163,7 +163,7 @@ prelude_plugin_generic_t *prelude_plugin_instance_get_plugin(prelude_plugin_inst
  * have the ability to use plugin_register_for_use to tell it want
  * to use this plugin.
  */
-int prelude_plugin_load_from_dir(const char *dirname,
+int prelude_plugin_load_from_dir(const char *dirname, const char *symbol, void *data,
                                  int (*subscribe)(prelude_plugin_instance_t *p),
                                  void (*unsubscribe)(prelude_plugin_instance_t *pi));
 
@@ -180,7 +180,7 @@ void prelude_plugin_instance_compute_time(prelude_plugin_instance_t *pi, struct 
 
 int prelude_plugin_instance_call_commit_func(prelude_plugin_instance_t *pi, prelude_string_t *err);
 
-int prelude_plugin_instance_has_commit_func(prelude_plugin_instance_t *pi);
+prelude_bool_t prelude_plugin_instance_has_commit_func(prelude_plugin_instance_t *pi);
 
 void prelude_plugin_set_preloaded_symbols(void *symlist);
 
@@ -206,12 +206,5 @@ void prelude_plugin_unload(prelude_plugin_generic_t *plugin);
  */
 #define prelude_plugin_run(pi, type, member, arg...) \
         (((type *)prelude_plugin_instance_get_plugin(pi))->member(arg))
-
-
-/*
- * hook function for a plugin.
- */
-prelude_plugin_generic_t *prelude_plugin_init(void);
-
 
 #endif /* _LIBPRELUDE_PLUGIN_H */

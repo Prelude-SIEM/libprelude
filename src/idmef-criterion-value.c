@@ -21,6 +21,8 @@
 *
 *****/
 
+#include "config.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,11 +35,10 @@
 #include "libmissing.h"
 #include "common.h"
 #include "prelude-log.h"
+#include "prelude-error.h"
 #include "prelude-inttypes.h"
 
 #include "idmef.h"
-#include "idmef-util.h"
-
 #include "idmef-criterion-value.h"
 
 
@@ -73,41 +74,13 @@ struct idmef_criterion_value {
 
 
 
-/*
- * FIXME: move in utils
- */
-
-static char *my_strndup(const char *s, size_t n)
-{
-	char *ptr;
-        size_t len, newlen;
-
-        len = strlen(s);
-        newlen = (n < len) ? n : len;
-
-        ptr = malloc(newlen+1);
-        if ( ! ptr ) {
-                errno = ENOMEM;
-                return NULL;
-        }
-
-        strncpy(ptr, s, newlen);
-        ptr[newlen] = '\0';
-
-        return ptr;
-}
-
-
-
-idmef_criterion_value_non_linear_time_t *idmef_criterion_value_non_linear_time_new(void)
+int idmef_criterion_value_non_linear_time_new(idmef_criterion_value_non_linear_time_t **cv)
 {
 	idmef_criterion_value_non_linear_time_t *time;
 
-	time = malloc(sizeof (*time));
-	if ( ! time ) {
-		log(LOG_ERR, "memory exhausted.\n");
-		return NULL;
-	}
+	*cv = time = malloc(sizeof (*time));
+	if ( ! time )
+		return prelude_error_from_errno(errno);
 
 	time->year = -1;
 	time->month = -1;
@@ -118,7 +91,7 @@ idmef_criterion_value_non_linear_time_t *idmef_criterion_value_non_linear_time_n
 	time->min = -1;
 	time->sec = -1;
 
-	return time;
+	return 0;
 }
 
 
@@ -134,21 +107,18 @@ static int get_next_key_value_pair(const char **input, char **key, char **value)
 	if ( ! ptr )
 		return -1;
 
-	*key = my_strndup(*input, ptr - *input);
-	if ( ! *key ) {
-		log(LOG_ERR, "memory exhausted.\n");
-		return -1;
-	}
+	*key = strndup(*input, ptr - *input);
+	if ( ! *key )
+		return prelude_error_from_errno(errno);
 
 	*input = ptr + 1;
 
 	ptr = strchr(*input, ' ');
 	if ( ptr ) {
-		*value = my_strndup(*input, ptr - *input);
+		*value = strndup(*input, ptr - *input);
 		if ( ! *value ) {
 			free(*key);
-			log(LOG_ERR, "memory exhausted.\n");
-			return -1;
+			return prelude_error_from_errno(errno);
 		}
 
 		*input = ptr;
@@ -159,8 +129,7 @@ static int get_next_key_value_pair(const char **input, char **key, char **value)
 		*value = strdup(*input);
 		if ( ! *value ) {
 			free(*key);
-			log(LOG_ERR, "memory exhausted.\n");
-			return -1;
+			return prelude_error_from_errno(errno);
 		}
 
 		while ( **input )
@@ -522,20 +491,21 @@ static int parse_non_linear_time(idmef_criterion_value_non_linear_time_t *time, 
 
 
 
-idmef_criterion_value_non_linear_time_t *idmef_criterion_value_non_linear_time_new_string(const char *buffer)
+int idmef_criterion_value_non_linear_time_new_string(idmef_criterion_value_non_linear_time_t **cv, const char *buffer)
 {
-	idmef_criterion_value_non_linear_time_t *time;
+        int ret;
+        
+	ret = idmef_criterion_value_non_linear_time_new(cv);
+	if ( ret < 0 )
+		return ret;
 
-	time = idmef_criterion_value_non_linear_time_new();
-	if ( ! time )
-		return NULL;
-
-	if ( parse_non_linear_time(time, buffer) < 0 ) {
-		idmef_criterion_value_non_linear_time_destroy(time);
-		return NULL;
+        ret = parse_non_linear_time(*cv, buffer);
+        if ( ret < 0 ) {
+		idmef_criterion_value_non_linear_time_destroy(*cv);
+		return ret;
 	}
 
-	return time;
+	return 0;
 }
 
 
@@ -547,19 +517,16 @@ void idmef_criterion_value_non_linear_time_destroy(idmef_criterion_value_non_lin
 
 
 
-idmef_criterion_value_non_linear_time_t *idmef_criterion_value_non_linear_time_clone(const idmef_criterion_value_non_linear_time_t *src)
+int idmef_criterion_value_non_linear_time_clone(const idmef_criterion_value_non_linear_time_t *src,
+                                                idmef_criterion_value_non_linear_time_t **dst)
 {
-	idmef_criterion_value_non_linear_time_t *dst;
+	*dst = malloc(sizeof(**dst));
+	if ( ! dst )
+		return prelude_error_from_errno(errno);
 
-	dst = malloc(sizeof (*dst));
-	if ( ! dst ) {
-		log(LOG_ERR, "memory exhausted.\n");
-		return NULL;
-	}
+	memcpy(*dst, src, sizeof(**dst));
 
-	memcpy(dst, src, sizeof (*dst));
-
-	return dst;
+	return 0;
 }
 
 
@@ -622,55 +589,7 @@ idmef_criterion_value_non_linear_time_get(sec)
 
 
 
-void idmef_criterion_value_non_linear_time_print(idmef_criterion_value_non_linear_time_t *time)
-{
-	int have_print = 0;
-
-	if ( time->year != -1 ) {
-		printf("year:%d", time->year);
-		have_print = 1;
-	}
-
-	if ( time->month != -1 ) {
-		printf("%smonth:%d", have_print ? " " : "", time->month);
-		have_print = 1;
-	}
-
-	if ( time->yday != -1 ) {
-		printf("%syday:%d", have_print ? " " : "", time->yday);
-		have_print = 1;
-	}
-
-	if ( time->mday != -1 ) {
-		printf("%smday:%d", have_print ? " " : "", time->mday);
-		have_print = 1;
-	}
-
-	if ( time->wday != -1 ) {
-		printf("%swday:%d", have_print ? " " : "", time->wday);
-		have_print = 1;
-	}
-
-	if ( time->hour != -1 ) {
-		printf("%shour:%d", have_print ? " " : "", time->hour);
-		have_print = 1;
-	}
-
-	if ( time->min != -1 ) {
-		printf("%smin:%d", have_print ? " " : "", time->min);
-		have_print = 1;
-	}
-
-	if ( time->sec != -1 ) {
-		printf("%ssec:%d", have_print ? " " : "", time->sec);
-		have_print = 1;
-	}
-}
-
-
-
-int idmef_criterion_value_non_linear_time_to_string(idmef_criterion_value_non_linear_time_t *time,
-                                                    prelude_string_t *out)
+int idmef_criterion_value_non_linear_time_to_string(idmef_criterion_value_non_linear_time_t *time, prelude_string_t *out)
 {
         int ret = 0;
 	int have_print = 0;
@@ -720,88 +639,80 @@ int idmef_criterion_value_non_linear_time_to_string(idmef_criterion_value_non_li
 
 
 
-idmef_criterion_value_t *idmef_criterion_value_new_fixed(idmef_value_t *fixed)
+int idmef_criterion_value_new_fixed(idmef_criterion_value_t **cv, idmef_value_t *fixed)
 {
-	idmef_criterion_value_t *value;
+	*cv = malloc(sizeof(**cv));
+	if ( ! *cv )
+		return prelude_error_from_errno(errno);
 
-	value = malloc(sizeof (*value));
-	if ( ! value ) {
-		log(LOG_ERR, "memory exhausted.\n");
-		return NULL;
-	}
-
-	value->type = idmef_criterion_value_type_fixed;
-	value->val.fixed = fixed;
-
-	return value;
+	(*cv)->val.fixed = fixed;
+	(*cv)->type = IDMEF_CRITERION_VALUE_TYPE_FIXED;
+        
+	return 0;
 }
 
 
 
-idmef_criterion_value_t *idmef_criterion_value_new_non_linear_time(idmef_criterion_value_non_linear_time_t *time)
+int idmef_criterion_value_new_non_linear_time(idmef_criterion_value_t **cv, idmef_criterion_value_non_linear_time_t *time)
 {
-	idmef_criterion_value_t *value;
+	*cv = malloc(sizeof(**cv));
+	if ( ! *cv )
+		return prelude_error_from_errno(errno);
 
-	value = malloc(sizeof (*value));
-	if ( ! value ) {
-		log(LOG_ERR, "memory exhausted.\n");
-		return NULL;
-	}
+        (*cv)->val.non_linear_time = time;
+	(*cv)->type = IDMEF_CRITERION_VALUE_TYPE_NON_LINEAR_TIME;
 
-	value->type = idmef_criterion_value_type_non_linear_time;
-	value->val.non_linear_time = time;
-
-	return value;
+	return 0;
 }
 
 
 
-static idmef_criterion_value_t *build_fixed_value(idmef_object_t *object, const char *buf)
+static int build_fixed_value(idmef_criterion_value_t **cv, idmef_path_t *path, const char *buf)
 {
+        int ret;
 	idmef_value_t *fixed;
-	idmef_criterion_value_t *value;
 
-	fixed = idmef_value_new_for_object(object, buf);
-	if ( ! fixed )
-		return NULL;
+	ret = idmef_value_new_from_path(&fixed, path, buf);
+	if ( ret < 0 )
+		return ret;
 
-	value = idmef_criterion_value_new_fixed(fixed);
-	if ( ! value ) {
+	ret = idmef_criterion_value_new_fixed(cv, fixed);
+	if ( ret < 0 ) {
 		idmef_value_destroy(fixed);
-		return NULL;
+		return ret;
 	}
 
-	return value;
+	return 0;
 }
 
 
 
-static idmef_criterion_value_t *build_non_linear_time_value(const char *buf)
+static int build_non_linear_time_value(idmef_criterion_value_t **cv, const char *buf)
 {
+        int ret;
 	idmef_criterion_value_non_linear_time_t *time;
-	idmef_criterion_value_t *value;
 
-	time = idmef_criterion_value_non_linear_time_new_string(buf);
-	if ( ! time )
-		return NULL;
+	ret = idmef_criterion_value_non_linear_time_new_string(&time, buf);
+	if ( ret < 0 )
+		return ret;
 
-	value = idmef_criterion_value_new_non_linear_time(time);
-	if ( ! value ) {
+	ret = idmef_criterion_value_new_non_linear_time(cv, time);
+	if ( ret < 0 ) {
 		idmef_criterion_value_non_linear_time_destroy(time);
-		return NULL;
+		return ret;
 	}
 
-	return value;
+	return 0;
 }
 
 
 
-idmef_criterion_value_t *idmef_criterion_value_new_generic(idmef_object_t *object, const char *buf)
+int idmef_criterion_value_new_generic(idmef_criterion_value_t **cv, idmef_path_t *path, const char *buf)
 {
-	if ( idmef_object_get_value_type(object) == IDMEF_VALUE_TYPE_TIME && isalpha((int) *buf) )
-		return build_non_linear_time_value(buf);
+	if ( idmef_path_get_value_type(path) == IDMEF_VALUE_TYPE_TIME && isalpha((int) *buf) )
+		return build_non_linear_time_value(cv, buf);
 
-	return build_fixed_value(object, buf);
+	return build_fixed_value(cv, path, buf);
 }
 
 
@@ -809,11 +720,12 @@ idmef_criterion_value_t *idmef_criterion_value_new_generic(idmef_object_t *objec
 void idmef_criterion_value_destroy(idmef_criterion_value_t *value)
 {
 	switch ( value->type ) {
-	case idmef_criterion_value_type_fixed:
+                
+	case IDMEF_CRITERION_VALUE_TYPE_FIXED:
 		idmef_value_destroy(value->val.fixed);
 		break;
 
-	case idmef_criterion_value_type_non_linear_time:
+	case IDMEF_CRITERION_VALUE_TYPE_NON_LINEAR_TIME:
 		idmef_criterion_value_non_linear_time_destroy(value->val.non_linear_time);
 		break;
 	}
@@ -823,45 +735,46 @@ void idmef_criterion_value_destroy(idmef_criterion_value_t *value)
 
 
 
-idmef_criterion_value_t *idmef_criterion_value_clone(const idmef_criterion_value_t *src)
+int idmef_criterion_value_clone(const idmef_criterion_value_t *src, idmef_criterion_value_t **dst)
 {
-	idmef_criterion_value_t *dst = NULL;
+        int ret;
 
 	switch ( src->type ) {
-	case idmef_criterion_value_type_fixed: {
+
+        case IDMEF_CRITERION_VALUE_TYPE_FIXED: {
 		idmef_value_t *fixed;
 
-		fixed = idmef_value_clone(src->val.fixed);
-		if ( ! fixed )
-			return NULL;
+		ret = idmef_value_clone(src->val.fixed, &fixed);
+		if ( ret < 0 )
+			return ret;
 
-		dst = idmef_criterion_value_new_fixed(fixed);
-		if ( ! dst ) {
+		ret = idmef_criterion_value_new_fixed(dst, fixed);
+		if ( ret < 0 ) {
 			idmef_value_destroy(fixed);
-			return NULL;
+			return ret;
 		}
 
 		break;
 	}
 
-	case idmef_criterion_value_type_non_linear_time: {
+	case IDMEF_CRITERION_VALUE_TYPE_NON_LINEAR_TIME: {
 		idmef_criterion_value_non_linear_time_t *time;
 
-		time = idmef_criterion_value_non_linear_time_clone(src->val.non_linear_time);
-		if ( ! time )
-			return NULL;
+		ret = idmef_criterion_value_non_linear_time_clone(src->val.non_linear_time, &time);
+		if ( ret < 0 )
+			return ret;
 
-		dst = idmef_criterion_value_new_non_linear_time(time);
-		if ( ! dst ) {
+		ret = idmef_criterion_value_new_non_linear_time(dst, time);
+		if ( ret < 0 ) {
 			idmef_criterion_value_non_linear_time_destroy(time);
-			return NULL;
+			return ret;
 		}
-
+                
 		break;
 	}
 	}
 	
-	return dst;
+	return -1;
 }
 
 
@@ -875,48 +788,45 @@ idmef_criterion_value_type_t idmef_criterion_value_get_type(const idmef_criterio
 
 idmef_value_t *idmef_criterion_value_get_fixed(idmef_criterion_value_t *value)
 {
-	return (value->type == idmef_criterion_value_type_fixed ?
-		value->val.fixed :
-		NULL);
+	return (value->type == IDMEF_CRITERION_VALUE_TYPE_FIXED) ? value->val.fixed : NULL;
 }
 
 
 
 idmef_criterion_value_non_linear_time_t *idmef_criterion_value_get_non_linear_time(idmef_criterion_value_t *value)
 {
-	return (value->type == idmef_criterion_value_type_non_linear_time ?
-		value->val.non_linear_time :
-		NULL);
+	return (value->type == IDMEF_CRITERION_VALUE_TYPE_NON_LINEAR_TIME) ? value->val.non_linear_time : NULL;
 }
 
 
 
-void idmef_criterion_value_print(idmef_criterion_value_t *value)
+int idmef_criterion_value_print(idmef_criterion_value_t *value, prelude_io_t *fd)
 {
+        int ret = -1;
         prelude_string_t *out;
         
-	switch ( value->type ) {
-	case idmef_criterion_value_type_fixed: {
-                
-                out = prelude_string_new();
-                if ( ! out )
-                        return;
+        ret = prelude_string_new(&out);
+        if ( ret < 0 )
+                return ret;
         
-		if ( idmef_value_to_string(value->val.fixed, out) < 0 ) {
-                        prelude_string_destroy(out);
-			return;
-                }
+	switch ( value->type ) {
+
+        case IDMEF_CRITERION_VALUE_TYPE_FIXED:
+                ret = idmef_value_to_string(value->val.fixed, out);
+                break;
                 
-		printf("%s", prelude_string_get_string(out));
-                prelude_string_destroy(out);
-                
+        case IDMEF_CRITERION_VALUE_TYPE_NON_LINEAR_TIME:
+		ret = idmef_criterion_value_non_linear_time_to_string(value->val.non_linear_time, out);
 		break;
 	}
 
-	case idmef_criterion_value_type_non_linear_time:
-		idmef_criterion_value_non_linear_time_print(value->val.non_linear_time);
-		break;
-	}
+        if ( ret < 0 )
+                return ret;
+        
+        ret = prelude_io_write(fd, prelude_string_get_string(out), prelude_string_get_len(out));
+        prelude_string_destroy(out);
+
+        return ret;
 }
 
 
@@ -927,11 +837,11 @@ int idmef_criterion_value_to_string(idmef_criterion_value_t *value, prelude_stri
         
         switch ( value->type ) {
 
-        case idmef_criterion_value_type_fixed:
+        case IDMEF_CRITERION_VALUE_TYPE_FIXED:
                 ret = idmef_value_to_string(value->val.fixed, out);
 		break;
 
-	case idmef_criterion_value_type_non_linear_time:
+	case IDMEF_CRITERION_VALUE_TYPE_NON_LINEAR_TIME:
 		ret = idmef_criterion_value_non_linear_time_to_string(value->val.non_linear_time, out);
 		break;
 	}

@@ -19,14 +19,15 @@ idmef-criterion-value
 
 </para>
 
-@idmef_criterion_value_type_fixed: 
-@idmef_criterion_value_type_non_linear_time: 
+@IDMEF_CRITERION_VALUE_TYPE_FIXED: 
+@IDMEF_CRITERION_VALUE_TYPE_NON_LINEAR_TIME: 
 
 <!-- ##### FUNCTION idmef_criterion_value_non_linear_time_new ##### -->
 <para>
 
 </para>
 
+@time: 
 @Returns: 
 
 
@@ -35,6 +36,7 @@ idmef-criterion-value
 
 </para>
 
+@time: 
 @buf: 
 @Returns: 
 
@@ -53,6 +55,7 @@ idmef-criterion-value
 </para>
 
 @src: 
+@dst: 
 @Returns: 
 
 
@@ -200,14 +203,6 @@ idmef-criterion-value
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_print ##### -->
-<para>
-
-</para>
-
-@time: 
-
-
 <!-- ##### FUNCTION idmef_criterion_value_non_linear_time_to_string ##### -->
 <para>
 
@@ -216,9 +211,6 @@ idmef-criterion-value
 @time: 
 @out: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@buffer: 
-@size: 
 
 
 <!-- ##### FUNCTION idmef_criterion_value_new_fixed ##### -->
@@ -226,6 +218,7 @@ idmef-criterion-value
 
 </para>
 
+@cv: 
 @value: 
 @Returns: 
 
@@ -235,6 +228,7 @@ idmef-criterion-value
 
 </para>
 
+@cv: 
 @time: 
 @Returns: 
 
@@ -244,7 +238,8 @@ idmef-criterion-value
 
 </para>
 
-@object: 
+@cv: 
+@path: 
 @buf: 
 @Returns: 
 
@@ -263,6 +258,7 @@ idmef-criterion-value
 </para>
 
 @src: 
+@dst: 
 @Returns: 
 
 
@@ -299,6 +295,8 @@ idmef-criterion-value
 </para>
 
 @value: 
+@fd: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_criterion_value_to_string ##### -->
@@ -309,8 +307,5 @@ idmef-criterion-value
 @value: 
 @out: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@buffer: 
-@size: 
 
 

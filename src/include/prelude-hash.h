@@ -26,10 +26,11 @@
 
 typedef struct prelude_hash prelude_hash_t;
 
-prelude_hash_t *prelude_hash_new(unsigned int (*hash_func)(const void *),
-				 int (*key_cmp_func)(const void *, const void *),
-				 void (*key_destroy_func)(void *),
-				 void (*value_destroy_func)(void *));
+int prelude_hash_new(prelude_hash_t **hash,
+                     unsigned int (*hash_func)(const void *),
+                     int (*key_cmp_func)(const void *, const void *),
+                     void (*key_destroy_func)(void *),
+                     void (*value_destroy_func)(void *));
 
 void prelude_hash_destroy(prelude_hash_t *hash);
 

@@ -30,10 +30,17 @@
 #define _LIBPRELUDE_LIBMISSING_H
 
 #include "config.h"
+#include <alloca.h>
+#include "getaddrinfo.h"
+#include "minmax.h"
+#include "snprintf.h"
+#include <stdbool.h>
 #include "strdup.h"
 #include "strndup.h"
+#include "strpbrk.h"
 #include "strsep.h"
-#include "snprintf.h"
+#include "vasnprintf.h"
 #include "vsnprintf.h"
+#include "xsize.h"
 
 #endif /* _LIBPRELUDE_LIBMISSING_H */

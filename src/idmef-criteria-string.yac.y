@@ -35,13 +35,14 @@
 #include <pthread.h>
 
 #include "prelude-log.h"
+#include "prelude-error.h"
 #include "prelude-inttypes.h"
 
 #include "idmef.h"
 #include "idmef-criteria.h"
 #include "idmef-criteria-string.h"
 
-idmef_criteria_t *criteria;
+idmef_criteria_t *processed_criteria;
 
 #define operator_or 1
 #define operator_and 2
@@ -90,7 +91,7 @@ extern void yy_delete_buffer(void *);
 %%
 
 input: criteria					{
-							criteria = $1;
+							processed_criteria = $1;
 						}
 ;
 
@@ -109,12 +110,14 @@ criteria:	criteria_base			{
 ;
 
 criteria_base:	criterion			{
+                                                        int ret;
 							idmef_criteria_t *criteria;
 
-							criteria = idmef_criteria_new();
-							if ( ! criteria )
+							ret = idmef_criteria_new(&criteria);
+							if ( ret < 0 )
 								YYABORT;
-							criteria->criterion = $1;
+
+                                                        idmef_criteria_set_criterion(criteria, $1);
 							$$ = criteria;
                                                         
 						}
@@ -124,38 +127,39 @@ criteria_base:	criterion			{
 ;
 
 criterion: TOK_STRING relation TOK_STRING 	{
-							idmef_object_t *object = NULL;
+                                                        int ret;
+							idmef_path_t *path = NULL;
 							idmef_criterion_value_t *value = NULL;
 							idmef_value_relation_t relation;
 							idmef_criterion_t *criterion;
 
-							object = idmef_object_new_fast($1);
-							if ( ! object ) {
-								log(LOG_ERR, "cannot build object '%s'\n", $1);
+							ret = idmef_path_new_fast(&path, $1);
+							if ( ret < 0 ) {
+								prelude_perror(ret, "cannot build path '%s'", $1);
 								free($1);
 								free($3);
 								YYABORT;
 							}
 
-							value = idmef_criterion_value_new_generic(object, $3);
-							if ( ! value ) {
-								log(LOG_ERR, "cannot build value '%s' for object '%s'\n",
-								    $3, $1);
+							ret = idmef_criterion_value_new_generic(&value, path, $3);
+							if ( ret < 0 ) {
+								prelude_perror(ret, "cannot build value '%s' for path '%s'",
+                                                                               $3, $1);
 								free($1);
 								free($3);
-								idmef_object_destroy(object);
+								idmef_path_destroy(path);
 								YYABORT;
 							}
 
 							relation = $2;
 
-							criterion = idmef_criterion_new(object, value, relation);
-							if ( ! criterion ) {
-								log(LOG_ERR, "cannot build criterion for "
-								    "object: %s and value: %s\n", $1, $3);
+							ret = idmef_criterion_new(&criterion, path, value, relation);
+							if ( ret < 0 ) {
+								prelude_perror(ret, "cannot build criterion for "
+								    "path '%s' and value '%s'", $1, $3);
 								free($1);
 								free($3);
-								idmef_object_destroy(object);
+								idmef_path_destroy(path);
 								idmef_criterion_value_destroy(value);
 								YYABORT;
 							}
@@ -166,23 +170,23 @@ criterion: TOK_STRING relation TOK_STRING 	{
 							$$ = criterion;
 						}
 	| TOK_STRING				{
-							idmef_object_t *object;
+                                                        int ret;
+							idmef_path_t *path;
 							idmef_criterion_t *criterion;
                                                         
-							object = idmef_object_new_fast($1);
-							if ( ! object ) {
-								log(LOG_ERR, "cannot build object '%s'\n", $1);
+							ret = idmef_path_new_fast(&path, $1);
+							if ( ret < 0 ) {
+                                                                prelude_perror(ret, "cannot build path '%s'", $1);
 								free($1);
 								YYABORT;
 							}
 
-							criterion = idmef_criterion_new(object, NULL, IDMEF_VALUE_RELATION_IS_NOT_NULL);
-							if ( ! criterion ) {
-								log(LOG_ERR,
-								    "cannot build criterion for object: '%s' and value: NULL\n",
+							ret = idmef_criterion_new(&criterion, path, NULL, IDMEF_VALUE_RELATION_IS_NOT_NULL);
+							if ( ret < 0 ) {
+								prelude_perror(ret, "cannot build criterion for path '%s' and value: NULL",
 								    $1);
 								free($1);
-								idmef_object_destroy(object);
+								idmef_path_destroy(path);
 								YYABORT;
 							}
 
@@ -191,23 +195,24 @@ criterion: TOK_STRING relation TOK_STRING 	{
 							$$ = criterion;
 						}
 	| TOK_RELATION_IS_NULL TOK_STRING	{
-							idmef_object_t *object;
+                                                        int ret;
+							idmef_path_t *path;
 							idmef_criterion_t *criterion;
 
-							object = idmef_object_new_fast($2);
-							if ( ! object ) {
-								log(LOG_ERR, "cannot build object '%s'\n", $2);
+							ret = idmef_path_new_fast(&path, $2);
+							if ( ret < 0) {
+								prelude_perror(ret, "cannot build path '%s'", $2);
 								free($2);
 								YYABORT;
 							}
 
-							criterion = idmef_criterion_new(object, NULL, IDMEF_VALUE_RELATION_IS_NULL);
-							if ( ! criterion ) {
-								log(LOG_ERR,
-								    "cannot build criterion for object: '%s' and value: NULL\n",
+							ret = idmef_criterion_new(&criterion, path, NULL, IDMEF_VALUE_RELATION_IS_NULL);
+							if ( ret < 0 ) {
+								prelude_perror(ret,
+								    "cannot build criterion for path: '%s' and value: NULL",
 								    $2);
 								free($2);
-								idmef_object_destroy(object);
+								idmef_path_destroy(path);
 								YYABORT;
 							}
 
@@ -242,24 +247,28 @@ static void yyerror(char *s)  /* Called by yyparse on error */
 
 
 
-idmef_criteria_t *idmef_criteria_new_string(const char *str)
+int idmef_criteria_new_string(idmef_criteria_t **new_criteria, const char *str)
 {
-        int retval;
+        int ret;
 	pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 	void *state;
 
 	pthread_mutex_lock(&mutex);
 
-	criteria = NULL;
+	processed_criteria = NULL;
 	state = yy_scan_string(str);
-	retval = yyparse();
+	ret = yyparse();
 	yy_delete_buffer(state);
-	if ( retval != 0 && criteria ) {
-		idmef_criteria_destroy(criteria);
-		criteria = NULL;
-	}
+	if ( ret != 0 ) {
+		ret = prelude_error(PRELUDE_ERROR_GENERIC);
+
+		if ( processed_criteria )
+			idmef_criteria_destroy(processed_criteria);
+
+	} else
+		*new_criteria = processed_criteria;
 
 	pthread_mutex_unlock(&mutex);
-        
-	return criteria;
+
+	return ret;
 }
