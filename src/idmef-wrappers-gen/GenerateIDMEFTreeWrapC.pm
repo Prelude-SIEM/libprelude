@@ -103,6 +103,7 @@ sub	header
 
 #define OPTIONAL_INT(type, name) type name; int name ## _is_set:1
 
+#define IDENT(name) uint64_t name
 ");
 }
 

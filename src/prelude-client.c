@@ -203,7 +203,6 @@ static const char *client_get_status(prelude_client_t *client)
 static void heartbeat_expire_cb(void *data)
 {
         int ret;
-        char buf[128];
         idmef_time_t *time;
         prelude_string_t *str;
         idmef_message_t *message;
@@ -221,8 +220,8 @@ static void heartbeat_expire_cb(void *data)
                 prelude_perror(ret, "error creating new IDMEF heartbeat.\n");
                 goto out;
         }
-
-        snprintf(buf, sizeof(buf), "%u", prelude_timer_get_expire(&client->heartbeat_timer));
+        
+        idmef_heartbeat_set_heartbeat_interval(heartbeat, prelude_timer_get_expire(&client->heartbeat_timer));
         
         ret = prelude_string_new_constant(&str, "Analyzer status");
         if ( ret < 0 )
@@ -237,13 +236,7 @@ static void heartbeat_expire_cb(void *data)
                 
                 add_hb_data(heartbeat, str, client->md5sum);
         }
-
-        ret = prelude_string_new_constant(&str, "Analyzer heartbeat interval");
-        if ( ret < 0 )
-                return;
-        
-        add_hb_data(heartbeat, str, buf);
-
+                
         ret = idmef_time_new_from_gettimeofday(&time);
         if ( ret < 0 )
                 return;
@@ -279,28 +272,34 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
 {
         int ret;
         struct utsname uts;
-        uint64_t analyzerid;
-        prelude_string_t *buf;
+        prelude_string_t *str;
 	idmef_process_t *process;
-        char filename[256], *name, *path;
+        char buf[512], *name, *path;
 
-        analyzerid = prelude_client_profile_get_analyzerid(client->profile);
+        ret = prelude_string_new(&str);
+        if ( ret < 0 )
+                return ret;
+
+        snprintf(buf, sizeof(buf), "%llu", prelude_client_profile_get_analyzerid(client->profile));
+        ret = prelude_string_new_dup(&str, buf);
+        if ( ret < 0 )
+                return ret;
         
-	idmef_analyzer_set_analyzerid(client->analyzer, analyzerid);
+	idmef_analyzer_set_analyzerid(client->analyzer, str);
         if ( uname(&uts) < 0 )
                 return prelude_error_from_errno(errno);
 
-        ret = prelude_string_new_dup(&buf, uts.sysname);
+        ret = prelude_string_new_dup(&str, uts.sysname);
         if ( ret < 0 )
                 return ret;
         
-        idmef_analyzer_set_ostype(client->analyzer, buf);
+        idmef_analyzer_set_ostype(client->analyzer, str);
 
-        ret = prelude_string_new_dup(&buf, uts.release);
+        ret = prelude_string_new_dup(&str, uts.release);
         if ( ret < 0 )
                 return ret;
         
-	idmef_analyzer_set_osversion(client->analyzer, buf);
+	idmef_analyzer_set_osversion(client->analyzer, str);
 
         ret = idmef_analyzer_new_process(client->analyzer, &process);
         if ( ret < 0 ) 
@@ -315,30 +314,30 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
         if ( ret < 0 )
                 return ret;
 
-        ret = prelude_string_new_nodup(&buf, name);
+        ret = prelude_string_new_nodup(&str, name);
         if ( ret < 0 )
                 return ret;
         
-        idmef_process_set_name(process, buf);
+        idmef_process_set_name(process, str);
 
-        ret = prelude_string_new_nodup(&buf, path);
+        ret = prelude_string_new_nodup(&str, path);
         if ( ret < 0 )
                 return ret;
         
-        idmef_process_set_path(process, buf);
+        idmef_process_set_path(process, str);
 
-        ret = prelude_string_new(&buf);
+        ret = prelude_string_new(&str);
         if ( ret < 0 )
                 return ret;
         
-        snprintf(filename, sizeof(filename), "%s/%s", path, name);
+        snprintf(buf, sizeof(buf), "%s/%s", path, name);
 
-        ret = generate_md5sum(filename, buf);
+        ret = generate_md5sum(buf, str);
         if ( ret < 0 )
                 return ret;
         
-        ret = prelude_string_get_string_released(buf, &client->md5sum);
-        prelude_string_destroy(buf);
+        ret = prelude_string_get_string_released(str, &client->md5sum);
+        prelude_string_destroy(str);
         
         return ret;
 }
@@ -1138,32 +1137,12 @@ void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
  * not call prelude_msg_destroy() on @msg.
  */
 void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg)
-{
-        uint64_t ident;
-        idmef_alert_t *alert;
-        idmef_heartbeat_t *heartbeat;
-        
+{        
         /*
          * we need to hold a lock since asynchronous heartbeat
          * could write the message buffer at the same time we do.
          */
         pthread_mutex_lock(&client->msgbuf_lock);
-
-        if ( idmef_message_get_type(msg) == IDMEF_MESSAGE_TYPE_ALERT ) {
-                alert = idmef_message_get_alert(msg);
-                
-                if ( ! idmef_alert_get_messageid(alert) ) {
-                        ident = prelude_ident_inc(client->unique_ident);
-                        idmef_alert_set_messageid(alert, ident);
-                }
-        } else {       
-                heartbeat = idmef_message_get_heartbeat(msg);
-
-                if ( ! idmef_heartbeat_get_messageid(heartbeat) ) {
-                        ident = prelude_ident_inc(client->unique_ident);
-                        idmef_heartbeat_set_messageid(heartbeat, ident);
-                }
-        }
         
         idmef_message_write(msg, client->msgbuf);
         prelude_msgbuf_mark_end(client->msgbuf);

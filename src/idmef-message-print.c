@@ -311,10 +311,19 @@ void idmef_classification_print(idmef_classification_t *ptr, prelude_io_t *fd)
 
 	indent += 8;
 
-	print_indent(fd);
-	prelude_io_write(fd, "ident: ", sizeof("ident: ") - 1);
-	print_uint64(idmef_classification_get_ident(ptr), fd);
-	prelude_io_write(fd, "\n", sizeof("\n") - 1);
+	{
+		prelude_string_t *field;
+                const char tmp[] = "ident: ";
+
+		field = idmef_classification_get_ident(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
 
 	{
 		prelude_string_t *field;
@@ -356,16 +365,11 @@ void idmef_user_id_print(idmef_user_id_t *ptr, prelude_io_t *fd)
 
 	indent += 8;
 
-	print_indent(fd);
-	prelude_io_write(fd, "ident: ", sizeof("ident: ") - 1);
-	print_uint64(idmef_user_id_get_ident(ptr), fd);
-	prelude_io_write(fd, "\n", sizeof("\n") - 1);
-
 	{
 		prelude_string_t *field;
-                const char tmp[] = "name: ";
+                const char tmp[] = "ident: ";
 
-		field = idmef_user_id_get_name(ptr);
+		field = idmef_user_id_get_ident(ptr);
 
 		if ( field ) {
 			print_indent(fd);
@@ -387,6 +391,34 @@ void idmef_user_id_print(idmef_user_id_t *ptr, prelude_io_t *fd)
 			prelude_io_write(fd, "\n", sizeof("\n") - 1);
 		}
         }
+
+	{
+		prelude_string_t *field;
+                const char tmp[] = "tty: ";
+
+		field = idmef_user_id_get_tty(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
+
+	{
+		prelude_string_t *field;
+                const char tmp[] = "name: ";
+
+		field = idmef_user_id_get_name(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
 
 	{
 		uint32_t *field;
@@ -412,10 +444,19 @@ void idmef_user_print(idmef_user_t *ptr, prelude_io_t *fd)
 
 	indent += 8;
 
-	print_indent(fd);
-	prelude_io_write(fd, "ident: ", sizeof("ident: ") - 1);
-	print_uint64(idmef_user_get_ident(ptr), fd);
-	prelude_io_write(fd, "\n", sizeof("\n") - 1);
+	{
+		prelude_string_t *field;
+                const char tmp[] = "ident: ";
+
+		field = idmef_user_get_ident(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
 
 	{
 		int i = idmef_user_get_category(ptr);
@@ -456,10 +497,19 @@ void idmef_address_print(idmef_address_t *ptr, prelude_io_t *fd)
 
 	indent += 8;
 
-	print_indent(fd);
-	prelude_io_write(fd, "ident: ", sizeof("ident: ") - 1);
-	print_uint64(idmef_address_get_ident(ptr), fd);
-	prelude_io_write(fd, "\n", sizeof("\n") - 1);
+	{
+		prelude_string_t *field;
+                const char tmp[] = "ident: ";
+
+		field = idmef_address_get_ident(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
 
 	{
 		int i = idmef_address_get_category(ptr);
@@ -540,10 +590,19 @@ void idmef_process_print(idmef_process_t *ptr, prelude_io_t *fd)
 
 	indent += 8;
 
-	print_indent(fd);
-	prelude_io_write(fd, "ident: ", sizeof("ident: ") - 1);
-	print_uint64(idmef_process_get_ident(ptr), fd);
-	prelude_io_write(fd, "\n", sizeof("\n") - 1);
+	{
+		prelude_string_t *field;
+                const char tmp[] = "ident: ";
+
+		field = idmef_process_get_ident(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
 
 	{
 		prelude_string_t *field;
@@ -794,10 +853,19 @@ void idmef_service_print(idmef_service_t *ptr, prelude_io_t *fd)
 
 	indent += 8;
 
-	print_indent(fd);
-	prelude_io_write(fd, "ident: ", sizeof("ident: ") - 1);
-	print_uint64(idmef_service_get_ident(ptr), fd);
-	prelude_io_write(fd, "\n", sizeof("\n") - 1);
+	{
+		prelude_string_t *field;
+                const char tmp[] = "ident: ";
+
+		field = idmef_service_get_ident(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
 
 	{
 		uint8_t *field;
@@ -809,34 +877,6 @@ void idmef_service_print(idmef_service_t *ptr, prelude_io_t *fd)
 			print_indent(fd);
 			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
 			print_uint8(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
-
-	{
-		prelude_string_t *field;
-                const char tmp[] = "name: ";
-
-		field = idmef_service_get_name(ptr);
-
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
-
-	{
-		uint16_t *field;
-                const char tmp[] = "port: ";
-
-		field = idmef_service_get_port(ptr);
-
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint16(*field, fd);
 			prelude_io_write(fd, "\n", sizeof("\n") - 1);
 		}
 	}
@@ -865,6 +905,34 @@ void idmef_service_print(idmef_service_t *ptr, prelude_io_t *fd)
 			print_indent(fd);
 			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
 			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
+
+	{
+		prelude_string_t *field;
+                const char tmp[] = "name: ";
+
+		field = idmef_service_get_name(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
+
+	{
+		uint16_t *field;
+                const char tmp[] = "port: ";
+
+		field = idmef_service_get_port(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_uint16(*field, fd);
 			prelude_io_write(fd, "\n", sizeof("\n") - 1);
 		}
 	}
@@ -924,10 +992,19 @@ void idmef_node_print(idmef_node_t *ptr, prelude_io_t *fd)
 
 	indent += 8;
 
-	print_indent(fd);
-	prelude_io_write(fd, "ident: ", sizeof("ident: ") - 1);
-	print_uint64(idmef_node_get_ident(ptr), fd);
-	prelude_io_write(fd, "\n", sizeof("\n") - 1);
+	{
+		prelude_string_t *field;
+                const char tmp[] = "ident: ";
+
+		field = idmef_node_get_ident(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
 
 	{
 		int i = idmef_node_get_category(ptr);
@@ -996,10 +1073,19 @@ void idmef_source_print(idmef_source_t *ptr, prelude_io_t *fd)
 
 	indent += 8;
 
-	print_indent(fd);
-	prelude_io_write(fd, "ident: ", sizeof("ident: ") - 1);
-	print_uint64(idmef_source_get_ident(ptr), fd);
-	prelude_io_write(fd, "\n", sizeof("\n") - 1);
+	{
+		prelude_string_t *field;
+                const char tmp[] = "ident: ";
+
+		field = idmef_source_get_ident(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
 
 	{
 		int i = idmef_source_get_spoofed(ptr);
@@ -1270,10 +1356,19 @@ void idmef_file_print(idmef_file_t *ptr, prelude_io_t *fd)
 
 	indent += 8;
 
-	print_indent(fd);
-	prelude_io_write(fd, "ident: ", sizeof("ident: ") - 1);
-	print_uint64(idmef_file_get_ident(ptr), fd);
-	prelude_io_write(fd, "\n", sizeof("\n") - 1);
+	{
+		prelude_string_t *field;
+                const char tmp[] = "ident: ";
+
+		field = idmef_file_get_ident(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
 
 	{
 		prelude_string_t *field;
@@ -1534,10 +1629,19 @@ void idmef_target_print(idmef_target_t *ptr, prelude_io_t *fd)
 
 	indent += 8;
 
-	print_indent(fd);
-	prelude_io_write(fd, "ident: ", sizeof("ident: ") - 1);
-	print_uint64(idmef_target_get_ident(ptr), fd);
-	prelude_io_write(fd, "\n", sizeof("\n") - 1);
+	{
+		prelude_string_t *field;
+                const char tmp[] = "ident: ";
+
+		field = idmef_target_get_ident(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
 
 	{
 		int i = idmef_target_get_decoy(ptr);
@@ -1640,10 +1744,19 @@ void idmef_analyzer_print(idmef_analyzer_t *ptr, prelude_io_t *fd)
 
 	indent += 8;
 
-	print_indent(fd);
-	prelude_io_write(fd, "analyzerid: ", sizeof("analyzerid: ") - 1);
-	print_uint64(idmef_analyzer_get_analyzerid(ptr), fd);
-	prelude_io_write(fd, "\n", sizeof("\n") - 1);
+	{
+		prelude_string_t *field;
+                const char tmp[] = "analyzerid: ";
+
+		field = idmef_analyzer_get_analyzerid(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
 
 	{
 		prelude_string_t *field;
@@ -1935,19 +2048,10 @@ void idmef_confidence_print(idmef_confidence_t *ptr, prelude_io_t *fd)
 		}
         }
 
-	{
-		float *field;
-                const char tmp[] = "confidence: ";
-
-		field = idmef_confidence_get_confidence(ptr);
-
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_float(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+	print_indent(fd);
+	prelude_io_write(fd, "confidence: ", sizeof("confidence: ") - 1);
+	print_float(idmef_confidence_get_confidence(ptr), fd);
+	prelude_io_write(fd, "\n", sizeof("\n") - 1);
 
 	indent -= 8;
 }
@@ -2155,10 +2259,19 @@ void idmef_alert_print(idmef_alert_t *ptr, prelude_io_t *fd)
 
 	indent += 8;
 
-	print_indent(fd);
-	prelude_io_write(fd, "messageid: ", sizeof("messageid: ") - 1);
-	print_uint64(idmef_alert_get_messageid(ptr), fd);
-	prelude_io_write(fd, "\n", sizeof("\n") - 1);
+	{
+		prelude_string_t *field;
+                const char tmp[] = "messageid: ";
+
+		field = idmef_alert_get_messageid(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
 
 	{
 		idmef_analyzer_t *field;
@@ -2319,10 +2432,19 @@ void idmef_heartbeat_print(idmef_heartbeat_t *ptr, prelude_io_t *fd)
 
 	indent += 8;
 
-	print_indent(fd);
-	prelude_io_write(fd, "messageid: ", sizeof("messageid: ") - 1);
-	print_uint64(idmef_heartbeat_get_messageid(ptr), fd);
-	prelude_io_write(fd, "\n", sizeof("\n") - 1);
+	{
+		prelude_string_t *field;
+                const char tmp[] = "messageid: ";
+
+		field = idmef_heartbeat_get_messageid(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
 
 	{
 		idmef_analyzer_t *field;
@@ -2360,6 +2482,20 @@ void idmef_heartbeat_print(idmef_heartbeat_t *ptr, prelude_io_t *fd)
 			print_indent(fd);
 			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
 			print_time(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
+
+	{
+		uint32_t *field;
+                const char tmp[] = "heartbeat_interval: ";
+
+		field = idmef_heartbeat_get_heartbeat_interval(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_uint32(*field, fd);
 			prelude_io_write(fd, "\n", sizeof("\n") - 1);
 		}
 	}

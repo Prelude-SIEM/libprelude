@@ -71,6 +71,7 @@
 
 #define OPTIONAL_INT(type, name) type name; int name ## _is_set:1
 
+#define IDENT(name) uint64_t name
 
 /**
  * idmef_additional_data_type_to_numeric:
@@ -263,8 +264,7 @@ struct idmef_reference {
 
 struct idmef_classification { 
          REFCOUNT;
- 
-         uint64_t ident;
+         prelude_string_t *ident;
          prelude_string_t text;
          LISTED_OBJECT(reference_list, idmef_reference_t);
  
@@ -349,9 +349,10 @@ const char *idmef_user_id_type_to_string(idmef_user_id_type_t val)
 struct idmef_user_id { 
          IS_LISTED;
   REFCOUNT;
-         uint64_t ident;
-         prelude_string_t *name;
+         prelude_string_t *ident;
          idmef_user_id_type_t type;
+         prelude_string_t *tty;
+         prelude_string_t *name;
          OPTIONAL_INT(uint32_t, number);
  
 };
@@ -409,7 +410,7 @@ const char *idmef_user_category_to_string(idmef_user_category_t val)
 
 struct idmef_user { 
   REFCOUNT;
-         uint64_t ident;
+         prelude_string_t *ident;
          idmef_user_category_t category;
          LISTED_OBJECT(user_id_list, idmef_user_id_t);
  
@@ -541,7 +542,7 @@ const char *idmef_address_category_to_string(idmef_address_category_t val)
 struct idmef_address { 
          IS_LISTED;
          REFCOUNT;
-         uint64_t ident;
+         prelude_string_t *ident;
          idmef_address_category_t category;
          prelude_string_t *vlan_name;
          OPTIONAL_INT(int32_t, vlan_num);
@@ -554,7 +555,7 @@ struct idmef_address {
 
 struct idmef_process { 
   REFCOUNT;
-         uint64_t ident;
+         prelude_string_t *ident;
          prelude_string_t name;
          OPTIONAL_INT(uint32_t, pid);
          prelude_string_t *path;
@@ -641,15 +642,14 @@ const char *idmef_service_type_to_string(idmef_service_type_t val)
 
 struct idmef_service { 
   REFCOUNT;
-         uint64_t ident;
+         prelude_string_t *ident;
+ 
          OPTIONAL_INT(uint8_t, ip_version);
- 
-         prelude_string_t *name;
-         OPTIONAL_INT(uint16_t, port);
- 
          OPTIONAL_INT(uint8_t, iana_protocol_number);
          prelude_string_t *iana_protocol_name;
  
+         prelude_string_t *name;
+         OPTIONAL_INT(uint16_t, port);
          prelude_string_t *portlist;
          prelude_string_t *protocol;
  
@@ -774,7 +774,7 @@ const char *idmef_node_category_to_string(idmef_node_category_t val)
 
 struct idmef_node { 
   REFCOUNT;
-         uint64_t ident;
+         prelude_string_t *ident;
          idmef_node_category_t category;
          prelude_string_t *location;
          prelude_string_t *name;
@@ -836,8 +836,8 @@ const char *idmef_source_spoofed_to_string(idmef_source_spoofed_t val)
 struct idmef_source { 
          IS_LISTED;
   REFCOUNT;
+         prelude_string_t *ident;
  
-         uint64_t ident;
          idmef_source_spoofed_t spoofed;
          prelude_string_t *interface;
  
@@ -1123,7 +1123,7 @@ const char *idmef_file_fstype_to_string(idmef_file_fstype_t val)
 struct idmef_file { 
          IS_LISTED;
   REFCOUNT;
-         uint64_t ident;
+         prelude_string_t *ident;
  
          prelude_string_t name;
          prelude_string_t path;
@@ -1285,8 +1285,8 @@ const char *idmef_target_decoy_to_string(idmef_target_decoy_t val)
 struct idmef_target { 
          IS_LISTED;
   REFCOUNT;
+         prelude_string_t *ident;
  
-         uint64_t ident;
          idmef_target_decoy_t decoy;
          prelude_string_t interface;
  
@@ -1302,8 +1302,7 @@ struct idmef_target {
 
 struct idmef_analyzer { 
   REFCOUNT;
- 
-         uint64_t analyzerid;
+         prelude_string_t *analyzerid;
  
          prelude_string_t *name;
          prelude_string_t *manufacturer;
@@ -1641,7 +1640,7 @@ struct idmef_confidence {
   REFCOUNT;
  
          idmef_confidence_rating_t rating;
-         OPTIONAL_INT(float, confidence);
+         float confidence;
  
 };
 
@@ -1746,7 +1745,7 @@ const char *idmef_alert_type_to_string(idmef_alert_type_t val)
 
 
 struct idmef_alert { 
-         uint64_t messageid;
+         prelude_string_t *messageid;
  
          idmef_analyzer_t *analyzer;
          idmef_time_t create_time;
@@ -1773,12 +1772,13 @@ struct idmef_alert {
 
 
 struct idmef_heartbeat { 
-         uint64_t messageid;
+         prelude_string_t *messageid;
          idmef_analyzer_t *analyzer;
  
          idmef_time_t create_time;
          idmef_time_t *analyzer_time;
  
+         OPTIONAL_INT(uint32_t, heartbeat_interval);
          LISTED_OBJECT(additional_data_list, idmef_additional_data_t);
  
 };
@@ -2586,7 +2586,7 @@ int idmef_classification_new_child(void *p, idmef_child_t child, int n, void **r
 	switch ( child ) {
 
 		case 0:
-			return idmef_classification_new_ident(ptr, (uint64_t **) ret);
+			return idmef_classification_new_ident(ptr, (prelude_string_t **) ret);
 
 		case 1:
 			return idmef_classification_new_text(ptr, (prelude_string_t **) ret);
@@ -2631,6 +2631,11 @@ int idmef_classification_new_child(void *p, idmef_child_t child, int n, void **r
 static void idmef_classification_destroy_internal(idmef_classification_t *ptr)
 {
 
+	if ( ptr->ident ) {
+		prelude_string_destroy(ptr->ident);
+		ptr->ident = NULL;
+	}
+
 	prelude_string_destroy_internal(&ptr->text);
 
 	{
@@ -2665,23 +2670,28 @@ void idmef_classification_destroy(idmef_classification_t *ptr)
 }
 
 /**
- * idmef_classification_get_ident:
+ * *idmef_classification_get_ident:
  * @ptr: pointer to a #idmef_classification_t object.
  *
  * Get ident children of the #idmef_classification_t object.
  *
- * Returns: a pointer to a uint64_t object, or NULL if the children object is not set.
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
  */
-uint64_t idmef_classification_get_ident(idmef_classification_t *ptr)
+prelude_string_t *idmef_classification_get_ident(idmef_classification_t *ptr)
 {
 	return ptr->ident;
 }
 
 int idmef_classification_get_ident_value(idmef_classification_t *ptr, idmef_value_t **value)
 {
+	if ( ! ptr->ident ) {
+                *value = NULL;
+		return 0;
+        }
+
         int ret;
 
-	ret = idmef_value_new_uint64(value, ptr->ident);
+	ret = idmef_value_new_string(value, ptr->ident);
 	if ( ret < 0 )
 		return ret;
 
@@ -2693,31 +2703,43 @@ int idmef_classification_get_ident_value(idmef_classification_t *ptr, idmef_valu
 /**
  * idmef_classification_set_ident:
  * @ptr: pointer to a #idmef_classification_t object.
- * @ident: pointer to a #uint64_t object.
+ * @ident: pointer to a #prelude_string_t object.
  *
  * Set @ident object as a children of @ptr.
  * if @ptr already contain an @ident object, then it is destroyed,
  * and updated to point to the provided @ident object.
  */
 
-void idmef_classification_set_ident(idmef_classification_t *ptr, uint64_t ident)
+void idmef_classification_set_ident(idmef_classification_t *ptr, prelude_string_t *ident)
 {
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+
 	ptr->ident = ident;
 }
 
 /**
  * idmef_classification_new_ident:
  * @ptr: pointer to a #idmef_classification_t object.
- * @ret: pointer to an address where to store the created #uint64_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new ident object, children of #idmef_classification_t.
- * If @ptr already contain a #uint64_t object, then it is destroyed.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_classification_new_ident(idmef_classification_t *ptr, uint64_t **ret)
+int idmef_classification_new_ident(idmef_classification_t *ptr, prelude_string_t **ret)
 {
-        *ret = &ptr->ident;
+        int retval;
+
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+		
+	retval = prelude_string_new(&ptr->ident);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->ident;
 	return 0;
 }
 
@@ -2920,14 +2942,18 @@ int idmef_user_id_get_child(void *p, idmef_child_t child, void **childptr)
 
 
 		case 1:
-			return idmef_user_id_get_name_value(ptr, (idmef_value_t **) childptr);
-
-
-		case 2:
 			return idmef_user_id_get_type_value(ptr, (idmef_value_t **) childptr);
 
 
+		case 2:
+			return idmef_user_id_get_tty_value(ptr, (idmef_value_t **) childptr);
+
+
 		case 3:
+			return idmef_user_id_get_name_value(ptr, (idmef_value_t **) childptr);
+
+
+		case 4:
 			return idmef_user_id_get_number_value(ptr, (idmef_value_t **) childptr);
 
 
@@ -2943,15 +2969,18 @@ int idmef_user_id_new_child(void *p, idmef_child_t child, int n, void **ret)
 	switch ( child ) {
 
 		case 0:
-			return idmef_user_id_new_ident(ptr, (uint64_t **) ret);
+			return idmef_user_id_new_ident(ptr, (prelude_string_t **) ret);
 
 		case 1:
-			return idmef_user_id_new_name(ptr, (prelude_string_t **) ret);
-
-		case 2:
 			return idmef_user_id_new_type(ptr, (idmef_user_id_type_t **) ret);
 
+		case 2:
+			return idmef_user_id_new_tty(ptr, (prelude_string_t **) ret);
+
 		case 3:
+			return idmef_user_id_new_name(ptr, (prelude_string_t **) ret);
+
+		case 4:
 			return idmef_user_id_new_number(ptr, (uint32_t **) ret);
 
 		default:
@@ -2965,6 +2994,16 @@ static void idmef_user_id_destroy_internal(idmef_user_id_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
+	if ( ptr->ident ) {
+		prelude_string_destroy(ptr->ident);
+		ptr->ident = NULL;
+	}
+
+	if ( ptr->tty ) {
+		prelude_string_destroy(ptr->tty);
+		ptr->tty = NULL;
+	}
+
 	if ( ptr->name ) {
 		prelude_string_destroy(ptr->name);
 		ptr->name = NULL;
@@ -2992,23 +3031,28 @@ void idmef_user_id_destroy(idmef_user_id_t *ptr)
 }
 
 /**
- * idmef_user_id_get_ident:
+ * *idmef_user_id_get_ident:
  * @ptr: pointer to a #idmef_user_id_t object.
  *
  * Get ident children of the #idmef_user_id_t object.
  *
- * Returns: a pointer to a uint64_t object, or NULL if the children object is not set.
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
  */
-uint64_t idmef_user_id_get_ident(idmef_user_id_t *ptr)
+prelude_string_t *idmef_user_id_get_ident(idmef_user_id_t *ptr)
 {
 	return ptr->ident;
 }
 
 int idmef_user_id_get_ident_value(idmef_user_id_t *ptr, idmef_value_t **value)
 {
+	if ( ! ptr->ident ) {
+                *value = NULL;
+		return 0;
+        }
+
         int ret;
 
-	ret = idmef_value_new_uint64(value, ptr->ident);
+	ret = idmef_value_new_string(value, ptr->ident);
 	if ( ret < 0 )
 		return ret;
 
@@ -3020,31 +3064,167 @@ int idmef_user_id_get_ident_value(idmef_user_id_t *ptr, idmef_value_t **value)
 /**
  * idmef_user_id_set_ident:
  * @ptr: pointer to a #idmef_user_id_t object.
- * @ident: pointer to a #uint64_t object.
+ * @ident: pointer to a #prelude_string_t object.
  *
  * Set @ident object as a children of @ptr.
  * if @ptr already contain an @ident object, then it is destroyed,
  * and updated to point to the provided @ident object.
  */
 
-void idmef_user_id_set_ident(idmef_user_id_t *ptr, uint64_t ident)
+void idmef_user_id_set_ident(idmef_user_id_t *ptr, prelude_string_t *ident)
 {
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+
 	ptr->ident = ident;
 }
 
 /**
  * idmef_user_id_new_ident:
  * @ptr: pointer to a #idmef_user_id_t object.
- * @ret: pointer to an address where to store the created #uint64_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new ident object, children of #idmef_user_id_t.
- * If @ptr already contain a #uint64_t object, then it is destroyed.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_user_id_new_ident(idmef_user_id_t *ptr, uint64_t **ret)
+int idmef_user_id_new_ident(idmef_user_id_t *ptr, prelude_string_t **ret)
 {
-        *ret = &ptr->ident;
+        int retval;
+
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+		
+	retval = prelude_string_new(&ptr->ident);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->ident;
+	return 0;
+}
+
+/**
+ * idmef_user_id_get_type:
+ * @ptr: pointer to a #idmef_user_id_t object.
+ *
+ * Get type children of the #idmef_user_id_t object.
+ *
+ * Returns: a pointer to a idmef_user_id_type_t object, or NULL if the children object is not set.
+ */
+idmef_user_id_type_t idmef_user_id_get_type(idmef_user_id_t *ptr)
+{
+	return ptr->type;
+}
+
+int idmef_user_id_get_type_value(idmef_user_id_t *ptr, idmef_value_t **value)
+{
+	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_USER_ID_TYPE, ptr->type);
+
+}
+
+/**
+ * idmef_user_id_set_type:
+ * @ptr: pointer to a #idmef_user_id_t object.
+ * @type: pointer to a #idmef_user_id_type_t object.
+ *
+ * Set @type object as a children of @ptr.
+ * if @ptr already contain an @type object, then it is destroyed,
+ * and updated to point to the provided @type object.
+ */
+
+void idmef_user_id_set_type(idmef_user_id_t *ptr, idmef_user_id_type_t type)
+{
+	ptr->type = type;
+}
+
+/**
+ * idmef_user_id_new_type:
+ * @ptr: pointer to a #idmef_user_id_t object.
+ * @ret: pointer to an address where to store the created #idmef_user_id_type_t object.
+ *
+ * Create a new type object, children of #idmef_user_id_t.
+ * If @ptr already contain a #idmef_user_id_type_t object, then it is destroyed.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
+int idmef_user_id_new_type(idmef_user_id_t *ptr, idmef_user_id_type_t **ret)
+{
+        *ret = &ptr->type;
+	return 0;
+}
+
+/**
+ * *idmef_user_id_get_tty:
+ * @ptr: pointer to a #idmef_user_id_t object.
+ *
+ * Get tty children of the #idmef_user_id_t object.
+ *
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
+ */
+prelude_string_t *idmef_user_id_get_tty(idmef_user_id_t *ptr)
+{
+	return ptr->tty;
+}
+
+int idmef_user_id_get_tty_value(idmef_user_id_t *ptr, idmef_value_t **value)
+{
+	if ( ! ptr->tty ) {
+                *value = NULL;
+		return 0;
+        }
+
+        int ret;
+
+	ret = idmef_value_new_string(value, ptr->tty);
+	if ( ret < 0 )
+		return ret;
+
+	idmef_value_dont_have_own_data(*value);
+
+	return 0;
+}
+
+/**
+ * idmef_user_id_set_tty:
+ * @ptr: pointer to a #idmef_user_id_t object.
+ * @tty: pointer to a #prelude_string_t object.
+ *
+ * Set @tty object as a children of @ptr.
+ * if @ptr already contain an @tty object, then it is destroyed,
+ * and updated to point to the provided @tty object.
+ */
+
+void idmef_user_id_set_tty(idmef_user_id_t *ptr, prelude_string_t *tty)
+{
+	if ( ptr->tty )
+		prelude_string_destroy(ptr->tty);
+
+	ptr->tty = tty;
+}
+
+/**
+ * idmef_user_id_new_tty:
+ * @ptr: pointer to a #idmef_user_id_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
+ *
+ * Create a new tty object, children of #idmef_user_id_t.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
+int idmef_user_id_new_tty(idmef_user_id_t *ptr, prelude_string_t **ret)
+{
+        int retval;
+
+	if ( ptr->tty )
+		prelude_string_destroy(ptr->tty);
+		
+	retval = prelude_string_new(&ptr->tty);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->tty;
 	return 0;
 }
 
@@ -3119,56 +3299,6 @@ int idmef_user_id_new_name(idmef_user_id_t *ptr, prelude_string_t **ret)
                return retval;
 
         *ret = ptr->name;
-	return 0;
-}
-
-/**
- * idmef_user_id_get_type:
- * @ptr: pointer to a #idmef_user_id_t object.
- *
- * Get type children of the #idmef_user_id_t object.
- *
- * Returns: a pointer to a idmef_user_id_type_t object, or NULL if the children object is not set.
- */
-idmef_user_id_type_t idmef_user_id_get_type(idmef_user_id_t *ptr)
-{
-	return ptr->type;
-}
-
-int idmef_user_id_get_type_value(idmef_user_id_t *ptr, idmef_value_t **value)
-{
-	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_USER_ID_TYPE, ptr->type);
-
-}
-
-/**
- * idmef_user_id_set_type:
- * @ptr: pointer to a #idmef_user_id_t object.
- * @type: pointer to a #idmef_user_id_type_t object.
- *
- * Set @type object as a children of @ptr.
- * if @ptr already contain an @type object, then it is destroyed,
- * and updated to point to the provided @type object.
- */
-
-void idmef_user_id_set_type(idmef_user_id_t *ptr, idmef_user_id_type_t type)
-{
-	ptr->type = type;
-}
-
-/**
- * idmef_user_id_new_type:
- * @ptr: pointer to a #idmef_user_id_t object.
- * @ret: pointer to an address where to store the created #idmef_user_id_type_t object.
- *
- * Create a new type object, children of #idmef_user_id_t.
- * If @ptr already contain a #idmef_user_id_type_t object, then it is destroyed.
- *
- * Returns: 0 on success, or a negative value if an error occured.
- */
-int idmef_user_id_new_type(idmef_user_id_t *ptr, idmef_user_id_type_t **ret)
-{
-        *ret = &ptr->type;
 	return 0;
 }
 
@@ -3306,7 +3436,7 @@ int idmef_user_new_child(void *p, idmef_child_t child, int n, void **ret)
 	switch ( child ) {
 
 		case 0:
-			return idmef_user_new_ident(ptr, (uint64_t **) ret);
+			return idmef_user_new_ident(ptr, (prelude_string_t **) ret);
 
 		case 1:
 			return idmef_user_new_category(ptr, (idmef_user_category_t **) ret);
@@ -3351,6 +3481,11 @@ int idmef_user_new_child(void *p, idmef_child_t child, int n, void **ret)
 static void idmef_user_destroy_internal(idmef_user_t *ptr)
 {
 
+	if ( ptr->ident ) {
+		prelude_string_destroy(ptr->ident);
+		ptr->ident = NULL;
+	}
+
 	{
 		prelude_list_t *n, *tmp;
 		idmef_user_id_t *entry;
@@ -3383,23 +3518,28 @@ void idmef_user_destroy(idmef_user_t *ptr)
 }
 
 /**
- * idmef_user_get_ident:
+ * *idmef_user_get_ident:
  * @ptr: pointer to a #idmef_user_t object.
  *
  * Get ident children of the #idmef_user_t object.
  *
- * Returns: a pointer to a uint64_t object, or NULL if the children object is not set.
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
  */
-uint64_t idmef_user_get_ident(idmef_user_t *ptr)
+prelude_string_t *idmef_user_get_ident(idmef_user_t *ptr)
 {
 	return ptr->ident;
 }
 
 int idmef_user_get_ident_value(idmef_user_t *ptr, idmef_value_t **value)
 {
+	if ( ! ptr->ident ) {
+                *value = NULL;
+		return 0;
+        }
+
         int ret;
 
-	ret = idmef_value_new_uint64(value, ptr->ident);
+	ret = idmef_value_new_string(value, ptr->ident);
 	if ( ret < 0 )
 		return ret;
 
@@ -3411,31 +3551,43 @@ int idmef_user_get_ident_value(idmef_user_t *ptr, idmef_value_t **value)
 /**
  * idmef_user_set_ident:
  * @ptr: pointer to a #idmef_user_t object.
- * @ident: pointer to a #uint64_t object.
+ * @ident: pointer to a #prelude_string_t object.
  *
  * Set @ident object as a children of @ptr.
  * if @ptr already contain an @ident object, then it is destroyed,
  * and updated to point to the provided @ident object.
  */
 
-void idmef_user_set_ident(idmef_user_t *ptr, uint64_t ident)
+void idmef_user_set_ident(idmef_user_t *ptr, prelude_string_t *ident)
 {
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+
 	ptr->ident = ident;
 }
 
 /**
  * idmef_user_new_ident:
  * @ptr: pointer to a #idmef_user_t object.
- * @ret: pointer to an address where to store the created #uint64_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new ident object, children of #idmef_user_t.
- * If @ptr already contain a #uint64_t object, then it is destroyed.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_user_new_ident(idmef_user_t *ptr, uint64_t **ret)
+int idmef_user_new_ident(idmef_user_t *ptr, prelude_string_t **ret)
 {
-        *ret = &ptr->ident;
+        int retval;
+
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+		
+	retval = prelude_string_new(&ptr->ident);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->ident;
 	return 0;
 }
 
@@ -3658,7 +3810,7 @@ int idmef_address_new_child(void *p, idmef_child_t child, int n, void **ret)
 	switch ( child ) {
 
 		case 0:
-			return idmef_address_new_ident(ptr, (uint64_t **) ret);
+			return idmef_address_new_ident(ptr, (prelude_string_t **) ret);
 
 		case 1:
 			return idmef_address_new_category(ptr, (idmef_address_category_t **) ret);
@@ -3686,6 +3838,11 @@ static void idmef_address_destroy_internal(idmef_address_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
+	if ( ptr->ident ) {
+		prelude_string_destroy(ptr->ident);
+		ptr->ident = NULL;
+	}
+
 	if ( ptr->vlan_name ) {
 		prelude_string_destroy(ptr->vlan_name);
 		ptr->vlan_name = NULL;
@@ -3720,23 +3877,28 @@ void idmef_address_destroy(idmef_address_t *ptr)
 }
 
 /**
- * idmef_address_get_ident:
+ * *idmef_address_get_ident:
  * @ptr: pointer to a #idmef_address_t object.
  *
  * Get ident children of the #idmef_address_t object.
  *
- * Returns: a pointer to a uint64_t object, or NULL if the children object is not set.
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
  */
-uint64_t idmef_address_get_ident(idmef_address_t *ptr)
+prelude_string_t *idmef_address_get_ident(idmef_address_t *ptr)
 {
 	return ptr->ident;
 }
 
 int idmef_address_get_ident_value(idmef_address_t *ptr, idmef_value_t **value)
 {
+	if ( ! ptr->ident ) {
+                *value = NULL;
+		return 0;
+        }
+
         int ret;
 
-	ret = idmef_value_new_uint64(value, ptr->ident);
+	ret = idmef_value_new_string(value, ptr->ident);
 	if ( ret < 0 )
 		return ret;
 
@@ -3748,31 +3910,43 @@ int idmef_address_get_ident_value(idmef_address_t *ptr, idmef_value_t **value)
 /**
  * idmef_address_set_ident:
  * @ptr: pointer to a #idmef_address_t object.
- * @ident: pointer to a #uint64_t object.
+ * @ident: pointer to a #prelude_string_t object.
  *
  * Set @ident object as a children of @ptr.
  * if @ptr already contain an @ident object, then it is destroyed,
  * and updated to point to the provided @ident object.
  */
 
-void idmef_address_set_ident(idmef_address_t *ptr, uint64_t ident)
+void idmef_address_set_ident(idmef_address_t *ptr, prelude_string_t *ident)
 {
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+
 	ptr->ident = ident;
 }
 
 /**
  * idmef_address_new_ident:
  * @ptr: pointer to a #idmef_address_t object.
- * @ret: pointer to an address where to store the created #uint64_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new ident object, children of #idmef_address_t.
- * If @ptr already contain a #uint64_t object, then it is destroyed.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_address_new_ident(idmef_address_t *ptr, uint64_t **ret)
+int idmef_address_new_ident(idmef_address_t *ptr, prelude_string_t **ret)
 {
-        *ret = &ptr->ident;
+        int retval;
+
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+		
+	retval = prelude_string_new(&ptr->ident);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->ident;
 	return 0;
 }
 
@@ -4184,7 +4358,7 @@ int idmef_process_new_child(void *p, idmef_child_t child, int n, void **ret)
 	switch ( child ) {
 
 		case 0:
-			return idmef_process_new_ident(ptr, (uint64_t **) ret);
+			return idmef_process_new_ident(ptr, (prelude_string_t **) ret);
 
 		case 1:
 			return idmef_process_new_name(ptr, (prelude_string_t **) ret);
@@ -4267,6 +4441,11 @@ int idmef_process_new_child(void *p, idmef_child_t child, int n, void **ret)
 static void idmef_process_destroy_internal(idmef_process_t *ptr)
 {
 
+	if ( ptr->ident ) {
+		prelude_string_destroy(ptr->ident);
+		ptr->ident = NULL;
+	}
+
 	prelude_string_destroy_internal(&ptr->name);
 
 	if ( ptr->path ) {
@@ -4316,23 +4495,28 @@ void idmef_process_destroy(idmef_process_t *ptr)
 }
 
 /**
- * idmef_process_get_ident:
+ * *idmef_process_get_ident:
  * @ptr: pointer to a #idmef_process_t object.
  *
  * Get ident children of the #idmef_process_t object.
  *
- * Returns: a pointer to a uint64_t object, or NULL if the children object is not set.
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
  */
-uint64_t idmef_process_get_ident(idmef_process_t *ptr)
+prelude_string_t *idmef_process_get_ident(idmef_process_t *ptr)
 {
 	return ptr->ident;
 }
 
 int idmef_process_get_ident_value(idmef_process_t *ptr, idmef_value_t **value)
 {
+	if ( ! ptr->ident ) {
+                *value = NULL;
+		return 0;
+        }
+
         int ret;
 
-	ret = idmef_value_new_uint64(value, ptr->ident);
+	ret = idmef_value_new_string(value, ptr->ident);
 	if ( ret < 0 )
 		return ret;
 
@@ -4344,31 +4528,43 @@ int idmef_process_get_ident_value(idmef_process_t *ptr, idmef_value_t **value)
 /**
  * idmef_process_set_ident:
  * @ptr: pointer to a #idmef_process_t object.
- * @ident: pointer to a #uint64_t object.
+ * @ident: pointer to a #prelude_string_t object.
  *
  * Set @ident object as a children of @ptr.
  * if @ptr already contain an @ident object, then it is destroyed,
  * and updated to point to the provided @ident object.
  */
 
-void idmef_process_set_ident(idmef_process_t *ptr, uint64_t ident)
+void idmef_process_set_ident(idmef_process_t *ptr, prelude_string_t *ident)
 {
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+
 	ptr->ident = ident;
 }
 
 /**
  * idmef_process_new_ident:
  * @ptr: pointer to a #idmef_process_t object.
- * @ret: pointer to an address where to store the created #uint64_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new ident object, children of #idmef_process_t.
- * If @ptr already contain a #uint64_t object, then it is destroyed.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_process_new_ident(idmef_process_t *ptr, uint64_t **ret)
+int idmef_process_new_ident(idmef_process_t *ptr, prelude_string_t **ret)
 {
-        *ret = &ptr->ident;
+        int retval;
+
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+		
+	retval = prelude_string_new(&ptr->ident);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->ident;
 	return 0;
 }
 
@@ -5864,19 +6060,19 @@ int idmef_service_get_child(void *p, idmef_child_t child, void **childptr)
 
 
 		case 2:
-			return idmef_service_get_name_value(ptr, (idmef_value_t **) childptr);
-
-
-		case 3:
-			return idmef_service_get_port_value(ptr, (idmef_value_t **) childptr);
-
-
-		case 4:
 			return idmef_service_get_iana_protocol_number_value(ptr, (idmef_value_t **) childptr);
 
 
-		case 5:
+		case 3:
 			return idmef_service_get_iana_protocol_name_value(ptr, (idmef_value_t **) childptr);
+
+
+		case 4:
+			return idmef_service_get_name_value(ptr, (idmef_value_t **) childptr);
+
+
+		case 5:
+			return idmef_service_get_port_value(ptr, (idmef_value_t **) childptr);
 
 
 		case 6:
@@ -5910,22 +6106,22 @@ int idmef_service_new_child(void *p, idmef_child_t child, int n, void **ret)
 	switch ( child ) {
 
 		case 0:
-			return idmef_service_new_ident(ptr, (uint64_t **) ret);
+			return idmef_service_new_ident(ptr, (prelude_string_t **) ret);
 
 		case 1:
 			return idmef_service_new_ip_version(ptr, (uint8_t **) ret);
 
 		case 2:
-			return idmef_service_new_name(ptr, (prelude_string_t **) ret);
-
-		case 3:
-			return idmef_service_new_port(ptr, (uint16_t **) ret);
-
-		case 4:
 			return idmef_service_new_iana_protocol_number(ptr, (uint8_t **) ret);
 
-		case 5:
+		case 3:
 			return idmef_service_new_iana_protocol_name(ptr, (prelude_string_t **) ret);
+
+		case 4:
+			return idmef_service_new_name(ptr, (prelude_string_t **) ret);
+
+		case 5:
+			return idmef_service_new_port(ptr, (uint16_t **) ret);
 
 		case 6:
 			return idmef_service_new_portlist(ptr, (prelude_string_t **) ret);
@@ -5947,14 +6143,19 @@ int idmef_service_new_child(void *p, idmef_child_t child, int n, void **ret)
 static void idmef_service_destroy_internal(idmef_service_t *ptr)
 {
 
-	if ( ptr->name ) {
-		prelude_string_destroy(ptr->name);
-		ptr->name = NULL;
+	if ( ptr->ident ) {
+		prelude_string_destroy(ptr->ident);
+		ptr->ident = NULL;
 	}
 
 	if ( ptr->iana_protocol_name ) {
 		prelude_string_destroy(ptr->iana_protocol_name);
 		ptr->iana_protocol_name = NULL;
+	}
+
+	if ( ptr->name ) {
+		prelude_string_destroy(ptr->name);
+		ptr->name = NULL;
 	}
 
 	if ( ptr->portlist ) {
@@ -6005,23 +6206,28 @@ void idmef_service_destroy(idmef_service_t *ptr)
 }
 
 /**
- * idmef_service_get_ident:
+ * *idmef_service_get_ident:
  * @ptr: pointer to a #idmef_service_t object.
  *
  * Get ident children of the #idmef_service_t object.
  *
- * Returns: a pointer to a uint64_t object, or NULL if the children object is not set.
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
  */
-uint64_t idmef_service_get_ident(idmef_service_t *ptr)
+prelude_string_t *idmef_service_get_ident(idmef_service_t *ptr)
 {
 	return ptr->ident;
 }
 
 int idmef_service_get_ident_value(idmef_service_t *ptr, idmef_value_t **value)
 {
+	if ( ! ptr->ident ) {
+                *value = NULL;
+		return 0;
+        }
+
         int ret;
 
-	ret = idmef_value_new_uint64(value, ptr->ident);
+	ret = idmef_value_new_string(value, ptr->ident);
 	if ( ret < 0 )
 		return ret;
 
@@ -6033,31 +6239,43 @@ int idmef_service_get_ident_value(idmef_service_t *ptr, idmef_value_t **value)
 /**
  * idmef_service_set_ident:
  * @ptr: pointer to a #idmef_service_t object.
- * @ident: pointer to a #uint64_t object.
+ * @ident: pointer to a #prelude_string_t object.
  *
  * Set @ident object as a children of @ptr.
  * if @ptr already contain an @ident object, then it is destroyed,
  * and updated to point to the provided @ident object.
  */
 
-void idmef_service_set_ident(idmef_service_t *ptr, uint64_t ident)
+void idmef_service_set_ident(idmef_service_t *ptr, prelude_string_t *ident)
 {
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+
 	ptr->ident = ident;
 }
 
 /**
  * idmef_service_new_ident:
  * @ptr: pointer to a #idmef_service_t object.
- * @ret: pointer to an address where to store the created #uint64_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new ident object, children of #idmef_service_t.
- * If @ptr already contain a #uint64_t object, then it is destroyed.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_service_new_ident(idmef_service_t *ptr, uint64_t **ret)
+int idmef_service_new_ident(idmef_service_t *ptr, prelude_string_t **ret)
 {
-        *ret = &ptr->ident;
+        int retval;
+
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+		
+	retval = prelude_string_new(&ptr->ident);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->ident;
 	return 0;
 }
 
@@ -6123,145 +6341,6 @@ int idmef_service_new_ip_version(idmef_service_t *ptr, uint8_t **ret)
 	ptr->ip_version_is_set = 1;
 
         *ret = &ptr->ip_version;
-	return 0;
-}
-
-/**
- * *idmef_service_get_name:
- * @ptr: pointer to a #idmef_service_t object.
- *
- * Get name children of the #idmef_service_t object.
- *
- * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
- */
-prelude_string_t *idmef_service_get_name(idmef_service_t *ptr)
-{
-	return ptr->name;
-}
-
-int idmef_service_get_name_value(idmef_service_t *ptr, idmef_value_t **value)
-{
-	if ( ! ptr->name ) {
-                *value = NULL;
-		return 0;
-        }
-
-        int ret;
-
-	ret = idmef_value_new_string(value, ptr->name);
-	if ( ret < 0 )
-		return ret;
-
-	idmef_value_dont_have_own_data(*value);
-
-	return 0;
-}
-
-/**
- * idmef_service_set_name:
- * @ptr: pointer to a #idmef_service_t object.
- * @name: pointer to a #prelude_string_t object.
- *
- * Set @name object as a children of @ptr.
- * if @ptr already contain an @name object, then it is destroyed,
- * and updated to point to the provided @name object.
- */
-
-void idmef_service_set_name(idmef_service_t *ptr, prelude_string_t *name)
-{
-	if ( ptr->name )
-		prelude_string_destroy(ptr->name);
-
-	ptr->name = name;
-}
-
-/**
- * idmef_service_new_name:
- * @ptr: pointer to a #idmef_service_t object.
- * @ret: pointer to an address where to store the created #prelude_string_t object.
- *
- * Create a new name object, children of #idmef_service_t.
- * If @ptr already contain a #prelude_string_t object, then it is destroyed.
- *
- * Returns: 0 on success, or a negative value if an error occured.
- */
-int idmef_service_new_name(idmef_service_t *ptr, prelude_string_t **ret)
-{
-        int retval;
-
-	if ( ptr->name )
-		prelude_string_destroy(ptr->name);
-		
-	retval = prelude_string_new(&ptr->name);
-        if ( retval < 0 )
-               return retval;
-
-        *ret = ptr->name;
-	return 0;
-}
-
-/**
- * *idmef_service_get_port:
- * @ptr: pointer to a #idmef_service_t object.
- *
- * Get port children of the #idmef_service_t object.
- *
- * Returns: a pointer to a uint16_t object, or NULL if the children object is not set.
- */
-uint16_t *idmef_service_get_port(idmef_service_t *ptr)
-{
-	return ptr->port_is_set ? &ptr->port : NULL;
-}
-
-int idmef_service_get_port_value(idmef_service_t *ptr, idmef_value_t **value)
-{
-        if ( ! ptr->port_is_set ) {
-                *value = NULL;
-                return 0;
-        }
-
-	return idmef_value_new_uint16(value, ptr->port);
-
-}
-
-/**
- * idmef_service_set_port:
- * @ptr: pointer to a #idmef_service_t object.
- * @port: pointer to a #uint16_t object.
- *
- * Set @port object as a children of @ptr.
- * if @ptr already contain an @port object, then it is destroyed,
- * and updated to point to the provided @port object.
- */
-
-void idmef_service_set_port(idmef_service_t *ptr, uint16_t port)
-{
-	ptr->port = port;
-	ptr->port_is_set = 1;
-}
-
-
-void idmef_service_unset_port(idmef_service_t *ptr)
-{
-        ptr->port_is_set = 0;
-}
-
-
-/**
- * idmef_service_new_port:
- * @ptr: pointer to a #idmef_service_t object.
- * @ret: pointer to an address where to store the created #uint16_t object.
- *
- * Create a new port object, children of #idmef_service_t.
- * If @ptr already contain a #uint16_t object, then it is destroyed.
- *
- * Returns: 0 on success, or a negative value if an error occured.
- */
-int idmef_service_new_port(idmef_service_t *ptr, uint16_t **ret)
-{
-	ptr->port_is_set = 1;
-
-        *ret = &ptr->port;
 	return 0;
 }
 
@@ -6401,6 +6480,145 @@ int idmef_service_new_iana_protocol_name(idmef_service_t *ptr, prelude_string_t 
                return retval;
 
         *ret = ptr->iana_protocol_name;
+	return 0;
+}
+
+/**
+ * *idmef_service_get_name:
+ * @ptr: pointer to a #idmef_service_t object.
+ *
+ * Get name children of the #idmef_service_t object.
+ *
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
+ */
+prelude_string_t *idmef_service_get_name(idmef_service_t *ptr)
+{
+	return ptr->name;
+}
+
+int idmef_service_get_name_value(idmef_service_t *ptr, idmef_value_t **value)
+{
+	if ( ! ptr->name ) {
+                *value = NULL;
+		return 0;
+        }
+
+        int ret;
+
+	ret = idmef_value_new_string(value, ptr->name);
+	if ( ret < 0 )
+		return ret;
+
+	idmef_value_dont_have_own_data(*value);
+
+	return 0;
+}
+
+/**
+ * idmef_service_set_name:
+ * @ptr: pointer to a #idmef_service_t object.
+ * @name: pointer to a #prelude_string_t object.
+ *
+ * Set @name object as a children of @ptr.
+ * if @ptr already contain an @name object, then it is destroyed,
+ * and updated to point to the provided @name object.
+ */
+
+void idmef_service_set_name(idmef_service_t *ptr, prelude_string_t *name)
+{
+	if ( ptr->name )
+		prelude_string_destroy(ptr->name);
+
+	ptr->name = name;
+}
+
+/**
+ * idmef_service_new_name:
+ * @ptr: pointer to a #idmef_service_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
+ *
+ * Create a new name object, children of #idmef_service_t.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
+int idmef_service_new_name(idmef_service_t *ptr, prelude_string_t **ret)
+{
+        int retval;
+
+	if ( ptr->name )
+		prelude_string_destroy(ptr->name);
+		
+	retval = prelude_string_new(&ptr->name);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->name;
+	return 0;
+}
+
+/**
+ * *idmef_service_get_port:
+ * @ptr: pointer to a #idmef_service_t object.
+ *
+ * Get port children of the #idmef_service_t object.
+ *
+ * Returns: a pointer to a uint16_t object, or NULL if the children object is not set.
+ */
+uint16_t *idmef_service_get_port(idmef_service_t *ptr)
+{
+	return ptr->port_is_set ? &ptr->port : NULL;
+}
+
+int idmef_service_get_port_value(idmef_service_t *ptr, idmef_value_t **value)
+{
+        if ( ! ptr->port_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_uint16(value, ptr->port);
+
+}
+
+/**
+ * idmef_service_set_port:
+ * @ptr: pointer to a #idmef_service_t object.
+ * @port: pointer to a #uint16_t object.
+ *
+ * Set @port object as a children of @ptr.
+ * if @ptr already contain an @port object, then it is destroyed,
+ * and updated to point to the provided @port object.
+ */
+
+void idmef_service_set_port(idmef_service_t *ptr, uint16_t port)
+{
+	ptr->port = port;
+	ptr->port_is_set = 1;
+}
+
+
+void idmef_service_unset_port(idmef_service_t *ptr)
+{
+        ptr->port_is_set = 0;
+}
+
+
+/**
+ * idmef_service_new_port:
+ * @ptr: pointer to a #idmef_service_t object.
+ * @ret: pointer to an address where to store the created #uint16_t object.
+ *
+ * Create a new port object, children of #idmef_service_t.
+ * If @ptr already contain a #uint16_t object, then it is destroyed.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
+int idmef_service_new_port(idmef_service_t *ptr, uint16_t **ret)
+{
+	ptr->port_is_set = 1;
+
+        *ret = &ptr->port;
 	return 0;
 }
 
@@ -6829,7 +7047,7 @@ int idmef_node_new_child(void *p, idmef_child_t child, int n, void **ret)
 	switch ( child ) {
 
 		case 0:
-			return idmef_node_new_ident(ptr, (uint64_t **) ret);
+			return idmef_node_new_ident(ptr, (prelude_string_t **) ret);
 
 		case 1:
 			return idmef_node_new_category(ptr, (idmef_node_category_t **) ret);
@@ -6880,6 +7098,11 @@ int idmef_node_new_child(void *p, idmef_child_t child, int n, void **ret)
 static void idmef_node_destroy_internal(idmef_node_t *ptr)
 {
 
+	if ( ptr->ident ) {
+		prelude_string_destroy(ptr->ident);
+		ptr->ident = NULL;
+	}
+
 	if ( ptr->location ) {
 		prelude_string_destroy(ptr->location);
 		ptr->location = NULL;
@@ -6922,23 +7145,28 @@ void idmef_node_destroy(idmef_node_t *ptr)
 }
 
 /**
- * idmef_node_get_ident:
+ * *idmef_node_get_ident:
  * @ptr: pointer to a #idmef_node_t object.
  *
  * Get ident children of the #idmef_node_t object.
  *
- * Returns: a pointer to a uint64_t object, or NULL if the children object is not set.
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
  */
-uint64_t idmef_node_get_ident(idmef_node_t *ptr)
+prelude_string_t *idmef_node_get_ident(idmef_node_t *ptr)
 {
 	return ptr->ident;
 }
 
 int idmef_node_get_ident_value(idmef_node_t *ptr, idmef_value_t **value)
 {
+	if ( ! ptr->ident ) {
+                *value = NULL;
+		return 0;
+        }
+
         int ret;
 
-	ret = idmef_value_new_uint64(value, ptr->ident);
+	ret = idmef_value_new_string(value, ptr->ident);
 	if ( ret < 0 )
 		return ret;
 
@@ -6950,31 +7178,43 @@ int idmef_node_get_ident_value(idmef_node_t *ptr, idmef_value_t **value)
 /**
  * idmef_node_set_ident:
  * @ptr: pointer to a #idmef_node_t object.
- * @ident: pointer to a #uint64_t object.
+ * @ident: pointer to a #prelude_string_t object.
  *
  * Set @ident object as a children of @ptr.
  * if @ptr already contain an @ident object, then it is destroyed,
  * and updated to point to the provided @ident object.
  */
 
-void idmef_node_set_ident(idmef_node_t *ptr, uint64_t ident)
+void idmef_node_set_ident(idmef_node_t *ptr, prelude_string_t *ident)
 {
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+
 	ptr->ident = ident;
 }
 
 /**
  * idmef_node_new_ident:
  * @ptr: pointer to a #idmef_node_t object.
- * @ret: pointer to an address where to store the created #uint64_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new ident object, children of #idmef_node_t.
- * If @ptr already contain a #uint64_t object, then it is destroyed.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_node_new_ident(idmef_node_t *ptr, uint64_t **ret)
+int idmef_node_new_ident(idmef_node_t *ptr, prelude_string_t **ret)
 {
-        *ret = &ptr->ident;
+        int retval;
+
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+		
+	retval = prelude_string_new(&ptr->ident);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->ident;
 	return 0;
 }
 
@@ -7349,7 +7589,7 @@ int idmef_source_new_child(void *p, idmef_child_t child, int n, void **ret)
 	switch ( child ) {
 
 		case 0:
-			return idmef_source_new_ident(ptr, (uint64_t **) ret);
+			return idmef_source_new_ident(ptr, (prelude_string_t **) ret);
 
 		case 1:
 			return idmef_source_new_spoofed(ptr, (idmef_source_spoofed_t **) ret);
@@ -7380,6 +7620,11 @@ static void idmef_source_destroy_internal(idmef_source_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
+	if ( ptr->ident ) {
+		prelude_string_destroy(ptr->ident);
+		ptr->ident = NULL;
+	}
+
 	if ( ptr->interface ) {
 		prelude_string_destroy(ptr->interface);
 		ptr->interface = NULL;
@@ -7427,23 +7672,28 @@ void idmef_source_destroy(idmef_source_t *ptr)
 }
 
 /**
- * idmef_source_get_ident:
+ * *idmef_source_get_ident:
  * @ptr: pointer to a #idmef_source_t object.
  *
  * Get ident children of the #idmef_source_t object.
  *
- * Returns: a pointer to a uint64_t object, or NULL if the children object is not set.
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
  */
-uint64_t idmef_source_get_ident(idmef_source_t *ptr)
+prelude_string_t *idmef_source_get_ident(idmef_source_t *ptr)
 {
 	return ptr->ident;
 }
 
 int idmef_source_get_ident_value(idmef_source_t *ptr, idmef_value_t **value)
 {
+	if ( ! ptr->ident ) {
+                *value = NULL;
+		return 0;
+        }
+
         int ret;
 
-	ret = idmef_value_new_uint64(value, ptr->ident);
+	ret = idmef_value_new_string(value, ptr->ident);
 	if ( ret < 0 )
 		return ret;
 
@@ -7455,31 +7705,43 @@ int idmef_source_get_ident_value(idmef_source_t *ptr, idmef_value_t **value)
 /**
  * idmef_source_set_ident:
  * @ptr: pointer to a #idmef_source_t object.
- * @ident: pointer to a #uint64_t object.
+ * @ident: pointer to a #prelude_string_t object.
  *
  * Set @ident object as a children of @ptr.
  * if @ptr already contain an @ident object, then it is destroyed,
  * and updated to point to the provided @ident object.
  */
 
-void idmef_source_set_ident(idmef_source_t *ptr, uint64_t ident)
+void idmef_source_set_ident(idmef_source_t *ptr, prelude_string_t *ident)
 {
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+
 	ptr->ident = ident;
 }
 
 /**
  * idmef_source_new_ident:
  * @ptr: pointer to a #idmef_source_t object.
- * @ret: pointer to an address where to store the created #uint64_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new ident object, children of #idmef_source_t.
- * If @ptr already contain a #uint64_t object, then it is destroyed.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_source_new_ident(idmef_source_t *ptr, uint64_t **ret)
+int idmef_source_new_ident(idmef_source_t *ptr, prelude_string_t **ret)
 {
-        *ret = &ptr->ident;
+        int retval;
+
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+		
+	retval = prelude_string_new(&ptr->ident);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->ident;
 	return 0;
 }
 
@@ -9090,7 +9352,7 @@ int idmef_file_new_child(void *p, idmef_child_t child, int n, void **ret)
 	switch ( child ) {
 
 		case 0:
-			return idmef_file_new_ident(ptr, (uint64_t **) ret);
+			return idmef_file_new_ident(ptr, (prelude_string_t **) ret);
 
 		case 1:
 			return idmef_file_new_name(ptr, (prelude_string_t **) ret);
@@ -9229,6 +9491,11 @@ static void idmef_file_destroy_internal(idmef_file_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
+	if ( ptr->ident ) {
+		prelude_string_destroy(ptr->ident);
+		ptr->ident = NULL;
+	}
+
 	prelude_string_destroy_internal(&ptr->name);
 
 	prelude_string_destroy_internal(&ptr->path);
@@ -9305,23 +9572,28 @@ void idmef_file_destroy(idmef_file_t *ptr)
 }
 
 /**
- * idmef_file_get_ident:
+ * *idmef_file_get_ident:
  * @ptr: pointer to a #idmef_file_t object.
  *
  * Get ident children of the #idmef_file_t object.
  *
- * Returns: a pointer to a uint64_t object, or NULL if the children object is not set.
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
  */
-uint64_t idmef_file_get_ident(idmef_file_t *ptr)
+prelude_string_t *idmef_file_get_ident(idmef_file_t *ptr)
 {
 	return ptr->ident;
 }
 
 int idmef_file_get_ident_value(idmef_file_t *ptr, idmef_value_t **value)
 {
+	if ( ! ptr->ident ) {
+                *value = NULL;
+		return 0;
+        }
+
         int ret;
 
-	ret = idmef_value_new_uint64(value, ptr->ident);
+	ret = idmef_value_new_string(value, ptr->ident);
 	if ( ret < 0 )
 		return ret;
 
@@ -9333,31 +9605,43 @@ int idmef_file_get_ident_value(idmef_file_t *ptr, idmef_value_t **value)
 /**
  * idmef_file_set_ident:
  * @ptr: pointer to a #idmef_file_t object.
- * @ident: pointer to a #uint64_t object.
+ * @ident: pointer to a #prelude_string_t object.
  *
  * Set @ident object as a children of @ptr.
  * if @ptr already contain an @ident object, then it is destroyed,
  * and updated to point to the provided @ident object.
  */
 
-void idmef_file_set_ident(idmef_file_t *ptr, uint64_t ident)
+void idmef_file_set_ident(idmef_file_t *ptr, prelude_string_t *ident)
 {
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+
 	ptr->ident = ident;
 }
 
 /**
  * idmef_file_new_ident:
  * @ptr: pointer to a #idmef_file_t object.
- * @ret: pointer to an address where to store the created #uint64_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new ident object, children of #idmef_file_t.
- * If @ptr already contain a #uint64_t object, then it is destroyed.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_file_new_ident(idmef_file_t *ptr, uint64_t **ret)
+int idmef_file_new_ident(idmef_file_t *ptr, prelude_string_t **ret)
 {
-        *ret = &ptr->ident;
+        int retval;
+
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+		
+	retval = prelude_string_new(&ptr->ident);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->ident;
 	return 0;
 }
 
@@ -10727,7 +11011,7 @@ int idmef_target_new_child(void *p, idmef_child_t child, int n, void **ret)
 	switch ( child ) {
 
 		case 0:
-			return idmef_target_new_ident(ptr, (uint64_t **) ret);
+			return idmef_target_new_ident(ptr, (prelude_string_t **) ret);
 
 		case 1:
 			return idmef_target_new_decoy(ptr, (idmef_target_decoy_t **) ret);
@@ -10790,6 +11074,11 @@ static void idmef_target_destroy_internal(idmef_target_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
+	if ( ptr->ident ) {
+		prelude_string_destroy(ptr->ident);
+		ptr->ident = NULL;
+	}
+
 	prelude_string_destroy_internal(&ptr->interface);
 
 	if ( ptr->node ) {
@@ -10844,23 +11133,28 @@ void idmef_target_destroy(idmef_target_t *ptr)
 }
 
 /**
- * idmef_target_get_ident:
+ * *idmef_target_get_ident:
  * @ptr: pointer to a #idmef_target_t object.
  *
  * Get ident children of the #idmef_target_t object.
  *
- * Returns: a pointer to a uint64_t object, or NULL if the children object is not set.
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
  */
-uint64_t idmef_target_get_ident(idmef_target_t *ptr)
+prelude_string_t *idmef_target_get_ident(idmef_target_t *ptr)
 {
 	return ptr->ident;
 }
 
 int idmef_target_get_ident_value(idmef_target_t *ptr, idmef_value_t **value)
 {
+	if ( ! ptr->ident ) {
+                *value = NULL;
+		return 0;
+        }
+
         int ret;
 
-	ret = idmef_value_new_uint64(value, ptr->ident);
+	ret = idmef_value_new_string(value, ptr->ident);
 	if ( ret < 0 )
 		return ret;
 
@@ -10872,31 +11166,43 @@ int idmef_target_get_ident_value(idmef_target_t *ptr, idmef_value_t **value)
 /**
  * idmef_target_set_ident:
  * @ptr: pointer to a #idmef_target_t object.
- * @ident: pointer to a #uint64_t object.
+ * @ident: pointer to a #prelude_string_t object.
  *
  * Set @ident object as a children of @ptr.
  * if @ptr already contain an @ident object, then it is destroyed,
  * and updated to point to the provided @ident object.
  */
 
-void idmef_target_set_ident(idmef_target_t *ptr, uint64_t ident)
+void idmef_target_set_ident(idmef_target_t *ptr, prelude_string_t *ident)
 {
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+
 	ptr->ident = ident;
 }
 
 /**
  * idmef_target_new_ident:
  * @ptr: pointer to a #idmef_target_t object.
- * @ret: pointer to an address where to store the created #uint64_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new ident object, children of #idmef_target_t.
- * If @ptr already contain a #uint64_t object, then it is destroyed.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_target_new_ident(idmef_target_t *ptr, uint64_t **ret)
+int idmef_target_new_ident(idmef_target_t *ptr, prelude_string_t **ret)
 {
-        *ret = &ptr->ident;
+        int retval;
+
+	if ( ptr->ident )
+		prelude_string_destroy(ptr->ident);
+		
+	retval = prelude_string_new(&ptr->ident);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->ident;
 	return 0;
 }
 
@@ -11446,7 +11752,7 @@ int idmef_analyzer_new_child(void *p, idmef_child_t child, int n, void **ret)
 	switch ( child ) {
 
 		case 0:
-			return idmef_analyzer_new_analyzerid(ptr, (uint64_t **) ret);
+			return idmef_analyzer_new_analyzerid(ptr, (prelude_string_t **) ret);
 
 		case 1:
 			return idmef_analyzer_new_name(ptr, (prelude_string_t **) ret);
@@ -11485,6 +11791,11 @@ int idmef_analyzer_new_child(void *p, idmef_child_t child, int n, void **ret)
 
 static void idmef_analyzer_destroy_internal(idmef_analyzer_t *ptr)
 {
+
+	if ( ptr->analyzerid ) {
+		prelude_string_destroy(ptr->analyzerid);
+		ptr->analyzerid = NULL;
+	}
 
 	if ( ptr->name ) {
 		prelude_string_destroy(ptr->name);
@@ -11558,23 +11869,28 @@ void idmef_analyzer_destroy(idmef_analyzer_t *ptr)
 }
 
 /**
- * idmef_analyzer_get_analyzerid:
+ * *idmef_analyzer_get_analyzerid:
  * @ptr: pointer to a #idmef_analyzer_t object.
  *
  * Get analyzerid children of the #idmef_analyzer_t object.
  *
- * Returns: a pointer to a uint64_t object, or NULL if the children object is not set.
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
  */
-uint64_t idmef_analyzer_get_analyzerid(idmef_analyzer_t *ptr)
+prelude_string_t *idmef_analyzer_get_analyzerid(idmef_analyzer_t *ptr)
 {
 	return ptr->analyzerid;
 }
 
 int idmef_analyzer_get_analyzerid_value(idmef_analyzer_t *ptr, idmef_value_t **value)
 {
+	if ( ! ptr->analyzerid ) {
+                *value = NULL;
+		return 0;
+        }
+
         int ret;
 
-	ret = idmef_value_new_uint64(value, ptr->analyzerid);
+	ret = idmef_value_new_string(value, ptr->analyzerid);
 	if ( ret < 0 )
 		return ret;
 
@@ -11586,31 +11902,43 @@ int idmef_analyzer_get_analyzerid_value(idmef_analyzer_t *ptr, idmef_value_t **v
 /**
  * idmef_analyzer_set_analyzerid:
  * @ptr: pointer to a #idmef_analyzer_t object.
- * @analyzerid: pointer to a #uint64_t object.
+ * @analyzerid: pointer to a #prelude_string_t object.
  *
  * Set @analyzerid object as a children of @ptr.
  * if @ptr already contain an @analyzerid object, then it is destroyed,
  * and updated to point to the provided @analyzerid object.
  */
 
-void idmef_analyzer_set_analyzerid(idmef_analyzer_t *ptr, uint64_t analyzerid)
+void idmef_analyzer_set_analyzerid(idmef_analyzer_t *ptr, prelude_string_t *analyzerid)
 {
+	if ( ptr->analyzerid )
+		prelude_string_destroy(ptr->analyzerid);
+
 	ptr->analyzerid = analyzerid;
 }
 
 /**
  * idmef_analyzer_new_analyzerid:
  * @ptr: pointer to a #idmef_analyzer_t object.
- * @ret: pointer to an address where to store the created #uint64_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new analyzerid object, children of #idmef_analyzer_t.
- * If @ptr already contain a #uint64_t object, then it is destroyed.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_analyzer_new_analyzerid(idmef_analyzer_t *ptr, uint64_t **ret)
+int idmef_analyzer_new_analyzerid(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
-        *ret = &ptr->analyzerid;
+        int retval;
+
+	if ( ptr->analyzerid )
+		prelude_string_destroy(ptr->analyzerid);
+		
+	retval = prelude_string_new(&ptr->analyzerid);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->analyzerid;
 	return 0;
 }
 
@@ -13285,27 +13613,29 @@ int idmef_confidence_new_rating(idmef_confidence_t *ptr, idmef_confidence_rating
 }
 
 /**
- * *idmef_confidence_get_confidence:
+ * idmef_confidence_get_confidence:
  * @ptr: pointer to a #idmef_confidence_t object.
  *
  * Get confidence children of the #idmef_confidence_t object.
  *
  * Returns: a pointer to a float object, or NULL if the children object is not set.
  */
-float *idmef_confidence_get_confidence(idmef_confidence_t *ptr)
+float idmef_confidence_get_confidence(idmef_confidence_t *ptr)
 {
-	return ptr->confidence_is_set ? &ptr->confidence : NULL;
+	return ptr->confidence;
 }
 
 int idmef_confidence_get_confidence_value(idmef_confidence_t *ptr, idmef_value_t **value)
 {
-        if ( ! ptr->confidence_is_set ) {
-                *value = NULL;
-                return 0;
-        }
+        int ret;
 
-	return idmef_value_new_float(value, ptr->confidence);
+	ret = idmef_value_new_float(value, ptr->confidence);
+	if ( ret < 0 )
+		return ret;
 
+	idmef_value_dont_have_own_data(*value);
+
+	return 0;
 }
 
 /**
@@ -13321,15 +13651,7 @@ int idmef_confidence_get_confidence_value(idmef_confidence_t *ptr, idmef_value_t
 void idmef_confidence_set_confidence(idmef_confidence_t *ptr, float confidence)
 {
 	ptr->confidence = confidence;
-	ptr->confidence_is_set = 1;
 }
-
-
-void idmef_confidence_unset_confidence(idmef_confidence_t *ptr)
-{
-        ptr->confidence_is_set = 0;
-}
-
 
 /**
  * idmef_confidence_new_confidence:
@@ -13343,8 +13665,6 @@ void idmef_confidence_unset_confidence(idmef_confidence_t *ptr)
  */
 int idmef_confidence_new_confidence(idmef_confidence_t *ptr, float **ret)
 {
-	ptr->confidence_is_set = 1;
-
         *ret = &ptr->confidence;
 	return 0;
 }
@@ -14793,7 +15113,7 @@ int idmef_alert_new_child(void *p, idmef_child_t child, int n, void **ret)
 	switch ( child ) {
 
 		case 0:
-			return idmef_alert_new_messageid(ptr, (uint64_t **) ret);
+			return idmef_alert_new_messageid(ptr, (prelude_string_t **) ret);
 
 		case 1:
 			return idmef_alert_new_analyzer(ptr, (idmef_analyzer_t **) ret);
@@ -14926,6 +15246,11 @@ int idmef_alert_new_child(void *p, idmef_child_t child, int n, void **ret)
 static void idmef_alert_destroy_internal(idmef_alert_t *ptr)
 {
 
+	if ( ptr->messageid ) {
+		prelude_string_destroy(ptr->messageid);
+		ptr->messageid = NULL;
+	}
+
 	if ( ptr->analyzer ) {
 		idmef_analyzer_destroy(ptr->analyzer);
 		ptr->analyzer = NULL;
@@ -15023,23 +15348,28 @@ void idmef_alert_destroy(idmef_alert_t *ptr)
 }
 
 /**
- * idmef_alert_get_messageid:
+ * *idmef_alert_get_messageid:
  * @ptr: pointer to a #idmef_alert_t object.
  *
  * Get messageid children of the #idmef_alert_t object.
  *
- * Returns: a pointer to a uint64_t object, or NULL if the children object is not set.
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
  */
-uint64_t idmef_alert_get_messageid(idmef_alert_t *ptr)
+prelude_string_t *idmef_alert_get_messageid(idmef_alert_t *ptr)
 {
 	return ptr->messageid;
 }
 
 int idmef_alert_get_messageid_value(idmef_alert_t *ptr, idmef_value_t **value)
 {
+	if ( ! ptr->messageid ) {
+                *value = NULL;
+		return 0;
+        }
+
         int ret;
 
-	ret = idmef_value_new_uint64(value, ptr->messageid);
+	ret = idmef_value_new_string(value, ptr->messageid);
 	if ( ret < 0 )
 		return ret;
 
@@ -15051,31 +15381,43 @@ int idmef_alert_get_messageid_value(idmef_alert_t *ptr, idmef_value_t **value)
 /**
  * idmef_alert_set_messageid:
  * @ptr: pointer to a #idmef_alert_t object.
- * @messageid: pointer to a #uint64_t object.
+ * @messageid: pointer to a #prelude_string_t object.
  *
  * Set @messageid object as a children of @ptr.
  * if @ptr already contain an @messageid object, then it is destroyed,
  * and updated to point to the provided @messageid object.
  */
 
-void idmef_alert_set_messageid(idmef_alert_t *ptr, uint64_t messageid)
+void idmef_alert_set_messageid(idmef_alert_t *ptr, prelude_string_t *messageid)
 {
+	if ( ptr->messageid )
+		prelude_string_destroy(ptr->messageid);
+
 	ptr->messageid = messageid;
 }
 
 /**
  * idmef_alert_new_messageid:
  * @ptr: pointer to a #idmef_alert_t object.
- * @ret: pointer to an address where to store the created #uint64_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new messageid object, children of #idmef_alert_t.
- * If @ptr already contain a #uint64_t object, then it is destroyed.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_alert_new_messageid(idmef_alert_t *ptr, uint64_t **ret)
+int idmef_alert_new_messageid(idmef_alert_t *ptr, prelude_string_t **ret)
 {
-        *ret = &ptr->messageid;
+        int retval;
+
+	if ( ptr->messageid )
+		prelude_string_destroy(ptr->messageid);
+		
+	retval = prelude_string_new(&ptr->messageid);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->messageid;
 	return 0;
 }
 
@@ -16100,6 +16442,10 @@ int idmef_heartbeat_get_child(void *p, idmef_child_t child, void **childptr)
 
 
 		case 4:
+			return idmef_heartbeat_get_heartbeat_interval_value(ptr, (idmef_value_t **) childptr);
+
+
+		case 5:
                         *childptr = &ptr->additional_data_list;
 			return 0;
 
@@ -16115,7 +16461,7 @@ int idmef_heartbeat_new_child(void *p, idmef_child_t child, int n, void **ret)
 	switch ( child ) {
 
 		case 0:
-			return idmef_heartbeat_new_messageid(ptr, (uint64_t **) ret);
+			return idmef_heartbeat_new_messageid(ptr, (prelude_string_t **) ret);
 
 		case 1:
 			return idmef_heartbeat_new_analyzer(ptr, (idmef_analyzer_t **) ret);
@@ -16126,7 +16472,10 @@ int idmef_heartbeat_new_child(void *p, idmef_child_t child, int n, void **ret)
 		case 3:
 			return idmef_heartbeat_new_analyzer_time(ptr, (idmef_time_t **) ret);
 
-		case 4: {
+		case 4:
+			return idmef_heartbeat_new_heartbeat_interval(ptr, (uint32_t **) ret);
+
+		case 5: {
                         int i, j;
                         int retval;
 			prelude_list_t *tmp;
@@ -16165,6 +16514,11 @@ int idmef_heartbeat_new_child(void *p, idmef_child_t child, int n, void **ret)
 
 static void idmef_heartbeat_destroy_internal(idmef_heartbeat_t *ptr)
 {
+
+	if ( ptr->messageid ) {
+		prelude_string_destroy(ptr->messageid);
+		ptr->messageid = NULL;
+	}
 
 	if ( ptr->analyzer ) {
 		idmef_analyzer_destroy(ptr->analyzer);
@@ -16207,23 +16561,28 @@ void idmef_heartbeat_destroy(idmef_heartbeat_t *ptr)
 }
 
 /**
- * idmef_heartbeat_get_messageid:
+ * *idmef_heartbeat_get_messageid:
  * @ptr: pointer to a #idmef_heartbeat_t object.
  *
  * Get messageid children of the #idmef_heartbeat_t object.
  *
- * Returns: a pointer to a uint64_t object, or NULL if the children object is not set.
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
  */
-uint64_t idmef_heartbeat_get_messageid(idmef_heartbeat_t *ptr)
+prelude_string_t *idmef_heartbeat_get_messageid(idmef_heartbeat_t *ptr)
 {
 	return ptr->messageid;
 }
 
 int idmef_heartbeat_get_messageid_value(idmef_heartbeat_t *ptr, idmef_value_t **value)
 {
+	if ( ! ptr->messageid ) {
+                *value = NULL;
+		return 0;
+        }
+
         int ret;
 
-	ret = idmef_value_new_uint64(value, ptr->messageid);
+	ret = idmef_value_new_string(value, ptr->messageid);
 	if ( ret < 0 )
 		return ret;
 
@@ -16235,31 +16594,43 @@ int idmef_heartbeat_get_messageid_value(idmef_heartbeat_t *ptr, idmef_value_t **
 /**
  * idmef_heartbeat_set_messageid:
  * @ptr: pointer to a #idmef_heartbeat_t object.
- * @messageid: pointer to a #uint64_t object.
+ * @messageid: pointer to a #prelude_string_t object.
  *
  * Set @messageid object as a children of @ptr.
  * if @ptr already contain an @messageid object, then it is destroyed,
  * and updated to point to the provided @messageid object.
  */
 
-void idmef_heartbeat_set_messageid(idmef_heartbeat_t *ptr, uint64_t messageid)
+void idmef_heartbeat_set_messageid(idmef_heartbeat_t *ptr, prelude_string_t *messageid)
 {
+	if ( ptr->messageid )
+		prelude_string_destroy(ptr->messageid);
+
 	ptr->messageid = messageid;
 }
 
 /**
  * idmef_heartbeat_new_messageid:
  * @ptr: pointer to a #idmef_heartbeat_t object.
- * @ret: pointer to an address where to store the created #uint64_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new messageid object, children of #idmef_heartbeat_t.
- * If @ptr already contain a #uint64_t object, then it is destroyed.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_heartbeat_new_messageid(idmef_heartbeat_t *ptr, uint64_t **ret)
+int idmef_heartbeat_new_messageid(idmef_heartbeat_t *ptr, prelude_string_t **ret)
 {
-        *ret = &ptr->messageid;
+        int retval;
+
+	if ( ptr->messageid )
+		prelude_string_destroy(ptr->messageid);
+		
+	retval = prelude_string_new(&ptr->messageid);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->messageid;
 	return 0;
 }
 
@@ -16457,6 +16828,71 @@ int idmef_heartbeat_new_analyzer_time(idmef_heartbeat_t *ptr, idmef_time_t **ret
                return retval;
 
         *ret = ptr->analyzer_time;
+	return 0;
+}
+
+/**
+ * *idmef_heartbeat_get_heartbeat_interval:
+ * @ptr: pointer to a #idmef_heartbeat_t object.
+ *
+ * Get heartbeat_interval children of the #idmef_heartbeat_t object.
+ *
+ * Returns: a pointer to a uint32_t object, or NULL if the children object is not set.
+ */
+uint32_t *idmef_heartbeat_get_heartbeat_interval(idmef_heartbeat_t *ptr)
+{
+	return ptr->heartbeat_interval_is_set ? &ptr->heartbeat_interval : NULL;
+}
+
+int idmef_heartbeat_get_heartbeat_interval_value(idmef_heartbeat_t *ptr, idmef_value_t **value)
+{
+        if ( ! ptr->heartbeat_interval_is_set ) {
+                *value = NULL;
+                return 0;
+        }
+
+	return idmef_value_new_uint32(value, ptr->heartbeat_interval);
+
+}
+
+/**
+ * idmef_heartbeat_set_heartbeat_interval:
+ * @ptr: pointer to a #idmef_heartbeat_t object.
+ * @heartbeat_interval: pointer to a #uint32_t object.
+ *
+ * Set @heartbeat_interval object as a children of @ptr.
+ * if @ptr already contain an @heartbeat_interval object, then it is destroyed,
+ * and updated to point to the provided @heartbeat_interval object.
+ */
+
+void idmef_heartbeat_set_heartbeat_interval(idmef_heartbeat_t *ptr, uint32_t heartbeat_interval)
+{
+	ptr->heartbeat_interval = heartbeat_interval;
+	ptr->heartbeat_interval_is_set = 1;
+}
+
+
+void idmef_heartbeat_unset_heartbeat_interval(idmef_heartbeat_t *ptr)
+{
+        ptr->heartbeat_interval_is_set = 0;
+}
+
+
+/**
+ * idmef_heartbeat_new_heartbeat_interval:
+ * @ptr: pointer to a #idmef_heartbeat_t object.
+ * @ret: pointer to an address where to store the created #uint32_t object.
+ *
+ * Create a new heartbeat_interval object, children of #idmef_heartbeat_t.
+ * If @ptr already contain a #uint32_t object, then it is destroyed.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
+int idmef_heartbeat_new_heartbeat_interval(idmef_heartbeat_t *ptr, uint32_t **ret)
+{
+	ptr->heartbeat_interval_is_set = 1;
+
+        *ret = &ptr->heartbeat_interval;
 	return 0;
 }
 

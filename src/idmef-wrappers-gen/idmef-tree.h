@@ -84,6 +84,9 @@
 
 #define OPTIONAL_INT(type, name) type name; int name_ ## is_set:1
 
+#define IDENT(name) uint64_t name
+
+
 #endif /* _GENERATE */
 
 /*
@@ -178,8 +181,7 @@ struct {
 
 struct {
         REFCOUNT;
-        
-        uint64_t ident;
+        prelude_string_t *ident;
         prelude_string_t text;
         LISTED_OBJECT(reference_list, idmef_reference_t);
         
@@ -207,9 +209,10 @@ ENUM() {
 struct {
         IS_LISTED;
 	REFCOUNT;
-        uint64_t ident;
-        prelude_string_t *name;
+        prelude_string_t *ident;
         idmef_user_id_type_t type;
+        prelude_string_t *tty;
+        prelude_string_t *name;
         OPTIONAL_INT(uint32_t, number);
 } TYPE_ID(idmef_user_id_t, 8);
 
@@ -232,7 +235,7 @@ ENUM(cat) {
 
 struct {
 	REFCOUNT;
-        uint64_t ident;
+        prelude_string_t *ident;
         idmef_user_category_t category;
         LISTED_OBJECT(user_id_list, idmef_user_id_t);
 } TYPE_ID(idmef_user_t, 10);
@@ -268,7 +271,7 @@ ENUM(addr) {
 struct {
         IS_LISTED;
         REFCOUNT;
-        uint64_t ident;
+        prelude_string_t *ident;
         idmef_address_category_t category;
         prelude_string_t *vlan_name;
         OPTIONAL_INT(int32_t, vlan_num);
@@ -284,7 +287,7 @@ struct {
 
 struct {
 	REFCOUNT;
-        uint64_t ident;
+        prelude_string_t *ident;
         prelude_string_t name;
         OPTIONAL_INT(uint32_t, pid);
         prelude_string_t *path;
@@ -335,15 +338,14 @@ ENUM() {
  */
 struct {
 	REFCOUNT;
-        uint64_t ident;
-        OPTIONAL_INT(uint8_t, ip_version);
+        prelude_string_t *ident;
         
-        prelude_string_t *name;
-        OPTIONAL_INT(uint16_t, port);
-
+        OPTIONAL_INT(uint8_t, ip_version);
         OPTIONAL_INT(uint8_t, iana_protocol_number);
         prelude_string_t *iana_protocol_name;
         
+        prelude_string_t *name;
+        OPTIONAL_INT(uint16_t, port);
         prelude_string_t *portlist;
         prelude_string_t *protocol;
 
@@ -380,7 +382,7 @@ ENUM(node) {
 
 struct {
 	REFCOUNT;
-        uint64_t ident;
+        prelude_string_t *ident;
         idmef_node_category_t category;
         prelude_string_t *location;
         prelude_string_t *name;
@@ -405,8 +407,8 @@ ENUM() {
 struct {
         IS_LISTED;
 	REFCOUNT;
-
-        uint64_t ident;
+        prelude_string_t *ident;
+        
         idmef_source_spoofed_t spoofed;
         prelude_string_t *interface;
 
@@ -504,7 +506,7 @@ ENUM(fstype) {
 struct {
         IS_LISTED;
 	REFCOUNT;
-        uint64_t ident;
+        prelude_string_t *ident;
         
         prelude_string_t name;
         prelude_string_t path;
@@ -571,8 +573,8 @@ ENUM() {
 struct {
         IS_LISTED;
 	REFCOUNT;
+        prelude_string_t *ident;
         
-        uint64_t ident;
         idmef_target_decoy_t decoy;
         prelude_string_t interface;
 
@@ -592,8 +594,7 @@ struct {
  */
 struct {
 	REFCOUNT;
-
-        uint64_t analyzerid;
+        prelude_string_t *analyzerid;
         
         prelude_string_t *name;
         prelude_string_t *manufacturer;
@@ -613,6 +614,7 @@ struct {
 
 /*
  * AlertIdent class
+ * FIXME
  */
 
 struct {
@@ -703,7 +705,7 @@ struct {
 	REFCOUNT;
 
         idmef_confidence_rating_t rating;
-        OPTIONAL_INT(float, confidence);
+        float confidence; /* FIXME was optional int */
 } TYPE_ID(idmef_confidence_t, 40);
 
 
@@ -776,7 +778,7 @@ ENUM(idmef) {
 
 
 struct {
-        uint64_t messageid;
+        prelude_string_t *messageid;
         
         idmef_analyzer_t *analyzer;
         idmef_time_t create_time;
@@ -807,12 +809,13 @@ struct {
  * Heartbeat class
  */
 struct {
-        uint64_t messageid;
+        prelude_string_t *messageid;
         idmef_analyzer_t *analyzer;
 
         idmef_time_t create_time;
         idmef_time_t *analyzer_time;
 
+        OPTIONAL_INT(uint32_t, heartbeat_interval);
         LISTED_OBJECT(additional_data_list, idmef_additional_data_t);
 } TYPE_ID(idmef_heartbeat_t, 47);
 

@@ -217,7 +217,7 @@ void idmef_classification_write(idmef_classification_t *classification, prelude_
 
         prelude_msgbuf_set(msg, MSG_CLASSIFICATION_TAG, 0, NULL);
 
-        uint64_write(idmef_classification_get_ident(classification), msg, MSG_CLASSIFICATION_IDENT);
+        prelude_string_write(idmef_classification_get_ident(classification), msg, MSG_CLASSIFICATION_IDENT);
         prelude_string_write(idmef_classification_get_text(classification), msg, MSG_CLASSIFICATION_TEXT);
 
         {
@@ -240,9 +240,10 @@ void idmef_user_id_write(idmef_user_id_t *user_id, prelude_msgbuf_t *msg)
 
         prelude_msgbuf_set(msg, MSG_USER_ID_TAG, 0, NULL);
 
-        uint64_write(idmef_user_id_get_ident(user_id), msg, MSG_USER_ID_IDENT);
-        prelude_string_write(idmef_user_id_get_name(user_id), msg, MSG_USER_ID_NAME);
+        prelude_string_write(idmef_user_id_get_ident(user_id), msg, MSG_USER_ID_IDENT);
         uint32_write(idmef_user_id_get_type(user_id), msg, MSG_USER_ID_TYPE);
+        prelude_string_write(idmef_user_id_get_tty(user_id), msg, MSG_USER_ID_TTY);
+        prelude_string_write(idmef_user_id_get_name(user_id), msg, MSG_USER_ID_NAME);
 
 	{
 		uint32_t *tmp;
@@ -263,7 +264,7 @@ void idmef_user_write(idmef_user_t *user, prelude_msgbuf_t *msg)
 
         prelude_msgbuf_set(msg, MSG_USER_TAG, 0, NULL);
 
-        uint64_write(idmef_user_get_ident(user), msg, MSG_USER_IDENT);
+        prelude_string_write(idmef_user_get_ident(user), msg, MSG_USER_IDENT);
         uint32_write(idmef_user_get_category(user), msg, MSG_USER_CATEGORY);
 
         {
@@ -286,7 +287,7 @@ void idmef_address_write(idmef_address_t *address, prelude_msgbuf_t *msg)
 
         prelude_msgbuf_set(msg, MSG_ADDRESS_TAG, 0, NULL);
 
-        uint64_write(idmef_address_get_ident(address), msg, MSG_ADDRESS_IDENT);
+        prelude_string_write(idmef_address_get_ident(address), msg, MSG_ADDRESS_IDENT);
         uint32_write(idmef_address_get_category(address), msg, MSG_ADDRESS_CATEGORY);
         prelude_string_write(idmef_address_get_vlan_name(address), msg, MSG_ADDRESS_VLAN_NAME);
 
@@ -311,7 +312,7 @@ void idmef_process_write(idmef_process_t *process, prelude_msgbuf_t *msg)
 
         prelude_msgbuf_set(msg, MSG_PROCESS_TAG, 0, NULL);
 
-        uint64_write(idmef_process_get_ident(process), msg, MSG_PROCESS_IDENT);
+        prelude_string_write(idmef_process_get_ident(process), msg, MSG_PROCESS_IDENT);
         prelude_string_write(idmef_process_get_name(process), msg, MSG_PROCESS_NAME);
 
 	{
@@ -394,7 +395,7 @@ void idmef_service_write(idmef_service_t *service, prelude_msgbuf_t *msg)
 
         prelude_msgbuf_set(msg, MSG_SERVICE_TAG, 0, NULL);
 
-        uint64_write(idmef_service_get_ident(service), msg, MSG_SERVICE_IDENT);
+        prelude_string_write(idmef_service_get_ident(service), msg, MSG_SERVICE_IDENT);
 
 	{
 		uint8_t *tmp;
@@ -402,15 +403,6 @@ void idmef_service_write(idmef_service_t *service, prelude_msgbuf_t *msg)
 		tmp = idmef_service_get_ip_version(service);
 		if ( tmp ) {
 			uint8_write(*tmp, msg, MSG_SERVICE_IP_VERSION);
-		}
-	}        prelude_string_write(idmef_service_get_name(service), msg, MSG_SERVICE_NAME);
-
-	{
-		uint16_t *tmp;
-
-		tmp = idmef_service_get_port(service);
-		if ( tmp ) {
-			uint16_write(*tmp, msg, MSG_SERVICE_PORT);
 		}
 	}
 	{
@@ -421,7 +413,16 @@ void idmef_service_write(idmef_service_t *service, prelude_msgbuf_t *msg)
 			uint8_write(*tmp, msg, MSG_SERVICE_IANA_PROTOCOL_NUMBER);
 		}
 	}        prelude_string_write(idmef_service_get_iana_protocol_name(service), msg, MSG_SERVICE_IANA_PROTOCOL_NAME);
-        prelude_string_write(idmef_service_get_portlist(service), msg, MSG_SERVICE_PORTLIST);
+        prelude_string_write(idmef_service_get_name(service), msg, MSG_SERVICE_NAME);
+
+	{
+		uint16_t *tmp;
+
+		tmp = idmef_service_get_port(service);
+		if ( tmp ) {
+			uint16_write(*tmp, msg, MSG_SERVICE_PORT);
+		}
+	}        prelude_string_write(idmef_service_get_portlist(service), msg, MSG_SERVICE_PORTLIST);
         prelude_string_write(idmef_service_get_protocol(service), msg, MSG_SERVICE_PROTOCOL);
 
         switch ( idmef_service_get_type(service) ) {
@@ -450,7 +451,7 @@ void idmef_node_write(idmef_node_t *node, prelude_msgbuf_t *msg)
 
         prelude_msgbuf_set(msg, MSG_NODE_TAG, 0, NULL);
 
-        uint64_write(idmef_node_get_ident(node), msg, MSG_NODE_IDENT);
+        prelude_string_write(idmef_node_get_ident(node), msg, MSG_NODE_IDENT);
         uint32_write(idmef_node_get_category(node), msg, MSG_NODE_CATEGORY);
         prelude_string_write(idmef_node_get_location(node), msg, MSG_NODE_LOCATION);
         prelude_string_write(idmef_node_get_name(node), msg, MSG_NODE_NAME);
@@ -475,7 +476,7 @@ void idmef_source_write(idmef_source_t *source, prelude_msgbuf_t *msg)
 
         prelude_msgbuf_set(msg, MSG_SOURCE_TAG, 0, NULL);
 
-        uint64_write(idmef_source_get_ident(source), msg, MSG_SOURCE_IDENT);
+        prelude_string_write(idmef_source_get_ident(source), msg, MSG_SOURCE_IDENT);
         uint32_write(idmef_source_get_spoofed(source), msg, MSG_SOURCE_SPOOFED);
         prelude_string_write(idmef_source_get_interface(source), msg, MSG_SOURCE_INTERFACE);
         idmef_node_write(idmef_source_get_node(source), msg);
@@ -586,7 +587,7 @@ void idmef_file_write(idmef_file_t *file, prelude_msgbuf_t *msg)
 
         prelude_msgbuf_set(msg, MSG_FILE_TAG, 0, NULL);
 
-        uint64_write(idmef_file_get_ident(file), msg, MSG_FILE_IDENT);
+        prelude_string_write(idmef_file_get_ident(file), msg, MSG_FILE_IDENT);
         prelude_string_write(idmef_file_get_name(file), msg, MSG_FILE_NAME);
         prelude_string_write(idmef_file_get_path(file), msg, MSG_FILE_PATH);
         idmef_time_write(idmef_file_get_create_time(file), msg, MSG_FILE_CREATE_TIME);
@@ -673,7 +674,7 @@ void idmef_target_write(idmef_target_t *target, prelude_msgbuf_t *msg)
 
         prelude_msgbuf_set(msg, MSG_TARGET_TAG, 0, NULL);
 
-        uint64_write(idmef_target_get_ident(target), msg, MSG_TARGET_IDENT);
+        prelude_string_write(idmef_target_get_ident(target), msg, MSG_TARGET_IDENT);
         uint32_write(idmef_target_get_decoy(target), msg, MSG_TARGET_DECOY);
         prelude_string_write(idmef_target_get_interface(target), msg, MSG_TARGET_INTERFACE);
         idmef_node_write(idmef_target_get_node(target), msg);
@@ -701,7 +702,7 @@ void idmef_analyzer_write(idmef_analyzer_t *analyzer, prelude_msgbuf_t *msg)
 
         prelude_msgbuf_set(msg, MSG_ANALYZER_TAG, 0, NULL);
 
-        uint64_write(idmef_analyzer_get_analyzerid(analyzer), msg, MSG_ANALYZER_ANALYZERID);
+        prelude_string_write(idmef_analyzer_get_analyzerid(analyzer), msg, MSG_ANALYZER_ANALYZERID);
         prelude_string_write(idmef_analyzer_get_name(analyzer), msg, MSG_ANALYZER_NAME);
         prelude_string_write(idmef_analyzer_get_manufacturer(analyzer), msg, MSG_ANALYZER_MANUFACTURER);
         prelude_string_write(idmef_analyzer_get_model(analyzer), msg, MSG_ANALYZER_MODEL);
@@ -792,15 +793,8 @@ void idmef_confidence_write(idmef_confidence_t *confidence, prelude_msgbuf_t *ms
         prelude_msgbuf_set(msg, MSG_CONFIDENCE_TAG, 0, NULL);
 
         uint32_write(idmef_confidence_get_rating(confidence), msg, MSG_CONFIDENCE_RATING);
+        float_write(idmef_confidence_get_confidence(confidence), msg, MSG_CONFIDENCE_CONFIDENCE);
 
-	{
-		float *tmp;
-
-		tmp = idmef_confidence_get_confidence(confidence);
-		if ( tmp ) {
-			float_write(*tmp, msg, MSG_CONFIDENCE_CONFIDENCE);
-		}
-	}
         prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
@@ -902,7 +896,7 @@ void idmef_alert_write(idmef_alert_t *alert, prelude_msgbuf_t *msg)
 
         prelude_msgbuf_set(msg, MSG_ALERT_TAG, 0, NULL);
 
-        uint64_write(idmef_alert_get_messageid(alert), msg, MSG_ALERT_MESSAGEID);
+        prelude_string_write(idmef_alert_get_messageid(alert), msg, MSG_ALERT_MESSAGEID);
         idmef_analyzer_write(idmef_alert_get_analyzer(alert), msg);
         idmef_time_write(idmef_alert_get_create_time(alert), msg, MSG_ALERT_CREATE_TIME);
         idmef_classification_write(idmef_alert_get_classification(alert), msg);
@@ -967,11 +961,19 @@ void idmef_heartbeat_write(idmef_heartbeat_t *heartbeat, prelude_msgbuf_t *msg)
 
         prelude_msgbuf_set(msg, MSG_HEARTBEAT_TAG, 0, NULL);
 
-        uint64_write(idmef_heartbeat_get_messageid(heartbeat), msg, MSG_HEARTBEAT_MESSAGEID);
+        prelude_string_write(idmef_heartbeat_get_messageid(heartbeat), msg, MSG_HEARTBEAT_MESSAGEID);
         idmef_analyzer_write(idmef_heartbeat_get_analyzer(heartbeat), msg);
         idmef_time_write(idmef_heartbeat_get_create_time(heartbeat), msg, MSG_HEARTBEAT_CREATE_TIME);
         idmef_time_write(idmef_heartbeat_get_analyzer_time(heartbeat), msg, MSG_HEARTBEAT_ANALYZER_TIME);
 
+	{
+		uint32_t *tmp;
+
+		tmp = idmef_heartbeat_get_heartbeat_interval(heartbeat);
+		if ( tmp ) {
+			uint32_write(*tmp, msg, MSG_HEARTBEAT_HEARTBEAT_INTERVAL);
+		}
+	}
         {
                 idmef_additional_data_t *additional_data = NULL;
 

@@ -24,29 +24,30 @@ children_list_t idmef_reference_children_list[] = {
 };
 
 children_list_t idmef_classification_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_UINT64, 0 },
+        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "text", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "reference", 1, IDMEF_VALUE_TYPE_OBJECT, IDMEF_OBJECT_TYPE_REFERENCE },
         { NULL, 0, 0, 0 }
 };
 
 children_list_t idmef_user_id_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_UINT64, 0 },
-        { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "type", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_OBJECT_TYPE_USER_ID_TYPE },
+        { "tty", 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "number", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
         { NULL, 0, 0, 0 }
 };
 
 children_list_t idmef_user_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_UINT64, 0 },
+        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "category", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_OBJECT_TYPE_USER_CATEGORY },
         { "user_id", 1, IDMEF_VALUE_TYPE_OBJECT, IDMEF_OBJECT_TYPE_USER_ID },
         { NULL, 0, 0, 0 }
 };
 
 children_list_t idmef_address_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_UINT64, 0 },
+        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "category", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_OBJECT_TYPE_ADDRESS_CATEGORY },
         { "vlan_name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "vlan_num", 0, IDMEF_VALUE_TYPE_INT32, 0 },
@@ -56,7 +57,7 @@ children_list_t idmef_address_children_list[] = {
 };
 
 children_list_t idmef_process_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_UINT64, 0 },
+        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "pid", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
         { "path", 0, IDMEF_VALUE_TYPE_STRING, 0 },
@@ -84,12 +85,12 @@ children_list_t idmef_snmp_service_children_list[] = {
 };
 
 children_list_t idmef_service_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_UINT64, 0 },
+        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "ip_version", 0, IDMEF_VALUE_TYPE_UINT8, 0 },
-        { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "port", 0, IDMEF_VALUE_TYPE_UINT16, 0 },
         { "iana_protocol_number", 0, IDMEF_VALUE_TYPE_UINT8, 0 },
         { "iana_protocol_name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "port", 0, IDMEF_VALUE_TYPE_UINT16, 0 },
         { "portlist", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "protocol", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "type", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_OBJECT_TYPE_SERVICE_TYPE },
@@ -99,7 +100,7 @@ children_list_t idmef_service_children_list[] = {
 };
 
 children_list_t idmef_node_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_UINT64, 0 },
+        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "category", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_OBJECT_TYPE_NODE_CATEGORY },
         { "location", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
@@ -108,7 +109,7 @@ children_list_t idmef_node_children_list[] = {
 };
 
 children_list_t idmef_source_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_UINT64, 0 },
+        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "spoofed", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_OBJECT_TYPE_SOURCE_SPOOFED },
         { "interface", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "node", 0, IDMEF_VALUE_TYPE_OBJECT, IDMEF_OBJECT_TYPE_NODE },
@@ -142,7 +143,7 @@ children_list_t idmef_checksum_children_list[] = {
 };
 
 children_list_t idmef_file_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_UINT64, 0 },
+        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "path", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "create_time", 0, IDMEF_VALUE_TYPE_TIME, 0 },
@@ -168,7 +169,7 @@ children_list_t idmef_linkage_children_list[] = {
 };
 
 children_list_t idmef_target_children_list[] = {
-        { "ident", 0, IDMEF_VALUE_TYPE_UINT64, 0 },
+        { "ident", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "decoy", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_OBJECT_TYPE_TARGET_DECOY },
         { "interface", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "node", 0, IDMEF_VALUE_TYPE_OBJECT, IDMEF_OBJECT_TYPE_NODE },
@@ -180,7 +181,7 @@ children_list_t idmef_target_children_list[] = {
 };
 
 children_list_t idmef_analyzer_children_list[] = {
-        { "analyzerid", 0, IDMEF_VALUE_TYPE_UINT64, 0 },
+        { "analyzerid", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "manufacturer", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "model", 0, IDMEF_VALUE_TYPE_STRING, 0 },
@@ -248,7 +249,7 @@ children_list_t idmef_overflow_alert_children_list[] = {
 };
 
 children_list_t idmef_alert_children_list[] = {
-        { "messageid", 0, IDMEF_VALUE_TYPE_UINT64, 0 },
+        { "messageid", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "analyzer", 0, IDMEF_VALUE_TYPE_OBJECT, IDMEF_OBJECT_TYPE_ANALYZER },
         { "create_time", 0, IDMEF_VALUE_TYPE_TIME, 0 },
         { "classification", 0, IDMEF_VALUE_TYPE_OBJECT, IDMEF_OBJECT_TYPE_CLASSIFICATION },
@@ -266,10 +267,11 @@ children_list_t idmef_alert_children_list[] = {
 };
 
 children_list_t idmef_heartbeat_children_list[] = {
-        { "messageid", 0, IDMEF_VALUE_TYPE_UINT64, 0 },
+        { "messageid", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "analyzer", 0, IDMEF_VALUE_TYPE_OBJECT, IDMEF_OBJECT_TYPE_ANALYZER },
         { "create_time", 0, IDMEF_VALUE_TYPE_TIME, 0 },
         { "analyzer_time", 0, IDMEF_VALUE_TYPE_TIME, 0 },
+        { "heartbeat_interval", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
         { "additional_data", 1, IDMEF_VALUE_TYPE_OBJECT, IDMEF_OBJECT_TYPE_ADDITIONAL_DATA },
         { NULL, 0, 0, 0 }
 };
@@ -298,11 +300,7 @@ object_data_t object_data[] = {
         { "(unassigned)", NULL, NULL, NULL }, /* ID: 1 */
         { "(unassigned)", NULL, NULL, NULL }, /* ID: 2 */
         { "additional_data_type", NULL, NULL, NULL, idmef_additional_data_type_to_numeric, idmef_additional_data_type_to_string}, /* ID: 3 */
-        { "additional_data",
-          idmef_additional_data_children_list,
-          idmef_additional_data_get_child,
-          idmef_additional_data_new_child,
-          NULL, NULL }, /* ID: 4 */
+        { "additional_data", idmef_additional_data_children_list, idmef_additional_data_get_child, idmef_additional_data_new_child, NULL, NULL }, /* ID: 4 */
         { "reference_origin", NULL, NULL, NULL, idmef_reference_origin_to_numeric, idmef_reference_origin_to_string}, /* ID: 5 */
         { "classification", idmef_classification_children_list, idmef_classification_get_child, idmef_classification_new_child, NULL, NULL }, /* ID: 6 */
         { "user_id_type", NULL, NULL, NULL, idmef_user_id_type_to_numeric, idmef_user_id_type_to_string}, /* ID: 7 */
@@ -352,4 +350,5 @@ object_data_t object_data[] = {
         { "(unassigned)", NULL, NULL, NULL }, /* ID: 51 */
         { "checksum", idmef_checksum_children_list, idmef_checksum_get_child, idmef_checksum_new_child, NULL, NULL }, /* ID: 52 */
         { "checksum_algorithm", NULL, NULL, NULL, idmef_checksum_algorithm_to_numeric, idmef_checksum_algorithm_to_string}, /* ID: 53 */
+        { NULL, NULL, NULL, NULL }
 };
