@@ -363,7 +363,7 @@ idmef_value_type_id_t idmef_value_get_type(idmef_value_t *value)
 
 idmef_type_t idmef_value_get_idmef_type(idmef_value_t *value)
 {
-	return (value->type.id == type_object) ? value->object_type : -1;
+	return (value->type.id == type_object || value->type.id == type_enum) ? value->object_type : -1;
 }
 
 

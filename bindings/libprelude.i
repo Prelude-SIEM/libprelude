@@ -242,6 +242,7 @@ typedef unsigned long long uint64_t;
 %include "../../src/include/idmef-tree-to-string.h"
 %include "../../src/include/idmef-value-type.h"
 %include "../../src/include/idmef-util.h"
+%include "../../src/include/idmef-type.h"
 
 int prelude_alert_fill_infos(idmef_message_t *message);
 int prelude_heartbeat_fill_infos(idmef_message_t *message);

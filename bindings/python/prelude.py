@@ -280,7 +280,6 @@ def idmef_value_c_to_python(value):
         type_uint64:    idmef_value_get_uint64,
         type_float:     idmef_value_get_float,
         type_double:    idmef_value_get_double,
-        type_enum:      idmef_value_get_enum,
         }
 
     type = idmef_value_get_type(value)
@@ -305,6 +304,10 @@ def idmef_value_c_to_python(value):
             return None
 
         return idmef_data_get_data(data)
+
+    if type == type_enum:
+        return idmef_type_enum_to_string(idmef_value_get_idmef_type(value),
+                                         idmef_value_get_enum(value))
     
     try:
         func = func_type_table[type]

@@ -1,5 +1,22 @@
 2003-12-26  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
+	* src/idmef-value.c:
+	(idmef_value_get_idmef_type)
+	also return object_type if value's type is type_enum
+
+	* bindings/libprelude.i:
+	bind idmef-type.h
+
+	* bindings/perl/Prelude.c:
+	* bindings/python/_prelude.c:
+	regenerated
+
+	* bindings/perl/Prelude.pm:
+	* bindings/python/prelude.py:
+	return enums as strings
+
+2003-12-26  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
 	* configure.in:
 	don't regenerate the .c source files of bindings during
 	./configure
