@@ -35,4 +35,4 @@ include_HEADERS = config-engine.h 		\
 		  common.h
 
 
-noinst_HEADERS = ssl.h client-ident.h ntp.h
+noinst_HEADERS = ssl.h client-ident.h
