@@ -1,8 +1,6 @@
 /*****
 *
-* Copyright (C) 2002, 2003 Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
-* Copyright (C) 2003 Nicolas Delon <delon.nicolas@wanadoo.fr>
-* Copyright (C) 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2004-2005 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
