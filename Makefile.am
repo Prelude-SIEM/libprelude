@@ -1,4 +1,4 @@
-SUBDIRS = src docs
+SUBDIRS = src sensor-adduser docs
 
 includedir=$(prefix)/libprelude/include
 include_HEADERS=config.h

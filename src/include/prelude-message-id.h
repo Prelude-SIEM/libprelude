@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -51,3 +51,4 @@
 
 #define PRELUDE_MSG_AUTH_SUCCEED   6
 #define PRELUDE_MSG_AUTH_FAILED    7
+#define PRELUDE_MSG_AUTH_EXIST     8

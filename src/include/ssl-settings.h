@@ -21,7 +21,5 @@
 *
 *****/
 
-int ssl_add_certificate(void);
-
 void prelude_ssl_ask_settings(int *keysize, int *expire);
 

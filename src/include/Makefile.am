@@ -8,7 +8,7 @@ include_HEADERS = config-engine.h 		\
 		  plugin-common.h		\
 		  plugin-common-prv.h		\
 		  ssl-gencrypto.h		\
-		  ssl-register.h		\
+		  ssl-settings.h		\
 		  ssl-registration-msg.h	\
 		  daemonize.h			\
 		  string-matching.h		\

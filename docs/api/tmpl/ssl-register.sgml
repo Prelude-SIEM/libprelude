@@ -14,14 +14,6 @@ ssl-register
 
 </para>
 
-<!-- ##### FUNCTION ssl_add_certificate ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-
 <!-- ##### FUNCTION prelude_ssl_ask_settings ##### -->
 <para>
 

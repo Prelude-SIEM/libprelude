@@ -340,6 +340,16 @@ thread
 @lockfile: 
 @Returns: 
 
+<!-- ##### FUNCTION des_generate_2key ##### -->
+<para>
+
+</para>
+
+@key1: 
+@key2: 
+@verify: 
+@Returns: 
+
 <!-- ##### FUNCTION getopt_long ##### -->
 <para>
 
@@ -527,4 +537,11 @@ thread
 
 </para>
 
+
+<!-- ##### FUNCTION ssl_add_certificate ##### -->
+<para>
+
+</para>
+
+@Returns: 
 

@@ -245,10 +245,11 @@ static int handle_plaintext_connection(prelude_client_t *client, int sock)
         
         ret = prelude_auth_read_entry(filename, NULL, &user, &pass);
         if ( ret < 0 ) {
-                log(LOG_INFO,
-                    "\n\ncouldn't get username / password to use for plaintext connection.\n"
-                    "Please use the \"sensor-adduser\" program on the Manager host.\n\n");
-                return -1;
+                log(LOG_INFO, "\nPlaintext authentication failed. Please run :\n"
+                    "sensor-adduser --sensorname %s --uid %d\n"
+                    "program on the Sensor host to create an account for this sensor.\n\n",
+                    prelude_get_sensor_name(), getuid());
+                exit(1);
         }
         
         ulen = strlen(user) + 1;
@@ -315,10 +316,11 @@ static int handle_ssl_connection(prelude_client_t *client, int sock)
         ssl = ssl_connect_server(sock);
         if ( ! ssl ) {
                 log(LOG_INFO,
-                    "\nSSL authentication failed. Use the \"manager-adduser\"\n"
-                    "program on the Manager host together with the \"sensor-adduser\"\n"
-                    "program on the Sensor host to create an username for this Sensor.\n\n");
-                return -1;
+                    "\nSSL authentication failed. Please run : "
+                    "sensor-adduser --sensorname %s --uid %d\n"
+                    "program on the Sensor host to create an account for this sensor.\n\n",
+                    prelude_get_sensor_name(), getuid());
+                exit(1);
         }
         
         prelude_io_set_ssl_io(client->fd, ssl);
@@ -470,8 +472,7 @@ static int do_connect(prelude_client_t *client)
 {
         int ret;
         
-        ret = strcmp(client->daddr, "unix");
-	if ( ret == 0 ) {
+	if ( strcmp(client->daddr, "unix") == 0 || strcmp(client->daddr, "127.0.0.1") == 0 ) {
 		ret = start_unix_connection(client);
         } else {
                 ret = start_inet_connection(client);

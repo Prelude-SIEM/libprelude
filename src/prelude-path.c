@@ -45,7 +45,7 @@
 /*
  * Path to the Prelude Unix socket.
  */
-#define UNIX_SOCKET "/var/lib/socket"
+#define UNIX_SOCKET "/tmp/.prelude-unix"
 
 
 
@@ -88,4 +88,11 @@ char *prelude_get_socket_filename(void)
 void prelude_set_program_name(const char *sname) 
 {
         sensorname = sname;
+}
+
+
+
+const char *prelude_get_sensor_name(void)
+{
+        return sensorname;
 }

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Jeremie Brebec / Toussaint Mathieu
+* Copyright (C) 2001, 2002 Jeremie Brebec / Toussaint Mathieu
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -57,10 +57,6 @@ int build_install_msg(BUF_MEM * input, char *output, int outputlen,
 int analyse_install_msg(char *input, int inputlen, char *output,
 			int outpulen, des_key_schedule * key1,
 			des_key_schedule * key2);
-
-int des_generate_2key(des_key_schedule * key1, des_key_schedule * key2,
-		      int verify);
-
 
 
 int prelude_ssl_recv_cert(prelude_io_t *pio, char *out, int outlen,

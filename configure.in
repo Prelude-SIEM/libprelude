@@ -219,11 +219,13 @@ AC_OUTPUT([
 Makefile 
 libprelude-config
 
+src/Makefile
+src/include/Makefile
+
+sensor-adduser/Makefile
+
 docs/Makefile
 docs/api/Makefile
-
-src/Makefile 
-src/include/Makefile
 
 ], [ chmod +x libprelude-config ])
 

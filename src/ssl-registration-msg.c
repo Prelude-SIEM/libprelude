@@ -4,7 +4,7 @@
 
 /*****
 *
-* Copyright (C) 2001 Jeremie Brebec / Toussaint Mathieu
+* Copyright (C) 2001, 2002 Jeremie Brebec / Toussaint Mathieu
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -85,40 +85,6 @@ int x509_to_msg(X509 * x509, char *msg, int msglen,
 	BIO_free(mem);
 
 	return msglen;
-}
-
-
-
-
-int des_generate_2key(des_key_schedule * key1, des_key_schedule * key2,
-		      int verify)
-{
-	int res;
-	des_cblock prekey1;
-	des_cblock prekey2;
-
-	res = des_read_2passwords(&prekey1, &prekey2,
-                                  "Enter registration one shot password :",
-                                  verify);
-	if (res != SUCCESS) {
-		memset(&prekey1, 5, sizeof(des_cblock));
-		memset(&prekey2, 5, sizeof(des_cblock));
-		return res;
-	}
-
-	res = des_set_key_checked(&prekey1, *key1);
-	memset(&prekey1, 5, sizeof(des_cblock));
-	if (res != SUCCESS) {
-		memset(&prekey2, 5, sizeof(des_cblock));
-		return res;
-	}
-
-	res = des_set_key_checked(&prekey2, *key2);
-	memset(&prekey2, 5, sizeof(des_cblock));
-	if (res != SUCCESS)
-		return res;
-
-	return SUCCESS;
 }
 
 

@@ -20,6 +20,7 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
+
 char *prelude_get_socket_filename(void);
 
 void prelude_get_auth_filename(char *buf, size_t size);
@@ -31,3 +32,5 @@ void prelude_get_ssl_key_filename(char *buf, size_t size);
 void prelude_get_backup_filename(char *buf, size_t size);
 
 void prelude_set_program_name(const char *sname);
+
+const char *prelude_get_sensor_name(void);

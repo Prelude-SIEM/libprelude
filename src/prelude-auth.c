@@ -347,6 +347,54 @@ static int ask_account_infos(FILE *fd, char **user, char **pass)
 /**
  * prelude_auth_create_account:
  * @filename: The filename to store account in.
+ * @user: Address of a pointer where the created username will be stored.
+ * @pass: Address of a pointer where the created password will be stored.
+ * @crypted: Specify wether the password should be crypted using crypt().
+ *
+ * Ask for a new account creation which will be stored into 'filename'
+ * which is the authentication file. Uppon success, @user and @pass will
+ * be updated to point on the configured username and password.
+ *
+ * Returns: 0 on sucess, -1 otherwise
+ */
+int prelude_auth_create_account(const char *filename, char **user, char **pass, int crypted) 
+{
+        int ret;
+        FILE *fd;
+        char *cpass;
+
+        fd = open_auth_file(filename);
+        if ( ! fd ) 
+                return -1;
+
+        ret = ask_account_infos(fd, user, pass);
+        if ( ret < 0 ) {
+                fclose(fd);
+                return -1;
+        }
+
+        if ( crypted )
+                cpass = crypt(*pass, SALT);
+        else
+                cpass = *pass;
+        
+        ret = comfirm_account_creation(*user);
+        if ( ret == 0 ) 
+                write_account(fd, *user, cpass);
+
+        fclose(fd);
+
+        return ret;
+}
+
+
+
+
+/**
+ * prelude_auth_create_account_noprompt:
+ * @filename: The filename to store account in.
+ * @user: Username to create.
+ * @pass: Password associated with username.
  * @crypted: Specify wether the password should be crypted using crypt().
  *
  * Ask for a new account creation which will be stored into 'filename'
@@ -354,37 +402,26 @@ static int ask_account_infos(FILE *fd, char **user, char **pass)
  *
  * Returns: 0 on sucess, -1 otherwise
  */
-int prelude_auth_create_account(const char *filename, int crypted) 
+int prelude_auth_create_account_noprompt(const char *filename, const char *user, const char *pass, int crypted) 
 {
-        int ret;
         FILE *fd;
-        char *user, *pass, *cpass;
-
+        const char *cpass;
+        
         fd = open_auth_file(filename);
         if ( ! fd ) 
                 return -1;
-
-        ret = ask_account_infos(fd, &user, &pass);
-        if ( ret < 0 ) {
-                fclose(fd);
-                return -1;
-        }
 
         if ( crypted )
                 cpass = crypt(pass, SALT);
         else
                 cpass = pass;
-        
-        ret = comfirm_account_creation(user);
-        if ( ret == 0 ) 
-                write_account(fd, user, cpass);
 
-        free(user);
-        free(pass);
+        write_account(fd, user, cpass);
         fclose(fd);
 
-        return ret;
+        return 0;
 }
+
 
 
 
@@ -410,10 +447,8 @@ int prelude_auth_read_entry(const char *authfile, const char *wanted_user, char 
         int line = 0;
         
         file = fopen(authfile, "r");
-        if (! file ) {
-                log(LOG_ERR,"couldn't open authentication file %s.\n", authfile);
+        if (! file ) 
                 return -1;
-        }
 
         while ( auth_read_entry(file, &line, user, pass) == 0 ) {
                 if ( wanted_user ) {

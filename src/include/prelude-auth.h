@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -21,7 +21,9 @@
 *
 *****/
 
-int prelude_auth_create_account(const char *filename, int crypted);
+int prelude_auth_create_account(const char *filename, char **user, char **pass, int crypted);
+
+int prelude_auth_create_account_noprompt(const char *filename, const char *user, const char *pass, int crypted);
 
 int prelude_auth_check(const char *authfile, const char *user, const char *pass);
 

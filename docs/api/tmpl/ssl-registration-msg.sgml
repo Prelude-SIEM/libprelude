@@ -158,17 +158,6 @@ ssl-registration-msg
 @Returns: 
 
 
-<!-- ##### FUNCTION des_generate_2key ##### -->
-<para>
-
-</para>
-
-@key1: 
-@key2: 
-@verify: 
-@Returns: 
-
-
 <!-- ##### FUNCTION prelude_ssl_recv_cert ##### -->
 <para>
 

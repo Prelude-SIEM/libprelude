@@ -224,6 +224,10 @@ const char *variable
 <NAME>PRELUDE_MSG_AUTH_FAILED</NAME>
 #define PRELUDE_MSG_AUTH_FAILED    7
 </MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_AUTH_EXIST</NAME>
+#define PRELUDE_MSG_AUTH_EXIST     8
+</MACRO>
 <FUNCTION>
 <NAME>prelude_log_use_syslog</NAME>
 <RETURNS>void  </RETURNS>
@@ -282,9 +286,19 @@ void
 int socket
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_ssl_ask_settings</NAME>
+<RETURNS>void  </RETURNS>
+int *keysize, int *expire
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_auth_create_account</NAME>
 <RETURNS>int  </RETURNS>
 const char *filename, int crypted
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_auth_create_account_noprompt</NAME>
+<RETURNS>int  </RETURNS>
+const char *filename, const char *user, const char *pass, int crypted
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_auth_check</NAME>
@@ -499,7 +513,7 @@ prelude_msgbuf_t *msg, idmef_assessment_t *assessment
 <FUNCTION>
 <NAME>idmef_msg_send</NAME>
 <RETURNS>int  </RETURNS>
-idmef_message_t *idmef, uint8_t priority
+prelude_msgbuf_t *msgbuf, idmef_message_t *idmef, uint8_t priority
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_ident_inc</NAME>
@@ -706,11 +720,6 @@ BUF_MEM * input, char *output, int outputlen,des_key_schedule * key1, des_key_sc
 <NAME>analyse_install_msg</NAME>
 <RETURNS>int  </RETURNS>
 char *input, int inputlen, char *output,int outpulen, des_key_schedule * key1,des_key_schedule * key2
-</FUNCTION>
-<FUNCTION>
-<NAME>des_generate_2key</NAME>
-<RETURNS>int  </RETURNS>
-des_key_schedule * key1, des_key_schedule * key2,int verify
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_ssl_recv_cert</NAME>
@@ -1035,16 +1044,6 @@ void
         for (pos = (head)->next, n = pos->next; pos != (head); \
                 pos = n, n = pos->next)
 </MACRO>
-<FUNCTION>
-<NAME>ssl_add_certificate</NAME>
-<RETURNS>int  </RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_ssl_ask_settings</NAME>
-<RETURNS>void  </RETURNS>
-int *keysize, int *expire
-</FUNCTION>
 <FUNCTION>
 <NAME>prelude_sensor_send_msg</NAME>
 <RETURNS>void  </RETURNS>
@@ -1908,7 +1907,7 @@ int async_send
 prelude_msgbuf_t *msgbuf
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_msgbuf_flush</NAME>
+<NAME>prelude_msgbuf_mark_end</NAME>
 <RETURNS>void  </RETURNS>
 prelude_msgbuf_t *msgbuf
 </FUNCTION>
@@ -1916,6 +1915,11 @@ prelude_msgbuf_t *msgbuf
 <NAME>prelude_msgbuf_set</NAME>
 <RETURNS>void  </RETURNS>
 prelude_msgbuf_t *msgbuf, uint8_t tag, uint32_t len, const void *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msgbuf_set_header</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msgbuf_t *msgbuf, uint8_t tag, uint8_t priority
 </FUNCTION>
 <TYPEDEF>
 <NAME>size_t</NAME>
@@ -1974,9 +1978,19 @@ prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src
 prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_msg_recycle</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_mark_end</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_msg_dynamic_new</NAME>
 <RETURNS>prelude_msg_t  *</RETURNS>
-uint8_t tag, uint8_t priority, prelude_msg_t *(*flush_msg_cb)(prelude_msg_t *msg)
+uint8_t tag, uint8_t priority, void *data,prelude_msg_t *(*flush_msg_cb)(void *data)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_msg_new</NAME>
@@ -1992,6 +2006,16 @@ prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *data
 <NAME>prelude_msg_write</NAME>
 <RETURNS>int  </RETURNS>
 prelude_msg_t *msg, prelude_io_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_set_tag</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msg_t *msg, uint8_t tag
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_set_priority</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msg_t *msg, uint8_t priority
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_msg_get_tag</NAME>

@@ -1,3 +1,28 @@
+2002-02-04  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* sensor-adduser is back from the dead.
+
+	* src/prelude-auth.c (prelude_auth_create_account_noprompt): 
+	new function, take username and password as argument.
+	(prelude_auth_create_account): modified so that it return 
+	created username and password.
+
+	* sensors-default.conf (manager-addr): 
+	default entry is only unix, since 127.0.0.1 is now
+	translated to unix.
+
+	Remove unused groupname entry
+
+	* src/prelude-client.c (do_connect): 
+	When 127.0.0.1 is specified, use an UNIX socket.
+
+	* src/prelude-path.c (prelude_get_sensor_name): 
+	new function, return the sensorname.
+
+	* src/prelude-client.c (handle_plaintext_connection): 
+	correct message in case no authentication files are present.
+	(handle_ssl_connection): ditto.
+
 2002-02-02  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-message.c: made API more consistant,

@@ -13,7 +13,7 @@ libprelude_la_SOURCES = 		\
 	ssl.c				\
 	ssl-gencrypto.c			\
 	ssl-registration-msg.c		\
-	ssl-register.c			\
+	ssl-settings.c			\
 	string-matching.c		\
 	timer.c				\
 	variable.c			\
