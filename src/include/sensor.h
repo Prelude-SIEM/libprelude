@@ -27,6 +27,9 @@
 #include "idmef.h"
 #include "prelude-message.h"
 
+
+int prelude_init(int argc, char **argv);
+
 void prelude_sensor_send_msg(prelude_msg_t *msg);
 
 void prelude_sensor_send_msg_async(prelude_msg_t *msg);

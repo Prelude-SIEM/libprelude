@@ -96,6 +96,9 @@ static int setup_analyzer_node_location(void **context, prelude_option_t *opt, c
 {
 	idmef_string_t *location;
 
+        if ( ! analyzer_node && ! (analyzer_node = idmef_node_new()) )
+                return -1;
+             
 	location = idmef_node_get_location(analyzer_node);
 	if ( ! location ) {
 		log(LOG_ERR, "cannot create node location\n");
@@ -113,6 +116,9 @@ static int setup_analyzer_node_name(void **context, prelude_option_t *opt, const
 {
 	idmef_string_t *name;
 
+        if ( ! analyzer_node && ! (analyzer_node = idmef_node_new()) )
+                return -1;
+        
 	name = idmef_node_get_name(analyzer_node);
 	if ( ! name ) {
 		log(LOG_ERR, "cannot create node name\n");
@@ -178,7 +184,10 @@ static int setup_analyzer_node_address_netmask(void **context, prelude_option_t 
 static int setup_analyzer_node_category(void **context, prelude_option_t *opt, const char *arg) 
 {
         int category;
-
+        
+        if ( ! analyzer_node && ! (analyzer_node = idmef_node_new()) )
+                return -1;
+        
         category = idmef_node_category_to_numeric(arg);
         if ( category < 0 ) {
 		log(LOG_ERR, "unknown node category: %s.\n", arg);
@@ -216,7 +225,10 @@ static int setup_analyzer_node_address_vlan_name(void **context, prelude_option_
 
 
 static int setup_address(void **context, prelude_option_t *opt, const char *arg) 
-{  
+{
+        if ( ! analyzer_node && ! (analyzer_node = idmef_node_new()) )
+                return -1;
+        
         node_address = idmef_address_new();
         if ( ! node_address ) {
                 log(LOG_ERR, "memory exhausted.\n");
@@ -260,71 +272,7 @@ static int get_process_name(int argc, char **argv)
 static int parse_argument(const char *filename, int argc, char **argv, int type) 
 {
         int ret;
-        int old_flags;
         void *context = NULL;
-        prelude_option_t *opt;
-                        
-        /*
-         * Declare library options.
-         */
-        opt = prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "manager-addr",
-                                 "Address where manager is listening (addr:port)",
-                                 required_argument, setup_manager_addr, NULL);
-
-        /*
-         * run this one last, so that application that wish to change
-         * their userID won't get a false message for sensor-adduser (--uid option).
-         */
-        prelude_option_set_priority(opt, option_run_last);
-        
-        prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "heartbeat-time",
-                           "Send hearbeat at the specified time (default 60 minutes)",
-                           required_argument, setup_heartbeat_repeat_time, NULL);
-
-        prelude_option_add(NULL, CFG_HOOK, 0, "node-name",
-                           NULL, required_argument, setup_analyzer_node_name, NULL);
-
-        prelude_option_add(NULL, CFG_HOOK, 0, "node-location",
-                           NULL, required_argument, setup_analyzer_node_location, NULL);
-        
-        prelude_option_add(NULL, CFG_HOOK, 0, "node-category",
-                           NULL, required_argument, setup_analyzer_node_category, NULL);
-        
-        opt = prelude_option_add(NULL, CFG_HOOK, 0, "node address",
-                                 NULL, required_argument, setup_address, NULL);
-
-        prelude_option_set_priority(opt, option_run_first);
-        
-        prelude_option_add(opt, CFG_HOOK, 0, "address",
-                           NULL, required_argument, setup_analyzer_node_address_address, NULL);
-
-        prelude_option_add(opt, CFG_HOOK, 0, "netmask",
-                           NULL, required_argument, setup_analyzer_node_address_netmask, NULL);
-
-        prelude_option_add(opt, CFG_HOOK, 0, "category",
-                           NULL, required_argument, setup_analyzer_node_address_category, NULL);
-
-        prelude_option_add(opt, CFG_HOOK, 0, "vlan-name",
-                           NULL, required_argument, setup_analyzer_node_address_vlan_name, NULL);
-
-        prelude_option_add(opt, CFG_HOOK, 0, "vlan-num",
-                           NULL, required_argument, setup_analyzer_node_address_vlan_num, NULL);
-        
-        /*
-         * When parsing our own option, we don't want libprelude to whine
-         * about unknow argument on command line (theses can be the own application
-         * arguments).
-         */
-        prelude_option_set_warnings(~(OPT_INVAL|OPT_INVAL_ARG), &old_flags);
-
-        /*
-         * Parse default configuration...
-         */
-        ret = prelude_option_parse_arguments(&context, NULL, DEFAULT_SENSOR_CONFIG, 0, NULL);
-        if ( ret == prelude_option_error ) {
-                log(LOG_INFO, "error processing sensor options.\n", DEFAULT_SENSOR_CONFIG);
-                goto out;
-        }
         
         /*
          * Parse configuration and command line arguments.
@@ -332,11 +280,11 @@ static int parse_argument(const char *filename, int argc, char **argv, int type)
         ret = prelude_option_parse_arguments(&context, NULL, filename, argc, argv);
         if ( ret == prelude_option_error ) {
                 log(LOG_INFO, "error processing sensor options.\n", filename);
-                goto out;
+                return ret;
         }
 
         else if ( ret == prelude_option_end )
-                goto out;
+                return ret;
 
         /*
          * do this before connection, and after prelude_option_parse_argument()
@@ -361,16 +309,69 @@ static int parse_argument(const char *filename, int argc, char **argv, int type)
                     "config file or the --manager-addr command line options.\n");
                 return -1;
         }
+
         free(manager_cfg_line);
- out:
-        /*
-         * Destroy option list and restore old option flags.
-         */
-        prelude_option_set_warnings(old_flags, NULL);
 
         return ret;
 }
 
+
+
+
+int prelude_init(int argc, char **argv)
+{
+        int old_flags, ret;
+        void *context = NULL;
+        prelude_option_t *opt;
+        
+        get_process_name(argc, argv);
+        
+        prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "heartbeat-time",
+                           "Send hearbeat at the specified time (default 60 minutes)",
+                           required_argument, setup_heartbeat_repeat_time, NULL);
+
+        prelude_option_add(NULL, CFG_HOOK, 0, "node-name",
+                           NULL, required_argument, setup_analyzer_node_name, NULL);
+
+        prelude_option_add(NULL, CFG_HOOK, 0, "node-location",
+                           NULL, required_argument, setup_analyzer_node_location, NULL);
+        
+        prelude_option_add(NULL, CFG_HOOK, 0, "node-category",
+                           NULL, required_argument, setup_analyzer_node_category, NULL);
+        
+        opt = prelude_option_add(NULL, CFG_HOOK, 0, "node address",
+                                 NULL, required_argument, setup_address, NULL);
+        
+        prelude_option_add(opt, CFG_HOOK, 0, "address",
+                           NULL, required_argument, setup_analyzer_node_address_address, NULL);
+
+        prelude_option_add(opt, CFG_HOOK, 0, "netmask",
+                           NULL, required_argument, setup_analyzer_node_address_netmask, NULL);
+
+        prelude_option_add(opt, CFG_HOOK, 0, "category",
+                           NULL, required_argument, setup_analyzer_node_address_category, NULL);
+
+        prelude_option_add(opt, CFG_HOOK, 0, "vlan-name",
+                           NULL, required_argument, setup_analyzer_node_address_vlan_name, NULL);
+
+        prelude_option_add(opt, CFG_HOOK, 0, "vlan-num",
+                           NULL, required_argument, setup_analyzer_node_address_vlan_num, NULL);
+        
+        prelude_option_set_warnings(~(OPT_INVAL|OPT_INVAL_ARG), &old_flags);
+
+        /*
+         * Parse default configuration...
+         */
+        ret = prelude_option_parse_arguments(&context, NULL, DEFAULT_SENSOR_CONFIG, 0, NULL);
+        if ( ret == prelude_option_error ) {
+                log(LOG_INFO, "error processing sensor options.\n", DEFAULT_SENSOR_CONFIG);
+                return -1;
+        }
+
+        prelude_option_set_warnings(old_flags, NULL);
+        
+        return 0;
+}
 
 
 
@@ -388,26 +389,42 @@ static int parse_argument(const char *filename, int argc, char **argv, int type)
  */
 int prelude_sensor_init(const char *sname, const char *filename, int argc, char **argv)
 {
-        sensor_dynamic_ident = prelude_ident_new();
-        if ( ! sensor_dynamic_ident )
-                return -1;
+        int ret, old_flags;
+        prelude_option_t *opt;
         
-	analyzer_node = idmef_node_new();
-	if ( ! analyzer_node ) {
-		log(LOG_ERR, "cannot create analyzer node\n");
-		return -1;
-	}
-
         if ( ! sname ) {
                 errno = EINVAL;
                 return -1;
         }
 
-        get_process_name(argc, argv);
+        /*
+         * Declare library options.
+         */
+        opt = prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "manager-addr",
+                                 "Address where manager is listening (addr:port)",
+                                 required_argument, setup_manager_addr, NULL);
 
+        /*
+         * run this one last, so that application that wish to change
+         * their userID won't get a false message for sensor-adduser (--uid option).
+         */
+        prelude_option_set_priority(opt, option_run_last);
+
+        ret = prelude_init(argc, argv);
+        if ( ret < 0 )
+                return -1;
+        
+        sensor_dynamic_ident = prelude_ident_new();
+        if ( ! sensor_dynamic_ident )
+                return -1;
+        
         prelude_set_program_name(sname);
 
-        return parse_argument(filename, argc, argv, PRELUDE_CLIENT_TYPE_SENSOR);
+        prelude_option_set_warnings(~(OPT_INVAL|OPT_INVAL_ARG), &old_flags);
+        ret = parse_argument(filename, argc, argv, PRELUDE_CLIENT_TYPE_SENSOR);
+        prelude_option_set_warnings(old_flags, NULL);
+
+        return ret;
 }
 
 
