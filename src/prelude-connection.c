@@ -74,7 +74,7 @@ struct prelude_connection {
         char *daddr;
         uint16_t dport;
         
-        size_t sa_len;
+        socklen_t sa_len;
         struct sockaddr *sa;
         
         /*
