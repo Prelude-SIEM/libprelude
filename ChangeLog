@@ -1,3 +1,17 @@
+2002-03-29  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-getopt.c (process_option_cfg_hook): 
+
+	handle case when there is several entry of the same 
+	name in the configuration file. Call the callback once
+	for each entry then.
+
+	* src/config-engine.c: (search_entry): (config_get):
+	
+	Modified so that when passed a NULL section and entry, 
+	it will try to search a different entry of the same name
+	and within the same section as the previously searched one.
+
 2002-03-28  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/include/idmef-tree-func.h (idmef_string_set): 

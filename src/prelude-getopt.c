@@ -329,6 +329,10 @@ static int process_option_cfg_hook(struct list_head *cb_list, prelude_option_t *
                         if ( ! str )
                                 return prelude_option_success;
 
+                        /*
+                         * call the config cb for each entry
+                         * of the same name.
+                         */
                         section = entry = NULL;
                         call_option_cb(cb_list, opt, str);
                         
