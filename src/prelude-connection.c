@@ -511,10 +511,10 @@ int prelude_connection_send_msg(prelude_connection_t *cnx, prelude_msg_t *msg)
 
 /**
  * prelude_connection_get_fd:
- * @client: Pointer to a client object.
+ * @cnx: Pointer to a #prelude_connection_t object.
  *
- * Returns: A pointer to a #prelude_io_t object used for the
- * communication with the client.
+ * Returns: A pointer to the #prelude_io_t object used for
+ * communicating with the peer.
  */
 prelude_io_t *prelude_connection_get_fd(prelude_connection_t *cnx) 
 {
@@ -526,11 +526,9 @@ prelude_io_t *prelude_connection_get_fd(prelude_connection_t *cnx)
 
 /**
  * prelude_connection_get_saddr:
- * @client: Pointer to a client object.
+ * @cnx: Pointer to a #prelude_connection_t object.
  *
- *
- * Returns: the source address used to connect, or NULL
- * if an error occured.
+ * Returns: the source address used to connect.
  */
 const char *prelude_connection_get_saddr(prelude_connection_t *cnx) 
 {
@@ -541,8 +539,7 @@ const char *prelude_connection_get_saddr(prelude_connection_t *cnx)
 
 /**
  * prelude_connection_get_daddr:
- * @client: Pointer to a client object.
- *
+ * @cnx: Pointer to a #prelude_connection_t object.
  *
  * Returns: the destination address used to connect.
  */
@@ -555,8 +552,7 @@ const char *prelude_connection_get_daddr(prelude_connection_t *cnx)
 
 /**
  * prelude_connection_get_sport:
- * @client: Pointer to a client object.
- *
+ * @cnx: Pointer to a #prelude_connection_t object.
  *
  * Returns: the source port used to connect.
  */
@@ -569,8 +565,7 @@ uint16_t prelude_connection_get_sport(prelude_connection_t *cnx)
 
 /**
  * prelude_connection_get_sport:
- * @client: Pointer to a client object.
- *
+ * @cnx: Pointer to a #prelude_connection_t object.
  *
  * Returns: the destination port used to connect.
  */
@@ -583,10 +578,9 @@ uint16_t prelude_connection_get_dport(prelude_connection_t *cnx)
 
 /**
  * prelude_connection_is_alive:
- * @client: Pointer to a client object.
+ * @cnx: Pointer to a #prelude_connection_t object.
  *
- * Returns: 0 if the connection associated with @client is alive,
- * -1 if it is not.
+ * Returns: 0 if the connection associated with @cnx is alive, -1 otherwise.
  */
 int prelude_connection_is_alive(prelude_connection_t *cnx) 
 {
