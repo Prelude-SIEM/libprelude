@@ -1,3 +1,21 @@
+2003-12-25  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/idmef-wrappers-gen/GenerateIDMEFMessageSendC.pm (struct): 
+	don't call prelude_msgbuf_mark_end() on idmef_message_send(). Doing
+	so is up to the caller, which might want to add more information
+	to the written alert.
+
+	* src/idmef-data.c (idmef_data_new_dup): 
+	(idmef_data_new_nodup): 
+	(idmef_data_new_ref): 
+	(idmef_data_set_dup): 
+	(idmef_data_set_nodup): 
+	(idmef_data_set_ref): 
+	(idmef_data_get_data): 
+
+	* src/idmef-string.c (idmef_string_new_ref_fast): 
+	str is const.
+
 2003-12-20  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
 	* bindings/libprelude.i:

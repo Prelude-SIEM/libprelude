@@ -84,7 +84,7 @@ idmef_string_t *idmef_string_new_nodup_fast(char *str, size_t len)
 
 
 
-idmef_string_t *idmef_string_new_ref_fast(char *str, int len)
+idmef_string_t *idmef_string_new_ref_fast(const char *str, int len)
 {
         return idmef_data_new_ref(str, len);
 }

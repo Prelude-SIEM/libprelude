@@ -267,10 +267,7 @@ sub	struct
 	}
     }
 
-    if ( $struct->{toplevel} ) {
-	$self->output(" " x 8, "prelude_msgbuf_mark_end(msg);", "\n");
-
-    } else {
+    if ( ! $struct->{toplevel} ) {
 	$self->output("\n", " " x 8, "prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);", "\n");
     }
 

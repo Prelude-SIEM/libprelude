@@ -51,7 +51,7 @@ void idmef_string_destroy_internal(idmef_string_t *string);
 
 idmef_string_t *idmef_string_new_nodup_fast(char *str, size_t len);
 
-idmef_string_t *idmef_string_new_ref_fast(char *str, int len);
+idmef_string_t *idmef_string_new_ref_fast(const char *str, int len);
 
 int idmef_string_set_dup_fast(idmef_string_t *string, const char *str, size_t len);
 
