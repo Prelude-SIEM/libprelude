@@ -160,7 +160,7 @@ static int unix_connect(void)
  */
 static int inet_connect(prelude_client_t *client)
 {
-        int ret, on, len, sock;
+        int ret, len, sock;
 	struct sockaddr_in daddr, saddr;
         
 	log(LOG_INFO, "- Connecting to Tcp prelude Manager server %s:%d.\n",
@@ -175,7 +175,8 @@ static int inet_connect(prelude_client_t *client)
 		log(LOG_ERR,"Error opening inet socket.\n");
 		return -1;
 	}
-        
+
+#if 0
         /*
          * We want packet to be sent as soon as possible,
          * this mean not using the Nagle algorithm which try to minimize
@@ -185,7 +186,7 @@ static int inet_connect(prelude_client_t *client)
         ret = setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, &on, sizeof(int));
         if ( ret < 0 ) 
                 log(LOG_ERR, "couldn't turn the tcp Nagle algorithm off.\n");
-        
+#endif
         
         ret = generic_connect(sock, (struct sockaddr *)&daddr, sizeof(daddr));
         if ( ret < 0 ) {

@@ -1,5 +1,8 @@
 2002-02-28  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/prelude-client.c (inet_connect): re-enable
+	the Nagle algorithm for now.
+
 	* src/idmef-tree-func.c (idmef_alert_new): 
 	set analyzerid field.
 
