@@ -264,10 +264,7 @@ static int plugin_desactivate(void *context, prelude_option_t *opt)
         else
                 destroy_instance(pi);
         
-        /*
-         * so that the plugin commit function is not called after unsubscribtion.
-         */
-        return prelude_error(PRELUDE_ERROR_EOF);
+        return 0;
 }
 
 
