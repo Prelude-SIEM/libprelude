@@ -642,87 +642,85 @@ SWIG_InstallConstants(PyObject *d, swig_const_info constants[]) {
 /* -------- TYPES TABLE (BEGIN) -------- */
 
 #define  SWIGTYPE_p_f_p_idmef_value_t_p_void__int swig_types[0] 
-#define  SWIGTYPE_p_f_p_void__void swig_types[1] 
-#define  SWIGTYPE_p_f_p_prelude_list_t__void swig_types[2] 
-#define  SWIGTYPE_p_f_p_prelude_client_t__void swig_types[3] 
-#define  SWIGTYPE_p_prelude_msg_t swig_types[4] 
-#define  SWIGTYPE_p_f_p_prelude_msgbuf_t__p_prelude_msg_t swig_types[5] 
-#define  SWIGTYPE_p_size_t swig_types[6] 
-#define  SWIGTYPE_p_idmef_heartbeat_t swig_types[7] 
-#define  SWIGTYPE_p_idmef_target_t swig_types[8] 
-#define  SWIGTYPE_p_idmef_time swig_types[9] 
-#define  SWIGTYPE_p_idmef_confidence_t swig_types[10] 
-#define  SWIGTYPE_p_idmef_confidence_rating_t swig_types[11] 
-#define  SWIGTYPE_p_idmef_message_t swig_types[12] 
-#define  SWIGTYPE_p_idmef_alert_t swig_types[13] 
-#define  SWIGTYPE_p_idmef_overflow_alert_t swig_types[14] 
-#define  SWIGTYPE_p_idmef_correlation_alert_t swig_types[15] 
-#define  SWIGTYPE_p_idmef_tool_alert_t swig_types[16] 
-#define  SWIGTYPE_p_idmef_inode_t swig_types[17] 
-#define  SWIGTYPE_p_idmef_node_t swig_types[18] 
-#define  SWIGTYPE_p_idmef_file_access_t swig_types[19] 
-#define  SWIGTYPE_p_idmef_process_t swig_types[20] 
-#define  SWIGTYPE_p_gid_t swig_types[21] 
-#define  SWIGTYPE_p_uint32_t swig_types[22] 
-#define  SWIGTYPE_p_void swig_types[23] 
-#define  SWIGTYPE_p_idmef_source_t swig_types[24] 
-#define  SWIGTYPE_p_idmef_classification_origin_t swig_types[25] 
-#define  SWIGTYPE_p_idmef_criteria swig_types[26] 
-#define  SWIGTYPE_p_idmef_criterion_t swig_types[27] 
-#define  SWIGTYPE_p_prelude_list_t swig_types[28] 
-#define  SWIGTYPE_p_idmef_object_value_list_t swig_types[29] 
-#define  SWIGTYPE_p_idmef_time_t swig_types[30] 
-#define  SWIGTYPE_p_idmef_criteria_t swig_types[31] 
-#define  SWIGTYPE_p_idmef_criterion_value_t swig_types[32] 
-#define  SWIGTYPE_p_idmef_value_t swig_types[33] 
-#define  SWIGTYPE_p_idmef_user_t swig_types[34] 
-#define  SWIGTYPE_p_idmef_object_value_t swig_types[35] 
-#define  SWIGTYPE_p_idmef_analyzer_t swig_types[36] 
-#define  SWIGTYPE_p_prelude_msgbuf_t swig_types[37] 
-#define  SWIGTYPE_p_idmef_string_t swig_types[38] 
-#define  SWIGTYPE_p_uint16_t swig_types[39] 
-#define  SWIGTYPE_p_uint64_t swig_types[40] 
-#define  SWIGTYPE_p_idmef_address_t swig_types[41] 
-#define  SWIGTYPE_p_idmef_impact_t swig_types[42] 
-#define  SWIGTYPE_p_idmef_webservice_t swig_types[43] 
-#define  SWIGTYPE_p_idmef_snmpservice_t swig_types[44] 
-#define  SWIGTYPE_p_idmef_service_t swig_types[45] 
-#define  SWIGTYPE_p_idmef_target_decoy_t swig_types[46] 
-#define  SWIGTYPE_p_p_char swig_types[47] 
-#define  SWIGTYPE_p_idmef_impact_type_t swig_types[48] 
-#define  SWIGTYPE_p_idmef_file_fstype_t swig_types[49] 
-#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[50] 
-#define  SWIGTYPE_p_idmef_userid_type_t swig_types[51] 
-#define  SWIGTYPE_p_idmef_file_t swig_types[52] 
-#define  SWIGTYPE_p_idmef_value_type_t swig_types[53] 
-#define  SWIGTYPE_p_idmef_source_spoofed_t swig_types[54] 
-#define  SWIGTYPE_p_idmef_data_t_data swig_types[55] 
-#define  SWIGTYPE_p_idmef_linkage_t swig_types[56] 
-#define  SWIGTYPE_p_idmef_action_t swig_types[57] 
-#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[58] 
-#define  SWIGTYPE_p_idmef_classification_t swig_types[59] 
-#define  SWIGTYPE_p_idmef_userid_t swig_types[60] 
-#define  SWIGTYPE_p_idmef_assessment_t swig_types[61] 
-#define  SWIGTYPE_p_prelude_client_t swig_types[62] 
-#define  SWIGTYPE_p_idmef_object_t swig_types[63] 
-#define  SWIGTYPE_p_unsigned_char swig_types[64] 
-#define  SWIGTYPE_p_prelude_connection_mgr_t swig_types[65] 
-#define  SWIGTYPE_p_uid_t swig_types[66] 
-#define  SWIGTYPE_p_float swig_types[67] 
-#define  SWIGTYPE_p_idmef_additional_data_t swig_types[68] 
-#define  SWIGTYPE_p_idmef_data_t swig_types[69] 
-#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[70] 
-#define  SWIGTYPE_p_va_list swig_types[71] 
-#define  SWIGTYPE_p_idmef_alertident_t swig_types[72] 
-#define  SWIGTYPE_p_prelude_ident_t swig_types[73] 
-#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[74] 
-#define  SWIGTYPE_p_idmef_action_category_t swig_types[75] 
-#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[76] 
-#define  SWIGTYPE_p_idmef_file_category_t swig_types[77] 
+#define  SWIGTYPE_p_f_p_prelude_client_t_p_idmef_message_t__void swig_types[1] 
+#define  SWIGTYPE_p_prelude_msg_t swig_types[2] 
+#define  SWIGTYPE_p_f_p_prelude_msgbuf_t__p_prelude_msg_t swig_types[3] 
+#define  SWIGTYPE_p_size_t swig_types[4] 
+#define  SWIGTYPE_p_idmef_heartbeat_t swig_types[5] 
+#define  SWIGTYPE_p_idmef_target_t swig_types[6] 
+#define  SWIGTYPE_p_idmef_time swig_types[7] 
+#define  SWIGTYPE_p_idmef_confidence_t swig_types[8] 
+#define  SWIGTYPE_p_idmef_confidence_rating_t swig_types[9] 
+#define  SWIGTYPE_p_idmef_message_t swig_types[10] 
+#define  SWIGTYPE_p_idmef_alert_t swig_types[11] 
+#define  SWIGTYPE_p_idmef_overflow_alert_t swig_types[12] 
+#define  SWIGTYPE_p_idmef_correlation_alert_t swig_types[13] 
+#define  SWIGTYPE_p_idmef_tool_alert_t swig_types[14] 
+#define  SWIGTYPE_p_idmef_inode_t swig_types[15] 
+#define  SWIGTYPE_p_idmef_node_t swig_types[16] 
+#define  SWIGTYPE_p_idmef_file_access_t swig_types[17] 
+#define  SWIGTYPE_p_idmef_process_t swig_types[18] 
+#define  SWIGTYPE_p_gid_t swig_types[19] 
+#define  SWIGTYPE_p_uint32_t swig_types[20] 
+#define  SWIGTYPE_p_void swig_types[21] 
+#define  SWIGTYPE_p_idmef_source_t swig_types[22] 
+#define  SWIGTYPE_p_idmef_classification_origin_t swig_types[23] 
+#define  SWIGTYPE_p_idmef_criteria swig_types[24] 
+#define  SWIGTYPE_p_idmef_criterion_t swig_types[25] 
+#define  SWIGTYPE_p_prelude_list_t swig_types[26] 
+#define  SWIGTYPE_p_idmef_object_value_list_t swig_types[27] 
+#define  SWIGTYPE_p_idmef_time_t swig_types[28] 
+#define  SWIGTYPE_p_idmef_criteria_t swig_types[29] 
+#define  SWIGTYPE_p_idmef_object_value_t swig_types[30] 
+#define  SWIGTYPE_p_idmef_criterion_value_t swig_types[31] 
+#define  SWIGTYPE_p_idmef_value_t swig_types[32] 
+#define  SWIGTYPE_p_idmef_user_t swig_types[33] 
+#define  SWIGTYPE_p_idmef_analyzer_t swig_types[34] 
+#define  SWIGTYPE_p_prelude_msgbuf_t swig_types[35] 
+#define  SWIGTYPE_p_idmef_string_t swig_types[36] 
+#define  SWIGTYPE_p_uint16_t swig_types[37] 
+#define  SWIGTYPE_p_uint64_t swig_types[38] 
+#define  SWIGTYPE_p_idmef_address_t swig_types[39] 
+#define  SWIGTYPE_p_idmef_impact_t swig_types[40] 
+#define  SWIGTYPE_p_idmef_webservice_t swig_types[41] 
+#define  SWIGTYPE_p_idmef_snmpservice_t swig_types[42] 
+#define  SWIGTYPE_p_idmef_service_t swig_types[43] 
+#define  SWIGTYPE_p_idmef_target_decoy_t swig_types[44] 
+#define  SWIGTYPE_p_p_char swig_types[45] 
+#define  SWIGTYPE_p_idmef_impact_type_t swig_types[46] 
+#define  SWIGTYPE_p_idmef_file_fstype_t swig_types[47] 
+#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[48] 
+#define  SWIGTYPE_p_idmef_userid_type_t swig_types[49] 
+#define  SWIGTYPE_p_idmef_file_t swig_types[50] 
+#define  SWIGTYPE_p_idmef_value_type_t swig_types[51] 
+#define  SWIGTYPE_p_idmef_source_spoofed_t swig_types[52] 
+#define  SWIGTYPE_p_idmef_data_t_data swig_types[53] 
+#define  SWIGTYPE_p_idmef_linkage_t swig_types[54] 
+#define  SWIGTYPE_p_idmef_action_t swig_types[55] 
+#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[56] 
+#define  SWIGTYPE_p_idmef_classification_t swig_types[57] 
+#define  SWIGTYPE_p_idmef_userid_t swig_types[58] 
+#define  SWIGTYPE_p_idmef_assessment_t swig_types[59] 
+#define  SWIGTYPE_p_prelude_client_t swig_types[60] 
+#define  SWIGTYPE_p_idmef_object_t swig_types[61] 
+#define  SWIGTYPE_p_unsigned_char swig_types[62] 
+#define  SWIGTYPE_p_prelude_connection_mgr_t swig_types[63] 
+#define  SWIGTYPE_p_uid_t swig_types[64] 
+#define  SWIGTYPE_p_float swig_types[65] 
+#define  SWIGTYPE_p_idmef_additional_data_t swig_types[66] 
+#define  SWIGTYPE_p_idmef_data_t swig_types[67] 
+#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[68] 
+#define  SWIGTYPE_p_va_list swig_types[69] 
+#define  SWIGTYPE_p_idmef_alertident_t swig_types[70] 
+#define  SWIGTYPE_p_prelude_ident_t swig_types[71] 
+#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[72] 
+#define  SWIGTYPE_p_idmef_action_category_t swig_types[73] 
+#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[74] 
+#define  SWIGTYPE_p_idmef_file_category_t swig_types[75] 
+#define  SWIGTYPE_p_idmef_user_category_t swig_types[76] 
+#define  SWIGTYPE_p_idmef_address_category_t swig_types[77] 
 #define  SWIGTYPE_p_idmef_node_category_t swig_types[78] 
-#define  SWIGTYPE_p_idmef_user_category_t swig_types[79] 
-#define  SWIGTYPE_p_idmef_address_category_t swig_types[80] 
-static swig_type_info *swig_types[82];
+static swig_type_info *swig_types[80];
 
 /* -------- TYPES TABLE (END) -------- */
 
@@ -741,114 +739,12 @@ static swig_type_info *swig_types[82];
 #include "prelude-message-buffered.h"
 #include "prelude-client.h"
 #include "idmef.h"
-#include "sensor.h"
 #include "idmef-value-object.h"
 #include "idmef-object-value.h"
 #include "idmef-message-write.h"
 #include "idmef-tree-print.h"
 #include "idmef-tree-to-string.h"
 #include "idmef-util.h"
-
-static int prelude_message_analyzer_fill_infos(idmef_analyzer_t *analyzer,
-					       int argc, char **argv)
-{
-	idmef_process_t *process;
-	idmef_string_t *process_name;
-	idmef_string_t *process_path;
-	char *name;
-	char *path;
-	int ret = 0;
-
-	if ( prelude_analyzer_fill_infos(analyzer) < 0 )
-		return -1;
-
-	process = idmef_analyzer_get_process(analyzer);
-	if ( ! process )
-		return -1;
-
-	ret = prelude_get_file_name_and_path(argv[0], &name, &path);
-	if ( ret < 0 )
-		return -1;
-
-	process_name = idmef_process_new_name(process);
-	if ( ! process_name ) {
-		free(name);
-		if ( ret == 2 )
-			free(path);
-		return -1;
-	}
-
-	if ( idmef_string_set_nodup(process_name, name) < 0 ) {
-		free(name);
-		if ( ret == 2 )
-			free(path);
-		return -1;
-	}
-
-	if ( ret == 2 ) {
-		process_path = idmef_process_new_path(process);
-		if ( ! process_path ) {
-			free(path);
-			return -1;
-		}
-
-		if ( idmef_string_set_nodup(process_path, path) < 0 ) {
-			free(path);
-			return -1;
-		}
-	}
-
-	return 0;
-}
-
-static	int prelude_alert_fill_infos(idmef_message_t *message,
-				     int argc, char **argv)
-{
-	idmef_alert_t *alert;
-	idmef_analyzer_t *analyzer;
-	idmef_time_t *create_time;
-	int retval;
-
-	alert = idmef_message_new_alert(message);
-	if ( ! alert )
-		return -1;
-
-	create_time = idmef_time_new_gettimeofday();
-	if ( ! create_time )
-		return -1;
-
-	idmef_alert_set_create_time(alert, create_time);
-
-	analyzer = idmef_alert_new_analyzer(alert);
-	if ( ! analyzer )
-		return -1;
-
-	return prelude_message_analyzer_fill_infos(analyzer, argc, argv);
-}
-
-static	int prelude_heartbeat_fill_infos(idmef_message_t *message,
-					 int argc, char **argv)
-{
-	idmef_heartbeat_t *heartbeat;
-	idmef_analyzer_t *analyzer;
-	idmef_time_t *create_time;
-
-	heartbeat = idmef_message_new_heartbeat(message);
-	if ( ! heartbeat )
-		return -1;
-
-	create_time = idmef_time_new_gettimeofday();
-	if ( ! create_time )
-		return -1;
-
-	idmef_heartbeat_set_create_time(heartbeat, create_time);
-
-	analyzer = idmef_heartbeat_new_analyzer(heartbeat);
-	if ( ! analyzer )
-		return -1;
-
-	return prelude_message_analyzer_fill_infos(analyzer, argc, argv);
-}
 
 
 
@@ -1201,13 +1097,13 @@ static PyObject *_wrap_prelude_client_send_msg(PyObject *self, PyObject *args) {
 static PyObject *_wrap_prelude_client_set_heartbeat_cb(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_client_t *arg1 = (prelude_client_t *) 0 ;
-    void (*arg2)(prelude_client_t *) = (void (*)(prelude_client_t *)) 0 ;
+    void (*arg2)(prelude_client_t *,idmef_message_t *) = (void (*)(prelude_client_t *,idmef_message_t *)) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
     if(!PyArg_ParseTuple(args,(char *)"OO:prelude_client_set_heartbeat_cb",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_client_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_f_p_prelude_client_t__void,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_f_p_prelude_client_t_p_idmef_message_t__void,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     prelude_client_set_heartbeat_cb(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
@@ -1346,224 +1242,6 @@ static PyObject *_wrap_prelude_client_get_backup_filename(PyObject *self, PyObje
     prelude_client_get_backup_filename(arg1,arg2,arg3);
     
     Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_prelude_init(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    int arg1 ;
-    char **arg2 = (char **) 0 ;
-    int result;
-    PyObject * obj1 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"iO:prelude_init",&arg1,&obj1)) goto fail;
-    {
-        /* Check if is a list */
-        if ( PyList_Check(obj1) ) {
-            int size = PyList_Size(obj1);
-            int i = 0;
-            
-            arg2 = (char **) malloc((size+1) * sizeof(char *));
-            for ( i = 0; i < size; i++ ) {
-                PyObject *o = PyList_GetItem(obj1,i);
-                if ( PyString_Check(o) )
-                arg2[i] = PyString_AsString(PyList_GetItem(obj1, i));
-                else {
-                    PyErr_SetString(PyExc_TypeError, "list must contain strings");
-                    free(arg2);
-                    return NULL;
-                }
-            }
-            arg2[i] = 0;
-        }else {
-            PyErr_SetString(PyExc_TypeError, "not a list");
-            return NULL;
-        }
-    }
-    result = (int)prelude_init(arg1,arg2);
-    
-    resultobj = PyInt_FromLong((long)result);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_prelude_sensor_send_msg(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    prelude_msg_t *arg1 = (prelude_msg_t *) 0 ;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:prelude_sensor_send_msg",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msg_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    prelude_sensor_send_msg(arg1);
-    
-    Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_prelude_sensor_send_msg_async(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    prelude_msg_t *arg1 = (prelude_msg_t *) 0 ;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:prelude_sensor_send_msg_async",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msg_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    prelude_sensor_send_msg_async(arg1);
-    
-    Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_prelude_sensor_init(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    char *arg1 ;
-    char *arg2 ;
-    int arg3 ;
-    char **arg4 = (char **) 0 ;
-    int result;
-    PyObject * obj0 = 0 ;
-    PyObject * obj1 = 0 ;
-    PyObject * obj3 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"OOiO:prelude_sensor_init",&obj0,&obj1,&arg3,&obj3)) goto fail;
-    {
-        if ( obj0 == Py_None )
-        arg1 = NULL;
-        else if ( PyString_Check(obj0) )
-        arg1 = PyString_AsString(obj0);
-        else {
-            PyErr_Format(PyExc_TypeError,
-            "expected None or string, %s found", obj0->ob_type->tp_name);
-            return NULL;
-        }
-    }
-    {
-        if ( obj1 == Py_None )
-        arg2 = NULL;
-        else if ( PyString_Check(obj1) )
-        arg2 = PyString_AsString(obj1);
-        else {
-            PyErr_Format(PyExc_TypeError,
-            "expected None or string, %s found", obj1->ob_type->tp_name);
-            return NULL;
-        }
-    }
-    {
-        /* Check if is a list */
-        if ( PyList_Check(obj3) ) {
-            int size = PyList_Size(obj3);
-            int i = 0;
-            
-            arg4 = (char **) malloc((size+1) * sizeof(char *));
-            for ( i = 0; i < size; i++ ) {
-                PyObject *o = PyList_GetItem(obj3,i);
-                if ( PyString_Check(o) )
-                arg4[i] = PyString_AsString(PyList_GetItem(obj3, i));
-                else {
-                    PyErr_SetString(PyExc_TypeError, "list must contain strings");
-                    free(arg4);
-                    return NULL;
-                }
-            }
-            arg4[i] = 0;
-        }else {
-            PyErr_SetString(PyExc_TypeError, "not a list");
-            return NULL;
-        }
-    }
-    result = (int)prelude_sensor_init((char const *)arg1,(char const *)arg2,arg3,arg4);
-    
-    resultobj = PyInt_FromLong((long)result);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_prelude_sensor_get_client_list(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    prelude_list_t *result;
-    
-    if(!PyArg_ParseTuple(args,(char *)":prelude_sensor_get_client_list")) goto fail;
-    result = (prelude_list_t *)prelude_sensor_get_client_list();
-    
-    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_prelude_list_t, 0);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_prelude_sensor_notify_mgr_connection(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    void (*arg1)(prelude_list_t *) = (void (*)(prelude_list_t *)) 0 ;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:prelude_sensor_notify_mgr_connection",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_f_p_prelude_list_t__void,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    prelude_sensor_notify_mgr_connection(arg1);
-    
-    Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_prelude_heartbeat_register_cb(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    void (*arg1)(void *) = (void (*)(void *)) 0 ;
-    void *arg2 = (void *) 0 ;
-    PyObject * obj0 = 0 ;
-    PyObject * obj1 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"OO:prelude_heartbeat_register_cb",&obj0,&obj1)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_f_p_void__void,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj1,(void **) &arg2, 0, SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    prelude_heartbeat_register_cb(arg1,arg2);
-    
-    Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_prelude_heartbeat_send(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    int result;
-    
-    if(!PyArg_ParseTuple(args,(char *)":prelude_heartbeat_send")) goto fail;
-    result = (int)prelude_heartbeat_send();
-    
-    resultobj = PyInt_FromLong((long)result);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_prelude_analyzer_fill_infos(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    idmef_analyzer_t *arg1 = (idmef_analyzer_t *) 0 ;
-    int result;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:prelude_analyzer_fill_infos",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_analyzer_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (int)prelude_analyzer_fill_infos(arg1);
-    
-    resultobj = PyInt_FromLong((long)result);
     return resultobj;
     fail:
     return NULL;
@@ -21098,92 +20776,6 @@ static PyObject *_wrap_idmef_type_get_name(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_prelude_alert_fill_infos(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    idmef_message_t *arg1 = (idmef_message_t *) 0 ;
-    int arg2 ;
-    char **arg3 = (char **) 0 ;
-    int result;
-    PyObject * obj0 = 0 ;
-    PyObject * obj2 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"OiO:prelude_alert_fill_infos",&obj0,&arg2,&obj2)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_message_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    {
-        /* Check if is a list */
-        if ( PyList_Check(obj2) ) {
-            int size = PyList_Size(obj2);
-            int i = 0;
-            
-            arg3 = (char **) malloc((size+1) * sizeof(char *));
-            for ( i = 0; i < size; i++ ) {
-                PyObject *o = PyList_GetItem(obj2,i);
-                if ( PyString_Check(o) )
-                arg3[i] = PyString_AsString(PyList_GetItem(obj2, i));
-                else {
-                    PyErr_SetString(PyExc_TypeError, "list must contain strings");
-                    free(arg3);
-                    return NULL;
-                }
-            }
-            arg3[i] = 0;
-        }else {
-            PyErr_SetString(PyExc_TypeError, "not a list");
-            return NULL;
-        }
-    }
-    result = (int)prelude_alert_fill_infos(arg1,arg2,arg3);
-    
-    resultobj = PyInt_FromLong((long)result);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_prelude_heartbeat_fill_infos(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    idmef_message_t *arg1 = (idmef_message_t *) 0 ;
-    int arg2 ;
-    char **arg3 = (char **) 0 ;
-    int result;
-    PyObject * obj0 = 0 ;
-    PyObject * obj2 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"OiO:prelude_heartbeat_fill_infos",&obj0,&arg2,&obj2)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_message_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    {
-        /* Check if is a list */
-        if ( PyList_Check(obj2) ) {
-            int size = PyList_Size(obj2);
-            int i = 0;
-            
-            arg3 = (char **) malloc((size+1) * sizeof(char *));
-            for ( i = 0; i < size; i++ ) {
-                PyObject *o = PyList_GetItem(obj2,i);
-                if ( PyString_Check(o) )
-                arg3[i] = PyString_AsString(PyList_GetItem(obj2, i));
-                else {
-                    PyErr_SetString(PyExc_TypeError, "list must contain strings");
-                    free(arg3);
-                    return NULL;
-                }
-            }
-            arg3[i] = 0;
-        }else {
-            PyErr_SetString(PyExc_TypeError, "not a list");
-            return NULL;
-        }
-    }
-    result = (int)prelude_heartbeat_fill_infos(arg1,arg2,arg3);
-    
-    resultobj = PyInt_FromLong((long)result);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"prelude_client_get_unique_ident", _wrap_prelude_client_get_unique_ident, METH_VARARGS },
 	 { (char *)"prelude_client_get_manager_list", _wrap_prelude_client_get_manager_list, METH_VARARGS },
@@ -21208,15 +20800,6 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"prelude_client_get_ssl_cert_filename", _wrap_prelude_client_get_ssl_cert_filename, METH_VARARGS },
 	 { (char *)"prelude_client_get_ssl_key_filename", _wrap_prelude_client_get_ssl_key_filename, METH_VARARGS },
 	 { (char *)"prelude_client_get_backup_filename", _wrap_prelude_client_get_backup_filename, METH_VARARGS },
-	 { (char *)"prelude_init", _wrap_prelude_init, METH_VARARGS },
-	 { (char *)"prelude_sensor_send_msg", _wrap_prelude_sensor_send_msg, METH_VARARGS },
-	 { (char *)"prelude_sensor_send_msg_async", _wrap_prelude_sensor_send_msg_async, METH_VARARGS },
-	 { (char *)"prelude_sensor_init", _wrap_prelude_sensor_init, METH_VARARGS },
-	 { (char *)"prelude_sensor_get_client_list", _wrap_prelude_sensor_get_client_list, METH_VARARGS },
-	 { (char *)"prelude_sensor_notify_mgr_connection", _wrap_prelude_sensor_notify_mgr_connection, METH_VARARGS },
-	 { (char *)"prelude_heartbeat_register_cb", _wrap_prelude_heartbeat_register_cb, METH_VARARGS },
-	 { (char *)"prelude_heartbeat_send", _wrap_prelude_heartbeat_send, METH_VARARGS },
-	 { (char *)"prelude_analyzer_fill_infos", _wrap_prelude_analyzer_fill_infos, METH_VARARGS },
 	 { (char *)"idmef_additional_data_type_to_numeric", _wrap_idmef_additional_data_type_to_numeric, METH_VARARGS },
 	 { (char *)"idmef_additional_data_type_to_string", _wrap_idmef_additional_data_type_to_string, METH_VARARGS },
 	 { (char *)"idmef_additional_data_new", _wrap_idmef_additional_data_new, METH_VARARGS },
@@ -22294,8 +21877,6 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_type_get_child", _wrap_idmef_type_get_child, METH_VARARGS },
 	 { (char *)"idmef_type_new_child", _wrap_idmef_type_new_child, METH_VARARGS },
 	 { (char *)"idmef_type_get_name", _wrap_idmef_type_get_name, METH_VARARGS },
-	 { (char *)"prelude_alert_fill_infos", _wrap_prelude_alert_fill_infos, METH_VARARGS },
-	 { (char *)"prelude_heartbeat_fill_infos", _wrap_prelude_heartbeat_fill_infos, METH_VARARGS },
 	 { NULL, NULL }
 };
 
@@ -22303,9 +21884,7 @@ static PyMethodDef SwigMethods[] = {
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
 static swig_type_info _swigt__p_f_p_idmef_value_t_p_void__int[] = {{"_p_f_p_idmef_value_t_p_void__int", 0, "int (*)(idmef_value_t *,void *)", 0},{"_p_f_p_idmef_value_t_p_void__int"},{0}};
-static swig_type_info _swigt__p_f_p_void__void[] = {{"_p_f_p_void__void", 0, "void (*)(void *)", 0},{"_p_f_p_void__void"},{0}};
-static swig_type_info _swigt__p_f_p_prelude_list_t__void[] = {{"_p_f_p_prelude_list_t__void", 0, "void (*)(prelude_list_t *)", 0},{"_p_f_p_prelude_list_t__void"},{0}};
-static swig_type_info _swigt__p_f_p_prelude_client_t__void[] = {{"_p_f_p_prelude_client_t__void", 0, "void (*)(prelude_client_t *)", 0},{"_p_f_p_prelude_client_t__void"},{0}};
+static swig_type_info _swigt__p_f_p_prelude_client_t_p_idmef_message_t__void[] = {{"_p_f_p_prelude_client_t_p_idmef_message_t__void", 0, "void (*)(prelude_client_t *,idmef_message_t *)", 0},{"_p_f_p_prelude_client_t_p_idmef_message_t__void"},{0}};
 static swig_type_info _swigt__p_prelude_msg_t[] = {{"_p_prelude_msg_t", 0, "prelude_msg_t *", 0},{"_p_prelude_msg_t"},{0}};
 static swig_type_info _swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t[] = {{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t", 0, "prelude_msg_t *(*)(prelude_msgbuf_t *)", 0},{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t"},{0}};
 static swig_type_info _swigt__p_size_t[] = {{"_p_size_t", 0, "size_t *", 0},{"_p_size_t"},{0}};
@@ -22334,10 +21913,10 @@ static swig_type_info _swigt__p_prelude_list_t[] = {{"_p_prelude_list_t", 0, "pr
 static swig_type_info _swigt__p_idmef_object_value_list_t[] = {{"_p_idmef_object_value_list_t", 0, "idmef_object_value_list_t *", 0},{"_p_idmef_object_value_list_t"},{0}};
 static swig_type_info _swigt__p_idmef_time_t[] = {{"_p_idmef_time_t", 0, "idmef_time_t *", 0},{"_p_idmef_time_t"},{"_p_idmef_time"},{0}};
 static swig_type_info _swigt__p_idmef_criteria_t[] = {{"_p_idmef_criteria_t", 0, "idmef_criteria_t *", 0},{"_p_idmef_criteria_t"},{"_p_idmef_criteria"},{0}};
+static swig_type_info _swigt__p_idmef_object_value_t[] = {{"_p_idmef_object_value_t", 0, "idmef_object_value_t *", 0},{"_p_idmef_object_value_t"},{0}};
 static swig_type_info _swigt__p_idmef_criterion_value_t[] = {{"_p_idmef_criterion_value_t", 0, "idmef_criterion_value_t *", 0},{"_p_idmef_criterion_value_t"},{0}};
 static swig_type_info _swigt__p_idmef_value_t[] = {{"_p_idmef_value_t", 0, "idmef_value_t *", 0},{"_p_idmef_value_t"},{0}};
 static swig_type_info _swigt__p_idmef_user_t[] = {{"_p_idmef_user_t", 0, "idmef_user_t *", 0},{"_p_idmef_user_t"},{0}};
-static swig_type_info _swigt__p_idmef_object_value_t[] = {{"_p_idmef_object_value_t", 0, "idmef_object_value_t *", 0},{"_p_idmef_object_value_t"},{0}};
 static swig_type_info _swigt__p_idmef_analyzer_t[] = {{"_p_idmef_analyzer_t", 0, "idmef_analyzer_t *", 0},{"_p_idmef_analyzer_t"},{0}};
 static swig_type_info _swigt__p_prelude_msgbuf_t[] = {{"_p_prelude_msgbuf_t", 0, "prelude_msgbuf_t *", 0},{"_p_prelude_msgbuf_t"},{0}};
 static swig_type_info _swigt__p_idmef_string_t[] = {{"_p_idmef_string_t", 0, "idmef_string_t *", 0},{"_p_idmef_string_t"},{"_p_idmef_data_t"},{0}};
@@ -22380,15 +21959,13 @@ static swig_type_info _swigt__p_idmef_impact_severity_t[] = {{"_p_idmef_impact_s
 static swig_type_info _swigt__p_idmef_action_category_t[] = {{"_p_idmef_action_category_t", 0, "idmef_action_category_t *", 0},{"_p_idmef_action_category_t"},{0}};
 static swig_type_info _swigt__p_idmef_linkage_category_t[] = {{"_p_idmef_linkage_category_t", 0, "idmef_linkage_category_t *", 0},{"_p_idmef_linkage_category_t"},{0}};
 static swig_type_info _swigt__p_idmef_file_category_t[] = {{"_p_idmef_file_category_t", 0, "idmef_file_category_t *", 0},{"_p_idmef_file_category_t"},{0}};
-static swig_type_info _swigt__p_idmef_node_category_t[] = {{"_p_idmef_node_category_t", 0, "idmef_node_category_t *", 0},{"_p_idmef_node_category_t"},{0}};
 static swig_type_info _swigt__p_idmef_user_category_t[] = {{"_p_idmef_user_category_t", 0, "idmef_user_category_t *", 0},{"_p_idmef_user_category_t"},{0}};
 static swig_type_info _swigt__p_idmef_address_category_t[] = {{"_p_idmef_address_category_t", 0, "idmef_address_category_t *", 0},{"_p_idmef_address_category_t"},{0}};
+static swig_type_info _swigt__p_idmef_node_category_t[] = {{"_p_idmef_node_category_t", 0, "idmef_node_category_t *", 0},{"_p_idmef_node_category_t"},{0}};
 
 static swig_type_info *swig_types_initial[] = {
 _swigt__p_f_p_idmef_value_t_p_void__int, 
-_swigt__p_f_p_void__void, 
-_swigt__p_f_p_prelude_list_t__void, 
-_swigt__p_f_p_prelude_client_t__void, 
+_swigt__p_f_p_prelude_client_t_p_idmef_message_t__void, 
 _swigt__p_prelude_msg_t, 
 _swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t, 
 _swigt__p_size_t, 
@@ -22417,10 +21994,10 @@ _swigt__p_prelude_list_t,
 _swigt__p_idmef_object_value_list_t, 
 _swigt__p_idmef_time_t, 
 _swigt__p_idmef_criteria_t, 
+_swigt__p_idmef_object_value_t, 
 _swigt__p_idmef_criterion_value_t, 
 _swigt__p_idmef_value_t, 
 _swigt__p_idmef_user_t, 
-_swigt__p_idmef_object_value_t, 
 _swigt__p_idmef_analyzer_t, 
 _swigt__p_prelude_msgbuf_t, 
 _swigt__p_idmef_string_t, 
@@ -22463,9 +22040,9 @@ _swigt__p_idmef_impact_severity_t,
 _swigt__p_idmef_action_category_t, 
 _swigt__p_idmef_linkage_category_t, 
 _swigt__p_idmef_file_category_t, 
-_swigt__p_idmef_node_category_t, 
 _swigt__p_idmef_user_category_t, 
 _swigt__p_idmef_address_category_t, 
+_swigt__p_idmef_node_category_t, 
 0
 };
 

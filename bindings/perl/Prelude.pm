@@ -24,13 +24,6 @@ use strict;
 
 package Prelude;
 
-sub	sensor_init
-{
-    my	$sensor_name = shift || $0;
-
-    return (prelude_sensor_init($sensor_name, undef, 0, [ ]) < 0) ? 0 : 1;
-}
-
 sub	value2scalar($)
 {
     my	$value = shift;
@@ -94,6 +87,105 @@ sub	value2scalar($)
 
     return $result;
 }
+
+
+package Sensor;
+
+sub new($$)
+{
+    my $class = shift;
+    my $name = shift || $0;
+    my $config = shift || undef;
+    my $self = { };
+
+    if ( ! $config ) {
+	$config = `libprelude-config --prefix`;
+	chomp($config);
+	$config .= "/etc/prelude/default/client.conf";
+    }
+
+    $self->{client} = Prelude::prelude_client_new($Prelude::PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF);
+    if ( ! $self->{client} ) {
+	return undef;
+    }
+
+    if ( Prelude::prelude_client_init($self->{client}, $name, $config, length(@ARGV), [ $0, @ARGV ]) < 0 ) {
+	Prelude::prelude_client_destroy($self->{client});
+	return undef;
+    }
+
+    $self->{analyzer} = Prelude::prelude_client_get_analyzer($self->{client});
+    if ( ! $self->{analyzer}) {
+	Prelude::prelude_client_destroy($self->{client});
+	return undef;
+    }
+
+    $self->{msgbuf} = Prelude::prelude_msgbuf_new($self->{client});
+    if ( ! $self->{msgbuf} ) {
+	Prelude::prelude_client_destroy($self->{client});
+	return undef;
+    }
+
+    return bless($self, $class);
+}
+
+sub set_manufacturer
+{
+    my $self = shift;
+    my $manufacturer = shift || return 0;
+
+    Prelude::idmef_analyzer_set_manufacturer($self->{analyzer}, Prelude::idmef_string_new_dup($manufacturer));
+
+    return 1;
+}
+
+sub set_model
+{
+    my $self = shift;
+    my $model = shift || return 0;
+    my $version = shift || undef;
+
+    Prelude::idmef_analyzer_set_model($self->{analyzer}, Prelude::idmef_string_new_dup($model));
+
+    if ( $version ) {
+	Prelude::idmef_analyzer_set_version($self->{analyzer}, Prelude::idmef_string_new_dup($version));
+    }
+
+    return 1;
+}
+
+sub set_class
+{
+    my $self = shift;
+    my $class = shift || return 0;
+
+    Prelude::idmef_analyzer_set_class($self->{analyzer}, Prelude::idmef_string_new_dup($class));
+
+    return 1;
+}
+
+sub send_alert
+{
+    my $self = shift;
+    my $message = shift || return 0;
+    my $alert;
+
+    $alert = Prelude::idmef_message_get_alert($$message) || return undef;
+    Prelude::idmef_alert_set_analyzer($alert, Prelude::idmef_analyzer_ref($self->{analyzer}));
+    Prelude::idmef_write_message($self->{msgbuf}, $$message);
+    Prelude::prelude_msgbuf_mark_end($self->{msgbuf});
+
+    return 1;    
+}
+
+sub DESTROY
+{
+    my $self = shift;
+
+    Prelude::prelude_msgbuf_close($self->{msgbuf});
+    Prelude::prelude_client_destroy($self->{client});
+}
+
 
 
 package IDMEFMessage;
@@ -227,16 +319,6 @@ sub	get
     return wantarray ? @ret : $ret[0];
 }
 
-sub	send
-{
-    my	$self = shift;
-    my	$msgbuf;
-
-    $msgbuf = PreludeMsgBuf->new(0);
-
-    return $msgbuf->send($self, 0);
-}
-
 sub	print
 {
     my	$self = shift;
@@ -263,59 +345,9 @@ sub	new
 
     $self = new IDMEFMessage() or return undef;
 
-    @argv = ($0, @ARGV);
-
-    Prelude::prelude_alert_fill_infos($$self, scalar(@argv), \@argv) < 0 and return undef;
+    $self->set("alert.create_time", time());
 
     return $self;
-}
-
-
-
-package	IDMEFHeartbeat;
-
-sub	new
-{
-    my	$class = shift;
-    my	$self;
-
-    $self = new IDMEFMessage() or return undef;
-
-    Prelude::prelude_heartbeat_fill_infos($$self) < 0 and return undef;
-
-    return $self;
-}
-
-
-
-package PreludeMsgBuf;
-
-sub	new($$)
-{
-    my	$class = shift;
-    my	$async_send = shift;
-    my	$self;
-
-    $self = Prelude::prelude_msgbuf_new($async_send);
-
-    return $self ? bless(\$self, $class) : undef;
-}
-
-sub	send
-{
-    my	$self = shift;
-    my	$message = shift || return 0;
-
-    Prelude::idmef_write_message($$self, $$message);
-
-    return 1;
-}
-
-sub	DESTROY
-{
-    my	$self = shift;
-
-    $$self and Prelude::prelude_msgbuf_close($$self);
 }
 
 

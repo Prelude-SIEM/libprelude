@@ -475,7 +475,7 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
         void *context = new;
 
         new->name = strdup(sname);
-        new->config_filename = strdup(config);
+        new->config_filename = config ? strdup(config) : NULL;
 
         new->unique_ident = prelude_ident_new();
         if ( ! new->unique_ident ) {

@@ -3,11 +3,12 @@
 use strict;
 use Prelude;
 
+my $sensor;
 my $alert;
 
-Prelude::sensor_init("test") or die;
+$sensor = Sensor("test");
 
-$alert = new IDMEFAlert;
+$alert = new IDMEFAlert();
 
 $alert->set("alert.classification(0).name" => "test perl");
 $alert->set("alert.assessment.impact.severity" => "low");
@@ -19,4 +20,4 @@ $alert->set("alert.target(0).node.address(0).address" => "10.0.0.2");
 $alert->set("alert.target(1).node.address(0).address" => "10.0.0.3");
 $alert->set("alert.additional_data(0).data" => "something");
 
-$alert->send;
+$sensor->send_alert($alert);

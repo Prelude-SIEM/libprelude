@@ -18,8 +18,11 @@
 # the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import sys
+import os
+
 import time
 import string
+
 import _prelude
 
 
@@ -71,6 +74,58 @@ def sensor_init(name=None):
         
     if _prelude.prelude_sensor_init(name, None, 0, [ ]) < 0:
         raise SensorError()
+
+
+class Sensor:
+    def __init__(self, name, config=None):
+        if not name:
+            name = sys.argv[0]
+        
+        if not config:
+            file = os.popen("libprelude-config --prefix")
+            path = file.read()
+            file.close()
+            config = path[:-1] + "/etc/prelude/default/client.conf"
+        
+        self._client = _prelude.prelude_client_new(_prelude.PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF)
+        if not self._client:
+            raise SensorError()
+
+        if _prelude.prelude_client_init(self._client, name, config, len(sys.argv), sys.argv) < 0:
+            _prelude.prelude_client_destroy(self._client)
+            raise SensorError()
+
+        self._analyzer = _prelude.prelude_client_get_analyzer(self._client)
+        if not self._analyzer:
+            _prelude.prelude_client_destroy(self._client)
+            raise SensorError()
+
+        self._msgbuf = _prelude.prelude_msgbuf_new(self._client)
+        if not self._msgbuf:
+            _prelude.prelude_client_destroy(self._client)
+            raise SensorError()
+    
+    def set_manufacturer(self, manufacturer):
+        _prelude.idmef_analyzer_set_manufacturer(self._analyzer, _prelude.idmef_string_new_dup(manufacturer))
+
+    def set_model(self, name, version=None):
+        _prelude.idmef_analyzer_set_model(self._analyzer, _prelude.idmef_string_new_dup(name))
+        
+        if version:
+            _prelude.idmef_analyzer_set_version(self._analyzer, _prelude.idmef_string_new_dup(version))
+
+    def set_class(self, class_):
+        _prelude.idmef_analyzer_set_class(self._analyzer, _prelude.idmef_string_new_dup(class_))
+
+    def send_alert(self, message):
+        alert = _prelude.idmef_message_get_alert(message.res)
+        _prelude.idmef_alert_set_analyzer(alert, _prelude.idmef_analyzer_ref(self._analyzer))
+        _prelude.idmef_write_message(self._msgbuf, message.res)
+        _prelude.prelude_msgbuf_mark_end(self._msgbuf)
+
+    def __del__(self):
+        _prelude.prelude_msgbuf_close(self._msgbuf)
+        _prelude.prelude_client_destroy(self._client)
 
 
 
@@ -417,8 +472,7 @@ class IDMEFAlert(IDMEFMessage):
     def __init__(self):
         """Create a message alert with with some message alert's field already built."""
         IDMEFMessage.__init__(self)
-        if _prelude.prelude_alert_fill_infos(self.res, len(sys.argv), sys.argv) < 0:
-            raise PreludeError()
+        self["alert.create_time"] = time.time()
 
 
 
