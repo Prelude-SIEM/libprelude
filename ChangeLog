@@ -1,3 +1,9 @@
+2003-12-16  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
+	* src/idmef-value-type.c:
+	in read functions for integer types: handle both decimal 
+	and hexadecimal value
+
 2003-12-14  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
 	* src/idmef-message.c:

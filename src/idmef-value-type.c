@@ -33,17 +33,31 @@
 #include "idmef-value-type.h"
 
 
-#define GENERIC_RW_FUNC(fmt, name, type)                                           \
+#define GENERIC_ONE_BASE_RW_FUNC(fmt, name, type)                                  \
         static int name ## _read(idmef_value_type_t *dst, const char *buf)         \
         {                                                                          \
-                return sscanf(buf, (fmt), &(dst)->data. name ##_val);              \
+                return sscanf(buf, fmt, &(dst)->data. name ##_val);                \
         }                                                                          \
                                                                                    \
         static int name ## _write(char *buf, size_t size, idmef_value_type_t *src) \
         {                                                                          \
-                return snprintf(buf, size, (fmt), src->data.name ##_val);          \
-        }                                                                          \
+                return snprintf(buf, size, fmt, src->data.name ##_val);            \
+        }
 
+
+#define GENERIC_TWO_BASES_RW_FUNC(fmt_dec, fmt_hex, name, type)				\
+        static int name ## _read(idmef_value_type_t *dst, const char *buf)		\
+        {										\
+		if ( strncasecmp(buf, "0x", 2) == 0 )					\
+			return sscanf(buf, fmt_hex, &(dst)->data. name ##_val);		\
+											\
+		return sscanf(buf, fmt_dec, &(dst)->data. name ##_val);			\
+	}										\
+											\
+        static int name ## _write(char *buf, size_t size, idmef_value_type_t *src)	\
+        {										\
+                return snprintf(buf, size, fmt_dec, src->data.name ##_val);		\
+        }
 
 
 typedef struct {
@@ -62,14 +76,15 @@ typedef struct {
 } idmef_value_type_operation_t;
 
 
-GENERIC_RW_FUNC("%hd", int16, int16_t)
-GENERIC_RW_FUNC("%hu", uint16, uint16_t)
-GENERIC_RW_FUNC("%d", int32, int32_t)
-GENERIC_RW_FUNC("%u", uint32, uint32_t)
-GENERIC_RW_FUNC("%lld", int64, int64_t)
-GENERIC_RW_FUNC("%llu", uint64, uint64_t)
-GENERIC_RW_FUNC("%f", float, float)
-GENERIC_RW_FUNC("%lf", double, double)
+GENERIC_TWO_BASES_RW_FUNC("%hd", "%hx", int16, int16_t)
+GENERIC_TWO_BASES_RW_FUNC("%hu", "%hx", uint16, uint16_t)
+GENERIC_TWO_BASES_RW_FUNC("%d", "%x", int32, int32_t)
+GENERIC_TWO_BASES_RW_FUNC("%u", "%x", uint32, uint32_t)
+GENERIC_TWO_BASES_RW_FUNC("%lld", "%llx", int64, int64_t)
+GENERIC_TWO_BASES_RW_FUNC("%llu", "%llx", uint64, uint64_t)
+
+GENERIC_ONE_BASE_RW_FUNC("%f", float, float)
+GENERIC_ONE_BASE_RW_FUNC("%lf", double, double)
 
 
 
