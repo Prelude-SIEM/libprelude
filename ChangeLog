@@ -1,3 +1,14 @@
+2002-07-17  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-getopt.c (option_get_all): 
+	don't call the option callback if the option was 
+	called from command line.
+	
+	(process_option_cfg_hook): don't check called_from_cli here.
+
+	(section_get_all): only call the parent option callback
+	if it wasn't provided on command line.
+
 2002-07-11  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* src/sensor.c (prelude_sensor_init): Move the call

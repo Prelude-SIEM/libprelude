@@ -368,6 +368,9 @@ static int option_get_all(struct list_head *cb_list,
         int ret;
         const char *str, *entry;
 
+        if ( opt->called_from_cli )
+                return prelude_option_success;
+        
         entry = opt->longopt;
         
         while ( 1 ) {
@@ -376,7 +379,7 @@ static int option_get_all(struct list_head *cb_list,
                         return prelude_option_success;
                 
                 line++;
-                        
+                
                 ret = call_option_cb(cb_list, opt, str);
                 if ( ret == prelude_option_error || ret == prelude_option_end )
                         return ret;
@@ -410,7 +413,7 @@ static int section_get_all(struct list_head *cb_list,
                 
                 line++;
                 
-                if ( opt->set ) {
+                if ( opt->set && ! opt->called_from_cli ) {
                         /*
                          * call the parent callback.
                          */
@@ -443,13 +446,7 @@ static int section_get_all(struct list_head *cb_list,
 
 static int process_option_cfg_hook(struct list_head *cb_list, prelude_option_t *opt,
                                    config_t *cfg, const char *section, int line) 
-{
-        if ( opt->called_from_cli && ! list_empty(&opt->optlist.optlist) )
-                /*
-                 * a parent section specified on CLI completly override CFG.
-                 */
-                return prelude_option_success;
-        
+{        
         if ( ! (opt->flags & CFG_HOOK) )                
                 return prelude_option_success;
 
