@@ -1268,13 +1268,6 @@ idmef_message_read
 </SECTION>
 
 <SECTION>
-<FILE>prelude-inet</FILE>
-prelude_inet_addr_is_loopback
-prelude_inet_sockaddr_get_inaddr
-prelude_inet_ntop
-</SECTION>
-
-<SECTION>
 <FILE>prelude-list</FILE>
 PRELUDE_LIST
 prelude_list_t

@@ -31,7 +31,6 @@ libprelude_la_SOURCES = 		\
 	prelude-failover.c		\
 	prelude-hash.c			\
 	prelude-ident.c			\
-	prelude-inet.c			\
 	prelude-io.c			\
 	prelude-log.c			\
 	prelude-msg.c			\

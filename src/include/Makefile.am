@@ -32,7 +32,6 @@ include_HEADERS = common.h			\
 		  prelude-connection-pool.h	\
 		  prelude-failover.h		\
 		  prelude-ident.h		\
-		  prelude-inet.h		\
 		  prelude-io.h			\
 		  prelude-msg.h			\
 		  prelude-msgbuf.h		\

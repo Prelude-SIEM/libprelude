@@ -6266,21 +6266,6 @@ idmef_heartbeat_t *heartbeat, prelude_msg_t *msg
 <RETURNS>int </RETURNS>
 idmef_message_t *message, prelude_msg_t *msg
 </FUNCTION>
-<FUNCTION>
-<NAME>prelude_inet_addr_is_loopback</NAME>
-<RETURNS>int </RETURNS>
-int af, void *addr
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_inet_sockaddr_get_inaddr</NAME>
-<RETURNS>void *</RETURNS>
-struct sockaddr *sa
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_inet_ntop</NAME>
-<RETURNS>const char *</RETURNS>
-int af, const void *src, char *dst, size_t cnt
-</FUNCTION>
 <MACRO>
 <NAME>PRELUDE_LIST</NAME>
 #define PRELUDE_LIST(item) prelude_list_t (item) = { &(item), &(item) }
