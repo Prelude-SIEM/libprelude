@@ -79,7 +79,7 @@ void prelude_get_backup_filename(char *buf, size_t size)
 }
 
 
-char *prelude_get_socket_filename(void) 
+const char *prelude_get_socket_filename(void) 
 {
         return UNIX_SOCKET;
 }

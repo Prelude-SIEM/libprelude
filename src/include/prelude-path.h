@@ -21,7 +21,7 @@
 *
 *****/
 
-char *prelude_get_socket_filename(void);
+const char *prelude_get_socket_filename(void);
 
 void prelude_get_auth_filename(char *buf, size_t size);
 

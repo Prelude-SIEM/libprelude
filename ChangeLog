@@ -1,5 +1,12 @@
 2002-04-24  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/prelude-path.c (prelude_get_socket_filename): 
+	return a const char pointer.
+	
+	* src/include/list.h (list_entry): 
+	* src/prelude-message.c (set_data): avoid void pointer
+	arithmetic.
+
 	* src/include/extract.h: (byte): create a second byte
 	macro conditionaly compiled depending on the byte order.
 

@@ -136,11 +136,11 @@ inline static int set_data(prelude_msg_t **m, const void *buf, size_t size)
                  * and allocate a new one.
                  */
                 memcpy(msg->payload + msg->write_index, buf, remaining);
-
-                buf += remaining;
+                
                 size -= remaining;
                 msg->write_index += remaining;
-
+                buf = (const unsigned char *) buf + remaining;
+                
                 /*
                  * this is a fragment of message.
                  */
