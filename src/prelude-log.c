@@ -48,7 +48,7 @@ static void syslog_log(int priority, const char *file,
 
         else {
                 len = snprintf(buf, sizeof(buf), "%s", (global_prefix) ? global_prefix : "");
-                if ( len < 0 || len > sizeof(buf) )
+                if ( len < 0 || len >= sizeof(buf) )
                         return;
                 
                 len += vsnprintf(buf + len, sizeof(buf) - len, fmt, *ap);
