@@ -205,7 +205,7 @@ prelude_string_t *prelude_string_new_dup(const char *str)
 prelude_string_t *prelude_string_new_nodup_fast(char *str, size_t len)
 {
         prelude_string_t *ret;
-
+        
         if ( check_string(str, len) < 0 )
                 return NULL;
                 
@@ -226,7 +226,7 @@ prelude_string_t *prelude_string_new_nodup_fast(char *str, size_t len)
 
 prelude_string_t *prelude_string_new_nodup(char *str)
 {
-        return prelude_string_new_dup_fast(str, strlen(str));
+        return prelude_string_new_nodup_fast(str, strlen(str));
 }
 
 
