@@ -147,7 +147,7 @@ dnl **************************************************
 dnl * Check for GnuTLS.                              *
 dnl **************************************************
 
-AM_PATH_LIBGNUTLS(1.0.17, gnutls=yes, gnutls=no)
+AM_PATH_LIBGNUTLS(1.0.14, gnutls=yes, gnutls=no)
 if test x$gnutls != xyes; then
 	AC_MSG_ERROR(libgnutls is required in order to build libprelude.)
 fi
@@ -168,7 +168,7 @@ dnl **************************************************
 dnl * Check for GnuTLS extra.                        *
 dnl **************************************************
 
-AM_PATH_LIBGNUTLS_EXTRA(1.0.17, gnutls_extra=yes, gnutls_extra=no)
+AM_PATH_LIBGNUTLS_EXTRA(1.0.14, gnutls_extra=yes, gnutls_extra=no)
 if test x$gnutls_extra != xyes; then
 	AC_MSG_ERROR(libgnutls-extra is required in order to build libprelude.)
 fi
