@@ -1,5 +1,11 @@
 2002-06-10  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* autogen.sh: 
+	Override libtool configure.in by a configure.in that'll
+	require autoconf2.50, and re-generate configure script.
+	This fix some problem when dealing with certain environment
+	variable.
+
 	* configure.in (gtk_doc_min_version): 
 	only enable gtkdoc if requested.
 
