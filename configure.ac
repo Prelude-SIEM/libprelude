@@ -145,14 +145,13 @@ AC_SUBST(LIBS)
 CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations \
 -Wbad-function-cast -Wcast-qual -Wcast-align -Wnested-externs"
 
-AC_CONFIG_FILES([
+AC_OUTPUT([
 Makefile 
 libprelude-config
 src/Makefile 
 src/include/Makefile
 libmissing/Makefile
 ], [ chmod +x libprelude-config ])
-AC_OUTPUT
 
 
 echo
