@@ -51,9 +51,9 @@ typedef enum {
 
 
 typedef enum {
-        PRELUDE_OPTION_PRIORITY_NONE     = 0,
-        PRELUDE_OPTION_PRIORITY_FIRST    = 1,
-        PRELUDE_OPTION_PRIORITY_LAST     = 2
+        PRELUDE_OPTION_PRIORITY_FIRST    = -1,
+        PRELUDE_OPTION_PRIORITY_NONE     =  0,
+        PRELUDE_OPTION_PRIORITY_LAST     =  2
 } prelude_option_priority_t;
 
 
