@@ -158,15 +158,16 @@ static int parse_request(prelude_client_t *client, int rtype, char *request, cha
 
 
 
-static prelude_msg_t *send_msg(prelude_msgbuf_t *msgbuf) 
+static int send_msg(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg) 
 {
+        int ret;
         prelude_io_t *fd = prelude_msgbuf_get_data(msgbuf);
-        prelude_msg_t *msg = prelude_msgbuf_get_msg(msgbuf);
-        
-        prelude_msg_write(msg, fd);
-        prelude_msg_recycle(msg);
-        
-        return msg;
+
+        do {
+                ret = prelude_msg_write(msg, fd);
+        } while ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN );
+
+        return ret;
 }
 
 
@@ -252,16 +253,16 @@ static int handle_option_request(prelude_client_t *client, prelude_io_t *fd, pre
         int ret = 0;
         prelude_msgbuf_t *msgbuf;
             
-        msgbuf = prelude_msgbuf_new(client);
-        if ( ! msgbuf ) 
-                return -1;
+        ret = prelude_msgbuf_new(&msgbuf);
+        if ( ret < 0 ) 
+                return ret;
         
         prelude_msgbuf_set_data(msgbuf, fd);
         prelude_msgbuf_set_callback(msgbuf, send_msg);
         prelude_msg_set_tag(prelude_msgbuf_get_msg(msgbuf), PRELUDE_MSG_OPTION_REPLY);
         
         ret = read_option_request(client, msgbuf, msg);
-        prelude_msgbuf_close(msgbuf);
+        prelude_msgbuf_destroy(msgbuf);
 
         return ret;
 }
