@@ -26,7 +26,7 @@ idmef-tree
 
 </para>
 
-@boolean: 
+@string: 
 @byte: 
 @character: 
 @date_time: 
@@ -34,7 +34,7 @@ idmef-tree
 @ntpstamps: 
 @portlist: 
 @real: 
-@string: 
+@boolean: 
 @xml: 
 
 <!-- ##### TYPEDEF idmef_additional_data_t ##### -->

@@ -125,9 +125,9 @@ static int lockfile_write_pid(int fd, pid_t pid)
  */
 int prelude_daemonize(const char *lockfile)
 {
-        int fd;
 	pid_t pid;
-
+        int fd = 0;
+        
         if ( lockfile ) {
                 fd = lockfile_get_exclusive(lockfile);
                 if ( fd < 0 )
@@ -135,12 +135,12 @@ int prelude_daemonize(const char *lockfile)
         }
         
 	pid = fork();
-	if (pid < 0) {
+	if ( pid < 0 ) {
                 log(LOG_ERR, "fork failed.\n");
 		return -1;
 	}
 
-        else if (pid) {
+        else if ( pid ) {
                 if ( lockfile ) 
                         lockfile_write_pid(fd, pid);
                 
