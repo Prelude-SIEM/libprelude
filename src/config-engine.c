@@ -49,7 +49,7 @@ static void free_val(char **val)
 {
         if ( ! *val )
                 return;
-        
+
         free(*val);
         *val = NULL;
 }
@@ -57,13 +57,13 @@ static void free_val(char **val)
 
 
 /*
- * Remove '\n' and ';' at the end of the string. 
+ * Remove '\n' and at the end of the string. 
  */
 static char *chomp(char *string) 
 {
         char *ptr;
         
-        if ( (ptr = strrchr(string, ';')) || (ptr = strrchr(string, '\n')) )
+        if ( (ptr = strrchr(string, '\n')) )
                 *ptr = '\0';
 
         return string;
@@ -91,7 +91,7 @@ static int is_line_commented(const char *line)
  */
 static int is_section(const char *line) 
 {
-        while ( *line == ' ' || *line == '\t' )
+        while ( *line == ' ' || *line == '\t' || *line == '\n' )
                 line++;
         
         if ( *line == '[' && strchr(line, ']') )
@@ -136,7 +136,7 @@ static char *get_section(const char *in)
  */
 static void op_modify_line(char **line, char *nline) 
 {
-        free(line[0]); *line = nline;
+        free(*line); *line = nline;
 }
 
 
@@ -151,14 +151,18 @@ static void op_modify_line(char **line, char *nline)
  */
 static int op_append_line(config_t *cfg, char *line)
 {
+        if ( ! line )
+                return 0;
+                
         if ( ! cfg->content ) 
                 cfg->elements = 1;
-        
+
         cfg->elements++;
         
         cfg->content = prelude_realloc(cfg->content, cfg->elements * sizeof(char **));
         if ( ! cfg->content )
                 return -1;        
+
         
         cfg->content[cfg->elements - 2] = line;
         cfg->content[cfg->elements - 1] = NULL;
@@ -211,13 +215,11 @@ static int load_file_in_memory(config_t *cfg)
         }
         
         while ( fgets(line, sizeof(line), fd) ) {
-                
                 ret = op_append_line(cfg, strdup(chomp(line)));
                 if ( ret < 0 ) {
                         fclose(fd);
                         return -1;
-                }
-                
+                }    
         }
 
         fclose(fd);
@@ -231,14 +233,16 @@ static int load_file_in_memory(config_t *cfg)
 static char *strip_value(const char *in)
 {
         char *ret;
+        size_t len;
         const char *start, *end;
         
         start = in;
         while ( *in == ' ' || *in == '\t' )
                 start = ++in;
 
-        end = in + strlen(in) - 1;
-        while ( *end == ' ' || *end == '\t' )
+        len = strlen(start);
+        end = start + (len ? len - 1 : 0);
+        while ( end != start && (*end == ' ' || *end == '\t') )
                 end--;
         
         if ( *start == '"' && *end == '"' ) {
@@ -264,11 +268,11 @@ static char *strip_value(const char *in)
 static int parse_buffer(char *str, char **entry, char **value)
 {
         char *ptr, *buf = str;
-
-        if ( ! *str )
-                return 0;
         
         *value = *entry = NULL;
+        
+        if ( ! *str )
+                return 0;
 
         ptr = prelude_strsep(&buf, "=");        
         if ( ! *ptr )
@@ -313,10 +317,10 @@ static int parse_section_buffer(char *buf, char **entry, char **value)
 
 
 
-static int search_section(config_t *cfg, const char *section, int line) 
+static int search_section(config_t *cfg, const char *section, int i) 
 {
+        int ret;
         char *ptr;
-        int i = line, ret;
         
         if ( ! cfg->content )
                 return -1;
@@ -325,11 +329,12 @@ static int search_section(config_t *cfg, const char *section, int line)
                             
                 if ( is_line_commented(cfg->content[i]) )
                         continue;
-
+                
                 if ( ! is_section(cfg->content[i]) )
                         continue;
-
+                
                 ptr = get_section(cfg->content[i]);
+                
                 ret = strcasecmp(section, ptr);
                 free(ptr);
                 
@@ -349,16 +354,16 @@ static int search_section(config_t *cfg, const char *section, int line)
  * return the line number matching 'entry' or -1.
  */
 static int search_entry(config_t *cfg, const char *section,
-                        const char *entry, int line, char **eout, char **vout) 
+                        const char *entry, int index, char **eout, char **vout) 
 {
-        int i = line, ret;
+        int i = index, ret;
         
         if ( ! cfg->content )
                 return -1;
         
-        if ( section && ! line ) {
+        if ( section && ! index ) {
                 
-                i = search_section(cfg, section, line);
+                i = search_section(cfg, section, index);
                 if ( i < 0 )
                         return -1;
 
@@ -367,22 +372,23 @@ static int search_entry(config_t *cfg, const char *section,
                         
                 i++;
         }
-                
+        
         for (; cfg->content[i] != NULL; i++ ) {
-                if ( section && is_section(cfg->content[i]) == 0 )
+                
+                if ( section && is_section(cfg->content[i]) )
                         return -1;
                 
                 ret = parse_buffer(cfg->content[i], eout, vout);
                 if ( ret < 0 )
                         return -1;
-
+                
                 if ( ! *eout )
                         continue;
-                
+
                 ret = strcmp(entry, *eout);
                 if ( ret == 0 )
                         return i;
-
+                
                 free_val(eout);
                 free_val(vout);
         }
@@ -400,6 +406,9 @@ static char *create_new_line(const char *entry, const char *val)
         char *line;
         size_t len = 0;
 
+        if ( ! entry )
+                return NULL;
+        
         if ( val )
                 len = strlen(val) + 3;
         else
@@ -435,12 +444,7 @@ static int sync_and_free_file_content(const char *filename, char **content)
         
         for ( i = 0; content[i] != NULL; i++ ) {                
                 fwrite(content[i], 1, strlen(content[i]), fd);
-
-                ptr = strpbrk(content[i], "[# ");
-                if ( ! ptr )
-                        fwrite(";\n", 1, 2, fd);
-                else
-                        fwrite("\n", 1, 1, fd);
+                fwrite("\n", 1, 1, fd);
                 
                 free(content[i]);
         }
@@ -472,19 +476,22 @@ static void free_file_content(char **content)
 /*
  *
  */
-static int new_entry_line(config_t *cfg, const char *entry, const char *val) 
+static int new_entry_line(config_t *cfg, const char *entry, const char *val, int *index) 
 {
-        int line;
+        int ret;
         char *eout, *vout;
         
-        line = search_entry(cfg, NULL, entry, 0, &eout, &vout);
-        if ( line < 0 ) 
-                return op_append_line(cfg, create_new_line(entry, val));
+        ret = search_entry(cfg, NULL, entry, *index, &eout, &vout);        
+        if ( ret < 0 ) {
+                *index = cfg->elements + 1;
+                return op_insert_line(cfg, create_new_line(entry, val), 0);
+        }
         
         free_val(&eout);
         free_val(&vout);
-        
-        op_modify_line(&cfg->content[line], create_new_line(entry, val));
+
+        *index = ret;
+        op_modify_line(&cfg->content[ret], create_new_line(entry, val));
 
         return 0;
 }
@@ -496,30 +503,42 @@ static int new_entry_line(config_t *cfg, const char *entry, const char *val)
  *
  */
 static int new_section_line(config_t *cfg, const char *section,
-                            const char *entry, const char *val) 
+                            const char *entry, const char *val, int *index) 
 {
-        int line, el;
+        int ret, el;
         char *eout, *vout;
         
-        line = search_section(cfg, section, 0);
-        if ( line < 0 ) {
+        ret = search_section(cfg, section, *index);        
+        if ( ret < 0 ) {
                 char buf[1024];
 
                 snprintf(buf, sizeof(buf), " \n[%s]", section);
                 op_append_line(cfg, strdup(buf));
 
+                *index = cfg->elements - 2;
+
+                if ( ! entry )
+                        return 0;
+                
+                *index = cfg->elements - 1;
+                                
                 return op_append_line(cfg, create_new_line(entry, val));
         }
 
-        el = search_entry(cfg, section, entry, 0, &eout, &vout);
+        *index = ret;
+        if ( ! entry )
+                return 0;
+        
+        el = search_entry(cfg, section, entry, ret + 1, &eout, &vout);        
         if ( el < 0 ) 
-                return op_insert_line(cfg, create_new_line(entry, val), line + 1);
+                return op_insert_line(cfg, create_new_line(entry, val), ret + 1);
 
         free_val(&eout);
         free_val(&vout);
         
         op_modify_line(&cfg->content[el], create_new_line(entry, val));
-
+        *index = el;
+        
         return 0;
 }
 
@@ -541,16 +560,16 @@ static int new_section_line(config_t *cfg, const char *section,
  */
 int config_set(config_t *cfg, const char *section, const char *entry, const char *val) 
 {
-        int ret;
+        int ret, index = 0;
         
         if ( section )
-                ret = new_section_line(cfg, section, entry, val);
+                ret = new_section_line(cfg, section, entry, val, &index);
         else
-                ret = new_entry_line(cfg, entry, val);
-
-        if ( ret == 0 )
+                ret = new_entry_line(cfg, entry, val, &index);
+        
+        if ( ret == 0 ) 
                 cfg->need_sync = 1;
-
+        
         return ret;
 }
 
@@ -601,14 +620,15 @@ int config_get_next(config_t *cfg, char **section, char **entry, char **value, i
 {
         char *ptr;
 
-        if ( ! *line )
-                *section = NULL;
+        if ( ! *line ) 
+                free_val(section);
         
         if ( ! cfg->content )
                 return -1;
 
         free_val(entry);
         free_val(value);
+        free_val(section);
         
         for ( (*line)++; cfg->content[*line - 1] != NULL; (*line)++ ) {
                 
@@ -621,7 +641,6 @@ int config_get_next(config_t *cfg, char **section, char **entry, char **value, i
                         continue;
                 
                 if ( is_section(ptr) ) {
-                        free_val(section);
                         return parse_section_buffer(ptr, section, value);
                 } else {                        
                         return parse_buffer(ptr, entry, value);
@@ -629,7 +648,6 @@ int config_get_next(config_t *cfg, char **section, char **entry, char **value, i
         }
 
         (*line)--;
-        free_val(section);
         
         return -1;
 }
@@ -639,7 +657,7 @@ int config_get_next(config_t *cfg, char **section, char **entry, char **value, i
 
 /**
  * config_get_section:
- * @¢fg: Configuration file identifier.
+ * @cfg: Configuration file identifier.
  * @section: Section we are searching for.
  * @line: Pointer to a line number we should start the search at.
  *
@@ -654,7 +672,7 @@ int config_get_section(config_t *cfg, const char *section, int *line)
         
         if ( ! cfg->content )
                 return -1;
-
+        
         ret = search_section(cfg, section, *line);
         if ( ret < 0 )
                 return -1;
@@ -698,12 +716,14 @@ char *config_get(config_t *cfg, const char *section, const char *entry, int *lin
         
         if ( ! cfg->content )
                 return NULL;
+
+        l = (*line) ? *line - 1 : *line;
         
-        l = search_entry(cfg, section, entry, *line, &tmp, &value);
+        l = search_entry(cfg, section, entry, l, &tmp, &value);
         if ( l < 0 )
                 return NULL;
         
-        *line = l;        
+        *line = l + 1;  
         free(tmp);
         
         /*
