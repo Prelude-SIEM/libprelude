@@ -1,0 +1,55 @@
+# err-codes.h.in - List of error codes and their description input file.
+/* err-codes.h - List of error codes and their description.
+   Copyright (C) 2003, 2004 g10 Code GmbH
+
+   This file is part of libgpg-error.
+
+   libgpg-error is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public License
+   as published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+ 
+   libgpg-error is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+ 
+   You should have received a copy of the GNU Lesser General Public
+   License along with libgpg-error; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
+
+# Everything up to the first line that starts with a number in the
+# first column is copied into the output verbatim.  Then, empty lines
+# are ignored.  Other lines must have an error code number, followed
+# by one or more <tab> characters, followed by the error code symbol,
+# followed by one or more <tab> characters, followed by the error
+# message.  Trailing whitespace is removed.  The error codes should be
+# sorted.  The last line should not have a number, but only a <tab>,
+# followed by a dummy field, followed by a <tab>, followed by a
+# description for error codes that are not in the list.
+
+0	PRELUDE_ERROR_NO_ERROR		Success
+1	PRELUDE_ERROR_GENERIC		Unknown generic error
+2	PRELUDE_ERROR_TLS		Unknown TLS error
+3	PRELUDE_ERROR_INVAL_LENGTH	Invalid length specified
+4	PRELUDE_ERROR_INVAL_MESSAGE	Invalid message
+5	PRELUDE_ERROR_PROTOCOL_VERSION	Invalid protocol version
+6	PRELUDE_ERROR_EOF		End of file
+7	PRELUDE_ERROR_BACKUP_DIRECTORY	Could not access Analyzer backup directory 
+8	PRELUDE_ERROR_ANALYZERID_FILE	Could not open AnalyzerID file
+9	PRELUDE_ERROR_ANALYZERID_PARSE	Error parsing AnalyzerId file
+10	PRELUDE_ERROR_TLS_CERTIFICATE	Could not access TLS certificate file
+11	PRELUDE_ERROR_TLS_CERTIFICATE_PARSE	Could not parse TLS certificate
+12	PRELUDE_ERROR_TLS_KEY		Could not access TLS private key
+
+#11 to 16381 are free to be used.
+
+16382	PRELUDE_ERROR_UNKNOWN_ERRNO		Unknown system error
+16383	PRELUDE_ERROR_EOF			End of file
+
+# 16384 - 32767 are reserved for future extensions.
+
+# PRELUDE_ERROR_SYSTEM_ERROR | (141 to 32767) are to be used for system errors.
+
+	PRELUDE_ERROR_CODE_DIM		Unknown error code
