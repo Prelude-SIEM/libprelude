@@ -464,6 +464,9 @@ int prelude_connection_connect(prelude_connection_t *cnx)
         ret = prelude_msg_write(msg, cnx->fd);
         prelude_msg_destroy(msg);
 
+        if ( ret < 0 )
+                goto err;
+        
         ret = prelude_client_ident_send(prelude_client_get_analyzerid(cnx->client), cnx->fd);
         if ( ret < 0 ) 
                 goto err;
