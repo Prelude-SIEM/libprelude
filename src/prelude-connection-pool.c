@@ -288,50 +288,10 @@ static void expand_timeout(prelude_timer_t *timer)
 
 static void check_for_data_cb(void *arg)
 {
-        cnx_t *cnx;
-        fd_set rfds;
-	int ret, fd;
-        struct timeval tv;
-        prelude_list_t *tmp;
-        prelude_connection_pool_event_t global_event = 0;
-        prelude_connection_pool_t *pool = (prelude_connection_pool_t *) arg;
+        prelude_connection_pool_t *pool = arg;
         
-        tv.tv_sec = 0;
-        tv.tv_usec = 0;
-        rfds = pool->fds;
-
+        prelude_connection_pool_check_event(pool, 0, NULL, NULL);
         prelude_timer_reset(&pool->timer);
-
-        ret = select(pool->nfd, &rfds, NULL, NULL, &tv);
-        if ( ret <= 0 )
-                return;
-
-        prelude_list_for_each(&pool->int_cnx, tmp) {
-                cnx = prelude_list_entry(tmp, cnx_t, list);
-                
-                if ( ! prelude_connection_is_alive(cnx->cnx) )
-                        continue;
-                
-                fd = prelude_io_get_fd(prelude_connection_get_fd(cnx->cnx));
-                
-                ret = FD_ISSET(fd, &rfds);       
-                if ( ! ret )
-                        continue;
-
-                global_event |= PRELUDE_CONNECTION_POOL_EVENT_INPUT;
-                
-                ret = pool->event_handler(pool, PRELUDE_CONNECTION_POOL_EVENT_INPUT, cnx->cnx);
-                if ( ret < 0 || ! prelude_connection_is_alive(cnx->cnx) ) {
-                        global_event |= PRELUDE_CONNECTION_POOL_EVENT_DEAD;
-                        notify_dead(cnx, ret, FALSE);
-                }
-        }
-
-        if ( global_event & pool->wanted_event && pool->global_event_handler )
-                pool->global_event_handler(pool, global_event);
-        
-        if ( pool->connection_string_changed )
-                prelude_connection_pool_init(pool);
 }
 
 
@@ -1035,13 +995,16 @@ void prelude_connection_pool_set_flags(prelude_connection_pool_t *pool, prelude_
 
 
 
-int prelude_connection_pool_recv(prelude_connection_pool_t *pool, prelude_msg_t **out, int timeout) 
+int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int timeout,
+                                        int (*event_cb)(prelude_connection_pool_t *pool,
+                                                        prelude_connection_t *cnx, void *extra), void *extra)
 {
         cnx_t *cnx;
-        int ret, fd;
         fd_set rfds;
+        int ret, i = 0;
         prelude_list_t *tmp;
         struct timeval tv, *tvptr = NULL;
+        prelude_connection_pool_event_t global_event = 0;
         
         if ( timeout >= 0 ) {
                 tvptr = &tv;
@@ -1050,7 +1013,7 @@ int prelude_connection_pool_recv(prelude_connection_pool_t *pool, prelude_msg_t 
         }
 
         rfds = pool->fds;
-        
+
         ret = select(pool->nfd, &rfds, NULL, NULL, tvptr);
         if ( ret < 0 )
                 return prelude_error_from_errno(ret);
@@ -1058,30 +1021,44 @@ int prelude_connection_pool_recv(prelude_connection_pool_t *pool, prelude_msg_t 
         else if ( ret == 0 )
                 return 0;
         
-        prelude_list_for_each(&pool->all_cnx, tmp) {
+        prelude_list_for_each(&pool->int_cnx, tmp) {
                 cnx = prelude_list_entry(tmp, cnx_t, list);
-
+                
                 if ( ! prelude_connection_is_alive(cnx->cnx) )
                         continue;
                                 
-                fd = prelude_io_get_fd(prelude_connection_get_fd(cnx->cnx));
-                
-                ret = FD_ISSET(fd, &rfds);                
+                ret = FD_ISSET(prelude_io_get_fd(prelude_connection_get_fd(cnx->cnx)), &rfds);                
                 if ( ! ret )
                         continue;
 
-                *out = NULL;
+                global_event |= PRELUDE_CONNECTION_POOL_EVENT_INPUT;
                 
-                ret = prelude_msg_read(out, prelude_connection_get_fd(cnx->cnx));
-                if ( ret < 0 )
-                        FD_CLR(fd, &rfds);
+                ret = pool->event_handler(pool, PRELUDE_CONNECTION_POOL_EVENT_INPUT, cnx->cnx);
+                if ( ret < 0 || ! prelude_connection_is_alive(cnx->cnx) ) {
+                        global_event |= PRELUDE_CONNECTION_POOL_EVENT_DEAD;
+                        notify_dead(cnx, ret, FALSE);
+                }
+
+                if ( event_cb ) {
+
+                        ret = event_cb(pool, cnx->cnx, extra);
+                        if ( ret < 0 ) {
+                                global_event |= PRELUDE_CONNECTION_POOL_EVENT_DEAD;
+                                notify_dead(cnx, ret, FALSE);
+                        }
+                }
                 
-                return ret;
+                i++;
         }
 
-        return -1;
+        if ( global_event & pool->wanted_event && pool->global_event_handler )
+                pool->global_event_handler(pool, global_event);
+        
+        if ( pool->connection_string_changed )
+                prelude_connection_pool_init(pool);
+        
+        return i;
 }
-
 
 
 void prelude_connection_pool_set_data(prelude_connection_pool_t *pool, void *data)

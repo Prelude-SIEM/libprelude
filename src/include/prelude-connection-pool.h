@@ -71,7 +71,9 @@ void prelude_connection_pool_set_data(prelude_connection_pool_t *pool, void *dat
 
 void *prelude_connection_pool_get_data(prelude_connection_pool_t *pool);
 
-int prelude_connection_pool_recv(prelude_connection_pool_t *pool, prelude_msg_t **out, int timeout);
+int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int timeout,
+                                        int (*event_cb)(prelude_connection_pool_t *pool,
+                                                        prelude_connection_t *cnx, void *extra), void *extra);
 
 void prelude_connection_pool_set_global_event_handler(prelude_connection_pool_t *pool,
                                                       prelude_connection_pool_event_t events,
