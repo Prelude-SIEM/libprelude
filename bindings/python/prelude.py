@@ -101,34 +101,24 @@ def get_libprelude_prefix():
 
 
 class Client:
-##     RECV_IDMEF = _prelude.PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF
-##     SEND_IDMEF = _prelude.PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF
-##     RECV_ADMIN = _prelude.PRELUDE_CLIENT_CAPABILITY_RECV_ADMIN
-##     SEND_ADMIN = _prelude.PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN
-##     RECV_CM = _prelude.PRELUDE_CLIENT_CAPABILITY_RECV_CM
-##     SEND_CM = _prelude.PRELUDE_CLIENT_CAPABILITY_SEND_CM
-
-    def __init__(self, capability, name=None, config=None):
+    CONNECT = _prelude.PRELUDE_CONNECTION_CAPABILITY_CONNECT
+    RECV_IDMEF = _prelude.PRELUDE_CONNECTION_CAPABILITY_RECV_IDMEF
+    RECV_CM = _prelude.PRELUDE_CONNECTION_CAPABILITY_RECV_CM
+    
+    def __init__(self, capability, profile=None, config=None):
         self._client = None
         self._msgbuf = None
         self._exit_status = _prelude.PRELUDE_CLIENT_EXIT_STATUS_FAILURE
         
-        if not name:
-            name = sys.argv[0]
+        if not profile:
+            profile = sys.argv[0]
         
-        self._client = _prelude.prelude_client_new(capability)
+        self._client = _prelude.prelude_client_new(capability, profile, config, 0, [ ])
         if not self._client:
             raise ClientError()
 
-        #if _prelude.prelude_client_init(self._client, name, config, 1, [ sys.argv[0] ]) < 0:
-        retval = _prelude.swig_prelude_client_init(self._client, name, config, 0, [ ])
-        if retval < 0:
-            raise ClientError(retval)
-        
-        if capability & (Client.SEND_IDMEF | Client.SEND_ADMIN | Client.SEND_CM):
-            self._msgbuf = _prelude.prelude_msgbuf_new(self._client)
-            if not self._msgbuf:
-                raise ClientError()
+        if _prelude.prelude_client_start(self._client) < 0:
+            raise ClientError()
 
     def get_analyzerid(self):
         return _prelude.prelude_client_get_analyzerid(self._client)
@@ -140,13 +130,8 @@ class Client:
         self._exit_status = _prelude.PRELUDE_CLIENT_EXIT_STATUS_FAILURE
         
     def __del__(self):
-        if self._msgbuf:
-            _prelude.prelude_msgbuf_close(self._msgbuf)
-            #self._msgbuf = None
-
         if self._client:
-            _prelude.prelude_client_destroy(self._client, self._exit_status)
-            #self._client = None
+            pass#_prelude.prelude_client_destroy(self._client, self._exit_status)
 
 
 
@@ -155,11 +140,10 @@ class Sensor(Client):
         if not config:
             config = get_libprelude_prefix() + "/etc/prelude/default/idmef-client.conf"
         
-        Client.__init__(self, Client.SEND_IDMEF, name, config)
+        Client.__init__(self, Client.CONNECT, name, config)
         
         self._analyzer = _prelude.prelude_client_get_analyzer(self._client)
         if not self._analyzer:
-            _prelude.prelude_client_destroy(self._client, _prelude.PRELUDE_CLIENT_EXIT_STATUS_FAILURE)
             raise ClientError()
 
         process = _prelude.idmef_analyzer_get_process(self._analyzer)
@@ -181,8 +165,9 @@ class Sensor(Client):
     def send_alert(self, message):
         alert = _prelude.idmef_message_get_alert(message.res)
         _prelude.idmef_alert_set_analyzer(alert, _prelude.idmef_analyzer_ref(self._analyzer))
-        _prelude.idmef_write_message(self._msgbuf, message.res)
-        _prelude.prelude_msgbuf_mark_end(self._msgbuf)
+        _prelude.prelude_client_send_idmef(self._client, message.res)
+        #_prelude.idmef_write_message(self._msgbuf, message.res)
+        #_prelude.prelude_msgbuf_mark_end(self._msgbuf)
 
 
 

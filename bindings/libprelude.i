@@ -237,8 +237,11 @@ typedef unsigned int prelude_bool_t;
 	$1 = &tmp;
 };
  
-%typemap(argout) prelude_client_t **client {
-	$result = SWIG_NewPointerObj((void *) * $1, SWIGTYPE_p_prelude_client_t, 0);
+%typemap(python, argout) prelude_client_t **client {
+	if ( PyInt_AsLong($result) < 0 )
+		$result = Py_None;
+	else
+		$result = SWIG_NewPointerObj((void *) * $1, SWIGTYPE_p_prelude_client_t, 0);
 };
 
 
@@ -283,6 +286,11 @@ typedef unsigned int prelude_bool_t;
 };
 
 
+
+%typemap(in) int *argc (int tmp) {
+	tmp = PyInt_AsLong($input);
+	$1 = &tmp;
+};
 
 
 prelude_msg_t *my_prelude_msg_read(prelude_io_t *pio);
