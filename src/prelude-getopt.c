@@ -29,8 +29,6 @@
 #include <sys/types.h>
 #include <assert.h>
 
-#include "prelude-io.h"
-#include "prelude-message.h"
 #include "prelude-message-id.h"
 
 #include "prelude-list.h"
@@ -86,10 +84,14 @@ struct prelude_option {
 struct cb_list {
         prelude_list_t list;
         char *arg;
-        void **context;
+        prelude_list_t children;
         prelude_option_t *option;
 };
 
+
+static int get_missing_options(config_t *cfg, void **context,
+                               const char *filename, prelude_list_t *cblist,
+                               prelude_optlist_t *rootlist, int *line, int depth);
 
 
 /*
@@ -307,41 +309,73 @@ static char *lookup_variable_if_needed(char *optarg)
 
 
 
-
-static int call_option_cb(void **context, prelude_list_t *cblist, prelude_option_t *option, const char *arg) 
+static int process_cfg_file(void **context, prelude_list_t *cblist, prelude_optlist_t *optlist, const char *filename) 
 {
+        config_t *cfg;
+        int line = 0, ret;
+
+        cfg = config_open(filename);
+        if ( ! cfg ) {
+                log(LOG_INFO, "couldn't open %s.\n", filename);
+                return -1;
+        }
+                
+        ret = get_missing_options(cfg, context, filename, cblist, optlist, &line, 0);
+        
+        config_close(cfg);
+
+        return ret;
+}
+
+
+
+
+static struct cb_list *call_option_cb(prelude_list_t *cblist, prelude_option_t *option, const char *arg) 
+{
+        int ret, got_prev = 0;
         struct cb_list *new, *cb;
-        prelude_list_t *tmp, *prev = NULL;
+        prelude_list_t*tmp, *prev = NULL;
 
         if ( ! option->set )
                 return 0;
         
-        if ( option->priority == option_run_first ) 
-                return option->set(context, option, arg);
+        prelude_list_for_each(tmp, cblist) {
+                
+                cb = prelude_list_entry(tmp, struct cb_list, list);
+                    
+                if ( cb->option->priority < option->priority )
+                        got_prev = 1;
+
+                if ( ! got_prev )
+                        prev = tmp;
+                    
+                if ( option->flags & ALLOW_MULTIPLE_CALL )
+                        continue;
+                
+                ret = strcmp(cb->option->longopt, option->longopt);
+                if ( ret == 0 ) {
+                        if ( cb->arg )
+                                free(cb->arg);
+                        
+                        cb->arg = (arg) ? strdup(arg) : NULL;
+
+                        return cb;
+                }
+        }
         
         new = malloc(sizeof(*new));
         if ( ! new ) {
                 log(LOG_ERR, "memory exhausted.\n");
-                return -1;
+                return NULL;
         }
 
+        PRELUDE_INIT_LIST_HEAD(&new->children);
         new->arg = (arg) ? strdup(arg) : NULL;
         new->option = option;
-        new->context = context;
-        
+
         if ( option->priority == option_run_last ) {
                 prelude_list_add_tail(&new->list, cblist);
-                return 0;
-        }        
-        
-        prelude_list_for_each(tmp, cblist) {
-                
-                cb = prelude_list_entry(tmp, struct cb_list, list);
-
-                if ( cb->option->priority < option->priority ) 
-                        break;
-                
-                prev = tmp;
+                return new;
         }
         
         if ( ! prev )
@@ -349,13 +383,29 @@ static int call_option_cb(void **context, prelude_list_t *cblist, prelude_option
         
         prelude_list_add(&new->list, prev);
 
-        return 0;
+        return new;
 }
 
 
 
 
-static int call_option_from_cb_list(prelude_list_t *cblist, int option_kind) 
+static int call_init_func(void **context, prelude_option_t *parent)
+{
+        prelude_option_t *opt;
+
+        if ( ! parent )
+                return -1;
+
+        opt = search_option(&parent->optlist, PRELUDE_OPTION_INIT_NAME, PRELUDE_OPTION_INIT_FLAG, 0);        
+        if ( ! opt )
+                return 0;
+
+        return opt->set(context, opt, NULL);
+}
+
+
+
+static int call_option_from_cb_list(void **context, prelude_list_t *cblist) 
 {
         char *str;
         void *old;
@@ -367,18 +417,27 @@ static int call_option_from_cb_list(prelude_list_t *cblist, int option_kind)
                 
                 cb = prelude_list_entry(tmp, struct cb_list, list);
 
-                if ( option_kind != option_run_all && option_kind != cb->option->priority ) 
-                        continue;
+                old = *context;
                 
-                old = *cb->context;
-                ret = cb->option->set(cb->context, cb->option, (str = lookup_variable_if_needed(cb->arg)));
-                
+                ret = cb->option->set(context, cb->option, (str = lookup_variable_if_needed(cb->arg)));
                 if ( str )
                         free(str);
 
-                if ( ret == prelude_option_error || ret == prelude_option_end )
+                if ( ret == prelude_option_error || ret == prelude_option_end ) 
                         return ret;
-
+                
+                if ( ! prelude_list_empty(&cb->children) ) {
+                        
+                        ret = call_option_from_cb_list(context, &cb->children);                        
+                        if ( ret == prelude_option_error || ret == prelude_option_end )
+                                return ret;
+                        
+                        ret = call_init_func(context, cb->option);
+                        if ( ret == prelude_option_error || ret == prelude_option_end )
+                                return ret;
+                }
+                *context = old;
+                
                 if ( cb->arg )
                         free(cb->arg);
                 
@@ -386,23 +445,7 @@ static int call_option_from_cb_list(prelude_list_t *cblist, int option_kind)
                 free(cb);
         }
         
-        return ret;
-}
-
-
-
-static int call_init_func(void **context, prelude_list_t *cb_list, prelude_option_t *parent)
-{
-        prelude_option_t *opt;
-
-        if ( ! parent )
-                return -1;
-
-        opt = search_option(&parent->optlist, PRELUDE_OPTION_INIT_NAME, PRELUDE_OPTION_INIT_FLAG, 0);        
-        if ( ! opt )
-                return -1;
-
-        return call_option_cb(context, cb_list, opt, NULL);
+        return 0;
 }
 
 
@@ -416,15 +459,24 @@ static int get_missing_options(config_t *cfg, void **context,
                                prelude_optlist_t *rootlist, int *line, int depth) 
 {
         int ret;
-        void *bkp;
         prelude_option_t *opt;
-        PRELUDE_LIST_HEAD(newlist);
+        struct cb_list *cbitem;
         char *section = NULL, *entry = NULL, *value = NULL;
 
         while ( (config_get_next(cfg, &section, &entry, &value, line)) == 0 ) {
                 
                 opt = search_option(rootlist, (section && ! entry) ? section : entry, CFG_HOOK, 0);
+                
+                if ( ! opt && entry && value && strcmp(entry, "include") == 0 ) {        
+                        ret = process_cfg_file(context, cblist, rootlist, value);
+                        if ( ret == prelude_option_error || ret == prelude_option_end )
+                                return ret;
+
+                        continue;
+                }
+
                 if ( ! opt ) {
+                        
                         if ( depth != 0 ) {
                                 (*line)--;
                                 return 0;
@@ -440,27 +492,18 @@ static int get_missing_options(config_t *cfg, void **context,
                 }
                         
                 if ( section && ! entry ) {
-                        bkp = *context;
-                        
-                        ret = call_option_cb(context, &newlist, opt, value);
-                        if ( ret == prelude_option_error || ret == prelude_option_end ) 
-                                return ret;
+                        cbitem = call_option_cb(cblist, opt, value);
+                        if ( ! cbitem )
+                                return -1;
 
-                        ret = get_missing_options(cfg, context, filename, &newlist, &opt->optlist, line, depth + 1);
-                        if ( ret == prelude_option_error || ret == prelude_option_end )
-                                return ret;
+                        ret = get_missing_options(cfg, context, filename, &cbitem->children, &opt->optlist, line, depth + 1);
+                        if ( ret < 0 )
+                                return -1;
                         
-                        call_init_func(context, &newlist, opt);
-                        
-                        ret = call_option_from_cb_list(&newlist, option_run_all);
-                        if ( ret == prelude_option_error || ret == prelude_option_end )
-                                return ret;
-
-                        *context = bkp;
-                } else {                        
-                        ret = call_option_cb(context, cblist, opt, value);  
-                        if ( ret == prelude_option_error || ret == prelude_option_end ) 
-                                return ret;
+                } else {
+                        cbitem = call_option_cb(cblist, opt, value);  
+                        if ( ! cbitem )
+                                return -1;
                 }
         }
 
@@ -474,9 +517,9 @@ static int parse_argument(void **context, prelude_list_t *cb_list,
                           int argc, char **argv, int *argv_index, int depth)
 {
         int ret;
-        void *bkp;
         prelude_option_t *opt;
         const char *arg, *old;
+        struct cb_list *cbitem;
         char optarg[256], *argptr;
         
         while ( *argv_index < argc ) {
@@ -496,8 +539,7 @@ static int parse_argument(void **context, prelude_list_t *cb_list,
                 while ( *arg == '-' ) arg++;
                 
                 opt = search_option(optlist, arg, CLI_HOOK, 0);
-                
-                if ( ! opt ) {
+                if ( ! opt ) {                        
                         if ( depth ) {
                                 (*argv_index)--;
                                 return 0;
@@ -515,10 +557,9 @@ static int parse_argument(void **context, prelude_list_t *cb_list,
                         return -1;
                 
                 if ( opt->set ) {
-                        
-                        ret = call_option_cb(context, cb_list, opt, argptr);
-                        if ( ret == prelude_option_end || ret == prelude_option_error )
-                                return ret;        
+                        cbitem = call_option_cb(cb_list, opt, argptr);
+                        if ( ! cbitem )
+                                return -1;
                 }
                 
                 /*
@@ -526,25 +567,18 @@ static int parse_argument(void **context, prelude_list_t *cb_list,
                  * Try to match the rest of our argument against them.
                  */
                 if ( ! prelude_list_empty(&opt->optlist.optlist) ) {
-                        bkp = *context;
+
                         
-                        ret = parse_argument(context, cb_list, &opt->optlist, filename, argc, argv, argv_index, depth + 1);
+                        ret = parse_argument(context, &cbitem->children, &opt->optlist, filename, argc, argv, argv_index, depth + 1);
                         if ( ret == prelude_option_end || ret == prelude_option_error )
                                 return ret;
                         
-                        call_init_func(context, cb_list, opt);
-                        
-                        ret = call_option_from_cb_list(cb_list, option_run_all);
-                        if ( ret == prelude_option_error || ret == prelude_option_end )
-                                return ret;
-
-                        *context = bkp;
+                            //call_init_func(cb_list, opt);
                 }
         }
         
         return 0;
 }
-
 
 
 
@@ -570,8 +604,7 @@ static int parse_argument(void **context, prelude_list_t *cb_list,
  */
 int prelude_option_parse_arguments(void **context, prelude_option_t *option,
                                    const char *filename, int argc, char **argv) 
-{        
-        config_t *cfg;
+{
         int argv_index = 1, ret;
         PRELUDE_LIST_HEAD(cb_list);
         prelude_optlist_t *optlist;
@@ -582,30 +615,16 @@ int prelude_option_parse_arguments(void **context, prelude_option_t *option,
                 optlist = &option->optlist;
 
         if ( filename ) {
-                int line = 0;
-                PRELUDE_LIST_HEAD(cb_list);
-                                
-                cfg = config_open(filename);
-                if ( ! cfg ) {
-                        log(LOG_INFO, "couldn't open %s.\n", filename);
-                        return -1;
-                }
-                
-                ret = get_missing_options(cfg, context, filename, &cb_list, optlist, &line, 0);
+                ret = process_cfg_file(context, &cb_list, optlist, filename);
                 if ( ret == prelude_option_error || ret == prelude_option_end )
                         return ret;
-                
-                ret = call_option_from_cb_list(&cb_list, option_run_all);
-                if ( ret == prelude_option_error || ret == prelude_option_end )
-                        return ret;
-                config_close(cfg);
         }
         
         ret = parse_argument(context, &cb_list, optlist, filename, argc, argv, &argv_index, 0); 
         if ( ret == prelude_option_error || ret == prelude_option_end )
                 return ret;
         
-        ret = call_option_from_cb_list(&cb_list, option_run_all);
+        ret = call_option_from_cb_list(context, &cb_list);
         if ( ret == prelude_option_error || ret == prelude_option_end )
                 return ret;
         
@@ -757,7 +776,7 @@ static void construct_option_msg(prelude_msg_t *msg, prelude_optlist_t *optlist)
 
 
 
-prelude_msg_t *prelude_option_wide_get_msg(void) 
+prelude_msg_t *prelude_option_wide_get_msg(uint64_t ident) 
 {
         uint64_t source_id;
         
@@ -777,8 +796,7 @@ prelude_msg_t *prelude_option_wide_get_msg(void)
                 return NULL;
         }
 
-
-        source_id = prelude_hton64(prelude_client_get_analyzerid());
+        source_id = prelude_hton64(ident);
         prelude_msg_set(root_optlist->wide_msg, PRELUDE_MSG_OPTION_SOURCE_ID, sizeof(source_id), &source_id);
 
         construct_option_msg(root_optlist->wide_msg, root_optlist);
@@ -1094,6 +1112,19 @@ void prelude_option_set_description(prelude_option_t *opt, const char *descripti
 const char *prelude_option_get_description(prelude_option_t *opt)
 {
         return opt->description;
+}
+
+
+
+void prelude_option_set_flags(prelude_option_t *opt, int flags)
+{
+        opt->flags = flags;
+}
+
+
+int prelude_option_get_flags(prelude_option_t *opt)
+{
+        return opt->flags;
 }
 
 

@@ -17,7 +17,7 @@
 
 
 
-static prelude_msg_t *client_send_msg(prelude_msgbuf_t *msgbuf) 
+static prelude_msg_t *cnx_send_msg(prelude_msgbuf_t *msgbuf) 
 {        
         prelude_client_send_msg(prelude_msgbuf_get_data(msgbuf), prelude_msgbuf_get_msg(msgbuf));
         return NULL;
@@ -26,7 +26,7 @@ static prelude_msg_t *client_send_msg(prelude_msgbuf_t *msgbuf)
 
 
 
-static int send_option_reply(prelude_client_t *client, uint64_t admin_id,
+static int send_option_reply(prelude_connection_t *cnx, uint64_t admin_id,
                              uint32_t request_id, const char *getdata, const char *error) 
 {
         int msgnum, msglen;
@@ -63,12 +63,12 @@ static int send_option_reply(prelude_client_t *client, uint64_t admin_id,
         if ( error )
 		prelude_msg_set(msg, PRELUDE_MSG_OPTION_ERROR, errorlen, error);
 
-	return prelude_msg_write(msg, prelude_client_get_fd(client));
+	return prelude_msg_write(msg, prelude_connection_get_fd(cnx));
 }
 
 
 
-static int read_option_request(prelude_client_t *client, prelude_msg_t *msg, uint64_t *admin_id,
+static int read_option_request(prelude_connection_t *cnx, prelude_msg_t *msg, uint64_t *admin_id,
                                uint32_t *request_id, int *type, const char **option, const char **value) 
 {
         int ret;
@@ -117,16 +117,16 @@ static int read_option_request(prelude_client_t *client, prelude_msg_t *msg, uin
                 break;
 
         default:
-                log(LOG_INFO, "[%s] - unknown option tag %d.\n", prelude_client_get_saddr(client), tag);
+                log(LOG_INFO, "[%s] - unknown option tag %d.\n", prelude_connection_get_saddr(cnx), tag);
         }
         
-        return read_option_request(client, msg, admin_id, request_id, type, option, value);
+        return read_option_request(cnx, msg, admin_id, request_id, type, option, value);
 }
 
 
 
 
-static int handle_option_request(prelude_client_t *client, prelude_msg_t *msg)
+static int handle_option_request(prelude_connection_t *cnx, prelude_msg_t *msg)
 {
         uint64_t admin_id;
         uint32_t request_id;
@@ -135,7 +135,7 @@ static int handle_option_request(prelude_client_t *client, prelude_msg_t *msg)
         char getbuf[1024], *getptr = NULL;
         const char *option = NULL, *value = NULL;
         
-        ret = read_option_request(client, msg, &admin_id, &request_id, &type, &option, &value);
+        ret = read_option_request(cnx, msg, &admin_id, &request_id, &type, &option, &value);
         if ( ret < 0 )
                 return -1;
         
@@ -154,7 +154,7 @@ static int handle_option_request(prelude_client_t *client, prelude_msg_t *msg)
         if ( ret < 0 )
                 error = "Error setting option";
         
-        return send_option_reply(client, admin_id, request_id, getptr, error);
+        return send_option_reply(cnx, admin_id, request_id, getptr, error);
 }
 
 
@@ -247,42 +247,43 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
 
 
 
-int prelude_option_process_request(prelude_client_t *client, prelude_msg_t *msg)
+int prelude_option_process_request(prelude_connection_t *cnx, prelude_msg_t *msg)
 {
         uint8_t tag;
         
         tag = prelude_msg_get_tag(msg);
 
         if ( tag != PRELUDE_MSG_OPTION_REQUEST ) {
-                log(LOG_INFO, "[%s] - unknown option tag %d.\n", prelude_client_get_saddr(client), tag);
+                log(LOG_INFO, "[%s] - unknown option tag %d.\n", prelude_connection_get_saddr(cnx), tag);
                 return -1;
         }
 
-        return handle_option_request(client, msg);
+        return handle_option_request(cnx, msg);
 }
 
 
 
 
 
-int prelude_option_send_request(prelude_client_t *client, uint32_t request_id, uint64_t target_id, int type, const char *option, const char *value)
+int prelude_option_send_request(prelude_connection_t *cnx, uint32_t request_id,
+                                uint64_t target_id, int type, const char *option, const char *value)
 {
         uint64_t tmp;
         prelude_msgbuf_t *msg;
         
-        msg = prelude_msgbuf_new(0);
+        msg = prelude_msgbuf_new(prelude_connection_get_client(cnx));
         if ( ! msg ) {
                 log(LOG_ERR, "error creating option message.\n");
                 return -1;
         }
 
-        prelude_msgbuf_set_data(msg, client);
-        prelude_msgbuf_set_callback(msg, client_send_msg);
+        prelude_msgbuf_set_data(msg, cnx);
+        prelude_msgbuf_set_callback(msg, cnx_send_msg);
         prelude_msg_set_tag(prelude_msgbuf_get_msg(msg), PRELUDE_MSG_OPTION_REQUEST);
         
         prelude_msgbuf_set(msg, type, 0, 0);
 
-        tmp = prelude_hton64(prelude_client_get_analyzerid());
+        tmp = prelude_hton64(prelude_client_get_analyzerid(prelude_connection_get_client(cnx)));
         prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_SOURCE_ID, sizeof(tmp), &tmp);
 
         tmp = prelude_hton64(target_id);

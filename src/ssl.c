@@ -29,7 +29,7 @@
 
 #include "ssl.h"
 #include "prelude-log.h"
-#include "prelude-path.h"
+#include "prelude-client.h"
 
 
 
@@ -78,7 +78,7 @@ SSL *ssl_connect_server(int socket)
  *
  * Returns: 0 on sucess, -1 on error.
  */
-int ssl_init_client(void)
+int ssl_init_client(prelude_client_t *client)
 {
         int ret;
         char filename[256];
@@ -106,7 +106,7 @@ int ssl_init_client(void)
          */
 	SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, NULL);
 
-        prelude_get_ssl_cert_filename(filename, sizeof(filename));
+        prelude_client_get_ssl_cert_filename(client, filename, sizeof(filename));
         
 	ret = SSL_CTX_load_verify_locations(ctx, filename, NULL);
 	if ( ret <= 0 ) {
@@ -114,7 +114,7 @@ int ssl_init_client(void)
                 goto err;
         }
         
-        prelude_get_ssl_key_filename(filename, sizeof(filename));
+        prelude_client_get_ssl_key_filename(client, filename, sizeof(filename));
         
 	ret = SSL_CTX_use_certificate_file(ctx, filename, SSL_FILETYPE_PEM);
 	if ( ret <= 0 ) {

@@ -25,10 +25,10 @@
 #define _LIBPRELUDE_PRELUDE_AUTH_H
 
 int prelude_auth_create_account(const char *filename, char **user, char **pass,
-                                int crypted, uid_t uid);
+                                int crypted, uid_t uid, gid_t gid);
 
 int prelude_auth_create_account_noprompt(const char *filename, const char *user,
-                                         const char *pass, int crypted, uid_t uid);
+                                         const char *pass, int crypted, uid_t uid, gid_t gid);
 
 int prelude_auth_check(const char *authfile, const char *user, const char *pass);
 

@@ -37,7 +37,8 @@ include_HEADERS = config-engine.h 		\
 		  prelude-linked-object.h	\
 		  prelude-list.h		\
 		  prelude-client.h		\
-		  prelude-client-mgr.h		\
+		  prelude-connection.h		\
+		  prelude-connection-mgr.h	\
 		  prelude-getopt.h		\
 		  prelude-getopt-wide.h		\
 		  prelude-io.h			\
@@ -47,11 +48,9 @@ include_HEADERS = config-engine.h 		\
 		  prelude-async.h		\
 		  prelude-ident.h		\
 		  prelude-inet.h		\
-		  prelude-path.h		\
 		  prelude-plugin.h		\
 		  prelude-log.h			\
 		  prelude-strbuf.h		\
-		  sensor.h			\
 		  threads.h			\
 		  extract.h			\
 		  common.h

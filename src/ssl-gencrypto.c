@@ -44,7 +44,6 @@
 #include <openssl/pem.h>
 
 #include "prelude-log.h"
-#include "prelude-path.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
 #include "prelude-client.h"
@@ -95,7 +94,7 @@ static int get_full_hostname(char *buf, size_t len)
 
 
 
-static int add_DN_object(X509_NAME *name, char *text, int nid, int min, int max)
+static int add_DN_object(X509_NAME *name, int nid, uint64_t analyzerid, const char *sname)
 {
         int ret;
         struct timeval tv;
@@ -107,14 +106,13 @@ static int add_DN_object(X509_NAME *name, char *text, int nid, int min, int max)
         gettimeofday(&tv, NULL);
         srand(getpid() * tv.tv_usec);
 
-        ret = snprintf(buf, sizeof(buf), "%s:%s:%llu:%d", host,
-                       prelude_get_sensor_name(),
-                       prelude_client_get_analyzerid(), rand());
+        ret = snprintf(buf, sizeof(buf), "%s:%s:%llu:%d",
+                       host, sname, analyzerid, rand());
 
         if ( ret < 0 || ret >= sizeof(buf) )
                 return -1;
         
-	if ( req_check_len(ret, min, max) < 0)
+	if ( req_check_len(ret, 5, 100) < 0)
 		return -1;
         
 	entry = X509_NAME_ENTRY_create_by_NID(NULL, nid, V_ASN1_APP_CHOOSE,
@@ -131,10 +129,9 @@ static int add_DN_object(X509_NAME *name, char *text, int nid, int min, int max)
 
 
 
-static int prompt_info(X509_REQ * req)
+static int prompt_info(X509_REQ *req, uint64_t analyzerid, const char *sname)
 {
-
-	int nid, min, max;
+	int nid;
 	CONF_VALUE v;
 	X509_NAME *subj;
 
@@ -142,11 +139,9 @@ static int prompt_info(X509_REQ * req)
 
 	v.name = "CN";
 	v.value = "Name";
-	min = 5;
-	max = 100;
 	nid = OBJ_txt2nid(v.name);
 
-        if ( add_DN_object(subj, v.value, nid, min, max) < 0 )
+        if ( add_DN_object(subj, nid, analyzerid, sname) < 0 )
 		return 0;
         
 	/*
@@ -162,7 +157,7 @@ static int prompt_info(X509_REQ * req)
 
 
 
-static int make_REQ(X509_REQ * req, EVP_PKEY * pkey)
+static int make_REQ(X509_REQ *req, EVP_PKEY *pkey, uint64_t analyzerid, const char *sname)
 {
 	/*
          * setup version number
@@ -173,7 +168,7 @@ static int make_REQ(X509_REQ * req, EVP_PKEY * pkey)
 	/*
          * ask user for DN
          */
-	if (!prompt_info(req))
+	if ( ! prompt_info(req, analyzerid, sname))
 		return 0;
 
 	X509_REQ_set_pubkey(req, pkey);
@@ -238,7 +233,7 @@ static EVP_PKEY *generate_private_key(int len)
 
 
 
-static X509 *generate_self_signed_certificate(EVP_PKEY *pkey, int days)
+static X509 *generate_self_signed_certificate(EVP_PKEY *pkey, int days, uint64_t analyzerid, const char *sname)
 {
 	X509 *x509ss;
 	X509_REQ *req;
@@ -254,7 +249,7 @@ static X509 *generate_self_signed_certificate(EVP_PKEY *pkey, int days)
                 return NULL;
         }
         
-	if ( ! make_REQ(req, pkey) ) {
+	if ( ! make_REQ(req, pkey, analyzerid, sname) ) {
 		X509_REQ_free(req);
                 return NULL;
 	}
@@ -326,7 +321,8 @@ static void check_key_size(int keysize)
  *
  * Returns: 0 on success, or -1 if an error occured.
  */
-int prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int crypt, uid_t uid)
+int prelude_ssl_gen_crypto(uint64_t analyzerid, const char *sname,
+                           int keysize, int expire, const char *keyout, int crypt, uid_t uid)
 {
         FILE *fdp;
 	int ret, fd;
@@ -357,7 +353,7 @@ int prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int cryp
 		return -1;
 	}
         
-        x509ss = generate_self_signed_certificate(pkey, expire);
+        x509ss = generate_self_signed_certificate(pkey, expire, analyzerid, sname);
 	if ( ! x509ss ) {
 		ERR_print_errors_fp(stderr);
                 fprintf(stderr, "problems making self signed Certificate.\n");

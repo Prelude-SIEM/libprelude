@@ -58,9 +58,6 @@ sub	header
 #include \"common.h\"
 
 
-extern prelude_ident_t *sensor_dynamic_ident;
-
-
 
 /*
  * If you wonder why we do this, and why life is complicated,
@@ -155,10 +152,12 @@ static inline void idmef_write_data(prelude_msgbuf_t *msg, uint8_t tag, idmef_da
 static inline void idmef_write_dynamic_ident(prelude_msgbuf_t *msg, uint8_t tag, uint64_t data) 
 \{
         uint64_t dst;
+        prelude_ident_t *unique_ident;
+        prelude_client_t *client = prelude_msgbuf_get_client(msg);
 
         if ( ! data ) {
-                assert(sensor_dynamic_ident != NULL);
-                data = prelude_ident_inc(sensor_dynamic_ident);
+                unique_ident = prelude_client_get_unique_ident(client);
+                data = prelude_ident_inc(unique_ident);
         }
 
         dst = prelude_hton64(data);

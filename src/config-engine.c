@@ -617,8 +617,9 @@ int config_get_next(config_t *cfg, char **section, char **entry, char **value, i
                 if ( is_section(ptr) ) {
                         free_val(section);
                         return parse_section_buffer(ptr, section, value);
-                } else 
+                } else {                        
                         return parse_buffer(ptr, entry, value);
+                }
         }
 
         (*line)--;

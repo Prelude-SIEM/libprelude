@@ -1,81 +1,70 @@
-/*****
-*
-* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
-* All Rights Reserved
-*
-* This file is part of the Prelude program.
-*
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2, or (at your option)
-* any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; see the file COPYING.  If not, write to
-* the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-*****/
+#ifndef _LIBPRELUDE_ANALYZER_H
+#define _LIBPRELUDE_ANALYZER_H
 
-#ifndef _LIBPRELUDE_PRELUDE_CLIENT_H
-#define _LIBPRELUDE_PRELUDE_CLIENT_H
 
-#include "prelude-message.h"
+typedef enum {
+        PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF = 0x01,
+        PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF = 0x02,
+        PRELUDE_CLIENT_CAPABILITY_RECV_ADMIN = 0x04,
+        PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN = 0x08,
+        PRELUDE_CLIENT_CAPABILITY_RECV_CM    = 0x10,
+        PRELUDE_CLIENT_CAPABILITY_SEND_CM    = 0x20,
+} prelude_client_capability_t;
 
+#define PRELUDE_CLIENT_ASYNC_SEND  0x01
+#define PRELUDE_CLIENT_ASYNC_TIMER 0x02
 
 typedef struct prelude_client prelude_client_t;
 
+#include "prelude-ident.h"
+#include "prelude-connection.h"
+#include "prelude-connection-mgr.h"
+#include "idmef.h"
+
+prelude_ident_t *prelude_client_get_unique_ident(prelude_client_t *client);
+
+prelude_connection_mgr_t *prelude_client_get_manager_list(prelude_client_t *client);
+
+int prelude_client_init(prelude_client_t *client, const char *sname, const char *config, int argc, char **argv);
+
+prelude_client_t *prelude_client_new(prelude_client_capability_t capability);
+
+idmef_analyzer_t *prelude_client_get_analyzer(prelude_client_t *client);
+
+uint64_t prelude_client_get_analyzerid(prelude_client_t *client);
+
+void prelude_client_set_name(prelude_client_t *client, const char *name);
+
+const char *prelude_client_get_name(prelude_client_t *client);
+
+void prelude_client_set_uid(prelude_client_t *client, uid_t uid);
+
+uid_t prelude_client_get_uid(prelude_client_t *client);
+
+void prelude_client_set_gid(prelude_client_t *client, gid_t gid);
+
+gid_t prelude_client_get_gid(prelude_client_t *client);
+
+int prelude_client_get_flags(prelude_client_t *client);
+
+prelude_client_capability_t prelude_client_get_capability(prelude_client_t *client);
+
+void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg);
+
+void prelude_client_set_heartbeat_cb(prelude_client_t *client, void (*cb)(prelude_client_t *client));
+
 void prelude_client_destroy(prelude_client_t *client);
 
-prelude_client_t *prelude_client_new(const char *addr, uint16_t port);
+int prelude_client_set_flags(prelude_client_t *client, int flags);
 
-int prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg);
+void prelude_client_set_capability(prelude_client_t *client, prelude_client_capability_t capability);
 
-int prelude_client_connect(prelude_client_t *client);
+void prelude_client_get_auth_filename(prelude_client_t *client, char *buf, size_t size);
 
-ssize_t prelude_client_forward(prelude_client_t *client, prelude_io_t *src, size_t count);
+void prelude_client_get_ssl_cert_filename(prelude_client_t *client, char *buf, size_t size);
 
-const char *prelude_client_get_saddr(prelude_client_t *client);
+void prelude_client_get_ssl_key_filename(prelude_client_t *client, char *buf, size_t size);
 
-const char *prelude_client_get_daddr(prelude_client_t *client);
+void prelude_client_get_backup_filename(prelude_client_t *client, char *buf, size_t size);
 
-uint16_t prelude_client_get_sport(prelude_client_t *client);
-
-uint16_t prelude_client_get_dport(prelude_client_t *client);
-
-int prelude_client_is_alive(prelude_client_t *client);
-
-prelude_io_t *prelude_client_get_fd(prelude_client_t *client);
-
-void prelude_client_close(prelude_client_t *client);
-
-void prelude_client_set_fd(prelude_client_t *client, prelude_io_t *fd);
-
-#define PRELUDE_CLIENT_TYPE_OTHER            0
-#define PRELUDE_CLIENT_TYPE_SENSOR           1
-#define PRELUDE_CLIENT_TYPE_MANAGER_PARENT   2
-#define PRELUDE_CLIENT_TYPE_MANAGER_CHILDREN 3
-#define PRELUDE_CLIENT_TYPE_ADMIN            4
-
-void prelude_client_set_type(prelude_client_t *client, int type);
-
-int prelude_client_get_type(prelude_client_t *client);
-
-
-#define PRELUDE_CLIENT_CONNECTED    0x01
-#define PRELUDE_CLIENT_OWN_FD       0x02
-
-void prelude_client_set_state(prelude_client_t *client, int state);
-
-int prelude_client_get_state(prelude_client_t *client);
-
-/*
- * this one is located in client-ident.c
- */
-uint64_t prelude_client_get_analyzerid(void);
-
-#endif /* _LIBPRELUDE_PRELUDE_CLIENT_H */
+#endif

@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <sys/types.h>
 
-#include "prelude-path.h"
+#include "prelude-client.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
 #include "prelude-message-id.h"
@@ -81,13 +81,13 @@ static int setup_plaintext(prelude_io_t *fd, const char *oneshot,
 
 
 
-int create_plaintext_user_account(prelude_io_t *fd, const char *oneshot, uid_t uid) 
+int create_plaintext_user_account(prelude_client_t *client, prelude_io_t *fd, const char *oneshot) 
 {
         int ret;
         char buf[256];
         char *user, *pass;
                 
-        prelude_get_auth_filename(buf, sizeof(buf));
+        prelude_client_get_auth_filename(client, buf, sizeof(buf));
 
         /*
          * we don't want to keep an old user entry (each sensor have
@@ -95,7 +95,9 @@ int create_plaintext_user_account(prelude_io_t *fd, const char *oneshot, uid_t u
          */
         unlink(buf);
         
-        ret = prelude_auth_create_account(buf, &user, &pass, 0, uid);
+        ret = prelude_auth_create_account(buf, &user, &pass, 0,
+                                          prelude_client_get_uid(client),
+                                          prelude_client_get_gid(client));
         if ( ret < 0 )
                 return -1;
 

@@ -1,5 +1,5 @@
 INCLUDES = -I$(top_srcdir)/src/include -I$(top_srcdir)
-DEFS = -DSENSORS_IDENT_FILE=\"@sensors_ident_file@\"
+DEFS = -DPRELUDE_IDENT_FILE=\"@prelude_ident_file@\"
 bin_PROGRAMS = sensor-adduser
 
 sensor_adduser_LDFLAGS = -export-dynamic

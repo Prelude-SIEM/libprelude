@@ -40,6 +40,7 @@
 struct prelude_message_buffered {
         int flags;
         void *data;
+        prelude_client_t *client;
         prelude_msg_t *msg;
         prelude_msg_t *(*send_msg)(void *data);
 };
@@ -50,7 +51,7 @@ static prelude_msg_t *send_msg(void *data)
 {
         prelude_msgbuf_t *msgbuf = data;
         
-        prelude_sensor_send_msg(msgbuf->msg);
+        prelude_client_send_msg(msgbuf->client, msgbuf->msg);
         prelude_msg_recycle(msgbuf->msg);
 
         return msgbuf->msg;
@@ -62,7 +63,7 @@ static prelude_msg_t *send_msg_async(void *data)
 {
         prelude_msgbuf_t *msgbuf = data;
         
-        prelude_sensor_send_msg_async(msgbuf->msg);
+        prelude_client_send_msg(msgbuf->client, msgbuf->msg);
         
         msgbuf->msg = prelude_msg_dynamic_new(send_msg_async, msgbuf);
         if ( ! msgbuf->msg ) {
@@ -105,7 +106,7 @@ void prelude_msgbuf_set(prelude_msgbuf_t *msgbuf, uint8_t tag, uint32_t len, con
  *
  * Returns: a #prelude_msgbuf_t object, or NULL if an error occured.
  */
-prelude_msgbuf_t *prelude_msgbuf_new(int flags) 
+prelude_msgbuf_t *prelude_msgbuf_new(prelude_client_t *client)
 {
         prelude_msgbuf_t *msgbuf;
 
@@ -115,9 +116,9 @@ prelude_msgbuf_t *prelude_msgbuf_new(int flags)
                 return NULL;
         }
 
-        msgbuf->flags = flags;
+        msgbuf->client = client;
         
-        if ( flags & PRELUDE_MSGBUF_ASYNC_SEND )
+        if ( prelude_client_get_flags(client) & PRELUDE_CLIENT_ASYNC_SEND )
                 msgbuf->send_msg = send_msg_async;
         else
                 msgbuf->send_msg = send_msg;
@@ -179,7 +180,7 @@ void prelude_msgbuf_close(prelude_msgbuf_t *msgbuf)
 {
         msgbuf->send_msg(msgbuf);
         
-        if ( ! (msgbuf->flags & PRELUDE_MSGBUF_ASYNC_SEND) && msgbuf->msg )
+        if ( msgbuf->msg )
                 prelude_msg_destroy(msgbuf->msg);
 
         free(msgbuf);
@@ -216,6 +217,11 @@ void *prelude_msgbuf_get_data(prelude_msgbuf_t *msgbuf)
 }
 
 
+
+prelude_client_t *prelude_msgbuf_get_client(prelude_msgbuf_t *msgbuf)
+{
+        return msgbuf->client;
+}
 
 
 

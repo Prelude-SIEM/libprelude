@@ -1,12 +1,12 @@
 /*****
 *
-* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
 *
 * This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by 
+* it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2, or (at your option)
 * any later version.
 *
@@ -25,836 +25,670 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <inttypes.h>
-#include <sys/poll.h>
-#include <sys/ioctl.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <netinet/in.h>
-#include <sys/un.h>
-#include <fcntl.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netinet/tcp.h>
-#include <signal.h>
+#include <sys/utsname.h>
 
-#include "config.h"
-
-#ifdef HAVE_SSL
-#include "ssl.h"
-#endif
-
+#include "idmef.h"
+#include "timer.h"
 #include "common.h"
-#include "prelude-log.h"
-#include "prelude-io.h"
-#include "prelude-auth.h"
-#include "prelude-inet.h"
-#include "prelude-message.h"
-#include "prelude-message-id.h"
-#include "prelude-client.h"
-#include "prelude-getopt.h"
 #include "client-ident.h"
-#include "prelude-path.h"
-#include "prelude-list.h"
-#include "prelude-linked-object.h"
+#include "prelude-log.h"
+#include "prelude-ident.h"
+#include "prelude-async.h"
+#include "prelude-getopt.h"
+#include "prelude-connection-mgr.h"
+#include "prelude-client.h"
+#include "idmef-message-write.h"
+#include "config-engine.h"
 
+
+/*
+ * directory where SSL authentication file are stored.
+ */
+#define SSL_DIR PRELUDE_CONFIG_DIR "/ssl"
+
+/*
+ * directory where plaintext authentication file are stored.
+ */
+#define AUTH_DIR PRELUDE_CONFIG_DIR "/plaintext"
+
+/*
+ * send an heartbeat every hours.
+ */
+#define DEFAULT_HEARTBEAT_INTERVAL 60 * 60
+
+
+#define CAPABILITY_SEND (PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF|PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN|PRELUDE_CLIENT_CAPABILITY_SEND_CM)
 
 
 
 struct prelude_client {
-        PRELUDE_LINKED_OBJECT;
-        
-        char *saddr;
-        uint16_t sport;
-
-        char *daddr;
-        uint16_t dport;
-        
-        size_t sa_len;
-        struct sockaddr *sa;
+        int flags;
+        prelude_client_capability_t capability;
         
         /*
-         * This pointer point to the object suitable
-         * for writing to the Manager.
+         * information about the user/group this analyzer is running as
          */
-        prelude_io_t *fd;
+        uid_t uid;
+        gid_t gid;
 
-        uint8_t type;
-        uint8_t state;
+        /*
+         * name, analyzerid, and config file for this analyzer.
+         */
+        char *name;
+        uint64_t analyzerid;
+        char *config_filename;
+        
+        idmef_address_t *address;
+        idmef_analyzer_t *analyzer;
+        prelude_connection_mgr_t *manager_list;
+        prelude_timer_t heartbeat_timer;
+        
+        prelude_msgbuf_t *msgbuf;
+        prelude_ident_t *unique_ident;
+        
+        void (*heartbeat_cb)(prelude_client_t *client);
 };
 
 
 
 
-static void auth_error(prelude_client_t *client, const char *auth_kind) 
+static void heartbeat_expire_cb(void *data)
 {
-        log(LOG_INFO, "\n%s authentication failed. Please run :\n"
-            "sensor-adduser --sensorname %s --uid %d --manager-addr %s\n"
-            "program on the sensor host to create an account for this sensor.\n\n",
-            auth_kind, prelude_get_sensor_name(), prelude_get_program_userid(), client->daddr);
-
-        exit(1);
-}
-
-
-
-
-/*
- * Check if the tcp connection has been closed by peer
- * i.e if peer has sent a FIN tcp segment.
- *
- * It is important to call this function before writing on
- * a tcp socket, otherwise the write will succeed despite
- * the remote socket has been closed and next write will lead
- * to a broken pipe
- */
-static int is_tcp_connection_still_established(prelude_io_t *pio)
-{
-        int pending, ret;
-	struct pollfd pfd;
-        
-	pfd.events = POLLIN;
-	pfd.fd = prelude_io_get_fd(pio);
-
-	ret = poll(&pfd, 1, 0);
-	if ( ret < 0 ) {
-		log(LOG_ERR, "poll on tcp socket failed.\n");
-		return -1;
-	}
-
-	if ( ret == 0 )
-		return 0;
-
-	if ( pfd.revents & POLLERR ) {
-		log(LOG_ERR, "error polling tcp socket.\n");
-		return -1;
-	}
-
-	if ( pfd.revents & POLLHUP ) {
-		log(LOG_ERR, "connection hang up.\n");
-		return -1;
-	}
-
-	if ( ! (pfd.revents & POLLIN) )
-		return 0;
-
-	/*
-	 * Get the number of bytes to read
-	 */
-        pending = prelude_io_pending(pio);        
-	if ( pending <= 0 ) {
-		log(LOG_ERR, "connection has been closed by peer.\n");
-		return -1;
-	}
-
-	return 0;
-}
-
-
-
-
-/*
- * Connect to the specified address in a generic manner
- * (can be Unix or Inet ).
- */
-static int generic_connect(struct sockaddr *sa, socklen_t sa_len)
-{
-        int ret, sock, proto;
-
-        if ( sa->sa_family == AF_UNIX ) 
-                proto = 0;
-        else
-                proto = IPPROTO_TCP;
-        
-        sock = socket(sa->sa_family, SOCK_STREAM, proto);
-	if ( sock < 0 ) {
-                log(LOG_ERR, "error opening socket.\n");
-		return -1;
-	}
-        
-        ret = fcntl(sock, F_SETOWN, getpid());
-        if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't set children to receive signal.\n");
-                goto err;
-        }
-
-        ret = connect(sock, sa, sa_len);
-	if ( ret < 0 ) {
-                log(LOG_ERR,"error connecting socket.\n");
-                goto err;
-	}
-        
-	return sock;
-
-  err:
-        close(sock);
-        return -1;
-}
-
-
-
-
-static int read_plaintext_authentication_result(prelude_client_t *client)
-{
-        int ret;
-        void *buf;
-        uint8_t tag;
-        uint32_t dlen;
-        prelude_msg_t *msg = NULL;
-        prelude_msg_status_t status;
-
-        do {
-                status = prelude_msg_read(&msg, client->fd);
-        } while ( status == prelude_msg_unfinished );
-        
-        if ( status != prelude_msg_finished ) {
-                log(LOG_ERR, "error reading authentication result.\n");
-                return -1;
-        }
-
-        ret = prelude_msg_get(msg, &tag, &dlen, &buf);
-        prelude_msg_destroy(msg);
-        
-        if ( ret <= 0 ) {
-                log(LOG_ERR, "error reading authentication result.\n");
-                return -1;
-        }
-        
-        if ( tag == PRELUDE_MSG_AUTH_SUCCEED ) {
-                log(LOG_INFO, "- Plaintext authentication succeed with Prelude Manager.\n");
-                return 0;
-        }
-        
-        log(LOG_INFO, "- Plaintext authentication failed with Prelude Manager.\n");
-        auth_error(client, "Plaintext");
-        
-        return -1;
-}
-
-
-
-
-static int handle_plaintext_connection(prelude_client_t *client, int sock) 
-{
-        int ret;
-        size_t ulen, plen;
-        char *user, *pass;
-        prelude_msg_t *msg;
-        char filename[256];
-
-        prelude_get_auth_filename(filename, sizeof(filename));
-        
-        ret = prelude_auth_read_entry(filename, NULL, NULL, &user, &pass);
-        if ( ret < 0 ) {
-                /*
-                 * the authentication file doesn't exist. Tell
-                 * the user it have to create it and exit.
-                 */
-                auth_error(client, "Plaintext");
-        }
-
-        /*
-         * create message containing plaintext authentication informations.
-         */
-        ulen = strlen(user) + 1;
-        plen = strlen(pass) + 1;
-        
-        msg = prelude_msg_new(3, ulen + plen, PRELUDE_MSG_AUTH, 0);
-        if ( ! msg ) {
-                ret = -1;
-                goto err;
-        }
-
-        prelude_msg_set(msg, PRELUDE_MSG_AUTH_PLAINTEXT, 0, NULL);
-        prelude_msg_set(msg, PRELUDE_MSG_AUTH_USERNAME, ulen, user);
-        prelude_msg_set(msg, PRELUDE_MSG_AUTH_PASSWORD, plen, pass);
-        
-        ret = prelude_msg_write(msg, client->fd);
-        if ( ret <= 0 ) {
-                log(LOG_ERR, "error sending plaintext authentication message.\n");
-                ret = -1;
-        }
-
-        prelude_msg_destroy(msg);
-
-  err:
-        free(user);
-        free(pass);
-
-        return read_plaintext_authentication_result(client);
-}
-
-
-
-#ifdef HAVE_SSL
-
-static int handle_ssl_connection(prelude_client_t *client, int sock) 
-{
-        int ret;
-        SSL *ssl;
-        prelude_msg_t *msg;
-        static int ssl_initialized = 0;
-        
-        if ( ! ssl_initialized ) {
-                ret = ssl_init_client();
-                if ( ret < 0 ) {
-                         /*
-                          * SSL key / certificate doesn't exist. Tell the
-                          * use how to create them and exit.
-                          */
-                        auth_error(client, "SSL");
-                }
-                
-                ssl_initialized = 1;
-        }
-        
-        msg = prelude_msg_new(1, 0, PRELUDE_MSG_AUTH, 0);
-        if ( ! msg )
-                return -1;
-
-        prelude_msg_set(msg, PRELUDE_MSG_AUTH_SSL, 0, NULL);
-        ret = prelude_msg_write(msg, client->fd);
-        prelude_msg_destroy(msg);        
-        
-        if ( ret < 0 ) {
-                log(LOG_ERR, "error sending SSL authentication message.\n");
-                return -1;
-        }
-        
-        ssl = ssl_connect_server(sock);
-        if ( ! ssl ) {
-                /*
-                 * SSL authentication failed,
-                 * tell the user how to setup SSL auth and exit.
-                 */
-                log(LOG_INFO, "- SSL authentication failed with Prelude Manager.\n");
-                auth_error(client, "SSL");
-        }
-
-        log(LOG_INFO, "- SSL authentication succeed with Prelude Manager.\n");
-        prelude_io_set_ssl_io(client->fd, ssl);
-
-        return 0;
-}
-
-#endif
-
-
-
-
-/*
- * Report server should send us a message containing
- * information about the kind of connecition it support.
- */
-static int get_manager_setup(prelude_io_t *fd, int *have_ssl, int *have_plaintext) 
-{
-        int ret;
-        void *buf;
-        uint8_t tag;
-        uint32_t dlen;
-        prelude_msg_t *msg = NULL;
-        prelude_msg_status_t status;
-
-        do {
-                status = prelude_msg_read(&msg, fd);
-        } while ( status == prelude_msg_unfinished );
-        
-        if ( status != prelude_msg_finished ) {
-                log(LOG_ERR, "error reading Manager configuration message (status=%d).\n", status);
-                return -1;
-        }
-
-        if ( prelude_msg_get_tag(msg) != PRELUDE_MSG_AUTH ) {
-                log(LOG_ERR, "Manager didn't sent us any authentication message.\n");
-                return -1;
-        }
-
-        while ( (ret = prelude_msg_get(msg, &tag, &dlen, &buf)) > 0  ) {
-                
-                switch (tag) {
-
-                case PRELUDE_MSG_AUTH_HAVE_SSL:
-                        *have_ssl = 1;
-                        break;
-
-                case PRELUDE_MSG_AUTH_HAVE_PLAINTEXT:
-                        *have_plaintext = 1;
-                        break;
-
-                default:
-                        log(LOG_ERR, "Invalid authentication tag %d.\n", tag);
-                        goto err;
-                }
-        }
-        
- err:
-        prelude_msg_destroy(msg);
-        return ret;
-}
-
-
-
-
-static int start_inet_connection(prelude_client_t *client) 
-{
-        socklen_t len;
-        struct sockaddr_in addr;
-        int have_ssl = 0, have_plaintext = 0, sock, ret = -1;
-        
-        sock = generic_connect(client->sa, client->sa_len);
-        if ( sock < 0 )
-                return -1;
-
-        /*
-         * Get information about the connection,
-         * because the sensor might want to know source addr/port used.
-         */        
-        len = sizeof(addr);
-
-        ret = getsockname(sock, (struct sockaddr *) &addr, &len);
-        if ( ret < 0 ) 
-                log(LOG_ERR, "couldn't get connection informations.\n");
-        else {
-                client->saddr = strdup(inet_ntoa(addr.sin_addr));
-                client->sport = ntohs(addr.sin_port);
-        }
-        
-        prelude_io_set_sys_io(client->fd, sock);
-        
-        /*
-         * get manager message telling what kind of connection it
-         * support. Prefer SSL over plaintext if supported by both end.
-         */
-        ret = get_manager_setup(client->fd, &have_ssl, &have_plaintext);
-        if ( ret < 0 ) {
-                close(sock);
-                return -1;
-        }
-                
-#ifdef HAVE_SSL
-        if ( have_ssl ) {
-                ret = handle_ssl_connection(client, sock);
-                goto end;
-        }
-#endif
-
-        if ( have_plaintext ) {
-                ret = handle_plaintext_connection(client, sock);
-                goto end;
-        } else {
-                log(LOG_INFO, "couldn't agree on a protocol to use.\n");
-                ret = -1;
-        }
- end:
-        if ( ret < 0 )
-                close(sock);
-        
-        return ret;
-}
-
-
-
-
-static int start_unix_connection(prelude_client_t *client) 
-{
-        int ret, sock, have_ssl = 0, have_plaintext = 0;
-        
-        sock = generic_connect(client->sa, client->sa_len);
-        if ( sock < 0 )
-                return -1;
-        
-        prelude_io_set_sys_io(client->fd, sock);
-        
-        ret = get_manager_setup(client->fd, &have_ssl, &have_plaintext);
-        if ( ret < 0 ) {
-                close(sock);
-                return -1;
-        }
-
-        if ( ! have_plaintext ) {
-                log(LOG_INFO, "Unix connection used, but Manager report plaintext unavailable.\n");
-                close(sock);
-                return -1;
-        }
-        
-        ret = handle_plaintext_connection(client, sock);
-        if ( ret < 0 ) {
-                close(sock);
-                return -1;
-        }
-        
-        return 0;
-}
-
-
-
-
-static int do_connect(prelude_client_t *client) 
-{
-        int ret;
-        
-        if ( client->sa->sa_family == AF_UNIX ) {
-                log(LOG_INFO, "- Connecting to UNIX prelude Manager server.\n");
-		ret = start_unix_connection(client);
-        } else {
-                log(LOG_INFO, "- Connecting to %s port %d prelude Manager server.\n",
-                    client->daddr, client->dport);
-                ret = start_inet_connection(client);
-        }
-        
-        return ret;
-}
-
-
-
-
-static void close_client_fd(prelude_client_t *client) 
-{
-        client->state &= ~PRELUDE_CLIENT_CONNECTED;
-        
-        if ( ! (client->state & PRELUDE_CLIENT_OWN_FD) )
+        idmef_message_t *message;
+        idmef_heartbeat_t *heartbeat;
+        prelude_client_t *client = data;
+
+        if ( client->heartbeat_cb ) {
+                client->heartbeat_cb(client);
                 return;
+        }
         
-        prelude_io_close(client->fd);
-        prelude_io_destroy(client->fd);
+        message = idmef_message_new();
+        if ( ! message )
+                return;
+
+        heartbeat = idmef_message_new_heartbeat(message);
+        if ( ! heartbeat ) {
+                idmef_message_destroy(message);
+                return;
+        }
+
+        idmef_heartbeat_set_analyzer(heartbeat, idmef_analyzer_ref(client->analyzer));
+        idmef_heartbeat_set_create_time(heartbeat, idmef_time_new_gettimeofday());
+
+        idmef_write_message(client->msgbuf, message);
+        prelude_msgbuf_mark_end(client->msgbuf);
+        
+        idmef_message_destroy(message);
+
+        timer_reset(&client->heartbeat_timer);
 }
 
 
 
-static void handle_connection_breakage(prelude_client_t *client)
-{
-        close_client_fd(client);
+
+static void setup_heartbeat_timer(prelude_client_t *client, int expire)
+{        
+        timer_set_data(&client->heartbeat_timer, client);
+        timer_set_expire(&client->heartbeat_timer, expire * 60);
+        timer_set_callback(&client->heartbeat_timer, heartbeat_expire_cb);
 }
 
 
 
-
-static int resolve_addr(prelude_client_t *client, const char *addr, uint16_t port) 
+static int fill_client_infos(prelude_client_t *client, const char *program) 
 {
         int ret;
-        prelude_addrinfo_t *ai, hints;
-        char service[sizeof("00000")];
-
-        memset(&hints, 0, sizeof(hints));
+        char *name, *path;
+        struct utsname uts;
+	idmef_process_t *process;
         
-        hints.ai_family = PF_UNSPEC;
-        hints.ai_socktype = SOCK_STREAM;
-        hints.ai_protocol = IPPROTO_TCP;
-
-        snprintf(service, sizeof(service), "%u", port);
+	idmef_analyzer_set_analyzerid(client->analyzer, client->analyzerid);
         
-        ret = prelude_inet_getaddrinfo(addr, service, &hints, &ai);        
-        if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't resolve %s.\n", addr);
-                return -1;
-        }
-        
-        ret = prelude_inet_addr_is_loopback(ai->ai_family, prelude_inet_sockaddr_get_inaddr(ai->ai_addr));        
-        if ( ret == 0 ) {                
-                ai->ai_family = AF_UNIX;
-                ai->ai_addrlen = sizeof(struct sockaddr_un);
-        }
-
-        client->sa = malloc(ai->ai_addrlen);
-        if ( ! client->sa ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                prelude_inet_freeaddrinfo(ai);
+        if ( uname(&uts) < 0 ) {
+                log(LOG_ERR, "uname returned an error.\n");
                 return -1;
         }
 
-        client->sa_len = ai->ai_addrlen;
-        client->sa->sa_family = ai->ai_family;
+        idmef_analyzer_set_ostype(client->analyzer, idmef_string_new_dup(uts.sysname));
+	idmef_analyzer_set_osversion(client->analyzer, idmef_string_new_dup(uts.release));
 
-        if ( ai->ai_family != AF_UNIX )
-                memcpy(client->sa, ai->ai_addr, ai->ai_addrlen);
-        else {
-                struct sockaddr_un *un = (struct sockaddr_un *) client->sa;
-                prelude_get_socket_filename(un->sun_path, sizeof(un->sun_path), port);
+        process = idmef_analyzer_new_process(client->analyzer);
+        if ( ! process ) {
+                log(LOG_ERR, "cannot create process field of analyzer\n");
+                return -1;
         }
-                
-        prelude_inet_freeaddrinfo(ai);
+
+	idmef_process_set_pid(process, getpid());
+
+        ret = prelude_get_file_name_and_path(program, &name, &path);
+        if ( ret < 0 )
+                return -1;
+        
+        if ( name ) 
+                idmef_process_set_name(process, idmef_string_new_ref(name));
+
+        if ( path )
+                idmef_process_set_path(process, idmef_string_new_ref(path));
+        
+        return 0;
+}
+
+
+
+
+static int set_node_address_category(void **context, prelude_option_t *opt, const char *arg) 
+{
+        idmef_address_category_t category;
+        prelude_client_t *ptr = *context;
+
+        category = idmef_address_category_to_numeric(arg);
+        if ( category < 0 )
+                return -1;
+        
+        idmef_address_set_category(ptr->address, category);
 
         return 0;
 }
 
 
 
-/*
- * function called back when a connection timer expire.
- */
-
-void prelude_client_destroy(prelude_client_t *client) 
+static int set_node_address_vlan_num(void **context, prelude_option_t *opt, const char *arg) 
 {
-	free(client->sa);
-        close_client_fd(client);
+        prelude_client_t *ptr = *context;
 
-        if ( client->saddr )
-                free(client->saddr);
-        
-        free(client->daddr);
-        free(client);
+        idmef_address_set_vlan_num(ptr->address, atoi(arg));
+
+        return 0;
+}
+
+
+
+static int set_node_address_vlan_name(void **context, prelude_option_t *opt, const char *arg) 
+{
+        prelude_client_t *ptr = *context;
+
+        idmef_address_set_vlan_name(ptr->address, idmef_string_new_dup(arg));
+
+        return 0;
+}
+
+
+
+static int set_node_address_address(void **context, prelude_option_t *opt, const char *arg) 
+{
+        prelude_client_t *ptr = *context;
+
+        idmef_address_set_address(ptr->address, idmef_string_new_dup(arg));
+
+        return 0;
 }
 
 
 
 
-prelude_client_t *prelude_client_new(const char *addr, uint16_t port) 
+static int set_node_address_netmask(void **context, prelude_option_t *opt, const char *arg) 
 {
-        int ret;
+        prelude_client_t *ptr = *context;
+
+        idmef_address_set_netmask(ptr->address, idmef_string_new_dup(arg));
+
+        return 0;
+}
+
+
+
+
+static int set_node_address(void **context, prelude_option_t *opt, const char *arg) 
+{
+        idmef_node_t *node;
+        prelude_client_t *ptr = *context;
+        
+        node = idmef_analyzer_new_node(ptr->analyzer);
+        if ( ! node )
+                return -1;
+
+        ptr->address = idmef_node_new_address(node);
+        if ( ! ptr->address )
+                return -1;
+
+        return 0;
+}
+
+
+
+
+static int set_node_category(void **context, prelude_option_t *opt, const char *arg) 
+{
+        idmef_node_t *node;
+        idmef_node_category_t category;
+        prelude_client_t *ptr = *context;
+
+        category = idmef_node_category_to_numeric(arg);
+        if ( category < 0 )
+                return -1;
+        
+        node = idmef_analyzer_new_node(ptr->analyzer);
+        if ( ! node )
+                return -1;
+        
+        idmef_node_set_category(node, category);
+
+        return 0;
+}
+
+
+
+static int set_node_location(void **context, prelude_option_t *opt, const char *arg) 
+{
+        idmef_node_t *node;
+        prelude_client_t *ptr = *context;
+
+        node = idmef_analyzer_new_node(ptr->analyzer);
+        if ( ! node )
+                return -1;
+
+        idmef_node_set_location(node, idmef_string_new_dup(arg));
+
+        return 0;
+}
+
+
+
+static int set_node_name(void **context, prelude_option_t *opt, const char *arg) 
+{
+        idmef_node_t *node;
+        prelude_client_t *ptr = *context;
+
+        node = idmef_analyzer_new_node(ptr->analyzer);
+        if ( ! node )
+                return -1;
+
+        idmef_node_set_name(node, idmef_string_new_dup(arg));
+
+        return 0;
+}
+
+
+
+
+static int set_configuration_file(void **context, prelude_option_t *opt, const char *arg) 
+{
+        prelude_client_t *ptr = *context;
+
+        ptr->config_filename = strdup(arg);
+        if ( ! ptr->config_filename )
+                return -1;
+        
+        return 0;
+}
+
+
+
+
+static int set_name(void **context, prelude_option_t *opt, const char *arg)
+{
+        prelude_client_t *ptr = *context;
+        
+        if ( ptr->name )
+                free(ptr->name);
+        
+        ptr->name = strdup(arg);
+        if ( ! ptr->name )
+                return -1;
+        
+        return 0;
+}
+
+
+
+static int set_manager_addr(void **context, prelude_option_t *opt, const char *arg)
+{
+        prelude_client_t *ptr = *context;
+
+        ptr->manager_list = prelude_connection_mgr_new(ptr, arg);
+
+        return (ptr->manager_list) ? 0 : -1;
+}
+
+
+
+static int set_heartbeat_interval(void **context, prelude_option_t *opt, const char *arg)
+{
+        prelude_client_t *ptr = *context;
+        
+        setup_heartbeat_timer(ptr, atoi(arg));
+        timer_reset(&ptr->heartbeat_timer);
+        
+        return 0;
+}
+
+
+
+static void get_this_option(prelude_client_t *client, prelude_option_t *opt, int argc, char **argv)
+{
+        int old_flags;
+        void *context = client;
+        
+        prelude_option_set_warnings(0, &old_flags);
+        prelude_option_parse_arguments(&context, opt, NULL, argc, argv);
+        prelude_option_set_warnings(old_flags, NULL);
+}
+
+
+
+
+static void setup_options(prelude_client_t *client, int argc, char **argv)
+{
+        prelude_option_t *opt;
+        
+        prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "heartbeat-interval",
+                           "Number of minutes between two heartbeat", required_argument,
+                           set_heartbeat_interval, NULL);
+
+        
+        if ( client->capability & CAPABILITY_SEND ) {
+                 prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "manager-addr",
+                                    "Address where manager is listening (addr:port)",
+                                    required_argument, set_manager_addr, NULL);
+        }
+        
+        opt = prelude_option_new(NULL);
+        prelude_option_add(opt, CLI_HOOK|CFG_HOOK, 0, "analyzer-name",
+                                 "Name for this analyzer", required_argument, set_name, NULL);
+
+        prelude_option_add(opt, CLI_HOOK|CFG_HOOK, 0, "config-file",
+                           "Configuration file for this analyzer", required_argument, set_configuration_file, NULL);
+        get_this_option(client, opt, argc, argv);
+        
+        prelude_option_add(NULL, CFG_HOOK, 0, "node-name",
+                           NULL, required_argument, set_node_name, NULL);
+
+        prelude_option_add(NULL, CFG_HOOK, 0, "node-location",
+                           NULL, required_argument, set_node_location, NULL);
+        
+        prelude_option_add(NULL, CFG_HOOK, 0, "node-category",
+                           NULL, required_argument, set_node_category, NULL);
+        
+        opt = prelude_option_add(NULL, CFG_HOOK, 0, "node-address",
+                                 NULL, required_argument, set_node_address, NULL);
+        
+        prelude_option_add(opt, CFG_HOOK, 0, "address",
+                           NULL, required_argument, set_node_address_address, NULL);
+
+        prelude_option_add(opt, CFG_HOOK, 0, "netmask",
+                           NULL, required_argument, set_node_address_netmask, NULL);
+
+        prelude_option_add(opt, CFG_HOOK, 0, "category",
+                           NULL, required_argument, set_node_address_category, NULL);
+
+        prelude_option_add(opt, CFG_HOOK, 0, "vlan-name",
+                           NULL, required_argument, set_node_address_vlan_name, NULL);
+
+        prelude_option_add(opt, CFG_HOOK, 0, "vlan-num",
+                           NULL, required_argument, set_node_address_vlan_num, NULL);
+}
+
+
+static int create_heartbeat_msgbuf(prelude_client_t *client)
+{
+        client->msgbuf = prelude_msgbuf_new(client);
+        if ( ! client->msgbuf )
+                return -1;
+
+        return 0;
+}
+
+
+
+
+prelude_client_t *prelude_client_new(prelude_client_capability_t capability)
+{
         prelude_client_t *new;
         
-        
-        signal(SIGPIPE, SIG_IGN);
-
-        new = malloc(sizeof(*new));
-        if (! new )
-                return NULL;
-        
-        ret = resolve_addr(new, addr, port);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't resolve %s.\n", addr);
+        new = calloc(1, sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
                 return NULL;
         }
+
+        new->capability = capability;
         
-        new->saddr = NULL;
-        new->sport = 0;
-        new->daddr = strdup(addr);
-        new->dport = port;
-        new->type = PRELUDE_CLIENT_TYPE_OTHER;
-        new->state = 0;
-                        
         return new;
 }
 
 
 
-
-void prelude_client_set_fd(prelude_client_t *client, prelude_io_t *fd) 
-{
-        close_client_fd(client);
-        client->fd = fd;
-
-        /*
-         * The caller is responssible for fd closing/destruction.
-         * Unless it specify otherwise using prelude_client_set_state().
-         */
-        client->state &= ~PRELUDE_CLIENT_OWN_FD;
-}
-
-
-
-
-int prelude_client_connect(prelude_client_t *client) 
+int prelude_client_init(prelude_client_t *new, const char *sname, const char *config, int argc, char **argv)
 {
         int ret;
-        prelude_msg_t *msg;
+        void *context = new;
 
-        client->state &= ~PRELUDE_CLIENT_CONNECTED;
-        
-        client->fd = prelude_io_new();
-        if ( ! client->fd ) 
-                return -1;
-        
-        ret = do_connect(client);
-        if ( ret < 0 ) {
-                prelude_io_destroy(client->fd);
+        new->name = strdup(sname);
+        new->config_filename = strdup(config);
+
+        new->unique_ident = prelude_ident_new();
+        if ( ! new->unique_ident ) {
+                log(LOG_ERR, "memory exhausted.\n");
                 return -1;
         }
-        
-        msg = prelude_msg_new(1, sizeof(client->type), PRELUDE_MSG_CLIENT_TYPE, 0);
-        if ( ! msg )
-                goto err;
 
-        prelude_msg_set(msg, client->type, 0, NULL);
-        ret = prelude_msg_write(msg, client->fd);
-        prelude_msg_destroy(msg);
-        
-        if ( ret < 0 ) 
-                goto err;
+        new->analyzer = idmef_analyzer_new();
+        if ( ! new->analyzer ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return -1;
+        }
                 
-        ret = prelude_client_ident_send(client->fd, client->type);
-        if ( ret < 0 )
-                goto err;
+        setup_options(new, argc, argv);
 
-        msg = prelude_option_wide_get_msg();
-        if ( msg ) {
-                ret = prelude_msg_write(msg, client->fd);
+        if ( new->capability & CAPABILITY_SEND ) {
+                ret = prelude_client_ident_init(new, &new->analyzerid);
                 if ( ret < 0 )
-                        goto err;
+                        return -1;
         }
         
-        client->state |= PRELUDE_CLIENT_OWN_FD;
-        client->state |= PRELUDE_CLIENT_CONNECTED;
-        
-        return ret;
-        
- err:
-        prelude_io_close(client->fd);
-        prelude_io_destroy(client->fd);
-        
-        return ret;
-}
-
-
-
-
-void prelude_client_close(prelude_client_t *client) 
-{
-        close_client_fd(client);
-}
-
-
-
-
-int prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg) 
-{
-        ssize_t ret;
-        
-        if ( ! (client->state & PRELUDE_CLIENT_CONNECTED) )
-                return -1;
-
-        ret = prelude_msg_write(msg, client->fd);
-        if ( ret < 0 || (ret = is_tcp_connection_still_established(client->fd)) < 0 ) {
-                log(LOG_ERR, "could not send message to Manager.\n");
-                handle_connection_breakage(client);
-        }
-        
-        return ret;
-}
-
-
-
-/**
- * prelude_client_get_fd:
- * @client: Pointer to a client object.
- *
- * Returns: A pointer to a #prelude_io_t object used for the
- * communication with the client.
- */
-prelude_io_t *prelude_client_get_fd(prelude_client_t *client) 
-{
-        return client->fd;
-}
-
-
-
-
-/**
- * prelude_client_get_saddr:
- * @client: Pointer to a client object.
- *
- *
- * Returns: the source address used to connect, or NULL
- * if an error occured.
- */
-const char *prelude_client_get_saddr(prelude_client_t *client) 
-{
-        return client->saddr;
-}
-
-
-
-/**
- * prelude_client_get_daddr:
- * @client: Pointer to a client object.
- *
- *
- * Returns: the destination address used to connect.
- */
-const char *prelude_client_get_daddr(prelude_client_t *client) 
-{
-        return client->daddr;
-}
-
-
-
-/**
- * prelude_client_get_sport:
- * @client: Pointer to a client object.
- *
- *
- * Returns: the source port used to connect.
- */
-uint16_t prelude_client_get_sport(prelude_client_t *client) 
-{
-        return client->sport;
-}
-
-
-
-/**
- * prelude_client_get_sport:
- * @client: Pointer to a client object.
- *
- *
- * Returns: the destination port used to connect.
- */
-uint16_t prelude_client_get_dport(prelude_client_t *client) 
-{
-        return client->dport;
-}
-
-
-
-/**
- * prelude_client_is_alive:
- * @client: Pointer to a client object.
- *
- * Returns: 0 if the connection associated with @client is alive,
- * -1 if it is not.
- */
-int prelude_client_is_alive(prelude_client_t *client) 
-{
-        return (client->state & PRELUDE_CLIENT_CONNECTED) ? 0 : -1;
-}
-
-
-
-void prelude_client_set_type(prelude_client_t *client, int type) 
-{
-        client->type = type;
-}
-
-
-
-int prelude_client_get_type(prelude_client_t *client) 
-{
-        return client->type;
-}
-
-
-
-
-void prelude_client_set_state(prelude_client_t *client, int state) 
-{
-        client->state = state;
-}
-
-
-
-
-int prelude_client_get_state(prelude_client_t *client)
-{
-        return client->state;
-}
-
-
-
-
-ssize_t prelude_client_forward(prelude_client_t *client, prelude_io_t *src, size_t count) 
-{
-        ssize_t ret;
-
-        if ( ! (client->state & PRELUDE_CLIENT_CONNECTED) )
+        ret = prelude_option_parse_arguments(&context, NULL, new->config_filename, argc, argv);
+        if ( ret == prelude_option_end )
                 return -1;
         
-        ret = prelude_io_forward(client->fd, src, count);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "error forwarding message to Manager.\n");
-                handle_connection_breakage(client);
+        if ( ret == prelude_option_error ) {
+                log(LOG_INFO, "%s: error processing sensor options.\n", new->config_filename);
+                idmef_analyzer_destroy(new->analyzer);
+                return -1;
+        }
+        
+        ret = fill_client_infos(new, argv[0]);
+        if ( ret < 0 )
+                return -1;
+        
+        setup_heartbeat_timer(new, DEFAULT_HEARTBEAT_INTERVAL);
+        timer_init(&new->heartbeat_timer);
+
+        ret = create_heartbeat_msgbuf(new);
+        if ( ret < 0 )
+                return -1;
+                
+        if ( new->manager_list )
+                heartbeat_expire_cb(new);
+        
+        return 0;
+}
+
+
+
+
+idmef_analyzer_t *prelude_client_get_analyzer(prelude_client_t *client)
+{
+        return client->analyzer;
+}
+
+
+
+uint64_t prelude_client_get_analyzerid(prelude_client_t *client)
+{
+        return client->analyzerid;
+}
+
+
+
+const char *prelude_client_get_name(prelude_client_t *client)
+{
+        return client->name;
+}
+
+
+
+void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
+{
+        if ( client->flags & PRELUDE_CLIENT_ASYNC_SEND )
+                prelude_connection_mgr_broadcast_async(client->manager_list, msg);
+        else
+                prelude_connection_mgr_broadcast(client->manager_list, msg);
+}
+
+
+
+void prelude_client_set_uid(prelude_client_t *client, uid_t uid)
+{
+        client->uid = uid;
+}
+
+
+
+uid_t prelude_client_get_uid(prelude_client_t *client)
+{
+        return client->uid;
+}
+
+
+
+void prelude_client_set_gid(prelude_client_t *client, gid_t gid)
+{
+        client->gid = gid;
+}
+
+
+
+gid_t prelude_client_get_gid(prelude_client_t *client)
+{
+        return client->gid;
+}
+
+
+
+prelude_connection_mgr_t *prelude_client_get_manager_list(prelude_client_t *client)
+{
+        return client->manager_list;
+}
+
+
+
+void prelude_client_set_heartbeat_cb(prelude_client_t *client, void (*cb)(prelude_client_t *client))
+{
+        client->heartbeat_cb = cb;
+}
+
+
+
+void prelude_client_set_name(prelude_client_t *client, const char *name)
+{
+        if ( client->name )
+                free(client->name);
+
+        client->name = strdup(name);
+}
+
+
+
+
+void prelude_client_destroy(prelude_client_t *client)
+{        
+        if ( client->name )
+                free(client->name);
+
+        if ( client->analyzer )
+                idmef_analyzer_destroy(client->analyzer);
+
+        if ( client->config_filename )
+                free(client->config_filename);
+
+        if ( client->manager_list )
+                prelude_connection_mgr_destroy(client->manager_list);
+
+        free(client);
+}
+
+
+
+int prelude_client_set_flags(prelude_client_t *client, int flags)
+{
+        int ret = 0;
+        
+        if ( flags & PRELUDE_CLIENT_ASYNC_SEND ) {
+                printf("Async send requested.\n");
+                ret = prelude_async_init();
+        }
+        
+        if ( flags & PRELUDE_CLIENT_ASYNC_TIMER ) {
+                printf("Async timer requested.\n");
+                ret = prelude_async_init();
+                prelude_async_set_flags(PRELUDE_ASYNC_TIMER);       
         }
 
         return ret;
 }
 
+
+
+
+int prelude_client_get_flags(prelude_client_t *client)
+{
+        return client->flags;
+}
+
+
+
+void prelude_client_set_capability(prelude_client_t *client, prelude_client_capability_t capability)
+{
+        client->capability = capability;
+}
+
+
+
+prelude_client_capability_t prelude_client_get_capability(prelude_client_t *client)
+{
+        return client->capability;
+}
+
+
+
+void prelude_client_get_auth_filename(prelude_client_t *client, char *buf, size_t size) 
+{
+        snprintf(buf, size, AUTH_DIR "/%s.%d.%d", client->name, (int) client->uid, (int) client->gid);
+}
+
+
+
+void prelude_client_get_ssl_cert_filename(prelude_client_t *client, char *buf, size_t size) 
+{
+        snprintf(buf, size, SSL_DIR "/%s-cert.%d.%d", client->name, (int) client->uid, (int) client->gid);
+}
+
+
+void prelude_client_get_ssl_key_filename(prelude_client_t *client, char *buf, size_t size) 
+{
+        snprintf(buf, size, SSL_DIR "/%s-key.%d.%d", client->name, (int) client->uid, (int) client->gid);
+}
+
+
+void prelude_client_get_backup_filename(prelude_client_t *client, char *buf, size_t size) 
+{
+        snprintf(buf, size, PRELUDE_SPOOL_DIR "/%s.%d.%d", client->name, (int) client->uid, (int) client->gid);
+}
+
+
+
+prelude_ident_t *prelude_client_get_unique_ident(prelude_client_t *client)
+{
+        return client->unique_ident;
+}

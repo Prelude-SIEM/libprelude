@@ -389,7 +389,7 @@ idmef_object_t *idmef_object_new_fast(const char *buffer)
 {
         int ret;
 	idmef_object_t *object;
-
+        
 	ret = idmef_object_create(buffer, &object);
 	if ( ret < 0 )
 		return NULL;
@@ -448,7 +448,7 @@ idmef_object_t *idmef_object_new(const char *format, ...)
 
 
 
-idmef_object_type_t idmef_object_get_object_type(idmef_object_t *object)
+idmef_object_type_t idmef_object_get_type(idmef_object_t *object)
 {
         /*
          * FIXME ?
@@ -591,7 +591,7 @@ int idmef_object_make_child(idmef_object_t *object, const char *child_name, int 
 		return -3;
 	}
 
-	child = idmef_type_find_child(idmef_object_get_object_type(object), child_name);
+	child = idmef_type_find_child(idmef_object_get_type(object), child_name);
 	if ( child < 0 )
 		return -4;
 
@@ -601,7 +601,7 @@ int idmef_object_make_child(idmef_object_t *object, const char *child_name, int 
 	/* current drive^H^H^H^H^Hname is no longer valid */
 	object->name[0] = '\0'; 
 
-	type = idmef_object_get_object_type(object);
+	type = idmef_object_get_type(object);
 
 	object->depth++;
 

@@ -246,7 +246,7 @@ static int check_account(const char *authfile,
  * If the authentication file does not exist, it is
  * created with permission 600.
  */
-static FILE *open_auth_file(const char *filename, uid_t uid) 
+static FILE *open_auth_file(const char *filename, uid_t uid, gid_t gid) 
 {
         int ret;
         FILE *fd;
@@ -263,7 +263,7 @@ static FILE *open_auth_file(const char *filename, uid_t uid)
                 return NULL;
         }
 
-        ret = fchown(fileno(fd), uid, -1);
+        ret = fchown(fileno(fd), uid, gid);
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't change %s to UID %d.\n", filename, uid);
                 fclose(fd);
@@ -359,7 +359,7 @@ static int account_already_exist(FILE *fd, const char *nuser)
         
         rewind(fd);
         while (auth_read_entry(fd, &line, &user, &pass) == 0 ) {
-
+                
                 if ( strcmp(nuser, user) == 0 ) {
                         fprintf(stderr, "username %s already exist.\n", nuser);
                         return -1;
@@ -445,13 +445,13 @@ static int ask_account_infos(FILE *fd, char **user, char **pass)
  *
  * Returns: 0 on sucess, -1 otherwise
  */
-int prelude_auth_create_account(const char *filename, char **user, char **pass, int crypted, uid_t uid) 
+int prelude_auth_create_account(const char *filename, char **user, char **pass, int crypted, uid_t uid, gid_t gid) 
 {
         int ret;
         FILE *fd;
         char *cpass, salt[3];
 
-        fd = open_auth_file(filename, uid);
+        fd = open_auth_file(filename, uid, gid);
         if ( ! fd ) 
                 return -1;
 
@@ -491,13 +491,13 @@ int prelude_auth_create_account(const char *filename, char **user, char **pass, 
  * Returns: 0 on sucess, -1 otherwise
  */
 int prelude_auth_create_account_noprompt(const char *filename, const char *user,
-                                         const char *pass, int crypted, uid_t uid) 
+                                         const char *pass, int crypted, uid_t uid, gid_t gid) 
 {
         FILE *fd;
         char salt[2];
         const char *cpass;
         
-        fd = open_auth_file(filename, uid);
+        fd = open_auth_file(filename, uid, gid);
         if ( ! fd ) 
                 return -1;
 
@@ -539,7 +539,7 @@ int prelude_auth_read_entry(const char *authfile, const char *wanted_user,
 {
         FILE *file;
         int line = 0, ret;
-        
+
         file = fopen(authfile, "r");
         if ( ! file ) {
                 if ( errno == ENOENT )

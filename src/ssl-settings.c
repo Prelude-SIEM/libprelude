@@ -47,7 +47,6 @@
 #include "ssl-settings.h"
 #include "prelude-log.h"
 #include "prelude-io.h"
-#include "prelude-path.h"
 
 
 static void ask_keysize(int *keysize) 

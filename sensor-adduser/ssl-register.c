@@ -52,7 +52,7 @@
 #include "ssl-register.h"
 #include "ssl-settings.h"
 #include "ssl-gencrypto.h"
-#include "prelude-path.h"
+#include "prelude-client.h"
 #include "ssl-registration-msg.h"
 
 
@@ -61,15 +61,15 @@
 
 
 
-static int send_own_certificate(prelude_io_t *pio, des_key_schedule *skey1,
-                                des_key_schedule *skey2, int expire, int keysize, uid_t uid) 
+static int send_own_certificate(prelude_client_t *client, const char *sname, prelude_io_t *pio,
+                                des_key_schedule *skey1, des_key_schedule *skey2, int expire, int keysize, uid_t uid) 
 {
         int ret;
         char filename[256];
 
-        prelude_get_ssl_key_filename(filename, sizeof(filename));
+        prelude_client_get_ssl_key_filename(client, filename, sizeof(filename));
         
-        ret = prelude_ssl_gen_crypto(keysize, expire, filename, 0, uid);
+        ret = prelude_ssl_gen_crypto(prelude_client_get_analyzerid(client), sname, keysize, expire, filename, 0, uid);
 	if ( ret < 0 ) {
 		fprintf(stderr, "\nRegistration failed\n");
 		return -1;
@@ -88,7 +88,8 @@ static int send_own_certificate(prelude_io_t *pio, des_key_schedule *skey1,
 
 
 
-static int recv_manager_certificate(prelude_io_t *pio, des_key_schedule *skey1,
+static int recv_manager_certificate(prelude_client_t *client,
+                                    prelude_io_t *pio, des_key_schedule *skey1,
                                     des_key_schedule *skey2, uid_t uid)  
 {
         uint16_t len;
@@ -117,7 +118,7 @@ static int recv_manager_certificate(prelude_io_t *pio, des_key_schedule *skey1,
 	/*
          * save Manager certificate
          */
-        prelude_get_ssl_cert_filename(filename, sizeof(filename));        
+        prelude_client_get_ssl_cert_filename(client, filename, sizeof(filename));        
 
         ret = prelude_ssl_save_cert(filename, cert, certlen, uid);
         if ( ret < 0 ) {
@@ -204,7 +205,7 @@ static int tell_ssl_usage(prelude_io_t *fd)
 
 
 
-int ssl_add_certificate(prelude_io_t *fd, char *pass, size_t size, uid_t uid)
+int ssl_add_certificate(prelude_client_t *client, const char *sname, prelude_io_t *fd, char *pass, size_t size, uid_t uid)
 {
 	int ret;
         char filename[1024];
@@ -235,19 +236,19 @@ int ssl_add_certificate(prelude_io_t *fd, char *pass, size_t size, uid_t uid)
         ask_configuration(&keysize, &expire); 
 
 
-        ret = send_own_certificate(fd, &skey1, &skey2, expire, keysize, uid);
+        ret = send_own_certificate(client, sname, fd, &skey1, &skey2, expire, keysize, uid);
         if ( ret < 0 ) {
                 fprintf(stderr, "Error sending own certificate - Registration failed.\n");
                 return -1;
         }
 
-        ret = recv_manager_certificate(fd, &skey1, &skey2, uid);
+        ret = recv_manager_certificate(client, fd, &skey1, &skey2, uid);
         if ( ret < 0 ) {
                 fprintf(stderr, "Error receiving Manager certificate - Registration failed.\n");
                 /*
                  * delete certificate we created...
                  */
-                prelude_get_ssl_key_filename(filename, sizeof(filename));
+                prelude_client_get_ssl_key_filename(client, filename, sizeof(filename));
                 unlink(filename);
                 return -1;
         }

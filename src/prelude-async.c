@@ -43,13 +43,15 @@
 static PRELUDE_LIST_HEAD(joblist);
 
 
+static int async_init_ret = -1;
+static int stop_processing = 0;
 static int async_flags = PRELUDE_ASYNC_TIMER;
 
 
 static pthread_t thread;
-static pthread_cond_t cond;
-static pthread_mutex_t mutex;
-static int stop_processing = 0;
+static pthread_once_t init_once = PTHREAD_ONCE_INIT;
+static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
 
@@ -202,10 +204,24 @@ static void prelude_async_exit(void)
 
 
 
+static void init_async(void)
+{        
+        async_init_ret = pthread_create(&thread, NULL, async_thread, NULL);
+        if ( async_init_ret < 0 )
+                return;        
+
+        atexit(prelude_async_exit);
+}
+
+
+
 
 void prelude_async_set_flags(int flags) 
 {
         async_flags = flags;
+
+        if ( flags & PRELUDE_ASYNC_TIMER )
+                pthread_cond_signal(&cond);
 }
 
 
@@ -226,18 +242,8 @@ int prelude_async_get_flags(void)
  */
 int prelude_async_init(void) 
 {
-        int ret;
-        
-        pthread_mutex_init(&mutex, NULL);
-        pthread_cond_init(&cond, NULL);
-        
-        ret = pthread_create(&thread, NULL, async_thread, NULL);
-        if ( ret < 0 ) {
-                pthread_cond_destroy(&cond);
-                pthread_mutex_destroy(&mutex);
-        }
-
-        return atexit(prelude_async_exit);
+        pthread_once(&init_once, init_async);
+        return async_init_ret;
 }
 
 

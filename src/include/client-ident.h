@@ -24,10 +24,12 @@
 #ifndef _LIBPRELUDE_CLIENT_IDENT_H
 #define _LIBPRELUDE_CLIENT_IDENT_H
 
-int prelude_client_ident_send(prelude_io_t *fd, int client_type);
+#include "prelude-client.h"
 
-int prelude_client_ident_init(const char *sname);
 
-void prelude_client_set_analyzer_id(uint64_t id);
+int prelude_client_ident_send(uint64_t analyzerid, prelude_io_t *fd);
+
+int prelude_client_ident_init(prelude_client_t *client, uint64_t *analyzerid);
+
 
 #endif /* _LIBPRELUDE_CLIENT_IDENT_H */

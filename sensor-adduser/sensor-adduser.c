@@ -36,8 +36,8 @@
 #include <time.h>
 
 #include "common.h"
+#include "prelude-client.h"
 #include "prelude-message-id.h"
-#include "prelude-path.h"
 #include "prelude-log.h"
 #include "prelude-io.h"
 #include "prelude-auth.h"
@@ -49,18 +49,17 @@
 #include "client-ident.h"
 
 
+static int gid_set = 0;
 static int uid_set = 0;
-static uid_t sensor_uid;
 static uint16_t port = 5553;
 static const char *addr = NULL;
-static const char *sensor_name = NULL;
+static prelude_client_t *client;
 
 
 
 static int set_sensor_name(void **context, prelude_option_t *opt, const char *optarg) 
 {
-        sensor_name = strdup(optarg);
-        prelude_set_program_name(sensor_name);
+        prelude_client_set_name(client, optarg);
         return prelude_option_success;
 }
 
@@ -69,8 +68,16 @@ static int set_sensor_name(void **context, prelude_option_t *opt, const char *op
 static int set_sensor_uid(void **context, prelude_option_t *opt, const char *optarg) 
 {
         uid_set = 1;
-        sensor_uid = atoi(optarg);
-        prelude_set_program_userid(sensor_uid);
+        prelude_client_set_uid(client, atoi(optarg));
+        return prelude_option_success;
+}
+
+
+
+static int set_sensor_gid(void **context, prelude_option_t *opt, const char *optarg)
+{
+        gid_set = 1;
+        prelude_client_set_gid(client, atoi(optarg));
         return prelude_option_success;
 }
 
@@ -248,9 +255,12 @@ static int handle_argument(int argc, char **argv)
         prelude_option_add(NULL, CLI_HOOK, 's', "sensorname", "Name of the sensor to register",
                            required_argument, set_sensor_name, NULL);
         
-        prelude_option_add(NULL, CLI_HOOK, 'u', "uid", "UserID used by the sensor to register",
+        prelude_option_add(NULL, CLI_HOOK, 'u', "uid", "Unix UID used by the sensor to register",
                            required_argument, set_sensor_uid, NULL);
 
+        prelude_option_add(NULL, CLI_HOOK, 'g', "gid", "Unix GID used by the sensor to register",
+                           required_argument, set_sensor_gid, NULL);
+        
         prelude_option_add(NULL, CLI_HOOK, 'm', "manager-addr", "Address where the Prelude Manager is listening",
                            required_argument, set_manager_addr, NULL);
         
@@ -263,13 +273,17 @@ static int handle_argument(int argc, char **argv)
                 return -1;
         }
 
-        if ( ! sensor_name ) {
+        if ( ! prelude_client_get_name(client) ) {
                 log(LOG_INFO, "No sensor name specified.\n");
                 return -1;
         }
 
-        if ( ! uid_set ) {
-                sensor_uid = getuid();
+        if ( ! uid_set || ! gid_set ) {
+                if ( ! uid_set )
+                        prelude_client_set_uid(client, getuid());
+
+                if ( ! gid_set )
+                        prelude_client_set_gid(client, getgid());
                 
                 log(LOG_INFO,
                     "\n\n*** WARNING ***\n"
@@ -279,7 +293,7 @@ static int handle_argument(int argc, char **argv)
                     "will be created using the current UID which is %u.\n\n"
 
                     "Your sensor won't start unless it is running under this UID.\n\n"
-                    "[Please press enter if this is what you plan to do]\n", sensor_uid);
+                    "[Please press enter if this is what you plan to do]\n", prelude_client_get_uid(client));
 
                 while ( getchar() != '\n' );
         }
@@ -329,7 +343,7 @@ static uint32_t time_hash(void)
 
 
 
-static uint64_t generate_sensor_ident(const char *hostname, const char *sensorname) 
+static uint64_t generate_analyzerid(const char *hostname, const char *sensorname) 
 {
         union {
                 uint64_t val64;
@@ -351,9 +365,9 @@ static int register_sensor_ident(const char *sname, uint64_t *ident)
         FILE *fd;
         char buf[256], *ptr = buf, *identptr, *name;
         
-        fd = fopen(SENSORS_IDENT_FILE, "a+");
+        fd = fopen(PRELUDE_IDENT_FILE, "a+");
         if ( ! fd ) {
-                log(LOG_ERR, "error opening %s for writing.\n", SENSORS_IDENT_FILE);
+                log(LOG_ERR, "error opening %s for writing.\n", PRELUDE_IDENT_FILE);
                 return -1;
         }
         
@@ -401,12 +415,14 @@ static int register_sensor_ident(const char *sname, uint64_t *ident)
 
 
 
-static int setup_sensor_files(const char *hostname, uint64_t sensor_ident) 
+static int setup_sensor_files(const char *hostname, uint64_t analyzerid) 
 {
         int fd, ret;
         char buf[256];
+        const char *sname;
 
-        prelude_get_backup_filename(buf, sizeof(buf));
+        sname = prelude_client_get_name(client);
+        prelude_client_get_backup_filename(client, buf, sizeof(buf));
 
         /*
          * The user may have changed permission, and we don't want
@@ -418,18 +434,19 @@ static int setup_sensor_files(const char *hostname, uint64_t sensor_ident)
                 return -1;
         }
 
-        ret = fchown(fd, sensor_uid, -1);
+        ret = fchown(fd, prelude_client_get_uid(client), prelude_client_get_gid(client));
         if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't chown %s to UID %d.\n", buf, sensor_uid);
+                log(LOG_ERR, "could not chown %s to UID %d GID %d.\n", buf,
+                    prelude_client_get_uid(client), prelude_client_get_gid(client));
                 return -1;
         }
 
-        ret = register_sensor_ident(sensor_name, &sensor_ident);
+        ret = register_sensor_ident(sname, &analyzerid);
         if ( ret == 0 )
-                fprintf(stderr, "Allocated ident for %s@%s: %llu.\n", sensor_name, hostname, sensor_ident);
+                fprintf(stderr, "Allocated ident for %s@%s: %llu.\n", sname, hostname, analyzerid);
 
         else if ( ret == 1)
-                fprintf(stderr, "Using already allocated ident for %s@%s: %llu.\n", sensor_name, hostname, sensor_ident);
+                fprintf(stderr, "Using already allocated ident for %s@%s: %llu.\n", sname, hostname, analyzerid);
 
         return 0;
 }
@@ -443,10 +460,14 @@ int main(int argc, char **argv)
         int ret;
         prelude_io_t *fd;
         struct in_addr in;
+        uint64_t analyzerid;
         char buf[256], *pass;
-        uint64_t sensor_ident;
         int have_ssl = 0, have_plaintext = 0;
 
+        client = prelude_client_new(0);
+        if ( ! client )
+                return -1;
+        
         ret = handle_argument(argc, argv);
         if ( ret < 0 )
                 return -1;
@@ -484,22 +505,18 @@ int main(int argc, char **argv)
                 return -1;
 
         gethostname(buf, sizeof(buf));
-        sensor_ident = generate_sensor_ident(sensor_name, buf);
-
-        /*
-         * this will be used for SSL subject generation.
-         */
-        prelude_client_set_analyzer_id(sensor_ident);
+        analyzerid = generate_analyzerid(prelude_client_get_name(client), buf);
         
 #ifdef HAVE_SSL
         if ( have_ssl && strcmp(inet_ntoa(in), "127.0.0.1") != 0 ) {
-                ret = ssl_add_certificate(fd, pass, strlen(pass), sensor_uid);
+                ret = ssl_add_certificate(client, prelude_client_get_name(client),
+                                          fd, pass, strlen(pass), prelude_client_get_uid(client));
                 goto end;
         }
 #endif
 
         if ( have_plaintext ) {
-                ret = create_plaintext_user_account(fd, pass, sensor_uid);
+                ret = create_plaintext_user_account(client, fd, pass);
                 goto end;
         } else {
                 log(LOG_INFO, "couldn't agree on a protocol to use.\n");
@@ -512,7 +529,7 @@ int main(int argc, char **argv)
         if ( ret < 0 )
                 exit(ret);
         
-        exit(setup_sensor_files(buf, sensor_ident));
+        exit(setup_sensor_files(buf, analyzerid));
 }
 
 

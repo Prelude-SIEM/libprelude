@@ -36,6 +36,9 @@ sub	header
 #ifndef _LIBPRELUDE_IDMEF_MESSAGE_WRITE_H
 #define _LIBPRELUDE_IDMEF_MESSAGE_WRITE_H
 
+#include \"prelude-message-buffered.h\"
+
+
 void idmef_write_time(prelude_msgbuf_t *msg, uint8_t tag, idmef_time_t *data);
 ");
 }

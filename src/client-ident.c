@@ -34,38 +34,34 @@
 #include <errno.h>
 
 #include "common.h"
-#include "prelude-path.h"
 #include "prelude-log.h"
 #include "extract.h"
 #include "prelude-io.h"
-#include "prelude-message.h"
 #include "prelude-client.h"
+#include "prelude-message.h"
 #include "prelude-message-id.h"
+
 #include "client-ident.h"
 
 
-static uint64_t sensor_ident = 0;
-static const char *sensor_name = NULL;
-
-
-
-static void file_error(void) 
+static void file_error(prelude_client_t *client) 
 {
         log(LOG_INFO, "\nBasic file configuration does not exist. Please run :\n"
-            "sensor-adduser --sensorname %s --uid %d\n"
+            "sensor-adduser --sensorname %s --uid %d --gid %d\n"
             "program on the sensor host to create an account for this sensor.\n\n"
             
             "Be aware that you should also pass the \"--manager-addr\" option with the\n"
             "manager address as argument. \"sensor-adduser\" should be called for\n"
             "each configured manager address.\n\n", 
-            prelude_get_sensor_name(), prelude_get_program_userid());
+            prelude_client_get_name(client),
+            prelude_client_get_uid(client), prelude_client_get_gid(client));
 
         exit(1);
 }
 
 
 
-static int declare_ident_to_manager(prelude_io_t *fd) 
+static int declare_ident_to_manager(uint64_t analyzerid, prelude_io_t *fd) 
 {
         int ret;
         uint64_t nident;
@@ -75,7 +71,7 @@ static int declare_ident_to_manager(prelude_io_t *fd)
         if ( ! msg )
                 return -1;
 
-        nident = prelude_hton64(sensor_ident);
+        nident = prelude_hton64(analyzerid);
         
         /*
          * send message
@@ -90,37 +86,24 @@ static int declare_ident_to_manager(prelude_io_t *fd)
 
 
 
-
-int prelude_client_ident_send(prelude_io_t *fd, int client_type) 
+int prelude_client_ident_send(uint64_t analyzerid, prelude_io_t *fd) 
 {
-        if ( client_type == PRELUDE_CLIENT_TYPE_OTHER )
-                /*
-                 * generic client, no ident allocation needed.
-                 */
-                return 0;
-        
-        /*
-         * possibly request, or declare ident for sensor.
-         * declare ident 0 for manager.
-         */
-        return declare_ident_to_manager(fd);
+        return declare_ident_to_manager(analyzerid, fd);
 }
 
 
 
 
-int prelude_client_ident_init(const char *sname) 
+int prelude_client_ident_init(prelude_client_t *client, uint64_t *analyzerid) 
 {
         int ret;
         FILE *fd;
         char buf[1024], *name, *ident, *ptr;
         
-        sensor_name = sname;
-
-        fd = fopen(SENSORS_IDENT_FILE, "r");
+        fd = fopen(PRELUDE_IDENT_FILE, "r");
         if ( ! fd ) {
-                log(LOG_ERR, "error opening sensors identity file: %s.\n", SENSORS_IDENT_FILE);
-                file_error();
+                log(LOG_ERR, "error opening sensors identity file: %s.\n", PRELUDE_IDENT_FILE);
+                file_error(client);
                 return -1;
         }
 
@@ -135,32 +118,19 @@ int prelude_client_ident_init(const char *sname)
                 if ( ! ident )
                         break;
 
-                sscanf(ident, "%llu", &sensor_ident);
+                sscanf(ident, "%llu", analyzerid);
                             
-                ret = strcmp(name, sname);
+                ret = strcmp(name, prelude_client_get_name(client));
                 if ( ret == 0 ) {
                         fclose(fd);
                         return 0;
                 }
         }
+                
+        log(LOG_INFO, "No ident configured for sensor %s.\n", prelude_client_get_name(client));
 
-        log(LOG_INFO, "No ident configured for sensor %s.\n", sname);
-        file_error();
+        file_error(client);
+        fclose(fd);
         
         return -1;
-}
-
-
-
-
-uint64_t prelude_client_get_analyzerid(void) 
-{
-        return sensor_ident;
-}
-
-
-
-void prelude_client_set_analyzer_id(uint64_t id) 
-{
-        sensor_ident = id;
 }

@@ -1,9 +1,6 @@
 SUBDIRS = libltdl src sensor-adduser bindings docs
 
-includedir=$(prefix)/libprelude/include
-include_HEADERS=config.h
-
-EXTRA_DIST = COPYING.OpenSSL sensors-default.conf
+EXTRA_DIST = COPYING.OpenSSL client.conf global.conf
 bin_SCRIPTS = $(top_srcdir)/libprelude-config
 
 
@@ -14,20 +11,37 @@ bin_SCRIPTS = $(top_srcdir)/libprelude-config
 # Spool directory for report saving is mode 
 
 install-data-local:
-	$(INSTALL) -d -m 755 $(DESTDIR)$(sensors_spool_dir);
-	$(INSTALL) -d -m 755 $(DESTDIR)$(sensors_config_dir);
-	$(INSTALL) -d -m 755 $(DESTDIR)$(sensors_config_dir)/ssl;
-	$(INSTALL) -d -m 755 $(DESTDIR)$(sensors_config_dir)/plaintext;
-	@if test -f $(DESTDIR)$(sensors_config_dir)/sensors-default.conf; then                                   		\
+	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_spool_dir);
+	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_config_dir);
+	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_config_dir)/default;
+	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_config_dir)/ssl;
+	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_config_dir)/plaintext;
+	@if test -f $(DESTDIR)$(prelude_config_dir)/default/client.conf; then							\
+		echo;														\
 		echo "********************************************************************************";          		\
-                echo;                                                                                             		\
-                echo "$(DESTDIR)$(sensors_config_dir)/sensors-default.conf already exist...";					\
-                echo "Installing default configuration in $(DESTDIR)$(sensors_config_dir)/sensors-default.conf-dist";		\
-                echo;                                                                                             		\
-                echo "********************************************************************************";          		\
-		$(INSTALL) -m 644 $(top_srcdir)/sensors-default.conf $(DESTDIR)$(sensors_config_dir)/sensors-default.conf-dist;\
-        else                                                                                                      		\
-                $(INSTALL) -m 644 $(top_srcdir)/sensors-default.conf $(DESTDIR)$(sensors_config_dir)/;        			\
+                echo;														\
+                echo "$(DESTDIR)$(prelude_config_dir)/default/client.conf already exist...";					\
+                echo "Installing default configuration in $(DESTDIR)$(prelude_config_dir)/default/client.conf-dist";		\
+                echo;														\
+                echo "********************************************************************************";			\
+		echo;														\
+		$(INSTALL) -m 644 $(top_srcdir)/client.conf $(DESTDIR)$(prelude_config_dir)/default/client.conf-dist;		\
+        else															\
+                $(INSTALL) -m 644 $(top_srcdir)/client.conf $(DESTDIR)$(prelude_config_dir)/default;				\
+        fi
+
+	@if test -f $(DESTDIR)$(prelude_config_dir)/default/global.conf; then							\
+		echo;														\
+		echo "********************************************************************************";          		\
+                echo;														\
+                echo "$(DESTDIR)$(prelude_config_dir)/default/global.conf already exist...";					\
+                echo "Installing default configuration in $(DESTDIR)$(prelude_config_dir)/default/global.conf-dist";		\
+                echo;														\
+                echo "********************************************************************************";			\
+		echo;														\
+		$(INSTALL) -m 644 $(top_srcdir)/global.conf $(DESTDIR)$(prelude_config_dir)/default/global.conf-dist;		\
+        else															\
+                $(INSTALL) -m 644 $(top_srcdir)/global.conf $(DESTDIR)$(prelude_config_dir)/default;				\
         fi
 
 

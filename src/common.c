@@ -263,8 +263,8 @@ uint64_t prelude_hton64(uint64_t val)
 int prelude_get_file_name_and_path(const char *str, char **name, char **path)
 {
         int ret = 0;
-	char buf[512], cwd[PATH_MAX], *ptr;
-                
+	char buf[512], cwd[PATH_MAX], *ptr, tmp;
+        
         if ( *str != '/' ) {
                 ret = snprintf(buf, sizeof(buf), "%s/", getcwd(cwd, sizeof(cwd)));
                 if ( ret < 0 || ret >= sizeof(buf) )
@@ -273,13 +273,15 @@ int prelude_get_file_name_and_path(const char *str, char **name, char **path)
         
         ptr = strrchr(str, '/');
         if ( ptr ) {
-                *ptr++ = '\0';
+                tmp = *ptr;
+                *ptr = '\0';
 
                 ret = snprintf(buf + ret, sizeof(buf) - ret, "%s/", str);
                 if ( ret < 0 || ret >= sizeof(buf) )
                         return -1;
-                
-                str = ptr;
+
+                str = ptr + 1;
+                *ptr = tmp;
         }
         
         *name = strdup(str);

@@ -562,9 +562,9 @@ static void _swig_create_magic(CPerlObj *pPerl, SV *sv, const char *name, int (C
 #define  SWIGTYPE_p_f_p_idmef_value_t_p_void__int swig_types[0] 
 #define  SWIGTYPE_p_f_p_void__void swig_types[1] 
 #define  SWIGTYPE_p_f_p_prelude_list_t__void swig_types[2] 
-#define  SWIGTYPE_p_prelude_msg_t swig_types[3] 
-#define  SWIGTYPE_p_f_p_prelude_msgbuf_t__p_prelude_msg_t swig_types[4] 
-#define  SWIGTYPE_p_ssize_t swig_types[5] 
+#define  SWIGTYPE_p_f_p_prelude_client_t__void swig_types[3] 
+#define  SWIGTYPE_p_prelude_msg_t swig_types[4] 
+#define  SWIGTYPE_p_f_p_prelude_msgbuf_t__p_prelude_msg_t swig_types[5] 
 #define  SWIGTYPE_p_size_t swig_types[6] 
 #define  SWIGTYPE_p_idmef_heartbeat_t swig_types[7] 
 #define  SWIGTYPE_p_idmef_target_t swig_types[8] 
@@ -580,64 +580,67 @@ static void _swig_create_magic(CPerlObj *pPerl, SV *sv, const char *name, int (C
 #define  SWIGTYPE_p_idmef_node_t swig_types[18] 
 #define  SWIGTYPE_p_idmef_file_access_t swig_types[19] 
 #define  SWIGTYPE_p_idmef_process_t swig_types[20] 
-#define  SWIGTYPE_p_uint32_t swig_types[21] 
-#define  SWIGTYPE_p_void swig_types[22] 
-#define  SWIGTYPE_p_idmef_source_t swig_types[23] 
-#define  SWIGTYPE_p_idmef_classification_origin_t swig_types[24] 
-#define  SWIGTYPE_p_idmef_criteria swig_types[25] 
-#define  SWIGTYPE_p_idmef_criterion_t swig_types[26] 
-#define  SWIGTYPE_p_idmef_object_value_list_t swig_types[27] 
+#define  SWIGTYPE_p_gid_t swig_types[21] 
+#define  SWIGTYPE_p_uint32_t swig_types[22] 
+#define  SWIGTYPE_p_void swig_types[23] 
+#define  SWIGTYPE_p_idmef_source_t swig_types[24] 
+#define  SWIGTYPE_p_idmef_classification_origin_t swig_types[25] 
+#define  SWIGTYPE_p_idmef_criteria swig_types[26] 
+#define  SWIGTYPE_p_idmef_criterion_t swig_types[27] 
 #define  SWIGTYPE_p_prelude_list_t swig_types[28] 
-#define  SWIGTYPE_p_idmef_time_t swig_types[29] 
-#define  SWIGTYPE_p_idmef_criteria_t swig_types[30] 
-#define  SWIGTYPE_p_idmef_object_value_t swig_types[31] 
+#define  SWIGTYPE_p_idmef_object_value_list_t swig_types[29] 
+#define  SWIGTYPE_p_idmef_time_t swig_types[30] 
+#define  SWIGTYPE_p_idmef_criteria_t swig_types[31] 
 #define  SWIGTYPE_p_idmef_criterion_value_t swig_types[32] 
 #define  SWIGTYPE_p_idmef_value_t swig_types[33] 
 #define  SWIGTYPE_p_idmef_user_t swig_types[34] 
-#define  SWIGTYPE_p_idmef_analyzer_t swig_types[35] 
-#define  SWIGTYPE_p_prelude_msgbuf_t swig_types[36] 
-#define  SWIGTYPE_p_idmef_string_t swig_types[37] 
-#define  SWIGTYPE_p_uint16_t swig_types[38] 
-#define  SWIGTYPE_p_uint64_t swig_types[39] 
-#define  SWIGTYPE_p_idmef_address_t swig_types[40] 
-#define  SWIGTYPE_p_idmef_impact_t swig_types[41] 
-#define  SWIGTYPE_p_idmef_webservice_t swig_types[42] 
-#define  SWIGTYPE_p_idmef_snmpservice_t swig_types[43] 
-#define  SWIGTYPE_p_idmef_service_t swig_types[44] 
-#define  SWIGTYPE_p_idmef_target_decoy_t swig_types[45] 
-#define  SWIGTYPE_p_p_char swig_types[46] 
-#define  SWIGTYPE_p_idmef_impact_type_t swig_types[47] 
-#define  SWIGTYPE_p_idmef_file_fstype_t swig_types[48] 
-#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[49] 
-#define  SWIGTYPE_p_idmef_userid_type_t swig_types[50] 
-#define  SWIGTYPE_p_idmef_file_t swig_types[51] 
-#define  SWIGTYPE_p_idmef_value_type_t swig_types[52] 
-#define  SWIGTYPE_p_idmef_source_spoofed_t swig_types[53] 
-#define  SWIGTYPE_p_idmef_data_t_data swig_types[54] 
-#define  SWIGTYPE_p_idmef_linkage_t swig_types[55] 
-#define  SWIGTYPE_p_idmef_action_t swig_types[56] 
-#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[57] 
-#define  SWIGTYPE_p_idmef_classification_t swig_types[58] 
-#define  SWIGTYPE_p_idmef_userid_t swig_types[59] 
-#define  SWIGTYPE_p_idmef_assessment_t swig_types[60] 
-#define  SWIGTYPE_p_prelude_client_t swig_types[61] 
-#define  SWIGTYPE_p_prelude_io_t swig_types[62] 
+#define  SWIGTYPE_p_idmef_object_value_t swig_types[35] 
+#define  SWIGTYPE_p_idmef_analyzer_t swig_types[36] 
+#define  SWIGTYPE_p_prelude_msgbuf_t swig_types[37] 
+#define  SWIGTYPE_p_idmef_string_t swig_types[38] 
+#define  SWIGTYPE_p_uint16_t swig_types[39] 
+#define  SWIGTYPE_p_uint64_t swig_types[40] 
+#define  SWIGTYPE_p_idmef_address_t swig_types[41] 
+#define  SWIGTYPE_p_idmef_impact_t swig_types[42] 
+#define  SWIGTYPE_p_idmef_webservice_t swig_types[43] 
+#define  SWIGTYPE_p_idmef_snmpservice_t swig_types[44] 
+#define  SWIGTYPE_p_idmef_service_t swig_types[45] 
+#define  SWIGTYPE_p_idmef_target_decoy_t swig_types[46] 
+#define  SWIGTYPE_p_p_char swig_types[47] 
+#define  SWIGTYPE_p_idmef_impact_type_t swig_types[48] 
+#define  SWIGTYPE_p_idmef_file_fstype_t swig_types[49] 
+#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[50] 
+#define  SWIGTYPE_p_idmef_userid_type_t swig_types[51] 
+#define  SWIGTYPE_p_idmef_file_t swig_types[52] 
+#define  SWIGTYPE_p_idmef_value_type_t swig_types[53] 
+#define  SWIGTYPE_p_idmef_source_spoofed_t swig_types[54] 
+#define  SWIGTYPE_p_idmef_data_t_data swig_types[55] 
+#define  SWIGTYPE_p_idmef_linkage_t swig_types[56] 
+#define  SWIGTYPE_p_idmef_action_t swig_types[57] 
+#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[58] 
+#define  SWIGTYPE_p_idmef_classification_t swig_types[59] 
+#define  SWIGTYPE_p_idmef_userid_t swig_types[60] 
+#define  SWIGTYPE_p_idmef_assessment_t swig_types[61] 
+#define  SWIGTYPE_p_prelude_client_t swig_types[62] 
 #define  SWIGTYPE_p_idmef_object_t swig_types[63] 
 #define  SWIGTYPE_p_unsigned_char swig_types[64] 
-#define  SWIGTYPE_p_float swig_types[65] 
-#define  SWIGTYPE_p_idmef_additional_data_t swig_types[66] 
-#define  SWIGTYPE_p_idmef_data_t swig_types[67] 
-#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[68] 
-#define  SWIGTYPE_p_va_list swig_types[69] 
-#define  SWIGTYPE_p_idmef_alertident_t swig_types[70] 
-#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[71] 
-#define  SWIGTYPE_p_idmef_action_category_t swig_types[72] 
-#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[73] 
-#define  SWIGTYPE_p_idmef_file_category_t swig_types[74] 
-#define  SWIGTYPE_p_idmef_user_category_t swig_types[75] 
-#define  SWIGTYPE_p_idmef_address_category_t swig_types[76] 
-#define  SWIGTYPE_p_idmef_node_category_t swig_types[77] 
-static swig_type_info *swig_types[79];
+#define  SWIGTYPE_p_prelude_connection_mgr_t swig_types[65] 
+#define  SWIGTYPE_p_uid_t swig_types[66] 
+#define  SWIGTYPE_p_float swig_types[67] 
+#define  SWIGTYPE_p_idmef_additional_data_t swig_types[68] 
+#define  SWIGTYPE_p_idmef_data_t swig_types[69] 
+#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[70] 
+#define  SWIGTYPE_p_va_list swig_types[71] 
+#define  SWIGTYPE_p_idmef_alertident_t swig_types[72] 
+#define  SWIGTYPE_p_prelude_ident_t swig_types[73] 
+#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[74] 
+#define  SWIGTYPE_p_idmef_action_category_t swig_types[75] 
+#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[76] 
+#define  SWIGTYPE_p_idmef_file_category_t swig_types[77] 
+#define  SWIGTYPE_p_idmef_node_category_t swig_types[78] 
+#define  SWIGTYPE_p_idmef_user_category_t swig_types[79] 
+#define  SWIGTYPE_p_idmef_address_category_t swig_types[80] 
+static swig_type_info *swig_types[82];
 
 /* -------- TYPES TABLE (END) -------- */
 
@@ -810,6 +813,540 @@ SWIGCLASS_STATIC int swig_magic_readonly(pTHX_ SV *sv, MAGIC *mg) {
 #ifdef __cplusplus
 extern "C" {
 #endif
+XS(_wrap_prelude_client_get_unique_ident) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        prelude_ident_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_client_get_unique_ident(client);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_get_unique_ident. Expected _p_prelude_client_t");
+            }
+        }
+        result = (prelude_ident_t *)prelude_client_get_unique_ident(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_ident_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_client_get_manager_list) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        prelude_connection_mgr_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_client_get_manager_list(client);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_get_manager_list. Expected _p_prelude_client_t");
+            }
+        }
+        result = (prelude_connection_mgr_t *)prelude_client_get_manager_list(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_connection_mgr_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_client_init) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        char *arg2 ;
+        char *arg3 ;
+        int arg4 ;
+        char **arg5 = (char **) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 5) || (items > 5)) {
+            SWIG_croak("Usage: prelude_client_init(client,sname,config,argc,argv);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_init. Expected _p_prelude_client_t");
+            }
+        }
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        if (!SvOK((SV*) ST(2))) arg3 = 0;
+        else arg3 = (char *) SvPV(ST(2), PL_na);
+        arg4 = (int) SvIV(ST(3));
+        {
+            AV *tempav;
+            I32 len;
+            int i;
+            SV  **tv;
+            
+            if ( ! SvROK(ST(4)) )
+            croak("Argument 5 is not a reference.");
+            
+            if ( SvTYPE(SvRV(ST(4))) != SVt_PVAV )
+            croak("Argument 5 is not an array.");
+            
+            tempav = (AV*) SvRV(ST(4));
+            len = av_len(tempav);
+            arg5 = (char **) malloc((len+2)*sizeof(char *));
+            if ( ! arg5 )
+            croak("out of memory\n");
+            for (i = 0; i <= len; i++) {
+                tv = av_fetch(tempav, i, 0);	
+                arg5[i] = (char *) SvPV_nolen(*tv);
+            }
+            arg5[i] = NULL;
+        }
+        result = (int)prelude_client_init(arg1,(char const *)arg2,(char const *)arg3,arg4,arg5);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_client_new) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        int arg1 ;
+        prelude_client_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_client_new(capability);");
+        }
+        arg1 = (int) SvIV(ST(0));
+        result = (prelude_client_t *)prelude_client_new((prelude_client_capability_t )arg1);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_client_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_client_get_analyzer) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        idmef_analyzer_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_client_get_analyzer(client);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_get_analyzer. Expected _p_prelude_client_t");
+            }
+        }
+        result = (idmef_analyzer_t *)prelude_client_get_analyzer(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_analyzer_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_client_get_analyzerid) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        uint64_t result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_client_get_analyzerid(client);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_get_analyzerid. Expected _p_prelude_client_t");
+            }
+        }
+        result = (uint64_t)prelude_client_get_analyzerid(arg1);
+        
+        {
+            char tmp[32];
+            int len;
+            
+            len = snprintf(tmp, sizeof (tmp), "%llu", result);
+            
+            if ( len >= 0 && len < sizeof (tmp) ) {
+                ST(argvi) = sv_2mortal(newSVpv(tmp, len));
+                argvi++;
+            }
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_client_set_name) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        char *arg2 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_client_set_name(client,name);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_set_name. Expected _p_prelude_client_t");
+            }
+        }
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        prelude_client_set_name(arg1,(char const *)arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_client_get_name) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        char *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_client_get_name(client);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_get_name. Expected _p_prelude_client_t");
+            }
+        }
+        result = (char *)prelude_client_get_name(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_client_set_uid) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        uid_t arg2 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_client_set_uid(client,uid);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_set_uid. Expected _p_prelude_client_t");
+            }
+        }
+        {
+            uid_t * argp;
+            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_uid_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_client_set_uid. Expected _p_uid_t");
+            }
+            arg2 = *argp;
+        }
+        prelude_client_set_uid(arg1,arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_client_get_uid) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        uid_t result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_client_get_uid(client);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_get_uid. Expected _p_prelude_client_t");
+            }
+        }
+        result = prelude_client_get_uid(arg1);
+        
+        {
+            uid_t * resultobj = (uid_t *) malloc(sizeof(uid_t));
+            memmove(resultobj, &result, sizeof(uid_t));
+            ST(argvi) = sv_newmortal();
+            SWIG_MakePtr(ST(argvi++), (void *) resultobj, SWIGTYPE_p_uid_t,0);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_client_set_gid) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        gid_t arg2 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_client_set_gid(client,gid);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_set_gid. Expected _p_prelude_client_t");
+            }
+        }
+        {
+            gid_t * argp;
+            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_gid_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_client_set_gid. Expected _p_gid_t");
+            }
+            arg2 = *argp;
+        }
+        prelude_client_set_gid(arg1,arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_client_get_gid) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        gid_t result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_client_get_gid(client);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_get_gid. Expected _p_prelude_client_t");
+            }
+        }
+        result = prelude_client_get_gid(arg1);
+        
+        {
+            gid_t * resultobj = (gid_t *) malloc(sizeof(gid_t));
+            memmove(resultobj, &result, sizeof(gid_t));
+            ST(argvi) = sv_newmortal();
+            SWIG_MakePtr(ST(argvi++), (void *) resultobj, SWIGTYPE_p_gid_t,0);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_client_get_flags) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_client_get_flags(client);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_get_flags. Expected _p_prelude_client_t");
+            }
+        }
+        result = (int)prelude_client_get_flags(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_client_get_capability) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_client_get_capability(client);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_get_capability. Expected _p_prelude_client_t");
+            }
+        }
+        result = (int)prelude_client_get_capability(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_client_send_msg) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        prelude_msg_t *arg2 = (prelude_msg_t *) 0 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_client_send_msg(client,msg);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_send_msg. Expected _p_prelude_client_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_prelude_msg_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_client_send_msg. Expected _p_prelude_msg_t");
+            }
+        }
+        prelude_client_send_msg(arg1,arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_client_set_heartbeat_cb) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        void (*arg2)(prelude_client_t *) = (void (*)(prelude_client_t *)) 0 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_client_set_heartbeat_cb(client,cb);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_set_heartbeat_cb. Expected _p_prelude_client_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_f_p_prelude_client_t__void,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_client_set_heartbeat_cb. Expected _p_f_p_prelude_client_t__void");
+            }
+        }
+        prelude_client_set_heartbeat_cb(arg1,arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
 XS(_wrap_prelude_client_destroy) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
@@ -837,58 +1374,26 @@ XS(_wrap_prelude_client_destroy) {
 }
 
 
-XS(_wrap_prelude_client_new) {
-    char _swigmsg[SWIG_MAX_ERRMSG] = "";
-    const char *_swigerr = _swigmsg;
-    {
-        char *arg1 ;
-        uint16_t arg2 ;
-        prelude_client_t *result;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: prelude_client_new(addr,port);");
-        }
-        if (!SvOK((SV*) ST(0))) arg1 = 0;
-        else arg1 = (char *) SvPV(ST(0), PL_na);
-        arg2 = (uint16_t) SvUV(ST(1));
-        result = (prelude_client_t *)prelude_client_new((char const *)arg1,arg2);
-        
-        ST(argvi) = sv_newmortal();
-        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_client_t,0);
-        XSRETURN(argvi);
-        fail:
-        (void) _swigerr;
-    }
-    croak(_swigerr);
-}
-
-
-XS(_wrap_prelude_client_send_msg) {
+XS(_wrap_prelude_client_set_flags) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
         prelude_client_t *arg1 = (prelude_client_t *) 0 ;
-        prelude_msg_t *arg2 = (prelude_msg_t *) 0 ;
+        int arg2 ;
         int result;
         int argvi = 0;
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: prelude_client_send_msg(client,msg);");
+            SWIG_croak("Usage: prelude_client_set_flags(client,flags);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of prelude_client_send_msg. Expected _p_prelude_client_t");
+                SWIG_croak("Type error in argument 1 of prelude_client_set_flags. Expected _p_prelude_client_t");
             }
         }
-        {
-            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_prelude_msg_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of prelude_client_send_msg. Expected _p_prelude_msg_t");
-            }
-        }
-        result = (int)prelude_client_send_msg(arg1,arg2);
+        arg2 = (int) SvIV(ST(1));
+        result = (int)prelude_client_set_flags(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
         sv_setiv(ST(argvi++), (IV) result);
@@ -900,27 +1405,27 @@ XS(_wrap_prelude_client_send_msg) {
 }
 
 
-XS(_wrap_prelude_client_connect) {
+XS(_wrap_prelude_client_set_capability) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
         prelude_client_t *arg1 = (prelude_client_t *) 0 ;
-        int result;
+        int arg2 ;
         int argvi = 0;
         dXSARGS;
         
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: prelude_client_connect(client);");
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_client_set_capability(client,capability);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of prelude_client_connect. Expected _p_prelude_client_t");
+                SWIG_croak("Type error in argument 1 of prelude_client_set_capability. Expected _p_prelude_client_t");
             }
         }
-        result = (int)prelude_client_connect(arg1);
+        arg2 = (int) SvIV(ST(1));
+        prelude_client_set_capability(arg1,(prelude_client_capability_t )arg2);
         
-        ST(argvi) = sv_newmortal();
-        sv_setiv(ST(argvi++), (IV) result);
+        
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -929,39 +1434,30 @@ XS(_wrap_prelude_client_connect) {
 }
 
 
-XS(_wrap_prelude_client_forward) {
+XS(_wrap_prelude_client_get_auth_filename) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
         prelude_client_t *arg1 = (prelude_client_t *) 0 ;
-        prelude_io_t *arg2 = (prelude_io_t *) 0 ;
+        char *arg2 ;
         size_t arg3 ;
-        ssize_t result;
         int argvi = 0;
         dXSARGS;
         
         if ((items < 3) || (items > 3)) {
-            SWIG_croak("Usage: prelude_client_forward(client,src,count);");
+            SWIG_croak("Usage: prelude_client_get_auth_filename(client,buf,size);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of prelude_client_forward. Expected _p_prelude_client_t");
+                SWIG_croak("Type error in argument 1 of prelude_client_get_auth_filename. Expected _p_prelude_client_t");
             }
         }
-        {
-            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_prelude_io_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of prelude_client_forward. Expected _p_prelude_io_t");
-            }
-        }
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
         arg3 = (size_t) SvUV(ST(2));
-        result = prelude_client_forward(arg1,arg2,arg3);
+        prelude_client_get_auth_filename(arg1,arg2,arg3);
         
-        {
-            ssize_t * resultobj = (ssize_t *) malloc(sizeof(ssize_t));
-            memmove(resultobj, &result, sizeof(ssize_t));
-            ST(argvi) = sv_newmortal();
-            SWIG_MakePtr(ST(argvi++), (void *) resultobj, SWIGTYPE_p_ssize_t,0);
-        }
+        
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -970,31 +1466,30 @@ XS(_wrap_prelude_client_forward) {
 }
 
 
-XS(_wrap_prelude_client_get_saddr) {
+XS(_wrap_prelude_client_get_ssl_cert_filename) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
         prelude_client_t *arg1 = (prelude_client_t *) 0 ;
-        char *result;
+        char *arg2 ;
+        size_t arg3 ;
         int argvi = 0;
         dXSARGS;
         
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: prelude_client_get_saddr(client);");
+        if ((items < 3) || (items > 3)) {
+            SWIG_croak("Usage: prelude_client_get_ssl_cert_filename(client,buf,size);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of prelude_client_get_saddr. Expected _p_prelude_client_t");
+                SWIG_croak("Type error in argument 1 of prelude_client_get_ssl_cert_filename. Expected _p_prelude_client_t");
             }
         }
-        result = (char *)prelude_client_get_saddr(arg1);
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        arg3 = (size_t) SvUV(ST(2));
+        prelude_client_get_ssl_cert_filename(arg1,arg2,arg3);
         
-        ST(argvi) = sv_newmortal();
-        if (result) {
-            sv_setpv((SV*)ST(argvi++), (char *) result);
-        }else {
-            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
-        }
+        
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -1003,31 +1498,30 @@ XS(_wrap_prelude_client_get_saddr) {
 }
 
 
-XS(_wrap_prelude_client_get_daddr) {
+XS(_wrap_prelude_client_get_ssl_key_filename) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
         prelude_client_t *arg1 = (prelude_client_t *) 0 ;
-        char *result;
+        char *arg2 ;
+        size_t arg3 ;
         int argvi = 0;
         dXSARGS;
         
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: prelude_client_get_daddr(client);");
+        if ((items < 3) || (items > 3)) {
+            SWIG_croak("Usage: prelude_client_get_ssl_key_filename(client,buf,size);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of prelude_client_get_daddr. Expected _p_prelude_client_t");
+                SWIG_croak("Type error in argument 1 of prelude_client_get_ssl_key_filename. Expected _p_prelude_client_t");
             }
         }
-        result = (char *)prelude_client_get_daddr(arg1);
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        arg3 = (size_t) SvUV(ST(2));
+        prelude_client_get_ssl_key_filename(arg1,arg2,arg3);
         
-        ST(argvi) = sv_newmortal();
-        if (result) {
-            sv_setpv((SV*)ST(argvi++), (char *) result);
-        }else {
-            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
-        }
+        
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -1036,322 +1530,30 @@ XS(_wrap_prelude_client_get_daddr) {
 }
 
 
-XS(_wrap_prelude_client_get_sport) {
+XS(_wrap_prelude_client_get_backup_filename) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
         prelude_client_t *arg1 = (prelude_client_t *) 0 ;
-        uint16_t result;
+        char *arg2 ;
+        size_t arg3 ;
         int argvi = 0;
         dXSARGS;
         
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: prelude_client_get_sport(client);");
+        if ((items < 3) || (items > 3)) {
+            SWIG_croak("Usage: prelude_client_get_backup_filename(client,buf,size);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of prelude_client_get_sport. Expected _p_prelude_client_t");
+                SWIG_croak("Type error in argument 1 of prelude_client_get_backup_filename. Expected _p_prelude_client_t");
             }
         }
-        result = (uint16_t)prelude_client_get_sport(arg1);
-        
-        ST(argvi) = sv_newmortal();
-        sv_setuv(ST(argvi++), (UV) result);
-        XSRETURN(argvi);
-        fail:
-        (void) _swigerr;
-    }
-    croak(_swigerr);
-}
-
-
-XS(_wrap_prelude_client_get_dport) {
-    char _swigmsg[SWIG_MAX_ERRMSG] = "";
-    const char *_swigerr = _swigmsg;
-    {
-        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
-        uint16_t result;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: prelude_client_get_dport(client);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of prelude_client_get_dport. Expected _p_prelude_client_t");
-            }
-        }
-        result = (uint16_t)prelude_client_get_dport(arg1);
-        
-        ST(argvi) = sv_newmortal();
-        sv_setuv(ST(argvi++), (UV) result);
-        XSRETURN(argvi);
-        fail:
-        (void) _swigerr;
-    }
-    croak(_swigerr);
-}
-
-
-XS(_wrap_prelude_client_is_alive) {
-    char _swigmsg[SWIG_MAX_ERRMSG] = "";
-    const char *_swigerr = _swigmsg;
-    {
-        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
-        int result;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: prelude_client_is_alive(client);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of prelude_client_is_alive. Expected _p_prelude_client_t");
-            }
-        }
-        result = (int)prelude_client_is_alive(arg1);
-        
-        ST(argvi) = sv_newmortal();
-        sv_setiv(ST(argvi++), (IV) result);
-        XSRETURN(argvi);
-        fail:
-        (void) _swigerr;
-    }
-    croak(_swigerr);
-}
-
-
-XS(_wrap_prelude_client_get_fd) {
-    char _swigmsg[SWIG_MAX_ERRMSG] = "";
-    const char *_swigerr = _swigmsg;
-    {
-        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
-        prelude_io_t *result;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: prelude_client_get_fd(client);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of prelude_client_get_fd. Expected _p_prelude_client_t");
-            }
-        }
-        result = (prelude_io_t *)prelude_client_get_fd(arg1);
-        
-        ST(argvi) = sv_newmortal();
-        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_io_t,0);
-        XSRETURN(argvi);
-        fail:
-        (void) _swigerr;
-    }
-    croak(_swigerr);
-}
-
-
-XS(_wrap_prelude_client_close) {
-    char _swigmsg[SWIG_MAX_ERRMSG] = "";
-    const char *_swigerr = _swigmsg;
-    {
-        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: prelude_client_close(client);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of prelude_client_close. Expected _p_prelude_client_t");
-            }
-        }
-        prelude_client_close(arg1);
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        arg3 = (size_t) SvUV(ST(2));
+        prelude_client_get_backup_filename(arg1,arg2,arg3);
         
         
-        XSRETURN(argvi);
-        fail:
-        (void) _swigerr;
-    }
-    croak(_swigerr);
-}
-
-
-XS(_wrap_prelude_client_set_fd) {
-    char _swigmsg[SWIG_MAX_ERRMSG] = "";
-    const char *_swigerr = _swigmsg;
-    {
-        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
-        prelude_io_t *arg2 = (prelude_io_t *) 0 ;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: prelude_client_set_fd(client,fd);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of prelude_client_set_fd. Expected _p_prelude_client_t");
-            }
-        }
-        {
-            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_prelude_io_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of prelude_client_set_fd. Expected _p_prelude_io_t");
-            }
-        }
-        prelude_client_set_fd(arg1,arg2);
-        
-        
-        XSRETURN(argvi);
-        fail:
-        (void) _swigerr;
-    }
-    croak(_swigerr);
-}
-
-
-XS(_wrap_prelude_client_set_type) {
-    char _swigmsg[SWIG_MAX_ERRMSG] = "";
-    const char *_swigerr = _swigmsg;
-    {
-        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
-        int arg2 ;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: prelude_client_set_type(client,type);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of prelude_client_set_type. Expected _p_prelude_client_t");
-            }
-        }
-        arg2 = (int) SvIV(ST(1));
-        prelude_client_set_type(arg1,arg2);
-        
-        
-        XSRETURN(argvi);
-        fail:
-        (void) _swigerr;
-    }
-    croak(_swigerr);
-}
-
-
-XS(_wrap_prelude_client_get_type) {
-    char _swigmsg[SWIG_MAX_ERRMSG] = "";
-    const char *_swigerr = _swigmsg;
-    {
-        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
-        int result;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: prelude_client_get_type(client);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of prelude_client_get_type. Expected _p_prelude_client_t");
-            }
-        }
-        result = (int)prelude_client_get_type(arg1);
-        
-        ST(argvi) = sv_newmortal();
-        sv_setiv(ST(argvi++), (IV) result);
-        XSRETURN(argvi);
-        fail:
-        (void) _swigerr;
-    }
-    croak(_swigerr);
-}
-
-
-XS(_wrap_prelude_client_set_state) {
-    char _swigmsg[SWIG_MAX_ERRMSG] = "";
-    const char *_swigerr = _swigmsg;
-    {
-        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
-        int arg2 ;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: prelude_client_set_state(client,state);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of prelude_client_set_state. Expected _p_prelude_client_t");
-            }
-        }
-        arg2 = (int) SvIV(ST(1));
-        prelude_client_set_state(arg1,arg2);
-        
-        
-        XSRETURN(argvi);
-        fail:
-        (void) _swigerr;
-    }
-    croak(_swigerr);
-}
-
-
-XS(_wrap_prelude_client_get_state) {
-    char _swigmsg[SWIG_MAX_ERRMSG] = "";
-    const char *_swigerr = _swigmsg;
-    {
-        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
-        int result;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: prelude_client_get_state(client);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of prelude_client_get_state. Expected _p_prelude_client_t");
-            }
-        }
-        result = (int)prelude_client_get_state(arg1);
-        
-        ST(argvi) = sv_newmortal();
-        sv_setiv(ST(argvi++), (IV) result);
-        XSRETURN(argvi);
-        fail:
-        (void) _swigerr;
-    }
-    croak(_swigerr);
-}
-
-
-XS(_wrap_prelude_client_get_analyzerid) {
-    char _swigmsg[SWIG_MAX_ERRMSG] = "";
-    const char *_swigerr = _swigmsg;
-    {
-        uint64_t result;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 0) || (items > 0)) {
-            SWIG_croak("Usage: prelude_client_get_analyzerid();");
-        }
-        result = (uint64_t)prelude_client_get_analyzerid();
-        
-        {
-            char tmp[32];
-            int len;
-            
-            len = snprintf(tmp, sizeof (tmp), "%llu", result);
-            
-            if ( len >= 0 && len < sizeof (tmp) ) {
-                ST(argvi) = sv_2mortal(newSVpv(tmp, len));
-                argvi++;
-            }
-        }
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -24432,7 +24634,7 @@ XS(_wrap_idmef_value_get_type) {
 }
 
 
-XS(_wrap_idmef_value_get_idmef_type) {
+XS(_wrap_idmef_value_get_object_type) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -24442,14 +24644,14 @@ XS(_wrap_idmef_value_get_idmef_type) {
         dXSARGS;
         
         if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: idmef_value_get_idmef_type(value);");
+            SWIG_croak("Usage: idmef_value_get_object_type(value);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_value_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_value_get_idmef_type. Expected _p_idmef_value_t");
+                SWIG_croak("Type error in argument 1 of idmef_value_get_object_type. Expected _p_idmef_value_t");
             }
         }
-        result = (idmef_object_type_t)idmef_value_get_idmef_type(arg1);
+        result = (idmef_object_type_t)idmef_value_get_object_type(arg1);
         
         ST(argvi) = sv_newmortal();
         sv_setiv(ST(argvi++), (IV) result);
@@ -25005,7 +25207,7 @@ XS(_wrap_idmef_object_new_fast) {
 }
 
 
-XS(_wrap_idmef_object_get_object_type) {
+XS(_wrap_idmef_object_get_type) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -25015,14 +25217,14 @@ XS(_wrap_idmef_object_get_object_type) {
         dXSARGS;
         
         if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: idmef_object_get_object_type(object);");
+            SWIG_croak("Usage: idmef_object_get_type(object);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_object_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_object_get_object_type. Expected _p_idmef_object_t");
+                SWIG_croak("Type error in argument 1 of idmef_object_get_type. Expected _p_idmef_object_t");
             }
         }
-        result = (idmef_object_type_t)idmef_object_get_object_type(arg1);
+        result = (idmef_object_type_t)idmef_object_get_type(arg1);
         
         ST(argvi) = sv_newmortal();
         sv_setiv(ST(argvi++), (IV) result);
@@ -29323,19 +29525,52 @@ XS(_wrap_idmef_object_value_list_destroy) {
 }
 
 
+XS(_wrap_prelude_msgbuf_get_client) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
+        prelude_client_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_msgbuf_get_client(msgbuf);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_msgbuf_get_client. Expected _p_prelude_msgbuf_t");
+            }
+        }
+        result = (prelude_client_t *)prelude_msgbuf_get_client(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_client_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
 XS(_wrap_prelude_msgbuf_new) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
-        int arg1 ;
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
         prelude_msgbuf_t *result;
         int argvi = 0;
         dXSARGS;
         
         if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: prelude_msgbuf_new(flags);");
+            SWIG_croak("Usage: prelude_msgbuf_new(client);");
         }
-        arg1 = (int) SvIV(ST(0));
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_msgbuf_new. Expected _p_prelude_client_t");
+            }
+        }
         result = (prelude_msgbuf_t *)prelude_msgbuf_new(arg1);
         
         ST(argvi) = sv_newmortal();
@@ -34080,9 +34315,9 @@ XS(_wrap_prelude_heartbeat_fill_infos) {
 static swig_type_info _swigt__p_f_p_idmef_value_t_p_void__int[] = {{"_p_f_p_idmef_value_t_p_void__int", 0, "int (*)(idmef_value_t *,void *)", 0},{"_p_f_p_idmef_value_t_p_void__int"},{0}};
 static swig_type_info _swigt__p_f_p_void__void[] = {{"_p_f_p_void__void", 0, "void (*)(void *)", 0},{"_p_f_p_void__void"},{0}};
 static swig_type_info _swigt__p_f_p_prelude_list_t__void[] = {{"_p_f_p_prelude_list_t__void", 0, "void (*)(prelude_list_t *)", 0},{"_p_f_p_prelude_list_t__void"},{0}};
+static swig_type_info _swigt__p_f_p_prelude_client_t__void[] = {{"_p_f_p_prelude_client_t__void", 0, "void (*)(prelude_client_t *)", 0},{"_p_f_p_prelude_client_t__void"},{0}};
 static swig_type_info _swigt__p_prelude_msg_t[] = {{"_p_prelude_msg_t", 0, "prelude_msg_t *", 0},{"_p_prelude_msg_t"},{0}};
 static swig_type_info _swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t[] = {{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t", 0, "prelude_msg_t *(*)(prelude_msgbuf_t *)", 0},{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t"},{0}};
-static swig_type_info _swigt__p_ssize_t[] = {{"_p_ssize_t", 0, "ssize_t *", 0},{"_p_ssize_t"},{0}};
 static swig_type_info _swigt__p_size_t[] = {{"_p_size_t", 0, "size_t *", 0},{"_p_size_t"},{0}};
 static swig_type_info _swigt__p_idmef_heartbeat_t[] = {{"_p_idmef_heartbeat_t", 0, "idmef_heartbeat_t *", 0},{"_p_idmef_heartbeat_t"},{0}};
 static swig_type_info _swigt__p_idmef_target_t[] = {{"_p_idmef_target_t", 0, "idmef_target_t *", 0},{"_p_idmef_target_t"},{0}};
@@ -34098,20 +34333,21 @@ static swig_type_info _swigt__p_idmef_inode_t[] = {{"_p_idmef_inode_t", 0, "idme
 static swig_type_info _swigt__p_idmef_node_t[] = {{"_p_idmef_node_t", 0, "idmef_node_t *", 0},{"_p_idmef_node_t"},{0}};
 static swig_type_info _swigt__p_idmef_file_access_t[] = {{"_p_idmef_file_access_t", 0, "idmef_file_access_t *", 0},{"_p_idmef_file_access_t"},{0}};
 static swig_type_info _swigt__p_idmef_process_t[] = {{"_p_idmef_process_t", 0, "idmef_process_t *", 0},{"_p_idmef_process_t"},{0}};
+static swig_type_info _swigt__p_gid_t[] = {{"_p_gid_t", 0, "gid_t *", 0},{"_p_gid_t"},{0}};
 static swig_type_info _swigt__p_uint32_t[] = {{"_p_uint32_t", 0, "uint32_t *", 0},{"_p_uint32_t"},{0}};
 static swig_type_info _swigt__p_void[] = {{"_p_void", 0, "void *", 0},{"_p_void"},{0}};
 static swig_type_info _swigt__p_idmef_source_t[] = {{"_p_idmef_source_t", 0, "idmef_source_t *", 0},{"_p_idmef_source_t"},{0}};
 static swig_type_info _swigt__p_idmef_classification_origin_t[] = {{"_p_idmef_classification_origin_t", 0, "idmef_classification_origin_t *", 0},{"_p_idmef_classification_origin_t"},{0}};
 static swig_type_info _swigt__p_idmef_criteria[] = {{"_p_idmef_criteria", 0, "struct idmef_criteria *", 0},{"_p_idmef_criteria_t"},{"_p_idmef_criteria"},{0}};
 static swig_type_info _swigt__p_idmef_criterion_t[] = {{"_p_idmef_criterion_t", 0, "idmef_criterion_t *", 0},{"_p_idmef_criterion_t"},{0}};
-static swig_type_info _swigt__p_idmef_object_value_list_t[] = {{"_p_idmef_object_value_list_t", 0, "idmef_object_value_list_t *", 0},{"_p_idmef_object_value_list_t"},{0}};
 static swig_type_info _swigt__p_prelude_list_t[] = {{"_p_prelude_list_t", 0, "prelude_list_t *", 0},{"_p_prelude_list_t"},{0}};
+static swig_type_info _swigt__p_idmef_object_value_list_t[] = {{"_p_idmef_object_value_list_t", 0, "idmef_object_value_list_t *", 0},{"_p_idmef_object_value_list_t"},{0}};
 static swig_type_info _swigt__p_idmef_time_t[] = {{"_p_idmef_time_t", 0, "idmef_time_t *", 0},{"_p_idmef_time_t"},{"_p_idmef_time"},{0}};
 static swig_type_info _swigt__p_idmef_criteria_t[] = {{"_p_idmef_criteria_t", 0, "idmef_criteria_t *", 0},{"_p_idmef_criteria_t"},{"_p_idmef_criteria"},{0}};
-static swig_type_info _swigt__p_idmef_object_value_t[] = {{"_p_idmef_object_value_t", 0, "idmef_object_value_t *", 0},{"_p_idmef_object_value_t"},{0}};
 static swig_type_info _swigt__p_idmef_criterion_value_t[] = {{"_p_idmef_criterion_value_t", 0, "idmef_criterion_value_t *", 0},{"_p_idmef_criterion_value_t"},{0}};
 static swig_type_info _swigt__p_idmef_value_t[] = {{"_p_idmef_value_t", 0, "idmef_value_t *", 0},{"_p_idmef_value_t"},{0}};
 static swig_type_info _swigt__p_idmef_user_t[] = {{"_p_idmef_user_t", 0, "idmef_user_t *", 0},{"_p_idmef_user_t"},{0}};
+static swig_type_info _swigt__p_idmef_object_value_t[] = {{"_p_idmef_object_value_t", 0, "idmef_object_value_t *", 0},{"_p_idmef_object_value_t"},{0}};
 static swig_type_info _swigt__p_idmef_analyzer_t[] = {{"_p_idmef_analyzer_t", 0, "idmef_analyzer_t *", 0},{"_p_idmef_analyzer_t"},{0}};
 static swig_type_info _swigt__p_prelude_msgbuf_t[] = {{"_p_prelude_msgbuf_t", 0, "prelude_msgbuf_t *", 0},{"_p_prelude_msgbuf_t"},{0}};
 static swig_type_info _swigt__p_idmef_string_t[] = {{"_p_idmef_string_t", 0, "idmef_string_t *", 0},{"_p_idmef_string_t"},{"_p_idmef_data_t"},{0}};
@@ -34139,30 +34375,32 @@ static swig_type_info _swigt__p_idmef_classification_t[] = {{"_p_idmef_classific
 static swig_type_info _swigt__p_idmef_userid_t[] = {{"_p_idmef_userid_t", 0, "idmef_userid_t *", 0},{"_p_idmef_userid_t"},{0}};
 static swig_type_info _swigt__p_idmef_assessment_t[] = {{"_p_idmef_assessment_t", 0, "idmef_assessment_t *", 0},{"_p_idmef_assessment_t"},{0}};
 static swig_type_info _swigt__p_prelude_client_t[] = {{"_p_prelude_client_t", 0, "prelude_client_t *", 0},{"_p_prelude_client_t"},{0}};
-static swig_type_info _swigt__p_prelude_io_t[] = {{"_p_prelude_io_t", 0, "prelude_io_t *", 0},{"_p_prelude_io_t"},{0}};
 static swig_type_info _swigt__p_idmef_object_t[] = {{"_p_idmef_object_t", 0, "idmef_object_t *", 0},{"_p_idmef_object_t"},{0}};
 static swig_type_info _swigt__p_unsigned_char[] = {{"_p_unsigned_char", 0, "unsigned char *", 0},{"_p_unsigned_char"},{0}};
+static swig_type_info _swigt__p_prelude_connection_mgr_t[] = {{"_p_prelude_connection_mgr_t", 0, "prelude_connection_mgr_t *", 0},{"_p_prelude_connection_mgr_t"},{0}};
+static swig_type_info _swigt__p_uid_t[] = {{"_p_uid_t", 0, "uid_t *", 0},{"_p_uid_t"},{0}};
 static swig_type_info _swigt__p_float[] = {{"_p_float", 0, "float *", 0},{"_p_float"},{0}};
 static swig_type_info _swigt__p_idmef_additional_data_t[] = {{"_p_idmef_additional_data_t", 0, "idmef_additional_data_t *", 0},{"_p_idmef_additional_data_t"},{0}};
 static swig_type_info _swigt__p_idmef_data_t[] = {{"_p_idmef_data_t", 0, "idmef_data_t *", 0},{"_p_idmef_string_t"},{"_p_idmef_data_t"},{0}};
 static swig_type_info _swigt__p_idmef_value_type_data_t[] = {{"_p_idmef_value_type_data_t", 0, "idmef_value_type_data_t *", 0},{"_p_idmef_value_type_data_t"},{0}};
 static swig_type_info _swigt__p_va_list[] = {{"_p_va_list", 0, "va_list *", 0},{"_p_va_list"},{0}};
 static swig_type_info _swigt__p_idmef_alertident_t[] = {{"_p_idmef_alertident_t", 0, "idmef_alertident_t *", 0},{"_p_idmef_alertident_t"},{0}};
+static swig_type_info _swigt__p_prelude_ident_t[] = {{"_p_prelude_ident_t", 0, "prelude_ident_t *", 0},{"_p_prelude_ident_t"},{0}};
 static swig_type_info _swigt__p_idmef_impact_severity_t[] = {{"_p_idmef_impact_severity_t", 0, "idmef_impact_severity_t *", 0},{"_p_idmef_impact_severity_t"},{0}};
 static swig_type_info _swigt__p_idmef_action_category_t[] = {{"_p_idmef_action_category_t", 0, "idmef_action_category_t *", 0},{"_p_idmef_action_category_t"},{0}};
 static swig_type_info _swigt__p_idmef_linkage_category_t[] = {{"_p_idmef_linkage_category_t", 0, "idmef_linkage_category_t *", 0},{"_p_idmef_linkage_category_t"},{0}};
 static swig_type_info _swigt__p_idmef_file_category_t[] = {{"_p_idmef_file_category_t", 0, "idmef_file_category_t *", 0},{"_p_idmef_file_category_t"},{0}};
+static swig_type_info _swigt__p_idmef_node_category_t[] = {{"_p_idmef_node_category_t", 0, "idmef_node_category_t *", 0},{"_p_idmef_node_category_t"},{0}};
 static swig_type_info _swigt__p_idmef_user_category_t[] = {{"_p_idmef_user_category_t", 0, "idmef_user_category_t *", 0},{"_p_idmef_user_category_t"},{0}};
 static swig_type_info _swigt__p_idmef_address_category_t[] = {{"_p_idmef_address_category_t", 0, "idmef_address_category_t *", 0},{"_p_idmef_address_category_t"},{0}};
-static swig_type_info _swigt__p_idmef_node_category_t[] = {{"_p_idmef_node_category_t", 0, "idmef_node_category_t *", 0},{"_p_idmef_node_category_t"},{0}};
 
 static swig_type_info *swig_types_initial[] = {
 _swigt__p_f_p_idmef_value_t_p_void__int, 
 _swigt__p_f_p_void__void, 
 _swigt__p_f_p_prelude_list_t__void, 
+_swigt__p_f_p_prelude_client_t__void, 
 _swigt__p_prelude_msg_t, 
 _swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t, 
-_swigt__p_ssize_t, 
 _swigt__p_size_t, 
 _swigt__p_idmef_heartbeat_t, 
 _swigt__p_idmef_target_t, 
@@ -34178,20 +34416,21 @@ _swigt__p_idmef_inode_t,
 _swigt__p_idmef_node_t, 
 _swigt__p_idmef_file_access_t, 
 _swigt__p_idmef_process_t, 
+_swigt__p_gid_t, 
 _swigt__p_uint32_t, 
 _swigt__p_void, 
 _swigt__p_idmef_source_t, 
 _swigt__p_idmef_classification_origin_t, 
 _swigt__p_idmef_criteria, 
 _swigt__p_idmef_criterion_t, 
-_swigt__p_idmef_object_value_list_t, 
 _swigt__p_prelude_list_t, 
+_swigt__p_idmef_object_value_list_t, 
 _swigt__p_idmef_time_t, 
 _swigt__p_idmef_criteria_t, 
-_swigt__p_idmef_object_value_t, 
 _swigt__p_idmef_criterion_value_t, 
 _swigt__p_idmef_value_t, 
 _swigt__p_idmef_user_t, 
+_swigt__p_idmef_object_value_t, 
 _swigt__p_idmef_analyzer_t, 
 _swigt__p_prelude_msgbuf_t, 
 _swigt__p_idmef_string_t, 
@@ -34219,22 +34458,24 @@ _swigt__p_idmef_classification_t,
 _swigt__p_idmef_userid_t, 
 _swigt__p_idmef_assessment_t, 
 _swigt__p_prelude_client_t, 
-_swigt__p_prelude_io_t, 
 _swigt__p_idmef_object_t, 
 _swigt__p_unsigned_char, 
+_swigt__p_prelude_connection_mgr_t, 
+_swigt__p_uid_t, 
 _swigt__p_float, 
 _swigt__p_idmef_additional_data_t, 
 _swigt__p_idmef_data_t, 
 _swigt__p_idmef_value_type_data_t, 
 _swigt__p_va_list, 
 _swigt__p_idmef_alertident_t, 
+_swigt__p_prelude_ident_t, 
 _swigt__p_idmef_impact_severity_t, 
 _swigt__p_idmef_action_category_t, 
 _swigt__p_idmef_linkage_category_t, 
 _swigt__p_idmef_file_category_t, 
+_swigt__p_idmef_node_category_t, 
 _swigt__p_idmef_user_category_t, 
 _swigt__p_idmef_address_category_t, 
-_swigt__p_idmef_node_category_t, 
 0
 };
 
@@ -34242,13 +34483,14 @@ _swigt__p_idmef_node_category_t,
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (END) -------- */
 
 static swig_constant_info swig_constants[] = {
-{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_TYPE_OTHER", (long) 0, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_TYPE_SENSOR", (long) 1, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_TYPE_MANAGER_PARENT", (long) 2, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_TYPE_MANAGER_CHILDREN", (long) 3, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_TYPE_ADMIN", (long) 4, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_CONNECTED", (long) 0x01, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_OWN_FD", (long) 0x02, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF", (long) PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF", (long) PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_CAPABILITY_RECV_ADMIN", (long) PRELUDE_CLIENT_CAPABILITY_RECV_ADMIN, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN", (long) PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_CAPABILITY_RECV_CM", (long) PRELUDE_CLIENT_CAPABILITY_RECV_CM, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_CAPABILITY_SEND_CM", (long) PRELUDE_CLIENT_CAPABILITY_SEND_CM, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_ASYNC_SEND", (long) 0x01, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_ASYNC_TIMER", (long) 0x02, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_STRING", (long) IDMEF_ADDITIONAL_DATA_TYPE_STRING, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN", (long) IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_BYTE", (long) IDMEF_ADDITIONAL_DATA_TYPE_BYTE, 0, 0, 0},
@@ -34403,7 +34645,6 @@ static swig_constant_info swig_constants[] = {
 { SWIG_INT,     (char *) SWIG_prefix "idmef_object_type_time", (long) 1, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_data", (long) 2, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_string", (long) 0, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSGBUF_ASYNC_SEND", (long) 0x01, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_VALUE_RELATION_EQUAL", (long) IDMEF_VALUE_RELATION_EQUAL, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_VALUE_RELATION_NOT_EQUAL", (long) IDMEF_VALUE_RELATION_NOT_EQUAL, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_VALUE_RELATION_LESSER", (long) IDMEF_VALUE_RELATION_LESSER, 0, 0, 0},
@@ -34439,24 +34680,29 @@ static swig_variable_info swig_variables[] = {
 {0}
 };
 static swig_command_info swig_commands[] = {
-{"Prelude::prelude_client_destroy", _wrap_prelude_client_destroy},
+{"Prelude::prelude_client_get_unique_ident", _wrap_prelude_client_get_unique_ident},
+{"Prelude::prelude_client_get_manager_list", _wrap_prelude_client_get_manager_list},
+{"Prelude::prelude_client_init", _wrap_prelude_client_init},
 {"Prelude::prelude_client_new", _wrap_prelude_client_new},
-{"Prelude::prelude_client_send_msg", _wrap_prelude_client_send_msg},
-{"Prelude::prelude_client_connect", _wrap_prelude_client_connect},
-{"Prelude::prelude_client_forward", _wrap_prelude_client_forward},
-{"Prelude::prelude_client_get_saddr", _wrap_prelude_client_get_saddr},
-{"Prelude::prelude_client_get_daddr", _wrap_prelude_client_get_daddr},
-{"Prelude::prelude_client_get_sport", _wrap_prelude_client_get_sport},
-{"Prelude::prelude_client_get_dport", _wrap_prelude_client_get_dport},
-{"Prelude::prelude_client_is_alive", _wrap_prelude_client_is_alive},
-{"Prelude::prelude_client_get_fd", _wrap_prelude_client_get_fd},
-{"Prelude::prelude_client_close", _wrap_prelude_client_close},
-{"Prelude::prelude_client_set_fd", _wrap_prelude_client_set_fd},
-{"Prelude::prelude_client_set_type", _wrap_prelude_client_set_type},
-{"Prelude::prelude_client_get_type", _wrap_prelude_client_get_type},
-{"Prelude::prelude_client_set_state", _wrap_prelude_client_set_state},
-{"Prelude::prelude_client_get_state", _wrap_prelude_client_get_state},
+{"Prelude::prelude_client_get_analyzer", _wrap_prelude_client_get_analyzer},
 {"Prelude::prelude_client_get_analyzerid", _wrap_prelude_client_get_analyzerid},
+{"Prelude::prelude_client_set_name", _wrap_prelude_client_set_name},
+{"Prelude::prelude_client_get_name", _wrap_prelude_client_get_name},
+{"Prelude::prelude_client_set_uid", _wrap_prelude_client_set_uid},
+{"Prelude::prelude_client_get_uid", _wrap_prelude_client_get_uid},
+{"Prelude::prelude_client_set_gid", _wrap_prelude_client_set_gid},
+{"Prelude::prelude_client_get_gid", _wrap_prelude_client_get_gid},
+{"Prelude::prelude_client_get_flags", _wrap_prelude_client_get_flags},
+{"Prelude::prelude_client_get_capability", _wrap_prelude_client_get_capability},
+{"Prelude::prelude_client_send_msg", _wrap_prelude_client_send_msg},
+{"Prelude::prelude_client_set_heartbeat_cb", _wrap_prelude_client_set_heartbeat_cb},
+{"Prelude::prelude_client_destroy", _wrap_prelude_client_destroy},
+{"Prelude::prelude_client_set_flags", _wrap_prelude_client_set_flags},
+{"Prelude::prelude_client_set_capability", _wrap_prelude_client_set_capability},
+{"Prelude::prelude_client_get_auth_filename", _wrap_prelude_client_get_auth_filename},
+{"Prelude::prelude_client_get_ssl_cert_filename", _wrap_prelude_client_get_ssl_cert_filename},
+{"Prelude::prelude_client_get_ssl_key_filename", _wrap_prelude_client_get_ssl_key_filename},
+{"Prelude::prelude_client_get_backup_filename", _wrap_prelude_client_get_backup_filename},
 {"Prelude::prelude_init", _wrap_prelude_init},
 {"Prelude::prelude_sensor_send_msg", _wrap_prelude_sensor_send_msg},
 {"Prelude::prelude_sensor_send_msg_async", _wrap_prelude_sensor_send_msg_async},
@@ -35230,7 +35476,7 @@ static swig_command_info swig_commands[] = {
 {"Prelude::idmef_value_have_own_data", _wrap_idmef_value_have_own_data},
 {"Prelude::idmef_value_dont_have_own_data", _wrap_idmef_value_dont_have_own_data},
 {"Prelude::idmef_value_get_type", _wrap_idmef_value_get_type},
-{"Prelude::idmef_value_get_idmef_type", _wrap_idmef_value_get_idmef_type},
+{"Prelude::idmef_value_get_object_type", _wrap_idmef_value_get_object_type},
 {"Prelude::idmef_value_get_object", _wrap_idmef_value_get_object},
 {"Prelude::idmef_value_iterate", _wrap_idmef_value_iterate},
 {"Prelude::idmef_value_get_nth", _wrap_idmef_value_get_nth},
@@ -35248,7 +35494,7 @@ static swig_command_info swig_commands[] = {
 {"Prelude::idmef_object_new", _wrap_idmef_object_new},
 {"Prelude::idmef_object_new_v", _wrap_idmef_object_new_v},
 {"Prelude::idmef_object_new_fast", _wrap_idmef_object_new_fast},
-{"Prelude::idmef_object_get_object_type", _wrap_idmef_object_get_object_type},
+{"Prelude::idmef_object_get_type", _wrap_idmef_object_get_type},
 {"Prelude::idmef_object_get_value_type", _wrap_idmef_object_get_value_type},
 {"Prelude::idmef_object_set_number", _wrap_idmef_object_set_number},
 {"Prelude::idmef_object_undefine_number", _wrap_idmef_object_undefine_number},
@@ -35392,6 +35638,7 @@ static swig_command_info swig_commands[] = {
 {"Prelude::idmef_object_value_list_add", _wrap_idmef_object_value_list_add},
 {"Prelude::idmef_object_value_list_get_next", _wrap_idmef_object_value_list_get_next},
 {"Prelude::idmef_object_value_list_destroy", _wrap_idmef_object_value_list_destroy},
+{"Prelude::prelude_msgbuf_get_client", _wrap_prelude_msgbuf_get_client},
 {"Prelude::prelude_msgbuf_new", _wrap_prelude_msgbuf_new},
 {"Prelude::prelude_msgbuf_close", _wrap_prelude_msgbuf_close},
 {"Prelude::prelude_msgbuf_mark_end", _wrap_prelude_msgbuf_mark_end},

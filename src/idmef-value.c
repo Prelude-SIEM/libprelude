@@ -361,7 +361,7 @@ idmef_value_type_id_t idmef_value_get_type(idmef_value_t *value)
 
 
 
-idmef_object_type_t idmef_value_get_idmef_type(idmef_value_t *value)
+idmef_object_type_t idmef_value_get_object_type(idmef_value_t *value)
 {
 	return (value->type.id == IDMEF_VALUE_TYPE_OBJECT ||
                 value->type.id == IDMEF_VALUE_TYPE_ENUM) ? value->object_type : -1;
@@ -502,7 +502,7 @@ static int enum_to_string(idmef_value_t *val, char *buf, size_t len)
         size_t slen;
 	const char *str;
         
-	str = idmef_type_enum_to_string(idmef_value_get_idmef_type(val),
+	str = idmef_type_enum_to_string(idmef_value_get_object_type(val),
 					idmef_value_get_enum(val));
         
 	slen = strlen(str);

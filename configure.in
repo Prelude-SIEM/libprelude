@@ -453,13 +453,13 @@ AC_TYPE_SIGNAL
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS(gettimeofday select socket strdup strerror strstr)
 
-sensors_spool_dir=$localstatedir/spool/prelude-sensors
-sensors_ident_file=$sysconfdir/prelude-sensors/sensors.ident
-sensors_config_dir=$sysconfdir/prelude-sensors
+prelude_config_dir=$sysconfdir/prelude
+prelude_spool_dir=$localstatedir/spool/prelude
+prelude_ident_file=$sysconfdir/prelude/sensors.ident
 
-AC_SUBST(sensors_spool_dir)
-AC_SUBST(sensors_ident_file)
-AC_SUBST(sensors_config_dir)
+AC_SUBST(prelude_spool_dir)
+AC_SUBST(prelude_config_dir)
+AC_SUBST(prelude_ident_file)
 
 
 dnl We use no-strict-prototype because of SSL warning.
@@ -473,6 +473,8 @@ AC_SUBST(CFLAGS)
 AC_CONFIG_FILES([
 
 Makefile 
+client.conf
+global.conf
 libprelude-config
 
 src/Makefile

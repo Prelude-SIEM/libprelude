@@ -76,7 +76,7 @@ int idmef_value_have_own_data(idmef_value_t *value);
 int idmef_value_dont_have_own_data(idmef_value_t *value);
 
 idmef_value_type_id_t idmef_value_get_type(idmef_value_t *value);
-idmef_object_type_t idmef_value_get_idmef_type(idmef_value_t *value);
+idmef_object_type_t idmef_value_get_object_type(idmef_value_t *value);
 
 void *idmef_value_get_object(idmef_value_t *value);
 

@@ -1,5 +1,5 @@
 SUBDIRS = include
-DEFS = -DSENSORS_CONFIG_DIR=\"@sensors_config_dir@\" -DSENSORS_SPOOL_DIR=\"@sensors_spool_dir@\" -DSENSORS_IDENT_FILE=\"@sensors_ident_file@\" @libprelude_cflags@ @pthread_cflags@
+DEFS = -DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\" -DPRELUDE_SPOOL_DIR=\"@prelude_spool_dir@\" -DPRELUDE_IDENT_FILE=\"@prelude_ident_file@\" @libprelude_cflags@ @pthread_cflags@
 INCLUDES = -I$(top_srcdir) -I$(srcdir)/include @INCLTDL@
 
 libpreludeincludedir = $(includedir)/
@@ -21,7 +21,8 @@ libprelude_la_SOURCES = 		\
 	variable.c			\
 	prelude-auth.c			\
 	prelude-client.c		\
-	prelude-client-mgr.c		\
+	prelude-connection.c		\
+	prelude-connection-mgr.c	\
 	prelude-getopt.c		\
 	prelude-getopt-wide.c		\
 	prelude-io.c			\
@@ -29,13 +30,11 @@ libprelude_la_SOURCES = 		\
 	prelude-message-buffered.c	\
 	prelude-async.c			\
 	prelude-ident.c			\
-	prelude-path.c			\
 	prelude-plugin.c		\
 	prelude-hash.c			\
 	prelude-log.c			\
 	prelude-inet.c			\
 	prelude-strbuf.c		\
-	sensor.c			\
 	client-ident.c			\
 	ntp.c				\
 	idmef-util.c			\

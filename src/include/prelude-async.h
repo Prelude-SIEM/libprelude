@@ -28,8 +28,8 @@
 #include "prelude-linked-object.h"
 
 
-#define PRELUDE_ASYNC_TIMER 0x01
-
+#define PRELUDE_ASYNC_TIMER   0x01
+#define PRELUDE_ASYNC_MESSAGE 0x02
 
 
 typedef void (*prelude_async_func_t)(void *object, void *data);

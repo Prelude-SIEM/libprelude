@@ -25,9 +25,10 @@
 #define _LIBPRELUDE_SSL_H
 
 #include <openssl/ssl.h>
-
-int ssl_init_client(void);
+#include "prelude-client.h"
 
 SSL *ssl_connect_server(int socket);
+
+int ssl_init_client(prelude_client_t *client);
 
 #endif /* _LIBPRELUDE_SSL_H */

@@ -24,15 +24,14 @@
 #ifndef _LIBPRELUDE_PRELUDE_MESSAGE_BUFFERED_H
 #define _LIBPRELUDE_PRELUDE_MESSAGE_BUFFERED_H
 
+#include "prelude-client.h"
 #include "prelude-message.h"
 
 typedef struct prelude_message_buffered prelude_msgbuf_t;
 
+prelude_client_t *prelude_msgbuf_get_client(prelude_msgbuf_t *msgbuf);
 
-#define PRELUDE_MSGBUF_ASYNC_SEND 0x01
-
-
-prelude_msgbuf_t *prelude_msgbuf_new(int flags);
+prelude_msgbuf_t *prelude_msgbuf_new(prelude_client_t *client);
 
 void prelude_msgbuf_close(prelude_msgbuf_t *msgbuf);
 

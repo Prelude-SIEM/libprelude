@@ -37,7 +37,7 @@ idmef_object_t *idmef_object_new(const char * format, ...);
 idmef_object_t *idmef_object_new_v(const char * format, va_list args);
 idmef_object_t *idmef_object_new_fast(const char *buffer);
 
-idmef_object_type_t idmef_object_get_object_type(idmef_object_t *object);
+idmef_object_type_t idmef_object_get_type(idmef_object_t *object);
 
 idmef_value_type_id_t idmef_object_get_value_type(idmef_object_t *object);
 

@@ -668,6 +668,8 @@ int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
         pe = search_plugin_entry(plugin);        
         if ( ! pe )
                 return -1;
+
+        prelude_option_set_flags(opt, prelude_option_get_flags(opt) | ALLOW_MULTIPLE_CALL);
         
         new = prelude_option_add(opt, WIDE_HOOK, 0, "unsubscribe",
                                  "Unsubscribe this plugin", no_argument,

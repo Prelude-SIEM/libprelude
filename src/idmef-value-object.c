@@ -58,7 +58,7 @@ idmef_value_t *idmef_value_new_for_object(idmef_object_t *object, const char *bu
 		    return NULL;
 	
 	if  ( value_type == IDMEF_VALUE_TYPE_ENUM ) {
-	    	idmef_type = idmef_object_get_object_type(object);
+	    	idmef_type = idmef_object_get_type(object);
 	    	if ( idmef_type < 0 )
 		    	return NULL;
 	    

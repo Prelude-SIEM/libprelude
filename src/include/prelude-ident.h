@@ -24,6 +24,8 @@
 #ifndef _LIBPRELUDE_PRELUDE_IDENT_H
 #define _LIBPRELUDE_PRELUDE_IDENT_H
 
+#include <inttypes.h>
+
 typedef struct prelude_ident prelude_ident_t;
 
 uint64_t prelude_ident_inc(prelude_ident_t *ident);

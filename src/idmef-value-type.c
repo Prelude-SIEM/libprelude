@@ -32,6 +32,8 @@
 #include "idmef-string.h"
 #include "idmef-value-type.h"
 
+#define OBJECT_RELATION  IDMEF_VALUE_RELATION_IS_NULL|IDMEF_VALUE_RELATION_IS_NOT_NULL
+
 #define DATA_RELATION    IDMEF_VALUE_RELATION_EQUAL|IDMEF_VALUE_RELATION_NOT_EQUAL| \
                          IDMEF_VALUE_RELATION_LESSER|IDMEF_VALUE_RELATION_GREATER
 
@@ -370,6 +372,8 @@ static idmef_value_type_operation_t ops_tbl[] = {
         { 0, TIME_RELATION, time_copy, time_clone, time_destroy, time_compare, time_read, time_write                     }, 
         { 0, DATA_RELATION, data_copy, data_clone, data_destroy, data_compare, data_read, data_write                     },
         { sizeof(idmef_value_type_id_t), INTEGER_RELATION, generic_copy, generic_clone, NULL, generic_compare, enum_read, enum_write, /* type_enum */ },
+        { 0, 0, NULL, NULL, NULL, NULL, NULL, NULL },
+        { 0, OBJECT_RELATION, NULL, NULL, NULL, NULL, NULL, NULL },
 };
 
 

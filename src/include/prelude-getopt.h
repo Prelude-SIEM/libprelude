@@ -34,6 +34,7 @@
 #define CLI_HOOK 0x1 /* Option to be hooked to command line */
 #define CFG_HOOK 0x2 /* Option to be hooked to config file  */
 #define WIDE_HOOK 0x4
+#define ALLOW_MULTIPLE_CALL 0x8
 
 /*
  * Possible return value for set() callback.
@@ -78,7 +79,7 @@ void prelude_option_set_priority(prelude_option_t *option, int priority);
 
 void prelude_option_print(prelude_option_t *opt, int flags, int descoff);
 
-prelude_msg_t *prelude_option_wide_get_msg(void);
+prelude_msg_t *prelude_option_wide_get_msg(uint64_t ident);
 
 void prelude_option_destroy(prelude_option_t *option);
 
@@ -100,6 +101,11 @@ prelude_option_t *prelude_option_add_init_func(prelude_option_t *parent,
 
 #define OPT_INVAL     0x1
 #define OPT_INVAL_ARG 0x2
+
+
+void prelude_option_set_flags(prelude_option_t *opt, int flags);
+
+int prelude_option_get_flags(prelude_option_t *opt);
 
 void prelude_option_set_warnings(int flags, int *old_flags);
 

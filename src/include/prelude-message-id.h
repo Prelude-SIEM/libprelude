@@ -32,7 +32,7 @@
 #define PRELUDE_MSG_ID             3
 #define PRELUDE_MSG_AUTH           4
 #define PRELUDE_MSG_CM             5 
-#define PRELUDE_MSG_CLIENT_TYPE    6
+#define PRELUDE_MSG_CLIENT_CAPABILITY    6
 #define PRELUDE_MSG_OPTION_REQUEST 7
 #define PRELUDE_MSG_OPTION_REPLY   8
 
