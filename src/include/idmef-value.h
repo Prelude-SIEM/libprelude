@@ -27,7 +27,7 @@
 
 #include "prelude-string.h"
 #include "idmef-value-type.h"
-#include "idmef-type.h"
+#include "idmef-class.h"
 
 
 typedef struct idmef_value idmef_value_t;
@@ -48,11 +48,11 @@ int idmef_value_new_double(idmef_value_t **value, double val);
 int idmef_value_new_string(idmef_value_t **value, prelude_string_t *string);
 int idmef_value_new_time(idmef_value_t **value, idmef_time_t *time);
 int idmef_value_new_data(idmef_value_t **value, idmef_data_t *data);
-int idmef_value_new_object(idmef_value_t **value, idmef_object_type_t object_type, void *ptr);
+int idmef_value_new_class(idmef_value_t **value, idmef_class_id_t classid, void *ptr);
 int idmef_value_new_list(idmef_value_t **value);
-int idmef_value_new_enum(idmef_value_t **value, idmef_object_type_t type, const char *buf);
-int idmef_value_new_enum_from_string(idmef_value_t **value, idmef_object_type_t type, const char *buf);
-int idmef_value_new_enum_from_numeric(idmef_value_t **value, idmef_object_type_t type, int val);
+int idmef_value_new_enum(idmef_value_t **value, idmef_class_id_t classid, const char *buf);
+int idmef_value_new_enum_from_string(idmef_value_t **value, idmef_class_id_t classid, const char *buf);
+int idmef_value_new_enum_from_numeric(idmef_value_t **value, idmef_class_id_t classid, int val);
 
 int idmef_value_new(idmef_value_t **value, idmef_value_type_id_t type, void *ptr);
 int idmef_value_new_from_path(idmef_value_t **value, idmef_path_t *path, const char *buf);
@@ -82,7 +82,7 @@ int idmef_value_have_own_data(idmef_value_t *value);
 int idmef_value_dont_have_own_data(idmef_value_t *value);
 
 idmef_value_type_id_t idmef_value_get_type(idmef_value_t *value);
-idmef_object_type_t idmef_value_get_object_type(idmef_value_t *value);
+idmef_class_id_t idmef_value_get_class(idmef_value_t *value);
 
 void *idmef_value_get_object(idmef_value_t *value);
 

@@ -19,9 +19,10 @@ prelude-log
 
 </para>
 
-@priority: 
+@level: 
 @...: 
 <!-- # Unused Parameters # -->
+@priority: 
 @file: 
 @function: 
 @line: 
@@ -29,14 +30,23 @@ prelude-log
 @Varargs: 
 
 
+<!-- ##### MACRO prelude_log_debug ##### -->
+<para>
+
+</para>
+
+@level: 
+@...: 
+
+
 <!-- ##### ENUM prelude_log_t ##### -->
 <para>
 
 </para>
 
-@PRELUDE_LOG_INFO: 
-@PRELUDE_LOG_WARN: 
 @PRELUDE_LOG_ERR: 
+@PRELUDE_LOG_WARN: 
+@PRELUDE_LOG_INFO: 
 @PRELUDE_LOG_DEBUG: 
 
 <!-- ##### ENUM prelude_log_flags_t ##### -->
@@ -46,7 +56,22 @@ prelude-log
 
 @PRELUDE_LOG_FLAGS_QUIET: 
 @PRELUDE_LOG_FLAGS_SYSLOG: 
-@PRELUDE_LOG_FLAGS_DEBUG: 
+
+<!-- ##### FUNCTION prelude_log_set_level ##### -->
+<para>
+
+</para>
+
+@level: 
+
+
+<!-- ##### FUNCTION prelude_log_set_debug_level ##### -->
+<para>
+
+</para>
+
+@level: 
+
 
 <!-- ##### FUNCTION prelude_log_get_flags ##### -->
 <para>
@@ -85,11 +110,13 @@ prelude-log
 
 </para>
 
-@priority: 
+@level: 
 @file: 
 @function: 
 @line: 
 @fmt: 
 @ap: 
+<!-- # Unused Parameters # -->
+@priority: 
 
 

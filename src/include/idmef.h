@@ -31,7 +31,7 @@
 #include "prelude-string.h"
 #include "idmef-time.h"
 #include "idmef-data.h"
-#include "idmef-type.h"
+#include "idmef-class.h"
 #include "idmef-value.h"
 #include "idmef-tree-wrap.h"
 #include "idmef-path.h"

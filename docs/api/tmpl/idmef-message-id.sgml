@@ -301,14 +301,21 @@ idmef-message-id
 
 
 
-<!-- ##### MACRO MSG_USER_ID_NAME ##### -->
+<!-- ##### MACRO MSG_USER_ID_TYPE ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO MSG_USER_ID_TYPE ##### -->
+<!-- ##### MACRO MSG_USER_ID_TTY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_USER_ID_NAME ##### -->
 <para>
 
 </para>
@@ -504,20 +511,6 @@ idmef-message-id
 
 
 
-<!-- ##### MACRO MSG_SERVICE_NAME ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO MSG_SERVICE_PORT ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### MACRO MSG_SERVICE_IANA_PROTOCOL_NUMBER ##### -->
 <para>
 
@@ -526,6 +519,20 @@ idmef-message-id
 
 
 <!-- ##### MACRO MSG_SERVICE_IANA_PROTOCOL_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SERVICE_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SERVICE_PORT ##### -->
 <para>
 
 </para>
@@ -988,6 +995,13 @@ idmef-message-id
 
 
 <!-- ##### MACRO MSG_HEARTBEAT_ANALYZER_TIME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_HEARTBEAT_HEARTBEAT_INTERVAL ##### -->
 <para>
 
 </para>

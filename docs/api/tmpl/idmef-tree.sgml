@@ -116,6 +116,14 @@ idmef-tree
 @name: 
 
 
+<!-- ##### MACRO IDENT ##### -->
+<para>
+
+</para>
+
+@name: 
+
+
 <!-- ##### MACRO IDMEF_VERSION ##### -->
 <para>
 

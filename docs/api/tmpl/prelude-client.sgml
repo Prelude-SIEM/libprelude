@@ -29,6 +29,7 @@ prelude-client
 
 @PRELUDE_CLIENT_FLAGS_ASYNC_SEND: 
 @PRELUDE_CLIENT_FLAGS_ASYNC_TIMER: 
+@PRELUDE_CLIENT_FLAGS_HEARTBEAT: 
 
 <!-- ##### FUNCTION prelude_client_get_unique_ident ##### -->
 <para>

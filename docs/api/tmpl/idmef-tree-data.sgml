@@ -22,7 +22,7 @@ idmef-tree-data
 @name: 
 @list: 
 @type: 
-@object_type: 
+@class: 
 
 <!-- ##### STRUCT object_data_t ##### -->
 <para>

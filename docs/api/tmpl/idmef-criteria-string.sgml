@@ -14,13 +14,3 @@ idmef-criteria-string
 
 </para>
 
-<!-- ##### FUNCTION idmef_criteria_new_string ##### -->
-<para>
-
-</para>
-
-@criteria: 
-@str: 
-@Returns: 
-
-

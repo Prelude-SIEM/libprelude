@@ -144,13 +144,13 @@ idmef-value
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_value_new_object ##### -->
+<!-- ##### FUNCTION idmef_value_new_class ##### -->
 <para>
 
 </para>
 
 @value: 
-@object_type: 
+@classid: 
 @ptr: 
 @Returns: 
 
@@ -170,9 +170,11 @@ idmef-value
 </para>
 
 @value: 
-@type: 
+@classid: 
 @buf: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@type: 
 
 
 <!-- ##### FUNCTION idmef_value_new_enum_from_string ##### -->
@@ -181,9 +183,11 @@ idmef-value
 </para>
 
 @value: 
-@type: 
+@classid: 
 @buf: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@type: 
 
 
 <!-- ##### FUNCTION idmef_value_new_enum_from_numeric ##### -->
@@ -192,9 +196,11 @@ idmef-value
 </para>
 
 @value: 
-@type: 
+@classid: 
 @val: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@type: 
 
 
 <!-- ##### FUNCTION idmef_value_new ##### -->
@@ -411,7 +417,7 @@ idmef-value
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_value_get_object_type ##### -->
+<!-- ##### FUNCTION idmef_value_get_class ##### -->
 <para>
 
 </para>
@@ -434,8 +440,8 @@ idmef-value
 </para>
 
 @value: 
-@extra: 
 @callback: 
+@extra: 
 @Returns: 
 
 

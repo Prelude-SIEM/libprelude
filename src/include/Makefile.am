@@ -5,6 +5,7 @@ include_HEADERS = common.h			\
 		  variable.h			\
 		  idmef.h			\
 		  idmef-additional-data.h	\
+		  idmef-class.h			\
 		  idmef-criteria.h		\
 		  idmef-criterion-value.h	\
 		  idmef-data.h			\
@@ -16,7 +17,6 @@ include_HEADERS = common.h			\
 		  idmef-time.h			\
 		  idmef-tree-data.h		\
 		  idmef-tree-wrap.h		\
-		  idmef-type.h			\
 		  idmef-value.h			\
 		  idmef-value-type.h		\
 		  prelude.h			\

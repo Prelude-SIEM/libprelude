@@ -43,3 +43,13 @@ tls-util
 @Returns: 
 
 
+<!-- ##### FUNCTION tls_certificate_get_peer_analyzerid ##### -->
+<para>
+
+</para>
+
+@session: 
+@analyzerid: 
+@Returns: 
+
+

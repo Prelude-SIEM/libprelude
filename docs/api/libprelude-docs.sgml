@@ -1,6 +1,7 @@
 <!doctype book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
 <!ENTITY libprelude-idmef-criteria-stringyac SYSTEM "sgml/idmef-criteria-string.yac.sgml">
 <!ENTITY libprelude-code-from-errno SYSTEM "sgml/code-from-errno.sgml">
+<!ENTITY libprelude-prelude-error SYSTEM "sgml/prelude-error.sgml">
 <!ENTITY libprelude-idmef-tree SYSTEM "sgml/idmef-tree.sgml">
 <!ENTITY libprelude-prelude-linked-object SYSTEM "sgml/prelude-linked-object.sgml">
 <!ENTITY libprelude-idmef-tree-wrap SYSTEM "sgml/idmef-tree-wrap.sgml">
@@ -9,7 +10,6 @@
 <!ENTITY libprelude-prelude-message-id SYSTEM "sgml/prelude-message-id.sgml">
 <!ENTITY libprelude-prelude-log SYSTEM "sgml/prelude-log.sgml">
 <!ENTITY libprelude-prelude-msg SYSTEM "sgml/prelude-msg.sgml">
-<!ENTITY libprelude-idmef-criteria-string SYSTEM "sgml/idmef-criteria-string.sgml">
 <!ENTITY libprelude-ntp SYSTEM "sgml/ntp.sgml">
 <!ENTITY libprelude-prelude-option SYSTEM "sgml/prelude-option.sgml">
 <!ENTITY libprelude-prelude-connection SYSTEM "sgml/prelude-connection.sgml">
@@ -18,12 +18,12 @@
 <!ENTITY libprelude-prelude-msgbuf SYSTEM "sgml/prelude-msgbuf.sgml">
 <!ENTITY libprelude-idmef-message-write SYSTEM "sgml/idmef-message-write.sgml">
 <!ENTITY libprelude-prelude-ident SYSTEM "sgml/prelude-ident.sgml">
-<!ENTITY libprelude-idmef-message-id-format SYSTEM "sgml/idmef-message-id-format.sgml">
 <!ENTITY libprelude-prelude-client SYSTEM "sgml/prelude-client.sgml">
 <!ENTITY libprelude-prelude-client-profile SYSTEM "sgml/prelude-client-profile.sgml">
 <!ENTITY libprelude-prelude-plugin SYSTEM "sgml/prelude-plugin.sgml">
 <!ENTITY libprelude-prelude-hash SYSTEM "sgml/prelude-hash.sgml">
 <!ENTITY libprelude-prelude-failover SYSTEM "sgml/prelude-failover.sgml">
+<!ENTITY libprelude-idmef-class SYSTEM "sgml/idmef-class.sgml">
 <!ENTITY libprelude-prelude-connection-pool SYSTEM "sgml/prelude-connection-pool.sgml">
 <!ENTITY libprelude-prelude-async SYSTEM "sgml/prelude-async.sgml">
 <!ENTITY libprelude-idmef-message-read SYSTEM "sgml/idmef-message-read.sgml">
@@ -42,8 +42,6 @@
 <!ENTITY libprelude-idmef-tree-data SYSTEM "sgml/idmef-tree-data.sgml">
 <!ENTITY libprelude-idmef-additional-data SYSTEM "sgml/idmef-additional-data.sgml">
 <!ENTITY libprelude-idmef-time SYSTEM "sgml/idmef-time.sgml">
-<!ENTITY libprelude-idmef-type SYSTEM "sgml/idmef-type.sgml">
-<!ENTITY libprelude-prelude-extract SYSTEM "sgml/prelude-extract.sgml">
 <!ENTITY libprelude-idmef-message-id SYSTEM "sgml/idmef-message-id.sgml">
 <!ENTITY libprelude-prelude-timer SYSTEM "sgml/prelude-timer.sgml">
 <!ENTITY libprelude-idmef-value SYSTEM "sgml/idmef-value.sgml">
@@ -60,6 +58,7 @@
     <title>[Insert title here]</title>
     &libprelude-idmef-criteria-stringyac;
     &libprelude-code-from-errno;
+    &libprelude-prelude-error;
     &libprelude-idmef-tree;
     &libprelude-prelude-linked-object;
     &libprelude-idmef-tree-wrap;
@@ -68,7 +67,6 @@
     &libprelude-prelude-message-id;
     &libprelude-prelude-log;
     &libprelude-prelude-msg;
-    &libprelude-idmef-criteria-string;
     &libprelude-ntp;
     &libprelude-prelude-option;
     &libprelude-prelude-connection;
@@ -77,12 +75,12 @@
     &libprelude-prelude-msgbuf;
     &libprelude-idmef-message-write;
     &libprelude-prelude-ident;
-    &libprelude-idmef-message-id-format;
     &libprelude-prelude-client;
     &libprelude-prelude-client-profile;
     &libprelude-prelude-plugin;
     &libprelude-prelude-hash;
     &libprelude-prelude-failover;
+    &libprelude-idmef-class;
     &libprelude-prelude-connection-pool;
     &libprelude-prelude-async;
     &libprelude-idmef-message-read;
@@ -101,8 +99,6 @@
     &libprelude-idmef-tree-data;
     &libprelude-idmef-additional-data;
     &libprelude-idmef-time;
-    &libprelude-idmef-type;
-    &libprelude-prelude-extract;
     &libprelude-idmef-message-id;
     &libprelude-prelude-timer;
     &libprelude-idmef-value;

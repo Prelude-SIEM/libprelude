@@ -50,7 +50,7 @@ idmef-value-type
 @IDMEF_VALUE_TYPE_DATA: 
 @IDMEF_VALUE_TYPE_ENUM: 
 @IDMEF_VALUE_TYPE_LIST: 
-@IDMEF_VALUE_TYPE_OBJECT: 
+@IDMEF_VALUE_TYPE_CLASS: 
 
 <!-- ##### STRUCT idmef_value_type_t ##### -->
 <para>

@@ -59,7 +59,7 @@ sub	header
 #ifndef _LIBPRELUDE_IDMEF_TREE_WRAP_H
 #define _LIBPRELUDE_IDMEF_TREE_WRAP_H
 
-#include \"idmef-type.h\"
+#include \"idmef-class.h\"
 #include \"idmef-value.h\"
 #include \"prelude-inttypes.h\"
 #include \"prelude-string.h\"
@@ -126,7 +126,7 @@ sub	struct_get_child
     my	$struct = shift;
     my	$n = 0;
 
-    $self->output("int idmef_$struct->{short_typename}_get_child(void *p, idmef_child_t child, void **childptr);\n");
+    $self->output("int idmef_$struct->{short_typename}_get_child(void *p, idmef_class_child_id_t child, void **childptr);\n");
 }
 
 sub	struct_new_child
@@ -136,7 +136,7 @@ sub	struct_new_child
     my	$struct = shift;
     my	$n = 0;
 
-    $self->output("int idmef_$struct->{short_typename}_new_child(void *p, idmef_child_t child, int n, void **ret);\n");
+    $self->output("int idmef_$struct->{short_typename}_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);\n");
     $self->output("\n");
 }
 
@@ -294,7 +294,7 @@ sub	obj
     my	$tree = shift;
     my	$obj = shift;
 
-    push(@{ $self->{type_list} }, [ "IDMEF_OBJECT_TYPE_" . uc("$obj->{short_typename}") => $obj->{id} ])
+    push(@{ $self->{type_list} }, [ "IDMEF_CLASS_ID_" . uc("$obj->{short_typename}") => $obj->{id} ])
 	if ( $obj->{obj_type} != &OBJ_PRE_DECLARED );
 }
 

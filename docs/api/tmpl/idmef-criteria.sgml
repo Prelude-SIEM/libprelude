@@ -222,3 +222,13 @@ idmef-criteria
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_criteria_new_from_string ##### -->
+<para>
+
+</para>
+
+@criteria: 
+@str: 
+@Returns: 
+
+

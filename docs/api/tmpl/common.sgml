@@ -94,3 +94,12 @@ common
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_impact_severity_to_msg_priority ##### -->
+<para>
+
+</para>
+
+@severity: 
+@Returns: 
+
+

@@ -73,7 +73,7 @@ sub	header
 
 #include \"idmef-time.h\"
 #include \"idmef-data.h\"
-#include \"idmef-type.h\"
+#include \"idmef-class.h\"
 #include \"idmef-value.h\"
 
 #include \"idmef-tree-wrap.h\"
@@ -210,7 +210,7 @@ sub	struct_get_child
     my	$n = 0;
 
     $self->output("
-int idmef_$struct->{short_typename}_get_child(void *p, idmef_child_t child, void **childptr)
+int idmef_$struct->{short_typename}_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 \{
 	$struct->{typename} *ptr = p;
 	
@@ -279,7 +279,7 @@ sub	struct_new_child
     my	$n = 0;
 
     $self->output("
-int idmef_$struct->{short_typename}_new_child(void *p, idmef_child_t child, int n, void **ret)
+int idmef_$struct->{short_typename}_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 \{
 	$struct->{typename} *ptr = p;
     
@@ -350,7 +350,7 @@ sub	struct_destroy_internal
 static void idmef_$struct->{short_typename}_destroy_internal($struct->{typename} *ptr)
 \{
 ");
-
+    
     $self->output("
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
@@ -374,6 +374,7 @@ static void idmef_$struct->{short_typename}_destroy_internal($struct->{typename}
 
 		prelude_list_for_each_safe(&ptr->$field->{name}, tmp, n) \{
 			entry = prelude_list_entry(tmp, $field->{typename}, list);
+                        prelude_list_del_init(&entry->list);
 			$destroy_func(entry);
 		\}
 	\}
@@ -615,12 +616,12 @@ int idmef_$struct->{short_typename}_get_${name}_value($struct->{typename} *ptr, 
 	}
 
 	$self->output("
-	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ", ${refer}ptr->$field->{name});
+	return idmef_value_new_class(value, IDMEF_CLASS_ID_" . uc("$field->{short_typename}") . ", ${refer}ptr->$field->{name});
 \}
 ");
 
     } elsif ( $field->{metatype} & &METATYPE_ENUM ) {
-	my $value_func = "idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ", ptr->$field->{name})";
+	my $value_func = "idmef_value_new_enum_from_numeric(value, IDMEF_CLASS_ID_" . uc("$field->{short_typename}") . ", ptr->$field->{name})";
 
 	$self->output("
 int idmef_$struct->{short_typename}_get_${name}_value($struct->{typename} *ptr, idmef_value_t **value)
@@ -831,7 +832,7 @@ $field->{typename} idmef_$struct->{short_typename}_get_$field->{var}($struct->{t
     $self->output("
 int idmef_$struct->{short_typename}_get_$field->{var}_value($struct->{typename} *ptr, idmef_value_t **value)
 \{
-	return idmef_value_new_enum_from_numeric(value, IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ", ptr->$field->{var});
+	return idmef_value_new_enum_from_numeric(value, IDMEF_CLASS_ID_" . uc("$field->{short_typename}") . ", ptr->$field->{var});
 \}
 ");
 
@@ -893,8 +894,8 @@ int idmef_$struct->{short_typename}_get_$member->{name}_value($struct->{typename
                 return 0;
         }
 
-	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_" . uc("$member->{short_typename}") . ",
-                                      ptr->$field->{name}.$member->{name});                        
+	return idmef_value_new_class(value, IDMEF_CLASS_ID_" . uc("$member->{short_typename}") . ",
+                                     ptr->$field->{name}.$member->{name});                        
 \}
 ");
 
@@ -987,11 +988,15 @@ $field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name
  * idmef_$struct->{short_typename}_set_$field->{short_name}:
  * \@ptr: pointer to a #$struct->{typename} object.
  * \@object: pointer to a #$field->{typename} object.
+ * \@pos: Position in the list.
  *
- * Add \@object to the beginning of \@ptr list of #$field->{typename} object.
+ * Add \@object to position \@pos of \@ptr list of #$field->{typename} object.
  */
 void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object, int pos)
 \{
+        if ( ! prelude_list_is_empty(&object->list) )
+                prelude_list_del_init(&object->list);
+
         list_insert(&ptr->$field->{name}, &object->list, pos);
 \}
 
@@ -1000,9 +1005,10 @@ void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename
  * idmef_$struct->{short_typename}_new_$field->{short_name}:
  * \@ptr: pointer to a #$struct->{typename} object.
  * \@ret: pointer to an address where to store the created #$field->{typename} object.
+ * \@pos: position in the list.
  *
  * Create a new #$field->{typename} children of \@ptr,
- * and add it to the tail of \@ptr list of #$field->{typename} object.
+ * and add it to position \@pos of \@ptr list of #$field->{typename} object.
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -1047,7 +1053,7 @@ int idmef_$struct->{short_typename}_get_$field->{short_name}_value($struct->{typ
 
     } else {
 	$self->output("
-		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ", entry);
+		ret = idmef_value_new_class(&val, IDMEF_CLASS_ID_" . uc("$field->{short_typename}") . ", entry);
 		if ( ret < 0 ) \{
 			idmef_value_destroy(*value);
 			return ret;

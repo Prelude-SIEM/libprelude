@@ -42,6 +42,7 @@ libprelude_la_SOURCES = 		\
 	prelude-string.c		\
 	prelude-timer.c			\
 	idmef-additional-data.c		\
+	idmef-class.c			\
 	idmef-criteria.c		\
 	idmef-criteria-string.yac.y	\
 	idmef-criteria-string.lex.l	\
@@ -53,7 +54,6 @@ libprelude_la_SOURCES = 		\
 	idmef-path.c			\
 	idmef-time.c			\
 	idmef-tree-wrap.c		\
-	idmef-type.c			\
 	idmef-value.c			\
 	idmef-value-type.c		
 

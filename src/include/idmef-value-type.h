@@ -58,7 +58,7 @@ typedef enum {
         IDMEF_VALUE_TYPE_DATA    =  13,
         IDMEF_VALUE_TYPE_ENUM    =  14,
         IDMEF_VALUE_TYPE_LIST    =  15,
-        IDMEF_VALUE_TYPE_OBJECT  =  16
+        IDMEF_VALUE_TYPE_CLASS   =  16
 } idmef_value_type_id_t;
 
 
