@@ -847,7 +847,7 @@ static void print_wrapped(const char *line, int descoff)
 
 static void print_options(prelude_list_t *optlist, prelude_option_type_t type, int descoff, int depth) 
 {
-        int i, separator;
+        int i;
         prelude_option_t *opt;
         prelude_list_t *tmp;
         
@@ -863,6 +863,9 @@ static void print_options(prelude_list_t *optlist, prelude_option_type_t type, i
                 
                 for ( i = 0; i < depth; i++ )
                         printf("  ");
+
+                if ( ! prelude_list_empty(&opt->optlist) )
+                        putchar('\n');
                 
                 if ( opt->shortopt != 0 )
                         i += printf("-%c ", opt->shortopt);
@@ -873,15 +876,12 @@ static void print_options(prelude_list_t *optlist, prelude_option_type_t type, i
                 while ( i++ < descoff )
                         putchar(' ');
 
-                if ( opt->description ) {
+                if ( opt->description )
                         print_wrapped(opt->description, depth + descoff);
-                        separator = (strlen(opt->description) > (80 - descoff)) ? 1 : 0;
-                        if ( separator )
-                                putchar('\n');
-                } else
+                else
                         putchar('\n');
-                
-                if ( ! prelude_list_empty(&opt->optlist) ) 
+
+                if ( ! prelude_list_empty(&opt->optlist) )
                         print_options(&opt->optlist, type, descoff, depth + 1);
         }
 
