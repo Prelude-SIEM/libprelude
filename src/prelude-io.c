@@ -24,6 +24,7 @@
 #include "config.h"
 
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
@@ -40,22 +41,94 @@
  #include <sys/filio.h>
 #endif
 
+
 #include "prelude-log.h"
 #include "prelude-io.h"
+#include "common.h"
+
 
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_IO
 #include "prelude-error.h"
 
 
+#define CHUNK_SIZE 1024
+
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
+
+
 struct prelude_io {
+
         int fd;
         void *fd_ptr;
+        
+        size_t size;
+        size_t rindex;
         
         int (*close)(prelude_io_t *pio);
         ssize_t (*read)(prelude_io_t *pio, void *buf, size_t count);
         ssize_t (*write)(prelude_io_t *pio, const void *buf, size_t count);
         ssize_t (*pending)(prelude_io_t *pio);
 };
+
+
+
+/*
+ * Buffer IO functions.
+ */
+static ssize_t buffer_read(prelude_io_t *pio, void *buf, size_t count)
+{
+        if ( pio->size - pio->rindex == 0 )
+                return 0;
+
+        count = MIN(count, pio->size - pio->rindex);
+
+        memcpy(buf, (unsigned char *) pio->fd_ptr + pio->rindex, count);
+        pio->rindex += count;
+        
+        return count;
+}
+
+
+
+static ssize_t buffer_write(prelude_io_t *pio, const void *buf, size_t count)
+{
+        unsigned char *new;
+        
+        if ( pio->size + count <= pio->size )
+                return -1;
+        
+        new = prelude_realloc(pio->fd_ptr, pio->size + count);
+        if ( ! new )
+                return prelude_error_from_errno(errno);
+        
+        memcpy(new + pio->size, buf, count);
+
+        pio->fd_ptr = new;
+        pio->size += count;
+        
+        return count;
+}
+
+
+
+static int buffer_close(prelude_io_t *pio)
+{
+        if ( pio->fd_ptr ) {
+                free(pio->fd_ptr);
+                pio->fd_ptr = NULL;
+                pio->size = pio->rindex = 0;
+        }
+
+        return 0;
+}
+
+
+
+static ssize_t buffer_pending(prelude_io_t *pio)
+{
+        return pio->size - pio->rindex;
+}
+
 
 
 
@@ -631,6 +704,20 @@ void prelude_io_set_sys_io(prelude_io_t *pio, int fd)
 
 
 
+int prelude_io_set_buffer_io(prelude_io_t *pio)
+{
+        pio->size = pio->rindex = 0;
+        
+        pio->read = buffer_read;
+        pio->write = buffer_write;
+        pio->close = buffer_close;
+        pio->pending = buffer_pending;
+        
+        return 0;
+}
+
+
+
 /**
  * prelude_io_get_fd:
  * @pio: A pointer on a #prelude_io_t object.
@@ -643,11 +730,12 @@ int prelude_io_get_fd(prelude_io_t *pio)
 }
 
 
+
 /**
  * prelude_io_get_fdptr:
  * @pio: A pointer on a #prelude_io_t object.
  *
- * Returns: Pointer associated with this object (file, tls, or NULL).
+ * Returns: Pointer associated with this object (file, tls, buffer, or NULL).
  */
 void *prelude_io_get_fdptr(prelude_io_t *pio) 
 {
