@@ -126,6 +126,7 @@ for flag in $acx_pthread_flags; do
 
                 -*)
                 AC_MSG_CHECKING([whether pthreads work with $flag])
+		PTHREAD_LIBS="$flag"
                 PTHREAD_CFLAGS="$flag"
                 ;;
 
