@@ -100,13 +100,10 @@ static prelude_msg_t *call_alloc_cb(prelude_msg_t *msg)
 
 
 
-static void msg_mark_end(prelude_msg_t *msg) 
+static void write_message_header(prelude_msg_t *msg) 
 {
         uint32_t dlen;
         uint32_t hdr_offset = msg->header_index;
-        
-        if ( msg->write_index - msg->header_index - PRELUDE_MSG_HDR_SIZE <= 0 ) 
-                return;
         
         dlen = htonl(msg->write_index - msg->header_index - PRELUDE_MSG_HDR_SIZE);
         
@@ -528,11 +525,11 @@ int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src
 ssize_t prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst) 
 {
         uint32_t dlen = msg->write_index;
-
+        
         /*
          * no need to send... There's no data in this message.
-         */
-        if ( msg->write_index == PRELUDE_MSG_HDR_SIZE )
+         */        
+        if ( msg->write_index - msg->header_index - PRELUDE_MSG_HDR_SIZE <= 0 ) 
                 return 0;
         
         /*
@@ -541,7 +538,7 @@ ssize_t prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst)
          * mark end of the message, cause the caller didn't do it in theses case.
          */
         if ( msg->header_index == 0 || msg->hdr.is_fragment ) 
-                msg_mark_end(msg);
+                write_message_header(msg);
 
         /*
          * in this case, prelude_msg_mark_end() was called.
@@ -580,15 +577,10 @@ void prelude_msg_recycle(prelude_msg_t *msg)
  */
 void prelude_msg_mark_end(prelude_msg_t *msg)
 {
-        msg_mark_end(msg);
+        write_message_header(msg);
                 
         if ( msg->write_index + PRELUDE_MSG_HDR_SIZE + MINIMUM_FRAGMENT_DATA_SIZE > msg->hdr.datalen ) {
-
-                /*
-                 * we don't have enough space to store an header + MINIMUM_FRAGMENT_DATA_SIZE byte of data.
-                 */
-                msg->write_index += PRELUDE_MSG_HDR_SIZE;
-                
+                                
                 msg = call_alloc_cb(msg);
                 if ( ! msg ) 
                         return;
@@ -615,9 +607,9 @@ void prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *
 {        
         uint32_t l;
         uint8_t end_of_tag = 0xff;
-        
-        l = htonl(len);
 
+        l = htonl(len);
+        
         set_data(&msg, &tag, sizeof(tag));
         set_data(&msg, &l, sizeof(l));
         set_data(&msg, data, len);
