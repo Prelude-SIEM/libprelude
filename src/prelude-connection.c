@@ -304,6 +304,9 @@ static void close_connection_fd(prelude_connection_t *cnx)
 {
         if ( ! (cnx->state & PRELUDE_CONNECTION_ESTABLISHED) )
                 return;
+
+        if ( cnx->saddr )
+                free(cnx->saddr);
         
         cnx->state &= ~PRELUDE_CONNECTION_ESTABLISHED;
         prelude_io_close(cnx->fd);
