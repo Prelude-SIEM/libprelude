@@ -59,12 +59,10 @@ dnl **************************************************
 
 AC_CHECK_LIB(pthread, pthread_create, pthrlib="yes")
 if test x$pthrlib = xyes; then
-	PTHREAD_LIBS="-lpthread"
+	LIBS="$LIBS -lpthread"
 else
-	AC_CHECK_LIB(c_r, pthread_create, PTHREAD_LIBS="-lc_r")
+	AC_CHECK_LIB(c_r, pthread_create, LIBS="$LIBS -lc_r")
 fi
-
-AC_SUBST(PTHREAD_LIBS)
 
 
 
@@ -79,6 +77,7 @@ AC_ARG_ENABLE(openssl, [  --enable-openssl Use OpenSSL to communicate with Repor
 
 if test x$enable_openssl = xauto ; then
 	if test x$openssl_header = xyes; then
+		SSL_LIBS="-lssl -lcrypto"	
 		LIBS="$LIBS -lssl -lcrypto"
 		AC_DEFINE(HAVE_SSL)
     		enable_openssl=yes
@@ -86,6 +85,8 @@ if test x$enable_openssl = xauto ; then
     		enable_openssl=no
   	fi
 fi
+
+AC_SUBST(SSL_LIBS)
 
 
 dnl **************************************************

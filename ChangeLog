@@ -1,3 +1,10 @@
+2001-12-13  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* sensor-adduser/Makefile.am: 
+	* src/Makefile.am: 
+	* configure.ac: 
+	Fix : sensor-adduser doesn't compile without OpenSSL.
+
 2001-12-12  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-client-mgr.c (prelude_client_mgr_broadcast): 

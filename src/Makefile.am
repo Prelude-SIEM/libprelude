@@ -27,5 +27,5 @@ libprelude_la_SOURCES = 		\
 	common.c
 
 
-libprelude_la_LIBADD = ../libmissing/libmissing.a @PTHREAD_LIBS@
+libprelude_la_LIBADD = ../libmissing/libmissing.a @LIBS@
 
