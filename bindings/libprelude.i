@@ -77,8 +77,13 @@ int prelude_option_recv_set(prelude_msg_t *msg)
 	char *str;
 	int retval;
 
-	return prelude_option_recv_reply(msg, &source_id, &request_id, (void **) &str) !=
-		PRELUDE_OPTION_REPLY_TYPE_ERROR;	     
+	if ( prelude_option_recv_reply(msg, &source_id, &request_id, (void **) &str) ==
+	     PRELUDE_OPTION_REPLY_TYPE_ERROR ) {
+		fprintf(stderr, "reply error: %s\n", str);
+		return 0;
+	}
+
+	return 1;
 }
 
 #ifdef SWIGPYTHON
