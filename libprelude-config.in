@@ -1,11 +1,12 @@
 #!/bin/sh
 
 prefix=@prefix@
+prelude_conf_prefix=@prelude_config_dir@
 exec_prefix=@exec_prefix@
 exec_prefix_set=no
 
 usage="\
-Usage: libprelude-config [--prefix[=DIR]] [--exec-prefix[=DIR]] [--version] [--libs] [--pthread-cflags] [--cflags]"
+Usage: libprelude-config [--prefix[=DIR]] [--exec-prefix[=DIR]] [--prelude-config-prefix] [--version] [--libs] [--pthread-cflags] [--cflags]"
 
 if test $# -eq 0; then
       echo "${usage}" 1>&2
@@ -37,6 +38,10 @@ while test $# -gt 0; do
 
     --exec-prefix)
       echo $exec_prefix
+      ;;
+
+    --prelude-config-prefix)
+      echo $prelude_conf_prefix
       ;;
 
     --version)
