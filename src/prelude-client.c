@@ -729,7 +729,8 @@ static int set_manager_addr(prelude_option_t *opt, const char *optarg, prelude_s
                         return ret;
                 
                 prelude_connection_pool_set_data(pool, client);
-                prelude_connection_pool_set_flags(pool, PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT);
+                prelude_connection_pool_set_flags(pool, prelude_connection_pool_get_flags(pool) |
+                                                  PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT);
                 prelude_connection_pool_set_event_handler(pool, PRELUDE_CONNECTION_POOL_EVENT_INPUT, connection_pool_event_cb);
                 
                 client->manager_list = pool;
