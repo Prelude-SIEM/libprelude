@@ -228,8 +228,9 @@ int idmef_time_to_ntpstamp(const idmef_time_t *time, char *outptr, size_t size)
         unsigned ts_roundbit = TS_ROUNDBIT;     /* defaults to 20 bits (us) */
         int ret;
 
+	tv.tv_sec = idmef_time_get_sec(time);
         tv.tv_usec = idmef_time_get_usec(time);
-        
+
         sTVTOTS(&tv, &ts);
 
         ts.l_ui += JAN_1970;                    /* make it time since 1900 */
