@@ -237,7 +237,7 @@ int socket
 <FUNCTION>
 <NAME>prelude_auth_create_account</NAME>
 <RETURNS>int  </RETURNS>
-const char *filename
+const char *filename, int crypted
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_auth_check</NAME>

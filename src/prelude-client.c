@@ -211,9 +211,8 @@ static int handle_plaintext_connection(prelude_client_t *client, int sock)
         
         msg = prelude_msg_new(2, ulen + plen, PRELUDE_MSG_AUTH_PLAINTEXT, 0);
         if ( ! msg ) {
-                free(user);
-                free(pass);
-                return -1;
+                ret = -1;
+                goto err;
         }
 
         prelude_msg_set(msg, PRELUDE_MSG_AUTH_USERNAME, ulen, user);
@@ -226,6 +225,9 @@ static int handle_plaintext_connection(prelude_client_t *client, int sock)
 
         prelude_msg_destroy(msg);
 
+  err:
+        free(user);
+        free(pass);
         return ret;
 }
 
