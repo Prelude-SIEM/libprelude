@@ -28,18 +28,16 @@
 #ifdef NEED_ALIGNED_ACCESS
 
 /*
- * for memmove().
+ * Using memmove make the generated code 200% slower,
+ * that's the reason we use theses hack.
  */
-#include <string.h> 
+
+#define byte(buf, x) ((uint8_t *) (buf))[(x)]
 
 
 static inline uint16_t align_uint16(const void *buf)
 {
-        uint16_t tmp;
-        
-        memmove(&tmp, buf, sizeof(tmp));
-
-        return tmp;
+        return byte(buf, 0) | byte(buf, 1);
 }
 
 
@@ -47,11 +45,7 @@ static inline uint16_t align_uint16(const void *buf)
 
 static inline uint32_t align_uint32(const void *buf) 
 {
-        uint32_t tmp;
-
-        memmove(&tmp, buf, sizeof(tmp));
-
-        return tmp;
+        return byte(buf, 0) | byte(buf, 1) | byte(buf, 2) | byte(buf, 3);
 }
 
 
@@ -59,11 +53,8 @@ static inline uint32_t align_uint32(const void *buf)
 
 static inline uint64_t align_uint64(const void *buf) 
 {
-        uint64_t tmp;
-
-        memmove(&tmp, buf, sizeof(tmp));
-
-        return tmp;
+        return  byte(buf, 0) | byte(buf, 1) | byte(buf, 2) | byte(buf, 3) |
+                byte(buf, 4) | byte(buf, 5) | byte(buf, 6) | byte(buf, 7);
 }
 
 

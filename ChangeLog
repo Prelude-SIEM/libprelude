@@ -1,3 +1,13 @@
+2002-04-16  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/include/extract.h: 
+	stop using memmove for alignment care ! Checksum performance
+	test resulted in ~ 600MB/s without alignment care, and ~ 20MB/s
+	with it (memmove).
+
+	The new version (which cast every byte of the buffer to a single 
+	8 bits integer and OR them all) run at ~ 200MB/s, which is way better.
+
 2002-04-15  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/include/list.h: included modified patch from
