@@ -53,6 +53,7 @@
 #include "prelude-getopt-wide.h"
 #include "prelude-failover.h"
 #include "extract.h"
+#include "prelude-timer-config.h"
 
 #define other_error -2
 #define communication_error -1
@@ -97,7 +98,7 @@ typedef struct cnx {
          */
         int use_timer;
         prelude_timer_t timer;
-
+        
         prelude_failover_t *failover;
         
         /*
@@ -166,18 +167,22 @@ static void expand_timeout(prelude_timer_t *timer)
 
 static int process_request(prelude_connection_t *cnx) 
 {
+        uint8_t tag;
+        prelude_io_t *fd;
         prelude_msg_t *msg = NULL;
         prelude_msg_status_t status;
 
-        status = prelude_msg_read(&msg, prelude_connection_get_fd(cnx));
-        if ( status != prelude_msg_finished )
-                return status;
+        fd = prelude_connection_get_fd(cnx);
         
-        if ( prelude_msg_get_tag(msg) != PRELUDE_MSG_OPTION_REQUEST )
+        status = prelude_msg_read(&msg, fd);
+        if ( status != prelude_msg_finished )
                 return -1;
 
-        prelude_option_process_request(cnx, msg);
-
+        tag = prelude_msg_get_tag(msg);
+        
+        if ( tag == PRELUDE_MSG_OPTION_REQUEST )
+                prelude_option_process_request(prelude_connection_get_client(cnx), fd, msg);
+        
         prelude_msg_destroy(msg);
 
         return 0;
@@ -229,8 +234,8 @@ static void check_for_data_cb(void *arg)
                 if ( ! ret )
                         continue;
                 
-                ret = process_request(cnx);
-                if ( ret <= 0 )
+                ret = process_request(cnx);                
+                if ( ret < 0 )
                         FD_CLR(fd, &mgr->fds);
         }
 }
@@ -245,9 +250,9 @@ static int broadcast_message(prelude_msg_t *msg, cnx_list_t *clist, cnx_t *cnx)
 
         if ( ! cnx )
                 return 0;
-
+        
         if ( prelude_connection_get_state(cnx->cnx) & PRELUDE_CONNECTION_ESTABLISHED ) {
-                ret = prelude_connection_send_msg(cnx->cnx, msg);
+                ret = prelude_connection_send_msg(cnx->cnx, msg);                
                 if ( ret < 0 ) 
                         notify_dead(clist, cnx);
         }
@@ -268,14 +273,14 @@ static int walk_manager_lists(prelude_connection_mgr_t *cmgr, prelude_msg_t *msg
 {
         int ret = 0;
         cnx_list_t *or;
-
+        
         for ( or = cmgr->or_list; or != NULL; or = or->or ) {
                 
                 if ( or->dead == or->total ) {
                         ret = -2;
                         continue;
                 }
-                
+
                 ret = broadcast_message(msg, or, or->and);                
                 if ( ret == 0 )  /* AND of Manager emission succeed */
                         return 0;
@@ -439,7 +444,7 @@ static cnx_t *new_connection(prelude_client_t *client, cnx_list_t *clist, prelud
         
         if ( ! (state & PRELUDE_CONNECTION_ESTABLISHED) ) {
                 clist->dead++;
-                timer_init(&new->timer);
+                if ( use_timer ) timer_init(&new->timer);
         } else {
                 fd = prelude_io_get_fd(prelude_connection_get_fd(cnx));
                 FD_SET(fd, &clist->parent->fds);
@@ -500,17 +505,14 @@ static cnx_list_t *create_connection_list(prelude_connection_mgr_t *cmgr)
 {
         cnx_list_t *new;
 
-        new = malloc(sizeof(*new));
+        new = calloc(1, sizeof(*new));
         if ( ! new ) {
                 log(LOG_ERR, "memory exhausted.\n");
                 return NULL;
         }
 
-        new->dead = 0;
-        new->total = 0;
-        new->or = NULL;
         new->parent = cmgr;
-                
+        
         return new;
 }
 
@@ -829,7 +831,7 @@ prelude_connection_t *prelude_connection_mgr_search_connection(prelude_connectio
 
 int prelude_connection_mgr_add_connection(prelude_connection_mgr_t **mgr, prelude_connection_t *cnx, int use_timer) 
 {
-        cnx_t *c;
+        cnx_t **c;
         cnx_list_t *clist;
         
         if ( ! *mgr ) {
@@ -837,25 +839,30 @@ int prelude_connection_mgr_add_connection(prelude_connection_mgr_t **mgr, prelud
                 *mgr = connection_mgr_new(prelude_connection_get_client(cnx));
                 if ( ! *mgr )
                         return -1;
-                
+
                 timer_set_expire(&(*mgr)->timer, 1);
                 timer_set_data(&(*mgr)->timer, *mgr);
                 timer_set_callback(&(*mgr)->timer, check_for_data_cb);
-                timer_init(&(*mgr)->timer);
+
+                if ( use_timer )
+                        timer_init(&(*mgr)->timer);
         }
         
         clist = create_connection_list(*mgr);
         if ( ! clist ) 
                 return -1;
 
-        for ( c = clist->and; c && c->and; c = c->and );
+        for ( c = &clist->and; (*c); c = &(*c)->and );
 
-        c->and = new_connection(prelude_connection_get_client(cnx), clist, cnx, use_timer);
-        if ( ! c->and ) {
+        *c = new_connection(prelude_connection_get_client(cnx), clist, cnx, use_timer);
+        
+        if ( ! (*c) ) {
                 free(clist);
                 return -1;
         }
 
+        (*mgr)->or_list = clist;
+        
         return 0;
 }
 

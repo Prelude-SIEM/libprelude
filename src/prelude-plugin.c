@@ -256,7 +256,7 @@ static void destroy_instance(prelude_plugin_instance_t *instance)
 
 
 
-#if 0
+
 /*
  * FIXME: reactivate once the prelude-getopt get() option callback
  * is fixed: pass the option as an argument + fix the way we are
@@ -264,15 +264,24 @@ static void destroy_instance(prelude_plugin_instance_t *instance)
  */
 static int intercept_plugin_option_get(void **context, char *buf, size_t size)
 {
+        if ( ! *context ) {
+                log(LOG_ERR, "referenced instance not available.\n");
+                return -1;
+        }
+
+        return -1;
+        
+#if 0
         plugin_option_intercept_t *intercept;
         prelude_plugin_instance_t *pi = *context;
-        
+
         intercept = prelude_option_get_private_data(opt);
         assert(intercept);
 
         return intercept->plugin_option_get_cb(pi, buf, size);
-}
 #endif
+}
+
 
 
 
@@ -360,7 +369,9 @@ static int intercept_plugin_init_option(void **context, prelude_option_t *opt, c
 
 
 static int setup_plugin_option_intercept(plugin_entry_t *pe, prelude_option_t *opt,
-                                         int (*intercept)(void **context, prelude_option_t *opt, const char *arg))
+                                         int (*intercept_set)(void **context, prelude_option_t *opt, const char *arg),
+                                         int (*intercept_get)(void **context, char *buf, size_t size))
+                                         
 {
         plugin_option_intercept_t *new;
 
@@ -374,10 +385,12 @@ static int setup_plugin_option_intercept(plugin_entry_t *pe, prelude_option_t *o
         }
 
         new->entry = pe;
+        new->plugin_option_get_cb = prelude_option_get_get_callback(opt);
         new->func.plugin_option_set_cb = prelude_option_get_set_callback(opt);
         
         prelude_option_set_private_data(opt, new);
-        prelude_option_set_set_callback(opt, intercept);
+        prelude_option_set_set_callback(opt, intercept_set);
+        prelude_option_set_get_callback(opt, intercept_get);
 
         return 0;
 }
@@ -873,7 +886,7 @@ prelude_option_t *prelude_plugin_option_add(prelude_option_t *parent, int flags,
         new->func.plugin_option_set_cb = set;
         prelude_option_set_private_data(opt, new);
         
-        ret = setup_plugin_option_intercept(NULL, opt, intercept_plugin_option_set);
+        ret = setup_plugin_option_intercept(NULL, opt, intercept_plugin_option_set, intercept_plugin_option_get);
         if ( ret < 0 ) {
                 free(new);
                 free(opt);

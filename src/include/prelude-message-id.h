@@ -28,7 +28,6 @@
  * Top level message tag (to be used with prelude_msg_new()).
  */
 #define PRELUDE_MSG_IDMEF          0
-#define PRELUDE_MSG_OPTION_LIST    1
 #define PRELUDE_MSG_ID             3
 #define PRELUDE_MSG_AUTH           4
 #define PRELUDE_MSG_CM             5 
@@ -41,21 +40,11 @@
  */
 #define PRELUDE_MSG_ID_DECLARE  0
 
-
 /*
- * PRELUDE_MSG_AUTH submessage
+ * authentication msg
  */
-#define PRELUDE_MSG_AUTH_HAVE_SSL       0
-#define PRELUDE_MSG_AUTH_HAVE_PLAINTEXT 1
-
-#define PRELUDE_MSG_AUTH_SSL       2
-#define PRELUDE_MSG_AUTH_PLAINTEXT 3
-#define PRELUDE_MSG_AUTH_USERNAME  4
-#define PRELUDE_MSG_AUTH_PASSWORD  5
-
 #define PRELUDE_MSG_AUTH_SUCCEED   6
 #define PRELUDE_MSG_AUTH_FAILED    7
-#define PRELUDE_MSG_AUTH_EXIST     8
 
 
 /*
@@ -71,6 +60,7 @@
  */
 #define PRELUDE_MSG_OPTION_TARGET_ID        0
 #define PRELUDE_MSG_OPTION_SOURCE_ID        1
+#define PRELUDE_MSG_OPTION_LIST             2
 #define PRELUDE_MSG_OPTION_VALUE            3
 #define PRELUDE_MSG_OPTION_SET              4
 #define PRELUDE_MSG_OPTION_GET              5

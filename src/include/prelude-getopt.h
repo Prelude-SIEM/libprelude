@@ -24,7 +24,7 @@
 #ifndef _LIBPRELUDE_PRELUDE_GETOPT_H
 #define _LIBPRELUDE_PRELUDE_GETOPT_H
 
-#include "prelude-message.h"
+#include "prelude-message-buffered.h"
 
 
 
@@ -78,7 +78,7 @@ void prelude_option_set_priority(prelude_option_t *option, int priority);
 
 void prelude_option_print(prelude_option_t *opt, int flags, int descoff);
 
-prelude_msg_t *prelude_option_wide_get_msg(uint64_t ident);
+int prelude_option_wide_send_msg(void *context, prelude_msgbuf_t *msgbuf);
 
 void prelude_option_destroy(prelude_option_t *option);
 
@@ -116,9 +116,9 @@ void prelude_option_set_private_data(prelude_option_t *opt, void *data);
 
 void *prelude_option_get_private_data(prelude_option_t *opt);
 
-int prelude_option_invoke_set(const char *option, const char *value);
+int prelude_option_invoke_set(void *context, const char *option, const char *value);
 
-int prelude_option_invoke_get(const char *option, char *buf, size_t len);
+int prelude_option_invoke_get(void *context, const char *option, char *buf, size_t len);
 
 
 /*
@@ -137,6 +137,10 @@ const char *prelude_option_get_description(prelude_option_t *opt);
 void prelude_option_set_has_arg(prelude_option_t *opt, prelude_option_argument_t has_arg);
 
 prelude_option_argument_t prelude_option_get_has_arg(prelude_option_t *opt);
+
+void prelude_option_set_value(prelude_option_t *opt, const char *value);
+
+const char *prelude_option_get_value(prelude_option_t *opt);
 
 void prelude_option_set_help(prelude_option_t *opt, const char *help);
 
@@ -158,5 +162,11 @@ prelude_option_t *prelude_option_get_parent(prelude_option_t *opt);
 void *prelude_option_get_set_callback(prelude_option_t *opt);
 
 void prelude_option_set_set_callback(prelude_option_t *opt, int (*set)(void **context, prelude_option_t *opt, const char *optarg));
+
+void prelude_option_set_get_callback(prelude_option_t *opt,
+                                     int (*get)(void **context, char *buf, size_t size));
+
+void *prelude_option_get_get_callback(prelude_option_t *opt);
+
 
 #endif /* _LIBPRELUDE_PRELUDE_GETOPT_H */

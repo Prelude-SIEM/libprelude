@@ -52,6 +52,8 @@ prelude_ident_t *prelude_client_get_unique_ident(prelude_client_t *client);
 
 void *prelude_client_get_credentials(prelude_client_t *client);
 
+void prelude_client_set_manager_list(prelude_client_t *client, prelude_connection_mgr_t *mgrlist);
+
 prelude_connection_mgr_t *prelude_client_get_manager_list(prelude_client_t *client);
 
 int prelude_client_init(prelude_client_t *client, const char *sname, const char *config, int argc, char **argv);

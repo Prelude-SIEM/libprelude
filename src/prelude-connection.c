@@ -311,11 +311,13 @@ static void close_connection_fd(prelude_connection_t *cnx)
 
 
 
-static void handle_connection_breakage(prelude_connection_t *cnx)
+static void destroy_connection_fd(prelude_connection_t *cnx)
 {
         close_connection_fd(cnx);
+        
+        if ( cnx->state & PRELUDE_CONNECTION_OWN_FD )
+                prelude_io_destroy(cnx->fd);
 }
-
 
 
 
@@ -376,9 +378,8 @@ static int resolve_addr(prelude_connection_t *cnx, const char *addr, uint16_t po
 void prelude_connection_destroy(prelude_connection_t *cnx) 
 {
 	free(cnx->sa);
-        close_connection_fd(cnx);
-
-        prelude_io_destroy(cnx->fd);
+        
+        destroy_connection_fd(cnx);
         
         if ( cnx->saddr )
                 free(cnx->saddr);
@@ -432,7 +433,7 @@ prelude_connection_t *prelude_connection_new(prelude_client_t *client, const cha
 
 void prelude_connection_set_fd(prelude_connection_t *cnx, prelude_io_t *fd) 
 {
-        close_connection_fd(cnx);
+        destroy_connection_fd(cnx);        
         cnx->fd = fd;
 
         /*
@@ -463,16 +464,13 @@ int prelude_connection_connect(prelude_connection_t *cnx)
         prelude_msg_set(msg, prelude_client_get_capability(cnx->client), 0, NULL);
         ret = prelude_msg_write(msg, cnx->fd);
         prelude_msg_destroy(msg);
+
+        ret = prelude_client_ident_send(prelude_client_get_analyzerid(cnx->client), cnx->fd);
+        if ( ret < 0 )
+                return -1;
         
         if ( ret < 0 ) 
                 goto err;
-
-        msg = prelude_option_wide_get_msg(prelude_client_get_analyzerid(cnx->client));
-        if ( msg ) {
-                ret = prelude_msg_write(msg, cnx->fd);
-                if ( ret < 0 )
-                        goto err;
-        }
         
         cnx->state |= PRELUDE_CONNECTION_OWN_FD;
         cnx->state |= PRELUDE_CONNECTION_ESTABLISHED;
@@ -506,7 +504,7 @@ int prelude_connection_send_msg(prelude_connection_t *cnx, prelude_msg_t *msg)
         ret = prelude_msg_write(msg, cnx->fd);
         if ( ret < 0 || (ret = is_tcp_connection_still_established(cnx->fd)) < 0 ) {
                 log(LOG_ERR, "could not send message to Manager.\n");
-                handle_connection_breakage(cnx);
+                close_connection_fd(cnx);
         }
         
         return ret;
@@ -626,7 +624,7 @@ ssize_t prelude_connection_forward(prelude_connection_t *cnx, prelude_io_t *src,
         ret = prelude_io_forward(cnx->fd, src, count);
         if ( ret < 0 ) {
                 log(LOG_ERR, "error forwarding message to Manager.\n");
-                handle_connection_breakage(cnx);
+                close_connection_fd(cnx);
         }
 
         return ret;
