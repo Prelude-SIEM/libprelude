@@ -21,8 +21,6 @@
 *
 *****/
 
-/* IMPORTANT NOTE: pass this file to Perl script after preprocessing with
-                   cpp -D_GENERATE -E idmef-tree-input.h */
 
 /*
  * NOTE ON GENERATION TIME MACROS:
@@ -137,7 +135,7 @@ ENUM() {
 
 
 
-typedef struct {
+struct {
         IS_LISTED;
 	REFCOUNT;
         idmef_additional_data_type_t type;
@@ -161,7 +159,7 @@ ENUM(origin) {
 
 
 
-typedef struct {
+struct {
         IS_LISTED;
 	REFCOUNT;
         idmef_classification_origin_t origin;
@@ -188,7 +186,7 @@ ENUM() {
 } TYPE_ID(idmef_userid_type_t, 7);
 
 
-typedef struct {
+struct {
         IS_LISTED;
 	REFCOUNT;
         uint64_t ident;
@@ -214,7 +212,7 @@ ENUM(cat) {
 
 
 
-typedef struct {
+struct {
 	REFCOUNT;
         uint64_t ident;
         idmef_user_category_t category;
@@ -249,7 +247,7 @@ ENUM(addr) {
 
 
 
-typedef struct {
+struct {
         IS_LISTED;
         REFCOUNT;
         uint64_t ident;
@@ -266,7 +264,7 @@ typedef struct {
  * Process class
  */
 
-typedef struct {
+struct {
 	REFCOUNT;
         uint64_t ident;
         idmef_string_t name;
@@ -279,7 +277,7 @@ typedef struct {
 
 
 
-typedef struct {
+struct {
 	REFCOUNT;
         idmef_string_t url;
         idmef_string_t cgi;
@@ -293,7 +291,7 @@ typedef struct {
 /*
  * SNMPService class
  */
-typedef struct {
+struct {
 	REFCOUNT;
         idmef_string_t oid;
         idmef_string_t community;
@@ -314,7 +312,7 @@ ENUM() {
 /*
  * Service class
  */
-typedef struct {
+struct {
 	REFCOUNT;
         uint64_t ident;
         idmef_string_t name;
@@ -353,7 +351,7 @@ ENUM(node) {
 } TYPE_ID(idmef_node_category_t, 18);
 
 
-typedef struct {
+struct {
 	REFCOUNT;
         uint64_t ident;
         idmef_node_category_t category;
@@ -377,7 +375,7 @@ ENUM() {
 } TYPE_ID(idmef_source_spoofed_t, 20);
 
 
-typedef struct {
+struct {
         IS_LISTED;
 	REFCOUNT;
 
@@ -399,7 +397,7 @@ typedef struct {
 
 
 
-typedef struct {
+struct {
         IS_LISTED;
 	REFCOUNT;
         
@@ -412,7 +410,7 @@ typedef struct {
 /*
  * Inode class
  */
-typedef struct {
+struct {
 	REFCOUNT;
         idmef_time_t *change_time;
         uint32_t number;
@@ -454,7 +452,7 @@ ENUM() {
 
 
 
-typedef struct {
+struct {
         IS_LISTED;
 	REFCOUNT;
         
@@ -493,7 +491,7 @@ ENUM() {
 } TYPE_ID(idmef_linkage_category_t, 27);
 
 
-typedef struct {
+struct {
         IS_LISTED;
 	REFCOUNT;
         
@@ -518,7 +516,7 @@ ENUM() {
 } TYPE_ID(idmef_target_decoy_t, 29);
 
 
-typedef struct {
+struct {
         IS_LISTED;
 	REFCOUNT;
         
@@ -540,7 +538,7 @@ typedef struct {
 /*
  * Analyzer class
  */
-typedef struct idmef_analyzer {
+struct {
 	REFCOUNT;
 
         uint64_t analyzerid;
@@ -563,7 +561,7 @@ typedef struct idmef_analyzer {
  * AlertIdent class
  */
 
-typedef struct {
+struct {
         IS_LISTED;
 	REFCOUNT;
 
@@ -603,7 +601,7 @@ ENUM() {
 } TYPE_ID(idmef_impact_type_t, 35);
 
 
-typedef struct {
+struct {
 	REFCOUNT;
 
         idmef_impact_severity_t severity;
@@ -625,7 +623,7 @@ ENUM(action) {
 } TYPE_ID(idmef_action_category_t, 37);
 
 
-typedef struct {
+struct {
         IS_LISTED;
 	REFCOUNT;
 
@@ -647,7 +645,7 @@ ENUM() {
 } TYPE_ID(idmef_confidence_rating_t, 39);
 
 
-typedef struct {
+struct {
 	REFCOUNT;
 
         idmef_confidence_rating_t rating;
@@ -658,7 +656,7 @@ typedef struct {
 /*
  * Assessment class
  */
-typedef struct {
+struct {
 	REFCOUNT;
 
         idmef_impact_t *impact;
@@ -671,7 +669,7 @@ typedef struct {
 /*
  * Toolalert class
  */
-typedef struct {
+struct {
 	REFCOUNT;
 
         idmef_string_t name;
@@ -686,7 +684,7 @@ typedef struct {
 /*
  * CorrelationAlert class
  */
-typedef struct {
+struct {
 	REFCOUNT;
 
         idmef_string_t name;
@@ -699,7 +697,7 @@ typedef struct {
 /*
  * OverflowAlert class
  */
-typedef struct {
+struct {
 	REFCOUNT;
 
         idmef_string_t program;
@@ -723,7 +721,7 @@ ENUM(idmef) {
 
 
 
-typedef struct {
+struct {
         DYNAMIC_IDENT(ident);
 
         idmef_assessment_t *assessment;
@@ -754,7 +752,7 @@ typedef struct {
 /*
  * Heartbeat class
  */
-typedef struct {
+struct {
         DYNAMIC_IDENT(ident);
         idmef_analyzer_t *analyzer;
 
@@ -777,7 +775,7 @@ ENUM() {
 } TYPE_ID(idmef_message_type_t, 48);
 
 
-typedef struct {        
+struct {        
         REFCOUNT;
         
         idmef_string_t version;

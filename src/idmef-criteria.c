@@ -34,14 +34,8 @@
 #include "prelude-log.h"
 #include "prelude-inttypes.h"
 
-#include "idmef-string.h"
-#include "idmef-tree.h"
+#include "idmef.h"
 #include "idmef-util.h"
-#include "idmef-value.h"
-#include "idmef-object.h"
-#include "idmef-message.h"
-#include "idmef-criterion-value.h"
-
 #include "idmef-criteria.h"
 
 
@@ -314,7 +308,7 @@ int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message
         int ret = 0;
 	idmef_value_t *value;
 	
-	value = idmef_message_get(message, criterion->object);
+	value = idmef_object_get(message, criterion->object);
 	if ( ! value ) 
 		return (criterion->relation == IDMEF_VALUE_RELATION_IS_NULL) ? 0 : -1;
         

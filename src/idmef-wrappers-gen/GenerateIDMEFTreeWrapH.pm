@@ -36,12 +36,20 @@ sub	header
 #ifndef _LIBPRELUDE_IDMEF_TREE_WRAP_H
 #define _LIBPRELUDE_IDMEF_TREE_WRAP_H
 
+#include \"prelude-message.h\"
+
 ");
 }
 
 sub	footer
 {
     my	$self = shift;
+
+    $self->output("
+void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg);
+
+prelude_msg_t *idmef_message_get_pmsg(idmef_message_t *message);
+");
 
     $self->output("#define $_->[0] $_->[1]\n") foreach ( @{ $self->{type_list} } );
     $self->output("\n");
@@ -58,9 +66,7 @@ sub	struct_definition
     $self->output(" * $_\n") foreach ( @{ $struct->{desc} } );
     $self->output(" */\n\n");
     $self->output("
-#ifndef _LIBPRELUDE_IDMEF_TREE_H
 typedef struct idmef_$struct->{short_typename} $struct->{typename};
-#endif /* _LIBPRELUDE_IDMEF_TREE_H */
 
 ") unless ( $tree->{pre_declareds}->{$struct->{typename}} );
 }
@@ -70,8 +76,6 @@ sub	struct_constructor
     my	$self = shift;
     my	$tree = shift;
     my	$struct = shift;
-
-    return if ( $struct->{toplevel} );
 
     $self->output("$struct->{typename} *idmef_$struct->{short_typename}_new(void);\n");
 }
@@ -115,12 +119,7 @@ sub	struct_destroy
     my	$tree = shift;
     my	$struct = shift;
 
-    if ( $struct->{toplevel} ) {
-	$self->output("void idmef_$struct->{short_typename}_destroy_internal($struct->{typename} *ptr);\n");
-
-    } else {
-	$self->output("void idmef_$struct->{short_typename}_destroy($struct->{typename} *ptr);\n");
-    }
+    $self->output("void idmef_$struct->{short_typename}_destroy($struct->{typename} *ptr);\n");
 }
 
 sub	struct_field_normal
@@ -217,8 +216,6 @@ sub	enum
     my	$enum = shift;
     my	$cnt = 0;
 
-    $self->output("#ifndef _LIBPRELUDE_IDMEF_TREE_H\n\n");
-
     foreach ( @{ $enum->{desc} } ) {
 	if ( $cnt == 0 ) {
 	    $self->output("typedef enum {\n");
@@ -233,7 +230,6 @@ sub	enum
 	$cnt++;
     }
 
-    $self->output("\n#endif /* _LIBPRELUDE_IDMEF_TREE_H */\n\n");
     $self->output("\n\n");
     $self->output("int idmef_$enum->{short_typename}_to_numeric(const char *name);", "\n");
     $self->output("const char *idmef_$enum->{short_typename}_to_string(int val);", "\n");
@@ -248,16 +244,12 @@ sub	pre_declared
 
     if ( $pre_declared->{metatype} & &METATYPE_STRUCT ) {
     $self->output("
-#ifndef _LIBPRELUDE_IDMEF_TREE_H
 typedef struct idmef_$pre_declared->{short_typename} $pre_declared->{typename};
-#endif /* _LIBPRELUDE_IDMEF_TREE_H */
 
 ");
     } else {
     $self->output("
-#ifndef _LIBPRELUDE_IDMEF_TREE_H
 typedef enum idmef_$pre_declared->{short_typename} $pre_declared->{typename};
-#endif /* _LIBPRELUDE_IDMEF_TREE_H */
 
 ");
     }

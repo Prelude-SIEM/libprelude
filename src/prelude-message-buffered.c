@@ -32,7 +32,6 @@
 #include "prelude-async.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
-#include "idmef-tree.h"
 #include "prelude-message-buffered.h"
 
 

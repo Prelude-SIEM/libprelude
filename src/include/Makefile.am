@@ -6,7 +6,6 @@ include_HEADERS = config-engine.h 		\
 		  idmef-string.h		\
 		  idmef-time.h			\
 		  idmef-data.h			\
-		  idmef-tree.h			\
 		  idmef-object.h		\
 		  idmef-tree-data.h		\
 		  idmef-tree-print.h		\
@@ -20,7 +19,6 @@ include_HEADERS = config-engine.h 		\
 		  idmef-criteria.h		\
 		  idmef-criteria-string.h	\
 		  idmef-criterion-value.h	\
-		  idmef-message.h		\
 		  ntp.h				\
 		  idmef.h			\
 		  idmef-util.h			\

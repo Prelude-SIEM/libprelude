@@ -35,17 +35,8 @@
 #include "prelude-log.h"
 #include "prelude-inttypes.h"
 
-#include "idmef-string.h"
-#include "idmef-tree.h"
-
-#include "idmef-value.h"
-#include "idmef-object.h"
-#include "idmef-message.h"
-#include "idmef-value-object.h"
-#include "idmef-criterion-value.h"
-
+#include "idmef.h"
 #include "idmef-criteria.h"
-
 #include "idmef-criteria-string.h"
 
 idmef_criteria_t *criteria;

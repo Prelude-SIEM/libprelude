@@ -124,7 +124,7 @@ sub	parse
 
     while ( defined($line = $self->get_line) ) {
 	
-	if ( $line =~ /typedef\s+struct\s+.*\{/ ) {
+	if ( $line =~ /^\s*struct\s+.*\{/ ) {
 	    $self->debug("parse struct\n");
 	    $self->parse_struct($line);
 
@@ -374,18 +374,25 @@ sub	process
 
     foreach my $obj ( @{ $self->{obj_list} } ) {
 	
-	$generator->obj($self, $obj) if ( $generator->can("obj") );
-
 	if ( $obj->{obj_type} == &OBJ_STRUCT ) {
 	    $generator->struct($self, $obj) if ( $generator->can("struct") );
 	}
-
+		
+	if ( $obj->{obj_type} == &OBJ_PRE_DECLARED ) {
+	    $generator->pre_declared($self, $obj) if ( $generator->can("pre_declared") );
+	}
+	
 	if ( $obj->{obj_type} == &OBJ_ENUM ) {
 	    $generator->enum($self, $obj) if ( $generator->can("enum") );
 	}
+    }
 
-	if ( $obj->{obj_type} == &OBJ_PRE_DECLARED ) {
-	    $generator->pre_declared($self, $obj) if ( $generator->can("pre_declared") );
+    foreach my $obj ( @{ $self->{obj_list} } ) {
+	
+	$generator->obj($self, $obj) if ( $generator->can("obj") );
+
+	if ( $obj->{obj_type} == &OBJ_STRUCT ) {
+	    $generator->struct_func($self, $obj) if ( $generator->can("struct_func") );
 	}
     }
 

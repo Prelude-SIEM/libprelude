@@ -55,7 +55,6 @@ libprelude_la_SOURCES = 		\
 	idmef-criterion-value.c		\
 	idmef-message-write.c		\
 	idmef-message-read.c		\
-	idmef-message.c			\
 	common.c			\
 	tls-auth.c			\
 	tls-util.c			

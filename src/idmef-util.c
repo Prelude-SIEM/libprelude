@@ -38,7 +38,6 @@
 #include "prelude-log.h"
 #include "prelude-inttypes.h"
 #include "extract.h"
-#include "idmef-tree.h"
 #include "prelude-ident.h"
 
 #include "idmef-string.h"
@@ -46,7 +45,6 @@
 #include "idmef-data.h"
 #include "idmef-type.h"
 #include "idmef-value.h"
-#include "idmef-tree.h"
 #include "idmef-tree-wrap.h"
 #include "prelude-strbuf.h"
 

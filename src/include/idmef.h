@@ -40,6 +40,5 @@
 #include "idmef-criterion-value.h"
 #include "idmef-criteria.h"
 #include "idmef-criteria-string.h"
-#include "idmef-message.h"
 
 #endif /* _LIBPRELUDE_IDMEF_H */

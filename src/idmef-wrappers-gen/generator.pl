@@ -114,10 +114,10 @@ my @generator_list = ({ source => 'GenerateIDMEFTreeWrapC.pm',
 			func => sub { new GenerateIDMEFMessageIdH(-filename => shift) } }
 		      );
 
-$idmef_tree = new IDMEFTree(-filename => "../include/idmef-tree.h",
+$idmef_tree = new IDMEFTree(-filename => "idmef-tree.h",
 			    -debug => 0);
 $idmef_tree->load();
 
 foreach my $generator (@generator_list) {
-    target_need_update($generator, '../include/idmef-tree.h', 'IDMEFTree.pm') and target_update($generator, $idmef_tree);
+    target_need_update($generator, 'idmef-tree.h', 'IDMEFTree.pm') and target_update($generator, $idmef_tree);
 }

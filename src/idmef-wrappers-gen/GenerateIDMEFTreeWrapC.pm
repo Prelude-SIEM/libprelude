@@ -42,6 +42,7 @@ sub	header
 
 #include \"prelude-inttypes.h\"
 #include \"prelude-list.h\"
+#include \"prelude-message.h\"
 
 #include \"idmef-string.h\"
 #include \"idmef-time.h\"
@@ -49,9 +50,30 @@ sub	header
 #include \"idmef-type.h\"
 #include \"idmef-value.h\"
 
-#include \"idmef-tree.h\"
 #include \"idmef-tree-wrap.h\"
 
+#define LISTED_OBJECT(name, type) prelude_list_t name
+
+#define IS_LISTED prelude_list_t list
+
+#define	UNION(type, var) type var; union
+
+#define	UNION_MEMBER(value, type, name) type name
+
+#define ENUM(...) typedef enum
+
+#define PRE_DECLARE(type, class)
+
+#define TYPE_ID(type, id) type
+
+#define PRIMITIVE_TYPE(type)
+#define PRIMITIVE_TYPE_STRUCT(type)
+
+#define HIDE(type, name) type name
+
+#define REFCOUNT int refcount
+
+#define DYNAMIC_IDENT(x) uint64_t x
 
 ");
 }
@@ -61,10 +83,19 @@ sub	struct_desc
     my	$self = shift;
     my	$tree = shift;
     my	$struct = shift;
+    my $line;
 
-    $self->output("\n\n/*\n");
-    $self->output(" * $_\n") foreach ( @{ $struct->{desc} } );
-    $self->output(" */\n\n");
+    $self->output("\n\nstruct idmef_$struct->{short_typename} \{");
+
+    foreach ( @{ $struct->{desc} } ) {
+	$line = $_;
+	$line =~ s/.*TYPE_ID.*//;
+        $line =~ s/struct {//;
+    $self->output(" $line\n");
+
+    }
+    #$self->output(" $_\n") foreach ( @{ $struct->{desc} } ~ s/.*TYPE_ID.*// );
+    $self->output("\};\n\n");
 }
 
 sub	struct_constructor
@@ -72,8 +103,6 @@ sub	struct_constructor
     my	$self = shift;
     my	$tree = shift;
     my	$struct = shift;
-
-    return if ( $struct->{toplevel} );
 
     $self->output("
 $struct->{typename} *idmef_$struct->{short_typename}_new(void)
@@ -270,17 +299,10 @@ sub	struct_destroy_internal
     my	$tree = shift;
     my	$struct = shift;
 
-    if ( $struct->{toplevel} ) {
-	$self->output("
-void idmef_$struct->{short_typename}_destroy_internal($struct->{typename} *ptr)
-\{
-");
-    } else {
-	$self->output("
+    $self->output("
 static void idmef_$struct->{short_typename}_destroy_internal($struct->{typename} *ptr)
 \{
 ");
-    }
 
     $self->output("
 	prelude_list_del(&ptr->list);
@@ -359,7 +381,6 @@ sub	struct_destroy
     my	$struct = shift;
 
     return if ( $struct->{toplevel} );
-
     if ( $struct->{refcount} ) {
 	$self->output("
 void idmef_$struct->{short_typename}_destroy($struct->{typename} *ptr)
@@ -795,6 +816,14 @@ sub	struct
     my	$struct = shift;
 
     $self->struct_desc($tree, $struct);
+}
+
+sub	struct_func
+{
+    my	$self = shift;
+    my	$tree = shift;
+    my	$struct = shift;
+
     $self->struct_constructor($tree, $struct);
     $self->struct_ref($tree, $struct);
     $self->struct_get_child($tree, $struct);
@@ -877,4 +906,37 @@ const char *idmef_$enum->{short_typename}_to_string(int val)
 ");
 }
 
+
+sub footer 
+{
+    my $self = shift;
+
+    $self->output("
+void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg)
+\{
+        message->pmsg = msg;
+\}
+
+
+prelude_msg_t *idmef_message_get_pmsg(idmef_message_t *message)
+\{
+        return message->pmsg;
+\}
+
+
+void idmef_message_destroy(idmef_message_t *message)
+\{
+        if ( --message->refcount )
+                return;
+
+        idmef_message_destroy_internal(message);
+
+        if ( message->pmsg )
+                prelude_msg_destroy(message->pmsg);
+
+        free(message);
+\}
+");
+
+}
 1;
