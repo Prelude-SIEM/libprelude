@@ -27,6 +27,7 @@ idmef-tree
 </para>
 
 @string: 
+@boolean: 
 @byte: 
 @character: 
 @date_time: 
@@ -34,7 +35,6 @@ idmef-tree
 @ntpstamp: 
 @portlist: 
 @real: 
-@boolean: 
 @xml: 
 
 <!-- ##### TYPEDEF idmef_additional_data_t ##### -->
@@ -64,8 +64,8 @@ idmef-tree
 
 </para>
 
-@current_user: 
 @original_user: 
+@current_user: 
 @target_user: 
 @user_privs: 
 @current_group: 
@@ -163,7 +163,7 @@ idmef-tree
 
 </para>
 
-@default_service: 
+@no_specific_service: 
 @web_service: 
 @snmp_service: 
 
@@ -285,25 +285,6 @@ idmef-tree
 @idmef_tool_alert: 
 @idmef_correlation_alert: 
 @idmef_overflow_alert: 
-
-<!-- ##### ENUM idmef_alert_impact_t ##### -->
-<para>
-
-</para>
-
-@unknown_impact: 
-@bad_unknown: 
-@not_suspicious: 
-@attempted_admin: 
-@successful_admin: 
-@attempted_dos: 
-@successful_dos: 
-@attempted_recon: 
-@successful_recon: 
-@successful_recon_limited: 
-@successful_recon_largescale: 
-@attempted_user: 
-@successful_user: 
 
 <!-- ##### TYPEDEF detail ##### -->
 <para>

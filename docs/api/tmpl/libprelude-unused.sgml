@@ -359,14 +359,26 @@ thread
 
 @size: 
 
-<!-- ##### MACRO idmef_constant ##### -->
+<!-- ##### ENUM idmef_alert_impact_t ##### -->
 <para>
 
 </para>
 
-@x: 
+@unknown_impact: 
+@bad_unknown: 
+@not_suspicious: 
+@attempted_admin: 
+@successful_admin: 
+@attempted_dos: 
+@successful_dos: 
+@attempted_recon: 
+@successful_recon: 
+@successful_recon_limited: 
+@successful_recon_largescale: 
+@attempted_user: 
+@successful_user: 
 
-<!-- ##### MACRO idmef_string ##### -->
+<!-- ##### MACRO idmef_constant ##### -->
 <para>
 
 </para>

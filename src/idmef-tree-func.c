@@ -35,7 +35,6 @@
 #include "prelude-log.h"
 #include "idmef-tree.h"
 #include "idmef-tree-func.h"
-#include "idmef-msg-send.h"
 
 
 #define generic_free_list(type, head) do {           \
@@ -378,7 +377,7 @@ idmef_service_t *idmef_source_service_new(idmef_source_t *source)
         }
 
         source->service = new;
-        new->type = default_service;
+        new->type = no_specific_service;
 
         return new;
 }

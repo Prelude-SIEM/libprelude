@@ -1,3 +1,19 @@
+2002-01-25  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/include/idmef-tree.h: replace each occurence of
+	const char * with the idmef_string_t type. This type 
+	associate a length with a string. So the sensor won't end
+	up calling strlen which is slow.
+
+	Also cleanup enumeration, enumeration with no default shouldn't
+	use the value 0 for enumeration member.
+
+	* src/include/idmef-msg-send.h: add macro to access
+	idmef_string_t.
+
+	* src/idmef-msg-send.c: made all function public. As
+	they might be used independantly by sensors. 
+
 2002-01-23  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/sensor.c (prelude_sensor_send_msg_async): 

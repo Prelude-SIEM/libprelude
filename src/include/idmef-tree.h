@@ -27,8 +27,19 @@
 
 #include <inttypes.h>
 
-#define IDMEF_VERSION "0.5"
+/*
+ * Default value for an enumeration member should always be 0.
+ * If there is no default value, no enumeration member should use
+ * the 0 value/
+ */
 
+#define IDMEF_VERSION "0.6"
+
+
+typedef struct {
+        uint16_t len;
+        const char *string;
+} idmef_string_t;
 
 
 
@@ -52,14 +63,14 @@ typedef struct {
  */
 typedef enum {
         string    = 0,
-        byte      = 1,
-        character = 2,
-        date_time = 3,
-        integer   = 4,
-        ntpstamp  = 5,
-        portlist  = 6,
-        real      = 7,
-        boolean   = 8,
+        boolean   = 1,
+        byte      = 2,
+        character = 3,
+        date_time = 4,
+        integer   = 5,
+        ntpstamp  = 6,
+        portlist  = 7,
+        real      = 8,
         xml       = 9,
 } idmef_additional_data_type_t;
 
@@ -68,8 +79,8 @@ typedef enum {
 typedef struct {
         struct list_head list;
         idmef_additional_data_type_t type;
-        const char *meaning;
-        const char *data;
+        idmef_string_t meaning;
+        idmef_string_t data;
 } idmef_additional_data_t;
 
 
@@ -91,8 +102,8 @@ typedef enum {
 typedef struct {
         struct list_head list;
         idmef_classification_origin_t origin;
-        const char *name;
-        const char *url;
+        idmef_string_t name;
+        idmef_string_t url;
 } idmef_classification_t;
 
 
@@ -103,8 +114,8 @@ typedef struct {
  * UserId class
  */
 typedef enum {
-        current_user  = 0,
-        original_user = 1,
+        original_user = 0,
+        current_user  = 1,
         target_user   = 2,
         user_privs    = 3,
         current_group = 4,
@@ -118,7 +129,7 @@ typedef struct {
 
         uint64_t ident;
         idmef_userid_type_t type;
-        const char *name;
+        idmef_string_t name;
         uint32_t number;
 } idmef_userid_t;
 
@@ -176,10 +187,10 @@ typedef struct {
         
         uint64_t ident;
         idmef_address_category_t category;
-        const char *vlan_name;
+        idmef_string_t vlan_name;
         int vlan_num;
-        const char *address;
-        const char *netmask;
+        idmef_string_t address;
+        idmef_string_t netmask;
 } idmef_address_t;
 
 
@@ -188,18 +199,18 @@ typedef struct {
  * Process class
  */
 typedef struct {
-        const char *string;
+        idmef_string_t string;
         struct list_head list;
-} idmef_string_t;
+} idmef_string_item_t;
 
-#define idmef_process_env_t idmef_string_t
-#define idmef_process_arg_t idmef_string_t
+#define idmef_process_env_t idmef_string_item_t
+#define idmef_process_arg_t idmef_string_item_t
 
 typedef struct {
         uint64_t ident;
-        const char *name;
+        idmef_string_t name;
         uint32_t pid;
-        const char *path;
+        idmef_string_t path;
 
         struct list_head arg_list;
         struct list_head env_list;
@@ -211,10 +222,10 @@ typedef struct {
  * WebService class
  */
 typedef struct {
-        const char *url;
-        const char *cgi;
-        const char *http_method;
-        const char *arg;
+        idmef_string_t url;
+        idmef_string_t cgi;
+        idmef_string_t http_method;
+        idmef_string_t arg;
 } idmef_webservice_t;
 
 
@@ -224,15 +235,15 @@ typedef struct {
  * SNMPService class
  */
 typedef struct {
-        const char *oid;
-        const char *community;
-        const char *command;
+        idmef_string_t oid;
+        idmef_string_t community;
+        idmef_string_t command;
 } idmef_snmpservice_t;
 
         
 
 typedef enum {
-        default_service = 0,
+        no_specific_service = 0,
         web_service = 1,
         snmp_service = 2,
 } idmef_service_type_t;
@@ -244,10 +255,10 @@ typedef enum {
  */
 typedef struct {
         uint64_t ident;
-        const char *name;
+        idmef_string_t name;
         uint16_t port;
-        const char *portlist;
-        const char *protocol;
+        idmef_string_t portlist;
+        idmef_string_t protocol;
 
         idmef_service_type_t type;
         union {
@@ -283,8 +294,8 @@ typedef enum {
 typedef struct {
         uint64_t ident;
         idmef_node_category_t category;
-        const char *location;
-        const char *name;
+        idmef_string_t location;
+        idmef_string_t name;
         struct list_head address_list;
 } idmef_node_t;
 
@@ -307,7 +318,7 @@ typedef struct {
     
         uint64_t ident;
         idmef_spoofed_t spoofed;
-        const char *interface;
+        idmef_string_t interface;
 
         idmef_node_t *node;
         idmef_user_t *user;
@@ -323,7 +334,7 @@ typedef struct {
 typedef struct {
         struct list_head list;
         idmef_userid_t userid;
-        const char *permission;
+        idmef_string_t permission;
 } idmef_file_access_t;
 
 
@@ -331,12 +342,12 @@ typedef struct {
  * Linkage class
  */
 typedef enum {
-        hard_link     = 0,
-        mount_point   = 1,
-        reparse_point = 2,
-        shortcut      = 3,
-        stream        = 4,
-        symbolic_link = 5,
+        hard_link     = 1,
+        mount_point   = 2,
+        reparse_point = 3,
+        shortcut      = 4,
+        stream        = 5,
+        symbolic_link = 6,
 } idmef_linkage_category_t;
 
 
@@ -344,8 +355,8 @@ typedef struct {
         struct list_head list;
         
         idmef_linkage_category_t category;
-        const char *name;
-        const char *path;
+        idmef_string_t name;
+        idmef_string_t path;
         struct idmef_file *file;
 } idmef_linkage_t;
 
@@ -370,8 +381,8 @@ typedef struct {
  * File class
  */
 typedef enum {
-        current  = 0,
-        original = 1,
+        current  = 1,
+        original = 2,
 } idmef_file_category_t;
         
         
@@ -380,10 +391,10 @@ typedef struct idmef_file {
         
         uint64_t ident;
         idmef_file_category_t category;
-        const char *fstype;
+        idmef_string_t fstype;
 
-        const char *name;
-        const char *path;
+        idmef_string_t name;
+        idmef_string_t path;
 
         idmef_time_t *create_time;
         idmef_time_t *modify_time;
@@ -408,7 +419,7 @@ typedef struct {
         
         uint64_t ident;
         idmef_spoofed_t decoy;
-        const char *interface;
+        idmef_string_t interface;
 
         idmef_node_t *node;
         idmef_user_t *user;
@@ -426,12 +437,12 @@ typedef struct {
  */
 typedef struct {
         uint64_t analyzerid;
-        const char *manufacturer;
-        const char *model;
-        const char *version;
-        const char *class;
-        const char *ostype;
-        const char *osversion;
+        idmef_string_t manufacturer;
+        idmef_string_t model;
+        idmef_string_t version;
+        idmef_string_t class;
+        idmef_string_t ostype;
+        idmef_string_t osversion;
         
         idmef_node_t *node;
         idmef_process_t *process;
@@ -455,26 +466,25 @@ typedef struct {
  * Impact class
  */
 typedef enum {
-        impact_low    = 0,
-        impact_medium = 1,
-        impact_high   = 2,
+        impact_low    = 1,
+        impact_medium = 2,
+        impact_high   = 3,
 } idmef_impact_severity_t;
 
 
 typedef enum {
-        unknown_completion = 0,
         failed     = 1,
         succeeded  = 2,
 } idmef_impact_completion_t;
 
 
 typedef enum {
-        admin      = 0,
-        dos        = 1,
-        file       = 2,
-        recon      = 3,
-        user       = 4,
-        other      = 5,
+        other      = 0,
+        admin      = 1,
+        dos        = 2,
+        file       = 3,
+        recon      = 4,
+        user       = 5,
 } idmef_impact_type_t;
 
 
@@ -482,7 +492,7 @@ typedef struct {
         idmef_impact_severity_t severity;
         idmef_impact_completion_t completion;
         idmef_impact_type_t type;
-        const char *description;
+        idmef_string_t description;
 } idmef_impact_t;
 
 
@@ -490,17 +500,17 @@ typedef struct {
  * Action class
  */
 typedef enum {
-        block_installed    = 0,
-        notification_sent  = 1,
-        taken_offline      = 2,
-        action_other       = 3,
+        action_other       = 0,
+        block_installed    = 1,
+        notification_sent  = 2,
+        taken_offline      = 3,
 } idmef_action_category_t;
 
 
 typedef struct {
         struct list_head list;
         idmef_action_category_t category;
-        const char *description;
+        idmef_string_t description;
 } idmef_action_t;
 
 
@@ -509,10 +519,10 @@ typedef struct {
  * Confidence class
  */
 typedef enum {
-        low     = 0,
-        medium  = 1,
-        high    = 2,
-        numeric = 3,
+        numeric = 0,
+        low     = 1,
+        medium  = 2,
+        high    = 3,
 } idmef_confidence_rating_t;
 
 
@@ -537,8 +547,8 @@ typedef struct {
  * Toolalert class
  */
 typedef struct {
-        const char *name;
-        const char *command;
+        idmef_string_t name;
+        idmef_string_t command;
         struct list_head alertident_list;
 } idmef_tool_alert_t;
 
@@ -550,7 +560,7 @@ typedef struct {
  * CorrelationAlert class
  */
 typedef struct {
-        const char *name;
+        idmef_string_t name;
         struct list_head alertident_list;
 } idmef_correlation_alert_t;
 
@@ -561,7 +571,7 @@ typedef struct {
  * OverflowAlert class
  */
 typedef struct {
-        const char *program;
+        idmef_string_t program;
         uint32_t size;
         const unsigned char *buffer;
 } idmef_overflow_alert_t;
@@ -578,24 +588,6 @@ typedef enum {
         idmef_correlation_alert = 2,
         idmef_overflow_alert    = 3,
 } idmef_alert_type_t;
-
-
-
-typedef enum {
-        unknown_impact              = 0,
-        bad_unknown                 = 1,
-        not_suspicious              = 2,
-        attempted_admin             = 3,
-        successful_admin            = 4,
-        attempted_dos               = 5,
-        successful_dos              = 6,
-        attempted_recon             = 7,
-        successful_recon            = 8,
-        successful_recon_limited    = 9,
-        successful_recon_largescale = 10,
-        attempted_user              = 11,
-        successful_user             = 12,
-} idmef_alert_impact_t;
 
 
 
@@ -648,24 +640,17 @@ typedef struct {
  * IDMEF Message class
  */
 typedef enum {
-        idmef_alert_message     = 0,
-        idmef_heartbeat_message = 1,
+        idmef_alert_message     = 1,
+        idmef_heartbeat_message = 2,
 } idmef_message_type_t;
 
 
-typedef struct {
-
-        /*
-         * specific to prelude
-         */
-        int msglen;
-        int msgcount;
-        
+typedef struct {        
 
         /*
          * end of specific things.
          */
-        const char *version;
+        idmef_string_t version;
 
         idmef_message_type_t type;
         union {

@@ -122,6 +122,14 @@ void idmef_message_free(idmef_message_t *msg);
 void idmef_additional_data_free(idmef_additional_data_t *data);
 
 
+/*
+ * IDMEF string func
+ */
+#define idmef_string(s) (s)->string
+#define idmef_string_len(s) (s)->len
+#define idmef_string_set_constant(s, str) (s)->string = (str); (s)->len = sizeof((str))
+#define idmef_string_set(s, str) (s)->string = (str); (s)->len = strlen((str)) + 1
+
 #endif
 
 
