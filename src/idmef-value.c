@@ -1,6 +1,5 @@
 /*****
 *
-* Copyright (C) 2002,2003, 2004 Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
 * Copyright (C) 2003 Nicolas Delon <delon.nicolas@wanadoo.fr>
 * Copyright (C) 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
@@ -410,7 +409,7 @@ void *idmef_value_get_object(idmef_value_t *value)
 
 
 
-int idmef_value_iterate(idmef_value_t *value, void *extra, int (*callback)(idmef_value_t *ptr, void *extra))
+int idmef_value_iterate(idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra)
 {
 	int i, ret;
         
@@ -592,7 +591,7 @@ int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_value_rela
 	compare.val2 = val2;
 	compare.relation = relation;
         
-	return idmef_value_iterate(val1, &compare, idmef_value_match_internal);
+	return idmef_value_iterate(val1, idmef_value_match_internal, &compare);
 }
 
 

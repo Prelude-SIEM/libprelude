@@ -86,7 +86,7 @@ idmef_object_type_t idmef_value_get_object_type(idmef_value_t *value);
 
 void *idmef_value_get_object(idmef_value_t *value);
 
-int idmef_value_iterate(idmef_value_t *value, void *extra, int (*callback)(idmef_value_t *ptr, void *extra));
+int idmef_value_iterate(idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra);
 
 idmef_value_t *idmef_value_get_nth(idmef_value_t *val, int n);
 
