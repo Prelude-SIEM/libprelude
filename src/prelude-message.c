@@ -88,11 +88,12 @@ static void msg_write_destroy(prelude_msg_t *msg)
 inline static prelude_msg_status_t read_message_data(unsigned char *dst, size_t *size, prelude_io_t *fd) 
 {
         ssize_t ret;
+        size_t count = *size;
         
         /*
          * Read the whole header.
          */
-        ret = prelude_io_read(fd, dst, *size);
+        ret = prelude_io_read(fd, dst, count);
         if ( ret < 0 ) {
                 log(LOG_ERR, "error reading message.\n");
                 return prelude_msg_error;
@@ -103,7 +104,7 @@ inline static prelude_msg_status_t read_message_data(unsigned char *dst, size_t 
         if ( ret == 0 )
                 return prelude_msg_eof;
         
-        else if ( ret != *size )
+        else if ( ret != count )
                 return prelude_msg_unfinished;
         
         return prelude_msg_finished;

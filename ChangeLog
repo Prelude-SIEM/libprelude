@@ -1,3 +1,10 @@
+2002-01-15  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-message.c (read_message_data): copy
+	size into a count variable on entering to the function.
+	So that we don't get confused when comparing the amount
+	of byte requested and the amount of byte we got.
+
 2002-01-14  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/ssl-register.c: move here.
