@@ -149,13 +149,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_additional_data_type_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_additional_data_type_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_type_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_additional_data_type_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_new</NAME>
@@ -255,13 +255,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_classification_origin_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_classification_origin_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_origin_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_classification_origin_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_new</NAME>
@@ -363,13 +363,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_userid_type_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_userid_type_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_userid_type_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_userid_type_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_userid_new</NAME>
@@ -487,13 +487,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_user_category_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_user_category_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_category_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_user_category_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_new</NAME>
@@ -603,13 +603,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_address_category_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_address_category_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_category_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_address_category_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_new</NAME>
@@ -1102,13 +1102,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_service_type_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_service_type_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_type_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_service_type_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_new</NAME>
@@ -1306,13 +1306,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_node_category_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_node_category_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_category_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_node_category_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_new</NAME>
@@ -1450,13 +1450,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_source_spoofed_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_source_spoofed_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_spoofed_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_source_spoofed_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_new</NAME>
@@ -1843,13 +1843,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_file_category_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_file_category_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_category_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_file_category_t val
 </FUNCTION>
 <ENUM>
 <NAME>idmef_file_fstype_t</NAME>
@@ -1869,13 +1869,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_file_fstype_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_file_fstype_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_fstype_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_file_fstype_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_new</NAME>
@@ -2176,13 +2176,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_linkage_category_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_linkage_category_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_category_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_linkage_category_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_new</NAME>
@@ -2300,13 +2300,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_target_decoy_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_target_decoy_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_decoy_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_target_decoy_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_new</NAME>
@@ -2795,13 +2795,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_impact_severity_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_impact_severity_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_severity_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_impact_severity_t val
 </FUNCTION>
 <ENUM>
 <NAME>idmef_impact_completion_t</NAME>
@@ -2813,13 +2813,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_impact_completion_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_impact_completion_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_completion_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_impact_completion_t val
 </FUNCTION>
 <ENUM>
 <NAME>idmef_impact_type_t</NAME>
@@ -2835,13 +2835,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_impact_type_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_impact_type_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_type_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_impact_type_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_new</NAME>
@@ -2960,13 +2960,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_action_category_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_action_category_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_action_category_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_action_category_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_action_new</NAME>
@@ -3045,13 +3045,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_confidence_rating_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_confidence_rating_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_confidence_rating_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_confidence_rating_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_confidence_new</NAME>
@@ -3450,13 +3450,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_alert_type_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_alert_type_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_type_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_alert_type_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_new</NAME>
@@ -3878,13 +3878,13 @@ typedef enum {
 </ENUM>
 <FUNCTION>
 <NAME>idmef_message_type_to_numeric</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>idmef_message_type_t  </RETURNS>
 const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_type_to_string</NAME>
 <RETURNS>const char  *</RETURNS>
-int val
+idmef_message_type_t val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_new</NAME>

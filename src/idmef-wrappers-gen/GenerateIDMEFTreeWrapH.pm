@@ -231,8 +231,8 @@ sub	enum
     }
 
     $self->output("\n\n");
-    $self->output("int idmef_$enum->{short_typename}_to_numeric(const char *name);", "\n");
-    $self->output("const char *idmef_$enum->{short_typename}_to_string(int val);", "\n");
+    $self->output("$enum->{typename} idmef_$enum->{short_typename}_to_numeric(const char *name);", "\n");
+    $self->output("const char *idmef_$enum->{short_typename}_to_string($enum->{typename} val);", "\n");
     $self->output("\n\n");
 }
 

@@ -105,6 +105,13 @@ sub	struct_constructor
     my	$struct = shift;
 
     $self->output("
+/**
+ * idmef_$struct->{short_typename}_new:
+ * 
+ * Create a new #$struct->{typename} object.
+ *
+ * Returns: a pointer to the newly created object, or NULL if an error occured.
+ */
 $struct->{typename} *idmef_$struct->{short_typename}_new(void)
 \{
 	$struct->{typename} *ret;
@@ -381,6 +388,17 @@ sub	struct_destroy
     my	$struct = shift;
 
     return if ( $struct->{toplevel} );
+
+    $self->output("
+/**
+ * idmef_$struct->{short_typename}_destroy:
+ * \@ptr: pointer to a #$struct->{typename} object.
+ * 
+ * Destroy \@ptr and all of it's children.
+ * The objects are only destroyed if their reference count reach zero.
+ */
+");
+
     if ( $struct->{refcount} ) {
 	$self->output("
 void idmef_$struct->{short_typename}_destroy($struct->{typename} *ptr)
@@ -413,6 +431,15 @@ sub	struct_ref
     $struct->{refcount} or return;
 
     $self->output("
+/**
+ * idmef_$struct->{short_typename}_ref:
+ * \@ptr: pointer to a #$struct->{typename} object.
+ *
+ * Increase \@ptr reference count, so that it can be referenced
+ * multiple time.
+ *
+ * Returns: a pointer to \@ptr.
+ */
 $struct->{typename} *idmef_$struct->{short_typename}_ref($struct->{typename} *ptr)
 \{
 	ptr->refcount++;
@@ -452,6 +479,14 @@ sub	struct_field_normal
     ##############################
 
     $self->output("
+/**
+ * ${ptr}idmef_$struct->{short_typename}_get_${name}:
+ * \@ptr: pointer to a #$struct->{typename} object.
+ *
+ * Get ${name} children of the #$struct->{typename} object.
+ *
+ * Returns: a pointer to a $field->{typename} object, or NULL if the children object is not set.
+ */
 $field->{typename} ${ptr}idmef_$struct->{short_typename}_get_${name}($struct->{typename} *ptr)
 \{");
 
@@ -520,6 +555,19 @@ idmef_value_t *idmef_$struct->{short_typename}_get_${name}_value($struct->{typen
     # Generate *_set_* functions #
     ##############################
 
+
+    $self->output("
+/**
+ * idmef_$struct->{short_typename}_set_$field->{name}:
+ * \@ptr: pointer to a #$struct->{typename} object.
+ * \@$field->{name}: pointer to a #$field->{typename} object.
+ *
+ * Set \@$field->{name} object as a children of \@ptr.
+ * if \@ptr already contain an \@$field->{name} object, then it is destroyed,
+ * and updated to point to the provided \@$field->{name} object.
+ */
+");
+
     if ( $field->{metatype} & &METATYPE_STRUCT ) {
 	if ( $field->{ptr} ) {
 	    $self->output("
@@ -569,6 +617,15 @@ void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr
     ##############################
 
     $self->output("
+/**
+ * idmef_$struct->{short_typename}_new_${name}:
+ * \@ptr: pointer to a #$struct->{typename} object.
+ *
+ * Create a new ${name} object, children of #$struct->{typename}.
+ * If \@ptr already contain a #$field->{typename} object, then it is destroyed.
+ *
+ * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ */
 $field->{typename} *idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr)
 \{");
 
@@ -627,11 +684,20 @@ sub	struct_field_union
     my	$field = shift;
 
     $self->output("
+/** 
+ * idmef_$struct->{short_typename}_get_$field->{var}:
+ * \@ptr: pointer to a #$struct->{typename} object.
+ *
+ * Access the $field->{var} children of \@ptr.
+ *
+ * Returns: a pointer to the #$field->{typename} children, or NULL if it is not set.
+ */
 $field->{typename} idmef_$struct->{short_typename}_get_$field->{var}($struct->{typename} *ptr)
 \{
 	return ptr->$field->{var};
 \}
 ");
+
     $self->output("
 idmef_value_t *idmef_$struct->{short_typename}_get_$field->{var}_value($struct->{typename} *ptr)
 \{
@@ -641,6 +707,14 @@ idmef_value_t *idmef_$struct->{short_typename}_get_$field->{var}_value($struct->
 
     foreach my $member ( @{ $field->{member_list} } ) {
 	$self->output("
+/** 
+ * idmef_$struct->{short_typename}_get_$member->{name}:
+ * \@ptr: pointer to a #$struct->{typename} object.
+ *
+ * Access the $member->{name} children of \@ptr.
+ *
+ * Returns: a pointer to the #$member->{typename} children, or NULL if it is not set.
+ */
 $member->{typename} *idmef_$struct->{short_typename}_get_$member->{name}($struct->{typename} *ptr)
 \{
 	return (ptr->$field->{var} == $member->{value}) ? ptr->$field->{name}.$member->{name} : NULL;
@@ -649,6 +723,15 @@ $member->{typename} *idmef_$struct->{short_typename}_get_$member->{name}($struct
 );
 
 	$self->output("
+/**
+ * idmef_$struct->{short_typename}_set_$member->{name}:
+ * \@ptr: pointer to a #$struct->{typename} object.
+ * \@$member->{name}: pointer to a #$member->{typename} object.
+ *
+ * Set \@$member->{name} object as a children of \@ptr.
+ * if \@ptr already contain a \@$member->{name} object, then it is destroyed,
+ * and updated to point to the provided \@$member->{name} object.
+ */
 void idmef_$struct->{short_typename}_set_$member->{name}($struct->{typename} *ptr, $member->{typename} *$member->{name})
 \{
 	switch ( ptr->$field->{var} ) \{
@@ -682,6 +765,15 @@ idmef_value_t *idmef_$struct->{short_typename}_get_$member->{name}_value($struct
 ");
 
 	$self->output("
+/**
+ * idmef_$struct->{short_typename}_new_$member->{name}:
+ * \@ptr: pointer to a #$struct->{typename} object.
+ *
+ * Create a new $member->{name} object, children of #$struct->{typename}.
+ * If \@ptr already contain a #$member->{typename} object, then it is destroyed.
+ *
+ * Returns: A pointer to the newly allocated object, or NULL if an error occured.
+ */
 $member->{typename} *idmef_$struct->{short_typename}_new_$member->{name}($struct->{typename} *ptr)
 \{
 	switch ( ptr->$field->{var} ) \{
@@ -724,17 +816,43 @@ sub	struct_field_list
     my	$field = shift;
 
     $self->output("
-    
+/**
+ * idmef_$struct->{short_typename}_get_next_$field->{short_name}:
+ * \@ptr: pointer to a #$struct->{typename} object.
+ * \@object: pointer to a #$field->{typename} object.
+ *
+ * Get the next #$field->{typename} object listed in \@ptr.
+ * When iterating over the $field->{typename} object listed in \@ptr,
+ * \@object should be set to the latest returned #$field->{typename} object.
+ * 
+ * Returns: the next #$field->{typename} in the list.
+ */
 $field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object)
 \{
     	return prelude_list_get_next(object, &ptr->$field->{name}, $field->{typename}, list);
 \}
 
+/**
+ * idmef_$struct->{short_typename}_set_$field->{short_name}:
+ * \@ptr: pointer to a #$struct->{typename} object.
+ * \@object: pointer to a #$field->{typename} object.
+ *
+ * Add \@object to the tail of \@ptr list of #$field->{typename} object.
+ */
 void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object)
 \{
 	prelude_list_add_tail(&object->list, &ptr->$field->{name});
 \}
 
+/**
+ * idmef_$struct->{short_typename}_new_$field:
+ * \@ptr: pointer to a #$struct->{typename} object.
+ * 
+ * Create a new $field children of \@ptr,
+ * and add it to the tail of \@ptr list of #$field->{typename} object.
+ * 
+ * Returns: a pointer to the created #$field->{typename} object, or NULL if an error occured.
+ */
 $field->{typename} *idmef_$struct->{short_typename}_new_$field->{short_name}($struct->{typename} *ptr)
 \{
 	$field->{typename} *object;
@@ -840,7 +958,13 @@ sub	enum
     my	$enum = shift;
 
     $self->output("
-int idmef_$enum->{short_typename}_to_numeric(const char *name)
+/**
+ * idmef_$enum->{short_typename}_to_numeric:
+ * \@name: pointer to an IDMEF string representation of a #$enum->{typename} value.
+ *
+ * Returns: the numeric equivalent of \@name, or -1 if \@name is not valid.
+ */
+$enum->{typename} idmef_$enum->{short_typename}_to_numeric(const char *name)
 \{
 ");
 
@@ -864,7 +988,15 @@ int idmef_$enum->{short_typename}_to_numeric(const char *name)
 ");
 
         $self->output("
-const char *idmef_$enum->{short_typename}_to_string(int val)
+/**
+ * idmef_$enum->{short_typename}_to_string:
+ * \@val: an enumeration value for #$enum->{typename}.
+ *
+ * Return the IDMEF string equivalent of \@val provided #$enum->{typename} value.
+ *
+ * Returns: a pointer to the string describing \@val, or NULL if \@val is invalid.
+ */
+const char *idmef_$enum->{short_typename}_to_string($enum->{typename} val)
 \{
 	switch ( val ) \{
 ");
@@ -924,17 +1056,24 @@ prelude_msg_t *idmef_message_get_pmsg(idmef_message_t *message)
 \}
 
 
-void idmef_message_destroy(idmef_message_t *message)
+/**
+ * idmef_message_destroy:
+ * \@ptr: pointer to a #idmef_message_t object.
+ *
+ * Destroy \@ptr and all of it's children.
+ * The objects are only destroyed if their reference count reach zero.
+ */
+void idmef_message_destroy(idmef_message_t *ptr)
 \{
-        if ( --message->refcount )
+        if ( --ptr->refcount )
                 return;
 
-        idmef_message_destroy_internal(message);
+        idmef_message_destroy_internal(ptr);
 
-        if ( message->pmsg )
-                prelude_msg_destroy(message->pmsg);
+        if ( ptr->pmsg )
+                prelude_msg_destroy(ptr->pmsg);
 
-        free(message);
+        free(ptr);
 \}
 ");
 

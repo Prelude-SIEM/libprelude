@@ -1099,8 +1099,6 @@ MSG_FORMAT_PRELUDE_NIDS
 <FILE>prelude-client</FILE>
 prelude_client_exit_status_t
 prelude_client_capability_t
-PRELUDE_CLIENT_ASYNC_SEND
-PRELUDE_CLIENT_ASYNC_TIMER
 prelude_client_get_unique_ident
 prelude_client_get_credentials
 prelude_client_set_manager_list
