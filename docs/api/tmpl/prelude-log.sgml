@@ -107,3 +107,16 @@ prelude-log
 @Varargs: 
 
 
+<!-- ##### FUNCTION prelude_log_v ##### -->
+<para>
+
+</para>
+
+@priority: 
+@file: 
+@function: 
+@line: 
+@fmt: 
+@ap: 
+
+

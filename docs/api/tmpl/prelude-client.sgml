@@ -42,18 +42,6 @@ int main(int argc, char **argv)
 @PRELUDE_CLIENT_EXIT_STATUS_SUCCESS: 
 @PRELUDE_CLIENT_EXIT_STATUS_FAILURE: 
 
-<!-- ##### ENUM prelude_client_capability_t ##### -->
-<para>
-
-</para>
-
-@PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF: 
-@PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF: 
-@PRELUDE_CLIENT_CAPABILITY_RECV_ADMIN: 
-@PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN: 
-@PRELUDE_CLIENT_CAPABILITY_RECV_CM: 
-@PRELUDE_CLIENT_CAPABILITY_SEND_CM: 
-
 <!-- ##### ENUM prelude_client_flags_t ##### -->
 <para>
 
@@ -69,14 +57,6 @@ int main(int argc, char **argv)
 
 @client: 
 @Returns: 
-
-
-<!-- ##### FUNCTION prelude_client_get_credentials ##### -->
-<para>
-
-</para>
-
-@client: 
 
 
 <!-- ##### FUNCTION prelude_client_set_manager_list ##### -->
@@ -97,16 +77,12 @@ int main(int argc, char **argv)
 @Returns: 
 
 
-<!-- ##### FUNCTION prelude_client_init ##### -->
+<!-- ##### FUNCTION prelude_client_start ##### -->
 <para>
 
 </para>
 
 @client: 
-@sname: 
-@config: 
-@argc: 
-@argv: 
 @Returns: 
 
 
@@ -115,83 +91,16 @@ int main(int argc, char **argv)
 
 </para>
 
+@client: 
 @capability: 
+@profile: 
+@config: 
+@argc: 
+@argv: 
 @Returns: 
 
 
 <!-- ##### FUNCTION prelude_client_get_analyzer ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-
-<!-- ##### FUNCTION prelude_client_set_analyzerid ##### -->
-<para>
-
-</para>
-
-@client: 
-@analyzerid: 
-
-
-<!-- ##### FUNCTION prelude_client_get_analyzerid ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-
-<!-- ##### FUNCTION prelude_client_set_name ##### -->
-<para>
-
-</para>
-
-@client: 
-@name: 
-
-
-<!-- ##### FUNCTION prelude_client_get_name ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-
-<!-- ##### FUNCTION prelude_client_set_uid ##### -->
-<para>
-
-</para>
-
-@client: 
-@uid: 
-
-
-<!-- ##### FUNCTION prelude_client_get_uid ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-
-<!-- ##### FUNCTION prelude_client_set_gid ##### -->
-<para>
-
-</para>
-
-@client: 
-@gid: 
-
-
-<!-- ##### FUNCTION prelude_client_get_gid ##### -->
 <para>
 
 </para>
@@ -264,95 +173,6 @@ int main(int argc, char **argv)
 @Returns: 
 
 
-<!-- ##### FUNCTION prelude_client_set_capability ##### -->
-<para>
-
-</para>
-
-@client: 
-@capability: 
-
-
-<!-- ##### FUNCTION prelude_client_get_ident_filename ##### -->
-<para>
-
-</para>
-
-@client: 
-@buf: 
-@size: 
-
-
-<!-- ##### FUNCTION prelude_client_get_tls_key_filename ##### -->
-<para>
-
-</para>
-
-@client: 
-@buf: 
-@size: 
-
-
-<!-- ##### FUNCTION prelude_client_get_tls_server_ca_cert_filename ##### -->
-<para>
-
-</para>
-
-@client: 
-@buf: 
-@size: 
-
-
-<!-- ##### FUNCTION prelude_client_get_tls_server_keycert_filename ##### -->
-<para>
-
-</para>
-
-@client: 
-@buf: 
-@size: 
-
-
-<!-- ##### FUNCTION prelude_client_get_tls_server_trusted_cert_filename ##### -->
-<para>
-
-</para>
-
-@client: 
-@buf: 
-@size: 
-
-
-<!-- ##### FUNCTION prelude_client_get_tls_client_keycert_filename ##### -->
-<para>
-
-</para>
-
-@client: 
-@buf: 
-@size: 
-
-
-<!-- ##### FUNCTION prelude_client_get_tls_client_trusted_cert_filename ##### -->
-<para>
-
-</para>
-
-@client: 
-@buf: 
-@size: 
-
-
-<!-- ##### FUNCTION prelude_client_get_backup_filename ##### -->
-<para>
-
-</para>
-
-@client: 
-@buf: 
-@size: 
-
-
 <!-- ##### FUNCTION prelude_client_get_config_filename ##### -->
 <para>
 
@@ -362,11 +182,30 @@ int main(int argc, char **argv)
 @Returns: 
 
 
-<!-- ##### FUNCTION prelude_client_installation_error ##### -->
+<!-- ##### FUNCTION prelude_client_print_setup_error ##### -->
 <para>
 
 </para>
 
 @client: 
+
+
+<!-- ##### FUNCTION prelude_client_is_setup_needed ##### -->
+<para>
+
+</para>
+
+@client: 
+@err: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_get_profile ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
 
 

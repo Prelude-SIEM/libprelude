@@ -451,9 +451,11 @@ idmef-value
 </para>
 
 @val: 
+@out: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @buf: 
 @len: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_value_get ##### -->

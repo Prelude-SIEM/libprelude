@@ -188,9 +188,11 @@ idmef-time
 </para>
 
 @time: 
+@out: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @outptr: 
 @size: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_time_to_ntpstamp ##### -->
@@ -199,9 +201,11 @@ idmef-time
 </para>
 
 @time: 
+@out: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @outptr: 
 @size: 
-@Returns: 
 
 
 <!-- ##### MACRO IDMEF_TIME_MAX_STRING_SIZE ##### -->

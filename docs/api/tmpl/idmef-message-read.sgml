@@ -304,3 +304,13 @@ idmef-message-read
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_message_read ##### -->
+<para>
+
+</para>
+
+@message: 
+@msg: 
+@Returns: 
+
+

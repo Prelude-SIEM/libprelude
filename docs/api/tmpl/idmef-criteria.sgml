@@ -56,9 +56,11 @@ idmef-criteria
 </para>
 
 @criterion: 
+@out: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @buffer: 
 @size: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_criterion_get_object ##### -->
@@ -137,9 +139,11 @@ idmef-criteria
 </para>
 
 @criteria: 
+@out: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @buffer: 
 @size: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_criteria_is_criterion ##### -->

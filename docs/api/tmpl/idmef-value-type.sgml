@@ -85,10 +85,12 @@ idmef-value-type
 
 </para>
 
+@src: 
+@out: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @buf: 
 @size: 
-@src: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_value_type_destroy ##### -->

@@ -42,7 +42,7 @@ prelude-message-id
 
 
 
-<!-- ##### MACRO PRELUDE_MSG_CLIENT_CAPABILITY ##### -->
+<!-- ##### MACRO PRELUDE_MSG_CONNECTION_CAPABILITY ##### -->
 <para>
 
 </para>
@@ -119,13 +119,6 @@ prelude-message-id
 
 
 
-<!-- ##### MACRO PRELUDE_MSG_OPTION_SOURCE_ID ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### MACRO PRELUDE_MSG_OPTION_LIST ##### -->
 <para>
 
@@ -154,7 +147,7 @@ prelude-message-id
 
 
 
-<!-- ##### MACRO PRELUDE_MSG_OPTION_ID ##### -->
+<!-- ##### MACRO PRELUDE_MSG_OPTION_REQUEST_ID ##### -->
 <para>
 
 </para>
@@ -231,7 +224,7 @@ prelude-message-id
 
 
 
-<!-- ##### MACRO PRELUDE_MSG_OPTION_FLAGS ##### -->
+<!-- ##### MACRO PRELUDE_MSG_OPTION_TYPE ##### -->
 <para>
 
 </para>
@@ -246,6 +239,13 @@ prelude-message-id
 
 
 <!-- ##### MACRO PRELUDE_MSG_OPTION_COMMIT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_HOP ##### -->
 <para>
 
 </para>

@@ -21,6 +21,21 @@ prelude
 
 
 
+<!-- ##### FUNCTION prelude_init ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_deinit ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### FUNCTION prelude_check_version ##### -->
 <para>
 

@@ -127,6 +127,7 @@ prelude-message-buffered
 
 </para>
 
+@ret: 
 @flush_msg_cb: 
 @data: 
 @Returns: 
@@ -140,6 +141,7 @@ prelude-message-buffered
 
 </para>
 
+@ret: 
 @msgcount: 
 @msglen: 
 @tag: 
@@ -156,7 +158,6 @@ prelude-message-buffered
 @tag: 
 @len: 
 @data: 
-<!-- # Unused Parameters # -->
 @Returns: 
 
 

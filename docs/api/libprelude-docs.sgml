@@ -6,7 +6,7 @@
 <!ENTITY libprelude-prelude-io SYSTEM "sgml/prelude-io.sgml">
 <!ENTITY libprelude-variable SYSTEM "sgml/variable.sgml">
 <!ENTITY libprelude-prelude-message-id SYSTEM "sgml/prelude-message-id.sgml">
-<!ENTITY libprelude-idmef-tree-print SYSTEM "sgml/idmef-tree-print.sgml">
+<!ENTITY libprelude-idmef-message-print SYSTEM "sgml/idmef-tree-print.sgml">
 <!ENTITY libprelude-prelude-log SYSTEM "sgml/prelude-log.sgml">
 <!ENTITY libprelude-idmef-criteria-string SYSTEM "sgml/idmef-criteria-string.sgml">
 <!ENTITY libprelude-ntp SYSTEM "sgml/ntp.sgml">
@@ -22,7 +22,6 @@
 <!ENTITY libprelude-idmef-message-read SYSTEM "sgml/idmef-message-read.sgml">
 <!ENTITY libprelude-prelude-inet SYSTEM "sgml/prelude-inet.sgml">
 <!ENTITY libprelude-prelude-list SYSTEM "sgml/prelude-list.sgml">
-<!ENTITY libprelude-threads SYSTEM "sgml/threads.sgml">
 <!ENTITY libprelude-prelude-inttypes SYSTEM "sgml/prelude-inttypes.sgml">
 <!ENTITY libprelude-prelude SYSTEM "sgml/prelude.sgml">
 <!ENTITY libprelude-config-engine SYSTEM "sgml/config-engine.sgml">
@@ -32,7 +31,6 @@
 <!ENTITY libprelude-prelude-getopt-wide SYSTEM "sgml/prelude-getopt-wide.sgml">
 <!ENTITY libprelude-idmef-criteria SYSTEM "sgml/idmef-criteria.sgml">
 <!ENTITY libprelude-idmef-data SYSTEM "sgml/idmef-data.sgml">
-<!ENTITY libprelude-idmef-tree-to-string SYSTEM "sgml/idmef-tree-to-string.sgml">
 <!ENTITY libprelude-idmef-criterion-value SYSTEM "sgml/idmef-criterion-value.sgml">
 <!ENTITY libprelude-tls-auth SYSTEM "sgml/tls-auth.sgml">
 <!ENTITY libprelude-idmef-tree-data SYSTEM "sgml/idmef-tree-data.sgml">
@@ -49,7 +47,6 @@
 <!ENTITY libprelude-idmef-object SYSTEM "sgml/idmef-object.sgml">
 <!ENTITY libprelude-idmef-object-value SYSTEM "sgml/idmef-object-value.sgml">
 <!ENTITY libprelude-idmef-value-type SYSTEM "sgml/idmef-value-type.sgml">
-<!ENTITY libprelude-client-ident SYSTEM "sgml/client-ident.sgml">
 <!ENTITY libprelude-tls-util SYSTEM "sgml/tls-util.sgml">
 ]>
 <book id="index">
@@ -66,7 +63,7 @@
     &libprelude-prelude-io;
     &libprelude-variable;
     &libprelude-prelude-message-id;
-    &libprelude-idmef-tree-print;
+    &libprelude-idmef-message-print;
     &libprelude-prelude-log;
     &libprelude-idmef-criteria-string;
     &libprelude-ntp;
@@ -82,7 +79,6 @@
     &libprelude-idmef-message-read;
     &libprelude-prelude-inet;
     &libprelude-prelude-list;
-    &libprelude-threads;
     &libprelude-prelude-inttypes;
     &libprelude-prelude;
     &libprelude-config-engine;
@@ -92,7 +88,6 @@
     &libprelude-prelude-getopt-wide;
     &libprelude-idmef-criteria;
     &libprelude-idmef-data;
-    &libprelude-idmef-tree-to-string;
     &libprelude-idmef-criterion-value;
     &libprelude-tls-auth;
     &libprelude-idmef-tree-data;
@@ -109,7 +104,6 @@
     &libprelude-idmef-object;
     &libprelude-idmef-object-value;
     &libprelude-idmef-value-type;
-    &libprelude-client-ident;
     &libprelude-tls-util;
   </chapter>
 </book>

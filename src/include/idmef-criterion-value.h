@@ -65,7 +65,7 @@ int idmef_criterion_value_non_linear_time_get_min(idmef_criterion_value_non_line
 int idmef_criterion_value_non_linear_time_get_sec(idmef_criterion_value_non_linear_time_t *time);
 void idmef_criterion_value_non_linear_time_print(idmef_criterion_value_non_linear_time_t *time);
 int idmef_criterion_value_non_linear_time_to_string(idmef_criterion_value_non_linear_time_t *time,
-						    char *buffer, size_t size);
+						    prelude_string_t *out);
 
 
 idmef_criterion_value_t *idmef_criterion_value_new_fixed(idmef_value_t *value);
@@ -77,7 +77,7 @@ idmef_criterion_value_type_t idmef_criterion_value_get_type(const idmef_criterio
 idmef_value_t *idmef_criterion_value_get_fixed(idmef_criterion_value_t *value);
 idmef_criterion_value_non_linear_time_t *idmef_criterion_value_get_non_linear_time(idmef_criterion_value_t *time);
 void idmef_criterion_value_print(idmef_criterion_value_t *value);
-int idmef_criterion_value_to_string(idmef_criterion_value_t *value, char *buffer, size_t size);
+int idmef_criterion_value_to_string(idmef_criterion_value_t *value, prelude_string_t *out);
 
 
 

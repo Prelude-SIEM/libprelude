@@ -14,27 +14,3 @@ client-ident
 
 </para>
 
-<!-- ##### FUNCTION prelude_client_ident_send ##### -->
-<para>
-
-</para>
-
-@analyzerid: 
-@fd: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@client_type: 
-
-
-<!-- ##### FUNCTION prelude_client_ident_init ##### -->
-<para>
-
-</para>
-
-@client: 
-@analyzerid: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@sname: 
-
-

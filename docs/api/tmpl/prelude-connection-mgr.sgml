@@ -19,8 +19,16 @@ prelude-connection-mgr
 
 </para>
 
-@PRELUDE_CONNECTION_MGR_USE_TIMER: 
-@PRELUDE_CONNECTION_MGR_TIMER_IN_USE: 
+@PRELUDE_CONNECTION_MGR_FLAGS_RECONNECT: 
+
+<!-- ##### ENUM prelude_connection_mgr_event_t ##### -->
+<para>
+
+</para>
+
+@PRELUDE_CONNECTION_MGR_EVENT_INPUT: 
+@PRELUDE_CONNECTION_MGR_EVENT_DEAD: 
+@PRELUDE_CONNECTION_MGR_EVENT_ALIVE: 
 
 <!-- ##### FUNCTION prelude_connection_mgr_broadcast ##### -->
 <para>
@@ -54,9 +62,12 @@ prelude-connection-mgr
 
 </para>
 
-@client: 
+@ret: 
+@cp: 
+@capability: 
 @Returns: 
 <!-- # Unused Parameters # -->
+@client: 
 @cfgline: 
 
 
@@ -83,11 +94,12 @@ prelude-connection-mgr
 
 </para>
 
-@mgr_ptr: 
+@mgr: 
 @cnx: 
-@flags: 
 @Returns: 
 <!-- # Unused Parameters # -->
+@mgr_ptr: 
+@flags: 
 @use_timer: 
 
 
@@ -166,5 +178,72 @@ prelude-connection-mgr
 </para>
 
 @mgr: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_set_flags ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@flags: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_set_data ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@data: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_get_data ##### -->
+<para>
+
+</para>
+
+@mgr: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_recv ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@out: 
+@timeout: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_get_next_connection ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@iter: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_set_global_event_handler ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@events: 
+@callback: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_set_event_handler ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@events: 
+@callback: 
 
 

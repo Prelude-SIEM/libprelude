@@ -24,48 +24,6 @@ extract
 @Returns: 
 
 
-<!-- ##### MACRO align_uint16 ##### -->
-<para>
-
-</para>
-
-@x: 
-
-
-<!-- ##### MACRO align_int32 ##### -->
-<para>
-
-</para>
-
-@x: 
-
-
-<!-- ##### MACRO align_uint32 ##### -->
-<para>
-
-</para>
-
-@x: 
-
-
-<!-- ##### FUNCTION align_uint64 ##### -->
-<para>
-
-</para>
-
-@Varargs: 
-@Returns: 
-
-
-<!-- ##### FUNCTION align_ipv4_addr ##### -->
-<para>
-
-</para>
-
-@Varargs: 
-@Returns: 
-
-
 <!-- ##### FUNCTION ntohs ##### -->
 <para>
 

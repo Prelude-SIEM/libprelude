@@ -18,6 +18,26 @@
 acconfig
 
 
+<!-- ##### SECTION ./tmpl/client-ident.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/client-ident.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/client-ident.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/client-ident.sgml:Title ##### -->
+client-ident
+
+
 <!-- ##### SECTION ./tmpl/common-gdb.sgml:Long_Description ##### -->
 <para>
 
@@ -56,6 +76,26 @@ common-gdb
 
 <!-- ##### SECTION ./tmpl/config.sgml:Title ##### -->
 config
+
+
+<!-- ##### SECTION ./tmpl/extract.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/extract.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/extract.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/extract.sgml:Title ##### -->
+extract
 
 
 <!-- ##### SECTION ./tmpl/getopt_long.sgml:Long_Description ##### -->
@@ -260,6 +300,124 @@ prelude-auth
 prelude-client-mgr
 
 
+<!-- ##### SECTION ./tmpl/prelude-getopt-wide.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/prelude-getopt-wide.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/prelude-getopt-wide.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/prelude-getopt-wide.sgml:Title ##### -->
+prelude-getopt-wide
+
+
+<!-- ##### SECTION ./tmpl/prelude-getopt.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/prelude-getopt.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/prelude-getopt.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/prelude-getopt.sgml:Title ##### -->
+prelude-getopt
+
+
+<!-- ##### SECTION ./tmpl/prelude-message-buffered.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/prelude-message-buffered.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/prelude-message-buffered.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/prelude-message-buffered.sgml:Title ##### -->
+prelude-message-buffered
+
+
+<!-- ##### SECTION ./tmpl/prelude-message.sgml:Long_Description ##### -->
+<para>
+This Mesaging API is used for differents Prelude program to communicate
+together. It feature compatibility between version, and use a way to describe
+data similar to XML.
+</para>
+
+<para>
+The Message header contain the protocol version, which is only to be used
+in case the main protocol structure change (compatibility break), The tag 
+describe the kind of message, The fragment field may be used if a message 
+is sent in several time, The priority may be used by the receiving end 
+to priorityze task, The datalen contain the size of the whole message in 
+network byte order
+
+<programlisting>
+
+   8bits    8bits   8bits     8bits                32bits
++--------+--------+--------+----------+------------------------------+
+|version |   tag  |priority| fragment |            datalen           |
++--------+--------+--------+----------+------------------------------+
+
+</programlisting>
+</para>
+
+
+<para>
+Then the message itself contain submessage composed of :
+
+A tag describing the kind of payload, the len of the payload (in network byte order),
+the payload itself, and an end of message byte (0xff) in order to resynchronize in 
+case of problem.
+
+<programlisting>
+
+  8bits              32bits                                   8bits
++--------+--------------------------------+-----------------+--------+
+|  tag   |             len                |     payload     |  0xff  |                     
++--------+--------------------------------+-----------------+--------+
+
+</programlisting>
+</para>
+
+
+<!-- ##### SECTION ./tmpl/prelude-message.sgml:See_Also ##### -->
+<para>
+prelude-message-buffered
+</para>
+
+
+<!-- ##### SECTION ./tmpl/prelude-message.sgml:Short_Description ##### -->
+Prelude Messaging API
+
+
+<!-- ##### SECTION ./tmpl/prelude-message.sgml:Title ##### -->
+prelude-message
+
+
 <!-- ##### SECTION ./tmpl/prelude-path.sgml:Long_Description ##### -->
 <para>
 
@@ -460,6 +618,47 @@ string-matching
 thread
 
 
+<!-- ##### SECTION ./tmpl/threads.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/threads.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/threads.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/threads.sgml:Title ##### -->
+threads
+
+
+<!-- ##### SECTION ./tmpl/timer.sgml:Long_Description ##### -->
+<para>
+Timer may be used by Prelude program in order to be notified asynchronously
+when a timer previously set expire.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/timer.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/timer.sgml:Short_Description ##### -->
+Asynchronous timer API
+
+
+<!-- ##### SECTION ./tmpl/timer.sgml:Title ##### -->
+timer
+
+
 <!-- ##### MACRO ACK ##### -->
 <para>
 
@@ -467,6 +666,12 @@ thread
 
 
 <!-- ##### MACRO ACKLENGTH ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO ALLOW_MULTIPLE_CALL ##### -->
 <para>
 
 </para>
@@ -538,13 +743,44 @@ thread
 @bm_gs: 
 @Returns: 
 
+<!-- ##### MACRO CFG_HOOK ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO CLI_HOOK ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### MACRO DEFAULT_KEY_LENGTH ##### -->
 <para>
 
 </para>
 
 
+<!-- ##### MACRO DESTROY_HOOK ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO DYNAMIC_IDENT ##### -->
+<para>
+
+</para>
+
+@x: 
+
 <!-- ##### TYPEDEF FILE ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO HAVE_CONTEXT ##### -->
 <para>
 
 </para>
@@ -1057,6 +1293,18 @@ thread
 </para>
 
 
+<!-- ##### MACRO OPT_INVAL ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO OPT_INVAL_ARG ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### MACRO PACKAGE ##### -->
 <para>
 
@@ -1142,6 +1390,30 @@ thread
 
 
 <!-- ##### MACRO PRELUDE_MSG_AUTH_USERNAME ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PRELUDE_MSG_CLIENT_CAPABILITY ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_FLAGS ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_ID ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_SOURCE_ID ##### -->
 <para>
 
 </para>
@@ -1267,11 +1539,54 @@ thread
 </para>
 
 
+<!-- ##### MACRO WIDE_HOOK ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### MACRO WRONG_SIZE ##### -->
 <para>
 
 </para>
 
+
+<!-- ##### MACRO align_int32 ##### -->
+<para>
+
+</para>
+
+@x: 
+
+<!-- ##### FUNCTION align_ipv4_addr ##### -->
+<para>
+
+</para>
+
+@Varargs: 
+@Returns: 
+
+<!-- ##### MACRO align_uint16 ##### -->
+<para>
+
+</para>
+
+@x: 
+
+<!-- ##### MACRO align_uint32 ##### -->
+<para>
+
+</para>
+
+@x: 
+
+<!-- ##### FUNCTION align_uint64 ##### -->
+<para>
+
+</para>
+
+@Varargs: 
+@Returns: 
 
 <!-- ##### FUNCTION analyse_install_msg ##### -->
 <para>
@@ -1432,6 +1747,17 @@ thread
 </para>
 
 
+<!-- ##### FUNCTION idmef_action_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
+
 <!-- ##### FUNCTION idmef_additional_data_free ##### -->
 <para>
 
@@ -1439,17 +1765,146 @@ thread
 
 @data: 
 
+<!-- ##### FUNCTION idmef_additional_data_get_datetime ##### -->
+<para>
+
+</para>
+
+@data: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_additional_data_get_ntpstamp ##### -->
+<para>
+
+</para>
+
+@data: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_additional_data_get_portlist ##### -->
+<para>
+
+</para>
+
+@data: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_additional_data_get_string ##### -->
+<para>
+
+</para>
+
+@data: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_additional_data_get_xml ##### -->
+<para>
+
+</para>
+
+@data: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_additional_data_new_data_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_additional_data_new_data_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_additional_data_new_data_ref ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_additional_data_set_data_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+@buf: 
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_additional_data_set_data_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+@buf: 
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_additional_data_set_data_ref ##### -->
+<para>
+
+</para>
+
+@data: 
+@buf: 
+@len: 
+@Returns: 
+
 <!-- ##### TYPEDEF idmef_additional_data_t ##### -->
 <para>
 
 </para>
 
 
+<!-- ##### FUNCTION idmef_additional_data_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
+
+<!-- ##### FUNCTION idmef_additionaldata_data_to_string ##### -->
+<para>
+
+</para>
+
+@ad: 
+@buf: 
+@size: 
+@Returns: 
+
 <!-- ##### TYPEDEF idmef_address_t ##### -->
 <para>
 
 </para>
 
+
+<!-- ##### FUNCTION idmef_address_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
 
 <!-- ##### FUNCTION idmef_adjust_msg_size ##### -->
 <para>
@@ -1571,11 +2026,33 @@ thread
 @alert: 
 @Returns: 
 
+<!-- ##### FUNCTION idmef_alert_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
+
 <!-- ##### TYPEDEF idmef_alertident_t ##### -->
 <para>
 
 </para>
 
+
+<!-- ##### FUNCTION idmef_alertident_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
 
 <!-- ##### FUNCTION idmef_analyzer_node_new ##### -->
 <para>
@@ -1602,6 +2079,17 @@ thread
 
 </para>
 
+
+<!-- ##### FUNCTION idmef_analyzer_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
 
 <!-- ##### FUNCTION idmef_assessment_action_new ##### -->
 <para>
@@ -1630,6 +2118,28 @@ thread
 
 </para>
 
+
+<!-- ##### FUNCTION idmef_assessment_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
+
+<!-- ##### FUNCTION idmef_checksum_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
 
 <!-- ##### FUNCTION idmef_classification_get_name ##### -->
 <para>
@@ -1761,11 +2271,33 @@ thread
 </para>
 
 
+<!-- ##### FUNCTION idmef_classification_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
+
 <!-- ##### TYPEDEF idmef_confidence_t ##### -->
 <para>
 
 </para>
 
+
+<!-- ##### FUNCTION idmef_confidence_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
 
 <!-- ##### MACRO idmef_constant ##### -->
 <para>
@@ -1788,11 +2320,87 @@ thread
 </para>
 
 
+<!-- ##### FUNCTION idmef_correlation_alert_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
+
 <!-- ##### MACRO idmef_create_time_t ##### -->
 <para>
 
 </para>
 
+
+<!-- ##### FUNCTION idmef_data_new_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_data_new_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_data_new_ref ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+@Returns: 
+
+<!-- ##### MACRO idmef_data_set_constant_ref ##### -->
+<para>
+
+</para>
+
+@data: 
+@buf: 
+
+<!-- ##### FUNCTION idmef_data_set_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+@buf: 
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_data_set_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+@buf: 
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_data_set_ref ##### -->
+<para>
+
+</para>
+
+@data: 
+@buf: 
+@len: 
+@Returns: 
 
 <!-- ##### MACRO idmef_detect_time_t ##### -->
 <para>
@@ -1860,6 +2468,17 @@ thread
 @file: 
 @Returns: 
 
+<!-- ##### FUNCTION idmef_file_access_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
+
 <!-- ##### FUNCTION idmef_file_create_time_new ##### -->
 <para>
 
@@ -1925,6 +2544,17 @@ thread
 @ptr: 
 @object: 
 
+<!-- ##### FUNCTION idmef_file_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
+
 <!-- ##### FUNCTION idmef_heartbeat_additional_data_new ##### -->
 <para>
 
@@ -1978,11 +2608,33 @@ thread
 </para>
 
 
+<!-- ##### FUNCTION idmef_heartbeat_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
+
 <!-- ##### TYPEDEF idmef_impact_t ##### -->
 <para>
 
 </para>
 
+
+<!-- ##### FUNCTION idmef_impact_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
 
 <!-- ##### FUNCTION idmef_inode_change_time_new ##### -->
 <para>
@@ -1998,6 +2650,17 @@ thread
 </para>
 
 
+<!-- ##### FUNCTION idmef_inode_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
+
 <!-- ##### FUNCTION idmef_linkage_file_new ##### -->
 <para>
 
@@ -2012,12 +2675,34 @@ thread
 </para>
 
 
+<!-- ##### FUNCTION idmef_linkage_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
+
 <!-- ##### FUNCTION idmef_message_free ##### -->
 <para>
 
 </para>
 
 @msg: 
+
+<!-- ##### FUNCTION idmef_message_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
 
 <!-- ##### FUNCTION idmef_msg_send ##### -->
 <para>
@@ -2049,11 +2734,33 @@ thread
 </para>
 
 
+<!-- ##### FUNCTION idmef_node_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
+
 <!-- ##### TYPEDEF idmef_overflow_alert_t ##### -->
 <para>
 
 </para>
 
+
+<!-- ##### FUNCTION idmef_overflow_alert_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
 
 <!-- ##### FUNCTION idmef_process_arg_new ##### -->
 <para>
@@ -2088,6 +2795,17 @@ thread
 
 </para>
 
+
+<!-- ##### FUNCTION idmef_process_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
 
 <!-- ##### FUNCTION idmef_read_action ##### -->
 <para>
@@ -2331,6 +3049,17 @@ thread
 @msg: 
 @webservice: 
 @Returns: 
+
+<!-- ##### FUNCTION idmef_reference_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
 
 <!-- ##### FUNCTION idmef_send_action ##### -->
 <para>
@@ -2754,6 +3483,17 @@ thread
 @service: 
 @Returns: 
 
+<!-- ##### FUNCTION idmef_service_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
+
 <!-- ##### FUNCTION idmef_service_webservice_new ##### -->
 <para>
 
@@ -2761,6 +3501,17 @@ thread
 
 @service: 
 @Returns: 
+
+<!-- ##### FUNCTION idmef_snmp_service_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
 
 <!-- ##### FUNCTION idmef_snmpservice_destroy ##### -->
 <para>
@@ -2966,6 +3717,17 @@ thread
 
 </para>
 
+
+<!-- ##### FUNCTION idmef_source_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
 
 <!-- ##### FUNCTION idmef_source_user_new ##### -->
 <para>
@@ -3255,6 +4017,17 @@ thread
 </para>
 
 
+<!-- ##### FUNCTION idmef_target_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
+
 <!-- ##### MACRO idmef_target_user_new ##### -->
 <para>
 
@@ -3388,6 +4161,17 @@ thread
 </para>
 
 
+<!-- ##### FUNCTION idmef_tool_alert_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
+
 <!-- ##### FUNCTION idmef_user_get_next_userid ##### -->
 <para>
 
@@ -3404,6 +4188,17 @@ thread
 
 @ptr: 
 @Returns: 
+
+<!-- ##### FUNCTION idmef_user_id_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
 
 <!-- ##### FUNCTION idmef_user_new_userid ##### -->
 <para>
@@ -3426,6 +4221,17 @@ thread
 
 </para>
 
+
+<!-- ##### FUNCTION idmef_user_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
 
 <!-- ##### FUNCTION idmef_user_userid_new ##### -->
 <para>
@@ -3686,6 +4492,17 @@ thread
 </para>
 
 @n: 
+
+<!-- ##### FUNCTION idmef_web_service_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@out: 
+@Returns: 
+@buffer: 
+@size: 
 
 <!-- ##### FUNCTION idmef_webservice_arg_new ##### -->
 <para>
@@ -4205,6 +5022,24 @@ thread
 </para>
 
 
+<!-- ##### MACRO option_run_first ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO option_run_last ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO option_run_no_order ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### MACRO optional_argument ##### -->
 <para>
 
@@ -4535,6 +5370,18 @@ thread
 @addr: 
 @Returns: 
 
+<!-- ##### ENUM prelude_client_capability_t ##### -->
+<para>
+
+</para>
+
+@PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF: 
+@PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF: 
+@PRELUDE_CLIENT_CAPABILITY_RECV_ADMIN: 
+@PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN: 
+@PRELUDE_CLIENT_CAPABILITY_RECV_CM: 
+@PRELUDE_CLIENT_CAPABILITY_SEND_CM: 
+
 <!-- ##### FUNCTION prelude_client_close ##### -->
 <para>
 
@@ -4560,6 +5407,30 @@ thread
 @count: 
 @Returns: 
 
+<!-- ##### FUNCTION prelude_client_get_analyzerid ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+<!-- ##### FUNCTION prelude_client_get_backup_filename ##### -->
+<para>
+
+</para>
+
+@client: 
+@buf: 
+@size: 
+
+<!-- ##### FUNCTION prelude_client_get_credentials ##### -->
+<para>
+
+</para>
+
+@client: 
+
 <!-- ##### FUNCTION prelude_client_get_daddr ##### -->
 <para>
 
@@ -4584,6 +5455,23 @@ thread
 @client: 
 @Returns: 
 
+<!-- ##### FUNCTION prelude_client_get_gid ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+<!-- ##### FUNCTION prelude_client_get_ident_filename ##### -->
+<para>
+
+</para>
+
+@client: 
+@buf: 
+@size: 
+
 <!-- ##### FUNCTION prelude_client_get_inet_address ##### -->
 <para>
 
@@ -4592,6 +5480,14 @@ thread
 @client: 
 @saddr: 
 @daddr: 
+@Returns: 
+
+<!-- ##### FUNCTION prelude_client_get_name ##### -->
+<para>
+
+</para>
+
+@client: 
 @Returns: 
 
 <!-- ##### FUNCTION prelude_client_get_saddr ##### -->
@@ -4609,6 +5505,107 @@ thread
 
 @client: 
 @Returns: 
+
+<!-- ##### FUNCTION prelude_client_get_tls_client_keycert_filename ##### -->
+<para>
+
+</para>
+
+@client: 
+@buf: 
+@size: 
+
+<!-- ##### FUNCTION prelude_client_get_tls_client_trusted_cert_filename ##### -->
+<para>
+
+</para>
+
+@client: 
+@buf: 
+@size: 
+
+<!-- ##### FUNCTION prelude_client_get_tls_key_filename ##### -->
+<para>
+
+</para>
+
+@client: 
+@buf: 
+@size: 
+
+<!-- ##### FUNCTION prelude_client_get_tls_server_ca_cert_filename ##### -->
+<para>
+
+</para>
+
+@client: 
+@buf: 
+@size: 
+
+<!-- ##### FUNCTION prelude_client_get_tls_server_keycert_filename ##### -->
+<para>
+
+</para>
+
+@client: 
+@buf: 
+@size: 
+
+<!-- ##### FUNCTION prelude_client_get_tls_server_trusted_cert_filename ##### -->
+<para>
+
+</para>
+
+@client: 
+@buf: 
+@size: 
+
+<!-- ##### FUNCTION prelude_client_get_uid ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+<!-- ##### FUNCTION prelude_client_ident_init ##### -->
+<para>
+
+</para>
+
+@client: 
+@analyzerid: 
+@Returns: 
+@sname: 
+
+<!-- ##### FUNCTION prelude_client_ident_send ##### -->
+<para>
+
+</para>
+
+@analyzerid: 
+@fd: 
+@Returns: 
+@client_type: 
+
+<!-- ##### FUNCTION prelude_client_init ##### -->
+<para>
+
+</para>
+
+@client: 
+@sname: 
+@config: 
+@argc: 
+@argv: 
+@Returns: 
+
+<!-- ##### FUNCTION prelude_client_installation_error ##### -->
+<para>
+
+</para>
+
+@client: 
 
 <!-- ##### FUNCTION prelude_client_is_alive ##### -->
 <para>
@@ -4667,6 +5664,38 @@ thread
 
 @id: 
 
+<!-- ##### FUNCTION prelude_client_set_analyzerid ##### -->
+<para>
+
+</para>
+
+@client: 
+@analyzerid: 
+
+<!-- ##### FUNCTION prelude_client_set_capability ##### -->
+<para>
+
+</para>
+
+@client: 
+@capability: 
+
+<!-- ##### FUNCTION prelude_client_set_gid ##### -->
+<para>
+
+</para>
+
+@client: 
+@gid: 
+
+<!-- ##### FUNCTION prelude_client_set_name ##### -->
+<para>
+
+</para>
+
+@client: 
+@name: 
+
 <!-- ##### FUNCTION prelude_client_set_type ##### -->
 <para>
 
@@ -4674,6 +5703,31 @@ thread
 
 @client: 
 @type: 
+
+<!-- ##### FUNCTION prelude_client_set_uid ##### -->
+<para>
+
+</para>
+
+@client: 
+@uid: 
+
+<!-- ##### FUNCTION prelude_connection_get_client ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@Returns: 
+
+<!-- ##### FUNCTION prelude_connection_send_msg ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@msg: 
+@Returns: 
 
 <!-- ##### FUNCTION prelude_get_auth_filename ##### -->
 <para>
@@ -4780,6 +5834,21 @@ thread
 @prelude_msg_unfinished: 
 @prelude_msg_finished: 
 
+<!-- ##### FUNCTION prelude_msgbuf_close ##### -->
+<para>
+
+</para>
+
+@msgbuf: 
+
+<!-- ##### FUNCTION prelude_msgbuf_get_client ##### -->
+<para>
+
+</para>
+
+@msgbuf: 
+@Returns: 
+
 <!-- ##### FUNCTION prelude_msgbuf_set_header ##### -->
 <para>
 
@@ -4788,6 +5857,40 @@ thread
 @msgbuf: 
 @tag: 
 @priority: 
+
+<!-- ##### MACRO prelude_option_end ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO prelude_option_error ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION prelude_option_get_flags ##### -->
+<para>
+
+</para>
+
+@opt: 
+@Returns: 
+
+<!-- ##### FUNCTION prelude_option_set_flags ##### -->
+<para>
+
+</para>
+
+@opt: 
+@flags: 
+
+<!-- ##### MACRO prelude_option_success ##### -->
+<para>
+
+</para>
+
 
 <!-- ##### FUNCTION prelude_option_wide_add ##### -->
 <para>
@@ -5037,6 +6140,13 @@ thread
 @ap: 
 @Returns: 
 
+<!-- ##### FUNCTION prelude_string_dont_own ##### -->
+<para>
+
+</para>
+
+@string: 
+
 <!-- ##### FUNCTION prelude_thread_create ##### -->
 <para>
 
@@ -5045,6 +6155,18 @@ thread
 @thread: 
 @attr: 
 @Returns: 
+
+<!-- ##### FUNCTION prelude_wake_up_timer ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO pthread_create ##### -->
+<para>
+
+</para>
+
 
 <!-- ##### MACRO required_argument ##### -->
 <para>
@@ -5102,13 +6224,113 @@ thread
 
 @Returns: 
 
+<!-- ##### FUNCTION start_routine ##### -->
+<para>
+
+</para>
+
+@Varargs: 
+@Returns: 
+
+<!-- ##### MACRO timer_data ##### -->
+<para>
+
+</para>
+
+@timer: 
+
+<!-- ##### FUNCTION timer_destroy ##### -->
+<para>
+
+</para>
+
+@timer: 
+
 <!-- ##### FUNCTION timer_destroy_current ##### -->
 <para>
 
 </para>
 
 
+<!-- ##### FUNCTION timer_elapsed ##### -->
+<para>
+
+</para>
+
+@timer: 
+@tv: 
+
+<!-- ##### MACRO timer_expire ##### -->
+<para>
+
+</para>
+
+@timer: 
+
+<!-- ##### FUNCTION timer_flush ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO timer_func ##### -->
+<para>
+
+</para>
+
+@timer: 
+
+<!-- ##### FUNCTION timer_init ##### -->
+<para>
+
+</para>
+
+@timer: 
+
+<!-- ##### FUNCTION timer_lock_critical_region ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION timer_reset ##### -->
+<para>
+
+</para>
+
+@timer: 
+
 <!-- ##### FUNCTION timer_reset_current ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO timer_set_callback ##### -->
+<para>
+
+</para>
+
+@timer: 
+@x: 
+
+<!-- ##### MACRO timer_set_data ##### -->
+<para>
+
+</para>
+
+@timer: 
+@x: 
+
+<!-- ##### MACRO timer_set_expire ##### -->
+<para>
+
+</para>
+
+@timer: 
+@x: 
+
+<!-- ##### FUNCTION timer_unlock_critical_region ##### -->
 <para>
 
 </para>

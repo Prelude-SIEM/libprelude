@@ -37,14 +37,3 @@ idmef-util
 @...: 
 
 
-<!-- ##### FUNCTION idmef_additionaldata_data_to_string ##### -->
-<para>
-
-</para>
-
-@ad: 
-@buf: 
-@size: 
-@Returns: 
-
-

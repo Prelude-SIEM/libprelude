@@ -14,19 +14,3 @@ threads
 
 </para>
 
-<!-- ##### FUNCTION start_routine ##### -->
-<para>
-
-</para>
-
-@Varargs: 
-@Returns: 
-
-
-<!-- ##### MACRO pthread_create ##### -->
-<para>
-
-</para>
-
-
-

@@ -21,14 +21,15 @@
 *
 *****/
 
+#include "libmissing.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 
-#include "libmissing.h"
 #include "prelude-inttypes.h"
+#include "prelude-string.h"
 #include "idmef-data.h"
 
 
@@ -78,9 +79,14 @@ IDMEF_DATA_DECL(IDMEF_DATA_TYPE_UINT64, uint64_t, uint64)
 IDMEF_DATA_DECL(IDMEF_DATA_TYPE_FLOAT, float, float)
 
 
-/*
- * creates an empty data
- */        
+
+/**
+ * idmef_data_new:
+ *
+ * Allocate a new idmef_data_t object.
+ *
+ * Returns: A new idmef_data_t object, or NULL if an error occured.
+ */
 idmef_data_t *idmef_data_new(void)
 {
         idmef_data_t *ret;
@@ -239,9 +245,14 @@ idmef_data_t *idmef_data_new_char_string_dup_fast(const char *str, size_t len)
 
 
 
-
-/*
- * just make a pointer copy of the embedded data
+/**
+ * idmef_data_copy_ref:
+ * @dst: Destination #idmef_data_t object.
+ * @src: Source #idmef_data_t object.
+ *
+ * Make @dst reference the same buffer as @src.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
  */
 int idmef_data_copy_ref(idmef_data_t *dst, const idmef_data_t *src)
 {
@@ -257,8 +268,16 @@ int idmef_data_copy_ref(idmef_data_t *dst, const idmef_data_t *src)
 
 
 
-/*
- * also copy the content of the embedded data
+
+/**
+ * idmef_data_copy_dup:
+ * @dst: Destination #idmef_data_t object.
+ * @src: Source #idmef_data_t object.
+ *
+ * Copy @src to @dst, including the associated buffer
+ * this is an alternative to idmef_data_clone().
+ *
+ * Returns: 0 on success, a negative value if an error occured.
  */
 int idmef_data_copy_dup(idmef_data_t *dst, const idmef_data_t *src)
 {
@@ -282,6 +301,15 @@ int idmef_data_copy_dup(idmef_data_t *dst, const idmef_data_t *src)
 
 
 
+
+/**
+ * idmef_data_clone:
+ * @data: Pointer to an #idmef_data_t object.
+ *
+ * Make up an exact copy of the @data object, and it's content.
+ *
+ * Returns: A new #idmef_data_t object, or NULL if an error occured.
+ */
 idmef_data_t *idmef_data_clone(const idmef_data_t *data)
 {
         idmef_data_t *ret;
@@ -314,6 +342,12 @@ const unsigned char *idmef_data_get_byte_string(const idmef_data_t *data)
 
 
 
+/**
+ * idmef_data_get_type
+ * @data: Pointer to an #idmef_data_t object.
+ *
+ * Returns: the type of the embedded data.
+ */
 idmef_data_type_t idmef_data_get_type(const idmef_data_t *data)
 {
 	return data->type;
@@ -321,6 +355,13 @@ idmef_data_type_t idmef_data_get_type(const idmef_data_t *data)
 
 
 
+
+/**
+ * idmef_data_get_len:
+ * @data: Pointer to an #idmef_data_t object.
+ *
+ * Returns: the len of data contained within @data object.
+ */
 size_t idmef_data_get_len(const idmef_data_t *data)
 {
         return data->len;
@@ -328,6 +369,13 @@ size_t idmef_data_get_len(const idmef_data_t *data)
 
 
 
+
+/**
+ * idmef_data_get_data:
+ * @data: Pointer to an #idmef_data_t object.
+ *
+ * Returns: the data contained within @data object.
+ */
 const void *idmef_data_get_data(const idmef_data_t *data)
 {
 	switch ( data->type ) {
@@ -345,65 +393,79 @@ const void *idmef_data_get_data(const idmef_data_t *data)
 }
 
 
-int idmef_data_is_empty(const idmef_data_t *data)
+
+/**
+ * idmef_data_is_empty:
+ * @data: Pointer to an #idmef_data_t object.
+ *
+ * Returns: TRUE if empty, FALSE otherwise.
+ */
+prelude_bool_t idmef_data_is_empty(const idmef_data_t *data)
 {
-        return (data->len == 0);
+        return (data->len == 0) ? TRUE : FALSE;
 }
 
 
 
-static int bytes_to_string(char *dst, size_t dst_len, const unsigned char *src, size_t src_len)
+static int bytes_to_string(prelude_string_t *out, const unsigned char *src, size_t size)
 {
-        int ret;
+        size_t i;
+        int ret = 0;
         unsigned char c;
-	size_t src_cnt = 0, dst_cnt = 0;
 
-        do {
-                c = src[src_cnt++];
+        for ( i = 0; i < size; i++ ) {
+                c = src[i];
                 
-                if ( dst_len - dst_cnt < 2 )
-                        return -1;
-
                 if ( c >= 32 && c <= 127 ) {
-                        dst[dst_cnt++] = c;
-			dst[dst_cnt] = '\0';
+                        ret = prelude_string_ncat(out, &c, 1);
+                        if ( ret < 0 )
+                                return ret;
+                        
                         continue;
                 }
 
                 switch ( c ) {
                 case '\\':
-                        ret = snprintf(dst + dst_cnt, dst_len - dst_cnt, "\\\\");
+                        ret = prelude_string_cat(out, "\\\\");
                         break;
 
                 case '\r':
-                        ret = snprintf(dst + dst_cnt, dst_len - dst_cnt, "\\r");
+                        ret = prelude_string_cat(out, "\\r");
                         break;
 
                 case '\n':
-                        ret = snprintf(dst + dst_cnt, dst_len - dst_cnt, "\\n");
+                        ret = prelude_string_cat(out, "\\n");
                         break;
 
                 case '\t':
-                        ret = snprintf(dst + dst_cnt, dst_len - dst_cnt, "\\t");
+                        ret = prelude_string_cat(out, "\\t");
                         break;
 
                 default:
-                        ret = snprintf(dst + dst_cnt, dst_len - dst_cnt, "\\x%02x", c);
+                        ret = prelude_string_cat(out, "\\x%02x");
                         break;
                 }
 
-                if ( ret < 0 || ret > dst_len - dst_cnt )
-                        return -1;
-
-                dst_cnt += ret;
-
-        } while ( src_cnt < src_len );
-
-        return dst_cnt;
+                if ( ret < 0 )
+                        return ret;
+        }
+        
+        return ret;
 }
 
 
-int idmef_data_to_string(const idmef_data_t *data, char *buf, size_t size)
+
+/**
+ * idmef_data_to_string:
+ * @data: Pointer to an #idmef_data_t object.
+ * @out: Pointer to a #prelude_string_t to store the formated data into.
+ *
+ * Format the data contained within @data to be printable,
+ * and store the result in the provided @out buffer.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_data_to_string(const idmef_data_t *data, prelude_string_t *out)
 {
 	int ret = 0;
 
@@ -412,35 +474,35 @@ int idmef_data_to_string(const idmef_data_t *data, char *buf, size_t size)
 		return 0;
 
 	case IDMEF_DATA_TYPE_CHAR:
-		ret = snprintf(buf, size, "%c", data->data.char_data);
+		ret = prelude_string_sprintf(out, "%c", data->data.char_data);
 		break;
 
 	case IDMEF_DATA_TYPE_BYTE:
-		ret = snprintf(buf, size, "%hhu", data->data.byte_data);
+		ret = prelude_string_sprintf(out, "%hhu", data->data.byte_data);
 		break;
 
 	case IDMEF_DATA_TYPE_UINT32:
-		ret = snprintf(buf, size, "%u", data->data.uint32_data);
+		ret = prelude_string_sprintf(out, "%u", data->data.uint32_data);
 		break;
 
 	case IDMEF_DATA_TYPE_UINT64:
-		ret = snprintf(buf, size, "%llu", data->data.uint64_data);
+		ret = prelude_string_sprintf(out, "%llu", data->data.uint64_data);
 		break;
 
 	case IDMEF_DATA_TYPE_FLOAT:
-		ret = snprintf(buf, size, "%f", data->data.float_data);
+		ret = prelude_string_sprintf(out, "%f", data->data.float_data);
 		break;
 
 	case IDMEF_DATA_TYPE_CHAR_STRING:
-		ret = snprintf(buf, size, "%s", (const char *) data->data.ro_data);
+		ret = prelude_string_sprintf(out, "%s", (const char *) data->data.ro_data);
 		break;
 
 	case IDMEF_DATA_TYPE_BYTE_STRING:
-		ret = bytes_to_string(buf, size, data->data.ro_data, data->len);
+		ret = bytes_to_string(out, data->data.ro_data, data->len);
 		break;
 	}
 
-	return (ret < 0 || ret > size) ? -1 : ret;
+	return ret;
 }
 
 
@@ -465,13 +527,20 @@ void idmef_data_destroy_internal(idmef_data_t *ptr)
 
 
 
-void idmef_data_destroy(idmef_data_t *ptr)
+/**
+ * idmef_data_destroy:
+ * @data: Pointer to an #idmef_data_t object.
+ *
+ * Free @data. The buffer pointed to by @data will be freed if
+ * the @data object is marked as _dup or _nodup.
+ */
+void idmef_data_destroy(idmef_data_t *data)
 {
-        if ( --ptr->refcount )
+        if ( --data->refcount )
                 return;
         
-        idmef_data_destroy_internal(ptr);
+        idmef_data_destroy_internal(data);
         
-        if ( ptr->flags & IDMEF_DATA_OWN_STRUCTURE )
-                free(ptr);
+        if ( data->flags & IDMEF_DATA_OWN_STRUCTURE )
+                free(data);
 }

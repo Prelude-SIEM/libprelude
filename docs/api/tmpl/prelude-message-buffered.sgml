@@ -14,32 +14,16 @@ prelude-message-buffered
 
 </para>
 
-<!-- ##### FUNCTION prelude_msgbuf_get_client ##### -->
-<para>
-
-</para>
-
-@msgbuf: 
-@Returns: 
-
-
 <!-- ##### FUNCTION prelude_msgbuf_new ##### -->
 <para>
 
 </para>
 
-@client: 
+@ret: 
 @Returns: 
 <!-- # Unused Parameters # -->
+@client: 
 @async_send: 
-
-
-<!-- ##### FUNCTION prelude_msgbuf_close ##### -->
-<para>
-
-</para>
-
-@msgbuf: 
 
 
 <!-- ##### FUNCTION prelude_msgbuf_mark_end ##### -->
@@ -59,6 +43,7 @@ prelude-message-buffered
 @tag: 
 @len: 
 @data: 
+@Returns: 
 
 
 <!-- ##### FUNCTION prelude_msgbuf_get_msg ##### -->

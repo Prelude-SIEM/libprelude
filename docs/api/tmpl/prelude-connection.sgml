@@ -14,6 +14,16 @@ prelude-connection
 
 </para>
 
+<!-- ##### ENUM prelude_connection_capability_t ##### -->
+<para>
+
+</para>
+
+@PRELUDE_CONNECTION_CAPABILITY_NONE: 
+@PRELUDE_CONNECTION_CAPABILITY_CONNECT: 
+@PRELUDE_CONNECTION_CAPABILITY_RECV_IDMEF: 
+@PRELUDE_CONNECTION_CAPABILITY_RECV_CM: 
+
 <!-- ##### MACRO PRELUDE_CONNECTION_ESTABLISHED ##### -->
 <para>
 
@@ -36,7 +46,17 @@ prelude-connection
 @cnx: 
 
 
-<!-- ##### FUNCTION prelude_connection_send_msg ##### -->
+<!-- ##### FUNCTION prelude_connection_send ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_recv ##### -->
 <para>
 
 </para>
@@ -52,6 +72,8 @@ prelude-connection
 </para>
 
 @cnx: 
+@profile: 
+@capability: 
 @Returns: 
 
 
@@ -155,6 +177,23 @@ prelude-connection
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_connection_set_data ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@data: 
+
+
+<!-- ##### FUNCTION prelude_connection_get_data ##### -->
+<para>
+
+</para>
+
+@cnx: 
+
+
 <!-- ##### FUNCTION prelude_connection_get_socket_filename ##### -->
 <para>
 
@@ -165,7 +204,7 @@ prelude-connection
 @port: 
 
 
-<!-- ##### FUNCTION prelude_connection_get_client ##### -->
+<!-- ##### FUNCTION prelude_connection_get_peer_analyzerid ##### -->
 <para>
 
 </para>
@@ -174,14 +213,35 @@ prelude-connection
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_connection_set_peer_analyzerid ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@analyzerid: 
+
+
 <!-- ##### FUNCTION prelude_connection_new ##### -->
 <para>
 
 </para>
 
-@client: 
+@ret: 
 @addr: 
 @port: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@client: 
+
+
+<!-- ##### FUNCTION prelude_connection_new_msgbuf ##### -->
+<para>
+
+</para>
+
+@connection: 
+@msgbuf: 
 @Returns: 
 
 

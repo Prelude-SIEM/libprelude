@@ -288,11 +288,10 @@ idmef_additional_data_t *idmef_additional_data_new_str_dup_fast(idmef_additional
 /*
  * copy / clone / destroy
  */
-void idmef_additional_data_destroy(idmef_additional_data_t *data);
 void idmef_additional_data_destroy_internal(idmef_additional_data_t *data);
-idmef_additional_data_t *idmef_additional_data_clone(const idmef_additional_data_t *data);
-int idmef_additional_data_copy_ref(idmef_additional_data_t *dst, const idmef_additional_data_t *src);
-int idmef_additional_data_copy_dup(idmef_additional_data_t *dst, const idmef_additional_data_t *src);
+idmef_additional_data_t *idmef_additional_data_clone(idmef_additional_data_t *data);
+int idmef_additional_data_copy_ref(idmef_additional_data_t *dst, idmef_additional_data_t *src);
+int idmef_additional_data_copy_dup(idmef_additional_data_t *dst, idmef_additional_data_t *src);
 
 /*
  * Accessors
@@ -303,14 +302,10 @@ uint32_t idmef_additional_data_get_integer(idmef_additional_data_t *data);
 prelude_bool_t idmef_additional_data_get_boolean(idmef_additional_data_t *data);
 char idmef_additional_data_get_character(idmef_additional_data_t *data);
 
+size_t idmef_additional_data_get_len(idmef_additional_data_t *data);
 
-size_t idmef_additional_data_get_len(const idmef_additional_data_t *data);
+prelude_bool_t idmef_additional_data_is_empty(idmef_additional_data_t *data);
 
-idmef_additional_data_type_t idmef_additional_data_get_type(idmef_additional_data_t *ad);
-
-int idmef_additional_data_is_empty(const idmef_additional_data_t *data);
-
-const char *idmef_additional_data_data_to_string(const idmef_additional_data_t *data,
-						 char *buf, size_t *size);
+int idmef_additional_data_data_to_string(idmef_additional_data_t *ad, prelude_string_t *out);
 
 #endif /* _LIBPRELUDE_IDMEF_DATA_H */

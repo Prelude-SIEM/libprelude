@@ -214,9 +214,11 @@ idmef-criterion-value
 </para>
 
 @time: 
+@out: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @buffer: 
 @size: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_criterion_value_new_fixed ##### -->
@@ -305,8 +307,10 @@ idmef-criterion-value
 </para>
 
 @value: 
+@out: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @buffer: 
 @size: 
-@Returns: 
 
 

@@ -61,7 +61,7 @@ void idmef_additional_data_set_ ## name(idmef_additional_data_t *ptr, c_type val
 											\
 c_type idmef_additional_data_get_ ## name(idmef_additional_data_t *ptr)			\
 {											\
-	return (c_type) idmef_data_get_ ## d_name(idmef_additional_data_get_data(ptr));	\
+	return idmef_data_get_ ## d_name(idmef_additional_data_get_data(ptr));	        \
 }
 
 
@@ -269,7 +269,7 @@ idmef_additional_data_t *idmef_additional_data_new_str_dup_fast(idmef_additional
 /*
  * just make a pointer copy of the embedded data
  */
-int idmef_additional_data_copy_ref(idmef_additional_data_t *dst, const idmef_additional_data_t *src)
+int idmef_additional_data_copy_ref(idmef_additional_data_t *dst, idmef_additional_data_t *src)
 {
 	if ( prelude_string_copy_ref(idmef_additional_data_get_meaning(dst), idmef_additional_data_get_meaning(src)) < 0 )
 		return -1;
@@ -284,7 +284,7 @@ int idmef_additional_data_copy_ref(idmef_additional_data_t *dst, const idmef_add
 /*
  * also copy the content of the embedded data
  */
-int idmef_additional_data_copy_dup(idmef_additional_data_t *dst, const idmef_additional_data_t *src)
+int idmef_additional_data_copy_dup(idmef_additional_data_t *dst, idmef_additional_data_t *src)
 {
 	if ( prelude_string_copy_dup(idmef_additional_data_get_meaning(dst), idmef_additional_data_get_meaning(src)) < 0 )
 		return -1;
@@ -297,7 +297,7 @@ int idmef_additional_data_copy_dup(idmef_additional_data_t *dst, const idmef_add
 
 
 
-idmef_additional_data_t *idmef_additional_data_clone(const idmef_additional_data_t *data)
+idmef_additional_data_t *idmef_additional_data_clone(idmef_additional_data_t *data)
 {
         idmef_additional_data_t *ret;
         
@@ -315,48 +315,41 @@ idmef_additional_data_t *idmef_additional_data_clone(const idmef_additional_data
 
 
 
-size_t idmef_additional_data_get_len(const idmef_additional_data_t *data)
+size_t idmef_additional_data_get_len(idmef_additional_data_t *data)
 {
         return idmef_data_get_len(idmef_additional_data_get_data(data));
 }
 
 
 
-int idmef_additional_data_is_empty(const idmef_additional_data_t *data)
+prelude_bool_t idmef_additional_data_is_empty(idmef_additional_data_t *data)
 {
         return idmef_data_is_empty(idmef_additional_data_get_data(data));
 }
 
 
 
-const char *idmef_additional_data_data_to_string(const idmef_additional_data_t *ad, char *buf, size_t *size)
+int idmef_additional_data_data_to_string(idmef_additional_data_t *ad, prelude_string_t *out)
 {
-        int ret = 0;
+        int ret;
+        uint64_t i;
         idmef_data_t *data;
 
         data = idmef_additional_data_get_data(ad);
         if ( idmef_data_is_empty(data) )
-                return "";
+                return 0;
 
         switch ( idmef_additional_data_get_type(ad) ) {
 
-	case IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP: {
-		uint64_t i;
-
+	case IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP:
 		i = idmef_data_get_uint64(data);
-		ret = snprintf(buf, *size, "0x%08ux.0x%08ux", (unsigned long) (i >> 32), (unsigned long) i);
-
+		ret = prelude_string_sprintf(out, "0x%08ux.0x%08ux", (unsigned long) (i >> 32), (unsigned long) i);
 		break;
-	}
 
 	default:
-		ret = idmef_data_to_string(data, buf, *size);
-	}
+		ret = idmef_data_to_string(data, out);
+                break;
+        }
 
-        if ( ret < 0 || ret >= *size )
-                return NULL;
-
-        *size = ret;
-
-        return buf;
+        return ret;
 }

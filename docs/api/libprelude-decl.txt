@@ -76,16 +76,16 @@ extern YYSTYPE yylval;
 <MACRO>
 <NAME>msgidxof</NAME>
 #define msgidxof(code) (0 ? -1 \
-  : ((code >= 0) && (code <= 6)) ? (code - 0) \
-  : ((code >= 16382) && (code <= 16383)) ? (code - 16375) \
-  : 16384 - 16375)
+  : ((code >= 0) && (code <= 21)) ? (code - 0) \
+  : ((code >= 16382) && (code <= 16382)) ? (code - 16360) \
+  : 16383 - 16360)
 </MACRO>
 <MACRO>
 <NAME>msgidxof</NAME>
 #define msgidxof(code) (0 ? -1 \
-  : ((code >= 0) && (code <= 6)) ? (code - 0) \
-  : ((code >= 16382) && (code <= 16383)) ? (code - 16375) \
-  : 16384 - 16375)
+  : ((code >= 0) && (code <= 21)) ? (code - 0) \
+  : ((code >= 16382) && (code <= 16382)) ? (code - 16360) \
+  : 16383 - 16360)
 </MACRO>
 <MACRO>
 <NAME>gettext</NAME>
@@ -133,8 +133,8 @@ extern YYSTYPE yylval;
 <MACRO>
 <NAME>msgidxof</NAME>
 #define msgidxof(code) (0 ? -1 \
-  : ((code >= 0) && (code <= 4)) ? (code - 0) \
-  : 5 - 0)
+  : ((code >= 0) && (code <= 8)) ? (code - 0) \
+  : 9 - 0)
 </MACRO>
 <MACRO>
 <NAME>errnos_msgidxof</NAME>
@@ -145,8 +145,8 @@ extern YYSTYPE yylval;
 <MACRO>
 <NAME>msgidxof</NAME>
 #define msgidxof(code) (0 ? -1 \
-  : ((code >= 0) && (code <= 4)) ? (code - 0) \
-  : 5 - 0)
+  : ((code >= 0) && (code <= 8)) ? (code - 0) \
+  : 9 - 0)
 </MACRO>
 <ENUM>
 <NAME>prelude_error_source_t</NAME>
@@ -156,6 +156,10 @@ typedef enum {
     PRELUDE_ERROR_SOURCE_MESSAGE = 2,
     PRELUDE_ERROR_SOURCE_FAILOVER = 3,
     PRELUDE_ERROR_SOURCE_CLIENT = 4,
+    PRELUDE_ERROR_SOURCE_CLIENT_PROFILE = 5,
+    PRELUDE_ERROR_SOURCE_EXTRACT = 6,
+    PRELUDE_ERROR_SOURCE_CONNECTION = 7,
+    PRELUDE_ERROR_SOURCE_CONNECTION_MGR = 8,
 
 	PRELUDE_ERROR_SOURCE_DIM = 256
 } prelude_error_source_t;
@@ -170,8 +174,22 @@ typedef enum {
     PRELUDE_ERROR_INVAL_MESSAGE = 4,
     PRELUDE_ERROR_PROTOCOL_VERSION = 5,
     PRELUDE_ERROR_EOF = 6,
+    PRELUDE_ERROR_BACKUP_DIRECTORY = 7,
+    PRELUDE_ERROR_ANALYZERID_FILE = 8,
+    PRELUDE_ERROR_ANALYZERID_PARSE = 9,
+    PRELUDE_ERROR_TLS_CERTIFICATE = 10,
+    PRELUDE_ERROR_TLS_CERTIFICATE_PARSE = 11,
+    PRELUDE_ERROR_TLS_KEY = 12,
+    PRELUDE_ERROR_IDMEF_UNKNOWN_TAG = 13,
+    PRELUDE_ERROR_INVAL_INT8 = 14,
+    PRELUDE_ERROR_INVAL_INT16 = 15,
+    PRELUDE_ERROR_INVAL_INT32 = 16,
+    PRELUDE_ERROR_INVAL_INT64 = 17,
+    PRELUDE_ERROR_INVAL_FLOAT = 18,
+    PRELUDE_ERROR_INVAL_CHAR = 19,
+    PRELUDE_ERROR_INVAL_IDMEF_TIME = 20,
+    PRELUDE_ERROR_CONNECTION_STRING = 21,
     PRELUDE_ERROR_UNKNOWN_ERRNO = 16382,
-    PRELUDE_ERROR_EOF = 16383,
 
 #define PRELUDE_ERROR_SYSTEM_ERROR    (1 << 15)
     PRELUDE_ERROR_E2BIG = PRELUDE_ERROR_SYSTEM_ERROR | 0,
@@ -333,7 +351,7 @@ typedef enum {
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_ERROR_SOURCE_SHIFT</NAME>
-#define PRELUDE_ERROR_SOURCE_SHIFT    24
+#define PRELUDE_ERROR_SOURCE_SHIFT    23
 </MACRO>
 <TYPEDEF>
 <NAME>prelude_error_t</NAME>
@@ -353,6 +371,11 @@ PRELUDE_ERROR_SOURCE_DEFAULT, code
 <NAME>prelude_error_make</NAME>
 <RETURNS>return  </RETURNS>
 PRELUDE_ERROR_SOURCE_DEFAULT, prelude_error_code_from_errno(err)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_perror</NAME>
+<RETURNS>void  </RETURNS>
+prelude_error_t err, const char *fmt, ...
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_strerror</NAME>
@@ -414,10 +437,6 @@ prelude_error_code_t code
 #define REFCOUNT int refcount
 </MACRO>
 <MACRO>
-<NAME>DYNAMIC_IDENT</NAME>
-#define DYNAMIC_IDENT(x) uint64_t x
-</MACRO>
-<MACRO>
 <NAME>OPTIONAL_INT</NAME>
 #define OPTIONAL_INT(type, name) type name; int name_ ## is_set:1
 </MACRO>
@@ -446,16 +465,17 @@ struct prelude_linked_object_t
 <NAME>idmef_additional_data_type_t</NAME>
 typedef enum {
         IDMEF_ADDITIONAL_DATA_TYPE_ERROR = -1,
-        IDMEF_ADDITIONAL_DATA_TYPE_STRING = 0,
-        IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN = 1,
-        IDMEF_ADDITIONAL_DATA_TYPE_BYTE = 2,
-        IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER = 3,
-        IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME = 4,
-        IDMEF_ADDITIONAL_DATA_TYPE_INTEGER = 5,
-        IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP = 6,
-        IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST = 7,
-        IDMEF_ADDITIONAL_DATA_TYPE_REAL = 8,
-        IDMEF_ADDITIONAL_DATA_TYPE_XML = 9
+        IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN = 0,
+        IDMEF_ADDITIONAL_DATA_TYPE_BYTE = 1,
+        IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER = 2,
+        IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME = 3,
+        IDMEF_ADDITIONAL_DATA_TYPE_INTEGER = 4,
+        IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP = 5,
+        IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST = 6,
+ IDMEF_ADDITIONAL_DATA_TYPE_REAL = 7,
+        IDMEF_ADDITIONAL_DATA_TYPE_STRING = 8,
+ IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING = 9,
+ IDMEF_ADDITIONAL_DATA_TYPE_XML = 10,
 } idmef_additional_data_type_t;
 </ENUM>
 <FUNCTION>
@@ -4881,8 +4901,8 @@ idmef_message_t *message
 </MACRO>
 <FUNCTION>
 <NAME>prelude_io_new</NAME>
-<RETURNS>prelude_io_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+prelude_io_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_io_destroy</NAME>
@@ -4903,6 +4923,11 @@ prelude_io_t *pio, void *tls
 <NAME>prelude_io_set_sys_io</NAME>
 <RETURNS>void  </RETURNS>
 prelude_io_t *pio, int fd
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_io_set_buffer_io</NAME>
+<RETURNS>int  </RETURNS>
+prelude_io_t *pio
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_io_close</NAME>
@@ -4997,8 +5022,8 @@ const char *variable
 #define PRELUDE_MSG_CM             5 
 </MACRO>
 <MACRO>
-<NAME>PRELUDE_MSG_CLIENT_CAPABILITY</NAME>
-#define PRELUDE_MSG_CLIENT_CAPABILITY    6
+<NAME>PRELUDE_MSG_CONNECTION_CAPABILITY</NAME>
+#define PRELUDE_MSG_CONNECTION_CAPABILITY    6
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_MSG_OPTION_REQUEST</NAME>
@@ -5041,10 +5066,6 @@ const char *variable
 #define PRELUDE_MSG_OPTION_TARGET_ID        0
 </MACRO>
 <MACRO>
-<NAME>PRELUDE_MSG_OPTION_SOURCE_ID</NAME>
-#define PRELUDE_MSG_OPTION_SOURCE_ID        1
-</MACRO>
-<MACRO>
 <NAME>PRELUDE_MSG_OPTION_LIST</NAME>
 #define PRELUDE_MSG_OPTION_LIST             2
 </MACRO>
@@ -5061,8 +5082,8 @@ const char *variable
 #define PRELUDE_MSG_OPTION_GET              5
 </MACRO>
 <MACRO>
-<NAME>PRELUDE_MSG_OPTION_ID</NAME>
-#define PRELUDE_MSG_OPTION_ID               6
+<NAME>PRELUDE_MSG_OPTION_REQUEST_ID</NAME>
+#define PRELUDE_MSG_OPTION_REQUEST_ID       6
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_MSG_OPTION_ERROR</NAME>
@@ -5105,8 +5126,8 @@ const char *variable
 #define PRELUDE_MSG_OPTION_ARG              16
 </MACRO>
 <MACRO>
-<NAME>PRELUDE_MSG_OPTION_FLAGS</NAME>
-#define PRELUDE_MSG_OPTION_FLAGS            17
+<NAME>PRELUDE_MSG_OPTION_TYPE</NAME>
+#define PRELUDE_MSG_OPTION_TYPE             17
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_MSG_OPTION_DESTROY</NAME>
@@ -5116,156 +5137,10 @@ const char *variable
 <NAME>PRELUDE_MSG_OPTION_COMMIT</NAME>
 #define PRELUDE_MSG_OPTION_COMMIT           19
 </MACRO>
-<FUNCTION>
-<NAME>idmef_additional_data_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_additional_data_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_reference_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_reference_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_classification_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_classification_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_user_id_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_user_id_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_user_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_user_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_address_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_address_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_process_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_process_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_web_service_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_web_service_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_snmp_service_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_snmp_service_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_service_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_service_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_node_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_node_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_source_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_source_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_file_access_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_file_access_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_inode_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_inode_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_checksum_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_checksum_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_file_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_file_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_linkage_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_linkage_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_target_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_target_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_analyzer_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_analyzer_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_alertident_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_alertident_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_impact_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_impact_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_action_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_action_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_confidence_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_confidence_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_assessment_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_assessment_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_tool_alert_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_tool_alert_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_correlation_alert_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_correlation_alert_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_overflow_alert_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_overflow_alert_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_alert_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_alert_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_heartbeat_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_heartbeat_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_message_print</NAME>
-<RETURNS>void  </RETURNS>
-idmef_message_t *ptr
-</FUNCTION>
+<MACRO>
+<NAME>PRELUDE_MSG_OPTION_HOP</NAME>
+#define PRELUDE_MSG_OPTION_HOP              20
+</MACRO>
 <MACRO>
 <NAME>log</NAME>
 #define log(priority, ...) \
@@ -5322,6 +5197,133 @@ char *prefix
 <NAME>prelude_log</NAME>
 <RETURNS>void  </RETURNS>
 prelude_log_priority_t priority, const char *file,const char *function, int line, const char *fmt, ...
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_log_v</NAME>
+<RETURNS>void  </RETURNS>
+prelude_log_priority_t priority, const char *file,const char *function, int line, const char *fmt, va_list ap
+</FUNCTION>
+<MACRO>
+<NAME>PRELUDE_MSG_PRIORITY_HIGH</NAME>
+#define PRELUDE_MSG_PRIORITY_HIGH 0
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_PRIORITY_MID</NAME>
+#define PRELUDE_MSG_PRIORITY_MID  1
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_PRIORITY_LOW</NAME>
+#define PRELUDE_MSG_PRIORITY_LOW  2
+</MACRO>
+<FUNCTION>
+<NAME>prelude_msg_read</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msg_t **msg, prelude_io_t *pio
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_forward</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_get</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_recycle</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_mark_end</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_dynamic_new</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msg_t **ret, int (*flush_msg_cb)(prelude_msg_t **msg, void *data), void *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_new</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msg_t **ret, size_t msgcount, size_t msglen, uint8_t tag, uint8_t priority
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_set</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_write</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msg_t *msg, prelude_io_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_set_tag</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msg_t *msg, uint8_t tag
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_set_priority</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msg_t *msg, uint8_t priority
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_get_tag</NAME>
+<RETURNS>uint8_t  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_get_version</NAME>
+<RETURNS>uint8_t  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_get_priority</NAME>
+<RETURNS>uint8_t  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_get_len</NAME>
+<RETURNS>uint32_t  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_get_datalen</NAME>
+<RETURNS>uint32_t  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_is_empty</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_is_fragment</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_destroy</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_reset</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_set_callback</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msg_t *msg, int (*flush_msg_cb)(prelude_msg_t **msg, void *data)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_set_data</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msg_t *msg, void *data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_new_string</NAME>
@@ -5444,6 +5446,295 @@ struct l_fp
                 } \
         } while (0)
 </MACRO>
+<ENUM>
+<NAME>prelude_option_type_t</NAME>
+typedef enum {
+        PRELUDE_OPTION_TYPE_CLI  = 0x1,
+        PRELUDE_OPTION_TYPE_CFG  = 0x2,
+        PRELUDE_OPTION_TYPE_WIDE = 0x4,
+        PRELUDE_OPTION_TYPE_ALLOW_MULTIPLE_CALL = 0x8,
+        PRELUDE_OPTION_TYPE_DESTROY = 0x20,
+        PRELUDE_OPTION_TYPE_CONTEXT = 0x40,
+        PRELUDE_OPTION_TYPE_ROOT    = 0x80
+} prelude_option_type_t;
+</ENUM>
+<ENUM>
+<NAME>prelude_option_argument_t</NAME>
+typedef enum {
+        PRELUDE_OPTION_ARGUMENT_REQUIRED = 1,
+        PRELUDE_OPTION_ARGUMENT_OPTIONAL = 2,
+        PRELUDE_OPTION_ARGUMENT_NONE     = 3
+} prelude_option_argument_t;
+</ENUM>
+<ENUM>
+<NAME>prelude_option_priority_t</NAME>
+typedef enum {
+        PRELUDE_OPTION_PRIORITY_NONE     = 0,
+        PRELUDE_OPTION_PRIORITY_FIRST    = 1,
+        PRELUDE_OPTION_PRIORITY_LAST     = 2
+} prelude_option_priority_t;
+</ENUM>
+<ENUM>
+<NAME>prelude_option_warning_t</NAME>
+typedef enum {
+        PRELUDE_OPTION_WARNING_OPTION    = 0x1,
+        PRELUDE_OPTION_WARNING_ARG       = 0x2
+} prelude_option_warning_t;
+</ENUM>
+<FUNCTION>
+<NAME>prelude_option_set_priority</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *option, prelude_option_priority_t priority
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_print</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *opt, prelude_option_type_t type, int descoff
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_wide_send_msg</NAME>
+<RETURNS>int  </RETURNS>
+void *context, prelude_msgbuf_t *msgbuf
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_destroy</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *option
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_parse_arguments</NAME>
+<RETURNS>int  </RETURNS>
+void *context, prelude_option_t *option,const char *filename, int *argc, char **argv
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_add</NAME>
+<RETURNS>prelude_option_t  *</RETURNS>
+prelude_option_t *parent, prelude_option_type_t type,char shortopt, const char *longopt, const char *desc,prelude_option_argument_t has_arg,int (*set)(void *context, prelude_option_t *opt, const char *optarg),int (*get)(void *context, prelude_option_t *opt, char *buf, size_t size)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_set_type</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *opt, prelude_option_type_t type
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_type</NAME>
+<RETURNS>prelude_option_type_t  </RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_set_warnings</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_warning_t new, prelude_option_warning_t *old_warnings
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_shortname</NAME>
+<RETURNS>char  </RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_longname</NAME>
+<RETURNS>const char  *</RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_set_private_data</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *opt, void *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_private_data</NAME>
+<RETURNS>void  *</RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_invoke_commit</NAME>
+<RETURNS>int  </RETURNS>
+void *context, prelude_option_t *opt, const char *value, char *err, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_invoke_set</NAME>
+<RETURNS>int  </RETURNS>
+void **context, prelude_option_t *opt, const char *value, char *err, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_invoke_get</NAME>
+<RETURNS>int  </RETURNS>
+void *context, prelude_option_t *opt, const char *value, char *buf, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_invoke_destroy</NAME>
+<RETURNS>int  </RETURNS>
+void *context, prelude_option_t *opt, const char *value, char *buf, size_t err
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_new_root</NAME>
+<RETURNS>prelude_option_t  *</RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_new</NAME>
+<RETURNS>prelude_option_t  *</RETURNS>
+prelude_option_t *parent
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_set_longopt</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *opt, const char *longopt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_longopt</NAME>
+<RETURNS>const char  *</RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_set_description</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *opt, const char *description
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_description</NAME>
+<RETURNS>const char  *</RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_set_has_arg</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *opt, prelude_option_argument_t has_arg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_has_arg</NAME>
+<RETURNS>prelude_option_argument_t  </RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_set_value</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *opt, const char *value
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_value</NAME>
+<RETURNS>const char  *</RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_set_help</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *opt, const char *help
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_help</NAME>
+<RETURNS>const char  *</RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_set_input_validation_regex</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *opt, const char *regex
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_input_validation_regex</NAME>
+<RETURNS>const char  *</RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_set_input_type</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *opt, uint8_t input_type
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_input_type</NAME>
+<RETURNS>uint8_t  </RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_optlist</NAME>
+<RETURNS>prelude_list_t  *</RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_next</NAME>
+<RETURNS>prelude_option_t  *</RETURNS>
+prelude_option_t *start, prelude_option_t *cur
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_has_optlist</NAME>
+<RETURNS>int  </RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_parent</NAME>
+<RETURNS>prelude_option_t  *</RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_set_destroy_callback</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *opt,int (*destroy)(void *context, prelude_option_t *opt)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_destroy_callback</NAME>
+<RETURNS>void  *</RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_set_set_callback</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *opt,int (*set)(void *context, prelude_option_t *opt, const char *optarg)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_set_callback</NAME>
+<RETURNS>void  *</RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_set_get_callback</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *opt,int (*get)(void *context, prelude_option_t *opt, char *buf, size_t size)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_get_callback</NAME>
+<RETURNS>void  *</RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_set_commit_callback</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *opt, int (*commit)(void *context, prelude_option_t *opt)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_commit_callback</NAME>
+<RETURNS>void  *</RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_set_default_context</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *opt, void *context
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_new_context</NAME>
+<RETURNS>prelude_option_context_t  *</RETURNS>
+prelude_option_t *opt, const char *name, void *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_context_destroy</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_context_t *oc
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_search</NAME>
+<RETURNS>prelude_option_t  *</RETURNS>
+prelude_option_t *parent, const char *name,prelude_option_type_t type, int walk_children
+</FUNCTION>
+<ENUM>
+<NAME>prelude_connection_capability_t</NAME>
+typedef enum {
+        PRELUDE_CONNECTION_CAPABILITY_NONE       = 0x00,
+        PRELUDE_CONNECTION_CAPABILITY_CONNECT    = 0x01,
+        PRELUDE_CONNECTION_CAPABILITY_RECV_IDMEF = 0x02,
+        PRELUDE_CONNECTION_CAPABILITY_RECV_CM    = 0x04
+} prelude_connection_capability_t;
+</ENUM>
 <MACRO>
 <NAME>PRELUDE_CONNECTION_ESTABLISHED</NAME>
 #define PRELUDE_CONNECTION_ESTABLISHED    0x01
@@ -5458,14 +5749,19 @@ struct l_fp
 prelude_connection_t *cnx
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_connection_send_msg</NAME>
+<NAME>prelude_connection_send</NAME>
 <RETURNS>int  </RETURNS>
 prelude_connection_t *cnx, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_connection_recv</NAME>
+<RETURNS>int  </RETURNS>
+prelude_connection_t *cnx, prelude_msg_t **msg
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_connection_connect</NAME>
 <RETURNS>int  </RETURNS>
-prelude_connection_t *cnx
+prelude_connection_t *cnx,prelude_client_profile_t *profile,prelude_connection_capability_t capability
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_connection_forward</NAME>
@@ -5494,7 +5790,7 @@ prelude_connection_t *cnx
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_connection_is_alive</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>prelude_bool_t  </RETURNS>
 prelude_connection_t *cnx
 </FUNCTION>
 <FUNCTION>
@@ -5523,19 +5819,39 @@ prelude_connection_t *cnx, int state
 prelude_connection_t *cnx
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_connection_set_data</NAME>
+<RETURNS>void  </RETURNS>
+prelude_connection_t *cnx, void *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_get_data</NAME>
+<RETURNS>void  *</RETURNS>
+prelude_connection_t *cnx
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_connection_get_socket_filename</NAME>
 <RETURNS>void  </RETURNS>
 char *buf, size_t size, uint16_t port
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_connection_get_client</NAME>
-<RETURNS>prelude_client_t  *</RETURNS>
+<NAME>prelude_connection_get_peer_analyzerid</NAME>
+<RETURNS>uint64_t  </RETURNS>
 prelude_connection_t *cnx
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_connection_set_peer_analyzerid</NAME>
+<RETURNS>void  </RETURNS>
+prelude_connection_t *cnx, uint64_t analyzerid
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_connection_new</NAME>
-<RETURNS>prelude_connection_t  *</RETURNS>
-prelude_client_t *client, const char *addr, uint16_t port
+<RETURNS>int  </RETURNS>
+prelude_connection_t **ret, const char *addr, uint16_t port
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_new_msgbuf</NAME>
+<RETURNS>int  </RETURNS>
+prelude_connection_t *connection, prelude_msgbuf_t **msgbuf
 </FUNCTION>
 <MACRO>
 <NAME>idmef_type_string</NAME>
@@ -5642,6 +5958,11 @@ const prelude_string_t *src
 const prelude_string_t *string
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_string_get_string_or_default</NAME>
+<RETURNS>const char  *</RETURNS>
+const prelude_string_t *string, const char *def
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_string_get_string</NAME>
 <RETURNS>const char  *</RETURNS>
 const prelude_string_t *string
@@ -5655,11 +5976,6 @@ prelude_string_t *string
 <NAME>prelude_string_is_empty</NAME>
 <RETURNS>int  </RETURNS>
 const prelude_string_t *string
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_string_dont_own</NAME>
-<RETURNS>void  </RETURNS>
-prelude_string_t *string
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_clear</NAME>
@@ -5696,6 +6012,212 @@ prelude_string_t *string, const char *fmt, va_list ap
 #define prelude_string_new_constant(str)		       	\
 	prelude_string_new_ref_fast((str), sizeof((str)) - 1)
 </MACRO>
+<FUNCTION>
+<NAME>idmef_additional_data_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_additional_data_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_reference_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_reference_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_classification_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_classification_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_user_id_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_user_id_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_user_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_user_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_address_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_address_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_process_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_process_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_web_service_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_web_service_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_snmp_service_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_snmp_service_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_service_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_service_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_node_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_node_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_source_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_source_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_file_access_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_file_access_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_inode_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_inode_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_checksum_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_checksum_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_file_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_file_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_linkage_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_linkage_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_target_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_target_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_analyzer_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_analyzer_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_alertident_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_alertident_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_impact_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_impact_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_action_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_action_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_confidence_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_confidence_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_assessment_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_assessment_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_tool_alert_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_tool_alert_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_correlation_alert_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_correlation_alert_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_overflow_alert_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_overflow_alert_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_alert_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_alert_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_heartbeat_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_heartbeat_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_message_print</NAME>
+<RETURNS>void  </RETURNS>
+idmef_message_t *ptr, prelude_io_t *fd
+</FUNCTION>
+<ENUM>
+<NAME>prelude_msgbuf_flags_t</NAME>
+typedef enum {
+        PRELUDE_MSGBUF_FLAGS_ASYNC = 0x01,
+} prelude_msgbuf_flags_t;
+</ENUM>
+<FUNCTION>
+<NAME>prelude_msgbuf_new</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msgbuf_t **msgbuf
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msgbuf_destroy</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msgbuf_t *msgbuf
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msgbuf_mark_end</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msgbuf_t *msgbuf
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msgbuf_set</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msgbuf_t *msgbuf, uint8_t tag, uint32_t len, const void *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msgbuf_get_msg</NAME>
+<RETURNS>prelude_msg_t  *</RETURNS>
+prelude_msgbuf_t *msgbuf
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msgbuf_set_callback</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msgbuf_t *msgbuf, int (*send_msg)(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msgbuf_set_data</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msgbuf_t *msgbuf, void *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msgbuf_get_data</NAME>
+<RETURNS>void  *</RETURNS>
+prelude_msgbuf_t *msgbuf
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msgbuf_set_flags</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msgbuf_t *msgbuf, prelude_msgbuf_flags_t flags
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msgbuf_get_flags</NAME>
+<RETURNS>prelude_msgbuf_flags_t  </RETURNS>
+prelude_msgbuf_t *msgbuf
+</FUNCTION>
 <FUNCTION>
 <NAME>idmef_time_write</NAME>
 <RETURNS>void  </RETURNS>
@@ -5980,8 +6502,8 @@ prelude_ident_t *ident
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_ident_new</NAME>
-<RETURNS>prelude_ident_t  *</RETURNS>
-void
+<RETURNS>int  </RETURNS>
+prelude_ident_t **ret
 </FUNCTION>
 <MACRO>
 <NAME>MSG_FORMAT_PRELUDE_NIDS</NAME>
@@ -5993,17 +6515,6 @@ typedef enum {
         PRELUDE_CLIENT_EXIT_STATUS_SUCCESS = 0,
         PRELUDE_CLIENT_EXIT_STATUS_FAILURE = -1
 } prelude_client_exit_status_t;
-</ENUM>
-<ENUM>
-<NAME>prelude_client_capability_t</NAME>
-typedef enum {
-        PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF = 0x01,
-        PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF = 0x02,
-        PRELUDE_CLIENT_CAPABILITY_RECV_ADMIN = 0x04,
-        PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN = 0x08,
-        PRELUDE_CLIENT_CAPABILITY_RECV_CM    = 0x10,
-        PRELUDE_CLIENT_CAPABILITY_SEND_CM    = 0x20
-} prelude_client_capability_t;
 </ENUM>
 <ENUM>
 <NAME>prelude_client_flags_t</NAME>
@@ -6018,11 +6529,6 @@ typedef enum {
 prelude_client_t *client
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_client_get_credentials</NAME>
-<RETURNS>void  *</RETURNS>
-prelude_client_t *client
-</FUNCTION>
-<FUNCTION>
 <NAME>prelude_client_set_manager_list</NAME>
 <RETURNS>void  </RETURNS>
 prelude_client_t *client, prelude_connection_mgr_t *mgrlist
@@ -6033,58 +6539,18 @@ prelude_client_t *client, prelude_connection_mgr_t *mgrlist
 prelude_client_t *client
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_client_init</NAME>
+<NAME>prelude_client_start</NAME>
 <RETURNS>int  </RETURNS>
-prelude_client_t *client, const char *sname, const char *config, int *argc, char **argv
+prelude_client_t *client
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_client_new</NAME>
-<RETURNS>prelude_client_t  *</RETURNS>
-prelude_client_capability_t capability
+<RETURNS>int  </RETURNS>
+prelude_client_t **client,prelude_connection_capability_t capability,const char *profile, const char *config,int *argc, char **argv
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_client_get_analyzer</NAME>
 <RETURNS>idmef_analyzer_t  *</RETURNS>
-prelude_client_t *client
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_set_analyzerid</NAME>
-<RETURNS>void  </RETURNS>
-prelude_client_t *client, uint64_t analyzerid
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_get_analyzerid</NAME>
-<RETURNS>uint64_t  </RETURNS>
-prelude_client_t *client
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_set_name</NAME>
-<RETURNS>void  </RETURNS>
-prelude_client_t *client, const char *name
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_get_name</NAME>
-<RETURNS>const char  *</RETURNS>
-prelude_client_t *client
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_set_uid</NAME>
-<RETURNS>void  </RETURNS>
-prelude_client_t *client, uid_t uid
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_get_uid</NAME>
-<RETURNS>uid_t  </RETURNS>
-prelude_client_t *client
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_set_gid</NAME>
-<RETURNS>void  </RETURNS>
-prelude_client_t *client, gid_t gid
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_get_gid</NAME>
-<RETURNS>gid_t  </RETURNS>
 prelude_client_t *client
 </FUNCTION>
 <FUNCTION>
@@ -6094,7 +6560,7 @@ prelude_client_t *client
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_client_get_capability</NAME>
-<RETURNS>prelude_client_capability_t  </RETURNS>
+<RETURNS>prelude_connection_capability_t  </RETURNS>
 prelude_client_t *client
 </FUNCTION>
 <FUNCTION>
@@ -6123,59 +6589,119 @@ prelude_client_t *client, prelude_client_exit_status_t status
 prelude_client_t *client, prelude_client_flags_t flags
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_client_set_capability</NAME>
-<RETURNS>void  </RETURNS>
-prelude_client_t *client, prelude_client_capability_t capability
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_get_ident_filename</NAME>
-<RETURNS>void  </RETURNS>
-prelude_client_t *client, char *buf, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_get_tls_key_filename</NAME>
-<RETURNS>void  </RETURNS>
-prelude_client_t *client, char *buf, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_get_tls_server_ca_cert_filename</NAME>
-<RETURNS>void  </RETURNS>
-prelude_client_t *client, char *buf, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_get_tls_server_keycert_filename</NAME>
-<RETURNS>void  </RETURNS>
-prelude_client_t *client, char *buf, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_get_tls_server_trusted_cert_filename</NAME>
-<RETURNS>void  </RETURNS>
-prelude_client_t *client, char *buf, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_get_tls_client_keycert_filename</NAME>
-<RETURNS>void  </RETURNS>
-prelude_client_t *client, char *buf, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_get_tls_client_trusted_cert_filename</NAME>
-<RETURNS>void  </RETURNS>
-prelude_client_t *client, char *buf, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_get_backup_filename</NAME>
-<RETURNS>void  </RETURNS>
-prelude_client_t *client, char *buf, size_t size
-</FUNCTION>
-<FUNCTION>
 <NAME>prelude_client_get_config_filename</NAME>
 <RETURNS>const char  *</RETURNS>
 prelude_client_t *client
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_client_installation_error</NAME>
+<NAME>prelude_client_print_setup_error</NAME>
 <RETURNS>void  </RETURNS>
 prelude_client_t *client
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_is_setup_needed</NAME>
+<RETURNS>prelude_bool_t  </RETURNS>
+prelude_client_t *client, prelude_error_t err
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_get_profile</NAME>
+<RETURNS>prelude_client_profile_t  *</RETURNS>
+prelude_client_t *client
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_new</NAME>
+<RETURNS>int  </RETURNS>
+prelude_client_profile_t **ret, const char *name
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_destroy</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_profile_t *cp
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_get_analyzerid_filename</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_profile_t *cp, char *buf, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_get_tls_key_filename</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_profile_t *cp, char *buf, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_get_tls_server_ca_cert_filename</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_profile_t *cp, char *buf, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_get_tls_server_keycert_filename</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_profile_t *cp, char *buf, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_get_tls_server_trusted_cert_filename</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_profile_t *cp, char *buf, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_get_tls_client_keycert_filename</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_profile_t *cp, char *buf, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_get_tls_client_trusted_cert_filename</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_profile_t *cp, char *buf, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_get_backup_dirname</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_profile_t *cp, char *buf, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_set_uid</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_profile_t *cp, uid_t uid
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_get_uid</NAME>
+<RETURNS>uid_t  </RETURNS>
+prelude_client_profile_t *cp
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_set_gid</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_profile_t *cp, uid_t gid
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_get_gid</NAME>
+<RETURNS>gid_t  </RETURNS>
+prelude_client_profile_t *cp
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_set_name</NAME>
+<RETURNS>int  </RETURNS>
+prelude_client_profile_t *cp, const char *name
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_get_name</NAME>
+<RETURNS>const char  *</RETURNS>
+prelude_client_profile_t *cp
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_get_analyzerid</NAME>
+<RETURNS>uint64_t  </RETURNS>
+prelude_client_profile_t *cp
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_set_analyzerid</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_profile_t *cp, uint64_t analyzerid
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_get_credentials</NAME>
+<RETURNS>int  </RETURNS>
+prelude_client_profile_t *cp, gnutls_certificate_credentials *credentials
 </FUNCTION>
 <MACRO>
 <NAME>PRELUDE_PLUGIN_SET_PRELOADED_SYMBOLS</NAME>
@@ -6193,7 +6719,7 @@ static int prefix ## _set_ ## name(void *context, prelude_option_t *opt, const c
         dup = strdup(arg);                                                                       \
         if ( ! dup ) {                                                                           \
                 log(LOG_ERR, "memory exhausted.\n");                                             \
-                return prelude_option_error;                                                     \
+                return -1;                                                                       \
         }                                                                                        \
                                                                                                  \
         if ( ptr->name )                                                                         \
@@ -6201,7 +6727,7 @@ static int prefix ## _set_ ## name(void *context, prelude_option_t *opt, const c
                                                                                                  \
         ptr->name = dup;                                                                         \
                                                                                                  \
-        return prelude_option_success;                                                           \
+        return 0;                                                                                \
 }                                                                                                \
                                                                                                  \
                                                                                                  \
@@ -6209,7 +6735,7 @@ static int prefix ## _get_ ## name(void *context, prelude_option_t *opt, char *b
 {                                                                                                \
         type *ptr = prelude_plugin_instance_get_data(context);                                   \
         snprintf(buf, size, "%s", ptr->name);                                                    \
-        return prelude_option_success;                                                           \
+        return 0;                                                                                \
 }
 </MACRO>
 <MACRO>
@@ -6441,8 +6967,8 @@ prelude_failover_t *failover
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_failover_new</NAME>
-<RETURNS>prelude_failover_t  *</RETURNS>
-const char *dirname
+<RETURNS>int  </RETURNS>
+prelude_failover_t **ret, const char *dirname
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_failover_set_quota</NAME>
@@ -6523,148 +7049,153 @@ prelude_async_object_t *obj
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_read</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_additional_data_t *additional_data, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_read</NAME>
-<RETURNS>idmef_reference_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_reference_t *reference, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_read</NAME>
-<RETURNS>idmef_classification_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_classification_t *classification, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_read</NAME>
-<RETURNS>idmef_user_id_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_user_id_t *user_id, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_read</NAME>
-<RETURNS>idmef_user_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_user_t *user, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_read</NAME>
-<RETURNS>idmef_address_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_address_t *address, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_read</NAME>
-<RETURNS>idmef_process_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_process_t *process, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_read</NAME>
-<RETURNS>idmef_web_service_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_web_service_t *web_service, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_read</NAME>
-<RETURNS>idmef_snmp_service_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_snmp_service_t *snmp_service, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_read</NAME>
-<RETURNS>idmef_service_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_service_t *service, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_read</NAME>
-<RETURNS>idmef_node_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_node_t *node, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_read</NAME>
-<RETURNS>idmef_source_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_source_t *source, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_access_read</NAME>
-<RETURNS>idmef_file_access_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_file_access_t *file_access, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_read</NAME>
-<RETURNS>idmef_inode_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_inode_t *inode, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_checksum_read</NAME>
-<RETURNS>idmef_checksum_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_checksum_t *checksum, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_read</NAME>
-<RETURNS>idmef_file_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_file_t *file, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_read</NAME>
-<RETURNS>idmef_linkage_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_linkage_t *linkage, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_read</NAME>
-<RETURNS>idmef_target_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_target_t *target, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_read</NAME>
-<RETURNS>idmef_analyzer_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_analyzer_t *analyzer, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alertident_read</NAME>
-<RETURNS>idmef_alertident_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_alertident_t *alertident, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_read</NAME>
-<RETURNS>idmef_impact_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_impact_t *impact, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_action_read</NAME>
-<RETURNS>idmef_action_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_action_t *action, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_confidence_read</NAME>
-<RETURNS>idmef_confidence_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_confidence_t *confidence, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_read</NAME>
-<RETURNS>idmef_assessment_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_assessment_t *assessment, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_read</NAME>
-<RETURNS>idmef_tool_alert_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_tool_alert_t *tool_alert, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_correlation_alert_read</NAME>
-<RETURNS>idmef_correlation_alert_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_correlation_alert_t *correlation_alert, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_read</NAME>
-<RETURNS>idmef_overflow_alert_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_overflow_alert_t *overflow_alert, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_read</NAME>
-<RETURNS>idmef_alert_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_alert_t *alert, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_read</NAME>
-<RETURNS>idmef_heartbeat_t  *</RETURNS>
+<RETURNS>int  </RETURNS>
 idmef_heartbeat_t *heartbeat, prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_message_read</NAME>
+<RETURNS>int  </RETURNS>
+idmef_message_t *message, prelude_msg_t *msg
 </FUNCTION>
 <MACRO>
 <NAME>AI_CANONNAME</NAME>
@@ -6777,15 +7308,6 @@ int af, const void *src, char *dst, size_t cnt
 #define prelude_list_for_each_reversed_safe(pos, n, head) \
         for (pos = (head)->prev, n = pos->prev; pos != (head); \
                  pos = n, n = pos->prev)
-</MACRO>
-<FUNCTION>
-<NAME>start_routine</NAME>
-<RETURNS>return  </RETURNS>
-arg
-</FUNCTION>
-<MACRO>
-<NAME>pthread_create</NAME>
-#define pthread_create gprof_pthread_create
 </MACRO>
 <MACRO>
 <NAME>INT8_MIN</NAME>
@@ -6943,6 +7465,16 @@ typedef enum {
 #define LIBPRELUDE_VERSION "0.9.0-svn"
 </MACRO>
 <FUNCTION>
+<NAME>prelude_init</NAME>
+<RETURNS>int  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_deinit</NAME>
+<RETURNS>void  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_check_version</NAME>
 <RETURNS>const char  *</RETURNS>
 const char *rq_version
@@ -6982,82 +7514,41 @@ config_t *cfg
 <RETURNS>int  </RETURNS>
 config_t *cfg, const char *section, const char *entry
 </FUNCTION>
-<STRUCT>
-<NAME>prelude_timer_t</NAME>
-struct prelude_timer_t
-{
-        prelude_list_t list;
-
-        int expire;
-        time_t start_time;
-
-        void *data;
-        void (*function)(void *data);
-};
-</STRUCT>
 <MACRO>
-<NAME>timer_expire</NAME>
-#define timer_expire(timer) (timer)->expire
+<NAME>PRELUDE_OPTION_REPLY_TYPE_SET</NAME>
+#define PRELUDE_OPTION_REPLY_TYPE_SET   0x01
 </MACRO>
 <MACRO>
-<NAME>timer_data</NAME>
-#define timer_data(timer) (timer)->data
+<NAME>PRELUDE_OPTION_REPLY_TYPE_GET</NAME>
+#define PRELUDE_OPTION_REPLY_TYPE_GET   0x02
 </MACRO>
 <MACRO>
-<NAME>timer_func</NAME>
-#define timer_func(timer) (timer)->function
+<NAME>PRELUDE_OPTION_REPLY_TYPE_LIST</NAME>
+#define PRELUDE_OPTION_REPLY_TYPE_LIST  0x04
 </MACRO>
 <MACRO>
-<NAME>timer_set_expire</NAME>
-#define timer_set_expire(timer, x) timer_expire((timer)) = (x)
-</MACRO>
-<MACRO>
-<NAME>timer_set_data</NAME>
-#define timer_set_data(timer, x) timer_data((timer)) = (x)
-</MACRO>
-<MACRO>
-<NAME>timer_set_callback</NAME>
-#define timer_set_callback(timer, x) timer_func((timer)) = (x)
+<NAME>PRELUDE_OPTION_REPLY_TYPE_ERROR</NAME>
+#define PRELUDE_OPTION_REPLY_TYPE_ERROR 0x08
 </MACRO>
 <FUNCTION>
-<NAME>timer_init</NAME>
-<RETURNS>void  </RETURNS>
-prelude_timer_t *timer
+<NAME>prelude_option_push_request</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msgbuf_t *msg, int type, const char *request
 </FUNCTION>
 <FUNCTION>
-<NAME>timer_reset</NAME>
-<RETURNS>void  </RETURNS>
-prelude_timer_t *timer
+<NAME>prelude_option_new_request</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msgbuf_t *msgbuf,uint32_t request_id, uint64_t *target_id, size_t size
 </FUNCTION>
 <FUNCTION>
-<NAME>timer_destroy</NAME>
-<RETURNS>void  </RETURNS>
-prelude_timer_t *timer
+<NAME>prelude_option_process_request</NAME>
+<RETURNS>int  </RETURNS>
+prelude_client_t *client, prelude_io_t *fd, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>timer_elapsed</NAME>
-<RETURNS>void  </RETURNS>
-prelude_timer_t *timer, struct timeval *tv
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_wake_up_timer</NAME>
-<RETURNS>void  </RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
-<NAME>timer_flush</NAME>
-<RETURNS>void  </RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
-<NAME>timer_lock_critical_region</NAME>
-<RETURNS>void  </RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
-<NAME>timer_unlock_critical_region</NAME>
-<RETURNS>void  </RETURNS>
-void
+<NAME>prelude_option_recv_reply</NAME>
+<RETURNS>int  </RETURNS>
+prelude_msg_t *msg, uint64_t *source_id, uint32_t *request_id, void **value
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_realloc</NAME>
@@ -7102,9 +7593,16 @@ struct tm *tm
 <ENUM>
 <NAME>prelude_connection_mgr_flags_t</NAME>
 typedef enum {
-        PRELUDE_CONNECTION_MGR_USE_TIMER = 0x01,
-        PRELUDE_CONNECTION_MGR_TIMER_IN_USE = 0x02
+        PRELUDE_CONNECTION_MGR_FLAGS_RECONNECT        = 0x01,
 } prelude_connection_mgr_flags_t;
+</ENUM>
+<ENUM>
+<NAME>prelude_connection_mgr_event_t</NAME>
+typedef enum {
+        PRELUDE_CONNECTION_MGR_EVENT_INPUT            = 0x01,
+        PRELUDE_CONNECTION_MGR_EVENT_DEAD             = 0x02,
+        PRELUDE_CONNECTION_MGR_EVENT_ALIVE            = 0x04
+} prelude_connection_mgr_event_t;
 </ENUM>
 <FUNCTION>
 <NAME>prelude_connection_mgr_broadcast</NAME>
@@ -7123,8 +7621,8 @@ prelude_connection_mgr_t *new
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_connection_mgr_new</NAME>
-<RETURNS>prelude_connection_mgr_t  *</RETURNS>
-prelude_client_t *client
+<RETURNS>int  </RETURNS>
+prelude_connection_mgr_t **ret,prelude_client_profile_t *cp,prelude_connection_capability_t capability
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_connection_mgr_notify_connection</NAME>
@@ -7139,7 +7637,7 @@ prelude_connection_mgr_t *mgr
 <FUNCTION>
 <NAME>prelude_connection_mgr_add_connection</NAME>
 <RETURNS>int  </RETURNS>
-prelude_connection_mgr_t **mgr_ptr, prelude_connection_t *cnx, prelude_connection_mgr_flags_t flags
+prelude_connection_mgr_t *mgr, prelude_connection_t *cnx
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_connection_mgr_set_connection_dead</NAME>
@@ -7181,41 +7679,40 @@ prelude_connection_mgr_t *mgr
 <RETURNS>void  </RETURNS>
 prelude_connection_mgr_t *mgr
 </FUNCTION>
-<MACRO>
-<NAME>PRELUDE_OPTION_REPLY_TYPE_SET</NAME>
-#define PRELUDE_OPTION_REPLY_TYPE_SET   0x01
-</MACRO>
-<MACRO>
-<NAME>PRELUDE_OPTION_REPLY_TYPE_GET</NAME>
-#define PRELUDE_OPTION_REPLY_TYPE_GET   0x02
-</MACRO>
-<MACRO>
-<NAME>PRELUDE_OPTION_REPLY_TYPE_LIST</NAME>
-#define PRELUDE_OPTION_REPLY_TYPE_LIST  0x04
-</MACRO>
-<MACRO>
-<NAME>PRELUDE_OPTION_REPLY_TYPE_ERROR</NAME>
-#define PRELUDE_OPTION_REPLY_TYPE_ERROR 0x08
-</MACRO>
 <FUNCTION>
-<NAME>prelude_option_push_request</NAME>
-<RETURNS>int  </RETURNS>
-prelude_msgbuf_t *msg, int type, const char *request
+<NAME>prelude_connection_mgr_set_flags</NAME>
+<RETURNS>void  </RETURNS>
+prelude_connection_mgr_t *mgr, prelude_connection_mgr_flags_t flags
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_option_new_request</NAME>
-<RETURNS>int  </RETURNS>
-prelude_client_t *client, prelude_msgbuf_t *msgbuf, uint32_t request_id, uint64_t target_id
+<NAME>prelude_connection_mgr_set_data</NAME>
+<RETURNS>void  </RETURNS>
+prelude_connection_mgr_t *mgr, void *data
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_option_process_request</NAME>
-<RETURNS>int  </RETURNS>
-prelude_client_t *client, prelude_io_t *fd, prelude_msg_t *msg
+<NAME>prelude_connection_mgr_get_data</NAME>
+<RETURNS>void  *</RETURNS>
+prelude_connection_mgr_t *mgr
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_option_recv_reply</NAME>
+<NAME>prelude_connection_mgr_recv</NAME>
 <RETURNS>int  </RETURNS>
-prelude_msg_t *msg, uint64_t *source_id, uint32_t *request_id, void **value
+prelude_connection_mgr_t *mgr, prelude_msg_t **out, int timeout
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_mgr_get_next_connection</NAME>
+<RETURNS>prelude_connection_t  *</RETURNS>
+prelude_connection_mgr_t *mgr, prelude_list_t **iter
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_mgr_set_global_event_handler</NAME>
+<RETURNS>void  </RETURNS>
+prelude_connection_mgr_t *mgr,prelude_connection_mgr_event_t events,int (*callback)(prelude_connection_mgr_t *mgr,prelude_connection_mgr_event_t events)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_mgr_set_event_handler</NAME>
+<RETURNS>void  </RETURNS>
+prelude_connection_mgr_t *mgr,prelude_connection_mgr_event_t events,int (*callback)(prelude_connection_mgr_t *mgr,prelude_connection_mgr_event_t events,prelude_connection_t *cnx)
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_new</NAME>
@@ -7240,7 +7737,7 @@ const idmef_criterion_t *criterion
 <FUNCTION>
 <NAME>idmef_criterion_to_string</NAME>
 <RETURNS>int  </RETURNS>
-const idmef_criterion_t *criterion, char *buffer, size_t size
+const idmef_criterion_t *criterion, prelude_string_t *out
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_get_object</NAME>
@@ -7285,7 +7782,7 @@ idmef_criteria_t *criteria
 <FUNCTION>
 <NAME>idmef_criteria_to_string</NAME>
 <RETURNS>int  </RETURNS>
-idmef_criteria_t *criteria, char *buffer, size_t size
+idmef_criteria_t *criteria, prelude_string_t *out
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_is_criterion</NAME>
@@ -7331,18 +7828,37 @@ idmef_criteria_t *criteria
 <NAME>idmef_type_data</NAME>
 #define idmef_type_data 2
 </MACRO>
+<ENUM>
+<NAME>idmef_data_type_t</NAME>
+typedef enum {
+	IDMEF_DATA_TYPE_UNKNOWN      = 0,
+	IDMEF_DATA_TYPE_CHAR         = 1,
+	IDMEF_DATA_TYPE_BYTE         = 2,
+	IDMEF_DATA_TYPE_UINT32       = 3,
+	IDMEF_DATA_TYPE_UINT64       = 4,
+	IDMEF_DATA_TYPE_FLOAT        = 5,
+	IDMEF_DATA_TYPE_CHAR_STRING  = 6,
+	IDMEF_DATA_TYPE_BYTE_STRING  = 7
+}	idmef_data_type_t;
+</ENUM>
 <STRUCT>
 <NAME>data</NAME>
 struct data
 {
         int refcount;
-        
+
         int flags;
+        idmef_data_type_t type;
         size_t len;
 
         union {
-                unsigned char *rw_data;
-                const unsigned char *ro_data;
+		char char_data;
+		uint8_t byte_data;
+		uint32_t uint32_data;
+		uint64_t uint64_data;
+		float float_data;
+		void *rw_data;
+		const void *ro_data;
         };
 </STRUCT>
 <FUNCTION>
@@ -7356,39 +7872,184 @@ void
 idmef_data_t *data
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_data_new_dup</NAME>
+<NAME>idmef_data_new_char</NAME>
 <RETURNS>idmef_data_t  *</RETURNS>
-const unsigned char *data, size_t len
+char c
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_data_new_nodup</NAME>
+<NAME>idmef_data_new_byte</NAME>
 <RETURNS>idmef_data_t  *</RETURNS>
-unsigned char *data, size_t len
+uint8_t i
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_data_new_ref</NAME>
+<NAME>idmef_data_new_uint32</NAME>
 <RETURNS>idmef_data_t  *</RETURNS>
-const unsigned char *data, size_t len
+uint32_t i
 </FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_new_uint64</NAME>
+<RETURNS>idmef_data_t  *</RETURNS>
+uint64_t i
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_new_float</NAME>
+<RETURNS>idmef_data_t  *</RETURNS>
+float f
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_set_char</NAME>
+<RETURNS>void  </RETURNS>
+idmef_data_t *data, char c
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_set_byte</NAME>
+<RETURNS>void  </RETURNS>
+idmef_data_t *data, uint8_t i
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_set_uint32</NAME>
+<RETURNS>void  </RETURNS>
+idmef_data_t *data, uint32_t i
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_set_uint64</NAME>
+<RETURNS>void  </RETURNS>
+idmef_data_t *data, uint64_t i
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_set_float</NAME>
+<RETURNS>void  </RETURNS>
+idmef_data_t *data, float f
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_new_ptr_ref_fast</NAME>
+<RETURNS>idmef_data_t  *</RETURNS>
+idmef_data_type_t type, const void *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_new_ptr_dup_fast</NAME>
+<RETURNS>idmef_data_t  *</RETURNS>
+idmef_data_type_t type, const void *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_new_ptr_nodup_fast</NAME>
+<RETURNS>idmef_data_t  *</RETURNS>
+idmef_data_type_t type, void *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_set_ptr_ref_fast</NAME>
+<RETURNS>int  </RETURNS>
+idmef_data_t *data, idmef_data_type_t type, const void *ptr, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_set_ptr_dup_fast</NAME>
+<RETURNS>int  </RETURNS>
+idmef_data_t *data, idmef_data_type_t type, const void *ptr, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_set_ptr_nodup_fast</NAME>
+<RETURNS>int  </RETURNS>
+idmef_data_t *data, idmef_data_type_t type, void *ptr, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_set_char_string_dup_fast</NAME>
+<RETURNS>int  </RETURNS>
+idmef_data_t *data, const char *str, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_new_char_string_dup_fast</NAME>
+<RETURNS>idmef_data_t  *</RETURNS>
+const char *str, size_t len
+</FUNCTION>
+<MACRO>
+<NAME>idmef_data_new_char_string_ref_fast</NAME>
+#define idmef_data_new_char_string_ref_fast(data, len) \
+	idmef_data_new_ptr_ref_fast(IDMEF_DATA_TYPE_CHAR_STRING, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_data_new_char_string_nodup_fast</NAME>
+#define idmef_data_new_char_string_nodup_fast(data, len) \
+	idmef_data_new_ptr_nodup_fast(IDMEF_DATA_TYPE_CHAR_STRING, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_data_set_char_string_ref_fast</NAME>
+#define idmef_data_set_char_string_ref_fast(idmef_data, data, len) \
+	idmef_data_set_ptr_ref_fast(idmef_data, IDMEF_DATA_TYPE_CHAR_STRING, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_data_set_char_string_nodup_fast</NAME>
+#define idmef_data_set_char_string_nodup_fast(idmef_data, data, len) \
+	idmef_data_set_ptr_nodup_fast(idmef_data, IDMEF_DATA_TYPE_CHAR_STRING, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_data_new_char_string_ref</NAME>
+#define idmef_data_new_char_string_ref(data) \
+	idmef_data_new_ptr_ref_fast(IDMEF_DATA_TYPE_CHAR_STRING, data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_data_new_char_string_dup</NAME>
+#define idmef_data_new_char_string_dup(data) \
+	idmef_data_new_char_string_dup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_data_new_char_string_nodup</NAME>
+#define idmef_data_new_char_string_nodup(data) \
+	idmef_data_new_ptr_nodup_fast(IDMEF_DATA_TYPE_CHAR_STRING, data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_data_set_char_string_ref</NAME>
+#define idmef_data_set_char_string_ref(idmef_data, data) \
+	idmef_data_set_ptr_ref_fast(idmef_data, IDMEF_DATA_TYPE_CHAR_STRING, data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_data_set_char_string_dup</NAME>
+#define idmef_data_set_char_string_dup(idmef_data, data) \
+	idmef_data_set_char_string_dup_fast(idmef_data, data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_data_set_char_string_nodup</NAME>
+#define idmef_data_set_char_string_nodup(idmef_data, data) \
+	idmef_data_set_ptr_nodup_fast(idmef_data, IDMEF_DATA_TYPE_CHAR_STRING, data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_data_set_char_string_constant</NAME>
+#define idmef_data_set_char_string_constant(idmef_data, data) \
+	idmef_data_set_ptr_ref_fast(idmef_data, IDMEF_DATA_TYPE_CHAR_STRING, data, sizeof (data))
+</MACRO>
+<MACRO>
+<NAME>idmef_data_new_byte_string_ref</NAME>
+#define idmef_data_new_byte_string_ref(data, len) \
+	idmef_data_new_ptr_ref_fast(IDMEF_DATA_TYPE_BYTE_STRING, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_data_new_byte_string_dup</NAME>
+#define idmef_data_new_byte_string_dup(data, len) \
+	idmef_data_new_ptr_dup_fast(IDMEF_DATA_TYPE_BYTE_STRING, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_data_new_byte_string_nodup</NAME>
+#define idmef_data_new_byte_string_nodup(data, len) \
+	idmef_data_new_ptr_nodup_fast(IDMEF_DATA_TYPE_BYTE_STRING, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_data_set_byte_string_ref</NAME>
+#define idmef_data_set_byte_string_ref(idmef_data, data, len) \
+	idmef_data_set_ptr_ref_fast(idmef_data, IDMEF_DATA_TYPE_BYTE_STRING, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_data_set_byte_string_dup</NAME>
+#define idmef_data_set_byte_string_dup(idmef_data, data, len) \
+	idmef_data_set_ptr_dup_fast(idmef_data, IDMEF_DATA_TYPE_BYTE_STRING, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_data_set_byte_string_nodup</NAME>
+#define idmef_data_set_byte_string_nodup(idmef_data, data, len) \
+	idmef_data_set_ptr_nodup_fast(idmef_data, IDMEF_DATA_TYPE_BYTE_STRING, data, len)
+</MACRO>
 <FUNCTION>
 <NAME>idmef_data_destroy</NAME>
 <RETURNS>void  </RETURNS>
 idmef_data_t *data
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_data_set_nodup</NAME>
-<RETURNS>int  </RETURNS>
-idmef_data_t *data, unsigned char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_data_set_dup</NAME>
-<RETURNS>int  </RETURNS>
-idmef_data_t *data, const unsigned char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_data_set_ref</NAME>
-<RETURNS>int  </RETURNS>
-idmef_data_t *data, const unsigned char *buf, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_copy_ref</NAME>
@@ -7406,184 +8067,69 @@ idmef_data_t *dst, const idmef_data_t *src
 const idmef_data_t *data
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_data_get_type</NAME>
+<RETURNS>idmef_data_type_t  </RETURNS>
+const idmef_data_t *data
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_data_get_len</NAME>
 <RETURNS>size_t  </RETURNS>
 const idmef_data_t *data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_get_data</NAME>
-<RETURNS>unsigned char  *</RETURNS>
+<RETURNS>const void  *</RETURNS>
+const idmef_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_get_char</NAME>
+<RETURNS>char  </RETURNS>
+const idmef_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_get_byte</NAME>
+<RETURNS>uint8_t  </RETURNS>
+const idmef_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_get_uint32</NAME>
+<RETURNS>uint32_t  </RETURNS>
+const idmef_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_get_uint64</NAME>
+<RETURNS>uint64_t  </RETURNS>
+const idmef_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_get_float</NAME>
+<RETURNS>float  </RETURNS>
+const idmef_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_get_char_string</NAME>
+<RETURNS>const char  *</RETURNS>
+const idmef_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_get_byte_string</NAME>
+<RETURNS>const unsigned char  *</RETURNS>
 const idmef_data_t *data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_is_empty</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>prelude_bool_t  </RETURNS>
 const idmef_data_t *data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_to_string</NAME>
 <RETURNS>int  </RETURNS>
-idmef_data_t *data, char *buf, size_t size
+const idmef_data_t *data, prelude_string_t *out
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_destroy_internal</NAME>
 <RETURNS>void  </RETURNS>
 idmef_data_t *data
-</FUNCTION>
-<MACRO>
-<NAME>idmef_data_set_constant_ref</NAME>
-#define idmef_data_set_constant_ref(data, buf)      \
-        idmef_data_set_ref(data, buf, sizeof(buf))
-</MACRO>
-<FUNCTION>
-<NAME>idmef_additional_data_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_reference_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_reference_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_classification_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_classification_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_user_id_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_user_id_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_user_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_user_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_address_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_address_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_process_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_process_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_web_service_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_web_service_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_snmp_service_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_snmp_service_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_service_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_service_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_node_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_node_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_source_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_source_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_file_access_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_file_access_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_inode_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_inode_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_checksum_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_checksum_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_file_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_file_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_linkage_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_linkage_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_target_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_target_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_analyzer_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_analyzer_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_alertident_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_alertident_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_impact_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_impact_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_action_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_action_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_confidence_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_confidence_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_assessment_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_assessment_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_tool_alert_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_tool_alert_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_correlation_alert_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_correlation_alert_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_overflow_alert_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_overflow_alert_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_alert_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_alert_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_heartbeat_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_heartbeat_t *ptr, char *buffer, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_message_to_string</NAME>
-<RETURNS>int  </RETURNS>
-idmef_message_t *ptr, char *buffer, size_t size
 </FUNCTION>
 <ENUM>
 <NAME>idmef_criterion_value_type_t</NAME>
@@ -7700,7 +8246,7 @@ idmef_criterion_value_non_linear_time_t *time
 <FUNCTION>
 <NAME>idmef_criterion_value_non_linear_time_to_string</NAME>
 <RETURNS>int  </RETURNS>
-idmef_criterion_value_non_linear_time_t *time,char *buffer, size_t size
+idmef_criterion_value_non_linear_time_t *time,prelude_string_t *out
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_new_fixed</NAME>
@@ -7750,17 +8296,17 @@ idmef_criterion_value_t *value
 <FUNCTION>
 <NAME>idmef_criterion_value_to_string</NAME>
 <RETURNS>int  </RETURNS>
-idmef_criterion_value_t *value, char *buffer, size_t size
+idmef_criterion_value_t *value, prelude_string_t *out
 </FUNCTION>
 <FUNCTION>
 <NAME>tls_auth_connection</NAME>
 <RETURNS>int  </RETURNS>
-prelude_client_t *client, prelude_io_t *io, int crypt
+prelude_client_profile_t *cp, prelude_io_t *io, int crypt, uint64_t *peer_analyzerid
 </FUNCTION>
 <FUNCTION>
 <NAME>tls_auth_init</NAME>
-<RETURNS>gnutls_certificate_credentials  </RETURNS>
-prelude_client_t *client
+<RETURNS>int  </RETURNS>
+prelude_client_profile_t *cp, gnutls_certificate_credentials *cred
 </FUNCTION>
 <STRUCT>
 <NAME>children_list_t</NAME>
@@ -7784,16 +8330,6 @@ struct object_data_t
 	const char *(*to_string)(int val);
 };
 </STRUCT>
-<FUNCTION>
-<NAME>idmef_additional_data_ref</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-idmef_additional_data_t *data
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-void
-</FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_new_real</NAME>
 <RETURNS>idmef_additional_data_t  *</RETURNS>
@@ -7820,220 +8356,400 @@ prelude_bool_t data
 char data
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_additional_data_new_xml_ref</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-const char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_xml_dup</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-const char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_xml_nodup</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_data_ref</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-const unsigned char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_data_dup</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-const unsigned char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_data_nodup</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-unsigned char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_string_ref</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-const char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_string_dup</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-const char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_string_nodup</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_ntpstamp_ref</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-const char *data
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_ntpstamp_dup</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-const char *data
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_ntpstamp_nodup</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-const char *data
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_portlist_ref</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-const char *data
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_portlist_dup</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-const char *data
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_portlist_nodup</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-const char *data
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_datetime_ref</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-const char *data
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_datetime_dup</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-const char *data
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_datetime_nodup</NAME>
-<RETURNS>idmef_additional_data_t  *</RETURNS>
-const char *data
-</FUNCTION>
-<FUNCTION>
 <NAME>idmef_additional_data_set_real</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, float data
+<RETURNS>void  </RETURNS>
+idmef_additional_data_t *ptr, float data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_set_byte</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, uint8_t byte
+<RETURNS>void  </RETURNS>
+idmef_additional_data_t *ptr, uint8_t byte
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_set_integer</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, uint32_t data)int idmef_additional_data_set_boolean(idmef_additional_data_t *data, prelude_bool_t data
+<RETURNS>void  </RETURNS>
+idmef_additional_data_t *ptr, uint32_t data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_boolean</NAME>
+<RETURNS>void  </RETURNS>
+idmef_additional_data_t *ptr, prelude_bool_t data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_set_character</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, char data
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_xml_ref</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, const char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_xml_dup</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, const char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_xml_nodup</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_data_ref</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, const unsigned char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_data_dup</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, const unsigned char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_data_nodup</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, unsigned char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_string_ref</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, const char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_string_dup</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, const char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_string_nodup</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_ntpstamp_ref</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, const char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_ntpstamp_dup</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, const char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_ntpstamp_nodup</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_portlist_ref</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, const char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_portlist_dup</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, const char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_portlist_nodup</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_datetime_ref</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, const char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_datetime_dup</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, const char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_datetime_nodup</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *data, char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_copy_ref</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *dst, const prelude_data_t *src
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_copy_dup</NAME>
-<RETURNS>int  </RETURNS>
-idmef_additional_data_t *dst, const prelude_data_t *src
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_destroy</NAME>
 <RETURNS>void  </RETURNS>
-idmef_additional_data_t *data
+idmef_additional_data_t *ptr, char data
 </FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_ptr_ref_fast</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+idmef_additional_data_type_t type,const unsigned char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_ptr_dup_fast</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+idmef_additional_data_type_t type,const unsigned char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_ptr_nodup_fast</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+idmef_additional_data_type_t type,unsigned char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_ptr_ref_fast</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *ad,idmef_additional_data_type_t type, const unsigned char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_ptr_dup_fast</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *ad,idmef_additional_data_type_t type, const unsigned char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_ptr_nodup_fast</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *ad,idmef_additional_data_type_t type, unsigned char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_str_dup_fast</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, idmef_additional_data_type_t type,const char *str, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_str_dup_fast</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+idmef_additional_data_type_t type, const char *str,size_t len
+</FUNCTION>
+<MACRO>
+<NAME>idmef_additional_data_new_string_ref_fast</NAME>
+#define idmef_additional_data_new_string_ref_fast(data, len) \
+        idmef_additional_data_new_ptr_ref_fast(IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_string_ref_fast</NAME>
+#define idmef_additional_data_set_string_ref_fast(ad, data, len) \
+        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_string_dup_fast</NAME>
+#define idmef_additional_data_new_string_dup_fast(data, len) \
+        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_string_dup_fast</NAME>
+#define idmef_additional_data_set_string_dup_fast(ad, data, len) \
+        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_string_nodup_fast</NAME>
+#define idmef_additional_data_new_string_nodup_fast(data, len) \
+        idmef_additional_data_new_ptr_nodup_fast(IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_string_nodup_fast</NAME>
+#define idmef_additional_data_set_string_nodup_fast(ad, data, len) \
+        idmef_additional_data_set_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_string_ref</NAME>
+#define idmef_additional_data_new_string_ref(data) \
+        idmef_additional_data_new_string_ref_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_string_ref</NAME>
+#define idmef_additional_data_set_string_ref(ad, data) \
+        idmef_additional_data_set_string_ref_fast(ad, data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_string_dup</NAME>
+#define idmef_additional_data_new_string_dup(data) \
+        idmef_additional_data_new_string_dup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_string_dup</NAME>
+#define idmef_additional_data_set_string_dup(data) \
+        idmef_additional_data_set_string_dup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_string_nodup</NAME>
+#define idmef_additional_data_new_string_nodup(data) \
+        idmef_additional_data_new_string_nodup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_string_nodup</NAME>
+#define idmef_additional_data_set_string_nodup(data) \
+        idmef_additional_data_set_string_nodup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_ntpstamp_ref_fast</NAME>
+#define idmef_additional_data_new_ntpstamp_ref_fast(data, len) \
+        idmef_additional_data_new_ptr_ref_fast(IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_ntpstamp_ref_fast</NAME>
+#define idmef_additional_data_set_ntpstamp_ref_fast(ad, data, len) \
+        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_ntpstamp_dup_fast</NAME>
+#define idmef_additional_data_new_ntpstamp_dup_fast(data, len) \
+        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_ntpstamp_dup_fast</NAME>
+#define idmef_additional_data_set_ntpstamp_dup_fast(ad, data, len) \
+        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_ntpstamp_nodup_fast</NAME>
+#define idmef_additional_data_new_ntpstamp_nodup_fast(data, len) \
+        idmef_additional_data_new_ptr_nodup_fast(IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_ntpstamp_nodup_fast</NAME>
+#define idmef_additional_data_set_ntpstamp_nodup_fast(ad, data, len) \
+        idmef_additional_data_set_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_ntpstamp_ref</NAME>
+#define idmef_additional_data_new_ntpstamp_ref(data) \
+        idmef_additional_data_new_ntpstamp_ref_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_ntpstamp_ref</NAME>
+#define idmef_additional_data_set_ntpstamp_ref(ad, data) \
+        idmef_additional_data_set_ntpstamp_ref_fast(ad, data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_ntpstamp_dup</NAME>
+#define idmef_additional_data_new_ntpstamp_dup(data) \
+        idmef_additional_data_new_ntpstamp_dup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_ntpstamp_dup</NAME>
+#define idmef_additional_data_set_ntpstamp_dup(data) \
+        idmef_additional_data_set_ntpstamp_dup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_ntpstamp_nodup</NAME>
+#define idmef_additional_data_new_ntpstamp_nodup(data) \
+        idmef_additional_data_new_ntpstamp_nodup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_ntpstamp_nodup</NAME>
+#define idmef_additional_data_set_ntpstamp_nodup(data) \
+        idmef_additional_data_set_ntpstamp_nodup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_byte_string_ref</NAME>
+#define idmef_additional_data_new_byte_string_ref(data, len) \
+        idmef_additional_data_new_ptr_ref_fast(IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_byte_string_ref</NAME>
+#define idmef_additional_data_set_byte_string_ref(ad, data, len) \
+        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_byte_string_dup</NAME>
+#define idmef_additional_data_new_byte_string_dup(data, len) \
+        idmef_additional_data_new_ptr_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_byte_string_dup</NAME>
+#define idmef_additional_data_set_byte_string_dup(ad, data, len) \
+        idmef_additional_data_set_ptr_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_byte_string_nodup</NAME>
+#define idmef_additional_data_new_byte_string_nodup(data, len) \
+        idmef_additional_data_new_ptr_nodup_fast(IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_byte_string_nodup</NAME>
+#define idmef_additional_data_set_byte_string_nodup(ad, data, len) \
+        idmef_additional_data_set_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_portlist_ref_fast</NAME>
+#define idmef_additional_data_new_portlist_ref_fast(data, len) \
+        idmef_additional_data_new_ptr_ref_fast(IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_portlist_ref_fast</NAME>
+#define idmef_additional_data_set_portlist_ref_fast(ad, data, len) \
+        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_portlist_dup_fast</NAME>
+#define idmef_additional_data_new_portlist_dup_fast(data, len) \
+        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_portlist_dup_fast</NAME>
+#define idmef_additional_data_set_portlist_dup_fast(ad, data, len) \
+        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_portlist_nodup_fast</NAME>
+#define idmef_additional_data_new_portlist_nodup_fast(data, len) \
+        idmef_additional_data_new_ptr_nodup_fast(IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_portlist_nodup_fast</NAME>
+#define idmef_additional_data_set_portlist_nodup_fast(ad, data, len) \
+        idmef_additional_data_set_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_portlist_ref</NAME>
+#define idmef_additional_data_new_portlist_ref(data) \
+        idmef_additional_data_new_portlist_ref_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_portlist_ref</NAME>
+#define idmef_additional_data_set_portlist_ref(ad, data) \
+        idmef_additional_data_set_portlist_ref_fast(ad, data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_portlist_dup</NAME>
+#define idmef_additional_data_new_portlist_dup(data) \
+        idmef_additional_data_new_portlist_dup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_portlist_dup</NAME>
+#define idmef_additional_data_set_portlist_dup(data) \
+        idmef_additional_data_set_portlist_dup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_portlist_nodup</NAME>
+#define idmef_additional_data_new_portlist_nodup(data) \
+        idmef_additional_data_new_portlist_nodup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_portlist_nodup</NAME>
+#define idmef_additional_data_set_portlist_nodup(data) \
+        idmef_additional_data_set_portlist_nodup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_datetime_ref_fast</NAME>
+#define idmef_additional_data_new_datetime_ref_fast(data, len) \
+        idmef_additional_data_new_ptr_ref_fast(IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_datetime_ref_fast</NAME>
+#define idmef_additional_data_set_datetime_ref_fast(ad, data, len) \
+        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_datetime_dup_fast</NAME>
+#define idmef_additional_data_new_datetime_dup_fast(data, len) \
+        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_datetime_dup_fast</NAME>
+#define idmef_additional_data_set_datetime_dup_fast(ad, data, len) \
+        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_datetime_nodup_fast</NAME>
+#define idmef_additional_data_new_datetime_nodup_fast(data, len) \
+        idmef_additional_data_new_ptr_nodup_fast(IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_datetime_nodup_fast</NAME>
+#define idmef_additional_data_set_datetime_nodup_fast(ad, data, len) \
+        idmef_additional_data_set_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_datetime_ref</NAME>
+#define idmef_additional_data_new_datetime_ref(data) \
+        idmef_additional_data_new_datetime_ref_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_datetime_ref</NAME>
+#define idmef_additional_data_set_datetime_ref(ad, data) \
+        idmef_additional_data_set_datetime_ref_fast(ad, data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_datetime_dup</NAME>
+#define idmef_additional_data_new_datetime_dup(data) \
+        idmef_additional_data_new_datetime_dup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_datetime_dup</NAME>
+#define idmef_additional_data_set_datetime_dup(data) \
+        idmef_additional_data_set_datetime_dup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_datetime_nodup</NAME>
+#define idmef_additional_data_new_datetime_nodup(data) \
+        idmef_additional_data_new_datetime_nodup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_datetime_nodup</NAME>
+#define idmef_additional_data_set_datetime_nodup(data) \
+        idmef_additional_data_set_datetime_nodup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_xml_ref_fast</NAME>
+#define idmef_additional_data_new_xml_ref_fast(data, len) \
+        idmef_additional_data_new_ptr_ref_fast(IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_xml_ref_fast</NAME>
+#define idmef_additional_data_set_xml_ref_fast(ad, data, len) \
+        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_xml_dup_fast</NAME>
+#define idmef_additional_data_new_xml_dup_fast(data, len) \
+        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_xml_dup_fast</NAME>
+#define idmef_additional_data_set_xml_dup_fast(ad, data, len) \
+        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_xml_nodup_fast</NAME>
+#define idmef_additional_data_new_xml_nodup_fast(data, len) \
+        idmef_additional_data_new_ptr_nodup_fast(IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_xml_nodup_fast</NAME>
+#define idmef_additional_data_set_xml_nodup_fast(ad, data, len) \
+        idmef_additional_data_set_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len + 1)
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_xml_ref</NAME>
+#define idmef_additional_data_new_xml_ref(data) \
+        idmef_additional_data_new_xml_ref_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_xml_ref</NAME>
+#define idmef_additional_data_set_xml_ref(ad, data) \
+        idmef_additional_data_set_xml_ref_fast(ad, data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_xml_dup</NAME>
+#define idmef_additional_data_new_xml_dup(data) \
+        idmef_additional_data_new_xml_dup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_xml_dup</NAME>
+#define idmef_additional_data_set_xml_dup(data) \
+        idmef_additional_data_set_xml_dup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_new_xml_nodup</NAME>
+#define idmef_additional_data_new_xml_nodup(data) \
+        idmef_additional_data_new_xml_nodup_fast(data, strlen(data))
+</MACRO>
+<MACRO>
+<NAME>idmef_additional_data_set_xml_nodup</NAME>
+#define idmef_additional_data_set_xml_nodup(data) \
+        idmef_additional_data_set_xml_nodup_fast(data, strlen(data))
+</MACRO>
 <FUNCTION>
 <NAME>idmef_additional_data_destroy_internal</NAME>
 <RETURNS>void  </RETURNS>
@@ -8042,366 +8758,52 @@ idmef_additional_data_t *data
 <FUNCTION>
 <NAME>idmef_additional_data_clone</NAME>
 <RETURNS>idmef_additional_data_t  *</RETURNS>
-const idmef_additional_data_t *data
+idmef_additional_data_t *data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_copy_ref</NAME>
 <RETURNS>int  </RETURNS>
-idmef_additional_data_t *dst, const prelude_data_t *src
+idmef_additional_data_t *dst, idmef_additional_data_t *src
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_copy_dup</NAME>
 <RETURNS>int  </RETURNS>
-idmef_additional_data_t *dst, const prelude_data_t *src
+idmef_additional_data_t *dst, idmef_additional_data_t *src
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_additional_data_get_boolean</NAME>
-<RETURNS>prelude_bool_t  </RETURNS>
-const idmef_additional_data_t *data
+<NAME>idmef_additional_data_get_real</NAME>
+<RETURNS>float  </RETURNS>
+idmef_additional_data_t *data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_get_integer</NAME>
 <RETURNS>uint32_t  </RETURNS>
-const idmef_additional_data_t *data
+idmef_additional_data_t *data
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_additional_data_get_xml</NAME>
-<RETURNS>char  *</RETURNS>
-const idmef_additional_data_t *data
+<NAME>idmef_additional_data_get_boolean</NAME>
+<RETURNS>prelude_bool_t  </RETURNS>
+idmef_additional_data_t *data
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_additional_data_get_data</NAME>
-<RETURNS>unsigned char  *</RETURNS>
-const idmef_additional_data_t *data
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_get_string</NAME>
-<RETURNS>char  *</RETURNS>
-const idmef_additional_data_t *data
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_get_ntpstamp</NAME>
-<RETURNS>uint64_t  </RETURNS>
-const idmef_additional_data_t *data
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_get_portlist</NAME>
-<RETURNS>char  *</RETURNS>
-const idmef_additional_data_t *data
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_get_datetime</NAME>
-<RETURNS>char  *</RETURNS>
-const idmef_additional_data_t *data
+<NAME>idmef_additional_data_get_character</NAME>
+<RETURNS>char  </RETURNS>
+idmef_additional_data_t *data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_get_len</NAME>
 <RETURNS>size_t  </RETURNS>
-const idmef_additional_data_t *data
+idmef_additional_data_t *data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_is_empty</NAME>
+<RETURNS>prelude_bool_t  </RETURNS>
+idmef_additional_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_data_to_string</NAME>
 <RETURNS>int  </RETURNS>
-const idmef_additional_data_t *data
-</FUNCTION>
-<MACRO>
-<NAME>CLI_HOOK</NAME>
-#define CLI_HOOK 0x1 /* Option to be hooked to command line */
-</MACRO>
-<MACRO>
-<NAME>CFG_HOOK</NAME>
-#define CFG_HOOK 0x2 /* Option to be hooked to config file  */
-</MACRO>
-<MACRO>
-<NAME>WIDE_HOOK</NAME>
-#define WIDE_HOOK 0x4
-</MACRO>
-<MACRO>
-<NAME>ALLOW_MULTIPLE_CALL</NAME>
-#define ALLOW_MULTIPLE_CALL 0x8
-</MACRO>
-<MACRO>
-<NAME>DESTROY_HOOK</NAME>
-#define DESTROY_HOOK 0x20
-</MACRO>
-<MACRO>
-<NAME>HAVE_CONTEXT</NAME>
-#define HAVE_CONTEXT 0x40
-</MACRO>
-<MACRO>
-<NAME>prelude_option_success</NAME>
-#define prelude_option_success 0
-</MACRO>
-<MACRO>
-<NAME>prelude_option_end</NAME>
-#define prelude_option_end -2
-</MACRO>
-<MACRO>
-<NAME>prelude_option_error</NAME>
-#define prelude_option_error -1
-</MACRO>
-<ENUM>
-<NAME>prelude_option_argument_t</NAME>
-typedef enum {
-        required_argument,
-        optionnal_argument,
-        no_argument
-} prelude_option_argument_t;
-</ENUM>
-<MACRO>
-<NAME>option_run_first</NAME>
-#define option_run_first     -1
-</MACRO>
-<MACRO>
-<NAME>option_run_no_order</NAME>
-#define option_run_no_order   0
-</MACRO>
-<MACRO>
-<NAME>option_run_last</NAME>
-#define option_run_last       1
-</MACRO>
-<FUNCTION>
-<NAME>prelude_option_set_priority</NAME>
-<RETURNS>void  </RETURNS>
-prelude_option_t *option, int priority
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_print</NAME>
-<RETURNS>void  </RETURNS>
-prelude_option_t *opt, int flags, int descoff
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_wide_send_msg</NAME>
-<RETURNS>int  </RETURNS>
-void *context, prelude_msgbuf_t *msgbuf
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_destroy</NAME>
-<RETURNS>void  </RETURNS>
-prelude_option_t *option
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_parse_arguments</NAME>
-<RETURNS>int  </RETURNS>
-void *context, prelude_option_t *option,const char *filename, int *argc, char **argv
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_add</NAME>
-<RETURNS>prelude_option_t  *</RETURNS>
-prelude_option_t *parent, int flags,char shortopt, const char *longopt, const char *desc,prelude_option_argument_t has_arg,int (*set)(void *context, prelude_option_t *opt, const char *optarg),int (*get)(void *context, prelude_option_t *opt, char *buf, size_t size)
-</FUNCTION>
-<MACRO>
-<NAME>OPT_INVAL</NAME>
-#define OPT_INVAL     0x1
-</MACRO>
-<MACRO>
-<NAME>OPT_INVAL_ARG</NAME>
-#define OPT_INVAL_ARG 0x2
-</MACRO>
-<FUNCTION>
-<NAME>prelude_option_set_flags</NAME>
-<RETURNS>void  </RETURNS>
-prelude_option_t *opt, int flags
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_flags</NAME>
-<RETURNS>int  </RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_set_warnings</NAME>
-<RETURNS>void  </RETURNS>
-int flags, int *old_flags
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_shortname</NAME>
-<RETURNS>char  </RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_longname</NAME>
-<RETURNS>const char  *</RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_set_private_data</NAME>
-<RETURNS>void  </RETURNS>
-prelude_option_t *opt, void *data
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_private_data</NAME>
-<RETURNS>void  *</RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_invoke_commit</NAME>
-<RETURNS>int  </RETURNS>
-void *context, prelude_option_t *opt, const char *value, char *err, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_invoke_set</NAME>
-<RETURNS>int  </RETURNS>
-void **context, prelude_option_t *opt, const char *value, char *err, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_invoke_get</NAME>
-<RETURNS>int  </RETURNS>
-void *context, prelude_option_t *opt, const char *value, char *buf, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_invoke_destroy</NAME>
-<RETURNS>int  </RETURNS>
-void *context, prelude_option_t *opt, const char *value, char *buf, size_t err
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_new</NAME>
-<RETURNS>prelude_option_t  *</RETURNS>
-prelude_option_t *parent
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_set_longopt</NAME>
-<RETURNS>void  </RETURNS>
-prelude_option_t *opt, const char *longopt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_longopt</NAME>
-<RETURNS>const char  *</RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_set_description</NAME>
-<RETURNS>void  </RETURNS>
-prelude_option_t *opt, const char *description
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_description</NAME>
-<RETURNS>const char  *</RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_set_has_arg</NAME>
-<RETURNS>void  </RETURNS>
-prelude_option_t *opt, prelude_option_argument_t has_arg
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_has_arg</NAME>
-<RETURNS>prelude_option_argument_t  </RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_set_value</NAME>
-<RETURNS>void  </RETURNS>
-prelude_option_t *opt, const char *value
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_value</NAME>
-<RETURNS>const char  *</RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_set_help</NAME>
-<RETURNS>void  </RETURNS>
-prelude_option_t *opt, const char *help
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_help</NAME>
-<RETURNS>const char  *</RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_set_input_validation_regex</NAME>
-<RETURNS>void  </RETURNS>
-prelude_option_t *opt, const char *regex
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_input_validation_regex</NAME>
-<RETURNS>const char  *</RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_set_input_type</NAME>
-<RETURNS>void  </RETURNS>
-prelude_option_t *opt, uint8_t input_type
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_input_type</NAME>
-<RETURNS>uint8_t  </RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_optlist</NAME>
-<RETURNS>prelude_list_t  *</RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_next</NAME>
-<RETURNS>prelude_option_t  *</RETURNS>
-prelude_option_t *start, prelude_option_t *cur
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_has_optlist</NAME>
-<RETURNS>int  </RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_parent</NAME>
-<RETURNS>prelude_option_t  *</RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_set_destroy_callback</NAME>
-<RETURNS>void  </RETURNS>
-prelude_option_t *opt,int (*destroy)(void *context, prelude_option_t *opt)
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_destroy_callback</NAME>
-<RETURNS>void  *</RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_set_set_callback</NAME>
-<RETURNS>void  </RETURNS>
-prelude_option_t *opt,int (*set)(void *context, prelude_option_t *opt, const char *optarg)
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_set_callback</NAME>
-<RETURNS>void  *</RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_set_get_callback</NAME>
-<RETURNS>void  </RETURNS>
-prelude_option_t *opt,int (*get)(void *context, prelude_option_t *opt, char *buf, size_t size)
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_get_callback</NAME>
-<RETURNS>void  *</RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_set_commit_callback</NAME>
-<RETURNS>void  </RETURNS>
-prelude_option_t *opt, int (*commit)(void *context, prelude_option_t *opt)
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_get_commit_callback</NAME>
-<RETURNS>void  *</RETURNS>
-prelude_option_t *opt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_new_context</NAME>
-<RETURNS>prelude_option_context_t  *</RETURNS>
-prelude_option_t *opt, const char *name, void *data
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_context_destroy</NAME>
-<RETURNS>void  </RETURNS>
-prelude_option_context_t *oc
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_search</NAME>
-<RETURNS>prelude_option_t  *</RETURNS>
-prelude_option_t *parent, const char *name, int flags, int walk_children
+idmef_additional_data_t *ad, prelude_string_t *out
 </FUNCTION>
 <FUNCTION>
 <NAME>pconfig_init</NAME>
@@ -8455,7 +8857,7 @@ const idmef_time_t *src
 <FUNCTION>
 <NAME>idmef_time_copy</NAME>
 <RETURNS>int  </RETURNS>
-idmef_time_t *dst, idmef_time_t *src
+idmef_time_t *dst, const idmef_time_t *src
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_time_set_from_time</NAME>
@@ -8505,12 +8907,12 @@ idmef_time_t *time, const char *buf
 <FUNCTION>
 <NAME>idmef_time_to_string</NAME>
 <RETURNS>int  </RETURNS>
-const idmef_time_t *time, char *outptr, size_t size
+const idmef_time_t *time, prelude_string_t *out
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_time_to_ntpstamp</NAME>
 <RETURNS>int  </RETURNS>
-const idmef_time_t *time, char *outptr, size_t size
+const idmef_time_t *time, prelude_string_t *out
 </FUNCTION>
 <MACRO>
 <NAME>IDMEF_TIME_MAX_STRING_SIZE</NAME>
@@ -8593,51 +8995,6 @@ void *ptr, idmef_object_type_t type, idmef_child_t child, int n
 <RETURNS>char  *</RETURNS>
 idmef_object_type_t type
 </FUNCTION>
-<FUNCTION>
-<NAME>prelude_msgbuf_get_client</NAME>
-<RETURNS>prelude_client_t  *</RETURNS>
-prelude_msgbuf_t *msgbuf
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msgbuf_new</NAME>
-<RETURNS>prelude_msgbuf_t  *</RETURNS>
-prelude_client_t *client
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msgbuf_close</NAME>
-<RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msgbuf
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msgbuf_mark_end</NAME>
-<RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msgbuf
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msgbuf_set</NAME>
-<RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msgbuf, uint8_t tag, uint32_t len, const void *data
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msgbuf_get_msg</NAME>
-<RETURNS>prelude_msg_t  *</RETURNS>
-prelude_msgbuf_t *msgbuf
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msgbuf_set_callback</NAME>
-<RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msgbuf, prelude_msg_t *(*send_msg)(prelude_msgbuf_t *msgbuf)
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msgbuf_set_data</NAME>
-<RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msgbuf, void *data
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msgbuf_get_data</NAME>
-<RETURNS>void  *</RETURNS>
-prelude_msgbuf_t *msgbuf
-</FUNCTION>
 <MACRO>
 <NAME>MY_CONCAT</NAME>
 #define MY_CONCAT(func, res, buffer, size, offset)		\
@@ -8664,133 +9021,6 @@ do {									\
 	offset += __retval;						\
 } while ( 0 )
 </MACRO>
-<FUNCTION>
-<NAME>idmef_additionaldata_data_to_string</NAME>
-<RETURNS>const unsigned char  *</RETURNS>
-idmef_additional_data_t *ad,unsigned char *buf, size_t *size
-</FUNCTION>
-<MACRO>
-<NAME>PRELUDE_MSG_PRIORITY_HIGH</NAME>
-#define PRELUDE_MSG_PRIORITY_HIGH 0
-</MACRO>
-<MACRO>
-<NAME>PRELUDE_MSG_PRIORITY_MID</NAME>
-#define PRELUDE_MSG_PRIORITY_MID  1
-</MACRO>
-<MACRO>
-<NAME>PRELUDE_MSG_PRIORITY_LOW</NAME>
-#define PRELUDE_MSG_PRIORITY_LOW  2
-</MACRO>
-<FUNCTION>
-<NAME>prelude_msg_read</NAME>
-<RETURNS>int  </RETURNS>
-prelude_msg_t **msg, prelude_io_t *pio
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_forward</NAME>
-<RETURNS>int  </RETURNS>
-prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_get</NAME>
-<RETURNS>int  </RETURNS>
-prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_recycle</NAME>
-<RETURNS>void  </RETURNS>
-prelude_msg_t *msg
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_mark_end</NAME>
-<RETURNS>void  </RETURNS>
-prelude_msg_t *msg
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_dynamic_new</NAME>
-<RETURNS>prelude_msg_t  *</RETURNS>
-prelude_msg_t *(*flush_msg_cb)(void *data), void *data
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_new</NAME>
-<RETURNS>prelude_msg_t  *</RETURNS>
-size_t msgcount, size_t msglen, uint8_t tag, uint8_t priority
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_set</NAME>
-<RETURNS>void  </RETURNS>
-prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *data
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_write</NAME>
-<RETURNS>ssize_t  </RETURNS>
-prelude_msg_t *msg, prelude_io_t *dst
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_set_tag</NAME>
-<RETURNS>void  </RETURNS>
-prelude_msg_t *msg, uint8_t tag
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_set_priority</NAME>
-<RETURNS>void  </RETURNS>
-prelude_msg_t *msg, uint8_t priority
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_get_tag</NAME>
-<RETURNS>uint8_t  </RETURNS>
-prelude_msg_t *msg
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_get_version</NAME>
-<RETURNS>uint8_t  </RETURNS>
-prelude_msg_t *msg
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_get_priority</NAME>
-<RETURNS>uint8_t  </RETURNS>
-prelude_msg_t *msg
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_get_len</NAME>
-<RETURNS>uint32_t  </RETURNS>
-prelude_msg_t *msg
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_get_datalen</NAME>
-<RETURNS>uint32_t  </RETURNS>
-prelude_msg_t *msg
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_is_empty</NAME>
-<RETURNS>int  </RETURNS>
-prelude_msg_t *msg
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_is_fragment</NAME>
-<RETURNS>int  </RETURNS>
-prelude_msg_t *msg
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_destroy</NAME>
-<RETURNS>void  </RETURNS>
-prelude_msg_t *msg
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_reset</NAME>
-<RETURNS>void  </RETURNS>
-prelude_msg_t *msg
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_set_callback</NAME>
-<RETURNS>void  </RETURNS>
-prelude_msg_t *msg, prelude_msg_t *(*flush_msg_cb)(void *data)
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_set_data</NAME>
-<RETURNS>void  </RETURNS>
-prelude_msg_t *msg, void *data
-</FUNCTION>
 <FUNCTION>
 <NAME>manager_auth_disable_encryption</NAME>
 <RETURNS>int  </RETURNS>
@@ -8832,52 +9062,97 @@ uint32_t, buf, 0) << 24 | byte(uint32_t, buf, 1) << 16 |byte(uint32_t, buf, 2) <
 <FUNCTION>
 <NAME>byte</NAME>
 <RETURNS>return  </RETURNS>
+float, buf, 0) << 24 | byte(float, buf, 1) << 16 |byte(float, buf, 2) <<  8 | byte(float, buf, 3
+</FUNCTION>
+<FUNCTION>
+<NAME>byte</NAME>
+<RETURNS>return  </RETURNS>
 uint64_t, buf, 0) << 56 | byte(uint64_t, buf, 1) << 48 | byte(uint64_t, buf, 2) << 40 |byte(uint64_t, buf, 3) << 32 | byte(uint64_t, buf, 4) << 24 | byte(uint64_t, buf, 5) << 16 |byte(uint64_t, buf, 6) <<  8 | byte(uint64_t, buf, 7
 </FUNCTION>
+<FUNCTION>
+<NAME>byte</NAME>
+<RETURNS>return  </RETURNS>
+float, buf, 0) << 56 | byte(float, buf, 1) << 48 | byte(uint64_t, buf, 2) << 40 |byte(uint64_t, buf, 3) << 32 | byte(uint64_t, buf, 4) << 24 | byte(uint64_t, buf, 5) << 16 |byte(uint64_t, buf, 6) <<  8 | byte(uint64_t, buf, 7
+</FUNCTION>
 <MACRO>
-<NAME>align_uint16</NAME>
-#define align_uint16(x) (*(const uint16_t *) (x))
+<NAME>prelude_align_uint16</NAME>
+#define prelude_align_uint16(x) (*(const uint16_t *) (x))
 </MACRO>
 <MACRO>
-<NAME>align_int32</NAME>
-#define align_int32(x) (*(const int32_t *) (x))
+<NAME>prelude_align_int32</NAME>
+#define prelude_align_int32(x) (*(const int32_t *) (x))
 </MACRO>
 <MACRO>
-<NAME>align_uint32</NAME>
-#define align_uint32(x) (*(const uint32_t *) (x))
+<NAME>prelude_align_uint32</NAME>
+#define prelude_align_uint32(x) (*(const uint32_t *) (x))
 </MACRO>
 <MACRO>
-<NAME>align_uint64</NAME>
-#define align_uint64(x) (*(const uint64_t *) (x))
+<NAME>prelude_align_uint64</NAME>
+#define prelude_align_uint64(x) (*(const uint64_t *) (x))
 </MACRO>
 <MACRO>
-<NAME>align_ipv4_addr</NAME>
-#define align_ipv4_addr(x) *((const struct in_addr *) (x))
+<NAME>prelude_align_ipv4_addr</NAME>
+#define prelude_align_ipv4_addr(x) *((const struct in_addr *) (x))
 </MACRO>
 <FUNCTION>
-<NAME>align_ipv4_addr</NAME>
+<NAME>prelude_align_ipv4_addr</NAME>
 <RETURNS>return  </RETURNS>
 buf
 </FUNCTION>
 <FUNCTION>
 <NAME>ntohs</NAME>
 <RETURNS>return  </RETURNS>
-align_uint16(buf)
+prelude_align_uint16(buf)
 </FUNCTION>
 <FUNCTION>
 <NAME>ntohl</NAME>
 <RETURNS>return  </RETURNS>
-align_int32(buf)
+prelude_align_int32(buf)
 </FUNCTION>
 <FUNCTION>
 <NAME>ntohl</NAME>
 <RETURNS>return  </RETURNS>
-align_uint32(buf)
+prelude_align_uint32(buf)
 </FUNCTION>
 <FUNCTION>
-<NAME>align_uint64</NAME>
+<NAME>prelude_align_uint64</NAME>
 <RETURNS>return  </RETURNS>
 buf
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return  </RETURNS>
+PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT8
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return  </RETURNS>
+PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT16
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return  </RETURNS>
+PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT32
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return  </RETURNS>
+PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT32
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return  </RETURNS>
+PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT64
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return  </RETURNS>
+PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_FLOAT
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return  </RETURNS>
+PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_CHAR
 </FUNCTION>
 <MACRO>
 <NAME>MSG_OWN_FORMAT</NAME>
@@ -9443,6 +9718,83 @@ buf
 <NAME>MSG_MESSAGE_VERSION</NAME>
 #define MSG_MESSAGE_VERSION 29
 </MACRO>
+<STRUCT>
+<NAME>prelude_timer_t</NAME>
+struct prelude_timer_t
+{
+        prelude_list_t list;
+
+        int expire;
+        time_t start_time;
+
+        void *data;
+        void (*function)(void *data);
+};
+</STRUCT>
+<MACRO>
+<NAME>prelude_timer_get_expire</NAME>
+#define prelude_timer_get_expire(timer) (timer)->expire
+</MACRO>
+<MACRO>
+<NAME>prelude_timer_get_data</NAME>
+#define prelude_timer_get_data(timer) (timer)->data
+</MACRO>
+<MACRO>
+<NAME>prelude_timer_get_callback</NAME>
+#define prelude_timer_get_callback(timer) (timer)->function
+</MACRO>
+<MACRO>
+<NAME>prelude_timer_set_expire</NAME>
+#define prelude_timer_set_expire(timer, x) prelude_timer_get_expire((timer)) = (x)
+</MACRO>
+<MACRO>
+<NAME>prelude_timer_set_data</NAME>
+#define prelude_timer_set_data(timer, x) prelude_timer_get_data((timer)) = (x)
+</MACRO>
+<MACRO>
+<NAME>prelude_timer_set_callback</NAME>
+#define prelude_timer_set_callback(timer, x) prelude_timer_get_callback((timer)) = (x)
+</MACRO>
+<FUNCTION>
+<NAME>prelude_timer_init</NAME>
+<RETURNS>void  </RETURNS>
+prelude_timer_t *timer
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_timer_reset</NAME>
+<RETURNS>void  </RETURNS>
+prelude_timer_t *timer
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_timer_destroy</NAME>
+<RETURNS>void  </RETURNS>
+prelude_timer_t *timer
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_timer_elapsed</NAME>
+<RETURNS>void  </RETURNS>
+prelude_timer_t *timer, struct timeval *tv
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_timer_wake_up</NAME>
+<RETURNS>void  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_timer_flush</NAME>
+<RETURNS>void  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_timer_lock_critical_region</NAME>
+<RETURNS>void  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_timer_unlock_critical_region</NAME>
+<RETURNS>void  </RETURNS>
+void
+</FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_new_int8</NAME>
 <RETURNS>idmef_value_t  *</RETURNS>
@@ -9681,7 +10033,7 @@ idmef_value_t *val
 <FUNCTION>
 <NAME>idmef_value_to_string</NAME>
 <RETURNS>int  </RETURNS>
-idmef_value_t *val, char *buf, size_t len
+idmef_value_t *val, prelude_string_t *out
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get</NAME>
@@ -9910,7 +10262,7 @@ idmef_value_type_t *dst, const char *buf
 <FUNCTION>
 <NAME>idmef_value_type_write</NAME>
 <RETURNS>int  </RETURNS>
-char *buf, size_t size, idmef_value_type_t *src
+idmef_value_type_t *src, prelude_string_t *out
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_type_destroy</NAME>
@@ -9931,16 +10283,6 @@ idmef_value_type_t *type1, idmef_value_type_t *type2, idmef_value_relation_t rel
 <NAME>idmef_value_type_check_relation</NAME>
 <RETURNS>int  </RETURNS>
 idmef_value_type_t *type, idmef_value_relation_t relation
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_ident_send</NAME>
-<RETURNS>int  </RETURNS>
-uint64_t analyzerid, prelude_io_t *fd
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_client_ident_init</NAME>
-<RETURNS>int  </RETURNS>
-prelude_client_t *client, uint64_t *analyzerid
 </FUNCTION>
 <FUNCTION>
 <NAME>tls_unload_file</NAME>

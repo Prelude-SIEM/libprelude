@@ -22,7 +22,10 @@ as well as some read / write / forward operation.
 
 </para>
 
+@ret: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@pio: 
 
 
 <!-- ##### FUNCTION prelude_io_destroy ##### -->

@@ -58,11 +58,13 @@ prelude-getopt-wide
 
 </para>
 
-@client: 
 @msgbuf: 
 @request_id: 
 @target_id: 
+@size: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@client: 
 
 
 <!-- ##### FUNCTION prelude_option_process_request ##### -->

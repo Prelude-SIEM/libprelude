@@ -19,10 +19,13 @@ tls-auth
 
 </para>
 
-@client: 
+@cp: 
 @io: 
 @crypt: 
+@peer_analyzerid: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@client: 
 
 
 <!-- ##### FUNCTION tls_auth_init ##### -->
@@ -30,7 +33,10 @@ tls-auth
 
 </para>
 
-@client: 
+@cp: 
+@cred: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@client: 
 
 

@@ -14,98 +14,14 @@ prelude-getopt
 
 </para>
 
-<!-- ##### MACRO CLI_HOOK ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO CFG_HOOK ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO WIDE_HOOK ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO ALLOW_MULTIPLE_CALL ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO DESTROY_HOOK ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO HAVE_CONTEXT ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO prelude_option_success ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO prelude_option_end ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO prelude_option_error ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### ENUM prelude_option_argument_t ##### -->
 <para>
 
 </para>
 
-@required_argument: 
-@optionnal_argument: 
-@no_argument: 
-
-<!-- ##### MACRO option_run_first ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO option_run_no_order ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO option_run_last ##### -->
-<para>
-
-</para>
-
-
+@PRELUDE_OPTION_ARGUMENT_REQUIRED: 
+@PRELUDE_OPTION_ARGUMENT_OPTIONAL: 
+@PRELUDE_OPTION_ARGUMENT_NONE: 
 
 <!-- ##### FUNCTION prelude_option_set_priority ##### -->
 <para>
@@ -122,9 +38,10 @@ prelude-getopt
 </para>
 
 @opt: 
-@flags: 
+@type: 
 @descoff: 
 <!-- # Unused Parameters # -->
+@flags: 
 @optlist: 
 
 
@@ -169,7 +86,7 @@ prelude-getopt
 </para>
 
 @parent: 
-@flags: 
+@type: 
 @shortopt: 
 @longopt: 
 @desc: 
@@ -178,39 +95,8 @@ prelude-getopt
 @get: 
 @Returns: 
 <!-- # Unused Parameters # -->
-@optlist: 
-
-
-<!-- ##### MACRO OPT_INVAL ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO OPT_INVAL_ARG ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### FUNCTION prelude_option_set_flags ##### -->
-<para>
-
-</para>
-
-@opt: 
 @flags: 
-
-
-<!-- ##### FUNCTION prelude_option_get_flags ##### -->
-<para>
-
-</para>
-
-@opt: 
-@Returns: 
+@optlist: 
 
 
 <!-- ##### FUNCTION prelude_option_set_warnings ##### -->
@@ -575,8 +461,10 @@ prelude-getopt
 
 @parent: 
 @name: 
-@flags: 
+@type: 
 @walk_children: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@flags: 
 
 
