@@ -173,15 +173,17 @@ void *tls_auth_init(prelude_client_t *client)
         char keyfile[256], certfile[256];
         gnutls_certificate_credentials cred;
         
-        gnutls_global_init();
-        gnutls_certificate_allocate_credentials(&cred);
-
         prelude_client_get_tls_key_filename(client, keyfile, sizeof(keyfile));
         prelude_client_get_tls_client_keycert_filename(client, certfile, sizeof(certfile));
         
         ret = access(certfile, F_OK);
-        if ( ret < 0 ) 
-                return cred;
+        if ( ret < 0 ) {
+                log(LOG_ERR, "certificate %s does not exist.\n", certfile);
+                return NULL;
+        }
+        
+        gnutls_global_init();
+        gnutls_certificate_allocate_credentials(&cred);
         
         ret = tls_certificates_load(keyfile, certfile, cred);
         if ( ret < 0 ) {
