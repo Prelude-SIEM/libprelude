@@ -59,7 +59,7 @@ typedef struct {
 
         uint8_t no;
         idmef_child_t id;
-        idmef_type_t object_type;
+        idmef_object_type_t object_type;
         idmef_value_type_id_t value_type;
 
 } idmef_object_description_t;
@@ -110,14 +110,14 @@ static int initialize_object_cache_if_needed(void)
 
 
 
-static idmef_value_t *idmef_object_get_internal(idmef_object_t *, int,	void *, idmef_type_t);
+static idmef_value_t *idmef_object_get_internal(idmef_object_t *, int,	void *, idmef_object_type_t);
 
 
 
 static idmef_value_t *idmef_object_get_list_internal(idmef_object_t *object,
 						     int depth,
 						     struct list_head *list,
-						     idmef_type_t parent_type)
+						     idmef_object_type_t parent_type)
 {
 	idmef_value_t *value_list;
 	idmef_value_t *value;
@@ -145,7 +145,7 @@ static idmef_value_t *idmef_object_get_list_internal(idmef_object_t *object,
 static idmef_value_t *idmef_object_get_nth_internal(idmef_object_t *object,
 						    int depth,
 						    struct list_head *list,
-						    idmef_type_t parent_type,
+						    idmef_object_type_t parent_type,
 						    int which)
 {
 	struct list_head *ptr;
@@ -164,12 +164,12 @@ static idmef_value_t *idmef_object_get_nth_internal(idmef_object_t *object,
 
 
 static idmef_value_t *idmef_object_get_internal(idmef_object_t *object, int depth,
-						void *parent, idmef_type_t parent_type)
+						void *parent, idmef_object_type_t parent_type)
 {
 	void *child;
         uint8_t which;
         idmef_child_t child_id;
-	idmef_type_t child_type;
+	idmef_object_type_t child_type;
 
         if ( depth < object->depth ) {
 
@@ -199,7 +199,7 @@ static idmef_value_t *idmef_object_get_internal(idmef_object_t *object, int dept
 
 idmef_value_t *idmef_object_get(idmef_message_t *message, idmef_object_t *object)
 {
-	return idmef_object_get_internal(object, 0, message, idmef_type_message);
+	return idmef_object_get_internal(object, 0, message, IDMEF_OBJECT_TYPE_MESSAGE);
 }
 
 
@@ -208,11 +208,11 @@ int idmef_object_set(idmef_message_t *message, idmef_object_t *object, idmef_val
 {
     	int i, n;
     	void *ptr;
-    	idmef_type_t type, parent_type;
+    	idmef_object_type_t type, parent_type;
         idmef_object_description_t *desc;
         
 	ptr = message;
-	parent_type = type = idmef_type_message;
+	parent_type = type = IDMEF_OBJECT_TYPE_MESSAGE;
         
 	for ( i = 0; i < object->depth; i++ ) {
                 desc = &object->desc[i];
@@ -317,7 +317,7 @@ static int idmef_object_parse_new(const char *buffer, idmef_object_t *object)
 	uint16_t depth = 0;
         char *endptr, *ptr, *ptr2;
         idmef_child_t id = 0;
-        idmef_type_t type, prev_type = 0;
+        idmef_object_type_t type, prev_type = 0;
 	int len = 0, index = -1, is_last;
         
         len = strlen(buffer) + 1;
@@ -330,7 +330,7 @@ static int idmef_object_parse_new(const char *buffer, idmef_object_t *object)
 
         ptr = NULL;
         endptr = object->name;
-        type = idmef_type_message;
+        type = IDMEF_OBJECT_TYPE_MESSAGE;
         
         do {
                 index = -1;
@@ -379,7 +379,7 @@ static int idmef_object_parse_new(const char *buffer, idmef_object_t *object)
 	object->depth = depth;
 	object->desc[depth - 1].value_type = idmef_type_get_child_type(prev_type, id);
 
-	if ( object->desc[depth - 1].value_type == type_enum )
+	if ( object->desc[depth - 1].value_type == IDMEF_VALUE_TYPE_ENUM )
 		object->desc[depth - 1].object_type = idmef_type_get_child_enum_type(prev_type, id);
 	else
                 object->desc[depth - 1].object_type = idmef_type_get_child_object_type(prev_type, id);
@@ -452,23 +452,23 @@ idmef_object_t *idmef_object_new(const char *format, ...)
 
 
 
-idmef_type_t idmef_object_get_idmef_type(idmef_object_t *object)
+idmef_object_type_t idmef_object_get_object_type(idmef_object_t *object)
 {
         /*
          * FIXME ?
          */
         if ( object->depth == 0 )
-		return idmef_type_message;
+		return IDMEF_OBJECT_TYPE_MESSAGE;
         
 	return object->desc[object->depth - 1].object_type;
 }
 
 
 
-idmef_value_type_id_t idmef_object_get_type(idmef_object_t *object)
+idmef_value_type_id_t idmef_object_get_value_type(idmef_object_t *object)
 {
 	if ( object->depth == 0 )
-		return type_object;
+		return IDMEF_VALUE_TYPE_OBJECT;
 	
 	return object->desc[object->depth - 1].value_type;
 }
@@ -582,7 +582,7 @@ int idmef_object_get_number(idmef_object_t *object, uint8_t depth)
 
 int idmef_object_make_child(idmef_object_t *object, const char *child_name, int n)
 {
-        idmef_type_t type;
+        idmef_object_type_t type;
 	idmef_child_t child;
 
 	if ( n == INDEX_FORBIDDEN ) {
@@ -595,7 +595,7 @@ int idmef_object_make_child(idmef_object_t *object, const char *child_name, int 
 		return -3;
 	}
 
-	child = idmef_type_find_child(idmef_object_get_idmef_type(object), child_name);
+	child = idmef_type_find_child(idmef_object_get_object_type(object), child_name);
 	if ( child < 0 )
 		return -4;
 
@@ -605,7 +605,7 @@ int idmef_object_make_child(idmef_object_t *object, const char *child_name, int 
 	/* current drive^H^H^H^H^Hname is no longer valid */
 	object->name[0] = '\0'; 
 
-	type = idmef_object_get_idmef_type(object);
+	type = idmef_object_get_object_type(object);
 
 	object->depth++;
 
@@ -621,7 +621,7 @@ int idmef_object_make_child(idmef_object_t *object, const char *child_name, int 
 	
 	object->desc[object->depth - 1].value_type = idmef_type_get_child_type(type, child);
 
-	if ( object->desc[object->depth - 1].value_type == type_enum )
+	if ( object->desc[object->depth - 1].value_type == IDMEF_VALUE_TYPE_ENUM )
 		object->desc[object->depth - 1].object_type = idmef_type_get_child_enum_type(type, child);
 	else
 		object->desc[object->depth - 1].object_type = idmef_type_get_child_object_type(type, child);
@@ -741,7 +741,7 @@ idmef_object_t *idmef_object_ref(idmef_object_t *object)
 static int build_name(idmef_object_t *object)
 {
         uint16_t i;
-        idmef_type_t type;
+        idmef_object_type_t type;
         char buf2[16], *name;
 
 	/* 
@@ -752,7 +752,7 @@ static int build_name(idmef_object_t *object)
         object->name[sizeof(object->name) - 1] = '\0';
         buf2[sizeof(buf2) - 1] = '\0';
 
-        type = idmef_type_message;
+        type = IDMEF_OBJECT_TYPE_MESSAGE;
 
         for ( i = 0; i < object->depth; i++ ) {
 
@@ -816,7 +816,8 @@ char *idmef_object_get_numeric(idmef_object_t *object)
                         prelude_strbuf_sprintf(buf, "(%hhu)", object->desc[i].no);
 	}
 
-        ret = strdup(prelude_strbuf_get_string(buf));
+        ret = prelude_strbuf_get_string(buf);
+        prelude_strbuf_dont_own(buf);
         prelude_strbuf_destroy(buf);
         
 	return ret;
