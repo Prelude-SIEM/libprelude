@@ -34,6 +34,7 @@
 
 #include "config.h"
 
+#include "common.h"
 #include "prelude-path.h"
 #include "prelude-list.h"
 #include "config-engine.h"
@@ -249,7 +250,7 @@ static int get_process_name(int argc, char **argv)
         if ( ! argc || ! argv )
                 return -1;
 
-	return prelude_get_process_name_and_path(argv[0], &process_name, &process_path);
+	return prelude_get_file_name_and_path(argv[0], &process_name, &process_path);
 }
 
 
