@@ -1,6 +1,6 @@
 /* Formatted output to strings.
    Copyright (C) 2004 Free Software Foundation, Inc.
-   Written by Yoann Vandoorselaere.
+   Written by Yoann Vandoorselaere <yoann@prelude-ids.org>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -50,7 +50,7 @@ vsnprintf (char *str, size_t size, const char *format, va_list ap)
   if (!out)
     return -1;
 
-  if (str)
+  if (str && size > 0)
     {
       memcpy (str, out, MIN (len + 1, size));
       str[size - 1] = '\0';

@@ -1,6 +1,6 @@
 /* Formatted output to strings.
    Copyright (C) 2004 Free Software Foundation, Inc.
-   Written by Simon Josefsson.
+   Written by Yoann Vandoorselaere <yoann@prelude-ids.org>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by

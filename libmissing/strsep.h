@@ -1,5 +1,5 @@
-/* Copyright (C) 1991, 1996, 1997, 1998, 2002 Free Software Foundation, Inc.
- * Copyright (C) 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
+/* Copyright (C) 2004 Free Software Foundation, Inc.
+ * Written by Yoann Vandoorselaere <yoann@prelude-ids.org>
  *
  * The file is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,6 +25,19 @@
  */
 #include <string.h>
 
-extern char *strsep(char **stringp, const char *delim);
+/* Searches the next delimiter (char listed in DELIM) starting at *STRINGP.
+   If one is found, it is overwritten with a NUL, and *STRINGP is advanced
+   to point to the next char after it.  Otherwise, *STRINGP is set to NULL.
+   If *STRINGP was already NULL, nothing happens.
+   Returns the old value of *STRINGP.
+
+   This is a variant of strtok() that is multithread-safe and supports
+   empty fields.
+
+   Caveat: It modifies the original string.
+   Caveat: It doesn't work with multibyte strings unless all of the delimiter
+           characters are ASCII characters < 0x30.  */
+
+extern char *strsep (char **stringp, const char *delim);
 
 #endif /* GNULIB_STRSEP_H_ */

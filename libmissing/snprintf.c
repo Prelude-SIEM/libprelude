@@ -20,23 +20,14 @@
 # include <config.h>
 #endif
 
-/* Get va_list, va_start, va_end. */
-#include <stdarg.h>
-
-/* Get memcpy, size_t. */
-#include <string.h>
-
-/* Get free. */
-#include <stdlib.h>
-
-/* Get specification.  */
 #include "snprintf.h"
 
-/* Get vasnprintf.  */
-#include "vasnprintf.h"
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
 
-/* Get MIN. */
-#include <minmax.h>
+#include "minmax.h"
+#include "vasnprintf.h"
 
 /* Print formatted output to string STR.  Similar to sprintf, but
    additional length SIZE limit how much is written into STR.  Returns
@@ -46,24 +37,24 @@
 int
 snprintf (char *str, size_t size, const char *format, ...)
 {
-  char *out;
+  char *output;
   size_t len;
-  va_list ap;
+  va_list args;
 
-  va_start(ap, format);
-  out = vasnprintf (NULL, &len, format, ap);
-  va_end(ap);
+  va_start (args, format);
+  output = vasnprintf (NULL, &len, format, args);
+  va_end (args);
 
-  if (!out)
+  if (!output)
     return -1;
 
-  if (str)
+  if (str && size > 0)
     {
-      memcpy (str, out, MIN (len + 1, size));
+      memcpy (str, output, MIN (len + 1, size));
       str[size - 1] = '\0';
     }
 
-  free (out);
+  free (output);
 
   return len;
 }

@@ -1,5 +1,5 @@
-/* Copyright (C) 1991, 1996, 1997, 1998, 2002 Free Software Foundation, Inc.
- * Copyright (C) 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
+/* Copyright (C) 2004 Free Software Foundation, Inc.
+ * Written by Yoann Vandoorselaere <yoann@prelude-ids.org>
  *
  * The file is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,32 +18,39 @@
  */
 
 #ifdef HAVE_CONFIG_H
- #include <config.h>
+#include <config.h>
 #endif
+
+/* Specification.  */
+#include "strsep.h"
 
 #include <string.h>
 
-#include "strsep.h"
+#include "strpbrk.h"
 
-char *strsep(char **stringp, const char *delim)
+char *
+strsep (char **stringp, const char *delim)
 {
-        char *ptr, *start = *stringp;
+  char *start = *stringp;
+  char *ptr;
 
-        if ( ! start )
-                return NULL;
+  if (!start)
+    return NULL;
 
-        if ( ! *delim )
-                ptr = start + strlen(start);
-        else {
-                ptr = strpbrk(start, delim);
-                if ( ! ptr ) {
-                        *stringp = NULL;
-                        return start;
-                }
-        }
+  if (!*delim)
+    ptr = start + strlen (start);
+  else
+    {
+      ptr = strpbrk (start, delim);
+      if (!ptr)
+	{
+	  *stringp = NULL;
+	  return start;
+	}
+    }
 
-        *ptr = 0;
-        *stringp = ptr + 1;
+  *ptr = '\0';
+  *stringp = ptr + 1;
 
-        return start;
+  return start;
 }
