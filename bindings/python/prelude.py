@@ -492,7 +492,13 @@ def _idmef_value_python_to_c(object, py_value):
 
     elif object_type is _prelude.IDMEF_VALUE_TYPE_DATA:
         if type(py_value) is str:
-            c_data = _prelude.idmef_data_new_char_string_dup(py_value)
+            def get_str_type(s):
+                for c in s:
+                    if not ((ord(c) >= ord(" ") and ord(c) <= ord("~")) or c in ("\n", "\t")):
+                        return _prelude.IDMEF_DATA_TYPE_BYTE_STRING
+                return _prelude.IDMEF_DATA_TYPE_CHAR_STRING
+            
+            c_data = _prelude.idmef_data_new_ptr_dup_fast(get_str_type(py_value), py_value)
         elif type(py_value) is int:
             c_data = _prelude.idmef_data_new_uint32(py_value)
         elif type(py_value) is long:
@@ -561,7 +567,7 @@ def idmef_value_c_to_python(value):
                  _prelude.idmef_data_get_uint64,
                  _prelude.idmef_data_get_float,
                  _prelude.idmef_data_get_char_string,
-                 _prelude.idmef_data_get_byte_string)[_prelude.idmef_data_get_type(data)](data)
+                 _prelude.swig_idmef_data_get_byte_string)[_prelude.idmef_data_get_type(data)](data)
 
         return value
         

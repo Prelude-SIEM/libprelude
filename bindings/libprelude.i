@@ -83,6 +83,12 @@ int prelude_option_recv_set(prelude_msg_t *msg)
 }
 
 
+PyObject *swig_idmef_data_get_byte_string(idmef_data_t *data)
+{
+	return PyString_FromStringAndSize(idmef_data_get_byte_string(data), idmef_data_get_len(data));
+}
+
+
 %}
 
 typedef char int8_t;
@@ -98,6 +104,12 @@ typedef unsigned int prelude_bool_t;
 
 %typemap(python, out) uint32_t {
 	$result = PyLong_FromUnsignedLong($1);
+};
+
+
+%typemap(python, in) (const void *data, size_t len) {
+	$1 = PyString_AsString($input);
+	$2 = PyString_Size($input);
 };
 
 
@@ -302,6 +314,7 @@ typedef unsigned int prelude_bool_t;
 prelude_msg_t *my_prelude_msg_read(prelude_io_t *pio);
 prelude_option_t *prelude_option_recv_list(prelude_msg_t *msg);
 int prelude_option_recv_set(prelude_msg_t *msg);
+PyObject *swig_idmef_data_get_byte_string(idmef_data_t *data);
 
 %include "prelude-client.h"
 %include "prelude-client-profile.h"
