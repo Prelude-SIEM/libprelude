@@ -100,16 +100,17 @@ static int verify_certificate(gnutls_session session)
 
 
 
-static void handle_gnutls_error(gnutls_session session, int ret)
+static int handle_gnutls_error(gnutls_session session, int ret)
 {
         int last_alert;
         
         if ( ret == GNUTLS_E_WARNING_ALERT_RECEIVED || ret == GNUTLS_E_FATAL_ALERT_RECEIVED ) {
                 last_alert = gnutls_alert_get(session);
                 log(LOG_INFO, "- Received alert: %s.\n", gnutls_alert_get_name(last_alert));
+                return -1;
         }
 
-        log(LOG_INFO, "- TLS handshake failed: %s.\n", gnutls_strerror(ret));
+        return (ret == GNUTLS_E_AGAIN) ? 0 : ret;
 }
 
 
@@ -127,9 +128,11 @@ int tls_auth_connection(prelude_client_t *client, prelude_io_t *io, int crypt)
         fd = prelude_io_get_fd(io);
         gnutls_transport_set_ptr(session, (gnutls_transport_ptr) fd);
 
-        ret = gnutls_handshake(session);
+        do {
+                ret = gnutls_handshake(session);
+        } while ( ret < 0 && handle_gnutls_error == 0 );
+        
         if ( ret < 0 ) {
-                handle_gnutls_error(session, ret);
                 log(LOG_INFO, "- TLS handshake failed: %s.\n", gnutls_strerror(ret));
                 gnutls_deinit(session);
                 return -1;
