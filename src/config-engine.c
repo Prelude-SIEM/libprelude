@@ -28,6 +28,7 @@
 #include <assert.h>
 
 #include "config-engine.h"
+#include "variable.h"
 #include "common.h"
 
 
@@ -41,15 +42,15 @@ struct config {
 
 
 /*
- * Remove '\n' at the end of the string. 
+ * Remove '\n' and ';' at the end of the string. 
  */
 static char *chomp(char *string) 
 {
         char *ptr;
         
-        if ( (ptr = strchr(string, ';')) || (ptr = strchr(string, '\n')) )
+        if ( (ptr = strrchr(string, ';')) || (ptr = strrchr(string, '\n')) )
                 *ptr = '\0';
-        
+
         return string;
 }
 
@@ -80,9 +81,6 @@ static int cmp_entry(char *string, const char *wanted)
         char old;
         char *ptr;
 
-        /*
-         * Locate the last character before the value.
-         */
         ptr = strrchr(string, '=');
         if ( ! ptr )
                 ptr = string + strlen(string);
@@ -97,7 +95,7 @@ static int cmp_entry(char *string, const char *wanted)
         old = *ptr; *ptr = 0;
 
         ret = strcmp(string, wanted);
-        
+
         *ptr = old;
         
         return ret;
@@ -160,7 +158,7 @@ static int op_append_line(config_t *cfg, char *line)
         
         cfg->elements++;
         
-        cfg->content = (char **) realloc(cfg->content, cfg->elements * sizeof(char **));
+        cfg->content = realloc(cfg->content, cfg->elements * sizeof(char **));
         if ( ! cfg->content )
                 return -1;        
         
@@ -184,7 +182,7 @@ static int op_insert_line(config_t *cfg, char *line, int lins)
 
         cfg->elements++;
         
-        cfg->content = (char **) realloc(cfg->content, cfg->elements * sizeof(char **));
+        cfg->content = realloc(cfg->content, cfg->elements * sizeof(char **));
         if (! cfg->content )
                 return -1;
         
@@ -406,13 +404,18 @@ static int new_section_line(config_t *cfg, const char *section,
 
 
 
-/*
- * Set an entry 'entry' to the value 'value',
- * and in section 'section' if it is no NULL,
- * to the config file configured in the 'cfg'
- * abstract data type.
+/**
+ * config_set:
+ * @cfg: Configuration file identifier.
+ * @section: Section where the entry should be set.
+ * @entry: Entry to set.
+ * @val: Value for the entry.
  *
- * The entry and section are created if it do not exist.
+ * Set an entry 'entry' to the specified value, and, in case
+ * it is not NULL, in the specified section in the config file
+ * identified by 'cfg'.
+ *
+ * Returns: 0 on success, -1 otherwise.
  */
 int config_set(config_t *cfg, const char *section, const char *entry, const char *val) 
 {
@@ -431,12 +434,42 @@ int config_set(config_t *cfg, const char *section, const char *entry, const char
 
 
 
+
+static const char *get_variable_content(config_t *cfg, const char *variable) 
+{
+        const char *ptr;
+        
+        /*
+         * Variable set at runtime.
+         */
+        ptr = variable_get(variable);
+        if ( ! ptr )
+                /*
+                 * other variable (declared in the configuration file).
+                 */
+                ptr = config_get(cfg, NULL, variable);
+
+        return ptr;
+}
+
+
+
+
 /*
- * Get value for the entry 'entry', in the config file
- * configured in the 'cfg' abstract data type.
+ * config_get:
+ * @cfg: Configuration file identifier.
+ * @section: Section to gather the entry from.
+ * @entry: Entry to gather the value from.
  *
- * If section is not NULL, entry will be searched only
- * in this section.
+ * Get value for the entry 'entry', in the optionnal section
+ * specified by 'section', in the config file represented in the 'cfg'
+ * abstract data type.
+ *
+ * If the value gathered start with a '$', which mean it is
+ * a variable, the variable is automatically looked up.
+ *
+ * Returns: The entry value on success, an empty string if the entry
+ * exist but have no value, NULL on error.
  */
 const char *config_get(config_t *cfg, const char *section, const char *entry) 
 {
@@ -463,14 +496,25 @@ const char *config_get(config_t *cfg, const char *section, const char *entry)
         for ( p = ret + strlen(ret); p && *p == ' '; p-- )
                 *p = 0;
 
+        /*
+         * The requested value point to a variable.
+         */
+        if ( ret[0] == '$' )
+                return get_variable_content(cfg, ret + 1);
+        
         return ret;
 }
 
 
 
-/*
- * Close the 'cfg' object,
- * used to access the configuration file.
+/**
+ * config_close:
+ * @cfg: Configuration file identifier.
+ *
+ * Close the 'cfg' object, used to access the configuration file.
+ * Any change made with the config_set() function call will be written.
+ *
+ * Returns: 0 on success, -1 otherwise.
  */
 int config_close(config_t *cfg) 
 {
@@ -493,10 +537,15 @@ int config_close(config_t *cfg)
 
 
 
-/*
- * Open 'filename', and load it into memory, return
- * a config_t structure which is an abstract for
- * config file operation.
+/**
+ * config_open:
+ * @filename: The configuration file.
+ *
+ * Open the configuration file pointed to by 'filename' and load it into memory,
+ * the returned #config_t object will have to be used for any operation on this
+ * configuration file.
+ *
+ * Returns: a #config_t object on success, NULL otherwise.
  */
 config_t *config_open(const char *filename) 
 {

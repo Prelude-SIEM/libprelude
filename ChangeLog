@@ -1,3 +1,28 @@
+2001-08-26  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/libprelude/plugin-common.c (plugin_config_get): 
+	If the argument to pass to the plugin is a variable, try
+	to look it up. If it fail issue a warning. Return only if 
+	the argument for this option is required.
+
+	* src/libprelude/config-engine.c (config_open): 
+	(config_close): 
+	(config_set): 
+	(get_variable_content): Lookup value for the specified variable. 
+	(config_get): Call get_variable_content() if the value 
+	found is a variable.
+
+	Made gtk-doc style comment for all theses functions.
+	
+	* src/libprelude/include/Makefile.am (EXTRA_DIST): 
+	add variable.h
+
+	* src/libprelude/Makefile.am (libprelude_la_SOURCES): 
+	add variable.c
+
+	* src/libprelude/variable.c: move the variable implementation
+	to libprelude. Little code cleanup and function documentation.
+	
 2001-08-24  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/alert-common.c (read_alert):

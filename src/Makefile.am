@@ -17,6 +17,7 @@ libprelude_la_SOURCES = 		\
 	socket-op.c			\
 	string-matching.c		\
 	timer.c				\
-	alert-common.c
+	alert-common.c			\
+	variable.c
 
 libprelude_la_LIBADD = ../libmissing/libmissing.a

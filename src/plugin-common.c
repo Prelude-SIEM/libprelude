@@ -35,6 +35,7 @@
 #include "config.h"
 #include "list.h"
 #include "common.h"
+#include "variable.h"
 #include "plugin-common.h"
 #include "plugin-common-prv.h"
 #include "config-engine.h"
@@ -236,7 +237,7 @@ int plugin_load_from_dir(const char *dirname, int (*cb)(plugin_container_t *p))
         
         while ( ( d = readdir(dir) ) ) {
                 filename = generate_filename(dirname, d->d_name);
-                
+
                 ret = is_a_plugin(filename);
                 if ( ret == 0 )
                         plugin_load_single(filename);
@@ -507,22 +508,24 @@ static const char *generate_options_string(plugin_option_t *opts)
 
 
 
+
 /**
  * plugin_config_get:
  * @plugin: The plugin that want to read it's configuration.
  * @cfg: List of options supported by the plugin.
- * @conffile: Config file to read for value not specified on the command line.
+ * @conffile: Config file to read for value not specified on command line.
  *
  * Request the configuration for this plugin to be read.
- * For each option found, the corresponding callback int he #cfg structure is
- * called back.
+ * For each option found, the corresponding callback in the #cfg structure is
+ * called back. If a variable is specified as argument, it is automatically
+ * looked up.
  *
  * Returns: -1 on error, 0 on success.
  */
 void plugin_config_get(plugin_generic_t *plugin, plugin_option_t *cfg, const char *conffile) 
 {
-        char **argv;
         int c, i, argc;
+        char **argv, *ptr;
         const char *optstring;
         
         plugin_get_opts(plugin_name(plugin), &argc, &argv);
@@ -536,6 +539,19 @@ void plugin_config_get(plugin_generic_t *plugin, plugin_option_t *cfg, const cha
                 for ( i = 0; cfg[i].name != NULL; i++ )
                         if ( cfg[i].val == c ) {
 
+                                /*
+                                 * If optarg specify a variable, do the lookup.
+                                 */
+                                if ( optarg && *optarg == '$' ) {
+                                        ptr = variable_get(optarg + 1);
+                                        if ( ! ptr ) {
+                                            log(LOG_ERR, "couldn't lookup variable %s.\n", optarg + 1);
+                                            if ( cfg[i].has_arg == required_argument )
+                                                    return;
+                                        }
+                                        optarg = ptr;
+                                }
+                                
                                 cfg[i].cb(optarg);
                                 cfg[i].called = 1;
                                 break;
@@ -579,5 +595,12 @@ void plugin_set_args(int ac, char **av)
         argv = av;
         s_optind = optind - 2;
 }
+
+
+
+
+
+
+
 
 

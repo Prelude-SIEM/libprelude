@@ -15,4 +15,5 @@ include_HEADERS = config-engine.h 		\
 		  timer.h			\
 		  alert-common.h		\
 		  auth-common.h			\
-		  list.h
+		  list.h			\
+		  variable.h
