@@ -26,6 +26,12 @@
 
 
 typedef enum {
+        PRELUDE_CLIENT_EXIT_STATUS_SUCCESS = 0,
+        PRELUDE_CLIENT_EXIT_STATUS_FAILURE = -1
+} prelude_client_exit_status_t;
+
+
+typedef enum {
         PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF = 0x01,
         PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF = 0x02,
         PRELUDE_CLIENT_CAPABILITY_RECV_ADMIN = 0x04,
@@ -86,7 +92,7 @@ void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg);
 
 void prelude_client_set_heartbeat_cb(prelude_client_t *client, void (*cb)(prelude_client_t *client, idmef_message_t *hb));
 
-void prelude_client_destroy(prelude_client_t *client);
+void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status_t status);
 
 int prelude_client_set_flags(prelude_client_t *client, int flags);
 

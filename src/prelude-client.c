@@ -910,11 +910,29 @@ void prelude_client_set_name(prelude_client_t *client, const char *name)
 
 
 
-void prelude_client_destroy(prelude_client_t *client)
+/**
+ * prelude_client_destroy:
+ * @client: Pointer on a client object.
+ * @status: Exit status for the client.
+ *
+ * Destroy @client, and send an heartbeat containing the 'exiting'
+ * status in case @status is PRELUDE_CLIENT_EXIT_STATUS_SUCCESS.
+ *
+ * This is useful for analyzer expected to be running periodically,
+ * and that shouldn't be treated as behaving anormaly in case no
+ * heartbeat is sent.
+ *
+ * Please note that your are not supposed to run this function
+ * from a signal handler.
+ */
+void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status_t status)
 {
-        timer_destroy(&client->heartbeat_timer);
-        client->status = CLIENT_STATUS_EXITING;
-        heartbeat_expire_cb(client);
+        if ( status == PRELUDE_CLIENT_EXIT_STATUS_SUCCESS ) {
+                
+                timer_destroy(&client->heartbeat_timer);
+                client->status = CLIENT_STATUS_EXITING;
+                heartbeat_expire_cb(client);
+        }
         
         if ( client->name )
                 free(client->name);
