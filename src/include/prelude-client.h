@@ -24,8 +24,6 @@
 #ifndef _LIBPRELUDE_PRELUDE_CLIENT_H
 #define _LIBPRELUDE_PRELUDE_CLIENT_H
 
-#include <gnutls/gnutls.h>
-
 
 typedef enum {
         PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF = 0x01,
