@@ -36,6 +36,7 @@
 
 #ifdef HAVE_SSL
 #include <openssl/ssl.h>
+#include "ssl.h"
 #endif
 
 #include "prelude-io.h"
@@ -43,7 +44,6 @@
 #include "prelude-client-mgr.h"
 #include "sensor.h"
 
-#include "ssl.h"
 #include "prelude-getopt.h"
 #include "prelude-async.h"
 

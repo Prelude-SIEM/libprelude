@@ -1,5 +1,7 @@
 2001-12-11  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/sensor.c: include ssl.h only if HAVE_SSL is defined.
+
 	* configure.ac (COMMON_LIBS): applied patch from 
 	Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
 	("use == operator for test in configure, but valid one is =")
