@@ -1168,10 +1168,10 @@ int prelude_option_invoke_get(void **context, prelude_option_t **last_opt,
         prelude_option_t *opt;
         prelude_option_instance_t *oi;
         prelude_optlist_t *optlist = (*last_opt) ? &(*last_opt)->optlist : root_optlist;
-        
+
         opt = search_option(optlist, option, WIDE_HOOK, 0);
         if ( ! opt ) {
-                snprintf(buf, size, "option %s does not exist", opt->longopt);
+                snprintf(buf, size, "option %s does not exist", option);
                 return -1;
         }
 
