@@ -1,3 +1,13 @@
+2001-11-19  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-async.c (wait_timer_and_data): 
+	use a while loop instead of tail recursivity for now as it
+	might be the cause of a subtle bug.
+
+	* configure.ac: 
+	* src/Makefile.am (libprelude_la_LIBADD): 
+	Add autoconf code to search pthread library.
+
 2001-11-16  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/include/idmef-tree.h: IDMEF structure.

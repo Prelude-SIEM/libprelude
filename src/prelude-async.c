@@ -61,43 +61,47 @@ static double get_elapsed_time(struct timeval *start)
 
 static void wait_timer_and_data(void) 
 {
-        int ret = 0;
+        int ret;
         double elapsed;
         struct timespec ts;
         struct timeval now;
         static struct timeval last_timer_wake_up;
-        
-        /*
-         * Setup the condition timer to one second.
-         */ 
-        gettimeofday(&now, NULL);
-        ts.tv_sec = now.tv_sec + 1;
-        ts.tv_nsec = now.tv_usec * 1000;
-        
-        pthread_mutex_lock(&mutex);
-        while ( list_empty(&joblist) && ret != ETIMEDOUT ) {
-                ret = pthread_cond_timedwait(&cond, &mutex, &ts);
-        }
-        pthread_mutex_unlock(&mutex);
 
-        /*
-         * Data is available for processing, but we also want to check
-         * the average time we spent waiting on the condition. (which may be
-         * > 1 second if the condition was signaled several time).
-         */
-        if ( ret != ETIMEDOUT ) {
-                elapsed = get_elapsed_time(&last_timer_wake_up);
-                if ( elapsed >= 1 ) {
+        while ( 1 ) {
+                ret = 0;
+                
+                /*
+                 * Setup the condition timer to one second.
+                 */
+                gettimeofday(&now, NULL);
+                ts.tv_sec = now.tv_sec + 1;
+                ts.tv_nsec = now.tv_usec * 1000;
+        
+                pthread_mutex_lock(&mutex);
+                while ( list_empty(&joblist) && ret != ETIMEDOUT ) {
+                        ret = pthread_cond_timedwait(&cond, &mutex, &ts);
+                }
+                pthread_mutex_unlock(&mutex);
+                
+                /*
+                 * Data is available for processing, but we also want to check
+                 * the average time we spent waiting on the condition. (which may be
+                 * > 1 second if the condition was signaled several time).
+                 */
+                if ( ret != ETIMEDOUT ) {
+                        elapsed = get_elapsed_time(&last_timer_wake_up);
+                        if ( elapsed >= 1 ) {
+                                gettimeofday(&last_timer_wake_up, NULL);
+                                prelude_wake_up_timer();
+                        }
+                        return;
+                }
+
+                else {
                         gettimeofday(&last_timer_wake_up, NULL);
                         prelude_wake_up_timer();
                 }
         }
-
-        else {
-                gettimeofday(&last_timer_wake_up, NULL);
-                prelude_wake_up_timer();
-                wait_timer_and_data(); /* tail recursion */
-        } 
 }
 
 

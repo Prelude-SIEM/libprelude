@@ -26,5 +26,5 @@ libprelude_la_SOURCES = 		\
 	sensor.c
 
 
-libprelude_la_LIBADD = ../libmissing/libmissing.a -lpthread
+libprelude_la_LIBADD = ../libmissing/libmissing.a @PTHREAD_LIBS@
 
