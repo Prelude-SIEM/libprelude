@@ -30,6 +30,7 @@
 
 typedef enum {
         PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT        = 0x01,
+        PRELUDE_CONNECTION_POOL_FLAGS_GLOBAL_FAILOVER  = 0x02
 } prelude_connection_pool_flags_t;
 
 

@@ -328,8 +328,11 @@ static int walk_manager_lists(prelude_connection_pool_t *pool, prelude_msg_t *ms
         cnx_list_t *or;
         
         for ( or = pool->or_list; or != NULL; or = or->or ) {
-                
-                if ( or->dead == or->total ) {
+
+                /*
+                 * if all connection are dead and we have a or, go to next.
+                 */
+                if ( or->dead == or->total && (pool->flags & PRELUDE_CONNECTION_POOL_FLAGS_GLOBAL_FAILOVER) ) {
                         ret = -2;
                         continue;
                 }
@@ -361,10 +364,10 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
         if ( clist )
                 snprintf(name, sizeof(name), "any");
         else
-                snprintf(name, sizeof(name), "%s", prelude_connection_get_peer_addr(cnx->cnx));
+                snprintf(name, sizeof(name), "0x%llx", prelude_connection_get_peer_analyzerid(cnx->cnx));
         
         prelude_log(PRELUDE_LOG_INFO,
-                    "- Flushing %u message to %s manager (%u erased due to quota)...\n",
+                    "- Flushing %u message to %s (%u erased due to quota)...\n",
                     available, name, prelude_failover_get_deleted_msg_count(failover));
 
         do {
@@ -381,8 +384,10 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
                                 ret = -1;
                 } else {
                         ret = do_send(cnx->cnx, msg);
-                        if ( ret < 0 )
+                        if ( ret < 0 ) {
                                 notify_dead(cnx, ret, FALSE);
+                                prelude_failover_save_msg(cnx->failover, msg);
+                        }
                 }
 
                 prelude_msg_destroy(msg);
@@ -830,7 +835,8 @@ int prelude_connection_pool_new(prelude_connection_pool_t **ret,
         new->client_profile = cp;
         new->permission = permission;
         new->connection_string_changed = FALSE;
-
+        new->flags = PRELUDE_CONNECTION_POOL_FLAGS_GLOBAL_FAILOVER;
+        
         prelude_list_init(&new->all_cnx);
         prelude_list_init(&new->int_cnx);
         prelude_timer_init_list(&new->timer);
