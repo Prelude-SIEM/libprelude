@@ -42,8 +42,6 @@ if test x$cryptlib = xtrue; then
 	libprelude_libs="$libprelude_libs -lcrypt";
 fi
 
-
-
 dnl **************************************************
 dnl * Check for Pthread library                      *
 dnl **************************************************
@@ -64,17 +62,6 @@ else
 	if test x$pthrlib = xyes; then
 		libprelude_libs="$libprelude_libs -lc_r"
 		libprelude_cflags="-D_REENTRANT"
-
-	else
-		if test -f /usr/pkg/include/pthread.h; then
-			AC_TRY_LINK([#include <pthread.h>], [pthread_attr_t attr; pthread_attr_init(&attr);],
-				    pthrlib="yes")
-
-			if test x$pthrlib = xyes; then
-				libprelude_libs="$libprelude_libs -L/usr/pkg/lib -lpthread"
-				libprelude_cflags="$libprelude_cflags -D_REENTRANT -I/usr/pkg/include"
-			fi
-		fi
 	fi
 fi
 
