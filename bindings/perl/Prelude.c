@@ -221,7 +221,7 @@ SWIG_TypeClientData(swig_type_info *ti, void *clientdata) {
  * perl5.swg
  *
  * Perl5 runtime library
- * $Header: /var/lib/cvsd/cvsroot/prelude/libprelude/bindings/perl/Prelude.c,v 1.6 2004/01/07 16:47:05 nicolas Exp $
+ * $Header: /var/lib/cvsd/cvsroot/prelude/libprelude/bindings/perl/Prelude.c,v 1.7 2004/01/25 17:47:06 nicolas Exp $
  * ----------------------------------------------------------------------------- */
 
 #define SWIGPERL
@@ -591,50 +591,51 @@ static void _swig_create_magic(CPerlObj *pPerl, SV *sv, const char *name, int (C
 #define  SWIGTYPE_p_idmef_time_t swig_types[29] 
 #define  SWIGTYPE_p_idmef_criteria_t swig_types[30] 
 #define  SWIGTYPE_p_idmef_object_value_t swig_types[31] 
-#define  SWIGTYPE_p_idmef_value_t swig_types[32] 
-#define  SWIGTYPE_p_idmef_user_t swig_types[33] 
-#define  SWIGTYPE_p_idmef_analyzer_t swig_types[34] 
-#define  SWIGTYPE_p_prelude_msgbuf_t swig_types[35] 
-#define  SWIGTYPE_p_idmef_string_t swig_types[36] 
-#define  SWIGTYPE_p_uint16_t swig_types[37] 
-#define  SWIGTYPE_p_uint64_t swig_types[38] 
-#define  SWIGTYPE_p_idmef_address_t swig_types[39] 
-#define  SWIGTYPE_p_idmef_impact_t swig_types[40] 
-#define  SWIGTYPE_p_idmef_webservice_t swig_types[41] 
-#define  SWIGTYPE_p_idmef_snmpservice_t swig_types[42] 
-#define  SWIGTYPE_p_idmef_service_t swig_types[43] 
-#define  SWIGTYPE_p_p_char swig_types[44] 
-#define  SWIGTYPE_p_idmef_impact_type_t swig_types[45] 
-#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[46] 
-#define  SWIGTYPE_p_idmef_userid_type_t swig_types[47] 
-#define  SWIGTYPE_p_idmef_file_t swig_types[48] 
-#define  SWIGTYPE_p_idmef_value_type_t swig_types[49] 
-#define  SWIGTYPE_p_idmef_spoofed_t swig_types[50] 
-#define  SWIGTYPE_p_idmef_data_t_data swig_types[51] 
-#define  SWIGTYPE_p_idmef_linkage_t swig_types[52] 
-#define  SWIGTYPE_p_idmef_action_t swig_types[53] 
-#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[54] 
-#define  SWIGTYPE_p_idmef_classification_t swig_types[55] 
-#define  SWIGTYPE_p_idmef_userid_t swig_types[56] 
-#define  SWIGTYPE_p_idmef_assessment_t swig_types[57] 
-#define  SWIGTYPE_p_prelude_client_t swig_types[58] 
-#define  SWIGTYPE_p_prelude_io_t swig_types[59] 
-#define  SWIGTYPE_p_idmef_object_t swig_types[60] 
-#define  SWIGTYPE_p_unsigned_char swig_types[61] 
-#define  SWIGTYPE_p_float swig_types[62] 
-#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[63] 
+#define  SWIGTYPE_p_idmef_criterion_value_t swig_types[32] 
+#define  SWIGTYPE_p_idmef_value_t swig_types[33] 
+#define  SWIGTYPE_p_idmef_user_t swig_types[34] 
+#define  SWIGTYPE_p_idmef_analyzer_t swig_types[35] 
+#define  SWIGTYPE_p_prelude_msgbuf_t swig_types[36] 
+#define  SWIGTYPE_p_idmef_string_t swig_types[37] 
+#define  SWIGTYPE_p_uint16_t swig_types[38] 
+#define  SWIGTYPE_p_uint64_t swig_types[39] 
+#define  SWIGTYPE_p_idmef_address_t swig_types[40] 
+#define  SWIGTYPE_p_idmef_impact_t swig_types[41] 
+#define  SWIGTYPE_p_idmef_webservice_t swig_types[42] 
+#define  SWIGTYPE_p_idmef_snmpservice_t swig_types[43] 
+#define  SWIGTYPE_p_idmef_service_t swig_types[44] 
+#define  SWIGTYPE_p_p_char swig_types[45] 
+#define  SWIGTYPE_p_idmef_impact_type_t swig_types[46] 
+#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[47] 
+#define  SWIGTYPE_p_idmef_userid_type_t swig_types[48] 
+#define  SWIGTYPE_p_idmef_file_t swig_types[49] 
+#define  SWIGTYPE_p_idmef_value_type_t swig_types[50] 
+#define  SWIGTYPE_p_idmef_spoofed_t swig_types[51] 
+#define  SWIGTYPE_p_idmef_data_t_data swig_types[52] 
+#define  SWIGTYPE_p_idmef_linkage_t swig_types[53] 
+#define  SWIGTYPE_p_idmef_action_t swig_types[54] 
+#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[55] 
+#define  SWIGTYPE_p_idmef_classification_t swig_types[56] 
+#define  SWIGTYPE_p_idmef_userid_t swig_types[57] 
+#define  SWIGTYPE_p_idmef_assessment_t swig_types[58] 
+#define  SWIGTYPE_p_prelude_client_t swig_types[59] 
+#define  SWIGTYPE_p_prelude_io_t swig_types[60] 
+#define  SWIGTYPE_p_idmef_object_t swig_types[61] 
+#define  SWIGTYPE_p_unsigned_char swig_types[62] 
+#define  SWIGTYPE_p_float swig_types[63] 
 #define  SWIGTYPE_p_idmef_additional_data_t swig_types[64] 
 #define  SWIGTYPE_p_idmef_data_t swig_types[65] 
-#define  SWIGTYPE_p_va_list swig_types[66] 
-#define  SWIGTYPE_p_idmef_alertident_t swig_types[67] 
-#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[68] 
-#define  SWIGTYPE_p_idmef_action_category_t swig_types[69] 
-#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[70] 
-#define  SWIGTYPE_p_idmef_file_category_t swig_types[71] 
-#define  SWIGTYPE_p_idmef_user_category_t swig_types[72] 
-#define  SWIGTYPE_p_idmef_address_category_t swig_types[73] 
-#define  SWIGTYPE_p_idmef_node_category_t swig_types[74] 
-static swig_type_info *swig_types[76];
+#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[66] 
+#define  SWIGTYPE_p_va_list swig_types[67] 
+#define  SWIGTYPE_p_idmef_alertident_t swig_types[68] 
+#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[69] 
+#define  SWIGTYPE_p_idmef_action_category_t swig_types[70] 
+#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[71] 
+#define  SWIGTYPE_p_idmef_file_category_t swig_types[72] 
+#define  SWIGTYPE_p_idmef_user_category_t swig_types[73] 
+#define  SWIGTYPE_p_idmef_address_category_t swig_types[74] 
+#define  SWIGTYPE_p_idmef_node_category_t swig_types[75] 
+static swig_type_info *swig_types[77];
 
 /* -------- TYPES TABLE (END) -------- */
 
@@ -27704,7 +27705,7 @@ XS(_wrap_idmef_criterion_t_value_set) {
     const char *_swigerr = _swigmsg;
     {
         idmef_criterion_t *arg1 = (idmef_criterion_t *) 0 ;
-        idmef_value_t *arg2 = (idmef_value_t *) 0 ;
+        idmef_criterion_value_t *arg2 = (idmef_criterion_value_t *) 0 ;
         int argvi = 0;
         dXSARGS;
         
@@ -27717,8 +27718,8 @@ XS(_wrap_idmef_criterion_t_value_set) {
             }
         }
         {
-            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_value_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_criterion_t_value_set. Expected _p_idmef_value_t");
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_criterion_value_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of idmef_criterion_t_value_set. Expected _p_idmef_criterion_value_t");
             }
         }
         if (arg1) (arg1)->value = arg2;
@@ -27737,7 +27738,7 @@ XS(_wrap_idmef_criterion_t_value_get) {
     const char *_swigerr = _swigmsg;
     {
         idmef_criterion_t *arg1 = (idmef_criterion_t *) 0 ;
-        idmef_value_t *result;
+        idmef_criterion_value_t *result;
         int argvi = 0;
         dXSARGS;
         
@@ -27749,10 +27750,10 @@ XS(_wrap_idmef_criterion_t_value_get) {
                 SWIG_croak("Type error in argument 1 of idmef_criterion_t_value_get. Expected _p_idmef_criterion_t");
             }
         }
-        result = (idmef_value_t *) ((arg1)->value);
+        result = (idmef_criterion_value_t *) ((arg1)->value);
         
         ST(argvi) = sv_newmortal();
-        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_value_t,0);
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_criterion_value_t,0);
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -28181,7 +28182,7 @@ XS(_wrap_idmef_criterion_new) {
     {
         idmef_object_t *arg1 = (idmef_object_t *) 0 ;
         int arg2 ;
-        idmef_value_t *arg3 = (idmef_value_t *) 0 ;
+        idmef_criterion_value_t *arg3 = (idmef_criterion_value_t *) 0 ;
         idmef_criterion_t *result;
         int argvi = 0;
         dXSARGS;
@@ -28196,8 +28197,8 @@ XS(_wrap_idmef_criterion_new) {
         }
         arg2 = (int) SvIV(ST(1));
         {
-            if (SWIG_ConvertPtr(ST(2), (void **) &arg3, SWIGTYPE_p_idmef_value_t,0) < 0) {
-                SWIG_croak("Type error in argument 3 of idmef_criterion_new. Expected _p_idmef_value_t");
+            if (SWIG_ConvertPtr(ST(2), (void **) &arg3, SWIGTYPE_p_idmef_criterion_value_t,0) < 0) {
+                SWIG_croak("Type error in argument 3 of idmef_criterion_new. Expected _p_idmef_criterion_value_t");
             }
         }
         result = (idmef_criterion_t *)idmef_criterion_new(arg1,(idmef_relation_t )arg2,arg3);
@@ -28363,7 +28364,7 @@ XS(_wrap_idmef_criterion_get_value) {
     const char *_swigerr = _swigmsg;
     {
         idmef_criterion_t *arg1 = (idmef_criterion_t *) 0 ;
-        idmef_value_t *result;
+        idmef_criterion_value_t *result;
         int argvi = 0;
         dXSARGS;
         
@@ -28375,10 +28376,10 @@ XS(_wrap_idmef_criterion_get_value) {
                 SWIG_croak("Type error in argument 1 of idmef_criterion_get_value. Expected _p_idmef_criterion_t");
             }
         }
-        result = (idmef_value_t *)idmef_criterion_get_value(arg1);
+        result = (idmef_criterion_value_t *)idmef_criterion_get_value(arg1);
         
         ST(argvi) = sv_newmortal();
-        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_value_t,0);
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_criterion_value_t,0);
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -33933,6 +33934,7 @@ static swig_type_info _swigt__p_idmef_object_list_t[] = {{"_p_idmef_object_list_
 static swig_type_info _swigt__p_idmef_time_t[] = {{"_p_idmef_time_t", 0, "idmef_time_t *", 0},{"_p_idmef_time_t"},{"_p_idmef_time"},{0}};
 static swig_type_info _swigt__p_idmef_criteria_t[] = {{"_p_idmef_criteria_t", 0, "idmef_criteria_t *", 0},{"_p_idmef_criteria_t"},{0}};
 static swig_type_info _swigt__p_idmef_object_value_t[] = {{"_p_idmef_object_value_t", 0, "idmef_object_value_t *", 0},{"_p_idmef_object_value_t"},{0}};
+static swig_type_info _swigt__p_idmef_criterion_value_t[] = {{"_p_idmef_criterion_value_t", 0, "idmef_criterion_value_t *", 0},{"_p_idmef_criterion_value_t"},{0}};
 static swig_type_info _swigt__p_idmef_value_t[] = {{"_p_idmef_value_t", 0, "idmef_value_t *", 0},{"_p_idmef_value_t"},{0}};
 static swig_type_info _swigt__p_idmef_user_t[] = {{"_p_idmef_user_t", 0, "idmef_user_t *", 0},{"_p_idmef_user_t"},{0}};
 static swig_type_info _swigt__p_idmef_analyzer_t[] = {{"_p_idmef_analyzer_t", 0, "idmef_analyzer_t *", 0},{"_p_idmef_analyzer_t"},{0}};
@@ -33964,9 +33966,9 @@ static swig_type_info _swigt__p_prelude_io_t[] = {{"_p_prelude_io_t", 0, "prelud
 static swig_type_info _swigt__p_idmef_object_t[] = {{"_p_idmef_object_t", 0, "idmef_object_t *", 0},{"_p_idmef_object_t"},{0}};
 static swig_type_info _swigt__p_unsigned_char[] = {{"_p_unsigned_char", 0, "unsigned char *", 0},{"_p_unsigned_char"},{0}};
 static swig_type_info _swigt__p_float[] = {{"_p_float", 0, "float *", 0},{"_p_float"},{0}};
-static swig_type_info _swigt__p_idmef_value_type_data_t[] = {{"_p_idmef_value_type_data_t", 0, "idmef_value_type_data_t *", 0},{"_p_idmef_value_type_data_t"},{0}};
 static swig_type_info _swigt__p_idmef_additional_data_t[] = {{"_p_idmef_additional_data_t", 0, "idmef_additional_data_t *", 0},{"_p_idmef_additional_data_t"},{0}};
 static swig_type_info _swigt__p_idmef_data_t[] = {{"_p_idmef_data_t", 0, "idmef_data_t *", 0},{"_p_idmef_string_t"},{"_p_idmef_data_t"},{0}};
+static swig_type_info _swigt__p_idmef_value_type_data_t[] = {{"_p_idmef_value_type_data_t", 0, "idmef_value_type_data_t *", 0},{"_p_idmef_value_type_data_t"},{0}};
 static swig_type_info _swigt__p_va_list[] = {{"_p_va_list", 0, "va_list *", 0},{"_p_va_list"},{0}};
 static swig_type_info _swigt__p_idmef_alertident_t[] = {{"_p_idmef_alertident_t", 0, "idmef_alertident_t *", 0},{"_p_idmef_alertident_t"},{0}};
 static swig_type_info _swigt__p_idmef_impact_severity_t[] = {{"_p_idmef_impact_severity_t", 0, "idmef_impact_severity_t *", 0},{"_p_idmef_impact_severity_t"},{0}};
@@ -34010,6 +34012,7 @@ _swigt__p_idmef_object_list_t,
 _swigt__p_idmef_time_t, 
 _swigt__p_idmef_criteria_t, 
 _swigt__p_idmef_object_value_t, 
+_swigt__p_idmef_criterion_value_t, 
 _swigt__p_idmef_value_t, 
 _swigt__p_idmef_user_t, 
 _swigt__p_idmef_analyzer_t, 
@@ -34041,9 +34044,9 @@ _swigt__p_prelude_io_t,
 _swigt__p_idmef_object_t, 
 _swigt__p_unsigned_char, 
 _swigt__p_float, 
-_swigt__p_idmef_value_type_data_t, 
 _swigt__p_idmef_additional_data_t, 
 _swigt__p_idmef_data_t, 
+_swigt__p_idmef_value_type_data_t, 
 _swigt__p_va_list, 
 _swigt__p_idmef_alertident_t, 
 _swigt__p_idmef_impact_severity_t, 

@@ -389,6 +389,9 @@ class IDMEFMessage:
         
         c_value = _prelude.idmef_message_get(self.res, object)
         _prelude.idmef_object_destroy(object)
+
+        if not c_value:
+            return None
         
         try:
             py_value = _idmef_value_list_c_to_python(c_value)

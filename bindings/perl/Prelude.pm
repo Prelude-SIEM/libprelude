@@ -432,7 +432,7 @@ sub	_add
 	return 0;
     }
 
-    $value = Prelude::idmef_value_new_for_object($object, $value_str);
+    $value = Prelude::idmef_criterion_value_new_generic($object, $value_str);
     unless ( $value ) {
 	Prelude::idmef_object_destroy($object);
 	return 0;
@@ -441,7 +441,7 @@ sub	_add
     $criterion = Prelude::idmef_criterion_new($object, $relation, $value);
     unless ( $criterion ) {
 	Prelude::idmef_object_destroy($object);
-	Prelude::idmef_value_destroy($value);
+	Prelude::idmef_criterion_value_destroy($value);
 	return 0;
     }
 

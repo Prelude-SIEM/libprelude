@@ -42,6 +42,7 @@
 #include "idmef-object.h"
 #include "idmef-message.h"
 #include "idmef-value-object.h"
+#include "idmef-criterion-value.h"
 
 #include "idmef-criteria.h"
 
@@ -149,7 +150,7 @@ criteria_base:	criterion			{
 
 criterion: TOK_STRING relation TOK_STRING 	{
 							idmef_object_t *object = NULL;
-							idmef_value_t *value = NULL;
+							idmef_criterion_value_t *value = NULL;
 							idmef_relation_t relation;
 							idmef_criterion_t *criterion;
 
@@ -161,7 +162,7 @@ criterion: TOK_STRING relation TOK_STRING 	{
 								YYABORT;
 							}
 
-							value = idmef_value_new_for_object(object, $3);
+							value = idmef_criterion_value_new_generic(object, $3);
 							if ( ! value ) {
 								log(LOG_ERR, "cannot build value '%s' for object '%s'\n",
 								    $3, $1);
@@ -180,7 +181,7 @@ criterion: TOK_STRING relation TOK_STRING 	{
 								free($1);
 								free($3);
 								idmef_object_destroy(object);
-								idmef_value_destroy(value);
+								idmef_criterion_value_destroy(value);
 								YYABORT;
 							}
 
@@ -294,5 +295,10 @@ idmef_criteria_t *idmef_criteria_new_string(char *str)
 	yylex_destroy(parser_control.scanner);
 	free(buffer);
 
-	return parser_control.criteria; /* FIXME */
+	if ( retval != 0 ) {
+		idmef_criteria_destroy(parser_control.criteria);
+		return NULL;
+	}
+
+	return parser_control.criteria;
 }

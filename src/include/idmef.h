@@ -37,6 +37,7 @@
 #include "idmef-object.h"
 #include "idmef-value-object.h"
 #include "idmef-object-value.h"
+#include "idmef-criterion-value.h"
 #include "idmef-criteria.h"
 #include "idmef-criteria-string.h"
 #include "idmef-message.h"

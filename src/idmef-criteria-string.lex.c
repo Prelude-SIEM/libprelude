@@ -522,13 +522,11 @@ static char *strndup(const char *s, size_t n)
 
 #define INITIAL 0
 
-#ifndef YY_NO_UNISTD_H
 /* Special case for "unistd.h", since it is non-ANSI. We include it way
  * down here because we want the user's section 1 to have been scanned first.
  * The user has a chance to override it with an option.
  */
 #include <unistd.h>
-#endif
 
 #ifndef YY_EXTRA_TYPE
 #define YY_EXTRA_TYPE void *
@@ -746,7 +744,7 @@ YY_DECL
 #line 68 "idmef-criteria-string.lex.l"
 
 
-#line 750 "idmef-criteria-string.lex.c"
+#line 748 "idmef-criteria-string.lex.c"
 
     yylval = yylval_param;
 
@@ -965,7 +963,7 @@ YY_RULE_SETUP
 #line 108 "idmef-criteria-string.lex.l"
 ECHO;
 	YY_BREAK
-#line 969 "idmef-criteria-string.lex.c"
+#line 967 "idmef-criteria-string.lex.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1717,10 +1715,10 @@ YY_BUFFER_STATE yy_scan_buffer  (char * base, yy_size_t  size , yyscan_t yyscann
  * @note If you want to scan bytes that may contain NUL values, then use
  *       yy_scan_bytes() instead.
  */
-YY_BUFFER_STATE yy_scan_string (yyconst char * yy_str , yyscan_t yyscanner)
+YY_BUFFER_STATE yy_scan_string (yyconst char * str , yyscan_t yyscanner)
 {
     
-	return yy_scan_bytes(yy_str,strlen(yy_str) ,yyscanner);
+	return yy_scan_bytes(str,strlen(str) ,yyscanner);
 }
 
 /** Setup the input buffer state to scan the given bytes. The next call to yylex() will
@@ -2083,7 +2081,6 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 #undef yy_set_bol
 #undef yy_new_buffer
 #undef yy_set_interactive
-#undef yytext_ptr
 #undef YY_DO_BEFORE_ACTION
 
 #ifdef YY_DECL_IS_OURS

@@ -40,7 +40,7 @@ typedef enum {
 
 typedef struct idmef_criterion {
 	idmef_object_t *object;
-	idmef_value_t *value;
+	idmef_criterion_value_t *value;
 	idmef_relation_t relation;
 } idmef_criterion_t;
 
@@ -55,13 +55,13 @@ typedef struct idmef_criteria {
 }	idmef_criteria_t;
 
 
-idmef_criterion_t *idmef_criterion_new(idmef_object_t *object, idmef_relation_t relation, idmef_value_t *value);
+idmef_criterion_t *idmef_criterion_new(idmef_object_t *object, idmef_relation_t relation, idmef_criterion_value_t *value);
 void idmef_criterion_destroy(idmef_criterion_t *criterion);
 idmef_criterion_t *idmef_criterion_clone(idmef_criterion_t *criterion);
 void idmef_criterion_print(const idmef_criterion_t *criterion);
 int idmef_criterion_to_string(const idmef_criterion_t *criterion, char *buffer, size_t size);
 idmef_object_t *idmef_criterion_get_object(idmef_criterion_t *criterion);
-idmef_value_t *idmef_criterion_get_value(idmef_criterion_t *criterion);
+idmef_criterion_value_t *idmef_criterion_get_value(idmef_criterion_t *criterion);
 idmef_relation_t idmef_criterion_get_relation(idmef_criterion_t *criterion);
 int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message);
 

@@ -1,3 +1,39 @@
+2004-01-25  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
+	* bindings/perl/Prelude.c:
+	regenerated
+
+	* bindings/perl/Prelude.pm:
+	fit idmef-criteria changes
+
+	* bindings/python/_prelude.c:
+	regenerated
+	
+	* bindings/python/prelude.py:
+	(IDMEFMessage.__getitem__)
+	bug fix, check if c_value != None before destroying it
+
+	* src/idmef-criteria-string.yac.y:
+	fit idmef-criteria changes
+	bug fix, check yyparse return value
+
+	* src/idmef-criteria.c:
+	* src/include/idmef-criteria.h:
+	perform validity checks for idmef criterion
+	replace idmef_value in idmef_criterion by the new idmef_criterion_value
+	abstraction layer
+
+	* src/idmef-criterion-value.c:
+	* src/include/idmef-criterion-value.h:
+	new files
+	create a new abtraction layer uppon the value in a idmef-criterion
+	this allow the use of complex date description (idmef_criterion_value_non_linear_time)
+
+	* src/idmef-util.c:
+	* src/include/idmef-util.h:
+	(prelude_get_gmt_offset)
+	new function
+
 2004-01-17  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* configure.in: correct python and perl check. Check

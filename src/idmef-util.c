@@ -240,3 +240,25 @@ int prelude_get_process_name_and_path(const char *str, char **name, char **path)
 
 	return -1;
 }
+
+
+
+int prelude_get_gmt_offset(int *gmt_offset)
+{
+        struct tm tm_utc;
+        time_t time_utc;
+	time_t time_local;
+
+	time(&time_local);
+
+        if ( ! gmtime_r(&time_local, &tm_utc) ) {
+                log(LOG_ERR, "error converting local time to utc time.\n");
+                return -1;
+        }
+
+        tm_utc.tm_isdst = -1;
+        time_utc = mktime(&tm_utc);
+        *gmt_offset = time_local - time_utc;
+
+        return 0;
+}
