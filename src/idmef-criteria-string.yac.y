@@ -254,34 +254,16 @@ static void yyerror(char *s)  /* Called by yyparse on error */
 idmef_criteria_t *idmef_criteria_new_string(const char *str)
 {
         int retval;
-	size_t len;
-	char *buffer;
 	struct parser_control parser_control;
 	pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-	/* 
-	 * yy_scan_buffer wants buffer terminated by a DOUBLE null character
-	 */
-
-	len = strlen(str);
-
-	buffer = malloc(len + 2);
-	if ( ! buffer )
-		return NULL;
-
-	memcpy(buffer, str, len);
-	buffer[len] = 0;
-	buffer[len + 1] = 0;
-
 	parser_control.criteria = NULL;
-
+	
 	pthread_mutex_lock(&mutex);
-	yy_scan_buffer(buffer, len + 2);
+	yy_scan_string(str);
 	retval = yyparse(&parser_control);
 	pthread_mutex_unlock(&mutex);
         
-	free(buffer);
-
 	if ( retval != 0 ) {
                 if ( parser_control.criteria )
                         idmef_criteria_destroy(parser_control.criteria);
