@@ -108,6 +108,8 @@ void prelude_client_get_tls_client_trusted_cert_filename(prelude_client_t *clien
 
 void prelude_client_get_backup_filename(prelude_client_t *client, char *buf, size_t size);
 
+const char *prelude_client_get_config_filename(prelude_client_t *client);
+
 void prelude_client_installation_error(prelude_client_t *client);
 
 

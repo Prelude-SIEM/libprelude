@@ -104,7 +104,6 @@ struct prelude_client {
         uint64_t analyzerid;
         char *config_filename;
         
-        idmef_address_t *address;
         idmef_analyzer_t *analyzer;
 
         void *credentials;
@@ -147,6 +146,7 @@ static char *generate_md5sum(const char *filename)
         
         gcry_md_hash_buffer(GCRY_MD_MD5, digest, data, st.st_size);
         munmap(data, st.st_size);
+        close(fd);
         
         for ( i = ret = 0; i < len; i++ ) 
                 ret += snprintf(out + ret, sizeof(out) - ret, "%.2x", digest[i]);
@@ -280,14 +280,13 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
 
 static int set_node_address_category(void *context, prelude_option_t *opt, const char *arg) 
 {
-        prelude_client_t *ptr = context;
         idmef_address_category_t category;
 
-        category = idmef_address_category_to_numeric(arg);
-        if ( category < 0 )
+        category = idmef_address_category_to_numeric(arg);        
+        if ( category < 0 ) 
                 return -1;
         
-        idmef_address_set_category(ptr->address, category);
+        idmef_address_set_category(context, category);
 
         return 0;
 }
@@ -296,10 +295,7 @@ static int set_node_address_category(void *context, prelude_option_t *opt, const
 
 static int set_node_address_vlan_num(void *context, prelude_option_t *opt, const char *arg) 
 {
-        prelude_client_t *ptr = context;
-
-        idmef_address_set_vlan_num(ptr->address, atoi(arg));
-
+        idmef_address_set_vlan_num(context, atoi(arg));
         return 0;
 }
 
@@ -307,21 +303,15 @@ static int set_node_address_vlan_num(void *context, prelude_option_t *opt, const
 
 static int set_node_address_vlan_name(void *context, prelude_option_t *opt, const char *arg) 
 {
-        prelude_client_t *ptr = context;
-
-        idmef_address_set_vlan_name(ptr->address, idmef_string_new_dup(arg));
-
+        idmef_address_set_vlan_name(context, idmef_string_new_dup(arg));
         return 0;
 }
 
 
 
 static int set_node_address_address(void *context, prelude_option_t *opt, const char *arg) 
-{
-        prelude_client_t *ptr = context;
-
-        idmef_address_set_address(ptr->address, idmef_string_new_dup(arg));
-
+{        
+        idmef_address_set_address(context, idmef_string_new_dup(arg));
         return 0;
 }
 
@@ -330,10 +320,7 @@ static int set_node_address_address(void *context, prelude_option_t *opt, const 
 
 static int set_node_address_netmask(void *context, prelude_option_t *opt, const char *arg) 
 {
-        prelude_client_t *ptr = context;
-
-        idmef_address_set_netmask(ptr->address, idmef_string_new_dup(arg));
-
+        idmef_address_set_netmask(context, idmef_string_new_dup(arg));
         return 0;
 }
 
@@ -343,19 +330,21 @@ static int set_node_address_netmask(void *context, prelude_option_t *opt, const 
 static int set_node_address(void *context, prelude_option_t *opt, const char *arg) 
 {
         idmef_node_t *node;
+        idmef_address_t *addr;
         prelude_client_t *ptr = context;
         
         node = idmef_analyzer_new_node(ptr->analyzer);
         if ( ! node )
                 return -1;
-
-        ptr->address = idmef_node_new_address(node);
-        if ( ! ptr->address )
+        
+        addr = idmef_node_new_address(node);
+        if ( ! addr )
                 return -1;
 
+        prelude_option_instance_new(opt, arg, addr);
+        
         return 0;
 }
-
 
 
 
@@ -515,31 +504,31 @@ static int setup_options(prelude_client_t *client, int argc, char **argv)
         if ( ret < 0 )
                 return -1;
         
-        prelude_option_add(NULL, CFG_HOOK, 0, "node-name",
+        prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK, 0, "node-name",
                            NULL, required_argument, set_node_name, NULL);
 
-        prelude_option_add(NULL, CFG_HOOK, 0, "node-location",
+        prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK, 0, "node-location",
                            NULL, required_argument, set_node_location, NULL);
         
-        prelude_option_add(NULL, CFG_HOOK, 0, "node-category",
+        prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK, 0, "node-category",
                            NULL, required_argument, set_node_category, NULL);
         
-        opt = prelude_option_add(NULL, CFG_HOOK, 0, "node-address",
+        opt = prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK|ALLOW_MULTIPLE_CALL, 0, "node-address",
                                  NULL, required_argument, set_node_address, NULL);
         
-        prelude_option_add(opt, CFG_HOOK, 0, "address",
+        prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "address",
                            NULL, required_argument, set_node_address_address, NULL);
 
-        prelude_option_add(opt, CFG_HOOK, 0, "netmask",
+        prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "netmask",
                            NULL, required_argument, set_node_address_netmask, NULL);
 
-        prelude_option_add(opt, CFG_HOOK, 0, "category",
+        prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "category",
                            NULL, required_argument, set_node_address_category, NULL);
 
-        prelude_option_add(opt, CFG_HOOK, 0, "vlan-name",
+        prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "vlan-name",
                            NULL, required_argument, set_node_address_vlan_name, NULL);
 
-        prelude_option_add(opt, CFG_HOOK, 0, "vlan-num",
+        prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "vlan-num",
                            NULL, required_argument, set_node_address_vlan_num, NULL);
 
         return 0;
@@ -884,6 +873,12 @@ void prelude_client_get_backup_filename(prelude_client_t *client, char *buf, siz
         snprintf(buf, size, PRELUDE_SPOOL_DIR "/%s", client->name);
 }
 
+
+
+const char *prelude_client_get_config_filename(prelude_client_t *client)
+{
+        return client->config_filename;
+}
 
 
 prelude_ident_t *prelude_client_get_unique_ident(prelude_client_t *client)
