@@ -45,10 +45,8 @@ struct prelude_message_buffered {
 
 
 
-static prelude_msg_t *send_msg(void *data) 
-{
-        prelude_msgbuf_t *msgbuf = data;
-        
+static prelude_msg_t *do_send_msg(prelude_msgbuf_t *msgbuf) 
+{        
         prelude_client_send_msg(msgbuf->client, msgbuf->msg);
         prelude_msg_recycle(msgbuf->msg);
 
@@ -57,19 +55,32 @@ static prelude_msg_t *send_msg(void *data)
 
 
 
-static prelude_msg_t *send_msg_async(void *data) 
-{
-        prelude_msgbuf_t *msgbuf = data;
-        
+static prelude_msg_t *do_send_msg_async(prelude_msgbuf_t *msgbuf) 
+{        
         prelude_client_send_msg(msgbuf->client, msgbuf->msg);
         
-        msgbuf->msg = prelude_msg_dynamic_new(send_msg_async, msgbuf);
+        msgbuf->msg = prelude_msg_dynamic_new(msgbuf->send_msg, msgbuf);
         if ( ! msgbuf->msg ) {
                 log(LOG_ERR, "memory exhausted.\n");
                 return NULL;
         }
 
         return msgbuf->msg;
+}
+
+
+
+static prelude_msg_t *default_send_msg_cb(void *data)
+{
+        prelude_msg_t *msg;
+        prelude_msgbuf_t *msgbuf = data;
+
+        if ( prelude_client_get_flags(msgbuf->client) & PRELUDE_CLIENT_FLAGS_ASYNC_SEND )
+                msg = do_send_msg_async(msgbuf);
+        else
+                msg = do_send_msg(msgbuf);
+        
+        return msg;
 }
 
 
@@ -115,12 +126,8 @@ prelude_msgbuf_t *prelude_msgbuf_new(prelude_client_t *client)
         }
 
         msgbuf->client = client;
+        msgbuf->send_msg = default_send_msg_cb;
         
-        if ( client && prelude_client_get_flags(client) & PRELUDE_CLIENT_FLAGS_ASYNC_SEND )
-                msgbuf->send_msg = send_msg_async;
-        else
-                msgbuf->send_msg = send_msg;
-
         msgbuf->msg = prelude_msg_dynamic_new(msgbuf->send_msg, msgbuf);     
         if ( ! msgbuf->msg )
                 return NULL;
@@ -189,14 +196,16 @@ void prelude_msgbuf_close(prelude_msgbuf_t *msgbuf)
 
 
 /**
+ * prelude_msgbuf_set_callback:
  * @msgbuf: Pointer on a #prelude_msgbuf_t object.
+ * @send_msg: Pointer to a function for sending a message.
  *
  * Associate an application specific callback to this @msgbuf.
  */
-void prelude_msgbuf_set_callback(prelude_msgbuf_t *msgbuf, prelude_msg_t *(*send_msg)(prelude_msgbuf_t *msgbuf))
+void prelude_msgbuf_set_callback(prelude_msgbuf_t *msgbuf, prelude_msg_t *(*send_msg)(void *data))
 {
-        msgbuf->send_msg = (void *) send_msg;
-        prelude_msg_set_callback(msgbuf->msg, (void *) send_msg);
+        msgbuf->send_msg = send_msg;
+        prelude_msg_set_callback(msgbuf->msg, send_msg);
 }
 
 
