@@ -422,10 +422,10 @@ int prelude_option_recv_reply(prelude_msg_t *msg, uint64_t *source_id, uint32_t 
 
                 case PRELUDE_MSG_OPTION_ERROR:
                         type = PRELUDE_OPTION_REPLY_TYPE_ERROR;
-			if ( ! dlen ) {
-				*value = "No error message";	
-				break;
-			}
+                        if ( ! dlen ) {
+                                *value = "No error message";	
+                                break;
+                        }
 			
                         ret = extract_characters_safe((const char **) value, buf, dlen);
                         if ( ret < 0 )
