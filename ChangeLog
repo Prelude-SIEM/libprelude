@@ -1,3 +1,8 @@
+2002-05-21  Krzysztof Zaraska  <kzaraska@student.uci.agh.edu.pl>
+
+	* configure.in: cleanup in pthread detection code (*BSD mainly). 
+	Fixed a gcc 3.1 compilation warning caused by using -I/usr/include . 
+
 2002-05-21  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* sensor-adduser/sensor-adduser.c (handle_argument): 
