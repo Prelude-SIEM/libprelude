@@ -84,7 +84,25 @@ static char *process_name = NULL, *process_path = NULL;
  */
 static const char *manager_cfg_line = NULL;
 static prelude_client_mgr_t *manager_list = NULL;
- 
+
+
+
+static int find_category(const char **tbl, const char *arg) 
+{
+        int i;
+        
+        for ( i = 0; tbl[i] != NULL; i++ ) {
+
+                if ( strcmp(tbl[i], arg) == 0 )                         
+                        return i;
+        }
+        
+        log(LOG_ERR, "unknown category: %s.\n", arg);        
+
+        return -1;
+}
+
+
 
 static int setup_analyzer_node_location(const char *arg) 
 {
@@ -102,9 +120,9 @@ static int setup_analyzer_node_name(const char *arg)
 
 
 
-static int setup_analyzer_node_category(const char *arg) 
+static int setup_analyzer_node_address_category(const char *arg) 
 {
-        int i;
+        int ret;
         const char *name[] = {
                 "unknown",
                 "atm",
@@ -124,16 +142,11 @@ static int setup_analyzer_node_category(const char *arg)
                 NULL,
         };
 
-        for (i = 0; name[i] != NULL; i++ ) {
-                if ( strcmp(name[i], arg) == 0 ) {
-                        node.category = i;
-                        break;
-                }
-        }
+        ret = find_category(name, arg);
+        if ( ret < 0 )
+                return prelude_option_error;
 
-        if ( name[i] == NULL )
-                log(LOG_ERR, "unknown category: %s.\n", arg);
-        
+        address.category = ret;
         return prelude_option_success;
 }
 
@@ -153,9 +166,32 @@ static int setup_analyzer_node_address_netmask(const char *arg)
 }
 
 
-static int setup_analyzer_node_address_category(const char *arg) 
+static int setup_analyzer_node_category(const char *arg) 
 {
-        address.category = atoi(arg);
+        int ret;
+        const char *name[] = {
+                "unknown",
+                "ads",
+                "afs",
+                "coda",
+                "dfs",
+                "dns",
+                "hosts",
+                "kerberos",
+                "nds",
+                "nis",
+                "nisplus",
+                "nt",
+                "wfw",
+                NULL,
+        };
+
+        ret = find_category(name, arg);
+        if ( ret < 0 )
+                return prelude_option_error;
+        
+        node.category = ret;
+        
         return prelude_option_success;
 }
 
@@ -185,7 +221,6 @@ static int setup_address(const char *arg)
 
 static int setup_manager_addr(const char *arg) 
 {
-        printf("%s\n", arg);
         manager_cfg_line = arg;                
         return prelude_option_success;
 }
@@ -332,7 +367,7 @@ static int parse_argument(const char *filename, int argc, char **argv)
 int prelude_sensor_init(const char *sname, const char *filename, int argc, char **argv)
 {
         int ret;
-
+        
         memset(&node, 0, sizeof(node));
         memset(&address, 0, sizeof(address));
         INIT_LIST_HEAD(&node.address_list);
@@ -470,8 +505,9 @@ void prelude_heartbeat_register_cb(void (*cb)(void *data), void *data)
 int prelude_analyzer_fill_infos(idmef_analyzer_t *analyzer) 
 {
         int ret;
+        struct list_head *tmp;
         static struct utsname uts;
-        static idmef_process_t process;
+        idmef_address_t *cur, *new;
         
         ret = uname(&uts);
         if ( ret < 0 ) {
@@ -479,24 +515,52 @@ int prelude_analyzer_fill_infos(idmef_analyzer_t *analyzer)
                 return -1;
         }
 
-        memset(&process, 0, sizeof(process));
+        analyzer->process = calloc(1, sizeof(*analyzer->process));
+        if ( ! analyzer->process ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return -1;
+        }
+        
+        INIT_LIST_HEAD(&analyzer->process->arg_list);
+        INIT_LIST_HEAD(&analyzer->process->env_list);
+        
+        analyzer->node = calloc(1, sizeof(*analyzer->node));
+        if ( ! analyzer->node ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return -1;
+        }
         
         idmef_string_set(&analyzer->ostype, uts.sysname);
         idmef_string_set(&analyzer->osversion, uts.release);
-
-        INIT_LIST_HEAD(&process.arg_list);
-        INIT_LIST_HEAD(&process.env_list);
         
-        process.pid = getpid();
+        analyzer->process->pid = getpid();
 
         if ( process_name )
-                idmef_string_set(&process.name, process_name);
+                idmef_string_set(&analyzer->process->name, process_name);
 
         if ( process_path )
-                idmef_string_set(&process.path, process_path);
+                idmef_string_set(&analyzer->process->path, process_path);
+
+        /*
+         * As the sensor may call idmef_message_free(),
+         * and call this function again, we have to copy all the data.
+         */
+        memcpy(analyzer->node, &node, sizeof(node));
+        INIT_LIST_HEAD(&analyzer->node->address_list);
         
-        analyzer->node = &node;
-        analyzer->process = &process;
+        list_for_each(tmp, &node.address_list) {
+                cur = list_entry(tmp, idmef_address_t, list);
+
+                new = calloc(1, sizeof(*new));
+                if ( ! new ) {
+                        log(LOG_ERR, "memory exhausted.\n");
+                        return -1;
+                }
+
+                memcpy(new, cur, sizeof(*new));
+                list_add_tail(&new->list, &analyzer->node->address_list);
+        }
         
         return 0;
 }
+
