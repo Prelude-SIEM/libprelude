@@ -51,6 +51,4 @@ int prelude_get_file_name_and_path(const char *str, char **name, char **path);
 
 int prelude_get_gmt_offset(time_t time_local, int *gmt_offset);
 
-const char *prelude_check_version(const char *req_version);
-
 #endif /* _LIBPRELUDE_COMMON_H */
