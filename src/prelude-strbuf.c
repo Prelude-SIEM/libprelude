@@ -26,6 +26,7 @@
 #include <stdarg.h>
 #include <string.h>
 
+#include "libmissing.h"
 #include "prelude-log.h"
 #include "prelude-strbuf.h"
 
