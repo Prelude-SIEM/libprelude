@@ -23,6 +23,7 @@ ssl-gencrypto
 @expire: 
 @keyout: 
 @crypt: 
+@uid: 
 @Returns: 
 
 

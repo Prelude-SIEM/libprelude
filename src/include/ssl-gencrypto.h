@@ -24,6 +24,6 @@
 #ifndef SSL_GENCRYPTO_H
 #define SSL_GENCRYPTO_H
 
-int prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int crypt);
+int prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int crypt, uid_t uid);
 
 #endif

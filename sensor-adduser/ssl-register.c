@@ -65,19 +65,19 @@
 
 
 static int send_own_certificate(prelude_io_t *pio, des_key_schedule *skey1,
-                                des_key_schedule *skey2, int expire, int keysize) 
+                                des_key_schedule *skey2, int expire, int keysize, uid_t uid) 
 {
         int ret;
         char filename[256];
 
         prelude_get_ssl_key_filename(filename, sizeof(filename));
-
-        ret = prelude_ssl_gen_crypto(keysize, expire, filename, 0);
+        
+        ret = prelude_ssl_gen_crypto(keysize, expire, filename, 0, uid);
 	if ( ret < 0 ) {
 		fprintf(stderr, "\nRegistration failed\n");
 		return -1;
 	}
-
+        
         ret = prelude_ssl_send_cert(pio, filename, skey1, skey2);
         if ( ret < 0 ) {
                 fprintf(stderr, "Error sending certificate.\n");
@@ -90,7 +90,8 @@ static int send_own_certificate(prelude_io_t *pio, des_key_schedule *skey1,
 
 
 
-static int recv_manager_certificate(prelude_io_t *pio, des_key_schedule *skey1, des_key_schedule *skey2)  
+static int recv_manager_certificate(prelude_io_t *pio, des_key_schedule *skey1,
+                                    des_key_schedule *skey2, uid_t uid)  
 {
         uint16_t len;
         BUF_MEM ackbuf;
@@ -118,7 +119,9 @@ static int recv_manager_certificate(prelude_io_t *pio, des_key_schedule *skey1, 
          * save Manager certificate
          */
         prelude_get_ssl_cert_filename(filename, sizeof(filename));        
-	if ( ! prelude_ssl_save_cert(filename, cert, certlen) ) {
+
+        ret = prelude_ssl_save_cert(filename, cert, certlen, uid);
+        if ( ret < 0 ) {
 		fprintf(stderr, "error writing Prelude-Report Certificate to %s\n", filename);
                 return -1;
 	}
@@ -204,7 +207,7 @@ static int tell_ssl_usage(prelude_io_t *fd)
 
 
 
-int ssl_add_certificate(prelude_io_t *fd, char *pass, size_t size)
+int ssl_add_certificate(prelude_io_t *fd, char *pass, size_t size, uid_t uid)
 {
 	int ret;
         int keysize, expire;
@@ -234,13 +237,13 @@ int ssl_add_certificate(prelude_io_t *fd, char *pass, size_t size)
         ask_configuration(&keysize, &expire);
 
         
-        ret = send_own_certificate(fd, &skey1, &skey2, expire, keysize);
+        ret = send_own_certificate(fd, &skey1, &skey2, expire, keysize, uid);
         if ( ret < 0 ) {
                 fprintf(stderr, "Error sending own certificate - Registration failed.\n");
                 return -1;
         }
 
-        ret = recv_manager_certificate(fd, &skey1, &skey2);
+        ret = recv_manager_certificate(fd, &skey1, &skey2, uid);
         if ( ret < 0 ) {
                 fprintf(stderr, "Error receiving Manager certificate - Registration failed.\n");
                 return -1;

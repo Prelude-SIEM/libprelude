@@ -314,6 +314,7 @@ static void check_key_size(int keysize)
  * @expire: Number of day this key will expire in.
  * @keyout: Place where the create key should be stored.
  * @crypt: Whether the key should be crypted or not.
+ * @uid: UID of authentication file owner.
  *
  * Create a new private key of @keysize bits, expiring in @expire days,
  * along with a self signed certificate for this key. Both the key and
@@ -323,7 +324,7 @@ static void check_key_size(int keysize)
  *
  * Returns: 0 on success, or -1 if an error occured.
  */
-int prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int crypt)
+int prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int crypt, uid_t uid)
 {
         FILE *fdp;
 	int ret, fd;
@@ -377,6 +378,12 @@ int prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int cryp
                 fprintf(stderr, "couldn't open %s for writing.\n", keyout);
                 close(fd);
                 ret = -1; goto ferr;
+        }
+
+        ret = fchown(fd, uid, 0);
+        if ( ret < 0 ) {
+                fprintf(stderr, "couldn't change file owner to UID %d.\n", uid);
+                goto err;
         }
 
         ret = PEM_write_PrivateKey(fdp, pkey, cipher, NULL, 0, NULL, NULL);

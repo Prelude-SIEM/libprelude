@@ -30,6 +30,8 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #include "common.h"
 #include "prelude-message-id.h"
@@ -270,6 +272,35 @@ static int handle_argument(int argc, char **argv)
 
 
 
+static int setup_sensor_files(void) 
+{
+        int fd, ret;
+        char buf[256];
+
+        prelude_get_backup_filename(buf, sizeof(buf));
+
+        /*
+         * The user may have changed permission, and we don't want
+         * to be vulnerable to a symlink attack anyway. 
+         */
+        fd = prelude_open_persistant_tmpfile(buf, 0, S_IRUSR|S_IWUSR);
+        if ( fd < 0 ) {
+                log(LOG_ERR, "couldn't create %s.\n", buf);
+                return -1;
+        }
+
+        ret = fchown(fd, sensor_uid, 0);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "couldn't chown %s to UID %d.\n", buf, sensor_uid);
+                return -1;
+        }
+        
+        return 0;
+}
+
+
+
+
 
 int main(int argc, char **argv) 
 {
@@ -283,12 +314,6 @@ int main(int argc, char **argv)
         if ( ret < 0 )
                 return -1;
         
-        ret = seteuid(sensor_uid);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't set userid to %d.\n", sensor_uid);
-                return -1;
-        }
-
         fprintf(stderr,
                 "\n\nNow please start \"manager-adduser\" on the Manager host where\n"
                 "you wish to add the new user.\n\n"
@@ -321,25 +346,28 @@ int main(int argc, char **argv)
         if ( ret < 0 )
                 return -1;
 
-        prelude_get_auth_filename(buf, sizeof(buf));
-
 #ifdef HAVE_SSL
         if ( have_ssl && strcmp(inet_ntoa(in), "127.0.0.1") != 0 ) {
-                ret = ssl_add_certificate(fd, pass, strlen(pass));
+                ret = ssl_add_certificate(fd, pass, strlen(pass), sensor_uid);
                 goto end;
         }
 #endif
 
         if ( have_plaintext ) {
-                ret = create_plaintext_user_account(fd, pass);
+                ret = create_plaintext_user_account(fd, pass, sensor_uid);
                 goto end;
         } else {
                 log(LOG_INFO, "couldn't agree on a protocol to use.\n");
                 ret = -1;
         }
 
+        exit(1);
+        
  end:
-        exit(ret);
+        if ( ret < 0 )
+                exit(ret);
+
+        exit(setup_sensor_files());
 }
 
 

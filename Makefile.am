@@ -16,10 +16,10 @@ bin_SCRIPTS = $(top_srcdir)/libprelude-config
 
 install-data-hook:
 	install -d -m 755 $(sensors_config_dir);         	   \
-	install -d -m 1733 /var/lib/prelude-sensors/plaintext;     \
-	install -d -m 1733 /var/lib/prelude-sensors/ssl;	   \
+	install -d -m 755 /var/lib/prelude-sensors/plaintext;      \
+	install -d -m 755 /var/lib/prelude-sensors/ssl;	  	   \
+	install -d -m 755 /var/spool/prelude-sensors;		   \
 	install -d -m 1733 /var/lib/prelude-sensors/idents;	   \
-	install -d -m 1733 /var/spool/prelude-sensors;		   \
 	install -m 644 $(top_srcdir)/sensors-default.conf $(sensors_config_dir)/sensors-default.conf;
 
 

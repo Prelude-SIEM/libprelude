@@ -81,7 +81,7 @@ static int setup_plaintext(prelude_io_t *fd, const char *oneshot,
 
 
 
-int create_plaintext_user_account(prelude_io_t *fd, const char *oneshot) 
+int create_plaintext_user_account(prelude_io_t *fd, const char *oneshot, uid_t uid) 
 {
         int ret;
         char buf[256];
@@ -95,7 +95,7 @@ int create_plaintext_user_account(prelude_io_t *fd, const char *oneshot)
          */
         unlink(buf);
         
-        ret = prelude_auth_create_account(buf, &user, &pass, 0);
+        ret = prelude_auth_create_account(buf, &user, &pass, 0, uid);
         if ( ret < 0 )
                 return -1;
 

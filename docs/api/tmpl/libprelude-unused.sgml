@@ -550,6 +550,16 @@ thread
 </para>
 
 
+<!-- ##### FUNCTION save_cert ##### -->
+<para>
+
+</para>
+
+@filename: 
+@cert: 
+@certlen: 
+@Returns: 
+
 <!-- ##### FUNCTION ssl_add_certificate ##### -->
 <para>
 

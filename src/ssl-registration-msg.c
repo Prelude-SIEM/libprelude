@@ -27,6 +27,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <openssl/des.h>
@@ -36,6 +37,7 @@
 #include <openssl/buffer.h>
 #include <openssl/sha.h>
 #include <inttypes.h>
+#include <fcntl.h>
 
 #include "prelude-io.h"
 #include "ssl-registration-msg.h"
@@ -254,35 +256,42 @@ int prelude_ssl_send_cert(prelude_io_t *pio, const char *filename,
 
 
 
-int prelude_ssl_save_cert(const char *filename, char *cert, int certlen)
+int prelude_ssl_save_cert(const char *filename, char *cert, int certlen, uid_t uid)
 {
-	BIO *file;
-        mode_t old_mask;
-
-        /*
-         * FIXME : BIO API probably have a way to set
-         * permission... don't do a chmod() to avoid a race.
-         * (see ChangeLog of 2001-03-30).
-         */
-
-        old_mask = umask(S_IRWXG|S_IRWXO);
+        FILE *fdp;
+        int fd, ret;
         
-	file = BIO_new_file(filename, "a");
-	if ( !file ) {
-                umask(old_mask);
-                return 0;
+        fd = open(filename, O_CREAT|O_WRONLY|O_APPEND, S_IRUSR|S_IWUSR);
+        if ( fd < 0 ) {
+                log(LOG_ERR, "couldn't open %s for appending.\n", filename);
+                return -1;
         }
 
-        umask(old_mask);
-        
-	if (BIO_write(file, cert, certlen) <= 0) {
-                BIO_free(file);
-		return 0;
+        ret = fchown(fd, uid, 0);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "couldn't set file owner to UID %d.\n", uid);
+                close(fd);
+                return -1;
+        }
+
+        fdp = fdopen(fd, "a");
+        if ( ! fdp ) {
+                log(LOG_ERR, "couldn't open %s for appending.\n", filename);
+                close(fd);
+                return -1;
         }
         
-	BIO_free(file);
+	ret = fwrite(cert, 1, certlen, fdp);
+        if ( ret != certlen ) {
+                log(LOG_ERR, "couldn't write certificate.\n");
+                ret = -1;
+        } else
+                ret = 0;
+        
+        fclose(fdp);
+        close(fd);
 
-	return 1;
+	return ret;
 }
 
 

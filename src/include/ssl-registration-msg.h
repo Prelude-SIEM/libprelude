@@ -44,7 +44,6 @@
 #define WRONG_SIZE            -4
 #define SUCCESS                0
 
-int save_cert(const char *filename, char *cert, int certlen);
 
 int x509_to_msg(X509 * x509, char *msg, int msglen,
 		des_key_schedule * key1, des_key_schedule * key2);
@@ -65,6 +64,6 @@ int prelude_ssl_recv_cert(prelude_io_t *pio, char *out, int outlen,
 int prelude_ssl_send_cert(prelude_io_t *pio, const char *filename,
                           des_key_schedule *skey1, des_key_schedule *skey2);
 
-int prelude_ssl_save_cert(const char *filename, char *cert, int certlen);
+int prelude_ssl_save_cert(const char *filename, char *cert, int certlen, uid_t uid);
 
 #endif

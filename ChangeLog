@@ -1,3 +1,48 @@
+2002-03-14  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* Makefile.am (install-data-hook): stop using sticky bit on
+	directory, permission for directory are 755 now. (except for
+	the idents directory - not changed yet).
+
+	* src/ssl-registration-msg.c (prelude_ssl_save_cert): 
+	stop using the BIO API here, and use the standard IO function
+	so that we can now stop using the umask() hack. 
+
+	The function now take an UID argument, and the saved certificate
+	is owned by this userID. 
+
+	* src/ssl-gencrypto.c (prelude_ssl_gen_crypto): 
+	take an UID argument, use fchown() to set the created file
+	UID.
+
+	* src/prelude-client-mgr.c (file_error): 
+	new function, tell the user sensors required files
+	are not installed. 
+
+	* src/prelude-auth.c (open_auth_file): 
+	fchown the created file to the specified UID.
+
+	(prelude_auth_create_account): 
+	(prelude_auth_create_account_noprompt): 
+	take an UID argument.
+	
+	* sensor-adduser/ssl-register.c (send_own_certificate): 
+	prelude_ssl_gen_crypto take an UID argument.
+	
+	(recv_manager_certificate):
+	prelude_ssl_save_cert take an UID argument.
+
+	* sensor-adduser/sensor-adduser.c (setup_sensor_files): 
+	new function, create sensors related file, with the needed
+	sensors permission.
+
+	(main): ssl_add_certificate and create_plaintext_user_account 
+	take an UID argument.
+
+	* sensor-adduser/plaintext.c (create_plaintext_user_account): 
+	take an uid argument, call prelude_auth_create_account with this 
+	argument.
+
 2002-03-12  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/daemonize.c (get_absolute_filename): 

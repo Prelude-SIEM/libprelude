@@ -423,8 +423,23 @@ static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline)
 
 
 
+static void file_error(const char *cfgline) 
+{
+        log(LOG_INFO, "\nBasic file configuration does not exist. Please run :\n"
+            "sensor-adduser --sensorname %s --uid %d\n"
+            "program on the sensor host to create an account for this sensor.\n\n"
+            
+            "Be aware that you should also pass the \"--manager-addr\" option with the\n"
+            "manager address as argument. \"sensor-adduser\" should be called for\n"
+            "each configured manager address. Here is the configuration line :\n\n%s\n\n", 
+            prelude_get_sensor_name(), prelude_get_program_userid(), cfgline);
 
-static int setup_backup_fd(prelude_client_mgr_t *new) 
+        exit(1);
+}
+
+
+
+static int setup_backup_fd(prelude_client_mgr_t *new, const char *cfgline) 
 {
         int wfd, rfd;
         char filename[1024];
@@ -444,21 +459,23 @@ static int setup_backup_fd(prelude_client_mgr_t *new)
          * do write atomically (O_APPEND). The other file descriptor has it's
          * own file table, with it's own offset so we can read from it.
          */
-        wfd = prelude_open_persistant_tmpfile(filename, O_WRONLY|O_APPEND, S_IRUSR|S_IWUSR);
+        wfd = open(filename, O_WRONLY|O_APPEND, S_IRUSR|S_IWUSR);
         if ( wfd < 0 ) {
                 log(LOG_ERR, "couldn't open %s for writing.\n", filename);
+                file_error(cfgline);
                 return -1;
         }
         
         rfd = open(filename, O_RDONLY);
         if ( rfd < 0 ) {
                 log(LOG_ERR, "couldn't open %s for reading.\n", filename);
+                file_error(cfgline);
                 return -1;
         }
         
         prelude_io_set_sys_io(new->backup_fd_write, wfd);
         prelude_io_set_sys_io(new->backup_fd_read, rfd);
-                
+        
         return 0;
 }
 
@@ -624,7 +641,7 @@ prelude_client_mgr_t *prelude_client_mgr_new(const char *cfgline)
          * Setup a backup file descriptor for this client Manager.
          * It will be used if a message emmission fail.
          */
-        ret = setup_backup_fd(new);
+        ret = setup_backup_fd(new, cfgline);
         if ( ret < 0 ) {
                 free(new);
                 return NULL;
@@ -665,4 +682,15 @@ struct list_head *prelude_client_mgr_get_client_list(prelude_client_mgr_t *mgr)
 {
         return &mgr->all_client;
 }
+
+
+
+
+
+
+
+
+
+
+
 

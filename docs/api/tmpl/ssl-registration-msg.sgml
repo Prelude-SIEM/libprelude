@@ -98,17 +98,6 @@ ssl-registration-msg
 
 
 
-<!-- ##### FUNCTION save_cert ##### -->
-<para>
-
-</para>
-
-@filename: 
-@cert: 
-@certlen: 
-@Returns: 
-
-
 <!-- ##### FUNCTION x509_to_msg ##### -->
 <para>
 
@@ -191,6 +180,7 @@ ssl-registration-msg
 @filename: 
 @cert: 
 @certlen: 
+@uid: 
 @Returns: 
 
 

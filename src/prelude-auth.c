@@ -242,10 +242,10 @@ static int check_account(const char *authfile,
  * If the authentication file does not exist, it is
  * created with permission 600.
  */
-static FILE *open_auth_file(const char *filename) 
+static FILE *open_auth_file(const char *filename, uid_t uid) 
 {
-        FILE *fd;
         int ret;
+        FILE *fd;
         
         ret = access(filename, F_OK);
         if ( ret < 0 && creat(filename, S_IRUSR|S_IWUSR) < 0 ) {
@@ -259,6 +259,13 @@ static FILE *open_auth_file(const char *filename)
                 return NULL;
         }
 
+        ret = fchown(fileno(fd), uid, 0);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "couldn't change owner to UID %d.\n", uid);
+                fclose(fd);
+                return NULL;
+        }
+        
         return fd;
 }
 
@@ -422,6 +429,7 @@ static int ask_account_infos(FILE *fd, char **user, char **pass)
  * @user: Address of a pointer where the created username will be stored.
  * @pass: Address of a pointer where the created password will be stored.
  * @crypted: Specify wether the password should be crypted using crypt().
+ * @uid: UID of authentication file owner.
  *
  * Ask for a new account creation which will be stored into 'filename'
  * which is the authentication file. Uppon success, @user and @pass will
@@ -429,13 +437,13 @@ static int ask_account_infos(FILE *fd, char **user, char **pass)
  *
  * Returns: 0 on sucess, -1 otherwise
  */
-int prelude_auth_create_account(const char *filename, char **user, char **pass, int crypted) 
+int prelude_auth_create_account(const char *filename, char **user, char **pass, int crypted, uid_t uid) 
 {
         int ret;
         FILE *fd;
         char *cpass, salt[3];
 
-        fd = open_auth_file(filename);
+        fd = open_auth_file(filename, uid);
         if ( ! fd ) 
                 return -1;
 
@@ -468,19 +476,20 @@ int prelude_auth_create_account(const char *filename, char **user, char **pass, 
  * @user: Username to create.
  * @pass: Password associated with username.
  * @crypted: Specify wether the password should be crypted using crypt().
+ * @uid: UID of authentication file owner.
  *
- * Ask for a new account creation which will be stored into 'filename'
- * which is the authentication file. 
+ * Create specified account.
  *
  * Returns: 0 on sucess, -1 otherwise
  */
-int prelude_auth_create_account_noprompt(const char *filename, const char *user, const char *pass, int crypted) 
+int prelude_auth_create_account_noprompt(const char *filename, const char *user,
+                                         const char *pass, int crypted, uid_t uid) 
 {
         FILE *fd;
         char salt[2];
         const char *cpass;
         
-        fd = open_auth_file(filename);
+        fd = open_auth_file(filename, uid);
         if ( ! fd ) 
                 return -1;
 
