@@ -33,6 +33,7 @@
 
 #ifdef HAVE_SSL
  #include <openssl/ssl.h>
+ #include <openssl/err.h>
 #endif
 
 #include "prelude-log.h"
@@ -168,19 +169,56 @@ static ssize_t copy_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
 
 
 #ifdef HAVE_SSL
+
+static int handle_ssl_error(SSL *ssl, int ret, int errnum) 
+{
+        int ssl_error;
+
+        ssl_error = SSL_get_error(ssl, ret);
+        
+        switch (ssl_error) {
+                
+        case SSL_ERROR_WANT_READ:
+        case SSL_ERROR_WANT_WRITE:
+                return 1;
+
+        case SSL_ERROR_ZERO_RETURN:
+                return 0;
+
+        case SSL_ERROR_SYSCALL:
+                if ( ret == 0 )
+                        /*
+                         * an EOF was observed that violates the protocol
+                         */
+                        return 0;
+                
+                if ( ret == -1 && (errnum == EAGAIN || errnum == EINTR) )
+                        /*
+                         * we got interrupted, let's try again.
+                         */
+                        return 1;
+
+                return -1;
+                
+        default:
+                log(LOG_ERR, "SSL error : %s.\n", ERR_reason_error_string(ERR_get_error()));
+                return -1;
+        }
+}
+
+
+
 /*
  * SSL IO functions
  */
 static ssize_t ssl_read(prelude_io_t *pio, void *buf, size_t count) 
 {
-        int ret, ssl_error;
+        int ret;
         
         do {
                 ret = SSL_read(pio->fd_ptr, buf, count);
-                if ( ret < 0 ) 
-                        errno = ssl_error = SSL_get_error(pio->fd_ptr, ret);
-                        
-        } while ( ret < 0 && (ssl_error == EINTR || ssl_error == EAGAIN) );
+                
+        } while ( ret <= 0 && (ret = handle_ssl_error(pio->fd_ptr, ret, errno)) == 1);
         
         return ret;
 }
@@ -189,14 +227,12 @@ static ssize_t ssl_read(prelude_io_t *pio, void *buf, size_t count)
 
 static ssize_t ssl_write(prelude_io_t *pio, const void *buf, size_t count) 
 {
-        int ret, ssl_error;
+        int ret;
 
-        do {
+        do {        
                 ret = SSL_write(pio->fd_ptr, buf, count);
-                if ( ret < 0 )
-                        errno = ssl_error = SSL_get_error(pio->fd_ptr, ret);
 
-        } while ( ret < 0 && (ssl_error == EINTR || ssl_error == EAGAIN) );
+        } while ( ret < 0 && (ret = handle_ssl_error(pio->fd_ptr, ret, errno)) == 1);
         
         return ret;
 }
