@@ -22,10 +22,18 @@
 *****/
 
 #include <stdio.h>
+#include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <sys/utsname.h>
+#include <fcntl.h>
+#include <assert.h>
+
+#include <gcrypt.h>
 
 #include "idmef.h"
 #include "timer.h"
@@ -75,7 +83,10 @@
 
 
 struct prelude_client {
+        
         int flags;
+        int initial_hb;
+        
         prelude_client_capability_t capability;
         
         /*
@@ -88,6 +99,8 @@ struct prelude_client {
          * name, analyzerid, and config file for this analyzer.
          */
         char *name;
+        char *md5sum;
+        
         uint64_t analyzerid;
         char *config_filename;
         
@@ -107,8 +120,64 @@ struct prelude_client {
 
 
 
+static char *generate_md5sum(const char *filename)
+{
+        void *data;
+        int ret, fd;
+        size_t len, i;
+        struct stat st;
+        unsigned char out[33], digest[16];
+        
+        len = gcry_md_get_algo_dlen(GCRY_MD_MD5);
+        assert(len == sizeof(digest));
+        
+        fd = open(filename, O_RDONLY);
+        if ( fd < 0 )
+                return NULL;
+        
+        ret = fstat(fd, &st);
+        if ( ret < 0 )
+                return NULL;
+        
+        data = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+        if ( ! data ) {
+                log(LOG_ERR, "could not mmap %s.\n", filename);
+                return NULL;
+        }
+        
+        gcry_md_hash_buffer(GCRY_MD_MD5, digest, data, st.st_size);
+        munmap(data, st.st_size);
+        
+        for ( i = ret = 0; i < len; i++ ) 
+                ret += snprintf(out + ret, sizeof(out) - ret, "%.2x", digest[i]);
+        
+        return strdup(out);
+}
+
+
+
+static int add_hb_data(idmef_heartbeat_t *hb, idmef_string_t *meaning, idmef_data_t *data)
+{
+        idmef_additional_data_t *ad;
+        
+        ad = idmef_heartbeat_new_additional_data(hb);
+        if ( ! ad ) {
+                log(LOG_ERR, "error creating new IDMEF data.\n");
+                return -1;
+        }
+
+        idmef_additional_data_set_data(ad, data);
+        idmef_additional_data_set_meaning(ad, meaning);
+        idmef_additional_data_set_type(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING);
+
+        return 0;
+}
+
+
+
 static void heartbeat_expire_cb(void *data)
 {
+        char buf[128];
         idmef_message_t *message;
         idmef_heartbeat_t *heartbeat;
         prelude_client_t *client = data;
@@ -124,10 +193,21 @@ static void heartbeat_expire_cb(void *data)
                 log(LOG_ERR, "error creating new IDMEF heartbeat.\n");
                 goto out;
         }
+
+        snprintf(buf, sizeof(buf), "%u", timer_expire(&client->heartbeat_timer) / 60);
         
-        idmef_heartbeat_set_analyzer(heartbeat, idmef_analyzer_ref(client->analyzer));
+        add_hb_data(heartbeat, idmef_string_new_constant("Analyzer status"),
+                    idmef_string_new_ref(client->initial_hb ? "starting" : "running"));
+
+        add_hb_data(heartbeat, idmef_string_new_constant("Analyzer md5sum"),
+                    idmef_string_new_ref(client->md5sum));
+
+        add_hb_data(heartbeat, idmef_string_new_constant("Analyzer heartbeat interval"),
+                    idmef_string_new_ref(buf));
+        
         idmef_heartbeat_set_create_time(heartbeat, idmef_time_new_gettimeofday());
-        
+        idmef_heartbeat_set_analyzer(heartbeat, idmef_analyzer_ref(client->analyzer));
+                
         if ( client->heartbeat_cb ) {
                 client->heartbeat_cb(client, message);
                 goto out;
@@ -514,6 +594,7 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
 
         new->name = strdup(sname);
         new->config_filename = config ? strdup(config) : NULL;
+        new->md5sum = generate_md5sum(argv[0]);
         
         new->unique_ident = prelude_ident_new();
         if ( ! new->unique_ident ) {
@@ -565,8 +646,11 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
         if ( ret < 0 )
                 return -1;
 
-        if ( new->manager_list || new->heartbeat_cb )
+        if ( new->manager_list || new->heartbeat_cb ) {
+                new->initial_hb = 1;
                 heartbeat_expire_cb(new);
+                new->initial_hb = 0;
+        }
         
         return 0;
 }
