@@ -220,7 +220,7 @@ sub	struct_field_normal
     $extra_msg = ", msg" if ( $field->{metatype} & (&METATYPE_STRUCT | &METATYPE_LIST) );
 
     $self->output("
-			case MSG_",  uc($struct->{short_typename}), "_", uc($field->{short_name}), ": \{
+			case IDMEF_MSG_",  uc($struct->{short_typename}), "_", uc($field->{short_name}), ": \{
                                 ${var_type} ${ptr}tmp;
 
                                 ret = prelude_extract_${type}_safe(&tmp, buf, len${extra_msg});
@@ -250,7 +250,7 @@ sub	struct_field_struct
     my	$name = shift || $field->{name};
 
     $self->output("
-			case MSG_",  uc($field->{short_typename}), "_TAG", ": \{
+			case IDMEF_MSG_",  uc($field->{short_typename}), "_TAG", ": \{
                                 int ret;
 				$field->{typename} *tmp;
 ");
@@ -343,7 +343,7 @@ int idmef_$struct->{short_typename}_read($struct->{typename} *$struct->{short_ty
     }
 
     $self->output("
-			case MSG_END_OF_TAG:
+			case IDMEF_MSG_END_OF_TAG:
 				return 0;
 
 			default:

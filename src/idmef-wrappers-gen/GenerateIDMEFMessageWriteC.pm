@@ -231,7 +231,7 @@ sub	struct_field_normal
 
 		tmp = idmef_$struct->{short_typename}_get_$field->{name}($struct->{short_typename});
 		if ( tmp ) \{
-			$function(*tmp, msg, MSG_",  uc($struct->{short_typename}), "_", uc($field->{name}), ");");
+			$function(*tmp, msg, IDMEF_MSG_",  uc($struct->{short_typename}), "_", uc($field->{name}), ");");
 
 	if ( $field->{typename} eq "idmef_impact_severity_t" ) {
 	    $self->output("
@@ -245,7 +245,7 @@ sub	struct_field_normal
     } else {
 	$self->output(" " x 8, 
 		      "$function(idmef_$struct->{short_typename}_get_$field->{name}($struct->{short_typename}), ", 
-		      "msg, MSG_",  uc($struct->{short_typename}), "_", uc($field->{name}),
+		      "msg, IDMEF_MSG_",  uc($struct->{short_typename}), "_", uc($field->{name}),
 		      ");\n");
     }
 }
@@ -277,7 +277,7 @@ sub	struct_field_list
     if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
 	$self->output(" " x 24,
 		      "$field->{short_typename}_write($field->{short_name}, msg, ",
-		      "MSG_", uc($struct->{short_typename}), "_", uc($field->{short_name}),
+		      "IDMEF_MSG_", uc($struct->{short_typename}), "_", uc($field->{short_name}),
 		      ");\n");
 
     } else {
@@ -332,7 +332,7 @@ sub	struct
 		  "\n\n");
 
     if ( ! $struct->{toplevel} ) {
-	$self->output(" " x 8, "prelude_msgbuf_set(msg, ", "MSG_" . uc($struct->{short_typename}) . "_TAG", ", 0, NULL);", "\n\n");
+	$self->output(" " x 8, "prelude_msgbuf_set(msg, ", "IDMEF_MSG_" . uc($struct->{short_typename}) . "_TAG", ", 0, NULL);", "\n\n");
     }
 
     foreach my $field ( @{ $struct->{field_list} } ) {
@@ -357,7 +357,7 @@ sub	struct
 	}
     }
 
-    $self->output("\n", " " x 8, "prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);", "\n");
+    $self->output("\n", " " x 8, "prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);", "\n");
   
 
     $self->output("\}\n\n\n");

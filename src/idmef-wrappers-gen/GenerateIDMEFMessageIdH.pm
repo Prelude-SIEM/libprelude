@@ -41,8 +41,8 @@ sub	header
  * Misc value
  */
 
-#define MSG_OWN_FORMAT                                 253
-#define MSG_END_OF_TAG                                 254
+#define IDMEF_MSG_OWN_FORMAT                                 253
+#define IDMEF_MSG_END_OF_TAG                                 254
 
 /*
  * Tag value
@@ -52,7 +52,7 @@ sub	header
 
      foreach my $struct ( @{ $tree->{struct_list} } ) {
 	 if ( ! $struct->{toplevel} ) {
-	     $self->output("#define ", "MSG_" . uc($struct->{short_typename}) . "_TAG ", $cnt++, "\n");
+	     $self->output("#define ", "IDMEF_MSG_" . uc($struct->{short_typename}) . "_TAG ", $cnt++, "\n");
 	 }
      }
 
@@ -82,7 +82,7 @@ sub	struct
     foreach my $field ( @{ $struct->{field_list} } ) {
 
 	if ( $field->{metatype} & (&METATYPE_PRIMITIVE | &METATYPE_ENUM) ) {
-	    $self->output("#define ", "MSG_", uc($struct->{short_typename}), "_", uc($field->{short_name}), " ", $cnt, "\n");
+	    $self->output("#define ", "IDMEF_MSG_", uc($struct->{short_typename}), "_", uc($field->{short_name}), " ", $cnt, "\n");
 	    $cnt++;
 	}
     }
