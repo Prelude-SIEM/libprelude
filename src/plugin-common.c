@@ -120,15 +120,15 @@ static plugin_entry_t *add_plugin_entry(void)
  */
 static void delete_container(plugin_entry_t *entry) 
 {
-        struct list_head *tmp;
         plugin_container_t *pc;
+        struct list_head *tmp, *bkp;
 
-        for ( tmp = entry->pclist.next; tmp != &entry->pclist; ) {
+        list_for_each_safe(tmp, bkp, &entry->pclist) {
+                
                 pc = list_entry(tmp, plugin_container_t, int_list);
 
-                tmp = tmp->next;
-
                 entry->unsubscribe(pc);
+
                 list_del(&pc->int_list);
                 free(pc);
         }
@@ -412,7 +412,6 @@ int plugin_add(plugin_container_t *pc, struct list_head *h, const char *infos)
 void plugin_del(plugin_container_t *pc) 
 {
         list_del(&pc->ext_list);
-        free(pc);
 }
 
 

@@ -1,5 +1,9 @@
 2002-02-07  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/plugin-common.c (delete_container): 
+	use list_for_each_safe.
+	(plugin_del): do not free the container here.
+
 	* src/prelude-getopt.c (print_options): 
 	remove an errornous putchar().
 	(print_options): description offset should include depth.
