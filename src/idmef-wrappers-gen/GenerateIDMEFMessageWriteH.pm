@@ -38,7 +38,7 @@ sub	header
 
 #include \"prelude-inttypes.h\"
 #include \"idmef-time.h\"
-#include \"idmef-string.h\"
+#include \"prelude-string.h\"
 #include \"prelude-message-buffered.h\"
 
 

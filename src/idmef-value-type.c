@@ -28,9 +28,10 @@
 
 #include "libmissing.h"
 #include "prelude-inttypes.h"
+#include "prelude-string.h"
+
 #include "idmef-time.h"
 #include "idmef-data.h"
-#include "idmef-string.h"
 #include "idmef-value-type.h"
 
 
@@ -226,8 +227,8 @@ static int string_compare(idmef_value_type_t *t1, idmef_value_type_t *t2, size_t
 {
         const char *s1, *s2;
         
-        s1 = idmef_string_get_string(t1->data.string_val);
-        s2 = idmef_string_get_string(t2->data.string_val);
+        s1 = prelude_string_get_string(t1->data.string_val);
+        s2 = prelude_string_get_string(t2->data.string_val);
         
         if ( relation & IDMEF_VALUE_RELATION_EQUAL && strcmp(s1, s2) == 0 )
                 return 0;
@@ -245,7 +246,7 @@ static int string_compare(idmef_value_type_t *t1, idmef_value_type_t *t2, size_t
 
 static int string_read(idmef_value_type_t *dst, const char *buf)
 {        
-        dst->data.string_val = idmef_string_new_dup(buf);
+        dst->data.string_val = prelude_string_new_dup(buf);
         if ( ! dst->data.string_val )
                 return -1;
 
@@ -256,14 +257,14 @@ static int string_read(idmef_value_type_t *dst, const char *buf)
 
 static int string_copy(void *dst, idmef_value_type_t *src, size_t size)
 {        
-        return idmef_string_copy_dup(dst, src->data.string_val);
+        return prelude_string_copy_dup(dst, src->data.string_val);
 }
 
 
 
 static int string_clone(idmef_value_type_t *dst, idmef_value_type_t *src, size_t size)
 {        
-        dst->data.string_val = idmef_string_clone(src->data.string_val);
+        dst->data.string_val = prelude_string_clone(src->data.string_val);
         if ( ! dst->data.string_val )
                 return -1;
 
@@ -273,14 +274,14 @@ static int string_clone(idmef_value_type_t *dst, idmef_value_type_t *src, size_t
 
 static void string_destroy(idmef_value_type_t *type)
 {        
-        idmef_string_destroy(type->data.string_val);
+        prelude_string_destroy(type->data.string_val);
 }
 
 
 
 static int string_write(char *buf, size_t size, idmef_value_type_t *src)
 {
-        return snprintf(buf, size, "%s", idmef_string_get_string(src->data.string_val));
+        return snprintf(buf, size, "%s", prelude_string_get_string(src->data.string_val));
 }
 
 

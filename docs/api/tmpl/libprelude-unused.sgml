@@ -98,6 +98,26 @@ getopt_long
 idmef-msg-send
 
 
+<!-- ##### SECTION ./tmpl/idmef-string.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/idmef-string.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/idmef-string.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/idmef-string.sgml:Title ##### -->
+idmef-string
+
+
 <!-- ##### SECTION ./tmpl/idmef-tree-func.sgml:Long_Description ##### -->
 <para>
 
@@ -258,6 +278,26 @@ prelude-path
 
 <!-- ##### SECTION ./tmpl/prelude-stdint.sgml:Title ##### -->
 prelude-stdint
+
+
+<!-- ##### SECTION ./tmpl/prelude-strbuf.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/prelude-strbuf.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/prelude-strbuf.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/prelude-strbuf.sgml:Title ##### -->
+prelude-strbuf
 
 
 <!-- ##### SECTION ./tmpl/prelude-timer-config.sgml:Long_Description ##### -->
@@ -2304,6 +2344,14 @@ thread
 
 @s: 
 
+<!-- ##### FUNCTION idmef_string_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@Returns: 
+
 <!-- ##### MACRO idmef_string_copy ##### -->
 <para>
 
@@ -2311,6 +2359,62 @@ thread
 
 @dst: 
 @src: 
+
+<!-- ##### FUNCTION idmef_string_copy_dup ##### -->
+<para>
+
+</para>
+
+@dst: 
+@src: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_string_copy_ref ##### -->
+<para>
+
+</para>
+
+@dst: 
+@src: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_string_destroy ##### -->
+<para>
+
+</para>
+
+@string: 
+
+<!-- ##### FUNCTION idmef_string_destroy_internal ##### -->
+<para>
+
+</para>
+
+@string: 
+
+<!-- ##### FUNCTION idmef_string_get_len ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_string_get_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_string_is_empty ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
 
 <!-- ##### TYPEDEF idmef_string_item_t ##### -->
 <para>
@@ -2325,6 +2429,71 @@ thread
 
 @s: 
 
+<!-- ##### FUNCTION idmef_string_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### MACRO idmef_string_new_constant ##### -->
+<para>
+
+</para>
+
+@str: 
+
+<!-- ##### FUNCTION idmef_string_new_dup ##### -->
+<para>
+
+</para>
+
+@str: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_string_new_dup_fast ##### -->
+<para>
+
+</para>
+
+@str: 
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_string_new_nodup ##### -->
+<para>
+
+</para>
+
+@str: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_string_new_nodup_fast ##### -->
+<para>
+
+</para>
+
+@str: 
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_string_new_ref ##### -->
+<para>
+
+</para>
+
+@str: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_string_new_ref_fast ##### -->
+<para>
+
+</para>
+
+@str: 
+@len: 
+@Returns: 
+
 <!-- ##### MACRO idmef_string_set ##### -->
 <para>
 
@@ -2332,6 +2501,77 @@ thread
 
 @s: 
 @str: 
+
+<!-- ##### MACRO idmef_string_set_constant ##### -->
+<para>
+
+</para>
+
+@s: 
+@str: 
+
+<!-- ##### FUNCTION idmef_string_set_dup ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_string_set_dup_fast ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_string_set_nodup ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_string_set_nodup_fast ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_string_set_ref ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@Returns: 
+
+<!-- ##### FUNCTION idmef_string_set_ref_fast ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@len: 
+@Returns: 
+
+<!-- ##### TYPEDEF idmef_string_t ##### -->
+<para>
+
+</para>
+
 
 <!-- ##### FUNCTION idmef_target_file_new ##### -->
 <para>
@@ -2414,6 +2654,21 @@ thread
 
 </para>
 
+
+<!-- ##### MACRO idmef_value_get_hdr ##### -->
+<para>
+
+</para>
+
+@n: 
+@t: 
+
+<!-- ##### MACRO idmef_value_get_struct_hdr ##### -->
+<para>
+
+</para>
+
+@n: 
 
 <!-- ##### FUNCTION idmef_webservice_arg_new ##### -->
 <para>
@@ -3460,6 +3715,97 @@ thread
 @filename: 
 @skey1: 
 @skey2: 
+@Returns: 
+
+<!-- ##### FUNCTION prelude_strbuf_cat ##### -->
+<para>
+
+</para>
+
+@s: 
+@str: 
+@Returns: 
+
+<!-- ##### FUNCTION prelude_strbuf_clear ##### -->
+<para>
+
+</para>
+
+@s: 
+
+<!-- ##### FUNCTION prelude_strbuf_destroy ##### -->
+<para>
+
+</para>
+
+@s: 
+
+<!-- ##### FUNCTION prelude_strbuf_dont_own ##### -->
+<para>
+
+</para>
+
+@s: 
+
+<!-- ##### FUNCTION prelude_strbuf_get_len ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+<!-- ##### FUNCTION prelude_strbuf_get_string ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+<!-- ##### FUNCTION prelude_strbuf_is_empty ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+<!-- ##### FUNCTION prelude_strbuf_ncat ##### -->
+<para>
+
+</para>
+
+@s: 
+@str: 
+@len: 
+@Returns: 
+
+<!-- ##### FUNCTION prelude_strbuf_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION prelude_strbuf_sprintf ##### -->
+<para>
+
+</para>
+
+@s: 
+@fmt: 
+@Varargs: 
+@Returns: 
+
+<!-- ##### FUNCTION prelude_strbuf_vprintf ##### -->
+<para>
+
+</para>
+
+@s: 
+@fmt: 
+@ap: 
 @Returns: 
 
 <!-- ##### FUNCTION prelude_thread_create ##### -->

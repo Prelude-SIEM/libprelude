@@ -176,7 +176,7 @@ static char *generate_md5sum(const char *filename)
 
 
 
-static int add_hb_data(idmef_heartbeat_t *hb, idmef_string_t *meaning, idmef_data_t *data)
+static int add_hb_data(idmef_heartbeat_t *hb, prelude_string_t *meaning, idmef_data_t *data)
 {
         idmef_additional_data_t *ad;
         
@@ -215,6 +215,7 @@ static const char *client_get_status(prelude_client_t *client)
 static void heartbeat_expire_cb(void *data)
 {
         char buf[128];
+        const char *str;
         idmef_message_t *message;
         idmef_heartbeat_t *heartbeat;
         prelude_client_t *client = data;
@@ -232,16 +233,17 @@ static void heartbeat_expire_cb(void *data)
         }
 
         snprintf(buf, sizeof(buf), "%u", timer_expire(&client->heartbeat_timer) / 60);
-        
-        add_hb_data(heartbeat, idmef_string_new_constant("Analyzer status"),
-                    idmef_string_new_ref(client_get_status(client)));
+
+        str = client_get_status(client);
+        add_hb_data(heartbeat, prelude_string_new_constant("Analyzer status"),
+                    idmef_data_new_ref(str, strlen(str) + 1));
 
         if ( client->md5sum )
-                add_hb_data(heartbeat, idmef_string_new_constant("Analyzer md5sum"),
-                            idmef_string_new_ref(client->md5sum));
-
-        add_hb_data(heartbeat, idmef_string_new_constant("Analyzer heartbeat interval"),
-                    idmef_string_new_ref(buf));
+                add_hb_data(heartbeat, prelude_string_new_constant("Analyzer md5sum"),
+                            idmef_data_new_ref(client->md5sum, strlen(client->md5sum) + 1));
+        
+        add_hb_data(heartbeat, prelude_string_new_constant("Analyzer heartbeat interval"),
+                    idmef_data_new_ref(buf, strlen(buf) + 1));
         
         idmef_heartbeat_set_create_time(heartbeat, idmef_time_new_gettimeofday());
         idmef_heartbeat_set_analyzer(heartbeat, idmef_analyzer_ref(client->analyzer));
@@ -285,8 +287,8 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
                 return -1;
         }
 
-        idmef_analyzer_set_ostype(client->analyzer, idmef_string_new_dup(uts.sysname));
-	idmef_analyzer_set_osversion(client->analyzer, idmef_string_new_dup(uts.release));
+        idmef_analyzer_set_ostype(client->analyzer, prelude_string_new_dup(uts.sysname));
+	idmef_analyzer_set_osversion(client->analyzer, prelude_string_new_dup(uts.release));
 
         process = idmef_analyzer_new_process(client->analyzer);
         if ( ! process ) {
@@ -303,8 +305,8 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
         if ( ret < 0 )
                 return -1;
         
-        idmef_process_set_name(process, idmef_string_new_ref(name));
-        idmef_process_set_path(process, idmef_string_new_ref(path));
+        idmef_process_set_name(process, prelude_string_new_ref(name));
+        idmef_process_set_path(process, prelude_string_new_ref(path));
         
         snprintf(filename, sizeof(filename), "%s/%s", path, name);
         client->md5sum = generate_md5sum(filename);
@@ -357,7 +359,7 @@ static int get_node_address_vlan_num(void *context, prelude_option_t *opt, char 
 
 static int set_node_address_vlan_name(void *context, prelude_option_t *opt, const char *arg) 
 {
-        idmef_address_set_vlan_name(context, idmef_string_new_dup(arg));
+        idmef_address_set_vlan_name(context, prelude_string_new_dup(arg));
         return 0;
 }
 
@@ -365,7 +367,7 @@ static int set_node_address_vlan_name(void *context, prelude_option_t *opt, cons
 
 static int get_node_address_vlan_name(void *context, prelude_option_t *opt, char *out, size_t size)
 {
-        snprintf(out, size, "%s", idmef_string_get_string(idmef_address_get_vlan_name(context)));
+        snprintf(out, size, "%s", prelude_string_get_string(idmef_address_get_vlan_name(context)));
         return 0;
 }
 
@@ -373,7 +375,7 @@ static int get_node_address_vlan_name(void *context, prelude_option_t *opt, char
 
 static int set_node_address_address(void *context, prelude_option_t *opt, const char *arg) 
 {       
-        idmef_address_set_address(context, idmef_string_new_dup(arg));
+        idmef_address_set_address(context, prelude_string_new_dup(arg));
         return 0;
 }
 
@@ -381,7 +383,7 @@ static int set_node_address_address(void *context, prelude_option_t *opt, const 
 
 static int get_node_address_address(void *context, prelude_option_t *opt, char *out, size_t size)
 {
-        snprintf(out, size, "%s", idmef_string_get_string(idmef_address_get_address(context)));
+        snprintf(out, size, "%s", prelude_string_get_string(idmef_address_get_address(context)));
         return 0;
 }
 
@@ -389,7 +391,7 @@ static int get_node_address_address(void *context, prelude_option_t *opt, char *
 
 static int set_node_address_netmask(void *context, prelude_option_t *opt, const char *arg) 
 {
-        idmef_address_set_netmask(context, idmef_string_new_dup(arg));
+        idmef_address_set_netmask(context, prelude_string_new_dup(arg));
         return 0;
 }
 
@@ -397,7 +399,7 @@ static int set_node_address_netmask(void *context, prelude_option_t *opt, const 
 
 static int get_node_address_netmask(void *context, prelude_option_t *opt, char *out, size_t size)
 {
-        snprintf(out, size, "%s", idmef_string_get_string(idmef_address_get_netmask(context)));
+        snprintf(out, size, "%s", prelude_string_get_string(idmef_address_get_netmask(context)));
         return 0;
 }
 
@@ -481,7 +483,7 @@ static int set_node_location(void *context, prelude_option_t *opt, const char *a
         if ( ! node )
                 return -1;
 
-        idmef_node_set_location(node, idmef_string_new_dup(arg));
+        idmef_node_set_location(node, prelude_string_new_dup(arg));
 
         return 0;
 }
@@ -496,7 +498,7 @@ static int get_node_location(void *context, prelude_option_t *opt, char *out, si
         if ( ! node )
                 return -1;
         
-        snprintf(out, size, "%s", idmef_string_get_string(idmef_node_get_location(node)));
+        snprintf(out, size, "%s", prelude_string_get_string(idmef_node_get_location(node)));
         
         return 0;
 }
@@ -512,7 +514,7 @@ static int set_node_name(void *context, prelude_option_t *opt, const char *arg)
         if ( ! node )
                 return -1;
 
-        idmef_node_set_name(node, idmef_string_new_dup(arg));
+        idmef_node_set_name(node, prelude_string_new_dup(arg));
 
         return 0;
 }
@@ -527,7 +529,7 @@ static int get_node_name(void *context, prelude_option_t *opt, char *out, size_t
         if ( ! node )
                 return -1;
         
-        snprintf(out, size, "%s", idmef_string_get_string(idmef_node_get_name(node)));
+        snprintf(out, size, "%s", prelude_string_get_string(idmef_node_get_name(node)));
         
         return 0;
 }

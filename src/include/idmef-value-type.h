@@ -25,7 +25,7 @@
 #define _IDMEF_VALUE_TYPE_H
 
 #include "idmef-time.h"
-#include "idmef-string.h"
+#include "prelude-string.h"
 
 
 typedef enum {
@@ -70,7 +70,7 @@ typedef union {
         uint64_t uint64_val;
         float float_val;
         double double_val;
-        idmef_string_t *string_val;
+        prelude_string_t *string_val;
         idmef_time_t *time_val;
         idmef_data_t *data_val;
         void *object_val;

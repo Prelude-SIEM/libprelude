@@ -96,7 +96,7 @@
 #define IDMEF_VERSION "0.6"
 
 #ifndef _GENERATE
-#include "idmef-string.h"
+#include "prelude-string.h"
 #include "idmef-time.h"
 #include "idmef-data.h"
 #endif
@@ -111,7 +111,7 @@ PRIMITIVE_TYPE(uint64_t)
 PRIMITIVE_TYPE(uchar_t)
 PRIMITIVE_TYPE(float)
 
-PRIMITIVE_TYPE_STRUCT(idmef_string_t)
+PRIMITIVE_TYPE_STRUCT(prelude_string_t)
 PRIMITIVE_TYPE_STRUCT(idmef_time_t)
 PRIMITIVE_TYPE_STRUCT(idmef_data_t)
 
@@ -139,7 +139,7 @@ struct {
         IS_LISTED;
 	REFCOUNT;
         idmef_additional_data_type_t type;
-        idmef_string_t meaning;
+        prelude_string_t meaning;
 	idmef_data_t data;
 } TYPE_ID(idmef_additional_data_t, 4);
 
@@ -163,8 +163,8 @@ struct {
         IS_LISTED;
 	REFCOUNT;
         idmef_classification_origin_t origin;
-        idmef_string_t name;
-        idmef_string_t url;
+        prelude_string_t name;
+        prelude_string_t url;
 } TYPE_ID(idmef_classification_t, 6);
 
 
@@ -191,7 +191,7 @@ struct {
 	REFCOUNT;
         uint64_t ident;
         idmef_userid_type_t type;
-        idmef_string_t name;
+        prelude_string_t name;
         uint32_t number;
 } TYPE_ID(idmef_userid_t, 8);
 
@@ -252,10 +252,10 @@ struct {
         REFCOUNT;
         uint64_t ident;
         idmef_address_category_t category;
-        idmef_string_t vlan_name;
+        prelude_string_t vlan_name;
         uint32_t vlan_num;
-        idmef_string_t address;
-        idmef_string_t netmask;
+        prelude_string_t address;
+        prelude_string_t netmask;
 } TYPE_ID(idmef_address_t, 12);
 
 
@@ -267,22 +267,22 @@ struct {
 struct {
 	REFCOUNT;
         uint64_t ident;
-        idmef_string_t name;
+        prelude_string_t name;
         uint32_t pid;
-        idmef_string_t path;
+        prelude_string_t path;
 
-        LISTED_OBJECT(arg_list, idmef_string_t);
-        LISTED_OBJECT(env_list, idmef_string_t);
+        LISTED_OBJECT(arg_list, prelude_string_t);
+        LISTED_OBJECT(env_list, prelude_string_t);
 } TYPE_ID(idmef_process_t, 13);
 
 
 
 struct {
 	REFCOUNT;
-        idmef_string_t url;
-        idmef_string_t cgi;
-        idmef_string_t http_method;
-        LISTED_OBJECT(arg_list, idmef_string_t);
+        prelude_string_t url;
+        prelude_string_t cgi;
+        prelude_string_t http_method;
+        LISTED_OBJECT(arg_list, prelude_string_t);
 } TYPE_ID(idmef_webservice_t, 14);
 
 
@@ -293,9 +293,9 @@ struct {
  */
 struct {
 	REFCOUNT;
-        idmef_string_t oid;
-        idmef_string_t community;
-        idmef_string_t command;
+        prelude_string_t oid;
+        prelude_string_t community;
+        prelude_string_t command;
 } TYPE_ID(idmef_snmpservice_t, 15);
 
         
@@ -315,10 +315,10 @@ ENUM() {
 struct {
 	REFCOUNT;
         uint64_t ident;
-        idmef_string_t name;
+        prelude_string_t name;
         uint16_t port;
-        idmef_string_t portlist;
-        idmef_string_t protocol;
+        prelude_string_t portlist;
+        prelude_string_t protocol;
 
 	UNION(idmef_service_type_t, type) {
 		UNION_MEMBER(IDMEF_SERVICE_TYPE_WEB, idmef_webservice_t, *web);
@@ -355,8 +355,8 @@ struct {
 	REFCOUNT;
         uint64_t ident;
         idmef_node_category_t category;
-        idmef_string_t location;
-        idmef_string_t name;
+        prelude_string_t location;
+        prelude_string_t name;
         LISTED_OBJECT(address_list, idmef_address_t);
 } TYPE_ID(idmef_node_t, 19);
 
@@ -381,7 +381,7 @@ struct {
 
         uint64_t ident;
         idmef_source_spoofed_t spoofed;
-        idmef_string_t interface;
+        prelude_string_t interface;
 
         idmef_node_t *node;
         idmef_user_t *user;
@@ -402,7 +402,7 @@ struct {
 	REFCOUNT;
         
         idmef_userid_t userid;
-        LISTED_OBJECT(permission_list, idmef_string_t);
+        LISTED_OBJECT(permission_list, prelude_string_t);
 } TYPE_ID(idmef_file_access_t, 22);
 
 
@@ -460,8 +460,8 @@ struct {
         idmef_file_category_t category;
         idmef_file_fstype_t fstype;
 
-        idmef_string_t name;
-        idmef_string_t path;
+        prelude_string_t name;
+        prelude_string_t path;
 
         idmef_time_t *create_time;
         idmef_time_t *modify_time;
@@ -496,8 +496,8 @@ struct {
 	REFCOUNT;
         
         idmef_linkage_category_t category;
-        idmef_string_t name;
-        idmef_string_t path;
+        prelude_string_t name;
+        prelude_string_t path;
         idmef_file_t *file;
 } TYPE_ID(idmef_linkage_t, 28);
 
@@ -522,7 +522,7 @@ struct {
         
         uint64_t ident;
         idmef_target_decoy_t decoy;
-        idmef_string_t interface;
+        prelude_string_t interface;
 
         idmef_node_t *node;
         idmef_user_t *user;
@@ -542,12 +542,12 @@ struct {
 	REFCOUNT;
 
         uint64_t analyzerid;
-        idmef_string_t manufacturer;
-        idmef_string_t model;
-        idmef_string_t version;
-        idmef_string_t class;
-        idmef_string_t ostype;
-        idmef_string_t osversion;
+        prelude_string_t manufacturer;
+        prelude_string_t model;
+        prelude_string_t version;
+        prelude_string_t class;
+        prelude_string_t ostype;
+        prelude_string_t osversion;
         
         idmef_node_t *node;
         idmef_process_t *process;
@@ -607,7 +607,7 @@ struct {
         idmef_impact_severity_t severity;
         idmef_impact_completion_t completion;
         idmef_impact_type_t type;
-        idmef_string_t description;
+        prelude_string_t description;
 } TYPE_ID(idmef_impact_t, 36);
 
 
@@ -628,7 +628,7 @@ struct {
 	REFCOUNT;
 
         idmef_action_category_t category;
-        idmef_string_t description;
+        prelude_string_t description;
 } TYPE_ID(idmef_action_t, 38);
 
 
@@ -672,8 +672,8 @@ struct {
 struct {
 	REFCOUNT;
 
-        idmef_string_t name;
-        idmef_string_t command;
+        prelude_string_t name;
+        prelude_string_t command;
         LISTED_OBJECT(alertident_list, idmef_alertident_t);
 } TYPE_ID(idmef_tool_alert_t, 42);
 
@@ -687,7 +687,7 @@ struct {
 struct {
 	REFCOUNT;
 
-        idmef_string_t name;
+        prelude_string_t name;
         LISTED_OBJECT(alertident_list, idmef_alertident_t);
 } TYPE_ID(idmef_correlation_alert_t, 43);
 
@@ -700,7 +700,7 @@ struct {
 struct {
 	REFCOUNT;
 
-        idmef_string_t program;
+        prelude_string_t program;
         uint32_t *size;
         idmef_data_t *buffer;
 } TYPE_ID(idmef_overflow_alert_t, 44);
@@ -778,7 +778,7 @@ ENUM() {
 struct {        
         REFCOUNT;
         
-        idmef_string_t version;
+        prelude_string_t version;
 
         UNION(idmef_message_type_t, type) {
 		UNION_MEMBER(IDMEF_MESSAGE_TYPE_ALERT, idmef_alert_t, *alert);

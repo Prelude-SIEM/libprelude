@@ -53,11 +53,11 @@ static void print_indent(void)
 
 
 
-static void print_string(idmef_string_t *string)
+static void print_string(prelude_string_t *string)
 \{
 	const char *s;
 
-	s = idmef_string_get_string(string);
+	s = prelude_string_get_string(string);
 	printf(\"\%s\", s ? s : \"<empty>\");
 \}
 
@@ -258,7 +258,7 @@ sub	struct_field_list
     if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
 	$self->output("
 			printf(\"$field->{short_name}(%d): \", cnt);
-			print_$field->{short_typename}(elem);
+			print_$field->{value_type}(elem);
 			printf(\"\\n\");
 ");
 

@@ -67,8 +67,8 @@ sub	header
 #include \"prelude-inttypes.h\"
 #include \"prelude-list.h\"
 #include \"prelude-message.h\"
+#include \"prelude-string.h\"
 
-#include \"idmef-string.h\"
 #include \"idmef-time.h\"
 #include \"idmef-data.h\"
 #include \"idmef-type.h\"
@@ -340,6 +340,14 @@ static void idmef_$struct->{short_typename}_destroy_internal($struct->{typename}
 ") if ( $struct->{is_listed} );
 
     foreach my $field ( @{ $struct->{field_list} } ) {
+	my $destroy_func = "$field->{short_typename}_destroy";
+	my $destroy_internal_func = "${destroy_func}_internal";
+
+	if ( ! ($field->{metatype} & &METATYPE_PRIMITIVE) ) {
+	    $destroy_func = "idmef_${destroy_func}";
+	    $destroy_internal_func = "idmef_$destroy_internal_func";
+	}
+	
 	if ( $field->{metatype} & &METATYPE_LIST ) {
 
 	    $self->output("
@@ -349,7 +357,7 @@ static void idmef_$struct->{short_typename}_destroy_internal($struct->{typename}
 
 		prelude_list_for_each_safe(tmp, n, &ptr->$field->{name}) \{
 			entry = prelude_list_entry(tmp, $field->{typename}, list);
-			idmef_$field->{short_typename}_destroy(entry);
+			$destroy_func(entry);
 		\}
 	\}
 ");
@@ -374,14 +382,6 @@ static void idmef_$struct->{short_typename}_destroy_internal($struct->{typename}
 	}
 ");
 	} elsif ( $field->{metatype} & &METATYPE_STRUCT ) {
-	    my $destroy_func = "$field->{short_typename}_destroy";
-	    my $destroy_internal_func = "${destroy_func}_internal";
-
-	    if ( ! ($field->{metatype} & &METATYPE_PRIMITIVE) ) {
-		$destroy_func = "idmef_${destroy_func}";
-		$destroy_internal_func = "idmef_$destroy_internal_func";
-	    }
-	    
 	    if ( $field->{ptr} ) {
 		$self->output("
 	if ( ptr->$field->{name} ) \{
@@ -853,6 +853,9 @@ sub	struct_field_list
     my	$tree = shift;
     my	$struct = shift;
     my	$field = shift;
+    my	$new_field_function = "$field->{short_typename}_new()";
+
+    $new_field_function = "idmef_${new_field_function}" if ( ! ($field->{metatype} & &METATYPE_PRIMITIVE) );
 
     $self->output("
 /**
@@ -896,7 +899,7 @@ $field->{typename} *idmef_$struct->{short_typename}_new_$field->{short_name}($st
 \{
 	$field->{typename} *object;
 	
-	object = idmef_$field->{short_typename}_new();
+	object = $new_field_function;
 	if ( ! object )
 		return NULL;
 	

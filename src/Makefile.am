@@ -33,13 +33,12 @@ libprelude_la_SOURCES = 		\
 	prelude-hash.c			\
 	prelude-log.c			\
 	prelude-inet.c			\
-	prelude-strbuf.c		\
+	prelude-string.c		\
 	client-ident.c			\
 	ntp.c				\
 	idmef-util.c			\
 	idmef-time.c			\
 	idmef-data.c			\
-	idmef-string.c			\
 	idmef-tree-print.c		\
 	idmef-tree-to-string.c		\
 	idmef-tree-wrap.c		\

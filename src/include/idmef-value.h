@@ -25,6 +25,7 @@
 #ifndef _LIBPRELUDE_IDMEF_VALUE_H
 #define _LIBPRELUDE_IDMEF_VALUE_H
 
+#include "prelude-string.h"
 #include "idmef-value-type.h"
 #include "idmef-type.h"
 
@@ -40,7 +41,7 @@ idmef_value_t *idmef_value_new_int64(int64_t val);
 idmef_value_t *idmef_value_new_uint64(uint64_t val);
 idmef_value_t *idmef_value_new_float(float val);
 idmef_value_t *idmef_value_new_double(double val);
-idmef_value_t *idmef_value_new_string(idmef_string_t *string);
+idmef_value_t *idmef_value_new_string(prelude_string_t *string);
 idmef_value_t *idmef_value_new_time(idmef_time_t *time);
 idmef_value_t *idmef_value_new_data(idmef_data_t *data);
 idmef_value_t *idmef_value_new_object(void *object, idmef_object_type_t object_type);
@@ -50,23 +51,19 @@ idmef_value_t *idmef_value_new_enum_string(idmef_object_type_t type, const char 
 idmef_value_t *idmef_value_new_enum_numeric(idmef_object_type_t type, int val);
 idmef_value_t *idmef_value_new_generic(idmef_value_type_id_t type, const char *buf);
 
-#define idmef_value_get_hdr(n, t) t idmef_value_get_ ## n (idmef_value_t *val)
+int16_t idmef_value_get_int16(idmef_value_t *val);
+uint16_t idmef_value_get_uint16(idmef_value_t *val);
+int32_t idmef_value_get_int32(idmef_value_t *val);
+uint32_t idmef_value_get_uint32(idmef_value_t *val);
+int64_t idmef_value_get_int64(idmef_value_t *val);
+uint64_t idmef_value_get_uint64(idmef_value_t *val);
+int idmef_value_get_enum(idmef_value_t *val);
+float idmef_value_get_float(idmef_value_t *val);
+double idmef_value_get_double(idmef_value_t *val);
 
-idmef_value_get_hdr(int16, int16_t);
-idmef_value_get_hdr(uint16, uint16_t);
-idmef_value_get_hdr(int32, int32_t);
-idmef_value_get_hdr(uint32, uint32_t);
-idmef_value_get_hdr(int64, int64_t);
-idmef_value_get_hdr(uint64, uint64_t);
-idmef_value_get_hdr(enum, int);
-idmef_value_get_hdr(float, float);
-idmef_value_get_hdr(double, double);
-
-#define idmef_value_get_struct_hdr(n) idmef_ ## n ## _t *idmef_value_get_ ## n (idmef_value_t *val)
-
-idmef_value_get_struct_hdr(string);
-idmef_value_get_struct_hdr(time);
-idmef_value_get_struct_hdr(data);
+idmef_time_t *idmef_value_get_time(idmef_value_t *val);
+idmef_data_t *idmef_value_get_data(idmef_value_t *val);
+prelude_string_t *idmef_value_get_string(idmef_value_t *val);
 
 int idmef_value_list_add(idmef_value_t *list, idmef_value_t *new);
 int idmef_value_is_list(idmef_value_t *list);

@@ -30,8 +30,8 @@
 #include "prelude-list.h"
 #include "prelude-log.h"
 #include "prelude-inttypes.h"
+#include "prelude-string.h"
 
-#include "idmef-string.h"
 #include "idmef-time.h"
 #include "idmef-data.h"
 

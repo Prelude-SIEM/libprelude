@@ -31,8 +31,8 @@
 #include "prelude-list.h"
 #include "prelude-log.h"
 #include "prelude-inttypes.h"
+#include "prelude-string.h"
 
-#include "idmef-string.h"
 #include "idmef-time.h"
 #include "idmef-data.h"
 
@@ -54,10 +54,10 @@ idmef_child_t idmef_type_find_child(idmef_object_type_t type, const char *name)
 		return -1;
 	
 	list = object_data[type].children_list;
-	for (i=0; list[i].name; i++)
+	for ( i = 0; list[i].name; i++ )                
 		if (strcasecmp(list[i].name, name) == 0)
 			return i;
-
+        
 	return -1;
 }
 

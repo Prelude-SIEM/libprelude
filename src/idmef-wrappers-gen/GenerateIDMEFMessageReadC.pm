@@ -77,19 +77,17 @@ sub	header
 #include \"idmef-message-read.h\"
 #include \"idmef-util.h\"
 
+#define extract_string_safe(out, buf, len) extract_string_safe_f(__FUNCTION__, __LINE__, out, buf, len)
 
-static inline int extract_string_safe(idmef_string_t **out, char *buf, size_t len)
+static inline int extract_string_safe_f(const char *f, int line, prelude_string_t **out, char *buf, size_t len)
 \{
-        if ( buf[len - 1] ) \{
-                log(LOG_ERR, \"Datatype error: buffer is not a string.\\n\");
-                return -1;
-        \}
+        /*
+         * we use len - 1 since len is supposed to include \0 to avoid making a dup.
+         */
 
-        *out = idmef_string_new_ref_fast(buf, len);
-        if ( ! *out ) \{
-                log(LOG_ERR, \"memory exhausted.\\n\");
+        *out = prelude_string_new_ref_fast(buf, len - 1);
+        if ( ! *out ) \
                 return -2;
-        \}
 
         return 0;
 \}

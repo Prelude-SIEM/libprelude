@@ -11,8 +11,6 @@
 <!ENTITY libprelude-idmef-criteria-string SYSTEM "sgml/idmef-criteria-string.sgml">
 <!ENTITY libprelude-ntp SYSTEM "sgml/ntp.sgml">
 <!ENTITY libprelude-prelude-connection SYSTEM "sgml/prelude-connection.sgml">
-<!ENTITY libprelude-idmef-string SYSTEM "sgml/idmef-string.sgml">
-<!ENTITY libprelude-prelude-strbuf SYSTEM "sgml/prelude-strbuf.sgml">
 <!ENTITY libprelude-idmef-message-write SYSTEM "sgml/idmef-message-write.sgml">
 <!ENTITY libprelude-prelude-ident SYSTEM "sgml/prelude-ident.sgml">
 <!ENTITY libprelude-idmef-message-id-format SYSTEM "sgml/idmef-message-id-format.sgml">
@@ -74,8 +72,6 @@
     &libprelude-idmef-criteria-string;
     &libprelude-ntp;
     &libprelude-prelude-connection;
-    &libprelude-idmef-string;
-    &libprelude-prelude-strbuf;
     &libprelude-idmef-message-write;
     &libprelude-prelude-ident;
     &libprelude-idmef-message-id-format;

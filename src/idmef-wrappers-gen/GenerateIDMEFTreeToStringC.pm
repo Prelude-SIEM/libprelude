@@ -79,12 +79,12 @@ to_string_(float, float, \"\%f\")
 
 
 
-static	int to_string_string(idmef_string_t *string, char *buffer, size_t size)
+static	int to_string_string(prelude_string_t *string, char *buffer, size_t size)
 \{
 	const char *s;
 	int offset = 0;
 
-	s = idmef_string_get_string(string);
+	s = prelude_string_get_string(string);
 
 	MY_SNPRINTF(buffer, size, offset, \"\%s\", s ? s : \"<empty>\");
 

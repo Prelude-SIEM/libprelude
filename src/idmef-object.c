@@ -32,8 +32,8 @@
 #include "prelude-hash.h"
 #include "prelude-log.h"
 #include "prelude-inttypes.h"
+#include "prelude-string.h"
 
-#include "idmef-string.h"
 #include "idmef-time.h"
 #include "idmef-data.h"
 
@@ -42,7 +42,7 @@
 
 #include "idmef-tree-wrap.h"
 #include "idmef-object.h"
-#include "prelude-strbuf.h"
+#include "prelude-string.h"
 #include "prelude-linked-object.h"
 
 
@@ -332,13 +332,13 @@ static int idmef_object_parse_new(const char *buffer, idmef_object_t *object)
         do {
                 index = -1;
                 is_last = parse_object_token(&endptr, &ptr);
-                
+                            
                 ptr2 = strchr(ptr, '(');
                 if ( ptr2 ) {
                         *ptr2 = '\0';
                         index = strtol(ptr2 + 1, NULL, 0);
                 }
-
+                
                 id = idmef_type_find_child(type, ptr);
                 if ( id < 0 ) 
 			return -1;
@@ -380,7 +380,8 @@ static int idmef_object_parse_new(const char *buffer, idmef_object_t *object)
 		object->desc[depth - 1].object_type = idmef_type_get_child_enum_type(prev_type, id);
 	else
                 object->desc[depth - 1].object_type = idmef_type_get_child_object_type(prev_type, id);
-	return 0;
+
+        return 0;
 }
 
 
@@ -482,7 +483,7 @@ static inline int invalidate(idmef_object_t *object)
         int ret;
         
 	pthread_mutex_lock(&object->mutex);
-
+        
 	if ( object->refcount == 1 ) {
 		pthread_mutex_unlock(&object->mutex);
 		return 0; /* not cached */
@@ -512,7 +513,7 @@ static inline int invalidate(idmef_object_t *object)
 	if ( object->refcount == 2 ) {
 		pthread_mutex_lock(&cached_object_mutex);
 		ret = prelude_hash_elem_destroy(cached_objects, object->name);
-		pthread_mutex_unlock(&cached_object_mutex);
+                pthread_mutex_unlock(&cached_object_mutex);
 
 		if ( ret == 0 )
 			object->refcount--;  /* object was present in a hash */
@@ -600,7 +601,7 @@ int idmef_object_make_child(idmef_object_t *object, const char *child_name, int 
 	child = idmef_type_find_child(idmef_object_get_type(object), child_name);
 	if ( child < 0 )
 		return -4;
-
+        
 	if ( invalidate(object) < 0 )
 		return -5;
 
@@ -802,25 +803,25 @@ char *idmef_object_get_numeric(idmef_object_t *object)
 {
         int i;
         char *ret;
-        prelude_strbuf_t *buf;
+        prelude_string_t *string;
 
-        buf = prelude_strbuf_new();
-        if ( ! buf )
+        string = prelude_string_new();
+        if ( ! string )
                 return NULL;
 
-        prelude_strbuf_sprintf(buf, "%hu", object->desc[0].id);
+        prelude_string_sprintf(string, "%hu", object->desc[0].id);
         
 	for ( i = 1; i < object->depth; i++ ) {
 
-                prelude_strbuf_sprintf(buf, ".%hu", object->desc[i].id);
+                prelude_string_sprintf(string, ".%hu", object->desc[i].id);
                 
 	    	if ( object->desc[i].no != INDEX_UNDEFINED && object->desc[i].no != INDEX_FORBIDDEN )
-                        prelude_strbuf_sprintf(buf, "(%hhu)", object->desc[i].no);
+                        prelude_string_sprintf(string, "(%hhu)", object->desc[i].no);
 	}
 
-        ret = prelude_strbuf_get_string(buf);
-        prelude_strbuf_dont_own(buf);
-        prelude_strbuf_destroy(buf);
+        ret = prelude_string_get_string(string);
+        prelude_string_dont_own(string);
+        prelude_string_destroy(string);
         
 	return ret;
 }

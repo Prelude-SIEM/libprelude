@@ -41,7 +41,6 @@
 #include <time.h>
 
 #include "libmissing.h"
-#include "prelude-strbuf.h"
 #include "prelude-log.h"
 #include "common.h"
 

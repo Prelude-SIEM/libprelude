@@ -40,13 +40,11 @@
 #include "extract.h"
 #include "prelude-ident.h"
 
-#include "idmef-string.h"
 #include "idmef-time.h"
 #include "idmef-data.h"
 #include "idmef-type.h"
 #include "idmef-value.h"
 #include "idmef-tree-wrap.h"
-#include "prelude-strbuf.h"
 
 #include "ntp.h"
 #include "idmef-util.h"

@@ -196,6 +196,14 @@ prelude-inttypes
 
 
 
+<!-- ##### ENUM prelude_bool_t ##### -->
+<para>
+
+</para>
+
+@PRELUDE_BOOL_TRUE: 
+@PRELUDE_BOOL_FALSE: 
+
 <!-- ##### TYPEDEF int8_t ##### -->
 <para>
 

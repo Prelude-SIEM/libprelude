@@ -91,12 +91,12 @@ sub	header
  */
 
 
-static inline void idmef_string_write(idmef_string_t *string, prelude_msgbuf_t *msg, uint8_t tag)
+static inline void prelude_string_write(prelude_string_t *string, prelude_msgbuf_t *msg, uint8_t tag)
 \{
-        if ( ! string || ! idmef_string_get_string(string) )
+        if ( ! string || prelude_string_is_empty(string) )
                 return;
 
-        prelude_msgbuf_set(msg, tag, idmef_string_get_len(string), idmef_string_get_string(string));
+        prelude_msgbuf_set(msg, tag, prelude_string_get_len(string) + 1, prelude_string_get_string(string));
 \}
 
 
@@ -241,7 +241,7 @@ sub	struct_field_list
 
     if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
 	$self->output(" " x 24,
-		      "idmef_$field->{short_typename}_write($field->{short_name}, msg, ",
+		      "$field->{short_typename}_write($field->{short_name}, msg, ",
 		      "MSG_", uc($struct->{short_typename}), "_", uc($field->{short_name}),
 		      ");\n");
 

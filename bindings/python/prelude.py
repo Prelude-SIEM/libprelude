@@ -149,19 +149,19 @@ class Sensor(Client):
 
         process = _prelude.idmef_analyzer_get_process(self._analyzer)
         for arg in sys.argv[1:]:
-            _prelude.idmef_process_set_arg(process, _prelude.idmef_string_new_dup(arg))
+            _prelude.idmef_process_set_arg(process, _prelude.prelude_string_new_dup(arg))
     
     def set_manufacturer(self, manufacturer):
-        _prelude.idmef_analyzer_set_manufacturer(self._analyzer, _prelude.idmef_string_new_dup(manufacturer))
+        _prelude.idmef_analyzer_set_manufacturer(self._analyzer, _prelude.prelude_string_new_dup(manufacturer))
 
     def set_model(self, name, version=None):
-        _prelude.idmef_analyzer_set_model(self._analyzer, _prelude.idmef_string_new_dup(name))
+        _prelude.idmef_analyzer_set_model(self._analyzer, _prelude.prelude_string_new_dup(name))
         
         if version:
-            _prelude.idmef_analyzer_set_version(self._analyzer, _prelude.idmef_string_new_dup(version))
+            _prelude.idmef_analyzer_set_version(self._analyzer, _prelude.prelude_string_new_dup(version))
 
     def set_class(self, class_):
-        _prelude.idmef_analyzer_set_class(self._analyzer, _prelude.idmef_string_new_dup(class_))
+        _prelude.idmef_analyzer_set_class(self._analyzer, _prelude.prelude_string_new_dup(class_))
 
     def send_alert(self, message):
         alert = _prelude.idmef_message_get_alert(message.res)
@@ -456,7 +456,7 @@ def _idmef_value_python_to_c(object, py_value):
         if type(py_value) is not str:
             raise IDMEFValueError(py_value, "expected %s, got %s" % (str, type(py_value)))
 
-        c_string = _prelude.idmef_string_new_dup(py_value)
+        c_string = _prelude.prelude_string_new_dup(py_value)
         if not c_string:
             raise Error()
 
@@ -510,7 +510,7 @@ def idmef_value_c_to_python(value):
         if not string:
             return None
 
-        return _prelude.idmef_string_get_string(string)
+        return _prelude.prelude_string_get_string(string)
     
     if type == _prelude.IDMEF_VALUE_TYPE_DATA:
         data = _prelude.idmef_value_get_data(value)

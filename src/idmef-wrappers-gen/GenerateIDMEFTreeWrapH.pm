@@ -64,6 +64,7 @@ sub	header
 #include \"idmef-value.h\"
 #include \"prelude-inttypes.h\"
 #include \"prelude-message.h\"
+#include \"prelude-string.h\"
 
 ");
 }

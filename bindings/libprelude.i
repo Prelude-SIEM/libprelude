@@ -236,7 +236,7 @@ char *prelude_option_recv_set(prelude_msg_t *msg);
 %include "idmef-object.h"
 %include "idmef-time.h"
 %include "idmef-data.h"
-%include "idmef-string.h"
+%include "prelude-string.h"
 %include "idmef-criteria.h"
 %include "idmef-criteria-string.h"
 %include "idmef-value-object.h"

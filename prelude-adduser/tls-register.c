@@ -35,7 +35,6 @@
 #include <gnutls/x509.h>
 
 #include "libmissing.h"
-#include "prelude-strbuf.h"
 #include "prelude-client.h"
 #include "tls-register.h"
 #include "tls-util.h"

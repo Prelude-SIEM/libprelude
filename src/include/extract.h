@@ -100,7 +100,7 @@ static inline struct in_addr align_ipv4_addr(const void *buf)
 
 #endif
 
-#include "idmef-string.h"
+#include "prelude-string.h"
 #include "idmef-time.h"
 #include "idmef-data.h"
 

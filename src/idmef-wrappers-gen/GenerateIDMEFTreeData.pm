@@ -91,7 +91,7 @@ sub	struct
 		$name = $field->{short_name};
 
 		if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
-		    $object = "IDMEF_VALUE_TYPE_" . uc("$field->{short_typename}");
+		    $object = "IDMEF_VALUE_TYPE_" . uc("$field->{value_type}");
 		    $object_type = 0;
 
 		} else {

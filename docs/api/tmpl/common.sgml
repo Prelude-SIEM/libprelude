@@ -14,14 +14,6 @@ common
 
 </para>
 
-<!-- ##### ENUM prelude_bool_t ##### -->
-<para>
-
-</para>
-
-@PRELUDE_BOOL_TRUE: 
-@PRELUDE_BOOL_FALSE: 
-
 <!-- ##### FUNCTION prelude_realloc ##### -->
 <para>
 

@@ -3,7 +3,6 @@ includedir = $(prefix)/include/libprelude
 include_HEADERS = config-engine.h 		\
 		  idmef-message-id.h		\
 		  idmef-message-id-format.h	\
-		  idmef-string.h		\
 		  idmef-time.h			\
 		  idmef-data.h			\
 		  idmef-object.h		\
@@ -46,7 +45,7 @@ include_HEADERS = config-engine.h 		\
 		  prelude-inet.h		\
 		  prelude-plugin.h		\
 		  prelude-log.h			\
-		  prelude-strbuf.h		\
+		  prelude-string.h		\
 		  threads.h			\
 		  extract.h			\
 		  common.h

@@ -171,21 +171,112 @@ idmef-value
 @Returns: 
 
 
-<!-- ##### MACRO idmef_value_get_hdr ##### -->
+<!-- ##### FUNCTION idmef_value_get_int16 ##### -->
 <para>
 
 </para>
 
-@n: 
-@t: 
+@val: 
+@Returns: 
 
 
-<!-- ##### MACRO idmef_value_get_struct_hdr ##### -->
+<!-- ##### FUNCTION idmef_value_get_uint16 ##### -->
 <para>
 
 </para>
 
-@n: 
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get_int32 ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get_uint32 ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get_int64 ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get_uint64 ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get_enum ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get_float ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get_double ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get_time ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get_data ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get_string ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_value_list_add ##### -->

@@ -33,7 +33,8 @@
 #include "prelude-list.h"
 #include "prelude-log.h"
 #include "prelude-inttypes.h"
-#include "idmef-string.h"
+#include "prelude-string.h"
+
 #include "idmef.h"
 #include "idmef-util.h"
 #include "idmef-value-type.h"
@@ -135,13 +136,13 @@ idmef_value_get_(UINT64, uint64, uint64_t)
 idmef_value_get_(ENUM, enum, int)
 idmef_value_get_(FLOAT, float, float)
 idmef_value_get_(DOUBLE, double, double)
-idmef_value_get_(STRING, string, idmef_string_t *)
+idmef_value_get_(STRING, string, prelude_string_t *)
 idmef_value_get_(DATA, data, idmef_data_t *)
 idmef_value_get_(TIME, time, idmef_time_t *)
 
 
 
-idmef_value_t *idmef_value_new_string(idmef_string_t *string)
+idmef_value_t *idmef_value_new_string(prelude_string_t *string)
 {
 	idmef_value_t *ret;
 	

@@ -60,7 +60,7 @@ sub	value2scalar($)
 	my $string;
 
 	$string = Prelude::idmef_value_get_string($value) or return undef;
-	$result = Prelude::idmef_string_get_string($string);
+	$result = Prelude::prelude_string_get_string($string);
 
     } elsif ( $type == $Prelude::IDMEF_VALUE_TYPE_ENUM) {
 	$result = Prelude::idmef_type_enum_to_string(Prelude::idmef_value_get_object_type($value),
@@ -135,7 +135,7 @@ sub new($$)
     my $process = Prelude::idmef_analyzer_get_process($self->{analyzer});
     
     foreach my $arg ( @ARGV ) {
-	Prelude::idmef_process_set_arg($process, Prelude::idmef_string_new_dup($arg));
+	Prelude::idmef_process_set_arg($process, Prelude::prelude_string_new_dup($arg));
     }
 
     if ( $capability & &SEND_IDMEF ) {
@@ -154,7 +154,7 @@ sub set_manufacturer
     my $self = shift;
     my $manufacturer = shift || return 0;
 
-    Prelude::idmef_analyzer_set_manufacturer($self->{analyzer}, Prelude::idmef_string_new_dup($manufacturer));
+    Prelude::idmef_analyzer_set_manufacturer($self->{analyzer}, Prelude::prelude_string_new_dup($manufacturer));
 
     return 1;
 }
@@ -165,10 +165,10 @@ sub set_model
     my $model = shift || return 0;
     my $version = shift || undef;
 
-    Prelude::idmef_analyzer_set_model($self->{analyzer}, Prelude::idmef_string_new_dup($model));
+    Prelude::idmef_analyzer_set_model($self->{analyzer}, Prelude::prelude_string_new_dup($model));
 
     if ( $version ) {
-	Prelude::idmef_analyzer_set_version($self->{analyzer}, Prelude::idmef_string_new_dup($version));
+	Prelude::idmef_analyzer_set_version($self->{analyzer}, Prelude::prelude_string_new_dup($version));
     }
 
     return 1;
@@ -179,7 +179,7 @@ sub set_class
     my $self = shift;
     my $class = shift || return 0;
 
-    Prelude::idmef_analyzer_set_class($self->{analyzer}, Prelude::idmef_string_new_dup($class));
+    Prelude::idmef_analyzer_set_class($self->{analyzer}, Prelude::prelude_string_new_dup($class));
 
     return 1;
 }
