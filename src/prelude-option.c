@@ -503,13 +503,10 @@ static int get_missing_options(config_t *cfg, const char *filename, prelude_list
                 
                 if ( section && ! entry ) {
 
-                        if ( opt->already_set )
-                                continue;
-                        
                         ret = check_option(opt, &argptr, value);
                         if ( ret < 0 )
                                 return ret;
-                        
+
                         ret = call_option_cb(&cbitem, cblist, opt, argptr);
                         if ( ret < 0 ) 
                                 return ret;
