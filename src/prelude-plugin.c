@@ -545,7 +545,7 @@ prelude_plugin_instance_t *prelude_plugin_new_instance(prelude_plugin_generic_t 
                 if ( pe->root_opt ) {
                         pi->opt_instance = prelude_option_instance_new(pe->root_opt, name, pi);
                         if ( ! pi->opt_instance )
-                                return -1;
+                                return NULL;
                 }
                 
                 if ( pe->create_instance && pe->create_instance(pi, NULL, name) < 0 )
