@@ -1,5 +1,8 @@
 2002-04-27  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* configure.in: use AM_PROG_LIBTOOL, for older 
+	libtool/automake installation.
+
 	* src/plugin-common.c: 
 	remove dlfcn.h - not needed anymore with libltdl.
 	(plugin_load_single): return -1 if the plugin is already
