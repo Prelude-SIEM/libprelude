@@ -79,6 +79,7 @@ install-data-local:
 
 
 uninstall-local:
-	rm -f $(DESTDIR)$(prelude_config_dir)/tls/tls.conf
 	rm -f $(DESTDIR)$(prelude_config_dir)/default/client.conf
 	rm -f $(DESTDIR)$(prelude_config_dir)/default/global.conf
+	rm -f $(DESTDIR)$(prelude_config_dir)/default/idmef-client.conf
+	rm -f $(DESTDIR)$(prelude_config_dir)/default/tls.conf
