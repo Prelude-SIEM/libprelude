@@ -1,0 +1,15 @@
+use Config;
+use ExtUtils::MakeMaker;
+
+my %attributs = (NAME => 'Prelude',
+		 INC => '-I@top_srcdir@/src/include',
+		 LIBS => [ "@libprelude_libs@ -L@top_builddir@/src/.libs -lprelude" ],
+		 LDDLFLAGS => "$Config{lddlflags} @PTHREAD_LDFLAGS@");
+
+if  (-w $Config{"sitelib"}) {
+    $attributs{"INSTALLDIRS"} = "site";
+} else {
+    $attributs{"PREFIX"} = "@prefix@";
+}
+
+WriteMakefile(%attributs);
