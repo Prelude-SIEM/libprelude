@@ -141,7 +141,7 @@ static int check_option_optarg(prelude_optlist_t *optlist,
 {
         int len = 0;
         
-        while ( optlist->argv_index < argc && *argv[optlist->argv_index] != '-' ) {
+        while ( optlist->argv_index < argc && *argv[optlist->argv_index] != '-' && len < size ) {
 
                 if ( len > 0 )
                         optarg[len++] = ' ';
@@ -167,8 +167,8 @@ static int check_option_reqarg(prelude_optlist_t *optlist, const char *option,
                 return -1;
         }
 
-        while ( optlist->argv_index < argc && *argv[optlist->argv_index] != '-' ) {
-
+        while ( optlist->argv_index < argc && *argv[optlist->argv_index] != '-' && len < size ) {
+                
                 if ( len > 0 )
                         optarg[len++] = ' ';
                 
@@ -202,7 +202,7 @@ static int check_option(prelude_optlist_t *optlist, prelude_option_t *option,
 {
         int ret;
 
-        optarg[0] = '\0';
+        *optarg = '\0';
         
         switch (option->has_arg) {
                 
