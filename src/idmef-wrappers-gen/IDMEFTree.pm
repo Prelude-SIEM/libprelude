@@ -271,7 +271,8 @@ sub	parse_struct
 		push(@{ $struct->{desc} }, $line);
 		
 		if ( ($value, $typename, $ptr, $name) = $line =~ /^\s*UNION_MEMBER\(\s*(\w+)\s*,\s*(\w+)\s*,\s*(\**)(\w+)\s*\);/ ) {
-		    $member = { value => $value, 
+		    $member = { metatype => &METATYPE_NORMAL | &METATYPE_STRUCT,
+				value => $value, 
 				typename => $typename,
 				short_typename => get_idmef_name($typename),
 				name => $name,
