@@ -55,7 +55,6 @@ include_HEADERS = config-engine.h 		\
 		  sensor.h			\
 		  threads.h			\
 		  extract.h			\
-		  extract-idmef.h		\
 		  common.h
 
 

@@ -248,7 +248,7 @@ static inline int extract_float_safe(float *out, const void *buf, size_t len)
 
 
 
-static inline int extract_characters_safe(char **out, char *buf, size_t len)
+static inline int extract_characters_safe(const char **out, char *buf, size_t len)
 {
 	if ( buf[len - 1] != '\0' ) {
                 log(LOG_ERR, "Datatype error: buffer is not a string.\n");

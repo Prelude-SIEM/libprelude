@@ -105,13 +105,13 @@ static int read_option_request(prelude_client_t *client, prelude_msg_t *msg, uin
                 break;
                 
         case PRELUDE_MSG_OPTION_NAME:
-                ret = extract_string_safe(option, buf, len);
+                ret = extract_characters_safe(option, buf, len);
                 if (ret < 0 )
                         return -1;
                 break;
 
         case PRELUDE_MSG_OPTION_VALUE:
-                ret = extract_string_safe(value, buf, len);
+                ret = extract_characters_safe(value, buf, len);
                 if (ret < 0 )
                         return -1;
                 break;
@@ -187,7 +187,7 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         break;
 
                 case PRELUDE_MSG_OPTION_NAME:
-                        ret = extract_string_safe(&tmp, buf, dlen);
+                        ret = extract_characters_safe(&tmp, buf, dlen);
                         if ( ret < 0 )
                                 return -1;
 
@@ -195,7 +195,7 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         break;
                         
                 case PRELUDE_MSG_OPTION_DESC:
-                        ret = extract_string_safe(&tmp, buf, dlen);
+                        ret = extract_characters_safe(&tmp, buf, dlen);
                         if ( ret < 0 )
                                 return -1;
                         
@@ -203,7 +203,7 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         break;
                         
                 case PRELUDE_MSG_OPTION_HELP:
-                        ret = extract_string_safe(&tmp, buf, dlen);
+                        ret = extract_characters_safe(&tmp, buf, dlen);
                         if ( ret < 0 )
                                 return -1;
                         
@@ -211,7 +211,7 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         break;
                         
                 case PRELUDE_MSG_OPTION_INPUT_VALIDATION:
-                        ret = extract_string_safe(&tmp, buf, dlen);
+                        ret = extract_characters_safe(&tmp, buf, dlen);
                         if ( ret < 0 )
                                 return -1;
                         
@@ -323,13 +323,13 @@ int prelude_option_recv_reply(prelude_msg_t *msg, uint32_t *request_id, const ch
                         break;
 
                 case PRELUDE_MSG_OPTION_VALUE:
-                        ret = extract_string_safe(value, buf, dlen);
+                        ret = extract_characters_safe(value, buf, dlen);
                         if ( ret < 0 )
                                 return -1;
                         break;
 
                 case PRELUDE_MSG_OPTION_ERROR:
-                        ret = extract_string_safe(error, buf, dlen);
+                        ret = extract_characters_safe(error, buf, dlen);
                         if ( ret < 0 )
                                 return -1;
 
