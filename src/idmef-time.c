@@ -279,7 +279,7 @@ int idmef_time_set_ntp_timestamp(idmef_time_t *time, const char *buf)
 	unsigned ts_roundbit = TS_ROUNDBIT;
 	
         
-	if ( sscanf(buf, "%lx.%lx", (unsigned long *) &ts.l_ui, (unsigned long *) &ts.l_uf) < 2 )
+	if ( sscanf(buf, "%x.%x", &ts.l_ui, &ts.l_uf) < 2 )
 		return -1;
 
 	/* 
