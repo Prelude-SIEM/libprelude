@@ -1027,22 +1027,23 @@ int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int tim
                 if ( ! prelude_connection_is_alive(cnx->cnx) )
                         continue;
                                 
-                ret = FD_ISSET(prelude_io_get_fd(prelude_connection_get_fd(cnx->cnx)), &rfds);                
+                ret = FD_ISSET(prelude_io_get_fd(prelude_connection_get_fd(cnx->cnx)), &rfds);
                 if ( ! ret )
                         continue;
 
                 global_event |= PRELUDE_CONNECTION_POOL_EVENT_INPUT;
-                
-                ret = pool->event_handler(pool, PRELUDE_CONNECTION_POOL_EVENT_INPUT, cnx->cnx);
-                if ( ret < 0 || ! prelude_connection_is_alive(cnx->cnx) ) {
-                        global_event |= PRELUDE_CONNECTION_POOL_EVENT_DEAD;
-                        notify_dead(cnx, ret, FALSE);
-                }
 
                 if ( event_cb ) {
-
-                        ret = event_cb(pool, cnx->cnx, extra);
+                        ret = event_cb(pool, cnx->cnx, extra);                        
                         if ( ret < 0 ) {
+                                global_event |= PRELUDE_CONNECTION_POOL_EVENT_DEAD;
+                                notify_dead(cnx, ret, FALSE);
+                        }
+                }
+
+                else {
+                        ret = pool->event_handler(pool, PRELUDE_CONNECTION_POOL_EVENT_INPUT, cnx->cnx);
+                        if ( ret < 0 || ! prelude_connection_is_alive(cnx->cnx) ) {
                                 global_event |= PRELUDE_CONNECTION_POOL_EVENT_DEAD;
                                 notify_dead(cnx, ret, FALSE);
                         }
