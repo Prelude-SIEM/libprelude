@@ -1,5 +1,9 @@
 2003-12-25  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
+	* src/idmef-data.c (idmef_data_new): 
+	revert previous change (unsigned char pointer to void pointer), 
+	cause it was causing problem for binding.
+
 	* src/idmef-wrappers-gen/GenerateIDMEFMessageSendC.pm (struct): 
 	don't call prelude_msgbuf_mark_end() on idmef_message_send(). Doing
 	so is up to the caller, which might want to add more information

@@ -38,8 +38,8 @@ typedef struct {
         size_t len;
 
         union {
-                void *rw_data;
-                const void *ro_data;
+                unsigned char *rw_data;
+                const unsigned char *ro_data;
         } data;
         
         struct list_head list;
@@ -73,7 +73,7 @@ idmef_data_t *idmef_data_new(void);
  *
  * Returns: A new idmef_data_t object, or NULL if an error occured.
  */
-idmef_data_t *idmef_data_new_dup(const void *data, size_t len);
+idmef_data_t *idmef_data_new_dup(const unsigned char *data, size_t len);
 
 
 
@@ -87,7 +87,7 @@ idmef_data_t *idmef_data_new_dup(const void *data, size_t len);
  *
  * Returns: A new idmef_data_t object, or NULL if an error occured.
  */
-idmef_data_t *idmef_data_new_nodup(void *data, size_t len);
+idmef_data_t *idmef_data_new_nodup(unsigned char *data, size_t len);
 
 
 
@@ -101,7 +101,7 @@ idmef_data_t *idmef_data_new_nodup(void *data, size_t len);
  *
  * Returns: A new idmef_data_t object, or NULL if an error occured.
  */
-idmef_data_t *idmef_data_new_ref(const void *data, size_t len);
+idmef_data_t *idmef_data_new_ref(const unsigned char *data, size_t len);
 
 
 
@@ -129,7 +129,7 @@ void idmef_data_destroy(idmef_data_t *data);
  * 
  * Returns: 0 on success, -1 if an error occurred.
  */
-int idmef_data_set_nodup(idmef_data_t *data, void *buf, size_t len);
+int idmef_data_set_nodup(idmef_data_t *data, unsigned char *buf, size_t len);
 
 
 
@@ -146,7 +146,7 @@ int idmef_data_set_nodup(idmef_data_t *data, void *buf, size_t len);
  * 
  * Returns: 0 on success, -1 if an error occurred.
  */
-int idmef_data_set_dup(idmef_data_t *data, const void *buf, size_t len);
+int idmef_data_set_dup(idmef_data_t *data, const unsigned char *buf, size_t len);
 
 
 
@@ -163,7 +163,7 @@ int idmef_data_set_dup(idmef_data_t *data, const void *buf, size_t len);
  * 
  * Returns: 0 on success, -1 if an error occurred.
  */
-int idmef_data_set_ref(idmef_data_t *data, const void *buf, size_t len);
+int idmef_data_set_ref(idmef_data_t *data, const unsigned char *buf, size_t len);
 
 
 
@@ -223,7 +223,7 @@ size_t idmef_data_get_len(const idmef_data_t *data);
  *
  * Returns: the data contained within @data object.
  */
-void *idmef_data_get_data(const idmef_data_t *data);
+unsigned char *idmef_data_get_data(const idmef_data_t *data);
 
 
 

@@ -62,7 +62,7 @@ idmef_data_t *idmef_data_new(void)
 
 
 
-idmef_data_t *idmef_data_new_dup(const void *data, size_t len)
+idmef_data_t *idmef_data_new_dup(const unsigned char *data, size_t len)
 {
 	idmef_data_t *ret;
 
@@ -86,7 +86,7 @@ idmef_data_t *idmef_data_new_dup(const void *data, size_t len)
 
 
 
-idmef_data_t *idmef_data_new_nodup(void *data, size_t len)
+idmef_data_t *idmef_data_new_nodup(unsigned char *data, size_t len)
 {
 	idmef_data_t *ret;
 
@@ -104,7 +104,7 @@ idmef_data_t *idmef_data_new_nodup(void *data, size_t len)
 
 
 
-idmef_data_t *idmef_data_new_ref(const void *data, size_t len)
+idmef_data_t *idmef_data_new_ref(const unsigned char *data, size_t len)
 {
 	idmef_data_t *ret;
 
@@ -121,7 +121,7 @@ idmef_data_t *idmef_data_new_ref(const void *data, size_t len)
 
 
 
-int idmef_data_set_dup(idmef_data_t *data, const void *buf, size_t len)
+int idmef_data_set_dup(idmef_data_t *data, const unsigned char *buf, size_t len)
 {
 	idmef_data_destroy_internal(data);
         
@@ -139,7 +139,7 @@ int idmef_data_set_dup(idmef_data_t *data, const void *buf, size_t len)
 
 
 
-int idmef_data_set_nodup(idmef_data_t *data, void *buf, size_t len)
+int idmef_data_set_nodup(idmef_data_t *data, unsigned char *buf, size_t len)
 {
 	idmef_data_destroy_internal(data);
 
@@ -153,7 +153,7 @@ int idmef_data_set_nodup(idmef_data_t *data, void *buf, size_t len)
 
 
 
-int idmef_data_set_ref(idmef_data_t *data, const void *buf, size_t len)
+int idmef_data_set_ref(idmef_data_t *data, const unsigned char *buf, size_t len)
 {
         idmef_data_destroy_internal(data);
         
@@ -236,7 +236,7 @@ size_t idmef_data_get_len(const idmef_data_t *data)
 
 
 
-void *idmef_data_get_data(const idmef_data_t *data)
+unsigned char *idmef_data_get_data(const idmef_data_t *data)
 {
 	return data->data.rw_data;
 }
@@ -253,7 +253,7 @@ int idmef_data_to_string(idmef_data_t *data, char *buf, size_t size)
         i = outpos = 0;
 
         do {
-		c = ((const unsigned char *)data->data.ro_data)[i++];
+		c = data->data.ro_data[i++];
                 
 		if ( outpos > size - 2 ) {
 			buf[size - 1] = '\0';
