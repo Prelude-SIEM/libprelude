@@ -68,7 +68,8 @@ struct prelude_msg {
         uint32_t read_index;
         uint32_t header_index;
         uint32_t write_index;
-
+        uint32_t fd_write_index;
+        
         prelude_msg_hdr_t hdr;
         unsigned char hdrbuf[PRELUDE_MSG_HDR_SIZE];
         unsigned char *payload;
@@ -379,6 +380,7 @@ prelude_msg_status_t prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
                 (*msg)->read_index = PRELUDE_MSG_HDR_SIZE;
                 (*msg)->header_index = 0;
                 (*msg)->write_index = 0;
+                (*msg)->fd_write_index = 0;
                 (*msg)->payload = NULL;
         }
 
@@ -570,14 +572,18 @@ ssize_t prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst)
         else if ( ! msg->hdr.is_fragment )
                 dlen -= PRELUDE_MSG_HDR_SIZE;
         
-        ret = prelude_io_write(dst, msg->payload, dlen);
+        ret = prelude_io_write(dst, msg->payload + msg->fd_write_index, dlen - msg->fd_write_index);
         if ( ret < 0 )
                 return prelude_msg_error;
         
-        msg->payload += ret;
-        msg->write_index -= ret;
+        msg->fd_write_index += ret;
         
-        return (ret == dlen) ? prelude_msg_finished : prelude_msg_unfinished;
+        if ( msg->fd_write_index == dlen ) {
+                msg->fd_write_index = 0;
+                return prelude_msg_finished;
+        }
+        
+        return prelude_msg_unfinished;
 }
 
 
@@ -705,6 +711,7 @@ prelude_msg_t *prelude_msg_new(size_t msgcount, size_t msglen, uint8_t tag, uint
         msg->hdr.datalen = len;
         msg->read_index = 0;
         msg->write_index = PRELUDE_MSG_HDR_SIZE;
+        msg->fd_write_index = 0;
         msg->flush_msg_cb = NULL;
         
         return msg;
