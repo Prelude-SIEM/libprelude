@@ -14,16 +14,17 @@ data similar to XML.
 <para>
 The Message header contain the protocol version, which is only to be used
 in case the main protocol structure change (compatibility break), The tag 
-describe the kind of message, The priority may be used by the receiving end 
+describe the kind of message, The fragment field may be used if a message 
+is sent in several time, The priority may be used by the receiving end 
 to priorityze task, The datalen contain the size of the whole message in 
 network byte order
 
 <programlisting>
 
-   8bits    8bits   8bits               32bits
-+--------+--------+--------+--------------------------------+
-|version |   tag  |priority|           datalen              |
-+--------+--------+--------+--------------------------------+
+   8bits    8bits   8bits     8bits                32bits
++--------+--------+--------+----------+------------------------------+
+|version |   tag  |priority| fragment |            datalen           |
++--------+--------+--------+----------+------------------------------+
 
 </programlisting>
 </para>
@@ -48,7 +49,7 @@ case of problem.
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+prelude-message-buffered
 </para>
 
 <!-- ##### TYPEDEF size_t ##### -->
