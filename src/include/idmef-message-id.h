@@ -173,3 +173,8 @@
  * Other
  */
 #define MSG_OWN_FORMAT 71
+
+/*
+ * Possible tag behind MSG_OWN_FORMAT
+ */
+#define MSG_FORMAT_PRELUDE_NIDS 0
