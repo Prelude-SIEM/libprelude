@@ -50,7 +50,8 @@ extern int yylex(void);
 extern void yylex_init(void);
 extern void yylex_destroy(void);
 static void yyerror(char *s);
-extern void yy_scan_string(const char *);
+extern void *yy_scan_string(const char *);
+extern void yy_delete_buffer(void *);
 
 %}
 
@@ -245,12 +246,14 @@ idmef_criteria_t *idmef_criteria_new_string(const char *str)
 {
         int retval;
 	pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+	void *state;
 
 	pthread_mutex_lock(&mutex);
 
 	criteria = NULL;
-	yy_scan_string(str);
+	state = yy_scan_string(str);
 	retval = yyparse();
+	yy_delete_buffer(state);
 	if ( retval != 0 && criteria ) {
 		idmef_criteria_destroy(criteria);
 		criteria = NULL;
