@@ -28,15 +28,7 @@ void prelude_sensor_send_msg(prelude_msg_t *msg);
 
 void prelude_sensor_send_msg_async(prelude_msg_t *msg);
 
-prelude_msg_t *prelude_sensor_get_option_msg(void);
-
 int prelude_sensor_init(const char *sname, const char *filename, int argc, char **argv);
-
-uint64_t prelude_sensor_get_ident(void);
-
-void prelude_sensor_set_ident(uint64_t *ident);
-
-void prelude_set_sensor_name(const char *sname);
 
 struct list_head *prelude_sensor_get_client_list(void);
 
