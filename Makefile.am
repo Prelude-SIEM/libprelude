@@ -1,7 +1,7 @@
 SUBDIRS = libltdl src prelude-adduser bindings docs
 
 EXTRA_DIST = COPYING.OpenSSL client.conf global.conf
-bin_SCRIPTS = $(top_srcdir)/libprelude-config
+bin_SCRIPTS = $(top_builddir)/libprelude-config
 
 
 #
