@@ -131,7 +131,7 @@ int prelude_plugin_subscribe(prelude_plugin_instance_t *pi);
 prelude_plugin_instance_t *prelude_plugin_new_instance(prelude_plugin_generic_t *plugin, const char *name, void *data);
 
 
-int prelude_plugin_unsubscribe(prelude_plugin_instance_t *plugin);
+int prelude_plugin_unsubscribe(prelude_plugin_instance_t *pi);
 
 
 /*
@@ -170,9 +170,9 @@ int prelude_plugin_load_from_dir(const char *dirname,
 /*
  * Call this if you want to use this plugin.
  */ 
-int prelude_plugin_add(prelude_plugin_instance_t *pc, prelude_list_t *h, const char *infos);
+int prelude_plugin_add(prelude_plugin_instance_t *pi, prelude_list_t *h, const char *infos);
 
-void prelude_plugin_del(prelude_plugin_instance_t *pc);
+void prelude_plugin_del(prelude_plugin_instance_t *pi);
 
 void prelude_plugin_instance_compute_time(prelude_plugin_instance_t *pi, struct timeval *start, struct timeval *end);
 
