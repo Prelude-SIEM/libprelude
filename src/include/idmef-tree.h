@@ -122,16 +122,17 @@ PRIMITIVE_TYPE_STRUCT(idmef_data_t)
  * Additional Data class
  */
 ENUM() {
-        IDMEF_ADDITIONAL_DATA_TYPE_STRING     = 0,
-        IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN    = 1,
-        IDMEF_ADDITIONAL_DATA_TYPE_BYTE       = 2,
-        IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER  = 3,
-        IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME  = 4,
-        IDMEF_ADDITIONAL_DATA_TYPE_INTEGER    = 5,
-        IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP   = 6,
-        IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST   = 7,
-        IDMEF_ADDITIONAL_DATA_TYPE_REAL       = 8,
-        IDMEF_ADDITIONAL_DATA_TYPE_XML        = 9
+        IDMEF_ADDITIONAL_DATA_TYPE_ERROR      = -1,
+        IDMEF_ADDITIONAL_DATA_TYPE_STRING     =  0,
+        IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN    =  1,
+        IDMEF_ADDITIONAL_DATA_TYPE_BYTE       =  2,
+        IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER  =  3,
+        IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME  =  4,
+        IDMEF_ADDITIONAL_DATA_TYPE_INTEGER    =  5,
+        IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP   =  6,
+        IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST   =  7,
+        IDMEF_ADDITIONAL_DATA_TYPE_REAL       =  8,
+        IDMEF_ADDITIONAL_DATA_TYPE_XML        =  9
 } TYPE_ID(idmef_additional_data_type_t, 3);
 
 
@@ -150,10 +151,11 @@ typedef struct {
  * Classification class
  */
 ENUM(origin) {
-        IDMEF_CLASSIFICATION_ORIGIN_UNKNOWN         = 0,
-        IDMEF_CLASSIFICATION_ORIGIN_BUGTRAQID       = 1,
-        IDMEF_CLASSIFICATION_ORIGIN_CVE             = 2,
-        IDMEF_CLASSIFICATION_ORIGIN_VENDOR_SPECIFIC = 3
+        IDMEF_CLASSIFICATION_ORIGIN_ERROR           = -1,
+        IDMEF_CLASSIFICATION_ORIGIN_UNKNOWN         =  0,
+        IDMEF_CLASSIFICATION_ORIGIN_BUGTRAQID       =  1,
+        IDMEF_CLASSIFICATION_ORIGIN_CVE             =  2,
+        IDMEF_CLASSIFICATION_ORIGIN_VENDOR_SPECIFIC =  3
 } TYPE_ID(idmef_classification_origin_t, 5);
 
 
@@ -174,13 +176,14 @@ typedef struct {
  * UserId class
  */
 ENUM() {
-        IDMEF_USERID_TYPE_ORIGINAL_USER = 0,
-        IDMEF_USERID_TYPE_CURRENT_USER  = 1,
-        IDMEF_USERID_TYPE_TARGET_USER   = 2,
-        IDMEF_USERID_TYPE_USER_PRIVS    = 3,
-        IDMEF_USERID_TYPE_CURRENT_GROUP = 4,
-        IDMEF_USERID_TYPE_GROUP_PRIVS   = 5,
-        IDMEF_USERID_TYPE_OTHER_PRIVS   = 6
+        IDMEF_USERID_TYPE_ORIGINAL_ERROR = -1,
+        IDMEF_USERID_TYPE_ORIGINAL_USER  =  0,
+        IDMEF_USERID_TYPE_CURRENT_USER   =  1,
+        IDMEF_USERID_TYPE_TARGET_USER    =  2,
+        IDMEF_USERID_TYPE_USER_PRIVS     =  3,
+        IDMEF_USERID_TYPE_CURRENT_GROUP  =  4,
+        IDMEF_USERID_TYPE_GROUP_PRIVS    =  5,
+        IDMEF_USERID_TYPE_OTHER_PRIVS    =  6
 } TYPE_ID(idmef_userid_type_t, 7);
 
 
@@ -202,9 +205,10 @@ typedef struct {
  * User class
  */
 ENUM(cat) {
-        IDMEF_USER_CATEGORY_UNKNOWN      = 0,
-        IDMEF_USER_CATEGORY_APPLICATION  = 1,
-        IDMEF_USER_CATEGORY_OS_DEVICE    = 2
+        IDMEF_USER_CATEGORY_ERROR	 = -1,
+        IDMEF_USER_CATEGORY_UNKNOWN      =  0,
+        IDMEF_USER_CATEGORY_APPLICATION  =  1,
+        IDMEF_USER_CATEGORY_OS_DEVICE    =  2
 } TYPE_ID(idmef_user_category_t, 9);
 
 
@@ -223,21 +227,22 @@ typedef struct {
  * Address class
  */
 ENUM(addr) {
-        IDMEF_ADDRESS_CATEGORY_UNKNOWN       = 0,
-        IDMEF_ADDRESS_CATEGORY_ATM           = 1,
-        IDMEF_ADDRESS_CATEGORY_E_MAIL        = 2,
-        IDMEF_ADDRESS_CATEGORY_LOTUS_NOTES   = 3,
-        IDMEF_ADDRESS_CATEGORY_MAC           = 4,
-        IDMEF_ADDRESS_CATEGORY_SNA           = 5,
-        IDMEF_ADDRESS_CATEGORY_VM            = 6,
-        IDMEF_ADDRESS_CATEGORY_IPV4_ADDR     = 7,
-        IDMEF_ADDRESS_CATEGORY_IPV4_ADDR_HEX = 8,
-        IDMEF_ADDRESS_CATEGORY_IPV4_NET      = 9,
+        IDMEF_ADDRESS_CATEGORY_ERROR	     = -1,
+        IDMEF_ADDRESS_CATEGORY_UNKNOWN       =  0,
+        IDMEF_ADDRESS_CATEGORY_ATM           =  1,
+        IDMEF_ADDRESS_CATEGORY_E_MAIL        =  2,
+        IDMEF_ADDRESS_CATEGORY_LOTUS_NOTES   =  3,
+        IDMEF_ADDRESS_CATEGORY_MAC           =  4,
+        IDMEF_ADDRESS_CATEGORY_SNA           =  5,
+        IDMEF_ADDRESS_CATEGORY_VM            =  6,
+        IDMEF_ADDRESS_CATEGORY_IPV4_ADDR     =  7,
+        IDMEF_ADDRESS_CATEGORY_IPV4_ADDR_HEX =  8,
+        IDMEF_ADDRESS_CATEGORY_IPV4_NET      =  9,
         IDMEF_ADDRESS_CATEGORY_IPV4_NET_MASK = 10,
         IDMEF_ADDRESS_CATEGORY_IPV6_ADDR     = 11,
         IDMEF_ADDRESS_CATEGORY_IPV6_ADDR_HEX = 12,
         IDMEF_ADDRESS_CATEGORY_IPV6_NET      = 13,
-        IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK = 14
+        IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK = 14,
 } TYPE_ID(idmef_address_category_t, 11);
 
 
@@ -297,9 +302,10 @@ typedef struct {
         
 
 ENUM() {
-        IDMEF_SERVICE_TYPE_DEFAULT = 0,
-        IDMEF_SERVICE_TYPE_WEB     = 1,
-        IDMEF_SERVICE_TYPE_SNMP    = 2
+        IDMEF_SERVICE_TYPE_ERROR   = -1,
+        IDMEF_SERVICE_TYPE_DEFAULT =  0,
+        IDMEF_SERVICE_TYPE_WEB     =  1,
+        IDMEF_SERVICE_TYPE_SNMP    =  2
 } TYPE_ID(idmef_service_type_t, 16);
 
 
@@ -329,19 +335,20 @@ typedef struct {
  * Node class
  */
 ENUM(node) {
-        IDMEF_NODE_CATEGORY_UNKNOWN      = 0,
-        IDMEF_NODE_CATEGORY_ADS          = 1,
-        IDMEF_NODE_CATEGORY_AFS          = 2,
-        IDMEF_NODE_CATEGORY_CODA         = 3,
-        IDMEF_NODE_CATEGORY_DFS          = 4,
-        IDMEF_NODE_CATEGORY_DNS          = 5,
-        IDMEF_NODE_CATEGORY_HOSTS        = 6,
-        IDMEF_NODE_CATEGORY_KERBEROS     = 7,
-        IDMEF_NODE_CATEGORY_NDS          = 8,
-        IDMEF_NODE_CATEGORY_NIS          = 9,
-        IDMEF_NODE_CATEGORY_NISPLUS      = 10,
-        IDMEF_NODE_CATEGORY_NT           = 11,
-        IDMEF_NODE_CATEGORY_WFW          = 12
+        IDMEF_NODE_CATEGORY_ERROR	 = -1,        
+        IDMEF_NODE_CATEGORY_UNKNOWN      =  0,
+        IDMEF_NODE_CATEGORY_ADS          =  1,
+        IDMEF_NODE_CATEGORY_AFS          =  2,
+        IDMEF_NODE_CATEGORY_CODA         =  3,
+        IDMEF_NODE_CATEGORY_DFS          =  4,
+        IDMEF_NODE_CATEGORY_DNS          =  5,
+        IDMEF_NODE_CATEGORY_HOSTS        =  6,
+        IDMEF_NODE_CATEGORY_KERBEROS     =  7,
+        IDMEF_NODE_CATEGORY_NDS          =  8,
+        IDMEF_NODE_CATEGORY_NIS          =  9,
+        IDMEF_NODE_CATEGORY_NISPLUS      =  10,
+        IDMEF_NODE_CATEGORY_NT           =  11,
+        IDMEF_NODE_CATEGORY_WFW          =  12
 } TYPE_ID(idmef_node_category_t, 18);
 
 
@@ -362,9 +369,10 @@ typedef struct {
  * Source class
  */
 ENUM() {
-        IDMEF_SOURCE_SPOOFED_UNKNOWN = 0,
-        IDMEF_SOURCE_SPOOFED_YES     = 1,
-        IDMEF_SOURCE_SPOOFED_NO      = 2
+        IDMEF_SOURCE_SPOOFED_ERROR   = -1,
+        IDMEF_SOURCE_SPOOFED_UNKNOWN =  0,
+        IDMEF_SOURCE_SPOOFED_YES     =  1,
+        IDMEF_SOURCE_SPOOFED_NO      =  2
 } TYPE_ID(idmef_source_spoofed_t, 20);
 
 
@@ -423,21 +431,23 @@ PRE_DECLARE(idmef_linkage_t, struct)
  * File class
  */
 ENUM() {
-        IDMEF_FILE_CATEGORY_CURRENT  = 1,
-        IDMEF_FILE_CATEGORY_ORIGINAL = 2
+        IDMEF_FILE_CATEGORY_ERROR    = -1,
+        IDMEF_FILE_CATEGORY_CURRENT  =  1,
+        IDMEF_FILE_CATEGORY_ORIGINAL =  2
 } TYPE_ID(idmef_file_category_t, 24);
 
 
 ENUM() {
-        IDMEF_FILE_FSTYPE_UFS     = 1,
-        IDMEF_FILE_FSTYPE_EFS     = 2,
-        IDMEF_FILE_FSTYPE_NFS     = 3,
-        IDMEF_FILE_FSTYPE_AFS     = 4,
-        IDMEF_FILE_FSTYPE_NTFS    = 5,
-        IDMEF_FILE_FSTYPE_FAT16   = 6,
-        IDMEF_FILE_FSTYPE_FAT32   = 7,
-        IDMEF_FILE_FSTYPE_PCFS    = 8,
-        IDMEF_FILE_FSTYPE_JOLIET  = 9,
+        IDMEF_FILE_FSTYPE_ERROR   = -1,
+        IDMEF_FILE_FSTYPE_UFS     =  1,
+        IDMEF_FILE_FSTYPE_EFS     =  2,
+        IDMEF_FILE_FSTYPE_NFS     =  3,
+        IDMEF_FILE_FSTYPE_AFS     =  4,
+        IDMEF_FILE_FSTYPE_NTFS    =  5,
+        IDMEF_FILE_FSTYPE_FAT16   =  6,
+        IDMEF_FILE_FSTYPE_FAT32   =  7,
+        IDMEF_FILE_FSTYPE_PCFS    =  8,
+        IDMEF_FILE_FSTYPE_JOLIET  =  9,
         IDMEF_FILE_FSTYPE_ISO9660 = 10,
 } TYPE_ID(idmef_file_fstype_t, 25);
 
@@ -472,12 +482,13 @@ typedef struct {
  * Linkage class
  */
 ENUM() {
-        IDMEF_LINKAGE_CATEGORY_HARD_LINK     = 1,
-        IDMEF_LINKAGE_CATEGORY_MOUNT_POINT   = 2,
-        IDMEF_LINKAGE_CATEGORY_REPARSE_POINT = 3,
-        IDMEF_LINKAGE_CATEGORY_SHORTCUT      = 4,
-        IDMEF_LINKAGE_CATEGORY_STREAM        = 5,
-        IDMEF_LINKAGE_CATEGORY_SYMBOLIC_LINK = 6
+        IDMEF_LINKAGE_CATEGORY_ERROR	     = -1,
+        IDMEF_LINKAGE_CATEGORY_HARD_LINK     =  1,
+        IDMEF_LINKAGE_CATEGORY_MOUNT_POINT   =  2,
+        IDMEF_LINKAGE_CATEGORY_REPARSE_POINT =  3,
+        IDMEF_LINKAGE_CATEGORY_SHORTCUT      =  4,
+        IDMEF_LINKAGE_CATEGORY_STREAM        =  5,
+        IDMEF_LINKAGE_CATEGORY_SYMBOLIC_LINK =  6
 } TYPE_ID(idmef_linkage_category_t, 27);
 
 
@@ -499,9 +510,10 @@ typedef struct {
  */
 
 ENUM() {
-        IDMEF_TARGET_DECOY_UNKNOWN = 0,
-        IDMEF_TARGET_DECOY_YES     = 1,
-        IDMEF_TARGET_DECOY_NO      = 2
+        IDMEF_TARGET_DECOY_ERROR   = -1,
+        IDMEF_TARGET_DECOY_UNKNOWN =  0,
+        IDMEF_TARGET_DECOY_YES     =  1,
+        IDMEF_TARGET_DECOY_NO      =  2
 } TYPE_ID(idmef_target_decoy_t, 29);
 
 
@@ -564,25 +576,28 @@ typedef struct {
  * Impact class
  */
 ENUM(impact) {
-        IDMEF_IMPACT_SEVERITY_LOW    = 1,
-        IDMEF_IMPACT_SEVERITY_MEDIUM = 2,
-        IDMEF_IMPACT_SEVERITY_HIGH   = 3
+        IDMEF_IMPACT_SEVERITY_ERROR  = -1,
+        IDMEF_IMPACT_SEVERITY_LOW    =  1,
+        IDMEF_IMPACT_SEVERITY_MEDIUM =  2,
+        IDMEF_IMPACT_SEVERITY_HIGH   =  3
 } TYPE_ID(idmef_impact_severity_t, 33);
 
 
 ENUM() {
-        IDMEF_IMPACT_COMPLETION_FAILED     = 1,
-        IDMEF_IMPACT_COMPLETION_SUCCEEDED  = 2
+        IDMEF_IMPACT_COMPLETION_ERROR	   = -1,
+        IDMEF_IMPACT_COMPLETION_FAILED     =  1,
+        IDMEF_IMPACT_COMPLETION_SUCCEEDED  =  2
 } TYPE_ID(idmef_impact_completion_t, 34);
 
 
 ENUM() {
-        IDMEF_IMPACT_TYPE_OTHER      = 0,
-        IDMEF_IMPACT_TYPE_ADMIN      = 1,
-        IDMEF_IMPACT_TYPE_DOS        = 2,
-        IDMEF_IMPACT_TYPE_FILE       = 3,
-        IDMEF_IMPACT_TYPE_RECON      = 4,
-        IDMEF_IMPACT_TYPE_USER       = 5
+        IDMEF_IMPACT_TYPE_ERROR	     = -1,
+        IDMEF_IMPACT_TYPE_OTHER      =  0,
+        IDMEF_IMPACT_TYPE_ADMIN      =  1,
+        IDMEF_IMPACT_TYPE_DOS        =  2,
+        IDMEF_IMPACT_TYPE_FILE       =  3,
+        IDMEF_IMPACT_TYPE_RECON      =  4,
+        IDMEF_IMPACT_TYPE_USER       =  5
 } TYPE_ID(idmef_impact_type_t, 35);
 
 
@@ -600,10 +615,11 @@ typedef struct {
  * Action class
  */
 ENUM(action) {
-        IDMEF_ACTION_CATEGORY_OTHER              = 0,
-        IDMEF_ACTION_CATEGORY_BLOCK_INSTALLED    = 1,
-        IDMEF_ACTION_CATEGORY_NOTIFICATION_SENT  = 2,
-        IDMEF_ACTION_CATEGORY_TAKEN_OFFLINE      = 3
+        IDMEF_ACTION_CATEGORY_ERROR	         = -1,
+        IDMEF_ACTION_CATEGORY_OTHER              =  0,
+        IDMEF_ACTION_CATEGORY_BLOCK_INSTALLED    =  1,
+        IDMEF_ACTION_CATEGORY_NOTIFICATION_SENT  =  2,
+        IDMEF_ACTION_CATEGORY_TAKEN_OFFLINE      =  3
 } TYPE_ID(idmef_action_category_t, 37);
 
 
@@ -621,10 +637,11 @@ typedef struct {
  * Confidence class
  */
 ENUM() {
-        IDMEF_CONFIDENCE_RATING_NUMERIC = 0,
-        IDMEF_CONFIDENCE_RATING_LOW     = 1,
-        IDMEF_CONFIDENCE_RATING_MEDIUM  = 2,
-        IDMEF_CONFIDENCE_RATING_HIGH    = 3
+        IDMEF_CONFIDENCE_RATING_ERROR   = -1,
+        IDMEF_CONFIDENCE_RATING_NUMERIC =  0,
+        IDMEF_CONFIDENCE_RATING_LOW     =  1,
+        IDMEF_CONFIDENCE_RATING_MEDIUM  =  2,
+        IDMEF_CONFIDENCE_RATING_HIGH    =  3
 } TYPE_ID(idmef_confidence_rating_t, 39);
 
 
@@ -695,10 +712,11 @@ typedef struct {
  * Alert class
  */
 ENUM(idmef) {
-        IDMEF_ALERT_TYPE_DEFAULT           = 0,
-        IDMEF_ALERT_TYPE_TOOL              = 1,
-        IDMEF_ALERT_TYPE_CORRELATION       = 2,
-        IDMEF_ALERT_TYPE_OVERFLOW          = 3
+        IDMEF_ALERT_TYPE_ERROR             = -1,
+        IDMEF_ALERT_TYPE_DEFAULT           =  0,
+        IDMEF_ALERT_TYPE_TOOL              =  1,
+        IDMEF_ALERT_TYPE_CORRELATION       =  2,
+        IDMEF_ALERT_TYPE_OVERFLOW          =  3
 } TYPE_ID(idmef_alert_type_t, 45);
 
 
@@ -751,8 +769,9 @@ typedef struct {
  * IDMEF Message class
  */
 ENUM() {
-        IDMEF_MESSAGE_TYPE_ALERT     = 1,
-        IDMEF_MESSAGE_TYPE_HEARTBEAT = 2
+        IDMEF_MESSAGE_TYPE_ERROR     = -1,
+        IDMEF_MESSAGE_TYPE_ALERT     =  1,
+        IDMEF_MESSAGE_TYPE_HEARTBEAT =  2
 } TYPE_ID(idmef_message_type_t, 48);
 
 
