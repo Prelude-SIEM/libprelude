@@ -24,16 +24,38 @@
 #include "config.h"
 
 #include <stdio.h>
+#include <pthread.h>
 
 #include "prelude.h"
 #include "idmef-path.h"
 #include "prelude-option.h"
 
 
+void _idmef_path_cache_lock(void);
+void _idmef_path_cache_unlock(void);
+void _idmef_path_cache_destroy(void);
+
 
 int _prelude_internal_argc = 0;
 char *_prelude_internal_argv[1024];
+extern pthread_mutex_t _criteria_parse_mutex;
 extern prelude_option_t *_prelude_generic_optlist;
+
+
+
+static void prepare_fork_cb(void)
+{
+        _idmef_path_cache_lock();
+        pthread_mutex_lock(&_criteria_parse_mutex);
+}
+
+
+
+static void in_fork_cb(void)
+{
+        _idmef_path_cache_unlock();
+        pthread_mutex_unlock(&_criteria_parse_mutex);
+}
 
 
 
@@ -108,7 +130,14 @@ static void slice_arguments(int *argc, char **argv)
  */
 int prelude_init(int *argc, char **argv)
 {
+        int ret;
+        
+        ret = pthread_atfork(prepare_fork_cb, in_fork_cb, in_fork_cb);
+        if ( ret != 0 )
+                return prelude_error_from_errno(ret);
+        
         slice_arguments(argc, argv);
+
         return 0;
 }
 

@@ -70,6 +70,4 @@ int idmef_path_has_lists(idmef_path_t *path);
 
 unsigned int idmef_path_get_depth(const idmef_path_t *path);
 
-void _idmef_path_cache_destroy(void);
-
 #endif /* _LIBPRELUDE_IDMEF_PATH_H */

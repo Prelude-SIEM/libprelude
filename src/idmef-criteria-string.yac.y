@@ -42,8 +42,10 @@
 #include "idmef-criteria.h"
 
 
-idmef_criteria_t *processed_criteria;
+static idmef_criteria_t *processed_criteria;
+pthread_mutex_t _criteria_parse_mutex = PTHREAD_MUTEX_INITIALIZER;
 
+ 
 #define operator_or 1
 #define operator_and 2
  
@@ -248,25 +250,26 @@ static void yyerror(char *s)  /* Called by yyparse on error */
 int idmef_criteria_new_from_string(idmef_criteria_t **new_criteria, const char *str)
 {
         int ret;
-	pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 	void *state;
-
-	pthread_mutex_lock(&mutex);
-
+        
+	pthread_mutex_lock(&_criteria_parse_mutex);
+        
 	processed_criteria = NULL;
+        
 	state = yy_scan_string(str);
 	ret = yyparse();
 	yy_delete_buffer(state);
-	if ( ret != 0 ) {
+
+        if ( ret != 0 ) {
 		ret = prelude_error(PRELUDE_ERROR_GENERIC);
 
 		if ( processed_criteria )
 			idmef_criteria_destroy(processed_criteria);
+	}
 
-	} else
-		*new_criteria = processed_criteria;
+        else *new_criteria = processed_criteria;
 
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&_criteria_parse_mutex);
 
 	return ret;
 }

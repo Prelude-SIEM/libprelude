@@ -86,6 +86,22 @@ static pthread_mutex_t cached_path_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
 
+static void path_lock_cb(void *data)
+{
+        idmef_path_t *path = data;
+        pthread_mutex_lock(&path->mutex);
+}
+
+
+
+static void path_unlock_cb(void *data)
+{
+        idmef_path_t *path = data;
+        pthread_mutex_unlock(&path->mutex);
+}
+
+
+
 static void flush_cache_if_wanted(void *ptr)
 {
         if ( flush_cache )
@@ -1004,18 +1020,6 @@ int idmef_path_has_lists(idmef_path_t *path)
 
 
 
-void _idmef_path_cache_destroy(void)
-{
-        if ( ! cached_path )
-                return;
-
-        flush_cache = TRUE;
-        prelude_hash_destroy(cached_path);
-        flush_cache = FALSE;
-}
-
-
-
 /**
  * idmef_path_get_depth:
  * @path: Pointer to an #idmef_path_t object.
@@ -1058,4 +1062,36 @@ const char *idmef_path_get_name(const idmef_path_t *path, int depth)
                 ret = idmef_class_get_name(elem->class);
         
         return ret;
+}
+
+
+
+void _idmef_path_cache_lock(void)
+{
+        pthread_mutex_lock(&cached_path_mutex);
+
+        if ( cached_path )
+                prelude_hash_iterate(cached_path, path_lock_cb);
+}
+
+
+
+void _idmef_path_cache_unlock(void)
+{
+        if ( cached_path )
+                prelude_hash_iterate(cached_path, path_unlock_cb);
+
+        pthread_mutex_unlock(&cached_path_mutex);
+}
+
+
+
+void _idmef_path_cache_destroy(void)
+{
+        if ( ! cached_path )
+                return;
+
+        flush_cache = TRUE;
+        prelude_hash_destroy(cached_path);
+        flush_cache = FALSE;
 }
