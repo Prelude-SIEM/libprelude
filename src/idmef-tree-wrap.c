@@ -5253,10 +5253,10 @@ int idmef_service_new_child(void *p, idmef_class_child_id_t child, int n, void *
 		case 7:
 			return idmef_service_new_protocol(ptr, (prelude_string_t **) ret);
 
-		case 9:
+		case 8:
 			return idmef_service_new_web_service(ptr, (idmef_web_service_t **) ret);
 
-		case 10:
+		case 9:
 			return idmef_service_new_snmp_service(ptr, (idmef_snmp_service_t **) ret);
 
 		default:
@@ -12854,13 +12854,13 @@ int idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         return idmef_alert_new_additional_data(ptr, (idmef_additional_data_t **) ret, n);
 		}
 
-		case 11:
+		case 10:
 			return idmef_alert_new_tool_alert(ptr, (idmef_tool_alert_t **) ret);
 
-		case 12:
+		case 11:
 			return idmef_alert_new_correlation_alert(ptr, (idmef_correlation_alert_t **) ret);
 
-		case 13:
+		case 12:
 			return idmef_alert_new_overflow_alert(ptr, (idmef_overflow_alert_t **) ret);
 
 		default:
@@ -14416,10 +14416,10 @@ int idmef_message_new_child(void *p, idmef_class_child_id_t child, int n, void *
 		case 0:
 			return idmef_message_new_version(ptr, (prelude_string_t **) ret);
 
-		case 2:
+		case 1:
 			return idmef_message_new_alert(ptr, (idmef_alert_t **) ret);
 
-		case 3:
+		case 2:
 			return idmef_message_new_heartbeat(ptr, (idmef_heartbeat_t **) ret);
 
 		default:

@@ -412,8 +412,6 @@ int idmef_$struct->{short_typename}_new_child(void *p, idmef_class_child_id_t ch
 ");
 	} elsif ( $field->{metatype} & &METATYPE_UNION ) {
 
-	    $n++;
-
 	    foreach my $member ( @{ $field->{member_list} } ) {
 		$self->output("
 		case $n:
