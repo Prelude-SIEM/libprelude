@@ -58,8 +58,9 @@
 
 
 struct prelude_client {
+        char *addr;
         uint16_t port;
-        const char *addr;
+        
         
         /*
          * This pointer point to the object suitable
