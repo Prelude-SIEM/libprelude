@@ -1,3 +1,11 @@
+2002-10-21  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/string-matching.c 
+	(BoyerMoore_CI_StringMatching):
+	(BoyerMoore_StringMatching):
+	return the index where we matched the pattern on success 
+	and -1 on error.
+
 2002-09-23  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* NEWS: updated.

@@ -123,14 +123,14 @@ int BoyerMoore_StringMatching(char *data, int dlen, char *ptrn, int plen,
 		for (j = plen - 1; j >= 0 && data[i + j] == ptrn[j]; --j);
 
 		if (j < 0)
-			return i+1;
+			return i;
 		else {
 			int k = bm_bc[(uint8_t)data[i + j]] - plen + j + 1;
 			i += (k > bm_gs[j + 1]) ? k : bm_gs[j + 1];
 		}
 	}
 	
-	return 0;
+	return -1;
 }
 
 int BoyerMoore_CI_StringMatching(char *data, int dlen, char *ptrn, int plen,
@@ -145,12 +145,12 @@ int BoyerMoore_CI_StringMatching(char *data, int dlen, char *ptrn, int plen,
 		for (j = plen - 1; j >= 0 && toupper(data[i + j]) == ptrn[j]; --j);
 
 		if (j < 0)
-			return i+1;
+			return i;
 		else {
 			int k = bm_bc[toupper((uint8_t)data[i + j])] - plen + j + 1;
 			i += (k > bm_gs[j + 1]) ? k : bm_gs[j + 1];
 		}
 	}
 	
-	return 0;
+	return -1;
 }
