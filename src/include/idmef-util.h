@@ -59,7 +59,8 @@ do {									\
 
 
 
-unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, unsigned char *buf, size_t *size);
+const unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad,
+                                                         unsigned char *buf, size_t *size);
 
 #define MAX_UTC_DATETIME_SIZE  64   /* YYYY-MM-DDThh:mm:ss.ssZ */
 #define MAX_NTP_TIMESTAMP_SIZE 22   /* 0xNNNNNNNN.0xNNNNNNNN + \0  */

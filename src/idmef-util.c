@@ -54,7 +54,8 @@
 #include "idmef-util.h"
 
 
-unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, unsigned char *buf, size_t *size)
+const unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad,
+                                                         unsigned char *buf, size_t *size)
 {
         int ret = 0;
         idmef_data_t *data;
@@ -78,7 +79,7 @@ unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, 
         case IDMEF_ADDITIONAL_DATA_TYPE_XML:
                 ret = extract_characters_safe(&outstr, idmef_data_get_data(data), idmef_data_get_len(data));
                 *size = idmef_data_get_len(data) - 1; /* 0 string delimiter is included in len */
-                return (ret < 0) ? NULL : buf;
+                return (ret < 0) ? NULL : outstr;
 
         case IDMEF_ADDITIONAL_DATA_TYPE_INTEGER: {
                 uint32_t out32;
