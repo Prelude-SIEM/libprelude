@@ -174,18 +174,18 @@ int prelude_daemonize(const char *lockfile)
                 
         }
         
-	pid = fork();
-	if ( pid < 0 ) {
+        pid = fork();
+        if ( pid < 0 ) {
                 log(LOG_ERR, "fork failed.\n");
-		return -1;
-	}
+                return -1;
+        }
 
         else if ( pid ) {
                 if ( lockfile )
                         lockfile_write_pid(fd, pid);
                 
                 log(LOG_INFO, "- Starting as daemon: PID is %d.\n", (int) pid);
-		exit(0);
+                _exit(0);
         }
         
         setsid();
