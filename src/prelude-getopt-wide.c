@@ -26,13 +26,13 @@ static int reply_option_request(prelude_client_t *client, uint64_t admin_id,
 	
         if ( getdata ) {
                 msgnum++;
-                getdatalen = strlen(getdata);
+                getdatalen = strlen(getdata) + 1;
                 msglen += getdatalen;
         }
 
         if ( error ) {
 		msgnum++;
-                errorlen = strlen(error);
+                errorlen = strlen(error) + 1;
 		msglen += errorlen;
 	}
          
@@ -116,30 +116,32 @@ static int get_option_request(prelude_client_t *client, prelude_msg_t *msg, uint
 
 static int handle_option_request(prelude_client_t *client, prelude_msg_t *msg)
 {
-        int ret = 0, type;
-        char getbuf[1024];
         uint64_t admin_id;
         uint32_t request_id;
+        int ret = 0, type = -1;
         const char *error = NULL;
+        char getbuf[1024], *getptr = NULL;
         const char *option = NULL, *value = NULL;
         
         ret = get_option_request(client, msg, &admin_id, &request_id, &type, &option, &value);
         if ( ret < 0 )
                 return -1;
-                
+        
 	if ( type == PRELUDE_MSG_OPTION_SET ) 
 		ret = prelude_option_invoke_set(option, value);
         
-	else if ( type == PRELUDE_MSG_OPTION_SET ) 
+	else if ( type == PRELUDE_MSG_OPTION_GET ) {
+                getptr = getbuf;
 		ret = prelude_option_invoke_get(option, getbuf, sizeof(getbuf));
-        
-        else 
+        }
+
+        else
                 error = "Invalid option type";
 
         if ( ret < 0 )
                 error = "Error setting option";
         
-        return reply_option_request(client, admin_id, request_id, getbuf, error);
+        return reply_option_request(client, admin_id, request_id, getptr, error);
 }
 
 
