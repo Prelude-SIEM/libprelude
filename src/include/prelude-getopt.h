@@ -156,6 +156,7 @@ uint8_t prelude_option_get_input_type(prelude_option_t *opt);
 
 prelude_option_t *prelude_option_get_root(void);
 
+prelude_list_t *prelude_option_get_optlist(prelude_option_t *opt);
 
 prelude_option_t *prelude_option_get_parent(prelude_option_t *opt);
 

@@ -32,6 +32,7 @@
 #include "prelude-message-id.h"
 #include "prelude-message-buffered.h"
 
+#include "prelude-linked-object.h"
 #include "prelude-list.h"
 #include "prelude-log.h"
 #include "variable.h"
@@ -53,9 +54,9 @@ typedef struct prelude_optlist {
 
 
 struct prelude_option {
+        PRELUDE_LINKED_OBJECT;
+        
         prelude_optlist_t optlist;
-        prelude_list_t list;
-
         prelude_option_t *parent;
         
         int flags;
@@ -1024,6 +1025,13 @@ const char *prelude_option_get_longname(prelude_option_t *opt)
 void prelude_option_set_value(prelude_option_t *opt, const char *value)
 {
         opt->value = strdup(value);
+}
+
+
+
+prelude_list_t *prelude_option_get_optlist(prelude_option_t *opt)
+{
+        return &opt->optlist.optlist;
 }
 
 
