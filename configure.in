@@ -61,6 +61,24 @@ AC_PROG_YACC
 AC_SYS_LARGEFILE
 AX_CREATE_PRELUDE_INTTYPES_H(src/include/prelude-inttypes.h)
 
+dnl Expand $prefix.
+
+if test "x$prefix" = "xNONE"; then
+   prefix="/usr/local"
+fi
+
+if test "x$localstatedir" = "x\${prefix}/var"; then
+   localstatedir="$prefix/var"
+fi
+
+if test "x$sysconfdir" = "x\${prefix}/etc"; then
+   sysconfdir="$prefix/etc"
+fi
+
+if test "x$datadir" = "x\${prefix}/share"; then
+   datadir="$prefix/share"
+fi
+
 
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
@@ -442,6 +460,8 @@ AC_CONFIG_FILES([
 Makefile 
 client.conf
 global.conf
+idmef-client.conf
+
 libprelude-config
 
 libmissing/Makefile

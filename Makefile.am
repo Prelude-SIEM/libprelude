@@ -51,6 +51,20 @@ install-data-local:
                 $(INSTALL) -m 644 $(top_srcdir)/global.conf $(DESTDIR)$(prelude_config_dir)/default;				\
         fi															
 
+	@if test -f $(DESTDIR)$(prelude_config_dir)/default/idmef-client.conf; then						\
+		echo;														\
+		echo "********************************************************************************";          		\
+                echo;														\
+                echo "$(DESTDIR)$(prelude_config_dir)/default/idmef-client.conf already exist...";				\
+                echo "Installing default configuration in $(DESTDIR)$(prelude_config_dir)/default/idmef-client.conf-dist";	\
+                echo;														\
+                echo "********************************************************************************";			\
+		echo;														\
+		$(INSTALL) -m 644 $(top_srcdir)/idmef-client.conf $(DESTDIR)$(prelude_config_dir)/default/idmef-client.conf-dist; \
+        else															\
+                $(INSTALL) -m 644 $(top_srcdir)/idmef-client.conf $(DESTDIR)$(prelude_config_dir)/default;			\
+        fi
+
 	@if test -f $(DESTDIR)$(prelude_config_dir)/tls/tls.conf; then								\
 		echo;														\
 		echo "********************************************************************************";          		\
