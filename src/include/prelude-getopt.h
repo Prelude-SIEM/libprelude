@@ -70,10 +70,9 @@ typedef enum {
 /*
  * option callback order
  */
-#define option_run_last      -1
-#define option_run_first     -2
+#define option_run_first     -1
 #define option_run_no_order   0
-
+#define option_run_last       1
 
 void prelude_option_set_priority(prelude_option_t *option, int priority);
 
