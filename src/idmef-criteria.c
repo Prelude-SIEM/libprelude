@@ -58,7 +58,7 @@ struct idmef_criteria {
  * idmef_criterion_operator_to_string:
  * @op: #idmef_criterion_operator_t type.
  *
- * Transform @op to string.
+ * Transforms @op to string.
  *
  * Returns: A pointer to an operator string or NULL.
  */
@@ -93,13 +93,13 @@ const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t op)
 /**
  * idmef_criterion_new:
  * @criterion: Address where to store the created #idmef_criterion_t object.
- * @path: Pointer to a #idmef_path_t object.
- * @value: Pointer to a #idmef_criterion_value_t object.
+ * @path: Pointer to an #idmef_path_t object.
+ * @value: Pointer to an #idmef_criterion_value_t object.
  * @op: #idmef_criterion_operator_t to use for matching this criterion.
  *
- * Create a new #idmef_criterion_t object and store it in @criterion.
- * Matching this criterion will result in comparing the value of the object
- * pointed to by @path against the provided @value, using @op.
+ * Creates a new #idmef_criterion_t object and store it in @criterion.
+ * Matching this criterion will result in comparing the object value
+ * pointed by @path against the provided @value, using @op.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -126,7 +126,7 @@ int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
  * idmef_criterion_destroy:
  * @criterion: Pointer to a #idmef_criterion_t object.
  *
- * Destroy @criterion and it's content.
+ * Destroys @criterion and its content.
  */
 void idmef_criterion_destroy(idmef_criterion_t *criterion)
 {
@@ -145,7 +145,7 @@ void idmef_criterion_destroy(idmef_criterion_t *criterion)
  * @criterion: Pointer to a #idmef_criterion_t object to clone.
  * @dst: Address where to store the cloned #idmef_criterion_t object.
  *
- * Clone @criterion and store the cloned criterion within @dst.
+ * Clones @criterion and stores the cloned criterion within @dst.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -300,7 +300,7 @@ idmef_criterion_operator_t idmef_criterion_get_operator(idmef_criterion_t *crite
  * @criterion: Pointer to a #idmef_criterion_t object.
  * @message: Pointer to a #idmef_message_t object to match against @criterion.
  *
- * Match @message against the provided @criterion. This imply retrieving the
+ * Matches @message against the provided @criterion. This implies retrieving the
  * value associated with @criterion path, and matching it with the @idmef_criterion_value_t
  * object within @criterion.
  *
@@ -336,7 +336,7 @@ int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message
  * idmef_criteria_new:
  * @criteria: Address where to store the created #idmef_criteria_t object.
  *
- * Create a new #idmef_criteria_t object and store it into @criteria.
+ * Creates a new #idmef_criteria_t object and store it into @criteria.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -358,7 +358,7 @@ int idmef_criteria_new(idmef_criteria_t **criteria)
  * idmef_criteria_destroy:
  * @criteria: Pointer to a #idmef_criteria_t object.
  *
- * Destroy @criteria and it's content.
+ * Destroys @criteria and its content.
  */
 void idmef_criteria_destroy(idmef_criteria_t *criteria)
 {
@@ -381,7 +381,7 @@ void idmef_criteria_destroy(idmef_criteria_t *criteria)
  * @src: Pointer to a #idmef_criteria_t object to clone.
  * @dst: Address where to store the cloned #idmef_criteria_t object.
  *
- * Clone @src and store the cloned criteria within @dst.
+ * Clones @src and stores the cloned criteria within @dst.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -554,7 +554,7 @@ void idmef_criteria_set_criterion(idmef_criteria_t *criteria, idmef_criterion_t 
  * @criteria: Pointer to a #idmef_criteria_t object.
  * @message: Pointer to a #idmef_message_t message.
  *
- * Match @message against the provided criteria.
+ * Matches @message against the provided criteria.
  *
  * Returns: 1 if criteria match, 0 if it did not, a negative value if an error occured.
  */
