@@ -51,28 +51,6 @@
 #define END_STR         "-----END "
 
 
- 
-static int cmp_certificate_issuer(gnutls_x509_crt crt, const char *dn, size_t dnsize)
-{
-        int ret;
-        char buf[128];
-        size_t size = sizeof(buf);
-        
-        ret = gnutls_x509_crt_get_issuer_dn(crt, buf, &size);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't get certificate issue dn: %s.\n", gnutls_strerror(ret));
-                return -1;
-        }
-        
-        if ( size != dnsize )
-                return -1;
-        
-        ret = strcmp(buf, dn);
-
-        return (ret == 0) ? 0 : -1;
-}
-
-
 
 static int load_individual_cert(FILE *fd, gnutls_datum *key, gnutls_certificate_credentials cred)
 {
