@@ -6,7 +6,7 @@ exec_prefix=@exec_prefix@
 exec_prefix_set=no
 
 usage="\
-Usage: libprelude-config [--prefix[=DIR]] [--exec-prefix[=DIR]] [--prelude-config-prefix] [--version] [--libs] [--pthread-cflags] [--cflags]"
+Usage: libprelude-config [--prefix[=DIR]] [--exec-prefix[=DIR]] [--prelude-config-prefix] [--version] [--libs] [--cflags]"
 
 if test $# -eq 0; then
       echo "${usage}" 1>&2
@@ -52,11 +52,11 @@ while test $# -gt 0; do
       if test @includedir@ != /usr/include ; then
         includes=-I@includedir@
       fi
-      echo $includes @libprelude_cflags@
+      echo @libprelude_cflags@ $includes
       ;;
 
     --pthread-cflags)
-      echo @pthread_cflags@
+      echo @PTHREAD_CFLAGS@
       ;;
 
     --libs)
