@@ -14,182 +14,308 @@ prelude-inttypes
 
 </para>
 
-<!-- ##### MACRO INT8_MIN ##### -->
+<!-- ##### MACRO PRELUDE_INT8_MIN ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO INT16_MIN ##### -->
+<!-- ##### MACRO PRELUDE_INT16_MIN ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO INT32_MIN ##### -->
+<!-- ##### MACRO PRELUDE_INT32_MIN ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO INT64_MIN ##### -->
+<!-- ##### MACRO PRELUDE_INT64_MIN ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO INT8_MAX ##### -->
+<!-- ##### MACRO PRELUDE_INT8_MAX ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO INT16_MAX ##### -->
+<!-- ##### MACRO PRELUDE_INT16_MAX ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO INT32_MAX ##### -->
+<!-- ##### MACRO PRELUDE_INT32_MAX ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO INT64_MAX ##### -->
+<!-- ##### MACRO PRELUDE_INT64_MAX ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO UINT8_MAX ##### -->
+<!-- ##### MACRO PRELUDE_UINT8_MAX ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO UINT16_MAX ##### -->
+<!-- ##### MACRO PRELUDE_UINT16_MAX ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO UINT32_MAX ##### -->
+<!-- ##### MACRO PRELUDE_UINT32_MAX ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO UINT64_MAX ##### -->
+<!-- ##### MACRO PRELUDE_UINT64_MAX ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO INTMAX_MIN ##### -->
+<!-- ##### MACRO PRELUDE_INTMAX_MIN ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO INTMAX_MAX ##### -->
+<!-- ##### MACRO PRELUDE_INTMAX_MAX ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO UINTMAX_MAX ##### -->
+<!-- ##### MACRO PRELUDE_UINTMAX_MAX ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO PRId64 ##### -->
+<!-- ##### MACRO PRELUDE_PRId64 ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO PRIi64 ##### -->
+<!-- ##### MACRO PRELUDE_PRIi64 ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO PRIo64 ##### -->
+<!-- ##### MACRO PRELUDE_PRIo64 ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO PRIx64 ##### -->
+<!-- ##### MACRO PRELUDE_PRIx64 ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO PRIX64 ##### -->
+<!-- ##### MACRO PRELUDE_PRIX64 ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO PRIu64 ##### -->
+<!-- ##### MACRO PRELUDE_PRIu64 ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO SCNd64 ##### -->
+<!-- ##### MACRO PRELUDE_PRId32 ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO SCNi64 ##### -->
+<!-- ##### MACRO PRELUDE_PRIi32 ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO SCNo64 ##### -->
+<!-- ##### MACRO PRELUDE_PRIo32 ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO SCNx64 ##### -->
+<!-- ##### MACRO PRELUDE_PRIx32 ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO SCNu64 ##### -->
+<!-- ##### MACRO PRELUDE_PRIX32 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_PRIu32 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_PRId16 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_PRIi16 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_PRIo16 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_PRIx16 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_PRIX16 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_PRIu16 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_PRId8 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_PRIi8 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_PRIo8 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_PRIx8 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_PRIX8 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_PRIu8 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_SCNd64 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_SCNi64 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_SCNo64 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_SCNx64 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_SCNu64 ##### -->
 <para>
 
 </para>
