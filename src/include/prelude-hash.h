@@ -40,4 +40,6 @@ void *prelude_hash_get(prelude_hash_t *hash, const void *key);
 
 int prelude_hash_elem_destroy(prelude_hash_t *hash, const void *key);
 
+void prelude_hash_iterate(prelude_hash_t *hash, void (*cb)(void *data));
+
 #endif /* _LIBPRELUDE_HASH_H */
