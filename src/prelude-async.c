@@ -31,12 +31,10 @@
 #include "prelude-list.h"
 #include "prelude-inttypes.h"
 #include "prelude-linked-object.h"
-#include "timer.h"
+#include "prelude-timer.h"
 #include "prelude-log.h"
 #include "prelude-io.h"
-#include "prelude-message.h"
 #include "prelude-async.h"
-#include "threads.h"
 
 
 
@@ -105,7 +103,7 @@ static void wait_timer_and_data(void)
                 
                 elapsed = get_elapsed_time(&now, &last_timer_wake_up);
                 if ( elapsed >= 1 ) {
-                        prelude_wake_up_timer();
+                        prelude_timer_wake_up();
                         last_timer_wake_up.tv_sec = now.tv_sec;
                         last_timer_wake_up.tv_usec = now.tv_usec;
                 }

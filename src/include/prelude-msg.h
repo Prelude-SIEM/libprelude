@@ -34,16 +34,8 @@ typedef struct prelude_msg prelude_msg_t;
 #define PRELUDE_MSG_PRIORITY_MID  1
 #define PRELUDE_MSG_PRIORITY_LOW  2
 
-typedef enum {
-        prelude_msg_error      = -1,
-        prelude_msg_eof        =  0,
-        prelude_msg_unfinished =  1,
-        prelude_msg_finished   =  2
-} prelude_msg_status_t;
 
-
-
-prelude_msg_status_t prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio);
+int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio);
 
 int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src);
 

@@ -31,12 +31,11 @@
 #include "prelude-log.h"
 #include "extract.h"
 #include "prelude-io.h"
-#include "prelude-message.h"
-#include "prelude-message-buffered.h"
+#include "prelude-msgbuf.h"
 #include "prelude-client.h"
 #include "prelude-message-id.h"
-#include "prelude-getopt.h"
-#include "prelude-getopt-wide.h"
+#include "prelude-option.h"
+#include "prelude-option-wide.h"
 #include "common.h"
 #include "config-engine.h"
 
@@ -48,7 +47,7 @@ static int config_save_value(config_t *cfg, int rtype, prelude_option_t *last,
         int ret;
         char buf[1024];
         
-        if ( ! (prelude_option_get_flags(last) & CFG_HOOK) )
+        if ( ! (prelude_option_get_type(last) & PRELUDE_OPTION_TYPE_CFG) )
                 return -1;
         
         if ( rtype != PRELUDE_MSG_OPTION_SET && rtype != PRELUDE_MSG_OPTION_DESTROY )
@@ -85,7 +84,7 @@ static int parse_single(void **context, prelude_option_t **last, int is_last_cmd
 {
         int ret = 0;
 	
-        *last = prelude_option_search(*last, option, WIDE_HOOK, 0);
+        *last = prelude_option_search(*last, option, PRELUDE_OPTION_TYPE_WIDE, 0);
         if ( ! *last ) {
                 snprintf(out, size, "Unknown option: %s.\n", option);
                 return -1;
@@ -339,12 +338,12 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         prelude_option_set_has_arg(opt, tmpint);
                         break;
 
-                case PRELUDE_MSG_OPTION_FLAGS:
+                case PRELUDE_MSG_OPTION_TYPE:
                         ret = extract_uint8_safe(&tmpint, buf, dlen);
                         if ( ret < 0 )
                                 return -1;
 
-                        prelude_option_set_flags(opt, tmpint);
+                        prelude_option_set_type(opt, tmpint);
                         break;
                         
                 case PRELUDE_MSG_OPTION_INPUT_TYPE:

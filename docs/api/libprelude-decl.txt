@@ -63,6 +63,313 @@
 extern YYSTYPE yylval;
 </VARIABLE>
 <MACRO>
+<NAME>errno_to_idx</NAME>
+#define errno_to_idx(code) (0 ? -1 \
+  : ((code >= 1) && (code <= 11)) ? (code - 1) \
+  : ((code >= 11) && (code <= 35)) ? (code - 0) \
+  : ((code >= 35) && (code <= 40)) ? (code - -1) \
+  : ((code >= 42) && (code <= 57)) ? (code - 0) \
+  : ((code >= 59) && (code <= 95)) ? (code - 1) \
+  : ((code >= 95) && (code <= 125)) ? (code - 0) \
+  : -1)
+</MACRO>
+<MACRO>
+<NAME>msgidxof</NAME>
+#define msgidxof(code) (0 ? -1 \
+  : ((code >= 0) && (code <= 6)) ? (code - 0) \
+  : ((code >= 16382) && (code <= 16383)) ? (code - 16375) \
+  : 16384 - 16375)
+</MACRO>
+<MACRO>
+<NAME>msgidxof</NAME>
+#define msgidxof(code) (0 ? -1 \
+  : ((code >= 0) && (code <= 6)) ? (code - 0) \
+  : ((code >= 16382) && (code <= 16383)) ? (code - 16375) \
+  : 16384 - 16375)
+</MACRO>
+<MACRO>
+<NAME>gettext</NAME>
+# define gettext(Msgid) ((const char *) (Msgid))
+</MACRO>
+<MACRO>
+<NAME>dgettext</NAME>
+# define dgettext(Domainname, Msgid) ((const char *) (Msgid))
+</MACRO>
+<MACRO>
+<NAME>dcgettext</NAME>
+# define dcgettext(Domainname, Msgid, Category) ((const char *) (Msgid))
+</MACRO>
+<MACRO>
+<NAME>ngettext</NAME>
+# define ngettext(Msgid1, Msgid2, N) \
+    ((N) == 1 ? (const char *) (Msgid1) : (const char *) (Msgid2))
+</MACRO>
+<MACRO>
+<NAME>dngettext</NAME>
+# define dngettext(Domainname, Msgid1, Msgid2, N) \
+    ((N) == 1 ? (const char *) (Msgid1) : (const char *) (Msgid2))
+</MACRO>
+<MACRO>
+<NAME>dcngettext</NAME>
+# define dcngettext(Domainname, Msgid1, Msgid2, N, Category) \
+    ((N) == 1 ? (const char *) (Msgid1) : (const char *) (Msgid2))
+</MACRO>
+<MACRO>
+<NAME>textdomain</NAME>
+# define textdomain(Domainname) ((const char *) (Domainname))
+</MACRO>
+<MACRO>
+<NAME>bindtextdomain</NAME>
+# define bindtextdomain(Domainname, Dirname) ((const char *) (Dirname))
+</MACRO>
+<MACRO>
+<NAME>bind_textdomain_codeset</NAME>
+# define bind_textdomain_codeset(Domainname, Codeset) ((const char *) (Codeset))
+</MACRO>
+<MACRO>
+<NAME>gettext_noop</NAME>
+#define gettext_noop(String) String
+</MACRO>
+<MACRO>
+<NAME>msgidxof</NAME>
+#define msgidxof(code) (0 ? -1 \
+  : ((code >= 0) && (code <= 4)) ? (code - 0) \
+  : 5 - 0)
+</MACRO>
+<MACRO>
+<NAME>errnos_msgidxof</NAME>
+#define errnos_msgidxof(code) (0 ? -1 \
+  : ((code >= 0) && (code <= 140)) ? (code - 0) \
+  : -1)
+</MACRO>
+<MACRO>
+<NAME>msgidxof</NAME>
+#define msgidxof(code) (0 ? -1 \
+  : ((code >= 0) && (code <= 4)) ? (code - 0) \
+  : 5 - 0)
+</MACRO>
+<ENUM>
+<NAME>prelude_error_source_t</NAME>
+typedef enum {
+    PRELUDE_ERROR_SOURCE_UNKNOWN = 0,
+    PRELUDE_ERROR_SOURCE_IO = 1,
+    PRELUDE_ERROR_SOURCE_MESSAGE = 2,
+    PRELUDE_ERROR_SOURCE_FAILOVER = 3,
+    PRELUDE_ERROR_SOURCE_CLIENT = 4,
+
+	PRELUDE_ERROR_SOURCE_DIM = 256
+} prelude_error_source_t;
+</ENUM>
+<ENUM>
+<NAME>prelude_error_code_t</NAME>
+typedef enum {
+    PRELUDE_ERROR_NO_ERROR = 0,
+    PRELUDE_ERROR_GENERIC = 1,
+    PRELUDE_ERROR_TLS = 2,
+    PRELUDE_ERROR_INVAL_LENGTH = 3,
+    PRELUDE_ERROR_INVAL_MESSAGE = 4,
+    PRELUDE_ERROR_PROTOCOL_VERSION = 5,
+    PRELUDE_ERROR_EOF = 6,
+    PRELUDE_ERROR_UNKNOWN_ERRNO = 16382,
+    PRELUDE_ERROR_EOF = 16383,
+
+#define PRELUDE_ERROR_SYSTEM_ERROR    (1 << 15)
+    PRELUDE_ERROR_E2BIG = PRELUDE_ERROR_SYSTEM_ERROR | 0,
+    PRELUDE_ERROR_EACCES = PRELUDE_ERROR_SYSTEM_ERROR | 1,
+    PRELUDE_ERROR_EADDRINUSE = PRELUDE_ERROR_SYSTEM_ERROR | 2,
+    PRELUDE_ERROR_EADDRNOTAVAIL = PRELUDE_ERROR_SYSTEM_ERROR | 3,
+    PRELUDE_ERROR_EADV = PRELUDE_ERROR_SYSTEM_ERROR | 4,
+    PRELUDE_ERROR_EAFNOSUPPORT = PRELUDE_ERROR_SYSTEM_ERROR | 5,
+    PRELUDE_ERROR_EAGAIN = PRELUDE_ERROR_SYSTEM_ERROR | 6,
+    PRELUDE_ERROR_EALREADY = PRELUDE_ERROR_SYSTEM_ERROR | 7,
+    PRELUDE_ERROR_EAUTH = PRELUDE_ERROR_SYSTEM_ERROR | 8,
+    PRELUDE_ERROR_EBACKGROUND = PRELUDE_ERROR_SYSTEM_ERROR | 9,
+    PRELUDE_ERROR_EBADE = PRELUDE_ERROR_SYSTEM_ERROR | 10,
+    PRELUDE_ERROR_EBADF = PRELUDE_ERROR_SYSTEM_ERROR | 11,
+    PRELUDE_ERROR_EBADFD = PRELUDE_ERROR_SYSTEM_ERROR | 12,
+    PRELUDE_ERROR_EBADMSG = PRELUDE_ERROR_SYSTEM_ERROR | 13,
+    PRELUDE_ERROR_EBADR = PRELUDE_ERROR_SYSTEM_ERROR | 14,
+    PRELUDE_ERROR_EBADRPC = PRELUDE_ERROR_SYSTEM_ERROR | 15,
+    PRELUDE_ERROR_EBADRQC = PRELUDE_ERROR_SYSTEM_ERROR | 16,
+    PRELUDE_ERROR_EBADSLT = PRELUDE_ERROR_SYSTEM_ERROR | 17,
+    PRELUDE_ERROR_EBFONT = PRELUDE_ERROR_SYSTEM_ERROR | 18,
+    PRELUDE_ERROR_EBUSY = PRELUDE_ERROR_SYSTEM_ERROR | 19,
+    PRELUDE_ERROR_ECANCELED = PRELUDE_ERROR_SYSTEM_ERROR | 20,
+    PRELUDE_ERROR_ECHILD = PRELUDE_ERROR_SYSTEM_ERROR | 21,
+    PRELUDE_ERROR_ECHRNG = PRELUDE_ERROR_SYSTEM_ERROR | 22,
+    PRELUDE_ERROR_ECOMM = PRELUDE_ERROR_SYSTEM_ERROR | 23,
+    PRELUDE_ERROR_ECONNABORTED = PRELUDE_ERROR_SYSTEM_ERROR | 24,
+    PRELUDE_ERROR_ECONNREFUSED = PRELUDE_ERROR_SYSTEM_ERROR | 25,
+    PRELUDE_ERROR_ECONNRESET = PRELUDE_ERROR_SYSTEM_ERROR | 26,
+    PRELUDE_ERROR_ED = PRELUDE_ERROR_SYSTEM_ERROR | 27,
+    PRELUDE_ERROR_EDEADLK = PRELUDE_ERROR_SYSTEM_ERROR | 28,
+    PRELUDE_ERROR_EDEADLOCK = PRELUDE_ERROR_SYSTEM_ERROR | 29,
+    PRELUDE_ERROR_EDESTADDRREQ = PRELUDE_ERROR_SYSTEM_ERROR | 30,
+    PRELUDE_ERROR_EDIED = PRELUDE_ERROR_SYSTEM_ERROR | 31,
+    PRELUDE_ERROR_EDOM = PRELUDE_ERROR_SYSTEM_ERROR | 32,
+    PRELUDE_ERROR_EDOTDOT = PRELUDE_ERROR_SYSTEM_ERROR | 33,
+    PRELUDE_ERROR_EDQUOT = PRELUDE_ERROR_SYSTEM_ERROR | 34,
+    PRELUDE_ERROR_EEXIST = PRELUDE_ERROR_SYSTEM_ERROR | 35,
+    PRELUDE_ERROR_EFAULT = PRELUDE_ERROR_SYSTEM_ERROR | 36,
+    PRELUDE_ERROR_EFBIG = PRELUDE_ERROR_SYSTEM_ERROR | 37,
+    PRELUDE_ERROR_EFTYPE = PRELUDE_ERROR_SYSTEM_ERROR | 38,
+    PRELUDE_ERROR_EGRATUITOUS = PRELUDE_ERROR_SYSTEM_ERROR | 39,
+    PRELUDE_ERROR_EGREGIOUS = PRELUDE_ERROR_SYSTEM_ERROR | 40,
+    PRELUDE_ERROR_EHOSTDOWN = PRELUDE_ERROR_SYSTEM_ERROR | 41,
+    PRELUDE_ERROR_EHOSTUNREACH = PRELUDE_ERROR_SYSTEM_ERROR | 42,
+    PRELUDE_ERROR_EIDRM = PRELUDE_ERROR_SYSTEM_ERROR | 43,
+    PRELUDE_ERROR_EIEIO = PRELUDE_ERROR_SYSTEM_ERROR | 44,
+    PRELUDE_ERROR_EILSEQ = PRELUDE_ERROR_SYSTEM_ERROR | 45,
+    PRELUDE_ERROR_EINPROGRESS = PRELUDE_ERROR_SYSTEM_ERROR | 46,
+    PRELUDE_ERROR_EINTR = PRELUDE_ERROR_SYSTEM_ERROR | 47,
+    PRELUDE_ERROR_EINVAL = PRELUDE_ERROR_SYSTEM_ERROR | 48,
+    PRELUDE_ERROR_EIO = PRELUDE_ERROR_SYSTEM_ERROR | 49,
+    PRELUDE_ERROR_EISCONN = PRELUDE_ERROR_SYSTEM_ERROR | 50,
+    PRELUDE_ERROR_EISDIR = PRELUDE_ERROR_SYSTEM_ERROR | 51,
+    PRELUDE_ERROR_EISNAM = PRELUDE_ERROR_SYSTEM_ERROR | 52,
+    PRELUDE_ERROR_EL2HLT = PRELUDE_ERROR_SYSTEM_ERROR | 53,
+    PRELUDE_ERROR_EL2NSYNC = PRELUDE_ERROR_SYSTEM_ERROR | 54,
+    PRELUDE_ERROR_EL3HLT = PRELUDE_ERROR_SYSTEM_ERROR | 55,
+    PRELUDE_ERROR_EL3RST = PRELUDE_ERROR_SYSTEM_ERROR | 56,
+    PRELUDE_ERROR_ELIBACC = PRELUDE_ERROR_SYSTEM_ERROR | 57,
+    PRELUDE_ERROR_ELIBBAD = PRELUDE_ERROR_SYSTEM_ERROR | 58,
+    PRELUDE_ERROR_ELIBEXEC = PRELUDE_ERROR_SYSTEM_ERROR | 59,
+    PRELUDE_ERROR_ELIBMAX = PRELUDE_ERROR_SYSTEM_ERROR | 60,
+    PRELUDE_ERROR_ELIBSCN = PRELUDE_ERROR_SYSTEM_ERROR | 61,
+    PRELUDE_ERROR_ELNRNG = PRELUDE_ERROR_SYSTEM_ERROR | 62,
+    PRELUDE_ERROR_ELOOP = PRELUDE_ERROR_SYSTEM_ERROR | 63,
+    PRELUDE_ERROR_EMEDIUMTYPE = PRELUDE_ERROR_SYSTEM_ERROR | 64,
+    PRELUDE_ERROR_EMFILE = PRELUDE_ERROR_SYSTEM_ERROR | 65,
+    PRELUDE_ERROR_EMLINK = PRELUDE_ERROR_SYSTEM_ERROR | 66,
+    PRELUDE_ERROR_EMSGSIZE = PRELUDE_ERROR_SYSTEM_ERROR | 67,
+    PRELUDE_ERROR_EMULTIHOP = PRELUDE_ERROR_SYSTEM_ERROR | 68,
+    PRELUDE_ERROR_ENAMETOOLONG = PRELUDE_ERROR_SYSTEM_ERROR | 69,
+    PRELUDE_ERROR_ENAVAIL = PRELUDE_ERROR_SYSTEM_ERROR | 70,
+    PRELUDE_ERROR_ENEEDAUTH = PRELUDE_ERROR_SYSTEM_ERROR | 71,
+    PRELUDE_ERROR_ENETDOWN = PRELUDE_ERROR_SYSTEM_ERROR | 72,
+    PRELUDE_ERROR_ENETRESET = PRELUDE_ERROR_SYSTEM_ERROR | 73,
+    PRELUDE_ERROR_ENETUNREACH = PRELUDE_ERROR_SYSTEM_ERROR | 74,
+    PRELUDE_ERROR_ENFILE = PRELUDE_ERROR_SYSTEM_ERROR | 75,
+    PRELUDE_ERROR_ENOANO = PRELUDE_ERROR_SYSTEM_ERROR | 76,
+    PRELUDE_ERROR_ENOBUFS = PRELUDE_ERROR_SYSTEM_ERROR | 77,
+    PRELUDE_ERROR_ENOCSI = PRELUDE_ERROR_SYSTEM_ERROR | 78,
+    PRELUDE_ERROR_ENODATA = PRELUDE_ERROR_SYSTEM_ERROR | 79,
+    PRELUDE_ERROR_ENODEV = PRELUDE_ERROR_SYSTEM_ERROR | 80,
+    PRELUDE_ERROR_ENOENT = PRELUDE_ERROR_SYSTEM_ERROR | 81,
+    PRELUDE_ERROR_ENOEXEC = PRELUDE_ERROR_SYSTEM_ERROR | 82,
+    PRELUDE_ERROR_ENOLCK = PRELUDE_ERROR_SYSTEM_ERROR | 83,
+    PRELUDE_ERROR_ENOLINK = PRELUDE_ERROR_SYSTEM_ERROR | 84,
+    PRELUDE_ERROR_ENOMEDIUM = PRELUDE_ERROR_SYSTEM_ERROR | 85,
+    PRELUDE_ERROR_ENOMEM = PRELUDE_ERROR_SYSTEM_ERROR | 86,
+    PRELUDE_ERROR_ENOMSG = PRELUDE_ERROR_SYSTEM_ERROR | 87,
+    PRELUDE_ERROR_ENONET = PRELUDE_ERROR_SYSTEM_ERROR | 88,
+    PRELUDE_ERROR_ENOPKG = PRELUDE_ERROR_SYSTEM_ERROR | 89,
+    PRELUDE_ERROR_ENOPROTOOPT = PRELUDE_ERROR_SYSTEM_ERROR | 90,
+    PRELUDE_ERROR_ENOSPC = PRELUDE_ERROR_SYSTEM_ERROR | 91,
+    PRELUDE_ERROR_ENOSR = PRELUDE_ERROR_SYSTEM_ERROR | 92,
+    PRELUDE_ERROR_ENOSTR = PRELUDE_ERROR_SYSTEM_ERROR | 93,
+    PRELUDE_ERROR_ENOSYS = PRELUDE_ERROR_SYSTEM_ERROR | 94,
+    PRELUDE_ERROR_ENOTBLK = PRELUDE_ERROR_SYSTEM_ERROR | 95,
+    PRELUDE_ERROR_ENOTCONN = PRELUDE_ERROR_SYSTEM_ERROR | 96,
+    PRELUDE_ERROR_ENOTDIR = PRELUDE_ERROR_SYSTEM_ERROR | 97,
+    PRELUDE_ERROR_ENOTEMPTY = PRELUDE_ERROR_SYSTEM_ERROR | 98,
+    PRELUDE_ERROR_ENOTNAM = PRELUDE_ERROR_SYSTEM_ERROR | 99,
+    PRELUDE_ERROR_ENOTSOCK = PRELUDE_ERROR_SYSTEM_ERROR | 100,
+    PRELUDE_ERROR_ENOTSUP = PRELUDE_ERROR_SYSTEM_ERROR | 101,
+    PRELUDE_ERROR_ENOTTY = PRELUDE_ERROR_SYSTEM_ERROR | 102,
+    PRELUDE_ERROR_ENOTUNIQ = PRELUDE_ERROR_SYSTEM_ERROR | 103,
+    PRELUDE_ERROR_ENXIO = PRELUDE_ERROR_SYSTEM_ERROR | 104,
+    PRELUDE_ERROR_EOPNOTSUPP = PRELUDE_ERROR_SYSTEM_ERROR | 105,
+    PRELUDE_ERROR_EOVERFLOW = PRELUDE_ERROR_SYSTEM_ERROR | 106,
+    PRELUDE_ERROR_EPERM = PRELUDE_ERROR_SYSTEM_ERROR | 107,
+    PRELUDE_ERROR_EPFNOSUPPORT = PRELUDE_ERROR_SYSTEM_ERROR | 108,
+    PRELUDE_ERROR_EPIPE = PRELUDE_ERROR_SYSTEM_ERROR | 109,
+    PRELUDE_ERROR_EPROCLIM = PRELUDE_ERROR_SYSTEM_ERROR | 110,
+    PRELUDE_ERROR_EPROCUNAVAIL = PRELUDE_ERROR_SYSTEM_ERROR | 111,
+    PRELUDE_ERROR_EPROGMISMATCH = PRELUDE_ERROR_SYSTEM_ERROR | 112,
+    PRELUDE_ERROR_EPROGUNAVAIL = PRELUDE_ERROR_SYSTEM_ERROR | 113,
+    PRELUDE_ERROR_EPROTO = PRELUDE_ERROR_SYSTEM_ERROR | 114,
+    PRELUDE_ERROR_EPROTONOSUPPORT = PRELUDE_ERROR_SYSTEM_ERROR | 115,
+    PRELUDE_ERROR_EPROTOTYPE = PRELUDE_ERROR_SYSTEM_ERROR | 116,
+    PRELUDE_ERROR_ERANGE = PRELUDE_ERROR_SYSTEM_ERROR | 117,
+    PRELUDE_ERROR_EREMCHG = PRELUDE_ERROR_SYSTEM_ERROR | 118,
+    PRELUDE_ERROR_EREMOTE = PRELUDE_ERROR_SYSTEM_ERROR | 119,
+    PRELUDE_ERROR_EREMOTEIO = PRELUDE_ERROR_SYSTEM_ERROR | 120,
+    PRELUDE_ERROR_ERESTART = PRELUDE_ERROR_SYSTEM_ERROR | 121,
+    PRELUDE_ERROR_EROFS = PRELUDE_ERROR_SYSTEM_ERROR | 122,
+    PRELUDE_ERROR_ERPCMISMATCH = PRELUDE_ERROR_SYSTEM_ERROR | 123,
+    PRELUDE_ERROR_ESHUTDOWN = PRELUDE_ERROR_SYSTEM_ERROR | 124,
+    PRELUDE_ERROR_ESOCKTNOSUPPORT = PRELUDE_ERROR_SYSTEM_ERROR | 125,
+    PRELUDE_ERROR_ESPIPE = PRELUDE_ERROR_SYSTEM_ERROR | 126,
+    PRELUDE_ERROR_ESRCH = PRELUDE_ERROR_SYSTEM_ERROR | 127,
+    PRELUDE_ERROR_ESRMNT = PRELUDE_ERROR_SYSTEM_ERROR | 128,
+    PRELUDE_ERROR_ESTALE = PRELUDE_ERROR_SYSTEM_ERROR | 129,
+    PRELUDE_ERROR_ESTRPIPE = PRELUDE_ERROR_SYSTEM_ERROR | 130,
+    PRELUDE_ERROR_ETIME = PRELUDE_ERROR_SYSTEM_ERROR | 131,
+    PRELUDE_ERROR_ETIMEDOUT = PRELUDE_ERROR_SYSTEM_ERROR | 132,
+    PRELUDE_ERROR_ETOOMANYREFS = PRELUDE_ERROR_SYSTEM_ERROR | 133,
+    PRELUDE_ERROR_ETXTBSY = PRELUDE_ERROR_SYSTEM_ERROR | 134,
+    PRELUDE_ERROR_EUCLEAN = PRELUDE_ERROR_SYSTEM_ERROR | 135,
+    PRELUDE_ERROR_EUNATCH = PRELUDE_ERROR_SYSTEM_ERROR | 136,
+    PRELUDE_ERROR_EUSERS = PRELUDE_ERROR_SYSTEM_ERROR | 137,
+    PRELUDE_ERROR_EWOULDBLOCK = PRELUDE_ERROR_SYSTEM_ERROR | 138,
+    PRELUDE_ERROR_EXDEV = PRELUDE_ERROR_SYSTEM_ERROR | 139,
+    PRELUDE_ERROR_EXFULL = PRELUDE_ERROR_SYSTEM_ERROR | 140,
+
+	PRELUDE_ERROR_CODE_DIM = 65536
+} prelude_error_code_t;
+</ENUM>
+<MACRO>
+<NAME>PRELUDE_ERROR_SOURCE_DEFAULT</NAME>
+ #define PRELUDE_ERROR_SOURCE_DEFAULT  PRELUDE_ERROR_SOURCE_UNKNOWN
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_ERROR_CODE_MASK</NAME>
+#define PRELUDE_ERROR_CODE_MASK       (PRELUDE_ERROR_CODE_DIM - 1)
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_ERROR_SOURCE_MASK</NAME>
+#define PRELUDE_ERROR_SOURCE_MASK     (PRELUDE_ERROR_SOURCE_DIM - 1)
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_ERROR_SOURCE_SHIFT</NAME>
+#define PRELUDE_ERROR_SOURCE_SHIFT    24
+</MACRO>
+<TYPEDEF>
+<NAME>prelude_error_t</NAME>
+typedef signed int prelude_error_t;
+</TYPEDEF>
+<FUNCTION>
+<NAME>prelude_error_code_from_errno</NAME>
+<RETURNS>prelude_error_code_t  </RETURNS>
+int err
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return  </RETURNS>
+PRELUDE_ERROR_SOURCE_DEFAULT, code
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return  </RETURNS>
+PRELUDE_ERROR_SOURCE_DEFAULT, prelude_error_code_from_errno(err)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_strerror</NAME>
+<RETURNS>const char  *</RETURNS>
+prelude_error_t err
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_strsource</NAME>
+<RETURNS>const char  *</RETURNS>
+prelude_error_t err
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_code_to_errno</NAME>
+<RETURNS>int  </RETURNS>
+prelude_error_code_t code
+</FUNCTION>
+<MACRO>
 <NAME>LISTED_OBJECT</NAME>
 #define LISTED_OBJECT(name, type) prelude_list_t name
 </MACRO>
@@ -4647,6 +4954,17 @@ prelude_io_t *pio
 <RETURNS>ssize_t  </RETURNS>
 prelude_io_t *pio
 </FUNCTION>
+<MACRO>
+<NAME>errno_to_idx</NAME>
+#define errno_to_idx(code) (0 ? -1 \
+  : ((code >= 1) && (code <= 11)) ? (code - 1) \
+  : ((code >= 11) && (code <= 35)) ? (code - 0) \
+  : ((code >= 35) && (code <= 40)) ? (code - -1) \
+  : ((code >= 42) && (code <= 57)) ? (code - 0) \
+  : ((code >= 59) && (code <= 95)) ? (code - 1) \
+  : ((code >= 95) && (code <= 125)) ? (code - 0) \
+  : -1)
+</MACRO>
 <FUNCTION>
 <NAME>variable_set</NAME>
 <RETURNS>int  </RETURNS>
@@ -5325,8 +5643,13 @@ const prelude_string_t *string
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_get_string</NAME>
-<RETURNS>char  *</RETURNS>
+<RETURNS>const char  *</RETURNS>
 const prelude_string_t *string
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_string_get_string_released</NAME>
+<RETURNS>char  *</RETURNS>
+prelude_string_t *string
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_string_is_empty</NAME>
@@ -5528,6 +5851,118 @@ idmef_heartbeat_t *heartbeat, prelude_msgbuf_t *msg
 <RETURNS>void  </RETURNS>
 idmef_message_t *message, prelude_msgbuf_t *msg
 </FUNCTION>
+<TYPEDEF>
+<NAME>idmef_data_t</NAME>
+typedef prelude_data_t idmef_data_t;
+</TYPEDEF>
+<MACRO>
+<NAME>idmef_type_data</NAME>
+#define idmef_type_data 2
+</MACRO>
+<STRUCT>
+<NAME>data</NAME>
+struct data
+{
+        int refcount;
+        
+        int flags;
+        size_t len;
+
+        union {
+                unsigned char *rw_data;
+                const unsigned char *ro_data;
+        };
+</STRUCT>
+<FUNCTION>
+<NAME>prelude_data_new</NAME>
+<RETURNS>prelude_data_t  *</RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_data_ref</NAME>
+<RETURNS>prelude_data_t  *</RETURNS>
+prelude_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_data_new_dup</NAME>
+<RETURNS>prelude_data_t  *</RETURNS>
+const unsigned char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_data_new_nodup</NAME>
+<RETURNS>prelude_data_t  *</RETURNS>
+unsigned char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_data_new_ref</NAME>
+<RETURNS>prelude_data_t  *</RETURNS>
+const unsigned char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_data_destroy</NAME>
+<RETURNS>void  </RETURNS>
+prelude_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_data_set_nodup</NAME>
+<RETURNS>int  </RETURNS>
+prelude_data_t *data, unsigned char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_data_set_dup</NAME>
+<RETURNS>int  </RETURNS>
+prelude_data_t *data, const unsigned char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_data_set_ref</NAME>
+<RETURNS>int  </RETURNS>
+prelude_data_t *data, const unsigned char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_data_copy_ref</NAME>
+<RETURNS>int  </RETURNS>
+prelude_data_t *dst, const prelude_data_t *src
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_data_copy_dup</NAME>
+<RETURNS>int  </RETURNS>
+prelude_data_t *dst, const prelude_data_t *src
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_data_clone</NAME>
+<RETURNS>prelude_data_t  *</RETURNS>
+const prelude_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_data_get_len</NAME>
+<RETURNS>size_t  </RETURNS>
+const prelude_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_data_get_data</NAME>
+<RETURNS>unsigned char  *</RETURNS>
+const prelude_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_data_is_empty</NAME>
+<RETURNS>int  </RETURNS>
+const prelude_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_data_to_string</NAME>
+<RETURNS>int  </RETURNS>
+prelude_data_t *data, char *buf, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_data_destroy_internal</NAME>
+<RETURNS>void  </RETURNS>
+prelude_data_t *data
+</FUNCTION>
+<MACRO>
+<NAME>prelude_data_set_constant_ref</NAME>
+#define prelude_data_set_constant_ref(data, buf)      \
+        prelude_data_set_ref(data, buf, sizeof(buf))
+</MACRO>
 <FUNCTION>
 <NAME>prelude_ident_inc</NAME>
 <RETURNS>uint64_t  </RETURNS>
@@ -7349,6 +7784,326 @@ struct object_data_t
 	const char *(*to_string)(int val);
 };
 </STRUCT>
+<FUNCTION>
+<NAME>idmef_additional_data_ref</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+idmef_additional_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_real</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+float data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_byte</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+uint8_t byte
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_integer</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+uint32_t data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_boolean</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+prelude_bool_t data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_character</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+char data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_xml_ref</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+const char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_xml_dup</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+const char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_xml_nodup</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_data_ref</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+const unsigned char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_data_dup</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+const unsigned char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_data_nodup</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+unsigned char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_string_ref</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+const char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_string_dup</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+const char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_string_nodup</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_ntpstamp_ref</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+const char *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_ntpstamp_dup</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+const char *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_ntpstamp_nodup</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+const char *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_portlist_ref</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+const char *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_portlist_dup</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+const char *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_portlist_nodup</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+const char *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_datetime_ref</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+const char *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_datetime_dup</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+const char *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_datetime_nodup</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+const char *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_real</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, float data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_byte</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, uint8_t byte
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_integer</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, uint32_t data)int idmef_additional_data_set_boolean(idmef_additional_data_t *data, prelude_bool_t data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_character</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, char data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_xml_ref</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, const char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_xml_dup</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, const char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_xml_nodup</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_data_ref</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, const unsigned char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_data_dup</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, const unsigned char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_data_nodup</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, unsigned char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_string_ref</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, const char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_string_dup</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, const char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_string_nodup</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_ntpstamp_ref</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, const char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_ntpstamp_dup</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, const char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_ntpstamp_nodup</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_portlist_ref</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, const char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_portlist_dup</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, const char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_portlist_nodup</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_datetime_ref</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, const char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_datetime_dup</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, const char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_datetime_nodup</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *data, char *buf, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_copy_ref</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *dst, const prelude_data_t *src
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_copy_dup</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *dst, const prelude_data_t *src
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_destroy</NAME>
+<RETURNS>void  </RETURNS>
+idmef_additional_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_destroy_internal</NAME>
+<RETURNS>void  </RETURNS>
+idmef_additional_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_clone</NAME>
+<RETURNS>idmef_additional_data_t  *</RETURNS>
+const idmef_additional_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_copy_ref</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *dst, const prelude_data_t *src
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_copy_dup</NAME>
+<RETURNS>int  </RETURNS>
+idmef_additional_data_t *dst, const prelude_data_t *src
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_get_boolean</NAME>
+<RETURNS>prelude_bool_t  </RETURNS>
+const idmef_additional_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_get_integer</NAME>
+<RETURNS>uint32_t  </RETURNS>
+const idmef_additional_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_get_xml</NAME>
+<RETURNS>char  *</RETURNS>
+const idmef_additional_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_get_data</NAME>
+<RETURNS>unsigned char  *</RETURNS>
+const idmef_additional_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_get_string</NAME>
+<RETURNS>char  *</RETURNS>
+const idmef_additional_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_get_ntpstamp</NAME>
+<RETURNS>uint64_t  </RETURNS>
+const idmef_additional_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_get_portlist</NAME>
+<RETURNS>char  *</RETURNS>
+const idmef_additional_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_get_datetime</NAME>
+<RETURNS>char  *</RETURNS>
+const idmef_additional_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_get_len</NAME>
+<RETURNS>size_t  </RETURNS>
+const idmef_additional_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_is_empty</NAME>
+<RETURNS>int  </RETURNS>
+const idmef_additional_data_t *data
+</FUNCTION>
 <MACRO>
 <NAME>CLI_HOOK</NAME>
 #define CLI_HOOK 0x1 /* Option to be hooked to command line */
@@ -7648,6 +8403,11 @@ prelude_option_context_t *oc
 <RETURNS>prelude_option_t  *</RETURNS>
 prelude_option_t *parent, const char *name, int flags, int walk_children
 </FUNCTION>
+<FUNCTION>
+<NAME>pconfig_init</NAME>
+<RETURNS>int  </RETURNS>
+int argc, char **argv
+</FUNCTION>
 <MACRO>
 <NAME>idmef_object_type_time</NAME>
 #define idmef_object_type_time 1
@@ -7921,18 +8681,9 @@ idmef_additional_data_t *ad,unsigned char *buf, size_t *size
 <NAME>PRELUDE_MSG_PRIORITY_LOW</NAME>
 #define PRELUDE_MSG_PRIORITY_LOW  2
 </MACRO>
-<ENUM>
-<NAME>prelude_msg_status_t</NAME>
-typedef enum {
-        prelude_msg_error      = -1,
-        prelude_msg_eof        =  0,
-        prelude_msg_unfinished =  1,
-        prelude_msg_finished   =  2
-} prelude_msg_status_t;
-</ENUM>
 <FUNCTION>
 <NAME>prelude_msg_read</NAME>
-<RETURNS>prelude_msg_status_t  </RETURNS>
+<RETURNS>int  </RETURNS>
 prelude_msg_t **msg, prelude_io_t *pio
 </FUNCTION>
 <FUNCTION>
@@ -8039,6 +8790,21 @@ prelude_msg_t *msg, prelude_msg_t *(*flush_msg_cb)(void *data)
 <NAME>prelude_msg_set_data</NAME>
 <RETURNS>void  </RETURNS>
 prelude_msg_t *msg, void *data
+</FUNCTION>
+<FUNCTION>
+<NAME>manager_auth_disable_encryption</NAME>
+<RETURNS>int  </RETURNS>
+server_generic_client_t *client, prelude_io_t *pio
+</FUNCTION>
+<FUNCTION>
+<NAME>manager_auth_client</NAME>
+<RETURNS>int  </RETURNS>
+server_generic_client_t *client, prelude_io_t *pio
+</FUNCTION>
+<FUNCTION>
+<NAME>manager_auth_init</NAME>
+<RETURNS>int  </RETURNS>
+prelude_client_t *client, int dh_bits, int dh_regenerate
 </FUNCTION>
 <MACRO>
 <NAME>byte</NAME>

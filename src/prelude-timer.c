@@ -32,7 +32,7 @@
 #include "prelude-linked-object.h"
 #include "prelude-async.h"
 
-#include "timer.h"
+#include "prelude-timer.h"
 
 
 #ifdef DEBUG
@@ -96,10 +96,10 @@ static int wake_up_if_needed(prelude_timer_t *timer, time_t now)
 {
         assert(timer->start_time != -1);
 
-        if ( now == -1 || time_elapsed(timer, now) >= timer_expire(timer) ) {
+        if ( now == -1 || time_elapsed(timer, now) >= prelude_timer_get_expire(timer) ) {
                 timer->start_time = -1;
                 
-                timer_func(timer)(timer_data(timer));
+                prelude_timer_get_callback(timer)(prelude_timer_get_data(timer));
                 
                 return 0;
         }
@@ -334,12 +334,12 @@ static void timer_init_unlocked(prelude_timer_t *timer)
 
 
 /**
- * timer_init:
+ * prelude_timer_init:
  * @timer: timer to initialize.
  *
  * Initialize a timer (add it to the timer list).
  */
-void timer_init(prelude_timer_t *timer)
+void prelude_timer_init(prelude_timer_t *timer)
 {
         timer_init_unlocked(timer);
 }
@@ -348,12 +348,12 @@ void timer_init(prelude_timer_t *timer)
 
 
 /**
- * timer_reset:
+ * prelude_timer_reset:
  * @timer: the timer to reset.
  *
  * Reset timer 'timer', as if it was just started.
  */
-void timer_reset(prelude_timer_t *timer) 
+void prelude_timer_reset(prelude_timer_t *timer) 
 {
         timer_destroy_unlocked(timer);
         timer_init_unlocked(timer);
@@ -363,13 +363,13 @@ void timer_reset(prelude_timer_t *timer)
 
 
 /**
- * timer_destroy:
+ * prelude_timer_destroy:
  * @timer: the timer to destroy.
  * 
  * Destroy the timer 'timer',
  * this remove it from the active timer list.
  */
-void timer_destroy(prelude_timer_t *timer) 
+void prelude_timer_destroy(prelude_timer_t *timer) 
 {
         timer_destroy_unlocked(timer);
 }
@@ -378,12 +378,12 @@ void timer_destroy(prelude_timer_t *timer)
 
 
 /**
- * prelude_wake_up_timer:
+ * prelude_timer_wake_up:
  *
  * Wake up timer that need it.
  * This function should be called every second to work properly.
  */
-void prelude_wake_up_timer(void) 
+void prelude_timer_wake_up(void) 
 {
         time_t now = time(NULL);
         
@@ -394,11 +394,11 @@ void prelude_wake_up_timer(void)
 
 
 /**
- * timer_flush:
+ * prelude_timer_flush:
  *
  * Expire every timer.
  */
-void timer_flush(void) 
+void prelude_timer_flush(void) 
 {
         walk_and_wake_up_timer(-1);
 }
@@ -407,11 +407,11 @@ void timer_flush(void)
 
 
 /**
- * timer_lock_critical_region:
+ * prelude_timer_lock_critical_region:
  *
  * Deactivate timer wake-up until timer_unlock_critical_region() is called.
  */
-void timer_lock_critical_region(void) 
+void prelude_timer_lock_critical_region(void) 
 {
         timer_lock_list();
 }
@@ -419,11 +419,11 @@ void timer_lock_critical_region(void)
 
 
 /**
- * timer_unlock_critical_region:
+ * prelude_timer_unlock_critical_region:
  *
  * Reactivate timer wake-up after timer_lock_critical_regions() has been called.
  */
-void timer_unlock_critical_region(void) 
+void prelude_timer_unlock_critical_region(void) 
 {
         timer_unlock_list();
 }

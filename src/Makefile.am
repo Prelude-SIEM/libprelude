@@ -1,41 +1,45 @@
-SUBDIRS = include
+SUBDIRS = libprelude-error include
 
 AM_CPPFLAGS = @PTHREAD_CFLAGS@ -I$(srcdir)/include -I$(top_builddir)/src/include 	\
-		-I$(top_srcdir)/libmissing @INCLTDL@ @libprelude_cflags@		\
+		-I$(srcdir)/libprelude-error -I$(top_srcdir)/libmissing @INCLTDL@ @libprelude_cflags@	\
 		-DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\" -DPRELUDE_SPOOL_DIR=\"@prelude_spool_dir@\"
 
 
 libpreludeincludedir = $(includedir)/
 libprelude_la_LIBADD = @libprelude_libs@ @LIBLTDL@
-libprelude_la_LDFLAGS = @PTHREAD_CFLAGS@ -no-undefined -version-info @libprelude_soname@ ../libmissing/libmissing.la
+libprelude_la_LDFLAGS = @PTHREAD_CFLAGS@ -no-undefined -version-info @libprelude_soname@ \
+	../libmissing/libmissing.la libprelude-error/libprelude-error.la
 lib_LTLIBRARIES = libprelude.la
 
 AM_YFLAGS = -d
 LEX_OUTPUT_ROOT = lex.yy
 
 libprelude_la_SOURCES = 		\
+	common.c			\
+	client-ident.c			\
 	config-engine.c 		\
 	daemonize.c			\
-	timer.c				\
+	ntp.c				\
+	tls-auth.c			\
+	tls-util.c			\
 	variable.c			\
+	prelude-async.c			\
 	prelude-client.c		\
 	prelude-connection.c		\
 	prelude-connection-mgr.c	\
-	prelude-getopt.c		\
-	prelude-getopt-wide.c		\
-	prelude-io.c			\
-	prelude-message.c		\
-	prelude-message-buffered.c	\
-	prelude-async.c			\
 	prelude-failover.c		\
-	prelude-ident.c			\
-	prelude-plugin.c		\
 	prelude-hash.c			\
-	prelude-log.c			\
+	prelude-ident.c			\
 	prelude-inet.c			\
+	prelude-io.c			\
+	prelude-log.c			\
+	prelude-msg.c			\
+	prelude-msgbuf.c		\
+	prelude-option.c		\
+	prelude-option-wide.c		\
+	prelude-plugin.c		\
 	prelude-string.c		\
-	client-ident.c			\
-	ntp.c				\
+	prelude-timer.c			\
 	idmef-util.c			\
 	idmef-time.c			\
 	idmef-data.c			\
@@ -52,9 +56,5 @@ libprelude_la_SOURCES = 		\
 	idmef-criteria-string.lex.l	\
 	idmef-criterion-value.c		\
 	idmef-message-write.c		\
-	idmef-message-read.c		\
-	common.c			\
-	tls-auth.c			\
-	tls-util.c			
-
+	idmef-message-read.c		
 

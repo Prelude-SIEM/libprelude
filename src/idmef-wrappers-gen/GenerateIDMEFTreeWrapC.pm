@@ -65,7 +65,7 @@ sub	header
 
 #include \"prelude-inttypes.h\"
 #include \"prelude-list.h\"
-#include \"prelude-message.h\"
+#include \"prelude-msg.h\"
 #include \"prelude-string.h\"
 
 #include \"idmef-time.h\"

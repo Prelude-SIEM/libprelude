@@ -38,7 +38,7 @@ sub	header
 #include \"prelude-inttypes.h\"
 #include \"idmef-time.h\"
 #include \"prelude-string.h\"
-#include \"prelude-message-buffered.h\"
+#include \"prelude-msgbuf.h\"
 
 
 void idmef_time_write(idmef_time_t *data, prelude_msgbuf_t *msg, uint8_t tag);

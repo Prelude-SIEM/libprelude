@@ -31,12 +31,14 @@
 #include "prelude-client.h"
 #include "prelude-connection.h"
 #include "prelude-connection-mgr.h"
+#include "prelude-error.h"
 #include "prelude-io.h"
-#include "prelude-getopt.h"
+#include "prelude-option.h"
 #include "prelude-async.h"
+#include "prelude-error.h"
 #include "prelude-plugin.h"
-#include "prelude-message.h"
-#include "prelude-message-buffered.h"
+#include "prelude-msg.h"
+#include "prelude-msgbuf.h"
 #include "idmef.h"
 
 const char *prelude_check_version(const char *rq_version);

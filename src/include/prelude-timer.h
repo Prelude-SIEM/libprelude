@@ -21,8 +21,8 @@
 *
 *****/
 
-#ifndef _LIBPRELUDE_TIMER_H
-#define _LIBPRELUDE_TIMER_H
+#ifndef _LIBPRELUDE_PRELUDE_TIMER_H
+#define _LIBPRELUDE_PRELUDE_TIMER_H
 
 
 #include "prelude-list.h"
@@ -42,31 +42,31 @@ typedef struct {
  * Use theses macros for compatibility purpose
  * if the internal timer structure change.
  */
-#define timer_expire(timer) (timer)->expire
-#define timer_data(timer) (timer)->data
-#define timer_func(timer) (timer)->function
+#define prelude_timer_get_expire(timer) (timer)->expire
+#define prelude_timer_get_data(timer) (timer)->data
+#define prelude_timer_get_callback(timer) (timer)->function
 
-#define timer_set_expire(timer, x) timer_expire((timer)) = (x)
-#define timer_set_data(timer, x) timer_data((timer)) = (x)
-#define timer_set_callback(timer, x) timer_func((timer)) = (x)
+#define prelude_timer_set_expire(timer, x) prelude_timer_get_expire((timer)) = (x)
+#define prelude_timer_set_data(timer, x) prelude_timer_get_data((timer)) = (x)
+#define prelude_timer_set_callback(timer, x) prelude_timer_get_callback((timer)) = (x)
 
 
 /*
  * Init a timer (add it to the timer list).
  */
-void timer_init(prelude_timer_t *timer);
+void prelude_timer_init(prelude_timer_t *timer);
 
 
 /*
  * Reset timer 'timer'.
  */
-void timer_reset(prelude_timer_t *timer);
+void prelude_timer_reset(prelude_timer_t *timer);
 
 
 /*
  * Destroy timer 'timer'.
  */
-void timer_destroy(prelude_timer_t *timer);
+void prelude_timer_destroy(prelude_timer_t *timer);
 
 
 /*
@@ -75,30 +75,30 @@ void timer_destroy(prelude_timer_t *timer);
  *
  * Store the result in a timeval structure given as argument.
  */
-void timer_elapsed(prelude_timer_t *timer, struct timeval *tv);
+void prelude_timer_elapsed(prelude_timer_t *timer, struct timeval *tv);
 
 
 /*
  * Wake up time that need it.
  * This function should be called every second to work properly.
  */
-void prelude_wake_up_timer(void);
-
-
-/*
- * walk every timer.
- */
-void timer_flush(void);
+void prelude_timer_wake_up(void);
 
 /*
  *
  */
-void timer_lock_critical_region(void);
+void prelude_timer_flush(void);
 
 
 /*
  *
  */
-void timer_unlock_critical_region(void);
+void prelude_timer_lock_critical_region(void);
 
-#endif /* _LIBPRELUDE_TIMER_H */
+
+/*
+ *
+ */
+void prelude_timer_unlock_critical_region(void);
+
+#endif /* _LIBPRELUDE_PRELUDE_TIMER_H */

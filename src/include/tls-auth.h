@@ -26,6 +26,6 @@
 
 int tls_auth_connection(prelude_client_t *client, prelude_io_t *io, int crypt);
 
-gnutls_certificate_credentials tls_auth_init(prelude_client_t *client);
+int tls_auth_init(prelude_client_t *client, gnutls_certificate_credentials *cred);
 
 #endif

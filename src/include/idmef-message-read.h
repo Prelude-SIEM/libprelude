@@ -29,7 +29,7 @@
 #define _LIBPRELUDE_IDMEF_MESSAGE_READ_H
 
 #include "prelude-inttypes.h"
-#include "prelude-message-buffered.h"
+#include "prelude-msgbuf.h"
 
 
 idmef_additional_data_t *idmef_additional_data_read(idmef_additional_data_t *additional_data, prelude_msg_t *msg);

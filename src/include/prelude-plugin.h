@@ -26,7 +26,7 @@
 
 
 #include "prelude-list.h"
-#include "prelude-getopt.h"
+#include "prelude-option.h"
 
 typedef struct prelude_plugin_instance prelude_plugin_instance_t;
 
@@ -51,7 +51,7 @@ static int prefix ## _set_ ## name(void *context, prelude_option_t *opt, const c
         dup = strdup(arg);                                                                       \
         if ( ! dup ) {                                                                           \
                 log(LOG_ERR, "memory exhausted.\n");                                             \
-                return prelude_option_error;                                                     \
+                return -1;                                                                       \
         }                                                                                        \
                                                                                                  \
         if ( ptr->name )                                                                         \
@@ -59,7 +59,7 @@ static int prefix ## _set_ ## name(void *context, prelude_option_t *opt, const c
                                                                                                  \
         ptr->name = dup;                                                                         \
                                                                                                  \
-        return prelude_option_success;                                                           \
+        return 0;                                                                                \
 }                                                                                                \
                                                                                                  \
                                                                                                  \
@@ -67,7 +67,7 @@ static int prefix ## _get_ ## name(void *context, prelude_option_t *opt, char *b
 {                                                                                                \
         type *ptr = prelude_plugin_instance_get_data(context);                                   \
         snprintf(buf, size, "%s", ptr->name);                                                    \
-        return prelude_option_success;                                                           \
+        return 0;                                                                                \
 }
 
 

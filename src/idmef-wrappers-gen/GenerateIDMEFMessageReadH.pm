@@ -60,7 +60,7 @@ sub	header
 #define _LIBPRELUDE_IDMEF_MESSAGE_READ_H
 
 #include \"prelude-inttypes.h\"
-#include \"prelude-message-buffered.h\"
+#include \"prelude-msgbuf.h\"
 
 ");
 }

@@ -32,14 +32,14 @@
 #include "libmissing.h"
 #include "prelude-inttypes.h"
 #include "prelude-message-id.h"
-#include "prelude-message-buffered.h"
+#include "prelude-msgbuf.h"
 
 #include "prelude-linked-object.h"
 #include "prelude-list.h"
 #include "prelude-log.h"
 #include "variable.h"
 #include "config-engine.h"
-#include "prelude-getopt.h"
+#include "prelude-option.h"
 #include "prelude-client.h"
 #include "common.h"
 
@@ -48,7 +48,6 @@
 
 
 #define option_run_all 10
-#define PRELUDE_OPTION_INIT_FLAG WIDE_HOOK
 
 
 struct prelude_option_context {
@@ -64,8 +63,8 @@ struct prelude_option {
         prelude_list_t optlist;
         prelude_option_t *parent;
         
-        int flags;
-        int priority;
+        prelude_option_type_t type;
+        prelude_option_priority_t priority;
         char shortopt;
         
         char *value;
@@ -111,7 +110,7 @@ static PRELUDE_LIST_HEAD(root_optlist);
 /*
  * Warning are turned on by default.
  */
-static int warnings_flags = OPT_INVAL|OPT_INVAL_ARG;
+static int warnings_flags = PRELUDE_OPTION_WARNING_OPTION|PRELUDE_OPTION_WARNING_ARG;
 
 
 
@@ -157,7 +156,7 @@ static prelude_option_context_t *search_context(prelude_option_t *opt, const cha
  * Search an option of a given name in the given option list.
  */
 static prelude_option_t *search_option(prelude_list_t *optlist,
-                                       const char *optname, int flags, int walk_children) 
+                                       const char *optname, prelude_option_type_t type, int walk_children) 
 {
         prelude_option_t *item, *ret;
         prelude_list_t *tmp;
@@ -166,12 +165,12 @@ static prelude_option_t *search_option(prelude_list_t *optlist,
                 item = prelude_list_entry(tmp, prelude_option_t, list);
                 
                 if ( walk_children || (! item->longopt && ! item->shortopt) ) {
-                        ret = search_option(&item->optlist, optname, flags, walk_children);
+                        ret = search_option(&item->optlist, optname, type, walk_children);
                         if ( ret )
                                 return ret;
                 }
 
-                if ( ! (item->flags & flags) )
+                if ( ! (item->type & type) )
                         continue;
                 
                 if ( item->longopt && strcasecmp(item->longopt, optname) == 0 )
@@ -250,15 +249,15 @@ static int check_option(prelude_list_t *optlist, prelude_option_t *option,
         
         switch (option->has_arg) {
                 
-        case optionnal_argument:
+        case PRELUDE_OPTION_ARGUMENT_OPTIONAL:
                 ret = check_option_optarg(optlist, argc, argv, argv_index, optarg);
                 break;
                 
-        case required_argument:
+        case PRELUDE_OPTION_ARGUMENT_REQUIRED:
                 ret = check_option_reqarg(optlist, option->longopt, argc, argv, argv_index, optarg);
                 break;
 
-        case no_argument:
+        case PRELUDE_OPTION_ARGUMENT_NONE:
                 ret = 0;
                 break;
 
@@ -352,7 +351,7 @@ static struct cb_list *call_option_cb(prelude_list_t *cblist, prelude_option_t *
                 if ( ! got_prev )
                         prev = tmp;
                     
-                if ( option->flags & ALLOW_MULTIPLE_CALL || option->flags & HAVE_CONTEXT ) 
+                if ( option->type & PRELUDE_OPTION_TYPE_ALLOW_MULTIPLE_CALL || option->type & PRELUDE_OPTION_TYPE_CONTEXT ) 
                         continue;
                 
                 ret = strcmp(cb->option->longopt, option->longopt);
@@ -377,7 +376,7 @@ static struct cb_list *call_option_cb(prelude_list_t *cblist, prelude_option_t *
         new->arg = (arg) ? strdup(arg) : NULL;
         new->option = option;
 
-        if ( option->priority == option_run_last ) {
+        if ( option->priority == PRELUDE_OPTION_PRIORITY_LAST ) {
                 prelude_list_add_tail(&new->list, cblist);
                 return new;
         }
@@ -401,7 +400,7 @@ static int do_set(void **context, prelude_option_t *opt, const char *value)
         if ( ! value || ! *value )
                 value = DEFAULT_INSTANCE_NAME;
         
-        if ( opt->flags & HAVE_CONTEXT ) {
+        if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
                 oc = search_context(opt, value);
                 if ( oc ) {
                         *context = oc->data;
@@ -413,7 +412,7 @@ static int do_set(void **context, prelude_option_t *opt, const char *value)
         if ( str )
                 free(str);
         
-        if ( opt->flags & HAVE_CONTEXT ) {
+        if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
                 oc = search_context(opt, value);                                
                 if ( ! oc )
 		        return -1;
@@ -428,24 +427,24 @@ static int do_set(void **context, prelude_option_t *opt, const char *value)
 
 static int call_option_from_cb_list(void *default_context, prelude_list_t *cblist) 
 {
+        int ret = 0;
         struct cb_list *cb;
         prelude_list_t *tmp, *bkp;
 	void *context = default_context;
-        int ret = prelude_option_success;
         
         prelude_list_for_each_safe(tmp, bkp, cblist) {
                 cb = prelude_list_entry(tmp, struct cb_list, list);
                 
                 if ( cb->option->set ) {
                         ret = do_set(&context, cb->option, cb->arg);                        
-                        if ( ret == prelude_option_error || ret == prelude_option_end ) 
+                        if ( ret < 0 ) 
                                 return ret;
                 }
                 
                 if ( ! prelude_list_empty(&cb->children) ) {
                                                 
                         ret = call_option_from_cb_list(context, &cb->children);                        
-                        if ( ret == prelude_option_error || ret == prelude_option_end )
+                        if ( ret < 0 )
                                 return ret;
                         
 			if ( cb->option->commit ) 
@@ -480,11 +479,12 @@ static int get_missing_options(config_t *cfg, const char *filename,
         
         while ( (config_get_next(cfg, &section, &entry, &value, line)) == 0 ) {
                               
-                opt = search_option(rootlist, (section && ! entry) ? section : entry, CFG_HOOK, 0);
+                opt = search_option(rootlist, (section && ! entry) ?
+                                    section : entry, PRELUDE_OPTION_TYPE_CFG, 0);
                 
                 if ( ! opt && entry && value && strcmp(entry, "include") == 0 ) {        
                         ret = process_cfg_file(cblist, rootlist, value);
-                        if ( ret == prelude_option_error || ret == prelude_option_end ) 
+                        if ( ret < 0 ) 
                                 return ret;
                         
                         continue;
@@ -502,9 +502,11 @@ static int get_missing_options(config_t *cfg, const char *filename,
                         }
 
                         if ( section && ! entry )
-                                option_err(OPT_INVAL, "%s:%d: invalid section : \"%s\".\n", filename, *line, section);
+                                option_err(PRELUDE_OPTION_WARNING_OPTION,
+                                           "%s:%d: invalid section : \"%s\".\n", filename, *line, section);
                         else
-                                option_err(OPT_INVAL, "%s:%d: invalid option \"%s\" in \"%s\" section.\n",
+                                option_err(PRELUDE_OPTION_WARNING_ARG,
+                                           "%s:%d: invalid option \"%s\" in \"%s\" section.\n",
                                            filename, *line, entry, (section) ? section : "global");
 
                         continue;
@@ -553,14 +555,14 @@ static int parse_argument(prelude_list_t *cb_list,
                 if ( ! isalnum((int) *arg) )
                         continue;
                      
-                opt = search_option(optlist, arg, CLI_HOOK, 0);                
+                opt = search_option(optlist, arg, PRELUDE_OPTION_TYPE_CLI, 0);                
                 if ( ! opt ) {                        
                         if ( depth ) {
                                 (*argv_index)--;
                                 return 0;
                         }
                         
-                        option_err(OPT_INVAL, "invalid option -- \"%s\" (%d).\n", arg, depth);
+                        option_err(PRELUDE_OPTION_WARNING_OPTION, "invalid option -- \"%s\" (%d).\n", arg, depth);
                         continue;
                 }
                 
@@ -584,7 +586,7 @@ static int parse_argument(prelude_list_t *cb_list,
                         ret = parse_argument(&cbitem->children, &opt->optlist,
                                              filename, argc, argv, argv_index, depth + 1);
 
-                        if ( ret == prelude_option_end || ret == prelude_option_error )
+                        if ( ret < 0 )
                                 return ret;
                 }
         }
@@ -602,7 +604,7 @@ static int get_option_from_optlist(prelude_list_t *optlist, prelude_list_t *cb_l
         
         if ( filename ) {
                 ret = process_cfg_file(cb_list, optlist, filename);
-                if ( ret == prelude_option_error || ret == prelude_option_end )
+                if ( ret < 0 )
                         return ret;
         }
 
@@ -661,7 +663,7 @@ int prelude_option_parse_arguments(void *context, prelude_option_t *option,
                 return -1;
         
         ret = call_option_from_cb_list(context, &cb_list);
-        if ( ret == prelude_option_error || ret == prelude_option_end )
+        if ( ret < 0 )
                 return ret;
 
         return opt_index;
@@ -674,7 +676,7 @@ int prelude_option_parse_arguments(void *context, prelude_option_t *option,
 /**
  * prelude_option_add:
  * @parent: Pointer on a parent option.
- * @flags: bitfields.
+ * @type: bitfields.
  * @shortopt: Short option name.
  * @longopt: Long option name.
  * @desc: Description of the option.
@@ -685,13 +687,13 @@ int prelude_option_parse_arguments(void *context, prelude_option_t *option,
  * prelude_option_add() create a new option. The option is set to be the child
  * of @parent, unless it is NULL. In this case the option is a root option.
  *
- * The @flags parameters can be set to CLI_HOOK (telling the option may be searched
- * on the command line only) or CFG_HOOk (telling the option may be searched in the
- * configuration file only) or both.
+ * The @type parameters can be set to PRELUDE_OPTION_TYPE_CLI (telling the
+ * option may be searched on the command line), PRELUDE_OPTION_TYPE_CFG (telling
+ * the option may be searched in the configuration file) or both.
  *
  * Returns: Pointer on the option object, or NULL if an error occured.
  */
-prelude_option_t *prelude_option_add(prelude_option_t *parent, int flags,
+prelude_option_t *prelude_option_add(prelude_option_t *parent, prelude_option_type_t type,
                                      char shortopt, const char *longopt, const char *desc,
                                      prelude_option_argument_t has_arg,
                                      int (*set)(void *context, prelude_option_t *opt, const char *optarg),
@@ -710,8 +712,8 @@ prelude_option_t *prelude_option_add(prelude_option_t *parent, int flags,
         new->value = NULL;
 	new->commit = NULL;
         new->destroy = NULL;
-        new->priority = option_run_no_order;
-        new->flags = flags;
+        new->priority = PRELUDE_OPTION_PRIORITY_NONE;
+        new->type = type;
         new->has_arg = has_arg;
         new->longopt = longopt;
         new->shortopt = shortopt;
@@ -740,7 +742,7 @@ static void send_option_msg(void *context, prelude_option_t *opt, const char *in
         prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_START, 0, NULL);
         prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_NAME, strlen(name) + 1, name);
         prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_HAS_ARG, sizeof(uint8_t), &opt->has_arg);
-        prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_FLAGS, sizeof(uint8_t), &opt->flags);
+        prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_TYPE, sizeof(uint8_t), &opt->type);
         
         if ( opt->description )
                 prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_DESC, strlen(opt->description) + 1, opt->description);
@@ -763,7 +765,7 @@ static void construct_option_msg(void *default_context, prelude_msgbuf_t *msg, p
         prelude_list_for_each(tmp, optlist) {
                 opt = prelude_list_entry(tmp, prelude_option_t, list);
 
-                if ( ! (opt->flags & WIDE_HOOK) )
+                if ( ! (opt->type & PRELUDE_OPTION_TYPE_WIDE) )
                         continue;
                 
                 prelude_list_for_each(tmp2, &opt->context_list) {
@@ -843,7 +845,7 @@ static void print_wrapped(const char *line, int descoff)
 
 
 
-static void print_options(prelude_list_t *optlist, int flags, int descoff, int depth) 
+static void print_options(prelude_list_t *optlist, prelude_option_type_t type, int descoff, int depth) 
 {
         int i, separator;
         prelude_option_t *opt;
@@ -854,9 +856,9 @@ static void print_options(prelude_list_t *optlist, int flags, int descoff, int d
                 opt = prelude_list_entry(tmp, prelude_option_t, list);
 
                 /*
-                 * If flags is not there, continue.
+                 * If type is not there, continue.
                  */
-                if ( flags && ! (opt->flags & flags) ) 
+                if ( type && ! (opt->type & type) ) 
                         continue;
                 
                 for ( i = 0; i < depth; i++ )
@@ -880,7 +882,7 @@ static void print_options(prelude_list_t *optlist, int flags, int descoff, int d
                         putchar('\n');
                 
                 if ( ! prelude_list_empty(&opt->optlist) ) 
-                        print_options(&opt->optlist, flags, descoff, depth + 1);
+                        print_options(&opt->optlist, type, descoff, depth + 1);
         }
 
         putchar('\n');
@@ -892,24 +894,24 @@ static void print_options(prelude_list_t *optlist, int flags, int descoff, int d
 /**
  * prelude_option_print:
  * @opt: Option(s) to print out.
- * @flags: Only option with specified flags will be printed.
+ * @type: Only option with specified types will be printed.
  * @descoff: offset from the begining of the line where the description
  * should start.
  *
- * Dump option available in @opt and hooked to the given flags.
+ * Dump option available in @opt and hooked to the given types.
  * If @opt is NULL, then the root of the option list is used.
  */
-void prelude_option_print(prelude_option_t *opt, int flags, int descoff) 
+void prelude_option_print(prelude_option_t *opt, prelude_option_type_t type, int descoff) 
 {
         prelude_list_t *optlist = (opt) ? &opt->optlist : &root_optlist;
         
-        print_options(optlist, flags, descoff, 0);
+        print_options(optlist, type, descoff, 0);
 }
 
 
 
 /**
- * prelude_option_set_priotity:
+ * prelude_option_set_priority:
  * @option: Pointer on an option object.
  * @priority: Priority of the option object.
  *
@@ -924,7 +926,7 @@ void prelude_option_print(prelude_option_t *opt, int flags, int descoff)
  * for the way it assign priority (knowing that highest priority are always
  * executed first).
  */
-void prelude_option_set_priority(prelude_option_t *option, int priority) 
+void prelude_option_set_priority(prelude_option_t *option, prelude_option_priority_t priority) 
 {
         assert(prelude_list_empty(&option->optlist));
         option->priority = priority;
@@ -971,7 +973,7 @@ void prelude_option_destroy(prelude_option_t *option)
 
 /**
  * prelude_option_set_warnings;
- * @flags: bitwise OR of flags.
+ * @warnings: bitwise OR of flags.
  * @old_flags: Pointer to an integer where to store old flags to.
  *
  * Set current warnings flags to @flags (unless @flags is 0).
@@ -979,12 +981,12 @@ void prelude_option_destroy(prelude_option_t *option)
  * Uppon return, the variable pointed to by @old_flags is updated
  * to contain the old flags unless it point to NULL.
  */
-void prelude_option_set_warnings(int flags, int *old_flags) 
+void prelude_option_set_warnings(prelude_option_warning_t new, prelude_option_warning_t *old_warnings) 
 {
-        if ( old_flags ) 
-                *old_flags = warnings_flags;
+        if ( old_warnings ) 
+                *old_warnings = warnings_flags;
         
-        warnings_flags = flags;
+        warnings_flags = new;
 }
 
 
@@ -1036,7 +1038,7 @@ void prelude_option_set_destroy_callback(prelude_option_t *opt,
                                          int (*destroy)(void *context, prelude_option_t *opt))
 {
         opt->destroy = destroy;
-        opt->flags |= DESTROY_HOOK;
+        opt->type |= PRELUDE_OPTION_TYPE_DESTROY;
 }
 
 
@@ -1124,12 +1126,12 @@ int prelude_option_invoke_set(void **context, prelude_option_t *opt, const char 
         if ( value && ! *value )
                 value = NULL;
         
-        if ( opt->has_arg == no_argument && value != NULL ) {
+        if ( opt->has_arg == PRELUDE_OPTION_ARGUMENT_NONE && value != NULL ) {
                 snprintf(err, size, "%s does not take an argument", opt->longopt);
                 return -1;
         }
         
-        if ( opt->has_arg == required_argument && value == NULL ) {
+        if ( opt->has_arg == PRELUDE_OPTION_ARGUMENT_REQUIRED && value == NULL ) {
                 snprintf(err, size, "%s require an argument", opt->longopt);
                 return -1;
         }
@@ -1147,7 +1149,7 @@ int prelude_option_invoke_commit(void *context, prelude_option_t *opt, const cha
         if ( ! opt->commit ) 
 		return 0;
         
-	if ( opt->flags & HAVE_CONTEXT ) {
+	if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
 		oc = search_context(opt, value);
 		if ( ! oc ) {
 			snprintf(err, size, "could not find option with context %s[%s]", opt->longopt, value);
@@ -1175,7 +1177,7 @@ int prelude_option_invoke_destroy(void *context, prelude_option_t *opt, const ch
 		return -1;
 	}
         
-	if ( opt->flags & HAVE_CONTEXT ) {
+	if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
 		oc = search_context(opt, value);
 		if ( ! oc ) {
 			snprintf(err, size, "could not find option with context %s[%s]", opt->longopt, value);
@@ -1207,7 +1209,7 @@ int prelude_option_invoke_get(void *context, prelude_option_t *opt, const char *
                 return -1;
         }
         
-	if ( opt->flags & HAVE_CONTEXT ) {
+	if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
 		oc = search_context(opt, value);
 		if ( ! oc ) {
 			snprintf(buf, size, "could not find option with context %s[%s]", opt->longopt, value);
@@ -1271,15 +1273,15 @@ const char *prelude_option_get_description(prelude_option_t *opt)
 
 
 
-void prelude_option_set_flags(prelude_option_t *opt, int flags)
+void prelude_option_set_type(prelude_option_t *opt, prelude_option_type_t type)
 {
-        opt->flags = flags;
+        opt->type = type;
 }
 
 
-int prelude_option_get_flags(prelude_option_t *opt)
+prelude_option_type_t prelude_option_get_type(prelude_option_t *opt)
 {
-        return opt->flags;
+        return opt->type;
 }
 
 
@@ -1364,7 +1366,7 @@ prelude_option_context_t *prelude_option_new_context(prelude_option_t *opt, cons
         new->name = (name) ? strdup(name) : NULL;
         
         if ( opt ) {
-        	opt->flags |= HAVE_CONTEXT;
+        	opt->type |= PRELUDE_OPTION_TYPE_CONTEXT;
 		prelude_list_add_tail(&new->list, &opt->context_list);
         } else {         	
 		PRELUDE_INIT_LIST_HEAD(&new->list);
@@ -1388,8 +1390,9 @@ void prelude_option_context_destroy(prelude_option_context_t *oc)
 
 
 
-prelude_option_t *prelude_option_search(prelude_option_t *parent, const char *name, int flags, int walk_children)
+prelude_option_t *prelude_option_search(prelude_option_t *parent, const char *name,
+                                        prelude_option_type_t type, int walk_children)
 {
         prelude_list_t *optlist = parent ? &parent->optlist : &root_optlist;
-        return search_option(optlist, name, flags, walk_children);
+        return search_option(optlist, name, type, walk_children);
 }

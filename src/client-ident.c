@@ -34,13 +34,13 @@
 #include <errno.h>
 
 #include "prelude-inttypes.h"
+#include "prelude-error.h"
 
 #include "common.h"
 #include "prelude-log.h"
 #include "extract.h"
 #include "prelude-io.h"
 #include "prelude-client.h"
-#include "prelude-message.h"
 #include "prelude-message-id.h"
 
 #include "client-ident.h"
@@ -86,15 +86,12 @@ int prelude_client_ident_init(prelude_client_t *client, uint64_t *analyzerid)
         prelude_client_get_ident_filename(client, filename, sizeof(filename));
         
         fd = fopen(filename, "r");
-        if ( ! fd ) {
-                log(LOG_ERR, "error opening analyzer identity file: %s.\n", filename);
-                return -1;
-        }
+        if ( ! fd )
+                return prelude_error_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_ANALYZERID_FILE);
 
         if ( ! fgets(buf, sizeof(buf), fd) ) {
-                log(LOG_ERR, "error reading analyzerid from %s.\n", filename);
                 fclose(fd);
-                return -1;
+                return prelude_error_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_ANALYZERID_PARSE);
         }
         
         sscanf(buf, "%" PRIu64, analyzerid);

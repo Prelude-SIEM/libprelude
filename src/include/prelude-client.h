@@ -25,6 +25,11 @@
 #define _LIBPRELUDE_PRELUDE_CLIENT_H
 
 
+#define PRELUDE_CLIENT_NEED_SETUP (PRELUDE_ERROR_ANALYZERID_FILE | \
+                                   PRELUDE_ERROR_ANALYZERID_PARSE| \
+                                   PRELUDE_ERROR_BACKUP_DIRECTORY)
+
+
 typedef enum {
         PRELUDE_CLIENT_EXIT_STATUS_SUCCESS = 0,
         PRELUDE_CLIENT_EXIT_STATUS_FAILURE = -1
@@ -100,7 +105,7 @@ void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status
 
 int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t flags);
 
-void prelude_client_set_capability(prelude_client_t *client, prelude_client_capability_t capability);
+int prelude_client_set_capability(prelude_client_t *client, prelude_client_capability_t capability);
 
 void prelude_client_get_ident_filename(prelude_client_t *client, char *buf, size_t size);
 

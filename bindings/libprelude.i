@@ -34,11 +34,11 @@
 #include "common.h"
 #include "prelude-io.h"
 #include "prelude-log.h"
-#include "prelude-message.h"
-#include "prelude-message-buffered.h"
+#include "prelude-msg.h"
+#include "prelude-msgbuf.h"
 #include "prelude-client.h"
-#include "prelude-getopt.h"
-#include "prelude-getopt-wide.h"
+#include "prelude-option.h"
+#include "prelude-option-wide.h"
 #include "idmef.h"
 #include "idmef-object-value.h"
 #include "idmef-message-write.h"
@@ -62,7 +62,7 @@ prelude_msg_t *my_prelude_msg_read(prelude_io_t *pio)
 {
 	prelude_msg_t *msg = NULL;
 	
-	if ( prelude_msg_read(&msg, pio) != prelude_msg_finished )
+	if ( prelude_msg_read(&msg, pio) < 0 )
 		return NULL;
 	
 	return msg;	
@@ -240,7 +240,6 @@ char *prelude_option_recv_set(prelude_msg_t *msg);
 %include "idmef-criteria.h"
 %include "idmef-criteria-string.h"
 %include "idmef-object-value.h"
-%include "prelude-message-buffered.h"
 %include "idmef-message-write.h"
 %include "idmef-tree-print.h"
 %include "idmef-tree-to-string.h"
@@ -248,7 +247,7 @@ char *prelude_option_recv_set(prelude_msg_t *msg);
 %include "idmef-util.h"
 %include "idmef-type.h"
 %include "prelude-connection.h"
-%include "prelude-getopt.h"
-%include "prelude-getopt-wide.h"
+%include "prelude-option.h"
+%include "prelude-option-wide.h"
 %include "prelude-message-id.h"
 %include "prelude-log.h"

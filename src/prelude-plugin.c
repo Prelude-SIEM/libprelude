@@ -40,10 +40,10 @@
 #include "variable.h"
 #include "prelude-inttypes.h"
 #include "prelude-io.h"
-#include "prelude-message.h"
-#include "prelude-getopt.h"
+#include "prelude-option.h"
 #include "prelude-linked-object.h"
 #include "prelude-plugin.h"
+#include "prelude-error.h"
 #include "config-engine.h"
 
 
@@ -267,7 +267,7 @@ static int plugin_desactivate(void *context, prelude_option_t *opt)
         /*
          * so that the plugin commit function is not called after unsubscribtion.
          */
-        return prelude_option_end;
+        return prelude_error(PRELUDE_ERROR_EOF);
 }
 
 
@@ -590,7 +590,7 @@ int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
                 return -1;
         
         prelude_option_set_destroy_callback(opt, plugin_desactivate);
-        prelude_option_set_flags(opt, prelude_option_get_flags(opt) | HAVE_CONTEXT);
+        prelude_option_set_type(opt, prelude_option_get_type(opt) | PRELUDE_OPTION_TYPE_CONTEXT);
         
         pe->create_instance = prelude_option_get_set_callback(opt);
 

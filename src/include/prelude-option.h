@@ -24,37 +24,18 @@
 #ifndef _LIBPRELUDE_PRELUDE_GETOPT_H
 #define _LIBPRELUDE_PRELUDE_GETOPT_H
 
-#include "prelude-message-buffered.h"
+#include "prelude-msgbuf.h"
 
 
 
-/*
- * prelude_option_add flags
- */
-#define CLI_HOOK 0x1 /* Option to be hooked to command line */
-#define CFG_HOOK 0x2 /* Option to be hooked to config file  */
-#define WIDE_HOOK 0x4
-#define ALLOW_MULTIPLE_CALL 0x8
-#define DESTROY_HOOK 0x20
-#define HAVE_CONTEXT 0x40
-
-/*
- * Possible return value for set() callback.
- * Theses return value are only usefull when the set function
- * is called from prelude_option_parse_argument().
- */
-#define prelude_option_success 0
-
-/*
- * tell prelude_option_parse_argument that next option should be
- * matched against parent of current option list
- */
-#define prelude_option_end -2
-
-/*
- * Any parsing will stop.
- */
-#define prelude_option_error -1
+typedef enum {
+        PRELUDE_OPTION_TYPE_CLI  = 0x1,
+        PRELUDE_OPTION_TYPE_CFG  = 0x2,
+        PRELUDE_OPTION_TYPE_WIDE = 0x4,
+        PRELUDE_OPTION_TYPE_ALLOW_MULTIPLE_CALL = 0x8,
+        PRELUDE_OPTION_TYPE_DESTROY = 0x20,
+        PRELUDE_OPTION_TYPE_CONTEXT = 0x40,
+} prelude_option_type_t;
 
 
 typedef struct prelude_option prelude_option_t;
@@ -62,23 +43,28 @@ typedef struct prelude_option_context prelude_option_context_t;
 
 
 typedef enum {
-        required_argument,
-        optionnal_argument,
-        no_argument
+        PRELUDE_OPTION_ARGUMENT_REQUIRED = 1,
+        PRELUDE_OPTION_ARGUMENT_OPTIONAL = 2,
+        PRELUDE_OPTION_ARGUMENT_NONE     = 3
 } prelude_option_argument_t;
 
 
+typedef enum {
+        PRELUDE_OPTION_PRIORITY_NONE     = 0,
+        PRELUDE_OPTION_PRIORITY_FIRST    = 1,
+        PRELUDE_OPTION_PRIORITY_LAST     = 2
+} prelude_option_priority_t;
 
-/*
- * option callback order
- */
-#define option_run_first     -1
-#define option_run_no_order   0
-#define option_run_last       1
 
-void prelude_option_set_priority(prelude_option_t *option, int priority);
+typedef enum {
+        PRELUDE_OPTION_WARNING_OPTION    = 0x1,
+        PRELUDE_OPTION_WARNING_ARG       = 0x2
+} prelude_option_warning_t;
 
-void prelude_option_print(prelude_option_t *opt, int flags, int descoff);
+
+void prelude_option_set_priority(prelude_option_t *option, prelude_option_priority_t priority);
+
+void prelude_option_print(prelude_option_t *opt, prelude_option_type_t type, int descoff);
 
 int prelude_option_wide_send_msg(void *context, prelude_msgbuf_t *msgbuf);
 
@@ -88,22 +74,17 @@ int prelude_option_parse_arguments(void *context, prelude_option_t *option,
                                    const char *filename, int *argc, char **argv);
 
 
-prelude_option_t *prelude_option_add(prelude_option_t *parent, int flags,
+prelude_option_t *prelude_option_add(prelude_option_t *parent, prelude_option_type_t type,
                                      char shortopt, const char *longopt, const char *desc,
                                      prelude_option_argument_t has_arg,
                                      int (*set)(void *context, prelude_option_t *opt, const char *optarg),
                                      int (*get)(void *context, prelude_option_t *opt, char *buf, size_t size));
 
+void prelude_option_set_type(prelude_option_t *opt, prelude_option_type_t type);
 
-#define OPT_INVAL     0x1
-#define OPT_INVAL_ARG 0x2
+prelude_option_type_t prelude_option_get_type(prelude_option_t *opt);
 
-
-void prelude_option_set_flags(prelude_option_t *opt, int flags);
-
-int prelude_option_get_flags(prelude_option_t *opt);
-
-void prelude_option_set_warnings(int flags, int *old_flags);
+void prelude_option_set_warnings(prelude_option_warning_t flags, prelude_option_warning_t *old_flags);
 
 char prelude_option_get_shortname(prelude_option_t *opt);
 
@@ -193,6 +174,7 @@ prelude_option_context_t *prelude_option_new_context(prelude_option_t *opt, cons
 void prelude_option_context_destroy(prelude_option_context_t *oc);
 
 
-prelude_option_t *prelude_option_search(prelude_option_t *parent, const char *name, int flags, int walk_children);
+prelude_option_t *prelude_option_search(prelude_option_t *parent, const char *name,
+                                        prelude_option_type_t type, int walk_children);
 
 #endif /* _LIBPRELUDE_PRELUDE_GETOPT_H */

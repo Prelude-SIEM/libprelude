@@ -40,6 +40,7 @@
 #include <stdarg.h>
 #include <time.h>
 
+#include "prelude-error.h"
 #include "libmissing.h"
 #include "prelude-log.h"
 #include "common.h"
@@ -308,28 +309,35 @@ int prelude_get_file_name_and_path(const char *str, char **name, char **path)
                 ret = find_absolute_path(cwd, str, path);
                 if ( ret == 0 ) {
                         *name = strdup(str);
-                        return 0;
+                        return (*name) ? 0 : prelude_error_from_errno(errno);
                 }
         }
 
         if ( *str != '/' ) {
                 ret = snprintf(buf, sizeof(buf), "%s/%s", cwd, (*str == '.') ? str + 2 : str);
                 if ( ret < 0 || ret >= sizeof(buf) )
-                        return -1;
+                        return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
                 
                 return prelude_get_file_name_and_path(buf, name, path);
         }
         
         ret = access(str, F_OK);
         if ( ret < 0 )
-                return -1;
+                return prelude_error_from_errno(errno);
         
         *ptr = 0;       
         *path = strdup(str);
+        if ( ! *path )
+                return prelude_error_from_errno(errno);
+        
         *ptr = '/';
         
         *name = strdup(ptr + 1);
-                
+        if ( ! *name ) {
+                free(*path);
+                return prelude_error_from_errno(errno);
+        }
+        
 	return 0;
 }
 

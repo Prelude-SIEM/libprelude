@@ -41,7 +41,7 @@
 #include "config-engine.h"
 #include "prelude-inttypes.h"
 #include "prelude-client.h"
-#include "prelude-getopt.h"
+#include "prelude-option.h"
 
 #include "server.h"
 #include "tls-register.h"
@@ -165,7 +165,7 @@ static int set_uid(void *context, prelude_option_t *opt, const char *optarg)
 {
         uid_set = 1;
         prelude_client_set_uid(client, atoi(optarg));
-        return prelude_option_success;
+        return 0;
 }
 
 
@@ -174,7 +174,7 @@ static int set_gid(void *context, prelude_option_t *opt, const char *optarg)
 {
         gid_set = 1;
         prelude_client_set_gid(client, atoi(optarg));
-        return prelude_option_success;
+        return 0;
 }
 
 
@@ -182,14 +182,14 @@ static int set_gid(void *context, prelude_option_t *opt, const char *optarg)
 static int set_server_keepalive(void *context, prelude_option_t *opt, const char *optarg)
 {
 	server_keepalive = 1;
-	return prelude_option_success;
+	return 0;
 }
 
 
 static int set_server_prompt_passwd(void *context, prelude_option_t *opt, const char *optarg)
 {
 	server_prompt_passwd = 1;
-	return prelude_option_success;
+	return 0;
 }
 
 
@@ -481,7 +481,7 @@ static int rename_cmd(int argc, char **argv)
         fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
         rename(spath, dpath);
         
-        return prelude_option_success;
+        return 0;
 }
 
 
@@ -523,8 +523,8 @@ static int add_cmd(int argc, char **argv)
         client = prelude_client_new(0);
         
         opt = prelude_option_new(NULL);
-        prelude_option_add(opt, CLI_HOOK, 'u', "uid", NULL, required_argument, set_uid, NULL);
-        prelude_option_add(opt, CLI_HOOK, 'g', "gid", NULL, required_argument, set_gid, NULL);
+        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'u', "uid", NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_uid, NULL);
+        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'g', "gid", NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_gid, NULL);
 
         argc -= 2;
         
@@ -600,8 +600,8 @@ static int register_cmd(int argc, char **argv)
         client = prelude_client_new(0);
 
         opt = prelude_option_new(NULL);
-        prelude_option_add(opt, CLI_HOOK, 'u', "uid", NULL, required_argument, set_uid, NULL);
-        prelude_option_add(opt, CLI_HOOK, 'g', "gid", NULL, required_argument, set_gid, NULL);
+        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'u', "uid", NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_uid, NULL);
+        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'g', "gid", NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_gid, NULL);
 
         argc -= 3;
         
@@ -673,14 +673,14 @@ static int registration_server_cmd(int argc, char **argv)
         opt = prelude_option_new(NULL);
         client = prelude_client_new(0);
         
-        prelude_option_add(opt, CLI_HOOK, 'k', "keepalive", NULL,
-                           no_argument, set_server_keepalive, NULL);
+        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'k', "keepalive", NULL,
+                           PRELUDE_OPTION_ARGUMENT_NONE, set_server_keepalive, NULL);
 		
-	prelude_option_add(opt, CLI_HOOK, 'p', "prompt", NULL,
-                           no_argument, set_server_prompt_passwd, NULL);
+	prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'p', "prompt", NULL,
+                           PRELUDE_OPTION_ARGUMENT_NONE, set_server_prompt_passwd, NULL);
         
-        prelude_option_add(opt, CLI_HOOK, 'u', "uid", NULL, required_argument, set_uid, NULL);
-        prelude_option_add(opt, CLI_HOOK, 'g', "gid", NULL, required_argument, set_gid, NULL);
+        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'u', "uid", NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_uid, NULL);
+        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'g', "gid", NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_gid, NULL);
 
         argc -= 2;
         

@@ -31,8 +31,8 @@
 #include "prelude-linked-object.h"
 #include "prelude-async.h"
 #include "prelude-io.h"
-#include "prelude-message.h"
-#include "prelude-message-buffered.h"
+#include "prelude-msg.h"
+#include "prelude-msgbuf.h"
 
 
 struct prelude_message_buffered {

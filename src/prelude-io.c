@@ -43,6 +43,9 @@
 #include "prelude-log.h"
 #include "prelude-io.h"
 
+#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_IO
+#include "prelude-error.h"
+
 
 struct prelude_io {
         int fd;
@@ -66,7 +69,13 @@ static ssize_t sys_read(prelude_io_t *pio, void *buf, size_t count)
         do {
                 ret = read(pio->fd, buf, count);        
         } while ( ret < 0 && errno == EINTR );
+
+        if ( ret == 0 )
+                return prelude_error(PRELUDE_ERROR_EOF);
         
+        if ( ret < 0 )
+                return prelude_error_from_errno(errno);
+
         return ret;
 }
 
@@ -79,6 +88,9 @@ static ssize_t sys_write(prelude_io_t *pio, const void *buf, size_t count)
         do {
                 ret = write(pio->fd, buf, count);
         } while ( ret < 0 && errno == EINTR );
+
+        if ( ret < 0 )
+                return prelude_error_from_errno(errno);
         
         return ret;
 }
@@ -93,7 +105,7 @@ static int sys_close(prelude_io_t *pio)
                 ret = close(pio->fd);
         } while ( ret < 0 && errno == EINTR );
 
-        return (ret >= 0) ? ret : errno;
+        return (ret >= 0) ? ret : prelude_error_from_errno(errno);
 }
 
 
@@ -102,14 +114,11 @@ static ssize_t sys_pending(prelude_io_t *pio)
 {
         ssize_t ret;
         
-        if ( ioctl(pio->fd, FIONREAD, &ret) < 0 ) {
-                log(LOG_ERR, "ioctl FIONREAD failed on tcp socket.\n");
-                return -1;
-        }
+        if ( ioctl(pio->fd, FIONREAD, &ret) < 0 )
+                return prelude_error_from_errno(errno);
 
         return ret;
 }
-
 
 
 
@@ -166,11 +175,17 @@ static ssize_t file_pending(prelude_io_t *pio)
 /*
  * TLS IO functions
  */
-static int check_alert(prelude_io_t *pio, int ret)
+static int tls_check_error(prelude_io_t *pio, int ret)
 {
         const char *alert;
+        
+        if ( ret == GNUTLS_E_INTERRUPTED )
+                return 0;
 
-        if ( ret == GNUTLS_E_WARNING_ALERT_RECEIVED ) {
+        else if ( ret == GNUTLS_E_AGAIN )
+                return prelude_error(PRELUDE_ERROR_EAGAIN);
+        
+        else if ( ret == GNUTLS_E_WARNING_ALERT_RECEIVED ) {
                 alert = gnutls_alert_get_name(gnutls_alert_get(pio->fd_ptr));
                 log(LOG_INFO, "- TLS: received warning alert: %s.\n", alert);
                 return 0;
@@ -179,10 +194,9 @@ static int check_alert(prelude_io_t *pio, int ret)
         else if ( ret == GNUTLS_E_FATAL_ALERT_RECEIVED ) {
                 alert = gnutls_alert_get_name(gnutls_alert_get(pio->fd_ptr));
                 log(LOG_INFO, "- TLS: received fatal alert: %s.\n", alert);
-                return -1;
         }
-        
-        return ret;
+
+        return prelude_error(PRELUDE_ERROR_TLS);
 }
 
 
@@ -193,8 +207,8 @@ static ssize_t tls_read(prelude_io_t *pio, void *buf, size_t count)
         
         do {
                 ret = gnutls_record_recv(pio->fd_ptr, buf, count);
-                                              
-        } while ( ret < 0 && (ret == GNUTLS_E_INTERRUPTED || check_alert(pio, ret) == 0) );
+
+        } while ( ret < 0 && (ret = tls_check_error(pio, ret)) == 0 );
         
         return ret;
 }
@@ -207,8 +221,8 @@ static ssize_t tls_write(prelude_io_t *pio, const void *buf, size_t count)
 
         do {        
                 ret = gnutls_record_send(pio->fd_ptr, buf, count);
-                
-        } while ( ret < 0 && (ret == GNUTLS_E_INTERRUPTED || check_alert(pio, ret) == 0) );
+                                
+        } while ( ret < 0 && (ret = tls_check_error(pio, ret)) == 0 );
         
         return ret;
 }
@@ -217,7 +231,12 @@ static ssize_t tls_write(prelude_io_t *pio, const void *buf, size_t count)
 
 static int tls_close(prelude_io_t *pio) 
 {
-        gnutls_bye(pio->fd_ptr, GNUTLS_SHUT_RDWR);
+        int ret;
+
+        do {
+                ret = gnutls_bye(pio->fd_ptr, GNUTLS_SHUT_RDWR);
+        } while ( ret < 0 && (ret = tls_check_error(pio, ret)) == 0 );
+        
         gnutls_deinit(pio->fd_ptr);
         
         return sys_close(pio);

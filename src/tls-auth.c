@@ -32,6 +32,7 @@
 #include "prelude-log.h"
 #include "prelude-client.h"
 #include "prelude-message-id.h"
+#include "prelude-error.h"
 
 #include "tls-util.h"
 #include "tls-auth.h"
@@ -45,13 +46,13 @@ static int read_auth_result(prelude_io_t *fd)
         uint8_t tag;
         uint32_t len;
         prelude_msg_t *msg = NULL;
-        
+
         do {
                 ret = prelude_msg_read(&msg, fd);
                 
-        } while ( ret == prelude_msg_unfinished );
+        } while ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN );
 
-        if ( ret == prelude_msg_error )
+        if ( ret < 0 )
                 return -1;
         
         if ( prelude_msg_get_tag(msg) != PRELUDE_MSG_AUTH ) {
@@ -110,7 +111,7 @@ static int handle_gnutls_error(gnutls_session session, int ret)
                 return -1;
         }
 
-        return (ret == GNUTLS_E_AGAIN) ? 0 : ret;
+        return (ret == GNUTLS_E_AGAIN || ret == GNUTLS_E_INTERRUPTED) ? 0 : ret;
 }
 
 
@@ -130,7 +131,7 @@ int tls_auth_connection(prelude_client_t *client, prelude_io_t *io, int crypt)
 
         do {
                 ret = gnutls_handshake(session);
-        } while ( ret < 0 && handle_gnutls_error == 0 );
+        } while ( ret < 0 && handle_gnutls_error(session, ret) == 0 );
         
         if ( ret < 0 ) {
                 log(LOG_INFO, "- TLS handshake failed: %s.\n", gnutls_strerror(ret));
@@ -170,38 +171,30 @@ int tls_auth_connection(prelude_client_t *client, prelude_io_t *io, int crypt)
 
 
 
-gnutls_certificate_credentials tls_auth_init(prelude_client_t *client)
+int tls_auth_init(prelude_client_t *client, gnutls_certificate_credentials *cred)
 {
         int ret;
         char keyfile[256], certfile[256];
-        gnutls_certificate_credentials cred;
         
         prelude_client_get_tls_key_filename(client, keyfile, sizeof(keyfile));
         prelude_client_get_tls_client_keycert_filename(client, certfile, sizeof(certfile));
 
         gnutls_global_init();
-        gnutls_certificate_allocate_credentials(&cred);
+        gnutls_certificate_allocate_credentials(cred);
         
         ret = access(certfile, F_OK);
-        if ( ret < 0 ) 
-                /*
-                 * certain analyzer (prelude-manager) need this.
-                 */
-                return cred;
-        
-        ret = tls_certificates_load(keyfile, certfile, cred);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "error loading certificate list.\n");
-                return NULL;
-        }
+        if ( ret < 0 )
+                return prelude_error_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS_CERTIFICATE);
+
+        ret = tls_certificates_load(keyfile, certfile, *cred);
+        if ( ret < 0 )
+                return ret;
 
         prelude_client_get_tls_client_trusted_cert_filename(client, certfile, sizeof(certfile));
         
-        ret = gnutls_certificate_set_x509_trust_file(cred, certfile, GNUTLS_X509_FMT_PEM);
-        if ( ret < 0 ) {
-                log(LOG_INFO, "- couldn't set x509 trust file: %s.\n", gnutls_strerror(ret));
-                return NULL;
-        }
+        ret = gnutls_certificate_set_x509_trust_file(*cred, certfile, GNUTLS_X509_FMT_PEM);
+        if ( ret < 0 )
+                return prelude_error_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS_CERTIFICATE_PARSE);
 
-        return cred;
+        return 0;
 }

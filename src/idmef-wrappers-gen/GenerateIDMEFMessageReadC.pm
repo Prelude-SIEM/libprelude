@@ -67,8 +67,6 @@ sub	header
 #include \"prelude-log.h\"
 #include \"extract.h\"
 #include \"prelude-io.h\"
-#include \"prelude-message.h\"
-#include \"prelude-message-buffered.h\"
 #include \"idmef-message-id.h\"
 #include \"idmef.h\"
 #include \"idmef-tree-wrap.h\"

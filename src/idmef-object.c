@@ -820,8 +820,7 @@ char *idmef_object_get_numeric(idmef_object_t *object)
                         prelude_string_sprintf(string, "(%hhu)", object->desc[i].no);
 	}
 
-        ret = prelude_string_get_string(string);
-        prelude_string_dont_own(string);
+        ret = prelude_string_get_string_released(string);
         prelude_string_destroy(string);
         
 	return ret;

@@ -28,7 +28,7 @@ typedef struct prelude_message_buffered prelude_msgbuf_t;
 
 
 #include "prelude-client.h"
-#include "prelude-message.h"
+#include "prelude-msg.h"
 
 
 prelude_client_t *prelude_msgbuf_get_client(prelude_msgbuf_t *msgbuf);

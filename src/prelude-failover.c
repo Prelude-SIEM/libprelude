@@ -34,9 +34,11 @@
 #include "libmissing.h"
 #include "prelude-log.h"
 #include "prelude-io.h"
-#include "prelude-message.h"
+#include "prelude-msg.h"
 #include "prelude-failover.h"
 
+#define PRELUDE_ERROR_DEFAULT_SOURCE PRELUDE_ERROR_SOURCE_FAILOVER
+#include "prelude-error.h"
 
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
@@ -264,12 +266,13 @@ ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg
         }
 
         *msg = NULL;
-        while ( (ret = prelude_msg_read(msg, failover->fd)) == prelude_msg_unfinished );
+        while ( (ret = prelude_msg_read(msg, failover->fd)) == PRELUDE_ERROR_EAGAIN );
 
         prelude_io_close(failover->fd);
         
-        if ( ret != prelude_msg_finished ) {
-                log(LOG_ERR, "error reading message index=%d.\n", failover->older_index);
+        if ( ret != 0 ) {
+                log(LOG_INFO, "prelude-failover: error reading message index=%d: %s.\n",
+                    failover->older_index, prelude_strerror(ret));
                 failover->older_index++;
                 failover->to_be_deleted_size = get_file_size(filename);
                 return -1;

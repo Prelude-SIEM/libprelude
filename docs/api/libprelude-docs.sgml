@@ -15,7 +15,6 @@
 <!ENTITY libprelude-prelude-ident SYSTEM "sgml/prelude-ident.sgml">
 <!ENTITY libprelude-idmef-message-id-format SYSTEM "sgml/idmef-message-id-format.sgml">
 <!ENTITY libprelude-prelude-client SYSTEM "sgml/prelude-client.sgml">
-<!ENTITY libprelude-idmef-value-object SYSTEM "sgml/idmef-value-object.sgml">
 <!ENTITY libprelude-prelude-plugin SYSTEM "sgml/prelude-plugin.sgml">
 <!ENTITY libprelude-prelude-hash SYSTEM "sgml/prelude-hash.sgml">
 <!ENTITY libprelude-prelude-failover SYSTEM "sgml/prelude-failover.sgml">
@@ -76,7 +75,6 @@
     &libprelude-prelude-ident;
     &libprelude-idmef-message-id-format;
     &libprelude-prelude-client;
-    &libprelude-idmef-value-object;
     &libprelude-prelude-plugin;
     &libprelude-prelude-hash;
     &libprelude-prelude-failover;

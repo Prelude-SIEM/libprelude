@@ -24,7 +24,7 @@
 #ifndef _LIBPRELUDE_PRELUDE_CONNECTION_H
 #define _LIBPRELUDE_PRELUDE_CONNECTION_H
 
-#include "prelude-message.h"
+#include "prelude-msg.h"
 
 
 #define PRELUDE_CONNECTION_ESTABLISHED    0x01

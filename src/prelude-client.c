@@ -33,22 +33,27 @@
 #include <fcntl.h>
 #include <assert.h>
 #include <pthread.h>
+#include <errno.h>
 
 #include <gcrypt.h>
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
 
+
+#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_CLIENT
+#include "prelude-error.h"
+
 #include "libmissing.h"
 #include "idmef.h"
-#include "timer.h"
 #include "common.h"
 #include "client-ident.h"
 #include "prelude-log.h"
 #include "prelude-ident.h"
 #include "prelude-async.h"
-#include "prelude-getopt.h"
+#include "prelude-option.h"
 #include "prelude-connection-mgr.h"
 #include "prelude-client.h"
+#include "prelude-timer.h"
 #include "idmef-message-write.h"
 #include "config-engine.h"
 #include "tls-auth.h"
@@ -142,42 +147,44 @@ struct prelude_client {
 
 
 
-static char *generate_md5sum(const char *filename)
+static int generate_md5sum(const char *filename, prelude_string_t *out)
 {
         void *data;
         int ret, fd;
         size_t len, i;
         struct stat st;
-        unsigned char out[33], digest[16];
+        unsigned char digest[16];
         
         len = gcry_md_get_algo_dlen(GCRY_MD_MD5);
         assert(len == sizeof(digest));
         
         fd = open(filename, O_RDONLY);
         if ( fd < 0 )
-                return NULL;
+                return prelude_error_from_errno(errno);
         
         ret = fstat(fd, &st);
         if ( ret < 0 || ! S_ISREG(st.st_mode) ) {
                 close(fd);
-                return NULL;
+                return prelude_error_from_errno(errno);
         }
         
         data = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
         if ( ! data ) {
-                log(LOG_ERR, "could not mmap %s.\n", filename);
                 close(fd);
-                return NULL;
+                return prelude_error_from_errno(errno);
         }
         
         gcry_md_hash_buffer(GCRY_MD_MD5, digest, data, st.st_size);
         munmap(data, st.st_size);
         close(fd);
         
-        for ( i = ret = 0; i < len; i++ ) 
-                ret += snprintf(out + ret, sizeof(out) - ret, "%.2x", digest[i]);
+        for ( i = 0; i < len; i++ ) {
+                ret = prelude_string_sprintf(out, "%.2x", digest[i]);
+                if ( ret < 0 )
+                        return ret;
+        }
         
-        return strdup(out);
+        return 0;
 }
 
 
@@ -187,10 +194,8 @@ static int add_hb_data(idmef_heartbeat_t *hb, prelude_string_t *meaning, idmef_d
         idmef_additional_data_t *ad;
         
         ad = idmef_heartbeat_new_additional_data(hb);
-        if ( ! ad ) {
-                log(LOG_ERR, "error creating new IDMEF data.\n");
-                return -1;
-        }
+        if ( ! ad )
+                return prelude_error_from_errno(errno);
 
         idmef_additional_data_set_data(ad, data);
         idmef_additional_data_set_meaning(ad, meaning);
@@ -238,7 +243,7 @@ static void heartbeat_expire_cb(void *data)
                 goto out;
         }
 
-        snprintf(buf, sizeof(buf), "%u", timer_expire(&client->heartbeat_timer));
+        snprintf(buf, sizeof(buf), "%u", prelude_timer_get_expire(&client->heartbeat_timer));
 
         str = client_get_status(client);
         add_hb_data(heartbeat, prelude_string_new_constant("Analyzer status"),
@@ -263,7 +268,7 @@ static void heartbeat_expire_cb(void *data)
         
   out:
         idmef_message_destroy(message);
-        timer_reset(&client->heartbeat_timer);
+        prelude_timer_reset(&client->heartbeat_timer);
 }
 
 
@@ -271,9 +276,9 @@ static void heartbeat_expire_cb(void *data)
 
 static void setup_heartbeat_timer(prelude_client_t *client, int expire)
 {
-        timer_set_data(&client->heartbeat_timer, client);
-        timer_set_expire(&client->heartbeat_timer, expire);
-        timer_set_callback(&client->heartbeat_timer, heartbeat_expire_cb);
+        prelude_timer_set_data(&client->heartbeat_timer, client);
+        prelude_timer_set_expire(&client->heartbeat_timer, expire);
+        prelude_timer_set_callback(&client->heartbeat_timer, heartbeat_expire_cb);
 }
 
 
@@ -282,41 +287,48 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
 {
         int ret;
         struct utsname uts;
+        prelude_string_t *buf;
 	idmef_process_t *process;
         char filename[256], *name, *path;
         
 	idmef_analyzer_set_analyzerid(client->analyzer, client->analyzerid);
         
-        if ( uname(&uts) < 0 ) {
-                log(LOG_ERR, "uname returned an error.\n");
-                return -1;
-        }
+        if ( uname(&uts) < 0 )
+                return prelude_error_from_errno(errno);
 
         idmef_analyzer_set_ostype(client->analyzer, prelude_string_new_dup(uts.sysname));
 	idmef_analyzer_set_osversion(client->analyzer, prelude_string_new_dup(uts.release));
 
         process = idmef_analyzer_new_process(client->analyzer);
-        if ( ! process ) {
-                log(LOG_ERR, "cannot create process field of analyzer\n");
-                return -1;
-        }
+        if ( ! process ) 
+                return prelude_error_from_errno(errno);
 
 	idmef_process_set_pid(process, getpid());
-
+        
         if ( ! program )
                 return 0;
         
         ret = prelude_get_file_name_and_path(program, &name, &path);
         if ( ret < 0 )
-                return -1;
+                return ret;
 
         idmef_process_set_name(process, prelude_string_new_nodup(name));
         idmef_process_set_path(process, prelude_string_new_nodup(path));
+
+        buf = prelude_string_new();
+        if ( ! buf )
+                return prelude_error_from_errno(errno);
         
         snprintf(filename, sizeof(filename), "%s/%s", path, name);
-        client->md5sum = generate_md5sum(filename);
+
+        ret = generate_md5sum(filename, buf);
+        if ( ret < 0 )
+                return ret;
         
-        return 0;
+        client->md5sum = prelude_string_get_string_released(buf);
+        prelude_string_destroy(buf);
+        
+        return (client->md5sum) ? 0 : prelude_error_from_errno(errno);
 }
 
 
@@ -604,7 +616,7 @@ static int set_heartbeat_interval(void *context, prelude_option_t *opt, const ch
         prelude_client_t *ptr = context;
 
         setup_heartbeat_timer(ptr, atoi(arg));
-        timer_reset(&ptr->heartbeat_timer);
+        prelude_timer_reset(&ptr->heartbeat_timer);
         
         return 0;
 }
@@ -633,60 +645,64 @@ static int setup_options(prelude_client_t *client)
 {
         prelude_option_t *opt;
                 
-        prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "heartbeat-interval",
-                           "Number of minutes between two heartbeat", required_argument,
+        prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG
+                           |PRELUDE_OPTION_TYPE_WIDE, 0, "heartbeat-interval",
+                           "Number of minutes between two heartbeat",
+                           PRELUDE_OPTION_ARGUMENT_REQUIRED,
                            set_heartbeat_interval, get_heartbeat_interval);
         
         if ( client->capability & CAPABILITY_SEND ) {
-                 prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "manager-addr",
+                 prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG
+                                    |PRELUDE_OPTION_TYPE_WIDE, 0, "manager-addr",
                                     "Address where manager is listening (addr:port)",
-                                    required_argument, set_manager_addr, get_manager_addr);
+                                    PRELUDE_OPTION_ARGUMENT_REQUIRED, set_manager_addr, get_manager_addr);
         }
         
         client->config_file_opt =
-                prelude_option_add(NULL, CLI_HOOK, 0, "config-file",
-                                   "Configuration file for this analyzer", required_argument,
+                prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CLI, 0, "config-file",
+                                   "Configuration file for this analyzer", PRELUDE_OPTION_ARGUMENT_REQUIRED,
                                    set_configuration_file, NULL);
         
-        prelude_option_add(NULL, CLI_HOOK|CFG_HOOK, 0, "analyzer-name",
-                           "Name for this analyzer", required_argument, set_name, NULL);
+        prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE,
+                           0, "analyzer-name", "Name for this analyzer", PRELUDE_OPTION_ARGUMENT_REQUIRED,
+                           set_name, NULL);
         
-        prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK, 0, "node-name",
-                           "Name of the equipment", required_argument, 
+        prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-name",
+                           "Name of the equipment", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
                            set_node_name, get_node_name);
 
-        prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK, 0, "node-location",
-                           "Location of the equipment", required_argument, 
+        prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-location",
+                           "Location of the equipment", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
                            set_node_location, get_node_location);
         
-        prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK, 0, "node-category",
-                           NULL, required_argument, set_node_category, 
-                           get_node_category);
+        prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-category",
+                           NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_node_category, get_node_category);
         
-        opt = prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK|HAVE_CONTEXT, 0, "node-address",
-                                 "Network or hardware address of the equipment", required_argument, 
-                                 set_node_address, NULL);
+        opt = prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE
+                                 |PRELUDE_OPTION_TYPE_CONTEXT, 0, "node-address",
+                                 "Network or hardware address of the equipment",
+                                 PRELUDE_OPTION_ARGUMENT_REQUIRED, set_node_address, NULL);
         prelude_option_set_destroy_callback(opt, destroy_node_address);
         
-        prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "address",
-                           "Address information", required_argument, 
+        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "address",
+                           "Address information", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
                            set_node_address_address, get_node_address_address);
 
-        prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "netmask",
-                           "Network mask for the address, if appropriate", required_argument, 
+        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "netmask",
+                           "Network mask for the address, if appropriate", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
                            set_node_address_netmask, get_node_address_netmask);
 
-        prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "category",
-                           "Type of address represented", required_argument, 
+        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "category",
+                           "Type of address represented", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
                            set_node_address_category, get_node_address_category);
 
-        prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "vlan-name",
+        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "vlan-name",
                            "Name of the Virtual LAN to which the address belongs", 
-                           required_argument, set_node_address_vlan_name, get_node_address_vlan_name);
+                           PRELUDE_OPTION_ARGUMENT_REQUIRED, set_node_address_vlan_name, get_node_address_vlan_name);
 
-        prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "vlan-num",
+        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "vlan-num",
                            "Number of the Virtual LAN to which the address belongs", 
-                           required_argument, set_node_address_vlan_num, get_node_address_vlan_num);
+                           PRELUDE_OPTION_ARGUMENT_REQUIRED, set_node_address_vlan_num, get_node_address_vlan_num);
 
         return 0;
 }
@@ -716,14 +732,11 @@ prelude_client_t *prelude_client_new(prelude_client_capability_t capability)
         prelude_client_t *new;
         
         new = calloc(1, sizeof(*new));
-        if ( ! new ) {
-                log(LOG_ERR, "memory exhausted.\n");
+        if ( ! new )
                 return NULL;
-        }
         
         new->analyzer = idmef_analyzer_new();
         if ( ! new->analyzer ) {
-                log(LOG_ERR, "memory exhausted.\n");
                 free(new);
                 return NULL;
         }
@@ -756,49 +769,53 @@ prelude_client_t *prelude_client_new(prelude_client_capability_t capability)
  */
 int prelude_client_init(prelude_client_t *client, const char *sname, const char *config, int *argc, char **argv)
 {
-        int ret, old_flags;
+        int ret;
         char filename[256];
         prelude_option_t *opt;
+        prelude_option_warning_t old_warnings;
+        prelude_client_capability_t capability;
         
         client->name = strdup(sname);
         client->config_filename = config ? strdup(config) : NULL;
- 
-        client->unique_ident = prelude_ident_new();
-        if ( ! client->unique_ident ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return -1;
-        }
         
-        prelude_option_set_warnings(0, &old_flags);
+        client->unique_ident = prelude_ident_new();
+        if ( ! client->unique_ident )
+                return prelude_error_from_errno(errno);
+        
+        prelude_option_set_warnings(0, &old_warnings);
 
-        opt = prelude_option_add(NULL, CLI_HOOK, 0, "ignore-startup-error",
-                                 NULL, no_argument, set_ignore_error, NULL);
+        opt = prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CLI, 0, "ignore-startup-error",
+                                 NULL, PRELUDE_OPTION_ARGUMENT_NONE, set_ignore_error, NULL);
 
         ret = prelude_option_parse_arguments(client, opt, NULL, argc, argv);
         if ( ret < 0 )
-                return -1;
+                return ret;
+
+        /*
+         * At initialization time,
+         * if one of the sending capability is set, we will error out if
+         * we get no connection string. However, if the capability is changed
+         * while we parse option argument, we don't want to take into account
+         * an 'outside' capability.
+         */
+        capability = client->capability;
         
         ret = prelude_option_parse_arguments(client, client->config_file_opt, NULL, argc, argv);
         if ( ret < 0 )
-                return -1;
+                return ret;
         
-        prelude_option_set_warnings(old_flags, NULL);
+        prelude_option_set_warnings(old_warnings, NULL);
         
         client->manager_list = prelude_connection_mgr_new(client);
         if ( ! client->manager_list )
-                return -1;
+                return prelude_error_from_errno(errno);
         
         setup_heartbeat_timer(client, DEFAULT_HEARTBEAT_INTERVAL);
-        timer_init(&client->heartbeat_timer);
-        
+        prelude_timer_init(&client->heartbeat_timer);
+                
         ret = prelude_option_parse_arguments(client, NULL, client->config_filename, argc, argv);        
-        if ( ret == prelude_option_end )
-                return -1;
-        
-        if ( ret == prelude_option_error ) {
-                log(LOG_INFO, "There was an error processing configuration options.\n");
-                return -1;
-        }
+        if ( ret < 0 )
+                return ret;
                 
         /*
          * need to be done after option parsing, so that there is no error
@@ -808,33 +825,27 @@ int prelude_client_init(prelude_client_t *client, const char *sname, const char 
         prelude_option_destroy(opt);
         
         ret = prelude_client_ident_init(client, &client->analyzerid);
-        if ( ret < 0 && ! client->ignore_error ) {
-                prelude_client_installation_error(client);
-                return -1;
-        }
+        if ( ret < 0 && ! client->ignore_error )
+                return ret;
         
         prelude_client_get_backup_filename(client, filename, sizeof(filename));
         ret = access(filename, W_OK);
-        if ( ret < 0 && ! client->ignore_error ) {
-                prelude_client_installation_error(client);
-                return -1;
-        }
+        if ( ret < 0 && ! client->ignore_error )
+                return prelude_error(PRELUDE_ERROR_BACKUP_DIRECTORY);
         
         ret = fill_client_infos(client, argv ? argv[0] : NULL);
         if ( ret < 0 )
-                return -1;
+                return ret;
 
         ret = create_heartbeat_msgbuf(client);
         if ( ret < 0 )
-                return -1;
+                return ret;
+        
+        if ( capability & CAPABILITY_SEND ) {
 
-        if ( client->capability & CAPABILITY_SEND ) {
-
-                client->credentials = tls_auth_init(client);
-                if ( ! client->credentials && ! client->ignore_error ) {
-                        prelude_client_installation_error(client);
-                        return -1;
-                }
+                ret = tls_auth_init(client, &client->credentials);
+                if ( ret < 0 && ! client->ignore_error )
+                        return ret;
                 
                 ret = prelude_connection_mgr_init(client->manager_list);
                 if ( ret < 0 ) {
@@ -1118,13 +1129,13 @@ void prelude_client_set_name(prelude_client_t *client, const char *name)
 void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status_t status)
 {        
         if ( status == PRELUDE_CLIENT_EXIT_STATUS_SUCCESS ) {
-                timer_lock_critical_region();
+                prelude_timer_lock_critical_region();
                 
                 client->status = CLIENT_STATUS_EXITING;
                 heartbeat_expire_cb(client);
-                timer_destroy(&client->heartbeat_timer);
+                prelude_timer_destroy(&client->heartbeat_timer);
 
-                timer_unlock_critical_region();
+                prelude_timer_unlock_critical_region();
         }
 
         if ( client->md5sum )
@@ -1216,9 +1227,20 @@ prelude_client_flags_t prelude_client_get_flags(prelude_client_t *client)
  * Set @capability for @client. @client might change depending
  * on the capability you set.
  */
-void prelude_client_set_capability(prelude_client_t *client, prelude_client_capability_t capability)
+int prelude_client_set_capability(prelude_client_t *client, prelude_client_capability_t capability)
 {
+        int ret;
+        
+        if ( capability & CAPABILITY_SEND && ! client->credentials ){
+                
+                ret = tls_auth_init(client, &client->credentials);
+                if ( ret < 0 )
+                        return ret;
+        }
+        
         client->capability = capability;
+        
+        return 0;
 }
 
 

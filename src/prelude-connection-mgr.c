@@ -43,17 +43,18 @@
 #include "common.h"
 #include "prelude-list.h"
 #include "prelude-linked-object.h"
-#include "timer.h"
+#include "prelude-timer.h"
 #include "prelude-log.h"
 #include "config-engine.h"
 #include "prelude-io.h"
-#include "prelude-message.h"
+#include "prelude-msg.h"
 #include "prelude-message-id.h"
 #include "prelude-async.h"
 #include "prelude-client.h"
-#include "prelude-getopt.h"
-#include "prelude-getopt-wide.h"
+#include "prelude-option.h"
+#include "prelude-option-wide.h"
 #include "prelude-failover.h"
+#include "prelude-error.h"
 #include "extract.h"
 
 #define other_error -2
@@ -141,7 +142,7 @@ static void init_cnx_timer(cnx_t *cnx)
 {
         if ( cnx->flags & PRELUDE_CONNECTION_MGR_USE_TIMER ) {
                 cnx->flags |= PRELUDE_CONNECTION_MGR_TIMER_IN_USE;
-                timer_init(&cnx->timer);
+                prelude_timer_init(&cnx->timer);
         }
 }
 
@@ -158,7 +159,7 @@ static void connection_list_destroy(cnx_list_t *clist)
                         bkp = cnx->and;
 
                         if ( cnx->flags & PRELUDE_CONNECTION_MGR_TIMER_IN_USE )
-                                timer_destroy(&cnx->timer);
+                                prelude_timer_destroy(&cnx->timer);
 
                         prelude_linked_object_del((prelude_linked_object_t *) cnx->cnx);
 
@@ -198,8 +199,8 @@ static void notify_dead(cnx_t *cnx)
 
 static void expand_timeout(prelude_timer_t *timer) 
 {
-        if ( timer_expire(timer) < MAXIMUM_EXPIRATION_TIME )
-                timer_set_expire(timer, timer_expire(timer) * 2);
+        if ( prelude_timer_get_expire(timer) < MAXIMUM_EXPIRATION_TIME )
+                prelude_timer_set_expire(timer, prelude_timer_get_expire(timer) * 2);
 }
 
 
@@ -207,16 +208,18 @@ static void expand_timeout(prelude_timer_t *timer)
 
 static int process_request(prelude_connection_t *cnx) 
 {
+        int ret;
         uint8_t tag;
         prelude_io_t *fd;
         prelude_msg_t *msg = NULL;
-        prelude_msg_status_t status;
 
         fd = prelude_connection_get_fd(cnx);
         
-        status = prelude_msg_read(&msg, fd);
-        if ( status != prelude_msg_finished )
-                return -1;
+        ret = prelude_msg_read(&msg, fd);
+        if ( ret < 0 ) {
+                log(LOG_INFO, "error reading input message - %s: %s.\n", prelude_strsource(ret), prelude_strerror(ret));
+                return ret;
+        }
         
         tag = prelude_msg_get_tag(msg);
         
@@ -256,7 +259,7 @@ static void check_for_data_cb(void *arg)
         tv.tv_usec = 0;
         rfds = mgr->fds;
 
-        timer_reset(&mgr->timer);
+        prelude_timer_reset(&mgr->timer);
 
         ret = select(mgr->nfd, &rfds, NULL, NULL, &tv);
         if ( ret <= 0 )
@@ -280,7 +283,7 @@ static void check_for_data_cb(void *arg)
         }
 
         if ( mgr->connection_string_changed ) {
-                timer_destroy(&mgr->timer);
+                prelude_timer_destroy(&mgr->timer);
                 prelude_connection_mgr_init(mgr);
         }
 }
@@ -410,7 +413,7 @@ static void connection_timer_expire(void *data)
                  * expand the current timeout and reset the timer.
                  */
                 expand_timeout(&cnx->timer);
-                timer_reset(&cnx->timer);
+                prelude_timer_reset(&cnx->timer);
 
         } else {
                 /*
@@ -419,7 +422,7 @@ static void connection_timer_expire(void *data)
                  * is dead, emit backuped report.
                  */
                 cnx->parent->dead--;
-                timer_destroy(&cnx->timer);
+                prelude_timer_destroy(&cnx->timer);
                 
                 if ( mgr->notify_cb )
                         mgr->notify_cb(&mgr->all_cnx);
@@ -434,7 +437,7 @@ static void connection_timer_expire(void *data)
                                 return;
                 }
                 
-                timer_set_expire(&cnx->timer, INITIAL_EXPIRATION_TIME);
+                prelude_timer_set_expire(&cnx->timer, INITIAL_EXPIRATION_TIME);
                 
 		/*
 		 * put the fd in fdset for read from manager.
@@ -484,9 +487,9 @@ static cnx_t *new_connection(prelude_client_t *client, cnx_list_t *clist,
         new->flags = flags;
         
         if ( flags & PRELUDE_CONNECTION_MGR_USE_TIMER ) {
-                timer_set_data(&new->timer, new);        
-                timer_set_expire(&new->timer, INITIAL_EXPIRATION_TIME);
-                timer_set_callback(&new->timer, connection_timer_expire);
+                prelude_timer_set_data(&new->timer, new);        
+                prelude_timer_set_expire(&new->timer, INITIAL_EXPIRATION_TIME);
+                prelude_timer_set_callback(&new->timer, connection_timer_expire);
         }
 
         state = prelude_connection_get_state(cnx);
@@ -759,9 +762,9 @@ static int init_global_failover(prelude_connection_mgr_t *mgr)
  */
 void prelude_connection_mgr_broadcast(prelude_connection_mgr_t *cmgr, prelude_msg_t *msg) 
 {
-        timer_lock_critical_region();
+        prelude_timer_lock_critical_region();
         walk_manager_lists(cmgr, msg);        
-        timer_unlock_critical_region();
+        prelude_timer_unlock_critical_region();
 }
 
 
@@ -818,10 +821,10 @@ int prelude_connection_mgr_init(prelude_connection_mgr_t *new)
         if ( ret < 0 )
                 log(LOG_INFO, "Can't contact configured Manager - Enabling failsafe mode.\n");
         
-        timer_set_data(&new->timer, new);
-        timer_set_expire(&new->timer, 1);
-        timer_set_callback(&new->timer, check_for_data_cb);
-        timer_init(&new->timer);
+        prelude_timer_set_data(&new->timer, new);
+        prelude_timer_set_expire(&new->timer, 1);
+        prelude_timer_set_callback(&new->timer, check_for_data_cb);
+        prelude_timer_init(&new->timer);
                 
         return 0;
 }
@@ -840,7 +843,7 @@ int prelude_connection_mgr_init(prelude_connection_mgr_t *new)
 prelude_connection_mgr_t *prelude_connection_mgr_new(prelude_client_t *client)
 {
         prelude_connection_mgr_t *new;
-
+        
         new = connection_mgr_new(client);
         if ( ! new )
                 return NULL;
@@ -858,7 +861,7 @@ void prelude_connection_mgr_destroy(prelude_connection_mgr_t *mgr)
                 free(mgr->connection_string);
         
         connection_list_destroy(mgr->or_list);
-        timer_destroy(&mgr->timer);
+        prelude_timer_destroy(&mgr->timer);
         prelude_failover_destroy(mgr->failover);
         
         free(mgr);
@@ -901,12 +904,12 @@ int prelude_connection_mgr_add_connection(prelude_connection_mgr_t **mgr,
                 if ( ! *mgr )
                         return -1;
 
-                timer_set_expire(&(*mgr)->timer, 1);
-                timer_set_data(&(*mgr)->timer, *mgr);
-                timer_set_callback(&(*mgr)->timer, check_for_data_cb);
+                prelude_timer_set_expire(&(*mgr)->timer, 1);
+                prelude_timer_set_data(&(*mgr)->timer, *mgr);
+                prelude_timer_set_callback(&(*mgr)->timer, check_for_data_cb);
 
                 if ( flags & PRELUDE_CONNECTION_MGR_USE_TIMER )
-                        timer_init(&(*mgr)->timer);
+                        prelude_timer_init(&(*mgr)->timer);
         }
         
         clist = create_connection_list(*mgr);
@@ -996,10 +999,8 @@ int prelude_connection_mgr_set_connection_string(prelude_connection_mgr_t *mgr, 
         char *new;
 
         new = strdup(cfgstr);
-        if ( ! new ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return -1;
-        }
+        if ( ! new )
+                return prelude_error_from_errno(errno);
 
         if ( mgr->connection_string )
                 free(mgr->connection_string);

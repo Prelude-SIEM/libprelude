@@ -33,6 +33,9 @@
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
 
+#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_CLIENT
+#include "prelude-error.h"
+
 #include "common.h"
 #include "prelude-log.h"
 #include "prelude-client.h"
@@ -118,23 +121,19 @@ int tls_load_file(const char *filename, gnutls_datum *data)
         struct stat st;
 
         fd = open(filename, O_RDONLY);
-        if ( fd < 0 ) {
-                log(LOG_ERR, "could not open %s for reading.\n", filename);
-                return -1;
-        }
+        if ( fd < 0 )
+                return prelude_error(PRELUDE_ERROR_TLS_KEY);
         
         ret = fstat(fd, &st);
         if ( ret < 0 ) {
-                log(LOG_ERR, "could not stat fd.\n");
                 close(fd);
-                return -1;
+                return prelude_error_from_errno(errno);
         }
         
         data->data = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
         if ( ! data->data ) {
-                log(LOG_ERR, "error mapping file to memory.\n");
                 close(fd);
-                return -1;
+                return prelude_error_from_errno(errno);
         }
 
         close(fd);
@@ -160,19 +159,19 @@ int tls_certificates_load(const char *keyfile, const char *certfile, gnutls_cert
         gnutls_datum key;
 
         ret = tls_load_file(keyfile, &key);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "error opening %s for reading.\n", keyfile);
-                return -1;
-        }
+        if ( ret < 0 )
+                return ret;
         
         fd = fopen(certfile, "r");
         if ( ! fd ) {
-                log(LOG_ERR, "error opening %s for reading.\n", certfile);
-                return -1;
+                tls_unload_file(&key);
+                return prelude_error(PRELUDE_ERROR_TLS_CERTIFICATE);
         }
         
         ret = load_individual_cert(fd, &key, cred);
-                
+        if ( ret < 0 )
+                ret = prelude_error_from_errno(errno);
+        
         tls_unload_file(&key);
         fclose(fd);
         

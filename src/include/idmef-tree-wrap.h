@@ -31,8 +31,8 @@
 #include "idmef-type.h"
 #include "idmef-value.h"
 #include "prelude-inttypes.h"
-#include "prelude-message.h"
 #include "prelude-string.h"
+#include "prelude-msg.h"
 
 typedef enum {
         IDMEF_ADDITIONAL_DATA_TYPE_ERROR = -1,
@@ -58,10 +58,10 @@ const char *idmef_additional_data_type_to_string(idmef_additional_data_type_t va
 /*
  * struct {
  *         IS_LISTED;
- *         REFCOUNT;
+ *  REFCOUNT;
  *         idmef_additional_data_type_t type;
  *         prelude_string_t *meaning;
- *         idmef_data_t data;
+ *  idmef_data_t data;
  * } TYPE_ID(idmef_additional_data_t, 4);
  */
 
@@ -205,7 +205,7 @@ const char *idmef_user_id_type_to_string(idmef_user_id_type_t val);
 /*
  * struct {
  *         IS_LISTED;
- *         REFCOUNT;
+ *  REFCOUNT;
  *         uint64_t ident;
  *         prelude_string_t *name;
  *         idmef_user_id_type_t type;
@@ -258,7 +258,7 @@ const char *idmef_user_category_to_string(idmef_user_category_t val);
 
 /*
  * struct {
- *         REFCOUNT;
+ *  REFCOUNT;
  *         uint64_t ident;
  *         idmef_user_category_t category;
  *         LISTED_OBJECT(user_id_list, idmef_user_id_t);
@@ -371,7 +371,7 @@ prelude_string_t *idmef_address_new_netmask(idmef_address_t *ptr);
 
 /*
  * struct {
- *         REFCOUNT;
+ *  REFCOUNT;
  *         uint64_t ident;
  *         prelude_string_t name;
  *         OPTIONAL_INT(uint32_t, pid);
@@ -425,7 +425,7 @@ idmef_value_t *idmef_process_get_env_value(idmef_process_t *ptr);
 
 /*
  * struct {
- *         REFCOUNT;
+ *  REFCOUNT;
  *         prelude_string_t url;
  *         prelude_string_t *cgi;
  *         prelude_string_t *http_method;
@@ -466,7 +466,7 @@ idmef_value_t *idmef_web_service_get_arg_value(idmef_web_service_t *ptr);
 
 /*
  * struct {
- *         REFCOUNT;
+ *  REFCOUNT;
  *         prelude_string_t *oid;
  *         prelude_string_t *community;
  *         prelude_string_t *security_name;
@@ -531,7 +531,7 @@ const char *idmef_service_type_to_string(idmef_service_type_t val);
 
 /*
  * struct {
- *         REFCOUNT;
+ *  REFCOUNT;
  *         uint64_t ident;
  *         OPTIONAL_INT(uint8_t, ip_version);
  * 
@@ -544,10 +544,10 @@ const char *idmef_service_type_to_string(idmef_service_type_t val);
  *         prelude_string_t *portlist;
  *         prelude_string_t *protocol;
  * 
- *         UNION(idmef_service_type_t, type) {
- *                 UNION_MEMBER(IDMEF_SERVICE_TYPE_WEB, idmef_web_service_t, *web_service);
- *                 UNION_MEMBER(IDMEF_SERVICE_TYPE_SNMP, idmef_snmp_service_t, *snmp_service);
- *         } specific;
+ *  UNION(idmef_service_type_t, type) {
+ *   UNION_MEMBER(IDMEF_SERVICE_TYPE_WEB, idmef_web_service_t, *web_service);
+ *   UNION_MEMBER(IDMEF_SERVICE_TYPE_SNMP, idmef_snmp_service_t, *snmp_service);
+ *  } specific;
  * 
  * } TYPE_ID(idmef_service_t, 17);
  */
@@ -639,7 +639,7 @@ const char *idmef_node_category_to_string(idmef_node_category_t val);
 
 /*
  * struct {
- *         REFCOUNT;
+ *  REFCOUNT;
  *         uint64_t ident;
  *         idmef_node_category_t category;
  *         prelude_string_t *location;
@@ -699,11 +699,11 @@ const char *idmef_source_spoofed_to_string(idmef_source_spoofed_t val);
 /*
  * struct {
  *         IS_LISTED;
- *         REFCOUNT;
+ *  REFCOUNT;
  * 
  *         uint64_t ident;
  *         idmef_source_spoofed_t spoofed;
- *         prelude_string_t interface;
+ *         prelude_string_t *interface;
  * 
  *         idmef_node_t *node;
  *         idmef_user_t *user;
@@ -762,10 +762,10 @@ idmef_service_t *idmef_source_new_service(idmef_source_t *ptr);
 /*
  * struct {
  *         IS_LISTED;
- *         REFCOUNT;
+ *  REFCOUNT;
  * 
  *         idmef_user_id_t user_id;
- *         LISTED_OBJECT(permission_list, prelude_string_t);
+ *  LISTED_OBJECT(permission_list, prelude_string_t);
  * } TYPE_ID(idmef_file_access_t, 22);
  */
 
@@ -792,7 +792,7 @@ idmef_value_t *idmef_file_access_get_permission_value(idmef_file_access_t *ptr);
 
 /*
  * struct {
- *         REFCOUNT;
+ *  REFCOUNT;
  *         idmef_time_t *change_time;
  *         OPTIONAL_INT(uint32_t, number);
  *         OPTIONAL_INT(uint32_t, major_device);
@@ -867,7 +867,7 @@ const char *idmef_checksum_algorithm_to_string(idmef_checksum_algorithm_t val);
 
 /*
  * struct {
- *         IS_LISTED;
+ *  IS_LISTED;
  *         REFCOUNT;
  *         prelude_string_t value;
  *         prelude_string_t *key;
@@ -934,7 +934,7 @@ const char *idmef_file_fstype_to_string(idmef_file_fstype_t val);
 /*
  * struct {
  *         IS_LISTED;
- *         REFCOUNT;
+ *  REFCOUNT;
  *         uint64_t ident;
  * 
  *         prelude_string_t name;
@@ -952,7 +952,7 @@ const char *idmef_file_fstype_to_string(idmef_file_fstype_t val);
  *         LISTED_OBJECT(linkage_list, idmef_linkage_t);
  * 
  *         idmef_inode_t *inode;
- *         LISTED_OBJECT(checksum_list, idmef_checksum_t);
+ *  LISTED_OBJECT(checksum_list, idmef_checksum_t);
  * 
  *         idmef_file_category_t category;
  *         OPTIONAL_INT(idmef_file_fstype_t, fstype);
@@ -1059,7 +1059,7 @@ const char *idmef_linkage_category_to_string(idmef_linkage_category_t val);
 /*
  * struct {
  *         IS_LISTED;
- *         REFCOUNT;
+ *  REFCOUNT;
  * 
  *         idmef_linkage_category_t category;
  *         prelude_string_t name;
@@ -1111,7 +1111,7 @@ const char *idmef_target_decoy_to_string(idmef_target_decoy_t val);
 /*
  * struct {
  *         IS_LISTED;
- *         REFCOUNT;
+ *  REFCOUNT;
  * 
  *         uint64_t ident;
  *         idmef_target_decoy_t decoy;
@@ -1178,7 +1178,7 @@ idmef_value_t *idmef_target_get_file_value(idmef_target_t *ptr);
 
 /*
  * struct {
- *         REFCOUNT;
+ *  REFCOUNT;
  * 
  *         uint64_t analyzerid;
  * 
@@ -1266,7 +1266,7 @@ idmef_analyzer_t *idmef_analyzer_new_analyzer(idmef_analyzer_t *ptr);
 /*
  * struct {
  *         IS_LISTED;
- *         REFCOUNT;
+ *  REFCOUNT;
  * 
  *         uint64_t alertident;
  *         OPTIONAL_INT(uint64_t, analyzerid);
@@ -1335,7 +1335,7 @@ const char *idmef_impact_type_to_string(idmef_impact_type_t val);
 
 /*
  * struct {
- *         REFCOUNT;
+ *  REFCOUNT;
  * 
  *         OPTIONAL_INT(idmef_impact_severity_t, severity);
  *         OPTIONAL_INT(idmef_impact_completion_t, completion);
@@ -1391,7 +1391,7 @@ const char *idmef_action_category_to_string(idmef_action_category_t val);
 /*
  * struct {
  *         IS_LISTED;
- *         REFCOUNT;
+ *  REFCOUNT;
  * 
  *         idmef_action_category_t category;
  *         prelude_string_t *description;
@@ -1434,7 +1434,7 @@ const char *idmef_confidence_rating_to_string(idmef_confidence_rating_t val);
 
 /*
  * struct {
- *         REFCOUNT;
+ *  REFCOUNT;
  * 
  *         idmef_confidence_rating_t rating;
  *         OPTIONAL_INT(float, confidence);
@@ -1464,7 +1464,7 @@ float *idmef_confidence_new_confidence(idmef_confidence_t *ptr);
 
 /*
  * struct {
- *         REFCOUNT;
+ *  REFCOUNT;
  * 
  *         idmef_impact_t *impact;
  *         LISTED_OBJECT(action_list, idmef_action_t);
@@ -1500,7 +1500,7 @@ idmef_confidence_t *idmef_assessment_new_confidence(idmef_assessment_t *ptr);
 
 /*
  * struct {
- *         REFCOUNT;
+ *  REFCOUNT;
  * 
  *         prelude_string_t name;
  *         prelude_string_t *command;
@@ -1536,7 +1536,7 @@ idmef_value_t *idmef_tool_alert_get_alertident_value(idmef_tool_alert_t *ptr);
 
 /*
  * struct {
- *         REFCOUNT;
+ *  REFCOUNT;
  * 
  *         prelude_string_t name;
  *         LISTED_OBJECT(alertident_list, idmef_alertident_t);
@@ -1566,7 +1566,7 @@ idmef_value_t *idmef_correlation_alert_get_alertident_value(idmef_correlation_al
 
 /*
  * struct {
- *         REFCOUNT;
+ *  REFCOUNT;
  * 
  *         prelude_string_t program;
  *         OPTIONAL_INT(uint32_t, size);
@@ -1781,11 +1781,11 @@ const char *idmef_message_type_to_string(idmef_message_type_t val);
  *         prelude_string_t version;
  * 
  *         UNION(idmef_message_type_t, type) {
- *                 UNION_MEMBER(IDMEF_MESSAGE_TYPE_ALERT, idmef_alert_t, *alert);
- *                 UNION_MEMBER(IDMEF_MESSAGE_TYPE_HEARTBEAT, idmef_heartbeat_t, *heartbeat);
+ *   UNION_MEMBER(IDMEF_MESSAGE_TYPE_ALERT, idmef_alert_t, *alert);
+ *   UNION_MEMBER(IDMEF_MESSAGE_TYPE_HEARTBEAT, idmef_heartbeat_t, *heartbeat);
  *         } message;
  * 
- *         HIDE(prelude_msg_t *, pmsg);
+ *  HIDE(prelude_msg_t *, pmsg);
  * 
  * } TYPE_ID(idmef_message_t, 49);
  */
