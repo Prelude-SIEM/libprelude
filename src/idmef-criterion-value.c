@@ -181,8 +181,8 @@ static int do_match_cb(idmef_value_t *value, void *extra)
                 return idmef_value_iterate(value, do_match_cb, mcb);
 
         /*
-         * In case we are matching against a list of value,
-         * a single mach is considered as a match. If the match fail
+         * In case we are matching against a list of values,
+         * a single mach is considered as a match. If the match fails
          * we keep trying.
          */
         ret = cv->match(cv, operator, value);
