@@ -45,8 +45,6 @@ libprelude_la_SOURCES = 		\
 	idmef-util.c			\
 	idmef-time.c			\
 	idmef-data.c			\
-	idmef-tree-print.c		\
-	idmef-tree-to-string.c		\
 	idmef-tree-wrap.c		\
 	idmef-type.c			\
 	idmef-object.c			\
@@ -57,6 +55,7 @@ libprelude_la_SOURCES = 		\
 	idmef-criteria-string.yac.y	\
 	idmef-criteria-string.lex.l	\
 	idmef-criterion-value.c		\
-	idmef-message-write.c		\
-	idmef-message-read.c		
+	idmef-message-print.c		\
+	idmef-message-read.c		\
+	idmef-message-write.c		
 

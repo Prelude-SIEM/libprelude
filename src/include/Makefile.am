@@ -4,6 +4,7 @@ include_HEADERS = common.h			\
 		  daemonize.h			\
 		  variable.h			\
 		  idmef.h			\
+		  idmef-additional-data.h	\
 		  idmef-criteria.h		\
 		  idmef-criteria-string.h	\
 		  idmef-criterion-value.h	\
@@ -14,16 +15,14 @@ include_HEADERS = common.h			\
 		  idmef-object-value.h		\
 		  idmef-time.h			\
 		  idmef-tree-data.h		\
-		  idmef-tree-to-string.h	\
-		  idmef-tree-print.h		\
 		  idmef-tree-wrap.h		\
 		  idmef-type.h			\
 		  idmef-value.h			\
 		  idmef-value-type.h		\
 		  idmef-util.h			\
-		  idmef-message-write.h		\
 		  idmef-message-read.h		\
-		  idmef-additional-data.h	\
+		  idmef-message-print.h		\
+		  idmef-message-write.h		\
 		  prelude.h			\
 		  prelude-async.h		\
 		  prelude-extract.h		\

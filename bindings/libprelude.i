@@ -43,8 +43,7 @@
 #include "idmef.h"
 #include "idmef-object-value.h"
 #include "idmef-message-write.h"
-#include "idmef-tree-print.h"
-#include "idmef-tree-to-string.h"
+#include "idmef-message-print.h"
 #include "idmef-util.h"
 
 prelude_msg_t *my_prelude_msg_read(prelude_io_t *pio)
@@ -328,8 +327,6 @@ PyObject *swig_idmef_data_get_byte_string(idmef_data_t *data);
 %include "idmef-criteria-string.h"
 %include "idmef-object-value.h"
 %include "idmef-message-write.h"
-%include "idmef-tree-print.h"
-%include "idmef-tree-to-string.h"
 %include "idmef-value-type.h"
 %include "idmef-util.h"
 %include "idmef-type.h"

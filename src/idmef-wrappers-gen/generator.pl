@@ -31,10 +31,8 @@ use GenerateIDMEFMessageWriteH;
 use GenerateIDMEFMessageReadC;
 use GenerateIDMEFMessageReadH;
 use GenerateIDMEFMessageIdH;
-use GenerateIDMEFTreePrintC;
-use GenerateIDMEFTreePrintH;
-use GenerateIDMEFTreeToStringC;
-use GenerateIDMEFTreeToStringH;
+use GenerateIDMEFMessagePrintC;
+use GenerateIDMEFMessagePrintH;
 
 sub	target_need_update
 {
@@ -77,21 +75,13 @@ my @generator_list = ({ source => 'GenerateIDMEFTreeWrapC.pm',
 			target => '../include/idmef-tree-data.h',
 			func => sub { new GenerateIDMEFTreeData(-filename => shift) } },
 
-		      { source => 'GenerateIDMEFTreePrintC.pm',
-			target => '../idmef-tree-print.c',
-			func => sub { new GenerateIDMEFTreePrintC(-filename => shift) } },
+		      { source => 'GenerateIDMEFMessagePrintC.pm',
+			target => '../idmef-message-print.c',
+			func => sub { new GenerateIDMEFMessagePrintC(-filename => shift) } },
 
-		      { source => 'GenerateIDMEFTreePrintH.pm',
-			target => '../include/idmef-tree-print.h',
-			func => sub { new GenerateIDMEFTreePrintH(-filename => shift) } },
-
-		      { source => 'GenerateIDMEFTreeToStringC.pm',
-			target => '../idmef-tree-to-string.c',
-			func => sub { new GenerateIDMEFTreeToStringC(-filename => shift) } },
-
-		      { source => 'GenerateIDMEFTreeToStringH.pm',
-			target => '../include/idmef-tree-to-string.h',
-			func => sub { new GenerateIDMEFTreeToStringH(-filename => shift) } },
+		      { source => 'GenerateIDMEFMessagePrintH.pm',
+			target => '../include/idmef-message-print.h',
+			func => sub { new GenerateIDMEFMessagePrintH(-filename => shift) } },
 
 		      { source => 'GenerateIDMEFMessageWriteC.pm',
 			target => '../idmef-message-write.c',
