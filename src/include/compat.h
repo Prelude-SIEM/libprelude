@@ -21,6 +21,10 @@
 #ifndef COMPAT_H
 #define COMPAT_H
 
+#ifnef PACKAGE
+ #error "compat.h require <libprelude/config.h> in order to compile"
+#endif
+
 #ifndef HAVE_GETOPT_LONG
 
 #define no_argument 0
