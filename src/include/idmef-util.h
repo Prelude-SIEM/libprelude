@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002, 2003 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2002, 2003, 2004 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -58,7 +58,8 @@ do {									\
 } while ( 0 )
 
 
-const char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad);
+
+unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, unsigned char *buf, size_t size);
 int prelude_get_process_name_and_path(const char *str, char **name, char **path);
 int prelude_get_gmt_offset(int *gmt_offset);
 

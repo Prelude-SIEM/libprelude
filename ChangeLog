@@ -1,3 +1,10 @@
+2004-02-03  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/idmef-util.c (idmef_additionaldata_data_to_string): 
+	API change. Stop using a static buffer, use the buffer
+	provided as argument. When the additional data type is byte
+	or character, directly return the content of the data.
+
 2004-01-31  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
 	* src/idmef-value.c

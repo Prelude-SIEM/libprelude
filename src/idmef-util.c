@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002, 2003 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2002, 2003, 2004 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -53,31 +53,10 @@
 #include "idmef-util.h"
 
 
-/*
- * Some of the code here was inspired from libidmef code.
- */
-
-
-
-
-
-
-
-/**
- * idmef_additionaldata_data_to_string:
- * @ad: An additional data object.
- *
- * This function take care of converting the IDMEF AdditionalData data
- * member to a string suitable to be outputed in the IDMEF database.
- *
- * Returns: NULL on error, string written otherwise
- *
- */
-const char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad)
+unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, unsigned char *buf, size_t size)
 {
-	static char buffer[128];
+        int ret;
 	idmef_data_t *data;
-        int retval = 0;
 
 	data = idmef_additional_data_get_data(ad);
 	if ( idmef_data_is_empty(data) )
@@ -86,41 +65,17 @@ const char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad)
         switch ( idmef_additional_data_get_type(ad) ) {
 
         case byte:
-                /*
-                 * FIXME:
-                 *
-                 * from section 4.3.2.2 of the IDMEF specs:
-                 *
-                 * Any character defined by the ISO/IEC 10646 and Unicode standards may
-                 * be included in an XML document by the use of a character reference.
-                 *
-                 * A character reference is started with the characters '&' and '#', and
-                 * ended with the character ';'.  Between these characters, the
-                 * character code for the character inserted.
-                 *
-                 * If the character code is preceded by an 'x' it is interpreted in
-                 * hexadecimal (base 16), otherwise, it is interpreted in decimal (base
-                 * 10).  For instance, the ampersand (&) is encoded as &#38; or &#x0026;
-                 * and the less-than sign (<) is encoded as &#60; or &#x003C;.
-                 *
-                 * Any one-, two-, or four-byte character specified in the ISO/IEC 10646
-                 * and Unicode standards can be included in a document using this
-                 * technique.
-                 */
-                break;
-
         case character:
-                retval = snprintf(buffer, sizeof (buffer), "%c", *(const char *) idmef_data_get_data(data));
-                break;
+                return idmef_data_get_data(data);
 
         case integer: {
-		uint32_t out32;
-
-                retval = extract_uint32_safe(&out32, idmef_data_get_data(data), idmef_data_get_len(data));
-                if ( retval < 0 )
+                uint32_t out32;
+                
+                ret = extract_uint32_safe(&out32, idmef_data_get_data(data), idmef_data_get_len(data));
+                if ( ret < 0 )
                         return NULL;
                 
-                retval = snprintf(buffer, sizeof (buffer), "%u", out32);
+                ret = snprintf(buf, size, "%u", out32);
                 break;
 	}
                 
@@ -130,22 +85,22 @@ const char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad)
                         uint32_t r_buf[2];
                 } d;
 
-                retval = extract_uint64_safe(&d.w_buf, idmef_data_get_data(data), idmef_data_get_len(data));
-                if ( retval < 0 )
+                ret = extract_uint64_safe(&d.w_buf, idmef_data_get_data(data), idmef_data_get_len(data));
+                if ( ret < 0 )
                         return NULL;
                 
-                retval = snprintf(buffer, sizeof (buffer), "0x%08ux.0x%08ux", d.r_buf[0], d.r_buf[1]);
+                ret = snprintf(buf, size, "0x%08ux.0x%08ux", d.r_buf[0], d.r_buf[1]);
                 break;
 	}
 
         case real: {
 		uint32_t out32;
 
-                retval = extract_uint32_safe(&out32, idmef_data_get_data(data), idmef_data_get_len(data));
-                if ( retval < 0 )
+                ret = extract_uint32_safe(&out32, idmef_data_get_data(data), idmef_data_get_len(data));
+                if ( ret < 0 )
                         return NULL;
                 
-                retval = snprintf(buffer, sizeof (buffer), "%f", (float) out32);
+                ret = snprintf(buf, size, "%f", (float) out32);
                 break;
 	}
 
@@ -153,13 +108,9 @@ const char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad)
         case date_time:
         case portlist:
         case string:
-        case xml: {
-		const char *ptr;
-
-                retval = extract_characters_safe(&ptr, idmef_data_get_data(data), idmef_data_get_len(data));
-
-		return (retval < 0) ? NULL : ptr;
-	}
+        case xml: 
+                ret = extract_characters_safe(&buf, idmef_data_get_data(data), idmef_data_get_len(data));
+                break;
 
         default:
                 log(LOG_ERR, "Unknown data type: %d.\n", idmef_additional_data_get_type(ad));
@@ -173,7 +124,7 @@ const char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad)
          * had been available.
          */
 
-	return (retval < 0 || retval >= sizeof (buffer)) ? NULL : buffer;
+	return (ret < 0 || ret >= size) ? NULL : buf;
 }
 
 
