@@ -1,3 +1,46 @@
+* 2003-04-28, libprelude-0.8.5:
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  Explicitly permit linking with OpenSSL so that Debian
+	  package might be distributed.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  Fix AC_DATATYPE_GENERIC so that it can find valid socklen_t
+	  replacement.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  Fix a possible SIGSEGV on client that doesn't use prelude-getopt.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  Fix a priority problem when assigning a variable, that
+	  could lead to a SIGSEGV.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  Fix compilation with OpenSSL 0.9.7.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  prelude-getopt doesn't need to modify the argv array
+	  anymore. The application might want to still use it.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  Fix a bug where option would not be printed if option 
+	  flags was set to zero.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  Fix a possible NULL strcmp that would result in a SIGSEGV 
+	  for option without longname.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  Fix a possible NULL pointer dereference in the Prelude 
+ 	  configuration engine.
+	
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  When starting as a deamon close stdin, stdout, and stderr.
+
+	- Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
+	  Make arbitrary length certificate work correctly, and fix
+	  a possible sensor-adduser SIGSEGV. 
+
 * 2002-09-23, libprelude-0.8.4:
 	
 	- Correct the way we enable/disable OpenSSL support.

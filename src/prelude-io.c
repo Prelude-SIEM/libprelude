@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -84,9 +84,10 @@ static ssize_t sys_write(prelude_io_t *pio, const void *buf, size_t count)
 static int sys_close(prelude_io_t *pio) 
 {
         int ret;
-
+        
         do {
                 ret = close(pio->fd);
+                
         } while ( ret < 0 && (errno == EINTR || errno == EAGAIN) );
 
         return ret;

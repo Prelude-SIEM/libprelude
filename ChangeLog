@@ -1,4 +1,12 @@
+2003-03-23  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/ssl-gencrypto.c (add_DN_object): 
+	* src/prelude-log.c (syslog_log): 
+	Handle snprintf error better.
+
 2003-02-04  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* Changed my mail address everywhere.
 
 	* src/sensor.c (get_process_name): don't modify argv.
 

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -650,14 +650,14 @@ int prelude_client_connect(prelude_client_t *client)
         ret = prelude_client_ident_send(client->fd, client->type);
         if ( ret < 0 )
                 goto err;
-        
+
         msg = prelude_option_wide_get_msg();
         if ( msg ) {
                 ret = prelude_msg_write(msg, client->fd);
                 if ( ret < 0 )
                         goto err;
         }
-
+        
         client->state |= PRELUDE_CLIENT_OWN_FD;
         client->state |= PRELUDE_CLIENT_CONNECTED;
         

@@ -111,6 +111,9 @@ static int add_DN_object(X509_NAME *name, char *text, int nid, int min, int max)
         ret = snprintf(buf, sizeof(buf), "%s:%s:%llu:%d", host,
                        prelude_get_sensor_name(),
                        prelude_client_get_analyzerid(), rand());
+
+        if ( ret < 0 || ret >= sizeof(buf) )
+                return -1;
         
 	if ( req_check_len(ret, min, max) < 0)
 		return -1;

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -48,6 +48,9 @@ static void syslog_log(int priority, const char *file,
 
         else {
                 len = snprintf(buf, sizeof(buf), "%s", (global_prefix) ? global_prefix : "");
+                if ( len < 0 || len > sizeof(buf) )
+                        return;
+                
                 len += vsnprintf(buf + len, sizeof(buf) - len, fmt, *ap);
                 syslog(priority, "%s", buf);
         }
