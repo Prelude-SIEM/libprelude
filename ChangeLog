@@ -1,3 +1,15 @@
+2001-12-30  Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
+	* src/include/list.h: added #undef LIST_HEAD to fix FreeBSD
+	conflict with LIST_HEAD from <sys/queue.h>. See comment
+	in the file for details. 
+	
+	Also added copyright notice. 
+
+	* sensor-adduser/sensor-adduser.c: 
+	* src/prelude-getopt.c:
+	* src/prelude-message.c:
+	added #include <sys/types.h> (FreeBSD fix)
+
 2001-12-29  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/sensor.c (parse_argument): set warning flags to 0 before 

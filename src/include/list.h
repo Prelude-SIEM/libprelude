@@ -1,7 +1,23 @@
+/* 
+   This file is originally (C) Linus Torvalds.
+   Slight changes were made by Prelude developers.
+*/ 
+
 #ifndef LIST_H
 
 #define LIST_H
 
+/* 
+ * NOTE: This file must be always included AFTER <sys/queue.h> (or, any file
+ * including <sys/queue.h>); otherwise LIST_HEAD macro will be defined
+ * to three-argument version from <sys/queue.h> which is probably not what
+ * you want. If you include this file after <sys/queue.h> it will
+ * redefine the macro to version used in Prelude. 
+ */
+
+#ifdef LIST_HEAD
+#undef LIST_HEAD
+#endif /* LIST_HEAD */
 
 /*
  * Simple doubly linked list implementation.

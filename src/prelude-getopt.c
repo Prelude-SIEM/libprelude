@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <inttypes.h>
+#include <sys/types.h>
 
 #include "prelude-io.h"
 #include "prelude-message.h"
