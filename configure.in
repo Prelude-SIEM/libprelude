@@ -41,6 +41,7 @@ AC_LTDL_DLLIB
 AC_LIBLTDL_CONVENIENCE
 AC_PROG_LIBTOOL
 
+AC_SUBST(CFLAGS)
 AC_SUBST(INCLTDL)
 AC_SUBST(LIBLTDL)
 AC_SUBST(LIBADD_DL)
@@ -101,8 +102,11 @@ dnl * Check for Pthread library                      *
 dnl **************************************************
 
 ACX_PTHREAD(, AC_MSG_ERROR(couldn't find suitable pthread implementation))
-libprelude_libs="$PTHREAD_LIBS $libprelude_libs"
-dnl libprelude_cflags="$PTHREAD_CFLAGS $libprelude_cflags"
+
+dnl Export pthread stuff wide for libmissing and libprelude-error
+LIBS="$LIBS $PTHREAD_LIBS"
+CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+LDFLAGS="$CFLAGS $PTHREAD_CFLAGS"
 CC="$PTHREAD_CC"
 
 
