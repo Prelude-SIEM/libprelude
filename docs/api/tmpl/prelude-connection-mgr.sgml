@@ -38,8 +38,9 @@ prelude-connection-mgr
 </para>
 
 @client: 
-@cfgline: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@cfgline: 
 
 
 <!-- ##### FUNCTION prelude_connection_mgr_notify_connection ##### -->

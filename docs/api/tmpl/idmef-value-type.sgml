@@ -50,11 +50,13 @@ idmef-value-type
 @IDMEF_VALUE_TYPE_LIST: 
 @IDMEF_VALUE_TYPE_OBJECT: 
 
-<!-- ##### TYPEDEF idmef_value_type_t ##### -->
+<!-- ##### STRUCT idmef_value_type_t ##### -->
 <para>
 
 </para>
 
+@id: 
+@data: 
 
 <!-- ##### FUNCTION idmef_value_type_copy ##### -->
 <para>

@@ -44,11 +44,12 @@ prelude-async
 
 
 
-<!-- ##### TYPEDEF prelude_async_object_t ##### -->
+<!-- ##### STRUCT prelude_async_object_t ##### -->
 <para>
 
 </para>
 
+@T: 
 
 <!-- ##### FUNCTION prelude_async_init ##### -->
 <para>

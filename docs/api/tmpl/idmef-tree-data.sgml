@@ -14,15 +14,25 @@ idmef-tree-data
 
 </para>
 
-<!-- ##### TYPEDEF children_list_t ##### -->
+<!-- ##### STRUCT children_list_t ##### -->
 <para>
 
 </para>
 
+@name: 
+@list: 
+@type: 
+@object_type: 
 
-<!-- ##### TYPEDEF object_data_t ##### -->
+<!-- ##### STRUCT object_data_t ##### -->
 <para>
 
 </para>
 
+@name: 
+@children_list: 
+@get_child: 
+@new_child: 
+@to_numeric: 
+@to_string: 
 

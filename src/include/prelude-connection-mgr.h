@@ -28,6 +28,12 @@
 #include "prelude-connection.h"
 
 
+typedef enum {
+        PRELUDE_CONNECTION_MGR_USE_TIMER = 0x01,
+        PRELUDE_CONNECTION_MGR_TIMER_IN_USE = 0x02
+} prelude_connection_mgr_flags_t;
+
+
 typedef struct prelude_connection_mgr prelude_connection_mgr_t;
 
 
@@ -35,13 +41,15 @@ void prelude_connection_mgr_broadcast(prelude_connection_mgr_t *cmgr, prelude_ms
 
 void prelude_connection_mgr_broadcast_async(prelude_connection_mgr_t *cmgr, prelude_msg_t *msg);
 
-prelude_connection_mgr_t *prelude_connection_mgr_new(prelude_client_t *client, const char *cfgline);
+int prelude_connection_mgr_init(prelude_connection_mgr_t *new);
+
+prelude_connection_mgr_t *prelude_connection_mgr_new(prelude_client_t *client);
 
 void prelude_connection_mgr_notify_connection(prelude_connection_mgr_t *mgr, void (*callback)(prelude_list_t *clist));
 
 prelude_list_t *prelude_connection_mgr_get_connection_list(prelude_connection_mgr_t *mgr);
 
-int prelude_connection_mgr_add_connection(prelude_connection_mgr_t **mgr_ptr, prelude_connection_t *cnx, int use_timer);
+int prelude_connection_mgr_add_connection(prelude_connection_mgr_t **mgr_ptr, prelude_connection_t *cnx, prelude_connection_mgr_flags_t flags);
 
 int prelude_connection_mgr_set_connection_dead(prelude_connection_mgr_t *mgr, prelude_connection_t *cnx);
 
@@ -51,6 +59,10 @@ int prelude_connection_mgr_flush_backup(prelude_connection_mgr_t *mgr, prelude_c
 
 int prelude_connection_mgr_tell_connection_dead(prelude_connection_mgr_t *mgr, prelude_connection_t *cnx);
 int prelude_connection_mgr_tell_connection_alive(prelude_connection_mgr_t *mgr, prelude_connection_t *cnx);
+
+int prelude_connection_mgr_set_connection_string(prelude_connection_mgr_t *mgr, const char *cfgstr);
+
+const char *prelude_connection_mgr_get_connection_string(prelude_connection_mgr_t *mgr);
 
 void prelude_connection_mgr_destroy(prelude_connection_mgr_t *mgr);
 

@@ -21,11 +21,16 @@ idmef-data
 
 
 
-<!-- ##### TYPEDEF data ##### -->
+<!-- ##### STRUCT data ##### -->
 <para>
 
 </para>
 
+@refcount: 
+@flags: 
+@len: 
+@rw_data: 
+@ro_data: 
 
 <!-- ##### FUNCTION idmef_data_new ##### -->
 <para>

@@ -127,6 +127,8 @@ struct prelude_client {
         
         prelude_msgbuf_t *msgbuf;
         prelude_ident_t *unique_ident;
+
+        prelude_option_t *analyzer_name_opt, *config_file_opt;
         
         void (*heartbeat_cb)(prelude_client_t *client, idmef_message_t *heartbeat);
 };
@@ -562,13 +564,25 @@ static int set_name(void *context, prelude_option_t *opt, const char *arg)
 
 
 
-static int set_manager_addr(void *context, prelude_option_t *opt, const char *arg)
+static int get_manager_addr(void *context, prelude_option_t *opt, char *out, size_t size)
 {
         prelude_client_t *ptr = context;
 
-        ptr->manager_list = prelude_connection_mgr_new(ptr, arg);
+        snprintf(out, size, "%s", prelude_connection_mgr_get_connection_string(ptr->manager_list));
 
-        return (ptr->manager_list || ptr->ignore_error) ? 0 : -1;
+        return 0;
+}
+
+
+
+static int set_manager_addr(void *context, prelude_option_t *opt, const char *arg)
+{
+        int ret;
+        prelude_client_t *ptr = context;
+        
+        ret = prelude_connection_mgr_set_connection_string(ptr->manager_list, arg);
+        
+        return (ret == 0 || ptr->ignore_error) ? 0 : -1;
 }
 
 
@@ -603,50 +617,28 @@ static int set_ignore_error(void *context, prelude_option_t *opt, const char *ar
 }
 
 
-static int setup_options(prelude_client_t *client, int argc, char **argv)
+static int setup_options(prelude_client_t *client)
 {
-        int ret;
-        int old_flags;
         prelude_option_t *opt;
-        
-        opt = prelude_option_add(NULL, CLI_HOOK, 0, "ignore-startup-error",
-                                 NULL, no_argument, set_ignore_error, NULL);
-        prelude_option_set_warnings(0, &old_flags);
-        ret = prelude_option_parse_arguments(client, opt, NULL, argc, argv);
-        prelude_option_set_warnings(old_flags, NULL);
-        prelude_option_destroy(opt);
-        
+                
         prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "heartbeat-interval",
                            "Number of minutes between two heartbeat", required_argument,
                            set_heartbeat_interval, get_heartbeat_interval);
-
         
         if ( client->capability & CAPABILITY_SEND ) {
                  prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "manager-addr",
                                     "Address where manager is listening (addr:port)",
-                                    required_argument, set_manager_addr, NULL);
+                                    required_argument, set_manager_addr, get_manager_addr);
         }
         
-        opt = prelude_option_add(NULL, CLI_HOOK, 0, "config-file",
-                                 "Configuration file for this analyzer", required_argument,
-                                 set_configuration_file, NULL);
-
-        prelude_option_set_warnings(0, &old_flags);
-        ret = prelude_option_parse_arguments(client, opt, NULL, argc, argv);
-        prelude_option_set_warnings(old_flags, NULL);
+        client->config_file_opt =
+                prelude_option_add(NULL, CLI_HOOK, 0, "config-file",
+                                   "Configuration file for this analyzer", required_argument,
+                                   set_configuration_file, NULL);
         
-        if ( ret < 0 )
-                return -1;
-        
-        opt = prelude_option_add(NULL, CLI_HOOK|CFG_HOOK, 0, "analyzer-name",
-                                 "Name for this analyzer", required_argument, set_name, NULL);
-        
-        prelude_option_set_warnings(0, &old_flags);
-        ret = prelude_option_parse_arguments(client, opt, NULL, argc, argv);
-        prelude_option_set_warnings(old_flags, NULL);
-        
-        if ( ret < 0 )
-                return -1;
+        client->analyzer_name_opt =
+                prelude_option_add(NULL, CLI_HOOK|CFG_HOOK, 0, "analyzer-name",
+                                   "Name for this analyzer", required_argument, set_name, NULL);
         
         prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK, 0, "node-name",
                            "Name of the equipment", required_argument, 
@@ -685,6 +677,20 @@ static int setup_options(prelude_client_t *client, int argc, char **argv)
                            "Number of the Virtual LAN to which the address belongs", 
                            required_argument, set_node_address_vlan_num, get_node_address_vlan_num);
 
+        return 0;
+}
+
+
+static int get_standalone_option(prelude_client_t *client, prelude_option_t *opt, int argc, char **argv)
+{
+        int ret;
+        
+        ret = prelude_option_parse_arguments(client, opt, NULL, argc, argv);
+        if ( ret < 0 )
+                return -1;
+
+        prelude_option_destroy(opt);
+        
         return 0;
 }
 
@@ -744,6 +750,8 @@ prelude_client_t *prelude_client_new(prelude_client_capability_t capability)
         new->uid = getuid();
         new->gid = getgid();
         new->capability = capability;
+
+        setup_options(new);
         
         return new;
 }
@@ -766,8 +774,9 @@ prelude_client_t *prelude_client_new(prelude_client_capability_t capability)
  */
 int prelude_client_init(prelude_client_t *client, const char *sname, const char *config, int argc, char **argv)
 {
-        int ret;
+        int ret, old_flags;
         char filename[256];
+        prelude_option_t *opt;
         
         client->name = strdup(sname);
         client->config_filename = config ? strdup(config) : NULL;
@@ -777,10 +786,22 @@ int prelude_client_init(prelude_client_t *client, const char *sname, const char 
                 log(LOG_ERR, "memory exhausted.\n");
                 return -1;
         }
+        
+        prelude_option_set_warnings(0, &old_flags);
 
-        ret = setup_options(client, argc, argv);
+        opt = prelude_option_add(NULL, CLI_HOOK, 0, "ignore-startup-error",
+                                 NULL, no_argument, set_ignore_error, NULL);
+        ret = prelude_option_parse_arguments(client, opt, NULL, argc, argv);
+        
+        ret = get_standalone_option(client, client->config_file_opt, argc, argv);
         if ( ret < 0 )
                 return -1;
+
+        ret = get_standalone_option(client, client->analyzer_name_opt, argc, argv);
+        if ( ret < 0 )
+                return -1;
+        
+        prelude_option_set_warnings(old_flags, NULL);
         
         client->credentials = tls_auth_init(client);
         if ( ! client->credentials && ! client->ignore_error ) {
@@ -800,6 +821,10 @@ int prelude_client_init(prelude_client_t *client, const char *sname, const char 
                 file_error(client);
                 return -1;
         }
+        
+        client->manager_list = prelude_connection_mgr_new(client);
+        if ( ! client->manager_list )
+                return -1;
         
         setup_heartbeat_timer(client, DEFAULT_HEARTBEAT_INTERVAL);
         timer_init(&client->heartbeat_timer);
@@ -821,7 +846,11 @@ int prelude_client_init(prelude_client_t *client, const char *sname, const char 
         ret = create_heartbeat_msgbuf(client);
         if ( ret < 0 )
                 return -1;
-
+        
+        ret = prelude_connection_mgr_init(client->manager_list);
+        if ( ret < 0 )
+                return -1;
+        
         if ( client->manager_list || client->heartbeat_cb ) {
                 client->status = CLIENT_STATUS_STARTING;
                 heartbeat_expire_cb(client);
@@ -1011,7 +1040,7 @@ prelude_connection_mgr_t *prelude_client_get_manager_list(prelude_client_t *clie
  * this to be automated by prelude_client_init().
  */
 void prelude_client_set_manager_list(prelude_client_t *client, prelude_connection_mgr_t *mgrlist)
-{
+{        
         client->manager_list = mgrlist;
 }
 
