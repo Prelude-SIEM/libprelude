@@ -60,6 +60,7 @@ static int read_auth_result(prelude_io_t *fd)
         }
         
         prelude_msg_get(msg, &tag, &len, &buf);
+        prelude_msg_destroy(msg);
         
         return (tag == PRELUDE_MSG_AUTH_SUCCEED) ? 0 : -1;
 }
