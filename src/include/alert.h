@@ -24,6 +24,9 @@
 #ifndef ALERT_H
 #define ALERT_H
 
+#include "list.h"
+#include "plugin-common.h"
+#include "timer.h"
 
 typedef enum { normal, maybe_faked, maybe_not_reliable, guess } rkind_t;
 

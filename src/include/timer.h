@@ -21,6 +21,9 @@
 *
 *****/
 
+#ifndef _TIMER_H
+#define _TIMER_H
+
 #include <stdlib.h>
 #include <sys/time.h>
 
@@ -95,22 +98,4 @@ void timer_elapsed(prelude_timer_t *timer, struct timeval *tv);
 void wake_up_timer(void);
 
 
-
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif
