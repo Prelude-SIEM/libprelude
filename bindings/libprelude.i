@@ -143,6 +143,24 @@ typedef unsigned long long uint64_t;
 	}
 };
 
+%typemap(freearg) char ** {
+	free($1);
+};
+
+%typemap(python, in) (uint64_t *target_id, size_t size) {
+	int i;
+	$2 = PyList_Size($input);
+	$1 = malloc($2 * sizeof (uint64_t));
+	for ( i = 0; i < $2; i++ ) {
+		PyObject *o = PyList_GetItem($input, i);
+		$1[i] = PyLong_AsUnsignedLongLong(o);
+	}
+};
+
+%typemap(freearg) uint64_t * {
+	free($1);
+};
+
 %typemap(python, in) const char * {
 	if ( $input == Py_None )
 		$1 = NULL;

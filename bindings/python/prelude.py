@@ -118,15 +118,16 @@ class Client:
         #if _prelude.prelude_client_init(self._client, name, config, 1, [ sys.argv[0] ]) < 0:
         retval = _prelude.swig_prelude_client_init(self._client, name, config, 0, [ ])
         if retval < 0:
-            error = ClientError(retval)
-            print error
-            raise error
-
+            raise ClientError(retval)
+        
         if capability & (Client.SEND_IDMEF | Client.SEND_ADMIN | Client.SEND_CM):
             self._msgbuf = _prelude.prelude_msgbuf_new(self._client)
             if not self._msgbuf:
                 raise ClientError()
-            
+
+    def get_analyzerid(self):
+        return _prelude.prelude_client_get_analyzerid(self._client)
+    
     def set_success(self):
         self._exit_status = _prelude.PRELUDE_CLIENT_EXIT_STATUS_SUCCESS
 
@@ -252,8 +253,8 @@ class Admin(Client):
                 
         return options
 
-    def _request(self, analyzerid, type, value=None):
-        _prelude.prelude_option_new_request(self._client, self._msgbuf, 0, analyzerid)
+    def _request(self, analyzer_path, type, value=None):
+        _prelude.prelude_option_new_request(self._client, self._msgbuf, 0, analyzer_path)
         _prelude.prelude_option_push_request(self._msgbuf, type, value)
         _prelude.prelude_msgbuf_mark_end(self._msgbuf)
         
@@ -261,45 +262,39 @@ class Admin(Client):
         
         return msg
         
-    def get_option_list(self, analyzerid):
-        print "--- before PRELUDE_MSG_OPTION_LIST"
-        msg = self._request(analyzerid, _prelude.PRELUDE_MSG_OPTION_LIST)
-        print "--- after PRELUDE_MSG_OPTION_LIST"
+    def get_option_list(self, analyzer_path):
+        msg = self._request(analyzer_path, _prelude.PRELUDE_MSG_OPTION_LIST)
         
         if not msg:
             raise Error("PRELUDE_MSG_OPTION_LIST failed")
 
-        print "--- before prelude_option_recv_list"
-        
         options = _prelude.prelude_option_recv_list(msg)
-
-        print "--- after prelude_option_recv_list"
 
         return self._get_option_list(None, _prelude.prelude_option_get_next(options, None))
 
-    def get_option(self, analyzerid, name):
+    def get_option(self, analyzer_path, name):
         pass
     
-    def set_option(self, analyzerid, name, value=None):
+    def set_option(self, analyzer_path, name, value=None):
         if value:
             value = "%s=%s" % (name, value)
         else:
             value = name
-        msg = self._request(analyzerid, _prelude.PRELUDE_MSG_OPTION_SET, value)
+        msg = self._request(analyzer_path, _prelude.PRELUDE_MSG_OPTION_SET, value)
         retval = _prelude.prelude_option_recv_set(msg)
         
         return retval
 
-    def commit(self, analyzerid, instance):
-        msg = self._request(analyzerid, _prelude.PRELUDE_MSG_OPTION_COMMIT, instance)
+    def commit(self, analyzer_path, instance):
+        msg = self._request(analyzer_path, _prelude.PRELUDE_MSG_OPTION_COMMIT, instance)
         if not msg:
             return
         retval = _prelude.prelude_option_recv_set(msg)
 
         return retval
 
-    def destroy(self, analyzerid, instance):
-        msg = self._request(analyzerid, _prelude.PRELUDE_MSG_OPTION_DESTROY, instance)
+    def destroy(self, analyzer_path, instance):
+        msg = self._request(analyzer_path, _prelude.PRELUDE_MSG_OPTION_DESTROY, instance)
         if not msg:
             return
         retval = _prelude.prelude_option_recv_set(msg)
