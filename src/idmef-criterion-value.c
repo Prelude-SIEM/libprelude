@@ -49,6 +49,7 @@
 #endif
 
 struct match_cb {
+        unsigned int match;
         idmef_criterion_value_t *cv;
         idmef_criterion_operator_t operator;
 };
@@ -86,7 +87,7 @@ static int regex_match(const idmef_criterion_value_t *cv, idmef_criterion_operat
 
         else return -1;
         
-        return ( regexec(cv->value, str, 0, NULL, 0) == 0 ) ? 0 : -1;
+        return ( regexec(cv->value, str, 0, NULL, 0) == 0 ) ? 1 : 0;
 }
 
 
@@ -131,7 +132,7 @@ static void regex_destroy(idmef_criterion_value_t *cv)
  * value stuff
  */
 static int value_match(const idmef_criterion_value_t *cv, idmef_criterion_operator_t operator, idmef_value_t *value)
-{
+{        
         return idmef_value_match(cv->value, value, operator);
 }
 
@@ -170,6 +171,7 @@ static void value_destroy(idmef_criterion_value_t *cv)
  */
 static int do_match_cb(idmef_value_t *value, void *extra)
 {
+        int ret;
         struct match_cb *mcb = extra;
         idmef_criterion_value_t *cv = mcb->cv;
         idmef_criterion_operator_t operator = mcb->operator;
@@ -177,7 +179,19 @@ static int do_match_cb(idmef_value_t *value, void *extra)
         if ( idmef_value_is_list(value) )
                 return idmef_value_iterate(value, do_match_cb, mcb);
 
-        return cv->match(cv, operator, value);
+        /*
+         * In case we are matching against a list of value,
+         * a single mach is considered as a match. If the match fail
+         * we keep trying.
+         */
+        ret = cv->match(cv, operator, value);
+        if ( ret < 0 )
+                return ret;
+
+        if ( ret > 0 )
+                mcb->match++;
+        
+        return 0;
 }
 
 
@@ -223,13 +237,19 @@ int idmef_criterion_value_to_string(idmef_criterion_value_t *cv, prelude_string_
 
 int idmef_criterion_value_match(idmef_criterion_value_t *cv, idmef_value_t *value,
                                 idmef_criterion_operator_t operator)
-{        
+{
+        int ret;
         struct match_cb mcb;
 
         mcb.cv = cv;
+        mcb.match = 0;
         mcb.operator = operator;
-
-        return idmef_value_iterate(value, do_match_cb, &mcb);
+        
+        ret = idmef_value_iterate(value, do_match_cb, &mcb);        
+        if ( ret < 0 )
+                return ret;
+        
+        return mcb.match;
 }
 
 

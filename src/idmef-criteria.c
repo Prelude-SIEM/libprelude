@@ -58,7 +58,7 @@ struct idmef_criteria {
  * idmef_criterion_operator_to_string:
  * @operator: #idmef_criterion_operator_t type.
  *
- * Transform @relation to string.
+ * Transform @operator to string.
  *
  * Returns: A pointer to an operator string or NULL.
  */
@@ -90,6 +90,19 @@ const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t operat
 
 
 
+/**
+ * idmef_criterion_new:
+ * @criterion: Address where to store the created #idmef_criterion_t object.
+ * @path: Pointer to a #idmef_path_t object.
+ * @value: Pointer to a #idmef_criterion_value_t object.
+ * @operator: #idmef_criterion_operator_t to use for matching this criterion.
+ *
+ * Create a new #idmef_criterion_t object and store it in @criterion.
+ * Matching this criterion will result in comparing the value of the object
+ * pointed to by @path against the provided @value, using @operator.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
 int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
                         idmef_criterion_value_t *value, idmef_criterion_operator_t operator)
 {
@@ -109,6 +122,12 @@ int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
 
 
 
+/**
+ * idmef_criterion_destroy:
+ * @criterion: Pointer to a #idmef_criterion_t object.
+ *
+ * Destroy @criterion and it's content.
+ */
 void idmef_criterion_destroy(idmef_criterion_t *criterion)
 {
 	idmef_path_destroy(criterion->path);
@@ -121,6 +140,15 @@ void idmef_criterion_destroy(idmef_criterion_t *criterion)
 
 
 
+/**
+ * idmef_criterion_clone:
+ * @criterion: Pointer to a #idmef_criterion_t object to clone.
+ * @dst: Address where to store the cloned #idmef_criterion_t object.
+ *
+ * Clone @criterion and store the cloned criterion within @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
 int idmef_criterion_clone(idmef_criterion_t *criterion, idmef_criterion_t **dst)
 {
         int ret;
@@ -151,6 +179,19 @@ int idmef_criterion_clone(idmef_criterion_t *criterion, idmef_criterion_t **dst)
 
 
 
+/**
+ * idmef_criterion_print:
+ * @criterion: Pointer to a #idmef_criterion_t object.
+ * @fd: Pointer to a #prelude_io_t object.
+ *
+ * Dump @criterion to @fd in the form of:
+ * <path> <operator> <value>
+ *
+ * Or if there is no value associated with the criterion:
+ * <operator> <path>
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
 int idmef_criterion_print(const idmef_criterion_t *criterion, prelude_io_t *fd)
 {
         int ret;
@@ -174,6 +215,19 @@ int idmef_criterion_print(const idmef_criterion_t *criterion, prelude_io_t *fd)
 
 
 
+/**
+ * idmef_criterion_print:
+ * @criterion: Pointer to a #idmef_criterion_t object.
+ * @out: Pointer to a #prelude_string_t object.
+ *
+ * Dump @criterion as a string to the @out buffer in the form of:
+ * <path> <operator> <value>
+ *
+ * Or if there is no value associated with the criterion:
+ * <operator> <path>
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
 int idmef_criterion_to_string(const idmef_criterion_t *criterion, prelude_string_t *out)
 {
         const char *name, *operator;
@@ -193,6 +247,14 @@ int idmef_criterion_to_string(const idmef_criterion_t *criterion, prelude_string
 
 
 
+/**
+ * idmef_criterion_get_path:
+ * @criterion: Pointer to a #idmef_criterion_t object.
+ *
+ * Used to access the #idmef_path_t object associated with @criterion.
+ *
+ * Returns: the #idmef_path_t object associated with @criterion.
+ */
 idmef_path_t *idmef_criterion_get_path(idmef_criterion_t *criterion)
 {
 	return criterion->path;
@@ -200,6 +262,16 @@ idmef_path_t *idmef_criterion_get_path(idmef_criterion_t *criterion)
 
 
 
+/**
+ * idmef_criterion_get_value:
+ * @criterion: Pointer to a #idmef_criterion_t object.
+ *
+ * Used to access the #idmef_criterion_value_t associated with @criterion.
+ * There might be no value specifically if the provided #idmef_criterion_operator_t
+ * was IDMEF_CRITERION_OPERATOR_NULL or IDMEF_CRITERION_OPERATOR_NOT_NULL.
+ *
+ * Returns: the #idmef_criterion_value_t object associated with @criterion.
+ */
 idmef_criterion_value_t *idmef_criterion_get_value(idmef_criterion_t *criterion)
 {
 	return criterion ? criterion->value : NULL;
@@ -207,6 +279,15 @@ idmef_criterion_value_t *idmef_criterion_get_value(idmef_criterion_t *criterion)
 
 
 
+
+/**
+ * idmef_criterion_get_operator:
+ * @criterion: Pointer to a #idmef_criterion_t object.
+ *
+ * Used to access the #idmef_criterion_operator_t enumeration associated with @criterion.
+ *
+ * Returns: the #idmef_criterion_operator_t associated with @criterion.
+ */
 idmef_criterion_operator_t idmef_criterion_get_operator(idmef_criterion_t *criterion)
 {
         return criterion->operator;
@@ -214,13 +295,20 @@ idmef_criterion_operator_t idmef_criterion_get_operator(idmef_criterion_t *crite
 
 
 
-/* 
- * Check if message matches criterion. Returns 1 if it does, 0 if it doesn't,
- * -1 on error (e.g. a comparision with NULL)
+/**
+ * idmef_criterion_match:
+ * @criterion: Pointer to a #idmef_criterion_t object.
+ * @message: Pointer to a #idmef_message_t object to match against @criterion.
+ *
+ * Match @message against the provided @criterion. This imply retrieving the
+ * value associated with @criterion path, and matching it with the @idmef_criterion_value_t
+ * object within @criterion.
+ *
+ * Returns: 1 for a match, 0 for no match, or a negative value if an error occured.
  */
 int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message)
 {
-        int ret = 0;
+        int ret;
 	idmef_value_t *value;
 	
 	ret = idmef_path_get(criterion->path, message, &value);
@@ -228,19 +316,30 @@ int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message
                 return ret;
         
         if ( ret == 0 ) 
-		return (criterion->operator == IDMEF_CRITERION_OPERATOR_IS_NULL) ? 0 : -1;
+		return (criterion->operator == IDMEF_CRITERION_OPERATOR_IS_NULL) ? 1 : 0;
         
         if ( ! criterion->value )
-                return (criterion->operator == IDMEF_CRITERION_OPERATOR_IS_NOT_NULL) ? 0 : -1;
+                return (criterion->operator == IDMEF_CRITERION_OPERATOR_IS_NOT_NULL) ? 1 : 0;
         
         ret = idmef_criterion_value_match(criterion->value, value, criterion->operator);
         idmef_value_destroy(value);
 
-        return ret;
+        if ( ret < 0 )
+                return ret;
+        
+        return (ret > 0) ? 1 : 0;
 }
 
 
 
+/**
+ * idmef_criteria_new:
+ * @criteria: Address where to store the created #idmef_criteria_t object.
+ *
+ * Create a new #idmef_criteria_t object and store it into @criteria.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
 int idmef_criteria_new(idmef_criteria_t **criteria)
 {
         *criteria = calloc(1, sizeof(**criteria));
@@ -255,6 +354,12 @@ int idmef_criteria_new(idmef_criteria_t **criteria)
 
 
 
+/**
+ * idmef_criteria_destroy:
+ * @criteria: Pointer to a #idmef_criteria_t object.
+ *
+ * Destroy @criteria and it's content.
+ */
 void idmef_criteria_destroy(idmef_criteria_t *criteria)
 {
 	if ( criteria->criterion )
@@ -271,6 +376,15 @@ void idmef_criteria_destroy(idmef_criteria_t *criteria)
 
 
 
+/**
+ * idmef_criteria_clone:
+ * @src: Pointer to a #idmef_criteria_t object to clone.
+ * @dst: Address where to store the cloned #idmef_criteria_t object.
+ *
+ * Clone @src and store the cloned criteria within @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
 int idmef_criteria_clone(idmef_criteria_t *src, idmef_criteria_t **dst)
 {
         int ret;
@@ -434,6 +548,16 @@ void idmef_criteria_set_criterion(idmef_criteria_t *criteria, idmef_criterion_t 
 
 
 
+
+/**
+ * idmef_criteria_match:
+ * @criteria: Pointer to a #idmef_criteria_t object.
+ * @message: Pointer to a #idmef_message_t message.
+ *
+ * Match @message against the provided criteria.
+ *
+ * Returns: 1 if criteria match, 0 if it did not, a negative value if an error occured.
+ */
 int idmef_criteria_match(idmef_criteria_t *criteria, idmef_message_t *message)
 {
         int ret;
@@ -441,6 +565,9 @@ int idmef_criteria_match(idmef_criteria_t *criteria, idmef_message_t *message)
         
         ret = idmef_criterion_match(criteria->criterion, message);
         if ( ret < 0 )
+                return ret;
+        
+        if ( ret == 0 )
                 next = criteria->or;
         else
                 next = criteria->and;

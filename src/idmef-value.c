@@ -67,7 +67,8 @@ vtype idmef_value_get_ ## vname (idmef_value_t *val)	         \
 
 
 typedef struct compare {
-	idmef_value_t *val2;
+        unsigned int match;
+        idmef_value_t *val2;
 	idmef_criterion_operator_t operator;
 } compare_t;
 
@@ -581,6 +582,7 @@ int idmef_value_get(idmef_value_t *val, void *res)
 
 static int idmef_value_match_internal(idmef_value_t *val1, void *extra)
 {
+        int ret;
 	idmef_value_t *val2;
         compare_t *compare = extra;
 	idmef_criterion_operator_t operator;
@@ -593,7 +595,11 @@ static int idmef_value_match_internal(idmef_value_t *val1, void *extra)
 
         assert(! val1 || ! val2 || val1->type.id == val2->type.id);
                 
-        return idmef_value_type_compare(&val1->type, &val2->type, operator);
+        ret = idmef_value_type_compare(&val1->type, &val2->type, operator);        
+        if ( ret == 0 )
+                compare->match++;
+        
+        return 0;
 }
 
 
@@ -606,16 +612,22 @@ static int idmef_value_match_internal(idmef_value_t *val1, void *extra)
  *
  * Match @val1 and @val2 using @operator.
  *
- * Returns:
+ * Returns: the number of match, 0 for none, a negative value if an error occured.
  */
 int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_operator_t operator)
 {
+        int ret;
 	compare_t compare;
-        
+
+        compare.match = 0;
 	compare.val2 = val2;
 	compare.operator = operator;
         
-	return idmef_value_iterate(val1, idmef_value_match_internal, &compare);
+	ret = idmef_value_iterate(val1, idmef_value_match_internal, &compare);        
+        if ( ret < 0 )
+                return ret;
+        
+        return compare.match;
 }
 
 
