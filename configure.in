@@ -327,24 +327,6 @@ fi
 
 
 dnl **************************************************
-dnl * Criteria regex                                 *
-dnl **************************************************
-
-AC_PATH_PROG(PCRE_CONFIG, pcre-config, no)
-criteria_regex_backend="none"
-
-if test x$PCRE_CONFIG != xno; then
-	REGEX_LIBS=`$PCRE_CONFIG --libs-posix`
-	REGEX_CFLAGS=`$PCRE_CONFIG --cflags-posix`
-	libprelude_libs="$libprelude_libs $REGEX_LIBS"
-	criteria_regex_backend="pcreposix"
-	AC_DEFINE_UNQUOTED(HAVE_PCREPOSIX, , Define wether pcreposix is available on this system)
-fi
-
-AC_SUBST(REGEX_CFLAGS)
-
-
-dnl **************************************************
 dnl * Swig support                                   *
 dnl **************************************************
 
@@ -477,4 +459,3 @@ echo "*** Dumping configuration ***"
 echo "    - Generate documentation : $enable_gtk_doc"
 echo "    - Perl binding           : $enable_perl"
 echo "    - Python binding         : $enable_python"
-echo "    - Criteria regex         : $criteria_regex_backend"

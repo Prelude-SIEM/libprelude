@@ -42,12 +42,9 @@
 #include "idmef.h"
 #include "idmef-criterion-value.h"
 
+#include "regex.h"
 
-#ifdef HAVE_PCREPOSIX
- #include <pcreposix.h>
-#else
- #include "regex.h"
-#endif
+
 
 struct match_cb {
         unsigned int match;
