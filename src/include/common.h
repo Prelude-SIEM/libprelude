@@ -43,4 +43,6 @@ int prelude_get_gmt_offset(time_t time_local, int *gmt_offset);
 
 char *prelude_strndup(const char *src, size_t n);
 
+char *prelude_strnstr(const char *str, const char *needed, size_t len);
+
 #endif /* _LIBPRELUDE_COMMON_H */

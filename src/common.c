@@ -330,3 +330,31 @@ char *prelude_strndup(const char *src, size_t n)
 
 	return dst;
 }
+
+
+
+
+char *prelude_strnstr(const char *str, const char *needed, size_t len)
+{
+        char *ptr;
+        size_t nlen = strlen(needed);
+        
+        if ( ! *needed )
+                return NULL;
+        
+        while ( (ptr = memchr(str, *needed, len)) ) {
+
+                len -= (ptr - str);
+                if ( len < nlen )
+                        break;
+                
+                if ( memcmp(ptr, needed, nlen) == 0 )
+                        return ptr;
+
+                len--;
+                str = ptr + 1;
+        }
+
+        return NULL;
+}
+
