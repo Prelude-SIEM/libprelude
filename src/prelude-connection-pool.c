@@ -150,7 +150,7 @@ static int do_send(prelude_connection_t *conn, prelude_msg_t *msg)
          */
         do {
                 ret = prelude_connection_send(conn, msg);
-        } while ( ret < 0 && prelude_error_get_code(ret) == EAGAIN );
+        } while ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN );
 
         return ret;
 }
