@@ -10,6 +10,10 @@
 	(idmef_criteria_clone)
 	bug fix, the way the operators were handled was buggy
 
+	* bindings/generate.sh:
+	new script that simply call the generate.sh of perl and python
+	directories
+
 2003-12-25  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* src/idmef-data.c (idmef_data_new): 
@@ -18,7 +22,7 @@
 
 	* src/idmef-wrappers-gen/GenerateIDMEFMessageSendC.pm (struct): 
 	don't call prelude_msgbuf_mark_end() on idmef_message_send(). Doing
-	so is up to the caller, which might want to add more information
+	so is up to the caller, who might want to add more information
 	to the written alert.
 
 	* src/idmef-data.c (idmef_data_new_dup): 
