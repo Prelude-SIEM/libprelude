@@ -1,5 +1,14 @@
 use Config;
 use ExtUtils::MakeMaker;
+use File::Copy;
+
+if ( "@top_srcdir@" ne "@top_builddir@" ) {
+    foreach my $filename ( qw/Prelude.c Prelude.pm/ ) {
+	my $src = "@top_srcdir@/bindings/perl/$filename";
+	my $dst = "@top_builddir@/bindings/perl/$filename";
+	copy($src, $dst) if ( ! -e $dst );
+    }
+}
 
 my %attributs = (NAME => 'Prelude',
 		 INC => '-I@top_builddir@/src/include -I@top_srcdir@/src/include',

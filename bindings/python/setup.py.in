@@ -9,9 +9,11 @@ def split_args(s):
     import re
     return re.split("\s+", s.strip())
     
+def is_system_wide_install():
+    return os.access(get_python_lib(), os.W_OK)
 
 if sys.argv[1] == "install":
-    if not os.access(get_python_lib(), os.W_OK):
+    if not is_system_wide_install():
         sys.argv.extend(["--prefix", "@prefix@"])
 
 if sys.argv[1] == "build":
@@ -21,6 +23,19 @@ if sys.argv[1] == "build":
             dst = "@top_builddir@/bindings/python/" + filename
             if not exists(dst):
                 shutil.copy(src, dst)
+
+
+# there is no "uninstall" command, do it manually
+if sys.argv[1] == "uninstall":
+    if is_system_wide_install():
+        prefix = get_python_lib()
+    else:
+        prefix = "@prefix@" + "/site-packages"
+    
+    for filename in "prelude.py", "prelude.pyc", "_prelude.so":
+        os.remove(filename)
+    
+    sys.exit(0)
 
 setup(name="prelude",
       package_dir={'prelude': '@top_srcdir@/bindings/python'},

@@ -54,13 +54,21 @@ if HAVE_PYTHON
 	cd python && python setup.py install
 endif
 
-
-
-clean-am: perl/Makefile
+uninstall-hook:
 if HAVE_PERL
-	cd perl && $(MAKE) clean
+	cd perl && $(MAKE) uninstall
 endif
 
 if HAVE_PYTHON
-	cd python && python setup.py clean -a
+	cd python && python setup.py uninstall
 endif
+
+
+# clean-am: perl/Makefile
+# if HAVE_PERL
+# 	cd perl && $(MAKE) clean
+# endif
+
+# if HAVE_PYTHON
+# 	cd python && python setup.py clean -a
+# endif
