@@ -276,7 +276,7 @@ static int setup_inet_connection(prelude_io_t *fd, int *use_ssl)
         char *ptr, buf[1024];
         
         ret = prelude_io_read_delimited(fd, (void **) &ptr);
-        if ( ret < 0 ) {
+        if ( ret <= 0 ) {
                 log(LOG_ERR, "error waiting for Manager config string.\n");
                 return -1;
         }
