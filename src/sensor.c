@@ -36,10 +36,10 @@
 
 #include "common.h"
 #include "prelude-path.h"
-#include "prelude-list.h"
 #include "config-engine.h"
 #include "prelude-log.h"
 
+#include "prelude-linked-object.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
 #include "prelude-client.h"

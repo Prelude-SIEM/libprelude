@@ -45,9 +45,7 @@
 #include "ssl.h"
 #endif
 
-#include "list.h"
 #include "common.h"
-#include "prelude-list.h"
 #include "prelude-log.h"
 #include "prelude-io.h"
 #include "prelude-auth.h"
@@ -58,6 +56,7 @@
 #include "prelude-getopt.h"
 #include "client-ident.h"
 #include "prelude-path.h"
+#include "prelude-linked-object.h"
 
 
 

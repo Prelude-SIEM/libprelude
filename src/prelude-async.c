@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001-2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -29,7 +29,7 @@
 #include <errno.h>
 #include <signal.h>
 
-#include "prelude-list.h"
+#include "prelude-linked-object.h"
 #include "timer.h"
 #include "prelude-log.h"
 #include "prelude-io.h"
@@ -172,7 +172,7 @@ static void *async_thread(void *arg)
                         next = ( tmp->next != &joblist ) ? tmp->next : NULL;
                         pthread_mutex_unlock(&mutex);
                         
-                        obj = prelude_list_get_object(tmp, prelude_async_object_t);
+                        obj = prelude_linked_object_get_object(tmp, prelude_async_object_t);
                         prelude_async_del(obj);
                         obj->func(obj, obj->data);                     
                 }
@@ -250,7 +250,7 @@ int prelude_async_init(void)
 void prelude_async_add(prelude_async_object_t *obj) 
 {
         pthread_mutex_lock(&mutex);
-        prelude_list_add_tail((prelude_linked_object_t *)obj, &joblist);
+        prelude_linked_object_add_tail((prelude_linked_object_t *)obj, &joblist);
         pthread_cond_signal(&cond);
         pthread_mutex_unlock(&mutex);
 }
@@ -267,7 +267,7 @@ void prelude_async_add(prelude_async_object_t *obj)
 void prelude_async_del(prelude_async_object_t *obj) 
 {
         pthread_mutex_lock(&mutex);
-        prelude_list_del((prelude_linked_object_t *)obj);
+        prelude_linked_object_del((prelude_linked_object_t *)obj);
         pthread_mutex_unlock(&mutex);
 }
 

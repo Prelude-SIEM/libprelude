@@ -36,7 +36,7 @@ include_HEADERS = config-engine.h 		\
 		  variable.h			\
 		  prelude-auth.h		\
 		  prelude-hash.h		\
-		  prelude-list.h		\
+		  prelude-linked-object.h	\
 		  prelude-client.h		\
 		  prelude-client-mgr.h		\
 		  prelude-getopt.h		\

@@ -35,7 +35,7 @@
 #include "prelude-log.h"
 #include "extract.h"
 #include "prelude-io.h"
-#include "prelude-list.h"
+#include "prelude-linked-object.h"
 #include "prelude-async.h"
 #include "prelude-message.h"
 

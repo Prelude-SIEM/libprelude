@@ -29,7 +29,6 @@
 #include <stdarg.h>
 #include <pthread.h>
 
-#include "list.h"
 #include "prelude-hash.h"
 #include "prelude-log.h"
 
@@ -43,7 +42,8 @@
 #include "idmef-tree-wrap.h"
 #include "idmef-object.h"
 #include "prelude-strbuf.h"
-#include "prelude-list.h"
+#include "prelude-linked-object.h"
+
 
 
 #define MAX_DEPTH     16

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 1999 - 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 1999-2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -29,7 +29,7 @@
 
 #include "timer.h"
 #include "prelude-log.h"
-#include "prelude-list.h"
+#include "prelude-linked-object.h"
 #include "prelude-async.h"
 
 

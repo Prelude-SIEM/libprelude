@@ -34,14 +34,13 @@
 #include "ltdl.h"
 
 #include "config.h"
-#include "list.h"
-#include "prelude-list.h"
 #include "prelude-log.h"
 #include "variable.h"
 #include "inttypes.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
 #include "prelude-getopt.h"
+#include "prelude-linked-object.h"
 #include "prelude-plugin.h"
 #include "config-engine.h"
 
@@ -691,7 +690,7 @@ int prelude_plugin_add(prelude_plugin_instance_t *pi, struct list_head *h, const
         }
         
         pi->infos = infos;
-        prelude_list_add_tail((prelude_linked_object_t *) pi, h);
+        prelude_linked_object_add_tail((prelude_linked_object_t *) pi, h);
         
         return 0;
 }
@@ -752,7 +751,7 @@ prelude_plugin_instance_t *prelude_plugin_search_instance_by_name(const char *pn
 void prelude_plugin_del(prelude_plugin_instance_t *pi) 
 {
         assert(pi->already_used);
-        prelude_list_del((prelude_linked_object_t *) pi);
+        prelude_linked_object_del((prelude_linked_object_t *) pi);
 }
 
 

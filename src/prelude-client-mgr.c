@@ -39,7 +39,7 @@
 #include <assert.h>
 
 #include "common.h"
-#include "prelude-list.h"
+#include "prelude-linked-object.h"
 #include "timer.h"
 #include "prelude-log.h"
 #include "config-engine.h"
@@ -181,7 +181,7 @@ static void check_for_data_cb(void *arg)
                 return;
 
         list_for_each(tmp, &mgr->all_client) {
-                client = prelude_list_get_object(tmp, prelude_client_t);
+                client = prelude_linked_object_get_object(tmp, prelude_client_t);
 
                 fd = prelude_io_get_fd(prelude_client_get_fd(client));
                 
@@ -365,7 +365,7 @@ static int add_new_client(client_list_t *clist, prelude_client_t *client, int us
                 timer_set_callback(&new->timer, client_timer_expire);
         }
         
-        prelude_list_add((prelude_linked_object_t *) new->client, &clist->parent->all_client);
+        prelude_linked_object_add((prelude_linked_object_t *) new->client, &clist->parent->all_client);
         list_add_tail(&new->list, &clist->client_list);
 
         return 0;
@@ -398,7 +398,7 @@ static int create_new_client(client_list_t *clist, char *addr, int type)
 
         prelude_client_set_type(new->client, type);
         
-        prelude_list_add((prelude_linked_object_t *) new->client, &clist->parent->all_client);
+        prelude_linked_object_add((prelude_linked_object_t *) new->client, &clist->parent->all_client);
 
         new->use_timer = 1;
         timer_set_data(&new->timer, new);        
@@ -891,7 +891,7 @@ prelude_client_t *prelude_client_mgr_search_client(prelude_client_mgr_t *mgr, co
                 return NULL;
         
         list_for_each(tmp, &mgr->all_client) {
-                client = prelude_list_get_object(tmp, prelude_client_t);
+                client = prelude_linked_object_get_object(tmp, prelude_client_t);
                 
                 if ( type != prelude_client_get_type(client) )
                         continue;
