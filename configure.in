@@ -133,10 +133,12 @@ dnl **************************************************
 dnl * Check for OpenSSL.                             *
 dnl **************************************************
 
-AC_CHECK_HEADER(openssl/ssl.h, openssl_header=yes)
-AC_ARG_ENABLE(openssl, [  --enable-openssl	Use OpenSSL to communicate with Manager [default=auto]],, enable_openssl=yes)
+AC_ARG_ENABLE(openssl, [  --enable-openssl	Use OpenSSL to communicate with Manager [default=auto]], enable_openssl="$enableval", enable_openssl=yes)
 
 if test x$enable_openssl = xyes ; then
+	
+	AC_CHECK_HEADER(openssl/ssl.h, openssl_header=yes)
+
 	if test x$openssl_header = xyes; then
 		libprelude_libs="$libprelude_libs -lssl -lcrypto"
 		AC_DEFINE(HAVE_SSL, , 1)
@@ -151,7 +153,7 @@ dnl * Enable / Disable gprof profiling.              *
 dnl **************************************************
 
 AC_ARG_ENABLE(profiling, [  --enable-profiling Enable Gprof profiling - with thread workaround [default=no]], \
-	      enable_profiling=yes, enable_profiling=no)
+	      enable_profiling="$enableval", enable_profiling=no)
 
 if test x$enable_profiling = xyes ; then
 	CFLAGS="$CFLAGS -O3 -pg"
