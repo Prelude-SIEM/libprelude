@@ -1,3 +1,15 @@
+2001-12-08  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/include/plugin-common-prv.h (plugin_run_with_return_value): 
+	(plugin_run): specify the member to call in the macro call.
+
+2001-12-06  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-client-mgr.c (prelude_client_mgr_get_manager_list): 
+	* src/sensor.c (prelude_sensor_get_manager_list): new function.
+
+	* src/prelude-getopt.c (parse_argument): argv is not const.
+
 2001-12-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/include/common.h (do_init_nofail): put back do_init

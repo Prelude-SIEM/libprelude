@@ -107,30 +107,30 @@ int plugin_get_highest_id(void);
 /*
  * Macro used to start a plugin.
  */
-#define plugin_run(pc, type, arg...) do {   \
-        struct timeval start, end;          \
-                                            \
-        gettimeofday(&start, NULL);         \
-        ((type *)pc->plugin)->run(arg);     \
-        gettimeofday(&end, NULL);           \
-        pc->p_time += (double) end.tv_sec + (double) (end.tv_usec * 1e-6);  \
+#define plugin_run(pc, type, member, arg...) do {                              \
+        struct timeval start, end;                                             \
+                                                                               \
+        gettimeofday(&start, NULL);                                            \
+        ((type *)pc->plugin)->member(arg);                                     \
+        gettimeofday(&end, NULL);                                              \
+        pc->p_time += (double) end.tv_sec + (double) (end.tv_usec * 1e-6);     \
         pc->p_time -= (double) start.tv_sec + (double) (start.tv_usec * 1e-6); \
-        pc->p_count++;                      \
+        pc->p_count++;                                                         \
 } while (0)
 
 
 /*
  * Macro used to start a plugin.
  */
-#define plugin_run_with_return_value(pc, ret, type, arg...) do {   \
-        struct timeval start, end;          \
-                                            \
-        gettimeofday(&start, NULL);         \
-        *ret = ((type *)pc->plugin)->run(arg);     \
-        gettimeofday(&end, NULL);           \
-        pc->p_time += (double) end.tv_sec + (double) (end.tv_usec * 1e-6);  \
+#define plugin_run_with_return_value(pc, type, member, ret, arg...) do {       \
+        struct timeval start, end;                                             \
+                                                                               \
+        gettimeofday(&start, NULL);                                            \
+        ret = ((type *)pc->plugin)->member(arg);                               \
+        gettimeofday(&end, NULL);                                              \
+        pc->p_time += (double) end.tv_sec + (double) (end.tv_usec * 1e-6);     \
         pc->p_time -= (double) start.tv_sec + (double) (start.tv_usec * 1e-6); \
-        pc->p_count++;                      \
+        pc->p_count++;                                                         \
 } while (0)
 
 
