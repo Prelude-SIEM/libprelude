@@ -67,10 +67,10 @@ int idmef_additional_data_set_ptr_nodup_fast(idmef_additional_data_t *ad,
         idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
 
 #define idmef_additional_data_new_string_dup_fast(data, len) \
-        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
+        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len)
 
 #define idmef_additional_data_set_string_dup_fast(ad, data, len) \
-        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
+        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len)
 
 #define idmef_additional_data_new_string_nodup_fast(data, len) \
         idmef_additional_data_new_ptr_nodup_fast(IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
@@ -106,10 +106,10 @@ int idmef_additional_data_set_ptr_nodup_fast(idmef_additional_data_t *ad,
         idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len + 1)
 
 #define idmef_additional_data_new_ntpstamp_dup_fast(data, len) \
-        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len + 1)
+        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len)
 
 #define idmef_additional_data_set_ntpstamp_dup_fast(ad, data, len) \
-        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len + 1)
+        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len)
 
 #define idmef_additional_data_new_ntpstamp_nodup_fast(data, len) \
         idmef_additional_data_new_ptr_nodup_fast(IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len + 1)
@@ -168,10 +168,10 @@ int idmef_additional_data_set_ptr_nodup_fast(idmef_additional_data_t *ad,
         idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len + 1)
 
 #define idmef_additional_data_new_portlist_dup_fast(data, len) \
-        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len + 1)
+        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len)
 
 #define idmef_additional_data_set_portlist_dup_fast(ad, data, len) \
-        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len + 1)
+        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len)
 
 #define idmef_additional_data_new_portlist_nodup_fast(data, len) \
         idmef_additional_data_new_ptr_nodup_fast(IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len + 1)
@@ -207,10 +207,10 @@ int idmef_additional_data_set_ptr_nodup_fast(idmef_additional_data_t *ad,
         idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len + 1)
 
 #define idmef_additional_data_new_datetime_dup_fast(data, len) \
-        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len + 1)
+        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len)
 
 #define idmef_additional_data_set_datetime_dup_fast(ad, data, len) \
-        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len + 1)
+        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len)
 
 #define idmef_additional_data_new_datetime_nodup_fast(data, len) \
         idmef_additional_data_new_ptr_nodup_fast(IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len + 1)
@@ -247,10 +247,10 @@ int idmef_additional_data_set_ptr_nodup_fast(idmef_additional_data_t *ad,
         idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len + 1)
 
 #define idmef_additional_data_new_xml_dup_fast(data, len) \
-        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len + 1)
+        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len)
 
 #define idmef_additional_data_set_xml_dup_fast(ad, data, len) \
-        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len + 1)
+        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len)
 
 #define idmef_additional_data_new_xml_nodup_fast(data, len) \
         idmef_additional_data_new_ptr_nodup_fast(IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len + 1)
