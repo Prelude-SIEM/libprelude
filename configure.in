@@ -80,8 +80,6 @@ libprelude_libs="$PTHREAD_LIBS $libprelude_libs"
 dnl libprelude_cflags="$PTHREAD_CFLAGS $libprelude_cflags"
 CC="$PTHREAD_CC"
 
-echo "libs=$PTHREAD_LIBS cflags=$PTHREAD_CFLAGS"
-
 
 dnl **************************************************
 dnl * Check endianess                                *
@@ -404,11 +402,15 @@ AC_SUBST(prelude_ident_file)
 
 dnl We use no-strict-prototype because of SSL warning.
 
-CFLAGS="$CFLAGS -Wall -Wno-strict-prototypes -Wmissing-prototypes -Wmissing-declarations \
--Wbad-function-cast -Wcast-qual -Wcast-align -Wnested-externs -Wunused"
+AX_CFLAGS_GCC_OPTION(-Wall)
+AX_CFLAGS_GCC_OPTION(-Wmissing-prototypes)
+AX_CFLAGS_GCC_OPTION(-Wmissing-declarations)
+AX_CFLAGS_GCC_OPTION(-Wbad-function-cast)
+AX_CFLAGS_GCC_OPTION(-Wcast-qual)
+AX_CFLAGS_GCC_OPTION(-Wcast-align)
+AX_CFLAGS_GCC_OPTION(-Wnested-externs)
+AX_CFLAGS_GCC_OPTION(-Wunused)
 
-
-AC_SUBST(CFLAGS)
 
 AC_CONFIG_FILES([
 
