@@ -232,7 +232,6 @@ char *prelude_option_recv_set(prelude_msg_t *msg);
 
 %include "prelude-client.h"
 %include "idmef-tree-wrap.h"
-%include "idmef-message.h"
 %include "idmef-value.h"
 %include "idmef-object.h"
 %include "idmef-time.h"
