@@ -1,4 +1,3 @@
-
 aclocal
 autoconf
 autoheader
