@@ -590,8 +590,7 @@ static int parse_argument(prelude_list_t *cb_list,
                         }
                         
                         option_err(OPT_INVAL, "invalid option : \"%s\" (%d).\n", arg, depth);
-                        
-                        return 0;
+                        continue;
                 }
 
                 argptr = optarg;
