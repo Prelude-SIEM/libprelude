@@ -1,5 +1,8 @@
 2001-09-02  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/include/alert-id.h (ID_PRELUDE_NIDS_ALERT): 
+	new file, define known alert ID.
+
 	* src/alert-read.c (prelude_alert_read): 
 	better control of the read() return value.
 	(prelude_alert_read): Set the message index to 0.

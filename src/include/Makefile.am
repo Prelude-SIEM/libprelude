@@ -13,6 +13,9 @@ include_HEADERS = config-engine.h 		\
 		  string-matching.h		\
 		  timer.h			\
 		  alert-read.h			\
+		  alert-id.h			\
 		  auth-common.h			\
 		  list.h			\
 		  variable.h
+
+
