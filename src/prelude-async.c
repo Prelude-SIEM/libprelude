@@ -180,6 +180,9 @@ static void prelude_async_exit(void)
 void prelude_async_set_flags(int flags) 
 {
         async_flags = flags;
+
+        if ( flags & PRELUDE_ASYNC_TIMER )
+                timer_set_flags(timer_get_flags() | PRELUDE_ASYNC_TIMER);
 }
 
 

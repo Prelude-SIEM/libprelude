@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 1998 - 2000, 2002 Vandoorselaere Yoann
+* Copyright (C) 1998 - 2000, 2002, 2003 Vandoorselaere Yoann
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -103,6 +103,18 @@ void prelude_wake_up_timer(void);
  * walk every timer.
  */
 void timer_flush(void);
+
+
+/*
+ *
+ */
+void timer_set_flags(int flags);
+
+
+/*
+ *
+ */
+int timer_get_flags(void);
 
 
 #endif /* _LIBPRELUDE_TIMER_H */

@@ -29,6 +29,9 @@
 
 #include "timer.h"
 #include "prelude-log.h"
+#include "prelude-list.h"
+#include "prelude-async.h"
+
 
 
 #ifdef DEBUG
@@ -39,7 +42,7 @@
 
 
 static int count = 0;
-static int async_timer = 0;
+static int timer_flags = 0;
 static LIST_HEAD(timer_list);
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -47,7 +50,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 inline static void timer_lock(void) 
 {
-        if ( async_timer )
+        if ( timer_flags & PRELUDE_ASYNC_TIMER )
                 pthread_mutex_lock(&mutex);
 }
 
@@ -55,7 +58,7 @@ inline static void timer_lock(void)
 
 inline static void timer_unlock(void) 
 {
-        if ( async_timer )
+        if ( timer_flags & PRELUDE_ASYNC_TIMER )
                 pthread_mutex_unlock(&mutex);
 }
 
@@ -409,4 +412,15 @@ void timer_flush(void)
 
 
 
+void timer_set_flags(int flags) 
+{
+        timer_flags = flags;
+}
+
+
+
+int timer_get_flags(void)
+{
+        return timer_flags;
+}
 
