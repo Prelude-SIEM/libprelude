@@ -14,20 +14,3 @@ thread
 
 </para>
 
-<!-- ##### MACRO pthread_create ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### FUNCTION prelude_thread_create ##### -->
-<para>
-
-</para>
-
-@thread: 
-@attr: 
-@Returns: 
-
-

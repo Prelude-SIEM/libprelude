@@ -98,6 +98,26 @@ libmissing
 ssl-register
 
 
+<!-- ##### SECTION ./tmpl/thread.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/thread.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/thread.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/thread.sgml:Title ##### -->
+thread
+
+
 <!-- ##### MACRO HAVE_CRYPT ##### -->
 <para>
 
@@ -279,6 +299,39 @@ ssl-register
 
 
 <!-- ##### MACRO optional_argument ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION prelude_client_get_inet_address ##### -->
+<para>
+
+</para>
+
+@client: 
+@saddr: 
+@daddr: 
+@Returns: 
+
+<!-- ##### FUNCTION prelude_client_mgr_get_manager_list ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@cb: 
+
+<!-- ##### FUNCTION prelude_thread_create ##### -->
+<para>
+
+</para>
+
+@thread: 
+@attr: 
+@Returns: 
+
+<!-- ##### MACRO pthread_create ##### -->
 <para>
 
 </para>

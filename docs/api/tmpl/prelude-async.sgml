@@ -41,8 +41,9 @@ prelude-async
 
 </para>
 
-@use_thread: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@use_thread: 
 
 
 <!-- ##### FUNCTION prelude_async_add ##### -->

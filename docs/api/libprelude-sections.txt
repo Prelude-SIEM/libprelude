@@ -196,12 +196,6 @@ prelude_ssl_ask_settings
 </SECTION>
 
 <SECTION>
-<FILE>thread</FILE>
-pthread_create
-prelude_thread_create
-</SECTION>
-
-<SECTION>
 <FILE>prelude-getopt</FILE>
 CLI_HOOK
 CFG_HOOK

@@ -214,9 +214,9 @@ prelude_client_t *client
 prelude_client_t *client, prelude_io_t *src, size_t count
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_client_get_inet_address</NAME>
-<RETURNS>int  </RETURNS>
-prelude_client_t *client,struct sockaddr_in *saddr, struct sockaddr_in *daddr
+<NAME>prelude_client_get_address</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_t *client, char **addr, uint16_t *port
 </FUNCTION>
 <USER_FUNCTION>
 <NAME>prelude_async_func_t</NAME>
@@ -228,8 +228,7 @@ void *object, void *data
 #define PRELUDE_ASYNC_OBJECT                   \
         PRELUDE_LINKED_OBJECT;                 \
         void *data;                            \
-        prelude_async_func_t func;             \
-        pthread_mutex_t mutex
+        prelude_async_func_t func
 </MACRO>
 <TYPEDEF>
 <NAME>prelude_async_object_t</NAME>
@@ -240,7 +239,7 @@ typedef struct {
 <FUNCTION>
 <NAME>prelude_async_init</NAME>
 <RETURNS>int  </RETURNS>
-int use_thread
+void
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_async_add</NAME>
@@ -493,11 +492,6 @@ prelude_client_mgr_t *cmgr, prelude_msg_t *msg
 prelude_client_mgr_t *cmgr, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_client_mgr_get_manager_list</NAME>
-<RETURNS>void  </RETURNS>
-prelude_client_mgr_t *mgr,int (*cb)(const char *addr, uint16_t port)
-</FUNCTION>
-<FUNCTION>
 <NAME>prelude_client_mgr_new</NAME>
 <RETURNS>prelude_client_mgr_t  *</RETURNS>
 const char *identifier, const char *cfgline
@@ -651,15 +645,6 @@ int keysize, int expire, const char *keyout, int crypt
 <NAME>prelude_ssl_ask_settings</NAME>
 <RETURNS>void  </RETURNS>
 int *keysize, int *expire, int *store_crypted
-</FUNCTION>
-<MACRO>
-<NAME>pthread_create</NAME>
-  #define pthread_create prelude_thread_create
-</MACRO>
-<FUNCTION>
-<NAME>prelude_thread_create</NAME>
-<RETURNS>int  </RETURNS>
-pthread_t *thread, pthread_attr_t *attr,void *(start_routine)(void *), void *arg
 </FUNCTION>
 <MACRO>
 <NAME>CLI_HOOK</NAME>

@@ -32,15 +32,6 @@ prelude-client-mgr
 @msg: 
 
 
-<!-- ##### FUNCTION prelude_client_mgr_get_manager_list ##### -->
-<para>
-
-</para>
-
-@mgr: 
-@cb: 
-
-
 <!-- ##### FUNCTION prelude_client_mgr_new ##### -->
 <para>
 

@@ -62,14 +62,3 @@ prelude-client
 @Returns: 
 
 
-<!-- ##### FUNCTION prelude_client_get_inet_address ##### -->
-<para>
-
-</para>
-
-@client: 
-@saddr: 
-@daddr: 
-@Returns: 
-
-
