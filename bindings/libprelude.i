@@ -88,6 +88,7 @@ typedef unsigned int prelude_bool_t;
 
 
 
+%include "prelude.h"
 %include "prelude-client.h"
 %include "prelude-client-profile.h"
 %include "idmef-tree-wrap.h"

@@ -186,6 +186,21 @@ PyObject *swig_python_data(idmef_data_t *data)
 };
 
 
+%typemap(in) const time_t * (time_t tmp) {
+	if ( PyInt_Check($input) )
+		tmp = (time_t) PyInt_AsLong($input);
+	else if ( PyLong_Check($input) )
+		tmp = (time_t) PyLong_AsUnsignedLong($input);
+	else {
+		PyErr_Format(PyExc_TypeError,
+			     "expected int or long, %s found", $input->ob_type->tp_name);
+		return NULL;
+	}
+
+	$1 = &tmp;
+};
+
+
 %typemap(argout) (uint64_t *source_id, uint32_t *request_id, void **value) {
 	int ret = PyInt_AsLong($result);
 	PyObject *tuple = PyTuple_New(4);
@@ -286,7 +301,8 @@ PyObject *swig_python_data(idmef_data_t *data)
 	idmef_path_t **,
 	idmef_value_t **,
 	idmef_criteria_t **,
-	idmef_time_t **
+	idmef_time_t **,
+        idmef_data_t **
 };
 
 
