@@ -93,7 +93,7 @@ int idmef_value_type_copy(void *dst, idmef_value_type_t *src);
 
 int idmef_value_type_read(idmef_value_type_t *dst, const char *buf);
 
-int idmef_value_type_write(char *buf, size_t size, idmef_value_type_t *src);
+int idmef_value_type_write(idmef_value_type_t *src, prelude_string_t *out);
 
 void idmef_value_type_destroy(idmef_value_type_t *type);
 

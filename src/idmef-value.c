@@ -530,36 +530,28 @@ idmef_value_t *idmef_value_ref(idmef_value_t *val)
 
 
 
-static int enum_to_string(idmef_value_t *val, char *buf, size_t len)
+static int enum_to_string(idmef_value_t *val, prelude_string_t *out)
 {
-        size_t slen;
 	const char *str;
         
 	str = idmef_type_enum_to_string(idmef_value_get_object_type(val),
 					idmef_value_get_enum(val));
-        
-	slen = strlen(str);
 
-	if ( slen >= len )
-		return -1;
-
-	memcpy(buf, str, slen + 1);
-	
-	return slen;
+        return prelude_string_cat(out, str);
 }
 
 
 
-int idmef_value_to_string(idmef_value_t *val, char *buf, size_t len)
+int idmef_value_to_string(idmef_value_t *val, prelude_string_t *out)
 {
 	int ret;
 
 	if ( idmef_value_get_type(val) == IDMEF_VALUE_TYPE_ENUM )
-		ret = enum_to_string(val, buf, len);
+		ret = enum_to_string(val, out);
 	else
-		ret = idmef_value_type_write(buf, len, &val->type);
+		ret = idmef_value_type_write(&val->type, out);
 
-	return (ret < 0 || ret > len) ? -1 : ret;
+	return ret;
 }
 
 

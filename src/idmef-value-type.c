@@ -56,9 +56,9 @@
                 return sscanf(buf, (scanfmt), &(dst)->data. name ##_val);          \
         }                                                                          \
                                                                                    \
-        static int name ## _write(char *buf, size_t size, idmef_value_type_t *src) \
+        static int name ## _write(idmef_value_type_t *src, prelude_string_t *out)  \
         {                                                                          \
-                return snprintf(buf, size, (printfmt), src->data.name ##_val);     \
+                return prelude_string_sprintf(out, (printfmt), src->data.name ##_val);     \
         }
 
 
@@ -71,9 +71,9 @@
 		return sscanf(buf, (fmt_dec), &(dst)->data. name ##_val);               \
 	}										\
 											\
-        static int name ## _write(char *buf, size_t size, idmef_value_type_t *src)	\
+        static int name ## _write(idmef_value_type_t *src, prelude_string_t *out)	\
         {										\
-                return snprintf(buf, size, (fmt_dec), src->data.name ##_val);		\
+                return prelude_string_sprintf(out, (fmt_dec), src->data.name ##_val);	\
         }
 
 
@@ -90,7 +90,7 @@ typedef struct {
         int (*compare)(idmef_value_type_t *t1, idmef_value_type_t *t2, size_t size, idmef_value_relation_t relation);
         
         int (*read)(idmef_value_type_t *dst, const char *buf);
-        int (*write)(char *buf, size_t size, idmef_value_type_t *src);
+        int (*write)(idmef_value_type_t *src, prelude_string_t *out);
 
 } idmef_value_type_operation_t;
 
@@ -190,9 +190,9 @@ static int time_read(idmef_value_type_t *dst, const char *buf)
 
 
 
-static int time_write(char *buffer, size_t size, idmef_value_type_t *src)
+static int time_write(idmef_value_type_t *src, prelude_string_t *out)
 {
-	return idmef_time_to_string(src->data.time_val, buffer, size);
+	return idmef_time_to_string(src->data.time_val, out);
 }
 
 
@@ -282,9 +282,10 @@ static void string_destroy(idmef_value_type_t *type)
 
 
 
-static int string_write(char *buf, size_t size, idmef_value_type_t *src)
+static int string_write(idmef_value_type_t *src, prelude_string_t *out)
 {
-        return snprintf(buf, size, "%s", prelude_string_get_string(src->data.string_val));
+        return prelude_string_sprintf(out, "%s",
+                                      prelude_string_get_string(src->data.string_val));
 }
 
 
@@ -332,9 +333,9 @@ static int data_read(idmef_value_type_t *dst, const char *src)
 
 
 
-static int data_write(char *buf, size_t size, idmef_value_type_t *src)
+static int data_write(idmef_value_type_t *src, prelude_string_t *out)
 {
-        return idmef_data_to_string(src->data.data_val, buf, size);
+        return idmef_data_to_string(src->data.data_val, out);
 }
 
 
@@ -487,7 +488,7 @@ int idmef_value_type_read(idmef_value_type_t *dst, const char *buf)
 
 
 
-int idmef_value_type_write(char *dst, size_t size, idmef_value_type_t *src)
+int idmef_value_type_write(idmef_value_type_t *src, prelude_string_t *out)
 {
         int ret;
         
@@ -498,7 +499,7 @@ int idmef_value_type_write(char *dst, size_t size, idmef_value_type_t *src)
         if ( ! ops_tbl[src->id].write )
                 return -1;
         
-        return ops_tbl[src->id].write(dst, size, src);
+        return ops_tbl[src->id].write(src, out);
 }
 
 
