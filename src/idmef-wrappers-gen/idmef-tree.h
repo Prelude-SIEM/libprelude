@@ -84,6 +84,7 @@
 
 #define DYNAMIC_IDENT(x) uint64_t x
 
+#define OPTIONAL_INT(type, name) type name; int name_ ## is_set:1
 
 #endif /* _GENERATE */
 
@@ -190,9 +191,9 @@ struct {
         IS_LISTED;
 	REFCOUNT;
         uint64_t ident;
-        idmef_userid_type_t type;
         prelude_string_t name;
-        uint32_t number;
+        idmef_userid_type_t type;
+        OPTIONAL_INT(uint32_t, number);
 } TYPE_ID(idmef_userid_t, 8);
 
 
@@ -253,7 +254,7 @@ struct {
         uint64_t ident;
         idmef_address_category_t category;
         prelude_string_t vlan_name;
-        uint32_t vlan_num;
+        OPTIONAL_INT(int32_t, vlan_num);
         prelude_string_t address;
         prelude_string_t netmask;
 } TYPE_ID(idmef_address_t, 12);
