@@ -1,0 +1,20 @@
+* 2002-08-26, libprelude-0.8.2:
+	- Act as a LIFO when subscribing a plugin, so that
+	  a plugin loading another, both subscribing from
+	  plugin_init() won't end up with undefined result (Yoann Vandoorselaere).
+
+	- Delete plugin entry on plugin loading error. 
+	  Fix a possible SIGSEGV.                          (Yoann Vandoorselaere).
+
+	- Fix possible NULL pointer dereference when 
+	  searching for a plugin.			   (Yoann Vandoorselaere).
+	
+	- Remove some unused function			   (Guillaume Pelat).
+
+	- Fix possible recursive loop when asking 
+	  information to the user in sensor-adduser.       (Guillaume Pelat).
+
+	- Free username on error when authenticating.      (Guillaume Pelat).
+	
+	- Always nul terminate socket filename (handle
+	  case where the filename is too long).            (Guillaume Pelat).
