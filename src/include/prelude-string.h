@@ -92,11 +92,11 @@ prelude_string_t *prelude_string_clone(const prelude_string_t *src);
 
 size_t prelude_string_get_len(const prelude_string_t *string);
 
-char *prelude_string_get_string(const prelude_string_t *string);
+const char *prelude_string_get_string(const prelude_string_t *string);
+
+char *prelude_string_get_string_released(prelude_string_t *string);
 
 int prelude_string_is_empty(const prelude_string_t *string);
-
-void prelude_string_dont_own(prelude_string_t *string);
 
 void prelude_string_clear(prelude_string_t *string);
 

@@ -410,11 +410,27 @@ size_t prelude_string_get_len(const prelude_string_t *string)
 
 
 
-char *prelude_string_get_string(const prelude_string_t *string)
+const char *prelude_string_get_string(const prelude_string_t *string)
 {
-        return string->data.rwbuf;
+        return string->data.robuf;
 }
 
+
+
+char *prelude_string_get_string_released(prelude_string_t *string)
+{
+        char *ptr;
+
+        ptr = prelude_realloc(string->data.rwbuf, string->index + 1);
+        if ( ! ptr )
+                return NULL;
+
+        string->size = 0;
+        string->index = 0;
+        string->data.rwbuf = NULL;
+        
+        return ptr;
+}
 
 
 
@@ -537,11 +553,4 @@ void prelude_string_clear(prelude_string_t *string)
                 *(string->data.rwbuf) = '\0';
                 string->index = 0;
         }
-}
-
-
-
-void prelude_string_dont_own(prelude_string_t *string)
-{
-        string->flags &= ~PRELUDE_STRING_OWN_DATA;
 }
