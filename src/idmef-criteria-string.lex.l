@@ -24,12 +24,11 @@
 
 %{
 
+#include <string.h>
+
 #include "idmef.h"
-
 #include "common.h"
-
 #include "idmef-criteria-string.yac.h"
-
 
 %}
 
