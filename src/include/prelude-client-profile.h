@@ -26,7 +26,6 @@
 #define _LIBPRELUDE_CLIENT_PROFILE_H
 
 #include <unistd.h>
-#include <gnutls/gnutls.h>
 
 #include "prelude-inttypes.h"
 
@@ -78,7 +77,7 @@ uint64_t prelude_client_profile_get_analyzerid(prelude_client_profile_t *cp);
 
 void prelude_client_profile_set_analyzerid(prelude_client_profile_t *cp, uint64_t analyzerid);
 
-int prelude_client_profile_get_credentials(prelude_client_profile_t *cp, gnutls_certificate_credentials *credentials);
+int prelude_client_profile_get_credentials(prelude_client_profile_t *cp, void **credentials);
 
 #ifdef __cplusplus
  }

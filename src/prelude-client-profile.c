@@ -446,7 +446,7 @@ int prelude_client_profile_set_name(prelude_client_profile_t *cp, const char *na
  * 
  * Returns: 0 on success or a negative value if an error occured.
  */
-int prelude_client_profile_get_credentials(prelude_client_profile_t *cp, gnutls_certificate_credentials *credentials)
+int prelude_client_profile_get_credentials(prelude_client_profile_t *cp, void **credentials)
 {
         int ret;
         

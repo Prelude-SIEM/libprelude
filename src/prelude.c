@@ -25,6 +25,7 @@
 
 #include <stdio.h>
 #include <pthread.h>
+#include <gnutls/gnutls.h>
 
 #include "prelude.h"
 #include "idmef-path.h"
