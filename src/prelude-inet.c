@@ -120,6 +120,7 @@ static int getaddrinfo_compat(int flags, const char *host, const char *service, 
         int i, ret;
         struct hostent *h;
         uint16_t dport = 0;
+        struct in_addr tmpaddr;
         prelude_addrinfo_t *head, **tmp;
         
         h = gethostbyname(host);
@@ -132,7 +133,9 @@ static int getaddrinfo_compat(int flags, const char *host, const char *service, 
         tmp = &head;
         for ( i = 0; h->h_addr_list[i] != NULL; i++ ) {
 
-                ret = addrinfo_new(flags, h->h_name, (struct in_addr *) h->h_addr_list[i], dport, tmp);                
+                tmpaddr.s_addr = align_uint32(h->h_addr_list[i]);
+                
+                ret = addrinfo_new(flags, h->h_name, &tmpaddr, dport, tmp);
                 if ( ret < 0 )
                         return ret;
 
