@@ -154,8 +154,9 @@ prelude_string_t *prelude_string_new(void)
         ret = calloc(1, sizeof(*ret));
         if ( ! ret )
                 return NULL;
-
+        
         ret->refcount = 1;
+        PRELUDE_INIT_LIST_HEAD(&ret->list);
         ret->flags = PRELUDE_STRING_OWN_STRUCTURE;
 
         return ret;
@@ -470,6 +471,11 @@ void prelude_string_destroy(prelude_string_t *string)
 {
         if ( --string->refcount )
                 return;
+
+        if ( ! prelude_list_empty(&string->list) ) {
+                prelude_list_del(&string->list);
+                PRELUDE_INIT_LIST_HEAD(&string->list);
+        }
         
         prelude_string_destroy_internal(string);
 
