@@ -64,7 +64,7 @@ static inline prelude_bool_t need_to_log(prelude_log_t level)
 
 
 static void syslog_log(prelude_log_t level, const char *file,
-                       const char *function, int line, const char *fmt, va_list *ap) 
+                       const char *function, int line, const char *fmt, va_list ap) 
 {
         int len, ret;
         char buf[512];
@@ -73,7 +73,7 @@ static void syslog_log(prelude_log_t level, const char *file,
         
         if ( level >= PRELUDE_LOG_DEBUG || level == PRELUDE_LOG_ERR ) {
                 
-                len = vsnprintf(buf, sizeof(buf), fmt, *ap);
+                len = vsnprintf(buf, sizeof(buf), fmt, ap);
                 if ( len < 0 || len >= sizeof(buf) )
                         return;
                 
@@ -86,7 +86,7 @@ static void syslog_log(prelude_log_t level, const char *file,
                 if ( len < 0 || len >= sizeof(buf) )
                         return;
                 
-                ret = vsnprintf(buf + len, sizeof(buf) - len, fmt, *ap);
+                ret = vsnprintf(buf + len, sizeof(buf) - len, fmt, ap);
                 if ( ret < 0 || (ret + len) >= sizeof(buf) )
                         return;
                 
@@ -98,7 +98,7 @@ static void syslog_log(prelude_log_t level, const char *file,
 
 
 static void standard_log(prelude_log_t level, const char *file,
-                         const char *function, int line, const char *fmt, va_list *ap)
+                         const char *function, int line, const char *fmt, va_list ap)
 {
         FILE *out = get_out_fd(level);
         
@@ -108,7 +108,7 @@ static void standard_log(prelude_log_t level, const char *file,
         if ( level >= PRELUDE_LOG_DEBUG || level == PRELUDE_LOG_ERR )
                 fprintf(out, "%s:%s:%d: ", file, function, line);
         
-        vfprintf(out, fmt, *ap);
+        vfprintf(out, fmt, ap);
 }
 
 
@@ -117,9 +117,9 @@ static void do_log_v(prelude_log_t level, const char *file,
                      const char *function, int line, const char *fmt, va_list ap)
 {
         if ( log_flags & PRELUDE_LOG_FLAGS_SYSLOG )
-                syslog_log(level, file, function, line, fmt, &ap);
+                syslog_log(level, file, function, line, fmt, ap);
         else
-                standard_log(level, file, function, line, fmt, &ap);
+                standard_log(level, file, function, line, fmt, ap);
 }
 
 
