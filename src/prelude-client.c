@@ -416,7 +416,12 @@ prelude_client_t *prelude_client_new(const char *addr, uint16_t port)
 
 int prelude_client_connect(prelude_client_t *client) 
 {
-        return do_connect(client);
+        int ret;
+        
+        ret = do_connect(client);
+        client->connection_broken = (ret < 0) ? 1 : 0;
+
+        return ret;
 }
 
 

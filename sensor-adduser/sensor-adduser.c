@@ -30,6 +30,8 @@
 #include "prelude-auth.h"
 #include "ssl-register.h"
 
+#include "config.h"
+
 
 int config_quiet = 0;
 

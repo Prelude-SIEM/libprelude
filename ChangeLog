@@ -1,5 +1,9 @@
 2001-11-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/prelude-client.c (prelude_client_connect): set
+	the connection_broken member here. This'll avoid bug
+	on reconnection.
+
 	* sensor-adduser/ssl-register.c: include netinet/in.h to fix
 	BSD compilation. 
 	Thanks to Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl> for
