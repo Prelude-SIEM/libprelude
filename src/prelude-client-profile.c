@@ -5,6 +5,8 @@
 
 #include <gnutls/gnutls.h>
 
+#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_CLIENT_PROFILE
+
 #include "prelude-error.h"
 #include "prelude-client-profile.h"
 #include "tls-auth.h"

@@ -50,8 +50,9 @@
 18	PRELUDE_ERROR_INVAL_FLOAT	Buffer does not contain a 32 bits float
 19	PRELUDE_ERROR_INVAL_CHAR	Buffer is not zero terminated
 20	PRELUDE_ERROR_INVAL_IDMEF_TIME	Buffer does not contain an IDMEF time type
+21	PRELUDE_ERROR_CONNECTION_STRING	No connection information provided 
 
-#21 to 16381 are free to be used.
+#22 to 16381 are free to be used.
 
 16382	PRELUDE_ERROR_UNKNOWN_ERRNO		Unknown system error
 

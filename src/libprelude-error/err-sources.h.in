@@ -34,9 +34,10 @@
 2	PRELUDE_ERROR_SOURCE_MESSAGE		prelude-message
 3	PRELUDE_ERROR_SOURCE_FAILOVER		prelude-failover
 4	PRELUDE_ERROR_SOURCE_CLIENT		prelude-client
-5	PRELUDE_ERROR_SOURCE_EXTRACT		prelude-extract
-6	PRELUDE_ERROR_SOURCE_CONNECTION		prelude-connection
-7	PRELUDE_ERROR_SOURCE_CONNECTION_MGR	prelude-connection-mgr
+5	PRELUDE_ERROR_SOURCE_CLIENT_PROFILE	prelude-client-profile
+6	PRELUDE_ERROR_SOURCE_EXTRACT		prelude-extract
+7	PRELUDE_ERROR_SOURCE_CONNECTION		prelude-connection
+8	PRELUDE_ERROR_SOURCE_CONNECTION_MGR	prelude-connection-mgr
 
 # 8 to 255 are free to be used.
 	PRELUDE_ERROR_SOURCE_DIM		Unknown source
