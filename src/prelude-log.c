@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001, 2002, 2003, 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -33,17 +33,34 @@ static int config_quiet = 0;
 static char *global_prefix = NULL;
 
 
+
+static char *strip_return(char *buf, size_t len)
+{
+        while ( buf[--len] == '\n' );
+        
+        buf[++len] = '\0';
+        
+        return buf;
+}
+
+
+
 static void syslog_log(int priority, const char *file,
                        const char *function, int line, const char *fmt, va_list *ap) 
 {
-        int len;
+        int len, ret;
         char buf[256];
-                
-        if ( priority == LOG_ERR ) {
-                vsnprintf(buf, sizeof(buf), fmt, *ap);
 
-                syslog(priority, "%s%s:%s:%d : (errno=%s) : %s", (global_prefix) ? global_prefix : "",
-                       file, function, line, strerror(errno), buf);
+        while (*fmt == '\n') fmt++;
+        
+        if ( priority == LOG_ERR ) {
+                len = vsnprintf(buf, sizeof(buf), fmt, *ap);
+                if ( len < 0 || len >= sizeof(buf) )
+                        return;
+                
+                syslog(priority, "%s%s:%s:%d : (errno=%s) : %s",
+                       (global_prefix) ? global_prefix : "",
+                       file, function, line, strerror(errno), strip_return(buf, len));
         }
 
         else {
@@ -51,8 +68,11 @@ static void syslog_log(int priority, const char *file,
                 if ( len < 0 || len >= sizeof(buf) )
                         return;
                 
-                len += vsnprintf(buf + len, sizeof(buf) - len, fmt, *ap);
-                syslog(priority, "%s", buf);
+                ret = vsnprintf(buf + len, sizeof(buf) - len, fmt, *ap);
+                if ( ret < 0 || (ret + len) >= sizeof(buf) )
+                        return;
+                
+                syslog(priority, "%s", strip_return(buf, ret + len));
         }
 }
 

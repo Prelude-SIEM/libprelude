@@ -1,5 +1,9 @@
 2004-01-17  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
+	* src/prelude-log.c (syslog_log, strip_return): 
+	strip '\n' character at the head and tail of the
+	buffer when logging to syslog().
+
 	* src/prelude-getopt.c (get_missing_options): 
 	carry more information.
 
