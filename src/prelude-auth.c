@@ -30,7 +30,7 @@
 #include <fcntl.h>
 #include <inttypes.h>
 
-#include "common.h"
+#include "prelude-log.h"
 #include "prelude-io.h"
 #include "prelude-auth.h"
 

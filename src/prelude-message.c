@@ -30,7 +30,8 @@
 #include <inttypes.h>
 #include <netinet/in.h>
 
-#include "common.h"
+#include "prelude-log.h"
+#include "extract.h"
 #include "prelude-io.h"
 #include "prelude-list.h"
 #include "prelude-async.h"
@@ -98,7 +99,7 @@ inline static prelude_msg_status_t read_message_data(unsigned char *dst, size_t 
                 log(LOG_ERR, "error reading message.\n");
                 return prelude_msg_error;
         }
-
+        
         *size = ret;
         
         if ( ret == 0 )
@@ -117,7 +118,7 @@ inline static void slice_message_header(prelude_msg_hdr_t *hdr, unsigned char *h
         hdr->version  = hdrbuf[0];
         hdr->tag      = hdrbuf[1];
         hdr->priority = hdrbuf[2];
-        hdr->datalen  = *((uint32_t *) &hdrbuf[3]);
+        extract_uint32(&hdr->datalen, hdrbuf + 3, sizeof(hdr->datalen));
 }
 
 
@@ -154,7 +155,7 @@ static prelude_msg_status_t read_message_header(prelude_msg_t *msg, prelude_io_t
                 return prelude_msg_error;
         }
         
-        msg->hdr.datalen = ntohl(msg->hdr.datalen) + PRELUDE_MSG_HDR_SIZE;
+        msg->hdr.datalen += PRELUDE_MSG_HDR_SIZE;
         msg->write_index = msg->hdr.datalen; /* we might want to send this msg later */
         
         msg->payload = malloc(msg->hdr.datalen);
@@ -162,7 +163,7 @@ static prelude_msg_status_t read_message_header(prelude_msg_t *msg, prelude_io_t
                 log(LOG_ERR, "couldn't allocate %d bytes.\n", msg->hdr.datalen);
                 return prelude_msg_error;
         }
-        
+                
         return prelude_msg_finished;
 }
 
@@ -309,8 +310,7 @@ int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf)
          * slice wanted data.
          */
         *tag = msg->payload[msg->read_index++];
-        *len = *(uint32_t *)&msg->payload[msg->read_index];
-        *len = ntohl(*len);
+        extract_uint32(len, &msg->payload[msg->read_index], sizeof(uint32_t));
         
         msg->read_index += 4;
 

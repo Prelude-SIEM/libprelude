@@ -37,7 +37,7 @@
 #include "prelude-list.h"
 #include "config-engine.h"
 #include "plugin-common.h"
-#include "common.h"
+#include "prelude-log.h"
 
 #ifdef HAVE_SSL
 #include <openssl/ssl.h>

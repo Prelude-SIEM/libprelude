@@ -43,10 +43,9 @@
 #endif
 
 #include "list.h"
-#include "prelude-list.h"
 #include "common.h"
-#include "config-engine.h"
-#include "plugin-common.h"
+#include "prelude-list.h"
+#include "prelude-log.h"
 #include "prelude-io.h"
 #include "prelude-auth.h"
 #include "prelude-message.h"
@@ -150,17 +149,22 @@ static int inet_connect(const char *addr, unsigned int port)
 	struct sockaddr_in daddr, saddr;
         
 	log(LOG_INFO, "- Connecting to Tcp prelude Manager server %s:%d.\n", addr, port);
-
+        
+	daddr.sin_family = AF_INET;
+	daddr.sin_port = htons(port);
+        
+        ret = prelude_resolve_addr(addr, &daddr.sin_addr);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "couldn't resolve %s.\n", addr);
+                return -1;
+        }
+        
         sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if ( sock < 0 ) {
 		log(LOG_ERR,"Error opening inet socket.\n");
 		return -1;
 	}
-
-	daddr.sin_family = AF_INET;
-	daddr.sin_port = htons(port);
-	daddr.sin_addr.s_addr = inet_addr(addr);
-
+        
         /*
          * We want packet to be sent as soon as possible,
          * this mean not using the Nagle algorithm which try to minimize

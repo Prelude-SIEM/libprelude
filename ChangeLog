@@ -1,3 +1,10 @@
+2002-01-19  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* Update everything to fit header change.
+	
+	* src/common.c (prelude_resolve_addr): new function.
+	* src/prelude-log.c: moved all the logging stuff here.
+
 2002-01-18  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* revert to using configure.in instead of configure.ac.

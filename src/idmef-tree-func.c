@@ -31,7 +31,7 @@
 #include <inttypes.h>
 
 #include "list.h"
-#include "common.h"
+#include "prelude-log.h"
 #include "idmef-tree.h"
 #include "idmef-tree-func.h"
 #include "idmef-msg-send.h"

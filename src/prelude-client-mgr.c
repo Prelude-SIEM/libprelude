@@ -33,7 +33,7 @@
 
 #include "prelude-list.h"
 #include "timer.h"
-#include "common.h"
+#include "prelude-log.h"
 #include "config-engine.h"
 #include "prelude-io.h"
 #include "prelude-message.h"

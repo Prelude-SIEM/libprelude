@@ -11,7 +11,6 @@ include_HEADERS = config-engine.h 		\
 		  ssl-register.h		\
 		  ssl-registration-msg.h	\
 		  daemonize.h			\
-		  common.h 			\
 		  string-matching.h		\
 		  timer.h			\
 		  list.h			\
@@ -28,9 +27,11 @@ include_HEADERS = config-engine.h 		\
 		  prelude-async.h		\
 		  prelude-ident.h		\
 		  prelude-path.h		\
+		  prelude-log.h			\
 		  sensor.h			\
 		  threads.h			\
-		  extract.h			
+		  extract.h			\
+		  common.h
 
 
 noinst_HEADERS = ssl.h client-ident.h

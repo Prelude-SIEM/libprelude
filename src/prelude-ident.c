@@ -29,7 +29,7 @@
 #include <sys/mman.h>
 #include <inttypes.h>
 
-#include "common.h"
+#include "prelude-log.h"
 #include "prelude-ident.h"
 
 

@@ -39,7 +39,7 @@
 
 #include "prelude-io.h"
 #include "ssl-registration-msg.h"
-#include "common.h"
+#include "prelude-log.h"
 
 
 

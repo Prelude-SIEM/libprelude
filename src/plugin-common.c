@@ -34,7 +34,7 @@
 
 #include "config.h"
 #include "list.h"
-#include "common.h"
+#include "prelude-log.h"
 #include "variable.h"
 #include "plugin-common.h"
 #include "plugin-common-prv.h"

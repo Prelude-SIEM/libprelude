@@ -29,7 +29,7 @@
 
 #include "config-engine.h"
 #include "variable.h"
-#include "common.h"
+#include "prelude-log.h"
 
 
 struct config {

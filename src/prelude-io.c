@@ -34,7 +34,7 @@
  #include <openssl/ssl.h>
 #endif
 
-#include "common.h"
+#include "prelude-log.h"
 #include "prelude-io.h"
 
 

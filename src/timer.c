@@ -28,7 +28,7 @@
 #include <pthread.h>
 
 #include "timer.h"
-#include "common.h"
+#include "prelude-log.h"
 
 
 #ifdef DEBUG

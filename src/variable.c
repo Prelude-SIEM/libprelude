@@ -29,7 +29,7 @@
 #include <string.h>
 
 #include "list.h"
-#include "common.h"
+#include "prelude-log.h"
 #include "variable.h"
 
 

@@ -33,7 +33,7 @@
 
 
 #include "daemonize.h"
-#include "common.h"
+#include "prelude-log.h"
 
 
 static const char *global_lockfile;

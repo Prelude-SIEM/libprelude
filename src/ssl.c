@@ -32,7 +32,7 @@
 #include <openssl/err.h>
 
 #include "ssl.h"
-#include "common.h"
+#include "prelude-log.h"
 #include "prelude-path.h"
 
 

@@ -48,6 +48,7 @@
 #include <openssl/bio.h>
 
 #include "ssl.h"
+#include "common.h"
 #include "ssl-register.h"
 #include "ssl-gencrypto.h"
 #include "prelude-io.h"
@@ -55,33 +56,7 @@
 #include "ssl-registration-msg.h"
 
 
-extern char *sensorname;
 #define ACKMSGLEN ACKLENGTH + SHA_DIGEST_LENGTH + HEADLENGTH + PADMAXSIZE
-
-
-static int resolve_addr(const char *hostname, struct in_addr *addr) 
-{
-        int ret;
-        struct hostent *h;
-
-        /*
-         * This is not an hostname. No need to resolve.
-         */
-        ret = inet_aton(hostname, addr);
-        if ( ret != 0 ) 
-                return 0;
-        
-        h = gethostbyname(hostname);
-        if ( ! h )
-                return -1;
-
-        assert(h->h_length <= sizeof(*addr));
-        
-        memcpy(addr, h->h_addr, h->h_length);
-                
-        return 0;
-}
-
 
 
 static void ask_keysize(int *keysize) 
@@ -219,7 +194,7 @@ static prelude_io_t *connect_server(const char *server, uint16_t port)
 
         memset(&sa, '\0', sizeof(sa));
         
-        ret = resolve_addr(server, &sa.sin_addr);
+        ret = prelude_resolve_addr(server, &sa.sin_addr);
         if ( ret < 0 ) {
                 fprintf(stderr, "couldn't resolve %s : %s.\n", server, strerror(errno));
                 return NULL;

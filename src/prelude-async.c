@@ -31,7 +31,7 @@
 
 #include "prelude-list.h"
 #include "timer.h"
-#include "common.h"
+#include "prelude-log.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
 #include "prelude-async.h"
@@ -117,6 +117,9 @@ static void *async_thread(void *arg)
         prelude_async_object_t *obj;
         struct list_head *tmp, *next;
 
+        /*
+         *
+         */
         ret = sigfillset(&set);
         if ( ret < 0 ) {
                 log(LOG_ERR, "sigfillset returned an error.\n");
@@ -128,7 +131,7 @@ static void *async_thread(void *arg)
                 log(LOG_ERR, "pthread_sigmask returned an error.\n");
                 return NULL;
         }
-        
+
         while ( 1 ) {
                 
                 wait_timer_and_data();
@@ -156,10 +159,10 @@ static void *async_thread(void *arg)
 
 
 static void prelude_async_exit(void)  
-{
-        log(LOG_INFO, "Flushing remaining messages.\n");
-        
+{        
         pthread_cancel(thread);
+        pthread_join(thread, NULL);
+        
         pthread_cond_destroy(&cond);
         pthread_mutex_destroy(&mutex);
 }

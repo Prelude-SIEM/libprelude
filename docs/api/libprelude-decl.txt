@@ -225,6 +225,53 @@ const char *variable
 #define PRELUDE_MSG_AUTH_FAILED    7
 </MACRO>
 <FUNCTION>
+<NAME>prelude_log_use_syslog</NAME>
+<RETURNS>void  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_log_get_prefix</NAME>
+<RETURNS>char  *</RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_log_set_prefix</NAME>
+<RETURNS>void  </RETURNS>
+char *prefix
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_log</NAME>
+<RETURNS>void  </RETURNS>
+int priority, const char *file, const char *function, int line, const char *fmt, ...
+</FUNCTION>
+<MACRO>
+<NAME>log</NAME>
+#define log(priority, args...) \
+        prelude_log(priority, __FILE__, __FUNCTION__, __LINE__, args)
+</MACRO>
+<MACRO>
+<NAME>do_init</NAME>
+#define do_init(func, name) do {                         \
+        char *old_prefix = prelude_log_get_prefix();     \
+        prelude_log_set_prefix(NULL);                    \
+        log(LOG_INFO, "- %s\n", name);                   \
+        prelude_log_set_prefix(old_prefix);              \
+        if ( (func) < 0 )                                \
+                exit(1);                                 \
+        prelude_log_set_prefix(old_prefix);              \
+} while(0);
+</MACRO>
+<MACRO>
+<NAME>do_init_nofail</NAME>
+#define do_init_nofail(func, name) do {                  \
+        char *old_prefix = prelude_log_get_prefix();     \
+        prelude_log_set_prefix(NULL);                    \
+        log(LOG_INFO, "- %s\n", name);                   \
+        prelude_log_set_prefix(old_prefix);              \
+        (func);                                          \
+} while(0);
+</MACRO>
+<FUNCTION>
 <NAME>ssl_init_client</NAME>
 <RETURNS>int  </RETURNS>
 void
@@ -619,52 +666,10 @@ prelude_timer_t *timer, struct timeval *tv
 void
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_log_use_syslog</NAME>
-<RETURNS>void  </RETURNS>
-void
+<NAME>prelude_resolve_addr</NAME>
+<RETURNS>int  </RETURNS>
+const char *hostname, struct in_addr *addr
 </FUNCTION>
-<FUNCTION>
-<NAME>prelude_log_get_prefix</NAME>
-<RETURNS>char  *</RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_log_set_prefix</NAME>
-<RETURNS>void  </RETURNS>
-char *prefix
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_log</NAME>
-<RETURNS>void  </RETURNS>
-int priority, const char *file, const char *function, int line, const char *fmt, ...
-</FUNCTION>
-<MACRO>
-<NAME>log</NAME>
-#define log(priority, args...) \
-        prelude_log(priority, __FILE__, __FUNCTION__, __LINE__, args)
-</MACRO>
-<MACRO>
-<NAME>do_init</NAME>
-#define do_init(func, name) do {                         \
-        char *old_prefix = prelude_log_get_prefix();     \
-        prelude_log_set_prefix(NULL);                    \
-        log(LOG_INFO, "- %s\n", name);                   \
-        prelude_log_set_prefix(old_prefix);              \
-        if ( (func) < 0 )                                \
-                exit(1);                                 \
-        prelude_log_set_prefix(old_prefix);              \
-} while(0);
-</MACRO>
-<MACRO>
-<NAME>do_init_nofail</NAME>
-#define do_init_nofail(func, name) do {                  \
-        char *old_prefix = prelude_log_get_prefix();     \
-        prelude_log_set_prefix(NULL);                    \
-        log(LOG_INFO, "- %s\n", name);                   \
-        prelude_log_set_prefix(old_prefix);              \
-        (func);                                          \
-} while(0);
-</MACRO>
 <FUNCTION>
 <NAME>prelude_client_mgr_broadcast</NAME>
 <RETURNS>void  </RETURNS>

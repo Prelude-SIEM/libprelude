@@ -26,9 +26,10 @@ libprelude_la_SOURCES = 		\
 	prelude-async.c			\
 	prelude-ident.c			\
 	prelude-path.c			\
+	prelude-log.c			\
 	sensor.c			\
 	client-ident.c			\
-	common.c			\
 	idmef-tree-func.c		\
-	idmef-msg-send.c		
+	idmef-msg-send.c		\
+	common.c
 

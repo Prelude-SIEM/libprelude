@@ -34,7 +34,7 @@
 #include "prelude-message-id.h"
 
 #include "list.h"
-#include "common.h"
+#include "prelude-log.h"
 #include "variable.h"
 #include "config-engine.h"
 #include "prelude-getopt.h"
