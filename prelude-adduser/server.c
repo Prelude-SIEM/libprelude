@@ -134,7 +134,7 @@ static int wait_connection(prelude_client_profile_t *cp, int sock, int keepalive
                 fprintf(stderr, "  - Connection from %s:%u.\n", buf, *port);
                 prelude_io_set_sys_io(fd, csock);
                 
-                ret = handle_client_connection(cp, fd, cred, key, cacrt, crt);
+                ret = handle_client_connection(cp, fd, cred, key, cacrt, crt, "");
                 if ( ret == 0 )
                         fprintf(stderr, "  - %s:%u successfully registered.\n", buf, *port);
                 
