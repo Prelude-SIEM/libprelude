@@ -1,0 +1,406 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sys/types.h>
+
+#include <gnutls/gnutls.h>
+
+#include "prelude-error.h"
+#include "prelude-client-profile.h"
+#include "tls-auth.h"
+
+/*
+ * directory where TLS private keys file are stored.
+ */
+#define TLS_KEY_DIR PRELUDE_CONFIG_DIR "/tls/keys"
+
+/*
+ * directory where TLS client certificate file are stored.
+ */
+#define TLS_CLIENT_CERT_DIR PRELUDE_CONFIG_DIR "/tls/client"
+
+/*
+ * directory where TLS server certificate file are stored.
+ */
+#define TLS_SERVER_CERT_DIR PRELUDE_CONFIG_DIR "/tls/server"
+
+
+/*
+ * directory where analyzerID file are stored.
+ */
+#define IDENT_DIR PRELUDE_CONFIG_DIR "/analyzerid"
+
+
+
+struct prelude_client_profile {
+        uid_t uid;
+        gid_t gid;
+        char *name;
+        uint64_t analyzerid;
+        gnutls_certificate_credentials credentials;
+};
+
+
+
+static int get_profile_analyzerid(prelude_client_profile_t *cp) 
+{
+        int ret;
+        FILE *fd;
+        char *ptr, filename[256], buf[256];
+
+        prelude_client_profile_get_analyzerid_filename(cp, filename, sizeof(filename));
+        
+        fd = fopen(filename, "r");
+        if ( ! fd )
+                return prelude_error(PRELUDE_ERROR_ANALYZERID_FILE);
+
+        ptr = fgets(buf, sizeof(buf), fd);
+        fclose(fd);
+        
+        if ( ! ptr )
+                return prelude_error(PRELUDE_ERROR_ANALYZERID_PARSE);
+        
+        ret = sscanf(buf, "%" PRIu64, &cp->analyzerid);
+        if ( ret != 1 )
+                return prelude_error(PRELUDE_ERROR_ANALYZERID_PARSE);
+        
+        return 0;
+}
+
+
+
+
+/**
+ * prelude_client_profile_get_analyzerid_filename:
+ * @cp: pointer on a #prelude_client_profile_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Return the filename used to store @cp unique and permanent analyzer ident.
+ */
+void prelude_client_profile_get_analyzerid_filename(prelude_client_profile_t *cp, char *buf, size_t size) 
+{
+        snprintf(buf, size, IDENT_DIR "/%s", cp->name);
+}
+
+
+
+
+/**
+ * prelude_client_profile_get_tls_key_filename:
+ * @cp: pointer on a #prelude_client_profile_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Return the filename used to store @cp private key.
+ */
+void prelude_client_profile_get_tls_key_filename(prelude_client_profile_t *cp, char *buf, size_t size) 
+{
+        snprintf(buf, size, TLS_KEY_DIR "/%s", cp->name);
+}
+
+
+
+
+/**
+ * prelude_client_profile_get_tls_server_filename:
+ * @cp: pointer on a #prelude_client_profile_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Return the filename used to store @cp related CA certificate.
+ * This only apply to @cp receiving connection from analyzer (server).
+ */
+void prelude_client_profile_get_tls_server_ca_cert_filename(prelude_client_profile_t *cp, char *buf, size_t size) 
+{
+        snprintf(buf, size, TLS_SERVER_CERT_DIR "/%s.ca", cp->name);
+}
+
+
+
+
+/**
+ * prelude_client_profile_get_tls_server_trusted_cert_filename:
+ * @cp: pointer on a #prelude_client_profile_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Return the filename used to store certificate that this @cp trust.
+ * This only apply to @cp receiving connection from analyzer (server).
+ */
+void prelude_client_profile_get_tls_server_trusted_cert_filename(prelude_client_profile_t *cp, char *buf, size_t size) 
+{
+        snprintf(buf, size, TLS_SERVER_CERT_DIR "/%s.trusted", cp->name);
+}
+
+
+
+
+/**
+ * prelude_client_profile_get_tls_server_keycert_filename:
+ * @cp: pointer on a #prelude_client_profile_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Return the filename used to store certificate for @cp private key.
+ * This only apply to @cp receiving connection from analyzer (server).
+ */
+void prelude_client_profile_get_tls_server_keycert_filename(prelude_client_profile_t *cp, char *buf, size_t size) 
+{
+        snprintf(buf, size, TLS_SERVER_CERT_DIR "/%s.keycrt", cp->name);
+}
+
+
+
+
+/**
+ * prelude_client_profile_get_tls_client_trusted_cert_filename:
+ * @cp: pointer on a #prelude_client_profile_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Return the filename used to store peers public certificates that @cp trust.
+ * This only apply to client connecting to a peer.
+ */
+void prelude_client_profile_get_tls_client_trusted_cert_filename(prelude_client_profile_t *cp, char *buf, size_t size) 
+{
+        snprintf(buf, size, TLS_CLIENT_CERT_DIR "/%s.trusted", cp->name);
+}
+
+
+
+
+/**
+ * prelude_client_profile_get_tls_client_keycert_filename:
+ * @cp: pointer on a #prelude_client_profile_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Return the filename used to store public certificate for @cp private key.
+ * This only apply to client connecting to a peer.
+ */
+void prelude_client_profile_get_tls_client_keycert_filename(prelude_client_profile_t *cp, char *buf, size_t size) 
+{
+        snprintf(buf, size, TLS_CLIENT_CERT_DIR "/%s.keycrt", cp->name);
+}
+
+
+
+
+/**
+ * prelude_client_profile_get_backup_dirname:
+ * @cp: pointer on a #prelude_client_profile_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Return the directory name where message sent by @cp will be stored,
+ * in case writing the message to the peer fail.
+ */
+void prelude_client_profile_get_backup_dirname(prelude_client_profile_t *cp, char *buf, size_t size) 
+{
+        snprintf(buf, size, PRELUDE_SPOOL_DIR "/%s", cp->name);
+}
+
+
+
+int _prelude_client_profile_new(prelude_client_profile_t **ret)
+{
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
+
+        return 0;
+}
+
+
+
+int _prelude_client_profile_init(prelude_client_profile_t *cp)
+{
+        int ret;
+        
+        ret = get_profile_analyzerid(cp);
+        if ( ret < 0 )
+                return ret;
+
+        ret = tls_auth_init(cp, &cp->credentials);
+        if ( ret < 0 )
+                return ret;
+        
+        cp->uid = geteuid();
+        cp->gid = getegid();
+
+        return 0;
+}
+
+
+
+/**
+ * prelude_client_profile_new:
+ * @ret: Pointer where to store the address of the created object.
+ * @name: Name for this profile.
+ *
+ * Create a new #prelude_client_profile_t object and store it's
+ * address into @ret.
+ *
+ * Returns: 0 on success or a negative value if an error occured.
+ */
+int prelude_client_profile_new(prelude_client_profile_t **ret, const char *name)
+{
+        int retval;
+        prelude_client_profile_t *cp;
+        
+        cp = calloc(1, sizeof(*cp));
+        if ( ! cp )
+                return prelude_error_from_errno(errno);
+
+        cp->name = strdup(name);
+        if ( ! cp->name ) {
+                free(cp);
+                return prelude_error_from_errno(errno);
+        }
+
+        retval = _prelude_client_profile_init(cp);
+        if ( retval < 0 )
+                return retval;
+        
+        *ret = cp;
+        
+        return 0;
+}
+
+
+
+/**
+ * prelude_client_profile_destroy:
+ * @cp: Pointer to a #prelude_client_profile_t.
+ *
+ * Destroy @cp.
+ */
+void prelude_client_profile_destroy(prelude_client_profile_t *cp)
+{        
+        if ( cp->credentials )
+                gnutls_certificate_free_credentials(cp->credentials);
+        
+        if ( cp->name )
+                free(cp->name);
+
+        free(cp);
+}
+
+
+
+/**
+ * prelude_client_profile_get_uid:
+ * @cp: Pointer to a #prelude_client_profile_t object.
+ *
+ * Get the UID associated with @cp.
+ *
+ * Returns: the UID associated used by @cp.
+ */
+uid_t prelude_client_profile_get_uid(prelude_client_profile_t *cp)
+{
+        return cp->uid;
+}
+
+
+
+
+/**
+ * prelude_client_profile_set_uid:
+ * @cp: Pointer to a #prelude_client_profile_t object.
+ * @uid: UID to be used by @cp.
+ *
+ * Set the UID used by @cp to @uid.
+ */
+void prelude_client_profile_set_uid(prelude_client_profile_t *cp, uid_t uid)
+{
+        cp->uid = uid;
+}
+
+
+
+/**
+ * prelude_client_profile_get_gid:
+ * @cp: Pointer to a #prelude_client_profile_t object.
+ *
+ * Get the GID associated with @cp.
+ *
+ * Returns: the GID associated used by @cp.
+ */
+gid_t prelude_client_profile_get_gid(prelude_client_profile_t *cp)
+{
+        return cp->gid;
+}
+
+
+
+
+/**
+ * prelude_client_profile_set_gid:
+ * @cp: Pointer to a #prelude_client_profile_t object.
+ * @gid: GID to be used by @cp.
+ *
+ * Set the GID used by @cp to @gid.
+ */
+void prelude_client_profile_set_gid(prelude_client_profile_t *cp, gid_t gid)
+{
+        cp->gid = gid;
+}
+
+
+
+void prelude_client_profile_set_analyzerid(prelude_client_profile_t *cp, uint64_t analizerid)
+{
+        cp->analyzerid = analizerid;
+}
+
+
+
+/**
+ * prelude_client_profile_get_analyzerid:
+ * @cp: Pointer to a #prelude_client_profile_t object.
+ *
+ * Get the unique and permanent analyzer ident associated with @cp.
+ *
+ * Returns: the analyzer ident used by @cp.
+ */
+uint64_t prelude_client_profile_get_analyzerid(prelude_client_profile_t *cp)
+{
+        return cp->analyzerid;
+}
+
+
+
+/**
+ * prelude_client_profile_get_gid:
+ * @cp: Pointer to a #prelude_client_profile_t object.
+ *
+ * Get the name of @cp client profile.
+ *
+ * Returns: the name used by @cp.
+ */
+const char *prelude_client_profile_get_name(prelude_client_profile_t *cp)
+{
+        return cp->name;
+}
+
+
+
+int prelude_client_profile_set_name(prelude_client_profile_t *cp, const char *name)
+{
+        if ( cp->name )
+                free(cp->name);
+        
+        cp->name = strdup(name);
+        if ( ! cp->name )
+                return prelude_error_from_errno(errno);
+
+        return 0;
+}
+
+
+
+gnutls_certificate_credentials prelude_client_profile_get_credentials(prelude_client_profile_t *cp)
+{
+        return cp->credentials;
+}
