@@ -17,7 +17,7 @@ install-data-local:
 	$(INSTALL) -d -m 755 $(sensors_config_dir);
 	$(INSTALL) -d -m 755 $(sensors_config_dir)/ssl;
 	$(INSTALL) -d -m 755 $(sensors_config_dir)/plaintext;
-	$(INSTALL) -d -m 1733 $(sensors_ident_dir)/prelude-sensors;
+	$(INSTALL) -d -m 1733 $(sensors_ident_dir);
 	@if test -f $(sensors_config_dir)/sensors-default.conf; then                                              \
 		echo "********************************************************************************";          \
                 echo;                                                                                             \

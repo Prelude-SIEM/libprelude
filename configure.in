@@ -292,7 +292,7 @@ AC_TYPE_SIGNAL
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS(gettimeofday select socket strdup strerror strstr)
 
-sensors_ident_dir=$localstatedir/prelude-sensors
+sensors_ident_dir=$localstatedir/lib/prelude-sensors
 sensors_config_dir=$sysconfdir/prelude-sensors
 
 AC_SUBST(sensors_ident_dir)
