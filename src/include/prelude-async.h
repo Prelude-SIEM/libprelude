@@ -1,7 +1,7 @@
 /*****
 *
-* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
-* All Rights Reserved
+* Copyright (C) 2001, 2002, 2003, 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
+* Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude program.
 *
@@ -38,8 +38,8 @@ typedef void (*prelude_async_func_t)(void *object, void *data);
 
 #define PRELUDE_ASYNC_OBJECT                   \
         PRELUDE_LINKED_OBJECT;                 \
-        void *data;                            \
-        prelude_async_func_t func
+        void *_async_data;                     \
+        prelude_async_func_t _async_func
 
 
 typedef struct {
@@ -50,13 +50,13 @@ typedef struct {
 
 static inline void prelude_async_set_data(prelude_async_object_t *obj, void *data) 
 {
-        obj->data = data;
+        obj->_async_data = data;
 }
 
 
 static inline void prelude_async_set_callback(prelude_async_object_t *obj, prelude_async_func_t func) 
 {
-        obj->func = func;
+        obj->_async_func = func;
 }
 
 int prelude_async_init(void);
@@ -68,6 +68,8 @@ void prelude_async_set_flags(prelude_async_flags_t flags);
 void prelude_async_add(prelude_async_object_t *obj);
 
 void prelude_async_del(prelude_async_object_t *obj);
+
+void prelude_async_exit(void);
 
 #endif /* _LIBPRELUDE_PRELUDE_ASYNC_H */
 

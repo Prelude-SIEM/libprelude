@@ -164,7 +164,7 @@ static void *async_thread(void *arg)
         int ret;
         sigset_t set;
         prelude_async_object_t *obj;
-
+        
         ret = sigfillset(&set);
         if ( ret < 0 ) {
                 prelude_log(PRELUDE_LOG_ERR, "sigfillset returned an error.\n");
@@ -187,7 +187,7 @@ static void *async_thread(void *arg)
                 while ( (obj = get_next_job()) ) {
                         
                         prelude_async_del(obj);
-                        obj->func(obj, obj->data);       
+                        obj->_async_func(obj, obj->_async_data);       
                 }
         }
 }
@@ -195,32 +195,55 @@ static void *async_thread(void *arg)
 
 
 
-static void prelude_async_exit(void)  
+static void async_exit(void)  
 {
-        pthread_mutex_lock(&mutex);
-        
-        stop_processing = 1;
-        pthread_cond_signal(&cond);
-
-        pthread_mutex_unlock(&mutex);
-
-        prelude_log(PRELUDE_LOG_INFO, "Waiting asynchronous operation to finish.\n");
-        
-        pthread_join(thread, NULL);
-        
-        pthread_cond_destroy(&cond);
-        pthread_mutex_destroy(&mutex);
+        prelude_log(PRELUDE_LOG_INFO, "Waiting for asynchronous operation to complete.\n");
+        prelude_async_exit();
 }
 
 
 
-static void init_async(void)
-{        
-        async_init_ret = pthread_create(&thread, NULL, async_thread, NULL);
-        if ( async_init_ret < 0 )
-                return;        
+static void prepare_fork_cb(void)
+{
+        pthread_mutex_lock(&mutex);
+        prelude_timer_lock_critical_region();
+}
 
-        atexit(prelude_async_exit);
+
+
+static void parent_fork_cb(void)
+{
+        prelude_timer_unlock_critical_region();
+        pthread_mutex_unlock(&mutex);
+}
+
+
+
+static void child_fork_cb(void)
+{
+        /*
+         * We can't assume the user won't use prelude-async in the children
+         * thread, thus we re-create the thread.
+         */
+        async_init_ret = pthread_create(&thread, NULL, async_thread, NULL);
+        if ( async_init_ret != 0 )
+                return;
+        
+        prelude_timer_unlock_critical_region();
+        pthread_mutex_unlock(&mutex);
+}
+
+
+
+static void init_async_once(void)
+{
+        pthread_atfork(prepare_fork_cb, parent_fork_cb, child_fork_cb);
+        
+        async_init_ret = pthread_create(&thread, NULL, async_thread, NULL);
+        if ( async_init_ret != 0 )
+                return;        
+        
+        atexit(async_exit);
 }
 
 
@@ -267,7 +290,7 @@ prelude_async_flags_t prelude_async_get_flags(void)
  */
 int prelude_async_init(void) 
 {
-        pthread_once(&init_once, init_async);
+        pthread_once(&init_once, init_async_once);
         return async_init_ret;
 }
 
@@ -304,3 +327,20 @@ void prelude_async_del(prelude_async_object_t *obj)
 
 
 
+
+void prelude_async_exit(void)
+{        
+        if ( async_init_ret != 0 )
+                return;
+        
+        pthread_mutex_lock(&mutex);
+
+        stop_processing = 1;
+        pthread_cond_signal(&cond);
+        
+        pthread_mutex_unlock(&mutex);
+
+        pthread_join(thread, NULL);
+        pthread_cond_destroy(&cond);
+        pthread_mutex_destroy(&mutex);
+}
