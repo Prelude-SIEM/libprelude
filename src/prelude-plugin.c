@@ -669,7 +669,7 @@ int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
         if ( ! pe )
                 return -1;
         
-        new = prelude_option_add(opt, CLI_HOOK|WIDE_HOOK, 0, "unsubscribe",
+        new = prelude_option_add(opt, WIDE_HOOK, 0, "unsubscribe",
                                  "Unsubscribe this plugin", no_argument,
                                  plugin_desactivate, NULL);
         if ( ! new )
