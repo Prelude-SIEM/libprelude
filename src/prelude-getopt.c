@@ -33,7 +33,6 @@
 #include "prelude-message.h"
 #include "prelude-message-id.h"
 
-#include "prelude-analyzer.h"
 #include "prelude-list.h"
 #include "prelude-log.h"
 #include "variable.h"
