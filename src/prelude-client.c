@@ -395,9 +395,9 @@ static void setup_options(prelude_client_t *client, int argc, char **argv)
         
         opt = prelude_option_new(NULL);
         prelude_option_add(opt, CLI_HOOK|CFG_HOOK, 0, "analyzer-name",
-                                 "Name for this analyzer", required_argument, set_name, NULL);
-
-        prelude_option_add(opt, CLI_HOOK|CFG_HOOK, 0, "config-file",
+                           "Name for this analyzer", required_argument, set_name, NULL);
+        
+        prelude_option_add(opt, CLI_HOOK, 0, "config-file",
                            "Configuration file for this analyzer", required_argument, set_configuration_file, NULL);
         get_this_option(client, opt, argc, argv);
         
