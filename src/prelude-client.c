@@ -46,11 +46,11 @@
 #include "common.h"
 #include "config-engine.h"
 #include "plugin-common.h"
-
 #include "prelude-io.h"
 #include "prelude-auth.h"
 #include "prelude-message.h"
 #include "prelude-client.h"
+#include "sensor.h"
 
 
 #define RECONNECT_TIME_WAIT 10

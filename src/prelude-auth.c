@@ -37,52 +37,6 @@
 
 
 
-/*
- * Replace \n by \0, as we don't want to take care of them.
- */
-static int filter_string(char *string, size_t len) 
-{
-        int i, ret = -1;
-        
-        for ( i = 0; i < len; i++ )
-                if ( string[i] == '\n' ) {
-                        string[i] = 0;
-                        ret = 0;
-                }
-
-        return ret;
-}
-
-
-
-/*
- * Separate user and pass from a given string.
- */
-static int separate_string(const char *string, size_t slen, char **user, char **pass) 
-{
-        int len;
-        char *p = NULL;
-        
-        do {
-                if ( ! *user && (p = strstr(string, "user ")) ) 
-                        *user = strdup(p + 5);
-                
-                if ( ! *pass && (p = strstr(string, "pass ")) ) 
-                        *pass = strdup(p + 5);
-
-                if ( ! *user && ! *pass )
-                        return -1;
-
-                len = strlen(string) + 1;
-                string += len;
-                
-        } while ((slen -= len) != 0);
-
-        return 0;
-}
-
-
-
 
 /*
  * Parse the line 'line' comming from the authentication file,

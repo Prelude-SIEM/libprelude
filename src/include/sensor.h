@@ -20,7 +20,10 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
+
 void prelude_sensor_send_alert(prelude_msg_t *msg);
+
+prelude_msg_t *prelude_sensor_get_option_msg(void);
 
 int prelude_sensor_init(const char *filename, int argc, char **argv);
 

@@ -298,6 +298,14 @@ thread
 </para>
 
 
+<!-- ##### FUNCTION daemon_start ##### -->
+<para>
+
+</para>
+
+@lockfile: 
+@Returns: 
+
 <!-- ##### FUNCTION getopt_long ##### -->
 <para>
 

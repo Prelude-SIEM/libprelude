@@ -14,12 +14,3 @@ daemonize
 
 </para>
 
-<!-- ##### FUNCTION daemon_start ##### -->
-<para>
-
-</para>
-
-@lockfile: 
-@Returns: 
-
-

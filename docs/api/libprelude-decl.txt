@@ -724,6 +724,11 @@ plugin_generic_t *plugin, plugin_option_t *cfg, const char *conffile
 prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_sensor_get_option_msg</NAME>
+<RETURNS>prelude_msg_t  *</RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_sensor_init</NAME>
 <RETURNS>int  </RETURNS>
 const char *filename, int argc, char **argv
@@ -1717,7 +1722,7 @@ char *x, int m, int bm_bc[]
 #define MSG_FORMAT_PRELUDE_NIDS 89
 </MACRO>
 <FUNCTION>
-<NAME>daemon_start</NAME>
+<NAME>prelude_daemonize</NAME>
 <RETURNS>int  </RETURNS>
 const char *lockfile
 </FUNCTION>

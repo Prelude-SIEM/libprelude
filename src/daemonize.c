@@ -98,7 +98,7 @@ static int lockfile_write_pid(int fd, pid_t pid)
         
         snprintf(buf, sizeof(buf), "%d\n", getpid());
         
-        ret = write(fd, buf, sizeof(buf));
+        ret = write(fd, buf, strlen(buf));
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't write PID to lockfile.\n");
                 return -1;
