@@ -807,6 +807,9 @@ static void construct_option_msg(prelude_msg_t *msg, prelude_optlist_t *optlist)
 
 prelude_msg_t *prelude_option_wide_get_msg(void) 
 {
+        if ( ! root_optlist )
+                return NULL;
+        
         if ( root_optlist->wide_msg )
                 return root_optlist->wide_msg;
 

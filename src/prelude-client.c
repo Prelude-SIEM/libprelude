@@ -652,12 +652,11 @@ int prelude_client_connect(prelude_client_t *client)
                 goto err;
         
         msg = prelude_option_wide_get_msg();
-        if ( ! msg )
-                goto err;
-
-        ret = prelude_msg_write(msg, client->fd);
-        if ( ret < 0 )
-                goto err;
+        if ( msg ) {
+                ret = prelude_msg_write(msg, client->fd);
+                if ( ret < 0 )
+                        goto err;
+        }
 
         client->state |= PRELUDE_CLIENT_OWN_FD;
         client->state |= PRELUDE_CLIENT_CONNECTED;
