@@ -27,6 +27,8 @@
 
 #define DEFAULT_KEY_LENGTH	512
 
-X509 *ssl_gen_crypto(int days, int keysize, const char *keyout, int crypt);
+X509 *prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int crypt);
+
+void prelude_ssl_ask_settings(int *keysize, int *expire, int *store_crypted);
 
 #endif

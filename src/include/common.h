@@ -28,6 +28,7 @@
 #include <unistd.h>
 
 
+
 #define do_init(func, name) do {                         \
         log(LOG_INFO, "- %s\n", name);                   \
         if ( (func) < 0 )                                \
@@ -39,6 +40,7 @@
         log(LOG_INFO, "- %s\n", name);                   \
         (func);                                          \
 } while(0);
+
 
 
 extern int config_quiet;
@@ -61,3 +63,6 @@ extern int config_quiet;
                 fprintf(out, args);                                                                    \
         }                                                                                              \
 } while(0)
+
+
+

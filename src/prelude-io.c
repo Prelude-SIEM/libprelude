@@ -2,21 +2,26 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
+#include <sys/poll.h>
+#include <inttypes.h>
+#include <netinet/in.h>
+
+#include "config.h"
 
 #ifdef HAVE_SSL
 #include <openssl/ssl.h>
 #endif
 
+#include "common.h"
 #include "prelude-io.h"
 
 
 struct prelude_io {
-        union {
-                int fd;
+        int fd;
+        
 #ifdef HAVE_SSL
-                SSL *ssl;
+        SSL *ssl;
 #endif
-        } fd;
 
         int (*close)(prelude_io_t *pio);
         ssize_t (*read)(prelude_io_t *pio, void *buf, size_t count);
@@ -25,60 +30,30 @@ struct prelude_io {
 
 
 
-#ifdef HAVE_SSL
-
-/*
- * Call the SSL read function.
- */
-static ssize_t ssl_read(prelude_io_t *pio, void *buf, size_t count) 
-{
-        return SSL_read(pio->fd.ssl, buf, count);
-}
-
-
-
-/*
- * Call the SSL write function.
- */
-static ssize_t ssl_write(prelude_io_t *pio, const void *buf, size_t count) 
-{
-        return SSL_write(pio->fd.ssl, buf, count);
-}
-
-
-
-/*
- * Close the SSL session.
- */
-static int ssl_close(prelude_io_t *pio) 
-{
-        int ret;
-
-        ret = SSL_shutdown(pio->fd.ssl);
-        if ( ret <= 0 )
-                return -1;
-
-        SSL_free(pio->fd.ssl);
-
-        return 0;
-}
-
-#endif
-
-
 /*
  * Call the standard read function. Also, handle EINTR.
  */
-static ssize_t normal_read(prelude_io_t *pio, void *buf, size_t count) 
+inline static ssize_t normal_read(prelude_io_t *pio, void *buf, size_t count) 
 {
         int ret;
 
         do {
-                ret = read(pio->fd.fd, buf, count);
+                ret = read(pio->fd, buf, count);
         } while ( ret < 0 && errno == EINTR );
 
         return ret;
 }
+
+
+
+/*
+ * This function is just to distinguish read from file and read from other fd.
+ */
+static ssize_t file_read(prelude_io_t *pio, void *buf, size_t count) 
+{
+        return normal_read(pio, buf, count);
+}
+
 
 
 
@@ -90,7 +65,7 @@ static ssize_t normal_write(prelude_io_t *pio, const void *buf, size_t count)
         int ret;
 
         do {
-                ret = write(pio->fd.fd, buf, count);
+                ret = write(pio->fd, buf, count);
         } while ( ret < 0 && errno == EINTR );
 
         return ret;
@@ -106,11 +81,112 @@ static int normal_close(prelude_io_t *pio)
         int ret;
 
         do {
-                ret = close(pio->fd.fd);
+                ret = close(pio->fd);
         } while ( ret < 0 && errno == EINTR );
 
         return ret;
 }
+
+
+
+
+/*
+ * Forward data from one fd to another using copy.
+ */
+static ssize_t copy_forward(prelude_io_t *dst, prelude_io_t *src, size_t count) 
+{
+        int ret;
+        unsigned char buf[count];
+
+        ret = prelude_io_read(src, buf, count);
+        if ( ret <= 0 )
+                return -1;
+
+        return prelude_io_write(dst, buf, count);
+}
+
+
+#ifdef HAVE_SSL
+
+/*
+ * Call the SSL read function.
+ */
+static ssize_t ssl_read(prelude_io_t *pio, void *buf, size_t count) 
+{
+        return SSL_read(pio->ssl, buf, count);
+}
+
+
+
+/*
+ * Call the SSL write function.
+ */
+static ssize_t ssl_write(prelude_io_t *pio, const void *buf, size_t count) 
+{
+        return SSL_write(pio->ssl, buf, count);
+}
+
+
+
+/*
+ * Close the SSL session.
+ */
+static int ssl_close(prelude_io_t *pio) 
+{
+        int ret;
+
+        ret = SSL_shutdown(pio->ssl);
+        if ( ret <= 0 )
+                return -1;
+        
+        SSL_free(pio->ssl);
+
+        return normal_close(pio);
+}
+
+#endif
+
+
+
+
+
+
+/**
+ * prelude_io_forward:
+ * @src: Pointer to a #prelude_io_t object.
+ * @dst: Pointer to a #prelude_io_t object.
+ * @count: Number of byte to forward from @src to @dst.
+ *
+ * prelude_io_forward() attempts to transfer up to @count bytes from
+ * the file descriptor identified by @src into the file descriptor
+ * identified by @dst.
+ *
+ * Returns: If the transfer was successful, the number of bytes written
+ * to @dst is returned.  On error, -1 is returned, and errno is set appropriately.
+ */
+ssize_t prelude_io_forward(prelude_io_t *dst, prelude_io_t *src, size_t count) 
+{
+#ifdef HAVE_LINUX_SENDFILE
+        ssize_t ret;
+        off_t off = 0;
+        
+        /*
+         * Linux sendfile can only be used on two condition :
+         * - The source is a file.
+         * - The destination is not using SSL.
+         */
+        if ( src->read == file_read && ! dst->ssl ) {
+                
+                ret = sendfile(dst->fd, src->fd.fd, &off, count);
+                if ( ret )
+                        lseek(src->fd.fd, off, SEEK_CUR);
+
+                return ret;
+        } else
+#endif
+                return copy_forward(dst, src, count);
+}
+
 
 
 
@@ -129,21 +205,116 @@ static int normal_close(prelude_io_t *pio)
  * The case where the read function would be interrupted by a signal is
  * handled internally. So you don't have to check for EINTR.
  *
+ * prelude_io_read() always return the number of bytes requested. Or an
+ * error if the internal timeout expire and the read couldn't be completed.
+ * If you don't know how many bytes have to be read, it mean you are wrong
+ * and should use the prelude_io_write_delimited() / prelude_io_read_delimited()
+ * or the prelude_message API.
+ *
  * Returns: On success, the number of bytes read is returned (zero
- * indicates end of file). It is not an error if this number is
- * smaller than the number of bytes requested; this may happen
- * for example because fewer bytes are actually available right
- * now (maybe because we were close to end-of-file, or because we
- * are reading from a pipe, or from a terminal), or because read()
- * was interrupted by a signal.
+ * indicates end of file). 
  *
  * On error, -1 is returned, and errno is set appropriately. In this
  * case it is left unspecified whether the file position (if any) changes.
  */
 ssize_t prelude_io_read(prelude_io_t *pio, void *buf, size_t count) 
 {
-        return pio->read(pio, buf, count);
+        int i = 0;
+        ssize_t ret;
+        struct pollfd pfd;
+
+        pfd.fd = pio->fd;
+        pfd.events = POLLIN;
+        
+        do {
+                ret = poll(&pfd, 1, 10000);
+                if ( ret < 0 ) {
+                        log(LOG_ERR, "poll returned an error.\n");
+                        return -1;
+                }
+                
+                if ( ret == 0 )
+                        return -1;
+
+                if ( pfd.revents == POLLIN ) {
+                        ret = pio->read(pio, &((unsigned char *)buf)[i], count - i);
+                        if ( ret <= 0 ) {
+                                log(LOG_ERR, "couldn't read %d bytes.\n", count - i);
+                                return ret;
+                        }
+                        
+                        i += ret;
+                }
+                
+                else if ( pfd.revents == POLLHUP ) {
+                        log(LOG_ERR, "hang up.\n");
+                        return 0;
+                }
+
+                else {
+                        log(LOG_ERR, "poll error (%x)\n", pfd.revents);
+                        return -1;
+                }
+                
+        } while ( i != count );
+        
+        return count;
 }
+
+
+
+
+/**
+ * prelude_io_read_delimited:
+ * @pio: Pointer to a #prelude_io_t object.
+ * buf: Pointer to the address of a buffer to store address of data into.
+ * count: Pointer to the number of bytes read.
+ *
+ * prelude_io_read_delimited() read message written by prelude_write_delimited().
+ * Theses messages are sents along with the len of the message.
+ *
+ * Uppon return the @buf argument is updated to point on a newly allocated
+ * buffer containing the data read. The @count argument is set to the number of
+ * bytes the message was containing.
+ *
+ * The case where the read function would be interrupted by a signal is
+ * handled internally. So you don't have to check for EINTR.
+ *
+ * Returns: On success, the number of bytes read is returned (zero
+ * indicates end of file). 
+ *
+ * On error, -1 is returned, and errno is set appropriately. In this
+ * case it is left unspecified whether the file position (if any) changes.
+ */
+ssize_t prelude_io_read_delimited(prelude_io_t *pio, void **buf) 
+{
+        int ret;
+        size_t count;
+        uint16_t msglen;
+        
+        ret = prelude_io_read(pio, &msglen, sizeof(msglen));
+        if ( ret <= 0 ) {
+                log(LOG_ERR, "couldn't read len message of %d bytes.\n", sizeof(msglen));
+                return ret;
+        }
+
+        count = ntohs(msglen);
+
+        *buf = malloc(count);
+        if ( ! *buf ) {
+                log(LOG_ERR, "couldn't allocate %d bytes.\n", count);
+                return -1;
+        }       
+        
+        ret = prelude_io_read(pio, *buf, count);
+        if ( ret <= 0 ) {
+                log(LOG_ERR, "couldn't read %d bytes.\n", count);
+                return ret;
+        }
+
+        return count;
+}
+
 
 
 
@@ -175,6 +346,49 @@ ssize_t prelude_io_write(prelude_io_t *pio, const void *buf, size_t count)
 
 
 /**
+ * prelude_io_write_delimited:
+ * @pio: Pointer to a #prelude_io_t object.
+ * @buf: Pointer to the buffer to write data from.
+ * @count: Number of bytes to write.
+ *
+ * prelude_io_write_delimited() writes up to @count bytes to the file descriptor
+ * identified by @pio from the buffer starting at @buf. POSIX requires
+ * that a read() which can be proved to occur after a write() has returned
+ * returns the new data. Note that not all file systems are POSIX conforming.
+ *
+ * prelude_io_write_delimited() also write the len of the data to be sent.
+ * which allow prelude_io_read_delimited() to safely know if it got all the
+ * data a given write contain.
+ *
+ * The case where the write() function would be interrupted by a signal is
+ * handled internally. So you don't have to check for EINTR.
+ *
+ * Returns: On success, the number of bytes written are returned (zero
+ * indicates nothing was written). On error, -1 is returned, and errno
+ * is set appropriately.
+ */
+int prelude_io_write_delimited(prelude_io_t *pio, const void *buf, uint16_t count) 
+{
+        int ret;
+        uint16_t nlen;
+        
+        nlen = htons(count);
+        
+        ret = prelude_io_write(pio, &nlen, sizeof(nlen));
+        if ( ret < 0 ) 
+                return -1;
+        
+        ret = prelude_io_write(pio, buf, count);
+        if ( ret < 0 )
+                return -1;
+
+        return count;
+}
+
+
+
+
+/**
  * prelude_io_close:
  * @pio: Pointer to a #prelude_io_t object.
  *
@@ -192,59 +406,84 @@ int prelude_io_close(prelude_io_t *pio)
 
 
 
-#ifdef HAVE_SSL
 
 /**
- * prelude_io_ssl_new:
- * @ssl: Pointer on the SSL structure holding the TLS/SSL connection data.
+ * prelude_io_new:
  *
- * Create a new prelude IO object for SSL connection.
+ * Create a new prelude IO object.
  *
  * Returns: a #prelude_io_t object or NULL on error.
  */
-prelude_io_t *prelude_io_ssl_new(SSL *ssl) 
+prelude_io_t *prelude_io_new(void) 
 {
         prelude_io_t *new;
 
         new = malloc(sizeof(*new));
         if ( ! new )
                 return NULL;
-
-        new->fd.ssl = ssl;
-
-        new->read = ssl_read;
-        new->write = ssl_write;
-        new->close = ssl_close;
         
         return new;
+}
+
+
+
+/**
+ * prelude_io_set_file_io:
+ * @pio: A pointer on the #prelude_io_t object.
+ * @fd: File descriptor identifying a file.
+ *
+ * Setup the @pio object to work on a file type output.
+ * The @pio object is then associated with @fd.
+ */
+void prelude_io_set_file_io(prelude_io_t *pio, int fd) 
+{
+        pio->fd = fd;
+        pio->ssl = NULL;
+        pio->read = file_read;
+        pio->write = normal_write;
+        pio->close = normal_close;
+}
+
+
+
+#ifdef HAVE_SSL
+
+/**
+ * prelude_io_set_ssl_io:
+ * @pio: A pointer on the #prelude_io_t object.
+ * @ssl: Pointer on the SSL structure holding the TLS/SSL connection data.
+ *
+ * Setup the @pio object to work with SSL based I/O function.
+ * The @pio object is then associated with @ssl.
+ */
+void prelude_io_set_ssl_io(prelude_io_t *pio, void *ssl) 
+{
+        pio->fd = SSL_get_fd(ssl);
+        pio->ssl = ssl;
+        pio->read = ssl_read;
+        pio->write = ssl_write;
+        pio->close = ssl_close;
 }
 
 #endif
 
 
+
 /**
- * prelude_io_new:
- * @fd: File descriptor identifying the connection.
+ * prelude_io_set_socket_io:
+ * @pio: A pointer on the #prelude_io_t object.
+ * @fd: A socket descriptor.
  *
- * Create a new prelude IO object for the connection associated to the FD.
- *
- * Returns: a #prelude_io_t object or NULL on error.
+ * Setup the @pio object to work with socket based I/O function.
+ * The @pio object is then associated with @fd.
  */
-prelude_io_t *prelude_io_new(int fd) 
+void prelude_io_set_socket_io(prelude_io_t *pio, int fd) 
 {
-        prelude_io_t *new;
-
-        new = malloc(sizeof(*new));
-        if ( ! new )
-                return NULL;
-
-        new->fd.fd = fd;
-
-        new->read = normal_read;
-        new->write = normal_write;
-        new->close = normal_close;
-        
-        return new;
+        pio->fd = fd;
+        pio->ssl = NULL;
+        pio->read = normal_read;
+        pio->write = normal_write;
+        pio->close = normal_close;
 }
 
 
@@ -260,3 +499,20 @@ void prelude_io_destroy(prelude_io_t *pio)
 {
         free(pio);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

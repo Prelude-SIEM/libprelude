@@ -145,11 +145,16 @@ CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declara
 -Wbad-function-cast -Wcast-qual -Wcast-align -Wnested-externs"
 
 AC_OUTPUT([
+
 Makefile 
 libprelude-config
+
+libmissing/Makefile
+sensor-adduser/Makefile
+
 src/Makefile 
 src/include/Makefile
-libmissing/Makefile
+
 ], [ chmod +x libprelude-config ])
 
 

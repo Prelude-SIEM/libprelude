@@ -1,4 +1,5 @@
 #include "config.h"
+
 #ifdef HAVE_SSL
 
 /*****
@@ -41,9 +42,7 @@
 #include <openssl/pem.h>
 #include <openssl/e_os.h>
 
-#include "config-engine.h"
 #include "ssl-gencrypto.h"
-#include "ssl-config.h"
 
 
 static int req_check_len(int len, int min, int max)
@@ -300,7 +299,7 @@ static X509 *ssl_gen_sscert(EVP_PKEY * pkey, const EVP_MD * digest, int days)
 
 
 
-X509 *ssl_gen_crypto(int days, int keysize, const char *keyout, int crypt)
+X509 *prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int crypt)
 {
 	int i;
         mode_t old_mask;
@@ -313,8 +312,12 @@ X509 *ssl_gen_crypto(int days, int keysize, const char *keyout, int crypt)
         if ( crypt )
                 cipher = EVP_des_ede3_cbc();
 
-	if (keysize < DEFAULT_KEY_LENGTH)
-		keysize = DEFAULT_KEY_LENGTH;
+        /*
+         * FIXME: What is that ?
+         * Don't it cause exportation issue ?
+         */
+	if ( keysize < DEFAULT_KEY_LENGTH )
+                keysize = DEFAULT_KEY_LENGTH;
 
 	if ((bio_err = BIO_new(BIO_s_file())) != NULL)
 		BIO_set_fp(bio_err, stderr, BIO_NOCLOSE | BIO_FP_TEXT);
@@ -372,7 +375,7 @@ X509 *ssl_gen_crypto(int days, int keysize, const char *keyout, int crypt)
 	BIO_printf(bio_err, "-----\n");
 
 	//-----------------------------------------------------
-	x509ss = ssl_gen_sscert(pkey, digest, days);
+	x509ss = ssl_gen_sscert(pkey, digest, expire);
 	if (x509ss == NULL) {
 		ERR_print_errors(bio_err);
 		BIO_printf(bio_err, "problems making self signed Certificate\n");
@@ -406,5 +409,60 @@ X509 *ssl_gen_crypto(int days, int keysize, const char *keyout, int crypt)
 
 	return x509ss;
 }
+
+
+
+
+static void ask_keysize(int *keysize) 
+{
+        char buf[10];
+        
+        fprintf(stderr, "\n\nWhat keysize do you want [1024] ? ");
+        fgets(buf, sizeof(buf), stdin);
+        *keysize = ( *buf == '\n' ) ? 1024 : atoi(buf);
+}
+
+
+
+
+static void ask_expiration_time(int *expire) 
+{
+        char buf[10];
+        
+        fprintf(stderr,
+                "\n\nPlease specify how long the key should be valid.\n"
+                "\t0    = key does not expire\n"
+                "\t<n>  = key expires in n days\n");
+
+        fprintf(stderr, "\nKey is valid for [0] : ");
+        fgets(buf, sizeof(buf), stdin);
+        *expire = ( *buf == '\n' ) ? 0 : atoi(buf);
+}
+
+
+
+static void ask_key_storage(int *crypted) 
+{
+        char buf[10];
+        
+        fprintf(stderr, "\n\nThe private key can be stored encrypted, but this will\n"
+                "require to enter a password each time the sensor start.\n\n"
+                "Should the private key be stored encrypted ? [yes] : ");
+
+        fgets(buf, sizeof(buf), stdin);
+        buf[strlen(buf) - 1] = '\0';
+        
+        *crypted = ( strcmp(buf, "no") == 0 ) ? 0 : 1;
+}
+
+
+
+void prelude_ssl_ask_settings(int *keysize, int *expire, int *crypted) 
+{
+        ask_keysize(keysize);
+        ask_expiration_time(expire);
+        ask_key_storage(crypted);    
+}
+
 
 #endif

@@ -1,4 +1,5 @@
 #include "config.h"
+
 #ifdef HAVE_SSL
 
 /*****
@@ -34,41 +35,11 @@
 #include <openssl/pem.h>
 #include <openssl/buffer.h>
 #include <openssl/sha.h>
+#include <inttypes.h>
 
+#include "prelude-io.h"
 #include "ssl-registration-msg.h"
-
-
-
-int save_cert(const char *filename, char *cert, int certlen)
-{
-	BIO *file;
-        mode_t old_mask;
-
-        /*
-         * FIXME : BIO API probably have a way to set
-         * permission... don't do a chmod() to avoid a race.
-         * (see ChangeLog of 2001-03-30).
-         */
-
-        old_mask = umask(S_IRWXG|S_IRWXO);
-        
-	file = BIO_new_file(filename, "a");
-	if ( !file ) {
-                umask(old_mask);
-                return 0;
-        }
-
-        umask(old_mask);
-        
-	if (BIO_write(file, cert, certlen) <= 0) {
-                BIO_free(file);
-		return 0;
-        }
-        
-	BIO_free(file);
-
-	return 1;
-}
+#include "common.h"
 
 
 
@@ -126,10 +97,9 @@ int des_generate_2key(des_key_schedule * key1, des_key_schedule * key2,
 	des_cblock prekey1;
 	des_cblock prekey2;
 
-	res =
-	    des_read_2passwords(&prekey1, &prekey2,
-				"Enter registration one shot password :",
-				verify);
+	res = des_read_2passwords(&prekey1, &prekey2,
+                                  "Enter registration one shot password :",
+                                  verify);
 	if (res != SUCCESS) {
 		memset(&prekey1, 5, sizeof(des_cblock));
 		memset(&prekey2, 5, sizeof(des_cblock));
@@ -218,8 +188,10 @@ int analyse_install_msg(char *input, int inputlen, char *output,
 	int len;
 	char pad;
 
-	if (inputlen % sizeof(des_cblock) != 0)
+	if (inputlen % sizeof(des_cblock) != 0) {
+                log(LOG_ERR, "packet should only contain DES blocks.\n");
 		return WRONG_SIZE;
+        }
 
 	memset(&ivec, 1, sizeof(des_cblock));
 	des_ede3_cbc_encrypt((unsigned char *)input, (unsigned char *)input,
@@ -233,24 +205,120 @@ int analyse_install_msg(char *input, int inputlen, char *output,
 	SHA1((unsigned char *)input + SHA_DIGEST_LENGTH,
              inputlen - SHA_DIGEST_LENGTH, (unsigned char *) hash);
 
-	if (len < 0 || len > outputlen)
+	if (len < 0 || len > outputlen) {
+                log(LOG_ERR, "len %d is wrong.\n", len);
 		return WRONG_SIZE;
+        }
 
 	strncpy(output, input + SHA_DIGEST_LENGTH + pad + HEADLENGTH - 1,
 		len);
 
 	*(input + SHA_DIGEST_LENGTH + pad + HEADLENGTH - 1) = '\0';
-
-	if (strcmp(input + SHA_DIGEST_LENGTH + pad, head) != 0)
+        
+	if (strcmp(input + SHA_DIGEST_LENGTH + pad, head) != 0) {
+                log(LOG_ERR, "packet is not an install message.\n");
 		return NOT_INSTALL_MSG;
+        }
 
 	hash[SHA_DIGEST_LENGTH] = '\0';
 	*(input + SHA_DIGEST_LENGTH) = '\0';
-	if (strcmp(input, hash) != 0)
+
+        if (strcmp(input, hash) != 0) {
+                log(LOG_ERR, "install message corrupted.\n");
 		return INSTALL_MSG_CORRUPTED;
+        }
 
 	return len;
 }
 
 
+
+
+int prelude_ssl_recv_cert(prelude_io_t *pio, char *out, int outlen,
+                          des_key_schedule *skey1, des_key_schedule *skey2) 
+{
+        int len, certlen;       
+        unsigned char *buf;
+        
+        len = prelude_io_read_delimited(pio, (void **) &buf);
+        if ( len <= 0 ) {
+                fprintf(stderr, "couldn't receive certificate.\n");
+                return -1;
+        }
+        
+	certlen = analyse_install_msg(buf, len, out, outlen, skey1, skey2);
+	if ( certlen < 0 ) {
+		fprintf(stderr, "Bad message received - Registration failed.\n");
+                return -1;
+	}
+
+        return certlen;
+}
+
+
+
+
+int prelude_ssl_send_cert(prelude_io_t *pio, const char *filename,
+                          des_key_schedule *skey1, des_key_schedule *skey2) 
+{
+        int len;
+        X509 *x509ss;
+        char buf[BUFMAXSIZE];
+        
+        x509ss = load_x509(filename);
+	if ( ! x509ss ) {
+		fprintf(stderr, "couldn't read certificate %s.\n", filename);
+		return -1;
+	}
+        
+        len = x509_to_msg(x509ss, buf, BUFMAXSIZE, skey1, skey2);
+        if (len < 0) {
+                fprintf(stderr, "Error reading certificate.\n");
+                return -1;
+        }
+
+        len = prelude_io_write_delimited(pio, buf, len);
+        if ( len <= 0 ) {
+                fprintf(stderr, "couldn't send sensor certificate.\n");
+                return -1;
+        }
+
+        return 0;
+}
+
+
+
+int prelude_ssl_save_cert(const char *filename, char *cert, int certlen)
+{
+	BIO *file;
+        mode_t old_mask;
+
+        /*
+         * FIXME : BIO API probably have a way to set
+         * permission... don't do a chmod() to avoid a race.
+         * (see ChangeLog of 2001-03-30).
+         */
+
+        old_mask = umask(S_IRWXG|S_IRWXO);
+        
+	file = BIO_new_file(filename, "a");
+	if ( !file ) {
+                umask(old_mask);
+                return 0;
+        }
+
+        umask(old_mask);
+        
+	if (BIO_write(file, cert, certlen) <= 0) {
+                BIO_free(file);
+		return 0;
+        }
+        
+	BIO_free(file);
+
+	return 1;
+}
+
+
 #endif
+

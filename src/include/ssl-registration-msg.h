@@ -59,4 +59,14 @@ int analyse_install_msg(char *input, int inputlen, char *output,
 int des_generate_2key(des_key_schedule * key1, des_key_schedule * key2,
 		      int verify);
 
+
+
+int prelude_ssl_recv_cert(prelude_io_t *pio, char *out, int outlen,
+                          des_key_schedule *skey1, des_key_schedule *skey2);
+
+int prelude_ssl_send_cert(prelude_io_t *pio, const char *filename,
+                          des_key_schedule *skey1, des_key_schedule *skey2);
+
+int prelude_ssl_save_cert(const char *filename, char *cert, int certlen);
+
 #endif

@@ -8,17 +8,22 @@ lib_LTLIBRARIES = libprelude.la
 
 libprelude_la_SOURCES = 		\
 	config-engine.c 		\
-	auth-common.c			\
 	plugin-common.c			\
 	daemonize.c			\
-	ssl-registration-msg.c 		\
+	ssl.c				\
 	ssl-gencrypto.c			\
-	ssl-config.c			\
+	ssl-registration-msg.c		\
 	socket-op.c			\
 	string-matching.c		\
 	timer.c				\
-	alert-read.c			\
 	variable.c			\
-	prelude-io.c
+	prelude-auth.c			\
+	prelude-client.c		\
+	prelude-client-mgr.c		\
+	prelude-getopt.c		\
+	prelude-io.c			\
+	prelude-message.c		\
+	sensor.c
+
 
 libprelude_la_LIBADD = ../libmissing/libmissing.a
