@@ -150,12 +150,24 @@ static prelude_option_t *search_option(prelude_optlist_t *optlist, const char *o
 
 
 
+static int is_an_argument(const char *stuff) 
+{
+        int len = strlen(stuff);
+        
+        if ( stuff[0] == '-' && (len == 2 || (len > 2 && stuff[1] == '-')) ) 
+                return -1;
+        
+        return 0;
+}
+
+
+
 static int check_option_optarg(prelude_optlist_t *optlist, int argc,
                                char **argv, int *argv_index, char **optarg, size_t size) 
 {
         size_t len = 0;
         
-        while ( *argv_index < argc && *argv[*argv_index] != '-' && len < size ) {
+        while ( *argv_index < argc && is_an_argument(argv[*argv_index]) == 0 && len < size ) {
 
                 if ( len > 0 )
                         (*optarg)[len++] = ' ';
@@ -179,12 +191,12 @@ static int check_option_reqarg(prelude_optlist_t *optlist, const char *option,
 {
         size_t len = 0;
         
-        if ( *argv_index >= argc || *argv[*argv_index] == '-' ) {
+        if ( *argv_index >= argc || is_an_argument(argv[*argv_index]) < 0 ) {
                 fprintf(stderr, "Option %s require an argument.\n", option);
                 return -1;
         }
         
-        while ( *argv_index < argc && *argv[*argv_index] != '-' && len < size ) {
+        while ( *argv_index < argc && is_an_argument(argv[*argv_index]) == 0 && len < size ) {
                          
                 if ( len > 0 )
                         (*optarg)[len++] = ' ';
@@ -206,7 +218,7 @@ static int check_option_reqarg(prelude_optlist_t *optlist, const char *option,
 static int check_option_noarg(prelude_optlist_t *optlist, const char *option,
                               int argc, char **argv, int *argv_index)
 {        
-        if ( *argv_index < argc && *argv[*argv_index] != '-' && argv[*argv_index] != "" ) {
+        if ( *argv_index < argc && is_an_argument(argv[*argv_index]) == 0 ) {
                 fprintf(stderr, "Option %s do not take an argument (%s).\n", option, argv[*argv_index]);
                 return -1;
         }
