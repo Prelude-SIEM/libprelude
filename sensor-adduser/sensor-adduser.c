@@ -20,11 +20,46 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
-typedef struct prelude_client prelude_client_t;
+#include <stdio.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <netinet/in.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <assert.h>
 
-void prelude_client_destroy(prelude_client_t *client);
+#include "prelude-auth.h"
+#include "ssl-register.h"
 
-prelude_client_t *prelude_client_new(const char *addr, uint16_t port);
 
-int prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg);
+int config_quiet = 0;
+
+
+int main(int argc, char **argv) 
+{
+        int ret;
+        char buf[1024];
+
+        fprintf(stderr, "\n\nAuthentication method (cipher/plaintext) [cipher] : ");
+
+        fgets(buf, sizeof(buf), stdin);
+        buf[strlen(buf) - 1] = '\0';
+        
+        ret = strcmp(buf, "plaintext");
+        if ( ret == 0 )
+                ret = prelude_auth_create_account(SENSORS_AUTH_FILE);
+        else
+                ret = ssl_add_certificate();
+                
+        exit(ret);
+}
+
+
+
+
+
 

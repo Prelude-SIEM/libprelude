@@ -548,7 +548,7 @@ static int ask_account_infos(FILE *fd, char **addr, char **user, char **pass)
  *
  * Returns: 0 on sucess, -1 otherwise
  */
-int prelude_auth_create_account(const char *filename, const int crypted) 
+int prelude_auth_create_account(const char *filename) 
 {
         int ret;
         FILE *fd;

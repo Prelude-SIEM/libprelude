@@ -53,9 +53,11 @@ X509 *load_x509(const char *certfilename);
 
 int build_install_msg(BUF_MEM * input, char *output, int outputlen,
 		      des_key_schedule * key1, des_key_schedule * key2);
+
 int analyse_install_msg(char *input, int inputlen, char *output,
 			int outpulen, des_key_schedule * key1,
 			des_key_schedule * key2);
+
 int des_generate_2key(des_key_schedule * key1, des_key_schedule * key2,
 		      int verify);
 

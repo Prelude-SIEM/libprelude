@@ -32,7 +32,6 @@
 #include "list.h"
 #include "config-engine.h"
 #include "plugin-common.h"
-#include "auth-common.h"
 #include "common.h"
 
 #ifdef HAVE_SSL
