@@ -56,8 +56,9 @@ idmef_criteria_t *criteria;
 extern int yylex();
 extern void yylex_init();
 extern void yylex_destroy();
-static void yyerror (char *s);
- 
+static void yyerror(char *s);
+extern void yy_scan_string(const char *);
+
 %}
 
 %union {

@@ -62,12 +62,12 @@ static void print_string(idmef_string_t *string)
 \}
 
 
-
+/*
 static void print_int16(int16_t i)
 \{
 	printf(\"\%hd\", i);
 \}
-
+*/
 
 
 static void print_uint16(uint16_t i)
@@ -76,12 +76,12 @@ static void print_uint16(uint16_t i)
 \}
 
 
-
+/*
 static void print_int32(int32_t i)
 \{
 	printf(\"\%d\", i);
 \}
-
+*/
 
 
 static void print_uint32(uint32_t i)
@@ -90,12 +90,12 @@ static void print_uint32(uint32_t i)
 \}
 
 
-
+/*
 static void print_int64(int64_t i)
 \{
 	printf(\"%\" PRId64, i);
 \}
-
+*/
 
 
 static void print_uint64(uint64_t i)

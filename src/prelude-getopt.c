@@ -417,7 +417,7 @@ static struct cb_list *call_option_cb(prelude_list_t *cblist, prelude_option_t *
 
 
 
-static int do_set(void **context, prelude_option_t *opt, char *value)
+static int do_set(void **context, prelude_option_t *opt, const char *value)
 {
         int ret;
         char *str;

@@ -68,11 +68,11 @@ static int to_string_ ## name( type var, char *buffer, size_t size)	\\
 	return offset;							\\
 \}
 
-to_string_(int16, int16_t, \"\%hd\")
+/*to_string_(int16, int16_t, \"\%hd\")*/
 to_string_(uint16, uint16_t, \"\%hu\")
-to_string_(int32, int32_t, \"\%d\")
+/*to_string_(int32, int32_t, \"\%d\")*/
 to_string_(uint32, uint32_t, \"\%u\")
-to_string_(int64, int64_t, \"%\" PRId64)
+/*to_string_(int64, int64_t, \"%\" PRId64)*/
 to_string_(uint64, uint64_t, \"%\" PRIu64)
 to_string_(float, float, \"\%f\")
 

@@ -30,6 +30,10 @@
 #include "common.h"
 #include "idmef-criteria-string.yac.h"
 
+int yylex(void);
+
+#define YY_NO_UNPUT
+
 %}
 
 STRING          ([a-zA-Z0-9_\-]+(\([0-9]+\))?\.?)+
