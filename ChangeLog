@@ -1,3 +1,9 @@
+2002-11-12  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* COPYING.OpenSSL: 
+	* README: Permit linking with OpenSSL so that Debian 
+	package might be distributed.
+
 2002-11-11  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/include/prelude-client.h: add 
