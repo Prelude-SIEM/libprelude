@@ -49,7 +49,7 @@
 idmef_child_t idmef_type_find_child(idmef_object_type_t type, const char *name)
 {
         idmef_child_t i;
-	children_list_t *list;
+	const children_list_t *list;
                 
 	list = object_data[type].children_list;
         
@@ -65,7 +65,7 @@ idmef_child_t idmef_type_find_child(idmef_object_type_t type, const char *name)
 
 int idmef_type_child_is_list(idmef_object_type_t type, idmef_child_t child)
 {
-	children_list_t *c;
+	const children_list_t *c;
         
 	if ( type < 0 || child < 0 )
 		return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
@@ -80,7 +80,7 @@ int idmef_type_child_is_list(idmef_object_type_t type, idmef_child_t child)
 
 idmef_value_type_id_t idmef_type_get_child_type(idmef_object_type_t type, idmef_child_t child)
 {
-	children_list_t *c;
+	const children_list_t *c;
         
 	if ( type < 0 || child < 0 )
 		return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
@@ -95,7 +95,7 @@ idmef_value_type_id_t idmef_type_get_child_type(idmef_object_type_t type, idmef_
 
 idmef_object_type_t idmef_type_get_child_object_type(idmef_object_type_t type, idmef_child_t child)
 {
-	children_list_t *c;
+	const children_list_t *c;
 
 	if ( type < 0 || child < 0 )
 		return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
@@ -109,7 +109,7 @@ idmef_object_type_t idmef_type_get_child_object_type(idmef_object_type_t type, i
 
 idmef_object_type_t idmef_type_get_child_enum_type(idmef_object_type_t type, idmef_child_t child)
 {
-	children_list_t *c;
+	const children_list_t *c;
 
 	if ( type < 0 || child < 0 )
 		return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
@@ -124,7 +124,7 @@ idmef_object_type_t idmef_type_get_child_enum_type(idmef_object_type_t type, idm
 
 char *idmef_type_get_child_name(idmef_object_type_t type, idmef_child_t child)
 {
-	children_list_t *c;
+	const children_list_t *c;
 
 	if ( type < 0 || child < 0 )
 		return NULL;
