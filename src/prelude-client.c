@@ -765,7 +765,7 @@ static int get_heartbeat_interval(prelude_option_t *opt, prelude_string_t *out, 
 
 static int set_profile(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
-        prelude_client_t *client = context;        
+        prelude_client_t *client = context;
         return prelude_client_profile_set_name(client->profile, optarg);
 }
 
@@ -793,6 +793,7 @@ static int create_heartbeat_msgbuf(prelude_client_t *client)
         
         return 0;
 }
+
 
 
 
@@ -843,6 +844,7 @@ static int create_template_config_file(prelude_client_t *client)
 
 
 
+
 static void _prelude_client_destroy(prelude_client_t *client)
 {
         if ( client->profile )
@@ -890,7 +892,7 @@ int _prelude_client_register_options(void)
         if ( ret < 0 )
                 return ret;
         
-        ret = prelude_option_add(root_list, &opt, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG, 0, "profile",
+        ret = prelude_option_add(root_list, &opt, PRELUDE_OPTION_TYPE_CLI, 0, "profile",
                                  "Profile to use for this analyzer", PRELUDE_OPTION_ARGUMENT_REQUIRED,
                                  set_profile, NULL);
         if ( ret < 0 )
@@ -1059,22 +1061,37 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
  */
 int prelude_client_init(prelude_client_t *client)
 {
-        int ret;
+        int ret, i;
         prelude_string_t *err = NULL;
+        char *tmp[_prelude_internal_argc];
         prelude_option_warning_t old_warnings;
 
-        if ( ! client->config_filename ) {
-                ret = create_template_config_file(client);
-                if ( ret < 0 )
-                        return ret;
-        }
+        /*
+         * Chicken and egg problem, where we need to get the profile used by the client
+         * from the command line. We then need to use the profile (default or parsed),
+         * create a configuration template, and read everything from it, but we need to overwrite
+         * option from the config file by the one provided on the CLI since it take precedence.
+         */
+        for ( i = 0; i < _prelude_internal_argc; i++ )
+                tmp[i] = _prelude_internal_argv[i];
 
         prelude_option_set_warnings(0, &old_warnings);
         
+        ret = prelude_option_read(_prelude_generic_optlist, (const char **) &client->config_filename, &i, tmp, &err, client);
+        
+        if ( ! client->config_filename ) {
+                ret = create_template_config_file(client);
+                if ( ret < 0 ) {
+                        prelude_option_set_warnings(old_warnings, NULL);
+                        return ret;
+                }
+        }
+        
         ret = prelude_option_read(_prelude_generic_optlist, (const char **)&client->config_filename,
-                                  &_prelude_internal_argc, _prelude_internal_argv, &err, client);        
+                                  &_prelude_internal_argc, _prelude_internal_argv, &err, client);
         
         prelude_option_set_warnings(old_warnings, NULL);
+        
         if ( ret < 0 )
                 return ret;
         
