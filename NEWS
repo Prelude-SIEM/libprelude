@@ -1,3 +1,11 @@
+* 2005-03-31, libprelude-0.9.0rc2:
+
+	- Fix Python/Perl bindings linking order. Was linking to old version of the library
+	  on system where old libprelude-0.8 was installed.
+
+	- Fix an issue with the Perl bindings on make clean.
+	
+
 * 2005-03-29, libprelude-0.9.0rc1:
 
 	Note: due to several years of work and the habit of working with the new 

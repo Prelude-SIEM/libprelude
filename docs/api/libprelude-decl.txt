@@ -6559,7 +6559,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.0-rc1"
+#define LIBPRELUDE_VERSION "0.9.0-rc2"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
