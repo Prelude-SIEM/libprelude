@@ -1,6 +1,6 @@
 * 2005-04-04, libprelude-0.9.0-rc3:
 
-	- Stop using pcreposix for IDMEF criteria matching, and always rely 
+	- Stop using pcreposix for IDMEF criteria matching, always rely 
           on POSIX regex. The way pcreposix define it's symbol make it impossible 
           to use it from a library if the final program isn't linked against 
           libpcreposix (example: python / perl program using libprelude bindings).
@@ -9,13 +9,14 @@
 
 	- Fix some compilation warnings.
 	
-	- Fix OpenBSD compilation.
+	- Fix OpenBSD/MacOSX/Irix compilation.
 
 	- Fix compilation on system that lack pthread_atfork().
 
 	- Correct IDMEF value operator check.
 
 	- Better IDMEF criteria error return value.
+
 
 * 2005-03-31, libprelude-0.9.0-rc2:
 

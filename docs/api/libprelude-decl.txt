@@ -7914,6 +7914,11 @@ prelude_align_int32(buf)
 prelude_align_uint32(buf)
 </FUNCTION>
 <FUNCTION>
+<NAME>ntohl</NAME>
+<RETURNS>return </RETURNS>
+prelude_align_uint32(buf)
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_align_uint64</NAME>
 <RETURNS>return </RETURNS>
 buf
