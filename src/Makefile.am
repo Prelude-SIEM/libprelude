@@ -6,14 +6,15 @@ libpreludeincludedir = $(includedir)/
 libprelude_la_LIBADD = @LIBLTDL@
 lib_LTLIBRARIES = libprelude.la
 
+if HAVE_SSL
+ SSL_SRCS = ssl.c ssl-gencrypto.c ssl-registration-msg.c ssl-settings.c
+endif
+
+
 libprelude_la_SOURCES = 		\
 	config-engine.c 		\
 	plugin-common.c			\
 	daemonize.c			\
-	ssl.c				\
-	ssl-gencrypto.c			\
-	ssl-registration-msg.c		\
-	ssl-settings.c			\
 	string-matching.c		\
 	timer.c				\
 	variable.c			\
@@ -32,5 +33,7 @@ libprelude_la_SOURCES = 		\
 	client-ident.c			\
 	idmef-tree-func.c		\
 	idmef-msg-send.c		\
-	common.c
+	common.c			\
+	$(SSL_SRCS)
+
 

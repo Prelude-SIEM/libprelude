@@ -1,3 +1,21 @@
+2002-09-15  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* acinclude.m4: 
+	new AC_DATATYPE_GENERIC() macro, that check for a datatype
+	and possible replacement.
+
+	* configure.in: 
+	Enable OpenSSL conditionaly.
+	
+	Check for the socklen_t datatype, and provide a replacement
+	if not found. This fix a compilation problem on Solaris.
+
+	* src/Makefile.am: 
+	* sensor-adduser/Makefile.am: 
+
+	Stop compiling empty source file when SSL support is 
+	disabled. Don't compile the sources at all instead.
+	
 2002-09-10  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* NEWS: updated.

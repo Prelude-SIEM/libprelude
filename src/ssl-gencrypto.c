@@ -1,7 +1,3 @@
-#include "config.h"
-
-#ifdef HAVE_SSL
-
 /*****
 *
 * Copyright (C) 2001, 2002 Jeremie Brebec / Toussaint Mathieu
@@ -415,16 +411,5 @@ int prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int cryp
 
 	return ret;
 }
-
-#endif
-
-
-
-
-
-
-
-
-
 
 

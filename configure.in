@@ -147,6 +147,18 @@ if test x$enable_openssl = xyes ; then
   	fi
 fi
 
+AM_CONDITIONAL(HAVE_SSL, test x$enable_openssl = xyes && test x$openssl_header = xyes)
+
+
+dnl **************************************************
+dnl * Check for socklen_t.                           *
+dnl **************************************************
+
+AC_DATATYPE_GENERIC([
+ #include <sys/types.h> 
+ #include <sys/socket.h>
+], socklen_t, int size_t "unsigned long")
+
 
 dnl **************************************************
 dnl * Enable / Disable gprof profiling.              *

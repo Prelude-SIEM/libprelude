@@ -1,5 +1,3 @@
-#include "config.h"
-
 /*****
 *
 * Copyright (C) 2001, 2002 Jeremie Brebec / Toussaint Mathieu
@@ -22,8 +20,6 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
-
-#ifdef HAVE_SSL
 
 #include <stdio.h>
 #include <unistd.h>
@@ -261,6 +257,4 @@ int ssl_add_certificate(prelude_io_t *fd, char *pass, size_t size, uid_t uid)
         
 	return 0;
 }
-
-#endif /* HAVE_SSL */
 

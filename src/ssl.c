@@ -21,10 +21,6 @@
 *
 *****/
 
-#include "config.h"
-
-#ifdef HAVE_SSL
-
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -147,8 +143,6 @@ int ssl_init_client(void)
 
         return -1;
 }
-
-#endif
 
 
 

@@ -1,5 +1,3 @@
-#include "config.h"
-
 /*****
 *
 * Copyright (C) 2001, 2002 Jeremie Brebec / Toussaint Mathieu
@@ -22,8 +20,6 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
-
-#ifdef HAVE_SSL
 
 #include <stdio.h>
 #include <string.h>
@@ -93,9 +89,6 @@ void prelude_ssl_ask_settings(int *keysize, int *expire)
         ask_keysize(keysize);
         ask_expiration_time(expire);
 }
-
-
-#endif /* HAVE_SSL */
 
 
 
