@@ -91,6 +91,20 @@ AC_SUBST(SSL_LIBS)
 
 
 dnl **************************************************
+dnl * Enable / Disable gprof profiling.              *
+dnl **************************************************
+
+AC_ARG_ENABLE(profiling, [  --enable-profiling Enable Gprof profiling - with thread workaround [default=no]], \
+	      enable_profiling=yes, enable_profiling=no)
+
+if test x$enable_profiling = xyes ; then
+	CFLAGS="$CFLAGS -pg"
+	AC_DEFINE(ENABLE_PROFILING)
+fi
+
+
+
+dnl **************************************************
 dnl * Check for GTK-DOC                              *
 dnl **************************************************
 
@@ -184,7 +198,7 @@ echo
 echo "*** Dumping configuration ***"
 echo "    - Use OpenSSL            : $enable_openssl"
 echo "    - Generate documentation : $enable_gtk_doc"
-
+echo "    - Profiling enabled      : $enable_profiling"
 
 
 

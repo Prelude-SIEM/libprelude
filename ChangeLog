@@ -1,5 +1,11 @@
 2001-12-30  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/include/threads.h: workaround for thread enabled thread
+	profiling. This code come from http://sam.zoy.org/doc/programming/gprof.html
+	The authors is presumably Samuel Hocevar <sam@zoy.org>.
+
+	Only enabled if --enable-profiling is given on command line
+
 	* Added missing CREDITS file, taken from prelude-nids and updated
 	with the necessary entry.
 

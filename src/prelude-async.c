@@ -20,6 +20,7 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
@@ -34,6 +35,7 @@
 #include "prelude-io.h"
 #include "prelude-message.h"
 #include "prelude-async.h"
+#include "threads.h"
 
 
 static LIST_HEAD(joblist);

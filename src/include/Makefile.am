@@ -25,7 +25,8 @@ include_HEADERS = config-engine.h 		\
 		  prelude-message-id.h		\
 		  prelude-async.h		\
 		  prelude-ident.h		\
-		  sensor.h
+		  sensor.h			\
+		  threads.h
 
 
 
