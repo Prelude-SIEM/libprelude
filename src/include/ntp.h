@@ -44,9 +44,9 @@ typedef struct {
 
 
 
-extern unsigned long ustotslo[];
-extern unsigned long ustotsmid[];
-extern unsigned long ustotshi[];
+extern const unsigned long ustotslo[];
+extern const unsigned long ustotsmid[];
+extern const unsigned long ustotshi[];
 
 
 #define M_NEG(v_i, v_f)         /* v = -v */ \
@@ -101,9 +101,9 @@ extern unsigned long ustotshi[];
  * Convert a time stamp fraction to microseconds.  The time stamp
  * fraction is assumed to be unsigned.  To use this in a program, declare:
  */
-extern long tstouslo[];
-extern long tstousmid[];
-extern long tstoushi[];
+extern const long tstouslo[];
+extern const long tstousmid[];
+extern const long tstoushi[];
 
 #define TSFTOTVU(tsf, tvu) \
         (tvu) = (tstoushi[((tsf) >> 24) & 0xff] \
