@@ -19,14 +19,14 @@
 #ifndef GETADDRINFO_H
 # define GETADDRINFO_H
 
+/* Get socklen_t, struct sockaddr. */
+# include <sys/types.h>
+
 /* Get getaddrinfo declarations, if available. */
 # include <sys/socket.h>
 # include <netdb.h>
 
 # if defined HAVE_GETADDRINFO && !HAVE_GETADDRINFO
-
-/* Get socklen_t, struct sockaddr. */
-#  include <sys/types.h>
 
 /* Structure to contain information about address of a service provider.  */
 struct addrinfo

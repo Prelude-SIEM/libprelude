@@ -21,6 +21,8 @@
 *
 *****/
 
+#include "config.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
@@ -203,6 +205,8 @@ static void async_exit(void)
 
 
 
+#ifdef HAVE_PTHREAD_ATFORK
+
 static void prepare_fork_cb(void)
 {
         pthread_mutex_lock(&mutex);
@@ -232,12 +236,15 @@ static void child_fork_cb(void)
         prelude_timer_unlock_critical_region();
         pthread_mutex_unlock(&mutex);
 }
+#endif
 
 
 
 static void init_async_once(void)
 {
+#ifdef HAVE_PTHREAD_ATFORK
         pthread_atfork(prepare_fork_cb, parent_fork_cb, child_fork_cb);
+#endif
         
         async_init_ret = pthread_create(&thread, NULL, async_thread, NULL);
         if ( async_init_ret != 0 )

@@ -38,6 +38,8 @@ extern prelude_option_t *_prelude_generic_optlist;
 
 
 
+#ifdef HAVE_PTHREAD_ATFORK
+
 static void prepare_fork_cb(void)
 {
         _idmef_path_cache_lock();
@@ -52,6 +54,7 @@ static void in_fork_cb(void)
         pthread_mutex_unlock(&_criteria_parse_mutex);
 }
 
+#endif
 
 
 static void remove_argv(int *argc, char **argv, int removed)
@@ -134,11 +137,13 @@ static void slice_arguments(int *argc, char **argv)
  */
 int prelude_init(int *argc, char **argv)
 {
+#ifdef HAVE_PTHREAD_ATFORK
         int ret;
         
         ret = pthread_atfork(prepare_fork_cb, in_fork_cb, in_fork_cb);
         if ( ret != 0 )
                 return prelude_error_from_errno(ret);
+#endif
         
         slice_arguments(argc, argv);
 

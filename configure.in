@@ -115,6 +115,13 @@ LDFLAGS="$CFLAGS $PTHREAD_CFLAGS"
 CC="$PTHREAD_CC"
 
 
+AC_CHECK_FUNC(pthread_atfork, have_pthread_atfork=yes, have_pthread_atfork=no)
+if test x$have_pthread_atfork = xyes; then
+   AC_DEFINE_UNQUOTED(HAVE_PTHREAD_ATFORK, , Define wether pthread_atfork is available)
+fi
+
+
+
 dnl **************************************************
 dnl * Check endianess                                *
 dnl **************************************************
@@ -252,18 +259,6 @@ AC_CHECK_DECL(AF_INET6, have_ipv6_def=yes,, [
 if test x$have_ipv6_type = xyes && test x$have_ipv6_def = xyes; then
         AC_DEFINE_UNQUOTED(HAVE_IPV6, , Define wether Ipv6 is available on this system)
 fi
-
-
-dnl **************************************************
-dnl * Check for getaddrinfo.                         *
-dnl **************************************************
-AC_CHECK_FUNC(getaddrinfo, , libprelude_cflags="$libprelude_cflags -DMISSING_GETADDRINFO")
-
-
-dnl **************************************************
-dnl * Check for inet_ntop.                           *
-dnl **************************************************
-AC_CHECK_FUNC(inet_ntop, AC_DEFINE_UNQUOTED(HAVE_INET_NTOP, , Define wether inet_ntop is available on this system))
 
 
 

@@ -1,7 +1,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
 #include <arpa/inet.h>
-#include <sys/types.h>
 
 # if defined HAVE_INET_NTOP && !HAVE_INET_NTOP
 
