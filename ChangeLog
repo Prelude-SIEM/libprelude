@@ -1,3 +1,9 @@
+2002-09-07  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/idmef-msg-send.c (idmef_send_uint64): 
+	if we're running on a big endian system, don't send
+	an uninitialized value.
+
 2002-09-04  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-getopt.c (get_from_config): check 
