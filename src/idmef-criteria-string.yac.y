@@ -111,26 +111,9 @@ criteria:	criteria_base			{
 						}
 	| criteria operator criteria_base	{                                                        
                                                         if ( $2 == operator_or ) {
-                                                                printf("OR ");
-                                                                idmef_criteria_print($1);
-                                                                printf(" WITH ");
-                                                                idmef_criteria_print($3);
-                                                                printf("\n");
                                                                 idmef_criteria_or_criteria($1, $3);
-
-                                                                printf("RESULT: ");
-                                                                idmef_criteria_print($1);
-                                                                printf("\n\n");
                                                         } else {
-                                                                printf("AND ");
-                                                                idmef_criteria_print($1);
-                                                                printf(" WITH ");
-                                                                idmef_criteria_print($3);
-                                                                printf("\n");
                                                                 idmef_criteria_and_criteria($1, $3);
-                                                                printf("RESULT: ");
-                                                                idmef_criteria_print($1);
-                                                                printf("\n\n");
                                                         }
                                                         
                                                         $$ = $1;
