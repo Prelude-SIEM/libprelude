@@ -60,7 +60,7 @@ static const char *sensor_name = NULL;
 static int set_sensor_name(prelude_option_t *opt, const char *optarg) 
 {
         sensor_name = strdup(optarg);
-        prelude_set_program_name(optarg);
+        prelude_set_program_name(sensor_name);
         return prelude_option_success;
 }
 
