@@ -575,5 +575,17 @@ void prelude_client_get_address(prelude_client_t *client, char **addr, uint16_t 
 
 ssize_t prelude_client_forward(prelude_client_t *client, prelude_io_t *src, size_t count) 
 {
-        return prelude_io_forward(client->fd, src, count);
+        ssize_t ret;
+
+        if ( client->connection_broken == 1 )
+                return -1;
+
+        
+        ret = prelude_io_forward(client->fd, src, count);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "error forwarding message to Manager.\n");
+                handle_connection_breakage(client);
+        }
+
+        return ret;
 }
