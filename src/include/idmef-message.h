@@ -30,7 +30,10 @@
 #include "prelude-message.h"
 
 idmef_message_t *idmef_message_new(void);
+
 void idmef_message_destroy(idmef_message_t *message);
+
+prelude_msg_t *idmef_message_get_pmsg(idmef_message_t *message);
 
 void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg);
 
