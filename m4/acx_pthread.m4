@@ -126,8 +126,8 @@ for flag in $acx_pthread_flags; do
 
                 -*)
                 AC_MSG_CHECKING([whether pthreads work with $flag])
-		PTHREAD_LIBS="$flag"
                 PTHREAD_CFLAGS="$flag"
+                PTHREAD_LDFLAGS="$flag"
                 ;;
 
 		pthread-config)
@@ -226,6 +226,7 @@ fi
 
 AC_SUBST(PTHREAD_LIBS)
 AC_SUBST(PTHREAD_CFLAGS)
+AC_SUBST(PTHREAD_LDFLAGS)
 AC_SUBST(PTHREAD_CC)
 
 # Finally, execute ACTION-IF-FOUND/ACTION-IF-NOT-FOUND:

@@ -6,7 +6,7 @@ AM_CPPFLAGS = @PTHREAD_CFLAGS@ @INCLTDL@ @libprelude_cflags@ -I$(srcdir)/include
 
 libpreludeincludedir = $(includedir)/
 libprelude_la_LIBADD = @libprelude_libs@ @LIBLTDL@
-libprelude_la_LDFLAGS = -no-undefined -version-info @libprelude_soname@
+libprelude_la_LDFLAGS = @PTHREAD_LDFLAGS@ -no-undefined -version-info @libprelude_soname@
 lib_LTLIBRARIES = libprelude.la
 
 AM_YFLAGS = -d
