@@ -305,10 +305,18 @@ const char *filename, const char *user, const char *pass, int crypted
 <RETURNS>int  </RETURNS>
 const char *authfile, const char *user, const char *pass
 </FUNCTION>
+<MACRO>
+<NAME>user_does_not_exist</NAME>
+#define user_does_not_exist      -2
+</MACRO>
+<MACRO>
+<NAME>password_does_not_match</NAME>
+#define password_does_not_match  -3
+</MACRO>
 <FUNCTION>
 <NAME>prelude_auth_read_entry</NAME>
 <RETURNS>int  </RETURNS>
-const char *authfile, const char *wanted_user, char **user, char **pass
+const char *authfile, const char *wanted_user,const char *wanted_pass, char **user, char **pass
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_send_string</NAME>
@@ -795,6 +803,11 @@ char *buf, size_t size
 <NAME>prelude_set_program_name</NAME>
 <RETURNS>void  </RETURNS>
 const char *sname
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_set_program_userid</NAME>
+<RETURNS>void  </RETURNS>
+uid_t uid
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_get_sensor_name</NAME>

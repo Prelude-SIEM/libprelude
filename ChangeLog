@@ -1,5 +1,8 @@
 2002-02-07  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* sensor-adduser/Makefile.am (sensor_adduser_LDADD): correct
+	libprelude.so linkage.
+
 	* src/prelude-client.c (read_plaintext_authentication_result): 
 	call auth_error() in case of failure authenticating. So that
 	the user know what to do.

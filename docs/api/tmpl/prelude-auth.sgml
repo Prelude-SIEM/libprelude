@@ -46,6 +46,7 @@ peer, only if the connection is plaintext.
 
 @authfile: 
 @wanted_user: 
+@wanted_pass: 
 @user: 
 @pass: 
 @Returns: 
