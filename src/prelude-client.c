@@ -54,6 +54,8 @@
 #include "prelude-connection-mgr.h"
 #include "prelude-client.h"
 #include "prelude-timer.h"
+#include "prelude-message-id.h"
+#include "prelude-option-wide.h"
 #include "idmef-message-write.h"
 #include "config-engine.h"
 #include "tls-auth.h"
@@ -70,22 +72,6 @@
 
 
 /*
- * directory where TLS private keys file are stored.
- */
-#define TLS_KEY_DIR PRELUDE_CONFIG_DIR "/tls/keys"
-
-/*
- * directory where TLS client certificate file are stored.
- */
-#define TLS_CLIENT_CERT_DIR PRELUDE_CONFIG_DIR "/tls/client"
-
-/*
- * directory where TLS server certificate file are stored.
- */
-#define TLS_SERVER_CERT_DIR PRELUDE_CONFIG_DIR "/tls/server"
-
-
-/*
  * directory where analyzerID file are stored.
  */
 #define IDENT_DIR PRELUDE_CONFIG_DIR "/analyzerid"
@@ -97,11 +83,6 @@
 #define DEFAULT_HEARTBEAT_INTERVAL 600
 
 
-#define CAPABILITY_SEND (PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF| \
-                         PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN| \
-                         PRELUDE_CLIENT_CAPABILITY_SEND_CM)
-
-
 
 struct prelude_client {
         
@@ -110,27 +91,20 @@ struct prelude_client {
         
         prelude_bool_t ignore_error;
         
-        prelude_client_capability_t capability;
+        prelude_connection_capability_t capability;
         
         /*
          * information about the user/group this analyzer is running as
          */
-        uid_t uid;
-        gid_t gid;
-
+        prelude_client_profile_t *profile;
+        
         /*
          * name, analyzerid, and config file for this analyzer.
-         */
-        char *profile;
-        
+         */        
         char *md5sum;
-        
-        uint64_t analyzerid;
         char *config_filename;
-        
         idmef_analyzer_t *analyzer;
-
-        gnutls_certificate_credentials credentials;
+        
         prelude_connection_mgr_t *manager_list;
         prelude_timer_t heartbeat_timer;
 
@@ -145,6 +119,9 @@ struct prelude_client {
         void (*heartbeat_cb)(prelude_client_t *client, idmef_message_t *heartbeat);
 };
 
+
+
+prelude_option_t *prelude_generic_optlist = NULL;
 
 
 
@@ -288,12 +265,14 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
 {
         int ret;
         struct utsname uts;
+        uint64_t analyzerid;
         prelude_string_t *buf;
 	idmef_process_t *process;
         char filename[256], *name, *path;
+
+        analyzerid = prelude_client_profile_get_analyzerid(client->profile);
         
-	idmef_analyzer_set_analyzerid(client->analyzer, client->analyzerid);
-        
+	idmef_analyzer_set_analyzerid(client->analyzer, analyzerid);
         if ( uname(&uts) < 0 )
                 return prelude_error_from_errno(errno);
 
@@ -624,7 +603,7 @@ static int set_analyzer_name(void *context, prelude_option_t *opt, const char *a
 {
         prelude_string_t *str;
         prelude_client_t *ptr = context;
-
+        
         str = idmef_analyzer_new_name(ptr->analyzer);
         if ( ! str )
                 return -1;
@@ -662,7 +641,7 @@ static int set_manager_addr(void *context, prelude_option_t *opt, const char *ar
 static int set_heartbeat_interval(void *context, prelude_option_t *opt, const char *arg)
 {
         prelude_client_t *ptr = context;
-
+        
         setup_heartbeat_timer(ptr, atoi(arg));
         prelude_timer_reset(&ptr->heartbeat_timer);
         
@@ -693,55 +672,61 @@ static int set_ignore_error(void *context, prelude_option_t *opt, const char *ar
 static int set_profile(void *context, prelude_option_t *opt, const char *arg)
 {
         prelude_client_t *client = context;
-
-        client->profile = strdup(arg);
-
-        return 0;
+        return prelude_client_profile_set_name(client->profile, arg);
 }
+
 
 
 static int setup_options(prelude_client_t *client)
 {
         prelude_option_t *opt;
-                
-        prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG
-                           |PRELUDE_OPTION_TYPE_WIDE, 0, "prelude-heartbeat-interval",
-                           "Number of minutes between two heartbeat",
-                           PRELUDE_OPTION_ARGUMENT_REQUIRED,
-                           set_heartbeat_interval, get_heartbeat_interval);
+        prelude_option_t *root_list;
+
+        if ( prelude_generic_optlist )
+                return 0;
         
-        if ( client->capability & CAPABILITY_SEND ) {
-                 prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG
-                                    |PRELUDE_OPTION_TYPE_WIDE, 0, "prelude-server-addr",
-                                    "Address where this sensor should report to (addr:port)",
-                                    PRELUDE_OPTION_ARGUMENT_REQUIRED, set_manager_addr, get_manager_addr);
-        }
+        root_list = prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG, 0,
+                                       "prelude", "Prelude generic options",
+                                       PRELUDE_OPTION_ARGUMENT_NONE, NULL, NULL);
+
+        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG, 0, "profile",
+                           "Profile to use for this analyzer", PRELUDE_OPTION_ARGUMENT_REQUIRED,
+                           set_profile, NULL);
         
         client->config_file_opt =
                 prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CLI, 0, "prelude-config-file",
                                    "Configuration file for this analyzer", PRELUDE_OPTION_ARGUMENT_REQUIRED,
                                    set_configuration_file, NULL);
         
-        prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG, 0, "prelude-profile",
-                           "Profile to use for this analyzer", PRELUDE_OPTION_ARGUMENT_REQUIRED,
-                           set_profile, NULL);
+        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG
+                           |PRELUDE_OPTION_TYPE_WIDE, 0, "heartbeat-interval",
+                           "Number of seconds between two heartbeat",
+                           PRELUDE_OPTION_ARGUMENT_REQUIRED,
+                           set_heartbeat_interval, get_heartbeat_interval);
         
-        prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE,
+        if ( client->capability & PRELUDE_CONNECTION_CAPABILITY_CONNECT ) {
+                 prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG
+                                    |PRELUDE_OPTION_TYPE_WIDE, 0, "server-addr",
+                                    "Address where this sensor should report to (addr:port)",
+                                    PRELUDE_OPTION_ARGUMENT_REQUIRED, set_manager_addr, get_manager_addr);
+        }
+                
+        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE,
                            0, "analyzer-name", "Name for this analyzer",
                            PRELUDE_OPTION_ARGUMENT_REQUIRED, set_analyzer_name, get_analyzer_name);
         
-        prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-name",
+        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-name",
                            "Name of the equipment", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
                            set_node_name, get_node_name);
 
-        prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-location",
+        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-location",
                            "Location of the equipment", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
                            set_node_location, get_node_location);
         
-        prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-category",
+        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-category",
                            NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_node_category, get_node_category);
         
-        opt = prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE
+        opt = prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE
                                  |PRELUDE_OPTION_TYPE_CONTEXT, 0, "node-address",
                                  "Network or hardware address of the equipment",
                                  PRELUDE_OPTION_ARGUMENT_REQUIRED, set_node_address, NULL);
@@ -769,59 +754,120 @@ static int setup_options(prelude_client_t *client)
                            PRELUDE_OPTION_ARGUMENT_REQUIRED, set_node_address_vlan_num,
                            get_node_address_vlan_num);
 
+        prelude_generic_optlist = root_list;
+        
         return 0;
 }
+
+
+
+static int client_write_msgbuf(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
+{
+        prelude_client_send_msg(prelude_msgbuf_get_data(msgbuf), msg);
+        return 0;
+}
+
 
 
 static int create_heartbeat_msgbuf(prelude_client_t *client)
 {
-        client->msgbuf = prelude_msgbuf_new(client);
-        if ( ! client->msgbuf )
-                return -1;
+        int ret;
+        
+        ret = prelude_msgbuf_new(&client->msgbuf);
+        if ( ret < 0 )
+                return ret;
+
+        prelude_msgbuf_set_data(client->msgbuf, client);
+        prelude_msgbuf_set_callback(client->msgbuf, client_write_msgbuf);
+        
+        return 0;
+}
+
+
+
+static void _prelude_client_destroy(prelude_client_t *client)
+{
+        if ( client->profile )
+                prelude_client_profile_destroy(client->profile);
+        
+        if ( client->md5sum )
+                free(client->md5sum);
+        
+        if ( client->msgbuf )
+                prelude_msgbuf_destroy(client->msgbuf);
+        
+        if ( client->analyzer )
+                idmef_analyzer_destroy(client->analyzer);
+
+        if ( client->config_filename )
+                free(client->config_filename);
+        
+        if ( client->manager_list )
+                prelude_connection_mgr_destroy(client->manager_list);
+        
+        if ( client->unique_ident )
+                prelude_ident_destroy(client->unique_ident);
+        
+        free(client);
+}
+
+
+
+static int connection_mgr_event_cb(prelude_connection_mgr_t *mgr,
+                                   prelude_connection_mgr_event_t event,
+                                   prelude_connection_t *conn)
+{
+        int ret;
+        prelude_io_t *fd;
+        prelude_client_t *client;
+        prelude_msg_t *msg = NULL;
+        
+        if ( event != PRELUDE_CONNECTION_MGR_EVENT_INPUT )
+                return 0;
+
+        do {
+                ret = prelude_connection_recv(conn, &msg);
+        } while ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN );
+
+        if ( ret < 0 )
+                return ret;
+        
+        if ( prelude_msg_get_tag(msg) != PRELUDE_MSG_OPTION_REQUEST )
+                return ret;
+
+        fd = prelude_connection_get_fd(conn);
+        client = prelude_connection_mgr_get_data(mgr);
+        
+        return prelude_option_process_request(client, fd, msg);
+}
+
+
+
+static int connection_mgr_create(prelude_client_t *client)
+{
+        int ret;
+        prelude_connection_mgr_t *mgr;
+        
+        ret = prelude_connection_mgr_new(&mgr, client->profile, client->capability);
+        if ( ret < 0 )
+                return ret;
+
+        prelude_connection_mgr_set_flags(mgr, PRELUDE_CONNECTION_MGR_FLAGS_RECONNECT);
+        prelude_connection_mgr_set_event_handler(mgr, PRELUDE_CONNECTION_MGR_EVENT_INPUT, connection_mgr_event_cb);
+
+        client->manager_list = mgr;
 
         return 0;
 }
+
 
 
 
 /**
  * prelude_client_new:
- * @capability: set of capability for this client.
- *
- * Create a new #prelude_client_t object with the given capability.
- *
- * Returns: a #prelude_client_t object, or NULL if an error occured.
- */
-prelude_client_t *prelude_client_new(prelude_client_capability_t capability)
-{
-        prelude_client_t *new;
-        
-        new = calloc(1, sizeof(*new));
-        if ( ! new )
-                return NULL;
-        
-        new->analyzer = idmef_analyzer_new();
-        if ( ! new->analyzer ) {
-                free(new);
-                return NULL;
-        }
-        
-        new->uid = getuid();
-        new->gid = getgid();
-        new->capability = capability;
-        pthread_mutex_init(&new->msgbuf_lock, NULL);
-        
-        setup_options(new);
-        
-        return new;
-}
-
-
-
-/**
- * prelude_client_init:
  * @client: Pointer to a client object to initialize.
- * @sname: Default name of the analyzer associated with this client.
+ * @capability: capability of this client.
+ * @profile: Default profile name for this analyzer.
  * @config: Generic configuration file for this analyzer.
  * @argc: argument count provided on the analyzer command line.
  * @argv: array of argument provided on the analyzer command line.
@@ -830,94 +876,138 @@ prelude_client_t *prelude_client_new(prelude_client_capability_t capability)
  * option from the @config configuration file and the provided
  * @argv array of arguments.
  *
- * Returns: 0 on success, -1 if an error occured.
+ * Returns: 0 on success or a negative value if an error occur.
  */
-int prelude_client_init(prelude_client_t *client, const char *sname,
-                        const char *config, int *argc, char **argv)
+int prelude_client_new(prelude_client_t **client,
+                       prelude_connection_capability_t capability,
+                       const char *profile, const char *config,
+                       int *argc, char **argv)
 {
         int ret;
         char filename[256];
+        prelude_client_t *new;
         prelude_option_t *opt;
         prelude_option_warning_t old_warnings;
-        prelude_client_capability_t capability;
-
-        set_analyzer_name(client, NULL, sname);
-        client->profile = strdup(sname);
-        client->config_filename = config ? strdup(config) : NULL;
         
-        client->unique_ident = prelude_ident_new();
-        if ( ! client->unique_ident )
+        new = calloc(1, sizeof(*new));
+        if ( ! new )
                 return prelude_error_from_errno(errno);
         
-        prelude_option_set_warnings(0, &old_warnings);
+        new->analyzer = idmef_analyzer_new();
+        if ( ! new->analyzer ) {
+                _prelude_client_destroy(new);
+                return prelude_error_from_errno(errno);
+        }
 
-        opt = prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CLI, 0, "ignore-startup-error",
-                                 NULL, PRELUDE_OPTION_ARGUMENT_NONE, set_ignore_error, NULL);
-
-        ret = prelude_option_parse_arguments(client, opt, NULL, argc, argv);
-        if ( ret < 0 )
-                return ret;
-
-        /*
-         * At initialization time,
-         * if one of the sending capability is set, we will error out if
-         * we get no connection string. However, if the capability is changed
-         * while we parse option argument, we don't want to take into account
-         * an 'outside' capability.
-         */
-        capability = client->capability;
+        new->capability = capability;
+        pthread_mutex_init(&new->msgbuf_lock, NULL);
+        new->config_filename = config ? strdup(config) : NULL;
         
-        ret = prelude_option_parse_arguments(client, client->config_file_opt, NULL, argc, argv);
-        if ( ret < 0 )
+        setup_options(new);
+        set_analyzer_name(new, NULL, profile);
+
+        ret = _prelude_client_profile_new(&new->profile);
+        if ( ret < 0 ) {
+                _prelude_client_destroy(new);
                 return ret;
+        }
+
+        prelude_client_profile_set_name(new->profile, profile);
+                
+        ret = prelude_ident_new(&new->unique_ident);
+        if ( ret < 0 ) {
+                _prelude_client_destroy(new);
+                return ret;
+        }
+
+        prelude_option_set_warnings(0, &old_warnings);
+        opt = prelude_option_add(prelude_generic_optlist, PRELUDE_OPTION_TYPE_CLI, 0,
+                                 "ignore-startup-error", NULL, PRELUDE_OPTION_ARGUMENT_NONE,
+                                 set_ignore_error, NULL);
+        
+        ret = prelude_option_parse_arguments(new, opt, NULL, argc, argv);
+        if ( ret < 0 ) {
+                _prelude_client_destroy(new);
+                return ret;
+        }
+        
+        setup_heartbeat_timer(new, DEFAULT_HEARTBEAT_INTERVAL);
+        prelude_timer_init(&new->heartbeat_timer);
+
+        if ( new->capability & PRELUDE_CONNECTION_CAPABILITY_CONNECT ) {
+                ret = connection_mgr_create(new);
+                if ( ret < 0 ) {
+                        _prelude_client_destroy(new);
+                        return ret;
+                }
+        }
+        
+        ret = prelude_option_parse_arguments(new, prelude_generic_optlist, config, argc, argv);        
+        if ( ret < 0 ) {
+                _prelude_client_destroy(new);
+                return ret;
+        }
         
         prelude_option_set_warnings(old_warnings, NULL);
         
-        client->manager_list = prelude_connection_mgr_new(client);
-        if ( ! client->manager_list )
-                return prelude_error_from_errno(errno);
-        
-        setup_heartbeat_timer(client, DEFAULT_HEARTBEAT_INTERVAL);
-        prelude_timer_init(&client->heartbeat_timer);
-                
-        ret = prelude_option_parse_arguments(client, NULL, client->config_filename, argc, argv);        
-        if ( ret < 0 )
+        ret = _prelude_client_profile_init(new->profile);
+        if ( ret < 0 ) {
+                _prelude_client_destroy(new);
                 return ret;
-                
+        }
+        
+        
         /*
          * need to be done after option parsing, so that there is no error
          * when prelude-getopt see standalone option.
          */
-        prelude_option_destroy(client->config_file_opt);
         prelude_option_destroy(opt);
-        
-        ret = prelude_client_ident_init(client, &client->analyzerid);
-        if ( ret < 0 && ! client->ignore_error )
-                return ret;
-        
-        prelude_client_get_backup_filename(client, filename, sizeof(filename));
+        prelude_client_profile_get_backup_dirname(new->profile, filename, sizeof(filename));
+
         ret = access(filename, W_OK);
-        if ( ret < 0 && ! client->ignore_error )
+        if ( ret < 0 && ! new->ignore_error ) {
+                _prelude_client_destroy(new);
                 return prelude_error(PRELUDE_ERROR_BACKUP_DIRECTORY);
+        }
         
-        ret = fill_client_infos(client, argv ? argv[0] : NULL);
-        if ( ret < 0 )
+        ret = fill_client_infos(new, argv ? argv[0] : NULL);
+        if ( ret < 0 ) {
+                _prelude_client_destroy(new);
                 return ret;
-
-        ret = create_heartbeat_msgbuf(client);
-        if ( ret < 0 )
-                return ret;
+        }
         
-        if ( capability & CAPABILITY_SEND ) {
+        ret = create_heartbeat_msgbuf(new);
+        if ( ret < 0 ) {
+                _prelude_client_destroy(new);
+                return ret;
+        }
+        
+        *client = new;
+        
+        return 0;
+}
 
-                ret = tls_auth_init(client, &client->credentials);
-                if ( ret < 0 && ! client->ignore_error )
-                        return ret;
-                
-                ret = prelude_connection_mgr_init(client->manager_list);
+
+
+/**
+ * prelude_client_start:
+ * @client: Pointer to a client object to initialize.
+ *
+ * This function start the @client object, triggering
+ * a connection from the client to it's server if any were
+ * specified, and sending the initial heartbeat.
+ *
+ * Returns: 0 on success, -1 if an error occured.
+ */
+int prelude_client_start(prelude_client_t *client)
+{
+        int ret;
+        
+        if ( client->manager_list ) {
+                ret = prelude_connection_mgr_init(client->manager_list);                
                 if ( ret < 0 ) {
                         log(LOG_ERR, "Initiating connection to the manager has failed.\n");
-                        return -1;
+                        return ret;
                 }
         }
         
@@ -947,53 +1037,6 @@ idmef_analyzer_t *prelude_client_get_analyzer(prelude_client_t *client)
         return client->analyzer;
 }
 
-
-
-/**
- * prelude_client_set_analyzerid:
- * @client: Pointer to a #prelude_client_t object.
- * @analyzerid: an unique identity accross the whole environement of analyzer.
- *
- * Provide the ability to manually set @client analyzerid. This unique identity
- * should be unique accross the whole environement of analyzer. The analyzerid
- * is normally allocated when registering an analyzer.
- */
-void prelude_client_set_analyzerid(prelude_client_t *client, uint64_t analyzerid)
-{
-        client->analyzerid = analyzerid;
-}
-
-
-
-/**
- * prelude_client_get_analyzerid:
- * @client: Pointer to a #prelude_client_t object.
- *
- * Get the unique and permanent analyzerid associated with @client.
- *
- * Returns: a 64bits integer representing the unique identity of @client.
- */
-uint64_t prelude_client_get_analyzerid(prelude_client_t *client)
-{
-        return client->analyzerid;
-}
-
-
-
-/**
- * prelude_client_get_name:
- * @client: Pointer to a #prelude_client_t object.
- *
- * Get the analyzer name associated with @client. This name might
- * have been set by prelude_client_init() or prelude_client_set_name()
- * functions.
- *
- * Returns: a pointer to the name of @client.
- */
-const char *prelude_client_get_profile(prelude_client_t *client)
-{
-        return client->profile;
-}
 
 
 
@@ -1031,82 +1074,36 @@ void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
  */
 void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg)
 {
+        uint64_t ident;
+        idmef_alert_t *alert;
+        idmef_heartbeat_t *heartbeat;
+        
         /*
          * we need to hold a lock since asynchronous heartbeat
          * could write the message buffer at the same time we do.
          */
         pthread_mutex_lock(&client->msgbuf_lock);
+
+        if ( idmef_message_get_type(msg) == IDMEF_MESSAGE_TYPE_ALERT ) {
+                alert = idmef_message_get_alert(msg);
+                
+                if ( ! idmef_alert_get_messageid(alert) ) {
+                        ident = prelude_ident_inc(client->unique_ident);
+                        idmef_alert_set_messageid(alert, ident);
+                }
+        } else {       
+                heartbeat = idmef_message_get_heartbeat(msg);
+
+                if ( ! idmef_heartbeat_get_messageid(heartbeat) ) {
+                        ident = prelude_ident_inc(client->unique_ident);
+                        idmef_heartbeat_set_messageid(heartbeat, ident);
+                }
+        }
         
         idmef_message_write(msg, client->msgbuf);
         prelude_msgbuf_mark_end(client->msgbuf);
 
         pthread_mutex_unlock(&client->msgbuf_lock);
-}
-
-
-
-/**
- * prelude_client_set_uid:
- * @client: Pointer to a #prelude_client_t object.
- * @uid: UID used by @client.
- *
- * Analyzer UID and GID are part of the different filenames used to
- * store analyzer data. This is required since it is not impossible
- * for two instance of the same analyzer (same name) to use different
- * access privileges.
- *
- * In case your analyzer drop privilege after a call to prelude_client_init(),
- * you might use this function to override the UID gathered using getuid().
- */
-void prelude_client_set_uid(prelude_client_t *client, uid_t uid)
-{
-        client->uid = uid;
-}
-
-
-
-/**
- * prelude_client_get_uid:
- * @client: pointer to a #prelude_client_t object.
- *
- * Returns: the UID used by @client.
- */
-uid_t prelude_client_get_uid(prelude_client_t *client)
-{
-        return client->uid;
-}
-
-
-
-/**
- * prelude_client_set_gid:
- * @client: Pointer to a #prelude_client_t object.
- * @gid: GID used by @client.
- *
- * Analyzer UID and GID are part of the different filenames used to
- * store analyzer data. This is required since it is not impossible
- * for two instance of the same analyzer (same name) to use different
- * access privileges.
- *
- * In case your analyzer drop privileges after a call to prelude_client_init()
- * you might use this function to override the GID gathered using getuid().
- */
-void prelude_client_set_gid(prelude_client_t *client, gid_t gid)
-{
-        client->gid = gid;
-}
-
-
-
-/**
- * prelude_client_get_gid:
- * @client: pointer to a #prelude_client_t object.
- *
- * Returns: the GID used by @client.
- */
-gid_t prelude_client_get_gid(prelude_client_t *client)
-{
-        return client->gid;
 }
 
 
@@ -1160,25 +1157,6 @@ void prelude_client_set_heartbeat_cb(prelude_client_t *client,
 
 
 /**
- * prelude_client_set_profile:
- * @client: Pointer to a #prelude_client_t object.
- * @profile: Profile name for @client.
- *
- * This function might be used to override @client name provided
- * using prelude_client_init(). Analyzer are not expected to use
- * this function directly.
- */
-void prelude_client_set_profile(prelude_client_t *client, const char *profile)
-{
-        if ( client->profile )
-                free(client->profile);
-
-        client->profile = strdup(profile);
-}
-
-
-
-/**
  * prelude_client_destroy:
  * @client: Pointer on a client object.
  * @status: Exit status for the client.
@@ -1205,11 +1183,13 @@ void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status
                 prelude_timer_unlock_critical_region();
         }
 
+        prelude_client_profile_destroy(client->profile);
+        
         if ( client->md5sum )
                 free(client->md5sum);
         
         if ( client->msgbuf )
-                prelude_msgbuf_close(client->msgbuf);
+                prelude_msgbuf_destroy(client->msgbuf);
         
         if ( client->profile )
                 free(client->profile);
@@ -1222,9 +1202,6 @@ void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status
 
         if ( client->manager_list )
                 prelude_connection_mgr_destroy(client->manager_list);
-
-        if ( client->credentials )
-                gnutls_certificate_free_credentials(client->credentials);
 
         if ( client->unique_ident )
                 prelude_ident_destroy(client->unique_ident);
@@ -1287,173 +1264,14 @@ prelude_client_flags_t prelude_client_get_flags(prelude_client_t *client)
 
 
 /**
- * prelude_client_set_capability:
- * @client: Pointer on a #prelude_client_t object.
- * @capability: Or'ed list of capability the client have.
- *
- * Set @capability for @client. @client might change depending
- * on the capability you set.
- */
-int prelude_client_set_capability(prelude_client_t *client, prelude_client_capability_t capability)
-{
-        int ret;
-        
-        if ( capability & CAPABILITY_SEND && ! client->credentials ){
-                
-                ret = tls_auth_init(client, &client->credentials);
-                if ( ret < 0 )
-                        return ret;
-        }
-        
-        client->capability = capability;
-        
-        return 0;
-}
-
-
-
-/**
  * prelude_client_get_capability:
  * @client: Pointer on a #prelude_client_t object.
  *
  * Returns: @client capability as set with prelude_client_set_capability()
  */
-prelude_client_capability_t prelude_client_get_capability(prelude_client_t *client)
+prelude_connection_capability_t prelude_client_get_capability(prelude_client_t *client)
 {
         return client->capability;
-}
-
-
-
-/**
- * prelude_client_get_ident_filename:
- * @client: pointer on a #prelude_client_t object.
- * @buf: buffer to write the returned filename to.
- * @size: size of @buf.
- *
- * Return the filename used to store @client unique and permanent analyzer ident.
- */
-void prelude_client_get_ident_filename(prelude_client_t *client, char *buf, size_t size) 
-{
-        snprintf(buf, size, IDENT_DIR "/%s", client->profile);
-}
-
-
-
-
-/**
- * prelude_client_get_tls_key_filename:
- * @client: pointer on a #prelude_client_t object.
- * @buf: buffer to write the returned filename to.
- * @size: size of @buf.
- *
- * Return the filename used to store @client private key.
- */
-void prelude_client_get_tls_key_filename(prelude_client_t *client, char *buf, size_t size) 
-{
-        snprintf(buf, size, TLS_KEY_DIR "/%s", client->profile);
-}
-
-
-
-
-/**
- * prelude_client_get_tls_server_filename:
- * @client: pointer on a #prelude_client_t object.
- * @buf: buffer to write the returned filename to.
- * @size: size of @buf.
- *
- * Return the filename used to store @client related CA certificate.
- * This only apply to @client receiving connection from analyzer (server).
- */
-void prelude_client_get_tls_server_ca_cert_filename(prelude_client_t *client, char *buf, size_t size) 
-{
-        snprintf(buf, size, TLS_SERVER_CERT_DIR "/%s.ca", client->profile);
-}
-
-
-
-
-/**
- * prelude_client_get_tls_server_trusted_cert_filename:
- * @client: pointer on a #prelude_client_t object.
- * @buf: buffer to write the returned filename to.
- * @size: size of @buf.
- *
- * Return the filename used to store certificate that this @client trust.
- * This only apply to @client receiving connection from analyzer (server).
- */
-void prelude_client_get_tls_server_trusted_cert_filename(prelude_client_t *client, char *buf, size_t size) 
-{
-        snprintf(buf, size, TLS_SERVER_CERT_DIR "/%s.trusted", client->profile);
-}
-
-
-
-
-/**
- * prelude_client_get_tls_server_keycert_filename:
- * @client: pointer on a #prelude_client_t object.
- * @buf: buffer to write the returned filename to.
- * @size: size of @buf.
- *
- * Return the filename used to store certificate for @client private key.
- * This only apply to @client receiving connection from analyzer (server).
- */
-void prelude_client_get_tls_server_keycert_filename(prelude_client_t *client, char *buf, size_t size) 
-{
-        snprintf(buf, size, TLS_SERVER_CERT_DIR "/%s.keycrt", client->profile);
-}
-
-
-
-
-/**
- * prelude_client_get_tls_client_trusted_cert_filename:
- * @client: pointer on a #prelude_client_t object.
- * @buf: buffer to write the returned filename to.
- * @size: size of @buf.
- *
- * Return the filename used to store peers public certificates that @client trust.
- * This only apply to client connecting to a peer.
- */
-void prelude_client_get_tls_client_trusted_cert_filename(prelude_client_t *client, char *buf, size_t size) 
-{
-        snprintf(buf, size, TLS_CLIENT_CERT_DIR "/%s.trusted", client->profile);
-}
-
-
-
-
-/**
- * prelude_client_get_tls_client_keycert_filename:
- * @client: pointer on a #prelude_client_t object.
- * @buf: buffer to write the returned filename to.
- * @size: size of @buf.
- *
- * Return the filename used to store public certificate for @client private key.
- * This only apply to client connecting to a peer.
- */
-void prelude_client_get_tls_client_keycert_filename(prelude_client_t *client, char *buf, size_t size) 
-{
-        snprintf(buf, size, TLS_CLIENT_CERT_DIR "/%s.keycrt", client->profile);
-}
-
-
-
-
-/**
- * prelude_client_get_backup_filename:
- * @client: pointer on a #prelude_client_t object.
- * @buf: buffer to write the returned filename to.
- * @size: size of @buf.
- *
- * Return the filename where message sent by @client will be stored,
- * in case writing the message to the peer fail.
- */
-void prelude_client_get_backup_filename(prelude_client_t *client, char *buf, size_t size) 
-{
-        snprintf(buf, size, PRELUDE_SPOOL_DIR "/%s", client->profile);
 }
 
 
@@ -1480,9 +1298,9 @@ prelude_ident_t *prelude_client_get_unique_ident(prelude_client_t *client)
 
 
 
-void *prelude_client_get_credentials(prelude_client_t *client)
+prelude_client_profile_t *prelude_client_get_profile(prelude_client_t *client)
 {
-        return client->credentials;
+        return client->profile;
 }
 
 
@@ -1500,9 +1318,10 @@ prelude_bool_t prelude_client_is_setup_needed(prelude_client_t *client, prelude_
 }
 
 
+
 void prelude_client_print_setup_error(prelude_client_t *client) 
 {
-        if ( client->capability & CAPABILITY_SEND ) {
+        if ( client->capability & PRELUDE_CONNECTION_CAPABILITY_CONNECT ) {
                 log(LOG_INFO,
                     "\nBasic file configuration does not exist. Please run :\n"
                     "prelude-adduser register %s <manager address> --uid %d --gid %d\n"
@@ -1511,12 +1330,16 @@ void prelude_client_print_setup_error(prelude_client_t *client)
                     "Be aware that you should replace the \"<manager address>\" argument with\n"
                     "the server address this analyzer is reporting to as argument.\n"
                     "\"prelude-adduser\" should be called for each configured server address.\n\n",
-                    client->profile, client->uid, client->gid);
+                    prelude_client_profile_get_name(client->profile),
+                    prelude_client_profile_get_uid(client->profile),
+                    prelude_client_profile_get_gid(client->profile));
                 
         } else {
                 log(LOG_INFO,
                     "\nBasic file configuration does not exist. Please run :\n"
                     "prelude-adduser add %s --uid %d --gid %d\n\n",
-                    client->profile, client->uid, client->gid);
+                    prelude_client_profile_get_name(client->profile),
+                    prelude_client_profile_get_uid(client->profile),
+                    prelude_client_profile_get_gid(client->profile));
         }
 }
