@@ -7,7 +7,6 @@ include_HEADERS = config-engine.h 		\
 		  idmef-time.h			\
 		  idmef-data.h			\
 		  idmef-tree.h			\
-		  idmef-tree-func.h		\
 		  idmef-object.h		\
 		  idmef-tree-data.h		\
 		  idmef-tree-print.h		\
