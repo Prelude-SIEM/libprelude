@@ -434,6 +434,7 @@ m4/Makefile
 
 src/Makefile
 src/include/Makefile
+src/include/prelude.h
 src/include/prelude-inttypes.h
 
 prelude-adduser/Makefile
