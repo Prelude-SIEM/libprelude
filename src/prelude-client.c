@@ -489,6 +489,9 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
                         return -1;
         }
         
+        setup_heartbeat_timer(new, DEFAULT_HEARTBEAT_INTERVAL);
+        timer_init(&new->heartbeat_timer);
+        
         ret = prelude_option_parse_arguments(&context, NULL, new->config_filename, argc, argv);
         if ( ret == prelude_option_end )
                 return -1;
@@ -502,14 +505,11 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
         ret = fill_client_infos(new, argv[0]);
         if ( ret < 0 )
                 return -1;
-        
-        setup_heartbeat_timer(new, DEFAULT_HEARTBEAT_INTERVAL);
-        timer_init(&new->heartbeat_timer);
 
         ret = create_heartbeat_msgbuf(new);
         if ( ret < 0 )
                 return -1;
-                
+
         if ( new->manager_list || new->heartbeat_cb )
                 heartbeat_expire_cb(new);
         
