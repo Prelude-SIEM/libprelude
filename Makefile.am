@@ -1,6 +1,7 @@
 SUBDIRS = libltdl src prelude-adduser bindings docs
 
 EXTRA_DIST = client.conf global.conf tls.conf
+
 bin_SCRIPTS = $(top_builddir)/libprelude-config
 
 
@@ -60,3 +61,9 @@ install-data-local:
         else															\
                 $(INSTALL) -m 644 $(top_srcdir)/tls.conf $(DESTDIR)$(prelude_config_dir)/tls;					\
 	fi
+
+
+uninstall-local:
+	rm -f $(DESTDIR)$(prelude_config_dir)/tls/tls.conf
+	rm -f $(DESTDIR)$(prelude_config_dir)/default/client.conf
+	rm -f $(DESTDIR)$(prelude_config_dir)/default/global.conf
