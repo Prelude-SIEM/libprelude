@@ -1,3 +1,11 @@
+2002-11-13  Chia-liang Kao <clkao@clkao.org>
+
+	* src/prelude-getopt.c:
+	(search_option): take flags and walk_children when doing search.
+
+	(prelude_option_invoke_set):
+	(prelude_option_invoke_get): implemented.
+	
 2002-11-13  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-client.c (prelude_client_connect): 

@@ -101,4 +101,8 @@ void prelude_option_set_private_data(prelude_option_t *opt, void *data);
 
 void *prelude_option_get_private_data(prelude_option_t *opt);
 
+int prelude_option_invoke_set(const char *option, const char *value);
+
+int prelude_option_invoke_get(const char *option, char *buf, size_t len);
+
 #endif /* _LIBPRELUDE_PRELUDE_GETOPT_H */

@@ -121,15 +121,21 @@ static void option_err(int flag, const char *fmt, ...)
 /*
  * Search an option of a given name in the given option list.
  */
-static prelude_option_t *search_cli_option(prelude_optlist_t *optlist, const char *optname) 
+static prelude_option_t *search_option(prelude_optlist_t *optlist, const char *optname, int flags, int walk_children) 
 {
         struct list_head *tmp;
-        prelude_option_t *item;
+        prelude_option_t *item, *ret;
 
         list_for_each(tmp, &optlist->optlist) {
                 item = list_entry(tmp, prelude_option_t, list);
 
-                if ( ! (item->flags & CLI_HOOK) )
+                if ( walk_children ) {
+                        ret = search_option(&item->optlist, optname, flags, walk_children);
+                        if ( ret )
+                                return ret;
+                }
+                
+                if ( ! (item->flags & flags) )
                         continue;
                                
                 if ( strcmp(item->longopt, optname) == 0 )
@@ -545,7 +551,7 @@ static int parse_argument(struct list_head *cb_list,
 
                 while ( *arg == '-' ) arg++;
                 
-                opt = search_cli_option(optlist, arg);
+                opt = search_option(optlist, arg, CLI_HOOK, 0);
                 if ( ! opt ) {
                         if ( depth == 0 ) {
                                 option_err(OPT_INVAL, "Invalid option : \"%s\".\n", arg);
@@ -1027,4 +1033,36 @@ void prelude_option_set_private_data(prelude_option_t *opt, void *data)
 void *prelude_option_get_private_data(prelude_option_t *opt) 
 {
         return opt->private_data;
+}
+
+
+
+int prelude_option_invoke_set(const char *option, const char *value)
+{
+        prelude_option_t *opt;
+
+        opt = search_option(root_optlist, option, WIDE_HOOK, 1);
+        if ( ! opt )
+                return -1;
+        
+        if ( opt->has_arg == no_argument && value != NULL )
+                return -1;
+        
+        if ( opt->has_arg == required_argument && value == NULL )
+                return -1;
+
+        return opt->set(opt, value);
+}
+
+
+
+int prelude_option_invoke_get(const char *option, char *buf, size_t len)
+{
+        prelude_option_t *opt;
+
+        opt = search_option(root_optlist, option, WIDE_HOOK, 1);
+        if ( ! opt || ! opt->get)
+                return -1;
+        
+        return opt->get(buf, len);
 }
