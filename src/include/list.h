@@ -174,7 +174,18 @@ static inline void list_splice(struct list_head *list, struct list_head *head)
                                 list_entry((pos)->member.next, class, member) \
         : \
                 ((list)->next == (list)) ? NULL : \
-                                list_entry((list)->next, class, member)         
+                                list_entry((list)->next, class, member)
+
+
+#define list_get_next_safe(pos, bkp, list, class, member)                                                                \
+        pos ?                                                                                                            \
+              (((pos) = bkp),                                                                                            \
+               ((bkp) = (! (bkp) || (bkp)->member.next == list) ? NULL : list_entry((pos)->member.next, class, member)), \
+               (pos))                                                                                                    \
+        :                                                                                                                \
+              (((pos) = ((list)->next == list) ? NULL : list_entry((list)->next, class, member)),                        \
+               ((bkp) = ((pos)->member.next == list) ? NULL : list_entry((pos)->member.next, class, member)),            \
+               (pos))
 
 
 /**
