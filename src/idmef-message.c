@@ -50,7 +50,11 @@ idmef_message_t *idmef_message_new(void)
 	idmef_message_t *message;
 
 	message = calloc(1, sizeof (*message));
+        if ( ! message )
+                return NULL;
 
+        message->refcount = 1;
+        
 	return message;
 }
 
@@ -58,6 +62,9 @@ idmef_message_t *idmef_message_new(void)
 
 void idmef_message_destroy(idmef_message_t *message)
 {
+        if ( --message->refcount )
+                return;
+        
 	idmef_message_destroy_internal(message);
 
 	if ( message->pmsg )

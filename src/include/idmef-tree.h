@@ -757,7 +757,8 @@ ENUM() {
 
 
 typedef struct {        
-
+        REFCOUNT;
+        
         idmef_string_t version;
 
         UNION(idmef_message_type_t, type) {
