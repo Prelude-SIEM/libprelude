@@ -31,6 +31,7 @@ include_HEADERS = common.h			\
 		  prelude-list.h		\
 		  prelude-log.h			\
 		  prelude-client.h		\
+		  prelude-client-profile.h	\
 		  prelude-connection.h		\
 		  prelude-connection-mgr.h	\
 		  prelude-failover.h		\
@@ -48,4 +49,4 @@ include_HEADERS = common.h			\
 
 nodist_include_HEADERS = prelude.h prelude-inttypes.h
 
-noinst_HEADERS = client-ident.h config-engine.h libmissing.h idmef-tree-data.h ntp.h tls-auth.h tls-util.h
+noinst_HEADERS = config-engine.h libmissing.h idmef-tree-data.h ntp.h tls-auth.h tls-util.h

@@ -16,7 +16,6 @@ LEX_OUTPUT_ROOT = lex.yy
 
 libprelude_la_SOURCES = 		\
 	common.c			\
-	client-ident.c			\
 	config-engine.c 		\
 	daemonize.c			\
 	ntp.c				\
@@ -26,6 +25,7 @@ libprelude_la_SOURCES = 		\
 	prelude.c			\
 	prelude-async.c			\
 	prelude-client.c		\
+	prelude-client-profile.c	\
 	prelude-connection.c		\
 	prelude-connection-mgr.c	\
 	prelude-failover.c		\
