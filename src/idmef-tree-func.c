@@ -35,7 +35,9 @@
 #include "prelude-log.h"
 #include "idmef-tree.h"
 #include "idmef-tree-func.h"
-
+#include "prelude-io.h"
+#include "prelude-message.h"
+#include "prelude-client.h"
 
 #define generic_free_list(type, head) do {           \
         type *decl;                                  \
@@ -627,9 +629,10 @@ idmef_additional_data_t *idmef_alert_additional_data_new(idmef_alert_t *alert)
 
 
 void idmef_alert_new(idmef_message_t *message) 
-{        
+{
         message->message.alert = &alert;
         message->type = idmef_alert_message;
+        alert.analyzer.analyzerid = prelude_client_get_analyzerid();
 }
 
 
