@@ -1,5 +1,13 @@
 2002-06-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/sensor.c (parse_argument): 
+	add node and analyzer configuration only option.
+	(prelude_analyzer_fill_information): new function, setup
+	an analyzer.
+
+	* sensors-default.conf (manager-addr): 
+	Add commentary for generic analyzer informations.
+
 	* src/sensor.c (prelude_heartbeat_register_cb): 
 	don't initialize timer and send initial heartbeat if
 	heartbeat_repeat_time is 0.

@@ -30,6 +30,7 @@
 #include <inttypes.h>
 #include <unistd.h>
 #include <errno.h>
+#include <sys/utsname.h>
 
 #include "config.h"
 
@@ -50,6 +51,8 @@
 #include "client-ident.h"
 #include "timer.h"
 
+#include "idmef-tree.h"
+#include "idmef-tree-func.h"
 
 /*
  * send an heartbeat every hours.
@@ -70,7 +73,84 @@ static prelude_timer_t heartbeat_timer;
 static int heartbeat_repeat_time = 60 * 60;
 static void (*send_heartbeat_cb)(void *data) = NULL;
 
+/*
+ * Analyzer informations
+ */
+static idmef_node_t node;
+static idmef_address_t address;
+static char *process_name = NULL, *process_path = NULL;
+
+/*
+ *
+ */
 static prelude_client_mgr_t *manager_list = NULL;
+ 
+
+static int setup_analyzer_node_location(const char *arg) 
+{
+        idmef_string_set(&node.location, arg);
+        return prelude_option_success;
+}
+
+
+
+static int setup_analyzer_node_name(const char *arg) 
+{
+        idmef_string_set(&node.name, arg);
+        return prelude_option_success;
+}
+
+
+
+static int setup_analyzer_node_category(const char *arg) 
+{
+        node.category = atoi(arg);
+        return prelude_option_success;
+}
+
+
+
+static int setup_analyzer_node_address_address(const char *arg)
+{
+        idmef_string_set(&address.address, arg);
+        return prelude_option_success;
+}
+
+
+static int setup_analyzer_node_address_netmask(const char *arg)
+{
+        idmef_string_set(&address.netmask, arg);
+        return prelude_option_success;
+}
+
+
+static int setup_analyzer_node_address_category(const char *arg) 
+{
+        address.category = atoi(arg);
+        return prelude_option_success;
+}
+
+
+static int setup_analyzer_node_address_vlan_num(const char *arg) 
+{
+        address.vlan_num = atoi(arg);
+        return prelude_option_success;
+}
+
+
+
+static int setup_analyzer_node_address_vlan_name(const char *arg) 
+{        
+        idmef_string_set(&address.vlan_name, arg);
+        return prelude_option_success;
+}
+
+
+static int setup_address(const char *arg) 
+{
+        list_add_tail(&address.list, &node.address_list);
+        return prelude_option_success;
+}
 
 
 
@@ -98,8 +178,18 @@ static int parse_argument(const char *filename, int argc, char **argv)
 {
         int ret;
         int old_flags;
+        char *ptr;
         prelude_option_t *opt;
-        
+
+        ptr = strrchr(argv[0], '/');
+        if ( ptr ) {
+                *ptr = '\0';
+                process_path = argv[0];
+                process_name = strdup(ptr + 1);
+
+        } else
+                process_name = argv[0];
+                
         /*
          * Declare library options.
          */
@@ -116,6 +206,33 @@ static int parse_argument(const char *filename, int argc, char **argv)
         prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "heartbeat-time",
                            "Send hearbeat at the specified time (default 60 minutes)",
                            required_argument, setup_heartbeat_repeat_time, NULL);
+
+        prelude_option_add(NULL, CFG_HOOK, 0, "node-name",
+                           NULL, required_argument, setup_analyzer_node_name, NULL);
+
+        prelude_option_add(NULL, CFG_HOOK, 0, "node-location",
+                           NULL, required_argument, setup_analyzer_node_location, NULL);
+        
+        prelude_option_add(NULL, CFG_HOOK, 0, "node-category",
+                           NULL, required_argument, setup_analyzer_node_category, NULL);
+        
+        opt = prelude_option_add(NULL, CFG_HOOK, 0, "node address",
+                                 NULL, required_argument, setup_address, NULL);
+
+        prelude_option_add(NULL, CFG_HOOK, 0, "address",
+                           NULL, required_argument, setup_analyzer_node_address_address, NULL);
+        
+        prelude_option_add(opt, CFG_HOOK, 0, "netmask",
+                           NULL, required_argument, setup_analyzer_node_address_netmask, NULL);
+
+        prelude_option_add(opt, CFG_HOOK, 0, "category",
+                           NULL, required_argument, setup_analyzer_node_address_category, NULL);
+
+        prelude_option_add(opt, CFG_HOOK, 0, "vlan-name",
+                           NULL, required_argument, setup_analyzer_node_address_vlan_name, NULL);
+
+        prelude_option_add(opt, CFG_HOOK, 0, "vlan-num",
+                           NULL, required_argument, setup_analyzer_node_address_vlan_num, NULL);
         
         /*
          * When parsing our own option, we don't want libprelude to whine
@@ -188,6 +305,10 @@ static int parse_argument(const char *filename, int argc, char **argv)
 int prelude_sensor_init(const char *sname, const char *filename, int argc, char **argv)
 {
         int ret;
+
+        memset(&node, 0, sizeof(node));
+        memset(&address, 0, sizeof(address));
+        INIT_LIST_HEAD(&node.address_list);
         
         if ( ! sname ) {
                 errno = EINVAL;
@@ -319,12 +440,37 @@ void prelude_heartbeat_register_cb(void (*cb)(void *data), void *data)
 
 
 
+int prelude_analyzer_fill_information(idmef_analyzer_t *analyzer) 
+{
+        int ret;
+        char *ptr;
+        static struct utsname uts;
+        static idmef_process_t process;
+        
+        ret = uname(&uts);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "uname returned an error.\n");
+                return -1;
+        }
 
+        memset(&process, 0, sizeof(process));
+        
+        idmef_string_set(&analyzer->ostype, uts.sysname);
+        idmef_string_set(&analyzer->osversion, uts.release);
 
+        INIT_LIST_HEAD(&process.arg_list);
+        INIT_LIST_HEAD(&process.env_list);
+        
+        process.pid = getpid();
 
+        if ( process_name )
+                idmef_string_set(&process.name, process_name);
 
-
-
-
-
-
+        if ( process_path )
+                idmef_string_set(&process.path, process_path);
+        
+        analyzer->node = &node;
+        analyzer->process = &process;
+        
+        return 0;
+}

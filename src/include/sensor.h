@@ -46,4 +46,6 @@ void prelude_heartbeat_register_cb(void (*cb)(void *data), void *data);
 
 int prelude_heartbeat_send(void);
 
+int prelude_analyzer_fill_information(idmef_analyzer_t *analyzer);
+
 #endif /* _LIBPRELUDE_SENSOR_H */
