@@ -318,6 +318,7 @@ idmef_criteria_t *idmef_criteria_clone(idmef_criteria_t *src)
 {
 	idmef_criteria_t *dst;
 	idmef_criteria_t *ptr;
+	idmef_operator_t operator = operator_and;
 
 	if ( ! src )
 		return NULL;
@@ -337,7 +338,7 @@ idmef_criteria_t *idmef_criteria_clone(idmef_criteria_t *src)
 			if ( ! criterion )
 				goto error;
 
-			if ( idmef_criteria_add_criterion(dst, criterion, ptr->operator) < 0 )
+			if ( idmef_criteria_add_criterion(dst, criterion, operator) < 0 )
 				goto error;
 
 		} else {
@@ -347,10 +348,11 @@ idmef_criteria_t *idmef_criteria_clone(idmef_criteria_t *src)
 			if ( ! sub_criteria )
 				goto error;
 
-			if ( idmef_criteria_add_criteria(dst, sub_criteria, ptr->operator) < 0 )
+			if ( idmef_criteria_add_criteria(dst, sub_criteria, operator) < 0 )
 				goto error;
 		}
 
+		operator = ptr->operator;
 	}
 
 	return dst;

@@ -269,7 +269,7 @@ def _idmef_value_python_to_c(object, py_value):
 
 
 
-def _idmef_value_c_to_python(value):
+def idmef_value_c_to_python(value):
 
     func_type_table = {
         type_int16:     idmef_value_get_int16,
@@ -320,7 +320,7 @@ def _idmef_value_list_c_to_python(value):
         return None
     
     if not idmef_value_is_list(value):
-        return _idmef_value_c_to_python(value)
+        return idmef_value_c_to_python(value)
 
     ret = [ ]
 
@@ -334,15 +334,27 @@ def _idmef_value_list_c_to_python(value):
 class IDMEFMessage:
     """IDMEF Message manipulation class."""
     
-    def __init__(self):
-        """Create a new empty IDMEF message."""
-        self.res = idmef_message_new()
-        if not self.res:
-            raise Error()
+    def __init__(self, res=None):
+        """Create a new empty IDMEF message.""" # FIXME
+        if res:
+            self.res = res
+        else:
+            self.res = idmef_message_new()
+            if not self.res:
+                raise Error()
 
     def __del__(self):
         """Destroy the IDMEF message."""
         idmef_message_destroy(self.res)
+
+    def __repr__(self):
+        buf = "A" * 8192
+
+        size = idmef_message_to_string(self.res, buf, len(buf))
+        if size < 0:
+            raise Error()
+
+        return buf[:size]
 
     def __setitem__(self, object_name, py_value):
         """Set the value of the object in the message."""
@@ -434,31 +446,26 @@ class IDMEFCriteria(object):
     def __repr__(self):
         self.__str__()
 
-    def __append(self, value, operator):
-        top_criteria = IDMEFCriteria()
-        idmef_criteria_destroy(top_criteria.res)
+    def __append(self, new_sub_criteria, operator):
+        new_criteria = IDMEFCriteria()
+        idmef_criteria_destroy(new_criteria.res)
 
-        top_criteria.res = idmef_criteria_clone(self.res)
-        if not top_criteria.res:
-            raise Error()
-        
-        if type(value) is IDMEFCriteria:
-            criteria2 = idmef_criteria_clone(value.res)
-            if not criteria2:
-                raise Error()
-        else:
-            criteria2 = idmef_criteria_new_string(value)
-            if not criteria2:
-                raise IDMEFCriteriaError(value)
-            
-        if idmef_criteria_add_criteria(top_criteria.res, criteria2, operator) < 0:
-            idmef_criteria_destroy(criteria2)
+        new_criteria.res = idmef_criteria_clone(self.res)
+        if not new_criteria.res:
             raise Error()
 
-        return top_criteria
+        new_sub_criteria_res = idmef_criteria_clone(new_sub_criteria.res)
+        if not new_sub_criteria_res:
+            raise Error()
 
-    def __and__(self, value):
-        return self.__append(value, operator_and)
+        if idmef_criteria_add_criteria(new_criteria.res, new_sub_criteria_res, operator) < 0:
+            idmef_criteria_destroy(new_sub_criteria_res)
+            raise Error()
 
-    def __or__(self, value):
-        return self.__append(value, operator_or)
+        return new_criteria
+
+    def __and__(self, new_sub_criteria):
+        return self.__append(new_sub_criteria, operator_and)
+
+    def __or__(self, new_sub_criteria):
+        return self.__append(new_sub_criteria, operator_or)

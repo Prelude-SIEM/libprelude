@@ -1033,6 +1033,25 @@ static PyObject *_wrap_prelude_client_close(PyObject *self, PyObject *args) {
 }
 
 
+static PyObject *_wrap_prelude_client_set_fd(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+    prelude_io_t *arg2 = (prelude_io_t *) 0 ;
+    PyObject * obj0 = 0 ;
+    PyObject * obj1 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"OO:prelude_client_set_fd",&obj0,&obj1)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_client_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_prelude_io_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    prelude_client_set_fd(arg1,arg2);
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_prelude_client_set_type(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_client_t *arg1 = (prelude_client_t *) 0 ;
@@ -1044,6 +1063,57 @@ static PyObject *_wrap_prelude_client_set_type(PyObject *self, PyObject *args) {
     prelude_client_set_type(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_prelude_client_get_type(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+    int result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:prelude_client_get_type",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_client_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (int)prelude_client_get_type(arg1);
+    
+    resultobj = PyInt_FromLong((long)result);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_prelude_client_set_state(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+    int arg2 ;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"Oi:prelude_client_set_state",&obj0,&arg2)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_client_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    prelude_client_set_state(arg1,arg2);
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_prelude_client_get_state(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+    int result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:prelude_client_get_state",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_client_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (int)prelude_client_get_state(arg1);
+    
+    resultobj = PyInt_FromLong((long)result);
     return resultobj;
     fail:
     return NULL;
@@ -1290,6 +1360,23 @@ static PyObject *_wrap_idmef_additional_data_new(PyObject *self, PyObject *args)
     
     if(!PyArg_ParseTuple(args,(char *)":idmef_additional_data_new")) goto fail;
     result = (idmef_additional_data_t *)idmef_additional_data_new();
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_additional_data_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_additional_data_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_additional_data_t *arg1 = (idmef_additional_data_t *) 0 ;
+    idmef_additional_data_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_additional_data_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_additional_data_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_additional_data_t *)idmef_additional_data_ref(arg1);
     
     resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_additional_data_t, 0);
     return resultobj;
@@ -1623,6 +1710,23 @@ static PyObject *_wrap_idmef_classification_new(PyObject *self, PyObject *args) 
 }
 
 
+static PyObject *_wrap_idmef_classification_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_classification_t *arg1 = (idmef_classification_t *) 0 ;
+    idmef_classification_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_classification_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_classification_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_classification_t *)idmef_classification_ref(arg1);
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_classification_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_classification_get_child(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     void *arg1 = (void *) 0 ;
@@ -1940,6 +2044,23 @@ static PyObject *_wrap_idmef_userid_new(PyObject *self, PyObject *args) {
     
     if(!PyArg_ParseTuple(args,(char *)":idmef_userid_new")) goto fail;
     result = (idmef_userid_t *)idmef_userid_new();
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_userid_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_userid_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_userid_t *arg1 = (idmef_userid_t *) 0 ;
+    idmef_userid_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_userid_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_userid_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_userid_t *)idmef_userid_ref(arg1);
     
     resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_userid_t, 0);
     return resultobj;
@@ -2345,6 +2466,23 @@ static PyObject *_wrap_idmef_user_new(PyObject *self, PyObject *args) {
 }
 
 
+static PyObject *_wrap_idmef_user_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_user_t *arg1 = (idmef_user_t *) 0 ;
+    idmef_user_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_user_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_user_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_user_t *)idmef_user_ref(arg1);
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_user_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_user_get_child(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     void *arg1 = (void *) 0 ;
@@ -2666,6 +2804,23 @@ static PyObject *_wrap_idmef_address_new(PyObject *self, PyObject *args) {
     
     if(!PyArg_ParseTuple(args,(char *)":idmef_address_new")) goto fail;
     result = (idmef_address_t *)idmef_address_new();
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_address_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_address_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_address_t *arg1 = (idmef_address_t *) 0 ;
+    idmef_address_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_address_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_address_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_address_t *)idmef_address_ref(arg1);
     
     resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_address_t, 0);
     return resultobj;
@@ -3161,6 +3316,23 @@ static PyObject *_wrap_idmef_process_new(PyObject *self, PyObject *args) {
     
     if(!PyArg_ParseTuple(args,(char *)":idmef_process_new")) goto fail;
     result = (idmef_process_t *)idmef_process_new();
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_process_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_process_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_process_t *arg1 = (idmef_process_t *) 0 ;
+    idmef_process_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_process_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_process_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_process_t *)idmef_process_ref(arg1);
     
     resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_process_t, 0);
     return resultobj;
@@ -3672,6 +3844,23 @@ static PyObject *_wrap_idmef_webservice_new(PyObject *self, PyObject *args) {
 }
 
 
+static PyObject *_wrap_idmef_webservice_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_webservice_t *arg1 = (idmef_webservice_t *) 0 ;
+    idmef_webservice_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_webservice_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_webservice_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_webservice_t *)idmef_webservice_ref(arg1);
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_webservice_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_webservice_get_child(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     void *arg1 = (void *) 0 ;
@@ -4030,6 +4219,23 @@ static PyObject *_wrap_idmef_snmpservice_new(PyObject *self, PyObject *args) {
 }
 
 
+static PyObject *_wrap_idmef_snmpservice_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_snmpservice_t *arg1 = (idmef_snmpservice_t *) 0 ;
+    idmef_snmpservice_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_snmpservice_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_snmpservice_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_snmpservice_t *)idmef_snmpservice_ref(arg1);
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_snmpservice_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_snmpservice_get_child(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     void *arg1 = (void *) 0 ;
@@ -4349,6 +4555,23 @@ static PyObject *_wrap_idmef_service_new(PyObject *self, PyObject *args) {
     
     if(!PyArg_ParseTuple(args,(char *)":idmef_service_new")) goto fail;
     result = (idmef_service_t *)idmef_service_new();
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_service_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_service_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_service_t *arg1 = (idmef_service_t *) 0 ;
+    idmef_service_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_service_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_service_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_service_t *)idmef_service_ref(arg1);
     
     resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_service_t, 0);
     return resultobj;
@@ -5000,6 +5223,23 @@ static PyObject *_wrap_idmef_node_new(PyObject *self, PyObject *args) {
 }
 
 
+static PyObject *_wrap_idmef_node_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_node_t *arg1 = (idmef_node_t *) 0 ;
+    idmef_node_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_node_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_node_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_node_t *)idmef_node_ref(arg1);
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_node_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_node_get_child(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     void *arg1 = (void *) 0 ;
@@ -5461,6 +5701,23 @@ static PyObject *_wrap_idmef_source_new(PyObject *self, PyObject *args) {
     
     if(!PyArg_ParseTuple(args,(char *)":idmef_source_new")) goto fail;
     result = (idmef_source_t *)idmef_source_new();
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_source_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_source_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_source_t *arg1 = (idmef_source_t *) 0 ;
+    idmef_source_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_source_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_source_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_source_t *)idmef_source_ref(arg1);
     
     resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_source_t, 0);
     return resultobj;
@@ -6033,6 +6290,23 @@ static PyObject *_wrap_idmef_file_access_new(PyObject *self, PyObject *args) {
 }
 
 
+static PyObject *_wrap_idmef_file_access_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_file_access_t *arg1 = (idmef_file_access_t *) 0 ;
+    idmef_file_access_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_file_access_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_file_access_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_file_access_t *)idmef_file_access_ref(arg1);
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_file_access_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_file_access_get_child(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     void *arg1 = (void *) 0 ;
@@ -6243,6 +6517,23 @@ static PyObject *_wrap_idmef_inode_new(PyObject *self, PyObject *args) {
     
     if(!PyArg_ParseTuple(args,(char *)":idmef_inode_new")) goto fail;
     result = (idmef_inode_t *)idmef_inode_new();
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_inode_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_inode_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_inode_t *arg1 = (idmef_inode_t *) 0 ;
+    idmef_inode_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_inode_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_inode_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_inode_t *)idmef_inode_ref(arg1);
     
     resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_inode_t, 0);
     return resultobj;
@@ -6785,6 +7076,23 @@ static PyObject *_wrap_idmef_file_new(PyObject *self, PyObject *args) {
     
     if(!PyArg_ParseTuple(args,(char *)":idmef_file_new")) goto fail;
     result = (idmef_file_t *)idmef_file_new();
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_file_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_file_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_file_t *arg1 = (idmef_file_t *) 0 ;
+    idmef_file_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_file_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_file_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_file_t *)idmef_file_ref(arg1);
     
     resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_file_t, 0);
     return resultobj;
@@ -7827,6 +8135,23 @@ static PyObject *_wrap_idmef_linkage_new(PyObject *self, PyObject *args) {
 }
 
 
+static PyObject *_wrap_idmef_linkage_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_linkage_t *arg1 = (idmef_linkage_t *) 0 ;
+    idmef_linkage_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_linkage_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_linkage_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_linkage_t *)idmef_linkage_ref(arg1);
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_linkage_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_linkage_get_child(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     void *arg1 = (void *) 0 ;
@@ -8172,6 +8497,23 @@ static PyObject *_wrap_idmef_target_new(PyObject *self, PyObject *args) {
     
     if(!PyArg_ParseTuple(args,(char *)":idmef_target_new")) goto fail;
     result = (idmef_target_t *)idmef_target_new();
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_target_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_target_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_target_t *arg1 = (idmef_target_t *) 0 ;
+    idmef_target_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_target_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_target_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_target_t *)idmef_target_ref(arg1);
     
     resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_target_t, 0);
     return resultobj;
@@ -8809,6 +9151,23 @@ static PyObject *_wrap_idmef_analyzer_new(PyObject *self, PyObject *args) {
     
     if(!PyArg_ParseTuple(args,(char *)":idmef_analyzer_new")) goto fail;
     result = (idmef_analyzer_t *)idmef_analyzer_new();
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_analyzer_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_analyzer_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_analyzer_t *arg1 = (idmef_analyzer_t *) 0 ;
+    idmef_analyzer_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_analyzer_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_analyzer_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_analyzer_t *)idmef_analyzer_ref(arg1);
     
     resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_analyzer_t, 0);
     return resultobj;
@@ -9523,6 +9882,23 @@ static PyObject *_wrap_idmef_alertident_new(PyObject *self, PyObject *args) {
 }
 
 
+static PyObject *_wrap_idmef_alertident_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_alertident_t *arg1 = (idmef_alertident_t *) 0 ;
+    idmef_alertident_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_alertident_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_alertident_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_alertident_t *)idmef_alertident_ref(arg1);
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_alertident_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_alertident_get_child(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     void *arg1 = (void *) 0 ;
@@ -9858,6 +10234,23 @@ static PyObject *_wrap_idmef_impact_new(PyObject *self, PyObject *args) {
     
     if(!PyArg_ParseTuple(args,(char *)":idmef_impact_new")) goto fail;
     result = (idmef_impact_t *)idmef_impact_new();
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_impact_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_impact_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_impact_t *arg1 = (idmef_impact_t *) 0 ;
+    idmef_impact_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_impact_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_impact_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_impact_t *)idmef_impact_ref(arg1);
     
     resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_impact_t, 0);
     return resultobj;
@@ -10257,6 +10650,23 @@ static PyObject *_wrap_idmef_action_new(PyObject *self, PyObject *args) {
 }
 
 
+static PyObject *_wrap_idmef_action_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_action_t *arg1 = (idmef_action_t *) 0 ;
+    idmef_action_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_action_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_action_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_action_t *)idmef_action_ref(arg1);
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_action_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_action_get_child(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     void *arg1 = (void *) 0 ;
@@ -10512,6 +10922,23 @@ static PyObject *_wrap_idmef_confidence_new(PyObject *self, PyObject *args) {
 }
 
 
+static PyObject *_wrap_idmef_confidence_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_confidence_t *arg1 = (idmef_confidence_t *) 0 ;
+    idmef_confidence_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_confidence_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_confidence_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_confidence_t *)idmef_confidence_ref(arg1);
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_confidence_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_confidence_get_child(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     void *arg1 = (void *) 0 ;
@@ -10715,6 +11142,23 @@ static PyObject *_wrap_idmef_assessment_new(PyObject *self, PyObject *args) {
     
     if(!PyArg_ParseTuple(args,(char *)":idmef_assessment_new")) goto fail;
     result = (idmef_assessment_t *)idmef_assessment_new();
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_assessment_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_assessment_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_assessment_t *arg1 = (idmef_assessment_t *) 0 ;
+    idmef_assessment_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_assessment_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_assessment_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_assessment_t *)idmef_assessment_ref(arg1);
     
     resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_assessment_t, 0);
     return resultobj;
@@ -11011,6 +11455,23 @@ static PyObject *_wrap_idmef_tool_alert_new(PyObject *self, PyObject *args) {
 }
 
 
+static PyObject *_wrap_idmef_tool_alert_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_tool_alert_t *arg1 = (idmef_tool_alert_t *) 0 ;
+    idmef_tool_alert_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_tool_alert_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_tool_alert_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_tool_alert_t *)idmef_tool_alert_ref(arg1);
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_tool_alert_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_tool_alert_get_child(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     void *arg1 = (void *) 0 ;
@@ -11299,6 +11760,23 @@ static PyObject *_wrap_idmef_correlation_alert_new(PyObject *self, PyObject *arg
 }
 
 
+static PyObject *_wrap_idmef_correlation_alert_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_correlation_alert_t *arg1 = (idmef_correlation_alert_t *) 0 ;
+    idmef_correlation_alert_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_correlation_alert_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_correlation_alert_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_correlation_alert_t *)idmef_correlation_alert_ref(arg1);
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_correlation_alert_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_correlation_alert_get_child(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     void *arg1 = (void *) 0 ;
@@ -11509,6 +11987,23 @@ static PyObject *_wrap_idmef_overflow_alert_new(PyObject *self, PyObject *args) 
     
     if(!PyArg_ParseTuple(args,(char *)":idmef_overflow_alert_new")) goto fail;
     result = (idmef_overflow_alert_t *)idmef_overflow_alert_new();
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_overflow_alert_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_overflow_alert_ref(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_overflow_alert_t *arg1 = (idmef_overflow_alert_t *) 0 ;
+    idmef_overflow_alert_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_overflow_alert_ref",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_overflow_alert_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (idmef_overflow_alert_t *)idmef_overflow_alert_ref(arg1);
     
     resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_overflow_alert_t, 0);
     return resultobj;
@@ -13653,6 +14148,41 @@ static PyObject *_wrap_idmef_message_new(PyObject *self, PyObject *args) {
 }
 
 
+static PyObject *_wrap_idmef_message_destroy(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_message_t *arg1 = (idmef_message_t *) 0 ;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_message_destroy",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_message_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    idmef_message_destroy(arg1);
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_message_set_pmsg(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_message_t *arg1 = (idmef_message_t *) 0 ;
+    prelude_msg_t *arg2 = (prelude_msg_t *) 0 ;
+    PyObject * obj0 = 0 ;
+    PyObject * obj1 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_message_set_pmsg",&obj0,&obj1)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_message_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_prelude_msg_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    idmef_message_set_pmsg(arg1,arg2);
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_message_enable_cache(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_message_t *arg1 = (idmef_message_t *) 0 ;
@@ -13681,22 +14211,6 @@ static PyObject *_wrap_idmef_message_disable_cache(PyObject *self, PyObject *arg
     result = (int)idmef_message_disable_cache(arg1);
     
     resultobj = PyInt_FromLong((long)result);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_idmef_message_destroy(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    idmef_message_t *arg1 = (idmef_message_t *) 0 ;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:idmef_message_destroy",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_message_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_message_destroy(arg1);
-    
-    Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
     fail:
     return NULL;
@@ -16392,9 +16906,21 @@ static PyObject *_wrap_idmef_string_new_ref_fast(PyObject *self, PyObject *args)
     char *arg1 ;
     int arg2 ;
     idmef_string_t *result;
+    PyObject * obj0 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"si:idmef_string_new_ref_fast",&arg1,&arg2)) goto fail;
-    result = (idmef_string_t *)idmef_string_new_ref_fast(arg1,arg2);
+    if(!PyArg_ParseTuple(args,(char *)"Oi:idmef_string_new_ref_fast",&obj0,&arg2)) goto fail;
+    {
+        if ( obj0 == Py_None )
+        arg1 = NULL;
+        else if ( PyString_Check(obj0) )
+        arg1 = PyString_AsString(obj0);
+        else {
+            PyErr_Format(PyExc_TypeError,
+            "expected None or string, %s found", obj0->ob_type->tp_name);
+            return NULL;
+        }
+    }
+    result = (idmef_string_t *)idmef_string_new_ref_fast((char const *)arg1,arg2);
     
     resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_string_t, 0);
     return resultobj;
@@ -20089,7 +20615,7 @@ static PyObject *_wrap_idmef_additionaldata_data_to_string(PyObject *self, PyObj
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_additional_data_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     arg3 = (size_t) PyInt_AsLong(obj2);
     if (PyErr_Occurred()) SWIG_fail;
-    result = (int)idmef_additionaldata_data_to_string((idmef_additional_data_t const *)arg1,arg2,arg3);
+    result = (int)idmef_additionaldata_data_to_string(arg1,arg2,arg3);
     
     resultobj = PyInt_FromLong((long)result);
     return resultobj;
@@ -20145,7 +20671,11 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"prelude_client_is_alive", _wrap_prelude_client_is_alive, METH_VARARGS },
 	 { (char *)"prelude_client_get_fd", _wrap_prelude_client_get_fd, METH_VARARGS },
 	 { (char *)"prelude_client_close", _wrap_prelude_client_close, METH_VARARGS },
+	 { (char *)"prelude_client_set_fd", _wrap_prelude_client_set_fd, METH_VARARGS },
 	 { (char *)"prelude_client_set_type", _wrap_prelude_client_set_type, METH_VARARGS },
+	 { (char *)"prelude_client_get_type", _wrap_prelude_client_get_type, METH_VARARGS },
+	 { (char *)"prelude_client_set_state", _wrap_prelude_client_set_state, METH_VARARGS },
+	 { (char *)"prelude_client_get_state", _wrap_prelude_client_get_state, METH_VARARGS },
 	 { (char *)"prelude_client_get_analyzerid", _wrap_prelude_client_get_analyzerid, METH_VARARGS },
 	 { (char *)"prelude_sensor_send_msg", _wrap_prelude_sensor_send_msg, METH_VARARGS },
 	 { (char *)"prelude_sensor_send_msg_async", _wrap_prelude_sensor_send_msg_async, METH_VARARGS },
@@ -20158,6 +20688,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_additional_data_type_to_numeric", _wrap_idmef_additional_data_type_to_numeric, METH_VARARGS },
 	 { (char *)"idmef_additional_data_type_to_string", _wrap_idmef_additional_data_type_to_string, METH_VARARGS },
 	 { (char *)"idmef_additional_data_new", _wrap_idmef_additional_data_new, METH_VARARGS },
+	 { (char *)"idmef_additional_data_ref", _wrap_idmef_additional_data_ref, METH_VARARGS },
 	 { (char *)"idmef_additional_data_get_child", _wrap_idmef_additional_data_get_child, METH_VARARGS },
 	 { (char *)"idmef_additional_data_new_child", _wrap_idmef_additional_data_new_child, METH_VARARGS },
 	 { (char *)"idmef_additional_data_destroy", _wrap_idmef_additional_data_destroy, METH_VARARGS },
@@ -20176,6 +20707,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_classification_origin_to_numeric", _wrap_idmef_classification_origin_to_numeric, METH_VARARGS },
 	 { (char *)"idmef_classification_origin_to_string", _wrap_idmef_classification_origin_to_string, METH_VARARGS },
 	 { (char *)"idmef_classification_new", _wrap_idmef_classification_new, METH_VARARGS },
+	 { (char *)"idmef_classification_ref", _wrap_idmef_classification_ref, METH_VARARGS },
 	 { (char *)"idmef_classification_get_child", _wrap_idmef_classification_get_child, METH_VARARGS },
 	 { (char *)"idmef_classification_new_child", _wrap_idmef_classification_new_child, METH_VARARGS },
 	 { (char *)"idmef_classification_destroy", _wrap_idmef_classification_destroy, METH_VARARGS },
@@ -20194,6 +20726,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_userid_type_to_numeric", _wrap_idmef_userid_type_to_numeric, METH_VARARGS },
 	 { (char *)"idmef_userid_type_to_string", _wrap_idmef_userid_type_to_string, METH_VARARGS },
 	 { (char *)"idmef_userid_new", _wrap_idmef_userid_new, METH_VARARGS },
+	 { (char *)"idmef_userid_ref", _wrap_idmef_userid_ref, METH_VARARGS },
 	 { (char *)"idmef_userid_get_child", _wrap_idmef_userid_get_child, METH_VARARGS },
 	 { (char *)"idmef_userid_new_child", _wrap_idmef_userid_new_child, METH_VARARGS },
 	 { (char *)"idmef_userid_destroy", _wrap_idmef_userid_destroy, METH_VARARGS },
@@ -20216,6 +20749,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_user_category_to_numeric", _wrap_idmef_user_category_to_numeric, METH_VARARGS },
 	 { (char *)"idmef_user_category_to_string", _wrap_idmef_user_category_to_string, METH_VARARGS },
 	 { (char *)"idmef_user_new", _wrap_idmef_user_new, METH_VARARGS },
+	 { (char *)"idmef_user_ref", _wrap_idmef_user_ref, METH_VARARGS },
 	 { (char *)"idmef_user_get_child", _wrap_idmef_user_get_child, METH_VARARGS },
 	 { (char *)"idmef_user_new_child", _wrap_idmef_user_new_child, METH_VARARGS },
 	 { (char *)"idmef_user_destroy", _wrap_idmef_user_destroy, METH_VARARGS },
@@ -20234,6 +20768,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_address_category_to_numeric", _wrap_idmef_address_category_to_numeric, METH_VARARGS },
 	 { (char *)"idmef_address_category_to_string", _wrap_idmef_address_category_to_string, METH_VARARGS },
 	 { (char *)"idmef_address_new", _wrap_idmef_address_new, METH_VARARGS },
+	 { (char *)"idmef_address_ref", _wrap_idmef_address_ref, METH_VARARGS },
 	 { (char *)"idmef_address_get_child", _wrap_idmef_address_get_child, METH_VARARGS },
 	 { (char *)"idmef_address_new_child", _wrap_idmef_address_new_child, METH_VARARGS },
 	 { (char *)"idmef_address_destroy", _wrap_idmef_address_destroy, METH_VARARGS },
@@ -20262,6 +20797,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_address_get_netmask_value", _wrap_idmef_address_get_netmask_value, METH_VARARGS },
 	 { (char *)"idmef_address_new_netmask", _wrap_idmef_address_new_netmask, METH_VARARGS },
 	 { (char *)"idmef_process_new", _wrap_idmef_process_new, METH_VARARGS },
+	 { (char *)"idmef_process_ref", _wrap_idmef_process_ref, METH_VARARGS },
 	 { (char *)"idmef_process_get_child", _wrap_idmef_process_get_child, METH_VARARGS },
 	 { (char *)"idmef_process_new_child", _wrap_idmef_process_new_child, METH_VARARGS },
 	 { (char *)"idmef_process_destroy", _wrap_idmef_process_destroy, METH_VARARGS },
@@ -20290,6 +20826,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_process_new_env", _wrap_idmef_process_new_env, METH_VARARGS },
 	 { (char *)"idmef_process_get_env_value", _wrap_idmef_process_get_env_value, METH_VARARGS },
 	 { (char *)"idmef_webservice_new", _wrap_idmef_webservice_new, METH_VARARGS },
+	 { (char *)"idmef_webservice_ref", _wrap_idmef_webservice_ref, METH_VARARGS },
 	 { (char *)"idmef_webservice_get_child", _wrap_idmef_webservice_get_child, METH_VARARGS },
 	 { (char *)"idmef_webservice_new_child", _wrap_idmef_webservice_new_child, METH_VARARGS },
 	 { (char *)"idmef_webservice_destroy", _wrap_idmef_webservice_destroy, METH_VARARGS },
@@ -20310,6 +20847,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_webservice_new_arg", _wrap_idmef_webservice_new_arg, METH_VARARGS },
 	 { (char *)"idmef_webservice_get_arg_value", _wrap_idmef_webservice_get_arg_value, METH_VARARGS },
 	 { (char *)"idmef_snmpservice_new", _wrap_idmef_snmpservice_new, METH_VARARGS },
+	 { (char *)"idmef_snmpservice_ref", _wrap_idmef_snmpservice_ref, METH_VARARGS },
 	 { (char *)"idmef_snmpservice_get_child", _wrap_idmef_snmpservice_get_child, METH_VARARGS },
 	 { (char *)"idmef_snmpservice_new_child", _wrap_idmef_snmpservice_new_child, METH_VARARGS },
 	 { (char *)"idmef_snmpservice_destroy", _wrap_idmef_snmpservice_destroy, METH_VARARGS },
@@ -20328,6 +20866,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_service_type_to_numeric", _wrap_idmef_service_type_to_numeric, METH_VARARGS },
 	 { (char *)"idmef_service_type_to_string", _wrap_idmef_service_type_to_string, METH_VARARGS },
 	 { (char *)"idmef_service_new", _wrap_idmef_service_new, METH_VARARGS },
+	 { (char *)"idmef_service_ref", _wrap_idmef_service_ref, METH_VARARGS },
 	 { (char *)"idmef_service_get_child", _wrap_idmef_service_get_child, METH_VARARGS },
 	 { (char *)"idmef_service_new_child", _wrap_idmef_service_new_child, METH_VARARGS },
 	 { (char *)"idmef_service_destroy", _wrap_idmef_service_destroy, METH_VARARGS },
@@ -20364,6 +20903,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_node_category_to_numeric", _wrap_idmef_node_category_to_numeric, METH_VARARGS },
 	 { (char *)"idmef_node_category_to_string", _wrap_idmef_node_category_to_string, METH_VARARGS },
 	 { (char *)"idmef_node_new", _wrap_idmef_node_new, METH_VARARGS },
+	 { (char *)"idmef_node_ref", _wrap_idmef_node_ref, METH_VARARGS },
 	 { (char *)"idmef_node_get_child", _wrap_idmef_node_get_child, METH_VARARGS },
 	 { (char *)"idmef_node_new_child", _wrap_idmef_node_new_child, METH_VARARGS },
 	 { (char *)"idmef_node_destroy", _wrap_idmef_node_destroy, METH_VARARGS },
@@ -20390,6 +20930,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_spoofed_to_numeric", _wrap_idmef_spoofed_to_numeric, METH_VARARGS },
 	 { (char *)"idmef_spoofed_to_string", _wrap_idmef_spoofed_to_string, METH_VARARGS },
 	 { (char *)"idmef_source_new", _wrap_idmef_source_new, METH_VARARGS },
+	 { (char *)"idmef_source_ref", _wrap_idmef_source_ref, METH_VARARGS },
 	 { (char *)"idmef_source_get_child", _wrap_idmef_source_get_child, METH_VARARGS },
 	 { (char *)"idmef_source_new_child", _wrap_idmef_source_new_child, METH_VARARGS },
 	 { (char *)"idmef_source_destroy", _wrap_idmef_source_destroy, METH_VARARGS },
@@ -20422,6 +20963,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_source_get_service_value", _wrap_idmef_source_get_service_value, METH_VARARGS },
 	 { (char *)"idmef_source_new_service", _wrap_idmef_source_new_service, METH_VARARGS },
 	 { (char *)"idmef_file_access_new", _wrap_idmef_file_access_new, METH_VARARGS },
+	 { (char *)"idmef_file_access_ref", _wrap_idmef_file_access_ref, METH_VARARGS },
 	 { (char *)"idmef_file_access_get_child", _wrap_idmef_file_access_get_child, METH_VARARGS },
 	 { (char *)"idmef_file_access_new_child", _wrap_idmef_file_access_new_child, METH_VARARGS },
 	 { (char *)"idmef_file_access_destroy", _wrap_idmef_file_access_destroy, METH_VARARGS },
@@ -20434,6 +20976,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_file_access_new_permission", _wrap_idmef_file_access_new_permission, METH_VARARGS },
 	 { (char *)"idmef_file_access_get_permission_value", _wrap_idmef_file_access_get_permission_value, METH_VARARGS },
 	 { (char *)"idmef_inode_new", _wrap_idmef_inode_new, METH_VARARGS },
+	 { (char *)"idmef_inode_ref", _wrap_idmef_inode_ref, METH_VARARGS },
 	 { (char *)"idmef_inode_get_child", _wrap_idmef_inode_get_child, METH_VARARGS },
 	 { (char *)"idmef_inode_new_child", _wrap_idmef_inode_new_child, METH_VARARGS },
 	 { (char *)"idmef_inode_destroy", _wrap_idmef_inode_destroy, METH_VARARGS },
@@ -20464,6 +21007,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_file_category_to_numeric", _wrap_idmef_file_category_to_numeric, METH_VARARGS },
 	 { (char *)"idmef_file_category_to_string", _wrap_idmef_file_category_to_string, METH_VARARGS },
 	 { (char *)"idmef_file_new", _wrap_idmef_file_new, METH_VARARGS },
+	 { (char *)"idmef_file_ref", _wrap_idmef_file_ref, METH_VARARGS },
 	 { (char *)"idmef_file_get_child", _wrap_idmef_file_get_child, METH_VARARGS },
 	 { (char *)"idmef_file_new_child", _wrap_idmef_file_new_child, METH_VARARGS },
 	 { (char *)"idmef_file_destroy", _wrap_idmef_file_destroy, METH_VARARGS },
@@ -20522,6 +21066,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_linkage_category_to_numeric", _wrap_idmef_linkage_category_to_numeric, METH_VARARGS },
 	 { (char *)"idmef_linkage_category_to_string", _wrap_idmef_linkage_category_to_string, METH_VARARGS },
 	 { (char *)"idmef_linkage_new", _wrap_idmef_linkage_new, METH_VARARGS },
+	 { (char *)"idmef_linkage_ref", _wrap_idmef_linkage_ref, METH_VARARGS },
 	 { (char *)"idmef_linkage_get_child", _wrap_idmef_linkage_get_child, METH_VARARGS },
 	 { (char *)"idmef_linkage_new_child", _wrap_idmef_linkage_new_child, METH_VARARGS },
 	 { (char *)"idmef_linkage_destroy", _wrap_idmef_linkage_destroy, METH_VARARGS },
@@ -20542,6 +21087,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_linkage_get_file_value", _wrap_idmef_linkage_get_file_value, METH_VARARGS },
 	 { (char *)"idmef_linkage_new_file", _wrap_idmef_linkage_new_file, METH_VARARGS },
 	 { (char *)"idmef_target_new", _wrap_idmef_target_new, METH_VARARGS },
+	 { (char *)"idmef_target_ref", _wrap_idmef_target_ref, METH_VARARGS },
 	 { (char *)"idmef_target_get_child", _wrap_idmef_target_get_child, METH_VARARGS },
 	 { (char *)"idmef_target_new_child", _wrap_idmef_target_new_child, METH_VARARGS },
 	 { (char *)"idmef_target_destroy", _wrap_idmef_target_destroy, METH_VARARGS },
@@ -20578,6 +21124,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_target_new_file", _wrap_idmef_target_new_file, METH_VARARGS },
 	 { (char *)"idmef_target_get_file_value", _wrap_idmef_target_get_file_value, METH_VARARGS },
 	 { (char *)"idmef_analyzer_new", _wrap_idmef_analyzer_new, METH_VARARGS },
+	 { (char *)"idmef_analyzer_ref", _wrap_idmef_analyzer_ref, METH_VARARGS },
 	 { (char *)"idmef_analyzer_get_child", _wrap_idmef_analyzer_get_child, METH_VARARGS },
 	 { (char *)"idmef_analyzer_new_child", _wrap_idmef_analyzer_new_child, METH_VARARGS },
 	 { (char *)"idmef_analyzer_destroy", _wrap_idmef_analyzer_destroy, METH_VARARGS },
@@ -20618,6 +21165,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_analyzer_get_process_value", _wrap_idmef_analyzer_get_process_value, METH_VARARGS },
 	 { (char *)"idmef_analyzer_new_process", _wrap_idmef_analyzer_new_process, METH_VARARGS },
 	 { (char *)"idmef_alertident_new", _wrap_idmef_alertident_new, METH_VARARGS },
+	 { (char *)"idmef_alertident_ref", _wrap_idmef_alertident_ref, METH_VARARGS },
 	 { (char *)"idmef_alertident_get_child", _wrap_idmef_alertident_get_child, METH_VARARGS },
 	 { (char *)"idmef_alertident_new_child", _wrap_idmef_alertident_new_child, METH_VARARGS },
 	 { (char *)"idmef_alertident_destroy", _wrap_idmef_alertident_destroy, METH_VARARGS },
@@ -20636,6 +21184,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_impact_type_to_numeric", _wrap_idmef_impact_type_to_numeric, METH_VARARGS },
 	 { (char *)"idmef_impact_type_to_string", _wrap_idmef_impact_type_to_string, METH_VARARGS },
 	 { (char *)"idmef_impact_new", _wrap_idmef_impact_new, METH_VARARGS },
+	 { (char *)"idmef_impact_ref", _wrap_idmef_impact_ref, METH_VARARGS },
 	 { (char *)"idmef_impact_get_child", _wrap_idmef_impact_get_child, METH_VARARGS },
 	 { (char *)"idmef_impact_new_child", _wrap_idmef_impact_new_child, METH_VARARGS },
 	 { (char *)"idmef_impact_destroy", _wrap_idmef_impact_destroy, METH_VARARGS },
@@ -20658,6 +21207,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_action_category_to_numeric", _wrap_idmef_action_category_to_numeric, METH_VARARGS },
 	 { (char *)"idmef_action_category_to_string", _wrap_idmef_action_category_to_string, METH_VARARGS },
 	 { (char *)"idmef_action_new", _wrap_idmef_action_new, METH_VARARGS },
+	 { (char *)"idmef_action_ref", _wrap_idmef_action_ref, METH_VARARGS },
 	 { (char *)"idmef_action_get_child", _wrap_idmef_action_get_child, METH_VARARGS },
 	 { (char *)"idmef_action_new_child", _wrap_idmef_action_new_child, METH_VARARGS },
 	 { (char *)"idmef_action_destroy", _wrap_idmef_action_destroy, METH_VARARGS },
@@ -20672,6 +21222,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_confidence_rating_to_numeric", _wrap_idmef_confidence_rating_to_numeric, METH_VARARGS },
 	 { (char *)"idmef_confidence_rating_to_string", _wrap_idmef_confidence_rating_to_string, METH_VARARGS },
 	 { (char *)"idmef_confidence_new", _wrap_idmef_confidence_new, METH_VARARGS },
+	 { (char *)"idmef_confidence_ref", _wrap_idmef_confidence_ref, METH_VARARGS },
 	 { (char *)"idmef_confidence_get_child", _wrap_idmef_confidence_get_child, METH_VARARGS },
 	 { (char *)"idmef_confidence_new_child", _wrap_idmef_confidence_new_child, METH_VARARGS },
 	 { (char *)"idmef_confidence_destroy", _wrap_idmef_confidence_destroy, METH_VARARGS },
@@ -20684,6 +21235,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_confidence_get_confidence_value", _wrap_idmef_confidence_get_confidence_value, METH_VARARGS },
 	 { (char *)"idmef_confidence_new_confidence", _wrap_idmef_confidence_new_confidence, METH_VARARGS },
 	 { (char *)"idmef_assessment_new", _wrap_idmef_assessment_new, METH_VARARGS },
+	 { (char *)"idmef_assessment_ref", _wrap_idmef_assessment_ref, METH_VARARGS },
 	 { (char *)"idmef_assessment_get_child", _wrap_idmef_assessment_get_child, METH_VARARGS },
 	 { (char *)"idmef_assessment_new_child", _wrap_idmef_assessment_new_child, METH_VARARGS },
 	 { (char *)"idmef_assessment_destroy", _wrap_idmef_assessment_destroy, METH_VARARGS },
@@ -20700,6 +21252,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_assessment_get_confidence_value", _wrap_idmef_assessment_get_confidence_value, METH_VARARGS },
 	 { (char *)"idmef_assessment_new_confidence", _wrap_idmef_assessment_new_confidence, METH_VARARGS },
 	 { (char *)"idmef_tool_alert_new", _wrap_idmef_tool_alert_new, METH_VARARGS },
+	 { (char *)"idmef_tool_alert_ref", _wrap_idmef_tool_alert_ref, METH_VARARGS },
 	 { (char *)"idmef_tool_alert_get_child", _wrap_idmef_tool_alert_get_child, METH_VARARGS },
 	 { (char *)"idmef_tool_alert_new_child", _wrap_idmef_tool_alert_new_child, METH_VARARGS },
 	 { (char *)"idmef_tool_alert_destroy", _wrap_idmef_tool_alert_destroy, METH_VARARGS },
@@ -20716,6 +21269,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_tool_alert_new_alertident", _wrap_idmef_tool_alert_new_alertident, METH_VARARGS },
 	 { (char *)"idmef_tool_alert_get_alertident_value", _wrap_idmef_tool_alert_get_alertident_value, METH_VARARGS },
 	 { (char *)"idmef_correlation_alert_new", _wrap_idmef_correlation_alert_new, METH_VARARGS },
+	 { (char *)"idmef_correlation_alert_ref", _wrap_idmef_correlation_alert_ref, METH_VARARGS },
 	 { (char *)"idmef_correlation_alert_get_child", _wrap_idmef_correlation_alert_get_child, METH_VARARGS },
 	 { (char *)"idmef_correlation_alert_new_child", _wrap_idmef_correlation_alert_new_child, METH_VARARGS },
 	 { (char *)"idmef_correlation_alert_destroy", _wrap_idmef_correlation_alert_destroy, METH_VARARGS },
@@ -20728,6 +21282,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_correlation_alert_new_alertident", _wrap_idmef_correlation_alert_new_alertident, METH_VARARGS },
 	 { (char *)"idmef_correlation_alert_get_alertident_value", _wrap_idmef_correlation_alert_get_alertident_value, METH_VARARGS },
 	 { (char *)"idmef_overflow_alert_new", _wrap_idmef_overflow_alert_new, METH_VARARGS },
+	 { (char *)"idmef_overflow_alert_ref", _wrap_idmef_overflow_alert_ref, METH_VARARGS },
 	 { (char *)"idmef_overflow_alert_get_child", _wrap_idmef_overflow_alert_get_child, METH_VARARGS },
 	 { (char *)"idmef_overflow_alert_new_child", _wrap_idmef_overflow_alert_new_child, METH_VARARGS },
 	 { (char *)"idmef_overflow_alert_destroy", _wrap_idmef_overflow_alert_destroy, METH_VARARGS },
@@ -20847,9 +21402,10 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_message_get_heartbeat_value", _wrap_idmef_message_get_heartbeat_value, METH_VARARGS },
 	 { (char *)"idmef_message_new_heartbeat", _wrap_idmef_message_new_heartbeat, METH_VARARGS },
 	 { (char *)"idmef_message_new", _wrap_idmef_message_new, METH_VARARGS },
+	 { (char *)"idmef_message_destroy", _wrap_idmef_message_destroy, METH_VARARGS },
+	 { (char *)"idmef_message_set_pmsg", _wrap_idmef_message_set_pmsg, METH_VARARGS },
 	 { (char *)"idmef_message_enable_cache", _wrap_idmef_message_enable_cache, METH_VARARGS },
 	 { (char *)"idmef_message_disable_cache", _wrap_idmef_message_disable_cache, METH_VARARGS },
-	 { (char *)"idmef_message_destroy", _wrap_idmef_message_destroy, METH_VARARGS },
 	 { (char *)"idmef_message_set", _wrap_idmef_message_set, METH_VARARGS },
 	 { (char *)"idmef_message_get", _wrap_idmef_message_get, METH_VARARGS },
 	 { (char *)"idmef_value_new_int16", _wrap_idmef_value_new_int16, METH_VARARGS },
@@ -21256,7 +21812,7 @@ static swig_type_info _swigt__p_prelude_io_t[] = {{"_p_prelude_io_t", 0, "prelud
 static swig_type_info _swigt__p_idmef_object_t[] = {{"_p_idmef_object_t", 0, "idmef_object_t *", 0},{"_p_idmef_object_t"},{0}};
 static swig_type_info _swigt__p_unsigned_char[] = {{"_p_unsigned_char", 0, "unsigned char *", 0},{"_p_unsigned_char"},{0}};
 static swig_type_info _swigt__p_float[] = {{"_p_float", 0, "float *", 0},{"_p_float"},{0}};
-static swig_type_info _swigt__p_idmef_additional_data_t[] = {{"_p_idmef_additional_data_t", 0, "idmef_additional_data_t const *", 0},{"_p_idmef_additional_data_t"},{0}};
+static swig_type_info _swigt__p_idmef_additional_data_t[] = {{"_p_idmef_additional_data_t", 0, "idmef_additional_data_t *", 0},{"_p_idmef_additional_data_t"},{0}};
 static swig_type_info _swigt__p_idmef_data_t[] = {{"_p_idmef_data_t", 0, "idmef_data_t *", 0},{"_p_idmef_string_t"},{"_p_idmef_data_t"},{0}};
 static swig_type_info _swigt__p_idmef_value_type_data_t[] = {{"_p_idmef_value_type_data_t", 0, "idmef_value_type_data_t *", 0},{"_p_idmef_value_type_data_t"},{0}};
 static swig_type_info _swigt__p_va_list[] = {{"_p_va_list", 0, "va_list *", 0},{"_p_va_list"},{0}};
@@ -21356,7 +21912,11 @@ _swigt__p_idmef_node_category_t,
 static swig_const_info swig_const_table[] = {
 { SWIG_PY_INT,     (char *)"PRELUDE_CLIENT_TYPE_OTHER", (long) 0, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"PRELUDE_CLIENT_TYPE_SENSOR", (long) 1, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"PRELUDE_CLIENT_TYPE_MANAGER", (long) 2, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"PRELUDE_CLIENT_TYPE_MANAGER_PARENT", (long) 2, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"PRELUDE_CLIENT_TYPE_MANAGER_CHILDREN", (long) 3, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"PRELUDE_CLIENT_TYPE_ADMIN", (long) 4, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"PRELUDE_CLIENT_CONNECTED", (long) 0x01, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"PRELUDE_CLIENT_OWN_FD", (long) 0x02, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"string", (long) string, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"boolean", (long) boolean, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"byte", (long) byte, 0, 0, 0},

@@ -1,3 +1,15 @@
+2003-12-26  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
+	* bindings/python/_prelude.c:
+	regenerated
+
+	* bindings/python/prelude.py:
+	cleanup
+
+	* src/idmef-criteria.c:
+	(idmef_criteria_clone)
+	bug fix, the way the operators were handled was buggy
+
 2003-12-25  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* src/idmef-data.c (idmef_data_new): 
