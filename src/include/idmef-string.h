@@ -87,9 +87,9 @@ int idmef_string_is_empty(const idmef_string_t *string);
 
                                                          
 #define idmef_string_set_constant(istr, str) 			\
-	idmef_string_set_ref_fast(istr, str, sizeof(str))
+	idmef_string_set_ref_fast(istr, (str), sizeof((str)))
 
 #define idmef_string_new_constant(str)				\
-	idmef_string_new_ref_fast(str, sizeof(str))
+	idmef_string_new_ref_fast((str), sizeof((str)))
                                                          
 #endif /* _LIBPRELUDE_IDMEF_STRING_H */
