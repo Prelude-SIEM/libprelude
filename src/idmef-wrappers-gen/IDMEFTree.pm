@@ -155,7 +155,7 @@ sub	parse_struct
 {
     my	$self = shift;
     my	$line = shift;
-    my	$struct = { obj_type => &OBJ_STRUCT, toplevel => 0, is_listed => 0, desc => [ $line ] };
+    my	$struct = { obj_type => &OBJ_STRUCT, toplevel => 0, is_listed => 0, refcount => 0, desc => [ $line ] };
     my	@field_list;
     my	$ptr;
     my	$typename;
@@ -168,6 +168,10 @@ sub	parse_struct
 
 	if ( $line =~ /^\s*HIDE\(/ ) {
 	    next;
+
+	} elsif ( $line =~ /^\s*REFCOUNT\s*\;\s*$/ ) {
+	    $struct->{refcount} = 1;
+	    $self->debug("struct is refcounted\n");
 
 	} elsif ( $line =~ /^\s*IS_LISTED\s*\;\s*$/ ) {
 	    $struct->{is_listed} = 1;

@@ -91,9 +91,14 @@ $struct->{typename} *idmef_$struct->{short_typename}_new(void)
 ");
     }
 
+    if ( $struct->{refcount} ) {
+	$self->output("
+	ret->refcount = 1;
+");
+    }
+
     foreach my $field ( map { $_->{metatype} & &METATYPE_LIST ? $_ : () } @{ $struct->{field_list} } ) {
 	$self->output("
-	
 	INIT_LIST_HEAD(&ret->$field->{name});
     
 ");
@@ -355,11 +360,43 @@ sub	struct_destroy
 
     return if ( $struct->{toplevel} );
 
-    $self->output("
+    if ( $struct->{refcount} ) {
+	$self->output("
+void idmef_$struct->{short_typename}_destroy($struct->{typename} *ptr)
+\{
+	if ( --ptr->refcount )
+		return;
+
+	idmef_$struct->{short_typename}_destroy_internal(ptr);
+        free(ptr);
+\}
+");
+
+    } else {
+	$self->output("
 void idmef_$struct->{short_typename}_destroy($struct->{typename} *ptr)
 \{
 	idmef_$struct->{short_typename}_destroy_internal(ptr);
         free(ptr);
+\}
+");
+    }
+}
+
+sub	struct_ref
+{
+    my	$self = shift;
+    my	$tree = shift;
+    my	$struct = shift;
+
+    $struct->{refcount} or return;
+
+    $self->output("
+$struct->{typename} *idmef_$struct->{short_typename}_ref($struct->{typename} *ptr)
+\{
+	ptr->refcount++;
+
+	return ptr;
 \}
 ");
 }
@@ -759,6 +796,7 @@ sub	struct
 
     $self->struct_desc($tree, $struct);
     $self->struct_constructor($tree, $struct);
+    $self->struct_ref($tree, $struct);
     $self->struct_get_child($tree, $struct);
     $self->struct_new_child($tree, $struct);
     $self->struct_destroy_internal($tree, $struct);

@@ -76,6 +76,16 @@ sub	struct_constructor
     $self->output("$struct->{typename} *idmef_$struct->{short_typename}_new(void);\n");
 }
 
+sub	struct_ref
+{
+    my	$self = shift;
+    my	$tree = shift;
+    my	$struct = shift;
+
+    $self->output("$struct->{typename} *idmef_$struct->{short_typename}_ref($struct->{typename} *ptr);\n");
+
+}
+
 sub	struct_get_child
 {
     my	$self = shift;
@@ -191,6 +201,7 @@ sub	struct
 
     $self->struct_definition($tree, $struct);
     $self->struct_constructor($tree, $struct);
+    $self->struct_ref($tree, $struct);
     $self->struct_get_child($tree, $struct);
     $self->struct_new_child($tree, $struct);
     $self->struct_destroy($tree, $struct);

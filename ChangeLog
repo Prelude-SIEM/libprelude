@@ -1,3 +1,15 @@
+2003-12-13  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
+	* src/idmef-wrappers-gen/GenerateIDMEFTreeWrapC.pm:
+	* src/idmef-wrappers-gen/GenerateIDMEFTreeWrapH.pm:
+	* src/idmef-wrappers-gen/IDMEFTree.pm:
+	* src/include/idmef-tree.h:
+	implement refcount support
+
+	* src/idmef-tree-wrap.c:
+	* src/include/idmef-tree-wrap.h:
+	regenerated
+
 2003-12-12  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* src/idmef-wrappers-gen/GenerateIDMEFMessageSendC.pm (header): 

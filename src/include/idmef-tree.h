@@ -79,6 +79,8 @@
 
 #define HIDE(type, name) type name
 
+#define REFCOUNT int refcount
+
 #endif /* _GENERATE */
 
 /*
@@ -130,6 +132,7 @@ ENUM() {
 
 typedef struct {
         IS_LISTED;
+	REFCOUNT;
         idmef_additional_data_type_t type;
         idmef_string_t meaning;
 	idmef_data_t data;
@@ -151,6 +154,7 @@ ENUM(origin) {
 
 typedef struct {
         IS_LISTED;
+	REFCOUNT;
         idmef_classification_origin_t origin;
         idmef_string_t name;
         idmef_string_t url;
@@ -176,7 +180,7 @@ ENUM() {
 
 typedef struct {
         IS_LISTED;
-
+	REFCOUNT;
         uint64_t ident;
         idmef_userid_type_t type;
         idmef_string_t name;
@@ -200,6 +204,7 @@ ENUM(cat) {
 
 
 typedef struct {
+	REFCOUNT;
         uint64_t ident;
         idmef_user_category_t category;
         LISTED_OBJECT(userid_list, idmef_userid_t);
@@ -234,7 +239,7 @@ ENUM(addr) {
 
 typedef struct {
         IS_LISTED;
-        
+        REFCOUNT;
         uint64_t ident;
         idmef_address_category_t category;
         idmef_string_t vlan_name;
@@ -250,6 +255,7 @@ typedef struct {
  */
 
 typedef struct {
+	REFCOUNT;
         uint64_t ident;
         idmef_string_t name;
         uint32_t pid;
@@ -262,6 +268,7 @@ typedef struct {
 
 
 typedef struct {
+	REFCOUNT;
         idmef_string_t url;
         idmef_string_t cgi;
         idmef_string_t http_method;
@@ -275,6 +282,7 @@ typedef struct {
  * SNMPService class
  */
 typedef struct {
+	REFCOUNT;
         idmef_string_t oid;
         idmef_string_t community;
         idmef_string_t command;
@@ -294,6 +302,7 @@ ENUM() {
  * Service class
  */
 typedef struct {
+	REFCOUNT;
         uint64_t ident;
         idmef_string_t name;
         uint16_t port;
@@ -331,6 +340,7 @@ ENUM(node) {
 
 
 typedef struct {
+	REFCOUNT;
         uint64_t ident;
         idmef_node_category_t category;
         idmef_string_t location;
@@ -354,7 +364,8 @@ ENUM() {
 
 typedef struct {
         IS_LISTED;
-    
+	REFCOUNT;
+
         uint64_t ident;
         idmef_spoofed_t spoofed;
         idmef_string_t interface;
@@ -372,6 +383,8 @@ typedef struct {
  */
 typedef struct {
         IS_LISTED;
+	REFCOUNT;
+
         idmef_userid_t userid;
         LISTED_OBJECT(permission_list, idmef_string_t);
 } TYPE_ID(idmef_file_access_t, 22);
@@ -382,6 +395,7 @@ typedef struct {
  * Inode class
  */
 typedef struct {
+	REFCOUNT;
         idmef_time_t *change_time;
         uint32_t number;
         uint32_t major_device;
@@ -407,6 +421,7 @@ ENUM() {
         
 typedef struct {
         IS_LISTED;
+	REFCOUNT;
         
         uint64_t ident;
         idmef_file_category_t category;
@@ -444,6 +459,7 @@ ENUM() {
 
 typedef struct {
         IS_LISTED;
+	REFCOUNT;
         
         idmef_linkage_category_t category;
         idmef_string_t name;
@@ -459,6 +475,7 @@ typedef struct {
  */
 typedef struct {
         IS_LISTED;
+	REFCOUNT;
         
         uint64_t ident;
         idmef_spoofed_t decoy;
@@ -479,6 +496,8 @@ typedef struct {
  * Analyzer class
  */
 typedef struct {
+	REFCOUNT;
+
         uint64_t analyzerid;
         idmef_string_t manufacturer;
         idmef_string_t model;
@@ -499,6 +518,8 @@ typedef struct {
 
 typedef struct {
         IS_LISTED;
+	REFCOUNT;
+
         uint64_t alertident;
         uint64_t analyzerid;
 } TYPE_ID(idmef_alertident_t, 30);
@@ -532,6 +553,8 @@ ENUM() {
 
 
 typedef struct {
+	REFCOUNT;
+
         idmef_impact_severity_t severity;
         idmef_impact_completion_t completion;
         idmef_impact_type_t type;
@@ -552,6 +575,8 @@ ENUM(action) {
 
 typedef struct {
         IS_LISTED;
+	REFCOUNT;
+
         idmef_action_category_t category;
         idmef_string_t description;
 } TYPE_ID(idmef_action_t, 36);
@@ -570,6 +595,8 @@ ENUM() {
 
 
 typedef struct {
+	REFCOUNT;
+
         idmef_confidence_rating_t rating;
         float confidence;
 } TYPE_ID(idmef_confidence_t, 38);
@@ -579,6 +606,8 @@ typedef struct {
  * Assessment class
  */
 typedef struct {
+	REFCOUNT;
+
         idmef_impact_t *impact;
         LISTED_OBJECT(action_list, idmef_action_t);
         idmef_confidence_t *confidence;
@@ -590,6 +619,8 @@ typedef struct {
  * Toolalert class
  */
 typedef struct {
+	REFCOUNT;
+
         idmef_string_t name;
         idmef_string_t command;
         LISTED_OBJECT(alertident_list, idmef_alertident_t);
@@ -603,6 +634,8 @@ typedef struct {
  * CorrelationAlert class
  */
 typedef struct {
+	REFCOUNT;
+
         idmef_string_t name;
         LISTED_OBJECT(alertident_list, idmef_alertident_t);
 } TYPE_ID(idmef_correlation_alert_t, 41);
@@ -614,6 +647,8 @@ typedef struct {
  * OverflowAlert class
  */
 typedef struct {
+	REFCOUNT;
+
         idmef_string_t program;
         uint32_t *size;
         idmef_data_t *buffer;
@@ -639,7 +674,7 @@ typedef struct {
 
         idmef_assessment_t *assessment;
     
-        idmef_analyzer_t analyzer;
+        idmef_analyzer_t *analyzer;
     
         idmef_time_t create_time;
         idmef_time_t *detect_time;
@@ -667,7 +702,7 @@ typedef struct {
  */
 typedef struct {
         uint64_t ident;
-        idmef_analyzer_t analyzer;
+        idmef_analyzer_t *analyzer;
 
         idmef_time_t create_time;
         idmef_time_t *analyzer_time;
