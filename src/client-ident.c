@@ -16,6 +16,8 @@
 
 #define IDENTITY_DIR "/var/lib/prelude-sensors/idents"
 
+extern int is_caller_a_sensor;
+
 static char identfile[1024];
 static uint64_t sensor_ident = 0;
 static const char *sensor_name = NULL;
@@ -32,7 +34,7 @@ static int save_ident(void)
 {
         int fd;
         FILE *fdp;
-
+        
         /*
          * use O_EXCL first to avoid a possible symlink attack.
          */
@@ -161,16 +163,13 @@ static int declare_ident_to_manager(prelude_io_t *fd)
 int prelude_client_ident_send(prelude_io_t *fd) 
 {
         /*
-         * we are not a sensor, probably a relay manager.
-         * don't set any identity.
+         * if prelude_client_ident_init wasn't called (client_is_a_sensor == 0),
+         * the caller is a relay Manager, and we declare ourself as being ID 0. 
          */
-        if ( ! sensor_name )
-                return 0;
-
-        if ( sensor_ident != 0 )
-                return declare_ident_to_manager(fd);
-        else
+        if ( is_caller_a_sensor && ! sensor_ident )
                 return request_ident_from_manager(fd);
+        else
+                return declare_ident_to_manager(fd);
 }
 
 

@@ -1,3 +1,16 @@
+2002-01-17  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/client-ident.c (prelude_client_ident_send): 
+	if is_caller_a_sensor is set, declare the client as being
+	ID 0 (Relay Manager).
+
+	* src/sensor.c: global variable, telling if the caller
+	is a sensor or not (a Manager for exemple).
+	(prelude_sensor_init): set is_caller_a_sensor to 1.
+
+	* src/prelude-async.c (prelude_async_add): 
+	signal the condition.
+
 2002-01-16  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/client-ident.c (save_ident): 

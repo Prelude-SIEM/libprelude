@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -195,6 +195,7 @@ void prelude_async_add(prelude_async_object_t *obj)
 {
         pthread_mutex_lock(&mutex);
         prelude_list_add_tail((prelude_linked_object_t *)obj, &joblist);
+        pthread_cond_signal(&cond);
         pthread_mutex_unlock(&mutex);
 }
 

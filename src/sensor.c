@@ -60,7 +60,7 @@
 #define DEFAULT_SENSOR_CONFIG SENSORS_CONFIG_DIR"/sensors-default.conf"
 
 
-
+int is_caller_a_sensor = 0;
 static prelude_client_mgr_t *manager_list = NULL;
 
 
@@ -194,6 +194,8 @@ int prelude_sensor_init(const char *sname, const char *filename, int argc, char 
 {
         int ret;
 
+        is_caller_a_sensor = 1;
+        
         if ( ! sname ) {
                 errno = EINVAL;
                 return -1;
