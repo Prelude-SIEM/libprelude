@@ -27,9 +27,9 @@
 #define idmef_object_type_time 1
 
 struct idmef_time {
-        int32_t gmtoff;
 	uint32_t sec;
 	uint32_t usec;
+        int32_t gmt_offset;
 };
 
 typedef struct idmef_time idmef_time_t;
@@ -48,12 +48,12 @@ int idmef_time_copy(idmef_time_t *dst, idmef_time_t *src);
 
 void idmef_time_set_sec(idmef_time_t *time, uint32_t sec);
 void idmef_time_set_usec(idmef_time_t *time, uint32_t usec);
-void idmef_time_set_gmtoff(idmef_time_t *time, uint32_t gmtoff);
+void idmef_time_set_gmt_offset(idmef_time_t *time, uint32_t gmtoff);
 
 double idmef_time_get_time(const idmef_time_t *time);
 uint32_t idmef_time_get_sec(const idmef_time_t *time);
 uint32_t idmef_time_get_usec(const idmef_time_t *time);
-int32_t idmef_time_get_gmtoff(const idmef_time_t *time);
+int32_t idmef_time_get_gmt_offset(const idmef_time_t *time);
 
 int idmef_time_set_string(idmef_time_t *time, const char *buf);
 int idmef_time_set_ntp_timestamp(idmef_time_t *time, const char *buf);

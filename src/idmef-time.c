@@ -353,12 +353,11 @@ int idmef_time_get_db_timestamp(const idmef_time_t *time, char *outptr, size_t s
                 return -2;
         }
         
-        ret = snprintf(outptr, size, "'%d-%.2d-%.2d %.2d:%.2d:%.2d %+.2d:%.2d'",
+        ret = snprintf(outptr, size, "'%d-%.2d-%.2d %.2d:%.2d:%.2d'",
                        utc.tm_year + 1900, utc.tm_mon + 1, utc.tm_mday,
-                       utc.tm_hour, utc.tm_min, utc.tm_sec,
-                       time->gmtoff / 3600, time->gmtoff % 3600 / 60);
+                       utc.tm_hour, utc.tm_min, utc.tm_sec);
         
-        return (ret < 0 || ret >= size) ? -1 : 0;
+        return (ret < 0 || ret >= size) ? -1 : ret;
 }
 
 
@@ -367,14 +366,12 @@ int idmef_time_set_db_timestamp(idmef_time_t *time, const char *buf)
 {
         int ret;
 	struct tm tm;
-        int32_t gmt_hour, gmt_min;
         
 	memset(&tm, 0, sizeof (tm));
-
-        ret = sscanf(buf, "%d-%d-%d %d:%d:%d %d:%d",
+        
+        ret = sscanf(buf, "%d-%d-%d %d:%d:%d",
                      &tm.tm_year, &tm.tm_mon, &tm.tm_mday,
-                     &tm.tm_hour, &tm.tm_min, &tm.tm_sec,
-                     &gmt_hour, &gmt_min);
+                     &tm.tm_hour, &tm.tm_min, &tm.tm_sec);
 
         if ( ret < 6 )
 		return -1;
@@ -384,9 +381,6 @@ int idmef_time_set_db_timestamp(idmef_time_t *time, const char *buf)
         
 	time->usec = 0;
 	time->sec = my_timegm(&tm);
-
-        if ( ret == 8 )
-                time->gmtoff = gmt_hour * 3600 + gmt_min * 60;
         
 	return 0;
 }
@@ -406,32 +400,23 @@ int idmef_time_set_db_timestamp(idmef_time_t *time, const char *buf)
  */
 int idmef_time_get_idmef_timestamp(const idmef_time_t *time, char *outptr, size_t size)
 {
-        time_t sec;
-        struct tm tm_localtime;
-        int ret, len = 0, gmt_offset;
+        struct tm utc;
+        int ret, len = 0;
 
-	sec = idmef_time_get_sec(time);
-	if ( ! localtime_r(&sec, &tm_localtime) ) {
-		log(LOG_ERR, "error converting timestamp to localtime.\n");
-		return -1;
-	}
-
-	if ( get_gmt_offset(sec, &gmt_offset) < 0 )
-		return -1;
-
-        len += ret = strftime(outptr, size, "%Y-%m-%dT%H:%M:%S", &tm_localtime);
-        if ( ret == 0 ) {
-                log(LOG_ERR, "error converting localtime to string.\n");
-                return -1;
+        if ( ! gmtime_r((const time_t *) &time->sec, &utc) ) {
+                log(LOG_ERR, "error converting timestamp to gmt time.\n");
+                return -2;
         }
+        
+        ret = snprintf(outptr, size, "%d-%.2d-%.2dT%.2d:%.2d:%.2d.%02u%+.2d:%.2d",
+                       utc.tm_year + 1900, utc.tm_mon + 1, utc.tm_mday,
+                       utc.tm_hour, utc.tm_min, utc.tm_sec,
+                       idmef_time_get_usec(time) / 10000 % 60,
+                       time->gmt_offset / 3600, time->gmt_offset % 3600 / 60);
 
-        len += ret = snprintf(outptr + len, size - len, ".%02u", idmef_time_get_usec(time) / 10000 % 60);
-	if ( ret < 0 || len >= size )
+        if ( ret < 0 || len >= size )
 		return -1;
-
-	len += ret = snprintf(outptr + len, size - len, "%+.2d:%.2d", 
-			      gmt_offset / 3600, gmt_offset % 3600 / 60);
-
+        
 	return (ret < 0 || len >= size) ? -1 : len;
 }
 
@@ -534,7 +519,7 @@ idmef_time_t *idmef_time_new_gettimeofday(void)
 
         get_gmt_offset((time_t) tv.tv_sec, &gmt);
         
-        time->gmtoff = gmt;
+        time->gmt_offset = gmt;
         time->sec = tv.tv_sec;
         time->usec = tv.tv_usec;
                 
@@ -573,9 +558,9 @@ idmef_time_t *idmef_time_clone(const idmef_time_t *src)
 
 
 
-void idmef_time_set_gmtoff(idmef_time_t *time, uint32_t gmtoff)
+void idmef_time_set_gmt_offset(idmef_time_t *time, uint32_t gmtoff)
 {
-	time->gmtoff = gmtoff;
+	time->gmt_offset = gmtoff;
 }
 
 
@@ -595,9 +580,9 @@ void idmef_time_set_usec(idmef_time_t *time, uint32_t usec)
 
 
 
-int32_t idmef_time_get_gmtoff(const idmef_time_t *time)
+int32_t idmef_time_get_gmt_offset(const idmef_time_t *time)
 {
-	return time->gmtoff;
+	return time->gmt_offset;
 }
 
 
