@@ -166,6 +166,9 @@ AC_OUTPUT([
 Makefile 
 libprelude-config
 
+docs/Makefile
+docs/api/Makefile
+
 libmissing/Makefile
 sensor-adduser/Makefile
 

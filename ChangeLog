@@ -1,3 +1,9 @@
+2001-12-11  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* configure.ac (COMMON_LIBS): applied patch from 
+	Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
+	("use == operator for test in configure, but valid one is =")
+
 2001-12-10  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/common.c (syslog_log): we have to yse a buffer.
