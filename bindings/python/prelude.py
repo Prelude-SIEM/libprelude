@@ -354,7 +354,7 @@ class IDMEFTime(object):
 
     def __int__(self):
         """Return the number of seconds."""
-        return _prelude.idmef_time_get_sec(self.res)
+        return int(_prelude.idmef_time_get_sec(self.res))
 
     def __float__(self):
         """Return the number of seconds and useconds"""
@@ -491,9 +491,6 @@ def _idmef_value_python_to_c(object, py_value):
         c_value = _prelude.idmef_value_new_string(c_string)
 
     elif object_type is _prelude.IDMEF_VALUE_TYPE_DATA:
-        if type(py_value) is not str:
-            raise IDMEFValueError(py_value, "expected %s, got %s" % (str, type(py_value)))
-
         if type(py_value) is str:
             c_data = _prelude.idmef_data_new_char_string_dup(py_value)
         elif type(py_value) is int:
@@ -557,15 +554,17 @@ def idmef_value_c_to_python(value):
         if not data:
             return None
 
-        return (lambda d: None,
-                _prelude.idmef_data_get_char,
-                _prelude.idmef_data_get_byte,
-                _prelude.idmef_data_get_uint32,
-                _prelude.idmef_data_get_uint64,
-                _prelude.idmef_data_get_float,
-                _prelude.idmef_data_get_char_string,
-                _prelude.idmef_data_get_byte_string)[_prelude.idmef_data_get_type(data)](data)
+        value = (lambda d: None,
+                 _prelude.idmef_data_get_char,
+                 _prelude.idmef_data_get_byte,
+                 _prelude.idmef_data_get_uint32,
+                 _prelude.idmef_data_get_uint64,
+                 _prelude.idmef_data_get_float,
+                 _prelude.idmef_data_get_char_string,
+                 _prelude.idmef_data_get_byte_string)[_prelude.idmef_data_get_type(data)](data)
 
+        return value
+        
     if type == _prelude.IDMEF_VALUE_TYPE_ENUM:
         return _prelude.idmef_type_enum_to_string(_prelude.idmef_value_get_object_type(value),
                                                   _prelude.idmef_value_get_enum(value))

@@ -95,6 +95,12 @@ typedef long long int64_t;
 typedef unsigned long long uint64_t;
 typedef unsigned int prelude_bool_t;
 
+
+%typemap(python, out) uint32_t {
+	$result = PyLong_FromUnsignedLong($1);
+};
+
+
 /*
  * Grab from swig python documentation
  */
