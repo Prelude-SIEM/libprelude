@@ -24,6 +24,9 @@
 #ifndef _LIBPRELUDE_PRELUDE_IO_H
 #define _LIBPRELUDE_PRELUDE_IO_H
 
+#include <inttypes.h>
+
+
 typedef struct prelude_io prelude_io_t;
 
 /*
