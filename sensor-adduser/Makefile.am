@@ -12,3 +12,4 @@ sensor_adduser_SOURCES = 		\
 	plaintext.c
 
 
+noinst_HEADERS = plaintext.h ssl-register.h
