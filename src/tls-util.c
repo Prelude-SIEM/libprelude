@@ -160,16 +160,18 @@ int tls_certificates_load(const char *keyfile, const char *certfile, gnutls_cert
 
 int tls_certificate_get_peer_analyzerid(gnutls_session session, uint64_t *analyzerid)
 {
-        size_t size;
         char buf[1024];
-        int cert_list_size, ret;
-        const gnutls_datum_t* cert_list;
         gnutls_x509_crt cert;
+        int cert_list_size, ret;
+        size_t size = sizeof(buf);
+        const gnutls_datum *cert_list;
         
         cert_list = gnutls_certificate_get_peers(session, &cert_list_size);
-        if ( ! cert_list )
+        if ( ! cert_list || cert_list_size != 1 ) {
+                prelude_log(PRELUDE_LOG_ERR, "invalid number of peer certificate: %d.\n", cert_list_size);
                 return -1;
-
+        }
+        
         ret = gnutls_x509_crt_init(&cert);
         if ( ret < 0 )
                 return -1;
@@ -180,7 +182,6 @@ int tls_certificate_get_peer_analyzerid(gnutls_session session, uint64_t *analyz
                 return prelude_error(PRELUDE_ERROR_TLS_CERTIFICATE_PARSE);
         }
 
-        size = sizeof(buf);
         ret = gnutls_x509_crt_get_dn(cert, buf, &size);
         if ( ret < 0 ) {
                 gnutls_x509_crt_deinit(cert);
