@@ -38,6 +38,8 @@
    Caveat: It doesn't work with multibyte strings unless all of the delimiter
            characters are ASCII characters < 0x30.  */
 
+#if defined HAVE_DECL_STRSEP && !HAVE_DECL_STRSEP
 extern char *strsep (char **stringp, const char *delim);
+#endif
 
 #endif /* GNULIB_STRSEP_H_ */
