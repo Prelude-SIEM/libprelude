@@ -102,7 +102,6 @@ class Client:
         if not name:
             name = sys.argv[0]
         
-        
         self._client = _prelude.prelude_client_new(capability)
         if not self._client:
             raise ClientError()
@@ -117,20 +116,18 @@ class Client:
                 raise ClientError()
 
     def set_success(self):
-        self._exit_status = _prelude.PRELUDE_CLIENT_EXIST_STATUS_SUCCESS
+        self._exit_status = _prelude.PRELUDE_CLIENT_EXIT_STATUS_SUCCESS
 
     def set_failure(self):
-        self._exit_status = _prelude.PRELUDE_CLIENT_EXIST_STATUS_FAILURE
+        self._exit_status = _prelude.PRELUDE_CLIENT_EXIT_STATUS_FAILURE
         
     def __del__(self):
-        #print "Client.__del__"
-        
         if self._msgbuf:
             _prelude.prelude_msgbuf_close(self._msgbuf)
             #self._msgbuf = None
 
         if self._client:
-            _prelude.prelude_client_destroy(self._client)
+            _prelude.prelude_client_destroy(self._client, self._exit_status)
             #self._client = None
 
 
@@ -147,7 +144,7 @@ class Sensor(Client):
         
         self._analyzer = _prelude.prelude_client_get_analyzer(self._client)
         if not self._analyzer:
-            _prelude.prelude_client_destroy(self._client)
+            _prelude.prelude_client_destroy(self._client, _prelude.PRELUDE_CLIENT_EXIT_STATUS_FAILURE)
             raise ClientError()
 
         process = _prelude.idmef_analyzer_get_process(self._analyzer)
@@ -216,9 +213,16 @@ class Option:
 class Admin(Client):
     def __init__(self, name=None, address="127.0.0.1", port=5554):
         Client.__init__(self, Client.SEND_ADMIN, name, None)
+        
         self._manager_connection = _prelude.prelude_connection_new(self._client, address, port)
-        _prelude.prelude_client_set_connection(self._client, self._manager_connection)
-        _prelude.prelude_connection_connect(self._manager_connection)
+        if not self._manager_connection:
+            raise ClientError("could not create new connection to %s:%p" % (address, port))
+        
+        if _prelude.prelude_client_set_connection(self._client, self._manager_connection) < 0:
+            raise ClientError("could not set client connection")
+        
+        if _prelude.prelude_connection_connect(self._manager_connection) < 0:
+            raise ClientError("could not connect to manager")
 
     def _get_option_list(self, parent, start):
         options = [ ]
