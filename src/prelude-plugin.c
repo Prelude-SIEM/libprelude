@@ -238,6 +238,19 @@ static int subscribe_instance(prelude_plugin_instance_t *pi)
 
 
 
+
+static void destroy_instance(prelude_plugin_instance_t *instance)
+{
+        free(instance->name);
+        
+        prelude_list_del(&instance->int_list);
+
+        free(instance);
+}
+
+
+
+
 #if 0
 /*
  * FIXME: reactivate once the prelude-getopt get() option callback
@@ -262,6 +275,11 @@ static int intercept_plugin_option_set(void **context, prelude_option_t *opt, co
 {
         plugin_option_intercept_t *intercept;
         prelude_plugin_instance_t *pi = *context;
+
+        if ( ! *context ) {
+                log(LOG_ERR, "referenced instance not available.\n");
+                return -1;
+        }
         
         intercept = prelude_option_get_private_data(opt);
         assert(intercept);
@@ -311,6 +329,11 @@ static int intercept_plugin_init_option(void **context, prelude_option_t *opt, c
         plugin_entry_t *pe;
         prelude_plugin_instance_t *pi;
         plugin_option_intercept_t *intercept;
+
+        if ( ! *context ) {
+                log(LOG_ERR, "referenced instance not available.\n");
+                return -1;
+        }
         
         intercept = prelude_option_get_private_data(opt);
         assert(intercept);
@@ -324,9 +347,10 @@ static int intercept_plugin_init_option(void **context, prelude_option_t *opt, c
         if ( pi->already_subscribed )
                 return ret;
         
-        if ( ret < 0 )
+        if ( ret < 0 ) {
                 pe->plugin->destroy(pi);
-        else
+                destroy_instance(pi);
+        } else
                 subscribe_instance(pi);
 
         return ret;
@@ -383,23 +407,6 @@ static plugin_entry_t *add_plugin_entry(void)
         
         return pe;
 }
-
-
-
-
-static void destroy_instance(prelude_plugin_instance_t *instance)
-{
-        if ( instance->entry->unsubscribe )
-                instance->entry->unsubscribe(instance);
-        
-        free(instance->name);
-        
-        prelude_list_del(&instance->int_list);
-
-        free(instance);
-}
-
-
 
 
 
@@ -610,11 +617,20 @@ prelude_plugin_instance_t *prelude_plugin_subscribe(prelude_plugin_generic_t *pl
 
 
 
-static int plugin_desactivate(prelude_plugin_instance_t *pi, prelude_option_t *opt, const char *arg)
-{        
+static int plugin_desactivate(void **context, prelude_option_t *opt, const char *arg)
+{
+        prelude_plugin_instance_t *pi = *context;
+        
+        if ( ! pi ) {
+                log(LOG_ERR, "referenced instance not available.\n");
+                return -1;
+        }
+        
         pi->entry->plugin->destroy(pi);
         prelude_plugin_unsubscribe(pi);
 
+        *context = NULL;
+        
         /*
          * so that the plugin init function is not called after unsubscribtion.
          */
@@ -636,9 +652,9 @@ int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
         if ( ! pe )
                 return -1;
                 
-        new = prelude_plugin_option_add(opt, WIDE_HOOK, 0, "unsubscribe",
-                                        "Unsubscribe this plugin", no_argument,
-                                        plugin_desactivate, NULL);
+        new = prelude_option_add(opt, CLI_HOOK|WIDE_HOOK, 0, "unsubscribe",
+                                 "Unsubscribe this plugin", no_argument,
+                                 plugin_desactivate, NULL);
         if ( ! new )
                 return -1;
         
