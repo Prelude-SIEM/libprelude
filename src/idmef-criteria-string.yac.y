@@ -24,6 +24,8 @@
      
 %{
 
+#include "libmissing.h"
+        
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -44,9 +46,9 @@ idmef_criteria_t *criteria;
 #define operator_or 1
 #define operator_and 2
  
-extern int yylex();
-extern void yylex_init();
-extern void yylex_destroy();
+extern int yylex(void);
+extern void yylex_init(void);
+extern void yylex_destroy(void);
 static void yyerror(char *s);
 extern void yy_scan_string(const char *);
 
