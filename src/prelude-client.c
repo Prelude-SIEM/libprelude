@@ -51,6 +51,16 @@
 #include "tls-auth.h"
 
 
+#define CLIENT_STATUS_STARTING 0
+#define CLIENT_STATUS_STARTING_STR "starting"
+
+#define CLIENT_STATUS_RUNNING  1
+#define CLIENT_STATUS_RUNNING_STR "running"
+
+#define CLIENT_STATUS_EXITING  2
+#define CLIENT_STATUS_EXITING_STR "exiting"
+
+
 /*
  * directory where TLS private keys file are stored.
  */
@@ -79,14 +89,17 @@
 #define DEFAULT_HEARTBEAT_INTERVAL 60 * 60
 
 
-#define CAPABILITY_SEND (PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF|PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN|PRELUDE_CLIENT_CAPABILITY_SEND_CM)
+#define CAPABILITY_SEND (PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF| \
+                         PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN| \
+                         PRELUDE_CLIENT_CAPABILITY_SEND_CM)
 
 
 
 struct prelude_client {
         
         int flags;
-        prelude_bool_t startup;
+        int status;
+        
         prelude_bool_t ignore_error;
         
         prelude_client_capability_t capability;
@@ -180,6 +193,23 @@ static int add_hb_data(idmef_heartbeat_t *hb, idmef_string_t *meaning, idmef_dat
 
 
 
+static const char *client_get_status(prelude_client_t *client)
+{
+        if ( client->status == CLIENT_STATUS_RUNNING )
+                return CLIENT_STATUS_RUNNING_STR;
+
+        else if ( client->status == CLIENT_STATUS_STARTING )
+                return CLIENT_STATUS_STARTING_STR;
+
+        else if ( client->status == CLIENT_STATUS_EXITING )
+                return CLIENT_STATUS_EXITING_STR;
+
+        abort();
+}
+        
+
+
+
 static void heartbeat_expire_cb(void *data)
 {
         char buf[128];
@@ -202,7 +232,7 @@ static void heartbeat_expire_cb(void *data)
         snprintf(buf, sizeof(buf), "%u", timer_expire(&client->heartbeat_timer) / 60);
         
         add_hb_data(heartbeat, idmef_string_new_constant("Analyzer status"),
-                    idmef_string_new_ref(client->startup ? "starting" : "running"));
+                    idmef_string_new_ref(client_get_status(client)));
 
         if ( client->md5sum )
                 add_hb_data(heartbeat, idmef_string_new_constant("Analyzer md5sum"),
@@ -772,9 +802,9 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
                 return -1;
 
         if ( new->manager_list || new->heartbeat_cb ) {
-                new->startup = TRUE;
+                new->status = CLIENT_STATUS_STARTING;
                 heartbeat_expire_cb(new);
-                new->startup = FALSE;
+                new->status = CLIENT_STATUS_RUNNING;
         }
         
         return 0;
@@ -880,9 +910,12 @@ void prelude_client_set_name(prelude_client_t *client, const char *name)
 
 
 
-
 void prelude_client_destroy(prelude_client_t *client)
-{        
+{
+        timer_destroy(&client->heartbeat_timer);
+        client->status = CLIENT_STATUS_EXITING;
+        heartbeat_expire_cb(client);
+        
         if ( client->name )
                 free(client->name);
 
@@ -894,8 +927,6 @@ void prelude_client_destroy(prelude_client_t *client)
 
         if ( client->manager_list )
                 prelude_connection_mgr_destroy(client->manager_list);
-
-	timer_destroy(&client->heartbeat_timer);
 
         free(client);
 }
