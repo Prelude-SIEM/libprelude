@@ -766,10 +766,6 @@ static void send_option_msg(prelude_bool_t parent_need_context,
         if ( opt->description )
                 prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_DESC, strlen(opt->description) + 1, opt->description);
 
-        
-        printf("need_context=%d have_context=%d context=%p iname=%s opt=%s\n",
-               parent_need_context, opt->type & PRELUDE_OPTION_TYPE_CONTEXT, context, iname, opt->longopt);
-        
         if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT && ! context )
                 return;
 
