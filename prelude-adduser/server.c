@@ -37,8 +37,9 @@
 
 #include "libmissing.h"
 #include "prelude-client.h"
-#include "prelude-inet.h"
 #include "prelude-error.h"
+#include "common.h"
+
 #include "server.h"
 #include "tls-register.h"
 
@@ -95,6 +96,7 @@ static int wait_connection(prelude_client_profile_t *cp, int sock, int keepalive
                            gnutls_srp_server_credentials cred, gnutls_x509_privkey key,
                            gnutls_x509_crt cacrt, gnutls_x509_crt crt)
 {
+        void *inaddr;
         char buf[512];
         int csock, ret;
         socklen_t len;
@@ -129,8 +131,12 @@ static int wait_connection(prelude_client_profile_t *cp, int sock, int keepalive
                         fprintf(stderr, "accept returned an error: %s.\n", strerror(errno));
                         return -1;
                 }
+
+                inaddr = prelude_sockaddr_get_inaddr(sa);
+                if ( ! inaddr )
+                        return -1;
                 
-                prelude_inet_ntop(sa->sa_family, prelude_inet_sockaddr_get_inaddr(sa), buf, sizeof(buf));
+                inet_ntop(sa->sa_family, inaddr, buf, sizeof(buf));                
                 snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf), ":%u", *port);
                 
                 fprintf(stderr, "  - Connection from %s.\n", buf);
