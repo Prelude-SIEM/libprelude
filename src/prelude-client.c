@@ -706,7 +706,7 @@ void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
 {
         if ( client->flags & PRELUDE_CLIENT_ASYNC_SEND )
                 prelude_connection_mgr_broadcast_async(client->manager_list, msg);
-        else
+        else 
                 prelude_connection_mgr_broadcast(client->manager_list, msg);
 }
 
@@ -743,6 +743,13 @@ gid_t prelude_client_get_gid(prelude_client_t *client)
 prelude_connection_mgr_t *prelude_client_get_manager_list(prelude_client_t *client)
 {
         return client->manager_list;
+}
+
+
+
+void prelude_client_set_manager_list(prelude_client_t *client, prelude_connection_mgr_t *mgrlist)
+{
+        client->manager_list = mgrlist;
 }
 
 
