@@ -21,6 +21,8 @@
 *
 *****/
 
+void extract_ipv4_addr(struct in_addr *out, struct in_addr *addr);
+
 int extract_uint64(uint64_t *dst, const void *buf, uint32_t blen);
 
 int extract_uint32(uint32_t *dst, const void *buf, uint32_t blen);
