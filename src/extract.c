@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <inttypes.h>
+#include <sys/types.h>
 #include <netinet/in.h>
 
 #include "common.h"
