@@ -84,8 +84,9 @@ static inline int extract_time_safe(idmef_time_t **out, void *buf, size_t len)
                 return -2;
         \}
 
-        idmef_time_set_sec(*out, ntohl(((uint32_t *) buf)[0]));
-        idmef_time_set_usec(*out, ntohl(((uint32_t *) buf)[1]));
+        idmef_time_set_sec(*out, extract_uint32(buf));
+        idmef_time_set_usec(*out, extract_uint32(buf + 4));
+        idmef_time_set_gmt_offset(*out, extract_int32(buf + 8));
 
         return 0;
 \}

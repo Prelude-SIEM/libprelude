@@ -132,6 +132,7 @@ inline void idmef_write_time(prelude_msgbuf_t *msg, uint8_t tag, idmef_time_t *d
 
 	idmef_time_set_sec(&dst, htonl(idmef_time_get_sec(data)));
 	idmef_time_set_usec(&dst, htonl(idmef_time_get_usec(data)));
+        idmef_time_set_gmt_offset(&dst, htonl(idmef_time_get_gmt_offset(data)));
 
 	prelude_msgbuf_set(msg, tag, sizeof (dst), &dst);
 \}
