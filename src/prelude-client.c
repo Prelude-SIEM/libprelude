@@ -190,6 +190,40 @@ static int inet_connect(const char *addr, unsigned int port)
 
 
 
+static int read_plaintext_authentication_result(prelude_io_t *fd) 
+{
+        int ret;
+        void *buf;
+        uint8_t tag;
+        uint32_t dlen;
+        prelude_msg_t *msg = NULL;
+
+        ret = prelude_msg_read(&msg, fd);
+        if ( ret <= 0 ) {
+                log(LOG_ERR, "error reading authentication result.\n");
+                return -1;
+        }
+
+        ret = prelude_msg_get(msg, &tag, &dlen, &buf);
+        prelude_msg_destroy(msg);
+        
+        if ( ret <= 0 ) {
+                log(LOG_ERR, "error reading authentication result.\n");
+                return -1;
+        }
+        
+        if ( tag == PRELUDE_MSG_AUTH_SUCCEED ) {
+                log(LOG_INFO, "Plaintext authentication succeed with Prelude Manager.\n");
+                return 0;
+        }
+        
+        log(LOG_INFO, "Plaintext authentication failed with Prelude Manager.\n");
+
+        return -1;
+}
+
+
+
 
 static int handle_plaintext_connection(prelude_client_t *client, int sock) 
 {
@@ -221,15 +255,18 @@ static int handle_plaintext_connection(prelude_client_t *client, int sock)
         prelude_io_set_sys_io(client->fd, sock);
         
         ret = prelude_msg_write(msg, client->fd);
-        if ( ret <= 0 )
+        if ( ret <= 0 ) {
+                log(LOG_ERR, "error sending plaintext authentication message.\n");
                 ret = -1;
+        }
 
         prelude_msg_destroy(msg);
 
   err:
         free(user);
         free(pass);
-        return ret;
+
+        return read_plaintext_authentication_result(client->fd);
 }
 
 
@@ -256,8 +293,13 @@ static int handle_ssl_connection(prelude_client_t *client, int sock)
                 return -1;
 
         prelude_msg_set(msg, PRELUDE_MSG_AUTH_SSL, 0, NULL);
-        prelude_msg_write(msg, client->fd);
-        prelude_msg_destroy(msg);
+        ret = prelude_msg_write(msg, client->fd);
+        prelude_msg_destroy(msg);        
+        
+        if ( ret < 0 ) {
+                log(LOG_ERR, "error sending SSL authentication message.\n");
+                return -1;
+        }
         
         ssl = ssl_connect_server(sock);
         if ( ! ssl ) {
@@ -274,7 +316,6 @@ static int handle_ssl_connection(prelude_client_t *client, int sock)
 }
 
 #endif
-
 
 
 
@@ -363,7 +404,6 @@ static int start_inet_connection(prelude_client_t *client)
  end:
         if ( ret < 0 )
                 close(sock);
-        
         return ret;
 }
 
@@ -372,15 +412,33 @@ static int start_inet_connection(prelude_client_t *client)
 
 static int start_unix_connection(prelude_client_t *client) 
 {
-        int sock;
+        int ret, sock, have_ssl = 0, have_plaintext = 0;
         
         sock = unix_connect();
         if ( sock < 0 )
                 return -1;
 
         prelude_io_set_sys_io(client->fd, sock);
+
+        ret = get_manager_setup(client->fd, &have_ssl, &have_plaintext);
+        if ( ret < 0 ) {
+                close(sock);
+                return -1;
+        }
+
+        if ( ! have_plaintext ) {
+                log(LOG_INFO, "Unix connection used, but Manager report plaintext unavailable.\n");
+                close(sock);
+                return -1;
+        }
         
-        return handle_plaintext_connection(client, sock);
+        ret = handle_plaintext_connection(client, sock);
+        if ( ret < 0 ) {
+                close(sock);
+                return -1;
+        }
+
+        return 0;
 }
 
 
@@ -399,7 +457,6 @@ static int do_connect(prelude_client_t *client)
         
         return ret;
 }
-
 
 
 

@@ -3,6 +3,13 @@
 	* src/prelude-client.c (handle_plaintext_connection): 
 	always use PRELUDE_MSG_AUTH for header tag.
 	use PRELUDE_MSG_AUTH_PLAINTEXT as a subtag.
+	
+	(start_unix_connection): read Manager setup, even in UNIX mode.
+
+	(handle_plaintext_connection): call read_plaintext_authentication_result().
+
+	(read_plaintext_authentication_result): new function. 
+	Read authentication result.
 
 2002-01-10  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
