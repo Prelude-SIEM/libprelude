@@ -1,3 +1,41 @@
+2002-01-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/client-ident.c: new file.
+	(prelude_client_ident_tell): when called, will tell the
+	other peer what ID we are, unless we are a Manager ourselve.
+
+	* src/extract.c: new file, contain type checking function
+	for message extraction.
+
+	* src/sensor.c (prelude_sensor_init): 
+	now take a sensor_name argument.
+
+	(setup_manager_addr): identifier for client manager
+	is the sensor name.
+
+	* src/prelude-message.c (prelude_msg_read): 
+	it's possible for a message to only contain an header.
+	handle that case well, without returning an error.
+
+	* src/prelude-client.c (prelude_client_connect): 
+	better error handling. Call prelude_client_ident_tell().
+
+	* src/prelude-client-mgr.c (parse_config_line): 
+	warn if Manager emission can not work at initialisation too.
+
+	(setup_backup_fd): include program UID, in the filename. 
+	This file can't be shared if two instance of the sensor run
+	as different user.
+
+	* src/include/prelude-message-id.h (PRELUDE_MSG_ID_REPLY): 
+	(PRELUDE_MSG_ID_REQUEST): new message ID.
+
+	* src/sensor.c (prelude_sensor_init): stop initializing if
+	parse_argument() return prelude_option_end or prelude_option_error.
+
+	* src/prelude-getopt.c (check_option_optarg): check index before
+	dereferencing argv.
+
 2002-01-04  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/config-engine.c (is_line_commented): new function.

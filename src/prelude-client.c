@@ -50,7 +50,9 @@
 #include "prelude-auth.h"
 #include "prelude-message.h"
 #include "prelude-client.h"
+#include "prelude-getopt.h"
 #include "sensor.h"
+#include "client-ident.h"
 #include "auth.h"
 
 
@@ -422,10 +424,24 @@ int prelude_client_connect(prelude_client_t *client)
         prelude_msg_t *msg;
         
         ret = do_connect(client);
-        if ( ret == 0 && (msg = prelude_option_wide_get_msg() ) ) 
-                prelude_msg_write(msg, client->fd);
+        if ( ret < 0 ) {
+                client->connection_broken = 1;
+                return -1;
+        }
 
-        client->connection_broken = (ret < 0) ? 1 : 0;
+        msg = prelude_option_wide_get_msg();
+        if ( ! msg )
+                return -1;
+
+        ret = prelude_msg_write(msg, client->fd);
+        if ( ret < 0 )
+                return -1;
+
+        ret = prelude_client_ident_tell(client->fd);
+        if ( ret < 0 )
+                return -1;
+        
+        client->connection_broken = 0;
         
         return ret;
 }
@@ -465,16 +481,3 @@ ssize_t prelude_client_forward(prelude_client_t *client, prelude_io_t *src, size
 {
         return prelude_io_forward(client->fd, src, count);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

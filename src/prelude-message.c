@@ -202,7 +202,7 @@ prelude_msg_status_t prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
                 }
         }
         
-        if ( (*msg)->payload ) {
+        if ( (*msg)->payload && (*msg)->hdr.datalen > PRELUDE_MSG_HDR_SIZE ) {
                 ret = read_message_content(*msg, pio);
                 if ( ret == prelude_msg_error || ret == prelude_msg_eof ) {
                         prelude_msg_destroy(*msg);

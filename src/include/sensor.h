@@ -25,5 +25,8 @@ void prelude_sensor_send_alert(prelude_msg_t *msg);
 
 prelude_msg_t *prelude_sensor_get_option_msg(void);
 
-int prelude_sensor_init(const char *filename, int argc, char **argv);
+int prelude_sensor_init(const char *sname, const char *filename, int argc, char **argv);
 
+uint64_t prelude_sensor_get_ident(void);
+
+void prelude_sensor_set_ident(uint64_t *ident);

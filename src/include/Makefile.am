@@ -25,8 +25,9 @@ include_HEADERS = config-engine.h 		\
 		  prelude-async.h		\
 		  prelude-ident.h		\
 		  sensor.h			\
-		  threads.h
+		  threads.h			\
+		  extract.h
 
 
 
-noinst_HEADERS = ssl.h auth.h
+noinst_HEADERS = ssl.h auth.h client-ident.h

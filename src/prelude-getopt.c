@@ -130,7 +130,7 @@ static prelude_option_t *search_cli_option(prelude_optlist_t *optlist, const cha
 static int check_option_optarg(prelude_optlist_t *optlist,
                                int argc, char **argv, const char **optarg) 
 {        
-        if ( *argv[optlist->argv_index] != '-' ) {
+        if ( optlist->argv_index < argc && *argv[optlist->argv_index] != '-' ) {
                 *optarg = argv[optlist->argv_index];
                 argv[optlist->argv_index++] = "";
         }

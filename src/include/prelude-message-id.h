@@ -20,9 +20,20 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
+
 /*
  * Top level message tag (to be used with prelude_msg_new()).
  */
 #define PRELUDE_MSG_IDMEF       0
 #define PRELUDE_MSG_OPTION_LIST 1
 #define PRELUDE_MSG_OPTION_SET  2
+
+#define PRELUDE_MSG_ID          3
+
+/*
+ * PRELUDE_MSG_ID submessage
+ */
+#define PRELUDE_MSG_ID_REQUEST  0
+#define PRELUDE_MSG_ID_REPLY    1
+#define PRELUDE_MSG_ID_DECLARE  3
+

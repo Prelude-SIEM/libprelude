@@ -345,7 +345,8 @@ static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline)
 {
         int ret;
         char *ptr;
-        client_list_t *clist = NULL;
+        int working_and = 0;
+        client_list_t *clist;
 
         clist = create_client_list(cmgr);
         if ( ! clist )
@@ -363,9 +364,11 @@ static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline)
                          * is AND of Manager list true (all connection okay) ?
                          * if it is, flush a potential backup file from previous session.
                          */
-                        if ( clist->dead == 0 )
+                        if ( clist->dead == 0 ) {
+                                working_and = 1;
                                 flush_backup_if_needed(clist);
-
+                        }
+                        
                         /*
                          * end of line ?
                          */
@@ -389,7 +392,10 @@ static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline)
                 ret = add_new_client(clist, ptr);
                 if ( ret < 0 )
                         return -1;
-        } 
+        }
+
+        if ( ! working_and ) 
+                log(LOG_INFO, "Can't contact configured Manager - Enabling failsafe mode.\n");
 
         return 0;
 }
@@ -454,8 +460,12 @@ static int setup_backup_fd(prelude_client_mgr_t *new, const char *name)
 {
         int wfd, rfd;
         char filename[1024];
-        
-        snprintf(filename, sizeof(filename), "%s/%s", BACKUP_DIR, name);
+
+        /*
+         * The backup file can't be shared if two instance of the sensor
+         * run as different user.
+         */
+        snprintf(filename, sizeof(filename), "%s/%s.%d", BACKUP_DIR, name, getuid());
         
         new->backup_fd_write = prelude_io_new();
         if (! new->backup_fd_write ) 

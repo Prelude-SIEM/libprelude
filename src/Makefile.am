@@ -8,6 +8,7 @@ lib_LTLIBRARIES = libprelude.la
 
 libprelude_la_SOURCES = 		\
 	config-engine.c 		\
+	extract.c			\
 	plugin-common.c			\
 	daemonize.c			\
 	ssl.c				\
@@ -25,6 +26,7 @@ libprelude_la_SOURCES = 		\
 	prelude-async.c			\
 	prelude-ident.c			\
 	sensor.c			\
+	client-ident.c			\
 	common.c
 
 
