@@ -32,6 +32,8 @@
 #include <arpa/inet.h>
 #include <sys/time.h>
 
+#include <errno.h>
+
 #include "common.h"
 #include "prelude-log.h"
 #include "extract.h"
@@ -179,12 +181,17 @@ inline static prelude_msg_status_t read_message_data(unsigned char *dst, size_t 
 {
         ssize_t ret;
         size_t count = *size;
+
+        *size = 0;
         
         /*
          * Read the whole header.
          */
         ret = prelude_io_read(fd, dst, count);
         if ( ret < 0 ) {
+                if ( errno == EAGAIN )
+                        return prelude_msg_unfinished;
+                
                 log(LOG_ERR, "error reading message.\n");
                 return prelude_msg_error;
         }
