@@ -27,13 +27,15 @@
 #define idmef_object_type_time 1
 
 struct idmef_time {
-	uint32_t sec;
-	uint32_t usec;
+        int refcount;
+        uint32_t sec;
+        uint32_t usec;
         int32_t gmt_offset;
 };
 
 typedef struct idmef_time idmef_time_t;
 
+idmef_time_t *idmef_time_ref(idmef_time_t *time);
 idmef_time_t *idmef_time_new(void);
 idmef_time_t *idmef_time_new_gettimeofday(void);
 idmef_time_t *idmef_time_new_string(const char *buf);
