@@ -267,8 +267,8 @@ int prelude_option_send_request(prelude_client_t *client, uint32_t request_id, u
 {
         uint64_t tmp;
         prelude_msgbuf_t *msg;
-
-        msg = prelude_msgbuf_new(PRELUDE_MSGBUF_ASYNC_SEND);
+        
+        msg = prelude_msgbuf_new(0);
         if ( ! msg ) {
                 log(LOG_ERR, "error creating option message.\n");
                 return -1;
