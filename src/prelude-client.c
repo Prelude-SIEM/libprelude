@@ -296,9 +296,26 @@ static int set_node_address_category(void *context, prelude_option_t *opt, const
 
 
 
+static int get_node_address_category(void *context, prelude_option_t *opt, char *out, size_t size)
+{
+        idmef_address_category_t category = idmef_address_get_category(context);
+        snprintf(out, size, "%s", idmef_address_category_to_string(category));
+        return 0;
+}
+
+
+
 static int set_node_address_vlan_num(void *context, prelude_option_t *opt, const char *arg) 
 {
         idmef_address_set_vlan_num(context, atoi(arg));
+        return 0;
+}
+
+
+
+static int get_node_address_vlan_num(void *context, prelude_option_t *opt, char *out, size_t size)
+{
+        snprintf(out, size, "%d", idmef_address_get_vlan_num(context));
         return 0;
 }
 
@@ -312,12 +329,27 @@ static int set_node_address_vlan_name(void *context, prelude_option_t *opt, cons
 
 
 
+static int get_node_address_vlan_name(void *context, prelude_option_t *opt, char *out, size_t size)
+{
+        snprintf(out, size, "%s", idmef_string_get_string(idmef_address_get_vlan_name(context)));
+        return 0;
+}
+
+
+
 static int set_node_address_address(void *context, prelude_option_t *opt, const char *arg) 
-{        
+{       
         idmef_address_set_address(context, idmef_string_new_dup(arg));
         return 0;
 }
 
+
+
+static int get_node_address_address(void *context, prelude_option_t *opt, char *out, size_t size)
+{
+        snprintf(out, size, "%s", idmef_string_get_string(idmef_address_get_address(context)));
+        return 0;
+}
 
 
 
@@ -327,6 +359,13 @@ static int set_node_address_netmask(void *context, prelude_option_t *opt, const 
         return 0;
 }
 
+
+
+static int get_node_address_netmask(void *context, prelude_option_t *opt, char *out, size_t size)
+{
+        snprintf(out, size, "%s", idmef_string_get_string(idmef_address_get_netmask(context)));
+        return 0;
+}
 
 
 
@@ -372,6 +411,23 @@ static int set_node_category(void *context, prelude_option_t *opt, const char *a
 
 
 
+static int get_node_category(void *context, prelude_option_t *opt, char *out, size_t size)
+{
+        idmef_node_category_t category;
+        prelude_client_t *client = context;
+        idmef_node_t *node = idmef_analyzer_get_node(client->analyzer);
+        
+        if ( ! node )
+                return -1;
+        
+        category = idmef_node_get_category(node);
+        snprintf(out, size, "%s", idmef_node_category_to_string(category));
+        
+        return 0;
+}
+
+
+
 static int set_node_location(void *context, prelude_option_t *opt, const char *arg) 
 {
         idmef_node_t *node;
@@ -383,6 +439,21 @@ static int set_node_location(void *context, prelude_option_t *opt, const char *a
 
         idmef_node_set_location(node, idmef_string_new_dup(arg));
 
+        return 0;
+}
+
+
+
+static int get_node_location(void *context, prelude_option_t *opt, char *out, size_t size)
+{
+        prelude_client_t *client = context;
+        idmef_node_t *node = idmef_analyzer_get_node(client->analyzer);
+        
+        if ( ! node )
+                return -1;
+        
+        snprintf(out, size, "%s", idmef_string_get_string(idmef_node_get_location(node)));
+        
         return 0;
 }
 
@@ -402,6 +473,20 @@ static int set_node_name(void *context, prelude_option_t *opt, const char *arg)
         return 0;
 }
 
+
+
+static int get_node_name(void *context, prelude_option_t *opt, char *out, size_t size)
+{
+        prelude_client_t *client = context;
+        idmef_node_t *node = idmef_analyzer_get_node(client->analyzer);
+        
+        if ( ! node )
+                return -1;
+        
+        snprintf(out, size, "%s", idmef_string_get_string(idmef_node_get_name(node)));
+        
+        return 0;
+}
 
 
 
@@ -508,34 +593,40 @@ static int setup_options(prelude_client_t *client, int argc, char **argv)
                 return -1;
         
         prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK, 0, "node-name",
-                           "Name of the equipment", required_argument, set_node_name, NULL);
+                           "Name of the equipment", required_argument, 
+                           set_node_name, get_node_name);
 
         prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK, 0, "node-location",
-                           "Location of the equipment", required_argument, set_node_location, NULL);
+                           "Location of the equipment", required_argument, 
+                           set_node_location, get_node_location);
         
         prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK, 0, "node-category",
-                           NULL, required_argument, set_node_category, NULL);
+                           NULL, required_argument, set_node_category, 
+                           get_node_category);
         
         opt = prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK|HAVE_CONTEXT, 0, "node-address",
                                  "Network or hardware address of the equipment", required_argument, 
                                  set_node_address, NULL);
         
         prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "address",
-                           "Address information", required_argument, set_node_address_address, NULL);
+                           "Address information", required_argument, 
+                           set_node_address_address, get_node_address_address);
 
         prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "netmask",
-                           "Network mask for the address, if appropriate", required_argument, set_node_address_netmask, NULL);
+                           "Network mask for the address, if appropriate", required_argument, 
+                           set_node_address_netmask, get_node_address_netmask);
 
         prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "category",
-                           "Type of address represented", required_argument, set_node_address_category, NULL);
+                           "Type of address represented", required_argument, 
+                           set_node_address_category, get_node_address_category);
 
         prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "vlan-name",
                            "Name of the Virtual LAN to which the address belongs", 
-                           required_argument, set_node_address_vlan_name, NULL);
+                           required_argument, set_node_address_vlan_name, get_node_address_vlan_name);
 
         prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "vlan-num",
                            "Number of the Virtual LAN to which the address belongs", 
-                           required_argument, set_node_address_vlan_num, NULL);
+                           required_argument, set_node_address_vlan_num, get_node_address_vlan_num);
 
         return 0;
 }
