@@ -3,7 +3,7 @@ SUBDIRS = libltdl src sensor-adduser docs
 includedir=$(prefix)/libprelude/include
 include_HEADERS=config.h
 
-EXTRA_DIST = sensors-default.conf
+EXTRA_DIST = COPYING.OpenSSL sensors-default.conf
 bin_SCRIPTS = $(top_srcdir)/libprelude-config
 
 
