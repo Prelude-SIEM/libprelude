@@ -297,14 +297,14 @@ class Admin:
         else:
             value = name
         msg = self._request(analyzer_path, _prelude.PRELUDE_MSG_OPTION_SET, value)
-        
-        if _prelude.prelude_option_recv_set(msg) < 0:
+
+        if not _prelude.prelude_option_recv_set(msg):
             raise Error("could not read set_option answer")
 
     def commit(self, analyzer_path, instance):
         msg = self._request(analyzer_path, _prelude.PRELUDE_MSG_OPTION_COMMIT, instance)
         
-        if _prelude.prelude_option_recv_set(msg) < 0:
+        if not _prelude.prelude_option_recv_set(msg):
             raise Error("could not read commit answer")
 
     def get_analyzerid(self):
@@ -322,7 +322,7 @@ class Admin:
     def destroy(self, analyzer_path, instance):
         msg = self._request(analyzer_path, _prelude.PRELUDE_MSG_OPTION_DESTROY, instance)
 
-        if _prelude.prelude_option_recv_set(msg) < 0:
+        if not _prelude.prelude_option_recv_set(msg):
             raise Error("could not read destroy answer")
 
 

@@ -71,18 +71,15 @@ prelude_option_t *prelude_option_recv_list(prelude_msg_t *msg)
 	return opt;
 }
 
-char *prelude_option_recv_set(prelude_msg_t *msg)
+int prelude_option_recv_set(prelude_msg_t *msg)
 {
 	uint64_t source_id;
 	uint32_t request_id;
 	char *str;
 	int retval;
 	
-	retval = prelude_option_recv_reply(msg, &source_id, &request_id, (void **) &str);
-	if ( retval == PRELUDE_OPTION_REPLY_TYPE_ERROR )
-		return NULL;
-	
-	return str;
+	return prelude_option_recv_reply(msg, &source_id, &request_id, (void **) &str) != 
+		PRELUDE_OPTION_REPLY_TYPE_ERROR;
 }
 
 
@@ -290,7 +287,7 @@ typedef unsigned int prelude_bool_t;
 
 prelude_msg_t *my_prelude_msg_read(prelude_io_t *pio);
 prelude_option_t *prelude_option_recv_list(prelude_msg_t *msg);
-char *prelude_option_recv_set(prelude_msg_t *msg);
+int prelude_option_recv_set(prelude_msg_t *msg);
 
 %include "prelude-client.h"
 %include "prelude-client-profile.h"
