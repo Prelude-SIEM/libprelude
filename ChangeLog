@@ -1,3 +1,8 @@
+2002-06-19  Krzysztof Zaraska  <kzaraska@student.uci.agh.edu.pl>
+
+	* src/sensor.c: fix crash in prelude_sensor_init on Linux when
+	passed NULL argv value. Correct function name in comment. 
+
 2002-06-18  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/plugin-common.c (plugin_search_by_name): 
