@@ -147,8 +147,9 @@ static int read_message_content(prelude_msg_t *msg, prelude_io_t *pio)
                 return prelude_msg_error;
         }
 
-        else if ( ret == 0 ) 
-                return prelude_msg_error; /* EOF */
+        else if ( ret == 0 )
+                /* EOF should not happen in the middle of a message */
+                return prelude_msg_error;
 
         msg->read_index += ret;
 
@@ -193,14 +194,23 @@ prelude_msg_status_t prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
         
         if ( ! (*msg)->payload ) {
                 ret = read_message_header(*msg, pio);
-                if ( ret != prelude_msg_finished )
+                if ( ret == prelude_msg_error || ret == prelude_msg_eof ) {
+                        prelude_msg_destroy(*msg);
+                        *msg = NULL;
                         return ret;
+                }
         }
         
-        if ( (*msg)->payload )
-                return read_message_content(*msg, pio);
+        if ( (*msg)->payload ) {
+                ret = read_message_content(*msg, pio);
+                if ( ret == prelude_msg_error || ret == prelude_msg_eof ) {
+                        prelude_msg_destroy(*msg);
+                        *msg = NULL;
+                        return ret;
+                }
+        }
         
-        return prelude_msg_unfinished;
+        return ret;
 }
 
 

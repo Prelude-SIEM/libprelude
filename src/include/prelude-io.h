@@ -29,11 +29,11 @@ prelude_io_t *prelude_io_new(void);
 
 void prelude_io_destroy(prelude_io_t *pio);
 
-void prelude_io_set_file_io(prelude_io_t *pio, int fd);
+void prelude_io_set_file_io(prelude_io_t *pio, FILE *fd);
 
 void prelude_io_set_ssl_io(prelude_io_t *pio, void *ssl);
 
-void prelude_io_set_socket_io(prelude_io_t *pio, int fd);
+void prelude_io_set_sys_io(prelude_io_t *pio, int fd);
 
 
 

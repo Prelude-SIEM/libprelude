@@ -391,7 +391,7 @@ static int setup_backup_fd(prelude_client_mgr_t *new, const char *name)
                 return -1;
         }
         
-        prelude_io_set_file_io(new->backup_fd, fd);
+        prelude_io_set_sys_io(new->backup_fd, fd);
         
         return 0;
 }

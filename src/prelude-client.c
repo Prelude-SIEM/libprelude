@@ -200,7 +200,7 @@ static int handle_plaintext_connection(prelude_client_t *client, int sock)
                 return -1;
         }
 
-        prelude_io_set_socket_io(client->fd, sock);
+        prelude_io_set_sys_io(client->fd, sock);
 
         return 0;
 }
@@ -305,7 +305,7 @@ static int start_inet_connection(prelude_client_t *client)
         if ( sock < 0 )
                 return -1;
 
-        prelude_io_set_socket_io(client->fd, sock);
+        prelude_io_set_sys_io(client->fd, sock);
         
         ret = setup_inet_connection(client->fd, &use_ssl);
         if ( ret < 0 ) {
@@ -338,7 +338,7 @@ static int start_unix_connection(prelude_client_t *client)
         if ( sock < 0 )
                 return -1;
 
-        prelude_io_set_socket_io(client->fd, sock);
+        prelude_io_set_sys_io(client->fd, sock);
         
         return handle_plaintext_connection(client, sock);
 }

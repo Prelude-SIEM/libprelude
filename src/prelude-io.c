@@ -31,7 +31,7 @@
 #include "config.h"
 
 #ifdef HAVE_SSL
-#include <openssl/ssl.h>
+ #include <openssl/ssl.h>
 #endif
 
 #include "common.h"
@@ -40,11 +40,8 @@
 
 struct prelude_io {
         int fd;
+        void *fd_ptr;
         
-#ifdef HAVE_SSL
-        SSL *ssl;
-#endif
-
         int (*close)(prelude_io_t *pio);
         ssize_t (*read)(prelude_io_t *pio, void *buf, size_t count);
         ssize_t (*write)(prelude_io_t *pio, const void *buf, size_t count);
@@ -52,12 +49,13 @@ struct prelude_io {
 
 
 
+
 /*
- * Call the standard read function. Also, handle EINTR.
+ * System IO function.
  */
-inline static ssize_t normal_read(prelude_io_t *pio, void *buf, size_t count) 
+static ssize_t sys_read(prelude_io_t *pio, void *buf, size_t count) 
 {
-        int ret;
+        ssize_t ret;
 
         do {
                 ret = read(pio->fd, buf, count);
@@ -68,23 +66,9 @@ inline static ssize_t normal_read(prelude_io_t *pio, void *buf, size_t count)
 
 
 
-/*
- * This function is just to distinguish read from file and read from other fd.
- */
-static ssize_t file_read(prelude_io_t *pio, void *buf, size_t count) 
+static ssize_t sys_write(prelude_io_t *pio, const void *buf, size_t count) 
 {
-        return normal_read(pio, buf, count);
-}
-
-
-
-
-/*
- * Call the standard write function. Also, handle EINTR.
- */
-static ssize_t normal_write(prelude_io_t *pio, const void *buf, size_t count) 
-{
-        int ret;
+        ssize_t ret;
         
         do {
                 ret = write(pio->fd, buf, count);
@@ -95,10 +79,7 @@ static ssize_t normal_write(prelude_io_t *pio, const void *buf, size_t count)
 
 
 
-/*
- * Call the standard close function. Also, handle EINTR.
- */
-static int normal_close(prelude_io_t *pio) 
+static int sys_close(prelude_io_t *pio) 
 {
         int ret;
 
@@ -107,6 +88,49 @@ static int normal_close(prelude_io_t *pio)
         } while ( ret < 0 && errno == EINTR );
 
         return ret;
+}
+
+
+
+
+/*
+ * Buffered IO function.
+ */
+static ssize_t file_read(prelude_io_t *pio, void *buf, size_t count) 
+{
+        ssize_t ret;
+
+        do {
+                ret = fread(buf, count, 1, pio->fd_ptr);
+        } while ( ret < 0 && errno == EINTR );
+
+        if ( ret <= 0 )
+                return ret;
+        
+        return count;
+}
+
+
+
+static ssize_t file_write(prelude_io_t *pio, const void *buf, size_t count) 
+{
+        ssize_t ret;
+
+        do {
+                ret = fwrite(buf, count, 1, pio->fd_ptr);
+        } while ( ret < 0 && errno == EINTR );
+
+        if ( ret <= 0 )
+                return ret;
+        
+        return count;
+}
+
+
+
+static int file_close(prelude_io_t *pio) 
+{
+        return fclose(pio->fd_ptr);
 }
 
 
@@ -143,41 +167,33 @@ static ssize_t copy_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
 
 
 #ifdef HAVE_SSL
-
 /*
- * Call the SSL read function.
+ * SSL IO functions
  */
 static ssize_t ssl_read(prelude_io_t *pio, void *buf, size_t count) 
 {
-        return SSL_read(pio->ssl, buf, count);
+        return SSL_read(pio->fd_ptr, buf, count);
 }
 
 
-
-/*
- * Call the SSL write function.
- */
 static ssize_t ssl_write(prelude_io_t *pio, const void *buf, size_t count) 
 {
-        return SSL_write(pio->ssl, buf, count);
+        return SSL_write(pio->fd_ptr, buf, count);
 }
 
 
 
-/*
- * Close the SSL session.
- */
 static int ssl_close(prelude_io_t *pio) 
 {
         int ret;
 
-        ret = SSL_shutdown(pio->ssl);
+        ret = SSL_shutdown(pio->fd_ptr);
         if ( ret <= 0 )
                 return -1;
         
-        SSL_free(pio->ssl);
+        SSL_free(pio->fd_ptr);
 
-        return normal_close(pio);
+        return sys_close(pio);
 }
 
 #endif
@@ -484,15 +500,13 @@ prelude_io_t *prelude_io_new(void)
  * Setup the @pio object to work with file I/O function.
  * The @pio object is then associated with @fd.
  */
-void prelude_io_set_file_io(prelude_io_t *pio, int fd) 
+void prelude_io_set_file_io(prelude_io_t *pio, FILE *fdptr) 
 {
-        pio->fd = fd;
-#ifdef HAVE_SSL
-        pio->ssl = NULL;
-#endif
+        pio->fd = fileno(fdptr);
+        pio->fd_ptr = fdptr;
         pio->read = file_read;
-        pio->write = normal_write;
-        pio->close = normal_close;
+        pio->write = file_write;
+        pio->close = file_close;
 }
 
 
@@ -510,7 +524,7 @@ void prelude_io_set_file_io(prelude_io_t *pio, int fd)
 void prelude_io_set_ssl_io(prelude_io_t *pio, void *ssl) 
 {
         pio->fd = SSL_get_fd(ssl);
-        pio->ssl = ssl;
+        pio->fd_ptr = ssl;
         pio->read = ssl_read;
         pio->write = ssl_write;
         pio->close = ssl_close;
@@ -521,22 +535,19 @@ void prelude_io_set_ssl_io(prelude_io_t *pio, void *ssl)
 
 
 /**
- * prelude_io_set_socket_io:
+ * prelude_io_set_sys_io:
  * @pio: A pointer on the #prelude_io_t object.
  * @fd: A socket descriptor.
  *
- * Setup the @pio object to work with socket based I/O function.
+ * Setup the @pio object to work with system based I/O function.
  * The @pio object is then associated with @fd.
  */
-void prelude_io_set_socket_io(prelude_io_t *pio, int fd) 
+void prelude_io_set_sys_io(prelude_io_t *pio, int fd) 
 {
         pio->fd = fd;
-#ifdef HAVE_SSL
-        pio->ssl = NULL;
-#endif
-        pio->read = normal_read;
-        pio->write = normal_write;
-        pio->close = normal_close;
+        pio->read = sys_read;
+        pio->write = sys_write;
+        pio->close = sys_close;
 }
 
 
