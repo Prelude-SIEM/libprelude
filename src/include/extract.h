@@ -32,64 +32,95 @@
  */
 #include <string.h> 
 
-static inline uint16_t extract_uint16(const void *buf)
+
+static inline uint16_t align_uint16(const void *buf)
 {
         uint16_t tmp;
         
         memmove(&tmp, buf, sizeof(tmp));
-        return ntohs(tmp);
+
+        return tmp;
 }
 
 
-static inline uint32_t extract_uint32(const void *buf) 
+
+
+static inline uint32_t align_uint32(const void *buf) 
 {
         uint32_t tmp;
 
         memmove(&tmp, buf, sizeof(tmp));
-        return ntohl(tmp);
+
+        return tmp;
 }
 
 
-static inline uint64_t extract_uint64(const void *buf) 
+
+
+static inline uint64_t align_uint64(const void *buf) 
 {
-        uint64_t tmp, swap;
+        uint64_t tmp;
 
         memmove(&tmp, buf, sizeof(tmp));
-        
-        ((uint32_t *) &swap)[0] = ntohl(((uint32_t *) &tmp)[1]);
-        ((uint32_t *) &swap)[1] = ntohl(((uint32_t *) &tmp)[0]);
 
-        return swap;
+        return tmp;
 }
 
 
 
-static inline struct in_addr extract_ipv4_addr(const void *buf) 
+static inline struct in_addr align_ipv4_addr(const void *buf) 
 {
         struct in_addr tmp;
         
         memmove(&tmp, buf, sizeof(tmp));
+
         return tmp;
 }
 
 
 #else
 
-#define extract_uint16(x) ntohs((*(const uint16_t *) (x)))
-#define extract_uint32(x) ntohl((*(const uint32_t *) (x)))
-#define extract_ipv4_addr(x) *((const struct in_addr *) (x))
+
+#define align_uint16(x) (*(const uint16_t *) (x))
+#define align_uint32(x) (*(const uint32_t *) (x))
+#define align_uint64(x) (*(const uint64_t *) (x))
+#define align_ipv4_addr(x) *((const struct in_addr *) (x))
+
+#endif
+
+
+static inline struct in_addr extract_ipv4_addr(const void *buf) 
+{
+        return align_ipv4_addr(buf);
+}
+
+
+
+static inline uint16_t extract_uint16(const void *buf) 
+{
+        return ntohs(align_uint16(buf));
+}
+
+
+
+static inline uint32_t extract_uint32(const void *buf) 
+{
+        return ntohl(align_uint32(buf));
+}
+
+
 
 static inline uint64_t extract_uint64(const void *buf) 
 {
-        uint64_t tmp;
+        uint64_t tmp, swap;
+
+        tmp = align_uint64(buf);
+
+        ((uint32_t *) &swap)[0] = ntohl(((uint32_t *) &tmp)[1]);
+        ((uint32_t *) &swap)[1] = ntohl(((uint32_t *) &tmp)[0]);
         
-        ((uint32_t *) &tmp)[0] = ntohl(((const uint32_t *) buf)[1]);
-        ((uint32_t *) &tmp)[1] = ntohl(((const uint32_t *) buf)[0]);
-
-        return tmp;
+        return swap;
 }
-
-#endif
 
 
 
