@@ -316,7 +316,7 @@ static int parse_buffer(char *str, char **entry, char **value)
         if ( buf ) 
                 *(buf - 1) = '=';
         
-        ptr = prelude_strsep(&buf, "=");
+        ptr = prelude_strsep(&buf, "");
         if ( ptr )
                 *value = strip_value(ptr);
 
