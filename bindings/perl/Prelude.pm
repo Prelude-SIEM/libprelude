@@ -63,7 +63,7 @@ sub	value2scalar($)
 	$result = Prelude::idmef_string_get_string($string);
 
     } elsif ( $type == $Prelude::IDMEF_VALUE_TYPE_ENUM) {
-	$result = Prelude::idmef_type_enum_to_string(Prelude::idmef_value_get_idmef_type($value),
+	$result = Prelude::idmef_type_enum_to_string(Prelude::idmef_value_get_object_type($value),
 						     Prelude::idmef_value_get_enum($value));
 
     } elsif ( $type == $Prelude::IDMEF_VALUE_TYPE_TIME ) {
