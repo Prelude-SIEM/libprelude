@@ -24,6 +24,7 @@
 #include "config.h"
 
 #include <stdio.h>
+#include <unistd.h>
 #include <pthread.h>
 #include <gnutls/gnutls.h>
 
