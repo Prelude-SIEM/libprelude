@@ -24,6 +24,9 @@
 #ifndef _LIBPRELUDE_SENSOR_H
 #define _LIBPRELUDE_SENSOR_H
 
+#include "idmef.h"
+#include "prelude-message.h"
+
 void prelude_sensor_send_msg(prelude_msg_t *msg);
 
 void prelude_sensor_send_msg_async(prelude_msg_t *msg);
