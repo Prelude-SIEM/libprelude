@@ -29,6 +29,7 @@ include_HEADERS = config-engine.h 		\
 		  daemonize.h			\
 		  timer.h			\
 		  variable.h			\
+		  prelude.h			\
 		  prelude-hash.h		\
 		  prelude-linked-object.h	\
 		  prelude-list.h		\
