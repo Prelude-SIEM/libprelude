@@ -527,7 +527,6 @@ ssize_t prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst)
         /*
          * no need to send... There's no data in this message.
          */
-        
         if ( msg->write_index - PRELUDE_MSG_HDR_SIZE <= 0 ) 
                 return 0;
         
@@ -801,6 +800,23 @@ uint32_t prelude_msg_get_datalen(prelude_msg_t *msg)
 
 
 /**
+ * prelude_msg_get_len:
+ * @msg: Pointer on a #prelude_msg_t object.
+ *
+ * prelude_msg_get_len() return the currently used
+ * len for the @msg message.
+ *
+ * Returns: Len of the message.
+ */
+uint32_t prelude_msg_get_len(prelude_msg_t *msg) 
+{
+        return msg->write_index;
+}
+
+
+
+
+/**
  * prelude_msg_destroy:
  * @msg: Pointer on a #prelude_msg_t object.
  *
@@ -847,3 +863,29 @@ void prelude_msg_set_data(prelude_msg_t *msg, void *data)
 }
 
 
+
+/**
+ * prelude_msg_is_fragment:
+ * @msg: Pointer on a #prelude_msg_t object.
+ *
+ * prelude_msg_is_fragment() return true if @msg only contain
+ * a fragment of message.
+ */
+int prelude_msg_is_fragment(prelude_msg_t *msg)
+{
+        return msg->hdr.is_fragment ? 1 : 0;
+}
+
+
+
+/**
+ * prelude_msg_is_empty:
+ * @msg: Pointer on a #prelude_msg_t object.
+ *
+ * prelude_msg_is_empty() return true if @msg doesn't contain
+ * any data to send.
+ */
+int prelude_msg_is_empty(prelude_msg_t *msg)
+{
+        return (msg->write_index - PRELUDE_MSG_HDR_SIZE <= 0) ? 1 : 0;
+}
