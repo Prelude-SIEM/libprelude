@@ -184,7 +184,6 @@ static void file_error(prelude_client_t *client, const char *cfgline)
 
 static int process_request(prelude_connection_t *cnx) 
 {
-        int ret;
         prelude_msg_t *msg = NULL;
         prelude_msg_status_t status;
 
@@ -207,6 +206,7 @@ static int process_request(prelude_connection_t *cnx)
 
 static void check_for_data_cb(void *arg)
 {
+        fd_set rfds;
 	int ret, fd;
         struct timeval tv;
         prelude_list_t *tmp;
