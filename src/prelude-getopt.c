@@ -435,7 +435,6 @@ static int do_set(void **context, prelude_option_t *opt, char *value)
         }
 	
         ret = opt->set(*context, opt, (str = lookup_variable_if_needed(value)));
-        printf("set(%p, %s, %s) ret=%d\n", *context, opt->longopt, str, ret);
         if ( str )
                 free(str);
         
@@ -634,11 +633,8 @@ static int get_option_from_optlist(prelude_list_t *optlist, prelude_list_t *cb_l
                         return ret;
         }
         
-        ret = parse_argument(cb_list, optlist, filename, argc, argv, &argv_index, 0); 
-        if ( ret == prelude_option_error || ret == prelude_option_end )
-                return ret;
-        
-        return ret;
+        return parse_argument(cb_list, optlist, filename, argc, argv, &argv_index, 0); 
+
 }
 
 
@@ -668,7 +664,6 @@ static int get_option_from_optlist(prelude_list_t *optlist, prelude_list_t *cb_l
 int prelude_option_parse_arguments(void *context, prelude_option_t *option,
                                    const char *filename, int argc, char **argv) 
 {
-        int ret;
         prelude_list_t tmpl;
         PRELUDE_LIST_HEAD(optlist);
         PRELUDE_LIST_HEAD(cb_list);
