@@ -85,13 +85,6 @@ static void print_string(prelude_string_t *string, prelude_io_t *fd)
 \}
 
 
-/*
-static void print_int16(int16_t i)
-\{
-	printf(\"\%hd\", i);
-\}
-*/
-
 
 static void print_uint8(uint8_t i, prelude_io_t *fd)
 \{
@@ -133,20 +126,13 @@ static void print_uint32(uint32_t i, prelude_io_t *fd)
 \}
 
 
-/*
-static void print_int64(int64_t i)
-\{
-	printf(\"%\" PRId64, i);
-\}
-*/
-
 
 static void print_uint64(uint64_t i, prelude_io_t *fd)
 \{
         int len;
         char buf[sizeof(\"18446744073709551616\")];
 
-	len = snprintf(buf, sizeof(buf), \"%\" PRIu64, i);
+	len = snprintf(buf, sizeof(buf), \"%\" PRELUDE_PRIu64, i);
         prelude_io_write(fd, buf, len);
 \}
 

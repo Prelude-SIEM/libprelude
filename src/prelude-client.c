@@ -280,7 +280,7 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
         if ( ret < 0 )
                 return ret;
 
-        snprintf(buf, sizeof(buf), "%" PRIu64, prelude_client_profile_get_analyzerid(client->profile));
+        snprintf(buf, sizeof(buf), "%" PRELUDE_PRIu64, prelude_client_profile_get_analyzerid(client->profile));
         ret = prelude_string_new_dup(&str, buf);
         if ( ret < 0 )
                 return ret;
@@ -386,7 +386,7 @@ static int get_node_address_vlan_num(prelude_option_t *opt, prelude_string_t *ou
 
         num = idmef_address_get_vlan_num(context);
         if ( num )
-                return prelude_string_sprintf(out, "%" PRId32, *num);
+                return prelude_string_sprintf(out, "%" PRELUDE_PRId32, *num);
 
         return 0;
 }

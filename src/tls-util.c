@@ -189,7 +189,7 @@ int tls_certificate_get_peer_analyzerid(gnutls_session session, uint64_t *analyz
                 return prelude_error(PRELUDE_ERROR_TLS_INVALID_CERTIFICATE);
         }
 
-        ret = sscanf(buf, "%" PRIu64, analyzerid);
+        ret = sscanf(buf, "%" PRELUDE_PRIu64, analyzerid);
         if ( ret != 1 ) {
                 gnutls_x509_crt_deinit(cert);
                 return prelude_error(PRELUDE_ERROR_TLS_INVALID_CERTIFICATE);

@@ -82,7 +82,7 @@ static int get_profile_analyzerid(prelude_client_profile_t *cp)
         if ( ! ptr )
                 return prelude_error(PRELUDE_ERROR_ANALYZERID_PARSE);
         
-        ret = sscanf(buf, "%" PRIu64, &cp->analyzerid);
+        ret = sscanf(buf, "%" PRELUDE_PRIu64, &cp->analyzerid);
         if ( ret != 1 )
                 return prelude_error(PRELUDE_ERROR_ANALYZERID_PARSE);
         

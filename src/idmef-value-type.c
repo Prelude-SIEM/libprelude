@@ -101,8 +101,8 @@ GENERIC_TWO_BASES_RW_FUNC("%hd", "%hx", int16, int16_t)
 GENERIC_TWO_BASES_RW_FUNC("%hu", "%hx", uint16, uint16_t)
 GENERIC_TWO_BASES_RW_FUNC("%d", "%x", int32, int32_t)
 GENERIC_TWO_BASES_RW_FUNC("%u", "%x", uint32, uint32_t)
-GENERIC_TWO_BASES_RW_FUNC("%" PRId64, "%" PRIx64, int64, int64_t)
-GENERIC_TWO_BASES_RW_FUNC("%" PRIu64, "%" PRIx64, uint64, uint64_t)
+GENERIC_TWO_BASES_RW_FUNC("%" PRELUDE_PRId64, "%" PRELUDE_PRIx64, int64, int64_t)
+GENERIC_TWO_BASES_RW_FUNC("%" PRELUDE_PRIu64, "%" PRELUDE_PRIx64, uint64, uint64_t)
 
 GENERIC_ONE_BASE_RW_FUNC("%d", "%d", enum, enum);
 GENERIC_ONE_BASE_RW_FUNC("%f", "%f", float, float)

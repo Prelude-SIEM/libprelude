@@ -176,7 +176,7 @@ static int get_connection_backup_path(prelude_connection_t *cn, const char *path
          */
         addr = prelude_connection_get_peer_addr(cn);
         if ( ! addr )
-                prelude_string_sprintf(str, "%llu", prelude_connection_get_peer_analyzerid(cn));
+                prelude_string_sprintf(str, "%" PRELUDE_PRIu64, prelude_connection_get_peer_analyzerid(cn));
 
         else {
                 snprintf(buf, sizeof(buf), "%s:%u",
@@ -364,7 +364,7 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
         if ( clist )
                 snprintf(name, sizeof(name), "any");
         else
-                snprintf(name, sizeof(name), "0x%llx", prelude_connection_get_peer_analyzerid(cnx->cnx));
+                snprintf(name, sizeof(name), "0x%" PRELUDE_PRIx64, prelude_connection_get_peer_analyzerid(cnx->cnx));
         
         prelude_log(PRELUDE_LOG_INFO,
                     "- Flushing %u message to %s (%u erased due to quota)...\n",

@@ -61,7 +61,7 @@ struct cmdtbl {
 };
 
 
-static uint16_t port = 5553;
+static unsigned int port = 5553;
 static int gid_set = 0, uid_set = 0;
 static prelude_client_profile_t *profile;
 static int server_prompt_passwd = 0, server_keepalive = 0;
@@ -265,19 +265,19 @@ static int register_sensor_ident(const char *name, uint64_t *ident)
                         return register_sensor_ident(name, ident);
                 }
                 
-                if ( ! sscanf(buf, "%" SCNu64, ident) ) {
+                if ( ! sscanf(buf, "%" PRELUDE_SCNu64, ident) ) {
                         fclose(fd);
                         unlink(filename);
                         return register_sensor_ident(name, ident);
                 }
                 
-                fprintf(stderr, "  - Using already allocated ident for %s: %" PRIu64 ".\n", name, *ident);
+                fprintf(stderr, "  - Using already allocated ident for %s: %" PRELUDE_PRIu64 ".\n", name, *ident);
                 
                 return 0;
         }
 
-        fprintf(fd, "%" PRIu64 "\n", *ident);
-        fprintf(stderr, "  - Allocated ident for %s: %" PRIu64 ".\n", name, *ident);
+        fprintf(fd, "%" PRELUDE_PRIu64 "\n", *ident);
+        fprintf(stderr, "  - Allocated ident for %s: %" PRELUDE_PRIu64 ".\n", name, *ident);
         fclose(fd);
         
         return 0;
@@ -320,7 +320,7 @@ static gnutls_session new_tls_session(int sock, char *passwd)
 
 
 
-static prelude_io_t *connect_manager(const char *addr, uint16_t port, char *passwd) 
+static prelude_io_t *connect_manager(const char *addr, unsigned int port, char *passwd) 
 {
         int ret, sock;
         prelude_io_t *fd;
@@ -647,7 +647,7 @@ static int register_cmd(int argc, char **argv)
                 port = atoi(ptr);
         }
         
-	fprintf(stderr, "  - connecting to registration server (%s:%d)...\n", addr, port);
+	fprintf(stderr, "  - connecting to registration server (%s:%u)...\n", addr, port);
         
         fd = connect_manager(addr, port, pass);
         if ( ! fd ) 

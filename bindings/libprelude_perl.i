@@ -45,7 +45,7 @@ SV *swig_perl_data(idmef_data_t *data)
 		return newSVpvf("%d", idmef_data_get_uint32(data));
 
 	case IDMEF_DATA_TYPE_UINT64:
-		return newSVpvf("%" PRIu64, idmef_data_get_uint64(data));
+		return newSVpvf("%" PRELUDE_PRIu64, idmef_data_get_uint64(data));
 
 	case IDMEF_DATA_TYPE_FLOAT:
 		return newSVpvf("%hf", idmef_data_get_float(data));
@@ -138,7 +138,7 @@ SV *swig_perl_data(idmef_data_t *data)
 %typemap(argout) (uint64_t *source_id, uint32_t *request_id, void **value) {
 	int ret = SvIV($result);
 
-	XPUSHs(sv_2mortal(newSVpvf("%" PRIu64, *$1)));
+	XPUSHs(sv_2mortal(newSVpvf("%" PRELUDE_PRIu64, *$1)));
 	XPUSHs(sv_2mortal(newSVuv(*$2)));
 	XPUSHs(sv_2mortal(newSViv(ret)));
 

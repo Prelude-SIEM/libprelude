@@ -59,128 +59,87 @@
 /*
  * Minimum of signed integral types.
  */
-#ifndef INT8_MIN
- #define INT8_MIN               (-128)
-#endif
+#define PRELUDE_INT8_MIN               (-128)
+#define PRELUDE_INT16_MIN              (-32767 - 1)
+#define PRELUDE_INT32_MIN              (-2147483647 - 1)
+#define PRELUDE_INT64_MIN              (-__INT64_SUFFIX(9223372036854775807) - 1)
 
-#ifndef INT16_MIN
- #define INT16_MIN              (-32767 - 1)
-#endif
-
-#ifndef INT32_MIN
- #define INT32_MIN              (-2147483647 - 1)
-#endif
-
-#ifndef INT64_MIN
- #define INT64_MIN              (-__INT64_SUFFIX(9223372036854775807) - 1)
-#endif
 
 
 /*
  * Maximum of signed integral types.
  */
-#ifndef INT8_MAX
- #define INT8_MAX               (127)
-#endif
-
-#ifndef INT16_MAX
- #define INT16_MAX              (32767)
-#endif
-
-#ifndef INT32_MAX
- #define INT32_MAX              (2147483647)
-#endif
-
-#ifndef INT64_MAX
- #define INT64_MAX              (__INT64_SUFFIX(9223372036854775807))
-#endif
+#define PRELUDE_INT8_MAX               (127)
+#define PRELUDE_INT16_MAX              (32767)
+#define PRELUDE_INT32_MAX              (2147483647)
+#define PRELUDE_INT64_MAX              (__INT64_SUFFIX(9223372036854775807))
 
 
 /*
  * Maximum of unsigned integral types.
  */
-#ifndef UINT8_MAX
- #define UINT8_MAX              (255)
-#endif
+#define PRELUDE_UINT8_MAX              (255)
+#define PRELUDE_UINT16_MAX             (65535)
+#define PRELUDE_UINT32_MAX             (4294967295U)
+#define PRELUDE_UINT64_MAX             (__UINT64_SUFFIX(18446744073709551615))
 
-#ifndef UINT16_MAX
- #define UINT16_MAX             (65535)
-#endif
-
-#ifndef UINT32_MAX
- #define UINT32_MAX             (4294967295U)
-#endif
-
-#ifndef UINT64_MAX
- #define UINT64_MAX             (__UINT64_SUFFIX(18446744073709551615))
-#endif
 
 /*
  * Other
  */
-#ifndef INTMAX_MIN
- #define INTMAX_MIN             INT64_MIN
-#endif
+#define PRELUDE_INTMAX_MIN             INT64_MIN
+#define PRELUDE_INTMAX_MAX             INT64_MAX
+#define PRELUDE_UINTMAX_MAX            UINT64_MAX
 
-#ifndef INTMAX_MAX
- #define INTMAX_MAX             INT64_MAX
-#endif
-
-#ifndef UINTMAX_MAX
- #define UINTMAX_MAX            UINT64_MAX
-#endif
 
 
 /*
  * format specifier
  */
-#ifndef __PRELUDE_HAVE_WORKING_PRI64_PREFIX
-
- #ifdef __PRELUDE_HAVE_64BIT_LONG
-  #define __PRELUDE_PRI64_PREFIX     "l"
-  #define __PRELUDE_INT64_SUFFIX(c)  c ## L
-  #define __PRELUDE_UINT64_SUFFIX(c) c ## UL
- #else
-  #define __PRELUDE_PRI64_PREFIX     "ll"
-  #define __PRELUDE_INT64_SUFFIX(c)  c ## LL
-  #define __PRELUDE_UINT64_SUFFIX(c) c ## ULL
- #endif
-
- #undef PRId64
- #define PRId64      __PRELUDE_PRI64_PREFIX "d"
-
- #undef PRIi64
- #define PRIi64      __PRELUDE_PRI64_PREFIX "i"
-
- #undef PRIo64
- #define PRIo64      __PRELUDE_PRI64_PREFIX "o"
-
- #undef PRIx64
- #define PRIx64      __PRELUDE_PRI64_PREFIX "x"
-
- #undef PRIX64
- #define PRIX64      __PRELUDE_PRI64_PREFIX "X"
-
- #undef PRIu64
- #define PRIu64      __PRELUDE_PRI64_PREFIX "u"
-
-
- #undef SCNd64
- #define SCNd64      __PRELUDE_PRI64_PREFIX "d"
-
- #undef SCNi64
- #define SCNi64      __PRELUDE_PRI64_PREFIX "i"
-
- #undef SCNo64
- #define SCNo64      __PRELUDE_PRI64_PREFIX "o"
-
- #undef SCNx64
- #define SCNx64      __PRELUDE_PRI64_PREFIX "x"
-
- #undef SCNu64
- #define SCNu64      __PRELUDE_PRI64_PREFIX "u"
-
+#ifdef __PRELUDE_HAVE_64BIT_LONG
+ #define __PRELUDE_PRI64_PREFIX     "l"
+ #define __PRELUDE_INT64_SUFFIX(c)  c ## L
+ #define __PRELUDE_UINT64_SUFFIX(c) c ## UL
+#else
+ #define __PRELUDE_PRI64_PREFIX     "ll"
+ #define __PRELUDE_INT64_SUFFIX(c)  c ## LL
+ #define __PRELUDE_UINT64_SUFFIX(c) c ## ULL
 #endif
+
+#define PRELUDE_PRId64      __PRELUDE_PRI64_PREFIX "d"
+#define PRELUDE_PRIi64      __PRELUDE_PRI64_PREFIX "i"
+#define PRELUDE_PRIo64      __PRELUDE_PRI64_PREFIX "o"
+#define PRELUDE_PRIx64      __PRELUDE_PRI64_PREFIX "x"
+#define PRELUDE_PRIX64      __PRELUDE_PRI64_PREFIX "X"
+#define PRELUDE_PRIu64      __PRELUDE_PRI64_PREFIX "u"
+
+#define PRELUDE_PRId32      "d"
+#define PRELUDE_PRIi32      "i"
+#define PRELUDE_PRIo32      "o"
+#define PRELUDE_PRIx32      "x"
+#define PRELUDE_PRIX32      "X"
+#define PRELUDE_PRIu32      "u"
+
+#define PRELUDE_PRId16      "d"
+#define PRELUDE_PRIi16      "i"
+#define PRELUDE_PRIo16      "o"
+#define PRELUDE_PRIx16      "x"
+#define PRELUDE_PRIX16      "X"
+#define PRELUDE_PRIu16      "u"
+
+#define PRELUDE_PRId8       "d"
+#define PRELUDE_PRIi8       "i"
+#define PRELUDE_PRIo8       "o"
+#define PRELUDE_PRIx8       "x"
+#define PRELUDE_PRIX8       "X"
+#define PRELUDE_PRIu8       "u"
+
+#define PRELUDE_SCNd64      __PRELUDE_PRI64_PREFIX "d"
+#define PRELUDE_SCNi64      __PRELUDE_PRI64_PREFIX "i"
+#define PRELUDE_SCNo64      __PRELUDE_PRI64_PREFIX "o"
+#define PRELUDE_SCNx64      __PRELUDE_PRI64_PREFIX "x"
+#define PRELUDE_SCNu64      __PRELUDE_PRI64_PREFIX "u"
+
 
 
 

@@ -126,7 +126,8 @@ static int remove_old_certificate(const char *filename, uint64_t dn, uint64_t is
                 if ( ret != 0 )
                         fwrite(data.data, 1, data.size, wfd);
                 else
-                        fprintf(stderr, "  - Removing old certificate with subject=%" PRIu64 " issuer=%" PRIu64 ".\n", dn, issuer_dn);
+                        fprintf(stderr, "  - Removing old certificate with subject=%"
+                                PRELUDE_PRIu64 " issuer=%" PRELUDE_PRIu64 ".\n", dn, issuer_dn);
                 
                 prelude_string_clear(out);
                 gnutls_x509_crt_deinit(crt);
@@ -275,7 +276,7 @@ static gnutls_x509_crt generate_certificate(prelude_client_profile_t *cp, gnutls
         gnutls_x509_crt_set_activation_time(crt, time(NULL));
         gnutls_x509_crt_set_expiration_time(crt, expire);
         
-        ret = snprintf(buf, sizeof(buf), "%" PRIu64, prelude_client_profile_get_analyzerid(cp));
+        ret = snprintf(buf, sizeof(buf), "%" PRELUDE_PRIu64, prelude_client_profile_get_analyzerid(cp));
         ret = gnutls_x509_crt_set_dn_by_oid(crt, GNUTLS_OID_X520_DN_QUALIFIER, 0, buf, ret);
         if ( ret < 0 ) {
                 fprintf(stderr, "error setting common name: %s.\n", gnutls_strerror(ret));
@@ -450,7 +451,7 @@ static gnutls_x509_crq generate_certificate_request(prelude_client_profile_t *cp
         
         gnutls_x509_crq_set_version(crq, 3);
 
-        ret = snprintf(buf, *size, "%" PRIu64, prelude_client_profile_get_analyzerid(cp));
+        ret = snprintf(buf, *size, "%" PRELUDE_PRIu64, prelude_client_profile_get_analyzerid(cp));
         ret = gnutls_x509_crq_set_dn_by_oid(crq, GNUTLS_OID_X520_DN_QUALIFIER, 0, buf, ret);
         if ( ret < 0 ) {
                 fprintf(stderr, "error setting common name: %s.\n", gnutls_strerror(ret));
@@ -598,7 +599,7 @@ static int check_req(gnutls_x509_crq crq)
                 return -1;
         }
         
-        fprintf(stderr, "  - Analyzer with ID=\"%" PRIu64 "\" ask for registration with permission=\"%s\".\n",
+        fprintf(stderr, "  - Analyzer with ID=\"%" PRELUDE_PRIu64 "\" ask for registration with permission=\"%s\".\n",
                 analyzerid, prelude_string_get_string(out));
 
         if ( server_confirm ) {
@@ -607,7 +608,7 @@ static int check_req(gnutls_x509_crq crq)
                         return -1;
         }
         
-        fprintf(stderr, "    Registering analyzer \"%" PRIu64 "\" with permission \"%s\".\n", analyzerid,
+        fprintf(stderr, "    Registering analyzer \"%" PRELUDE_PRIu64 "\" with permission \"%s\".\n", analyzerid,
                 prelude_string_get_string(out));
 
         prelude_string_destroy(out);
