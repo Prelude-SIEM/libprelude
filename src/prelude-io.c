@@ -31,13 +31,13 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <termios.h>
+#include <gnutls/gnutls.h>
+
+#include "config.h"
 
 #ifdef HAVE_SYS_FILIO_H
  #include <sys/filio.h>
 #endif
-
-#include "config.h"
-#include <gnutls/gnutls.h>
 
 #include "prelude-log.h"
 #include "prelude-io.h"
