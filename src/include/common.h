@@ -45,4 +45,6 @@ char *prelude_strndup(const char *src, size_t n);
 
 char *prelude_strnstr(const char *str, const char *needed, size_t len);
 
+char *prelude_strsep(char **stringp, const char *delim);
+
 #endif /* _LIBPRELUDE_COMMON_H */
