@@ -507,10 +507,6 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
         new->name = strdup(sname);
         new->config_filename = config ? strdup(config) : NULL;
         
-        new->credentials = tls_auth_init(new);
-        if ( ! new->credentials )
-                return -1;
-        
         new->unique_ident = prelude_ident_new();
         if ( ! new->unique_ident ) {
                 log(LOG_ERR, "memory exhausted.\n");
@@ -519,6 +515,10 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
                 
         ret = setup_options(new, argc, argv);
         if ( ret < 0 )
+                return -1;
+
+        new->credentials = tls_auth_init(new);
+        if ( ! new->credentials )
                 return -1;
 
         prelude_client_get_backup_filename(new, filename, sizeof(filename));
