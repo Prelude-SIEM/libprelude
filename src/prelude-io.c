@@ -548,20 +548,19 @@ int prelude_io_close(prelude_io_t *pio)
 
 /**
  * prelude_io_new:
+ * @ret: Pointer where to store the created #prelude_io_t object.
  *
  * Create a new prelude IO object.
  *
- * Returns: a #prelude_io_t object or NULL on error.
+ * Returns: 0 on success, or a negative value if an error occur.
  */
-prelude_io_t *prelude_io_new(void) 
+int prelude_io_new(prelude_io_t **ret) 
 {
-        prelude_io_t *new;
-
-        new = malloc(sizeof(*new));
-        if ( ! new )
-                return NULL;
+        *ret = malloc(sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
         
-        return new;
+        return 0;
 }
 
 
