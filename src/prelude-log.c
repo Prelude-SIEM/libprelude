@@ -25,13 +25,15 @@
 #include <string.h>
 #include <stdarg.h>
 #include <errno.h>
+#include <syslog.h>
 
 #include "libmissing.h"
 #include "prelude-log.h"
+#include "prelude-inttypes.h"
 
 
-static int config_quiet = 0;
 static char *global_prefix = NULL;
+static prelude_log_flags_t log_flags = 0;
 
 
 
@@ -46,7 +48,7 @@ static char *strip_return(char *buf, size_t len)
 
 
 
-static void syslog_log(int priority, const char *file,
+static void syslog_log(prelude_log_priority_t priority, const char *file,
                        const char *function, int line, const char *fmt, va_list *ap) 
 {
         int len, ret;
@@ -54,7 +56,8 @@ static void syslog_log(int priority, const char *file,
 
         while (*fmt == '\n') fmt++;
         
-        if ( priority == LOG_ERR ) {
+        if ( priority == PRELUDE_LOG_PRIORITY_ERROR ) {
+                
                 len = vsnprintf(buf, sizeof(buf), fmt, *ap);
                 if ( len < 0 || len >= sizeof(buf) )
                         return;
@@ -85,12 +88,12 @@ static void syslog_log(int priority, const char *file,
 
 
 
-static void standard_log(int priority, const char *file,
+static void standard_log(prelude_log_priority_t priority, const char *file,
                          const char *function, int line, const char *fmt, va_list *ap)
 {
         FILE *out;
         
-        if ( priority == LOG_ERR ) {
+        if ( priority == PRELUDE_LOG_PRIORITY_ERROR ) {
                 out = stderr;                
 
                 if ( global_prefix )
@@ -114,7 +117,7 @@ static void standard_log(int priority, const char *file,
 
 /**
  * prelude_log:
- * @priority: LOG_INFO or LOG_ERR.
+ * @priority: PRELUDE_LOG_PRIORITY_INFO or PRELUDE_LOG_PRIORITY_ERROR.
  * @file: The caller filename.
  * @function: The caller function name.
  * @line: The caller line number.
@@ -124,16 +127,17 @@ static void standard_log(int priority, const char *file,
  * This function should not be called directly.
  * Use the #log macro defined in prelude-log.h
  */
-void prelude_log(int priority, const char *file,
+void prelude_log(prelude_log_priority_t priority, const char *file,
                  const char *function, int line, const char *fmt, ...) 
 {
         va_list ap;
         
         va_start(ap, fmt);
         
-        if ( config_quiet )
+        if ( log_flags & PRELUDE_LOG_FLAGS_SYSLOG )
                 syslog_log(priority, file, function, line, fmt, &ap);
-        else
+
+        else if ( ! (log_flags & PRELUDE_LOG_FLAGS_QUIET) && priority != PRELUDE_LOG_PRIORITY_ERROR )
                 standard_log(priority, file, function, line, fmt, &ap);
         
         va_end(ap);
@@ -151,7 +155,24 @@ void prelude_log(int priority, const char *file,
  */
 void prelude_log_use_syslog(void) 
 {
-        config_quiet = 1;
+        log_flags |= PRELUDE_LOG_FLAGS_SYSLOG;
+}
+
+
+
+/**
+ * prelude_log_set_flags:
+ *
+ */
+void prelude_log_set_flags(prelude_log_flags_t flags) 
+{
+        log_flags = flags;
+}
+
+
+prelude_log_flags_t prelude_log_get_flags(void)
+{
+        return log_flags;
 }
 
 

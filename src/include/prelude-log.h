@@ -24,8 +24,35 @@
 #ifndef _LIBPRELUDE_PRELUDE_LOG_H
 #define _LIBPRELUDE_PRELUDE_LOG_H
 
-#include "syslog.h"
+#include <syslog.h>
 
+#define log(priority, ...) \
+        prelude_log(priority, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
+
+
+#ifndef LOG_ERR
+ #define LOG_ERR 1
+#endif
+
+#ifndef LOG_INFO
+ #define LOG_INFO 0
+#endif
+
+typedef enum {
+        PRELUDE_LOG_PRIORITY_INFO   = LOG_INFO,
+        PRELUDE_LOG_PRIORITY_ERROR  = LOG_ERR,
+} prelude_log_priority_t;
+
+
+typedef enum {
+        PRELUDE_LOG_FLAGS_QUIET  = 0x01,
+        PRELUDE_LOG_FLAGS_SYSLOG = 0x02
+} prelude_log_flags_t;
+
+
+prelude_log_flags_t prelude_log_get_flags(void);
+
+void prelude_log_set_flags(prelude_log_flags_t flags);
 
 void prelude_log_use_syslog(void);
 
@@ -33,30 +60,7 @@ char *prelude_log_get_prefix(void);
 
 void prelude_log_set_prefix(char *prefix);
 
-void prelude_log(int priority, const char *file, const char *function, int line, const char *fmt, ...);
-
-
-#define log(priority, ...) \
-        prelude_log(priority, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
-
-
-#define do_init(func, name) do {                         \
-        char *old_prefix = prelude_log_get_prefix();     \
-        prelude_log_set_prefix(NULL);                    \
-        log(LOG_INFO, "- %s\n", name);                   \
-        prelude_log_set_prefix(old_prefix);              \
-        if ( (func) < 0 )                                \
-                exit(1);                                 \
-        prelude_log_set_prefix(old_prefix);              \
-} while(0);
-
-
-#define do_init_nofail(func, name) do {                  \
-        char *old_prefix = prelude_log_get_prefix();     \
-        prelude_log_set_prefix(NULL);                    \
-        log(LOG_INFO, "- %s\n", name);                   \
-        prelude_log_set_prefix(old_prefix);              \
-        (func);                                          \
-} while(0);
+void prelude_log(prelude_log_priority_t priority, const char *file,
+                 const char *function, int line, const char *fmt, ...);
 
 #endif /* _LIBPRELUDE_PRELUDE_LOG_H */
