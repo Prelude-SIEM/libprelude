@@ -19,28 +19,27 @@
 static int parse_request(prelude_client_t *client, int rtype, char *request, char *out, size_t size)
 {
         int ret;
-        char *str, *ptr;
         void *context = client;
+        char *str, *ptr, *value;
         char pname[256], iname[256];
         prelude_option_t *last = NULL;
-        
+
+        value = request;
+        prelude_strsep(&value, "=");
+                        
+        ptr = NULL;
+
         while ( (str = (prelude_strsep(&request, "."))) ) {                
                                     
-                ret = sscanf(str, "%255[^[][%255[^]]", pname, iname);                
+                ret = sscanf(str, "%255[^[][%255[^]]", pname, iname);
                 if ( ret <= 0 ) {
                         snprintf(out, size, "error parsing option path");
                         break;
                 }
                 
-                if ( ret < 0 ) {                   
-                        snprintf(out, size, "option path is invalid");
-                        break;
-                }
-
-                ptr = strchr(pname, '=');
-                if ( ptr )
-                        *ptr++ = 0;
-                
+                if ( str + strlen(str) + 1 == value ) 
+                        ptr = value;
+                                
                 if ( rtype == PRELUDE_MSG_OPTION_SET )
                         ret = prelude_option_invoke_set(&context, &last, pname, (ret == 2) ? iname : ptr, out, size);      
                 else 
