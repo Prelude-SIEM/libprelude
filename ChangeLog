@@ -1,3 +1,10 @@
+2003-02-04  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/sensor.c (get_process_name): don't modify argv.
+
+	* src/daemonize.c (prelude_daemonize): 
+	close stdin, stdout, and stderr.
+
 2003-02-03  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* src/config-engine.c (get_variable_content): 

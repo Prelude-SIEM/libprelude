@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 1999 - 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 1999 - 2003 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -186,6 +186,10 @@ int prelude_daemonize(const char *lockfile)
         setsid();
         chdir("/");
         umask(0);
+        
+        fclose(stdin);
+        fclose(stdout);
+        fclose(stderr);
         
         /*
          * We want the lock to be unlinked upon normal exit.

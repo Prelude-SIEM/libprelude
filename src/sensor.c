@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -257,9 +257,9 @@ static int get_process_name(int argc, char **argv)
                 process_name = argv[0];
         else {
                 *ptr = '\0';
-                process_path = argv[0];
+                process_path = strdup(argv[0]);
                 process_name = strdup(ptr + 1);
-
+                *ptr = '/';
         }
 
         return 0;
