@@ -91,7 +91,7 @@ class Sensor:
         if not self._client:
             raise SensorError()
 
-        if _prelude.prelude_client_init(self._client, name, config, len(sys.argv), sys.argv) < 0:
+        if _prelude.prelude_client_init(self._client, name, config, 1, [ sys.argv[0] ]) < 0:
             _prelude.prelude_client_destroy(self._client)
             raise SensorError()
 
@@ -99,6 +99,10 @@ class Sensor:
         if not self._analyzer:
             _prelude.prelude_client_destroy(self._client)
             raise SensorError()
+
+        process = _prelude.idmef_analyzer_get_process(self._analyzer)
+        for arg in sys.argv[1:]:
+            _prelude.idmef_process_set_arg(process, _prelude.idmef_string_new_dup(arg))
 
         self._msgbuf = _prelude.prelude_msgbuf_new(self._client)
         if not self._msgbuf:

@@ -109,7 +109,7 @@ sub new($$)
 	return undef;
     }
 
-    if ( Prelude::prelude_client_init($self->{client}, $name, $config, length(@ARGV), [ $0, @ARGV ]) < 0 ) {
+    if ( Prelude::prelude_client_init($self->{client}, $name, $config, 1, [ $0 ]) < 0 ) {
 	Prelude::prelude_client_destroy($self->{client});
 	return undef;
     }
@@ -118,6 +118,12 @@ sub new($$)
     if ( ! $self->{analyzer}) {
 	Prelude::prelude_client_destroy($self->{client});
 	return undef;
+    }
+
+    my $process = Prelude::idmef_analyzer_get_process($self->{analyzer});
+    
+    foreach my $arg ( @ARGV ) {
+	Prelude::idmef_process_set_arg($process, Prelude::idmef_string_new_dup($arg));
     }
 
     $self->{msgbuf} = Prelude::prelude_msgbuf_new($self->{client});
