@@ -28,12 +28,18 @@ typedef struct prelude_failover prelude_failover_t;
 
 int prelude_failover_flush(prelude_failover_t *failover, prelude_io_t *out);
 
-int prelude_failover_save(prelude_failover_t *failover, prelude_msg_t *msg);
+void prelude_failover_destroy(prelude_failover_t *failover);
 
 prelude_failover_t *prelude_failover_new(const char *dirname);
 
-void prelude_failover_destroy(prelude_failover_t *failover);
-
 void prelude_failover_set_quota(prelude_failover_t *failover, size_t limit);
+
+int prelude_failover_save_msg(prelude_failover_t *failover, prelude_msg_t *msg);
+
+ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg_t **out);
+
+unsigned int prelude_failover_get_deleted_msg_count(prelude_failover_t *failover);
+
+unsigned int prelude_failover_get_available_msg_count(prelude_failover_t *failover);
 
 #endif

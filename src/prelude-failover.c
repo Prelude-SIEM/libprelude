@@ -193,7 +193,7 @@ static int failover_apply_quota(prelude_failover_t *failover, prelude_msg_t *new
 
 
 
-int prelude_failover_save(prelude_failover_t *failover, prelude_msg_t *msg)
+int prelude_failover_save_msg(prelude_failover_t *failover, prelude_msg_t *msg)
 {
         int ret;
         ssize_t size;
@@ -235,11 +235,48 @@ int prelude_failover_save(prelude_failover_t *failover, prelude_msg_t *msg)
 
 
 
-int prelude_failover_flush(prelude_failover_t *data, prelude_io_t *out)
+ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg_t **msg)
+{
+        int ret;
+        size_t size;
+        char filename[256];
+        
+        if ( failover->older_index == failover->newer_index )
+                return 0;
+        
+        ret = open_failover_fd(failover, filename, sizeof(filename), failover->older_index, O_RDONLY);
+        if ( ret < 0 ) 
+                return -1;
+
+        *msg = NULL;
+        while ( (ret = prelude_msg_read(msg, failover->fd)) == prelude_msg_unfinished );
+
+        prelude_io_close(failover->fd);
+        unlink(filename);
+        
+        if ( ret == prelude_msg_error ) {
+                log(LOG_ERR, "error reading message index=%d.\n", index);
+                return -1;
+        }
+
+        size = prelude_msg_get_len(*msg);
+        
+        failover->older_index++;
+        failover->cur_size -= size;
+
+        if ( failover->newer_index - failover->older_index == 0 )
+                failover->older_index = failover->newer_index = 0;
+        
+        return size;
+}
+
+
+
+
+int prelude_failover_flush(prelude_failover_t *failover, prelude_io_t *out)
 {
         unsigned int older_index;
         ssize_t size, totsize = 0;
-        prelude_failover_t *failover = data;
 
         log(LOG_INFO, "- Flushing %u message (%u erased due to quota)...\n",
             failover->newer_index - failover->older_index,
@@ -294,6 +331,14 @@ prelude_failover_t *prelude_failover_new(const char *dirname)
                 return NULL;
         }
 
+        ret = mkdir(dirname, S_IRUSR|S_IWUSR);
+        if ( ret < 0 && errno != EEXIST ) {
+                log(LOG_ERR, "error creating %s.\n", dirname);
+                prelude_io_destroy(new->fd);
+                free(new);
+                return NULL;
+        }
+ 
         ret = get_current_directory_index(new, dirname);
         if ( ret < 0 ) {
                 prelude_io_destroy(new->fd);
@@ -322,4 +367,18 @@ void prelude_failover_destroy(prelude_failover_t *failover)
 void prelude_failover_set_quota(prelude_failover_t *failover, size_t limit) 
 {
         failover->size_limit = limit;
+}
+
+
+
+unsigned int prelude_failover_get_deleted_msg_count(prelude_failover_t *failover)
+{
+        return failover->newer_index - (failover->newer_index - failover->older_index);
+}
+
+
+
+unsigned int prelude_failover_get_available_msg_count(prelude_failover_t *failover)
+{
+        return failover->newer_index - failover->older_index;
 }
