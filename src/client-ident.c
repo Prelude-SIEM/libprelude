@@ -25,7 +25,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <inttypes.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
@@ -33,6 +32,8 @@
 #include <sys/time.h>
 #include <fcntl.h>
 #include <errno.h>
+
+#include "prelude-inttypes.h"
 
 #include "common.h"
 #include "prelude-log.h"

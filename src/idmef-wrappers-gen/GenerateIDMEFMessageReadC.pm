@@ -35,11 +35,11 @@ sub	header
 
 #include <stdio.h>
 #include <unistd.h>
-#include <inttypes.h>
 #include <sys/time.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include \"prelude-inttypes.h\"
 #include \"prelude-list.h\"
 #include \"prelude-log.h\"
 #include \"extract.h\"

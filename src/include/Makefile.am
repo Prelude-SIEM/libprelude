@@ -30,6 +30,7 @@ include_HEADERS = config-engine.h 		\
 		  timer.h			\
 		  variable.h			\
 		  prelude-hash.h		\
+		  prelude-inttypes.h		\
 		  prelude-linked-object.h	\
 		  prelude-list.h		\
 		  prelude-client.h		\

@@ -25,7 +25,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <inttypes.h>
 #include <sys/poll.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
@@ -43,6 +42,7 @@
 #include "config.h"
 
 #include "common.h"
+#include "prelude-inttypes.h"
 #include "prelude-client.h"
 #include "prelude-log.h"
 #include "prelude-io.h"

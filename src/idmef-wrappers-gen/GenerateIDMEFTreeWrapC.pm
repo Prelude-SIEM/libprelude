@@ -37,10 +37,10 @@ sub	header
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <inttypes.h>
 #include <strings.h>
 #include <sys/types.h>
 
+#include \"prelude-inttypes.h\"
 #include \"prelude-list.h\"
 
 #include \"idmef-string.h\"

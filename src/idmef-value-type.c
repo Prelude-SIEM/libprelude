@@ -25,8 +25,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include <inttypes.h>
 
+#include "prelude-inttypes.h"
 #include "idmef-time.h"
 #include "idmef-data.h"
 #include "idmef-string.h"

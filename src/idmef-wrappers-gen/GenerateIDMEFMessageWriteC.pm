@@ -36,12 +36,12 @@ sub	header
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <inttypes.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/time.h>
 #include <assert.h>
 
+#include \"prelude-inttypes.h\"
 #include \"prelude-list.h\"
 #include \"prelude-log.h\"
 #include \"prelude-io.h\"

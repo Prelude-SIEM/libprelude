@@ -24,13 +24,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <inttypes.h>
 #include <sys/types.h>
 #include <stdarg.h>
 #include <pthread.h>
 
 #include "prelude-hash.h"
 #include "prelude-log.h"
+#include "prelude-inttypes.h"
 
 #include "idmef-string.h"
 #include "idmef-time.h"

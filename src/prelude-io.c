@@ -27,13 +27,13 @@
 #include <errno.h>
 #include <sys/poll.h>
 #include <sys/ioctl.h>
-#include <inttypes.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <termios.h>
 #include <gnutls/gnutls.h>
 
 #include "config.h"
+#include "prelude-inttypes.h"
 
 #ifdef HAVE_SYS_FILIO_H
  #include <sys/filio.h>

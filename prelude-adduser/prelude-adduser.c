@@ -25,7 +25,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
-#include <inttypes.h>
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -39,6 +38,7 @@
 
 #include "common.h"
 #include "config-engine.h"
+#include "prelude-inttypes.h"
 #include "prelude-client.h"
 #include "prelude-getopt.h"
 

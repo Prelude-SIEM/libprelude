@@ -56,7 +56,7 @@
 
 #ifndef _GENERATE
 
-#include <inttypes.h>
+#include <prelude-inttypes.h>
 
 #include "prelude-hash.h"
 

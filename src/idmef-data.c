@@ -25,9 +25,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <inttypes.h>
 #include <sys/types.h>
 
+#include "prelude-inttypes.h"
 #include "idmef-data.h"
 
 

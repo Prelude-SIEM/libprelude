@@ -36,7 +36,7 @@
 #include "config.h"
 #include "prelude-log.h"
 #include "variable.h"
-#include "inttypes.h"
+#include "prelude-inttypes.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
 #include "prelude-getopt.h"

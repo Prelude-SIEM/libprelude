@@ -25,7 +25,7 @@
 #define _LIBPRELUDE_EXTRACT_H
 
 
-#include <inttypes.h>
+#include <prelude-inttypes.h>
 
 
 #ifdef NEED_ALIGNED_ACCESS

@@ -26,9 +26,9 @@
 #include <string.h>
 #include <errno.h>
 #include <assert.h>
-#include <inttypes.h>
 #include <sys/types.h>
 
+#include "prelude-inttypes.h"
 #include "common.h"
 #include "config-engine.h"
 #include "variable.h"

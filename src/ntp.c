@@ -22,9 +22,9 @@
 ***********************************************************************/
 
 #include <stdio.h>
-#include <inttypes.h>
 #include <sys/types.h>
 
+#include "prelude-inttypes.h"
 #include "ntp.h"
 
 

@@ -25,10 +25,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include <inttypes.h>
 #include <sys/types.h>
 #include <assert.h>
 
+#include "prelude-inttypes.h"
 #include "prelude-message-id.h"
 #include "prelude-message-buffered.h"
 

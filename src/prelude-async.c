@@ -24,12 +24,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
-#include <inttypes.h>
 #include <pthread.h>
 #include <errno.h>
 #include <signal.h>
 
 #include "prelude-list.h"
+#include "prelude-inttypes.h"
 #include "prelude-linked-object.h"
 #include "timer.h"
 #include "prelude-log.h"

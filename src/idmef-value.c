@@ -23,7 +23,6 @@
 *
 *****/
 
-#include <inttypes.h>
 #include <sys/types.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,6 +32,7 @@
 
 #include "prelude-list.h"
 #include "prelude-log.h"
+#include "prelude-inttypes.h"
 #include "idmef-string.h"
 #include "idmef.h"
 #include "idmef-util.h"

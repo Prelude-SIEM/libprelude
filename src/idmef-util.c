@@ -27,13 +27,13 @@
 #include <unistd.h>
 #include <limits.h>
 #include <sys/time.h>
-#include <inttypes.h>
 #include <netinet/in.h> /* for extract.h */
 #include <string.h>
 #include <stdarg.h>
 
 #include "prelude-list.h"
 #include "prelude-log.h"
+#include "prelude-inttypes.h"
 #include "extract.h"
 #include "idmef-tree.h"
 #include "prelude-ident.h"

@@ -22,7 +22,6 @@
 *****/
 
 
-#include <inttypes.h>
 #include <sys/types.h>
 #include <stdlib.h>
 #include <sys/time.h>
@@ -36,6 +35,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "prelude-inttypes.h"
 #include "ntp.h"
 #include "prelude-log.h"
 #include "idmef-time.h"

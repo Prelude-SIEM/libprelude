@@ -24,7 +24,7 @@
 #ifndef _LIBPRELUDE_COMMON_H
 #define _LIBPRELUDE_COMMON_H
 
-#include <inttypes.h>
+#include <prelude-inttypes.h>
 #include <netinet/in.h>
 
 #ifndef TRUE

@@ -24,7 +24,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <inttypes.h>
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -33,6 +32,7 @@
 #include <errno.h>
 
 #include "config.h"
+#include "prelude-inttypes.h"
 #include "prelude-log.h"
 #include "prelude-inet.h"
 

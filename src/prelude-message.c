@@ -27,7 +27,6 @@
 #include <sys/types.h>
 #include <assert.h>
 #include <sys/uio.h>
-#include <inttypes.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/time.h>
@@ -36,6 +35,7 @@
 
 #include "common.h"
 #include "prelude-log.h"
+#include "prelude-inttypes.h"
 #include "extract.h"
 #include "prelude-io.h"
 #include "prelude-linked-object.h"

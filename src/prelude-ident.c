@@ -26,9 +26,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/time.h>
-#include <inttypes.h>
 
 #include "prelude-log.h"
+#include "prelude-inttypes.h"
 #include "prelude-ident.h"
 
 
