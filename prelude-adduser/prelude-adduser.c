@@ -81,7 +81,7 @@ static void permission_warning(void)
                 
                 "Your sensor won't start unless it is running under this UID or is a member of this GID.\n\n"
                 "[Please press enter if this is what you plan to do]\n",
-                prelude_client_get_uid(client), prelude_client_get_gid(client));
+                (int) prelude_client_get_uid(client), (int) prelude_client_get_gid(client));
         
         while ( getchar() != '\n' );
 }
@@ -414,8 +414,8 @@ static int setup_analyzer_files(prelude_client_t *client, uint64_t analyzerid,
         ret = chown(buf, prelude_client_get_uid(client), prelude_client_get_gid(client));
         if ( ret < 0 ) {
                 fprintf(stderr, "could not chown %s to %d:%d: %s.\n", buf,
-                        prelude_client_get_uid(client), prelude_client_get_gid(client),
-                        strerror(errno));
+                        (int) prelude_client_get_uid(client),
+                        (int) prelude_client_get_gid(client), strerror(errno));
                 return -1;
         }
         
