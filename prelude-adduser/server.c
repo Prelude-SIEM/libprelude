@@ -17,6 +17,7 @@
 #include "server.h"
 #include "tls-register.h"
 
+#include "config.h"
 
 static char *one_shot_passwd;
 
@@ -70,8 +71,9 @@ static int wait_connection(prelude_client_t *client, int sock, int keepalive,
                            gnutls_x509_crt cacrt, gnutls_x509_crt crt)
 {
         char buf[512];
+        int csock, ret;
+        socklen_t len;
         prelude_io_t *fd;
-        int csock, len, ret;
         struct sockaddr_in addr;
 
         fd = prelude_io_new();
