@@ -52,6 +52,11 @@ if test x$cryptlib = xtrue; then
 fi
 
 
+
+dnl **************************************************
+dnl * Check for Pthread library                      *
+dnl **************************************************
+
 AC_CHECK_LIB(pthread, pthread_create, pthrlib="yes")
 if test x$pthrlib == xyes; then
 	PTHREAD_LIBS="-lpthread"
@@ -155,6 +160,7 @@ AC_SUBST(LIBS)
 CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations \
 -Wbad-function-cast -Wcast-qual -Wcast-align -Wnested-externs"
 
+
 AC_OUTPUT([
 
 Makefile 
@@ -172,3 +178,15 @@ src/include/Makefile
 echo
 echo "*** Dumping configuration ***"
 echo "    - Use OpenSSL   : $enable_openssl"
+
+
+
+
+
+
+
+
+
+
+
+
