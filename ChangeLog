@@ -1,3 +1,8 @@
+2003-12-28  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/prelude-message.c (set_data, prelude_msg_forward):
+	datatype safety.
+
 2003-12-27  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
 	* src/idmef-value.c:

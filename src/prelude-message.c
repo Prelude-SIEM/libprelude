@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -121,7 +121,7 @@ static void msg_mark_end(prelude_msg_t *msg)
 
 inline static int set_data(prelude_msg_t **m, const void *buf, size_t size) 
 {
-        int remaining;
+        size_t remaining;
         prelude_msg_t *msg = *m;
         
         remaining = (msg->hdr.datalen - msg->write_index);
@@ -487,7 +487,7 @@ int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf)
  */
 int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src) 
 {
-        int ret;
+        ssize_t ret;
         uint32_t dlen = htonl(msg->hdr.datalen);
         unsigned char buf[PRELUDE_MSG_HDR_SIZE];
 
