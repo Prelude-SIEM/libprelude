@@ -64,7 +64,10 @@ sub	value2scalar($)
 	$result = Prelude::idmef_value_get_double($value);
 
     } elsif ( $type == $Prelude::type_string ) {
-	$result = Prelude::idmef_value_get_string($value);
+	my $string;
+
+	$string = Prelude::idmef_value_get_string($value) or return undef;
+	$result = Prelude::idmef_string_get_string($string);
 
     } elsif ( $type == $Prelude::type_enum) {
 	$result = Prelude::idmef_value_get_enum($value);
@@ -79,7 +82,10 @@ sub	value2scalar($)
 	$result->{usec} = Prelude::idmef_time_get_usec($time);
 
     } elsif ( $type == $Prelude::type_data ) {
-	$result = Prelude::idmef_value_get_data($value);
+	my $data;
+
+	$data = Prelude::idmef_value_get_data($value) or return undef;
+	$result = Prelude::idmef_data_get_data($data);
 
     } else {
 	warn "type $type not supported !\n";

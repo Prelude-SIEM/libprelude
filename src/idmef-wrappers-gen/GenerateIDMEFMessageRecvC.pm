@@ -61,7 +61,7 @@ static inline int extract_string_safe(idmef_string_t **out, char *buf, size_t le
                 return -1;
         \}
 
-        *out = idmef_string_new_ref_fast(buf, len + 1);
+        *out = idmef_string_new_ref_fast(buf, len);
         if ( ! *out ) \{
                 log(LOG_ERR, \"out of memory\\n\");
                 return -2;

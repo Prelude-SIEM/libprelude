@@ -1,3 +1,20 @@
+2003-12-20  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
+	* bindings/libprelude.i:
+	* bindings/perl/Prelude.pm:
+	cleanup
+
+	* bindings/perl/Prelude.c:
+	regenerated
+
+	* src/idmef-wrappers-gen/GenerateIDMEFMessageRecvC.pm:
+	(extract_string_safe)
+	bug fix, idmef_string_new_ref_fast was called with len + 1, but
+	len already takes the final NULL byte in account
+
+	* src/idmef-message-recv.c:
+	regenerated
+
 2003-12-18  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
 	* src/prelude-io.c:

@@ -190,30 +190,12 @@ typedef unsigned long long uint64_t;
 };
 
 /*
- * FIXME: we have a leak here...
+ * FIXME: this piece of code assume that data is a string
  */
 
-%typemap(perl5, in) idmef_string_t * {
-	STRLEN len;
-	char *s;
-
-	s = SvPV($input, len);
-	$1 = idmef_string_new_dup_fast(s, len + 1);
-};
-
-
-%typemap(perl5, out) idmef_string_t * {
-	if ( $1 ) {
-		$result = sv_2mortal(newSVpv(idmef_string($1), idmef_string_len($1) - 1));
-		argvi++;
-	}
-};
-
-%typemap(perl5, out) idmef_data_t * {
-	if ( $1 ) {
-		$result = sv_2mortal(newSVpv((char *) idmef_data($1), idmef_data_len($1)));
-		argvi++;
-	}
+%typemap(perl5, out) unsigned char * {
+	$result = $1 ? sv_2mortal(newSVpv($1, 0)) : NULL;
+	argvi++;
 };
 
 %typemap(perl5, in) uint64_t {
