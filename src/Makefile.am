@@ -23,6 +23,7 @@ libprelude_la_SOURCES = 		\
 	prelude-getopt.c		\
 	prelude-io.c			\
 	prelude-message.c		\
+	prelude-message-buffered.c	\
 	prelude-async.c			\
 	prelude-ident.c			\
 	prelude-path.c			\

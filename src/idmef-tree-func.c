@@ -184,7 +184,7 @@ idmef_alertident_t *idmef_tool_alert_alertident_new(idmef_tool_alert_t *tool_ale
                 return NULL;
         }
 
-        list_add(&new->list, &tool_alert->alertident_list);
+        list_add_tail(&new->list, &tool_alert->alertident_list);
 
         return new;
 }
@@ -214,7 +214,7 @@ idmef_alertident_t *idmef_correlation_alert_alertident_new(idmef_correlation_ale
                 return NULL;
         }
 
-        list_add(&new->list, &correlation_alert->alertident_list);
+        list_add_tail(&new->list, &correlation_alert->alertident_list);
 
         return new;
 }
@@ -292,7 +292,7 @@ idmef_address_t *idmef_node_address_new(idmef_node_t *node)
         }
 
         new->category = unknown;
-        list_add(&new->list, &node->address_list);
+        list_add_tail(&new->list, &node->address_list);
 
         return new;
 }
@@ -313,7 +313,7 @@ idmef_process_arg_t *idmef_process_arg_new(idmef_process_t *process)
                 return NULL;
         }
 
-        list_add(&new->list, &process->arg_list);
+        list_add_tail(&new->list, &process->arg_list);
 
         return new;
 }
@@ -331,7 +331,7 @@ idmef_process_env_t *idmef_process_env_new(idmef_process_t *process)
                 return NULL;
         }
 
-        list_add(&new->list, &process->env_list);
+        list_add_tail(&new->list, &process->env_list);
 
         return new;
 }
@@ -353,7 +353,7 @@ idmef_userid_t *idmef_user_userid_new(idmef_user_t *user)
         }
 
         new->type = original_user;
-        list_add(&new->list, &user->userid_list);
+        list_add_tail(&new->list, &user->userid_list);
 
         return new;
 }
@@ -481,7 +481,7 @@ idmef_action_t *idmef_assessment_action_new(idmef_assessment_t *assessment)
                 return NULL;
         }
 
-        list_add(&new->list, &assessment->action_list);
+        list_add_tail(&new->list, &assessment->action_list);
 
         return new;
 }
@@ -531,7 +531,7 @@ idmef_target_t *idmef_alert_target_new(idmef_alert_t *alert)
 
         new->decoy = unknown;
         INIT_LIST_HEAD(&new->file_list);
-        list_add(&new->list, &alert->target_list);
+        list_add_tail(&new->list, &alert->target_list);
         
         return new;
 }
@@ -550,7 +550,7 @@ idmef_source_t *idmef_alert_source_new(idmef_alert_t *alert)
         }
 
         new->spoofed = unknown;
-        list_add(&new->list, &alert->source_list);
+        list_add_tail(&new->list, &alert->source_list);
         
         return new;
 }
@@ -568,7 +568,7 @@ idmef_classification_t *idmef_alert_classification_new(idmef_alert_t *alert)
         }
 
         new->origin = unknown;
-        list_add(&new->list, &alert->classification_list);
+        list_add_tail(&new->list, &alert->classification_list);
         
         return new;
 }
@@ -587,7 +587,7 @@ idmef_additional_data_t *idmef_alert_additional_data_new(idmef_alert_t *alert)
         }
 
         new->type = string;
-        list_add(&new->list, &alert->additional_data_list);
+        list_add_tail(&new->list, &alert->additional_data_list);
         
         return new;
 }
@@ -617,7 +617,7 @@ idmef_additional_data_t *idmef_heartbeat_additional_data_new(idmef_heartbeat_t *
                 return NULL;
         }
 
-        list_add(&new->list, &hb->additional_data_list);
+        list_add_tail(&new->list, &hb->additional_data_list);
         new->type = string;
         
         return new;

@@ -355,7 +355,7 @@ static int get_manager_setup(prelude_io_t *fd, int *have_ssl, int *have_plaintex
                 return -1;
         }
 
-        while ( (ret = prelude_msg_get(msg, &tag, &dlen, &buf)) ) {
+        while ( (ret = prelude_msg_get(msg, &tag, &dlen, &buf)) > 0  ) {
                 
                 switch (tag) {
 

@@ -30,7 +30,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <netinet/in.h> /* required by common.h */
 
+#include "common.h"
 #include "prelude-list.h"
 #include "timer.h"
 #include "prelude-log.h"
@@ -421,59 +423,6 @@ static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline)
 
 
 
-/*
- * Open a *possibly persistant* file for writing,
- * trying to avoid symlink attack as much as possible.
- */
-static int secure_open(const char *filename) 
-{
-        int fd, ret;
-        struct stat st;
-        
-        /*
-         * We can't rely on O_EXCL to avoid symlink attack,
-         * as it could be perfectly normal that a file would already exist
-         * and we would be open to a race condition between the time we stat
-         * it (to see if it's a link) and the time we open it, this time without
-         * O_EXCL.
-         */
-        fd = open(filename, O_CREAT|O_WRONLY|O_APPEND|O_EXCL, S_IRUSR|S_IWUSR);
-        if ( fd < 0 ) {
-                if ( errno != EEXIST ) {
-                        log(LOG_ERR, "couldn't open %s.\n", filename);
-                        return -1;
-                }
-                
-                ret = lstat(filename, &st);
-                if ( ret < 0 ) {
-                        log(LOG_ERR, "couldn't get FD stat.\n");
-                        return -1;
-                }
-
-                /*
-                 * There is a race between the lstat() and this open() call.
-                 * No atomic operation that I know off permit to fix it.
-                 * And we can't use O_TRUNC.
-                 */
-                if ( S_ISREG(st.st_mode) ) 
-                        return open(filename, O_CREAT|O_WRONLY|O_APPEND, S_IRUSR|S_IWUSR);
-                
-                else if ( S_ISLNK(st.st_mode) ) {
-                        log(LOG_INFO, "symlink attack detected. Overriding.\n");
-                        
-                        ret = unlink(filename);
-                        if ( ret < 0 ) {
-                                log(LOG_ERR, "couldn't unlink %s.\n", filename);
-                                return -1;
-                        }
-
-                        return secure_open(filename);
-                }
-        }
-        return fd;
-}
-
-
 
 static int setup_backup_fd(prelude_client_mgr_t *new) 
 {
@@ -492,10 +441,10 @@ static int setup_backup_fd(prelude_client_mgr_t *new)
         
         /*
          * we want two different descriptor in order to
-         * do write atomically. The other file descriptor has it's own
-         * file table, with it's own offset.
+         * do write atomically (O_APPEND). The other file descriptor has it's
+         * own file table, with it's own offset so we can read from it.
          */
-        wfd = secure_open(filename);
+        wfd = prelude_open_persistant_tmpfile(filename, O_WRONLY|O_APPEND, S_IRUSR|S_IWUSR);
         if ( wfd < 0 ) {
                 log(LOG_ERR, "couldn't open %s for writing.\n", filename);
                 return -1;

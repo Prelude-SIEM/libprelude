@@ -70,7 +70,7 @@
 /*
  * Possible tag behind MSG_OWN_FORMAT
  */
-#define MSG_FORMAT_PRELUDE_NIDS 01
+#define MSG_FORMAT_PRELUDE_NIDS 1
 
 
 /*

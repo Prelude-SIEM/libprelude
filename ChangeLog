@@ -1,3 +1,32 @@
+2002-02-01  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-message-buffered.c: 
+	new prelude-msgbuf API. This API help a lot for message
+	generation, and provide fragmentation and buffering of message.
+
+	* src/prelude-message.c: big change allowing fragmentation
+	and buffering of message.
+
+	* src/prelude-client.c (get_manager_setup): 
+	handle prelude_msg_get() return value correctly.
+
+	* src/prelude-client-mgr.c: 
+	removed function that used to open file securely and use
+	prelude_open_persistant_tmpfile().
+
+	* src/idmef-tree-func.c: use list_add_tail everywhere. 
+	We want to insert data at the end of the list.
+
+	* src/idmef-msg-send.c: convert to use the prelude-msgbuf API.
+	(idmef_msg_send): now take an msgbuf as argument.
+
+	* src/common.c (prelude_open_persistant_tmpfile): 
+	new function. Open a *possibly persistant* file for writing,
+	trying to avoid symlink attack as much as possible.
+
+	* src/client-ident.c (save_ident): use prelude_open_persistant_tmpfile()
+	in order to open the file securely.
+
 2002-01-26  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/client-ident.c (prelude_client_get_analyzerid): 

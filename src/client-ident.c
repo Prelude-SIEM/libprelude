@@ -29,17 +29,19 @@
 #include <fcntl.h>
 #include <errno.h>
 
+#include "common.h"
 #include "prelude-log.h"
 #include "extract.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
+#include "prelude-client.h"
 #include "prelude-message-id.h"
 #include "client-ident.h"
 
 #define IDENTITY_DIR "/var/lib/prelude-sensors/idents"
 
-extern int is_caller_a_sensor;
 
+extern int is_caller_a_sensor;
 static char identfile[1024];
 static uint64_t sensor_ident = 0;
 static const char *sensor_name = NULL;
@@ -57,10 +59,7 @@ static int save_ident(void)
         int fd;
         FILE *fdp;
         
-        /*
-         * use O_EXCL first to avoid a possible symlink attack.
-         */
-        fd = open(identfile, O_CREAT|O_WRONLY|O_EXCL, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
+        fd = prelude_open_persistant_tmpfile(identfile, O_WRONLY, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
         if ( fd < 0 ) {
                 log(LOG_ERR, "error opening %s for writing.\n", identfile);
                 return -1;

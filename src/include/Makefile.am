@@ -23,6 +23,7 @@ include_HEADERS = config-engine.h 		\
 		  prelude-getopt-wide.h		\
 		  prelude-io.h			\
 		  prelude-message.h		\
+		  prelude-message-buffered.h	\
 		  prelude-message-id.h		\
 		  prelude-async.h		\
 		  prelude-ident.h		\

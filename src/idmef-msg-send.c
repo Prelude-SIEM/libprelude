@@ -32,6 +32,7 @@
 #include "prelude-log.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
+#include "prelude-message-buffered.h"
 #include "prelude-message-id.h"
 #include "idmef-message-id.h"
 #include "idmef-tree.h"
@@ -48,17 +49,17 @@
  */
 
 
-void idmef_send_string(prelude_msg_t *msg, uint8_t tag, idmef_string_t *string)
+void idmef_send_string(prelude_msgbuf_t *msg, uint8_t tag, idmef_string_t *string)
 {
         if ( ! string || ! string->string )
                 return;
 
-        prelude_msg_set(msg, tag, string->len, string->string);
+        prelude_msgbuf_set(msg, tag, string->len, string->string);
 }
 
 
 
-void idmef_send_uint64(prelude_msg_t *msg, uint8_t tag, uint64_t *data) 
+void idmef_send_uint64(prelude_msgbuf_t *msg, uint8_t tag, uint64_t *data) 
 {
         uint64_t dst;
         
@@ -68,58 +69,58 @@ void idmef_send_uint64(prelude_msg_t *msg, uint8_t tag, uint64_t *data)
         ((uint32_t *) &dst)[0] = ntohl(((uint32_t *) data)[1]);
         ((uint32_t *) &dst)[1] = ntohl(((uint32_t *) data)[0]);
         
-        prelude_msg_set(msg, tag, sizeof(*data), &dst);
+        prelude_msgbuf_set(msg, tag, sizeof(*data), &dst);
 }
 
 
 
-void idmef_send_uint32(prelude_msg_t *msg, uint8_t tag, uint32_t data) 
+void idmef_send_uint32(prelude_msgbuf_t *msg, uint8_t tag, uint32_t data) 
 {        
         if ( data == 0 )
                 return;
         
         data = htonl(data);
-        prelude_msg_set(msg, tag, sizeof(data), &data);
+        prelude_msgbuf_set(msg, tag, sizeof(data), &data);
 }
 
 
 
-void idmef_send_uint16(prelude_msg_t *msg, uint8_t tag, uint16_t data) 
+void idmef_send_uint16(prelude_msgbuf_t *msg, uint8_t tag, uint16_t data) 
 {
         if ( data == 0 )
                 return;
         
         data = htons(data);
-        prelude_msg_set(msg, tag, sizeof(data), &data);
+        prelude_msgbuf_set(msg, tag, sizeof(data), &data);
 }
 
 
 
 
-void idmef_send_time(prelude_msg_t *msg, uint8_t tag, idmef_time_t *time) 
+void idmef_send_time(prelude_msgbuf_t *msg, uint8_t tag, idmef_time_t *time) 
 {
         if (! time )
                 return;
 
-        prelude_msg_set(msg, tag, 0, NULL);        
+        prelude_msgbuf_set(msg, tag, 0, NULL);        
         idmef_send_uint32(msg, MSG_TIME_SEC, time->sec);
         idmef_send_uint32(msg, MSG_TIME_USEC, time->usec);
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_send_additional_data(prelude_msg_t *msg, idmef_additional_data_t *data) 
+void idmef_send_additional_data(prelude_msgbuf_t *msg, idmef_additional_data_t *data) 
 {        
-        prelude_msg_set(msg, MSG_ADDITIONALDATA_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_ADDITIONALDATA_TAG, 0, NULL);
         idmef_send_uint32(msg, MSG_ADDITIONALDATA_TYPE, data->type);
         idmef_send_string(msg, MSG_ADDITIONALDATA_MEANING, &data->meaning);
         idmef_send_string(msg, MSG_ADDITIONALDATA_DATA, &data->data);
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
        
 
 
-void idmef_send_additional_data_list(prelude_msg_t *msg, struct list_head *head) 
+void idmef_send_additional_data_list(prelude_msgbuf_t *msg, struct list_head *head) 
 {
         struct list_head *tmp;
         idmef_additional_data_t *data;
@@ -132,41 +133,41 @@ void idmef_send_additional_data_list(prelude_msg_t *msg, struct list_head *head)
 
 
 
-void idmef_send_web_service(prelude_msg_t *msg, idmef_webservice_t *web) 
+void idmef_send_web_service(prelude_msgbuf_t *msg, idmef_webservice_t *web) 
 {
-        prelude_msg_set(msg, MSG_WEBSERVICE_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_WEBSERVICE_TAG, 0, NULL);
 
         idmef_send_string(msg, MSG_WEBSERVICE_URL, &web->url);
         idmef_send_string(msg, MSG_WEBSERVICE_CGI, &web->cgi);
         idmef_send_string(msg, MSG_WEBSERVICE_HTTP_METHOD, &web->http_method);
         idmef_send_string(msg, MSG_WEBSERVICE_ARG, &web->arg);
 
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
-void idmef_send_snmp_service(prelude_msg_t *msg, idmef_snmpservice_t *snmp) 
+void idmef_send_snmp_service(prelude_msgbuf_t *msg, idmef_snmpservice_t *snmp) 
 {
-        prelude_msg_set(msg, MSG_SNMPSERVICE_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_SNMPSERVICE_TAG, 0, NULL);
 
         idmef_send_string(msg, MSG_SNMPSERVICE_OID, &snmp->oid);
         idmef_send_string(msg, MSG_SNMPSERVICE_COMMUNITY, &snmp->community);
         idmef_send_string(msg, MSG_SNMPSERVICE_COMMAND, &snmp->command);
 
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);  
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);  
 }
 
 
 
 
 
-void idmef_send_service(prelude_msg_t *msg, idmef_service_t *service) 
+void idmef_send_service(prelude_msgbuf_t *msg, idmef_service_t *service) 
 {
         if ( ! service )
                 return;
         
-        prelude_msg_set(msg, MSG_SERVICE_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_SERVICE_TAG, 0, NULL);
 
         idmef_send_uint64(msg, MSG_SERVICE_IDENT, &service->ident);
         idmef_send_string(msg, MSG_SERVICE_NAME, &service->name);
@@ -180,27 +181,27 @@ void idmef_send_service(prelude_msg_t *msg, idmef_service_t *service)
         else if ( service->type == snmp_service )
                 idmef_send_snmp_service(msg, service->specific.snmp);
         
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
-void idmef_send_address(prelude_msg_t *msg, idmef_address_t *address) 
+void idmef_send_address(prelude_msgbuf_t *msg, idmef_address_t *address) 
 {
-        prelude_msg_set(msg, MSG_ADDRESS_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_ADDRESS_TAG, 0, NULL);
         idmef_send_uint32(msg, MSG_ADDRESS_CATEGORY, address->category);
         idmef_send_string(msg, MSG_ADDRESS_VLAN_NAME, &address->vlan_name);
         idmef_send_uint32(msg, MSG_ADDRESS_VLAN_NUM, address->vlan_num);
         idmef_send_string(msg, MSG_ADDRESS_ADDRESS, &address->address);
         idmef_send_string(msg, MSG_ADDRESS_NETMASK, &address->netmask);
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
-void idmef_send_address_list(prelude_msg_t *msg, struct list_head *address_list) 
+void idmef_send_address_list(prelude_msgbuf_t *msg, struct list_head *address_list) 
 {
         struct list_head *tmp;
         idmef_address_t *address;
@@ -213,7 +214,7 @@ void idmef_send_address_list(prelude_msg_t *msg, struct list_head *address_list)
 
 
 
-void idmef_send_string_list(prelude_msg_t *msg, uint8_t tag, struct list_head *head)
+void idmef_send_string_list(prelude_msgbuf_t *msg, uint8_t tag, struct list_head *head)
 {
         struct list_head *tmp;
         idmef_string_item_t *string;
@@ -227,12 +228,12 @@ void idmef_send_string_list(prelude_msg_t *msg, uint8_t tag, struct list_head *h
 
 
 
-void idmef_send_process(prelude_msg_t *msg, idmef_process_t *process) 
+void idmef_send_process(prelude_msgbuf_t *msg, idmef_process_t *process) 
 {
         if ( ! process )
                 return;
         
-        prelude_msg_set(msg, MSG_PROCESS_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_PROCESS_TAG, 0, NULL);
 
         idmef_send_string(msg, MSG_PROCESS_NAME, &process->name);
         idmef_send_uint32(msg, MSG_PROCESS_PID, process->pid);
@@ -240,43 +241,43 @@ void idmef_send_process(prelude_msg_t *msg, idmef_process_t *process)
         idmef_send_string_list(msg, MSG_PROCESS_ARG, &process->arg_list);
         idmef_send_string_list(msg, MSG_PROCESS_ENV, &process->env_list);
         
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
-void idmef_send_node(prelude_msg_t *msg, idmef_node_t *node) 
+void idmef_send_node(prelude_msgbuf_t *msg, idmef_node_t *node) 
 {
         if ( ! node )
                 return;
         
-        prelude_msg_set(msg, MSG_NODE_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_NODE_TAG, 0, NULL);
 
         idmef_send_uint32(msg, MSG_NODE_CATEGORY, node->category);
         idmef_send_string(msg, MSG_NODE_LOCATION, &node->location);
         idmef_send_string(msg, MSG_NODE_NAME, &node->name);
         idmef_send_address_list(msg, &node->address_list);
         
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
-void idmef_send_userid(prelude_msg_t *msg, idmef_userid_t *uid) 
+void idmef_send_userid(prelude_msgbuf_t *msg, idmef_userid_t *uid) 
 {
-        prelude_msg_set(msg, MSG_USERID_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_USERID_TAG, 0, NULL);
         idmef_send_uint32(msg, MSG_USERID_TYPE, uid->type);
         idmef_send_string(msg, MSG_USERID_NAME, &uid->name);
         idmef_send_uint32(msg, MSG_USERID_NUMBER, uid->number);
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
-void idmef_send_userid_list(prelude_msg_t *msg, struct list_head *head) 
+void idmef_send_userid_list(prelude_msgbuf_t *msg, struct list_head *head) 
 {
         idmef_userid_t *uid;
         struct list_head *tmp;
@@ -290,23 +291,23 @@ void idmef_send_userid_list(prelude_msg_t *msg, struct list_head *head)
 
 
 
-void idmef_send_user(prelude_msg_t *msg, idmef_user_t *user) 
+void idmef_send_user(prelude_msgbuf_t *msg, idmef_user_t *user) 
 {
         if ( ! user )
                 return;
         
-        prelude_msg_set(msg, MSG_USER_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_USER_TAG, 0, NULL);
         idmef_send_uint32(msg, MSG_USER_CATEGORY, user->category);
         idmef_send_userid_list(msg, &user->userid_list);
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
-void idmef_send_source(prelude_msg_t *msg, idmef_source_t *source) 
+void idmef_send_source(prelude_msgbuf_t *msg, idmef_source_t *source) 
 {
-        prelude_msg_set(msg, MSG_SOURCE_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_SOURCE_TAG, 0, NULL);
 
         idmef_send_uint64(msg, MSG_SOURCE_IDENT, &source->ident);
         idmef_send_uint32(msg, MSG_SOURCE_SPOOFED, source->spoofed);
@@ -316,12 +317,12 @@ void idmef_send_source(prelude_msg_t *msg, idmef_source_t *source)
         idmef_send_process(msg, source->process);
         idmef_send_service(msg, source->service);
         
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
-void idmef_send_source_list(prelude_msg_t *msg, struct list_head *head) 
+void idmef_send_source_list(prelude_msgbuf_t *msg, struct list_head *head) 
 {
         struct list_head *tmp;
         idmef_source_t *source;
@@ -334,20 +335,20 @@ void idmef_send_source_list(prelude_msg_t *msg, struct list_head *head)
 
 
 
-void idmef_send_file_access(prelude_msg_t *msg, idmef_file_access_t *access) 
+void idmef_send_file_access(prelude_msgbuf_t *msg, idmef_file_access_t *access) 
 {
-        prelude_msg_set(msg, MSG_ACCESS_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_ACCESS_TAG, 0, NULL);
 
         idmef_send_userid(msg, &access->userid);
         idmef_send_string(msg, MSG_ACCESS_PERMISSION, &access->permission);
         
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
-void idmef_send_file_access_list(prelude_msg_t *msg, struct list_head *head) 
+void idmef_send_file_access_list(prelude_msgbuf_t *msg, struct list_head *head) 
 {
         struct list_head *tmp;
         idmef_file_access_t *access;
@@ -362,22 +363,22 @@ void idmef_send_file_access_list(prelude_msg_t *msg, struct list_head *head)
 
 
 
-void idmef_send_linkage(prelude_msg_t *msg, idmef_linkage_t *linkage) 
+void idmef_send_linkage(prelude_msgbuf_t *msg, idmef_linkage_t *linkage) 
 {
-        prelude_msg_set(msg, MSG_LINKAGE_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_LINKAGE_TAG, 0, NULL);
 
         idmef_send_uint32(msg, MSG_LINKAGE_CATEGORY, linkage->category);
         idmef_send_string(msg, MSG_LINKAGE_NAME, &linkage->name);
         idmef_send_string(msg, MSG_LINKAGE_PATH, &linkage->path);
         idmef_send_file(msg, linkage->file);
         
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
-void idmef_send_linkage_list(prelude_msg_t *msg, struct list_head *head) 
+void idmef_send_linkage_list(prelude_msgbuf_t *msg, struct list_head *head) 
 {
         struct list_head *tmp;
         idmef_linkage_t *linkage;
@@ -390,9 +391,9 @@ void idmef_send_linkage_list(prelude_msg_t *msg, struct list_head *head)
 
 
 
-void idmef_send_inode(prelude_msg_t *msg, idmef_inode_t *inode) 
+void idmef_send_inode(prelude_msgbuf_t *msg, idmef_inode_t *inode) 
 {
-        prelude_msg_set(msg, MSG_INODE_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_INODE_TAG, 0, NULL);
         
         idmef_send_time(msg, MSG_INODE_CHANGE_TIME, &inode->change_time);
         idmef_send_uint32(msg, MSG_INODE_NUMBER, inode->number);
@@ -401,15 +402,15 @@ void idmef_send_inode(prelude_msg_t *msg, idmef_inode_t *inode)
         idmef_send_uint32(msg, MSG_INODE_C_MAJOR_DEVICE, inode->c_major_device);
         idmef_send_uint32(msg, MSG_INODE_C_MINOR_DEVICE, inode->c_minor_device);
 
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
-void idmef_send_file(prelude_msg_t *msg, idmef_file_t *file) 
+void idmef_send_file(prelude_msgbuf_t *msg, idmef_file_t *file) 
 {
-        prelude_msg_set(msg, MSG_FILE_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_FILE_TAG, 0, NULL);
 
         idmef_send_uint64(msg, MSG_FILE_IDENT, &file->ident);
         idmef_send_uint32(msg, MSG_FILE_CATEGORY, file->category);
@@ -425,13 +426,13 @@ void idmef_send_file(prelude_msg_t *msg, idmef_file_t *file)
         idmef_send_linkage_list(msg, &file->file_linkage_list);
         idmef_send_inode(msg, file->inode);
         
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
-void idmef_send_file_list(prelude_msg_t *msg, struct list_head *head) 
+void idmef_send_file_list(prelude_msgbuf_t *msg, struct list_head *head) 
 {
         idmef_file_t *file;
         struct list_head *tmp;
@@ -446,9 +447,9 @@ void idmef_send_file_list(prelude_msg_t *msg, struct list_head *head)
 
 
 
-void idmef_send_target(prelude_msg_t *msg, idmef_target_t *target) 
+void idmef_send_target(prelude_msgbuf_t *msg, idmef_target_t *target) 
 {
-        prelude_msg_set(msg, MSG_TARGET_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_TARGET_TAG, 0, NULL);
 
         idmef_send_uint64(msg, MSG_TARGET_IDENT, &target->ident);
         idmef_send_uint32(msg, MSG_TARGET_DECOY, target->decoy);
@@ -459,13 +460,13 @@ void idmef_send_target(prelude_msg_t *msg, idmef_target_t *target)
         idmef_send_service(msg, target->service);
         idmef_send_file_list(msg, &target->file_list);
         
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
-void idmef_send_target_list(prelude_msg_t *msg, struct list_head *head) 
+void idmef_send_target_list(prelude_msgbuf_t *msg, struct list_head *head) 
 {
         struct list_head *tmp;
         idmef_target_t *target;
@@ -478,9 +479,9 @@ void idmef_send_target_list(prelude_msg_t *msg, struct list_head *head)
 
 
 
-void idmef_send_analyzer(prelude_msg_t *msg, idmef_analyzer_t *analyzer) 
+void idmef_send_analyzer(prelude_msgbuf_t *msg, idmef_analyzer_t *analyzer) 
 {
-        prelude_msg_set(msg, MSG_ANALYZER_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_ANALYZER_TAG, 0, NULL);
         
         idmef_send_string(msg, MSG_ANALYZER_MANUFACTURER, &analyzer->manufacturer);
         idmef_send_string(msg, MSG_ANALYZER_MODEL, &analyzer->model);
@@ -491,13 +492,13 @@ void idmef_send_analyzer(prelude_msg_t *msg, idmef_analyzer_t *analyzer)
         idmef_send_node(msg, analyzer->node);
         idmef_send_process(msg, analyzer->process);
         
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
-void idmef_send_create_time(prelude_msg_t *msg, idmef_time_t *time) 
+void idmef_send_create_time(prelude_msgbuf_t *msg, idmef_time_t *time) 
 {
         struct timeval tv;
 
@@ -510,21 +511,21 @@ void idmef_send_create_time(prelude_msg_t *msg, idmef_time_t *time)
 
 
 
-void idmef_send_classification(prelude_msg_t *msg, idmef_classification_t *classification) 
+void idmef_send_classification(prelude_msgbuf_t *msg, idmef_classification_t *classification) 
 {
-        prelude_msg_set(msg, MSG_CLASSIFICATION_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_CLASSIFICATION_TAG, 0, NULL);
         
         idmef_send_uint32(msg, MSG_CLASSIFICATION_ORIGIN, classification->origin);
         idmef_send_string(msg, MSG_CLASSIFICATION_NAME, &classification->name);
         idmef_send_string(msg, MSG_CLASSIFICATION_URL, &classification->url);
 
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
-void idmef_send_classification_list(prelude_msg_t *msg, struct list_head *head) 
+void idmef_send_classification_list(prelude_msgbuf_t *msg, struct list_head *head) 
 {
         struct list_head *tmp;
         idmef_classification_t *classification;
@@ -537,36 +538,36 @@ void idmef_send_classification_list(prelude_msg_t *msg, struct list_head *head)
 
 
 
-void idmef_send_confidence(prelude_msg_t *msg, idmef_confidence_t *confidence) 
+void idmef_send_confidence(prelude_msgbuf_t *msg, idmef_confidence_t *confidence) 
 {
         if ( ! confidence )
                 return;
 
-        prelude_msg_set(msg, MSG_CONFIDENCE_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_CONFIDENCE_TAG, 0, NULL);
 
         idmef_send_uint32(msg, MSG_CONFIDENCE_RATING, confidence->rating);
         idmef_send_uint32(msg, MSG_CONFIDENCE_CONFIDENCE, confidence->confidence);
         
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
-void idmef_send_action(prelude_msg_t *msg, idmef_action_t *action) 
+void idmef_send_action(prelude_msgbuf_t *msg, idmef_action_t *action) 
 {
-        prelude_msg_set(msg, MSG_ACTION_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_ACTION_TAG, 0, NULL);
 
         idmef_send_uint32(msg, MSG_ACTION_CATEGORY, action->category);
         idmef_send_string(msg, MSG_ACTION_DESCRIPTION, &action->description);
 
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
-void idmef_send_action_list(prelude_msg_t *msg, struct list_head *head) 
+void idmef_send_action_list(prelude_msgbuf_t *msg, struct list_head *head) 
 {
         struct list_head *tmp;
         idmef_action_t *action;
@@ -580,27 +581,27 @@ void idmef_send_action_list(prelude_msg_t *msg, struct list_head *head)
 
 
 
-void idmef_send_impact(prelude_msg_t *msg, idmef_impact_t *impact) 
+void idmef_send_impact(prelude_msgbuf_t *msg, idmef_impact_t *impact) 
 {
         if ( ! impact )
                 return;
 
-        prelude_msg_set(msg, MSG_IMPACT_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_IMPACT_TAG, 0, NULL);
 
         idmef_send_uint32(msg, MSG_IMPACT_SEVERITY, impact->severity);
         idmef_send_uint32(msg, MSG_IMPACT_COMPLETION, impact->completion);
         idmef_send_uint32(msg, MSG_IMPACT_TYPE, impact->type);
         idmef_send_string(msg, MSG_IMPACT_DESCRIPTION, &impact->description);
 
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
-void idmef_send_alert(prelude_msg_t *msg, idmef_alert_t *alert) 
+void idmef_send_alert(prelude_msgbuf_t *msg, idmef_alert_t *alert) 
 {
-        prelude_msg_set(msg, MSG_ALERT_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_ALERT_TAG, 0, NULL);
 
         idmef_send_assessment(msg, alert->assessment);
         idmef_send_analyzer(msg, &alert->analyzer);
@@ -612,76 +613,57 @@ void idmef_send_alert(prelude_msg_t *msg, idmef_alert_t *alert)
         idmef_send_classification_list(msg, &alert->classification_list);
         idmef_send_additional_data_list(msg, &alert->additional_data_list);
 
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
-void idmef_send_heartbeat(prelude_msg_t *msg, idmef_heartbeat_t *hb) 
+void idmef_send_heartbeat(prelude_msgbuf_t *msg, idmef_heartbeat_t *hb) 
 {
-        prelude_msg_set(msg, MSG_HEARTBEAT_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_HEARTBEAT_TAG, 0, NULL);
 
         idmef_send_analyzer(msg, &hb->analyzer);
         idmef_send_create_time(msg, &hb->create_time);
         idmef_send_time(msg, MSG_ANALYZER_TIME_TAG, hb->analyzer_time);
         idmef_send_additional_data_list(msg, &hb->additional_data_list);
         
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
 
 
-void idmef_send_assessment(prelude_msg_t *msg, idmef_assessment_t *assessment) 
+void idmef_send_assessment(prelude_msgbuf_t *msg, idmef_assessment_t *assessment) 
 {       
         if ( ! assessment )
                 return;
         
-        prelude_msg_set(msg, MSG_ASSESSMENT_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_ASSESSMENT_TAG, 0, NULL);
         idmef_send_impact(msg, assessment->impact);
         idmef_send_action_list(msg, &assessment->action_list);
         idmef_send_confidence(msg, assessment->confidence);
-        prelude_msg_set(msg, MSG_END_OF_TAG, 0, NULL);
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 
 
-int idmef_msg_send(idmef_message_t *idmef, uint8_t priority)
-{
-        static prelude_msg_t *msg = NULL;
 
-        if ( ! msg ) {
-                /*
-                 * we'll always use a message of the same size here, for simplicity,
-                 * so keep our buffer arround.
-                 */
-                msg = prelude_msg_new(0, 8192, PRELUDE_MSG_IDMEF, priority);
-                if ( ! msg ) {
-                        log(LOG_ERR, "error creating a new message.\n");
-                        return -1;
-                }
-        }
-
-        /*
-         * reset message write buffer to 0, so that
-         * the same msg object can be reused.
-         */
-        prelude_msg_reset(msg);
-        
+int idmef_msg_send(prelude_msgbuf_t *msgbuf, idmef_message_t *idmef, uint8_t priority)
+{        
         switch ( idmef->type ) {
 
         case idmef_alert_message:
-                idmef_send_alert(msg, idmef->message.alert);
+                idmef_send_alert(msgbuf, idmef->message.alert);
                 break;
                 
         case idmef_heartbeat_message:
-                idmef_send_heartbeat(msg, idmef->message.heartbeat);                
+                idmef_send_heartbeat(msgbuf, idmef->message.heartbeat);                
                 break;
         }
-        
-        prelude_sensor_send_msg(msg);
+
+        prelude_msgbuf_mark_end(msgbuf);
                 
         return 0;
 }

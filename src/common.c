@@ -20,13 +20,19 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
+
+#include <unistd.h>
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <assert.h>
+#include <errno.h>
 
+#include "prelude-log.h"
 #include "common.h"
 
 
@@ -54,4 +60,73 @@ int prelude_resolve_addr(const char *hostname, struct in_addr *addr)
 }
 
 
+
+
+/**
+ * prelude_open_persistant_tmpfile:
+ * @filename: Path to the file to open.
+ * @flags: Flags that should be used to open the file.
+ * @mode: Mode that should be used to open the file.
+ *
+ * Open a *possibly persistant* file for writing,
+ * trying to avoid symlink attack as much as possible.
+ *
+ * The file is created if it does not exist.
+ * Refer to open(2) for @flags and @mode meaning.
+ *
+ * Returns: A valid file descriptor on success, -1 if an error occured.
+ */
+int prelude_open_persistant_tmpfile(const char *filename, int flags, mode_t mode) 
+{
+        int fd, ret;
+        struct stat st;
+        int secure_flags;
+        
+        /*
+         * We can't rely on O_EXCL to avoid symlink attack,
+         * as it could be perfectly normal that a file would already exist
+         * and we would be open to a race condition between the time we lstat
+         * it (to see if it's a link) and the time we open it, this time without
+         * O_EXCL.
+         */
+        secure_flags = flags | O_CREAT | O_EXCL;
+        
+        fd = open(filename, secure_flags, mode);
+        if ( fd >= 0 )
+                return fd;
+
+        if ( errno != EEXIST ) {
+                log(LOG_ERR, "couldn't open %s.\n", filename);
+                return -1;
+        }
+                
+        ret = lstat(filename, &st);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "couldn't get FD stat.\n");
+                return -1;
+        }
+
+        /*
+         * There is a race between the lstat() and this open() call.
+         * No atomic operation that I know off permit to fix it.
+         * And we can't use O_TRUNC.
+         */
+        if ( S_ISREG(st.st_mode) ) 
+                return open(filename, O_CREAT | flags, mode);
+        
+        else if ( S_ISLNK(st.st_mode) ) {
+                log(LOG_INFO, "symlink attack detected. Overriding.\n");
+                
+                ret = unlink(filename);
+                if ( ret < 0 ) {
+                        log(LOG_ERR, "couldn't unlink %s.\n", filename);
+                        return -1;
+                }
+                
+                return prelude_open_persistant_tmpfile(filename, flags, mode);
+                
+        }
+        
+        return -1;
+}
 

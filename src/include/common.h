@@ -20,4 +20,7 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
+
 int prelude_resolve_addr(const char *hostname, struct in_addr *addr);
+
+int prelude_open_persistant_tmpfile(const char *filename, int flags, mode_t mode);
