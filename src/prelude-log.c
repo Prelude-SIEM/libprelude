@@ -57,10 +57,15 @@ static void syslog_log(int priority, const char *file,
                 len = vsnprintf(buf, sizeof(buf), fmt, *ap);
                 if ( len < 0 || len >= sizeof(buf) )
                         return;
-                
-                syslog(priority, "%s%s:%s:%d : (errno=%s) : %s",
-                       (global_prefix) ? global_prefix : "",
-                       file, function, line, strerror(errno), strip_return(buf, len));
+
+                if ( errno ) 
+                        syslog(priority, "%s%s:%s:%d: %s: %s",
+                               (global_prefix) ? global_prefix : "",
+                               file, function, line, strerror(errno), strip_return(buf, len));
+                else
+                        syslog(priority, "%s%s:%s:%d: %s",
+                               (global_prefix) ? global_prefix : "",
+                               file, function, line, strip_return(buf, len));
         }
 
         else {
@@ -86,8 +91,15 @@ static void standard_log(int priority, const char *file,
         
         if ( priority == LOG_ERR ) {
                 out = stderr;                
-                if ( global_prefix ) fprintf(out, "%s", global_prefix);
-                fprintf(out, "%s:%s:%d : (errno=%s) : ", file, function, line, strerror(errno));
+
+                if ( global_prefix )
+                        fprintf(out, "%s", global_prefix);
+
+                if ( errno )
+                        fprintf(out, "%s:%s:%d: %s: ", file, function, line, strerror(errno));
+                else
+                        fprintf(out, "%s:%s:%d: ", file, function, line);
+                        
         } else {
                 out = stdout;
                 if ( global_prefix ) fprintf(out, "%s", global_prefix);
@@ -124,6 +136,7 @@ void prelude_log(int priority, const char *file,
                 standard_log(priority, file, function, line, fmt, &ap);
         
         va_end(ap);
+        errno = 0;
 }
         
 
