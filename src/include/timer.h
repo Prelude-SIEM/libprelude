@@ -99,4 +99,10 @@ void timer_elapsed(prelude_timer_t *timer, struct timeval *tv);
 void prelude_wake_up_timer(void);
 
 
+/*
+ * walk every timer.
+ */
+void timer_flush(void);
+
+
 #endif /* _LIBPRELUDE_TIMER_H */
