@@ -86,7 +86,7 @@ struct prelude_client {
         prelude_msgbuf_t *msgbuf;
         prelude_ident_t *unique_ident;
         
-        void (*heartbeat_cb)(prelude_client_t *client);
+        void (*heartbeat_cb)(prelude_client_t *client, idmef_message_t *heartbeat);
 };
 
 
@@ -97,11 +97,6 @@ static void heartbeat_expire_cb(void *data)
         idmef_message_t *message;
         idmef_heartbeat_t *heartbeat;
         prelude_client_t *client = data;
-
-        if ( client->heartbeat_cb ) {
-                client->heartbeat_cb(client);
-                return;
-        }
         
         message = idmef_message_new();
         if ( ! message )
@@ -115,12 +110,17 @@ static void heartbeat_expire_cb(void *data)
 
         idmef_heartbeat_set_analyzer(heartbeat, idmef_analyzer_ref(client->analyzer));
         idmef_heartbeat_set_create_time(heartbeat, idmef_time_new_gettimeofday());
+        
+        if ( client->heartbeat_cb ) {
+                client->heartbeat_cb(client, message);
+                goto out;
+        }
 
         idmef_write_message(client->msgbuf, message);
         prelude_msgbuf_mark_end(client->msgbuf);
-        
-        idmef_message_destroy(message);
 
+  out:
+        idmef_message_destroy(message);
         timer_reset(&client->heartbeat_timer);
 }
 
@@ -518,7 +518,7 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
         if ( ret < 0 )
                 return -1;
                 
-        if ( new->manager_list )
+        if ( new->manager_list || new->heartbeat_cb )
                 heartbeat_expire_cb(new);
         
         return 0;
@@ -593,7 +593,7 @@ prelude_connection_mgr_t *prelude_client_get_manager_list(prelude_client_t *clie
 
 
 
-void prelude_client_set_heartbeat_cb(prelude_client_t *client, void (*cb)(prelude_client_t *client))
+void prelude_client_set_heartbeat_cb(prelude_client_t *client, void (*cb)(prelude_client_t *client, idmef_message_t *hb))
 {
         client->heartbeat_cb = cb;
 }

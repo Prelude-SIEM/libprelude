@@ -51,7 +51,7 @@ prelude_client_capability_t prelude_client_get_capability(prelude_client_t *clie
 
 void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg);
 
-void prelude_client_set_heartbeat_cb(prelude_client_t *client, void (*cb)(prelude_client_t *client));
+void prelude_client_set_heartbeat_cb(prelude_client_t *client, void (*cb)(prelude_client_t *client, idmef_message_t *hb));
 
 void prelude_client_destroy(prelude_client_t *client);
 
