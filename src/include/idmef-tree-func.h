@@ -129,13 +129,20 @@ void idmef_additional_data_free(idmef_additional_data_t *data);
 #define idmef_string(s) (s)->string
 #define idmef_string_len(s) (s)->len
 
+#define idmef_string_copy(dst, src) do {                   \
+        (dst)->len = (src)->len;                           \
+        (dst)->string = (src)->string;                     \
+} while(0)
+ 
+
 #define idmef_string_set_constant(s, str) do {             \
 	(s)->string = (str); (s)->len = sizeof((str));     \
-} while (0);
+} while (0)
+
 
 #define idmef_string_set(s, str) do {                      \
 	(s)->string = (str); (s)->len = strlen((str)) + 1; \
-} while (0);
+} while (0)
 
 #endif
 
