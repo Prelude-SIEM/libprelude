@@ -55,8 +55,8 @@
 #define prelude_option_error -1
 
 
-
 typedef struct prelude_option prelude_option_t;
+typedef struct prelude_option_instance prelude_option_instance_t;
 
 
 typedef enum {
@@ -83,19 +83,19 @@ int prelude_option_wide_send_msg(void *context, prelude_msgbuf_t *msgbuf);
 void prelude_option_destroy(prelude_option_t *option);
 
 
-int prelude_option_parse_arguments(void **context, prelude_option_t *option, const char *filename, int argc, char **argv);
+int prelude_option_parse_arguments(void *context, prelude_option_t *option, const char *filename, int argc, char **argv);
 
 
 prelude_option_t *prelude_option_add(prelude_option_t *parent, int flags,
                                      char shortopt, const char *longopt, const char *desc,
                                      prelude_option_argument_t has_arg,
-                                     int (*set)(void **context, prelude_option_t *opt, const char *optarg),
-                                     int (*get)(void **context, char *buf, size_t size));
+                                     int (*set)(void *context, prelude_option_t *opt, const char *optarg),
+                                     int (*get)(void *context, prelude_option_t *opt, char *buf, size_t size));
 
 
 
 prelude_option_t *prelude_option_add_init_func(prelude_option_t *parent,
-                                               int (*set)(void **context, prelude_option_t *opt, const char *arg));
+                                               int (*set)(void *context, prelude_option_t *opt, const char *arg));
 
 
 #define OPT_INVAL     0x1
@@ -116,10 +116,10 @@ void prelude_option_set_private_data(prelude_option_t *opt, void *data);
 
 void *prelude_option_get_private_data(prelude_option_t *opt);
 
-int prelude_option_invoke_set(void *context, const char *option, const char *value);
+int prelude_option_invoke_set(void **context, prelude_option_t **last_opt,
+                              const char *option, const char *value, char *err, size_t size);
 
-int prelude_option_invoke_get(void *context, const char *option, char *buf, size_t len);
-
+int prelude_option_invoke_get(void **context, prelude_option_t **last, const char *option, const char *value, char *buf, size_t len);
 
 /*
  *
@@ -162,12 +162,15 @@ prelude_option_t *prelude_option_get_parent(prelude_option_t *opt);
 
 void *prelude_option_get_set_callback(prelude_option_t *opt);
 
-void prelude_option_set_set_callback(prelude_option_t *opt, int (*set)(void **context, prelude_option_t *opt, const char *optarg));
+void prelude_option_set_set_callback(prelude_option_t *opt, int (*set)(void *context, prelude_option_t *opt, const char *optarg));
 
 void prelude_option_set_get_callback(prelude_option_t *opt,
-                                     int (*get)(void **context, char *buf, size_t size));
+                                     int (*get)(void *context, prelude_option_t *opt, char *buf, size_t size));
 
 void *prelude_option_get_get_callback(prelude_option_t *opt);
 
+prelude_option_instance_t *prelude_option_instance_new(prelude_option_t *opt, const char *name, void *data);
+
+void prelude_option_instance_destroy(prelude_option_instance_t *oi);
 
 #endif /* _LIBPRELUDE_PRELUDE_GETOPT_H */

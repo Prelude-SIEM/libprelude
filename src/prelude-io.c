@@ -194,7 +194,9 @@ static ssize_t tls_write(prelude_io_t *pio, const void *buf, size_t count)
 
 
 static int tls_close(prelude_io_t *pio) 
-{        
+{
+        printf("bye\n");
+        
         gnutls_bye(pio->fd_ptr, GNUTLS_SHUT_RDWR);
         gnutls_deinit(pio->fd_ptr);
         

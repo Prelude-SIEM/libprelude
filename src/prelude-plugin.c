@@ -73,22 +73,6 @@ typedef struct {
 
 
 
-typedef struct {
-        plugin_entry_t *entry;
-
-        int is_activation;
-        
-        union {
-                int (*plugin_init_cb)(prelude_plugin_instance_t *pi);
-                int (*plugin_option_set_cb)(prelude_plugin_instance_t *pi, prelude_option_t *opt, const char *optarg);        
-        } func;
-
-        int (*plugin_option_get_cb)(prelude_plugin_instance_t *pi, prelude_option_t *opt, const char *optarg);        
-        
-} plugin_option_intercept_t;
-
-
-
 struct prelude_plugin_instance {
         /*
          * List members for external list (outside library).
@@ -110,6 +94,7 @@ struct prelude_plugin_instance {
          */
         void *data;
         void *private_data;
+        prelude_option_instance_t *opt_instance;
         
         char *name;
         const char *infos;
@@ -246,6 +231,10 @@ static int subscribe_instance(prelude_plugin_instance_t *pi)
 
 static void destroy_instance(prelude_plugin_instance_t *instance)
 {
+        printf("destroy instance %p\n", instance);
+        
+        prelude_option_instance_destroy(instance->opt_instance);
+        
         free(instance->name);
         
         prelude_list_del(&instance->int_list);
@@ -256,54 +245,7 @@ static void destroy_instance(prelude_plugin_instance_t *instance)
 
 
 
-
-/*
- * FIXME: reactivate once the prelude-getopt get() option callback
- * is fixed: pass the option as an argument + fix the way we are
- * writing the output.
- */
-static int intercept_plugin_option_get(void **context, char *buf, size_t size)
-{
-        if ( ! *context ) {
-                log(LOG_ERR, "referenced instance not available.\n");
-                return -1;
-        }
-
-        return -1;
-        
-#if 0
-        plugin_option_intercept_t *intercept;
-        prelude_plugin_instance_t *pi = *context;
-
-        intercept = prelude_option_get_private_data(opt);
-        assert(intercept);
-
-        return intercept->plugin_option_get_cb(pi, buf, size);
-#endif
-}
-
-
-
-
-static int intercept_plugin_option_set(void **context, prelude_option_t *opt, const char *name)
-{
-        plugin_option_intercept_t *intercept;
-        prelude_plugin_instance_t *pi = *context;
-
-        if ( ! *context ) {
-                log(LOG_ERR, "referenced instance not available.\n");
-                return -1;
-        }
-        
-        intercept = prelude_option_get_private_data(opt);
-        assert(intercept);
-
-        return intercept->func.plugin_option_set_cb(pi, opt, name);
-}
-
-
-
-static int intercept_plugin_activation_option(void **context, prelude_option_t *opt, const char *name)
+static int intercept_plugin_activation_option(void *context, prelude_option_t *opt, const char *name)
 {
         int ret = 0;
         plugin_entry_t *pe;
@@ -321,37 +263,37 @@ static int intercept_plugin_activation_option(void **context, prelude_option_t *
                 if ( ! pi )
                         return -1;
 
-                *context = pi;
-
                 ret = pi->entry->create_instance(pi, opt, name);
                 if ( ret < 0 )
                         return -1;
-
+                
+                pi->opt_instance = prelude_option_instance_new(opt, name, pi);
+                if ( ! pi->opt_instance )
+                        return -1;
+                
                 if ( ! pe->init_instance )
                         ret = subscribe_instance(pi);
         }
         
-        *context = pi;
-
         return ret;
 }
 
 
 
-static int intercept_plugin_init_option(void **context, prelude_option_t *opt, const char *name)
+static int intercept_plugin_init_option(void *context, prelude_option_t *opt, const char *name)
 {
         int ret;
         plugin_entry_t *pe;
         prelude_plugin_instance_t *pi;
-
-        if ( ! *context ) {
+        
+        if ( ! context ) {
                 log(LOG_ERR, "referenced instance not available.\n");
                 return -1;
         }
         
-        pi = *context;
+        pi = context;
         pe = pi->entry;
-                
+        
         ret = pe->init_instance(pi);
         if ( pi->already_subscribed )
                 return ret;
@@ -364,37 +306,6 @@ static int intercept_plugin_init_option(void **context, prelude_option_t *opt, c
 
         return ret;
 }
-
-
-
-
-static int setup_plugin_option_intercept(plugin_entry_t *pe, prelude_option_t *opt,
-                                         int (*intercept_set)(void **context, prelude_option_t *opt, const char *arg),
-                                         int (*intercept_get)(void **context, char *buf, size_t size))
-                                         
-{
-        plugin_option_intercept_t *new;
-
-        if ( ! prelude_option_get_set_callback(opt) )
-                return 0;
-        
-        new = malloc(sizeof(*new));
-        if ( ! new ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return -1;
-        }
-
-        new->entry = pe;
-        new->plugin_option_get_cb = prelude_option_get_get_callback(opt);
-        new->func.plugin_option_set_cb = prelude_option_get_set_callback(opt);
-        
-        prelude_option_set_private_data(opt, new);
-        prelude_option_set_set_callback(opt, intercept_set);
-        prelude_option_set_get_callback(opt, intercept_get);
-
-        return 0;
-}
-
 
 
 
@@ -452,7 +363,6 @@ static prelude_plugin_instance_t *copy_instance(prelude_plugin_instance_t *pi)
         
         return new;
 }
-
 
 
 
@@ -647,19 +557,27 @@ int prelude_plugin_subscribe(prelude_plugin_instance_t *pi)
 
 
 
-static int plugin_desactivate(void **context, prelude_option_t *opt, const char *arg)
+static int plugin_desactivate(void *context, prelude_option_t *opt, const char *arg)
 {
-        prelude_plugin_instance_t *pi = *context;
+        prelude_plugin_instance_t *pi = context;
         
         if ( ! pi ) {
                 log(LOG_ERR, "referenced instance not available.\n");
                 return -1;
         }
-        
-        pi->entry->plugin->destroy(pi);
-        prelude_plugin_unsubscribe(pi);
 
-        *context = NULL;
+        /*
+         * destroy plugin data.
+         */
+        pi->entry->plugin->destroy(pi);
+
+        /*
+         * unsubscribe the plugin, only if it is subscribed
+         */
+        if ( pi->already_subscribed )
+                prelude_plugin_unsubscribe(pi);
+        else
+                destroy_instance(pi);
         
         /*
          * so that the plugin init function is not called after unsubscribtion.
@@ -676,7 +594,6 @@ int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
         int ret = 0;
         plugin_entry_t *pe;
         prelude_option_t *new;
-        plugin_option_intercept_t *intercept;
         
         pe = search_plugin_entry(plugin);        
         if ( ! pe )
@@ -690,15 +607,10 @@ int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
         if ( ! new )
                 return -1;
         
-        /*
-         * We assume that the provided option was created with
-         * prelude_plugin_option_add() and thus contain an interceptor.
-         */
-        intercept = prelude_option_get_private_data(opt);
-        assert(intercept);
-        pe->create_instance = intercept->func.plugin_option_set_cb;
-        free(intercept);
+        pe->create_instance = prelude_option_get_set_callback(opt);
         
+
+        prelude_option_set_get_callback(opt, NULL);
         prelude_option_set_set_callback(opt, intercept_plugin_activation_option);
         prelude_option_set_private_data(opt, pe);
         
@@ -856,46 +768,6 @@ void prelude_plugin_instance_compute_time(prelude_plugin_instance_t *pi,
         pi->time -= (double) start->tv_sec + (double) (start->tv_usec * 1e-6); 
         pi->count++;
 }
-
-
-
-
-
-prelude_option_t *prelude_plugin_option_add(prelude_option_t *parent, int flags,
-                                            char shortopt, const char *longopt, const char *desc,
-                                            prelude_option_argument_t has_arg,
-                                            int (*set)(prelude_plugin_instance_t *pi, prelude_option_t *opt, const char *optarg),
-                                            int (*get)(prelude_plugin_instance_t *pi, char *buf, size_t size))
-{
-        int ret;
-        prelude_option_t *opt;
-        plugin_option_intercept_t *new;
-
-        new = malloc(sizeof(*new));
-        if ( ! new ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
-        
-        opt = prelude_option_add(parent, flags, shortopt, longopt, desc, has_arg, (void *)set, (void *)get);
-        if ( ! opt ) {
-                free(new);
-                return NULL;
-        }
-
-        new->func.plugin_option_set_cb = set;
-        prelude_option_set_private_data(opt, new);
-        
-        ret = setup_plugin_option_intercept(NULL, opt, intercept_plugin_option_set, intercept_plugin_option_get);
-        if ( ret < 0 ) {
-                free(new);
-                free(opt);
-                return NULL;
-        }
-        
-        return opt;
-}
-
 
 
 

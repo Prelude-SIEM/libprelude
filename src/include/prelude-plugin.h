@@ -34,7 +34,7 @@ typedef struct prelude_plugin_instance prelude_plugin_instance_t;
 
 
 #define PRELUDE_PLUGIN_OPTION_DECLARE_STRING_CB(prefix, type, name)	 		        \
-static int prefix ## _set_ ## name(prelude_plugin_instance_t *pi, prelude_option_t *opt, const char *arg)	\
+static int prefix ## _set_ ## name(void *pi, prelude_option_t *opt, const char *arg)	        \
 {                                                                                               \
         char *dup;                                                                              \
         type *ptr = prelude_plugin_instance_get_data(pi);                                       \
@@ -54,7 +54,7 @@ static int prefix ## _set_ ## name(prelude_plugin_instance_t *pi, prelude_option
 }                                                                                               \
                                                                                                 \
                                                                                                 \
-static int prefix ## _get_ ## name(prelude_plugin_instance_t *pi, char *buf, size_t size)       \
+static int prefix ## _get_ ## name(void *pi, prelude_option_t *opt, char *buf, size_t size)     \
 {                                                                                               \
         type *ptr = prelude_plugin_instance_get_data(pi);                                       \
         snprintf(buf, size, "%s", ptr->name);                                                   \
@@ -171,12 +171,6 @@ void prelude_plugin_instance_compute_time(prelude_plugin_instance_t *pi, struct 
 int prelude_plugin_instance_call_init_func(prelude_plugin_instance_t *pi);
 
 int prelude_plugin_instance_have_init_func(prelude_plugin_instance_t *pi);
-
-prelude_option_t *prelude_plugin_option_add(prelude_option_t *parent, int flags,
-                                            char shortopt, const char *longopt, const char *desc,
-                                            prelude_option_argument_t has_arg,
-                                            int (*set)(prelude_plugin_instance_t *pi, prelude_option_t *opt, const char *optarg),
-                                            int (*get)(prelude_plugin_instance_t *pi, char *buf, size_t size));
 
 
 /*

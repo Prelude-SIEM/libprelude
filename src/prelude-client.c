@@ -279,10 +279,10 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
 
 
 
-static int set_node_address_category(void **context, prelude_option_t *opt, const char *arg) 
+static int set_node_address_category(void *context, prelude_option_t *opt, const char *arg) 
 {
+        prelude_client_t *ptr = context;
         idmef_address_category_t category;
-        prelude_client_t *ptr = *context;
 
         category = idmef_address_category_to_numeric(arg);
         if ( category < 0 )
@@ -295,9 +295,9 @@ static int set_node_address_category(void **context, prelude_option_t *opt, cons
 
 
 
-static int set_node_address_vlan_num(void **context, prelude_option_t *opt, const char *arg) 
+static int set_node_address_vlan_num(void *context, prelude_option_t *opt, const char *arg) 
 {
-        prelude_client_t *ptr = *context;
+        prelude_client_t *ptr = context;
 
         idmef_address_set_vlan_num(ptr->address, atoi(arg));
 
@@ -306,9 +306,9 @@ static int set_node_address_vlan_num(void **context, prelude_option_t *opt, cons
 
 
 
-static int set_node_address_vlan_name(void **context, prelude_option_t *opt, const char *arg) 
+static int set_node_address_vlan_name(void *context, prelude_option_t *opt, const char *arg) 
 {
-        prelude_client_t *ptr = *context;
+        prelude_client_t *ptr = context;
 
         idmef_address_set_vlan_name(ptr->address, idmef_string_new_dup(arg));
 
@@ -317,9 +317,9 @@ static int set_node_address_vlan_name(void **context, prelude_option_t *opt, con
 
 
 
-static int set_node_address_address(void **context, prelude_option_t *opt, const char *arg) 
+static int set_node_address_address(void *context, prelude_option_t *opt, const char *arg) 
 {
-        prelude_client_t *ptr = *context;
+        prelude_client_t *ptr = context;
 
         idmef_address_set_address(ptr->address, idmef_string_new_dup(arg));
 
@@ -329,9 +329,9 @@ static int set_node_address_address(void **context, prelude_option_t *opt, const
 
 
 
-static int set_node_address_netmask(void **context, prelude_option_t *opt, const char *arg) 
+static int set_node_address_netmask(void *context, prelude_option_t *opt, const char *arg) 
 {
-        prelude_client_t *ptr = *context;
+        prelude_client_t *ptr = context;
 
         idmef_address_set_netmask(ptr->address, idmef_string_new_dup(arg));
 
@@ -341,10 +341,10 @@ static int set_node_address_netmask(void **context, prelude_option_t *opt, const
 
 
 
-static int set_node_address(void **context, prelude_option_t *opt, const char *arg) 
+static int set_node_address(void *context, prelude_option_t *opt, const char *arg) 
 {
         idmef_node_t *node;
-        prelude_client_t *ptr = *context;
+        prelude_client_t *ptr = context;
         
         node = idmef_analyzer_new_node(ptr->analyzer);
         if ( ! node )
@@ -360,11 +360,11 @@ static int set_node_address(void **context, prelude_option_t *opt, const char *a
 
 
 
-static int set_node_category(void **context, prelude_option_t *opt, const char *arg) 
+static int set_node_category(void *context, prelude_option_t *opt, const char *arg) 
 {
         idmef_node_t *node;
         idmef_node_category_t category;
-        prelude_client_t *ptr = *context;
+        prelude_client_t *ptr = context;
 
         category = idmef_node_category_to_numeric(arg);
         if ( category < 0 )
@@ -381,10 +381,10 @@ static int set_node_category(void **context, prelude_option_t *opt, const char *
 
 
 
-static int set_node_location(void **context, prelude_option_t *opt, const char *arg) 
+static int set_node_location(void *context, prelude_option_t *opt, const char *arg) 
 {
         idmef_node_t *node;
-        prelude_client_t *ptr = *context;
+        prelude_client_t *ptr = context;
 
         node = idmef_analyzer_new_node(ptr->analyzer);
         if ( ! node )
@@ -397,10 +397,10 @@ static int set_node_location(void **context, prelude_option_t *opt, const char *
 
 
 
-static int set_node_name(void **context, prelude_option_t *opt, const char *arg) 
+static int set_node_name(void *context, prelude_option_t *opt, const char *arg) 
 {
         idmef_node_t *node;
-        prelude_client_t *ptr = *context;
+        prelude_client_t *ptr = context;
 
         node = idmef_analyzer_new_node(ptr->analyzer);
         if ( ! node )
@@ -414,9 +414,9 @@ static int set_node_name(void **context, prelude_option_t *opt, const char *arg)
 
 
 
-static int set_configuration_file(void **context, prelude_option_t *opt, const char *arg) 
+static int set_configuration_file(void *context, prelude_option_t *opt, const char *arg) 
 {
-        prelude_client_t *ptr = *context;
+        prelude_client_t *ptr = context;
 
         ptr->config_filename = strdup(arg);
         if ( ! ptr->config_filename )
@@ -428,9 +428,9 @@ static int set_configuration_file(void **context, prelude_option_t *opt, const c
 
 
 
-static int set_name(void **context, prelude_option_t *opt, const char *arg)
+static int set_name(void *context, prelude_option_t *opt, const char *arg)
 {
-        prelude_client_t *ptr = *context;
+        prelude_client_t *ptr = context;
         
         if ( ptr->name )
                 free(ptr->name);
@@ -444,9 +444,9 @@ static int set_name(void **context, prelude_option_t *opt, const char *arg)
 
 
 
-static int set_manager_addr(void **context, prelude_option_t *opt, const char *arg)
+static int set_manager_addr(void *context, prelude_option_t *opt, const char *arg)
 {
-        prelude_client_t *ptr = *context;
+        prelude_client_t *ptr = context;
 
         ptr->manager_list = prelude_connection_mgr_new(ptr, arg);
 
@@ -455,9 +455,9 @@ static int set_manager_addr(void **context, prelude_option_t *opt, const char *a
 
 
 
-static int set_heartbeat_interval(void **context, prelude_option_t *opt, const char *arg)
+static int set_heartbeat_interval(void *context, prelude_option_t *opt, const char *arg)
 {
-        prelude_client_t *ptr = *context;
+        prelude_client_t *ptr = context;
         
         setup_heartbeat_timer(ptr, atoi(arg));
         timer_reset(&ptr->heartbeat_timer);
@@ -467,9 +467,9 @@ static int set_heartbeat_interval(void **context, prelude_option_t *opt, const c
 
 
 
-static int get_heartbeat_interval(void **context, char *buf, size_t size)
+static int get_heartbeat_interval(void *context, prelude_option_t *opt, char *buf, size_t size)
 {        
-        prelude_client_t *ptr = *context;
+        prelude_client_t *ptr = context;
         
         snprintf(buf, size, "%u", ptr->heartbeat_timer.expire / 60);
         
@@ -605,8 +605,7 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
 {
         int ret;
         char filename[256];
-        void *context = new;
-
+        
         new->name = strdup(sname);
         new->config_filename = config ? strdup(config) : NULL;
         
@@ -645,7 +644,7 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
         setup_heartbeat_timer(new, DEFAULT_HEARTBEAT_INTERVAL);
         timer_init(&new->heartbeat_timer);
         
-        ret = prelude_option_parse_arguments(&context, NULL, new->config_filename, argc, argv);
+        ret = prelude_option_parse_arguments(new, NULL, new->config_filename, argc, argv);
         if ( ret == prelude_option_end )
                 return -1;
         

@@ -30,6 +30,10 @@
 #define PRELUDE_OPTION_REPLY_TYPE_ERROR 0x08
 
 
+int prelude_option_push_request(prelude_msgbuf_t *msg, int type, const char *request);
+
+int prelude_option_new_request(prelude_client_t *client, prelude_msgbuf_t *msgbuf, uint32_t request_id, uint64_t target_id);
+
 int prelude_option_send_request(prelude_client_t *client, uint32_t request_id,
                                 uint64_t target_id, int type, const char *option, const char *value);
 
