@@ -88,9 +88,7 @@ struct prelude_client {
         
         int flags;
         int status;
-        
-        prelude_bool_t ignore_error;
-        
+                
         prelude_connection_capability_t capability;
         
         /*
@@ -121,8 +119,9 @@ struct prelude_client {
 
 
 
-prelude_option_t *prelude_generic_optlist = NULL;
-
+extern int _prelude_internal_argc;
+extern char *_prelude_internal_argv[1024];
+prelude_option_t *_prelude_generic_optlist = NULL;
 
 
 static int generate_md5sum(const char *filename, prelude_string_t *out)
@@ -583,18 +582,6 @@ static int get_node_name(void *context, prelude_option_t *opt, prelude_string_t 
 
 
 
-static int set_configuration_file(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err) 
-{
-        prelude_client_t *ptr = context;
-
-        ptr->config_filename = strdup(optarg);
-        if ( ! ptr->config_filename )
-                return -1;
-        
-        return 0;
-}
-
-
 
 static int get_analyzer_name(void *context, prelude_option_t *opt, prelude_string_t *out)
 {
@@ -639,7 +626,7 @@ static int set_manager_addr(void *context, prelude_option_t *opt, const char *op
         prelude_client_t *ptr = context;
         
         ret = prelude_connection_mgr_set_connection_string(ptr->manager_list, optarg);
-        return (ret == 0 || ptr->ignore_error) ? 0 : ret;
+        return (ret == 0) ? 0 : ret;
 }
 
 
@@ -664,14 +651,6 @@ static int get_heartbeat_interval(void *context, prelude_option_t *opt, prelude_
 
 
 
-static int set_ignore_error(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)
-{
-        prelude_client_t *client = context;
-        client->ignore_error = TRUE;
-        return 0;
-}
-
-
 
 static int set_profile(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)
 {
@@ -679,92 +658,6 @@ static int set_profile(void *context, prelude_option_t *opt, const char *optarg,
         return prelude_client_profile_set_name(client->profile, optarg);
 }
 
-
-
-static int setup_options(prelude_client_t *client)
-{
-        prelude_option_t *opt;
-        prelude_option_t *root_list;
-
-        if ( prelude_generic_optlist )
-                return 0;
-
-        root_list = prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG|
-                                       PRELUDE_OPTION_TYPE_WIDE, 0,
-                                       "prelude", "Prelude generic options",
-                                       PRELUDE_OPTION_ARGUMENT_NONE, NULL, NULL);
-
-        prelude_option_set_default_context(root_list, client);
-        
-        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG, 0, "profile",
-                           "Profile to use for this analyzer", PRELUDE_OPTION_ARGUMENT_REQUIRED,
-                           set_profile, NULL);
-        
-        client->config_file_opt =
-                prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CLI, 0, "prelude-config-file",
-                                   "Configuration file for this analyzer", PRELUDE_OPTION_ARGUMENT_REQUIRED,
-                                   set_configuration_file, NULL);
-        
-        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG
-                           |PRELUDE_OPTION_TYPE_WIDE, 0, "heartbeat-interval",
-                           "Number of seconds between two heartbeat",
-                           PRELUDE_OPTION_ARGUMENT_REQUIRED,
-                           set_heartbeat_interval, get_heartbeat_interval);
-        
-        if ( client->capability & PRELUDE_CONNECTION_CAPABILITY_CONNECT ) {
-                 prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG
-                                    |PRELUDE_OPTION_TYPE_WIDE, 0, "server-addr",
-                                    "Address where this sensor should report to (addr:port)",
-                                    PRELUDE_OPTION_ARGUMENT_REQUIRED, set_manager_addr, get_manager_addr);
-        }
-                
-        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE,
-                           0, "analyzer-name", "Name for this analyzer",
-                           PRELUDE_OPTION_ARGUMENT_REQUIRED, set_analyzer_name, get_analyzer_name);
-        
-        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-name",
-                           "Name of the equipment", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
-                           set_node_name, get_node_name);
-
-        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-location",
-                           "Location of the equipment", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
-                           set_node_location, get_node_location);
-        
-        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-category",
-                           NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_node_category, get_node_category);
-        
-        opt = prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE
-                                 |PRELUDE_OPTION_TYPE_CONTEXT, 0, "node-address",
-                                 "Network or hardware address of the equipment",
-                                 PRELUDE_OPTION_ARGUMENT_OPTIONAL, set_node_address, NULL);
-        prelude_option_set_destroy_callback(opt, destroy_node_address);
-        
-        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "address",
-                           "Address information", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
-                           set_node_address_address, get_node_address_address);
-
-        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "netmask",
-                           "Network mask for the address, if appropriate", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
-                           set_node_address_netmask, get_node_address_netmask);
-
-        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "category",
-                           "Type of address represented", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
-                           set_node_address_category, get_node_address_category);
-
-        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "vlan-name",
-                           "Name of the Virtual LAN to which the address belongs", 
-                           PRELUDE_OPTION_ARGUMENT_REQUIRED, set_node_address_vlan_name,
-                           get_node_address_vlan_name);
-
-        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "vlan-num",
-                           "Number of the Virtual LAN to which the address belongs", 
-                           PRELUDE_OPTION_ARGUMENT_REQUIRED, set_node_address_vlan_num,
-                           get_node_address_vlan_num);
-
-        prelude_generic_optlist = root_list;
-        
-        return 0;
-}
 
 
 
@@ -871,6 +764,85 @@ static int connection_mgr_create(prelude_client_t *client)
 
 
 
+int _prelude_client_register_options(void)
+{
+        prelude_option_t *opt;
+        prelude_option_t *root_list;
+
+        if ( _prelude_generic_optlist )
+                return 0;
+
+        root_list = prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG|
+                                       PRELUDE_OPTION_TYPE_WIDE, 0,
+                                       "prelude", "Prelude generic options",
+                                       PRELUDE_OPTION_ARGUMENT_NONE, NULL, NULL);
+        
+        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG, 0, "profile",
+                           "Profile to use for this analyzer", PRELUDE_OPTION_ARGUMENT_REQUIRED,
+                           set_profile, NULL);
+                
+        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG
+                           |PRELUDE_OPTION_TYPE_WIDE, 0, "heartbeat-interval",
+                           "Number of seconds between two heartbeat",
+                           PRELUDE_OPTION_ARGUMENT_REQUIRED,
+                           set_heartbeat_interval, get_heartbeat_interval);
+        
+        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG
+                           |PRELUDE_OPTION_TYPE_WIDE, 0, "server-addr",
+                           "Address where this sensor should report to (addr:port)",
+                           PRELUDE_OPTION_ARGUMENT_REQUIRED, set_manager_addr, get_manager_addr);
+                
+        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE,
+                           0, "analyzer-name", "Name for this analyzer",
+                           PRELUDE_OPTION_ARGUMENT_REQUIRED, set_analyzer_name, get_analyzer_name);
+        
+        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-name",
+                           "Name of the equipment", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
+                           set_node_name, get_node_name);
+
+        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-location",
+                           "Location of the equipment", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
+                           set_node_location, get_node_location);
+        
+        prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-category",
+                           NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_node_category, get_node_category);
+        
+        opt = prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE
+                                 |PRELUDE_OPTION_TYPE_CONTEXT, 0, "node-address",
+                                 "Network or hardware address of the equipment",
+                                 PRELUDE_OPTION_ARGUMENT_OPTIONAL, set_node_address, NULL);
+        prelude_option_set_destroy_callback(opt, destroy_node_address);
+        
+        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "address",
+                           "Address information", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
+                           set_node_address_address, get_node_address_address);
+
+        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "netmask",
+                           "Network mask for the address, if appropriate", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
+                           set_node_address_netmask, get_node_address_netmask);
+
+        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "category",
+                           "Type of address represented", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
+                           set_node_address_category, get_node_address_category);
+
+        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "vlan-name",
+                           "Name of the Virtual LAN to which the address belongs", 
+                           PRELUDE_OPTION_ARGUMENT_REQUIRED, set_node_address_vlan_name,
+                           get_node_address_vlan_name);
+
+        prelude_option_add(opt, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "vlan-num",
+                           "Number of the Virtual LAN to which the address belongs", 
+                           PRELUDE_OPTION_ARGUMENT_REQUIRED, set_node_address_vlan_num,
+                           get_node_address_vlan_num);
+
+        _prelude_generic_optlist = root_list;
+        
+        return 0;
+}
+
+
+
+
 /**
  * prelude_client_new:
  * @client: Pointer to a client object to initialize.
@@ -888,19 +860,17 @@ static int connection_mgr_create(prelude_client_t *client)
  */
 int prelude_client_new(prelude_client_t **client,
                        prelude_connection_capability_t capability,
-                       const char *profile, const char *config,
-                       int *argc, char **argv)
+                       const char *profile, const char *config)
 {
         int ret;
         prelude_client_t *new;
-        prelude_option_t *opt;
         prelude_string_t *err = NULL;
         prelude_option_warning_t old_warnings;
-        
+                
         new = calloc(1, sizeof(*new));
         if ( ! new )
                 return prelude_error_from_errno(errno);
-        
+                
         new->analyzer = idmef_analyzer_new();
         if ( ! new->analyzer ) {
                 _prelude_client_destroy(new);
@@ -911,7 +881,6 @@ int prelude_client_new(prelude_client_t **client,
         pthread_mutex_init(&new->msgbuf_lock, NULL);
         new->config_filename = config ? strdup(config) : NULL;
         
-        setup_options(new);
         set_analyzer_name(new, NULL, profile, NULL);
 
         ret = _prelude_client_profile_new(&new->profile);
@@ -923,17 +892,6 @@ int prelude_client_new(prelude_client_t **client,
         prelude_client_profile_set_name(new->profile, profile);
                 
         ret = prelude_ident_new(&new->unique_ident);
-        if ( ret < 0 ) {
-                _prelude_client_destroy(new);
-                return ret;
-        }
-
-        prelude_option_set_warnings(0, &old_warnings);
-        opt = prelude_option_add(prelude_generic_optlist, PRELUDE_OPTION_TYPE_CLI, 0,
-                                 "ignore-startup-error", NULL, PRELUDE_OPTION_ARGUMENT_NONE,
-                                 set_ignore_error, NULL);
-        
-        ret = prelude_option_parse_arguments(new, opt, NULL, argc, argv, &err);
         if ( ret < 0 ) {
                 _prelude_client_destroy(new);
                 return ret;
@@ -950,7 +908,10 @@ int prelude_client_new(prelude_client_t **client,
                 }
         }
         
-        ret = prelude_option_parse_arguments(new, prelude_generic_optlist, config, argc, argv, &err);        
+        prelude_option_set_warnings(0, &old_warnings);
+
+        ret = prelude_option_parse_arguments(new, _prelude_generic_optlist, &config,
+                                             &_prelude_internal_argc, _prelude_internal_argv, &err);        
         if ( ret < 0 ) {
                 _prelude_client_destroy(new);
                 return ret;
@@ -971,14 +932,8 @@ int prelude_client_new(prelude_client_t **client,
                 if ( ret < 0 )
                         return ret;
         }
-        
-        /*
-         * need to be done after option parsing, so that there is no error
-         * when prelude-getopt see standalone option.
-         */
-        prelude_option_destroy(opt);
-        
-        ret = fill_client_infos(new, argv ? argv[0] : NULL);
+                
+        ret = fill_client_infos(new, _prelude_internal_argv[0]);
         if ( ret < 0 ) {
                 _prelude_client_destroy(new);
                 return ret;
@@ -1013,10 +968,8 @@ int prelude_client_start(prelude_client_t *client)
         
         if ( client->manager_list ) {
                 ret = prelude_connection_mgr_init(client->manager_list);                
-                if ( ret < 0 ) {
-                        log(LOG_ERR, "Initiating connection to the manager has failed.\n");
+                if ( ret < 0 )
                         return ret;
-                }
         }
         
         if ( client->manager_list || client->heartbeat_cb ) {
@@ -1292,9 +1245,9 @@ prelude_client_profile_t *prelude_client_get_profile(prelude_client_t *client)
 
 
 
-prelude_bool_t prelude_client_is_setup_needed(prelude_client_t *client, prelude_error_t err)
+prelude_bool_t prelude_client_is_setup_needed(prelude_client_t *client, int error)
 {
-        prelude_error_code_t code = prelude_error_get_code(err);
+        prelude_error_code_t code = prelude_error_get_code(error);
         
         return ( code == PRELUDE_ERROR_BACKUP_DIRECTORY    ||
                  code == PRELUDE_ERROR_ANALYZERID_FILE     ||

@@ -38,6 +38,7 @@
 6	PRELUDE_ERROR_SOURCE_EXTRACT		prelude-extract
 7	PRELUDE_ERROR_SOURCE_CONNECTION		prelude-connection
 8	PRELUDE_ERROR_SOURCE_CONNECTION_MGR	prelude-connection-mgr
+9	PRELUDE_ERROR_SOURCE_CONFIG_ENGINE	prelude-config
 
 255	PRELUDE_ERROR_SOURCE_PRELUDEDB		libpreludedb
 # 8 to 255 are free to be used.

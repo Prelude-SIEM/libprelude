@@ -31,8 +31,73 @@
 
 
 
-int prelude_init(void)
+int _prelude_internal_argc = 0;
+char *_prelude_internal_argv[8];
+extern prelude_option_t *_prelude_generic_optlist;
+
+
+
+static void remove_argv(int *argc, char **argv, int removed)
 {
+        int i;
+        
+        for ( i = removed; (i + 1) < *argc; i++ )                
+                argv[i] = argv[i + 1];
+        
+        (*argc)--;
+}
+
+
+
+
+static void slice_arguments(int *argc, char **argv)
+{
+        int i;
+        char *ptr;
+        prelude_option_t *opt;
+        
+        _prelude_client_register_options();
+
+        if ( ! argc || ! argv )
+                return;
+        
+        _prelude_internal_argv[_prelude_internal_argc++] = argv[0];
+
+        for ( i = 0; i < *argc && _prelude_internal_argc + 1 < sizeof(_prelude_internal_argv) / sizeof(char *); i++ ) {
+                                
+                ptr = argv[i];
+                if ( *ptr != '-' )
+                        continue;
+                
+                while ( *ptr == '-' ) ptr++;
+                
+                opt = prelude_option_search(_prelude_generic_optlist, ptr, PRELUDE_OPTION_TYPE_CLI, TRUE);                
+                if ( ! opt )
+                        continue;
+                
+                _prelude_internal_argv[_prelude_internal_argc++] = argv[i];
+                remove_argv(argc, argv, i--);
+                
+                if ( (i + 1) == *argc )
+                        break;
+                
+                if ( prelude_option_get_has_arg(opt) == PRELUDE_OPTION_ARGUMENT_NONE )
+                        continue;
+                
+                if ( *argv[i + 1] == '-' )
+                        continue;
+                
+                _prelude_internal_argv[_prelude_internal_argc++] = argv[i + 1];
+                remove_argv(argc, argv, i + 1);
+        }
+}
+
+
+
+
+int prelude_init(int *argc, char **argv)
+{
+        slice_arguments(argc, argv);
         return 0;
 }
 

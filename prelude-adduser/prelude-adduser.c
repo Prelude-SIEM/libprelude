@@ -749,14 +749,14 @@ static const char *lifetime_to_str(char *out, size_t size, int lifetime)
 
 static int read_tls_setting(void)
 {
-        int line = 0;
         config_t *cfg;
         char buf[128];
         const char *ptr;
+        int line = 0, ret;
         
-        cfg = config_open(TLS_CONFIG);
-        if ( ! cfg ) {
-                fprintf(stderr, "couldn't open %s.\n", TLS_CONFIG);
+        ret = config_open(&cfg, TLS_CONFIG);
+        if ( ret < 0 ) {
+                prelude_perror(ret, "could not open %s", TLS_CONFIG);
                 return -1;
         }
 

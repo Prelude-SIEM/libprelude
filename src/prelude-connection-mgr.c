@@ -48,6 +48,8 @@
 #include "prelude-option.h"
 #include "prelude-option-wide.h"
 #include "prelude-failover.h"
+
+#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_CONNECTION_MGR
 #include "prelude-error.h"
 
 #define INITIAL_EXPIRATION_TIME 10
@@ -459,18 +461,16 @@ static void parse_address(char *addr, uint16_t *port)
 
 
 
-static cnx_t *new_connection(prelude_client_profile_t *cp, cnx_list_t *clist,
-                             prelude_connection_t *cnx, prelude_connection_mgr_flags_t flags) 
+static int new_connection(cnx_t **ncnx, prelude_client_profile_t *cp, cnx_list_t *clist,
+                          prelude_connection_t *cnx, prelude_connection_mgr_flags_t flags) 
 {
         cnx_t *new;
         int state, fd, ret;
         char dirname[256], buf[256];
         
         new = malloc(sizeof(*new));
-        if ( ! new ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
+        if ( ! new )
+                return prelude_error_from_errno(ret);
         
         new->parent = clist;
         new->timer_started = FALSE;
@@ -480,9 +480,18 @@ static cnx_t *new_connection(prelude_client_profile_t *cp, cnx_list_t *clist,
                 prelude_timer_set_expire(&new->timer, INITIAL_EXPIRATION_TIME);
                 prelude_timer_set_callback(&new->timer, connection_timer_expire);
         }
+
+        prelude_client_profile_get_backup_dirname(cp, buf, sizeof(buf));
+        snprintf(dirname, sizeof(dirname), "%s/%s:%u", buf,
+                 prelude_connection_get_daddr(cnx), prelude_connection_get_dport(cnx));
+        
+        ret = prelude_failover_new(&new->failover, dirname);
+        if ( ret < 0 ) {
+                free(new);
+                return ret;
+        }
         
         state = prelude_connection_get_state(cnx);
-        
         if ( ! (state & PRELUDE_CONNECTION_ESTABLISHED) ) {
                 clist->dead++;
                 init_cnx_timer(new);
@@ -494,31 +503,25 @@ static cnx_t *new_connection(prelude_client_profile_t *cp, cnx_list_t *clist,
         
         new->cnx = cnx;
         new->and = NULL;
-
-        prelude_client_profile_get_backup_dirname(cp, buf, sizeof(buf));
-        snprintf(dirname, sizeof(dirname), "%s/%s:%u", buf,
-                 prelude_connection_get_daddr(cnx), prelude_connection_get_dport(cnx));
-        
-        ret = prelude_failover_new(&new->failover, dirname);
-        if ( ret < 0 ) 
-                return NULL;
         
         if ( state & PRELUDE_CONNECTION_ESTABLISHED )
                 ret = failover_flush(new->failover, NULL, new);
         
         prelude_list_add(&new->list, &clist->parent->all_cnx);
 
-        return new;
+        *ncnx = new;
+        
+        return 0;
 }
 
 
 
 
-static cnx_t *new_connection_from_address(prelude_client_profile_t *cp, cnx_list_t *clist,
-                                          char *addr, prelude_connection_mgr_flags_t flags) 
+static int new_connection_from_address(cnx_t **new,
+                                       prelude_client_profile_t *cp, cnx_list_t *clist,
+                                       char *addr, prelude_connection_mgr_flags_t flags) 
 {
         int ret;
-        cnx_t *new;
         uint16_t port;
         prelude_connection_t *cnx;
         prelude_connection_mgr_event_t event;
@@ -529,7 +532,7 @@ static cnx_t *new_connection_from_address(prelude_client_profile_t *cp, cnx_list
         ret = prelude_connection_new(&cnx, addr, port);        
         if ( ret < 0 ) {
                 log(LOG_ERR, "%s: %s\n", prelude_strsource(ret), prelude_strerror(ret));
-                return NULL;
+                return ret;
         }
 
         event = PRELUDE_CONNECTION_MGR_EVENT_ALIVE;
@@ -542,16 +545,14 @@ static cnx_t *new_connection_from_address(prelude_client_profile_t *cp, cnx_list
                                prelude_connection_get_dport(cnx));
         }
         
-        new = new_connection(cp, clist, cnx, flags);
-        if ( ! new ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
+        ret = new_connection(new, cp, clist, cnx, flags);
+        if ( ! ret < 0 )
+                return ret;
 
         if ( mgr->event_handler && mgr->wanted_event & event )
                 mgr->event_handler(mgr, event, cnx);
         
-        return new;
+        return 0;
 }
 
 
@@ -560,19 +561,15 @@ static cnx_t *new_connection_from_address(prelude_client_profile_t *cp, cnx_list
 /*
  * Create a list (boolean AND) of connection.
  */
-static cnx_list_t *create_connection_list(prelude_connection_mgr_t *cmgr) 
+static int create_connection_list(cnx_list_t **new, prelude_connection_mgr_t *cmgr) 
 {
-        cnx_list_t *new;
+        *new = calloc(1, sizeof(**new));
+        if ( ! *new )
+                return prelude_error_from_errno(errno);
 
-        new = calloc(1, sizeof(*new));
-        if ( ! new ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
-
-        new->parent = cmgr;
+        (*new)->parent = cmgr;
         
-        return new;
+        return 0;
 }
 
 
@@ -623,11 +620,12 @@ static int parse_config_line(prelude_connection_mgr_t *cmgr)
         cnx_t **cnx;
         cnx_list_t *clist = NULL;
         char *ptr, *cfgline = cmgr->connection_string;
-        
-        clist = cmgr->or_list = create_connection_list(cmgr);
-        if ( ! clist )
-                return -1;
 
+        ret = create_connection_list(&cmgr->or_list, cmgr);
+        if ( ret < 0 )
+                return ret;
+        
+        clist = cmgr->or_list;
         cnx = &clist->and;
         
         while ( 1 ) {                
@@ -653,9 +651,9 @@ static int parse_config_line(prelude_connection_mgr_t *cmgr)
                         /*
                          * we met the || operator, prepare a new list. 
                          */
-                        clist->or = create_connection_list(cmgr);
-                        if ( ! clist )
-                                return -1;
+                        ret = create_connection_list(&clist->or, cmgr);
+                        if ( ret < 0 )
+                                return ret;
 
                         clist = clist->or;
                         cnx = &clist->and;
@@ -666,9 +664,9 @@ static int parse_config_line(prelude_connection_mgr_t *cmgr)
                 if ( ret == 0 )
                         continue;
                 
-                *cnx = new_connection_from_address(cmgr->client_profile, clist, ptr, cmgr->flags);
-                if ( ! *cnx )
-                        return -1;
+                ret = new_connection_from_address(cnx, cmgr->client_profile, clist, ptr, cmgr->flags);
+                if ( ret < 0 )
+                        return ret;
 
                 clist->total++;
                 cnx = &(*cnx)->and;
@@ -760,12 +758,12 @@ int prelude_connection_mgr_init(prelude_connection_mgr_t *new)
                 ret = prelude_failover_new(&new->failover, dirname);
                 if ( ret < 0 ) {
                         free(new);
-                        return -1;
+                        return ret;
                 }
         }
         
         if ( ! new->connection_string_changed || ! new->connection_string )
-                return -1;
+                return prelude_error(PRELUDE_ERROR_CONNECTION_STRING);
         
         new->connection_string_changed = FALSE;
         connection_list_destroy(new->or_list);
@@ -775,7 +773,7 @@ int prelude_connection_mgr_init(prelude_connection_mgr_t *new)
         
         ret = parse_config_line(new);
         if ( ret < 0 || ! new->or_list )
-                return -1;
+                return ret;
         
         for ( clist = new->or_list; clist != NULL; clist = clist->or ) {
                 if ( clist->dead )
@@ -858,19 +856,20 @@ void prelude_connection_mgr_destroy(prelude_connection_mgr_t *mgr)
 
 int prelude_connection_mgr_add_connection(prelude_connection_mgr_t *mgr, prelude_connection_t *cnx)
 {
+        int ret;
         cnx_t **c;
 
         if ( ! mgr->or_list ) {
-                mgr->or_list = create_connection_list(mgr);
-                if ( ! mgr->or_list ) 
-                        return -1;
+                ret = create_connection_list(&mgr->or_list, mgr);
+                if ( ret < 0 ) 
+                        return ret;
         }
         
         for ( c = &mgr->or_list->and; (*c); c = &(*c)->and );
 
-        *c = new_connection(mgr->client_profile, mgr->or_list, cnx, mgr->flags);
-        if ( ! (*c) )
-                return -1;
+        ret = new_connection(c, mgr->client_profile, mgr->or_list, cnx, mgr->flags);
+        if ( ret < 0 )
+                return ret;
 
         mgr->or_list->total++;
         

@@ -33,6 +33,7 @@
 #include "prelude-io.h"
 #include "prelude-msg.h"
 #include "prelude-msgbuf.h"
+#include "prelude-error.h"
 
 
 struct prelude_msgbuf {

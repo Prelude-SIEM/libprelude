@@ -35,7 +35,7 @@ char *config_get(config_t *cfg, const char *section, const char *entry, int *lin
 
 int config_set(config_t *cfg, const char *section, const char *entry, const char *val);
 
-config_t *config_open(const char *filename);
+int config_open(config_t **ret, const char *filename);
 
 int config_close(config_t *cfg);
 

@@ -121,8 +121,8 @@ static int parse_request(prelude_client_t *client, int rtype, char *request, pre
         prelude_option_t *last = NULL;
         char *str, *value, *prev = NULL, *ptr = NULL;
         
-        cfg = config_open(prelude_client_get_config_filename(client));
-        if ( ! cfg ) {
+        ret = config_open(&cfg, prelude_client_get_config_filename(client));
+        if ( ret < 0 ) {
                 log(LOG_ERR, "error opening %s.\n", prelude_client_get_config_filename(client));
                 return -1;
         }

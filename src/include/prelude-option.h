@@ -72,7 +72,7 @@ int prelude_option_wide_send_msg(void *context, prelude_msgbuf_t *msgbuf);
 void prelude_option_destroy(prelude_option_t *option);
 
 int prelude_option_parse_arguments(void *context, prelude_option_t *option,
-                                   const char *filename, int *argc, char **argv, prelude_string_t **err);
+                                   const char **filename, int *argc, char **argv, prelude_string_t **err);
 
 
 prelude_option_t *prelude_option_add(prelude_option_t *parent, prelude_option_type_t type,
