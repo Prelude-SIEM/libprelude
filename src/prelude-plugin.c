@@ -45,7 +45,7 @@
 #include "config-engine.h"
 
 
-#define PRELUDE_PLUGIN_DEFAULT_INSTANCE_NAME "default"
+#define DEFAULT_INSTANCE_NAME "default"
 
 
 typedef struct {
