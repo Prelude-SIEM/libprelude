@@ -264,6 +264,14 @@ class Admin(Client):
 
         return retval
 
+    def destroy(self, analyzerid, instance):
+        msg = self._request(analyzerid, _prelude.PRELUDE_MSG_OPTION_DESTROY, instance)
+        if not msg:
+            return
+        retval = _prelude.prelude_option_recv_set(msg)
+
+        return retval
+
 
 
 class IDMEFTime(object):
