@@ -362,6 +362,54 @@ thread
 @verify: 
 @Returns: 
 
+<!-- ##### MACRO extract_int ##### -->
+<para>
+
+</para>
+
+@type: 
+@buf: 
+@blen: 
+@dst: 
+
+<!-- ##### FUNCTION extract_str ##### -->
+<para>
+
+</para>
+
+@buf: 
+@blen: 
+@Returns: 
+
+<!-- ##### MACRO extract_string ##### -->
+<para>
+
+</para>
+
+@buf: 
+@blen: 
+@dst: 
+
+<!-- ##### FUNCTION extract_uint64 ##### -->
+<para>
+
+</para>
+
+@dst: 
+@buf: 
+@blen: 
+@Returns: 
+
+<!-- ##### FUNCTION extract_uint8 ##### -->
+<para>
+
+</para>
+
+@dst: 
+@buf: 
+@blen: 
+@Returns: 
+
 <!-- ##### FUNCTION getopt_long ##### -->
 <para>
 

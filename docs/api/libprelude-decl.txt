@@ -822,8 +822,6 @@ typedef struct {
         short int expire;
         time_t start_time;
 
-        pthread_mutex_t mutex;
-        
         void *data;
         void (*function)(void *data);
 } prelude_timer_t;
@@ -2123,52 +2121,26 @@ prelude_msg_t *msg
 prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>extract_ipv4_addr</NAME>
-<RETURNS>void  </RETURNS>
-struct in_addr *out, const struct in_addr *addr
+<NAME>ntohs</NAME>
+<RETURNS>return  </RETURNS>
+tmp
 </FUNCTION>
 <FUNCTION>
-<NAME>extract_uint64</NAME>
-<RETURNS>int  </RETURNS>
-uint64_t *dst, const void *buf, uint32_t blen
-</FUNCTION>
-<FUNCTION>
-<NAME>extract_uint32</NAME>
-<RETURNS>int  </RETURNS>
-uint32_t *dst, const void *buf, uint32_t blen
-</FUNCTION>
-<FUNCTION>
-<NAME>extract_uint16</NAME>
-<RETURNS>int  </RETURNS>
-uint16_t *dst, const void *buf, uint32_t blen
-</FUNCTION>
-<FUNCTION>
-<NAME>extract_uint8</NAME>
-<RETURNS>int  </RETURNS>
-uint8_t *dst, const void *buf, uint32_t blen
-</FUNCTION>
-<FUNCTION>
-<NAME>extract_str</NAME>
-<RETURNS>const char  *</RETURNS>
-void *buf, uint32_t blen
+<NAME>ntohl</NAME>
+<RETURNS>return  </RETURNS>
+tmp
 </FUNCTION>
 <MACRO>
-<NAME>extract_int</NAME>
-#define extract_int(type, buf, blen, dst) do {        \
-        int ret;                                      \
-        ret = extract_ ## type (&dst, buf, blen);     \
-        if ( ret < 0 )                                \
-                return -1;                            \
-} while (0)
+<NAME>extract_uint16</NAME>
+#define extract_uint16(x) ntohs((*(const uint16_t *) (x)))
 </MACRO>
 <MACRO>
-<NAME>extract_string</NAME>
-#define extract_string(buf, blen, dst)                                    \
-        dst = extract_str(buf, blen);                                     \
-        if ( ! dst ) {                                                    \
-               log(LOG_ERR, "Datatype error, buffer is not a string.\n"); \
-               return -1;                                                 \
-        }
+<NAME>extract_uint32</NAME>
+#define extract_uint32(x) ntohl((*(const uint32_t *) (x)))
+</MACRO>
+<MACRO>
+<NAME>extract_ipv4_addr</NAME>
+#define extract_ipv4_addr(x) *((const struct in_addr *) (x))
 </MACRO>
 <TYPEDEF>
 <NAME>bm_string_t</NAME>

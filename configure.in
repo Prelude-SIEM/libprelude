@@ -308,7 +308,9 @@ if test x$enable_profiling = xno; then
 	CFLAGS="$CFLAGS -O2 -fomit-frame-pointer"
 fi
 
-CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations \
+dnl We use no-strict-prototype because of SSL warning.
+
+CFLAGS="$CFLAGS -Wall -Wno-strict-prototypes -Wmissing-prototypes -Wmissing-declarations \
 -Wbad-function-cast -Wcast-qual -Wcast-align -Wnested-externs -Wunused"
 
 
