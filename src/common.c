@@ -21,6 +21,8 @@
 *
 *****/
 
+#include "config.h"
+
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -380,6 +382,24 @@ time_t prelude_timegm(struct tm *tm)
 
         return retval;
 }
+
+
+
+void *prelude_sockaddr_get_inaddr(struct sockaddr *sa) 
+{
+        void *ret = NULL;
+        
+        if ( sa->sa_family == AF_INET )
+                ret = &((struct sockaddr_in *) sa)->sin_addr;
+
+#ifdef HAVE_IPV6
+        else if ( sa->sa_family == AF_INET6 )
+                ret = &((struct sockaddr_in6 *) sa)->sin6_addr;
+#endif
+        
+        return ret;
+}
+
 
 
 

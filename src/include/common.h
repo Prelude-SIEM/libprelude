@@ -34,6 +34,8 @@ void *prelude_realloc(void *ptr, size_t size);
 
 int prelude_resolve_addr(const char *hostname, struct in_addr *addr);
 
+void *prelude_sockaddr_get_inaddr(struct sockaddr *sa);
+
 int prelude_open_persistant_tmpfile(const char *filename, int flags, mode_t mode);
 
 int prelude_read_multiline(FILE *fd, int *line, char *buf, size_t size);
