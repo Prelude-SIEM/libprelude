@@ -28,12 +28,22 @@
 
 typedef struct 
 {
-        struct list_head int_list;   /* List members for internal list (inside library). */
-        struct list_head ext_list;   /* List members for external list (outside library). */
+        /*
+         * List members for internal list (inside library).
+         */
+        struct list_head int_list;
+
+        /*
+         * List members for external list (outside library).
+         */
+        struct list_head ext_list;
 
         int already_used;
-        
-        plugin_generic_t *plugin;    /* pointer to the plugin */ 
+
+        /*
+         * pointer to the plugin
+         */ 
+        plugin_generic_t *plugin;
 
         const char *infos;
         
