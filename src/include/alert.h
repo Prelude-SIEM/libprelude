@@ -82,8 +82,9 @@ typedef struct {
 
 #define alert_time_end(alert) (alert)->time_end
 
-#define alert_data(alert) (alert)->data
+#define alert_sensor_data(alert) (alert)->sensor_data
 
+#define alert_sensor_data_id(alert) (alert)->sensor_data_id
 
 #endif
 
