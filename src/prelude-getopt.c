@@ -98,6 +98,10 @@ static prelude_optlist_t *root_optlist = NULL;
 
 
 
+static int get_from_config(struct list_head *cb_list,
+                           prelude_optlist_t *optlist, config_t *cfg, const char *section, int line);
+
+
 static void option_err(int flag, const char *fmt, ...) 
 {
         if ( warnings_flags & flag || flag == 1 ) {
@@ -438,14 +442,14 @@ static int section_get_all(struct list_head *cb_list,
 static int process_option_cfg_hook(struct list_head *cb_list, prelude_option_t *opt,
                                    config_t *cfg, const char *section, int line) 
 {
-        int ret;
-        const char *str = NULL, *entry = NULL;
+
+        if ( opt->called_from_cli && ! list_empty(&opt->optlist.optlist) )
+                /*
+                 * a parent section specified on CLI completly override CFG.
+                 */
+                return prelude_option_success;
         
-        /*
-         * Configuration hook shouldn't be called if the option was
-         * specified on the command line. Command line has higher priority.
-         */
-        if ( opt->called_from_cli || ! (opt->flags & CFG_HOOK) ) 
+        if ( ! (opt->flags & CFG_HOOK) )                
                 return prelude_option_success;
 
         if ( list_empty(&opt->optlist.optlist) ) 
@@ -465,7 +469,6 @@ static int process_option_cfg_hook(struct list_head *cb_list, prelude_option_t *
 static int get_from_config(struct list_head *cb_list,
                            prelude_optlist_t *optlist, config_t *cfg, const char *section, int line) 
 {
-        int ret;
         struct list_head *tmp;
         prelude_option_t *optitem;
 

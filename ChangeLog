@@ -1,5 +1,9 @@
 2002-06-10  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/prelude-getopt.c: fix warning.
+	(process_option_cfg_hook): parent option called from
+	command line completly override config file option.
+
 	* autogen.sh: 
 	Override libtool configure.in by a configure.in that'll
 	require autoconf2.50, and re-generate configure script.
