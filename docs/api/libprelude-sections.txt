@@ -1065,9 +1065,7 @@ prelude_log_v
 
 <SECTION>
 <FILE>prelude-msg</FILE>
-PRELUDE_MSG_PRIORITY_HIGH
-PRELUDE_MSG_PRIORITY_MID
-PRELUDE_MSG_PRIORITY_LOW
+prelude_msg_priority_t
 prelude_msg_read
 prelude_msg_forward
 prelude_msg_get

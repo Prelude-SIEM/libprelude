@@ -36,6 +36,8 @@ prelude-connection
 
 </para>
 
+@conn: 
+<!-- # Unused Parameters # -->
 @cnx: 
 
 
@@ -143,6 +145,7 @@ prelude-connection
 </para>
 
 @cnx: 
+@Returns: 
 
 
 <!-- ##### FUNCTION prelude_connection_set_fd_ref ##### -->

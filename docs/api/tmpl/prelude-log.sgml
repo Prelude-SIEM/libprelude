@@ -37,6 +37,7 @@ prelude-log
 @PRELUDE_LOG_INFO: 
 @PRELUDE_LOG_WARN: 
 @PRELUDE_LOG_ERR: 
+@PRELUDE_LOG_DEBUG: 
 
 <!-- ##### ENUM prelude_log_flags_t ##### -->
 <para>
@@ -45,6 +46,7 @@ prelude-log
 
 @PRELUDE_LOG_FLAGS_QUIET: 
 @PRELUDE_LOG_FLAGS_SYSLOG: 
+@PRELUDE_LOG_FLAGS_DEBUG: 
 
 <!-- ##### FUNCTION prelude_log_get_flags ##### -->
 <para>
