@@ -1,7 +1,0 @@
-# Automatically added by dh_installdocs
-if [ "$1" = "configure" ]; then
-	if [ -d /usr/doc -a ! -e /usr/doc/libprelude1 -a -d /usr/share/doc/libprelude1 ]; then
-		ln -sf ../share/doc/libprelude1 /usr/doc/libprelude1
-	fi
-fi
-# End automatically added section

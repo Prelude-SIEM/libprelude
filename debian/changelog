@@ -1,9 +1,0 @@
-libprelude (0.4.1-1) unstable; urgency=low
-
-  * Initial Release.
-
- -- Banux <banux@mail.ru>  Fri,  5 Oct 2001 11:53:02 +0200
-
-Local variables:
-mode: debian-changelog
-End:
