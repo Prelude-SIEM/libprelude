@@ -323,23 +323,26 @@ static int parse_argument(prelude_optlist_t *optlist, const char *filename,
 {
         int ret;
         const char *optarg;
-        const char *arg, *old;
         prelude_option_t *opt;
-        
+        const char *arg, *old;
+        int saved_index = 0, tmp;
+
         while ( optlist->argv_index < argc ) {
                 
                 old = arg = argv[optlist->argv_index++];                
-                if ( *arg != '-' ) {
+                            
+                if ( *arg != '-' ) {                        
                         /*
                          * If arg == "", this is an argument we processed, and so nullified.
                          */
                         if ( arg != "" )
-                                option_err(OPT_INVAL_ARG, "Invalid argument : \"%s\".\n", arg);
+                                option_err(OPT_INVAL, "Invalid argument : \"%s\".\n", arg);
+                        
                         continue;
                 }
 
                 while ( *arg == '-' ) arg++;
-
+                
                 opt = search_cli_option(optlist, arg);
                 if ( ! opt ) {
                         optlist->argv_index--;
@@ -353,23 +356,46 @@ static int parse_argument(prelude_optlist_t *optlist, const char *filename,
                  * Try to match the rest of our argument against them.
                  */
                 if ( ! list_empty(&opt->optlist.optlist) ) {
-                        opt->optlist.argv_index = optlist->argv_index;
+                        saved_index = optlist->argv_index;
+
+                        if ( opt->has_arg == required_argument ||
+                             (opt->has_arg == optionnal_argument && *argv[optlist->argv_index + 1] == '-') ) 
+                                opt->optlist.argv_index = optlist->argv_index + 1;
+                        else
+                                opt->optlist.argv_index = optlist->argv_index;
+                        
                         ret = parse_argument(&opt->optlist, filename, argc, argv, depth + 1);
                         if ( ret == prelude_option_end || ret == prelude_option_error )
                                 return ret;
+    
                         optlist->argv_index = opt->optlist.argv_index;
+                }
+
+                /*
+                 * check option *after* sub-option, so the caller can do some kind
+                 * of dependancy between option. We use the saved argument index, because
+                 * suboption parsing could have incremented the argument index.
+                 */
+                tmp = 0;
+                if ( saved_index ) {
+                        tmp = optlist->argv_index;
+                        optlist->argv_index = saved_index;
                 }
                 
                 ret = check_option(optlist, opt, &optarg, argc, argv);
                 if ( ret < 0 ) 
                         return -1;
-                        
+
+                if ( tmp ) 
+                        optlist->argv_index = tmp;
+                
                 ret = lookup_variable_if_needed(&optarg);
                 if ( ret < 0 )
                         return -1;
 
                 if ( opt->set ) {                        
                         opt->cb_called = 1;
+
                         ret = opt->set(optarg);
                         if ( ret == prelude_option_end || ret == prelude_option_error )
                                 return ret;
@@ -728,4 +754,5 @@ void prelude_option_set_warnings(int flags, int *old_flags)
         if ( flags != 0 ) 
                 warnings_flags = flags;
 }
+
 
