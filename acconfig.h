@@ -2,3 +2,4 @@
 #undef HAVE_CRYPT
 #undef HAVE_SSL
 #undef ENABLE_PROFILING
+#undef NEED_ALIGNED_ACCESS

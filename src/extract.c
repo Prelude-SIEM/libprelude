@@ -27,29 +27,29 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 
-#include "prelude-log.h"
+#include "config.h"
 #include "extract.h"
+#include "prelude-log.h"
 
 
+#ifdef NEED_ALIGNED_ACCESS
 
-static int is_aligned(void *ptr, size_t size) 
+inline static int is_aligned(void *ptr, size_t size) 
 {
         unsigned long p = (unsigned long) ptr;
         
         return ( (p % size) == 0) ? 0 : -1;        
 }
 
+#endif
 
 
 int extract_uint64(uint64_t *dst, void *buf, uint32_t blen) 
 {
+#ifdef NEED_ALIGNED_ACCESS
+
         uint64_t tmp;
         
-        if ( blen != sizeof(uint64_t) ) {
-                log(LOG_ERR, "Datatype error, buffer is not uint64: couldn't convert.\n");
-                return -1;
-        }
-
         /*
          * check alignment
          */
@@ -57,7 +57,13 @@ int extract_uint64(uint64_t *dst, void *buf, uint32_t blen)
                 memmove(&tmp, buf, sizeof(tmp));
                 buf = &tmp;
         }
-
+#endif
+        
+        if ( blen != sizeof(uint64_t) ) {
+                log(LOG_ERR, "Datatype error, buffer is not uint64: couldn't convert.\n");
+                return -1;
+        }
+                
         ((uint32_t *) dst)[0] = ntohl(((uint32_t *) buf)[1]);
         ((uint32_t *) dst)[1] = ntohl(((uint32_t *) buf)[0]);
      
@@ -69,19 +75,22 @@ int extract_uint64(uint64_t *dst, void *buf, uint32_t blen)
 
 int extract_uint32(uint32_t *dst, void *buf, uint32_t blen) 
 {
+#ifdef NEED_ALIGNED_ACCESS
+
         uint32_t tmp;
         
-        if ( blen != sizeof(uint32_t) ) {
-                log(LOG_ERR, "Datatype error, buffer is not uint32: couldn't convert.\n");
-                return -1;
-        }
-
         /*
          * check alignment
          */
         if ( is_aligned(buf, sizeof(*dst)) < 0 ) {
                 memmove(&tmp, buf, sizeof(tmp));
                 buf = &tmp;
+        }
+#endif
+        
+        if ( blen != sizeof(uint32_t) ) {
+                log(LOG_ERR, "Datatype error, buffer is not uint32: couldn't convert.\n");
+                return -1;
         }
         
         *dst = ntohl(*(uint32_t *) buf);
@@ -94,12 +103,9 @@ int extract_uint32(uint32_t *dst, void *buf, uint32_t blen)
 
 int extract_uint16(uint16_t *dst, void *buf, uint32_t blen) 
 {
+#ifdef NEED_ALIGNED_ACCESS
+ 
         uint16_t tmp;
-        
-        if ( blen != sizeof(uint16_t) ) {
-                log(LOG_ERR, "Datatype error, buffer is not uint16: couldn't convert.\n");
-                return -1;
-        }
 
         /*
          * check alignment
@@ -108,7 +114,14 @@ int extract_uint16(uint16_t *dst, void *buf, uint32_t blen)
                 memmove(&tmp, buf, sizeof(tmp));
                 buf = &tmp;
         }
+#endif
+
         
+        if ( blen != sizeof(uint16_t) ) {
+                log(LOG_ERR, "Datatype error, buffer is not uint16: couldn't convert.\n");
+                return -1;
+        }
+
         *dst = ntohs(*(uint16_t *) buf);
 
         return 0;
