@@ -31,9 +31,10 @@ typedef struct prelude_msg prelude_msg_t;
 
 
 typedef enum {
-        PRELUDE_MSG_PRIORITY_HIGH = 0,
-        PRELUDE_MSG_PRIORITY_MID  = 1,
-        PRELUDE_MSG_PRIORITY_LOW  = 2
+        PRELUDE_MSG_PRIORITY_NONE = 0,
+        PRELUDE_MSG_PRIORITY_LOW  = 1,
+        PRELUDE_MSG_PRIORITY_MID  = 2,
+        PRELUDE_MSG_PRIORITY_HIGH = 3,
 } prelude_msg_priority_t;
 
 

@@ -218,10 +218,15 @@ inline static int slice_message_header(prelude_msg_t *msg, unsigned char *hdrbuf
                  */
                 msg->hdr.version = hdrbuf[0];
                 msg->hdr.tag = hdrbuf[1];
-                msg->hdr.priority = hdrbuf[2];
                 msg->hdr.tv_sec = prelude_extract_uint32(hdrbuf + 8);
                 msg->hdr.tv_usec = prelude_extract_uint32(hdrbuf + 12);
         }
+
+        /*
+         * message priority might be set in any fragment.
+         */
+        if ( msg->hdr.priority == PRELUDE_MSG_PRIORITY_NONE )
+                msg->hdr.priority = hdrbuf[2];
         
         msg->hdr.is_fragment = hdrbuf[3];
         tmp = prelude_extract_uint32(hdrbuf + 4);
@@ -370,13 +375,15 @@ int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
                 *msg = malloc(sizeof(prelude_msg_t));
                 if ( ! *msg )
                         return prelude_error_from_errno(errno);
-
+                
                 (*msg)->hdr.datalen = 0;
-                (*msg)->read_index = PRELUDE_MSG_HDR_SIZE;
-                (*msg)->header_index = 0;
-                (*msg)->write_index = 0;
-                (*msg)->fd_write_index = 0;
+                (*msg)->hdr.priority = PRELUDE_MSG_PRIORITY_NONE;
+
                 (*msg)->payload = NULL;
+                (*msg)->write_index = 0;
+                (*msg)->header_index = 0;
+                (*msg)->fd_write_index = 0;
+                (*msg)->read_index = PRELUDE_MSG_HDR_SIZE;
         }
 
         /*
