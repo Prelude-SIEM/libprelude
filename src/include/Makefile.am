@@ -10,7 +10,6 @@ include_HEADERS = common.h			\
 		  idmef-criterion-value.h	\
 		  idmef-data.h			\
 		  idmef-message-id.h		\
-		  idmef-message-id-format.h	\
 		  idmef-message-read.h		\
 		  idmef-message-print.h		\
 		  idmef-message-write.h		\
