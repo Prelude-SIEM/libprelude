@@ -54,7 +54,7 @@ idmef_criterion_t *idmef_criterion_new(idmef_object_t *object,
 void idmef_criterion_destroy(idmef_criterion_t *criterion);
 idmef_criterion_t *idmef_criterion_clone(idmef_criterion_t *criterion);
 void idmef_criterion_print(const idmef_criterion_t *criterion);
-int idmef_criterion_to_string(const idmef_criterion_t *criterion, char *buffer, size_t size);
+int idmef_criterion_to_string(const idmef_criterion_t *criterion, prelude_string_t *out);
 idmef_object_t *idmef_criterion_get_object(idmef_criterion_t *criterion);
 idmef_criterion_value_t *idmef_criterion_get_value(idmef_criterion_t *criterion);
 idmef_value_relation_t idmef_criterion_get_relation(idmef_criterion_t *criterion);
@@ -64,7 +64,7 @@ idmef_criteria_t *idmef_criteria_new(void);
 void idmef_criteria_destroy(idmef_criteria_t *criteria);
 idmef_criteria_t *idmef_criteria_clone(idmef_criteria_t *criteria);
 void idmef_criteria_print(idmef_criteria_t *criteria);
-int idmef_criteria_to_string(idmef_criteria_t *criteria, char *buffer, size_t size);
+int idmef_criteria_to_string(idmef_criteria_t *criteria, prelude_string_t *out);
 int idmef_criteria_is_criterion(idmef_criteria_t *criteria);
 idmef_criterion_t *idmef_criteria_get_criterion(idmef_criteria_t *criteria);
 void idmef_criteria_set_criterion(idmef_criteria_t *criteria, idmef_criterion_t *criterion);

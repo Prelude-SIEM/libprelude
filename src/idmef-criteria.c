@@ -257,23 +257,19 @@ void idmef_criterion_print(const idmef_criterion_t *criterion)
 
 
 
-int idmef_criterion_to_string(const idmef_criterion_t *criterion, char *buffer, size_t size)
+int idmef_criterion_to_string(const idmef_criterion_t *criterion, prelude_string_t *out)
 {
-	int offset = 0;
         const char *operator;
 
         operator = idmef_value_relation_to_string(criterion->relation);
         assert(operator);
 
-        if ( ! criterion->value ) {
-                MY_SNPRINTF(buffer, size, offset, "%s %s", operator, idmef_object_get_name(criterion->object));
-                return offset;
-        }
-        
-        MY_SNPRINTF(buffer, size, offset, "%s %s ", idmef_object_get_name(criterion->object), operator);        
-        MY_CONCAT(idmef_criterion_value_to_string, criterion->value, buffer, size, offset);
-        
-        return offset;
+        if ( ! criterion->value )
+                return prelude_string_sprintf(out, "%s %s", operator, idmef_object_get_name(criterion->object));
+
+        prelude_string_sprintf(out, "%s %s ", idmef_object_get_name(criterion->object), operator);
+
+        return idmef_criterion_value_to_string(criterion->value, out);
 }
 
 
@@ -434,30 +430,28 @@ void idmef_criteria_print(idmef_criteria_t *criteria)
 
 
 
-int idmef_criteria_to_string(idmef_criteria_t *criteria, char *buffer, size_t size)
+int idmef_criteria_to_string(idmef_criteria_t *criteria, prelude_string_t *out)
 {
-	int offset = 0;
-
 	if ( ! criteria )
 		return -1;
 
 	if ( criteria->or )
-		MY_SNPRINTF(buffer, size, offset, "((");
-        
-        MY_CONCAT(idmef_criterion_to_string, criteria->criterion, buffer, size, offset);
+                prelude_string_sprintf(out, "((");
 
+        idmef_criterion_to_string(criteria->criterion, out);
+        
         if ( criteria->and ) {
-                MY_SNPRINTF(buffer, size, offset, " && ");
-		MY_CONCAT(idmef_criteria_to_string, criteria->and, buffer, size, offset);
+                prelude_string_sprintf(out, " && ");
+		idmef_criteria_to_string(criteria->and, out);
         }
         
         if ( criteria->or ) {
-		MY_SNPRINTF(buffer, size, offset, ") || (");
-		MY_CONCAT(idmef_criteria_to_string, criteria->or, buffer, size, offset);
-		MY_SNPRINTF(buffer, size, offset, "))");
+                prelude_string_sprintf(out, ") || (");
+		idmef_criteria_to_string(criteria->or, out);
+                prelude_string_sprintf(out, "))");
         }
-
-	return offset;
+        
+	return 0;
 }
 
 
