@@ -93,7 +93,7 @@ static	int to_string_data(idmef_data_t *data, char *buffer, size_t size)
 {
 	int offset = 0;
 
-	MY_SNPRINTF(buffer, size, offset, "%s", idmef_data_get_data(data));
+	MY_SNPRINTF(buffer, size, offset, "%s", (const char *) idmef_data_get_data(data));
 
 	return offset;
 }
