@@ -56,9 +56,9 @@ struct idmef_criteria {
 
 /**
  * idmef_criterion_operator_to_string:
- * @operator: #idmef_criterion_operator_t type.
+ * @op: #idmef_criterion_operator_t type.
  *
- * Transform @operator to string.
+ * Transform @op to string.
  *
  * Returns: A pointer to an operator string or NULL.
  */
@@ -95,16 +95,16 @@ const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t op)
  * @criterion: Address where to store the created #idmef_criterion_t object.
  * @path: Pointer to a #idmef_path_t object.
  * @value: Pointer to a #idmef_criterion_value_t object.
- * @operator: #idmef_criterion_operator_t to use for matching this criterion.
+ * @op: #idmef_criterion_operator_t to use for matching this criterion.
  *
  * Create a new #idmef_criterion_t object and store it in @criterion.
  * Matching this criterion will result in comparing the value of the object
- * pointed to by @path against the provided @value, using @operator.
+ * pointed to by @path against the provided @value, using @op.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
 int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
-                        idmef_criterion_value_t *value, idmef_criterion_operator_t operator)
+                        idmef_criterion_value_t *value, idmef_criterion_operator_t op)
 {
         if ( ! value && operator != IDMEF_CRITERION_OPERATOR_IS_NULL && operator != IDMEF_CRITERION_OPERATOR_IS_NOT_NULL )
                 return -1;

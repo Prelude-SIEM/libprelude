@@ -312,10 +312,10 @@ typedef enum {
         IDMEF_ADDITIONAL_DATA_TYPE_INTEGER = 4,
         IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP = 5,
         IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST = 6,
- IDMEF_ADDITIONAL_DATA_TYPE_REAL = 7,
+        IDMEF_ADDITIONAL_DATA_TYPE_REAL = 7,
         IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN = 8,
- IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING = 9,
- IDMEF_ADDITIONAL_DATA_TYPE_XML = 10,
+        IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING = 9,
+        IDMEF_ADDITIONAL_DATA_TYPE_XML = 10,
 } idmef_additional_data_type_t;
 </ENUM>
 <FUNCTION>
@@ -2795,7 +2795,7 @@ idmef_analyzer_t *ptr
 <FUNCTION>
 <NAME>idmef_analyzer_set_class</NAME>
 <RETURNS>void </RETURNS>
-idmef_analyzer_t *ptr, prelude_string_t *class
+idmef_analyzer_t *ptr, prelude_string_t *class_str
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_new_class</NAME>
@@ -4518,7 +4518,7 @@ prelude_option_t *opt
 <FUNCTION>
 <NAME>prelude_option_set_warnings</NAME>
 <RETURNS>void </RETURNS>
-prelude_option_warning_t new, prelude_option_warning_t *old_warnings
+prelude_option_warning_t new_warnings, prelude_option_warning_t *old_warnings
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_get_shortname</NAME>
@@ -4869,14 +4869,6 @@ prelude_connection_permission_t perm, prelude_string_t *out
 <RETURNS>int </RETURNS>
 prelude_connection_permission_t *out, const char *buf
 </FUNCTION>
-<MACRO>
-<NAME>idmef_type_string</NAME>
-#define idmef_type_string 0
-</MACRO>
-<MACRO>
-<NAME>prelude_type_string</NAME>
-#define prelude_type_string 0
-</MACRO>
 <STRUCT>
 <NAME>prelude_string</NAME>
 struct prelude_string {
@@ -6587,12 +6579,12 @@ typedef struct idmef_criterion idmef_criterion_t;
 <FUNCTION>
 <NAME>idmef_criterion_operator_to_string</NAME>
 <RETURNS>const char *</RETURNS>
-idmef_criterion_operator_t operator
+idmef_criterion_operator_t op
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_new</NAME>
 <RETURNS>int </RETURNS>
-idmef_criterion_t **criterion, idmef_path_t *path,idmef_criterion_value_t *value, idmef_criterion_operator_t operator
+idmef_criterion_t **criterion, idmef_path_t *path,idmef_criterion_value_t *value, idmef_criterion_operator_t op
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_destroy</NAME>
@@ -6704,10 +6696,6 @@ idmef_criteria_t *criteria
 <RETURNS>int </RETURNS>
 idmef_criteria_t **criteria, const char *str
 </FUNCTION>
-<MACRO>
-<NAME>idmef_type_data</NAME>
-#define idmef_type_data 2
-</MACRO>
 <ENUM>
 <NAME>idmef_data_type_t</NAME>
 typedef enum {
@@ -7036,12 +7024,12 @@ idmef_criterion_value_t **cv, const char *regex
 <FUNCTION>
 <NAME>idmef_criterion_value_new_value</NAME>
 <RETURNS>int </RETURNS>
-idmef_criterion_value_t **cv, idmef_value_t *value,idmef_criterion_operator_t operator
+idmef_criterion_value_t **cv, idmef_value_t *value,idmef_criterion_operator_t op
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_new_from_string</NAME>
 <RETURNS>int </RETURNS>
-idmef_criterion_value_t **cv, idmef_path_t *path,const char *value, idmef_criterion_operator_t operator
+idmef_criterion_value_t **cv, idmef_path_t *path,const char *value, idmef_criterion_operator_t op
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_clone</NAME>
@@ -7066,7 +7054,7 @@ idmef_criterion_value_t *value, prelude_string_t *out
 <FUNCTION>
 <NAME>idmef_criterion_value_match</NAME>
 <RETURNS>int </RETURNS>
-idmef_criterion_value_t *cv, idmef_value_t *value, idmef_criterion_operator_t operator
+idmef_criterion_value_t *cv, idmef_value_t *value, idmef_criterion_operator_t op
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_get_value</NAME>
@@ -7824,6 +7812,86 @@ uint32_t, buf, 0) << 24 | byte(uint32_t, buf, 1) << 16 |byte(uint32_t, buf, 2) <
 <RETURNS>return  </RETURNS>
 uint64_t, buf, 0) << 56 | byte(uint64_t, buf, 1) << 48 | byte(uint64_t, buf, 2) << 40 |byte(uint64_t, buf, 3) << 32 | byte(uint64_t, buf, 4) << 24 | byte(uint64_t, buf, 5) << 16 |byte(uint64_t, buf, 6) <<  8 | byte(uint64_t, buf, 7
 </FUNCTION>
+<FUNCTION>
+<NAME>prelude_align_uint32</NAME>
+<RETURNS>return </RETURNS>
+buf
+</FUNCTION>
+<MACRO>
+<NAME>prelude_align_uint16</NAME>
+#define prelude_align_uint16(x) (*(const uint16_t *) (x))
+</MACRO>
+<MACRO>
+<NAME>prelude_align_int32</NAME>
+#define prelude_align_int32(x) (*(const int32_t *) (x))
+</MACRO>
+<MACRO>
+<NAME>prelude_align_uint32</NAME>
+#define prelude_align_uint32(x) (*(const uint32_t *) (x))
+</MACRO>
+<MACRO>
+<NAME>prelude_align_uint64</NAME>
+#define prelude_align_uint64(x) (*(const uint64_t *) (x))
+</MACRO>
+<MACRO>
+<NAME>prelude_align_float</NAME>
+#define prelude_align_float(x) (*(const float *) (x))
+</MACRO>
+<FUNCTION>
+<NAME>ntohs</NAME>
+<RETURNS>return </RETURNS>
+prelude_align_uint16(buf)
+</FUNCTION>
+<FUNCTION>
+<NAME>ntohl</NAME>
+<RETURNS>return </RETURNS>
+prelude_align_int32(buf)
+</FUNCTION>
+<FUNCTION>
+<NAME>ntohl</NAME>
+<RETURNS>return </RETURNS>
+prelude_align_uint32(buf)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_align_uint64</NAME>
+<RETURNS>return </RETURNS>
+buf
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return </RETURNS>
+PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT8
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return </RETURNS>
+PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT16
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return </RETURNS>
+PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT32
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return </RETURNS>
+PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT32
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return </RETURNS>
+PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT64
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return </RETURNS>
+PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_FLOAT
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return </RETURNS>
+PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_CHAR
+</FUNCTION>
 <STRUCT>
 <NAME>prelude_timer_t</NAME>
 typedef struct {
@@ -8087,7 +8155,7 @@ idmef_value_t *val
 <FUNCTION>
 <NAME>idmef_value_list_add</NAME>
 <RETURNS>int </RETURNS>
-idmef_value_t *list, idmef_value_t *new
+idmef_value_t *list, idmef_value_t *item
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_is_list</NAME>
@@ -8167,12 +8235,12 @@ idmef_value_t *val, void *res
 <FUNCTION>
 <NAME>idmef_value_match</NAME>
 <RETURNS>int </RETURNS>
-idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_operator_t operator
+idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_operator_t op
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_check_operator</NAME>
 <RETURNS>int </RETURNS>
-idmef_value_t *value, idmef_criterion_operator_t operator
+idmef_value_t *value, idmef_criterion_operator_t op
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_destroy</NAME>

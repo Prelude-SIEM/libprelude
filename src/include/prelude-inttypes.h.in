@@ -24,6 +24,9 @@
 #ifndef _LIBPRELUDE_INTTYPES_H
 #define _LIBPRELUDE_INTTYPES_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 @__PRELUDE_HAVE_STDINT_H@
 @__PRELUDE_HAVE_INTTYPES_H@
@@ -218,6 +221,10 @@ typedef enum {
   typedef unsigned long long uint64_t;
 
  #endif
+#endif
+
+#ifdef __cplusplus
+ }
 #endif
 
 #endif /* _LIBPRELUDE_INTTYPES_H */

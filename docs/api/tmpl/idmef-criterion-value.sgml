@@ -55,8 +55,10 @@ idmef-criterion-value
 
 @cv: 
 @value: 
-@operator: 
+@op: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@operator: 
 
 
 <!-- ##### FUNCTION idmef_criterion_value_new_from_string ##### -->
@@ -67,8 +69,10 @@ idmef-criterion-value
 @cv: 
 @path: 
 @value: 
-@operator: 
+@op: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@operator: 
 
 
 <!-- ##### FUNCTION idmef_criterion_value_clone ##### -->
@@ -116,8 +120,10 @@ idmef-criterion-value
 
 @cv: 
 @value: 
-@operator: 
+@op: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@operator: 
 
 
 <!-- ##### FUNCTION idmef_criterion_value_get_value ##### -->

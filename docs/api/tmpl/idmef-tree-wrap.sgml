@@ -4634,6 +4634,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 </para>
 
 @ptr: 
+@class_str: 
+<!-- # Unused Parameters # -->
 @class: 
 
 

@@ -946,8 +946,6 @@ prelude_connection_permission_new_from_string
 
 <SECTION>
 <FILE>prelude-string</FILE>
-idmef_type_string
-prelude_type_string
 prelude_string
 prelude_string_t
 prelude_string_new
@@ -1383,7 +1381,6 @@ idmef_criteria_new_from_string
 
 <SECTION>
 <FILE>idmef-data</FILE>
-idmef_type_data
 idmef_data_type_t
 data
 idmef_data_new
@@ -1621,6 +1618,14 @@ idmef_time_to_ntpstamp
 <SECTION>
 <FILE>prelude-extract</FILE>
 byte
+prelude_align_uint32
+prelude_align_uint16
+prelude_align_int32
+prelude_align_uint64
+prelude_align_float
+ntohs
+ntohl
+prelude_error_make
 </SECTION>
 
 <SECTION>

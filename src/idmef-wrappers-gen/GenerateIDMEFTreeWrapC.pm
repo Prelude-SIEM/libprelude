@@ -666,11 +666,11 @@ $field->{typename} ${ptr}idmef_$struct->{short_typename}_get_${name}($struct->{t
 /**
  * idmef_$struct->{short_typename}_set_$field->{name}:
  * \@ptr: pointer to a #$struct->{typename} object.
- * \@$field->{name}: pointer to a #$field->{typename} object.
+ * \@$field_name: pointer to a #$field->{typename} object.
  *
- * Set \@$field->{name} object as a children of \@ptr.
- * if \@ptr already contain an \@$field->{name} object, then it is destroyed,
- * and updated to point to the provided \@$field->{name} object.
+ * Set \@$field_name object as a children of \@ptr.
+ * if \@ptr already contain an \@$field_name object, then it is destroyed,
+ * and updated to point to the provided \@$field_name object.
  */
 ");
 
