@@ -94,6 +94,8 @@ void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg);
 
 void prelude_client_set_heartbeat_cb(prelude_client_t *client, void (*cb)(prelude_client_t *client, idmef_message_t *hb));
 
+void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg);
+
 void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status_t status);
 
 int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t flags);

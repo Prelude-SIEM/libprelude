@@ -32,6 +32,7 @@
 #include <sys/utsname.h>
 #include <fcntl.h>
 #include <assert.h>
+#include <pthread.h>
 
 #include <gcrypt.h>
 #include <gnutls/gnutls.h>
@@ -126,8 +127,11 @@ struct prelude_client {
         gnutls_certificate_credentials credentials;
         prelude_connection_mgr_t *manager_list;
         prelude_timer_t heartbeat_timer;
+
         
         prelude_msgbuf_t *msgbuf;
+        pthread_mutex_t msgbuf_lock;
+        
         prelude_ident_t *unique_ident;
 
         prelude_option_t *config_file_opt;
@@ -255,9 +259,8 @@ static void heartbeat_expire_cb(void *data)
                 goto out;
         }
 
-        idmef_message_write(message, client->msgbuf);
-        prelude_msgbuf_mark_end(client->msgbuf);
-
+        prelude_client_send_idmef(client, message);
+        
   out:
         idmef_message_destroy(message);
         timer_reset(&client->heartbeat_timer);
@@ -723,7 +726,8 @@ prelude_client_t *prelude_client_new(prelude_client_capability_t capability)
         new->uid = getuid();
         new->gid = getgid();
         new->capability = capability;
-
+        pthread_mutex_init(&new->msgbuf_lock, NULL);
+        
         setup_options(new);
         
         return new;
@@ -803,12 +807,6 @@ int prelude_client_init(prelude_client_t *client, const char *sname, const char 
                 prelude_client_installation_error(client);
                 return -1;
         }
-
-        client->credentials = tls_auth_init(client);
-        if ( ! client->credentials && ! client->ignore_error ) {
-                prelude_client_installation_error(client);
-                return -1;
-        }
         
         prelude_client_get_backup_filename(client, filename, sizeof(filename));
         ret = access(filename, W_OK);
@@ -826,6 +824,13 @@ int prelude_client_init(prelude_client_t *client, const char *sname, const char 
                 return -1;
 
         if ( client->capability & CAPABILITY_SEND ) {
+
+                client->credentials = tls_auth_init(client);
+                if ( ! client->credentials && ! client->ignore_error ) {
+                        prelude_client_installation_error(client);
+                        return -1;
+                }
+                
                 ret = prelude_connection_mgr_init(client->manager_list);
                 if ( ret < 0 ) {
                         log(LOG_ERR, "Initiating connection to the manager has failed.\n");
@@ -926,6 +931,33 @@ void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
                 prelude_connection_mgr_broadcast_async(client->manager_list, msg);
         else 
                 prelude_connection_mgr_broadcast(client->manager_list, msg);
+}
+
+
+
+/**
+ * prelude_client_send_idmef:
+ * @client: Pointer to a #prelude_client_t object.
+ * @msg: pointer to an IDMEF message to be sent to @client peers.
+ *
+ * Send @msg to the peers @client is communicating with.
+ *
+ * The message will be sent asynchronously if @PRELUDE_CLIENT_FLAGS_ASYNC_SEND
+ * was set using prelude_client_set_flags() in which case the caller should
+ * not call prelude_msg_destroy() on @msg.
+ */
+void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg)
+{
+        /*
+         * we need to hold a lock since asynchronous heartbeat
+         * could write the message buffer at the same time we do.
+         */
+        pthread_mutex_lock(&client->msgbuf_lock);
+        
+        idmef_message_write(msg, client->msgbuf);
+        prelude_msgbuf_mark_end(client->msgbuf);
+
+        pthread_mutex_unlock(&client->msgbuf_lock);
 }
 
 
