@@ -12,11 +12,17 @@ static int config_quiet = 0;
 
 static void syslog_log(int priority, const char *file,
                        const char *function, int line, const char *fmt, va_list *ap) 
-{        
+{
+        char buf[256];
+
+        vsnprintf(buf, sizeof(buf), fmt, *ap);
+        
         if ( priority == LOG_ERR ) 
                 syslog(priority, "%s:%s:%d : (errno=%s) : ", file, function, line, strerror(errno));
-        syslog(priority, fmt, va_arg(*ap, char *));
+
+        syslog(priority, buf);
 }
+
 
 
 
@@ -30,8 +36,8 @@ static void standard_log(int priority, const char *file,
                 fprintf(out, "%s:%s:%d : (errno=%s) : ", file, function, line, strerror(errno));
         } else
                 out = stdout;
-        
-        fprintf(out, fmt, va_arg(*ap, char *));
+
+        vfprintf(out, fmt, *ap);
 }
 
 
