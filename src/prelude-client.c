@@ -199,8 +199,9 @@ static void heartbeat_expire_cb(void *data)
         add_hb_data(heartbeat, idmef_string_new_constant("Analyzer status"),
                     idmef_string_new_ref(client->initial_hb ? "starting" : "running"));
 
-        add_hb_data(heartbeat, idmef_string_new_constant("Analyzer md5sum"),
-                    idmef_string_new_ref(client->md5sum));
+        if ( client->md5sum )
+                add_hb_data(heartbeat, idmef_string_new_constant("Analyzer md5sum"),
+                            idmef_string_new_ref(client->md5sum));
 
         add_hb_data(heartbeat, idmef_string_new_constant("Analyzer heartbeat interval"),
                     idmef_string_new_ref(buf));
