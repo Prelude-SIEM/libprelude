@@ -1,7 +1,7 @@
 ACLOCAL_AMFLAGS = -I m4 -I libmissing/m4
 SUBDIRS = libltdl libmissing m4 src prelude-adduser bindings docs
 
-EXTRA_DIST = client.conf global.conf tls.conf
+EXTRA_DIST = client.conf global.conf idmef-client.conf tls.conf
 
 bin_SCRIPTS = $(top_builddir)/libprelude-config
 
