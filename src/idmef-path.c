@@ -223,16 +223,18 @@ static int idmef_path_get_nth_internal(idmef_value_t **value, idmef_path_t *path
                                        unsigned int depth, prelude_list_t *list,
                                        idmef_class_id_t parent_class, int which)
 {
-	prelude_list_t *tmp;
 	unsigned int cnt = 0;
+	prelude_list_t *tmp, *last = NULL;
         
-	prelude_list_for_each(list, tmp) {
+	prelude_list_for_each(list, tmp) {                
 		if ( cnt++ == which )
 			return idmef_path_get_internal(value, path, depth, tmp, parent_class);
-	}
 
-        if ( which == -1 )
-                return idmef_path_get_internal(value, path, depth, tmp, parent_class);
+                last = tmp;
+        }
+
+        if ( which == -1 && last )
+                return idmef_path_get_internal(value, path, depth, last, parent_class);
 
 	return 0;
 }
