@@ -429,7 +429,7 @@ static int set_node_address(void *context, prelude_option_t *opt, const char *ar
         idmef_node_t *node;
         idmef_address_t *addr;
         prelude_client_t *ptr = context;
-        
+                
         node = idmef_analyzer_new_node(ptr->analyzer);
         if ( ! node )
                 return -1;
@@ -680,7 +680,7 @@ static int setup_options(prelude_client_t *client)
 
         if ( prelude_generic_optlist )
                 return 0;
-        
+
         root_list = prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG|
                                        PRELUDE_OPTION_TYPE_WIDE, 0,
                                        "prelude", "Prelude generic options",
@@ -952,23 +952,23 @@ int prelude_client_new(prelude_client_t **client,
         
         ret = _prelude_client_profile_init(new->profile);
         if ( ret < 0 ) {
-                _prelude_client_destroy(new);
+                *client = new;
                 return ret;
         }
-        
+
+        if ( new->capability & PRELUDE_CONNECTION_CAPABILITY_CONNECT ) {
+                gnutls_certificate_credentials credentials;
+                
+                ret = prelude_client_profile_get_credentials(new->profile, &credentials);
+                if ( ret < 0 )
+                        return ret;
+        }
         
         /*
          * need to be done after option parsing, so that there is no error
          * when prelude-getopt see standalone option.
          */
         prelude_option_destroy(opt);
-        prelude_client_profile_get_backup_dirname(new->profile, filename, sizeof(filename));
-
-        ret = access(filename, W_OK);
-        if ( ret < 0 && ! new->ignore_error ) {
-                _prelude_client_destroy(new);
-                return prelude_error(PRELUDE_ERROR_BACKUP_DIRECTORY);
-        }
         
         ret = fill_client_infos(new, argv ? argv[0] : NULL);
         if ( ret < 0 ) {
@@ -1183,30 +1183,7 @@ void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status
                 prelude_timer_unlock_critical_region();
         }
 
-        prelude_client_profile_destroy(client->profile);
-        
-        if ( client->md5sum )
-                free(client->md5sum);
-        
-        if ( client->msgbuf )
-                prelude_msgbuf_destroy(client->msgbuf);
-        
-        if ( client->profile )
-                free(client->profile);
-
-        if ( client->analyzer )
-                idmef_analyzer_destroy(client->analyzer);
-        
-        if ( client->config_filename )
-                free(client->config_filename);
-
-        if ( client->manager_list )
-                prelude_connection_mgr_destroy(client->manager_list);
-
-        if ( client->unique_ident )
-                prelude_ident_destroy(client->unique_ident);
-        
-        free(client);
+        _prelude_client_destroy(client);
 }
 
 
@@ -1239,8 +1216,10 @@ int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t fl
                 prelude_async_set_flags(PRELUDE_ASYNC_TIMER);       
         }
         
-        else if ( flags & PRELUDE_CLIENT_FLAGS_ASYNC_SEND )
+        if ( flags & PRELUDE_CLIENT_FLAGS_ASYNC_SEND ) {
                 ret = prelude_async_init();
+                prelude_msgbuf_set_flags(client->msgbuf, PRELUDE_MSGBUF_FLAGS_ASYNC);
+        }
 
         return ret;
 }
