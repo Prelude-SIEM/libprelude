@@ -23,7 +23,8 @@ libprelude_la_SOURCES = 		\
 	prelude-io.c			\
 	prelude-message.c		\
 	prelude-async.c			\
-	sensor.c
+	sensor.c			\
+	common.c
 
 
 libprelude_la_LIBADD = ../libmissing/libmissing.a @PTHREAD_LIBS@

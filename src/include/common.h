@@ -21,48 +21,15 @@
 *
 *****/
 
-#include <stdarg.h>
-#include <errno.h>
-#include <string.h>
-#include <syslog.h>
-#include <unistd.h>
+#include "syslog.h"
 
 
+void prelude_log_use_syslog(void);
 
-#define do_init(func, name) do {                         \
-        log(LOG_INFO, "- %s\n", name);                   \
-        if ( (func) < 0 )                                \
-               exit(1);                                  \
-} while(0);
+void prelude_log(int priority, const char *file, const char *function, int line, const char *comment, ...);
 
 
-#define do_init_nofail(func, name) do {                  \
-        log(LOG_INFO, "- %s\n", name);                   \
-        (func);                                          \
-} while(0);
-
-
-
-extern int config_quiet;
-
-
-#define log(priority, args...) do {                                                                    \
-        if ( config_quiet ) {                                                                          \
-                if ( priority == LOG_ERR )                                                              \
-                        syslog(priority, "%s:%s:%d : (errno=%m) : ", __FILE__, __FUNCTION__, __LINE__);\
-                syslog(priority, args);                                                                \
-        } else {                                                                                       \
-                FILE *out;                                                                             \
-                                                                                                       \
-                if ( priority == LOG_ERR ) {                                                           \
-                        out = stderr;                                                                  \
-                        fprintf(out, "%s:%s:%d : (errno=%m) : ", __FILE__, __FUNCTION__, __LINE__);    \
-                } else                                                                                 \
-                        out = stdout;                                                                  \
-                                                                                                       \
-                fprintf(out, args);                                                                    \
-        }                                                                                              \
-} while(0)
-
+#define log(priority, args...) \
+        prelude_log(priority, __FILE__, __FUNCTION__, __LINE__, args)
 
 

@@ -54,21 +54,28 @@ static prelude_client_mgr_t *manager_list = NULL;
 
 
 
-static void print_help(const char *optarg) 
+static int print_help(const char *optarg) 
 {
         launch = 0;
-        fprintf(stderr, "\nSensor options\n");
-        prelude_option_print(opts);
+
+        fprintf(stderr, "\nGeneric sensor options :\n");
+        prelude_option_print(opts, CLI_HOOK);
+        printf("\n\n");
+        
+        return prelude_option_end;
 }
 
 
 
 
-static void setup_manager_addr(const char *optarg) 
-{        
+static int setup_manager_addr(const char *optarg) 
+{
         manager_list = prelude_client_mgr_new("manager", strdup(optarg));
+        if ( ! manager_list ) 
+                return prelude_option_error;
+        
+        return prelude_option_success;
 }
-
 
 
 
@@ -80,17 +87,22 @@ static int parse_argument(const char *filename, int argc, char **argv)
         if ( ! opts )
                 return -1;
 
-        prelude_option_add(opts, 'a', "manager-addr",
+        prelude_option_add(opts, CLI_HOOK|CFG_HOOK, 'a', "manager-addr",
                            "Address where manager is listening", required_argument, setup_manager_addr);
-        prelude_option_add(opts, 'h', "help",
+
+        prelude_option_add(opts, CLI_HOOK|CFG_HOOK, 'h', "help",
                            "Print this help", no_argument, print_help);
         
         ret = prelude_option_parse_arguments(opts, filename, argc, argv);
-        if ( ret < 0 )
-                return -1;
 
         prelude_option_destroy(opts);
 
+        if ( ret < 0 )
+                return -1;
+
+        if ( ! launch )
+                return 0;
+        
         if ( ! manager_list ) {
                 log(LOG_INFO,
                     "No Manager were configured. You need to setup a Manager for this Sensor\n"
@@ -141,6 +153,9 @@ void prelude_sensor_send_alert(prelude_msg_t *msg)
 {
         prelude_client_mgr_broadcast_async(manager_list, msg);
 }
+
+
+
 
 
 

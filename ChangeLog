@@ -1,3 +1,28 @@
+2001-12-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-getopt.c : Lot of work. Hierarchy of option
+	should now work. Callback have a control over the argument parsing
+	using their return value.
+
+	A flag is now passed when adding an option, to tell if it is 
+	handled throught the command line interface or the configuration
+	file or both.
+
+2001-12-04  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-getopt.c (lookup_variable_if_needed): 
+	Take the address of the optarg pointer as argument.
+	Return 0 on success, -1 on error.
+
+	* src/common.c: 
+	* src/include/common.h: Move the log macro code to the prelude_log
+	function. The log macro still exist, and will pass the necessary
+	parameter to prelude_log().
+
+	This avoid the logging code to be inlined in the calling function, 
+	which was bad because it was making the functions grew at the risk of
+	not fitting the CPU cache anymore.
+
 2001-11-27  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-getopt.c (prelude_option_add): use list_add_tail
