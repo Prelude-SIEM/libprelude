@@ -14,7 +14,6 @@ AC_DEFUN([gl_INET_NTOP],
 
 # Prerequisites of lib/inet_ntop.h and lib/inet_ntop.c.
 AC_DEFUN([gl_PREREQ_INET_NTOP], [
-  AC_REQUIRE([gl_C_RESTRICT])
   AC_REQUIRE([gl_SOCKET_FAMILIES])
   AC_REQUIRE([AC_C_INLINE])
 ])
