@@ -502,7 +502,8 @@ static int do_connect(prelude_connection_t *cnx)
         int ret;
         
         if ( cnx->sa->sa_family == AF_UNIX ) {
-                log(LOG_INFO, "- Connecting to UNIX prelude Manager server.\n");
+                log(LOG_INFO, "- Connecting to %s (UNIX) prelude Manager server.\n",
+                    ((struct sockaddr_un *) cnx->sa)->sun_path);
 		ret = start_unix_connection(cnx);
         } else {
                 log(LOG_INFO, "- Connecting to %s port %d prelude Manager server.\n",
@@ -524,7 +525,6 @@ static void close_connection_fd(prelude_connection_t *cnx)
                 return;
         
         prelude_io_close(cnx->fd);
-        prelude_io_destroy(cnx->fd);
 }
 
 
@@ -596,6 +596,8 @@ void prelude_connection_destroy(prelude_connection_t *cnx)
 	free(cnx->sa);
         close_connection_fd(cnx);
 
+        prelude_io_destroy(cnx->fd);
+        
         if ( cnx->saddr )
                 free(cnx->saddr);
         
@@ -617,10 +619,17 @@ prelude_connection_t *prelude_connection_new(prelude_client_t *client, const cha
         if ( ! new )
                 return NULL;
         
+        new->fd = prelude_io_new();
+        if ( ! new->fd ) {
+                free(new);
+                return NULL;
+        }
+
         if ( strcmp(addr, "unix") != 0 ) {
                 ret = resolve_addr(new, addr, port);
                 if ( ret < 0 ) {
                         log(LOG_ERR, "couldn't resolve %s.\n", addr);
+                        prelude_io_destroy(new->fd);
                         free(new);
                         return NULL;
                 }
@@ -660,16 +669,10 @@ int prelude_connection_connect(prelude_connection_t *cnx)
         prelude_msg_t *msg;
         
         cnx->state &= ~PRELUDE_CONNECTION_ESTABLISHED;
-        
-        cnx->fd = prelude_io_new();
-        if ( ! cnx->fd ) 
-                return -1;
-        
+                
         ret = do_connect(cnx);
-        if ( ret < 0 ) {
-                prelude_io_destroy(cnx->fd);
+        if ( ret < 0 ) 
                 return -1;
-        }
         
         msg = prelude_msg_new(1, sizeof(uint8_t), PRELUDE_MSG_CLIENT_CAPABILITY, 0);
         if ( ! msg )
@@ -696,7 +699,6 @@ int prelude_connection_connect(prelude_connection_t *cnx)
         
  err:
         prelude_io_close(cnx->fd);
-        prelude_io_destroy(cnx->fd);
         
         return ret;
 }
