@@ -1,0 +1,78 @@
+<!-- ##### SECTION Title ##### -->
+extract
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION byte ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### MACRO align_uint16 ##### -->
+<para>
+
+</para>
+
+@x: 
+
+
+<!-- ##### MACRO align_uint32 ##### -->
+<para>
+
+</para>
+
+@x: 
+
+
+<!-- ##### FUNCTION align_uint64 ##### -->
+<para>
+
+</para>
+
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION align_ipv4_addr ##### -->
+<para>
+
+</para>
+
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION ntohs ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION ntohl ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

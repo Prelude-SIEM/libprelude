@@ -1,0 +1,64 @@
+<!-- ##### SECTION Title ##### -->
+prelude-message-buffered
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION prelude_msgbuf_new ##### -->
+<para>
+
+</para>
+
+@async_send: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msgbuf_close ##### -->
+<para>
+
+</para>
+
+@msgbuf: 
+
+
+<!-- ##### FUNCTION prelude_msgbuf_mark_end ##### -->
+<para>
+
+</para>
+
+@msgbuf: 
+
+
+<!-- ##### FUNCTION prelude_msgbuf_set ##### -->
+<para>
+
+</para>
+
+@msgbuf: 
+@tag: 
+@len: 
+@data: 
+
+
+<!-- ##### FUNCTION prelude_msgbuf_set_header ##### -->
+<para>
+
+</para>
+
+@msgbuf: 
+@tag: 
+@priority: 
+
+

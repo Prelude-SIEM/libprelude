@@ -1,0 +1,123 @@
+<!-- ##### SECTION Title ##### -->
+prelude-message-id
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PRELUDE_MSG_IDMEF ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_LIST ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_SET ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_ID ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_AUTH ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_ID_DECLARE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_AUTH_HAVE_SSL ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_AUTH_HAVE_PLAINTEXT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_AUTH_SSL ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_AUTH_PLAINTEXT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_AUTH_USERNAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_AUTH_PASSWORD ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_AUTH_SUCCEED ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_AUTH_FAILED ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_AUTH_EXIST ##### -->
+<para>
+
+</para>
+
+
+

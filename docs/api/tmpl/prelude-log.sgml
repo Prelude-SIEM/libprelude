@@ -1,0 +1,81 @@
+<!-- ##### SECTION Title ##### -->
+prelude-log
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION prelude_log_use_syslog ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION prelude_log_get_prefix ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_log_set_prefix ##### -->
+<para>
+
+</para>
+
+@prefix: 
+
+
+<!-- ##### FUNCTION prelude_log ##### -->
+<para>
+
+</para>
+
+@priority: 
+@file: 
+@function: 
+@line: 
+@fmt: 
+@Varargs: 
+
+
+<!-- ##### MACRO log ##### -->
+<para>
+
+</para>
+
+@priority: 
+@args...: 
+
+
+<!-- ##### MACRO do_init ##### -->
+<para>
+
+</para>
+
+@func: 
+@name: 
+
+
+<!-- ##### MACRO do_init_nofail ##### -->
+<para>
+
+</para>
+
+@func: 
+@name: 
+
+

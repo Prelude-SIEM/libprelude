@@ -1,0 +1,53 @@
+<!-- ##### SECTION Title ##### -->
+prelude-ident
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION prelude_ident_inc ##### -->
+<para>
+
+</para>
+
+@ident: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_ident_dec ##### -->
+<para>
+
+</para>
+
+@ident: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_ident_destroy ##### -->
+<para>
+
+</para>
+
+@ident: 
+
+
+<!-- ##### FUNCTION prelude_ident_new ##### -->
+<para>
+
+</para>
+
+@filename: 
+@Returns: 
+
+

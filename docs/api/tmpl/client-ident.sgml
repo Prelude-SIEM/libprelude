@@ -1,0 +1,37 @@
+<!-- ##### SECTION Title ##### -->
+client-ident
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION prelude_client_ident_send ##### -->
+<para>
+
+</para>
+
+@fd: 
+@client_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_ident_init ##### -->
+<para>
+
+</para>
+
+@sname: 
+@Returns: 
+
+

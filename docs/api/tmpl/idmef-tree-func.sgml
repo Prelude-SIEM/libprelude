@@ -1,0 +1,398 @@
+<!-- ##### SECTION Title ##### -->
+idmef-tree-func
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF idmef_msg_send_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION idmef_source_node_new ##### -->
+<para>
+
+</para>
+
+@source: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_source_user_new ##### -->
+<para>
+
+</para>
+
+@source: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_source_process_new ##### -->
+<para>
+
+</para>
+
+@source: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_source_service_new ##### -->
+<para>
+
+</para>
+
+@source: 
+@Returns: 
+
+
+<!-- ##### MACRO idmef_target_node_new ##### -->
+<para>
+
+</para>
+
+@target: 
+
+
+<!-- ##### MACRO idmef_target_user_new ##### -->
+<para>
+
+</para>
+
+@target: 
+
+
+<!-- ##### MACRO idmef_target_process_new ##### -->
+<para>
+
+</para>
+
+@target: 
+
+
+<!-- ##### MACRO idmef_target_service_new ##### -->
+<para>
+
+</para>
+
+@target: 
+
+
+<!-- ##### FUNCTION idmef_analyzer_node_new ##### -->
+<para>
+
+</para>
+
+@analyzer: 
+
+
+<!-- ##### FUNCTION idmef_analyzer_process_new ##### -->
+<para>
+
+</para>
+
+@analyzer: 
+
+
+<!-- ##### FUNCTION idmef_process_env_new ##### -->
+<para>
+
+</para>
+
+@process: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_process_arg_new ##### -->
+<para>
+
+</para>
+
+@process: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_userid_new ##### -->
+<para>
+
+</para>
+
+@user: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_node_address_new ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_webservice_arg_new ##### -->
+<para>
+
+</para>
+
+@w: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_webservice_new ##### -->
+<para>
+
+</para>
+
+@service: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_snmpservice_new ##### -->
+<para>
+
+</para>
+
+@service: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_tool_alert_new ##### -->
+<para>
+
+</para>
+
+@alert: 
+
+
+<!-- ##### FUNCTION idmef_overflow_alert_new ##### -->
+<para>
+
+</para>
+
+@alert: 
+
+
+<!-- ##### FUNCTION idmef_correlation_alert_new ##### -->
+<para>
+
+</para>
+
+@alert: 
+
+
+<!-- ##### FUNCTION idmef_tool_alert_alertident_new ##### -->
+<para>
+
+</para>
+
+@alert: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_correlation_alert_alertident_new ##### -->
+<para>
+
+</para>
+
+@alert: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_assessment_impact_new ##### -->
+<para>
+
+</para>
+
+@assessment: 
+
+
+<!-- ##### FUNCTION idmef_assessment_confidence_new ##### -->
+<para>
+
+</para>
+
+@assessment: 
+
+
+<!-- ##### FUNCTION idmef_assessment_action_new ##### -->
+<para>
+
+</para>
+
+@assessment: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_alert_new ##### -->
+<para>
+
+</para>
+
+@message: 
+
+
+<!-- ##### FUNCTION idmef_alert_assessment_new ##### -->
+<para>
+
+</para>
+
+@alert: 
+
+
+<!-- ##### FUNCTION idmef_alert_detect_time_new ##### -->
+<para>
+
+</para>
+
+@alert: 
+
+
+<!-- ##### FUNCTION idmef_alert_analyzer_time_new ##### -->
+<para>
+
+</para>
+
+@alert: 
+
+
+<!-- ##### FUNCTION idmef_alert_source_new ##### -->
+<para>
+
+</para>
+
+@alert: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_alert_target_new ##### -->
+<para>
+
+</para>
+
+@alert: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_alert_classification_new ##### -->
+<para>
+
+</para>
+
+@alert: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_alert_additional_data_new ##### -->
+<para>
+
+</para>
+
+@alert: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_heartbeat_new ##### -->
+<para>
+
+</para>
+
+@message: 
+
+
+<!-- ##### FUNCTION idmef_heartbeat_analyzer_time_new ##### -->
+<para>
+
+</para>
+
+@heartbeat: 
+
+
+<!-- ##### FUNCTION idmef_heartbeat_additional_data_new ##### -->
+<para>
+
+</para>
+
+@heartbeat: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_message_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_message_free ##### -->
+<para>
+
+</para>
+
+@msg: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_free ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_string ##### -->
+<para>
+
+</para>
+
+@s: 
+
+
+<!-- ##### MACRO idmef_string_len ##### -->
+<para>
+
+</para>
+
+@s: 
+
+
+<!-- ##### MACRO idmef_string_copy ##### -->
+<para>
+
+</para>
+
+@dst: 
+@src: 
+
+
+<!-- ##### MACRO idmef_string_set_constant ##### -->
+<para>
+
+</para>
+
+@s: 
+@str: 
+
+
+<!-- ##### MACRO idmef_string_set ##### -->
+<para>
+
+</para>
+
+@s: 
+@str: 
+
+

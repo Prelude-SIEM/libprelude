@@ -1,0 +1,94 @@
+<!-- ##### SECTION Title ##### -->
+prelude-path
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION prelude_get_socket_filename ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_get_auth_filename ##### -->
+<para>
+
+</para>
+
+@buf: 
+@size: 
+
+
+<!-- ##### FUNCTION prelude_get_ssl_cert_filename ##### -->
+<para>
+
+</para>
+
+@buf: 
+@size: 
+
+
+<!-- ##### FUNCTION prelude_get_ssl_key_filename ##### -->
+<para>
+
+</para>
+
+@buf: 
+@size: 
+
+
+<!-- ##### FUNCTION prelude_get_backup_filename ##### -->
+<para>
+
+</para>
+
+@buf: 
+@size: 
+
+
+<!-- ##### FUNCTION prelude_get_program_userid ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_set_program_name ##### -->
+<para>
+
+</para>
+
+@sname: 
+
+
+<!-- ##### FUNCTION prelude_set_program_userid ##### -->
+<para>
+
+</para>
+
+@uid: 
+
+
+<!-- ##### FUNCTION prelude_get_sensor_name ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
