@@ -2570,6 +2570,8 @@ idmef_reference_t *idmef_classification_get_next_reference(idmef_classification_
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #idmef_reference_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_classification_set_reference(idmef_classification_t *ptr, idmef_reference_t *object, int pos)
 {
@@ -2586,9 +2588,12 @@ void idmef_classification_set_reference(idmef_classification_t *ptr, idmef_refer
  * @ret: pointer to an address where to store the created #idmef_reference_t object.
  * @pos: position in the list.
  *
- * Create a new #idmef_reference_t children of @ptr,
- * and add it to position @pos of @ptr list of #idmef_reference_t object.
- * 
+ * Create a new #idmef_reference_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #idmef_reference_t object. The created #idmef_reference_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #idmef_reference_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_classification_new_reference(idmef_classification_t *ptr, idmef_reference_t **ret, int pos)
@@ -3271,6 +3276,8 @@ idmef_user_id_t *idmef_user_get_next_user_id(idmef_user_t *ptr, idmef_user_id_t 
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #idmef_user_id_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_user_set_user_id(idmef_user_t *ptr, idmef_user_id_t *object, int pos)
 {
@@ -3287,9 +3294,12 @@ void idmef_user_set_user_id(idmef_user_t *ptr, idmef_user_id_t *object, int pos)
  * @ret: pointer to an address where to store the created #idmef_user_id_t object.
  * @pos: position in the list.
  *
- * Create a new #idmef_user_id_t children of @ptr,
- * and add it to position @pos of @ptr list of #idmef_user_id_t object.
- * 
+ * Create a new #idmef_user_id_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #idmef_user_id_t object. The created #idmef_user_id_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #idmef_user_id_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_user_new_user_id(idmef_user_t *ptr, idmef_user_id_t **ret, int pos)
@@ -4195,6 +4205,8 @@ prelude_string_t *idmef_process_get_next_arg(idmef_process_t *ptr, prelude_strin
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #prelude_string_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_process_set_arg(idmef_process_t *ptr, prelude_string_t *object, int pos)
 {
@@ -4211,9 +4223,12 @@ void idmef_process_set_arg(idmef_process_t *ptr, prelude_string_t *object, int p
  * @ret: pointer to an address where to store the created #prelude_string_t object.
  * @pos: position in the list.
  *
- * Create a new #prelude_string_t children of @ptr,
- * and add it to position @pos of @ptr list of #prelude_string_t object.
- * 
+ * Create a new #prelude_string_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #prelude_string_t object. The created #prelude_string_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #prelude_string_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_process_new_arg(idmef_process_t *ptr, prelude_string_t **ret, int pos)
@@ -4259,6 +4274,8 @@ prelude_string_t *idmef_process_get_next_env(idmef_process_t *ptr, prelude_strin
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #prelude_string_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_process_set_env(idmef_process_t *ptr, prelude_string_t *object, int pos)
 {
@@ -4275,9 +4292,12 @@ void idmef_process_set_env(idmef_process_t *ptr, prelude_string_t *object, int p
  * @ret: pointer to an address where to store the created #prelude_string_t object.
  * @pos: position in the list.
  *
- * Create a new #prelude_string_t children of @ptr,
- * and add it to position @pos of @ptr list of #prelude_string_t object.
- * 
+ * Create a new #prelude_string_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #prelude_string_t object. The created #prelude_string_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #prelude_string_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_process_new_env(idmef_process_t *ptr, prelude_string_t **ret, int pos)
@@ -4632,6 +4652,8 @@ prelude_string_t *idmef_web_service_get_next_arg(idmef_web_service_t *ptr, prelu
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #prelude_string_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_web_service_set_arg(idmef_web_service_t *ptr, prelude_string_t *object, int pos)
 {
@@ -4648,9 +4670,12 @@ void idmef_web_service_set_arg(idmef_web_service_t *ptr, prelude_string_t *objec
  * @ret: pointer to an address where to store the created #prelude_string_t object.
  * @pos: position in the list.
  *
- * Create a new #prelude_string_t children of @ptr,
- * and add it to position @pos of @ptr list of #prelude_string_t object.
- * 
+ * Create a new #prelude_string_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #prelude_string_t object. The created #prelude_string_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #prelude_string_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_web_service_new_arg(idmef_web_service_t *ptr, prelude_string_t **ret, int pos)
@@ -6344,6 +6369,8 @@ idmef_address_t *idmef_node_get_next_address(idmef_node_t *ptr, idmef_address_t 
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #idmef_address_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_node_set_address(idmef_node_t *ptr, idmef_address_t *object, int pos)
 {
@@ -6360,9 +6387,12 @@ void idmef_node_set_address(idmef_node_t *ptr, idmef_address_t *object, int pos)
  * @ret: pointer to an address where to store the created #idmef_address_t object.
  * @pos: position in the list.
  *
- * Create a new #idmef_address_t children of @ptr,
- * and add it to position @pos of @ptr list of #idmef_address_t object.
- * 
+ * Create a new #idmef_address_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #idmef_address_t object. The created #idmef_address_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #idmef_address_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_node_new_address(idmef_node_t *ptr, idmef_address_t **ret, int pos)
@@ -7118,6 +7148,8 @@ prelude_string_t *idmef_file_access_get_next_permission(idmef_file_access_t *ptr
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #prelude_string_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_file_access_set_permission(idmef_file_access_t *ptr, prelude_string_t *object, int pos)
 {
@@ -7134,9 +7166,12 @@ void idmef_file_access_set_permission(idmef_file_access_t *ptr, prelude_string_t
  * @ret: pointer to an address where to store the created #prelude_string_t object.
  * @pos: position in the list.
  *
- * Create a new #prelude_string_t children of @ptr,
- * and add it to position @pos of @ptr list of #prelude_string_t object.
- * 
+ * Create a new #prelude_string_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #prelude_string_t object. The created #prelude_string_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #prelude_string_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_file_access_new_permission(idmef_file_access_t *ptr, prelude_string_t **ret, int pos)
@@ -8618,6 +8653,8 @@ idmef_file_access_t *idmef_file_get_next_file_access(idmef_file_t *ptr, idmef_fi
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #idmef_file_access_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_file_set_file_access(idmef_file_t *ptr, idmef_file_access_t *object, int pos)
 {
@@ -8634,9 +8671,12 @@ void idmef_file_set_file_access(idmef_file_t *ptr, idmef_file_access_t *object, 
  * @ret: pointer to an address where to store the created #idmef_file_access_t object.
  * @pos: position in the list.
  *
- * Create a new #idmef_file_access_t children of @ptr,
- * and add it to position @pos of @ptr list of #idmef_file_access_t object.
- * 
+ * Create a new #idmef_file_access_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #idmef_file_access_t object. The created #idmef_file_access_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #idmef_file_access_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_file_new_file_access(idmef_file_t *ptr, idmef_file_access_t **ret, int pos)
@@ -8682,6 +8722,8 @@ idmef_linkage_t *idmef_file_get_next_linkage(idmef_file_t *ptr, idmef_linkage_t 
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #idmef_linkage_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_file_set_linkage(idmef_file_t *ptr, idmef_linkage_t *object, int pos)
 {
@@ -8698,9 +8740,12 @@ void idmef_file_set_linkage(idmef_file_t *ptr, idmef_linkage_t *object, int pos)
  * @ret: pointer to an address where to store the created #idmef_linkage_t object.
  * @pos: position in the list.
  *
- * Create a new #idmef_linkage_t children of @ptr,
- * and add it to position @pos of @ptr list of #idmef_linkage_t object.
- * 
+ * Create a new #idmef_linkage_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #idmef_linkage_t object. The created #idmef_linkage_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #idmef_linkage_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_file_new_linkage(idmef_file_t *ptr, idmef_linkage_t **ret, int pos)
@@ -8798,6 +8843,8 @@ idmef_checksum_t *idmef_file_get_next_checksum(idmef_file_t *ptr, idmef_checksum
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #idmef_checksum_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_file_set_checksum(idmef_file_t *ptr, idmef_checksum_t *object, int pos)
 {
@@ -8814,9 +8861,12 @@ void idmef_file_set_checksum(idmef_file_t *ptr, idmef_checksum_t *object, int po
  * @ret: pointer to an address where to store the created #idmef_checksum_t object.
  * @pos: position in the list.
  *
- * Create a new #idmef_checksum_t children of @ptr,
- * and add it to position @pos of @ptr list of #idmef_checksum_t object.
- * 
+ * Create a new #idmef_checksum_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #idmef_checksum_t object. The created #idmef_checksum_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #idmef_checksum_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_file_new_checksum(idmef_file_t *ptr, idmef_checksum_t **ret, int pos)
@@ -9829,6 +9879,8 @@ idmef_file_t *idmef_target_get_next_file(idmef_target_t *ptr, idmef_file_t *obje
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #idmef_file_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_target_set_file(idmef_target_t *ptr, idmef_file_t *object, int pos)
 {
@@ -9845,9 +9897,12 @@ void idmef_target_set_file(idmef_target_t *ptr, idmef_file_t *object, int pos)
  * @ret: pointer to an address where to store the created #idmef_file_t object.
  * @pos: position in the list.
  *
- * Create a new #idmef_file_t children of @ptr,
- * and add it to position @pos of @ptr list of #idmef_file_t object.
- * 
+ * Create a new #idmef_file_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #idmef_file_t object. The created #idmef_file_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #idmef_file_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_target_new_file(idmef_target_t *ptr, idmef_file_t **ret, int pos)
@@ -11763,6 +11818,8 @@ idmef_action_t *idmef_assessment_get_next_action(idmef_assessment_t *ptr, idmef_
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #idmef_action_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_assessment_set_action(idmef_assessment_t *ptr, idmef_action_t *object, int pos)
 {
@@ -11779,9 +11836,12 @@ void idmef_assessment_set_action(idmef_assessment_t *ptr, idmef_action_t *object
  * @ret: pointer to an address where to store the created #idmef_action_t object.
  * @pos: position in the list.
  *
- * Create a new #idmef_action_t children of @ptr,
- * and add it to position @pos of @ptr list of #idmef_action_t object.
- * 
+ * Create a new #idmef_action_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #idmef_action_t object. The created #idmef_action_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #idmef_action_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_assessment_new_action(idmef_assessment_t *ptr, idmef_action_t **ret, int pos)
@@ -12122,6 +12182,8 @@ idmef_alertident_t *idmef_tool_alert_get_next_alertident(idmef_tool_alert_t *ptr
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #idmef_alertident_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_tool_alert_set_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t *object, int pos)
 {
@@ -12138,9 +12200,12 @@ void idmef_tool_alert_set_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t
  * @ret: pointer to an address where to store the created #idmef_alertident_t object.
  * @pos: position in the list.
  *
- * Create a new #idmef_alertident_t children of @ptr,
- * and add it to position @pos of @ptr list of #idmef_alertident_t object.
- * 
+ * Create a new #idmef_alertident_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #idmef_alertident_t object. The created #idmef_alertident_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #idmef_alertident_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_tool_alert_new_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t **ret, int pos)
@@ -12363,6 +12428,8 @@ idmef_alertident_t *idmef_correlation_alert_get_next_alertident(idmef_correlatio
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #idmef_alertident_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_correlation_alert_set_alertident(idmef_correlation_alert_t *ptr, idmef_alertident_t *object, int pos)
 {
@@ -12379,9 +12446,12 @@ void idmef_correlation_alert_set_alertident(idmef_correlation_alert_t *ptr, idme
  * @ret: pointer to an address where to store the created #idmef_alertident_t object.
  * @pos: position in the list.
  *
- * Create a new #idmef_alertident_t children of @ptr,
- * and add it to position @pos of @ptr list of #idmef_alertident_t object.
- * 
+ * Create a new #idmef_alertident_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #idmef_alertident_t object. The created #idmef_alertident_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #idmef_alertident_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_correlation_alert_new_alertident(idmef_correlation_alert_t *ptr, idmef_alertident_t **ret, int pos)
@@ -13066,6 +13136,8 @@ idmef_analyzer_t *idmef_alert_get_next_analyzer(idmef_alert_t *ptr, idmef_analyz
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #idmef_analyzer_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_alert_set_analyzer(idmef_alert_t *ptr, idmef_analyzer_t *object, int pos)
 {
@@ -13082,9 +13154,12 @@ void idmef_alert_set_analyzer(idmef_alert_t *ptr, idmef_analyzer_t *object, int 
  * @ret: pointer to an address where to store the created #idmef_analyzer_t object.
  * @pos: position in the list.
  *
- * Create a new #idmef_analyzer_t children of @ptr,
- * and add it to position @pos of @ptr list of #idmef_analyzer_t object.
- * 
+ * Create a new #idmef_analyzer_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #idmef_analyzer_t object. The created #idmef_analyzer_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #idmef_analyzer_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_alert_new_analyzer(idmef_alert_t *ptr, idmef_analyzer_t **ret, int pos)
@@ -13342,6 +13417,8 @@ idmef_source_t *idmef_alert_get_next_source(idmef_alert_t *ptr, idmef_source_t *
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #idmef_source_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_alert_set_source(idmef_alert_t *ptr, idmef_source_t *object, int pos)
 {
@@ -13358,9 +13435,12 @@ void idmef_alert_set_source(idmef_alert_t *ptr, idmef_source_t *object, int pos)
  * @ret: pointer to an address where to store the created #idmef_source_t object.
  * @pos: position in the list.
  *
- * Create a new #idmef_source_t children of @ptr,
- * and add it to position @pos of @ptr list of #idmef_source_t object.
- * 
+ * Create a new #idmef_source_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #idmef_source_t object. The created #idmef_source_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #idmef_source_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_alert_new_source(idmef_alert_t *ptr, idmef_source_t **ret, int pos)
@@ -13406,6 +13486,8 @@ idmef_target_t *idmef_alert_get_next_target(idmef_alert_t *ptr, idmef_target_t *
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #idmef_target_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_alert_set_target(idmef_alert_t *ptr, idmef_target_t *object, int pos)
 {
@@ -13422,9 +13504,12 @@ void idmef_alert_set_target(idmef_alert_t *ptr, idmef_target_t *object, int pos)
  * @ret: pointer to an address where to store the created #idmef_target_t object.
  * @pos: position in the list.
  *
- * Create a new #idmef_target_t children of @ptr,
- * and add it to position @pos of @ptr list of #idmef_target_t object.
- * 
+ * Create a new #idmef_target_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #idmef_target_t object. The created #idmef_target_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #idmef_target_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_alert_new_target(idmef_alert_t *ptr, idmef_target_t **ret, int pos)
@@ -13522,6 +13607,8 @@ idmef_additional_data_t *idmef_alert_get_next_additional_data(idmef_alert_t *ptr
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #idmef_additional_data_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_alert_set_additional_data(idmef_alert_t *ptr, idmef_additional_data_t *object, int pos)
 {
@@ -13538,9 +13625,12 @@ void idmef_alert_set_additional_data(idmef_alert_t *ptr, idmef_additional_data_t
  * @ret: pointer to an address where to store the created #idmef_additional_data_t object.
  * @pos: position in the list.
  *
- * Create a new #idmef_additional_data_t children of @ptr,
- * and add it to position @pos of @ptr list of #idmef_additional_data_t object.
- * 
+ * Create a new #idmef_additional_data_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #idmef_additional_data_t object. The created #idmef_additional_data_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #idmef_additional_data_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_alert_new_additional_data(idmef_alert_t *ptr, idmef_additional_data_t **ret, int pos)
@@ -14091,6 +14181,8 @@ idmef_analyzer_t *idmef_heartbeat_get_next_analyzer(idmef_heartbeat_t *ptr, idme
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #idmef_analyzer_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_heartbeat_set_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t *object, int pos)
 {
@@ -14107,9 +14199,12 @@ void idmef_heartbeat_set_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t *obje
  * @ret: pointer to an address where to store the created #idmef_analyzer_t object.
  * @pos: position in the list.
  *
- * Create a new #idmef_analyzer_t children of @ptr,
- * and add it to position @pos of @ptr list of #idmef_analyzer_t object.
- * 
+ * Create a new #idmef_analyzer_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #idmef_analyzer_t object. The created #idmef_analyzer_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #idmef_analyzer_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_heartbeat_new_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t **ret, int pos)
@@ -14313,6 +14408,8 @@ idmef_additional_data_t *idmef_heartbeat_get_next_additional_data(idmef_heartbea
  * @pos: Position in the list.
  *
  * Add @object to position @pos of @ptr list of #idmef_additional_data_t object.
+ *
+ * If @pos is -1, @object will be inserted at the tail of the list.
  */
 void idmef_heartbeat_set_additional_data(idmef_heartbeat_t *ptr, idmef_additional_data_t *object, int pos)
 {
@@ -14329,9 +14426,12 @@ void idmef_heartbeat_set_additional_data(idmef_heartbeat_t *ptr, idmef_additiona
  * @ret: pointer to an address where to store the created #idmef_additional_data_t object.
  * @pos: position in the list.
  *
- * Create a new #idmef_additional_data_t children of @ptr,
- * and add it to position @pos of @ptr list of #idmef_additional_data_t object.
- * 
+ * Create a new #idmef_additional_data_t children of @ptr, and add it to position @pos of 
+ * @ptr list of #idmef_additional_data_t object. The created #idmef_additional_data_t object is
+ * stored in @ret.
+ *
+ * If @pos is -1, the new #idmef_additional_data_t children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_heartbeat_new_additional_data(idmef_heartbeat_t *ptr, idmef_additional_data_t **ret, int pos)

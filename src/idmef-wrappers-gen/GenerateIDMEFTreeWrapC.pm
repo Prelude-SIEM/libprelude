@@ -978,6 +978,8 @@ $field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name
  * \@pos: Position in the list.
  *
  * Add \@object to position \@pos of \@ptr list of #$field->{typename} object.
+ *
+ * If \@pos is -1, \@object will be inserted at the tail of the list.
  */
 void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object, int pos)
 \{
@@ -994,9 +996,12 @@ void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename
  * \@ret: pointer to an address where to store the created #$field->{typename} object.
  * \@pos: position in the list.
  *
- * Create a new #$field->{typename} children of \@ptr,
- * and add it to position \@pos of \@ptr list of #$field->{typename} object.
- * 
+ * Create a new #$field->{typename} children of \@ptr, and add it to position \@pos of 
+ * \@ptr list of #$field->{typename} object. The created #$field->{typename} object is
+ * stored in \@ret.
+ *
+ * If \@pos is -1, the new #$field->{typename} children will be inserted at the tail of the list.
+ *
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_$struct->{short_typename}_new_$field->{short_name}($struct->{typename} *ptr, $field->{typename} **ret, int pos)
