@@ -884,7 +884,9 @@ int _prelude_client_register_options(void)
         if ( _prelude_generic_optlist )
                 return 0;
 
-        ret = prelude_option_add(NULL, &root_list,
+        prelude_option_new_root(&_prelude_generic_optlist);
+
+        ret = prelude_option_add(_prelude_generic_optlist, &root_list,
                                  PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0,
                                  "prelude", "Prelude generic options", PRELUDE_OPTION_ARGUMENT_NONE, NULL, NULL);
         if ( ret < 0 )
@@ -974,8 +976,6 @@ int _prelude_client_register_options(void)
                                  get_node_address_vlan_num);
         if ( ret < 0 )
                 return ret;
-        
-        _prelude_generic_optlist = root_list;
         
         return 0;
 }

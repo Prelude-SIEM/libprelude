@@ -71,7 +71,7 @@ static void slice_arguments(int *argc, char **argv)
 {
         int i;
         char *ptr;
-        prelude_option_t *opt;
+        prelude_option_t *opt = NULL, *bkp = NULL;
         
         _prelude_client_register_options();
 
@@ -88,9 +88,17 @@ static void slice_arguments(int *argc, char **argv)
                 
                 while ( *ptr == '-' ) ptr++;
                 
-                opt = prelude_option_search(_prelude_generic_optlist, ptr, PRELUDE_OPTION_TYPE_CLI, TRUE); 
-                if ( ! opt )
+                opt = prelude_option_search(_prelude_generic_optlist, ptr, PRELUDE_OPTION_TYPE_CLI, FALSE);
+                if ( ! opt ) {
+                        if ( bkp )
+                                _prelude_generic_optlist = bkp;
                         continue;
+                }
+                        
+                if ( prelude_option_has_optlist(opt) ) {
+                        bkp = _prelude_generic_optlist;
+                        _prelude_generic_optlist = opt;
+                }
                 
                 _prelude_internal_argv[_prelude_internal_argc++] = argv[i];
                 remove_argv(argc, argv, i--);
