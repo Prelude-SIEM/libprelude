@@ -1,3 +1,8 @@
+2002-04-04  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* sensor-adduser/sensor-adduser.c (get_manager_setup): 
+	don't give up until an error occur or we get prelude_msg_finished.
+
 2002-03-29  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-getopt.c (process_option_cfg_hook): 

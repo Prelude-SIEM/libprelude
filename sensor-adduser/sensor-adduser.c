@@ -155,12 +155,15 @@ static int get_manager_setup(prelude_io_t *fd, int *have_ssl, int *have_plaintex
         uint32_t dlen;
         prelude_msg_t *msg = NULL;
         prelude_msg_status_t status;
-        
-        status = prelude_msg_read(&msg, fd);
-        if ( status != prelude_msg_finished ) {
-                log(LOG_ERR, "error reading Manager configuration message (status=%d).\n", status);
-                return -1;
-        }
+
+        do {
+                status = prelude_msg_read(&msg, fd);
+                if ( status == prelude_msg_error ) {
+                        log(LOG_ERR, "an error occured while reading the Manager configuration msg.\n");
+                        return -1;
+                }
+                
+        } while ( status != prelude_msg_finished );
 
         if ( prelude_msg_get_tag(msg) != PRELUDE_MSG_AUTH ) {
                 log(LOG_ERR, "Manager didn't sent us any authentication message.\n");
