@@ -2,6 +2,8 @@
 
 	* src/plugin-common.c: 
 	remove dlfcn.h - not needed anymore with libltdl.
+	(plugin_load_single): return -1 if the plugin is already
+	loaded so that we don't count the plugin twice.
 
 	(plugin_load_from_dir): remove the filename extension,
 	so that libltdl decide of the best extension to use on this

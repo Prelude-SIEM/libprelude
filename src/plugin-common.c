@@ -219,7 +219,7 @@ static int plugin_load_single(const char *filename, int argc, char **argv,
          */
         if ( is_plugin_already_loaded(handle) == 0 ) {
                 lt_dlclose(handle);
-                return 0;
+                return -1;
         }
         
         init = lt_dlsym(handle, "plugin_init");
