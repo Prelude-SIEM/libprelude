@@ -21,5 +21,5 @@
 *
 *****/
 
-int server_create(prelude_client_t *client, int keepalive, int prompt,
+int server_create(prelude_client_profile_t *cp, int keepalive, int prompt,
                   gnutls_x509_privkey key, gnutls_x509_crt cacrt, gnutls_x509_crt crt);

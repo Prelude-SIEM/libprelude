@@ -21,19 +21,19 @@
 *
 *****/
 
-int tls_request_certificate(prelude_client_t *client, prelude_io_t *fd, gnutls_x509_privkey key);
+int tls_request_certificate(prelude_client_profile_t *cp, prelude_io_t *fd, gnutls_x509_privkey key);
 
-int tls_handle_certificate_request(prelude_client_t *client, prelude_io_t *fd,
+int tls_handle_certificate_request(prelude_client_profile_t *cp, prelude_io_t *fd,
                                    gnutls_x509_privkey cakey, gnutls_x509_crt cacrt,
                                    gnutls_x509_crt crt);
 
-gnutls_x509_privkey tls_load_privkey(prelude_client_t *client);
+gnutls_x509_privkey tls_load_privkey(prelude_client_profile_t *cp);
 
 
-int tls_load_ca_certificate(prelude_client_t *client,
+int tls_load_ca_certificate(prelude_client_profile_t *cp,
                             gnutls_x509_privkey key, gnutls_x509_crt *crt);
 
-int tls_load_ca_signed_certificate(prelude_client_t *client,
+int tls_load_ca_signed_certificate(prelude_client_profile_t *cp,
                                    gnutls_x509_privkey cakey,
                                    gnutls_x509_crt cacrt,
                                    gnutls_x509_crt *crt);

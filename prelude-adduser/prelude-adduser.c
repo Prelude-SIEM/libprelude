@@ -42,6 +42,7 @@
 #include "prelude-inttypes.h"
 #include "prelude-client.h"
 #include "prelude-option.h"
+#include "prelude-client-profile.h"
 
 #include "server.h"
 #include "tls-register.h"
@@ -60,8 +61,8 @@ struct cmdtbl {
 
 static uint16_t port = 5553;
 static const char *addr = NULL;
-static prelude_client_t *client;
 static int gid_set = 0, uid_set = 0;
+static prelude_client_profile_t *profile;
 static int server_prompt_passwd = 0, server_keepalive = 0;
 
 
@@ -82,7 +83,7 @@ static void permission_warning(void)
                 
                 "Your sensor won't start unless it is running under this UID or is a member of this GID.\n\n"
                 "[Please press enter if this is what you plan to do]\n",
-                (int) prelude_client_get_uid(client), (int) prelude_client_get_gid(client));
+                (int) prelude_client_profile_get_uid(profile), (int) prelude_client_profile_get_gid(profile));
         
         while ( getchar() != '\n' );
 }
@@ -164,7 +165,7 @@ static void print_add_help(void)
 static int set_uid(void *context, prelude_option_t *opt, const char *optarg) 
 {
         uid_set = 1;
-        prelude_client_set_uid(client, atoi(optarg));
+        prelude_client_profile_set_uid(profile, atoi(optarg));
         return 0;
 }
 
@@ -173,7 +174,7 @@ static int set_uid(void *context, prelude_option_t *opt, const char *optarg)
 static int set_gid(void *context, prelude_option_t *opt, const char *optarg)
 {
         gid_set = 1;
-        prelude_client_set_gid(client, atoi(optarg));
+        prelude_client_profile_set_gid(profile, atoi(optarg));
         return 0;
 }
 
@@ -219,7 +220,7 @@ static int register_sensor_ident(const char *name, uint64_t *ident)
         int ret, already_exist;
         char buf[256], filename[256];
         
-        prelude_client_get_ident_filename(client, filename, sizeof(filename));
+        prelude_client_profile_get_analyzerid_filename(profile, filename, sizeof(filename));
 
         already_exist = access(filename, F_OK);
         
@@ -229,7 +230,7 @@ static int register_sensor_ident(const char *name, uint64_t *ident)
                 return -1;
         }
 
-        ret = fchown(fileno(fd), prelude_client_get_uid(client), prelude_client_get_gid(client));
+        ret = fchown(fileno(fd), prelude_client_profile_get_uid(profile), prelude_client_profile_get_gid(profile));
         if ( ret < 0 ) 
                 fprintf(stderr, "couldn't change %s owner.\n", filename);
         
@@ -328,8 +329,8 @@ static prelude_io_t *connect_manager(struct in_addr in, uint16_t port, char *pas
         if ( ! session )
                 return NULL;
         
-        fd = prelude_io_new();
-        if ( ! fd ) {
+        ret = prelude_io_new(&fd);
+        if ( ret < 0 ) {
                 fprintf(stderr, "error creating an IO object.\n");
                 gnutls_deinit(session);
                 close(sock);
@@ -380,25 +381,26 @@ static int ask_one_shot_password(char **buf)
 
 
 
-static int setup_analyzer_files(prelude_client_t *client, uint64_t analyzerid,
+static int setup_analyzer_files(prelude_client_profile_t *profile, uint64_t analyzerid,
                                 gnutls_x509_privkey *key, gnutls_x509_crt *crt) 
 {
         int ret;
         char buf[256];
         const char *name;
         
-        name = prelude_client_get_profile(client);
+        name = prelude_client_profile_get_name(profile);
+
         ret = register_sensor_ident(name, &analyzerid);
         if ( ret < 0 )
                 return -1;
 
-        prelude_client_set_analyzerid(client, analyzerid);
+        prelude_client_profile_set_analyzerid(profile, analyzerid);
         
-        *key = tls_load_privkey(client);  
+        *key = tls_load_privkey(profile);  
         if ( ! *key )
                 return -1;
         
-        prelude_client_get_backup_filename(client, buf, sizeof(buf));
+        prelude_client_profile_get_backup_dirname(profile, buf, sizeof(buf));
 
         /*
          * The user may have changed permission, and we don't want
@@ -412,11 +414,11 @@ static int setup_analyzer_files(prelude_client_t *client, uint64_t analyzerid,
                 return -1;
         }
 
-        ret = chown(buf, prelude_client_get_uid(client), prelude_client_get_gid(client));
+        ret = chown(buf, prelude_client_profile_get_uid(profile), prelude_client_profile_get_gid(profile));
         if ( ret < 0 ) {
                 fprintf(stderr, "could not chown %s to %d:%d: %s.\n", buf,
-                        (int) prelude_client_get_uid(client),
-                        (int) prelude_client_get_gid(client), strerror(errno));
+                        (int) prelude_client_profile_get_uid(profile),
+                        (int) prelude_client_profile_get_gid(profile), strerror(errno));
                 return -1;
         }
         
@@ -427,57 +429,57 @@ static int setup_analyzer_files(prelude_client_t *client, uint64_t analyzerid,
 
 static int rename_cmd(int argc, char **argv)
 {
+        int ret;
         const char *sname, *dname;
         char spath[256], dpath[256];
-        prelude_client_t *sclient, *dclient;
+        prelude_client_profile_t *sprofile, *dprofile;
         
         sname = argv[2];
         dname = argv[3];
         fprintf(stderr, "Renaming analyzer %s to %s\n", sname, dname);
+
+        ret = prelude_client_profile_new(&sprofile, sname);
         
-        sclient = prelude_client_new(0);
-        prelude_client_set_profile(sclient, sname);
-        
-        dclient = prelude_client_new(0);
-        prelude_client_set_profile(dclient, dname);
+        ret = _prelude_client_profile_new(&dprofile);
+        prelude_client_profile_set_name(dprofile, dname);
 
-        prelude_client_get_ident_filename(sclient, spath, sizeof(spath));
-        prelude_client_get_ident_filename(dclient, dpath, sizeof(dpath));
+        prelude_client_profile_get_analyzerid_filename(sprofile, spath, sizeof(spath));
+        prelude_client_profile_get_analyzerid_filename(dprofile, dpath, sizeof(dpath));
         fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
         rename(spath, dpath);
 
-        prelude_client_get_backup_filename(sclient, spath, sizeof(spath));
-        prelude_client_get_backup_filename(dclient, dpath, sizeof(dpath));
-        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
-        rename(spath, dpath);
-        
-        prelude_client_get_tls_key_filename(sclient, spath, sizeof(spath));
-        prelude_client_get_tls_key_filename(dclient, dpath, sizeof(dpath));
-        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
-        rename(spath, dpath);
-
-        prelude_client_get_tls_client_keycert_filename(sclient, spath, sizeof(spath));
-        prelude_client_get_tls_client_keycert_filename(dclient, dpath, sizeof(dpath));
-        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
-        rename(spath, dpath);
-
-        prelude_client_get_tls_server_keycert_filename(sclient, spath, sizeof(spath));
-        prelude_client_get_tls_server_keycert_filename(dclient, dpath, sizeof(dpath));
-        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
-        rename(spath, dpath);
-
-        prelude_client_get_tls_client_trusted_cert_filename(sclient, spath, sizeof(spath));
-        prelude_client_get_tls_client_trusted_cert_filename(dclient, dpath, sizeof(dpath));
-        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
-        rename(spath, dpath);
-
-        prelude_client_get_tls_server_trusted_cert_filename(sclient, spath, sizeof(spath));
-        prelude_client_get_tls_server_trusted_cert_filename(dclient, dpath, sizeof(dpath));
+        prelude_client_profile_get_backup_dirname(sprofile, spath, sizeof(spath));
+        prelude_client_profile_get_backup_dirname(dprofile, dpath, sizeof(dpath));
         fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
         rename(spath, dpath);
         
-        prelude_client_get_tls_server_ca_cert_filename(sclient, spath, sizeof(spath));
-        prelude_client_get_tls_server_ca_cert_filename(dclient, dpath, sizeof(dpath));
+        prelude_client_profile_get_tls_key_filename(sprofile, spath, sizeof(spath));
+        prelude_client_profile_get_tls_key_filename(dprofile, dpath, sizeof(dpath));
+        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
+        rename(spath, dpath);
+
+        prelude_client_profile_get_tls_client_keycert_filename(sprofile, spath, sizeof(spath));
+        prelude_client_profile_get_tls_client_keycert_filename(dprofile, dpath, sizeof(dpath));
+        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
+        rename(spath, dpath);
+
+        prelude_client_profile_get_tls_server_keycert_filename(sprofile, spath, sizeof(spath));
+        prelude_client_profile_get_tls_server_keycert_filename(dprofile, dpath, sizeof(dpath));
+        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
+        rename(spath, dpath);
+
+        prelude_client_profile_get_tls_client_trusted_cert_filename(sprofile, spath, sizeof(spath));
+        prelude_client_profile_get_tls_client_trusted_cert_filename(dprofile, dpath, sizeof(dpath));
+        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
+        rename(spath, dpath);
+
+        prelude_client_profile_get_tls_server_trusted_cert_filename(sprofile, spath, sizeof(spath));
+        prelude_client_profile_get_tls_server_trusted_cert_filename(dprofile, dpath, sizeof(dpath));
+        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
+        rename(spath, dpath);
+        
+        prelude_client_profile_get_tls_server_ca_cert_filename(sprofile, spath, sizeof(spath));
+        prelude_client_profile_get_tls_server_ca_cert_filename(dprofile, dpath, sizeof(dpath));
         fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
         rename(spath, dpath);
         
@@ -493,23 +495,23 @@ static int add_analyzer(const char *name, gnutls_x509_privkey *key, gnutls_x509_
         
         fprintf(stderr, "- Adding analyzer %s.\n", name);
 
-        prelude_client_set_profile(client, name);
+        prelude_client_profile_set_name(profile, name);
         
         if ( ! uid_set || ! gid_set ) {
                 if ( ! uid_set )
-                        prelude_client_set_uid(client, getuid());
+                        prelude_client_profile_set_uid(profile, getuid());
 
                 if ( ! gid_set )
-                        prelude_client_set_gid(client, getgid());
+                        prelude_client_profile_set_gid(profile, getgid());
 
-                prelude_client_get_backup_filename(client, buf, sizeof(buf));
+                prelude_client_profile_get_backup_dirname(profile, buf, sizeof(buf));
                 
                 ret = access(buf, W_OK);
                 if ( ret < 0 )
                         permission_warning();
         }
 
-        return setup_analyzer_files(client, generate_analyzerid(), key, crt);
+        return setup_analyzer_files(profile, generate_analyzerid(), key, crt);
 }
 
 
@@ -520,7 +522,7 @@ static int add_cmd(int argc, char **argv)
         prelude_option_t *opt;
         gnutls_x509_privkey key;
 
-        client = prelude_client_new(0);
+        ret = _prelude_client_profile_new(&profile);
         
         opt = prelude_option_new(NULL);
         prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'u', "uid", NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_uid, NULL);
@@ -541,44 +543,44 @@ static int add_cmd(int argc, char **argv)
 
 static int del_cmd(int argc, char **argv)
 {
+        int ret;
         char buf[512];
 
-        client = prelude_client_new(0);
-        if ( ! client )
+        ret = prelude_client_profile_new(&profile, argv[2]);
+        if ( ret < 0 )
                 return -1;
-
-        prelude_client_set_profile(client, argv[2]);
+        
         fprintf(stderr, "- Deleting analyzer %s\n", argv[2]);
         
-        prelude_client_get_backup_filename(client, buf, sizeof(buf));
+        prelude_client_profile_get_backup_dirname(profile, buf, sizeof(buf));
         fprintf(stderr, "  - Removing %s...\n", buf);
         unlink(buf);
         
-        prelude_client_get_ident_filename(client, buf, sizeof(buf));
+        prelude_client_profile_get_analyzerid_filename(profile, buf, sizeof(buf));
         fprintf(stderr, "  - Removing %s...\n", buf);
         unlink(buf);
 
-        prelude_client_get_tls_key_filename(client, buf, sizeof(buf));
+        prelude_client_profile_get_tls_key_filename(profile, buf, sizeof(buf));
         fprintf(stderr, "  - Removing %s...\n", buf);
         unlink(buf);
         
-        prelude_client_get_tls_client_keycert_filename(client, buf, sizeof(buf));
+        prelude_client_profile_get_tls_client_keycert_filename(profile, buf, sizeof(buf));
         fprintf(stderr, "  - Removing %s...\n", buf);
         unlink(buf);
         
-        prelude_client_get_tls_server_keycert_filename(client, buf, sizeof(buf));
+        prelude_client_profile_get_tls_server_keycert_filename(profile, buf, sizeof(buf));
         fprintf(stderr, "  - Removing %s...\n", buf);
         unlink(buf);
         
-        prelude_client_get_tls_client_trusted_cert_filename(client, buf, sizeof(buf));
+        prelude_client_profile_get_tls_client_trusted_cert_filename(profile, buf, sizeof(buf));
         fprintf(stderr, "  - Removing %s...\n", buf);
         unlink(buf);
         
-        prelude_client_get_tls_server_trusted_cert_filename(client, buf, sizeof(buf));
+        prelude_client_profile_get_tls_server_trusted_cert_filename(profile, buf, sizeof(buf));
         fprintf(stderr, "  - Removing %s...\n", buf);
         unlink(buf);
         
-        prelude_client_get_tls_server_ca_cert_filename(client, buf, sizeof(buf));
+        prelude_client_profile_get_tls_server_ca_cert_filename(profile, buf, sizeof(buf));
         fprintf(stderr, "  - Removing %s...\n", buf);
         unlink(buf);
         
@@ -597,7 +599,7 @@ static int register_cmd(int argc, char **argv)
         gnutls_x509_privkey key;
         char *ptr, *addr = strdup(argv[3]);
 
-        client = prelude_client_new(0);
+        ret = _prelude_client_profile_new(&profile);
 
         opt = prelude_option_new(NULL);
         prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'u', "uid", NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_uid, NULL);
@@ -657,7 +659,7 @@ static int register_cmd(int argc, char **argv)
         if ( ! fd ) 
                 return -1;
         
-        ret = tls_request_certificate(client, fd, key);
+        ret = tls_request_certificate(profile, fd, key);
         if ( ret < 0 )
                 return -1;
 
@@ -676,7 +678,7 @@ static int registration_server_cmd(int argc, char **argv)
         gnutls_x509_crt ca_crt, crt;
         
         opt = prelude_option_new(NULL);
-        client = prelude_client_new(0);
+        ret = _prelude_client_profile_new(&profile);
         
         prelude_option_add(opt, PRELUDE_OPTION_TYPE_CLI, 'k', "keepalive", NULL,
                            PRELUDE_OPTION_ARGUMENT_NONE, set_server_keepalive, NULL);
@@ -699,16 +701,16 @@ static int registration_server_cmd(int argc, char **argv)
         if ( ret < 0 )
                 return -1;
         
-        ret = tls_load_ca_certificate(client, key, &ca_crt);
+        ret = tls_load_ca_certificate(profile, key, &ca_crt);
         if ( ret < 0 )
                 return -1;
         
-        ret = tls_load_ca_signed_certificate(client, key, ca_crt, &crt);
+        ret = tls_load_ca_signed_certificate(profile, key, ca_crt, &crt);
         if ( ret < 0 )
                 return -1;
         
         fprintf(stderr, "\n- Starting registration server.\n");
-        return server_create(client, server_keepalive, server_prompt_passwd, key, ca_crt, crt);
+        return server_create(profile, server_keepalive, server_prompt_passwd, key, ca_crt, crt);
 }
 
 

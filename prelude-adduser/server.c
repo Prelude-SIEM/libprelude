@@ -73,7 +73,7 @@ static gnutls_session new_tls_session(int sock, gnutls_srp_server_credentials cr
 
 
 
-static int handle_client_connection(prelude_client_t *client, prelude_io_t *fd,
+static int handle_client_connection(prelude_client_profile_t *cp, prelude_io_t *fd,
                                     gnutls_srp_server_credentials cred, gnutls_x509_privkey key,
                                     gnutls_x509_crt cacrt, gnutls_x509_crt crt, const char *peer)
 {
@@ -85,12 +85,12 @@ static int handle_client_connection(prelude_client_t *client, prelude_io_t *fd,
         
         prelude_io_set_tls_io(fd, session);
         
-        return tls_handle_certificate_request(client, fd, key, cacrt, crt);
+        return tls_handle_certificate_request(cp, fd, key, cacrt, crt);
 }
 
 
 
-static int wait_connection(prelude_client_t *client, int sock, int keepalive,
+static int wait_connection(prelude_client_profile_t *cp, int sock, int keepalive,
                            gnutls_srp_server_credentials cred, gnutls_x509_privkey key,
                            gnutls_x509_crt cacrt, gnutls_x509_crt crt)
 {
@@ -100,8 +100,13 @@ static int wait_connection(prelude_client_t *client, int sock, int keepalive,
         prelude_io_t *fd;
         struct sockaddr_in addr;
 
-        fd = prelude_io_new();
-
+        ret = prelude_io_new(&fd);
+        if ( ret < 0 ) {
+                fprintf(stderr, "%s: error creating a new IO object: %s.\n",
+                        prelude_strsource(ret), prelude_strerror(ret));
+                return -1;
+        }
+        
         do {
                 fprintf(stderr, "\n  - Waiting for install request from peer...\n");
                 len = sizeof(addr);
@@ -117,7 +122,7 @@ static int wait_connection(prelude_client_t *client, int sock, int keepalive,
 
                 prelude_io_set_sys_io(fd, csock);
                 
-                ret = handle_client_connection(client, fd, cred, key, cacrt, crt, buf);
+                ret = handle_client_connection(cp, fd, cred, key, cacrt, crt, buf);
                 if ( ret == 0 )
                         fprintf(stderr, "  - %s:%u successfully registered.\n", buf, addr.sin_port);
                 
@@ -290,7 +295,7 @@ static int srp_callback(gnutls_session session, const char *username, gnutls_dat
 
 
 
-int server_create(prelude_client_t *client, int keepalive, int prompt,
+int server_create(prelude_client_profile_t *cp, int keepalive, int prompt,
                   gnutls_x509_privkey key, gnutls_x509_crt cacrt, gnutls_x509_crt crt) 
 {
         int sock, ret;
@@ -321,7 +326,7 @@ int server_create(prelude_client_t *client, int keepalive, int prompt,
         }
 
         gnutls_srp_set_server_credentials_function(cred, srp_callback);
-        wait_connection(client, sock, keepalive, cred, key, cacrt, crt);
+        wait_connection(cp, sock, keepalive, cred, key, cacrt, crt);
         gnutls_srp_free_server_credentials(cred);
         
         return 0;
