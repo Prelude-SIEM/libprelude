@@ -1,3 +1,45 @@
+2002-06-07  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-getopt.c (prelude_option_add): 
+	don't overwrite specified priority for parent option.
+
+	(section_get_all): process sub option, and flush the
+	callback that run without order when leaving the parent.
+	This allow to have the parent called before other option
+	if option_run_first was specified.
+
+	(section_get_all): 
+	(option_get_all): new function, call the option callback
+	the same number of time the option/section is in the 
+	config file.
+
+	* src/sensor.c (parse_argument): 
+	make the address option a children of "node address".
+	Make node address run first so that it can allocate the
+	idmef_address_t structure.
+
+	(setup_address): allocate a new idmef_address_t structure.
+
+	* src/config-engine.c 
+	(config_get): 
+	(config_get_section): 
+	take a line argument, indicating where we should start
+	the search.
+	
+	(search_section): 
+	take a 'line' argument, telling where to start the search.
+
+	(search_entry): ditto.
+	
+2002-06-06  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/config-engine.c (search_section): 
+	if last_index is set, and there is no section specified,
+	use last_index and last_section. This allow searching for 
+	several section, with the same name.
+
+	(config_get_section): on success, set last_index and last_section.
+
 2002-06-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/sensor.c (parse_argument): 

@@ -76,7 +76,7 @@ static void (*send_heartbeat_cb)(void *data) = NULL;
  * Analyzer informations
  */
 static idmef_node_t node;
-static idmef_address_t address;
+static idmef_address_t *address;
 static char *process_name = NULL, *process_path = NULL;
 
 /*
@@ -146,7 +146,7 @@ static int setup_analyzer_node_address_category(const char *arg)
         if ( ret < 0 )
                 return prelude_option_error;
 
-        address.category = ret;
+        address->category = ret;
         return prelude_option_success;
 }
 
@@ -154,14 +154,14 @@ static int setup_analyzer_node_address_category(const char *arg)
 
 static int setup_analyzer_node_address_address(const char *arg)
 {
-        idmef_string_set(&address.address, arg);
+        idmef_string_set(&address->address, arg);
         return prelude_option_success;
 }
 
 
 static int setup_analyzer_node_address_netmask(const char *arg)
 {
-        idmef_string_set(&address.netmask, arg);
+        idmef_string_set(&address->netmask, arg);
         return prelude_option_success;
 }
 
@@ -198,7 +198,7 @@ static int setup_analyzer_node_category(const char *arg)
 
 static int setup_analyzer_node_address_vlan_num(const char *arg) 
 {
-        address.vlan_num = atoi(arg);
+        address->vlan_num = atoi(arg);
         return prelude_option_success;
 }
 
@@ -206,14 +206,21 @@ static int setup_analyzer_node_address_vlan_num(const char *arg)
 
 static int setup_analyzer_node_address_vlan_name(const char *arg) 
 {        
-        idmef_string_set(&address.vlan_name, arg);
+        idmef_string_set(&address->vlan_name, arg);
         return prelude_option_success;
 }
 
 
 static int setup_address(const char *arg) 
-{
-        list_add_tail(&address.list, &node.address_list);
+{        
+        address = calloc(1, sizeof(*address));
+        if ( ! address ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return prelude_option_error;
+        }
+        
+        list_add_tail(&address->list, &node.address_list);
+
         return prelude_option_success;
 }
 
@@ -239,8 +246,8 @@ static int setup_heartbeat_repeat_time(const char *arg)
 static int parse_argument(const char *filename, int argc, char **argv) 
 {
         int ret;
-        int old_flags;
         char *ptr;
+        int old_flags;
         prelude_option_t *opt;
 
         ptr = strrchr(argv[0], '/');
@@ -281,9 +288,11 @@ static int parse_argument(const char *filename, int argc, char **argv)
         opt = prelude_option_add(NULL, CFG_HOOK, 0, "node address",
                                  NULL, required_argument, setup_address, NULL);
 
-        prelude_option_add(NULL, CFG_HOOK, 0, "address",
-                           NULL, required_argument, setup_analyzer_node_address_address, NULL);
+        prelude_option_set_priority(opt, option_run_first);
         
+        prelude_option_add(opt, CFG_HOOK, 0, "address",
+                           NULL, required_argument, setup_analyzer_node_address_address, NULL);
+
         prelude_option_add(opt, CFG_HOOK, 0, "netmask",
                            NULL, required_argument, setup_analyzer_node_address_netmask, NULL);
 
@@ -320,6 +329,7 @@ static int parse_argument(const char *filename, int argc, char **argv)
                 log(LOG_INFO, "error processing sensor options.\n", filename);
                 goto out;
         }
+
         else if ( ret == prelude_option_end )
                 goto out;
         
