@@ -56,6 +56,19 @@ static char *chomp(char *string)
 
 
 
+static int is_line_commented(const char *line) 
+{
+        while ( *line != '\0' && *line == ' ')
+                line++;
+
+        if ( *line == '#' )
+                return 0;
+
+        return -1;
+}
+
+
+
 
 /*
  * If line contain a section, return a pointer to
@@ -278,6 +291,9 @@ static int search_entry(config_t *cfg, const char *section, const char *entry)
                 if ( i < 0 )
                         return -1;
 
+                if ( is_line_commented(cfg->content[i]) == 0 )
+                        return -1;
+                        
                 i++;
         }
         
@@ -482,8 +498,11 @@ int config_get_section(config_t *cfg, const char *section)
         ret = search_section(cfg, section);
         if ( ret < 0 )
                 return -1;
+        
+        if ( *cfg->content[ret] == '#' )
+                return -1;
 
-        return 0;
+        return ( is_line_commented(cfg->content[ret]) == 0 ) ? -1 : 0;
 }
 
 

@@ -1,5 +1,10 @@
 2002-01-04  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/config-engine.c (is_line_commented): new function.
+	(search_entry): if the section the entry is in is commented,
+	return an error.
+	(config_get_section): ditto.
+
 	* src/include/plugin-common.h (plugin_request_new_id): 
 	remove plugin_option API. Plugin have to use prelude-getopt
 	API now.
