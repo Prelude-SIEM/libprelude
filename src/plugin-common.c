@@ -32,6 +32,7 @@
 #include <unistd.h>
 #include <assert.h>
 
+#include "config.h"
 #include "list.h"
 #include "common.h"
 #include "plugin-common.h"
