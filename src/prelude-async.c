@@ -43,9 +43,9 @@
 static PRELUDE_LIST_HEAD(joblist);
 
 
+static int async_flags = 0;
 static int async_init_ret = -1;
 static int stop_processing = 0;
-static int async_flags = PRELUDE_ASYNC_TIMER;
 
 
 static pthread_t thread;

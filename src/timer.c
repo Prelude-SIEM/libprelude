@@ -413,7 +413,7 @@ void timer_flush(void)
  */
 void timer_lock_critical_region(void) 
 {
-        pthread_mutex_lock(&mutex);
+        timer_lock_list();
 }
 
 
@@ -425,7 +425,7 @@ void timer_lock_critical_region(void)
  */
 void timer_unlock_critical_region(void) 
 {
-        pthread_mutex_unlock(&mutex);
+        timer_unlock_list();
 }
 
 
