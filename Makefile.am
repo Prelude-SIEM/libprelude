@@ -5,6 +5,7 @@ EXTRA_DIST = client.conf global.conf tls.conf
 
 bin_SCRIPTS = $(top_builddir)/libprelude-config
 
+#distcleancheck_listfiles = find . | grep -v .pod$
 
 #
 # Install default sensors configuration with mode 644

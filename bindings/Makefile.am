@@ -19,7 +19,7 @@ endif
 
 
 perl/Makefile: perl/Makefile.PL
-	cd perl && $(PERL) Makefile.PL
+	cd perl && $(PERL) Makefile.PL PREFIX=$(DESTDIR)/$(prefix)
 
 
 # proxy classes are an option for swig <= 1.3.19 and are activated by default with swig > 1.3.19
@@ -47,21 +47,22 @@ python-build:
 
 install-exec-hook:
 if HAVE_PERL
-	cd perl && $(MAKE) install
+	cd perl && $(PERL) Makefile.PL PREFIX=$(DESTDIR)/$(prefix) && $(MAKE) install
 endif
 
 if HAVE_PYTHON
-	cd python && $(PYTHON) setup.py install
+	cd python && $(PYTHON) setup.py install `test -n "$(DESTDIR)" && echo --root $(DESTDIR)`
 endif
 
-# uninstall-hook:
-# if HAVE_PERL
-# 	cd perl && $(MAKE) uninstall
-# endif
 
-# if HAVE_PYTHON
-# 	cd python && python setup.py uninstall
-# endif
+uninstall-hook:
+if HAVE_PERL
+	cd perl && $(PERL) Makefile.PL PREFIX=$(DESTDIR)/$(prefix) && $(MAKE) uninstall
+endif
+
+if HAVE_PYTHON
+	cd python && python setup.py uninstall `test -n "$(DESTDIR)" && echo --root $(DESTDIR)`
+endif
 
 
 clean-am: perl/Makefile

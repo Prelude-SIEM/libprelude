@@ -5,37 +5,67 @@ import shutil
 from distutils.sysconfig import get_python_lib
 from distutils.core import setup, Extension
 
+FILES_TO_BE_COPIED = ("_prelude.c", "prelude.py")
+
+
 def split_args(s):
     import re
     return re.split("\s+", s.strip())
-    
+
+
+def get_root():
+    try:
+        return sys.argv[sys.argv.index("--root") + 1]
+    except ValueError:
+        return ""
+
+
 def is_system_wide_install():
     return os.access(get_python_lib(), os.W_OK)
 
-if sys.argv[1] == "install":
+
+def pre_install():
     if not is_system_wide_install():
         sys.argv.extend(["--prefix", "@prefix@"])
 
-if sys.argv[1] == "build":
+
+def pre_build():
     if abspath("@top_srcdir@") != abspath("@top_builddir@"):
-        for filename in "_prelude.c", "prelude.py":
-            src = "@top_srcdir@/bindings/python/" + filename
-            dst = "@top_builddir@/bindings/python/" + filename
+        for file in FILES_TO_BE_COPIED:
+            src = "@top_srcdir@/bindings/python/" + file
+            dst = "@top_builddir@/bindings/python/" + file
             if not exists(dst):
                 shutil.copy(src, dst)
 
 
-# there is no "uninstall" command, do it manually
-if sys.argv[1] == "uninstall":
+def pre_clean():
+    for file in FILES_TO_BE_COPIED:
+        exists(file) and os.remove(file)
+
+
+def uninstall():
     if is_system_wide_install():
-        prefix = get_python_lib()
+        prefix = None
     else:
-        prefix = "@prefix@" + "/site-packages"
+        prefix = "@prefix@"
     
-    for filename in "prelude.py", "prelude.pyc", "_prelude.so":
-        os.remove(filename)
+    for file in "prelude.py", "prelude.pyc", "_prelude.so":
+        file = get_root() + "/" + get_python_lib(prefix=prefix) + "/" + file
+        exists(file) and os.remove(file)
     
     sys.exit(0)
+
+
+
+commands = {
+    "install": pre_install,
+    "build": pre_build,
+    "clean": pre_clean,
+    "uninstall": uninstall,
+    }
+
+if len(sys.argv) > 1 and commands.has_key(sys.argv[1]):
+    commands[sys.argv[1]]()
 
 setup(name="prelude",
       package_dir={'prelude': '@top_srcdir@/bindings/python'},

@@ -1,7 +1,13 @@
 use Config;
 use ExtUtils::MakeMaker;
+use ExtUtils::MM_Unix;
 use File::Copy;
 use Cwd "abs_path";
+
+my %attributs = (NAME => 'Prelude',
+		 INC => '-I@top_builddir@/src/include -I@top_srcdir@/src/include',
+		 LIBS => [ "@libprelude_libs@ -L@top_builddir@/src/.libs -lprelude" ],
+		 LDDLFLAGS => "@PTHREAD_CFLAGS@ $Config{lddlflags}");
 
 if ( abs_path("@top_srcdir@") ne abs_path("@top_builddir@") ) {
     foreach my $filename ( qw/Prelude.c Prelude.pm/ ) {
@@ -9,17 +15,28 @@ if ( abs_path("@top_srcdir@") ne abs_path("@top_builddir@") ) {
 	my $dst = "@top_builddir@/bindings/perl/$filename";
 	copy($src, $dst) if ( ! -e $dst );
     }
+    $attributs{"clean"} = {FILES => join(" ", map { "@top_builddir@/bindings/perl/$_" } qw/Prelude.c Prelude.pm Makefile/)};
 }
 
-my %attributs = (NAME => 'Prelude',
-		 INC => '-I@top_builddir@/src/include -I@top_srcdir@/src/include',
-		 LIBS => [ "@libprelude_libs@ -L@top_builddir@/src/.libs -lprelude" ],
-		 LDDLFLAGS => "@PTHREAD_CFLAGS@ $Config{lddlflags}");
-
-if  (-w $Config{"sitelib"}) {
+if ( -w $Config{"sitelib"} ) {
     $attributs{"INSTALLDIRS"} = "site";
 } else {
     $attributs{"PREFIX"} = "@prefix@";
 }
 
 WriteMakefile(%attributs);
+
+my($atime, $mtime) = (stat "Makefile.PL")[8,9];
+utime($atime + 1, $mtime + 1, "Makefile");
+
+
+package MY;
+
+sub install
+{
+    my $str = shift->SUPER::install(@_);
+
+    $str =~ s/(uninstall_from_sitedirs.+)\n.+\n/$1\n\t\$(RM_F) \`cat \$(INSTALLSITEARCH)\/auto\/\$(FULLEXT)\/.packlist\`\n\t\$(RM_F) \$(INSTALLSITEARCH)\/auto\/\$(FULLEXT)\/.packlist/;
+
+    return $str;
+}
