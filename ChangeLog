@@ -1,5 +1,8 @@
 2002-01-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/sensor.c (parse_argument): short option for manager-addr
+	is -m, not -a.
+
 	* src/client-ident.c: new file.
 	(prelude_client_ident_tell): when called, will tell the
 	other peer what ID we are, unless we are a Manager ourselve.
