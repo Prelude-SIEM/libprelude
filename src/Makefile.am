@@ -1,6 +1,6 @@
 SUBDIRS = include
 
-AM_CPPFLAGS = @PTHREAD_CFLAGS@ @INCLTDL@ @libprelude_cflags@ -I$(srcdir)/include \
+AM_CPPFLAGS = -I$(top_builddir)/src/include @PTHREAD_CFLAGS@ @INCLTDL@ @libprelude_cflags@ -I$(srcdir)/include \
 	      -DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\" -DPRELUDE_SPOOL_DIR=\"@prelude_spool_dir@\"
 
 
