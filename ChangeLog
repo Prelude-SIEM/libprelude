@@ -1,3 +1,8 @@
+2002-05-30  Laurent Oudot  <oudot.laurent@wanadoo.fr>
+	
+	* sensor-adduser/sensor-adduser.c:
+	very small change from "passwrd" to "password" in a getpass.
+	
 2002-05-24  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/timer.c (timer_flush): 

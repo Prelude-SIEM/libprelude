@@ -214,7 +214,7 @@ static int ask_one_shot_password(char **buf)
         if ( ! pass )
                 return -1;
         
-        confirm = getpass("Please confirm one shot passwrd : ");
+        confirm = getpass("Please confirm one shot password : ");
         if ( ! confirm )
                 return -1;
 
