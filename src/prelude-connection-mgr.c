@@ -705,8 +705,6 @@ static void broadcast_async_cb(void *obj, void *data)
         prelude_msg_t *msg = obj;
         prelude_connection_mgr_t *cmgr = data;
 
-        printf("broadcast async\n");
-        
         prelude_connection_mgr_broadcast(cmgr, msg);
         prelude_msg_destroy(msg);
 }
@@ -723,7 +721,6 @@ static void broadcast_async_cb(void *obj, void *data)
  */
 void prelude_connection_mgr_broadcast(prelude_connection_mgr_t *cmgr, prelude_msg_t *msg) 
 {
-        printf("broadcast\n");
         prelude_timer_lock_critical_region();
         walk_manager_lists(cmgr, msg);        
         prelude_timer_unlock_critical_region();
