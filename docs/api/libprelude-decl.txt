@@ -80,6 +80,11 @@ prelude_io_t *dst, prelude_io_t *src, size_t count
 prelude_io_t *pio
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_io_get_fdptr</NAME>
+<RETURNS>void  *</RETURNS>
+prelude_io_t *pio
+</FUNCTION>
+<FUNCTION>
 <NAME>plugin_load_from_dir</NAME>
 <RETURNS>int  </RETURNS>
 const char *dirname, int argc, char **argv,int (*subscribe)(plugin_container_t *p), void (*unsubscribe)(plugin_container_t *pc)
@@ -223,14 +228,6 @@ const char *variable
 <MACRO>
 <NAME>PRELUDE_MSG_AUTH_FAILED</NAME>
 #define PRELUDE_MSG_AUTH_FAILED    7
-</MACRO>
-<MACRO>
-<NAME>MANAGERS_CERT</NAME>
-#define MANAGERS_CERT SENSORS_CONFIG_DIR"/managers.cert"
-</MACRO>
-<MACRO>
-<NAME>SENSORS_KEY</NAME>
-#define SENSORS_KEY SENSORS_CONFIG_DIR"/sensors.key"
 </MACRO>
 <FUNCTION>
 <NAME>ssl_init_client</NAME>
@@ -505,17 +502,43 @@ const char *filename
 <RETURNS>int  </RETURNS>
 config_t *cfg
 </FUNCTION>
-<MACRO>
-<NAME>SENSORS_AUTH_FILE</NAME>
-#define SENSORS_AUTH_FILE SENSORS_CONFIG_DIR"/sensors.auth"
-</MACRO>
+<FUNCTION>
+<NAME>prelude_get_socket_filename</NAME>
+<RETURNS>char  *</RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_get_auth_filename</NAME>
+<RETURNS>void  </RETURNS>
+char *buf, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_get_ssl_cert_filename</NAME>
+<RETURNS>void  </RETURNS>
+char *buf, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_get_ssl_key_filename</NAME>
+<RETURNS>void  </RETURNS>
+char *buf, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_get_backup_filename</NAME>
+<RETURNS>void  </RETURNS>
+char *buf, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_set_program_name</NAME>
+<RETURNS>void  </RETURNS>
+const char *sname
+</FUNCTION>
 <TYPEDEF>
 <NAME>prelude_timer_t</NAME>
 typedef struct {
         struct list_head list;
 
-        long expire;
-        struct timeval start;
+        short int expire;
+        time_t start_time;
 
         void *data;
         void (*function)(void *data);
@@ -640,7 +663,7 @@ prelude_client_mgr_t *cmgr, prelude_msg_t *msg
 <FUNCTION>
 <NAME>prelude_client_mgr_new</NAME>
 <RETURNS>prelude_client_mgr_t  *</RETURNS>
-const char *identifier, const char *cfgline
+const char *cfgline
 </FUNCTION>
 <MACRO>
 <NAME>PLUGIN_GENERIC</NAME>
@@ -791,16 +814,13 @@ void
 <FUNCTION>
 <NAME>ssl_add_certificate</NAME>
 <RETURNS>int  </RETURNS>
-const char *sname, uid_t uid
+void
 </FUNCTION>
-<MACRO>
-<NAME>SENSORS_SPOOL_DATA</NAME>
-#define SENSORS_SPOOL_DATA "/var/spool/prelude-sensors"
-</MACRO>
-<MACRO>
-<NAME>SENSORS_PERSISTANT_DATA</NAME>
-#define SENSORS_PERSISTANT_DATA "/var/lib/prelude-sensors"
-</MACRO>
+<FUNCTION>
+<NAME>prelude_ssl_ask_settings</NAME>
+<RETURNS>void  </RETURNS>
+int *keysize, int *expire
+</FUNCTION>
 <FUNCTION>
 <NAME>prelude_sensor_send_alert</NAME>
 <RETURNS>void  </RETURNS>
@@ -826,6 +846,11 @@ void
 <RETURNS>void  </RETURNS>
 uint64_t *ident
 </FUNCTION>
+<FUNCTION>
+<NAME>prelude_set_sensor_name</NAME>
+<RETURNS>void  </RETURNS>
+const char *sname
+</FUNCTION>
 <MACRO>
 <NAME>SSL_GENCRYPTO_H</NAME>
 #define SSL_GENCRYPTO_H
@@ -838,11 +863,6 @@ uint64_t *ident
 <NAME>prelude_ssl_gen_crypto</NAME>
 <RETURNS>X509  *</RETURNS>
 int keysize, int expire, const char *keyout, int crypt
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_ssl_ask_settings</NAME>
-<RETURNS>void  </RETURNS>
-int *keysize, int *expire, int *store_crypted
 </FUNCTION>
 <MACRO>
 <NAME>CLI_HOOK</NAME>

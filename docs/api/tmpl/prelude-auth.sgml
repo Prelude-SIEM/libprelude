@@ -16,13 +16,6 @@ peer, only if the connection is plaintext.
 
 </para>
 
-<!-- ##### MACRO SENSORS_AUTH_FILE ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### FUNCTION prelude_auth_create_account ##### -->
 <para>
 

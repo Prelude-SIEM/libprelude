@@ -250,6 +250,12 @@ thread
 </para>
 
 
+<!-- ##### MACRO MANAGERS_CERT ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### MACRO MANAGER_AUTH_FILE ##### -->
 <para>
 
@@ -292,7 +298,19 @@ thread
 </para>
 
 
+<!-- ##### MACRO SENSORS_AUTH_FILE ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### MACRO SENSORS_CERT ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO SENSORS_KEY ##### -->
 <para>
 
 </para>

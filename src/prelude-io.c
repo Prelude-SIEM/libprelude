@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -172,12 +172,15 @@ static ssize_t copy_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
  */
 static ssize_t ssl_read(prelude_io_t *pio, void *buf, size_t count) 
 {
-        int ret;
+        int ret, ssl_error;
         
         do {
                 ret = SSL_read(pio->fd_ptr, buf, count);
-        } while ( ret < 0 && errno == (EINTR || errno == EAGAIN) );
-
+                if ( ret < 0 ) 
+                        errno = ssl_error = SSL_get_error(pio->fd_ptr, ret);
+                        
+        } while ( ret < 0 && (ssl_error == EINTR || ssl_error == EAGAIN) );
+        
         return ret;
 }
 
@@ -185,16 +188,16 @@ static ssize_t ssl_read(prelude_io_t *pio, void *buf, size_t count)
 
 static ssize_t ssl_write(prelude_io_t *pio, const void *buf, size_t count) 
 {
-        return SSL_write(pio->fd_ptr, buf, count);
-#if 0
-        int ret;
-        
-        printf("calling ssl write\n");
-        ret = SSL_write(pio->fd_ptr, buf, count);
-        printf("ssl write returned %d\n", ret);
+        int ret, ssl_error;
+
+        do {
+                ret = SSL_write(pio->fd_ptr, buf, count);
+                if ( ret < 0 )
+                        errno = ssl_error = SSL_get_error(pio->fd_ptr, ret);
+
+        } while ( ret < 0 && (ssl_error == EINTR || ssl_error == EAGAIN) );
         
         return ret;
-#endif
 }
 
 

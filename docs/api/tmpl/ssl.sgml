@@ -14,20 +14,6 @@ ssl
 
 </para>
 
-<!-- ##### MACRO MANAGERS_CERT ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO SENSORS_KEY ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### FUNCTION ssl_init_client ##### -->
 <para>
 
