@@ -14,25 +14,98 @@ prelude-list
 
 </para>
 
-<!-- ##### MACRO PRELUDE_LINKED_OBJECT ##### -->
+<!-- ##### MACRO PRELUDE_LIST_HEAD_INIT ##### -->
 <para>
 
 </para>
 
+@name: 
 
 
-<!-- ##### TYPEDEF prelude_linked_object_t ##### -->
+<!-- ##### MACRO PRELUDE_LIST_HEAD ##### -->
 <para>
 
 </para>
 
+@name: 
 
-<!-- ##### MACRO prelude_list_get_object ##### -->
+
+<!-- ##### MACRO PRELUDE_INIT_LIST_HEAD ##### -->
 <para>
 
 </para>
 
-@listentry: 
+@ptr: 
+
+
+<!-- ##### MACRO prelude_list_entry ##### -->
+<para>
+
+</para>
+
+@ptr: 
 @type: 
+@member: 
+
+
+<!-- ##### MACRO prelude_list_get_next ##### -->
+<para>
+
+</para>
+
+@pos: 
+@list: 
+@class: 
+@member: 
+
+
+<!-- ##### MACRO prelude_list_get_next_safe ##### -->
+<para>
+
+</para>
+
+@pos: 
+@bkp: 
+@list: 
+@class: 
+@member: 
+
+
+<!-- ##### MACRO prelude_list_for_each ##### -->
+<para>
+
+</para>
+
+@pos: 
+@head: 
+
+
+<!-- ##### MACRO prelude_list_for_each_safe ##### -->
+<para>
+
+</para>
+
+@pos: 
+@n: 
+@head: 
+
+
+<!-- ##### MACRO prelude_list_for_each_reversed ##### -->
+<para>
+
+</para>
+
+@pos: 
+@head: 
+
+
+<!-- ##### MACRO prelude_list_for_each_reversed_safe ##### -->
+<para>
+
+</para>
+
+@pos: 
+@n: 
+@head: 
 
 

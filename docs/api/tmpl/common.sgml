@@ -14,6 +14,14 @@ common
 
 </para>
 
+<!-- ##### ENUM prelude_bool_t ##### -->
+<para>
+
+</para>
+
+@PRELUDE_BOOL_TRUE: 
+@PRELUDE_BOOL_FALSE: 
+
 <!-- ##### FUNCTION prelude_realloc ##### -->
 <para>
 
@@ -53,6 +61,36 @@ common
 @line: 
 @buf: 
 @size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_hton64 ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_get_file_name_and_path ##### -->
+<para>
+
+</para>
+
+@str: 
+@name: 
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_get_gmt_offset ##### -->
+<para>
+
+</para>
+
+@time_local: 
+@gmt_offset: 
 @Returns: 
 
 

@@ -21,20 +21,6 @@ prelude-message-id
 
 
 
-<!-- ##### MACRO PRELUDE_MSG_OPTION_LIST ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO PRELUDE_MSG_OPTION_SET ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### MACRO PRELUDE_MSG_ID ##### -->
 <para>
 
@@ -56,49 +42,28 @@ prelude-message-id
 
 
 
+<!-- ##### MACRO PRELUDE_MSG_CLIENT_CAPABILITY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_REQUEST ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_REPLY ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO PRELUDE_MSG_ID_DECLARE ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO PRELUDE_MSG_AUTH_HAVE_SSL ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO PRELUDE_MSG_AUTH_HAVE_PLAINTEXT ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO PRELUDE_MSG_AUTH_SSL ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO PRELUDE_MSG_AUTH_PLAINTEXT ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO PRELUDE_MSG_AUTH_USERNAME ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO PRELUDE_MSG_AUTH_PASSWORD ##### -->
 <para>
 
 </para>
@@ -113,13 +78,6 @@ prelude-message-id
 
 
 <!-- ##### MACRO PRELUDE_MSG_AUTH_FAILED ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO PRELUDE_MSG_AUTH_EXIST ##### -->
 <para>
 
 </para>
@@ -148,6 +106,146 @@ prelude-message-id
 
 
 <!-- ##### MACRO PRELUDE_MSG_CM_FEATURE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_TARGET_ID ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_SOURCE_ID ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_LIST ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_VALUE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_SET ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_GET ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_ID ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_ERROR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_START ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_END ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_DESC ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_HAS_ARG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_HELP ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_INPUT_VALIDATION ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_INPUT_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_ARG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_FLAGS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_DESTROY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_OPTION_COMMIT ##### -->
 <para>
 
 </para>

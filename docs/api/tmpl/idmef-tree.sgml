@@ -14,431 +14,111 @@ idmef-tree
 
 </para>
 
+<!-- ##### MACRO LISTED_OBJECT ##### -->
+<para>
+
+</para>
+
+@name: 
+@type: 
+
+
+<!-- ##### MACRO IS_LISTED ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO UNION ##### -->
+<para>
+
+</para>
+
+@type: 
+@var: 
+
+
+<!-- ##### MACRO UNION_MEMBER ##### -->
+<para>
+
+</para>
+
+@value: 
+@type: 
+@name: 
+
+
+<!-- ##### MACRO ENUM ##### -->
+<para>
+
+</para>
+
+@...: 
+
+
+<!-- ##### MACRO PRE_DECLARE ##### -->
+<para>
+
+</para>
+
+@type: 
+@class: 
+
+
+<!-- ##### MACRO TYPE_ID ##### -->
+<para>
+
+</para>
+
+@type: 
+@id: 
+
+
+<!-- ##### MACRO PRIMITIVE_TYPE ##### -->
+<para>
+
+</para>
+
+@type: 
+
+
+<!-- ##### MACRO PRIMITIVE_TYPE_STRUCT ##### -->
+<para>
+
+</para>
+
+@type: 
+
+
+<!-- ##### MACRO HIDE ##### -->
+<para>
+
+</para>
+
+@type: 
+@name: 
+
+
+<!-- ##### MACRO REFCOUNT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO DYNAMIC_IDENT ##### -->
+<para>
+
+</para>
+
+@x: 
+
+
 <!-- ##### MACRO IDMEF_VERSION ##### -->
 <para>
 
 </para>
 
-
-
-<!-- ##### TYPEDEF idmef_string_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF idmef_time_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO idmef_create_time_t ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO idmef_detect_time_t ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO idmef_analyzer_time_t ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### ENUM idmef_additional_data_type_t ##### -->
-<para>
-
-</para>
-
-@string: 
-@boolean: 
-@byte: 
-@character: 
-@date_time: 
-@integer: 
-@ntpstamp: 
-@portlist: 
-@real: 
-@xml: 
-
-<!-- ##### TYPEDEF idmef_additional_data_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### ENUM idmef_classification_origin_t ##### -->
-<para>
-
-</para>
-
-@origin_unknown: 
-@bugtraqid: 
-@cve: 
-@vendor_specific: 
-
-<!-- ##### TYPEDEF idmef_classification_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### ENUM idmef_userid_type_t ##### -->
-<para>
-
-</para>
-
-@original_user: 
-@current_user: 
-@target_user: 
-@user_privs: 
-@current_group: 
-@group_privs: 
-@other_privs: 
-
-<!-- ##### TYPEDEF idmef_userid_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### ENUM idmef_user_category_t ##### -->
-<para>
-
-</para>
-
-@cat_unknown: 
-@application: 
-@os_device: 
-
-<!-- ##### TYPEDEF idmef_user_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### ENUM idmef_address_category_t ##### -->
-<para>
-
-</para>
-
-@addr_unknown: 
-@atm: 
-@e_mail: 
-@lotus_notes: 
-@mac: 
-@sna: 
-@vm: 
-@ipv4_addr: 
-@ipv4_addr_hex: 
-@ipv4_net: 
-@ipv4_net_mask: 
-@ipv6_addr: 
-@ipv6_addr_hex: 
-@ipv6_net: 
-@ipv6_net_mask: 
-
-<!-- ##### TYPEDEF idmef_address_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF idmef_string_item_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO idmef_process_env_t ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO idmef_process_arg_t ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO idmef_file_access_permission_t ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### TYPEDEF idmef_process_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF idmef_webservice_arg_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF idmef_webservice_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF idmef_snmpservice_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### ENUM idmef_service_type_t ##### -->
-<para>
-
-</para>
-
-@no_specific_service: 
-@web_service: 
-@snmp_service: 
-
-<!-- ##### TYPEDEF specific ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### ENUM idmef_node_category_t ##### -->
-<para>
-
-</para>
-
-@node_unknown: 
-@ads: 
-@afs: 
-@coda: 
-@dfs: 
-@dns: 
-@hosts: 
-@kerberos: 
-@nds: 
-@nis: 
-@nisplus: 
-@nt: 
-@wfw: 
-
-<!-- ##### TYPEDEF idmef_node_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### ENUM idmef_spoofed_t ##### -->
-<para>
-
-</para>
-
-@unknown: 
-@yes: 
-@no: 
-
-<!-- ##### TYPEDEF idmef_source_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF idmef_file_access_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### ENUM idmef_linkage_category_t ##### -->
-<para>
-
-</para>
-
-@hard_link: 
-@mount_point: 
-@reparse_point: 
-@shortcut: 
-@stream: 
-@symbolic_link: 
-
-<!-- ##### TYPEDEF idmef_linkage_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF idmef_inode_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### ENUM idmef_file_category_t ##### -->
-<para>
-
-</para>
-
-@current: 
-@original: 
-
-<!-- ##### TYPEDEF idmef_target_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF idmef_analyzer_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF idmef_alertident_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### ENUM idmef_impact_severity_t ##### -->
-<para>
-
-</para>
-
-@impact_low: 
-@impact_medium: 
-@impact_high: 
-
-<!-- ##### ENUM idmef_impact_completion_t ##### -->
-<para>
-
-</para>
-
-@failed: 
-@succeeded: 
-
-<!-- ##### ENUM idmef_impact_type_t ##### -->
-<para>
-
-</para>
-
-@other: 
-@admin: 
-@dos: 
-@file: 
-@recon: 
-@user: 
-
-<!-- ##### TYPEDEF idmef_impact_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### ENUM idmef_action_category_t ##### -->
-<para>
-
-</para>
-
-@action_other: 
-@block_installed: 
-@notification_sent: 
-@taken_offline: 
-
-<!-- ##### TYPEDEF idmef_action_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### ENUM idmef_confidence_rating_t ##### -->
-<para>
-
-</para>
-
-@numeric: 
-@low: 
-@medium: 
-@high: 
-
-<!-- ##### TYPEDEF idmef_confidence_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF idmef_assessment_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF idmef_tool_alert_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF idmef_correlation_alert_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF idmef_overflow_alert_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### ENUM idmef_alert_type_t ##### -->
-<para>
-
-</para>
-
-@idmef_default: 
-@idmef_tool_alert: 
-@idmef_correlation_alert: 
-@idmef_overflow_alert: 
-
-<!-- ##### TYPEDEF detail ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF idmef_heartbeat_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### ENUM idmef_message_type_t ##### -->
-<para>
-
-</para>
-
-@idmef_alert_message: 
-@idmef_heartbeat_message: 
-
-<!-- ##### TYPEDEF message ##### -->
-<para>
-
-</para>
 
 

@@ -15,11 +15,16 @@ when a timer previously set expire.
 
 </para>
 
-<!-- ##### TYPEDEF prelude_timer_t ##### -->
+<!-- ##### STRUCT prelude_timer_t ##### -->
 <para>
 
 </para>
 
+@list: 
+@expire: 
+@start_time: 
+@data: 
+@function: 
 
 <!-- ##### MACRO timer_expire ##### -->
 <para>
@@ -80,20 +85,6 @@ when a timer previously set expire.
 @timer: 
 
 
-<!-- ##### FUNCTION timer_destroy_current ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### FUNCTION timer_reset_current ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### FUNCTION timer_reset ##### -->
 <para>
 
@@ -127,6 +118,20 @@ when a timer previously set expire.
 
 
 <!-- ##### FUNCTION timer_flush ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION timer_lock_critical_region ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION timer_unlock_critical_region ##### -->
 <para>
 
 </para>

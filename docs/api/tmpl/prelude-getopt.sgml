@@ -35,6 +35,27 @@ prelude-getopt
 
 
 
+<!-- ##### MACRO ALLOW_MULTIPLE_CALL ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO DESTROY_HOOK ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO HAVE_CONTEXT ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO prelude_option_success ##### -->
 <para>
 
@@ -65,13 +86,6 @@ prelude-getopt
 @optionnal_argument: 
 @no_argument: 
 
-<!-- ##### MACRO option_run_last ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### MACRO option_run_first ##### -->
 <para>
 
@@ -80,6 +94,13 @@ prelude-getopt
 
 
 <!-- ##### MACRO option_run_no_order ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO option_run_last ##### -->
 <para>
 
 </para>
@@ -100,17 +121,20 @@ prelude-getopt
 
 </para>
 
+@opt: 
 @flags: 
 @descoff: 
 <!-- # Unused Parameters # -->
 @optlist: 
 
 
-<!-- ##### FUNCTION prelude_option_wide_get_msg ##### -->
+<!-- ##### FUNCTION prelude_option_wide_send_msg ##### -->
 <para>
 
 </para>
 
+@context: 
+@msgbuf: 
 @Returns: 
 
 
@@ -129,6 +153,7 @@ prelude-getopt
 
 </para>
 
+@context: 
 @option: 
 @filename: 
 @argc: 
@@ -168,6 +193,24 @@ prelude-getopt
 
 </para>
 
+
+
+<!-- ##### FUNCTION prelude_option_set_flags ##### -->
+<para>
+
+</para>
+
+@opt: 
+@flags: 
+
+
+<!-- ##### FUNCTION prelude_option_get_flags ##### -->
+<para>
+
+</para>
+
+@opt: 
+@Returns: 
 
 
 <!-- ##### FUNCTION prelude_option_set_warnings ##### -->
@@ -212,5 +255,328 @@ prelude-getopt
 </para>
 
 @opt: 
+
+
+<!-- ##### FUNCTION prelude_option_invoke_commit ##### -->
+<para>
+
+</para>
+
+@context: 
+@opt: 
+@value: 
+@err: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_invoke_set ##### -->
+<para>
+
+</para>
+
+@context: 
+@opt: 
+@value: 
+@err: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_invoke_get ##### -->
+<para>
+
+</para>
+
+@context: 
+@opt: 
+@value: 
+@buf: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_invoke_destroy ##### -->
+<para>
+
+</para>
+
+@context: 
+@opt: 
+@value: 
+@buf: 
+@err: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_new ##### -->
+<para>
+
+</para>
+
+@parent: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_set_longopt ##### -->
+<para>
+
+</para>
+
+@opt: 
+@longopt: 
+
+
+<!-- ##### FUNCTION prelude_option_get_longopt ##### -->
+<para>
+
+</para>
+
+@opt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_set_description ##### -->
+<para>
+
+</para>
+
+@opt: 
+@description: 
+
+
+<!-- ##### FUNCTION prelude_option_get_description ##### -->
+<para>
+
+</para>
+
+@opt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_set_has_arg ##### -->
+<para>
+
+</para>
+
+@opt: 
+@has_arg: 
+
+
+<!-- ##### FUNCTION prelude_option_get_has_arg ##### -->
+<para>
+
+</para>
+
+@opt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_set_value ##### -->
+<para>
+
+</para>
+
+@opt: 
+@value: 
+
+
+<!-- ##### FUNCTION prelude_option_get_value ##### -->
+<para>
+
+</para>
+
+@opt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_set_help ##### -->
+<para>
+
+</para>
+
+@opt: 
+@help: 
+
+
+<!-- ##### FUNCTION prelude_option_get_help ##### -->
+<para>
+
+</para>
+
+@opt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_set_input_validation_regex ##### -->
+<para>
+
+</para>
+
+@opt: 
+@regex: 
+
+
+<!-- ##### FUNCTION prelude_option_get_input_validation_regex ##### -->
+<para>
+
+</para>
+
+@opt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_set_input_type ##### -->
+<para>
+
+</para>
+
+@opt: 
+@input_type: 
+
+
+<!-- ##### FUNCTION prelude_option_get_input_type ##### -->
+<para>
+
+</para>
+
+@opt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_get_optlist ##### -->
+<para>
+
+</para>
+
+@opt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_get_next ##### -->
+<para>
+
+</para>
+
+@start: 
+@cur: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_has_optlist ##### -->
+<para>
+
+</para>
+
+@opt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_get_parent ##### -->
+<para>
+
+</para>
+
+@opt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_set_destroy_callback ##### -->
+<para>
+
+</para>
+
+@opt: 
+@destroy: 
+
+
+<!-- ##### FUNCTION prelude_option_get_destroy_callback ##### -->
+<para>
+
+</para>
+
+@opt: 
+
+
+<!-- ##### FUNCTION prelude_option_set_set_callback ##### -->
+<para>
+
+</para>
+
+@opt: 
+@set: 
+
+
+<!-- ##### FUNCTION prelude_option_get_set_callback ##### -->
+<para>
+
+</para>
+
+@opt: 
+
+
+<!-- ##### FUNCTION prelude_option_set_get_callback ##### -->
+<para>
+
+</para>
+
+@opt: 
+@get: 
+
+
+<!-- ##### FUNCTION prelude_option_get_get_callback ##### -->
+<para>
+
+</para>
+
+@opt: 
+
+
+<!-- ##### FUNCTION prelude_option_set_commit_callback ##### -->
+<para>
+
+</para>
+
+@opt: 
+@commit: 
+
+
+<!-- ##### FUNCTION prelude_option_get_commit_callback ##### -->
+<para>
+
+</para>
+
+@opt: 
+
+
+<!-- ##### FUNCTION prelude_option_new_context ##### -->
+<para>
+
+</para>
+
+@opt: 
+@name: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_context_destroy ##### -->
+<para>
+
+</para>
+
+@oc: 
+
+
+<!-- ##### FUNCTION prelude_option_search ##### -->
+<para>
+
+</para>
+
+@parent: 
+@name: 
+@flags: 
+@walk_children: 
+@Returns: 
 
 

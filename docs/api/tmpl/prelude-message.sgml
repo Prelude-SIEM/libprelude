@@ -52,36 +52,6 @@ case of problem.
 prelude-message-buffered
 </para>
 
-<!-- ##### TYPEDEF size_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF ssize_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF uint8_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF uint16_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF uint32_t ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### MACRO PRELUDE_MSG_PRIORITY_HIGH ##### -->
 <para>
 
@@ -167,11 +137,12 @@ prelude-message-buffered
 
 </para>
 
+@flush_msg_cb: 
+@data: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @tag: 
 @priority: 
-@data: 
-@flush_msg_cb: 
-@Returns: 
 
 
 <!-- ##### FUNCTION prelude_msg_new ##### -->
@@ -254,7 +225,34 @@ prelude-message-buffered
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_msg_get_len ##### -->
+<para>
+
+</para>
+
+@msg: 
+@Returns: 
+
+
 <!-- ##### FUNCTION prelude_msg_get_datalen ##### -->
+<para>
+
+</para>
+
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msg_is_empty ##### -->
+<para>
+
+</para>
+
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msg_is_fragment ##### -->
 <para>
 
 </para>
@@ -277,5 +275,23 @@ prelude-message-buffered
 </para>
 
 @msg: 
+
+
+<!-- ##### FUNCTION prelude_msg_set_callback ##### -->
+<para>
+
+</para>
+
+@msg: 
+@flush_msg_cb: 
+
+
+<!-- ##### FUNCTION prelude_msg_set_data ##### -->
+<para>
+
+</para>
+
+@msg: 
+@data: 
 
 

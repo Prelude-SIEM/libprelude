@@ -1,39 +1,59 @@
 <!doctype book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+<!ENTITY libprelude-idmef-criteria-stringyac SYSTEM "sgml/idmef-criteria-string.yac.sgml">
+<!ENTITY libprelude-idmef-tree SYSTEM "sgml/idmef-tree.sgml">
+<!ENTITY libprelude-prelude-linked-object SYSTEM "sgml/prelude-linked-object.sgml">
+<!ENTITY libprelude-idmef-tree-wrap SYSTEM "sgml/idmef-tree-wrap.sgml">
 <!ENTITY libprelude-prelude-io SYSTEM "sgml/prelude-io.sgml">
-<!ENTITY libprelude-plugin-common-prv SYSTEM "sgml/plugin-common-prv.sgml">
 <!ENTITY libprelude-variable SYSTEM "sgml/variable.sgml">
 <!ENTITY libprelude-prelude-message-id SYSTEM "sgml/prelude-message-id.sgml">
+<!ENTITY libprelude-idmef-tree-print SYSTEM "sgml/idmef-tree-print.sgml">
 <!ENTITY libprelude-prelude-log SYSTEM "sgml/prelude-log.sgml">
-<!ENTITY libprelude-ssl SYSTEM "sgml/ssl.sgml">
-<!ENTITY libprelude-ssl-settings SYSTEM "sgml/ssl-settings.sgml">
-<!ENTITY libprelude-prelude-auth SYSTEM "sgml/prelude-auth.sgml">
-<!ENTITY libprelude-idmef-msg-send SYSTEM "sgml/idmef-msg-send.sgml">
+<!ENTITY libprelude-idmef-criteria-string SYSTEM "sgml/idmef-criteria-string.sgml">
+<!ENTITY libprelude-ntp SYSTEM "sgml/ntp.sgml">
+<!ENTITY libprelude-prelude-connection SYSTEM "sgml/prelude-connection.sgml">
+<!ENTITY libprelude-idmef-string SYSTEM "sgml/idmef-string.sgml">
+<!ENTITY libprelude-prelude-strbuf SYSTEM "sgml/prelude-strbuf.sgml">
+<!ENTITY libprelude-idmef-message-write SYSTEM "sgml/idmef-message-write.sgml">
 <!ENTITY libprelude-prelude-ident SYSTEM "sgml/prelude-ident.sgml">
+<!ENTITY libprelude-idmef-message-id-format SYSTEM "sgml/idmef-message-id-format.sgml">
 <!ENTITY libprelude-prelude-client SYSTEM "sgml/prelude-client.sgml">
+<!ENTITY libprelude-idmef-value-object SYSTEM "sgml/idmef-value-object.sgml">
+<!ENTITY libprelude-prelude-plugin SYSTEM "sgml/prelude-plugin.sgml">
+<!ENTITY libprelude-prelude-hash SYSTEM "sgml/prelude-hash.sgml">
+<!ENTITY libprelude-prelude-failover SYSTEM "sgml/prelude-failover.sgml">
 <!ENTITY libprelude-prelude-async SYSTEM "sgml/prelude-async.sgml">
+<!ENTITY libprelude-idmef-message-read SYSTEM "sgml/idmef-message-read.sgml">
+<!ENTITY libprelude-prelude-inet SYSTEM "sgml/prelude-inet.sgml">
 <!ENTITY libprelude-prelude-list SYSTEM "sgml/prelude-list.sgml">
 <!ENTITY libprelude-threads SYSTEM "sgml/threads.sgml">
-<!ENTITY libprelude-ssl-registration-msg SYSTEM "sgml/ssl-registration-msg.sgml">
+<!ENTITY libprelude-prelude-inttypes SYSTEM "sgml/prelude-inttypes.sgml">
+<!ENTITY libprelude-prelude SYSTEM "sgml/prelude.sgml">
 <!ENTITY libprelude-config-engine SYSTEM "sgml/config-engine.sgml">
-<!ENTITY libprelude-prelude-path SYSTEM "sgml/prelude-path.sgml">
 <!ENTITY libprelude-timer SYSTEM "sgml/timer.sgml">
 <!ENTITY libprelude-common SYSTEM "sgml/common.sgml">
-<!ENTITY libprelude-prelude-client-mgr SYSTEM "sgml/prelude-client-mgr.sgml">
-<!ENTITY libprelude-plugin-common SYSTEM "sgml/plugin-common.sgml">
+<!ENTITY libprelude-prelude-connection-mgr SYSTEM "sgml/prelude-connection-mgr.sgml">
 <!ENTITY libprelude-prelude-getopt-wide SYSTEM "sgml/prelude-getopt-wide.sgml">
-<!ENTITY libprelude-list SYSTEM "sgml/list.sgml">
-<!ENTITY libprelude-sensor SYSTEM "sgml/sensor.sgml">
-<!ENTITY libprelude-ssl-gencrypto SYSTEM "sgml/ssl-gencrypto.sgml">
+<!ENTITY libprelude-idmef-criteria SYSTEM "sgml/idmef-criteria.sgml">
+<!ENTITY libprelude-idmef-data SYSTEM "sgml/idmef-data.sgml">
+<!ENTITY libprelude-idmef-tree-to-string SYSTEM "sgml/idmef-tree-to-string.sgml">
+<!ENTITY libprelude-idmef-criterion-value SYSTEM "sgml/idmef-criterion-value.sgml">
+<!ENTITY libprelude-tls-auth SYSTEM "sgml/tls-auth.sgml">
+<!ENTITY libprelude-idmef-tree-data SYSTEM "sgml/idmef-tree-data.sgml">
 <!ENTITY libprelude-prelude-getopt SYSTEM "sgml/prelude-getopt.sgml">
-<!ENTITY libprelude-idmef-tree-func SYSTEM "sgml/idmef-tree-func.sgml">
-<!ENTITY libprelude-idmef-tree SYSTEM "sgml/idmef-tree.sgml">
+<!ENTITY libprelude-idmef-time SYSTEM "sgml/idmef-time.sgml">
+<!ENTITY libprelude-idmef-type SYSTEM "sgml/idmef-type.sgml">
 <!ENTITY libprelude-prelude-message-buffered SYSTEM "sgml/prelude-message-buffered.sgml">
+<!ENTITY libprelude-idmef-util SYSTEM "sgml/idmef-util.sgml">
 <!ENTITY libprelude-prelude-message SYSTEM "sgml/prelude-message.sgml">
 <!ENTITY libprelude-extract SYSTEM "sgml/extract.sgml">
-<!ENTITY libprelude-string-matching SYSTEM "sgml/string-matching.sgml">
 <!ENTITY libprelude-idmef-message-id SYSTEM "sgml/idmef-message-id.sgml">
+<!ENTITY libprelude-idmef-value SYSTEM "sgml/idmef-value.sgml">
 <!ENTITY libprelude-daemonize SYSTEM "sgml/daemonize.sgml">
+<!ENTITY libprelude-idmef-object SYSTEM "sgml/idmef-object.sgml">
+<!ENTITY libprelude-idmef-object-value SYSTEM "sgml/idmef-object-value.sgml">
+<!ENTITY libprelude-idmef-value-type SYSTEM "sgml/idmef-value-type.sgml">
 <!ENTITY libprelude-client-ident SYSTEM "sgml/client-ident.sgml">
+<!ENTITY libprelude-tls-util SYSTEM "sgml/tls-util.sgml">
 ]>
 <book id="index">
   <bookinfo>
@@ -42,40 +62,60 @@
 
   <chapter>
     <title>[Insert title here]</title>
+    &libprelude-idmef-criteria-stringyac;
+    &libprelude-idmef-tree;
+    &libprelude-prelude-linked-object;
+    &libprelude-idmef-tree-wrap;
     &libprelude-prelude-io;
-    &libprelude-plugin-common-prv;
     &libprelude-variable;
     &libprelude-prelude-message-id;
+    &libprelude-idmef-tree-print;
     &libprelude-prelude-log;
-    &libprelude-ssl;
-    &libprelude-ssl-settings;
-    &libprelude-prelude-auth;
-    &libprelude-idmef-msg-send;
+    &libprelude-idmef-criteria-string;
+    &libprelude-ntp;
+    &libprelude-prelude-connection;
+    &libprelude-idmef-string;
+    &libprelude-prelude-strbuf;
+    &libprelude-idmef-message-write;
     &libprelude-prelude-ident;
+    &libprelude-idmef-message-id-format;
     &libprelude-prelude-client;
+    &libprelude-idmef-value-object;
+    &libprelude-prelude-plugin;
+    &libprelude-prelude-hash;
+    &libprelude-prelude-failover;
     &libprelude-prelude-async;
+    &libprelude-idmef-message-read;
+    &libprelude-prelude-inet;
     &libprelude-prelude-list;
     &libprelude-threads;
-    &libprelude-ssl-registration-msg;
+    &libprelude-prelude-inttypes;
+    &libprelude-prelude;
     &libprelude-config-engine;
-    &libprelude-prelude-path;
     &libprelude-timer;
     &libprelude-common;
-    &libprelude-prelude-client-mgr;
-    &libprelude-plugin-common;
+    &libprelude-prelude-connection-mgr;
     &libprelude-prelude-getopt-wide;
-    &libprelude-list;
-    &libprelude-sensor;
-    &libprelude-ssl-gencrypto;
+    &libprelude-idmef-criteria;
+    &libprelude-idmef-data;
+    &libprelude-idmef-tree-to-string;
+    &libprelude-idmef-criterion-value;
+    &libprelude-tls-auth;
+    &libprelude-idmef-tree-data;
     &libprelude-prelude-getopt;
-    &libprelude-idmef-tree-func;
-    &libprelude-idmef-tree;
+    &libprelude-idmef-time;
+    &libprelude-idmef-type;
     &libprelude-prelude-message-buffered;
+    &libprelude-idmef-util;
     &libprelude-prelude-message;
     &libprelude-extract;
-    &libprelude-string-matching;
     &libprelude-idmef-message-id;
+    &libprelude-idmef-value;
     &libprelude-daemonize;
+    &libprelude-idmef-object;
+    &libprelude-idmef-object-value;
+    &libprelude-idmef-value-type;
     &libprelude-client-ident;
+    &libprelude-tls-util;
   </chapter>
 </book>

@@ -15,6 +15,19 @@ method to access your configuration file.
 
 </para>
 
+<!-- ##### FUNCTION config_get_next ##### -->
+<para>
+
+</para>
+
+@cfg: 
+@section: 
+@entry: 
+@value: 
+@line: 
+@Returns: 
+
+
 <!-- ##### FUNCTION config_get_section ##### -->
 <para>
 
@@ -65,6 +78,17 @@ method to access your configuration file.
 </para>
 
 @cfg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION config_del ##### -->
+<para>
+
+</para>
+
+@cfg: 
+@section: 
+@entry: 
 @Returns: 
 
 

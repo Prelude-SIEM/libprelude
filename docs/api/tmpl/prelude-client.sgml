@@ -7,6 +7,26 @@ prelude-client
 <!-- ##### SECTION Long_Description ##### -->
 <para>
 
+<example>
+<title>Creating a new analyzer.</title>
+<programlisting>
+int main(int argc, char **argv)
+{
+        prelude_client_t *client;
+
+        client = prelude_client_new(PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF);
+        if ( ! client )
+                return -1;
+
+        ret = prelude_client_init(client, "MyAnalyzerName", "/etc/MyAnalyzerName.conf", argc, argv);
+        if ( ret < 0 )
+                exit(1);
+
+        exit(0);
+}
+</programlisting>
+</example>
+
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -14,7 +34,36 @@ prelude-client
 
 </para>
 
-<!-- ##### FUNCTION prelude_client_destroy ##### -->
+<!-- ##### ENUM prelude_client_exit_status_t ##### -->
+<para>
+
+</para>
+
+@PRELUDE_CLIENT_EXIT_STATUS_SUCCESS: 
+@PRELUDE_CLIENT_EXIT_STATUS_FAILURE: 
+
+<!-- ##### ENUM prelude_client_capability_t ##### -->
+<para>
+
+</para>
+
+@PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF: 
+@PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF: 
+@PRELUDE_CLIENT_CAPABILITY_RECV_ADMIN: 
+@PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN: 
+@PRELUDE_CLIENT_CAPABILITY_RECV_CM: 
+@PRELUDE_CLIENT_CAPABILITY_SEND_CM: 
+
+<!-- ##### FUNCTION prelude_client_get_unique_ident ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_get_credentials ##### -->
 <para>
 
 </para>
@@ -22,13 +71,142 @@ prelude-client
 @client: 
 
 
+<!-- ##### FUNCTION prelude_client_set_manager_list ##### -->
+<para>
+
+</para>
+
+@client: 
+@mgrlist: 
+
+
+<!-- ##### FUNCTION prelude_client_get_manager_list ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_init ##### -->
+<para>
+
+</para>
+
+@client: 
+@sname: 
+@config: 
+@argc: 
+@argv: 
+@Returns: 
+
+
 <!-- ##### FUNCTION prelude_client_new ##### -->
 <para>
 
 </para>
 
-@addr: 
-@port: 
+@capability: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_get_analyzer ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_set_analyzerid ##### -->
+<para>
+
+</para>
+
+@client: 
+@analyzerid: 
+
+
+<!-- ##### FUNCTION prelude_client_get_analyzerid ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_set_name ##### -->
+<para>
+
+</para>
+
+@client: 
+@name: 
+
+
+<!-- ##### FUNCTION prelude_client_get_name ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_set_uid ##### -->
+<para>
+
+</para>
+
+@client: 
+@uid: 
+
+
+<!-- ##### FUNCTION prelude_client_get_uid ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_set_gid ##### -->
+<para>
+
+</para>
+
+@client: 
+@gid: 
+
+
+<!-- ##### FUNCTION prelude_client_get_gid ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_get_flags ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_get_capability ##### -->
+<para>
+
+</para>
+
+@client: 
 @Returns: 
 
 
@@ -39,10 +217,126 @@ prelude-client
 
 @client: 
 @msg: 
+
+
+<!-- ##### FUNCTION prelude_client_set_heartbeat_cb ##### -->
+<para>
+
+</para>
+
+@client: 
+@cb: 
+
+
+<!-- ##### FUNCTION prelude_client_destroy ##### -->
+<para>
+
+</para>
+
+@client: 
+@status: 
+
+
+<!-- ##### FUNCTION prelude_client_set_flags ##### -->
+<para>
+
+</para>
+
+@client: 
+@flags: 
 @Returns: 
 
 
-<!-- ##### FUNCTION prelude_client_connect ##### -->
+<!-- ##### FUNCTION prelude_client_set_capability ##### -->
+<para>
+
+</para>
+
+@client: 
+@capability: 
+
+
+<!-- ##### FUNCTION prelude_client_get_ident_filename ##### -->
+<para>
+
+</para>
+
+@client: 
+@buf: 
+@size: 
+
+
+<!-- ##### FUNCTION prelude_client_get_tls_key_filename ##### -->
+<para>
+
+</para>
+
+@client: 
+@buf: 
+@size: 
+
+
+<!-- ##### FUNCTION prelude_client_get_tls_server_ca_cert_filename ##### -->
+<para>
+
+</para>
+
+@client: 
+@buf: 
+@size: 
+
+
+<!-- ##### FUNCTION prelude_client_get_tls_server_keycert_filename ##### -->
+<para>
+
+</para>
+
+@client: 
+@buf: 
+@size: 
+
+
+<!-- ##### FUNCTION prelude_client_get_tls_server_trusted_cert_filename ##### -->
+<para>
+
+</para>
+
+@client: 
+@buf: 
+@size: 
+
+
+<!-- ##### FUNCTION prelude_client_get_tls_client_keycert_filename ##### -->
+<para>
+
+</para>
+
+@client: 
+@buf: 
+@size: 
+
+
+<!-- ##### FUNCTION prelude_client_get_tls_client_trusted_cert_filename ##### -->
+<para>
+
+</para>
+
+@client: 
+@buf: 
+@size: 
+
+
+<!-- ##### FUNCTION prelude_client_get_backup_filename ##### -->
+<para>
+
+</para>
+
+@client: 
+@buf: 
+@size: 
+
+
+<!-- ##### FUNCTION prelude_client_get_config_filename ##### -->
 <para>
 
 </para>
@@ -51,114 +345,11 @@ prelude-client
 @Returns: 
 
 
-<!-- ##### FUNCTION prelude_client_forward ##### -->
+<!-- ##### FUNCTION prelude_client_installation_error ##### -->
 <para>
 
 </para>
 
 @client: 
-@src: 
-@count: 
-@Returns: 
-
-
-<!-- ##### FUNCTION prelude_client_get_saddr ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-
-<!-- ##### FUNCTION prelude_client_get_daddr ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-
-<!-- ##### FUNCTION prelude_client_get_sport ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-
-<!-- ##### FUNCTION prelude_client_get_dport ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-
-<!-- ##### FUNCTION prelude_client_is_alive ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-
-<!-- ##### FUNCTION prelude_client_get_fd ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-
-<!-- ##### FUNCTION prelude_client_close ##### -->
-<para>
-
-</para>
-
-@client: 
-
-
-<!-- ##### MACRO PRELUDE_CLIENT_TYPE_OTHER ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO PRELUDE_CLIENT_TYPE_SENSOR ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO PRELUDE_CLIENT_TYPE_MANAGER ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### FUNCTION prelude_client_set_type ##### -->
-<para>
-
-</para>
-
-@client: 
-@type: 
-
-
-<!-- ##### FUNCTION prelude_client_get_analyzerid ##### -->
-<para>
-
-</para>
-
-@Returns: 
 
 

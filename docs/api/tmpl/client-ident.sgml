@@ -19,9 +19,11 @@ client-ident
 
 </para>
 
+@analyzerid: 
 @fd: 
-@client_type: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@client_type: 
 
 
 <!-- ##### FUNCTION prelude_client_ident_init ##### -->
@@ -29,15 +31,10 @@ client-ident
 
 </para>
 
-@sname: 
+@client: 
+@analyzerid: 
 @Returns: 
-
-
-<!-- ##### FUNCTION prelude_client_set_analyzer_id ##### -->
-<para>
-
-</para>
-
-@id: 
+<!-- # Unused Parameters # -->
+@sname: 
 
 
