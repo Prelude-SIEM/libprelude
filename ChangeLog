@@ -1,3 +1,8 @@
+2003-12-29  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
+	* bindings/python/prelude.py:
+	cleanup
+
 2003-12-28  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
 	* bindings/libprelude.i:

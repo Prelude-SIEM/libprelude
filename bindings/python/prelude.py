@@ -17,12 +17,11 @@
 # along with this program; see the file COPYING.  If not, write to
 # the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
-
-
-from _prelude import *
 import sys
-from time import *
+import time
 import string
+import _prelude
+
 
 class Error(Exception):
     pass
@@ -70,7 +69,7 @@ def sensor_init(name=None):
     if name is None:
         name = sys.argv[0]
         
-    if prelude_sensor_init(name, None, 0, [ ]) < 0:
+    if _prelude.prelude_sensor_init(name, None, 0, [ ]) < 0:
         raise SensorError()
 
 
@@ -92,13 +91,13 @@ class IDMEFTime(object):
         
         """
         if value is None:
-            value = time()
+            value = time.time()
         
         self.res = _idmef_value_time_python_to_c(value)
 
     def __del__(self):
         try:
-            idmef_time_destroy(self.res)
+            _prelude.idmef_time_destroy(self.res)
         # it can happened if a bad value has been passed to _idmef_value_time_python_to_c
         except AttributeError: 
             pass            
@@ -107,7 +106,7 @@ class IDMEFTime(object):
         """Return the RFC8601 string representation of the object."""
         buf = "A" * 128
 
-        size = idmef_time_get_idmef_timestamp(self.res, buf, len(buf))
+        size = _prelude.idmef_time_get_idmef_timestamp(self.res, buf, len(buf))
         if len < 0:
             raise Error()
 
@@ -118,60 +117,60 @@ class IDMEFTime(object):
 
     def __int__(self):
         """Return the number of seconds."""
-        return idmef_time_get_sec(self.res)
+        return _prelude.idmef_time_get_sec(self.res)
 
     def __float__(self):
         """Return the number of seconds and useconds"""
-        sec = float(idmef_time_get_sec(self.res))
-        usec = float(idmef_time_get_usec(self.res))
+        sec = float(_prelude.idmef_time_get_sec(self.res))
+        usec = float(_prelude.idmef_time_get_usec(self.res))
         
         return sec + usec / 10 ** 6
 
     def __getattribute__(self, name):
         if name is "sec":
-            return idmef_time_get_sec(self.res)
+            return _prelude.idmef_time_get_sec(self.res)
 
         if name is "usec":
-            return idmef_time_get_usec(self.res)
+            return _prelude.idmef_time_get_usec(self.res)
 
         return object.__getattribute__(self, name)
 
 
 def _idmef_value_time_python_to_c(value):
-    time = idmef_time_new()
+    time = _prelude.idmef_time_new()
     if not time:
         raise Error()
     
     if type(value) is list:
         try:
-            idmef_time_set_sec(time, value[0])
-            idmef_time_set_usec(time, value[1])
+            _prelude.idmef_time_set_sec(time, value[0])
+            _prelude.idmef_time_set_usec(time, value[1])
         except IndexError:
-            idmef_time_destroy(time)
+            _prelude.idmef_time_destroy(time)
             raise
         
     elif type(value) is dict:
         try:
-            idmef_time_set_sec(time, value['sec'])
-            idmef_time_set_usec(time, value['usec'])
+            _prelude.idmef_time_set_sec(time, value['sec'])
+            _prelude.idmef_time_set_usec(time, value['usec'])
         except KeyError:
-            idmef_time_destroy(time)
+            _prelude.idmef_time_destroy(time)
             raise
     
     elif type(value) is int:
-        idmef_time_set_sec(time, value)
+        _prelude.idmef_time_set_sec(time, value)
 
     elif type(value) is float:
-        idmef_time_set_sec(time, int(value))
-        idmef_time_set_usec(time, int(value % 1 * 10 ** 6))
+        _prelude.idmef_time_set_sec(time, int(value))
+        _prelude.idmef_time_set_usec(time, int(value % 1 * 10 ** 6))
         
     elif type(value) is str:
-        if idmef_time_set_string(time, value) < 0:
-            idmef_time_destroy(time);
+        if _prelude.idmef_time_set_string(time, value) < 0:
+            _prelude.idmef_time_destroy(time);
             raise IDMEFTimeError(value)
         
     else:
-        idmef_time_destroy(time)
+        _prelude.idmef_time_destroy(time)
         raise IDMEFTimeError(value)
 
     return time
@@ -179,38 +178,38 @@ def _idmef_value_time_python_to_c(value):
 
 def _idmef_integer_python_to_c(object, py_value):
      value_type_table = {
-         type_int16: { 'py_type': [ int ],
-                       'check_value': lambda i: i >= -2 ** 15 and i < 2 ** 15,
-                       'convert': idmef_value_new_int16 },
+         _prelude.type_int16: { 'py_type': [ int ],
+                                'check_value': lambda i: i >= -2 ** 15 and i < 2 ** 15,
+                                'convert': _prelude.idmef_value_new_int16 },
         
-         type_uint16: { 'py_type': [ int ],
-                        'check_value': lambda i: i >= 0 and i < 2 ** 16,
-                        'convert': idmef_value_new_uint16 },
+         _prelude.type_uint16: { 'py_type': [ int ],
+                                 'check_value': lambda i: i >= 0 and i < 2 ** 16,
+                                 'convert': _prelude.idmef_value_new_uint16 },
         
-         type_int32: { 'py_type': [ int ],
-                       'check': lambda i: i >= -2 ** 31 and i < 2 ** 31,
-                       'convert': idmef_value_new_int32 },
+         _prelude.type_int32: { 'py_type': [ int ],
+                                'check': lambda i: i >= -2 ** 31 and i < 2 ** 31,
+                                'convert': _prelude.idmef_value_new_int32 },
         
-         type_uint32: { 'py_type': [ int ],
-                        'check_value': lambda i: i >= 0 and i < 2 ** 32,
-                        'convert': idmef_value_new_uint32 },
+         _prelude.type_uint32: { 'py_type': [ int ],
+                                 'check_value': lambda i: i >= 0 and i < 2 ** 32,
+                                 'convert': _prelude.idmef_value_new_uint32 },
         
-         type_int64: { 'py_type': [ long, int ],
-                       'check_value': lambda i: i >= -2 ** 63 and i < 2 ** 63,
-                       'convert': idmef_value_new_int64 },
+         _prelude.type_int64: { 'py_type': [ long, int ],
+                                'check_value': lambda i: i >= -2 ** 63 and i < 2 ** 63,
+                                'convert': _prelude.idmef_value_new_int64 },
         
-         type_uint64: { 'py_type': [ long, int ],
-                        'check_value': lambda i: i >= 0 and i < 2 ** 64,
-                        'convert': idmef_value_new_uint64 },
+         _prelude.type_uint64: { 'py_type': [ long, int ],
+                                 'check_value': lambda i: i >= 0 and i < 2 ** 64,
+                                 'convert': _prelude.idmef_value_new_uint64 },
         
-         type_float: { 'py_type': [ float ],
-                       'convert': idmef_value_new_float },
+         _prelude.type_float: { 'py_type': [ float ],
+                                'convert': _prelude.idmef_value_new_float },
 
-         type_double: { 'py_type': [ float ],
-                        'convert': idmef_value_new_double },
+         _prelude.type_double: { 'py_type': [ float ],
+                                 'convert': _prelude.idmef_value_new_double },
          }
 
-     object_type = idmef_object_get_type(object)
+     object_type = _prelude.idmef_object_get_type(object)
 
      if type(py_value) not in value_type_table[object_type]['py_type']:
          raise IDMEFValueError(py_value, "expected %s, got %s" %
@@ -224,40 +223,42 @@ def _idmef_integer_python_to_c(object, py_value):
 
 
 def _idmef_value_python_to_c(object, py_value):
-    object_type = idmef_object_get_type(object)
+    object_type = _prelude.idmef_object_get_type(object)
     
-    if object_type is type_time:
+    if object_type is _prelude.type_time:
         time = _idmef_value_time_python_to_c(py_value)
-        c_value = idmef_value_new_time(time)
+        c_value = _prelude.idmef_value_new_time(time)
         if not c_value:
             raise Error()
 
-    elif object_type in [ type_int16, type_uint16, type_int32, type_uint32,
-                          type_int64, type_uint64, type_float, type_double ]:
+    elif object_type in [ _prelude.type_int16, _prelude.type_uint16,
+                          _prelude.type_int32, _prelude.type_uint32,
+                          _prelude.type_int64, _prelude.type_uint64,
+                          _prelude.type_float, _prelude.type_double ]:
         c_value = _idmef_integer_python_to_c(object, py_value)
 
-    elif object_type is type_enum:
-        c_value = idmef_value_new_enum_string(idmef_object_get_idmef_type(object), py_value)
+    elif object_type is _prelude.type_enum:
+        c_value = _prelude.idmef_value_new_enum_string(_prelude.idmef_object_get_idmef_type(object), py_value)
 
-    elif object_type is type_string:
+    elif object_type is _prelude.type_string:
         if type(py_value) is not str:
             raise IDMEFValueError(py_value, "expected %s, got %s" % (str, type(py_value)))
 
-        c_string = idmef_string_new_dup(py_value)
+        c_string = _prelude.idmef_string_new_dup(py_value)
         if not c_string:
             raise Error()
 
-        c_value = idmef_value_new_string(c_string)
+        c_value = _prelude.idmef_value_new_string(c_string)
 
-    elif object_type is type_data:
+    elif object_type is _prelude.type_data:
         if type(py_value) is not str:
             raise IDMEFValueError(py_value, "expected %s, got %s" % (str, type(py_value)))
 
-        c_data = idmef_data_new_dup(py_value, len(py_value) + 1)
+        c_data = _prelude.idmef_data_new_dup(py_value, len(py_value) + 1)
         if not c_data:
             raise Error()
 
-        c_value = idmef_value_new_data(c_data)
+        c_value = _prelude.idmef_value_new_data(c_data)
 
     else: # internal type not recognized/supported
         raise Error()
@@ -272,42 +273,43 @@ def _idmef_value_python_to_c(object, py_value):
 def idmef_value_c_to_python(value):
 
     func_type_table = {
-        type_int16:     idmef_value_get_int16,
-        type_uint16:    idmef_value_get_uint16,
-        type_int32:     idmef_value_get_int32,
-        type_uint32:    idmef_value_get_uint32,
-        type_int64:     idmef_value_get_int64,
-        type_uint64:    idmef_value_get_uint64,
-        type_float:     idmef_value_get_float,
-        type_double:    idmef_value_get_double,
+        _prelude.type_int16:     _prelude.idmef_value_get_int16,
+        _prelude.type_uint16:    _prelude.idmef_value_get_uint16,
+        _prelude.type_int32:     _prelude.idmef_value_get_int32,
+        _prelude.type_uint32:    _prelude.idmef_value_get_uint32,
+        _prelude.type_int64:     _prelude.idmef_value_get_int64,
+        _prelude.type_uint64:    _prelude.idmef_value_get_uint64,
+        _prelude.type_float:     _prelude.idmef_value_get_float,
+        _prelude.type_double:    _prelude.idmef_value_get_double,
         }
 
-    type = idmef_value_get_type(value)
+    type = _prelude.idmef_value_get_type(value)
 
-    if type == type_time:
-        time = idmef_value_get_time(value)
+    if type == _prelude.type_time:
+        time = _prelude.idmef_value_get_time(value)
         if not time:
             return None
 
-        return IDMEFTime([idmef_time_get_sec(time), idmef_time_get_usec(time)])
+        return IDMEFTime([_prelude.idmef_time_get_sec(time),
+                          _prelude.idmef_time_get_usec(time)])
     
-    if type == type_string:
-        string = idmef_value_get_string(value)
+    if type == _prelude.type_string:
+        string = _prelude.idmef_value_get_string(value)
         if not string:
             return None
 
-        return idmef_string_get_string(string)
+        return _prelude.idmef_string_get_string(string)
     
-    if type == type_data:
-        data = idmef_value_get_data(value)
+    if type == _prelude.type_data:
+        data = _prelude.idmef_value_get_data(value)
         if not data:
             return None
 
-        return idmef_data_get_data(data)
+        return _prelude.idmef_data_get_data(data)
 
-    if type == type_enum:
-        return idmef_type_enum_to_string(idmef_value_get_idmef_type(value),
-                                         idmef_value_get_enum(value))
+    if type == _prelude.type_enum:
+        return _prelude.idmef_type_enum_to_string(_prelude.idmef_value_get_idmef_type(value),
+                                                  _prelude.idmef_value_get_enum(value))
     
     try:
         func = func_type_table[type]
@@ -322,13 +324,13 @@ def _idmef_value_list_c_to_python(value):
     if value is None:
         return None
     
-    if not idmef_value_is_list(value):
+    if not _prelude.idmef_value_is_list(value):
         return idmef_value_c_to_python(value)
 
     ret = [ ]
 
-    for i in range(idmef_value_get_count(value)):
-        ret.append(_idmef_value_list_c_to_python(idmef_value_get_nth(value, i)))
+    for i in range(_prelude.idmef_value_get_count(value)):
+        ret.append(_idmef_value_list_c_to_python(_prelude.idmef_value_get_nth(value, i)))
 
     return ret
 
@@ -342,18 +344,18 @@ class IDMEFMessage:
         if res:
             self.res = res
         else:
-            self.res = idmef_message_new()
+            self.res = _prelude.idmef_message_new()
             if not self.res:
                 raise Error()
 
     def __del__(self):
         """Destroy the IDMEF message."""
-        idmef_message_destroy(self.res)
+        _prelude.idmef_message_destroy(self.res)
 
     def __repr__(self):
         buf = "A" * 8192
 
-        size = idmef_message_to_string(self.res, buf, len(buf))
+        size = _prelude.idmef_message_to_string(self.res, buf, len(buf))
         if size < 0:
             raise Error()
 
@@ -361,45 +363,45 @@ class IDMEFMessage:
 
     def __setitem__(self, object_name, py_value):
         """Set the value of the object in the message."""
-        object = idmef_object_new_fast(object_name)
+        object = _prelude.idmef_object_new_fast(object_name)
         if not object:
             raise IDMEFObjectError(object_name)
 
         try:
             c_value = _idmef_value_python_to_c(object, py_value)
         except Error:
-            idmef_object_destroy(object)
+            _prelude.idmef_object_destroy(object)
             raise
 
-        if idmef_message_set(self.res, object, c_value) < 0:
-            idmef_object_destroy(object)
-            idmef_value_destroy(c_value)
+        if _prelude.idmef_message_set(self.res, object, c_value) < 0:
+            _prelude.idmef_object_destroy(object)
+            _prelude.idmef_value_destroy(c_value)
             raise Error()
 
     def __getitem__(self, object_name):
         """Get the value of the object in the message."""
-        object = idmef_object_new_fast(object_name)
+        object = _prelude.idmef_object_new_fast(object_name)
         if not object:
             raise IDMEFObjectError(object_name)
         
-        c_value = idmef_message_get(self.res, object)
-        idmef_object_destroy(object)
+        c_value = _prelude.idmef_message_get(self.res, object)
+        _prelude.idmef_object_destroy(object)
         
         try:
             py_value = _idmef_value_list_c_to_python(c_value)
         finally:
-            idmef_value_destroy(c_value)
+            _prelude.idmef_value_destroy(c_value)
 
         return py_value
         
     def send(self):
         """Send the message to the manager."""
-        msgbuf = prelude_msgbuf_new(0)
+        msgbuf = _prelude.prelude_msgbuf_new(0)
         if not msgbuf:
             raise Error()
 
-        idmef_send_message(msgbuf, self.res)
-        prelude_msgbuf_close(msgbuf)
+        _prelude.idmef_send_message(msgbuf, self.res)
+        _prelude.prelude_msgbuf_close(msgbuf)
 
 
 
@@ -409,7 +411,7 @@ class IDMEFAlert(IDMEFMessage):
     def __init__(self):
         """Create a message alert with with some message alert's field already built."""
         IDMEFMessage.__init__(self)
-        if prelude_alert_fill_infos(self.res, len(sys.argv), sys.argv) < 0:
+        if _prelude.prelude_alert_fill_infos(self.res, len(sys.argv), sys.argv) < 0:
             raise PreludeError()
 
 
@@ -424,23 +426,23 @@ class IDMEFCriteria(object):
         An empty criteria is built if no argument is given.
         """
         if criteria_string:
-            self.res = idmef_criteria_new_string(criteria_string)
+            self.res = _prelude.idmef_criteria_new_string(criteria_string)
             if not self.res:
                 raise IDMEFCriteriaError(criteria_string)
         else:
-            self.res = idmef_criteria_new()
+            self.res = _prelude.idmef_criteria_new()
             if not self.res:
                 raise Error()
 
     def __del__(self):
         if self.res:
-            idmef_criteria_destroy(self.res)
+            _prelude.idmef_criteria_destroy(self.res)
 
     def __str__(self):
         """Return the criteria as a string."""
         buf = "A" * 256
 
-        size = idmef_criteria_to_string(self.res, buf, len(buf))
+        size = _prelude.idmef_criteria_to_string(self.res, buf, len(buf))
         if size < 0:
             raise Error()
 
@@ -451,24 +453,24 @@ class IDMEFCriteria(object):
 
     def __append(self, new_sub_criteria, operator):
         new_criteria = IDMEFCriteria()
-        idmef_criteria_destroy(new_criteria.res)
+        _prelude.idmef_criteria_destroy(new_criteria.res)
 
-        new_criteria.res = idmef_criteria_clone(self.res)
+        new_criteria.res = _prelude.idmef_criteria_clone(self.res)
         if not new_criteria.res:
             raise Error()
 
-        new_sub_criteria_res = idmef_criteria_clone(new_sub_criteria.res)
+        new_sub_criteria_res = _prelude.idmef_criteria_clone(new_sub_criteria.res)
         if not new_sub_criteria_res:
             raise Error()
 
-        if idmef_criteria_add_criteria(new_criteria.res, new_sub_criteria_res, operator) < 0:
-            idmef_criteria_destroy(new_sub_criteria_res)
+        if _prelude.idmef_criteria_add_criteria(new_criteria.res, new_sub_criteria_res, operator) < 0:
+            _prelude.idmef_criteria_destroy(new_sub_criteria_res)
             raise Error()
 
         return new_criteria
 
     def __and__(self, new_sub_criteria):
-        return self.__append(new_sub_criteria, operator_and)
+        return self.__append(new_sub_criteria, _prelude.operator_and)
 
     def __or__(self, new_sub_criteria):
-        return self.__append(new_sub_criteria, operator_or)
+        return self.__append(new_sub_criteria, _prelude.operator_or)
