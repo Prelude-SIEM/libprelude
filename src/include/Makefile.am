@@ -39,6 +39,7 @@ include_HEADERS = config-engine.h 		\
 		  prelude-client.h		\
 		  prelude-connection.h		\
 		  prelude-connection-mgr.h	\
+		  prelude-failover.h		\
 		  prelude-getopt.h		\
 		  prelude-getopt-wide.h		\
 		  prelude-io.h			\

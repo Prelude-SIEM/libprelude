@@ -29,6 +29,7 @@ libprelude_la_SOURCES = 		\
 	prelude-message.c		\
 	prelude-message-buffered.c	\
 	prelude-async.c			\
+	prelude-failover.c		\
 	prelude-ident.c			\
 	prelude-plugin.c		\
 	prelude-hash.c			\
