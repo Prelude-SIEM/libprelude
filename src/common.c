@@ -239,7 +239,7 @@ int prelude_read_multiline(FILE *fd, int *line, char *buf, size_t size)
         /*
          * We don't want to handle multiline in case this is a comment.
          */
-        for ( i = 0; buf[i] != '\0' && isspace(buf[i]); i++ );
+        for ( i = 0; buf[i] != '\0' && isspace((int) buf[i]); i++ );
                 
         if ( buf[i] == '#' )
                 return prelude_read_multiline(fd, line, buf, size);
