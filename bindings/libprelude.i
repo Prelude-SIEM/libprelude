@@ -26,15 +26,8 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "prelude-inttypes.h"
-#include "common.h"
-#include "prelude-io.h"
+#include "prelude.h"
 #include "prelude-log.h"
-#include "prelude-error.h"
-#include "prelude-msg.h"
-#include "prelude-msgbuf.h"
-#include "prelude-client.h"
-#include "prelude-client-profile.h"
 #include "prelude-option.h"
 #include "prelude-option-wide.h"
 #include "idmef.h"
