@@ -40,7 +40,7 @@ struct prelude_message_buffered {
         void *data;
         prelude_client_t *client;
         prelude_msg_t *msg;
-        prelude_msg_t *(*send_msg)(void *data);
+        prelude_msg_t *(*send_msg)(prelude_msgbuf_t *msgbuf);
 };
 
 
@@ -59,7 +59,7 @@ static prelude_msg_t *do_send_msg_async(prelude_msgbuf_t *msgbuf)
 {        
         prelude_client_send_msg(msgbuf->client, msgbuf->msg);
         
-        msgbuf->msg = prelude_msg_dynamic_new(msgbuf->send_msg, msgbuf);
+        msgbuf->msg = prelude_msg_dynamic_new((void *) msgbuf->send_msg, msgbuf);
         if ( ! msgbuf->msg ) {
                 log(LOG_ERR, "memory exhausted.\n");
                 return NULL;
@@ -70,10 +70,9 @@ static prelude_msg_t *do_send_msg_async(prelude_msgbuf_t *msgbuf)
 
 
 
-static prelude_msg_t *default_send_msg_cb(void *data)
+static prelude_msg_t *default_send_msg_cb(prelude_msgbuf_t *msgbuf)
 {
         prelude_msg_t *msg;
-        prelude_msgbuf_t *msgbuf = data;
 
         if ( prelude_client_get_flags(msgbuf->client) & PRELUDE_CLIENT_FLAGS_ASYNC_SEND )
                 msg = do_send_msg_async(msgbuf);
@@ -128,7 +127,7 @@ prelude_msgbuf_t *prelude_msgbuf_new(prelude_client_t *client)
         msgbuf->client = client;
         msgbuf->send_msg = default_send_msg_cb;
         
-        msgbuf->msg = prelude_msg_dynamic_new(msgbuf->send_msg, msgbuf);     
+        msgbuf->msg = prelude_msg_dynamic_new((void *) msgbuf->send_msg, msgbuf);     
         if ( ! msgbuf->msg )
                 return NULL;
 
@@ -202,10 +201,10 @@ void prelude_msgbuf_close(prelude_msgbuf_t *msgbuf)
  *
  * Associate an application specific callback to this @msgbuf.
  */
-void prelude_msgbuf_set_callback(prelude_msgbuf_t *msgbuf, prelude_msg_t *(*send_msg)(void *data))
+void prelude_msgbuf_set_callback(prelude_msgbuf_t *msgbuf, prelude_msg_t *(*send_msg)(prelude_msgbuf_t *msgbuf))
 {
         msgbuf->send_msg = send_msg;
-        prelude_msg_set_callback(msgbuf->msg, send_msg);
+        prelude_msg_set_callback(msgbuf->msg, (void *) send_msg);
 }
 
 
