@@ -153,7 +153,7 @@ static int op_delete_line(config_t *cfg, unsigned int start, unsigned int end)
         
         cfg->elements -= end - start;
         
-        cfg->content = prelude_realloc(cfg->content, cfg->elements * sizeof(char **));
+        cfg->content = _prelude_realloc(cfg->content, cfg->elements * sizeof(char **));
         if ( ! cfg->content )
                 return prelude_error_from_errno(errno);
         
@@ -184,7 +184,7 @@ static int op_append_line(config_t *cfg, char *line)
         
         cfg->elements++;
         
-        cfg->content = prelude_realloc(cfg->content, cfg->elements * sizeof(char **));
+        cfg->content = _prelude_realloc(cfg->content, cfg->elements * sizeof(char **));
         if ( ! cfg->content )
                 return prelude_error_from_errno(errno);        
 
@@ -210,7 +210,7 @@ static int op_insert_line(config_t *cfg, char *line, unsigned int lins)
         
         cfg->elements++;
         
-        cfg->content = prelude_realloc(cfg->content, cfg->elements * sizeof(char **));
+        cfg->content = _prelude_realloc(cfg->content, cfg->elements * sizeof(char **));
         if (! cfg->content )
                 return prelude_error_from_errno(errno);
                 

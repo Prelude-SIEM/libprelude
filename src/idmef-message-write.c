@@ -1288,7 +1288,7 @@ int idmef_impact_write(idmef_impact_t *impact, prelude_msgbuf_t *msg)
                         if ( ret < 0 )
                                 return ret;
 			prelude_msg_set_priority(prelude_msgbuf_get_msg(msg),
-					         idmef_impact_severity_to_msg_priority(*tmp));
+					         _idmef_impact_severity_to_msg_priority(*tmp));
 		}
 	}
 

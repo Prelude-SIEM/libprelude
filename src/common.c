@@ -50,6 +50,27 @@
 #include "common.h"
 
 
+
+static prelude_string_t *get_message_ident(prelude_ident_t *ident)
+{
+        int ret;
+        prelude_string_t *str;
+
+        ret = prelude_string_new(&str);
+        if ( ret < 0 )
+                return NULL;
+
+        ret = prelude_string_sprintf(str, "%" PRIu64, prelude_ident_inc(ident));
+        if ( ret < 0 ) {
+                prelude_string_destroy(str);
+                return NULL;
+        }
+
+        return str;
+}
+
+
+
 static int find_absolute_path(const char *cwd, const char *file, char **path)
 {
         int ret;
@@ -83,42 +104,9 @@ static int find_absolute_path(const char *cwd, const char *file, char **path)
 
 
 
-/**
- * prelude_resolve_addr:
- * @hostname: Hostname to lookup.
- * @addr: Pointer on an in_addr structure to store the result in.
- *
- * Lookup @hostname, and store the resolved IP address in @addr.
- *
- * Returns: 0 on success, -1 if an error occured.
- */ 
-int prelude_resolve_addr(const char *hostname, struct in_addr *addr) 
-{
-        int ret;
-        struct hostent *h;
-
-        /*
-         * This is not an hostname. No need to resolve.
-         */
-        ret = inet_aton(hostname, addr);
-        if ( ret != 0 ) 
-                return 0;
-        
-        h = gethostbyname(hostname);
-        if ( ! h )
-                return -1;
-
-        assert((unsigned int) h->h_length <= sizeof(*addr));
-        
-        memcpy(addr, h->h_addr, h->h_length);
-                
-        return 0;
-}
-
-
 
 /**
- * prelude_realloc:
+ * _prelude_realloc:
  * @ptr: Pointer on a memory block.
  * @size: New size.
  *
@@ -140,77 +128,12 @@ int prelude_resolve_addr(const char *hostname, struct in_addr *addr)
  *
  * Returns: a pointer to the newly allocated memory.
  */
-void *prelude_realloc(void *ptr, size_t size) 
+void *_prelude_realloc(void *ptr, size_t size) 
 {
         if ( ptr == NULL )
                 return malloc(size);
         else
                 return realloc(ptr, size);
-}
-
-
-
-
-/**
- * prelude_open_persistant_tmpfile:
- * @filename: Path to the file to open.
- * @flags: Flags that should be used to open the file.
- * @mode: Mode that should be used to open the file.
- *
- * Open a *possibly persistant* file for writing,
- * trying to avoid symlink attack as much as possible.
- *
- * The file is created if it does not exist.
- * Refer to open(2) for @flags and @mode meaning.
- *
- * Returns: A valid file descriptor on success, -1 if an error occured.
- */
-int prelude_open_persistant_tmpfile(const char *filename, int flags, mode_t mode) 
-{
-        int fd, ret;
-        struct stat st;
-        int secure_flags;
-        
-        /*
-         * We can't rely on O_EXCL to avoid symlink attack,
-         * as it could be perfectly normal that a file would already exist
-         * and we would be open to a race condition between the time we lstat
-         * it (to see if it's a link) and the time we open it, this time without
-         * O_EXCL.
-         */
-        secure_flags = flags | O_CREAT | O_EXCL;
-        
-        fd = open(filename, secure_flags, mode);
-        if ( fd >= 0 )
-                return fd;
-
-        if ( errno != EEXIST )
-                return prelude_error_from_errno(errno);
-                
-        ret = lstat(filename, &st);
-        if ( ret < 0 )
-                return prelude_error_from_errno(errno);
-
-        /*
-         * There is a race between the lstat() and this open() call.
-         * No atomic operation that I know off permit to fix it.
-         * And we can't use O_TRUNC.
-         */
-        if ( S_ISREG(st.st_mode) ) 
-                return open(filename, O_CREAT | flags, mode);
-        
-        else if ( S_ISLNK(st.st_mode) ) {
-                prelude_log(PRELUDE_LOG_WARN, "- symlink attack detected for %s. Overriding.\n", filename);
-                
-                ret = unlink(filename);
-                if ( ret < 0 )
-                        return prelude_error_from_errno(errno);
-                
-                return prelude_open_persistant_tmpfile(filename, flags, mode);
-                
-        }
-        
-        return -1;
 }
 
 
@@ -266,7 +189,6 @@ int prelude_read_multiline(FILE *fd, int *line, char *buf, size_t size)
  *
  * Returns: @val in the network bytes order.
  */
-
 uint64_t prelude_hton64(uint64_t val) 
 {
         uint64_t tmp;
@@ -294,7 +216,7 @@ uint64_t prelude_hton64(uint64_t val)
 
 
 
-int prelude_get_file_name_and_path(const char *str, char **name, char **path)
+int _prelude_get_file_name_and_path(const char *str, char **name, char **path)
 {
         int ret = 0;
 	char buf[512], *ptr, cwd[PATH_MAX];
@@ -320,7 +242,7 @@ int prelude_get_file_name_and_path(const char *str, char **name, char **path)
                 if ( ret < 0 || ret >= sizeof(buf) )
                         return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
 
-                return prelude_get_file_name_and_path(buf, name, path);
+                return _prelude_get_file_name_and_path(buf, name, path);
         }
         
         ret = access(str, F_OK);
@@ -406,7 +328,7 @@ void *prelude_sockaddr_get_inaddr(struct sockaddr *sa)
 /*
  * keep this function consistant with idmef_impact_severity_t value.
  */
-prelude_msg_priority_t idmef_impact_severity_to_msg_priority(idmef_impact_severity_t severity)
+prelude_msg_priority_t _idmef_impact_severity_to_msg_priority(idmef_impact_severity_t severity)
 {        
         static const prelude_msg_priority_t priority[] = {
                 PRELUDE_MSG_PRIORITY_NONE, /* not bound                         */
@@ -420,4 +342,26 @@ prelude_msg_priority_t idmef_impact_severity_to_msg_priority(idmef_impact_severi
                 return PRELUDE_MSG_PRIORITY_NONE;
         
         return priority[severity];
+}
+
+
+
+int _idmef_message_assign_messageid(idmef_message_t *msg, prelude_ident_t *ident)
+{
+        idmef_alert_t *alert;
+        idmef_heartbeat_t *heartbeat;
+        
+        if ( idmef_message_get_type(msg) == IDMEF_MESSAGE_TYPE_ALERT ) {
+                alert = idmef_message_get_alert(msg);
+                
+                if ( ! idmef_alert_get_messageid(alert) )
+                        idmef_alert_set_messageid(alert, get_message_ident(ident));
+        } else {       
+                heartbeat = idmef_message_get_heartbeat(msg);
+
+                if ( ! idmef_heartbeat_get_messageid(heartbeat) )
+                        idmef_heartbeat_set_messageid(heartbeat, get_message_ident(ident));
+        }
+
+        return 0;
 }

@@ -243,7 +243,7 @@ sub	struct_field_normal
 	if ( $field->{typename} eq "idmef_impact_severity_t" ) {
 	    $self->output("
 			prelude_msg_set_priority(prelude_msgbuf_get_msg(msg),
-					         idmef_impact_severity_to_msg_priority(*tmp));");
+					         _idmef_impact_severity_to_msg_priority(*tmp));");
 	}
 
 	$self->output("

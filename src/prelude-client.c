@@ -310,7 +310,7 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
         if ( ! program )
                 return 0;
         
-        ret = prelude_get_file_name_and_path(program, &name, &path);
+        ret = _prelude_get_file_name_and_path(program, &name, &path);
         if ( ret < 0 )
                 return ret;
 
@@ -873,6 +873,8 @@ static void _prelude_client_destroy(prelude_client_t *client)
 
 
 
+
+
 int _prelude_client_register_options(void)
 {
         int ret;
@@ -1205,6 +1207,7 @@ void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg)
          */
         pthread_mutex_lock(&client->msgbuf_lock);
         
+        _idmef_message_assign_messageid(msg, client->unique_ident);
         idmef_message_write(msg, client->msgbuf);
         prelude_msgbuf_mark_end(client->msgbuf);
 

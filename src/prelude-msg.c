@@ -289,7 +289,7 @@ static int read_message_header(prelude_msg_t **msgptr, prelude_io_t *fd)
          * header so that it can be eventually sent...
          */
 
-        msg = prelude_realloc(msg, sizeof(*msg) + PRELUDE_MSG_HDR_SIZE + msg->hdr.datalen);
+        msg = _prelude_realloc(msg, sizeof(*msg) + PRELUDE_MSG_HDR_SIZE + msg->hdr.datalen);
         if ( ! msg )
                 return prelude_error_from_errno(errno);
 

@@ -116,7 +116,7 @@ static int allocate_more_chunk_if_needed(prelude_string_t *s, size_t needed_len)
         
         if ( s->flags & PRELUDE_STRING_CAN_REALLOC ) {
                 
-                ptr = prelude_realloc(s->data.rwbuf, s->size + len);
+                ptr = _prelude_realloc(s->data.rwbuf, s->size + len);
                 if ( ! ptr )
                         return prelude_error_from_errno(errno);
         }
@@ -647,7 +647,7 @@ int prelude_string_get_string_released(prelude_string_t *string, char **outptr)
                 return (*outptr) ? 0 : prelude_error_from_errno(errno);
         }
         
-        *outptr = prelude_realloc(string->data.rwbuf, string->index + 1);
+        *outptr = _prelude_realloc(string->data.rwbuf, string->index + 1);
         if ( ! *outptr )
                 return prelude_error_from_errno(errno);
 

@@ -97,7 +97,7 @@ static ssize_t buffer_write(prelude_io_t *pio, const void *buf, size_t count)
         if ( pio->size + count <= pio->size )
                 return -1;
         
-        new = prelude_realloc(pio->fd_ptr, pio->size + count);
+        new = _prelude_realloc(pio->fd_ptr, pio->size + count);
         if ( ! new )
                 return prelude_error_from_errno(errno);
         
