@@ -262,6 +262,9 @@ static int load_file_in_memory(config_t *cfg)
                         if ( line[len - 1] != 0 )
                                 continue;
                 }
+
+                if ( prelude_string_is_empty(out) )
+                        continue;
                 
                 ret = prelude_string_get_string_released(out, &ptr);
                 if ( ret < 0 )
