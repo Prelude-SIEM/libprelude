@@ -28,7 +28,7 @@
 #include "prelude-inttypes.h"
 
 
-#ifdef NEED_ALIGNED_ACCESS
+#ifdef PRELUDE_ALIGNED_ACCESS
 
 #include <string.h> /* for memmove */
 
@@ -39,7 +39,7 @@
  * to this version in doing checksum test.
  */
 
-#ifdef WORDS_BIGENDIAN
+#ifdef PRELUDE_WORDS_BIGENDIAN
  #define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[(pos)]
 #else
  #define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[sizeof(type) - 1 - (pos)]
@@ -129,7 +129,7 @@ static inline float prelude_extract_float(const void *buf)
 
 static inline uint64_t prelude_extract_uint64(const void *buf) 
 {    
-#ifdef WORDS_BIGENDIAN
+#ifdef PRELUDE_WORDS_BIGENDIAN
         
         return prelude_align_uint64(buf);
 

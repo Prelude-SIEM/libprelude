@@ -193,7 +193,7 @@ uint64_t prelude_hton64(uint64_t val)
 {
         uint64_t tmp;
         
-#ifdef WORDS_BIGENDIAN
+#ifdef PRELUDE_WORDS_BIGENDIAN
         tmp = val;
 #else
 	union {
