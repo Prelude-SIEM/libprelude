@@ -148,7 +148,7 @@ static inline int extract_uint64_safe(uint64_t *out, const void *buf, size_t len
 
 static inline int extract_string_safe(const char **out, const char *buf, size_t len) 
 {
-        if ( buf[len] != '\0' ) {
+        if ( buf[len - 1] != '\0' ) {
                 log(LOG_ERR, "Datatype error: buffer is not a string.\n");
                 return -1;
         }
