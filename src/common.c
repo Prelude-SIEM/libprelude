@@ -65,8 +65,8 @@ static int find_absolute_path(const char *cwd, const char *file, char **path)
                 if ( ret < 0 )
                         continue;
                 
-                free(old);
                 *path = strdup(ptr);
+                free(old);
 
                 return 0;
         }
