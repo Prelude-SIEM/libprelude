@@ -55,7 +55,6 @@
 #include "prelude-message-id.h"
 #include "prelude-client.h"
 #include "prelude-option.h"
-#include "client-ident.h"
 #include "prelude-list.h"
 #include "prelude-linked-object.h"
 
