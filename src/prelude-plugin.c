@@ -96,8 +96,6 @@ struct prelude_plugin_instance {
          */
         void *data;
         void *private_data;
-
-        prelude_option_context_t *opt_context;
         
         char *name;
         const char *infos;
@@ -233,9 +231,7 @@ static int subscribe_instance(prelude_plugin_instance_t *pi)
 
 
 static void destroy_instance(prelude_plugin_instance_t *instance)
-{        
-        prelude_option_context_destroy(instance->opt_context);
-        
+{      
         free(instance->name);
         
         prelude_list_del(&instance->int_list);
@@ -248,7 +244,7 @@ static void destroy_instance(prelude_plugin_instance_t *instance)
 
 static int plugin_desactivate(void *context, prelude_option_t *opt)
 {
-        prelude_plugin_instance_t *pi = pi;
+        prelude_plugin_instance_t *pi = context;
         
         if ( ! pi ) {
                 log(LOG_ERR, "referenced instance not available.\n");
@@ -295,9 +291,7 @@ static int intercept_plugin_activation_option(void *context, prelude_option_t *o
                 if ( ! pi )
                         return -1;
               
-                pi->opt_context = prelude_option_new_context(opt, name, pi);
-                if ( ! pi->opt_context )
-                        return -1;
+                prelude_option_new_context(opt, name, pi);
                 
                 ret = pi->entry->create_instance(pi, opt, name);
                 if ( ret < 0 )
