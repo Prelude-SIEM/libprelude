@@ -165,7 +165,7 @@ static void expand_timeout(prelude_timer_t *timer)
 
 
 static void file_error(prelude_client_t *client, const char *cfgline) 
-{
+{       
         log(LOG_INFO, "\nBasic file configuration does not exist. Please run :\n"
             "sensor-adduser --sensorname %s --uid %d --gid %d\n"
             "program on the sensor host to create an account for this sensor.\n\n"
@@ -190,16 +190,16 @@ static int process_request(prelude_connection_t *cnx)
 
         status = prelude_msg_read(&msg, prelude_connection_get_fd(cnx));
         if ( status != prelude_msg_finished )
-                return -1;
-
+                return status;
+        
         if ( prelude_msg_get_tag(msg) != PRELUDE_MSG_OPTION_REQUEST )
                 return -1;
 
-        ret = prelude_option_process_request(cnx, msg);
+        prelude_option_process_request(cnx, msg);
 
         prelude_msg_destroy(msg);
 
-        return ret;
+        return 0;
 }
 
 
@@ -208,7 +208,6 @@ static int process_request(prelude_connection_t *cnx)
 static void check_for_data_cb(void *arg)
 {
 	int ret, fd;
-        fd_set rfds;
         struct timeval tv;
         prelude_list_t *tmp;
         prelude_connection_t *cnx;
@@ -229,16 +228,16 @@ static void check_for_data_cb(void *arg)
         tv.tv_sec = 0;
         tv.tv_usec = 0;
         rfds = mgr->fds;
-        
+
         timer_reset(&mgr->timer);
-        
+
         ret = select(mgr->nfd, &rfds, NULL, NULL, &tv);
         if ( ret <= 0 )
                 return;
 
         prelude_list_for_each(tmp, &mgr->all_cnx) {
                 cnx = prelude_linked_object_get_object(tmp, prelude_connection_t);
-
+                
                 if ( ! (prelude_connection_get_state(cnx) & PRELUDE_CONNECTION_ESTABLISHED) )
                         continue;
                 
@@ -248,7 +247,9 @@ static void check_for_data_cb(void *arg)
                 if ( ! ret )
                         continue;
 
-                process_request(cnx);
+                ret = process_request(cnx);
+                if ( ret <= 0 )
+                        FD_CLR(fd, &mgr->fds);
         }
 }
 
