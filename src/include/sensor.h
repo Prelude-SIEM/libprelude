@@ -44,6 +44,6 @@ void prelude_sensor_notify_mgr_connection(void (*cb)(struct list_head *clist));
 
 void prelude_heartbeat_register_cb(void (*cb)(void *data), void *data);
 
-int prelude_heartbeat_send(void *null);
+int prelude_heartbeat_send(void);
 
 #endif /* _LIBPRELUDE_SENSOR_H */

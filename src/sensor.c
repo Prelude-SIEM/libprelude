@@ -259,7 +259,7 @@ void prelude_sensor_notify_mgr_connection(void (*cb)(struct list_head *clist))
 
 
 
-int prelude_heartbeat_send(void *null) 
+int prelude_heartbeat_send(void) 
 {        
         if ( ! send_heartbeat_cb ) 
                 return -1;
@@ -268,14 +268,22 @@ int prelude_heartbeat_send(void *null)
          * trigger the application callback.
          */
         send_heartbeat_cb(heartbeat_data);
+
+        return 0;
+}
+
+
+
+static void heartbeat_timer_expire(void *null) 
+{
+        prelude_heartbeat_send();
         
         /*
          * reset our timer.
          */
         timer_reset(&heartbeat_timer);
-
-        return 0;
 }
+
 
 
 
@@ -292,7 +300,7 @@ void prelude_heartbeat_register_cb(void (*cb)(void *data), void *data)
         heartbeat_data = data;
         send_heartbeat_cb = cb;
         
-        timer_set_callback(&heartbeat_timer, prelude_heartbeat_send);
+        timer_set_callback(&heartbeat_timer, heartbeat_timer_expire);
         timer_set_expire(&heartbeat_timer, heartbeat_repeat_time);
         timer_init(&heartbeat_timer);
 
