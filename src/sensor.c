@@ -320,7 +320,7 @@ static int parse_argument(const char *filename, int argc, char **argv, int type)
 
 int prelude_init(int argc, char **argv)
 {
-        int old_flags, ret;
+        int ret;
         void *context = NULL;
         prelude_option_t *opt;
         
@@ -357,7 +357,6 @@ int prelude_init(int argc, char **argv)
         prelude_option_add(opt, CFG_HOOK, 0, "vlan-num",
                            NULL, required_argument, setup_analyzer_node_address_vlan_num, NULL);
         
-        prelude_option_set_warnings(~(OPT_INVAL|OPT_INVAL_ARG), &old_flags);
 
         /*
          * Parse default configuration...
@@ -367,8 +366,6 @@ int prelude_init(int argc, char **argv)
                 log(LOG_INFO, "error processing sensor options.\n", DEFAULT_SENSOR_CONFIG);
                 return -1;
         }
-
-        prelude_option_set_warnings(old_flags, NULL);
         
         return 0;
 }
@@ -420,11 +417,7 @@ int prelude_sensor_init(const char *sname, const char *filename, int argc, char 
         
         prelude_set_program_name(sname);
 
-        prelude_option_set_warnings(~(OPT_INVAL|OPT_INVAL_ARG), &old_flags);
-        ret = parse_argument(filename, argc, argv, PRELUDE_CLIENT_TYPE_SENSOR);
-        prelude_option_set_warnings(old_flags, NULL);
-
-        return ret;
+        return parse_argument(filename, argc, argv, PRELUDE_CLIENT_TYPE_SENSOR);
 }
 
 
