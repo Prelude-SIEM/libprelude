@@ -151,6 +151,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_additional_data_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_additional_data_destroy ##### -->
 <para>
 
@@ -298,6 +321,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_reference_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_reference_destroy ##### -->
 <para>
 
@@ -439,6 +485,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 </para>
 
 @ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_classification_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_classification_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
 @Returns: 
 
 
@@ -590,6 +659,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 </para>
 
 @ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
 @Returns: 
 
 
@@ -801,6 +893,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_user_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_user_destroy ##### -->
 <para>
 
@@ -957,6 +1072,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 </para>
 
 @ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_address_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_address_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
 @Returns: 
 
 
@@ -1165,6 +1303,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 </para>
 
 @ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_process_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_process_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
 @Returns: 
 
 
@@ -1382,6 +1543,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_web_service_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_web_service_destroy ##### -->
 <para>
 
@@ -1526,6 +1710,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 </para>
 
 @ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
 @Returns: 
 
 
@@ -1754,6 +1961,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 </para>
 
 @ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
 @Returns: 
 
 
@@ -2140,6 +2370,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_node_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_node_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_node_destroy ##### -->
 <para>
 
@@ -2340,6 +2593,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 </para>
 
 @ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_source_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_source_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
 @Returns: 
 
 
@@ -2571,6 +2847,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_file_access_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_access_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_file_access_destroy ##### -->
 <para>
 
@@ -2659,6 +2958,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 </para>
 
 @ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_inode_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_inode_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
 @Returns: 
 
 
@@ -2943,6 +3265,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_checksum_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_checksum_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_checksum_destroy ##### -->
 <para>
 
@@ -3118,6 +3463,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 </para>
 
 @ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
 @Returns: 
 
 
@@ -3603,6 +3971,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_linkage_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_linkage_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_linkage_destroy ##### -->
 <para>
 
@@ -3772,6 +4163,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 </para>
 
 @ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_target_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_target_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
 @Returns: 
 
 
@@ -4031,6 +4445,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 </para>
 
 @ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_analyzer_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_analyzer_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
 @Returns: 
 
 
@@ -4346,6 +4783,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_alertident_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_alertident_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_alertident_destroy ##### -->
 <para>
 
@@ -4518,6 +4978,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 </para>
 
 @ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_impact_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_impact_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
 @Returns: 
 
 
@@ -4710,6 +5193,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_action_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_action_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_action_destroy ##### -->
 <para>
 
@@ -4827,6 +5333,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_confidence_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_confidence_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_confidence_destroy ##### -->
 <para>
 
@@ -4912,6 +5441,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 </para>
 
 @ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_assessment_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_assessment_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
 @Returns: 
 
 
@@ -5034,6 +5586,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_tool_alert_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_tool_alert_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_tool_alert_destroy ##### -->
 <para>
 
@@ -5153,6 +5728,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_correlation_alert_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_correlation_alert_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_correlation_alert_destroy ##### -->
 <para>
 
@@ -5241,6 +5839,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 </para>
 
 @ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_overflow_alert_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_overflow_alert_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
 @Returns: 
 
 
@@ -5384,6 +6005,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
+@ret: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_alert_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_alert_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
 @ret: 
 @Returns: 
 
@@ -5796,6 +6440,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_heartbeat_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_heartbeat_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_heartbeat_destroy ##### -->
 <para>
 
@@ -6034,6 +6701,29 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 </para>
 
 @ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_message_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@childptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_message_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+@ret: 
 @Returns: 
 
 

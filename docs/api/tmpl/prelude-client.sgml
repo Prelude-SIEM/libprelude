@@ -15,40 +15,50 @@ for most of the work you are going to do with prelude.
 
 <title>Creating the client</title>
 <para>
-The creation of a #prelude_client_t object involve several steps, including, but 
-not limited to:
-
-<itemizedlist>
- <listitem>Parsing specific Prelude command line / configuration file options.</listitem>
- <listitem>Checking that the profile has been registered (the "my-analyzer" argument ahead).</listitem>
-</itemizedlist>
- 
-</para>
-
-<para>
-The prelude_client_new() function should be used for this task, and the #prelude_connection_capability_t
-argument should reflect the kind of use for this client:
-
-<itemizedlist>
-    <listitem>PRELUDE_CONNECTION_CAPABILITY_CONNECT - This client should connect to a peer.</listitem>
-    <listitem>PRELUDE_CONNECTION_CAPABILITY_RECV_IDMEF - This client receive IDMEF message from a collector.</listitem>
-    <listitem>See #prelude_connection_capability_t for more.</listitem> 
-</itemizedlist>
 
 <programlisting>
 int ret;
 prelude_client_t *client;
         
-ret = prelude_client_new(&amp;client, PRELUDE_CONNECTION_CAPABILITY_CONNECT, "my-analyzer", "/etc/my-analyzer.conf");
+ret = prelude_client_new(&amp;client, "my-analyzer");
 if ( ! client ) {
         prelude_perror(ret, "Unable to create a prelude client object");
         return -1;
 }
 </programlisting>
 
+This will create a new client object, whose default profile is my-analyzer.
+This default profile might be overriden using the --prelude --profile profile_name option on your
+command line as parsed by prelude_init().
+</para>
+
+<para>
+Additionally, prelude specific option might be overriden using a Prelude specific configuration file,
+like the template file created within each profile, or a configuration file specified using
+prelude_client_set_config_filename() before prelude_client_start() is called.
+</para>
+
+<para>
+The default required permission for the created client are set to PRELUDE_CONNECTION_PERMISSION_IDMEF_WRITE
+and PRELUDE_CONNECTION_PERMISSION_ADMIN_READ, which mean the client will reject any certificate where 
+permission are set to anything less than this. You can change the default required permission using the 
+prelude_client_set_required_permission() function.
+</para>
+
+<para>
+As an example, if you want to create a client that will read alert from a Manager, and accept administrative
+option request you should use:
+
+<programlisting>
+prelude_client_set_required_permission(client, PRELUDE_CONNECTION_PERMISSION_IDMEF_READ|PRELUDE_CONNECTION_PERMISSION_ADMIN_WRITE);
+</programlisting>
+</para>
+
+<para>
 Once the client is created and you have everything setup, you will need to start your client. 
 The prelude_client_start() function is responsible for this, and will trigger the connection to 
 the configured manager, and send the initial client heartbeat.
+</para>
 
 <programlisting>
 ret = prelude_client_start(client);
@@ -58,6 +68,7 @@ if ( ret &lt; 0 ) {
 }
 </programlisting>
 
+<para>
 Additionally, it is possible to set additional client flags, however, you should be careful 
 since some of theses flags (marked asynchronous) will result in creating an internal thread, 
 which should only be done after an eventual fork of the program since threads are not copied 
@@ -72,6 +83,7 @@ for calling the prelude_timer_wake_up() function every second from it's main loo
 registered timer.
 
 <itemizedlist>
+    <listitem>#PRELUDE_CLIENT_FLAGS_CONNECT - Used for a client to connect to a manager (this is the default).</listitem> 
     <listitem>#PRELUDE_CLIENT_FLAGS_HEARTBEAT - Used for client to send heartbeat (this is the default).</listitem>
     <listitem>#PRELUDE_CLIENT_FLAGS_ASYNC_SEND - Used if you want message to be sent asynchronously.</listitem>
     <listitem>#PRELUDE_CLIENT_FLAGS_ASYNC_TIMER - Used if you want timer to be automatically called from the asynchronous thread.</listitem>
@@ -157,6 +169,7 @@ is interrupted by a signal.
 @PRELUDE_CLIENT_FLAGS_ASYNC_SEND: 
 @PRELUDE_CLIENT_FLAGS_ASYNC_TIMER: 
 @PRELUDE_CLIENT_FLAGS_HEARTBEAT: 
+@PRELUDE_CLIENT_FLAGS_CONNECT: 
 
 <!-- ##### TYPEDEF prelude_client_t ##### -->
 <para>
@@ -200,16 +213,26 @@ is interrupted by a signal.
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_client_init ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
 <!-- ##### FUNCTION prelude_client_new ##### -->
 <para>
 
 </para>
 
 @client: 
-@capability: 
 @profile: 
-@config: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@config: 
+@capability: 
 
 
 <!-- ##### FUNCTION prelude_client_get_analyzer ##### -->
@@ -230,7 +253,16 @@ is interrupted by a signal.
 @Returns: 
 
 
-<!-- ##### FUNCTION prelude_client_get_capability ##### -->
+<!-- ##### FUNCTION prelude_client_set_required_permission ##### -->
+<para>
+
+</para>
+
+@client: 
+@permission: 
+
+
+<!-- ##### FUNCTION prelude_client_get_required_permission ##### -->
 <para>
 
 </para>
@@ -282,6 +314,16 @@ is interrupted by a signal.
 
 @client: 
 @flags: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_set_config_filename ##### -->
+<para>
+
+</para>
+
+@client: 
+@filename: 
 @Returns: 
 
 

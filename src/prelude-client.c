@@ -243,7 +243,7 @@ static void heartbeat_expire_cb(void *data)
         
         idmef_heartbeat_set_create_time(heartbeat, time);
         idmef_heartbeat_set_analyzer(heartbeat, idmef_analyzer_ref(client->analyzer), 0);
-                
+        
         if ( client->heartbeat_cb ) {
                 client->heartbeat_cb(client, message);
                 goto out;
@@ -767,7 +767,7 @@ static int get_heartbeat_interval(prelude_option_t *opt, prelude_string_t *out, 
 
 static int set_profile(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
-        prelude_client_t *client = context;
+        prelude_client_t *client = context;        
         return prelude_client_profile_set_name(client->profile, optarg);
 }
 
@@ -792,6 +792,53 @@ static int create_heartbeat_msgbuf(prelude_client_t *client)
 
         prelude_msgbuf_set_data(client->msgbuf, client);
         prelude_msgbuf_set_callback(client->msgbuf, client_write_msgbuf);
+        
+        return 0;
+}
+
+
+
+/*
+ * If the client provided no configuration filename, it is important
+ * that we use the default configuration (idmef-client.conf). Here,
+ * we do a copy of this file to the analyzer profile directory, so
+ * that admin request to the analyzer can be saved locally for this
+ * analyzer.
+ */
+static int create_template_config_file(prelude_client_t *client)
+{
+        int ret;
+        FILE *fd, *tfd;
+        char buf[1024];
+
+        prelude_client_profile_get_config_filename(client->profile, buf, sizeof(buf));        
+        client->config_filename = strdup(buf);
+        
+        ret = access(client->config_filename, F_OK);
+        if ( ret == 0 )
+                return 0;
+
+        tfd = fopen(PRELUDE_CONFIG_DIR "/default/idmef-client.conf", "r");
+        if ( ! tfd ) {
+                prelude_log_debug(3, "could not open template configuration file: %s.\n", strerror(errno));
+                return prelude_error_from_errno(errno);
+        }
+        
+        fd = fopen(client->config_filename, "w");
+        if ( ! fd ) {
+                fclose(tfd);
+                prelude_log_debug(3, "could not open sensor configuration file: %s.\n", strerror(errno));
+                return prelude_error(PRELUDE_ERROR_PROFILE);
+        }
+
+        fchmod(fileno(fd), S_IRUSR|S_IWUSR|S_IRGRP);
+        fchown(fileno(fd), prelude_client_profile_get_uid(client->profile), prelude_client_profile_get_gid(client->profile));
+        
+        while ( fgets(buf, sizeof(buf), tfd) )
+                fwrite(buf, 1, strlen(buf), fd);
+
+        fclose(fd);
+        fclose(tfd);
         
         return 0;
 }
@@ -937,18 +984,13 @@ int _prelude_client_register_options(void)
 /**
  * prelude_client_new:
  * @client: Pointer to a client object to initialize.
- * @permission: Required permission for this client.
  * @profile: Default profile name for this analyzer.
- * @config: Generic configuration file for this analyzer.
  *
- * This function initialize the @client object, reading generic
- * option from the @config configuration file and the provided
- * @argv array of arguments.
+ * This function initialize the @client object.
  *
  * Returns: 0 on success or a negative value if an error occur.
  */
-int prelude_client_new(prelude_client_t **client, const char *profile,
-                       const char *config /* move to client_start or only through function call ? */ )
+int prelude_client_new(prelude_client_t **client, const char *profile)
 {
         int ret;
         prelude_client_t *new;
@@ -968,9 +1010,7 @@ int prelude_client_new(prelude_client_t **client, const char *profile,
                 _prelude_client_destroy(new);
                 return ret;
         }
-        
-        new->config_filename = config ? strdup(config) : NULL;
-        
+                
         set_analyzer_name(NULL, profile, NULL, new);
 
         ret = _prelude_client_profile_new(&new->profile);
@@ -1023,13 +1063,18 @@ int prelude_client_init(prelude_client_t *client)
         prelude_string_t *err = NULL;
         prelude_option_warning_t old_warnings;
 
+        if ( ! client->config_filename ) {
+                ret = create_template_config_file(client);
+                if ( ret < 0 )
+                        return ret;
+        }
+
         prelude_option_set_warnings(0, &old_warnings);
         
         ret = prelude_option_read(_prelude_generic_optlist, (const char **)&client->config_filename,
                                   &_prelude_internal_argc, _prelude_internal_argv, &err, client);        
         
         prelude_option_set_warnings(old_warnings, NULL);
-
         if ( ret < 0 )
                 return ret;
         
@@ -1303,12 +1348,12 @@ prelude_client_flags_t prelude_client_get_flags(prelude_client_t *client)
 
 
 /**
- * prelude_client_get_permission:
+ * prelude_client_get_required_permission:
  * @client: Pointer on a #prelude_client_t object.
  *
- * Returns: @client permission as set with prelude_client_set_permission()
+ * Returns: @client permission as set with prelude_client_set_required_permission()
  */
-prelude_connection_permission_t prelude_client_get_permission(prelude_client_t *client)
+prelude_connection_permission_t prelude_client_get_required_permission(prelude_client_t *client)
 {
         return client->permission;
 }
@@ -1316,15 +1361,18 @@ prelude_connection_permission_t prelude_client_get_permission(prelude_client_t *
 
 
 /**
- * prelude_client_set_permission:
+ * prelude_client_set_required_permission:
  * @client: Pointer on a #prelude_client_t object.
  * @permission: Required permission for @client.
  *
  * Set the required @permission for @client.
  * The default is #PRELUDE_CONNECTION_PERMISSION_IDMEF_WRITE | #PRELUDE_CONNECTION_PERMISSION_ADMIN_READ.
  * Value set through this function should be set before prelude_client_start().
+ *
+ * If the client certificate for connecting to one of the specified manager doesn't have theses permission
+ * the client will reject the certificate and ask for registration.
  */
-void prelude_client_set_permission(prelude_client_t *client, prelude_connection_permission_t permission)
+void prelude_client_set_required_permission(prelude_client_t *client, prelude_connection_permission_t permission)
 {
         client->permission = permission;
 }
@@ -1343,6 +1391,32 @@ void prelude_client_set_permission(prelude_client_t *client, prelude_connection_
 const char *prelude_client_get_config_filename(prelude_client_t *client)
 {
         return client->config_filename;
+}
+
+
+
+/**
+ * prelude_client_set_config_filename:
+ * @client: pointer on a #prelude_client_t object.
+ * @filename: Configuration file to use for this client.
+ *
+ * The default for a client is to use a template configuration file (idmef-client.conf).
+ * By using this function you might override the default and provide your own
+ * configuration file to use for @client. The format of the configuration file need
+ * to be compatible with the Prelude format.
+ *
+ * Returns: 0 on success, -1 if an error occured.
+ */
+int prelude_client_set_config_filename(prelude_client_t *client, const char *filename)
+{
+        if ( client->config_filename )
+                free(client->config_filename);
+        
+        client->config_filename = strdup(filename);
+        if ( ! client->config_filename )
+                return prelude_error_from_errno(errno);
+
+        return 0;
 }
 
 
@@ -1376,9 +1450,10 @@ prelude_bool_t prelude_client_is_setup_needed(int error)
         prelude_error_code_t code = prelude_error_get_code(error);
         
         return ( code == PRELUDE_ERROR_BACKUP_DIRECTORY     ||
+                 code == PRELUDE_ERROR_PROFILE              ||
                  code == PRELUDE_ERROR_ANALYZERID_FILE      ||
                  code == PRELUDE_ERROR_ANALYZERID_PARSE     ||
-                 code == PRELUDE_ERROR_TLS_KEY              ||
+                 code == PRELUDE_ERROR_TLS_KEY_FILE         ||
                  code == PRELUDE_ERROR_TLS_CERTIFICATE_FILE ||
                  code == PRELUDE_ERROR_TLS_CERTIFICATE_PARSE ) ? TRUE : FALSE;
 }

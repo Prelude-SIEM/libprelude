@@ -58,16 +58,15 @@ int prelude_client_start(prelude_client_t *client);
 
 int prelude_client_init(prelude_client_t *client);
 
-int prelude_client_new(prelude_client_t **client,
-                       const char *profile, const char *config);
+int prelude_client_new(prelude_client_t **client, const char *profile);
 
 idmef_analyzer_t *prelude_client_get_analyzer(prelude_client_t *client);
 
 prelude_client_flags_t prelude_client_get_flags(prelude_client_t *client);
 
-void prelude_client_set_permission(prelude_client_t *client, prelude_connection_permission_t permission);
+void prelude_client_set_required_permission(prelude_client_t *client, prelude_connection_permission_t permission);
 
-prelude_connection_permission_t prelude_client_get_permission(prelude_client_t *client);
+prelude_connection_permission_t prelude_client_get_required_permission(prelude_client_t *client);
 
 void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg);
 
@@ -78,6 +77,8 @@ void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg);
 void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status_t status);
 
 int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t flags);
+
+int prelude_client_set_config_filename(prelude_client_t *client, const char *filename);
 
 const char *prelude_client_get_config_filename(prelude_client_t *client);
 

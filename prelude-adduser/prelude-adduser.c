@@ -50,7 +50,7 @@
 #include "tls-register.h"
 
 
-#define TLS_CONFIG PRELUDE_CONFIG_DIR "/tls/tls.conf"
+#define TLS_CONFIG PRELUDE_CONFIG_DIR "/default/tls.conf"
 
 
 struct cmdtbl {
@@ -401,6 +401,31 @@ static int ask_one_shot_password(char **buf)
 
 
 
+static int create_directory(prelude_client_profile_t *profile, const char *dirname)
+{
+        int ret;
+        
+        fprintf(stderr, "  - Creating %s...\n", dirname);
+
+        ret = mkdir(dirname, S_IRWXU|S_IRWXG);
+        if ( ret < 0 && errno != EEXIST ) {
+                fprintf(stderr, "error creating directory %s: %s.\n", dirname, strerror(errno));
+                return -1;
+        }
+        
+        ret = chown(dirname, prelude_client_profile_get_uid(profile), prelude_client_profile_get_gid(profile));
+        if ( ret < 0 ) {
+                fprintf(stderr, "could not chown %s to %d:%d: %s.\n", dirname,
+                        (int) prelude_client_profile_get_uid(profile),
+                        (int) prelude_client_profile_get_gid(profile), strerror(errno));
+                return -1;
+        }
+
+        return 0;
+}
+
+
+
 static int setup_analyzer_files(prelude_client_profile_t *profile, uint64_t analyzerid,
                                 gnutls_x509_privkey *key, gnutls_x509_crt *crt) 
 {
@@ -408,8 +433,15 @@ static int setup_analyzer_files(prelude_client_profile_t *profile, uint64_t anal
         char buf[256];
         const char *name;
         
-        name = prelude_client_profile_get_name(profile);
+        prelude_client_profile_get_profile_dirname(profile, buf, sizeof(buf));
 
+        ret = create_directory(profile, buf);
+        if ( ret < 0 ) {
+                fprintf(stderr, "error creating directory %s: %s.\n", buf, strerror(errno));
+                return -1;
+        }
+        
+        name = prelude_client_profile_get_name(profile);
         ret = register_sensor_ident(name, &analyzerid);
         if ( ret < 0 )
                 return -1;
@@ -422,27 +454,7 @@ static int setup_analyzer_files(prelude_client_profile_t *profile, uint64_t anal
         
         prelude_client_profile_get_backup_dirname(profile, buf, sizeof(buf));
 
-        /*
-         * The user may have changed permission, and we don't want
-         * to be vulnerable to a symlink attack anyway. 
-         */
-        fprintf(stderr, "  - Creating %s...\n", buf);
-
-        ret = mkdir(buf, S_IRWXU|S_IRWXG);
-        if ( ret < 0 && errno != EEXIST ) {
-                fprintf(stderr, "error creating directory %s: %s.\n", buf, strerror(errno));
-                return -1;
-        }
-
-        ret = chown(buf, prelude_client_profile_get_uid(profile), prelude_client_profile_get_gid(profile));
-        if ( ret < 0 ) {
-                fprintf(stderr, "could not chown %s to %d:%d: %s.\n", buf,
-                        (int) prelude_client_profile_get_uid(profile),
-                        (int) prelude_client_profile_get_gid(profile), strerror(errno));
-                return -1;
-        }
-        
-        return 0;
+        return create_directory(profile, buf);
 }
 
 
@@ -456,52 +468,32 @@ static int rename_cmd(int argc, char **argv)
         
         sname = argv[2];
         dname = argv[3];
-        fprintf(stderr, "Renaming analyzer %s to %s\n", sname, dname);
+        fprintf(stderr, "- Renaming analyzer %s to %s\n", sname, dname);
 
         ret = prelude_client_profile_new(&sprofile, sname);
         
         ret = _prelude_client_profile_new(&dprofile);
         prelude_client_profile_set_name(dprofile, dname);
 
-        prelude_client_profile_get_analyzerid_filename(sprofile, spath, sizeof(spath));
-        prelude_client_profile_get_analyzerid_filename(dprofile, dpath, sizeof(dpath));
-        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
-        rename(spath, dpath);
-
+        prelude_client_profile_get_profile_dirname(sprofile, spath, sizeof(spath));
+        prelude_client_profile_get_profile_dirname(dprofile, dpath, sizeof(dpath));
+        fprintf(stderr, "  - renaming %s to %s.\n", spath, dpath);
+        
+        ret = rename(spath, dpath);
+        if ( ret < 0 ) {
+                fprintf(stderr, "error renaming %s to %s: %s.\n", spath, dpath, strerror(errno));
+                return ret;
+        }
+        
         prelude_client_profile_get_backup_dirname(sprofile, spath, sizeof(spath));
         prelude_client_profile_get_backup_dirname(dprofile, dpath, sizeof(dpath));
-        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
-        rename(spath, dpath);
-        
-        prelude_client_profile_get_tls_key_filename(sprofile, spath, sizeof(spath));
-        prelude_client_profile_get_tls_key_filename(dprofile, dpath, sizeof(dpath));
-        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
-        rename(spath, dpath);
+        fprintf(stderr, "  - renaming %s to %s.\n", spath, dpath);
 
-        prelude_client_profile_get_tls_client_keycert_filename(sprofile, spath, sizeof(spath));
-        prelude_client_profile_get_tls_client_keycert_filename(dprofile, dpath, sizeof(dpath));
-        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
-        rename(spath, dpath);
-
-        prelude_client_profile_get_tls_server_keycert_filename(sprofile, spath, sizeof(spath));
-        prelude_client_profile_get_tls_server_keycert_filename(dprofile, dpath, sizeof(dpath));
-        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
-        rename(spath, dpath);
-
-        prelude_client_profile_get_tls_client_trusted_cert_filename(sprofile, spath, sizeof(spath));
-        prelude_client_profile_get_tls_client_trusted_cert_filename(dprofile, dpath, sizeof(dpath));
-        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
-        rename(spath, dpath);
-
-        prelude_client_profile_get_tls_server_trusted_cert_filename(sprofile, spath, sizeof(spath));
-        prelude_client_profile_get_tls_server_trusted_cert_filename(dprofile, dpath, sizeof(dpath));
-        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
-        rename(spath, dpath);
-        
-        prelude_client_profile_get_tls_server_ca_cert_filename(sprofile, spath, sizeof(spath));
-        prelude_client_profile_get_tls_server_ca_cert_filename(dprofile, dpath, sizeof(dpath));
-        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
-        rename(spath, dpath);
+        ret = rename(spath, dpath);
+        if ( ret < 0 ) {
+                fprintf(stderr, "error renaming %s to %s: %s.\n", spath, dpath, strerror(errno));
+                return ret;
+        }
         
         return 0;
 }
@@ -571,38 +563,14 @@ static int del_cmd(int argc, char **argv)
         
         fprintf(stderr, "- Deleting analyzer %s\n", argv[2]);
         
+        prelude_client_profile_get_profile_dirname(profile, buf, sizeof(buf));
+        fprintf(stderr, "  - Removing %s...\n", buf);
+        unlink(buf);
+        
         prelude_client_profile_get_backup_dirname(profile, buf, sizeof(buf));
         fprintf(stderr, "  - Removing %s...\n", buf);
         unlink(buf);
-        
-        prelude_client_profile_get_analyzerid_filename(profile, buf, sizeof(buf));
-        fprintf(stderr, "  - Removing %s...\n", buf);
-        unlink(buf);
-
-        prelude_client_profile_get_tls_key_filename(profile, buf, sizeof(buf));
-        fprintf(stderr, "  - Removing %s...\n", buf);
-        unlink(buf);
-        
-        prelude_client_profile_get_tls_client_keycert_filename(profile, buf, sizeof(buf));
-        fprintf(stderr, "  - Removing %s...\n", buf);
-        unlink(buf);
-        
-        prelude_client_profile_get_tls_server_keycert_filename(profile, buf, sizeof(buf));
-        fprintf(stderr, "  - Removing %s...\n", buf);
-        unlink(buf);
-        
-        prelude_client_profile_get_tls_client_trusted_cert_filename(profile, buf, sizeof(buf));
-        fprintf(stderr, "  - Removing %s...\n", buf);
-        unlink(buf);
-        
-        prelude_client_profile_get_tls_server_trusted_cert_filename(profile, buf, sizeof(buf));
-        fprintf(stderr, "  - Removing %s...\n", buf);
-        unlink(buf);
-        
-        prelude_client_profile_get_tls_server_ca_cert_filename(profile, buf, sizeof(buf));
-        fprintf(stderr, "  - Removing %s...\n", buf);
-        unlink(buf);
-        
+                
         return 0;
 }
 

@@ -37,61 +37,64 @@
 5	PRELUDE_ERROR_PROTOCOL_VERSION	Invalid protocol version
 6	PRELUDE_ERROR_EOF		End of file
 7	PRELUDE_ERROR_BACKUP_DIRECTORY	Could not access Analyzer backup directory 
-8	PRELUDE_ERROR_ANALYZERID_FILE	Could not open AnalyzerID file
-9	PRELUDE_ERROR_ANALYZERID_PARSE	Error parsing AnalyzerId file
-10	PRELUDE_ERROR_TLS_CERTIFICATE_FILE	Could not access TLS certificate file
-11	PRELUDE_ERROR_TLS_CERTIFICATE_PARSE	Could not parse TLS certificate
-12	PRELUDE_ERROR_TLS_KEY		Could not access TLS private key
-13	PRELUDE_ERROR_IDMEF_UNKNOWN_TAG	IDMEF message tag is unknown
-14	PRELUDE_ERROR_INVAL_INT8	Buffer does not contain a 8 bits integer
-15	PRELUDE_ERROR_INVAL_INT16	Buffer does not contain a 16 bits integer
-16	PRELUDE_ERROR_INVAL_INT32	Buffer does not contain a 32 bits integer
-17	PRELUDE_ERROR_INVAL_INT64	Buffer does not contain a 64 bits integer
-18	PRELUDE_ERROR_INVAL_FLOAT	Buffer does not contain a 32 bits float
-19	PRELUDE_ERROR_INVAL_CHAR	Buffer is not zero terminated
-20	PRELUDE_ERROR_INVAL_IDMEF_TIME	Buffer does not contain an IDMEF time type
-21	PRELUDE_ERROR_CONNECTION_STRING	No connection information provided
+8	PRELUDE_ERROR_PROFILE		Client profile does not exist or have wrong permissions
+9	PRELUDE_ERROR_ANALYZERID_FILE	Could not open AnalyzerId file
+10	PRELUDE_ERROR_ANALYZERID_PARSE	Error parsing AnalyzerId file
 
-22	PRELUDE_ERROR_IDMEF_VALUE_TYPE_UNKNOWN	Unknown IDMEF value type
-23	PRELUDE_ERROR_IDMEF_VALUE_TYPE_COPY_UNAVAILABLE	Copy operation unavailable for specified IDMEF type
-24	PRELUDE_ERROR_IDMEF_VALUE_TYPE_CLONE_UNAVAILABLE	Clone operation unavailable for specified IDMEF type
-25	PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_UNAVAILABLE	Compare operation unavailable for specified IDMEF type
-26	PRELUDE_ERROR_IDMEF_VALUE_TYPE_READ_UNAVAILABLE	Read operation unavailable for specified IDMEF type
-27	PRELUDE_ERROR_IDMEF_VALUE_TYPE_WRITE_UNAVAILABLE	Write operation unavailable for specified IDMEF type
-28	PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_MISMATCH	Can not compare data of different type
-29	PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE	Could not parse IDMEF value
+11	PRELUDE_ERROR_TLS_CERTIFICATE_FILE	Could not access TLS certificate file
+12	PRELUDE_ERROR_TLS_CERTIFICATE_PARSE	Could not parse TLS certificate
+13	PRELUDE_ERROR_TLS_KEY_FILE		Could not access TLS private key
+14	PRELUDE_ERROR_TLS_HANDSHAKE		TLS handshake failed
+15	PRELUDE_ERROR_TLS_INVALID_CERTIFICATE	Unable to verify peer certificate
+16	PRELUDE_ERROR_TLS_AUTH_REJECTED		Peer rejected authentication
 
-30	PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN	Unknown IDMEF type or child specified
-31	PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD	Unknown IDMEF child specified
-32	PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_NAME	Unknown IDMEF element name
+17	PRELUDE_ERROR_INVAL_INT8	Buffer does not contain a 8 bits integer
+18	PRELUDE_ERROR_INVAL_INT16	Buffer does not contain a 16 bits integer
+19	PRELUDE_ERROR_INVAL_INT32	Buffer does not contain a 32 bits integer
+20	PRELUDE_ERROR_INVAL_INT64	Buffer does not contain a 64 bits integer
+21	PRELUDE_ERROR_INVAL_FLOAT	Buffer does not contain a 32 bits float
+22	PRELUDE_ERROR_INVAL_CHAR	Buffer is not zero terminated
+23	PRELUDE_ERROR_INVAL_IDMEF_TIME	Buffer does not contain an IDMEF time type
+24	PRELUDE_ERROR_CONNECTION_STRING	No connection information provided
 
-33	PRELUDE_ERROR_IDMEF_PATH_LENGTH		IDMEF path name too long
-34	PRELUDE_ERROR_IDMEF_PATH_DEPTH		IDMEF path maximum depth exceeded
-35	PRELUDE_ERROR_IDMEF_PATH_PARENT_ROOT	Can not make parent from IDMEF root path
-36	PRELUDE_ERROR_IDMEF_PATH_NTH		Specified object index does not exist
-37	PRELUDE_ERROR_IDMEF_PATH_MISS_INDEX	Listed element require an index to be specified
-38	PRELUDE_ERROR_IDMEF_PATH_INTEGRITY	Element integrity failed
-39	PRELUDE_ERROR_IDMEF_PATH_INDEX_RESERVED	Provided index value is reserved
-40	PRELUDE_ERROR_IDMEF_PATH_INDEX_FORBIDDEN	Element forbid indexing
-41	PRELUDE_ERROR_IDMEF_PATH_INDEX_UNDEFINED	Element index is undefined
-42	PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED	An index below the one specified is undefined
+25	PRELUDE_ERROR_IDMEF_VALUE_TYPE_UNKNOWN	Unknown IDMEF value type
+26	PRELUDE_ERROR_IDMEF_VALUE_TYPE_COPY_UNAVAILABLE	Copy operation unavailable for specified IDMEF type
+27	PRELUDE_ERROR_IDMEF_VALUE_TYPE_CLONE_UNAVAILABLE	Clone operation unavailable for specified IDMEF type
+28	PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_UNAVAILABLE	Compare operation unavailable for specified IDMEF type
+29	PRELUDE_ERROR_IDMEF_VALUE_TYPE_READ_UNAVAILABLE	Read operation unavailable for specified IDMEF type
+30	PRELUDE_ERROR_IDMEF_VALUE_TYPE_WRITE_UNAVAILABLE	Write operation unavailable for specified IDMEF type
+31	PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_MISMATCH	Can not compare data of different type
+32	PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE	Could not parse IDMEF value
 
-43	PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING	Unknown enumeration string
-44	PRELUDE_ERROR_DAEMONIZE_LOCK_HELD	File lock is held by another process
-45	PRELUDE_ERROR_PLUGIN_LTDL_INIT		Unable to initialize LTDL
+33	PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN	Unknown IDMEF type or child specified
+34	PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD	Unknown IDMEF child specified
+35	PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_NAME	Unknown IDMEF element name
 
-46	PRELUDE_ERROR_TLS_HANDSHAKE		TLS handshake failed
-47	PRELUDE_ERROR_TLS_INVALID_CERTIFICATE	Unable to verify peer certificate
-48	PRELUDE_ERROR_TLS_REMOTE_AUTH		Peer rejected authentication
+36	PRELUDE_ERROR_IDMEF_PATH_LENGTH		IDMEF path name too long
+37	PRELUDE_ERROR_IDMEF_PATH_DEPTH		IDMEF path maximum depth exceeded
+38	PRELUDE_ERROR_IDMEF_PATH_PARENT_ROOT	Can not make parent from IDMEF root path
+39	PRELUDE_ERROR_IDMEF_PATH_NTH		Specified object index does not exist
+40	PRELUDE_ERROR_IDMEF_PATH_MISS_INDEX	Listed element require an index to be specified
+41	PRELUDE_ERROR_IDMEF_PATH_INTEGRITY	Element integrity failed
+42	PRELUDE_ERROR_IDMEF_PATH_INDEX_RESERVED	Provided index value is reserved
+43	PRELUDE_ERROR_IDMEF_PATH_INDEX_FORBIDDEN	Element forbid indexing
+44	PRELUDE_ERROR_IDMEF_PATH_INDEX_UNDEFINED	Element index is undefined
+45	PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED	An index below the one specified is undefined
+46	PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING		Unknown enumeration string
+47	PRELUDE_ERROR_IDMEF_UNKNOWN_TAG			IDMEF message tag is unknown
+
+48	PRELUDE_ERROR_DAEMONIZE_LOCK_HELD	File lock is held by another process
+49	PRELUDE_ERROR_PLUGIN_LTDL_INIT		Unable to initialize LTDL
 		
-49	PRELUDE_ERROR_STRING_NOT_NULL_TERMINATED	String is not 'null' terminated
-50	PRELUDE_ERROR_CANT_RESOLVE		Could not resolve address
+50	PRELUDE_ERROR_STRING_NOT_NULL_TERMINATED	String is not 'nul' terminated
+51	PRELUDE_ERROR_CANT_RESOLVE		Could not resolve address
 
-51	PRELUDE_ERROR_UNKNOWN_PERMISSION_TYPE	Specified permission type is unknown
-52	PRELUDE_ERROR_UNKNOWN_PERMISSION	Specified permission bit is not known
-53	PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS	Insufficient credentials for requested operation
+52	PRELUDE_ERROR_UNKNOWN_PERMISSION_TYPE	Specified permission type is unknown
+53	PRELUDE_ERROR_UNKNOWN_PERMISSION_BIT	Specified permission bit is not known
+54	PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS	Insufficient credentials for requested operation
 
-#52 to 16381 are free to be used.
+
+#55 to 16381 are free to be used.
 
 16382	PRELUDE_ERROR_UNKNOWN_ERRNO		Unknown system error
 

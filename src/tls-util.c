@@ -100,7 +100,7 @@ int tls_load_file(const char *filename, gnutls_datum *data)
 
         fd = open(filename, O_RDONLY);
         if ( fd < 0 )
-                return prelude_error(PRELUDE_ERROR_TLS_KEY);
+                return prelude_error(PRELUDE_ERROR_TLS_KEY_FILE);
         
         ret = fstat(fd, &st);
         if ( ret < 0 ) {

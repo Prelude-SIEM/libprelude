@@ -39,6 +39,8 @@ int prelude_client_profile_new(prelude_client_profile_t **ret, const char *name)
 
 void prelude_client_profile_destroy(prelude_client_profile_t *cp);
 
+void prelude_client_profile_get_config_filename(prelude_client_profile_t *cp, char *buf, size_t size);
+
 void prelude_client_profile_get_analyzerid_filename(prelude_client_profile_t *cp, char *buf, size_t size);
 
 void prelude_client_profile_get_tls_key_filename(prelude_client_profile_t *cp, char *buf, size_t size);
@@ -54,6 +56,8 @@ void prelude_client_profile_get_tls_client_keycert_filename(prelude_client_profi
 void prelude_client_profile_get_tls_client_trusted_cert_filename(prelude_client_profile_t *cp, char *buf, size_t size);
 
 void prelude_client_profile_get_backup_dirname(prelude_client_profile_t *cp, char *buf, size_t size);
+
+void prelude_client_profile_get_profile_dirname(prelude_client_profile_t *cp, char *buf, size_t size);
 
 void prelude_client_profile_set_uid(prelude_client_profile_t *cp, uid_t uid);
 

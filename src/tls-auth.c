@@ -76,7 +76,7 @@ static int read_auth_result(prelude_io_t *fd)
 
         if ( tag != PRELUDE_MSG_AUTH_SUCCEED ) {
                 prelude_msg_destroy(msg);
-                return prelude_error(PRELUDE_ERROR_TLS_REMOTE_AUTH);
+                return prelude_error(PRELUDE_ERROR_TLS_AUTH_REJECTED);
         }
         
         prelude_msg_destroy(msg);

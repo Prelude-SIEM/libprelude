@@ -14,15 +14,15 @@ prelude-connection
 
 </para>
 
-<!-- ##### ENUM prelude_connection_capability_t ##### -->
+<!-- ##### ENUM prelude_connection_permission_t ##### -->
 <para>
 
 </para>
 
-@PRELUDE_CONNECTION_CAPABILITY_NONE: 
-@PRELUDE_CONNECTION_CAPABILITY_CONNECT: 
-@PRELUDE_CONNECTION_CAPABILITY_RECV_IDMEF: 
-@PRELUDE_CONNECTION_CAPABILITY_RECV_CM: 
+@PRELUDE_CONNECTION_PERMISSION_IDMEF_READ: 
+@PRELUDE_CONNECTION_PERMISSION_ADMIN_READ: 
+@PRELUDE_CONNECTION_PERMISSION_IDMEF_WRITE: 
+@PRELUDE_CONNECTION_PERMISSION_ADMIN_WRITE: 
 
 <!-- ##### ENUM prelude_connection_state_t ##### -->
 <para>
@@ -72,8 +72,10 @@ prelude-connection
 
 @cnx: 
 @profile: 
-@capability: 
+@permission: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@capability: 
 
 
 <!-- ##### FUNCTION prelude_connection_forward ##### -->
@@ -212,6 +214,15 @@ prelude-connection
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_connection_get_permission ##### -->
+<para>
+
+</para>
+
+@conn: 
+@Returns: 
+
+
 <!-- ##### FUNCTION prelude_connection_get_peer_analyzerid ##### -->
 <para>
 
@@ -247,6 +258,26 @@ prelude-connection
 
 @connection: 
 @msgbuf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_permission_to_string ##### -->
+<para>
+
+</para>
+
+@perm: 
+@out: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_permission_new_from_string ##### -->
+<para>
+
+</para>
+
+@out: 
+@buf: 
 @Returns: 
 
 

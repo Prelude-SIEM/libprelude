@@ -14,6 +14,14 @@ prelude-list
 
 </para>
 
+<!-- ##### MACRO PRELUDE_LIST ##### -->
+<para>
+
+</para>
+
+@item: 
+
+
 <!-- ##### STRUCT prelude_list_t ##### -->
 <para>
 
@@ -22,30 +30,50 @@ prelude-list
 @next: 
 @prev: 
 
-<!-- ##### MACRO PRELUDE_LIST ##### -->
-<para>
-
-</para>
-
-@name: 
-
-
 <!-- ##### MACRO prelude_list_entry ##### -->
 <para>
 
 </para>
 
-@ptr: 
+@item: 
 @type: 
 @member: 
 
 
-<!-- ##### MACRO prelude_list_for_each_continue_safe ##### -->
+<!-- ##### MACRO prelude_list_for_each ##### -->
 <para>
 
 </para>
 
-@head: 
+@list: 
+@pos: 
+
+
+<!-- ##### MACRO prelude_list_for_each_safe ##### -->
+<para>
+
+</para>
+
+@list: 
+@pos: 
+@bkp: 
+
+
+<!-- ##### MACRO prelude_list_for_each_reversed ##### -->
+<para>
+
+</para>
+
+@list: 
+@pos: 
+
+
+<!-- ##### MACRO prelude_list_for_each_reversed_safe ##### -->
+<para>
+
+</para>
+
+@list: 
 @pos: 
 @bkp: 
 
@@ -55,36 +83,18 @@ prelude-list
 
 </para>
 
-@head: 
+@list: 
 @pos: 
 
 
-<!-- ##### MACRO prelude_list_for_each ##### -->
+<!-- ##### MACRO prelude_list_for_each_continue_safe ##### -->
 <para>
 
 </para>
 
-@head: 
+@list: 
 @pos: 
-
-
-<!-- ##### MACRO prelude_list_for_each_safe ##### -->
-<para>
-
-</para>
-
-@head: 
-@pos: 
-@n: 
-
-
-<!-- ##### MACRO prelude_list_for_each_reversed ##### -->
-<para>
-
-</para>
-
-@head: 
-@pos: 
+@bkp: 
 
 
 <!-- ##### MACRO prelude_list_get_next ##### -->

@@ -847,7 +847,7 @@ int prelude_connection_permission_new_from_string(prelude_connection_permission_
                                 else if ( c == 'w' )
                                         *out |= tbl[i].val_write;
                                 
-                                else return prelude_error(PRELUDE_ERROR_UNKNOWN_PERMISSION);
+                                else return prelude_error(PRELUDE_ERROR_UNKNOWN_PERMISSION_BIT);
                         }
                         break;
                 }

@@ -1,8 +1,8 @@
 <SECTION>
 <FILE>prelude-error</FILE>
+PRELUDE_ERROR_SYSTEM_ERROR
 prelude_error_source_t
 prelude_error_code_t
-PRELUDE_ERROR_SYSTEM_ERROR
 PRELUDE_ERROR_SOURCE_DEFAULT
 PRELUDE_ERROR_CODE_MASK
 PRELUDE_ERROR_SOURCE_MASK
@@ -31,6 +31,8 @@ idmef_additional_data_type_to_string
 idmef_additional_data_t
 idmef_additional_data_new
 idmef_additional_data_ref
+idmef_additional_data_get_child
+idmef_additional_data_new_child
 idmef_additional_data_destroy
 idmef_additional_data_get_type
 idmef_additional_data_set_type
@@ -47,6 +49,8 @@ idmef_reference_origin_to_string
 idmef_reference_t
 idmef_reference_new
 idmef_reference_ref
+idmef_reference_get_child
+idmef_reference_new_child
 idmef_reference_destroy
 idmef_reference_get_origin
 idmef_reference_set_origin
@@ -63,6 +67,8 @@ idmef_reference_new_meaning
 idmef_classification_t
 idmef_classification_new
 idmef_classification_ref
+idmef_classification_get_child
+idmef_classification_new_child
 idmef_classification_destroy
 idmef_classification_get_ident
 idmef_classification_set_ident
@@ -79,6 +85,8 @@ idmef_user_id_type_to_string
 idmef_user_id_t
 idmef_user_id_new
 idmef_user_id_ref
+idmef_user_id_get_child
+idmef_user_id_new_child
 idmef_user_id_destroy
 idmef_user_id_get_ident
 idmef_user_id_set_ident
@@ -102,6 +110,8 @@ idmef_user_category_to_string
 idmef_user_t
 idmef_user_new
 idmef_user_ref
+idmef_user_get_child
+idmef_user_new_child
 idmef_user_destroy
 idmef_user_get_ident
 idmef_user_set_ident
@@ -118,6 +128,8 @@ idmef_address_category_to_string
 idmef_address_t
 idmef_address_new
 idmef_address_ref
+idmef_address_get_child
+idmef_address_new_child
 idmef_address_destroy
 idmef_address_get_ident
 idmef_address_set_ident
@@ -141,6 +153,8 @@ idmef_address_new_netmask
 idmef_process_t
 idmef_process_new
 idmef_process_ref
+idmef_process_get_child
+idmef_process_new_child
 idmef_process_destroy
 idmef_process_get_ident
 idmef_process_set_ident
@@ -164,6 +178,8 @@ idmef_process_new_env
 idmef_web_service_t
 idmef_web_service_new
 idmef_web_service_ref
+idmef_web_service_get_child
+idmef_web_service_new_child
 idmef_web_service_destroy
 idmef_web_service_get_url
 idmef_web_service_set_url
@@ -180,6 +196,8 @@ idmef_web_service_new_arg
 idmef_snmp_service_t
 idmef_snmp_service_new
 idmef_snmp_service_ref
+idmef_snmp_service_get_child
+idmef_snmp_service_new_child
 idmef_snmp_service_destroy
 idmef_snmp_service_get_oid
 idmef_snmp_service_set_oid
@@ -205,6 +223,8 @@ idmef_service_type_to_string
 idmef_service_t
 idmef_service_new
 idmef_service_ref
+idmef_service_get_child
+idmef_service_new_child
 idmef_service_destroy
 idmef_service_get_ident
 idmef_service_set_ident
@@ -246,6 +266,8 @@ idmef_node_category_to_string
 idmef_node_t
 idmef_node_new
 idmef_node_ref
+idmef_node_get_child
+idmef_node_new_child
 idmef_node_destroy
 idmef_node_get_ident
 idmef_node_set_ident
@@ -268,6 +290,8 @@ idmef_source_spoofed_to_string
 idmef_source_t
 idmef_source_new
 idmef_source_ref
+idmef_source_get_child
+idmef_source_new_child
 idmef_source_destroy
 idmef_source_get_ident
 idmef_source_set_ident
@@ -293,6 +317,8 @@ idmef_source_new_service
 idmef_file_access_t
 idmef_file_access_new
 idmef_file_access_ref
+idmef_file_access_get_child
+idmef_file_access_new_child
 idmef_file_access_destroy
 idmef_file_access_get_user_id
 idmef_file_access_set_user_id
@@ -303,6 +329,8 @@ idmef_file_access_new_permission
 idmef_inode_t
 idmef_inode_new
 idmef_inode_ref
+idmef_inode_get_child
+idmef_inode_new_child
 idmef_inode_destroy
 idmef_inode_get_change_time
 idmef_inode_set_change_time
@@ -334,6 +362,8 @@ idmef_checksum_algorithm_to_string
 idmef_checksum_t
 idmef_checksum_new
 idmef_checksum_ref
+idmef_checksum_get_child
+idmef_checksum_new_child
 idmef_checksum_destroy
 idmef_checksum_get_value
 idmef_checksum_set_value
@@ -353,6 +383,8 @@ idmef_file_fstype_to_string
 idmef_file_t
 idmef_file_new
 idmef_file_ref
+idmef_file_get_child
+idmef_file_new_child
 idmef_file_destroy
 idmef_file_get_ident
 idmef_file_set_ident
@@ -404,6 +436,8 @@ idmef_linkage_category_to_numeric
 idmef_linkage_category_to_string
 idmef_linkage_new
 idmef_linkage_ref
+idmef_linkage_get_child
+idmef_linkage_new_child
 idmef_linkage_destroy
 idmef_linkage_get_category
 idmef_linkage_set_category
@@ -423,6 +457,8 @@ idmef_target_decoy_to_string
 idmef_target_t
 idmef_target_new
 idmef_target_ref
+idmef_target_get_child
+idmef_target_new_child
 idmef_target_destroy
 idmef_target_get_ident
 idmef_target_set_ident
@@ -451,6 +487,8 @@ idmef_target_new_file
 idmef_analyzer_t
 idmef_analyzer_new
 idmef_analyzer_ref
+idmef_analyzer_get_child
+idmef_analyzer_new_child
 idmef_analyzer_destroy
 idmef_analyzer_get_analyzerid
 idmef_analyzer_set_analyzerid
@@ -485,6 +523,8 @@ idmef_analyzer_new_process
 idmef_alertident_t
 idmef_alertident_new
 idmef_alertident_ref
+idmef_alertident_get_child
+idmef_alertident_new_child
 idmef_alertident_destroy
 idmef_alertident_get_alertident
 idmef_alertident_set_alertident
@@ -504,6 +544,8 @@ idmef_impact_type_to_string
 idmef_impact_t
 idmef_impact_new
 idmef_impact_ref
+idmef_impact_get_child
+idmef_impact_new_child
 idmef_impact_destroy
 idmef_impact_unset_severity
 idmef_impact_get_severity
@@ -525,6 +567,8 @@ idmef_action_category_to_string
 idmef_action_t
 idmef_action_new
 idmef_action_ref
+idmef_action_get_child
+idmef_action_new_child
 idmef_action_destroy
 idmef_action_get_category
 idmef_action_set_category
@@ -538,6 +582,8 @@ idmef_confidence_rating_to_string
 idmef_confidence_t
 idmef_confidence_new
 idmef_confidence_ref
+idmef_confidence_get_child
+idmef_confidence_new_child
 idmef_confidence_destroy
 idmef_confidence_get_rating
 idmef_confidence_set_rating
@@ -548,6 +594,8 @@ idmef_confidence_new_confidence
 idmef_assessment_t
 idmef_assessment_new
 idmef_assessment_ref
+idmef_assessment_get_child
+idmef_assessment_new_child
 idmef_assessment_destroy
 idmef_assessment_get_impact
 idmef_assessment_set_impact
@@ -561,6 +609,8 @@ idmef_assessment_new_confidence
 idmef_tool_alert_t
 idmef_tool_alert_new
 idmef_tool_alert_ref
+idmef_tool_alert_get_child
+idmef_tool_alert_new_child
 idmef_tool_alert_destroy
 idmef_tool_alert_get_name
 idmef_tool_alert_set_name
@@ -574,6 +624,8 @@ idmef_tool_alert_new_alertident
 idmef_correlation_alert_t
 idmef_correlation_alert_new
 idmef_correlation_alert_ref
+idmef_correlation_alert_get_child
+idmef_correlation_alert_new_child
 idmef_correlation_alert_destroy
 idmef_correlation_alert_get_name
 idmef_correlation_alert_set_name
@@ -584,6 +636,8 @@ idmef_correlation_alert_new_alertident
 idmef_overflow_alert_t
 idmef_overflow_alert_new
 idmef_overflow_alert_ref
+idmef_overflow_alert_get_child
+idmef_overflow_alert_new_child
 idmef_overflow_alert_destroy
 idmef_overflow_alert_get_program
 idmef_overflow_alert_set_program
@@ -600,6 +654,8 @@ idmef_alert_type_to_numeric
 idmef_alert_type_to_string
 idmef_alert_t
 idmef_alert_new
+idmef_alert_get_child
+idmef_alert_new_child
 idmef_alert_destroy
 idmef_alert_get_messageid
 idmef_alert_set_messageid
@@ -643,6 +699,8 @@ idmef_alert_set_overflow_alert
 idmef_alert_new_overflow_alert
 idmef_heartbeat_t
 idmef_heartbeat_new
+idmef_heartbeat_get_child
+idmef_heartbeat_new_child
 idmef_heartbeat_destroy
 idmef_heartbeat_get_messageid
 idmef_heartbeat_set_messageid
@@ -669,6 +727,8 @@ idmef_message_type_to_string
 idmef_message_t
 idmef_message_new
 idmef_message_ref
+idmef_message_get_child
+idmef_message_new_child
 idmef_message_destroy
 idmef_message_get_version
 idmef_message_set_version
@@ -853,7 +913,7 @@ prelude_option_search
 
 <SECTION>
 <FILE>prelude-connection</FILE>
-prelude_connection_capability_t
+prelude_connection_permission_t
 prelude_connection_state_t
 prelude_connection_t
 prelude_connection_destroy
@@ -875,10 +935,13 @@ prelude_connection_get_state
 prelude_connection_set_data
 prelude_connection_get_data
 prelude_connection_get_default_socket_filename
+prelude_connection_get_permission
 prelude_connection_get_peer_analyzerid
 prelude_connection_set_peer_analyzerid
 prelude_connection_new
 prelude_connection_new_msgbuf
+prelude_connection_permission_to_string
+prelude_connection_permission_new_from_string
 </SECTION>
 
 <SECTION>
@@ -1022,15 +1085,18 @@ prelude_client_get_unique_ident
 prelude_client_set_manager_list
 prelude_client_get_manager_list
 prelude_client_start
+prelude_client_init
 prelude_client_new
 prelude_client_get_analyzer
 prelude_client_get_flags
-prelude_client_get_capability
+prelude_client_set_required_permission
+prelude_client_get_required_permission
 prelude_client_send_msg
 prelude_client_set_heartbeat_cb
 prelude_client_send_idmef
 prelude_client_destroy
 prelude_client_set_flags
+prelude_client_set_config_filename
 prelude_client_get_config_filename
 prelude_client_print_setup_error
 prelude_client_is_setup_needed
@@ -1042,6 +1108,7 @@ prelude_client_get_profile
 prelude_client_profile_t
 prelude_client_profile_new
 prelude_client_profile_destroy
+prelude_client_profile_get_config_filename
 prelude_client_profile_get_analyzerid_filename
 prelude_client_profile_get_tls_key_filename
 prelude_client_profile_get_tls_server_ca_cert_filename
@@ -1050,6 +1117,7 @@ prelude_client_profile_get_tls_server_trusted_cert_filename
 prelude_client_profile_get_tls_client_keycert_filename
 prelude_client_profile_get_tls_client_trusted_cert_filename
 prelude_client_profile_get_backup_dirname
+prelude_client_profile_get_profile_dirname
 prelude_client_profile_set_uid
 prelude_client_profile_get_uid
 prelude_client_profile_set_gid
@@ -1144,6 +1212,7 @@ prelude_connection_pool_set_connection_alive
 prelude_connection_pool_set_connection_string
 prelude_connection_pool_get_connection_string
 prelude_connection_pool_destroy
+prelude_connection_pool_get_flags
 prelude_connection_pool_set_flags
 prelude_connection_pool_set_data
 prelude_connection_pool_get_data
@@ -1208,14 +1277,15 @@ prelude_inet_ntop
 
 <SECTION>
 <FILE>prelude-list</FILE>
-prelude_list_t
 PRELUDE_LIST
+prelude_list_t
 prelude_list_entry
-prelude_list_for_each_continue_safe
-prelude_list_for_each_continue
 prelude_list_for_each
 prelude_list_for_each_safe
 prelude_list_for_each_reversed
+prelude_list_for_each_reversed_safe
+prelude_list_for_each_continue
+prelude_list_for_each_continue_safe
 prelude_list_get_next
 prelude_list_get_next_safe
 </SECTION>

@@ -59,6 +59,7 @@ idmef_message_read()
 </para>
 
 @PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT: 
+@PRELUDE_CONNECTION_POOL_FLAGS_GLOBAL_FAILOVER: 
 
 <!-- ##### ENUM prelude_connection_pool_event_t ##### -->
 <para>
@@ -111,8 +112,10 @@ idmef_message_read()
 
 @ret: 
 @cp: 
-@capability: 
+@permission: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@capability: 
 
 
 <!-- ##### FUNCTION prelude_connection_pool_get_connection_list ##### -->
@@ -179,6 +182,15 @@ idmef_message_read()
 </para>
 
 @pool: 
+
+
+<!-- ##### FUNCTION prelude_connection_pool_get_flags ##### -->
+<para>
+
+</para>
+
+@pool: 
+@Returns: 
 
 
 <!-- ##### FUNCTION prelude_connection_pool_set_flags ##### -->
