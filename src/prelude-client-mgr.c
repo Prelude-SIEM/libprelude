@@ -43,7 +43,8 @@
 #define INITIAL_EXPIRATION_TIME 60
 #define MAXIMUM_EXPIRATION_TIME 3600
 
-#define BACKUP_DIR "/var/lib/prelude"
+
+#define BACKUP_DIR "/var/spool/prelude"
 
 
 
@@ -91,7 +92,14 @@ typedef struct {
 
 struct prelude_client_mgr {
         fd_set fds;
-        prelude_io_t *backup_fd;
+        
+        /*
+         * Theses are two different descriptor for the same file.
+         * This is needed so writing FD is open with the O_APPEND flag set,
+         * and write occur atomically.
+         */
+        prelude_io_t *backup_fd_read;
+        prelude_io_t *backup_fd_write; 
         struct list_head or_list;
 };
 
@@ -141,7 +149,7 @@ static void flush_backup_if_needed(client_list_t *clist)
 {
         int ret, fd;
         struct stat st;
-        prelude_io_t *pio = clist->parent->backup_fd;
+        prelude_io_t *pio = clist->parent->backup_fd_read;
 
         fd = prelude_io_get_fd(pio);
         
@@ -159,16 +167,12 @@ static void flush_backup_if_needed(client_list_t *clist)
                 log(LOG_ERR, "couldn't broadcast saved message.\n");
                 return;
         }
+
+        fd = prelude_io_get_fd(clist->parent->backup_fd_write);
         
         ret = ftruncate(fd, 0);
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't truncate backup FD to 0 bytes.\n");
-                return;
-        }
-
-        ret = lseek(fd, 0, SEEK_SET);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't seek to the begining of the file.\n");
                 return;
         }
 }
@@ -373,28 +377,68 @@ static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline)
 
 
 
-static int setup_backup_fd(prelude_client_mgr_t *new, const char *name) 
+static int open_backup_fd(const char *filename, prelude_io_t *pfd, int open_flags) 
 {
         int fd;
-        char filename[1024];
-        
-        new->backup_fd = prelude_io_new();
-        if (! new->backup_fd ) 
-                return -1;
-        
-        snprintf(filename, sizeof(filename), "%s/%s", BACKUP_DIR, name);
-        
-        fd = open(filename, O_CREAT|O_RDWR, S_IRUSR|S_IWUSR);
+
+        fd = open(filename, open_flags, S_IRUSR|S_IWUSR);
         if ( fd < 0 ) {
                 log(LOG_ERR, "couldn't open %s for writing.\n", filename);
-                prelude_io_destroy(new->backup_fd);
+                prelude_io_destroy(pfd);
                 return -1;
         }
         
-        prelude_io_set_sys_io(new->backup_fd, fd);
+        prelude_io_set_sys_io(pfd, fd);
+
+        return 0;
+}
+
+
+
+static int setup_backup_fd(prelude_client_mgr_t *new, const char *name) 
+{
+        int ret;
+        char filename[1024];
+        
+        snprintf(filename, sizeof(filename), "%s/%s", BACKUP_DIR, name);
+        
+        new->backup_fd_write = prelude_io_new();
+        if (! new->backup_fd_write ) 
+                return -1;
+
+        ret = open_backup_fd(filename, new->backup_fd_write, O_CREAT|O_RDWR|O_APPEND);
+        if ( ret < 0 )
+                return -1;
+        
+        new->backup_fd_read = prelude_io_new();
+        if ( ! new->backup_fd_read ) {
+                prelude_io_close(new->backup_fd_write);
+                prelude_io_destroy(new->backup_fd_write);
+                return -1;
+        }
+
+        ret = open_backup_fd(filename, new->backup_fd_read, O_CREAT|O_RDONLY);
+        if ( ret < 0 ) {
+                prelude_io_close(new->backup_fd_write);
+                prelude_io_destroy(new->backup_fd_write);
+                prelude_io_destroy(new->backup_fd_read);
+                return -1;
+        }
         
         return 0;
 }
+
+
+
+static void close_backup_fd(prelude_client_mgr_t *mgr) 
+{
+        prelude_io_close(mgr->backup_fd_read);
+        prelude_io_destroy(mgr->backup_fd_read);
+
+        prelude_io_close(mgr->backup_fd_write);
+        prelude_io_destroy(mgr->backup_fd_write);
+}
+
 
 
 
@@ -457,8 +501,7 @@ static int walk_manager_lists(prelude_client_mgr_t *cmgr, prelude_msg_t *msg)
  * @cmgr: Pointer on a client manager object.
  * @msg: Pointer on a #prelude_msg_t object.
  *
- * Send the message contained in @msg to all the client
- * in the @cmgr group of client asynchronously.
+ * Send the message contained in @msg to all the client.
  */
 void prelude_client_mgr_broadcast(prelude_client_mgr_t *cmgr, prelude_msg_t *msg) 
 {
@@ -475,7 +518,7 @@ void prelude_client_mgr_broadcast(prelude_client_mgr_t *cmgr, prelude_msg_t *msg
         if ( ret == -1 )
                 log(LOG_INFO, "Manager emmission failed. Enabling failsafe mode.\n");  
       
-        ret = prelude_msg_write(msg, cmgr->backup_fd);
+        ret = prelude_msg_write(msg, cmgr->backup_fd_write);
         if ( ret < 0 ) 
                 log(LOG_ERR, "could't backup message.\n");
 }
@@ -553,16 +596,14 @@ prelude_client_mgr_t *prelude_client_mgr_new(const char *identifier, const char 
         dup = strdup(cfgline);
         if ( ! dup ) {
                 log(LOG_ERR, "couldn't duplicate string.\n");
-                prelude_io_close(new->backup_fd);
-                prelude_io_destroy(new->backup_fd);
+                close_backup_fd(new);
                 free(new);
                 return NULL;
         }
         
         ret = parse_config_line(new, dup);
         if ( ret < 0 || list_empty(&new->or_list) ) {
-                prelude_io_close(new->backup_fd);
-                prelude_io_destroy(new->backup_fd);
+                close_backup_fd(new);
                 free(new);
                 return NULL;
         }

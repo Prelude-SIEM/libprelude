@@ -299,20 +299,15 @@ typedef struct {
 #define prelude_list_get_object(listentry, type)  \
         (type *) list_entry(listentry, prelude_linked_object_t, list)
 </MACRO>
-<MACRO>
-<NAME>pthread_create</NAME>
-#define pthread_create gprof_pthread_create
-</MACRO>
 <FUNCTION>
 <NAME>start_routine</NAME>
 <RETURNS>return  </RETURNS>
 arg
 </FUNCTION>
-<FUNCTION>
-<NAME>gprof_pthread_create</NAME>
-<RETURNS>int  </RETURNS>
-pthread_t *thread, pthread_attr_t *attr,void *(*start_routine)(void *), void *arg){int ret;thread_wrapper_t wrapper_data;wrapper_data.arg = arg;wrapper_data.start_routine = start_routine;getitimer(ITIMER_PROF, &wrapper_data.itimer
-</FUNCTION>
+<MACRO>
+<NAME>pthread_create</NAME>
+#define pthread_create gprof_pthread_create
+</MACRO>
 <MACRO>
 <NAME>SSL_REGISTRATION_MSG_H</NAME>
 #define SSL_REGISTRATION_MSG_H

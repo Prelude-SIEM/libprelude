@@ -98,7 +98,7 @@ AC_ARG_ENABLE(profiling, [  --enable-profiling Enable Gprof profiling - with thr
 	      enable_profiling=yes, enable_profiling=no)
 
 if test x$enable_profiling = xyes ; then
-	CFLAGS="$CFLAGS -pg"
+	CFLAGS="$CFLAGS -O0 -pg"
 	AC_DEFINE(ENABLE_PROFILING)
 fi
 

@@ -70,7 +70,7 @@ static int print_help(const char *optarg)
 
 static int setup_manager_addr(const char *optarg) 
 {
-        manager_list = prelude_client_mgr_new("manager", strdup(optarg));
+        manager_list = prelude_client_mgr_new("manager", optarg);
         if ( ! manager_list ) 
                 return prelude_option_error;
         
@@ -89,7 +89,8 @@ static int parse_argument(const char *filename, int argc, char **argv)
                 return -1;
 
         prelude_option_wide_add(opts, CLI_HOOK|CFG_HOOK, 'a', "manager-addr",
-                           "Address where manager is listening", required_argument, setup_manager_addr, NULL);
+                                "Address where manager is listening",
+                                required_argument, setup_manager_addr, NULL);
 
         prelude_option_add(opts, CLI_HOOK|CFG_HOOK, 'h', "help",
                            "Print this help", no_argument, print_help);
@@ -102,12 +103,12 @@ static int parse_argument(const char *filename, int argc, char **argv)
         prelude_option_set_warnings(~(OPT_INVAL|OPT_INVAL_ARG), &old_flags);
 
         ret = prelude_option_parse_arguments(opts, filename, argc, argv);
-
+        
         /*
          * Restore old option flags.
          */
         prelude_option_set_warnings(old_flags, NULL);
-
+        
         
         prelude_option_destroy(opts);
 

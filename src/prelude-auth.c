@@ -517,6 +517,7 @@ int prelude_auth_create_account(const char *filename)
 
         free(user);
         free(pass);
+        free(addr);
         
         fclose(fd);
 
@@ -557,7 +558,8 @@ int prelude_auth_send(prelude_io_t *fd, const char *addr)
         fclose(file);
         if (user) free(user);
         if (pass) free(pass);
-
+        if (client) free(client);
+        
         return ret;
 }
 

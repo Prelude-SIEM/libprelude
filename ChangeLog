@@ -1,3 +1,26 @@
+2002-01-02  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/sensor.c (setup_manager_addr): no need to duplicate
+	optarg.
+
+	* src/prelude-auth.c (prelude_auth_create_account): 
+	free client address string.
+	(prelude_auth_send): ditto.
+
+	* configure.ac: add -O0 -pg to CFLAGS if profiling is enabled.
+	
+	* src/config-engine.c (load_file_in_memory): handle fopen error
+	correctly.
+
+	* src/prelude-client-mgr.c: use two different file descriptor
+	referencing the same backup file. One is open for writing, in O_APPEND
+	mode. So the file won't get corrupted if different process are writing
+	to it at the same time (write are atomic).
+
+	(BACKUP_DIR): now /var/spool/prelude
+
+	This forbid us to use the same file descriptor for reading.
+
 2001-12-30  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/include/threads.h: workaround for thread enabled thread
