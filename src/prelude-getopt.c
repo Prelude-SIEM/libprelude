@@ -334,10 +334,7 @@ static struct cb_list *call_option_cb(prelude_list_t *cblist, prelude_option_t *
 {
         int ret, got_prev = 0;
         struct cb_list *new, *cb;
-        prelude_list_t*tmp, *prev = NULL;
-
-        if ( ! option->set )
-                return 0;
+        prelude_list_t *tmp, *prev = NULL;
         
         prelude_list_for_each(tmp, cblist) {
                 
@@ -418,13 +415,15 @@ static int call_option_from_cb_list(void **context, prelude_list_t *cblist)
                 cb = prelude_list_entry(tmp, struct cb_list, list);
 		if ( context )
 			old = *context;
-                
-                ret = cb->option->set(context, cb->option, (str = lookup_variable_if_needed(cb->arg)));
-                if ( str )
-                        free(str);
 
-                if ( ret == prelude_option_error || ret == prelude_option_end ) 
-                        return ret;
+                if ( cb->option->set ) {
+                        ret = cb->option->set(context, cb->option, (str = lookup_variable_if_needed(cb->arg)));
+                        if ( str )
+                                free(str);
+
+                        if ( ret == prelude_option_error || ret == prelude_option_end ) 
+                                return ret;
+                }
                 
                 if ( ! prelude_list_empty(&cb->children) ) {
                         
