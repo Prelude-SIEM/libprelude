@@ -1,65 +1,83 @@
 <!doctype book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
-<!ENTITY libprelude-config SYSTEM "sgml/config.sgml">
 <!ENTITY libprelude-prelude-io SYSTEM "sgml/prelude-io.sgml">
 <!ENTITY libprelude-plugin-common-prv SYSTEM "sgml/plugin-common-prv.sgml">
 <!ENTITY libprelude-variable SYSTEM "sgml/variable.sgml">
+<!ENTITY libprelude-prelude-message-id SYSTEM "sgml/prelude-message-id.sgml">
+<!ENTITY libprelude-prelude-log SYSTEM "sgml/prelude-log.sgml">
 <!ENTITY libprelude-ssl SYSTEM "sgml/ssl.sgml">
+<!ENTITY libprelude-ssl-settings SYSTEM "sgml/ssl-settings.sgml">
 <!ENTITY libprelude-prelude-auth SYSTEM "sgml/prelude-auth.sgml">
+<!ENTITY libprelude-idmef-msg-send SYSTEM "sgml/idmef-msg-send.sgml">
+<!ENTITY libprelude-prelude-ident SYSTEM "sgml/prelude-ident.sgml">
 <!ENTITY libprelude-prelude-client SYSTEM "sgml/prelude-client.sgml">
 <!ENTITY libprelude-prelude-async SYSTEM "sgml/prelude-async.sgml">
 <!ENTITY libprelude-prelude-list SYSTEM "sgml/prelude-list.sgml">
+<!ENTITY libprelude-threads SYSTEM "sgml/threads.sgml">
 <!ENTITY libprelude-ssl-registration-msg SYSTEM "sgml/ssl-registration-msg.sgml">
 <!ENTITY libprelude-config-engine SYSTEM "sgml/config-engine.sgml">
+<!ENTITY libprelude-prelude-path SYSTEM "sgml/prelude-path.sgml">
 <!ENTITY libprelude-timer SYSTEM "sgml/timer.sgml">
 <!ENTITY libprelude-common SYSTEM "sgml/common.sgml">
 <!ENTITY libprelude-prelude-client-mgr SYSTEM "sgml/prelude-client-mgr.sgml">
 <!ENTITY libprelude-plugin-common SYSTEM "sgml/plugin-common.sgml">
+<!ENTITY libprelude-prelude-getopt-wide SYSTEM "sgml/prelude-getopt-wide.sgml">
 <!ENTITY libprelude-list SYSTEM "sgml/list.sgml">
+<!ENTITY libprelude-common-gdb SYSTEM "sgml/common-gdb.sgml">
 <!ENTITY libprelude-sensor SYSTEM "sgml/sensor.sgml">
 <!ENTITY libprelude-ssl-gencrypto SYSTEM "sgml/ssl-gencrypto.sgml">
-<!ENTITY libprelude-thread SYSTEM "sgml/thread.sgml">
 <!ENTITY libprelude-prelude-getopt SYSTEM "sgml/prelude-getopt.sgml">
+<!ENTITY libprelude-idmef-tree-func SYSTEM "sgml/idmef-tree-func.sgml">
 <!ENTITY libprelude-idmef-tree SYSTEM "sgml/idmef-tree.sgml">
+<!ENTITY libprelude-prelude-message-buffered SYSTEM "sgml/prelude-message-buffered.sgml">
 <!ENTITY libprelude-prelude-message SYSTEM "sgml/prelude-message.sgml">
+<!ENTITY libprelude-extract SYSTEM "sgml/extract.sgml">
 <!ENTITY libprelude-string-matching SYSTEM "sgml/string-matching.sgml">
 <!ENTITY libprelude-idmef-message-id SYSTEM "sgml/idmef-message-id.sgml">
 <!ENTITY libprelude-daemonize SYSTEM "sgml/daemonize.sgml">
-<!ENTITY libprelude-getopt-long SYSTEM "sgml/getopt_long.sgml">
-<!ENTITY libprelude-ssl-register SYSTEM "sgml/ssl-register.sgml">
+<!ENTITY libprelude-client-ident SYSTEM "sgml/client-ident.sgml">
 ]>
 <book id="index">
   <bookinfo>
-    <title>Prelude Library Reference Manual</title>
+    <title>[Insert name here] Reference Manual</title>
   </bookinfo>
 
   <chapter>
-    <title>Prelude Library</title>
-    &libprelude-config;
+    <title>[Insert title here]</title>
     &libprelude-prelude-io;
     &libprelude-plugin-common-prv;
     &libprelude-variable;
+    &libprelude-prelude-message-id;
+    &libprelude-prelude-log;
     &libprelude-ssl;
+    &libprelude-ssl-settings;
     &libprelude-prelude-auth;
+    &libprelude-idmef-msg-send;
+    &libprelude-prelude-ident;
     &libprelude-prelude-client;
     &libprelude-prelude-async;
     &libprelude-prelude-list;
+    &libprelude-threads;
     &libprelude-ssl-registration-msg;
     &libprelude-config-engine;
+    &libprelude-prelude-path;
     &libprelude-timer;
     &libprelude-common;
     &libprelude-prelude-client-mgr;
     &libprelude-plugin-common;
+    &libprelude-prelude-getopt-wide;
     &libprelude-list;
+    &libprelude-common-gdb;
     &libprelude-sensor;
     &libprelude-ssl-gencrypto;
-    &libprelude-thread;
     &libprelude-prelude-getopt;
+    &libprelude-idmef-tree-func;
     &libprelude-idmef-tree;
+    &libprelude-prelude-message-buffered;
     &libprelude-prelude-message;
+    &libprelude-extract;
     &libprelude-string-matching;
     &libprelude-idmef-message-id;
     &libprelude-daemonize;
-    &libprelude-getopt-long;
-    &libprelude-ssl-register;
+    &libprelude-client-ident;
   </chapter>
 </book>

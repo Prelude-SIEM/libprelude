@@ -614,15 +614,15 @@ int prelude_client_connect(prelude_client_t *client)
                 return -1;
         }
         
+        ret = prelude_client_ident_send(client->fd, client->type);
+        if ( ret < 0 )
+                return -1;
+        
         msg = prelude_option_wide_get_msg();
         if ( ! msg )
                 return -1;
 
         ret = prelude_msg_write(msg, client->fd);
-        if ( ret < 0 )
-                return -1;
-                
-        ret = prelude_client_ident_send(client->fd, client->type);
         if ( ret < 0 )
                 return -1;
 
@@ -641,7 +641,7 @@ int prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
 
         if ( client->connection_broken == 1 )
                 return -1;
-        
+
         ret = prelude_msg_write(msg, client->fd);
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't send message to Manager.\n");
