@@ -35,6 +35,9 @@
 #include "variable.h"
 #include "prelude-log.h"
 
+#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_CONFIG_ENGINE
+#include "prelude-error.h"
+
 
 #define DEFAULT_INSERTION_POINT "include"
 
@@ -195,7 +198,7 @@ static int op_append_line(config_t *cfg, char *line)
         
         cfg->content = prelude_realloc(cfg->content, cfg->elements * sizeof(char **));
         if ( ! cfg->content )
-                return -1;        
+                return prelude_error_from_errno(errno);        
 
         
         cfg->content[cfg->elements - 2] = line;
@@ -220,7 +223,7 @@ static int op_insert_line(config_t *cfg, char *line, int lins)
         
         cfg->content = prelude_realloc(cfg->content, cfg->elements * sizeof(char **));
         if (! cfg->content )
-                return -1;
+                return prelude_error_from_errno(errno);
         
         for ( i = cfg->elements - 2; i >= lins; i-- )
                 cfg->content[i + 1] = cfg->content[i];
@@ -243,16 +246,14 @@ static int load_file_in_memory(config_t *cfg)
         char line[1024];
         
         fd = fopen(cfg->filename, "r");
-        if ( ! fd ) {
-                log(LOG_ERR, "couldn't open %s for reading.\n", cfg->filename);
-                return -1;
-        }
+        if ( ! fd )
+                return prelude_error_from_errno(errno);
         
         while ( fgets(line, sizeof(line), fd) ) {
                 ret = op_append_line(cfg, strdup(chomp(line)));
                 if ( ret < 0 ) {
                         fclose(fd);
-                        return -1;
+                        return ret;
                 }    
         }
 
@@ -478,7 +479,7 @@ static int sync_and_free_file_content(const char *filename, char **content)
         
         fd = fopen(filename, "w");
         if ( ! fd ) 
-                return -1;
+                return prelude_error_from_errno(errno);
         
         for ( i = 0; content[i] != NULL; i++ ) {                
                 fwrite(content[i], 1, strlen(content[i]), fd);
@@ -842,22 +843,32 @@ int config_close(config_t *cfg)
  *
  * Returns: a #config_t object on success, NULL otherwise.
  */
-config_t *config_open(const char *filename) 
+int config_open(config_t **new, const char *filename) 
 {
         int ret;
         config_t *cfg;
         
         cfg = malloc(sizeof(config_t));
-        if (! cfg )
-                return NULL;
+        if ( ! cfg )
+                return prelude_error_from_errno(errno);
 
         cfg->filename = strdup(filename);
+        if ( ! cfg->filename ) {
+                free(cfg);
+                return prelude_error_from_errno(errno);
+        }
+        
         cfg->need_sync = 0;
         cfg->content = NULL;
-        
+
         ret = load_file_in_memory(cfg);
-        if ( ret < 0 ) 
-                return NULL;
+        if ( ret < 0 ) {
+                free(cfg->filename);
+                free(cfg);
+                return ret;
+        }
         
-        return cfg;
+        *new = cfg;
+        
+        return ret;
 }
