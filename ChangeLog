@@ -1,5 +1,8 @@
 2002-01-23  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/idmef-msg-send.c (idmef_msg_send): 
+	use prelude_msg_reset.
+
 	* src/prelude-message.c (prelude_msg_reset): 
 	new function, to be used if the same message is going to be
 	written at several time.
