@@ -2,7 +2,7 @@ use Config;
 use ExtUtils::MakeMaker;
 
 my %attributs = (NAME => 'Prelude',
-		 INC => '-I@top_srcdir@/src/include',
+		 INC => '-I@top_builddir@/src/include -I@top_srcdir@/src/include',
 		 LIBS => [ "@libprelude_libs@ -L@top_builddir@/src/.libs -lprelude" ],
 		 LDDLFLAGS => "@PTHREAD_CFLAGS@ $Config{lddlflags}");
 
