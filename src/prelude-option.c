@@ -451,7 +451,7 @@ static int do_set(void **context, prelude_option_t *opt, const char *value, prel
 
 
 
-static int call_option_from_cb_list(void *default_context, prelude_list_t *cblist, prelude_string_t **err) 
+static int call_option_from_cb_list(void *default_context, prelude_list_t *cblist, prelude_string_t *err) 
 {
         int ret = 0;
         struct cb_list *cb;
@@ -461,7 +461,7 @@ static int call_option_from_cb_list(void *default_context, prelude_list_t *cblis
         prelude_list_for_each_safe(tmp, bkp, cblist) {
                 cb = prelude_list_entry(tmp, struct cb_list, list);
                                 
-                ret = do_set(&context, cb->option, cb->arg, *err);
+                ret = do_set(&context, cb->option, cb->arg, err);
                 if ( ret < 0 ) 
                         return ret;
                 
@@ -472,7 +472,7 @@ static int call_option_from_cb_list(void *default_context, prelude_list_t *cblis
                                 return ret;
                         
 			if ( cb->option->commit ) 
-				ret = cb->option->commit(context, cb->option, *err);
+				ret = cb->option->commit(context, cb->option, err);
                 }
 		
                 context = default_context;
@@ -676,7 +676,9 @@ int prelude_option_parse_arguments(void *context, prelude_option_t *option,
         int ret, opt_index;
         PRELUDE_LIST_HEAD(optlist);
         PRELUDE_LIST_HEAD(cb_list);
-                
+
+        *err =  NULL;
+        
         if ( option )
                 opt_index = get_option_from_optlist(option, &cb_list, filename, argc, argv);
         else
@@ -688,8 +690,8 @@ int prelude_option_parse_arguments(void *context, prelude_option_t *option,
         *err = prelude_string_new();
         if ( ! *err )
                 return -1;
-
-        ret = call_option_from_cb_list(context, &cb_list, err);        
+        
+        ret = call_option_from_cb_list(context, &cb_list, *err);        
 
         if ( prelude_string_is_empty(*err) ) {
                 prelude_string_destroy(*err);
