@@ -1050,6 +1050,22 @@ void *prelude_option_get_set_callback(prelude_option_t *opt)
 
 
 
+void prelude_option_set_destroy_callback(prelude_option_t *opt,
+                                         int (*destroy)(void *context, prelude_option_t *opt, const char *arg))
+{
+        opt->destroy = destroy;
+        opt->flags |= DESTROY_HOOK;
+}
+
+
+
+void *prelude_option_get_destroy_callback(prelude_option_t *opt)
+{
+        return opt->destroy;
+}
+
+
+
 char prelude_option_get_shortname(prelude_option_t *opt) 
 {
         return opt->shortopt;
@@ -1117,9 +1133,7 @@ void *prelude_option_get_private_data(prelude_option_t *opt)
 
 
 int prelude_option_invoke_set(void **context, prelude_option_t *opt, const char *value, char *err, size_t size)
-{
-        printf("%s->set(oc=%p, opt=%p, value=%s)\n", opt->longopt, *context, opt, value);
-        
+{       
         if ( ! opt->set ) {
                 snprintf(err, size, "%s does not support set operation", opt->longopt);
                 return -1;
@@ -1375,15 +1389,6 @@ prelude_option_context_t *prelude_option_new_context(prelude_option_t *opt, cons
         }
 	
         return new;
-}
-
-
-
-void prelude_option_set_destroy_callback(prelude_option_t *opt,
-                                         int (*destroy)(void *context, prelude_option_t *opt, const char *arg))
-{
-        opt->destroy = destroy;
-        opt->flags |= DESTROY_HOOK;
 }
 
 

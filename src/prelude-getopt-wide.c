@@ -56,8 +56,8 @@ static int config_save_value(config_t *cfg, int rtype, prelude_option_t *last,
 
 
 
-static int parse_xxx(void **context, prelude_option_t **last, int is_last_cmd,
-                     int rtype, const char *option, const char *value, char *out, size_t size)
+static int parse_single(void **context, prelude_option_t **last, int is_last_cmd,
+                        int rtype, const char *option, const char *value, char *out, size_t size)
 {
         int ret = 0;
 	
@@ -81,8 +81,6 @@ static int parse_xxx(void **context, prelude_option_t **last, int is_last_cmd,
 		else if ( rtype == PRELUDE_MSG_OPTION_COMMIT )
 			ret = prelude_option_invoke_commit(*context, *last, value, out, size);
 	}
-
-	printf("last=%d rtype=%d ret=%d\n", is_last_cmd, rtype, ret);
 	
         return ret;
 }
@@ -109,7 +107,6 @@ static int parse_request(prelude_client_t *client, int rtype, char *request, cha
         prelude_strsep(&value, "=");
         
         while ( (str = (prelude_strsep(&request, "."))) ) {
-                printf("%p == %p\n", request, value);
                 
                 if ( ! request ) {
                         ptr = value;
@@ -122,9 +119,7 @@ static int parse_request(prelude_client_t *client, int rtype, char *request, cha
                         return -1;
                 }
 
-                printf("ent=%d last=%d pname=%s %s\n", ent, last_cmd, pname, (ent==2) ? iname : ptr);
-                
-                ret = parse_xxx(&context, &last, last_cmd, rtype, pname, (ent == 2) ? iname : ptr, out, size);
+                ret = parse_single(&context, &last, last_cmd, rtype, pname, (ent == 2) ? iname : ptr, out, size);
                 if ( ret < 0 )
                         break;
                 
@@ -205,9 +200,7 @@ static int read_option_request(prelude_client_t *client, prelude_msgbuf_t *msgbu
                                 return -1;
                         }
                         
-                        ret = parse_request(client, type, request, out, sizeof(out));                        
-                        printf("parse request ret %d: \"%s\" (%d) (%d)\n", ret, out, *out, out[0]);
-                        
+                        ret = parse_request(client, type, request, out, sizeof(out));                                                
                         if ( ret < 0 )
                                 prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_ERROR, *out ? strlen(out) + 1 : 0, out);
 				
