@@ -223,9 +223,6 @@ static int load_file_in_memory(config_t *cfg)
         
         fd = fopen(cfg->filename, "r");
         if ( ! fd ) {
-                if ( errno == ENOENT ) 
-                        return 0;
-
                 log(LOG_ERR, "couldn't open %s for reading.\n", cfg->filename);
                 return -1;
         }

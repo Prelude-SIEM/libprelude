@@ -105,7 +105,7 @@ int ssl_init_client(void)
 	n = SSL_CTX_load_verify_locations(ctx, MANAGERS_CERT, NULL);
 	if (n <= 0) {
 		ERR_print_errors_fp(stderr);
-                log(LOG_INFO, "No Manager certificate available. Please run the "
+                log(LOG_INFO, "\nNo Manager certificate available. Please run the "
                     "\"sensor-adduser\" program.\n");
 		return -1;
 	}

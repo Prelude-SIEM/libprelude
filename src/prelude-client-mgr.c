@@ -300,26 +300,35 @@ static client_list_t *create_client_list(prelude_client_mgr_t *cmgr)
 
 
 
-static char *parse_config_string(char **strp) 
+static char *parse_config_string(char **line) 
 {
-        char *out, *str = *strp;
-
-        if ( ! *strp ) 
-                return NULL;
+        char *out, *str = *line;
         
-        while ( *str != '\0' && *str == ' ' )
-                str++;
+        if ( ! *line ) 
+                return NULL;
 
+        /*
+         * Walk until next word.
+         */
+        while ( *str != '\0' && *str == ' ' ) str++;
+
+        /*
+         * save it
+         */ 
         out = str;
 
-        while ( *str != '\0' && *str != ' ' )
-                str++;
-
+        /*
+         * walk until end of word.
+         */
+        while ( *str != '\0' && *str != ' ' ) str++;
+        
         if ( *str == ' ' ) {
                 *str = '\0';
-                *strp = str + 1;
-        } else
-                *strp = NULL;
+                *line = str + 1;
+        }
+
+        else if ( *str == '\0' )                 
+                *line = NULL;
         
         return out;
 }
@@ -340,36 +349,47 @@ static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline)
         clist = create_client_list(cmgr);
         if ( ! clist )
                 return -1;
-
-        while ( 1 ) {
-
-                ptr = parse_config_string(&cfgline);                
-                if ( ! ptr )
-                        break;
-
-                ret = strcmp(ptr, "&&");
-                if ( ret == 0 )
-                        continue;
-
-                ret = strcmp(ptr, "||");
-                if ( ret == 0 ) {
+        
+        while ( 1 ) {                
+                ptr = parse_config_string(&cfgline);
+                
+                /*
+                 * If we meet end of line or "||",
+                 * it mean we just finished adding a AND list.
+                 */
+                if ( ! ptr || (ret = strcmp(ptr, "||") == 0) ) {
                         /*
-                         * We just finished adding a AND list.
-                         * if there is backup remaining from a previous session, flush it.
+                         * is AND of Manager list true (all connection okay) ?
+                         * if it is, flush a potential backup file from previous session.
                          */
                         if ( clist->dead == 0 )
                                 flush_backup_if_needed(clist);
-                        
+
+                        /*
+                         * end of line ?
+                         */
+                        if ( ! ptr )
+                                break;
+
+                        /*
+                         * we met the || operator, prepare a new list. 
+                         */
                         clist = create_client_list(cmgr);
                         if ( ! clist )
                                 return -1;
-
+                        
                         continue;
                 }
+                
+                ret = strcmp(ptr, "&&");
+                if ( ret == 0 )
+                        continue;
                 
                 ret = add_new_client(clist, ptr);
                 if ( ret < 0 )
                         return -1;
+
+                ptr = strtok(NULL, " ");
         } 
 
         return 0;

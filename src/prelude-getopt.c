@@ -236,6 +236,12 @@ static int get_missing_options(const char *filename, prelude_optlist_t *optlist)
         config_t *cfg = NULL;
         struct list_head *tmp;
         prelude_option_t *optitem;
+
+        cfg = config_open(filename);
+        if ( ! cfg ) {
+                log(LOG_INFO, "couldn't open %s.\n", filename);
+                return -1;
+        }
         
         list_for_each(tmp, &optlist->optlist) {
 
@@ -244,21 +250,18 @@ static int get_missing_options(const char *filename, prelude_optlist_t *optlist)
                 if ( optitem->cb_called || !(optitem->flags & CFG_HOOK) )
                         continue;
                 
-                if ( ! cfg && ! (cfg = config_open(filename)) ) {
-                        log(LOG_ERR, "couldn't open %s.\n", filename);
-                        return -1;
-                }
-                
                 str = config_get(cfg, NULL, optitem->longopt);
-                if ( str ) {
-                        ret = optitem->set(str);
-                        if ( ret < 0 )
-                                return -1;
+                if ( ! str )
+                        continue;
+                
+                ret = optitem->set(str);
+                if ( ret < 0 ) {
+                        config_close(cfg);
+                        return -1;
                 }
         }
 
-        if ( cfg )
-                config_close(cfg);
+        config_close(cfg);
 
         return 0;
 }
@@ -355,16 +358,20 @@ int prelude_option_parse_arguments(prelude_optlist_t *optlist,
         ret = parse_argument(optlist, filename, argc, argv);        
         if ( ret < 0 )
                 return -1;
-
-        if ( ret == prelude_option_end )
-                return 0;
         
         /*
          * Only try to get missing options from config file
          * if parsing arguments succeed and caller didn't requested us to stop.
          */
-        get_missing_options(filename, optlist);
+        if ( ret == prelude_option_end )
+                return 0;
 
+        if ( filename ) {
+                ret = get_missing_options(filename, optlist);
+                if ( ret < 0 )
+                        return -1;
+        }
+        
         /*
          * reset.
          */

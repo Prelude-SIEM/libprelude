@@ -43,9 +43,12 @@
 #include "prelude-message.h"
 #include "prelude-client-mgr.h"
 #include "sensor.h"
-
 #include "prelude-getopt.h"
 #include "prelude-async.h"
+
+
+#define DEFAULT_SENSOR_CONFIG CONFIG_DIR"/sensors-default.conf"
+
 
 
 static int launch = 1;
@@ -64,7 +67,6 @@ static int print_help(const char *optarg)
         
         return prelude_option_end;
 }
-
 
 
 
@@ -88,6 +90,9 @@ static int parse_argument(const char *filename, int argc, char **argv)
         if ( ! opts )
                 return -1;
 
+        /*
+         * Declare library options.
+         */
         prelude_option_wide_add(opts, CLI_HOOK|CFG_HOOK, 'a', "manager-addr",
                                 "Address where manager is listening",
                                 required_argument, setup_manager_addr, NULL);
@@ -102,31 +107,52 @@ static int parse_argument(const char *filename, int argc, char **argv)
          */
         prelude_option_set_warnings(~(OPT_INVAL|OPT_INVAL_ARG), &old_flags);
 
-        ret = prelude_option_parse_arguments(opts, filename, argc, argv);
-        
         /*
-         * Restore old option flags.
+         * Parse configuration and command line arguments.
+         */        
+        ret = prelude_option_parse_arguments(opts, filename, argc, argv);
+        if ( ret < 0 ) {
+                log(LOG_INFO, "error processing sensor options.\n", filename);
+                goto out;
+        }
+
+        /*
+         * help was requested - do not start
          */
-        prelude_option_set_warnings(old_flags, NULL);
-        
-        
-        prelude_option_destroy(opts);
-
-        if ( ret < 0 )
-                return -1;
-
         if ( ! launch )
-                return 0;
-        
+                goto out; 
+
+        /*
+         * The sensors configuration file we just parsed doesn't contain
+         * entry to specify the Manager address we should connect to.
+         *
+         * Here we try using the default sensors configuration file.
+         */
         if ( ! manager_list ) {
+           
+                ret = prelude_option_parse_arguments(opts, DEFAULT_SENSOR_CONFIG, 0, NULL);
+                if ( ret < 0 ) {
+                        log(LOG_INFO, "error processing generic sensors configuration file.\n");
+                        goto out;
+                }
+                
+                if ( manager_list )
+                        goto out;
+                
                 log(LOG_INFO,
                     "No Manager were configured. You need to setup a Manager for this Sensor\n"
                     "to report events. Please use the \"manager-addr\" entry in the Sensor\n"
                     "config file or the -a and eventually -p command line options.\n");
-                return -1;
         }
-        
-        return 0;
+
+ out:
+        /*
+         * Destroy option list and restore old option flags.
+         */
+        prelude_option_destroy(opts);
+        prelude_option_set_warnings(old_flags, NULL);
+
+        return ret;
 }
 
 
@@ -145,6 +171,11 @@ static int parse_argument(const char *filename, int argc, char **argv)
 int prelude_sensor_init(const char *filename, int argc, char **argv)
 {
         int ret;
+
+        /*
+         * The sensors didn't gave us a default configuration file
+         * to use. We'll use our default configuration file.
+         */
         
         ret = parse_argument(filename, argc, argv);
         if ( ret < 0 )

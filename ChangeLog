@@ -1,5 +1,28 @@
 2002-01-02  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/sensor.c (parse_argument): cleanup. Use generic
+	sensor configuration file when needed.
+
+	* src/prelude-getopt.c (get_missing_options): 
+	cleanup.
+	(prelude_option_parse_arguments): only try
+	to get missing option from configuration file if filename
+	is not NULL.
+
+	* src/prelude-client-mgr.c (parse_config_line): 
+	fix case were existing backup wouldn't be flushed.
+
+	* Makefile.am (install-data-hook): create the config directory,
+	(755), spool directory (1733, for any sensor to be able to fallback
+	to writing to a file).
+
+	Install a default configuration file, to be used the application
+	doesn't specify one.
+
+	* src/prelude-getopt.c (prelude_option_parse_arguments): 
+	only try to get missing option from configuration file if
+	filename is not NULL.
+
 	* src/sensor.c (setup_manager_addr): no need to duplicate
 	optarg.
 
