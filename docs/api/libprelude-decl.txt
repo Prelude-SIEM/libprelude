@@ -158,19 +158,11 @@ const char *variable
 </MACRO>
 <MACRO>
 <NAME>MANAGERS_CERT</NAME>
-#define MANAGERS_CERT CONFIG_DIR"/managers.cert"
-</MACRO>
-<MACRO>
-<NAME>SENSORS_CERT</NAME>
-#define SENSORS_CERT CONFIG_DIR"/sensors.cert"
-</MACRO>
-<MACRO>
-<NAME>MANAGER_KEY</NAME>
-#define MANAGER_KEY CONFIG_DIR"/manager.key"
+#define MANAGERS_CERT SENSORS_CONFIG_DIR"/managers.cert"
 </MACRO>
 <MACRO>
 <NAME>SENSORS_KEY</NAME>
-#define SENSORS_KEY CONFIG_DIR"/sensors.key"
+#define SENSORS_KEY SENSORS_CONFIG_DIR"/sensors.key"
 </MACRO>
 <FUNCTION>
 <NAME>ssl_init_client</NAME>
@@ -182,14 +174,6 @@ void
 <RETURNS>SSL  *</RETURNS>
 int socket
 </FUNCTION>
-<MACRO>
-<NAME>SENSORS_AUTH_FILE</NAME>
-#define SENSORS_AUTH_FILE CONFIG_DIR"/prelude-sensors.auth"
-</MACRO>
-<MACRO>
-<NAME>MANAGER_AUTH_FILE</NAME>
-#define MANAGER_AUTH_FILE CONFIG_DIR"/prelude-manager.auth"
-</MACRO>
 <FUNCTION>
 <NAME>prelude_auth_create_account</NAME>
 <RETURNS>int  </RETURNS>
@@ -198,12 +182,12 @@ const char *filename
 <FUNCTION>
 <NAME>prelude_auth_send</NAME>
 <RETURNS>int  </RETURNS>
-prelude_io_t *fd, const char *addr
+const char *authfile, prelude_io_t *fd, const char *addr
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_auth_recv</NAME>
 <RETURNS>int  </RETURNS>
-prelude_io_t *fd, const char *addr
+const char *authfile, prelude_io_t *fd, const char *addr
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_ident_inc</NAME>
@@ -431,6 +415,10 @@ const char *filename
 <RETURNS>int  </RETURNS>
 config_t *cfg
 </FUNCTION>
+<MACRO>
+<NAME>SENSORS_AUTH_FILE</NAME>
+#define SENSORS_AUTH_FILE SENSORS_CONFIG_DIR"/sensors.auth"
+</MACRO>
 <TYPEDEF>
 <NAME>prelude_timer_t</NAME>
 typedef struct {
@@ -778,7 +766,7 @@ typedef enum {
 <FUNCTION>
 <NAME>prelude_option_print</NAME>
 <RETURNS>void  </RETURNS>
-int flags
+int flags, int descoff
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_wide_get_msg</NAME>

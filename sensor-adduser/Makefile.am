@@ -1,4 +1,4 @@
-DEFS = -DCONFIG_DIR=\"@configdir@\"
+DEFS = -DSENSORS_CONFIG_DIR=\"@sensors_config_dir@\"
 INCLUDES = -I$(top_srcdir)/src/include -I$(top_srcdir)
 
 bin_PROGRAMS = sensor-adduser

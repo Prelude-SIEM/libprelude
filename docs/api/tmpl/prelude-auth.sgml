@@ -23,13 +23,6 @@ peer, only if the connection is plaintext.
 
 
 
-<!-- ##### MACRO MANAGER_AUTH_FILE ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### FUNCTION prelude_auth_create_account ##### -->
 <para>
 
@@ -44,6 +37,7 @@ peer, only if the connection is plaintext.
 
 </para>
 
+@authfile: 
 @fd: 
 @addr: 
 @Returns: 
@@ -54,6 +48,7 @@ peer, only if the connection is plaintext.
 
 </para>
 
+@authfile: 
 @fd: 
 @addr: 
 @Returns: 

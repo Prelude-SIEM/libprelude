@@ -147,15 +147,16 @@ static int cmp(const char *given_client, const char *client,
 /*
  *
  */
-static int check_account(const char *given_client, const char *given_user, const char *given_pass) 
+static int check_account(const char *authfile, const char *given_client,
+                         const char *given_user, const char *given_pass) 
 {
         FILE *fd;
-        char *client, *user, *pass;
         int line = 0, ret;
+        char *client, *user, *pass;
         
-        fd = fopen(MANAGER_AUTH_FILE, "r");
+        fd = fopen(authfile, "r");
         if ( ! fd ) {
-                log(LOG_ERR, "couldn't open %s for reading.\n", MANAGER_AUTH_FILE);
+                log(LOG_ERR, "couldn't open %s for reading.\n", authfile);
                 return -1;
         }
 
@@ -529,6 +530,7 @@ int prelude_auth_create_account(const char *filename)
 
 /**
  * prelude_auth_send:
+ * @authfile: Filename containing username/password pair.
  * @fd: Pointer on a #prelude_io_t object where authentication should occur.
  * @addr: Address of the server authentication is sent to.
  *
@@ -537,21 +539,21 @@ int prelude_auth_create_account(const char *filename)
  *
  * Returns: 0 if authentication was sucessful, -1 otherwise.
  */
-int prelude_auth_send(prelude_io_t *fd, const char *addr) 
+int prelude_auth_send(const char *authfile, prelude_io_t *fd, const char *addr) 
 {
         FILE *file;
         int ret, line;
         char *user, *pass, *client;
 
-        file = fopen(SENSORS_AUTH_FILE, "r");
+        file = fopen(authfile, "r");
         if (! file ) {
-                log(LOG_ERR,"couldn't open authentication file %s.\n", SENSORS_AUTH_FILE);
+                log(LOG_ERR,"couldn't open authentication file %s.\n", authfile);
                 return -1;
         }
 
         ret = auth_read_entry(file, &line, &client, &user, &pass);
         if ( ret < 0 )
-                log(LOG_ERR,"couldn't read authentication file %s.\n", SENSORS_AUTH_FILE);
+                log(LOG_ERR,"couldn't read authentication file %s.\n", authfile);
         else 
                 ret = do_auth(fd, user, pass);
         
@@ -569,6 +571,7 @@ int prelude_auth_send(prelude_io_t *fd, const char *addr)
 
 /** 
  * prelude_auth_recv:
+ * @authfile: Filename containing username/password pair.
  * @fd: Pointer on a #prelude_io_t object to read authentication from.
  * @addr: Address of the remote host to get login/password associated with.
  *
@@ -576,7 +579,7 @@ int prelude_auth_send(prelude_io_t *fd, const char *addr)
  *
  * Returns: 0 on success, -1 if an error occured or authentication failed.
  */
-int prelude_auth_recv(prelude_io_t *fd, const char *addr) 
+int prelude_auth_recv(const char *authfile, prelude_io_t *fd, const char *addr) 
 {
         int ret;
         char *user = NULL, *pass = NULL;
@@ -587,7 +590,7 @@ int prelude_auth_recv(prelude_io_t *fd, const char *addr)
                 return -1;
         }
         
-        ret = check_account(addr, user, pass);
+        ret = check_account(authfile, addr, user, pass);
         if ( ret < 0 )
                 prelude_io_write_delimited(fd, "failed", 6);
         else

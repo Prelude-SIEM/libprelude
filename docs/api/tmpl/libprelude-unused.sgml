@@ -250,6 +250,18 @@ thread
 </para>
 
 
+<!-- ##### MACRO MANAGER_AUTH_FILE ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO MANAGER_KEY ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### MACRO MSG_ALERT_ANALYZER_TIME ##### -->
 <para>
 
@@ -275,6 +287,12 @@ thread
 
 
 <!-- ##### MACRO RETSIGTYPE ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO SENSORS_CERT ##### -->
 <para>
 
 </para>

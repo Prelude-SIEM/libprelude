@@ -26,12 +26,8 @@
 /*
  * Place where the Manager certificate is saved.
  */
-#define MANAGERS_CERT CONFIG_DIR"/managers.cert"
-#define SENSORS_CERT CONFIG_DIR"/sensors.cert"
-
-#define MANAGER_KEY CONFIG_DIR"/manager.key"
-#define SENSORS_KEY CONFIG_DIR"/sensors.key"
-
+#define MANAGERS_CERT SENSORS_CONFIG_DIR"/managers.cert"
+#define SENSORS_KEY SENSORS_CONFIG_DIR"/sensors.key"
 
 
 int ssl_init_client(void);

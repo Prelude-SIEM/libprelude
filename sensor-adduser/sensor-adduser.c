@@ -30,7 +30,7 @@
 #include "prelude-io.h"
 #include "prelude-auth.h"
 #include "ssl-register.h"
-
+#include "auth.h"
 #include "config.h"
 
 

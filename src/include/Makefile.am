@@ -5,7 +5,6 @@ include_HEADERS = config-engine.h 		\
 		  idmef-tree.h			\
 		  plugin-common.h		\
 		  plugin-common-prv.h		\
-		  ssl.h				\
 		  ssl-gencrypto.h		\
 		  ssl-registration-msg.h	\
 		  daemonize.h			\
@@ -30,4 +29,4 @@ include_HEADERS = config-engine.h 		\
 
 
 
-
+noinst_HEADERS = ssl.h

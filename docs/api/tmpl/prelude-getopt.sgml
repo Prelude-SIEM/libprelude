@@ -94,6 +94,7 @@ prelude-getopt
 </para>
 
 @flags: 
+@descoff: 
 <!-- # Unused Parameters # -->
 @optlist: 
 

@@ -20,12 +20,9 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
-#define SENSORS_AUTH_FILE CONFIG_DIR"/prelude-sensors.auth"
-#define MANAGER_AUTH_FILE CONFIG_DIR"/prelude-manager.auth"
-
 
 int prelude_auth_create_account(const char *filename);
 
-int prelude_auth_send(prelude_io_t *fd, const char *addr);
+int prelude_auth_send(const char *authfile, prelude_io_t *fd, const char *addr);
 
-int prelude_auth_recv(prelude_io_t *fd, const char *addr);
+int prelude_auth_recv(const char *authfile, prelude_io_t *fd, const char *addr);

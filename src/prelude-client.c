@@ -51,6 +51,7 @@
 #include "prelude-message.h"
 #include "prelude-client.h"
 #include "sensor.h"
+#include "auth.h"
 
 
 #define RECONNECT_TIME_WAIT 10
@@ -191,7 +192,7 @@ static int handle_plaintext_connection(prelude_client_t *client, int sock)
 {
         int ret;
         
-        ret = prelude_auth_send(client->fd, client->addr);
+        ret = prelude_auth_send(SENSORS_AUTH_FILE, client->fd, client->addr);
         if ( ret < 0 ) {
                 log(LOG_INFO,
                     "\nPlaintext authentication failed. Use the \"manager-adduser\"\n"

@@ -167,10 +167,9 @@ AC_TYPE_SIGNAL
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS(gettimeofday select socket strdup strerror strstr)
 
-configdir=$sysconfdir/prelude
-plugindir=$libdir/prelude
+sensors_config_dir=$sysconfdir/prelude-sensors
+AC_SUBST(sensors_config_dir)
 
-AC_SUBST(configdir)
 AC_SUBST(LIBS)
 
 CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations \

@@ -47,7 +47,7 @@
 #include "prelude-async.h"
 
 
-#define DEFAULT_SENSOR_CONFIG CONFIG_DIR"/sensors-default.conf"
+#define DEFAULT_SENSOR_CONFIG SENSORS_CONFIG_DIR"/sensors-default.conf"
 
 
 

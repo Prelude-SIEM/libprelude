@@ -1,5 +1,5 @@
 SUBDIRS = include
-DEFS = -DCONFIG_DIR=\"@configdir@\"
+DEFS = -DSENSORS_CONFIG_DIR=\"@sensors_config_dir@\"
 
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libmissing -I$(srcdir)/include 
 
