@@ -264,7 +264,7 @@ static FILE *open_auth_file(const char *filename, uid_t uid)
 
         ret = fchown(fileno(fd), uid, 0);
         if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't change owner to UID %d.\n", uid);
+                log(LOG_ERR, "couldn't change %s to UID %d.\n", filename, uid);
                 fclose(fd);
                 return NULL;
         }
