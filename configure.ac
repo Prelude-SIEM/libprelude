@@ -20,6 +20,7 @@ AC_C_BIGENDIAN
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 AC_SUBST(libprelude_libs)
+AC_SUBST(libprelude_cflags)
 
 
 dnl **************************************************
@@ -48,8 +49,13 @@ dnl **************************************************
 AC_CHECK_LIB(pthread, pthread_create, pthrlib="yes")
 if test x$pthrlib = xyes; then
 	libprelude_libs="$libprelude_libs -lpthread"
+	libprelude_cflags="-D_REENTRANT"
 else
-	AC_CHECK_LIB(c_r, pthread_create, libprelude_libs="$libprelude_libs -lc_r")
+	AC_CHECK_LIB(c_r, pthread_create, pthrlib="yes")
+	if test x$pthrlib = xyes; then
+		libprelude_libs="$libprelude_libs -lc_r"
+		libprelude_cflags="-D_REENTRANT"
+	fi
 fi
 
 
@@ -197,7 +203,7 @@ sensors_config_dir=$sysconfdir/prelude-sensors
 AC_SUBST(sensors_config_dir)
 
 CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations \
--Wbad-function-cast -Wcast-qual -Wcast-align -Wnested-externs -Wunused -fomit-frame-pointer -D_REENTRANT"
+-Wbad-function-cast -Wcast-qual -Wcast-align -Wnested-externs -Wunused -fomit-frame-pointer"
 
 
 AC_SUBST(CFLAGS)

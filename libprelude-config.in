@@ -47,7 +47,7 @@ while test $# -gt 0; do
       if test @includedir@ != /usr/include ; then
         includes=-I@includedir@
       fi
-      echo $includes
+      echo $includes @libprelude_cflags@
       ;;
 
     --libs)
