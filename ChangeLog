@@ -1,5 +1,13 @@
 2001-11-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* sensor-adduser/ssl-register.c: include netinet/in.h to fix
+	BSD compilation. 
+	Thanks to Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl> for
+	reporting this.
+
+	* sensor-adduser/sensor-adduser.c: 
+	include config.h
+
 	* src/prelude-client.c
 	Address member is not const anymore.
 	
