@@ -273,13 +273,13 @@ static int parse_buffer(char *buf, char **entry, char **value)
         
         *entry = strip_value(ptr);
 
-        ptr = strsep(&buf, "=");
+        ptr = strsep(&buf, "\0");
         if ( ptr )
                 *value = strip_value(ptr);
 
         if ( ! *value )
                 *value = strdup("");
-               
+        
         return 0;
 }
 
