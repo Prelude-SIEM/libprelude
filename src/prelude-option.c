@@ -302,45 +302,6 @@ static int process_cfg_file(prelude_list_t *cblist, prelude_option_t *optlist,
 
 
 
-static int call_option_cb(struct cb_list **cbl, prelude_list_t *cblist, prelude_option_t *option, const char *arg) 
-{
-        struct cb_list *new, *cb;
-        prelude_list_t *tmp, *prev = NULL;
-        
-        prelude_log_debug(3, "%s(%s)\n", option->longopt, arg);
-                
-        prelude_list_for_each(cblist, tmp) {
-                cb = prelude_list_entry(tmp, struct cb_list, list);
-                
-                if ( ! prev && option->priority < cb->option->priority )
-                        prev = tmp;
-        }
-        
-        *cbl = new = malloc(sizeof(*new));
-        if ( ! new )
-                return prelude_error_from_errno(errno);
-
-        prelude_list_init(&new->children);
-                
-        new->arg = (arg) ? strdup(arg) : NULL;
-        new->option = option;
-
-        if ( option->priority == PRELUDE_OPTION_PRIORITY_LAST ) {
-                prelude_list_add_tail(cblist, &new->list);
-                return 0;
-        }
-
-        if ( ! prev )
-                prev = cblist;
-        
-        prelude_list_add_tail(prev, &new->list);
-        *cbl = new;
-        
-        return 0;
-}
-
-
-
 static int do_set(prelude_option_t *opt, const char *value, prelude_string_t *out, void **context)
 {
         int ret;
@@ -382,6 +343,52 @@ static int do_set(prelude_option_t *opt, const char *value, prelude_string_t *ou
 
 
 
+static int call_option_cb(struct cb_list **cbl, prelude_list_t *cblist,
+                          prelude_option_t *option, const char *arg, prelude_string_t *err) 
+{
+        struct cb_list *new, *cb;
+        prelude_list_t *tmp, *prev = NULL;
+
+        if ( option->priority == PRELUDE_OPTION_PRIORITY_IMMEDIATE ) {
+                void *ctx = NULL;
+                prelude_log_debug(3, "[immediate] %s(%s)\n", option->longopt, arg);
+                return do_set(option, arg, err, &ctx);
+        }
+
+        prelude_log_debug(3, "[queue] %s(%s)\n", option->longopt, arg);
+        
+        prelude_list_for_each(cblist, tmp) {
+                cb = prelude_list_entry(tmp, struct cb_list, list);
+                
+                if ( ! prev && option->priority < cb->option->priority )
+                        prev = tmp;
+        }
+        
+        *cbl = new = malloc(sizeof(*new));
+        if ( ! new )
+                return prelude_error_from_errno(errno);
+
+        prelude_list_init(&new->children);
+                
+        new->arg = (arg) ? strdup(arg) : NULL;
+        new->option = option;
+
+        if ( option->priority == PRELUDE_OPTION_PRIORITY_LAST ) {
+                prelude_list_add_tail(cblist, &new->list);
+                return 0;
+        }
+
+        if ( ! prev )
+                prev = cblist;
+        
+        prelude_list_add_tail(prev, &new->list);
+        *cbl = new;
+        
+        return 0;
+}
+
+
+
 static int call_option_from_cb_list(prelude_list_t *cblist, prelude_string_t *err, void *default_context, int depth) 
 {
         int ret = 0;
@@ -403,9 +410,13 @@ static int call_option_from_cb_list(prelude_list_t *cblist, prelude_string_t *er
                         ret = call_option_from_cb_list(&cb->children, err, context, depth + 1);
                         if ( ret < 0 )
                                 return ret;
-                        
-			if ( cb->option->commit ) 
-				ret = cb->option->commit(cb->option, err, context);
+                }
+                
+                if ( cb->option->commit ) {
+                        ret = cb->option->commit(cb->option, err, context);
+                        if ( ret < 0 ) {
+                                return ret;
+                        }
                 }
 		
                 context = default_context;
@@ -427,7 +438,8 @@ static int call_option_from_cb_list(prelude_list_t *cblist, prelude_string_t *er
  * Try to get all option that were not set from the command line in the config file.
  */
 static int get_missing_options(config_t *cfg, const char *filename, prelude_list_t *cblist,
-                               prelude_option_t *rootlist, unsigned int *line, int depth, prelude_string_t *err) 
+                               prelude_option_t *rootlist, unsigned int *line, int depth,
+                               prelude_string_t *err)
 {
         int ret;
         const char *argptr;
@@ -479,22 +491,19 @@ static int get_missing_options(config_t *cfg, const char *filename, prelude_list
                         if ( ret < 0 )
                                 return ret;
 
-                        ret = call_option_cb(&cbitem, cblist, opt, argptr);
+                        ret = call_option_cb(&cbitem, cblist, opt, argptr, err);
                         if ( ret < 0 ) 
                                 return ret;
                         
                         ret = get_missing_options(cfg, filename, &cbitem->children, opt, line, depth + 1, err);
                         if ( ret < 0 )
                                 return -1;
-                } else {                        
-                        if ( opt->already_set )
-                                continue;
-
+                } else {  
                         ret = check_option(opt, &argptr, value);                        
                         if ( ret < 0 )
                                 return ret;
                         
-                        ret = call_option_cb(&cbitem, cblist, opt, argptr);
+                        ret = call_option_cb(&cbitem, cblist, opt, argptr, err);
                         if ( ret < 0 ) 
                                 return ret;
                 }
@@ -506,7 +515,7 @@ static int get_missing_options(config_t *cfg, const char *filename, prelude_list
 
 
 static int parse_argument(prelude_list_t *cb_list, prelude_option_t *optlist,
-                          int *argc, char **argv, int *argv_index, int depth)
+                          int *argc, char **argv, int *argv_index, int depth, prelude_string_t *err)
 {
         int ret;
         prelude_option_t *opt;
@@ -545,7 +554,7 @@ static int parse_argument(prelude_list_t *cb_list, prelude_option_t *optlist,
                 if ( argptr )
                         reorder_argv(argc, argv, *argv_index, argv_index);
 
-                ret = call_option_cb(&cbitem, cb_list, opt, argptr);
+                ret = call_option_cb(&cbitem, cb_list, opt, argptr, err);
                 if ( ret < 0 )
                         return ret;
 
@@ -558,7 +567,7 @@ static int parse_argument(prelude_list_t *cb_list, prelude_option_t *optlist,
                 if ( ! prelude_list_is_empty(&opt->optlist) ) {
                         
                         ret = parse_argument(&cbitem->children, opt,
-                                             argc, argv, argv_index, depth + 1);
+                                             argc, argv, argv_index, depth + 1, err);
 
                         if ( ret < 0 )
                                 return ret;
@@ -577,11 +586,7 @@ static int get_option_from_optlist(void *context, prelude_option_t *optlist, pre
         int argv_index = 1, ret = 0;
         
         if ( argc ) {                
-                ret = parse_argument(cb_list, optlist, argc, argv, &argv_index, 0);
-                if ( ret < 0 )
-                        return ret;
-
-                ret = call_option_from_cb_list(cb_list, *err, context, 0);
+                ret = parse_argument(cb_list, optlist, argc, argv, &argv_index, 0, *err);
                 if ( ret < 0 )
                         return ret;
         }
@@ -827,7 +832,7 @@ static int get_max_char(const char *line, int descoff)
 
 
 
-static void print_wrapped(const char *line, int descoff) 
+static void print_wrapped(FILE *fd, const char *line, int descoff) 
 {
         int max, i = 0, j;
         
@@ -837,21 +842,21 @@ static void print_wrapped(const char *line, int descoff)
                 while ( max-- >= 0 ) {
                         
                         if ( line[i] == '\0' ) {
-                                putchar('\n');
+                                fputc('\n', fd);
                                 return;
                         } else
-                                putchar(line[i++]);
+                                fputc(line[i++], fd);
                 }
                         
-                putchar('\n');
+                fputc('\n', fd);
                 for ( j = 0; j < descoff; j++ )
-                        putchar(' ');
+                        fputc(' ', fd);
         }
 }
 
 
 
-static void print_options(prelude_option_t *root, prelude_option_type_t type, int descoff, int depth) 
+static void print_options(FILE *fd, prelude_option_t *root, prelude_option_type_t type, int descoff, int depth) 
 {
         int i;
         prelude_option_t *opt;
@@ -865,36 +870,36 @@ static void print_options(prelude_option_t *root, prelude_option_type_t type, in
                  * If type is not there, continue.
                  */
                 if ( opt->type == PRELUDE_OPTION_TYPE_ROOT )
-                        print_options(opt, type, descoff, depth);
+                        print_options(fd, opt, type, descoff, depth);
                 else {                          
                         if ( type && ! (opt->type & type) ) 
                                 continue;
 
                         for ( i = 0; i < depth; i++ )
-                                printf("  ");
+                                fprintf(fd, "  ");
                         
                         if ( ! prelude_list_is_empty(&opt->optlist) )
-                                putchar('\n');
+                                fputc('\n', fd);
                         
                         if ( opt->shortopt != 0 )
-                                i += printf("-%c ", opt->shortopt);
+                                i += fprintf(fd, "-%c ", opt->shortopt);
                         
                         if ( opt->longopt )
-                                i += printf("--%s ", opt->longopt);
+                                i += fprintf(fd, "--%s ", opt->longopt);
                         
                         while ( i++ < descoff )
-                                putchar(' ');
+                                fputc(' ', fd);
                         
                         if ( opt->description )
-                                print_wrapped(opt->description, depth + descoff);
+                                print_wrapped(fd, opt->description, depth + descoff);
                         else
-                                putchar('\n');
+                                fputc('\n', fd);
 
                         if ( ! prelude_list_is_empty(&opt->optlist) )
-                                print_options(opt, type, descoff, depth + 1);
+                                print_options(fd, opt, type, descoff, depth + 1);
                 }
         }
-        putchar('\n');
+        fputc('\n', fd);
 }
 
 
@@ -905,13 +910,14 @@ static void print_options(prelude_option_t *root, prelude_option_type_t type, in
  * @opt: Option(s) to print out.
  * @type: Only option with specified types will be printed.
  * @descoff: offset from the begining of the line where the description should start.
+ * @fd: File descriptor where the option should be dumped.
  *
  * Dump option available in @opt and hooked to the given types.
  * If @opt is NULL, then the root of the option list is used.
  */
-void prelude_option_print(prelude_option_t *opt, prelude_option_type_t type, int descoff) 
+void prelude_option_print(prelude_option_t *opt, prelude_option_type_t type, int descoff, FILE *fd) 
 {        
-        print_options(opt ? opt : root_optlist, type, descoff, 0);
+        print_options(fd, opt ? opt : root_optlist, type, descoff, 0);
 }
 
 
@@ -1042,7 +1048,6 @@ void prelude_option_set_destroy_callback(prelude_option_t *opt,
                                          int (*destroy)(prelude_option_t *opt, prelude_string_t *out, void *context))
 {
         opt->destroy = destroy;
-        opt->type |= PRELUDE_OPTION_TYPE_DESTROY;
 }
 
 

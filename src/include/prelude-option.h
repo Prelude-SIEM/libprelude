@@ -29,13 +29,11 @@
 
 
 typedef enum {
-        PRELUDE_OPTION_TYPE_CLI  = 0x1,
-        PRELUDE_OPTION_TYPE_CFG  = 0x2,
-        PRELUDE_OPTION_TYPE_WIDE = 0x4,
-        PRELUDE_OPTION_TYPE_ALLOW_MULTIPLE_CALL = 0x8,
-        PRELUDE_OPTION_TYPE_DESTROY = 0x20,
-        PRELUDE_OPTION_TYPE_CONTEXT = 0x40,
-        PRELUDE_OPTION_TYPE_ROOT    = 0x80
+        PRELUDE_OPTION_TYPE_CLI  = 0x01,
+        PRELUDE_OPTION_TYPE_CFG  = 0x02,
+        PRELUDE_OPTION_TYPE_WIDE = 0x04,
+        PRELUDE_OPTION_TYPE_CONTEXT = 0x08,
+        PRELUDE_OPTION_TYPE_ROOT    = 0x10
 } prelude_option_type_t;
 
 
@@ -51,9 +49,10 @@ typedef enum {
 
 
 typedef enum {
-        PRELUDE_OPTION_PRIORITY_FIRST    = -1,
-        PRELUDE_OPTION_PRIORITY_NONE     =  0,
-        PRELUDE_OPTION_PRIORITY_LAST     =  2
+        PRELUDE_OPTION_PRIORITY_IMMEDIATE = -2,
+        PRELUDE_OPTION_PRIORITY_FIRST     = -1,
+        PRELUDE_OPTION_PRIORITY_NONE      =  0,
+        PRELUDE_OPTION_PRIORITY_LAST      =  2
 } prelude_option_priority_t;
 
 
@@ -65,7 +64,8 @@ typedef enum {
 
 void prelude_option_set_priority(prelude_option_t *option, prelude_option_priority_t priority);
 
-void prelude_option_print(prelude_option_t *opt, prelude_option_type_t type, int descoff);
+
+void prelude_option_print(prelude_option_t *opt, prelude_option_type_t type, int descoff, FILE *fd);
 
 int prelude_option_wide_send_msg(prelude_msgbuf_t *msgbuf, void *context);
 
