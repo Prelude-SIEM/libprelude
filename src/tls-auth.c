@@ -130,30 +130,28 @@ int tls_auth_connection(prelude_client_t *client, prelude_io_t *io, int crypt)
 void *tls_auth_init(prelude_client_t *client)
 {
         int ret;
-        char filename[256];
+        char keyfile[256], certfile[256];
         gnutls_certificate_credentials cred;
         
         gnutls_global_init();
         gnutls_certificate_allocate_credentials(&cred);
 
-        prelude_client_get_tls_key_filename(client, filename, sizeof(filename));
-
-        ret = tls_certificates_load(filename, cred);
+        prelude_client_get_tls_key_filename(client, keyfile, sizeof(keyfile));
+        prelude_client_get_tls_client_keycert_filename(client, certfile, sizeof(certfile));
+        
+        ret = access(certfile, F_OK);
+        if ( ret < 0 ) 
+                return cred;
+        
+        ret = tls_certificates_load(keyfile, certfile, cred);
         if ( ret < 0 ) {
                 log(LOG_ERR, "error loading certificate list.\n");
                 return NULL;
         }
-        
-        prelude_client_get_tls_cert_filename(client, filename, sizeof(filename));
 
-        /*
-         * manager only have a trust file in case of relaying.
-         */
-        ret = access(filename, F_OK);
-        if ( ret < 0 )
-                return cred;
-                
-        ret = gnutls_certificate_set_x509_trust_file(cred, filename, GNUTLS_X509_FMT_PEM);
+        prelude_client_get_tls_client_trusted_cert_filename(client, certfile, sizeof(certfile));
+        
+        ret = gnutls_certificate_set_x509_trust_file(cred, certfile, GNUTLS_X509_FMT_PEM);
         if ( ret < 0 ) {
                 log(LOG_INFO, "- couldn't set x509 trust file: %s.\n", gnutls_strerror(ret));
                 return NULL;

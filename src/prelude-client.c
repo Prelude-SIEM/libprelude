@@ -45,12 +45,18 @@
 /*
  * directory where TLS private keys file are stored.
  */
-#define KEY_DIR PRELUDE_CONFIG_DIR "/keys"
+#define TLS_KEY_DIR PRELUDE_CONFIG_DIR "/tls/keys"
 
 /*
- * directory where TLS certificates file are stored.
+ * directory where TLS client certificate file are stored.
  */
-#define CERT_DIR PRELUDE_CONFIG_DIR "/certs"
+#define TLS_CLIENT_CERT_DIR PRELUDE_CONFIG_DIR "/tls/client"
+
+/*
+ * directory where TLS server certificate file are stored.
+ */
+#define TLS_SERVER_CERT_DIR PRELUDE_CONFIG_DIR "/tls/server"
+
 
 /*
  * directory where analyzerID file are stored.
@@ -108,15 +114,17 @@ static void heartbeat_expire_cb(void *data)
         prelude_client_t *client = data;
         
         message = idmef_message_new();
-        if ( ! message )
-                return;
-
+        if ( ! message ) {
+                log(LOG_ERR, "error creating new IDMEF message.\n");
+                goto out;
+        }
+        
         heartbeat = idmef_message_new_heartbeat(message);
         if ( ! heartbeat ) {
-                idmef_message_destroy(message);
-                return;
+                log(LOG_ERR, "error creating new IDMEF heartbeat.\n");
+                goto out;
         }
-
+        
         idmef_heartbeat_set_analyzer(heartbeat, idmef_analyzer_ref(client->analyzer));
         idmef_heartbeat_set_create_time(heartbeat, idmef_time_new_gettimeofday());
         
@@ -518,8 +526,10 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
                 return -1;
 
         new->credentials = tls_auth_init(new);
-        if ( ! new->credentials )
+        if ( ! new->credentials ) {
+                file_error(new);
                 return -1;
+        }
 
         prelude_client_get_backup_filename(new, filename, sizeof(filename));
         ret = access(filename, W_OK);
@@ -529,8 +539,10 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
         }
         
         ret = prelude_client_ident_init(new, &new->analyzerid);
-        if ( ret < 0 )
+        if ( ret < 0 ) {
+                file_error(new);
                 return -1;
+        }
         
         setup_heartbeat_timer(new, DEFAULT_HEARTBEAT_INTERVAL);
         timer_init(&new->heartbeat_timer);
@@ -723,16 +735,45 @@ void prelude_client_get_ident_filename(prelude_client_t *client, char *buf, size
 
 
 
-void prelude_client_get_tls_cert_filename(prelude_client_t *client, char *buf, size_t size) 
-{
-        snprintf(buf, size, CERT_DIR "/%s", client->name);
-}
-
-
 void prelude_client_get_tls_key_filename(prelude_client_t *client, char *buf, size_t size) 
 {
-        snprintf(buf, size, KEY_DIR "/%s", client->name);
+        snprintf(buf, size, TLS_KEY_DIR "/%s", client->name);
 }
+
+
+void prelude_client_get_tls_server_ca_cert_filename(prelude_client_t *client, char *buf, size_t size) 
+{
+        snprintf(buf, size, TLS_SERVER_CERT_DIR "/%s.ca", client->name);
+}
+
+
+
+void prelude_client_get_tls_server_trusted_cert_filename(prelude_client_t *client, char *buf, size_t size) 
+{
+        snprintf(buf, size, TLS_SERVER_CERT_DIR "/%s.trusted", client->name);
+}
+
+
+
+void prelude_client_get_tls_server_keycert_filename(prelude_client_t *client, char *buf, size_t size) 
+{
+        snprintf(buf, size, TLS_SERVER_CERT_DIR "/%s.keycrt", client->name);
+}
+
+
+
+void prelude_client_get_tls_client_trusted_cert_filename(prelude_client_t *client, char *buf, size_t size) 
+{
+        snprintf(buf, size, TLS_CLIENT_CERT_DIR "/%s.trusted", client->name);
+}
+
+
+
+void prelude_client_get_tls_client_keycert_filename(prelude_client_t *client, char *buf, size_t size) 
+{
+        snprintf(buf, size, TLS_CLIENT_CERT_DIR "/%s.keycrt", client->name);
+}
+
 
 
 void prelude_client_get_backup_filename(prelude_client_t *client, char *buf, size_t size) 

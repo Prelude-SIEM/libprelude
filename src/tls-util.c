@@ -48,12 +48,12 @@ static int cmp_certificate_issuer(gnutls_x509_crt crt, const char *dn, size_t dn
 
 
 
-static int load_individual_cert(FILE *fd, gnutls_certificate_credentials cred)
+static int load_individual_cert(FILE *fd, gnutls_datum *key, gnutls_certificate_credentials cred)
 {
         size_t len;
         char buf[65535];
-        gnutls_datum cert, key;
-        int ret = -1, got_start = 0, got_key = 0;
+        gnutls_datum cert;
+        int ret = -1, got_start = 0;
         
         cert.data = buf;
         
@@ -64,29 +64,18 @@ static int load_individual_cert(FILE *fd, gnutls_certificate_credentials cred)
                 len = strlen(buf + cert.size);
                 
                 if ( ! got_start && strstr(buf + cert.size, BEGIN_STR) ) {
-                        got_start = 1;
-                        
-                        if ( ! got_key && strstr(buf + cert.size, "KEY") )
-                                got_key = 1;
-                        
+                        got_start = 1;                        
                         continue;
                 }
 
                 if ( ! strstr(buf + cert.size, END_STR) ) 
                         continue;
-
+                
                 cert.size += len;
-                
-                if ( got_key ) {
-                        key.data = strdup(buf);
-                        key.size = cert.size;
-                        got_key = cert.size = len = 0;
-                        continue;
-                }
-                
-                ret = gnutls_certificate_set_x509_key_mem(cred, &cert, &key, GNUTLS_X509_FMT_PEM);
+
+                ret = gnutls_certificate_set_x509_key_mem(cred, &cert, key, GNUTLS_X509_FMT_PEM);
                 if ( ret < 0 ) {
-                        log(LOG_ERR, "error importing certificate: %s.\n", gnutls_strerror(ret));                        
+                        log(LOG_ERR, "error importing certificate: %s.\n", gnutls_strerror(ret));
                         goto out;
                 }
                 
@@ -94,8 +83,6 @@ static int load_individual_cert(FILE *fd, gnutls_certificate_credentials cred)
         }
 
   out:
-        if ( key.data )
-                free(key.data);
         
         return ret;
 }
@@ -143,18 +130,25 @@ void tls_unload_file(gnutls_datum *data)
 
 
 
-int tls_certificates_load(const char *filename, gnutls_certificate_credentials cred)
+int tls_certificates_load(const char *keyfile, const char *certfile, gnutls_certificate_credentials cred)
 {
         int ret;
         FILE *fd;
+        gnutls_datum key;
 
-        fd = fopen(filename, "r");
-        if ( ! fd ) {
-                log(LOG_ERR, "error opening %s for reading.\n", filename);
+        ret = tls_load_file(keyfile, &key);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "error opening %s for reading.\n", keyfile);
                 return -1;
         }
         
-        ret = load_individual_cert(fd, cred);
+        fd = fopen(certfile, "r");
+        if ( ! fd ) {
+                log(LOG_ERR, "error opening %s for reading.\n", certfile);
+                return -1;
+        }
+        
+        ret = load_individual_cert(fd, &key, cred);
         fclose(fd);
         
         return ret;

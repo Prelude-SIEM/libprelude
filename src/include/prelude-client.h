@@ -94,9 +94,17 @@ void prelude_client_set_capability(prelude_client_t *client, prelude_client_capa
 
 void prelude_client_get_ident_filename(prelude_client_t *client, char *buf, size_t size);
 
-void prelude_client_get_tls_cert_filename(prelude_client_t *client, char *buf, size_t size);
-
 void prelude_client_get_tls_key_filename(prelude_client_t *client, char *buf, size_t size);
+
+void prelude_client_get_tls_server_ca_cert_filename(prelude_client_t *client, char *buf, size_t size);
+
+void prelude_client_get_tls_server_keycert_filename(prelude_client_t *client, char *buf, size_t size);
+
+void prelude_client_get_tls_server_trusted_cert_filename(prelude_client_t *client, char *buf, size_t size);
+
+void prelude_client_get_tls_client_keycert_filename(prelude_client_t *client, char *buf, size_t size);
+
+void prelude_client_get_tls_client_trusted_cert_filename(prelude_client_t *client, char *buf, size_t size);
 
 void prelude_client_get_backup_filename(prelude_client_t *client, char *buf, size_t size);
 

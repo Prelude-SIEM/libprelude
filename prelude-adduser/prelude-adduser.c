@@ -38,11 +38,15 @@
 #include <gnutls/extra.h>
 
 #include "common.h"
+#include "config-engine.h"
 #include "prelude-client.h"
 #include "prelude-getopt.h"
 
 #include "server.h"
 #include "tls-register.h"
+
+
+#define TLS_CONFIG PRELUDE_CONFIG_DIR "/tls/tls.conf"
 
 
 struct cmdtbl {
@@ -55,9 +59,14 @@ struct cmdtbl {
 
 static uint16_t port = 5553;
 static const char *addr = NULL;
-prelude_client_t *client;
+static prelude_client_t *client;
 static int gid_set = 0, uid_set = 0;
 static int server_prompt_passwd = 0, server_keepalive = 0;
+
+
+int generated_key_size = 0;
+int authority_certificate_lifetime = 0;
+int generated_certificate_lifetime = 0;
 
 
 
@@ -380,8 +389,8 @@ static int setup_analyzer_files(prelude_client_t *client, uint64_t analyzerid,
 
         prelude_client_set_analyzerid(client, analyzerid);
         
-        ret = tls_create_privkey(client, key, crt);
-        if ( ret < 0 )
+        *key = tls_load_privkey(client);  
+        if ( ! *key )
                 return -1;
         
         prelude_client_get_backup_filename(client, buf, sizeof(buf));
@@ -442,11 +451,31 @@ static int rename_cmd(int argc, char **argv)
         fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
         rename(spath, dpath);
 
-        prelude_client_get_tls_cert_filename(sclient, spath, sizeof(spath));
-        prelude_client_get_tls_cert_filename(dclient, dpath, sizeof(dpath));
+        prelude_client_get_tls_client_keycert_filename(sclient, spath, sizeof(spath));
+        prelude_client_get_tls_client_keycert_filename(dclient, dpath, sizeof(dpath));
         fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
         rename(spath, dpath);
-                
+
+        prelude_client_get_tls_server_keycert_filename(sclient, spath, sizeof(spath));
+        prelude_client_get_tls_server_keycert_filename(dclient, dpath, sizeof(dpath));
+        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
+        rename(spath, dpath);
+
+        prelude_client_get_tls_client_trusted_cert_filename(sclient, spath, sizeof(spath));
+        prelude_client_get_tls_client_trusted_cert_filename(dclient, dpath, sizeof(dpath));
+        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
+        rename(spath, dpath);
+
+        prelude_client_get_tls_server_trusted_cert_filename(sclient, spath, sizeof(spath));
+        prelude_client_get_tls_server_trusted_cert_filename(dclient, dpath, sizeof(dpath));
+        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
+        rename(spath, dpath);
+        
+        prelude_client_get_tls_server_ca_cert_filename(sclient, spath, sizeof(spath));
+        prelude_client_get_tls_server_ca_cert_filename(dclient, dpath, sizeof(dpath));
+        fprintf(stderr, "- renaming %s to %s.\n", spath, dpath);
+        rename(spath, dpath);
+        
         return prelude_option_success;
 }
 
@@ -521,12 +550,28 @@ static int del_cmd(int argc, char **argv)
         prelude_client_get_ident_filename(client, buf, sizeof(buf));
         fprintf(stderr, "  - Removing %s...\n", buf);
         unlink(buf);
-        
+
         prelude_client_get_tls_key_filename(client, buf, sizeof(buf));
         fprintf(stderr, "  - Removing %s...\n", buf);
         unlink(buf);
-
-        prelude_client_get_tls_cert_filename(client, buf, sizeof(buf));
+        
+        prelude_client_get_tls_client_keycert_filename(client, buf, sizeof(buf));
+        fprintf(stderr, "  - Removing %s...\n", buf);
+        unlink(buf);
+        
+        prelude_client_get_tls_server_keycert_filename(client, buf, sizeof(buf));
+        fprintf(stderr, "  - Removing %s...\n", buf);
+        unlink(buf);
+        
+        prelude_client_get_tls_client_trusted_cert_filename(client, buf, sizeof(buf));
+        fprintf(stderr, "  - Removing %s...\n", buf);
+        unlink(buf);
+        
+        prelude_client_get_tls_server_trusted_cert_filename(client, buf, sizeof(buf));
+        fprintf(stderr, "  - Removing %s...\n", buf);
+        unlink(buf);
+        
+        prelude_client_get_tls_server_ca_cert_filename(client, buf, sizeof(buf));
         fprintf(stderr, "  - Removing %s...\n", buf);
         unlink(buf);
         
@@ -597,7 +642,7 @@ static int register_cmd(int argc, char **argv)
         fd = connect_manager(in, port, pass);
         if ( ! fd ) 
                 return -1;
-
+        
         ret = tls_request_certificate(client, fd, key);
         if ( ret < 0 )
                 return -1;
@@ -612,10 +657,10 @@ static int register_cmd(int argc, char **argv)
 static int registration_server_cmd(int argc, char **argv)
 {
         int ret;
-        gnutls_x509_crt crt;
         prelude_option_t *opt;
         gnutls_x509_privkey key;
-
+        gnutls_x509_crt ca_crt, crt;
+        
         opt = prelude_option_new(NULL);
         client = prelude_client_new(0);
         
@@ -631,15 +676,23 @@ static int registration_server_cmd(int argc, char **argv)
         ret = prelude_option_parse_arguments(NULL, opt, NULL, argc - 2, &argv[2]);
         if ( ret < 0 )
                 return -1;
-
+        
         prelude_option_destroy(opt);
         
-        ret = add_analyzer(argv[2], &key, &crt);
+        ret = add_analyzer(argv[2], &key, NULL);
         if ( ret < 0 )
                 return -1;
-
-        fprintf(stderr, "\n\n- Starting registration server.\n");
-        return server_create(client, server_keepalive, server_prompt_passwd, key, crt);
+        
+        ret = tls_load_ca_certificate(client, key, &ca_crt);
+        if ( ret < 0 )
+                return -1;
+        
+        ret = tls_load_ca_signed_certificate(client, key, ca_crt, &crt);
+        if ( ret < 0 )
+                return -1;
+        
+        fprintf(stderr, "\n- Starting registration server.\n");
+        return server_create(client, server_keepalive, server_prompt_passwd, key, ca_crt, crt);
 }
 
 
@@ -657,6 +710,73 @@ static int print_help(struct cmdtbl *tbl)
                 fprintf(stderr, " %s\n", tbl[i].cmd);
         
         exit(1);
+}
+
+
+
+static const char *lifetime_to_str(char *out, size_t size, int lifetime)
+{
+        if ( ! lifetime )
+                snprintf(out, size, "unlimited");
+        else
+                snprintf(out, size, "%d days", lifetime);
+        
+        return out;
+}
+
+
+
+static int read_tls_setting(void)
+{
+        int line = 0;
+        config_t *cfg;
+        char buf[128];
+        const char *ptr;
+        
+        cfg = config_open(TLS_CONFIG);
+        if ( ! cfg ) {
+                fprintf(stderr, "couldn't open %s.\n", TLS_CONFIG);
+                return -1;
+        }
+
+        ptr = config_get(cfg, NULL, "generated-key-size", &line);
+        if ( ! ptr ) {
+                fprintf(stderr, "%s: couldn't find \"generated-key-size\" setting.\n", TLS_CONFIG);
+                goto err;
+        }
+        
+        generated_key_size = atoi(ptr);
+
+        line=0;
+        ptr = config_get(cfg, NULL, "authority-certificate-lifetime", &line);
+        if ( ! ptr ) {
+                fprintf(stderr, "%s: couldn't find \"authority-certificate-lifetime\" setting.\n", TLS_CONFIG);
+                goto err;
+        }
+        
+        authority_certificate_lifetime = atoi(ptr);
+
+        ptr = config_get(cfg, NULL, "generated-certificate-lifetime", &line);
+        if ( ! ptr ) {
+                fprintf(stderr, "%s: couldn't find \"generated-certificate-lifetime\" setting.\n", TLS_CONFIG);
+                goto err;
+        }
+        
+        generated_certificate_lifetime = atoi(ptr);
+
+        fprintf(stderr, "\n- Using default TLS settings from %s:\n", TLS_CONFIG);
+        fprintf(stderr, "  - Generated key size: %d bits.\n", generated_key_size);
+        
+        fprintf(stderr, "  - Authority certificate lifetime: %s.\n",
+                lifetime_to_str(buf, sizeof(buf), authority_certificate_lifetime));
+        
+        fprintf(stderr, "  - Generated certificate lifetime: %s.\n\n",
+                lifetime_to_str(buf, sizeof(buf), authority_certificate_lifetime));
+
+  err:        
+        config_close(cfg);
+        
+        return (ptr) ? 0 : -1;
 }
 
 
@@ -680,6 +800,11 @@ int main(int argc, char **argv)
                 if ( *argv[k] == '-' )
                         break;
 
+        ret = read_tls_setting();
+        if ( ret < 0 )
+                return -1;
+
+        ret = -1;
         gnutls_global_init();
         gnutls_global_init_extra();
         
@@ -703,10 +828,6 @@ int main(int argc, char **argv)
         
         return ret;
 }
-
-        
-
-
 
 
 

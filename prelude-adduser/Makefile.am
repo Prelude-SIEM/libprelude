@@ -1,5 +1,5 @@
 INCLUDES = -I$(top_srcdir)/src/include -I$(top_srcdir)
-DEFS = -DPRELUDE_IDENT_FILE=\"@prelude_ident_file@\"
+DEFS = -DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\"
 
 bin_PROGRAMS = prelude-adduser
 prelude_adduser_LDFLAGS = -export-dynamic
@@ -12,3 +12,4 @@ prelude_adduser_SOURCES = 		\
 
 
 noinst_HEADERS = tls-register.h server.h
+
