@@ -2810,10 +2810,10 @@ void idmef_classification_set_reference(idmef_classification_t *ptr, idmef_refer
 }
 
 /**
- * idmef_classification_new_HASH(0x80242350):
+ * idmef_classification_new_HASH(0x80233b94):
  * @ptr: pointer to a #idmef_classification_t object.
  * 
- * Create a new HASH(0x80242350) children of @ptr,
+ * Create a new HASH(0x80233b94) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_reference_t object.
  * 
  * Returns: a pointer to the created #idmef_reference_t object, or NULL if an error occured.
@@ -3485,10 +3485,10 @@ void idmef_user_set_user_id(idmef_user_t *ptr, idmef_user_id_t *object)
 }
 
 /**
- * idmef_user_new_HASH(0x80245e40):
+ * idmef_user_new_HASH(0x8023762c):
  * @ptr: pointer to a #idmef_user_t object.
  * 
- * Create a new HASH(0x80245e40) children of @ptr,
+ * Create a new HASH(0x8023762c) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_user_id_t object.
  * 
  * Returns: a pointer to the created #idmef_user_id_t object, or NULL if an error occured.
@@ -4499,10 +4499,10 @@ void idmef_process_set_arg(idmef_process_t *ptr, prelude_string_t *object)
 }
 
 /**
- * idmef_process_new_HASH(0x8024a3fc):
+ * idmef_process_new_HASH(0x8023c030):
  * @ptr: pointer to a #idmef_process_t object.
  * 
- * Create a new HASH(0x8024a3fc) children of @ptr,
+ * Create a new HASH(0x8023c030) children of @ptr,
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
  * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
@@ -4580,10 +4580,10 @@ void idmef_process_set_env(idmef_process_t *ptr, prelude_string_t *object)
 }
 
 /**
- * idmef_process_new_HASH(0x8024a468):
+ * idmef_process_new_HASH(0x8023c09c):
  * @ptr: pointer to a #idmef_process_t object.
  * 
- * Create a new HASH(0x8024a468) children of @ptr,
+ * Create a new HASH(0x8023c09c) children of @ptr,
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
  * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
@@ -5018,10 +5018,10 @@ void idmef_web_service_set_arg(idmef_web_service_t *ptr, prelude_string_t *objec
 }
 
 /**
- * idmef_web_service_new_HASH(0x8024a738):
+ * idmef_web_service_new_HASH(0x8023ce20):
  * @ptr: pointer to a #idmef_web_service_t object.
  * 
- * Create a new HASH(0x8024a738) children of @ptr,
+ * Create a new HASH(0x8023ce20) children of @ptr,
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
  * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
@@ -6893,10 +6893,10 @@ void idmef_node_set_address(idmef_node_t *ptr, idmef_address_t *object)
 }
 
 /**
- * idmef_node_new_HASH(0x8025085c):
+ * idmef_node_new_HASH(0x802432ec):
  * @ptr: pointer to a #idmef_node_t object.
  * 
- * Create a new HASH(0x8025085c) children of @ptr,
+ * Create a new HASH(0x802432ec) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_address_t object.
  * 
  * Returns: a pointer to the created #idmef_address_t object, or NULL if an error occured.
@@ -7728,10 +7728,10 @@ void idmef_file_access_set_permission(idmef_file_access_t *ptr, prelude_string_t
 }
 
 /**
- * idmef_file_access_new_HASH(0x802529d0):
+ * idmef_file_access_new_HASH(0x80244fb8):
  * @ptr: pointer to a #idmef_file_access_t object.
  * 
- * Create a new HASH(0x802529d0) children of @ptr,
+ * Create a new HASH(0x80244fb8) children of @ptr,
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
  * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
@@ -9354,10 +9354,10 @@ void idmef_file_set_file_access(idmef_file_t *ptr, idmef_file_access_t *object)
 }
 
 /**
- * idmef_file_new_HASH(0x80259510):
+ * idmef_file_new_HASH(0x8024a8bc):
  * @ptr: pointer to a #idmef_file_t object.
  * 
- * Create a new HASH(0x80259510) children of @ptr,
+ * Create a new HASH(0x8024a8bc) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_file_access_t object.
  * 
  * Returns: a pointer to the created #idmef_file_access_t object, or NULL if an error occured.
@@ -9434,10 +9434,10 @@ void idmef_file_set_linkage(idmef_file_t *ptr, idmef_linkage_t *object)
 }
 
 /**
- * idmef_file_new_HASH(0x8025957c):
+ * idmef_file_new_HASH(0x8024a928):
  * @ptr: pointer to a #idmef_file_t object.
  * 
- * Create a new HASH(0x8025957c) children of @ptr,
+ * Create a new HASH(0x8024a928) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_linkage_t object.
  * 
  * Returns: a pointer to the created #idmef_linkage_t object, or NULL if an error occured.
@@ -9570,10 +9570,10 @@ void idmef_file_set_checksum(idmef_file_t *ptr, idmef_checksum_t *object)
 }
 
 /**
- * idmef_file_new_HASH(0x8025966c):
+ * idmef_file_new_HASH(0x8024aa18):
  * @ptr: pointer to a #idmef_file_t object.
  * 
- * Create a new HASH(0x8025966c) children of @ptr,
+ * Create a new HASH(0x8024aa18) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_checksum_t object.
  * 
  * Returns: a pointer to the created #idmef_checksum_t object, or NULL if an error occured.
@@ -10691,10 +10691,10 @@ void idmef_target_set_file(idmef_target_t *ptr, idmef_file_t *object)
 }
 
 /**
- * idmef_target_new_HASH(0x8025cc30):
+ * idmef_target_new_HASH(0x8024f650):
  * @ptr: pointer to a #idmef_target_t object.
  * 
- * Create a new HASH(0x8025cc30) children of @ptr,
+ * Create a new HASH(0x8024f650) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_file_t object.
  * 
  * Returns: a pointer to the created #idmef_file_t object, or NULL if an error occured.
@@ -12843,10 +12843,10 @@ void idmef_assessment_set_action(idmef_assessment_t *ptr, idmef_action_t *object
 }
 
 /**
- * idmef_assessment_new_HASH(0x80265034):
+ * idmef_assessment_new_HASH(0x802568b8):
  * @ptr: pointer to a #idmef_assessment_t object.
  * 
- * Create a new HASH(0x80265034) children of @ptr,
+ * Create a new HASH(0x802568b8) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_action_t object.
  * 
  * Returns: a pointer to the created #idmef_action_t object, or NULL if an error occured.
@@ -13259,10 +13259,10 @@ void idmef_tool_alert_set_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t
 }
 
 /**
- * idmef_tool_alert_new_HASH(0x80265d20):
+ * idmef_tool_alert_new_HASH(0x80257d44):
  * @ptr: pointer to a #idmef_tool_alert_t object.
  * 
- * Create a new HASH(0x80265d20) children of @ptr,
+ * Create a new HASH(0x80257d44) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_alertident_t object.
  * 
  * Returns: a pointer to the created #idmef_alertident_t object, or NULL if an error occured.
@@ -13542,10 +13542,10 @@ void idmef_correlation_alert_set_alertident(idmef_correlation_alert_t *ptr, idme
 }
 
 /**
- * idmef_correlation_alert_new_HASH(0x80265f00):
+ * idmef_correlation_alert_new_HASH(0x80257f24):
  * @ptr: pointer to a #idmef_correlation_alert_t object.
  * 
- * Create a new HASH(0x80265f00) children of @ptr,
+ * Create a new HASH(0x80257f24) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_alertident_t object.
  * 
  * Returns: a pointer to the created #idmef_alertident_t object, or NULL if an error occured.
@@ -14597,10 +14597,10 @@ void idmef_alert_set_source(idmef_alert_t *ptr, idmef_source_t *object)
 }
 
 /**
- * idmef_alert_new_HASH(0x80268f0c):
+ * idmef_alert_new_HASH(0x8025ab20):
  * @ptr: pointer to a #idmef_alert_t object.
  * 
- * Create a new HASH(0x80268f0c) children of @ptr,
+ * Create a new HASH(0x8025ab20) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_source_t object.
  * 
  * Returns: a pointer to the created #idmef_source_t object, or NULL if an error occured.
@@ -14677,10 +14677,10 @@ void idmef_alert_set_target(idmef_alert_t *ptr, idmef_target_t *object)
 }
 
 /**
- * idmef_alert_new_HASH(0x80268f78):
+ * idmef_alert_new_HASH(0x8025ab8c):
  * @ptr: pointer to a #idmef_alert_t object.
  * 
- * Create a new HASH(0x80268f78) children of @ptr,
+ * Create a new HASH(0x8025ab8c) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_target_t object.
  * 
  * Returns: a pointer to the created #idmef_target_t object, or NULL if an error occured.
@@ -14813,10 +14813,10 @@ void idmef_alert_set_additional_data(idmef_alert_t *ptr, idmef_additional_data_t
 }
 
 /**
- * idmef_alert_new_HASH(0x80269080):
+ * idmef_alert_new_HASH(0x8025ac94):
  * @ptr: pointer to a #idmef_alert_t object.
  * 
- * Create a new HASH(0x80269080) children of @ptr,
+ * Create a new HASH(0x8025ac94) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_additional_data_t object.
  * 
  * Returns: a pointer to the created #idmef_additional_data_t object, or NULL if an error occured.
@@ -15559,10 +15559,10 @@ void idmef_heartbeat_set_additional_data(idmef_heartbeat_t *ptr, idmef_additiona
 }
 
 /**
- * idmef_heartbeat_new_HASH(0x8026a60c):
+ * idmef_heartbeat_new_HASH(0x8025bee8):
  * @ptr: pointer to a #idmef_heartbeat_t object.
  * 
- * Create a new HASH(0x8026a60c) children of @ptr,
+ * Create a new HASH(0x8025bee8) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_additional_data_t object.
  * 
  * Returns: a pointer to the created #idmef_additional_data_t object, or NULL if an error occured.
