@@ -1615,7 +1615,7 @@ const char *idmef_alert_type_to_string(idmef_alert_type_t val);
 
 /*
  * struct {
- *         DYNAMIC_IDENT(messageid);
+ *         uint64_t messageid;
  * 
  *         idmef_analyzer_t *analyzer;
  *         idmef_time_t create_time;
@@ -1718,7 +1718,7 @@ idmef_overflow_alert_t *idmef_alert_new_overflow_alert(idmef_alert_t *ptr);
 
 /*
  * struct {
- *         DYNAMIC_IDENT(messageid);
+ *         uint64_t messageid;
  *         idmef_analyzer_t *analyzer;
  * 
  *         idmef_time_t create_time;
