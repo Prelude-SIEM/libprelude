@@ -177,11 +177,15 @@ static int time_compare(idmef_value_type_t *t1, idmef_value_type_t *t2, size_t s
 
 static int time_read(idmef_value_type_t *dst, const char *buf)
 {
+        dst->data.time_val = idmef_time_new_from_ntpstamp(buf);
+        if ( dst->data.time_val )
+                return 0;
+        
 	dst->data.time_val = idmef_time_new_from_string(buf);
-        if ( ! dst->data.time_val )
-                return -1;
+        if ( dst->data.time_val )
+                return 0;
 
-        return 0;
+        return -1;
 }
 
 
