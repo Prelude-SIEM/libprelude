@@ -147,8 +147,6 @@ CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declara
 
 AC_CONFIG_FILES([
 Makefile 
-docs/Makefile
-docs/api/Makefile
 src/Makefile 
 src/include/Makefile
 libmissing/Makefile
