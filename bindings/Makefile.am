@@ -1,5 +1,8 @@
 EXTRA_DIST = libprelude.i perl/Makefile.PL perl/Prelude.pm python/setup.py python/prelude.py
 
+
+if HAVE_SWIG
+
 all-am: perl python
 
 
@@ -30,3 +33,5 @@ install-exec-hook:
 clean-am: perl/Makefile
 	cd perl && make clean
 	cd python && python setup.py clean
+
+endif

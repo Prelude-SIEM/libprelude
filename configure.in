@@ -299,6 +299,22 @@ if test $ac_cv_lbl_unaligned_fail = yes ; then
 fi
 
 
+
+dnl **************************************************
+dnl * Swig support                                   *
+dnl **************************************************
+
+AC_ARG_ENABLE(swig, [  --enable-swig  Enable swig generation of languages bindings [default=auto]],
+		    enable_swig="$enableval", enable_swig="yes")
+
+if test x$enable_swig = xyes; then
+   AC_CHECK_PROG(HAVE_SWIG, swig, yes, no)    
+fi
+
+AM_CONDITIONAL(HAVE_SWIG, test x$enable_swig = xyes)
+
+
+
 dnl **************************************************
 dnl * Perl support                                   *
 dnl **************************************************
