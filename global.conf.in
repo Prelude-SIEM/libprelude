@@ -5,9 +5,9 @@
 # provided by the respective program configuration file.
 
 #
-# Set heartbeat interval, the default value is 60 minutes.
+# Set heartbeat interval, the default value is 600 seconds (10 minutes).
 #
-# heartbeat-interval = 60
+# heartbeat-interval = 600
 
 
 #

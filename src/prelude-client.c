@@ -84,9 +84,9 @@
 
 
 /*
- * send an heartbeat every 60 minutes.
+ * send an heartbeat every 600 seconds by default.
  */
-#define DEFAULT_HEARTBEAT_INTERVAL 60
+#define DEFAULT_HEARTBEAT_INTERVAL 600
 
 
 #define CAPABILITY_SEND (PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF| \
@@ -232,7 +232,7 @@ static void heartbeat_expire_cb(void *data)
                 goto out;
         }
 
-        snprintf(buf, sizeof(buf), "%u", timer_expire(&client->heartbeat_timer) / 60);
+        snprintf(buf, sizeof(buf), "%u", timer_expire(&client->heartbeat_timer));
 
         str = client_get_status(client);
         add_hb_data(heartbeat, prelude_string_new_constant("Analyzer status"),
@@ -267,7 +267,7 @@ static void heartbeat_expire_cb(void *data)
 static void setup_heartbeat_timer(prelude_client_t *client, int expire)
 {
         timer_set_data(&client->heartbeat_timer, client);
-        timer_set_expire(&client->heartbeat_timer, expire * 60);
+        timer_set_expire(&client->heartbeat_timer, expire);
         timer_set_callback(&client->heartbeat_timer, heartbeat_expire_cb);
 }
 
@@ -848,10 +848,14 @@ int prelude_client_init(prelude_client_t *client, const char *sname, const char 
         ret = create_heartbeat_msgbuf(client);
         if ( ret < 0 )
                 return -1;
-        
-        ret = prelude_connection_mgr_init(client->manager_list);
-        if ( ret < 0 )
-                return -1;
+
+        if ( client->capability & CAPABILITY_SEND ) {
+                ret = prelude_connection_mgr_init(client->manager_list);
+                if ( ret < 0 ) {
+                        log(LOG_ERR, "Initiating connection to the manager has failed.\n");
+                        return -1;
+                }
+        }
         
         if ( client->manager_list || client->heartbeat_cb ) {
                 client->status = CLIENT_STATUS_STARTING;
@@ -1101,10 +1105,13 @@ void prelude_client_set_name(prelude_client_t *client, const char *name)
 void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status_t status)
 {
         if ( status == PRELUDE_CLIENT_EXIT_STATUS_SUCCESS ) {
-                
-                timer_destroy(&client->heartbeat_timer);
+                timer_lock_critical_region();
+
                 client->status = CLIENT_STATUS_EXITING;
                 heartbeat_expire_cb(client);
+                timer_destroy(&client->heartbeat_timer);
+
+                timer_unlock_critical_region();
         }
         
         if ( client->name )
