@@ -1,3 +1,15 @@
+2003-12-27  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
+	* src/prelude-strbuf.c:
+	(prelude_strbuf_is_empty)
+	change return value
+	returns 1 (true/yes) if strbuf is empty and 0 (false/no) otherwise
+	it is more natural than 0 and -1 (return values < 0 are used as 
+	error code, and we don't have any error here)
+	moreover, it was the way libpreludedb's strbuf works, and when libpreludedb
+	has been changed to use prelude-strbuf instead of strbuf, it has been broken
+	by now everything works fine
+
 2003-12-26  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
 	* src/idmef-value.c:

@@ -185,7 +185,7 @@ size_t prelude_strbuf_get_len(prelude_strbuf_t *s)
 
 int prelude_strbuf_is_empty(prelude_strbuf_t *s)
 {
-	return (s->index == 0) ? 0 : -1;
+	return (s->index == 0);
 }
 
 
