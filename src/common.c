@@ -351,3 +351,32 @@ int prelude_get_gmt_offset(time_t time_local, int *gmt_offset)
         
         return 0;
 }
+
+
+
+const char *prelude_check_version(const char *req_version)
+{
+        int ret;
+        int major, minor, micro;
+        int rq_major, rq_minor, rq_micro;
+
+        if ( ! req_version )
+                return VERSION;
+        
+        ret = sscanf(VERSION, "%d.%d.%d", &major, &minor, &micro);
+        if ( ret != 3 )
+                return NULL;
+        
+        ret = sscanf(req_version, "%d.%d.%d", &rq_major, &rq_minor, &rq_micro);
+        if ( ret != 3 )
+                return NULL;
+        
+        if ( major > rq_major
+             || (major == rq_major && minor > rq_minor)
+             || (major == rq_major && minor == rq_minor && micro > rq_micro)
+             || (major == rq_major && minor == rq_minor && micro == rq_micro) ) {
+                return VERSION;
+        }
+
+        return NULL;
+}
