@@ -34,6 +34,7 @@
 
 
 typedef struct {
+        int refcount;
         
         int flags;
         size_t len;
@@ -57,6 +58,8 @@ typedef struct {
  */
 idmef_data_t *idmef_data_new(void);
 
+
+idmef_data_t *idmef_data_ref(idmef_data_t *data);
 
 
 /**

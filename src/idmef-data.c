@@ -45,8 +45,7 @@
 
 /*
  * creates an empty data
- */
-
+ */        
 idmef_data_t *idmef_data_new(void)
 {
         idmef_data_t *ret;
@@ -55,50 +54,60 @@ idmef_data_t *idmef_data_new(void)
         if ( ! ret )
                 return NULL;
 
-	ret->flags |= IDMEF_DATA_OWN_STRUCTURE;
+        ret->refcount = 1;
+        ret->flags |= IDMEF_DATA_OWN_STRUCTURE;
 
         return ret;
 }
 
 
 
+
+idmef_data_t *idmef_data_ref(idmef_data_t *data)
+{
+        data->refcount++;
+        return data;
+}
+
+
+
 idmef_data_t *idmef_data_new_dup(const unsigned char *data, size_t len)
 {
-	idmef_data_t *ret;
+        idmef_data_t *ret;
 
-	ret = idmef_data_new();
-	if ( ! ret )
-		return NULL;
+        ret = idmef_data_new();
+        if ( ! ret )
+                return NULL;
 
-	ret->data.rw_data = malloc(len);
-	if ( ! ret->data.rw_data ) {
-		free(ret);
-		return NULL;
-	}
+        ret->data.rw_data = malloc(len);
+        if ( ! ret->data.rw_data ) {
+                free(ret);
+                return NULL;
+        }
         
-	ret->len = len;
-	ret->flags |= IDMEF_DATA_OWN_DATA;
+        ret->len = len;
+        ret->flags |= IDMEF_DATA_OWN_DATA;
 
         memcpy(ret->data.rw_data, data, ret->len);
 
-	return ret;
+        return ret;
 }
 
 
 
 idmef_data_t *idmef_data_new_nodup(unsigned char *data, size_t len)
 {
-	idmef_data_t *ret;
+        idmef_data_t *ret;
 
-	ret = idmef_data_new();
-	if ( ! ret )
-		return NULL;
+        ret = idmef_data_new();
+        if ( ! ret )
+                return NULL;
         
-	ret->len = len;
-	ret->data.rw_data = data;
+        ret->len = len;
+        ret->data.rw_data = data;
         ret->flags |= IDMEF_DATA_OWN_DATA;
         
-	return ret;
+        return ret;
 }
 
 
@@ -106,16 +115,16 @@ idmef_data_t *idmef_data_new_nodup(unsigned char *data, size_t len)
 
 idmef_data_t *idmef_data_new_ref(const unsigned char *data, size_t len)
 {
-	idmef_data_t *ret;
+        idmef_data_t *ret;
 
-	ret = idmef_data_new();
-	if ( ! ret )
-		return NULL;
-	
-	ret->len = len;
-	ret->data.ro_data = data;
+        ret = idmef_data_new();
+        if ( ! ret )
+                return NULL;
+        
+        ret->len = len;
+        ret->data.ro_data = data;
 
-	return ret;
+        return ret;
 }
 
 
@@ -123,17 +132,17 @@ idmef_data_t *idmef_data_new_ref(const unsigned char *data, size_t len)
 
 int idmef_data_set_dup(idmef_data_t *data, const unsigned char *buf, size_t len)
 {
-	idmef_data_destroy_internal(data);
+        idmef_data_destroy_internal(data);
         
-	data->data.rw_data = malloc(len);
-	if ( ! data->data.rw_data )
-		return -1;
+        data->data.rw_data = malloc(len);
+        if ( ! data->data.rw_data )
+                return -1;
         
-	data->len = len;
-	data->flags |= IDMEF_DATA_OWN_DATA;
-	memcpy(data->data.rw_data, buf, len);
+        data->len = len;
+        data->flags |= IDMEF_DATA_OWN_DATA;
+        memcpy(data->data.rw_data, buf, len);
 
-	return 0;
+        return 0;
 }
 
 
@@ -141,13 +150,13 @@ int idmef_data_set_dup(idmef_data_t *data, const unsigned char *buf, size_t len)
 
 int idmef_data_set_nodup(idmef_data_t *data, unsigned char *buf, size_t len)
 {
-	idmef_data_destroy_internal(data);
+        idmef_data_destroy_internal(data);
 
-	data->len = len;
+        data->len = len;
         data->data.rw_data = buf;
-	data->flags |= IDMEF_DATA_OWN_DATA;
+        data->flags |= IDMEF_DATA_OWN_DATA;
 
-	return 0;	
+        return 0;       
 }
 
 
@@ -157,11 +166,11 @@ int idmef_data_set_ref(idmef_data_t *data, const unsigned char *buf, size_t len)
 {
         idmef_data_destroy_internal(data);
         
-	data->len = len;
+        data->len = len;
         data->data.ro_data = buf;
-	data->flags &= ~IDMEF_DATA_OWN_DATA;
+        data->flags &= ~IDMEF_DATA_OWN_DATA;
 
-	return 0;
+        return 0;
 }
 
 
@@ -174,11 +183,11 @@ int idmef_data_copy_ref(idmef_data_t *dst, const idmef_data_t *src)
 {
         idmef_data_destroy_internal(dst);
         
-	dst->len = src->len;
-	dst->data = src->data;
-	dst->flags &= ~IDMEF_DATA_OWN_DATA;
-		
-	return 0;
+        dst->len = src->len;
+        dst->data = src->data;
+        dst->flags &= ~IDMEF_DATA_OWN_DATA;
+                
+        return 0;
 }
 
 
@@ -190,7 +199,7 @@ int idmef_data_copy_dup(idmef_data_t *dst, const idmef_data_t *src)
 {
         idmef_data_destroy_internal(dst);
         
-	dst->data.rw_data = malloc(src->len);
+        dst->data.rw_data = malloc(src->len);
         if ( ! dst->data.rw_data )
                 return -1;
 
@@ -199,7 +208,7 @@ int idmef_data_copy_dup(idmef_data_t *dst, const idmef_data_t *src)
         
         memcpy(dst->data.rw_data, src->data.ro_data, dst->len);
         
-	return 0;
+        return 0;
 }
 
 
@@ -207,30 +216,30 @@ int idmef_data_copy_dup(idmef_data_t *dst, const idmef_data_t *src)
 
 idmef_data_t *idmef_data_clone(const idmef_data_t *data)
 {
-	idmef_data_t *ret;
+        idmef_data_t *ret;
         
-	ret = idmef_data_new();
-	if ( ! ret )
-		return NULL;
+        ret = idmef_data_new();
+        if ( ! ret )
+                return NULL;
 
-	ret->data.rw_data = malloc(data->len);
-	if ( ! ret->data.rw_data ) {
+        ret->data.rw_data = malloc(data->len);
+        if ( ! ret->data.rw_data ) {
                 free(ret);
-		return NULL;
+                return NULL;
         }
         
-	ret->len = data->len;
+        ret->len = data->len;
         ret->flags |= IDMEF_DATA_OWN_DATA;
-	memcpy(ret->data.rw_data, data->data.ro_data, ret->len);
-	
-	return ret;
+        memcpy(ret->data.rw_data, data->data.ro_data, ret->len);
+        
+        return ret;
 }
 
 
 
 size_t idmef_data_get_len(const idmef_data_t *data)
 {
-	return data->len;
+        return data->len;
 }
 
 
@@ -238,7 +247,7 @@ size_t idmef_data_get_len(const idmef_data_t *data)
 
 unsigned char *idmef_data_get_data(const idmef_data_t *data)
 {
-	return data->data.rw_data;
+        return data->data.rw_data;
 }
 
 
@@ -246,7 +255,7 @@ unsigned char *idmef_data_get_data(const idmef_data_t *data)
 
 int idmef_data_is_empty(const idmef_data_t *data)
 {
-	return (data->len == 0);
+        return (data->len == 0);
 }
 
 
@@ -261,51 +270,51 @@ int idmef_data_to_string(idmef_data_t *data, char *buf, size_t size)
         i = outpos = 0;
 
         do {
-		c = data->data.ro_data[i++];
+                c = data->data.ro_data[i++];
                 
-		if ( outpos > size - 2 ) {
-			buf[size - 1] = '\0';
-			return -1;
-		}
+                if ( outpos > size - 2 ) {
+                        buf[size - 1] = '\0';
+                        return -1;
+                }
 
-		if ( c >= 32 && c <= 127 ) {
-			buf[outpos++] = c;
-			continue;
-		}
+                if ( c >= 32 && c <= 127 ) {
+                        buf[outpos++] = c;
+                        continue;
+                }
 
-		switch (c) {
+                switch (c) {
 
                 case '\\':
-			ret = snprintf(buf + outpos, size - outpos, "\\\\");
-			break;
+                        ret = snprintf(buf + outpos, size - outpos, "\\\\");
+                        break;
 
-		case '\r':
-			ret = snprintf(buf + outpos, size - outpos, "\\r");
-			break;
+                case '\r':
+                        ret = snprintf(buf + outpos, size - outpos, "\\r");
+                        break;
 
-		case '\n':
-			ret = snprintf(buf + outpos, size - outpos, "\\n");
-			break;
+                case '\n':
+                        ret = snprintf(buf + outpos, size - outpos, "\\n");
+                        break;
 
-		case '\t':
-			ret = snprintf(buf + outpos, size - outpos, "\\t");
-			break;
+                case '\t':
+                        ret = snprintf(buf + outpos, size - outpos, "\\t");
+                        break;
 
-		default:
-			ret = snprintf(buf + outpos, size - outpos, "\\x%02x", c);
-			break;
-		}
+                default:
+                        ret = snprintf(buf + outpos, size - outpos, "\\x%02x", c);
+                        break;
+                }
 
-		if ( ret < 0 || ret > size - outpos ) {
-			buf[size - 1] = '\0';
-			return -1;
-		}
+                if ( ret < 0 || ret > size - outpos ) {
+                        buf[size - 1] = '\0';
+                        return -1;
+                }
 
-		outpos += ret;
+                outpos += ret;
 
-	} while (i < data->len);
+        } while (i < data->len);
 
-	return outpos;
+        return outpos;
 }
 
 
@@ -332,8 +341,11 @@ void idmef_data_destroy_internal(idmef_data_t *ptr)
 
 void idmef_data_destroy(idmef_data_t *ptr)
 {
+        if ( --ptr->refcount )
+                return;
+        
         idmef_data_destroy_internal(ptr);
-	
-	if ( ptr->flags & IDMEF_DATA_OWN_STRUCTURE )
-    		free(ptr);
+        
+        if ( ptr->flags & IDMEF_DATA_OWN_STRUCTURE )
+                free(ptr);
 }
