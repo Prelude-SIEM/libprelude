@@ -20,13 +20,14 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
-int extract_uint64(uint64_t *dst, void *buf, uint32_t blen);
 
-int extract_uint32(uint32_t *dst, void *buf, uint32_t blen);
+int extract_uint64(uint64_t *dst, const void *buf, uint32_t blen);
 
-int extract_uint16(uint16_t *dst, void *buf, uint32_t blen);
+int extract_uint32(uint32_t *dst, const void *buf, uint32_t blen);
 
-int extract_uint8(uint8_t *dst, void *buf, uint32_t blen);
+int extract_uint16(uint16_t *dst, const void *buf, uint32_t blen);
+
+int extract_uint8(uint8_t *dst, const void *buf, uint32_t blen);
 
 const char *extract_str(void *buf, uint32_t blen);
 
