@@ -88,13 +88,11 @@ int prelude_client_ident_init(prelude_client_t *client, uint64_t *analyzerid)
         fd = fopen(filename, "r");
         if ( ! fd ) {
                 log(LOG_ERR, "error opening analyzer identity file: %s.\n", filename);
-                prelude_client_installation_error(client);
                 return -1;
         }
 
         if ( ! fgets(buf, sizeof(buf), fd) ) {
                 log(LOG_ERR, "error reading analyzerid from %s.\n", filename);
-                prelude_client_installation_error(client);
                 fclose(fd);
                 return -1;
         }
