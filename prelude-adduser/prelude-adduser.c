@@ -719,9 +719,9 @@ static int registration_server_cmd(int argc, char **argv)
         
         setup_permission_options(opt);
         
-        argc -= 3;
+        argc -= 2;
         
-        ret = prelude_option_read(opt, NULL, &argc, &argv[4], &err, NULL);
+        ret = prelude_option_read(opt, NULL, &argc, &argv[2], &err, NULL);
         if ( ret < 0 )
                 return -1;
         
