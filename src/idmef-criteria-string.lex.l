@@ -35,7 +35,7 @@ int yylex(void);
 
 %}
 
-STRING          ([a-zA-Z0-9_\-]+(\([0-9]+\))?\.?)+
+STRING          ([a-zA-Z0-9_\-]+(\(\-?[0-9]+\))?\.?)+
 SQSTRING	\'([^\\\']|\\.)*\'
 DQSTRING	\"([^\\\"]|\\.)*\"
 BLANK		[ \t\n]+
