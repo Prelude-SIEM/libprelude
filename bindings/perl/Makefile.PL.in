@@ -5,9 +5,9 @@ use File::Copy;
 use Cwd "abs_path";
 
 my %attributs = (NAME => 'Prelude',
-		 INC => '-I@top_builddir@/src/include -I@top_srcdir@/src/include -I@top_builddir@/src/libprelude-error',
-		 LIBS => [ "@libprelude_libs@ -L@top_builddir@/src/.libs -lprelude" ],
-		 LDDLFLAGS => "@PTHREAD_CFLAGS@ $Config{lddlflags}");
+		 INC => '-I@top_builddir@/src/include -I@top_srcdir@/src/include -I@top_builddir@/src/libprelude-error @PTHREAD_CFLAGS@',
+		 LIBS => [ "@libprelude_libs@ -lprelude" ],
+		 LDDLFLAGS => "-L@top_builddir@/src/.libs/ @PTHREAD_CFLAGS@ $Config{lddlflags}");
 
 if ( abs_path("@top_srcdir@") ne abs_path("@top_builddir@") ) {
     foreach my $filename ( qw/Prelude.c Prelude.pm/ ) {

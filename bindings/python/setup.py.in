@@ -77,6 +77,6 @@ setup(name="prelude",
       py_modules=["prelude"],
       ext_modules=[Extension("_prelude",
                              ["_prelude.c"],
-                             extra_compile_args=split_args("-I@top_srcdir@/src/include -I@top_builddir@/src/include -I@top_builddir@src/libprelude-error"),
-                             extra_link_args=split_args("@PTHREAD_CFLAGS@ @libprelude_libs@ "
-                                                        "-L@top_builddir@/src/.libs -lprelude"))])
+                             extra_compile_args=split_args("-I@top_srcdir@/src/include -I@top_builddir@/src/include -I@top_builddir@src/libprelude-error @PTHREAD_CFLAGS@"),
+                             library_dirs=[ "@top_builddir@/src/.libs/" ],
+                             extra_link_args=split_args("-lprelude @PTHREAD_CFLAGS@ @libprelude_libs@"))])
