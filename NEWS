@@ -1,4 +1,62 @@
-* 2003-12-09, libprelude-0.8.9.10:
+* 2005-03-29, libprelude-0.9.0rc1:
+
+	Note: due to several years of work and the habit of working with the new 
+	version, it is hard to remind all the enhancement made in this release.
+	Please bear with us and try it for yourself :-)
+
+	- The Prelude framework has been stabilized, and a lot of consistency work 
+	  has been going on.  The C API should remain mostly stable at this point, 
+	  and we now offer Python and Perl bindings for interacting with Prelude. 
+	  
+	- C++ applications should now be able to compile with the library. New and 
+	  powerful API like idmef-path (defining a path within an IDMEF message tree, 
+	  assigning / retrieving it) and IDMEF criteria filtering has been introduced. 
+
+	- IDMEF draft 14 compliance.
+	- Support for IDMEF optionnal integer in events.
+	- A lot of work happened with the the IDWG to fix known IDMEF issue.
+	- Message routing across distributed Manager for remote sensors administration.
+
+	- The failover subsystem, used when the communication with a Prelude-Manager goes down, 
+	  now support transaction and quota.
+	
+	- Message unique identity generation now done on the sensor side, and fully optional 
+	  per IDMEF specifications.
+
+	- Support Ipv6 for client/manager connectivity.
+
+	- Use GnuTLS instead of OpenSSL. Authentication is now always done through TLS, and 
+	  the encryption later can be dropped if the connection is local.
+
+	- Usage of a single tool for sensor registration using SRP (Secure Remote Passwor protocol).
+
+	- Allow multiple analyzer instance through the use of profiles.
+
+	- Clean error handling. Application can now check the return value using
+	  prelude_perror(), prelude_strerror(), and prelude_strsource().
+
+	- It is now possible to remotely query and set sensors options.
+	
+	- Make the plugin API allow different instance of one plugin to be loaded.
+
+	- Allow recursive configuration file inclusion.
+
+	- You can now define filesystem quota for failover.
+
+	- Changed the way AND of manager work:
+	  When using {{ manager_addr = x.x.x.x && y.y.y.y }}, the emission used to stop if emission to x.x.x.x failed. 
+	  However, from a practical point of view, people who use AND of manager for redondancy want both manager to 
+  	  receive exactly the same messages, even if one of the Manager fail.
+
+	  Thus, in case emission x.x.x.x fail, we still want to emit the message to y.y.y.y, 
+	  and save the failed message associating them to x.x.x.x manager, for later emission.
+
+	- Heartbeat now carry a status and an interval.
+
+	- Use GnuLib for enhenced portability.
+	
+
+* 2003-12-09, libprelude-0.8.10:
 
 	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
 	  use a newer libtool version (fix an OpenBSD) problem.
