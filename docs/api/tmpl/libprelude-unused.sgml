@@ -340,6 +340,14 @@ thread
 @mgr: 
 @cb: 
 
+<!-- ##### FUNCTION prelude_io_set_socket_io ##### -->
+<para>
+
+</para>
+
+@pio: 
+@fd: 
+
 <!-- ##### FUNCTION prelude_thread_create ##### -->
 <para>
 

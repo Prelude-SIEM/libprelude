@@ -26,6 +26,10 @@
 
 void prelude_log_use_syslog(void);
 
+char *prelude_log_get_prefix(void);
+
+void prelude_log_set_prefix(char *prefix);
+
 void prelude_log(int priority, const char *file, const char *function, int line, const char *fmt, ...);
 
 
@@ -34,13 +38,20 @@ void prelude_log(int priority, const char *file, const char *function, int line,
 
 
 #define do_init(func, name) do {                         \
+        char *old_prefix = prelude_log_get_prefix();     \
+        prelude_log_set_prefix(NULL);                    \
         log(LOG_INFO, "- %s\n", name);                   \
+        prelude_log_set_prefix(old_prefix);              \
         if ( (func) < 0 )                                \
                 exit(1);                                 \
+        prelude_log_set_prefix(old_prefix);              \
 } while(0);
 
 
 #define do_init_nofail(func, name) do {                  \
+        char *old_prefix = prelude_log_get_prefix();     \
+        prelude_log_set_prefix(NULL);                    \
         log(LOG_INFO, "- %s\n", name);                   \
+        prelude_log_set_prefix(old_prefix);              \
         (func);                                          \
 } while(0);

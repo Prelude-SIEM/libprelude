@@ -7,20 +7,27 @@
 
 
 static int config_quiet = 0;
-
+static char *global_prefix = NULL;
 
 
 static void syslog_log(int priority, const char *file,
                        const char *function, int line, const char *fmt, va_list *ap) 
 {
+        int len;
         char buf[256];
+                
+        if ( priority == LOG_ERR ) {
+                vsnprintf(buf, sizeof(buf), fmt, *ap);
 
-        vsnprintf(buf, sizeof(buf), fmt, *ap);
-        
-        if ( priority == LOG_ERR ) 
-                syslog(priority, "%s:%s:%d : (errno=%s) : ", file, function, line, strerror(errno));
+                syslog(priority, "%s%s:%s:%d : (errno=%s) : %s", (global_prefix) ? global_prefix : "",
+                       file, function, line, strerror(errno), buf);
+        }
 
-        syslog(priority, buf);
+        else {
+                len = snprintf(buf, sizeof(buf), "%s", (global_prefix) ? global_prefix : "");
+                len += vsnprintf(buf + len, sizeof(buf) - len, fmt, *ap);
+                syslog(priority, "%s", buf);
+        }
 }
 
 
@@ -32,11 +39,14 @@ static void standard_log(int priority, const char *file,
         FILE *out;
         
         if ( priority == LOG_ERR ) {
-                out = stderr;
+                out = stderr;                
+                if ( global_prefix ) fprintf(out, "%s", global_prefix);
                 fprintf(out, "%s:%s:%d : (errno=%s) : ", file, function, line, strerror(errno));
-        } else
+        } else {
                 out = stdout;
-
+                if ( global_prefix ) fprintf(out, "%s", global_prefix);
+        }
+        
         vfprintf(out, fmt, *ap);
 }
 
@@ -86,5 +96,23 @@ void prelude_log_use_syslog(void)
 
 
 
+/**
+ * prelude_log_set_prefix:
+ * @prefix: Pointer to the prefix to use.
+ *
+ * Tell the Prelude standard logger to add @prefix before logging
+ * a line.
+ */
+void prelude_log_set_prefix(char *prefix) 
+{
+        global_prefix = prefix;
+}
+
+
+
+char *prelude_log_get_prefix(void) 
+{
+        return global_prefix;
+}
 
 

@@ -21,4 +21,4 @@
 *
 *****/
 
-int daemon_start(const char *lockfile);
+int prelude_daemonize(const char *lockfile);

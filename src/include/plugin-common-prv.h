@@ -25,6 +25,7 @@
 #define _PLUGIN_COMMON_PRV_H
 
 #include "list.h"
+#include <inttypes.h>
 
 typedef struct 
 {
@@ -51,7 +52,7 @@ typedef struct
          * Plugin running time and count.
          */
         double p_time;
-        unsigned long p_count;
+        uint32_t p_count;
 
         /*
          * Pointer on the parent of this container (on the entry in the lib).

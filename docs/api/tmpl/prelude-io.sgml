@@ -51,15 +51,6 @@ as well as some read / write / forward operation.
 @ssl: 
 
 
-<!-- ##### FUNCTION prelude_io_set_socket_io ##### -->
-<para>
-
-</para>
-
-@pio: 
-@fd: 
-
-
 <!-- ##### FUNCTION prelude_io_close ##### -->
 <para>
 

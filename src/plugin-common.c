@@ -324,15 +324,8 @@ int plugin_register_for_use(plugin_container_t *pc, struct list_head *h, const c
  */
 void plugin_print_stats(plugin_container_t *pc) 
 {
-        log(LOG_INFO, "%s ", pc->plugin->name);
-        
-        if ( pc->infos )
-                log(LOG_INFO, "(infos=%s) :\n", pc->infos);
-        else
-                log(LOG_INFO, ":\n");
-
-        log(LOG_INFO, "\t\t- plugin: called %ld time : %fs average\n",
-            pc->p_count, pc->p_time / pc->p_count);
+        log(LOG_INFO, "%s (\"%s\") : plugin called %u time: %fs average\n",
+            pc->plugin->name, pc->infos ? pc->infos : "no infos", pc->p_count, pc->p_time / pc->p_count);
 }
 
 
@@ -347,6 +340,8 @@ void plugins_print_stats(void)
         plugin_container_t *pc;
         plugin_entry_t *pe;
         struct list_head *tmp, *tmp2;
+
+        log(LOG_INFO, "*** Plugin stats (not accurate if used > 2e32-1 times) ***\n\n");
         
         list_for_each(tmp, &all_plugin) {
                 pe = list_entry(tmp, plugin_entry_t, list);
@@ -355,7 +350,7 @@ void plugins_print_stats(void)
                         pc = list_entry(tmp2, plugin_container_t, int_list);
                         plugin_print_stats(pc);
                 }
-        }               
+        }
 }
 
 

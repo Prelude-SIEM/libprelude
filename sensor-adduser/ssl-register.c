@@ -196,7 +196,7 @@ static prelude_io_t *connect_server(const char *server, uint16_t port)
                 return NULL;
         }
 
-        prelude_io_set_socket_io(pio, sock);
+        prelude_io_set_sys_io(pio, sock);
         
         return pio;
 }

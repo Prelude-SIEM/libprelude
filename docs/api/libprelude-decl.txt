@@ -1,19 +1,3 @@
-<MACRO>
-<NAME>PIO_FILE_IO</NAME>
-#define PIO_FILE_IO     0x1
-</MACRO>
-<MACRO>
-<NAME>PIO_ATOMIC_SEEK</NAME>
-#define PIO_ATOMIC_SEEK 0x2
-</MACRO>
-<MACRO>
-<NAME>PIO_SYSTEM_IO</NAME>
-#define PIO_SYSTEM_IO   0x4
-</MACRO>
-<MACRO>
-<NAME>PIO_SSL_IO</NAME>
-#define PIO_SSL_IO      0x8
-</MACRO>
 <FUNCTION>
 <NAME>prelude_io_new</NAME>
 <RETURNS>prelude_io_t  *</RETURNS>
@@ -25,14 +9,9 @@ void
 prelude_io_t *pio
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_io_set</NAME>
-<RETURNS>int  </RETURNS>
-prelude_io_t *pio, int fd, void *fd_ptr, int options
-</FUNCTION>
-<FUNCTION>
 <NAME>prelude_io_set_file_io</NAME>
 <RETURNS>void  </RETURNS>
-prelude_io_t *pio, int fd
+prelude_io_t *pio, FILE *fd
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_io_set_ssl_io</NAME>
@@ -40,7 +19,7 @@ prelude_io_t *pio, int fd
 prelude_io_t *pio, void *ssl
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_io_set_socket_io</NAME>
+<NAME>prelude_io_set_sys_io</NAME>
 <RETURNS>void  </RETURNS>
 prelude_io_t *pio, int fd
 </FUNCTION>
@@ -1246,9 +1225,18 @@ typedef struct {
 <NAME>PRELUDE_MSG_PRIORITY_LOW</NAME>
 #define PRELUDE_MSG_PRIORITY_LOW  2
 </MACRO>
+<ENUM>
+<NAME>prelude_msg_status_t</NAME>
+typedef enum {
+        prelude_msg_error      = -1,
+        prelude_msg_eof        =  0,
+        prelude_msg_unfinished =  1,
+        prelude_msg_finished   =  2,
+} prelude_msg_status_t;
+</ENUM>
 <FUNCTION>
 <NAME>prelude_msg_read</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>prelude_msg_status_t  </RETURNS>
 prelude_msg_t **msg, prelude_io_t *pio
 </FUNCTION>
 <FUNCTION>

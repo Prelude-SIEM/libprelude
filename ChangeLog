@@ -1,3 +1,38 @@
+2001-12-28  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/plugin-common.c (plugin_print_stats): remove
+	\t that was putting garbage in syslog logfile.
+
+	* src/common.c (prelude_log_set_prefix): 
+	(standard_log): 
+	(syslog_log): 
+	new function that allow to set a global prefix to all
+	prelude_log() call. Passing NULL to prelude_log_set_prefix()
+	remove the prefix.
+
+	* src/daemonize.c (prelude_daemonize): renamed to
+	prelude_daemonize(). Comment the function.
+
+	Also, if requested, create an exclusive lockfile held
+	until program exit.
+
+	* src/prelude-message.c (read_message_content): 
+	comment why we return prelude_msg_error if we get an
+	EOF in the middle of a message.
+	(prelude_msg_read): free message on error / eof.
+
+	* src/prelude-client.c (handle_plaintext_connection): 
+	(handle_ssl_connection): 
+	(start_inet_connection): 
+	(start_unix_connection): 
+	fit API change.
+
+	* src/prelude-client-mgr.c (setup_backup_fd): 
+
+	* src/prelude-io.c (prelude_io_set_file_io): now
+	correspond to libc buffered I/O.
+	(prelude_io_set_sys_io): renamed from set_network_io().
+
 2001-12-27  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/include/prelude-message.h: 
