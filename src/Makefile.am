@@ -1,6 +1,6 @@
 SUBDIRS = include
 DEFS = -DSENSORS_CONFIG_DIR=\"@sensors_config_dir@\" @libprelude_cflags@
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libmissing -I$(srcdir)/include 
+INCLUDES = -I$(top_srcdir) -I$(srcdir)/include 
 
 libpreludeincludedir = $(includedir)/
 lib_LTLIBRARIES = libprelude.la
