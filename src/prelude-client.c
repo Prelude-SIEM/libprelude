@@ -657,6 +657,21 @@ int prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
 
 
 /**
+ * prelude_client_get_fd:
+ * @client: Pointer to a client object.
+ *
+ * Returns: A pointer to a #prelude_io_t object used for the
+ * communication with the client.
+ */
+prelude_io_t *prelude_client_get_fd(prelude_client_t *client) 
+{
+        return client->fd;
+}
+
+
+
+
+/**
  * prelude_client_get_saddr:
  * @client: Pointer to a client object.
  *

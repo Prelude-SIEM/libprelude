@@ -1,3 +1,9 @@
+2002-07-22  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-client.c (prelude_client_get_fd): 
+	new function, return the prelude_io_t used to talk
+	to the client.
+
 2002-07-19  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* README: add a statement saying "This library is 
