@@ -13,42 +13,80 @@
 #include "prelude-getopt.h"
 #include "prelude-getopt-wide.h"
 #include "common.h"
+#include "config-engine.h"
+
+
+
+static int config_save_value(config_t *cfg, prelude_option_t *last,
+                             char **prev, const char *option, const char *value)
+{
+        char buf[1024];
+        
+        if ( prelude_option_has_optlist(last) ) {
+                
+                snprintf(buf, sizeof(buf), "%s=%s", option, (value) ? value : "default");
+                
+                if ( *prev )
+                        free(prev);
+                
+                *prev = strdup(buf);
+                
+                return config_set(cfg, buf, NULL, NULL);
+        }
+        
+        config_set(cfg, *prev, option, value);
+        
+        return 0;
+}
 
 
 
 static int parse_request(prelude_client_t *client, int rtype, char *request, char *out, size_t size)
 {
-        int ret;
+        int ret, ent;
         void *context = client;
-        char *str, *ptr, *value;
         char pname[256], iname[256];
         prelude_option_t *last = NULL;
+        char *str, *ptr, *value, *prev = NULL;
+        config_t *cfg = config_open(prelude_client_get_config_filename(client));
 
+        if ( ! cfg )
+                return -1;
+        
         value = request;
         prelude_strsep(&value, "=");
-                        
+        
         ptr = NULL;
 
         while ( (str = (prelude_strsep(&request, "."))) ) {                
-                                    
-                ret = sscanf(str, "%255[^[][%255[^]]", pname, iname);
-                if ( ret <= 0 ) {
+                                
+                ent = sscanf(str, "%255[^[][%255[^]]", pname, iname);
+                if ( ent <= 0 ) {
                         snprintf(out, size, "error parsing option path");
                         break;
                 }
                 
                 if ( str + strlen(str) + 1 == value ) 
                         ptr = value;
-                                
+
                 if ( rtype == PRELUDE_MSG_OPTION_SET )
-                        ret = prelude_option_invoke_set(&context, &last, pname, (ret == 2) ? iname : ptr, out, size);
+                        ret = prelude_option_invoke_set(&context, &last, pname, (ent == 2) ? iname : ptr, out, size);
                 else 
-                        ret = prelude_option_invoke_get(&context, &last, pname, (ret == 2) ? iname : ptr, out, size);
+                        ret = prelude_option_invoke_get(&context, &last, pname, (ent == 2) ? iname : ptr, out, size);
                 
-                if ( ret < 0 )
+                if ( ret < 0 ) {
+                        free(prev);
+                        config_close(cfg);
                         return -1;
+                }
+
+                if ( rtype == PRELUDE_MSG_OPTION_SET && prelude_option_get_flags(last) & CFG_HOOK ) 
+                        config_save_value(cfg, last, &prev, pname, (ent == 2) ? iname : ptr);
         }
-                
+
+        config_close(cfg);
+        free(prev);
+        
         return 0;
 }
 
@@ -229,7 +267,7 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         ret = extract_uint8_safe(&tmpint, buf, dlen);
                         if ( ret < 0 )
                                 return -1;
-                        
+
                         prelude_option_set_has_arg(opt, tmpint);
                         break;
 
