@@ -58,6 +58,7 @@ typedef enum {
 } prelude_option_argument_t;
 
 
+void prelude_option_set_priority(prelude_option_t *option, int priority);
 
 void prelude_option_print(int flags, int descoff);
 

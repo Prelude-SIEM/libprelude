@@ -1,3 +1,19 @@
+2002-03-11  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/extract.c (extract_ipv4_addr): 
+	only align when needed.
+
+	* src/prelude-getopt.c (call_option_cb): 
+	new function, call option in priority order if needed.
+
+	(parse_argument): if we meet an unknown option and we are at 
+	depth 0, continue parsing, so that it won't abort the whole
+	process.
+
+	* src/sensor.c (prelude_sensor_init): 
+	don't call prelude_async_init ourself, this is the sensor
+	responssability.
+
 2002-03-07  Krzysztof Zaraska  <kzaraska@student.uci.agh.edu.pl>
 	* src/client-ident.c:
 	* src/extract.c:

@@ -164,7 +164,7 @@ int prelude_sensor_init(const char *sname, const char *filename, int argc, char 
         }
 
         prelude_set_program_name(sname);
-        
+       
         ret = prelude_client_ident_init(sname);
         if ( ret < 0 )
                 return -1;
@@ -172,12 +172,6 @@ int prelude_sensor_init(const char *sname, const char *filename, int argc, char 
         ret = parse_argument(filename, argc, argv);
         if ( ret == prelude_option_end || ret == prelude_option_error )
                 return ret;
-        
-        ret = prelude_async_init();
-        if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't initialize asynchronous subsystem.\n");
-                return -1;
-        }
         
         return ret;
 }
@@ -190,7 +184,7 @@ int prelude_sensor_init(const char *sname, const char *filename, int argc, char 
  *
  * Asynchronously send @msg to all Manager server we're connected to.
  * When this function return, @msg is invalid and shouldn't be used
- * anymore.
+ * anymore. prelude_async_init() should be called prior to using this function.
  */
 void prelude_sensor_send_msg_async(prelude_msg_t *msg) 
 {

@@ -51,8 +51,10 @@ void extract_ipv4_addr(struct in_addr *out, const struct in_addr *addr)
 #ifndef NEED_ALIGNED_ACCESS
         *out = *addr;
 #else
-        struct in_addr tmp;
-        memmove(out, addr, sizeof(tmp));
+        if ( is_aligned(addr, sizeof(*out)) < 0 )
+                memmove(out, addr, sizeof(*out));
+        else
+                *out = *addr;
 #endif
 }
 
