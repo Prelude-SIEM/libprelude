@@ -43,7 +43,7 @@
 #include "config.h"
 
 
-static uint16_t port = 5554;
+static uint16_t port = 5553;
 static int uid_set = 0;
 static uid_t sensor_uid;
 static const char *addr = NULL;
