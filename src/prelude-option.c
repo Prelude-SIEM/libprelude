@@ -363,7 +363,7 @@ static int call_option_cb(struct cb_list **cbl, prelude_list_t *cblist,
         prelude_list_for_each(cblist, tmp) {
                 cb = prelude_list_entry(tmp, struct cb_list, list);
                 
-                if ( ! prev && option->priority < cb->option->priority )
+                if ( ! prev && option->priority <= cb->option->priority )
                         prev = tmp;
         }
         
