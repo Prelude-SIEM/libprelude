@@ -88,34 +88,37 @@ static int get_password_salt(const char *pass, char buf[3])
  */
 static int parse_auth_line(char *line, char **user, char **pass) 
 {
-        char *tmp;
-        
-        tmp = strtok(line, ":");
-        if ( ! tmp ) {
-                log(LOG_ERR, "malformed auth file.\n");
-                return -1;
-        }
-        
-        *user = strdup(tmp);
-        if (! *user ) {
-                log(LOG_ERR, "couldn't duplicate string.\n");
-                return -1;
-        }
-        
-        tmp = strtok(NULL, ":");
-        if ( ! tmp ) {
-                free(*user);
-                log(LOG_ERR, "malformed auth file.\n");
+        char *end;
+
+        end = strchr(line, ':');
+        if ( ! end ) {
+                log(LOG_INFO, "couldn't found username delimiter.\n");
                 return -1;
         }
 
-        *pass = strdup(tmp);
-        if (! *pass ) {
-                free(*user);
-                log(LOG_ERR, "couldn't duplicate string.\n");
+        *end = '\0';
+        *user = strdup(line);
+        if ( ! *user ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return -1;
+        }
+        
+        line = end + 1;
+        
+        end = strchr(line , ':');
+        if (! end ) {
+                log(LOG_INFO, "couldn't found password delimiter.\n");
                 return -1;
         }
 
+        *end = '\0';
+        *pass = strdup(line);
+        if ( ! *pass ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                free(*user);
+                return -1;
+        }
+        
         return 0;
 }
 
