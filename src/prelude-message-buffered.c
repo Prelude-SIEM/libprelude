@@ -116,7 +116,7 @@ prelude_msgbuf_t *prelude_msgbuf_new(prelude_client_t *client)
 
         msgbuf->client = client;
         
-        if ( client && prelude_client_get_flags(client) & PRELUDE_CLIENT_ASYNC_SEND )
+        if ( client && prelude_client_get_flags(client) & PRELUDE_CLIENT_FLAGS_ASYNC_SEND )
                 msgbuf->send_msg = send_msg_async;
         else
                 msgbuf->send_msg = send_msg;

@@ -41,8 +41,10 @@ typedef enum {
 } prelude_client_capability_t;
 
 
-#define PRELUDE_CLIENT_ASYNC_SEND  0x01
-#define PRELUDE_CLIENT_ASYNC_TIMER 0x02
+typedef enum {
+        PRELUDE_CLIENT_FLAGS_ASYNC_SEND  = 0x01,
+        PRELUDE_CLIENT_FLAGS_ASYNC_TIMER = 0x02
+} prelude_client_flags_t;
 
 
 typedef struct prelude_client prelude_client_t;
@@ -84,7 +86,7 @@ void prelude_client_set_gid(prelude_client_t *client, gid_t gid);
 
 gid_t prelude_client_get_gid(prelude_client_t *client);
 
-int prelude_client_get_flags(prelude_client_t *client);
+prelude_client_flags_t prelude_client_get_flags(prelude_client_t *client);
 
 prelude_client_capability_t prelude_client_get_capability(prelude_client_t *client);
 
@@ -94,7 +96,7 @@ void prelude_client_set_heartbeat_cb(prelude_client_t *client, void (*cb)(prelud
 
 void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status_t status);
 
-int prelude_client_set_flags(prelude_client_t *client, int flags);
+int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t flags);
 
 void prelude_client_set_capability(prelude_client_t *client, prelude_client_capability_t capability);
 

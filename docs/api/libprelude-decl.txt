@@ -5255,7 +5255,7 @@ prelude_client_t *client
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_client_get_flags</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>prelude_client_flags_t  </RETURNS>
 prelude_client_t *client
 </FUNCTION>
 <FUNCTION>
@@ -5281,7 +5281,7 @@ prelude_client_t *client, prelude_client_exit_status_t status
 <FUNCTION>
 <NAME>prelude_client_set_flags</NAME>
 <RETURNS>int  </RETURNS>
-prelude_client_t *client, int flags
+prelude_client_t *client, prelude_client_flags_t flags
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_client_set_capability</NAME>

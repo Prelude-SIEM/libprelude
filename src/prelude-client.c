@@ -769,63 +769,63 @@ int prelude_client_init(prelude_client_t *client, const char *sname, const char 
         int ret;
         char filename[256];
         
-        new->name = strdup(sname);
-        new->config_filename = config ? strdup(config) : NULL;
+        client->name = strdup(sname);
+        client->config_filename = config ? strdup(config) : NULL;
  
-        new->unique_ident = prelude_ident_new();
-        if ( ! new->unique_ident ) {
+        client->unique_ident = prelude_ident_new();
+        if ( ! client->unique_ident ) {
                 log(LOG_ERR, "memory exhausted.\n");
                 return -1;
         }
 
-        ret = setup_options(new, argc, argv);
+        ret = setup_options(client, argc, argv);
         if ( ret < 0 )
                 return -1;
         
-        new->credentials = tls_auth_init(new);
-        if ( ! new->credentials && ! new->ignore_error ) {
-                file_error(new);
+        client->credentials = tls_auth_init(client);
+        if ( ! client->credentials && ! client->ignore_error ) {
+                file_error(client);
                 return -1;
         }
         
-        prelude_client_get_backup_filename(new, filename, sizeof(filename));
+        prelude_client_get_backup_filename(client, filename, sizeof(filename));
         ret = access(filename, W_OK);
-        if ( ret < 0 && ! new->ignore_error ) {
-                file_error(new);
+        if ( ret < 0 && ! client->ignore_error ) {
+                file_error(client);
                 return -1;
         }
         
-        ret = prelude_client_ident_init(new, &new->analyzerid);
-        if ( ret < 0 && ! new->ignore_error ) {
-                file_error(new);
+        ret = prelude_client_ident_init(client, &client->analyzerid);
+        if ( ret < 0 && ! client->ignore_error ) {
+                file_error(client);
                 return -1;
         }
         
-        setup_heartbeat_timer(new, DEFAULT_HEARTBEAT_INTERVAL);
-        timer_init(&new->heartbeat_timer);
+        setup_heartbeat_timer(client, DEFAULT_HEARTBEAT_INTERVAL);
+        timer_init(&client->heartbeat_timer);
         
-        ret = prelude_option_parse_arguments(new, NULL, new->config_filename, argc, argv);
+        ret = prelude_option_parse_arguments(client, NULL, client->config_filename, argc, argv);
         if ( ret == prelude_option_end )
                 return -1;
         
         if ( ret == prelude_option_error ) {
-                log(LOG_INFO, "%s: error processing sensor options.\n", new->config_filename);
-                idmef_analyzer_destroy(new->analyzer);
+                log(LOG_INFO, "%s: error processing sensor options.\n", client->config_filename);
+                idmef_analyzer_destroy(client->analyzer);
                 return -1;
         }
         
-        ret = fill_client_infos(new, argv ? argv[0] : NULL);
+        ret = fill_client_infos(client, argv ? argv[0] : NULL);
         if ( ret < 0 )
                 return -1;
 
-        ret = create_heartbeat_msgbuf(new);
+        ret = create_heartbeat_msgbuf(client);
         if ( ret < 0 )
                 return -1;
 
-        if ( new->manager_list || new->heartbeat_cb ) {
-                new->status = CLIENT_STATUS_STARTING;
-                heartbeat_expire_cb(new);
-                new->status = CLIENT_STATUS_RUNNING;
+        if ( client->manager_list || client->heartbeat_cb ) {
+                client->status = CLIENT_STATUS_STARTING;
+                heartbeat_expire_cb(client);
+                client->status = CLIENT_STATUS_RUNNING;
         }
         
         return 0;

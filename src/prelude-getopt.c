@@ -644,6 +644,7 @@ static int get_option_from_optlist(prelude_list_t *optlist, prelude_list_t *cb_l
 
 /**
  * prelude_option_parse_arguments:
+ * @context:
  * @option: A pointer on an option (list).
  * @filename: Pointer to the config filename.
  * @argc: Number of argument.
