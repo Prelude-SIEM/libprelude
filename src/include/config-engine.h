@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2000, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2000, 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.

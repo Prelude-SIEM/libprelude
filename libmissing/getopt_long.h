@@ -15,7 +15,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- *  Authors: Yoann Vandoorselaere <yoann@mandrakesoft.com>
+ *  Authors: Yoann Vandoorselaere <yoann@prelude-ids.org>
  *
  */
 #ifndef GETOPT_LONG_H
