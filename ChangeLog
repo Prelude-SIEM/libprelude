@@ -3,6 +3,16 @@
 	* src/idmef-msg-send.c (idmef_send_create_time): 
 	don't get create time here since it prevent caller
 	to override the value.
+	
+	(idmef_send_analyzer): get analyzerID with 
+	prelude_client_get_analyzerid(), and send it.
+
+	(idmef_send_string): made inline.
+	(idmef_send_uint64): ditto
+	(idmef_send_uint32): ditto
+	(idmef_send_uint16): ditto
+
+	(idmef_send_analyzer): get and send analyzerid.
 
 	* src/idmef-tree-func.c (idmef_alert_new): 
 	get create time here.

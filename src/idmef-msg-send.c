@@ -39,6 +39,8 @@
 #include "idmef-tree.h"
 #include "idmef-msg-send.h"
 #include "sensor.h"
+#include "prelude-client.h"
+
 
 
 /*
@@ -50,7 +52,7 @@
  */
 
 
-void idmef_send_string(prelude_msgbuf_t *msg, uint8_t tag, idmef_string_t *string)
+inline void idmef_send_string(prelude_msgbuf_t *msg, uint8_t tag, idmef_string_t *string)
 {
         if ( ! string || ! string->string )
                 return;
@@ -60,7 +62,7 @@ void idmef_send_string(prelude_msgbuf_t *msg, uint8_t tag, idmef_string_t *strin
 
 
 
-void idmef_send_uint64(prelude_msgbuf_t *msg, uint8_t tag, uint64_t *data) 
+inline void idmef_send_uint64(prelude_msgbuf_t *msg, uint8_t tag, uint64_t *data) 
 {
         uint64_t dst;
         
@@ -77,7 +79,7 @@ void idmef_send_uint64(prelude_msgbuf_t *msg, uint8_t tag, uint64_t *data)
 
 
 
-void idmef_send_uint32(prelude_msgbuf_t *msg, uint8_t tag, uint32_t data) 
+inline void idmef_send_uint32(prelude_msgbuf_t *msg, uint8_t tag, uint32_t data) 
 {        
         if ( data == 0 )
                 return;
@@ -88,7 +90,7 @@ void idmef_send_uint32(prelude_msgbuf_t *msg, uint8_t tag, uint32_t data)
 
 
 
-void idmef_send_uint16(prelude_msgbuf_t *msg, uint8_t tag, uint16_t data) 
+inline void idmef_send_uint16(prelude_msgbuf_t *msg, uint8_t tag, uint16_t data) 
 {
         if ( data == 0 )
                 return;
@@ -500,7 +502,10 @@ void idmef_send_target_list(prelude_msgbuf_t *msg, struct list_head *head)
 void idmef_send_analyzer(prelude_msgbuf_t *msg, idmef_analyzer_t *analyzer) 
 {
         prelude_msgbuf_set(msg, MSG_ANALYZER_TAG, 0, NULL);
+
+        analyzer->analyzerid = prelude_client_get_analyzerid();
         
+        idmef_send_uint64(msg, MSG_ANALYZER_ID, &analyzer->analyzerid);
         idmef_send_string(msg, MSG_ANALYZER_MANUFACTURER, &analyzer->manufacturer);
         idmef_send_string(msg, MSG_ANALYZER_MODEL, &analyzer->model);
         idmef_send_string(msg, MSG_ANALYZER_VERSION, &analyzer->version);
