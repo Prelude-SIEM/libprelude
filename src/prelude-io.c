@@ -706,6 +706,7 @@ void prelude_io_set_sys_io(prelude_io_t *pio, int fd)
 
 int prelude_io_set_buffer_io(prelude_io_t *pio)
 {
+        pio->fd_ptr = NULL;
         pio->size = pio->rindex = 0;
         
         pio->read = buffer_read;
