@@ -81,7 +81,17 @@ AC_RUN_IFELSE(
   AC_LANG_SOURCE(
     [[
       #include <stdio.h>
-      #include "$ac_prelude_inttypes_h"
+
+      $__PRELUDE_HAVE_STDINT_H
+      $__PRELUDE_HAVE_INTTYPES_H
+
+      #ifdef __PRELUDE_HAVE_STDINT_H
+       #include <stdint.h>
+      #endif
+
+      #ifdef __PRELUDE_HAVE_INTTYPES_H
+       #include <inttypes.h>
+      #endif
 
       main()
         {
