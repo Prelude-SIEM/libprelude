@@ -1,5 +1,8 @@
 2002-02-27  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* configure.in: check for pthread in several directory,
+	including /usr/pkg.
+
 	* src/prelude-client.c: include string.h
 
 2002-02-21  Krzysztof Zaraska  <kzaraska@student.uci.agh.edu.pl>

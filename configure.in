@@ -48,19 +48,39 @@ dnl **************************************************
 dnl * Check for Pthread library                      *
 dnl **************************************************
 
-AC_CHECK_LIB(pthread, pthread_create, pthrlib="yes")
-if test x$pthrlib = xyes; then
-	libprelude_libs="$libprelude_libs -lpthread"
-	libprelude_cflags="-D_REENTRANT"
+for dir in /usr /usr/local /usr/pkg; do
+	AC_CHECK_FILE($dir/lib/libpthread.so, pthread_lib=$dir)
+	AC_CHECK_FILE($dir/include/pthread.h, pthread_include=$dir)
+done
+
+pthrlib=no
+
+if test -n $pthread_lib && test -n $pthread_include; then
+	pthrlib=yes
+	libprelude_libs="$libprelude_libs -L$pthread_lib/lib -lpthread"
+	libprelude_cflags="$libprelude_cflags -I$pthread_include/include -D_REENTRANT"
 else
 	AC_CHECK_LIB(c_r, pthread_create, pthrlib="yes")
 	if test x$pthrlib = xyes; then
 		libprelude_libs="$libprelude_libs -lc_r"
 		libprelude_cflags="-D_REENTRANT"
+
+	else
+		if test -f /usr/pkg/include/pthread.h; then
+			AC_TRY_LINK([#include <pthread.h>], [pthread_attr_t attr; pthread_attr_init(&attr);],
+				    pthrlib="yes")
+
+			if test x$pthrlib = xyes; then
+				libprelude_libs="$libprelude_libs -L/usr/pkg/lib -lpthread"
+				libprelude_cflags="$libprelude_cflags -D_REENTRANT -I/usr/pkg/include"
+			fi
+		fi
 	fi
 fi
 
-
+if test x$pthrlib != xyes; then
+	AC_MSG_ERROR(couldn't find POSIX thread library)
+fi
 
 dnl **************************************************
 dnl * Check for networking function                  *
