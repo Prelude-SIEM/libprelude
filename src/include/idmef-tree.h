@@ -60,6 +60,9 @@
 
 #include "prelude-hash.h"
 
+#include "prelude-io.h"
+#include "prelude-message.h"
+
 #define LISTED_OBJECT(name, type) struct list_head name
 
 #define IS_LISTED struct list_head list
@@ -732,6 +735,7 @@ typedef struct {
         } message;
 
 	HIDE(prelude_hash_t *, cache);
+	HIDE(prelude_msg_t *, pmsg);
         
 } TYPE_ID(idmef_message_t, 47);
 

@@ -1,3 +1,17 @@
+2003-12-14  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
+	* src/idmef-message.c:
+	* src/include/idmef-tree.h
+	(idmef_message_set_pmsg)
+	(idmef_message_destroy)
+	add the ability to attach a prelude_msg to the corresponding idmef_message
+
+	* src/idmef-wrappers-gen/GenerateIDMEFTreeWrapH.pm:
+	do not generate _ref function prototype for function that don't have refcount
+
+	* src/include/idmef-tree-wrap.h:
+	regenerated	
+
 2003-12-13  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
 	* src/idmef-wrappers-gen/GenerateIDMEFTreeWrapC.pm:

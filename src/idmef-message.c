@@ -65,6 +65,29 @@ idmef_message_t *idmef_message_new(void)
 }
 
 
+
+void idmef_message_destroy(idmef_message_t *message)
+{
+	idmef_message_destroy_internal(message);
+
+	if ( message->cache )
+		prelude_hash_destroy(message->cache);
+
+	if ( message->pmsg )
+		prelude_msg_destroy(message->pmsg);
+
+	free(message);
+}
+
+
+
+void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *pmsg)
+{
+	message->pmsg = pmsg;
+}
+
+
+
 int idmef_message_enable_cache(idmef_message_t *message)
 {
 	if ( ! message )
@@ -84,16 +107,6 @@ int idmef_message_disable_cache(idmef_message_t *message)
 	return 0;
 }
 
-
-void idmef_message_destroy(idmef_message_t *message)
-{
-	idmef_message_destroy_internal(message);
-
-	if ( message->cache )
-		prelude_hash_destroy(message->cache);
-
-	free(message);
-}
 
 
 int idmef_message_set(idmef_message_t *message, idmef_object_t *object, idmef_value_t *value)
