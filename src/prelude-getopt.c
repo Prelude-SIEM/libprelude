@@ -157,7 +157,7 @@ static int check_option_reqarg(prelude_optlist_t *optlist, const char *option,
                 fprintf(stderr, "Option %s require an argument.\n", option);
                 return -1;
         }
-
+        
         *optarg = argv[optlist->argv_index];
         argv[optlist->argv_index++] = "";
         
@@ -236,19 +236,12 @@ static int lookup_variable_if_needed(const char **optarg)
 
 static int call_option_cb(struct list_head *cblist, prelude_option_t *option, const char *arg) 
 {
-        int ret;
         struct cb_list *new, *cb;
         struct list_head *tmp, *prev = NULL;
         
-        if ( option->priority != -1 ) {
-                
+        if ( option->priority == option_run_first ) {
                 option->cb_called = 1;
-                
-                ret = option->set(arg);          
-                if ( ret == prelude_option_error || ret == prelude_option_end )
-                        return ret;  
-
-                return prelude_option_success;
+                return option->set(arg);
         }
         
         new = malloc(sizeof(*new));
@@ -259,20 +252,26 @@ static int call_option_cb(struct list_head *cblist, prelude_option_t *option, co
 
         new->arg = arg;
         new->option = option;
+
+        if ( option->priority == option_run_last ) {
+                list_add_tail(&new->list, cblist);
+                return 0;
+        }        
         
         list_for_each(tmp, cblist) {
                 
                 cb = list_entry(tmp, struct cb_list, list);
                 if ( option->priority < cb->option->priority ) {
                         prev = tmp;
+                        printf("prev=%s, cur=%s.\n", cb->option->longopt, option->longopt);
                         break;
                 }
         }
         
         if ( ! prev ) 
-                list_add_tail(&new->list, cblist);
-        else
-                list_add(&new->list, prev);
+                prev = cblist;
+        
+        list_add(&new->list, prev);
 
         return 0;
 }
@@ -291,7 +290,7 @@ static int call_option_from_cb_list(struct list_head *cblist)
                 cb = list_entry(tmp, struct cb_list, list);
 
                 cb->option->cb_called = 1;
-
+                
                 ret = cb->option->set(cb->arg);
                 if ( ret == prelude_option_error || ret == prelude_option_end )
                         return ret;
@@ -441,9 +440,10 @@ static int parse_argument(struct list_head *cb_list,
                         optlist->argv_index--;
                         return 0;
                 }
+
                 
                 argv[optlist->argv_index - 1] = "";
-
+                
                 /*
                  * If the option we just found have sub-option.
                  * Try to match the rest of our argument against them.
@@ -464,6 +464,7 @@ static int parse_argument(struct list_head *cb_list,
                         optlist->argv_index = opt->optlist.argv_index;
                 }
 
+                                
                 /*
                  * check option *after* sub-option, so the caller can do some kind
                  * of dependancy between option. We use the saved argument index, because
@@ -473,12 +474,13 @@ static int parse_argument(struct list_head *cb_list,
                 if ( saved_index ) {
                         tmp = optlist->argv_index;
                         optlist->argv_index = saved_index;
+                        saved_index = 0;
                 }
-                
+
                 ret = check_option(optlist, opt, &optarg, argc, argv);
                 if ( ret < 0 ) 
                         return -1;
-
+                
                 if ( tmp ) 
                         optlist->argv_index = tmp;
                 
@@ -619,7 +621,7 @@ prelude_option_t *prelude_option_add(prelude_option_t *parent, int flags,
 
         INIT_LIST_HEAD(&new->optlist.optlist);
 
-        new->priority = 0;
+        new->priority = option_run_no_order;
         new->flags = flags;
         new->has_arg = has_arg;
         new->longopt = longopt;
