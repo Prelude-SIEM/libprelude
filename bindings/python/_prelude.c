@@ -783,8 +783,8 @@ static swig_type_info *swig_types[90];
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
-#include <inttypes.h>
 
+#include "prelude-inttypes.h"
 #include "common.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
