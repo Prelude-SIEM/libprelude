@@ -71,17 +71,6 @@ AC_SUBST(libprelude_cflags)
 AC_CHECK_FUNCS(strndup)
 
 dnl **************************************************
-dnl * Check for crypt library                        *
-dnl **************************************************
-AC_CHECK_LIB(crypt, crypt, cryptlib=true)
-
-if test x$cryptlib = xtrue; then
-	AC_DEFINE(HAVE_CRYPT, , 1)
-	libprelude_libs="$libprelude_libs -lcrypt";
-fi
-
-
-dnl **************************************************
 dnl * Check for networking function                  *
 dnl **************************************************
 
