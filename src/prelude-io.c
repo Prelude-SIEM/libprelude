@@ -53,7 +53,9 @@
 
 #define CHUNK_SIZE 1024
 
-#define MIN(x, y) ((x) < (y) ? (x) : (y))
+#ifndef MIN
+ #define MIN(x, y) ((x) < (y) ? (x) : (y))
+#endif
 
 
 struct prelude_io {

@@ -25,6 +25,8 @@
 #define _LIBPRELUDE_IDMEF_TIME_H
 
 #include <time.h>
+#include <sys/time.h>
+
 
 #ifdef __cplusplus
  extern "C" {
