@@ -133,7 +133,7 @@ main ()
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <libprelude/prelude-client.h>
+#include <libprelude/prelude.h>
 ],      [ return !!prelude_check_version(NULL); ],
         [ echo "*** The test program compiled, but did not run. This usually means"
           echo "*** that the run-time linker is not finding LIBPRELUDE or finding the wrong"
