@@ -32,7 +32,8 @@ typedef enum {
 
 typedef enum {
         PRELUDE_CLIENT_FLAGS_ASYNC_SEND  = 0x01,
-        PRELUDE_CLIENT_FLAGS_ASYNC_TIMER = 0x02
+        PRELUDE_CLIENT_FLAGS_ASYNC_TIMER = 0x02,
+        PRELUDE_CLIENT_FLAGS_HEARTBEAT   = 0x04,
 } prelude_client_flags_t;
 
 

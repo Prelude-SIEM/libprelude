@@ -702,7 +702,9 @@ static int set_heartbeat_interval(prelude_option_t *opt, const char *optarg, pre
         prelude_client_t *ptr = context;
         
         setup_heartbeat_timer(ptr, atoi(optarg));
-        prelude_timer_reset(&ptr->heartbeat_timer);
+
+        if ( ptr->status == CLIENT_STATUS_RUNNING )
+                prelude_timer_reset(&ptr->heartbeat_timer);
         
         return 0;
 }
@@ -963,7 +965,10 @@ int prelude_client_new(prelude_client_t **client,
         new = calloc(1, sizeof(*new));
         if ( ! new )
                 return prelude_error_from_errno(errno);
-                
+
+        new->flags = PRELUDE_CLIENT_FLAGS_HEARTBEAT;
+        prelude_timer_init_list(&new->heartbeat_timer);
+        
         ret = idmef_analyzer_new(&new->analyzer);
         if ( ret < 0 ) {
                 _prelude_client_destroy(new);
@@ -991,7 +996,6 @@ int prelude_client_new(prelude_client_t **client,
         }
         
         setup_heartbeat_timer(new, DEFAULT_HEARTBEAT_INTERVAL);
-        prelude_timer_init(&new->heartbeat_timer);
 
         if ( new->capability & PRELUDE_CONNECTION_CAPABILITY_CONNECT ) {
                 ret = connection_pool_create(new);
@@ -1065,8 +1069,11 @@ int prelude_client_start(prelude_client_t *client)
                         return ret;
         }
         
-        if ( client->manager_list || client->heartbeat_cb ) {
+        if ( (client->manager_list || client->heartbeat_cb) && client->flags & PRELUDE_CLIENT_FLAGS_HEARTBEAT ) {
                 client->status = CLIENT_STATUS_STARTING;
+                /*
+                 * this will reset, and thus initialize the timer.
+                 */
                 heartbeat_expire_cb(client);
                 client->status = CLIENT_STATUS_RUNNING;
         }
@@ -1131,6 +1138,7 @@ void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg)
         uint64_t ident;
         idmef_alert_t *alert;
         idmef_heartbeat_t *heartbeat;
+        prelude_msg_priority_t priority = PRELUDE_MSG_PRIORITY_MID;
         
         /*
          * we need to hold a lock since asynchronous heartbeat
@@ -1274,7 +1282,7 @@ int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t fl
                 ret = prelude_async_init();
                 prelude_msgbuf_set_flags(client->msgbuf, PRELUDE_MSGBUF_FLAGS_ASYNC);
         }
-
+        
         return ret;
 }
 
