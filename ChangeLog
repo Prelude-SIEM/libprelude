@@ -1,5 +1,8 @@
 2001-08-21  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* Makefile.am (SUBDIRS): process docs subdirectory after
+	src.
+
 	* src/include/list.h (list_entry): updated to a more
 	recent, documented version, kernel use unsigned long for
 	pointer, we do use void *. Use the inline keyword.
