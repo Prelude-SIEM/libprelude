@@ -231,7 +231,7 @@ int idmef_criterion_clone(idmef_criterion_t *criterion, idmef_criterion_t **dst)
 {
         int ret;
 	idmef_path_t *path;
-	idmef_criterion_value_t *value;
+	idmef_criterion_value_t *value = NULL;
 
 	ret = idmef_path_clone(criterion->path, &path);
 	if ( ret < 0 )
@@ -243,8 +243,7 @@ int idmef_criterion_clone(idmef_criterion_t *criterion, idmef_criterion_t **dst)
 			idmef_path_destroy(path);
 			return ret;
 		}
-	} else
-		value = NULL;
+	} 
 
 	ret = idmef_criterion_new(dst, path, value, criterion->relation);
 	if ( ret < 0 ) {
