@@ -1,5 +1,10 @@
 2002-01-11  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/include/idmef-tree.h: 
+	* src/idmef-tree-func.c: 
+	* src/idmef-msg-send.c: 
+	move list.h inclusion out from the header file.
+
 	* src/prelude-client.c (handle_plaintext_connection): 
 	always use PRELUDE_MSG_AUTH for header tag.
 	use PRELUDE_MSG_AUTH_PLAINTEXT as a subtag.

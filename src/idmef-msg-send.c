@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 #include <sys/time.h>
 
+#include "list.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
 #include "prelude-message-id.h"

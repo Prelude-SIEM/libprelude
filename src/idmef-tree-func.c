@@ -30,6 +30,7 @@
 #include <sys/time.h>
 #include <inttypes.h>
 
+#include "list.h"
 #include "common.h"
 #include "idmef-tree.h"
 #include "idmef-tree-func.h"

@@ -26,7 +26,6 @@
 #define IDMEF_TREE_H
 
 #include <inttypes.h>
-#include <libprelude/list.h>
 
 #define IDMEF_VERSION "0.5"
 
