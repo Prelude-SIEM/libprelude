@@ -45,7 +45,7 @@
 #include "config-engine.h"
 
 
-#define DEFAULT_INSTANCE_NAME "default"
+#define PRELUDE_PLUGIN_DEFAULT_INSTANCE_NAME "default"
 
 
 typedef struct {
@@ -63,9 +63,12 @@ typedef struct {
 
         char *tmp_instance_name;
         prelude_plugin_generic_t *plugin;
-        
+
         int (*subscribe)(prelude_plugin_instance_t *pc);
         void (*unsubscribe)(prelude_plugin_instance_t *pc);
+        
+        int (*init_instance)(prelude_plugin_instance_t *pi);
+        int (*create_instance)(prelude_plugin_instance_t *pi, prelude_option_t *opt, const char *optarg);
 } plugin_entry_t;
 
 
@@ -292,28 +295,29 @@ static int intercept_plugin_option_set(void **context, prelude_option_t *opt, co
 static int intercept_plugin_activation_option(void **context, prelude_option_t *opt, const char *name)
 {
         int ret = 0;
+        plugin_entry_t *pe;
         prelude_plugin_instance_t *pi;
-        plugin_option_intercept_t *intercept;
         
-        intercept = prelude_option_get_private_data(opt);
-        assert(intercept);
+        pe = prelude_option_get_private_data(opt);
+        assert(pe);
                 
         if ( ! name || *name == 0 )
                 name = DEFAULT_INSTANCE_NAME;
 
-        pi = search_instance_from_entry(intercept->entry, name);
+        pi = search_instance_from_entry(pe, name);
         if ( ! pi ) {
-                pi = create_instance(intercept->entry, name, NULL);
+                pi = create_instance(pe, name, NULL);
                 if ( ! pi )
                         return -1;
 
                 *context = pi;
-                
-                ret = intercept->func.plugin_option_set_cb(pi, opt, name);                
+
+                ret = pi->entry->create_instance(pi, opt, name);
                 if ( ret < 0 )
                         return -1;
-                
-                ret = subscribe_instance(pi);
+
+                if ( ! pe->init_instance )
+                        ret = subscribe_instance(pi);
         }
         
         *context = pi;
@@ -328,22 +332,16 @@ static int intercept_plugin_init_option(void **context, prelude_option_t *opt, c
         int ret;
         plugin_entry_t *pe;
         prelude_plugin_instance_t *pi;
-        plugin_option_intercept_t *intercept;
 
         if ( ! *context ) {
                 log(LOG_ERR, "referenced instance not available.\n");
                 return -1;
         }
         
-        intercept = prelude_option_get_private_data(opt);
-        assert(intercept);
-
         pi = *context;
         pe = pi->entry;
-        
-        pe = intercept->entry;
                 
-        ret = intercept->func.plugin_init_cb(pi);
+        ret = pe->init_instance(pi);
         if ( pi->already_subscribed )
                 return ret;
         
@@ -592,11 +590,14 @@ int prelude_plugin_unsubscribe(prelude_plugin_instance_t *pi)
  *
  * Returns: 0 on success or -1 if an error occured.
  */
-prelude_plugin_instance_t *prelude_plugin_subscribe(prelude_plugin_generic_t *plugin, const char *name, void *data)
+prelude_plugin_instance_t *prelude_plugin_new_instance(prelude_plugin_generic_t *plugin, const char *name, void *data)
 {
         plugin_entry_t *pe;
         prelude_plugin_instance_t *pi;
-        
+
+        if ( ! name || ! *name )
+                name = DEFAULT_INSTANCE_NAME;
+                
         pe = search_plugin_entry(plugin);        
         if ( ! pe )
                 return NULL;
@@ -605,15 +606,29 @@ prelude_plugin_instance_t *prelude_plugin_subscribe(prelude_plugin_generic_t *pl
          * might be NULL in case the plugin subscribe from the init function.
          */
         pe->plugin = plugin;
-
+        
         pi = search_instance_from_entry(pe, name);
-        if ( ! pi && ! (pi = create_instance(pe, name, data)) )
-                return NULL;
-
-        subscribe_instance(pi);
+        if ( ! pi ) {
+                        
+                pi = create_instance(pe, name, NULL);
+                if ( ! pi )
+                        return NULL;
+                
+                if ( pe->create_instance && pe->create_instance(pi, NULL, name) < 0 )
+                        return NULL;
+        }
         
         return pi;
 }
+
+
+
+
+int prelude_plugin_subscribe(prelude_plugin_instance_t *pi)
+{
+        return subscribe_instance(pi);
+}
+
 
 
 
@@ -651,7 +666,7 @@ int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
         pe = search_plugin_entry(plugin);        
         if ( ! pe )
                 return -1;
-                
+        
         new = prelude_option_add(opt, CLI_HOOK|WIDE_HOOK, 0, "unsubscribe",
                                  "Unsubscribe this plugin", no_argument,
                                  plugin_desactivate, NULL);
@@ -664,20 +679,21 @@ int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
          */
         intercept = prelude_option_get_private_data(opt);
         assert(intercept);
+        pe->create_instance = intercept->func.plugin_option_set_cb;
+        free(intercept);
         
-        intercept->entry = pe;
         prelude_option_set_set_callback(opt, intercept_plugin_activation_option);
-        
+        prelude_option_set_private_data(opt, pe);
         
         /*
          * if an initialisation option is given, set it up.
          */
         if ( init ) {
-                new = prelude_option_add_init_func(opt, (void *) init);
+                new = prelude_option_add_init_func(opt, intercept_plugin_init_option);
                 if ( ! new )
                         return -1;
-                
-                ret = setup_plugin_option_intercept(pe, new, intercept_plugin_init_option);
+
+                pe->init_instance = init;
         }
 
         return ret;
@@ -846,3 +862,4 @@ prelude_option_t *prelude_plugin_option_add(prelude_option_t *parent, int flags,
         
         return opt;
 }
+

@@ -117,7 +117,9 @@ typedef struct {
 int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
                                          prelude_option_t *opt, int (*init)(prelude_plugin_instance_t *pi));
 
-prelude_plugin_instance_t *prelude_plugin_subscribe(prelude_plugin_generic_t *plugin, const char *name, void *data);
+int prelude_plugin_subscribe(prelude_plugin_instance_t *pi);
+
+prelude_plugin_instance_t *prelude_plugin_new_instance(prelude_plugin_generic_t *plugin, const char *name, void *data);
 
 
 int prelude_plugin_unsubscribe(prelude_plugin_instance_t *plugin);
