@@ -33,6 +33,7 @@
 
 
 static char *global_prefix = NULL;
+static int log_level = PRELUDE_LOG_INFO;
 static prelude_log_flags_t log_flags = 0;
 
 
@@ -48,53 +49,36 @@ static char *strip_return(char *buf, size_t len)
 
 
 
-static FILE *get_out_fd(prelude_log_t priority)
+static inline FILE *get_out_fd(prelude_log_t level)
 {
-        if ( priority > PRELUDE_LOG_INFO )
-                return stderr;
-        else
-                return stdout;
+        return (level < PRELUDE_LOG_INFO) ? stderr : stdout;
 }
 
 
 
-static prelude_bool_t need_to_log(prelude_log_t priority)
+static inline prelude_bool_t need_to_log(prelude_log_t level)
 {
-        prelude_bool_t ret = TRUE;
-        
-        if ( priority == PRELUDE_LOG_INFO && log_flags & PRELUDE_LOG_FLAGS_QUIET )
-                ret = FALSE;
-
-        else if ( priority == PRELUDE_LOG_DEBUG && ! (log_flags & PRELUDE_LOG_FLAGS_DEBUG) )
-                ret = FALSE;
-
-        return ret;
+        return (level > log_level) ? FALSE : TRUE;
 }
 
 
 
-static void syslog_log(prelude_log_t priority, const char *file,
+static void syslog_log(prelude_log_t level, const char *file,
                        const char *function, int line, const char *fmt, va_list *ap) 
 {
         int len, ret;
-        char buf[256];
+        char buf[512];
 
         while (*fmt == '\n') fmt++;
         
-        if ( priority >= PRELUDE_LOG_ERR ) {
+        if ( level >= PRELUDE_LOG_DEBUG || level == PRELUDE_LOG_ERR ) {
                 
                 len = vsnprintf(buf, sizeof(buf), fmt, *ap);
                 if ( len < 0 || len >= sizeof(buf) )
                         return;
-
-                if ( errno ) 
-                        syslog(priority, "%s%s:%s:%d: %s: %s",
-                               (global_prefix) ? global_prefix : "",
-                               file, function, line, strerror(errno), strip_return(buf, len));
-                else
-                        syslog(priority, "%s%s:%s:%d: %s",
-                               (global_prefix) ? global_prefix : "",
-                               file, function, line, strip_return(buf, len));
+                
+                syslog(level, "%s%s:%s:%d: %s", (global_prefix) ? global_prefix : "",
+                       file, function, line, strip_return(buf, len));
         }
 
         else {
@@ -106,58 +90,53 @@ static void syslog_log(prelude_log_t priority, const char *file,
                 if ( ret < 0 || (ret + len) >= sizeof(buf) )
                         return;
                 
-                syslog(priority, "%s", strip_return(buf, ret + len));
+                syslog(level, "%s", strip_return(buf, ret + len));
         }
 }
 
 
 
 
-static void standard_log(prelude_log_t priority, const char *file,
+static void standard_log(prelude_log_t level, const char *file,
                          const char *function, int line, const char *fmt, va_list *ap)
 {
-        FILE *out = get_out_fd(priority);
+        FILE *out = get_out_fd(level);
         
         if ( global_prefix )
                 fprintf(out, "%s", global_prefix);                
-                     
-        if ( priority >= PRELUDE_LOG_ERR ) {
-                if ( errno )
-                        fprintf(out, "%s:%s:%d: %s: ", file, function, line, strerror(errno));
-                else
-                        fprintf(out, "%s:%s:%d: ", file, function, line);
-                        
-        } 
+
+        if ( level >= PRELUDE_LOG_DEBUG || level == PRELUDE_LOG_ERR )
+                fprintf(out, "%s:%s:%d: ", file, function, line);
         
         vfprintf(out, fmt, *ap);
 }
 
 
 
-static void do_log_v(prelude_log_t priority, const char *file,
+static void do_log_v(prelude_log_t level, const char *file,
                      const char *function, int line, const char *fmt, va_list ap)
 {
         if ( log_flags & PRELUDE_LOG_FLAGS_SYSLOG )
-                syslog_log(priority, file, function, line, fmt, &ap);
+                syslog_log(level, file, function, line, fmt, &ap);
         else
-                standard_log(priority, file, function, line, fmt, &ap);
+                standard_log(level, file, function, line, fmt, &ap);
 }
 
 
-void prelude_log_v(prelude_log_t priority, const char *file,
+void prelude_log_v(prelude_log_t level, const char *file,
                    const char *function, int line, const char *fmt, va_list ap) 
 {
-        if ( ! need_to_log(priority) )
+        if ( ! need_to_log(level) )
                 return;
 
-        do_log_v(priority, file, function, line, fmt, ap);
+        do_log_v(level, file, function, line, fmt, ap);
 }
 
 
 
 /**
  * _prelude_log:
- * @priority: PRELUDE_LOG_PRIORITY_INFO or PRELUDE_LOG_PRIORITY_ERROR.
+ * @level: PRELUDE_LOG_PRIORITY_INFO or PRELUDE_LOG_PRIORITY_ERROR.
  * @file: The caller filename.
  * @function: The caller function name.
  * @line: The caller line number.
@@ -167,18 +146,19 @@ void prelude_log_v(prelude_log_t priority, const char *file,
  * This function should not be called directly.
  * Use the #log macro defined in prelude-log.h
  */
-void _prelude_log(prelude_log_t priority, const char *file,
+void _prelude_log(prelude_log_t level, const char *file,
                   const char *function, int line, const char *fmt, ...) 
 {
         va_list ap;
 
-        if ( ! need_to_log(priority) )
+        if ( ! need_to_log(level) )
                 return;
                 
         va_start(ap, fmt);
-        do_log_v(priority, file, function, line, fmt, ap);        
+        do_log_v(level, file, function, line, fmt, ap);        
         va_end(ap);
 }
+
 
 
 /**
@@ -187,6 +167,9 @@ void _prelude_log(prelude_log_t priority, const char *file,
  */
 void prelude_log_set_flags(prelude_log_flags_t flags) 
 {
+        if ( flags & PRELUDE_LOG_FLAGS_QUIET )
+                log_level = PRELUDE_LOG_WARN;
+        
         log_flags = flags;
 }
 
@@ -194,6 +177,19 @@ void prelude_log_set_flags(prelude_log_flags_t flags)
 prelude_log_flags_t prelude_log_get_flags(void)
 {
         return log_flags;
+}
+
+
+
+void prelude_log_set_level(prelude_log_t level)
+{
+        log_level = level;
+}
+
+
+void prelude_log_set_debug_level(int level)
+{
+        log_level = PRELUDE_LOG_DEBUG + level;
 }
 
 

@@ -28,24 +28,30 @@
 #include <syslog.h>
 
 
-#define prelude_log(priority, ...) \
-        _prelude_log(priority, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
+#define prelude_log(level, ...) \
+        _prelude_log(level, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
+
+#define prelude_log_debug(level, ...) \
+        _prelude_log(PRELUDE_LOG_DEBUG + level, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
 
 
 typedef enum {
-        PRELUDE_LOG_INFO =  0x01,
-        PRELUDE_LOG_WARN =  0x02,
-        PRELUDE_LOG_ERR  =  0x04,
-        PRELUDE_LOG_DEBUG = 0x08,
+        PRELUDE_LOG_ERR  =  0,
+        PRELUDE_LOG_WARN =  1,
+        PRELUDE_LOG_INFO =  2,
+        PRELUDE_LOG_DEBUG = 3,
 } prelude_log_t;
 
 
 typedef enum {
         PRELUDE_LOG_FLAGS_QUIET  = 0x01, /* Drop PRELUDE_LOG_PRIORITY_INFO */
         PRELUDE_LOG_FLAGS_SYSLOG = 0x02,
-        PRELUDE_LOG_FLAGS_DEBUG  = 0x04,
 } prelude_log_flags_t;
 
+
+void prelude_log_set_level(prelude_log_t level);
+
+void prelude_log_set_debug_level(int level);
 
 prelude_log_flags_t prelude_log_get_flags(void);
 
@@ -55,10 +61,10 @@ char *prelude_log_get_prefix(void);
 
 void prelude_log_set_prefix(char *prefix);
 
-void prelude_log_v(prelude_log_t priority, const char *file,
+void prelude_log_v(prelude_log_t level, const char *file,
                    const char *function, int line, const char *fmt, va_list ap);
 
-void _prelude_log(prelude_log_t priority, const char *file,
+void _prelude_log(prelude_log_t level, const char *file,
                   const char *function, int line, const char *fmt, ...);
 
 #endif /* _LIBPRELUDE_PRELUDE_LOG_H */
