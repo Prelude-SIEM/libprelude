@@ -377,7 +377,7 @@ static struct cb_list *call_option_cb(prelude_list_t *cblist, prelude_option_t *
                 if ( ! got_prev )
                         prev = tmp;
                     
-                if ( option->flags & HAVE_CONTEXT ) 
+                if ( option->flags & ALLOW_MULTIPLE_CALL || option->flags & HAVE_CONTEXT ) 
                         continue;
                 
                 ret = strcmp(cb->option->longopt, option->longopt);
@@ -435,6 +435,7 @@ static int do_set(void **context, prelude_option_t *opt, char *value)
         }
 	
         ret = opt->set(*context, opt, (str = lookup_variable_if_needed(value)));
+        printf("set(%p, %s, %s) ret=%d\n", *context, opt->longopt, str, ret);
         if ( str )
                 free(str);
         
@@ -463,7 +464,6 @@ static int call_option_from_cb_list(void *default_context, prelude_list_t *cblis
                 
                 if ( cb->option->set ) {
                         ret = do_set(&context, cb->option, cb->arg);
-                        
                         if ( ret == prelude_option_error || ret == prelude_option_end ) 
                                 return ret;
                 }
@@ -685,11 +685,7 @@ int prelude_option_parse_arguments(void *context, prelude_option_t *option,
         } else
                 get_option_from_optlist(&root_optlist, &cb_list, filename, argc, argv);
         
-        ret = call_option_from_cb_list(context, &cb_list);
-        if ( ret == prelude_option_error || ret == prelude_option_end )
-                return ret;
-        
-        return ret;
+        return call_option_from_cb_list(context, &cb_list);
 }
 
 

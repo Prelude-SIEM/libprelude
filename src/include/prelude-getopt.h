@@ -34,8 +34,9 @@
 #define CLI_HOOK 0x1 /* Option to be hooked to command line */
 #define CFG_HOOK 0x2 /* Option to be hooked to config file  */
 #define WIDE_HOOK 0x4
-#define HAVE_CONTEXT 0x8
+#define ALLOW_MULTIPLE_CALL 0x8
 #define DESTROY_HOOK 0x20
+#define HAVE_CONTEXT 0x40
 
 /*
  * Possible return value for set() callback.
