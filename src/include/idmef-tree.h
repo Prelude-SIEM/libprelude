@@ -64,7 +64,7 @@ typedef struct {
  * Classification class
  */
 typedef enum {
-        unknown         = 0,
+        origin_unknown  = 0,
         bugtraqid       = 1,
         cve             = 2,
         vendor_specific = 3,
@@ -114,9 +114,9 @@ typedef struct {
  * User class
  */
 typedef enum {
-        cat_unknow  = 0,
-        application = 1,
-        os_device   = 2,
+        cat_unknown  = 0,
+        application  = 1,
+        os_device    = 2,
 } idmef_user_category_t;
 
 
@@ -134,7 +134,7 @@ typedef struct {
  * Address class
  */
 typedef enum {
-        addr_unknow   = 0,
+        addr_unknown  = 0,
         atm           = 1,
         e_mail        = 2,
         lotus_notes   = 3,
@@ -230,18 +230,18 @@ typedef struct {
  * Node class
  */
 typedef enum {
-        node_unknow = 0,
-        ads         = 1,
-        afs         = 2,
-        coda        = 3,
-        dfs         = 4,
-        dns         = 5,
-        kerberos    = 6,
-        nds         = 7,
-        nis         = 8,
-        nisplus     = 9,
-        nt          = 10,
-        wfw         = 11,
+        node_unknown = 0,
+        ads          = 1,
+        afs          = 2,
+        coda         = 3,
+        dfs          = 4,
+        dns          = 5,
+        kerberos     = 6,
+        nds          = 7,
+        nis          = 8,
+        nisplus      = 9,
+        nt           = 10,
+        wfw          = 11,
 } idmef_node_category_t;
 
 
@@ -261,9 +261,9 @@ typedef struct {
  * Source class
  */
 typedef enum {
-        unknow = 0,
-        yes    = 1,
-        no     = 2,
+        unknown = 0,
+        yes     = 1,
+        no      = 2,
 } idmef_spoofed_t;
 
 
