@@ -40,8 +40,15 @@ int prelude_init(void)
 
 void prelude_deinit(void)
 {
+        prelude_list_t *iter = NULL;
+        prelude_plugin_generic_t *plugin;
+        
+        while ( (plugin = prelude_plugin_get_next(&iter)) )
+                prelude_plugin_unload(plugin);
+        
         _idmef_object_cache_destroy();
         prelude_option_destroy(NULL);
+        gnutls_global_deinit();
 }
 
 
