@@ -29,6 +29,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <errno.h>
 
 #include "prelude-list.h"
 #include "timer.h"
@@ -397,27 +398,63 @@ static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline)
 
 
 
-static int open_backup_fd(const char *filename, prelude_io_t *pfd, int open_flags) 
+/*
+ * Open a *possibly persistant* file for writing,
+ * trying to avoid symlink attack as much as possible.
+ */
+static int secure_open(const char *filename) 
 {
-        int fd;
-
-        fd = open(filename, open_flags, S_IRUSR|S_IWUSR);
-        if ( fd < 0 ) {
-                log(LOG_ERR, "couldn't open %s for writing.\n", filename);
-                prelude_io_destroy(pfd);
-                return -1;
-        }
+        int fd, ret;
+        struct stat st;
         
-        prelude_io_set_sys_io(pfd, fd);
+        /*
+         * We can't rely on O_EXCL to avoid symlink attack,
+         * as it could be perfectly normal that a file would already exist
+         * and we would be open to a race condition between the time we stat
+         * it (to see if it's a link) and the time we open it, this time without
+         * O_EXCL.
+         */
+        fd = open(filename, O_CREAT|O_WRONLY|O_APPEND|O_EXCL, S_IRUSR|S_IWUSR);
+        if ( fd < 0 ) {
+                if ( errno != EEXIST ) {
+                        log(LOG_ERR, "couldn't open %s.\n", filename);
+                        return -1;
+                }
+                
+                ret = lstat(filename, &st);
+                if ( ret < 0 ) {
+                        log(LOG_ERR, "couldn't get FD stat.\n");
+                        return -1;
+                }
 
-        return 0;
+                /*
+                 * There is a race between the lstat() and this open() call.
+                 * No atomic operation that I know off permit to fix it.
+                 * And we can't use O_TRUNC.
+                 */
+                if ( S_ISREG(st.st_mode) ) 
+                        return open(filename, O_CREAT|O_WRONLY|O_APPEND, S_IRUSR|S_IWUSR);
+                
+                else if ( S_ISLNK(st.st_mode) ) {
+                        log(LOG_INFO, "symlink attack detected. Overriding.\n");
+                        
+                        ret = unlink(filename);
+                        if ( ret < 0 ) {
+                                log(LOG_ERR, "couldn't unlink %s.\n", filename);
+                                return -1;
+                        }
+
+                        return secure_open(filename);
+                }
+        }
+        return fd;
 }
 
 
 
 static int setup_backup_fd(prelude_client_mgr_t *new, const char *name) 
 {
-        int ret;
+        int wfd, rfd;
         char filename[1024];
         
         snprintf(filename, sizeof(filename), "%s/%s", BACKUP_DIR, name);
@@ -425,26 +462,32 @@ static int setup_backup_fd(prelude_client_mgr_t *new, const char *name)
         new->backup_fd_write = prelude_io_new();
         if (! new->backup_fd_write ) 
                 return -1;
-
-        ret = open_backup_fd(filename, new->backup_fd_write, O_CREAT|O_RDWR|O_APPEND);
-        if ( ret < 0 )
-                return -1;
         
         new->backup_fd_read = prelude_io_new();
-        if ( ! new->backup_fd_read ) {
-                prelude_io_close(new->backup_fd_write);
-                prelude_io_destroy(new->backup_fd_write);
-                return -1;
-        }
-
-        ret = open_backup_fd(filename, new->backup_fd_read, O_CREAT|O_RDONLY);
-        if ( ret < 0 ) {
-                prelude_io_close(new->backup_fd_write);
-                prelude_io_destroy(new->backup_fd_write);
-                prelude_io_destroy(new->backup_fd_read);
+        if (! new->backup_fd_read ) {
                 return -1;
         }
         
+        /*
+         * we want two different descriptor in order to
+         * do write atomically. The other file descriptor has it's own
+         * file table, with it's own offset.
+         */
+        wfd = secure_open(filename);
+        if ( wfd < 0 ) {
+                log(LOG_ERR, "couldn't open %s for writing.\n", filename);
+                return -1;
+        }
+        
+        rfd = open(filename, O_RDONLY);
+        if ( rfd < 0 ) {
+                log(LOG_ERR, "couldn't open %s for reading.\n", filename);
+                return -1;
+        }
+        
+        prelude_io_set_sys_io(new->backup_fd_write, wfd);
+        prelude_io_set_sys_io(new->backup_fd_read, rfd);
+                
         return 0;
 }
 
