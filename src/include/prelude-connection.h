@@ -25,6 +25,15 @@
 #define _LIBPRELUDE_PRELUDE_CONNECTION_H
 
 #include "prelude-msg.h"
+#include "prelude-msgbuf.h"
+#include "prelude-client-profile.h"
+
+typedef enum {
+        PRELUDE_CONNECTION_CAPABILITY_NONE       = 0x00,
+        PRELUDE_CONNECTION_CAPABILITY_CONNECT    = 0x01,
+        PRELUDE_CONNECTION_CAPABILITY_RECV_IDMEF = 0x02,
+        PRELUDE_CONNECTION_CAPABILITY_RECV_CM    = 0x04
+} prelude_connection_capability_t;
 
 
 #define PRELUDE_CONNECTION_ESTABLISHED    0x01
@@ -35,9 +44,13 @@ typedef struct prelude_connection prelude_connection_t;
 
 void prelude_connection_destroy(prelude_connection_t *cnx);
 
-int prelude_connection_send_msg(prelude_connection_t *cnx, prelude_msg_t *msg);
+int prelude_connection_send(prelude_connection_t *cnx, prelude_msg_t *msg);
 
-int prelude_connection_connect(prelude_connection_t *cnx);
+int prelude_connection_recv(prelude_connection_t *cnx, prelude_msg_t **msg);
+
+int prelude_connection_connect(prelude_connection_t *cnx,
+                               prelude_client_profile_t *profile,
+                               prelude_connection_capability_t capability);
 
 ssize_t prelude_connection_forward(prelude_connection_t *cnx, prelude_io_t *src, size_t count);
 
@@ -61,15 +74,22 @@ void prelude_connection_set_state(prelude_connection_t *cnx, int state);
 
 int prelude_connection_get_state(prelude_connection_t *cnx);
 
+void prelude_connection_set_data(prelude_connection_t *cnx, void *data);
+
+void *prelude_connection_get_data(prelude_connection_t *cnx);
+
 void prelude_connection_get_socket_filename(char *buf, size_t size, uint16_t port);
 
 uint64_t prelude_connection_get_peer_analyzerid(prelude_connection_t *cnx);
 
+void prelude_connection_set_peer_analyzerid(prelude_connection_t *cnx, uint64_t analyzerid);
 
 #include "prelude-client.h"
 
 prelude_client_t *prelude_connection_get_client(prelude_connection_t *cnx);
 
-prelude_connection_t *prelude_connection_new(prelude_client_t *client, const char *addr, uint16_t port);
+int prelude_connection_new(prelude_connection_t **ret, const char *addr, uint16_t port);
+
+int prelude_connection_new_msgbuf(prelude_connection_t *connection, prelude_msgbuf_t **msgbuf);
 
 #endif /* _LIBPRELUDE_PRELUDE_CONNECTION_H */
