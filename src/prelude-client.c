@@ -507,7 +507,7 @@ static int set_configuration_file(void *context, prelude_option_t *opt, const ch
 static int set_name(void *context, prelude_option_t *opt, const char *arg)
 {
         prelude_client_t *ptr = context;
-        
+
         if ( ptr->name )
                 free(ptr->name);
         
@@ -576,7 +576,7 @@ static int setup_options(prelude_client_t *client, int argc, char **argv)
                                  set_configuration_file, NULL);
 
         prelude_option_set_warnings(0, &old_flags);
-        ret = prelude_option_parse_arguments((void *) &client, opt, NULL, argc, argv);
+        ret = prelude_option_parse_arguments((void *) client, opt, NULL, argc, argv);
         prelude_option_set_warnings(old_flags, NULL);
         
         if ( ret < 0 )
@@ -586,7 +586,7 @@ static int setup_options(prelude_client_t *client, int argc, char **argv)
                                  "Name for this analyzer", required_argument, set_name, NULL);
         
         prelude_option_set_warnings(0, &old_flags);
-        ret = prelude_option_parse_arguments((void *) &client, opt, NULL, argc, argv);
+        ret = prelude_option_parse_arguments((void *) client, opt, NULL, argc, argv);
         prelude_option_set_warnings(old_flags, NULL);
         
         if ( ret < 0 )
@@ -693,13 +693,13 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
         
         new->name = strdup(sname);
         new->config_filename = config ? strdup(config) : NULL;
-        
+ 
         new->unique_ident = prelude_ident_new();
         if ( ! new->unique_ident ) {
                 log(LOG_ERR, "memory exhausted.\n");
                 return -1;
         }
-                
+
         ret = setup_options(new, argc, argv);
         if ( ret < 0 )
                 return -1;
@@ -709,7 +709,7 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
                 file_error(new);
                 return -1;
         }
-
+        
         prelude_client_get_backup_filename(new, filename, sizeof(filename));
         ret = access(filename, W_OK);
         if ( ret < 0 ) {
