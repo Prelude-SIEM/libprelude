@@ -44,3 +44,15 @@ common
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_read_multiline ##### -->
+<para>
+
+</para>
+
+@fd: 
+@line: 
+@buf: 
+@size: 
+@Returns: 
+
+

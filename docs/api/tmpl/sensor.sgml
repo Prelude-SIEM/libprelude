@@ -82,3 +82,29 @@ sensor
 @cb: 
 
 
+<!-- ##### FUNCTION prelude_heartbeat_register_cb ##### -->
+<para>
+
+</para>
+
+@cb: 
+@data: 
+
+
+<!-- ##### FUNCTION prelude_heartbeat_send ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_analyzer_fill_infos ##### -->
+<para>
+
+</para>
+
+@analyzer: 
+@Returns: 
+
+

@@ -1,3 +1,14 @@
+* 2002-08-29, libprelude-0.8.2:
+	- Correct check for OpenSSL, and profiling, so that
+	  you won't end up disabling OpenSSL with 
+	  --enable-ssl=yes.				  (Yoann Vandoorselaere).
+
+	- Fix an infinite loop when asking for SSL setup
+	  confirmation.                                   (Sebastien Guilbaud).
+
+	- Don't provide an empty string to option callback
+	  when there is no argument.                      (Yoann Vandoorselaere).
+
 * 2002-08-26, libprelude-0.8.1:
 	- Act as a LIFO when subscribing a plugin, so that
 	  a plugin loading another, both subscribing from

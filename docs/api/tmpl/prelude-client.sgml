@@ -107,6 +107,23 @@ prelude-client
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_client_get_fd ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_close ##### -->
+<para>
+
+</para>
+
+@client: 
+
+
 <!-- ##### MACRO PRELUDE_CLIENT_TYPE_OTHER ##### -->
 <para>
 

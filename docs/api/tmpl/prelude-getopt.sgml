@@ -179,3 +179,38 @@ prelude-getopt
 @old_flags: 
 
 
+<!-- ##### FUNCTION prelude_option_get_shortname ##### -->
+<para>
+
+</para>
+
+@opt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_get_longname ##### -->
+<para>
+
+</para>
+
+@opt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_set_private_data ##### -->
+<para>
+
+</para>
+
+@opt: 
+@data: 
+
+
+<!-- ##### FUNCTION prelude_option_get_private_data ##### -->
+<para>
+
+</para>
+
+@opt: 
+
+

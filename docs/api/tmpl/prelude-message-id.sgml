@@ -49,6 +49,13 @@ prelude-message-id
 
 
 
+<!-- ##### MACRO PRELUDE_MSG_CM ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO PRELUDE_MSG_ID_DECLARE ##### -->
 <para>
 
@@ -113,6 +120,34 @@ prelude-message-id
 
 
 <!-- ##### MACRO PRELUDE_MSG_AUTH_EXIST ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_CM_FIREWALL ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_CM_THROTTLE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_CM_ISLAND ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_MSG_CM_FEATURE ##### -->
 <para>
 
 </para>

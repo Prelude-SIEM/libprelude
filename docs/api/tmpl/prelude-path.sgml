@@ -14,18 +14,6 @@ prelude-path
 
 </para>
 
-<!-- ##### FUNCTION prelude_get_socket_filename ##### -->
-<para>
-
-</para>
-
-@buf: 
-@size: 
-@port: 
-<!-- # Unused Parameters # -->
-@Returns: 
-
-
 <!-- ##### FUNCTION prelude_get_auth_filename ##### -->
 <para>
 
@@ -84,6 +72,18 @@ prelude-path
 </para>
 
 @uid: 
+
+
+<!-- ##### FUNCTION prelude_get_socket_filename ##### -->
+<para>
+
+</para>
+
+@buf: 
+@size: 
+@port: 
+<!-- # Unused Parameters # -->
+@Returns: 
 
 
 <!-- ##### FUNCTION prelude_get_sensor_name ##### -->

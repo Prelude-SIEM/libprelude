@@ -173,6 +173,13 @@ idmef-tree
 
 
 
+<!-- ##### MACRO idmef_file_access_permission_t ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### TYPEDEF idmef_process_t ##### -->
 <para>
 

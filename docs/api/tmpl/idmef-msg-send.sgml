@@ -308,6 +308,24 @@ idmef-msg-send
 @time: 
 
 
+<!-- ##### FUNCTION idmef_send_detect_time ##### -->
+<para>
+
+</para>
+
+@msg: 
+@time: 
+
+
+<!-- ##### FUNCTION idmef_send_analyzer_time ##### -->
+<para>
+
+</para>
+
+@msg: 
+@time: 
+
+
 <!-- ##### FUNCTION idmef_send_classification ##### -->
 <para>
 
