@@ -6,7 +6,7 @@ AC_CONFIG_SRCDIR([src])
 
 AC_PREREQ(2.53)
 AC_CANONICAL_TARGET([])
-AM_INIT_AUTOMAKE(libprelude, 0.8.5)
+AM_INIT_AUTOMAKE(libprelude, 0.8.6)
 AM_CONFIG_HEADER(config.h)
 AM_DISABLE_STATIC
 
@@ -37,6 +37,8 @@ AC_C_BIGENDIAN(libprelude_cflags="$libprelude_cflags -DWORDS_BIGENDIAN")
 
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
+
+AC_SUBST(pthread_cflags)
 AC_SUBST(libprelude_libs)
 AC_SUBST(libprelude_cflags)
 
@@ -61,6 +63,7 @@ pthrlib=no
 
 for dir in /usr /usr/local /usr/pkg; do
 	AC_CHECK_FILE($dir/lib/libpthread.so, pthread_lib_dir=$dir)
+	AC_CHECK_FILE($dir/lib/libpthread.dylib, pthread_lib_dir=$dir)
 	AC_CHECK_FILE($dir/include/pthread.h, pthread_include_dir=$dir)
 done
 
@@ -73,7 +76,7 @@ fi
 if test -n "$pthread_lib_dir"; then
 	pthrlib=yes
 	libprelude_libs="$libprelude_libs -L$pthread_lib_dir/lib -lpthread"
-	libprelude_cflags="$libprelude_cflags $pthread_include -D_REENTRANT"
+	pthread_cflags="$pthread_include -D_REENTRANT"
 else
 	AC_MSG_CHECKING(whether ${CC-cc} accepts -pthread)
 
@@ -94,7 +97,7 @@ EOF
 	if test -x conftest; then
 		pthrlib=yes
 		libprelude_libs="$libprelude_libs -pthread"
-		libprelude_cflags="$libprelude_cflags -D_THREAD_SAFE -D_REENTRANT $pthread_include"
+		pthread_cflags="$pthread_cflags -D_THREAD_SAFE -D_REENTRANT $pthread_include"
 		
 		rm -f conftest
 		AC_MSG_RESULT(yes)
@@ -126,8 +129,39 @@ if test x$libc_inet_aton != xyes; then
 	AC_CHECK_LIB(resolv, inet_aton, libprelude_libs="$libprelude_libs -lresolv")
 fi
 
+AC_CHECK_LIB(c, poll, libc_poll=yes)
+if test x$libc_poll != xyes; then
+       dnl SG: Special test for macosx, poll() is provided if libpoll
+       dnl is installed by the Fink Package Manager http://fink.sf.net/
+       if test $host_cpu = "powerpc" && test $host_vendor = "apple"; then
+	       
+	        dnl save vars
+		CFLAGS_SAVE=$CFLAGS
+		LDFLAGS_SAVE=$LDFLAGS
+		CPPFLAGS_SAVE=$CPPFLAGS
 
+		dnl set specific macosx paths (fink)
+		LDFLAGS="-L/sw/lib"
+		CFLAGS="-I/sw/include"
+		CPPFLAGS="-I/sw/include"
 
+		AC_CHECK_LIB(poll, poll,
+       		                     libprelude_libs="$libprelude_libs -L/sw/lib -lpoll",
+				     AC_MSG_ERROR("Could not find libpoll. Try installing libpoll via the Fink Package Manager http://fink.sourceforge.net/"))
+		AC_CHECK_HEADER(sys/poll.h,
+       		                     libprelude_cflags="$libprelude_cflags -I/sw/include",
+       		                     AC_MSG_ERROR("Could not find sys/poll.h."))
+
+		dnl restore vars
+		CFLAGS=$CFLAGS_SAVE
+		LDFLAGS=$LDFLAGS_SAVE
+		CPPFLAGS=$CPPFLAGS_SAVE
+
+       dnl poll() not found in libc, let's check in libpoll
+       else
+               AC_CHECK_LIB(poll, poll, libprelude_libs="$libprelude_libs -lpoll")
+       fi
+fi
 
 dnl **************************************************
 dnl * Check for OpenSSL.                             *
@@ -158,6 +192,41 @@ AC_DATATYPE_GENERIC([
  #include <sys/types.h> 
  #include <sys/socket.h>
 ], socklen_t, int size_t "unsigned long")
+
+
+
+dnl **************************************************
+dnl * Check for Ipv6.                                *
+dnl **************************************************
+
+AC_CHECK_TYPES([struct sockaddr_in6], have_ipv6_type=yes,, [
+ #include <sys/types.h>
+ #include <sys/socket.h>
+ #include <netinet/in.h>
+])
+
+AC_CHECK_DECL(AF_INET6, have_ipv6_def=yes,, [
+ #include <sys/types.h>
+ #include <sys/socket.h>
+ #include <netinet/in.h>
+])
+
+if test x$have_ipv6_type = xyes && test x$have_ipv6_def = xyes; then
+        AC_DEFINE_UNQUOTED(HAVE_IPV6, , Define wether Ipv6 is available on this system)
+fi
+
+
+dnl **************************************************
+dnl * Check for getaddrinfo.                         *
+dnl **************************************************
+AC_CHECK_FUNC(getaddrinfo, , libprelude_cflags="$libprelude_cflags -DMISSING_GETADDRINFO")
+
+
+dnl **************************************************
+dnl * Check for inet_ntop.                           *
+dnl **************************************************
+AC_CHECK_FUNC(inet_ntop, AC_DEFINE_UNQUOTED(HAVE_INET_NTOP, , Define wether inet_ntop is available on this system))
+
 
 
 dnl **************************************************

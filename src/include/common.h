@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -24,6 +24,7 @@
 #ifndef _LIBPRELUDE_COMMON_H
 #define _LIBPRELUDE_COMMON_H
 
+#include <inttypes.h>
 #include <netinet/in.h>
 
 void *prelude_realloc(void *ptr, size_t size);

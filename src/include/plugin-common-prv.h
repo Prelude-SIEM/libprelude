@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 1998 - 2000, 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 1998 - 2000, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -106,32 +106,34 @@ void plugins_print_opts(const char *dirname);
  */
 int plugin_get_highest_id(void);
 
-/*
- * Macro used to start a plugin.
- */
-#define plugin_run(pc, type, member, arg...) do {                              \
+
+#define plugin_compute_stats(func) do {                                        \
         struct timeval start, end;                                             \
-                                                                               \
         gettimeofday(&start, NULL);                                            \
-        ((type *)pc->plugin)->member(arg);                                     \
+        func;                                                                \
         gettimeofday(&end, NULL);                                              \
         pc->p_time += (double) end.tv_sec + (double) (end.tv_usec * 1e-6);     \
         pc->p_time -= (double) start.tv_sec + (double) (start.tv_usec * 1e-6); \
         pc->p_count++;                                                         \
+} while(0)
+
+
+/*
+ * Macro used to start a plugin.
+ */
+#define plugin_run(pc, type, member, arg...) do {                              \
+        ((type *)pc->plugin)->member(arg);                                     \
 } while (0)
 
 /*
  * Macro used to start a plugin.
  */
 #define plugin_run_with_return_value(pc, type, member, ret, arg...) do {       \
-        struct timeval start, end;                                             \
-                                                                               \
-        gettimeofday(&start, NULL);                                            \
         ret = ((type *)pc->plugin)->member(arg);                               \
-        gettimeofday(&end, NULL);                                              \
-        pc->p_time += (double) end.tv_sec + (double) (end.tv_usec * 1e-6);     \
-        pc->p_time -= (double) start.tv_sec + (double) (start.tv_usec * 1e-6); \
-        pc->p_count++;                                                         \
 } while (0)
 
 #endif /* _LIBPRELUDE_PLUGIN_COMMON_PRV_H */
+
+
+
+

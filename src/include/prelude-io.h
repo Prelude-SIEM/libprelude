@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -23,6 +23,8 @@
 
 #ifndef _LIBPRELUDE_PRELUDE_IO_H
 #define _LIBPRELUDE_PRELUDE_IO_H
+
+#include <inttypes.h>
 
 #ifdef SWIG
 
@@ -66,7 +68,7 @@ ssize_t prelude_io_read(prelude_io_t *pio, void *buf, size_t count);
 
 ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count);
 
-ssize_t prelude_io_read_delimited(prelude_io_t *pio, void **buf);
+ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf);
 
 
 ssize_t prelude_io_write(prelude_io_t *pio, const void *buf, size_t count);

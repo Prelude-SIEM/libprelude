@@ -220,7 +220,7 @@ int prelude_ssl_recv_cert(prelude_io_t *pio, char **out,
         int len, certlen;       
         unsigned char *buf;
         
-        len = prelude_io_read_delimited(pio, (void **) &buf);
+        len = prelude_io_read_delimited(pio, &buf);
         if ( len <= 0 ) {
                 fprintf(stderr, "couldn't receive certificate.\n");
                 return -1;

@@ -1,11 +1,208 @@
+2003-06-13  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/prelude-inet.c (gai_strerror_compat): implemented.
+	(prelude_inet_gai_strerror): implemented.
+
+2003-06-11  Stéphane Loeuillet  <stephane.loeuillet@tiscali.fr>
+
+	* autogen.sh :
+	remove hardcoded aclocal include directory which broke
+	 configure/Makefile generation on systems with several
+	 autoconf versions (mdk 9.1 and others)
+
+	* sensors-default.conf :
+	corrected typo in default sensor config file which made
+	 sensors without an address even if you filled this section
+
+2003-06-11  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* sensor-adduser/ssl-register.c (recv_manager_certificate): 
+	fix warning.
+
+	* src/prelude-client.c (generic_connect): made really generic. 
+	Now handle both UNIX and TCP connection.
+
+	(inet_connect): (unix_connect): 
+	deprecated by new generic_connect() implementation.
+	
+	(prelude_client_destroy): free sockaddr.
+
+	(resolve_addr): implemented. Use the prelude-inet interface, 
+	providing the ability to resolve Ipv6 address.
+
+	(do_connect): provide information about where we are connecting.
+
+	Theses change provide the ability for a prelude-client to connect
+	using both Ipv4 or Ipv6. Also the prelude-client code has been 
+	reworked so that connection using UNIX and TCP socket share more
+	code.
+	
+	* configure.in: check wether Ipv6 is available on this 
+	system, and define HAVE_IPV6 if it is. Also check for
+	inet_ntop and getaddrinfo.
+
+	* src/prelude-inet.c (prelude_inet_getaddrinfo): 
+	(prelude_inet_freeaddrinfo): 
+	(prelude_inet_ntop): 
+	(prelude_inet_sockaddr_get_inaddr): 
+	(prelude_inet_addr_is_loopback): implemented theses
+	functions, as well as fallback in case they aren't
+	present on the system.
+
+	* src/prelude-client-mgr.c (parse_address): 
+	use strrchr() instead of strchr() so that we can
+	handle Ipv6 address.
+
+2003-06-08  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/ssl-registration-msg.c (prelude_ssl_recv_cert): 
+	remove un-needed cast.
+
+	* sensor-adduser/sensor-adduser.c (generate_sensor_ident): 
+	fix GCC strict-aliasing warning by using an union.
+
+	* src/prelude-io.c (prelude_io_read_delimited): 
+	make buf pointer an unsigned char.
+
+	* src/idmef-msg-send.c (idmef_send_uint64): 
+	use prelude_hton64(), instead of re-implementing it.
+
+2003-06-07  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/include/extract.h (extract_uint64): 
+	fix GCC strict-aliasing warning by using an union.
+
+	* src/common.c (prelude_hton64): 
+	fix convertion problem. Fix GCC strict-aliasing warning.
+
+2003-06-03  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/string-matching.c: 
+	(BoyerMoore_StringMatching):
+	(BoyerMoore_CI_StringMatching); return -1 on error, or
+	the index where the string matched on success.
+
+2003-05-16  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/common.c (prelude_read_multiline): forbid
+	multiline comment (fix #0000078). This function 
+	now handle comment by itself.
+
+2003-05-14  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/prelude-async.c (wait_timer_and_data): 
+	(wait_data): unlock the mutex before exiting.
+
+2003-05-11  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/timer.c (walk_and_wake_up_timer): 
+	fix once for all long time race in this function.
+
+	* Included patch from Sylvain Gil <prelude-code@tootella.org>,
+	that fix libprelude compilation under MacOSX:
+
+	* configure.in (macosx): fixed search for libpthread
+	search for poll() in libpoll if not found in libc
+
+2003-05-06  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/plugin-common.c (plugin_print_stats): 
+	don't print anything if p_count member is not set.
+
+	* src/include/plugin-common-prv.h (plugin_run): 
+	(plugin_run_with_return_value): don't compute stats by
+	default. This avoid us 2 gettimeofday() syscall by plugin
+	ran.
+	
+	(plugin_compute_stats): new macro, that can be used to call
+	plugin_run and plugin_run_with_return_value.
+
+2003-05-03  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/prelude-async.c (prelude_async_exit): 
+	stop using pthread_cancel(). set a global stop_processing
+	variable to 1, and then join the thread.
+
+	(wait_data): 
+	(wait_timer_and_data): if stop_processing is set, and there
+	is no data remaining, exit the thread. 
+
+	* configure.in: update version number to 0.8.6,
+	so that Prelude programs might update their requirements.
+
+	* src/Makefile.am (DEFS): use @pthread_cflags@
+
+	* configure.in (CFLAGS): put pthread cflags in the
+	pthread_cflags variable. 
+
+	* libprelude-config.in: add a --pthread-cflags option.
+
+	This is done in order to avoid non threaded program to
+	compile with pthread related option (which might slow
+	down program execution due to extra locking used by
+	libc in this case).
+	
+2003-05-02  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* Makefile.am (install-data-local): 
+	remove un-needed / after $DESTDIR.
+
+	* src/plugin-common.c (plugin_load_single): correct
+	english in error output.
+
+2003-04-30  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/timer.c (timer_reset): don't use 
+	timer_mutex_unlock_if_needed() here, as timer_init_unlocked() 
+	will reset flags to 0. backup flags, and call timer_unlock()
+	if it's set to TIMER_CALLED_FROM_CB.
+
+	* src/prelude-async.c: 
+	re-establish post 0.8 behavior of defaulting to enable
+	asynchronous timer.
+
+	* src/timer.c: Asynchronous timer race fix.
+	Timer are now unlocked when the callback call 
+	timer_destroy / timer_reset. It make the operation
+	of gathering a timer -> executing it atomic.
+
+	Also, merge part of the HEAD code, and avoid to lock
+	mutex if the asynchronous timer aren't used.
+	
+	* src/include/timer.h: 
+	add a flags member to the timer structure.
+
 2003-04-28  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
-	* src/timer.c (timer_lock): 
-	(timer_unlock): only lock the mutex if async_timer 
-	is set.
+	* configure.in: bump version number to 0.8.5.
 
-	use timer_lock / timer_unlock everywhere.
+	* autogen.sh: remove obsolete hack.
 
+2003-04-27  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/timer.c (timer_unlock_critical_region): 
+	(timer_lock_critical_region): implemented. Provide the
+	ability to deny asynchronous timer wake up. 
+	This fix bug #0000019.
+
+	Program relying on asynchronous timer modifying 
+	shared data should rely on this.
+
+	* src/prelude-getopt.c (is_an_argument): 
+	check if string is an argument, or an option,
+	permit to handle some arguments starting with a '-'.
+	More work is needed thought (need an escape character).
+
+	(check_option_reqarg): 
+	(check_option_noarg): 
+	(check_option_optarg): 
+	use is_an_argument().
+
+	* src/prelude-async.c (prelude_async_set_flags): 
+	(prelude_async_get_flags): revert previous change,
+	and implement the following function, in order to
+	avoid API breakage.
+	
 2003-03-23  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* src/ssl-gencrypto.c (add_DN_object): 

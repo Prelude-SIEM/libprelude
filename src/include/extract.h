@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -23,6 +23,10 @@
 
 #ifndef _LIBPRELUDE_EXTRACT_H
 #define _LIBPRELUDE_EXTRACT_H
+
+
+#include <inttypes.h>
+
 
 #ifdef NEED_ALIGNED_ACCESS
 
@@ -117,14 +121,17 @@ static inline uint64_t extract_uint64(const void *buf)
         return align_uint64(buf);
 
 #else
-        uint64_t tmp, swap;
+        union {
+                uint64_t val64;
+                uint32_t val32[2];
+        } combo_r, combo_w;
 
-        tmp = align_uint64(buf);
+        combo_r.val64 = align_uint64(buf);
 
-        ((uint32_t *) &swap)[0] = ntohl(((uint32_t *) &tmp)[1]);
-        ((uint32_t *) &swap)[1] = ntohl(((uint32_t *) &tmp)[0]);
-        
-        return swap;
+        combo_w.val32[0] = ntohl(combo_r.val32[1]);
+        combo_w.val32[1] = ntohl(combo_r.val32[0]);
+
+        return combo_w.val64;
 #endif
 }
 

@@ -49,6 +49,7 @@
 #include "prelude-log.h"
 #include "prelude-io.h"
 #include "prelude-auth.h"
+#include "prelude-inet.h"
 #include "prelude-message.h"
 #include "prelude-message-id.h"
 #include "prelude-client.h"
@@ -67,8 +68,9 @@ struct prelude_client {
 
         char *daddr;
         uint16_t dport;
-
-        struct in_addr in;
+        
+        size_t sa_len;
+        struct sockaddr *sa;
         
         /*
          * This pointer point to the object suitable
@@ -101,112 +103,40 @@ static void auth_error(prelude_client_t *client, const char *auth_kind)
  * Connect to the specified address in a generic manner
  * (can be Unix or Inet ).
  */
-static int generic_connect(int sock, struct sockaddr *addr, socklen_t addrlen)
+static int generic_connect(struct sockaddr *sa, socklen_t sa_len)
 {
-        int ret;
+        int ret, sock, proto;
+
+        if ( sa->sa_family == AF_UNIX ) 
+                proto = 0;
+        else
+                proto = IPPROTO_TCP;
+        
+        sock = socket(sa->sa_family, SOCK_STREAM, proto);
+	if ( sock < 0 ) {
+                log(LOG_ERR, "error opening socket.\n");
+		return -1;
+	}
         
         ret = fcntl(sock, F_SETOWN, getpid());
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't set children to receive signal.\n");
-                return -1;
+                goto err;
         }
 
-        ret = connect(sock, addr, addrlen);
+        ret = connect(sock, sa, sa_len);
 	if ( ret < 0 ) {
                 log(LOG_ERR,"error connecting socket.\n");
-                return -1;
+                goto err;
 	}
         
-	return 0;
-}
-
-
-
-/*
- * Connect to an UNIX socket.
- */
-static int unix_connect(uint16_t port)
-{
-        int ret, sock;
-    	struct sockaddr_un addr;
-
-	log(LOG_INFO, "- Connecting to Unix prelude Manager server.\n");
-        
-	sock = socket(AF_UNIX, SOCK_STREAM, 0);
-	if ( sock < 0 ) {
-                log(LOG_ERR,"Error opening unix socket.\n");
-		return -1;
-	}
-        
-	addr.sun_family = AF_UNIX;
-        prelude_get_socket_filename(addr.sun_path, sizeof(addr.sun_path), port);
-
-        ret = generic_connect(sock, (struct sockaddr *)&addr, sizeof(addr));
-        if ( ret < 0 ) {
-                log(LOG_ERR,"Error connecting to Manager server.\n");
-                close(sock);
-                return -1;
-        }
-
 	return sock;
-}
 
-
-
-
-/*
- * Setup an Inet connection.
- */
-static int inet_connect(prelude_client_t *client)
-{
-        socklen_t len;
-        int ret, sock;
-	struct sockaddr_in daddr, saddr;
-        
-	log(LOG_INFO, "- Connecting to Tcp prelude Manager server %s:%d.\n",
-            client->daddr, client->dport);
-        
-	daddr.sin_family = AF_INET;
-	daddr.sin_port = htons(client->dport);
-        daddr.sin_addr.s_addr = client->in.s_addr;
-        
-        sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if ( sock < 0 ) {
-		log(LOG_ERR,"Error opening inet socket.\n");
-		return -1;
-	}
-
-#if 0
-        /*
-         * We want packet to be sent as soon as possible,
-         * this mean not using the Nagle algorithm which try to minimize
-         * packets on the network at the expense of buffering the data.
-         */
-        on = 1;
-        ret = setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, &on, sizeof(int));
-        if ( ret < 0 ) 
-                log(LOG_ERR, "couldn't turn the tcp Nagle algorithm off.\n");
-#endif
-        
-        ret = generic_connect(sock, (struct sockaddr *)&daddr, sizeof(daddr));
-        if ( ret < 0 ) {
-                log(LOG_ERR,"Error connecting to %s.\n", client->daddr);
-                goto err;
-        }
-
-        len = sizeof(saddr);
-        ret = getsockname(sock, (struct sockaddr *)&saddr, &len);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't get source connection informations.\n");
-                goto err;
-        }
-        
-        return sock;
-
- err:
+  err:
         close(sock);
         return -1;
 }
+
 
 
 
@@ -418,19 +348,16 @@ static int start_inet_connection(prelude_client_t *client)
         struct sockaddr_in addr;
         int have_ssl = 0, have_plaintext = 0, sock, ret = -1;
         
-        len = sizeof(addr);
-        
-        /*
-         * connect to the Manager.
-         */
-        sock = inet_connect(client);
+        sock = generic_connect(client->sa, client->sa_len);
         if ( sock < 0 )
                 return -1;
 
         /*
          * Get information about the connection,
          * because the sensor might want to know source addr/port used.
-         */
+         */        
+        len = sizeof(addr);
+
         ret = getsockname(sock, (struct sockaddr *) &addr, &len);
         if ( ret < 0 ) 
                 log(LOG_ERR, "couldn't get connection informations.\n");
@@ -479,7 +406,7 @@ static int start_unix_connection(prelude_client_t *client)
 {
         int ret, sock, have_ssl = 0, have_plaintext = 0;
         
-        sock = unix_connect(client->dport);
+        sock = generic_connect(client->sa, client->sa_len);
         if ( sock < 0 )
                 return -1;
 
@@ -512,22 +439,15 @@ static int start_unix_connection(prelude_client_t *client)
 static int do_connect(prelude_client_t *client) 
 {
         int ret;
-        const char *real_addr;
-
-        /*
-         * translate the resolved address to a string,
-         * so that we can see if it is resolved to 127.0.0.1.
-         */
-        real_addr = inet_ntoa(client->in);
-        if ( ! real_addr ) {
-                log(LOG_ERR, "couldn't get real address.\n");
-                return -1;
-        }
         
-	if ( strcmp(real_addr, "127.0.0.1") == 0 ) 
+        if ( client->sa->sa_family == AF_UNIX ) {
+                log(LOG_INFO, "- Connecting to UNIX prelude Manager server.\n");
 		ret = start_unix_connection(client);
-        else 
+        } else {
+                log(LOG_INFO, "- Connecting to %s port %d prelude Manager server.\n",
+                    client->daddr, client->dport);
                 ret = start_inet_connection(client);
+        }
         
         return ret;
 }
@@ -556,12 +476,63 @@ static void handle_connection_breakage(prelude_client_t *client)
 
 
 
+static int resolve_addr(prelude_client_t *client, const char *addr, uint16_t port) 
+{
+        int ret;
+        prelude_addrinfo_t *ai, hints;
+        char service[sizeof("00000")];
+
+        memset(&hints, 0, sizeof(hints));
+        
+        hints.ai_family = PF_UNSPEC;
+        hints.ai_socktype = SOCK_STREAM;
+        hints.ai_protocol = IPPROTO_TCP;
+
+        snprintf(service, sizeof(service), "%u", port);
+        
+        ret = prelude_inet_getaddrinfo(addr, service, &hints, &ai);        
+        if ( ret < 0 ) {
+                log(LOG_ERR, "couldn't resolve %s.\n", addr);
+                return -1;
+        }
+        
+        ret = prelude_inet_addr_is_loopback(ai->ai_family, prelude_inet_sockaddr_get_inaddr(ai->ai_addr));        
+        if ( ret == 0 ) {                
+                ai->ai_family = AF_UNIX;
+                ai->ai_addrlen = sizeof(struct sockaddr_un);
+        }
+
+        client->sa = malloc(ai->ai_addrlen);
+        if ( ! client->sa ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                prelude_inet_freeaddrinfo(ai);
+                return -1;
+        }
+
+        client->sa_len = ai->ai_addrlen;
+        client->sa->sa_family = ai->ai_family;
+
+        if ( ai->ai_family != AF_UNIX )
+                memcpy(client->sa, ai->ai_addr, ai->ai_addrlen);
+        else {
+                struct sockaddr_un *un = (struct sockaddr_un *) client->sa;
+                prelude_get_socket_filename(un->sun_path, sizeof(un->sun_path), port);
+        }
+                
+        prelude_inet_freeaddrinfo(ai);
+
+        return 0;
+}
+
+
+
 /*
  * function called back when a connection timer expire.
  */
 
 void prelude_client_destroy(prelude_client_t *client) 
 {
+	free(client->sa);
         close_client_fd(client);
 
         if ( client->saddr )
@@ -579,13 +550,14 @@ prelude_client_t *prelude_client_new(const char *addr, uint16_t port)
         int ret;
         prelude_client_t *new;
         
+        
         signal(SIGPIPE, SIG_IGN);
 
         new = malloc(sizeof(*new));
         if (! new )
                 return NULL;
         
-        ret = prelude_resolve_addr(addr, &new->in);
+        ret = resolve_addr(new, addr, port);
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't resolve %s.\n", addr);
                 return NULL;

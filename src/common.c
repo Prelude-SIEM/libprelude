@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -22,6 +22,7 @@
 *****/
 
 #include <stdio.h>
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -195,8 +196,17 @@ int prelude_read_multiline(FILE *fd, int *line, char *buf, size_t size)
                 return -1;
 
         (*line)++;
+         
+        /*
+         * We don't want to handle multiline in case this is a comment.
+         */
+        for ( i = 0; buf[i] != '\0' && isspace(buf[i]); i++ );
+                
+        if ( buf[i] == '#' )
+                return prelude_read_multiline(fd, line, buf, size);
+                
         i = strlen(buf);
-        
+
         while ( --i > 0 && (buf[i] == ' ' || buf[i] == '\n') );
         
         if ( buf[i] == '\\' )
@@ -225,12 +235,20 @@ uint64_t prelude_hton64(uint64_t val)
 #ifdef WORDS_BIGENDIAN
         tmp = val;
 #else
+	union {
+		uint64_t val64;
+		uint32_t val32[2];
+	} combo_r, combo_w;
+		
+	combo_r.val64 = val;
+	
         /*
          * Put in network byte order
          */
-        ((uint32_t *) &tmp)[0] = htonl(((uint32_t *) &val)[1]);
-        ((uint32_t *) &tmp)[1] = htonl(((uint32_t *) &val)[0]);
+	combo_w.val32[0] = htonl(combo_r.val32[1]);
+	combo_w.val32[1] = htonl(combo_r.val32[0]);
+	tmp = combo_w.val64;
 #endif
-
+        
         return tmp;
 }

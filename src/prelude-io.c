@@ -403,7 +403,7 @@ ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count)
  * On error, -1 is returned, and errno is set appropriately. In this
  * case it is left unspecified whether the file position (if any) changes.
  */
-ssize_t prelude_io_read_delimited(prelude_io_t *pio, void **buf) 
+ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf) 
 {
         int ret;
         size_t count;

@@ -41,10 +41,15 @@
 
 static LIST_HEAD(joblist);
 
+
+static int async_flags = PRELUDE_ASYNC_TIMER;
+
+
 static pthread_t thread;
-static int async_flags = 0;
 static pthread_cond_t cond;
 static pthread_mutex_t mutex;
+static int stop_processing = 0;
+
 
 
 
@@ -79,9 +84,16 @@ static void wait_timer_and_data(void)
                 ts.tv_nsec = now.tv_usec * 1000;
                 
                 pthread_mutex_lock(&mutex);
-                while ( list_empty(&joblist) && ret != ETIMEDOUT ) {
+
+                while ( list_empty(&joblist) && ret != ETIMEDOUT && ! stop_processing ) {
                         ret = pthread_cond_timedwait(&cond, &mutex, &ts);
                 }
+                
+                if ( list_empty(&joblist) && stop_processing ) {
+                        pthread_mutex_unlock(&mutex);
+                        pthread_exit(NULL);
+                }
+                
                 pthread_mutex_unlock(&mutex);
                 
                 gettimeofday(&now, NULL);
@@ -108,8 +120,13 @@ static void wait_data(void)
 {        
         pthread_mutex_lock(&mutex);
         
-        while ( list_empty(&joblist) ) 
+        while ( list_empty(&joblist) && ! stop_processing ) 
                 pthread_cond_wait(&cond, &mutex);
+
+        if ( list_empty(&joblist) && stop_processing ) {
+                pthread_mutex_unlock(&mutex);
+                pthread_exit(NULL);
+        }
 
         pthread_mutex_unlock(&mutex);
 }
@@ -166,8 +183,16 @@ static void *async_thread(void *arg)
 
 
 static void prelude_async_exit(void)  
-{        
-        pthread_cancel(thread);
+{
+        pthread_mutex_lock(&mutex);
+        
+        stop_processing = 1;
+        pthread_cond_signal(&cond);
+
+        pthread_mutex_unlock(&mutex);
+
+        log(LOG_INFO, "Waiting for asynchronous operation to finish.\n");
+        
         pthread_join(thread, NULL);
         
         pthread_cond_destroy(&cond);
@@ -180,9 +205,6 @@ static void prelude_async_exit(void)
 void prelude_async_set_flags(int flags) 
 {
         async_flags = flags;
-
-        if ( flags & PRELUDE_ASYNC_TIMER )
-                timer_set_flags(timer_get_flags() | PRELUDE_ASYNC_TIMER);
 }
 
 
@@ -232,6 +254,7 @@ void prelude_async_add(prelude_async_object_t *obj)
         pthread_cond_signal(&cond);
         pthread_mutex_unlock(&mutex);
 }
+
 
 
 

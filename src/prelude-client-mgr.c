@@ -1,6 +1,5 @@
 /*****
-*
-* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -40,15 +39,19 @@
 #include "config-engine.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
+#include "prelude-message-id.h"
 #include "prelude-client.h"
 #include "prelude-client-mgr.h"
 #include "prelude-async.h"
 #include "prelude-path.h"
+#include "prelude-getopt.h"
+#include "extract.h"
 
 #define INITIAL_EXPIRATION_TIME 60
 #define MAXIMUM_EXPIRATION_TIME 3600
 
 
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
 
 
 
@@ -107,7 +110,82 @@ struct prelude_client_mgr {
         void (*notify_cb)(struct list_head *clist);
         struct list_head all_client;
         struct list_head or_list;
+
+        int nfd;
+	fd_set fds;
+        prelude_timer_t timer;
 };
+
+
+
+
+static int process_request(prelude_client_t *client) 
+{
+        int ret;
+        prelude_msg_t *msg = NULL;
+        prelude_msg_status_t status;
+
+        status = prelude_msg_read(&msg, prelude_client_get_fd(client));
+        if ( status != prelude_msg_finished )
+                return -1;
+
+        if ( prelude_msg_get_tag(msg) != PRELUDE_MSG_OPTION_REQUEST )
+                return -1;
+
+        ret = prelude_option_process_request(client, msg);
+
+        prelude_msg_destroy(msg);
+
+        return ret;
+}
+
+
+
+
+static void check_for_data_cb(void *arg)
+{
+	int ret, fd;
+        fd_set rfds;
+        struct timeval tv;
+        struct list_head *tmp;
+        prelude_client_t *client;
+        prelude_client_mgr_t *mgr = (prelude_client_mgr_t *) arg;
+
+        /*
+         * Thread care - in case timers are ran asynchronously.
+         *
+         * - mgr->nfd and mgr->fds can be read without lock,
+         *   as they are only modified at initialisation time or
+         *   from within a timer (so it's serialized then).
+         *
+         * - process_request() should be okay, even if the client is
+         *   killed (deconnection) at the same time it's called.
+         *
+         * - The problem now arise with option callback.
+         */
+        tv.tv_sec = 0;
+        tv.tv_usec = 0;
+        rfds = mgr->fds;
+        
+        timer_reset(&mgr->timer);
+        
+        ret = select(mgr->nfd, &rfds, NULL, NULL, &tv);
+        if ( ret <= 0 )
+                return;
+
+        list_for_each(tmp, &mgr->all_client) {
+                client = prelude_list_get_object(tmp, prelude_client_t);
+
+                fd = prelude_io_get_fd(prelude_client_get_fd(client));
+                
+                ret = FD_ISSET(fd, &rfds);
+                if ( ! ret )
+                        continue;
+
+                process_request(client);
+        }
+}
+
 
 
 
@@ -193,7 +271,7 @@ static int flush_backup_if_needed(client_list_t *clist)
  */
 static void client_timer_expire(void *data) 
 {
-        int ret;
+        int ret, fd;
         client_t *client = data;
         prelude_client_mgr_t *mgr = client->parent->parent;
         
@@ -227,6 +305,14 @@ static void client_timer_expire(void *data)
                  */
                 if ( mgr->notify_cb )
                         mgr->notify_cb(&mgr->all_client);
+
+		/*
+		 * put the fd in fdset for read from manager.
+		 */
+                fd = prelude_io_get_fd(prelude_client_get_fd(client->client));
+
+                FD_SET(fd, &mgr->fds);
+                mgr->nfd = MAX(fd + 1, mgr->nfd);
         }
 }
 
@@ -240,7 +326,7 @@ static void parse_address(char *addr, uint16_t *port)
 {
         char *ptr;
         
-        ptr = strchr(addr, ':');
+        ptr = strrchr(addr, ':');
         if ( ! ptr )
                 *port = 5554;
         else {
@@ -283,7 +369,7 @@ static int add_new_client(client_list_t *clist, prelude_client_t *client, int us
 
 static int create_new_client(client_list_t *clist, char *addr, int type) 
 {
-        int ret;
+        int ret, fd;
         uint16_t port;
         client_t *new;
 
@@ -321,6 +407,11 @@ static int create_new_client(client_list_t *clist, char *addr, int type)
                  */
                 clist->dead++;
                 timer_init(&new->timer);
+        }
+	else {
+                fd = prelude_io_get_fd(prelude_client_get_fd(new->client));
+                FD_SET(fd, &clist->parent->fds);
+                clist->parent->nfd = MAX(fd + 1, clist->parent->nfd);
         }
         
         list_add_tail(&new->list, &clist->client_list);
@@ -676,7 +767,7 @@ void prelude_client_mgr_broadcast_async(prelude_client_mgr_t *cmgr, prelude_msg_
 static prelude_client_mgr_t *client_mgr_new(void) 
 {
         prelude_client_mgr_t *new;
-        
+
         new = malloc(sizeof(*new));
         if ( ! new ) {
                 log(LOG_ERR, "memory exhausted.\n");
@@ -686,6 +777,9 @@ static prelude_client_mgr_t *client_mgr_new(void)
         new->notify_cb = NULL;
         INIT_LIST_HEAD(&new->or_list);
         INIT_LIST_HEAD(&new->all_client);
+        
+	FD_ZERO(&new->fds);
+	new->nfd = 0;
 
         return new;
 }
@@ -739,12 +833,44 @@ prelude_client_mgr_t *prelude_client_mgr_new(int type, const char *cfgline)
                 free(new);
                 return NULL;
         }
-
+        
+        timer_set_data(&new->timer, new);
+        timer_set_expire(&new->timer, 1);
+        timer_set_callback(&new->timer, check_for_data_cb);
+        timer_init(&new->timer);
+        
         free(dup);
         
         return new;
 }
 
+
+
+
+void prelude_client_mgr_destroy(prelude_client_mgr_t *mgr) 
+{
+        client_t *client;
+        client_list_t *clist;
+        struct list_head *tmp, *tmp2, *bkp, *bkp2;
+
+        list_for_each_safe(tmp, bkp, &mgr->or_list) {
+                clist = list_entry(tmp, client_list_t, list);
+                
+                list_for_each_safe(tmp2, bkp2, &clist->client_list) {
+                        client = list_entry(tmp2, client_t, list);
+                        
+                        prelude_client_destroy(client->client);
+                        free(client);
+                }
+
+                free(clist);
+        }
+        
+        prelude_io_close(mgr->backup_fd_read);
+        prelude_io_close(mgr->backup_fd_write);
+        
+        free(mgr);
+}
 
 
 
@@ -786,6 +912,12 @@ int prelude_client_mgr_add_client(prelude_client_mgr_t **mgr_ptr, prelude_client
                         return -1;
                 
                 *mgr_ptr = mgr;
+                
+                timer_set_expire(&mgr->timer, 1);
+                timer_set_data(&mgr->timer, mgr);
+                timer_set_callback(&mgr->timer, check_for_data_cb);
+                timer_init(&mgr->timer);
+                
         } else 
                 mgr = *mgr_ptr;
         

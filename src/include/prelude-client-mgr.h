@@ -48,4 +48,7 @@ int prelude_client_mgr_flush_backup(prelude_client_mgr_t *mgr, prelude_client_t 
 int prelude_client_mgr_tell_client_dead(prelude_client_mgr_t *mgr, prelude_client_t *client);
 int prelude_client_mgr_tell_client_alive(prelude_client_mgr_t *mgr, prelude_client_t *client);
 
+
+void prelude_client_mgr_destroy(prelude_client_mgr_t *mgr);
+
 #endif /* _LIBPRELUDE_PRELUDE_CLIENT_MGR_H */

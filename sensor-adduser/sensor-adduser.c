@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -320,15 +320,15 @@ static uint32_t time_hash(void)
 
 static uint64_t generate_sensor_ident(const char *hostname, const char *sensorname) 
 {
-        uint32_t *ptr;
-        uint64_t ident;
+        union {
+                uint64_t val64;
+                uint32_t val32[2];
+        } combo;
         
-        ptr = (uint32_t *) &ident;
-
-        ptr[0] = time_hash();
-        ptr[1] = elf_hash(hostname) ^ elf_hash(sensorname);
+        combo.val32[0] = time_hash();
+        combo.val32[1] = elf_hash(hostname) ^ elf_hash(sensorname);
         
-        return ident;
+        return combo.val64;
 }
 
 

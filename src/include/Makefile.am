@@ -29,6 +29,7 @@ include_HEADERS = config-engine.h 		\
 		  prelude-ident.h		\
 		  prelude-path.h		\
 		  prelude-log.h			\
+		  prelude-inet.h		\
 		  sensor.h			\
 		  threads.h			\
 		  extract.h			\

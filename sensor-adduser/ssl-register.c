@@ -98,7 +98,7 @@ static int recv_manager_certificate(prelude_io_t *pio, des_key_schedule *skey1,
         unsigned char *buf;
         char filename[256];
         
-        len = prelude_io_read_delimited(pio, (void **)&buf);
+        len = prelude_io_read_delimited(pio, &buf);
         if ( len <= 0 ) {
                 fprintf(stderr, "Error receiving registration message.\n"
                         "Perhaps you provided the wrong one shot password ?\n");

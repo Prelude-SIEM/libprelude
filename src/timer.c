@@ -25,6 +25,9 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <assert.h>
+
+
+#define __USE_GNU 1
 #include <pthread.h>
 
 #include "timer.h"
@@ -33,41 +36,30 @@
 #include "prelude-async.h"
 
 
-
 #ifdef DEBUG
  #define dprint(args...) fprintf(stderr, args)
 #else
  #define dprint(args...)
 #endif
 
-
 static int count = 0;
-static int timer_flags = 0;
 static LIST_HEAD(timer_list);
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 
 
 
-inline static void timer_lock(void) 
+inline static void timer_lock_list(void) 
 {
-        if ( timer_flags & PRELUDE_ASYNC_TIMER )
+        if ( prelude_async_get_flags() & PRELUDE_ASYNC_TIMER )
                 pthread_mutex_lock(&mutex);
 }
 
 
 
-inline static void timer_unlock(void) 
+inline static void timer_unlock_list(void) 
 {
-        if ( timer_flags & PRELUDE_ASYNC_TIMER )
+        if ( prelude_async_get_flags() & PRELUDE_ASYNC_TIMER )
                 pthread_mutex_unlock(&mutex);
-}
-
-
-
-
-static void set_expiration_time(prelude_timer_t *timer) 
-{
-        timer->start_time = time(NULL);
 }
 
 
@@ -106,7 +98,9 @@ static int wake_up_if_needed(prelude_timer_t *timer, time_t now)
 
         if ( now == -1 || time_elapsed(timer, now) >= timer_expire(timer) ) {
                 timer->start_time = -1;
+                
                 timer_func(timer)(timer_data(timer));
+                
                 return 0;
         }
         
@@ -124,31 +118,22 @@ static void walk_and_wake_up_timer(time_t now)
 {
         int ret, woke = 0;
         prelude_timer_t *timer;
-        struct list_head *tmp, *next;
+        struct list_head *tmp, *bkp;
+        
+        timer_lock_list();
 
-        timer_lock();
-        next = ( list_empty(&timer_list) ) ? NULL : timer_list.next;
-        timer_unlock();
-                
-        while ( next ) {
-                tmp = next;
-
-                timer_lock();
-                next = ( tmp->next != &timer_list ) ? tmp->next : NULL;
-                timer_unlock();
-                
+        list_for_each_safe(tmp, bkp, &timer_list) {
                 timer = list_entry(tmp, prelude_timer_t, list);
-
+                
                 ret = wake_up_if_needed(timer, now);
                 if ( ret < 0 )
-                        /*
-                         * no timer remaining in the list will be expired.
-                         */
                         break;
-
+                
                 woke++;
         }
 
+        timer_unlock_list();
+        
         dprint("woke up %d/%d timer\n", woke, count);
 }
 
@@ -184,7 +169,7 @@ static struct list_head *search_previous_forward(prelude_timer_t *timer, time_t 
                          * we found a timer that's expiring at the same time
                          * as us. Return it as the previous insertion point.
                          */
-                        dprint("[expire=%d] found forward in %d hop at %p\n", timer->expire, hop, cur);
+                            //dprint("[expire=%d] found forward in %d hop at %p\n", timer->expire, hop, cur);
                         return tmp;
                 }
 
@@ -193,7 +178,7 @@ static struct list_head *search_previous_forward(prelude_timer_t *timer, time_t 
                          * we found a timer expiring after us. We can return 
                          * the previously saved entry.
                          */
-                        dprint("[expire=%d] found forward in %d hop at %p\n", timer->expire, hop, cur);
+                            //dprint("[expire=%d] found forward in %d hop at %p\n", timer->expire, hop, cur);
                         assert(prev);
                         return prev;
                 }
@@ -278,7 +263,7 @@ static struct list_head *search_previous_timer(prelude_timer_t *timer)
          */
         if ( timer->expire >= time_remaining(last, timer->start_time) ) {
                 assert(timer_list.prev);
-                dprint("[expire=%d] found without search (insert last)\n", timer->expire);
+//                dprint("[expire=%d] found without search (insert last)\n", timer->expire);
                 return timer_list.prev;
         }
         
@@ -289,7 +274,7 @@ static struct list_head *search_previous_timer(prelude_timer_t *timer)
          */
         if ( timer->expire <= time_remaining(first, timer->start_time) ) {
                 assert(&timer_list);
-                dprint("[expire=%d] found without search (insert first)\n", timer->expire);
+//                dprint("[expire=%d] found without search (insert first)\n", timer->expire);
                 return &timer_list;
         }
 
@@ -320,6 +305,32 @@ static struct list_head *search_previous_timer(prelude_timer_t *timer)
 
 
 
+static void timer_destroy_unlocked(prelude_timer_t *timer) 
+{
+        count--;
+        list_del(&timer->list);
+}
+
+
+
+
+static void timer_init_unlocked(prelude_timer_t *timer) 
+{
+        struct list_head *prev;
+
+        count++;
+        timer->start_time = time(NULL);
+        
+        if ( ! list_empty(&timer_list) ) {
+                prev = search_previous_timer(timer);
+        } else
+                prev = &timer_list;
+
+        list_add(&timer->list, prev);
+}
+
+
+
 
 
 /**
@@ -330,22 +341,9 @@ static struct list_head *search_previous_timer(prelude_timer_t *timer)
  */
 void timer_init(prelude_timer_t *timer)
 {
-        struct list_head *prev;
-        
-        set_expiration_time(timer);
-
-        timer_lock();
-        count++;
-        
-        if ( ! list_empty(&timer_list) ) {
-                prev = search_previous_timer(timer);
-        } else
-                prev = &timer_list;
-
-        list_add(&timer->list, prev);
-
-        timer_unlock();
+        timer_init_unlocked(timer);
 }
+
 
 
 
@@ -356,10 +354,11 @@ void timer_init(prelude_timer_t *timer)
  * Reset timer 'timer', as if it was just started.
  */
 void timer_reset(prelude_timer_t *timer) 
-{
-        timer_destroy(timer);
-        timer_init(timer);
+{        
+        timer_destroy_unlocked(timer);
+        timer_init_unlocked(timer);
 }
+
 
 
 
@@ -372,12 +371,7 @@ void timer_reset(prelude_timer_t *timer)
  */
 void timer_destroy(prelude_timer_t *timer) 
 {
-        timer_lock();
-        
-        count--;
-        list_del(&timer->list);
-
-        timer_unlock();
+        timer_destroy_unlocked(timer);
 }
 
 
@@ -399,7 +393,6 @@ void prelude_wake_up_timer(void)
 
 
 
-
 /**
  * timer_flush:
  *
@@ -412,15 +405,31 @@ void timer_flush(void)
 
 
 
-void timer_set_flags(int flags) 
+
+/**
+ * timer_lock_critical_region:
+ *
+ * Deactivate timer wake-up until timer_unlock_critical_region() is called.
+ */
+void timer_lock_critical_region(void) 
 {
-        timer_flags = flags;
+        pthread_mutex_lock(&mutex);
 }
 
 
 
-int timer_get_flags(void)
+/**
+ * timer_unlock_critical_region:
+ *
+ * Reactivate timer wake-up after timer_lock_critical_regions() has been called.
+ */
+void timer_unlock_critical_region(void) 
 {
-        return timer_flags;
+        pthread_mutex_unlock(&mutex);
 }
+
+
+
+
+
 

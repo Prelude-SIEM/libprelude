@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -30,6 +30,7 @@
 #include <sys/time.h>
 
 #include "list.h"
+#include "common.h"
 #include "prelude-log.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
@@ -69,14 +70,8 @@ inline void idmef_send_uint64(prelude_msgbuf_t *msg, uint8_t tag, uint64_t *data
         if ( *data == 0 )
                 return;
 
-#ifdef WORDS_BIGENDIAN
-        
-        dst = *data;
-#else
-        ((uint32_t *) &dst)[0] = htonl(((uint32_t *) data)[1]);
-        ((uint32_t *) &dst)[1] = htonl(((uint32_t *) data)[0]);
-#endif
-        
+        dst = prelude_hton64(*data);
+                
         prelude_msgbuf_set(msg, tag, sizeof(*data), &dst);
 }
 

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 1998 - 2000, 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 1998 - 2000, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -205,7 +205,7 @@ static int plugin_load_single(const char *filename, int argc, char **argv,
         
         handle = lt_dlopenext(filename);
         if ( ! handle ) {
-                log(LOG_INFO, "can't open %s : %s.\n", filename, lt_dlerror());
+                log(LOG_INFO, "couldn't open %s : %s.\n", filename, lt_dlerror());
                 return -1;
         }
 
@@ -486,6 +486,9 @@ void plugin_del(plugin_container_t *pc)
  */
 void plugin_print_stats(plugin_container_t *pc) 
 {
+        if ( ! pc->p_count )
+                return;
+        
         log(LOG_INFO, "%s (\"%s\") : plugin called %u time: %fs average\n",
             pc->plugin->name, pc->infos ? pc->infos : "no infos",
             pc->p_count, pc->p_time / pc->p_count);
@@ -504,7 +507,7 @@ void plugins_print_stats(void)
         plugin_entry_t *pe;
         plugin_container_t *pc;
         struct list_head *tmp, *tmp2;
-
+        
         log(LOG_INFO, "*** Plugin stats (not accurate if used > 2e32-1 times) ***\n\n");
         
         list_for_each(tmp, &all_plugin) {

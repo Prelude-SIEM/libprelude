@@ -32,7 +32,7 @@
 
 typedef struct {
         struct list_head list;
-
+        
         short int expire;
         time_t start_time;
 
@@ -57,18 +57,6 @@ typedef struct {
  * Init a timer (add it to the timer list).
  */
 void timer_init(prelude_timer_t *timer);
-
-
-/*
- * Destroy current timer.
- */
-void timer_destroy_current(void);
-
-
-/*
- * Reset current timer.
- */
-void timer_reset_current(void);
 
 
 /*
@@ -104,17 +92,15 @@ void prelude_wake_up_timer(void);
  */
 void timer_flush(void);
 
+/*
+ *
+ */
+void timer_lock_critical_region(void);
+
 
 /*
  *
  */
-void timer_set_flags(int flags);
-
-
-/*
- *
- */
-int timer_get_flags(void);
-
+void timer_unlock_critical_region(void);
 
 #endif /* _LIBPRELUDE_TIMER_H */
