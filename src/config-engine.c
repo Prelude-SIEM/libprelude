@@ -261,7 +261,6 @@ static char *strip_value(const char *in)
 
 
 
-
 static int parse_buffer(char *buf, char **entry, char **value)
 {
         char *ptr;
@@ -282,6 +281,28 @@ static int parse_buffer(char *buf, char **entry, char **value)
                 *value = strdup("");
                
         return 0;
+}
+
+
+
+static int parse_section_buffer(char *buf, char **entry, char **value)
+{
+        int ret;
+        char *s, *e;
+
+        s = strchr(buf, '[');
+        if ( ! s )
+                return -1;
+
+        e = strchr(buf, ']');
+        if ( ! e )
+                return -1;
+
+        *e = 0;
+        ret = parse_buffer(s + 1, entry, value);
+        *e = '[';
+
+        return ret;
 }
 
 
@@ -450,7 +471,7 @@ static int new_entry_line(config_t *cfg, const char *entry, const char *val)
         line = search_entry(cfg, NULL, entry, 0, &eout, &vout);
         if ( line < 0 ) 
                 return op_append_line(cfg, create_new_line(entry, val));
-
+        
         free_val(&eout);
         free_val(&vout);
         
@@ -567,8 +588,7 @@ static const char *get_variable_content(config_t *cfg, const char *variable)
  *
  * Returns: 0 on success, -1 if there is nothing more to read.
  */
-int config_get_next(config_t *cfg, char **section,
-                    char **entry, char **value, int *line)
+int config_get_next(config_t *cfg, char **section, char **entry, char **value, int *line)
 {
         char *ptr;
 
@@ -577,10 +597,9 @@ int config_get_next(config_t *cfg, char **section,
         
         if ( ! cfg->content )
                 return -1;
-        
+
         free_val(entry);
         free_val(value);
-        free_val(section);
         
         for ( (*line)++; cfg->content[*line - 1] != NULL; (*line)++ ) {
                 
@@ -592,11 +611,14 @@ int config_get_next(config_t *cfg, char **section,
                 if ( ! *ptr || is_line_commented(ptr) )
                         continue;
                 
-                if ( is_section(ptr) ) 
-                        *section = get_section(ptr);
-                else 
+                if ( is_section(ptr) ) {
+                        free_val(section);
+                        return parse_section_buffer(ptr, section, value);
+                } else 
                         return parse_buffer(ptr, entry, value);
         }
+
+        free_val(section);
         
         return -1;
 }

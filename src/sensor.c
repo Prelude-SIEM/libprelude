@@ -38,7 +38,6 @@
 #include "prelude-path.h"
 #include "prelude-list.h"
 #include "config-engine.h"
-#include "plugin-common.h"
 #include "prelude-log.h"
 
 #include "prelude-io.h"
@@ -90,7 +89,7 @@ static prelude_client_mgr_t *manager_list = NULL;
 char *program_name = NULL;
 
 
-static int setup_analyzer_node_location(prelude_option_t *opt, const char *arg) 
+static int setup_analyzer_node_location(void **context, prelude_option_t *opt, const char *arg) 
 {
 	idmef_string_t *location;
 
@@ -107,7 +106,7 @@ static int setup_analyzer_node_location(prelude_option_t *opt, const char *arg)
 
 
 
-static int setup_analyzer_node_name(prelude_option_t *opt, const char *arg) 
+static int setup_analyzer_node_name(void **context, prelude_option_t *opt, const char *arg) 
 {
 	idmef_string_t *name;
 
@@ -124,7 +123,7 @@ static int setup_analyzer_node_name(prelude_option_t *opt, const char *arg)
 
 
 
-static int setup_analyzer_node_address_category(prelude_option_t *opt, const char *arg) 
+static int setup_analyzer_node_address_category(void **context, prelude_option_t *opt, const char *arg) 
 {
 	int category;
 
@@ -141,7 +140,7 @@ static int setup_analyzer_node_address_category(prelude_option_t *opt, const cha
 
 
 
-static int setup_analyzer_node_address_address(prelude_option_t *opt, const char *arg)
+static int setup_analyzer_node_address_address(void **context, prelude_option_t *opt, const char *arg)
 {
         idmef_string_t *address;
         
@@ -157,7 +156,7 @@ static int setup_analyzer_node_address_address(prelude_option_t *opt, const char
 }
 
 
-static int setup_analyzer_node_address_netmask(prelude_option_t *opt, const char *arg)
+static int setup_analyzer_node_address_netmask(void **context, prelude_option_t *opt, const char *arg)
 {
 	idmef_string_t *netmask;
 
@@ -173,7 +172,7 @@ static int setup_analyzer_node_address_netmask(prelude_option_t *opt, const char
 }
 
 
-static int setup_analyzer_node_category(prelude_option_t *opt, const char *arg) 
+static int setup_analyzer_node_category(void **context, prelude_option_t *opt, const char *arg) 
 {
         int category;
 
@@ -189,7 +188,7 @@ static int setup_analyzer_node_category(prelude_option_t *opt, const char *arg)
 }
 
 
-static int setup_analyzer_node_address_vlan_num(prelude_option_t *opt, const char *arg) 
+static int setup_analyzer_node_address_vlan_num(void **context, prelude_option_t *opt, const char *arg) 
 {
 	idmef_address_set_vlan_num(node_address, atoi(arg));
         return prelude_option_success;
@@ -197,7 +196,7 @@ static int setup_analyzer_node_address_vlan_num(prelude_option_t *opt, const cha
 
 
 
-static int setup_analyzer_node_address_vlan_name(prelude_option_t *opt, const char *arg) 
+static int setup_analyzer_node_address_vlan_name(void **context, prelude_option_t *opt, const char *arg) 
 {
 	idmef_string_t *vlan_name;
 
@@ -213,7 +212,7 @@ static int setup_analyzer_node_address_vlan_name(prelude_option_t *opt, const ch
 }
 
 
-static int setup_address(prelude_option_t *opt, const char *arg) 
+static int setup_address(void **context, prelude_option_t *opt, const char *arg) 
 {  
         node_address = idmef_address_new();
         if ( ! node_address ) {
@@ -228,7 +227,7 @@ static int setup_address(prelude_option_t *opt, const char *arg)
 
 
 
-static int setup_manager_addr(prelude_option_t *opt, const char *arg) 
+static int setup_manager_addr(void **context, prelude_option_t *opt, const char *arg) 
 {
         manager_cfg_line = strdup(arg);                
         return prelude_option_success;
@@ -237,7 +236,7 @@ static int setup_manager_addr(prelude_option_t *opt, const char *arg)
 
 
 
-static int setup_heartbeat_repeat_time(prelude_option_t *opt, const char *arg) 
+static int setup_heartbeat_repeat_time(void **context, prelude_option_t *opt, const char *arg) 
 {
         heartbeat_repeat_time = atoi(arg) * 60;
         return prelude_option_success;
@@ -259,6 +258,7 @@ static int parse_argument(const char *filename, int argc, char **argv, int type)
 {
         int ret;
         int old_flags;
+        void *context = NULL;
         prelude_option_t *opt;
                         
         /*
@@ -317,7 +317,7 @@ static int parse_argument(const char *filename, int argc, char **argv, int type)
         /*
          * Parse default configuration...
          */
-        ret = prelude_option_parse_arguments(NULL, DEFAULT_SENSOR_CONFIG, 0, NULL);
+        ret = prelude_option_parse_arguments(&context, NULL, DEFAULT_SENSOR_CONFIG, 0, NULL);
         if ( ret == prelude_option_error ) {
                 log(LOG_INFO, "error processing sensor options.\n", DEFAULT_SENSOR_CONFIG);
                 goto out;
@@ -326,7 +326,7 @@ static int parse_argument(const char *filename, int argc, char **argv, int type)
         /*
          * Parse configuration and command line arguments.
          */        
-        ret = prelude_option_parse_arguments(NULL, filename, argc, argv);
+        ret = prelude_option_parse_arguments(&context, NULL, filename, argc, argv);
         if ( ret == prelude_option_error ) {
                 log(LOG_INFO, "error processing sensor options.\n", filename);
                 goto out;

@@ -68,8 +68,8 @@ int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message
 idmef_criteria_t *idmef_criteria_new(void);
 void idmef_criteria_destroy(idmef_criteria_t *criteria);
 idmef_criteria_t *idmef_criteria_clone(idmef_criteria_t *criteria);
-void idmef_criteria_print(const idmef_criteria_t *criteria);
-int idmef_criteria_to_string(const idmef_criteria_t *criteria, char *buffer, size_t size);
+void idmef_criteria_print(idmef_criteria_t *criteria);
+int idmef_criteria_to_string(idmef_criteria_t *criteria, char *buffer, size_t size);
 int idmef_criteria_is_criterion(idmef_criteria_t *criteria);
 idmef_criterion_t *idmef_criteria_get_criterion(idmef_criteria_t *criteria);
 int idmef_criteria_add_criteria(idmef_criteria_t *criteria1, idmef_criteria_t *criteria2, idmef_operator_t operator);

@@ -25,6 +25,6 @@
 #ifndef _LIBPRELUDE_IDMEF_CRITERIA_STRING_H
 #define _LIBPRELUDE_IDMEF_CRITERIA_STRING_H
 
-idmef_criteria_t *idmef_criteria_new_string(char *str);
+idmef_criteria_t *idmef_criteria_new_string(const char *str);
 
 #endif /* _LIBPRELUDE_IDMEF_CRITERIA_STRING_H */

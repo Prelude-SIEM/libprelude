@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001-2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -50,6 +50,7 @@
 #define prelude_option_error -1
 
 
+
 typedef struct prelude_option prelude_option_t;
 
 
@@ -77,15 +78,20 @@ prelude_msg_t *prelude_option_wide_get_msg(void);
 
 void prelude_option_destroy(prelude_option_t *option);
 
-int prelude_option_parse_arguments(prelude_option_t *option,
-                                   const char *filename, int argc, char **argv);
+
+int prelude_option_parse_arguments(void **context, prelude_option_t *option, const char *filename, int argc, char **argv);
+
 
 prelude_option_t *prelude_option_add(prelude_option_t *parent, int flags,
                                      char shortopt, const char *longopt, const char *desc,
                                      prelude_option_argument_t has_arg,
-                                     int (*set)(prelude_option_t *opt, const char *optarg),
-                                     int (*get)(char *buf, size_t size));
+                                     int (*set)(void **context, prelude_option_t *opt, const char *optarg),
+                                     int (*get)(void **context, char *buf, size_t size));
 
+
+
+prelude_option_t *prelude_option_add_init_func(prelude_option_t *parent,
+                                               int (*set)(void **context, prelude_option_t *opt, const char *arg));
 
 
 #define OPT_INVAL     0x1
@@ -137,6 +143,11 @@ uint8_t prelude_option_get_input_type(prelude_option_t *opt);
 
 prelude_option_t *prelude_option_get_root(void);
 
+
 prelude_option_t *prelude_option_get_parent(prelude_option_t *opt);
+
+void *prelude_option_get_set_callback(prelude_option_t *opt);
+
+void prelude_option_set_set_callback(prelude_option_t *opt, int (*set)(void **context, prelude_option_t *opt, const char *optarg));
 
 #endif /* _LIBPRELUDE_PRELUDE_GETOPT_H */

@@ -16,7 +16,6 @@ LEX_OUTPUT_ROOT = lex.yy
 
 libprelude_la_SOURCES = 		\
 	config-engine.c 		\
-	plugin-common.c			\
 	daemonize.c			\
 	timer.c				\
 	variable.c			\
@@ -31,6 +30,7 @@ libprelude_la_SOURCES = 		\
 	prelude-async.c			\
 	prelude-ident.c			\
 	prelude-path.c			\
+	prelude-plugin.c		\
 	prelude-hash.c			\
 	prelude-log.c			\
 	prelude-inet.c			\

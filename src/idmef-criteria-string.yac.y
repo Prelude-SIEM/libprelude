@@ -265,7 +265,9 @@ static void yyerror(char *s)  /* Called by yyparse on error */
 	/* nop */
 }
 
-idmef_criteria_t *idmef_criteria_new_string(char *str)
+
+
+idmef_criteria_t *idmef_criteria_new_string(const char *str)
 {
 	int len;
 	char *buffer;

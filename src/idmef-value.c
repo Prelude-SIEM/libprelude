@@ -496,15 +496,14 @@ idmef_value_t *idmef_value_ref(idmef_value_t *val)
 
 
 
-static int enum_to_string(idmef_value_t *val, char *buf, int len)
+static int enum_to_string(idmef_value_t *val, char *buf, size_t len)
 {
-	int ret;
-	char *str;
-	int slen;
-
+        size_t slen;
+	const char *str;
+        
 	str = idmef_type_enum_to_string(idmef_value_get_idmef_type(val),
 					idmef_value_get_enum(val));
-
+        
 	slen = strlen(str);
 
 	if ( slen >= len )
@@ -517,7 +516,7 @@ static int enum_to_string(idmef_value_t *val, char *buf, int len)
 
 
 
-int idmef_value_to_string(idmef_value_t *val, char *buf, int len)
+int idmef_value_to_string(idmef_value_t *val, char *buf, size_t len)
 {
 	int ret;
 

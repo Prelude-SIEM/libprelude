@@ -273,7 +273,7 @@ idmef_criterion_t *idmef_criterion_clone(idmef_criterion_t *criterion)
 
 
 
-void	idmef_criterion_print(const idmef_criterion_t *criterion)
+void idmef_criterion_print(const idmef_criterion_t *criterion)
 {
 	if ( criterion->relation == relation_is_null ) {
 		printf("! %s", idmef_object_get_name(criterion->object));
@@ -329,7 +329,7 @@ void	idmef_criterion_print(const idmef_criterion_t *criterion)
 
 
 
-int	idmef_criterion_to_string(const idmef_criterion_t *criterion, char *buffer, size_t size)
+int idmef_criterion_to_string(const idmef_criterion_t *criterion, char *buffer, size_t size)
 {
 	int offset = 0;
 
@@ -538,7 +538,7 @@ idmef_criteria_t *idmef_criteria_clone(idmef_criteria_t *src)
 
 
 
-void	idmef_criteria_print(const idmef_criteria_t *criteria)
+void idmef_criteria_print(idmef_criteria_t *criteria)
 {
 	idmef_criteria_t *ptr;
 
@@ -572,7 +572,7 @@ void	idmef_criteria_print(const idmef_criteria_t *criteria)
 
 
 
-int	idmef_criteria_to_string(const idmef_criteria_t *criteria, char *buffer, size_t size)
+int idmef_criteria_to_string(idmef_criteria_t *criteria, char *buffer, size_t size)
 {
 	idmef_criteria_t *ptr;
 	int offset = 0;

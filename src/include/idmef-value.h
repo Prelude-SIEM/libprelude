@@ -95,7 +95,7 @@ idmef_value_t *idmef_value_clone(idmef_value_t *val);
 
 idmef_value_t *idmef_value_ref(idmef_value_t *val);
 
-int idmef_value_to_string(idmef_value_t *val, char *buf, int len);
+int idmef_value_to_string(idmef_value_t *val, char *buf, size_t len);
 
 int idmef_value_get(void *res, idmef_value_t *val);
 

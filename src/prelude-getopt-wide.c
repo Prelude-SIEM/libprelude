@@ -139,12 +139,13 @@ static int handle_option_request(prelude_client_t *client, prelude_msg_t *msg)
         if ( ret < 0 )
                 return -1;
         
-	if ( type == PRELUDE_MSG_OPTION_SET ) 
-		ret = prelude_option_invoke_set(option, value);
+	if ( type == PRELUDE_MSG_OPTION_SET ) {
+                    //ret = prelude_option_invoke_set(NULL, option, value);
+        }
         
 	else if ( type == PRELUDE_MSG_OPTION_GET ) {
                 getptr = getbuf;
-		ret = prelude_option_invoke_get(option, getbuf, sizeof(getbuf));
+                    //ret = prelude_option_invoke_get(NULL, option, getbuf, sizeof(getbuf));
         }
 
         else

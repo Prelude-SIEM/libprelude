@@ -27,8 +27,6 @@ include_HEADERS = config-engine.h 		\
 		  idmef-message-write.h		\
 		  idmef-message-read.h		\
 		  idmef-msg-send.h		\
-		  plugin-common.h		\
-		  plugin-common-prv.h		\
 		  ssl-gencrypto.h		\
 		  ssl-settings.h		\
 		  ssl-registration-msg.h	\
@@ -51,6 +49,7 @@ include_HEADERS = config-engine.h 		\
 		  prelude-ident.h		\
 		  prelude-inet.h		\
 		  prelude-path.h		\
+		  prelude-plugin.h		\
 		  prelude-log.h			\
 		  prelude-strbuf.h		\
 		  sensor.h			\
