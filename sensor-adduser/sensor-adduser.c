@@ -338,42 +338,50 @@ static int register_sensor_ident(const char *sname, uint64_t *ident)
 {
         int ret;
         FILE *fd;
-        char buf[256], *ptr;
+        char buf[256], *ptr = buf, *identptr, *name;
         
         fd = fopen(SENSORS_IDENT_FILE, "a+");
         if ( ! fd ) {
                 log(LOG_ERR, "error opening %s for writing.\n", SENSORS_IDENT_FILE);
                 return -1;
         }
-
-        rewind(fd);
-
-        while ( fgets(buf, sizeof(buf), fd) ) {
-                
-                if ( strstr(buf, sname) ) {
-                        /*
-                         * sensor already have an ident.
-                         */
-                        ptr = strrchr(buf, ':');
-                        if ( ! ptr )
-                                return -1;
-
-                        sscanf(ptr + 1, "%llu", ident);
-                        fclose(fd);
-                        
-                        return -1;
-                }
-        }
         
-        fprintf(fd, "%s:%llu\n", sname, *ident);
-
         /*
          * make sure the file is readable by all.
          */
         ret = fchmod(fileno(fd), S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
         if ( ret < 0 ) 
                 log(LOG_ERR, "couldn't make ident file readable for all.\n");
+
+        rewind(fd);
         
+        while ( fgets(buf, sizeof(buf), fd) ) {
+
+                name = strtok(ptr, ":");
+                if ( ! name ) {
+                        log(LOG_ERR, "malformed sensor identity file.\n");
+                        return -1;
+                }
+
+                identptr = strtok(NULL, ":");
+                if ( ! identptr ) {
+                        log(LOG_ERR, "malformed sensor identity file.\n");
+                        return -1;
+                }
+
+                if ( strcmp(name, sname) == 0 ) {
+                        
+                        /*
+                         * sensor already have an ident.
+                         */
+                        sscanf(identptr, "%llu", ident);
+                        fclose(fd);
+                        
+                        return 1;
+                }
+        }
+        
+        fprintf(fd, "%s:%llu\n", sname, *ident);
         fclose(fd);
         
         return ret;
@@ -408,9 +416,9 @@ static int setup_sensor_files(const char *hostname, uint64_t sensor_ident)
         ret = register_sensor_ident(sensor_name, &sensor_ident);
         if ( ret == 0 )
                 fprintf(stderr, "Allocated ident for %s@%s: %llu.\n", sensor_name, hostname, sensor_ident);
-        else
-                fprintf(stderr, "Using already allocated ident for %s@%s: %llu.\n", sensor_name, hostname, sensor_ident);
 
+        else if ( ret == 1);
+                fprintf(stderr, "Using already allocated ident for %s@%s: %llu.\n", sensor_name, hostname, sensor_ident);
         return 0;
 }
 
