@@ -220,12 +220,12 @@ int _prelude_client_profile_init(prelude_client_profile_t *cp)
 {
         int ret;
         
+        cp->uid = geteuid();
+        cp->gid = getegid();
+        
         ret = get_profile_analyzerid(cp);
         if ( ret < 0 )
                 return ret;
-        
-        cp->uid = geteuid();
-        cp->gid = getegid();
 
         return 0;
 }
