@@ -1,7 +1,10 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(src)
-AC_CANONICAL_SYSTEM
+AC_PREREQ(2.53)
+
+AC_INIT
+AC_CONFIG_SRCDIR([src])
+AC_CANONICAL_TARGET([])
 AM_INIT_AUTOMAKE(libprelude, 0.4.1)
 AM_CONFIG_HEADER(config.h)
 AM_DISABLE_STATIC
@@ -17,7 +20,10 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 AC_C_INLINE
-AC_C_BIGENDIAN
+
+
+AC_C_BIGENDIAN(libprelude_cflags="$libprelude_cflags -DWORDS_BIGENDIAN")
+
 
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
@@ -294,7 +300,7 @@ CFLAGS="$CFLAGS -Wall -Wno-strict-prototypes -Wmissing-prototypes -Wmissing-decl
 
 AC_SUBST(CFLAGS)
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 
 Makefile 
 libprelude-config
@@ -307,7 +313,9 @@ sensor-adduser/Makefile
 docs/Makefile
 docs/api/Makefile
 
-], [ chmod +x libprelude-config ])
+])
+AC_CONFIG_COMMANDS([default],[[ chmod +x libprelude-config ]],[[]])
+AC_OUTPUT
 
 
 echo

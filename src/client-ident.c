@@ -162,13 +162,15 @@ static int declare_ident_to_manager(prelude_io_t *fd)
         msg = prelude_msg_new(1, sizeof(uint64_t), PRELUDE_MSG_ID, 0);
         if ( ! msg )
                 return -1;
+
         
+#ifndef WORDS_BIGENDIAN
         /*
          * Put in network byte order
          */
         ((uint32_t *) &nident)[0] = htonl(((uint32_t *) &sensor_ident)[1]);
         ((uint32_t *) &nident)[1] = htonl(((uint32_t *) &sensor_ident)[0]);
-
+#endif
         /*
          * send message
          */

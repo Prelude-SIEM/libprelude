@@ -1,3 +1,30 @@
+2002-04-24  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/include/extract.h: (byte): create a second byte
+	macro conditionaly compiled depending on the byte order.
+
+	(extract_uint64): do not try to translate from network
+	byte order to host byte order if WORDS_BIGENDIAN is defined.
+
+	(align_uint32): 
+	(align_uint64): 
+	(align_uint16): shift each byte.
+
+	* src/idmef-msg-send.c (idmef_send_uint64): 
+	only translate analyzer ident to network byte order
+	if we are on a little endian system. s/ntohl/htonl/.
+
+	* src/client-ident.c (declare_ident_to_manager): 
+	only translate analyzer ident to network byte order
+	if we are on a little endian system.
+
+	* configure.in: prereq autoconf 2.53.
+	use AC_C_BIGENDIAN macro to determine host byte order,
+	libprelude-config --cflags also include this definition.
+
+	* README: update.
+	
+
 2002-04-16  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/include/extract.h: 
