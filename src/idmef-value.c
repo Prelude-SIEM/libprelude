@@ -478,13 +478,36 @@ idmef_value_t *idmef_value_ref(idmef_value_t *val)
 
 
 
+static int enum_to_string(idmef_value_t *val, char *buf, int len)
+{
+	int ret;
+	char *str;
+	int slen;
+
+	str = idmef_type_enum_to_string(idmef_value_get_idmef_type(val),
+					idmef_value_get_enum(val));
+
+	slen = strlen(str);
+
+	if ( slen >= len )
+		return -1;
+
+	memcpy(buf, str, slen + 1);
+	
+	return slen;
+}
+
+
 
 int idmef_value_to_string(idmef_value_t *val, char *buf, int len)
 {
 	int ret;
 
-        ret = idmef_value_type_write(buf, len, &val->type);
-        
+	if ( idmef_value_get_type(val) == type_enum )
+		ret = enum_to_string(val, buf, len);
+	else
+		ret = idmef_value_type_write(buf, len, &val->type);
+
 	return (ret < 0 || ret > len) ? -1 : ret;
 }
 

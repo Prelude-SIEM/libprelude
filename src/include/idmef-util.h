@@ -24,7 +24,6 @@
 #ifndef _LIBPRELUDE_IDMEF_UTIL_H
 #define _LIBPRELUDE_IDMEF_UTIL_H
 
-
 /*
  * call func with buffer and size depending of offset
  * handle error case and update offset

@@ -1,5 +1,15 @@
 2003-12-27  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
+	* src/idmef-value.c:
+	(idmef_value_to_string)
+	bug fix, enum type was not handled since idmef-value.c rework
+	(it was not handled at idmef-value-type level
+	but enum need the object_type field in addition of the 
+	enum value to be converted into string, so the conversion
+	must be done at idmef-value level)
+
+2003-12-27  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
 	* src/prelude-strbuf.c:
 	(prelude_strbuf_is_empty)
 	change return value
