@@ -164,10 +164,10 @@ const char *idmef_additional_data_type_to_string(idmef_additional_data_type_t va
 
 struct idmef_additional_data { 
          IS_LISTED;
-         REFCOUNT;
+  REFCOUNT;
          idmef_additional_data_type_t type;
          prelude_string_t *meaning;
-         idmef_data_t data;
+  idmef_data_t data;
  
 };
 
@@ -342,7 +342,7 @@ const char *idmef_user_id_type_to_string(idmef_user_id_type_t val)
 
 struct idmef_user_id { 
          IS_LISTED;
-         REFCOUNT;
+  REFCOUNT;
          uint64_t ident;
          prelude_string_t *name;
          idmef_user_id_type_t type;
@@ -403,7 +403,7 @@ const char *idmef_user_category_to_string(idmef_user_category_t val)
 
 
 struct idmef_user { 
-         REFCOUNT;
+  REFCOUNT;
          uint64_t ident;
          idmef_user_category_t category;
          LISTED_OBJECT(user_id_list, idmef_user_id_t);
@@ -549,7 +549,7 @@ struct idmef_address {
 
 
 struct idmef_process { 
-         REFCOUNT;
+  REFCOUNT;
          uint64_t ident;
          prelude_string_t name;
          OPTIONAL_INT(uint32_t, pid);
@@ -563,7 +563,7 @@ struct idmef_process {
 
 
 struct idmef_web_service { 
-         REFCOUNT;
+  REFCOUNT;
          prelude_string_t url;
          prelude_string_t *cgi;
          prelude_string_t *http_method;
@@ -574,7 +574,7 @@ struct idmef_web_service {
 
 
 struct idmef_snmp_service { 
-         REFCOUNT;
+  REFCOUNT;
          prelude_string_t *oid;
          prelude_string_t *community;
          prelude_string_t *security_name;
@@ -637,7 +637,7 @@ const char *idmef_service_type_to_string(idmef_service_type_t val)
 
 
 struct idmef_service { 
-         REFCOUNT;
+  REFCOUNT;
          uint64_t ident;
          OPTIONAL_INT(uint8_t, ip_version);
  
@@ -650,10 +650,10 @@ struct idmef_service {
          prelude_string_t *portlist;
          prelude_string_t *protocol;
  
-         UNION(idmef_service_type_t, type) {
-                 UNION_MEMBER(IDMEF_SERVICE_TYPE_WEB, idmef_web_service_t, *web_service);
-                 UNION_MEMBER(IDMEF_SERVICE_TYPE_SNMP, idmef_snmp_service_t, *snmp_service);
-         } specific;
+  UNION(idmef_service_type_t, type) {
+   UNION_MEMBER(IDMEF_SERVICE_TYPE_WEB, idmef_web_service_t, *web_service);
+   UNION_MEMBER(IDMEF_SERVICE_TYPE_SNMP, idmef_snmp_service_t, *snmp_service);
+  } specific;
  
  
 };
@@ -771,7 +771,7 @@ const char *idmef_node_category_to_string(idmef_node_category_t val)
 
 
 struct idmef_node { 
-         REFCOUNT;
+  REFCOUNT;
          uint64_t ident;
          idmef_node_category_t category;
          prelude_string_t *location;
@@ -834,7 +834,7 @@ const char *idmef_source_spoofed_to_string(idmef_source_spoofed_t val)
 
 struct idmef_source { 
          IS_LISTED;
-         REFCOUNT;
+  REFCOUNT;
  
          uint64_t ident;
          idmef_source_spoofed_t spoofed;
@@ -852,17 +852,17 @@ struct idmef_source {
 
 struct idmef_file_access { 
          IS_LISTED;
-         REFCOUNT;
+  REFCOUNT;
  
          idmef_user_id_t user_id;
-         LISTED_OBJECT(permission_list, prelude_string_t);
+  LISTED_OBJECT(permission_list, prelude_string_t);
  
 };
 
 
 
 struct idmef_inode { 
-         REFCOUNT;
+  REFCOUNT;
          idmef_time_t *change_time;
          OPTIONAL_INT(uint32_t, number);
          OPTIONAL_INT(uint32_t, major_device);
@@ -970,7 +970,7 @@ const char *idmef_checksum_algorithm_to_string(idmef_checksum_algorithm_t val)
 
 
 struct idmef_checksum { 
-         IS_LISTED;
+  IS_LISTED;
          REFCOUNT;
          prelude_string_t value;
          prelude_string_t *key;
@@ -1124,7 +1124,7 @@ const char *idmef_file_fstype_to_string(idmef_file_fstype_t val)
 
 struct idmef_file { 
          IS_LISTED;
-         REFCOUNT;
+  REFCOUNT;
          uint64_t ident;
  
          prelude_string_t name;
@@ -1142,7 +1142,7 @@ struct idmef_file {
          LISTED_OBJECT(linkage_list, idmef_linkage_t);
  
          idmef_inode_t *inode;
-         LISTED_OBJECT(checksum_list, idmef_checksum_t);
+  LISTED_OBJECT(checksum_list, idmef_checksum_t);
  
          idmef_file_category_t category;
          OPTIONAL_INT(idmef_file_fstype_t, fstype);
@@ -1225,7 +1225,7 @@ const char *idmef_linkage_category_to_string(idmef_linkage_category_t val)
 
 struct idmef_linkage { 
          IS_LISTED;
-         REFCOUNT;
+  REFCOUNT;
  
          idmef_linkage_category_t category;
          prelude_string_t name;
@@ -1288,7 +1288,7 @@ const char *idmef_target_decoy_to_string(idmef_target_decoy_t val)
 
 struct idmef_target { 
          IS_LISTED;
-         REFCOUNT;
+  REFCOUNT;
  
          uint64_t ident;
          idmef_target_decoy_t decoy;
@@ -1305,7 +1305,7 @@ struct idmef_target {
 
 
 struct idmef_analyzer { 
-         REFCOUNT;
+  REFCOUNT;
  
          uint64_t analyzerid;
  
@@ -1328,7 +1328,7 @@ struct idmef_analyzer {
 
 struct idmef_alertident { 
          IS_LISTED;
-         REFCOUNT;
+  REFCOUNT;
  
          uint64_t alertident;
          OPTIONAL_INT(uint64_t, analyzerid);
@@ -1512,7 +1512,7 @@ const char *idmef_impact_type_to_string(idmef_impact_type_t val)
 
 
 struct idmef_impact { 
-         REFCOUNT;
+  REFCOUNT;
  
          OPTIONAL_INT(idmef_impact_severity_t, severity);
          OPTIONAL_INT(idmef_impact_completion_t, completion);
@@ -1581,7 +1581,7 @@ const char *idmef_action_category_to_string(idmef_action_category_t val)
 
 struct idmef_action { 
          IS_LISTED;
-         REFCOUNT;
+  REFCOUNT;
  
          idmef_action_category_t category;
          prelude_string_t *description;
@@ -1647,7 +1647,7 @@ const char *idmef_confidence_rating_to_string(idmef_confidence_rating_t val)
 
 
 struct idmef_confidence { 
-         REFCOUNT;
+  REFCOUNT;
  
          idmef_confidence_rating_t rating;
          OPTIONAL_INT(float, confidence);
@@ -1657,7 +1657,7 @@ struct idmef_confidence {
 
 
 struct idmef_assessment { 
-         REFCOUNT;
+  REFCOUNT;
  
          idmef_impact_t *impact;
          LISTED_OBJECT(action_list, idmef_action_t);
@@ -1668,7 +1668,7 @@ struct idmef_assessment {
 
 
 struct idmef_tool_alert { 
-         REFCOUNT;
+  REFCOUNT;
  
          prelude_string_t name;
          prelude_string_t *command;
@@ -1679,7 +1679,7 @@ struct idmef_tool_alert {
 
 
 struct idmef_correlation_alert { 
-         REFCOUNT;
+  REFCOUNT;
  
          prelude_string_t name;
          LISTED_OBJECT(alertident_list, idmef_alertident_t);
@@ -1689,7 +1689,7 @@ struct idmef_correlation_alert {
 
 
 struct idmef_overflow_alert { 
-         REFCOUNT;
+  REFCOUNT;
  
          prelude_string_t program;
          OPTIONAL_INT(uint32_t, size);
@@ -1756,7 +1756,7 @@ const char *idmef_alert_type_to_string(idmef_alert_type_t val)
 
 
 struct idmef_alert { 
-         DYNAMIC_IDENT(messageid);
+         uint64_t messageid;
  
          idmef_analyzer_t *analyzer;
          idmef_time_t create_time;
@@ -1783,7 +1783,7 @@ struct idmef_alert {
 
 
 struct idmef_heartbeat { 
-         DYNAMIC_IDENT(messageid);
+         uint64_t messageid;
          idmef_analyzer_t *analyzer;
  
          idmef_time_t create_time;
@@ -1848,11 +1848,11 @@ struct idmef_message {
          prelude_string_t version;
  
          UNION(idmef_message_type_t, type) {
-                 UNION_MEMBER(IDMEF_MESSAGE_TYPE_ALERT, idmef_alert_t, *alert);
-                 UNION_MEMBER(IDMEF_MESSAGE_TYPE_HEARTBEAT, idmef_heartbeat_t, *heartbeat);
+   UNION_MEMBER(IDMEF_MESSAGE_TYPE_ALERT, idmef_alert_t, *alert);
+   UNION_MEMBER(IDMEF_MESSAGE_TYPE_HEARTBEAT, idmef_heartbeat_t, *heartbeat);
          } message;
  
-         HIDE(prelude_msg_t *, pmsg);
+  HIDE(prelude_msg_t *, pmsg);
  
  
 };
@@ -2795,10 +2795,10 @@ void idmef_classification_set_reference(idmef_classification_t *ptr, idmef_refer
 }
 
 /**
- * idmef_classification_new_HASH(0x824c564):
+ * idmef_classification_new_HASH(0x8023e900):
  * @ptr: pointer to a #idmef_classification_t object.
  * 
- * Create a new HASH(0x824c564) children of @ptr,
+ * Create a new HASH(0x8023e900) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_reference_t object.
  * 
  * Returns: a pointer to the created #idmef_reference_t object, or NULL if an error occured.
@@ -3466,10 +3466,10 @@ void idmef_user_set_user_id(idmef_user_t *ptr, idmef_user_id_t *object)
 }
 
 /**
- * idmef_user_new_HASH(0x824f7f4):
+ * idmef_user_new_HASH(0x802414b4):
  * @ptr: pointer to a #idmef_user_t object.
  * 
- * Create a new HASH(0x824f7f4) children of @ptr,
+ * Create a new HASH(0x802414b4) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_user_id_t object.
  * 
  * Returns: a pointer to the created #idmef_user_id_t object, or NULL if an error occured.
@@ -4477,10 +4477,10 @@ void idmef_process_set_arg(idmef_process_t *ptr, prelude_string_t *object)
 }
 
 /**
- * idmef_process_new_HASH(0x8254278):
+ * idmef_process_new_HASH(0x80244fb0):
  * @ptr: pointer to a #idmef_process_t object.
  * 
- * Create a new HASH(0x8254278) children of @ptr,
+ * Create a new HASH(0x80244fb0) children of @ptr,
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
  * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
@@ -4558,10 +4558,10 @@ void idmef_process_set_env(idmef_process_t *ptr, prelude_string_t *object)
 }
 
 /**
- * idmef_process_new_HASH(0x82542e4):
+ * idmef_process_new_HASH(0x80246a60):
  * @ptr: pointer to a #idmef_process_t object.
  * 
- * Create a new HASH(0x82542e4) children of @ptr,
+ * Create a new HASH(0x80246a60) children of @ptr,
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
  * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
@@ -4997,10 +4997,10 @@ void idmef_web_service_set_arg(idmef_web_service_t *ptr, prelude_string_t *objec
 }
 
 /**
- * idmef_web_service_new_HASH(0x82545b4):
+ * idmef_web_service_new_HASH(0x80246d30):
  * @ptr: pointer to a #idmef_web_service_t object.
  * 
- * Create a new HASH(0x82545b4) children of @ptr,
+ * Create a new HASH(0x80246d30) children of @ptr,
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
  * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
@@ -6873,10 +6873,10 @@ void idmef_node_set_address(idmef_node_t *ptr, idmef_address_t *object)
 }
 
 /**
- * idmef_node_new_HASH(0x825a6b8):
+ * idmef_node_new_HASH(0x8024ce84):
  * @ptr: pointer to a #idmef_node_t object.
  * 
- * Create a new HASH(0x825a6b8) children of @ptr,
+ * Create a new HASH(0x8024ce84) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_address_t object.
  * 
  * Returns: a pointer to the created #idmef_address_t object, or NULL if an error occured.
@@ -7699,10 +7699,10 @@ void idmef_file_access_set_permission(idmef_file_access_t *ptr, prelude_string_t
 }
 
 /**
- * idmef_file_access_new_HASH(0x825cc54):
+ * idmef_file_access_new_HASH(0x8024ef40):
  * @ptr: pointer to a #idmef_file_access_t object.
  * 
- * Create a new HASH(0x825cc54) children of @ptr,
+ * Create a new HASH(0x8024ef40) children of @ptr,
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
  * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
@@ -9318,10 +9318,10 @@ void idmef_file_set_file_access(idmef_file_t *ptr, idmef_file_access_t *object)
 }
 
 /**
- * idmef_file_new_HASH(0x8263074):
+ * idmef_file_new_HASH(0x80254c6c):
  * @ptr: pointer to a #idmef_file_t object.
  * 
- * Create a new HASH(0x8263074) children of @ptr,
+ * Create a new HASH(0x80254c6c) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_file_access_t object.
  * 
  * Returns: a pointer to the created #idmef_file_access_t object, or NULL if an error occured.
@@ -9398,10 +9398,10 @@ void idmef_file_set_linkage(idmef_file_t *ptr, idmef_linkage_t *object)
 }
 
 /**
- * idmef_file_new_HASH(0x82630e0):
+ * idmef_file_new_HASH(0x80255f9c):
  * @ptr: pointer to a #idmef_file_t object.
  * 
- * Create a new HASH(0x82630e0) children of @ptr,
+ * Create a new HASH(0x80255f9c) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_linkage_t object.
  * 
  * Returns: a pointer to the created #idmef_linkage_t object, or NULL if an error occured.
@@ -9534,10 +9534,10 @@ void idmef_file_set_checksum(idmef_file_t *ptr, idmef_checksum_t *object)
 }
 
 /**
- * idmef_file_new_HASH(0x82631d0):
+ * idmef_file_new_HASH(0x8025608c):
  * @ptr: pointer to a #idmef_file_t object.
  * 
- * Create a new HASH(0x82631d0) children of @ptr,
+ * Create a new HASH(0x8025608c) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_checksum_t object.
  * 
  * Returns: a pointer to the created #idmef_checksum_t object, or NULL if an error occured.
@@ -10646,10 +10646,10 @@ void idmef_target_set_file(idmef_target_t *ptr, idmef_file_t *object)
 }
 
 /**
- * idmef_target_new_HASH(0x8266f1c):
+ * idmef_target_new_HASH(0x80259630):
  * @ptr: pointer to a #idmef_target_t object.
  * 
- * Create a new HASH(0x8266f1c) children of @ptr,
+ * Create a new HASH(0x80259630) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_file_t object.
  * 
  * Returns: a pointer to the created #idmef_file_t object, or NULL if an error occured.
@@ -12789,10 +12789,10 @@ void idmef_assessment_set_action(idmef_assessment_t *ptr, idmef_action_t *object
 }
 
 /**
- * idmef_assessment_new_HASH(0x826eb18):
+ * idmef_assessment_new_HASH(0x8026160c):
  * @ptr: pointer to a #idmef_assessment_t object.
  * 
- * Create a new HASH(0x826eb18) children of @ptr,
+ * Create a new HASH(0x8026160c) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_action_t object.
  * 
  * Returns: a pointer to the created #idmef_action_t object, or NULL if an error occured.
@@ -13206,10 +13206,10 @@ void idmef_tool_alert_set_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t
 }
 
 /**
- * idmef_tool_alert_new_HASH(0x826fffc):
+ * idmef_tool_alert_new_HASH(0x80262680):
  * @ptr: pointer to a #idmef_tool_alert_t object.
  * 
- * Create a new HASH(0x826fffc) children of @ptr,
+ * Create a new HASH(0x80262680) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_alertident_t object.
  * 
  * Returns: a pointer to the created #idmef_alertident_t object, or NULL if an error occured.
@@ -13490,10 +13490,10 @@ void idmef_correlation_alert_set_alertident(idmef_correlation_alert_t *ptr, idme
 }
 
 /**
- * idmef_correlation_alert_new_HASH(0x82701dc):
+ * idmef_correlation_alert_new_HASH(0x80262860):
  * @ptr: pointer to a #idmef_correlation_alert_t object.
  * 
- * Create a new HASH(0x82701dc) children of @ptr,
+ * Create a new HASH(0x80262860) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_alertident_t object.
  * 
  * Returns: a pointer to the created #idmef_alertident_t object, or NULL if an error occured.
@@ -14548,10 +14548,10 @@ void idmef_alert_set_source(idmef_alert_t *ptr, idmef_source_t *object)
 }
 
 /**
- * idmef_alert_new_HASH(0x8273260):
+ * idmef_alert_new_HASH(0x80264df8):
  * @ptr: pointer to a #idmef_alert_t object.
  * 
- * Create a new HASH(0x8273260) children of @ptr,
+ * Create a new HASH(0x80264df8) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_source_t object.
  * 
  * Returns: a pointer to the created #idmef_source_t object, or NULL if an error occured.
@@ -14628,10 +14628,10 @@ void idmef_alert_set_target(idmef_alert_t *ptr, idmef_target_t *object)
 }
 
 /**
- * idmef_alert_new_HASH(0x82732cc):
+ * idmef_alert_new_HASH(0x80264e64):
  * @ptr: pointer to a #idmef_alert_t object.
  * 
- * Create a new HASH(0x82732cc) children of @ptr,
+ * Create a new HASH(0x80264e64) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_target_t object.
  * 
  * Returns: a pointer to the created #idmef_target_t object, or NULL if an error occured.
@@ -14764,10 +14764,10 @@ void idmef_alert_set_additional_data(idmef_alert_t *ptr, idmef_additional_data_t
 }
 
 /**
- * idmef_alert_new_HASH(0x82733d4):
+ * idmef_alert_new_HASH(0x802659a0):
  * @ptr: pointer to a #idmef_alert_t object.
  * 
- * Create a new HASH(0x82733d4) children of @ptr,
+ * Create a new HASH(0x802659a0) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_additional_data_t object.
  * 
  * Returns: a pointer to the created #idmef_additional_data_t object, or NULL if an error occured.
@@ -15511,10 +15511,10 @@ void idmef_heartbeat_set_additional_data(idmef_heartbeat_t *ptr, idmef_additiona
 }
 
 /**
- * idmef_heartbeat_new_HASH(0x82745f8):
+ * idmef_heartbeat_new_HASH(0x80266754):
  * @ptr: pointer to a #idmef_heartbeat_t object.
  * 
- * Create a new HASH(0x82745f8) children of @ptr,
+ * Create a new HASH(0x80266754) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_additional_data_t object.
  * 
  * Returns: a pointer to the created #idmef_additional_data_t object, or NULL if an error occured.
