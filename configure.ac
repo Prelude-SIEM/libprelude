@@ -22,6 +22,7 @@ AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
 
+
 dnl **************************************************
 dnl * Check for getopt_long                          *
 dnl **************************************************
@@ -181,9 +182,8 @@ src/include/Makefile
 
 echo
 echo "*** Dumping configuration ***"
-echo "    - Use OpenSSL   : $enable_openssl"
-
-
+echo "    - Use OpenSSL            : $enable_openssl"
+echo "    - Generate documentation : $enable_gtk_doc"
 
 
 

@@ -1,3 +1,19 @@
+<MACRO>
+<NAME>PIO_FILE_IO</NAME>
+#define PIO_FILE_IO     0x1
+</MACRO>
+<MACRO>
+<NAME>PIO_ATOMIC_SEEK</NAME>
+#define PIO_ATOMIC_SEEK 0x2
+</MACRO>
+<MACRO>
+<NAME>PIO_SYSTEM_IO</NAME>
+#define PIO_SYSTEM_IO   0x4
+</MACRO>
+<MACRO>
+<NAME>PIO_SSL_IO</NAME>
+#define PIO_SSL_IO      0x8
+</MACRO>
 <FUNCTION>
 <NAME>prelude_io_new</NAME>
 <RETURNS>prelude_io_t  *</RETURNS>
@@ -7,6 +23,11 @@ void
 <NAME>prelude_io_destroy</NAME>
 <RETURNS>void  </RETURNS>
 prelude_io_t *pio
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_io_set</NAME>
+<RETURNS>int  </RETURNS>
+prelude_io_t *pio, int fd, void *fd_ptr, int options
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_io_set_file_io</NAME>
@@ -489,6 +510,16 @@ void
 void
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_log_get_prefix</NAME>
+<RETURNS>char  *</RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_log_set_prefix</NAME>
+<RETURNS>void  </RETURNS>
+char *prefix
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_log</NAME>
 <RETURNS>void  </RETURNS>
 int priority, const char *file, const char *function, int line, const char *fmt, ...
@@ -501,15 +532,22 @@ int priority, const char *file, const char *function, int line, const char *fmt,
 <MACRO>
 <NAME>do_init</NAME>
 #define do_init(func, name) do {                         \
+        char *old_prefix = prelude_log_get_prefix();     \
+        prelude_log_set_prefix(NULL);                    \
         log(LOG_INFO, "- %s\n", name);                   \
+        prelude_log_set_prefix(old_prefix);              \
         if ( (func) < 0 )                                \
                 exit(1);                                 \
+        prelude_log_set_prefix(old_prefix);              \
 } while(0);
 </MACRO>
 <MACRO>
 <NAME>do_init_nofail</NAME>
 #define do_init_nofail(func, name) do {                  \
+        char *old_prefix = prelude_log_get_prefix();     \
+        prelude_log_set_prefix(NULL);                    \
         log(LOG_INFO, "- %s\n", name);                   \
+        prelude_log_set_prefix(old_prefix);              \
         (func);                                          \
 } while(0);
 </MACRO>
@@ -857,8 +895,8 @@ typedef enum {
 <NAME>idmef_userid_t</NAME>
 typedef struct {
         struct list_head list;
-        
-        const char *ident;
+
+        uint64_t ident;
         idmef_userid_type_t type;
         const char *name;
         const char *number;
@@ -875,7 +913,7 @@ typedef enum {
 <TYPEDEF>
 <NAME>idmef_user_t</NAME>
 typedef struct {
-        const char *ident;
+        uint64_t ident;
         idmef_user_category_t category;
         struct list_head userid_list;
 } idmef_user_t;
@@ -905,7 +943,7 @@ typedef enum {
 typedef struct {
         struct list_head list;
         
-        const char *ident;
+        uint64_t ident;
         idmef_address_category_t category;
         const char *vlan_name;
         int vlan_num;
@@ -914,14 +952,30 @@ typedef struct {
 } idmef_address_t;
 </TYPEDEF>
 <TYPEDEF>
+<NAME>idmef_string_t</NAME>
+typedef struct {
+        const char *string;
+        struct list_head list;
+} idmef_string_t;
+</TYPEDEF>
+<MACRO>
+<NAME>idmef_process_env_t</NAME>
+#define idmef_process_env_t idmef_string_t
+</MACRO>
+<MACRO>
+<NAME>idmef_process_arg_t</NAME>
+#define idmef_process_arg_t idmef_string_t
+</MACRO>
+<TYPEDEF>
 <NAME>idmef_process_t</NAME>
 typedef struct {
-        const char *ident;
+        uint64_t ident;
         const char *name;
         uint32_t pid;
         const char *path;
-        const char **arg;
-        const char **env;
+
+        struct list_head arg_list;
+        struct list_head env_list;
 } idmef_process_t;
 </TYPEDEF>
 <TYPEDEF>
@@ -941,15 +995,24 @@ typedef struct {
         const char *command;
 } idmef_snmpservice_t;
 </TYPEDEF>
+<ENUM>
+<NAME>idmef_service_type_t</NAME>
+typedef enum {
+        default_service = 0,
+        web_service = 1,
+        snmp_service = 2,
+} idmef_service_type_t;
+</ENUM>
 <TYPEDEF>
 <NAME>specific</NAME>
 typedef struct {
-        const char *ident;
+        uint64_t ident;
         const char *name;
         uint16_t port;
         const char *portlist;
         const char *protocol;
 
+        idmef_service_type_t type;
         union {
                 idmef_webservice_t *web;
                 idmef_snmpservice_t *snmp;
@@ -976,7 +1039,7 @@ typedef enum {
 <TYPEDEF>
 <NAME>idmef_node_t</NAME>
 typedef struct {
-        const char *ident;
+        uint64_t ident;
         idmef_node_category_t category;
         const char *location;
         const char *name;
@@ -995,15 +1058,15 @@ typedef enum {
 <NAME>idmef_source_t</NAME>
 typedef struct {
         struct list_head list;
-        
-        const char *ident;
+    
+        uint64_t ident;
         idmef_spoofed_t spoofed;
         const char *interface;
 
-        idmef_node_t node;
-        idmef_user_t user;
-        idmef_process_t process;
-        idmef_service_t service;
+        idmef_node_t *node;
+        idmef_user_t *user;
+        idmef_process_t *process;
+        idmef_service_t *service;
         
 } idmef_source_t;
 </TYPEDEF>
@@ -1012,28 +1075,28 @@ typedef struct {
 typedef struct {
         struct list_head list;
         
-        const char *ident;
+        uint64_t ident;
         idmef_spoofed_t decoy;
         const char *interface;
 
-        idmef_node_t node;
-        idmef_user_t user;
-        idmef_process_t process;
-        idmef_service_t service;
+        idmef_node_t *node;
+        idmef_user_t *user;
+        idmef_process_t *process;
+        idmef_service_t *service;
         
 } idmef_target_t;
 </TYPEDEF>
 <TYPEDEF>
 <NAME>idmef_analyzer_t</NAME>
 typedef struct {
-        const char *analyzerid;
+        uint64_t analyzerid;
         const char *manufacturer;
         const char *model;
         const char *version;
         const char *class;
 
-        idmef_node_t node;
-        idmef_process_t process;
+        idmef_node_t *node;
+        idmef_process_t *process;
 } idmef_analyzer_t;
 </TYPEDEF>
 <TYPEDEF>
@@ -1043,19 +1106,39 @@ typedef struct {
         const char *time;
 } idmef_time_t;
 </TYPEDEF>
+<MACRO>
+<NAME>idmef_create_time_t</NAME>
+#define idmef_create_time_t idmef_time_t
+</MACRO>
+<MACRO>
+<NAME>idmef_detect_time_t</NAME>
+#define idmef_detect_time_t idmef_time_t
+</MACRO>
+<MACRO>
+<NAME>idmef_analyzer_time_t</NAME>
+#define idmef_analyzer_time_t idmef_time_t
+</MACRO>
+<TYPEDEF>
+<NAME>idmef_alertident_t</NAME>
+typedef struct {
+        struct list_head list;
+        uint64_t alertident;
+        uint64_t analyzerid;
+} idmef_alertident_t;
+</TYPEDEF>
 <TYPEDEF>
 <NAME>idmef_tool_alert_t</NAME>
 typedef struct {
         const char *name;
         const char *command;
-        const char **analyzerid;
+        struct list_head alertident_list;
 } idmef_tool_alert_t;
 </TYPEDEF>
 <TYPEDEF>
 <NAME>idmef_correlation_alert_t</NAME>
 typedef struct {
         const char *name;
-        const char **alertident;
+        struct list_head alertident_list;
 } idmef_correlation_alert_t;
 </TYPEDEF>
 <TYPEDEF>
@@ -1069,23 +1152,43 @@ typedef struct {
 <ENUM>
 <NAME>idmef_alert_type_t</NAME>
 typedef enum {
-        idmef_tool_alert        = 0,
-        idmef_correlation_alert = 1,
-        idmef_overflow_alert    = 2,
+        idmef_default           = 0,
+        idmef_tool_alert        = 1,
+        idmef_correlation_alert = 2,
+        idmef_overflow_alert    = 3,
 } idmef_alert_type_t;
+</ENUM>
+<ENUM>
+<NAME>idmef_alert_impact_t</NAME>
+typedef enum {
+        unknown_impact              = 0,
+        bad_unknown                 = 1,
+        not_suspicious              = 2,
+        attempted_admin             = 3,
+        successful_admin            = 4,
+        attempted_dos               = 5,
+        successful_dos              = 6,
+        attempted_recon             = 7,
+        successful_recon            = 8,
+        successful_recon_limited    = 9,
+        successful_recon_largescale = 10,
+        attempted_user              = 11,
+        successful_user             = 12,
+} idmef_alert_impact_t;
 </ENUM>
 <TYPEDEF>
 <NAME>detail</NAME>
 typedef struct {
         uint64_t ident;
-        const char *impact;
+    
+        const char *impact;    
         const char *action;
     
         idmef_analyzer_t analyzer;
     
         idmef_time_t create_time;
-        idmef_time_t detect_time;
-        idmef_time_t analyzer_time;
+        idmef_time_t *detect_time;
+        idmef_time_t *analyzer_time;
 
         struct list_head source_list;
         struct list_head target_list;
@@ -1103,10 +1206,11 @@ typedef struct {
 <TYPEDEF>
 <NAME>idmef_heartbeat_t</NAME>
 typedef struct {
-        const char *ident;
-
+        uint64_t ident;
         idmef_analyzer_t analyzer;
-        idmef_time_t analyzer_time;
+
+        idmef_time_t create_time;
+        idmef_time_t *analyzer_time;
 
         struct list_head additional_data_list;
 } idmef_heartbeat_t;
@@ -1197,6 +1301,23 @@ prelude_msg_t *msg
 <RETURNS>void  </RETURNS>
 prelude_msg_t *msg
 </FUNCTION>
+<MACRO>
+<NAME>extract_int</NAME>
+#define extract_int(type, buf, blen, dst) do {                                              \
+        int ret;                                                                            \
+        ret = extract_ ## type (&dst, buf, blen);                                           \
+        if ( ret < 0 ) {                                                                    \
+                const char *string = type;
+</MACRO>
+<MACRO>
+<NAME>extract_string</NAME>
+#define extract_string(buf, blen, dst)                                    \
+        dst = extract_str(buf, blen);                                     \
+        if ( ! dst ) {                                                    \
+               log(LOG_ERR, "Datatype error, buffer is not a string.\n"); \
+               return -1;                                                 \
+        }                                                                 
+</MACRO>
 <TYPEDEF>
 <NAME>bm_string_t</NAME>
 typedef struct {
@@ -1260,16 +1381,16 @@ char *x, int m, int bm_bc[]
 #define MSG_ALERT_IMPACT 3
 </MACRO>
 <MACRO>
-<NAME>MSG_ALERT_CREATE_TIME</NAME>
-#define MSG_ALERT_CREATE_TIME 4
+<NAME>MSG_CREATE_TIME_TAG</NAME>
+#define MSG_CREATE_TIME_TAG 4
 </MACRO>
 <MACRO>
-<NAME>MSG_ALERT_DETECT_TIME</NAME>
-#define MSG_ALERT_DETECT_TIME 5
+<NAME>MSG_DETECT_TIME_TAG</NAME>
+#define MSG_DETECT_TIME_TAG 5
 </MACRO>
 <MACRO>
-<NAME>MSG_ALERT_ANALYZER_TIME</NAME>
-#define MSG_ALERT_ANALYZER_TIME 6
+<NAME>MSG_ANALYZER_TIME_TAG</NAME>
+#define MSG_ANALYZER_TIME_TAG 6
 </MACRO>
 <MACRO>
 <NAME>MSG_SOURCE_TAG</NAME>
@@ -1528,12 +1649,84 @@ char *x, int m, int bm_bc[]
 #define MSG_TARGET_INTERFACE 70
 </MACRO>
 <MACRO>
+<NAME>MSG_HEARTBEAT_TAG</NAME>
+#define MSG_HEARTBEAT_TAG 71
+</MACRO>
+<MACRO>
+<NAME>MSG_HEARTBEAT_IDENT</NAME>
+#define MSG_HEARTBEAT_IDENT 72
+</MACRO>
+<MACRO>
+<NAME>MSG_TOOL_ALERT_TAG</NAME>
+#define MSG_TOOL_ALERT_TAG 73
+</MACRO>
+<MACRO>
+<NAME>MSG_TOOL_ALERT_NAME</NAME>
+#define MSG_TOOL_ALERT_NAME 74
+</MACRO>
+<MACRO>
+<NAME>MSG_TOOL_ALERT_COMMAND</NAME>
+#define MSG_TOOL_ALERT_COMMAND 75
+</MACRO>
+<MACRO>
+<NAME>MSG_TOOL_ALERT_ANALYZER_ID</NAME>
+#define MSG_TOOL_ALERT_ANALYZER_ID 76
+</MACRO>
+<MACRO>
+<NAME>MSG_CORRELATION_ALERT_TAG</NAME>
+#define MSG_CORRELATION_ALERT_TAG 76
+</MACRO>
+<MACRO>
+<NAME>MSG_CORRELATION_ALERT_NAME</NAME>
+#define MSG_CORRELATION_ALERT_NAME 77 
+</MACRO>
+<MACRO>
+<NAME>MSG_CORRELATION_ALERT_IDENT</NAME>
+#define MSG_CORRELATION_ALERT_IDENT 78
+</MACRO>
+<MACRO>
+<NAME>MSG_OVERFLOW_ALERT_TAG</NAME>
+#define MSG_OVERFLOW_ALERT_TAG 79
+</MACRO>
+<MACRO>
+<NAME>MSG_OVERFLOW_ALERT_PROGRAM</NAME>
+#define MSG_OVERFLOW_ALERT_PROGRAM 80
+</MACRO>
+<MACRO>
+<NAME>MSG_OVERFLOW_ALERT_SIZE</NAME>
+#define MSG_OVERFLOW_ALERT_SIZE 81
+</MACRO>
+<MACRO>
+<NAME>MSG_OVERFLOW_ALERT_BUFFER</NAME>
+#define MSG_OVERFLOW_ALERT_BUFFER 82
+</MACRO>
+<MACRO>
+<NAME>MSG_TIME_SEC</NAME>
+#define MSG_TIME_SEC 83
+</MACRO>
+<MACRO>
+<NAME>MSG_TIME_USEC</NAME>
+#define MSG_TIME_USEC 84
+</MACRO>
+<MACRO>
+<NAME>MSG_ALERTIDENT_TAG</NAME>
+#define MSG_ALERTIDENT_TAG 85
+</MACRO>
+<MACRO>
+<NAME>MSG_ALERTIDENT_IDENT</NAME>
+#define MSG_ALERTIDENT_IDENT 86
+</MACRO>
+<MACRO>
+<NAME>MSG_ALERTIDENT_ANALYZER_IDENT</NAME>
+#define MSG_ALERTIDENT_ANALYZER_IDENT 87
+</MACRO>
+<MACRO>
 <NAME>MSG_OWN_FORMAT</NAME>
-#define MSG_OWN_FORMAT 71
+#define MSG_OWN_FORMAT 88
 </MACRO>
 <MACRO>
 <NAME>MSG_FORMAT_PRELUDE_NIDS</NAME>
-#define MSG_FORMAT_PRELUDE_NIDS 0
+#define MSG_FORMAT_PRELUDE_NIDS 89
 </MACRO>
 <FUNCTION>
 <NAME>daemon_start</NAME>

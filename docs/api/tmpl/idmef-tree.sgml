@@ -223,6 +223,7 @@ idmef-tree
 
 </para>
 
+@idmef_default: 
 @idmef_tool_alert: 
 @idmef_correlation_alert: 
 @idmef_overflow_alert: 

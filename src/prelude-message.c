@@ -91,19 +91,19 @@ static int read_message_header(prelude_msg_t *msg, prelude_io_t *pio)
         /*
          * Read the whole header.
          */
-        ret = prelude_io_read(pio, &msg->hdrbuf[msg->read_index], PRELUDE_MSG_HDR_SIZE - msg->read_index);
+        ret = prelude_io_read(pio, &msg->hdrbuf[msg->read_index], PRELUDE_MSG_HDR_SIZE - msg->read_index);        
         if ( ret < 0 ) {
                 log(LOG_ERR, "error reading message.\n");
-                return -1;
+                return prelude_msg_error;
         }
 
         else if ( ret == 0 )
-                return -1;
+                return prelude_msg_eof;
         
         msg->read_index += ret;
         
         if ( msg->read_index < PRELUDE_MSG_HDR_SIZE )
-                return 0;
+                return prelude_msg_unfinished;
                 
         msg->hdr.version  = msg->hdrbuf[0];
         msg->hdr.tag      = msg->hdrbuf[1];
@@ -116,7 +116,7 @@ static int read_message_header(prelude_msg_t *msg, prelude_io_t *pio)
         if ( msg->hdr.version != PRELUDE_MSG_VERSION ) {
                 log(LOG_ERR, "protocol used isn't the same : (use %d, recv %d).\n",
                     PRELUDE_MSG_VERSION, msg->hdr.version);
-                return -1;
+                return prelude_msg_error;
         }
         
         msg->hdr.datalen = ntohl(msg->hdr.datalen) + PRELUDE_MSG_HDR_SIZE;
@@ -125,10 +125,10 @@ static int read_message_header(prelude_msg_t *msg, prelude_io_t *pio)
         msg->payload = malloc(msg->hdr.datalen);
         if (! msg->payload ) {
                 log(LOG_ERR, "couldn't allocate %d bytes.\n", msg->hdr.datalen);
-                return -1;
+                return prelude_msg_error;
         }
         
-        return 1;
+        return prelude_msg_finished;
 }
 
 
@@ -144,20 +144,20 @@ static int read_message_content(prelude_msg_t *msg, prelude_io_t *pio)
         ret = prelude_io_read(pio, &msg->payload[msg->read_index], count);        
         if ( ret < 0 ) {
                 log(LOG_ERR, "error reading message content.\n");
-                return -1;
+                return prelude_msg_error;
         }
 
         else if ( ret == 0 ) 
-                return -1;
+                return prelude_msg_error; /* EOF */
 
         msg->read_index += ret;
 
         if ( msg->read_index == msg->hdr.datalen ) {
                 msg->read_index = PRELUDE_MSG_HDR_SIZE;
-                return 1;
+                return prelude_msg_finished;
         }
         
-        return 0;
+        return prelude_msg_unfinished;
 }
 
 
@@ -174,7 +174,7 @@ static int read_message_content(prelude_msg_t *msg, prelude_io_t *pio)
  * Returns: -1 on end of stream or error.
  * 1 if the message is complete, 0 if it need further processing.
  */
-int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio) 
+prelude_msg_status_t prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio) 
 {
         int ret;
         
@@ -182,7 +182,7 @@ int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
                 *msg = malloc(sizeof(prelude_msg_t));
                 if ( ! *msg ) {
                         log(LOG_ERR, "memory exhausted.\n");
-                        return -1;
+                        return prelude_msg_error;
                 }
 
                 (*msg)->write_index = 0;
@@ -193,14 +193,14 @@ int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
         
         if ( ! (*msg)->payload ) {
                 ret = read_message_header(*msg, pio);
-                if ( ret <= 0 )
+                if ( ret != prelude_msg_finished )
                         return ret;
         }
         
         if ( (*msg)->payload )
                 return read_message_content(*msg, pio);
         
-        return 0;
+        return prelude_msg_unfinished;
 }
 
 
