@@ -549,6 +549,9 @@ static int parse_argument(prelude_list_t *cb_list,
                                 
                 while ( *arg == '-' ) arg++;
 
+                if ( ! isalnum((int) *arg) )
+                        continue;
+                     
                 opt = search_option(optlist, arg, CLI_HOOK, 0);                
                 if ( ! opt ) {                        
                         if ( depth ) {
