@@ -289,7 +289,6 @@ ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg
 
         size = prelude_msg_get_len(*msg);
         failover->to_be_deleted_size = size;
-        failover->to_be_deleted_index = failover->older_index;
         
         failover->older_index++;
         
