@@ -48,19 +48,20 @@
 static time_t my_timegm(struct tm *tm)
 {
 	time_t retval;
-	char *tz;
+	char *old, new[128];
 
-	tz = getenv("TZ");
-	setenv("TZ", "", 1);
-	tzset();
-
+	old = getenv("TZ");
+        if ( ! old )
+                return mktime(tm);
+        
+        putenv("TZ=");
+        tzset();
+        
 	retval = mktime(tm);
-
-	if ( tz )
-		setenv("TZ", tz, 1);
-	else
-		unsetenv("TZ");
-
+        
+        snprintf(new, sizeof(new), "TZ=%s", old);
+        putenv(new);
+        
 	tzset();
 
 	return retval;
