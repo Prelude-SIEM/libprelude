@@ -186,6 +186,19 @@ static void delete_current(prelude_failover_t *failover)
 
 
 
+static ssize_t get_file_size(const char *filename)
+{
+	int ret;
+	struct stat st;
+
+	ret = stat(filename, &st);
+	if ( ret < 0 ) 
+		return -1;
+
+	return st.st_size;
+}
+
+
 
 int prelude_failover_save_msg(prelude_failover_t *failover, prelude_msg_t *msg)
 {
@@ -241,10 +254,13 @@ ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg
                 failover->older_index = failover->newer_index = 1;
                 return 0;
         }
-        
+
         ret = open_failover_fd(failover, filename, sizeof(filename), failover->older_index, O_RDONLY);
-        if ( ret < 0 ) 
+        if ( ret < 0 ) {
+                failover->older_index++;
+                failover->to_be_deleted_size = get_file_size(filename);
                 return -1;
+        }
 
         *msg = NULL;
         while ( (ret = prelude_msg_read(msg, failover->fd)) == prelude_msg_unfinished );
@@ -253,14 +269,15 @@ ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg
         
         if ( ret != prelude_msg_finished ) {
                 log(LOG_ERR, "error reading message index=%d.\n", failover->older_index);
+                failover->older_index++;
+                failover->to_be_deleted_size = get_file_size(filename);
                 return -1;
         }
 
+        failover->older_index++;
         size = prelude_msg_get_len(*msg);
         failover->to_be_deleted_size = size;
-        
-        failover->older_index++;
-        
+
         return size;
 }
 
