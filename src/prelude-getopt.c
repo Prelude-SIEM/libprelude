@@ -131,7 +131,7 @@ static prelude_option_t *search_option(prelude_optlist_t *optlist,
         
         prelude_list_for_each(tmp, &optlist->optlist) {
                 item = prelude_list_entry(tmp, prelude_option_t, list);
-
+                
                 if ( walk_children ) {
                         ret = search_option(&item->optlist, optname, flags, walk_children);
                         if ( ret )
@@ -342,8 +342,8 @@ static struct cb_list *call_option_cb(prelude_list_t *cblist, prelude_option_t *
         prelude_list_for_each(tmp, cblist) {
                 
                 cb = prelude_list_entry(tmp, struct cb_list, list);
-                    
-                if ( cb->option->priority < option->priority )
+                
+                if ( option->priority < cb->option->priority )
                         got_prev = 1;
 
                 if ( ! got_prev )
@@ -414,9 +414,8 @@ static int call_option_from_cb_list(void **context, prelude_list_t *cblist)
         prelude_list_t *tmp, *bkp;
         
         prelude_list_for_each_safe(tmp, bkp, cblist) {
-                
-                cb = prelude_list_entry(tmp, struct cb_list, list);
 
+                cb = prelude_list_entry(tmp, struct cb_list, list);
                 old = *context;
                 
                 ret = cb->option->set(context, cb->option, (str = lookup_variable_if_needed(cb->arg)));
@@ -537,8 +536,8 @@ static int parse_argument(void **context, prelude_list_t *cb_list,
                 }
 
                 while ( *arg == '-' ) arg++;
-                
-                opt = search_option(optlist, arg, CLI_HOOK, 0);
+
+                opt = search_option(optlist, arg, CLI_HOOK, 0);                
                 if ( ! opt ) {                        
                         if ( depth ) {
                                 (*argv_index)--;
@@ -556,24 +555,19 @@ static int parse_argument(void **context, prelude_list_t *cb_list,
                 if ( ret < 0 ) 
                         return -1;
                 
-                if ( opt->set ) {
-                        cbitem = call_option_cb(cb_list, opt, argptr);
-                        if ( ! cbitem )
-                                return -1;
-                }
+                cbitem = call_option_cb(cb_list, opt, argptr);
+                if ( ! cbitem )
+                        return -1;
                 
                 /*
                  * If the option we just found have sub-option.
                  * Try to match the rest of our argument against them.
                  */
                 if ( ! prelude_list_empty(&opt->optlist.optlist) ) {
-
                         
                         ret = parse_argument(context, &cbitem->children, &opt->optlist, filename, argc, argv, argv_index, depth + 1);
                         if ( ret == prelude_option_end || ret == prelude_option_error )
                                 return ret;
-                        
-                            //call_init_func(cb_list, opt);
                 }
         }
         
