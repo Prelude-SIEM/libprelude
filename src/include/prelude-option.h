@@ -35,6 +35,7 @@ typedef enum {
         PRELUDE_OPTION_TYPE_ALLOW_MULTIPLE_CALL = 0x8,
         PRELUDE_OPTION_TYPE_DESTROY = 0x20,
         PRELUDE_OPTION_TYPE_CONTEXT = 0x40,
+        PRELUDE_OPTION_TYPE_ROOT    = 0x80
 } prelude_option_type_t;
 
 
@@ -107,6 +108,8 @@ int prelude_option_invoke_destroy(void *context, prelude_option_t *opt, const ch
 /*
  *
  */
+prelude_option_t *prelude_option_new_root(void);
+
 prelude_option_t *prelude_option_new(prelude_option_t *parent);
 
 void prelude_option_set_longopt(prelude_option_t *opt, const char *longopt);
@@ -168,6 +171,7 @@ void prelude_option_set_commit_callback(prelude_option_t *opt, int (*commit)(voi
 
 void *prelude_option_get_commit_callback(prelude_option_t *opt);
 
+void prelude_option_set_default_context(prelude_option_t *opt, void *context);
 
 prelude_option_context_t *prelude_option_new_context(prelude_option_t *opt, const char *name, void *data);
 
