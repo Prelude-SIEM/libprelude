@@ -59,7 +59,7 @@ static int config_save_value(config_t *cfg, int rtype, prelude_option_t *last,
                 snprintf(buf, sizeof(buf), "%s=%s", option, (value) ? value : "default");
                 
                 if ( *prev )
-                        free(prev);
+                        free(*prev);
                 
                 *prev = strdup(buf);
 
