@@ -1,3 +1,8 @@
+2002-04-05  Krzysztof Zaraska  <kzaraska@student.uci.agh.edu.pl>
+
+	* src/include/idmef-tree.h: added missing comment labeling 
+	idmef_alertident_t.
+
 2002-04-04  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/include/extract.h: include string.h for memmove.

@@ -457,7 +457,7 @@ typedef struct {
 
 
 /*
- *
+ * AlertIdent class
  */
 
 typedef struct {
