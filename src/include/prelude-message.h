@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001-2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -79,7 +79,7 @@ prelude_msg_t *prelude_msg_new(size_t msgcount, size_t msglen, uint8_t tag, uint
 
 void prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *data);
 
-int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst);
+ssize_t prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst);
 
 
 

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001, 2002, 2003, 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -523,7 +523,7 @@ int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src
  *
  * Returns: The number of bytes written, or -1 if an error occured.
  */
-int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst) 
+ssize_t prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst) 
 {
         uint32_t dlen = msg->write_index;
 
@@ -846,7 +846,5 @@ void prelude_msg_set_data(prelude_msg_t *msg, void *data)
 {
         msg->send_msg_data = data;
 }
-
-
 
 
