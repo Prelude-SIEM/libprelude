@@ -1,3 +1,16 @@
+2002-09-04  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-getopt.c (get_from_config): check 
+	process_option_cfg_hook() return value. Abort the
+	whole process if it return an error.
+
+	(section_get_all): config_get_section() doesn't 
+	return a prelude_option_x error code. If 
+	config_get_section() return -1, then return 0, it
+	just mean there are no more section of this name.
+
+	(prelude_option_destroy): use list_for_each_safe().
+	
 2002-09-03  Guillaume Pelat  <endymion@linux-secure.com>
 
 	* src/daemonize.c (lockfile_get_exclusive):

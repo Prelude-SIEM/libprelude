@@ -69,7 +69,10 @@ inline void idmef_send_uint64(prelude_msgbuf_t *msg, uint8_t tag, uint64_t *data
         if ( *data == 0 )
                 return;
 
-#ifndef WORDS_BIGENDIAN
+#ifdef WORDS_BIGENDIAN
+        
+        dst = *data;
+#else
         ((uint32_t *) &dst)[0] = htonl(((uint32_t *) data)[1]);
         ((uint32_t *) &dst)[1] = htonl(((uint32_t *) data)[0]);
 #endif

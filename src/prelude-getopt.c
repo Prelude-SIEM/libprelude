@@ -409,9 +409,9 @@ static int section_get_all(struct list_head *cb_list,
          * this parent,
          */
         while ( 1 ) {
-                ret = config_get_section(cfg, opt->longopt, &line);                
-                if ( ret == prelude_option_error || ret == prelude_option_end ) 
-                        return ret;
+                ret = config_get_section(cfg, opt->longopt, &line);
+                if ( ret < 0 )
+                        return 0;
                 
                 line++;
                 
@@ -469,6 +469,7 @@ static int process_option_cfg_hook(struct list_head *cb_list, prelude_option_t *
 static int get_from_config(struct list_head *cb_list,
                            prelude_optlist_t *optlist, config_t *cfg, const char *section, int line) 
 {
+        int ret;
         struct list_head *tmp;
         prelude_option_t *optitem;
 
@@ -477,7 +478,10 @@ static int get_from_config(struct list_head *cb_list,
          */
         list_for_each(tmp, &optlist->optlist) {
                 optitem = list_entry(tmp, prelude_option_t, list);
-                process_option_cfg_hook(cb_list, optitem, cfg, section, line);
+
+                ret = process_option_cfg_hook(cb_list, optitem, cfg, section, line);
+                if ( ret == prelude_option_error || ret == prelude_option_end )
+                        return ret;
         }
 
         return 0;
@@ -956,17 +960,16 @@ void prelude_option_set_priority(prelude_option_t *option, int priority)
  * Destroy a #prelude_option_t object and all data associated
  * with it (including all suboption).
  */
-void prelude_option_destroy(prelude_option_t *option) 
+void prelude_option_destroy(prelude_option_t *option)
 {
         prelude_option_t *opt;
-        struct list_head *tmp;
+        struct list_head *tmp, *bkp;
 
         list_del(&option->list);
-        
-        for ( tmp = option->optlist.optlist.next; tmp != &option->optlist.optlist; ) {
+
+        list_for_each_safe(tmp, bkp, &option->optlist.optlist) {
                 
                 opt = list_entry(tmp, prelude_option_t, list);
-                tmp = tmp->next;
                 prelude_option_destroy(opt);
         }
 
