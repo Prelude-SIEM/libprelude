@@ -85,7 +85,8 @@
 struct prelude_client {
         
         int flags;
-        int initial_hb;
+        prelude_bool_t startup;
+        prelude_bool_t ignore_error;
         
         prelude_client_capability_t capability;
         
@@ -200,7 +201,7 @@ static void heartbeat_expire_cb(void *data)
         snprintf(buf, sizeof(buf), "%u", timer_expire(&client->heartbeat_timer) / 60);
         
         add_hb_data(heartbeat, idmef_string_new_constant("Analyzer status"),
-                    idmef_string_new_ref(client->initial_hb ? "starting" : "running"));
+                    idmef_string_new_ref(client->startup ? "starting" : "running"));
 
         if ( client->md5sum )
                 add_hb_data(heartbeat, idmef_string_new_constant("Analyzer md5sum"),
@@ -526,7 +527,7 @@ static int set_manager_addr(void *context, prelude_option_t *opt, const char *ar
 
         ptr->manager_list = prelude_connection_mgr_new(ptr, arg);
 
-        return (ptr->manager_list) ? 0 : -1;
+        return (ptr->manager_list || ptr->ignore_error) ? 0 : -1;
 }
 
 
@@ -553,12 +554,26 @@ static int get_heartbeat_interval(void *context, prelude_option_t *opt, char *bu
 }
 
 
+static int set_ignore_error(void *context, prelude_option_t *opt, const char *arg)
+{
+        prelude_client_t *client = context;
+        client->ignore_error = TRUE;
+        return 0;
+}
+
 
 static int setup_options(prelude_client_t *client, int argc, char **argv)
 {
         int ret;
         int old_flags;
         prelude_option_t *opt;
+        
+        opt = prelude_option_add(NULL, CLI_HOOK, 0, "ignore-startup-error",
+                                 NULL, no_argument, set_ignore_error, NULL);
+        prelude_option_set_warnings(0, &old_flags);
+        ret = prelude_option_parse_arguments(client, opt, NULL, argc, argv);
+        prelude_option_set_warnings(old_flags, NULL);
+        prelude_option_destroy(opt);
         
         prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "heartbeat-interval",
                            "Number of minutes between two heartbeat", required_argument,
@@ -576,7 +591,7 @@ static int setup_options(prelude_client_t *client, int argc, char **argv)
                                  set_configuration_file, NULL);
 
         prelude_option_set_warnings(0, &old_flags);
-        ret = prelude_option_parse_arguments((void *) client, opt, NULL, argc, argv);
+        ret = prelude_option_parse_arguments(client, opt, NULL, argc, argv);
         prelude_option_set_warnings(old_flags, NULL);
         
         if ( ret < 0 )
@@ -586,7 +601,7 @@ static int setup_options(prelude_client_t *client, int argc, char **argv)
                                  "Name for this analyzer", required_argument, set_name, NULL);
         
         prelude_option_set_warnings(0, &old_flags);
-        ret = prelude_option_parse_arguments((void *) client, opt, NULL, argc, argv);
+        ret = prelude_option_parse_arguments(client, opt, NULL, argc, argv);
         prelude_option_set_warnings(old_flags, NULL);
         
         if ( ret < 0 )
@@ -703,22 +718,22 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
         ret = setup_options(new, argc, argv);
         if ( ret < 0 )
                 return -1;
-
+        
         new->credentials = tls_auth_init(new);
-        if ( ! new->credentials ) {
+        if ( ! new->credentials && ! new->ignore_error ) {
                 file_error(new);
                 return -1;
         }
         
         prelude_client_get_backup_filename(new, filename, sizeof(filename));
         ret = access(filename, W_OK);
-        if ( ret < 0 ) {
+        if ( ret < 0 && ! new->ignore_error ) {
                 file_error(new);
                 return -1;
         }
         
         ret = prelude_client_ident_init(new, &new->analyzerid);
-        if ( ret < 0 ) {
+        if ( ret < 0 && ! new->ignore_error ) {
                 file_error(new);
                 return -1;
         }
@@ -745,9 +760,9 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
                 return -1;
 
         if ( new->manager_list || new->heartbeat_cb ) {
-                new->initial_hb = 1;
+                new->startup = TRUE;
                 heartbeat_expire_cb(new);
-                new->initial_hb = 0;
+                new->startup = FALSE;
         }
         
         return 0;
