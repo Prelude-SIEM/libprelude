@@ -36,6 +36,9 @@ sub	header
 #ifndef _LIBPRELUDE_IDMEF_MESSAGE_WRITE_H
 #define _LIBPRELUDE_IDMEF_MESSAGE_WRITE_H
 
+#include \"prelude-inttypes.h\"
+#include \"idmef-time.h\"
+#include \"idmef-string.h\"
 #include \"prelude-message-buffered.h\"
 
 

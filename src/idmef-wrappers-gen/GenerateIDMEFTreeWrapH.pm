@@ -60,6 +60,9 @@ sub	header
 #ifndef _LIBPRELUDE_IDMEF_TREE_WRAP_H
 #define _LIBPRELUDE_IDMEF_TREE_WRAP_H
 
+#include \"idmef-type.h\"
+#include \"idmef-value.h\"
+#include \"prelude-inttypes.h\"
 #include \"prelude-message.h\"
 
 ");

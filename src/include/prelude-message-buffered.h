@@ -24,10 +24,12 @@
 #ifndef _LIBPRELUDE_PRELUDE_MESSAGE_BUFFERED_H
 #define _LIBPRELUDE_PRELUDE_MESSAGE_BUFFERED_H
 
+typedef struct prelude_message_buffered prelude_msgbuf_t;
+
+
 #include "prelude-client.h"
 #include "prelude-message.h"
 
-typedef struct prelude_message_buffered prelude_msgbuf_t;
 
 prelude_client_t *prelude_msgbuf_get_client(prelude_msgbuf_t *msgbuf);
 

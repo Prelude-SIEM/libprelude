@@ -28,6 +28,10 @@ typedef struct idmef_object idmef_object_t;
 
 #include <stdarg.h>
 
+#include "idmef-type.h"
+#include "idmef-value.h"
+#include "idmef-tree-wrap.h"
+
 idmef_value_t *idmef_object_get(idmef_message_t *message,
 				idmef_object_t *object);
 

@@ -24,6 +24,9 @@
 #ifndef _IDMEF_VALUE_TYPE_H
 #define _IDMEF_VALUE_TYPE_H
 
+#include "idmef-time.h"
+#include "idmef-string.h"
+
 
 typedef enum {
         IDMEF_VALUE_RELATION_EQUAL       = 0x01,
