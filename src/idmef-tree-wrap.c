@@ -171,7 +171,7 @@ idmef_additional_data_type_t idmef_additional_data_type_to_numeric(const char *n
               idmef_additional_data_type_t val;
               const char *name;
         } tbl[] = {
-            { IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN, "boolean" },
+            { IDMEF_ADDITIONAL_DATA_TYPE_STRING, "string" },
             { IDMEF_ADDITIONAL_DATA_TYPE_BYTE, "byte" },
             { IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER, "character" },
             { IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, "date-time" },
@@ -179,7 +179,7 @@ idmef_additional_data_type_t idmef_additional_data_type_to_numeric(const char *n
             { IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, "ntpstamp" },
             { IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, "portlist" },
             { IDMEF_ADDITIONAL_DATA_TYPE_REAL, "real" },
-            { IDMEF_ADDITIONAL_DATA_TYPE_STRING, "string" },
+            { IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN, "boolean" },
             { IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, "byte-string" },
             { IDMEF_ADDITIONAL_DATA_TYPE_XML, "xml" },
         };
@@ -206,7 +206,7 @@ const char *idmef_additional_data_type_to_string(idmef_additional_data_type_t va
               idmef_additional_data_type_t val;
               const char *name;
         } tbl[] = {
-                { IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN, "boolean" },
+                { IDMEF_ADDITIONAL_DATA_TYPE_STRING, "string" },
                 { IDMEF_ADDITIONAL_DATA_TYPE_BYTE, "byte" },
                 { IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER, "character" },
                 { IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, "date-time" },
@@ -214,7 +214,7 @@ const char *idmef_additional_data_type_to_string(idmef_additional_data_type_t va
                 { IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, "ntpstamp" },
                 { IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, "portlist" },
                 { IDMEF_ADDITIONAL_DATA_TYPE_REAL, "real" },
-                { IDMEF_ADDITIONAL_DATA_TYPE_STRING, "string" },
+                { IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN, "boolean" },
                 { IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, "byte-string" },
                 { IDMEF_ADDITIONAL_DATA_TYPE_XML, "xml" },
         };
