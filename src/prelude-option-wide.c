@@ -395,8 +395,7 @@ int prelude_option_push_request(prelude_msgbuf_t *msg, int type, const char *req
 
 
 
-int prelude_option_new_request(prelude_client_t *client,
-                               prelude_msgbuf_t *msgbuf,
+int prelude_option_new_request(prelude_msgbuf_t *msgbuf,
                                uint32_t request_id, uint64_t *target_id, size_t size)
 {
         int i;
