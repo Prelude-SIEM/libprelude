@@ -389,18 +389,22 @@ int idmef_criteria_clone(idmef_criteria_t *src, idmef_criteria_t **dst)
                 return prelude_error_from_errno(errno);
 
         memcpy(new, src, sizeof(*new));
-        
-        ret = idmef_criteria_clone(src->or, &new->or);
-        if ( ret < 0 ) {
-                idmef_criteria_destroy(new);
-                return ret;
-        }
-        
-        ret = idmef_criteria_clone(src->and, &new->and);
-        if ( ret < 0 ) {
-                idmef_criteria_destroy(new);
-                return ret;
-        }
+
+	if ( src->or ) {
+		ret = idmef_criteria_clone(src->or, &new->or);
+		if ( ret < 0 ) {
+			idmef_criteria_destroy(new);
+			return ret;
+		}
+	}
+
+	if ( src->and ) {
+		ret = idmef_criteria_clone(src->and, &new->and);
+		if ( ret < 0 ) {
+			idmef_criteria_destroy(new);
+			return ret;
+		}
+	}
         
         ret = idmef_criterion_clone(src->criterion, &new->criterion);
         if ( ret < 0 ) {
