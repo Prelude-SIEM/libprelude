@@ -470,7 +470,7 @@ static int new_connection(cnx_t **ncnx, prelude_client_profile_t *cp, cnx_list_t
         
         new = malloc(sizeof(*new));
         if ( ! new )
-                return prelude_error_from_errno(ret);
+                return prelude_error_from_errno(errno);
         
         new->parent = clist;
         new->timer_started = FALSE;
