@@ -1,3 +1,10 @@
+2002-08-04  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-client.c (unix_connect): 
+	Small bug found by Guillaume Pelat <endymion@linux-secure.com>,
+	directly call prelude_get_socket_filename() with addr.sun_path
+	as argument. 
+
 2002-07-30  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* configure.in: update version number to 0.8.0.

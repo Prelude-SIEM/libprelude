@@ -131,7 +131,6 @@ static int unix_connect(uint16_t port)
 {
         int ret, sock;
     	struct sockaddr_un addr;
-        char filename[256];
 
 	log(LOG_INFO, "- Connecting to Unix prelude Manager server.\n");
         
@@ -142,10 +141,7 @@ static int unix_connect(uint16_t port)
 	}
         
 	addr.sun_family = AF_UNIX;
-
-        prelude_get_socket_filename(filename, sizeof(filename), port);
-
-	strncpy(addr.sun_path, filename, sizeof(addr.sun_path));
+        prelude_get_socket_filename(addr.sun_path, sizeof(addr.sun_path), port);
 
         ret = generic_connect(sock, (struct sockaddr *)&addr, sizeof(addr));
         if ( ret < 0 ) {
