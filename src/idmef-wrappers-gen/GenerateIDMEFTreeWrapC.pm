@@ -593,23 +593,26 @@ idmef_value_t *idmef_$struct->{short_typename}_get_${name}_value($struct->{typen
 ");
 
     } elsif ( $field->{metatype} & &METATYPE_ENUM ) {
+	my $value_func = "idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ", ptr->$field->{name})";
+
 	$self->output("
 idmef_value_t *idmef_$struct->{short_typename}_get_${name}_value($struct->{typename} *ptr)
 \{");
 
-	if ( $field->{ptr} ) {
+	if ( $field->{metatype} & &METATYPE_OPTIONAL_INT ) {
 	    $self->output("
-	if ( ! ptr->$field->{name} )
-		return NULL;
+	return ptr->$field->{name}_is_set ? $value_func : NULL;");
+	} else {
+	    $self->output("
+	return $value_func;
 ");
 	}
 
 	$self->output("
-	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ", ptr->$field->{name});
 \}
 ");
-
     }
+       
 
     ##############################
     # Generate *_set_* functions #
@@ -1092,7 +1095,7 @@ const char *idmef_$enum->{short_typename}_to_string($enum->{typename} val)
 	if ( $cnt == 0 && $field->{value} != 0 ) {
 	    $self->output("
 		case 0:
-			return \"NULL\";
+			return NULL;
 ");
 	}
 	
@@ -1113,8 +1116,7 @@ const char *idmef_$enum->{short_typename}_to_string($enum->{typename} val)
 
     $self->output("
 		default:
-			/* if we did not hit 0 earlier, we treat is as undefined/NULL */
-			return ( val == 0 ) ? \"NULL\" : NULL;
+			return NULL;
 	\}
 
 	return NULL;
