@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001, 2002, 2003, 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -59,7 +59,7 @@ static const char *sensor_name = NULL;
 
 static int set_sensor_name(prelude_option_t *opt, const char *optarg) 
 {
-        sensor_name = optarg;
+        sensor_name = strdup(optarg);
         prelude_set_program_name(optarg);
         return prelude_option_success;
 }

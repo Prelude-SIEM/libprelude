@@ -1,5 +1,8 @@
 2004-01-11  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
+	* sensor-adduser/sensor-adduser.c (set_sensor_name): 
+	dup optarg.
+
 	* src/sensor.c (setup_analyzer_node_location) 
 	(setup_analyzer_node_name, setup_analyzer_node_address_address) 
 	(setup_analyzer_node_address_netmask) 
