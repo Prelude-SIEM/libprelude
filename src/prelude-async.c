@@ -84,19 +84,28 @@ static void wait_timer_and_data(void)
 static void *async_thread(void *arg) 
 {
         prelude_async_object_t *obj;
-        struct list_head *tmp, *bkp;
+        struct list_head *tmp, *next;
         
         
         while ( 1 ) {
                 
                 wait_timer_and_data();
+
+                pthread_mutex_lock(&mutex);
+                next = ( list_empty(&joblist) ) ? NULL : joblist.next;
+                pthread_mutex_unlock(&mutex);
                 
-                for ( tmp = joblist.next; tmp != &joblist; tmp = bkp ) {
-                    
+                while ( next ) {
+
+                        tmp = next;
+                        
+                        pthread_mutex_lock(&mutex);
+                        next = ( tmp->next != &joblist ) ? tmp->next : NULL;
+                        pthread_mutex_unlock(&mutex);
+                        
                         obj = prelude_list_get_object(tmp, prelude_async_object_t);
-                        bkp = tmp->next;
                         prelude_async_del(obj);
-                        obj->func(obj, obj->data);
+                        obj->func(obj, obj->data);                     
                 }
         }
 }
