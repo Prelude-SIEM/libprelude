@@ -41,7 +41,7 @@
 #include "prelude-msgbuf.h"
 #include "idmef.h"
 
-int prelude_init(void);
+int prelude_init(int *argc, char **argv);
 
 void prelude_deinit(void);
 
