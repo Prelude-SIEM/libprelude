@@ -23,6 +23,7 @@ libprelude_la_SOURCES = 		\
 	tls-auth.c			\
 	tls-util.c			\
 	variable.c			\
+	prelude.c			\
 	prelude-async.c			\
 	prelude-client.c		\
 	prelude-connection.c		\

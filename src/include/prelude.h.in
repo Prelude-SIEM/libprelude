@@ -41,6 +41,10 @@
 #include "prelude-msgbuf.h"
 #include "idmef.h"
 
+int prelude_init(void);
+
+void prelude_deinit(void);
+
 const char *prelude_check_version(const char *rq_version);
 
 
