@@ -30,7 +30,7 @@
 #include "common.h"
 #include "prelude-client.h"
 #include "prelude-connection.h"
-#include "prelude-connection-mgr.h"
+#include "prelude-connection-pool.h"
 #include "prelude-error.h"
 #include "prelude-io.h"
 #include "prelude-option.h"
