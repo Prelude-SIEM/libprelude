@@ -260,10 +260,13 @@ ssize_t prelude_io_read(prelude_io_t *pio, void *buf, size_t count)
 
                 if ( pfd.revents == POLLIN ) {
                         ret = pio->read(pio, &((unsigned char *)buf)[i], count - i);
-                        if ( ret <= 0 ) {
+                        if ( ret < 0 ) {
                                 log(LOG_ERR, "couldn't read %d bytes.\n", count - i);
-                                return ret;
+                                return -1;
                         }
+
+                        if ( ret == 0 )
+                                return 0;
                         
                         i += ret;
                 }
