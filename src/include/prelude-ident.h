@@ -34,6 +34,6 @@ uint64_t prelude_ident_dec(prelude_ident_t *ident);
 
 void prelude_ident_destroy(prelude_ident_t *ident);
 
-prelude_ident_t *prelude_ident_new(void);
+int prelude_ident_new(prelude_ident_t **ret);
 
 #endif /* _LIBPRELUDE_PRELUDE_IDENT_H */

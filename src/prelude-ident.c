@@ -28,6 +28,7 @@
 #include <sys/time.h>
 
 #include "prelude-log.h"
+#include "prelude-error.h"
 #include "prelude-inttypes.h"
 #include "prelude-ident.h"
 
@@ -42,28 +43,27 @@ struct prelude_ident {
 
 /**
  * prelude_ident_new:
+ * @ret: Pointer where to store the created object.
  *
  * Create a new #prelude_ident_t object with an unique value.
  *
- * Returns: a new #prelude_ident_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-prelude_ident_t *prelude_ident_new(void)
+int prelude_ident_new(prelude_ident_t **ret)
 {
         struct timeval tv;
         prelude_ident_t *new;
 
         gettimeofday(&tv, NULL);
         
-        new = malloc(sizeof(*new));
-        if ( ! new ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
-
+        *ret = new = malloc(sizeof(*new));
+        if ( ! new )
+                return prelude_error_from_errno(errno);
+        
         new->no = ~0;
         new->init_seconds = tv.tv_sec;
         
-        return new;
+        return 0;
 }
 
 
