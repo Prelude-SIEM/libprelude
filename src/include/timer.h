@@ -31,7 +31,7 @@
 typedef struct {
         prelude_list_t list;
 
-        short int expire;
+        int expire;
         time_t start_time;
 
         void *data;
