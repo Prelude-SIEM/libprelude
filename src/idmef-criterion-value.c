@@ -130,8 +130,8 @@ static void regex_destroy(idmef_criterion_value_t *cv)
  * value stuff
  */
 static int value_match(const idmef_criterion_value_t *cv, idmef_criterion_operator_t operator, idmef_value_t *value)
-{        
-        return idmef_value_match(cv->value, value, operator);
+{
+        return idmef_value_match(value, cv->value, operator);
 }
 
 
