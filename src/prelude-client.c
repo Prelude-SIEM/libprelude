@@ -231,11 +231,11 @@ static int read_plaintext_authentication_result(prelude_client_t *client)
         }
         
         if ( tag == PRELUDE_MSG_AUTH_SUCCEED ) {
-                log(LOG_INFO, "Plaintext authentication succeed with Prelude Manager.\n");
+                log(LOG_INFO, "- Plaintext authentication succeed with Prelude Manager.\n");
                 return 0;
         }
         
-        log(LOG_INFO, "Plaintext authentication failed with Prelude Manager.\n");
+        log(LOG_INFO, "- Plaintext authentication failed with Prelude Manager.\n");
         auth_error(client, "Plaintext");
         
         return -1;
@@ -338,9 +338,11 @@ static int handle_ssl_connection(prelude_client_t *client, int sock)
                  * SSL authentication failed,
                  * tell the user how to setup SSL auth and exit.
                  */
+                log(LOG_INFO, "- SSL authentication failed with Prelude Manager.\n");
                 auth_error(client, "SSL");
         }
-        
+
+        log(LOG_INFO, "- SSL authentication succeed with Prelude Manager.\n");
         prelude_io_set_ssl_io(client->fd, ssl);
 
         return 0;
