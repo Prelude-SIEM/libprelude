@@ -61,6 +61,8 @@ typedef struct
 } plugin_container_t;
 
 
+plugin_generic_t *plugin_search_by_name(const char *name);
+
 /*
  * Load all plugins in directory 'dirname'.
  * The CB arguments will be called for each plugin that register

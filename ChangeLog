@@ -1,5 +1,8 @@
 2002-04-08  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/plugin-common.c (plugin_search_by_name): 
+	new function, search a plugin by name.
+
 	* Makefile.am (install-data-local): 
 	Only install default configuration file if it does not
 	exit... If a configuration file is already present, warn

@@ -40,7 +40,7 @@
 #include "config-engine.h"
 
 #ifndef RTLD_NOW
-#define RTLD_NOW RTLD_LAZY
+ #define RTLD_NOW RTLD_LAZY
 #endif
 
 
@@ -397,6 +397,33 @@ int plugin_add(plugin_container_t *pc, struct list_head *h, const char *infos)
         list_add_tail(&pc->ext_list, h);
 
         return 0;
+}
+
+
+
+
+/**
+ * plugin_search_by_name:
+ * @name: Name of the plugin to search.
+ *
+ * Search the whole plugin list (subscribed and unsubscribed),
+ * for a plugin with name @name.
+ *
+ * Returns: the plugin on success, or NULL if the plugin doesn't exist.
+ */
+plugin_generic_t *plugin_search_by_name(const char *name) 
+{
+        plugin_entry_t *pe;
+        struct list_head *tmp;
+        
+        list_for_each(tmp, &all_plugin) {
+                pe = list_entry(tmp, plugin_entry_t, list);
+
+                if ( strcmp(pe->plugin->name, name) == 0 )
+                        return pe->plugin;
+        }
+
+        return NULL;
 }
 
 
