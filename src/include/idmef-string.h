@@ -77,14 +77,6 @@ char *idmef_string_get_string(const idmef_string_t *string);
 
 int idmef_string_is_empty(const idmef_string_t *string);
 
-
-/*
- * FIXME: backward compatibility
- */
-#define idmef_string idmef_string_get_string
-#define idmef_string_len idmef_string_get_len
-
-
                                                          
 #define idmef_string_set_constant(istr, str) 			\
 	idmef_string_set_ref_fast(istr, (str), sizeof((str)))

@@ -270,12 +270,4 @@ void idmef_data_destroy_internal(idmef_data_t *data);
 #define idmef_data_set_constant_ref(data, buf)      \
         idmef_data_set_ref(data, buf, sizeof(buf))
 
-
-
-/*
- * FIXME: backward compatibility
- */
-#define idmef_data idmef_data_get_data
-#define idmef_data_len idmef_data_get_len
-
 #endif /* _LIBPRELUDE_IDMEF_DATA_H */
