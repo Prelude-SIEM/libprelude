@@ -62,7 +62,7 @@ struct idmef_criteria {
  *
  * Returns: A pointer to an operator string or NULL.
  */
-const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t operator)
+const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t op)
 {
         int i;
         const struct {
@@ -82,7 +82,7 @@ const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t operat
         };
 
         for ( i = 0; tbl[i].operator != 0; i++ ) 
-                if ( operator == tbl[i].operator )
+                if ( op == tbl[i].operator )
                         return tbl[i].name;
 
         return NULL;

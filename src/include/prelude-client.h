@@ -24,6 +24,10 @@
 #ifndef _LIBPRELUDE_PRELUDE_CLIENT_H
 #define _LIBPRELUDE_PRELUDE_CLIENT_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 typedef enum {
         PRELUDE_CLIENT_EXIT_STATUS_SUCCESS = 0,
         PRELUDE_CLIENT_EXIT_STATUS_FAILURE = -1
@@ -90,4 +94,8 @@ prelude_client_profile_t *prelude_client_get_profile(prelude_client_t *client);
 
 int _prelude_client_register_options(void);
 
+#ifdef __cplusplus
+ }
+#endif
+         
 #endif

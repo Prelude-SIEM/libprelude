@@ -24,6 +24,10 @@
 #ifndef _LIBPRELUDE_IDMEF_ADDITIONAL_DATA_H
 #define _LIBPRELUDE_IDMEF_ADDITIONAL_DATA_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+         
 /*
  * basic type
  */
@@ -313,4 +317,8 @@ prelude_bool_t idmef_additional_data_is_empty(idmef_additional_data_t *data);
 
 int idmef_additional_data_data_to_string(idmef_additional_data_t *ad, prelude_string_t *out);
 
+#ifdef __cplusplus
+ }
+#endif
+         
 #endif /* _LIBPRELUDE_IDMEF_DATA_H */

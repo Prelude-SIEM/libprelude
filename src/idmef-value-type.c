@@ -433,7 +433,7 @@ int idmef_value_type_copy(const idmef_value_type_t *src, void *dst)
 
 int idmef_value_type_compare(const idmef_value_type_t *type1,
                              const idmef_value_type_t *type2,
-                             idmef_criterion_operator_t relation)
+                             idmef_criterion_operator_t op)
 {
         int ret;
 
@@ -444,12 +444,12 @@ int idmef_value_type_compare(const idmef_value_type_t *type1,
         if ( ret < 0 )
                 return ret;
 
-        assert(relation & ops_tbl[type1->id].relation);
+        assert(op & ops_tbl[type1->id].relation);
         
         if ( ! ops_tbl[type1->id].compare )
                 return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_UNAVAILABLE);
         
-        return ops_tbl[type1->id].compare(type1, type2, ops_tbl[type1->id].len, relation);
+        return ops_tbl[type1->id].compare(type1, type2, ops_tbl[type1->id].len, op);
 }
 
 
@@ -505,7 +505,7 @@ void idmef_value_type_destroy(idmef_value_type_t *type)
 
 
 
-int idmef_value_type_check_relation(const idmef_value_type_t *type, idmef_criterion_operator_t relation)
+int idmef_value_type_check_relation(const idmef_value_type_t *type, idmef_criterion_operator_t op)
 {
         int ret;
         
@@ -513,5 +513,5 @@ int idmef_value_type_check_relation(const idmef_value_type_t *type, idmef_criter
         if ( ret < 0 )
                 return ret;
 
-        return (relation & ops_tbl[type->id].relation) ? 0 : -1;
+        return (op & ops_tbl[type->id].relation) ? 0 : -1;
 }

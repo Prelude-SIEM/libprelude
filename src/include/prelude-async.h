@@ -27,6 +27,10 @@
 
 #include "prelude-linked-object.h"
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+         
 
 typedef enum {
         PRELUDE_ASYNC_FLAGS_TIMER   = 0x01, 
@@ -70,6 +74,10 @@ void prelude_async_add(prelude_async_object_t *obj);
 void prelude_async_del(prelude_async_object_t *obj);
 
 void prelude_async_exit(void);
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif /* _LIBPRELUDE_PRELUDE_ASYNC_H */
 

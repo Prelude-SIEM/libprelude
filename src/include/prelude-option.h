@@ -27,6 +27,10 @@
 #include "prelude-msgbuf.h"
 
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 
 typedef enum {
         PRELUDE_OPTION_TYPE_CLI  = 0x01,
@@ -85,7 +89,7 @@ void prelude_option_set_type(prelude_option_t *opt, prelude_option_type_t type);
 
 prelude_option_type_t prelude_option_get_type(prelude_option_t *opt);
 
-void prelude_option_set_warnings(prelude_option_warning_t new, prelude_option_warning_t *old_warnings);
+void prelude_option_set_warnings(prelude_option_warning_t new_warnings, prelude_option_warning_t *old_warnings);
 
 char prelude_option_get_shortname(prelude_option_t *opt);
 
@@ -185,4 +189,8 @@ void prelude_option_context_destroy(prelude_option_context_t *oc);
 prelude_option_t *prelude_option_search(prelude_option_t *parent, const char *name,
                                         prelude_option_type_t type, int walk_children);
 
+#ifdef __cplusplus
+ }
+#endif
+         
 #endif /* _LIBPRELUDE_PRELUDE_GETOPT_H */

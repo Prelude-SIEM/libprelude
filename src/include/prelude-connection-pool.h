@@ -27,6 +27,9 @@
 #include "prelude-list.h"
 #include "prelude-connection.h"
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 typedef enum {
         PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT        = 0x01,
@@ -89,4 +92,8 @@ void prelude_connection_pool_set_event_handler(prelude_connection_pool_t *pool,
                                                                prelude_connection_pool_event_t events,
                                                                prelude_connection_t *cnx));
 
+#ifdef __cplusplus
+ }
+#endif
+         
 #endif /* _LIBPRELUDE_PRELUDE_CONNECTION_POOL_H */

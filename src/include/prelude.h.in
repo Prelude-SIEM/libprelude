@@ -48,11 +48,18 @@
 #include "prelude-msgbuf.h"
 #include "idmef.h"
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 int prelude_init(int *argc, char **argv);
 
 void prelude_deinit(void);
 
 const char *prelude_check_version(const char *req_version);
 
+#ifdef __cplusplus
+ }
+#endif
 
 #endif /* _LIBPRELUDE_PRELUDE_H */

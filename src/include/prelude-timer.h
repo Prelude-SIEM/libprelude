@@ -27,6 +27,10 @@
 
 #include "prelude-list.h"
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 
 typedef struct {
         prelude_list_t list;
@@ -102,4 +106,8 @@ void prelude_timer_lock_critical_region(void);
  */
 void prelude_timer_unlock_critical_region(void);
 
+#ifdef __cplusplus
+ }
+#endif
+         
 #endif /* _LIBPRELUDE_PRELUDE_TIMER_H */

@@ -28,6 +28,10 @@
 #include "prelude-list.h"
 #include "prelude-option.h"
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+         
 typedef struct prelude_plugin_instance prelude_plugin_instance_t;
 
 
@@ -206,5 +210,9 @@ void prelude_plugin_unload(prelude_plugin_generic_t *plugin);
  */
 #define prelude_plugin_run(pi, type, member, arg...) \
         (((type *)prelude_plugin_instance_get_plugin(pi))->member(arg))
+
+#ifdef __cplusplus
+ } 
+#endif
 
 #endif /* _LIBPRELUDE_PLUGIN_H */

@@ -27,6 +27,9 @@
 #include <stdarg.h>
 #include <syslog.h>
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 #define prelude_log(level, ...) \
         _prelude_log(level, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
@@ -67,4 +70,8 @@ void prelude_log_v(prelude_log_t level, const char *file,
 void _prelude_log(prelude_log_t level, const char *file,
                   const char *function, int line, const char *fmt, ...);
 
+#ifdef __cplusplus
+ }
+#endif
+         
 #endif /* _LIBPRELUDE_PRELUDE_LOG_H */

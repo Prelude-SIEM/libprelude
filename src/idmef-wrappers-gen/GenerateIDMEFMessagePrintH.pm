@@ -58,6 +58,10 @@ sub	header
 #ifndef _LIBPRELUDE_IDMEF_MESSAGE_PRINT_H
 #define _LIBPRELUDE_IDMEF_MESSAGE_PRINT_H
 
+#ifdef __cplusplus
+ extern \"C\" \{
+#endif
+
 ");
 }
 
@@ -77,6 +81,10 @@ sub	footer
     my	$tree = shift;
 
     $self->output("
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif /* _LIBPRELUDE_IDMEF_MESSAGE_PRINT_H */
 "

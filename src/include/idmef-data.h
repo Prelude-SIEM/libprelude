@@ -26,12 +26,9 @@
 
 #include "prelude-list.h"
 
-
-/*
- * Make sure that this ID does not conflict with any in idmef-tree-wrap.h
- */
-#define idmef_type_data 2
-
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 typedef enum {
 	IDMEF_DATA_TYPE_UNKNOWN      = 0,
@@ -196,4 +193,8 @@ int idmef_data_to_string(const idmef_data_t *data, prelude_string_t *out);
 
 void idmef_data_destroy_internal(idmef_data_t *data);
 
+#ifdef __cplusplus
+ }
+#endif
+         
 #endif /* _LIBPRELUDE_IDMEF_DATA_H */

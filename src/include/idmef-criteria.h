@@ -24,6 +24,9 @@
 #ifndef _LIBPRELUDE_IDMEF_CRITERIA_H
 #define _LIBPRELUDE_IDMEF_CRITERIA_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 typedef enum {
         IDMEF_CRITERION_OPERATOR_EQUAL       = 0x01,
@@ -43,10 +46,10 @@ typedef struct idmef_criterion idmef_criterion_t;
 #include "idmef-path.h"
 #include "idmef-criterion-value.h"
 
-const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t operator);
+const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t op);
 
 int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
-                        idmef_criterion_value_t *value, idmef_criterion_operator_t operator);
+                        idmef_criterion_value_t *value, idmef_criterion_operator_t op);
 
 void idmef_criterion_destroy(idmef_criterion_t *criterion);
 int idmef_criterion_clone(idmef_criterion_t *criterion, idmef_criterion_t **dst);
@@ -78,4 +81,8 @@ idmef_criteria_t *idmef_criteria_get_and(idmef_criteria_t *criteria);
 
 int idmef_criteria_new_from_string(idmef_criteria_t **criteria, const char *str);
 
+#ifdef __cplusplus
+ }
+#endif
+         
 #endif /* _LIBPRELUDE_IDMEF_CRITERIA_H */

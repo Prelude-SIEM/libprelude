@@ -26,6 +26,10 @@
 #ifndef _LIBPRELUDE_IDMEF_PATH_H
 #define _LIBPRELUDE_IDMEF_PATH_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 typedef struct idmef_path idmef_path_t;
 
 #include <stdarg.h>
@@ -72,4 +76,8 @@ int idmef_path_has_lists(idmef_path_t *path);
 
 unsigned int idmef_path_get_depth(const idmef_path_t *path);
 
+#ifdef __cplusplus
+ }
+#endif
+         
 #endif /* _LIBPRELUDE_IDMEF_PATH_H */

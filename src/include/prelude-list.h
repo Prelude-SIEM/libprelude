@@ -81,7 +81,7 @@ static inline void prelude_list_init(prelude_list_t *item)
  */
 static inline prelude_bool_t prelude_list_is_empty(prelude_list_t *item)
 {
-        return (item->next == item) ? TRUE : FALSE;
+        return (item->next == item) ? PRELUDE_BOOL_TRUE : PRELUDE_BOOL_FALSE;
 }
 
 

@@ -29,9 +29,9 @@
 #include "prelude-list.h"
 #include "prelude-inttypes.h"
 
-#define idmef_type_string 0
-#define prelude_type_string 0
-
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 struct prelude_string {
 	prelude_list_t list;
@@ -119,5 +119,9 @@ int prelude_string_vprintf(prelude_string_t *string, const char *fmt, va_list ap
 
 #define prelude_string_new_constant(string, str)	            	\
 	prelude_string_new_ref_fast((string), (str), sizeof((str)) - 1)
-                                                         
+
+#ifdef __cplusplus
+ }
+#endif
+         
 #endif /* _LIBPRELUDE_PRELUDE_STRING_H */

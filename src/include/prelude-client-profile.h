@@ -1,7 +1,8 @@
 /*****
 *
-* Copyright (C) 2004-2005 Yoann Vandoorselaere <yoann@prelude-ids.org>
-* All Rights Reserved
+* Copyright (C) 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
+* Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
+*
 *
 * This file is part of the Prelude program.
 *
@@ -28,6 +29,10 @@
 #include <gnutls/gnutls.h>
 
 #include "prelude-inttypes.h"
+
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 typedef struct prelude_client_profile prelude_client_profile_t;
 
@@ -75,4 +80,8 @@ void prelude_client_profile_set_analyzerid(prelude_client_profile_t *cp, uint64_
 
 int prelude_client_profile_get_credentials(prelude_client_profile_t *cp, gnutls_certificate_credentials *credentials);
 
+#ifdef __cplusplus
+ }
+#endif
+         
 #endif

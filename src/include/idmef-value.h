@@ -34,6 +34,9 @@ typedef struct idmef_value idmef_value_t;
 #include "idmef-class.h"
 #include "idmef-path.h"
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 int idmef_value_new_int8(idmef_value_t **value, int8_t val);
 int idmef_value_new_uint8(idmef_value_t **value, uint8_t val);
@@ -74,7 +77,7 @@ idmef_time_t *idmef_value_get_time(idmef_value_t *val);
 idmef_data_t *idmef_value_get_data(idmef_value_t *val);
 prelude_string_t *idmef_value_get_string(idmef_value_t *val);
 
-int idmef_value_list_add(idmef_value_t *list, idmef_value_t *new);
+int idmef_value_list_add(idmef_value_t *list, idmef_value_t *item);
 prelude_bool_t idmef_value_is_list(idmef_value_t *list);
 prelude_bool_t idmef_value_list_is_empty(idmef_value_t *list);
 
@@ -102,10 +105,14 @@ int idmef_value_to_string(const idmef_value_t *val, prelude_string_t *out);
 
 int idmef_value_get(idmef_value_t *val, void *res);
 
-int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_operator_t operator);
+int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_operator_t op);
 
-int idmef_value_check_operator(idmef_value_t *value, idmef_criterion_operator_t operator);
+int idmef_value_check_operator(idmef_value_t *value, idmef_criterion_operator_t op);
 
 void idmef_value_destroy(idmef_value_t *val);
 
+#ifdef __cplusplus
+ }
+#endif
+         
 #endif /* _LIBPRELUDE_IDMEF_VALUE_H */

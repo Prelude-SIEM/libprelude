@@ -265,7 +265,7 @@ int idmef_value_new_list(idmef_value_t **value)
 
 
 
-int idmef_value_list_add(idmef_value_t *list, idmef_value_t *new)
+int idmef_value_list_add(idmef_value_t *list, idmef_value_t *item)
 {        
 	if ( list->list_elems == list->list_max ) {
                 
@@ -276,7 +276,7 @@ int idmef_value_list_add(idmef_value_t *list, idmef_value_t *new)
                 list->list_max += CHUNK_SIZE;
 	}
         
-	list->list[list->list_elems++] = new;
+	list->list[list->list_elems++] = item;
 	
 	return 0;
 }
@@ -608,20 +608,20 @@ static int idmef_value_match_internal(idmef_value_t *val1, void *extra)
  * idmef_value_match:
  * @val1: Pointer to a #idmef_value_t object.
  * @val2: Pointer to a #idmef_value_t object.
- * @operator: operator to use for matching.
+ * @op: operator to use for matching.
  *
- * Match @val1 and @val2 using @operator.
+ * Match @val1 and @val2 using @op.
  *
  * Returns: the number of match, 0 for none, a negative value if an error occured.
  */
-int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_operator_t operator)
+int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_operator_t op)
 {
         int ret;
 	compare_t compare;
 
         compare.match = 0;
 	compare.val2 = val2;
-	compare.operator = operator;
+	compare.operator = op;
         
 	ret = idmef_value_iterate(val1, idmef_value_match_internal, &compare);        
         if ( ret < 0 )
@@ -635,15 +635,15 @@ int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_
 /**
  * idmef_value_check_operator:
  * @value: Pointer to a #idmef_value_t object.
- * @operator: Type of operator to check @value for.
+ * @op: Type of operator to check @value for.
  *
- * Check whether @operator can apply to @value.
+ * Check whether @op can apply to @value.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
-int idmef_value_check_operator(idmef_value_t *value, idmef_criterion_operator_t operator)
+int idmef_value_check_operator(idmef_value_t *value, idmef_criterion_operator_t op)
 {
-        return idmef_value_type_check_relation(&value->type, operator);
+        return idmef_value_type_check_relation(&value->type, op);
 }
 
 

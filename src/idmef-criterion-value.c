@@ -238,14 +238,14 @@ int idmef_criterion_value_to_string(idmef_criterion_value_t *cv, prelude_string_
 
 
 int idmef_criterion_value_match(idmef_criterion_value_t *cv, idmef_value_t *value,
-                                idmef_criterion_operator_t operator)
+                                idmef_criterion_operator_t op)
 {
         int ret;
         struct match_cb mcb;
 
         mcb.cv = cv;
         mcb.match = 0;
-        mcb.operator = operator;
+        mcb.operator = op;
         
         ret = idmef_value_iterate(value, do_match_cb, &mcb);        
         if ( ret < 0 )
@@ -301,11 +301,11 @@ int idmef_criterion_value_new_regex(idmef_criterion_value_t **cv, const char *re
 
 
 int idmef_criterion_value_new_value(idmef_criterion_value_t **cv,
-                                    idmef_value_t *value, idmef_criterion_operator_t operator)
+                                    idmef_value_t *value, idmef_criterion_operator_t op)
 {
         int ret;
         
-        ret = idmef_value_check_operator(value, operator);
+        ret = idmef_value_check_operator(value, op);
         if ( ret < 0 )
                 return ret;
         

@@ -24,6 +24,10 @@
 #ifndef _LIBPRELUDE_PRELUDE_MSGBUF_H
 #define _LIBPRELUDE_PRELUDE_MSGBUF_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+         
 typedef struct prelude_msgbuf prelude_msgbuf_t;
 
 typedef enum {
@@ -55,4 +59,8 @@ void prelude_msgbuf_set_flags(prelude_msgbuf_t *msgbuf, prelude_msgbuf_flags_t f
 
 prelude_msgbuf_flags_t prelude_msgbuf_get_flags(prelude_msgbuf_t *msgbuf);
 
+#ifdef __cplusplus
+ }
+#endif
+         
 #endif /* _LIBPRELUDE_PRELUDE_MSGBUF_H */

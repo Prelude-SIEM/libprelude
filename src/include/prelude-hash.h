@@ -24,6 +24,10 @@
 #ifndef _LIBPRELUDE_HASH_H
 #define _LIBPRELUDE_HASH_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+         
 typedef struct prelude_hash prelude_hash_t;
 
 int prelude_hash_new(prelude_hash_t **hash,
@@ -42,4 +46,8 @@ int prelude_hash_elem_destroy(prelude_hash_t *hash, const void *key);
 
 void prelude_hash_iterate(prelude_hash_t *hash, void (*cb)(void *data));
 
+#ifdef __cplusplus
+ }
+#endif
+         
 #endif /* _LIBPRELUDE_HASH_H */

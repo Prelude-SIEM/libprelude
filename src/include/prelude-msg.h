@@ -27,6 +27,10 @@
 #include "prelude-io.h"
 
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+         
 typedef struct prelude_msg prelude_msg_t;
 
 
@@ -96,4 +100,8 @@ void prelude_msg_set_data(prelude_msg_t *msg, void *data);
 
 prelude_msg_t *prelude_msg_ref(prelude_msg_t *msg);
 
+#ifdef __cplusplus
+ }
+#endif
+         
 #endif /* _LIBPRELUDE_PRELUDE_MESSAGE_H */

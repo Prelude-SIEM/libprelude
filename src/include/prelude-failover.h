@@ -24,6 +24,10 @@
 #ifndef _LIBPRELUDE_PRELUDE_FAILOVER_H
 #define _LIBPRELUDE_PRELUDE_FAILOVER_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 typedef struct prelude_failover prelude_failover_t;
 
 void prelude_failover_destroy(prelude_failover_t *failover);
@@ -39,5 +43,9 @@ ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg
 unsigned long prelude_failover_get_deleted_msg_count(prelude_failover_t *failover);
 
 unsigned long prelude_failover_get_available_msg_count(prelude_failover_t *failover);
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif

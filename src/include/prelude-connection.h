@@ -24,6 +24,9 @@
 #ifndef _LIBPRELUDE_PRELUDE_CONNECTION_H
 #define _LIBPRELUDE_PRELUDE_CONNECTION_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 typedef enum {
         PRELUDE_CONNECTION_PERMISSION_IDMEF_READ      = 0x01, /* client might read received IDMEF message */
@@ -103,5 +106,8 @@ int prelude_connection_permission_to_string(prelude_connection_permission_t perm
 
 int prelude_connection_permission_new_from_string(prelude_connection_permission_t *out, const char *buf);
 
+#ifdef __cplusplus
+ }
+#endif
 
 #endif /* _LIBPRELUDE_PRELUDE_CONNECTION_H */

@@ -26,6 +26,11 @@
 
 #include <errno.h>
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
+
 /*
  * This is inspired from the GPG error interface.
  *
@@ -94,7 +99,7 @@ static inline prelude_error_code_t prelude_error_get_code(prelude_error_t error)
 
 static inline prelude_error_source_t prelude_error_get_source(prelude_error_t error)
 {
-        return (prelude_error_code_t) (((-error) >> PRELUDE_ERROR_SOURCE_SHIFT) & PRELUDE_ERROR_SOURCE_MASK);
+        return (prelude_error_source_t) (((-error) >> PRELUDE_ERROR_SOURCE_SHIFT) & PRELUDE_ERROR_SOURCE_MASK);
 }
 
 
@@ -111,6 +116,10 @@ const char *prelude_strerror(prelude_error_t err);
 const char *prelude_strsource(prelude_error_t err);
 
 int prelude_error_code_to_errno(prelude_error_code_t code);
+
+#ifdef __cplusplus
+ }
+#endif
 
 
 #endif

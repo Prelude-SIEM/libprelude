@@ -24,6 +24,10 @@
 #ifndef _LIBPRELUDE_PRELUDE_IO_H
 #define _LIBPRELUDE_PRELUDE_IO_H
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+        
 #include "prelude-inttypes.h"
 
 
@@ -70,4 +74,9 @@ void *prelude_io_get_fdptr(prelude_io_t *pio);
 
 ssize_t prelude_io_pending(prelude_io_t *pio);
 
+          
+#ifdef __cplusplus
+  }
+#endif
+        
 #endif /* _LIBPRELUDE_PRELUDE_IO_H */

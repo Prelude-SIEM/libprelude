@@ -27,6 +27,9 @@
 #include "idmef-time.h"
 #include "prelude-string.h"
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 typedef enum {
         IDMEF_VALUE_TYPE_ERROR   =  -1,
@@ -91,8 +94,12 @@ void idmef_value_type_destroy(idmef_value_type_t *type);
 int idmef_value_type_clone(const idmef_value_type_t *src, idmef_value_type_t *dst);
 
 int idmef_value_type_compare(const idmef_value_type_t *type1, const idmef_value_type_t *type2,
-                             idmef_criterion_operator_t operator);
+                             idmef_criterion_operator_t op);
 
-int idmef_value_type_check_relation(const idmef_value_type_t *type, idmef_criterion_operator_t operator);
+int idmef_value_type_check_relation(const idmef_value_type_t *type, idmef_criterion_operator_t op);
 
+#ifdef __cplusplus
+ }
+#endif
+         
 #endif

@@ -80,7 +80,7 @@ static inline uint64_t prelude_align_uint64(const void *buf)
 
 static inline float prelude_align_float(const void *buf)
 {
-        return (float) prelude_align_uint32(buf);
+        return prelude_align_uint32(buf);
 }
 
 

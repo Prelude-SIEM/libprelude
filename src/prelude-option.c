@@ -986,20 +986,20 @@ void prelude_option_destroy(prelude_option_t *option)
 
 /**
  * prelude_option_set_warnings;
- * @new: bitwise OR of #prelude_option_warning_t.
+ * @new_warnings: bitwise OR of #prelude_option_warning_t.
  * @old_warnings: Pointer where to store the old #prelude_option_warning_t to.
  *
- * Set current warnings flags to @new.
+ * Set current warnings flags to @new_warnings.
  *
  * Uppon return, if not NULL, the pointer to @old_warnings is updated
  * to contain the old warnings.
  */
-void prelude_option_set_warnings(prelude_option_warning_t new, prelude_option_warning_t *old_warnings) 
+void prelude_option_set_warnings(prelude_option_warning_t new_warnings, prelude_option_warning_t *old_warnings) 
 {
         if ( old_warnings ) 
                 *old_warnings = warnings_flags;
         
-        warnings_flags = new;
+        warnings_flags = new_warnings;
 }
 
 

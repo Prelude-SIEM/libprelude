@@ -26,6 +26,10 @@
 
 #include "prelude-inttypes.h"
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+         
 typedef struct prelude_ident prelude_ident_t;
 
 uint64_t prelude_ident_inc(prelude_ident_t *ident);
@@ -36,4 +40,8 @@ void prelude_ident_destroy(prelude_ident_t *ident);
 
 int prelude_ident_new(prelude_ident_t **ret);
 
+#ifdef __cplusplus
+ }
+#endif
+         
 #endif /* _LIBPRELUDE_PRELUDE_IDENT_H */
