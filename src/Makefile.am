@@ -7,7 +7,7 @@ libprelude_la_LIBADD = @LIBLTDL@
 lib_LTLIBRARIES = libprelude.la
 
 if HAVE_SSL
- SSL_SRCS = ssl.c ssl-gencrypto.c ssl-registration-msg.c ssl-settings.c
+ SSL_SRCS=ssl.c ssl-gencrypto.c ssl-registration-msg.c ssl-settings.c
 endif
 
 
