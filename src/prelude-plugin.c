@@ -109,6 +109,8 @@ struct prelude_plugin_instance {
          * information about this instance.
          */
         void *data;
+        void *private_data;
+        
         char *name;
         const char *infos;
         
@@ -795,9 +797,25 @@ void prelude_plugin_instance_set_data(prelude_plugin_instance_t *pi, void *data)
 
 
 
+void prelude_plugin_instance_set_private_data(prelude_plugin_instance_t *pi, void *data)
+{
+        pi->private_data = data;
+}
+
+
+
+
 void *prelude_plugin_instance_get_data(prelude_plugin_instance_t *pi)
 {
         return pi->data;
+}
+
+
+
+
+void *prelude_plugin_instance_get_private_data(prelude_plugin_instance_t *pi)
+{
+        return pi->private_data;
 }
 
 
@@ -863,3 +881,17 @@ prelude_option_t *prelude_plugin_option_add(prelude_option_t *parent, int flags,
         return opt;
 }
 
+
+
+
+int prelude_plugin_instance_call_init_func(prelude_plugin_instance_t *pi)
+{
+        return pi->entry->init_instance(pi);
+}
+
+
+
+int prelude_plugin_instance_have_init_func(prelude_plugin_instance_t *pi)
+{
+        return (pi->entry->init_instance) ? 1 : 0;
+}

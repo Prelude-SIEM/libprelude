@@ -137,6 +137,10 @@ void prelude_plugin_instance_set_data(prelude_plugin_instance_t *pi, void *data)
 
 void *prelude_plugin_instance_get_data(prelude_plugin_instance_t *pi);
 
+void prelude_plugin_instance_set_private_data(prelude_plugin_instance_t *pi, void *data);
+
+void *prelude_plugin_instance_get_private_data(prelude_plugin_instance_t *pi);
+
 const char *prelude_plugin_instance_get_name(prelude_plugin_instance_t *pi);
 
 prelude_plugin_generic_t *prelude_plugin_instance_get_plugin(prelude_plugin_instance_t *pi);
@@ -163,6 +167,10 @@ void prelude_plugin_del(prelude_plugin_instance_t *pc);
 
 void prelude_plugin_instance_compute_time(prelude_plugin_instance_t *pi, struct timeval *start, struct timeval *end);
 
+
+int prelude_plugin_instance_call_init_func(prelude_plugin_instance_t *pi);
+
+int prelude_plugin_instance_have_init_func(prelude_plugin_instance_t *pi);
 
 prelude_option_t *prelude_plugin_option_add(prelude_option_t *parent, int flags,
                                             char shortopt, const char *longopt, const char *desc,
