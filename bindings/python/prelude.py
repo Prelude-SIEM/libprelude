@@ -293,7 +293,7 @@ def _idmef_value_python_to_c(object, py_value):
         c_value = _idmef_integer_python_to_c(object, py_value)
 
     elif object_type is _prelude.IDMEF_VALUE_TYPE_ENUM:
-        c_value = _prelude.idmef_value_new_enum_string(_prelude.idmef_object_get_object_type(object), py_value)
+        c_value = _prelude.idmef_value_new_enum_string(_prelude.idmef_object_get_type(object), py_value)
 
     elif object_type is _prelude.IDMEF_VALUE_TYPE_STRING:
         if type(py_value) is not str:
