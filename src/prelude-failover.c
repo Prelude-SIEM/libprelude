@@ -102,10 +102,8 @@ static int get_current_directory_index(prelude_failover_t *failover, const char 
         struct dirent *item;
         
         dir = opendir(dirname);
-        if ( ! dir ) {
-                log(LOG_ERR, "couldn't open %s.\n", dirname);
-                return -1;
-        }
+        if ( ! dir )
+                return prelude_error_from_errno(errno);
 
         failover->older_index = ~0;
 
@@ -118,10 +116,8 @@ static int get_current_directory_index(prelude_failover_t *failover, const char 
                 snprintf(filename, sizeof(filename), "%s/%s", dirname, item->d_name);
                 
                 ret = stat(filename, &st);
-                if ( ret < 0 ) {
-                        log(LOG_ERR, "error trying to stat %s.\n", filename);
-                        return -1;
-                }
+                if ( ret < 0 )
+                        return prelude_error_from_errno(errno);
 
                 failover->cur_size += st.st_size;
                 
@@ -287,45 +283,43 @@ ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg
 
 
         
-prelude_failover_t *prelude_failover_new(const char *dirname)
+int prelude_failover_new(prelude_failover_t **out, const char *dirname)
 {
         int ret;
         prelude_failover_t *new;
         
         new = calloc(1, sizeof(*new));
-        if ( ! new ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
+        if ( ! new )
+                return prelude_error_from_errno(errno);
         
-        new->fd = prelude_io_new();
-        if ( ! new->fd ) {
+        ret = prelude_io_new(&new->fd);
+        if ( ret < 0 ) {
                 free(new);
-                return NULL;
+                return ret;
         }
         
         new->directory = strdup(dirname);
         if ( ! new->directory ) {
-                log(LOG_ERR, "memory exhausted.\n");
                 prelude_io_destroy(new->fd);
                 free(new);
-                return NULL;
+                return prelude_error_from_errno(errno);
         }
 
         ret = mkdir(dirname, S_IRWXU|S_IRWXG);
         if ( ret < 0 && errno != EEXIST ) {
-                log(LOG_ERR, "error creating %s.\n", dirname);
                 prelude_failover_destroy(new);
-                return NULL;
+                return prelude_error_from_errno(errno);
         }
  
         ret = get_current_directory_index(new, dirname);
         if ( ret < 0 ) {
                 prelude_failover_destroy(new);
-                return NULL;
+                return ret;
         }
-                
-        return new;
+
+        *out = new;
+        
+        return 0;
 }
 
 

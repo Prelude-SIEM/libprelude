@@ -28,7 +28,7 @@ typedef struct prelude_failover prelude_failover_t;
 
 void prelude_failover_destroy(prelude_failover_t *failover);
 
-prelude_failover_t *prelude_failover_new(const char *dirname);
+int prelude_failover_new(prelude_failover_t **ret, const char *dirname);
 
 void prelude_failover_set_quota(prelude_failover_t *failover, size_t limit);
 
