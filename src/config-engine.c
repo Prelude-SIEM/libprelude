@@ -35,6 +35,9 @@
 #include "prelude-log.h"
 
 
+#define DEFAULT_INSERTION_POINT "include"
+
+
 struct config {
         char *filename; /* filename for this session */
         char **content; /* content of the file */
@@ -354,16 +357,16 @@ static int search_section(config_t *cfg, const char *section, int i)
  * return the line number matching 'entry' or -1.
  */
 static int search_entry(config_t *cfg, const char *section,
-                        const char *entry, int index, char **eout, char **vout) 
+                        const char *entry, int *index, char **eout, char **vout) 
 {
-        int i = index, ret;
+        int i = *index, insertion_point = 0, ret;
         
         if ( ! cfg->content )
                 return -1;
         
         if ( section && ! index ) {
                 
-                i = search_section(cfg, section, index);
+                i = search_section(cfg, section, *index);
                 if ( i < 0 )
                         return -1;
 
@@ -375,8 +378,10 @@ static int search_entry(config_t *cfg, const char *section,
         
         for (; cfg->content[i] != NULL; i++ ) {
                 
-                if ( section && is_section(cfg->content[i]) )
+                if ( section && is_section(cfg->content[i]) ) {
+                        *index = insertion_point;
                         return -1;
+                }
                 
                 ret = parse_buffer(cfg->content[i], eout, vout);
                 if ( ret < 0 )
@@ -388,6 +393,9 @@ static int search_entry(config_t *cfg, const char *section,
                 ret = strcmp(entry, *eout);
                 if ( ret == 0 )
                         return i;
+                
+                if ( strcmp(*eout, DEFAULT_INSERTION_POINT) == 0 ) 
+                        *index = i + 1;
                 
                 free_val(eout);
                 free_val(vout);
@@ -481,11 +489,9 @@ static int new_entry_line(config_t *cfg, const char *entry, const char *val, int
         int ret;
         char *eout, *vout;
         
-        ret = search_entry(cfg, NULL, entry, *index, &eout, &vout);        
-        if ( ret < 0 ) {
-                *index = cfg->elements + 1;
-                return op_insert_line(cfg, create_new_line(entry, val), 0);
-        }
+        ret = search_entry(cfg, NULL, entry, index, &eout, &vout);        
+        if ( ret < 0 ) 
+                return op_insert_line(cfg, create_new_line(entry, val), *index);
         
         free_val(&eout);
         free_val(&vout);
@@ -528,10 +534,11 @@ static int new_section_line(config_t *cfg, const char *section,
         *index = ret;
         if ( ! entry )
                 return 0;
-        
-        el = search_entry(cfg, section, entry, ret + 1, &eout, &vout);        
+
+        ret++;
+        el = search_entry(cfg, section, entry, &ret, &eout, &vout);        
         if ( el < 0 ) 
-                return op_insert_line(cfg, create_new_line(entry, val), ret + 1);
+                return op_insert_line(cfg, create_new_line(entry, val), ret);
 
         free_val(&eout);
         free_val(&vout);
@@ -719,7 +726,7 @@ char *config_get(config_t *cfg, const char *section, const char *entry, int *lin
 
         l = (*line) ? *line - 1 : *line;
         
-        l = search_entry(cfg, section, entry, l, &tmp, &value);
+        l = search_entry(cfg, section, entry, &l, &tmp, &value);
         if ( l < 0 )
                 return NULL;
         
