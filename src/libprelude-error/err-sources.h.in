@@ -44,7 +44,8 @@
 12	PRELUDE_ERROR_SOURCE_IDMEF_PATH		idmef-path
 13	PRELUDE_ERROR_SOURCE_IDMEF_TYPE		idmef-type
 14	PRELUDE_ERROR_SOURCE_IDMEF_MESSAGE_READ	idmef-message-read
+15	PRELUDE_ERROR_SOURCE_IDMEF_CRITERIA	idmef-criteria
 
 255	PRELUDE_ERROR_SOURCE_PRELUDEDB		libpreludedb
-# 8 to 255 are free to be used.
+# 15 to 254 are free to be used.
 	PRELUDE_ERROR_SOURCE_DIM		Unknown source

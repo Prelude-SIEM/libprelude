@@ -261,7 +261,7 @@ int idmef_criteria_new_from_string(idmef_criteria_t **new_criteria, const char *
 	yy_delete_buffer(state);
 
         if ( ret != 0 ) {
-		ret = prelude_error(PRELUDE_ERROR_GENERIC);
+		ret = prelude_error_make(PRELUDE_ERROR_SOURCE_IDMEF_CRITERIA, PRELUDE_ERROR_IDMEF_CRITERIA_PARSE);
 
 		if ( processed_criteria )
 			idmef_criteria_destroy(processed_criteria);

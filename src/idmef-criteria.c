@@ -30,6 +30,8 @@
 
 #include "libmissing.h"
 #include "prelude-log.h"
+
+#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_IDMEF_CRITERIA
 #include "prelude-error.h"
 #include "prelude-inttypes.h"
 
