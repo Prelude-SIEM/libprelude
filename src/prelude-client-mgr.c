@@ -90,6 +90,7 @@ typedef struct {
 
 
 struct prelude_client_mgr {
+        fd_set fds;
         prelude_io_t *backup_fd;
         struct list_head or_list;
 };
@@ -420,12 +421,12 @@ static int broadcast_message(prelude_msg_t *msg, client_list_t *clist)
 
 
 /*
- * Return 0 on sucess, -1 on an already signaled failure,
+ * Return 0 on sucess, -1 on a new failure,
  * -2 on an already signaled failure.
  */
 static int walk_manager_lists(prelude_client_mgr_t *cmgr, prelude_msg_t *msg) 
 {
-        int ret;
+        int ret = -1;
         client_list_t *item;
         struct list_head *tmp;
         
@@ -446,7 +447,7 @@ static int walk_manager_lists(prelude_client_mgr_t *cmgr, prelude_msg_t *msg)
                         return 0;
         }
 
-        return -1;
+        return ret;
 }
 
 
@@ -471,7 +472,7 @@ void prelude_client_mgr_broadcast(prelude_client_mgr_t *cmgr, prelude_msg_t *msg
          * This is not good. All of our boolean AND rule for message emission
          * failed. Backup the message.
          */
-        if ( ret == -2 )
+        if ( ret == -1 )
                 log(LOG_INFO, "Manager emmission failed. Enabling failsafe mode.\n");  
       
         ret = prelude_msg_write(msg, cmgr->backup_fd);
@@ -535,7 +536,8 @@ prelude_client_mgr_t *prelude_client_mgr_new(const char *identifier, const char 
         if ( ! new ) {
                 log(LOG_ERR, "memory exhausted.\n");
                 return NULL;
-        }        
+        }
+        
         INIT_LIST_HEAD(&new->or_list);
         
         /*
