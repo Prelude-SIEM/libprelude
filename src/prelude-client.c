@@ -276,10 +276,6 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
 	idmef_process_t *process;
         char buf[512], *name, *path;
 
-        ret = prelude_string_new(&str);
-        if ( ret < 0 )
-                return ret;
-
         snprintf(buf, sizeof(buf), "%" PRELUDE_PRIu64, prelude_client_profile_get_analyzerid(client->profile));
         ret = prelude_string_new_dup(&str, buf);
         if ( ret < 0 )
