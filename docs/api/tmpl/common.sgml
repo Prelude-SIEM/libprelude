@@ -14,66 +14,33 @@ common
 
 </para>
 
-<!-- ##### FUNCTION prelude_log_use_syslog ##### -->
+<!-- ##### FUNCTION prelude_realloc ##### -->
 <para>
 
 </para>
 
+@ptr: 
+@size: 
 
 
-<!-- ##### FUNCTION prelude_log_get_prefix ##### -->
+<!-- ##### FUNCTION prelude_resolve_addr ##### -->
 <para>
 
 </para>
 
+@hostname: 
+@addr: 
 @Returns: 
 
 
-<!-- ##### FUNCTION prelude_log_set_prefix ##### -->
+<!-- ##### FUNCTION prelude_open_persistant_tmpfile ##### -->
 <para>
 
 </para>
 
-@prefix: 
-
-
-<!-- ##### FUNCTION prelude_log ##### -->
-<para>
-
-</para>
-
-@priority: 
-@file: 
-@function: 
-@line: 
-@fmt: 
-@Varargs: 
-
-
-<!-- ##### MACRO log ##### -->
-<para>
-
-</para>
-
-@priority: 
-@args...: 
-
-
-<!-- ##### MACRO do_init ##### -->
-<para>
-
-</para>
-
-@func: 
-@name: 
-
-
-<!-- ##### MACRO do_init_nofail ##### -->
-<para>
-
-</para>
-
-@func: 
-@name: 
+@filename: 
+@flags: 
+@mode: 
+@Returns: 
 
 

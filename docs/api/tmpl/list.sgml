@@ -74,3 +74,22 @@ list
 @head: 
 
 
+<!-- ##### MACRO list_for_each_reversed ##### -->
+<para>
+
+</para>
+
+@pos: 
+@head: 
+
+
+<!-- ##### MACRO list_for_each_reversed_safe ##### -->
+<para>
+
+</para>
+
+@pos: 
+@n: 
+@head: 
+
+

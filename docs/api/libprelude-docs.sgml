@@ -22,7 +22,6 @@
 <!ENTITY libprelude-plugin-common SYSTEM "sgml/plugin-common.sgml">
 <!ENTITY libprelude-prelude-getopt-wide SYSTEM "sgml/prelude-getopt-wide.sgml">
 <!ENTITY libprelude-list SYSTEM "sgml/list.sgml">
-<!ENTITY libprelude-common-gdb SYSTEM "sgml/common-gdb.sgml">
 <!ENTITY libprelude-sensor SYSTEM "sgml/sensor.sgml">
 <!ENTITY libprelude-ssl-gencrypto SYSTEM "sgml/ssl-gencrypto.sgml">
 <!ENTITY libprelude-prelude-getopt SYSTEM "sgml/prelude-getopt.sgml">
@@ -66,7 +65,6 @@
     &libprelude-plugin-common;
     &libprelude-prelude-getopt-wide;
     &libprelude-list;
-    &libprelude-common-gdb;
     &libprelude-sensor;
     &libprelude-ssl-gencrypto;
     &libprelude-prelude-getopt;

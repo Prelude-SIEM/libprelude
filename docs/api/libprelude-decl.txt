@@ -784,11 +784,6 @@ const char *filename
 config_t *cfg
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_get_socket_filename</NAME>
-<RETURNS>const char  *</RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
 <NAME>prelude_get_auth_filename</NAME>
 <RETURNS>void  </RETURNS>
 char *buf, size_t size
@@ -822,6 +817,11 @@ const char *sname
 <NAME>prelude_set_program_userid</NAME>
 <RETURNS>void  </RETURNS>
 uid_t uid
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_get_socket_filename</NAME>
+<RETURNS>void  </RETURNS>
+char *buf, size_t size, uint16_t port
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_get_sensor_name</NAME>
@@ -1097,26 +1097,6 @@ void
         for (pos = (head)->prev, n = pos->prev; pos != (head); \
                  pos = n, n = pos->prev)
 </MACRO>
-<MACRO>
-<NAME>prelude_assert</NAME>
-#define prelude_assert(expr) \
-        ((expr) ? 0 : _prelude_assert(#expr, __FILE__, __LINE__, __FUNCTION__))
-</MACRO>
-<FUNCTION>
-<NAME>prelude_realloc</NAME>
-<RETURNS>void  *</RETURNS>
-void *ptr, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_resolve_addr</NAME>
-<RETURNS>int  </RETURNS>
-const char *hostname, struct in_addr *addr
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_open_persistant_tmpfile</NAME>
-<RETURNS>int  </RETURNS>
-const char *filename, int flags, mode_t mode
-</FUNCTION>
 <FUNCTION>
 <NAME>prelude_sensor_send_msg</NAME>
 <RETURNS>void  </RETURNS>

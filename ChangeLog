@@ -1,3 +1,23 @@
+2002-05-15  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	Fix last remaining prefix problem.
+	
+	* Makefile.am (install-data-local): 
+	create sensors_spool_dir.
+
+	* src/prelude-path.c: 
+	remove BACKUP_DIR.
+	(prelude_get_backup_filename): use SENSORS_SPOOL_DIR.
+
+	* src/Makefile.am (DEFS): 
+	define SENSORS_SPOOL_DIR.
+	
+	* configure.in (sensors_spool_dir): 
+	configure spool directory.
+
+	* src/common.c (prelude_resolve_addr): 
+	document this function.
+
 2002-05-14  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-message.c (set_data): 

@@ -38,6 +38,15 @@
 #include "common.h"
 
 
+/**
+ * prelude_resolve_addr:
+ * @hostname: Hostname to lookup.
+ * @addr: Pointer on an in_addr structure to store the result in.
+ *
+ * Lookup @hostname, and store the resolved IP address in @addr.
+ *
+ * Returns: 0 on success, -1 if an error occured.
+ */ 
 int prelude_resolve_addr(const char *hostname, struct in_addr *addr) 
 {
         int ret;

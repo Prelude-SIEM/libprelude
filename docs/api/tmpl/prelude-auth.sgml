@@ -29,6 +29,19 @@ peer, only if the connection is plaintext.
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_auth_create_account_noprompt ##### -->
+<para>
+
+</para>
+
+@filename: 
+@user: 
+@pass: 
+@crypted: 
+@uid: 
+@Returns: 
+
+
 <!-- ##### FUNCTION prelude_auth_check ##### -->
 <para>
 
@@ -38,6 +51,20 @@ peer, only if the connection is plaintext.
 @user: 
 @pass: 
 @Returns: 
+
+
+<!-- ##### MACRO user_does_not_exist ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO password_does_not_match ##### -->
+<para>
+
+</para>
+
 
 
 <!-- ##### FUNCTION prelude_auth_read_entry ##### -->

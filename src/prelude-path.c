@@ -26,12 +26,6 @@
 
 #include "prelude-path.h"
 
-
-/*
- * directory where backup are made (in case Manager are down).
- */
-#define BACKUP_DIR "/var/spool/prelude-sensors"
-
 /*
  * directory where plaintext authentication file are stored.
  */
@@ -75,7 +69,7 @@ void prelude_get_ssl_key_filename(char *buf, size_t size)
 
 void prelude_get_backup_filename(char *buf, size_t size) 
 {
-        snprintf(buf, size, BACKUP_DIR"/backup.%d", userid);
+        snprintf(buf, size, SENSORS_SPOOL_DIR"/backup.%d", userid);
 }
 
 

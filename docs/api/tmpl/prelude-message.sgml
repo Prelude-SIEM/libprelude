@@ -145,6 +145,34 @@ case of problem.
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_msg_recycle ##### -->
+<para>
+
+</para>
+
+@msg: 
+
+
+<!-- ##### FUNCTION prelude_msg_mark_end ##### -->
+<para>
+
+</para>
+
+@msg: 
+
+
+<!-- ##### FUNCTION prelude_msg_dynamic_new ##### -->
+<para>
+
+</para>
+
+@tag: 
+@priority: 
+@data: 
+@flush_msg_cb: 
+@Returns: 
+
+
 <!-- ##### FUNCTION prelude_msg_new ##### -->
 <para>
 
@@ -178,6 +206,24 @@ case of problem.
 @msg: 
 @dst: 
 @Returns: 
+
+
+<!-- ##### FUNCTION prelude_msg_set_tag ##### -->
+<para>
+
+</para>
+
+@msg: 
+@tag: 
+
+
+<!-- ##### FUNCTION prelude_msg_set_priority ##### -->
+<para>
+
+</para>
+
+@msg: 
+@priority: 
 
 
 <!-- ##### FUNCTION prelude_msg_get_tag ##### -->
@@ -217,6 +263,14 @@ case of problem.
 
 
 <!-- ##### FUNCTION prelude_msg_destroy ##### -->
+<para>
+
+</para>
+
+@msg: 
+
+
+<!-- ##### FUNCTION prelude_msg_reset ##### -->
 <para>
 
 </para>

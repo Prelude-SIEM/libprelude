@@ -18,6 +18,26 @@
 acconfig
 
 
+<!-- ##### SECTION ./tmpl/common-gdb.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/common-gdb.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/common-gdb.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/common-gdb.sgml:Title ##### -->
+common-gdb
+
+
 <!-- ##### SECTION ./tmpl/config.sgml:Long_Description ##### -->
 <para>
 
@@ -76,6 +96,26 @@ getopt_long
 
 <!-- ##### SECTION ./tmpl/libmissing.sgml:Title ##### -->
 libmissing
+
+
+<!-- ##### SECTION ./tmpl/ssl-register.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/ssl-register.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/ssl-register.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/ssl-register.sgml:Title ##### -->
+ssl-register
 
 
 <!-- ##### SECTION ./tmpl/thread.sgml:Long_Description ##### -->

@@ -107,3 +107,41 @@ prelude-client
 @Returns: 
 
 
+<!-- ##### MACRO PRELUDE_CLIENT_TYPE_OTHER ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_CLIENT_TYPE_SENSOR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_CLIENT_TYPE_MANAGER ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION prelude_client_set_type ##### -->
+<para>
+
+</para>
+
+@client: 
+@type: 
+
+
+<!-- ##### FUNCTION prelude_client_get_analyzerid ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

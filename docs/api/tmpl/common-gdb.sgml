@@ -16,14 +16,6 @@ common-gdb
 </para>
 
 
-<!-- ##### MACRO prelude_assert ##### -->
-<para>
-
-</para>
-
-@expr: 
-
-
 <!-- ##### FUNCTION prelude_realloc ##### -->
 <para>
 

@@ -14,6 +14,15 @@ plugin-common-prv
 
 </para>
 
+<!-- ##### FUNCTION plugin_search_by_name ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
 <!-- ##### FUNCTION plugin_load_from_dir ##### -->
 <para>
 

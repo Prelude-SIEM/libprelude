@@ -65,6 +65,36 @@ prelude-getopt
 @optionnal_argument: 
 @no_argument: 
 
+<!-- ##### MACRO option_run_last ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO option_run_first ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO option_run_no_order ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION prelude_option_set_priority ##### -->
+<para>
+
+</para>
+
+@option: 
+@priority: 
+
+
 <!-- ##### FUNCTION prelude_option_print ##### -->
 <para>
 

@@ -14,6 +14,22 @@ sensor
 
 </para>
 
+<!-- ##### FUNCTION prelude_sensor_send_msg ##### -->
+<para>
+
+</para>
+
+@msg: 
+
+
+<!-- ##### FUNCTION prelude_sensor_send_msg_async ##### -->
+<para>
+
+</para>
+
+@msg: 
+
+
 <!-- ##### FUNCTION prelude_sensor_get_option_msg ##### -->
 <para>
 

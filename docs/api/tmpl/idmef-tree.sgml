@@ -21,6 +21,39 @@ idmef-tree
 
 
 
+<!-- ##### TYPEDEF idmef_string_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF idmef_time_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO idmef_create_time_t ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO idmef_detect_time_t ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO idmef_analyzer_time_t ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### ENUM idmef_additional_data_type_t ##### -->
 <para>
 
@@ -120,7 +153,7 @@ idmef-tree
 </para>
 
 
-<!-- ##### TYPEDEF idmef_string_t ##### -->
+<!-- ##### TYPEDEF idmef_string_item_t ##### -->
 <para>
 
 </para>
@@ -141,6 +174,12 @@ idmef-tree
 
 
 <!-- ##### TYPEDEF idmef_process_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF idmef_webservice_arg_t ##### -->
 <para>
 
 </para>
@@ -213,6 +252,44 @@ idmef-tree
 </para>
 
 
+<!-- ##### TYPEDEF idmef_file_access_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM idmef_linkage_category_t ##### -->
+<para>
+
+</para>
+
+@hard_link: 
+@mount_point: 
+@reparse_point: 
+@shortcut: 
+@stream: 
+@symbolic_link: 
+
+<!-- ##### TYPEDEF idmef_linkage_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF idmef_inode_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM idmef_file_category_t ##### -->
+<para>
+
+</para>
+
+@current: 
+@original: 
+
 <!-- ##### TYPEDEF idmef_target_t ##### -->
 <para>
 
@@ -225,34 +302,80 @@ idmef-tree
 </para>
 
 
-<!-- ##### TYPEDEF idmef_time_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO idmef_create_time_t ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO idmef_detect_time_t ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO idmef_analyzer_time_t ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### TYPEDEF idmef_alertident_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM idmef_impact_severity_t ##### -->
+<para>
+
+</para>
+
+@impact_low: 
+@impact_medium: 
+@impact_high: 
+
+<!-- ##### ENUM idmef_impact_completion_t ##### -->
+<para>
+
+</para>
+
+@failed: 
+@succeeded: 
+
+<!-- ##### ENUM idmef_impact_type_t ##### -->
+<para>
+
+</para>
+
+@other: 
+@admin: 
+@dos: 
+@file: 
+@recon: 
+@user: 
+
+<!-- ##### TYPEDEF idmef_impact_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM idmef_action_category_t ##### -->
+<para>
+
+</para>
+
+@action_other: 
+@block_installed: 
+@notification_sent: 
+@taken_offline: 
+
+<!-- ##### TYPEDEF idmef_action_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM idmef_confidence_rating_t ##### -->
+<para>
+
+</para>
+
+@numeric: 
+@low: 
+@medium: 
+@high: 
+
+<!-- ##### TYPEDEF idmef_confidence_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF idmef_assessment_t ##### -->
 <para>
 
 </para>

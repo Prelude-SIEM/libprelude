@@ -14,6 +14,7 @@ bin_SCRIPTS = $(top_srcdir)/libprelude-config
 # Spool directory for report saving is mode 
 
 install-data-local:
+	$(INSTALL) -d -m 755 $(sensors_spool_dir);
 	$(INSTALL) -d -m 755 $(sensors_config_dir);
 	$(INSTALL) -d -m 755 $(sensors_config_dir)/ssl;
 	$(INSTALL) -d -m 755 $(sensors_config_dir)/plaintext;

@@ -9,18 +9,20 @@ prelude-path
 
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
 
 <!-- ##### FUNCTION prelude_get_socket_filename ##### -->
 <para>
 
 </para>
 
+@buf: 
+@size: 
+@port: 
+<!-- # Unused Parameters # -->
 @Returns: 
 
 

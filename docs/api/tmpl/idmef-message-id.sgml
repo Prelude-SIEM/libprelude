@@ -14,21 +14,7 @@ idmef-message-id
 
 </para>
 
-<!-- ##### MACRO MSG_END_OF_TAG ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### MACRO MSG_ALERT_TAG ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO MSG_ALERT_IDENT ##### -->
 <para>
 
 </para>
@@ -63,6 +49,412 @@ idmef-message-id
 
 
 
+<!-- ##### MACRO MSG_NODE_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ADDRESS_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_USER_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_USERID_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_PROCESS_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SERVICE_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_WEBSERVICE_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SNMPSERVICE_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_CLASSIFICATION_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ADDITIONALDATA_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ANALYZER_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_TARGET_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_HEARTBEAT_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_TOOL_ALERT_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_CORRELATION_ALERT_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_OVERFLOW_ALERT_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ALERTIDENT_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_FILE_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ACCESS_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_LINKAGE_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_INODE_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_CONFIDENCE_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ACTION_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_IMPACT_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ASSESSMENT_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_OWN_FORMAT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_END_OF_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_FORMAT_PRELUDE_NIDS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_CONFIDENCE_RATING ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_CONFIDENCE_CONFIDENCE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ACTION_CATEGORY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ACTION_DESCRIPTION ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_IMPACT_SEVERITY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_IMPACT_COMPLETION ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_IMPACT_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_IMPACT_DESCRIPTION ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_FILE_IDENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_FILE_CATEGORY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_FILE_FSTYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_FILE_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_FILE_PATH ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_FILE_CREATE_TIME_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_FILE_MODIFY_TIME_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_FILE_ACCESS_TIME_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_FILE_DATASIZE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_FILE_DISKSIZE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_LINKAGE_CATEGORY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_LINKAGE_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_LINKAGE_PATH ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_LINKAGE_FILE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_INODE_CHANGE_TIME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_INODE_NUMBER ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_INODE_MAJOR_DEVICE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_INODE_MINOR_DEVICE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_INODE_C_MAJOR_DEVICE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_INODE_C_MINOR_DEVICE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ACCESS_PERMISSION ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ALERT_IDENT ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO MSG_SOURCE_IDENT ##### -->
 <para>
 
@@ -78,13 +470,6 @@ idmef-message-id
 
 
 <!-- ##### MACRO MSG_SOURCE_INTERFACE ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO MSG_NODE_TAG ##### -->
 <para>
 
 </para>
@@ -113,13 +498,6 @@ idmef-message-id
 
 
 <!-- ##### MACRO MSG_NODE_NAME ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO MSG_ADDRESS_TAG ##### -->
 <para>
 
 </para>
@@ -168,13 +546,6 @@ idmef-message-id
 
 
 
-<!-- ##### MACRO MSG_USER_TAG ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### MACRO MSG_USER_IDENT ##### -->
 <para>
 
@@ -183,13 +554,6 @@ idmef-message-id
 
 
 <!-- ##### MACRO MSG_USER_CATEGORY ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO MSG_USERID_TAG ##### -->
 <para>
 
 </para>
@@ -218,13 +582,6 @@ idmef-message-id
 
 
 <!-- ##### MACRO MSG_USERID_NUMBER ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO MSG_PROCESS_TAG ##### -->
 <para>
 
 </para>
@@ -273,13 +630,6 @@ idmef-message-id
 
 
 
-<!-- ##### MACRO MSG_SERVICE_TAG ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### MACRO MSG_SERVICE_IDENT ##### -->
 <para>
 
@@ -315,13 +665,6 @@ idmef-message-id
 
 
 
-<!-- ##### MACRO MSG_WEBSERVICE_TAG ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### MACRO MSG_WEBSERVICE_URL ##### -->
 <para>
 
@@ -336,14 +679,14 @@ idmef-message-id
 
 
 
-<!-- ##### MACRO MSG_WEBSERVICE_ARG ##### -->
+<!-- ##### MACRO MSG_WEBSERVICE_HTTP_METHOD ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO MSG_SNMPSERVICE_TAG ##### -->
+<!-- ##### MACRO MSG_WEBSERVICE_ARG ##### -->
 <para>
 
 </para>
@@ -371,13 +714,6 @@ idmef-message-id
 
 
 
-<!-- ##### MACRO MSG_CLASSIFICATION_TAG ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### MACRO MSG_CLASSIFICATION_ORIGIN ##### -->
 <para>
 
@@ -399,13 +735,6 @@ idmef-message-id
 
 
 
-<!-- ##### MACRO MSG_ADDITIONALDATA_TAG ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### MACRO MSG_ADDITIONALDATA_TYPE ##### -->
 <para>
 
@@ -421,13 +750,6 @@ idmef-message-id
 
 
 <!-- ##### MACRO MSG_ADDITIONALDATA_DATA ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO MSG_ANALYZER_TAG ##### -->
 <para>
 
 </para>
@@ -469,7 +791,14 @@ idmef-message-id
 
 
 
-<!-- ##### MACRO MSG_TARGET_TAG ##### -->
+<!-- ##### MACRO MSG_ANALYZER_OSTYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ANALYZER_OSVERSION ##### -->
 <para>
 
 </para>
@@ -497,21 +826,7 @@ idmef-message-id
 
 
 
-<!-- ##### MACRO MSG_HEARTBEAT_TAG ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### MACRO MSG_HEARTBEAT_IDENT ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO MSG_TOOL_ALERT_TAG ##### -->
 <para>
 
 </para>
@@ -539,13 +854,6 @@ idmef-message-id
 
 
 
-<!-- ##### MACRO MSG_CORRELATION_ALERT_TAG ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### MACRO MSG_CORRELATION_ALERT_NAME ##### -->
 <para>
 
@@ -554,13 +862,6 @@ idmef-message-id
 
 
 <!-- ##### MACRO MSG_CORRELATION_ALERT_IDENT ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO MSG_OVERFLOW_ALERT_TAG ##### -->
 <para>
 
 </para>
@@ -602,13 +903,6 @@ idmef-message-id
 
 
 
-<!-- ##### MACRO MSG_ALERTIDENT_TAG ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### MACRO MSG_ALERTIDENT_IDENT ##### -->
 <para>
 
@@ -617,20 +911,6 @@ idmef-message-id
 
 
 <!-- ##### MACRO MSG_ALERTIDENT_ANALYZER_IDENT ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO MSG_OWN_FORMAT ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO MSG_FORMAT_PRELUDE_NIDS ##### -->
 <para>
 
 </para>

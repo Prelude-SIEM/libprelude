@@ -314,14 +314,6 @@ list_for_each_reversed_safe
 </SECTION>
 
 <SECTION>
-<FILE>common-gdb</FILE>
-prelude_assert
-prelude_realloc
-prelude_resolve_addr
-prelude_open_persistant_tmpfile
-</SECTION>
-
-<SECTION>
 <FILE>sensor</FILE>
 prelude_sensor_send_msg
 prelude_sensor_send_msg_async
