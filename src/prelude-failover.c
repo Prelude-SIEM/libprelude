@@ -262,20 +262,19 @@ ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg
         if ( ret < 0 ) {
                 failover->older_index++;
                 failover->to_be_deleted_size = get_file_size(filename);
-                return -1;
+                return ret;
         }
 
         *msg = NULL;
-        while ( (ret = prelude_msg_read(msg, failover->fd)) == PRELUDE_ERROR_EAGAIN );
-
+        ret = prelude_msg_read(msg, failover->fd);
         prelude_io_close(failover->fd);
         
-        if ( ret != 0 ) {
+        if ( ret < 0 ) {
                 log(LOG_INFO, "prelude-failover: error reading message index=%d: %s.\n",
                     failover->older_index, prelude_strerror(ret));
                 failover->older_index++;
                 failover->to_be_deleted_size = get_file_size(filename);
-                return -1;
+                return ret;
         }
 
         failover->older_index++;
