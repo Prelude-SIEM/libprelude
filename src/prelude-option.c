@@ -284,6 +284,8 @@ static int process_cfg_file(prelude_list_t *cblist, prelude_option_t *optlist,
         config_t *cfg;
         int line = 0, ret;
 
+        prelude_log_debug(3, "Using configuration file: %s.\n", filename);
+        
         ret = config_open(&cfg, filename);
         if ( ret < 0 ) {
                 prelude_string_sprintf(err, "%s: could not open %s: %s", prelude_strsource(ret), filename, prelude_strerror(ret));
@@ -305,6 +307,8 @@ static int call_option_cb(struct cb_list **cbl, prelude_list_t *cblist, prelude_
         struct cb_list *new, *cb;
         prelude_list_t *tmp, *prev = NULL;
         
+        prelude_log_debug(3, "%s(%s)\n", option->longopt, arg);
+                
         prelude_list_for_each(cblist, tmp) {
                 cb = prelude_list_entry(tmp, struct cb_list, list);
                 
@@ -576,11 +580,15 @@ static int get_option_from_optlist(void *context, prelude_option_t *optlist, pre
                 ret = parse_argument(cb_list, optlist, argc, argv, &argv_index, 0);
                 if ( ret < 0 )
                         return ret;
+
+                ret = call_option_from_cb_list(cb_list, *err, context, 0);
+                if ( ret < 0 )
+                        return ret;
         }
         
         if ( filename && *filename )
                 ret = process_cfg_file(cb_list, optlist, *filename, *err);
-
+        
         return ret;
 }
 
@@ -629,7 +637,7 @@ int prelude_option_read(prelude_option_t *option, const char **filename,
         if ( ret < 0 )
                 goto err;
                 
-        ret = call_option_from_cb_list(&cb_list, *err, context, 0);        
+        ret = call_option_from_cb_list(&cb_list, *err, context, 0);
 
  err:
         if ( prelude_string_is_empty(*err) ) {
