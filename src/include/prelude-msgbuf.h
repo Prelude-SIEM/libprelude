@@ -35,7 +35,7 @@ typedef enum {
 #include "prelude-msg.h"
 
 
-int prelude_msgbuf_new(prelude_msgbuf_t **ret);
+int prelude_msgbuf_new(prelude_msgbuf_t **msgbuf);
 
 void prelude_msgbuf_destroy(prelude_msgbuf_t *msgbuf);
 

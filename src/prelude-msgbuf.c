@@ -104,6 +104,8 @@ static int default_send_msg_cb(prelude_msg_t **msg, void *data)
  *
  * prelude_msgbuf_set() append @len bytes of data from the @data buffer
  * to the @msgbuf object representing a message. The data is tagged with @tag.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
  */
 int prelude_msgbuf_set(prelude_msgbuf_t *msgbuf, uint8_t tag, uint32_t len, const void *data)
 {
@@ -115,15 +117,15 @@ int prelude_msgbuf_set(prelude_msgbuf_t *msgbuf, uint8_t tag, uint32_t len, cons
 
 /**
  * prelude_msgbuf_new:
- * @client: Pointer to the #prelude_client_t to flush message to.
+ * @msgbuf: Pointer where to store the created #prelude_msgbuf_t object.
  *
- * Create a new #prelude_msgbuf_t object. You can then write data to
- * @msgbuf using the prelude_msgbuf_set function.
+ * Create a new #prelude_msgbuf_t object and store it into @msgbuf.
+ * You can then write data to @msgbuf using the prelude_msgbuf_set() function.
  *
- * When the message buffer is full, the message will be flushed to the
- * list of #prelude_connection_manager_t pointed to the @client object.
+ * When the message buffer is full, the message will be flushed using the
+ * user provided callback.
  *
- * Returns: a #prelude_msgbuf_t object, or NULL if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
 int prelude_msgbuf_new(prelude_msgbuf_t **msgbuf)
 {
