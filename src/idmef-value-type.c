@@ -29,6 +29,8 @@
 #include "libmissing.h"
 #include "prelude-inttypes.h"
 #include "prelude-string.h"
+
+#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_IDMEF_VALUE_TYPE
 #include "prelude-error.h"
 
 #include "idmef-time.h"
@@ -512,7 +514,7 @@ int idmef_value_type_check_operator(const idmef_value_type_t *type, idmef_criter
         ret = is_type_valid(type->id);
         if ( ret < 0 )
                 return ret;
-
+        
         if ( (~ops_tbl[type->id].operator & op) == 0 )
                 return 0;
         
