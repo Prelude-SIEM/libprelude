@@ -408,11 +408,15 @@ char *prelude_strsep(char **stringp, const char *delim)
         
         if ( ! start )
                 return NULL;
-
-        ptr = strstr(start, delim);
-        if ( ! ptr ) {
-                *stringp = NULL;
-                return start;
+        
+        if ( ! *delim ) 
+                ptr = start + strlen(start); 
+        else {
+                ptr = strstr(start, delim);
+                if ( ! ptr ) {
+                        *stringp = NULL;
+                        return start;
+                }
         }
         
         len = strlen(delim);
