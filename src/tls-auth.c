@@ -22,11 +22,14 @@
 *****/
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <netinet/in.h>
+#include <pthread.h>
 
+#include <gcrypt.h>
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
 
@@ -40,6 +43,8 @@
 #include "tls-auth.h"
 
 
+GCRY_THREAD_OPTION_PTHREAD_IMPL;
+
 
 static int read_auth_result(prelude_io_t *fd, uint64_t *analyzerid)
 {
@@ -51,7 +56,6 @@ static int read_auth_result(prelude_io_t *fd, uint64_t *analyzerid)
 
         do {
                 ret = prelude_msg_read(&msg, fd);
-                
         } while ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN );
 
         if ( ret < 0 )
@@ -124,11 +128,11 @@ static int handle_gnutls_error(gnutls_session session, int ret)
 
 
 
-int tls_auth_connection(prelude_client_t *client, prelude_io_t *io, int crypt, uint64_t *analyzerid)
+int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int crypt, uint64_t *analyzerid)
 {
 	int ret, fd;
         gnutls_session session;
-        gnutls_certificate_credentials cred = prelude_client_get_credentials(client);
+        gnutls_certificate_credentials cred = prelude_client_profile_get_credentials(cp);
         
         gnutls_init(&session, GNUTLS_CLIENT);
         gnutls_set_default_priority(session);
@@ -179,15 +183,17 @@ int tls_auth_connection(prelude_client_t *client, prelude_io_t *io, int crypt, u
 
 
 
-int tls_auth_init(prelude_client_t *client, gnutls_certificate_credentials *cred)
+int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *cred)
 {
         int ret;
         char keyfile[256], certfile[256];
-       
-        prelude_client_get_tls_key_filename(client, keyfile, sizeof(keyfile));
-        prelude_client_get_tls_client_keycert_filename(client, certfile, sizeof(certfile));
 
+        gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread);
         gnutls_global_init();
+
+        prelude_client_profile_get_tls_key_filename(cp, keyfile, sizeof(keyfile));
+        prelude_client_profile_get_tls_client_keycert_filename(cp, certfile, sizeof(certfile));
+        
         gnutls_certificate_allocate_credentials(cred);
         
         ret = access(certfile, F_OK);
@@ -198,7 +204,7 @@ int tls_auth_init(prelude_client_t *client, gnutls_certificate_credentials *cred
         if ( ret < 0 )
                 return ret;
 
-        prelude_client_get_tls_client_trusted_cert_filename(client, certfile, sizeof(certfile));
+        prelude_client_profile_get_tls_client_trusted_cert_filename(cp, certfile, sizeof(certfile));
         
         ret = gnutls_certificate_set_x509_trust_file(*cred, certfile, GNUTLS_X509_FMT_PEM);
         if ( ret < 0 )
