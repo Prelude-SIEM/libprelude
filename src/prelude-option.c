@@ -422,6 +422,9 @@ static int do_set(void **context, prelude_option_t *opt, const char *value)
                 }
         }
 
+        if ( ! opt->set )
+                return 0;
+        
         ret = opt->set(*context, opt, (str = lookup_variable_if_needed(value)));
         if ( str )
                 free(str);
@@ -1157,12 +1160,7 @@ void *prelude_option_get_private_data(prelude_option_t *opt)
 
 
 int prelude_option_invoke_set(void **context, prelude_option_t *opt, const char *value, char *err, size_t size)
-{
-        if ( ! opt->set ) {
-                snprintf(err, size, "%s does not support set operation", opt->longopt);
-                return -1;
-        }
-        
+{        
         if ( value && ! *value )
                 value = NULL;
         
