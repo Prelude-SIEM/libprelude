@@ -1,3 +1,10 @@
+2004-01-14  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
+	* src/idmef-time.c:
+	(idmef_time_get_db_timestamp)
+	add a space character between date and hour to make
+	postgresql happy
+
 2004-01-11  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* src/config-engine.c (strip_value): 

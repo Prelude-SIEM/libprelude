@@ -360,7 +360,7 @@ int idmef_time_get_db_timestamp(const idmef_time_t *time, char *outptr, size_t s
                 return -2;
         }
 
-        ret = strftime(outptr, size, "'%Y-%m-%d%H:%M:%S'", &utc);
+        ret = strftime(outptr, size, "'%Y-%m-%d %H:%M:%S'", &utc);
         if ( ret == 0 ) {
                 log(LOG_ERR, "error converting UTC time to string.\n");
                 return -3;
