@@ -1,5 +1,8 @@
 2002-05-08  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/include/prelude-message-id.h:
+	remove deprecated MSG ID.
+
 	* src/client-ident.c: removed code for requesting
 	an ID to the Manager, since we now generate the 
 	ident number ourselv.

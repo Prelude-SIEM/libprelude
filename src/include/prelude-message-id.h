@@ -33,9 +33,7 @@
 /*
  * PRELUDE_MSG_ID submessage
  */
-#define PRELUDE_MSG_ID_REQUEST  0
-#define PRELUDE_MSG_ID_REPLY    1
-#define PRELUDE_MSG_ID_DECLARE  3
+#define PRELUDE_MSG_ID_DECLARE  0
 
 
 /*
