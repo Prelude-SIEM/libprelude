@@ -54,7 +54,6 @@
 
 static int req_check_len(int len, int min, int max)
 {
-
 	if ( len < min ) {
                 log(LOG_ERR, "string is too short, it needs to be at least %d bytes long\n", min);
 		return -1;
@@ -270,7 +269,7 @@ static X509 *generate_self_signed_certificate(EVP_PKEY *pkey, int days)
          */
         X509_set_version(x509ss, 3);
 	ASN1_INTEGER_set(X509_get_serialNumber(x509ss), 0);
-        X509_gmtime_adj(X509_get_notBefore(x509ss), 0);
+        X509_gmtime_adj(X509_get_notBefore(x509ss), (long) - 60 * 60 * 24);
 	X509_gmtime_adj(X509_get_notAfter(x509ss), (long) 60 * 60 * 24 * days);
         X509_set_pubkey(x509ss, pkey);
       
@@ -340,9 +339,10 @@ int prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int cryp
 
         if ( ! expire )
                 /*
-                 * does SSL allow never expiring key ?
+                 * Does SSL allow never expiring key ?
+                 * Set it to expire 10 years ahead of current time.
                  */
-                expire = 10950;
+                expire = 3650;
         
         check_key_size(keysize);
 

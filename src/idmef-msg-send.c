@@ -112,12 +112,21 @@ void idmef_send_time(prelude_msgbuf_t *msg, uint8_t tag, idmef_time_t *time)
 }
 
 
+inline void idmef_send_data(prelude_msgbuf_t *msg, uint8_t tag, idmef_data_t *data)
+{
+	if ( ! data || ! data->data )
+		return;
+
+	prelude_msgbuf_set(msg, tag, data->len, data->data);
+}
+
+
 void idmef_send_additional_data(prelude_msgbuf_t *msg, idmef_additional_data_t *data) 
 {        
         prelude_msgbuf_set(msg, MSG_ADDITIONALDATA_TAG, 0, NULL);
         idmef_send_uint32(msg, MSG_ADDITIONALDATA_TYPE, data->type);
         idmef_send_string(msg, MSG_ADDITIONALDATA_MEANING, &data->meaning);
-        prelude_msgbuf_set(msg, MSG_ADDITIONALDATA_DATA, data->dlen, data->data);
+        idmef_send_data(msg, MSG_ADDITIONALDATA_DATA, idmef_additional_data_get_data(data));
         prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
        

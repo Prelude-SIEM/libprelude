@@ -54,6 +54,14 @@ static inline uint16_t align_uint16(const void *buf)
 
 
 
+static inline int32_t align_int32(const void *buf) 
+{
+        return  byte(int32_t, buf, 0) << 24 | byte(int32_t, buf, 1) << 16 |
+                byte(int32_t, buf, 2) <<  8 | byte(int32_t, buf, 3);
+}
+
+
+
 static inline uint32_t align_uint32(const void *buf) 
 {
         return  byte(uint32_t, buf, 0) << 24 | byte(uint32_t, buf, 1) << 16 |
@@ -84,14 +92,17 @@ static inline struct in_addr align_ipv4_addr(const void *buf)
 
 #else
 
-
 #define align_uint16(x) (*(const uint16_t *) (x))
+#define align_int32(x) (*(const int32_t *) (x))
 #define align_uint32(x) (*(const uint32_t *) (x))
 #define align_uint64(x) (*(const uint64_t *) (x))
 #define align_ipv4_addr(x) *((const struct in_addr *) (x))
 
 #endif
 
+#include "idmef-string.h"
+#include "idmef-time.h"
+#include "idmef-data.h"
 
 static inline struct in_addr extract_ipv4_addr(const void *buf) 
 {
@@ -103,6 +114,13 @@ static inline struct in_addr extract_ipv4_addr(const void *buf)
 static inline uint16_t extract_uint16(const void *buf) 
 {
         return ntohs(align_uint16(buf));
+}
+
+
+
+static inline int32_t extract_int32(const void *buf) 
+{
+        return ntohl(align_int32(buf));
 }
 
 
@@ -137,6 +155,13 @@ static inline uint64_t extract_uint64(const void *buf)
 
 
 
+static inline float extract_float(const void *buf)
+{
+	return *((const float *) buf); /* FIXME: do we need alignment for float */
+}
+
+
+
 /*
  * Theses function check the buffer size for safety. 
  */
@@ -148,7 +173,7 @@ static inline int extract_uint8_safe(uint8_t *out, const void *buf, size_t len)
         }
 
         *out = *(const uint8_t *) buf;
-        
+
         return 0;
 }
 
@@ -181,6 +206,20 @@ static inline int extract_uint32_safe(uint32_t *out, const void *buf, size_t len
 
 
 
+static inline int extract_int32_safe(int32_t *out, const void *buf, size_t len) 
+{
+        if ( len != sizeof(int32_t) ) {
+                log(LOG_ERR, "Datatype error, buffer doesn't contain 32 bits integer.\n");
+                return -1;
+        }
+
+        *out = extract_int32(buf);
+	
+        return 0;
+}
+
+
+
 static inline int extract_uint64_safe(uint64_t *out, const void *buf, size_t len) 
 {
         if ( len != sizeof(uint64_t) ) {
@@ -195,19 +234,30 @@ static inline int extract_uint64_safe(uint64_t *out, const void *buf, size_t len
 
 
 
-static inline int extract_string_safe(const char **out, const char *buf, size_t len) 
+static inline int extract_float_safe(float *out, const void *buf, size_t len)
 {
-        if ( buf[len - 1] != '\0' ) {
-                log(LOG_ERR, "Datatype error: buffer is not a string.\n");
-                return -1;
-        }
-        
-        *out = buf;
+	if ( len != sizeof (*out) ) {
+		log(LOG_ERR, "Datatype error, buffer doesn't contain a float.\n");
+		return -1;
+	}
 
-        return 0;
+	*out = extract_float(buf);
+
+	return 0;
 }
 
 
 
-#endif /* _LIBPRELUDE_EXTRACT_H */
+static inline int extract_characters_safe(char **out, char *buf, size_t len)
+{
+	if ( buf[len - 1] != '\0' ) {
+                log(LOG_ERR, "Datatype error: buffer is not a string.\n");
+                return -1;
+        }
 
+	*out = buf;
+
+	return 0;
+}
+
+#endif /* _LIBPRELUDE_EXTRACT_H */

@@ -1,3 +1,11 @@
+2003-12-12  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/idmef-wrappers-gen/GenerateIDMEFMessageSendC.pm (header): 
+	use prelude_hton64().
+
+	* src/idmef-wrappers-gen/GenerateIDMEFTreeWrapC.pm (header): 
+	add missing includes.
+
 2003-10-16  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* configure.in: move test that might add library path

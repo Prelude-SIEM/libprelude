@@ -49,9 +49,9 @@
 #include "client-ident.h"
 
 
-static uint16_t port = 5553;
 static int uid_set = 0;
 static uid_t sensor_uid;
+static uint16_t port = 5553;
 static const char *addr = NULL;
 static const char *sensor_name = NULL;
 
@@ -269,8 +269,19 @@ static int handle_argument(int argc, char **argv)
         }
 
         if ( ! uid_set ) {
-                log(LOG_INFO, "No sensor UID specified.\n");
-                return -1;
+                sensor_uid = getuid();
+                
+                log(LOG_INFO,
+                    "\n\n*** WARNING ***\n"
+                    "sensor-adduser was started without the --uid command line option.\n\n"
+
+                    "It means that sensor specific files, that should be available for writing,\n"
+                    "will be created using the current UID which is %u.\n\n"
+
+                    "Your sensor won't start unless it is running under this UID.\n\n"
+                    "[Please press enter if this is what you plan to do]\n", sensor_uid);
+
+                while ( getchar() != '\n' );
         }
         
         return 0;
@@ -407,7 +418,7 @@ static int setup_sensor_files(const char *hostname, uint64_t sensor_ident)
                 return -1;
         }
 
-        ret = fchown(fd, sensor_uid, 0);
+        ret = fchown(fd, sensor_uid, -1);
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't chown %s to UID %d.\n", buf, sensor_uid);
                 return -1;

@@ -157,6 +157,26 @@ static inline void list_splice(struct list_head *list, struct list_head *head)
 #define list_entry(ptr, type, member) \
 	((type *)((unsigned long)(ptr) - (unsigned long)(&((type *)0)->member)))
 
+
+
+/**
+ * list_get_next - get next element from the list
+ * @pos:    a list iterator pointer (class *). 
+            If NULL, will be set to the list head. 
+ *          Will be set to NULL after iterating over last list member. 
+ * @list:   a pointer to list head. (struct list_head *)
+ * @class:  object type
+ * @member: list member in object (usually 'list')
+ */
+#define list_get_next(pos, list, class, member) \
+        pos ? \
+                ((pos)->member.next == (list)) ? NULL : \
+                                list_entry((pos)->member.next, class, member) \
+        : \
+                ((list)->next == (list)) ? NULL : \
+                                list_entry((list)->next, class, member)         
+
+
 /**
  * list_for_each	-	iterate over a list
  * @pos:	the &struct list_head to use as a loop counter.

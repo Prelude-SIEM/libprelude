@@ -289,7 +289,7 @@ static void client_timer_expire(void *data)
                 /*
                  * Connection succeed:
                  * Destroy the timer, and if no client in the AND list
-                 * is dead, emmit backuped report.
+                 * is dead, emit backuped report.
                  */
                 timer_destroy(&client->timer);
                 
@@ -389,7 +389,7 @@ static int create_new_client(client_list_t *clist, char *addr, int type)
                 free(new);
                 return -1;
         }
-        
+
         prelude_client_set_type(new->client, type);
         
         prelude_list_add((prelude_linked_object_t *) new->client, &clist->parent->all_client);
@@ -629,7 +629,7 @@ static int broadcast_message(prelude_msg_t *msg, client_list_t *clist)
         
         list_for_each(tmp, &clist->client_list) {
                 c = list_entry(tmp, client_t, list);
-                
+
                 ret = prelude_client_send_msg(c->client, msg);
                 if ( ret < 0 ) {
                         clist->dead++;
@@ -664,7 +664,7 @@ static int walk_manager_lists(prelude_client_mgr_t *cmgr, prelude_msg_t *msg)
                 
                 /*
                  * There is Manager(s) known to be dead in this list.
-                 * No need to try to emmit a message to theses.
+                 * No need to try to emit a message to theses.
                  */                
                 if ( item->dead ) {
                         ret = -2;
@@ -672,7 +672,7 @@ static int walk_manager_lists(prelude_client_mgr_t *cmgr, prelude_msg_t *msg)
                 }
                 
                 ret = broadcast_message(msg, item);
-                if ( ret == 0 )  /* AND of Manager emmission succeed */
+                if ( ret == 0 )  /* AND of Manager emission succeed */
                         return 0;
         }
 
@@ -725,11 +725,11 @@ void prelude_client_mgr_broadcast(prelude_client_mgr_t *cmgr, prelude_msg_t *msg
          * failed. Backup the message.
          */
         if ( ret == -1 )
-                log(LOG_INFO, "Manager emmission failed. Enabling failsafe mode.\n");  
-      
+                log(LOG_INFO, "Manager emission failed. Enabling failsafe mode.\n");  
+
         ret = prelude_msg_write(msg, cmgr->backup_fd_write);
         if ( ret < 0 ) 
-                log(LOG_ERR, "could't backup message.\n");
+                log(LOG_ERR, "could not backup message.\n");
 }
 
 
@@ -812,7 +812,7 @@ prelude_client_mgr_t *prelude_client_mgr_new(int type, const char *cfgline)
         
         /*
          * Setup a backup file descriptor for this client Manager.
-         * It will be used if a message emmission fail.
+         * It will be used if a message emission fail.
          */
         ret = setup_backup_fd(new, cfgline);
         if ( ret < 0 ) {

@@ -72,7 +72,7 @@ static void wait_timer_and_data(void)
         struct timeval now;
         struct timespec ts;
         static struct timeval last_timer_wake_up;
-        
+
         while ( 1 ) {
                 ret = 0;
                 
@@ -82,7 +82,7 @@ static void wait_timer_and_data(void)
                 gettimeofday(&now, NULL);
                 ts.tv_sec = now.tv_sec + 1;
                 ts.tv_nsec = now.tv_usec * 1000;
-                
+
                 pthread_mutex_lock(&mutex);
 
                 while ( list_empty(&joblist) && ret != ETIMEDOUT && ! stop_processing ) {

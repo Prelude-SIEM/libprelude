@@ -1,0 +1,6 @@
+This directory contains scripts needed to rebuild IDMEF wrappers code. 
+This needs to be done when structure definitions in idmef-tree.h are changed.
+
+To rebuild IDMEF wrappers code, run generator.pl script.
+
+- Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>

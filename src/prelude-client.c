@@ -214,7 +214,7 @@ static int handle_plaintext_connection(prelude_client_t *client, int sock)
         prelude_msg_set(msg, PRELUDE_MSG_AUTH_PLAINTEXT, 0, NULL);
         prelude_msg_set(msg, PRELUDE_MSG_AUTH_USERNAME, ulen, user);
         prelude_msg_set(msg, PRELUDE_MSG_AUTH_PASSWORD, plen, pass);
-        prelude_io_set_sys_io(client->fd, sock);
+        prelude_io_set_socket_io(client->fd, sock);
         
         ret = prelude_msg_write(msg, client->fd);
         if ( ret <= 0 ) {
@@ -366,7 +366,7 @@ static int start_inet_connection(prelude_client_t *client)
                 client->sport = ntohs(addr.sin_port);
         }
 
-        prelude_io_set_sys_io(client->fd, sock);
+        prelude_io_set_socket_io(client->fd, sock);
 
         /*
          * get manager message telling what kind of connection it
@@ -410,7 +410,7 @@ static int start_unix_connection(prelude_client_t *client)
         if ( sock < 0 )
                 return -1;
 
-        prelude_io_set_sys_io(client->fd, sock);
+        prelude_io_set_socket_io(client->fd, sock);
 
         ret = get_manager_setup(client->fd, &have_ssl, &have_plaintext);
         if ( ret < 0 ) {

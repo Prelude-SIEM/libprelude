@@ -1,3 +1,63 @@
+* 2003-12-09, libprelude-0.8.9.10:
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
+	  use a newer libtool version (fix an OpenBSD) problem.
+
+* 2003-12-05, libprelude-0.8.9:
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
+	  Use version-info to set library soname to something
+	  meaningful. 
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
+	  Implement prelude_io_pending() function that return
+	  wether there are byte waiting to be read or not. Take
+	  care of the OpenSSL internal buffer.
+
+	- Nicolas Delon <delon.nicolas@wanadoo.fr>:
+	  Add a new prelude-io type dedicated to socket operation. 
+	  Enable checking of connection state with theses. This fix
+	  a bug where a connection breakage would only be noticed
+	  on the second alert send.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
+	  Make sensor-adduser work if not called by root.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
+	  Allow sensor-adduser to be called without the --uid 
+          option, but print a big warning telling that sensor added without
+          a provided UID will have to be run using the registration UID.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
+	  Set generated certificate to start being valid one day 
+	  before of the current time. This can avoid problem in case 
+	  one of the machine involved in the communication doesn't have it's 
+	  time set right.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
+	  Allow a children option to access it's parent option through
+	  a new function in the prelude-getopt API.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
+	  Fix yet another plugin loading problem on OpenBSD.
+
+* 2003-10-21, libprelude-0.8.8:
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
+	  Work around problem with desynchronized ident that 
+	  people were getting in case of machine or manager crash.
+
+	- Nicolas Delon <delon.nicolas@wanadoo.fr>:
+	  Fix a memory leak affecting prelude-lml.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
+	  Fix a bug that could result in linking to the wrong 
+	  version of libprelude being linked when dual libprelude 
+	  version were installed.
+
+	- Stephane Loeuillet <stephane.loeuillet@tiscali.fr>:
+	  README update.
+
 * 2003-09-30, libprelude-0.8.7:
 
 	- Yoann Vandoorselaere <yoann@prelude-ids.org>

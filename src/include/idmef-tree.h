@@ -21,47 +21,99 @@
 *
 *****/
 
+/* IMPORTANT NOTE: pass this file to Perl script after preprocessing with
+                   cpp -D_GENERATE -E idmef-tree-input.h */
+
+/*
+ * NOTE ON GENERATION TIME MACROS:
+ *  
+ *  - IS_LISTED: use within object that will be a member of the list
+ *    always put this field as the first field of the struct, idmef-object.c
+ *    access idmef structure as a void * and therefore cannot use list_entry
+ *    to retrieve the list entry, thus it assumes that the struct list_head
+ *    is the first field of the struct
+ *
+ *  - LISTED_OBJECT(name, type): include list named 'name' consisted of objects 
+ *    named 'type' (objects must have IS_LISTED member). 'name' should end with '_list'. 
+ *
+ *  - UNION_MEMBER(union, var, val, type, name): use within 'union' clause. 
+ *    Parameters: 'union' - name of the union macro is used within 
+ *                'var' - variable controlling selection of memeber form the union
+ *                'val' - value of variable 'var' for which this member will be used
+ *                'type' - type of member variable
+ *                'name' - name of member variable    
+ *
+ * - FORCE_REGISTER(type, class): force parser to treat type 'type' as a 'class', 
+ *   even if it was not (yet) defined; example: FORCE_REGISTER(my_struct_t, struct)
+ *   registers my_struct_t as struct. 
+ *
+ * - TYPE_ID(type, id): set ID number of type 'type' to 'id'
+ */
+
 
 #ifndef _LIBPRELUDE_IDMEF_TREE_H
 #define _LIBPRELUDE_IDMEF_TREE_H
 
+#ifndef _GENERATE
+
 #include <inttypes.h>
+
+#include "prelude-hash.h"
+
+#define LISTED_OBJECT(name, type) struct list_head name
+
+#define IS_LISTED struct list_head list
+
+#define	UNION(type, var) type var; union
+
+#define	UNION_MEMBER(value, type, name) type name
+
+#define ENUM(...) typedef enum
+
+#define PRE_DECLARE(type, class)
+
+#define TYPE_ID(type, id) type
+
+#define PRIMITIVE_TYPE(type)
+#define PRIMITIVE_TYPE_STRUCT(type)
+
+#define HIDE(type, name) type name
+
+#endif /* _GENERATE */
 
 /*
  * Default value for an enumeration member should always be 0.
  * If there is no default value, no enumeration member should use
- * the 0 value/
+ * the 0 value
  */
 
 #define IDMEF_VERSION "0.6"
 
+#ifndef _GENERATE
+#include "idmef-string.h"
+#include "idmef-time.h"
+#include "idmef-data.h"
+#endif
 
-typedef struct {
-        uint16_t len;
-        const char *string;
-} idmef_string_t;
+PRIMITIVE_TYPE(void)
+PRIMITIVE_TYPE(int16_t)
+PRIMITIVE_TYPE(int32_t)
+PRIMITIVE_TYPE(int64_t)
+PRIMITIVE_TYPE(uint16_t)
+PRIMITIVE_TYPE(uint32_t)
+PRIMITIVE_TYPE(uint64_t)
+PRIMITIVE_TYPE(uchar_t)
+PRIMITIVE_TYPE(float)
 
-
-
-/*
- * Time class
- */
-typedef struct {
-        uint32_t sec;
-        uint32_t usec;
-} idmef_time_t;
-
-#define idmef_create_time_t idmef_time_t
-#define idmef_detect_time_t idmef_time_t
-#define idmef_analyzer_time_t idmef_time_t
-
-
+PRIMITIVE_TYPE_STRUCT(idmef_string_t)
+PRIMITIVE_TYPE_STRUCT(idmef_time_t)
+PRIMITIVE_TYPE_STRUCT(idmef_data_t)
 
 
 /*
  * Additional Data class
  */
-typedef enum {
+ENUM() {
         string    = 0,
         boolean   = 1,
         byte      = 2,
@@ -72,40 +124,37 @@ typedef enum {
         portlist  = 7,
         real      = 8,
         xml       = 9
-} idmef_additional_data_type_t;
+} TYPE_ID(idmef_additional_data_type_t, 3);
 
 
 
 typedef struct {
-        struct list_head list;
+        IS_LISTED;
         idmef_additional_data_type_t type;
         idmef_string_t meaning;
-
-        uint32_t dlen;
-        const void *data;
-        
-} idmef_additional_data_t;
+	idmef_data_t data;
+} TYPE_ID(idmef_additional_data_t, 4);
 
 
 
 /*
  * Classification class
  */
-typedef enum {
+ENUM(origin) {
         origin_unknown  = 0,
         bugtraqid       = 1,
         cve             = 2,
         vendor_specific = 3
-} idmef_classification_origin_t;
+} TYPE_ID(idmef_classification_origin_t, 5);
 
 
 
 typedef struct {
-        struct list_head list;
+        IS_LISTED;
         idmef_classification_origin_t origin;
         idmef_string_t name;
         idmef_string_t url;
-} idmef_classification_t;
+} TYPE_ID(idmef_classification_t, 6);
 
 
 
@@ -114,7 +163,7 @@ typedef struct {
 /*
  * UserId class
  */
-typedef enum {
+ENUM() {
         original_user = 0,
         current_user  = 1,
         target_user   = 2,
@@ -122,17 +171,17 @@ typedef enum {
         current_group = 4,
         group_privs   = 5,
         other_privs   = 6
-} idmef_userid_type_t;
+} TYPE_ID(idmef_userid_type_t, 7);
 
 
 typedef struct {
-        struct list_head list;
+        IS_LISTED;
 
         uint64_t ident;
         idmef_userid_type_t type;
         idmef_string_t name;
         uint32_t number;
-} idmef_userid_t;
+} TYPE_ID(idmef_userid_t, 8);
 
 
 
@@ -142,19 +191,19 @@ typedef struct {
 /*
  * User class
  */
-typedef enum {
+ENUM(cat) {
         cat_unknown  = 0,
         application  = 1,
         os_device    = 2
-} idmef_user_category_t;
+} TYPE_ID(idmef_user_category_t, 9);
 
 
 
 typedef struct {
         uint64_t ident;
         idmef_user_category_t category;
-        struct list_head userid_list;
-} idmef_user_t;
+        LISTED_OBJECT(userid_list, idmef_userid_t);
+} TYPE_ID(idmef_user_t, 10);
 
 
 
@@ -162,7 +211,7 @@ typedef struct {
 /*
  * Address class
  */
-typedef enum {
+ENUM(addr) {
         addr_unknown  = 0,
         atm           = 1,
         e_mail        = 2,
@@ -178,35 +227,27 @@ typedef enum {
         ipv6_addr_hex = 12,
         ipv6_net      = 13,
         ipv6_net_mask = 14
-} idmef_address_category_t;
+} TYPE_ID(idmef_address_category_t, 11);
 
 
 
 
 typedef struct {
-        struct list_head list;
+        IS_LISTED;
         
         uint64_t ident;
         idmef_address_category_t category;
         idmef_string_t vlan_name;
-        int vlan_num;
+        uint32_t vlan_num;
         idmef_string_t address;
         idmef_string_t netmask;
-} idmef_address_t;
+} TYPE_ID(idmef_address_t, 12);
 
 
 
 /*
  * Process class
  */
-typedef struct {
-        idmef_string_t string;
-        struct list_head list;
-} idmef_string_item_t;
-
-#define idmef_process_env_t idmef_string_item_t
-#define idmef_process_arg_t idmef_string_item_t
-#define idmef_file_access_permission_t idmef_string_item_t
 
 typedef struct {
         uint64_t ident;
@@ -214,27 +255,18 @@ typedef struct {
         uint32_t pid;
         idmef_string_t path;
 
-        struct list_head arg_list;
-        struct list_head env_list;
-} idmef_process_t;
+        LISTED_OBJECT(arg_list, idmef_string_t);
+        LISTED_OBJECT(env_list, idmef_string_t);
+} TYPE_ID(idmef_process_t, 13);
 
-
-
-/*
- * WebService class
- */
-typedef struct {
-        struct list_head list;
-        idmef_string_t arg;
-} idmef_webservice_arg_t;
 
 
 typedef struct {
         idmef_string_t url;
         idmef_string_t cgi;
         idmef_string_t http_method;
-        struct list_head arg_list;
-} idmef_webservice_t;
+        LISTED_OBJECT(arg_list, idmef_string_t);
+} TYPE_ID(idmef_webservice_t, 14);
 
 
 
@@ -246,15 +278,15 @@ typedef struct {
         idmef_string_t oid;
         idmef_string_t community;
         idmef_string_t command;
-} idmef_snmpservice_t;
+} TYPE_ID(idmef_snmpservice_t, 15);
 
         
 
-typedef enum {
+ENUM() {
         no_specific_service = 0,
         web_service = 1,
         snmp_service = 2
-} idmef_service_type_t;
+} TYPE_ID(idmef_service_type_t, 16);
 
 
 
@@ -268,13 +300,12 @@ typedef struct {
         idmef_string_t portlist;
         idmef_string_t protocol;
 
-        idmef_service_type_t type;
-        union {
-                idmef_webservice_t *web;
-                idmef_snmpservice_t *snmp;
-        } specific;
+	UNION(idmef_service_type_t, type) {
+		UNION_MEMBER(web_service, idmef_webservice_t, *web);
+		UNION_MEMBER(snmp_service, idmef_snmpservice_t, *snmp);
+	} specific;
         
-} idmef_service_t;
+} TYPE_ID(idmef_service_t, 17);
 
 
 
@@ -282,7 +313,7 @@ typedef struct {
 /*
  * Node class
  */
-typedef enum {
+ENUM(node) {
         node_unknown = 0,
         ads          = 1,
         afs          = 2,
@@ -296,7 +327,7 @@ typedef enum {
         nisplus      = 10,
         nt           = 11,
         wfw          = 12
-} idmef_node_category_t;
+} TYPE_ID(idmef_node_category_t, 18);
 
 
 typedef struct {
@@ -304,8 +335,8 @@ typedef struct {
         idmef_node_category_t category;
         idmef_string_t location;
         idmef_string_t name;
-        struct list_head address_list;
-} idmef_node_t;
+        LISTED_OBJECT(address_list, idmef_address_t);
+} TYPE_ID(idmef_node_t, 19);
 
 
 
@@ -314,15 +345,15 @@ typedef struct {
 /*
  * Source class
  */
-typedef enum {
+ENUM() {
         unknown = 0,
         yes     = 1,
         no      = 2
-} idmef_spoofed_t;
+} TYPE_ID(idmef_spoofed_t, 20);
 
 
 typedef struct {
-        struct list_head list;
+        IS_LISTED;
     
         uint64_t ident;
         idmef_spoofed_t spoofed;
@@ -333,40 +364,17 @@ typedef struct {
         idmef_process_t *process;
         idmef_service_t *service;
         
-} idmef_source_t;
+} TYPE_ID(idmef_source_t, 21);
 
 
 /*
  * File Access class
  */
 typedef struct {
-        struct list_head list;
+        IS_LISTED;
         idmef_userid_t userid;
-        struct list_head permission_list;
-} idmef_file_access_t;
-
-
-/*
- * Linkage class
- */
-typedef enum {
-        hard_link     = 1,
-        mount_point   = 2,
-        reparse_point = 3,
-        shortcut      = 4,
-        stream        = 5,
-        symbolic_link = 6
-} idmef_linkage_category_t;
-
-
-typedef struct {
-        struct list_head list;
-        
-        idmef_linkage_category_t category;
-        idmef_string_t name;
-        idmef_string_t path;
-        struct idmef_file *file;
-} idmef_linkage_t;
+        LISTED_OBJECT(permission_list, idmef_string_t);
+} TYPE_ID(idmef_file_access_t, 22);
 
 
 
@@ -380,22 +388,25 @@ typedef struct {
         uint32_t minor_device;
         uint32_t c_major_device;
         uint32_t c_minor_device;
-} idmef_inode_t;
+} TYPE_ID(idmef_inode_t, 23);
 
 
+/* chicken-and-egg problem between idmef_linkage_t and idmef_file_t */
 
-        
+PRE_DECLARE(idmef_linkage_t, struct)
+
+
 /*
  * File class
  */
-typedef enum {
+ENUM() {
         current  = 1,
         original = 2
-} idmef_file_category_t;
+} TYPE_ID(idmef_file_category_t, 24);
         
         
-typedef struct idmef_file {
-        struct list_head list;
+typedef struct {
+        IS_LISTED;
         
         uint64_t ident;
         idmef_file_category_t category;
@@ -411,11 +422,35 @@ typedef struct idmef_file {
         uint32_t data_size;
         uint32_t disk_size;
 
-        struct list_head file_access_list;
-        struct list_head file_linkage_list;
+        LISTED_OBJECT(file_access_list, idmef_file_access_t);
+        LISTED_OBJECT(file_linkage_list, idmef_linkage_t);
 
         idmef_inode_t *inode;
-} idmef_file_t;
+} TYPE_ID(idmef_file_t, 25);
+
+
+/*
+ * Linkage class
+ */
+ENUM() {
+        hard_link     = 1,
+        mount_point   = 2,
+        reparse_point = 3,
+        shortcut      = 4,
+        stream        = 5,
+        symbolic_link = 6
+} TYPE_ID(idmef_linkage_category_t, 26);
+
+
+typedef struct {
+        IS_LISTED;
+        
+        idmef_linkage_category_t category;
+        idmef_string_t name;
+        idmef_string_t path;
+        idmef_file_t *file;
+} TYPE_ID(idmef_linkage_t, 27);
+
 
 
 
@@ -423,7 +458,7 @@ typedef struct idmef_file {
  * Target class
  */
 typedef struct {
-        struct list_head list;
+        IS_LISTED;
         
         uint64_t ident;
         idmef_spoofed_t decoy;
@@ -433,8 +468,8 @@ typedef struct {
         idmef_user_t *user;
         idmef_process_t *process;
         idmef_service_t *service;
-        struct list_head file_list;
-} idmef_target_t;
+        LISTED_OBJECT(file_list, idmef_file_t);
+} TYPE_ID(idmef_target_t, 28);
 
 
 
@@ -454,7 +489,7 @@ typedef struct {
         
         idmef_node_t *node;
         idmef_process_t *process;
-} idmef_analyzer_t;
+} TYPE_ID(idmef_analyzer_t, 29);
 
 
 
@@ -463,37 +498,37 @@ typedef struct {
  */
 
 typedef struct {
-        struct list_head list;
+        IS_LISTED;
         uint64_t alertident;
         uint64_t analyzerid;
-} idmef_alertident_t;
+} TYPE_ID(idmef_alertident_t, 30);
 
 
 
 /*
  * Impact class
  */
-typedef enum {
+ENUM(impact) {
         impact_low    = 1,
         impact_medium = 2,
         impact_high   = 3
-} idmef_impact_severity_t;
+} TYPE_ID(idmef_impact_severity_t, 31);
 
 
-typedef enum {
+ENUM() {
         failed     = 1,
         succeeded  = 2
-} idmef_impact_completion_t;
+} TYPE_ID(idmef_impact_completion_t, 32);
 
 
-typedef enum {
+ENUM() {
         other      = 0,
         admin      = 1,
         dos        = 2,
         file       = 3,
         recon      = 4,
         user       = 5
-} idmef_impact_type_t;
+} TYPE_ID(idmef_impact_type_t, 33);
 
 
 typedef struct {
@@ -501,43 +536,43 @@ typedef struct {
         idmef_impact_completion_t completion;
         idmef_impact_type_t type;
         idmef_string_t description;
-} idmef_impact_t;
+} TYPE_ID(idmef_impact_t, 34);
 
 
 /*
  * Action class
  */
-typedef enum {
+ENUM(action) {
         action_other       = 0,
         block_installed    = 1,
         notification_sent  = 2,
         taken_offline      = 3
-} idmef_action_category_t;
+} TYPE_ID(idmef_action_category_t, 35);
 
 
 typedef struct {
-        struct list_head list;
+        IS_LISTED;
         idmef_action_category_t category;
         idmef_string_t description;
-} idmef_action_t;
+} TYPE_ID(idmef_action_t, 36);
 
 
 
 /*
  * Confidence class
  */
-typedef enum {
+ENUM() {
         numeric = 0,
         low     = 1,
         medium  = 2,
         high    = 3
-} idmef_confidence_rating_t;
+} TYPE_ID(idmef_confidence_rating_t, 37);
 
 
 typedef struct {
         idmef_confidence_rating_t rating;
         float confidence;
-} idmef_confidence_t;
+} TYPE_ID(idmef_confidence_t, 38);
 
 
 /*
@@ -545,9 +580,9 @@ typedef struct {
  */
 typedef struct {
         idmef_impact_t *impact;
-        struct list_head action_list;
+        LISTED_OBJECT(action_list, idmef_action_t);
         idmef_confidence_t *confidence;
-} idmef_assessment_t;
+} TYPE_ID(idmef_assessment_t, 39);
 
 
 
@@ -557,8 +592,8 @@ typedef struct {
 typedef struct {
         idmef_string_t name;
         idmef_string_t command;
-        struct list_head alertident_list;
-} idmef_tool_alert_t;
+        LISTED_OBJECT(alertident_list, idmef_alertident_t);
+} TYPE_ID(idmef_tool_alert_t, 40);
 
 
 
@@ -569,8 +604,8 @@ typedef struct {
  */
 typedef struct {
         idmef_string_t name;
-        struct list_head alertident_list;
-} idmef_correlation_alert_t;
+        LISTED_OBJECT(alertident_list, idmef_alertident_t);
+} TYPE_ID(idmef_correlation_alert_t, 41);
 
 
 
@@ -580,9 +615,9 @@ typedef struct {
  */
 typedef struct {
         idmef_string_t program;
-        uint32_t size;
-        const unsigned char *buffer;
-} idmef_overflow_alert_t;
+        uint32_t *size;
+        idmef_data_t *buffer;
+} TYPE_ID(idmef_overflow_alert_t, 42);
 
 
 
@@ -590,12 +625,12 @@ typedef struct {
 /*
  * Alert class
  */
-typedef enum {
+ENUM(idmef) {
         idmef_default           = 0,
         idmef_tool_alert        = 1,
         idmef_correlation_alert = 2,
         idmef_overflow_alert    = 3
-} idmef_alert_type_t;
+} TYPE_ID(idmef_alert_type_t, 43);
 
 
 
@@ -610,19 +645,18 @@ typedef struct {
         idmef_time_t *detect_time;
         idmef_time_t *analyzer_time;
 
-        struct list_head source_list;
-        struct list_head target_list;
-        struct list_head classification_list;
-        struct list_head additional_data_list;
+        LISTED_OBJECT(source_list, idmef_source_t);
+        LISTED_OBJECT(target_list, idmef_target_t);
+        LISTED_OBJECT(classification_list, idmef_classification_t);
+        LISTED_OBJECT(additional_data_list, idmef_additional_data_t);
 
-        idmef_alert_type_t type;
-        union {
-                idmef_tool_alert_t *tool_alert;
-                idmef_correlation_alert_t *correlation_alert;
-                idmef_overflow_alert_t *overflow_alert;
+        UNION(idmef_alert_type_t, type) {
+                UNION_MEMBER(idmef_tool_alert, idmef_tool_alert_t, *tool_alert);
+                UNION_MEMBER(idmef_correlation_alert, idmef_correlation_alert_t, *correlation_alert);
+                UNION_MEMBER(idmef_overflow_alert, idmef_overflow_alert_t, *overflow_alert);
         } detail;
         
-} idmef_alert_t;
+} TYPE_ID(idmef_alert_t, 44);
 
 
 
@@ -638,8 +672,8 @@ typedef struct {
         idmef_time_t create_time;
         idmef_time_t *analyzer_time;
 
-        struct list_head additional_data_list;
-} idmef_heartbeat_t;
+        LISTED_OBJECT(additional_data_list, idmef_additional_data_t);
+} TYPE_ID(idmef_heartbeat_t, 45);
 
 
 
@@ -647,32 +681,23 @@ typedef struct {
 /*
  * IDMEF Message class
  */
-typedef enum {
+ENUM() {
         idmef_alert_message     = 1,
         idmef_heartbeat_message = 2
-} idmef_message_type_t;
+} TYPE_ID(idmef_message_type_t, 46);
 
 
 typedef struct {        
 
-        /*
-         * end of specific things.
-         */
         idmef_string_t version;
 
-        idmef_message_type_t type;
-        union {
-                idmef_alert_t *alert;
-                idmef_heartbeat_t *heartbeat;
+        UNION(idmef_message_type_t, type) {
+		UNION_MEMBER(idmef_alert_message, idmef_alert_t, *alert);
+		UNION_MEMBER(idmef_heartbeat_message, idmef_heartbeat_t, *heartbeat);
         } message;
+
+	HIDE(prelude_hash_t *, cache);
         
-} idmef_message_t;
+} TYPE_ID(idmef_message_t, 47);
 
 #endif /* _LIBPRELUDE_IDMEF_TREE_H */
-
-
-
-
-
-
-

@@ -75,7 +75,7 @@ static prelude_msg_t *send_msg_async(void *data)
 
 
 /**
-é * prelude_msgbuf_set:
+ * prelude_msgbuf_set:
  * @msgbuf: Pointer on a #prelude_msgbuf_t object to store the data to.
  * @tag: 8 bits unsigned integer describing the kind of data.
  * @len: len of the data chunk.

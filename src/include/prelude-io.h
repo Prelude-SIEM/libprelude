@@ -24,23 +24,6 @@
 #ifndef _LIBPRELUDE_PRELUDE_IO_H
 #define _LIBPRELUDE_PRELUDE_IO_H
 
-#include <inttypes.h>
-
-#ifdef SWIG
-
-%module prelude_io
-
-typedef void FILE;
-typedef int size_t;
-typedef int ssize_t;
-typedef unsigned short int uint16_t;
-
-%{
-	#include "prelude-io.h"
-%}
-
-#endif
-
 typedef struct prelude_io prelude_io_t;
 
 /*
@@ -53,6 +36,8 @@ void prelude_io_destroy(prelude_io_t *pio);
 void prelude_io_set_file_io(prelude_io_t *pio, FILE *fd);
 
 void prelude_io_set_ssl_io(prelude_io_t *pio, void *ssl);
+
+void prelude_io_set_socket_io(prelude_io_t *pio, int fd);
 
 void prelude_io_set_sys_io(prelude_io_t *pio, int fd);
 
@@ -81,5 +66,7 @@ ssize_t prelude_io_forward(prelude_io_t *dst, prelude_io_t *src, size_t count);
 int prelude_io_get_fd(prelude_io_t *pio);
 
 void *prelude_io_get_fdptr(prelude_io_t *pio);
+
+ssize_t prelude_io_pending(prelude_io_t *pio);
 
 #endif /* _LIBPRELUDE_PRELUDE_IO_H */

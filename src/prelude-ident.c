@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -110,7 +110,7 @@ prelude_ident_t *prelude_ident_new(const char *filename)
                 return NULL;
         }
         
-        new->ident = mmap(0, sizeof(*new->ident), PROT_READ|PROT_WRITE, MAP_SHARED, new->fd, 0);
+        new->ident = mmap(0, sizeof(*new->ident), PROT_READ|PROT_WRITE|MS_SYNC, MAP_SHARED, new->fd, 0);
         if ( ! new->ident ) {
                 log(LOG_ERR, "mmap failed.\n");
                 close(new->fd);

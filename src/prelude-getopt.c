@@ -57,6 +57,8 @@ typedef struct prelude_optlist {
 struct prelude_option {
         prelude_optlist_t optlist;
         struct list_head list;
+
+        prelude_option_t *parent;
         
         int flags;
         int priority;
@@ -752,6 +754,7 @@ prelude_option_t *prelude_option_add(prelude_option_t *parent, int flags,
         new->set = set;
         new->get = get;
         new->called_from_cli = 0;
+        new->parent = parent;
 
         if ( parent ) {
                 optlist = &parent->optlist;
@@ -1091,6 +1094,7 @@ prelude_option_t *prelude_option_new(prelude_option_t *parent)
         if ( ! new ) 
                 return NULL;
 
+        new->parent = parent;
         INIT_LIST_HEAD(&new->optlist.optlist);
 
         if ( parent ) 
@@ -1181,4 +1185,11 @@ void prelude_option_set_input_type(prelude_option_t *opt, uint8_t input_type)
 uint8_t prelude_option_get_input_type(prelude_option_t *opt)
 {
         return opt->input_type;
+}
+
+
+
+prelude_option_t *prelude_option_get_parent(prelude_option_t *opt)
+{
+        return opt->parent;
 }

@@ -4,12 +4,15 @@ INCLUDES = -I$(top_srcdir) -I$(srcdir)/include @INCLTDL@
 
 libpreludeincludedir = $(includedir)/
 libprelude_la_LIBADD = @LIBLTDL@
+libprelude_la_LDFLAGS = -version-info @libprelude_soname@
 lib_LTLIBRARIES = libprelude.la
 
 if HAVE_SSL
 SSL_SRCS=ssl.c ssl-gencrypto.c ssl-registration-msg.c ssl-settings.c
 endif
 
+AM_YFLAGS = -d
+LEX_OUTPUT_ROOT = lex.yy
 
 libprelude_la_SOURCES = 		\
 	config-engine.c 		\
@@ -28,12 +31,32 @@ libprelude_la_SOURCES = 		\
 	prelude-async.c			\
 	prelude-ident.c			\
 	prelude-path.c			\
+	prelude-hash.c			\
 	prelude-log.c			\
 	prelude-inet.c			\
+	prelude-strbuf.c		\
 	sensor.c			\
 	client-ident.c			\
-	idmef-tree-func.c		\
-	idmef-msg-send.c		\
+	ntp.c				\
+	idmef-util.c			\
+	idmef-time.c			\
+	idmef-data.c			\
+	idmef-string.c			\
+	idmef-tree-print.c		\
+	idmef-tree-to-string.c		\
+	idmef-tree-wrap.c		\
+	idmef-type.c			\
+	idmef-object.c			\
+	idmef-value.c			\
+	idmef-value-object.c		\
+	idmef-value-type.c		\
+	idmef-object-value.c		\
+	idmef-criteria.c		\
+	idmef-criteria-string.yac.y	\
+	idmef-criteria-string.lex.l	\
+	idmef-message-send.c		\
+	idmef-message-recv.c		\
+	idmef-message.c			\
 	common.c			\
 	$(SSL_SRCS)
 

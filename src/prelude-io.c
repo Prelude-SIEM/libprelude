@@ -20,11 +20,13 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
 #include <sys/poll.h>
+#include <sys/ioctl.h>
 #include <inttypes.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -47,13 +49,67 @@ struct prelude_io {
         int (*close)(prelude_io_t *pio);
         ssize_t (*read)(prelude_io_t *pio, void *buf, size_t count);
         ssize_t (*write)(prelude_io_t *pio, const void *buf, size_t count);
+        ssize_t (*pending)(prelude_io_t *pio);
 };
 
 
 
 
 /*
- * System IO function.
+ * Check if the tcp connection has been closed by peer
+ * i.e if peer has sent a FIN tcp segment.
+ *
+ * It is important to call this function before writing on
+ * a tcp socket, otherwise the write will succeed despite
+ * the remote socket has been closed and next write will lead
+ * to a broken pipe
+ */
+static int is_tcp_connection_still_established(int fd)
+{
+        int pending;
+	struct pollfd pfd;
+
+	pfd.fd = fd;
+	pfd.events = POLLIN;
+
+	if ( poll(&pfd, 1, 0) < 0 ) {
+		log(LOG_ERR, "poll on tcp socket failed.\n");
+		return -1;
+	}
+
+	if ( pfd.revents & POLLERR ) {
+		log(LOG_ERR, "error polling tcp socket.\n");
+		return -1;
+	}
+
+	if ( pfd.revents & POLLHUP ) {
+		log(LOG_ERR, "connection hang up.\n");
+		return -1;
+	}
+
+	if ( ! (pfd.revents & POLLIN) )
+		return 0;
+
+	/*
+	 * Get the number of bytes to read
+	 */
+	if ( ioctl(fd, FIONREAD, &pending) < 0 ) {
+		log(LOG_ERR, "ioctl FIONREAD failed on tcp socket.\n");
+		return -1;
+	}
+
+	if ( ! pending ) {
+		log(LOG_ERR, "connection has been closed by peer.\n");
+		return -1;
+	}
+
+	return 0;
+}
+
+
+
+/*
+ * System IO functions.
  */
 static ssize_t sys_read(prelude_io_t *pio, void *buf, size_t count) 
 {
@@ -94,9 +150,17 @@ static int sys_close(prelude_io_t *pio)
 
 
 
+static ssize_t sys_pending(prelude_io_t *pio) 
+{
+        return -1;
+}
+
+
+
+
 
 /*
- * Buffered IO function.
+ * Buffered IO functions.
  */
 static ssize_t file_read(prelude_io_t *pio, void *buf, size_t count) 
 {
@@ -137,36 +201,51 @@ static int file_close(prelude_io_t *pio)
 
 
 
-
-/*
- * Forward data from one fd to another using copy.
- */
-static ssize_t copy_forward(prelude_io_t *dst, prelude_io_t *src, size_t count) 
+static ssize_t file_pending(prelude_io_t *pio)
 {
-        int ret;
-        size_t scount;
-        unsigned char buf[8192];
-
-        scount = count;
-        
-        while ( count ) {
-                
-                ret = (count < sizeof(buf)) ? count : sizeof(buf);
-                
-                ret = prelude_io_read(src, buf, ret);
-                if ( ret <= 0 ) 
-                        return -1;
-
-                count -= ret;
-                
-                ret = prelude_io_write(dst, buf, ret);
-                if ( ret < 0 ) 
-                        return -1;
-        }
-        
-        return scount;
+        return -1;
 }
 
+
+
+
+/*
+ * Socket IO functions.
+ */
+static ssize_t socket_pending(prelude_io_t *pio)
+{
+        int ret;
+        
+        if ( ioctl(pio->fd, FIONREAD, &ret) < 0 ) {
+                log(LOG_ERR, "ioctl FIONREAD failed on tcp socket.\n");
+                return -1;
+        }
+
+        return ret;
+}
+
+
+
+static ssize_t socket_write(prelude_io_t *pio, const void *buf, size_t count)
+{
+	ssize_t ret;
+
+	if ( is_tcp_connection_still_established(pio->fd) < 0 )
+		return -1;
+
+        do {
+                ret = write(pio->fd, buf, count);
+        } while ( ret < 0 && (errno == EINTR || errno == EAGAIN) );
+
+	return ret;
+}
+
+
+
+
+/*
+ * SSL IO functions
+ */
 
 #ifdef HAVE_SSL
 
@@ -208,9 +287,6 @@ static int handle_ssl_error(SSL *ssl, int ret, int errnum)
 
 
 
-/*
- * SSL IO functions
- */
 static ssize_t ssl_read(prelude_io_t *pio, void *buf, size_t count) 
 {
         int ret;
@@ -228,6 +304,9 @@ static ssize_t ssl_read(prelude_io_t *pio, void *buf, size_t count)
 static ssize_t ssl_write(prelude_io_t *pio, const void *buf, size_t count) 
 {
         int ret;
+
+	if ( is_tcp_connection_still_established(pio->fd) < 0 )
+		return -1;
 
         do {        
                 ret = SSL_write(pio->fd_ptr, buf, count);
@@ -247,8 +326,57 @@ static int ssl_close(prelude_io_t *pio)
         return sys_close(pio);
 }
 
+
+
+static ssize_t ssl_pending(prelude_io_t *pio)
+{
+        ssize_t ret;
+        
+        ret = SSL_pending(pio->fd_ptr);
+        if ( ret > 0 )
+                return ret;
+        
+        ret = socket_pending(pio);
+        if ( ret > 0 )
+                return ret;
+        
+        return 0;
+}
+
 #endif
 
+
+
+
+
+/*
+ * Forward data from one fd to another using copy.
+ */
+static ssize_t copy_forward(prelude_io_t *dst, prelude_io_t *src, size_t count) 
+{
+        int ret;
+        size_t scount;
+        unsigned char buf[8192];
+
+        scount = count;
+        
+        while ( count ) {
+                
+                ret = (count < sizeof(buf)) ? count : sizeof(buf);
+                
+                ret = prelude_io_read(src, buf, ret);
+                if ( ret <= 0 ) 
+                        return -1;
+
+                count -= ret;
+                
+                ret = prelude_io_write(dst, buf, ret);
+                if ( ret < 0 ) 
+                        return -1;
+        }
+        
+        return scount;
+}
 
 
 
@@ -269,25 +397,7 @@ static int ssl_close(prelude_io_t *pio)
  */
 ssize_t prelude_io_forward(prelude_io_t *dst, prelude_io_t *src, size_t count) 
 {
-#ifdef HAVE_LINUX_SENDFILE
-        ssize_t ret;
-        off_t off = 0;
-        
-        /*
-         * Linux sendfile can only be used on two condition :
-         * - The source is a file.
-         * - The destination is not using SSL.
-         */
-        if ( src->read == file_read && ! dst->ssl ) {
-                
-                ret = sendfile(dst->fd, src->fd.fd, &off, count);
-                if ( ret )
-                        lseek(src->fd.fd, off, SEEK_CUR);
-
-                return ret;
-        } else
-#endif
-                return copy_forward(dst, src, count);
+        return copy_forward(dst, src, count);
 }
 
 
@@ -558,6 +668,7 @@ void prelude_io_set_file_io(prelude_io_t *pio, FILE *fdptr)
         pio->read = file_read;
         pio->write = file_write;
         pio->close = file_close;
+        pio->pending = file_pending;
 }
 
 
@@ -579,6 +690,7 @@ void prelude_io_set_ssl_io(prelude_io_t *pio, void *ssl)
         pio->read = ssl_read;
         pio->write = ssl_write;
         pio->close = ssl_close;
+        pio->pending = ssl_pending;
 }
 
 #endif
@@ -588,7 +700,7 @@ void prelude_io_set_ssl_io(prelude_io_t *pio, void *ssl)
 /**
  * prelude_io_set_sys_io:
  * @pio: A pointer on the #prelude_io_t object.
- * @fd: A socket descriptor.
+ * @fd: A file descriptor.
  *
  * Setup the @pio object to work with system based I/O function.
  * The @pio object is then associated with @fd.
@@ -600,6 +712,27 @@ void prelude_io_set_sys_io(prelude_io_t *pio, int fd)
         pio->read = sys_read;
         pio->write = sys_write;
         pio->close = sys_close;
+        pio->pending = sys_pending;
+}
+
+
+
+/**
+ * prelude_io_set_socket_io:
+ * @pio: A pointer on the #prelude_io_t object.
+ * @fd: A socket descriptor.
+ *
+ * Setup the @pio object to work with system based I/O function.
+ * The @pio object is then associated with @fd.
+ */
+void prelude_io_set_socket_io(prelude_io_t *pio, int fd) 
+{
+        pio->fd = fd;
+        pio->fd_ptr = NULL;
+        pio->read = sys_read;
+        pio->write = socket_write;
+        pio->close = sys_close;
+        pio->pending = socket_pending;
 }
 
 
@@ -643,17 +776,17 @@ void prelude_io_destroy(prelude_io_t *pio)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * prelude_io_pending:
+ * @pio: Pointer to a #prelude_io_t object.
+ *
+ * prelude_io_pending return the number of bytes waiting to
+ * be read on an SSL or socket fd.
+ *
+ * Returns: Number of byte waiting to be read on @pio, or -1
+ * if @pio is not of type SSL or socket. 
+ */
+ssize_t prelude_io_pending(prelude_io_t *pio)
+{
+        return pio->pending(pio);
+}

@@ -1,4 +1,4 @@
-SUBDIRS = libltdl src sensor-adduser docs
+SUBDIRS = libltdl src sensor-adduser bindings docs
 
 includedir=$(prefix)/libprelude/include
 include_HEADERS=config.h

@@ -48,7 +48,7 @@
 #include "prelude-async.h"
 #include "prelude-auth.h"
 #include "idmef-tree.h"
-#include "idmef-tree-func.h"
+#include "idmef.h"
 #include "sensor.h"
 #include "client-ident.h"
 #include "timer.h"
@@ -75,8 +75,8 @@ static void (*send_heartbeat_cb)(void *data) = NULL;
 /*
  * Analyzer informations
  */
-static idmef_node_t node;
-static idmef_address_t *address;
+static idmef_node_t *analyzer_node;
+static idmef_address_t *node_address = NULL;
 static char *process_name = NULL, *process_path = NULL;
 
 /*
@@ -89,26 +89,18 @@ static prelude_client_mgr_t *manager_list = NULL;
 char *program_name = NULL;
 
 
-static int find_category(const char **tbl, const char *arg) 
-{
-        int i;
-        
-        for ( i = 0; tbl[i] != NULL; i++ ) {
-
-                if ( strcmp(tbl[i], arg) == 0 )                         
-                        return i;
-        }
-        
-        log(LOG_ERR, "unknown category: %s.\n", arg);        
-
-        return -1;
-}
-
-
-
 static int setup_analyzer_node_location(prelude_option_t *opt, const char *arg) 
 {
-        idmef_string_set(&node.location, arg);
+	idmef_string_t *location;
+
+	location = idmef_node_get_location(analyzer_node);
+	if ( ! location ) {
+		log(LOG_ERR, "cannot create node location\n");
+		return prelude_option_error;
+	}
+
+	idmef_string_set_ref(location, arg);
+
         return prelude_option_success;
 }
 
@@ -116,7 +108,16 @@ static int setup_analyzer_node_location(prelude_option_t *opt, const char *arg)
 
 static int setup_analyzer_node_name(prelude_option_t *opt, const char *arg) 
 {
-        idmef_string_set(&node.name, arg);
+	idmef_string_t *name;
+
+	name = idmef_node_get_name(analyzer_node);
+	if ( ! name ) {
+		log(LOG_ERR, "cannot create node name\n");
+		return prelude_option_error;
+	}
+
+	idmef_string_set_ref(name, arg);
+
         return prelude_option_success;
 }
 
@@ -124,104 +125,102 @@ static int setup_analyzer_node_name(prelude_option_t *opt, const char *arg)
 
 static int setup_analyzer_node_address_category(prelude_option_t *opt, const char *arg) 
 {
-        int ret;
-        const char *name[] = {
-                "unknown",
-                "atm",
-                "e-mail",
-                "lotus-notes",
-                "mac",
-                "sna",
-                "vm",
-                "ipv4-addr",
-                "ipv4-addr-hex",
-                "ipv4-net",
-                "ipv4-net-mask",
-                "ipv6-addr",
-                "ipv6-addr-hex",
-                "ipv6-net",
-                "ipv6-net-mask",
-                NULL,
-        };
+	int category;
 
-        ret = find_category(name, arg);
-        if ( ret < 0 )
-                return prelude_option_error;
+	category = idmef_address_category_to_numeric(arg);
+	if ( category < 0 ) {
+		log(LOG_ERR, "unknown address category: %s.\n", arg);
+		return prelude_option_error;
+	}
 
-        address->category = ret;
-        return prelude_option_success;
+	idmef_address_set_category(node_address, category);
+
+	return prelude_option_success;
 }
 
 
 
 static int setup_analyzer_node_address_address(prelude_option_t *opt, const char *arg)
 {
-        idmef_string_set(&address->address, arg);
+        idmef_string_t *address;
+
+	address = idmef_address_get_address(node_address);
+	if ( ! address ) {
+		log(LOG_ERR, "cannot create address address\n");
+		return prelude_option_error;
+	}
+
+	idmef_string_set_ref(address, arg);
+
         return prelude_option_success;
 }
 
 
 static int setup_analyzer_node_address_netmask(prelude_option_t *opt, const char *arg)
 {
-        idmef_string_set(&address->netmask, arg);
+	idmef_string_t *netmask;
+
+	netmask = idmef_address_get_netmask(node_address);
+	if ( ! netmask ) {
+		log(LOG_ERR, "cannot address netmask\n");
+		return prelude_option_error;
+	}
+
+	idmef_string_set_ref(netmask, arg);
+
         return prelude_option_success;
 }
 
 
 static int setup_analyzer_node_category(prelude_option_t *opt, const char *arg) 
 {
-        int ret;
-        const char *name[] = {
-                "unknown",
-                "ads",
-                "afs",
-                "coda",
-                "dfs",
-                "dns",
-                "hosts",
-                "kerberos",
-                "nds",
-                "nis",
-                "nisplus",
-                "nt",
-                "wfw",
-                NULL,
-        };
+        int category;
 
-        ret = find_category(name, arg);
-        if ( ret < 0 )
+        category = idmef_node_category_to_numeric(arg);
+        if ( category < 0 ) {
+		log(LOG_ERR, "unknown node category: %s.\n", arg);
                 return prelude_option_error;
-        
-        node.category = ret;
-        
+	}
+
+	idmef_node_set_category(analyzer_node, category);
+
         return prelude_option_success;
 }
 
 
 static int setup_analyzer_node_address_vlan_num(prelude_option_t *opt, const char *arg) 
 {
-        address->vlan_num = atoi(arg);
+	idmef_address_set_vlan_num(node_address, atoi(arg));
         return prelude_option_success;
 }
 
 
 
 static int setup_analyzer_node_address_vlan_name(prelude_option_t *opt, const char *arg) 
-{        
-        idmef_string_set(&address->vlan_name, arg);
+{
+	idmef_string_t *vlan_name;
+
+	vlan_name = idmef_address_new_vlan_name(node_address);
+	if ( ! vlan_name ) {
+		log(LOG_ERR, "cannot create address vlan_name\n");
+		return prelude_option_error;
+	}
+
+	idmef_string_set_ref(vlan_name, arg);
+
         return prelude_option_success;
 }
 
 
 static int setup_address(prelude_option_t *opt, const char *arg) 
 {  
-        address = calloc(1, sizeof(*address));
-        if ( ! address ) {
+        node_address = idmef_address_new();
+        if ( ! node_address ) {
                 log(LOG_ERR, "memory exhausted.\n");
                 return prelude_option_error;
         }
-        
-        list_add_tail(&address->list, &node.address_list);
+
+	idmef_node_set_address(analyzer_node, node_address);
 
         return prelude_option_success;
 }
@@ -397,26 +396,22 @@ static int parse_argument(const char *filename, int argc, char **argv, int type)
  */
 int prelude_sensor_init(const char *sname, const char *filename, int argc, char **argv)
 {
-        int ret;
-        
-        memset(&node, 0, sizeof(node));
-        memset(&address, 0, sizeof(address));
-        INIT_LIST_HEAD(&node.address_list);
-        
+	analyzer_node = idmef_node_new();
+	if ( ! analyzer_node ) {
+		log(LOG_ERR, "cannot create analyzer node\n");
+		return -1;
+	}
+
         if ( ! sname ) {
                 errno = EINVAL;
                 return -1;
         }
 
         get_process_name(argc, argv);
-        
+
         prelude_set_program_name(sname);
 
-        ret = parse_argument(filename, argc, argv, PRELUDE_CLIENT_TYPE_SENSOR);
-        if ( ret == prelude_option_end || ret == prelude_option_error )
-                return ret;
-
-        return ret;
+        return parse_argument(filename, argc, argv, PRELUDE_CLIENT_TYPE_SENSOR);
 }
 
 
@@ -534,64 +529,102 @@ void prelude_heartbeat_register_cb(void (*cb)(void *data), void *data)
 
 int prelude_analyzer_fill_infos(idmef_analyzer_t *analyzer) 
 {
-        int ret;
-        struct list_head *tmp;
         static struct utsname uts;
-        idmef_address_t *cur, *new;
+	idmef_process_t *process;
+	idmef_node_t *node;
+        idmef_address_t *address_ptr, *address_new;
+	idmef_string_t *ostype_string;
+	idmef_string_t *osversion_string;
+
+	/*
+	 * FIXME: workaround for compatibility with prelude-nids & prelude-lml
+	 * we want to be sure that analyzerid is always present
+	 */
+
+	idmef_analyzer_set_analyzerid(analyzer, prelude_client_get_analyzerid());
         
-        ret = uname(&uts);
-        if ( ret < 0 ) {
+        if ( uname(&uts) < 0 ) {
                 log(LOG_ERR, "uname returned an error.\n");
                 return -1;
         }
 
-        analyzer->process = calloc(1, sizeof(*analyzer->process));
-        if ( ! analyzer->process ) {
-                log(LOG_ERR, "memory exhausted.\n");
+	process = idmef_analyzer_new_process(analyzer);
+        if ( ! process ) {
+                log(LOG_ERR, "cannot create process field of analyzer\n");
                 return -1;
         }
         
-        INIT_LIST_HEAD(&analyzer->process->arg_list);
-        INIT_LIST_HEAD(&analyzer->process->env_list);
-        
-        analyzer->node = calloc(1, sizeof(*analyzer->node));
-        if ( ! analyzer->node ) {
-                log(LOG_ERR, "memory exhausted.\n");
+        node = idmef_analyzer_new_node(analyzer);
+        if ( ! node ) {
+                log(LOG_ERR, "cannot create node field of analyzer\n");
                 return -1;
         }
-        
-        idmef_string_set(&analyzer->ostype, uts.sysname);
-        idmef_string_set(&analyzer->osversion, uts.release);
-        
-        analyzer->process->pid = getpid();
 
-        if ( process_name )
-                idmef_string_set(&analyzer->process->name, process_name);
+	ostype_string = idmef_analyzer_new_ostype(analyzer);
+	if ( ! ostype_string ) {
+		log(LOG_ERR, "cannot create ostype field of analyzer\n");
+		return -1;
+	}
+	idmef_string_set_ref(ostype_string, uts.sysname);
 
-        if ( process_path )
-                idmef_string_set(&analyzer->process->path, process_path);
+	osversion_string = idmef_analyzer_new_osversion(analyzer);
+	if ( ! osversion_string ) {
+		log(LOG_ERR, "cannot create osversion field of analyzer\n");
+		return -1;
+	}
+	idmef_string_set_ref(osversion_string, uts.release);
 
-        /*
+	idmef_process_set_pid(process, getpid());
+
+        if ( process_name ) {
+		idmef_string_t *name_string;
+
+		name_string = idmef_process_new_name(process);
+		if ( ! name_string ) {
+			log(LOG_ERR, "cannot create name field of process\n");
+			return -1;
+		}
+                idmef_string_set_ref(name_string, process_name);
+	}
+
+        if ( process_path ) {
+		idmef_string_t *path_string;
+
+		path_string = idmef_process_new_path(process);
+		if ( ! path_string ) {
+			log(LOG_ERR, "cannot create path field of process\n");
+			return -1;
+		}
+                idmef_string_set_ref(path_string, process_path);
+	}
+
+	/*
          * As the sensor may call idmef_message_free(),
          * and call this function again, we have to copy all the data.
          */
-        memcpy(analyzer->node, &node, sizeof(node));
-        INIT_LIST_HEAD(&analyzer->node->address_list);
-        
-        list_for_each(tmp, &node.address_list) {
-                cur = list_entry(tmp, idmef_address_t, list);
+	/*
+	 * FIXME: this part will be rewritten using refcount when it will be
+	 * implemented in idmef-tree-wrap
+	 */
+	
+	if ( analyzer_node ) {
 
-                new = calloc(1, sizeof(*new));
-                if ( ! new ) {
-                        log(LOG_ERR, "memory exhausted.\n");
-                        return -1;
-                }
+		memcpy(node, analyzer_node, sizeof(*node));
+		INIT_LIST_HEAD(&node->address_list);
 
-                memcpy(new, cur, sizeof(*new));
-                list_add_tail(&new->list, &analyzer->node->address_list);
-        }
-        
+		address_ptr = NULL;
+		while ( (address_ptr = idmef_node_get_next_address(node, address_ptr)) ) {
+
+			address_new = calloc(1, sizeof(*address_new));
+			if ( ! address_new ) {
+				log(LOG_ERR, "memory exhausted.\n");
+				return -1;
+			}
+
+			memcpy(address_new, address_ptr, sizeof(*address_new));
+			idmef_node_set_address(node, address_new);
+		}
+	}
+
         return 0;
 }
-
-

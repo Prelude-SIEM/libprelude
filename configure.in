@@ -6,7 +6,28 @@ AC_CONFIG_SRCDIR([src])
 
 AC_PREREQ(2.53)
 AC_CANONICAL_TARGET([])
-AM_INIT_AUTOMAKE(libprelude, 0.8.7)
+
+libprelude_major=0
+libprelude_minor=8
+libprelude_micro=10
+
+dnl version and release information
+libprelude_version=$libprelude_major.$libprelude_minor.$libprelude_micro
+
+
+dnl library soname 
+dnl check http://sources.redhat.com/autobook/autobook/autobook_91.html#SEC91
+libprelude_current=1
+libprelude_revision=0
+libprelude_age=1
+
+libprelude_soname=$libprelude_current:$libprelude_revision:$libprelude_age
+
+AC_SUBST(libprelude_soname)
+ 
+AM_INIT_AUTOMAKE(libprelude, $libprelude_version)
+
+
 AM_CONFIG_HEADER(config.h)
 AM_DISABLE_STATIC
 
@@ -32,6 +53,9 @@ AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 AC_C_INLINE
 
+AM_PROG_LEX
+AC_PROG_YACC
+
 
 AC_C_BIGENDIAN(libprelude_cflags="$libprelude_cflags -DWORDS_BIGENDIAN")
 
@@ -43,6 +67,7 @@ AC_SUBST(pthread_cflags)
 AC_SUBST(libprelude_libs)
 AC_SUBST(libprelude_cflags)
 
+AC_CHECK_FUNCS(strndup)
 
 dnl **************************************************
 dnl * Check for crypt library                        *
@@ -303,6 +328,87 @@ if test $ac_cv_lbl_unaligned_fail = yes ; then
 fi
 
 
+dnl **************************************************
+dnl * Perl support                                   *
+dnl **************************************************
+
+AC_CHECK_PROG(PERL, perl, true, false)
+
+if $PERL; then
+    PERL_CFLAGS="-I`perl -e 'use Config; print $Config{archlib}'`/CORE"
+    AC_CHECK_PROG(SWIG, swig, true, false)
+    if $SWIG; then
+	(cd bindings/perl && ./generate.sh)
+    fi
+fi
+
+AC_ARG_ENABLE(perl, [  --enable-perl  Enable Perl binding [default=auto]], enable_perl="$enableval", enable_perl=auto)
+
+if test x$enable_perl = xauto; then
+    if $PERL; then
+	enable_perl=yes
+    else
+	enable_perl=no
+    fi
+fi
+
+perl_privlib=`perl -e 'use Config; print $Config{privlib}'`
+
+if test -w $perl_privlib; then
+    perl_dir=$perl_privlib
+else
+    perl_dir=$libdir/libprelude/bindings/perl
+fi
+
+AM_CONDITIONAL(HAVE_PERL, test x$enable_perl = xyes)
+AC_SUBST(PERL_CFLAGS)
+AC_SUBST(perl_dir)
+
+
+dnl **************************************************
+dnl * Python support                                 *
+dnl **************************************************
+
+AC_CHECK_PROG(PYTHON, python, true, false)
+
+dnl if $PYTHON; then
+dnl     PERL_CFLAGS="-I`perl -e 'use Config; print $Config{archlib}'`/CORE"
+dnl     AC_CHECK_PROG(SWIG, swig, true, false)
+dnl     if $SWIG; then
+dnl 	(cd bindings/perl && ./generate.sh)
+dnl     fi
+dnl fi
+
+AC_ARG_ENABLE(python, [  --enable-python  Enable Python binding [default=auto]], enable_python="$enableval", enable_python=auto)
+
+if test x$enable_python = xauto; then
+    if $PYTHON; then
+	enable_python=yes
+    else
+	enable_python=no
+    fi
+fi
+
+python_lib_path=`python -c '
+from distutils.sysconfig import get_python_lib
+print get_python_lib()
+'`
+
+PYTHON_CFLAGS=-I`python -c '
+from distutils.sysconfig import get_python_inc
+print get_python_inc()
+'`
+
+if test -w $python_lib_path; then
+    python_dir=$python_lib_path
+else
+    python_dir=$libdir/libprelude/bindings/python
+fi
+
+AM_CONDITIONAL(HAVE_PYTHON, test x$enable_python = xyes)
+AC_SUBST(PYTHON_CFLAGS)
+AC_SUBST(python_dir)
+
 
 dnl **************************************************
 dnl * Check for GTK-DOC                              *
@@ -385,6 +491,10 @@ sensor-adduser/Makefile
 docs/Makefile
 docs/api/Makefile
 
+bindings/Makefile
+bindings/perl/Makefile
+bindings/python/Makefile
+
 ])
 AC_CONFIG_COMMANDS([default],[[ chmod +x libprelude-config ]],[[]])
 AC_OUTPUT
@@ -394,12 +504,5 @@ echo
 echo "*** Dumping configuration ***"
 echo "    - Use OpenSSL            : $enable_openssl"
 echo "    - Generate documentation : $enable_gtk_doc"
-
-
-
-
-
-
-
-
-
+echo "    - Perl binding           : $enable_perl"
+echo "    - Python binding         : $enable_python"

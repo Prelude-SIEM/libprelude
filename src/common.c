@@ -159,7 +159,7 @@ int prelude_open_persistant_tmpfile(const char *filename, int flags, mode_t mode
                 return open(filename, O_CREAT | flags, mode);
         
         else if ( S_ISLNK(st.st_mode) ) {
-                log(LOG_INFO, "symlink attack detected. Overriding.\n");
+                log(LOG_INFO, "- symlink attack detected for %s. Overriding.\n", filename);
                 
                 ret = unlink(filename);
                 if ( ret < 0 ) {

@@ -41,6 +41,18 @@
 #include "config-engine.h"
 
 
+typedef struct 
+{
+        int count;
+        int argc;
+        char **argv;
+        int (*subscribe)(plugin_container_t *pc);
+        void (*unsubscribe)(plugin_container_t *pc);
+
+} libltdl_data_t;
+
+
+
 typedef struct {
         void *handle;
         struct list_head list;
@@ -112,7 +124,8 @@ static void delete_container(plugin_entry_t *entry)
                 
                 pc = list_entry(tmp, plugin_container_t, int_list);
 
-                entry->unsubscribe(pc);
+                if ( entry->unsubscribe )
+                        entry->unsubscribe(pc);
 
                 list_del(&pc->int_list);
                 free(pc);
@@ -173,23 +186,6 @@ static plugin_container_t *copy_container(plugin_container_t *pc)
 
 
 
-static int is_plugin_already_loaded(void *handle) 
-{
-        plugin_entry_t *pe;
-        struct list_head *tmp;
-
-        list_for_each(tmp, &all_plugin){
-
-                pe = list_entry(tmp, plugin_entry_t, list);
-                if ( pe->handle == handle ) 
-                        return 0;
-        }
-
-        return -1;
-}
-
-
-
 
 /*
  * Load a single plugin pointed to by 'filename'.
@@ -209,17 +205,6 @@ static int plugin_load_single(const char *filename, int argc, char **argv,
                 return -1;
         }
 
-        /*
-         * As there is often several file associated with a libtool plugin
-         * (from which the plugin can be loaded), and because libtool load
-         * the one that suit it best (for sake of compatibility), we have
-         * to check if we do not already have an handle for this plugin.
-         */
-        if ( is_plugin_already_loaded(handle) == 0 ) {
-                lt_dlclose(handle);
-                return -1;
-        }
-        
         init = lt_dlsym(handle, "plugin_init");
         if ( ! init ) {
                 log(LOG_INFO, "couldn't load %s : %s.\n", filename, lt_dlerror());
@@ -253,6 +238,19 @@ static int plugin_load_single(const char *filename, int argc, char **argv,
 
 
 
+static int libltdl_load_cb(const char *filename, lt_ptr ptr)
+{
+        int ret;
+        libltdl_data_t *data = ptr;
+
+        ret = plugin_load_single(filename, data->argc, data->argv, data->subscribe, data->unsubscribe);
+        if ( ret == 0 )
+                data->count++;
+
+        return 0;
+}
+
+
 
 /**
  * plugin_load_from_dir:
@@ -278,47 +276,24 @@ int plugin_load_from_dir(const char *dirname, int argc, char **argv,
                          int (*subscribe)(plugin_container_t *p),
                          void (*unsubscribe)(plugin_container_t *pc)) 
 {
-        DIR *dir;
-        struct dirent *d;
-        int ret, count = 0;
-        char filename[1024], *ptr;
-               
+        int ret;
+        libltdl_data_t data;
+        
         ret = lt_dlinit();
         if ( ret < 0 ) {
                 log(LOG_ERR, "error initializing libltdl.\n");
                 return -1;
         }
 
-        dir = opendir(dirname);
-        if ( ! dir ) {
-                log(LOG_ERR, "couldn't open directory %s.\n", dirname);
-                return -1;
-        }
+        data.count = 0;
+        data.argc = argc;
+        data.argv = argv;
+        data.subscribe = subscribe;
+        data.unsubscribe = unsubscribe;
         
-        while ( ( d = readdir(dir) ) ) {
-
-                if ( strcmp(d->d_name, ".") == 0 || strcmp(d->d_name, "..") == 0 )
-                        continue;
-                
-                ptr = strrchr(d->d_name, '.');
-                if ( ! ptr )
-                        continue;
-
-                /*
-                 * strip out the extension,
-                 * libtool will try different extension depending on the architecture.
-                 */
-                *ptr = '\0';
-                snprintf(filename, sizeof(filename), "%s/%s", dirname, d->d_name);
-                
-                ret = plugin_load_single(filename, argc, argv, subscribe, unsubscribe);                
-                if ( ret == 0 )
-                        count++;
-        }
-
-        closedir(dir);
+        lt_dlforeachfile(dirname, libltdl_load_cb, &data);
         
-        return count;
+        return data.count;
 }
 
 
@@ -396,8 +371,9 @@ int plugin_subscribe(plugin_generic_t *plugin)
                 pc = create_container(pe, plugin);
                 if ( ! pc )
                         return -1;
-                
-                pe->subscribe(pc);
+
+                if ( pe->subscribe )
+                        pe->subscribe(pc);
 
                 return 0;
         }
@@ -507,7 +483,7 @@ void plugins_print_stats(void)
         plugin_entry_t *pe;
         plugin_container_t *pc;
         struct list_head *tmp, *tmp2;
-        
+
         log(LOG_INFO, "*** Plugin stats (not accurate if used > 2e32-1 times) ***\n\n");
         
         list_for_each(tmp, &all_plugin) {
