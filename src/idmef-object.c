@@ -99,7 +99,7 @@ static int initialize_object_cache_if_needed(void)
         if ( cached_objects )
                 return 0;
                         
-        cached_objects = prelude_hash_new(NULL, NULL, NULL, NULL);
+        cached_objects = prelude_hash_new(NULL, NULL, NULL, (void *) idmef_object_destroy);
         if ( ! cached_objects ) 
                 return -1;
 
@@ -666,7 +666,7 @@ void idmef_object_destroy(idmef_object_t *object)
 	pthread_mutex_lock(&object->mutex);
 
 	if ( --object->refcount ) {
-		pthread_mutex_unlock(&object->mutex);
+                pthread_mutex_unlock(&object->mutex);
 	    	return;
 	}
 
@@ -855,4 +855,14 @@ int idmef_object_has_lists(idmef_object_t *object)
 	}
 	
 	return ret;
+}
+
+
+
+void _idmef_object_cache_destroy(void)
+{
+        if ( ! cached_objects )
+                return;
+
+        prelude_hash_destroy(cached_objects);
 }

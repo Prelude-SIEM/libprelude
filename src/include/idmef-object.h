@@ -71,4 +71,6 @@ int idmef_object_is_ambiguous(idmef_object_t *object);
 
 int idmef_object_has_lists(idmef_object_t *object);
 
+void _idmef_object_cache_destroy(void);
+
 #endif /* _LIBPRELUDE_IDMEF_OBJECT_H */
