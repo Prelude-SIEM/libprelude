@@ -187,6 +187,7 @@ class Option:
         else:
             self.instance = False
         self.boolean = _prelude.prelude_option_get_has_arg(option) == _prelude.PRELUDE_OPTION_ARGUMENT_NONE
+        self.value_required = bool(_prelude.prelude_option_get_has_arg(option) & _prelude.PRELUDE_OPTION_ARGUMENT_REQUIRED)
         self.value = _prelude.prelude_option_get_value(option)
         self.description = _prelude.prelude_option_get_description(option)
         self.options = [ ]
