@@ -218,7 +218,7 @@ prelude_string_t *prelude_string_new_nodup_fast(char *str, size_t len)
         ret->size = len + 1;
         ret->data.rwbuf = str;
 
-        ret->flags |= PRELUDE_STRING_OWN_DATA;
+        ret->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
         
         return ret;
 }
@@ -295,8 +295,7 @@ int prelude_string_set_nodup_fast(prelude_string_t *string, char *buf, size_t le
         string->size = len + 1;
         string->data.rwbuf = buf;
         
-        string->flags |= PRELUDE_STRING_OWN_DATA;
-        string->flags &= ~PRELUDE_STRING_CAN_REALLOC;
+        string->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
 
         return 0;       
 }
@@ -428,6 +427,12 @@ char *prelude_string_get_string_released(prelude_string_t *string)
 {
         char *ptr;
 
+        if ( ! string->index )
+                return NULL;
+
+        if ( ! (string->flags & PRELUDE_STRING_CAN_REALLOC) )
+                return strdup(string->data.robuf);
+        
         ptr = prelude_realloc(string->data.rwbuf, string->index + 1);
         if ( ! ptr )
                 return NULL;
