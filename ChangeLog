@@ -1,3 +1,16 @@
+2002-06-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/sensor.c (prelude_heartbeat_register_cb): 
+	don't initialize timer and send initial heartbeat if
+	heartbeat_repeat_time is 0.
+
+2002-06-03  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* sensor-adduser/ssl-register.c (send_own_certificate): 
+	remove certificate in case of error.
+	(recv_manager_certificate): ditto.
+	(ssl_add_certificate): ditto.
+
 2002-06-01  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/sensor.c (parse_argument): 

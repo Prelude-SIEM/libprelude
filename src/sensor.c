@@ -305,6 +305,9 @@ void prelude_heartbeat_register_cb(void (*cb)(void *data), void *data)
 {
         heartbeat_data = data;
         send_heartbeat_cb = cb;
+
+        if ( heartbeat_repeat_time == 0 )
+                return;
         
         timer_set_callback(&heartbeat_timer, heartbeat_timer_expire);
         timer_set_expire(&heartbeat_timer, heartbeat_repeat_time);

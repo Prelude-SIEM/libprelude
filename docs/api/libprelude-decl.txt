@@ -496,6 +496,16 @@ prelude_msgbuf_t *msg, idmef_analyzer_t *analyzer
 prelude_msgbuf_t *msg, idmef_time_t *time
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_send_detect_time</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msgbuf_t *msg, idmef_time_t *time
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_send_analyzer_time</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msgbuf_t *msg, idmef_time_t *time
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_send_classification</NAME>
 <RETURNS>void  </RETURNS>
 prelude_msgbuf_t *msg, idmef_classification_t *classification
@@ -1155,6 +1165,16 @@ const char *sname
 void (*cb)(struct list_head *clist)
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_heartbeat_register_cb</NAME>
+<RETURNS>void  </RETURNS>
+void (*cb)(void *data), void *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_heartbeat_send</NAME>
+<RETURNS>int  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_ssl_gen_crypto</NAME>
 <RETURNS>int  </RETURNS>
 int keysize, int expire, const char *keyout, int crypt, uid_t uid
@@ -1472,12 +1492,6 @@ idmef_additional_data_t *data
 } while (0)
 </MACRO>
 <MACRO>
-<NAME>idmef_data_set</NAME>
-#define idmef_data_set(ad, dptr, len) do {                 \
-        (ad)->data = dptr; (ad)->dlen = (len);             \
-} while (0)
-</MACRO>
-<MACRO>
 <NAME>IDMEF_VERSION</NAME>
 #define IDMEF_VERSION "0.6"
 </MACRO>
@@ -1529,12 +1543,7 @@ typedef struct {
         idmef_additional_data_type_t type;
         idmef_string_t meaning;
 
-        /*
-         * this is the same as idmef_string_t,
-         * except we use a void... Doing that to not
-         * break the API...
-         */
-        uint16_t len;
+        uint32_t dlen;
         const void *data;
         
 } idmef_additional_data_t;
@@ -2794,4 +2803,9 @@ prelude_io_t *fd, int client_type
 <NAME>prelude_client_ident_init</NAME>
 <RETURNS>int  </RETURNS>
 const char *sname
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_set_analyzer_id</NAME>
+<RETURNS>void  </RETURNS>
+uint64_t id
 </FUNCTION>
