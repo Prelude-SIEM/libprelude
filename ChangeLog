@@ -1,3 +1,8 @@
+2004-01-05  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/prelude-getopt.c (call_option_from_cb_list): 
+	don't leak value returned by lookup_variable_if_needed().
+
 2004-01-02  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
 	* bindings/python/prelude.py:

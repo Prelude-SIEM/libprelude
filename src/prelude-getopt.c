@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001-2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -352,6 +352,7 @@ static int call_option_cb(struct list_head *cblist, prelude_option_t *option, co
 
 static int call_option_from_cb_list(struct list_head *cblist, int option_kind) 
 {
+        char *str;
         struct cb_list *cb;
         struct list_head *tmp, *bkp;
         int ret = prelude_option_success;
@@ -362,8 +363,11 @@ static int call_option_from_cb_list(struct list_head *cblist, int option_kind)
 
                 if ( option_kind != option_run_all && option_kind != cb->option->priority ) 
                         continue;
-                
-                ret = cb->option->set(cb->option, lookup_variable_if_needed(cb->arg));
+
+                ret = cb->option->set(cb->option, (str = lookup_variable_if_needed(cb->arg)));
+                if ( str )
+                        free(str);
+
                 if ( ret == prelude_option_error || ret == prelude_option_end )
                         return ret;
 
