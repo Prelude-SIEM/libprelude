@@ -209,6 +209,9 @@ static ssize_t tls_read(prelude_io_t *pio, void *buf, size_t count)
                 ret = gnutls_record_recv(pio->fd_ptr, buf, count);
 
         } while ( ret < 0 && (ret = tls_check_error(pio, ret)) == 0 );
+
+        if ( ret == 0 )
+                return prelude_error(PRELUDE_ERROR_EOF);
         
         return ret;
 }
