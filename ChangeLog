@@ -1,5 +1,10 @@
 2002-02-07  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/prelude-client.c (read_plaintext_authentication_result): 
+	call auth_error() in case of failure authenticating. So that
+	the user know what to do.
+	(auth_error): call exit() here.
+
 	* src/prelude-path.c (prelude_set_program_name): 
 	store userID if not already set.
 	(prelude_set_program_userid): new function.

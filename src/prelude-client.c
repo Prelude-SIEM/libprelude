@@ -89,6 +89,8 @@ static void auth_error(prelude_client_t *client, const char *auth_kind)
             "sensor-adduser --sensorname %s --uid %d --manager-addr %s\n"
             "program on the sensor host to create an account for this sensor.\n\n",
             auth_kind, prelude_get_sensor_name(), getuid(), client->daddr);
+
+        exit(1);
 }
 
 
@@ -206,7 +208,7 @@ static int inet_connect(prelude_client_t *client)
 
 
 
-static int read_plaintext_authentication_result(prelude_io_t *fd) 
+static int read_plaintext_authentication_result(prelude_client_t *client)
 {
         int ret;
         void *buf;
@@ -214,7 +216,7 @@ static int read_plaintext_authentication_result(prelude_io_t *fd)
         uint32_t dlen;
         prelude_msg_t *msg = NULL;
 
-        ret = prelude_msg_read(&msg, fd);
+        ret = prelude_msg_read(&msg, client->fd);
         if ( ret <= 0 ) {
                 log(LOG_ERR, "error reading authentication result.\n");
                 return -1;
@@ -234,7 +236,8 @@ static int read_plaintext_authentication_result(prelude_io_t *fd)
         }
         
         log(LOG_INFO, "Plaintext authentication failed with Prelude Manager.\n");
-
+        auth_error(client, "Plaintext");
+        
         return -1;
 }
 
@@ -258,7 +261,6 @@ static int handle_plaintext_connection(prelude_client_t *client, int sock)
                  * the user it have to create it and exit.
                  */
                 auth_error(client, "Plaintext");
-                exit(1);
         }
 
         /*
@@ -290,7 +292,7 @@ static int handle_plaintext_connection(prelude_client_t *client, int sock)
         free(user);
         free(pass);
 
-        return read_plaintext_authentication_result(client->fd);
+        return read_plaintext_authentication_result(client);
 }
 
 
@@ -312,7 +314,6 @@ static int handle_ssl_connection(prelude_client_t *client, int sock)
                           * use how to create them and exit.
                           */
                         auth_error(client, "SSL");
-                        exit(1);
                 }
                 
                 ssl_initialized = 1;
@@ -338,7 +339,6 @@ static int handle_ssl_connection(prelude_client_t *client, int sock)
                  * tell the user how to setup SSL auth and exit.
                  */
                 auth_error(client, "SSL");
-                exit(1);
         }
         
         prelude_io_set_ssl_io(client->fd, ssl);
