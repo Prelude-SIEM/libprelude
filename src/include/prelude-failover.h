@@ -26,8 +26,6 @@
 
 typedef struct prelude_failover prelude_failover_t;
 
-int prelude_failover_flush(prelude_failover_t *failover, prelude_io_t *out);
-
 void prelude_failover_destroy(prelude_failover_t *failover);
 
 prelude_failover_t *prelude_failover_new(const char *dirname);
