@@ -81,6 +81,7 @@ static int send_own_certificate(prelude_io_t *pio, des_key_schedule *skey1,
         ret = prelude_ssl_send_cert(pio, filename, skey1, skey2);
         if ( ret < 0 ) {
                 fprintf(stderr, "Error sending certificate.\n");
+                unlink(filename);
                 return -1;
         }
         
@@ -102,7 +103,8 @@ static int recv_manager_certificate(prelude_io_t *pio, des_key_schedule *skey1,
         
         len = prelude_io_read_delimited(pio, (void **)&buf);
         if ( len <= 0 ) {
-                fprintf(stderr, "Error receiving registration message\n");
+                fprintf(stderr, "Error receiving registration message.\n"
+                        "Perhaps you provided the wrong one shot password ?\n");
                 return -1;
         }
         
@@ -136,12 +138,14 @@ static int recv_manager_certificate(prelude_io_t *pio, des_key_schedule *skey1,
 	len = build_install_msg(&ackbuf, buf, ACKMSGLEN, skey1, skey2);
 	if ( len <= 0 ) {
 		fprintf(stderr, "Error building message - Registration failed.\n");
+                unlink(filename);
                 return -1;
 	}
         
         ret = prelude_io_write_delimited(pio, buf, len);
         if ( ret < 0 ) {
                 fprintf(stderr, "Error sending registration message.\n");
+                unlink(filename);
                 return -1;
         }
         
@@ -210,6 +214,7 @@ static int tell_ssl_usage(prelude_io_t *fd)
 int ssl_add_certificate(prelude_io_t *fd, char *pass, size_t size, uid_t uid)
 {
 	int ret;
+        char filename[1024];
         int keysize, expire;
         des_cblock pre1, pre2;
 	des_key_schedule skey1, skey2;
@@ -246,6 +251,11 @@ int ssl_add_certificate(prelude_io_t *fd, char *pass, size_t size, uid_t uid)
         ret = recv_manager_certificate(fd, &skey1, &skey2, uid);
         if ( ret < 0 ) {
                 fprintf(stderr, "Error receiving Manager certificate - Registration failed.\n");
+                /*
+                 * delete certificate we created...
+                 */
+                prelude_get_ssl_key_filename(filename, sizeof(filename));
+                unlink(filename);
                 return -1;
         }
         
