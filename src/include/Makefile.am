@@ -4,8 +4,6 @@ include_HEADERS = config-engine.h 		\
 		  idmef-message-id.h		\
 		  idmef-tree.h			\
 		  idmef-tree-func.h		\
-		  idmef-util.h			\
-		  ntp.h				\
 		  idmef-msg-send.h		\
 		  plugin-common.h		\
 		  plugin-common-prv.h		\
