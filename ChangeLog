@@ -1,3 +1,8 @@
+2001-11-16  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/include/idmef-tree.h: IDMEF structure.
+	* src/include/idmef-message-id.h: ID for IDMEF based message.
+
 2001-11-10  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-message.c: 
