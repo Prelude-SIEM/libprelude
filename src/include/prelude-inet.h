@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2003, 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -31,71 +31,8 @@
 
 #include "config.h"
 
-
-/*
- * inet_ntop() error return
- */
-#ifndef EAFNOSUPPORT
- #define EAFNOSUPPORT -2
-#endif
-
-#ifndef ENOSPC
- #define ENOSPC -3
-#endif
-
-
-/*
- * getaddrinfo() error return
- */
-#ifndef EAI_FAMILY
- #define EAI_FAMILY -1
-#endif
-
-#ifndef EAI_SOCKTYPE
- #define EAI_SOCKTYPE -2
-#endif
-
-#ifndef EAI_BADFLAGS
- #define EAI_BADFLAGS -3
-#endif
-
-#ifndef EAI_NONAME
- #define EAI_NONAME -4
-#endif
-
-#ifndef EAI_SERVICE
- #define EAI_SERVICE -5
-#endif
-
-#ifndef EAI_ADDRFAMILY
- #define EAI_ADDRFAMILY -6
-#endif
-
-#ifndef EAI_NODATA
- #define EAI_NODATA -7
-#endif
-
-#ifndef EAI_MEMORY
- #define EAI_MEMORY -8
-#endif
-
-#ifndef EAI_FAIL
- #define EAI_FAIL -9
-#endif
-
-#ifndef EAI_EAGAIN
- #define EAI_EAGAIN -10
-#endif
-
-#ifndef EAI_SYSTEM
- #define EAI_SYSTEM -11
-#endif
-
-
 #ifndef MISSING_GETADDRINFO
-
  typedef struct addrinfo prelude_addrinfo_t;
-
 #else
 
 typedef struct prelude_addrinfo {

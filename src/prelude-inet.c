@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2003, 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -37,6 +37,18 @@
 #include "prelude-inet.h"
 
 
+#define PRELUDE_INET_EAI_FAMILY     -1
+#define PRELUDE_INET_EAI_SOCKTYPE   -2
+#define PRELUDE_INET_EAI_BADFLAGS   -3
+#define PRELUDE_INET_EAI_NONAME     -4
+#define PRELUDE_INET_EAI_SERVICE    -5
+#define PRELUDE_INET_EAI_ADDRFAMILY -6
+#define PRELUDE_INET_EAI_NODATA     -7
+#define PRELUDE_INET_EAI_MEMORY     -8
+#define PRELUDE_INET_EAI_FAIL       -9
+#define PRELUDE_INET_EAI_EAGAIN     -10
+#define PRELUDE_INET_EAI_SYSTEM     -11
+
 
 #ifndef INADDR_LOOPBACK
  #define INADDR_LOOPBACK        ((uint32_t) 0x7f000001) /* Inet 127.0.0.1.  */
@@ -70,7 +82,7 @@ static int addrinfo_new(int flags, const char *host, struct in_addr *addr, uint1
         new = calloc(1, sizeof(*new));
         if ( ! new ) {
                 log(LOG_ERR, "memory exhausted.\n");
-                return EAI_MEMORY;
+                return PRELUDE_INET_EAI_MEMORY;
         }
 
         new->ai_next = NULL;
@@ -80,13 +92,15 @@ static int addrinfo_new(int flags, const char *host, struct in_addr *addr, uint1
         if ( flags & AI_CANONNAME ) {
                 new->ai_canonname = strdup(host);
                 if ( ! new->ai_canonname )
-                        return EAI_MEMORY;
+                        return PRELUDE_INET_EAI_MEMORY;
         }
 
         sin = malloc(sizeof(struct sockaddr_in));
-        if ( ! sin ) 
-                return EAI_MEMORY;
-
+        if ( ! sin ) {
+                free(new);
+                return PRELUDE_INET_EAI_MEMORY;
+        }
+        
         sin->sin_family = AF_INET;
         sin->sin_port = htons(port);
         new->ai_addr = (struct sockaddr *) sin;
@@ -108,7 +122,7 @@ static int getaddrinfo_compat(int flags, const char *host, const char *service, 
         
         h = gethostbyname(host);
         if ( ! h )
-                return EAI_NONAME;
+                return PRELUDE_INET_EAI_NONAME;
 
         if ( service )
                 dport = atoi(service);
@@ -170,7 +184,7 @@ static const char *gai_strerror_compat(int errcode)
 
         key = 0 - errcode - 1;
         if ( key >= (sizeof(tbl) / sizeof(char *)) ) 
-                return NULL;
+                return "Unknown error";
         
         return tbl[key];
 }
