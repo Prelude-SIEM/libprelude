@@ -108,6 +108,7 @@ sub new($$)
 
     $self->{client} = undef;
     $self->{msgbuf} = undef;
+    $self->{exit_status} = $Prelude::PRELUDE_CLIENT_EXIT_STATUS_FAILURE;
 
     if ( ! $config ) {
 	$config = `libprelude-config --prefix`;
@@ -197,12 +198,22 @@ sub send_alert
     return 1;    
 }
 
+sub set_success
+{
+    (shift)->{exit_status} = $Prelude::PRELUDE_EXIT_STATUS_SUCCESS;
+}
+
+sub set_failure
+{
+    (shift)->{exit_status} = $Prelude::PRELUDE_EXIT_STATUS_FAILURE;
+}
+
 sub DESTROY
 {
     my $self = shift;
 
     Prelude::prelude_msgbuf_close($self->{msgbuf}) if ( $self->{msgbuf} );
-    Prelude::prelude_client_destroy($self->{client}) if ( $self->{client} );
+    Prelude::prelude_client_destroy($self->{client}, $self->{exit_status}) if ( $self->{client} );
 }
 
 

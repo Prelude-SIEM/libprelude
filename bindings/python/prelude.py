@@ -97,6 +97,7 @@ class Client:
     def __init__(self, capability, name=None, config=None):
         self._client = None
         self._msgbuf = None
+        self._exit_status = _prelude.PRELUDE_CLIENT_EXIT_STATUS_FAILURE
         
         if not name:
             name = sys.argv[0]
@@ -114,6 +115,12 @@ class Client:
             self._msgbuf = _prelude.prelude_msgbuf_new(self._client)
             if not self._msgbuf:
                 raise ClientError()
+
+    def set_success(self):
+        self._exit_status = _prelude.PRELUDE_CLIENT_EXIST_STATUS_SUCCESS
+
+    def set_failure(self):
+        self._exit_status = _prelude.PRELUDE_CLIENT_EXIST_STATUS_FAILURE
         
     def __del__(self):
         #print "Client.__del__"
