@@ -117,14 +117,23 @@ static int normal_close(prelude_io_t *pio)
  */
 static ssize_t copy_forward(prelude_io_t *dst, prelude_io_t *src, size_t count) 
 {
-        int ret;
-        unsigned char buf[count];
+        int ret, n;
+        unsigned char buf[8192];
+        
+        while ( count ) {
+                
+                n = (count < sizeof(buf)) ? count : sizeof(buf);
+                
+                ret = prelude_io_read(src, buf, n);
+                if ( ret <= 0 )
+                        return -1;
 
-        ret = prelude_io_read(src, buf, count);
-        if ( ret <= 0 )
-                return -1;
-
-        return prelude_io_write(dst, buf, count);
+                count -= ret;
+                
+                ret = prelude_io_write(dst, buf, ret);
+                if ( ret < 0 )
+                        return -1;
+        }
 }
 
 

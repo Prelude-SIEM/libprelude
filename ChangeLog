@@ -1,3 +1,14 @@
+2001-11-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-client.c
+	Address member is not const anymore.
+	
+	(prelude_client_new): duplicate address string.
+	(prelude_client_destroy): free address string.
+
+	* src/prelude-io.c (copy_forward): 
+	forward data by chunk of 8192 bytes.
+
 2001-10-30  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-io.c: compile properly even if SSL is not available.

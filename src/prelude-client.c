@@ -379,6 +379,8 @@ void prelude_client_destroy(prelude_client_t *client)
 {
         prelude_io_close(client->fd);
         prelude_io_destroy(client->fd);
+
+        free(client->addr);
         free(client);
 }
 
@@ -396,7 +398,7 @@ prelude_client_t *prelude_client_new(const char *addr, uint16_t port)
                 return NULL;
 
         new->port = port;
-        new->addr = addr;
+        new->addr = strdup(addr);
         new->connection_broken = 0;
         
         new->fd = prelude_io_new();
@@ -451,6 +453,16 @@ ssize_t prelude_client_forward(prelude_client_t *client, prelude_io_t *src, size
 {
         return prelude_io_forward(client->fd, src, count);
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
