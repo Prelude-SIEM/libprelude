@@ -716,7 +716,14 @@ static void file_error(prelude_client_t *client)
 
 
 
-
+/**
+ * prelude_client_new:
+ * @capability: set of capability for this client.
+ *
+ * Create a new #prelude_client_t object with the given capability.
+ *
+ * Returns: a #prelude_client_t object, or NULL if an error occured.
+ */
 prelude_client_t *prelude_client_new(prelude_client_capability_t capability)
 {
         prelude_client_t *new;
@@ -743,7 +750,21 @@ prelude_client_t *prelude_client_new(prelude_client_capability_t capability)
 
 
 
-int prelude_client_init(prelude_client_t *new, const char *sname, const char *config, int argc, char **argv)
+/**
+ * prelude_client_init:
+ * @client: Pointer to a client object to initialize.
+ * @sname: Default name of the analyzer associated with this client.
+ * @config: Generic configuration file for this analyzer.
+ * @argc: argument count provided on the analyzer command line.
+ * @argv: array of argument provided on the analyzer command line.
+ *
+ * This function initialize the @client object, reading generic
+ * option from the @config configuration file and the provided
+ * @argv array of arguments.
+ *
+ * Returns: 0 on success, -1 if an error occured.
+ */
+int prelude_client_init(prelude_client_t *client, const char *sname, const char *config, int argc, char **argv)
 {
         int ret;
         char filename[256];
@@ -812,7 +833,16 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
 
 
 
-
+/**
+ * prelude_client_get_analyzer:
+ * @client: Pointer to a #prelude_client_t object.
+ *
+ * Provide access to the #idmef_analyzer_t object associated to @client.
+ * This analyzer object is sent along with every alerts and heartbeats emited
+ * by this client. The analyzer object is created by prelude_client_init().
+ *
+ * Returns: the #idmef_analyzer_t object associated with @client.
+ */
 idmef_analyzer_t *prelude_client_get_analyzer(prelude_client_t *client)
 {
         return client->analyzer;
@@ -820,6 +850,15 @@ idmef_analyzer_t *prelude_client_get_analyzer(prelude_client_t *client)
 
 
 
+/**
+ * prelude_client_set_analyzerid:
+ * @client: Pointer to a #prelude_client_t object.
+ * @analyzerid: an unique identity accross the whole environement of analyzer.
+ *
+ * Provide the ability to manually set @client analyzerid. This unique identity
+ * should be unique accross the whole environement of analyzer. The analyzerid
+ * is normally allocated when registering an analyzer.
+ */
 void prelude_client_set_analyzerid(prelude_client_t *client, uint64_t analyzerid)
 {
         client->analyzerid = analyzerid;
@@ -827,6 +866,14 @@ void prelude_client_set_analyzerid(prelude_client_t *client, uint64_t analyzerid
 
 
 
+/**
+ * prelude_client_get_analyzerid:
+ * @client: Pointer to a #prelude_client_t object.
+ *
+ * Get the unique and permanent analyzerid associated with @client.
+ *
+ * Returns: a 64bits integer representing the unique identity of @client.
+ */
 uint64_t prelude_client_get_analyzerid(prelude_client_t *client)
 {
         return client->analyzerid;
@@ -834,6 +881,16 @@ uint64_t prelude_client_get_analyzerid(prelude_client_t *client)
 
 
 
+/**
+ * prelude_client_get_name:
+ * @client: Pointer to a #prelude_client_t object.
+ *
+ * Get the analyzer name associated with @client. This name might
+ * have been set by prelude_client_init() or prelude_client_set_name()
+ * functions.
+ *
+ * Returns: a pointer to the name of @client.
+ */
 const char *prelude_client_get_name(prelude_client_t *client)
 {
         return client->name;
@@ -841,9 +898,20 @@ const char *prelude_client_get_name(prelude_client_t *client)
 
 
 
+/**
+ * prelude_client_send_msg:
+ * @client: Pointer to a #prelude_client_t object.
+ * @msg: pointer to a message that @client should send.
+ *
+ * Send @msg to the peers @client is communicating with.
+ *
+ * The message will be sent asynchronously if @PRELUDE_CLIENT_FLAGS_ASYNC_SEND
+ * was set using prelude_client_set_flags() in which case the caller should
+ * not call prelude_msg_destroy() on @msg.
+ */
 void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
 {
-        if ( client->flags & PRELUDE_CLIENT_ASYNC_SEND )
+        if ( client->flags & PRELUDE_CLIENT_FLAGS_ASYNC_SEND )
                 prelude_connection_mgr_broadcast_async(client->manager_list, msg);
         else 
                 prelude_connection_mgr_broadcast(client->manager_list, msg);
@@ -851,6 +919,19 @@ void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
 
 
 
+/**
+ * prelude_client_set_uid:
+ * @client: Pointer to a #prelude_client_t object.
+ * @uid: UID used by @client.
+ *
+ * Analyzer UID and GID are part of the different filenames used to
+ * store analyzer data. This is required since it is not impossible
+ * for two instance of the same analyzer (same name) to use different
+ * access privileges.
+ *
+ * In case your analyzer drop privilege after a call to prelude_client_init(),
+ * you might use this function to override the UID gathered using getuid().
+ */
 void prelude_client_set_uid(prelude_client_t *client, uid_t uid)
 {
         client->uid = uid;
@@ -858,6 +939,12 @@ void prelude_client_set_uid(prelude_client_t *client, uid_t uid)
 
 
 
+/**
+ * prelude_client_get_uid:
+ * @client: pointer to a #prelude_client_t object.
+ *
+ * Returns: the UID used by @client.
+ */
 uid_t prelude_client_get_uid(prelude_client_t *client)
 {
         return client->uid;
@@ -865,6 +952,19 @@ uid_t prelude_client_get_uid(prelude_client_t *client)
 
 
 
+/**
+ * prelude_client_set_gid:
+ * @client: Pointer to a #prelude_client_t object.
+ * @gid: GID used by @client.
+ *
+ * Analyzer UID and GID are part of the different filenames used to
+ * store analyzer data. This is required since it is not impossible
+ * for two instance of the same analyzer (same name) to use different
+ * access privileges.
+ *
+ * In case your analyzer drop privileges after a call to prelude_client_init()
+ * you might use this function to override the GID gathered using getuid().
+ */
 void prelude_client_set_gid(prelude_client_t *client, gid_t gid)
 {
         client->gid = gid;
@@ -872,6 +972,12 @@ void prelude_client_set_gid(prelude_client_t *client, gid_t gid)
 
 
 
+/**
+ * prelude_client_get_gid:
+ * @client: pointer to a #prelude_client_t object.
+ *
+ * Returns: the GID used by @client.
+ */
 gid_t prelude_client_get_gid(prelude_client_t *client)
 {
         return client->gid;
@@ -879,6 +985,15 @@ gid_t prelude_client_get_gid(prelude_client_t *client)
 
 
 
+/**
+ * prelude_client_get_manager_list:
+ * @client: pointer to a #prelude_client_t object.
+ *
+ * Return a pointer to the #prelude_connection_mgr_t object used by @client
+ * to send messages.
+ *
+ * Returns: a pointer to a #prelude_connection_mgr_t object.
+ */
 prelude_connection_mgr_t *prelude_client_get_manager_list(prelude_client_t *client)
 {
         return client->manager_list;
@@ -886,6 +1001,15 @@ prelude_connection_mgr_t *prelude_client_get_manager_list(prelude_client_t *clie
 
 
 
+/**
+ * prelude_client_set_manager_list:
+ * @client: pointer to a #prelude_client_t object.
+ * @mgrlist: pointer to a #prelude_client_mgr_t object.
+ *
+ * Use this function in order to set your own list of peer that @client
+ * should send message too. This might be usefull in case you don't want
+ * this to be automated by prelude_client_init().
+ */
 void prelude_client_set_manager_list(prelude_client_t *client, prelude_connection_mgr_t *mgrlist)
 {
         client->manager_list = mgrlist;
@@ -893,13 +1017,31 @@ void prelude_client_set_manager_list(prelude_client_t *client, prelude_connectio
 
 
 
-void prelude_client_set_heartbeat_cb(prelude_client_t *client, void (*cb)(prelude_client_t *client, idmef_message_t *hb))
+/**
+ * prelude_client_set_heartbeat_cb:
+ * @client: pointer to a #prelude_client_t object.
+ * @cb: pointer to a function handling heartbeat sending.
+ *
+ * Use if you want to override the default function used to
+ * automatically send heartbeat to @client peers.
+ */
+void prelude_client_set_heartbeat_cb(prelude_client_t *client,
+                                     void (*cb)(prelude_client_t *client, idmef_message_t *hb))
 {
         client->heartbeat_cb = cb;
 }
 
 
 
+/**
+ * prelude_client_set_name:
+ * @client: Pointer to a #prelude_client_t object.
+ * @name: public name for @client.
+ *
+ * This function might be used to override @client name provided
+ * using prelude_client_init(). Analyzer are not expected to use
+ * this function directly.
+ */
 void prelude_client_set_name(prelude_client_t *client, const char *name)
 {
         if ( client->name )
@@ -951,16 +1093,28 @@ void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status
 
 
 
-int prelude_client_set_flags(prelude_client_t *client, int flags)
+
+/**
+ * prelude_client_set_flags:
+ * @client: Pointer on a #prelude_client_t object.
+ * @flags: Or'd list of flags used by @client.
+ *
+ * Set specific flags in the @client structure.
+ * This function can be called anytime after the creation of the
+ * @client object.
+ *
+ * Returns: 0 if setting @flags succeed, -1 otherwise.
+ */
+int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t flags)
 {
         int ret = 0;
 
         client->flags = flags;
         
-        if ( flags & PRELUDE_CLIENT_ASYNC_SEND )
+        if ( flags & PRELUDE_CLIENT_FLAGS_ASYNC_SEND )
                 ret = prelude_async_init();
         
-        if ( flags & PRELUDE_CLIENT_ASYNC_TIMER ) {
+        if ( flags & PRELUDE_CLIENT_FLAGS_ASYNC_TIMER ) {
                 ret = prelude_async_init();
                 prelude_async_set_flags(PRELUDE_ASYNC_TIMER);       
         }
@@ -971,13 +1125,29 @@ int prelude_client_set_flags(prelude_client_t *client, int flags)
 
 
 
-int prelude_client_get_flags(prelude_client_t *client)
+/**
+ * prelude_client_get_flags:
+ * @client: Pointer on a #prelude_client_t object.
+ *
+ * Get flags set through prelude_client_set_flags().
+ *
+ * Returns: an or'ed list of #prelude_client_flags_t.
+ */
+prelude_client_flags_t prelude_client_get_flags(prelude_client_t *client)
 {
         return client->flags;
 }
 
 
 
+/**
+ * prelude_client_set_capability:
+ * @client: Pointer on a #prelude_client_t object.
+ * @capability: Or'ed list of capability the client have.
+ *
+ * Set @capability for @client. @client might change depending
+ * on the capability you set.
+ */
 void prelude_client_set_capability(prelude_client_t *client, prelude_client_capability_t capability)
 {
         client->capability = capability;
@@ -985,6 +1155,12 @@ void prelude_client_set_capability(prelude_client_t *client, prelude_client_capa
 
 
 
+/**
+ * prelude_client_get_capability:
+ * @client: Pointer on a #prelude_client_t object.
+ *
+ * Returns: @client capability as set with prelude_client_set_capability()
+ */
 prelude_client_capability_t prelude_client_get_capability(prelude_client_t *client)
 {
         return client->capability;
@@ -992,6 +1168,14 @@ prelude_client_capability_t prelude_client_get_capability(prelude_client_t *clie
 
 
 
+/**
+ * prelude_client_get_ident_filename:
+ * @client: pointer on a #prelude_client_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Return the filename used to store @client unique and permanent analyzer ident.
+ */
 void prelude_client_get_ident_filename(prelude_client_t *client, char *buf, size_t size) 
 {
         snprintf(buf, size, IDENT_DIR "/%s", client->name);
@@ -999,12 +1183,32 @@ void prelude_client_get_ident_filename(prelude_client_t *client, char *buf, size
 
 
 
+
+/**
+ * prelude_client_get_tls_key_filename:
+ * @client: pointer on a #prelude_client_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Return the filename used to store @client private key.
+ */
 void prelude_client_get_tls_key_filename(prelude_client_t *client, char *buf, size_t size) 
 {
         snprintf(buf, size, TLS_KEY_DIR "/%s", client->name);
 }
 
 
+
+
+/**
+ * prelude_client_get_tls_server_filename:
+ * @client: pointer on a #prelude_client_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Return the filename used to store @client related CA certificate.
+ * This only apply to @client receiving connection from analyzer (server).
+ */
 void prelude_client_get_tls_server_ca_cert_filename(prelude_client_t *client, char *buf, size_t size) 
 {
         snprintf(buf, size, TLS_SERVER_CERT_DIR "/%s.ca", client->name);
@@ -1012,6 +1216,16 @@ void prelude_client_get_tls_server_ca_cert_filename(prelude_client_t *client, ch
 
 
 
+
+/**
+ * prelude_client_get_tls_server_trusted_cert_filename:
+ * @client: pointer on a #prelude_client_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Return the filename used to store certificate that this @client trust.
+ * This only apply to @client receiving connection from analyzer (server).
+ */
 void prelude_client_get_tls_server_trusted_cert_filename(prelude_client_t *client, char *buf, size_t size) 
 {
         snprintf(buf, size, TLS_SERVER_CERT_DIR "/%s.trusted", client->name);
@@ -1019,6 +1233,16 @@ void prelude_client_get_tls_server_trusted_cert_filename(prelude_client_t *clien
 
 
 
+
+/**
+ * prelude_client_get_tls_server_keycert_filename:
+ * @client: pointer on a #prelude_client_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Return the filename used to store certificate for @client private key.
+ * This only apply to @client receiving connection from analyzer (server).
+ */
 void prelude_client_get_tls_server_keycert_filename(prelude_client_t *client, char *buf, size_t size) 
 {
         snprintf(buf, size, TLS_SERVER_CERT_DIR "/%s.keycrt", client->name);
@@ -1026,6 +1250,16 @@ void prelude_client_get_tls_server_keycert_filename(prelude_client_t *client, ch
 
 
 
+
+/**
+ * prelude_client_get_tls_client_trusted_cert_filename:
+ * @client: pointer on a #prelude_client_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Return the filename used to store peers public certificates that @client trust.
+ * This only apply to client connecting to a peer.
+ */
 void prelude_client_get_tls_client_trusted_cert_filename(prelude_client_t *client, char *buf, size_t size) 
 {
         snprintf(buf, size, TLS_CLIENT_CERT_DIR "/%s.trusted", client->name);
@@ -1033,6 +1267,16 @@ void prelude_client_get_tls_client_trusted_cert_filename(prelude_client_t *clien
 
 
 
+
+/**
+ * prelude_client_get_tls_client_keycert_filename:
+ * @client: pointer on a #prelude_client_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Return the filename used to store public certificate for @client private key.
+ * This only apply to client connecting to a peer.
+ */
 void prelude_client_get_tls_client_keycert_filename(prelude_client_t *client, char *buf, size_t size) 
 {
         snprintf(buf, size, TLS_CLIENT_CERT_DIR "/%s.keycrt", client->name);
@@ -1040,6 +1284,16 @@ void prelude_client_get_tls_client_keycert_filename(prelude_client_t *client, ch
 
 
 
+
+/**
+ * prelude_client_get_backup_filename:
+ * @client: pointer on a #prelude_client_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Return the filename where message sent by @client will be stored,
+ * in case writing the message to the peer fail.
+ */
 void prelude_client_get_backup_filename(prelude_client_t *client, char *buf, size_t size) 
 {
         snprintf(buf, size, PRELUDE_SPOOL_DIR "/%s", client->name);
@@ -1047,6 +1301,15 @@ void prelude_client_get_backup_filename(prelude_client_t *client, char *buf, siz
 
 
 
+/**
+ * prelude_client_get_config_filename:
+ * @client: pointer on a #prelude_client_t object.
+ *
+ * Return the filename used to store @client configuration.
+ * This filename is originally set by the prelude_async_init() function.
+ *
+ * Returns: a pointer to @client configuration filename.
+ */
 const char *prelude_client_get_config_filename(prelude_client_t *client)
 {
         return client->config_filename;
