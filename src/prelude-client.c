@@ -1103,6 +1103,11 @@ void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status
  * This function can be called anytime after the creation of the
  * @client object.
  *
+ * When settings asynchronous flags such as #PRELUDE_CLIENT_FLAGS_ASYNC_SEND
+ * or #PRELUDE_CLIENT_FLAGS_ASYNC_TIMER, be carefull to call
+ * prelude_client_set_flags() in the same process you want to use the
+ * asynchronous API from. Threads aren't copied accross fork().
+ *
  * Returns: 0 if setting @flags succeed, -1 otherwise.
  */
 int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t flags)
@@ -1110,14 +1115,14 @@ int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t fl
         int ret = 0;
 
         client->flags = flags;
-        
-        if ( flags & PRELUDE_CLIENT_FLAGS_ASYNC_SEND )
-                ret = prelude_async_init();
-        
+                
         if ( flags & PRELUDE_CLIENT_FLAGS_ASYNC_TIMER ) {
                 ret = prelude_async_init();
                 prelude_async_set_flags(PRELUDE_ASYNC_TIMER);       
         }
+        
+        else if ( flags & PRELUDE_CLIENT_FLAGS_ASYNC_SEND )
+                ret = prelude_async_init();
 
         return ret;
 }
