@@ -21,11 +21,13 @@
 *
 *****/
 
-int tls_request_certificate(prelude_client_profile_t *cp, prelude_io_t *fd, gnutls_x509_privkey key);
+#include "tls-util.h"
+
+int tls_request_certificate(prelude_client_profile_t *cp, prelude_io_t *fd, gnutls_x509_privkey key,
+                            prelude_connection_permission_t permission);
 
 int tls_handle_certificate_request(prelude_client_profile_t *cp, prelude_io_t *fd,
-                                   gnutls_x509_privkey cakey, gnutls_x509_crt cacrt,
-                                   gnutls_x509_crt crt);
+                                   gnutls_x509_privkey cakey, gnutls_x509_crt cacrt, gnutls_x509_crt crt);
 
 gnutls_x509_privkey tls_load_privkey(prelude_client_profile_t *cp);
 

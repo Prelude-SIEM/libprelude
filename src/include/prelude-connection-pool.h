@@ -50,7 +50,7 @@ int prelude_connection_pool_init(prelude_connection_pool_t *pool);
 
 int prelude_connection_pool_new(prelude_connection_pool_t **ret,
                                 prelude_client_profile_t *cp,
-                                prelude_connection_capability_t capability);
+                                prelude_connection_permission_t permission);
 
 prelude_list_t *prelude_connection_pool_get_connection_list(prelude_connection_pool_t *pool);
 

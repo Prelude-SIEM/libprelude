@@ -34,6 +34,7 @@ typedef enum {
         PRELUDE_CLIENT_FLAGS_ASYNC_SEND  = 0x01,
         PRELUDE_CLIENT_FLAGS_ASYNC_TIMER = 0x02,
         PRELUDE_CLIENT_FLAGS_HEARTBEAT   = 0x04,
+        PRELUDE_CLIENT_FLAGS_CONNECT     = 0x08
 } prelude_client_flags_t;
 
 
@@ -55,15 +56,18 @@ prelude_connection_pool_t *prelude_client_get_manager_list(prelude_client_t *cli
 
 int prelude_client_start(prelude_client_t *client);
 
+int prelude_client_init(prelude_client_t *client);
+
 int prelude_client_new(prelude_client_t **client,
-                       prelude_connection_capability_t capability,
                        const char *profile, const char *config);
 
 idmef_analyzer_t *prelude_client_get_analyzer(prelude_client_t *client);
 
 prelude_client_flags_t prelude_client_get_flags(prelude_client_t *client);
 
-prelude_connection_capability_t prelude_client_get_capability(prelude_client_t *client);
+void prelude_client_set_permission(prelude_client_t *client, prelude_connection_permission_t permission);
+
+prelude_connection_permission_t prelude_client_get_permission(prelude_client_t *client);
 
 void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg);
 

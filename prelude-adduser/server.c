@@ -58,7 +58,7 @@ static gnutls_session new_tls_session(int sock, gnutls_srp_server_credentials cr
         gnutls_set_default_priority(session);
         gnutls_kx_set_priority(session, kx_priority);
         gnutls_credentials_set(session, GNUTLS_CRD_SRP, cred);
-        
+                
         gnutls_certificate_server_set_request(session, GNUTLS_CERT_IGNORE);
 
         gnutls_transport_set_ptr(session, (gnutls_transport_ptr) sock);
@@ -76,7 +76,7 @@ static gnutls_session new_tls_session(int sock, gnutls_srp_server_credentials cr
 
 static int handle_client_connection(prelude_client_profile_t *cp, prelude_io_t *fd,
                                     gnutls_srp_server_credentials cred, gnutls_x509_privkey key,
-                                    gnutls_x509_crt cacrt, gnutls_x509_crt crt, const char *peer)
+                                    gnutls_x509_crt cacrt, gnutls_x509_crt crt)
 {
         gnutls_session session;
         
@@ -115,7 +115,7 @@ static int wait_connection(prelude_client_profile_t *cp, int sock, int keepalive
         }
         
         do {
-                fprintf(stderr, "\n  - Waiting for install request from peer...\n");
+                fprintf(stderr, "\n  - Waiting for peers install request...\n");
                 sa = (struct sockaddr *) &addr;
                 len = sizeof(addr);
 
@@ -131,12 +131,14 @@ static int wait_connection(prelude_client_profile_t *cp, int sock, int keepalive
                 }
                 
                 prelude_inet_ntop(sa->sa_family, prelude_inet_sockaddr_get_inaddr(sa), buf, sizeof(buf));
-                fprintf(stderr, "  - Connection from %s:%u.\n", buf, *port);
+                snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf), ":%u", *port);
+                
+                fprintf(stderr, "  - Connection from %s.\n", buf);
                 prelude_io_set_sys_io(fd, csock);
                 
-                ret = handle_client_connection(cp, fd, cred, key, cacrt, crt, "");
+                ret = handle_client_connection(cp, fd, cred, key, cacrt, crt);
                 if ( ret == 0 )
-                        fprintf(stderr, "  - %s:%u successfully registered.\n", buf, *port);
+                        fprintf(stderr, "  - %s successfully registered.\n", buf);
                 
                 prelude_io_close(fd);
                 

@@ -113,7 +113,7 @@ struct prelude_connection_pool {
         fd_set fds;
 
         char *connection_string;
-        prelude_connection_capability_t capability;
+        prelude_connection_permission_t permission;
         
         prelude_client_profile_t *client_profile;
         prelude_connection_pool_flags_t flags;
@@ -413,7 +413,7 @@ static void connection_timer_expire(void *data)
         cnx_t *cnx = data;
         prelude_connection_pool_t *pool = cnx->parent->parent;
         
-        ret = prelude_connection_connect(cnx->cnx, pool->client_profile, pool->capability);
+        ret = prelude_connection_connect(cnx->cnx, pool->client_profile, pool->permission);
         if ( ret < 0 ) {
                 prelude_perror(ret, "could not connect to %s", prelude_connection_get_peer_addr(cnx->cnx));
                 
@@ -531,7 +531,7 @@ static int new_connection_from_address(cnx_t **new,
 
         event = PRELUDE_CONNECTION_POOL_EVENT_ALIVE;
         
-        cret = prelude_connection_connect(cnx, clist->parent->client_profile, clist->parent->capability);
+        cret = prelude_connection_connect(cnx, clist->parent->client_profile, clist->parent->permission);
         if ( cret < 0 )
                 event = PRELUDE_CONNECTION_POOL_EVENT_DEAD;
         
@@ -767,11 +767,12 @@ int prelude_connection_pool_init(prelude_connection_pool_t *pool)
         if ( ! pool->connection_string_changed || ! pool->connection_string )
                 return prelude_error(PRELUDE_ERROR_CONNECTION_STRING);
         
-        pool->connection_string_changed = FALSE;
+        pool->connection_string_changed = FALSE;        
         connection_list_destroy(pool->or_list);
-                
+        
         pool->nfd = 0;
         pool->or_list = NULL;
+        prelude_list_init(&pool->all_cnx);
         
         ret = parse_config_line(pool);        
         if ( ret < 0 || ! pool->or_list )
@@ -817,7 +818,7 @@ int prelude_connection_pool_init(prelude_connection_pool_t *pool)
  */
 int prelude_connection_pool_new(prelude_connection_pool_t **ret,
                                 prelude_client_profile_t *cp,
-                                prelude_connection_capability_t capability)
+                                prelude_connection_permission_t permission)
 {
         prelude_connection_pool_t *new;
         
@@ -827,7 +828,7 @@ int prelude_connection_pool_new(prelude_connection_pool_t **ret,
                 
         FD_ZERO(&new->fds);
         new->client_profile = cp;
-        new->capability = capability;
+        new->permission = permission;
         new->connection_string_changed = FALSE;
 
         prelude_list_init(&new->all_cnx);

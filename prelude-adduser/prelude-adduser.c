@@ -34,6 +34,7 @@
 
 #include <errno.h>
 #include <gnutls/gnutls.h>
+#include <gnutls/x509.h>
 #include <gnutls/extra.h>
 
 #include "common.h"
@@ -67,9 +68,11 @@ static prelude_client_profile_t *profile;
 static int server_prompt_passwd = 0, server_keepalive = 0;
 
 
+int server_confirm = 1;
 int generated_key_size = 0;
 int authority_certificate_lifetime = 0;
 int generated_certificate_lifetime = 0;
+static gnutls_srp_client_credentials cred;
 
 
 
@@ -128,6 +131,7 @@ static void print_registration_server_help(void)
         fprintf(stderr, "\t--gid arg\t\t: GID to use to setup 'receiving' analyzer files.\n");
         fprintf(stderr, "\t--prompt\t\t: Prompt for a password instead of auto generating it.\n");
         fprintf(stderr, "\t--keepalive\t\t: Register analyzer in an infinite loop.\n");
+        fprintf(stderr, "\t--no-confirm\t\t: Do not ask for confirmation on sensor registration.\n");
 }
 
 
@@ -135,7 +139,7 @@ static void print_registration_server_help(void)
 static void print_register_help(void)
 {
         fprintf(stderr, "register: Register an analyzer.\n");
-        fprintf(stderr, "usage: register <analyzer profile> <registration-server address> [options]\n\n");
+        fprintf(stderr, "usage: register <analyzer profile> <wanted permission> <registration-server address> [options]\n\n");
 
         fprintf(stderr,
                 "Register both \"add\" the analyzer basic setup if needed\n"
@@ -193,6 +197,12 @@ static int set_server_prompt_passwd(prelude_option_t *opt, const char *optarg, p
 	return 0;
 }
 
+
+static int set_server_no_confirm(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
+{
+	server_confirm = 0;
+	return 0;
+}
 
 
 static void setup_permission_options(prelude_option_t *parent)
@@ -280,7 +290,6 @@ static gnutls_session new_tls_session(int sock, char *passwd)
 {
         int ret;
         gnutls_session session;
-        gnutls_srp_client_credentials cred;
         const int kx_priority[] = { GNUTLS_KX_SRP, GNUTLS_KX_SRP_DSS, GNUTLS_KX_SRP_RSA, 0 };
                 
         gnutls_init(&session, GNUTLS_CLIENT);
@@ -608,15 +617,20 @@ static int register_cmd(int argc, char **argv)
         prelude_option_t *opt;
         prelude_string_t *err;
         gnutls_x509_privkey key;
-        char *ptr, *addr = strdup(argv[3]);
-
+        char *ptr, *addr = strdup(argv[4]);
+        prelude_connection_permission_t permission_bits;
+                                                               
         ret = _prelude_client_profile_new(&profile);
         ret = prelude_option_new(NULL, &opt);
         setup_permission_options(opt);
-
-        argc -= 3;
         
-        ret = prelude_option_read(opt, NULL, &argc, &argv[3], &err, NULL);
+        ret = prelude_connection_permission_new_from_string(&permission_bits, argv[3]);
+        if ( ret < 0 )
+                return -1;
+        
+        argc -= 4;
+        
+        ret = prelude_option_read(opt, NULL, &argc, &argv[4], &err, NULL);
         if ( ret < 0 )
                 return -1;
         
@@ -626,7 +640,7 @@ static int register_cmd(int argc, char **argv)
         if ( ret < 0 )
                 return -1;
 
-        fprintf(stderr, "\n- Registring analyzer %s to %s.\n\n", argv[2], argv[3]);
+        fprintf(stderr, "\n- Registring analyzer %s to %s.\n\n", argv[2], argv[4]);
         
         fprintf(stderr,
                 "  You now need to start \"prelude-adduser\" on the server host where\n"
@@ -668,11 +682,15 @@ static int register_cmd(int argc, char **argv)
         if ( ! fd ) 
                 return -1;
         
-        ret = tls_request_certificate(profile, fd, key);
+        ret = tls_request_certificate(profile, fd, key, permission_bits);
+
+        prelude_io_close(fd);
+        prelude_io_destroy(fd);
+        
         if ( ret < 0 )
                 return -1;
 
-        fprintf(stderr, "\n- %s registration to %s successful.\n\n", argv[2], argv[3]);
+        fprintf(stderr, "\n- %s registration to %s successful.\n\n", argv[2], argv[4]);
         
         return 0;
 }
@@ -695,12 +713,15 @@ static int registration_server_cmd(int argc, char **argv)
 		
 	prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 'p', "prompt", NULL,
                            PRELUDE_OPTION_ARGUMENT_NONE, set_server_prompt_passwd, NULL);
+
+        prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 'n', "no-confirm", NULL,
+                           PRELUDE_OPTION_ARGUMENT_NONE, set_server_no_confirm, NULL);
         
         setup_permission_options(opt);
         
-        argc -= 2;
+        argc -= 3;
         
-        ret = prelude_option_read(opt, NULL, &argc, &argv[2], &err, NULL);
+        ret = prelude_option_read(opt, NULL, &argc, &argv[4], &err, NULL);
         if ( ret < 0 )
                 return -1;
         
@@ -719,7 +740,13 @@ static int registration_server_cmd(int argc, char **argv)
                 return -1;
         
         fprintf(stderr, "\n- Starting registration server.\n");
-        return server_create(profile, server_keepalive, server_prompt_passwd, key, ca_crt, crt);
+        ret = server_create(profile, server_keepalive, server_prompt_passwd, key, ca_crt, crt);
+
+        gnutls_x509_privkey_deinit(key);
+        gnutls_x509_crt_deinit(crt);
+        gnutls_x509_crt_deinit(ca_crt);
+
+        return ret;
 }
 
 
@@ -756,9 +783,8 @@ static const char *lifetime_to_str(char *out, size_t size, int lifetime)
 static int read_tls_setting(void)
 {
         config_t *cfg;
-        char buf[128];
-        const char *ptr;
         int line = 0, ret;
+        char buf[128], *ptr;
         
         ret = config_open(&cfg, TLS_CONFIG);
         if ( ret < 0 ) {
@@ -773,7 +799,8 @@ static int read_tls_setting(void)
         }
         
         generated_key_size = atoi(ptr);
-
+        free(ptr);
+        
         line=0;
         ptr = config_get(cfg, NULL, "authority-certificate-lifetime", &line);
         if ( ! ptr ) {
@@ -782,7 +809,8 @@ static int read_tls_setting(void)
         }
         
         authority_certificate_lifetime = atoi(ptr);
-
+        free(ptr);
+        
         ptr = config_get(cfg, NULL, "generated-certificate-lifetime", &line);
         if ( ! ptr ) {
                 fprintf(stderr, "%s: couldn't find \"generated-certificate-lifetime\" setting.\n", TLS_CONFIG);
@@ -790,7 +818,8 @@ static int read_tls_setting(void)
         }
         
         generated_certificate_lifetime = atoi(ptr);
-
+        free(ptr);
+        
         fprintf(stderr, "\n- Using default TLS settings from %s:\n", TLS_CONFIG);
         fprintf(stderr, "  - Generated key size: %d bits.\n", generated_key_size);
         
@@ -815,7 +844,7 @@ int main(int argc, char **argv)
                 { "add", 1, add_cmd, print_add_help                                                 },
                 { "del", 1, del_cmd, print_delete_help                                              },
                 { "rename", 2, rename_cmd, print_rename_help                                        },
-                { "register", 2, register_cmd, print_register_help                                  },
+                { "register", 3, register_cmd, print_register_help                                  },
                 { "registration-server", 1, registration_server_cmd, print_registration_server_help },
                 { NULL, 0, NULL, NULL },
         };

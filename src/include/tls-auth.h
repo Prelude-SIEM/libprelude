@@ -25,8 +25,11 @@
 #define _LIBPRELUDE_TLS_AUTH_H
 
 #include "prelude-io.h"
+#include "prelude-connection.h"
 
-int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int crypt, uint64_t *peer_analyzerid);
+
+int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int crypt,
+                        uint64_t *peer_analyzerid, prelude_connection_permission_t *permission);
 
 int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *cred);
 

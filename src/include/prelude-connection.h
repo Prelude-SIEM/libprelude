@@ -24,16 +24,13 @@
 #ifndef _LIBPRELUDE_PRELUDE_CONNECTION_H
 #define _LIBPRELUDE_PRELUDE_CONNECTION_H
 
-#include "prelude-msg.h"
-#include "prelude-msgbuf.h"
-#include "prelude-client-profile.h"
 
 typedef enum {
-        PRELUDE_CONNECTION_CAPABILITY_NONE       = 0x00,
-        PRELUDE_CONNECTION_CAPABILITY_CONNECT    = 0x01,
-        PRELUDE_CONNECTION_CAPABILITY_RECV_IDMEF = 0x02,
-        PRELUDE_CONNECTION_CAPABILITY_RECV_CM    = 0x04
-} prelude_connection_capability_t;
+        PRELUDE_CONNECTION_PERMISSION_IDMEF_READ      = 0x01, /* client might read received IDMEF message */
+        PRELUDE_CONNECTION_PERMISSION_ADMIN_READ      = 0x02, /* client might read received ADMIN message */
+        PRELUDE_CONNECTION_PERMISSION_IDMEF_WRITE     = 0x04, /* client might send IDMEF message          */
+        PRELUDE_CONNECTION_PERMISSION_ADMIN_WRITE     = 0x08, /* client might issue OPTION request        */
+} prelude_connection_permission_t;
 
 
 typedef enum {
@@ -44,6 +41,12 @@ typedef enum {
 typedef struct prelude_connection prelude_connection_t;
 
 
+#include "prelude-msg.h"
+#include "prelude-msgbuf.h"
+#include "prelude-string.h"
+#include "prelude-client-profile.h"
+
+
 void prelude_connection_destroy(prelude_connection_t *conn);
 
 int prelude_connection_send(prelude_connection_t *cnx, prelude_msg_t *msg);
@@ -52,7 +55,7 @@ int prelude_connection_recv(prelude_connection_t *cnx, prelude_msg_t **outmsg);
 
 int prelude_connection_connect(prelude_connection_t *cnx,
                                prelude_client_profile_t *profile,
-                               prelude_connection_capability_t capability);
+                               prelude_connection_permission_t permission);
 
 ssize_t prelude_connection_forward(prelude_connection_t *cnx, prelude_io_t *src, size_t count);
 
@@ -84,6 +87,8 @@ void *prelude_connection_get_data(prelude_connection_t *cnx);
 
 const char *prelude_connection_get_default_socket_filename(void);
 
+prelude_connection_permission_t prelude_connection_get_permission(prelude_connection_t *conn);
+
 uint64_t prelude_connection_get_peer_analyzerid(prelude_connection_t *cnx);
 
 void prelude_connection_set_peer_analyzerid(prelude_connection_t *cnx, uint64_t analyzerid);
@@ -93,5 +98,10 @@ void prelude_connection_set_peer_analyzerid(prelude_connection_t *cnx, uint64_t 
 int prelude_connection_new(prelude_connection_t **ret, const char *addr);
 
 int prelude_connection_new_msgbuf(prelude_connection_t *connection, prelude_msgbuf_t **msgbuf);
+
+int prelude_connection_permission_to_string(prelude_connection_permission_t perm, prelude_string_t *out);
+
+int prelude_connection_permission_new_from_string(prelude_connection_permission_t *out, const char *buf);
+
 
 #endif /* _LIBPRELUDE_PRELUDE_CONNECTION_H */

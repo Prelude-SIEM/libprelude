@@ -111,6 +111,11 @@ static int verify_certificate(gnutls_session session)
                 return -1;
         }
 
+        if ( ret & GNUTLS_CERT_SIGNER_NOT_CA ) {
+                prelude_log(PRELUDE_LOG_WARN, "- TLS certificate error: server certificate issuer is not a CA.\n");
+                return -1;
+        }
+
         prelude_log(PRELUDE_LOG_INFO, "- TLS certificate: server certificate is trusted.\n");
 
         return 0;
@@ -140,7 +145,8 @@ static int handle_gnutls_error(gnutls_session session, int ret)
 
 
 
-int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int crypt, uint64_t *analyzerid)
+int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int crypt,
+                        uint64_t *analyzerid, prelude_connection_permission_t *permission)
 {
 	int ret, fd;
         gnutls_session session;
@@ -167,7 +173,7 @@ int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int cryp
                 return prelude_error(PRELUDE_ERROR_TLS_HANDSHAKE);
         }
 
-        ret = verify_certificate(session);
+        ret = verify_certificate(session);        
         if ( ret < 0 ) {
                 gnutls_deinit(session);
                 return prelude_error(PRELUDE_ERROR_TLS_INVALID_CERTIFICATE);
@@ -180,7 +186,11 @@ int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int cryp
                 return ret;
 
         ret = tls_certificate_get_peer_analyzerid(session, analyzerid);
-        if ( ret < 0 )
+        if ( ret < 0 ) 
+                return ret;
+        
+        ret = tls_certificate_get_permission(session, permission);
+        if ( ret < 0 ) 
                 return ret;
                 
         if ( ! crypt ) {

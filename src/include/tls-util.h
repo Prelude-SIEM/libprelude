@@ -24,6 +24,7 @@
 #ifndef _LIBPRELUDE_TLS_UTIL_H
 #define _LIBPRELUDE_TLS_UTIL_H
 
+
 void tls_unload_file(gnutls_datum *data);
 
 int tls_load_file(const char *filename, gnutls_datum *data);
@@ -31,5 +32,7 @@ int tls_load_file(const char *filename, gnutls_datum *data);
 int tls_certificates_load(const char *keyfile, const char *certfile, gnutls_certificate_credentials cred);
 
 int tls_certificate_get_peer_analyzerid(gnutls_session session, uint64_t *analyzerid);
+
+int tls_certificate_get_permission(gnutls_session session, prelude_connection_permission_t *permission);
 
 #endif

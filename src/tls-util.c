@@ -181,14 +181,55 @@ int tls_certificate_get_peer_analyzerid(gnutls_session session, uint64_t *analyz
                 gnutls_x509_crt_deinit(cert);
                 return prelude_error(PRELUDE_ERROR_TLS_CERTIFICATE_PARSE);
         }
-
-        ret = gnutls_x509_crt_get_dn(cert, buf, &size);
+        
+        size = sizeof(buf);
+        ret = gnutls_x509_crt_get_dn_by_oid(cert, GNUTLS_OID_X520_DN_QUALIFIER, 0, 0, buf, &size);
         if ( ret < 0 ) {
                 gnutls_x509_crt_deinit(cert);
                 return prelude_error(PRELUDE_ERROR_TLS_INVALID_CERTIFICATE);
         }
 
-        ret = sscanf(buf, "CN=%" PRIu64, analyzerid);
+        ret = sscanf(buf, "%" PRIu64, analyzerid);
+        if ( ret != 1 ) {
+                gnutls_x509_crt_deinit(cert);
+                return prelude_error(PRELUDE_ERROR_TLS_INVALID_CERTIFICATE);
+        }
+        
+        gnutls_x509_crt_deinit(cert);
+        
+        return 0;
+}
+
+
+
+int tls_certificate_get_permission(gnutls_session session,
+                                   prelude_connection_permission_t *permission)
+{
+        int ret;
+        char buf[1024];
+        gnutls_x509_crt cert;
+        size_t size = sizeof(buf);
+        const gnutls_datum *data;
+        
+        data = gnutls_certificate_get_ours(session);
+        if ( ! data ) {
+                prelude_log(PRELUDE_LOG_ERR, "could not get own certificate.\n");
+                return -1;
+        }
+        
+        ret = gnutls_x509_crt_init(&cert);
+        if ( ret < 0 )
+                return -1;
+        
+        ret = gnutls_x509_crt_import(cert, data, GNUTLS_X509_FMT_DER);
+        if ( ret < 0) {
+                gnutls_x509_crt_deinit(cert);
+                return prelude_error(PRELUDE_ERROR_TLS_CERTIFICATE_PARSE);
+        }
+        
+        gnutls_x509_crt_get_dn_by_oid(cert, GNUTLS_OID_X520_COMMON_NAME, 0, 0, buf, &size);
+        
+        ret = sscanf(buf, "%d", (int *) permission);
         if ( ret != 1 ) {
                 gnutls_x509_crt_deinit(cert);
                 return prelude_error(PRELUDE_ERROR_TLS_INVALID_CERTIFICATE);
