@@ -106,7 +106,8 @@ dnl **************************************************
 dnl * Check for OpenSSL.                             *
 dnl **************************************************
 
-AC_ARG_ENABLE(openssl, [  --enable-openssl	Use OpenSSL to communicate with Manager [default=auto]], enable_openssl="$enableval", enable_openssl=yes)
+AC_ARG_ENABLE(openssl, [  --enable-openssl	
+Use OpenSSL to communicate with Manager [default=auto]], enable_openssl="$enableval", enable_openssl=yes)
 
 if test x$enable_openssl = xyes ; then
 	
@@ -333,70 +334,72 @@ dnl **************************************************
 dnl * Perl support                                   *
 dnl **************************************************
 
-AC_CHECK_PROG(PERL, perl, true, false)
+AC_ARG_ENABLE(perl, [  --enable-perl  Enable Perl binding [default=auto]], 
+		    enable_perl="$enableval", enable_perl="yes")
 
-if $PERL; then
-    PERL_CFLAGS="-I`perl -e 'use Config; print $Config{archlib}'`/CORE"
+if test x$enable_perl = xyes; then
+   AC_CHECK_PROG(PERL, perl, yes, no)    
 fi
 
-AC_ARG_ENABLE(perl, [  --enable-perl  Enable Perl binding [default=auto]], enable_perl="$enableval", enable_perl=auto)
-
-if test x$enable_perl = xauto; then
-    if $PERL; then
-	enable_perl=yes
-    else
-	enable_perl=no
-    fi
+if test x$enable_perl = xyes; then
+   perl_includedir="`perl -e 'use Config; print $Config{archlib}'`/CORE"
+   AC_CHECK_FILE($perl_includedir/perl.h, enable_perl=yes, enable_perl=no)
 fi
 
-perl_privlib=`perl -e 'use Config; print $Config{privlib}'`
+if test x$enable_perl = xyes; then
+   
+   perl_privlib=`perl -e 'use Config; print $Config{privlib}'`
 
-if test -w $perl_privlib; then
-    perl_dir=$perl_privlib
-else
-    perl_dir=$libdir/libprelude/bindings/perl
+   if test -w $perl_privlib; then
+        perl_dir=$perl_privlib
+   else
+	perl_dir=$libdir/libprelude/bindings/perl
+   fi
+
+   PERL_CFLAGS="-I$perl_includedir"
+   
+   AC_SUBST(perl_dir)
+   AC_SUBST(PERL_CFLAGS)
 fi
 
 AM_CONDITIONAL(HAVE_PERL, test x$enable_perl = xyes)
-AC_SUBST(PERL_CFLAGS)
-AC_SUBST(perl_dir)
+
 
 
 dnl **************************************************
 dnl * Python support                                 *
 dnl **************************************************
 
-AC_CHECK_PROG(PYTHON, python, true, false)
 
-AC_ARG_ENABLE(python, [  --enable-python  Enable Python binding [default=auto]], enable_python="$enableval", enable_python=auto)
+AC_ARG_ENABLE(python, [  --enable-python  
+Enable Python binding [default=auto]], enable_python="$enableval", enable_python=yes)
 
-if test x$enable_python = xauto; then
-    if $PYTHON; then
-	enable_python=yes
-    else
-	enable_python=no
-    fi
+if test x$enable_python = xyes; then
+   AC_CHECK_PROG(enable_python, python, yes, no)
 fi
 
-python_lib_path=`python -c '
-from distutils.sysconfig import get_python_lib
-print get_python_lib()
-'`
+if test x$enable_python = xyes; then
+   python_includedir=`python -c 'from distutils.sysconfig import get_python_inc 
+print get_python_inc()'`
+   AC_CHECK_FILE($python_includedir/Python.h, enable_python=yes, enable_python=no)
+fi
 
-PYTHON_CFLAGS=-I`python -c '
-from distutils.sysconfig import get_python_inc
-print get_python_inc()
-'`
+if test x$enable_python = xyes; then
+   python_lib_path=`python -c 'from distutils.sysconfig import get_python_lib 
+print get_python_lib()'`
 
-if test -w $python_lib_path; then
-    python_dir=$python_lib_path
-else
-    python_dir=$libdir/libprelude/bindings/python
+   if test -w $python_lib_path; then
+        python_dir=$python_lib_path
+   else
+	python_dir=$libdir/libprelude/bindings/python 
+   fi
+
+   PYTHON_CFLAGS="-I$python_includedir"
+   AC_SUBST(PYTHON_CFLAGS)
+   AC_SUBST(python_dir)
 fi
 
 AM_CONDITIONAL(HAVE_PYTHON, test x$enable_python = xyes)
-AC_SUBST(PYTHON_CFLAGS)
-AC_SUBST(python_dir)
 
 
 dnl **************************************************

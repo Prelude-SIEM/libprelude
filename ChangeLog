@@ -1,5 +1,9 @@
 2004-01-17  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
+	* configure.in: correct python and perl check. Check
+	that the required header file is present. Fix build
+	failure on system missing headers file.
+
 	* src/prelude-log.c (syslog_log, strip_return): 
 	strip '\n' character at the head and tail of the
 	buffer when logging to syslog().
