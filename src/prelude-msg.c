@@ -26,7 +26,6 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <assert.h>
-#include <sys/uio.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/time.h>
