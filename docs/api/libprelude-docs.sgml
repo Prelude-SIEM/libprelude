@@ -57,11 +57,11 @@
 ]>
 <book id="index">
   <bookinfo>
-    <title>[Insert name here] Reference Manual</title>
+    <title>Prelude library Reference Manual</title>
   </bookinfo>
 
   <chapter>
-    <title>[Insert title here]</title>
+    <title>Public API</title>
     &libprelude-idmef-criteria-stringyac;
     &libprelude-idmef-tree;
     &libprelude-prelude-linked-object;
