@@ -27,11 +27,11 @@
 typedef struct config config_t;
 
 int config_get_next(config_t *cfg, char **section,
-                    char **entry, char **value, int *line);
+                    char **entry, char **value, unsigned int *line);
 
-int config_get_section(config_t *cfg, const char *section, int *line);
+int config_get_section(config_t *cfg, const char *section, unsigned int *line);
 
-char *config_get(config_t *cfg, const char *section, const char *entry, int *line);
+char *config_get(config_t *cfg, const char *section, const char *entry, unsigned int *line);
 
 int config_set(config_t *cfg, const char *section, const char *entry, const char *val);
 

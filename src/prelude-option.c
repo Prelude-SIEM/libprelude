@@ -100,7 +100,7 @@ struct cb_list {
 
 static int get_missing_options(config_t *cfg,
                                const char *filename, prelude_list_t *cblist,
-                               prelude_option_t *rootlist, int *line, int depth, prelude_string_t *err);
+                               prelude_option_t *rootlist, unsigned int *line, int depth, prelude_string_t *err);
 
 /*
  * contain all option
@@ -427,7 +427,7 @@ static int call_option_from_cb_list(prelude_list_t *cblist, prelude_string_t *er
  * Try to get all option that were not set from the command line in the config file.
  */
 static int get_missing_options(config_t *cfg, const char *filename, prelude_list_t *cblist,
-                               prelude_option_t *rootlist, int *line, int depth, prelude_string_t *err) 
+                               prelude_option_t *rootlist, unsigned int *line, int depth, prelude_string_t *err) 
 {
         int ret;
         const char *argptr;
@@ -1137,6 +1137,8 @@ int prelude_option_invoke_set(prelude_option_t *opt, const char *value, prelude_
                 return -1;
         }
 
+        prelude_log_debug(3, "opt=%s value=%s\n", opt->longopt, value);
+        
         return do_set(opt, value, err, context);
 }
 
