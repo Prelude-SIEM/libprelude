@@ -71,6 +71,25 @@ prelude-list
 @member: 
 
 
+<!-- ##### MACRO prelude_list_for_each_continue_safe ##### -->
+<para>
+
+</para>
+
+@pos: 
+@bkp: 
+@head: 
+
+
+<!-- ##### MACRO prelude_list_for_each_continue ##### -->
+<para>
+
+</para>
+
+@pos: 
+@head: 
+
+
 <!-- ##### MACRO prelude_list_for_each ##### -->
 <para>
 

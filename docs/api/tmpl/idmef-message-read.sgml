@@ -24,12 +24,32 @@ idmef-message-read
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_reference_read ##### -->
+<para>
+
+</para>
+
+@reference: 
+@msg: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_classification_read ##### -->
 <para>
 
 </para>
 
 @classification: 
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_read ##### -->
+<para>
+
+</para>
+
+@user_id: 
 @msg: 
 @Returns: 
 
@@ -60,6 +80,26 @@ idmef-message-read
 </para>
 
 @process: 
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_read ##### -->
+<para>
+
+</para>
+
+@web_service: 
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_read ##### -->
+<para>
+
+</para>
+
+@snmp_service: 
 @msg: 
 @Returns: 
 
@@ -110,6 +150,16 @@ idmef-message-read
 </para>
 
 @inode: 
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_checksum_read ##### -->
+<para>
+
+</para>
+
+@checksum: 
 @msg: 
 @Returns: 
 

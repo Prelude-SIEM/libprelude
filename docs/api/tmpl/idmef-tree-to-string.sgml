@@ -25,7 +25,29 @@ idmef-tree-to-string
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_reference_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@buffer: 
+@size: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_classification_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@buffer: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_to_string ##### -->
 <para>
 
 </para>
@@ -59,6 +81,28 @@ idmef-tree-to-string
 
 
 <!-- ##### FUNCTION idmef_process_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@buffer: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@buffer: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_to_string ##### -->
 <para>
 
 </para>
@@ -114,6 +158,17 @@ idmef-tree-to-string
 
 
 <!-- ##### FUNCTION idmef_inode_to_string ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@buffer: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_checksum_to_string ##### -->
 <para>
 
 </para>

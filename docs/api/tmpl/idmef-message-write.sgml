@@ -33,12 +33,30 @@ idmef-message-write
 @msg: 
 
 
+<!-- ##### FUNCTION idmef_reference_write ##### -->
+<para>
+
+</para>
+
+@reference: 
+@msg: 
+
+
 <!-- ##### FUNCTION idmef_classification_write ##### -->
 <para>
 
 </para>
 
 @classification: 
+@msg: 
+
+
+<!-- ##### FUNCTION idmef_user_id_write ##### -->
+<para>
+
+</para>
+
+@user_id: 
 @msg: 
 
 
@@ -66,6 +84,24 @@ idmef-message-write
 </para>
 
 @process: 
+@msg: 
+
+
+<!-- ##### FUNCTION idmef_web_service_write ##### -->
+<para>
+
+</para>
+
+@web_service: 
+@msg: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_write ##### -->
+<para>
+
+</para>
+
+@snmp_service: 
 @msg: 
 
 
@@ -111,6 +147,15 @@ idmef-message-write
 </para>
 
 @inode: 
+@msg: 
+
+
+<!-- ##### FUNCTION idmef_checksum_write ##### -->
+<para>
+
+</para>
+
+@checksum: 
 @msg: 
 
 

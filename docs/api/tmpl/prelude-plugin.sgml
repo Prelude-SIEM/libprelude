@@ -331,6 +331,23 @@ prelude-plugin
 @symlist: 
 
 
+<!-- ##### FUNCTION prelude_plugin_get_next ##### -->
+<para>
+
+</para>
+
+@iter: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_plugin_unload ##### -->
+<para>
+
+</para>
+
+@plugin: 
+
+
 <!-- ##### MACRO prelude_plugin_compute_stats ##### -->
 <para>
 

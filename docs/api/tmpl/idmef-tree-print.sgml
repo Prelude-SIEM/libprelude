@@ -22,7 +22,23 @@ idmef-tree-print
 @ptr: 
 
 
+<!-- ##### FUNCTION idmef_reference_print ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
 <!-- ##### FUNCTION idmef_classification_print ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
+<!-- ##### FUNCTION idmef_user_id_print ##### -->
 <para>
 
 </para>
@@ -47,6 +63,22 @@ idmef-tree-print
 
 
 <!-- ##### FUNCTION idmef_process_print ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
+<!-- ##### FUNCTION idmef_web_service_print ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_print ##### -->
 <para>
 
 </para>
@@ -87,6 +119,14 @@ idmef-tree-print
 
 
 <!-- ##### FUNCTION idmef_inode_print ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
+<!-- ##### FUNCTION idmef_checksum_print ##### -->
 <para>
 
 </para>

@@ -35,7 +35,21 @@ idmef-message-id
 
 
 
+<!-- ##### MACRO MSG_REFERENCE_TAG ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO MSG_CLASSIFICATION_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_USER_ID_TAG ##### -->
 <para>
 
 </para>
@@ -57,6 +71,20 @@ idmef-message-id
 
 
 <!-- ##### MACRO MSG_PROCESS_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_WEB_SERVICE_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SNMP_SERVICE_TAG ##### -->
 <para>
 
 </para>
@@ -92,6 +120,13 @@ idmef-message-id
 
 
 <!-- ##### MACRO MSG_INODE_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_CHECKSUM_TAG ##### -->
 <para>
 
 </para>
@@ -217,6 +252,76 @@ idmef-message-id
 
 
 
+<!-- ##### MACRO MSG_REFERENCE_ORIGIN ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_REFERENCE_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_REFERENCE_URL ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_REFERENCE_MEANING ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_CLASSIFICATION_IDENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_CLASSIFICATION_TEXT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_USER_ID_IDENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_USER_ID_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_USER_ID_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_USER_ID_NUMBER ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO MSG_USER_IDENT ##### -->
 <para>
 
@@ -315,7 +420,84 @@ idmef-message-id
 
 
 
+<!-- ##### MACRO MSG_WEB_SERVICE_URL ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_WEB_SERVICE_CGI ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_WEB_SERVICE_HTTP_METHOD ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_WEB_SERVICE_ARG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SNMP_SERVICE_OID ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SNMP_SERVICE_COMMUNITY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SNMP_SERVICE_SECURITY_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SNMP_SERVICE_CONTEXT_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SNMP_SERVICE_CONTEXT_ENGINE_ID ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SNMP_SERVICE_COMMAND ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO MSG_SERVICE_IDENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SERVICE_IP_VERSION ##### -->
 <para>
 
 </para>
@@ -330,6 +512,20 @@ idmef-message-id
 
 
 <!-- ##### MACRO MSG_SERVICE_PORT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SERVICE_IANA_PROTOCOL_NUMBER ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_SERVICE_IANA_PROTOCOL_NAME ##### -->
 <para>
 
 </para>
@@ -448,21 +644,28 @@ idmef-message-id
 
 
 
+<!-- ##### MACRO MSG_CHECKSUM_VALUE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_CHECKSUM_KEY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_CHECKSUM_ALGORITHM ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO MSG_FILE_IDENT ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO MSG_FILE_CATEGORY ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO MSG_FILE_FSTYPE ##### -->
 <para>
 
 </para>
@@ -518,6 +721,20 @@ idmef-message-id
 
 
 
+<!-- ##### MACRO MSG_FILE_CATEGORY ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_FILE_FSTYPE ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO MSG_LINKAGE_CATEGORY ##### -->
 <para>
 
@@ -561,6 +778,13 @@ idmef-message-id
 
 
 <!-- ##### MACRO MSG_ANALYZER_ANALYZERID ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ANALYZER_NAME ##### -->
 <para>
 
 </para>
@@ -721,6 +945,13 @@ idmef-message-id
 
 
 
+<!-- ##### MACRO MSG_ALERT_MESSAGEID ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO MSG_ALERT_CREATE_TIME ##### -->
 <para>
 
@@ -736,6 +967,13 @@ idmef-message-id
 
 
 <!-- ##### MACRO MSG_ALERT_ANALYZER_TIME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_HEARTBEAT_MESSAGEID ##### -->
 <para>
 
 </para>

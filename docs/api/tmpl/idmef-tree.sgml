@@ -115,6 +115,15 @@ idmef-tree
 @x: 
 
 
+<!-- ##### MACRO OPTIONAL_INT ##### -->
+<para>
+
+</para>
+
+@type: 
+@name: 
+
+
 <!-- ##### MACRO IDMEF_VERSION ##### -->
 <para>
 

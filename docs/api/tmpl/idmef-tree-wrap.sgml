@@ -201,6 +201,225 @@ idmef-tree-wrap
 @Returns: 
 
 
+<!-- ##### ENUM idmef_reference_origin_t ##### -->
+<para>
+
+</para>
+
+@IDMEF_REFERENCE_ORIGIN_ERROR: 
+@IDMEF_REFERENCE_ORIGIN_UNKNOWN: 
+@IDMEF_REFERENCE_ORIGIN_VENDOR_SPECIFIC: 
+@IDMEF_REFERENCE_ORIGIN_USER_SPECIFIC: 
+@IDMEF_REFERENCE_ORIGIN_BUGTRAQID: 
+@IDMEF_REFERENCE_ORIGIN_CVE: 
+@IDMEF_REFERENCE_ORIGIN_OSVDB: 
+
+<!-- ##### FUNCTION idmef_reference_origin_to_numeric ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_origin_to_string ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_ref ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+
+
+<!-- ##### FUNCTION idmef_reference_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+
+
+<!-- ##### FUNCTION idmef_reference_destroy ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
+<!-- ##### FUNCTION idmef_reference_get_origin ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_set_origin ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@origin: 
+
+
+<!-- ##### FUNCTION idmef_reference_get_origin_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_new_origin ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_get_name ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_set_name ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@name: 
+
+
+<!-- ##### FUNCTION idmef_reference_get_name_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_new_name ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_get_url ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_set_url ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@url: 
+
+
+<!-- ##### FUNCTION idmef_reference_get_url_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_new_url ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_get_meaning ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_set_meaning ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@meaning: 
+
+
+<!-- ##### FUNCTION idmef_reference_get_meaning_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_new_meaning ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_classification_new ##### -->
 <para>
 
@@ -243,6 +462,335 @@ idmef-tree-wrap
 </para>
 
 @ptr: 
+
+
+<!-- ##### FUNCTION idmef_classification_get_ident ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_classification_set_ident ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@ident: 
+
+
+<!-- ##### FUNCTION idmef_classification_get_ident_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_classification_new_ident ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_classification_get_text ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_classification_set_text ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@text: 
+
+
+<!-- ##### FUNCTION idmef_classification_get_text_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_classification_new_text ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_classification_get_next_reference ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_classification_set_reference ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@object: 
+
+
+<!-- ##### FUNCTION idmef_classification_new_reference ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_classification_get_reference_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### ENUM idmef_user_id_type_t ##### -->
+<para>
+
+</para>
+
+@IDMEF_USER_ID_TYPE_ORIGINAL_ERROR: 
+@IDMEF_USER_ID_TYPE_ORIGINAL_USER: 
+@IDMEF_USER_ID_TYPE_CURRENT_USER: 
+@IDMEF_USER_ID_TYPE_TARGET_USER: 
+@IDMEF_USER_ID_TYPE_USER_PRIVS: 
+@IDMEF_USER_ID_TYPE_CURRENT_GROUP: 
+@IDMEF_USER_ID_TYPE_GROUP_PRIVS: 
+@IDMEF_USER_ID_TYPE_OTHER_PRIVS: 
+
+<!-- ##### FUNCTION idmef_user_id_type_to_numeric ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_type_to_string ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_ref ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+
+
+<!-- ##### FUNCTION idmef_user_id_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+
+
+<!-- ##### FUNCTION idmef_user_id_destroy ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
+<!-- ##### FUNCTION idmef_user_id_get_ident ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_set_ident ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@ident: 
+
+
+<!-- ##### FUNCTION idmef_user_id_get_ident_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_new_ident ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_get_name ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_set_name ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@name: 
+
+
+<!-- ##### FUNCTION idmef_user_id_get_name_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_new_name ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_get_type ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_set_type ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@type: 
+
+
+<!-- ##### FUNCTION idmef_user_id_get_type_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_new_type ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_get_number ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_set_number ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@number: 
+
+
+<!-- ##### FUNCTION idmef_user_id_get_number_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_new_number ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
 
 
 <!-- ##### ENUM idmef_user_category_t ##### -->
@@ -381,6 +929,43 @@ idmef-tree-wrap
 
 
 <!-- ##### FUNCTION idmef_user_new_category ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_get_next_user_id ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_set_user_id ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@object: 
+
+
+<!-- ##### FUNCTION idmef_user_new_user_id ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_get_user_id_value ##### -->
 <para>
 
 </para>
@@ -951,6 +1536,455 @@ idmef-tree-wrap
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_web_service_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_ref ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+
+
+<!-- ##### FUNCTION idmef_web_service_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+
+
+<!-- ##### FUNCTION idmef_web_service_destroy ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
+<!-- ##### FUNCTION idmef_web_service_get_url ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_set_url ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@url: 
+
+
+<!-- ##### FUNCTION idmef_web_service_get_url_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_new_url ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_get_cgi ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_set_cgi ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@cgi: 
+
+
+<!-- ##### FUNCTION idmef_web_service_get_cgi_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_new_cgi ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_get_http_method ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_set_http_method ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@http_method: 
+
+
+<!-- ##### FUNCTION idmef_web_service_get_http_method_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_new_http_method ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_get_next_arg ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_set_arg ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@object: 
+
+
+<!-- ##### FUNCTION idmef_web_service_new_arg ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_get_arg_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_ref ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_destroy ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_oid ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_set_oid ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@oid: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_oid_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_new_oid ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_community ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_set_community ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@community: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_community_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_new_community ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_security_name ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_set_security_name ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@security_name: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_security_name_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_new_security_name ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_context_name ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_set_context_name ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@context_name: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_context_name_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_new_context_name ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_context_engine_id ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_set_context_engine_id ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@context_engine_id: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_context_engine_id_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_new_context_engine_id ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_command ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_set_command ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@command: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_command_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_new_command ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
 <!-- ##### ENUM idmef_service_type_t ##### -->
 <para>
 
@@ -1059,6 +2093,42 @@ idmef-tree-wrap
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_service_get_ip_version ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_set_ip_version ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@ip_version: 
+
+
+<!-- ##### FUNCTION idmef_service_get_ip_version_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_new_ip_version ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_service_get_name ##### -->
 <para>
 
@@ -1123,6 +2193,78 @@ idmef-tree-wrap
 
 
 <!-- ##### FUNCTION idmef_service_new_port ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_get_iana_protocol_number ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_set_iana_protocol_number ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@iana_protocol_number: 
+
+
+<!-- ##### FUNCTION idmef_service_get_iana_protocol_number_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_new_iana_protocol_number ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_get_iana_protocol_name ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_set_iana_protocol_name ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@iana_protocol_name: 
+
+
+<!-- ##### FUNCTION idmef_service_get_iana_protocol_name_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_new_iana_protocol_name ##### -->
 <para>
 
 </para>
@@ -1213,6 +2355,78 @@ idmef-tree-wrap
 
 
 <!-- ##### FUNCTION idmef_service_get_type_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_get_web_service ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_set_web_service ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@web_service: 
+
+
+<!-- ##### FUNCTION idmef_service_get_web_service_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_new_web_service ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_get_snmp_service ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_set_snmp_service ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@snmp_service: 
+
+
+<!-- ##### FUNCTION idmef_service_get_snmp_service_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_new_snmp_service ##### -->
 <para>
 
 </para>
@@ -1854,6 +3068,42 @@ idmef-tree-wrap
 @ptr: 
 
 
+<!-- ##### FUNCTION idmef_file_access_get_user_id ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_access_set_user_id ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@user_id: 
+
+
+<!-- ##### FUNCTION idmef_file_access_get_user_id_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_access_new_user_id ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_file_access_get_next_permission ##### -->
 <para>
 
@@ -2151,6 +3401,193 @@ idmef-tree-wrap
 @Returns: 
 
 
+<!-- ##### ENUM idmef_checksum_algorithm_t ##### -->
+<para>
+
+</para>
+
+@IDMEF_CHECKSUM_ALGORITHM_ERROR: 
+@IDMEF_CHECKSUM_ALGORITHM_MD4: 
+@IDMEF_CHECKSUM_ALGORITHM_MD5: 
+@IDMEF_CHECKSUM_ALGORITHM_SHA1: 
+@IDMEF_CHECKSUM_ALGORITHM_SHA2_256: 
+@IDMEF_CHECKSUM_ALGORITHM_SHA2_384: 
+@IDMEF_CHECKSUM_ALGORITHM_SHA2_512: 
+@IDMEF_CHECKSUM_ALGORITHM_CRC_32: 
+@IDMEF_CHECKSUM_ALGORITHM_HAVAL: 
+@IDMEF_CHECKSUM_ALGORITHM_TIGER: 
+@IDMEF_CHECKSUM_ALGORITHM_GOST: 
+
+<!-- ##### FUNCTION idmef_checksum_algorithm_to_numeric ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_checksum_algorithm_to_string ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_checksum_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_checksum_ref ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_checksum_get_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+
+
+<!-- ##### FUNCTION idmef_checksum_new_child ##### -->
+<para>
+
+</para>
+
+@p: 
+@child: 
+@n: 
+
+
+<!-- ##### FUNCTION idmef_checksum_destroy ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
+<!-- ##### FUNCTION idmef_checksum_get_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_checksum_set_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@value: 
+
+
+<!-- ##### FUNCTION idmef_checksum_get_value_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_checksum_new_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_checksum_get_key ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_checksum_set_key ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@key: 
+
+
+<!-- ##### FUNCTION idmef_checksum_get_key_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_checksum_new_key ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_checksum_get_algorithm ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_checksum_set_algorithm ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@algorithm: 
+
+
+<!-- ##### FUNCTION idmef_checksum_get_algorithm_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_checksum_new_algorithm ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
 <!-- ##### ENUM idmef_file_category_t ##### -->
 <para>
 
@@ -2285,78 +3722,6 @@ idmef-tree-wrap
 
 
 <!-- ##### FUNCTION idmef_file_new_ident ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_file_get_category ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_file_set_category ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@category: 
-
-
-<!-- ##### FUNCTION idmef_file_get_category_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_file_new_category ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_file_get_fstype ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_file_set_fstype ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@fstype: 
-
-
-<!-- ##### FUNCTION idmef_file_get_fstype_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_file_new_fstype ##### -->
 <para>
 
 </para>
@@ -2654,6 +4019,43 @@ idmef-tree-wrap
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_file_get_next_linkage ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_set_linkage ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@object: 
+
+
+<!-- ##### FUNCTION idmef_file_new_linkage ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_get_linkage_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_file_get_inode ##### -->
 <para>
 
@@ -2682,6 +4084,115 @@ idmef-tree-wrap
 
 
 <!-- ##### FUNCTION idmef_file_new_inode ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_get_next_checksum ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_set_checksum ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@object: 
+
+
+<!-- ##### FUNCTION idmef_file_new_checksum ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_get_checksum_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_get_category ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_set_category ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@category: 
+
+
+<!-- ##### FUNCTION idmef_file_get_category_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_new_category ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_get_fstype ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_set_fstype ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@fstype: 
+
+
+<!-- ##### FUNCTION idmef_file_get_fstype_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_new_fstype ##### -->
 <para>
 
 </para>
@@ -3342,6 +4853,42 @@ idmef-tree-wrap
 
 
 <!-- ##### FUNCTION idmef_analyzer_new_analyzerid ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_analyzer_get_name ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_analyzer_set_name ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@name: 
+
+
+<!-- ##### FUNCTION idmef_analyzer_get_name_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_analyzer_new_name ##### -->
 <para>
 
 </para>
@@ -5002,7 +6549,7 @@ idmef-tree-wrap
 @ptr: 
 
 
-<!-- ##### FUNCTION idmef_alert_get_assessment ##### -->
+<!-- ##### FUNCTION idmef_alert_get_messageid ##### -->
 <para>
 
 </para>
@@ -5011,16 +6558,16 @@ idmef-tree-wrap
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_alert_set_assessment ##### -->
+<!-- ##### FUNCTION idmef_alert_set_messageid ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@assessment: 
+@messageid: 
 
 
-<!-- ##### FUNCTION idmef_alert_get_assessment_value ##### -->
+<!-- ##### FUNCTION idmef_alert_get_messageid_value ##### -->
 <para>
 
 </para>
@@ -5029,7 +6576,7 @@ idmef-tree-wrap
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_alert_new_assessment ##### -->
+<!-- ##### FUNCTION idmef_alert_new_messageid ##### -->
 <para>
 
 </para>
@@ -5102,6 +6649,44 @@ idmef-tree-wrap
 
 
 <!-- ##### FUNCTION idmef_alert_new_create_time ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_alert_get_classification ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_alert_set_classification ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@classification: 
+<!-- # Unused Parameters # -->
+@object: 
+
+
+<!-- ##### FUNCTION idmef_alert_get_classification_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_alert_new_classification ##### -->
 <para>
 
 </para>
@@ -5256,18 +6841,7 @@ idmef-tree-wrap
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_alert_set_classification ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@classification: 
-<!-- # Unused Parameters # -->
-@object: 
-
-
-<!-- ##### FUNCTION idmef_alert_new_classification ##### -->
+<!-- ##### FUNCTION idmef_alert_get_assessment ##### -->
 <para>
 
 </para>
@@ -5276,7 +6850,25 @@ idmef-tree-wrap
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_alert_get_classification_value ##### -->
+<!-- ##### FUNCTION idmef_alert_set_assessment ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@assessment: 
+
+
+<!-- ##### FUNCTION idmef_alert_get_assessment_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_alert_new_assessment ##### -->
 <para>
 
 </para>
@@ -5483,6 +7075,42 @@ idmef-tree-wrap
 </para>
 
 @ptr: 
+
+
+<!-- ##### FUNCTION idmef_heartbeat_get_messageid ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_heartbeat_set_messageid ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@messageid: 
+
+
+<!-- ##### FUNCTION idmef_heartbeat_get_messageid_value ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_heartbeat_new_messageid ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_heartbeat_get_analyzer ##### -->
@@ -5859,7 +7487,35 @@ idmef-tree-wrap
 
 
 
+<!-- ##### MACRO IDMEF_OBJECT_TYPE_REFERENCE_ORIGIN ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO IDMEF_OBJECT_TYPE_REFERENCE ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO IDMEF_OBJECT_TYPE_CLASSIFICATION ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO IDMEF_OBJECT_TYPE_USER_ID_TYPE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO IDMEF_OBJECT_TYPE_USER_ID ##### -->
 <para>
 
 </para>
@@ -5895,6 +7551,20 @@ idmef-tree-wrap
 
 
 <!-- ##### MACRO IDMEF_OBJECT_TYPE_PROCESS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO IDMEF_OBJECT_TYPE_WEB_SERVICE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO IDMEF_OBJECT_TYPE_SNMP_SERVICE ##### -->
 <para>
 
 </para>
@@ -5951,6 +7621,20 @@ idmef-tree-wrap
 
 
 <!-- ##### MACRO IDMEF_OBJECT_TYPE_INODE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO IDMEF_OBJECT_TYPE_CHECKSUM_ALGORITHM ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO IDMEF_OBJECT_TYPE_CHECKSUM ##### -->
 <para>
 
 </para>

@@ -14,6 +14,24 @@ idmef-value
 
 </para>
 
+<!-- ##### FUNCTION idmef_value_new_int8 ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_uint8 ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_value_new_int16 ##### -->
 <para>
 
@@ -161,6 +179,16 @@ idmef-value
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_value_new_for_object ##### -->
+<para>
+
+</para>
+
+@object: 
+@buf: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_value_new_generic ##### -->
 <para>
 
@@ -168,6 +196,24 @@ idmef-value
 
 @type: 
 @buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get_int8 ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get_uint8 ##### -->
+<para>
+
+</para>
+
+@val: 
 @Returns: 
 
 

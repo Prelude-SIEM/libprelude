@@ -236,6 +236,15 @@ int main(int argc, char **argv)
 @cb: 
 
 
+<!-- ##### FUNCTION prelude_client_send_idmef ##### -->
+<para>
+
+</para>
+
+@client: 
+@msg: 
+
+
 <!-- ##### FUNCTION prelude_client_destroy ##### -->
 <para>
 

@@ -73,16 +73,6 @@ prelude-message-buffered
 
 
 
-<!-- ##### ENUM prelude_msg_status_t ##### -->
-<para>
-
-</para>
-
-@prelude_msg_error: 
-@prelude_msg_eof: 
-@prelude_msg_unfinished: 
-@prelude_msg_finished: 
-
 <!-- ##### FUNCTION prelude_msg_read ##### -->
 <para>
 

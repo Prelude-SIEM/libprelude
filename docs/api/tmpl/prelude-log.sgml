@@ -14,6 +14,63 @@ prelude-log
 
 </para>
 
+<!-- ##### MACRO log ##### -->
+<para>
+
+</para>
+
+@priority: 
+@...: 
+<!-- # Unused Parameters # -->
+@args...: 
+
+
+<!-- ##### MACRO LOG_ERR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO LOG_INFO ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### ENUM prelude_log_priority_t ##### -->
+<para>
+
+</para>
+
+@PRELUDE_LOG_PRIORITY_INFO: 
+@PRELUDE_LOG_PRIORITY_ERROR: 
+
+<!-- ##### ENUM prelude_log_flags_t ##### -->
+<para>
+
+</para>
+
+@PRELUDE_LOG_FLAGS_QUIET: 
+@PRELUDE_LOG_FLAGS_SYSLOG: 
+
+<!-- ##### FUNCTION prelude_log_get_flags ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_log_set_flags ##### -->
+<para>
+
+</para>
+
+@flags: 
+
+
 <!-- ##### FUNCTION prelude_log_use_syslog ##### -->
 <para>
 
@@ -48,16 +105,5 @@ prelude-log
 @line: 
 @fmt: 
 @Varargs: 
-
-
-<!-- ##### MACRO log ##### -->
-<para>
-
-</para>
-
-@priority: 
-@...: 
-<!-- # Unused Parameters # -->
-@args...: 
 
 
