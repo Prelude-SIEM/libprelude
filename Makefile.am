@@ -5,7 +5,8 @@ EXTRA_DIST = client.conf global.conf tls.conf
 
 bin_SCRIPTS = $(top_builddir)/libprelude-config
 
-distuninstallcheck_listfiles = find . -type f -print | grep -E -v 'perl|3pm'
+distuninstallcheck_listfiles = find . -type f -print | grep -v 'perl' | grep -v '3pm'
+
 
 #
 # Install default sensors configuration with mode 644
