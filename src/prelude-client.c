@@ -774,6 +774,8 @@ void prelude_client_destroy(prelude_client_t *client)
         if ( client->manager_list )
                 prelude_connection_mgr_destroy(client->manager_list);
 
+	timer_destroy(&client->heartbeat_timer);
+
         free(client);
 }
 

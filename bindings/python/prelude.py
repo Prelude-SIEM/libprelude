@@ -21,7 +21,7 @@ import sys
 import os
 
 import time
-import string
+import re
 
 import _prelude
 
@@ -81,6 +81,11 @@ class IDMEFCriteriaError(Error):
 
 
 
+def log_use_syslog():
+    _prelude.prelude_log_use_syslog()
+
+
+
 class Client:
     RECV_IDMEF = _prelude.PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF
     SEND_IDMEF = _prelude.PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF
@@ -111,11 +116,15 @@ class Client:
                 raise ClientError()
         
     def __del__(self):
+        #print "Client.__del__"
+        
         if self._msgbuf:
             _prelude.prelude_msgbuf_close(self._msgbuf)
+            #self._msgbuf = None
 
         if self._client:
             _prelude.prelude_client_destroy(self._client)
+            #self._client = None
 
 
 
@@ -157,18 +166,39 @@ class Sensor(Client):
         _prelude.prelude_msgbuf_mark_end(self._msgbuf)
 
 
+
 class Option:
-    def __init__(self, parent, name, description, value):
+    def __init__(self, parent, option):
         self.parent = parent
-        self.name = name
-        self.description = description
-        self.value = value
+        self.name = _prelude.prelude_option_get_longopt(option)
+        self.instantiable = bool(_prelude.prelude_option_get_flags(option) & _prelude.ALLOW_MULTIPLE_CALL)
+        if self.name.find("[") != -1:
+            self.instance = True
+            m = re.compile("(\w+)\[(\w+)\]").match(self.name)
+            self.instantiable_name = m.group(1)
+            self.instance_name = m.group(2)
+        else:
+            self.instance = False
+        self.boolean = _prelude.prelude_option_get_has_arg(option) == _prelude.no_argument
+        self.value = _prelude.prelude_option_get_value(option)
+        self.description = _prelude.prelude_option_get_description(option)
         self.options = [ ]
-        nodes = [ name ]
+        nodes = [ self.name ]
         while parent:
             nodes.insert(0, parent.name)
             parent = parent.parent
         self.path = ".".join(nodes)
+
+    def find(self, prefix):
+        if self.path.find(prefix) == 0:
+            return self
+
+        for option in self.options:
+            opt = option.find(prefix)
+            if opt:
+                return opt
+            
+        return None
         
     def is_section(self):
         return len(self.options) > 0
@@ -190,11 +220,7 @@ class Admin(Client):
             if not cur:
                 break
             
-            name = _prelude.prelude_option_get_longopt(cur)
-            value = _prelude.prelude_option_get_value(cur)
-            description = _prelude.prelude_option_get_description(cur)
-            
-            option = Option(parent, name, description, value)
+            option = Option(parent, cur)
             options.append(option)
             
             if _prelude.prelude_option_has_optlist(cur):
@@ -220,8 +246,12 @@ class Admin(Client):
     def get_option(self, analyzerid, name):
         pass
     
-    def set_option(self, analyzerid, name, value):
-        msg = self._request(analyzerid, _prelude.PRELUDE_MSG_OPTION_SET, "%s=%s" % (name, value))
+    def set_option(self, analyzerid, name, value=None):
+        if value:
+            value = "%s=%s" % (name, value)
+        else:
+            value = name
+        msg = self._request(analyzerid, _prelude.PRELUDE_MSG_OPTION_SET, value)
         retval = _prelude.prelude_option_recv_set(msg)
         
         return retval

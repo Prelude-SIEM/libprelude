@@ -90,12 +90,8 @@ char *prelude_option_recv_set(prelude_msg_t *msg)
 	int retval;
 	
 	retval = prelude_option_recv_reply(msg, &source_id, &request_id, (void **) &str);
-	if ( retval == PRELUDE_OPTION_REPLY_TYPE_ERROR ) {
-		printf("error: %s\n", str);
+	if ( retval == PRELUDE_OPTION_REPLY_TYPE_ERROR )
 		return NULL;
-	} else {
-		printf("SET successful %d\n", retval);
-	}
 	
 	return str;
 }
@@ -257,3 +253,4 @@ char *prelude_option_recv_set(prelude_msg_t *msg);
 %include "../../src/include/prelude-getopt.h"
 %include "../../src/include/prelude-getopt-wide.h"
 %include "../../src/include/prelude-message-id.h"
+%include "../../src/include/prelude-log.h"

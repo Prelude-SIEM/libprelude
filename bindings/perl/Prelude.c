@@ -735,12 +735,8 @@ char *prelude_option_recv_set(prelude_msg_t *msg)
 	int retval;
 	
 	retval = prelude_option_recv_reply(msg, &source_id, &request_id, (void **) &str);
-	if ( retval == PRELUDE_OPTION_REPLY_TYPE_ERROR ) {
-		printf("error: %s\n", str);
+	if ( retval == PRELUDE_OPTION_REPLY_TYPE_ERROR )
 		return NULL;
-	} else {
-		printf("SET successful %d\n", retval);
-	}
 	
 	return str;
 }
@@ -1870,6 +1866,39 @@ XS(_wrap_prelude_client_get_backup_filename) {
         prelude_client_get_backup_filename(arg1,arg2,arg3);
         
         
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_client_get_config_filename) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        char *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_client_get_config_filename(client);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_get_config_filename. Expected _p_prelude_client_t");
+            }
+        }
+        result = (char *)prelude_client_get_config_filename(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -36466,6 +36495,113 @@ XS(_wrap_prelude_option_recv_reply) {
 }
 
 
+XS(_wrap_prelude_log_use_syslog) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 0) || (items > 0)) {
+            SWIG_croak("Usage: prelude_log_use_syslog();");
+        }
+        prelude_log_use_syslog();
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_log_get_prefix) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        char *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 0) || (items > 0)) {
+            SWIG_croak("Usage: prelude_log_get_prefix();");
+        }
+        result = (char *)prelude_log_get_prefix();
+        
+        ST(argvi) = sv_newmortal();
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_log_set_prefix) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        char *arg1 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_log_set_prefix(prefix);");
+        }
+        if (!SvOK((SV*) ST(0))) arg1 = 0;
+        else arg1 = (char *) SvPV(ST(0), PL_na);
+        prelude_log_set_prefix(arg1);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_log) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        int arg1 ;
+        char *arg2 ;
+        char *arg3 ;
+        int arg4 ;
+        char *arg5 ;
+        void *arg6 = 0 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if (items < 5) {
+            SWIG_croak("Usage: prelude_log(priority,file,function,line,fmt,...);");
+        }
+        arg1 = (int) SvIV(ST(0));
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        if (!SvOK((SV*) ST(2))) arg3 = 0;
+        else arg3 = (char *) SvPV(ST(2), PL_na);
+        arg4 = (int) SvIV(ST(3));
+        if (!SvOK((SV*) ST(4))) arg5 = 0;
+        else arg5 = (char *) SvPV(ST(4), PL_na);
+        prelude_log(arg1,(char const *)arg2,(char const *)arg3,arg4,(char const *)arg5,arg6);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
@@ -36664,6 +36800,7 @@ static swig_constant_info swig_constants[] = {
 { SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_CAPABILITY_SEND_CM", (long) PRELUDE_CLIENT_CAPABILITY_SEND_CM, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_ASYNC_SEND", (long) 0x01, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_ASYNC_TIMER", (long) 0x02, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_ERROR", (long) IDMEF_ADDITIONAL_DATA_TYPE_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_STRING", (long) IDMEF_ADDITIONAL_DATA_TYPE_STRING, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN", (long) IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_BYTE", (long) IDMEF_ADDITIONAL_DATA_TYPE_BYTE, 0, 0, 0},
@@ -36674,10 +36811,12 @@ static swig_constant_info swig_constants[] = {
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST", (long) IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_REAL", (long) IDMEF_ADDITIONAL_DATA_TYPE_REAL, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_XML", (long) IDMEF_ADDITIONAL_DATA_TYPE_XML, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_CLASSIFICATION_ORIGIN_ERROR", (long) IDMEF_CLASSIFICATION_ORIGIN_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_CLASSIFICATION_ORIGIN_UNKNOWN", (long) IDMEF_CLASSIFICATION_ORIGIN_UNKNOWN, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_CLASSIFICATION_ORIGIN_BUGTRAQID", (long) IDMEF_CLASSIFICATION_ORIGIN_BUGTRAQID, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_CLASSIFICATION_ORIGIN_CVE", (long) IDMEF_CLASSIFICATION_ORIGIN_CVE, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_CLASSIFICATION_ORIGIN_VENDOR_SPECIFIC", (long) IDMEF_CLASSIFICATION_ORIGIN_VENDOR_SPECIFIC, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_USERID_TYPE_ORIGINAL_ERROR", (long) IDMEF_USERID_TYPE_ORIGINAL_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_USERID_TYPE_ORIGINAL_USER", (long) IDMEF_USERID_TYPE_ORIGINAL_USER, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_USERID_TYPE_CURRENT_USER", (long) IDMEF_USERID_TYPE_CURRENT_USER, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_USERID_TYPE_TARGET_USER", (long) IDMEF_USERID_TYPE_TARGET_USER, 0, 0, 0},
@@ -36685,9 +36824,11 @@ static swig_constant_info swig_constants[] = {
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_USERID_TYPE_CURRENT_GROUP", (long) IDMEF_USERID_TYPE_CURRENT_GROUP, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_USERID_TYPE_GROUP_PRIVS", (long) IDMEF_USERID_TYPE_GROUP_PRIVS, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_USERID_TYPE_OTHER_PRIVS", (long) IDMEF_USERID_TYPE_OTHER_PRIVS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_USER_CATEGORY_ERROR", (long) IDMEF_USER_CATEGORY_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_USER_CATEGORY_UNKNOWN", (long) IDMEF_USER_CATEGORY_UNKNOWN, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_USER_CATEGORY_APPLICATION", (long) IDMEF_USER_CATEGORY_APPLICATION, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_USER_CATEGORY_OS_DEVICE", (long) IDMEF_USER_CATEGORY_OS_DEVICE, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_ERROR", (long) IDMEF_ADDRESS_CATEGORY_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_UNKNOWN", (long) IDMEF_ADDRESS_CATEGORY_UNKNOWN, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_ATM", (long) IDMEF_ADDRESS_CATEGORY_ATM, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_E_MAIL", (long) IDMEF_ADDRESS_CATEGORY_E_MAIL, 0, 0, 0},
@@ -36703,9 +36844,11 @@ static swig_constant_info swig_constants[] = {
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_IPV6_ADDR_HEX", (long) IDMEF_ADDRESS_CATEGORY_IPV6_ADDR_HEX, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_IPV6_NET", (long) IDMEF_ADDRESS_CATEGORY_IPV6_NET, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK", (long) IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_SERVICE_TYPE_ERROR", (long) IDMEF_SERVICE_TYPE_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_SERVICE_TYPE_DEFAULT", (long) IDMEF_SERVICE_TYPE_DEFAULT, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_SERVICE_TYPE_WEB", (long) IDMEF_SERVICE_TYPE_WEB, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_SERVICE_TYPE_SNMP", (long) IDMEF_SERVICE_TYPE_SNMP, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_ERROR", (long) IDMEF_NODE_CATEGORY_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_UNKNOWN", (long) IDMEF_NODE_CATEGORY_UNKNOWN, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_ADS", (long) IDMEF_NODE_CATEGORY_ADS, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_AFS", (long) IDMEF_NODE_CATEGORY_AFS, 0, 0, 0},
@@ -36719,11 +36862,14 @@ static swig_constant_info swig_constants[] = {
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_NISPLUS", (long) IDMEF_NODE_CATEGORY_NISPLUS, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_NT", (long) IDMEF_NODE_CATEGORY_NT, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_WFW", (long) IDMEF_NODE_CATEGORY_WFW, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_SOURCE_SPOOFED_ERROR", (long) IDMEF_SOURCE_SPOOFED_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_SOURCE_SPOOFED_UNKNOWN", (long) IDMEF_SOURCE_SPOOFED_UNKNOWN, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_SOURCE_SPOOFED_YES", (long) IDMEF_SOURCE_SPOOFED_YES, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_SOURCE_SPOOFED_NO", (long) IDMEF_SOURCE_SPOOFED_NO, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_CATEGORY_ERROR", (long) IDMEF_FILE_CATEGORY_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_CATEGORY_CURRENT", (long) IDMEF_FILE_CATEGORY_CURRENT, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_CATEGORY_ORIGINAL", (long) IDMEF_FILE_CATEGORY_ORIGINAL, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_FSTYPE_ERROR", (long) IDMEF_FILE_FSTYPE_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_FSTYPE_UFS", (long) IDMEF_FILE_FSTYPE_UFS, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_FSTYPE_EFS", (long) IDMEF_FILE_FSTYPE_EFS, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_FSTYPE_NFS", (long) IDMEF_FILE_FSTYPE_NFS, 0, 0, 0},
@@ -36734,38 +36880,47 @@ static swig_constant_info swig_constants[] = {
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_FSTYPE_PCFS", (long) IDMEF_FILE_FSTYPE_PCFS, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_FSTYPE_JOLIET", (long) IDMEF_FILE_FSTYPE_JOLIET, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_FSTYPE_ISO9660", (long) IDMEF_FILE_FSTYPE_ISO9660, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_LINKAGE_CATEGORY_ERROR", (long) IDMEF_LINKAGE_CATEGORY_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_LINKAGE_CATEGORY_HARD_LINK", (long) IDMEF_LINKAGE_CATEGORY_HARD_LINK, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_LINKAGE_CATEGORY_MOUNT_POINT", (long) IDMEF_LINKAGE_CATEGORY_MOUNT_POINT, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_LINKAGE_CATEGORY_REPARSE_POINT", (long) IDMEF_LINKAGE_CATEGORY_REPARSE_POINT, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_LINKAGE_CATEGORY_SHORTCUT", (long) IDMEF_LINKAGE_CATEGORY_SHORTCUT, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_LINKAGE_CATEGORY_STREAM", (long) IDMEF_LINKAGE_CATEGORY_STREAM, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_LINKAGE_CATEGORY_SYMBOLIC_LINK", (long) IDMEF_LINKAGE_CATEGORY_SYMBOLIC_LINK, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_TARGET_DECOY_ERROR", (long) IDMEF_TARGET_DECOY_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_TARGET_DECOY_UNKNOWN", (long) IDMEF_TARGET_DECOY_UNKNOWN, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_TARGET_DECOY_YES", (long) IDMEF_TARGET_DECOY_YES, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_TARGET_DECOY_NO", (long) IDMEF_TARGET_DECOY_NO, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_SEVERITY_ERROR", (long) IDMEF_IMPACT_SEVERITY_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_SEVERITY_LOW", (long) IDMEF_IMPACT_SEVERITY_LOW, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_SEVERITY_MEDIUM", (long) IDMEF_IMPACT_SEVERITY_MEDIUM, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_SEVERITY_HIGH", (long) IDMEF_IMPACT_SEVERITY_HIGH, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_COMPLETION_ERROR", (long) IDMEF_IMPACT_COMPLETION_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_COMPLETION_FAILED", (long) IDMEF_IMPACT_COMPLETION_FAILED, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_COMPLETION_SUCCEEDED", (long) IDMEF_IMPACT_COMPLETION_SUCCEEDED, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_TYPE_ERROR", (long) IDMEF_IMPACT_TYPE_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_TYPE_OTHER", (long) IDMEF_IMPACT_TYPE_OTHER, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_TYPE_ADMIN", (long) IDMEF_IMPACT_TYPE_ADMIN, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_TYPE_DOS", (long) IDMEF_IMPACT_TYPE_DOS, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_TYPE_FILE", (long) IDMEF_IMPACT_TYPE_FILE, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_TYPE_RECON", (long) IDMEF_IMPACT_TYPE_RECON, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_TYPE_USER", (long) IDMEF_IMPACT_TYPE_USER, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ACTION_CATEGORY_ERROR", (long) IDMEF_ACTION_CATEGORY_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ACTION_CATEGORY_OTHER", (long) IDMEF_ACTION_CATEGORY_OTHER, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ACTION_CATEGORY_BLOCK_INSTALLED", (long) IDMEF_ACTION_CATEGORY_BLOCK_INSTALLED, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ACTION_CATEGORY_NOTIFICATION_SENT", (long) IDMEF_ACTION_CATEGORY_NOTIFICATION_SENT, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ACTION_CATEGORY_TAKEN_OFFLINE", (long) IDMEF_ACTION_CATEGORY_TAKEN_OFFLINE, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_CONFIDENCE_RATING_ERROR", (long) IDMEF_CONFIDENCE_RATING_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_CONFIDENCE_RATING_NUMERIC", (long) IDMEF_CONFIDENCE_RATING_NUMERIC, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_CONFIDENCE_RATING_LOW", (long) IDMEF_CONFIDENCE_RATING_LOW, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_CONFIDENCE_RATING_MEDIUM", (long) IDMEF_CONFIDENCE_RATING_MEDIUM, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_CONFIDENCE_RATING_HIGH", (long) IDMEF_CONFIDENCE_RATING_HIGH, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ALERT_TYPE_ERROR", (long) IDMEF_ALERT_TYPE_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ALERT_TYPE_DEFAULT", (long) IDMEF_ALERT_TYPE_DEFAULT, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ALERT_TYPE_TOOL", (long) IDMEF_ALERT_TYPE_TOOL, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ALERT_TYPE_CORRELATION", (long) IDMEF_ALERT_TYPE_CORRELATION, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_ALERT_TYPE_OVERFLOW", (long) IDMEF_ALERT_TYPE_OVERFLOW, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_MESSAGE_TYPE_ERROR", (long) IDMEF_MESSAGE_TYPE_ERROR, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_MESSAGE_TYPE_ALERT", (long) IDMEF_MESSAGE_TYPE_ALERT, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_MESSAGE_TYPE_HEARTBEAT", (long) IDMEF_MESSAGE_TYPE_HEARTBEAT, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_OBJECT_TYPE_ADDITIONAL_DATA_TYPE", (long) 3, 0, 0, 0},
@@ -36940,6 +37095,7 @@ static swig_command_info swig_commands[] = {
 {"Prelude::prelude_client_get_tls_client_keycert_filename", _wrap_prelude_client_get_tls_client_keycert_filename},
 {"Prelude::prelude_client_get_tls_client_trusted_cert_filename", _wrap_prelude_client_get_tls_client_trusted_cert_filename},
 {"Prelude::prelude_client_get_backup_filename", _wrap_prelude_client_get_backup_filename},
+{"Prelude::prelude_client_get_config_filename", _wrap_prelude_client_get_config_filename},
 {"Prelude::prelude_client_installation_error", _wrap_prelude_client_installation_error},
 {"Prelude::idmef_additional_data_type_to_numeric", _wrap_idmef_additional_data_type_to_numeric},
 {"Prelude::idmef_additional_data_type_to_string", _wrap_idmef_additional_data_type_to_string},
@@ -38086,6 +38242,10 @@ static swig_command_info swig_commands[] = {
 {"Prelude::prelude_option_new_request", _wrap_prelude_option_new_request},
 {"Prelude::prelude_option_process_request", _wrap_prelude_option_process_request},
 {"Prelude::prelude_option_recv_reply", _wrap_prelude_option_recv_reply},
+{"Prelude::prelude_log_use_syslog", _wrap_prelude_log_use_syslog},
+{"Prelude::prelude_log_get_prefix", _wrap_prelude_log_get_prefix},
+{"Prelude::prelude_log_set_prefix", _wrap_prelude_log_set_prefix},
+{"Prelude::prelude_log", _wrap_prelude_log},
 {0,0}
 };
 
