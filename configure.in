@@ -325,7 +325,7 @@ if test x$enable_perl = xyes; then
    if test x$PERL = xno; then
       enable_perl=no
    else
-      perl_includedir="`perl -e 'use Config; print $Config{archlib}'`/CORE"
+      perl_includedir="`$PERL -e 'use Config; print $Config{archlib}'`/CORE"
       AC_CHECK_FILE($perl_includedir/perl.h, enable_perl=yes, enable_perl=no)
    fi
 fi
@@ -346,7 +346,7 @@ if test x$enable_python = xyes; then
    if test x$PYTHON = xno; then
       enable_python=no
    else
-      python_includedir=`python -c 'from distutils.sysconfig import get_python_inc
+      python_includedir=`$PYTHON -c 'from distutils.sysconfig import get_python_inc
 print get_python_inc()'`
       AC_CHECK_FILE($python_includedir/Python.h, enable_python=yes, enable_python=no)
    fi
