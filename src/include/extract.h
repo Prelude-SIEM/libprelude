@@ -27,6 +27,11 @@
 
 #ifdef NEED_ALIGNED_ACCESS
 
+/*
+ * for memmove().
+ */
+#include <string.h> 
+
 static inline uint16_t extract_uint16(const void *buf)
 {
         uint16_t tmp;
@@ -51,8 +56,8 @@ static inline uint64_t extract_uint64(const void *buf)
 
         memmove(&tmp, buf, sizeof(tmp));
         
-        ((uint32_t *) swap)[0] = ntohl(((uint32_t *) tmp)[1]);
-        ((uint32_t *) swap)[1] = ntohl(((uint32_t *) tmp)[0]);
+        ((uint32_t *) &swap)[0] = ntohl(((uint32_t *) &tmp)[1]);
+        ((uint32_t *) &swap)[1] = ntohl(((uint32_t *) &tmp)[0]);
 
         return swap;
 }
