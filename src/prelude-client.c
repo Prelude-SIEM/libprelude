@@ -508,31 +508,34 @@ static int setup_options(prelude_client_t *client, int argc, char **argv)
                 return -1;
         
         prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK, 0, "node-name",
-                           NULL, required_argument, set_node_name, NULL);
+                           "Name of the equipment", required_argument, set_node_name, NULL);
 
         prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK, 0, "node-location",
-                           NULL, required_argument, set_node_location, NULL);
+                           "Location of the equipment", required_argument, set_node_location, NULL);
         
         prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK, 0, "node-category",
                            NULL, required_argument, set_node_category, NULL);
         
         opt = prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK|HAVE_CONTEXT, 0, "node-address",
-                                 NULL, required_argument, set_node_address, NULL);
+                                 "Network or hardware address of the equipment", required_argument, 
+                                 set_node_address, NULL);
         
         prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "address",
-                           NULL, required_argument, set_node_address_address, NULL);
+                           "Address information", required_argument, set_node_address_address, NULL);
 
         prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "netmask",
-                           NULL, required_argument, set_node_address_netmask, NULL);
+                           "Network mask for the address, if appropriate", required_argument, set_node_address_netmask, NULL);
 
         prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "category",
-                           NULL, required_argument, set_node_address_category, NULL);
+                           "Type of address represented", required_argument, set_node_address_category, NULL);
 
         prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "vlan-name",
-                           NULL, required_argument, set_node_address_vlan_name, NULL);
+                           "Name of the Virtual LAN to which the address belongs", 
+                           required_argument, set_node_address_vlan_name, NULL);
 
         prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "vlan-num",
-                           NULL, required_argument, set_node_address_vlan_num, NULL);
+                           "Number of the Virtual LAN to which the address belongs", 
+                           required_argument, set_node_address_vlan_num, NULL);
 
         return 0;
 }
