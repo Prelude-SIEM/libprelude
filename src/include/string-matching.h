@@ -25,4 +25,4 @@ int BoyerMoore_CI_StringMatching(char *y, int n, char *x, int m,
 void BoyerMoore_GoodSuffixShift(char *x, int m, int bm_gs[]);
 void BoyerMoore_BadCharacterShift(char *x, int m, int bm_bc[]);
 
-#endif LIBPRELUDE_STRING_MATCHING_H
+#endif /* _LIBPRELUDE_STRING_MATCHING_H */

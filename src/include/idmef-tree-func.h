@@ -142,4 +142,4 @@ void idmef_additional_data_free(idmef_additional_data_t *data);
 	(s)->string = (str); (s)->len = strlen((str)) + 1; \
 } while (0)
 
-#endif LIBPRELUDE_IDMEF_TREE_FUNC_H
+#endif /* _LIBPRELUDE_IDMEF_TREE_FUNC_H */

@@ -1,3 +1,7 @@
+2002-05-21  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/client-ident.c: include stdlib.h.
+
 2002-5-17  Baptiste Malguy <baptiste@malguy.net>
 
 	* src/include/prelude-message-id.h:
