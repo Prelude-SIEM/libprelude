@@ -58,10 +58,41 @@ if test -n "$pthread_lib" && test -n "$pthread_include"; then
 	libprelude_libs="$libprelude_libs -L$pthread_lib/lib -lpthread"
 	libprelude_cflags="$libprelude_cflags -I$pthread_include/include -D_REENTRANT"
 else
-	AC_CHECK_LIB(c_r, pthread_create, pthrlib="yes")
-	if test x$pthrlib = xyes; then
-		libprelude_libs="$libprelude_libs -lc_r"
-		libprelude_cflags="-D_REENTRANT"
+	#AC_CHECK_LIB(c_r, pthread_create, pthrlib="yes")
+	#if test x$pthrlib = xyes; then
+	#	libprelude_libs="$libprelude_libs -lc_r"
+	#	libprelude_cflags="-D_REENTRANT"
+	#fi
+
+	AC_MSG_CHECKING(whether ${CC-cc} accepts -pthread)
+
+	CFLAGS_bak=$CFLAGS
+	CFLAGS="$CFLAGS -pthread"
+
+	cat > conftest.c << EOF 
+
+	int main(void)
+	{
+		exit(0);
+	}
+EOF
+
+
+	${CC-cc} -o conftest $CFLAGS $CPPFLAGS $LDFLAGS conftest.c $LIBS >/dev/null 2>&1
+	CFLAGS=$CFLAGS_bak
+	if test -x conftest; then
+		pthrlib=yes
+		libprelude_libs="$libprelude_libs -pthread"
+		libprelude_cflags="$libprelude_cflags -D_THREAD_SAFE -D_REENTRANT"
+
+		if test -n "$pthread_include"; then
+			libprelude_cflags="$libprelude_cflags -I$pthread_include/include"
+		fi
+		
+		rm -f conftest
+		AC_MSG_RESULT(yes)
+	else
+		AC_MSG_RESULT(no)
 	fi
 fi
 
