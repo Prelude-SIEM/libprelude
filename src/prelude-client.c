@@ -203,7 +203,7 @@ static int handle_plaintext_connection(prelude_client_t *client, int sock)
                 log(LOG_INFO,
                     "\nPlaintext authentication failed. Use the \"manager-adduser\"\n"
                     "program on the Manager host together with the \"sensor-adduser\"\n"
-                    "program on the Sensor hostto create an username for this Sensor.\n");
+                    "program on the Sensor host to create an username for this Sensor.\n");
                 return -1;
         }
 

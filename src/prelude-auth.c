@@ -176,8 +176,6 @@ static int cmp(const char *given_client, const char *client,
         ret = strcmp(given_user, user);
         if ( ret != 0 )
                 return -1;
-
-        printf("cmp %s, %s\n", pass, given_pass);
         
         if ( strcmp(pass, given_pass) == 0 )
                 return 0;
@@ -637,8 +635,6 @@ int prelude_auth_recv(int sock, const char *addr)
                 log(LOG_ERR, "couldn't read remote authentication informations.\n");
                 return -1;
         }
-
-        printf("%s, %s, %s\n", addr, user, pass);
         
         ret = check_account(addr, user, pass);
         if ( ret < 0 ) 
