@@ -102,7 +102,7 @@ typedef unsigned int prelude_bool_t;
 %include "idmef-criteria.h"
 %include "idmef-message-write.h"
 %include "idmef-value-type.h"
-%include "idmef-type.h"
+%include "idmef-class.h"
 %include "prelude-connection.h"
 %include "prelude-option.h"
 %include "prelude-option-wide.h"
