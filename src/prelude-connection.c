@@ -577,6 +577,9 @@ int prelude_connection_send(prelude_connection_t *cnx, prelude_msg_t *msg)
 
         ret = prelude_msg_write(msg, cnx->fd);
         if ( ret < 0 ) {
+                if ( prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN )
+                        return ret;
+                
                 close_connection_fd(cnx);
                 return ret;
         }
