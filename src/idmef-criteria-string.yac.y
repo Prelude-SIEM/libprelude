@@ -69,7 +69,8 @@ extern void yy_delete_buffer(void *);
 
 /* BISON Declarations */
 
-%token <str> TOK_STRING
+%token <str> TOK_IDMEF_VALUE
+%token <str> TOK_IDMEF_PATH
 
 %token TOK_RELATION_SUBSTRING
 %token TOK_RELATION_REGEXP
@@ -130,7 +131,7 @@ criteria_base:	criterion			{
 						}
 ;
 
-criterion: TOK_STRING relation TOK_STRING 	{
+criterion: TOK_IDMEF_PATH relation TOK_IDMEF_VALUE {
 							idmef_path_t *path = NULL;
 							idmef_criterion_value_t *value = NULL;
 							idmef_criterion_operator_t operator = $2;
@@ -165,7 +166,7 @@ criterion: TOK_STRING relation TOK_STRING 	{
                                                         
 							$$ = criterion;
 						}
-	| TOK_STRING				{
+	| TOK_IDMEF_PATH				{
 							idmef_path_t *path;
 							idmef_criterion_t *criterion;
                                                         
@@ -186,7 +187,7 @@ criterion: TOK_STRING relation TOK_STRING 	{
 
 							$$ = criterion;
 						}
-	| TOK_RELATION_IS_NULL TOK_STRING	{
+	| TOK_RELATION_IS_NULL TOK_IDMEF_PATH	{
 							idmef_path_t *path;
 							idmef_criterion_t *criterion;
 

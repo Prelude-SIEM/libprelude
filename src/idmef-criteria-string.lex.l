@@ -35,48 +35,69 @@ int yylex(void);
 
 %}
 
-STRING          ([a-zA-Z0-9_\-]+(\(\-?[0-9]+\))?\.?)+
+IDMEF_PATH      ([a-zA-Z0-9_\-]+(\(\-?[0-9]+\))?\.?)+
 SQSTRING	\'([^\\\']|\\.)*\'
 DQSTRING	\"([^\\\"]|\\.)*\"
 BLANK		[ \t\n]+
 
 %option noyywrap
+%option stack
+
+%x IDMEF_VALUE
 
 %%
 
-substr			{ return TOK_RELATION_SUBSTRING; }
-SUBSTR			{ return TOK_RELATION_SUBSTRING; }
-\=\~			{ return TOK_RELATION_REGEXP; }
-\>			{ return TOK_RELATION_GREATER; }
-\>\=			{ return TOK_RELATION_GREATER_OR_EQUAL; }
-\<			{ return TOK_RELATION_LESS; }
-\<\=			{ return TOK_RELATION_LESS_OR_EQUAL; }
-\=\=			{ return TOK_RELATION_EQUAL; }
-\=			{ return TOK_RELATION_EQUAL; }
-\!\=			{ return TOK_RELATION_NOT_EQUAL; }
+substr			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING; }
+SUBSTR			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING; }
+
+{IDMEF_PATH}		{ 
+				yylval.str = strdup(yytext);
+				return TOK_IDMEF_PATH; 
+			}
+
+\=\~			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_REGEXP; }
+\>			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_GREATER; }
+\>\=			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_GREATER_OR_EQUAL; }
+\<			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_LESS; }
+\<\=			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_LESS_OR_EQUAL; }
+\=\=			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_EQUAL; }
+\=			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_EQUAL; }
+\!\=			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_EQUAL; }
 \!			{ return TOK_RELATION_IS_NULL; }
 
-and|AND			{ return TOK_OPERATOR_AND; }
 \&\&			{ return TOK_OPERATOR_AND; }
 \&			{ return TOK_OPERATOR_AND; }
-or|OR			{ return TOK_OPERATOR_OR; }
 \|\|			{ return TOK_OPERATOR_OR; }
 \|			{ return TOK_OPERATOR_OR; }
 
 \(			{ return '('; }
 \)			{ return ')'; }
 
-{STRING}		{
+<IDMEF_VALUE>{SQSTRING}	{
+				yylval.str = strndup(yytext + 1, yyleng - 2);
+				yy_pop_state();
+				return TOK_IDMEF_VALUE;
+			}
+
+<IDMEF_VALUE>{DQSTRING}	{
+				yylval.str = strndup(yytext + 1, yyleng - 2);
+				yy_pop_state();
+				return TOK_IDMEF_VALUE;
+			}
+
+<IDMEF_VALUE>[^ \t\(\)\&\|]+ {
 				yylval.str = strdup(yytext);
-				return TOK_STRING;
+				yy_pop_state();
+				return TOK_IDMEF_VALUE;
 			}
-{SQSTRING}		{
-				yylval.str = strndup(yytext + 1, yyleng - 2);
-				return TOK_STRING;
+
+<IDMEF_VALUE>{BLANK}	{
+				/* nop */;
 			}
-{DQSTRING}		{
-				yylval.str = strndup(yytext + 1, yyleng - 2);
-				return TOK_STRING;
+
+<IDMEF_VALUE>.		{
+				/* invalid token */
+				return TOK_ERROR;
 			}
 
 {BLANK}			{
