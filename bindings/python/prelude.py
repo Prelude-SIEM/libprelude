@@ -129,7 +129,7 @@ class Client:
 
 
 class Sensor(Client):
-    def __init__(self, name, config):
+    def __init__(self, name, config=None):
         if not config:
             file = os.popen("libprelude-config --prefix")
             path = file.read()
