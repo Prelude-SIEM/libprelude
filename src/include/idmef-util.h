@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2002, 2003 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -59,7 +59,7 @@ do {									\
 } while ( 0 )
 
 
-int idmef_additionaldata_data_to_string(const idmef_additional_data_t *ad, char *out, size_t size);
+int idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, char *out, size_t size);
 
 #define MAX_UTC_DATETIME_SIZE  64   /* YYYY-MM-DDThh:mm:ss.ssZ */
 #define MAX_NTP_TIMESTAMP_SIZE 21   /* 0xNNNNNNNN.0xNNNNNNNN   */

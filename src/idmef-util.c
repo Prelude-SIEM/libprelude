@@ -68,13 +68,13 @@
  * Returns: -1 on error, the len of the string written otherwise
  *
  */
-int idmef_additionaldata_data_to_string(const idmef_additional_data_t *ad, char *buffer, size_t size)
+int idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, char *buffer, size_t size)
 {
 	idmef_data_t *data;
         int retval = 0;
 
 	if ( ! ad )
-		return NULL;
+		return -1;
 
 	data = idmef_additional_data_get_data(ad);
 	if ( ! data || ! idmef_data_get_data(data) )
@@ -122,14 +122,16 @@ int idmef_additionaldata_data_to_string(const idmef_additional_data_t *ad, char 
 	}
                 
         case ntpstamp: {
-		uint64_t out64;
+                union {
+                        uint64_t w_buf;
+                        uint32_t r_buf[2];
+                } data;
 
-                retval = extract_uint64_safe(&out64, idmef_data_get_data(data), idmef_data_get_len(data));
+                retval = extract_uint64_safe(&data.w_buf, idmef_data_get_data(data), idmef_data_get_len(data));
                 if ( retval < 0 )
                         return -1;
                 
-                retval = snprintf(buffer, size, "0x%08ux.0x%08ux",
-				  ((const uint32_t *) &out64)[0],((const uint32_t *) &out64)[1]);
+                retval = snprintf(buffer, size, "0x%08ux.0x%08ux", data.r_buf[0], data.r_buf[1]);
                 break;
 	}
 
@@ -149,7 +151,7 @@ int idmef_additionaldata_data_to_string(const idmef_additional_data_t *ad, char 
         case portlist:
         case string:
         case xml: {
-		char *ptr;
+		const char *ptr;
 
                 retval = extract_characters_safe(&ptr, idmef_data_get_data(data), idmef_data_get_len(data));
                 if ( retval < 0 )
