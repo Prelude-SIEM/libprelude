@@ -49,10 +49,12 @@ typedef struct {
 
 
 
+
 struct prelude_msg {
         PRELUDE_ASYNC_OBJECT;
 
-        uint32_t msg_index;
+        uint32_t read_index;
+        uint32_t write_index;
         
         prelude_msg_hdr_t hdr;
         unsigned char hdrbuf[PRELUDE_MSG_HDR_SIZE];
@@ -60,6 +62,7 @@ struct prelude_msg {
         unsigned char *payload;
         void (*destroy)(prelude_msg_t *msg);
 };
+
 
 
 
@@ -80,6 +83,7 @@ static void msg_write_destroy(prelude_msg_t *msg)
 
 
 
+
 static int read_message_header(prelude_msg_t *msg, prelude_io_t *pio) 
 {
         int ret;
@@ -87,22 +91,20 @@ static int read_message_header(prelude_msg_t *msg, prelude_io_t *pio)
         /*
          * Read the whole header.
          */
-        ret = prelude_io_read(pio, &msg->hdrbuf[msg->msg_index], PRELUDE_MSG_HDR_SIZE - msg->msg_index);
+        ret = prelude_io_read(pio, &msg->hdrbuf[msg->read_index], PRELUDE_MSG_HDR_SIZE - msg->read_index);
         if ( ret < 0 ) {
                 log(LOG_ERR, "error reading message.\n");
                 return -1;
         }
-        
+
         else if ( ret == 0) 
                 return -1;
-
-        msg->msg_index += ret;
         
-        if ( msg->msg_index < PRELUDE_MSG_HDR_SIZE )
+        msg->read_index += ret;
+        
+        if ( msg->read_index < PRELUDE_MSG_HDR_SIZE )
                 return 0;
-        
-        msg->msg_index = 0;
-        
+                
         msg->hdr.version  = msg->hdrbuf[0];
         msg->hdr.tag      = msg->hdrbuf[1];
         msg->hdr.priority = msg->hdrbuf[2];
@@ -116,9 +118,10 @@ static int read_message_header(prelude_msg_t *msg, prelude_io_t *pio)
                     PRELUDE_MSG_VERSION, msg->hdr.version);
                 return -1;
         }
-
-        msg->hdr.datalen = ntohl(msg->hdr.datalen);
-
+        
+        msg->hdr.datalen = ntohl(msg->hdr.datalen) + PRELUDE_MSG_HDR_SIZE;
+        msg->write_index = msg->hdr.datalen; /* we might want to send this msg later */
+        
         msg->payload = malloc(msg->hdr.datalen);
         if (! msg->payload ) {
                 log(LOG_ERR, "couldn't allocate %d bytes.\n", msg->hdr.datalen);
@@ -136,9 +139,9 @@ static int read_message_content(prelude_msg_t *msg, prelude_io_t *pio)
         int ret;
         size_t count;
         
-        count = msg->hdr.datalen - msg->msg_index;
+        count = msg->hdr.datalen - msg->read_index;
         
-        ret = prelude_io_read(pio, &msg->payload[msg->msg_index], count);        
+        ret = prelude_io_read(pio, &msg->payload[msg->read_index], count);        
         if ( ret < 0 ) {
                 log(LOG_ERR, "error reading message content.\n");
                 return -1;
@@ -147,10 +150,10 @@ static int read_message_content(prelude_msg_t *msg, prelude_io_t *pio)
         else if ( ret == 0 ) 
                 return -1;
 
-        msg->msg_index += ret;
+        msg->read_index += ret;
 
-        if ( msg->msg_index == msg->hdr.datalen ) {
-                msg->msg_index = 0;
+        if ( msg->read_index == msg->hdr.datalen ) {
+                msg->read_index = PRELUDE_MSG_HDR_SIZE;
                 return 1;
         }
         
@@ -161,11 +164,15 @@ static int read_message_content(prelude_msg_t *msg, prelude_io_t *pio)
 
 
 /**
- * prelude_msg_read_notify:
- * @msg: Pointer on a #prelude_msg_t object.
+ * prelude_msg_read:
+ * @msg: Pointer on a #prelude_msg_t object address.
+ * @pio: Pointer on a #prelude_io_t object.
+ *
+ * Read a message on @pio into @msg. If @msg is NULL, it is
+ * allocated. This function will never block.
  *
  * Returns: -1 on end of stream or error.
- * 1 if the message is complete, 0 if not.
+ * 1 if the message is complete, 0 if it need further processing.
  */
 int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio) 
 {
@@ -177,8 +184,9 @@ int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
                         log(LOG_ERR, "memory exhausted.\n");
                         return -1;
                 }
-                
-                (*msg)->msg_index = 0;
+
+                (*msg)->write_index = 0;
+                (*msg)->read_index = 0;
                 (*msg)->payload = NULL;
                 (*msg)->destroy = msg_read_destroy;
         }
@@ -214,30 +222,38 @@ int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
  * an error occured.
  */
 int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf) 
-{        
-        if ( msg->msg_index == msg->hdr.datalen ) 
+{
+        if ( msg->read_index == msg->hdr.datalen ) 
                 return 0; /* no more sub - messages */
         
-        if ( (msg->msg_index + PRELUDE_MSG_HDR_SIZE) > msg->hdr.datalen ) 
+        if ( (msg->read_index + 5) > msg->hdr.datalen ) {
+                log(LOG_ERR, "buffer size (%d) is too short to contain another message.\n",
+                    msg->hdr.datalen);
                 return -1;
-        
-        *tag = msg->payload[msg->msg_index++];
-        *len = *(uint32_t *)&msg->payload[msg->msg_index];
+        }
+             
+        *tag = msg->payload[msg->read_index++];
+        *len = *(uint32_t *)&msg->payload[msg->read_index];
         *len = ntohl(*len);
+        msg->read_index += 4;
         
-        msg->msg_index += 4;
-        
-        if ( (msg->msg_index + *len + 1) > msg->hdr.datalen )
+        if ( (msg->read_index + *len + 1) > msg->hdr.datalen ) {
+                log(LOG_ERR, "message len (%d) overflow our buffer size (%d).\n",
+                    (msg->read_index + *len + 1), msg->hdr.datalen);
                 return -1;
+        }
                 
-        *buf = &msg->payload[msg->msg_index];
-        msg->msg_index += *len;
+        *buf = &msg->payload[msg->read_index];
+        msg->read_index += *len;
 
         /*
-         * Skip end of message.
+         * Verify and skip end of message.
          */
-        msg->msg_index++;
-        
+        if ( msg->payload[msg->read_index++] != 0xff ) {
+                log(LOG_ERR, "message is not terminated.\n");
+                return -1;
+        }
+                
         return 1;
 }
 
@@ -265,6 +281,7 @@ int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src
         buf[0] = msg->hdr.version;
         buf[1] = msg->hdr.tag;
         buf[2] = msg->hdr.priority;
+
         buf[3] = dlen;
         buf[4] = dlen >> 8;
         buf[5] = dlen >> 16;
@@ -297,14 +314,20 @@ int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src
  */
 int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst) 
 {
-        uint32_t dlen = htonl(msg->msg_index - PRELUDE_MSG_HDR_SIZE);
-                
+        uint32_t dlen = htonl(msg->write_index - PRELUDE_MSG_HDR_SIZE);
+        
+        /*
+         * Setup the header.
+         */
+        msg->payload[0] = PRELUDE_MSG_VERSION;
+        msg->payload[1] = msg->hdr.tag;
+        msg->payload[2] = msg->hdr.priority;
         msg->payload[3] = dlen;
         msg->payload[4] = dlen >> 8;
         msg->payload[5] = dlen >> 16;
         msg->payload[6] = dlen >> 24;
-
-        return prelude_io_write(dst, msg->payload, msg->msg_index); 
+        
+        return prelude_io_write(dst, msg->payload, msg->write_index);
 }
 
 
@@ -324,23 +347,23 @@ void prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *
 {        
         uint32_t l;
         
-        assert( (len + 6) < (msg->hdr.datalen - (msg->msg_index - 1)) );
+        assert( (len + 6) < (msg->hdr.datalen - msg->write_index) );
 
         l = htonl(len);
              
-        msg->payload[msg->msg_index++] = tag;
-        msg->payload[msg->msg_index++] = l;
-        msg->payload[msg->msg_index++] = l >> 8;
-        msg->payload[msg->msg_index++] = l >> 16;
-        msg->payload[msg->msg_index++] = l >> 24;
+        msg->payload[msg->write_index++] = tag;
+        msg->payload[msg->write_index++] = l;
+        msg->payload[msg->write_index++] = l >> 8;
+        msg->payload[msg->write_index++] = l >> 16;
+        msg->payload[msg->write_index++] = l >> 24;
 
-        memcpy(&msg->payload[msg->msg_index], data, len);
-        msg->msg_index += len;
+        memcpy(&msg->payload[msg->write_index], data, len);
+        msg->write_index += len;
 
         /*
          * 0xff mean end of message.
          */
-        msg->payload[msg->msg_index++] = 0xff;
+        msg->payload[msg->write_index++] = 0xff;
 }
 
 
@@ -365,7 +388,7 @@ prelude_msg_t *prelude_msg_new(size_t msgcount, size_t msglen, uint8_t tag, uint
         prelude_msg_t *msg;
         
         len = msglen;
-
+        
         /*
          * 6 bytes of header by chunks :
          * - 1 byte:  tag
@@ -380,19 +403,20 @@ prelude_msg_t *prelude_msg_new(size_t msgcount, size_t msglen, uint8_t tag, uint
         len += PRELUDE_MSG_HDR_SIZE;
                 
         msg = malloc(sizeof(prelude_msg_t) + len);
-        if ( ! msg ) 
+        if ( ! msg ) {
+                log(LOG_ERR, "memory exhausted.\n");
                 return NULL;
+        }
 
         msg->destroy = msg_write_destroy;
-        
         msg->payload = (unsigned char *) msg + sizeof(prelude_msg_t);
 
-        msg->hdr.version  = msg->payload[0] = PRELUDE_MSG_VERSION;
-        msg->hdr.tag      = msg->payload[1] = tag;
-        msg->hdr.priority = msg->payload[2] = priority;
+        msg->hdr.version = PRELUDE_MSG_VERSION;
+        msg->hdr.tag = tag;
+        msg->hdr.priority = priority;
         msg->hdr.datalen = len;
         
-        msg->msg_index = PRELUDE_MSG_HDR_SIZE;
+        msg->write_index = PRELUDE_MSG_HDR_SIZE;
         
         return msg;
 }

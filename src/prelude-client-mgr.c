@@ -442,10 +442,8 @@ static int walk_manager_lists(prelude_client_mgr_t *cmgr, prelude_msg_t *msg)
                 }
                 
                 ret = broadcast_message(msg, item);                
-                if ( ret >= 0 ) { /* AND of Manager emmission succeed */
-                        prelude_msg_destroy(msg);
+                if ( ret >= 0 )  /* AND of Manager emmission succeed */
                         return 0;
-                }
         }
 
         return -1;
@@ -453,13 +451,18 @@ static int walk_manager_lists(prelude_client_mgr_t *cmgr, prelude_msg_t *msg)
 
 
 
-
-static void broadcast_msg_cb(void *obj, void *data) 
+/**
+ * prelude_client_mgr_broadcast:
+ * @cmgr: Pointer on a client manager object.
+ * @msg: Pointer on a #prelude_msg_t object.
+ *
+ * Send the message contained in @msg to all the client
+ * in the @cmgr group of client asynchronously.
+ */
+void prelude_client_mgr_broadcast(prelude_client_mgr_t *cmgr, prelude_msg_t *msg) 
 {
         int ret;
-        prelude_msg_t *msg = obj;
-        prelude_client_mgr_t *cmgr = data;
-
+        
         ret = walk_manager_lists(cmgr, msg);
         if ( ret == 0 )
                 return;
@@ -474,7 +477,16 @@ static void broadcast_msg_cb(void *obj, void *data)
         ret = prelude_msg_write(msg, cmgr->backup_fd);
         if ( ret < 0 ) 
                 log(LOG_ERR, "could't backup message.\n");
-        
+}
+
+
+
+static void broadcast_async_cb(void *obj, void *data) 
+{
+        prelude_msg_t *msg = obj;
+        prelude_client_mgr_t *cmgr = data;
+
+        prelude_client_mgr_broadcast(cmgr, msg);
         prelude_msg_destroy(msg);
 }
 
@@ -487,11 +499,12 @@ static void broadcast_msg_cb(void *obj, void *data)
  * @msg: Pointer on a #prelude_msg_t object.
  *
  * Send the message contained in @msg to all the client
- * in the @cmgr group of client.
+ * in the @cmgr group of client asynchronously. After the
+ * request is processed, the @msg message will be freed.
  */
-void prelude_client_mgr_broadcast_msg(prelude_client_mgr_t *cmgr, prelude_msg_t *msg) 
+void prelude_client_mgr_broadcast_async(prelude_client_mgr_t *cmgr, prelude_msg_t *msg) 
 {
-        prelude_async_set_callback((prelude_async_object_t *)msg, &broadcast_msg_cb);
+        prelude_async_set_callback((prelude_async_object_t *)msg, &broadcast_async_cb);
         prelude_async_set_data((prelude_async_object_t *)msg, cmgr);
         prelude_async_add((prelude_async_object_t *)msg);
 }

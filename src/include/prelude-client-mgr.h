@@ -24,7 +24,9 @@
 typedef struct prelude_client_mgr prelude_client_mgr_t;
 
 
-void prelude_client_mgr_broadcast_msg(prelude_client_mgr_t *cmgr, prelude_msg_t *msg);
+void prelude_client_mgr_broadcast(prelude_client_mgr_t *cmgr, prelude_msg_t *msg);
+
+void prelude_client_mgr_broadcast_async(prelude_client_mgr_t *cmgr, prelude_msg_t *msg);
 
 prelude_client_mgr_t *prelude_client_mgr_new(const char *identifier, const char *cfgline);
 

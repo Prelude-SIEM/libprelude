@@ -1,3 +1,23 @@
+2001-11-10  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-message.c: 
+	(read_message_header): 
+	(prelude_msg_get): 
+	(prelude_msg_write): 
+	(prelude_msg_set): 
+	use separate index for read / write. This allow us to send a just
+	read messages. Forwarding between Manager is on it's way.
+
+	* src/sensor.c (prelude_sensor_send_alert): use
+	asynchrnous broadcasting.
+
+	* src/prelude-client-mgr.c (walk_manager_lists): 
+	Never free the message ourself. This is up to the caller to do it.
+	
+	(broadcast_async_cb): 
+	(prelude_client_mgr_broadcast_async): When asynchronous operation
+	are used, free the message ourself.
+
 2001-11-07  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-async.c (get_elapsed_time): new function.

@@ -139,7 +139,7 @@ int prelude_sensor_init(const char *filename, int argc, char **argv)
 
 void prelude_sensor_send_alert(prelude_msg_t *msg) 
 {
-        prelude_client_mgr_broadcast_msg(manager_list, msg);
+        prelude_client_mgr_broadcast_async(manager_list, msg);
 }
 
 
