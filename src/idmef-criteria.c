@@ -331,7 +331,7 @@ int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message
         if ( ret < 0 )
                 return ret;
         
-        if ( ! value ) 
+        if ( ret == 0 ) 
 		return (criterion->relation == IDMEF_VALUE_RELATION_IS_NULL) ? 0 : -1;
         
         if ( ! criterion->value )
