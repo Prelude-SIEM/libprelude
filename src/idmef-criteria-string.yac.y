@@ -31,6 +31,7 @@
 #include <sys/types.h>
 #include <stdarg.h>
 #include <ctype.h>
+#include <pthread.h>
 
 #include "prelude-log.h"
 
@@ -49,20 +50,18 @@
 
 struct parser_control {
 	idmef_criteria_t *criteria;
-	void *scanner; /* yyscan_t scanner */
 };
 
 #define operator_or 1
 #define operator_and 2
  
 #define YYPARSE_PARAM param
-#define YYLEX_PARAM ((struct parser_control *) param)->scanner
 
 extern int yylex();
 extern void yylex_init();
 extern void yylex_destroy();
 static void yyerror (char *s);
-
+ 
 %}
 
 %union {
@@ -74,7 +73,6 @@ static void yyerror (char *s);
 }     
 
 /* BISON Declarations */
-%pure_parser
 
 %token <str> TOK_STRING
 
@@ -102,7 +100,6 @@ static void yyerror (char *s);
 
 input: criteria					{
 							((struct parser_control *) param)->criteria = $1;
-	
 						}
 ;
 
@@ -260,6 +257,7 @@ idmef_criteria_t *idmef_criteria_new_string(const char *str)
 	size_t len;
 	char *buffer;
 	struct parser_control parser_control;
+	pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 	/* 
 	 * yy_scan_buffer wants buffer terminated by a DOUBLE null character
@@ -276,12 +274,12 @@ idmef_criteria_t *idmef_criteria_new_string(const char *str)
 	buffer[len + 1] = 0;
 
 	parser_control.criteria = NULL;
-	yylex_init(&parser_control.scanner);
-	yy_scan_buffer(buffer, len + 2, parser_control.scanner);
 
+	pthread_mutex_lock(&mutex);
+	yy_scan_buffer(buffer, len + 2);
 	retval = yyparse(&parser_control);
+	pthread_mutex_unlock(&mutex);
         
-	yylex_destroy(parser_control.scanner);
 	free(buffer);
 
 	if ( retval != 0 ) {

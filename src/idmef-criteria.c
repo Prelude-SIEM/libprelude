@@ -439,7 +439,28 @@ void idmef_criteria_print(idmef_criteria_t *criteria)
 
 int idmef_criteria_to_string(idmef_criteria_t *criteria, char *buffer, size_t size)
 {
-        return idmef_criterion_to_string(criteria->criterion, buffer, size);
+	int offset = 0;
+
+	if ( ! criteria )
+		return -1;
+
+	if ( criteria->or )
+		MY_SNPRINTF(buffer, size, offset, "((");
+        
+        MY_CONCAT(idmef_criterion_to_string, criteria->criterion, buffer, size, offset);
+
+        if ( criteria->and ) {
+                MY_SNPRINTF(buffer, size, offset, " && ");
+		MY_CONCAT(idmef_criteria_to_string, criteria->and, buffer, size, offset);
+        }
+        
+        if ( criteria->or ) {
+		MY_SNPRINTF(buffer, size, offset, ") || (");
+		MY_CONCAT(idmef_criteria_to_string, criteria->or, buffer, size, offset);
+		MY_SNPRINTF(buffer, size, offset, "))");
+        }
+
+	return offset;
 }
 
 

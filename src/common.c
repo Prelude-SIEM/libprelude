@@ -307,3 +307,24 @@ int prelude_get_gmt_offset(time_t time_local, int *gmt_offset)
         
         return 0;
 }
+
+
+
+char *prelude_strndup(const char *src, size_t n)
+{
+	size_t len;
+	char *dst;
+
+	len = strlen(src);
+	if ( n < len )
+		len = n;
+
+	dst = malloc(len + 1);
+	if ( ! dst )
+		return NULL;
+
+	memcpy(dst, src, len);
+	dst[len] = 0;
+
+	return dst;
+}

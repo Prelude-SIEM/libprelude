@@ -24,37 +24,12 @@
 
 %{
 
-#ifndef HAVE_STRNDUP
-
-/* 
- * KZ's owns implementation of strndup(), based on man page from 
- * a GNU/Linux system.
- */
-static char *strndup(const char *s, size_t n)
-{
-	char *ptr;
-	size_t len, newlen;
-
-	len = strlen(s);
-	newlen = ( n < len ) ? n : len;
-
-	ptr = malloc(newlen+1);
-	if ( ! ptr ) {
-		errno = ENOMEM;
-		return NULL;
-	}
-
-	strncpy(ptr, s, newlen);
-	ptr[newlen] = '\0';
-
-	return ptr;
-}
-
-#endif /* HAVE_STRNDUP */
-
 #include "idmef.h"
 
+#include "common.h"
+
 #include "idmef-criteria-string.yac.h"
+
 
 %}
 
@@ -63,7 +38,7 @@ SQSTRING	\'([^\\\']|\\.)*\'
 DQSTRING	\"([^\\\"]|\\.)*\"
 BLANK		[ \t\n]+
 
-%option reentrant bison-bridge noyywrap
+%option noyywrap
 
 %%
 
@@ -90,15 +65,15 @@ or|OR			{ return TOK_OPERATOR_OR; }
 \)			{ return ')'; }
 
 {STRING}		{
-				yylval->str = strndup(yytext, yyleng);
+				yylval.str = strdup(yytext);
 				return TOK_STRING;
 			}
 {SQSTRING}		{
-				yylval->str = strndup(yytext + 1, yyleng - 2);
+				yylval.str = prelude_strndup(yytext + 1, yyleng - 2);
 				return TOK_STRING;
 			}
 {DQSTRING}		{
-				yylval->str = strndup(yytext + 1, yyleng - 2);
+				yylval.str = prelude_strndup(yytext + 1, yyleng - 2);
 				return TOK_STRING;
 			}
 
