@@ -207,7 +207,13 @@ int prelude_client_ident_init(const char *sname)
         /*
          * scan the 64 bits sensor ident.
          */
-        fscanf(fd, "%llu", &sensor_ident);
+        ret = fscanf(fd, "%llu", &sensor_ident);
+        if ( ret != 1 ) {
+                log(LOG_ERR, "wrong format for %s.\n", identfile);
+                fclose(fd);
+                return -1;
+        }
+        
         fclose(fd);
 
         return 0;

@@ -2,6 +2,8 @@
 
 	* src/client-ident.c (save_ident): 
 	identity file should be readable for all.
+	(prelude_client_ident_init): handle error when reading
+	ident file.
 
 	* src/prelude-io.c (ssl_read): 
 	(ssl_write): handle ssl error correctly.
