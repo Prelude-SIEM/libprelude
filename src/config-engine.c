@@ -214,8 +214,11 @@ static int op_insert_line(config_t *cfg, char *line, unsigned int lins)
         if (! cfg->content )
                 return prelude_error_from_errno(errno);
                 
-        for ( i = cfg->elements - 2; i >= lins; i-- )
+        for ( i = cfg->elements - 2; i >= lins; i-- ) {
                 cfg->content[i + 1] = cfg->content[i];
+                if ( i == 0 )
+                        break;
+        }
         
         cfg->content[lins] = line;
      
@@ -233,9 +236,9 @@ static int load_file_in_memory(config_t *cfg)
         int ret;
         FILE *fd;
         size_t len;
-        char line[1024], *ptr;
         prelude_string_t *out;
-
+        char line[1024], *ptr, *tmp;
+        
         ret = prelude_string_new(&out);
         if ( ret < 0 )
                 return ret;
@@ -262,17 +265,19 @@ static int load_file_in_memory(config_t *cfg)
                         if ( line[len - 1] != 0 )
                                 continue;
                 }
+                
+                ret = prelude_string_get_string_released(out, &tmp);
+                if ( ret < 0 )
+                        goto err;
 
-                if ( prelude_string_is_empty(out) )
-                        continue;
+                if ( ! tmp )
+                        tmp = strdup("");
                 
-                ret = prelude_string_get_string_released(out, &ptr);
-                if ( ret < 0 )
+                ret = op_append_line(cfg, tmp);
+                if ( ret < 0 ) {
+                        free(tmp);
                         goto err;
-                
-                ret = op_append_line(cfg, ptr);
-                if ( ret < 0 )
-                        goto err;
+                }
                 
                 prelude_string_clear(out);
         } while ( ptr );
@@ -550,7 +555,8 @@ static int sync_and_free_file_content(const char *filename, char **content)
         for ( i = 0; content[i] != NULL; i++ ) {
                 
                 fwrite(content[i], 1, strlen(content[i]), fd);
-                fwrite("\n", 1, 1, fd);
+                if ( content[i + 1] != NULL )
+                        fwrite("\n", 1, 1, fd);
                 
                 free(content[i]);
         }
@@ -636,7 +642,7 @@ static int new_section_line(config_t *cfg, const char *section,
         ret++;
         el = search_entry(cfg, section, entry, &ret, &eout, &vout);        
         if ( el < 0 ) 
-                return op_insert_line(cfg, create_new_line(entry, val), ret);
+                return op_insert_line(cfg, create_new_line(entry, val), *index + 1);
 
         free_val(&eout);
         free_val(&vout);
