@@ -352,9 +352,8 @@ idmef_time_t *idmef_time_clone(const idmef_time_t *src)
         if ( ! ret )
                 return NULL;
 
-        ret->sec = src->sec;
-        ret->usec = src->usec;
-
+	idmef_time_copy(ret, src);
+	
         return ret;
 }
 
@@ -416,10 +415,11 @@ uint32_t idmef_time_get_usec(const idmef_time_t *time)
 
 
 
-int idmef_time_copy(idmef_time_t *dst, idmef_time_t *src)
+int idmef_time_copy(idmef_time_t *dst, const idmef_time_t *src)
 {
         dst->sec = src->sec;
         dst->usec = src->usec;
+	dst->gmt_offset = src->gmt_offset;
         
         return 0;
 }

@@ -47,7 +47,7 @@ void idmef_time_destroy_internal(idmef_time_t *time);
 void idmef_time_destroy(idmef_time_t *time);
 
 idmef_time_t *idmef_time_clone(const idmef_time_t *src);
-int idmef_time_copy(idmef_time_t *dst, idmef_time_t *src);
+int idmef_time_copy(idmef_time_t *dst, const idmef_time_t *src);
 
 void idmef_time_set_from_time(idmef_time_t *time, const time_t *t);
 void idmef_time_set_sec(idmef_time_t *time, uint32_t sec);
