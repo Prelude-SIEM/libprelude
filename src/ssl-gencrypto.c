@@ -31,9 +31,9 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/time.h>
+//#include <sys/time.h>
 #include <fcntl.h>
-
+#include <time.h>
 #include <inttypes.h>
 
 #include <openssl/bio.h>
@@ -241,7 +241,7 @@ static X509 *generate_self_signed_certificate(EVP_PKEY *pkey, int days)
 	X509 *x509ss;
 	X509_REQ *req;
 	X509V3_CTX ext_ctx;
-
+        
         x509ss = X509_new();
         if ( ! x509ss )
                 return NULL;
@@ -260,6 +260,7 @@ static X509 *generate_self_signed_certificate(EVP_PKEY *pkey, int days)
         
         X509_set_issuer_name(x509ss, X509_REQ_get_subject_name(req));
         X509_set_subject_name(x509ss, X509_REQ_get_subject_name(req));
+
 
 	/*
          * Set version to V3
@@ -333,6 +334,12 @@ int prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int cryp
         if ( crypt )
                 cipher = EVP_des_ede3_cbc();
 
+        if ( ! expire )
+                /*
+                 * does SSL allow never expiring key ?
+                 */
+                expire = 10950;
+        
         check_key_size(keysize);
 
         /*

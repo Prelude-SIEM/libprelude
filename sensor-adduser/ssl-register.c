@@ -233,11 +233,6 @@ int ssl_add_certificate(prelude_io_t *fd, char *pass, size_t size)
 
         ask_configuration(&keysize, &expire);
 
-        if ( expire == 0 ) 
-                /*
-                 * Does SSL allow for key that never expire ?
-                 */
-                expire = 36500;
         
         ret = send_own_certificate(fd, &skey1, &skey2, expire, keysize);
         if ( ret < 0 ) {
