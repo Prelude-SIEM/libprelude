@@ -37,35 +37,42 @@
 #include "ssl-config.h"
 
 
+/*
+ * Length of RSA-private key
+ */
+#define KEY_LENGTH 1024
 
+/*
+ * Number of days to make a certificate valid for.
+ */
+#define CERT_DAYS 3650
+
+
+/*
+ * Port of registration for report
+ */
 static struct {
 	int key_length;
 	int days;
-	char *cert_directory;
 } config;
 
 
 
 
-void ssl_read_config(config_t *cfg)
+void ssl_read_config(config_t *cfg, const char *section)
 {
         const char *param;
 
 	config.key_length = KEY_LENGTH;
 	config.days = CERT_DAYS;
-	config.cert_directory = CERT_DIRECTORY;
 
-        param = config_get(cfg, SSL_SECTION, "key");
+        param = config_get(cfg, section, "key");
         if (param)
                 config.key_length = atoi(param);
 
-        param = config_get(cfg, SSL_SECTION, "days");
+        param = config_get(cfg, section, "days");
         if (param)
                 config.days = atoi(param);
-        
-        param = config_get(cfg, SSL_SECTION, "directory");
-        if (param) 
-                config.cert_directory = strdup(param);
 }
 
 
@@ -81,18 +88,6 @@ int ssl_get_key_length(void)
 int ssl_get_days(void)
 {
 	return config.days;
-}
-
-
-
-
-const char *ssl_get_cert_filename(const char *filename)
-{
-	static char buf[1024];
-
-	snprintf(buf, sizeof(buf), "%s/%s", config.cert_directory, filename);
-
-	return buf;
 }
 
 #endif

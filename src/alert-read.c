@@ -47,14 +47,14 @@ struct alert_container {
 
 
 
-alert_container_t *prelude_alert_read(int fd, uint8_t *tag) 
+alert_container_t *prelude_alert_read(int fd, uint8_t *tag, readfunc_t *readfunc) 
 {
         int ret;
         uint32_t dlen;
         unsigned char buf[2];
         alert_container_t *ac;
 
-        ret = read(fd, buf, sizeof(buf));
+        ret = readfunc(fd, buf, sizeof(buf));
         if ( ret <= 0 )
                 return NULL;
 
@@ -65,7 +65,7 @@ alert_container_t *prelude_alert_read(int fd, uint8_t *tag)
 
         *tag = buf[1];
         
-        ret = read(fd, &dlen, sizeof(dlen));
+        ret = readfunc(fd, &dlen, sizeof(dlen));
         if ( ret != sizeof(dlen) ) {
                 log(LOG_ERR, "Invalid alert. Couldn't read len field.\n");
                 return NULL;
@@ -81,7 +81,7 @@ alert_container_t *prelude_alert_read(int fd, uint8_t *tag)
 
         ac->max_msgcount = dlen;
         
-        ret = read(fd, ac->msg, dlen);
+        ret = readfunc(fd, ac->msg, dlen);
         if ( ret != dlen ) {
                 free(ac);
                 return NULL;

@@ -1,3 +1,25 @@
+2001-09-28  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/ssl-config.c: Define KEY_LENGTH and CERT_DAYS moved
+	to this file instead of ssl-config.h, they should be used 
+	directly by any SSL related sources files.
+
+	Remove the ssl config structure cert_directory member and 
+	associated function, it's dependant on the user, and shouldn't 
+	be computed here.
+
+	* src/include/alert-read.h: new type readfunc_t,
+	to point on a read function to use.
+	
+	* src/alert-read.c (prelude_alert_read): 
+	take a readfunc_t argument identifying the read function to use.
+	
+
+2001-09-26  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/include/ssl-config.h: remove manager related 
+	definitions.
+
 2001-09-02  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/alert-read.c (prelude_alert_read_msg): 

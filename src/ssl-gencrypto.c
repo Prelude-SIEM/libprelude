@@ -324,9 +324,8 @@ X509 *ssl_gen_crypto(int days, int keysize, const char *keyout, int crypt)
 		BIO_free_all(out);
 		return NULL;
 	}
-	//--------------------------------
-	BIO_printf(bio_err, "Generating a %d bit %s private key\n",
-		   keysize, "RSA");
+        
+	BIO_printf(bio_err, "Generating a %d bit RSA private key\n", keysize);
 	pkey = ssl_gen_privkey(keysize, bio_err);
 	if (pkey == NULL) {
 		ERR_print_errors(bio_err);
@@ -341,6 +340,9 @@ X509 *ssl_gen_crypto(int days, int keysize, const char *keyout, int crypt)
          * (see ChangeLog of 2001-03-30).
          */
         old_mask = umask(S_IRWXG|S_IRWXO);
+
+        printf("keyout=%s\n", keyout);
+        
 	BIO_printf(bio_err, "Writing new private key to '%s'\n", keyout);
 	if (BIO_write_filename(out, keyout) <= 0) {
 		perror(keyout);
