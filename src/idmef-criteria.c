@@ -391,10 +391,11 @@ idmef_criteria_t *idmef_criteria_clone(idmef_criteria_t *src)
         }
 
         memcpy(new, src, sizeof(*new));
-
+        
         new->or = idmef_criteria_clone(src->or);
         new->and = idmef_criteria_clone(src->and);
-
+        new->criterion = idmef_criterion_clone(src->criterion);
+        
         return new;
 }
 
