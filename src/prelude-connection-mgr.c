@@ -315,7 +315,10 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
 
         do {
                 size = prelude_failover_get_saved_msg(failover, &msg);
-                if ( size <= 0 )
+                if ( size < 0 )
+                        continue;
+				
+                if ( size == 0 )
                         break;
 
                 if ( clist )
@@ -930,8 +933,3 @@ int prelude_connection_mgr_tell_connection_alive(prelude_connection_mgr_t *mgr, 
         
         return 0;
 }
-
-
-
-
-
