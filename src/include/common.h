@@ -26,24 +26,6 @@
 
 #include <netinet/in.h>
 
-#ifdef HAVE_INTTYPES_H
-
- #include <inttypes.h>
-
-#else
-
- typedef unsigned char uint8_t;
- typedef unsigned short uint16_t;
- typedef unsigned long uint32_t;
-
- #if __WORDSIZE == 64
-  typedef unsigned long uint64_t;
- #else
-  typedef unsigned long long uint64_t;
- #endif
-
-#endif
-
 void *prelude_realloc(void *ptr, size_t size);
 
 int prelude_resolve_addr(const char *hostname, struct in_addr *addr);
