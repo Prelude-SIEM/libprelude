@@ -26,6 +26,13 @@
 
 typedef struct idmef_criterion_value idmef_criterion_value_t;
 
+typedef enum {
+        IDMEF_CRITERION_VALUE_TYPE_ERROR  = -1,
+        IDMEF_CRITERION_VALUE_TYPE_VALUE  =  0,
+        IDMEF_CRITERION_VALUE_TYPE_REGEX  =  1,
+} idmef_criterion_value_type_t;
+
+        
 #include "idmef-criteria.h"
 #include "idmef-value.h"
 
@@ -49,5 +56,9 @@ int idmef_criterion_value_print(idmef_criterion_value_t *value, prelude_io_t *fd
 int idmef_criterion_value_to_string(idmef_criterion_value_t *value, prelude_string_t *out);
 
 int idmef_criterion_value_match(idmef_criterion_value_t *cv, idmef_value_t *value, idmef_criterion_operator_t operator);
+
+const void *idmef_criterion_value_get_value(idmef_criterion_value_t *cv);
+
+idmef_criterion_value_type_t idmef_criterion_value_get_type(idmef_criterion_value_t *cv);
 
 #endif /* _LIBPRELUDE_IDMEF_CRITERION_VALUE_H */

@@ -57,6 +57,7 @@ struct match_cb {
 struct idmef_criterion_value {
         
         void *value;
+        idmef_criterion_value_type_t type;
         
         int (*clone)(const idmef_criterion_value_t *cv, idmef_criterion_value_t *dst);
         int (*print)(const idmef_criterion_value_t *cv, prelude_io_t *fd);
@@ -270,7 +271,8 @@ int idmef_criterion_value_new_regex(idmef_criterion_value_t **cv, const char *re
         (*cv)->print = regex_print;
         (*cv)->destroy = regex_destroy;
         (*cv)->to_string = regex_to_string;
-                
+        (*cv)->type = IDMEF_CRITERION_VALUE_TYPE_REGEX;
+        
         return 0;
 }
 
@@ -295,7 +297,8 @@ int idmef_criterion_value_new_value(idmef_criterion_value_t **cv,
         (*cv)->print = value_print;
         (*cv)->destroy = value_destroy;
         (*cv)->to_string = value_to_string;
-                
+        (*cv)->type = IDMEF_CRITERION_VALUE_TYPE_VALUE;
+        
         return 0;
 }
 
@@ -317,4 +320,18 @@ int idmef_criterion_value_new_from_string(idmef_criterion_value_t **cv,
                 return ret;
         
 	return idmef_criterion_value_new_value(cv, val, operator);
+}
+
+
+
+const void *idmef_criterion_value_get_value(idmef_criterion_value_t *cv)
+{
+        return cv->value;
+}
+
+
+
+idmef_criterion_value_type_t idmef_criterion_value_get_type(idmef_criterion_value_t *cv)
+{
+        return cv->type;
 }
