@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001-2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -32,13 +32,12 @@
 #include <arpa/inet.h>
 #include <termios.h>
 
+#ifdef HAVE_SYS_FILIO_H
+ #include <sys/filio.h>
+#endif
+
 #include "config.h"
 #include <gnutls/gnutls.h>
-
-
-#ifndef TIOCINQ
- #define TIOCINQ FIONREAD
-#endif
 
 #include "prelude-log.h"
 #include "prelude-io.h"
@@ -102,8 +101,8 @@ static ssize_t sys_pending(prelude_io_t *pio)
 {
         ssize_t ret;
         
-        if ( ioctl(pio->fd, TIOCINQ, &ret) < 0 ) {
-                log(LOG_ERR, "ioctl TIOCINQ failed on tcp socket.\n");
+        if ( ioctl(pio->fd, FIONREAD, &ret) < 0 ) {
+                log(LOG_ERR, "ioctl FIONREAD failed on tcp socket.\n");
                 return -1;
         }
 
