@@ -115,7 +115,7 @@ static int parse_single(void **context, prelude_option_t **last, int is_last_cmd
 static int parse_request(prelude_client_t *client, int rtype, char *request, prelude_string_t *out)
 {
         config_t *cfg;
-        void *context = NULL;
+        void *context = client;
         char pname[256], iname[256];
         int ret = 0, last_cmd = 0, ent;
         prelude_option_t *last = NULL;
