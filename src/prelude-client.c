@@ -255,7 +255,7 @@ static int read_plaintext_authentication_result(prelude_client_t *client)
 static int handle_plaintext_connection(prelude_client_t *client, int sock) 
 {
         int ret;
-        int ulen, plen;
+        size_t ulen, plen;
         char *user, *pass;
         prelude_msg_t *msg;
         char filename[256];

@@ -44,10 +44,10 @@
 
 
 typedef struct prelude_optlist {    
-        int argv_index;
+        size_t argv_index;
 
-        int wide_msglen;
-        int wide_msgcount;
+        size_t wide_msglen;
+        size_t wide_msgcount;
         prelude_msg_t *wide_msg;
         
         struct list_head optlist;
@@ -148,7 +148,7 @@ static prelude_option_t *search_cli_option(prelude_optlist_t *optlist, const cha
 static int check_option_optarg(prelude_optlist_t *optlist,
                                int argc, char **argv, char **optarg, size_t size) 
 {
-        int len = 0;
+        size_t len = 0;
         
         while ( optlist->argv_index < argc && *argv[optlist->argv_index] != '-' && len < size ) {
 
@@ -172,7 +172,7 @@ static int check_option_optarg(prelude_optlist_t *optlist,
 static int check_option_reqarg(prelude_optlist_t *optlist, const char *option,
                                int argc, char **argv, char **optarg, size_t size) 
 {
-        int len = 0;
+        size_t len = 0;
         
         if ( optlist->argv_index >= argc || *argv[optlist->argv_index] == '-' ) {
                 fprintf(stderr, "Option %s require an argument.\n", option);
@@ -248,7 +248,7 @@ static int check_option(prelude_optlist_t *optlist, prelude_option_t *option,
 static char *lookup_variable_if_needed(char *optarg) 
 {
         const char *val;
-        int i, j, len = 0;
+        size_t i, j, len = 0;
         char out[1024], c;
 
         if ( ! optarg )

@@ -1,3 +1,16 @@
+2002-09-16  Guillaume Pelat  <endymion@linux-secure.com>
+
+	* sensor-adduser/plaintext.c(setup_plaintext):
+	* src/common.c(prelude_read_multiline):
+	* src/config-engine.c(cmp_entry):
+	(create_new_line):
+	* src/prelude-client.c(handle_plaintext_connection):
+	* src/prelude-getopt.c(check_option_optarg):
+	(check_option_reqarg):
+	(lookup_variable_if_needed):
+	* src/ssl-gencrypto.c(get_full_hostname):
+	Fix potential signed/unsigned integer problems.
+
 2002-09-15  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* acinclude.m4: 

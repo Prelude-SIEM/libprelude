@@ -95,7 +95,8 @@ static int cmp_entry(char *string, const char *wanted)
 {
         char old;
         char *ptr;
-        int ret, len;
+        int ret;
+        size_t len;
 
         /*
          * skip space;
@@ -332,7 +333,7 @@ static int search_entry(config_t *cfg, const char *section, const char *entry, i
 static char *create_new_line(const char *entry, const char *val) 
 {
         char *line;
-        int len = 0;
+        size_t len = 0;
 
         if ( val )
                 len = strlen(val) + 3;

@@ -6,7 +6,7 @@ sensor_adduser_LDFLAGS = -export-dynamic
 sensor_adduser_LDADD = $(top_builddir)/src/libprelude.la @libprelude_libs@
 
 if HAVE_SSL
- SSL_SRCS=ssl-register.c
+SSL_SRCS=ssl-register.c
 endif
 
 sensor_adduser_SOURCES = 		\

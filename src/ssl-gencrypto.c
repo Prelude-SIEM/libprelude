@@ -72,7 +72,8 @@ static int req_check_len(int len, int min, int max)
 
 static int get_full_hostname(char *buf, size_t len) 
 {
-        int ret, i;
+        int ret;
+        size_t i;
         
         ret = gethostname(buf, len);
         if ( ret < 0 ) {

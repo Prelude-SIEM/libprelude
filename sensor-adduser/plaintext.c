@@ -56,7 +56,7 @@ static int setup_plaintext(prelude_io_t *fd, const char *oneshot,
 {
         ssize_t ret;
         prelude_msg_t *msg;
-        int len, ulen, plen, olen;
+        size_t len, ulen, plen, olen;
 
         ulen = strlen(user) + 1;
         plen = strlen(pass) + 1;

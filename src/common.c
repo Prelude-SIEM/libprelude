@@ -189,7 +189,7 @@ int prelude_open_persistant_tmpfile(const char *filename, int flags, mode_t mode
  */
 int prelude_read_multiline(FILE *fd, int *line, char *buf, size_t size) 
 {
-        int i;
+        size_t i;
 
         if ( ! fgets(buf, size, fd) )
                 return -1;
