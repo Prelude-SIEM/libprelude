@@ -60,8 +60,6 @@ AC_PROG_YACC
 AC_SYS_LARGEFILE
 AX_CREATE_PRELUDE_INTTYPES_H(src/include/prelude-inttypes.h)
 
-AC_C_BIGENDIAN(libprelude_cflags="$libprelude_cflags -DWORDS_BIGENDIAN")
-
 
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
@@ -71,6 +69,26 @@ AC_SUBST(libprelude_libs)
 AC_SUBST(libprelude_cflags)
 
 AC_CHECK_FUNCS(strndup)
+
+
+dnl **************************************************
+dnl * Check for Pthread library                      *
+dnl **************************************************
+
+ACX_PTHREAD(, AC_MSG_ERROR(couldn't find suitable pthread implementation))
+libprelude_libs="$PTHREAD_LIBS $libprelude_libs"
+dnl libprelude_cflags="$PTHREAD_CFLAGS $libprelude_cflags"
+CC="$PTHREAD_CC"
+
+echo "libs=$PTHREAD_LIBS cflags=$PTHREAD_CFLAGS"
+
+
+dnl **************************************************
+dnl * Check endianess                                *
+dnl **************************************************
+
+AC_C_BIGENDIAN(libprelude_cflags="$libprelude_cflags -DWORDS_BIGENDIAN")
+
 
 
 dnl **************************************************
@@ -91,6 +109,14 @@ AC_CHECK_LIB(c, inet_aton, libc_inet_aton=yes)
 if test x$libc_inet_aton != xyes; then
 	AC_CHECK_LIB(resolv, inet_aton, libprelude_libs="$libprelude_libs -lresolv")
 fi
+
+
+dnl **************************************************
+dnl * Check what type to use in place of socklen_t   *
+dnl **************************************************
+
+AC_PROTOTYPE_ACCEPT
+AC_DEFINE(socklen_t, ACCEPT_ARG3, Define socklen_t to accept third argument type)
 
 
 
@@ -137,16 +163,6 @@ CPPFLAGS=$old_CPPFLAGS
 
 
 dnl **************************************************
-dnl * Check for Pthread library                      *
-dnl **************************************************
-
-ACX_PTHREAD(, AC_MSG_ERROR(couldn't find suitable pthread implementation))
-libprelude_libs="$libprelude_libs"
-libprelude_cflags="$libprelude_cflags"
-CC="$PTHREAD_CC"
-
-
-dnl **************************************************
 dnl * Check for poll()                               *
 dnl **************************************************
 
@@ -183,17 +199,6 @@ if test x$libc_poll != xyes; then
                AC_CHECK_LIB(poll, poll, libprelude_libs="$libprelude_libs -lpoll")
        fi
 fi
-
-
-dnl **************************************************
-dnl * Check for socklen_t.                           *
-dnl **************************************************
-
-AC_DATATYPE_GENERIC([
- #include <sys/types.h> 
- #include <sys/socket.h>
-], socklen_t, int size_t "unsigned long")
-
 
 
 dnl **************************************************
