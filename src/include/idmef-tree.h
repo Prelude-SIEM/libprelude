@@ -98,8 +98,8 @@ typedef enum {
 
 typedef struct {
         struct list_head list;
-        
-        const char *ident;
+
+        uint64_t ident;
         idmef_userid_type_t type;
         const char *name;
         const char *number;
@@ -122,7 +122,7 @@ typedef enum {
 
 
 typedef struct {
-        const char *ident;
+        uint64_t ident;
         idmef_user_category_t category;
         struct list_head userid_list;
 } idmef_user_t;
@@ -157,7 +157,7 @@ typedef enum {
 typedef struct {
         struct list_head list;
         
-        const char *ident;
+        uint64_t ident;
         idmef_address_category_t category;
         const char *vlan_name;
         int vlan_num;
@@ -171,12 +171,21 @@ typedef struct {
  * Process class
  */
 typedef struct {
-        const char *ident;
+        const char *string;
+        struct list_head list;
+} idmef_string_t;
+
+#define idmef_process_env_t idmef_string_t
+#define idmef_process_arg_t idmef_string_t
+
+typedef struct {
+        uint64_t ident;
         const char *name;
         uint32_t pid;
         const char *path;
-        const char **arg;
-        const char **env;
+
+        struct list_head arg_list;
+        struct list_head env_list;
 } idmef_process_t;
 
 
@@ -205,17 +214,25 @@ typedef struct {
 
         
 
+typedef enum {
+        default_service = 0,
+        web_service = 1,
+        snmp_service = 2,
+} idmef_service_type_t;
+
+
 
 /*
  * Service class
  */
 typedef struct {
-        const char *ident;
+        uint64_t ident;
         const char *name;
         uint16_t port;
         const char *portlist;
         const char *protocol;
 
+        idmef_service_type_t type;
         union {
                 idmef_webservice_t *web;
                 idmef_snmpservice_t *snmp;
@@ -246,7 +263,7 @@ typedef enum {
 
 
 typedef struct {
-        const char *ident;
+        uint64_t ident;
         idmef_node_category_t category;
         const char *location;
         const char *name;
@@ -269,15 +286,15 @@ typedef enum {
 
 typedef struct {
         struct list_head list;
-        
-        const char *ident;
+    
+        uint64_t ident;
         idmef_spoofed_t spoofed;
         const char *interface;
 
-        idmef_node_t node;
-        idmef_user_t user;
-        idmef_process_t process;
-        idmef_service_t service;
+        idmef_node_t *node;
+        idmef_user_t *user;
+        idmef_process_t *process;
+        idmef_service_t *service;
         
 } idmef_source_t;
 
@@ -290,14 +307,14 @@ typedef struct {
 typedef struct {
         struct list_head list;
         
-        const char *ident;
+        uint64_t ident;
         idmef_spoofed_t decoy;
         const char *interface;
 
-        idmef_node_t node;
-        idmef_user_t user;
-        idmef_process_t process;
-        idmef_service_t service;
+        idmef_node_t *node;
+        idmef_user_t *user;
+        idmef_process_t *process;
+        idmef_service_t *service;
         
 } idmef_target_t;
 
@@ -309,14 +326,14 @@ typedef struct {
  * Analyzer class
  */
 typedef struct {
-        const char *analyzerid;
+        uint64_t analyzerid;
         const char *manufacturer;
         const char *model;
         const char *version;
         const char *class;
 
-        idmef_node_t node;
-        idmef_process_t process;
+        idmef_node_t *node;
+        idmef_process_t *process;
 } idmef_analyzer_t;
 
 
@@ -331,6 +348,17 @@ typedef struct {
         const char *time;
 } idmef_time_t;
 
+#define idmef_create_time_t idmef_time_t
+#define idmef_detect_time_t idmef_time_t
+#define idmef_analyzer_time_t idmef_time_t
+
+
+
+typedef struct {
+        struct list_head list;
+        uint64_t alertident;
+        uint64_t analyzerid;
+} idmef_alertident_t;
 
 
 
@@ -340,7 +368,7 @@ typedef struct {
 typedef struct {
         const char *name;
         const char *command;
-        const char **analyzerid;
+        struct list_head alertident_list;
 } idmef_tool_alert_t;
 
 
@@ -352,7 +380,7 @@ typedef struct {
  */
 typedef struct {
         const char *name;
-        const char **alertident;
+        struct list_head alertident_list;
 } idmef_correlation_alert_t;
 
 
@@ -374,23 +402,43 @@ typedef struct {
  * Alert class
  */
 typedef enum {
-        idmef_tool_alert        = 0,
-        idmef_correlation_alert = 1,
-        idmef_overflow_alert    = 2,
+        idmef_default           = 0,
+        idmef_tool_alert        = 1,
+        idmef_correlation_alert = 2,
+        idmef_overflow_alert    = 3,
 } idmef_alert_type_t;
+
+
+
+typedef enum {
+        unknown_impact              = 0,
+        bad_unknown                 = 1,
+        not_suspicious              = 2,
+        attempted_admin             = 3,
+        successful_admin            = 4,
+        attempted_dos               = 5,
+        successful_dos              = 6,
+        attempted_recon             = 7,
+        successful_recon            = 8,
+        successful_recon_limited    = 9,
+        successful_recon_largescale = 10,
+        attempted_user              = 11,
+        successful_user             = 12,
+} idmef_alert_impact_t;
 
 
 
 typedef struct {
         uint64_t ident;
-        const char *impact;
+    
+        const char *impact;    
         const char *action;
     
         idmef_analyzer_t analyzer;
     
         idmef_time_t create_time;
-        idmef_time_t detect_time;
-        idmef_time_t analyzer_time;
+        idmef_time_t *detect_time;
+        idmef_time_t *analyzer_time;
 
         struct list_head source_list;
         struct list_head target_list;
@@ -414,10 +462,11 @@ typedef struct {
  * Heartbeat class
  */
 typedef struct {
-        const char *ident;
-
+        uint64_t ident;
         idmef_analyzer_t analyzer;
-        idmef_time_t analyzer_time;
+
+        idmef_time_t create_time;
+        idmef_time_t *analyzer_time;
 
         struct list_head additional_data_list;
 } idmef_heartbeat_t;

@@ -28,7 +28,6 @@
  */
 #define MSG_END_OF_TAG 254
 
-
 /*
  * IDMEF alert
  */
@@ -36,11 +35,14 @@
 #define MSG_ALERT_IDENT 1
 #define MSG_ALERT_ACTION 2
 #define MSG_ALERT_IMPACT 3
-#define MSG_ALERT_CREATE_TIME 4
-#define MSG_ALERT_DETECT_TIME 5
-#define MSG_ALERT_ANALYZER_TIME 6
 
 
+/*
+ * Create time 
+ */
+#define MSG_CREATE_TIME_TAG 4
+#define MSG_DETECT_TIME_TAG 5
+#define MSG_ANALYZER_TIME_TAG 6
 
 /*
  * IDMEF source / target
@@ -168,13 +170,58 @@
 #define MSG_TARGET_DECOY 69
 #define MSG_TARGET_INTERFACE 70
 
+/*
+ * IDMEF heartbeat
+ */
+#define MSG_HEARTBEAT_TAG 71
+#define MSG_HEARTBEAT_IDENT 72
+
+/*
+ * IDMEF tool alert
+ */
+#define MSG_TOOL_ALERT_TAG 73
+#define MSG_TOOL_ALERT_NAME 74
+#define MSG_TOOL_ALERT_COMMAND 75
+#define MSG_TOOL_ALERT_ANALYZER_ID 76
+
+
+/*
+ * IDMEF correlation alert
+ */
+#define MSG_CORRELATION_ALERT_TAG 76
+#define MSG_CORRELATION_ALERT_NAME 77 
+#define MSG_CORRELATION_ALERT_IDENT 78
+
+
+/*
+ * IDMEF Overflow alert
+ */
+#define MSG_OVERFLOW_ALERT_TAG 79
+#define MSG_OVERFLOW_ALERT_PROGRAM 80
+#define MSG_OVERFLOW_ALERT_SIZE 81
+#define MSG_OVERFLOW_ALERT_BUFFER 82
+
+/*
+ * Creattime / Detect Time / Analyzer time
+ */
+#define MSG_TIME_SEC 83
+#define MSG_TIME_USEC 84
+
+/*
+ * Carry an IDENT + an analyzer
+ */
+#define MSG_ALERTIDENT_TAG 85
+#define MSG_ALERTIDENT_IDENT 86
+#define MSG_ALERTIDENT_ANALYZER_IDENT 87
 
 /*
  * Other
  */
-#define MSG_OWN_FORMAT 71
+#define MSG_OWN_FORMAT 88
 
 /*
  * Possible tag behind MSG_OWN_FORMAT
  */
-#define MSG_FORMAT_PRELUDE_NIDS 0
+#define MSG_FORMAT_PRELUDE_NIDS 89
+
+

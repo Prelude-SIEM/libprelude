@@ -292,7 +292,7 @@ static int read_auth_result(prelude_io_t *fd)
         char *buf;
         
         ret = prelude_io_read_delimited(fd, (void **) &buf);
-        if ( ret < 0 ) {
+        if ( ret <= 0 ) {
                 log(LOG_ERR,"couldn't read authentication result.\n");
                 return -1;
         }

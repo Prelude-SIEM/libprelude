@@ -1,3 +1,14 @@
+2001-12-26  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/include/idmef-tree.h: ident members are all uint64_t.
+	Add missing IDMEF stuff.
+
+	* src/include/idmef-message-id.h: more work toward full IDMEF
+	compliance.
+
+	* src/prelude-auth.c (read_auth_result): Handle case where
+	prelude_io_read_delimited() return 0. This fix a possible crash.
+
 2001-12-19  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/sensor.c (parse_argument): manager address is a wide option.
