@@ -1,3 +1,13 @@
+2002-09-23  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* NEWS: updated.
+
+	* configure.in: bump version to 0.8.4
+
+	* src/sensor.c (parse_argument): return -1 here
+	in case of the manager client creation fail.
+	Fix a possible free() of a NULL pointer.
+
 2002-09-16  Guillaume Pelat  <endymion@linux-secure.com>
 
 	* sensor-adduser/plaintext.c(setup_plaintext):

@@ -1,3 +1,19 @@
+* 2002-09-23, libprelude-0.8.4:
+	
+	- Correct the way we enable/disable OpenSSL support.
+	  (Yoann Vandoorselaere).
+
+	- Workaround system that doesn't define socklen_t. This
+	  make libprelude compile on Solaris.
+	  (Yoann Vandoorselaere).
+
+	- Fix a possible NULL free in case the manager client 
+	  creation fail.
+	  (Yoann Vandoorselaere).
+
+	- Fix potential signed/unsigned integer problems.
+	  (Guillaume Pelat).
+
 * 2002-09-10, libprelude-0.8.3:
 	- Make sensor-adduser do exact compareason on sensor name,
 	  so that two sensor with the same prefix can't be confused.

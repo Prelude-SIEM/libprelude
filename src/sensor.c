@@ -367,7 +367,8 @@ static int parse_argument(const char *filename, int argc, char **argv, int type)
                 log(LOG_INFO,
                     "No Manager were configured. You need to setup a Manager for this Sensor\n"
                     "to report events. Please use the \"manager-addr\" entry in the Sensor\n"
-                    "config file or the -a and eventually -p command line options.\n");
+                    "config file or the --manager-addr command line options.\n");
+                return -1;
         }
         free(manager_cfg_line);
  out:
