@@ -2524,11 +2524,11 @@ char *x, int m, int bm_bc[]
 </MACRO>
 <MACRO>
 <NAME>MSG_ANALYZER_OSTYPE</NAME>
-#define MSG_ANALYZER_OSTYPE        5
+#define MSG_ANALYZER_OSTYPE        6
 </MACRO>
 <MACRO>
 <NAME>MSG_ANALYZER_OSVERSION</NAME>
-#define MSG_ANALYZER_OSVERSION     6
+#define MSG_ANALYZER_OSVERSION     7
 </MACRO>
 <MACRO>
 <NAME>MSG_TARGET_IDENT</NAME>
@@ -2598,6 +2598,11 @@ char *x, int m, int bm_bc[]
 <NAME>prelude_daemonize</NAME>
 <RETURNS>int  </RETURNS>
 const char *lockfile
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_get_analyzerid</NAME>
+<RETURNS>uint64_t  </RETURNS>
+void
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_client_ident_send</NAME>
