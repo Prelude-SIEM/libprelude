@@ -1,5 +1,11 @@
 2003-12-26  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
+	* configure.in:
+	don't regenerate the .c source files of bindings during
+	./configure
+
+2003-12-26  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
 	* bindings/python/_prelude.c:
 	regenerated
 
