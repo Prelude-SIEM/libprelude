@@ -42,7 +42,7 @@ typedef struct hash_elem {
 
 
 struct prelude_hash {
-	int lists_size;
+	size_t lists_size;
 	prelude_list_t *lists;
 
         unsigned int (*hash_func)(const void *key);
@@ -235,4 +235,20 @@ int prelude_hash_elem_destroy(prelude_hash_t *hash, const void *key)
 	free(hash_elem);
 
 	return 0;
+}
+
+
+
+void prelude_hash_iterate(prelude_hash_t *hash, void (*cb)(void *data))
+{
+        unsigned int i;
+        prelude_list_t *tmp;
+        hash_elem_t *hash_elem;
+        
+        for ( i = 0; i < hash->lists_size; i++ ) {
+                prelude_list_for_each(&hash->lists[i], tmp) {
+                        hash_elem = prelude_list_entry(tmp, hash_elem_t, list);
+                        cb(hash_elem->value);
+                }
+        }
 }
