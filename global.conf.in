@@ -1,3 +1,5 @@
+[prelude]
+
 # This is the default configuration for all program
 # (sensors, agents, and manager) using libprelude. 
 #
