@@ -464,7 +464,7 @@ int idmef_data_to_string(const idmef_data_t *data, prelude_string_t *out)
 		break;
 
 	case IDMEF_DATA_TYPE_UINT64:
-		ret = prelude_string_sprintf(out, "%llu", data->data.uint64_data);
+		ret = prelude_string_sprintf(out, "%" PRIu64, data->data.uint64_data);
 		break;
 
 	case IDMEF_DATA_TYPE_FLOAT:
