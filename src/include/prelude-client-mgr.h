@@ -29,7 +29,7 @@ void prelude_client_mgr_broadcast(prelude_client_mgr_t *cmgr, prelude_msg_t *msg
 
 void prelude_client_mgr_broadcast_async(prelude_client_mgr_t *cmgr, prelude_msg_t *msg);
 
-prelude_client_mgr_t *prelude_client_mgr_new(const char *cfgline);
+prelude_client_mgr_t *prelude_client_mgr_new(int type, const char *cfgline);
 
 void prelude_client_mgr_notify_connection(prelude_client_mgr_t *mgr, void (*callback)(struct list_head *clist));
 

@@ -250,7 +250,7 @@ static void parse_address(char *addr, uint16_t *port)
 
 
 
-static int add_new_client(client_list_t *clist, char *addr) 
+static int add_new_client(client_list_t *clist, char *addr, int type) 
 {
         int ret;
         uint16_t port;
@@ -272,6 +272,8 @@ static int add_new_client(client_list_t *clist, char *addr)
                 return -1;
         }
 
+        prelude_client_set_type(new->client, type);
+        
         prelude_list_add((prelude_linked_object_t *) new->client, &clist->parent->all_client);
         
         timer_set_data(&new->timer, new);
@@ -361,7 +363,7 @@ static char *parse_config_string(char **line)
  * Parse Manager configuration line:
  * x.x.x.x && y.y.y.y || z.z.z.z
  */
-static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline) 
+static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline, int type) 
 {
         int ret;
         char *ptr;
@@ -410,7 +412,7 @@ static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline)
                 if ( ret == 0 )
                         continue;
                 
-                ret = add_new_client(clist, ptr);
+                ret = add_new_client(clist, ptr, type);
                 if ( ret < 0 )
                         return -1;
         }
@@ -613,6 +615,7 @@ void prelude_client_mgr_broadcast_async(prelude_client_mgr_t *cmgr, prelude_msg_
 
 /**
  * prelude_client_mgr_new:
+ * @type: type of the manager to add.
  * @cfgline: Manager configuration string.
  *
  * prelude_client_mgr_new() initialize a new Client Manager object.
@@ -621,7 +624,7 @@ void prelude_client_mgr_broadcast_async(prelude_client_mgr_t *cmgr, prelude_msg_
  * Returns: a pointer on a #prelude_client_mgr_t object, or NULL
  * if an error occured.
  */
-prelude_client_mgr_t *prelude_client_mgr_new(const char *cfgline) 
+prelude_client_mgr_t *prelude_client_mgr_new(int type, const char *cfgline) 
 {
         int ret;
         char *dup;
@@ -655,7 +658,7 @@ prelude_client_mgr_t *prelude_client_mgr_new(const char *cfgline)
                 return NULL;
         }
         
-        ret = parse_config_line(new, dup);
+        ret = parse_config_line(new, dup, type);
         if ( ret < 0 || list_empty(&new->or_list) ) {
                 close_backup_fd(new);
                 free(new);

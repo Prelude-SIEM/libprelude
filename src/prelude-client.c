@@ -78,6 +78,8 @@ struct prelude_client {
          * for writing to the Manager.
          */
         prelude_io_t *fd;
+
+        uint8_t type;
         uint8_t connection_broken;
 };
 
@@ -584,6 +586,7 @@ prelude_client_t *prelude_client_new(const char *addr, uint16_t port)
         new->sport = 0;
         new->daddr = strdup(addr);
         new->dport = port;
+        new->type = PRELUDE_CLIENT_TYPE_OTHER;
         
         new->connection_broken = 0;
         
@@ -610,7 +613,7 @@ int prelude_client_connect(prelude_client_t *client)
                 client->connection_broken = 1;
                 return -1;
         }
-
+        
         msg = prelude_option_wide_get_msg();
         if ( ! msg )
                 return -1;
@@ -618,11 +621,11 @@ int prelude_client_connect(prelude_client_t *client)
         ret = prelude_msg_write(msg, client->fd);
         if ( ret < 0 )
                 return -1;
-
-        ret = prelude_client_ident_send(client->fd);
+                
+        ret = prelude_client_ident_send(client->fd, client->type);
         if ( ret < 0 )
                 return -1;
-        
+
         client->connection_broken = 0;
         
         return ret;
@@ -717,6 +720,13 @@ uint16_t prelude_client_get_dport(prelude_client_t *client)
 int prelude_client_is_alive(prelude_client_t *client) 
 {
         return (client->connection_broken == 1) ? -1 : 0;
+}
+
+
+
+void prelude_client_set_type(prelude_client_t *client, int type) 
+{
+        client->type = type;
 }
 
 

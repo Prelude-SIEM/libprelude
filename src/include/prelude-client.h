@@ -21,7 +21,6 @@
 *
 *****/
 
-
 typedef struct prelude_client prelude_client_t;
 
 void prelude_client_destroy(prelude_client_t *client);
@@ -44,7 +43,17 @@ uint16_t prelude_client_get_dport(prelude_client_t *client);
 
 int prelude_client_is_alive(prelude_client_t *client);
 
+
+#define PRELUDE_CLIENT_TYPE_OTHER   0
+#define PRELUDE_CLIENT_TYPE_SENSOR  1
+#define PRELUDE_CLIENT_TYPE_MANAGER 2
+
+void prelude_client_set_type(prelude_client_t *client, int type);
+
+
 /*
  * this one is located in client-ident.c
  */
 uint64_t prelude_client_get_analyzerid(void);
+
+

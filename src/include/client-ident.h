@@ -21,6 +21,6 @@
 *
 *****/
 
-int prelude_client_ident_send(prelude_io_t *fd);
+int prelude_client_ident_send(prelude_io_t *fd, int client_type);
 
 int prelude_client_ident_init(const char *sname);

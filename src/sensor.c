@@ -41,6 +41,7 @@
 
 #include "prelude-io.h"
 #include "prelude-message.h"
+#include "prelude-client.h"
 #include "prelude-client-mgr.h"
 #include "prelude-getopt.h"
 #include "prelude-async.h"
@@ -54,15 +55,13 @@
  */
 #define DEFAULT_SENSOR_CONFIG SENSORS_CONFIG_DIR"/sensors-default.conf"
 
-
-int is_caller_a_sensor = 0;
 static prelude_client_mgr_t *manager_list = NULL;
 
 
 
 static int setup_manager_addr(const char *arg) 
 {               
-        manager_list = prelude_client_mgr_new(arg);
+        manager_list = prelude_client_mgr_new(PRELUDE_CLIENT_TYPE_SENSOR, arg);
         if ( ! manager_list ) 
                 return prelude_option_error;
         
@@ -155,8 +154,6 @@ static int parse_argument(const char *filename, int argc, char **argv)
 int prelude_sensor_init(const char *sname, const char *filename, int argc, char **argv)
 {
         int ret;
-
-        is_caller_a_sensor = 1;
         
         if ( ! sname ) {
                 errno = EINVAL;

@@ -43,7 +43,6 @@
 #define IDENTITY_DIR "/var/lib/prelude-sensors/idents"
 
 
-extern int is_caller_a_sensor;
 static char identfile[1024];
 static uint64_t sensor_ident = 0;
 static const char *sensor_name = NULL;
@@ -185,13 +184,19 @@ static int declare_ident_to_manager(prelude_io_t *fd)
 
 
 
-int prelude_client_ident_send(prelude_io_t *fd) 
+int prelude_client_ident_send(prelude_io_t *fd, int client_type) 
 {
+        if ( client_type == PRELUDE_CLIENT_TYPE_OTHER )
+                /*
+                 * generic client, no ident allocation needed.
+                 */
+                return 0;
+        
         /*
-         * if prelude_client_ident_init wasn't called (client_is_a_sensor == 0),
-         * the caller is a relay Manager, and we declare ourself as being ID 0. 
+         * possibly request, or declare ident for sensor.
+         * declare ident 0 for manager.
          */
-        if ( is_caller_a_sensor && ! sensor_ident )
+        if ( client_type == PRELUDE_CLIENT_TYPE_SENSOR && ! sensor_ident )
                 return request_ident_from_manager(fd);
         else
                 return declare_ident_to_manager(fd);

@@ -1,5 +1,28 @@
 2002-04-30  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/prelude-client-mgr.c (prelude_client_mgr_new): 
+	take a new type argument. For each created client, 
+	the specified type will be associated.
+
+	* src/sensor.c: get rid of the is_caller_a_sensor
+	variable.
+
+	(setup_manager_addr): set client type to 
+	PRELUDE_CLIENT_TYPE_SENSOR.
+
+	* src/prelude-client.c (prelude_client_new): 
+	default client type is PRELUDE_CLIENT_TYPE_OTHER.
+
+	(prelude_client_connect): pass the client type to
+	prelude_client_ident_send().
+
+	(prelude_client_set_type): new function, set client type.
+
+	* src/client-ident.c (prelude_client_ident_send): 
+	now take a client_type argument. Only declare ident
+	if type is PRELUDE_CLIENT_TYPE_SENSOR or 
+	PRELUDE_CLIENT_TYPE_MANAGER.
+
 	* src/string-matching.c: 
 	(BoyerMoore_StringMatching):
 	(BoyerMoore_CI_StringMatching):
