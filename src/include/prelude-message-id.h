@@ -71,25 +71,19 @@
  */
 #define PRELUDE_MSG_OPTION_TARGET_ID        0
 #define PRELUDE_MSG_OPTION_SOURCE_ID        1
-#define PRELUDE_MSG_OPTION_NAME             2
 #define PRELUDE_MSG_OPTION_VALUE            3
 #define PRELUDE_MSG_OPTION_SET              4
 #define PRELUDE_MSG_OPTION_GET              5
 #define PRELUDE_MSG_OPTION_ID               6
 #define PRELUDE_MSG_OPTION_ERROR            7
-
-
-/*
- * PRELUDE_MSG_OPTION_LIST submessages
- */
-#define PRELUDE_OPTION_START            0
-#define PRELUDE_OPTION_END              1
-#define PRELUDE_OPTION_NAME             2
-#define PRELUDE_OPTION_DESC             3
-#define PRELUDE_OPTION_HAS_ARG          4
-#define PRELUDE_OPTION_HELP             5
-#define PRELUDE_OPTION_INPUT_VALIDATION 6
-#define PRELUDE_OPTION_INPUT_TYPE       7
-#define PRELUDE_OPTION_ARG              8
+#define PRELUDE_MSG_OPTION_START            8
+#define PRELUDE_MSG_OPTION_END              9
+#define PRELUDE_MSG_OPTION_NAME            10
+#define PRELUDE_MSG_OPTION_DESC            11
+#define PRELUDE_MSG_OPTION_HAS_ARG         12
+#define PRELUDE_MSG_OPTION_HELP            13
+#define PRELUDE_MSG_OPTION_INPUT_VALIDATION 14
+#define PRELUDE_MSG_OPTION_INPUT_TYPE       15
+#define PRELUDE_MSG_OPTION_ARG              16
 
 #endif /* _LIBPRELUDE_PRELUDE_MESSAGE_ID_H */

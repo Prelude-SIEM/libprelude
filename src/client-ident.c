@@ -75,16 +75,8 @@ static int declare_ident_to_manager(prelude_io_t *fd)
         if ( ! msg )
                 return -1;
 
+        nident = prelude_hton64(sensor_ident);
         
-#ifdef WORDS_BIGENDIAN
-        nident = sensor_ident;
-#else
-        /*
-         * Put in network byte order
-         */
-        ((uint32_t *) &nident)[0] = htonl(((uint32_t *) &sensor_ident)[1]);
-        ((uint32_t *) &nident)[1] = htonl(((uint32_t *) &sensor_ident)[0]);
-#endif
         /*
          * send message
          */

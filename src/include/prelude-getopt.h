@@ -71,7 +71,7 @@ typedef enum {
 
 void prelude_option_set_priority(prelude_option_t *option, int priority);
 
-void prelude_option_print(int flags, int descoff);
+void prelude_option_print(prelude_option_t *opt, int flags, int descoff);
 
 prelude_msg_t *prelude_option_wide_get_msg(void);
 
@@ -104,5 +104,37 @@ void *prelude_option_get_private_data(prelude_option_t *opt);
 int prelude_option_invoke_set(const char *option, const char *value);
 
 int prelude_option_invoke_get(const char *option, char *buf, size_t len);
+
+
+/*
+ *
+ */
+prelude_option_t *prelude_option_new(prelude_option_t *parent);
+
+void prelude_option_set_longopt(prelude_option_t *opt, const char *longopt);
+
+const char *prelude_option_get_longopt(prelude_option_t *opt);
+
+void prelude_option_set_description(prelude_option_t *opt, const char *description);
+
+const char *prelude_option_get_description(prelude_option_t *opt);
+
+void prelude_option_set_has_arg(prelude_option_t *opt, prelude_option_argument_t has_arg);
+
+prelude_option_argument_t prelude_option_get_has_arg(prelude_option_t *opt);
+
+void prelude_option_set_help(prelude_option_t *opt, const char *help);
+
+const char *prelude_option_get_help(prelude_option_t *opt);
+
+void prelude_option_set_input_validation_regex(prelude_option_t *opt, const char *regex);
+
+const char *prelude_option_get_input_validation_regex(prelude_option_t *opt);
+
+void prelude_option_set_input_type(prelude_option_t *opt, uint8_t input_type);
+
+uint8_t prelude_option_get_input_type(prelude_option_t *opt);
+
+prelude_option_t *prelude_option_get_root(void);
 
 #endif /* _LIBPRELUDE_PRELUDE_GETOPT_H */

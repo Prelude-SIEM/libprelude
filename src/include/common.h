@@ -34,4 +34,6 @@ int prelude_open_persistant_tmpfile(const char *filename, int flags, mode_t mode
 
 int prelude_read_multiline(FILE *fd, int *line, char *buf, size_t size);
 
+uint64_t prelude_hton64(uint64_t val);
+
 #endif /* _LIBPRELUDE_COMMON_H */

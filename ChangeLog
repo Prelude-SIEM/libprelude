@@ -1,3 +1,43 @@
+2002-11-22  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-getopt.c: 
+	input_validation_regex, not input_validation_rexex.
+
+	(prelude_option_new): 
+	(prelude_option_set_longopt): 
+	(prelude_option_get_longopt): 
+	(prelude_option_set_description): 
+	(prelude_option_get_description): 
+	(prelude_option_set_has_arg): 
+	(prelude_option_get_has_arg): 
+	(prelude_option_set_help): 
+	(prelude_option_get_help): 
+	(prelude_option_set_input_validation_regex): 
+	(prelude_option_get_input_validation_regex): 
+	(prelude_option_set_input_type): 
+	(prelude_option_get_input_type): 
+	implemented.
+	
+	(prelude_option_wide_get_msg): make the option message 
+	carry the originating sensor ID.
+
+	* src/prelude-getopt-wide.c (read_option_list): 
+	(prelude_option_send_request): 
+	(prelude_option_recv_reply): 
+	(prelude_option_read_option_list): 
+	implemented. Theses function are helper for the one
+	who want to use the administrative console.
+
+	* src/client-ident.c (declare_ident_to_manager): 
+	use prelude_hton64().
+
+	* src/common.c (prelude_hton64): 
+	new public function.
+
+	* src/prelude-getopt.c (check_option_reqarg): 
+	fix a priority problem when assigning optarg. 
+	This could result in a SIGSEGV.
+
 2002-11-13  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-getopt-wide.c: 

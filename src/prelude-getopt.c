@@ -37,7 +37,8 @@
 #include "variable.h"
 #include "config-engine.h"
 #include "prelude-getopt.h"
-
+#include "prelude-client.h"
+#include "common.h"
 
 #define option_run_all 10
 
@@ -70,7 +71,7 @@ struct prelude_option {
         int (*get)(char *ibuf, size_t size);
         
         const char *help;
-        const char *input_validation_rexex;
+        const char *input_validation_regex;
         enum { string, integer, boolean } input_type;
 
         void *private_data;
@@ -187,7 +188,7 @@ static int check_option_reqarg(prelude_optlist_t *optlist, const char *option,
         while ( optlist->argv_index < argc && *argv[optlist->argv_index] != '-' && len < size ) {
                 
                 if ( len > 0 )
-                        *optarg[len++] = ' ';
+                        (*optarg)[len++] = ' ';
                 
                 strncpy(*optarg + len, argv[optlist->argv_index], size - len);
                 len += strlen(argv[optlist->argv_index]);
@@ -690,13 +691,11 @@ static prelude_optlist_t *get_default_optlist(void)
         if ( root_optlist )
                 return root_optlist;
 
-        root_optlist = malloc(sizeof(*root_optlist));
+        root_optlist = calloc(1, sizeof(*root_optlist));
         if ( ! root_optlist )
                 return NULL;
         
         root_optlist->wide_msg = NULL;
-        root_optlist->wide_msgcount = 0;
-        root_optlist->wide_msglen = 0;
         root_optlist->argv_index = 1;
         INIT_LIST_HEAD(&root_optlist->optlist);
         
@@ -786,17 +785,17 @@ static void construct_option_msg(prelude_msg_t *msg, prelude_optlist_t *optlist)
 {
         struct list_head *tmp;
         prelude_option_t *opt;
-        
+
         list_for_each(tmp, &optlist->optlist) {
                 opt = list_entry(tmp, prelude_option_t, list);
 
                 if ( !(opt->flags & WIDE_HOOK) )
                         continue;
 
-                prelude_msg_set(msg, PRELUDE_OPTION_START, 0, NULL);
-                prelude_msg_set(msg, PRELUDE_OPTION_NAME, strlen(opt->longopt) + 1, opt->longopt);
-                prelude_msg_set(msg, PRELUDE_OPTION_DESC, strlen(opt->description) + 1, opt->description);
-                prelude_msg_set(msg, PRELUDE_OPTION_HAS_ARG, sizeof(uint8_t), &opt->has_arg);               
+                prelude_msg_set(msg, PRELUDE_MSG_OPTION_START, 0, NULL);
+                prelude_msg_set(msg, PRELUDE_MSG_OPTION_NAME, strlen(opt->longopt) + 1, opt->longopt);
+                prelude_msg_set(msg, PRELUDE_MSG_OPTION_DESC, strlen(opt->description) + 1, opt->description);
+                prelude_msg_set(msg, PRELUDE_MSG_OPTION_HAS_ARG, sizeof(uint8_t), &opt->has_arg);               
 
                 /*
                  * there is suboption.
@@ -804,7 +803,7 @@ static void construct_option_msg(prelude_msg_t *msg, prelude_optlist_t *optlist)
                 if ( ! list_empty(&opt->optlist.optlist) )
                         construct_option_msg(msg, &opt->optlist);
                         
-                prelude_msg_set(msg, PRELUDE_OPTION_END, 0, NULL);                    
+                prelude_msg_set(msg, PRELUDE_MSG_OPTION_END, 0, NULL);                    
         }
 }
 
@@ -812,19 +811,27 @@ static void construct_option_msg(prelude_msg_t *msg, prelude_optlist_t *optlist)
 
 prelude_msg_t *prelude_option_wide_get_msg(void) 
 {
+        uint64_t source_id;
+        
         if ( ! root_optlist )
                 return NULL;
         
         if ( root_optlist->wide_msg )
                 return root_optlist->wide_msg;
 
-        root_optlist->wide_msg = prelude_msg_new(root_optlist->wide_msgcount, root_optlist->wide_msglen,
-                                                 PRELUDE_MSG_OPTION_LIST, PRELUDE_MSG_PRIORITY_HIGH);
+        root_optlist->wide_msg =
+            prelude_msg_new(root_optlist->wide_msgcount + 2,
+                            root_optlist->wide_msglen + 100 + sizeof(uint64_t),
+                            PRELUDE_MSG_OPTION_LIST, PRELUDE_MSG_PRIORITY_HIGH);
+
         if ( ! root_optlist->wide_msg ) {
                 log(LOG_ERR, "memory exhausted.\n");
                 return NULL;
         }
+
         
+        source_id = prelude_hton64(prelude_client_get_analyzerid());
+        prelude_msg_set(root_optlist->wide_msg, PRELUDE_MSG_OPTION_SOURCE_ID, sizeof(source_id), &source_id);
 
         construct_option_msg(root_optlist->wide_msg, root_optlist);
         
@@ -885,13 +892,13 @@ static void print_options(prelude_optlist_t *optlist, int flags, int descoff, in
         struct list_head *tmp;
 
         list_for_each(tmp, &optlist->optlist) {
-
+                
                 opt = list_entry(tmp, prelude_option_t, list);
 
                 /*
                  * If flags is not there, continue.
                  */
-                if ( !(opt->flags & flags) )
+                if ( ! (opt->flags & flags) )
                         continue;
                 
                 for ( i = 0; i < depth; i++ )
@@ -924,15 +931,19 @@ static void print_options(prelude_optlist_t *optlist, int flags, int descoff, in
 
 /**
  * prelude_option_print:
+ * @opt: Option(s) to print out.
  * @flags: Only option with specified flags will be printed.
  * @descoff: offset from the begining of the line where the description
  * should start.
  *
- * Dump option available in optlist and hooked to the command line.
+ * Dump option available in @opt and hooked to the given flags.
+ * If @opt is NULL, then the root of the option list is used.
  */
-void prelude_option_print(int flags, int descoff) 
-{        
-        print_options(root_optlist, flags, descoff, 0);
+void prelude_option_print(prelude_option_t *opt, int flags, int descoff) 
+{
+        prelude_optlist_t *optlist = (opt) ? &opt->optlist : root_optlist;
+        
+        print_options(optlist, flags, descoff, 0);
 }
 
 
@@ -1064,4 +1075,108 @@ int prelude_option_invoke_get(const char *option, char *buf, size_t len)
                 return -1;
         
         return opt->get(buf, len);
+}
+
+
+
+
+prelude_option_t *prelude_option_new(prelude_option_t *parent) 
+{
+        prelude_option_t *new;
+        
+        new = calloc(1, sizeof(*new));
+        if ( ! new ) 
+                return NULL;
+
+        INIT_LIST_HEAD(&new->optlist.optlist);
+
+        if ( parent ) 
+                list_add_tail(&new->list, &parent->optlist.optlist);
+
+        return new;
+}
+
+
+
+
+void prelude_option_set_longopt(prelude_option_t *opt, const char *longopt) 
+{
+        opt->longopt = longopt;
+}
+
+
+
+const char *prelude_option_get_longopt(prelude_option_t *opt) 
+{
+        return opt->longopt;
+}
+
+
+
+void prelude_option_set_description(prelude_option_t *opt, const char *description) 
+{
+        opt->description = description;
+}
+
+
+
+const char *prelude_option_get_description(prelude_option_t *opt)
+{
+        return opt->description;
+}
+
+
+
+void prelude_option_set_has_arg(prelude_option_t *opt, prelude_option_argument_t has_arg) 
+{
+        opt->has_arg = has_arg;
+}
+
+
+
+prelude_option_argument_t prelude_option_get_has_arg(prelude_option_t *opt) 
+{
+        return opt->has_arg;
+}
+
+
+
+void prelude_option_set_help(prelude_option_t *opt, const char *help) 
+{
+        opt->help = help;
+}
+
+
+
+const char *prelude_option_get_help(prelude_option_t *opt) 
+{
+        return opt->help;
+}
+
+
+
+void prelude_option_set_input_validation_regex(prelude_option_t *opt, const char *regex)
+{
+        opt->input_validation_regex = regex;
+}
+
+
+
+const char *prelude_option_get_input_validation_regex(prelude_option_t *opt)
+{
+        return opt->input_validation_regex;
+}
+
+
+
+void prelude_option_set_input_type(prelude_option_t *opt, uint8_t input_type) 
+{
+        opt->input_type = input_type;
+}
+
+
+
+uint8_t prelude_option_get_input_type(prelude_option_t *opt)
+{
+        return opt->input_type;
 }

@@ -29,7 +29,14 @@
 #define _LIBPRELUDE_PRELUDE_GETOPT_WIDE_H
 
 
-int prelude_option_wide_process_request(prelude_client_t *client);
+int prelude_option_process_request(prelude_client_t *client, prelude_msg_t *msg);
+
+prelude_option_t *prelude_option_read_option_list(prelude_msg_t *msg, uint64_t *source_id);
+
+int prelude_option_send_request(prelude_client_t *client, uint32_t request_id, uint64_t target_id, int type, const char *option, const char *value);
+
+int prelude_option_recv_reply(prelude_msg_t *msg, uint32_t *request_id, const char **value, const char **error);
+
 
 #endif /* _LIBPRELUDE_PRELUDE_GETOPT_WIDE_H */
 

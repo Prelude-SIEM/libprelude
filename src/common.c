@@ -204,3 +204,33 @@ int prelude_read_multiline(FILE *fd, int *line, char *buf, size_t size)
                 
         return 0;
 }
+
+
+
+
+/**
+ * prelude_hton64:
+ * @val: Value to convert to network byte order.
+ *
+ * The prelude_hton64() function converts the 64 bits unsigned integer @val
+ * from host byte order to network byte order.
+ *
+ * Returns: @val in the network bytes order.
+ */
+
+uint64_t prelude_hton64(uint64_t val) 
+{
+        uint64_t tmp;
+        
+#ifdef WORDS_BIGENDIAN
+        tmp = val;
+#else
+        /*
+         * Put in network byte order
+         */
+        ((uint32_t *) &tmp)[0] = htonl(((uint32_t *) &val)[1]);
+        ((uint32_t *) &tmp)[1] = htonl(((uint32_t *) &val)[0]);
+#endif
+
+        return tmp;
+}
