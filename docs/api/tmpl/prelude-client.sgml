@@ -54,6 +54,14 @@ int main(int argc, char **argv)
 @PRELUDE_CLIENT_CAPABILITY_RECV_CM: 
 @PRELUDE_CLIENT_CAPABILITY_SEND_CM: 
 
+<!-- ##### ENUM prelude_client_flags_t ##### -->
+<para>
+
+</para>
+
+@PRELUDE_CLIENT_FLAGS_ASYNC_SEND: 
+@PRELUDE_CLIENT_FLAGS_ASYNC_TIMER: 
+
 <!-- ##### FUNCTION prelude_client_get_unique_ident ##### -->
 <para>
 

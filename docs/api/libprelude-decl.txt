@@ -4985,149 +4985,149 @@ prelude_strbuf_t *s
 prelude_strbuf_t *s
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_time</NAME>
+<NAME>idmef_time_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, uint8_t tag, idmef_time_t *data
+idmef_time_t *data, prelude_msgbuf_t *msg, uint8_t tag
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_additional_data</NAME>
+<NAME>idmef_additional_data_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_additional_data_t *additional_data
+idmef_additional_data_t *additional_data, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_classification</NAME>
+<NAME>idmef_classification_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_classification_t *classification
+idmef_classification_t *classification, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_userid</NAME>
+<NAME>idmef_userid_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_userid_t *userid
+idmef_userid_t *userid, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_user</NAME>
+<NAME>idmef_user_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_user_t *user
+idmef_user_t *user, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_address</NAME>
+<NAME>idmef_address_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_address_t *address
+idmef_address_t *address, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_process</NAME>
+<NAME>idmef_process_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_process_t *process
+idmef_process_t *process, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_webservice</NAME>
+<NAME>idmef_webservice_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_webservice_t *webservice
+idmef_webservice_t *webservice, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_snmpservice</NAME>
+<NAME>idmef_snmpservice_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_snmpservice_t *snmpservice
+idmef_snmpservice_t *snmpservice, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_service</NAME>
+<NAME>idmef_service_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_service_t *service
+idmef_service_t *service, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_node</NAME>
+<NAME>idmef_node_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_node_t *node
+idmef_node_t *node, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_source</NAME>
+<NAME>idmef_source_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_source_t *source
+idmef_source_t *source, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_file_access</NAME>
+<NAME>idmef_file_access_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_file_access_t *file_access
+idmef_file_access_t *file_access, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_inode</NAME>
+<NAME>idmef_inode_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_inode_t *inode
+idmef_inode_t *inode, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_file</NAME>
+<NAME>idmef_file_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_file_t *file
+idmef_file_t *file, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_linkage</NAME>
+<NAME>idmef_linkage_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_linkage_t *linkage
+idmef_linkage_t *linkage, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_target</NAME>
+<NAME>idmef_target_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_target_t *target
+idmef_target_t *target, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_analyzer</NAME>
+<NAME>idmef_analyzer_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_analyzer_t *analyzer
+idmef_analyzer_t *analyzer, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_alertident</NAME>
+<NAME>idmef_alertident_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_alertident_t *alertident
+idmef_alertident_t *alertident, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_impact</NAME>
+<NAME>idmef_impact_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_impact_t *impact
+idmef_impact_t *impact, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_action</NAME>
+<NAME>idmef_action_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_action_t *action
+idmef_action_t *action, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_confidence</NAME>
+<NAME>idmef_confidence_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_confidence_t *confidence
+idmef_confidence_t *confidence, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_assessment</NAME>
+<NAME>idmef_assessment_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_assessment_t *assessment
+idmef_assessment_t *assessment, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_tool_alert</NAME>
+<NAME>idmef_tool_alert_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_tool_alert_t *tool_alert
+idmef_tool_alert_t *tool_alert, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_correlation_alert</NAME>
+<NAME>idmef_correlation_alert_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_correlation_alert_t *correlation_alert
+idmef_correlation_alert_t *correlation_alert, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_overflow_alert</NAME>
+<NAME>idmef_overflow_alert_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_overflow_alert_t *overflow_alert
+idmef_overflow_alert_t *overflow_alert, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_alert</NAME>
+<NAME>idmef_alert_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_alert_t *alert
+idmef_alert_t *alert, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_heartbeat</NAME>
+<NAME>idmef_heartbeat_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_heartbeat_t *heartbeat
+idmef_heartbeat_t *heartbeat, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_write_message</NAME>
+<NAME>idmef_message_write</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msg, idmef_message_t *message
+idmef_message_t *message, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_ident_inc</NAME>
@@ -5678,139 +5678,139 @@ prelude_async_object_t *obj
 prelude_async_object_t *obj
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_additional_data</NAME>
+<NAME>idmef_additional_data_read</NAME>
 <RETURNS>idmef_additional_data_t  *</RETURNS>
-prelude_msg_t *msg, idmef_additional_data_t *additional_data
+idmef_additional_data_t *additional_data, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_classification</NAME>
+<NAME>idmef_classification_read</NAME>
 <RETURNS>idmef_classification_t  *</RETURNS>
-prelude_msg_t *msg, idmef_classification_t *classification
+idmef_classification_t *classification, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_userid</NAME>
+<NAME>idmef_userid_read</NAME>
 <RETURNS>idmef_userid_t  *</RETURNS>
-prelude_msg_t *msg, idmef_userid_t *userid
+idmef_userid_t *userid, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_user</NAME>
+<NAME>idmef_user_read</NAME>
 <RETURNS>idmef_user_t  *</RETURNS>
-prelude_msg_t *msg, idmef_user_t *user
+idmef_user_t *user, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_address</NAME>
+<NAME>idmef_address_read</NAME>
 <RETURNS>idmef_address_t  *</RETURNS>
-prelude_msg_t *msg, idmef_address_t *address
+idmef_address_t *address, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_process</NAME>
+<NAME>idmef_process_read</NAME>
 <RETURNS>idmef_process_t  *</RETURNS>
-prelude_msg_t *msg, idmef_process_t *process
+idmef_process_t *process, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_webservice</NAME>
+<NAME>idmef_webservice_read</NAME>
 <RETURNS>idmef_webservice_t  *</RETURNS>
-prelude_msg_t *msg, idmef_webservice_t *webservice
+idmef_webservice_t *webservice, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_snmpservice</NAME>
+<NAME>idmef_snmpservice_read</NAME>
 <RETURNS>idmef_snmpservice_t  *</RETURNS>
-prelude_msg_t *msg, idmef_snmpservice_t *snmpservice
+idmef_snmpservice_t *snmpservice, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_service</NAME>
+<NAME>idmef_service_read</NAME>
 <RETURNS>idmef_service_t  *</RETURNS>
-prelude_msg_t *msg, idmef_service_t *service
+idmef_service_t *service, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_node</NAME>
+<NAME>idmef_node_read</NAME>
 <RETURNS>idmef_node_t  *</RETURNS>
-prelude_msg_t *msg, idmef_node_t *node
+idmef_node_t *node, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_source</NAME>
+<NAME>idmef_source_read</NAME>
 <RETURNS>idmef_source_t  *</RETURNS>
-prelude_msg_t *msg, idmef_source_t *source
+idmef_source_t *source, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_file_access</NAME>
+<NAME>idmef_file_access_read</NAME>
 <RETURNS>idmef_file_access_t  *</RETURNS>
-prelude_msg_t *msg, idmef_file_access_t *file_access
+idmef_file_access_t *file_access, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_inode</NAME>
+<NAME>idmef_inode_read</NAME>
 <RETURNS>idmef_inode_t  *</RETURNS>
-prelude_msg_t *msg, idmef_inode_t *inode
+idmef_inode_t *inode, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_file</NAME>
+<NAME>idmef_file_read</NAME>
 <RETURNS>idmef_file_t  *</RETURNS>
-prelude_msg_t *msg, idmef_file_t *file
+idmef_file_t *file, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_linkage</NAME>
+<NAME>idmef_linkage_read</NAME>
 <RETURNS>idmef_linkage_t  *</RETURNS>
-prelude_msg_t *msg, idmef_linkage_t *linkage
+idmef_linkage_t *linkage, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_target</NAME>
+<NAME>idmef_target_read</NAME>
 <RETURNS>idmef_target_t  *</RETURNS>
-prelude_msg_t *msg, idmef_target_t *target
+idmef_target_t *target, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_analyzer</NAME>
+<NAME>idmef_analyzer_read</NAME>
 <RETURNS>idmef_analyzer_t  *</RETURNS>
-prelude_msg_t *msg, idmef_analyzer_t *analyzer
+idmef_analyzer_t *analyzer, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_alertident</NAME>
+<NAME>idmef_alertident_read</NAME>
 <RETURNS>idmef_alertident_t  *</RETURNS>
-prelude_msg_t *msg, idmef_alertident_t *alertident
+idmef_alertident_t *alertident, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_impact</NAME>
+<NAME>idmef_impact_read</NAME>
 <RETURNS>idmef_impact_t  *</RETURNS>
-prelude_msg_t *msg, idmef_impact_t *impact
+idmef_impact_t *impact, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_action</NAME>
+<NAME>idmef_action_read</NAME>
 <RETURNS>idmef_action_t  *</RETURNS>
-prelude_msg_t *msg, idmef_action_t *action
+idmef_action_t *action, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_confidence</NAME>
+<NAME>idmef_confidence_read</NAME>
 <RETURNS>idmef_confidence_t  *</RETURNS>
-prelude_msg_t *msg, idmef_confidence_t *confidence
+idmef_confidence_t *confidence, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_assessment</NAME>
+<NAME>idmef_assessment_read</NAME>
 <RETURNS>idmef_assessment_t  *</RETURNS>
-prelude_msg_t *msg, idmef_assessment_t *assessment
+idmef_assessment_t *assessment, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_tool_alert</NAME>
+<NAME>idmef_tool_alert_read</NAME>
 <RETURNS>idmef_tool_alert_t  *</RETURNS>
-prelude_msg_t *msg, idmef_tool_alert_t *tool_alert
+idmef_tool_alert_t *tool_alert, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_correlation_alert</NAME>
+<NAME>idmef_correlation_alert_read</NAME>
 <RETURNS>idmef_correlation_alert_t  *</RETURNS>
-prelude_msg_t *msg, idmef_correlation_alert_t *correlation_alert
+idmef_correlation_alert_t *correlation_alert, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_overflow_alert</NAME>
+<NAME>idmef_overflow_alert_read</NAME>
 <RETURNS>idmef_overflow_alert_t  *</RETURNS>
-prelude_msg_t *msg, idmef_overflow_alert_t *overflow_alert
+idmef_overflow_alert_t *overflow_alert, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_alert</NAME>
+<NAME>idmef_alert_read</NAME>
 <RETURNS>idmef_alert_t  *</RETURNS>
-prelude_msg_t *msg, idmef_alert_t *alert
+idmef_alert_t *alert, prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_read_heartbeat</NAME>
+<NAME>idmef_heartbeat_read</NAME>
 <RETURNS>idmef_heartbeat_t  *</RETURNS>
-prelude_msg_t *msg, idmef_heartbeat_t *heartbeat
+idmef_heartbeat_t *heartbeat, prelude_msg_t *msg
 </FUNCTION>
 <MACRO>
 <NAME>AI_CANONNAME</NAME>
@@ -7405,7 +7405,7 @@ prelude_msgbuf_t *msgbuf
 <FUNCTION>
 <NAME>prelude_msgbuf_set_callback</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msgbuf, prelude_msg_t *(*send_msg)(prelude_msgbuf_t *msgbuf)
+prelude_msgbuf_t *msgbuf, prelude_msg_t *(*send_msg)(void *data)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_msgbuf_set_data</NAME>

@@ -14,265 +14,265 @@ idmef-message-write
 
 </para>
 
-<!-- ##### FUNCTION idmef_write_time ##### -->
+<!-- ##### FUNCTION idmef_time_write ##### -->
 <para>
 
 </para>
 
+@data: 
 @msg: 
 @tag: 
-@data: 
 
 
-<!-- ##### FUNCTION idmef_write_additional_data ##### -->
+<!-- ##### FUNCTION idmef_additional_data_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @additional_data: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_classification ##### -->
+<!-- ##### FUNCTION idmef_classification_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @classification: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_userid ##### -->
+<!-- ##### FUNCTION idmef_userid_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @userid: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_user ##### -->
+<!-- ##### FUNCTION idmef_user_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @user: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_address ##### -->
+<!-- ##### FUNCTION idmef_address_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @address: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_process ##### -->
+<!-- ##### FUNCTION idmef_process_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @process: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_webservice ##### -->
+<!-- ##### FUNCTION idmef_webservice_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @webservice: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_snmpservice ##### -->
+<!-- ##### FUNCTION idmef_snmpservice_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @snmpservice: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_service ##### -->
+<!-- ##### FUNCTION idmef_service_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @service: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_node ##### -->
+<!-- ##### FUNCTION idmef_node_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @node: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_source ##### -->
+<!-- ##### FUNCTION idmef_source_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @source: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_file_access ##### -->
+<!-- ##### FUNCTION idmef_file_access_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @file_access: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_inode ##### -->
+<!-- ##### FUNCTION idmef_inode_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @inode: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_file ##### -->
+<!-- ##### FUNCTION idmef_file_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @file: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_linkage ##### -->
+<!-- ##### FUNCTION idmef_linkage_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @linkage: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_target ##### -->
+<!-- ##### FUNCTION idmef_target_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @target: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_analyzer ##### -->
+<!-- ##### FUNCTION idmef_analyzer_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @analyzer: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_alertident ##### -->
+<!-- ##### FUNCTION idmef_alertident_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @alertident: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_impact ##### -->
+<!-- ##### FUNCTION idmef_impact_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @impact: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_action ##### -->
+<!-- ##### FUNCTION idmef_action_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @action: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_confidence ##### -->
+<!-- ##### FUNCTION idmef_confidence_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @confidence: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_assessment ##### -->
+<!-- ##### FUNCTION idmef_assessment_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @assessment: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_tool_alert ##### -->
+<!-- ##### FUNCTION idmef_tool_alert_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @tool_alert: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_correlation_alert ##### -->
+<!-- ##### FUNCTION idmef_correlation_alert_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @correlation_alert: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_overflow_alert ##### -->
+<!-- ##### FUNCTION idmef_overflow_alert_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @overflow_alert: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_alert ##### -->
+<!-- ##### FUNCTION idmef_alert_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @alert: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_heartbeat ##### -->
+<!-- ##### FUNCTION idmef_heartbeat_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @heartbeat: 
+@msg: 
 
 
-<!-- ##### FUNCTION idmef_write_message ##### -->
+<!-- ##### FUNCTION idmef_message_write ##### -->
 <para>
 
 </para>
 
-@msg: 
 @message: 
+@msg: 
 
 

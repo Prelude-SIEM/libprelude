@@ -14,273 +14,273 @@ idmef-message-read
 
 </para>
 
-<!-- ##### FUNCTION idmef_read_additional_data ##### -->
+<!-- ##### FUNCTION idmef_additional_data_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @additional_data: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_classification ##### -->
+<!-- ##### FUNCTION idmef_classification_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @classification: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_userid ##### -->
+<!-- ##### FUNCTION idmef_userid_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @userid: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_user ##### -->
+<!-- ##### FUNCTION idmef_user_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @user: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_address ##### -->
+<!-- ##### FUNCTION idmef_address_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @address: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_process ##### -->
+<!-- ##### FUNCTION idmef_process_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @process: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_webservice ##### -->
+<!-- ##### FUNCTION idmef_webservice_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @webservice: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_snmpservice ##### -->
+<!-- ##### FUNCTION idmef_snmpservice_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @snmpservice: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_service ##### -->
+<!-- ##### FUNCTION idmef_service_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @service: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_node ##### -->
+<!-- ##### FUNCTION idmef_node_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @node: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_source ##### -->
+<!-- ##### FUNCTION idmef_source_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @source: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_file_access ##### -->
+<!-- ##### FUNCTION idmef_file_access_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @file_access: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_inode ##### -->
+<!-- ##### FUNCTION idmef_inode_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @inode: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_file ##### -->
+<!-- ##### FUNCTION idmef_file_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @file: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_linkage ##### -->
+<!-- ##### FUNCTION idmef_linkage_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @linkage: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_target ##### -->
+<!-- ##### FUNCTION idmef_target_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @target: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_analyzer ##### -->
+<!-- ##### FUNCTION idmef_analyzer_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @analyzer: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_alertident ##### -->
+<!-- ##### FUNCTION idmef_alertident_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @alertident: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_impact ##### -->
+<!-- ##### FUNCTION idmef_impact_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @impact: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_action ##### -->
+<!-- ##### FUNCTION idmef_action_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @action: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_confidence ##### -->
+<!-- ##### FUNCTION idmef_confidence_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @confidence: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_assessment ##### -->
+<!-- ##### FUNCTION idmef_assessment_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @assessment: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_tool_alert ##### -->
+<!-- ##### FUNCTION idmef_tool_alert_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @tool_alert: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_correlation_alert ##### -->
+<!-- ##### FUNCTION idmef_correlation_alert_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @correlation_alert: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_overflow_alert ##### -->
+<!-- ##### FUNCTION idmef_overflow_alert_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @overflow_alert: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_alert ##### -->
+<!-- ##### FUNCTION idmef_alert_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @alert: 
+@msg: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_read_heartbeat ##### -->
+<!-- ##### FUNCTION idmef_heartbeat_read ##### -->
 <para>
 
 </para>
 
-@msg: 
 @heartbeat: 
+@msg: 
 @Returns: 
 
 

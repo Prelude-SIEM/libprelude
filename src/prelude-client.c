@@ -249,7 +249,7 @@ static void heartbeat_expire_cb(void *data)
                 goto out;
         }
 
-        idmef_write_message(client->msgbuf, message);
+        idmef_message_write(message, client->msgbuf);
         prelude_msgbuf_mark_end(client->msgbuf);
 
   out:
