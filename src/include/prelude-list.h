@@ -188,6 +188,20 @@ static inline void prelude_list_splice(prelude_list_t *list, prelude_list_t *hea
                (pos))
 
 
+#define prelude_list_for_each_continue_safe(pos, bkp, head)     \
+        for ( (pos) = (((bkp) == NULL) ? (head)->next : (bkp)); \
+              ((bkp) = (pos)->next), (pos) != (head);           \
+              (pos) = (bkp))
+
+
+
+#define prelude_list_for_each_continue(pos, head)                     \
+        for ( (pos) = (((pos) == NULL) ? (head)->next : (pos)->next); \
+              (pos) != (head);                                        \
+              (pos) = (pos)->next)
+
+
+
 /**
  * list_for_each	-	iterate over a list
  * @pos:	the &prelude_list_t to use as a loop counter.
