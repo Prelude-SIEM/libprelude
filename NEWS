@@ -1,4 +1,4 @@
-* 2005-04-04, libprelude-0.9.0-rc3:
+* 2005-04-05, libprelude-0.9.0-rc3:
 
 	- Stop using pcreposix for IDMEF criteria matching, always rely 
           on POSIX regex. The way pcreposix define it's symbol make it impossible 
