@@ -346,7 +346,7 @@ static int get_manager_setup(prelude_io_t *fd, int *have_ssl, int *have_plaintex
         
         status = prelude_msg_read(&msg, fd);
         if ( status != prelude_msg_finished ) {
-                log(LOG_ERR, "error reading Manager configuration message.\n");
+                log(LOG_ERR, "error reading Manager configuration message (status=%d).\n", status);
                 return -1;
         }
 

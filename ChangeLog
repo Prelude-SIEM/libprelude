@@ -1,3 +1,15 @@
+2002-01-23  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-message.c (prelude_msg_reset): 
+	new function, to be used if the same message is going to be
+	written at several time.
+
+	* src/idmef-tree-func.c: 
+	* src/idmef-msg-send.c: 
+	stop trying to count number of item / len. That's just too
+	ugly. Use a static message buffer big enough (prelude_msg_set()
+	will error if input is > buffer size anyway).
+
 2002-01-22  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/include/idmef-message-id.h: 

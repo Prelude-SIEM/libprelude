@@ -50,7 +50,6 @@
 } while (0)
 
 
-int msglen = 0, msgcount = 0;
 
 static idmef_heartbeat_t heartbeat;
 
@@ -186,7 +185,6 @@ idmef_alertident_t *idmef_tool_alert_alertident_new(idmef_tool_alert_t *tool_ale
                 return NULL;
         }
 
-        msgcount += 2;
         list_add(&new->list, &tool_alert->alertident_list);
 
         return new;
@@ -197,7 +195,6 @@ idmef_alertident_t *idmef_tool_alert_alertident_new(idmef_tool_alert_t *tool_ale
 
 void idmef_tool_alert_new(idmef_alert_t *alert) 
 {
-        msgcount += 2;
         alert->type = idmef_tool_alert;
         alert->detail.tool_alert = &tool_alert;
 }
@@ -218,7 +215,6 @@ idmef_alertident_t *idmef_correlation_alert_alertident_new(idmef_correlation_ale
                 return NULL;
         }
 
-        msgcount += 2;
         list_add(&new->list, &correlation_alert->alertident_list);
 
         return new;
@@ -227,7 +223,6 @@ idmef_alertident_t *idmef_correlation_alert_alertident_new(idmef_correlation_ale
 
 void idmef_correlation_alert_new(idmef_alert_t *alert) 
 {
-        msgcount += 2;
         alert->type = idmef_correlation_alert;
         alert->detail.correlation_alert = &correlation_alert;
 }
@@ -239,7 +234,6 @@ void idmef_correlation_alert_new(idmef_alert_t *alert)
  */
 void idmef_overflow_alert_new(idmef_alert_t *alert) 
 {
-        msgcount += 2;
         alert->type = idmef_overflow_alert;
         alert->detail.overflow_alert = &overflow_alert;
 }
@@ -259,7 +253,6 @@ idmef_webservice_t *idmef_service_webservice_new(idmef_service_t *service)
                 return NULL;
         }
 
-        msgcount += 2;
         service->type = web_service;
         service->specific.web = new;
 
@@ -278,7 +271,6 @@ idmef_snmpservice_t *idmef_service_snmpservice_new(idmef_service_t *service)
                 return NULL;
         }
 
-        msgcount += 2;
         service->type = snmp_service;
         service->specific.snmp = new;
 
@@ -300,7 +292,6 @@ idmef_address_t *idmef_node_address_new(idmef_node_t *node)
                 return NULL;
         }
 
-        msgcount += 2;
         new->category = unknown;
         list_add(&new->list, &node->address_list);
 
@@ -323,7 +314,6 @@ idmef_process_arg_t *idmef_process_arg_new(idmef_process_t *process)
                 return NULL;
         }
 
-        msgcount += 2;
         list_add(&new->list, &process->arg_list);
 
         return new;
@@ -342,7 +332,6 @@ idmef_process_env_t *idmef_process_env_new(idmef_process_t *process)
                 return NULL;
         }
 
-        msgcount += 2;
         list_add(&new->list, &process->env_list);
 
         return new;
@@ -364,7 +353,6 @@ idmef_userid_t *idmef_user_userid_new(idmef_user_t *user)
                 return NULL;
         }
 
-        msgcount += 2;
         new->type = original_user;
         list_add(&new->list, &user->userid_list);
 
@@ -389,7 +377,6 @@ idmef_service_t *idmef_source_service_new(idmef_source_t *source)
                 return NULL;
         }
 
-        msgcount += 2;
         source->service = new;
         new->type = default_service;
 
@@ -408,7 +395,6 @@ idmef_user_t *idmef_source_user_new(idmef_source_t *source)
                 return NULL;
         }
 
-        msgcount += 2;
         source->user = new;
         new->category = unknown;
         INIT_LIST_HEAD(&new->userid_list);
@@ -427,7 +413,6 @@ idmef_node_t *idmef_source_node_new(idmef_source_t *source)
                 return NULL;
         }
 
-        msgcount += 2;
         source->node = new;
         new->category = unknown;
         INIT_LIST_HEAD(&new->address_list);
@@ -446,7 +431,6 @@ idmef_process_t *idmef_source_process_new(idmef_source_t *source)
                 return NULL;
         }
 
-        msgcount += 2;
         source->process = new;
         INIT_LIST_HEAD(&new->arg_list);
         INIT_LIST_HEAD(&new->env_list);
@@ -461,7 +445,6 @@ idmef_process_t *idmef_source_process_new(idmef_source_t *source)
  */
 void idmef_analyzer_node_new(idmef_analyzer_t *analyzer) 
 {
-        msgcount += 2;
         analyzer->node = &analyzer_node;
         analyzer_node.category = unknown;
         INIT_LIST_HEAD(&analyzer_node.address_list);
@@ -471,7 +454,6 @@ void idmef_analyzer_node_new(idmef_analyzer_t *analyzer)
 
 void idmef_analyzer_process_new(idmef_analyzer_t *analyzer) 
 {
-        msgcount += 2;
         analyzer->process = &analyzer_process;
         INIT_LIST_HEAD(&analyzer_process.arg_list);
         INIT_LIST_HEAD(&analyzer_process.env_list);
@@ -519,7 +501,6 @@ void idmef_assessment_impact_new(idmef_assessment_t *assessment)
  */
 void idmef_alert_assessment_new(idmef_alert_t *alert) 
 {
-        msgcount += 2;
         alert->assessment = &static_assessment;
 }
 
@@ -527,7 +508,6 @@ void idmef_alert_assessment_new(idmef_alert_t *alert)
 
 void idmef_alert_detect_time_new(idmef_alert_t *alert) 
 {
-        msgcount += 2;
         alert->detect_time = &static_detect_time;
 }
 
@@ -535,7 +515,6 @@ void idmef_alert_detect_time_new(idmef_alert_t *alert)
 
 void idmef_alert_analyzer_time_new(idmef_alert_t *alert) 
 {
-        msgcount += 2;
         alert->analyzer_time = &static_analyzer_time;
 }
 
@@ -554,8 +533,6 @@ idmef_target_t *idmef_alert_target_new(idmef_alert_t *alert)
         new->decoy = unknown;
         INIT_LIST_HEAD(&new->file_list);
         list_add(&new->list, &alert->target_list);
-
-        msgcount += 2;
         
         return new;
 }
@@ -575,8 +552,6 @@ idmef_source_t *idmef_alert_source_new(idmef_alert_t *alert)
 
         new->spoofed = unknown;
         list_add(&new->list, &alert->source_list);
-
-        msgcount += 2;
         
         return new;
 }
@@ -595,8 +570,6 @@ idmef_classification_t *idmef_alert_classification_new(idmef_alert_t *alert)
 
         new->origin = unknown;
         list_add(&new->list, &alert->classification_list);
-
-        msgcount += 2;
         
         return new;
 }
@@ -616,8 +589,6 @@ idmef_additional_data_t *idmef_alert_additional_data_new(idmef_alert_t *alert)
 
         new->type = idmef_constant(string);
         list_add(&new->list, &alert->additional_data_list);
-
-        msgcount += 2;
         
         return new;
 }
@@ -626,11 +597,7 @@ idmef_additional_data_t *idmef_alert_additional_data_new(idmef_alert_t *alert)
 
 
 void idmef_alert_new(idmef_message_t *message) 
-{
-        msgcount += 2; /* alert tag    */
-        msgcount += 2; /* analyzer tag */
-        msgcount += 2; /* create time  */
-        
+{        
         message->message.alert = &alert;
         message->type = idmef_alert_message;
 }
@@ -652,8 +619,6 @@ idmef_additional_data_t *idmef_heartbeat_additional_data_new(idmef_heartbeat_t *
         }
 
         list_add(&new->list, &hb->additional_data_list);
-
-        msgcount += 2;
         new->type = idmef_constant(string);
         
         return new;
@@ -663,7 +628,6 @@ idmef_additional_data_t *idmef_heartbeat_additional_data_new(idmef_heartbeat_t *
 
 void idmef_heartbeat_analyzer_time_new(idmef_heartbeat_t *heartbeat) 
 {
-        msgcount += 2;
         heartbeat->analyzer_time = &static_analyzer_time;
 }
 
@@ -671,7 +635,6 @@ void idmef_heartbeat_analyzer_time_new(idmef_heartbeat_t *heartbeat)
 
 void idmef_heartbeat_new(idmef_message_t *message) 
 {
-        msgcount += 2;
         message->message.heartbeat = &heartbeat;
         message->type = idmef_constant(idmef_heartbeat_message);
 }
@@ -684,9 +647,7 @@ void idmef_heartbeat_new(idmef_message_t *message)
 idmef_message_t *idmef_message_new(void) 
 {
         static idmef_message_t msg;
- 
-        msglen = msgcount = 0;
-        
+         
         /*
          * set static variable data to 0
          */

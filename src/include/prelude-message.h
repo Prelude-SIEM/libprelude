@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -87,5 +87,5 @@ uint32_t prelude_msg_get_datalen(prelude_msg_t *msg);
 
 void prelude_msg_destroy(prelude_msg_t *msg);
 
-
+void prelude_msg_reset(prelude_msg_t *msg);
 

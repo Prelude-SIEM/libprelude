@@ -29,6 +29,7 @@
 #include <sys/time.h>
 
 #include "list.h"
+#include "prelude-log.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
 #include "prelude-message-id.h"
@@ -591,37 +592,29 @@ static void send_heartbeat(prelude_msg_t *msg, idmef_heartbeat_t *hb)
 }
 
 
-extern int msgcount, msglen;
-
-
-
-void idmef_adjust_msg_size(size_t size) 
-{
-        msgcount += 1;
-        msglen += size;
-}
-
-
 
 
 int idmef_msg_send(idmef_message_t *idmef, uint8_t priority)
 {
-        prelude_msg_t *msg;
+        static prelude_msg_t *msg = NULL;
 
-        msgcount += 100;
-        msglen += 2000;
-        
-        
+        if ( ! msg ) {
+                /*
+                 * we'll always use a message of the same size here, for simplicity,
+                 * so keep our buffer arround.
+                 */
+                msg = prelude_msg_new(0, 8192, PRELUDE_MSG_IDMEF, priority);
+                if ( ! msg ) {
+                        log(LOG_ERR, "error creating a new message.\n");
+                        return -1;
+                }
+        }
+
         /*
-         * we set create time ourself
+         * reset message write buffer to 0, so that
+         * the same msg object can be reused.
          */
-        msgcount += 2;
-        msglen += 2 * sizeof(uint32_t);
-        
-        
-        msg = prelude_msg_new(msgcount, msglen, PRELUDE_MSG_IDMEF, priority);
-        if ( ! msg )
-                return -1;
+        prelude_msg_reset(msg);
         
         switch ( idmef->type ) {
 

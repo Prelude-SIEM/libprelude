@@ -115,9 +115,10 @@ inline static prelude_msg_status_t read_message_data(unsigned char *dst, size_t 
 
 inline static void slice_message_header(prelude_msg_hdr_t *hdr, unsigned char *hdrbuf) 
 {
-        hdr->version  = hdrbuf[0];
-        hdr->tag      = hdrbuf[1];
-        hdr->priority = hdrbuf[2];
+        hdr->version     = hdrbuf[0];
+        hdr->tag         = hdrbuf[1];
+        hdr->priority    = hdrbuf[2];
+        
         extract_uint32(&hdr->datalen, hdrbuf + 3, sizeof(hdr->datalen));
 }
 
@@ -413,6 +414,7 @@ int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst)
 
 
 
+
 /**
  * prelude_msg_set:
  * @msg: Pointer on a #prelude_msg_t object to store the data to.
@@ -500,6 +502,14 @@ prelude_msg_t *prelude_msg_new(size_t msgcount, size_t msglen, uint8_t tag, uint
         
         return msg;
 }
+
+
+
+void prelude_msg_reset(prelude_msg_t *msg) 
+{
+        msg->write_index = PRELUDE_MSG_HDR_SIZE;
+}
+
 
 
 
