@@ -149,8 +149,8 @@ int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int cryp
                         uint64_t *analyzerid, prelude_connection_permission_t *permission)
 {
 	int ret, fd;
+        void *cred;
         gnutls_session session;
-        gnutls_certificate_credentials cred;
 
         ret = prelude_client_profile_get_credentials(cp, &cred);
         if ( ret < 0 )

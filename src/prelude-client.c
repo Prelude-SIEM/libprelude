@@ -1126,7 +1126,7 @@ int prelude_client_init(prelude_client_t *client)
 int prelude_client_start(prelude_client_t *client)
 {
         int ret;
-        gnutls_certificate_credentials credentials;
+        void *credentials;
         
         if ( ! client->md5sum ) {
                 /*
