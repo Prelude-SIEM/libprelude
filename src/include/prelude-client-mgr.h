@@ -24,6 +24,8 @@
 #ifndef _LIBPRELUDE_PRELUDE_CLIENT_MGR_H
 #define _LIBPRELUDE_PRELUDE_CLIENT_MGR_H
 
+#include "prelude-client.h"
+
 typedef struct prelude_client_mgr prelude_client_mgr_t;
 
 
