@@ -241,7 +241,7 @@ static int write_account(FILE *fd, const char *user, const char *pass)
         
         ret = fseek(fd, 0, SEEK_END);
         if ( ret < 0 ) {
-                log(LOG_ERR, "seek.\n");
+                log(LOG_ERR, "couldn't seek to end of file.\n");
                 return -1;
         }
 

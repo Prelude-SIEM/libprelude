@@ -1,3 +1,7 @@
+2001-10-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/auth-common.c (write_account): better error reporting.
+
 2001-10-03  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/alert-read.c (prelude_alert_read): 
