@@ -67,7 +67,7 @@ if HAVE_PYTHON
 endif
 
 
-clean-am: perl/Makefile
+clean-am:
 if HAVE_PERL
 	cd perl && $(MAKE) clean
 endif
