@@ -321,13 +321,15 @@ static int call_option_cb(struct cb_list **cbl, prelude_list_t *cblist, prelude_
         prelude_list_for_each(cblist, tmp) {
                 
                 cb = prelude_list_entry(tmp, struct cb_list, list);
-                
+
+                if ( ! prev && option->priority < cb->option->priority )
+                        prev = tmp;
+#if 0
                 if ( option->priority < cb->option->priority ) 
                         got_prev = 1;
                 
                 if ( ! got_prev )
                         prev = tmp;
-                    
                 if ( option->type & PRELUDE_OPTION_TYPE_ALLOW_MULTIPLE_CALL || option->type & PRELUDE_OPTION_TYPE_CONTEXT ) 
                         continue;
                 
@@ -341,6 +343,7 @@ static int call_option_cb(struct cb_list **cbl, prelude_list_t *cblist, prelude_
                         
                         return 0;
                 }
+#endif
         }
         
         *cbl = new = malloc(sizeof(*new));
@@ -396,6 +399,7 @@ static int do_set(prelude_option_t *opt, const char *value, prelude_string_t *ou
                 return ret;
 
         if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
+                
                 oc = search_context(opt, value);                
                 if ( ! oc )
 		        return -1;
@@ -417,7 +421,7 @@ static int call_option_from_cb_list(prelude_list_t *cblist, prelude_string_t *er
 
         prelude_list_for_each_safe(cblist, tmp, bkp) {
                 cb = prelude_list_entry(tmp, struct cb_list, list);
-                                
+                
                 ret = do_set(cb->option, cb->arg, err, &context);                
                 if ( ret < 0 ) 
                         return ret;
@@ -682,6 +686,7 @@ int prelude_option_read(prelude_option_t *option, const char **filename,
 /**
  * prelude_option_add:
  * @parent: Pointer on a parent option.
+ * @retopt: Pointer where to store the created option.
  * @type: bitfields.
  * @shortopt: Short option name.
  * @longopt: Long option name.
