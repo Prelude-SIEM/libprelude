@@ -666,59 +666,58 @@ SWIG_InstallConstants(PyObject *d, swig_const_info constants[]) {
 #define  SWIGTYPE_p_uint32_t swig_types[22] 
 #define  SWIGTYPE_p_void swig_types[23] 
 #define  SWIGTYPE_p_idmef_source_t swig_types[24] 
-#define  SWIGTYPE_p_int swig_types[25] 
-#define  SWIGTYPE_p_idmef_classification_origin_t swig_types[26] 
-#define  SWIGTYPE_p_idmef_criterion_t swig_types[27] 
-#define  SWIGTYPE_p_idmef_object_value_list_t swig_types[28] 
-#define  SWIGTYPE_p_idmef_object_list_t swig_types[29] 
-#define  SWIGTYPE_p_idmef_time_t swig_types[30] 
-#define  SWIGTYPE_p_idmef_criteria_t swig_types[31] 
-#define  SWIGTYPE_p_idmef_object_value_t swig_types[32] 
-#define  SWIGTYPE_p_idmef_criterion_value_t swig_types[33] 
-#define  SWIGTYPE_p_idmef_value_t swig_types[34] 
-#define  SWIGTYPE_p_idmef_user_t swig_types[35] 
-#define  SWIGTYPE_p_idmef_analyzer_t swig_types[36] 
-#define  SWIGTYPE_p_prelude_msgbuf_t swig_types[37] 
-#define  SWIGTYPE_p_idmef_string_t swig_types[38] 
-#define  SWIGTYPE_p_uint16_t swig_types[39] 
-#define  SWIGTYPE_p_uint64_t swig_types[40] 
-#define  SWIGTYPE_p_idmef_address_t swig_types[41] 
-#define  SWIGTYPE_p_idmef_impact_t swig_types[42] 
-#define  SWIGTYPE_p_idmef_webservice_t swig_types[43] 
-#define  SWIGTYPE_p_idmef_snmpservice_t swig_types[44] 
-#define  SWIGTYPE_p_idmef_service_t swig_types[45] 
-#define  SWIGTYPE_p_p_char swig_types[46] 
-#define  SWIGTYPE_p_idmef_impact_type_t swig_types[47] 
-#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[48] 
-#define  SWIGTYPE_p_idmef_userid_type_t swig_types[49] 
-#define  SWIGTYPE_p_idmef_file_t swig_types[50] 
-#define  SWIGTYPE_p_idmef_value_type_t swig_types[51] 
-#define  SWIGTYPE_p_idmef_spoofed_t swig_types[52] 
-#define  SWIGTYPE_p_idmef_data_t_data swig_types[53] 
-#define  SWIGTYPE_p_idmef_linkage_t swig_types[54] 
-#define  SWIGTYPE_p_idmef_action_t swig_types[55] 
-#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[56] 
-#define  SWIGTYPE_p_idmef_classification_t swig_types[57] 
-#define  SWIGTYPE_p_idmef_userid_t swig_types[58] 
-#define  SWIGTYPE_p_idmef_assessment_t swig_types[59] 
-#define  SWIGTYPE_p_prelude_client_t swig_types[60] 
-#define  SWIGTYPE_p_prelude_io_t swig_types[61] 
-#define  SWIGTYPE_p_idmef_object_t swig_types[62] 
-#define  SWIGTYPE_p_unsigned_char swig_types[63] 
-#define  SWIGTYPE_p_float swig_types[64] 
-#define  SWIGTYPE_p_idmef_additional_data_t swig_types[65] 
-#define  SWIGTYPE_p_idmef_data_t swig_types[66] 
-#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[67] 
-#define  SWIGTYPE_p_va_list swig_types[68] 
-#define  SWIGTYPE_p_idmef_alertident_t swig_types[69] 
-#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[70] 
-#define  SWIGTYPE_p_idmef_action_category_t swig_types[71] 
-#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[72] 
-#define  SWIGTYPE_p_idmef_file_category_t swig_types[73] 
-#define  SWIGTYPE_p_idmef_user_category_t swig_types[74] 
-#define  SWIGTYPE_p_idmef_address_category_t swig_types[75] 
-#define  SWIGTYPE_p_idmef_node_category_t swig_types[76] 
-static swig_type_info *swig_types[78];
+#define  SWIGTYPE_p_idmef_classification_origin_t swig_types[25] 
+#define  SWIGTYPE_p_idmef_criterion_t swig_types[26] 
+#define  SWIGTYPE_p_idmef_object_value_list_t swig_types[27] 
+#define  SWIGTYPE_p_idmef_object_list_t swig_types[28] 
+#define  SWIGTYPE_p_idmef_time_t swig_types[29] 
+#define  SWIGTYPE_p_idmef_criteria_t swig_types[30] 
+#define  SWIGTYPE_p_idmef_object_value_t swig_types[31] 
+#define  SWIGTYPE_p_idmef_criterion_value_t swig_types[32] 
+#define  SWIGTYPE_p_idmef_value_t swig_types[33] 
+#define  SWIGTYPE_p_idmef_user_t swig_types[34] 
+#define  SWIGTYPE_p_idmef_analyzer_t swig_types[35] 
+#define  SWIGTYPE_p_prelude_msgbuf_t swig_types[36] 
+#define  SWIGTYPE_p_idmef_string_t swig_types[37] 
+#define  SWIGTYPE_p_uint16_t swig_types[38] 
+#define  SWIGTYPE_p_uint64_t swig_types[39] 
+#define  SWIGTYPE_p_idmef_address_t swig_types[40] 
+#define  SWIGTYPE_p_idmef_impact_t swig_types[41] 
+#define  SWIGTYPE_p_idmef_webservice_t swig_types[42] 
+#define  SWIGTYPE_p_idmef_snmpservice_t swig_types[43] 
+#define  SWIGTYPE_p_idmef_service_t swig_types[44] 
+#define  SWIGTYPE_p_p_char swig_types[45] 
+#define  SWIGTYPE_p_idmef_impact_type_t swig_types[46] 
+#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[47] 
+#define  SWIGTYPE_p_idmef_userid_type_t swig_types[48] 
+#define  SWIGTYPE_p_idmef_file_t swig_types[49] 
+#define  SWIGTYPE_p_idmef_value_type_t swig_types[50] 
+#define  SWIGTYPE_p_idmef_spoofed_t swig_types[51] 
+#define  SWIGTYPE_p_idmef_data_t_data swig_types[52] 
+#define  SWIGTYPE_p_idmef_linkage_t swig_types[53] 
+#define  SWIGTYPE_p_idmef_action_t swig_types[54] 
+#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[55] 
+#define  SWIGTYPE_p_idmef_classification_t swig_types[56] 
+#define  SWIGTYPE_p_idmef_userid_t swig_types[57] 
+#define  SWIGTYPE_p_idmef_assessment_t swig_types[58] 
+#define  SWIGTYPE_p_prelude_client_t swig_types[59] 
+#define  SWIGTYPE_p_prelude_io_t swig_types[60] 
+#define  SWIGTYPE_p_idmef_object_t swig_types[61] 
+#define  SWIGTYPE_p_unsigned_char swig_types[62] 
+#define  SWIGTYPE_p_float swig_types[63] 
+#define  SWIGTYPE_p_idmef_additional_data_t swig_types[64] 
+#define  SWIGTYPE_p_idmef_data_t swig_types[65] 
+#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[66] 
+#define  SWIGTYPE_p_va_list swig_types[67] 
+#define  SWIGTYPE_p_idmef_alertident_t swig_types[68] 
+#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[69] 
+#define  SWIGTYPE_p_idmef_action_category_t swig_types[70] 
+#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[71] 
+#define  SWIGTYPE_p_idmef_file_category_t swig_types[72] 
+#define  SWIGTYPE_p_idmef_user_category_t swig_types[73] 
+#define  SWIGTYPE_p_idmef_address_category_t swig_types[74] 
+#define  SWIGTYPE_p_idmef_node_category_t swig_types[75] 
+static swig_type_info *swig_types[77];
 
 /* -------- TYPES TABLE (END) -------- */
 
@@ -761,7 +760,7 @@ static int prelude_message_analyzer_fill_infos(idmef_analyzer_t *analyzer,
 	if ( ! process )
 		return -1;
 
-	ret = prelude_get_process_name_and_path(argv[0], &name, &path);
+	ret = prelude_get_file_name_and_path(argv[0], &name, &path);
 	if ( ret < 0 )
 		return -1;
 
@@ -20489,100 +20488,6 @@ static PyObject *_wrap_idmef_additionaldata_data_to_string(PyObject *self, PyObj
 }
 
 
-static PyObject *_wrap_prelude_get_process_name_and_path(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    char *arg1 ;
-    char **arg2 = (char **) 0 ;
-    char **arg3 = (char **) 0 ;
-    int result;
-    PyObject * obj0 = 0 ;
-    PyObject * obj1 = 0 ;
-    PyObject * obj2 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"OOO:prelude_get_process_name_and_path",&obj0,&obj1,&obj2)) goto fail;
-    {
-        if ( obj0 == Py_None )
-        arg1 = NULL;
-        else if ( PyString_Check(obj0) )
-        arg1 = PyString_AsString(obj0);
-        else {
-            PyErr_Format(PyExc_TypeError,
-            "expected None or string, %s found", obj0->ob_type->tp_name);
-            return NULL;
-        }
-    }
-    {
-        /* Check if is a list */
-        if ( PyList_Check(obj1) ) {
-            int size = PyList_Size(obj1);
-            int i = 0;
-            
-            arg2 = (char **) malloc((size+1) * sizeof(char *));
-            for ( i = 0; i < size; i++ ) {
-                PyObject *o = PyList_GetItem(obj1,i);
-                if ( PyString_Check(o) )
-                arg2[i] = PyString_AsString(PyList_GetItem(obj1, i));
-                else {
-                    PyErr_SetString(PyExc_TypeError, "list must contain strings");
-                    free(arg2);
-                    return NULL;
-                }
-            }
-            arg2[i] = 0;
-        }else {
-            PyErr_SetString(PyExc_TypeError, "not a list");
-            return NULL;
-        }
-    }
-    {
-        /* Check if is a list */
-        if ( PyList_Check(obj2) ) {
-            int size = PyList_Size(obj2);
-            int i = 0;
-            
-            arg3 = (char **) malloc((size+1) * sizeof(char *));
-            for ( i = 0; i < size; i++ ) {
-                PyObject *o = PyList_GetItem(obj2,i);
-                if ( PyString_Check(o) )
-                arg3[i] = PyString_AsString(PyList_GetItem(obj2, i));
-                else {
-                    PyErr_SetString(PyExc_TypeError, "list must contain strings");
-                    free(arg3);
-                    return NULL;
-                }
-            }
-            arg3[i] = 0;
-        }else {
-            PyErr_SetString(PyExc_TypeError, "not a list");
-            return NULL;
-        }
-    }
-    result = (int)prelude_get_process_name_and_path((char const *)arg1,arg2,arg3);
-    
-    resultobj = PyInt_FromLong((long)result);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_prelude_get_gmt_offset(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    int *arg1 = (int *) 0 ;
-    int result;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:prelude_get_gmt_offset",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_int,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (int)prelude_get_gmt_offset(arg1);
-    
-    resultobj = PyInt_FromLong((long)result);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
 static PyObject *_wrap_idmef_type_find_child(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_type_t arg1 ;
@@ -22000,8 +21905,6 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_value_type_clone", _wrap_idmef_value_type_clone, METH_VARARGS },
 	 { (char *)"idmef_value_type_compare", _wrap_idmef_value_type_compare, METH_VARARGS },
 	 { (char *)"idmef_additionaldata_data_to_string", _wrap_idmef_additionaldata_data_to_string, METH_VARARGS },
-	 { (char *)"prelude_get_process_name_and_path", _wrap_prelude_get_process_name_and_path, METH_VARARGS },
-	 { (char *)"prelude_get_gmt_offset", _wrap_prelude_get_gmt_offset, METH_VARARGS },
 	 { (char *)"idmef_type_find_child", _wrap_idmef_type_find_child, METH_VARARGS },
 	 { (char *)"idmef_type_child_is_list", _wrap_idmef_type_child_is_list, METH_VARARGS },
 	 { (char *)"idmef_type_get_child_type", _wrap_idmef_type_get_child_type, METH_VARARGS },
@@ -22048,7 +21951,6 @@ static swig_type_info _swigt__p_idmef_process_t[] = {{"_p_idmef_process_t", 0, "
 static swig_type_info _swigt__p_uint32_t[] = {{"_p_uint32_t", 0, "uint32_t *", 0},{"_p_uint32_t"},{0}};
 static swig_type_info _swigt__p_void[] = {{"_p_void", 0, "void *", 0},{"_p_void"},{0}};
 static swig_type_info _swigt__p_idmef_source_t[] = {{"_p_idmef_source_t", 0, "idmef_source_t *", 0},{"_p_idmef_source_t"},{0}};
-static swig_type_info _swigt__p_int[] = {{"_p_int", 0, "int *", 0},{"_p_int"},{0}};
 static swig_type_info _swigt__p_idmef_classification_origin_t[] = {{"_p_idmef_classification_origin_t", 0, "idmef_classification_origin_t *", 0},{"_p_idmef_classification_origin_t"},{0}};
 static swig_type_info _swigt__p_idmef_criterion_t[] = {{"_p_idmef_criterion_t", 0, "idmef_criterion_t *", 0},{"_p_idmef_criterion_t"},{0}};
 static swig_type_info _swigt__p_idmef_object_value_list_t[] = {{"_p_idmef_object_value_list_t", 0, "idmef_object_value_list_t *", 0},{"_p_idmef_object_value_list_t"},{0}};
@@ -22127,7 +22029,6 @@ _swigt__p_idmef_process_t,
 _swigt__p_uint32_t, 
 _swigt__p_void, 
 _swigt__p_idmef_source_t, 
-_swigt__p_int, 
 _swigt__p_idmef_classification_origin_t, 
 _swigt__p_idmef_criterion_t, 
 _swigt__p_idmef_object_value_list_t, 

@@ -221,7 +221,7 @@ SWIG_TypeClientData(swig_type_info *ti, void *clientdata) {
  * perl5.swg
  *
  * Perl5 runtime library
- * $Header: /var/lib/cvsd/cvsroot/prelude/libprelude/bindings/perl/Prelude.c,v 1.8 2004/02/03 00:24:02 yoann Exp $
+ * $Header: /var/lib/cvsd/cvsroot/prelude/libprelude/bindings/perl/Prelude.c,v 1.9 2004/02/05 16:00:07 yoann Exp $
  * ----------------------------------------------------------------------------- */
 
 #define SWIGPERL
@@ -584,59 +584,58 @@ static void _swig_create_magic(CPerlObj *pPerl, SV *sv, const char *name, int (C
 #define  SWIGTYPE_p_uint32_t swig_types[22] 
 #define  SWIGTYPE_p_void swig_types[23] 
 #define  SWIGTYPE_p_idmef_source_t swig_types[24] 
-#define  SWIGTYPE_p_int swig_types[25] 
-#define  SWIGTYPE_p_idmef_classification_origin_t swig_types[26] 
-#define  SWIGTYPE_p_idmef_criterion_t swig_types[27] 
-#define  SWIGTYPE_p_idmef_object_value_list_t swig_types[28] 
-#define  SWIGTYPE_p_idmef_object_list_t swig_types[29] 
-#define  SWIGTYPE_p_idmef_time_t swig_types[30] 
-#define  SWIGTYPE_p_idmef_criteria_t swig_types[31] 
-#define  SWIGTYPE_p_idmef_object_value_t swig_types[32] 
-#define  SWIGTYPE_p_idmef_criterion_value_t swig_types[33] 
-#define  SWIGTYPE_p_idmef_value_t swig_types[34] 
-#define  SWIGTYPE_p_idmef_user_t swig_types[35] 
-#define  SWIGTYPE_p_idmef_analyzer_t swig_types[36] 
-#define  SWIGTYPE_p_prelude_msgbuf_t swig_types[37] 
-#define  SWIGTYPE_p_idmef_string_t swig_types[38] 
-#define  SWIGTYPE_p_uint16_t swig_types[39] 
-#define  SWIGTYPE_p_uint64_t swig_types[40] 
-#define  SWIGTYPE_p_idmef_address_t swig_types[41] 
-#define  SWIGTYPE_p_idmef_impact_t swig_types[42] 
-#define  SWIGTYPE_p_idmef_webservice_t swig_types[43] 
-#define  SWIGTYPE_p_idmef_snmpservice_t swig_types[44] 
-#define  SWIGTYPE_p_idmef_service_t swig_types[45] 
-#define  SWIGTYPE_p_p_char swig_types[46] 
-#define  SWIGTYPE_p_idmef_impact_type_t swig_types[47] 
-#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[48] 
-#define  SWIGTYPE_p_idmef_userid_type_t swig_types[49] 
-#define  SWIGTYPE_p_idmef_file_t swig_types[50] 
-#define  SWIGTYPE_p_idmef_value_type_t swig_types[51] 
-#define  SWIGTYPE_p_idmef_spoofed_t swig_types[52] 
-#define  SWIGTYPE_p_idmef_data_t_data swig_types[53] 
-#define  SWIGTYPE_p_idmef_linkage_t swig_types[54] 
-#define  SWIGTYPE_p_idmef_action_t swig_types[55] 
-#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[56] 
-#define  SWIGTYPE_p_idmef_classification_t swig_types[57] 
-#define  SWIGTYPE_p_idmef_userid_t swig_types[58] 
-#define  SWIGTYPE_p_idmef_assessment_t swig_types[59] 
-#define  SWIGTYPE_p_prelude_client_t swig_types[60] 
-#define  SWIGTYPE_p_prelude_io_t swig_types[61] 
-#define  SWIGTYPE_p_idmef_object_t swig_types[62] 
-#define  SWIGTYPE_p_unsigned_char swig_types[63] 
-#define  SWIGTYPE_p_float swig_types[64] 
-#define  SWIGTYPE_p_idmef_additional_data_t swig_types[65] 
-#define  SWIGTYPE_p_idmef_data_t swig_types[66] 
-#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[67] 
-#define  SWIGTYPE_p_va_list swig_types[68] 
-#define  SWIGTYPE_p_idmef_alertident_t swig_types[69] 
-#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[70] 
-#define  SWIGTYPE_p_idmef_action_category_t swig_types[71] 
-#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[72] 
-#define  SWIGTYPE_p_idmef_file_category_t swig_types[73] 
-#define  SWIGTYPE_p_idmef_user_category_t swig_types[74] 
-#define  SWIGTYPE_p_idmef_address_category_t swig_types[75] 
-#define  SWIGTYPE_p_idmef_node_category_t swig_types[76] 
-static swig_type_info *swig_types[78];
+#define  SWIGTYPE_p_idmef_classification_origin_t swig_types[25] 
+#define  SWIGTYPE_p_idmef_criterion_t swig_types[26] 
+#define  SWIGTYPE_p_idmef_object_value_list_t swig_types[27] 
+#define  SWIGTYPE_p_idmef_object_list_t swig_types[28] 
+#define  SWIGTYPE_p_idmef_time_t swig_types[29] 
+#define  SWIGTYPE_p_idmef_criteria_t swig_types[30] 
+#define  SWIGTYPE_p_idmef_object_value_t swig_types[31] 
+#define  SWIGTYPE_p_idmef_criterion_value_t swig_types[32] 
+#define  SWIGTYPE_p_idmef_value_t swig_types[33] 
+#define  SWIGTYPE_p_idmef_user_t swig_types[34] 
+#define  SWIGTYPE_p_idmef_analyzer_t swig_types[35] 
+#define  SWIGTYPE_p_prelude_msgbuf_t swig_types[36] 
+#define  SWIGTYPE_p_idmef_string_t swig_types[37] 
+#define  SWIGTYPE_p_uint16_t swig_types[38] 
+#define  SWIGTYPE_p_uint64_t swig_types[39] 
+#define  SWIGTYPE_p_idmef_address_t swig_types[40] 
+#define  SWIGTYPE_p_idmef_impact_t swig_types[41] 
+#define  SWIGTYPE_p_idmef_webservice_t swig_types[42] 
+#define  SWIGTYPE_p_idmef_snmpservice_t swig_types[43] 
+#define  SWIGTYPE_p_idmef_service_t swig_types[44] 
+#define  SWIGTYPE_p_p_char swig_types[45] 
+#define  SWIGTYPE_p_idmef_impact_type_t swig_types[46] 
+#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[47] 
+#define  SWIGTYPE_p_idmef_userid_type_t swig_types[48] 
+#define  SWIGTYPE_p_idmef_file_t swig_types[49] 
+#define  SWIGTYPE_p_idmef_value_type_t swig_types[50] 
+#define  SWIGTYPE_p_idmef_spoofed_t swig_types[51] 
+#define  SWIGTYPE_p_idmef_data_t_data swig_types[52] 
+#define  SWIGTYPE_p_idmef_linkage_t swig_types[53] 
+#define  SWIGTYPE_p_idmef_action_t swig_types[54] 
+#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[55] 
+#define  SWIGTYPE_p_idmef_classification_t swig_types[56] 
+#define  SWIGTYPE_p_idmef_userid_t swig_types[57] 
+#define  SWIGTYPE_p_idmef_assessment_t swig_types[58] 
+#define  SWIGTYPE_p_prelude_client_t swig_types[59] 
+#define  SWIGTYPE_p_prelude_io_t swig_types[60] 
+#define  SWIGTYPE_p_idmef_object_t swig_types[61] 
+#define  SWIGTYPE_p_unsigned_char swig_types[62] 
+#define  SWIGTYPE_p_float swig_types[63] 
+#define  SWIGTYPE_p_idmef_additional_data_t swig_types[64] 
+#define  SWIGTYPE_p_idmef_data_t swig_types[65] 
+#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[66] 
+#define  SWIGTYPE_p_va_list swig_types[67] 
+#define  SWIGTYPE_p_idmef_alertident_t swig_types[68] 
+#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[69] 
+#define  SWIGTYPE_p_idmef_action_category_t swig_types[70] 
+#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[71] 
+#define  SWIGTYPE_p_idmef_file_category_t swig_types[72] 
+#define  SWIGTYPE_p_idmef_user_category_t swig_types[73] 
+#define  SWIGTYPE_p_idmef_address_category_t swig_types[74] 
+#define  SWIGTYPE_p_idmef_node_category_t swig_types[75] 
+static swig_type_info *swig_types[77];
 
 /* -------- TYPES TABLE (END) -------- */
 
@@ -694,7 +693,7 @@ static int prelude_message_analyzer_fill_infos(idmef_analyzer_t *analyzer,
 	if ( ! process )
 		return -1;
 
-	ret = prelude_get_process_name_and_path(argv[0], &name, &path);
+	ret = prelude_get_file_name_and_path(argv[0], &name, &path);
 	if ( ret < 0 )
 		return -1;
 
@@ -33348,109 +33347,6 @@ XS(_wrap_idmef_additionaldata_data_to_string) {
 }
 
 
-XS(_wrap_prelude_get_process_name_and_path) {
-    char _swigmsg[SWIG_MAX_ERRMSG] = "";
-    const char *_swigerr = _swigmsg;
-    {
-        char *arg1 ;
-        char **arg2 = (char **) 0 ;
-        char **arg3 = (char **) 0 ;
-        int result;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 3) || (items > 3)) {
-            SWIG_croak("Usage: prelude_get_process_name_and_path(str,name,path);");
-        }
-        if (!SvOK((SV*) ST(0))) arg1 = 0;
-        else arg1 = (char *) SvPV(ST(0), PL_na);
-        {
-            AV *tempav;
-            I32 len;
-            int i;
-            SV  **tv;
-            
-            if ( ! SvROK(ST(1)) )
-            croak("Argument 2 is not a reference.");
-            
-            if ( SvTYPE(SvRV(ST(1))) != SVt_PVAV )
-            croak("Argument 2 is not an array.");
-            
-            tempav = (AV*) SvRV(ST(1));
-            len = av_len(tempav);
-            arg2 = (char **) malloc((len+2)*sizeof(char *));
-            if ( ! arg2 )
-            croak("out of memory\n");
-            for (i = 0; i <= len; i++) {
-                tv = av_fetch(tempav, i, 0);	
-                arg2[i] = (char *) SvPV_nolen(*tv);
-            }
-            arg2[i] = NULL;
-        }
-        {
-            AV *tempav;
-            I32 len;
-            int i;
-            SV  **tv;
-            
-            if ( ! SvROK(ST(2)) )
-            croak("Argument 3 is not a reference.");
-            
-            if ( SvTYPE(SvRV(ST(2))) != SVt_PVAV )
-            croak("Argument 3 is not an array.");
-            
-            tempav = (AV*) SvRV(ST(2));
-            len = av_len(tempav);
-            arg3 = (char **) malloc((len+2)*sizeof(char *));
-            if ( ! arg3 )
-            croak("out of memory\n");
-            for (i = 0; i <= len; i++) {
-                tv = av_fetch(tempav, i, 0);	
-                arg3[i] = (char *) SvPV_nolen(*tv);
-            }
-            arg3[i] = NULL;
-        }
-        result = (int)prelude_get_process_name_and_path((char const *)arg1,arg2,arg3);
-        
-        ST(argvi) = sv_newmortal();
-        sv_setiv(ST(argvi++), (IV) result);
-        XSRETURN(argvi);
-        fail:
-        (void) _swigerr;
-    }
-    croak(_swigerr);
-}
-
-
-XS(_wrap_prelude_get_gmt_offset) {
-    char _swigmsg[SWIG_MAX_ERRMSG] = "";
-    const char *_swigerr = _swigmsg;
-    {
-        int *arg1 = (int *) 0 ;
-        int result;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: prelude_get_gmt_offset(gmt_offset);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_int,0) < 0) {
-                SWIG_croak("Type error in argument 1 of prelude_get_gmt_offset. Expected _p_int");
-            }
-        }
-        result = (int)prelude_get_gmt_offset(arg1);
-        
-        ST(argvi) = sv_newmortal();
-        sv_setiv(ST(argvi++), (IV) result);
-        XSRETURN(argvi);
-        fail:
-        (void) _swigerr;
-    }
-    croak(_swigerr);
-}
-
-
 XS(_wrap_idmef_type_find_child) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
@@ -33963,7 +33859,6 @@ static swig_type_info _swigt__p_idmef_process_t[] = {{"_p_idmef_process_t", 0, "
 static swig_type_info _swigt__p_uint32_t[] = {{"_p_uint32_t", 0, "uint32_t *", 0},{"_p_uint32_t"},{0}};
 static swig_type_info _swigt__p_void[] = {{"_p_void", 0, "void *", 0},{"_p_void"},{0}};
 static swig_type_info _swigt__p_idmef_source_t[] = {{"_p_idmef_source_t", 0, "idmef_source_t *", 0},{"_p_idmef_source_t"},{0}};
-static swig_type_info _swigt__p_int[] = {{"_p_int", 0, "int *", 0},{"_p_int"},{0}};
 static swig_type_info _swigt__p_idmef_classification_origin_t[] = {{"_p_idmef_classification_origin_t", 0, "idmef_classification_origin_t *", 0},{"_p_idmef_classification_origin_t"},{0}};
 static swig_type_info _swigt__p_idmef_criterion_t[] = {{"_p_idmef_criterion_t", 0, "idmef_criterion_t *", 0},{"_p_idmef_criterion_t"},{0}};
 static swig_type_info _swigt__p_idmef_object_value_list_t[] = {{"_p_idmef_object_value_list_t", 0, "idmef_object_value_list_t *", 0},{"_p_idmef_object_value_list_t"},{0}};
@@ -34042,7 +33937,6 @@ _swigt__p_idmef_process_t,
 _swigt__p_uint32_t, 
 _swigt__p_void, 
 _swigt__p_idmef_source_t, 
-_swigt__p_int, 
 _swigt__p_idmef_classification_origin_t, 
 _swigt__p_idmef_criterion_t, 
 _swigt__p_idmef_object_value_list_t, 
@@ -35379,8 +35273,6 @@ static swig_command_info swig_commands[] = {
 {"Prelude::idmef_value_type_clone", _wrap_idmef_value_type_clone},
 {"Prelude::idmef_value_type_compare", _wrap_idmef_value_type_compare},
 {"Prelude::idmef_additionaldata_data_to_string", _wrap_idmef_additionaldata_data_to_string},
-{"Prelude::prelude_get_process_name_and_path", _wrap_prelude_get_process_name_and_path},
-{"Prelude::prelude_get_gmt_offset", _wrap_prelude_get_gmt_offset},
 {"Prelude::idmef_type_find_child", _wrap_idmef_type_find_child},
 {"Prelude::idmef_type_child_is_list", _wrap_idmef_type_child_is_list},
 {"Prelude::idmef_type_get_child_type", _wrap_idmef_type_get_child_type},

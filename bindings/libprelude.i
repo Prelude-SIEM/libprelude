@@ -31,6 +31,7 @@
 #include <stdarg.h>
 #include <inttypes.h>
 
+#include "common.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
 #include "prelude-message-buffered.h"
@@ -61,7 +62,7 @@ static int prelude_message_analyzer_fill_infos(idmef_analyzer_t *analyzer,
 	if ( ! process )
 		return -1;
 
-	ret = prelude_get_process_name_and_path(argv[0], &name, &path);
+	ret = prelude_get_file_name_and_path(argv[0], &name, &path);
 	if ( ret < 0 )
 		return -1;
 
