@@ -7,6 +7,10 @@ EXTRA_DIST = mkstrtable.awk err-sources.h.in err-codes.h.in \
 
 BUILT_SOURCES = err-sources.h err-codes.h code-from-errno.h code-to-errno.h err-sources-sym.h err-codes-sym.h errnos-sym.h prelude-error.h 
 
+CLEANFILES = err-sources.h err-codes.h code-to-errno.h code-from-errno.h \
+        prelude-error.h mkerrcodes mkerrcodes.h \
+        err-sources-sym.h err-codes-sym.h errnos-sym.h
+
 nodist_include_HEADERS = prelude-error.h
 
 noinst_LTLIBRARIES = libprelude-error.la
