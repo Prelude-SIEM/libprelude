@@ -121,7 +121,7 @@ static inline int extract_uint16_safe(uint16_t *out, const void *buf, size_t len
 static inline int extract_uint32_safe(uint32_t *out, const void *buf, size_t len) 
 {
         if ( len != sizeof(uint32_t) ) {
-                log(LOG_ERR, "Datatype error buffer doesn't contain 32 bits integer.\n");
+                log(LOG_ERR, "Datatype error, buffer doesn't contain 32 bits integer.\n");
                 return -1;
         }
 
@@ -135,7 +135,7 @@ static inline int extract_uint32_safe(uint32_t *out, const void *buf, size_t len
 static inline int extract_uint64_safe(uint64_t *out, const void *buf, size_t len) 
 {
         if ( len != sizeof(uint64_t) ) {
-                log(LOG_ERR, "Datatype error buffer doesn't contain 64 bits integer.\n");
+                log(LOG_ERR, "Datatype error, buffer doesn't contain 64 bits integer.\n");
                 return -1;
         }
         
@@ -146,11 +146,13 @@ static inline int extract_uint64_safe(uint64_t *out, const void *buf, size_t len
 
 
 
-static inline int extract_string_safe(char **out, char *buf, size_t len) 
+static inline int extract_string_safe(const char **out, const char *buf, size_t len) 
 {
-        if ( buf[len] != '\0' )
+        if ( buf[len] != '\0' ) {
+                log(LOG_ERR, "Datatype error: buffer is not a string.\n");
                 return -1;
-
+        }
+        
         *out = buf;
 
         return 0;
