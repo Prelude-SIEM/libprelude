@@ -39,5 +39,7 @@ config_t *config_open(const char *filename);
 
 int config_close(config_t *cfg);
 
+int config_del(config_t *cfg, const char *section, const char *entry);
+
 #endif /* _LIBPRELUDE_CONFIG_ENGINE_H */
 

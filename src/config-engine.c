@@ -144,6 +144,36 @@ static void op_modify_line(char **line, char *nline)
 
 
 
+static int op_delete_line(config_t *cfg, int start, int end)
+{
+        int i, j;
+        
+        if ( ! cfg->elements )
+                return 0;
+
+        if ( start > cfg->elements || end > cfg->elements )
+                return -1;
+
+        for ( i = start; i < end; i++ ) {
+                free(cfg->content[i]);
+                cfg->content[i] = NULL;
+        }
+
+        for ( i = end, j = start; i < cfg->elements; i++ ) 
+                cfg->content[j++] = cfg->content[i];
+        
+        cfg->elements -= end - start;
+        
+        cfg->content = prelude_realloc(cfg->content, cfg->elements * sizeof(char **));
+        if ( ! cfg->content )
+                return -1;
+        
+        cfg->content[cfg->elements - 1] = NULL;
+              
+        return 0;
+}
+
+
 
 /*
  * Append a line to an array of line.
@@ -444,7 +474,6 @@ static int sync_and_free_file_content(const char *filename, char **content)
 {
         int i;
         FILE *fd;
-        const char *ptr;
         
         fd = fopen(filename, "w");
         if ( ! fd ) 
@@ -580,6 +609,28 @@ int config_set(config_t *cfg, const char *section, const char *entry, const char
         return ret;
 }
 
+
+
+int config_del(config_t *cfg, const char *section, const char *entry)
+{
+        char *tmp, *value;
+        int start, end, l = 0;
+        
+        if ( ! entry ) {
+                start = search_section(cfg, section, 0);
+                for ( end = start + 1; cfg->content[end] && ! is_section(cfg->content[end]); end++ );
+        } else {
+                start = search_entry(cfg, section, entry, &l, &tmp, &value);
+	        end = start + 1;
+        }
+	
+        if ( start < 0 )
+                return -1;
+        
+        cfg->need_sync = 1;
+        
+        return op_delete_line(cfg, start, end);
+}
 
 
 
@@ -809,4 +860,3 @@ config_t *config_open(const char *filename)
         
         return cfg;
 }
-
