@@ -177,9 +177,7 @@ static int handle_option(prelude_optlist_t *optlist, const char *option, int arg
                 return -1;
         
         optarg = lookup_variable_if_needed(optarg);
-        if ( ! optarg && optitem->has_arg == required_argument)
-                return -1;
-
+        
         optitem->called = 1;
         optitem->cb(optarg);
         
