@@ -87,8 +87,17 @@ typedef struct {
 
 
 
+static prelude_bool_t flush_cache = FALSE;
 static prelude_hash_t *cached_objects = NULL;
 static pthread_mutex_t cached_object_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+
+static void flush_cache_if_wanted(void *ptr)
+{
+        if ( flush_cache )
+                idmef_object_destroy(ptr);
+}
+
 
 
 /*
@@ -99,7 +108,7 @@ static int initialize_object_cache_if_needed(void)
         if ( cached_objects )
                 return 0;
                         
-        cached_objects = prelude_hash_new(NULL, NULL, NULL, (void *) idmef_object_destroy);
+        cached_objects = prelude_hash_new(NULL, NULL, NULL, flush_cache_if_wanted);
         if ( ! cached_objects ) 
                 return -1;
 
@@ -662,7 +671,7 @@ int idmef_object_make_parent(idmef_object_t *object)
 
 
 void idmef_object_destroy(idmef_object_t *object)
-{
+{        
 	pthread_mutex_lock(&object->mutex);
 
 	if ( --object->refcount ) {
@@ -864,5 +873,7 @@ void _idmef_object_cache_destroy(void)
         if ( ! cached_objects )
                 return;
 
+        flush_cache = TRUE;
         prelude_hash_destroy(cached_objects);
+        flush_cache = FALSE;
 }
