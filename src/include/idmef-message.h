@@ -34,9 +34,6 @@ void idmef_message_destroy(idmef_message_t *message);
 
 void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg);
 
-int idmef_message_enable_cache(idmef_message_t *message);
-int idmef_message_disable_cache(idmef_message_t *message);
-
 int idmef_message_set(idmef_message_t *message, idmef_object_t *object, idmef_value_t *value);
 
 idmef_value_t *idmef_message_get(idmef_message_t *message, idmef_object_t *object);

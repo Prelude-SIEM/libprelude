@@ -1,3 +1,24 @@
+2004-01-07  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
+	* src/idmef-message.c:
+	* src/include/idmef-message.h:
+	* src/include/idmef-tree.h:
+	drop the cache feature, since idmef_object_get' rework
+	(performance has been improved) this is no more necessary
+	idmef_message_set do not destroy object and value anymore
+
+	* bindings/perl/Prelude.c:
+	regenerated
+
+	* bindings/perl/Prelude.pm:
+	fit idmef-message changes
+
+	* bindings/python/_prelude.c:
+	regenerated
+
+	* bindings/python/prelude.py:
+	fit idmef-message changes
+
 2004-01-06  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* configure.in: call AC_SYS_LARGEFILE 

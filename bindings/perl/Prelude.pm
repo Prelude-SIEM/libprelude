@@ -119,20 +119,6 @@ sub	tostring
     return substr($buffer, 0, $retval);
 }
 
-sub	enable_cache
-{
-    my	$self = shift;
-
-    return (Prelude::idmef_message_enable_cache($$self) < 0) ? 0 : 1;
-}
-
-sub	disable_cache
-{
-    my	$self = shift;
-
-    return (Prelude::idmef_message_disable_cache($$self) < 0) ? 0 : 1;
-}
-
 # FIXME: clean up
 
 sub	set
@@ -142,6 +128,7 @@ sub	set
     my	$value_arg = shift || return 0;
     my	$object;
     my	$value;
+    my	$ret;
 
     $object = Prelude::idmef_object_new_fast($object_arg);
     unless ( $object ) {
@@ -195,13 +182,12 @@ sub	set
 	}
     }
 
-    if ( Prelude::idmef_message_set($$self, $object, $value) < 0 ) {
-	Prelude::idmef_object_destroy($object);
-	Prelude::idmef_value_destroy($value);
-	return 0;
-    }
+    $ret = Prelude::idmef_message_set($$self, $object, $value);
 
-    return 1;
+    Prelude::idmef_object_destroy($object);
+    Prelude::idmef_value_destroy($value);
+
+    return ($ret == 0);
 }
 
 sub	_convert_value

@@ -373,9 +373,12 @@ class IDMEFMessage:
             _prelude.idmef_object_destroy(object)
             raise
 
-        if _prelude.idmef_message_set(self.res, object, c_value) < 0:
-            _prelude.idmef_object_destroy(object)
-            _prelude.idmef_value_destroy(c_value)
+        ret = _prelude.idmef_message_set(self.res, object, c_value)
+        
+        _prelude.idmef_object_destroy(object)
+        _prelude.idmef_value_destroy(c_value)
+
+        if ret < 0:
             raise Error()
 
     def __getitem__(self, object_name):

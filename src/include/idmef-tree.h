@@ -734,7 +734,6 @@ typedef struct {
 		UNION_MEMBER(idmef_heartbeat_message, idmef_heartbeat_t, *heartbeat);
         } message;
 
-	HIDE(prelude_hash_t *, cache);
 	HIDE(prelude_msg_t *, pmsg);
         
 } TYPE_ID(idmef_message_t, 47);

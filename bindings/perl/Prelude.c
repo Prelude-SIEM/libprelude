@@ -221,7 +221,7 @@ SWIG_TypeClientData(swig_type_info *ti, void *clientdata) {
  * perl5.swg
  *
  * Perl5 runtime library
- * $Header: /var/lib/cvsd/cvsroot/prelude/libprelude/bindings/perl/Prelude.c,v 1.5 2004/01/01 23:17:42 nicolas Exp $
+ * $Header: /var/lib/cvsd/cvsroot/prelude/libprelude/bindings/perl/Prelude.c,v 1.6 2004/01/07 16:47:05 nicolas Exp $
  * ----------------------------------------------------------------------------- */
 
 #define SWIGPERL
@@ -23073,64 +23073,6 @@ XS(_wrap_idmef_message_set_pmsg) {
 }
 
 
-XS(_wrap_idmef_message_enable_cache) {
-    char _swigmsg[SWIG_MAX_ERRMSG] = "";
-    const char *_swigerr = _swigmsg;
-    {
-        idmef_message_t *arg1 = (idmef_message_t *) 0 ;
-        int result;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: idmef_message_enable_cache(message);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_message_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_message_enable_cache. Expected _p_idmef_message_t");
-            }
-        }
-        result = (int)idmef_message_enable_cache(arg1);
-        
-        ST(argvi) = sv_newmortal();
-        sv_setiv(ST(argvi++), (IV) result);
-        XSRETURN(argvi);
-        fail:
-        (void) _swigerr;
-    }
-    croak(_swigerr);
-}
-
-
-XS(_wrap_idmef_message_disable_cache) {
-    char _swigmsg[SWIG_MAX_ERRMSG] = "";
-    const char *_swigerr = _swigmsg;
-    {
-        idmef_message_t *arg1 = (idmef_message_t *) 0 ;
-        int result;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: idmef_message_disable_cache(message);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_message_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_message_disable_cache. Expected _p_idmef_message_t");
-            }
-        }
-        result = (int)idmef_message_disable_cache(arg1);
-        
-        ST(argvi) = sv_newmortal();
-        sv_setiv(ST(argvi++), (IV) result);
-        XSRETURN(argvi);
-        fail:
-        (void) _swigerr;
-    }
-    croak(_swigerr);
-}
-
-
 XS(_wrap_idmef_message_set) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
@@ -25551,38 +25493,6 @@ XS(_wrap_idmef_time_new_gettimeofday) {
 }
 
 
-XS(_wrap_idmef_time_set_string) {
-    char _swigmsg[SWIG_MAX_ERRMSG] = "";
-    const char *_swigerr = _swigmsg;
-    {
-        idmef_time_t *arg1 = (idmef_time_t *) 0 ;
-        char *arg2 ;
-        int result;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_time_set_string(time,buf);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_time_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_time_set_string. Expected _p_idmef_time_t");
-            }
-        }
-        if (!SvOK((SV*) ST(1))) arg2 = 0;
-        else arg2 = (char *) SvPV(ST(1), PL_na);
-        result = (int)idmef_time_set_string(arg1,(char const *)arg2);
-        
-        ST(argvi) = sv_newmortal();
-        sv_setiv(ST(argvi++), (IV) result);
-        XSRETURN(argvi);
-        fail:
-        (void) _swigerr;
-    }
-    croak(_swigerr);
-}
-
-
 XS(_wrap_idmef_time_new_string) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
@@ -25601,38 +25511,6 @@ XS(_wrap_idmef_time_new_string) {
         
         ST(argvi) = sv_newmortal();
         SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_time_t,0);
-        XSRETURN(argvi);
-        fail:
-        (void) _swigerr;
-    }
-    croak(_swigerr);
-}
-
-
-XS(_wrap_idmef_time_set_ntp_timestamp) {
-    char _swigmsg[SWIG_MAX_ERRMSG] = "";
-    const char *_swigerr = _swigmsg;
-    {
-        idmef_time_t *arg1 = (idmef_time_t *) 0 ;
-        char *arg2 ;
-        int result;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_time_set_ntp_timestamp(time,buf);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_time_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_time_set_ntp_timestamp. Expected _p_idmef_time_t");
-            }
-        }
-        if (!SvOK((SV*) ST(1))) arg2 = 0;
-        else arg2 = (char *) SvPV(ST(1), PL_na);
-        result = (int)idmef_time_set_ntp_timestamp(arg1,(char const *)arg2);
-        
-        ST(argvi) = sv_newmortal();
-        sv_setiv(ST(argvi++), (IV) result);
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -25667,6 +25545,86 @@ XS(_wrap_idmef_time_new_ntp_timestamp) {
 }
 
 
+XS(_wrap_idmef_time_new_db_timestamp) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        char *arg1 ;
+        idmef_time_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: idmef_time_new_db_timestamp(buf);");
+        }
+        if (!SvOK((SV*) ST(0))) arg1 = 0;
+        else arg1 = (char *) SvPV(ST(0), PL_na);
+        result = (idmef_time_t *)idmef_time_new_db_timestamp((char const *)arg1);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_time_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_time_destroy_internal) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        idmef_time_t *arg1 = (idmef_time_t *) 0 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: idmef_time_destroy_internal(time);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_time_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of idmef_time_destroy_internal. Expected _p_idmef_time_t");
+            }
+        }
+        idmef_time_destroy_internal(arg1);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_time_destroy) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        idmef_time_t *arg1 = (idmef_time_t *) 0 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: idmef_time_destroy(time);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_time_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of idmef_time_destroy. Expected _p_idmef_time_t");
+            }
+        }
+        idmef_time_destroy(arg1);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
 XS(_wrap_idmef_time_clone) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
@@ -25688,6 +25646,41 @@ XS(_wrap_idmef_time_clone) {
         
         ST(argvi) = sv_newmortal();
         SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_time_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_time_copy) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        idmef_time_t *arg1 = (idmef_time_t *) 0 ;
+        idmef_time_t *arg2 = (idmef_time_t *) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: idmef_time_copy(dst,src);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_time_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of idmef_time_copy. Expected _p_idmef_time_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_time_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of idmef_time_copy. Expected _p_idmef_time_t");
+            }
+        }
+        result = (int)idmef_time_copy(arg1,arg2);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -25841,30 +25834,27 @@ XS(_wrap_idmef_time_get_usec) {
 }
 
 
-XS(_wrap_idmef_time_copy) {
+XS(_wrap_idmef_time_set_string) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
         idmef_time_t *arg1 = (idmef_time_t *) 0 ;
-        idmef_time_t *arg2 = (idmef_time_t *) 0 ;
+        char *arg2 ;
         int result;
         int argvi = 0;
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_time_copy(dst,src);");
+            SWIG_croak("Usage: idmef_time_set_string(time,buf);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_time_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_time_copy. Expected _p_idmef_time_t");
+                SWIG_croak("Type error in argument 1 of idmef_time_set_string. Expected _p_idmef_time_t");
             }
         }
-        {
-            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_time_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_time_copy. Expected _p_idmef_time_t");
-            }
-        }
-        result = (int)idmef_time_copy(arg1,arg2);
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        result = (int)idmef_time_set_string(arg1,(char const *)arg2);
         
         ST(argvi) = sv_newmortal();
         sv_setiv(ST(argvi++), (IV) result);
@@ -25876,25 +25866,30 @@ XS(_wrap_idmef_time_copy) {
 }
 
 
-XS(_wrap_idmef_time_destroy_internal) {
+XS(_wrap_idmef_time_set_ntp_timestamp) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
         idmef_time_t *arg1 = (idmef_time_t *) 0 ;
+        char *arg2 ;
+        int result;
         int argvi = 0;
         dXSARGS;
         
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: idmef_time_destroy_internal(time);");
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: idmef_time_set_ntp_timestamp(time,buf);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_time_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_time_destroy_internal. Expected _p_idmef_time_t");
+                SWIG_croak("Type error in argument 1 of idmef_time_set_ntp_timestamp. Expected _p_idmef_time_t");
             }
         }
-        idmef_time_destroy_internal(arg1);
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        result = (int)idmef_time_set_ntp_timestamp(arg1,(char const *)arg2);
         
-        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -25903,25 +25898,30 @@ XS(_wrap_idmef_time_destroy_internal) {
 }
 
 
-XS(_wrap_idmef_time_destroy) {
+XS(_wrap_idmef_time_set_db_timestamp) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
         idmef_time_t *arg1 = (idmef_time_t *) 0 ;
+        char *arg2 ;
+        int result;
         int argvi = 0;
         dXSARGS;
         
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: idmef_time_destroy(time);");
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: idmef_time_set_db_timestamp(time,buf);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_time_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_time_destroy. Expected _p_idmef_time_t");
+                SWIG_croak("Type error in argument 1 of idmef_time_set_db_timestamp. Expected _p_idmef_time_t");
             }
         }
-        idmef_time_destroy(arg1);
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        result = (int)idmef_time_set_db_timestamp(arg1,(char const *)arg2);
         
-        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -35001,8 +35001,6 @@ static swig_command_info swig_commands[] = {
 {"Prelude::idmef_message_new", _wrap_idmef_message_new},
 {"Prelude::idmef_message_destroy", _wrap_idmef_message_destroy},
 {"Prelude::idmef_message_set_pmsg", _wrap_idmef_message_set_pmsg},
-{"Prelude::idmef_message_enable_cache", _wrap_idmef_message_enable_cache},
-{"Prelude::idmef_message_disable_cache", _wrap_idmef_message_disable_cache},
 {"Prelude::idmef_message_set", _wrap_idmef_message_set},
 {"Prelude::idmef_message_get", _wrap_idmef_message_get},
 {"Prelude::idmef_value_new_int16", _wrap_idmef_value_new_int16},
@@ -35084,19 +35082,21 @@ static swig_command_info swig_commands[] = {
 {"Prelude::delete_idmef_time", _wrap_delete_idmef_time},
 {"Prelude::idmef_time_new", _wrap_idmef_time_new},
 {"Prelude::idmef_time_new_gettimeofday", _wrap_idmef_time_new_gettimeofday},
-{"Prelude::idmef_time_set_string", _wrap_idmef_time_set_string},
 {"Prelude::idmef_time_new_string", _wrap_idmef_time_new_string},
-{"Prelude::idmef_time_set_ntp_timestamp", _wrap_idmef_time_set_ntp_timestamp},
 {"Prelude::idmef_time_new_ntp_timestamp", _wrap_idmef_time_new_ntp_timestamp},
+{"Prelude::idmef_time_new_db_timestamp", _wrap_idmef_time_new_db_timestamp},
+{"Prelude::idmef_time_destroy_internal", _wrap_idmef_time_destroy_internal},
+{"Prelude::idmef_time_destroy", _wrap_idmef_time_destroy},
 {"Prelude::idmef_time_clone", _wrap_idmef_time_clone},
+{"Prelude::idmef_time_copy", _wrap_idmef_time_copy},
 {"Prelude::idmef_time_set_sec", _wrap_idmef_time_set_sec},
 {"Prelude::idmef_time_set_usec", _wrap_idmef_time_set_usec},
 {"Prelude::idmef_time_get_time", _wrap_idmef_time_get_time},
 {"Prelude::idmef_time_get_sec", _wrap_idmef_time_get_sec},
 {"Prelude::idmef_time_get_usec", _wrap_idmef_time_get_usec},
-{"Prelude::idmef_time_copy", _wrap_idmef_time_copy},
-{"Prelude::idmef_time_destroy_internal", _wrap_idmef_time_destroy_internal},
-{"Prelude::idmef_time_destroy", _wrap_idmef_time_destroy},
+{"Prelude::idmef_time_set_string", _wrap_idmef_time_set_string},
+{"Prelude::idmef_time_set_ntp_timestamp", _wrap_idmef_time_set_ntp_timestamp},
+{"Prelude::idmef_time_set_db_timestamp", _wrap_idmef_time_set_db_timestamp},
 {"Prelude::idmef_time_get_ntp_timestamp", _wrap_idmef_time_get_ntp_timestamp},
 {"Prelude::idmef_time_get_timestamp", _wrap_idmef_time_get_timestamp},
 {"Prelude::idmef_time_get_db_timestamp", _wrap_idmef_time_get_db_timestamp},

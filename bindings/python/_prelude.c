@@ -14011,40 +14011,6 @@ static PyObject *_wrap_idmef_message_set_pmsg(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_message_enable_cache(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    idmef_message_t *arg1 = (idmef_message_t *) 0 ;
-    int result;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:idmef_message_enable_cache",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_message_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (int)idmef_message_enable_cache(arg1);
-    
-    resultobj = PyInt_FromLong((long)result);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_idmef_message_disable_cache(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    idmef_message_t *arg1 = (idmef_message_t *) 0 ;
-    int result;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:idmef_message_disable_cache",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_message_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (int)idmef_message_disable_cache(arg1);
-    
-    resultobj = PyInt_FromLong((long)result);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
 static PyObject *_wrap_idmef_message_set(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_message_t *arg1 = (idmef_message_t *) 0 ;
@@ -15563,36 +15529,6 @@ static PyObject *_wrap_idmef_time_new_gettimeofday(PyObject *self, PyObject *arg
 }
 
 
-static PyObject *_wrap_idmef_time_set_string(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    idmef_time_t *arg1 = (idmef_time_t *) 0 ;
-    char *arg2 ;
-    int result;
-    PyObject * obj0 = 0 ;
-    PyObject * obj1 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_time_set_string",&obj0,&obj1)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_time_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    {
-        if ( obj1 == Py_None )
-        arg2 = NULL;
-        else if ( PyString_Check(obj1) )
-        arg2 = PyString_AsString(obj1);
-        else {
-            PyErr_Format(PyExc_TypeError,
-            "expected None or string, %s found", obj1->ob_type->tp_name);
-            return NULL;
-        }
-    }
-    result = (int)idmef_time_set_string(arg1,(char const *)arg2);
-    
-    resultobj = PyInt_FromLong((long)result);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
 static PyObject *_wrap_idmef_time_new_string(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     char *arg1 ;
@@ -15614,36 +15550,6 @@ static PyObject *_wrap_idmef_time_new_string(PyObject *self, PyObject *args) {
     result = (idmef_time_t *)idmef_time_new_string((char const *)arg1);
     
     resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_time_t, 0);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_idmef_time_set_ntp_timestamp(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    idmef_time_t *arg1 = (idmef_time_t *) 0 ;
-    char *arg2 ;
-    int result;
-    PyObject * obj0 = 0 ;
-    PyObject * obj1 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_time_set_ntp_timestamp",&obj0,&obj1)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_time_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    {
-        if ( obj1 == Py_None )
-        arg2 = NULL;
-        else if ( PyString_Check(obj1) )
-        arg2 = PyString_AsString(obj1);
-        else {
-            PyErr_Format(PyExc_TypeError,
-            "expected None or string, %s found", obj1->ob_type->tp_name);
-            return NULL;
-        }
-    }
-    result = (int)idmef_time_set_ntp_timestamp(arg1,(char const *)arg2);
-    
-    resultobj = PyInt_FromLong((long)result);
     return resultobj;
     fail:
     return NULL;
@@ -15677,6 +15583,65 @@ static PyObject *_wrap_idmef_time_new_ntp_timestamp(PyObject *self, PyObject *ar
 }
 
 
+static PyObject *_wrap_idmef_time_new_db_timestamp(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    char *arg1 ;
+    idmef_time_t *result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_time_new_db_timestamp",&obj0)) goto fail;
+    {
+        if ( obj0 == Py_None )
+        arg1 = NULL;
+        else if ( PyString_Check(obj0) )
+        arg1 = PyString_AsString(obj0);
+        else {
+            PyErr_Format(PyExc_TypeError,
+            "expected None or string, %s found", obj0->ob_type->tp_name);
+            return NULL;
+        }
+    }
+    result = (idmef_time_t *)idmef_time_new_db_timestamp((char const *)arg1);
+    
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_time_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_time_destroy_internal(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_time_t *arg1 = (idmef_time_t *) 0 ;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_time_destroy_internal",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_time_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    idmef_time_destroy_internal(arg1);
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_time_destroy(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_time_t *arg1 = (idmef_time_t *) 0 ;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_time_destroy",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_time_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    idmef_time_destroy(arg1);
+    
+    Py_INCREF(Py_None); resultobj = Py_None;
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_time_clone(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_time_t *arg1 = (idmef_time_t *) 0 ;
@@ -15688,6 +15653,26 @@ static PyObject *_wrap_idmef_time_clone(PyObject *self, PyObject *args) {
     result = (idmef_time_t *)idmef_time_clone((idmef_time_t const *)arg1);
     
     resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_time_t, 0);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_time_copy(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_time_t *arg1 = (idmef_time_t *) 0 ;
+    idmef_time_t *arg2 = (idmef_time_t *) 0 ;
+    int result;
+    PyObject * obj0 = 0 ;
+    PyObject * obj1 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_time_copy",&obj0,&obj1)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_time_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_time_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (int)idmef_time_copy(arg1,arg2);
+    
+    resultobj = PyInt_FromLong((long)result);
     return resultobj;
     fail:
     return NULL;
@@ -15785,18 +15770,28 @@ static PyObject *_wrap_idmef_time_get_usec(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_time_copy(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_time_set_string(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_time_t *arg1 = (idmef_time_t *) 0 ;
-    idmef_time_t *arg2 = (idmef_time_t *) 0 ;
+    char *arg2 ;
     int result;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_time_copy",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_time_set_string",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_time_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_time_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (int)idmef_time_copy(arg1,arg2);
+    {
+        if ( obj1 == Py_None )
+        arg2 = NULL;
+        else if ( PyString_Check(obj1) )
+        arg2 = PyString_AsString(obj1);
+        else {
+            PyErr_Format(PyExc_TypeError,
+            "expected None or string, %s found", obj1->ob_type->tp_name);
+            return NULL;
+        }
+    }
+    result = (int)idmef_time_set_string(arg1,(char const *)arg2);
     
     resultobj = PyInt_FromLong((long)result);
     return resultobj;
@@ -15805,32 +15800,60 @@ static PyObject *_wrap_idmef_time_copy(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_time_destroy_internal(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_time_set_ntp_timestamp(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_time_t *arg1 = (idmef_time_t *) 0 ;
+    char *arg2 ;
+    int result;
     PyObject * obj0 = 0 ;
+    PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"O:idmef_time_destroy_internal",&obj0)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_time_set_ntp_timestamp",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_time_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_time_destroy_internal(arg1);
+    {
+        if ( obj1 == Py_None )
+        arg2 = NULL;
+        else if ( PyString_Check(obj1) )
+        arg2 = PyString_AsString(obj1);
+        else {
+            PyErr_Format(PyExc_TypeError,
+            "expected None or string, %s found", obj1->ob_type->tp_name);
+            return NULL;
+        }
+    }
+    result = (int)idmef_time_set_ntp_timestamp(arg1,(char const *)arg2);
     
-    Py_INCREF(Py_None); resultobj = Py_None;
+    resultobj = PyInt_FromLong((long)result);
     return resultobj;
     fail:
     return NULL;
 }
 
 
-static PyObject *_wrap_idmef_time_destroy(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_time_set_db_timestamp(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_time_t *arg1 = (idmef_time_t *) 0 ;
+    char *arg2 ;
+    int result;
     PyObject * obj0 = 0 ;
+    PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"O:idmef_time_destroy",&obj0)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_time_set_db_timestamp",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_time_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_time_destroy(arg1);
+    {
+        if ( obj1 == Py_None )
+        arg2 = NULL;
+        else if ( PyString_Check(obj1) )
+        arg2 = PyString_AsString(obj1);
+        else {
+            PyErr_Format(PyExc_TypeError,
+            "expected None or string, %s found", obj1->ob_type->tp_name);
+            return NULL;
+        }
+    }
+    result = (int)idmef_time_set_db_timestamp(arg1,(char const *)arg2);
     
-    Py_INCREF(Py_None); resultobj = Py_None;
+    resultobj = PyInt_FromLong((long)result);
     return resultobj;
     fail:
     return NULL;
@@ -21612,8 +21635,6 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_message_new", _wrap_idmef_message_new, METH_VARARGS },
 	 { (char *)"idmef_message_destroy", _wrap_idmef_message_destroy, METH_VARARGS },
 	 { (char *)"idmef_message_set_pmsg", _wrap_idmef_message_set_pmsg, METH_VARARGS },
-	 { (char *)"idmef_message_enable_cache", _wrap_idmef_message_enable_cache, METH_VARARGS },
-	 { (char *)"idmef_message_disable_cache", _wrap_idmef_message_disable_cache, METH_VARARGS },
 	 { (char *)"idmef_message_set", _wrap_idmef_message_set, METH_VARARGS },
 	 { (char *)"idmef_message_get", _wrap_idmef_message_get, METH_VARARGS },
 	 { (char *)"idmef_value_new_int16", _wrap_idmef_value_new_int16, METH_VARARGS },
@@ -21695,19 +21716,21 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"delete_idmef_time", _wrap_delete_idmef_time, METH_VARARGS },
 	 { (char *)"idmef_time_new", _wrap_idmef_time_new, METH_VARARGS },
 	 { (char *)"idmef_time_new_gettimeofday", _wrap_idmef_time_new_gettimeofday, METH_VARARGS },
-	 { (char *)"idmef_time_set_string", _wrap_idmef_time_set_string, METH_VARARGS },
 	 { (char *)"idmef_time_new_string", _wrap_idmef_time_new_string, METH_VARARGS },
-	 { (char *)"idmef_time_set_ntp_timestamp", _wrap_idmef_time_set_ntp_timestamp, METH_VARARGS },
 	 { (char *)"idmef_time_new_ntp_timestamp", _wrap_idmef_time_new_ntp_timestamp, METH_VARARGS },
+	 { (char *)"idmef_time_new_db_timestamp", _wrap_idmef_time_new_db_timestamp, METH_VARARGS },
+	 { (char *)"idmef_time_destroy_internal", _wrap_idmef_time_destroy_internal, METH_VARARGS },
+	 { (char *)"idmef_time_destroy", _wrap_idmef_time_destroy, METH_VARARGS },
 	 { (char *)"idmef_time_clone", _wrap_idmef_time_clone, METH_VARARGS },
+	 { (char *)"idmef_time_copy", _wrap_idmef_time_copy, METH_VARARGS },
 	 { (char *)"idmef_time_set_sec", _wrap_idmef_time_set_sec, METH_VARARGS },
 	 { (char *)"idmef_time_set_usec", _wrap_idmef_time_set_usec, METH_VARARGS },
 	 { (char *)"idmef_time_get_time", _wrap_idmef_time_get_time, METH_VARARGS },
 	 { (char *)"idmef_time_get_sec", _wrap_idmef_time_get_sec, METH_VARARGS },
 	 { (char *)"idmef_time_get_usec", _wrap_idmef_time_get_usec, METH_VARARGS },
-	 { (char *)"idmef_time_copy", _wrap_idmef_time_copy, METH_VARARGS },
-	 { (char *)"idmef_time_destroy_internal", _wrap_idmef_time_destroy_internal, METH_VARARGS },
-	 { (char *)"idmef_time_destroy", _wrap_idmef_time_destroy, METH_VARARGS },
+	 { (char *)"idmef_time_set_string", _wrap_idmef_time_set_string, METH_VARARGS },
+	 { (char *)"idmef_time_set_ntp_timestamp", _wrap_idmef_time_set_ntp_timestamp, METH_VARARGS },
+	 { (char *)"idmef_time_set_db_timestamp", _wrap_idmef_time_set_db_timestamp, METH_VARARGS },
 	 { (char *)"idmef_time_get_ntp_timestamp", _wrap_idmef_time_get_ntp_timestamp, METH_VARARGS },
 	 { (char *)"idmef_time_get_timestamp", _wrap_idmef_time_get_timestamp, METH_VARARGS },
 	 { (char *)"idmef_time_get_db_timestamp", _wrap_idmef_time_get_db_timestamp, METH_VARARGS },
