@@ -1,6 +1,9 @@
 2002-09-03  Guillaume Pelat  <endymion@linux-secure.com>
 
-	* src/daemonize.c (lockfile_get_exclusive): 
+	* src/daemonize.c (lockfile_get_exclusive):
+	Fix possible file descriptor leak.
+
+	* src/config-engine.c (load_file_in_memory):
 	Fix possible file descriptor leak.
 	
 2002-08-29  Yoann Vandoorselaere  <yoann@mandrakesoft.com>

@@ -252,8 +252,10 @@ static int load_file_in_memory(config_t *cfg)
         while ( prelude_read_multiline(fd, &l, line, sizeof(line)) == 0 ) {
                 
                 ret = op_append_line(cfg, strdup(chomp(line)));
-                if ( ret < 0 )
+                if ( ret < 0 ) {
+                        fclose(fd);
                         return -1;
+                }
                 
         }
 
