@@ -70,7 +70,7 @@ typedef struct {
 /*
  * Plugin need to call this function in order to get registered.
  */
-int plugin_register(plugin_generic_t *p);
+int plugin_register(plugin_generic_t *plugin);
 
 
 /*

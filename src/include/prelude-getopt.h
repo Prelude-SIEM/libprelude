@@ -74,7 +74,7 @@ prelude_option_t *prelude_option_wide_add(prelude_optlist_t *optlist, int flags,
 
 
 int prelude_option_parse_arguments(prelude_optlist_t *optlist,
-                                   const char *filename, int argc, const char **argv);
+                                   const char *filename, int argc, char **argv);
 
 
 void prelude_option_print(prelude_optlist_t *optlist, int flags);

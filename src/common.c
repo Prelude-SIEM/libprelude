@@ -50,6 +50,7 @@ static void standard_log(int priority, const char *file,
  * @function: The caller function name.
  * @line: The caller line number.
  * @fmt: Format string.
+ * @...: Variable argument list.
  *
  * This function should not be called directly.
  * Use the #log macro defined in common.h
@@ -82,3 +83,8 @@ void prelude_log_use_syslog(void)
 {
         config_quiet = 1;
 }
+
+
+
+
+

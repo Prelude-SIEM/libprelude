@@ -192,6 +192,7 @@ static int plugin_load_single(const char *filename)
         
         current_handle = handle = dlopen(filename, RTLD_NOW);
         if ( ! handle ) {
+                printf("can't open %s : %s.\n", filename, dlerror());
                 log(LOG_ERR, "can't open %s : %s.\n", filename, dlerror());
                 return -1;
         }
@@ -520,7 +521,6 @@ static const char *generate_options_string(plugin_option_t *opts)
  * called back. If a variable is specified as argument, it is automatically
  * looked up.
  *
- * Returns: -1 on error, 0 on success.
  */
 void plugin_config_get(plugin_generic_t *plugin, plugin_option_t *cfg, const char *conffile) 
 {

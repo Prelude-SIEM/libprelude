@@ -94,7 +94,7 @@ static prelude_option_t *search_cli_option(prelude_optlist_t *optlist, const cha
 
 
 static int check_option_optarg(prelude_optlist_t *optlist,
-                               int argc, const char **argv, const char **optarg) 
+                               int argc, char **argv, const char **optarg) 
 {
         if ( optlist->argv_index >= argc )
                 *optarg = NULL;
@@ -109,7 +109,7 @@ static int check_option_optarg(prelude_optlist_t *optlist,
 
 
 static int check_option_reqarg(prelude_optlist_t *optlist, const char *option,
-                               int argc, const char **argv, const char **optarg) 
+                               int argc, char **argv, const char **optarg) 
 {
         if ( optlist->argv_index >= argc || *argv[optlist->argv_index] == '-' ) {
                 fprintf(stderr, "Option %s require an argument.\n", option);
@@ -128,7 +128,7 @@ static int check_option_reqarg(prelude_optlist_t *optlist, const char *option,
 
 
 static int check_option_noarg(prelude_optlist_t *optlist, const char *option,
-                              int argc, const char **argv)
+                              int argc, char **argv)
 {        
         if ( optlist->argv_index < argc && *argv[optlist->argv_index] != '-' ) {
                 fprintf(stderr, "Option %s do not take an argument.\n", option);
@@ -142,7 +142,7 @@ static int check_option_noarg(prelude_optlist_t *optlist, const char *option,
 
 
 static int check_option(prelude_optlist_t *optlist, prelude_option_t *option,
-                        const char **optarg, int argc, const char **argv) 
+                        const char **optarg, int argc, char **argv) 
 {
         int ret;
         
@@ -233,7 +233,7 @@ static int get_missing_options(const char *filename, prelude_optlist_t *optlist)
 
 
 static int parse_argument(prelude_optlist_t *optlist,
-                          const char *filename, int argc, const char **argv)
+                          const char *filename, int argc, char **argv)
 {
         int ret;
         const char *arg, *old;
@@ -297,6 +297,7 @@ static int parse_argument(prelude_optlist_t *optlist,
 /**
  * prelude_option_parse_arguments:
  * @optlist: A pointer on an option list.
+ * @filename: Pointer to the config filename.
  * @argc: Number of argument.
  * @argv: Argument list.
  *
@@ -304,11 +305,14 @@ static int parse_argument(prelude_optlist_t *optlist,
  * match them against option in @optlist. If an option match, it's associated
  * callback function is called with the eventual option argument if any.
  *
+ * Option not matched on the command line are searched in the configuration file
+ * specified by @filename.
+ *
  * Returns: 0 if parsing the option succeed (including the case where one of
  * the callback returned -1 to request interruption of parsing), -1 if an error occured.
  */
 int prelude_option_parse_arguments(prelude_optlist_t *optlist,
-                                   const char *filename, int argc, const char **argv) 
+                                   const char *filename, int argc, char **argv) 
 {
         int ret;
         
@@ -339,14 +343,17 @@ int prelude_option_parse_arguments(prelude_optlist_t *optlist,
 /**
  * prelude_option_add:
  * @optlist: Pointer on a #prelude_optlist_t object.
- * @type: Define if the option is local to the program or available to a Manager admin console.
+ * @flags: bitfields.
  * @shortopt: Short option name.
  * @longopt: Long option name.
  * @desc: Description of the option.
  * @has_arg: Define if the option has argument.
- * @cb: Callback to be called when the value for this option change.
+ * @set: Callback to be called when the value for this option change.
  *
  * prelude_option_add() create a new option and add it to the option list @optlist.
+ * The @flags parameters can be set to CLI_HOOK (telling the option may be searched
+ * on the command line only) or CFG_HOOk (telling the option may be searched in the
+ * configuration file only) or both.
  *
  * Returns: Pointer on the option object, or NULL if an error occured.
  */

@@ -96,7 +96,7 @@ void plugins_print_opts(const char *dirname);
 /*
  * Pass command line arguments to the plugin layer.
  */
-void plugin_set_args(int argc, char **argv);
+void plugin_set_args(int ac, char **av);
 
 
 /*

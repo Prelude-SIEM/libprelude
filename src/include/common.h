@@ -26,7 +26,7 @@
 
 void prelude_log_use_syslog(void);
 
-void prelude_log(int priority, const char *file, const char *function, int line, const char *comment, ...);
+void prelude_log(int priority, const char *file, const char *function, int line, const char *fmt, ...);
 
 
 #define log(priority, args...) \

@@ -31,7 +31,7 @@ typedef struct prelude_msg prelude_msg_t;
 
 int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio);
 
-int prelude_msg_forward(prelude_msg_t *pmsg, prelude_io_t *dst, prelude_io_t *src);
+int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src);
 
 int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf);
 
@@ -42,9 +42,9 @@ int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf)
  */
 prelude_msg_t *prelude_msg_new(size_t msgcount, size_t msglen, uint8_t tag, uint8_t priority);
 
-void prelude_msg_set(prelude_msg_t *pmsg, uint8_t tag, uint32_t len, const void *data);
+void prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *data);
 
-int prelude_msg_write(prelude_msg_t *pmsg, prelude_io_t *pio);
+int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst);
 
 
 

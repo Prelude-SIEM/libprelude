@@ -229,8 +229,8 @@ ssize_t prelude_io_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
 /**
  * prelude_io_read:
  * @pio: Pointer to a #prelude_io_t object.
- * buf: Pointer to the buffer to store data into.
- * count: Number of bytes to read.
+ * @buf: Pointer to the buffer to store data into.
+ * @count: Number of bytes to read.
  *
  * prelude_io_read() attempts to read up to @count bytes from the
  * file descriptor identified by @pio into the buffer starting at @buf.
@@ -261,8 +261,8 @@ ssize_t prelude_io_read(prelude_io_t *pio, void *buf, size_t count)
 /**
  * prelude_io_read_wait:
  * @pio: Pointer to a #prelude_io_t object.
- * buf: Pointer to the buffer to store data into.
- * count: Number of bytes to read.
+ * @buf: Pointer to the buffer to store data into.
+ * @count: Number of bytes to read.
  *
  * prelude_io_read_wait() attempts to read up to @count bytes from the
  * file descriptor identified by @pio into the buffer starting at @buf.
@@ -306,8 +306,7 @@ ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count)
 /**
  * prelude_io_read_delimited:
  * @pio: Pointer to a #prelude_io_t object.
- * buf: Pointer to the address of a buffer to store address of data into.
- * count: Pointer to the number of bytes read.
+ * @buf: Pointer to the address of a buffer to store address of data into.
  *
  * prelude_io_read_delimited() read message written by prelude_write_delimited().
  * Theses messages are sents along with the len of the message.
@@ -471,7 +470,7 @@ prelude_io_t *prelude_io_new(void)
  * @pio: A pointer on the #prelude_io_t object.
  * @fd: File descriptor identifying a file.
  *
- * Setup the @pio object to work on a file type output.
+ * Setup the @pio object to work with file I/O function.
  * The @pio object is then associated with @fd.
  */
 void prelude_io_set_file_io(prelude_io_t *pio, int fd) 
