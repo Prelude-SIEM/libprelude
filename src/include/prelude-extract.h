@@ -204,7 +204,7 @@ static inline int prelude_extract_uint16_safe(uint16_t *out, const void *buf, si
 
 static inline int prelude_extract_uint32_safe(uint32_t *out, const void *buf, size_t len) 
 {
-        if ( len != sizeof(uint16_t) )
+        if ( len != sizeof(uint32_t) )
                 return prelude_error_make(PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT32);
 
         *out = prelude_extract_uint32(buf);
