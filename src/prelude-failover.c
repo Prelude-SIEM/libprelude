@@ -44,7 +44,7 @@
 struct prelude_failover {
         char *directory;
         prelude_io_t *fd;
-
+        
         size_t cur_size;
         size_t size_limit;
         int prev_was_a_fragment;
@@ -58,6 +58,11 @@ struct prelude_failover {
          * Older allocated index for a saved message.
          */
         unsigned int older_index;
+
+        /*
+         *
+         */
+        size_t to_be_deleted_size;
 };
 
 
@@ -116,14 +121,18 @@ static int get_current_directory_index(prelude_failover_t *failover, const char 
                 }
 
                 failover->cur_size += st.st_size;
+                
                 failover->older_index = MIN(failover->older_index, tmp);
-                failover->newer_index = MAX(failover->newer_index, tmp);
+                failover->newer_index = MAX(failover->newer_index, tmp + 1);
         }
 
         closedir(dir);
-        
+
         if ( failover->older_index == ~0 )
-                failover->older_index = 0;
+                failover->older_index = 1;
+
+        if ( ! failover->newer_index )
+                failover->newer_index = 1;
         
         return 0;
 }
@@ -193,6 +202,22 @@ static int failover_apply_quota(prelude_failover_t *failover, prelude_msg_t *new
 
 
 
+static void delete_current(prelude_failover_t *failover)
+{
+        char filename[256];
+
+        if ( (failover->older_index - 1) == 0 )
+                return;
+        
+        snprintf(filename, sizeof(filename), "%s/%u", failover->directory, failover->older_index - 1);
+        unlink(filename);
+        
+        failover->cur_size -= failover->to_be_deleted_size;
+}
+
+
+
+
 int prelude_failover_save_msg(prelude_failover_t *failover, prelude_msg_t *msg)
 {
         int ret;
@@ -238,11 +263,15 @@ int prelude_failover_save_msg(prelude_failover_t *failover, prelude_msg_t *msg)
 ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg_t **msg)
 {
         int ret;
-        size_t size;
+        ssize_t size;
         char filename[256];
         
-        if ( failover->older_index == failover->newer_index )
+        delete_current(failover);
+        
+        if ( failover->older_index == failover->newer_index ) {
+                failover->older_index = failover->newer_index = 1;
                 return 0;
+        }
         
         ret = open_failover_fd(failover, filename, sizeof(filename), failover->older_index, O_RDONLY);
         if ( ret < 0 ) 
@@ -252,7 +281,6 @@ ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg
         while ( (ret = prelude_msg_read(msg, failover->fd)) == prelude_msg_unfinished );
 
         prelude_io_close(failover->fd);
-        unlink(filename);
         
         if ( ret == prelude_msg_error ) {
                 log(LOG_ERR, "error reading message index=%d.\n", index);
@@ -260,52 +288,17 @@ ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg
         }
 
         size = prelude_msg_get_len(*msg);
+        failover->to_be_deleted_size = size;
+        failover->to_be_deleted_index = failover->older_index;
         
         failover->older_index++;
-        failover->cur_size -= size;
-
-        if ( failover->newer_index - failover->older_index == 0 )
-                failover->older_index = failover->newer_index = 0;
         
         return size;
 }
 
 
 
-
-int prelude_failover_flush(prelude_failover_t *failover, prelude_io_t *out)
-{
-        unsigned int older_index;
-        ssize_t size, totsize = 0;
-
-        log(LOG_INFO, "- Flushing %u message (%u erased due to quota)...\n",
-            failover->newer_index - failover->older_index,
-            failover->newer_index - (failover->newer_index - failover->older_index));
-
-        older_index = failover->older_index;
-        while ( failover->older_index < failover->newer_index ) {
-
-                size = flush_message(failover, failover->older_index, out);
-                if ( size < 0 )
-                        break;
-                
-                totsize += size;
-                failover->older_index++;
-                failover->cur_size -= size;
-        }
-
-        log(LOG_INFO, "- %u/%u messages flushed (%u bytes).\n",
-            failover->older_index - older_index, failover->newer_index - older_index, totsize);
         
-        if ( failover->newer_index - failover->older_index == 0 )
-                failover->older_index = failover->newer_index = 0;
-
-        return 0;
-}
-
-
-
-
 prelude_failover_t *prelude_failover_new(const char *dirname)
 {
         int ret;
@@ -345,10 +338,7 @@ prelude_failover_t *prelude_failover_new(const char *dirname)
                 free(new);
                 return NULL;
         }
-        
-        if ( new->newer_index )
-                new->newer_index++;
-        
+                
         return new;
 }
 
@@ -373,7 +363,7 @@ void prelude_failover_set_quota(prelude_failover_t *failover, size_t limit)
 
 unsigned int prelude_failover_get_deleted_msg_count(prelude_failover_t *failover)
 {
-        return failover->newer_index - (failover->newer_index - failover->older_index);
+        return failover->newer_index - (failover->newer_index - (failover->older_index - 1));
 }
 
 
