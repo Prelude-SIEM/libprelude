@@ -488,6 +488,8 @@ def _idmef_value_python_to_c(object, py_value):
 def idmef_value_c_to_python(value):
 
     func_type_table = {
+        _prelude.IDMEF_VALUE_TYPE_INT8:     _prelude.idmef_value_get_int8,
+        _prelude.IDMEF_VALUE_TYPE_UINT8:    _prelude.idmef_value_get_uint8,
         _prelude.IDMEF_VALUE_TYPE_INT16:     _prelude.idmef_value_get_int16,
         _prelude.IDMEF_VALUE_TYPE_UINT16:    _prelude.idmef_value_get_uint16,
         _prelude.IDMEF_VALUE_TYPE_INT32:     _prelude.idmef_value_get_int32,
