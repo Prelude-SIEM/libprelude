@@ -51,7 +51,7 @@ int idmef_time_copy(const idmef_time_t *src, idmef_time_t *dst);
 void idmef_time_set_from_time(idmef_time_t *time, const time_t *t);
 void idmef_time_set_sec(idmef_time_t *time, uint32_t sec);
 void idmef_time_set_usec(idmef_time_t *time, uint32_t usec);
-void idmef_time_set_gmt_offset(idmef_time_t *time, uint32_t gmtoff);
+void idmef_time_set_gmt_offset(idmef_time_t *time, int32_t gmtoff);
 
 uint32_t idmef_time_get_sec(const idmef_time_t *time);
 uint32_t idmef_time_get_usec(const idmef_time_t *time);

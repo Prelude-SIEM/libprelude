@@ -383,7 +383,7 @@ int idmef_time_clone(const idmef_time_t *src, idmef_time_t **dst)
 
 
 
-void idmef_time_set_gmt_offset(idmef_time_t *time, uint32_t gmtoff)
+void idmef_time_set_gmt_offset(idmef_time_t *time, int32_t gmtoff)
 {
         time->gmt_offset = gmtoff;
 }

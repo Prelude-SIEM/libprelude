@@ -338,7 +338,7 @@ int prelude_get_file_name_and_path(const char *str, char **name, char **path)
 
 
 
-int prelude_get_gmt_offset(uint32_t *gmtoff)
+int prelude_get_gmt_offset(int32_t *gmtoff)
 {
 	time_t t = 0;
 	struct tm tm_local;
