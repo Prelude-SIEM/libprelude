@@ -238,6 +238,25 @@ void idmef_overflow_alert_new(idmef_alert_t *alert)
 }
 
 
+/*
+ * IDMEF webservice
+ */
+idmef_webservice_arg_t *idmef_webservice_arg_new(idmef_webservice_t *w)
+{
+        idmef_webservice_arg_t *new;
+
+        new = calloc(1, sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }
+        
+        list_add(&new->list, &w->arg_list);
+
+        return new;
+}
+
+
 
 /*
  * IDMEF Service.
@@ -252,6 +271,8 @@ idmef_webservice_t *idmef_service_webservice_new(idmef_service_t *service)
                 return NULL;
         }
 
+        INIT_LIST_HEAD(&new->arg_list);
+        
         service->type = web_service;
         service->specific.web = new;
 

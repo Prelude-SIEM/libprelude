@@ -133,15 +133,30 @@ void idmef_send_additional_data_list(prelude_msgbuf_t *msg, struct list_head *he
 
 
 
+void idmef_send_web_service_arg(prelude_msgbuf_t *msg, idmef_webservice_arg_t *arg) 
+{
+        idmef_send_string(msg, MSG_WEBSERVICE_ARG, &arg->arg);
+}
+
+
+
+
 void idmef_send_web_service(prelude_msgbuf_t *msg, idmef_webservice_t *web) 
 {
+        struct list_head *tmp;
+        idmef_webservice_arg_t *arg;
+        
         prelude_msgbuf_set(msg, MSG_WEBSERVICE_TAG, 0, NULL);
 
         idmef_send_string(msg, MSG_WEBSERVICE_URL, &web->url);
         idmef_send_string(msg, MSG_WEBSERVICE_CGI, &web->cgi);
         idmef_send_string(msg, MSG_WEBSERVICE_HTTP_METHOD, &web->http_method);
-        idmef_send_string(msg, MSG_WEBSERVICE_ARG, &web->arg);
 
+        list_for_each(tmp, &web->arg_list){
+                arg = list_entry(tmp, idmef_webservice_arg_t, list);
+                idmef_send_web_service_arg(msg, arg);
+        }
+        
         prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
@@ -652,7 +667,6 @@ void idmef_send_assessment(prelude_msgbuf_t *msg, idmef_assessment_t *assessment
 
 int idmef_msg_send(prelude_msgbuf_t *msgbuf, idmef_message_t *idmef, uint8_t priority)
 {
-        printf("send\n");
         
         switch ( idmef->type ) {
 
@@ -666,8 +680,7 @@ int idmef_msg_send(prelude_msgbuf_t *msgbuf, idmef_message_t *idmef, uint8_t pri
         }
 
         prelude_msgbuf_mark_end(msgbuf);
-        printf("ok\n");
-        
+
         return 0;
 }
 

@@ -68,6 +68,7 @@ idmef_address_t *idmef_node_address_new(idmef_node_t *node);
 /*
  * Sub Service
  */
+idmef_webservice_arg_t *idmef_webservice_arg_new(idmef_webservice_t *w);
 idmef_webservice_t *idmef_service_webservice_new(idmef_service_t *service);
 idmef_snmpservice_t *idmef_service_snmpservice_new(idmef_service_t *service);
 

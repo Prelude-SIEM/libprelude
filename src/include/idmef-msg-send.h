@@ -28,8 +28,10 @@ void idmef_send_uint16(prelude_msgbuf_t *msg, uint8_t tag, uint16_t data);
 void idmef_send_time(prelude_msgbuf_t *msg, uint8_t tag, idmef_time_t *time);
 void idmef_send_additional_data(prelude_msgbuf_t *msg, idmef_additional_data_t *data);
 void idmef_send_additional_data_list(prelude_msgbuf_t *msg, struct list_head *head);
-void idmef_send_web_service(prelude_msgbuf_t *msg, idmef_webservice_t *web) 
-;
+
+void idmef_send_web_service_arg(prelude_msgbuf_t *msg, idmef_webservice_arg_t *arg);
+void idmef_send_web_service(prelude_msgbuf_t *msg, idmef_webservice_t *web);
+
 void idmef_send_snmp_service(prelude_msgbuf_t *msg, idmef_snmpservice_t *snmp);
 void idmef_send_service(prelude_msgbuf_t *msg, idmef_service_t *service);
 

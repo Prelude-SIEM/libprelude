@@ -222,10 +222,16 @@ typedef struct {
  * WebService class
  */
 typedef struct {
+        struct list_head list;
+        idmef_string_t arg;
+} idmef_webservice_arg_t;
+
+
+typedef struct {
         idmef_string_t url;
         idmef_string_t cgi;
         idmef_string_t http_method;
-        idmef_string_t arg;
+        struct list_head arg_list;
 } idmef_webservice_t;
 
 

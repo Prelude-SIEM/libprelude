@@ -1,5 +1,14 @@
 2002-02-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/idmef-msg-send.c (idmef_send_web_service): 
+	(idmef_send_web_service_arg): handle web argument list.
+
+	* src/idmef-tree-func.c (idmef_service_webservice_new): 
+	initialize argument list.
+	
+	(idmef_service_webservice_arg_new): new function
+	return a webservice_arg.
+
 	* src/prelude-message.c (prelude_msg_write): 
 	don't send empty message. 
 
