@@ -34,6 +34,8 @@
 #include <assert.h>
 
 #include <gcrypt.h>
+#include <gnutls/gnutls.h>
+#include <gnutls/x509.h>
 
 #include "libmissing.h"
 #include "idmef.h"
@@ -121,7 +123,7 @@ struct prelude_client {
         
         idmef_analyzer_t *analyzer;
 
-        void *credentials;
+        gnutls_certificate_credentials credentials;
         prelude_connection_mgr_t *manager_list;
         prelude_timer_t heartbeat_timer;
         
@@ -304,9 +306,9 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
         ret = prelude_get_file_name_and_path(program, &name, &path);
         if ( ret < 0 )
                 return -1;
-        
-        idmef_process_set_name(process, prelude_string_new_ref(name));
-        idmef_process_set_path(process, prelude_string_new_ref(path));
+
+        idmef_process_set_name(process, prelude_string_new_nodup(name));
+        idmef_process_set_path(process, prelude_string_new_nodup(path));
         
         snprintf(filename, sizeof(filename), "%s/%s", path, name);
         client->md5sum = generate_md5sum(filename);
@@ -1077,7 +1079,7 @@ void prelude_client_set_name(prelude_client_t *client, const char *name)
  * from a signal handler.
  */
 void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status_t status)
-{
+{        
         if ( status == PRELUDE_CLIENT_EXIT_STATUS_SUCCESS ) {
                 timer_lock_critical_region();
                 
@@ -1087,6 +1089,12 @@ void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status
 
                 timer_unlock_critical_region();
         }
+
+        if ( client->md5sum )
+                free(client->md5sum);
+        
+        if ( client->msgbuf )
+                prelude_msgbuf_close(client->msgbuf);
         
         if ( client->name )
                 free(client->name);
@@ -1100,6 +1108,12 @@ void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status
         if ( client->manager_list )
                 prelude_connection_mgr_destroy(client->manager_list);
 
+        if ( client->credentials )
+                gnutls_certificate_free_credentials(client->credentials);
+
+        if ( client->unique_ident )
+                prelude_ident_destroy(client->unique_ident);
+        
         free(client);
 }
 

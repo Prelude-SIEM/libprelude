@@ -170,7 +170,7 @@ int tls_auth_connection(prelude_client_t *client, prelude_io_t *io, int crypt)
 
 
 
-void *tls_auth_init(prelude_client_t *client)
+gnutls_certificate_credentials tls_auth_init(prelude_client_t *client)
 {
         int ret;
         char keyfile[256], certfile[256];
@@ -178,7 +178,7 @@ void *tls_auth_init(prelude_client_t *client)
         
         prelude_client_get_tls_key_filename(client, keyfile, sizeof(keyfile));
         prelude_client_get_tls_client_keycert_filename(client, certfile, sizeof(certfile));
-        
+
         gnutls_global_init();
         gnutls_certificate_allocate_credentials(&cred);
         
