@@ -1,9 +1,113 @@
+2003-10-16  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* configure.in: move test that might add library path
+	to the libprelude-config output at the end of the other
+	library check in order to avoid any perturbation.
+
+	* libprelude-config.in: Invert @libprelude_libs@ and
+	$libdirs. $libdirs define where the path to libprelude
+	when @libprelude_libs@ define other system library path.
+	
+	This could result in linking to the wrong version of 
+	libprelude being linked when dual libprelude version
+	were installed.
+
+2003-09-30  Stephane Loeuillet <stephane.loeuillet@tiscali.fr>
+
+	* README : update references to IRC channel and 
+	mailing list which were not changed since project has
+	quit sourceforge and openproject changed its name
+
+2003-09-30  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* NEWS: updated.
+
+	* configure.in: bump version number to 0.8.7.
+
+	* src/prelude-inet.c (addrinfo_new): 
+	set default sin_family to AF_INET. Fix a crash on system 
+	without getaddrinfo().
+
+2003-09-21  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* NEWS: updated.
+
+	* src/string-matching.c: 
+	removed. It's now part of prelude-nids.
+
+	Release libprelude-0.8.6.
+
+2003-08-09  Krzysztof Zaraska  <kzaraska@student.uci.agh.edu.pl>
+
+        * autogen.sh:
+        add AC_PROG_CPP so the preprocessor is detected before the OpenSSL
+        presence test, so the OpenSSL detection works correctly
+        (unfortunately, this makes sense...)
+
+2003-08-09  Krzysztof Zaraska  <kzaraska@student.uci.agh.edu.pl>
+
+	* src/prelude-inet.c:
+	fix includes so it builds on FreeBSD
+
+2003-08-09  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/idmef-msg-send.c (idmef_send_alert):
+
+	Handle tool, overflow, and correlation alert.
+	
+	(idmef_send_correlation_alert): 
+	(idmef_send_overflow_alert): 
+	(idmef_send_tool_alert): 
+	(idmef_send_alertident_list): 
+	(idmef_send_alertident): implemented.
+
+2003-08-08  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* sensor-adduser/sensor-adduser.c (setup_sensor_files): 
+	fix a typo (';' after an if statement). The block was never
+	executed, resulting in an incorrect sensor-adduser output.
+
+	* configure.in: stop overwriting CFLAGS.
+
+2003-08-06  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/prelude-inet.c (is_ipv6_loopback): 
+	new function, replace the dirty IN6_IS_ADDR_LOOPBACK macro.
+
+	(prelude_inet_addr_is_loopback): use is_ipv6_loopback().
+
+	(prelude_inet_getaddrinfo): provide the service argument to the
+	getaddrinfo_compat() function.
+
+	(getaddrinfo_compat): take care of the service argument.
+	Translate service to a 16 bits integer and provide it to the
+	addrinfo_new() function.
+	
+	(addrinfo_new): take a port argument.
+
+	Theses change fix a bug where the library would connect to
+	a random port in case getaddrinfo() was not available on the
+	system. Fix the getaddrinfo() fallback.
+
+	* src/daemonize.c (lockfile_write_pid): 
+	* src/prelude-path.c (prelude_get_auth_filename): 
+	(prelude_get_ssl_cert_filename): 
+	(prelude_get_ssl_key_filename): 
+	(prelude_get_backup_filename): 
+
+	cast uid_t and pid_t to integer. This fix compilation 
+	warning on 64bits architectures.
+	
+2003-07-17  Sylvain GIL <prelude-code@toootella.org>
+
+	* configure.in: removed CFLAGS resetting (fixed #91)
+
 2003-06-13  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* src/prelude-inet.c (gai_strerror_compat): implemented.
 	(prelude_inet_gai_strerror): implemented.
 
-2003-06-11  Stéphane Loeuillet  <stephane.loeuillet@tiscali.fr>
+2003-06-11  StÃ©phane Loeuillet  <stephane.loeuillet@tiscali.fr>
 
 	* autogen.sh :
 	remove hardcoded aclocal include directory which broke
@@ -209,6 +313,20 @@
 	* src/prelude-log.c (syslog_log): 
 	Handle snprintf error better.
 
+
+2003-03-12  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/prelude-async.c (prelude_async_init): 
+	take a flags argument. Implemented the possibility
+	to enable/disable asynchronous timer.
+	
+	(wait_data): new function, won't trigger timer wakeup.
+
+2003-03-06  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/prelude-client.c (prelude_client_connect): 
+	Don't try to send Wide option message until Prelude 0.9.
+	
 2003-02-04  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* Changed my mail address everywhere.

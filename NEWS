@@ -1,3 +1,54 @@
+* 2003-09-30, libprelude-0.8.7:
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  Fix a crash on system without getaddrinfo().
+
+* 2003-09-21, libprelude-0.8.6:
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  Re-establish post 0.8.5 behavior of defaulting to enable
+	  asynchronous timer.
+
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Handle tool, overflow, and correlation alert.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  Make the operation of gathering/executing a timer atomic. 
+	  Merge part of the HEAD code and avoid locking in case
+	  asynchronous timer aren't used.
+
+        - Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
+	  Add AC_PROG_CPP so the preprocessor is detected before the OpenSSL
+	  presence test, so the OpenSSL detection works correctly.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  Use pthread_join() instead of pthread_cancel().
+	  The behavior of pthread_cancel too much depend on the architecture.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  Add a --pthread-cflags option to libprelude-config in order to
+	  avoid non threaded program to compile with pthread related option
+	  which might slow down program execution due to extra locking used
+	  by libc.
+
+	- Sylvain Gil <prelude-code@tootella.org>
+	  Fix libprelude compilation under MacOSX.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  Forbid multiline comment. (Fix #0000078).
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  Fix GCC strict-aliasing warning.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  Provide the ability for a prelude-client to connect using both
+	  IPv4 and IPv6. Also, the prelude-client code has been reworked 
+	  so that connection using UNIX and TCP socket share more code.
+
+	- Yoann Vandoorselaere <yoann@prelude-ids.org>
+	  Implementation of the prelude_inet API providing IPv4/IPv6 lookup
+	  function, as well as their fallback if IPv6 support is not present.
+
 * 2003-04-28, libprelude-0.8.5:
 
 	- Yoann Vandoorselaere <yoann@prelude-ids.org>

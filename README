@@ -52,7 +52,7 @@ IRC
 
 If there's something you just can't find out elsewhere, you want to 
 give feedback directly to the authors or you're just bored, visit 
-#prelude on irc.openprojects.net
+#prelude on irc.freenode.net
 
 
 
@@ -60,10 +60,13 @@ Get Support
 ===========
 
 
-Prelude-user mailing list:
+Prelude-user mailing list archives can be accessed at:
 
-	 http://lists.sourceforge.net/lists/listinfo/prelude-list
+	http://listes.tuxfamily.org/?A=LIST&L=prelude-user_prelude-ids.org
 
+If you want to subscribe to the list, please send a mail to:
+
+	prelude-user-subscribe@prelude-ids.org
 
 
 Help development
@@ -73,14 +76,14 @@ Help development
 
 The Prelude source is constantly changing. If you want to submit a patch,
 please do so from the most recent CVS source tree, subscribe to the 
-prelude-devel mailing list by visiting:
+prelude-devel mailing list by sending a mail to:
 
-        http://lists.sourceforge.net/lists/listinfo/prelude-devel
+        prelude-devel-subscribe@prelude-ids.org
 
 and post your patch with a description of functionality.
 You can also attach patches to bugs on 
 
-        http://sourceforge.net/tracker/?group_id=1840&atid=101840
+        http://bugs.prelude-ids.org
 
 
 2. BUGS
@@ -90,7 +93,7 @@ If you find any bugs, please report them to:
 	http://bugs.prelude-ids.org
 
 Please make sure that what you're reporting is actually a BUG and not
-a problem at your end.
+a problem on your side.
 
 
 3. SUGGESTIONS

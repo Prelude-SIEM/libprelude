@@ -128,7 +128,7 @@ static int lockfile_write_pid(int fd, pid_t pid)
                 return -1;
         }
         
-        snprintf(buf, sizeof(buf), "%d\n", pid);
+        snprintf(buf, sizeof(buf), "%d\n", (int) pid);
         
         ret = write(fd, buf, strlen(buf));
         if ( ret < 0 ) {

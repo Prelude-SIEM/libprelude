@@ -627,6 +627,73 @@ void idmef_send_impact(prelude_msgbuf_t *msg, idmef_impact_t *impact)
 
 
 
+void idmef_send_alertident(prelude_msgbuf_t *msg, idmef_alertident_t *alertident) 
+{
+        prelude_msgbuf_set(msg, MSG_ALERTIDENT_TAG, 0, NULL);
+
+        idmef_send_uint64(msg, MSG_ALERTIDENT_IDENT, &alertident->alertident);
+        idmef_send_uint64(msg, MSG_ALERTIDENT_ANALYZER_IDENT, &alertident->analyzerid);
+
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
+}
+
+
+
+
+void idmef_send_alertident_list(prelude_msgbuf_t *msg, struct list_head *head)
+{
+        struct list_head *tmp;
+        idmef_alertident_t *ident;
+        
+        list_for_each(tmp, head) {
+                ident = list_entry(tmp, idmef_alertident_t, list);
+                idmef_send_alertident(msg, ident);
+        }
+}
+
+
+
+
+void idmef_send_tool_alert(prelude_msgbuf_t *msg, idmef_tool_alert_t *alert)
+{        
+        prelude_msgbuf_set(msg, MSG_TOOL_ALERT_TAG, 0, NULL);
+
+        idmef_send_string(msg, MSG_TOOL_ALERT_NAME, &alert->name);
+        idmef_send_string(msg, MSG_TOOL_ALERT_COMMAND, &alert->command);
+        idmef_send_alertident_list(msg, &alert->alertident_list);
+
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL); 
+}
+
+
+
+
+void idmef_send_overflow_alert(prelude_msgbuf_t *msg, idmef_overflow_alert_t *alert)
+{
+        prelude_msgbuf_set(msg, MSG_OVERFLOW_ALERT_TAG, 0, NULL);
+
+        idmef_send_string(msg, MSG_OVERFLOW_ALERT_PROGRAM, &alert->program);
+        idmef_send_uint32(msg, MSG_OVERFLOW_ALERT_SIZE, alert->size);
+        prelude_msgbuf_set(msg, MSG_OVERFLOW_ALERT_BUFFER, alert->size, alert->buffer);
+        
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
+}
+
+
+
+
+void idmef_send_correlation_alert(prelude_msgbuf_t *msg, idmef_correlation_alert_t *alert)
+{        
+        prelude_msgbuf_set(msg, MSG_CORRELATION_ALERT_TAG, 0, NULL);
+
+        idmef_send_string(msg, MSG_CORRELATION_ALERT_NAME, &alert->name);
+        idmef_send_alertident_list(msg, &alert->alertident_list);
+                
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
+}
+
+
+
 
 void idmef_send_alert(prelude_msgbuf_t *msg, idmef_alert_t *alert) 
 {
@@ -642,6 +709,24 @@ void idmef_send_alert(prelude_msgbuf_t *msg, idmef_alert_t *alert)
         idmef_send_classification_list(msg, &alert->classification_list);
         idmef_send_additional_data_list(msg, &alert->additional_data_list);
 
+        switch (alert->type) {
+
+            case idmef_tool_alert:
+                    idmef_send_tool_alert(msg, alert->detail.tool_alert);
+                    break;
+                    
+            case idmef_overflow_alert:
+                    idmef_send_overflow_alert(msg, alert->detail.overflow_alert);
+                    break;
+                    
+            case idmef_correlation_alert:
+                    idmef_send_correlation_alert(msg, alert->detail.correlation_alert);
+                    break;
+
+            default:
+                    break;
+        }
+        
         prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 

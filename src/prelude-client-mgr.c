@@ -1,4 +1,5 @@
 /*****
+*
 * Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
@@ -112,7 +113,7 @@ struct prelude_client_mgr {
         struct list_head or_list;
 
         int nfd;
-	fd_set fds;
+        fd_set fds;
         prelude_timer_t timer;
 };
 
@@ -438,7 +439,7 @@ static client_list_t *create_client_list(prelude_client_mgr_t *cmgr)
         new->dead = 0;
         new->parent = cmgr;
         INIT_LIST_HEAD(&new->client_list);
-                
+        
         list_add_tail(&new->list, &cmgr->or_list);
         
         return new;

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -51,25 +51,25 @@ static const char *sensorname = NULL;
 
 void prelude_get_auth_filename(char *buf, size_t size) 
 {
-        snprintf(buf, size, "%s/%s.%d", AUTH_DIR, sensorname, userid);
+        snprintf(buf, size, "%s/%s.%d", AUTH_DIR, sensorname, (int) userid);
 }
 
 
 void prelude_get_ssl_cert_filename(char *buf, size_t size) 
 {
-        snprintf(buf, size, "%s/%s-cert.%d", SSL_DIR, sensorname, userid);
+        snprintf(buf, size, "%s/%s-cert.%d", SSL_DIR, sensorname, (int) userid);
 }
 
 
 void prelude_get_ssl_key_filename(char *buf, size_t size) 
 {
-        snprintf(buf, size, "%s/%s-key.%d", SSL_DIR, sensorname, userid);
+        snprintf(buf, size, "%s/%s-key.%d", SSL_DIR, sensorname, (int) userid);
 }
 
 
 void prelude_get_backup_filename(char *buf, size_t size) 
 {
-        snprintf(buf, size, SENSORS_SPOOL_DIR"/backup.%d", userid);
+        snprintf(buf, size, SENSORS_SPOOL_DIR"/backup.%d", (int) userid);
 }
 
 

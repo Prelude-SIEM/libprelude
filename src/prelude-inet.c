@@ -24,8 +24,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <netinet/in.h>
+#include <inttypes.h>
 #include <sys/types.h>
+#include <netinet/in.h>
 #include <sys/socket.h>
 #include <netdb.h>
 #include <arpa/inet.h>
@@ -36,23 +37,32 @@
 #include "prelude-inet.h"
 
 
-#ifndef IN6_IS_ADDR_LOOPBACK
- #define IN6_IS_ADDR_LOOPBACK(a) \
-        (((__const uint32_t *) (a))[0] == 0                                   \
-         && ((__const uint32_t *) (a))[1] == 0                                \
-         && ((__const uint32_t *) (a))[2] == 0                                \
-         && ((__const uint32_t *) (a))[3] == htonl (1))
-#endif
-
 
 #ifndef INADDR_LOOPBACK
  #define INADDR_LOOPBACK        ((uint32_t) 0x7f000001) /* Inet 127.0.0.1.  */
 #endif
 
 
+#ifdef HAVE_IPV6
+
+static inline int is_ipv6_loopback(void *addr) 
+{
+        if ( ((const uint32_t *) addr)[0] == 0 &&
+             ((const uint32_t *) addr)[1] == 0 &&
+             ((const uint32_t *) addr)[2] == 0 &&
+             ((const uint32_t *) addr)[3] == htonl(1) )
+                return 0;
+
+        return -1;
+}
+
+#endif
+
+
+
 #ifdef MISSING_GETADDRINFO
 
-static int addrinfo_new(int flags, const char *host, struct in_addr *addr, prelude_addrinfo_t **out) 
+static int addrinfo_new(int flags, const char *host, struct in_addr *addr, uint16_t port, prelude_addrinfo_t **out) 
 {
         prelude_addrinfo_t *new;
         struct sockaddr_in *sin;
@@ -77,6 +87,8 @@ static int addrinfo_new(int flags, const char *host, struct in_addr *addr, prelu
         if ( ! sin ) 
                 return EAI_MEMORY;
 
+        sin->sin_family = AF_INET;
+        sin->sin_port = htons(port);
         new->ai_addr = (struct sockaddr *) sin;
         memcpy(&sin->sin_addr, addr, sizeof(sin->sin_addr));
         
@@ -87,23 +99,27 @@ static int addrinfo_new(int flags, const char *host, struct in_addr *addr, prelu
 
 
 
-static int getaddrinfo_compat(int flags, const char *host, prelude_addrinfo_t **res) 
+static int getaddrinfo_compat(int flags, const char *host, const char *service, prelude_addrinfo_t **res) 
 {
         int i, ret;
         struct hostent *h;
+        uint16_t dport = 0;
         prelude_addrinfo_t *head, **tmp;
         
         h = gethostbyname(host);
         if ( ! h )
                 return EAI_NONAME;
 
+        if ( service )
+                dport = atoi(service);
+        
         tmp = &head;
         for ( i = 0; h->h_addr_list[i] != NULL; i++ ) {
 
-                ret = addrinfo_new(flags, h->h_name, (struct in_addr *) h->h_addr_list[i], tmp);                
+                ret = addrinfo_new(flags, h->h_name, (struct in_addr *) h->h_addr_list[i], dport, tmp);                
                 if ( ret < 0 )
                         return ret;
-                
+
                 tmp = &(*tmp)->ai_next;
         }
 
@@ -199,7 +215,7 @@ int prelude_inet_getaddrinfo(const char *node, const char *service,
 #ifndef MISSING_GETADDRINFO
         return getaddrinfo(node, service, hints, res);
 #else
-        return getaddrinfo_compat(hints ? hints->ai_flags : 0, node, res);
+        return getaddrinfo_compat(hints ? hints->ai_flags : 0, node, service, res);
 #endif
 }
 
@@ -237,8 +253,7 @@ const char *prelude_inet_ntop(int af, const void *src, char *dst, size_t cnt)
         return inet_ntop(af, src, dst, cnt);
 #else
         return inet_ntop_compat(af, src, dst, cnt);
-#endif
-        
+#endif       
 }
 
 
@@ -260,7 +275,6 @@ void *prelude_inet_sockaddr_get_inaddr(struct sockaddr *sa)
 
 
 
-
 int prelude_inet_addr_is_loopback(int af, void *addr) 
 {
         int ret = -1;
@@ -271,8 +285,8 @@ int prelude_inet_addr_is_loopback(int af, void *addr)
         }
         
 #ifdef HAVE_IPV6
-        else if ( af == AF_INET6 )
-                ret = (IN6_IS_ADDR_LOOPBACK(addr)) ? 0 : -1;
+        else if ( af == AF_INET6 ) 
+                ret = is_ipv6_loopback(addr);
 #endif
 
         return ret;
@@ -312,3 +326,6 @@ int main(int argc, char **argv)
         prelude_inet_freeaddrinfo(ptr);
 }
 #endif
+
+
+

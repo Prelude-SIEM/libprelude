@@ -84,10 +84,9 @@ static ssize_t sys_write(prelude_io_t *pio, const void *buf, size_t count)
 static int sys_close(prelude_io_t *pio) 
 {
         int ret;
-        
+
         do {
                 ret = close(pio->fd);
-                
         } while ( ret < 0 && (errno == EINTR || errno == EAGAIN) );
 
         return ret;

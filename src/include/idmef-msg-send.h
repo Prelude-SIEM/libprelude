@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -28,6 +28,9 @@ void idmef_send_string(prelude_msgbuf_t *msg, uint8_t tag, idmef_string_t *strin
 void idmef_send_uint64(prelude_msgbuf_t *msg, uint8_t tag, uint64_t *data);
 void idmef_send_uint32(prelude_msgbuf_t *msg, uint8_t tag, uint32_t data);
 void idmef_send_uint16(prelude_msgbuf_t *msg, uint8_t tag, uint16_t data);
+void idmef_send_alertident(prelude_msgbuf_t *msg, idmef_alertident_t *alertident);
+void idmef_send_alertident_list(prelude_msgbuf_t *msg, struct list_head *head);
+
 void idmef_send_time(prelude_msgbuf_t *msg, uint8_t tag, idmef_time_t *time);
 void idmef_send_additional_data(prelude_msgbuf_t *msg, idmef_additional_data_t *data);
 void idmef_send_additional_data_list(prelude_msgbuf_t *msg, struct list_head *head);
@@ -67,6 +70,11 @@ void idmef_send_confidence(prelude_msgbuf_t *msg, idmef_confidence_t *confidence
 void idmef_send_action(prelude_msgbuf_t *msg, idmef_action_t *action);
 void idmef_send_action_list(prelude_msgbuf_t *msg, struct list_head *head);
 void idmef_send_impact(prelude_msgbuf_t *msg, idmef_impact_t *impact);
+
+void idmef_send_tool_alert(prelude_msgbuf_t *msg, idmef_tool_alert_t *alert);
+void idmef_send_overflow_alert(prelude_msgbuf_t *msg, idmef_overflow_alert_t *alert);
+void idmef_send_correlation_alert(prelude_msgbuf_t *msg, idmef_correlation_alert_t *alert);
+
 void idmef_send_alert(prelude_msgbuf_t *msg, idmef_alert_t *alert);
 void idmef_send_heartbeat(prelude_msgbuf_t *msg, idmef_heartbeat_t *hb);
 void idmef_send_assessment(prelude_msgbuf_t *msg, idmef_assessment_t *assessment);

@@ -417,8 +417,9 @@ static int setup_sensor_files(const char *hostname, uint64_t sensor_ident)
         if ( ret == 0 )
                 fprintf(stderr, "Allocated ident for %s@%s: %llu.\n", sensor_name, hostname, sensor_ident);
 
-        else if ( ret == 1);
+        else if ( ret == 1)
                 fprintf(stderr, "Using already allocated ident for %s@%s: %llu.\n", sensor_name, hostname, sensor_ident);
+
         return 0;
 }
 

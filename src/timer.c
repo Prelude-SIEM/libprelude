@@ -25,9 +25,6 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <assert.h>
-
-
-#define __USE_GNU 1
 #include <pthread.h>
 
 #include "timer.h"
@@ -42,9 +39,10 @@
  #define dprint(args...)
 #endif
 
+
 static int count = 0;
 static LIST_HEAD(timer_list);
-static pthread_mutex_t mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
 
@@ -124,11 +122,11 @@ static void walk_and_wake_up_timer(time_t now)
 
         list_for_each_safe(tmp, bkp, &timer_list) {
                 timer = list_entry(tmp, prelude_timer_t, list);
-                
+
                 ret = wake_up_if_needed(timer, now);
                 if ( ret < 0 )
                         break;
-                
+
                 woke++;
         }
 
@@ -169,7 +167,7 @@ static struct list_head *search_previous_forward(prelude_timer_t *timer, time_t 
                          * we found a timer that's expiring at the same time
                          * as us. Return it as the previous insertion point.
                          */
-                            //dprint("[expire=%d] found forward in %d hop at %p\n", timer->expire, hop, cur);
+                        dprint("[expire=%d] found forward in %d hop at %p\n", timer->expire, hop, cur);
                         return tmp;
                 }
 
@@ -178,7 +176,7 @@ static struct list_head *search_previous_forward(prelude_timer_t *timer, time_t 
                          * we found a timer expiring after us. We can return 
                          * the previously saved entry.
                          */
-                            //dprint("[expire=%d] found forward in %d hop at %p\n", timer->expire, hop, cur);
+                        dprint("[expire=%d] found forward in %d hop at %p\n", timer->expire, hop, cur);
                         assert(prev);
                         return prev;
                 }
@@ -263,7 +261,7 @@ static struct list_head *search_previous_timer(prelude_timer_t *timer)
          */
         if ( timer->expire >= time_remaining(last, timer->start_time) ) {
                 assert(timer_list.prev);
-//                dprint("[expire=%d] found without search (insert last)\n", timer->expire);
+                dprint("[expire=%d] found without search (insert last)\n", timer->expire);
                 return timer_list.prev;
         }
         
@@ -274,7 +272,7 @@ static struct list_head *search_previous_timer(prelude_timer_t *timer)
          */
         if ( timer->expire <= time_remaining(first, timer->start_time) ) {
                 assert(&timer_list);
-//                dprint("[expire=%d] found without search (insert first)\n", timer->expire);
+                dprint("[expire=%d] found without search (insert first)\n", timer->expire);
                 return &timer_list;
         }
 
@@ -354,7 +352,7 @@ void timer_init(prelude_timer_t *timer)
  * Reset timer 'timer', as if it was just started.
  */
 void timer_reset(prelude_timer_t *timer) 
-{        
+{
         timer_destroy_unlocked(timer);
         timer_init_unlocked(timer);
 }

@@ -6,7 +6,7 @@ AC_CONFIG_SRCDIR([src])
 
 AC_PREREQ(2.53)
 AC_CANONICAL_TARGET([])
-AM_INIT_AUTOMAKE(libprelude, 0.8.6)
+AM_INIT_AUTOMAKE(libprelude, 0.8.7)
 AM_CONFIG_HEADER(config.h)
 AM_DISABLE_STATIC
 
@@ -27,6 +27,7 @@ AC_SUBST(LIBLTDL)
 dnl Checks for programs.
 
 AC_PROG_CC
+AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 AC_C_INLINE
@@ -42,8 +43,6 @@ AC_SUBST(pthread_cflags)
 AC_SUBST(libprelude_libs)
 AC_SUBST(libprelude_cflags)
 
-CFLAGS=""
-
 
 dnl **************************************************
 dnl * Check for crypt library                        *
@@ -54,6 +53,50 @@ if test x$cryptlib = xtrue; then
 	AC_DEFINE(HAVE_CRYPT, , 1)
 	libprelude_libs="$libprelude_libs -lcrypt";
 fi
+
+
+dnl **************************************************
+dnl * Check for networking function                  *
+dnl **************************************************
+
+AC_CHECK_LIB(c, inet_ntoa, libc_inet_ntoa=yes)
+if test x$libc_inet_ntoa != xyes; then
+	AC_CHECK_LIB(nsl, inet_ntoa, libprelude_libs="$libprelude_libs -lnsl")
+fi
+
+AC_CHECK_LIB(c, socket, libc_socket=yes)
+if test x$libc_socket != xyes; then
+	AC_CHECK_LIB(socket, socket, libprelude_libs="$libprelude_libs -lsocket")
+fi
+
+AC_CHECK_LIB(c, inet_aton, libc_inet_aton=yes)
+if test x$libc_inet_aton != xyes; then
+	AC_CHECK_LIB(resolv, inet_aton, libprelude_libs="$libprelude_libs -lresolv")
+fi
+
+
+
+dnl **************************************************
+dnl * Check for OpenSSL.                             *
+dnl **************************************************
+
+AC_ARG_ENABLE(openssl, [  --enable-openssl	Use OpenSSL to communicate with Manager [default=auto]], enable_openssl="$enableval", enable_openssl=yes)
+
+if test x$enable_openssl = xyes ; then
+	
+	AC_CHECK_HEADER(openssl/ssl.h, openssl_header=yes)
+
+	if test x$openssl_header = xyes; then
+		libprelude_libs="$libprelude_libs -lssl -lcrypto"
+		AC_DEFINE(HAVE_SSL, , 1)
+  	else
+    		enable_openssl=no
+  	fi
+fi
+
+AM_CONDITIONAL(HAVE_SSL, test x$enable_openssl = xyes && test x$openssl_header = xyes)
+
+
 
 dnl **************************************************
 dnl * Check for Pthread library                      *
@@ -110,24 +153,11 @@ if test x$pthrlib != xyes; then
 	AC_MSG_ERROR(couldn't find POSIX thread library)
 fi
 
+
+
 dnl **************************************************
-dnl * Check for networking function                  *
+dnl * Check for poll()                               *
 dnl **************************************************
-
-AC_CHECK_LIB(c, inet_ntoa, libc_inet_ntoa=yes)
-if test x$libc_inet_ntoa != xyes; then
-	AC_CHECK_LIB(nsl, inet_ntoa, libprelude_libs="$libprelude_libs -lnsl")
-fi
-
-AC_CHECK_LIB(c, socket, libc_socket=yes)
-if test x$libc_socket != xyes; then
-	AC_CHECK_LIB(socket, socket, libprelude_libs="$libprelude_libs -lsocket")
-fi
-
-AC_CHECK_LIB(c, inet_aton, libc_inet_aton=yes)
-if test x$libc_inet_aton != xyes; then
-	AC_CHECK_LIB(resolv, inet_aton, libprelude_libs="$libprelude_libs -lresolv")
-fi
 
 AC_CHECK_LIB(c, poll, libc_poll=yes)
 if test x$libc_poll != xyes; then
@@ -162,26 +192,6 @@ if test x$libc_poll != xyes; then
                AC_CHECK_LIB(poll, poll, libprelude_libs="$libprelude_libs -lpoll")
        fi
 fi
-
-dnl **************************************************
-dnl * Check for OpenSSL.                             *
-dnl **************************************************
-
-AC_ARG_ENABLE(openssl, [  --enable-openssl	Use OpenSSL to communicate with Manager [default=auto]], enable_openssl="$enableval", enable_openssl=yes)
-
-if test x$enable_openssl = xyes ; then
-	
-	AC_CHECK_HEADER(openssl/ssl.h, openssl_header=yes)
-
-	if test x$openssl_header = xyes; then
-		libprelude_libs="$libprelude_libs -lssl -lcrypto"
-		AC_DEFINE(HAVE_SSL, , 1)
-  	else
-    		enable_openssl=no
-  	fi
-fi
-
-AM_CONDITIONAL(HAVE_SSL, test x$enable_openssl = xyes && test x$openssl_header = xyes)
 
 
 dnl **************************************************
@@ -226,21 +236,6 @@ dnl **************************************************
 dnl * Check for inet_ntop.                           *
 dnl **************************************************
 AC_CHECK_FUNC(inet_ntop, AC_DEFINE_UNQUOTED(HAVE_INET_NTOP, , Define wether inet_ntop is available on this system))
-
-
-
-dnl **************************************************
-dnl * Enable / Disable gprof profiling.              *
-dnl **************************************************
-
-AC_ARG_ENABLE(profiling, [  --enable-profiling Enable Gprof profiling - with thread workaround [default=no]], \
-	      enable_profiling="$enableval", enable_profiling=no)
-
-if test x$enable_profiling = xyes ; then
-	CFLAGS="$CFLAGS -O3 -pg"
-else
-	CFLAGS="$CFLAGS -O3 -fomit-frame-pointer";
-fi
 
 
 
@@ -399,7 +394,6 @@ echo
 echo "*** Dumping configuration ***"
 echo "    - Use OpenSSL            : $enable_openssl"
 echo "    - Generate documentation : $enable_gtk_doc"
-echo "    - Profiling enabled      : $enable_profiling"
 
 
 
