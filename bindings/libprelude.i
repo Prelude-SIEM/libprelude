@@ -59,6 +59,8 @@ typedef unsigned int prelude_bool_t;
 
 
 %typemap(in, numinputs=0) (uint64_t *source_id, uint32_t *request_id, void **value) (uint64_t tmp_source_id, uint32_t tmp_request_id, void *tmp_value) {
+	tmp_source_id = 0;
+	tmp_request_id = 0;
 	$1 = &tmp_source_id;
 	$2 = &tmp_request_id;
 	$3 = &tmp_value;
