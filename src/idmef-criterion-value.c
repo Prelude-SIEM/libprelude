@@ -670,52 +670,52 @@ void idmef_criterion_value_non_linear_time_print(idmef_criterion_value_non_linea
 
 
 int idmef_criterion_value_non_linear_time_to_string(idmef_criterion_value_non_linear_time_t *time,
-						     char *buffer, size_t size)
+                                                    prelude_string_t *out)
 {
+        int ret = 0;
 	int have_print = 0;
-	int offset = 0;
 
 	if ( time->year != -1 ) {
-		MY_SNPRINTF(buffer, size, offset, "year:%d", time->year);
+                ret = prelude_string_sprintf(out, "year:%d", time->year);
 		have_print = 1;
 	}
 
 	if ( time->month != -1 ) {
-		MY_SNPRINTF(buffer, size, offset, "%smonth:%d", have_print ? " " : "", time->month);
+		ret = prelude_string_sprintf(out, "%smonth:%d", have_print ? " " : "", time->month);
 		have_print = 1;
 	}
 
 	if ( time->yday != -1 ) {
-		MY_SNPRINTF(buffer, size, offset, "%syday:%d", have_print ? " " : "", time->yday);
+		ret = prelude_string_sprintf(out, "%syday:%d", have_print ? " " : "", time->yday);
 		have_print = 1;
 	}
 
 	if ( time->mday != -1 ) {
-		MY_SNPRINTF(buffer, size, offset, "%smday:%d", have_print ? " " : "", time->mday);
+		ret = prelude_string_sprintf(out, "%smday:%d", have_print ? " " : "", time->mday);
 		have_print = 1;
 	}
 
 	if ( time->wday != -1 ) {
-		MY_SNPRINTF(buffer, size, offset, "%swday:%d", have_print ? " " : "", time->wday);
+		ret = prelude_string_sprintf(out, "%swday:%d", have_print ? " " : "", time->wday);
 		have_print = 1;
 	}
 
 	if ( time->hour != -1 ) {
-		MY_SNPRINTF(buffer, size, offset, "%shour:%d", have_print ? " " : "", time->hour);
+		ret = prelude_string_sprintf(out, "%shour:%d", have_print ? " " : "", time->hour);
 		have_print = 1;
 	}
 
 	if ( time->min != -1 ) {
-		MY_SNPRINTF(buffer, size, offset, "%smin:%d", have_print ? " " : "", time->min);
+		ret = prelude_string_sprintf(out, "%smin:%d", have_print ? " " : "", time->min);
 		have_print = 1;
 	}
 
 	if ( time->sec != -1 ) {
-		MY_SNPRINTF(buffer, size, offset, "%ssec:%d", have_print ? " " : "", time->sec);
+		ret = prelude_string_sprintf(out, "%ssec:%d", have_print ? " " : "", time->sec);
 		have_print = 1;
 	}
 
-	return offset;
+	return ret;
 }
 
 
@@ -893,15 +893,23 @@ idmef_criterion_value_non_linear_time_t *idmef_criterion_value_get_non_linear_ti
 
 void idmef_criterion_value_print(idmef_criterion_value_t *value)
 {
+        prelude_string_t *out;
+        
 	switch ( value->type ) {
 	case idmef_criterion_value_type_fixed: {
-		char buffer[512];
-
-		if ( idmef_value_to_string(value->val.fixed, buffer, sizeof (buffer)) < 0 )
+                
+                out = prelude_string_new();
+                if ( ! out )
+                        return;
+        
+		if ( idmef_value_to_string(value->val.fixed, out) < 0 ) {
+                        prelude_string_destroy(out);
 			return;
-
-		printf("%s", buffer);
-
+                }
+                
+		printf("%s", prelude_string_get_string(out));
+                prelude_string_destroy(out);
+                
 		break;
 	}
 
@@ -913,20 +921,20 @@ void idmef_criterion_value_print(idmef_criterion_value_t *value)
 
 
 
-int idmef_criterion_value_to_string(idmef_criterion_value_t *value, char *buffer, size_t size)
+int idmef_criterion_value_to_string(idmef_criterion_value_t *value, prelude_string_t *out)
 {
-	int offset = 0;
+        int ret = -1;
+        
+        switch ( value->type ) {
 
-	switch ( value->type ) {
-	case idmef_criterion_value_type_fixed:
-		MY_CONCAT(idmef_value_to_string, value->val.fixed, buffer, size, offset);
+        case idmef_criterion_value_type_fixed:
+                ret = idmef_value_to_string(value->val.fixed, out);
 		break;
 
 	case idmef_criterion_value_type_non_linear_time:
-		MY_CONCAT(idmef_criterion_value_non_linear_time_to_string, value->val.non_linear_time,
-			  buffer, size, offset);
+		ret = idmef_criterion_value_non_linear_time_to_string(value->val.non_linear_time, out);
 		break;
 	}
 
-	return offset;
+	return ret;
 }
