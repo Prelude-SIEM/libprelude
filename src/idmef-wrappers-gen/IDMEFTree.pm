@@ -124,7 +124,7 @@ sub	parse
 
     while ( defined($line = $self->get_line) ) {
 	
-	if ( $line =~ /typedef\s+struct\s+\{/ ) {
+	if ( $line =~ /typedef\s+struct\s+.*\{/ ) {
 	    $self->debug("parse struct\n");
 	    $self->parse_struct($line);
 
@@ -176,6 +176,17 @@ sub	parse_struct
 	} elsif ( $line =~ /^\s*IS_LISTED\s*\;\s*$/ ) {
 	    $struct->{is_listed} = 1;
 	    $self->debug("struct is listed\n");
+
+	} elsif ( ($typename, $ptr, $name) = $line =~ /^\s*struct\s+(\w+)\s+(\**)(\w+)\;$/ ) {
+	    push(@field_list, { metatype => &METATYPE_NORMAL | &METATYPE_STRUCT,
+				typename => $typename . "_t",
+				short_typename => get_short_typename($typename),
+				name => $name,
+				short_name => $name,
+				ptr => $ptr ? 1 : 0,
+				dynamic_ident => 0 });
+
+	    $self->debug("parse direct struct field metatype:normal name:$name typename:$typename ptr:", $ptr ? "yes" : "no", "\n");
 
 	} elsif ( ($typename, $ptr, $name) = $line =~ /^\s*(\w+)\s+(\**)(\w+)\;/ ) {
 	    my $metatype;

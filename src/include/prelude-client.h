@@ -24,6 +24,9 @@
 #ifndef _LIBPRELUDE_PRELUDE_CLIENT_H
 #define _LIBPRELUDE_PRELUDE_CLIENT_H
 
+#include "prelude-message.h"
+
+
 typedef struct prelude_client prelude_client_t;
 
 void prelude_client_destroy(prelude_client_t *client);

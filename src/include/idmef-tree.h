@@ -527,7 +527,7 @@ typedef struct {
 /*
  * Analyzer class
  */
-typedef struct {
+typedef struct idmef_analyzer {
 	REFCOUNT;
 
         uint64_t analyzerid;
@@ -540,6 +540,8 @@ typedef struct {
         
         idmef_node_t *node;
         idmef_process_t *process;
+        struct idmef_analyzer *analyzer;
+        
 } TYPE_ID(idmef_analyzer_t, 31);
 
 
