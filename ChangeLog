@@ -1,3 +1,64 @@
+2002-11-11  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/include/prelude-client.h: add 
+	PRELUDE_CLIENT_TYPE_MANAGER_PARENT and 
+	PRELUDE_CLIENT_TYPE_MANAGER_CHILDREN types.
+
+	* src/prelude-client.c: remove unused RECONNECT_TIME_WAIT
+	definition.
+	(prelude_client_set_state): 
+	(prelude_client_get_state): implemented.
+
+	(prelude_client_forward): 
+	(prelude_client_is_alive): 
+	(prelude_client_send_msg): check that the CONNECTED state is set.
+
+	(prelude_client_connect): allocate the file descriptor here.
+	Make the type of the client part of the message.
+
+	(prelude_client_set_fd): new function. Close currently opened
+	file descriptor if needed, and set the client FD. By default,
+	the client doesn't own the passed FD.
+
+	(prelude_client_new): don't allocate the file descriptor here,
+	because the caller might furnish it's own FD. Only allocate 
+	the file descriptor by ourself on prelude_client_connect().
+	
+	(prelude_client_close): 
+	(prelude_client_destroy): 
+	(handle_connection_breakage): call close_client_fd().
+
+	(close_client_fd): impl. Set the CONNECTED state to zero,
+	and destroy the client file descriptor if the CLIENT_OWN_FD
+	bit is set.
+
+	* src/prelude-client-mgr.c (add_new_client): 
+	new function, add a client to the client-mgr.
+	
+	(prelude_client_mgr_tell_client_alive): Tell client-mgr that a given
+	client in the set is alive.
+
+	(prelude_client_mgr_tell_client_dead): Tell client-mgr that a given
+	client in the set is dead.
+
+	(prelude_client_mgr_search_client): search a client in the client-mgr
+	list using the address and client type criteria.
+
+	(search_client): search a given client in the client-mgr list.
+
+	(walk_manager_lists): return 0 if there is no client in the list.
+
+	(broadcast_message): on emission failure, only initialize the timer
+	if use_timer is set.
+
+	(prelude_client_mgr_add_client): new public function,
+	add a client to a given client-mgr, allocating a client-mgr
+	if not already done.
+
+	* acinclude.m4: remove an errnous parenthesis, leading
+	in AC_DATATYPE_GENERIC not finding any possible replacement
+	for socklen_t.
+
 2002-10-21  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/string-matching.c 

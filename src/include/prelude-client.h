@@ -50,12 +50,24 @@ prelude_io_t *prelude_client_get_fd(prelude_client_t *client);
 
 void prelude_client_close(prelude_client_t *client);
 
-#define PRELUDE_CLIENT_TYPE_OTHER   0
-#define PRELUDE_CLIENT_TYPE_SENSOR  1
-#define PRELUDE_CLIENT_TYPE_MANAGER 2
+void prelude_client_set_fd(prelude_client_t *client, prelude_io_t *fd);
+
+#define PRELUDE_CLIENT_TYPE_OTHER            0
+#define PRELUDE_CLIENT_TYPE_SENSOR           1
+#define PRELUDE_CLIENT_TYPE_MANAGER_PARENT   2
+#define PRELUDE_CLIENT_TYPE_MANAGER_CHILDREN 3
 
 void prelude_client_set_type(prelude_client_t *client, int type);
 
+int prelude_client_get_type(prelude_client_t *client);
+
+
+#define PRELUDE_CLIENT_CONNECTED    0x01
+#define PRELUDE_CLIENT_OWN_FD       0x02
+
+void prelude_client_set_state(prelude_client_t *client, int state);
+
+int prelude_client_get_state(prelude_client_t *client);
 
 /*
  * this one is located in client-ident.c

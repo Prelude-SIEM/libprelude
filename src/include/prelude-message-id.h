@@ -33,6 +33,7 @@
 #define PRELUDE_MSG_ID          3
 #define PRELUDE_MSG_AUTH        4
 #define PRELUDE_MSG_CM          5 
+#define PRELUDE_MSG_CLIENT_TYPE 6
 
 /*
  * PRELUDE_MSG_ID submessage

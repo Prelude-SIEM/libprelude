@@ -57,8 +57,6 @@
 #include "prelude-path.h"
 
 
-#define RECONNECT_TIME_WAIT 10
-
 
 
 struct prelude_client {
@@ -79,7 +77,7 @@ struct prelude_client {
         prelude_io_t *fd;
 
         uint8_t type;
-        uint8_t connection_broken;
+        uint8_t state;
 };
 
 
@@ -418,7 +416,7 @@ static int start_inet_connection(prelude_client_t *client)
 {
         socklen_t len;
         struct sockaddr_in addr;
-        int have_ssl  = 0, have_plaintext = 0, sock, ret = -1;
+        int have_ssl = 0, have_plaintext = 0, sock, ret = -1;
         
         len = sizeof(addr);
         
@@ -537,10 +535,22 @@ static int do_connect(prelude_client_t *client)
 
 
 
+static void close_client_fd(prelude_client_t *client) 
+{
+        client->state &= ~PRELUDE_CLIENT_CONNECTED;
+        
+        if ( ! (client->state & PRELUDE_CLIENT_OWN_FD) )
+                return;
+        
+        prelude_io_close(client->fd);
+        prelude_io_destroy(client->fd);
+}
+
+
+
 static void handle_connection_breakage(prelude_client_t *client)
 {
-        client->connection_broken = 1;
-        prelude_io_close(client->fd);
+        close_client_fd(client);
 }
 
 
@@ -552,8 +562,7 @@ static void handle_connection_breakage(prelude_client_t *client)
 
 void prelude_client_destroy(prelude_client_t *client) 
 {
-        prelude_io_close(client->fd);
-        prelude_io_destroy(client->fd);
+        close_client_fd(client);
 
         if ( client->saddr )
                 free(client->saddr);
@@ -587,17 +596,24 @@ prelude_client_t *prelude_client_new(const char *addr, uint16_t port)
         new->daddr = strdup(addr);
         new->dport = port;
         new->type = PRELUDE_CLIENT_TYPE_OTHER;
-        
-        new->connection_broken = 1;
-        
-        new->fd = prelude_io_new();
-        if ( ! new->fd ) {
-                free(new->daddr);
-                free(new);
-                return NULL;        
-        }
-        
+        new->state = 0;
+                        
         return new;
+}
+
+
+
+
+void prelude_client_set_fd(prelude_client_t *client, prelude_io_t *fd) 
+{
+        close_client_fd(client);
+        client->fd = fd;
+
+        /*
+         * The caller is responssible for fd closing/destruction.
+         * Unless it specify otherwise using prelude_client_set_state().
+         */
+        client->state &= ~PRELUDE_CLIENT_OWN_FD;
 }
 
 
@@ -607,26 +623,50 @@ int prelude_client_connect(prelude_client_t *client)
 {
         int ret;
         prelude_msg_t *msg;
+
+        client->state &= ~PRELUDE_CLIENT_CONNECTED;
+        
+        client->fd = prelude_io_new();
+        if ( ! client->fd ) 
+                return -1;
         
         ret = do_connect(client);
         if ( ret < 0 ) {
-                client->connection_broken = 1;
+                prelude_io_destroy(client->fd);
                 return -1;
         }
         
+        msg = prelude_msg_new(1, sizeof(client->type), PRELUDE_MSG_CLIENT_TYPE, 0);
+        if ( ! msg )
+                goto err;
+
+        prelude_msg_set(msg, client->type, 0, NULL);
+        ret = prelude_msg_write(msg, client->fd);
+        prelude_msg_destroy(msg);
+        
+        if ( ret < 0 ) 
+                goto err;
+                
         ret = prelude_client_ident_send(client->fd, client->type);
         if ( ret < 0 )
-                return -1;
+                goto err;
         
         msg = prelude_option_wide_get_msg();
         if ( ! msg )
-                return -1;
+                goto err;
 
         ret = prelude_msg_write(msg, client->fd);
         if ( ret < 0 )
-                return -1;
+                goto err;
 
-        client->connection_broken = 0;
+        client->state |= PRELUDE_CLIENT_OWN_FD;
+        client->state |= PRELUDE_CLIENT_CONNECTED;
+        
+        return ret;
+        
+ err:
+        prelude_io_close(client->fd);
+        prelude_io_destroy(client->fd);
         
         return ret;
 }
@@ -636,8 +676,7 @@ int prelude_client_connect(prelude_client_t *client)
 
 void prelude_client_close(prelude_client_t *client) 
 {
-        prelude_io_close(client->fd);
-        client->connection_broken = 1;
+        close_client_fd(client);
 }
 
 
@@ -646,8 +685,8 @@ void prelude_client_close(prelude_client_t *client)
 int prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg) 
 {
         ssize_t ret;
-
-        if ( client->connection_broken == 1 )
+        
+        if ( ! (client->state & PRELUDE_CLIENT_CONNECTED) )
                 return -1;
 
         ret = prelude_msg_write(msg, client->fd);
@@ -742,7 +781,7 @@ uint16_t prelude_client_get_dport(prelude_client_t *client)
  */
 int prelude_client_is_alive(prelude_client_t *client) 
 {
-        return (client->connection_broken == 1) ? -1 : 0;
+        return (client->state & PRELUDE_CLIENT_CONNECTED) ? 0 : -1;
 }
 
 
@@ -754,11 +793,35 @@ void prelude_client_set_type(prelude_client_t *client, int type)
 
 
 
+int prelude_client_get_type(prelude_client_t *client) 
+{
+        return client->type;
+}
+
+
+
+
+void prelude_client_set_state(prelude_client_t *client, int state) 
+{
+        client->state = state;
+}
+
+
+
+
+int prelude_client_get_state(prelude_client_t *client)
+{
+        return client->state;
+}
+
+
+
+
 ssize_t prelude_client_forward(prelude_client_t *client, prelude_io_t *src, size_t count) 
 {
         ssize_t ret;
 
-        if ( client->connection_broken == 1 )
+        if ( ! (client->state & PRELUDE_CLIENT_CONNECTED) )
                 return -1;
         
         ret = prelude_io_forward(client->fd, src, count);
@@ -769,16 +832,4 @@ ssize_t prelude_client_forward(prelude_client_t *client, prelude_io_t *src, size
 
         return ret;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 

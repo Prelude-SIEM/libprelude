@@ -37,4 +37,15 @@ void prelude_client_mgr_notify_connection(prelude_client_mgr_t *mgr, void (*call
 
 struct list_head *prelude_client_mgr_get_client_list(prelude_client_mgr_t *mgr);
 
+int prelude_client_mgr_add_client(prelude_client_mgr_t **mgr_ptr, prelude_client_t *client, int use_timer);
+
+int prelude_client_mgr_set_client_dead(prelude_client_mgr_t *mgr, prelude_client_t *client);
+
+prelude_client_t *prelude_client_mgr_search_client(prelude_client_mgr_t *mgr, const char *addr, int type);
+
+int prelude_client_mgr_flush_backup(prelude_client_mgr_t *mgr, prelude_client_t *client);
+
+int prelude_client_mgr_tell_client_dead(prelude_client_mgr_t *mgr, prelude_client_t *client);
+int prelude_client_mgr_tell_client_alive(prelude_client_mgr_t *mgr, prelude_client_t *client);
+
 #endif /* _LIBPRELUDE_PRELUDE_CLIENT_MGR_H */

@@ -31,6 +31,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <netinet/in.h> /* required by common.h */
+#include <assert.h>
 
 #include "common.h"
 #include "prelude-list.h"
@@ -78,6 +79,7 @@ typedef struct {
         /*
          * Timer for client reconnection.
          */
+        int use_timer;
         prelude_timer_t timer;
         
         /*
@@ -250,7 +252,36 @@ static void parse_address(char *addr, uint16_t *port)
 
 
 
-static int add_new_client(client_list_t *clist, char *addr, int type) 
+static int add_new_client(client_list_t *clist, prelude_client_t *client, int use_timer) 
+{
+        client_t *new;
+
+        new = malloc(sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return -1;
+        }
+
+        new->use_timer = use_timer;
+        new->parent = clist;
+        new->client = client;
+
+        if ( use_timer ) {
+                timer_set_data(&new->timer, new);        
+                timer_set_expire(&new->timer, INITIAL_EXPIRATION_TIME);
+                timer_set_callback(&new->timer, client_timer_expire);
+        }
+        
+        prelude_list_add((prelude_linked_object_t *) new->client, &clist->parent->all_client);
+        list_add_tail(&new->list, &clist->client_list);
+
+        return 0;
+}
+
+
+
+
+static int create_new_client(client_list_t *clist, char *addr, int type) 
 {
         int ret;
         uint16_t port;
@@ -271,15 +302,16 @@ static int add_new_client(client_list_t *clist, char *addr, int type)
                 free(new);
                 return -1;
         }
-
+        
         prelude_client_set_type(new->client, type);
         
         prelude_list_add((prelude_linked_object_t *) new->client, &clist->parent->all_client);
-        
-        timer_set_data(&new->timer, new);
+
+        new->use_timer = 1;
+        timer_set_data(&new->timer, new);        
         timer_set_expire(&new->timer, INITIAL_EXPIRATION_TIME);
         timer_set_callback(&new->timer, client_timer_expire);
-        
+
         ret = prelude_client_connect(new->client);
         if ( ret < 0 ) {
                 /*
@@ -315,7 +347,7 @@ static client_list_t *create_client_list(prelude_client_mgr_t *cmgr)
         new->dead = 0;
         new->parent = cmgr;
         INIT_LIST_HEAD(&new->client_list);
-        
+                
         list_add_tail(&new->list, &cmgr->or_list);
         
         return new;
@@ -412,7 +444,7 @@ static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline, int type
                 if ( ret == 0 )
                         continue;
                 
-                ret = add_new_client(clist, ptr, type);
+                ret = create_new_client(clist, ptr, type);
                 if ( ret < 0 )
                         return -1;
         }
@@ -500,14 +532,18 @@ static int broadcast_message(prelude_msg_t *msg, client_list_t *clist)
         int ret;
         client_t *c;
         struct list_head *tmp;
+
+        assert(! list_empty(&clist->client_list));
         
         list_for_each(tmp, &clist->client_list) {
                 c = list_entry(tmp, client_t, list);
-
+                
                 ret = prelude_client_send_msg(c->client, msg);
                 if ( ret < 0 ) {
                         clist->dead++;
-                        timer_init(&c->timer);
+
+                        if ( c->use_timer )
+                                timer_init(&c->timer);
                         
                         if ( clist->parent->notify_cb )
                                 clist->parent->notify_cb(&clist->parent->all_client);
@@ -527,7 +563,7 @@ static int broadcast_message(prelude_msg_t *msg, client_list_t *clist)
  */
 static int walk_manager_lists(prelude_client_mgr_t *cmgr, prelude_msg_t *msg) 
 {
-        int ret = -1;
+        int ret = 0;
         client_list_t *item;
         struct list_head *tmp;
         
@@ -550,6 +586,30 @@ static int walk_manager_lists(prelude_client_mgr_t *cmgr, prelude_msg_t *msg)
 
         return ret;
 }
+
+
+
+
+static client_t *search_client(prelude_client_mgr_t *mgr, prelude_client_t *client) 
+{
+        client_t *c;
+        client_list_t *clist;
+        struct list_head *tmp, *tmp2;
+        
+        list_for_each(tmp, &mgr->or_list) {
+                clist = list_entry(tmp, client_list_t, list);
+                
+                list_for_each(tmp2, &clist->client_list) {
+                        c = list_entry(tmp2, client_t, list);
+                                                
+                        if ( c->client == client )
+                                return c;
+                }
+        }
+
+        return NULL;
+}
+
 
 
 
@@ -613,6 +673,27 @@ void prelude_client_mgr_broadcast_async(prelude_client_mgr_t *cmgr, prelude_msg_
 
 
 
+static prelude_client_mgr_t *client_mgr_new(void) 
+{
+        prelude_client_mgr_t *new;
+        
+        new = malloc(sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }
+
+        new->notify_cb = NULL;
+        INIT_LIST_HEAD(&new->or_list);
+        INIT_LIST_HEAD(&new->all_client);
+
+        return new;
+}
+
+
+
+
+
 /**
  * prelude_client_mgr_new:
  * @type: type of the manager to add.
@@ -630,15 +711,9 @@ prelude_client_mgr_t *prelude_client_mgr_new(int type, const char *cfgline)
         char *dup;
         prelude_client_mgr_t *new;
         
-        new = malloc(sizeof(*new));
-        if ( ! new ) {
-                log(LOG_ERR, "memory exhausted.\n");
+        new = client_mgr_new();
+        if ( ! new )
                 return NULL;
-        }
-
-        new->notify_cb = NULL;
-        INIT_LIST_HEAD(&new->or_list);
-        INIT_LIST_HEAD(&new->all_client);
         
         /*
          * Setup a backup file descriptor for this client Manager.
@@ -673,6 +748,72 @@ prelude_client_mgr_t *prelude_client_mgr_new(int type, const char *cfgline)
 
 
 
+prelude_client_t *prelude_client_mgr_search_client(prelude_client_mgr_t *mgr, const char *addr, int type) 
+{
+        int ret;
+        struct list_head *tmp;
+        prelude_client_t *client;
+
+        if ( ! mgr )
+                return NULL;
+        
+        list_for_each(tmp, &mgr->all_client) {
+                client = prelude_list_get_object(tmp, prelude_client_t);
+                
+                if ( type != prelude_client_get_type(client) )
+                        continue;
+                
+                ret = strcmp(addr, prelude_client_get_daddr(client));
+                if ( ret == 0 ) 
+                        return client;
+        }
+
+        return NULL;
+}
+
+
+
+
+int prelude_client_mgr_add_client(prelude_client_mgr_t **mgr_ptr, prelude_client_t *client, int use_timer) 
+{
+        int ret;
+        client_list_t *clist;
+        prelude_client_mgr_t *mgr;
+        
+        if ( ! *mgr_ptr ) {
+                mgr = client_mgr_new();
+                if ( ! mgr )
+                        return -1;
+                
+                *mgr_ptr = mgr;
+        } else 
+                mgr = *mgr_ptr;
+        
+        clist = create_client_list(mgr);
+        if ( ! clist ) 
+                return -1;
+        
+        ret = add_new_client(clist, client, use_timer);
+        if ( ret < 0 ) {
+                free(clist);
+                return -1;
+        }
+                
+        ret = setup_backup_fd(mgr, NULL);
+        if ( ret < 0 ) {
+                if ( ! *mgr_ptr )
+                        free(mgr);
+                
+                return -1;
+        }
+
+        return 0;
+}
+
+
+
+
+
 void prelude_client_mgr_notify_connection(prelude_client_mgr_t *mgr, void (*callback)(struct list_head *clist)) 
 {
         mgr->notify_cb = callback;
@@ -689,9 +830,45 @@ struct list_head *prelude_client_mgr_get_client_list(prelude_client_mgr_t *mgr)
 
 
 
+int prelude_client_mgr_tell_client_dead(prelude_client_mgr_t *mgr, prelude_client_t *client)
+{
+        client_t *c;
+        
+        c = search_client(mgr, client);
+        if ( ! c )
+                return -1;
+        
+        c->parent->dead++;
+
+        if ( c->use_timer ) 
+                timer_init(&c->timer);
+        
+        return 0;
+}
 
 
 
+
+int prelude_client_mgr_tell_client_alive(prelude_client_mgr_t *mgr, prelude_client_t *client) 
+{
+        int ret;
+        client_t *c;
+        
+        c = search_client(mgr, client);
+        if ( ! c )
+                return -1;
+        
+        if ( c->parent->dead == 0 )
+                return 0;
+
+        ret = flush_backup_if_needed(c->parent);
+        if ( ret < 0 )
+                return -1;
+        
+        c->parent->dead--;
+        
+        return 0;
+}
 
 
 
