@@ -615,6 +615,10 @@ static int set_analyzer_name(void *context, prelude_option_t *opt, const char *o
 static int get_manager_addr(void *context, prelude_option_t *opt, prelude_string_t *out)
 {
         prelude_client_t *ptr = context;
+        
+        if ( ! ptr->manager_list )
+                return 0;
+        
         return prelude_string_cat(out, prelude_connection_mgr_get_connection_string(ptr->manager_list));
 }
 
@@ -624,6 +628,9 @@ static int set_manager_addr(void *context, prelude_option_t *opt, const char *op
 {
         int ret;
         prelude_client_t *ptr = context;
+        
+        if ( ! ptr->manager_list )
+                return 0;
         
         ret = prelude_connection_mgr_set_connection_string(ptr->manager_list, optarg);
         return (ret == 0) ? 0 : ret;
