@@ -626,11 +626,11 @@ static int register_cmd(int argc, char **argv)
                 "  you need to register to:\n\n"
                         
                 "  use: \"prelude-adduser registration-server <analyzer profile>\"\n"
-                "  example: \"prelude-adduser registration-server prelude-manager\"\n"
+                "  example: \"prelude-adduser registration-server prelude-manager\"\n\n"
                 
-                "This is used in order to register the 'sending' analyzer to the 'receiving'\n"
-                "analyzer. <analyzer profile> should be set to the profile name of the\n"
-                "'receiving' analyzer, the one where 'sending' analyzer will register to.\n\n"
+                "  This is used in order to register the 'sending' analyzer to the 'receiving'\n"
+                "  analyzer. <analyzer profile> should be set to the profile name of the\n"
+                "  'receiving' analyzer, the one where 'sending' analyzer will register to.\n\n"
         
                 "  Please remember that \"prelude-adduser\" should be used to register\n"
                 "  every server used by this analyzer.\n\n");
