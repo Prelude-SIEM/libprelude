@@ -67,12 +67,14 @@ struct prelude_option {
         prelude_option_argument_t has_arg;
         
         int called_from_cli;
-        int (*set)(const char *optarg);
+        int (*set)(prelude_option_t *opt, const char *optarg);
         int (*get)(char *ibuf, size_t size);
         
         const char *help;
         const char *input_validation_rexex;
         enum { string, integer, boolean } input_type;
+
+        void *private_data;
 };
 
 
@@ -284,7 +286,7 @@ static int call_option_cb(struct list_head *cblist, prelude_option_t *option, co
         struct list_head *tmp, *prev = NULL;
         
         if ( option->priority == option_run_first ) 
-                return option->set(arg);
+                return option->set(option, arg);
         
         new = malloc(sizeof(*new));
         if ( ! new ) {
@@ -338,7 +340,7 @@ static int call_option_from_cb_list(struct list_head *cblist, int option_kind)
                 if ( option_kind != option_run_all && option_kind != cb->option->priority ) 
                         continue;
                 
-                ret = cb->option->set(lookup_variable_if_needed(cb->arg));
+                ret = cb->option->set(cb->option, lookup_variable_if_needed(cb->arg));
                 if ( ret == prelude_option_error || ret == prelude_option_end )
                         return ret;
 
@@ -734,7 +736,7 @@ static prelude_optlist_t *get_default_optlist(void)
  */
 prelude_option_t *prelude_option_add(prelude_option_t *parent, int flags,
                                      char shortopt, const char *longopt, const char *desc,
-                                     prelude_option_argument_t has_arg, int (*set)(const char *optarg),
+                                     prelude_option_argument_t has_arg, int (*set)(prelude_option_t *opt, const char *optarg),
                                      int (*get)(char *buf, size_t size)) 
 {
         prelude_option_t *new;
@@ -1010,3 +1012,29 @@ void prelude_option_set_warnings(int flags, int *old_flags)
 }
 
 
+
+char prelude_option_get_shortname(prelude_option_t *opt) 
+{
+        return opt->shortopt;
+}
+
+
+
+const char *prelude_option_get_longname(prelude_option_t *opt) 
+{
+        return opt->longopt;
+}
+
+
+
+void prelude_option_set_private_data(prelude_option_t *opt, void *data) 
+{
+        opt->private_data = data;
+}
+
+
+
+void *prelude_option_get_private_data(prelude_option_t *opt) 
+{
+        return opt->private_data;
+}

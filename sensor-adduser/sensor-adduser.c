@@ -57,7 +57,7 @@ static const char *sensor_name = NULL;
 
 
 
-static int set_sensor_name(const char *optarg) 
+static int set_sensor_name(prelude_option_t *opt, const char *optarg) 
 {
         sensor_name = optarg;
         prelude_set_program_name(optarg);
@@ -66,7 +66,7 @@ static int set_sensor_name(const char *optarg)
 
 
 
-static int set_sensor_uid(const char *optarg) 
+static int set_sensor_uid(prelude_option_t *opt, const char *optarg) 
 {
         uid_set = 1;
         sensor_uid = atoi(optarg);
@@ -76,7 +76,7 @@ static int set_sensor_uid(const char *optarg)
 
 
 
-static int set_manager_addr(const char *optarg) 
+static int set_manager_addr(prelude_option_t *opt, const char *optarg) 
 {
         char *ptr;
         
@@ -97,7 +97,7 @@ static int set_manager_addr(const char *optarg)
 
 
 
-static int print_help(const char *optarg) 
+static int print_help(prelude_option_t *opt, const char *optarg) 
 {
         prelude_option_print(CLI_HOOK, 50);
         return prelude_option_end;
@@ -248,7 +248,7 @@ static int handle_argument(int argc, char **argv)
         prelude_option_add(NULL, CLI_HOOK, 's', "sensorname", "Name of the sensor to register",
                            required_argument, set_sensor_name, NULL);
         
-        prelude_option_add(NULL, CLI_HOOK, 'u', "uid", "UserID used by the sensor to regieter",
+        prelude_option_add(NULL, CLI_HOOK, 'u', "uid", "UserID used by the sensor to register",
                            required_argument, set_sensor_uid, NULL);
 
         prelude_option_add(NULL, CLI_HOOK, 'm', "manager-addr", "Address where the Prelude Manager is listening",

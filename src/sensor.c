@@ -106,7 +106,7 @@ static int find_category(const char **tbl, const char *arg)
 
 
 
-static int setup_analyzer_node_location(const char *arg) 
+static int setup_analyzer_node_location(prelude_option_t *opt, const char *arg) 
 {
         idmef_string_set(&node.location, arg);
         return prelude_option_success;
@@ -114,7 +114,7 @@ static int setup_analyzer_node_location(const char *arg)
 
 
 
-static int setup_analyzer_node_name(const char *arg) 
+static int setup_analyzer_node_name(prelude_option_t *opt, const char *arg) 
 {
         idmef_string_set(&node.name, arg);
         return prelude_option_success;
@@ -122,7 +122,7 @@ static int setup_analyzer_node_name(const char *arg)
 
 
 
-static int setup_analyzer_node_address_category(const char *arg) 
+static int setup_analyzer_node_address_category(prelude_option_t *opt, const char *arg) 
 {
         int ret;
         const char *name[] = {
@@ -154,21 +154,21 @@ static int setup_analyzer_node_address_category(const char *arg)
 
 
 
-static int setup_analyzer_node_address_address(const char *arg)
+static int setup_analyzer_node_address_address(prelude_option_t *opt, const char *arg)
 {
         idmef_string_set(&address->address, arg);
         return prelude_option_success;
 }
 
 
-static int setup_analyzer_node_address_netmask(const char *arg)
+static int setup_analyzer_node_address_netmask(prelude_option_t *opt, const char *arg)
 {
         idmef_string_set(&address->netmask, arg);
         return prelude_option_success;
 }
 
 
-static int setup_analyzer_node_category(const char *arg) 
+static int setup_analyzer_node_category(prelude_option_t *opt, const char *arg) 
 {
         int ret;
         const char *name[] = {
@@ -198,7 +198,7 @@ static int setup_analyzer_node_category(const char *arg)
 }
 
 
-static int setup_analyzer_node_address_vlan_num(const char *arg) 
+static int setup_analyzer_node_address_vlan_num(prelude_option_t *opt, const char *arg) 
 {
         address->vlan_num = atoi(arg);
         return prelude_option_success;
@@ -206,14 +206,14 @@ static int setup_analyzer_node_address_vlan_num(const char *arg)
 
 
 
-static int setup_analyzer_node_address_vlan_name(const char *arg) 
+static int setup_analyzer_node_address_vlan_name(prelude_option_t *opt, const char *arg) 
 {        
         idmef_string_set(&address->vlan_name, arg);
         return prelude_option_success;
 }
 
 
-static int setup_address(const char *arg) 
+static int setup_address(prelude_option_t *opt, const char *arg) 
 {        
         address = calloc(1, sizeof(*address));
         if ( ! address ) {
@@ -228,7 +228,7 @@ static int setup_address(const char *arg)
 
 
 
-static int setup_manager_addr(const char *arg) 
+static int setup_manager_addr(prelude_option_t *opt, const char *arg) 
 {
         manager_cfg_line = arg;                
         return prelude_option_success;
@@ -237,7 +237,7 @@ static int setup_manager_addr(const char *arg)
 
 
 
-static int setup_heartbeat_repeat_time(const char *arg) 
+static int setup_heartbeat_repeat_time(prelude_option_t *opt, const char *arg) 
 {
         heartbeat_repeat_time = atoi(arg) * 60;
         return prelude_option_success;
@@ -249,7 +249,7 @@ static int get_process_name(int argc, char **argv)
 {
         char *ptr;
         
-        if ( !argc || !argv  )
+        if ( ! argc || ! argv )
                 return -1;
 
         ptr = strrchr(argv[0], '/');

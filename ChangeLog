@@ -1,3 +1,29 @@
+2002-06-27  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-getopt.c (prelude_option_get_private_data): 
+	(prelude_option_set_private_data): new function, allow to
+	associate private data with an option, maybe usefull in 
+	the callback.
+
+	* sensor-adduser/sensor-adduser.c: 
+	* src/sensor.c: fit the latest prelude-getopt change.
+
+	* src/prelude-getopt.c: make the set() callback take
+	a prelude_option_t as argument, thus allowing more
+	generic operation to be performed in the callback.
+
+2002-06-26  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/common.c: 
+	include stdio.h.
+
+	* src/config-engine.c (load_file_in_memory): 
+	use prelude_read_multiline().
+
+	* src/common.c (prelude_read_multiline): 
+	new function, handle reading line separated by the 
+	'\' character.
+
 2002-06-19  Krzysztof Zaraska  <kzaraska@student.uci.agh.edu.pl>
 
 	* src/sensor.c: fix crash in prelude_sensor_init on Linux when

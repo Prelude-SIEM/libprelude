@@ -239,8 +239,8 @@ static int op_insert_line(config_t *cfg, char *line, int lins)
  */
 static int load_file_in_memory(config_t *cfg)
 {
-        int ret;
         FILE *fd;
+        int ret, l = 0;
         char line[1024];
         
         fd = fopen(cfg->filename, "r");
@@ -249,7 +249,7 @@ static int load_file_in_memory(config_t *cfg)
                 return -1;
         }
         
-        while ( fgets(line, sizeof(line), fd) ) {
+        while ( prelude_read_multiline(fd, &l, line, sizeof(line)) == 0 ) {
                 
                 ret = op_append_line(cfg, strdup(chomp(line)));
                 if ( ret < 0 )

@@ -82,7 +82,8 @@ int prelude_option_parse_arguments(prelude_option_t *option,
 
 prelude_option_t *prelude_option_add(prelude_option_t *parent, int flags,
                                      char shortopt, const char *longopt, const char *desc,
-                                     prelude_option_argument_t has_arg, int (*set)(const char *optarg),
+                                     prelude_option_argument_t has_arg,
+                                     int (*set)(prelude_option_t *opt, const char *optarg),
                                      int (*get)(char *buf, size_t size));
 
 
@@ -91,5 +92,13 @@ prelude_option_t *prelude_option_add(prelude_option_t *parent, int flags,
 #define OPT_INVAL_ARG 0x2
 
 void prelude_option_set_warnings(int flags, int *old_flags);
+
+char prelude_option_get_shortname(prelude_option_t *opt);
+
+const char *prelude_option_get_longname(prelude_option_t *opt);
+
+void prelude_option_set_private_data(prelude_option_t *opt, void *data);
+
+void *prelude_option_get_private_data(prelude_option_t *opt);
 
 #endif /* _LIBPRELUDE_PRELUDE_GETOPT_H */

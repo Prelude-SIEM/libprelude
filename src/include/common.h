@@ -32,4 +32,6 @@ int prelude_resolve_addr(const char *hostname, struct in_addr *addr);
 
 int prelude_open_persistant_tmpfile(const char *filename, int flags, mode_t mode);
 
+int prelude_read_multiline(FILE *fd, int *line, char *buf, size_t size);
+
 #endif /* _LIBPRELUDE_COMMON_H */

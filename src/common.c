@@ -21,6 +21,7 @@
 *
 *****/
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -172,3 +173,34 @@ int prelude_open_persistant_tmpfile(const char *filename, int flags, mode_t mode
         return -1;
 }
 
+
+
+
+/**
+ * prelude_read_multiline:
+ * @fd: File descriptor to read input from.
+ * @line: Pointer to a line counter.
+ * @buf: Pointer to a buffer where the line should be stored.
+ * @size: Size of the @buf buffer.
+ *
+ * This function handle reading line separated by the '\' character.
+ *
+ * Returns: 0 on success, -1 if an error ocurred.
+ */
+int prelude_read_multiline(FILE *fd, int *line, char *buf, size_t size) 
+{
+        int i;
+
+        if ( ! fgets(buf, size, fd) )
+                return -1;
+
+        (*line)++;
+        i = strlen(buf);
+        
+        while ( --i > 0 && (buf[i] == ' ' || buf[i] == '\n') );
+        
+        if ( buf[i] == '\\' )
+                return prelude_read_multiline(fd, line, buf + i, size - i);
+                
+        return 0;
+}
