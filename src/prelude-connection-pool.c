@@ -377,16 +377,12 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
 
                 if ( clist ) {
                         broadcast_message(msg, clist->and);
-                        if ( clist->dead ) {
+                        if ( clist->dead )
                                 ret = -1;
-                                break;
-                        }
                 } else {
                         ret = do_send(cnx->cnx, msg);
-                        if ( ret < 0 ) {
+                        if ( ret < 0 )
                                 notify_dead(cnx, ret, FALSE);
-                                break;
-                        }
                 }
 
                 prelude_msg_destroy(msg);
