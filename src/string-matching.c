@@ -22,7 +22,7 @@ bm_string_t *BoyerMoore_Init( char *y, int n )
 
 	string->length = n;
 
-	string->pattern = (char*) malloc( sizeof(char)*(n+20) );
+	string->pattern = (char*) malloc( sizeof(char)*(n+1) );
 	memcpy( string->pattern, y, n );
 	string->pattern[n] = '\0'; /* just for debugging..*/
 
