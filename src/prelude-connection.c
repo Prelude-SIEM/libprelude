@@ -301,11 +301,10 @@ static int do_connect(prelude_connection_t *cnx)
 
 static void close_connection_fd(prelude_connection_t *cnx) 
 {
-        cnx->state &= ~PRELUDE_CONNECTION_ESTABLISHED;
-        
-        if ( ! (cnx->state & PRELUDE_CONNECTION_OWN_FD) )
+        if ( ! (cnx->state & PRELUDE_CONNECTION_ESTABLISHED) )
                 return;
         
+        cnx->state &= ~PRELUDE_CONNECTION_ESTABLISHED;
         prelude_io_close(cnx->fd);
 }
 
@@ -376,7 +375,7 @@ static int resolve_addr(prelude_connection_t *cnx, const char *addr, uint16_t po
  */
 
 void prelude_connection_destroy(prelude_connection_t *cnx) 
-{
+{        
 	free(cnx->sa);
         
         destroy_connection_fd(cnx);
@@ -423,7 +422,7 @@ prelude_connection_t *prelude_connection_new(prelude_client_t *client, const cha
         new->sport = 0;
         new->daddr = strdup(addr);
         new->dport = port;
-        new->state = 0;
+        new->state = PRELUDE_CONNECTION_OWN_FD;
         
         return new;
 }
@@ -450,8 +449,8 @@ int prelude_connection_connect(prelude_connection_t *cnx)
 {
         int ret;
         prelude_msg_t *msg;
-        
-        cnx->state &= ~PRELUDE_CONNECTION_ESTABLISHED;
+
+        close_connection_fd(cnx);
                 
         ret = do_connect(cnx);
         if ( ret < 0 ) 
@@ -469,7 +468,6 @@ int prelude_connection_connect(prelude_connection_t *cnx)
         if ( ret < 0 ) 
                 goto err;
         
-        cnx->state |= PRELUDE_CONNECTION_OWN_FD;
         cnx->state |= PRELUDE_CONNECTION_ESTABLISHED;
         
         return ret;
