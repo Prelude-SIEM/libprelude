@@ -90,7 +90,7 @@ static int parse_single(void **context, prelude_option_t **last, int is_last_cmd
                 snprintf(out, size, "Unknown option: %s.\n", option);
                 return -1;
         }
-        
+
         if ( rtype == PRELUDE_MSG_OPTION_SET )
                 ret = prelude_option_invoke_set(context, *last, value, out, size);
         
@@ -115,11 +115,11 @@ static int parse_single(void **context, prelude_option_t **last, int is_last_cmd
 static int parse_request(prelude_client_t *client, int rtype, char *request, char *out, size_t size)
 {
         config_t *cfg;
+        void *context = NULL;
         char pname[256], iname[256];
         int ret = 0, last_cmd = 0, ent;
         prelude_option_t *last = NULL;
         char *str, *value, *prev = NULL, *ptr = NULL;
-        void *context = client;
 	
         cfg = config_open(prelude_client_get_config_filename(client));
         if ( ! cfg ) {
@@ -295,7 +295,7 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         ret = prelude_extract_characters_safe(&tmp, buf, dlen);
                         if ( ret < 0 ) 
                                 return ret;
-                        
+
                         prelude_option_set_value(opt, tmp);
                         break;
 
@@ -303,7 +303,7 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         ret = prelude_extract_characters_safe(&tmp, buf, dlen);
                         if ( ret < 0 )
                                 return ret;
-                        
+
                         prelude_option_set_longopt(opt, tmp);
                         break;
                         
