@@ -36,6 +36,9 @@
 
 
 struct config {
+        const char *last_entry;
+        const char *last_section;
+        int last_index;
         char *filename; /* filename for this session */
         char **content; /* content of the file */
         int need_sync;  /* do the file need to be synced on disk ? */
@@ -305,15 +308,26 @@ static int search_entry(config_t *cfg, const char *section, const char *entry)
                         
                 i++;
         }
-        
+
+        if ( ! section && ! entry ) {
+                /*
+                 * the user want to search an entry with the same name
+                 * as the previously searched one.
+                 */
+                i = cfg->last_index + 1;
+                entry = cfg->last_entry;
+                section = cfg->last_section;
+        }
+
         for (; cfg->content[i] != NULL; i++ ) {
                 if ( section && is_section(cfg->content[i]) == 0 )
                         return -1;
                 
-                if ( cmp_entry(cfg->content[i], entry) == 0 ) 
+                if ( cmp_entry(cfg->content[i], entry) == 0 ) {
+                        cfg->last_index = i;
                         return i;
+                }
         }
-        
 
         return -1;
 }
@@ -527,6 +541,10 @@ int config_get_section(config_t *cfg, const char *section)
  * If the value gathered start with a '$', which mean it is
  * a variable, the variable is automatically looked up.
  *
+ * If both @entry and @section are NULL, config_get() will try to
+ * look up another entry of the same name (and in the same section if
+ * section was previously set) as the one previously searched.
+ *
  * Returns: The entry value on success, an empty string if the entry
  * exist but have no value, NULL on error.
  */
@@ -541,7 +559,18 @@ const char *config_get(config_t *cfg, const char *section, const char *entry)
         line = search_entry(cfg, section, entry);
         if ( line < 0 )
                 return NULL;
-
+        
+        if ( entry ) {
+                /*
+                 * set theses information in case the user
+                 * try to search an entry of the same name after
+                 * this call return.
+                 */
+                cfg->last_index = line;
+                cfg->last_entry = entry;
+                cfg->last_section = section;
+        }
+        
         ret = strchr(cfg->content[line], '=');
         if ( ! ret )
                 return "";
@@ -614,7 +643,10 @@ config_t *config_open(const char *filename)
         cfg = malloc(sizeof(config_t));
         if (! cfg )
                 return NULL;
-        
+
+        cfg->last_entry = NULL;
+        cfg->last_section = NULL;
+        cfg->last_index = 0;
         cfg->filename = strdup(filename);
         cfg->need_sync = 0;
         cfg->content = NULL;

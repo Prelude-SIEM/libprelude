@@ -308,7 +308,7 @@ static int call_option_from_cb_list(struct list_head *cblist)
 static int process_option_cfg_hook(struct list_head *cb_list, prelude_option_t *opt, config_t *cfg, const char *section) 
 {
         int ret;
-        const char *str = NULL;
+        const char *str = NULL, *entry = NULL;
         
         /*
          * Configuration hook shouldn't be called if the option was
@@ -321,10 +321,18 @@ static int process_option_cfg_hook(struct list_head *cb_list, prelude_option_t *
          * Normal option (no suboption)
          */
         if ( list_empty(&opt->optlist.optlist) ) {
+
+                entry = opt->longopt;
                 
-                str = config_get(cfg, section, opt->longopt);
-                if ( ! str )
-                        return prelude_option_success;
+                while ( 1 ) {
+                        str = config_get(cfg, section, entry);       
+                        if ( ! str )
+                                return prelude_option_success;
+
+                        section = entry = NULL;
+                        call_option_cb(cb_list, opt, str);
+                        
+                }
         }
 
         
