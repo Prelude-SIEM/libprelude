@@ -34,12 +34,7 @@ int prelude_option_push_request(prelude_msgbuf_t *msg, int type, const char *req
 
 int prelude_option_new_request(prelude_client_t *client, prelude_msgbuf_t *msgbuf, uint32_t request_id, uint64_t target_id);
 
-int prelude_option_send_request(prelude_client_t *client, uint32_t request_id,
-                                uint64_t target_id, int type, const char *option, const char *value);
-
 int prelude_option_process_request(prelude_client_t *client, prelude_io_t *fd, prelude_msg_t *msg);
-
-prelude_option_t *prelude_option_read_option_list(prelude_msg_t *msg, uint64_t *source_id);
 
 int prelude_option_recv_reply(prelude_msg_t *msg, uint64_t *source_id, uint32_t *request_id, void **value);
 

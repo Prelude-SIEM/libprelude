@@ -265,7 +265,6 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
         ret = prelude_get_file_name_and_path(program, &name, &path);
         if ( ret < 0 )
                 return -1;
-                
         
         if ( name ) 
                 idmef_process_set_name(process, idmef_string_new_ref(name));
@@ -797,13 +796,10 @@ int prelude_client_set_flags(prelude_client_t *client, int flags)
 
         client->flags = flags;
         
-        if ( flags & PRELUDE_CLIENT_ASYNC_SEND ) {
-                printf("Async send requested.\n");
+        if ( flags & PRELUDE_CLIENT_ASYNC_SEND )
                 ret = prelude_async_init();
-        }
         
         if ( flags & PRELUDE_CLIENT_ASYNC_TIMER ) {
-                printf("Async timer requested.\n");
                 ret = prelude_async_init();
                 prelude_async_set_flags(PRELUDE_ASYNC_TIMER);       
         }

@@ -1097,6 +1097,20 @@ prelude_list_t *prelude_option_get_optlist(prelude_option_t *opt)
 
 
 
+prelude_option_t *prelude_option_get_next(prelude_option_t *start, prelude_option_t *cur)
+{
+	return prelude_list_get_next(cur, &start->optlist.optlist, prelude_option_t, list);
+}
+
+
+
+int prelude_option_has_optlist(prelude_option_t *opt)
+{
+	return ! prelude_list_empty(&opt->optlist.optlist);
+}
+
+
+
 const char *prelude_option_get_value(prelude_option_t *opt)
 {
         return opt->value;

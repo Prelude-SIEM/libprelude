@@ -564,81 +564,91 @@ static void _swig_create_magic(CPerlObj *pPerl, SV *sv, const char *name, int (C
 #define  SWIGTYPE_p_prelude_msg_t swig_types[2] 
 #define  SWIGTYPE_p_f_p_prelude_msgbuf_t__p_prelude_msg_t swig_types[3] 
 #define  SWIGTYPE_p_size_t swig_types[4] 
-#define  SWIGTYPE_p_idmef_heartbeat_t swig_types[5] 
-#define  SWIGTYPE_p_idmef_target_t swig_types[6] 
-#define  SWIGTYPE_p_idmef_time swig_types[7] 
-#define  SWIGTYPE_p_idmef_confidence_t swig_types[8] 
-#define  SWIGTYPE_p_idmef_confidence_rating_t swig_types[9] 
-#define  SWIGTYPE_p_idmef_message_t swig_types[10] 
-#define  SWIGTYPE_p_idmef_alert_t swig_types[11] 
-#define  SWIGTYPE_p_idmef_overflow_alert_t swig_types[12] 
-#define  SWIGTYPE_p_idmef_correlation_alert_t swig_types[13] 
-#define  SWIGTYPE_p_idmef_tool_alert_t swig_types[14] 
-#define  SWIGTYPE_p_idmef_inode_t swig_types[15] 
-#define  SWIGTYPE_p_idmef_node_t swig_types[16] 
-#define  SWIGTYPE_p_idmef_file_access_t swig_types[17] 
-#define  SWIGTYPE_p_idmef_process_t swig_types[18] 
-#define  SWIGTYPE_p_gid_t swig_types[19] 
-#define  SWIGTYPE_p_uint32_t swig_types[20] 
-#define  SWIGTYPE_p_void swig_types[21] 
-#define  SWIGTYPE_p_idmef_source_t swig_types[22] 
-#define  SWIGTYPE_p_idmef_classification_origin_t swig_types[23] 
-#define  SWIGTYPE_p_idmef_criteria swig_types[24] 
-#define  SWIGTYPE_p_idmef_criterion_t swig_types[25] 
-#define  SWIGTYPE_p_prelude_list_t swig_types[26] 
-#define  SWIGTYPE_p_idmef_object_value_list_t swig_types[27] 
-#define  SWIGTYPE_p_idmef_time_t swig_types[28] 
-#define  SWIGTYPE_p_idmef_criteria_t swig_types[29] 
-#define  SWIGTYPE_p_idmef_object_value_t swig_types[30] 
-#define  SWIGTYPE_p_idmef_criterion_value_t swig_types[31] 
-#define  SWIGTYPE_p_idmef_value_t swig_types[32] 
-#define  SWIGTYPE_p_idmef_user_t swig_types[33] 
-#define  SWIGTYPE_p_idmef_analyzer_t swig_types[34] 
-#define  SWIGTYPE_p_prelude_msgbuf_t swig_types[35] 
-#define  SWIGTYPE_p_idmef_string_t swig_types[36] 
-#define  SWIGTYPE_p_uint16_t swig_types[37] 
-#define  SWIGTYPE_p_uint64_t swig_types[38] 
-#define  SWIGTYPE_p_idmef_address_t swig_types[39] 
-#define  SWIGTYPE_p_idmef_impact_t swig_types[40] 
-#define  SWIGTYPE_p_idmef_webservice_t swig_types[41] 
-#define  SWIGTYPE_p_idmef_snmpservice_t swig_types[42] 
-#define  SWIGTYPE_p_idmef_service_t swig_types[43] 
-#define  SWIGTYPE_p_idmef_target_decoy_t swig_types[44] 
-#define  SWIGTYPE_p_p_char swig_types[45] 
-#define  SWIGTYPE_p_idmef_impact_type_t swig_types[46] 
-#define  SWIGTYPE_p_idmef_file_fstype_t swig_types[47] 
-#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[48] 
-#define  SWIGTYPE_p_idmef_userid_type_t swig_types[49] 
-#define  SWIGTYPE_p_idmef_file_t swig_types[50] 
-#define  SWIGTYPE_p_idmef_value_type_t swig_types[51] 
-#define  SWIGTYPE_p_idmef_source_spoofed_t swig_types[52] 
-#define  SWIGTYPE_p_idmef_data_t_data swig_types[53] 
-#define  SWIGTYPE_p_idmef_linkage_t swig_types[54] 
-#define  SWIGTYPE_p_idmef_action_t swig_types[55] 
-#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[56] 
-#define  SWIGTYPE_p_idmef_classification_t swig_types[57] 
-#define  SWIGTYPE_p_idmef_userid_t swig_types[58] 
-#define  SWIGTYPE_p_idmef_assessment_t swig_types[59] 
-#define  SWIGTYPE_p_prelude_client_t swig_types[60] 
-#define  SWIGTYPE_p_idmef_object_t swig_types[61] 
-#define  SWIGTYPE_p_unsigned_char swig_types[62] 
-#define  SWIGTYPE_p_prelude_connection_mgr_t swig_types[63] 
-#define  SWIGTYPE_p_uid_t swig_types[64] 
-#define  SWIGTYPE_p_float swig_types[65] 
-#define  SWIGTYPE_p_idmef_additional_data_t swig_types[66] 
-#define  SWIGTYPE_p_idmef_data_t swig_types[67] 
-#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[68] 
-#define  SWIGTYPE_p_va_list swig_types[69] 
-#define  SWIGTYPE_p_idmef_alertident_t swig_types[70] 
-#define  SWIGTYPE_p_prelude_ident_t swig_types[71] 
-#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[72] 
-#define  SWIGTYPE_p_idmef_action_category_t swig_types[73] 
-#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[74] 
-#define  SWIGTYPE_p_idmef_file_category_t swig_types[75] 
-#define  SWIGTYPE_p_idmef_user_category_t swig_types[76] 
-#define  SWIGTYPE_p_idmef_address_category_t swig_types[77] 
-#define  SWIGTYPE_p_idmef_node_category_t swig_types[78] 
-static swig_type_info *swig_types[80];
+#define  SWIGTYPE_p_ssize_t swig_types[5] 
+#define  SWIGTYPE_p_idmef_heartbeat_t swig_types[6] 
+#define  SWIGTYPE_p_idmef_target_t swig_types[7] 
+#define  SWIGTYPE_p_f_p_void_p_prelude_option_t_p_q_const__char__int swig_types[8] 
+#define  SWIGTYPE_p_idmef_time swig_types[9] 
+#define  SWIGTYPE_p_idmef_confidence_t swig_types[10] 
+#define  SWIGTYPE_p_idmef_confidence_rating_t swig_types[11] 
+#define  SWIGTYPE_p_idmef_message_t swig_types[12] 
+#define  SWIGTYPE_p_idmef_alert_t swig_types[13] 
+#define  SWIGTYPE_p_idmef_overflow_alert_t swig_types[14] 
+#define  SWIGTYPE_p_idmef_correlation_alert_t swig_types[15] 
+#define  SWIGTYPE_p_idmef_tool_alert_t swig_types[16] 
+#define  SWIGTYPE_p_idmef_inode_t swig_types[17] 
+#define  SWIGTYPE_p_idmef_node_t swig_types[18] 
+#define  SWIGTYPE_p_idmef_file_access_t swig_types[19] 
+#define  SWIGTYPE_p_idmef_process_t swig_types[20] 
+#define  SWIGTYPE_p_gid_t swig_types[21] 
+#define  SWIGTYPE_p_uint32_t swig_types[22] 
+#define  SWIGTYPE_p_f_p_void_p_prelude_option_t_p_char_size_t__int swig_types[23] 
+#define  SWIGTYPE_p_void swig_types[24] 
+#define  SWIGTYPE_p_p_void swig_types[25] 
+#define  SWIGTYPE_p_idmef_source_t swig_types[26] 
+#define  SWIGTYPE_p_int swig_types[27] 
+#define  SWIGTYPE_p_idmef_classification_origin_t swig_types[28] 
+#define  SWIGTYPE_p_idmef_criteria swig_types[29] 
+#define  SWIGTYPE_p_prelude_option_t swig_types[30] 
+#define  SWIGTYPE_p_p_prelude_option_t swig_types[31] 
+#define  SWIGTYPE_p_idmef_criterion_t swig_types[32] 
+#define  SWIGTYPE_p_prelude_list_t swig_types[33] 
+#define  SWIGTYPE_p_idmef_object_value_list_t swig_types[34] 
+#define  SWIGTYPE_p_idmef_time_t swig_types[35] 
+#define  SWIGTYPE_p_idmef_criterion_value_t swig_types[36] 
+#define  SWIGTYPE_p_idmef_value_t swig_types[37] 
+#define  SWIGTYPE_p_idmef_user_t swig_types[38] 
+#define  SWIGTYPE_p_idmef_criteria_t swig_types[39] 
+#define  SWIGTYPE_p_idmef_object_value_t swig_types[40] 
+#define  SWIGTYPE_p_idmef_analyzer_t swig_types[41] 
+#define  SWIGTYPE_p_prelude_msgbuf_t swig_types[42] 
+#define  SWIGTYPE_p_idmef_string_t swig_types[43] 
+#define  SWIGTYPE_p_uint16_t swig_types[44] 
+#define  SWIGTYPE_p_uint64_t swig_types[45] 
+#define  SWIGTYPE_p_idmef_address_t swig_types[46] 
+#define  SWIGTYPE_p_idmef_impact_t swig_types[47] 
+#define  SWIGTYPE_p_idmef_webservice_t swig_types[48] 
+#define  SWIGTYPE_p_idmef_snmpservice_t swig_types[49] 
+#define  SWIGTYPE_p_idmef_service_t swig_types[50] 
+#define  SWIGTYPE_p_idmef_target_decoy_t swig_types[51] 
+#define  SWIGTYPE_p_p_char swig_types[52] 
+#define  SWIGTYPE_p_prelude_option_instance_t swig_types[53] 
+#define  SWIGTYPE_p_idmef_impact_type_t swig_types[54] 
+#define  SWIGTYPE_p_idmef_file_fstype_t swig_types[55] 
+#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[56] 
+#define  SWIGTYPE_p_idmef_userid_type_t swig_types[57] 
+#define  SWIGTYPE_p_idmef_file_t swig_types[58] 
+#define  SWIGTYPE_p_idmef_value_type_t swig_types[59] 
+#define  SWIGTYPE_p_idmef_source_spoofed_t swig_types[60] 
+#define  SWIGTYPE_p_idmef_data_t_data swig_types[61] 
+#define  SWIGTYPE_p_idmef_linkage_t swig_types[62] 
+#define  SWIGTYPE_p_idmef_action_t swig_types[63] 
+#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[64] 
+#define  SWIGTYPE_p_prelude_connection_t swig_types[65] 
+#define  SWIGTYPE_p_idmef_classification_t swig_types[66] 
+#define  SWIGTYPE_p_idmef_userid_t swig_types[67] 
+#define  SWIGTYPE_p_idmef_assessment_t swig_types[68] 
+#define  SWIGTYPE_p_prelude_client_t swig_types[69] 
+#define  SWIGTYPE_p_prelude_io_t swig_types[70] 
+#define  SWIGTYPE_p_idmef_object_t swig_types[71] 
+#define  SWIGTYPE_p_unsigned_char swig_types[72] 
+#define  SWIGTYPE_p_prelude_connection_mgr_t swig_types[73] 
+#define  SWIGTYPE_p_uid_t swig_types[74] 
+#define  SWIGTYPE_p_float swig_types[75] 
+#define  SWIGTYPE_p_idmef_additional_data_t swig_types[76] 
+#define  SWIGTYPE_p_idmef_data_t swig_types[77] 
+#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[78] 
+#define  SWIGTYPE_p_va_list swig_types[79] 
+#define  SWIGTYPE_p_idmef_alertident_t swig_types[80] 
+#define  SWIGTYPE_p_prelude_ident_t swig_types[81] 
+#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[82] 
+#define  SWIGTYPE_p_idmef_action_category_t swig_types[83] 
+#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[84] 
+#define  SWIGTYPE_p_idmef_file_category_t swig_types[85] 
+#define  SWIGTYPE_p_idmef_node_category_t swig_types[86] 
+#define  SWIGTYPE_p_idmef_user_category_t swig_types[87] 
+#define  SWIGTYPE_p_idmef_address_category_t swig_types[88] 
+static swig_type_info *swig_types[90];
 
 /* -------- TYPES TABLE (END) -------- */
 
@@ -671,6 +681,8 @@ SWIGEXPORT(void) SWIG_init (CV *cv, CPerlObj *);
 #include "prelude-message.h"
 #include "prelude-message-buffered.h"
 #include "prelude-client.h"
+#include "prelude-getopt.h"
+#include "prelude-getopt-wide.h"
 #include "idmef.h"
 #include "idmef-value-object.h"
 #include "idmef-object-value.h"
@@ -678,6 +690,60 @@ SWIGEXPORT(void) SWIG_init (CV *cv, CPerlObj *);
 #include "idmef-tree-print.h"
 #include "idmef-tree-to-string.h"
 #include "idmef-util.h"
+
+int prelude_client_set_connection(prelude_client_t *client, prelude_connection_t *cnx)
+{
+	prelude_connection_mgr_t *mgr = NULL;
+
+	if ( prelude_connection_mgr_add_connection(&mgr, cnx, 0) < 0 )
+		return -1;
+
+	prelude_client_set_manager_list(client, mgr);
+
+	return 0;
+}
+
+prelude_msg_t *my_prelude_msg_read(prelude_io_t *pio)
+{
+	prelude_msg_t *msg = NULL;
+	
+	if ( prelude_msg_read(&msg, pio) != prelude_msg_finished )
+		return NULL;
+	
+	return msg;	
+}
+
+prelude_option_t *prelude_option_recv_list(prelude_msg_t *msg)
+{
+	uint64_t source_id;
+        uint32_t request_id;
+	prelude_option_t *opt;
+	int retval;
+	
+	retval = prelude_option_recv_reply(msg, &source_id, &request_id, (void **) &opt);
+	if ( retval == PRELUDE_OPTION_REPLY_TYPE_ERROR )
+		return NULL;
+	
+	return opt;
+}
+
+char *prelude_option_recv_set(prelude_msg_t *msg)
+{
+	uint64_t source_id;
+	uint32_t request_id;
+	char *str;
+	int retval;
+	
+	retval = prelude_option_recv_reply(msg, &source_id, &request_id, (void **) &str);
+	if ( retval == PRELUDE_OPTION_REPLY_TYPE_ERROR ) {
+		printf("error: %s\n", str);
+		return NULL;
+	} else {
+		printf("SET successful %d\n", retval);
+	}
+	
+	return str;
+}
 
 
 
@@ -709,6 +775,132 @@ SWIGCLASS_STATIC int swig_magic_readonly(pTHX_ SV *sv, MAGIC *mg) {
 #ifdef __cplusplus
 extern "C" {
 #endif
+XS(_wrap_prelude_client_set_connection) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        prelude_connection_t *arg2 = (prelude_connection_t *) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_client_set_connection(client,cnx);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_set_connection. Expected _p_prelude_client_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_prelude_connection_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_client_set_connection. Expected _p_prelude_connection_t");
+            }
+        }
+        result = (int)prelude_client_set_connection(arg1,arg2);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_my_prelude_msg_read) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_io_t *arg1 = (prelude_io_t *) 0 ;
+        prelude_msg_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: my_prelude_msg_read(pio);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_io_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of my_prelude_msg_read. Expected _p_prelude_io_t");
+            }
+        }
+        result = (prelude_msg_t *)my_prelude_msg_read(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_msg_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_recv_list) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_msg_t *arg1 = (prelude_msg_t *) 0 ;
+        prelude_option_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_recv_list(msg);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msg_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_recv_list. Expected _p_prelude_msg_t");
+            }
+        }
+        result = (prelude_option_t *)prelude_option_recv_list(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_option_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_recv_set) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_msg_t *arg1 = (prelude_msg_t *) 0 ;
+        char *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_recv_set(msg);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msg_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_recv_set. Expected _p_prelude_msg_t");
+            }
+        }
+        result = (char *)prelude_option_recv_set(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
 XS(_wrap_prelude_client_get_unique_ident) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
@@ -759,6 +951,39 @@ XS(_wrap_prelude_client_get_credentials) {
         
         ST(argvi) = sv_newmortal();
         SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_void,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_client_set_manager_list) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        prelude_connection_mgr_t *arg2 = (prelude_connection_mgr_t *) 0 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_client_set_manager_list(client,mgrlist);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_client_set_manager_list. Expected _p_prelude_client_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_prelude_connection_mgr_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_client_set_manager_list. Expected _p_prelude_connection_mgr_t");
+            }
+        }
+        prelude_client_set_manager_list(arg1,arg2);
+        
+        
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -22787,6 +23012,35 @@ XS(_wrap_idmef_message_type_to_string) {
 }
 
 
+XS(_wrap_idmef_message_ref) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        idmef_message_t *arg1 = (idmef_message_t *) 0 ;
+        idmef_message_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: idmef_message_ref(ptr);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_message_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of idmef_message_ref. Expected _p_idmef_message_t");
+            }
+        }
+        result = (idmef_message_t *)idmef_message_ref(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_message_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
 XS(_wrap_idmef_message_get_child) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
@@ -34169,6 +34423,2049 @@ XS(_wrap_idmef_type_get_name) {
 }
 
 
+XS(_wrap_prelude_connection_destroy) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_connection_destroy(cnx);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_connection_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_connection_destroy. Expected _p_prelude_connection_t");
+            }
+        }
+        prelude_connection_destroy(arg1);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_connection_send_msg) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
+        prelude_msg_t *arg2 = (prelude_msg_t *) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_connection_send_msg(cnx,msg);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_connection_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_connection_send_msg. Expected _p_prelude_connection_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_prelude_msg_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_connection_send_msg. Expected _p_prelude_msg_t");
+            }
+        }
+        result = (int)prelude_connection_send_msg(arg1,arg2);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_connection_connect) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_connection_connect(cnx);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_connection_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_connection_connect. Expected _p_prelude_connection_t");
+            }
+        }
+        result = (int)prelude_connection_connect(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_connection_forward) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
+        prelude_io_t *arg2 = (prelude_io_t *) 0 ;
+        size_t arg3 ;
+        ssize_t result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 3) || (items > 3)) {
+            SWIG_croak("Usage: prelude_connection_forward(cnx,src,count);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_connection_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_connection_forward. Expected _p_prelude_connection_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_prelude_io_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_connection_forward. Expected _p_prelude_io_t");
+            }
+        }
+        arg3 = (size_t) SvUV(ST(2));
+        result = prelude_connection_forward(arg1,arg2,arg3);
+        
+        {
+            ssize_t * resultobj = (ssize_t *) malloc(sizeof(ssize_t));
+            memmove(resultobj, &result, sizeof(ssize_t));
+            ST(argvi) = sv_newmortal();
+            SWIG_MakePtr(ST(argvi++), (void *) resultobj, SWIGTYPE_p_ssize_t,0);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_connection_get_saddr) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
+        char *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_connection_get_saddr(cnx);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_connection_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_connection_get_saddr. Expected _p_prelude_connection_t");
+            }
+        }
+        result = (char *)prelude_connection_get_saddr(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_connection_get_daddr) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
+        char *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_connection_get_daddr(cnx);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_connection_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_connection_get_daddr. Expected _p_prelude_connection_t");
+            }
+        }
+        result = (char *)prelude_connection_get_daddr(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_connection_get_sport) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
+        uint16_t result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_connection_get_sport(cnx);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_connection_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_connection_get_sport. Expected _p_prelude_connection_t");
+            }
+        }
+        result = (uint16_t)prelude_connection_get_sport(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setuv(ST(argvi++), (UV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_connection_get_dport) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
+        uint16_t result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_connection_get_dport(cnx);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_connection_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_connection_get_dport. Expected _p_prelude_connection_t");
+            }
+        }
+        result = (uint16_t)prelude_connection_get_dport(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setuv(ST(argvi++), (UV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_connection_is_alive) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_connection_is_alive(cnx);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_connection_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_connection_is_alive. Expected _p_prelude_connection_t");
+            }
+        }
+        result = (int)prelude_connection_is_alive(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_connection_get_fd) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
+        prelude_io_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_connection_get_fd(cnx);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_connection_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_connection_get_fd. Expected _p_prelude_connection_t");
+            }
+        }
+        result = (prelude_io_t *)prelude_connection_get_fd(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_io_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_connection_close) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_connection_close(cnx);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_connection_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_connection_close. Expected _p_prelude_connection_t");
+            }
+        }
+        prelude_connection_close(arg1);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_connection_set_fd) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
+        prelude_io_t *arg2 = (prelude_io_t *) 0 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_connection_set_fd(cnx,fd);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_connection_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_connection_set_fd. Expected _p_prelude_connection_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_prelude_io_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_connection_set_fd. Expected _p_prelude_io_t");
+            }
+        }
+        prelude_connection_set_fd(arg1,arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_connection_set_state) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
+        int arg2 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_connection_set_state(cnx,state);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_connection_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_connection_set_state. Expected _p_prelude_connection_t");
+            }
+        }
+        arg2 = (int) SvIV(ST(1));
+        prelude_connection_set_state(arg1,arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_connection_get_state) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_connection_get_state(cnx);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_connection_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_connection_get_state. Expected _p_prelude_connection_t");
+            }
+        }
+        result = (int)prelude_connection_get_state(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_connection_get_socket_filename) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        char *arg1 ;
+        size_t arg2 ;
+        uint16_t arg3 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 3) || (items > 3)) {
+            SWIG_croak("Usage: prelude_connection_get_socket_filename(buf,size,port);");
+        }
+        if (!SvOK((SV*) ST(0))) arg1 = 0;
+        else arg1 = (char *) SvPV(ST(0), PL_na);
+        arg2 = (size_t) SvUV(ST(1));
+        arg3 = (uint16_t) SvUV(ST(2));
+        prelude_connection_get_socket_filename(arg1,arg2,arg3);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_connection_get_client) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_connection_t *arg1 = (prelude_connection_t *) 0 ;
+        prelude_client_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_connection_get_client(cnx);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_connection_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_connection_get_client. Expected _p_prelude_connection_t");
+            }
+        }
+        result = (prelude_client_t *)prelude_connection_get_client(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_client_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_connection_new) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        char *arg2 ;
+        uint16_t arg3 ;
+        prelude_connection_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 3) || (items > 3)) {
+            SWIG_croak("Usage: prelude_connection_new(client,addr,port);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_connection_new. Expected _p_prelude_client_t");
+            }
+        }
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        arg3 = (uint16_t) SvUV(ST(2));
+        result = (prelude_connection_t *)prelude_connection_new(arg1,(char const *)arg2,arg3);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_connection_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_set_priority) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        int arg2 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_option_set_priority(option,priority);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_set_priority. Expected _p_prelude_option_t");
+            }
+        }
+        arg2 = (int) SvIV(ST(1));
+        prelude_option_set_priority(arg1,arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_print) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        int arg2 ;
+        int arg3 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 3) || (items > 3)) {
+            SWIG_croak("Usage: prelude_option_print(opt,flags,descoff);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_print. Expected _p_prelude_option_t");
+            }
+        }
+        arg2 = (int) SvIV(ST(1));
+        arg3 = (int) SvIV(ST(2));
+        prelude_option_print(arg1,arg2,arg3);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_wide_send_msg) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        void *arg1 = (void *) 0 ;
+        prelude_msgbuf_t *arg2 = (prelude_msgbuf_t *) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_option_wide_send_msg(context,msgbuf);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, 0,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_wide_send_msg. Expected _p_void");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_option_wide_send_msg. Expected _p_prelude_msgbuf_t");
+            }
+        }
+        result = (int)prelude_option_wide_send_msg(arg1,arg2);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_destroy) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_destroy(option);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_destroy. Expected _p_prelude_option_t");
+            }
+        }
+        prelude_option_destroy(arg1);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_parse_arguments) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        void *arg1 = (void *) 0 ;
+        prelude_option_t *arg2 = (prelude_option_t *) 0 ;
+        char *arg3 ;
+        int arg4 ;
+        char **arg5 = (char **) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 5) || (items > 5)) {
+            SWIG_croak("Usage: prelude_option_parse_arguments(context,option,filename,argc,argv);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, 0,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_parse_arguments. Expected _p_void");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_option_parse_arguments. Expected _p_prelude_option_t");
+            }
+        }
+        if (!SvOK((SV*) ST(2))) arg3 = 0;
+        else arg3 = (char *) SvPV(ST(2), PL_na);
+        arg4 = (int) SvIV(ST(3));
+        {
+            AV *tempav;
+            I32 len;
+            int i;
+            SV  **tv;
+            
+            if ( ! SvROK(ST(4)) )
+            croak("Argument 5 is not a reference.");
+            
+            if ( SvTYPE(SvRV(ST(4))) != SVt_PVAV )
+            croak("Argument 5 is not an array.");
+            
+            tempav = (AV*) SvRV(ST(4));
+            len = av_len(tempav);
+            arg5 = (char **) malloc((len+2)*sizeof(char *));
+            if ( ! arg5 )
+            croak("out of memory\n");
+            for (i = 0; i <= len; i++) {
+                tv = av_fetch(tempav, i, 0);	
+                arg5[i] = (char *) SvPV_nolen(*tv);
+            }
+            arg5[i] = NULL;
+        }
+        result = (int)prelude_option_parse_arguments(arg1,arg2,(char const *)arg3,arg4,arg5);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_add) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        int arg2 ;
+        char arg3 ;
+        char *arg4 ;
+        char *arg5 ;
+        int arg6 ;
+        int (*arg7)(void *,prelude_option_t *,char const *) = (int (*)(void *,prelude_option_t *,char const *)) 0 ;
+        int (*arg8)(void *,prelude_option_t *,char *,size_t) = (int (*)(void *,prelude_option_t *,char *,size_t)) 0 ;
+        prelude_option_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 8) || (items > 8)) {
+            SWIG_croak("Usage: prelude_option_add(parent,flags,shortopt,longopt,desc,has_arg,set,get);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_add. Expected _p_prelude_option_t");
+            }
+        }
+        arg2 = (int) SvIV(ST(1));
+        arg3 = (char) *SvPV(ST(2),PL_na);
+        if (!SvOK((SV*) ST(3))) arg4 = 0;
+        else arg4 = (char *) SvPV(ST(3), PL_na);
+        if (!SvOK((SV*) ST(4))) arg5 = 0;
+        else arg5 = (char *) SvPV(ST(4), PL_na);
+        arg6 = (int) SvIV(ST(5));
+        {
+            if (SWIG_ConvertPtr(ST(6), (void **) &arg7, SWIGTYPE_p_f_p_void_p_prelude_option_t_p_q_const__char__int,0) < 0) {
+                SWIG_croak("Type error in argument 7 of prelude_option_add. Expected _p_f_p_void_p_prelude_option_t_p_q_const__char__int");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(7), (void **) &arg8, SWIGTYPE_p_f_p_void_p_prelude_option_t_p_char_size_t__int,0) < 0) {
+                SWIG_croak("Type error in argument 8 of prelude_option_add. Expected _p_f_p_void_p_prelude_option_t_p_char_size_t__int");
+            }
+        }
+        result = (prelude_option_t *)prelude_option_add(arg1,arg2,arg3,(char const *)arg4,(char const *)arg5,(prelude_option_argument_t )arg6,arg7,arg8);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_option_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_add_init_func) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        int (*arg2)(void *,prelude_option_t *,char const *) = (int (*)(void *,prelude_option_t *,char const *)) 0 ;
+        prelude_option_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_option_add_init_func(parent,set);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_add_init_func. Expected _p_prelude_option_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_f_p_void_p_prelude_option_t_p_q_const__char__int,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_option_add_init_func. Expected _p_f_p_void_p_prelude_option_t_p_q_const__char__int");
+            }
+        }
+        result = (prelude_option_t *)prelude_option_add_init_func(arg1,arg2);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_option_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_set_flags) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        int arg2 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_option_set_flags(opt,flags);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_set_flags. Expected _p_prelude_option_t");
+            }
+        }
+        arg2 = (int) SvIV(ST(1));
+        prelude_option_set_flags(arg1,arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_get_flags) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_get_flags(opt);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_get_flags. Expected _p_prelude_option_t");
+            }
+        }
+        result = (int)prelude_option_get_flags(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_set_warnings) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        int arg1 ;
+        int *arg2 = (int *) 0 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_option_set_warnings(flags,old_flags);");
+        }
+        arg1 = (int) SvIV(ST(0));
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_int,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_option_set_warnings. Expected _p_int");
+            }
+        }
+        prelude_option_set_warnings(arg1,arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_get_shortname) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        char result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_get_shortname(opt);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_get_shortname. Expected _p_prelude_option_t");
+            }
+        }
+        result = (char)prelude_option_get_shortname(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setpvn((SV*)ST(argvi++), &result, 1);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_get_longname) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        char *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_get_longname(opt);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_get_longname. Expected _p_prelude_option_t");
+            }
+        }
+        result = (char *)prelude_option_get_longname(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_set_private_data) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        void *arg2 = (void *) 0 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_option_set_private_data(opt,data);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_set_private_data. Expected _p_prelude_option_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, 0,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_option_set_private_data. Expected _p_void");
+            }
+        }
+        prelude_option_set_private_data(arg1,arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_get_private_data) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        void *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_get_private_data(opt);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_get_private_data. Expected _p_prelude_option_t");
+            }
+        }
+        result = (void *)prelude_option_get_private_data(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_void,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_invoke_set) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        void **arg1 = (void **) 0 ;
+        prelude_option_t **arg2 = (prelude_option_t **) 0 ;
+        char *arg3 ;
+        char *arg4 ;
+        char *arg5 ;
+        size_t arg6 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 6) || (items > 6)) {
+            SWIG_croak("Usage: prelude_option_invoke_set(context,last_opt,option,value,err,size);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_p_void,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_invoke_set. Expected _p_p_void");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_option_invoke_set. Expected _p_p_prelude_option_t");
+            }
+        }
+        if (!SvOK((SV*) ST(2))) arg3 = 0;
+        else arg3 = (char *) SvPV(ST(2), PL_na);
+        if (!SvOK((SV*) ST(3))) arg4 = 0;
+        else arg4 = (char *) SvPV(ST(3), PL_na);
+        if (!SvOK((SV*) ST(4))) arg5 = 0;
+        else arg5 = (char *) SvPV(ST(4), PL_na);
+        arg6 = (size_t) SvUV(ST(5));
+        result = (int)prelude_option_invoke_set(arg1,arg2,(char const *)arg3,(char const *)arg4,arg5,arg6);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_invoke_get) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        void **arg1 = (void **) 0 ;
+        prelude_option_t **arg2 = (prelude_option_t **) 0 ;
+        char *arg3 ;
+        char *arg4 ;
+        char *arg5 ;
+        size_t arg6 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 6) || (items > 6)) {
+            SWIG_croak("Usage: prelude_option_invoke_get(context,last,option,value,buf,len);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_p_void,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_invoke_get. Expected _p_p_void");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_option_invoke_get. Expected _p_p_prelude_option_t");
+            }
+        }
+        if (!SvOK((SV*) ST(2))) arg3 = 0;
+        else arg3 = (char *) SvPV(ST(2), PL_na);
+        if (!SvOK((SV*) ST(3))) arg4 = 0;
+        else arg4 = (char *) SvPV(ST(3), PL_na);
+        if (!SvOK((SV*) ST(4))) arg5 = 0;
+        else arg5 = (char *) SvPV(ST(4), PL_na);
+        arg6 = (size_t) SvUV(ST(5));
+        result = (int)prelude_option_invoke_get(arg1,arg2,(char const *)arg3,(char const *)arg4,arg5,arg6);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_new) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        prelude_option_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_new(parent);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_new. Expected _p_prelude_option_t");
+            }
+        }
+        result = (prelude_option_t *)prelude_option_new(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_option_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_set_longopt) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        char *arg2 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_option_set_longopt(opt,longopt);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_set_longopt. Expected _p_prelude_option_t");
+            }
+        }
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        prelude_option_set_longopt(arg1,(char const *)arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_get_longopt) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        char *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_get_longopt(opt);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_get_longopt. Expected _p_prelude_option_t");
+            }
+        }
+        result = (char *)prelude_option_get_longopt(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_set_description) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        char *arg2 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_option_set_description(opt,description);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_set_description. Expected _p_prelude_option_t");
+            }
+        }
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        prelude_option_set_description(arg1,(char const *)arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_get_description) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        char *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_get_description(opt);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_get_description. Expected _p_prelude_option_t");
+            }
+        }
+        result = (char *)prelude_option_get_description(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_set_has_arg) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        int arg2 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_option_set_has_arg(opt,has_arg);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_set_has_arg. Expected _p_prelude_option_t");
+            }
+        }
+        arg2 = (int) SvIV(ST(1));
+        prelude_option_set_has_arg(arg1,(prelude_option_argument_t )arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_get_has_arg) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_get_has_arg(opt);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_get_has_arg. Expected _p_prelude_option_t");
+            }
+        }
+        result = (int)prelude_option_get_has_arg(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_set_value) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        char *arg2 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_option_set_value(opt,value);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_set_value. Expected _p_prelude_option_t");
+            }
+        }
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        prelude_option_set_value(arg1,(char const *)arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_get_value) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        char *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_get_value(opt);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_get_value. Expected _p_prelude_option_t");
+            }
+        }
+        result = (char *)prelude_option_get_value(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_set_help) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        char *arg2 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_option_set_help(opt,help);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_set_help. Expected _p_prelude_option_t");
+            }
+        }
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        prelude_option_set_help(arg1,(char const *)arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_get_help) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        char *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_get_help(opt);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_get_help. Expected _p_prelude_option_t");
+            }
+        }
+        result = (char *)prelude_option_get_help(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_set_input_validation_regex) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        char *arg2 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_option_set_input_validation_regex(opt,regex);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_set_input_validation_regex. Expected _p_prelude_option_t");
+            }
+        }
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        prelude_option_set_input_validation_regex(arg1,(char const *)arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_get_input_validation_regex) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        char *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_get_input_validation_regex(opt);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_get_input_validation_regex. Expected _p_prelude_option_t");
+            }
+        }
+        result = (char *)prelude_option_get_input_validation_regex(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_set_input_type) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        uint8_t arg2 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_option_set_input_type(opt,input_type);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_set_input_type. Expected _p_prelude_option_t");
+            }
+        }
+        {
+            arg2 = (uint8_t) SvIV(ST(1));
+        }
+        prelude_option_set_input_type(arg1,arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_get_input_type) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        uint8_t result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_get_input_type(opt);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_get_input_type. Expected _p_prelude_option_t");
+            }
+        }
+        result = (uint8_t)prelude_option_get_input_type(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setuv(ST(argvi++), (UV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_get_optlist) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        prelude_list_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_get_optlist(opt);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_get_optlist. Expected _p_prelude_option_t");
+            }
+        }
+        result = (prelude_list_t *)prelude_option_get_optlist(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_list_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_get_next) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        prelude_option_t *arg2 = (prelude_option_t *) 0 ;
+        prelude_option_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_option_get_next(start,cur);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_get_next. Expected _p_prelude_option_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_option_get_next. Expected _p_prelude_option_t");
+            }
+        }
+        result = (prelude_option_t *)prelude_option_get_next(arg1,arg2);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_option_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_has_optlist) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_has_optlist(opt);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_has_optlist. Expected _p_prelude_option_t");
+            }
+        }
+        result = (int)prelude_option_has_optlist(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_get_parent) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        prelude_option_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_get_parent(opt);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_get_parent. Expected _p_prelude_option_t");
+            }
+        }
+        result = (prelude_option_t *)prelude_option_get_parent(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_option_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_get_set_callback) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        void *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_get_set_callback(opt);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_get_set_callback. Expected _p_prelude_option_t");
+            }
+        }
+        result = (void *)prelude_option_get_set_callback(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_void,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_set_set_callback) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        int (*arg2)(void *,prelude_option_t *,char const *) = (int (*)(void *,prelude_option_t *,char const *)) 0 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_option_set_set_callback(opt,set);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_set_set_callback. Expected _p_prelude_option_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_f_p_void_p_prelude_option_t_p_q_const__char__int,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_option_set_set_callback. Expected _p_f_p_void_p_prelude_option_t_p_q_const__char__int");
+            }
+        }
+        prelude_option_set_set_callback(arg1,arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_set_get_callback) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        int (*arg2)(void *,prelude_option_t *,char *,size_t) = (int (*)(void *,prelude_option_t *,char *,size_t)) 0 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: prelude_option_set_get_callback(opt,get);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_set_get_callback. Expected _p_prelude_option_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_f_p_void_p_prelude_option_t_p_char_size_t__int,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_option_set_get_callback. Expected _p_f_p_void_p_prelude_option_t_p_char_size_t__int");
+            }
+        }
+        prelude_option_set_get_callback(arg1,arg2);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_get_get_callback) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        void *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_get_get_callback(opt);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_get_get_callback. Expected _p_prelude_option_t");
+            }
+        }
+        result = (void *)prelude_option_get_get_callback(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_void,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_instance_new) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_t *arg1 = (prelude_option_t *) 0 ;
+        char *arg2 ;
+        void *arg3 = (void *) 0 ;
+        prelude_option_instance_t *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 3) || (items > 3)) {
+            SWIG_croak("Usage: prelude_option_instance_new(opt,name,data);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_instance_new. Expected _p_prelude_option_t");
+            }
+        }
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        {
+            if (SWIG_ConvertPtr(ST(2), (void **) &arg3, 0,0) < 0) {
+                SWIG_croak("Type error in argument 3 of prelude_option_instance_new. Expected _p_void");
+            }
+        }
+        result = (prelude_option_instance_t *)prelude_option_instance_new(arg1,(char const *)arg2,arg3);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_prelude_option_instance_t,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_instance_destroy) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_option_instance_t *arg1 = (prelude_option_instance_t *) 0 ;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: prelude_option_instance_destroy(oi);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_option_instance_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_instance_destroy. Expected _p_prelude_option_instance_t");
+            }
+        }
+        prelude_option_instance_destroy(arg1);
+        
+        
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_push_request) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
+        int arg2 ;
+        char *arg3 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 3) || (items > 3)) {
+            SWIG_croak("Usage: prelude_option_push_request(msg,type,request);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_push_request. Expected _p_prelude_msgbuf_t");
+            }
+        }
+        arg2 = (int) SvIV(ST(1));
+        if (!SvOK((SV*) ST(2))) arg3 = 0;
+        else arg3 = (char *) SvPV(ST(2), PL_na);
+        result = (int)prelude_option_push_request(arg1,arg2,(char const *)arg3);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_new_request) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        prelude_msgbuf_t *arg2 = (prelude_msgbuf_t *) 0 ;
+        uint32_t arg3 ;
+        uint64_t arg4 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 4) || (items > 4)) {
+            SWIG_croak("Usage: prelude_option_new_request(client,msgbuf,request_id,target_id);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_new_request. Expected _p_prelude_client_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_option_new_request. Expected _p_prelude_msgbuf_t");
+            }
+        }
+        arg3 = (uint32_t) SvUV(ST(2));
+        {
+            if ( SvIOK(ST(3)) ) {
+                arg4 = (uint64_t) SvIV(ST(3));
+                
+            }else {
+                if ( sscanf(SvPV_nolen(ST(3)), "%llu", &(arg4)) < 1 ) {
+                    croak("Argument %s is not an unsigned 64 bits integer\n", SvPV_nolen(ST(3)));
+                }
+            }
+        }
+        result = (int)prelude_option_new_request(arg1,arg2,arg3,arg4);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_process_request) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_client_t *arg1 = (prelude_client_t *) 0 ;
+        prelude_io_t *arg2 = (prelude_io_t *) 0 ;
+        prelude_msg_t *arg3 = (prelude_msg_t *) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 3) || (items > 3)) {
+            SWIG_croak("Usage: prelude_option_process_request(client,fd,msg);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_client_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_process_request. Expected _p_prelude_client_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_prelude_io_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_option_process_request. Expected _p_prelude_io_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(2), (void **) &arg3, SWIGTYPE_p_prelude_msg_t,0) < 0) {
+                SWIG_croak("Type error in argument 3 of prelude_option_process_request. Expected _p_prelude_msg_t");
+            }
+        }
+        result = (int)prelude_option_process_request(arg1,arg2,arg3);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_prelude_option_recv_reply) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        prelude_msg_t *arg1 = (prelude_msg_t *) 0 ;
+        uint64_t *arg2 = (uint64_t *) 0 ;
+        uint32_t *arg3 = (uint32_t *) 0 ;
+        void **arg4 = (void **) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 4) || (items > 4)) {
+            SWIG_croak("Usage: prelude_option_recv_reply(msg,source_id,request_id,value);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msg_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of prelude_option_recv_reply. Expected _p_prelude_msg_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_uint64_t,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_option_recv_reply. Expected _p_uint64_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(2), (void **) &arg3, SWIGTYPE_p_uint32_t,0) < 0) {
+                SWIG_croak("Type error in argument 3 of prelude_option_recv_reply. Expected _p_uint32_t");
+            }
+        }
+        {
+            if (SWIG_ConvertPtr(ST(3), (void **) &arg4, SWIGTYPE_p_p_void,0) < 0) {
+                SWIG_croak("Type error in argument 4 of prelude_option_recv_reply. Expected _p_p_void");
+            }
+        }
+        result = (int)prelude_option_recv_reply(arg1,arg2,arg3,arg4);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
@@ -34177,8 +36474,10 @@ static swig_type_info _swigt__p_f_p_prelude_client_t_p_idmef_message_t__void[] =
 static swig_type_info _swigt__p_prelude_msg_t[] = {{"_p_prelude_msg_t", 0, "prelude_msg_t *", 0},{"_p_prelude_msg_t"},{0}};
 static swig_type_info _swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t[] = {{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t", 0, "prelude_msg_t *(*)(prelude_msgbuf_t *)", 0},{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t"},{0}};
 static swig_type_info _swigt__p_size_t[] = {{"_p_size_t", 0, "size_t *", 0},{"_p_size_t"},{0}};
+static swig_type_info _swigt__p_ssize_t[] = {{"_p_ssize_t", 0, "ssize_t *", 0},{"_p_ssize_t"},{0}};
 static swig_type_info _swigt__p_idmef_heartbeat_t[] = {{"_p_idmef_heartbeat_t", 0, "idmef_heartbeat_t *", 0},{"_p_idmef_heartbeat_t"},{0}};
 static swig_type_info _swigt__p_idmef_target_t[] = {{"_p_idmef_target_t", 0, "idmef_target_t *", 0},{"_p_idmef_target_t"},{0}};
+static swig_type_info _swigt__p_f_p_void_p_prelude_option_t_p_q_const__char__int[] = {{"_p_f_p_void_p_prelude_option_t_p_q_const__char__int", 0, "int (*)(void *,prelude_option_t *,char const *)", 0},{"_p_f_p_void_p_prelude_option_t_p_q_const__char__int"},{0}};
 static swig_type_info _swigt__p_idmef_time[] = {{"_p_idmef_time", 0, "struct idmef_time *", 0},{"_p_idmef_time_t"},{"_p_idmef_time"},{0}};
 static swig_type_info _swigt__p_idmef_confidence_t[] = {{"_p_idmef_confidence_t", 0, "idmef_confidence_t *", 0},{"_p_idmef_confidence_t"},{0}};
 static swig_type_info _swigt__p_idmef_confidence_rating_t[] = {{"_p_idmef_confidence_rating_t", 0, "idmef_confidence_rating_t *", 0},{"_p_idmef_confidence_rating_t"},{0}};
@@ -34193,19 +36492,24 @@ static swig_type_info _swigt__p_idmef_file_access_t[] = {{"_p_idmef_file_access_
 static swig_type_info _swigt__p_idmef_process_t[] = {{"_p_idmef_process_t", 0, "idmef_process_t *", 0},{"_p_idmef_process_t"},{0}};
 static swig_type_info _swigt__p_gid_t[] = {{"_p_gid_t", 0, "gid_t *", 0},{"_p_gid_t"},{0}};
 static swig_type_info _swigt__p_uint32_t[] = {{"_p_uint32_t", 0, "uint32_t *", 0},{"_p_uint32_t"},{0}};
+static swig_type_info _swigt__p_f_p_void_p_prelude_option_t_p_char_size_t__int[] = {{"_p_f_p_void_p_prelude_option_t_p_char_size_t__int", 0, "int (*)(void *,prelude_option_t *,char *,size_t)", 0},{"_p_f_p_void_p_prelude_option_t_p_char_size_t__int"},{0}};
 static swig_type_info _swigt__p_void[] = {{"_p_void", 0, "void *", 0},{"_p_void"},{0}};
+static swig_type_info _swigt__p_p_void[] = {{"_p_p_void", 0, "void **", 0},{"_p_p_void"},{0}};
 static swig_type_info _swigt__p_idmef_source_t[] = {{"_p_idmef_source_t", 0, "idmef_source_t *", 0},{"_p_idmef_source_t"},{0}};
+static swig_type_info _swigt__p_int[] = {{"_p_int", 0, "int *", 0},{"_p_int"},{0}};
 static swig_type_info _swigt__p_idmef_classification_origin_t[] = {{"_p_idmef_classification_origin_t", 0, "idmef_classification_origin_t *", 0},{"_p_idmef_classification_origin_t"},{0}};
 static swig_type_info _swigt__p_idmef_criteria[] = {{"_p_idmef_criteria", 0, "struct idmef_criteria *", 0},{"_p_idmef_criteria_t"},{"_p_idmef_criteria"},{0}};
+static swig_type_info _swigt__p_prelude_option_t[] = {{"_p_prelude_option_t", 0, "prelude_option_t *", 0},{"_p_prelude_option_t"},{0}};
+static swig_type_info _swigt__p_p_prelude_option_t[] = {{"_p_p_prelude_option_t", 0, "prelude_option_t **", 0},{"_p_p_prelude_option_t"},{0}};
 static swig_type_info _swigt__p_idmef_criterion_t[] = {{"_p_idmef_criterion_t", 0, "idmef_criterion_t *", 0},{"_p_idmef_criterion_t"},{0}};
 static swig_type_info _swigt__p_prelude_list_t[] = {{"_p_prelude_list_t", 0, "prelude_list_t *", 0},{"_p_prelude_list_t"},{0}};
 static swig_type_info _swigt__p_idmef_object_value_list_t[] = {{"_p_idmef_object_value_list_t", 0, "idmef_object_value_list_t *", 0},{"_p_idmef_object_value_list_t"},{0}};
 static swig_type_info _swigt__p_idmef_time_t[] = {{"_p_idmef_time_t", 0, "idmef_time_t *", 0},{"_p_idmef_time_t"},{"_p_idmef_time"},{0}};
-static swig_type_info _swigt__p_idmef_criteria_t[] = {{"_p_idmef_criteria_t", 0, "idmef_criteria_t *", 0},{"_p_idmef_criteria_t"},{"_p_idmef_criteria"},{0}};
-static swig_type_info _swigt__p_idmef_object_value_t[] = {{"_p_idmef_object_value_t", 0, "idmef_object_value_t *", 0},{"_p_idmef_object_value_t"},{0}};
 static swig_type_info _swigt__p_idmef_criterion_value_t[] = {{"_p_idmef_criterion_value_t", 0, "idmef_criterion_value_t *", 0},{"_p_idmef_criterion_value_t"},{0}};
 static swig_type_info _swigt__p_idmef_value_t[] = {{"_p_idmef_value_t", 0, "idmef_value_t *", 0},{"_p_idmef_value_t"},{0}};
 static swig_type_info _swigt__p_idmef_user_t[] = {{"_p_idmef_user_t", 0, "idmef_user_t *", 0},{"_p_idmef_user_t"},{0}};
+static swig_type_info _swigt__p_idmef_criteria_t[] = {{"_p_idmef_criteria_t", 0, "idmef_criteria_t *", 0},{"_p_idmef_criteria_t"},{"_p_idmef_criteria"},{0}};
+static swig_type_info _swigt__p_idmef_object_value_t[] = {{"_p_idmef_object_value_t", 0, "idmef_object_value_t *", 0},{"_p_idmef_object_value_t"},{0}};
 static swig_type_info _swigt__p_idmef_analyzer_t[] = {{"_p_idmef_analyzer_t", 0, "idmef_analyzer_t *", 0},{"_p_idmef_analyzer_t"},{0}};
 static swig_type_info _swigt__p_prelude_msgbuf_t[] = {{"_p_prelude_msgbuf_t", 0, "prelude_msgbuf_t *", 0},{"_p_prelude_msgbuf_t"},{0}};
 static swig_type_info _swigt__p_idmef_string_t[] = {{"_p_idmef_string_t", 0, "idmef_string_t *", 0},{"_p_idmef_string_t"},{"_p_idmef_data_t"},{0}};
@@ -34218,6 +36522,7 @@ static swig_type_info _swigt__p_idmef_snmpservice_t[] = {{"_p_idmef_snmpservice_
 static swig_type_info _swigt__p_idmef_service_t[] = {{"_p_idmef_service_t", 0, "idmef_service_t *", 0},{"_p_idmef_service_t"},{0}};
 static swig_type_info _swigt__p_idmef_target_decoy_t[] = {{"_p_idmef_target_decoy_t", 0, "idmef_target_decoy_t *", 0},{"_p_idmef_target_decoy_t"},{0}};
 static swig_type_info _swigt__p_p_char[] = {{"_p_p_char", 0, "char **", 0},{"_p_p_char"},{0}};
+static swig_type_info _swigt__p_prelude_option_instance_t[] = {{"_p_prelude_option_instance_t", 0, "prelude_option_instance_t *", 0},{"_p_prelude_option_instance_t"},{0}};
 static swig_type_info _swigt__p_idmef_impact_type_t[] = {{"_p_idmef_impact_type_t", 0, "idmef_impact_type_t *", 0},{"_p_idmef_impact_type_t"},{0}};
 static swig_type_info _swigt__p_idmef_file_fstype_t[] = {{"_p_idmef_file_fstype_t", 0, "idmef_file_fstype_t *", 0},{"_p_idmef_file_fstype_t"},{0}};
 static swig_type_info _swigt__p_idmef_additional_data_type_t[] = {{"_p_idmef_additional_data_type_t", 0, "idmef_additional_data_type_t *", 0},{"_p_idmef_additional_data_type_t"},{0}};
@@ -34229,10 +36534,12 @@ static swig_type_info _swigt__p_idmef_data_t_data[] = {{"_p_idmef_data_t_data", 
 static swig_type_info _swigt__p_idmef_linkage_t[] = {{"_p_idmef_linkage_t", 0, "idmef_linkage_t *", 0},{"_p_idmef_linkage_t"},{0}};
 static swig_type_info _swigt__p_idmef_action_t[] = {{"_p_idmef_action_t", 0, "idmef_action_t *", 0},{"_p_idmef_action_t"},{0}};
 static swig_type_info _swigt__p_idmef_impact_completion_t[] = {{"_p_idmef_impact_completion_t", 0, "idmef_impact_completion_t *", 0},{"_p_idmef_impact_completion_t"},{0}};
+static swig_type_info _swigt__p_prelude_connection_t[] = {{"_p_prelude_connection_t", 0, "prelude_connection_t *", 0},{"_p_prelude_connection_t"},{0}};
 static swig_type_info _swigt__p_idmef_classification_t[] = {{"_p_idmef_classification_t", 0, "idmef_classification_t *", 0},{"_p_idmef_classification_t"},{0}};
 static swig_type_info _swigt__p_idmef_userid_t[] = {{"_p_idmef_userid_t", 0, "idmef_userid_t *", 0},{"_p_idmef_userid_t"},{0}};
 static swig_type_info _swigt__p_idmef_assessment_t[] = {{"_p_idmef_assessment_t", 0, "idmef_assessment_t *", 0},{"_p_idmef_assessment_t"},{0}};
 static swig_type_info _swigt__p_prelude_client_t[] = {{"_p_prelude_client_t", 0, "prelude_client_t *", 0},{"_p_prelude_client_t"},{0}};
+static swig_type_info _swigt__p_prelude_io_t[] = {{"_p_prelude_io_t", 0, "prelude_io_t *", 0},{"_p_prelude_io_t"},{0}};
 static swig_type_info _swigt__p_idmef_object_t[] = {{"_p_idmef_object_t", 0, "idmef_object_t *", 0},{"_p_idmef_object_t"},{0}};
 static swig_type_info _swigt__p_unsigned_char[] = {{"_p_unsigned_char", 0, "unsigned char *", 0},{"_p_unsigned_char"},{0}};
 static swig_type_info _swigt__p_prelude_connection_mgr_t[] = {{"_p_prelude_connection_mgr_t", 0, "prelude_connection_mgr_t *", 0},{"_p_prelude_connection_mgr_t"},{0}};
@@ -34248,9 +36555,9 @@ static swig_type_info _swigt__p_idmef_impact_severity_t[] = {{"_p_idmef_impact_s
 static swig_type_info _swigt__p_idmef_action_category_t[] = {{"_p_idmef_action_category_t", 0, "idmef_action_category_t *", 0},{"_p_idmef_action_category_t"},{0}};
 static swig_type_info _swigt__p_idmef_linkage_category_t[] = {{"_p_idmef_linkage_category_t", 0, "idmef_linkage_category_t *", 0},{"_p_idmef_linkage_category_t"},{0}};
 static swig_type_info _swigt__p_idmef_file_category_t[] = {{"_p_idmef_file_category_t", 0, "idmef_file_category_t *", 0},{"_p_idmef_file_category_t"},{0}};
+static swig_type_info _swigt__p_idmef_node_category_t[] = {{"_p_idmef_node_category_t", 0, "idmef_node_category_t *", 0},{"_p_idmef_node_category_t"},{0}};
 static swig_type_info _swigt__p_idmef_user_category_t[] = {{"_p_idmef_user_category_t", 0, "idmef_user_category_t *", 0},{"_p_idmef_user_category_t"},{0}};
 static swig_type_info _swigt__p_idmef_address_category_t[] = {{"_p_idmef_address_category_t", 0, "idmef_address_category_t *", 0},{"_p_idmef_address_category_t"},{0}};
-static swig_type_info _swigt__p_idmef_node_category_t[] = {{"_p_idmef_node_category_t", 0, "idmef_node_category_t *", 0},{"_p_idmef_node_category_t"},{0}};
 
 static swig_type_info *swig_types_initial[] = {
 _swigt__p_f_p_idmef_value_t_p_void__int, 
@@ -34258,8 +36565,10 @@ _swigt__p_f_p_prelude_client_t_p_idmef_message_t__void,
 _swigt__p_prelude_msg_t, 
 _swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t, 
 _swigt__p_size_t, 
+_swigt__p_ssize_t, 
 _swigt__p_idmef_heartbeat_t, 
 _swigt__p_idmef_target_t, 
+_swigt__p_f_p_void_p_prelude_option_t_p_q_const__char__int, 
 _swigt__p_idmef_time, 
 _swigt__p_idmef_confidence_t, 
 _swigt__p_idmef_confidence_rating_t, 
@@ -34274,19 +36583,24 @@ _swigt__p_idmef_file_access_t,
 _swigt__p_idmef_process_t, 
 _swigt__p_gid_t, 
 _swigt__p_uint32_t, 
+_swigt__p_f_p_void_p_prelude_option_t_p_char_size_t__int, 
 _swigt__p_void, 
+_swigt__p_p_void, 
 _swigt__p_idmef_source_t, 
+_swigt__p_int, 
 _swigt__p_idmef_classification_origin_t, 
 _swigt__p_idmef_criteria, 
+_swigt__p_prelude_option_t, 
+_swigt__p_p_prelude_option_t, 
 _swigt__p_idmef_criterion_t, 
 _swigt__p_prelude_list_t, 
 _swigt__p_idmef_object_value_list_t, 
 _swigt__p_idmef_time_t, 
-_swigt__p_idmef_criteria_t, 
-_swigt__p_idmef_object_value_t, 
 _swigt__p_idmef_criterion_value_t, 
 _swigt__p_idmef_value_t, 
 _swigt__p_idmef_user_t, 
+_swigt__p_idmef_criteria_t, 
+_swigt__p_idmef_object_value_t, 
 _swigt__p_idmef_analyzer_t, 
 _swigt__p_prelude_msgbuf_t, 
 _swigt__p_idmef_string_t, 
@@ -34299,6 +36613,7 @@ _swigt__p_idmef_snmpservice_t,
 _swigt__p_idmef_service_t, 
 _swigt__p_idmef_target_decoy_t, 
 _swigt__p_p_char, 
+_swigt__p_prelude_option_instance_t, 
 _swigt__p_idmef_impact_type_t, 
 _swigt__p_idmef_file_fstype_t, 
 _swigt__p_idmef_additional_data_type_t, 
@@ -34310,10 +36625,12 @@ _swigt__p_idmef_data_t_data,
 _swigt__p_idmef_linkage_t, 
 _swigt__p_idmef_action_t, 
 _swigt__p_idmef_impact_completion_t, 
+_swigt__p_prelude_connection_t, 
 _swigt__p_idmef_classification_t, 
 _swigt__p_idmef_userid_t, 
 _swigt__p_idmef_assessment_t, 
 _swigt__p_prelude_client_t, 
+_swigt__p_prelude_io_t, 
 _swigt__p_idmef_object_t, 
 _swigt__p_unsigned_char, 
 _swigt__p_prelude_connection_mgr_t, 
@@ -34329,9 +36646,9 @@ _swigt__p_idmef_impact_severity_t,
 _swigt__p_idmef_action_category_t, 
 _swigt__p_idmef_linkage_category_t, 
 _swigt__p_idmef_file_category_t, 
+_swigt__p_idmef_node_category_t, 
 _swigt__p_idmef_user_category_t, 
 _swigt__p_idmef_address_category_t, 
-_swigt__p_idmef_node_category_t, 
 0
 };
 
@@ -34527,6 +36844,59 @@ static swig_constant_info swig_constants[] = {
 { SWIG_INT,     (char *) SWIG_prefix "IDMEF_VALUE_TYPE_OBJECT", (long) IDMEF_VALUE_TYPE_OBJECT, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "MAX_UTC_DATETIME_SIZE", (long) 64, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "MAX_NTP_TIMESTAMP_SIZE", (long) 22, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CONNECTION_ESTABLISHED", (long) 0x01, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CONNECTION_OWN_FD", (long) 0x02, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "CLI_HOOK", (long) 0x1, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "CFG_HOOK", (long) 0x2, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "WIDE_HOOK", (long) 0x4, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "ALLOW_MULTIPLE_CALL", (long) 0x8, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "prelude_option_success", (long) 0, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "prelude_option_end", (long) 1, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "prelude_option_error", (long) -1, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "required_argument", (long) required_argument, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "optionnal_argument", (long) optionnal_argument, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "no_argument", (long) no_argument, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "option_run_first", (long) -1, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "option_run_no_order", (long) 0, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "option_run_last", (long) 1, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "OPT_INVAL", (long) 0x1, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "OPT_INVAL_ARG", (long) 0x2, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_OPTION_REPLY_TYPE_SET", (long) 0x01, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_OPTION_REPLY_TYPE_GET", (long) 0x02, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_OPTION_REPLY_TYPE_LIST", (long) 0x04, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_OPTION_REPLY_TYPE_ERROR", (long) 0x08, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_IDMEF", (long) 0, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_ID", (long) 3, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_AUTH", (long) 4, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_CM", (long) 5, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_CLIENT_CAPABILITY", (long) 6, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_REQUEST", (long) 7, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_REPLY", (long) 8, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_ID_DECLARE", (long) 0, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_AUTH_SUCCEED", (long) 6, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_AUTH_FAILED", (long) 7, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_CM_FIREWALL", (long) 0, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_CM_THROTTLE", (long) 1, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_CM_ISLAND", (long) 2, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_CM_FEATURE", (long) 3, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_TARGET_ID", (long) 0, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_SOURCE_ID", (long) 1, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_LIST", (long) 2, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_VALUE", (long) 3, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_SET", (long) 4, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_GET", (long) 5, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_ID", (long) 6, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_ERROR", (long) 7, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_START", (long) 8, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_END", (long) 9, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_NAME", (long) 10, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_DESC", (long) 11, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_HAS_ARG", (long) 12, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_HELP", (long) 13, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_INPUT_VALIDATION", (long) 14, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_INPUT_TYPE", (long) 15, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_ARG", (long) 16, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "PRELUDE_MSG_OPTION_FLAGS", (long) 17, 0, 0, 0},
 {0}
 };
 #ifdef __cplusplus
@@ -34536,8 +36906,13 @@ static swig_variable_info swig_variables[] = {
 {0}
 };
 static swig_command_info swig_commands[] = {
+{"Prelude::prelude_client_set_connection", _wrap_prelude_client_set_connection},
+{"Prelude::my_prelude_msg_read", _wrap_my_prelude_msg_read},
+{"Prelude::prelude_option_recv_list", _wrap_prelude_option_recv_list},
+{"Prelude::prelude_option_recv_set", _wrap_prelude_option_recv_set},
 {"Prelude::prelude_client_get_unique_ident", _wrap_prelude_client_get_unique_ident},
 {"Prelude::prelude_client_get_credentials", _wrap_prelude_client_get_credentials},
+{"Prelude::prelude_client_set_manager_list", _wrap_prelude_client_set_manager_list},
 {"Prelude::prelude_client_get_manager_list", _wrap_prelude_client_get_manager_list},
 {"Prelude::prelude_client_init", _wrap_prelude_client_init},
 {"Prelude::prelude_client_new", _wrap_prelude_client_new},
@@ -35273,6 +37648,7 @@ static swig_command_info swig_commands[] = {
 {"Prelude::idmef_heartbeat_get_additional_data_value", _wrap_idmef_heartbeat_get_additional_data_value},
 {"Prelude::idmef_message_type_to_numeric", _wrap_idmef_message_type_to_numeric},
 {"Prelude::idmef_message_type_to_string", _wrap_idmef_message_type_to_string},
+{"Prelude::idmef_message_ref", _wrap_idmef_message_ref},
 {"Prelude::idmef_message_get_child", _wrap_idmef_message_get_child},
 {"Prelude::idmef_message_new_child", _wrap_idmef_message_new_child},
 {"Prelude::idmef_message_destroy_internal", _wrap_idmef_message_destroy_internal},
@@ -35648,6 +38024,68 @@ static swig_command_info swig_commands[] = {
 {"Prelude::idmef_type_get_child", _wrap_idmef_type_get_child},
 {"Prelude::idmef_type_new_child", _wrap_idmef_type_new_child},
 {"Prelude::idmef_type_get_name", _wrap_idmef_type_get_name},
+{"Prelude::prelude_connection_destroy", _wrap_prelude_connection_destroy},
+{"Prelude::prelude_connection_send_msg", _wrap_prelude_connection_send_msg},
+{"Prelude::prelude_connection_connect", _wrap_prelude_connection_connect},
+{"Prelude::prelude_connection_forward", _wrap_prelude_connection_forward},
+{"Prelude::prelude_connection_get_saddr", _wrap_prelude_connection_get_saddr},
+{"Prelude::prelude_connection_get_daddr", _wrap_prelude_connection_get_daddr},
+{"Prelude::prelude_connection_get_sport", _wrap_prelude_connection_get_sport},
+{"Prelude::prelude_connection_get_dport", _wrap_prelude_connection_get_dport},
+{"Prelude::prelude_connection_is_alive", _wrap_prelude_connection_is_alive},
+{"Prelude::prelude_connection_get_fd", _wrap_prelude_connection_get_fd},
+{"Prelude::prelude_connection_close", _wrap_prelude_connection_close},
+{"Prelude::prelude_connection_set_fd", _wrap_prelude_connection_set_fd},
+{"Prelude::prelude_connection_set_state", _wrap_prelude_connection_set_state},
+{"Prelude::prelude_connection_get_state", _wrap_prelude_connection_get_state},
+{"Prelude::prelude_connection_get_socket_filename", _wrap_prelude_connection_get_socket_filename},
+{"Prelude::prelude_connection_get_client", _wrap_prelude_connection_get_client},
+{"Prelude::prelude_connection_new", _wrap_prelude_connection_new},
+{"Prelude::prelude_option_set_priority", _wrap_prelude_option_set_priority},
+{"Prelude::prelude_option_print", _wrap_prelude_option_print},
+{"Prelude::prelude_option_wide_send_msg", _wrap_prelude_option_wide_send_msg},
+{"Prelude::prelude_option_destroy", _wrap_prelude_option_destroy},
+{"Prelude::prelude_option_parse_arguments", _wrap_prelude_option_parse_arguments},
+{"Prelude::prelude_option_add", _wrap_prelude_option_add},
+{"Prelude::prelude_option_add_init_func", _wrap_prelude_option_add_init_func},
+{"Prelude::prelude_option_set_flags", _wrap_prelude_option_set_flags},
+{"Prelude::prelude_option_get_flags", _wrap_prelude_option_get_flags},
+{"Prelude::prelude_option_set_warnings", _wrap_prelude_option_set_warnings},
+{"Prelude::prelude_option_get_shortname", _wrap_prelude_option_get_shortname},
+{"Prelude::prelude_option_get_longname", _wrap_prelude_option_get_longname},
+{"Prelude::prelude_option_set_private_data", _wrap_prelude_option_set_private_data},
+{"Prelude::prelude_option_get_private_data", _wrap_prelude_option_get_private_data},
+{"Prelude::prelude_option_invoke_set", _wrap_prelude_option_invoke_set},
+{"Prelude::prelude_option_invoke_get", _wrap_prelude_option_invoke_get},
+{"Prelude::prelude_option_new", _wrap_prelude_option_new},
+{"Prelude::prelude_option_set_longopt", _wrap_prelude_option_set_longopt},
+{"Prelude::prelude_option_get_longopt", _wrap_prelude_option_get_longopt},
+{"Prelude::prelude_option_set_description", _wrap_prelude_option_set_description},
+{"Prelude::prelude_option_get_description", _wrap_prelude_option_get_description},
+{"Prelude::prelude_option_set_has_arg", _wrap_prelude_option_set_has_arg},
+{"Prelude::prelude_option_get_has_arg", _wrap_prelude_option_get_has_arg},
+{"Prelude::prelude_option_set_value", _wrap_prelude_option_set_value},
+{"Prelude::prelude_option_get_value", _wrap_prelude_option_get_value},
+{"Prelude::prelude_option_set_help", _wrap_prelude_option_set_help},
+{"Prelude::prelude_option_get_help", _wrap_prelude_option_get_help},
+{"Prelude::prelude_option_set_input_validation_regex", _wrap_prelude_option_set_input_validation_regex},
+{"Prelude::prelude_option_get_input_validation_regex", _wrap_prelude_option_get_input_validation_regex},
+{"Prelude::prelude_option_set_input_type", _wrap_prelude_option_set_input_type},
+{"Prelude::prelude_option_get_input_type", _wrap_prelude_option_get_input_type},
+{"Prelude::prelude_option_get_optlist", _wrap_prelude_option_get_optlist},
+{"Prelude::prelude_option_get_next", _wrap_prelude_option_get_next},
+{"Prelude::prelude_option_has_optlist", _wrap_prelude_option_has_optlist},
+{"Prelude::prelude_option_get_parent", _wrap_prelude_option_get_parent},
+{"Prelude::prelude_option_get_set_callback", _wrap_prelude_option_get_set_callback},
+{"Prelude::prelude_option_set_set_callback", _wrap_prelude_option_set_set_callback},
+{"Prelude::prelude_option_set_get_callback", _wrap_prelude_option_set_get_callback},
+{"Prelude::prelude_option_get_get_callback", _wrap_prelude_option_get_get_callback},
+{"Prelude::prelude_option_instance_new", _wrap_prelude_option_instance_new},
+{"Prelude::prelude_option_instance_destroy", _wrap_prelude_option_instance_destroy},
+{"Prelude::prelude_option_push_request", _wrap_prelude_option_push_request},
+{"Prelude::prelude_option_new_request", _wrap_prelude_option_new_request},
+{"Prelude::prelude_option_process_request", _wrap_prelude_option_process_request},
+{"Prelude::prelude_option_recv_reply", _wrap_prelude_option_recv_reply},
 {0,0}
 };
 

@@ -36,6 +36,8 @@
 #include "prelude-message.h"
 #include "prelude-message-buffered.h"
 #include "prelude-client.h"
+#include "prelude-getopt.h"
+#include "prelude-getopt-wide.h"
 #include "idmef.h"
 #include "idmef-value-object.h"
 #include "idmef-object-value.h"
@@ -43,6 +45,60 @@
 #include "idmef-tree-print.h"
 #include "idmef-tree-to-string.h"
 #include "idmef-util.h"
+
+int prelude_client_set_connection(prelude_client_t *client, prelude_connection_t *cnx)
+{
+	prelude_connection_mgr_t *mgr = NULL;
+
+	if ( prelude_connection_mgr_add_connection(&mgr, cnx, 0) < 0 )
+		return -1;
+
+	prelude_client_set_manager_list(client, mgr);
+
+	return 0;
+}
+
+prelude_msg_t *my_prelude_msg_read(prelude_io_t *pio)
+{
+	prelude_msg_t *msg = NULL;
+	
+	if ( prelude_msg_read(&msg, pio) != prelude_msg_finished )
+		return NULL;
+	
+	return msg;	
+}
+
+prelude_option_t *prelude_option_recv_list(prelude_msg_t *msg)
+{
+	uint64_t source_id;
+        uint32_t request_id;
+	prelude_option_t *opt;
+	int retval;
+	
+	retval = prelude_option_recv_reply(msg, &source_id, &request_id, (void **) &opt);
+	if ( retval == PRELUDE_OPTION_REPLY_TYPE_ERROR )
+		return NULL;
+	
+	return opt;
+}
+
+char *prelude_option_recv_set(prelude_msg_t *msg)
+{
+	uint64_t source_id;
+	uint32_t request_id;
+	char *str;
+	int retval;
+	
+	retval = prelude_option_recv_reply(msg, &source_id, &request_id, (void **) &str);
+	if ( retval == PRELUDE_OPTION_REPLY_TYPE_ERROR ) {
+		printf("error: %s\n", str);
+		return NULL;
+	} else {
+		printf("SET successful %d\n", retval);
+	}
+	
+	return str;
+}
 
 %}
 
@@ -112,7 +168,6 @@ typedef unsigned long long uint64_t;
 };
 
 
-
 %typemap(perl5, in) char ** {
 	AV *tempav;
 	I32 len;
@@ -174,7 +229,10 @@ typedef unsigned long long uint64_t;
 	}
 };
 
-
+int prelude_client_set_connection(prelude_client_t *client, prelude_connection_t *cnx);
+prelude_msg_t *my_prelude_msg_read(prelude_io_t *pio);
+prelude_option_t *prelude_option_recv_list(prelude_msg_t *msg);
+char *prelude_option_recv_set(prelude_msg_t *msg);
 
 %include "../../src/include/prelude-client.h"
 %include "../../src/include/idmef-tree-wrap.h"
@@ -195,3 +253,7 @@ typedef unsigned long long uint64_t;
 %include "../../src/include/idmef-value-type.h"
 %include "../../src/include/idmef-util.h"
 %include "../../src/include/idmef-type.h"
+%include "../../src/include/prelude-connection.h"
+%include "../../src/include/prelude-getopt.h"
+%include "../../src/include/prelude-getopt-wide.h"
+%include "../../src/include/prelude-message-id.h"

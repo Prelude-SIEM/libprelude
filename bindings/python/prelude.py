@@ -96,20 +96,39 @@ class Client:
         if not name:
             name = sys.argv[0]
         
+        
+        self._client = _prelude.prelude_client_new(capability)
+        if not self._client:
+            raise ClientError()
+
+        #if _prelude.prelude_client_init(self._client, name, config, 1, [ sys.argv[0] ]) < 0:
+        if _prelude.prelude_client_init(self._client, name, config, 0, [ ]) < 0:
+            raise ClientError()
+
+        if capability & (Client.SEND_IDMEF | Client.SEND_ADMIN | Client.SEND_CM):
+            self._msgbuf = _prelude.prelude_msgbuf_new(self._client)
+            if not self._msgbuf:
+                raise ClientError()
+        
+    def __del__(self):
+        if self._msgbuf:
+            _prelude.prelude_msgbuf_close(self._msgbuf)
+
+        if self._client:
+            _prelude.prelude_client_destroy(self._client)
+
+
+
+class Sensor(Client):
+    def __init__(self, name, config):
         if not config:
             file = os.popen("libprelude-config --prefix")
             path = file.read()
             file.close()
             config = path[:-1] + "/etc/prelude/default/client.conf"
         
-        self._client = _prelude.prelude_client_new(capability)
-        if not self._client:
-            raise ClientError()
-
-        if _prelude.prelude_client_init(self._client, name, config, 1, [ sys.argv[0] ]) < 0:
-            _prelude.prelude_client_destroy(self._client)
-            raise ClientError()
-
+        Client.__init__(self, Client.SEND_IDMEF, name, config)
+        
         self._analyzer = _prelude.prelude_client_get_analyzer(self._client)
         if not self._analyzer:
             _prelude.prelude_client_destroy(self._client)
@@ -118,12 +137,6 @@ class Client:
         process = _prelude.idmef_analyzer_get_process(self._analyzer)
         for arg in sys.argv[1:]:
             _prelude.idmef_process_set_arg(process, _prelude.idmef_string_new_dup(arg))
-
-        if capability & Client.SEND_IDMEF:
-            self._msgbuf = _prelude.prelude_msgbuf_new(self._client)
-            if not self._msgbuf:
-                _prelude.prelude_client_destroy(self._client)
-                raise ClientError()
     
     def set_manufacturer(self, manufacturer):
         _prelude.idmef_analyzer_set_manufacturer(self._analyzer, _prelude.idmef_string_new_dup(manufacturer))
@@ -143,18 +156,75 @@ class Client:
         _prelude.idmef_write_message(self._msgbuf, message.res)
         _prelude.prelude_msgbuf_mark_end(self._msgbuf)
 
-    def __del__(self):
-        if self._msgbuf:
-            _prelude.prelude_msgbuf_close(self._msgbuf)
 
-        if self._client:
-            _prelude.prelude_client_destroy(self._client)
+class Option:
+    def __init__(self, parent, name, description, value):
+        self.parent = parent
+        self.name = name
+        self.description = description
+        self.value = value
+        self.options = [ ]
+        nodes = [ name ]
+        while parent:
+            nodes.insert(0, parent.name)
+            parent = parent.parent
+        self.path = ".".join(nodes)
+        
+    def is_section(self):
+        return len(self.options) > 0
 
 
 
-class Sensor(Client):
-    def __init__(self, name=None, config=None):
-        Client.__init__(self, Client.SEND_IDMEF, name, config)
+class Admin(Client):
+    def __init__(self, name=None, address="127.0.0.1", port=5554):
+        Client.__init__(self, Client.SEND_ADMIN, name, None)
+        self._manager_connection = _prelude.prelude_connection_new(self._client, address, port)
+        _prelude.prelude_client_set_connection(self._client, self._manager_connection)
+        _prelude.prelude_connection_connect(self._manager_connection)
+
+    def _get_option_list(self, parent, start):
+        options = [ ]
+        cur = None
+        while True:
+            cur = _prelude.prelude_option_get_next(start, cur)
+            if not cur:
+                break
+            
+            name = _prelude.prelude_option_get_longopt(cur)
+            value = _prelude.prelude_option_get_value(cur)
+            description = _prelude.prelude_option_get_description(cur)
+            
+            option = Option(parent, name, description, value)
+            options.append(option)
+            
+            if _prelude.prelude_option_has_optlist(cur):
+                option.options = self._get_option_list(option, cur)
+                
+        return options
+
+    def _request(self, analyzerid, type, value=None):
+        _prelude.prelude_option_new_request(self._client, self._msgbuf, 0, analyzerid)
+        _prelude.prelude_option_push_request(self._msgbuf, type, value)
+        _prelude.prelude_msgbuf_mark_end(self._msgbuf)
+        
+        msg = _prelude.my_prelude_msg_read(_prelude.prelude_connection_get_fd(self._manager_connection))
+        
+        return msg
+        
+    def get_option_list(self, analyzerid):
+        msg = self._request(analyzerid, _prelude.PRELUDE_MSG_OPTION_LIST)
+        options = _prelude.prelude_option_recv_list(msg)
+        
+        return self._get_option_list(None, _prelude.prelude_option_get_next(options, None))
+
+    def get_option(self, analyzerid, name):
+        pass
+    
+    def set_option(self, analyzerid, name, value):
+        msg = self._request(analyzerid, _prelude.PRELUDE_MSG_OPTION_SET, "%s=%s" % (name, value))
+        retval = _prelude.prelude_option_recv_set(msg)
+        
+        return retval
 
 
 
