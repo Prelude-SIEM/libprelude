@@ -762,7 +762,7 @@ int prelude_connection_pool_init(prelude_connection_pool_t *pool)
         cnx_list_t *clist;
         char dirname[512], buf[512];
         
-        if ( ! pool->failover && pool->flags & PRELUDE_CONNECTION_POOL_FLAGS_GLOBAL_FAILOVER ) {          
+        if ( ! pool->failover && (pool->flags & PRELUDE_CONNECTION_POOL_FLAGS_GLOBAL_FAILOVER) ) {          
                 prelude_client_profile_get_backup_dirname(pool->client_profile, buf, sizeof(buf));        
                 snprintf(dirname, sizeof(dirname), "%s/global", buf);
 
@@ -1109,6 +1109,20 @@ const char *prelude_connection_pool_get_connection_string(prelude_connection_poo
 void prelude_connection_pool_set_flags(prelude_connection_pool_t *pool, prelude_connection_pool_flags_t flags)
 {
         pool->flags = flags;
+}
+
+
+/**
+ * prelude_connection_pool_get_flags:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ *
+ * Return the #prelude_connection_pool_flags_t used in @pool.
+ *
+ * Returns: the #prelude_connection_pool_flags_t used in @pool.
+ */
+prelude_connection_pool_flags_t prelude_connection_pool_get_flags(prelude_connection_pool_t *pool)
+{
+        return pool->flags;
 }
 
 

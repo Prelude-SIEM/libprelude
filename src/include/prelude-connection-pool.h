@@ -66,6 +66,8 @@ const char *prelude_connection_pool_get_connection_string(prelude_connection_poo
 
 void prelude_connection_pool_destroy(prelude_connection_pool_t *pool);
 
+prelude_connection_pool_flags_t prelude_connection_pool_get_flags(prelude_connection_pool_t *pool);
+
 void prelude_connection_pool_set_flags(prelude_connection_pool_t *pool, prelude_connection_pool_flags_t flags);
 
 void prelude_connection_pool_set_data(prelude_connection_pool_t *pool, void *data);
