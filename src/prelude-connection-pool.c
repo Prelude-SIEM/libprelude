@@ -760,7 +760,7 @@ int prelude_connection_pool_init(prelude_connection_pool_t *pool)
         cnx_list_t *clist;
         char dirname[512], buf[512];
         
-        if ( ! pool->failover ) {                
+        if ( ! pool->failover && pool->flags & PRELUDE_CONNECTION_POOL_FLAGS_GLOBAL_FAILOVER ) {          
                 prelude_client_profile_get_backup_dirname(pool->client_profile, buf, sizeof(buf));        
                 snprintf(dirname, sizeof(dirname), "%s/global", buf);
 
