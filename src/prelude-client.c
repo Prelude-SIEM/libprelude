@@ -365,21 +365,24 @@ static int set_heartbeat_interval(void **context, prelude_option_t *opt, const c
 
 
 
-static void get_this_option(prelude_client_t *client, prelude_option_t *opt, int argc, char **argv)
+static int get_this_option(prelude_client_t *client, prelude_option_t *opt, int argc, char **argv)
 {
-        int old_flags;
+        int ret, old_flags;
         void *context = client;
         
         prelude_option_set_warnings(0, &old_flags);
-        prelude_option_parse_arguments(&context, opt, NULL, argc, argv);
+        ret = prelude_option_parse_arguments(&context, opt, NULL, argc, argv);
         prelude_option_set_warnings(old_flags, NULL);
+
+        return (ret != prelude_option_error) ? 0 : -1;
 }
 
 
 
 
-static void setup_options(prelude_client_t *client, int argc, char **argv)
+static int setup_options(prelude_client_t *client, int argc, char **argv)
 {
+        int ret;
         prelude_option_t *opt;
         
         prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "heartbeat-interval",
@@ -393,13 +396,16 @@ static void setup_options(prelude_client_t *client, int argc, char **argv)
                                     required_argument, set_manager_addr, NULL);
         }
         
-        opt = prelude_option_new(NULL);
-        prelude_option_add(opt, CLI_HOOK|CFG_HOOK, 0, "analyzer-name",
-                           "Name for this analyzer", required_argument, set_name, NULL);
+        opt = prelude_option_add(NULL, CLI_HOOK, 0, "config-file",
+                                 "Configuration file for this analyzer", required_argument, set_configuration_file, NULL);
+
+        ret = get_this_option(client, NULL, argc, argv);
+        if ( ret < 0 )
+                return -1;
         
-        prelude_option_add(opt, CLI_HOOK, 0, "config-file",
-                           "Configuration file for this analyzer", required_argument, set_configuration_file, NULL);
-        get_this_option(client, opt, argc, argv);
+        opt = prelude_option_add(NULL, CLI_HOOK|CFG_HOOK, 0, "analyzer-name",
+                                 "Name for this analyzer", required_argument, set_name, NULL);
+        prelude_option_set_priority(opt, option_run_first);
         
         prelude_option_add(NULL, CFG_HOOK, 0, "node-name",
                            NULL, required_argument, set_node_name, NULL);
@@ -427,6 +433,8 @@ static void setup_options(prelude_client_t *client, int argc, char **argv)
 
         prelude_option_add(opt, CFG_HOOK, 0, "vlan-num",
                            NULL, required_argument, set_node_address_vlan_num, NULL);
+
+        return 0;
 }
 
 
@@ -479,8 +487,10 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
                 return -1;
         }
                 
-        setup_options(new, argc, argv);
-
+        ret = setup_options(new, argc, argv);
+        if ( ret < 0 )
+                return -1;
+        
         if ( new->capability & CAPABILITY_SEND ) {
                 ret = prelude_client_ident_init(new, &new->analyzerid);
                 if ( ret < 0 )
