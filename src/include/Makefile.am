@@ -23,6 +23,7 @@ include_HEADERS = common.h			\
 		  idmef-util.h			\
 		  idmef-message-write.h		\
 		  idmef-message-read.h		\
+		  idmef-additional-data.h	\
 		  prelude.h			\
 		  prelude-async.h		\
 		  prelude-extract.h		\

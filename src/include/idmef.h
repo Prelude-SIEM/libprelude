@@ -41,5 +41,6 @@
 #include "idmef-criteria-string.h"
 #include "idmef-message-read.h"
 #include "idmef-message-write.h"
+#include "idmef-additional-data.h"
 
 #endif /* _LIBPRELUDE_IDMEF_H */

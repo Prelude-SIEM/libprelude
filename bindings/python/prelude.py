@@ -96,12 +96,12 @@ def get_libprelude_prefix():
 
 
 class Client:
-    RECV_IDMEF = _prelude.PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF
-    SEND_IDMEF = _prelude.PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF
-    RECV_ADMIN = _prelude.PRELUDE_CLIENT_CAPABILITY_RECV_ADMIN
-    SEND_ADMIN = _prelude.PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN
-    RECV_CM = _prelude.PRELUDE_CLIENT_CAPABILITY_RECV_CM
-    SEND_CM = _prelude.PRELUDE_CLIENT_CAPABILITY_SEND_CM
+##     RECV_IDMEF = _prelude.PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF
+##     SEND_IDMEF = _prelude.PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF
+##     RECV_ADMIN = _prelude.PRELUDE_CLIENT_CAPABILITY_RECV_ADMIN
+##     SEND_ADMIN = _prelude.PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN
+##     RECV_CM = _prelude.PRELUDE_CLIENT_CAPABILITY_RECV_CM
+##     SEND_CM = _prelude.PRELUDE_CLIENT_CAPABILITY_SEND_CM
 
     def __init__(self, capability, name=None, config=None):
         self._client = None
@@ -222,20 +222,24 @@ class Option:
 
 
 
-class Admin(Client):
+class Admin:
     def __init__(self, name=None, address="127.0.0.1", port=5554):
-        Client.__init__(self, Client.SEND_ADMIN, name,
-                        get_libprelude_prefix() + "/etc/prelude/default/client.conf")
+        self._profile = _prelude.prelude_client_profile_new(name or sys.argv[0])
+        if not self._profile:
+            raise ClientError("could not create client profile for %s" % name or sys.argv[0])
         
-        self._manager_connection = _prelude.prelude_connection_new(self._client, address, port)
-        if not self._manager_connection:
-            raise ClientError("could not create new connection to %s:%p" % (address, port))
+        self._connection = _prelude.prelude_connection_new(address, port)
+        if not self._connection:
+            raise ClientError("could not create connection to %s:%d" % (address, port))
+
+        self._msgbuf = _prelude.prelude_connection_new_msgbuf(self._connection)
+        if not self._msgbuf:
+            raise ClientError("could not create msgbuf for connection")
         
-        if _prelude.prelude_client_set_connection(self._client, self._manager_connection) < 0:
-            raise ClientError("could not set client connection")
-        
-        if _prelude.prelude_connection_connect(self._manager_connection) < 0:
-            raise ClientError("could not connect to manager")
+        if _prelude.prelude_connection_connect(self._connection,
+                                               self._profile,
+                                               _prelude.PRELUDE_CONNECTION_CAPABILITY_CONNECT) < 0:
+            raise ClientError("could not connect to %s:%d" % (address, port))
 
     def _get_option_list(self, parent, start):
         options = [ ]
@@ -254,11 +258,11 @@ class Admin(Client):
         return options
 
     def _request(self, analyzer_path, type, value=None):
-        _prelude.prelude_option_new_request(self._client, self._msgbuf, 0, analyzer_path)
+        _prelude.prelude_option_new_request(self._msgbuf, 0, analyzer_path)
         _prelude.prelude_option_push_request(self._msgbuf, type, value)
         _prelude.prelude_msgbuf_mark_end(self._msgbuf)
         
-        msg = _prelude.my_prelude_msg_read(_prelude.prelude_connection_get_fd(self._manager_connection))
+        msg = _prelude.my_prelude_msg_read(_prelude.prelude_connection_get_fd(self._connection))
         
         return msg
         
@@ -294,6 +298,9 @@ class Admin(Client):
         retval = _prelude.prelude_option_recv_set(msg)
 
         return retval
+
+    def get_analyzerid(self):
+        return _prelude.prelude_client_profile_get_analyzerid(self._profile)
 
     def destroy(self, analyzer_path, instance):
         msg = self._request(analyzer_path, _prelude.PRELUDE_MSG_OPTION_DESTROY, instance)
@@ -488,7 +495,15 @@ def _idmef_value_python_to_c(object, py_value):
         if type(py_value) is not str:
             raise IDMEFValueError(py_value, "expected %s, got %s" % (str, type(py_value)))
 
-        c_data = _prelude.idmef_data_new_dup(py_value, len(py_value) + 1)
+        if type(py_value) is str:
+            c_data = _prelude.idmef_data_new_char_string_dup(py_value)
+        elif type(py_value) is int:
+            c_data = _prelude.idmef_data_new_uint32(py_value)
+        elif type(py_value) is long:
+            c_data = _prelude.idmef_data_new_uint64(py_value)
+        else:
+            raise IDMEFValueError(py_value, "type %s is not handled by idmef_data" % type(py_value))
+        
         if not c_data:
             raise Error()
 
@@ -543,7 +558,14 @@ def idmef_value_c_to_python(value):
         if not data:
             return None
 
-        return _prelude.idmef_data_get_data(data)
+        return (lambda d: None,
+                _prelude.idmef_data_get_char,
+                _prelude.idmef_data_get_byte,
+                _prelude.idmef_data_get_uint32,
+                _prelude.idmef_data_get_uint64,
+                _prelude.idmef_data_get_float,
+                _prelude.idmef_data_get_char_string,
+                _prelude.idmef_data_get_byte_string)[_prelude.idmef_data_get_type(data)](data)
 
     if type == _prelude.IDMEF_VALUE_TYPE_ENUM:
         return _prelude.idmef_type_enum_to_string(_prelude.idmef_value_get_object_type(value),

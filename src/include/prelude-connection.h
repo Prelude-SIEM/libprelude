@@ -86,8 +86,6 @@ void prelude_connection_set_peer_analyzerid(prelude_connection_t *cnx, uint64_t 
 
 #include "prelude-client.h"
 
-prelude_client_t *prelude_connection_get_client(prelude_connection_t *cnx);
-
 int prelude_connection_new(prelude_connection_t **ret, const char *addr, uint16_t port);
 
 int prelude_connection_new_msgbuf(prelude_connection_t *connection, prelude_msgbuf_t **msgbuf);

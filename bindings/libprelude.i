@@ -37,6 +37,7 @@
 #include "prelude-msg.h"
 #include "prelude-msgbuf.h"
 #include "prelude-client.h"
+#include "prelude-client-profile.h"
 #include "prelude-option.h"
 #include "prelude-option-wide.h"
 #include "idmef.h"
@@ -45,18 +46,6 @@
 #include "idmef-tree-print.h"
 #include "idmef-tree-to-string.h"
 #include "idmef-util.h"
-
-int prelude_client_set_connection(prelude_client_t *client, prelude_connection_t *cnx)
-{
-	prelude_connection_mgr_t *mgr = NULL;
-
-	if ( prelude_connection_mgr_add_connection(&mgr, cnx, 0) < 0 )
-		return -1;
-
-	prelude_client_set_manager_list(client, mgr);
-
-	return 0;
-}
 
 prelude_msg_t *my_prelude_msg_read(prelude_io_t *pio)
 {
@@ -94,13 +83,6 @@ char *prelude_option_recv_set(prelude_msg_t *msg)
 		return NULL;
 	
 	return str;
-}
-
-
-int swig_prelude_client_init(prelude_client_t *client, const char *sname, const char *config,
-			     int argc, char **argv)
-{
-	return prelude_client_init(client, sname, config, &argc, argv);
 }
 
 
@@ -251,14 +233,55 @@ typedef unsigned long long uint64_t;
 	}
 };
 
-int prelude_client_set_connection(prelude_client_t *client, prelude_connection_t *cnx);
+
+
+%typemap(in, numinputs=0) prelude_client_t **client (prelude_client_t *tmp) {
+	$1 = &tmp;
+};
+ 
+%typemap(argout) prelude_client_t **client {
+	$result = SWIG_NewPointerObj((void *) * $1, SWIGTYPE_p_prelude_client_t, 0);
+};
+
+
+
+%typemap(in, numinputs=0) prelude_client_profile_t **ret (prelude_client_profile_t *tmp) {
+	$1 = &tmp;
+};
+ 
+%typemap(argout) prelude_client_profile_t **ret {
+	$result = SWIG_NewPointerObj((void *) * $1, SWIGTYPE_p_prelude_client_profile_t, 0);
+};
+
+
+
+%typemap(in, numinputs=0) prelude_msgbuf_t **msgbuf (prelude_msgbuf_t *tmp) {
+	$1 = &tmp;
+};
+ 
+%typemap(argout) prelude_msgbuf_t **msgbuf {
+	$result = SWIG_NewPointerObj((void *) * $1, SWIGTYPE_p_prelude_msgbuf_t, 0);
+};
+
+
+
+%typemap(in, numinputs=0) prelude_connection_t **ret (prelude_connection_t *tmp) {
+	$1 = &tmp;
+};
+ 
+%typemap(argout) prelude_connection_t **ret {
+	$result = SWIG_NewPointerObj((void *) * $1, SWIGTYPE_p_prelude_connection_t, 0);
+};
+
+
+
+
 prelude_msg_t *my_prelude_msg_read(prelude_io_t *pio);
 prelude_option_t *prelude_option_recv_list(prelude_msg_t *msg);
 char *prelude_option_recv_set(prelude_msg_t *msg);
-int swig_prelude_client_init(prelude_client_t *client, const char *sname, const char *config,
-			     int argc, char **argv);
 
 %include "prelude-client.h"
+%include "prelude-client-profile.h"
 %include "idmef-tree-wrap.h"
 %include "idmef-value.h"
 %include "idmef-object.h"

@@ -323,7 +323,7 @@ static int data_compare(idmef_value_type_t *t1, idmef_value_type_t *t2,
 
 static int data_read(idmef_value_type_t *dst, const char *src)
 {
-        dst->data.data_val = idmef_data_new_dup(src, strlen(src) + 1);
+        dst->data.data_val = idmef_data_new_char_string_dup_fast(src, strlen(src));
         if ( ! dst->data.data_val )
                 return -1;
 

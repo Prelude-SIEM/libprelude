@@ -74,7 +74,7 @@ sub	header
 #include \"idmef-message-read.h\"
 #include \"idmef-util.h\"
 
-#define prelude_extract_string_safe(out, buf, len) extract_string_safe_f(__FUNCTION__, __LINE__, out, buf, len)
+#define prelude_extract_string_safe(out, buf, len, msg) extract_string_safe_f(__FUNCTION__, __LINE__, out, buf, len)
 
 static inline int extract_string_safe_f(const char *f, int line, prelude_string_t **out, char *buf, size_t len)
 \{
@@ -90,7 +90,7 @@ static inline int extract_string_safe_f(const char *f, int line, prelude_string_
 \}
 
 
-static inline int prelude_extract_time_safe(idmef_time_t **out, void *buf, size_t len)
+static inline int prelude_extract_time_safe(idmef_time_t **out, void *buf, size_t len, prelude_msg_t *msg)
 \{
         /*
          * sizeof(sec) + sizeof(usec) + sizeof(gmt offset).
@@ -110,13 +110,79 @@ static inline int prelude_extract_time_safe(idmef_time_t **out, void *buf, size_
 \}
 
 
-static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, size_t len)
+static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, size_t len, prelude_msg_t *msg)
 \{
-        *out = idmef_data_new_ref(buf, len);
-        if ( ! *out ) 
-                return prelude_error_from_errno(errno);
+	idmef_data_type_t type;
+	uint8_t tag;
 
-        return 0;
+	if ( prelude_extract_uint32_safe(&type, buf, len) < 0 )
+		return -1;
+
+	if ( prelude_msg_get(msg, &tag, &len, &buf) < 0 )
+		return -1;
+
+	*out = NULL;
+
+	switch ( type ) \{
+	case IDMEF_DATA_TYPE_CHAR: \{
+		char tmp;
+
+		if ( prelude_extract_uint8_safe(&tmp, buf, len) < 0 )
+			return -1;
+		*out = idmef_data_new_char(tmp);
+		break;
+	\}
+
+	case IDMEF_DATA_TYPE_BYTE: \{
+		uint8_t tmp;
+
+		if ( prelude_extract_uint8_safe(&tmp, buf, len) < 0 )
+			return -1;
+		*out = idmef_data_new_byte(tmp);
+		break;
+	\}
+
+	case IDMEF_DATA_TYPE_UINT32: \{
+		uint32_t tmp;
+
+		if ( prelude_extract_uint32_safe(&tmp, buf, len) < 0 )
+			return -1;
+		*out = idmef_data_new_uint32(tmp);
+		break;
+	\}
+
+	case IDMEF_DATA_TYPE_UINT64: \{
+		uint64_t tmp;
+
+		if ( prelude_extract_uint64_safe(&tmp, buf, len) < 0 )
+			return -1;
+		*out = idmef_data_new_uint64(tmp);
+		break;
+	\}
+
+	case IDMEF_DATA_TYPE_FLOAT: \{
+		float tmp;
+
+		if ( prelude_extract_float_safe(&tmp, buf, len) < 0 )
+			return -1;
+		*out = idmef_data_new_float(tmp);
+		break;
+	\}
+
+	case IDMEF_DATA_TYPE_CHAR_STRING: case IDMEF_DATA_TYPE_BYTE_STRING: \{
+		const char *tmp;
+
+		if ( prelude_extract_characters_safe(&tmp, buf, len) < 0 )
+			return -1;
+		*out = idmef_data_new_ptr_ref_fast(type, tmp, len);
+		break;		
+	\}
+
+	case IDMEF_DATA_TYPE_UNKNOWN:
+		/* nop */;
+	\}
+
+	return *out ? 0 : prelude_error_from_errno(errno);
 \}
 
 
@@ -132,12 +198,15 @@ sub	struct_field_normal
     my	$ptr = ($field->{metatype} & (&METATYPE_STRUCT | &METATYPE_LIST)) ? "*" : "";
     my	$type = shift || $field->{value_type};
     my	$var_type = shift || "$field->{typename}";
+    my	$extra_msg = "";
+
+    $extra_msg = ", msg" if ( $field->{metatype} & (&METATYPE_STRUCT | &METATYPE_LIST) );
 
     $self->output("
 			case MSG_",  uc($struct->{short_typename}), "_", uc($field->{short_name}), ": \{
                                 ${var_type} ${ptr}tmp;
 
-                                ret = prelude_extract_${type}_safe(&tmp, buf, len);
+                                ret = prelude_extract_${type}_safe(&tmp, buf, len${extra_msg});
                                 if ( ret < 0 )
                                         return ret;
 

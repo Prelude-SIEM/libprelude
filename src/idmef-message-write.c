@@ -142,10 +142,41 @@ inline void idmef_time_write(idmef_time_t *data, prelude_msgbuf_t *msg, uint8_t 
 
 static inline void idmef_data_write(idmef_data_t *data, prelude_msgbuf_t *msg, uint8_t tag)
 {
+	idmef_data_type_t type;
+
 	if ( ! data )
 		return;
 
-	prelude_msgbuf_set(msg, tag, idmef_data_get_len(data), idmef_data_get_data(data));
+	type = idmef_data_get_type(data);
+	if ( type == IDMEF_DATA_TYPE_UNKNOWN )
+		return;
+
+	uint32_write(idmef_data_get_type(data), msg, tag);
+
+	switch ( type ) {
+	case IDMEF_DATA_TYPE_CHAR: case IDMEF_DATA_TYPE_BYTE:
+		uint8_write(* (const uint8_t *) idmef_data_get_data(data), msg, tag);
+		break;
+
+	case IDMEF_DATA_TYPE_UINT32:
+		uint32_write(idmef_data_get_uint32(data), msg, tag);
+		break;
+
+	case IDMEF_DATA_TYPE_UINT64:
+		uint64_write(idmef_data_get_uint64(data), msg, tag);
+		break;
+
+	case IDMEF_DATA_TYPE_FLOAT:
+		float_write(idmef_data_get_uint64(data), msg, tag);
+		break;
+
+	case IDMEF_DATA_TYPE_CHAR_STRING: case IDMEF_DATA_TYPE_BYTE_STRING:
+		prelude_msgbuf_set(msg, tag, idmef_data_get_len(data), idmef_data_get_data(data));
+		break;
+
+	case IDMEF_DATA_TYPE_UNKNOWN:
+		/* nop */;
+	}
 }
 
 void idmef_additional_data_write(idmef_additional_data_t *additional_data, prelude_msgbuf_t *msg)

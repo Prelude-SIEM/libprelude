@@ -78,9 +78,6 @@
 idmef_additional_data_type_t idmef_additional_data_type_to_numeric(const char *name)
 {
 
-	if ( strcasecmp(name, "string" ) == 0)
-		return IDMEF_ADDITIONAL_DATA_TYPE_STRING;
-
 	if ( strcasecmp(name, "boolean" ) == 0)
 		return IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN;
 
@@ -105,6 +102,12 @@ idmef_additional_data_type_t idmef_additional_data_type_to_numeric(const char *n
 	if ( strcasecmp(name, "real" ) == 0)
 		return IDMEF_ADDITIONAL_DATA_TYPE_REAL;
 
+	if ( strcasecmp(name, "string" ) == 0)
+		return IDMEF_ADDITIONAL_DATA_TYPE_STRING;
+
+	if ( strcasecmp(name, "byte-string" ) == 0)
+		return IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING;
+
 	if ( strcasecmp(name, "xml" ) == 0)
 		return IDMEF_ADDITIONAL_DATA_TYPE_XML;
 
@@ -123,9 +126,6 @@ idmef_additional_data_type_t idmef_additional_data_type_to_numeric(const char *n
 const char *idmef_additional_data_type_to_string(idmef_additional_data_type_t val)
 {
 	switch ( val ) {
-
-		case IDMEF_ADDITIONAL_DATA_TYPE_STRING:
-			return "string";
 
 		case IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN:
 			return "boolean";
@@ -150,6 +150,12 @@ const char *idmef_additional_data_type_to_string(idmef_additional_data_type_t va
 
 		case IDMEF_ADDITIONAL_DATA_TYPE_REAL:
 			return "real";
+
+		case IDMEF_ADDITIONAL_DATA_TYPE_STRING:
+			return "string";
+
+		case IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING:
+			return "byte-string";
 
 		case IDMEF_ADDITIONAL_DATA_TYPE_XML:
 			return "xml";
@@ -2795,10 +2801,18 @@ void idmef_classification_set_reference(idmef_classification_t *ptr, idmef_refer
 }
 
 /**
+<<<<<<< .mine
+ * idmef_classification_new_HASH(0x82783d8):
+=======
  * idmef_classification_new_HASH(0x8023e900):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_classification_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x82783d8) children of @ptr,
+=======
  * Create a new HASH(0x8023e900) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #idmef_reference_t object.
  * 
  * Returns: a pointer to the created #idmef_reference_t object, or NULL if an error occured.
@@ -3466,10 +3480,18 @@ void idmef_user_set_user_id(idmef_user_t *ptr, idmef_user_id_t *object)
 }
 
 /**
+<<<<<<< .mine
+ * idmef_user_new_HASH(0x827b164):
+=======
  * idmef_user_new_HASH(0x802414b4):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_user_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x827b164) children of @ptr,
+=======
  * Create a new HASH(0x802414b4) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #idmef_user_id_t object.
  * 
  * Returns: a pointer to the created #idmef_user_id_t object, or NULL if an error occured.
@@ -4477,10 +4499,18 @@ void idmef_process_set_arg(idmef_process_t *ptr, prelude_string_t *object)
 }
 
 /**
+<<<<<<< .mine
+ * idmef_process_new_HASH(0x827f708):
+=======
  * idmef_process_new_HASH(0x80244fb0):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_process_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x827f708) children of @ptr,
+=======
  * Create a new HASH(0x80244fb0) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
  * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
@@ -4558,10 +4588,18 @@ void idmef_process_set_env(idmef_process_t *ptr, prelude_string_t *object)
 }
 
 /**
+<<<<<<< .mine
+ * idmef_process_new_HASH(0x827f774):
+=======
  * idmef_process_new_HASH(0x80246a60):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_process_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x827f774) children of @ptr,
+=======
  * Create a new HASH(0x80246a60) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
  * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
@@ -4997,10 +5035,18 @@ void idmef_web_service_set_arg(idmef_web_service_t *ptr, prelude_string_t *objec
 }
 
 /**
+<<<<<<< .mine
+ * idmef_web_service_new_HASH(0x82808a8):
+=======
  * idmef_web_service_new_HASH(0x80246d30):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_web_service_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x82808a8) children of @ptr,
+=======
  * Create a new HASH(0x80246d30) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
  * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
@@ -6873,10 +6919,18 @@ void idmef_node_set_address(idmef_node_t *ptr, idmef_address_t *object)
 }
 
 /**
+<<<<<<< .mine
+ * idmef_node_new_HASH(0x828622c):
+=======
  * idmef_node_new_HASH(0x8024ce84):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_node_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x828622c) children of @ptr,
+=======
  * Create a new HASH(0x8024ce84) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #idmef_address_t object.
  * 
  * Returns: a pointer to the created #idmef_address_t object, or NULL if an error occured.
@@ -7699,10 +7753,18 @@ void idmef_file_access_set_permission(idmef_file_access_t *ptr, prelude_string_t
 }
 
 /**
+<<<<<<< .mine
+ * idmef_file_access_new_HASH(0x8288778):
+=======
  * idmef_file_access_new_HASH(0x8024ef40):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_file_access_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x8288778) children of @ptr,
+=======
  * Create a new HASH(0x8024ef40) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
  * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
@@ -9318,10 +9380,18 @@ void idmef_file_set_file_access(idmef_file_t *ptr, idmef_file_access_t *object)
 }
 
 /**
+<<<<<<< .mine
+ * idmef_file_new_HASH(0x828e0dc):
+=======
  * idmef_file_new_HASH(0x80254c6c):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_file_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x828e0dc) children of @ptr,
+=======
  * Create a new HASH(0x80254c6c) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #idmef_file_access_t object.
  * 
  * Returns: a pointer to the created #idmef_file_access_t object, or NULL if an error occured.
@@ -9398,10 +9468,18 @@ void idmef_file_set_linkage(idmef_file_t *ptr, idmef_linkage_t *object)
 }
 
 /**
+<<<<<<< .mine
+ * idmef_file_new_HASH(0x828e148):
+=======
  * idmef_file_new_HASH(0x80255f9c):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_file_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x828e148) children of @ptr,
+=======
  * Create a new HASH(0x80255f9c) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #idmef_linkage_t object.
  * 
  * Returns: a pointer to the created #idmef_linkage_t object, or NULL if an error occured.
@@ -9534,10 +9612,18 @@ void idmef_file_set_checksum(idmef_file_t *ptr, idmef_checksum_t *object)
 }
 
 /**
+<<<<<<< .mine
+ * idmef_file_new_HASH(0x828fc4c):
+=======
  * idmef_file_new_HASH(0x8025608c):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_file_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x828fc4c) children of @ptr,
+=======
  * Create a new HASH(0x8025608c) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #idmef_checksum_t object.
  * 
  * Returns: a pointer to the created #idmef_checksum_t object, or NULL if an error occured.
@@ -10646,10 +10732,18 @@ void idmef_target_set_file(idmef_target_t *ptr, idmef_file_t *object)
 }
 
 /**
+<<<<<<< .mine
+ * idmef_target_new_HASH(0x8292e80):
+=======
  * idmef_target_new_HASH(0x80259630):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_target_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x8292e80) children of @ptr,
+=======
  * Create a new HASH(0x80259630) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #idmef_file_t object.
  * 
  * Returns: a pointer to the created #idmef_file_t object, or NULL if an error occured.
@@ -12789,10 +12883,18 @@ void idmef_assessment_set_action(idmef_assessment_t *ptr, idmef_action_t *object
 }
 
 /**
+<<<<<<< .mine
+ * idmef_assessment_new_HASH(0x829ae3c):
+=======
  * idmef_assessment_new_HASH(0x8026160c):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_assessment_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x829ae3c) children of @ptr,
+=======
  * Create a new HASH(0x8026160c) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #idmef_action_t object.
  * 
  * Returns: a pointer to the created #idmef_action_t object, or NULL if an error occured.
@@ -13206,10 +13308,18 @@ void idmef_tool_alert_set_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t
 }
 
 /**
+<<<<<<< .mine
+ * idmef_tool_alert_new_HASH(0x829b124):
+=======
  * idmef_tool_alert_new_HASH(0x80262680):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_tool_alert_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x829b124) children of @ptr,
+=======
  * Create a new HASH(0x80262680) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #idmef_alertident_t object.
  * 
  * Returns: a pointer to the created #idmef_alertident_t object, or NULL if an error occured.
@@ -13490,10 +13600,18 @@ void idmef_correlation_alert_set_alertident(idmef_correlation_alert_t *ptr, idme
 }
 
 /**
+<<<<<<< .mine
+ * idmef_correlation_alert_new_HASH(0x829bdd0):
+=======
  * idmef_correlation_alert_new_HASH(0x80262860):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_correlation_alert_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x829bdd0) children of @ptr,
+=======
  * Create a new HASH(0x80262860) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #idmef_alertident_t object.
  * 
  * Returns: a pointer to the created #idmef_alertident_t object, or NULL if an error occured.
@@ -14548,10 +14666,18 @@ void idmef_alert_set_source(idmef_alert_t *ptr, idmef_source_t *object)
 }
 
 /**
+<<<<<<< .mine
+ * idmef_alert_new_HASH(0x829e2e0):
+=======
  * idmef_alert_new_HASH(0x80264df8):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_alert_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x829e2e0) children of @ptr,
+=======
  * Create a new HASH(0x80264df8) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #idmef_source_t object.
  * 
  * Returns: a pointer to the created #idmef_source_t object, or NULL if an error occured.
@@ -14628,10 +14754,18 @@ void idmef_alert_set_target(idmef_alert_t *ptr, idmef_target_t *object)
 }
 
 /**
+<<<<<<< .mine
+ * idmef_alert_new_HASH(0x829e34c):
+=======
  * idmef_alert_new_HASH(0x80264e64):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_alert_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x829e34c) children of @ptr,
+=======
  * Create a new HASH(0x80264e64) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #idmef_target_t object.
  * 
  * Returns: a pointer to the created #idmef_target_t object, or NULL if an error occured.
@@ -14764,10 +14898,18 @@ void idmef_alert_set_additional_data(idmef_alert_t *ptr, idmef_additional_data_t
 }
 
 /**
+<<<<<<< .mine
+ * idmef_alert_new_HASH(0x829e454):
+=======
  * idmef_alert_new_HASH(0x802659a0):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_alert_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x829e454) children of @ptr,
+=======
  * Create a new HASH(0x802659a0) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #idmef_additional_data_t object.
  * 
  * Returns: a pointer to the created #idmef_additional_data_t object, or NULL if an error occured.
@@ -15511,10 +15653,18 @@ void idmef_heartbeat_set_additional_data(idmef_heartbeat_t *ptr, idmef_additiona
 }
 
 /**
+<<<<<<< .mine
+ * idmef_heartbeat_new_HASH(0x82a077c):
+=======
  * idmef_heartbeat_new_HASH(0x80266754):
+>>>>>>> .r4599
  * @ptr: pointer to a #idmef_heartbeat_t object.
  * 
+<<<<<<< .mine
+ * Create a new HASH(0x82a077c) children of @ptr,
+=======
  * Create a new HASH(0x80266754) children of @ptr,
+>>>>>>> .r4599
  * and add it to the tail of @ptr list of #idmef_additional_data_t object.
  * 
  * Returns: a pointer to the created #idmef_additional_data_t object, or NULL if an error occured.

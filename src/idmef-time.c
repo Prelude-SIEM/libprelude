@@ -260,8 +260,11 @@ int idmef_time_to_string(const idmef_time_t *time, char *outptr, size_t size)
         struct tm utc;
         int ret;
 	uint32_t hour_off, min_off, sec_off;
+	time_t t;
 
-        if ( ! gmtime_r((const time_t *) &time->sec, &utc) ) {
+	t = time->sec + time->gmt_offset;	
+
+        if ( ! gmtime_r((const time_t *) &t, &utc) ) {
                 log(LOG_ERR, "gmtime_r failed.\n");
                 return -1;
         }
@@ -272,9 +275,7 @@ int idmef_time_to_string(const idmef_time_t *time, char *outptr, size_t size)
         
         ret = snprintf(outptr, size, "%d-%.2d-%.2dT%.2d:%.2d:%.2d.%02u+%.2d:%.2d",
                        utc.tm_year + 1900, utc.tm_mon + 1, utc.tm_mday,
-                       utc.tm_hour + hour_off,
-		       utc.tm_min + min_off,
-		       utc.tm_sec + sec_off,
+                       utc.tm_hour, utc.tm_min, utc.tm_sec,
                        idmef_time_get_usec(time) / 10000 % 60,
                        hour_off, min_off);
         

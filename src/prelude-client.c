@@ -56,6 +56,7 @@
 #include "prelude-message-id.h"
 #include "prelude-option-wide.h"
 #include "idmef-message-write.h"
+#include "idmef-additional-data.h"
 #include "config-engine.h"
 #include "tls-auth.h"
 
@@ -166,7 +167,7 @@ static int generate_md5sum(const char *filename, prelude_string_t *out)
 
 
 
-static int add_hb_data(idmef_heartbeat_t *hb, prelude_string_t *meaning, idmef_data_t *data)
+static int add_hb_data(idmef_heartbeat_t *hb, prelude_string_t *meaning, const char *data)
 {
         idmef_additional_data_t *ad;
         
@@ -174,9 +175,8 @@ static int add_hb_data(idmef_heartbeat_t *hb, prelude_string_t *meaning, idmef_d
         if ( ! ad )
                 return prelude_error_from_errno(errno);
 
-        idmef_additional_data_set_data(ad, data);
         idmef_additional_data_set_meaning(ad, meaning);
-        idmef_additional_data_set_type(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING);
+        idmef_additional_data_set_string_ref(ad, data);
 
         return 0;
 }
@@ -223,15 +223,12 @@ static void heartbeat_expire_cb(void *data)
         snprintf(buf, sizeof(buf), "%u", prelude_timer_get_expire(&client->heartbeat_timer));
 
         str = client_get_status(client);
-        add_hb_data(heartbeat, prelude_string_new_constant("Analyzer status"),
-                    idmef_data_new_ref(str, strlen(str) + 1));
+        add_hb_data(heartbeat, prelude_string_new_constant("Analyzer status"), str);
 
         if ( client->md5sum )
-                add_hb_data(heartbeat, prelude_string_new_constant("Analyzer md5sum"),
-                            idmef_data_new_ref(client->md5sum, strlen(client->md5sum) + 1));
+                add_hb_data(heartbeat, prelude_string_new_constant("Analyzer md5sum"), client->md5sum);
         
-        add_hb_data(heartbeat, prelude_string_new_constant("Analyzer heartbeat interval"),
-                    idmef_data_new_ref(buf, strlen(buf) + 1));
+        add_hb_data(heartbeat, prelude_string_new_constant("Analyzer heartbeat interval"), buf);
         
         idmef_heartbeat_set_create_time(heartbeat, idmef_time_new_from_gettimeofday());
         idmef_heartbeat_set_analyzer(heartbeat, idmef_analyzer_ref(client->analyzer));

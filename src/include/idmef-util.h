@@ -57,9 +57,4 @@ do {									\
 	offset += __retval;						\
 } while ( 0 )
 
-
-
-const unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad,
-                                                         unsigned char *buf, size_t *size);
-
 #endif /* _LIBPRELUDE_IDMEF_UTIL_H */
