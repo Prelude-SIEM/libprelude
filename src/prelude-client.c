@@ -650,7 +650,7 @@ static int get_heartbeat_interval(void *context, prelude_option_t *opt, char *bu
 {        
         prelude_client_t *ptr = context;
         
-        snprintf(buf, size, "%u", ptr->heartbeat_timer.expire / 60);
+        snprintf(buf, size, "%u", ptr->heartbeat_timer.expire);
         
         return 0;
 }
