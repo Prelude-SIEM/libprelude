@@ -15,6 +15,16 @@ method to access your configuration file.
 
 </para>
 
+<!-- ##### FUNCTION config_get_section ##### -->
+<para>
+
+</para>
+
+@cfg: 
+@section: 
+@Returns: 
+
+
 <!-- ##### FUNCTION config_get ##### -->
 <para>
 

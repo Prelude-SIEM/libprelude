@@ -62,3 +62,48 @@ prelude-client
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_client_get_saddr ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_get_daddr ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_get_sport ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_get_dport ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_is_alive ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -396,7 +396,7 @@ static int parse_argument(prelude_optlist_t *optlist, const char *filename,
  * Option not matched on the command line are searched in the configuration file
  * specified by @filename.
  *
- * if @optlist is NULL, all system option will be matched against argc, and argv.
+ * if @option is NULL, all system option will be matched against argc, and argv.
  *
  * Returns: 0 if parsing the option succeed (including the case where one of
  * the callback returned -1 to request interruption of parsing), -1 if an error occured.
@@ -472,6 +472,7 @@ static prelude_optlist_t *get_default_optlist(void)
  * @desc: Description of the option.
  * @has_arg: Define if the option has argument.
  * @set: Callback to be called when the value for this option change.
+ * @get: Callback to be called to get the value for this option.
  *
  * prelude_option_add() create a new option. The option is set to be the child
  * of @parent, unless it is NULL. In this case the option is a root option.

@@ -645,7 +645,7 @@ uint16_t prelude_client_get_dport(prelude_client_t *client)
 
 /**
  * prelude_client_is_alive:
- * @client; Pointer to a client object.
+ * @client: Pointer to a client object.
  *
  * Returns: 0 if the connection associated with @client is alive,
  * -1 if it is not.

@@ -115,11 +115,6 @@ void
 const char *dirname
 </FUNCTION>
 <FUNCTION>
-<NAME>plugin_set_args</NAME>
-<RETURNS>void  </RETURNS>
-int ac, char **av
-</FUNCTION>
-<FUNCTION>
 <NAME>plugin_get_highest_id</NAME>
 <RETURNS>int  </RETURNS>
 void
@@ -950,7 +945,7 @@ prelude_option_t *option
 <FUNCTION>
 <NAME>prelude_option_parse_arguments</NAME>
 <RETURNS>int  </RETURNS>
-prelude_option_t *optlist,const char *filename, int argc, char **argv
+prelude_option_t *option,const char *filename, int argc, char **argv
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_add</NAME>

@@ -29,6 +29,25 @@ plugin-common-prv
 @cb: 
 
 
+<!-- ##### FUNCTION plugin_add ##### -->
+<para>
+
+</para>
+
+@pc: 
+@h: 
+@infos: 
+@Returns: 
+
+
+<!-- ##### FUNCTION plugin_del ##### -->
+<para>
+
+</para>
+
+@pc: 
+
+
 <!-- ##### FUNCTION plugin_print_stats ##### -->
 <para>
 
@@ -50,15 +69,6 @@ plugin-common-prv
 </para>
 
 @dirname: 
-
-
-<!-- ##### FUNCTION plugin_set_args ##### -->
-<para>
-
-</para>
-
-@ac: 
-@av: 
 
 
 <!-- ##### FUNCTION plugin_get_highest_id ##### -->

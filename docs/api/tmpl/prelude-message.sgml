@@ -51,6 +51,36 @@ case of problem.
 
 </para>
 
+<!-- ##### TYPEDEF size_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF ssize_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF uint8_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF uint16_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF uint32_t ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### MACRO PRELUDE_MSG_PRIORITY_HIGH ##### -->
 <para>
 
@@ -71,6 +101,16 @@ case of problem.
 </para>
 
 
+
+<!-- ##### ENUM prelude_msg_status_t ##### -->
+<para>
+
+</para>
+
+@prelude_msg_error: 
+@prelude_msg_eof: 
+@prelude_msg_unfinished: 
+@prelude_msg_finished: 
 
 <!-- ##### FUNCTION prelude_msg_read ##### -->
 <para>

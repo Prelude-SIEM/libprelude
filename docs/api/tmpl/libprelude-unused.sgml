@@ -78,26 +78,6 @@ getopt_long
 libmissing
 
 
-<!-- ##### SECTION ./tmpl/ssl-register.sgml:Long_Description ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### SECTION ./tmpl/ssl-register.sgml:See_Also ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### SECTION ./tmpl/ssl-register.sgml:Short_Description ##### -->
-
-
-
-<!-- ##### SECTION ./tmpl/ssl-register.sgml:Title ##### -->
-ssl-register
-
-
 <!-- ##### SECTION ./tmpl/thread.sgml:Long_Description ##### -->
 <para>
 
@@ -399,6 +379,14 @@ thread
 @infos: 
 @Returns: 
 
+<!-- ##### FUNCTION plugin_set_args ##### -->
+<para>
+
+</para>
+
+@ac: 
+@av: 
+
 <!-- ##### FUNCTION prelude_auth_recv ##### -->
 <para>
 
@@ -476,22 +464,9 @@ thread
 @attr: 
 @Returns: 
 
-<!-- ##### MACRO pthread_create ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### MACRO required_argument ##### -->
 <para>
 
 </para>
 
-
-<!-- ##### FUNCTION ssl_add_certificate ##### -->
-<para>
-
-</para>
-
-@Returns: 
 

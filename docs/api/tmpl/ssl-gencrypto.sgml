@@ -40,14 +40,3 @@ ssl-gencrypto
 @Returns: 
 
 
-<!-- ##### FUNCTION prelude_ssl_ask_settings ##### -->
-<para>
-
-</para>
-
-@keysize: 
-@expire: 
-<!-- # Unused Parameters # -->
-@store_crypted: 
-
-

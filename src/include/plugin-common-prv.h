@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 1998 - 2000 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 1998 - 2000, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -97,11 +97,6 @@ void plugins_print_stats(void);
  */
 void plugins_print_opts(const char *dirname);
 
-
-/*
- * Pass command line arguments to the plugin layer.
- */
-void plugin_set_args(int ac, char **av);
 
 
 /*

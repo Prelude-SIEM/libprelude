@@ -26,3 +26,26 @@ peer, only if the connection is plaintext.
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_auth_check ##### -->
+<para>
+
+</para>
+
+@authfile: 
+@user: 
+@pass: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_auth_read_entry ##### -->
+<para>
+
+</para>
+
+@authfile: 
+@wanted_user: 
+@user: 
+@pass: 
+@Returns: 
+
+

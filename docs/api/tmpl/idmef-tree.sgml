@@ -119,6 +119,26 @@ idmef-tree
 </para>
 
 
+<!-- ##### TYPEDEF idmef_string_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO idmef_process_env_t ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO idmef_process_arg_t ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### TYPEDEF idmef_process_t ##### -->
 <para>
 
@@ -136,6 +156,15 @@ idmef-tree
 
 </para>
 
+
+<!-- ##### ENUM idmef_service_type_t ##### -->
+<para>
+
+</para>
+
+@default_service: 
+@web_service: 
+@snmp_service: 
 
 <!-- ##### TYPEDEF specific ##### -->
 <para>
@@ -200,6 +229,33 @@ idmef-tree
 </para>
 
 
+<!-- ##### MACRO idmef_create_time_t ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO idmef_detect_time_t ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO idmef_analyzer_time_t ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### TYPEDEF idmef_alertident_t ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### TYPEDEF idmef_tool_alert_t ##### -->
 <para>
 
@@ -227,6 +283,25 @@ idmef-tree
 @idmef_tool_alert: 
 @idmef_correlation_alert: 
 @idmef_overflow_alert: 
+
+<!-- ##### ENUM idmef_alert_impact_t ##### -->
+<para>
+
+</para>
+
+@unknown_impact: 
+@bad_unknown: 
+@not_suspicious: 
+@attempted_admin: 
+@successful_admin: 
+@attempted_dos: 
+@successful_dos: 
+@attempted_recon: 
+@successful_recon: 
+@successful_recon_limited: 
+@successful_recon_largescale: 
+@attempted_user: 
+@successful_user: 
 
 <!-- ##### TYPEDEF detail ##### -->
 <para>

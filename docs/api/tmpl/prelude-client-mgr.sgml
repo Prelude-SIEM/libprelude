@@ -43,3 +43,12 @@ prelude-client-mgr
 @identifier: 
 
 
+<!-- ##### FUNCTION prelude_client_mgr_notify_connection ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@callback: 
+
+

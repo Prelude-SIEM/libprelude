@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 1998 - 2000 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 1998 - 2000, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -39,7 +39,6 @@
 #include "plugin-common.h"
 #include "plugin-common-prv.h"
 #include "config-engine.h"
-#include "libmissing.h"
 
 #ifndef RTLD_NOW
 #define RTLD_NOW RTLD_LAZY
@@ -244,7 +243,7 @@ static int plugin_load_single(const char *filename, int argc, char **argv,
  * plugin_load_from_dir:
  * @dirname: The directory to load the plugin from.
  * @argc: Argument count for the plugin.
- * @ærgv: Argument vector for the plugin.
+ * @argv: Argument vector for the plugin.
  * @subscribe: Pointer to a callback function for plugin subscribtion.
  * @unsubscribe: Pointer to a callback function for plugin un-subscribtion.
  *  
@@ -255,7 +254,7 @@ static int plugin_load_single(const char *filename, int argc, char **argv,
  * plugin_subscribe() on one of the plugin. Which'll call @subscribe in order to
  * register the it.
  *
- * @argc and @ærgv are passed to the plugin at initialization time for
+ * @argc and @argv are passed to the plugin at initialization time for
  * option handling.
  *
  * Returns: The number of loaded plugins on success, -1 on error.

@@ -127,6 +127,24 @@ plugin-common
 @str: 
 
 
+<!-- ##### FUNCTION plugin_subscribe ##### -->
+<para>
+
+</para>
+
+@plugin: 
+@Returns: 
+
+
+<!-- ##### FUNCTION plugin_unsubscribe ##### -->
+<para>
+
+</para>
+
+@plugin: 
+@Returns: 
+
+
 <!-- ##### FUNCTION plugin_request_new_id ##### -->
 <para>
 

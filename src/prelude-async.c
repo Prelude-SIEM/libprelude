@@ -169,6 +169,10 @@ static void prelude_async_exit(void)
 
 /**
  * prelude_async_init:
+ *
+ * Initialize the asynchronous subsystem.
+ *
+ * Returns: 0 on success, -1 if an error occured.
  */
 int prelude_async_init(void) 
 {
@@ -189,7 +193,10 @@ int prelude_async_init(void)
 
 
 /**
- * prelude_async_queue:
+ * prelude_async_add:
+ * @obj: Pointer to a #prelude_async_t object.
+ *
+ * Add @obj to the asynchronous processing list.
  */
 void prelude_async_add(prelude_async_object_t *obj) 
 {
@@ -201,6 +208,12 @@ void prelude_async_add(prelude_async_object_t *obj)
 
 
 
+/**
+ * prelude_async_del:
+ * @obj: Pointer to a #prelude_async_t object.
+ *
+ * Delete @obj from the asynchronous processing list.
+ */
 void prelude_async_del(prelude_async_object_t *obj) 
 {
         pthread_mutex_lock(&mutex);

@@ -28,6 +28,13 @@ prelude-getopt
 
 
 
+<!-- ##### MACRO WIDE_HOOK ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO prelude_option_success ##### -->
 <para>
 
@@ -58,6 +65,49 @@ prelude-getopt
 @optionnal_argument: 
 @no_argument: 
 
+<!-- ##### FUNCTION prelude_option_print ##### -->
+<para>
+
+</para>
+
+@flags: 
+@descoff: 
+<!-- # Unused Parameters # -->
+@optlist: 
+
+
+<!-- ##### FUNCTION prelude_option_wide_get_msg ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_option_destroy ##### -->
+<para>
+
+</para>
+
+@option: 
+<!-- # Unused Parameters # -->
+@optlist: 
+
+
+<!-- ##### FUNCTION prelude_option_parse_arguments ##### -->
+<para>
+
+</para>
+
+@option: 
+@filename: 
+@argc: 
+@argv: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@optlist: 
+
+
 <!-- ##### FUNCTION prelude_option_add ##### -->
 <para>
 
@@ -76,36 +126,26 @@ prelude-getopt
 @optlist: 
 
 
-<!-- ##### FUNCTION prelude_option_parse_arguments ##### -->
+<!-- ##### MACRO OPT_INVAL ##### -->
 <para>
 
 </para>
 
-@optlist: 
-@filename: 
-@argc: 
-@argv: 
-@Returns: 
 
 
-<!-- ##### FUNCTION prelude_option_print ##### -->
+<!-- ##### MACRO OPT_INVAL_ARG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION prelude_option_set_warnings ##### -->
 <para>
 
 </para>
 
 @flags: 
-@descoff: 
-<!-- # Unused Parameters # -->
-@optlist: 
-
-
-<!-- ##### FUNCTION prelude_option_destroy ##### -->
-<para>
-
-</para>
-
-@option: 
-<!-- # Unused Parameters # -->
-@optlist: 
+@old_flags: 
 
 

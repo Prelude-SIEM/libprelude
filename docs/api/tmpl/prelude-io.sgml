@@ -17,6 +17,30 @@ as well as some read / write / forward operation.
 
 </para>
 
+<!-- ##### TYPEDEF FILE ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF size_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF ssize_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF uint16_t ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### FUNCTION prelude_io_new ##### -->
 <para>
 
@@ -49,6 +73,15 @@ as well as some read / write / forward operation.
 
 @pio: 
 @ssl: 
+
+
+<!-- ##### FUNCTION prelude_io_set_sys_io ##### -->
+<para>
+
+</para>
+
+@pio: 
+@fd: 
 
 
 <!-- ##### FUNCTION prelude_io_close ##### -->
@@ -132,5 +165,13 @@ as well as some read / write / forward operation.
 
 @pio: 
 @Returns: 
+
+
+<!-- ##### FUNCTION prelude_io_get_fdptr ##### -->
+<para>
+
+</para>
+
+@pio: 
 
 

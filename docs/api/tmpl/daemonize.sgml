@@ -14,3 +14,12 @@ daemonize
 
 </para>
 
+<!-- ##### FUNCTION prelude_daemonize ##### -->
+<para>
+
+</para>
+
+@lockfile: 
+@Returns: 
+
+

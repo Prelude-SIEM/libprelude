@@ -64,3 +64,13 @@ list
 @head: 
 
 
+<!-- ##### MACRO list_for_each_safe ##### -->
+<para>
+
+</para>
+
+@pos: 
+@n: 
+@head: 
+
+

@@ -1,9 +1,11 @@
-SUBDIRS = libmissing src docs
+SUBDIRS = src docs
 
 includedir=$(prefix)/libprelude/include
 include_HEADERS=config.h
 
-bin_SCRIPTS = libprelude-config
+EXTRA_DIST = sensors-default.conf
+
+bin_SCRIPTS = $(top_srcdir)/libprelude-config
 
 
 #
@@ -18,6 +20,6 @@ install-data-hook:
 	install -d -m 1733 /var/lib/prelude-sensors/ssl;	   \
 	install -d -m 1733 /var/lib/prelude-sensors/idents;	   \
 	install -d -m 1733 /var/spool/prelude-sensors;		   \
-	install -m 644 sensors-default.conf $(sensors_config_dir)/sensors-default.conf;
+	install -m 644 $(top_srcdir)/sensors-default.conf $(sensors_config_dir)/sensors-default.conf;
 
 

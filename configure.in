@@ -216,8 +216,6 @@ libprelude-config
 docs/Makefile
 docs/api/Makefile
 
-libmissing/Makefile
-
 src/Makefile 
 src/include/Makefile
 

@@ -49,6 +49,27 @@ idmef-message-id
 
 
 
+<!-- ##### MACRO MSG_CREATE_TIME_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_DETECT_TIME_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ANALYZER_TIME_TAG ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### MACRO MSG_SOURCE_TAG ##### -->
 <para>
 
@@ -491,6 +512,132 @@ idmef-message-id
 
 
 <!-- ##### MACRO MSG_TARGET_INTERFACE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_HEARTBEAT_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_HEARTBEAT_IDENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_TOOL_ALERT_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_TOOL_ALERT_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_TOOL_ALERT_COMMAND ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_TOOL_ALERT_ANALYZER_ID ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_CORRELATION_ALERT_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_CORRELATION_ALERT_NAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_CORRELATION_ALERT_IDENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_OVERFLOW_ALERT_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_OVERFLOW_ALERT_PROGRAM ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_OVERFLOW_ALERT_SIZE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_OVERFLOW_ALERT_BUFFER ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_TIME_SEC ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_TIME_USEC ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ALERTIDENT_TAG ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ALERTIDENT_IDENT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MSG_ALERTIDENT_ANALYZER_IDENT ##### -->
 <para>
 
 </para>

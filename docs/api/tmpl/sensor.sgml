@@ -22,6 +22,14 @@ sensor
 @msg: 
 
 
+<!-- ##### FUNCTION prelude_sensor_get_option_msg ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
 <!-- ##### FUNCTION prelude_sensor_init ##### -->
 <para>
 
@@ -32,5 +40,37 @@ sensor
 @argc: 
 @argv: 
 @Returns: 
+
+
+<!-- ##### FUNCTION prelude_sensor_get_ident ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_sensor_set_ident ##### -->
+<para>
+
+</para>
+
+@ident: 
+
+
+<!-- ##### FUNCTION prelude_set_sensor_name ##### -->
+<para>
+
+</para>
+
+@sname: 
+
+
+<!-- ##### FUNCTION prelude_sensor_notify_mgr_connection ##### -->
+<para>
+
+</para>
+
+@cb: 
 
 

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -65,7 +65,7 @@ prelude_msg_t *prelude_option_wide_get_msg(void);
 
 void prelude_option_destroy(prelude_option_t *option);
 
-int prelude_option_parse_arguments(prelude_option_t *optlist,
+int prelude_option_parse_arguments(prelude_option_t *option,
                                    const char *filename, int argc, char **argv);
 
 prelude_option_t *prelude_option_add(prelude_option_t *parent, int flags,

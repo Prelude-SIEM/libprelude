@@ -347,7 +347,7 @@ static int ask_account_infos(FILE *fd, char **user, char **pass)
 /**
  * prelude_auth_create_account:
  * @filename: The filename to store account in.
- * @¢rypted: Specify wether the password should be crypted using crypt().
+ * @crypted: Specify wether the password should be crypted using crypt().
  *
  * Ask for a new account creation which will be stored into 'filename'
  * which is the authentication file. 

@@ -21,6 +21,22 @@ common
 
 
 
+<!-- ##### FUNCTION prelude_log_get_prefix ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_log_set_prefix ##### -->
+<para>
+
+</para>
+
+@prefix: 
+
+
 <!-- ##### FUNCTION prelude_log ##### -->
 <para>
 
