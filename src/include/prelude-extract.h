@@ -84,17 +84,6 @@ static inline float prelude_align_float(const void *buf)
 }
 
 
-
-static inline struct in_addr prelude_align_ipv4_addr(const void *buf) 
-{
-        struct in_addr tmp;
-        
-        memmove(&tmp, buf, sizeof(tmp));
-
-        return tmp;
-}
-
-
 #else
 
 #define prelude_align_uint16(x) (*(const uint16_t *) (x))
@@ -103,19 +92,11 @@ static inline struct in_addr prelude_align_ipv4_addr(const void *buf)
 #define prelude_align_uint64(x) (*(const uint64_t *) (x))
 #define prelude_align_float(x) (*(const float *) (x))
 
-#define prelude_align_ipv4_addr(x) *((const struct in_addr *) (x))
-
 #endif
 
 #include "prelude-string.h"
 #include "idmef-time.h"
 #include "idmef-data.h"
-
-static inline struct in_addr prelude_extract_ipv4_addr(const void *buf) 
-{
-        return prelude_align_ipv4_addr(buf);
-}
-
 
 
 static inline uint16_t prelude_extract_uint16(const void *buf) 
