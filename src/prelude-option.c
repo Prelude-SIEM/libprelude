@@ -401,7 +401,8 @@ static int call_option_from_cb_list(prelude_list_t *cblist, prelude_string_t *er
         prelude_list_for_each_safe(cblist, tmp, bkp) {
                 cb = prelude_list_entry(tmp, struct cb_list, list);
 
-                prelude_log_debug(2, "%s(%s) context=%p default=%p\n", cb->option->longopt, cb->arg, context, default_context);
+                prelude_log_debug(2, "%s(%s) context=%p default=%p\n",
+                                  cb->option->longopt, cb->arg, context, default_context);
                 
                 ret = do_set(cb->option, cb->arg, err, &context);                
                 if ( ret < 0 ) 
@@ -414,6 +415,8 @@ static int call_option_from_cb_list(prelude_list_t *cblist, prelude_string_t *er
                 }
                 
                 if ( cb->option->commit ) {
+                        prelude_log_debug(2, "commit %s\n", cb->option->longopt);
+                        
                         ret = cb->option->commit(cb->option, err, context);
                         if ( ret < 0 ) {
                                 return ret;
@@ -497,11 +500,14 @@ static int get_missing_options(void *context, config_t *cfg, const char *filenam
                                         return ret;
                         }
                         
-                        ret = get_missing_options(context, cfg, filename, (cblist) ? &cbitem->children : NULL, opt, line, depth + 1, err);
+                        ret = get_missing_options(context, cfg, filename, (cblist) ?
+                                                  &cbitem->children : NULL, opt, line, depth + 1, err);
                         if ( ret < 0 )
                                 return -1;
                         
-                } else if ( cblist ) {
+                }
+
+                else if ( cblist ) {
                         ret = check_option(opt, &argptr, value);                        
                         if ( ret < 0 )
                                 return ret;
@@ -586,34 +592,26 @@ static int parse_argument(void *context, prelude_list_t *cb_list, prelude_option
 static int get_option_from_optlist(void *context, prelude_option_t *optlist,
                                    const char **filename, int *argc, char **argv, prelude_string_t **err)
 {
+        prelude_list_t cblist;
         int argv_index = 1, ret = 0;
-        prelude_list_t conf_cblist, cli_cblist;
-                
+                  
+        prelude_list_init(&cblist);
+
         if ( argc ) {                
-                prelude_list_init(&cli_cblist);
-                
-                ret = parse_argument(context, &cli_cblist, optlist, argc, argv, &argv_index, 0, *err);
+                ret = parse_argument(context, &cblist, optlist, argc, argv, &argv_index, 0, *err);
                 if ( ret < 0 )
                         return ret;
         }
         
-        if ( filename && *filename ) {                
-                prelude_list_init(&conf_cblist);
-                
-                ret = process_cfg_file(context, &conf_cblist, optlist, *filename, *err);
-                if ( ret < 0 )
-                        return ret;
-                
-                ret = call_option_from_cb_list(&conf_cblist, *err, context, 0);
+        if ( filename && *filename ) {                     
+                ret = process_cfg_file(context, &cblist, optlist, *filename, *err);
                 if ( ret < 0 )
                         return ret;
         }
 
-        if ( argc ) {                
-                ret = call_option_from_cb_list(&cli_cblist, *err, context, 0);
-                if ( ret < 0 )
-                        return ret;
-        }
+        ret = call_option_from_cb_list(&cblist, *err, context, 0);
+        if ( ret < 0 )
+                return ret;
         
         return ret;
 }
