@@ -25,7 +25,6 @@
 #define _LIBPRELUDE_IDMEF_OBJECT_H
 
 typedef struct idmef_object idmef_object_t;
-typedef struct idmef_object_list idmef_object_list_t;
 
 #include <stdarg.h>
 
@@ -61,20 +60,11 @@ idmef_object_t *idmef_object_clone(idmef_object_t *object);
 idmef_object_t *idmef_object_ref(idmef_object_t *object);
 
 char *idmef_object_get_numeric(idmef_object_t *object);
+
 const char *idmef_object_get_name(idmef_object_t *object);
 
 int idmef_object_is_ambiguous(idmef_object_t *object);
 
 int idmef_object_has_lists(idmef_object_t *object);
-
-idmef_object_list_t *idmef_object_list_new(void);
-
-void idmef_object_list_destroy(idmef_object_list_t *object_list);
-
-void idmef_object_list_add(idmef_object_list_t *object_list, idmef_object_t *object);
-
-idmef_object_t *idmef_object_list_get_next(idmef_object_list_t *object_list, idmef_object_t *object);
-
-int idmef_object_list_get_size(idmef_object_list_t *object_list);
 
 #endif /* _LIBPRELUDE_IDMEF_OBJECT_H */

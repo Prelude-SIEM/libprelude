@@ -791,58 +791,57 @@ static void _swig_create_magic(CPerlObj *pPerl, SV *sv, const char *name, int (C
 #define  SWIGTYPE_p_idmef_classification_origin_t swig_types[25] 
 #define  SWIGTYPE_p_idmef_criteria swig_types[26] 
 #define  SWIGTYPE_p_idmef_criterion_t swig_types[27] 
-#define  SWIGTYPE_p_idmef_object_list_t swig_types[28] 
-#define  SWIGTYPE_p_idmef_object_value_list_t swig_types[29] 
-#define  SWIGTYPE_p_idmef_time_t swig_types[30] 
-#define  SWIGTYPE_p_idmef_criteria_t swig_types[31] 
-#define  SWIGTYPE_p_idmef_object_value_t swig_types[32] 
-#define  SWIGTYPE_p_idmef_criterion_value_t swig_types[33] 
-#define  SWIGTYPE_p_idmef_value_t swig_types[34] 
-#define  SWIGTYPE_p_idmef_user_t swig_types[35] 
-#define  SWIGTYPE_p_idmef_analyzer_t swig_types[36] 
-#define  SWIGTYPE_p_prelude_msgbuf_t swig_types[37] 
-#define  SWIGTYPE_p_idmef_string_t swig_types[38] 
-#define  SWIGTYPE_p_uint16_t swig_types[39] 
-#define  SWIGTYPE_p_uint64_t swig_types[40] 
-#define  SWIGTYPE_p_idmef_address_t swig_types[41] 
-#define  SWIGTYPE_p_idmef_impact_t swig_types[42] 
-#define  SWIGTYPE_p_idmef_webservice_t swig_types[43] 
-#define  SWIGTYPE_p_idmef_snmpservice_t swig_types[44] 
-#define  SWIGTYPE_p_idmef_service_t swig_types[45] 
-#define  SWIGTYPE_p_idmef_target_decoy_t swig_types[46] 
-#define  SWIGTYPE_p_p_char swig_types[47] 
-#define  SWIGTYPE_p_idmef_impact_type_t swig_types[48] 
-#define  SWIGTYPE_p_idmef_file_fstype_t swig_types[49] 
-#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[50] 
-#define  SWIGTYPE_p_idmef_userid_type_t swig_types[51] 
-#define  SWIGTYPE_p_idmef_file_t swig_types[52] 
-#define  SWIGTYPE_p_idmef_value_type_t swig_types[53] 
-#define  SWIGTYPE_p_idmef_source_spoofed_t swig_types[54] 
-#define  SWIGTYPE_p_idmef_data_t_data swig_types[55] 
-#define  SWIGTYPE_p_idmef_linkage_t swig_types[56] 
-#define  SWIGTYPE_p_idmef_action_t swig_types[57] 
-#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[58] 
-#define  SWIGTYPE_p_idmef_classification_t swig_types[59] 
-#define  SWIGTYPE_p_idmef_userid_t swig_types[60] 
-#define  SWIGTYPE_p_idmef_assessment_t swig_types[61] 
-#define  SWIGTYPE_p_prelude_client_t swig_types[62] 
-#define  SWIGTYPE_p_prelude_io_t swig_types[63] 
-#define  SWIGTYPE_p_idmef_object_t swig_types[64] 
-#define  SWIGTYPE_p_unsigned_char swig_types[65] 
-#define  SWIGTYPE_p_float swig_types[66] 
-#define  SWIGTYPE_p_idmef_additional_data_t swig_types[67] 
-#define  SWIGTYPE_p_idmef_data_t swig_types[68] 
-#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[69] 
-#define  SWIGTYPE_p_va_list swig_types[70] 
-#define  SWIGTYPE_p_idmef_alertident_t swig_types[71] 
-#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[72] 
-#define  SWIGTYPE_p_idmef_action_category_t swig_types[73] 
-#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[74] 
-#define  SWIGTYPE_p_idmef_file_category_t swig_types[75] 
-#define  SWIGTYPE_p_idmef_user_category_t swig_types[76] 
-#define  SWIGTYPE_p_idmef_address_category_t swig_types[77] 
-#define  SWIGTYPE_p_idmef_node_category_t swig_types[78] 
-static swig_type_info *swig_types[80];
+#define  SWIGTYPE_p_idmef_object_value_list_t swig_types[28] 
+#define  SWIGTYPE_p_idmef_time_t swig_types[29] 
+#define  SWIGTYPE_p_idmef_criteria_t swig_types[30] 
+#define  SWIGTYPE_p_idmef_object_value_t swig_types[31] 
+#define  SWIGTYPE_p_idmef_criterion_value_t swig_types[32] 
+#define  SWIGTYPE_p_idmef_value_t swig_types[33] 
+#define  SWIGTYPE_p_idmef_user_t swig_types[34] 
+#define  SWIGTYPE_p_idmef_analyzer_t swig_types[35] 
+#define  SWIGTYPE_p_prelude_msgbuf_t swig_types[36] 
+#define  SWIGTYPE_p_idmef_string_t swig_types[37] 
+#define  SWIGTYPE_p_uint16_t swig_types[38] 
+#define  SWIGTYPE_p_uint64_t swig_types[39] 
+#define  SWIGTYPE_p_idmef_address_t swig_types[40] 
+#define  SWIGTYPE_p_idmef_impact_t swig_types[41] 
+#define  SWIGTYPE_p_idmef_webservice_t swig_types[42] 
+#define  SWIGTYPE_p_idmef_snmpservice_t swig_types[43] 
+#define  SWIGTYPE_p_idmef_service_t swig_types[44] 
+#define  SWIGTYPE_p_idmef_target_decoy_t swig_types[45] 
+#define  SWIGTYPE_p_p_char swig_types[46] 
+#define  SWIGTYPE_p_idmef_impact_type_t swig_types[47] 
+#define  SWIGTYPE_p_idmef_file_fstype_t swig_types[48] 
+#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[49] 
+#define  SWIGTYPE_p_idmef_userid_type_t swig_types[50] 
+#define  SWIGTYPE_p_idmef_file_t swig_types[51] 
+#define  SWIGTYPE_p_idmef_value_type_t swig_types[52] 
+#define  SWIGTYPE_p_idmef_source_spoofed_t swig_types[53] 
+#define  SWIGTYPE_p_idmef_data_t_data swig_types[54] 
+#define  SWIGTYPE_p_idmef_linkage_t swig_types[55] 
+#define  SWIGTYPE_p_idmef_action_t swig_types[56] 
+#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[57] 
+#define  SWIGTYPE_p_idmef_classification_t swig_types[58] 
+#define  SWIGTYPE_p_idmef_userid_t swig_types[59] 
+#define  SWIGTYPE_p_idmef_assessment_t swig_types[60] 
+#define  SWIGTYPE_p_prelude_client_t swig_types[61] 
+#define  SWIGTYPE_p_prelude_io_t swig_types[62] 
+#define  SWIGTYPE_p_idmef_object_t swig_types[63] 
+#define  SWIGTYPE_p_unsigned_char swig_types[64] 
+#define  SWIGTYPE_p_float swig_types[65] 
+#define  SWIGTYPE_p_idmef_additional_data_t swig_types[66] 
+#define  SWIGTYPE_p_idmef_data_t swig_types[67] 
+#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[68] 
+#define  SWIGTYPE_p_va_list swig_types[69] 
+#define  SWIGTYPE_p_idmef_alertident_t swig_types[70] 
+#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[71] 
+#define  SWIGTYPE_p_idmef_action_category_t swig_types[72] 
+#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[73] 
+#define  SWIGTYPE_p_idmef_file_category_t swig_types[74] 
+#define  SWIGTYPE_p_idmef_user_category_t swig_types[75] 
+#define  SWIGTYPE_p_idmef_address_category_t swig_types[76] 
+#define  SWIGTYPE_p_idmef_node_category_t swig_types[77] 
+static swig_type_info *swig_types[79];
 
 /* -------- TYPES TABLE (END) -------- */
 
@@ -23871,143 +23870,6 @@ XS(_wrap_idmef_object_has_lists) {
 }
 
 
-XS(_wrap_idmef_object_list_new) {
-    {
-        idmef_object_list_t *result;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 0) || (items > 0)) {
-            SWIG_croak("Usage: idmef_object_list_new();");
-        }
-        result = (idmef_object_list_t *)idmef_object_list_new();
-        
-        ST(argvi) = sv_newmortal();
-        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_object_list_t, 0|0);
-        XSRETURN(argvi);
-        fail:
-        ;
-    }
-    croak(Nullch);
-}
-
-
-XS(_wrap_idmef_object_list_destroy) {
-    {
-        idmef_object_list_t *arg1 = (idmef_object_list_t *) 0 ;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: idmef_object_list_destroy(object_list);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_object_list_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_object_list_destroy. Expected _p_idmef_object_list_t");
-            }
-        }
-        idmef_object_list_destroy(arg1);
-        
-        
-        XSRETURN(argvi);
-        fail:
-        ;
-    }
-    croak(Nullch);
-}
-
-
-XS(_wrap_idmef_object_list_add) {
-    {
-        idmef_object_list_t *arg1 = (idmef_object_list_t *) 0 ;
-        idmef_object_t *arg2 = (idmef_object_t *) 0 ;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_object_list_add(object_list,object);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_object_list_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_object_list_add. Expected _p_idmef_object_list_t");
-            }
-        }
-        {
-            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_object_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_object_list_add. Expected _p_idmef_object_t");
-            }
-        }
-        idmef_object_list_add(arg1,arg2);
-        
-        
-        XSRETURN(argvi);
-        fail:
-        ;
-    }
-    croak(Nullch);
-}
-
-
-XS(_wrap_idmef_object_list_get_next) {
-    {
-        idmef_object_list_t *arg1 = (idmef_object_list_t *) 0 ;
-        idmef_object_t *arg2 = (idmef_object_t *) 0 ;
-        idmef_object_t *result;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_object_list_get_next(object_list,object);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_object_list_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_object_list_get_next. Expected _p_idmef_object_list_t");
-            }
-        }
-        {
-            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_object_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_object_list_get_next. Expected _p_idmef_object_t");
-            }
-        }
-        result = (idmef_object_t *)idmef_object_list_get_next(arg1,arg2);
-        
-        ST(argvi) = sv_newmortal();
-        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_object_t, 0|0);
-        XSRETURN(argvi);
-        fail:
-        ;
-    }
-    croak(Nullch);
-}
-
-
-XS(_wrap_idmef_object_list_get_size) {
-    {
-        idmef_object_list_t *arg1 = (idmef_object_list_t *) 0 ;
-        int result;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: idmef_object_list_get_size(object_list);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_object_list_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_object_list_get_size. Expected _p_idmef_object_list_t");
-            }
-        }
-        result = (int)idmef_object_list_get_size(arg1);
-        
-        ST(argvi) = sv_newmortal();
-        sv_setiv(ST(argvi++), (IV) result);
-        XSRETURN(argvi);
-        fail:
-        ;
-    }
-    croak(Nullch);
-}
-
-
 XS(_wrap_idmef_time_sec_set) {
     {
         struct idmef_time *arg1 = (struct idmef_time *) 0 ;
@@ -32078,7 +31940,6 @@ static swig_type_info _swigt__p_idmef_source_t[] = {{"_p_idmef_source_t", 0, "id
 static swig_type_info _swigt__p_idmef_classification_origin_t[] = {{"_p_idmef_classification_origin_t", 0, "idmef_classification_origin_t *", 0},{"_p_idmef_classification_origin_t"},{0}};
 static swig_type_info _swigt__p_idmef_criteria[] = {{"_p_idmef_criteria", 0, "struct idmef_criteria *", 0},{"Prelude::idmef_criteria_t"},{"_p_idmef_criteria"},{0}};
 static swig_type_info _swigt__p_idmef_criterion_t[] = {{"Prelude::idmef_criterion_t", 0, "idmef_criterion_t *", 0},{"Prelude::idmef_criterion_t"},{0}};
-static swig_type_info _swigt__p_idmef_object_list_t[] = {{"_p_idmef_object_list_t", 0, "idmef_object_list_t *", 0},{"_p_idmef_object_list_t"},{0}};
 static swig_type_info _swigt__p_idmef_object_value_list_t[] = {{"_p_idmef_object_value_list_t", 0, "idmef_object_value_list_t *", 0},{"_p_idmef_object_value_list_t"},{0}};
 static swig_type_info _swigt__p_idmef_time_t[] = {{"_p_idmef_time_t", 0, "idmef_time_t *", 0},{"_p_idmef_time_t"},{"Prelude::idmef_time"},{0}};
 static swig_type_info _swigt__p_idmef_criteria_t[] = {{"Prelude::idmef_criteria_t", 0, "idmef_criteria_t *", 0},{"Prelude::idmef_criteria_t"},{"_p_idmef_criteria"},{0}};
@@ -32159,7 +32020,6 @@ _swigt__p_idmef_source_t,
 _swigt__p_idmef_classification_origin_t, 
 _swigt__p_idmef_criteria, 
 _swigt__p_idmef_criterion_t, 
-_swigt__p_idmef_object_list_t, 
 _swigt__p_idmef_object_value_list_t, 
 _swigt__p_idmef_time_t, 
 _swigt__p_idmef_criteria_t, 
@@ -33233,11 +33093,6 @@ static swig_command_info swig_commands[] = {
 {"Preludec::idmef_object_get_name", _wrap_idmef_object_get_name},
 {"Preludec::idmef_object_is_ambiguous", _wrap_idmef_object_is_ambiguous},
 {"Preludec::idmef_object_has_lists", _wrap_idmef_object_has_lists},
-{"Preludec::idmef_object_list_new", _wrap_idmef_object_list_new},
-{"Preludec::idmef_object_list_destroy", _wrap_idmef_object_list_destroy},
-{"Preludec::idmef_object_list_add", _wrap_idmef_object_list_add},
-{"Preludec::idmef_object_list_get_next", _wrap_idmef_object_list_get_next},
-{"Preludec::idmef_object_list_get_size", _wrap_idmef_object_list_get_size},
 {"Preludec::idmef_time_sec_set", _wrap_idmef_time_sec_set},
 {"Preludec::idmef_time_sec_get", _wrap_idmef_time_sec_get},
 {"Preludec::idmef_time_usec_set", _wrap_idmef_time_usec_set},

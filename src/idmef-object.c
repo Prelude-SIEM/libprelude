@@ -43,6 +43,7 @@
 #include "idmef-tree-wrap.h"
 #include "idmef-object.h"
 #include "prelude-strbuf.h"
+#include "prelude-list.h"
 
 
 #define MAX_DEPTH     16
@@ -66,18 +67,14 @@ typedef struct {
         
 
 struct idmef_object {
-	struct list_head list;
+	PRELUDE_LINKED_OBJECT;
+
 	pthread_mutex_t mutex;
 	char name[MAX_NAME_LEN];
 	int refcount;
 	uint8_t depth;
 
         idmef_object_description_t desc[MAX_DEPTH];
-};
-
-struct idmef_object_list {
-	struct list_head list;
-	int size;
 };
 
 
@@ -192,7 +189,7 @@ static idmef_value_t *idmef_object_get_internal(idmef_object_t *object, int dept
 		return idmef_object_get_nth_internal(object, depth + 1, child, child_type, which);
 	}
                 
-        return (parent_type == -1) ? parent : idmef_value_new_object(parent, child_type);
+        return (parent_type == -1) ? parent : idmef_value_new_object(parent, parent_type);
 }
 
 
@@ -852,66 +849,4 @@ int idmef_object_has_lists(idmef_object_t *object)
 	}
 	
 	return ret;
-}
-
-
-
-/*
- * Object list related functions
- */
-
-
-
-idmef_object_list_t *idmef_object_list_new(void)
-{
-	idmef_object_list_t *object_list;
-
-	object_list = malloc(sizeof (*object_list));
-	if ( ! object_list ) {
-		log(LOG_ERR, "memory exhausted.\n");
-		return NULL;
-	}
-
-	INIT_LIST_HEAD(&object_list->list);
-
-	object_list->size = 0;
-
-	return object_list;
-}
-
-
-
-void idmef_object_list_destroy(idmef_object_list_t *object_list)
-{
-	struct list_head *ptr, *next;
-	idmef_object_t *object;
-
-	list_for_each_safe(ptr, next, &object_list->list) {
-		object = list_entry(ptr, idmef_object_t, list);
-		idmef_object_destroy(object);
-	}
-
-	free(object_list);
-}
-
-
-
-void idmef_object_list_add(idmef_object_list_t *object_list, idmef_object_t *object)
-{
-	list_add_tail(&object->list, &object_list->list);
-	object_list->size++;
-}
-
-
-
-idmef_object_t *idmef_object_list_get_next(idmef_object_list_t *object_list, idmef_object_t *object)
-{
-	return list_get_next(object, &object_list->list, idmef_object_t, list);
-}
-
-
-
-int idmef_object_list_get_size(idmef_object_list_t *object_list)
-{
-	return object_list->size;
 }
