@@ -1,6 +1,6 @@
 AM_CPPFLAGS = 	-I$(top_builddir)/src/include -I$(top_srcdir)/src/include -I$(top_srcdir)/libmissing 	\
-		-I$(top_builddir)/src/libprelude-error @libprelude_cflags@ 				\
-		-DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\" @LIBGNUTLS_EXTRA_CFLAGS@ 
+		-I$(top_builddir)/src/libprelude-error @libprelude_cflags@ @LIBGNUTLS_CFLAGS@		\
+		@LIBGNUTLS_EXTRA_CFLAGS@ -DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\"
 
 bin_PROGRAMS = prelude-adduser
 prelude_adduser_LDADD = @libprelude_libs@ @LIBGNUTLS_EXTRA_LIBS@ $(top_builddir)/src/libprelude.la

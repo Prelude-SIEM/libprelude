@@ -1,8 +1,9 @@
 SUBDIRS = libprelude-error include
 
-AM_CPPFLAGS = -I$(srcdir)/include -I$(top_builddir)/src/include 	\
-		-I$(srcdir)/libprelude-error -I$(top_srcdir)/libmissing @INCLTDL@ @libprelude_cflags@	\
-		-DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\" -DPRELUDE_SPOOL_DIR=\"@prelude_spool_dir@\"
+AM_CPPFLAGS = \
+-I$(srcdir)/include -I$(top_builddir)/src/include -I$(srcdir)/libprelude-error	\
+-I$(top_srcdir)/libmissing @INCLTDL@ @libprelude_cflags@ @LIBGNUTLS_CFLAGS@	\
+-DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\" -DPRELUDE_SPOOL_DIR=\"@prelude_spool_dir@\"
 
 
 libpreludeincludedir = $(includedir)/

@@ -89,7 +89,6 @@ fi
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
-AC_SUBST(pthread_cflags)
 AC_SUBST(libprelude_libs)
 AC_SUBST(libprelude_cflags)
 
@@ -106,6 +105,11 @@ dnl **************************************************
 dnl * Check for Pthread library                      *
 dnl **************************************************
 
+dnl ***
+dnl *** Can we use -Werror -Wmissing-braces for some checks ? ***
+AX_CFLAGS_GCC_OPTION(-Werror -Wmissing-braces, buggy_pthread_cppflags)
+
+
 ACX_PTHREAD(, AC_MSG_ERROR(couldn't find suitable pthread implementation))
 
 dnl Export pthread stuff wide for libmissing and libprelude-error
@@ -120,6 +124,27 @@ if test x$have_pthread_atfork = xyes; then
    AC_DEFINE_UNQUOTED(HAVE_PTHREAD_ATFORK, , Define wether pthread_atfork is available)
 fi
 
+old_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS $buggy_pthread_cppflags"
+
+AC_MSG_CHECKING(for buggy pthread mutex initializers)
+AC_TRY_COMPILE(
+[
+#include <pthread.h>
+], 
+[
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+],
+compile_ok="yes", compile_ok="no")
+
+CFLAGS="$old_CFLAGS"
+
+if test x$compile_ok = xyes; then
+   AC_MSG_RESULT(no)
+else
+   AC_MSG_RESULT(yes)
+   buggy_pthread_initializers="yes"
+fi
 
 
 dnl **************************************************
@@ -169,13 +194,11 @@ if test x$gnutls != xyes; then
 fi
 
 libprelude_libs="$libprelude_libs $LIBGNUTLS_LIBS"
-libprelude_cflags="$libprelude_cflags $LIBGNUTLS_CFLAGS"
 
 old_CPPFLAGS=$CPPFLAGS
-CPPFLAGS=$libprelude_cflags
+CPPFLAGS="$LIBGNUTLS_CFLAGS"
 
-AC_CHECK_HEADER(gnutls/gnutls.h,
-       		libprelude_cflags="$libprelude_cflags",
+AC_CHECK_HEADER(gnutls/gnutls.h, ,
        		AC_MSG_ERROR("libgnutls development headers are required to build libprelude"))
 CPPFLAGS=$old_CPPFLAGS
 
@@ -193,7 +216,7 @@ AC_SUBST(LIBGNUTLS_EXTRA_LIBS)
 AC_SUBST(LIBGNUTLS_EXTRA_CFLAGS)
 
 old_CPPFLAGS=$CPPFLAGS
-CPPFLAGS="$libprelude_cflags $LIBGNUTLS_EXTRA_CFLAGS"
+CPPFLAGS="$LIBGNUTLS_EXTRA_CFLAGS"
 
 AC_CHECK_HEADER(gnutls/extra.h, ,
        		AC_MSG_ERROR("libgnutls-extra development headers are required to build libprelude"))
@@ -419,6 +442,9 @@ AX_CFLAGS_GCC_OPTION(-Wcast-qual)
 AX_CFLAGS_GCC_OPTION(-Wcast-align)
 AX_CFLAGS_GCC_OPTION(-Wnested-externs)
 AX_CFLAGS_GCC_OPTION(-Wunused)
+if test x$buggy_pthread_initializers = xyes; then 
+   AX_CFLAGS_GCC_OPTION(-Wno-missing-braces)
+fi
 
 
 AC_CONFIG_FILES([
