@@ -89,14 +89,25 @@ sub	value2scalar($)
 }
 
 
-package Sensor;
+package Client;
+
+sub RECV_IDMEF { $Prelude::PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF }
+sub SEND_IDMEF { $Prelude::PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF }
+sub RECV_ADMIN { $Prelude::PRELUDE_CLIENT_CAPABILITY_RECV_ADMIN }
+sub SEND_ADMIN { $Prelude::PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN }
+sub RECV_CM { $Prelude::PRELUDE_CLIENT_CAPABILITY_RECV_CM }
+sub SEND_CM { $Prelude::PRELUDE_CLIENT_CAPABILITY_SEND_CM }
 
 sub new($$)
 {
     my $class = shift;
+    my $capability = shift || return undef;
     my $name = shift || $0;
     my $config = shift || undef;
     my $self = { };
+
+    $self->{client} = undef;
+    $self->{msgbuf} = undef;
 
     if ( ! $config ) {
 	$config = `libprelude-config --prefix`;
@@ -126,10 +137,12 @@ sub new($$)
 	Prelude::idmef_process_set_arg($process, Prelude::idmef_string_new_dup($arg));
     }
 
-    $self->{msgbuf} = Prelude::prelude_msgbuf_new($self->{client});
-    if ( ! $self->{msgbuf} ) {
-	Prelude::prelude_client_destroy($self->{client});
-	return undef;
+    if ( $capability & &SEND_IDMEF ) {
+	$self->{msgbuf} = Prelude::prelude_msgbuf_new($self->{client});
+	if ( ! $self->{msgbuf} ) {
+	    Prelude::prelude_client_destroy($self->{client});
+	    return undef;
+	  }
     }
 
     return bless($self, $class);
@@ -188,8 +201,18 @@ sub DESTROY
 {
     my $self = shift;
 
-    Prelude::prelude_msgbuf_close($self->{msgbuf});
-    Prelude::prelude_client_destroy($self->{client});
+    Prelude::prelude_msgbuf_close($self->{msgbuf}) if ( $self->{msgbuf} );
+    Prelude::prelude_client_destroy($self->{client}) if ( $self->{client} );
+}
+
+
+
+package Sensor;
+
+sub new
+{
+    shift;
+    return new Client(&Client::SEND_IDMEF, @_) ;
 }
 
 

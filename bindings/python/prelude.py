@@ -26,11 +26,20 @@ import string
 import _prelude
 
 
+
 class Error(Exception):
     pass
 
-class SensorError(Error):
-    pass
+
+
+class ClientError(Error):
+    def __init__(self, message=""):
+        self._message = message
+
+    def __str__(self):
+        return self._message
+
+
 
 class IDMEFObjectError(Error, KeyError):
     def __init__(self, object):
@@ -38,6 +47,8 @@ class IDMEFObjectError(Error, KeyError):
 
     def __str__(self):
         return "Invalid IDMEF object '%s'" % self.object
+
+
 
 class IDMEFValueError(Error, ValueError):
     def __init__(self, value, desc=None):
@@ -50,12 +61,16 @@ class IDMEFValueError(Error, ValueError):
         
         return "Invalid IDMEF value '%s'" % self.value
 
+
+
 class IDMEFTimeError(Error, ValueError):
     def __init__(self, time):
         self.time = time
 
     def __str__(self):
         return "Invalid IDMEF time '%s'" % self.time
+
+
 
 class IDMEFCriteriaError(Error):
     def __init__(self, criteria):
@@ -66,18 +81,18 @@ class IDMEFCriteriaError(Error):
 
 
 
-def sensor_init(name=None):
-    """Prelude sensor initialization."""
-    
-    if name is None:
-        name = sys.argv[0]
+class Client:
+    RECV_IDMEF = _prelude.PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF
+    SEND_IDMEF = _prelude.PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF
+    RECV_ADMIN = _prelude.PRELUDE_CLIENT_CAPABILITY_RECV_ADMIN
+    SEND_ADMIN = _prelude.PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN
+    RECV_CM = _prelude.PRELUDE_CLIENT_CAPABILITY_RECV_CM
+    SEND_CM = _prelude.PRELUDE_CLIENT_CAPABILITY_SEND_CM
+
+    def __init__(self, capability, name=None, config=None):
+        self._client = None
+        self._msgbuf = None
         
-    if _prelude.prelude_sensor_init(name, None, 0, [ ]) < 0:
-        raise SensorError()
-
-
-class Sensor:
-    def __init__(self, name, config=None):
         if not name:
             name = sys.argv[0]
         
@@ -87,27 +102,28 @@ class Sensor:
             file.close()
             config = path[:-1] + "/etc/prelude/default/client.conf"
         
-        self._client = _prelude.prelude_client_new(_prelude.PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF)
+        self._client = _prelude.prelude_client_new(capability)
         if not self._client:
-            raise SensorError()
+            raise ClientError()
 
         if _prelude.prelude_client_init(self._client, name, config, 1, [ sys.argv[0] ]) < 0:
             _prelude.prelude_client_destroy(self._client)
-            raise SensorError()
+            raise ClientError()
 
         self._analyzer = _prelude.prelude_client_get_analyzer(self._client)
         if not self._analyzer:
             _prelude.prelude_client_destroy(self._client)
-            raise SensorError()
+            raise ClientError()
 
         process = _prelude.idmef_analyzer_get_process(self._analyzer)
         for arg in sys.argv[1:]:
             _prelude.idmef_process_set_arg(process, _prelude.idmef_string_new_dup(arg))
 
-        self._msgbuf = _prelude.prelude_msgbuf_new(self._client)
-        if not self._msgbuf:
-            _prelude.prelude_client_destroy(self._client)
-            raise SensorError()
+        if capability & Client.SEND_IDMEF:
+            self._msgbuf = _prelude.prelude_msgbuf_new(self._client)
+            if not self._msgbuf:
+                _prelude.prelude_client_destroy(self._client)
+                raise ClientError()
     
     def set_manufacturer(self, manufacturer):
         _prelude.idmef_analyzer_set_manufacturer(self._analyzer, _prelude.idmef_string_new_dup(manufacturer))
@@ -128,8 +144,17 @@ class Sensor:
         _prelude.prelude_msgbuf_mark_end(self._msgbuf)
 
     def __del__(self):
-        _prelude.prelude_msgbuf_close(self._msgbuf)
-        _prelude.prelude_client_destroy(self._client)
+        if self._msgbuf:
+            _prelude.prelude_msgbuf_close(self._msgbuf)
+
+        if self._client:
+            _prelude.prelude_client_destroy(self._client)
+
+
+
+class Sensor(Client):
+    def __init__(self, name=None, config=None):
+        Client.__init__(self, Client.SEND_IDMEF, name, config)
 
 
 
