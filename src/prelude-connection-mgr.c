@@ -784,7 +784,7 @@ int prelude_connection_mgr_init(prelude_connection_mgr_t *new)
         cnx_list_t *clist;
 
         if ( ! new->connection_string_changed || ! new->connection_string )
-                return 0;
+                return -1;
         
         new->connection_string_changed = FALSE;
         connection_list_destroy(new->or_list);
