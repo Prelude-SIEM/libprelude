@@ -82,13 +82,13 @@
 typedef struct {
         size_t len;
 
-        idmef_criterion_operator_t relation;
+        idmef_criterion_operator_t operator;
         
         int (*copy)(const idmef_value_type_t *src, void *dst, size_t size);
         int (*clone)(const idmef_value_type_t *src, idmef_value_type_t *dst, size_t size);
         
         void (*destroy)(idmef_value_type_t *type);
-        int (*compare)(const idmef_value_type_t *t1, const idmef_value_type_t *t2, size_t size, idmef_criterion_operator_t relation);
+        int (*compare)(const idmef_value_type_t *t1, const idmef_value_type_t *t2, size_t size, idmef_criterion_operator_t op);
         
         int (*read)(idmef_value_type_t *dst, const char *buf);
         int (*write)(const idmef_value_type_t *src, prelude_string_t *out);
@@ -132,19 +132,19 @@ static int generic_clone(const idmef_value_type_t *src, idmef_value_type_t *dst,
 
 
 static int generic_compare(const idmef_value_type_t *t1, const idmef_value_type_t *t2,
-                           size_t size, idmef_criterion_operator_t relation)
+                           size_t size, idmef_criterion_operator_t op)
 {
         int ret;
 
         ret = memcmp(&t1->data, &t2->data, size);
         
-        if ( ret == 0 && relation & IDMEF_CRITERION_OPERATOR_EQUAL ) 
+        if ( ret == 0 && op & IDMEF_CRITERION_OPERATOR_EQUAL ) 
                 return 0;
 
-        else if ( ret < 0 && relation & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_LESSER) )
+        else if ( ret < 0 && op & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_LESSER) )
                 return 0;
 
-        else if ( ret > 0 && relation & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_GREATER) )
+        else if ( ret > 0 && op & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_GREATER) )
                 return 0;
 
         return -1;
@@ -157,18 +157,18 @@ static int generic_compare(const idmef_value_type_t *t1, const idmef_value_type_
  * time specific function.
  */
 static int time_compare(const idmef_value_type_t *t1, const idmef_value_type_t *t2,
-                        size_t size, idmef_criterion_operator_t relation)
+                        size_t size, idmef_criterion_operator_t op)
 {
 	double time1 = idmef_time_get_sec(t1->data.time_val) + idmef_time_get_usec(t1->data.time_val) * 1e-6;
 	double time2 = idmef_time_get_sec(t2->data.time_val) + idmef_time_get_usec(t2->data.time_val) * 1e-6;
 
-        if ( relation & IDMEF_CRITERION_OPERATOR_EQUAL && time1 == time2 )
+        if ( op & IDMEF_CRITERION_OPERATOR_EQUAL && time1 == time2 )
                 return 0;
 
-        else if ( relation & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_LESSER) && time1 < time2 )
+        else if ( op & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_LESSER) && time1 < time2 )
                 return 0;
 
-        else if ( relation & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_GREATER) && time1 > time2 )
+        else if ( op & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_GREATER) && time1 > time2 )
                 return 0;
 
         return -1;
@@ -225,20 +225,20 @@ static void time_destroy(idmef_value_type_t *type)
  *
  */
 static int string_compare(const idmef_value_type_t *t1, const idmef_value_type_t *t2,
-                          size_t size, idmef_criterion_operator_t relation)
+                          size_t size, idmef_criterion_operator_t op)
 {
         const char *s1, *s2;
         
         s1 = prelude_string_get_string(t1->data.string_val);
         s2 = prelude_string_get_string(t2->data.string_val);
         
-        if ( relation & IDMEF_CRITERION_OPERATOR_EQUAL && strcmp(s1, s2) == 0 )
+        if ( op & IDMEF_CRITERION_OPERATOR_EQUAL && strcmp(s1, s2) == 0 )
                 return 0;
 
-        else if ( relation & IDMEF_CRITERION_OPERATOR_NOT_EQUAL && strcmp(s1, s2) != 0 )
+        else if ( op & IDMEF_CRITERION_OPERATOR_NOT_EQUAL && strcmp(s1, s2) != 0 )
                 return 0;
         
-        else if ( relation & IDMEF_CRITERION_OPERATOR_SUBSTR && strstr(s1, s2) )
+        else if ( op & IDMEF_CRITERION_OPERATOR_SUBSTR && strstr(s1, s2) )
                 return 0;
         
         return -1;
@@ -285,7 +285,7 @@ static int string_write(const idmef_value_type_t *src, prelude_string_t *out)
  * data specific functions
  */
 static int data_compare(const idmef_value_type_t *t1, const idmef_value_type_t *t2,
-                        size_t len, idmef_criterion_operator_t relation)
+                        size_t len, idmef_criterion_operator_t op)
 {
         int ret;
         size_t len1, len2;
@@ -299,13 +299,13 @@ static int data_compare(const idmef_value_type_t *t1, const idmef_value_type_t *
         else 
                 ret = (len1 > len2) ? 1 : -1;   
         
-        if ( ret == 0 && relation & IDMEF_CRITERION_OPERATOR_EQUAL )
+        if ( ret == 0 && op & IDMEF_CRITERION_OPERATOR_EQUAL )
                 return 0;
 
-        else if ( ret < 0 && relation & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_LESSER) )
+        else if ( ret < 0 && op & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_LESSER) )
                 return 0;
 
-        else if ( ret > 0 && relation & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_GREATER) )
+        else if ( ret > 0 && op & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_GREATER) )
                 return 0;
                                 
         return -1;
@@ -444,7 +444,7 @@ int idmef_value_type_compare(const idmef_value_type_t *type1,
         if ( ret < 0 )
                 return ret;
 
-        assert(op & ops_tbl[type1->id].relation);
+        assert(op & ops_tbl[type1->id].operator);
         
         if ( ! ops_tbl[type1->id].compare )
                 return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_UNAVAILABLE);
@@ -505,7 +505,7 @@ void idmef_value_type_destroy(idmef_value_type_t *type)
 
 
 
-int idmef_value_type_check_relation(const idmef_value_type_t *type, idmef_criterion_operator_t op)
+int idmef_value_type_check_operator(const idmef_value_type_t *type, idmef_criterion_operator_t op)
 {
         int ret;
         
@@ -513,5 +513,8 @@ int idmef_value_type_check_relation(const idmef_value_type_t *type, idmef_criter
         if ( ret < 0 )
                 return ret;
 
-        return (op & ops_tbl[type->id].relation) ? 0 : -1;
+        if ( (~ops_tbl[type->id].operator & op) == 0 )
+                return 0;
+        
+        return prelude_error(PRELUDE_ERROR_IDMEF_CRITERION_UNSUPPORTED_OPERATOR);
 }

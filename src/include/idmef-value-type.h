@@ -96,7 +96,7 @@ int idmef_value_type_clone(const idmef_value_type_t *src, idmef_value_type_t *ds
 int idmef_value_type_compare(const idmef_value_type_t *type1, const idmef_value_type_t *type2,
                              idmef_criterion_operator_t op);
 
-int idmef_value_type_check_relation(const idmef_value_type_t *type, idmef_criterion_operator_t op);
+int idmef_value_type_check_operator(const idmef_value_type_t *type, idmef_criterion_operator_t op);
 
 #ifdef __cplusplus
  }

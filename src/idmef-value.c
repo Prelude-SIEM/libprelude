@@ -643,7 +643,7 @@ int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_
  */
 int idmef_value_check_operator(idmef_value_t *value, idmef_criterion_operator_t op)
 {
-        return idmef_value_type_check_relation(&value->type, op);
+        return idmef_value_type_check_operator(&value->type, op);
 }
 
 
