@@ -306,7 +306,7 @@ static int handle_ssl_connection(prelude_client_t *client, int sock)
                 log(LOG_INFO,
                     "\nSSL authentication failed. Use the \"manager-adduser\"\n"
                     "program on the Manager host together with the \"sensor-adduser\"\n"
-                    "program on the Sensor host to create an username for this Sensor.\n");
+                    "program on the Sensor host to create an username for this Sensor.\n\n");
                 return -1;
         }
         
