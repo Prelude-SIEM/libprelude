@@ -50,11 +50,11 @@ void prelude_msg_recycle(prelude_msg_t *msg);
 
 void prelude_msg_mark_end(prelude_msg_t *msg);
 
-prelude_msg_t *prelude_msg_dynamic_new(prelude_msg_t *(*flush_msg_cb)(void *data), void *data);
+int prelude_msg_dynamic_new(prelude_msg_t **ret, int (*flush_msg_cb)(prelude_msg_t **msg, void *data), void *data);
 
-prelude_msg_t *prelude_msg_new(size_t msgcount, size_t msglen, uint8_t tag, uint8_t priority);
+int prelude_msg_new(prelude_msg_t **ret, size_t msgcount, size_t msglen, uint8_t tag, uint8_t priority);
 
-void prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *data);
+int prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *data);
 
 int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst);
 
@@ -87,7 +87,7 @@ void prelude_msg_destroy(prelude_msg_t *msg);
 
 void prelude_msg_reset(prelude_msg_t *msg);
 
-void prelude_msg_set_callback(prelude_msg_t *msg, prelude_msg_t *(*flush_msg_cb)(void *data));
+void prelude_msg_set_callback(prelude_msg_t *msg, int (*flush_msg_cb)(prelude_msg_t **msg, void *data));
 
 void prelude_msg_set_data(prelude_msg_t *msg, void *data);
 

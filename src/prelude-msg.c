@@ -76,17 +76,19 @@ struct prelude_msg {
         unsigned char *payload;
 
         void *send_msg_data;
-        prelude_msg_t *(*flush_msg_cb)(void *data);
+        int (*flush_msg_cb)(prelude_msg_t **msg, void *data);
 };
 
 
 
 
-static prelude_msg_t *call_alloc_cb(prelude_msg_t *msg) 
+static int call_alloc_cb(prelude_msg_t **msg) 
 {
-        msg = msg->flush_msg_cb(msg->send_msg_data);
-        if ( ! msg )
-                return NULL;
+        int ret;
+        
+        ret = (*msg)->flush_msg_cb(msg, (*msg)->send_msg_data);
+        if ( ret < 0 )
+                return ret;
 
         /*
          * Within the callback, the caller have the choise to use
@@ -97,11 +99,11 @@ static prelude_msg_t *call_alloc_cb(prelude_msg_t *msg)
          * in order to properly address the message buffer. And in order
          * for not all message to not look like fragment.
          */
-        msg->header_index = 0;
-        msg->write_index = PRELUDE_MSG_HDR_SIZE;
-        msg->hdr.is_fragment = 0;
+        (*msg)->header_index = 0;
+        (*msg)->write_index = PRELUDE_MSG_HDR_SIZE;
+        (*msg)->hdr.is_fragment = 0;
         
-        return msg;
+        return 0;
 }
 
 
@@ -132,8 +134,9 @@ static void write_message_header(prelude_msg_t *msg)
 
 
 
-inline static int set_data(prelude_msg_t **m, const void *buf, size_t size) 
+static int set_data(prelude_msg_t **m, const void *buf, size_t size) 
 {
+        int ret;
         size_t remaining;
         prelude_msg_t *msg = *m;
 
@@ -163,10 +166,10 @@ inline static int set_data(prelude_msg_t **m, const void *buf, size_t size)
                  * the caller might destroy the message after this and re-allocate
                  * one... or use synchronous send and reuse the same message.
                  */
-                *m = msg = call_alloc_cb(msg);
-                if ( ! msg )
-                        return prelude_error_from_errno(errno);
-                
+                ret = call_alloc_cb(&msg);
+                if ( ret < 0 )
+                        return ret;
+                                
                 return set_data(m, buf, size);
         }
 
@@ -594,6 +597,8 @@ void prelude_msg_recycle(prelude_msg_t *msg)
  */
 void prelude_msg_mark_end(prelude_msg_t *msg)
 {
+        int ret;
+        
         if ( msg->write_index - msg->header_index - PRELUDE_MSG_HDR_SIZE <= 0 ) 
                 return;
 
@@ -601,8 +606,8 @@ void prelude_msg_mark_end(prelude_msg_t *msg)
                 
         if ( msg->write_index + PRELUDE_MSG_HDR_SIZE + MINIMUM_FRAGMENT_DATA_SIZE > msg->hdr.datalen ) {
 
-                msg = call_alloc_cb(msg);
-                if ( ! msg ) 
+                ret = call_alloc_cb(&msg);
+                if ( ret < 0 ) 
                         return;
         } else {
                 msg->header_index = msg->write_index;
@@ -622,18 +627,32 @@ void prelude_msg_mark_end(prelude_msg_t *msg)
  *
  * prelude_msg_set() append @len bytes of data from the @data buffer
  * to the @msg object representing a message. The data is tagged with @tag.
+ *
+ * Returns: 0 on success, or a negative value if the remaining space is not
+ * available. You might check the return value mostly if using a dynamic message
+ * through prelude_msg_dynamic_new()
  */
-void prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *data) 
-{        
+int prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *data) 
+{
+        int ret;
         uint32_t l;
         uint8_t end_of_tag = 0xff;
 
         l = htonl(len);
         
-        set_data(&msg, &tag, sizeof(tag));
-        set_data(&msg, &l, sizeof(l));
-        set_data(&msg, data, len);
-        set_data(&msg, &end_of_tag, sizeof(end_of_tag));
+        ret = set_data(&msg, &tag, sizeof(tag));
+        if ( ret < 0 )
+                return ret;
+        
+        ret = set_data(&msg, &l, sizeof(l));
+        if ( ret < 0 )
+                return ret;
+        
+        ret = set_data(&msg, data, len);
+        if ( ret < 0 )
+                return ret;
+        
+        return set_data(&msg, &end_of_tag, sizeof(end_of_tag));
 }
 
 
@@ -652,7 +671,7 @@ void prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *
  *
  * Returns: A pointer on a #prelude_msg_t object or NULL if an error occured.
  */
-prelude_msg_t *prelude_msg_new(size_t msgcount, size_t msglen, uint8_t tag, uint8_t priority) 
+int prelude_msg_new(prelude_msg_t **ret, size_t msgcount, size_t msglen, uint8_t tag, uint8_t priority) 
 {
         size_t len;
         prelude_msg_t *msg;
@@ -674,7 +693,7 @@ prelude_msg_t *prelude_msg_new(size_t msgcount, size_t msglen, uint8_t tag, uint
         
         msg = malloc(sizeof(prelude_msg_t) + len);
         if ( ! msg )
-                return NULL;
+                return prelude_error_from_errno(errno);
 
         msg->payload = (unsigned char *) msg + sizeof(prelude_msg_t);
 
@@ -688,8 +707,10 @@ prelude_msg_t *prelude_msg_new(size_t msgcount, size_t msglen, uint8_t tag, uint
         msg->write_index = PRELUDE_MSG_HDR_SIZE;
         msg->fd_write_index = 0;
         msg->flush_msg_cb = NULL;
+
+        *ret = msg;
         
-        return msg;
+        return 0;
 }
 
 
@@ -710,15 +731,13 @@ prelude_msg_t *prelude_msg_new(size_t msgcount, size_t msglen, uint8_t tag, uint
  *
  * Returns: A pointer on a #prelude_msg_t object or NULL if an error occured.
  */
-prelude_msg_t *prelude_msg_dynamic_new(prelude_msg_t *(*flush_msg_cb)(void *data), void *data) 
+int prelude_msg_dynamic_new(prelude_msg_t **ret, int (*flush_msg_cb)(prelude_msg_t **msg, void *data), void *data) 
 {
         prelude_msg_t *msg;
         
         msg = malloc(sizeof(prelude_msg_t) + MSGBUF_SIZE);
-        if ( ! msg ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
+        if ( ! msg )
+                return prelude_error_from_errno(errno);
 
         msg->hdr.tag = 0;
         msg->hdr.priority = 0;
@@ -734,8 +753,10 @@ prelude_msg_t *prelude_msg_dynamic_new(prelude_msg_t *(*flush_msg_cb)(void *data
         msg->flush_msg_cb = flush_msg_cb;
         msg->write_index = PRELUDE_MSG_HDR_SIZE;
         msg->fd_write_index = 0;
+
+        *ret = msg;
         
-        return msg;
+        return 0;
 }
 
 
@@ -855,7 +876,7 @@ void prelude_msg_destroy(prelude_msg_t *msg)
  * prelude_msg_set_callback() allow to change the callback used
  * to flush a message created with prelude_msg_dynamic_new().
  */
-void prelude_msg_set_callback(prelude_msg_t *msg, prelude_msg_t *(*flush_msg_cb)(void *data)) 
+void prelude_msg_set_callback(prelude_msg_t *msg, int (*flush_msg_cb)(prelude_msg_t **msg, void *data)) 
 {
         msg->flush_msg_cb = flush_msg_cb;
 }
