@@ -84,6 +84,9 @@
 
 #define REFCOUNT int refcount
 
+#define DYNAMIC_IDENT(x) uint64_t x
+
+
 #endif /* _GENERATE */
 
 /*
@@ -699,7 +702,7 @@ ENUM(idmef) {
 
 
 typedef struct {
-        uint64_t ident;
+        DYNAMIC_IDENT(ident);
 
         idmef_assessment_t *assessment;
     
@@ -730,7 +733,7 @@ typedef struct {
  * Heartbeat class
  */
 typedef struct {
-        uint64_t ident;
+        DYNAMIC_IDENT(ident);
         idmef_analyzer_t *analyzer;
 
         idmef_time_t create_time;
