@@ -84,6 +84,7 @@ AC_RUN_IFELSE(
 
       $__PRELUDE_HAVE_STDINT_H
       $__PRELUDE_HAVE_INTTYPES_H
+      $__PRELUDE_STDINT_HAVE_UINT64
 
       #ifdef __PRELUDE_HAVE_STDINT_H
        #include <stdint.h>
@@ -91,6 +92,20 @@ AC_RUN_IFELSE(
 
       #ifdef __PRELUDE_HAVE_INTTYPES_H
        #include <inttypes.h>
+      #endif
+
+      #ifndef __PRELUDE_STDINT_HAVE_UINT64
+       #ifdef __PRELUDE_HAVE_64BIT_LONG
+
+        typedef long int64_t;
+        typedef unsigned long uint64_t;
+
+       #else
+
+        typedef long long int64_t;
+        typedef unsigned long long uint64_t;
+
+       #endif
       #endif
 
       main()
