@@ -20,25 +20,12 @@ AC_C_BIGENDIAN
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
-
-
-
-dnl **************************************************
-dnl * Check for getopt_long                          *
-dnl **************************************************
-
-AC_CHECK_HEADERS(getopt.h, getopt_long_hdr=yes)
-AC_CHECK_LIB(c, getopt_long, getopt_long_func=yes)
-
-if test x$getopt_long_hdr = xyes && test x$getopt_long_func = xyes; then
-	AC_DEFINE(HAVE_GETOPT_LONG)
-fi
-
+AC_SUBST(libprelude_libs)
 
 dnl **************************************************
 dnl * Check for demand loading of shared lib library *
 dnl **************************************************
-AC_CHECK_LIB(dl, dlopen, LIBS="-ldl")
+AC_CHECK_LIB(dl, dlopen, libprelude_libs="-ldl")
 
 
 
@@ -49,7 +36,7 @@ AC_CHECK_LIB(crypt, crypt, cryptlib=true)
 
 if test x$cryptlib = xtrue; then
 	AC_DEFINE(HAVE_CRYPT)
-	LIBS="$LIBS -lcrypt";
+	libprelude_libs="$libprelude_libs -lcrypt";
 fi
 
 
@@ -60,10 +47,32 @@ dnl **************************************************
 
 AC_CHECK_LIB(pthread, pthread_create, pthrlib="yes")
 if test x$pthrlib = xyes; then
-	LIBS="$LIBS -lpthread"
+	libprelude_libs="$libprelude_libs -lpthread"
 else
-	AC_CHECK_LIB(c_r, pthread_create, LIBS="$LIBS -lc_r")
+	AC_CHECK_LIB(c_r, pthread_create, libprelude_libs="$libprelude_libs -lc_r")
 fi
+
+
+
+dnl **************************************************
+dnl * Check for networking function                  *
+dnl **************************************************
+
+AC_CHECK_LIB(c, inet_ntoa, libc_inet_ntoa=yes)
+if test x$libc_inet_ntoa != xyes; then
+	AC_CHECK_LIB(nsl, inet_ntoa, libprelude_libs="$libprelude_libs -lnsl")
+fi
+
+AC_CHECK_LIB(c, socket, libc_socket=yes)
+if test x$libc_socket != xyes; then
+	AC_CHECK_LIB(socket, socket, libprelude_libs="$libprelude_libs -lsocket")
+fi
+
+AC_CHECK_LIB(c, inet_aton, libc_inet_aton=yes)
+if test x$libc_inet_aton != xyes; then
+	AC_CHECK_LIB(resolv, inet_aton, libprelude_libs="$libprelude_libs -lresolv")
+fi
+
 
 
 
@@ -78,16 +87,13 @@ AC_ARG_ENABLE(openssl, [  --enable-openssl Use OpenSSL to communicate with Repor
 
 if test x$enable_openssl = xauto ; then
 	if test x$openssl_header = xyes; then
-		SSL_LIBS="-lssl -lcrypto"	
-		LIBS="$LIBS -lssl -lcrypto"
+		libprelude_libs="$libprelude_libs -lssl -lcrypto"
 		AC_DEFINE(HAVE_SSL)
     		enable_openssl=yes
   	else
     		enable_openssl=no
   	fi
 fi
-
-AC_SUBST(SSL_LIBS)
 
 
 dnl **************************************************
@@ -169,8 +175,6 @@ AC_CHECK_FUNCS(gettimeofday select socket strdup strerror strstr)
 
 sensors_config_dir=$sysconfdir/prelude-sensors
 AC_SUBST(sensors_config_dir)
-
-AC_SUBST(LIBS)
 
 CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations \
 -Wbad-function-cast -Wcast-qual -Wcast-align -Wnested-externs -DREENTRANT"

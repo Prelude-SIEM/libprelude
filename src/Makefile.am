@@ -33,6 +33,3 @@ libprelude_la_SOURCES = 		\
 	idmef-tree-func.c		\
 	idmef-msg-send.c		
 
-
-libprelude_la_LIBADD = ../libmissing/libmissing.a @LIBS@
-

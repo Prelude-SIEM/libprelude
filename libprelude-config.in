@@ -25,33 +25,41 @@ while test $# -gt 0; do
         exec_prefix=$optarg
       fi
       ;;
+
     --prefix)
       echo $prefix
       ;;
+
     --exec-prefix=*)
       exec_prefix=$optarg
       exec_prefix_set=yes
       ;;
+
     --exec-prefix)
       echo $exec_prefix
       ;;
+
     --version)
       echo @VERSION@
       ;;
+
     --cflags)
       if test @includedir@ != /usr/include ; then
         includes=-I@includedir@
       fi
       echo $includes
       ;;
+
     --libs)
       libdirs=-L@libdir@
-      echo $libdirs -lprelude
+      echo $libdirs @libprelude_libs@ -lprelude
       ;;
+
     *)
       echo "${usage}" 1>&2
       exit 1
       ;;
+
   esac
   shift
 done

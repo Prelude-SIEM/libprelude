@@ -1,5 +1,18 @@
 2002-01-17  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* libprelude-config.in: 
+	* configure.ac: updated. Libprelude is not linked to the
+	needed library anymore. It's up to the application to do so.
+
+	Also, libprelude-config --libs will list -lc_r if needed for
+	Posix Thread so that when an application using libprelude try
+	to link, normal libc will be overwritten by -lc_r. 
+
+	This change was needed because crash would happen on FreeBSD using both
+	library at the same time. Credits goes to 
+	Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl> for finding
+	the problem
+
 	* src/client-ident.c (prelude_client_ident_send): 
 	if is_caller_a_sensor is set, declare the client as being
 	ID 0 (Relay Manager).
