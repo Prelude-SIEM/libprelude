@@ -346,6 +346,15 @@ static int parse_argument(const char *filename, int argc, char **argv)
 
         else if ( ret == prelude_option_end )
                 goto out;
+
+        /*
+         * do this before connection, and after prelude_option_parse_argument()
+         * return. So the caller might still print help even if the sensor is not
+         * registered.
+         */
+        ret = prelude_client_ident_init(prelude_get_sensor_name());
+        if ( ret < 0 )
+                return -1;
         
         /*
          * The sensors configuration file we just parsed doesn't contain
@@ -407,10 +416,6 @@ int prelude_sensor_init(const char *sname, const char *filename, int argc, char 
         ret = parse_argument(filename, argc, argv);
         if ( ret == prelude_option_end || ret == prelude_option_error )
                 return ret;
-	       
-        ret = prelude_client_ident_init(sname);
-        if ( ret < 0 )
-                return -1;
 
         return ret;
 }

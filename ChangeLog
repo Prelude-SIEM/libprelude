@@ -1,5 +1,9 @@
 2002-07-17  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/sensor.c (parse_argument): move the call
+	to prelude_client_ident_init() here, so that ident is declared
+	before connecting to the Manager, and after processing options.
+
 	* src/prelude-getopt.c (option_get_all): 
 	don't call the option callback if the option was 
 	called from command line.
