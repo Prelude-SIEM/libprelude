@@ -997,13 +997,13 @@ void prelude_option_destroy(prelude_option_t *option)
 
 /**
  * prelude_option_set_warnings;
- * @warnings: bitwise OR of flags.
- * @old_flags: Pointer to an integer where to store old flags to.
+ * @new: bitwise OR of #prelude_option_warning_t.
+ * @old_warnings: Pointer where to store the old #prelude_option_warning_t to.
  *
- * Set current warnings flags to @flags (unless @flags is 0).
+ * Set current warnings flags to @new.
  *
- * Uppon return, the variable pointed to by @old_flags is updated
- * to contain the old flags unless it point to NULL.
+ * Uppon return, if not NULL, the pointer to @old_warnings is updated
+ * to contain the old warnings.
  */
 void prelude_option_set_warnings(prelude_option_warning_t new, prelude_option_warning_t *old_warnings) 
 {

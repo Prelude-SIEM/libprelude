@@ -85,7 +85,7 @@ void prelude_option_set_type(prelude_option_t *opt, prelude_option_type_t type);
 
 prelude_option_type_t prelude_option_get_type(prelude_option_t *opt);
 
-void prelude_option_set_warnings(prelude_option_warning_t flags, prelude_option_warning_t *old_flags);
+void prelude_option_set_warnings(prelude_option_warning_t new, prelude_option_warning_t *old_warnings);
 
 char prelude_option_get_shortname(prelude_option_t *opt);
 
