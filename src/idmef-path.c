@@ -69,7 +69,6 @@ typedef struct idmef_path_element {
 
 
 struct idmef_path {
-	PRELUDE_LINKED_OBJECT;
 
 	pthread_mutex_t mutex;
 	char name[MAX_NAME_LEN];
@@ -360,7 +359,6 @@ static int idmef_path_create(idmef_path_t **path, const char *buffer)
 		return prelude_error_from_errno(errno);
 
         (*path)->refcount = 1;
-	prelude_list_init(&(*path)->list);
 	pthread_mutex_init(&(*path)->mutex, NULL);
         
 	return 0;
@@ -857,7 +855,6 @@ void idmef_path_destroy(idmef_path_t *path)
                 return;
         }
         
-        prelude_list_del(&path->list);
         pthread_mutex_unlock(&path->mutex);
         pthread_mutex_destroy(&path->mutex);
         free(path);
@@ -930,7 +927,6 @@ int idmef_path_clone(const idmef_path_t *src, idmef_path_t **dst)
 
         (*dst)->refcount = 1;
         (*dst)->depth = src->depth;
-        prelude_list_init(&(*dst)->list);
 
         strncpy((*dst)->name, src->name, sizeof(src->name)); 
         memcpy((*dst)->elem, src->elem, src->depth * sizeof(idmef_path_element_t));
