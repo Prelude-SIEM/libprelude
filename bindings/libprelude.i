@@ -96,6 +96,7 @@ typedef int int32_t;
 typedef unsigned int uint32_t;
 typedef long long int64_t;
 typedef unsigned long long uint64_t;
+typedef unsigned int prelude_bool_t;
 
 /*
  * Grab from swig python documentation
@@ -261,6 +262,17 @@ typedef unsigned long long uint64_t;
  
 %typemap(argout) prelude_msgbuf_t **msgbuf {
 	$result = SWIG_NewPointerObj((void *) * $1, SWIGTYPE_p_prelude_msgbuf_t, 0);
+};
+
+
+
+%typemap(in, numinputs=0) prelude_msg_t **msg (prelude_msg_t *tmp) {
+	tmp = NULL;
+	$1 = &tmp;
+};
+ 
+%typemap(argout) prelude_msg_t **msg {
+	$result = SWIG_NewPointerObj((void *) * $1, SWIGTYPE_p_prelude_msg_t, 0);
 };
 
 

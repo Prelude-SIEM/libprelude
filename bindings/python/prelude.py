@@ -45,6 +45,11 @@ class ClientError(Error):
 
 
 
+class ConnectionClosedError(Error):
+    pass
+
+
+
 class IDMEFObjectError(Error, KeyError):
     def __init__(self, object):
         self.object = object
@@ -224,6 +229,8 @@ class Option:
 
 class Admin:
     def __init__(self, name=None, address="127.0.0.1", port=5554):
+        self._address, self._port = address, port
+        
         self._profile = _prelude.prelude_client_profile_new(name or sys.argv[0])
         if not self._profile:
             raise ClientError("could not create client profile for %s" % name or sys.argv[0])
@@ -235,11 +242,8 @@ class Admin:
         self._msgbuf = _prelude.prelude_connection_new_msgbuf(self._connection)
         if not self._msgbuf:
             raise ClientError("could not create msgbuf for connection")
-        
-        if _prelude.prelude_connection_connect(self._connection,
-                                               self._profile,
-                                               _prelude.PRELUDE_CONNECTION_CAPABILITY_CONNECT) < 0:
-            raise ClientError("could not connect to %s:%d" % (address, port))
+
+        self.connect()
 
     def _get_option_list(self, parent, start):
         options = [ ]
@@ -258,23 +262,29 @@ class Admin:
         return options
 
     def _request(self, analyzer_path, type, value=None):
-        _prelude.prelude_option_new_request(self._msgbuf, 0, analyzer_path)
-        _prelude.prelude_option_push_request(self._msgbuf, type, value)
+        ret = _prelude.prelude_option_new_request(self._msgbuf, 0, analyzer_path)
+        if ret < 0:
+            raise ClientError(ret)
+                
+        ret = _prelude.prelude_option_push_request(self._msgbuf, type, value)
+        if ret < 0:
+            raise ClientError(ret)
+            
         _prelude.prelude_msgbuf_mark_end(self._msgbuf)
         
-        msg = _prelude.my_prelude_msg_read(_prelude.prelude_connection_get_fd(self._connection))
-        
+        #msg = _prelude.my_prelude_msg_read(_prelude.prelude_connection_get_fd(self._connection))
+        msg = _prelude.prelude_connection_recv(self._connection)
+        if not msg:
+            raise Error("could not read request answer")
+
         return msg
         
     def get_option_list(self, analyzer_path):
         msg = self._request(analyzer_path, _prelude.PRELUDE_MSG_OPTION_LIST)
-        
-        if not msg:
-            raise Error("PRELUDE_MSG_OPTION_LIST failed")
 
         options = _prelude.prelude_option_recv_list(msg)
         if not options:
-            return
+            raise Error("could not retrieve option list")
 
         return self._get_option_list(None, _prelude.prelude_option_get_next(options, None))
 
@@ -287,29 +297,33 @@ class Admin:
         else:
             value = name
         msg = self._request(analyzer_path, _prelude.PRELUDE_MSG_OPTION_SET, value)
-        retval = _prelude.prelude_option_recv_set(msg)
         
-        return retval
+        if _prelude.prelude_option_recv_set(msg) < 0:
+            raise Error("could not read set_option answer")
 
     def commit(self, analyzer_path, instance):
         msg = self._request(analyzer_path, _prelude.PRELUDE_MSG_OPTION_COMMIT, instance)
-        if not msg:
-            return
-        retval = _prelude.prelude_option_recv_set(msg)
-
-        return retval
+        
+        if _prelude.prelude_option_recv_set(msg) < 0:
+            raise Error("could not read commit answer")
 
     def get_analyzerid(self):
         return _prelude.prelude_client_profile_get_analyzerid(self._profile)
 
+    def connection_is_alive(self):
+        return _prelude.prelude_connection_is_alive(self._connection)
+
+    def connect(self):
+        if _prelude.prelude_connection_connect(self._connection,
+                                               self._profile,
+                                               _prelude.PRELUDE_CONNECTION_CAPABILITY_CONNECT):
+            raise ClientError("could not connect to %s:%d" % (self._address, self._port))
+        
     def destroy(self, analyzer_path, instance):
         msg = self._request(analyzer_path, _prelude.PRELUDE_MSG_OPTION_DESTROY, instance)
-        if not msg:
-            return
-        retval = _prelude.prelude_option_recv_set(msg)
 
-        return retval
-
+        if _prelude.prelude_option_recv_set(msg) < 0:
+            raise Error("could not read destroy answer")
 
 
 class IDMEFTime(object):
