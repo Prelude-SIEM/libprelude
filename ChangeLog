@@ -1,3 +1,7 @@
+2002-02-27  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-client.c: include string.h
+
 2002-02-21  Krzysztof Zaraska  <kzaraska@student.uci.agh.edu.pl>
 	* src/config-engine.c: fixed includes for FreeBSD compatibility. 
 
