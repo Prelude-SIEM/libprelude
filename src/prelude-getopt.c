@@ -757,7 +757,7 @@ static void construct_option_msg(prelude_msg_t *msg, prelude_optlist_t *optlist)
 
 
 
-prelude_msg_t *prelude_option_wide_get_msg(prelude_analyzer_t *analyzer) 
+prelude_msg_t *prelude_option_wide_get_msg(void) 
 {
         uint64_t source_id;
         
@@ -777,8 +777,8 @@ prelude_msg_t *prelude_option_wide_get_msg(prelude_analyzer_t *analyzer)
                 return NULL;
         }
 
-        
-        source_id = prelude_hton64(prelude_analyzer_get_analyzerid(analyzer));
+
+        source_id = prelude_hton64(prelude_client_get_analyzerid());
         prelude_msg_set(root_optlist->wide_msg, PRELUDE_MSG_OPTION_SOURCE_ID, sizeof(source_id), &source_id);
 
         construct_option_msg(root_optlist->wide_msg, root_optlist);

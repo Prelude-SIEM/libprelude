@@ -24,7 +24,7 @@
 #ifndef _LIBPRELUDE_PRELUDE_GETOPT_H
 #define _LIBPRELUDE_PRELUDE_GETOPT_H
 
-
+#include "prelude-analyzer.h"
 #include "prelude-message.h"
 
 
