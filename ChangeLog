@@ -1,3 +1,7 @@
+2001-11-21  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-message.c (prelude_msg_set): fix assert.
+
 2001-11-19  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-async.c (wait_timer_and_data): 

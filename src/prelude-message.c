@@ -347,7 +347,7 @@ void prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *
 {        
         uint32_t l;
         
-        assert( (len + 6) < (msg->hdr.datalen - msg->write_index) );
+        assert( (len + 6) <= (msg->hdr.datalen - msg->write_index) );
 
         l = htonl(len);
              
@@ -401,7 +401,7 @@ prelude_msg_t *prelude_msg_new(size_t msgcount, size_t msglen, uint8_t tag, uint
          * For alert header.
          */
         len += PRELUDE_MSG_HDR_SIZE;
-                
+        
         msg = malloc(sizeof(prelude_msg_t) + len);
         if ( ! msg ) {
                 log(LOG_ERR, "memory exhausted.\n");
