@@ -941,20 +941,27 @@ void prelude_option_set_priority(prelude_option_t *option, int priority)
 void prelude_option_destroy(prelude_option_t *option)
 {
         prelude_option_t *opt;
-        prelude_list_t *tmp, *bkp;
-
-        prelude_list_del(&option->list);
-
-        prelude_list_for_each_safe(tmp, bkp, &option->optlist) {
+        prelude_list_t *tmp, *bkp, *optlist;
+        
+        if ( ! option )
+                optlist = &root_optlist;
+        else {
+                optlist = &option->optlist;
+                prelude_list_del(&option->list);
+        }
+        
+        prelude_list_for_each_safe(tmp, bkp, optlist) {
                 
                 opt = prelude_list_entry(tmp, prelude_option_t, list);
                 prelude_option_destroy(opt);
         }
 
-        if ( option->value )
-                free(option->value);
+        if ( option ) {
+                if ( option->value )
+                        free(option->value);
         
-        free(option);
+                free(option);
+        }
 }
 
 
