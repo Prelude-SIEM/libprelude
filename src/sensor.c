@@ -50,8 +50,9 @@
 #include "client-ident.h"
 
 
-
+#define SENSORS_BACKUP_DIR "/var/spool/prelude-sensors"
 #define DEFAULT_SENSOR_CONFIG SENSORS_CONFIG_DIR"/sensors-default.conf"
+
 
 static const char *sensorname = NULL;
 static prelude_client_mgr_t *manager_list = NULL;
@@ -60,9 +61,11 @@ static prelude_client_mgr_t *manager_list = NULL;
 
 static int setup_manager_addr(const char *arg) 
 {
-        log(LOG_INFO, "\n");
-        
-        manager_list = prelude_client_mgr_new(sensorname, arg);
+        char filename[1024];
+
+        snprintf(filename, sizeof(filename), "%s/%s", SENSORS_BACKUP_DIR, sensorname);
+               
+        manager_list = prelude_client_mgr_new(arg, filename);
         if ( ! manager_list ) 
                 return prelude_option_error;
         
@@ -192,5 +195,3 @@ void prelude_sensor_send_alert(prelude_msg_t *msg)
 {
         prelude_client_mgr_broadcast_async(manager_list, msg);
 }
-
-

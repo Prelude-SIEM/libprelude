@@ -45,7 +45,6 @@
 #define MAXIMUM_EXPIRATION_TIME 3600
 
 
-#define BACKUP_DIR "/var/spool/prelude"
 
 
 
@@ -188,7 +187,7 @@ static void client_timer_expire(void *data)
 {
         int ret;
         client_t *client = data;
-
+        
         ret = prelude_client_connect(client->client);
         if ( ret < 0 ) {
                 /*
@@ -205,6 +204,7 @@ static void client_timer_expire(void *data)
                  * is dead, emmit backuped report.
                  */
                 timer_destroy(&client->timer);
+                
                 if ( --client->parent->dead == 0 ) 
                         flush_backup_if_needed(client->parent);
         }
@@ -456,16 +456,17 @@ static int secure_open(const char *filename)
 
 
 
-static int setup_backup_fd(prelude_client_mgr_t *new, const char *name) 
+static int setup_backup_fd(prelude_client_mgr_t *new, const char *path) 
 {
         int wfd, rfd;
         char filename[1024];
 
         /*
          * The backup file can't be shared if two instance of the sensor
-         * run as different user.
+         * run as different user. That's why we append the uid at the end
+         * of the filename.
          */
-        snprintf(filename, sizeof(filename), "%s/%s.%d", BACKUP_DIR, name, getuid());
+        snprintf(filename, sizeof(filename), "%s.%d", path, getuid());
         
         new->backup_fd_write = prelude_io_new();
         if (! new->backup_fd_write ) 
@@ -521,7 +522,7 @@ static int broadcast_message(prelude_msg_t *msg, client_list_t *clist)
         
         list_for_each(tmp, &clist->client_list) {
                 c = list_entry(tmp, client_t, list);
-                
+
                 ret = prelude_client_send_msg(c->client, msg);
                 if ( ret < 0 ) {
                         clist->dead++;
@@ -557,8 +558,8 @@ static int walk_manager_lists(prelude_client_mgr_t *cmgr, prelude_msg_t *msg)
                         continue;
                 }
                 
-                ret = broadcast_message(msg, item);                
-                if ( ret >= 0 )  /* AND of Manager emmission succeed */
+                ret = broadcast_message(msg, item);
+                if ( ret == 0 )  /* AND of Manager emmission succeed */
                         return 0;
         }
 
@@ -578,7 +579,7 @@ void prelude_client_mgr_broadcast(prelude_client_mgr_t *cmgr, prelude_msg_t *msg
 {
         int ret;
         
-        ret = walk_manager_lists(cmgr, msg);
+        ret = walk_manager_lists(cmgr, msg);        
         if ( ret == 0 )
                 return;
         
@@ -629,18 +630,16 @@ void prelude_client_mgr_broadcast_async(prelude_client_mgr_t *cmgr, prelude_msg_
 
 /**
  * prelude_client_mgr_new:
- * @identifier: Identifier for this clients manager.
+ * @filename: Path to a file.
  * @cfgline: Manager configuration string.
  *
  * prelude_client_mgr_new() initialize a new Client Manager object.
- * The @identifier argument will be used to identify the backup file associated
- * with this object.
- *
+ * The @filename argument will be the backup file associated with this object.
  *
  * Returns: a pointer on a #prelude_client_mgr_t object, or NULL
  * if an error occured.
  */
-prelude_client_mgr_t *prelude_client_mgr_new(const char *identifier, const char *cfgline) 
+prelude_client_mgr_t *prelude_client_mgr_new(const char *cfgline, const char *filename) 
 {
         int ret;
         char *dup;
@@ -658,7 +657,7 @@ prelude_client_mgr_t *prelude_client_mgr_new(const char *identifier, const char 
          * Setup a backup file descriptor for this client Manager.
          * It will be used if a message emmission fail.
          */
-        ret = setup_backup_fd(new, identifier);
+        ret = setup_backup_fd(new, filename);
         if ( ret < 0 ) {
                 free(new);
                 return NULL;
@@ -683,15 +682,3 @@ prelude_client_mgr_t *prelude_client_mgr_new(const char *identifier, const char 
         
         return new;
 }
-
-
-
-
-
-
-
-
-
-
-
-

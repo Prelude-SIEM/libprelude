@@ -27,6 +27,7 @@ sensor
 
 </para>
 
+@sname: 
 @filename: 
 @argc: 
 @argv: 

@@ -157,6 +157,22 @@ const char *variable
 #define PRELUDE_MSG_OPTION_SET  2
 </MACRO>
 <MACRO>
+<NAME>PRELUDE_MSG_ID</NAME>
+#define PRELUDE_MSG_ID          3
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_ID_REQUEST</NAME>
+#define PRELUDE_MSG_ID_REQUEST  0
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_ID_REPLY</NAME>
+#define PRELUDE_MSG_ID_REPLY    1
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_ID_DECLARE</NAME>
+#define PRELUDE_MSG_ID_DECLARE  3
+</MACRO>
+<MACRO>
 <NAME>MANAGERS_CERT</NAME>
 #define MANAGERS_CERT SENSORS_CONFIG_DIR"/managers.cert"
 </MACRO>
@@ -711,7 +727,17 @@ void
 <FUNCTION>
 <NAME>prelude_sensor_init</NAME>
 <RETURNS>int  </RETURNS>
-const char *filename, int argc, char **argv
+const char *sname, const char *filename, int argc, char **argv
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_sensor_get_ident</NAME>
+<RETURNS>uint64_t  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_sensor_set_ident</NAME>
+<RETURNS>void  </RETURNS>
+uint64_t *ident
 </FUNCTION>
 <MACRO>
 <NAME>SSL_GENCRYPTO_H</NAME>
@@ -1277,6 +1303,49 @@ prelude_msg_t *msg
 <RETURNS>void  </RETURNS>
 prelude_msg_t *msg
 </FUNCTION>
+<FUNCTION>
+<NAME>extract_uint64</NAME>
+<RETURNS>int  </RETURNS>
+uint64_t *dst, void *buf, uint32_t blen
+</FUNCTION>
+<FUNCTION>
+<NAME>extract_uint32</NAME>
+<RETURNS>int  </RETURNS>
+uint32_t *dst, void *buf, uint32_t blen
+</FUNCTION>
+<FUNCTION>
+<NAME>extract_uint16</NAME>
+<RETURNS>int  </RETURNS>
+uint16_t *dst, void *buf, uint32_t blen
+</FUNCTION>
+<FUNCTION>
+<NAME>extract_uint8</NAME>
+<RETURNS>int  </RETURNS>
+uint8_t *dst, void *buf, uint32_t blen
+</FUNCTION>
+<FUNCTION>
+<NAME>extract_str</NAME>
+<RETURNS>const char  *</RETURNS>
+void *buf, uint32_t blen
+</FUNCTION>
+<MACRO>
+<NAME>extract_int</NAME>
+#define extract_int(type, buf, blen, dst) do {        \
+        int ret;                                      \
+        ret = extract_ ## type (&dst, buf, blen);     \
+        if ( ret < 0 )                                \
+                return -1;                            \
+} while (0)
+</MACRO>
+<MACRO>
+<NAME>extract_string</NAME>
+#define extract_string(buf, blen, dst)                                    \
+        dst = extract_str(buf, blen);                                     \
+        if ( ! dst ) {                                                    \
+               log(LOG_ERR, "Datatype error, buffer is not a string.\n"); \
+               return -1;                                                 \
+        }
+</MACRO>
 <TYPEDEF>
 <NAME>bm_string_t</NAME>
 typedef struct {
@@ -1691,4 +1760,14 @@ char *x, int m, int bm_bc[]
 <NAME>prelude_daemonize</NAME>
 <RETURNS>int  </RETURNS>
 const char *lockfile
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_ident_send</NAME>
+<RETURNS>int  </RETURNS>
+prelude_io_t *fd
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_ident_init</NAME>
+<RETURNS>int  </RETURNS>
+const char *sname
 </FUNCTION>

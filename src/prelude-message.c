@@ -144,7 +144,7 @@ static int read_message_content(prelude_msg_t *msg, prelude_io_t *pio)
         
         ret = prelude_io_read(pio, &msg->payload[msg->read_index], count);        
         if ( ret < 0 ) {
-                log(LOG_ERR, "error reading message content.\n");
+                log(LOG_ERR, "error reading message content (%d).\n", count);
                 return prelude_msg_error;
         }
 
@@ -178,7 +178,7 @@ static int read_message_content(prelude_msg_t *msg, prelude_io_t *pio)
  */
 prelude_msg_status_t prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio) 
 {
-        int ret;
+        int ret = 0;
         
         if ( ! *msg ) {                
                 *msg = malloc(sizeof(prelude_msg_t));

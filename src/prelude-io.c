@@ -59,7 +59,7 @@ static ssize_t sys_read(prelude_io_t *pio, void *buf, size_t count)
 
         do {
                 ret = read(pio->fd, buf, count);
-        } while ( ret < 0 && errno == EINTR );
+        } while ( ret <= 0 && (errno == EINTR || errno == EAGAIN) );
 
         return ret;
 }
@@ -72,7 +72,7 @@ static ssize_t sys_write(prelude_io_t *pio, const void *buf, size_t count)
         
         do {
                 ret = write(pio->fd, buf, count);
-        } while ( ret < 0 && errno == EINTR );
+        } while ( ret < 0 && (errno == EINTR || errno == EAGAIN) );
 
         return ret;
 }
@@ -85,7 +85,7 @@ static int sys_close(prelude_io_t *pio)
 
         do {
                 ret = close(pio->fd);
-        } while ( ret < 0 && errno == EINTR );
+        } while ( ret < 0 && (errno == EINTR || errno == EAGAIN) );
 
         return ret;
 }
@@ -102,7 +102,7 @@ static ssize_t file_read(prelude_io_t *pio, void *buf, size_t count)
 
         do {
                 ret = fread(buf, count, 1, pio->fd_ptr);
-        } while ( ret < 0 && errno == EINTR );
+        } while ( ret <= 0 && errno == EINTR );
 
         if ( ret <= 0 )
                 return ret;
@@ -172,13 +172,29 @@ static ssize_t copy_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
  */
 static ssize_t ssl_read(prelude_io_t *pio, void *buf, size_t count) 
 {
-        return SSL_read(pio->fd_ptr, buf, count);
+        int ret;
+        
+        do {
+                ret = SSL_read(pio->fd_ptr, buf, count);
+        } while ( ret < 0 && errno == (EINTR || errno == EAGAIN) );
+
+        return ret;
 }
+
 
 
 static ssize_t ssl_write(prelude_io_t *pio, const void *buf, size_t count) 
 {
         return SSL_write(pio->fd_ptr, buf, count);
+#if 0
+        int ret;
+        
+        printf("calling ssl write\n");
+        ret = SSL_write(pio->fd_ptr, buf, count);
+        printf("ssl write returned %d\n", ret);
+        
+        return ret;
+#endif
 }
 
 
