@@ -525,8 +525,10 @@ static int add_cmd(int argc, char **argv)
         opt = prelude_option_new(NULL);
         prelude_option_add(opt, CLI_HOOK, 'u', "uid", NULL, required_argument, set_uid, NULL);
         prelude_option_add(opt, CLI_HOOK, 'g', "gid", NULL, required_argument, set_gid, NULL);
+
+        argc -= 2;
         
-        ret = prelude_option_parse_arguments(NULL, opt, NULL, argc - 2, &argv[2]);
+        ret = prelude_option_parse_arguments(NULL, opt, NULL, &argc, &argv[2]);
         if ( ret < 0 )
                 return -1;
 
@@ -600,8 +602,10 @@ static int register_cmd(int argc, char **argv)
         opt = prelude_option_new(NULL);
         prelude_option_add(opt, CLI_HOOK, 'u', "uid", NULL, required_argument, set_uid, NULL);
         prelude_option_add(opt, CLI_HOOK, 'g', "gid", NULL, required_argument, set_gid, NULL);
+
+        argc -= 3;
         
-        ret = prelude_option_parse_arguments(NULL, opt, NULL, argc - 3, &argv[3]);
+        ret = prelude_option_parse_arguments(NULL, opt, NULL, &argc, &argv[3]);
         if ( ret < 0 )
                 return -1;
         
@@ -677,8 +681,10 @@ static int registration_server_cmd(int argc, char **argv)
         
         prelude_option_add(opt, CLI_HOOK, 'u', "uid", NULL, required_argument, set_uid, NULL);
         prelude_option_add(opt, CLI_HOOK, 'g', "gid", NULL, required_argument, set_gid, NULL);
+
+        argc -= 2;
         
-        ret = prelude_option_parse_arguments(NULL, opt, NULL, argc - 2, &argv[2]);
+        ret = prelude_option_parse_arguments(NULL, opt, NULL, &argc, &argv[2]);
         if ( ret < 0 )
                 return -1;
         
