@@ -661,15 +661,17 @@ int prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *d
 
 /**
  * prelude_msg_new:
+ * @ret: Pointer where to store the created #prelude_msg_t.
  * @msgcount: Number of chunk of data the created object can accept.
  * @msglen: Maximum number of bytes the object should handle for all the chunks.
  * @tag: A tag identifying the kind of message.
  * @priority: The priority of this message.
  *
- * Allocate a new #prelude_msg_t object. prelude_msg_set() can then be used to
- * add chunk of data to the message, and prelude_msg_write() to send it.
+ * Allocate a new #prelude_msg_t object and store it into @ret. prelude_msg_set()
+ * can then be used to add chunk of data to the message, and prelude_msg_write()
+ * to send it.
  *
- * Returns: A pointer on a #prelude_msg_t object or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
 int prelude_msg_new(prelude_msg_t **ret, size_t msgcount, size_t msglen, uint8_t tag, uint8_t priority) 
 {
@@ -717,6 +719,7 @@ int prelude_msg_new(prelude_msg_t **ret, size_t msgcount, size_t msglen, uint8_t
 
 /**
  * prelude_msg_dynamic_new:
+ * @ret: Pointer where to store the create #prelude_msg_t.
  * @flush_msg_cb: Callback function to call when the buffer need to be flushed.
  * @data: Data to pass to the @flush_msg_cb callback function.
  *
@@ -729,7 +732,7 @@ int prelude_msg_new(prelude_msg_t **ret, size_t msgcount, size_t msglen, uint8_t
  * @flush_msg_cb callback will be called for the current message to be flushed,
  * and the returned message will be used in order to store remaining data.
  *
- * Returns: A pointer on a #prelude_msg_t object or NULL if an error occured.
+ * Returns: 0 on success, a negative value if an error occured.
  */
 int prelude_msg_dynamic_new(prelude_msg_t **ret, int (*flush_msg_cb)(prelude_msg_t **msg, void *data), void *data) 
 {
