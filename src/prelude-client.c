@@ -1142,7 +1142,6 @@ void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg)
         uint64_t ident;
         idmef_alert_t *alert;
         idmef_heartbeat_t *heartbeat;
-        prelude_msg_priority_t priority = PRELUDE_MSG_PRIORITY_MID;
         
         /*
          * we need to hold a lock since asynchronous heartbeat
