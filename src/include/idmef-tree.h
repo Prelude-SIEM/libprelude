@@ -173,7 +173,7 @@ typedef struct {
 typedef struct {
         const char *ident;
         const char *name;
-        const char *pid;
+        uint32_t pid;
         const char *path;
         const char **arg;
         const char **env;
