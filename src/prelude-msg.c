@@ -196,7 +196,7 @@ inline static int read_message_data(unsigned char *dst, size_t *size, prelude_io
         *size = ret;
         
         if ( ret != count )
-                return ret;
+                return prelude_error(PRELUDE_ERROR_EAGAIN);
         
         return 0;
 }
@@ -247,12 +247,9 @@ static int read_message_header(prelude_msg_t **msgptr, prelude_io_t *fd)
         ret = read_message_data(hdrptr, &count, fd);
         msg->header_index += count;
         
-        if ( ret != 0 )
+        if ( ret < 0 )
                 return ret;
         
-        if ( msg->header_index < PRELUDE_MSG_HDR_SIZE )
-                return prelude_error(PRELUDE_ERROR_EAGAIN);
-
         /*
          * we have a full header. Move it from our buffer
          * into a real header structure.
@@ -437,8 +434,7 @@ int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
  * @len is updated to contain the len of the data chunk.
  * @buf is updated to point on the data chunk.
  *
- * Returns: 0 if there is no more data chunk to read, or a #prelude_error_t
- * value on error. 
+ * Returns: 0 on success, or a #prelude_error_t value on error. 
  */
 int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf) 
 {        
