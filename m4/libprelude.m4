@@ -35,6 +35,7 @@ AC_ARG_WITH(libprelude-prefix,
     LIBPRELUDE_LDFLAGS=`$LIBPRELUDE_CONFIG $libprelude_config_args --ldflags`
     LIBPRELUDE_LIBS=`$LIBPRELUDE_CONFIG $libprelude_config_args --libs`
     LIBPRELUDE_PREFIX=`$LIBPRELUDE_CONFIG $libprelude_config_args --prefix`
+    LIBPRELUDE_CONFIG_PREFIX=`$LIBPRELUDE_CONFIG $libprelude_config_args --config-prefix`
     libprelude_config_version=`$LIBPRELUDE_CONFIG $libprelude_config_args --version`
 
 
@@ -165,6 +166,7 @@ main ()
   AC_SUBST(LIBPRELUDE_LDFLAGS)
   AC_SUBST(LIBPRELUDE_LIBS)
   AC_SUBST(LIBPRELUDE_PREFIX)
+  AC_SUBST(LIBPRELUDE_CONFIG_PREFIX)
 ])
 
 dnl *-*wedit:notab*-*  Please keep this as the last line.
