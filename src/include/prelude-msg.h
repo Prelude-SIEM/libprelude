@@ -94,4 +94,6 @@ void prelude_msg_set_callback(prelude_msg_t *msg, int (*flush_msg_cb)(prelude_ms
 
 void prelude_msg_set_data(prelude_msg_t *msg, void *data);
 
+prelude_msg_t *prelude_msg_ref(prelude_msg_t *msg);
+
 #endif /* _LIBPRELUDE_PRELUDE_MESSAGE_H */

@@ -66,6 +66,8 @@ typedef struct {
 struct prelude_msg {
         PRELUDE_ASYNC_OBJECT;
 
+        int refcount;
+        
         uint32_t read_index;
         uint32_t header_index;
         uint32_t write_index;
@@ -375,7 +377,8 @@ int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
                 *msg = malloc(sizeof(prelude_msg_t));
                 if ( ! *msg )
                         return prelude_error_from_errno(errno);
-                
+
+                (*msg)->refcount = 1;
                 (*msg)->hdr.datalen = 0;
                 (*msg)->hdr.priority = PRELUDE_MSG_PRIORITY_NONE;
 
@@ -706,6 +709,7 @@ int prelude_msg_new(prelude_msg_t **ret, size_t msgcount, size_t msglen, uint8_t
 
         msg->payload = (unsigned char *) msg + sizeof(prelude_msg_t);
 
+        msg->refcount = 1;
         msg->header_index = 0;
         msg->hdr.version = PRELUDE_MSG_VERSION;
         msg->hdr.tag = tag;
@@ -749,6 +753,7 @@ int prelude_msg_dynamic_new(prelude_msg_t **ret, int (*flush_msg_cb)(prelude_msg
         if ( ! msg )
                 return prelude_error_from_errno(errno);
 
+        msg->refcount = 1;
         msg->hdr.tag = 0;
         msg->hdr.priority = 0;
         msg->hdr.is_fragment = 0;
@@ -872,7 +877,8 @@ uint32_t prelude_msg_get_len(prelude_msg_t *msg)
  */
 void prelude_msg_destroy(prelude_msg_t *msg) 
 {
-        free(msg);
+        if ( --msg->refcount == 0 )
+                free(msg);
 }
 
 
@@ -940,4 +946,12 @@ struct timeval *prelude_msg_get_time(prelude_msg_t *msg, struct timeval *tv)
         tv->tv_usec = msg->hdr.tv_usec;
 
         return tv;
+}
+
+
+
+prelude_msg_t *prelude_msg_ref(prelude_msg_t *msg)
+{
+        msg->refcount++;
+        return msg;
 }
