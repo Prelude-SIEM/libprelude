@@ -237,13 +237,23 @@ int idmef_criterion_clone(idmef_criterion_t *criterion, idmef_criterion_t **dst)
 	if ( ret < 0 )
 		return ret;
 
-	ret = idmef_criterion_value_clone(criterion->value, &value);
-	if ( ret < 0 ) {
-                idmef_path_destroy(path);
-		return ret;
-        }
+	if ( criterion->value ) {
+		ret = idmef_criterion_value_clone(criterion->value, &value);
+		if ( ret < 0 ) {
+			idmef_path_destroy(path);
+			return ret;
+		}
+	} else
+		value = NULL;
 
-	return idmef_criterion_new(dst, path, value, criterion->relation);
+	ret = idmef_criterion_new(dst, path, value, criterion->relation);
+	if ( ret < 0 ) {
+		idmef_path_destroy(path);
+		idmef_criterion_value_destroy(value);
+		return ret;
+	}
+
+	return 0;
 }
 
 
