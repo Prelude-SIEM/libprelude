@@ -282,7 +282,7 @@ int plugin_load_from_dir(const char *dirname, int argc, char **argv,
                 
                 snprintf(filename, sizeof(filename), "%s/%s", dirname, d->d_name);
                 
-                ret = plugin_load_single(filename, argc, argv, subscribe, unsubscribe);
+                ret = plugin_load_single(filename, argc, argv, subscribe, unsubscribe);                
                 if ( ret == 0 )
                         count++;
         }
@@ -348,9 +348,6 @@ int plugin_subscribe(plugin_generic_t *plugin)
         
         list_for_each(tmp, &all_plugin) {
                 pe = list_entry(tmp, plugin_entry_t, list);
-                
-                if ( pe->plugin != NULL && pe->plugin != plugin )
-                        continue;
 
                 /*
                  * The plugin is subscribing itself
@@ -358,6 +355,9 @@ int plugin_subscribe(plugin_generic_t *plugin)
                  */
                 if ( pe->plugin == NULL ) 
                         pe->plugin = plugin;
+                
+                else if ( pe->plugin != plugin )
+                        continue;
                 
                 pc = create_container(pe, plugin);
                 if ( ! pc )
