@@ -47,12 +47,11 @@
 #include "prelude-getopt.h"
 #include "prelude-async.h"
 #include "prelude-auth.h"
+#include "idmef-tree.h"
+#include "idmef-tree-func.h"
 #include "sensor.h"
 #include "client-ident.h"
 #include "timer.h"
-
-#include "idmef-tree.h"
-#include "idmef-tree-func.h"
 
 /*
  * send an heartbeat every hours.
@@ -83,6 +82,7 @@ static char *process_name = NULL, *process_path = NULL;
 /*
  *
  */
+static const char *manager_cfg_line = NULL;
 static prelude_client_mgr_t *manager_list = NULL;
  
 
@@ -104,7 +104,36 @@ static int setup_analyzer_node_name(const char *arg)
 
 static int setup_analyzer_node_category(const char *arg) 
 {
-        node.category = atoi(arg);
+        int i;
+        const char *name[] = {
+                "unknown",
+                "atm",
+                "e-mail",
+                "lotus-notes",
+                "mac",
+                "sna",
+                "vm",
+                "ipv4-addr",
+                "ipv4-addr-hex",
+                "ipv4-net",
+                "ipv4-net-mask",
+                "ipv6-addr",
+                "ipv6-addr-hex",
+                "ipv6-net",
+                "ipv6-net-mask",
+                NULL,
+        };
+
+        for (i = 0; name[i] != NULL; i++ ) {
+                if ( strcmp(name[i], arg) == 0 ) {
+                        node.category = i;
+                        break;
+                }
+        }
+
+        if ( name[i] == NULL )
+                log(LOG_ERR, "unknown category: %s.\n", arg);
+        
         return prelude_option_success;
 }
 
@@ -155,11 +184,9 @@ static int setup_address(const char *arg)
 
 
 static int setup_manager_addr(const char *arg) 
-{               
-        manager_list = prelude_client_mgr_new(PRELUDE_CLIENT_TYPE_SENSOR, arg);
-        if ( ! manager_list ) 
-                return prelude_option_error;
-                
+{
+        printf("%s\n", arg);
+        manager_cfg_line = arg;                
         return prelude_option_success;
 }
 
@@ -242,6 +269,15 @@ static int parse_argument(const char *filename, int argc, char **argv)
         prelude_option_set_warnings(~(OPT_INVAL|OPT_INVAL_ARG), &old_flags);
 
         /*
+         * Parse default configuration...
+         */
+        ret = prelude_option_parse_arguments(NULL, DEFAULT_SENSOR_CONFIG, 0, NULL);
+        if ( ret == prelude_option_error ) {
+                log(LOG_INFO, "error processing sensor options.\n", DEFAULT_SENSOR_CONFIG);
+                goto out;
+        }
+        
+        /*
          * Parse configuration and command line arguments.
          */        
         ret = prelude_option_parse_arguments(NULL, filename, argc, argv);
@@ -258,17 +294,8 @@ static int parse_argument(const char *filename, int argc, char **argv)
          *
          * Here we try using the default sensors configuration file.
          */
-        if ( ! manager_list ) {
-           
-                ret = prelude_option_parse_arguments(NULL, DEFAULT_SENSOR_CONFIG, 0, NULL);
-                if ( ret < 0 ) {
-                        log(LOG_INFO, "error processing generic sensors configuration file.\n");
-                        goto out;
-                }
-                
-                if ( manager_list )
-                        goto out;
-                
+        if ( ! manager_cfg_line ||
+             ! (manager_list = prelude_client_mgr_new(PRELUDE_CLIENT_TYPE_SENSOR, manager_cfg_line)) ) {
                 log(LOG_INFO,
                     "No Manager were configured. You need to setup a Manager for this Sensor\n"
                     "to report events. Please use the \"manager-addr\" entry in the Sensor\n"
@@ -440,10 +467,9 @@ void prelude_heartbeat_register_cb(void (*cb)(void *data), void *data)
 
 
 
-int prelude_analyzer_fill_information(idmef_analyzer_t *analyzer) 
+int prelude_analyzer_fill_infos(idmef_analyzer_t *analyzer) 
 {
         int ret;
-        char *ptr;
         static struct utsname uts;
         static idmef_process_t process;
         

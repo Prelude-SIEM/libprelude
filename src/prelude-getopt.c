@@ -576,6 +576,8 @@ int prelude_option_parse_arguments(prelude_option_t *option, const char *filenam
 {
         int ret;
         LIST_HEAD(cb_list);
+        struct list_head *tmp;
+        prelude_option_t *opt;
         prelude_optlist_t *optlist;
         
         if ( ! option )
@@ -587,22 +589,25 @@ int prelude_option_parse_arguments(prelude_option_t *option, const char *filenam
                  */
                 optlist = root_optlist; /* &option->optlist; */
         
-        ret = parse_argument(&cb_list, optlist, filename, argc, argv, 0);        
+        ret = parse_argument(&cb_list, optlist, filename, argc, argv, 0); 
         if ( ret == prelude_option_error || ret == prelude_option_end )
-                return ret;
+                goto out;
 
         ret = call_option_from_cb_list(&cb_list);
         if ( ret == prelude_option_error || ret == prelude_option_end )
-                return ret;
+                goto out;
 
         /*
          * Only try to get missing options from config file
          * if parsing arguments succeed and caller didn't requested us to stop.
          */
-        if ( filename ) {                
+        if ( filename ) 
                 ret = get_missing_options(filename, optlist);
-                if ( ret < 0 )
-                        return -1;
+
+ out:
+        list_for_each(tmp, &optlist->optlist) {
+                opt = list_entry(tmp, prelude_option_t, list);
+                opt->cb_called = 0;
         }
         
         /*
@@ -610,7 +615,7 @@ int prelude_option_parse_arguments(prelude_option_t *option, const char *filenam
          */
         root_optlist->argv_index = 1;
         
-        return 0;
+        return ret;
 }
 
 

@@ -1175,6 +1175,11 @@ void (*cb)(void *data), void *data
 void
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_analyzer_fill_infos</NAME>
+<RETURNS>int  </RETURNS>
+idmef_analyzer_t *analyzer
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_ssl_gen_crypto</NAME>
 <RETURNS>int  </RETURNS>
 int keysize, int expire, const char *keyout, int crypt, uid_t uid

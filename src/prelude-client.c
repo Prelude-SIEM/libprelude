@@ -53,7 +53,6 @@
 #include "prelude-message-id.h"
 #include "prelude-client.h"
 #include "prelude-getopt.h"
-#include "sensor.h"
 #include "client-ident.h"
 #include "prelude-path.h"
 

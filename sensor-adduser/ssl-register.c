@@ -26,6 +26,7 @@
 #ifdef HAVE_SSL
 
 #include <stdio.h>
+#include <unistd.h>
 #include <string.h>
 #include <inttypes.h>
 #include <sys/types.h>
