@@ -21,7 +21,6 @@ include_HEADERS = config-engine.h 		\
 		  prelude-getopt.h		\
 		  prelude-io.h			\
 		  prelude-message.h		\
-		  sensor.h			\
-		  thread.h
+		  sensor.h
 
 

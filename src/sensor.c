@@ -138,7 +138,7 @@ int prelude_sensor_init(const char *filename, int argc, char **argv)
         if ( ! launch )
                 return 0;
 
-        ret = prelude_async_init(1);
+        ret = prelude_async_init();
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't initialize asynchronous subsystem.\n");
                 return -1;
@@ -149,14 +149,6 @@ int prelude_sensor_init(const char *filename, int argc, char **argv)
 
 
 
-/**
- * prelude_sensor_send_alert:
- * @msg: Pointer on a #prelude_msg_t.
- *
- * prelude_sensor_send_alert() will request asynchronous emmission
- * of the message contained in @msg. The message will be broadcasted
- * to all configured Manager. 
- */
 void prelude_sensor_send_alert(prelude_msg_t *msg) 
 {
         prelude_client_mgr_broadcast_async(manager_list, msg);
@@ -164,21 +156,7 @@ void prelude_sensor_send_alert(prelude_msg_t *msg)
 
 
 
-/**
- * prelude_sensor_get_manager_list:
- * @cb: Callback function.
- *
- * prelude_sensor_get_manager_list() permit the caller to get the list
- * of Manager being used. This is usefull to system like NIDS which
- * doesn't want to analyze their own traffic.
- *
- * If, in one of the iteration, the callback function return -1,
- * prelude_sensor_get_manager_list() will be interupted immediatly.
- */
-void prelude_sensor_get_manager_list(int (*cb)(const char *addr, uint16_t port)) 
-{
-        prelude_client_mgr_get_manager_list(manager_list, cb);
-}
+
 
 
 

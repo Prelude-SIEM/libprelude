@@ -447,38 +447,12 @@ int prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
 
 
 
+
 void prelude_client_get_address(prelude_client_t *client, char **addr, uint16_t *port) 
 {
         *addr = client->addr;
         *port = client->port;
 }
-
-
-
-int prelude_client_get_inet_address(prelude_client_t *client,
-                                    struct sockaddr_in *saddr, struct sockaddr_in *daddr) 
-{
-        int ret, sock, len;
-
-        sock = prelude_io_get_fd(client->fd);
-
-        len = sizeof(*saddr);
-        ret = getsockname(sock, (struct sockaddr *) saddr, &len);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't get socket name.\n");
-                return -1;
-        }
-
-        len = sizeof(*daddr);
-        ret = getpeername(sock, (struct sockaddr *) daddr, &len);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't get peer name.\n");
-                return -1;
-        }
-
-        return 0;
-}
-
 
 
 

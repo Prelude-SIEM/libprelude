@@ -20,9 +20,6 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
-
-#include <pthread.h>
-
 typedef void (*prelude_async_func_t)(void *object, void *data);
 
 
@@ -30,8 +27,7 @@ typedef void (*prelude_async_func_t)(void *object, void *data);
 #define PRELUDE_ASYNC_OBJECT                   \
         PRELUDE_LINKED_OBJECT;                 \
         void *data;                            \
-        prelude_async_func_t func;             \
-        pthread_mutex_t mutex
+        prelude_async_func_t func
 
 
 typedef struct {
@@ -51,8 +47,7 @@ static inline void prelude_async_set_callback(prelude_async_object_t *obj, prelu
         obj->func = func;
 }
 
-
-int prelude_async_init(int use_thread);
+int prelude_async_init(void);
 
 void prelude_async_add(prelude_async_object_t *obj);
 

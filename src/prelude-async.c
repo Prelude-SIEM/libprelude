@@ -27,7 +27,6 @@
 #include <pthread.h>
 #include <errno.h>
 
-#include "thread.h"
 #include "prelude-list.h"
 #include "timer.h"
 #include "common.h"
@@ -43,10 +42,6 @@ static pthread_cond_t cond;
 static pthread_mutex_t mutex;
 
 
-int (*prelude_async_lock)(prelude_async_object_t *obj);
-int (*prelude_async_unlock)(prelude_async_object_t *obj);
-
-
 
 static double get_elapsed_time(struct timeval *start) 
 {
@@ -60,6 +55,7 @@ static double get_elapsed_time(struct timeval *start)
 
         return current - s;
 }
+
 
 
 
@@ -110,6 +106,7 @@ static void wait_timer_and_data(void)
 
 
 
+
 static void *async_thread(void *arg) 
 {
         prelude_async_object_t *obj;
@@ -117,6 +114,7 @@ static void *async_thread(void *arg)
         
         
         while ( 1 ) {
+                
                 wait_timer_and_data();
 
                 pthread_mutex_lock(&mutex);
@@ -140,25 +138,6 @@ static void *async_thread(void *arg)
 
 
 
-static int do_nothing(void) 
-{
-        return 0;
-}
-
-
-
-static int real_prelude_async_lock(prelude_async_object_t *obj) 
-{
-        return pthread_mutex_lock(&obj->mutex);
-}
-
-
-static int real_prelude_async_unlock(prelude_async_object_t *obj) 
-{
-        return pthread_mutex_unlock(&obj->mutex);
-}
-
-
 
 static void prelude_async_exit(void)  
 {
@@ -171,21 +150,21 @@ static void prelude_async_exit(void)
 
 
 
-static int thread_async_init(void) 
+
+/**
+ * prelude_async_init:
+ */
+int prelude_async_init(void) 
 {
         int ret;
         
-        prelude_async_lock = real_prelude_async_lock;
-        prelude_async_unlock = real_prelude_async_unlock;
-        
         pthread_mutex_init(&mutex, NULL);
         pthread_cond_init(&cond, NULL);
-
+        
         ret = pthread_create(&thread, NULL, async_thread, NULL);
         if ( ret < 0 ) {
                 pthread_cond_destroy(&cond);
                 pthread_mutex_destroy(&mutex);
-                return -1;
         }
 
         return atexit(prelude_async_exit);
@@ -193,75 +172,21 @@ static int thread_async_init(void)
 
 
 
-#if 0
-static int async_init(void) 
-{
-        prelude_async_lock = noop_prelude_async_lock;
-        prelude_async_unlock = noop_prelude_async_unlock;
-
-        return 0;
-}
-#endif
-
-
-
-
 /**
- * prelude_async_init:
- * @use_thread: boolean.
- *
- * Initialize the asynchronous subsystem.
- * Use a separate thread for asynchronous processing if @use_thread
- * is TRUE. Otherwise, the program have to call itself FIXME() from
- * the main program loop.
- *
- * Returns: O on success, -1 if an error occured.
- */
-int prelude_async_init(int use_thread) 
-{
-        int ret = 0;
-
-        if ( use_thread )
-                ret = thread_async_init();
-        else
-#if 0
-                ret = async_init();
-#endif
-        return ret;
-}
-
-
-
-/**
- * prelude_async_add:
- * @obj: Pointer on an asynchronous object.
- *
- * Add an asynchronous object to the queue.
+ * prelude_async_queue:
  */
 void prelude_async_add(prelude_async_object_t *obj) 
 {
-        prelude_async_lock(obj);
+        pthread_mutex_lock(&mutex);
         prelude_list_add_tail((prelude_linked_object_t *)obj, &joblist);
-        prelude_async_unlock(obj);
+        pthread_mutex_unlock(&mutex);
 }
 
 
 
-/**
- * prelude_async_del:
- * @obj: Pointer on an asynchronous object.
- *
- * Remove an asynchronous object from the queue.
- */
 void prelude_async_del(prelude_async_object_t *obj) 
 {
-        prelude_async_lock(obj);
+        pthread_mutex_lock(&mutex);
         prelude_list_del((prelude_linked_object_t *)obj);
-        prelude_async_unlock(obj);
+        pthread_mutex_unlock(&mutex);
 }
-
-
-
-
-
-
