@@ -185,10 +185,10 @@ int idmef_criterion_clone(idmef_criterion_t *criterion, idmef_criterion_t **dst)
  * @fd: Pointer to a #prelude_io_t object.
  *
  * Dump @criterion to @fd in the form of:
- * <path> <operator> <value>
+ * [path] [operator] [value]
  *
  * Or if there is no value associated with the criterion:
- * <operator> <path>
+ * [operator] [path]
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -216,15 +216,15 @@ int idmef_criterion_print(const idmef_criterion_t *criterion, prelude_io_t *fd)
 
 
 /**
- * idmef_criterion_print:
+ * idmef_criterion_to_string:
  * @criterion: Pointer to a #idmef_criterion_t object.
  * @out: Pointer to a #prelude_string_t object.
  *
  * Dump @criterion as a string to the @out buffer in the form of:
- * <path> <operator> <value>
+ * [path] [operator] [value]
  *
  * Or if there is no value associated with the criterion:
- * <operator> <path>
+ * [operator] [path]
  *
  * Returns: 0 on success, a negative value if an error occured.
  */

@@ -819,7 +819,7 @@ int prelude_connection_pool_init(prelude_connection_pool_t *pool)
  * prelude_connection_pool_new:
  * @ret: Pointer to an address where to store the created #prelude_connection_pool_t object.
  * @cp: The #prelude_client_profile_t to use for connection.
- * @capability: Capability the connection in this connection-pool will declare.
+ * @permission: Permission the connection in this connection-pool will require.
  *
  * prelude_connection_pool_new() initialize a new Connection Manager object.
  *

@@ -150,9 +150,7 @@ static inline void prelude_list_del_init(prelude_list_t *item)
  * @member: List member in @type used to link it to a list.
  *
  * Retrieve the entry of type @type from the #prelude_list_t object @tmp,
- * using the item list member @member.
- *
- * Returns: The entry associated with @item.
+ * using the item list member @member. Returns the entry associated with @item.
  */
 #define prelude_list_entry(item, type, member)                             \
         (type *) ((unsigned long) item - (unsigned long) &((type *) 0)->member)

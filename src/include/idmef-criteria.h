@@ -49,7 +49,7 @@ int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
                         idmef_criterion_value_t *value, idmef_criterion_operator_t operator);
 
 void idmef_criterion_destroy(idmef_criterion_t *criterion);
-int idmef_criterion_clone(idmef_criterion_t *src, idmef_criterion_t **dst);
+int idmef_criterion_clone(idmef_criterion_t *criterion, idmef_criterion_t **dst);
 int idmef_criterion_print(const idmef_criterion_t *criterion, prelude_io_t *fd);
 int idmef_criterion_to_string(const idmef_criterion_t *criterion, prelude_string_t *out);
 idmef_path_t *idmef_criterion_get_path(idmef_criterion_t *criterion);
