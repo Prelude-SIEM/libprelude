@@ -32,13 +32,19 @@ static int save_ident(void)
 {
         int fd;
         FILE *fdp;
-        
+
+        /*
+         * use O_EXCL first to avoid a possible symlink attack.
+         */
         fd = open(identfile, O_CREAT|O_WRONLY|O_EXCL, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
         if ( fd < 0 ) {
                 log(LOG_ERR, "error opening %s for writing.\n", identfile);
                 return -1;
         }
 
+        /*
+         * then use standard IO.
+         */
         fdp = fdopen(fd, "w");
         if ( ! fdp ) {
                 log(LOG_ERR, "error associating fd with file object.\n", identfile);
