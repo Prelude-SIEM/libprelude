@@ -139,7 +139,7 @@ inline static int set_data(prelude_msg_t **m, const void *buf, size_t size)
                 
                 size -= remaining;
                 msg->write_index += remaining;
-                buf = (const unsigned char *) buf + remaining;
+                buf = (const uint8_t *) buf + remaining;
                 
                 /*
                  * this is a fragment of message.

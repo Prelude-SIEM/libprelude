@@ -1,3 +1,8 @@
+2002-04-25  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-message.c (set_data): 
+	s/unsigned char/uint8_t/
+
 2002-04-24  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-path.c (prelude_get_socket_filename): 
