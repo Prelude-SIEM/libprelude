@@ -132,14 +132,14 @@ struct prelude_connection_mgr {
 
 
 
-static void notify_dead(cnx_list_t *clist, cnx_t *cnx)
+static void notify_dead(cnx_t *cnx)
 {
         int fd;
+        cnx_list_t *clist = cnx->parent;
 
         log(LOG_INFO, "- connection error with %s:%u. Failover enabled.\n",
             prelude_connection_get_daddr(cnx->cnx), prelude_connection_get_dport(cnx->cnx));
-        
-        
+
         clist->dead++;
 
         if ( cnx->use_timer )
@@ -149,7 +149,7 @@ static void notify_dead(cnx_list_t *clist, cnx_t *cnx)
                 clist->parent->notify_cb(&clist->parent->all_cnx);
 
         fd = prelude_io_get_fd(prelude_connection_get_fd(cnx->cnx));
-        FD_CLR(fd, &cnx->parent->parent->fds);
+        FD_CLR(fd, &clist->parent->fds);
 }
 
 
@@ -253,7 +253,7 @@ static int broadcast_message(prelude_msg_t *msg, cnx_list_t *clist, cnx_t *cnx)
         if ( prelude_connection_get_state(cnx->cnx) & PRELUDE_CONNECTION_ESTABLISHED ) {
                 ret = prelude_connection_send_msg(cnx->cnx, msg);                
                 if ( ret < 0 ) 
-                        notify_dead(clist, cnx);
+                        notify_dead(cnx);
         }
 
         if ( ret < 0 ) 
@@ -326,7 +326,7 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
                 else {
                         ret = prelude_connection_send_msg(cnx->cnx, msg);
                         if ( ret < 0 )
-                                notify_dead(clist, cnx);
+                                notify_dead(cnx);
                 }
                 
                 prelude_msg_destroy(msg);
@@ -422,7 +422,8 @@ static void parse_address(char *addr, uint16_t *port)
 
 
 
-static cnx_t *new_connection(prelude_client_t *client, cnx_list_t *clist, prelude_connection_t *cnx, int use_timer) 
+static cnx_t *new_connection(prelude_client_t *client, cnx_list_t *clist,
+                             prelude_connection_t *cnx, int use_timer) 
 {
         cnx_t *new;
         int state, fd, ret;
