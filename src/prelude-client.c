@@ -89,7 +89,7 @@ static void auth_error(prelude_client_t *client, const char *auth_kind)
         log(LOG_INFO, "\n%s authentication failed. Please run :\n"
             "sensor-adduser --sensorname %s --uid %d --manager-addr %s\n"
             "program on the sensor host to create an account for this sensor.\n\n",
-            auth_kind, prelude_get_sensor_name(), getuid(), client->daddr);
+            auth_kind, prelude_get_sensor_name(), prelude_get_program_userid(), client->daddr);
 
         exit(1);
 }

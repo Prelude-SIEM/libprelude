@@ -31,6 +31,8 @@ void prelude_get_ssl_key_filename(char *buf, size_t size);
 
 void prelude_get_backup_filename(char *buf, size_t size);
 
+uid_t prelude_get_program_userid(void);
+
 void prelude_set_program_name(const char *sname);
 
 void prelude_set_program_userid(uid_t uid);

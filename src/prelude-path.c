@@ -92,6 +92,13 @@ void prelude_set_program_userid(uid_t uid)
 }
 
 
+uid_t prelude_get_program_userid(void) 
+{
+        return userid;
+}
+
+
+
 void prelude_set_program_name(const char *sname) 
 {
         if ( ! userid )
