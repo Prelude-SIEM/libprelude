@@ -221,7 +221,7 @@ SWIG_TypeClientData(swig_type_info *ti, void *clientdata) {
  * perl5.swg
  *
  * Perl5 runtime library
- * $Header: /var/lib/cvsd/cvsroot/prelude/libprelude/bindings/perl/Prelude.c,v 1.2 2003/12/20 00:12:50 nicolas Exp $
+ * $Header: /var/lib/cvsd/cvsroot/prelude/libprelude/bindings/perl/Prelude.c,v 1.3 2003/12/27 00:32:40 nicolas Exp $
  * ----------------------------------------------------------------------------- */
 
 #define SWIGPERL
@@ -562,81 +562,79 @@ static void _swig_create_magic(CPerlObj *pPerl, SV *sv, const char *name, int (C
 #define  SWIGTYPE_p_f_p_idmef_value_t_p_void__int swig_types[0] 
 #define  SWIGTYPE_p_f_p_void__void swig_types[1] 
 #define  SWIGTYPE_p_f_p_struct_list_head__void swig_types[2] 
-#define  SWIGTYPE_p_idmef_child_t swig_types[3] 
+#define  SWIGTYPE_p_f_p_prelude_msgbuf_t__p_prelude_msg_t swig_types[3] 
 #define  SWIGTYPE_p_prelude_msg_t swig_types[4] 
-#define  SWIGTYPE_p_f_p_prelude_msgbuf_t__p_prelude_msg_t swig_types[5] 
-#define  SWIGTYPE_p_list_head swig_types[6] 
-#define  SWIGTYPE_p_ssize_t swig_types[7] 
-#define  SWIGTYPE_p_size_t swig_types[8] 
-#define  SWIGTYPE_p_idmef_heartbeat_t swig_types[9] 
-#define  SWIGTYPE_p_idmef_target_t swig_types[10] 
-#define  SWIGTYPE_p_idmef_time swig_types[11] 
-#define  SWIGTYPE_p_idmef_confidence_t swig_types[12] 
-#define  SWIGTYPE_p_idmef_confidence_rating_t swig_types[13] 
-#define  SWIGTYPE_p_idmef_message_t swig_types[14] 
-#define  SWIGTYPE_p_idmef_alert_t swig_types[15] 
-#define  SWIGTYPE_p_idmef_overflow_alert_t swig_types[16] 
-#define  SWIGTYPE_p_idmef_correlation_alert_t swig_types[17] 
-#define  SWIGTYPE_p_idmef_tool_alert_t swig_types[18] 
-#define  SWIGTYPE_p_idmef_inode_t swig_types[19] 
-#define  SWIGTYPE_p_idmef_node_t swig_types[20] 
-#define  SWIGTYPE_p_idmef_file_access_t swig_types[21] 
-#define  SWIGTYPE_p_idmef_process_t swig_types[22] 
-#define  SWIGTYPE_p_uint32_t swig_types[23] 
-#define  SWIGTYPE_p_void swig_types[24] 
-#define  SWIGTYPE_p_idmef_source_t swig_types[25] 
-#define  SWIGTYPE_p_idmef_classification_origin_t swig_types[26] 
-#define  SWIGTYPE_p_idmef_criterion_t swig_types[27] 
-#define  SWIGTYPE_p_idmef_object_value_list_t swig_types[28] 
-#define  SWIGTYPE_p_idmef_object_list_t swig_types[29] 
-#define  SWIGTYPE_p_idmef_time_t swig_types[30] 
-#define  SWIGTYPE_p_idmef_criteria_t swig_types[31] 
-#define  SWIGTYPE_p_idmef_object_value_t swig_types[32] 
-#define  SWIGTYPE_p_idmef_value_t swig_types[33] 
-#define  SWIGTYPE_p_idmef_user_t swig_types[34] 
-#define  SWIGTYPE_p_idmef_analyzer_t swig_types[35] 
-#define  SWIGTYPE_p_prelude_msgbuf_t swig_types[36] 
-#define  SWIGTYPE_p_idmef_string_t swig_types[37] 
-#define  SWIGTYPE_p_uint16_t swig_types[38] 
-#define  SWIGTYPE_p_uint64_t swig_types[39] 
-#define  SWIGTYPE_p_idmef_address_t swig_types[40] 
-#define  SWIGTYPE_p_idmef_impact_t swig_types[41] 
-#define  SWIGTYPE_p_idmef_webservice_t swig_types[42] 
-#define  SWIGTYPE_p_idmef_snmpservice_t swig_types[43] 
-#define  SWIGTYPE_p_idmef_service_t swig_types[44] 
-#define  SWIGTYPE_p_p_char swig_types[45] 
-#define  SWIGTYPE_p_idmef_type_t swig_types[46] 
-#define  SWIGTYPE_p_idmef_impact_type_t swig_types[47] 
-#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[48] 
-#define  SWIGTYPE_p_idmef_userid_type_t swig_types[49] 
-#define  SWIGTYPE_p_idmef_file_t swig_types[50] 
-#define  SWIGTYPE_p_idmef_value_type_t swig_types[51] 
-#define  SWIGTYPE_p_idmef_spoofed_t swig_types[52] 
-#define  SWIGTYPE_p_idmef_data_t_data swig_types[53] 
-#define  SWIGTYPE_p_idmef_linkage_t swig_types[54] 
-#define  SWIGTYPE_p_idmef_action_t swig_types[55] 
-#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[56] 
-#define  SWIGTYPE_p_idmef_classification_t swig_types[57] 
-#define  SWIGTYPE_p_idmef_userid_t swig_types[58] 
-#define  SWIGTYPE_p_idmef_assessment_t swig_types[59] 
-#define  SWIGTYPE_p_prelude_client_t swig_types[60] 
-#define  SWIGTYPE_p_prelude_io_t swig_types[61] 
-#define  SWIGTYPE_p_idmef_object_t swig_types[62] 
-#define  SWIGTYPE_p_unsigned_char swig_types[63] 
-#define  SWIGTYPE_p_float swig_types[64] 
-#define  SWIGTYPE_p_idmef_additional_data_t swig_types[65] 
-#define  SWIGTYPE_p_idmef_data_t swig_types[66] 
-#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[67] 
-#define  SWIGTYPE_p_va_list swig_types[68] 
-#define  SWIGTYPE_p_idmef_alertident_t swig_types[69] 
-#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[70] 
-#define  SWIGTYPE_p_idmef_action_category_t swig_types[71] 
-#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[72] 
-#define  SWIGTYPE_p_idmef_file_category_t swig_types[73] 
-#define  SWIGTYPE_p_idmef_user_category_t swig_types[74] 
-#define  SWIGTYPE_p_idmef_address_category_t swig_types[75] 
-#define  SWIGTYPE_p_idmef_node_category_t swig_types[76] 
-static swig_type_info *swig_types[78];
+#define  SWIGTYPE_p_list_head swig_types[5] 
+#define  SWIGTYPE_p_ssize_t swig_types[6] 
+#define  SWIGTYPE_p_size_t swig_types[7] 
+#define  SWIGTYPE_p_idmef_heartbeat_t swig_types[8] 
+#define  SWIGTYPE_p_idmef_target_t swig_types[9] 
+#define  SWIGTYPE_p_idmef_time swig_types[10] 
+#define  SWIGTYPE_p_idmef_confidence_t swig_types[11] 
+#define  SWIGTYPE_p_idmef_confidence_rating_t swig_types[12] 
+#define  SWIGTYPE_p_idmef_message_t swig_types[13] 
+#define  SWIGTYPE_p_idmef_alert_t swig_types[14] 
+#define  SWIGTYPE_p_idmef_overflow_alert_t swig_types[15] 
+#define  SWIGTYPE_p_idmef_correlation_alert_t swig_types[16] 
+#define  SWIGTYPE_p_idmef_tool_alert_t swig_types[17] 
+#define  SWIGTYPE_p_idmef_inode_t swig_types[18] 
+#define  SWIGTYPE_p_idmef_node_t swig_types[19] 
+#define  SWIGTYPE_p_idmef_file_access_t swig_types[20] 
+#define  SWIGTYPE_p_idmef_process_t swig_types[21] 
+#define  SWIGTYPE_p_uint32_t swig_types[22] 
+#define  SWIGTYPE_p_void swig_types[23] 
+#define  SWIGTYPE_p_idmef_source_t swig_types[24] 
+#define  SWIGTYPE_p_idmef_classification_origin_t swig_types[25] 
+#define  SWIGTYPE_p_idmef_criterion_t swig_types[26] 
+#define  SWIGTYPE_p_idmef_object_value_list_t swig_types[27] 
+#define  SWIGTYPE_p_idmef_object_list_t swig_types[28] 
+#define  SWIGTYPE_p_idmef_time_t swig_types[29] 
+#define  SWIGTYPE_p_idmef_criteria_t swig_types[30] 
+#define  SWIGTYPE_p_idmef_object_value_t swig_types[31] 
+#define  SWIGTYPE_p_idmef_value_t swig_types[32] 
+#define  SWIGTYPE_p_idmef_user_t swig_types[33] 
+#define  SWIGTYPE_p_idmef_analyzer_t swig_types[34] 
+#define  SWIGTYPE_p_prelude_msgbuf_t swig_types[35] 
+#define  SWIGTYPE_p_idmef_string_t swig_types[36] 
+#define  SWIGTYPE_p_uint16_t swig_types[37] 
+#define  SWIGTYPE_p_uint64_t swig_types[38] 
+#define  SWIGTYPE_p_idmef_address_t swig_types[39] 
+#define  SWIGTYPE_p_idmef_impact_t swig_types[40] 
+#define  SWIGTYPE_p_idmef_webservice_t swig_types[41] 
+#define  SWIGTYPE_p_idmef_snmpservice_t swig_types[42] 
+#define  SWIGTYPE_p_idmef_service_t swig_types[43] 
+#define  SWIGTYPE_p_p_char swig_types[44] 
+#define  SWIGTYPE_p_idmef_impact_type_t swig_types[45] 
+#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[46] 
+#define  SWIGTYPE_p_idmef_userid_type_t swig_types[47] 
+#define  SWIGTYPE_p_idmef_file_t swig_types[48] 
+#define  SWIGTYPE_p_idmef_value_type_t swig_types[49] 
+#define  SWIGTYPE_p_idmef_spoofed_t swig_types[50] 
+#define  SWIGTYPE_p_idmef_data_t_data swig_types[51] 
+#define  SWIGTYPE_p_idmef_linkage_t swig_types[52] 
+#define  SWIGTYPE_p_idmef_action_t swig_types[53] 
+#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[54] 
+#define  SWIGTYPE_p_idmef_classification_t swig_types[55] 
+#define  SWIGTYPE_p_idmef_userid_t swig_types[56] 
+#define  SWIGTYPE_p_idmef_assessment_t swig_types[57] 
+#define  SWIGTYPE_p_prelude_client_t swig_types[58] 
+#define  SWIGTYPE_p_prelude_io_t swig_types[59] 
+#define  SWIGTYPE_p_idmef_object_t swig_types[60] 
+#define  SWIGTYPE_p_unsigned_char swig_types[61] 
+#define  SWIGTYPE_p_float swig_types[62] 
+#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[63] 
+#define  SWIGTYPE_p_idmef_additional_data_t swig_types[64] 
+#define  SWIGTYPE_p_idmef_data_t swig_types[65] 
+#define  SWIGTYPE_p_va_list swig_types[66] 
+#define  SWIGTYPE_p_idmef_alertident_t swig_types[67] 
+#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[68] 
+#define  SWIGTYPE_p_idmef_action_category_t swig_types[69] 
+#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[70] 
+#define  SWIGTYPE_p_idmef_file_category_t swig_types[71] 
+#define  SWIGTYPE_p_idmef_user_category_t swig_types[72] 
+#define  SWIGTYPE_p_idmef_address_category_t swig_types[73] 
+#define  SWIGTYPE_p_idmef_node_category_t swig_types[74] 
+static swig_type_info *swig_types[76];
 
 /* -------- TYPES TABLE (END) -------- */
 
@@ -1673,13 +1671,7 @@ XS(_wrap_idmef_additional_data_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_additional_data_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_additional_data_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_additional_data_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -1711,13 +1703,7 @@ XS(_wrap_idmef_additional_data_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_additional_data_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_additional_data_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_additional_data_new_child(arg1,arg2,arg3);
         
@@ -2239,13 +2225,7 @@ XS(_wrap_idmef_classification_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_classification_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_classification_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_classification_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -2277,13 +2257,7 @@ XS(_wrap_idmef_classification_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_classification_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_classification_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_classification_new_child(arg1,arg2,arg3);
         
@@ -2805,13 +2779,7 @@ XS(_wrap_idmef_userid_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_userid_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_userid_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_userid_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -2843,13 +2811,7 @@ XS(_wrap_idmef_userid_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_userid_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_userid_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_userid_new_child(arg1,arg2,arg3);
         
@@ -3501,13 +3463,7 @@ XS(_wrap_idmef_user_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_user_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_user_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_user_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -3539,13 +3495,7 @@ XS(_wrap_idmef_user_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_user_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_user_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_user_new_child(arg1,arg2,arg3);
         
@@ -4087,13 +4037,7 @@ XS(_wrap_idmef_address_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_address_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_address_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_address_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -4125,13 +4069,7 @@ XS(_wrap_idmef_address_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_address_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_address_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_address_new_child(arg1,arg2,arg3);
         
@@ -4968,13 +4906,7 @@ XS(_wrap_idmef_process_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_process_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_process_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_process_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -5006,13 +4938,7 @@ XS(_wrap_idmef_process_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_process_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_process_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_process_new_child(arg1,arg2,arg3);
         
@@ -5865,13 +5791,7 @@ XS(_wrap_idmef_webservice_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_webservice_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_webservice_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_webservice_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -5903,13 +5823,7 @@ XS(_wrap_idmef_webservice_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_webservice_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_webservice_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_webservice_new_child(arg1,arg2,arg3);
         
@@ -6506,13 +6420,7 @@ XS(_wrap_idmef_snmpservice_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_snmpservice_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_snmpservice_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_snmpservice_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -6544,13 +6452,7 @@ XS(_wrap_idmef_snmpservice_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_snmpservice_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_snmpservice_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_snmpservice_new_child(arg1,arg2,arg3);
         
@@ -7076,13 +6978,7 @@ XS(_wrap_idmef_service_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_service_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_service_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_service_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -7114,13 +7010,7 @@ XS(_wrap_idmef_service_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_service_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_service_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_service_new_child(arg1,arg2,arg3);
         
@@ -8194,13 +8084,7 @@ XS(_wrap_idmef_node_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_node_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_node_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_node_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -8232,13 +8116,7 @@ XS(_wrap_idmef_node_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_node_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_node_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_node_new_child(arg1,arg2,arg3);
         
@@ -9020,13 +8898,7 @@ XS(_wrap_idmef_source_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_source_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_source_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_source_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -9058,13 +8930,7 @@ XS(_wrap_idmef_source_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_source_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_source_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_source_new_child(arg1,arg2,arg3);
         
@@ -10025,13 +9891,7 @@ XS(_wrap_idmef_file_access_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_file_access_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_file_access_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_file_access_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -10063,13 +9923,7 @@ XS(_wrap_idmef_file_access_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_file_access_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_file_access_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_file_access_new_child(arg1,arg2,arg3);
         
@@ -10426,13 +10280,7 @@ XS(_wrap_idmef_inode_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_inode_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_inode_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_inode_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -10464,13 +10312,7 @@ XS(_wrap_idmef_inode_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_inode_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_inode_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_inode_new_child(arg1,arg2,arg3);
         
@@ -11336,13 +11178,7 @@ XS(_wrap_idmef_file_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_file_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_file_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_file_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -11374,13 +11210,7 @@ XS(_wrap_idmef_file_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_file_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_file_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_file_new_child(arg1,arg2,arg3);
         
@@ -13120,13 +12950,7 @@ XS(_wrap_idmef_linkage_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_linkage_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_linkage_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_linkage_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -13158,13 +12982,7 @@ XS(_wrap_idmef_linkage_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_linkage_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_linkage_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_linkage_new_child(arg1,arg2,arg3);
         
@@ -13751,13 +13569,7 @@ XS(_wrap_idmef_target_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_target_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_target_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_target_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -13789,13 +13601,7 @@ XS(_wrap_idmef_target_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_target_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_target_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_target_new_child(arg1,arg2,arg3);
         
@@ -14882,13 +14688,7 @@ XS(_wrap_idmef_analyzer_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_analyzer_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_analyzer_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_analyzer_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -14920,13 +14720,7 @@ XS(_wrap_idmef_analyzer_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_analyzer_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_analyzer_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_analyzer_new_child(arg1,arg2,arg3);
         
@@ -16131,13 +15925,7 @@ XS(_wrap_idmef_alertident_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_alertident_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_alertident_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_alertident_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -16169,13 +15957,7 @@ XS(_wrap_idmef_alertident_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_alertident_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_alertident_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_alertident_new_child(arg1,arg2,arg3);
         
@@ -16719,13 +16501,7 @@ XS(_wrap_idmef_impact_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_impact_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_impact_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_impact_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -16757,13 +16533,7 @@ XS(_wrap_idmef_impact_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_impact_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_impact_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_impact_new_child(arg1,arg2,arg3);
         
@@ -17397,13 +17167,7 @@ XS(_wrap_idmef_action_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_action_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_action_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_action_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -17435,13 +17199,7 @@ XS(_wrap_idmef_action_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_action_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_action_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_action_new_child(arg1,arg2,arg3);
         
@@ -17843,13 +17601,7 @@ XS(_wrap_idmef_confidence_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_confidence_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_confidence_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_confidence_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -17881,13 +17633,7 @@ XS(_wrap_idmef_confidence_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_confidence_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_confidence_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_confidence_new_child(arg1,arg2,arg3);
         
@@ -18231,13 +17977,7 @@ XS(_wrap_idmef_assessment_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_assessment_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_assessment_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_assessment_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -18269,13 +18009,7 @@ XS(_wrap_idmef_assessment_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_assessment_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_assessment_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_assessment_new_child(arg1,arg2,arg3);
         
@@ -18752,13 +18486,7 @@ XS(_wrap_idmef_tool_alert_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_tool_alert_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_tool_alert_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_tool_alert_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -18790,13 +18518,7 @@ XS(_wrap_idmef_tool_alert_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_tool_alert_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_tool_alert_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_tool_alert_new_child(arg1,arg2,arg3);
         
@@ -19273,13 +18995,7 @@ XS(_wrap_idmef_correlation_alert_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_correlation_alert_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_correlation_alert_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_correlation_alert_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -19311,13 +19027,7 @@ XS(_wrap_idmef_correlation_alert_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_correlation_alert_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_correlation_alert_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_correlation_alert_new_child(arg1,arg2,arg3);
         
@@ -19674,13 +19384,7 @@ XS(_wrap_idmef_overflow_alert_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_overflow_alert_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_overflow_alert_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_overflow_alert_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -19712,13 +19416,7 @@ XS(_wrap_idmef_overflow_alert_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_overflow_alert_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_overflow_alert_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_overflow_alert_new_child(arg1,arg2,arg3);
         
@@ -20211,13 +19909,7 @@ XS(_wrap_idmef_alert_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_alert_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_alert_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_alert_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -20249,13 +19941,7 @@ XS(_wrap_idmef_alert_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_alert_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_alert_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_alert_new_child(arg1,arg2,arg3);
         
@@ -21993,13 +21679,7 @@ XS(_wrap_idmef_heartbeat_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_heartbeat_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_heartbeat_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_heartbeat_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -22031,13 +21711,7 @@ XS(_wrap_idmef_heartbeat_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_heartbeat_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_heartbeat_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_heartbeat_new_child(arg1,arg2,arg3);
         
@@ -22771,13 +22445,7 @@ XS(_wrap_idmef_message_get_child) {
                 SWIG_croak("Type error in argument 1 of idmef_message_get_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_message_get_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         result = (void *)idmef_message_get_child(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -22809,13 +22477,7 @@ XS(_wrap_idmef_message_new_child) {
                 SWIG_croak("Type error in argument 1 of idmef_message_new_child. Expected _p_void");
             }
         }
-        {
-            idmef_child_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_child_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_message_new_child. Expected _p_idmef_child_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_child_t) SvIV(ST(1));
         arg3 = (int) SvIV(ST(2));
         result = (void *)idmef_message_new_child(arg1,arg2,arg3);
         
@@ -23807,13 +23469,7 @@ XS(_wrap_idmef_value_new_object) {
                 SWIG_croak("Type error in argument 1 of idmef_value_new_object. Expected _p_void");
             }
         }
-        {
-            idmef_type_t * argp;
-            if (SWIG_ConvertPtr(ST(1),(void **) &argp, SWIGTYPE_p_idmef_type_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_value_new_object. Expected _p_idmef_type_t");
-            }
-            arg2 = *argp;
-        }
+        arg2 = (idmef_type_t) SvIV(ST(1));
         result = (idmef_value_t *)idmef_value_new_object(arg1,arg2);
         
         ST(argvi) = sv_newmortal();
@@ -23862,13 +23518,7 @@ XS(_wrap_idmef_value_new_enum) {
         if ((items < 2) || (items > 2)) {
             SWIG_croak("Usage: idmef_value_new_enum(type,buf);");
         }
-        {
-            idmef_type_t * argp;
-            if (SWIG_ConvertPtr(ST(0),(void **) &argp, SWIGTYPE_p_idmef_type_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_value_new_enum. Expected _p_idmef_type_t");
-            }
-            arg1 = *argp;
-        }
+        arg1 = (idmef_type_t) SvIV(ST(0));
         if (!SvOK((SV*) ST(1))) arg2 = 0;
         else arg2 = (char *) SvPV(ST(1), PL_na);
         result = (idmef_value_t *)idmef_value_new_enum(arg1,(char const *)arg2);
@@ -23896,13 +23546,7 @@ XS(_wrap_idmef_value_new_enum_string) {
         if ((items < 2) || (items > 2)) {
             SWIG_croak("Usage: idmef_value_new_enum_string(type,buf);");
         }
-        {
-            idmef_type_t * argp;
-            if (SWIG_ConvertPtr(ST(0),(void **) &argp, SWIGTYPE_p_idmef_type_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_value_new_enum_string. Expected _p_idmef_type_t");
-            }
-            arg1 = *argp;
-        }
+        arg1 = (idmef_type_t) SvIV(ST(0));
         if (!SvOK((SV*) ST(1))) arg2 = 0;
         else arg2 = (char *) SvPV(ST(1), PL_na);
         result = (idmef_value_t *)idmef_value_new_enum_string(arg1,(char const *)arg2);
@@ -23930,13 +23574,7 @@ XS(_wrap_idmef_value_new_enum_numeric) {
         if ((items < 2) || (items > 2)) {
             SWIG_croak("Usage: idmef_value_new_enum_numeric(type,val);");
         }
-        {
-            idmef_type_t * argp;
-            if (SWIG_ConvertPtr(ST(0),(void **) &argp, SWIGTYPE_p_idmef_type_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_value_new_enum_numeric. Expected _p_idmef_type_t");
-            }
-            arg1 = *argp;
-        }
+        arg1 = (idmef_type_t) SvIV(ST(0));
         arg2 = (int) SvIV(ST(1));
         result = (idmef_value_t *)idmef_value_new_enum_numeric(arg1,arg2);
         
@@ -24536,14 +24174,10 @@ XS(_wrap_idmef_value_get_idmef_type) {
                 SWIG_croak("Type error in argument 1 of idmef_value_get_idmef_type. Expected _p_idmef_value_t");
             }
         }
-        result = idmef_value_get_idmef_type(arg1);
+        result = (idmef_type_t)idmef_value_get_idmef_type(arg1);
         
-        {
-            idmef_type_t * resultobj = (idmef_type_t *) malloc(sizeof(idmef_type_t));
-            memmove(resultobj, &result, sizeof(idmef_type_t));
-            ST(argvi) = sv_newmortal();
-            SWIG_MakePtr(ST(argvi++), (void *) resultobj, SWIGTYPE_p_idmef_type_t,0);
-        }
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -25053,14 +24687,10 @@ XS(_wrap_idmef_object_get_idmef_type) {
                 SWIG_croak("Type error in argument 1 of idmef_object_get_idmef_type. Expected _p_idmef_object_t");
             }
         }
-        result = idmef_object_get_idmef_type(arg1);
+        result = (idmef_type_t)idmef_object_get_idmef_type(arg1);
         
-        {
-            idmef_type_t * resultobj = (idmef_type_t *) malloc(sizeof(idmef_type_t));
-            memmove(resultobj, &result, sizeof(idmef_type_t));
-            ST(argvi) = sv_newmortal();
-            SWIG_MakePtr(ST(argvi++), (void *) resultobj, SWIGTYPE_p_idmef_type_t,0);
-        }
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -27524,7 +27154,7 @@ XS(_wrap_idmef_string_new_ref_fast) {
         if (!SvOK((SV*) ST(0))) arg1 = 0;
         else arg1 = (char *) SvPV(ST(0), PL_na);
         arg2 = (int) SvIV(ST(1));
-        result = (idmef_string_t *)idmef_string_new_ref_fast(arg1,arg2);
+        result = (idmef_string_t *)idmef_string_new_ref_fast((char const *)arg1,arg2);
         
         ST(argvi) = sv_newmortal();
         SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_string_t,0);
@@ -33599,6 +33229,380 @@ XS(_wrap_idmef_additionaldata_data_to_string) {
 }
 
 
+XS(_wrap_idmef_type_find_child) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        idmef_type_t arg1 ;
+        char *arg2 ;
+        idmef_child_t result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: idmef_type_find_child(type,name);");
+        }
+        arg1 = (idmef_type_t) SvIV(ST(0));
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        result = (idmef_child_t)idmef_type_find_child(arg1,(char const *)arg2);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_type_child_is_list) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        idmef_type_t arg1 ;
+        idmef_child_t arg2 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: idmef_type_child_is_list(type,child);");
+        }
+        arg1 = (idmef_type_t) SvIV(ST(0));
+        arg2 = (idmef_child_t) SvIV(ST(1));
+        result = (int)idmef_type_child_is_list(arg1,arg2);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_type_get_child_type) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        idmef_type_t arg1 ;
+        idmef_child_t arg2 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: idmef_type_get_child_type(type,child);");
+        }
+        arg1 = (idmef_type_t) SvIV(ST(0));
+        arg2 = (idmef_child_t) SvIV(ST(1));
+        result = (int)idmef_type_get_child_type(arg1,arg2);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_type_get_child_object_type) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        idmef_type_t arg1 ;
+        idmef_child_t arg2 ;
+        idmef_type_t result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: idmef_type_get_child_object_type(type,child);");
+        }
+        arg1 = (idmef_type_t) SvIV(ST(0));
+        arg2 = (idmef_child_t) SvIV(ST(1));
+        result = (idmef_type_t)idmef_type_get_child_object_type(arg1,arg2);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_type_get_child_enum_type) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        idmef_type_t arg1 ;
+        idmef_child_t arg2 ;
+        idmef_type_t result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: idmef_type_get_child_enum_type(type,child);");
+        }
+        arg1 = (idmef_type_t) SvIV(ST(0));
+        arg2 = (idmef_child_t) SvIV(ST(1));
+        result = (idmef_type_t)idmef_type_get_child_enum_type(arg1,arg2);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_type_get_child_name) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        idmef_type_t arg1 ;
+        idmef_child_t arg2 ;
+        char *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: idmef_type_get_child_name(type,child);");
+        }
+        arg1 = (idmef_type_t) SvIV(ST(0));
+        arg2 = (idmef_child_t) SvIV(ST(1));
+        result = (char *)idmef_type_get_child_name(arg1,arg2);
+        
+        ST(argvi) = sv_newmortal();
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_type_find) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        char *arg1 ;
+        idmef_type_t result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: idmef_type_find(name);");
+        }
+        if (!SvOK((SV*) ST(0))) arg1 = 0;
+        else arg1 = (char *) SvPV(ST(0), PL_na);
+        result = (idmef_type_t)idmef_type_find((char const *)arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_type_is_enum) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        idmef_type_t arg1 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: idmef_type_is_enum(type);");
+        }
+        arg1 = (idmef_type_t) SvIV(ST(0));
+        result = (int)idmef_type_is_enum(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_type_enum_to_numeric) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        idmef_type_t arg1 ;
+        char *arg2 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: idmef_type_enum_to_numeric(type,val);");
+        }
+        arg1 = (idmef_type_t) SvIV(ST(0));
+        if (!SvOK((SV*) ST(1))) arg2 = 0;
+        else arg2 = (char *) SvPV(ST(1), PL_na);
+        result = (int)idmef_type_enum_to_numeric(arg1,(char const *)arg2);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_type_enum_to_string) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        idmef_type_t arg1 ;
+        int arg2 ;
+        char *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 2) || (items > 2)) {
+            SWIG_croak("Usage: idmef_type_enum_to_string(type,val);");
+        }
+        arg1 = (idmef_type_t) SvIV(ST(0));
+        arg2 = (int) SvIV(ST(1));
+        result = (char *)idmef_type_enum_to_string(arg1,arg2);
+        
+        ST(argvi) = sv_newmortal();
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_type_get_child) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        void *arg1 = (void *) 0 ;
+        idmef_type_t arg2 ;
+        idmef_child_t arg3 ;
+        void *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 3) || (items > 3)) {
+            SWIG_croak("Usage: idmef_type_get_child(ptr,type,child);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, 0,0) < 0) {
+                SWIG_croak("Type error in argument 1 of idmef_type_get_child. Expected _p_void");
+            }
+        }
+        arg2 = (idmef_type_t) SvIV(ST(1));
+        arg3 = (idmef_child_t) SvIV(ST(2));
+        result = (void *)idmef_type_get_child(arg1,arg2,arg3);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_void,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_type_new_child) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        void *arg1 = (void *) 0 ;
+        idmef_type_t arg2 ;
+        idmef_child_t arg3 ;
+        int arg4 ;
+        void *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 4) || (items > 4)) {
+            SWIG_croak("Usage: idmef_type_new_child(ptr,type,child,n);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, 0,0) < 0) {
+                SWIG_croak("Type error in argument 1 of idmef_type_new_child. Expected _p_void");
+            }
+        }
+        arg2 = (idmef_type_t) SvIV(ST(1));
+        arg3 = (idmef_child_t) SvIV(ST(2));
+        arg4 = (int) SvIV(ST(3));
+        result = (void *)idmef_type_new_child(arg1,arg2,arg3,arg4);
+        
+        ST(argvi) = sv_newmortal();
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_void,0);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_type_get_name) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        idmef_type_t arg1 ;
+        char *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: idmef_type_get_name(type);");
+        }
+        arg1 = (idmef_type_t) SvIV(ST(0));
+        result = (char *)idmef_type_get_name(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
 XS(_wrap_prelude_alert_fill_infos) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
@@ -33663,9 +33667,8 @@ XS(_wrap_prelude_heartbeat_fill_infos) {
 static swig_type_info _swigt__p_f_p_idmef_value_t_p_void__int[] = {{"_p_f_p_idmef_value_t_p_void__int", 0, "int (*)(idmef_value_t *,void *)", 0},{"_p_f_p_idmef_value_t_p_void__int"},{0}};
 static swig_type_info _swigt__p_f_p_void__void[] = {{"_p_f_p_void__void", 0, "void (*)(void *)", 0},{"_p_f_p_void__void"},{0}};
 static swig_type_info _swigt__p_f_p_struct_list_head__void[] = {{"_p_f_p_struct_list_head__void", 0, "void (*)(struct list_head *)", 0},{"_p_f_p_struct_list_head__void"},{0}};
-static swig_type_info _swigt__p_idmef_child_t[] = {{"_p_idmef_child_t", 0, "idmef_child_t *", 0},{"_p_idmef_child_t"},{0}};
-static swig_type_info _swigt__p_prelude_msg_t[] = {{"_p_prelude_msg_t", 0, "prelude_msg_t *", 0},{"_p_prelude_msg_t"},{0}};
 static swig_type_info _swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t[] = {{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t", 0, "prelude_msg_t *(*)(prelude_msgbuf_t *)", 0},{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t"},{0}};
+static swig_type_info _swigt__p_prelude_msg_t[] = {{"_p_prelude_msg_t", 0, "prelude_msg_t *", 0},{"_p_prelude_msg_t"},{0}};
 static swig_type_info _swigt__p_list_head[] = {{"_p_list_head", 0, "struct list_head *", 0},{"_p_list_head"},{0}};
 static swig_type_info _swigt__p_ssize_t[] = {{"_p_ssize_t", 0, "ssize_t *", 0},{"_p_ssize_t"},{0}};
 static swig_type_info _swigt__p_size_t[] = {{"_p_size_t", 0, "size_t *", 0},{"_p_size_t"},{0}};
@@ -33706,7 +33709,6 @@ static swig_type_info _swigt__p_idmef_webservice_t[] = {{"_p_idmef_webservice_t"
 static swig_type_info _swigt__p_idmef_snmpservice_t[] = {{"_p_idmef_snmpservice_t", 0, "idmef_snmpservice_t *", 0},{"_p_idmef_snmpservice_t"},{0}};
 static swig_type_info _swigt__p_idmef_service_t[] = {{"_p_idmef_service_t", 0, "idmef_service_t *", 0},{"_p_idmef_service_t"},{0}};
 static swig_type_info _swigt__p_p_char[] = {{"_p_p_char", 0, "char **", 0},{"_p_p_char"},{0}};
-static swig_type_info _swigt__p_idmef_type_t[] = {{"_p_idmef_type_t", 0, "idmef_type_t *", 0},{"_p_idmef_type_t"},{0}};
 static swig_type_info _swigt__p_idmef_impact_type_t[] = {{"_p_idmef_impact_type_t", 0, "idmef_impact_type_t *", 0},{"_p_idmef_impact_type_t"},{0}};
 static swig_type_info _swigt__p_idmef_additional_data_type_t[] = {{"_p_idmef_additional_data_type_t", 0, "idmef_additional_data_type_t *", 0},{"_p_idmef_additional_data_type_t"},{0}};
 static swig_type_info _swigt__p_idmef_userid_type_t[] = {{"_p_idmef_userid_type_t", 0, "idmef_userid_type_t *", 0},{"_p_idmef_userid_type_t"},{0}};
@@ -33725,9 +33727,9 @@ static swig_type_info _swigt__p_prelude_io_t[] = {{"_p_prelude_io_t", 0, "prelud
 static swig_type_info _swigt__p_idmef_object_t[] = {{"_p_idmef_object_t", 0, "idmef_object_t *", 0},{"_p_idmef_object_t"},{0}};
 static swig_type_info _swigt__p_unsigned_char[] = {{"_p_unsigned_char", 0, "unsigned char *", 0},{"_p_unsigned_char"},{0}};
 static swig_type_info _swigt__p_float[] = {{"_p_float", 0, "float *", 0},{"_p_float"},{0}};
+static swig_type_info _swigt__p_idmef_value_type_data_t[] = {{"_p_idmef_value_type_data_t", 0, "idmef_value_type_data_t *", 0},{"_p_idmef_value_type_data_t"},{0}};
 static swig_type_info _swigt__p_idmef_additional_data_t[] = {{"_p_idmef_additional_data_t", 0, "idmef_additional_data_t *", 0},{"_p_idmef_additional_data_t"},{0}};
 static swig_type_info _swigt__p_idmef_data_t[] = {{"_p_idmef_data_t", 0, "idmef_data_t *", 0},{"_p_idmef_string_t"},{"_p_idmef_data_t"},{0}};
-static swig_type_info _swigt__p_idmef_value_type_data_t[] = {{"_p_idmef_value_type_data_t", 0, "idmef_value_type_data_t *", 0},{"_p_idmef_value_type_data_t"},{0}};
 static swig_type_info _swigt__p_va_list[] = {{"_p_va_list", 0, "va_list *", 0},{"_p_va_list"},{0}};
 static swig_type_info _swigt__p_idmef_alertident_t[] = {{"_p_idmef_alertident_t", 0, "idmef_alertident_t *", 0},{"_p_idmef_alertident_t"},{0}};
 static swig_type_info _swigt__p_idmef_impact_severity_t[] = {{"_p_idmef_impact_severity_t", 0, "idmef_impact_severity_t *", 0},{"_p_idmef_impact_severity_t"},{0}};
@@ -33742,9 +33744,8 @@ static swig_type_info *swig_types_initial[] = {
 _swigt__p_f_p_idmef_value_t_p_void__int, 
 _swigt__p_f_p_void__void, 
 _swigt__p_f_p_struct_list_head__void, 
-_swigt__p_idmef_child_t, 
-_swigt__p_prelude_msg_t, 
 _swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t, 
+_swigt__p_prelude_msg_t, 
 _swigt__p_list_head, 
 _swigt__p_ssize_t, 
 _swigt__p_size_t, 
@@ -33785,7 +33786,6 @@ _swigt__p_idmef_webservice_t,
 _swigt__p_idmef_snmpservice_t, 
 _swigt__p_idmef_service_t, 
 _swigt__p_p_char, 
-_swigt__p_idmef_type_t, 
 _swigt__p_idmef_impact_type_t, 
 _swigt__p_idmef_additional_data_type_t, 
 _swigt__p_idmef_userid_type_t, 
@@ -33804,9 +33804,9 @@ _swigt__p_prelude_io_t,
 _swigt__p_idmef_object_t, 
 _swigt__p_unsigned_char, 
 _swigt__p_float, 
+_swigt__p_idmef_value_type_data_t, 
 _swigt__p_idmef_additional_data_t, 
 _swigt__p_idmef_data_t, 
-_swigt__p_idmef_value_type_data_t, 
 _swigt__p_va_list, 
 _swigt__p_idmef_alertident_t, 
 _swigt__p_idmef_impact_severity_t, 
@@ -35099,6 +35099,19 @@ static swig_command_info swig_commands[] = {
 {"Prelude::idmef_value_type_clone", _wrap_idmef_value_type_clone},
 {"Prelude::idmef_value_type_compare", _wrap_idmef_value_type_compare},
 {"Prelude::idmef_additionaldata_data_to_string", _wrap_idmef_additionaldata_data_to_string},
+{"Prelude::idmef_type_find_child", _wrap_idmef_type_find_child},
+{"Prelude::idmef_type_child_is_list", _wrap_idmef_type_child_is_list},
+{"Prelude::idmef_type_get_child_type", _wrap_idmef_type_get_child_type},
+{"Prelude::idmef_type_get_child_object_type", _wrap_idmef_type_get_child_object_type},
+{"Prelude::idmef_type_get_child_enum_type", _wrap_idmef_type_get_child_enum_type},
+{"Prelude::idmef_type_get_child_name", _wrap_idmef_type_get_child_name},
+{"Prelude::idmef_type_find", _wrap_idmef_type_find},
+{"Prelude::idmef_type_is_enum", _wrap_idmef_type_is_enum},
+{"Prelude::idmef_type_enum_to_numeric", _wrap_idmef_type_enum_to_numeric},
+{"Prelude::idmef_type_enum_to_string", _wrap_idmef_type_enum_to_string},
+{"Prelude::idmef_type_get_child", _wrap_idmef_type_get_child},
+{"Prelude::idmef_type_new_child", _wrap_idmef_type_new_child},
+{"Prelude::idmef_type_get_name", _wrap_idmef_type_get_name},
 {"Prelude::prelude_alert_fill_infos", _wrap_prelude_alert_fill_infos},
 {"Prelude::prelude_heartbeat_fill_infos", _wrap_prelude_heartbeat_fill_infos},
 {0,0}
