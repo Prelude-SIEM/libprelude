@@ -20,6 +20,7 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
+
 /*
  * This enclose an option.
  */
@@ -27,17 +28,8 @@
 #ifndef _LIBPRELUDE_PRELUDE_GETOPT_WIDE_H
 #define _LIBPRELUDE_PRELUDE_GETOPT_WIDE_H
 
-#define PRELUDE_OPTION_START 0
-#define PRELUDE_OPTION_END   1
 
-#define PRELUDE_OPTION_NAME  2
-#define PRELUDE_OPTION_DESC  3
-#define PRELUDE_OPTION_HAS_ARG 4
-#define PRELUDE_OPTION_HELP 5
-#define PRELUDE_OPTION_INPUT_VALIDATION 6
-#define PRELUDE_OPTION_INPUT_TYPE 7
-
-#define PRELUDE_OPTION_ARG 8
+int prelude_option_wide_process_request(prelude_client_t *client);
 
 #endif /* _LIBPRELUDE_PRELUDE_GETOPT_WIDE_H */
 

@@ -56,6 +56,7 @@ void prelude_client_set_fd(prelude_client_t *client, prelude_io_t *fd);
 #define PRELUDE_CLIENT_TYPE_SENSOR           1
 #define PRELUDE_CLIENT_TYPE_MANAGER_PARENT   2
 #define PRELUDE_CLIENT_TYPE_MANAGER_CHILDREN 3
+#define PRELUDE_CLIENT_TYPE_ADMIN            4
 
 void prelude_client_set_type(prelude_client_t *client, int type);
 

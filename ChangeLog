@@ -1,3 +1,10 @@
+2002-11-13  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-getopt-wide.c: 
+	New functions, read an option request, apply it, and rACK it.
+	This code was written by both Chia-liang Kao <clkao@clkao.org> 
+	and myself.
+
 2002-11-13  Chia-liang Kao <clkao@clkao.org>
 
 	* src/prelude-getopt.c:

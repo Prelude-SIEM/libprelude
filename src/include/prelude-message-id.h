@@ -27,13 +27,14 @@
 /*
  * Top level message tag (to be used with prelude_msg_new()).
  */
-#define PRELUDE_MSG_IDMEF       0
-#define PRELUDE_MSG_OPTION_LIST 1
-#define PRELUDE_MSG_OPTION_SET  2
-#define PRELUDE_MSG_ID          3
-#define PRELUDE_MSG_AUTH        4
-#define PRELUDE_MSG_CM          5 
-#define PRELUDE_MSG_CLIENT_TYPE 6
+#define PRELUDE_MSG_IDMEF          0
+#define PRELUDE_MSG_OPTION_LIST    1
+#define PRELUDE_MSG_ID             3
+#define PRELUDE_MSG_AUTH           4
+#define PRELUDE_MSG_CM             5 
+#define PRELUDE_MSG_CLIENT_TYPE    6
+#define PRELUDE_MSG_OPTION_REQUEST 7
+#define PRELUDE_MSG_OPTION_REPLY   8
 
 /*
  * PRELUDE_MSG_ID submessage
@@ -64,5 +65,31 @@
 #define PRELUDE_MSG_CM_THROTTLE 1
 #define PRELUDE_MSG_CM_ISLAND   2
 #define PRELUDE_MSG_CM_FEATURE  3
+
+/*
+ * PRELUDE_MSG_OPTION submessages
+ */
+#define PRELUDE_MSG_OPTION_TARGET_ID        0
+#define PRELUDE_MSG_OPTION_SOURCE_ID        1
+#define PRELUDE_MSG_OPTION_NAME             2
+#define PRELUDE_MSG_OPTION_VALUE            3
+#define PRELUDE_MSG_OPTION_SET              4
+#define PRELUDE_MSG_OPTION_GET              5
+#define PRELUDE_MSG_OPTION_ID               6
+#define PRELUDE_MSG_OPTION_ERROR            7
+
+
+/*
+ * PRELUDE_MSG_OPTION_LIST submessages
+ */
+#define PRELUDE_OPTION_START            0
+#define PRELUDE_OPTION_END              1
+#define PRELUDE_OPTION_NAME             2
+#define PRELUDE_OPTION_DESC             3
+#define PRELUDE_OPTION_HAS_ARG          4
+#define PRELUDE_OPTION_HELP             5
+#define PRELUDE_OPTION_INPUT_VALIDATION 6
+#define PRELUDE_OPTION_INPUT_TYPE       7
+#define PRELUDE_OPTION_ARG              8
 
 #endif /* _LIBPRELUDE_PRELUDE_MESSAGE_ID_H */

@@ -30,7 +30,6 @@
 
 #include "prelude-io.h"
 #include "prelude-message.h"
-#include "prelude-getopt-wide.h"
 #include "prelude-message-id.h"
 
 #include "list.h"

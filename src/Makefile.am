@@ -22,6 +22,7 @@ libprelude_la_SOURCES = 		\
 	prelude-client.c		\
 	prelude-client-mgr.c		\
 	prelude-getopt.c		\
+	prelude-getopt-wide.c		\
 	prelude-io.c			\
 	prelude-message.c		\
 	prelude-message-buffered.c	\
