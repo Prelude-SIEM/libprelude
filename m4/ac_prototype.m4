@@ -77,6 +77,9 @@ dnl @author Loic Dachary <loic@senga.org>
 dnl
 
 AC_DEFUN([AC_PROTOTYPE],[
+
+AX_CFLAGS_GCC_OPTION(-Werror, ERROR_CPPFLAG)
+
 dnl
 dnl Upper case function name
 dnl
@@ -173,8 +176,8 @@ dnl
 dnl Activate fatal warnings if possible, gives better guess
 dnl
      ac_save_CPPFLAGS="$CPPFLAGS"
-     ifelse([AC_LANG],CPLUSPLUS,if test "$GXX" = "yes" ; then CPPFLAGS="$CPPFLAGS -Werror" ; fi)
-     ifelse([AC_LANG],C,if test "$GCC" = "yes" ; then CPPFLAGS="$CPPFLAGS -Werror" ; fi)
+     CPPFLAGS="$CPPFLAGS $ERROR_CPPFLAG"
+
      AC_TRY_COMPILE($2, $1, [
       CPPFLAGS="$ac_save_CPPFLAGS"
       AC_MSG_RESULT(ok)
