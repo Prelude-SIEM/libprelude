@@ -88,7 +88,9 @@ typedef unsigned int prelude_bool_t;
 %include libprelude_perl.i
 #endif /* ! SWIGPERL */
 
-
+%ignore idmef_path_new_v;
+%ignore prelude_string_vprintf;
+%ignore prelude_log_v;
 
 %include "prelude.h"
 %include "prelude-client.h"
