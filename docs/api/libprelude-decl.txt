@@ -1431,16 +1431,23 @@ idmef_additional_data_t *data
 #define idmef_string_len(s) (s)->len
 </MACRO>
 <MACRO>
+<NAME>idmef_string_copy</NAME>
+#define idmef_string_copy(dst, src) do {                   \
+        (dst)->len = (src)->len;                           \
+        (dst)->string = (src)->string;                     \
+} while(0)
+</MACRO>
+<MACRO>
 <NAME>idmef_string_set_constant</NAME>
 #define idmef_string_set_constant(s, str) do {             \
 	(s)->string = (str); (s)->len = sizeof((str));     \
-} while (0);
+} while (0)
 </MACRO>
 <MACRO>
 <NAME>idmef_string_set</NAME>
 #define idmef_string_set(s, str) do {                      \
 	(s)->string = (str); (s)->len = strlen((str)) + 1; \
-} while (0);
+} while (0)
 </MACRO>
 <MACRO>
 <NAME>IDMEF_VERSION</NAME>
