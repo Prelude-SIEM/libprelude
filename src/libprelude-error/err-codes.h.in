@@ -54,7 +54,6 @@
 #21 to 16381 are free to be used.
 
 16382	PRELUDE_ERROR_UNKNOWN_ERRNO		Unknown system error
-16383	PRELUDE_ERROR_EOF			End of file
 
 # 16384 - 32767 are reserved for future extensions.
 
