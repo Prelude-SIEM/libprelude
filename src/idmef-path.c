@@ -178,7 +178,10 @@ static int idmef_path_get_list_internal(idmef_value_t **value_list,
                         }
                 }
 
-                if ( ret <= 0 ) {
+                if ( ret == 0 )
+                        continue;
+                
+                if ( ret < 0 ) {
                         idmef_value_destroy(*value_list);
                         return ret;
                 }
