@@ -344,13 +344,19 @@ class IDMEFTime(object):
         
     def __str__(self):
         """Return the RFC8601 string representation of the object."""
-        buf = "A" * 128
-
-        size = _prelude.idmef_time_to_string(self.res, buf, len(buf))
-        if size < 0:
+        pstring = _prelude.prelude_string_new()
+        if not pstring:
+            raise Error()
+        
+        ret = _prelude.idmef_time_to_string(self.res, pstring)
+        if ret < 0:
+            _prelude.prelude_string_destroy(pstring)
             raise Error()
 
-        return buf[:size]
+        s = _prelude.prelude_string_get_string(pstring)
+        _prelude.prelude_string_destroy(pstring)
+
+        return s
 
     def __repr__(self):
         return self.__str__()
@@ -620,13 +626,18 @@ class IDMEFMessage:
         _prelude.idmef_message_destroy(self.res)
 
     def __repr__(self):
-        buf = "A" * 8192
-
-        size = _prelude.idmef_message_to_string(self.res, buf, len(buf))
-        if size < 0:
+        pstring = _prelude.prelude_string_new()
+        if not pstring:
+            raise Error()
+        
+        ret = prelude.idmef_message_to_string(self.res, pstring)
+        if ret < 0:
             raise Error()
 
-        return buf[:size]
+        s = _prelude.prelude_string_get_string(pstring)
+        _prelude.prelude_string_destroy(pstring)
+
+        return s
 
     def __setitem__(self, object_name, py_value):
         """Set the value of the object in the message."""
@@ -712,13 +723,18 @@ class IDMEFCriteria(object):
 
     def __str__(self):
         """Return the criteria as a string."""
-        buf = "A" * 256
-
-        size = _prelude.idmef_criteria_to_string(self.res, buf, len(buf))
-        if size < 0:
+        pstring = _prelude.prelude_string_new()
+        if not pstring:
+            raise Error()
+        
+        ret = _prelude.idmef_criteria_to_string(self.res, pstring)
+        if ret < 0:
             raise Error()
 
-        return buf[:size]
+        s = _prelude.prelude_string_get_string(pstring)
+        _prelude.prelude_string_destroy(pstring)
+
+        return s
 
     def __repr__(self):
         self.__str__()
