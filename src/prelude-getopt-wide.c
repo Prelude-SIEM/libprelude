@@ -70,7 +70,7 @@ static int parse_single(void **context, prelude_option_t **last, int is_last_cmd
         if ( rtype == PRELUDE_MSG_OPTION_SET )
                 ret = prelude_option_invoke_set(context, *last, value, out, size);
         
-	else if ( is_last_cmd ) {
+        else if ( is_last_cmd ) {
 		
                 if ( rtype == PRELUDE_MSG_OPTION_DESTROY ) 
                         ret = prelude_option_invoke_destroy(*context, *last, value, out, size);
