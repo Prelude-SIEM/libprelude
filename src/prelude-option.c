@@ -572,7 +572,10 @@ static int parse_argument(prelude_list_t *cb_list, prelude_option_t *optlist,
                 ret = check_option(opt, &argptr, (*argv_index < *argc) ? argv[*argv_index] : NULL);
                 if ( ret < 0 ) 
                         return -1;
-                
+
+                if ( argptr )
+                        reorder_argv(argc, argv, *argv_index, argv_index);
+                        
                 ret = call_option_cb(&cbitem, cb_list, opt, argptr);
                 if ( ret < 0 )
                         return ret;
