@@ -1,0 +1,24 @@
+(N) Name
+(E) web address
+(D) Description
+(S) snail-mail address
+
+N: Jeremie Brebec
+D: SSL implementation
+E: brebec@enseirb.fr
+S: France
+
+N: Krzysztof Zaraska 
+E: kzaraska@student.uci.agh.edu.pl
+D: FreeBSD Port
+S: Poland
+
+N: Mathieu Toussaint
+D: SSL implementation
+E: mathieut@enseirb.fr
+S: France
+
+N: Yoann Vandoorselaere
+E: yoann@mandrakesoft.com
+D: The rest
+S: France
