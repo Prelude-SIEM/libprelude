@@ -34,7 +34,7 @@
 #include <errno.h>
 
 #include "prelude-log.h"
-#include "extract.h"
+#include "prelude-error.h"
 #include "libmissing.h"
 #include "prelude-inttypes.h"
 #include "prelude-log.h"
