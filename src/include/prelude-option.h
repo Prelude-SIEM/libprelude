@@ -187,7 +187,7 @@ void prelude_option_context_destroy(prelude_option_context_t *oc);
 
 
 prelude_option_t *prelude_option_search(prelude_option_t *parent, const char *name,
-                                        prelude_option_type_t type, int walk_children);
+                                        prelude_option_type_t type, prelude_bool_t walk_children);
 
 #ifdef __cplusplus
  }
