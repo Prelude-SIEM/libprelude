@@ -41,7 +41,7 @@
 static PRELUDE_LIST(joblist);
 
 
-static int async_flags = 0;
+static prelude_async_flags_t async_flags = 0;
 static int async_init_ret = -1;
 static int stop_processing = 0;
 
@@ -71,7 +71,8 @@ static void wait_timer_and_data(void)
         double elapsed;
         struct timeval now;
         struct timespec ts;
-        int ret, old_async_flags;
+        int ret;
+        prelude_async_flags_t old_async_flags;
         static struct timeval last_timer_wake_up;
         
         while ( 1 ) {
@@ -121,7 +122,7 @@ static void wait_timer_and_data(void)
 
 static void wait_data(void) 
 {
-        int old_async_flags;
+        prelude_async_flags_t old_async_flags;
         
         pthread_mutex_lock(&mutex);
         old_async_flags = async_flags;
@@ -161,7 +162,7 @@ static void *async_thread(void *arg)
 
         while ( 1 ) {
 
-                if ( async_flags & PRELUDE_ASYNC_TIMER )
+                if ( async_flags & PRELUDE_ASYNC_FLAGS_TIMER )
                         wait_timer_and_data();
                 else
                         wait_data();
@@ -219,8 +220,14 @@ static void init_async(void)
 
 
 
-
-void prelude_async_set_flags(int flags) 
+/**
+ * prelude_async_set_flags:
+ * @flags: flags you want to set
+ * 
+ * Sets flags to the asynchronous subsystem.
+ *
+ */
+void prelude_async_set_flags(prelude_async_flags_t flags) 
 {
         pthread_mutex_lock(&mutex);
         
@@ -232,7 +239,14 @@ void prelude_async_set_flags(int flags)
 
 
 
-int prelude_async_get_flags(void) 
+/**
+ * prelude_async_get_flags:
+ * 
+ * Retrieves flags from the asynchronous subsystem
+ *
+ * Returns: asynchronous flags
+ */
+prelude_async_flags_t prelude_async_get_flags(void) 
 {
         return async_flags;
 }
@@ -258,7 +272,7 @@ int prelude_async_init(void)
  * prelude_async_add:
  * @obj: Pointer to a #prelude_async_t object.
  *
- * Add @obj to the asynchronous processing list.
+ * Adds @obj to the asynchronous processing list.
  */
 void prelude_async_add(prelude_async_object_t *obj) 
 {
@@ -270,12 +284,11 @@ void prelude_async_add(prelude_async_object_t *obj)
 
 
 
-
 /**
  * prelude_async_del:
  * @obj: Pointer to a #prelude_async_t object.
  *
- * Delete @obj from the asynchronous processing list.
+ * Deletes @obj from the asynchronous processing list.
  */
 void prelude_async_del(prelude_async_object_t *obj) 
 {

@@ -50,7 +50,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 inline static void timer_lock_list(void) 
 {
-        if ( prelude_async_get_flags() & PRELUDE_ASYNC_TIMER )
+        if ( prelude_async_get_flags() & PRELUDE_ASYNC_FLAGS_TIMER )
                 pthread_mutex_lock(&mutex);
 }
 
@@ -58,7 +58,7 @@ inline static void timer_lock_list(void)
 
 inline static void timer_unlock_list(void) 
 {
-        if ( prelude_async_get_flags() & PRELUDE_ASYNC_TIMER )
+        if ( prelude_async_get_flags() & PRELUDE_ASYNC_FLAGS_TIMER )
                 pthread_mutex_unlock(&mutex);
 }
 

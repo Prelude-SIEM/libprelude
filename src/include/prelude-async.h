@@ -28,9 +28,9 @@
 #include "prelude-linked-object.h"
 
 
-#define PRELUDE_ASYNC_TIMER   0x01
-#define PRELUDE_ASYNC_MESSAGE 0x02
-
+typedef enum {
+        PRELUDE_ASYNC_FLAGS_TIMER   = 0x01, 
+} prelude_async_flags_t;
 
 typedef void (*prelude_async_func_t)(void *object, void *data);
 
@@ -61,9 +61,9 @@ static inline void prelude_async_set_callback(prelude_async_object_t *obj, prelu
 
 int prelude_async_init(void);
 
-int prelude_async_get_flags(void);
+prelude_async_flags_t prelude_async_get_flags(void);
 
-void prelude_async_set_flags(int flags);
+void prelude_async_set_flags(prelude_async_flags_t flags);
 
 void prelude_async_add(prelude_async_object_t *obj);
 

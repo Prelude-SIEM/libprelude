@@ -14,19 +14,13 @@ prelude-async
 
 </para>
 
-<!-- ##### MACRO PRELUDE_ASYNC_TIMER ##### -->
+<!-- ##### ENUM prelude_async_flags_t ##### -->
 <para>
-
+Provides asynchronous timer, meaning the user specified callback function will be called automatically, from an asynchronous thread.
+If you use this flags, you don't need to call prelude_wake_up_timer() anymore.
 </para>
 
-
-
-<!-- ##### MACRO PRELUDE_ASYNC_MESSAGE ##### -->
-<para>
-
-</para>
-
-
+@PRELUDE_ASYNC_FLAGS_TIMER: 
 
 <!-- ##### USER_FUNCTION prelude_async_func_t ##### -->
 <para>

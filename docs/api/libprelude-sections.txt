@@ -1154,8 +1154,7 @@ prelude_connection_pool_set_event_handler
 
 <SECTION>
 <FILE>prelude-async</FILE>
-PRELUDE_ASYNC_TIMER
-PRELUDE_ASYNC_MESSAGE
+prelude_async_flags_t
 prelude_async_func_t
 PRELUDE_ASYNC_OBJECT
 prelude_async_object_t

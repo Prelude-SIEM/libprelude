@@ -1257,7 +1257,7 @@ int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t fl
                 
         if ( flags & PRELUDE_CLIENT_FLAGS_ASYNC_TIMER ) {
                 ret = prelude_async_init();
-                prelude_async_set_flags(PRELUDE_ASYNC_TIMER);       
+                prelude_async_set_flags(PRELUDE_ASYNC_FLAGS_TIMER);       
         }
         
         if ( flags & PRELUDE_CLIENT_FLAGS_ASYNC_SEND ) {
