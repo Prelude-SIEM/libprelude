@@ -41,7 +41,7 @@ static int parse_request(prelude_client_t *client, int rtype, char *request, cha
                         ptr = value;
                                 
                 if ( rtype == PRELUDE_MSG_OPTION_SET )
-                        ret = prelude_option_invoke_set(&context, &last, pname, (ret == 2) ? iname : ptr, out, size);      
+                        ret = prelude_option_invoke_set(&context, &last, pname, (ret == 2) ? iname : ptr, out, size);
                 else 
                         ret = prelude_option_invoke_get(&context, &last, pname, (ret == 2) ? iname : ptr, out, size);
                 
@@ -230,6 +230,7 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         if ( ret < 0 )
                                 return -1;
                         
+                        prelude_option_set_has_arg(opt, tmpint);
                         break;
 
                 case PRELUDE_MSG_OPTION_FLAGS:
