@@ -78,7 +78,7 @@ static int parse_argument(const char *filename, int argc, char **argv)
          * Declare library options.
          */
         prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 'a', "manager-addr",
-                           "Address where manager is listening",
+                           "Address where manager is listening (addr:port)",
                            required_argument, setup_manager_addr, NULL);
 
         /*
