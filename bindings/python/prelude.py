@@ -182,7 +182,7 @@ def _idmef_integer_python_to_c(object, py_value):
                                 'check_value': lambda i: i >= -2 ** 15 and i < 2 ** 15,
                                 'convert': _prelude.idmef_value_new_int16 },
         
-         _prelude.type_IDMEF_VALUE_TYPE_UINT16: { 'py_type': [ int ],
+         _prelude.IDMEF_VALUE_TYPE_UINT16: { 'py_type': [ int ],
                                  'check_value': lambda i: i >= 0 and i < 2 ** 16,
                                  'convert': _prelude.idmef_value_new_uint16 },
         
