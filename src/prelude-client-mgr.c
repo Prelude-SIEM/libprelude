@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001-2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -20,6 +20,11 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
+
+/*
+ * needed for 64 bits file offset.
+ */
+#include "config.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,6 +52,7 @@
 #include "prelude-path.h"
 #include "prelude-getopt.h"
 #include "extract.h"
+
 
 #define INITIAL_EXPIRATION_TIME 60
 #define MAXIMUM_EXPIRATION_TIME 3600
