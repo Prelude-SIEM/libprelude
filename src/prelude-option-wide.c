@@ -407,8 +407,7 @@ int prelude_option_new_request(prelude_client_t *client,
          * the caller is supposed to provide a full path,
          * from him to the destination, to the original hop is 1.
          */
-        hop = htonl(1); 
-        prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_HOP, sizeof(hop), &hop);
+        hop = htonl(1);
 
         for ( i = 0; i < size; i++ )
                 target_id[i] = prelude_hton64(target_id[i]);
@@ -416,7 +415,8 @@ int prelude_option_new_request(prelude_client_t *client,
         request_id = htonl(request_id);
         prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_REQUEST_ID, sizeof(request_id), &request_id);
         prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_TARGET_ID, i * sizeof(*target_id), target_id);
-
+        prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_HOP, sizeof(hop), &hop);
+        
         return 0;
 }
 
