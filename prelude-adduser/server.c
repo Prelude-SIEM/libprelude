@@ -38,6 +38,7 @@
 #include "libmissing.h"
 #include "prelude-client.h"
 #include "prelude-inet.h"
+#include "prelude-error.h"
 #include "server.h"
 #include "tls-register.h"
 
