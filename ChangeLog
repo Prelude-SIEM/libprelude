@@ -1,3 +1,29 @@
+2002-04-27  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/plugin-common.c: 
+	remove dlfcn.h - not needed anymore with libltdl.
+
+	(plugin_load_from_dir): remove the filename extension,
+	so that libltdl decide of the best extension to use on this
+	architecture.
+
+	(plugin_load_single): use libltdl function. 
+	As there is often several file associated with a libtool plugin
+	(from which the plugin can be loaded), and because libtool load
+	the one that suit it best (for sake of compatibility), we have
+        to check if we do not already have an handle for this plugin.
+	
+	(is_plugin_already_loaded): search a plugin by handle.
+
+	* src/Makefile.am (INCLUDES): add libltdl include PATH.
+	* configure.in: setup libltdl.
+	* autogen.sh: libtoolize --ltdl
+	* Makefile.am (SUBDIRS): libltdl.
+
+	Theses change fix possible portability problem with dynamically
+	loadable plugin API (OpenBSD plugin loading didn't work before
+	this).
+
 2002-04-26  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* configure.in: require autoconf 2.50, not 2.53.

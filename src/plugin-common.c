@@ -25,11 +25,12 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
-#include <dlfcn.h>
 #include <sys/types.h>
 #include <dirent.h>
 #include <sys/time.h>
 #include <unistd.h>
+
+#include "ltdl.h"
 
 #include "config.h"
 #include "list.h"
@@ -38,10 +39,6 @@
 #include "plugin-common.h"
 #include "plugin-common-prv.h"
 #include "config-engine.h"
-
-#ifndef RTLD_NOW
- #define RTLD_NOW RTLD_LAZY
-#endif
 
 
 typedef struct {
@@ -76,17 +73,6 @@ typedef struct {
  */
 static LIST_HEAD(all_plugin);
 static int plugins_id_max = 0;
-
-
-
-/*
- * Check if 'filename' look like a plugin.
- * FIXME : do real check.
- */
-static int is_a_plugin(const char *filename) 
-{
-        return ( strstr(filename, ".so") ) ? 0 : -1;
-}
 
 
 
@@ -187,6 +173,26 @@ static plugin_container_t *copy_container(plugin_container_t *pc)
 
 
 
+
+static int is_plugin_already_loaded(void *handle) 
+{
+        plugin_entry_t *pe;
+        struct list_head *tmp;
+
+        list_for_each(tmp, &all_plugin){
+
+                pe = list_entry(tmp, plugin_entry_t, list);
+                if ( pe->handle == handle ) 
+                        return 0;
+        }
+
+        return -1;
+}
+
+
+
+
+
 /*
  * Load a single plugin pointed to by 'filename'.
  */
@@ -199,22 +205,33 @@ static int plugin_load_single(const char *filename, int argc, char **argv,
         plugin_generic_t *plugin;
         plugin_generic_t *(*init)(int argc, char **argv);
         
-        handle = dlopen(filename, RTLD_NOW);
+        handle = lt_dlopenext(filename);
         if ( ! handle ) {
-                log(LOG_INFO, "can't open %s : %s.\n", filename, dlerror());
+                log(LOG_INFO, "can't open %s : %s.\n", filename, lt_dlerror());
                 return -1;
         }
 
-        init = dlsym(handle, "plugin_init");
+        /*
+         * As there is often several file associated with a libtool plugin
+         * (from which the plugin can be loaded), and because libtool load
+         * the one that suit it best (for sake of compatibility), we have
+         * to check if we do not already have an handle for this plugin.
+         */
+        if ( is_plugin_already_loaded(handle) == 0 ) {
+                lt_dlclose(handle);
+                return 0;
+        }
+        
+        init = lt_dlsym(handle, "plugin_init");
         if ( ! init ) {
-                log(LOG_INFO, "couldn't load %s : %s.\n", filename, dlerror());
-                dlclose(handle);
+                log(LOG_INFO, "couldn't load %s : %s.\n", filename, lt_dlerror());
+                lt_dlclose(handle);
                 return -1;
         }
         
         pe = add_plugin_entry();
         if ( ! pe ) {
-                dlclose(handle);
+                lt_dlclose(handle);
                 return -1;
         }
 
@@ -225,7 +242,7 @@ static int plugin_load_single(const char *filename, int argc, char **argv,
         plugin = init(argc, argv);
         if ( ! plugin ) {
                 log(LOG_ERR, "plugin returned an error.\n");
-                dlclose(handle);
+                lt_dlclose(handle);
                 free(pe);
                 return -1;
         }
@@ -265,8 +282,14 @@ int plugin_load_from_dir(const char *dirname, int argc, char **argv,
         DIR *dir;
         struct dirent *d;
         int ret, count = 0;
-        char filename[1024];
-        
+        char filename[1024], *ptr;
+               
+        ret = lt_dlinit();
+        if ( ret < 0 ) {
+                log(LOG_ERR, "error initializing libltdl.\n");
+                return -1;
+        }
+
         dir = opendir(dirname);
         if ( ! dir ) {
                 log(LOG_ERR, "couldn't open directory %s.\n", dirname);
@@ -274,11 +297,19 @@ int plugin_load_from_dir(const char *dirname, int argc, char **argv,
         }
         
         while ( ( d = readdir(dir) ) ) {
-                
-                ret = is_a_plugin(d->d_name);
-                if ( ret < 0 )
+
+                if ( strcmp(d->d_name, ".") == 0 || strcmp(d->d_name, "..") == 0 )
                         continue;
                 
+                ptr = strrchr(d->d_name, '.');
+                if ( ! ptr )
+                        continue;
+
+                /*
+                 * strip out the extension,
+                 * libtool will try different extension depending on the architecture.
+                 */
+                *ptr = '\0';
                 snprintf(filename, sizeof(filename), "%s/%s", dirname, d->d_name);
                 
                 ret = plugin_load_single(filename, argc, argv, subscribe, unsubscribe);                
@@ -287,7 +318,7 @@ int plugin_load_from_dir(const char *dirname, int argc, char **argv,
         }
 
         closedir(dir);
-
+        
         return count;
 }
 

@@ -776,7 +776,7 @@ config_t *cfg
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_get_socket_filename</NAME>
-<RETURNS>char  *</RETURNS>
+<RETURNS>const char  *</RETURNS>
 void
 </FUNCTION>
 <FUNCTION>
@@ -1064,7 +1064,7 @@ void
 <MACRO>
 <NAME>list_entry</NAME>
 #define list_entry(ptr, type, member) \
-	((type *)((void *)(ptr) - (void *)(&((type *)0)->member)))
+	((type *)((unsigned long)(ptr) - (unsigned long)(&((type *)0)->member)))
 </MACRO>
 <MACRO>
 <NAME>list_for_each</NAME>
@@ -1076,6 +1076,17 @@ void
 #define list_for_each_safe(pos, n, head) \
         for (pos = (head)->next, n = pos->next; pos != (head); \
                 pos = n, n = pos->next)
+</MACRO>
+<MACRO>
+<NAME>list_for_each_reversed</NAME>
+#define list_for_each_reversed(pos, head) \
+        for (pos = (head)->prev; pos != (head); pos = pos->prev)
+</MACRO>
+<MACRO>
+<NAME>list_for_each_reversed_safe</NAME>
+#define list_for_each_reversed_safe(pos, n, head) \
+        for (pos = (head)->prev, n = pos->prev; pos != (head); \
+                 pos = n, n = pos->prev)
 </MACRO>
 <MACRO>
 <NAME>prelude_assert</NAME>
@@ -2132,28 +2143,65 @@ prelude_msg_t *msg
 <RETURNS>void  </RETURNS>
 prelude_msg_t *msg
 </FUNCTION>
+<MACRO>
+<NAME>byte</NAME>
+ #define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[(pos)]
+</MACRO>
+<MACRO>
+<NAME>byte</NAME>
+ #define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[sizeof(type) - 1 - (pos)]
+</MACRO>
+<FUNCTION>
+<NAME>byte</NAME>
+<RETURNS>return  </RETURNS>
+uint16_t, buf, 0) << 8 | byte(uint16_t, buf, 1
+</FUNCTION>
+<FUNCTION>
+<NAME>byte</NAME>
+<RETURNS>return  </RETURNS>
+uint32_t, buf, 0) << 24 | byte(uint32_t, buf, 1) << 16 |byte(uint32_t, buf, 2) <<  8 | byte(uint32_t, buf, 3
+</FUNCTION>
+<FUNCTION>
+<NAME>byte</NAME>
+<RETURNS>return  </RETURNS>
+uint64_t, buf, 0) << 56 | byte(uint64_t, buf, 1) << 48 | byte(uint64_t, buf, 2) << 40 |byte(uint64_t, buf, 3) << 32 | byte(uint64_t, buf, 4) << 24 | byte(uint64_t, buf, 5) << 16 |byte(uint64_t, buf, 6) <<  8 | byte(uint64_t, buf, 7
+</FUNCTION>
+<MACRO>
+<NAME>align_uint16</NAME>
+#define align_uint16(x) (*(const uint16_t *) (x))
+</MACRO>
+<MACRO>
+<NAME>align_uint32</NAME>
+#define align_uint32(x) (*(const uint32_t *) (x))
+</MACRO>
+<MACRO>
+<NAME>align_uint64</NAME>
+#define align_uint64(x) (*(const uint64_t *) (x))
+</MACRO>
+<MACRO>
+<NAME>align_ipv4_addr</NAME>
+#define align_ipv4_addr(x) *((const struct in_addr *) (x))
+</MACRO>
+<FUNCTION>
+<NAME>align_ipv4_addr</NAME>
+<RETURNS>return  </RETURNS>
+buf
+</FUNCTION>
 <FUNCTION>
 <NAME>ntohs</NAME>
 <RETURNS>return  </RETURNS>
-tmp
+align_uint16(buf)
 </FUNCTION>
 <FUNCTION>
 <NAME>ntohl</NAME>
 <RETURNS>return  </RETURNS>
-tmp
+align_uint32(buf)
 </FUNCTION>
-<MACRO>
-<NAME>extract_uint16</NAME>
-#define extract_uint16(x) ntohs((*(const uint16_t *) (x)))
-</MACRO>
-<MACRO>
-<NAME>extract_uint32</NAME>
-#define extract_uint32(x) ntohl((*(const uint32_t *) (x)))
-</MACRO>
-<MACRO>
-<NAME>extract_ipv4_addr</NAME>
-#define extract_ipv4_addr(x) *((const struct in_addr *) (x))
-</MACRO>
+<FUNCTION>
+<NAME>align_uint64</NAME>
+<RETURNS>return  </RETURNS>
+buf
+</FUNCTION>
 <TYPEDEF>
 <NAME>bm_string_t</NAME>
 typedef struct {

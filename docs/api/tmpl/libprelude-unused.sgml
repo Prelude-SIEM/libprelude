@@ -390,6 +390,28 @@ thread
 @blen: 
 @dst: 
 
+<!-- ##### MACRO extract_uint16 ##### -->
+<para>
+
+</para>
+
+@x: 
+@Returns: 
+@dst: 
+@buf: 
+@blen: 
+
+<!-- ##### MACRO extract_uint32 ##### -->
+<para>
+
+</para>
+
+@x: 
+@Returns: 
+@dst: 
+@buf: 
+@blen: 
+
 <!-- ##### FUNCTION extract_uint64 ##### -->
 <para>
 

@@ -4,6 +4,7 @@ AC_PREREQ(2.50)
 
 AC_INIT
 AC_CONFIG_SRCDIR([src])
+
 AC_CANONICAL_TARGET([])
 AM_INIT_AUTOMAKE(libprelude, 0.4.1)
 AM_CONFIG_HEADER(config.h)
@@ -11,11 +12,20 @@ AM_DISABLE_STATIC
 
 AM_MAINTAINER_MODE
 
+dnl setup libltdl
+
+AC_CONFIG_SUBDIRS(libltdl)
 AC_LIBTOOL_DLOPEN
-AM_PROG_LIBTOOL
+AC_LIBLTDL_CONVENIENCE
+AC_PROG_LIBTOOL
+
+AC_SUBST(INCLTDL)
+AC_SUBST(LIBLTDL)
+
 
 
 dnl Checks for programs.
+
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
@@ -31,12 +41,6 @@ AC_SUBST(libprelude_libs)
 AC_SUBST(libprelude_cflags)
 
 CFLAGS=""
-
-dnl **************************************************
-dnl * Check for demand loading of shared lib library *
-dnl **************************************************
-AC_CHECK_LIB(dl, dlopen, libprelude_libs="-ldl")
-
 
 
 dnl **************************************************
