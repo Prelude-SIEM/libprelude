@@ -758,6 +758,7 @@ prelude_msg_t *prelude_msg_dynamic_new(prelude_msg_t *(*flush_msg_cb)(void *data
         msg->read_index = 0;
         msg->flush_msg_cb = flush_msg_cb;
         msg->write_index = PRELUDE_MSG_HDR_SIZE;
+        msg->fd_write_index = 0;
         
         return msg;
 }
