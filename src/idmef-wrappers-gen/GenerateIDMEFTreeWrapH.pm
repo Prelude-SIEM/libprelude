@@ -269,7 +269,7 @@ sub	obj
     my	$tree = shift;
     my	$obj = shift;
 
-    push(@{ $self->{type_list} }, [ "idmef_type_$obj->{short_typename}" => $obj->{id} ])
+    push(@{ $self->{type_list} }, [ "IDMEF_OBJECT_TYPE_" . uc("$obj->{short_typename}") => $obj->{id} ])
 	if ( $obj->{obj_type} != &OBJ_PRE_DECLARED );
 }
 

@@ -45,7 +45,7 @@
 
 
 
-idmef_child_t idmef_type_find_child(idmef_type_t type, const char *name)
+idmef_child_t idmef_type_find_child(idmef_object_type_t type, const char *name)
 {
 	children_list_t *list;
 	idmef_child_t i;
@@ -64,7 +64,7 @@ idmef_child_t idmef_type_find_child(idmef_type_t type, const char *name)
 
 
 
-int idmef_type_child_is_list(idmef_type_t type, idmef_child_t child)
+int idmef_type_child_is_list(idmef_object_type_t type, idmef_child_t child)
 {
 	children_list_t *c;
 
@@ -79,7 +79,7 @@ int idmef_type_child_is_list(idmef_type_t type, idmef_child_t child)
 
 
 
-idmef_value_type_id_t idmef_type_get_child_type(idmef_type_t type, idmef_child_t child)
+idmef_value_type_id_t idmef_type_get_child_type(idmef_object_type_t type, idmef_child_t child)
 {
 	children_list_t *c;
 
@@ -94,7 +94,7 @@ idmef_value_type_id_t idmef_type_get_child_type(idmef_type_t type, idmef_child_t
 
 
 
-idmef_type_t idmef_type_get_child_object_type(idmef_type_t type, idmef_child_t child)
+idmef_object_type_t idmef_type_get_child_object_type(idmef_object_type_t type, idmef_child_t child)
 {
 	children_list_t *c;
 
@@ -103,12 +103,12 @@ idmef_type_t idmef_type_get_child_object_type(idmef_type_t type, idmef_child_t c
 	
 	c = &object_data[type].children_list[child];
 	
-	return (c->type == type_object) ? c->object_type : -1;
+	return (c->type == IDMEF_VALUE_TYPE_OBJECT) ? c->object_type : -1;
 }
 
 
 
-idmef_type_t idmef_type_get_child_enum_type(idmef_type_t type, idmef_child_t child)
+idmef_object_type_t idmef_type_get_child_enum_type(idmef_object_type_t type, idmef_child_t child)
 {
 	children_list_t *c;
 
@@ -117,13 +117,13 @@ idmef_type_t idmef_type_get_child_enum_type(idmef_type_t type, idmef_child_t chi
 	
 	c = &object_data[type].children_list[child];
 	
-	return (c->type == type_enum) ? c->object_type : -1;
+	return (c->type == IDMEF_VALUE_TYPE_ENUM) ? c->object_type : -1;
 }
 
 
 
 
-char *idmef_type_get_child_name(idmef_type_t type, idmef_child_t child)
+char *idmef_type_get_child_name(idmef_object_type_t type, idmef_child_t child)
 {
 	children_list_t *c;
 
@@ -138,9 +138,9 @@ char *idmef_type_get_child_name(idmef_type_t type, idmef_child_t child)
 
 
 
-idmef_type_t idmef_type_find(const char *name)
+idmef_object_type_t idmef_type_find(const char *name)
 {
-	idmef_type_t i;
+	idmef_object_type_t i;
 	
 	for (i=0; object_data[i].name; i++)
 		if (strcasecmp(object_data[i].name, name) == 0)
@@ -150,7 +150,7 @@ idmef_type_t idmef_type_find(const char *name)
 }
 
 
-int idmef_type_is_enum(idmef_type_t type)
+int idmef_type_is_enum(idmef_object_type_t type)
 {
     	if ( type < 0 )
 	    	return -1;
@@ -159,19 +159,19 @@ int idmef_type_is_enum(idmef_type_t type)
 }
 
 
-int idmef_type_enum_to_numeric(idmef_type_t type, const char *val)
+int idmef_type_enum_to_numeric(idmef_object_type_t type, const char *val)
 {
     	return ( type < 0 ) ? -1 : object_data[type].to_numeric(val);
 }
 
 
-const char *idmef_type_enum_to_string(idmef_type_t type, int val)
+const char *idmef_type_enum_to_string(idmef_object_type_t type, int val)
 {
 	return ( type < 0 ) ? NULL : object_data[type].to_string(val);
 }
 
 
-void *idmef_type_get_child(void *ptr, idmef_type_t type, idmef_child_t child)
+void *idmef_type_get_child(void *ptr, idmef_object_type_t type, idmef_child_t child)
 {
 	if ( ( type < 0 ) || ( child < 0 ) )
 		return NULL;
@@ -182,7 +182,7 @@ void *idmef_type_get_child(void *ptr, idmef_type_t type, idmef_child_t child)
 
 
 
-void *idmef_type_new_child(void *ptr, idmef_type_t type, idmef_child_t child, int n)
+void *idmef_type_new_child(void *ptr, idmef_object_type_t type, idmef_child_t child, int n)
 {
 	if ( ( type < 0 ) || ( child < 0 ) )
 	    	return NULL;
@@ -193,7 +193,7 @@ void *idmef_type_new_child(void *ptr, idmef_type_t type, idmef_child_t child, in
 
 
 
-char *idmef_type_get_name(idmef_type_t type)
+char *idmef_type_get_name(idmef_object_type_t type)
 {
 	return ( type < 0 ) ? NULL : object_data[type].name;
 }

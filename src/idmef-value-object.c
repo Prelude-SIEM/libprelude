@@ -44,18 +44,18 @@
 
 idmef_value_t *idmef_value_new_for_object(idmef_object_t *object, const char *buf)
 {
-    	idmef_type_t idmef_type;
+    	idmef_object_type_t idmef_type;
     	idmef_value_type_id_t value_type;
 
     	if ( ! object || ! buf )
 	    	return NULL;
 		
-	value_type = idmef_object_get_type(object);
+	value_type = idmef_object_get_value_type(object);
 	if ( value_type < 0 )
 		    return NULL;
 	
-	if  ( value_type == type_enum ) {
-	    	idmef_type = idmef_object_get_idmef_type(object);
+	if  ( value_type == IDMEF_VALUE_TYPE_ENUM ) {
+	    	idmef_type = idmef_object_get_object_type(object);
 	    	if ( idmef_type < 0 )
 		    	return NULL;
 	    

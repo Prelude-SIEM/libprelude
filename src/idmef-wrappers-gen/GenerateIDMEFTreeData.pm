@@ -37,7 +37,7 @@ typedef struct \{
 	char *name;
 	int list;
 	idmef_value_type_id_t type;
-	idmef_type_t object_type;
+	idmef_object_type_t object_type;
 \} children_list_t;
 
 ");
@@ -59,11 +59,11 @@ sub	struct
 
 	if ( $field->{metatype} == &METATYPE_UNION ) {
 
-	    $self->output("        \{ \"$field->{var}\", 0, type_enum, idmef_type_$field->{short_typename} \},\n");
+	    $self->output("        \{ \"$field->{var}\", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . " \},\n");
 
 	    foreach my $member ( @{ $field->{member_list} } ) {
 
-		$self->output("        \{ \"$member->{name}\", 0, type_object, idmef_type_$member->{short_typename} \},\n");
+		$self->output("        \{ \"$member->{name}\", 0, IDMEF_VALUE_TYPE_OBJECT, IDMEF_OBJECT_TYPE_" . uc("$member->{short_typename}") . " \},\n");
 	    }
 
 	} else {
@@ -74,16 +74,16 @@ sub	struct
 	    if ( $field->{metatype} & &METATYPE_NORMAL) {
 
 		if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
-		    $object = "type_$field->{short_typename}";
+		    $object = "IDMEF_VALUE_TYPE_" . uc("$field->{short_typename}");
 		    $object_type = 0;
 
 		} elsif ( $field->{metatype} & &METATYPE_STRUCT ) {
-		    $object = "type_object";
-		    $object_type = "idmef_type_$field->{short_typename}";
+		    $object = "IDMEF_VALUE_TYPE_OBJECT";
+		    $object_type = "IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}");
 
 		} elsif ( $field->{metatype} & &METATYPE_ENUM ) {
-		    $object = "type_enum";
-		    $object_type = "idmef_type_$field->{short_typename}";
+		    $object = "IDMEF_VALUE_TYPE_ENUM";
+		    $object_type = "IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}");
 		}
 
 	    } elsif ( $field->{metatype} & &METATYPE_LIST ) {
@@ -91,12 +91,12 @@ sub	struct
 		$name = $field->{short_name};
 
 		if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
-		    $object = "type_$field->{short_typename}";
+		    $object = "IDMEF_VALUE_TYPE_" . uc("$field->{short_typename}");
 		    $object_type = 0;
 
 		} else {
-		    $object = "type_object";
-		    $object_type = "idmef_type_$field->{short_typename}";
+		    $object = "IDMEF_VALUE_TYPE_OBJECT";
+		    $object_type = "IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}");
 		}
 	    }
 

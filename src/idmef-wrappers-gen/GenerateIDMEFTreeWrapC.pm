@@ -481,7 +481,7 @@ idmef_value_t *idmef_$struct->{short_typename}_get_${name}_value($struct->{typen
 	$self->output("
 idmef_value_t *idmef_$struct->{short_typename}_get_${name}_value($struct->{typename} *ptr)
 \{
-	return idmef_value_new_object(${refer}ptr->$field->{name}, idmef_type_$field->{short_typename});
+	return idmef_value_new_object(${refer}ptr->$field->{name}, IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ");
 \}
 ");
 
@@ -489,7 +489,7 @@ idmef_value_t *idmef_$struct->{short_typename}_get_${name}_value($struct->{typen
 	$self->output("
 idmef_value_t *idmef_$struct->{short_typename}_get_${name}_value($struct->{typename} *ptr)
 \{
-	return idmef_value_new_enum_numeric(idmef_type_$field->{short_typename}, ptr->$field->{name});
+	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ", ptr->$field->{name});
 \}
 ");
 
@@ -614,7 +614,7 @@ $field->{typename} idmef_$struct->{short_typename}_get_$field->{var}($struct->{t
     $self->output("
 idmef_value_t *idmef_$struct->{short_typename}_get_$field->{var}_value($struct->{typename} *ptr)
 \{
-	return idmef_value_new_enum_numeric(idmef_type_$field->{short_typename}, ptr->$field->{var});
+	return idmef_value_new_enum_numeric(IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ", ptr->$field->{var});
 \}
 ");
 
@@ -655,7 +655,7 @@ void idmef_$struct->{short_typename}_set_$member->{name}($struct->{typename} *pt
 idmef_value_t *idmef_$struct->{short_typename}_get_$member->{name}_value($struct->{typename} *ptr)
 \{
 	return ((ptr->$field->{var} == $member->{value}) ?
-		idmef_value_new_object(ptr->$field->{name}.$member->{name}, idmef_type_$member->{short_typename}) :
+		idmef_value_new_object(ptr->$field->{name}.$member->{name}, IDMEF_OBJECT_TYPE_" . uc("$member->{short_typename}") . ") :
 		NULL);
 \}
 ");
@@ -753,7 +753,7 @@ idmef_value_t *idmef_$struct->{short_typename}_get_$field->{short_name}_value($s
 
     } else {
 	$self->output("
-		val = idmef_value_new_object(entry, idmef_type_$field->{short_typename});
+		val = idmef_value_new_object(entry, IDMEF_OBJECT_TYPE_" . uc("$field->{short_typename}") . ");
 		if ( ! val ) \{
 			idmef_value_destroy(list_val);
 			return NULL;

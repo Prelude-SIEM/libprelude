@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002,2003 Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
+* Copyright (C) 2002,2003, 2004 Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
 * Copyright (C) 2003 Nicolas Delon <delon.nicolas@wanadoo.fr>
 * Copyright (C) 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
@@ -29,6 +29,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <assert.h>
 
 #include "list.h"
 #include "prelude-log.h"
@@ -40,35 +41,34 @@
 #define CHUNK_SIZE 16
 
 
-#define idmef_value_new(vname, vtype)                   \
-idmef_value_t *idmef_value_new_ ## vname (vtype val) { 	\
-	idmef_value_t *ptr;				\
-                                                        \
-	ptr = idmef_value_create(type_ ## vname);	\
-	if ( ! ptr )			 	        \
-		return NULL;			        \
-						        \
-	ptr->type.data. vname ## _val = val;            \
-						        \
-	return ptr;				        \
+#define idmef_value_new(mtype, vname, vtype)                     \
+idmef_value_t *idmef_value_new_ ## vname (vtype val) { 	         \
+	idmef_value_t *ptr;				         \
+                                                                 \
+	ptr = idmef_value_create(IDMEF_VALUE_TYPE_ ## mtype); \
+	if ( ! ptr )			 	                 \
+		return NULL;			                 \
+						                 \
+	ptr->type.data. vname ## _val = val;                     \
+						                 \
+	return ptr;				                 \
 }
 
 
-#define idmef_value_get_(vname, vtype)			\
-vtype idmef_value_get_ ## vname (idmef_value_t *val)	\
-{							\
-	if ( val->type.id != type_ ## vname )	       	\
-		return (vtype) 0;			\
-							\
-	return val->type.data. vname ## _val;		\
+#define idmef_value_get_(mtype, vname, vtype)		         \
+vtype idmef_value_get_ ## vname (idmef_value_t *val)	         \
+{							         \
+	if ( val->type.id != IDMEF_VALUE_TYPE_ ## mtype )     \
+		return (vtype) 0;			         \
+							         \
+	return val->type.data. vname ## _val;		         \
 }
 
 
 
 typedef struct compare {
-	int result;	
 	idmef_value_t *val2;
-	idmef_relation_t relation;
+	idmef_value_relation_t relation;
 } compare_t;
 
 
@@ -80,7 +80,7 @@ struct idmef_value {
 	int own_data;
 	idmef_value_t **list;
 	idmef_value_type_t type;
-	idmef_type_t object_type;
+	idmef_object_type_t object_type;
 };
 
 
@@ -117,27 +117,27 @@ static idmef_value_t *idmef_value_create(idmef_value_type_id_t type_id)
 
 
 
-idmef_value_new(int16, int16_t)
-idmef_value_new(uint16, uint16_t)
-idmef_value_new(int32, int32_t)
-idmef_value_new(uint32, uint32_t)
-idmef_value_new(int64, int64_t)
-idmef_value_new(uint64, uint64_t)
-idmef_value_new(float, float)
-idmef_value_new(double, double)
+idmef_value_new(INT16, int16, int16_t)
+idmef_value_new(UINT16, uint16, uint16_t)
+idmef_value_new(INT32, int32, int32_t)
+idmef_value_new(UINT32, uint32, uint32_t)
+idmef_value_new(INT64, int64, int64_t)
+idmef_value_new(UINT64, uint64, uint64_t)
+idmef_value_new(FLOAT, float, float)
+idmef_value_new(DOUBLE, double, double)
 
-idmef_value_get_(int16, int16_t)
-idmef_value_get_(uint16, uint16_t)
-idmef_value_get_(int32, int32_t)
-idmef_value_get_(uint32, uint32_t)
-idmef_value_get_(int64, int64_t)
-idmef_value_get_(uint64, uint64_t)
-idmef_value_get_(enum, int)
-idmef_value_get_(float, float)
-idmef_value_get_(double, double)
-idmef_value_get_(string, idmef_string_t *)
-idmef_value_get_(data, idmef_data_t *)
-idmef_value_get_(time, idmef_time_t *)
+idmef_value_get_(INT16, int16, int16_t)
+idmef_value_get_(UINT16, uint16, uint16_t)
+idmef_value_get_(INT32, int32, int32_t)
+idmef_value_get_(UINT32, uint32, uint32_t)
+idmef_value_get_(INT64, int64, int64_t)
+idmef_value_get_(UINT64, uint64, uint64_t)
+idmef_value_get_(ENUM, enum, int)
+idmef_value_get_(FLOAT, float, float)
+idmef_value_get_(DOUBLE, double, double)
+idmef_value_get_(STRING, string, idmef_string_t *)
+idmef_value_get_(DATA, data, idmef_data_t *)
+idmef_value_get_(TIME, time, idmef_time_t *)
 
 
 
@@ -145,7 +145,7 @@ idmef_value_t *idmef_value_new_string(idmef_string_t *string)
 {
 	idmef_value_t *ret;
 	
-	ret = idmef_value_create(type_string);
+	ret = idmef_value_create(IDMEF_VALUE_TYPE_STRING);
 	if ( ! ret )
 		return NULL;
 	
@@ -160,7 +160,7 @@ idmef_value_t *idmef_value_new_time(idmef_time_t *time)
 {
 	idmef_value_t *ret;
 
-	ret = idmef_value_create(type_time);
+	ret = idmef_value_create(IDMEF_VALUE_TYPE_TIME);
 	if ( ! ret )
 		return NULL;
 
@@ -176,7 +176,7 @@ idmef_value_t *idmef_value_new_data(idmef_data_t *data)
 {
 	idmef_value_t *ret;
 
-	ret = idmef_value_create(type_data);
+	ret = idmef_value_create(IDMEF_VALUE_TYPE_DATA);
 	if ( ! ret )
 		return NULL;
 
@@ -188,12 +188,12 @@ idmef_value_t *idmef_value_new_data(idmef_data_t *data)
 
 
 
-idmef_value_t *idmef_value_new_object(void *object, idmef_type_t object_type)
+idmef_value_t *idmef_value_new_object(void *object, idmef_object_type_t object_type)
 {
 	idmef_value_t *ptr;				
 						
-	ptr = idmef_value_create(type_object);
-	if ( ! ptr )
+	ptr = idmef_value_create(IDMEF_VALUE_TYPE_OBJECT);
+        if ( ! ptr )
 		return NULL;
 
 	ptr->object_type = object_type;
@@ -204,11 +204,11 @@ idmef_value_t *idmef_value_new_object(void *object, idmef_type_t object_type)
 
 
 
-idmef_value_t *idmef_value_new_enum_numeric(idmef_type_t type, int val)
+idmef_value_t *idmef_value_new_enum_numeric(idmef_object_type_t type, int val)
 {
 	idmef_value_t *ptr;				
 						
-	ptr = idmef_value_create(type_enum);
+	ptr = idmef_value_create(IDMEF_VALUE_TYPE_ENUM);
 	if ( ! ptr )
 		return NULL;
         
@@ -220,7 +220,7 @@ idmef_value_t *idmef_value_new_enum_numeric(idmef_type_t type, int val)
 
 
 
-idmef_value_t *idmef_value_new_enum_string(idmef_type_t type, const char *buf)
+idmef_value_t *idmef_value_new_enum_string(idmef_object_type_t type, const char *buf)
 {
     	int val;
 
@@ -238,7 +238,7 @@ idmef_value_t *idmef_value_new_list(void)
 {
 	idmef_value_t *ptr;				
 
-	ptr = idmef_value_create(type_object);
+	ptr = idmef_value_create(IDMEF_VALUE_TYPE_OBJECT);
 	if ( ! ptr )
 		return NULL;
 
@@ -292,7 +292,7 @@ int idmef_value_list_empty(idmef_value_t *list)
 
 
 
-idmef_value_t *idmef_value_new_enum(idmef_type_t type, const char *buf)
+idmef_value_t *idmef_value_new_enum(idmef_object_type_t type, const char *buf)
 {
         if ( string_isdigit(buf) == 0 )
                 return idmef_value_new_enum_numeric(type, atoi(buf));
@@ -361,16 +361,17 @@ idmef_value_type_id_t idmef_value_get_type(idmef_value_t *value)
 
 
 
-idmef_type_t idmef_value_get_idmef_type(idmef_value_t *value)
+idmef_object_type_t idmef_value_get_idmef_type(idmef_value_t *value)
 {
-	return (value->type.id == type_object || value->type.id == type_enum) ? value->object_type : -1;
+	return (value->type.id == IDMEF_VALUE_TYPE_OBJECT ||
+                value->type.id == IDMEF_VALUE_TYPE_ENUM) ? value->object_type : -1;
 }
 
 
 
 void *idmef_value_get_object(idmef_value_t *value)
 {
-	return (value->type.id == type_object) ? value->type.data.object_val : NULL;
+	return (value->type.id == IDMEF_VALUE_TYPE_OBJECT) ? value->type.data.object_val : NULL;
 		
 }
 
@@ -450,7 +451,7 @@ static idmef_value_t *idmef_value_enum_clone(idmef_value_t *val)
 {
 	idmef_value_t *new;
 
-	new = idmef_value_create(type_enum);
+	new = idmef_value_create(IDMEF_VALUE_TYPE_ENUM);
 	if ( ! new )
 		return NULL;
 
@@ -469,7 +470,7 @@ idmef_value_t *idmef_value_clone(idmef_value_t *val)
 	if ( val->list )
 		return idmef_value_list_clone(val);
 
-	if ( val->type.id == type_enum )
+	if ( val->type.id == IDMEF_VALUE_TYPE_ENUM )
 		return idmef_value_enum_clone(val);
 
 	new = idmef_value_create(val->type.id);
@@ -520,7 +521,7 @@ int idmef_value_to_string(idmef_value_t *val, char *buf, size_t len)
 {
 	int ret;
 
-	if ( idmef_value_get_type(val) == type_enum )
+	if ( idmef_value_get_type(val) == IDMEF_VALUE_TYPE_ENUM )
 		ret = enum_to_string(val, buf, len);
 	else
 		ret = idmef_value_type_write(buf, len, &val->type);
@@ -546,22 +547,20 @@ int idmef_value_get(void *res, idmef_value_t *val)
 static int idmef_value_match_internal(idmef_value_t *val1, void *extra)
 {
 	idmef_value_t *val2;
-	idmef_relation_t relation;
         compare_t *compare = extra;
+	idmef_value_relation_t relation;
         
-        compare->result = -1;
 	val2 = compare->val2;
 	relation = compare->relation;
 
-        if ( val1->type.id != val2->type.id ) 
-		return -1;
-        
+        assert(! val1 || ! val2 || val1->type.id == val2->type.id);
+                
         return idmef_value_type_compare(&val1->type, &val2->type, relation);
 }
 
 
 
-int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_relation_t relation)
+int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_value_relation_t relation)
 {
 	compare_t compare;
         
@@ -569,6 +568,13 @@ int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_relation_t
 	compare.relation = relation;
         
 	return idmef_value_iterate(val1, &compare, idmef_value_match_internal);
+}
+
+
+
+int idmef_value_check_relation(idmef_value_t *value, idmef_value_relation_t relation)
+{
+        return idmef_value_type_check_relation(&value->type, relation);
 }
 
 
@@ -596,3 +602,30 @@ void idmef_value_destroy(idmef_value_t *val)
 	free(val);
 }
 
+
+
+const char *idmef_value_relation_to_string(idmef_value_relation_t relation)
+{
+                int i;
+        struct {
+                idmef_value_relation_t relation;
+                const char *name;
+        } tbl[] = {
+                { IDMEF_VALUE_RELATION_EQUAL, "=="                        },
+                { IDMEF_VALUE_RELATION_NOT_EQUAL, "!="                    },
+                { IDMEF_VALUE_RELATION_LESSER, "<"                        },
+                { IDMEF_VALUE_RELATION_GREATER, ">"                       },
+                { IDMEF_VALUE_RELATION_SUBSTR, "subsr"                    },
+                { IDMEF_VALUE_RELATION_REGEX, "=~"                        },
+                { IDMEF_VALUE_RELATION_IS_NULL, "!"                       },
+                { IDMEF_VALUE_RELATION_IS_NOT_NULL, ""                    },
+                { IDMEF_VALUE_RELATION_LESSER|IDMEF_VALUE_RELATION_EQUAL, "<="  },
+                { IDMEF_VALUE_RELATION_GREATER|IDMEF_VALUE_RELATION_EQUAL, ">=" },
+        };
+
+        for ( i = 0; tbl[i].relation != 0; i++ ) 
+                if ( relation == tbl[i].relation )
+                        return tbl[i].name;
+
+        return NULL;
+}
