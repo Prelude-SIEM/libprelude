@@ -593,8 +593,6 @@ static int set_heartbeat_interval(void *context, prelude_option_t *opt, const ch
 {
         prelude_client_t *ptr = context;
 
-        printf("arg=%s\n", arg);
-        
         setup_heartbeat_timer(ptr, atoi(arg));
         timer_reset(&ptr->heartbeat_timer);
         
