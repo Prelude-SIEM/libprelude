@@ -180,7 +180,7 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         if ( ret < 0 )
                                 return -1;
 
-                        prelude_option_set_value(opt, strdup(tmp));
+                        prelude_option_set_value(opt, tmp);
                         break;
 
                 case PRELUDE_MSG_OPTION_NAME:
@@ -188,7 +188,7 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         if ( ret < 0 )
                                 return -1;
 
-                        prelude_option_set_longopt(opt, strdup(tmp));
+                        prelude_option_set_longopt(opt, tmp);
                         break;
                         
                 case PRELUDE_MSG_OPTION_DESC:
@@ -196,7 +196,7 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         if ( ret < 0 )
                                 return -1;
                         
-                        prelude_option_set_description(opt, strdup(tmp));
+                        prelude_option_set_description(opt, tmp);
                         break;
                         
                 case PRELUDE_MSG_OPTION_HELP:
@@ -204,7 +204,7 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         if ( ret < 0 )
                                 return -1;
                         
-                        prelude_option_set_help(opt, strdup(tmp));
+                        prelude_option_set_help(opt, tmp);
                         break;
                         
                 case PRELUDE_MSG_OPTION_INPUT_VALIDATION:
@@ -212,7 +212,7 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         if ( ret < 0 )
                                 return -1;
                         
-                        prelude_option_set_input_validation_regex(opt, strdup(tmp));
+                        prelude_option_set_input_validation_regex(opt, tmp);
                         break;
 
                 case PRELUDE_MSG_OPTION_HAS_ARG:
