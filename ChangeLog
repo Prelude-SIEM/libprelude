@@ -4,6 +4,9 @@
 	(prelude_client_ident_tell): when called, will tell the
 	other peer what ID we are, unless we are a Manager ourselve.
 
+	(declare_ident_to_manager): put the ident in network byte
+	order.
+
 	* src/extract.c: new file, contain type checking function
 	for message extraction.
 

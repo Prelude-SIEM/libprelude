@@ -437,7 +437,7 @@ int prelude_client_connect(prelude_client_t *client)
         if ( ret < 0 )
                 return -1;
 
-        ret = prelude_client_ident_tell(client->fd);
+        ret = prelude_client_ident_send(client->fd);
         if ( ret < 0 )
                 return -1;
         

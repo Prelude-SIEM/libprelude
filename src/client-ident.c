@@ -133,17 +133,26 @@ static int request_ident_from_manager(prelude_io_t *fd)
 
 
 
-static int tell_ident_to_manager(prelude_io_t *fd) 
+static int declare_ident_to_manager(prelude_io_t *fd) 
 {
         int ret;
+        uint64_t nident;
         prelude_msg_t *msg;
         
         msg = prelude_msg_new(1, sizeof(uint64_t), PRELUDE_MSG_ID, 0);
         if ( ! msg )
                 return -1;
+        
+        /*
+         * Put in network byte order
+         */
+        ((uint32_t *) &nident)[0] = htonl(((uint32_t *) &sensor_ident)[1]);
+        ((uint32_t *) &nident)[1] = htonl(((uint32_t *) &sensor_ident)[0]);
 
-        prelude_msg_set(msg, PRELUDE_MSG_ID_DECLARE, sizeof(uint64_t), &sensor_ident);
-
+        /*
+         * send message
+         */
+        prelude_msg_set(msg, PRELUDE_MSG_ID_DECLARE, sizeof(uint64_t), &nident);
         ret = prelude_msg_write(msg, fd);
         prelude_msg_destroy(msg);
 
@@ -154,7 +163,7 @@ static int tell_ident_to_manager(prelude_io_t *fd)
 
 
 
-int prelude_client_ident_tell(prelude_io_t *fd) 
+int prelude_client_ident_send(prelude_io_t *fd) 
 {
         /*
          * we are not a sensor, probably a relay manager.
@@ -164,7 +173,7 @@ int prelude_client_ident_tell(prelude_io_t *fd)
                 return 0;
 
         if ( sensor_ident != 0 )
-                return tell_ident_to_manager(fd);
+                return declare_ident_to_manager(fd);
         else
                 return request_ident_from_manager(fd);
 }
