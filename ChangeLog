@@ -1,3 +1,8 @@
+2002-04-09  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* configure.in: stop using profile-arcs for optimised build.
+	GCC generate bugged code with it.
+
 2002-04-08  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-client-mgr.c (broadcast_saved_message): 
