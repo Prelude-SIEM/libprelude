@@ -52,20 +52,20 @@
 #define MAX_DEPTH     16
 #define MAX_NAME_LEN 128
 
-#define INDEX_UNDEFINED 0xfe
-#define INDEX_FORBIDDEN 0xff
+#define INDEX_UNDEFINED -2
+#define INDEX_FORBIDDEN -3
 
 
 
-struct idmef_path_element {
+typedef struct idmef_path_element {
 
         int index;
 
         idmef_class_id_t class;
-        idmef_class_child_id_t child;
+        idmef_class_child_id_t position;
         idmef_value_type_id_t value_type;
 
-};
+} idmef_path_element_t;
 
 
 struct idmef_path {
@@ -83,6 +83,7 @@ struct idmef_path {
 static prelude_bool_t flush_cache = FALSE;
 static prelude_hash_t *cached_path = NULL;
 static pthread_mutex_t cached_path_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 
 
 static void flush_cache_if_wanted(void *ptr)
@@ -103,6 +104,47 @@ static int initialize_path_cache_if_needed(void)
                         
         return prelude_hash_new(&cached_path, NULL, NULL, NULL, flush_cache_if_wanted);
 }
+
+
+
+static int build_name(idmef_path_t *path)
+{
+        unsigned int i;
+        const char *name;
+        char buf[16] = { 0 };
+        idmef_class_id_t class;
+        
+        /* 
+         * we don't need pthread_mutex_{,un}lock since the path has no name
+         * it means that it is not in the cache and thus, not shared
+         */
+        path->name[0] = '\0';
+        class = IDMEF_CLASS_ID_MESSAGE;
+
+        for ( i = 0; i < path->depth; i++ ) {
+                
+                if ( i > 0 )
+                        strncat(path->name, ".", sizeof(path->name) - strlen(path->name));
+
+                name = idmef_path_get_name(path, i);
+                if ( ! name )
+                        return prelude_error(PRELUDE_ERROR_IDMEF_PATH_INTEGRITY);
+
+                strncat(path->name, name, sizeof(path->name) - strlen(path->name));
+
+                if ( path->elem[i].index != INDEX_UNDEFINED && path->elem[i].index != INDEX_FORBIDDEN ) {
+                        snprintf(buf, sizeof(buf), "(%d)", path->elem[i].index);
+                        strncat(path->name, buf, sizeof(path->name) - strlen(path->name));
+                }
+
+                class = idmef_class_get_child_class(class, path->elem[i].position);
+                if ( class < 0 && i < path->depth - 1 )
+                        return prelude_error(PRELUDE_ERROR_IDMEF_PATH_INTEGRITY);
+        }
+
+        return 0;
+}
+
 
 
 
@@ -188,7 +230,7 @@ static int idmef_path_get_internal(idmef_value_t **value, idmef_path_t *path,
         
         if ( depth < path->depth ) {
 
-                child_id = path->elem[depth].child;
+                child_id = path->elem[depth].position;
 
                 ret = idmef_class_get_child(parent, parent_class, child_id, &child);
                 if ( ret < 0 ) 
@@ -208,12 +250,12 @@ static int idmef_path_get_internal(idmef_value_t **value, idmef_path_t *path,
                 
 		return idmef_path_get_nth_internal(value, path, depth + 1, child, child_class, which);
 	}
-        
-        if ( parent_class == -1 ) {
+
+        if ( parent_class == -1 || path->elem[path->depth - 1].value_type == IDMEF_VALUE_TYPE_ENUM ) {
                 *value = parent;
                 return 1;
         }
-        
+
         return (ret = idmef_value_new_class(value, parent_class, parent) < 0) ? ret : 1;
 }
 
@@ -240,22 +282,22 @@ int idmef_path_set(idmef_path_t *path, idmef_message_t *message, idmef_value_t *
 	for ( i = 0; i < path->depth; i++ ) {
                 elem = &path->elem[i];
                 
-	    	if ( elem->index == INDEX_UNDEFINED && idmef_class_is_child_list(class, elem->child) )
+	    	if ( elem->index == INDEX_UNDEFINED && idmef_class_is_child_list(class, elem->position) )
 			return prelude_error(PRELUDE_ERROR_IDMEF_PATH_MISS_INDEX);
 
-                ret = idmef_class_new_child(ptr, class, elem->child, elem->index, &child);
+                ret = idmef_class_new_child(ptr, class, elem->position, elem->index, &child);
                 if ( ret < 0 )
 		    	return ret;
                 
                 ptr = child;
                 parent_class = class;
                 
-                class = idmef_class_get_child_class(class, elem->child);                
+                class = idmef_class_get_child_class(class, elem->position);                
                 if ( class < 0 && i < path->depth - 1 )
                         abort();
         }
 
-        tid = idmef_class_get_child_value_type(parent_class, path->elem[path->depth - 1].child);
+        tid = idmef_class_get_child_value_type(parent_class, path->elem[path->depth - 1].position);
         
         if ( idmef_value_get_type(value) != tid )
                 abort();
@@ -349,7 +391,7 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
         class = IDMEF_CLASS_ID_MESSAGE;
         
         do {
-                index = -1;
+                index = INDEX_UNDEFINED;
                 is_last = parse_path_token(&endptr, &ptr);
                                 
                 ptr2 = strchr(ptr, '(');
@@ -362,15 +404,15 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
                 if ( child < 0 ) 
 			return child;
                 
-                path->elem[depth].child = child;
+                path->elem[depth].position = child;
                 
-                if ( index < 0 )
+                if ( index == INDEX_UNDEFINED )
                         path->elem[depth].index = idmef_class_is_child_list(class, child) ? INDEX_UNDEFINED : INDEX_FORBIDDEN;
 		else {
                         *ptr2 = '(';
                         
                         if ( ! idmef_class_is_child_list(class, child) )
-			    	return -1;
+			    	return prelude_error(PRELUDE_ERROR_IDMEF_PATH_INDEX_FORBIDDEN);
 
                         path->elem[depth].index = index;
                 }
@@ -472,22 +514,28 @@ int idmef_path_new(idmef_path_t **path, const char *format, ...)
 
 
 
-idmef_class_id_t idmef_path_get_class(idmef_path_t *path)
+idmef_class_id_t idmef_path_get_class(const idmef_path_t *path, int depth)
 {
-        if ( path->depth == 0 )
+        if ( depth < 0 )
+                depth = path->depth - 1;
+        
+        if ( path->depth == 0 && depth < 0 )
                 return IDMEF_CLASS_ID_MESSAGE;
-
-	return path->elem[path->depth - 1].class;
+        
+	return path->elem[depth].class;
 }
 
 
 
-idmef_value_type_id_t idmef_path_get_value_type(idmef_path_t *path)
+idmef_value_type_id_t idmef_path_get_value_type(const idmef_path_t *path, int depth)
 {
-        if ( path->depth == 0 )
+        if ( depth < 0 )
+                depth = path->depth - 1;
+
+        if ( path->depth == 0 && depth < 0 )
                 return IDMEF_VALUE_TYPE_CLASS;
-        
-        return path->elem[path->depth - 1].value_type;
+                
+        return path->elem[depth].value_type;
 }
 
 
@@ -561,11 +609,15 @@ int idmef_path_set_index(idmef_path_t *path, unsigned int depth, unsigned int in
         if ( ret < 0 ) 
                 return ret;
 
-        path->name[0] = '\0';
+        ret = build_name(path);
+        if ( ret < 0 )
+                return ret;
+        
         path->elem[depth].index = index;
 
         return 0;
 }
+
 
 
 int idmef_path_undefine_index(idmef_path_t *path, unsigned int depth)
@@ -575,7 +627,7 @@ int idmef_path_undefine_index(idmef_path_t *path, unsigned int depth)
 
 
 
-int idmef_path_get_index(idmef_path_t *path, unsigned int depth)
+int idmef_path_get_index(const idmef_path_t *path, unsigned int depth)
 {
         if ( depth > (path->depth - 1) )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_DEPTH);
@@ -594,30 +646,32 @@ int idmef_path_get_index(idmef_path_t *path, unsigned int depth)
 int idmef_path_make_child(idmef_path_t *path, const char *child_name, unsigned int index)
 {
         int ret;
+        char buf[16] = { 0 };
         idmef_class_id_t class;
         idmef_class_child_id_t child;
-
-        if ( index == INDEX_FORBIDDEN )
-                return prelude_error(PRELUDE_ERROR_IDMEF_PATH_INDEX_FORBIDDEN);
-
+        
         if ( path->depth > MAX_DEPTH - 1 )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_DEPTH);
 
-        child = idmef_class_find_child(idmef_path_get_class(path), child_name);        
+        class = idmef_path_get_class(path, -1);
+        
+        child = idmef_class_find_child(class, child_name);        
         if ( child < 0 )
                 return child;
 
         ret = invalidate(path);
         if ( ret < 0 )
                 return ret;
+        
+        if ( index >= 0 && idmef_class_is_child_list(class, child) )
+             snprintf(buf, sizeof(buf), "(%d)", index);
+        
+        snprintf(path->name + strlen(path->name), sizeof(path->name) - strlen(path->name), "%s%s%s",
+                 (path->depth > 0) ? "." : "", child_name, buf);
 
-        /* current drive^H^H^H^H^Hname is no longer valid */
-        path->name[0] = '\0'; 
-
-        class = idmef_path_get_class(path);
         path->depth++;
 
-        path->elem[path->depth - 1].child = child;
+        path->elem[path->depth - 1].position = child;
         if ( idmef_class_is_child_list(class, child) )
                 path->elem[path->depth - 1].index = (index < 0) ? INDEX_UNDEFINED : index;
         else
@@ -647,10 +701,10 @@ int idmef_path_make_parent(idmef_path_t *path)
 
         if ( path->name[0] ) {
                 ptr = strrchr(path->name, '.');
-                if ( ptr )
-                        *ptr = '\0';
-                else
-                        path->name[0] = '\0'; /* top-level path */
+                if ( ! ptr )
+                        ptr = path->name; /* top-level path */
+                
+                *ptr = '\0';
         }
 
         return 0;
@@ -675,30 +729,30 @@ void idmef_path_destroy(idmef_path_t *path)
 
 
 
-
-int idmef_path_compare(idmef_path_t *o1, idmef_path_t *o2)
+int idmef_path_ncompare(const idmef_path_t *o1, const idmef_path_t *o2, unsigned int depth)
 {
-        int diff = 0;
-        unsigned int i, depth;
-
-        depth = MIN(o1->depth, o2->depth);
+        unsigned int i;
         
         for ( i = 0; i < depth; i++ ) {
-                diff = o1->elem[i].child - o2->elem[i].child;
-                if ( diff != 0 )
-                        return diff;
+                
+                if ( o1->elem[i].index != o2->elem[i].index )
+                        return -1;
+                
+                if ( o1->elem[i].position - o2->elem[i].position )
+                        return -1;
         }
-        
+
+        return 0;
+}
+
+
+
+int idmef_path_compare(const idmef_path_t *o1, const idmef_path_t *o2)
+{
         if ( o1->depth != o2->depth )
-                return o1->depth - o2->depth;
-        
-        for ( i = 0; i < depth; i++ ) {
-                diff = o1->elem[i].index - o2->elem[i].index;
-                if ( diff != 0 )
-                        break;
-        }
+                return -1;
 
-        return diff;
+        return idmef_path_ncompare(o1, o2, o1->depth);
 }
 
 
@@ -734,88 +788,6 @@ idmef_path_t *idmef_path_ref(idmef_path_t *path)
 }
 
 
-static int build_name(idmef_path_t *path)
-{
-        char buf2[16];
-        unsigned int i;
-        const char *name;
-        idmef_class_id_t class;
-        
-        /* 
-         * we don't need pthread_mutex_{,un}lock since the path has no name
-         * it means that it is not in the cache and thus, not shared
-         */
-
-        path->name[sizeof(path->name) - 1] = '\0';
-        buf2[sizeof(buf2) - 1] = '\0';
-
-        class = IDMEF_CLASS_ID_MESSAGE;
-
-        for ( i = 0; i < path->depth; i++ ) {
-
-                if ( i > 0 )
-                        strncat(path->name, ".", sizeof(path->name) - 1);
-
-                name = idmef_class_get_child_name(class, path->elem[i].child);
-                if ( ! name )
-                        return prelude_error(PRELUDE_ERROR_IDMEF_PATH_INTEGRITY);
-
-                strncat(path->name, name, sizeof(path->name) - 1);
-
-                if ( path->elem[i].index != INDEX_UNDEFINED && path->elem[i].index != INDEX_FORBIDDEN ) {
-                        snprintf(buf2, sizeof(buf2) - 1, "(%u)", path->elem[i].index);
-                        strncat(path->name, buf2, sizeof(path->name) - 1);
-                }
-
-                class = idmef_class_get_child_class(class, path->elem[i].child);
-                if ( class < 0 && i < path->depth - 1 )
-                        return prelude_error(PRELUDE_ERROR_IDMEF_PATH_INTEGRITY);
-        }
-
-        return 0;
-}
-
-
-
-const char *idmef_path_get_name(idmef_path_t *path)
-{
-	if ( path->name[0] == '\0' && path->depth ) {
-		if ( build_name(path) < 0 )
-			return NULL;
-	}
-
-	return path->name;
-}
-
-
-
-char *idmef_path_get_numeric(idmef_path_t *path)
-{
-        int i, retval;
-        char *ret;
-        prelude_string_t *string;
-
-        retval = prelude_string_new(&string);
-        if ( retval < 0 )
-                return NULL;
-
-        prelude_string_sprintf(string, "%d", path->elem[0].child);
-        
-	for ( i = 1; i < path->depth; i++ ) {
-
-                prelude_string_sprintf(string, ".%d", path->elem[i].child);
-                
-	    	if ( path->elem[i].index != INDEX_UNDEFINED && path->elem[i].index != INDEX_FORBIDDEN )
-                        prelude_string_sprintf(string, "(%u)", path->elem[i].index);
-	}
-
-        retval = prelude_string_get_string_released(string, &ret);
-        prelude_string_destroy(string);
-        
-	return ret;
-}
-
-
 
 prelude_bool_t idmef_path_is_ambiguous(idmef_path_t *path)
 {
@@ -835,9 +807,6 @@ int idmef_path_has_lists(idmef_path_t *path)
 {
 	int i, ret = 0;
 
-        /*
-         * FIXME: return value
-         */ 
 	for ( i = 0; i < path->depth; i++ ) {
 		if ( path->elem[i].index != INDEX_FORBIDDEN )
 			ret++;
@@ -860,26 +829,27 @@ void _idmef_path_cache_destroy(void)
 
 
 
-unsigned int idmef_path_get_depth(idmef_path_t *path)
+unsigned int idmef_path_get_depth(const idmef_path_t *path)
 {
         return path->depth;
 }
 
 
 
-idmef_path_element_t *idmef_path_get_element(idmef_path_t *path, unsigned int depth)
+const char *idmef_path_get_name(const idmef_path_t *path, int depth)
 {
-        return &path->elem[depth];
-}
-
-
-idmef_value_type_id_t idmef_path_element_get_value_type(idmef_path_element_t *elem)
-{
-        return elem->value_type;
-}
-
-
-idmef_class_id_t idmef_path_element_get_class(idmef_path_element_t *elem)
-{
-        return elem->class;
+        const char *ret;
+        const idmef_path_element_t *elem;
+        
+        if ( depth < 0 )
+                return path->name;
+        
+        elem = &path->elem[depth];
+        
+        if ( elem->class == -1 || elem->value_type == IDMEF_VALUE_TYPE_ENUM )
+                ret = idmef_class_get_child_name(path->elem[depth - 1].class, elem->position);
+        else
+                ret = idmef_class_get_name(elem->class);
+        
+        return ret;
 }

@@ -25,13 +25,13 @@
 #ifndef _LIBPRELUDE_IDMEF_VALUE_H
 #define _LIBPRELUDE_IDMEF_VALUE_H
 
-#include "prelude-string.h"
-#include "idmef-value-type.h"
-#include "idmef-class.h"
-
 
 typedef struct idmef_value idmef_value_t;
 
+#include "prelude-io.h"
+#include "idmef-value-type.h"
+#include "prelude-string.h"
+#include "idmef-class.h"
 #include "idmef-path.h"
 
 
@@ -96,15 +96,15 @@ int idmef_value_clone(idmef_value_t *val, idmef_value_t **dst);
 
 idmef_value_t *idmef_value_ref(idmef_value_t *val);
 
+int idmef_value_print(idmef_value_t *val, prelude_io_t *fd);
+
 int idmef_value_to_string(idmef_value_t *val, prelude_string_t *out);
 
 int idmef_value_get(idmef_value_t *val, void *res);
 
-int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_value_relation_t relation);
+int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_operator_t operator);
 
-int idmef_value_check_relation(idmef_value_t *value, idmef_value_relation_t relation);
-
-const char *idmef_value_relation_to_string(idmef_value_relation_t relation);
+int idmef_value_check_operator(idmef_value_t *value, idmef_criterion_operator_t operator);
 
 void idmef_value_destroy(idmef_value_t *val);
 

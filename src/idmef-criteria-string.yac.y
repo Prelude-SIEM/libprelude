@@ -61,7 +61,7 @@ extern void yy_delete_buffer(void *);
         int operator;
 	idmef_criterion_t *criterion;
 	idmef_criteria_t *criteria;
-	idmef_value_relation_t relation;
+	idmef_criterion_operator_t relation;
 }     
 
 /* BISON Declarations */
@@ -130,7 +130,7 @@ criterion: TOK_STRING relation TOK_STRING 	{
                                                         int ret;
 							idmef_path_t *path = NULL;
 							idmef_criterion_value_t *value = NULL;
-							idmef_value_relation_t relation;
+							idmef_criterion_operator_t operator = $2;
 							idmef_criterion_t *criterion;
 
 							ret = idmef_path_new_fast(&path, $1);
@@ -140,8 +140,8 @@ criterion: TOK_STRING relation TOK_STRING 	{
 								free($3);
 								YYABORT;
 							}
-
-							ret = idmef_criterion_value_new_generic(&value, path, $3);
+                                                        
+							ret = idmef_criterion_value_new_from_string(&value, path, $3, operator);
 							if ( ret < 0 ) {
 								prelude_perror(ret, "cannot build value '%s' for path '%s'",
                                                                                $3, $1);
@@ -151,9 +151,7 @@ criterion: TOK_STRING relation TOK_STRING 	{
 								YYABORT;
 							}
 
-							relation = $2;
-
-							ret = idmef_criterion_new(&criterion, path, value, relation);
+							ret = idmef_criterion_new(&criterion, path, value, operator);
 							if ( ret < 0 ) {
 								prelude_perror(ret, "cannot build criterion for "
 								    "path '%s' and value '%s'", $1, $3);
@@ -181,7 +179,7 @@ criterion: TOK_STRING relation TOK_STRING 	{
 								YYABORT;
 							}
 
-							ret = idmef_criterion_new(&criterion, path, NULL, IDMEF_VALUE_RELATION_IS_NOT_NULL);
+							ret = idmef_criterion_new(&criterion, path, NULL, IDMEF_CRITERION_OPERATOR_IS_NOT_NULL);
 							if ( ret < 0 ) {
 								prelude_perror(ret, "cannot build criterion for path '%s' and value: NULL",
 								    $1);
@@ -206,7 +204,7 @@ criterion: TOK_STRING relation TOK_STRING 	{
 								YYABORT;
 							}
 
-							ret = idmef_criterion_new(&criterion, path, NULL, IDMEF_VALUE_RELATION_IS_NULL);
+							ret = idmef_criterion_new(&criterion, path, NULL, IDMEF_CRITERION_OPERATOR_IS_NULL);
 							if ( ret < 0 ) {
 								prelude_perror(ret,
 								    "cannot build criterion for path: '%s' and value: NULL",
@@ -222,15 +220,15 @@ criterion: TOK_STRING relation TOK_STRING 	{
 						}
 ;
 
-relation:	TOK_RELATION_SUBSTRING		{ $$ = IDMEF_VALUE_RELATION_SUBSTR; }
-	|	TOK_RELATION_REGEXP		{ $$ = IDMEF_VALUE_RELATION_REGEX; }
-	|	TOK_RELATION_GREATER		{ $$ = IDMEF_VALUE_RELATION_GREATER; }
-	|	TOK_RELATION_GREATER_OR_EQUAL	{ $$ = IDMEF_VALUE_RELATION_GREATER|IDMEF_VALUE_RELATION_EQUAL; }
-	|	TOK_RELATION_LESS		{ $$ = IDMEF_VALUE_RELATION_LESSER; }
-	|	TOK_RELATION_LESS_OR_EQUAL	{ $$ = IDMEF_VALUE_RELATION_LESSER|IDMEF_VALUE_RELATION_EQUAL; }
-	|	TOK_RELATION_EQUAL		{ $$ = IDMEF_VALUE_RELATION_EQUAL; }
-	|	TOK_RELATION_NOT_EQUAL		{ $$ = IDMEF_VALUE_RELATION_NOT_EQUAL; }
-	|	TOK_RELATION_IS_NULL		{ $$ = IDMEF_VALUE_RELATION_IS_NULL; }
+relation:	TOK_RELATION_SUBSTRING		{ $$ = IDMEF_CRITERION_OPERATOR_SUBSTR; }
+	|	TOK_RELATION_REGEXP		{ $$ = IDMEF_CRITERION_OPERATOR_REGEX; }
+	|	TOK_RELATION_GREATER		{ $$ = IDMEF_CRITERION_OPERATOR_GREATER; }
+	|	TOK_RELATION_GREATER_OR_EQUAL	{ $$ = IDMEF_CRITERION_OPERATOR_GREATER|IDMEF_CRITERION_OPERATOR_EQUAL; }
+	|	TOK_RELATION_LESS		{ $$ = IDMEF_CRITERION_OPERATOR_LESSER; }
+	|	TOK_RELATION_LESS_OR_EQUAL	{ $$ = IDMEF_CRITERION_OPERATOR_LESSER|IDMEF_CRITERION_OPERATOR_EQUAL; }
+	|	TOK_RELATION_EQUAL		{ $$ = IDMEF_CRITERION_OPERATOR_EQUAL; }
+	|	TOK_RELATION_NOT_EQUAL		{ $$ = IDMEF_CRITERION_OPERATOR_NOT_EQUAL; }
+	|	TOK_RELATION_IS_NULL		{ $$ = IDMEF_CRITERION_OPERATOR_IS_NULL; }
 ;
 
 operator:	TOK_OPERATOR_AND		{ $$ = operator_and; }

@@ -1,3 +1,5 @@
+DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
+
 ACLOCAL_AMFLAGS = -I m4 -I libmissing/m4
 SUBDIRS = libltdl libmissing m4 src prelude-adduser bindings docs
 

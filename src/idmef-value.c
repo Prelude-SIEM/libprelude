@@ -68,7 +68,7 @@ vtype idmef_value_get_ ## vname (idmef_value_t *val)	         \
 
 typedef struct compare {
 	idmef_value_t *val2;
-	idmef_value_relation_t relation;
+	idmef_criterion_operator_t operator;
 } compare_t;
 
 
@@ -337,14 +337,14 @@ int idmef_value_new_from_path(idmef_value_t **value, idmef_path_t *path, const c
         idmef_class_id_t class;
     	idmef_value_type_id_t value_type;
         		
-	value_type = idmef_path_get_value_type(path);
+	value_type = idmef_path_get_value_type(path, -1);
         if ( value_type < 0 )
                 return value_type;
 
         if ( value_type != IDMEF_VALUE_TYPE_ENUM )
                 ret = idmef_value_new_from_string(value, value_type, buf);
         else {
-                class = idmef_path_get_class(path);
+                class = idmef_path_get_class(path, -1);                
                 if ( class < 0 )
                         return class;
                 
@@ -412,11 +412,12 @@ void *idmef_value_get_object(idmef_value_t *value)
 int idmef_value_iterate(idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra)
 {
 	int i, ret;
-        
+
         if ( ! value->list )
                 return callback(value, extra);
         
         for ( i = 0; i < value->list_elems; i++ ) {
+                
                 ret = callback(value->list[i], extra);
                 if ( ret < 0 )
                         return -1;
@@ -525,28 +526,48 @@ idmef_value_t *idmef_value_ref(idmef_value_t *val)
 
 
 
-static int enum_to_string(idmef_value_t *val, prelude_string_t *out)
+int idmef_value_to_string(idmef_value_t *val, prelude_string_t *out)
 {
-	const char *str;
+	int ret;
+        const char *str;
         
-	str = idmef_class_enum_to_string(idmef_value_get_class(val),
-                                         idmef_value_get_enum(val));
+	if ( idmef_value_get_type(val) == IDMEF_VALUE_TYPE_ENUM ) {
+                str = idmef_class_enum_to_string(idmef_value_get_class(val), idmef_value_get_enum(val));
+                ret = prelude_string_cat(out, str);
+	} else
+		ret = idmef_value_type_write(&val->type, out);
 
-        return prelude_string_cat(out, str);
+	return ret;
 }
 
 
 
-int idmef_value_to_string(idmef_value_t *val, prelude_string_t *out)
+int idmef_value_print(idmef_value_t *val, prelude_io_t *fd)
 {
-	int ret;
+        int ret;
+        const char *str;
+        prelude_string_t *out;
+        
+        if ( idmef_value_get_type(val) == IDMEF_VALUE_TYPE_ENUM ) {
+                str = idmef_class_enum_to_string(idmef_value_get_class(val), idmef_value_get_enum(val));
+                ret = prelude_io_write(fd, str, strlen(str));
+        }
 
-	if ( idmef_value_get_type(val) == IDMEF_VALUE_TYPE_ENUM )
-		ret = enum_to_string(val, out);
-	else
-		ret = idmef_value_type_write(&val->type, out);
+        else {
+                ret = prelude_string_new(&out);
+                if ( ret < 0 )
+                        return ret;
 
-	return ret;
+                ret = idmef_value_type_write(&val->type, out);
+                if ( ret < 0 ) {
+                        prelude_string_destroy(out);
+                        return ret;
+                }
+
+                ret = prelude_io_write(fd, prelude_string_get_string(out), prelude_string_get_len(out));
+        }
+
+        return ret;
 }
 
 
@@ -562,14 +583,17 @@ static int idmef_value_match_internal(idmef_value_t *val1, void *extra)
 {
 	idmef_value_t *val2;
         compare_t *compare = extra;
-	idmef_value_relation_t relation;
+	idmef_criterion_operator_t operator;
+
+        if ( idmef_value_is_list(val1) )
+                return idmef_value_iterate(val1, idmef_value_match_internal, extra);
         
 	val2 = compare->val2;
-	relation = compare->relation;
+	operator = compare->operator;
 
         assert(! val1 || ! val2 || val1->type.id == val2->type.id);
                 
-        return idmef_value_type_compare(&val1->type, &val2->type, relation);
+        return idmef_value_type_compare(&val1->type, &val2->type, operator);
 }
 
 
@@ -578,18 +602,18 @@ static int idmef_value_match_internal(idmef_value_t *val1, void *extra)
  * idmef_value_match:
  * @val1: Pointer to a #idmef_value_t object.
  * @val2: Pointer to a #idmef_value_t object.
- * @relation: relation to use for matching.
+ * @operator: operator to use for matching.
  *
- * Match @val1 and @val2 using @relation.
+ * Match @val1 and @val2 using @operator.
  *
  * Returns:
  */
-int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_value_relation_t relation)
+int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_operator_t operator)
 {
 	compare_t compare;
         
 	compare.val2 = val2;
-	compare.relation = relation;
+	compare.operator = operator;
         
 	return idmef_value_iterate(val1, idmef_value_match_internal, &compare);
 }
@@ -597,17 +621,17 @@ int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_value_rela
 
 
 /**
- * idmef_value_check_relation:
+ * idmef_value_check_operator:
  * @value: Pointer to a #idmef_value_t object.
- * @relation: Type of relation to check @value for.
+ * @operator: Type of operator to check @value for.
  *
- * Check whether @relation can apply to @value.
+ * Check whether @operator can apply to @value.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
-int idmef_value_check_relation(idmef_value_t *value, idmef_value_relation_t relation)
+int idmef_value_check_operator(idmef_value_t *value, idmef_criterion_operator_t operator)
 {
-        return idmef_value_type_check_relation(&value->type, relation);
+        return idmef_value_type_check_relation(&value->type, operator);
 }
 
 
@@ -641,38 +665,3 @@ void idmef_value_destroy(idmef_value_t *val)
 	free(val);
 }
 
-
-
-/**
- * idmef_value_relation_to_string:
- * @relation: #idmef_value_relation_t type.
- *
- * Transform @relation to string.
- *
- * Returns: A pointer to a relation string or NULL.
- */
-const char *idmef_value_relation_to_string(idmef_value_relation_t relation)
-{
-                int i;
-        struct {
-                idmef_value_relation_t relation;
-                const char *name;
-        } tbl[] = {
-                { IDMEF_VALUE_RELATION_EQUAL, "=="                        },
-                { IDMEF_VALUE_RELATION_NOT_EQUAL, "!="                    },
-                { IDMEF_VALUE_RELATION_LESSER, "<"                        },
-                { IDMEF_VALUE_RELATION_GREATER, ">"                       },
-                { IDMEF_VALUE_RELATION_SUBSTR, "subsr"                    },
-                { IDMEF_VALUE_RELATION_REGEX, "=~"                        },
-                { IDMEF_VALUE_RELATION_IS_NULL, "!"                       },
-                { IDMEF_VALUE_RELATION_IS_NOT_NULL, ""                    },
-                { IDMEF_VALUE_RELATION_LESSER|IDMEF_VALUE_RELATION_EQUAL, "<="  },
-                { IDMEF_VALUE_RELATION_GREATER|IDMEF_VALUE_RELATION_EQUAL, ">=" },
-        };
-
-        for ( i = 0; tbl[i].relation != 0; i++ ) 
-                if ( relation == tbl[i].relation )
-                        return tbl[i].name;
-
-        return NULL;
-}

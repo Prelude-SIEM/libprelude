@@ -29,18 +29,6 @@
 
 
 typedef enum {
-        IDMEF_VALUE_RELATION_EQUAL       = 0x01,
-        IDMEF_VALUE_RELATION_NOT_EQUAL   = 0x02,
-        IDMEF_VALUE_RELATION_LESSER      = 0x04,
-        IDMEF_VALUE_RELATION_GREATER     = 0x08,
-        IDMEF_VALUE_RELATION_SUBSTR      = 0x10,
-        IDMEF_VALUE_RELATION_REGEX       = 0x20,
-        IDMEF_VALUE_RELATION_IS_NULL     = 0x40,
-        IDMEF_VALUE_RELATION_IS_NOT_NULL = 0x80
-} idmef_value_relation_t;
-
-
-typedef enum {
         IDMEF_VALUE_TYPE_ERROR   =  -1,
         IDMEF_VALUE_TYPE_UNKNOWN =   0,
 	IDMEF_VALUE_TYPE_INT8	 =   1,
@@ -89,6 +77,9 @@ typedef struct {
 } idmef_value_type_t;
 
 
+#include "idmef-criteria.h"
+
+
 int idmef_value_type_copy(const idmef_value_type_t *src, void *dst);
 
 int idmef_value_type_read(idmef_value_type_t *dst, const char *buf);
@@ -99,8 +90,9 @@ void idmef_value_type_destroy(idmef_value_type_t *type);
 
 int idmef_value_type_clone(const idmef_value_type_t *src, idmef_value_type_t *dst);
 
-int idmef_value_type_compare(const idmef_value_type_t *type1, const idmef_value_type_t *type2, idmef_value_relation_t relation);
+int idmef_value_type_compare(const idmef_value_type_t *type1, const idmef_value_type_t *type2,
+                             idmef_criterion_operator_t operator);
 
-int idmef_value_type_check_relation(const idmef_value_type_t *type, idmef_value_relation_t relation);
+int idmef_value_type_check_relation(const idmef_value_type_t *type, idmef_criterion_operator_t operator);
 
 #endif

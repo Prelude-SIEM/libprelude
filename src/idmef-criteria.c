@@ -40,7 +40,7 @@
 struct idmef_criterion {
 	idmef_path_t *path;
 	idmef_criterion_value_t *value;
-	idmef_value_relation_t relation;
+	idmef_criterion_operator_t operator;
 };
 
 
@@ -54,161 +54,55 @@ struct idmef_criteria {
 
 
 
-static int idmef_criterion_check_path_value(idmef_path_t *path,
-                                            idmef_criterion_value_t *value)
+/**
+ * idmef_criterion_operator_to_string:
+ * @operator: #idmef_criterion_operator_t type.
+ *
+ * Transform @relation to string.
+ *
+ * Returns: A pointer to an operator string or NULL.
+ */
+const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t operator)
 {
-        int ret = 0;
-        idmef_value_t *fixed;
-	idmef_value_type_id_t type;
+        int i;
+        const struct {
+                idmef_criterion_operator_t operator;
+                const char *name;
+        } tbl[] = {
+                { IDMEF_CRITERION_OPERATOR_EQUAL, "=="                        },
+                { IDMEF_CRITERION_OPERATOR_NOT_EQUAL, "!="                    },
+                { IDMEF_CRITERION_OPERATOR_LESSER, "<"                        },
+                { IDMEF_CRITERION_OPERATOR_GREATER, ">"                       },
+                { IDMEF_CRITERION_OPERATOR_SUBSTR, "subsr"                    },
+                { IDMEF_CRITERION_OPERATOR_REGEX, "=~"                        },
+                { IDMEF_CRITERION_OPERATOR_IS_NULL, "!"                       },
+                { IDMEF_CRITERION_OPERATOR_IS_NOT_NULL, ""                    },
+                { IDMEF_CRITERION_OPERATOR_LESSER|IDMEF_CRITERION_OPERATOR_EQUAL, "<="  },
+                { IDMEF_CRITERION_OPERATOR_GREATER|IDMEF_CRITERION_OPERATOR_EQUAL, ">=" },
+        };
 
-	type = idmef_path_get_value_type(path);
+        for ( i = 0; tbl[i].operator != 0; i++ ) 
+                if ( operator == tbl[i].operator )
+                        return tbl[i].name;
 
-	switch ( idmef_criterion_value_get_type(value) ) {
-                
-	case IDMEF_CRITERION_VALUE_TYPE_FIXED: 
-		fixed = idmef_criterion_value_get_fixed(value);
-		ret = (idmef_value_get_type(fixed) == type);
-		break;
-
-	case IDMEF_CRITERION_VALUE_TYPE_NON_LINEAR_TIME:
-		ret = (type == IDMEF_VALUE_TYPE_TIME);
-		break;
-                
-	}
-
-	return ret ? 0 : -1;
-}
-
-
-
-static int is_non_linear_time_contiguous(idmef_criterion_value_non_linear_time_t *time)
-{
-	int time_parts[6];
-	int cnt;
-	int start;
-	
-	time_parts[0] = idmef_criterion_value_non_linear_time_get_year(time);
-	time_parts[1] = idmef_criterion_value_non_linear_time_get_month(time);
-	time_parts[2] = idmef_criterion_value_non_linear_time_get_mday(time);
-	time_parts[3] = idmef_criterion_value_non_linear_time_get_hour(time);
-	time_parts[4] = idmef_criterion_value_non_linear_time_get_min(time);
-	time_parts[5] = idmef_criterion_value_non_linear_time_get_sec(time);
-
-	if ( time_parts[0] != -1 )
-		start = 0;
-
-	else if ( time_parts[3] != -1 )
-		start = 3;
-
-	else
-		return 0;
-
-	for ( cnt = 0; cnt < start; cnt++ )
-		if ( time_parts[cnt] != -1 )
-			return 0;
-
-	for ( cnt = start + 1;
-	      cnt < sizeof (time_parts) / sizeof (time_parts[0]) && time_parts[cnt] != -1;
-	      cnt++ );
-
-	for ( cnt += 1; cnt < sizeof (time_parts) / sizeof (time_parts[0]); cnt++ )
-		if ( time_parts[cnt] != -1 )
-			return 0;
-
-	return 1;
-}
-
-
-
-static int count_non_linear_time_parts(idmef_criterion_value_non_linear_time_t *time)
-{
-	return ((idmef_criterion_value_non_linear_time_get_year(time) != -1) +
-		(idmef_criterion_value_non_linear_time_get_month(time) != -1) +
-		(idmef_criterion_value_non_linear_time_get_yday(time) != -1) +
-		(idmef_criterion_value_non_linear_time_get_mday(time) != -1) +
-		(idmef_criterion_value_non_linear_time_get_wday(time) != -1) +
-		(idmef_criterion_value_non_linear_time_get_hour(time) != -1) +
-		(idmef_criterion_value_non_linear_time_get_min(time) != -1) +
-		(idmef_criterion_value_non_linear_time_get_sec(time) != -1));
-}
-
-
-
-static int idmef_criterion_check_relation_value_non_linear_value(idmef_criterion_value_non_linear_time_t *time,
-								 idmef_value_relation_t relation)
-{
-	int time_parts_count;
-
-	if ( relation & IDMEF_VALUE_RELATION_SUBSTR    ||
-             relation & IDMEF_VALUE_RELATION_IS_NULL   ||
-             relation & IDMEF_VALUE_RELATION_IS_NOT_NULL )
-		return -1;
-
-	if ( relation == IDMEF_VALUE_RELATION_EQUAL || relation == IDMEF_VALUE_RELATION_NOT_EQUAL )
-		return 0;
-
-	time_parts_count = count_non_linear_time_parts(time);
-	if ( time_parts_count == 0 )
-		return -1;
-
-	if ( ( idmef_criterion_value_non_linear_time_get_yday(time) != -1 ||
-	       idmef_criterion_value_non_linear_time_get_wday(time) != -1 ||
-	       idmef_criterion_value_non_linear_time_get_month(time) != -1 ||
-	       idmef_criterion_value_non_linear_time_get_mday(time) != -1 ) &&
-	     time_parts_count == 1 )
-		return 0;
-
-	return is_non_linear_time_contiguous(time) ? 0 : -1;
-}
-
-
-
-static int idmef_criterion_check_relation(idmef_criterion_value_t *value,
-					  idmef_value_relation_t relation)
-{
-	switch ( idmef_criterion_value_get_type(value) ) {
-
-        case IDMEF_CRITERION_VALUE_TYPE_FIXED:
-		return idmef_value_check_relation(idmef_criterion_value_get_fixed(value), relation);
-
-	case IDMEF_CRITERION_VALUE_TYPE_NON_LINEAR_TIME:
-		return idmef_criterion_check_relation_value_non_linear_value
-			(idmef_criterion_value_get_non_linear_time(value), relation);
-	}
-
-	/* never reached */
-	return -1;
-}
-
-
-
-static int idmef_criterion_check(idmef_path_t *path,
-				 idmef_criterion_value_t *value,
-                                 idmef_value_relation_t relation)
-{
-	if ( idmef_criterion_check_path_value(path, value) < 0 )
-		return -1;
-        
-	return idmef_criterion_check_relation(value, relation);
+        return NULL;
 }
 
 
 
 int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
-                        idmef_criterion_value_t *value, idmef_value_relation_t relation)
+                        idmef_criterion_value_t *value, idmef_criterion_operator_t operator)
 {
-        int ret;
+        if ( ! value && operator != IDMEF_CRITERION_OPERATOR_IS_NULL && operator != IDMEF_CRITERION_OPERATOR_IS_NOT_NULL )
+                return -1;
         
-        if ( value && (ret = idmef_criterion_check(path, value, relation)) < 0 )
-		return ret;
-
 	*criterion = calloc(1, sizeof(**criterion));
 	if ( ! *criterion )
 		return prelude_error_from_errno(errno);
 
 	(*criterion)->path = path;
-	(*criterion)->relation = relation;
 	(*criterion)->value = value;
+	(*criterion)->operator = operator;
 
 	return 0;
 }
@@ -219,7 +113,7 @@ void idmef_criterion_destroy(idmef_criterion_t *criterion)
 {
 	idmef_path_destroy(criterion->path);
 
-	if ( criterion->value ) /* can be NULL if relation is is_null or is_not_null */
+	if ( criterion->value ) /* can be NULL if operator is is_null or is_not_null */
 		idmef_criterion_value_destroy(criterion->value);
 
 	free(criterion);
@@ -245,7 +139,7 @@ int idmef_criterion_clone(idmef_criterion_t *criterion, idmef_criterion_t **dst)
 		}
 	} 
 
-	ret = idmef_criterion_new(dst, path, value, criterion->relation);
+	ret = idmef_criterion_new(dst, path, value, criterion->operator);
 	if ( ret < 0 ) {
 		idmef_path_destroy(path);
 		idmef_criterion_value_destroy(value);
@@ -282,15 +176,17 @@ int idmef_criterion_print(const idmef_criterion_t *criterion, prelude_io_t *fd)
 
 int idmef_criterion_to_string(const idmef_criterion_t *criterion, prelude_string_t *out)
 {
-        const char *operator;
+        const char *name, *operator;
 
-        operator = idmef_value_relation_to_string(criterion->relation);
+        operator = idmef_criterion_operator_to_string(criterion->operator);
         assert(operator);
 
+        name = idmef_path_get_name(criterion->path, -1);
+        
         if ( ! criterion->value )
-                return prelude_string_sprintf(out, "%s %s", operator, idmef_path_get_name(criterion->path));
+                return prelude_string_sprintf(out, "%s %s", operator, name);
 
-        prelude_string_sprintf(out, "%s %s ", idmef_path_get_name(criterion->path), operator);
+        prelude_string_sprintf(out, "%s %s ", name, operator);
 
         return idmef_criterion_value_to_string(criterion->value, out);
 }
@@ -311,9 +207,9 @@ idmef_criterion_value_t *idmef_criterion_get_value(idmef_criterion_t *criterion)
 
 
 
-idmef_value_relation_t idmef_criterion_get_relation(idmef_criterion_t *criterion)
+idmef_criterion_operator_t idmef_criterion_get_operator(idmef_criterion_t *criterion)
 {
-        return criterion->relation;
+        return criterion->operator;
 }
 
 
@@ -332,28 +228,15 @@ int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message
                 return ret;
         
         if ( ret == 0 ) 
-		return (criterion->relation == IDMEF_VALUE_RELATION_IS_NULL) ? 0 : -1;
+		return (criterion->operator == IDMEF_CRITERION_OPERATOR_IS_NULL) ? 0 : -1;
         
         if ( ! criterion->value )
-                return (criterion->relation == IDMEF_VALUE_RELATION_IS_NOT_NULL) ? 0 : -1; 
+                return (criterion->operator == IDMEF_CRITERION_OPERATOR_IS_NOT_NULL) ? 0 : -1;
         
-	switch ( idmef_criterion_value_get_type(criterion->value) ) {
-                
-        case IDMEF_CRITERION_VALUE_TYPE_FIXED:
-        	ret = idmef_value_match(value,
-                                        idmef_criterion_value_get_fixed(criterion->value),
-                                        criterion->relation);
-		break;
-		
-	case IDMEF_CRITERION_VALUE_TYPE_NON_LINEAR_TIME:
-		/* not supported for the moment */
-                ret = -1;
-		break;
-	}
+        ret = idmef_criterion_value_match(criterion->value, value, criterion->operator);
+        idmef_value_destroy(value);
 
-	idmef_value_destroy(value);
-
-	return ret;
+        return ret;
 }
 
 

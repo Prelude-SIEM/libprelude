@@ -36,19 +36,19 @@
 #include "idmef-value-type.h"
 
 
-#define OBJECT_RELATION  IDMEF_VALUE_RELATION_IS_NULL|IDMEF_VALUE_RELATION_IS_NOT_NULL
+#define OBJECT_OPERATOR  IDMEF_CRITERION_OPERATOR_IS_NULL|IDMEF_CRITERION_OPERATOR_IS_NOT_NULL
 
-#define DATA_RELATION    IDMEF_VALUE_RELATION_EQUAL|IDMEF_VALUE_RELATION_NOT_EQUAL| \
-                         IDMEF_VALUE_RELATION_LESSER|IDMEF_VALUE_RELATION_GREATER
+#define DATA_OPERATOR    IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT_EQUAL| \
+                         IDMEF_CRITERION_OPERATOR_LESSER|IDMEF_CRITERION_OPERATOR_GREATER
 
-#define TIME_RELATION    IDMEF_VALUE_RELATION_LESSER|IDMEF_VALUE_RELATION_GREATER| \
-                         IDMEF_VALUE_RELATION_EQUAL|IDMEF_VALUE_RELATION_NOT_EQUAL
+#define TIME_OPERATOR    IDMEF_CRITERION_OPERATOR_LESSER|IDMEF_CRITERION_OPERATOR_GREATER| \
+                         IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT_EQUAL
 
-#define STRING_RELATION  IDMEF_VALUE_RELATION_SUBSTR|IDMEF_VALUE_RELATION_EQUAL| \
-                         IDMEF_VALUE_RELATION_NOT_EQUAL
+#define STRING_OPERATOR  IDMEF_CRITERION_OPERATOR_SUBSTR|IDMEF_CRITERION_OPERATOR_EQUAL| \
+                         IDMEF_CRITERION_OPERATOR_NOT_EQUAL
 
-#define INTEGER_RELATION IDMEF_VALUE_RELATION_LESSER|IDMEF_VALUE_RELATION_GREATER|\
-                         IDMEF_VALUE_RELATION_EQUAL|IDMEF_VALUE_RELATION_NOT_EQUAL
+#define INTEGER_OPERATOR IDMEF_CRITERION_OPERATOR_LESSER|IDMEF_CRITERION_OPERATOR_GREATER|\
+                         IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT_EQUAL
 
 
 #define GENERIC_ONE_BASE_RW_FUNC(scanfmt, printfmt, name, type)                          \
@@ -82,13 +82,13 @@
 typedef struct {
         size_t len;
 
-        idmef_value_relation_t relation;
+        idmef_criterion_operator_t relation;
         
         int (*copy)(const idmef_value_type_t *src, void *dst, size_t size);
         int (*clone)(const idmef_value_type_t *src, idmef_value_type_t *dst, size_t size);
         
         void (*destroy)(idmef_value_type_t *type);
-        int (*compare)(const idmef_value_type_t *t1, const idmef_value_type_t *t2, size_t size, idmef_value_relation_t relation);
+        int (*compare)(const idmef_value_type_t *t1, const idmef_value_type_t *t2, size_t size, idmef_criterion_operator_t relation);
         
         int (*read)(idmef_value_type_t *dst, const char *buf);
         int (*write)(const idmef_value_type_t *src, prelude_string_t *out);
@@ -132,19 +132,19 @@ static int generic_clone(const idmef_value_type_t *src, idmef_value_type_t *dst,
 
 
 static int generic_compare(const idmef_value_type_t *t1, const idmef_value_type_t *t2,
-                           size_t size, idmef_value_relation_t relation)
+                           size_t size, idmef_criterion_operator_t relation)
 {
         int ret;
 
         ret = memcmp(&t1->data, &t2->data, size);
         
-        if ( ret == 0 && relation & IDMEF_VALUE_RELATION_EQUAL ) 
+        if ( ret == 0 && relation & IDMEF_CRITERION_OPERATOR_EQUAL ) 
                 return 0;
 
-        else if ( ret < 0 && relation & (IDMEF_VALUE_RELATION_NOT_EQUAL|IDMEF_VALUE_RELATION_LESSER) )
+        else if ( ret < 0 && relation & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_LESSER) )
                 return 0;
 
-        else if ( ret > 0 && relation & (IDMEF_VALUE_RELATION_NOT_EQUAL|IDMEF_VALUE_RELATION_GREATER) )
+        else if ( ret > 0 && relation & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_GREATER) )
                 return 0;
 
         return -1;
@@ -157,18 +157,18 @@ static int generic_compare(const idmef_value_type_t *t1, const idmef_value_type_
  * time specific function.
  */
 static int time_compare(const idmef_value_type_t *t1, const idmef_value_type_t *t2,
-                        size_t size, idmef_value_relation_t relation)
+                        size_t size, idmef_criterion_operator_t relation)
 {
 	double time1 = idmef_time_get_sec(t1->data.time_val) + idmef_time_get_usec(t1->data.time_val) * 1e-6;
 	double time2 = idmef_time_get_sec(t2->data.time_val) + idmef_time_get_usec(t2->data.time_val) * 1e-6;
 
-        if ( relation & IDMEF_VALUE_RELATION_EQUAL && time1 == time2 )
+        if ( relation & IDMEF_CRITERION_OPERATOR_EQUAL && time1 == time2 )
                 return 0;
 
-        else if ( relation & (IDMEF_VALUE_RELATION_NOT_EQUAL|IDMEF_VALUE_RELATION_LESSER) && time1 < time2 )
+        else if ( relation & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_LESSER) && time1 < time2 )
                 return 0;
 
-        else if ( relation & (IDMEF_VALUE_RELATION_NOT_EQUAL|IDMEF_VALUE_RELATION_GREATER) && time1 > time2 )
+        else if ( relation & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_GREATER) && time1 > time2 )
                 return 0;
 
         return -1;
@@ -225,20 +225,20 @@ static void time_destroy(idmef_value_type_t *type)
  *
  */
 static int string_compare(const idmef_value_type_t *t1, const idmef_value_type_t *t2,
-                          size_t size, idmef_value_relation_t relation)
+                          size_t size, idmef_criterion_operator_t relation)
 {
         const char *s1, *s2;
         
         s1 = prelude_string_get_string(t1->data.string_val);
         s2 = prelude_string_get_string(t2->data.string_val);
         
-        if ( relation & IDMEF_VALUE_RELATION_EQUAL && strcmp(s1, s2) == 0 )
+        if ( relation & IDMEF_CRITERION_OPERATOR_EQUAL && strcmp(s1, s2) == 0 )
                 return 0;
 
-        else if ( relation & IDMEF_VALUE_RELATION_NOT_EQUAL && strcmp(s1, s2) != 0 )
+        else if ( relation & IDMEF_CRITERION_OPERATOR_NOT_EQUAL && strcmp(s1, s2) != 0 )
                 return 0;
         
-        else if ( relation & IDMEF_VALUE_RELATION_SUBSTR && strstr(s1, s2) )
+        else if ( relation & IDMEF_CRITERION_OPERATOR_SUBSTR && strstr(s1, s2) )
                 return 0;
         
         return -1;
@@ -285,7 +285,7 @@ static int string_write(const idmef_value_type_t *src, prelude_string_t *out)
  * data specific functions
  */
 static int data_compare(const idmef_value_type_t *t1, const idmef_value_type_t *t2,
-                        size_t len, idmef_value_relation_t relation)
+                        size_t len, idmef_criterion_operator_t relation)
 {
         int ret;
         size_t len1, len2;
@@ -299,13 +299,13 @@ static int data_compare(const idmef_value_type_t *t1, const idmef_value_type_t *
         else 
                 ret = (len1 > len2) ? 1 : -1;   
         
-        if ( ret == 0 && relation & IDMEF_VALUE_RELATION_EQUAL )
+        if ( ret == 0 && relation & IDMEF_CRITERION_OPERATOR_EQUAL )
                 return 0;
 
-        else if ( ret < 0 && relation & (IDMEF_VALUE_RELATION_NOT_EQUAL|IDMEF_VALUE_RELATION_LESSER) )
+        else if ( ret < 0 && relation & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_LESSER) )
                 return 0;
 
-        else if ( ret > 0 && relation & (IDMEF_VALUE_RELATION_NOT_EQUAL|IDMEF_VALUE_RELATION_GREATER) )
+        else if ( ret > 0 && relation & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_GREATER) )
                 return 0;
                                 
         return -1;
@@ -350,36 +350,36 @@ static void data_destroy(idmef_value_type_t *type)
 
 static const idmef_value_type_operation_t ops_tbl[] = {
         { 0, 0, NULL, NULL, NULL, NULL, NULL, NULL},
-        { sizeof(int8_t), INTEGER_RELATION, generic_copy,
+        { sizeof(int8_t), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, int8_read, int8_write             },
-        { sizeof(uint8_t), INTEGER_RELATION, generic_copy,
+        { sizeof(uint8_t), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, uint8_read, uint8_write           },
-        { sizeof(int16_t), INTEGER_RELATION, generic_copy,
+        { sizeof(int16_t), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, int16_read, int16_write           },
-        { sizeof(uint16_t), INTEGER_RELATION, generic_copy,
+        { sizeof(uint16_t), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, uint16_read, uint16_write         },
-        { sizeof(int32_t), INTEGER_RELATION, generic_copy,
+        { sizeof(int32_t), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, int32_read, int32_write           },
-        { sizeof(uint32_t), INTEGER_RELATION, generic_copy,
+        { sizeof(uint32_t), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, uint32_read, uint32_write         },
-        { sizeof(int64_t), INTEGER_RELATION, generic_copy,
+        { sizeof(int64_t), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, int64_read, int64_write           },
-        { sizeof(uint64_t), INTEGER_RELATION, generic_copy, 
+        { sizeof(uint64_t), INTEGER_OPERATOR, generic_copy, 
           generic_clone, NULL, generic_compare, uint64_read, uint64_write         },
-        { sizeof(float), INTEGER_RELATION, generic_copy,
+        { sizeof(float), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, float_read, float_write           },
-        { sizeof(double), INTEGER_RELATION, generic_copy,
+        { sizeof(double), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, double_read, double_write         },
-        { 0, STRING_RELATION, string_copy,
+        { 0, STRING_OPERATOR, string_copy,
           string_clone, string_destroy, string_compare, string_read, string_write },
-        { 0, TIME_RELATION, time_copy,
+        { 0, TIME_OPERATOR, time_copy,
           time_clone, time_destroy, time_compare, time_read, time_write           }, 
-        { 0, DATA_RELATION, data_copy,
+        { 0, DATA_OPERATOR, data_copy,
           data_clone, data_destroy, data_compare, data_read, data_write           },
-        { sizeof(idmef_value_type_id_t), INTEGER_RELATION, generic_copy,
+        { sizeof(idmef_value_type_id_t), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, enum_read, enum_write, /* enum */ },
         { 0, 0, NULL, NULL, NULL, NULL, NULL, NULL                                },
-        { 0, OBJECT_RELATION, NULL, NULL, NULL, NULL, NULL, NULL                  },
+        { 0, OBJECT_OPERATOR, NULL, NULL, NULL, NULL, NULL, NULL                  },
 };
 
 
@@ -433,7 +433,7 @@ int idmef_value_type_copy(const idmef_value_type_t *src, void *dst)
 
 int idmef_value_type_compare(const idmef_value_type_t *type1,
                              const idmef_value_type_t *type2,
-                             idmef_value_relation_t relation)
+                             idmef_criterion_operator_t relation)
 {
         int ret;
 
@@ -505,7 +505,7 @@ void idmef_value_type_destroy(idmef_value_type_t *type)
 
 
 
-int idmef_value_type_check_relation(const idmef_value_type_t *type, idmef_value_relation_t relation)
+int idmef_value_type_check_relation(const idmef_value_type_t *type, idmef_criterion_operator_t relation)
 {
         int ret;
         

@@ -24,12 +24,29 @@
 #ifndef _LIBPRELUDE_IDMEF_CRITERIA_H
 #define _LIBPRELUDE_IDMEF_CRITERIA_H
 
+
+typedef enum {
+        IDMEF_CRITERION_OPERATOR_EQUAL       = 0x01,
+        IDMEF_CRITERION_OPERATOR_NOT_EQUAL   = 0x02,
+        IDMEF_CRITERION_OPERATOR_LESSER      = 0x04,
+        IDMEF_CRITERION_OPERATOR_GREATER     = 0x08,
+        IDMEF_CRITERION_OPERATOR_SUBSTR      = 0x10,
+        IDMEF_CRITERION_OPERATOR_REGEX       = 0x20,
+        IDMEF_CRITERION_OPERATOR_IS_NULL     = 0x40,
+        IDMEF_CRITERION_OPERATOR_IS_NOT_NULL = 0x80
+} idmef_criterion_operator_t;
+
+
 typedef struct idmef_criteria idmef_criteria_t;
 typedef struct idmef_criterion idmef_criterion_t;
 
+#include "idmef-path.h"
+#include "idmef-criterion-value.h"
+
+const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t operator);
 
 int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
-                        idmef_criterion_value_t *value, idmef_value_relation_t relation);
+                        idmef_criterion_value_t *value, idmef_criterion_operator_t operator);
 
 void idmef_criterion_destroy(idmef_criterion_t *criterion);
 int idmef_criterion_clone(idmef_criterion_t *src, idmef_criterion_t **dst);
@@ -37,7 +54,7 @@ int idmef_criterion_print(const idmef_criterion_t *criterion, prelude_io_t *fd);
 int idmef_criterion_to_string(const idmef_criterion_t *criterion, prelude_string_t *out);
 idmef_path_t *idmef_criterion_get_path(idmef_criterion_t *criterion);
 idmef_criterion_value_t *idmef_criterion_get_value(idmef_criterion_t *criterion);
-idmef_value_relation_t idmef_criterion_get_relation(idmef_criterion_t *criterion);
+idmef_criterion_operator_t idmef_criterion_get_operator(idmef_criterion_t *criterion);
 int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message);
 
 int idmef_criteria_new(idmef_criteria_t **criteria);

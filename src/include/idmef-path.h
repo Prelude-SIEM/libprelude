@@ -25,59 +25,51 @@
 #define _LIBPRELUDE_IDMEF_OBJECT_H
 
 typedef struct idmef_path idmef_path_t;
-typedef struct idmef_path_element idmef_path_element_t;
 
 #include <stdarg.h>
-
 #include "idmef-value.h"
 #include "idmef-tree-wrap.h"
 
-int idmef_path_get(idmef_path_t *object, idmef_message_t *message, idmef_value_t **ret);
+int idmef_path_get(idmef_path_t *path, idmef_message_t *message, idmef_value_t **ret);
 
-int idmef_path_set(idmef_path_t *object, idmef_message_t *message, idmef_value_t *value);
+int idmef_path_set(idmef_path_t *path, idmef_message_t *message, idmef_value_t *value);
 
-int idmef_path_new(idmef_path_t **object, const char *format, ...);
-int idmef_path_new_v(idmef_path_t **object, const char *format, va_list args);
-int idmef_path_new_fast(idmef_path_t **object, const char *buffer);
+int idmef_path_new(idmef_path_t **path, const char *format, ...);
+int idmef_path_new_v(idmef_path_t **path, const char *format, va_list args);
+int idmef_path_new_fast(idmef_path_t **path, const char *buffer);
 
-idmef_class_id_t idmef_path_get_class(idmef_path_t *object);
+idmef_class_id_t idmef_path_get_class(const idmef_path_t *path, int depth);
 
-idmef_value_type_id_t idmef_path_get_value_type(idmef_path_t *object);
+idmef_value_type_id_t idmef_path_get_value_type(const idmef_path_t *path, int depth);
 
-int idmef_path_set_index(idmef_path_t *object, unsigned int depth, unsigned int number);
+int idmef_path_set_index(idmef_path_t *path, unsigned int depth, unsigned int number);
 
-int idmef_path_undefine_index(idmef_path_t *object, unsigned int depth);
+int idmef_path_undefine_index(idmef_path_t *path, unsigned int depth);
 
-int idmef_path_get_index(idmef_path_t *object, unsigned int depth);
+int idmef_path_get_index(const idmef_path_t *path, unsigned int depth);
 
-int idmef_path_make_child(idmef_path_t *object, const char *child_name, unsigned int n);
+int idmef_path_make_child(idmef_path_t *path, const char *child_name, unsigned int index);
 
-int idmef_path_make_parent(idmef_path_t *object);
+int idmef_path_make_parent(idmef_path_t *path);
 
-void idmef_path_destroy(idmef_path_t *object);
+void idmef_path_destroy(idmef_path_t *path);
 
-int idmef_path_compare(idmef_path_t *o1, idmef_path_t *o2);
+int idmef_path_ncompare(const idmef_path_t *p1, const idmef_path_t *p2, unsigned int depth);
+
+int idmef_path_compare(const idmef_path_t *p1, const idmef_path_t *p2);
 
 int idmef_path_clone(const idmef_path_t *src, idmef_path_t **dst);
 
 idmef_path_t *idmef_path_ref(idmef_path_t *object);
 
-char *idmef_path_get_numeric(idmef_path_t *object);
-
-const char *idmef_path_get_name(idmef_path_t *object);
+const char *idmef_path_get_name(const idmef_path_t *object, int depth);
 
 prelude_bool_t idmef_path_is_ambiguous(idmef_path_t *object);
 
 int idmef_path_has_lists(idmef_path_t *object);
 
-unsigned int idmef_path_get_depth(idmef_path_t *path);
+unsigned int idmef_path_get_depth(const idmef_path_t *path);
 
 void _idmef_path_cache_destroy(void);
-
-idmef_path_element_t *idmef_path_get_element(idmef_path_t *path, unsigned int depth);
-
-idmef_value_type_id_t idmef_path_element_get_value_type(idmef_path_element_t *elem);
-
-idmef_class_id_t idmef_path_element_get_class(idmef_path_element_t *elem);
 
 #endif /* _LIBPRELUDE_IDMEF_OBJECT_H */
