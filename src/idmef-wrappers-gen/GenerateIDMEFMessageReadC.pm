@@ -63,7 +63,7 @@ static inline int extract_string_safe(idmef_string_t **out, char *buf, size_t le
 
         *out = idmef_string_new_ref_fast(buf, len);
         if ( ! *out ) \{
-                log(LOG_ERR, \"out of memory\\n\");
+                log(LOG_ERR, \"memory exhausted.\\n\");
                 return -2;
         \}
 
@@ -73,14 +73,17 @@ static inline int extract_string_safe(idmef_string_t **out, char *buf, size_t le
 
 static inline int extract_time_safe(idmef_time_t **out, void *buf, size_t len)
 \{
-        if ( len != sizeof(**out) ) \{
+        /*
+         * sizeof(sec) + sizeof(usec) + sizeof(gmt offset).
+         */
+        if ( len != 12 ) \{
                 log(LOG_ERR, \"Datatype error: buffer is not a idmef time.\\n\");
                 return -1;
         \}
 
         *out = idmef_time_new();
         if ( ! *out ) \{
-                log(LOG_ERR, \"out of memory\\n\");
+                log(LOG_ERR, \"memory exhausted.\\n\");
                 return -2;
         \}
 
@@ -96,7 +99,7 @@ static inline int extract_data_safe(idmef_data_t **out, void *buf, size_t len)
 \{
         *out = idmef_data_new_ref(buf, len);
         if ( ! *out ) \{
-                log(LOG_ERR, \"out of memory\\n\");
+                log(LOG_ERR, \"memory exhausted.\\n\");
                 return -1;
         \}
 

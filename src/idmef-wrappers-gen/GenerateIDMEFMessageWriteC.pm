@@ -125,16 +125,19 @@ static inline void idmef_write_float(prelude_msgbuf_t *msg, uint8_t tag, float d
 
 inline void idmef_write_time(prelude_msgbuf_t *msg, uint8_t tag, idmef_time_t *data) 
 \{
-	idmef_time_t dst;
+        uint32_t tmp;
+        unsigned char buf[12];
+      
+        tmp = htonl(idmef_time_get_sec(data));
+        memcpy(buf, &tmp, sizeof(tmp));
 
-	if ( ! data)
-		return;
+        tmp = htonl(idmef_time_get_usec(data));
+        memcpy(buf + 4, &tmp, sizeof(tmp));
 
-	idmef_time_set_sec(&dst, htonl(idmef_time_get_sec(data)));
-	idmef_time_set_usec(&dst, htonl(idmef_time_get_usec(data)));
-        idmef_time_set_gmt_offset(&dst, htonl(idmef_time_get_gmt_offset(data)));
+        tmp = htonl(idmef_time_get_gmt_offset(data));
+        memcpy(buf + 8, &tmp, sizeof(tmp));
 
-	prelude_msgbuf_set(msg, tag, sizeof (dst), &dst);
+        prelude_msgbuf_set(msg, tag, sizeof (buf), buf);
 \}
 
 
