@@ -135,7 +135,7 @@ sub	set
 	return 0;
     }
 
-    if ( Prelude::idmef_object_get_type($object) == $Prelude::IDMEF_VALUE_TYPE_TIME ) {
+    if ( Prelude::idmef_object_get_value_type($object) == $Prelude::IDMEF_VALUE_TYPE_TIME ) {
 	my $time;
 
 	$time = Prelude::idmef_time_new();
@@ -388,14 +388,14 @@ sub	and
 {
     my	$self = shift;
 
-    return $self->_add(Prelude::idmef_criteria_and_criteria, @_);
+    return $self->_add(&Prelude::idmef_criteria_and_criteria, @_);
 }
 
 sub	or
 {
     my	$self = shift;
 
-    return $self->_add(Prelude::idmef_criteria_or_criteria, @_);
+    return $self->_add(&Prelude::idmef_criteria_or_criteria, @_);
 }
 
 sub	DESTROY
