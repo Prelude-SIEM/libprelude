@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <netinet/in.h>
@@ -17,10 +18,17 @@
 
 
 
-static int config_save_value(config_t *cfg, prelude_option_t *last,
+static int config_save_value(config_t *cfg, int rtype, prelude_option_t *last,
                              char **prev, const char *option, const char *value)
 {
+        int ret;
         char buf[1024];
+        
+        if ( ! (prelude_option_get_flags(last) & CFG_HOOK) )
+                return -1;
+        
+        if ( rtype != PRELUDE_MSG_OPTION_SET && rtype != PRELUDE_MSG_OPTION_DESTROY )
+                return -1;
         
         if ( prelude_option_has_optlist(last) ) {
                 
@@ -30,64 +38,103 @@ static int config_save_value(config_t *cfg, prelude_option_t *last,
                         free(prev);
                 
                 *prev = strdup(buf);
-                
-                return config_set(cfg, buf, NULL, NULL);
+
+                if ( rtype == PRELUDE_MSG_OPTION_SET )
+                        return config_set(cfg, buf, NULL, NULL);
+                else
+                        return config_del(cfg, buf, NULL);
+                        
+        }
+
+        if ( rtype == PRELUDE_MSG_OPTION_SET )
+                ret = config_set(cfg, *prev, option, value);
+        else
+                ret = config_del(cfg, *prev, option);
+        
+        return ret;
+}
+
+
+
+static int parse_xxx(void **context, prelude_option_t **last, int is_last_cmd,
+                     int rtype, const char *option, const char *value, char *out, size_t size)
+{
+        int ret = 0;
+	
+        *last = prelude_option_search(*last, option, WIDE_HOOK, 0);
+        if ( ! *last ) {
+                snprintf(out, size, "Unknown option: %s.\n", option);
+                return -1;
         }
         
-        config_set(cfg, *prev, option, value);
+        if ( rtype == PRELUDE_MSG_OPTION_SET )
+                ret = prelude_option_invoke_set(context, *last, value, out, size);
         
-        return 0;
+	else if ( is_last_cmd ) {
+		
+                if ( rtype == PRELUDE_MSG_OPTION_DESTROY ) 
+                        ret = prelude_option_invoke_destroy(*context, *last, value, out, size);
+                
+                else if ( rtype == PRELUDE_MSG_OPTION_GET )
+                        ret = prelude_option_invoke_get(*context, *last, value, out, size);
+        
+		else if ( rtype == PRELUDE_MSG_OPTION_COMMIT )
+			ret = prelude_option_invoke_commit(*context, *last, value, out, size);
+	}
+
+	printf("last=%d rtype=%d ret=%d\n", is_last_cmd, rtype, ret);
+	
+        return ret;
 }
+
 
 
 
 static int parse_request(prelude_client_t *client, int rtype, char *request, char *out, size_t size)
 {
-        int ret, ent;
-        void *context = client;
+        config_t *cfg;
         char pname[256], iname[256];
+        int ret = 0, last_cmd = 0, ent;
         prelude_option_t *last = NULL;
-        char *str, *ptr, *value, *prev = NULL;
-        config_t *cfg = config_open(prelude_client_get_config_filename(client));
-
-        if ( ! cfg )
+        char *str, *value, *prev = NULL, *ptr = NULL;
+        void *context = client;
+	
+        cfg = config_open(prelude_client_get_config_filename(client));
+        if ( ! cfg ) {
+                log(LOG_ERR, "error opening %s.\n", prelude_client_get_config_filename(client));
                 return -1;
+        }
         
         value = request;
         prelude_strsep(&value, "=");
         
-        ptr = NULL;
+        while ( (str = (prelude_strsep(&request, "."))) ) {
+                printf("%p == %p\n", request, value);
+                
+                if ( ! request ) {
+                        ptr = value;
+                        last_cmd = 1;
+                }
 
-        while ( (str = (prelude_strsep(&request, "."))) ) {                
-                                
                 ent = sscanf(str, "%255[^[][%255[^]]", pname, iname);
                 if ( ent <= 0 ) {
                         snprintf(out, size, "error parsing option path");
-                        break;
-                }
-                
-                if ( str + strlen(str) + 1 == value ) 
-                        ptr = value;
-
-                if ( rtype == PRELUDE_MSG_OPTION_SET )
-                        ret = prelude_option_invoke_set(&context, &last, pname, (ent == 2) ? iname : ptr, out, size);
-                else 
-                        ret = prelude_option_invoke_get(&context, &last, pname, (ent == 2) ? iname : ptr, out, size);
-                
-                if ( ret < 0 ) {
-                        free(prev);
-                        config_close(cfg);
                         return -1;
                 }
 
-                if ( rtype == PRELUDE_MSG_OPTION_SET && prelude_option_get_flags(last) & CFG_HOOK ) 
-                        config_save_value(cfg, last, &prev, pname, (ent == 2) ? iname : ptr);
+                printf("ent=%d last=%d pname=%s %s\n", ent, last_cmd, pname, (ent==2) ? iname : ptr);
+                
+                ret = parse_xxx(&context, &last, last_cmd, rtype, pname, (ent == 2) ? iname : ptr, out, size);
+                if ( ret < 0 )
+                        break;
+                
+                config_save_value(cfg, rtype, last, &prev, pname, (ent == 2) ? iname : ptr);
         }
-
+        
         config_close(cfg);
         free(prev);
         
-        return 0;
+        return ret;
 }
 
 
@@ -124,6 +171,7 @@ static int read_option_request(prelude_client_t *client, prelude_msgbuf_t *msgbu
                         
                 case PRELUDE_MSG_OPTION_SET:
                 case PRELUDE_MSG_OPTION_GET:
+                case PRELUDE_MSG_OPTION_DESTROY:
                         type = tag;
                         break;
                 
@@ -158,9 +206,11 @@ static int read_option_request(prelude_client_t *client, prelude_msgbuf_t *msgbu
                         }
                         
                         ret = parse_request(client, type, request, out, sizeof(out));                        
-                        if ( ret < 0 ) 
-                                prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_ERROR, strlen(out) + 1, out);
-
+                        printf("parse request ret %d: \"%s\" (%d) (%d)\n", ret, out, *out, out[0]);
+                        
+                        if ( ret < 0 )
+                                prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_ERROR, *out ? strlen(out) + 1 : 0, out);
+				
                         else if ( *out )
                                 prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_VALUE, strlen(out) + 1, out);
                         break;
@@ -378,7 +428,11 @@ int prelude_option_recv_reply(prelude_msg_t *msg, uint64_t *source_id, uint32_t 
 
                 case PRELUDE_MSG_OPTION_ERROR:
                         type = PRELUDE_OPTION_REPLY_TYPE_ERROR;
-
+			if ( ! dlen ) {
+				*value = "No error message";	
+				break;
+			}
+			
                         ret = extract_characters_safe((const char **) value, buf, dlen);
                         if ( ret < 0 )
                                 return -1;

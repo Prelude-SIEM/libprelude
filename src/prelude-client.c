@@ -344,7 +344,7 @@ static int set_node_address(void *context, prelude_option_t *opt, const char *ar
         if ( ! addr )
                 return -1;
 
-        prelude_option_instance_new(opt, arg, addr);
+        prelude_option_new_context(opt, arg, addr);
         
         return 0;
 }
@@ -516,7 +516,7 @@ static int setup_options(prelude_client_t *client, int argc, char **argv)
         prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK, 0, "node-category",
                            NULL, required_argument, set_node_category, NULL);
         
-        opt = prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK|ALLOW_MULTIPLE_CALL, 0, "node-address",
+        opt = prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK|HAVE_CONTEXT, 0, "node-address",
                                  NULL, required_argument, set_node_address, NULL);
         
         prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "address",

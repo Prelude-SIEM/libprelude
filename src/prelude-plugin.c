@@ -69,7 +69,7 @@ typedef struct {
         int (*subscribe)(prelude_plugin_instance_t *pc);
         void (*unsubscribe)(prelude_plugin_instance_t *pc);
         
-        int (*init_instance)(prelude_plugin_instance_t *pi);
+        int (*commit_instance)(prelude_plugin_instance_t *pi);
         int (*create_instance)(prelude_plugin_instance_t *pi, prelude_option_t *opt, const char *optarg);
 } plugin_entry_t;
 
@@ -97,7 +97,7 @@ struct prelude_plugin_instance {
         void *data;
         void *private_data;
 
-        prelude_option_instance_t *opt_instance;
+        prelude_option_context_t *opt_context;
         
         char *name;
         const char *infos;
@@ -233,16 +233,45 @@ static int subscribe_instance(prelude_plugin_instance_t *pi)
 
 
 static void destroy_instance(prelude_plugin_instance_t *instance)
-{
-        printf("destroy instance %p\n", instance);
-        
-        prelude_option_instance_destroy(instance->opt_instance);
+{        
+        prelude_option_context_destroy(instance->opt_context);
         
         free(instance->name);
         
         prelude_list_del(&instance->int_list);
 
         free(instance);
+}
+
+
+
+
+static int plugin_desactivate(void *context, prelude_option_t *opt, const char *arg)
+{
+        prelude_plugin_instance_t *pi = pi;
+        
+        if ( ! pi ) {
+                log(LOG_ERR, "referenced instance not available.\n");
+                return -1;
+        }
+
+        /*
+         * destroy plugin data.
+         */
+        pi->entry->plugin->destroy(pi);
+
+        /*
+         * unsubscribe the plugin, only if it is subscribed
+         */
+        if ( pi->already_subscribed )
+                prelude_plugin_unsubscribe(pi);
+        else
+                destroy_instance(pi);
+        
+        /*
+         * so that the plugin commit function is not called after unsubscribtion.
+         */
+        return prelude_option_end;
 }
 
 
@@ -265,16 +294,16 @@ static int intercept_plugin_activation_option(void *context, prelude_option_t *o
                 pi = create_instance(pe, name, NULL);
                 if ( ! pi )
                         return -1;
-
+              
+                pi->opt_context = prelude_option_new_context(opt, name, pi);
+                if ( ! pi->opt_context )
+                        return -1;
+                
                 ret = pi->entry->create_instance(pi, opt, name);
                 if ( ret < 0 )
                         return -1;
                 
-                pi->opt_instance = prelude_option_instance_new(opt, name, pi);
-                if ( ! pi->opt_instance )
-                        return -1;
-                
-                if ( ! pe->init_instance )
+                if ( ! pe->commit_instance )
                         ret = subscribe_instance(pi);
         }
         
@@ -283,28 +312,24 @@ static int intercept_plugin_activation_option(void *context, prelude_option_t *o
 
 
 
-static int intercept_plugin_init_option(void *context, prelude_option_t *opt, const char *name)
+static int intercept_plugin_commit_option(void *context, prelude_option_t *opt)
 {
         int ret;
         plugin_entry_t *pe;
-        prelude_plugin_instance_t *pi;
-        
-        if ( ! context ) {
+        prelude_plugin_instance_t *pi = context;
+	
+        if ( ! pi ) {
                 log(LOG_ERR, "referenced instance not available.\n");
                 return -1;
         }
         
-        pi = context;
         pe = pi->entry;
         
-        ret = pe->init_instance(pi);
+        ret = pe->commit_instance(pi);
         if ( pi->already_subscribed )
                 return ret;
         
-        if ( ret < 0 ) {
-                pe->plugin->destroy(pi);
-                destroy_instance(pi);
-        } else
+        if ( ret == 0 )
                 subscribe_instance(pi);
 
         return ret;
@@ -531,25 +556,27 @@ prelude_plugin_instance_t *prelude_plugin_new_instance(prelude_plugin_generic_t 
                 return NULL;
 
         /*
-         * might be NULL in case the plugin subscribe from the init function.
+         * might be NULL in case the plugin subscribe from the commit function.
          */
         pe->plugin = plugin;
         
         pi = search_instance_from_entry(pe, name);
         if ( ! pi ) {
-                        
+                
                 pi = create_instance(pe, name, NULL);
                 if ( ! pi )
                         return NULL;
 
+#if 0
                 if ( pe->root_opt ) {
-                        pi->opt_instance = prelude_option_instance_new(pe->root_opt, name, pi);
-                        if ( ! pi->opt_instance )
+                        pi->opt_context = prelude_option_context_new(pe->root_opt, name, pi);
+                        if ( ! pi->opt_context )
                                 return NULL;
                 }
                 
                 if ( pe->create_instance && pe->create_instance(pi, NULL, name) < 0 )
                         return NULL;
+#endif
         }
         
         return pi;
@@ -566,73 +593,32 @@ int prelude_plugin_subscribe(prelude_plugin_instance_t *pi)
 
 
 
-static int plugin_desactivate(void *context, prelude_option_t *opt, const char *arg)
-{
-        prelude_plugin_instance_t *pi = context;
-        
-        if ( ! pi ) {
-                log(LOG_ERR, "referenced instance not available.\n");
-                return -1;
-        }
-
-        /*
-         * destroy plugin data.
-         */
-        pi->entry->plugin->destroy(pi);
-
-        /*
-         * unsubscribe the plugin, only if it is subscribed
-         */
-        if ( pi->already_subscribed )
-                prelude_plugin_unsubscribe(pi);
-        else
-                destroy_instance(pi);
-        
-        /*
-         * so that the plugin init function is not called after unsubscribtion.
-         */
-        return prelude_option_end;
-}
-
-
-
-
 int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
-                                         prelude_option_t *opt, int (*init)(prelude_plugin_instance_t *pi))
+                                         prelude_option_t *opt, int (*commit)(prelude_plugin_instance_t *pi))
 {
         int ret = 0;
         plugin_entry_t *pe;
-        prelude_option_t *new;
         
         pe = search_plugin_entry(plugin);        
         if ( ! pe )
                 return -1;
-
-        prelude_option_set_flags(opt, prelude_option_get_flags(opt) | ALLOW_MULTIPLE_CALL);
         
-        new = prelude_option_add(opt, WIDE_HOOK, 0, "unsubscribe",
-                                 "Unsubscribe this plugin", no_argument,
-                                 plugin_desactivate, NULL);
-        if ( ! new )
-                return -1;
-
+        prelude_option_set_destroy_callback(opt, plugin_desactivate);
+        prelude_option_set_flags(opt, prelude_option_get_flags(opt) | HAVE_CONTEXT);
+        
         pe->root_opt = opt;
         pe->create_instance = prelude_option_get_set_callback(opt);
-        
 
         prelude_option_set_get_callback(opt, NULL);
         prelude_option_set_set_callback(opt, intercept_plugin_activation_option);
         prelude_option_set_private_data(opt, pe);
         
         /*
-         * if an initialisation option is given, set it up.
+         * if a commit function is provided, set it up.
          */
-        if ( init ) {
-                new = prelude_option_add_init_func(opt, intercept_plugin_init_option);
-                if ( ! new )
-                        return -1;
-
-                pe->init_instance = init;
+        if ( commit ) {
+                prelude_option_set_commit_callback(opt, intercept_plugin_commit_option);
+                pe->commit_instance = commit;
         }
 
         return ret;
@@ -781,14 +767,14 @@ void prelude_plugin_instance_compute_time(prelude_plugin_instance_t *pi,
 
 
 
-int prelude_plugin_instance_call_init_func(prelude_plugin_instance_t *pi)
+int prelude_plugin_instance_call_commit_func(prelude_plugin_instance_t *pi)
 {
-        return pi->entry->init_instance(pi);
+        return pi->entry->commit_instance(pi);
 }
 
 
 
-int prelude_plugin_instance_have_init_func(prelude_plugin_instance_t *pi)
+int prelude_plugin_instance_has_commit_func(prelude_plugin_instance_t *pi)
 {
-        return (pi->entry->init_instance) ? 1 : 0;
+        return (pi->entry->commit_instance) ? 1 : 0;
 }

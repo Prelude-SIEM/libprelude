@@ -76,5 +76,7 @@
 #define PRELUDE_MSG_OPTION_INPUT_TYPE       15
 #define PRELUDE_MSG_OPTION_ARG              16
 #define PRELUDE_MSG_OPTION_FLAGS            17
+#define PRELUDE_MSG_OPTION_DESTROY          18
+#define PRELUDE_MSG_OPTION_COMMIT           19
 
 #endif /* _LIBPRELUDE_PRELUDE_MESSAGE_ID_H */

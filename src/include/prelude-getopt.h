@@ -34,7 +34,8 @@
 #define CLI_HOOK 0x1 /* Option to be hooked to command line */
 #define CFG_HOOK 0x2 /* Option to be hooked to config file  */
 #define WIDE_HOOK 0x4
-#define ALLOW_MULTIPLE_CALL 0x8
+#define HAVE_CONTEXT 0x8
+#define DESTROY_HOOK 0x20
 
 /*
  * Possible return value for set() callback.
@@ -56,7 +57,7 @@
 
 
 typedef struct prelude_option prelude_option_t;
-typedef struct prelude_option_instance prelude_option_instance_t;
+typedef struct prelude_option_context prelude_option_context_t;
 
 
 typedef enum {
@@ -82,7 +83,6 @@ int prelude_option_wide_send_msg(void *context, prelude_msgbuf_t *msgbuf);
 
 void prelude_option_destroy(prelude_option_t *option);
 
-
 int prelude_option_parse_arguments(void *context, prelude_option_t *option, const char *filename, int argc, char **argv);
 
 
@@ -91,11 +91,6 @@ prelude_option_t *prelude_option_add(prelude_option_t *parent, int flags,
                                      prelude_option_argument_t has_arg,
                                      int (*set)(void *context, prelude_option_t *opt, const char *optarg),
                                      int (*get)(void *context, prelude_option_t *opt, char *buf, size_t size));
-
-
-
-prelude_option_t *prelude_option_add_init_func(prelude_option_t *parent,
-                                               int (*set)(void *context, prelude_option_t *opt, const char *arg));
 
 
 #define OPT_INVAL     0x1
@@ -116,10 +111,15 @@ void prelude_option_set_private_data(prelude_option_t *opt, void *data);
 
 void *prelude_option_get_private_data(prelude_option_t *opt);
 
-int prelude_option_invoke_set(void **context, prelude_option_t **last_opt,
-                              const char *option, const char *value, char *err, size_t size);
 
-int prelude_option_invoke_get(void **context, prelude_option_t **last, const char *option, const char *value, char *buf, size_t len);
+int prelude_option_invoke_commit(void *context, prelude_option_t *opt, const char *value, char *err, size_t size);
+
+int prelude_option_invoke_set(void **context, prelude_option_t *opt, const char *value, char *err, size_t size);
+
+int prelude_option_invoke_get(void *context, prelude_option_t *opt, const char *value, char *buf, size_t size);
+
+int prelude_option_invoke_destroy(void *context, prelude_option_t *opt, const char *value, char *buf, size_t err);
+
 
 /*
  *
@@ -162,17 +162,35 @@ int prelude_option_has_optlist(prelude_option_t *opt);
 
 prelude_option_t *prelude_option_get_parent(prelude_option_t *opt);
 
+
+void prelude_option_set_destroy_callback(prelude_option_t *opt,
+                                         int (*destroy)(void *context, prelude_option_t *opt, const char *arg));
+
+void *prelude_option_get_destroy_callback(prelude_option_t *opt);
+
+
+void prelude_option_set_set_callback(prelude_option_t *opt,
+                                     int (*set)(void *context, prelude_option_t *opt, const char *optarg));
+
 void *prelude_option_get_set_callback(prelude_option_t *opt);
 
-void prelude_option_set_set_callback(prelude_option_t *opt, int (*set)(void *context, prelude_option_t *opt, const char *optarg));
 
 void prelude_option_set_get_callback(prelude_option_t *opt,
                                      int (*get)(void *context, prelude_option_t *opt, char *buf, size_t size));
 
 void *prelude_option_get_get_callback(prelude_option_t *opt);
 
-prelude_option_instance_t *prelude_option_instance_new(prelude_option_t *opt, const char *name, void *data);
 
-void prelude_option_instance_destroy(prelude_option_instance_t *oi);
+void prelude_option_set_commit_callback(prelude_option_t *opt, int (*commit)(void *context, prelude_option_t *opt));
+
+void *prelude_option_get_commit_callback(prelude_option_t *opt);
+
+
+prelude_option_context_t *prelude_option_new_context(prelude_option_t *opt, const char *name, void *data);
+
+void prelude_option_context_destroy(prelude_option_context_t *oc);
+
+
+prelude_option_t *prelude_option_search(prelude_option_t *parent, const char *name, int flags, int walk_children);
 
 #endif /* _LIBPRELUDE_PRELUDE_GETOPT_H */

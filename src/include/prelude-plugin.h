@@ -33,32 +33,32 @@ typedef struct prelude_plugin_instance prelude_plugin_instance_t;
 
 
 
-#define PRELUDE_PLUGIN_OPTION_DECLARE_STRING_CB(prefix, type, name)	 		        \
-static int prefix ## _set_ ## name(void *pi, prelude_option_t *opt, const char *arg)	        \
-{                                                                                               \
-        char *dup;                                                                              \
-        type *ptr = prelude_plugin_instance_get_data(pi);                                       \
-                                                                                                \
- 	dup = strdup(arg);					                                \
-	if ( ! dup ) {   						                        \
-		log(LOG_ERR, "memory exhausted.\n");			                        \
-		return prelude_option_error;				                        \
-	}		                                                                        \
-                                                                                                \
-        if ( ptr->name )						                        \
-		free(ptr->name);			   		                        \
-									                        \
-        ptr->name = dup;                                                                        \
-									                        \
-	return prelude_option_success;					                        \
-}                                                                                               \
-                                                                                                \
-                                                                                                \
-static int prefix ## _get_ ## name(void *pi, prelude_option_t *opt, char *buf, size_t size)     \
-{                                                                                               \
-        type *ptr = prelude_plugin_instance_get_data(pi);                                       \
-        snprintf(buf, size, "%s", ptr->name);                                                   \
-        return prelude_option_success;                                                          \
+#define PRELUDE_PLUGIN_OPTION_DECLARE_STRING_CB(prefix, type, name)                              \
+static int prefix ## _set_ ## name(void *context, prelude_option_t *opt, const char *arg)        \
+{                                                                                                \
+        char *dup;                                                                               \
+        type *ptr = prelude_plugin_instance_get_data(context);                                   \
+                                                                                                 \
+        dup = strdup(arg);                                                                       \
+        if ( ! dup ) {                                                                           \
+                log(LOG_ERR, "memory exhausted.\n");                                             \
+                return prelude_option_error;                                                     \
+        }                                                                                        \
+                                                                                                 \
+        if ( ptr->name )                                                                         \
+                free(ptr->name);                                                                 \
+                                                                                                 \
+        ptr->name = dup;                                                                         \
+                                                                                                 \
+        return prelude_option_success;                                                           \
+}                                                                                                \
+                                                                                                 \
+                                                                                                 \
+static int prefix ## _get_ ## name(void *context, prelude_option_t *opt, char *buf, size_t size) \
+{                                                                                                \
+        type *ptr = prelude_plugin_instance_get_data(context);                                   \
+        snprintf(buf, size, "%s", ptr->name);                                                    \
+        return prelude_option_success;                                                           \
 }
 
 
@@ -115,7 +115,7 @@ typedef struct {
  */
 
 int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
-                                         prelude_option_t *opt, int (*init)(prelude_plugin_instance_t *pi));
+                                         prelude_option_t *opt, int (*commit)(prelude_plugin_instance_t *pi));
 
 int prelude_plugin_subscribe(prelude_plugin_instance_t *pi);
 
@@ -168,9 +168,9 @@ void prelude_plugin_del(prelude_plugin_instance_t *pc);
 void prelude_plugin_instance_compute_time(prelude_plugin_instance_t *pi, struct timeval *start, struct timeval *end);
 
 
-int prelude_plugin_instance_call_init_func(prelude_plugin_instance_t *pi);
+int prelude_plugin_instance_call_commit_func(prelude_plugin_instance_t *pi);
 
-int prelude_plugin_instance_have_init_func(prelude_plugin_instance_t *pi);
+int prelude_plugin_instance_has_commit_func(prelude_plugin_instance_t *pi);
 
 
 /*
@@ -199,4 +199,3 @@ prelude_plugin_generic_t *prelude_plugin_init(void);
 
 
 #endif /* _LIBPRELUDE_PLUGIN_H */
-
