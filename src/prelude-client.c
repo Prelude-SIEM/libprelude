@@ -49,6 +49,7 @@
 #include "prelude-io.h"
 #include "prelude-auth.h"
 #include "prelude-message.h"
+#include "prelude-message-id.h"
 #include "prelude-client.h"
 #include "prelude-getopt.h"
 #include "sensor.h"
@@ -193,19 +194,39 @@ static int inet_connect(const char *addr, unsigned int port)
 static int handle_plaintext_connection(prelude_client_t *client, int sock) 
 {
         int ret;
-        
-        ret = prelude_auth_send(SENSORS_AUTH_FILE, client->fd, client->addr);
+        int ulen, plen;
+        char *user, *pass;
+        prelude_msg_t *msg;
+
+        ret = prelude_auth_read_entry(SENSORS_AUTH_FILE, NULL, &user, &pass);
         if ( ret < 0 ) {
                 log(LOG_INFO,
-                    "\nPlaintext authentication failed. Use the \"manager-adduser\"\n"
-                    "program on the Manager host together with the \"sensor-adduser\"\n"
-                    "program on the Sensor host to create an username for this Sensor.\n");
+                    "\n\ncouldn't get username / password to use for plaintext connection.\n"
+                    "Please use the \"sensor-adduser\" program on the Manager host.\n\n");
+                return -1;
+        }
+        
+        ulen = strlen(user) + 1;
+        plen = strlen(pass) + 1;
+        
+        msg = prelude_msg_new(2, ulen + plen, PRELUDE_MSG_AUTH_PLAINTEXT, 0);
+        if ( ! msg ) {
+                free(user);
+                free(pass);
                 return -1;
         }
 
+        prelude_msg_set(msg, PRELUDE_MSG_AUTH_USERNAME, ulen, user);
+        prelude_msg_set(msg, PRELUDE_MSG_AUTH_PASSWORD, plen, pass);
         prelude_io_set_sys_io(client->fd, sock);
+        
+        ret = prelude_msg_write(msg, client->fd);
+        if ( ret <= 0 )
+                ret = -1;
 
-        return 0;
+        prelude_msg_destroy(msg);
+
+        return ret;
 }
 
 
@@ -216,6 +237,7 @@ static int handle_ssl_connection(prelude_client_t *client, int sock)
 {
         int ret;
         SSL *ssl;
+        prelude_msg_t *msg;
         static int ssl_initialized = 0;
         
         if ( ! ssl_initialized ) {
@@ -225,7 +247,15 @@ static int handle_ssl_connection(prelude_client_t *client, int sock)
                 
                 ssl_initialized = 1;
         }
-                
+        
+        msg = prelude_msg_new(1, 0, PRELUDE_MSG_AUTH, 0);
+        if ( ! msg )
+                return -1;
+
+        prelude_msg_set(msg, PRELUDE_MSG_AUTH_SSL, 0, NULL);
+        prelude_msg_write(msg, client->fd);
+        prelude_msg_destroy(msg);
+        
         ssl = ssl_connect_server(sock);
         if ( ! ssl ) {
                 log(LOG_INFO,
@@ -245,56 +275,52 @@ static int handle_ssl_connection(prelude_client_t *client, int sock)
 
 
 
-static int check_ssl_option(const char *optbuf) 
-{
-#ifdef HAVE_SSL
-        if ( strstr(optbuf, "ssl=supported;") ) {
-                log(LOG_INFO, "- Manager support SSL, initializing SSL subsystem.\n");
-                return 1;
-        } else 
-                log(LOG_INFO, "\t- Manager do not support SSL, not using encryption.\n");
-#endif
-        
-        return 0;
-}
-
-
-
 
 /*
- * Report server should send us a string looking like :
- * xdr=xxx; ssl=xxx;
- *
- * with xxx having the value "supported" or "unsupported"
- *
- * The string have to be terminated with a '\n\0'.
+ * Report server should send us a message containing
+ * information about the kind of connecition it support.
  */
-static int setup_inet_connection(prelude_io_t *fd, int *use_ssl) 
+static int get_manager_setup(prelude_io_t *fd, int *have_ssl, int *have_plaintext) 
 {
-        const char *ssl;
-        int len = 0, ret;
-        char *ptr, buf[1024];
+        int ret;
+        void *buf;
+        uint8_t tag;
+        uint32_t dlen;
+        prelude_msg_t *msg = NULL;
+        prelude_msg_status_t status;
         
-        ret = prelude_io_read_delimited(fd, (void **) &ptr);
-        if ( ret <= 0 ) {
-                log(LOG_ERR, "error waiting for Manager config string.\n");
+        status = prelude_msg_read(&msg, fd);
+        if ( status != prelude_msg_finished ) {
+                log(LOG_ERR, "error reading Manager configuration message.\n");
                 return -1;
         }
-        
-        *use_ssl = check_ssl_option(ptr);
-       
-        free(ptr);
-        
-        ssl = (*use_ssl == 1) ? "yes" : "no";
-        len = snprintf(buf, sizeof(buf), "use_ssl=%s;\n", ssl);
-        
-	ret = prelude_io_write_delimited(fd, buf, ++len);
-	if ( ret != len ) {
-                log(LOG_ERR, "couldn't write config string to Manager.\n");
+
+        if ( prelude_msg_get_tag(msg) != PRELUDE_MSG_AUTH ) {
+                log(LOG_ERR, "Manager didn't sent us any authentication message.\n");
                 return -1;
         }
+
+        while ( (ret = prelude_msg_get(msg, &tag, &dlen, &buf)) ) {
+                
+                switch (tag) {
+
+                case PRELUDE_MSG_AUTH_HAVE_SSL:
+                        *have_ssl = 1;
+                        break;
+
+                case PRELUDE_MSG_AUTH_HAVE_PLAINTEXT:
+                        *have_plaintext = 1;
+                        break;
+
+                default:
+                        log(LOG_ERR, "Invalid authentication tag %d.\n", tag);
+                        goto err;
+                }
+        }
         
-        return 0;
+ err:
+        prelude_msg_destroy(msg);
+        return ret;
 }
 
 
@@ -302,7 +328,7 @@ static int setup_inet_connection(prelude_io_t *fd, int *use_ssl)
 
 static int start_inet_connection(prelude_client_t *client) 
 {
-        int ret = -1, use_ssl, sock;
+        int ret = -1, have_ssl  = 0, have_plaintext = 0, sock;
         
         sock = inet_connect(client->addr, client->port);
         if ( sock < 0 )
@@ -310,20 +336,28 @@ static int start_inet_connection(prelude_client_t *client)
 
         prelude_io_set_sys_io(client->fd, sock);
         
-        ret = setup_inet_connection(client->fd, &use_ssl);
+        ret = get_manager_setup(client->fd, &have_ssl, &have_plaintext);
         if ( ret < 0 ) {
                 close(sock);
                 return -1;
         }
 
-        if ( ! use_ssl ) 
-                ret = handle_plaintext_connection(client, sock);
-#ifdef HAVE_SSL        
-        else {
+#ifdef HAVE_SSL
+        if ( have_ssl ) {
                 ret = handle_ssl_connection(client, sock);
-        } 
+                goto end;
+        }
 #endif
-        
+
+        if ( have_plaintext ) {
+                ret = handle_plaintext_connection(client, sock);
+                goto end;
+        } else {
+                log(LOG_INFO, "couldn't agree on a protocol to use.\n");
+                ret = -1;
+        }
+
+ end:
         if ( ret < 0 )
                 close(sock);
         

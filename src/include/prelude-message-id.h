@@ -27,8 +27,8 @@
 #define PRELUDE_MSG_IDMEF       0
 #define PRELUDE_MSG_OPTION_LIST 1
 #define PRELUDE_MSG_OPTION_SET  2
-
 #define PRELUDE_MSG_ID          3
+#define PRELUDE_MSG_AUTH        4
 
 /*
  * PRELUDE_MSG_ID submessage
@@ -36,4 +36,16 @@
 #define PRELUDE_MSG_ID_REQUEST  0
 #define PRELUDE_MSG_ID_REPLY    1
 #define PRELUDE_MSG_ID_DECLARE  3
+
+
+/*
+ * PRELUDE_MSG_AUTH submessage
+ */
+#define PRELUDE_MSG_AUTH_SSL       0
+#define PRELUDE_MSG_AUTH_PLAINTEXT 1
+#define PRELUDE_MSG_AUTH_HAVE_SSL       2
+#define PRELUDE_MSG_AUTH_HAVE_PLAINTEXT 3
+
+#define PRELUDE_MSG_AUTH_USERNAME  4
+#define PRELUDE_MSG_AUTH_PASSWORD  5
 

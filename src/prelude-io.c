@@ -58,9 +58,9 @@ static ssize_t sys_read(prelude_io_t *pio, void *buf, size_t count)
         ssize_t ret;
 
         do {
-                ret = read(pio->fd, buf, count);
-        } while ( ret <= 0 && (errno == EINTR || errno == EAGAIN) );
-
+                ret = read(pio->fd, buf, count);        
+        } while ( ret < 0 && (errno == EINTR || errno == EAGAIN) );
+        
         return ret;
 }
 
@@ -98,15 +98,15 @@ static int sys_close(prelude_io_t *pio)
  */
 static ssize_t file_read(prelude_io_t *pio, void *buf, size_t count) 
 {
-        ssize_t ret;
-
-        do {
-                ret = fread(buf, count, 1, pio->fd_ptr);
-        } while ( ret <= 0 && errno == EINTR );
-
+        size_t ret;
+        
+        ret = fread(buf, count, 1, pio->fd_ptr);
         if ( ret <= 0 )
                 return ret;
-        
+
+        /*
+         * fread return the number of *item* read.
+         */
         return count;
 }
 
@@ -114,15 +114,15 @@ static ssize_t file_read(prelude_io_t *pio, void *buf, size_t count)
 
 static ssize_t file_write(prelude_io_t *pio, const void *buf, size_t count) 
 {
-        ssize_t ret;
-
-        do {
-                ret = fwrite(buf, count, 1, pio->fd_ptr);
-        } while ( ret < 0 && errno == EINTR );
-
+        size_t ret;
+        
+        ret = fwrite(buf, count, 1, pio->fd_ptr);
         if ( ret <= 0 )
                 return ret;
-        
+
+        /*
+         * fwrite return the number of *item* written.
+         */
         return count;
 }
 

@@ -32,25 +32,3 @@ peer, only if the connection is plaintext.
 @Returns: 
 
 
-<!-- ##### FUNCTION prelude_auth_send ##### -->
-<para>
-
-</para>
-
-@authfile: 
-@fd: 
-@addr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION prelude_auth_recv ##### -->
-<para>
-
-</para>
-
-@authfile: 
-@fd: 
-@addr: 
-@Returns: 
-
-

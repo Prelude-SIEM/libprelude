@@ -34,7 +34,9 @@
 #include "prelude-io.h"
 #include "prelude-auth.h"
 
+#define SALT "Pr"
 
+extern char *crypt(const char *key, const char *salt);
 
 
 
@@ -43,23 +45,11 @@
  * and store the username and password in 'user' and 'pass'
  * passed arguments.
  */
-static int parse_auth_line(char *line, char **addr, char **user, char **pass) 
+static int parse_auth_line(char *line, char **user, char **pass) 
 {
         char *tmp;
         
         tmp = strtok(line, ":");
-        if ( ! tmp ) {
-                log(LOG_ERR, "malformed auth file.\n");
-                return -1;
-        }
-
-        *addr = strdup(tmp);
-        if (! *addr ) {
-                log(LOG_ERR, "couldn't duplicate string.\n");
-                return -1;
-        }
-
-        tmp = strtok(NULL, ":");
         if ( ! tmp ) {
                 log(LOG_ERR, "malformed auth file.\n");
                 return -1;
@@ -93,7 +83,7 @@ static int parse_auth_line(char *line, char **addr, char **user, char **pass)
 /*
  * Read the next entry in the authentication file pointed by fd.
  */
-static int auth_read_entry(FILE *fd, int *line, char **addr, char **user, char **pass) 
+static int auth_read_entry(FILE *fd, int *line, char **user, char **pass) 
 {
         int ret;
         char buf[1024];
@@ -101,7 +91,7 @@ static int auth_read_entry(FILE *fd, int *line, char **addr, char **user, char *
         if ( fgets(buf, sizeof(buf), fd) ) {
                 
                 *line += 1;
-                ret = parse_auth_line(buf, addr, user, pass);
+                ret = parse_auth_line(buf, user, pass);
                 if ( ret < 0 ) {
                         log(LOG_ERR, "couldn't parse line %d.\n", *line);
                         return -1;
@@ -118,15 +108,10 @@ static int auth_read_entry(FILE *fd, int *line, char **addr, char **user, char *
 /*
  *
  */
-static int cmp(const char *given_client, const char *client,
-               const char *given_user, const char *user,
+static int cmp(const char *given_user, const char *user,
                const char *given_pass, const char *pass) 
 {
         int ret;
-        
-        ret = strcmp(given_client, client);
-        if ( ret != 0 )
-                return -1;
         
         ret = strcmp(given_user, user);
         if ( ret != 0 )
@@ -147,12 +132,12 @@ static int cmp(const char *given_client, const char *client,
 /*
  *
  */
-static int check_account(const char *authfile, const char *given_client,
+static int check_account(const char *authfile,
                          const char *given_user, const char *given_pass) 
 {
         FILE *fd;
         int line = 0, ret;
-        char *client, *user, *pass;
+        char *user, *pass;
         
         fd = fopen(authfile, "r");
         if ( ! fd ) {
@@ -160,10 +145,9 @@ static int check_account(const char *authfile, const char *given_client,
                 return -1;
         }
 
-        while ( auth_read_entry(fd, &line, &client, &user, &pass) == 0 ) {                
-                ret = cmp(given_client, client, given_user, user, given_pass, pass);
+        while ( auth_read_entry(fd, &line, &user, &pass) == 0 ) {
+                ret = cmp(given_user, user, given_pass, pass);
                 
-                free(client);
                 free(user);
                 free(pass);
                 
@@ -174,38 +158,6 @@ static int check_account(const char *authfile, const char *given_client,
         }
         
         fclose(fd);
-
-        return -1;
-}
-
-
-
-/*
- *
- */
-static int get_account_infos(prelude_io_t *fd, char **user, char **pass) 
-{
-        int ret;
-
-        ret = prelude_io_read_delimited(fd, (void **) user);
-        if ( ret <= 0 ) {
-                if ( ret < 0 )
-                        log(LOG_ERR, "error reading data.\n");
-                goto err;
-        }
-
-        ret = prelude_io_read_delimited(fd, (void **) pass);
-        if ( ret <= 0 ) {
-                if ( ret < 0 )
-                        log(LOG_ERR, "error reading data.\n");
-                goto err;
-        }
-        
-        return 0;
-
- err:
-        if ( *user ) free(*user);
-        if ( *pass ) free(*pass);
 
         return -1;
 }
@@ -315,7 +267,7 @@ static FILE *open_auth_file(const char *filename)
  * Write new account (consisting of username 'user'
  * and password 'pass' to the authentication file.
  */
-static int write_account(FILE *fd, const char *addr, const char *user, const char *pass) 
+static int write_account(FILE *fd, const char *user, const char *pass) 
 {
         int ret;
         
@@ -325,8 +277,6 @@ static int write_account(FILE *fd, const char *addr, const char *user, const cha
                 return -1;
         }
 
-        fwrite(addr, 1, strlen(addr), fd);
-        fwrite(":", 1, 1, fd);
         fwrite(user, 1, strlen(user), fd);
         fwrite(":", 1, 1, fd);
         fwrite(pass, 1, strlen(pass), fd);
@@ -403,16 +353,16 @@ static char *ask_manager_address(void)
 /*
  * Check if user 'user' already exist.
  */
-static int account_already_exist(FILE *fd, const char *naddr, const char *nuser) 
+static int account_already_exist(FILE *fd, const char *nuser) 
 {
         int line = 0;
-        char *user, *pass, *addr;
+        char *user, *pass;
         
         rewind(fd);
-        while (auth_read_entry(fd, &line, &addr, &user, &pass) == 0 ) {
+        while (auth_read_entry(fd, &line, &user, &pass) == 0 ) {
 
-                if ( strcmp(naddr, addr) == 0 && strcmp(nuser, user) == 0 ) {
-                        fprintf(stderr, "address %s with username %s already exist.\n", naddr, nuser);
+                if ( strcmp(nuser, user) == 0 ) {
+                        fprintf(stderr, "username %s already exist.\n", nuser);
                         return -1;
                 }
         }
@@ -448,34 +398,25 @@ static int comfirm_account_creation(const char *user)
  * Call subroutine in order to create an account,
  * and do all the necessary test to see if it is valid.
  */
-static int ask_account_infos(FILE *fd, char **addr, char **user, char **pass) 
+static int ask_account_infos(FILE *fd, char **user, char **pass) 
 {
         int ret;
-
-        *addr = ask_manager_address();
-        if ( ! *addr ) {
-                fclose(fd);
-                return -1;
-        }
         
         *user = ask_username();
         if ( ! *user ) {
                 fclose(fd);
-                free(*addr);
                 return -1;
         }
 
-        ret = account_already_exist(fd, *addr, *user);
+        ret = account_already_exist(fd, *user);
         if ( ret < 0 ) {
                 fclose(fd);
                 free(*user);
-                free(*addr);
                 return -1;
         }
         
         *pass = ask_password();
         if ( ! *pass ) {
-                free(*addr);
                 free(*user);
                 fclose(fd);
                 return -1;
@@ -489,37 +430,40 @@ static int ask_account_infos(FILE *fd, char **addr, char **user, char **pass)
 /**
  * prelude_auth_create_account:
  * @filename: The filename to store account in.
+ * @¢rypted: Specify wether the password should be crypted using crypt().
  *
  * Ask for a new account creation which will be stored into 'filename'
- * which is the authentication file. crypted mean if the password will
- * be written in a crypted fashion or not.
+ * which is the authentication file. 
  *
  * Returns: 0 on sucess, -1 otherwise
  */
-int prelude_auth_create_account(const char *filename) 
+int prelude_auth_create_account(const char *filename, int crypted) 
 {
         int ret;
         FILE *fd;
-        char *addr, *user, *pass;
+        char *user, *pass, *cpass;
 
         fd = open_auth_file(filename);
         if ( ! fd ) 
                 return -1;
 
-        ret = ask_account_infos(fd, &addr, &user, &pass);
+        ret = ask_account_infos(fd, &user, &pass);
         if ( ret < 0 ) {
                 fclose(fd);
                 return -1;
         }
+
+        if ( crypted )
+                cpass = crypt(pass, SALT);
+        else
+                cpass = pass;
         
         ret = comfirm_account_creation(user);
         if ( ret == 0 ) 
-                write_account(fd, addr, user, pass);
+                write_account(fd, user, cpass);
 
         free(user);
         free(pass);
-        free(addr);
-        
         fclose(fd);
 
         return ret;
@@ -529,75 +473,67 @@ int prelude_auth_create_account(const char *filename)
 
 
 /**
- * prelude_auth_send:
+ * prelude_auth_read_entry:
  * @authfile: Filename containing username/password pair.
- * @fd: Pointer on a #prelude_io_t object where authentication should occur.
- * @addr: Address of the server authentication is sent to.
+ * @wanted_user: Pointer to an username to get entry for or NULL.
+ * @user: Address of a pointer where username should be stored.
+ * @pass: Address of a pointer where password should be stored.
  *
- * prelude_auth_send() get account information from @filename
- * corresponding to server @server, and send them to @sock.
+ * prelude_auth_read_entry() get account information from @authfile,
+ * if @wanted_user is not NULL, it will only return success if @wanted_user
+ * is found.
  *
- * Returns: 0 if authentication was sucessful, -1 otherwise.
+ * Else, the first entry in the file is returned.
+ *
+ * Returns: 0 on success, -1 otherwise.
  */
-int prelude_auth_send(const char *authfile, prelude_io_t *fd, const char *addr) 
+int prelude_auth_read_entry(const char *authfile, const char *wanted_user, char **user, char **pass) 
 {
         FILE *file;
-        int ret, line;
-        char *user, *pass, *client;
-
+        int line = 0;
+        
         file = fopen(authfile, "r");
         if (! file ) {
                 log(LOG_ERR,"couldn't open authentication file %s.\n", authfile);
                 return -1;
         }
 
-        ret = auth_read_entry(file, &line, &client, &user, &pass);
-        if ( ret < 0 )
-                log(LOG_ERR,"couldn't read authentication file %s.\n", authfile);
-        else 
-                ret = do_auth(fd, user, pass);
+        while ( auth_read_entry(file, &line, user, pass) == 0 ) {
+                if ( wanted_user ) {
+                        if ( strcmp(wanted_user, *user) == 0 )
+                                return 0;
+                        else {
+                                free(*user);
+                                free(*pass);
+                        }
+                }
+                
+                else return 0;
+        }
         
-        fclose(file);
-        if (user) free(user);
-        if (pass) free(pass);
-        if (client) free(client);
-        
-        return ret;
+        return -1;
 }
-
 
 
 
 
 /** 
- * prelude_auth_recv:
+ * prelude_auth_check:
  * @authfile: Filename containing username/password pair.
- * @fd: Pointer on a #prelude_io_t object to read authentication from.
- * @addr: Address of the remote host to get login/password associated with.
+ * @user: Pointer on an username.
+ * @pass: Pointer on a password.
  *
- * Authenticate the client sending authentication information on @sock.
+ * Check the @used / @pass pair match an entry in the @authfile file.
  *
  * Returns: 0 on success, -1 if an error occured or authentication failed.
  */
-int prelude_auth_recv(const char *authfile, prelude_io_t *fd, const char *addr) 
+int prelude_auth_check(const char *authfile, const char *user, const char *pass) 
 {
-        int ret;
-        char *user = NULL, *pass = NULL;
-        
-        ret = get_account_infos(fd, &user, &pass);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't read remote authentication informations.\n");
-                return -1;
-        }
-        
-        ret = check_account(authfile, addr, user, pass);
-        if ( ret < 0 )
-                prelude_io_write_delimited(fd, "failed", 6);
-        else
-                prelude_io_write_delimited(fd, "ok", 2);
-        
-        free(user);
-        free(pass);
-        
-        return ret;
+        return check_account(authfile, user, crypt(pass, SALT));
 }
+
+
+
+
+
+

@@ -1,5 +1,33 @@
 2002-01-10  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/include/prelude-message-id.h:
+	added ID for authentication.
+
+	* src/include/prelude-message.h: 
+	* src/include/prelude-io.h: add a Swig entry so that
+	swig know how to generate a wrapper.
+
+	* src/ssl.c (ssl_init_client): 
+	free unused data in case of failure.
+
+	* src/prelude-io.c (sys_write): 
+	(sys_close): don't handle case where read return 0.
+	(file_read): 
+	(file_write): theses one should never set errno to EINTR or EAGAIN.
+
+	* src/prelude-client.c (handle_plaintext_connection): 
+	read authentication message. This is now done throughr prelude-message,
+	not prelude-io directly.
+
+	most of the code reworked cause we use prelude-message everywhere now.
+
+	* src/prelude-auth.c: don't take care of the connecting
+	host anymore. Act as a basic interface to the authentication
+	file. The message reading / writing code is now in the prelude-client /
+	Manager server interface.
+
+	Keep password crypted on the Manager server.
+
 	* src/prelude-io.c (prelude_io_read_delimited): 
 	return -1 on EOF.
 

@@ -77,7 +77,7 @@ SSL *ssl_connect_server(int socket)
  */
 int ssl_init_client(void)
 {
-        int n;
+        int ret;
 	SSL_METHOD *method;
 
         /*
@@ -89,46 +89,49 @@ int ssl_init_client(void)
 	method = SSLv3_client_method();
 
 	ctx = SSL_CTX_new(method);
-	if (!ctx) {
+	if ( ! ctx ) {
 		ERR_print_errors_fp(stderr);
+                ERR_free_strings();
 		return -1;
 	}
 
 	SSL_CTX_set_options(ctx, SSL_OP_NO_SSLv2 | SSL_OP_NO_TLSv1);
 	SSL_CTX_set_verify_depth(ctx, 1);
-
+        
 	/*
          * no callback, mutual authentication.
          */
 	SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, NULL);
         
-	n = SSL_CTX_load_verify_locations(ctx, MANAGERS_CERT, NULL);
-	if (n <= 0) {
-		ERR_print_errors_fp(stderr);
+	ret = SSL_CTX_load_verify_locations(ctx, MANAGERS_CERT, NULL);
+	if ( ret <= 0 ) {
                 log(LOG_INFO, "\nNo Manager certificate available. Please run the "
                     "\"sensor-adduser\" program.\n");
-		return -1;
+                goto err;
 	}
 
-	n = SSL_CTX_use_certificate_file(ctx, SENSORS_KEY, SSL_FILETYPE_PEM);
-	if (n <= 0) {
-		ERR_print_errors_fp(stderr);
-		return -1;
-	}
+	ret = SSL_CTX_use_certificate_file(ctx, SENSORS_KEY, SSL_FILETYPE_PEM);
+	if ( ret <= 0 ) 
+		goto err;
 
-	n = SSL_CTX_use_PrivateKey_file(ctx, SENSORS_KEY, SSL_FILETYPE_PEM);
-	if (n <= 0) {
-		ERR_print_errors_fp(stderr);
-		return -1;
-	}
+	ret = SSL_CTX_use_PrivateKey_file(ctx, SENSORS_KEY, SSL_FILETYPE_PEM);
+	if ( ret <= 0 ) 
+		goto err;
 
-	if (!SSL_CTX_check_private_key(ctx)) {
+	if ( ! SSL_CTX_check_private_key(ctx) ) {
 		fprintf(stderr,
 			"Private key does not match the certificate public key\n");
-		return -1;
+		goto err;
 	}
 
 	return 0;
+
+ err:
+        ERR_print_errors_fp(stderr);
+        SSL_CTX_free(ctx);
+        ERR_free_strings();
+
+        return -1;
 }
 
 #endif

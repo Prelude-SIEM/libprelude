@@ -20,6 +20,22 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
+
+#ifdef SWIG
+
+%module prelude_io
+
+typedef void FILE;
+typedef int size_t;
+typedef int ssize_t;
+typedef unsigned short int uint16_t;
+
+%{
+	#include "prelude-io.h"
+%}
+
+#endif
+
 typedef struct prelude_io prelude_io_t;
 
 /*

@@ -1,3 +1,19 @@
+<TYPEDEF>
+<NAME>FILE</NAME>
+typedef void FILE;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>size_t</NAME>
+typedef int size_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>ssize_t</NAME>
+typedef int ssize_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>uint16_t</NAME>
+typedef unsigned short int uint16_t;
+</TYPEDEF>
 <FUNCTION>
 <NAME>prelude_io_new</NAME>
 <RETURNS>prelude_io_t  *</RETURNS>
@@ -161,6 +177,10 @@ const char *variable
 #define PRELUDE_MSG_ID          3
 </MACRO>
 <MACRO>
+<NAME>PRELUDE_MSG_AUTH</NAME>
+#define PRELUDE_MSG_AUTH        4
+</MACRO>
+<MACRO>
 <NAME>PRELUDE_MSG_ID_REQUEST</NAME>
 #define PRELUDE_MSG_ID_REQUEST  0
 </MACRO>
@@ -171,6 +191,30 @@ const char *variable
 <MACRO>
 <NAME>PRELUDE_MSG_ID_DECLARE</NAME>
 #define PRELUDE_MSG_ID_DECLARE  3
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_AUTH_SSL</NAME>
+#define PRELUDE_MSG_AUTH_SSL       0
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_AUTH_PLAINTEXT</NAME>
+#define PRELUDE_MSG_AUTH_PLAINTEXT 1
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_AUTH_HAVE_SSL</NAME>
+#define PRELUDE_MSG_AUTH_HAVE_SSL       2
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_AUTH_HAVE_PLAINTEXT</NAME>
+#define PRELUDE_MSG_AUTH_HAVE_PLAINTEXT 3
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_AUTH_USERNAME</NAME>
+#define PRELUDE_MSG_AUTH_USERNAME  4
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_AUTH_PASSWORD</NAME>
+#define PRELUDE_MSG_AUTH_PASSWORD  5
 </MACRO>
 <MACRO>
 <NAME>MANAGERS_CERT</NAME>
@@ -196,14 +240,14 @@ int socket
 const char *filename
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_auth_send</NAME>
+<NAME>prelude_auth_check</NAME>
 <RETURNS>int  </RETURNS>
-const char *authfile, prelude_io_t *fd, const char *addr
+const char *authfile, const char *user, const char *pass
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_auth_recv</NAME>
+<NAME>prelude_auth_read_entry</NAME>
 <RETURNS>int  </RETURNS>
-const char *authfile, prelude_io_t *fd, const char *addr
+const char *authfile, const char *wanted_user, char **user, char **pass
 </FUNCTION>
 <MACRO>
 <NAME>idmef_constant</NAME>
@@ -1432,6 +1476,26 @@ typedef struct {
                 idmef_heartbeat_t *heartbeat;
         } message;
         
+</TYPEDEF>
+<TYPEDEF>
+<NAME>size_t</NAME>
+ typedef unsigned int size_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>ssize_t</NAME>
+ typedef int ssize_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>uint8_t</NAME>
+ typedef unsigned char uint8_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>uint16_t</NAME>
+ typedef unsigned short int uint16_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>uint32_t</NAME>
+ typedef unsigned int uint32_t;
 </TYPEDEF>
 <MACRO>
 <NAME>PRELUDE_MSG_PRIORITY_HIGH</NAME>

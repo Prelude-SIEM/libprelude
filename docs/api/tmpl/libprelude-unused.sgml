@@ -381,6 +381,26 @@ thread
 @infos: 
 @Returns: 
 
+<!-- ##### FUNCTION prelude_auth_recv ##### -->
+<para>
+
+</para>
+
+@authfile: 
+@fd: 
+@addr: 
+@Returns: 
+
+<!-- ##### FUNCTION prelude_auth_send ##### -->
+<para>
+
+</para>
+
+@authfile: 
+@fd: 
+@addr: 
+@Returns: 
+
 <!-- ##### FUNCTION prelude_client_get_inet_address ##### -->
 <para>
 

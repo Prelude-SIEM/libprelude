@@ -47,7 +47,7 @@ int main(int argc, char **argv)
         
         ret = strcmp(buf, "plaintext");
         if ( ret == 0 )
-                ret = prelude_auth_create_account(SENSORS_AUTH_FILE);
+                ret = prelude_auth_create_account(SENSORS_AUTH_FILE, 0);
         else {
 #ifdef HAVE_SSL
                 ret = ssl_add_certificate();

@@ -21,8 +21,8 @@
 *
 *****/
 
-int prelude_auth_create_account(const char *filename);
+int prelude_auth_create_account(const char *filename, int crypted);
 
-int prelude_auth_send(const char *authfile, prelude_io_t *fd, const char *addr);
+int prelude_auth_check(const char *authfile, const char *user, const char *pass);
 
-int prelude_auth_recv(const char *authfile, prelude_io_t *fd, const char *addr);
+int prelude_auth_read_entry(const char *authfile, const char *wanted_user, char **user, char **pass);
