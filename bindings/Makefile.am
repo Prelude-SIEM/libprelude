@@ -21,9 +21,14 @@ endif
 perl/Makefile: perl/Makefile.PL
 	cd perl && perl Makefile.PL
 
+
+# proxy classes are an option for swig <= 1.3.19 and are activated by default with swig > 1.3.19
+# as we don't want proxy classes, we must explicitly tell swig > 1.3.19 (that support the -noproxy option)
+# to not generate them
 perl/Prelude.c: libprelude.i
 if HAVE_SWIG
-	swig -I$(top_srcdir)/src/include -o $@ -perl5 -nopm $<
+	swig -I$(top_srcdir)/src/include -o $@ -perl5 -nopm \
+	 `swig -perl5 -help 2>&1 | grep noproxy > /dev/null && echo -noproxy` $<
 endif
 
 python/_prelude.c: libprelude.i
