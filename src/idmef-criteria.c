@@ -100,8 +100,7 @@ static int is_non_linear_time_contiguous(idmef_criterion_value_non_linear_time_t
 
 	for ( cnt = start + 1;
 	      cnt < sizeof (time_parts) / sizeof (time_parts[0]) && time_parts[cnt] != -1;
-	      cnt++ )
-			;
+	      cnt++ );
 
 	for ( cnt += 1; cnt < sizeof (time_parts) / sizeof (time_parts[0]); cnt++ )
 		if ( time_parts[cnt] != -1 )
@@ -190,8 +189,8 @@ idmef_criterion_t *idmef_criterion_new(idmef_object_t *object,
                                        idmef_value_relation_t relation)
 {
 	idmef_criterion_t *criterion;
-
-	if ( idmef_criterion_check(object, value, relation) < 0 )
+        
+	if ( value && idmef_criterion_check(object, value, relation) < 0 )
 		return NULL;
 
 	criterion = calloc(1, sizeof(*criterion));
@@ -316,7 +315,7 @@ int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message
 	
 	value = idmef_message_get(message, criterion->object);
 	if ( ! value ) 
-		return -1;
+		return (criterion->relation == IDMEF_VALUE_RELATION_IS_NULL) ? 0 : -1;
         
 	switch ( idmef_criterion_value_get_type(criterion->value) ) {
                 
