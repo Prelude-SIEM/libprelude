@@ -1,3 +1,10 @@
+2001-08-28  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/include/alert.h: include inttypes.h
+	alert_t now contain a pointer on the private sensor
+	data, and a 8 bits integer representing the kind of
+	data it is.
+
 2001-08-26  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
         * src/libprelude/config-engine.c (cmp_entry): 

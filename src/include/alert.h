@@ -24,9 +24,11 @@
 #ifndef ALERT_H
 #define ALERT_H
 
+#include <inttypes.h>
 #include "list.h"
 #include "plugin-common.h"
 #include "timer.h"
+
 
 typedef enum { normal, maybe_faked, maybe_not_reliable, guess } rkind_t;
 
@@ -57,7 +59,8 @@ typedef struct {
         /*
          * Received packet.
          */
-        void *data;
+        uint8_t sensor_data_id;
+        void *sensor_data;
 } alert_t;
 
 
