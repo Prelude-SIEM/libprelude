@@ -1,3 +1,8 @@
+***
+* Using this file is deprecated, use svn log.
+***
+
+
 2004-02-08  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* src/common.c (prelude_get_gmt_offset): 

@@ -5,7 +5,7 @@
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 * Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 *
-* This file is part of the Prelude program.
+* This file is part of the Prelude library.
 *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,9 @@
 #include "prelude-string.h"
 #include "prelude-msg.h"
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
 typedef enum {
         IDMEF_ADDITIONAL_DATA_TYPE_ERROR = -1,
         IDMEF_ADDITIONAL_DATA_TYPE_STRING = 0,
@@ -1690,6 +1693,10 @@ int idmef_message_new_heartbeat(idmef_message_t *ptr, idmef_heartbeat_t **ret);
 void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg);
 
 prelude_msg_t *idmef_message_get_pmsg(idmef_message_t *message);
+
+#ifdef __cplusplus
+  }
+#endif
 #define IDMEF_CLASS_ID_ADDITIONAL_DATA_TYPE 3
 #define IDMEF_CLASS_ID_ADDITIONAL_DATA 4
 #define IDMEF_CLASS_ID_REFERENCE_ORIGIN 5

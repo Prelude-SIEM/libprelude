@@ -1,7 +1,7 @@
 # Copyright (C) 2003, 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
 # Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 #
-# This file is part of the Prelude program.
+# This file is part of the Prelude library.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ sub	header
 * Author: Yoann Vandoorselaere <yoann.v\@prelude-ids.com>
 * Author: Nicolas Delon <nicolas.delon\@prelude-ids.com>
 *
-* This file is part of the Prelude program.
+* This file is part of the Prelude library.
 *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -65,6 +65,9 @@ sub	header
 #include \"prelude-string.h\"
 #include \"prelude-msg.h\"
 
+#ifdef __cplusplus
+  extern \"C\" \{
+#endif
 ");
 }
 
@@ -76,6 +79,10 @@ sub	footer
 void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg);
 
 prelude_msg_t *idmef_message_get_pmsg(idmef_message_t *message);
+
+#ifdef __cplusplus
+  }
+#endif
 ");
 
     $self->output("#define $_->[0] $_->[1]\n") foreach ( @{ $self->{type_list} } );

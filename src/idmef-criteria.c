@@ -3,7 +3,7 @@
 * Copyright (C) 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
-* This file is part of the Prelude program.
+* This file is part of the Prelude library.
 *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -106,7 +106,7 @@ const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t op)
 int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
                         idmef_criterion_value_t *value, idmef_criterion_operator_t op)
 {
-        if ( ! value && operator != IDMEF_CRITERION_OPERATOR_IS_NULL && operator != IDMEF_CRITERION_OPERATOR_IS_NOT_NULL )
+        if ( ! value && op != IDMEF_CRITERION_OPERATOR_IS_NULL && op != IDMEF_CRITERION_OPERATOR_IS_NOT_NULL )
                 return -1;
         
 	*criterion = calloc(1, sizeof(**criterion));
@@ -115,7 +115,7 @@ int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
 
 	(*criterion)->path = path;
 	(*criterion)->value = value;
-	(*criterion)->operator = operator;
+	(*criterion)->operator = op;
 
 	return 0;
 }

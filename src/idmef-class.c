@@ -4,7 +4,7 @@
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 * Author: Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
 *
-* This file is part of the Prelude program.
+* This file is part of the Prelude library.
 *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
