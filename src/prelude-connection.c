@@ -130,12 +130,21 @@ static int connection_write_msgbuf(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
 
 
 static void auth_error(prelude_connection_t *cnx, prelude_client_profile_t *cp) 
-{        
+{
+        char *tmp;
+
+        tmp = strrchr(cnx->daddr, ':');
+        if ( tmp )
+                *tmp = '\0';
+        
         prelude_log(PRELUDE_LOG_WARN, "\nTLS authentication failed. Please run :\n"
                     "prelude-adduser register %s %s --uid %d --gid %d\n"
                     "program on the sensor host to create an account for this sensor.\n\n",
                     prelude_client_profile_get_name(cp), cnx->daddr,
                     prelude_client_profile_get_uid(cp), prelude_client_profile_get_gid(cp));
+
+        if ( tmp )
+                *tmp = ':';
 }
 
 
@@ -592,6 +601,9 @@ int prelude_connection_recv(prelude_connection_t *cnx, prelude_msg_t **msg)
 
         ret = prelude_msg_read(msg, cnx->fd);
         if ( ret < 0 ) {
+                if ( prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN )
+                        return ret;
+                
                 close_connection_fd(cnx);
                 return ret;
         }
