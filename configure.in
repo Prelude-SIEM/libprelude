@@ -137,58 +137,10 @@ dnl **************************************************
 dnl * Check for Pthread library                      *
 dnl **************************************************
 
-pthrlib=no
-
-for dir in /usr /usr/local /usr/pkg; do
-	AC_CHECK_FILE($dir/lib/libpthread.so, pthread_lib_dir=$dir)
-	AC_CHECK_FILE($dir/lib/libpthread.dylib, pthread_lib_dir=$dir)
-	AC_CHECK_FILE($dir/lib/libpthread.a, pthread_lib_dir=$dir)
-	AC_CHECK_FILE($dir/include/pthread.h, pthread_include_dir=$dir)
-done
-
-if test $pthread_include_dir = /usr; then
-	pthread_include=""
-else
-	pthread_include="-I$pthread_include/include"
-fi
-
-if test -n "$pthread_lib_dir"; then
-	pthrlib=yes
-	libprelude_libs="$libprelude_libs -L$pthread_lib_dir/lib -lpthread"
-	pthread_cflags="$pthread_include -D_REENTRANT"
-else
-	AC_MSG_CHECKING(whether ${CC-cc} accepts -pthread)
-
-	CFLAGS_bak=$CFLAGS
-	CFLAGS="$CFLAGS -pthread"
-
-	cat > conftest.c << EOF 
-
-	int main(void)
-	{
-		exit(0);
-	}
-EOF
-
-
-	${CC-cc} -o conftest $CFLAGS $CPPFLAGS $LDFLAGS conftest.c $LIBS >/dev/null 2>&1
-	CFLAGS=$CFLAGS_bak
-	if test -x conftest; then
-		pthrlib=yes
-		libprelude_libs="$libprelude_libs -pthread"
-		pthread_cflags="$pthread_cflags -D_THREAD_SAFE -D_REENTRANT $pthread_include"
-		
-		rm -f conftest
-		AC_MSG_RESULT(yes)
-	else
-		AC_MSG_RESULT(no)
-	fi
-fi
-
-if test x$pthrlib != xyes; then
-	AC_MSG_ERROR(couldn't find POSIX thread library)
-fi
-
+ACX_PTHREAD(, AC_MSG_ERROR(couldn't find suitable pthread implementation))
+libprelude_libs="$libprelude_libs"
+libprelude_cflags="$libprelude_cflags"
+CC="$PTHREAD_CC"
 
 
 dnl **************************************************

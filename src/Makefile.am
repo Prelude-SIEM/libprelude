@@ -3,11 +3,11 @@ INCLUDES = -I$(top_srcdir) -I$(srcdir)/include @INCLTDL@
 
 DEFS = 	-DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\"	\
 	-DPRELUDE_SPOOL_DIR=\"@prelude_spool_dir@\" 	\
-	@libprelude_cflags@ @pthread_cflags@
+	@libprelude_cflags@ @PTHREAD_CFLAGS@
 
 libpreludeincludedir = $(includedir)/
-libprelude_la_LIBADD = @libprelude_libs@ @LIBLTDL@
-libprelude_la_LDFLAGS = -no-undefined -version-info @libprelude_soname@
+libprelude_la_LIBADD = @libprelude_libs@ @LIBLTDL@ @PTHREAD_LIBS@
+libprelude_la_LDFLAGS = -no-undefined -version-info @libprelude_soname@ @PTHREAD_CFLAGS@
 lib_LTLIBRARIES = libprelude.la
 
 AM_YFLAGS = -d
