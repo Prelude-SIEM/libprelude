@@ -71,7 +71,7 @@ IDMEF_ADDITIONAL_DATA_DECL(IDMEF_DATA_TYPE_BYTE, byte, IDMEF_ADDITIONAL_DATA_TYP
 IDMEF_ADDITIONAL_DATA_DECL(IDMEF_DATA_TYPE_CHAR, char, IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER, char, character)
 
 
-static struct {
+static const struct {
 	idmef_additional_data_type_t ad_type;
 	idmef_data_type_t d_type;
 	size_t len;
