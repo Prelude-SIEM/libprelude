@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 1998,1999,2000 Vandoorselaere Yoann
+* Copyright (C) 1998,1999,2000 Yoann Vandoorselaere
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
