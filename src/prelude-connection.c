@@ -616,8 +616,6 @@ prelude_connection_t *prelude_connection_new(prelude_client_t *client, const cha
         new = malloc(sizeof(*new));
         if ( ! new )
                 return NULL;
-
-        printf("addr=%s\n", addr);
         
         if ( strcmp(addr, "unix") != 0 ) {
                 ret = resolve_addr(new, addr, port);
@@ -634,8 +632,6 @@ prelude_connection_t *prelude_connection_new(prelude_client_t *client, const cha
         new->daddr = strdup(addr);
         new->dport = port;
         new->state = 0;
-
-        printf("ret %p\n", new);
         
         return new;
 }
