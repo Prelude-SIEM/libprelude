@@ -1,3 +1,11 @@
+2003-12-18  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
+	* src/prelude-strbuf.c:
+	* src/include/prelude-strbuf.h:
+	(prelude_strbuf_cat)
+	(prelude_strbuf_ncat)
+	new functions
+
 2003-12-16  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
 	* src/idmef-value-type.c:

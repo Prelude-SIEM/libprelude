@@ -27,22 +27,21 @@
 typedef struct prelude_strbuf prelude_strbuf_t;
 
 prelude_strbuf_t *prelude_strbuf_new(void);
+void prelude_strbuf_destroy(prelude_strbuf_t *s);
 
 int prelude_strbuf_sprintf(prelude_strbuf_t *s, const char *fmt, ...);
-
 int prelude_strbuf_vprintf(prelude_strbuf_t *s, const char *fmt, va_list ap);
+
+int prelude_strbuf_cat(prelude_strbuf_t *s, const char *str);
+int prelude_strbuf_ncat(prelude_strbuf_t *s, const char *str, size_t len);
 
 void prelude_strbuf_dont_own(prelude_strbuf_t *s);
 
 size_t prelude_strbuf_get_len(prelude_strbuf_t *s);
-
 char *prelude_strbuf_get_string(prelude_strbuf_t *s);
 
 int prelude_strbuf_is_empty(prelude_strbuf_t *s);
-
 void prelude_strbuf_clear(prelude_strbuf_t *s);
-
-void prelude_strbuf_destroy(prelude_strbuf_t *s);
 
 #endif /* _LIBPRELUDEDB_STRBUF_H */
 

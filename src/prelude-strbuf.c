@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <string.h>
 
 #include "prelude-log.h"
 
@@ -74,11 +75,28 @@ prelude_strbuf_t *prelude_strbuf_new(void)
 
 
 
+static int allocate_one_more_chunk(prelude_strbuf_t *s)
+{
+	char *ptr;
+
+	ptr = realloc(s->buf, s->size + CHUNK_SIZE);
+        if ( ! ptr ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                s->buf[s->size - 1] = '\0';
+                return -1;
+        }
+
+        s->buf = ptr;
+        s->size += CHUNK_SIZE;
+
+	return 0;
+}
+
+
 
 int prelude_strbuf_vprintf(prelude_strbuf_t *s, const char *fmt, va_list ap)
 {
         int ret;
-        char *ptr;
         
         ret = vsnprintf(s->buf + s->index, s->size - s->index, fmt, ap);
         
@@ -98,19 +116,11 @@ int prelude_strbuf_vprintf(prelude_strbuf_t *s, const char *fmt, va_list ap)
                 return ret;
         }
 
-        ptr = realloc(s->buf, s->size + CHUNK_SIZE);
-        if ( ! ptr ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                s->buf[s->size - 1] = '\0';
-                return -1;
-        }
-		
-        s->buf = ptr;
-        s->size += CHUNK_SIZE;
+	if ( allocate_one_more_chunk(s) < 0 )
+		return -1;
 
         return prelude_strbuf_vprintf(s, fmt, ap);
 }
-
 
 
 
@@ -128,11 +138,34 @@ int prelude_strbuf_sprintf(prelude_strbuf_t *s, const char *fmt, ...)
 
 
 
+int prelude_strbuf_ncat(prelude_strbuf_t *s, const char *str, size_t len)
+{
+	if ( len < s->size - s->index ) {
+		memcpy(s->buf + s->index, str, len);
+		s->index += len;
+		s->buf[s->index] = 0;
+		return len;
+	}
+
+	if ( allocate_one_more_chunk(s) < 0 )
+		return -1;
+
+	return prelude_strbuf_ncat(s, str, len);
+}
+
+
+
+int prelude_strbuf_cat(prelude_strbuf_t *s, const char *str)
+{
+	return prelude_strbuf_ncat(s, str, strlen(str));
+}
+
+
+
 void prelude_strbuf_dont_own(prelude_strbuf_t *s)
 {
         s->flags &= ~STRBUF_OWN_DATA;
 }
-
 
 
 
@@ -154,7 +187,6 @@ int prelude_strbuf_is_empty(prelude_strbuf_t *s)
 {
 	return (s->index == 0) ? 0 : -1;
 }
-
 
 
 
