@@ -50,10 +50,6 @@
 #include "prelude-failover.h"
 #include "prelude-error.h"
 
-
-#define other_error -2
-#define communication_error -1
-
 #define INITIAL_EXPIRATION_TIME 10
 #define MAXIMUM_EXPIRATION_TIME 3600
 
@@ -87,12 +83,9 @@ typedef struct cnx_list {
 typedef struct cnx {
         struct cnx *and;
         
-        prelude_list_t list;
-
         /*
          * Timer for client reconnection.
          */
-        int flags;
         prelude_timer_t timer;
         
         prelude_failover_t *failover;
@@ -111,10 +104,7 @@ typedef struct cnx {
 
 
 struct prelude_connection_mgr {
-
         int dead;
-        
-        void (*notify_cb)(prelude_list_t *clist);
         
         cnx_list_t *or_list;
         prelude_failover_t *failover;
@@ -122,22 +112,52 @@ struct prelude_connection_mgr {
         int nfd;
         fd_set fds;
 
-        prelude_client_t *client;
         char *connection_string;
-        prelude_bool_t connection_string_changed;
+        prelude_connection_capability_t capability;
         
+        prelude_client_profile_t *client_profile;
+        prelude_connection_mgr_flags_t flags;
+        prelude_bool_t connection_string_changed;
+
+        prelude_bool_t timer_started;
         prelude_timer_t timer;
         prelude_list_t all_cnx;
+
+        void *data;
+        
+        prelude_connection_mgr_event_t wanted_event;
+        
+        int (*event_listed_handler)(prelude_connection_mgr_t *mgr,
+                                    prelude_connection_mgr_event_t event,
+                                    prelude_list_t *clist);
+        
+        int (*event_handler)(prelude_connection_mgr_t *mgr,
+                             prelude_connection_mgr_event_t event,
+                             prelude_connection_t *connection);
 };
 
 
 
-static void init_cnx_timer(cnx_t *cnx)
+static void notify_event(prelude_connection_mgr_t *mgr,
+                         prelude_connection_mgr_event_t event,
+                         prelude_connection_t *connection)
 {
-        if ( cnx->flags & PRELUDE_CONNECTION_MGR_USE_TIMER ) {
-                cnx->flags |= PRELUDE_CONNECTION_MGR_TIMER_IN_USE;
+        if ( ! (event & mgr->wanted_event) )
+                return;
+        
+        if ( mgr->event_handler )
+                mgr->event_handler(mgr, event, connection);
+
+        if ( mgr->event_listed_handler )
+                mgr->event_listed_handler(mgr, event, &mgr->all_cnx);
+}
+
+
+
+static void init_cnx_timer(cnx_t *cnx)
+{        
+        if ( cnx->parent->parent->flags & PRELUDE_CONNECTION_MGR_FLAGS_RECONNECT ) 
                 prelude_timer_init(&cnx->timer);
-        }
 }
 
 
@@ -152,8 +172,8 @@ static void connection_list_destroy(cnx_list_t *clist)
                 for ( cnx = clist->and; cnx != NULL; cnx = bkp ) {
                         bkp = cnx->and;
 
-                        if ( cnx->flags & PRELUDE_CONNECTION_MGR_TIMER_IN_USE )
-                                prelude_timer_destroy(&cnx->timer);
+                        if ( ! (prelude_connection_get_state(cnx->cnx) & PRELUDE_CONNECTION_ESTABLISHED) )
+                             prelude_timer_destroy(&cnx->timer);
 
                         prelude_linked_object_del((prelude_linked_object_t *) cnx->cnx);
 
@@ -180,10 +200,9 @@ static void notify_dead(cnx_t *cnx)
 
         clist->dead++;
         init_cnx_timer(cnx);
-        
-        if ( clist->parent->notify_cb )
-                clist->parent->notify_cb(&clist->parent->all_cnx);
 
+        notify_event(clist->parent, PRELUDE_CONNECTION_MGR_EVENT_DEAD, cnx->cnx);
+        
         fd = prelude_io_get_fd(prelude_connection_get_fd(cnx->cnx));
         FD_CLR(fd, &clist->parent->fds);
 }
@@ -199,35 +218,6 @@ static void expand_timeout(prelude_timer_t *timer)
 
 
 
-
-static int process_request(prelude_connection_t *cnx) 
-{
-        int ret;
-        uint8_t tag;
-        prelude_io_t *fd;
-        prelude_msg_t *msg = NULL;
-
-        fd = prelude_connection_get_fd(cnx);
-        
-        ret = prelude_msg_read(&msg, fd);
-        if ( ret < 0 ) {
-                log(LOG_INFO, "error reading input message - %s: %s.\n", prelude_strsource(ret), prelude_strerror(ret));
-                return ret;
-        }
-        
-        tag = prelude_msg_get_tag(msg);
-        
-        if ( tag == PRELUDE_MSG_OPTION_REQUEST )
-                prelude_option_process_request(prelude_connection_get_client(cnx), fd, msg);
-        
-        prelude_msg_destroy(msg);
-
-        return 0;
-}
-
-
-
-
 static void check_for_data_cb(void *arg)
 {
         fd_set rfds;
@@ -236,19 +226,7 @@ static void check_for_data_cb(void *arg)
         prelude_list_t *tmp;
         prelude_connection_t *cnx;
         prelude_connection_mgr_t *mgr = (prelude_connection_mgr_t *) arg;
-
-        /*
-         * Thread care - in case timers are ran asynchronously.
-         *
-         * - mgr->nfd and mgr->fds can be read without lock,
-         *   as they are only modified at initialisation time or
-         *   from within a timer (so it's serialized then).
-         *
-         * - process_request() should be okay, even if the connection is
-         *   killed (disconnection) at the same time it's called.
-         *
-         * - The problem now arise with option callback.
-         */
+        
         tv.tv_sec = 0;
         tv.tv_usec = 0;
         rfds = mgr->fds;
@@ -271,8 +249,8 @@ static void check_for_data_cb(void *arg)
                 if ( ! ret )
                         continue;
                 
-                ret = process_request(cnx);                
-                if ( ret < 0 ) 
+                ret = mgr->event_handler(mgr, PRELUDE_CONNECTION_MGR_EVENT_INPUT, cnx);
+                if ( ret < 0 )
                         FD_CLR(fd, &mgr->fds);
         }
 
@@ -294,12 +272,16 @@ static int broadcast_message(prelude_msg_t *msg, cnx_list_t *clist, cnx_t *cnx)
                 return 0;
         
         if ( prelude_connection_get_state(cnx->cnx) & PRELUDE_CONNECTION_ESTABLISHED ) {
-                ret = prelude_connection_send_msg(cnx->cnx, msg);                
-                if ( ret < 0 ) 
+                ret = prelude_connection_send(cnx->cnx, msg);                
+                if ( ret < 0 ) {
+                        prelude_perror(ret, "could not send message to %s:%hu",
+                                       prelude_connection_get_daddr(cnx->cnx), prelude_connection_get_dport(cnx->cnx));
                         notify_dead(cnx);
+                }
+                
         }
 
-        if ( ret < 0 ) 
+        if ( ret < 0 )
                 prelude_failover_save_msg(cnx->failover, msg);
         
         return broadcast_message(msg, clist, cnx->and);
@@ -327,7 +309,7 @@ static int walk_manager_lists(prelude_connection_mgr_t *cmgr, prelude_msg_t *msg
                 if ( ret == 0 )  /* AND of Manager emission succeed */
                         return 0;
         }
-        
+
         prelude_failover_save_msg(cmgr->failover, msg);
         
         return ret;
@@ -338,9 +320,9 @@ static int walk_manager_lists(prelude_connection_mgr_t *cmgr, prelude_msg_t *msg
 static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t *cnx)
 {
         char name[128];
-        ssize_t size, ret;
         prelude_msg_t *msg;
         size_t totsize = 0;
+        ssize_t size, ret = 0;
         unsigned int available, count = 0;
         
         available = prelude_failover_get_available_msg_count(failover);
@@ -367,9 +349,12 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
                 if ( clist )
                         ret = broadcast_message(msg, clist, clist->and);
                 else {
-                        ret = prelude_connection_send_msg(cnx->cnx, msg);
-                        if ( ret < 0 )
+                        ret = prelude_connection_send(cnx->cnx, msg);
+                        if ( ret < 0 ) {
+                                prelude_perror(ret, "could not send message to %s:%hu",
+                                       prelude_connection_get_daddr(cnx->cnx), prelude_connection_get_dport(cnx->cnx));
                                 notify_dead(cnx);
+                        }
                 }
                 
                 prelude_msg_destroy(msg);
@@ -385,7 +370,7 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
         log(LOG_INFO, "- %s from failover: %u/%u messages flushed (%u bytes).\n",
             (count == available) ? "Recovered" : "Failed recovering", count, available, totsize);
         
-        return 0;
+        return ret;
 }
 
 
@@ -399,9 +384,13 @@ static void connection_timer_expire(void *data)
         int ret, fd;
         cnx_t *cnx = data;
         prelude_connection_mgr_t *mgr = cnx->parent->parent;
-                
-        ret = prelude_connection_connect(cnx->cnx);
+        
+        ret = prelude_connection_connect(cnx->cnx, mgr->client_profile, mgr->capability);
         if ( ret < 0 ) {
+                prelude_perror(ret, "could not connect to %s:%hu",
+                               prelude_connection_get_daddr(cnx->cnx),
+                               prelude_connection_get_dport(cnx->cnx));
+                
                 /*
                  * Connection failed:
                  * expand the current timeout and reset the timer.
@@ -414,20 +403,19 @@ static void connection_timer_expire(void *data)
                  * Connection succeed:
                  * Destroy the timer, and if no client in the AND list
                  * is dead, emit backuped report.
-                 */
+                 */                
                 cnx->parent->dead--;
                 prelude_timer_destroy(&cnx->timer);
-                
-                if ( mgr->notify_cb )
-                        mgr->notify_cb(&mgr->all_cnx);
-                
+
+                notify_event(mgr, PRELUDE_CONNECTION_MGR_EVENT_ALIVE, cnx->cnx);
+                                
                 ret = failover_flush(cnx->failover, NULL, cnx);
-                if ( ret == communication_error ) 
+                if ( ret < 0 ) 
                         return;
                 
                 if ( cnx->parent->dead == 0 ) {
                         ret = failover_flush(mgr->failover, cnx->parent, NULL);
-                        if ( ret == communication_error )
+                        if ( ret < 0 )
                                 return;
                 }
                 
@@ -465,7 +453,7 @@ static void parse_address(char *addr, uint16_t *port)
 
 
 
-static cnx_t *new_connection(prelude_client_t *client, cnx_list_t *clist,
+static cnx_t *new_connection(prelude_client_profile_t *cp, cnx_list_t *clist,
                              prelude_connection_t *cnx, prelude_connection_mgr_flags_t flags) 
 {
         cnx_t *new;
@@ -477,15 +465,15 @@ static cnx_t *new_connection(prelude_client_t *client, cnx_list_t *clist,
                 log(LOG_ERR, "memory exhausted.\n");
                 return NULL;
         }
-
-        new->flags = flags;
         
-        if ( flags & PRELUDE_CONNECTION_MGR_USE_TIMER ) {
-                prelude_timer_set_data(&new->timer, new);        
+        new->parent = clist;
+
+        if ( flags & PRELUDE_CONNECTION_MGR_FLAGS_RECONNECT ) {
+                prelude_timer_set_data(&new->timer, new);
                 prelude_timer_set_expire(&new->timer, INITIAL_EXPIRATION_TIME);
                 prelude_timer_set_callback(&new->timer, connection_timer_expire);
         }
-
+        
         state = prelude_connection_get_state(cnx);
         
         if ( ! (state & PRELUDE_CONNECTION_ESTABLISHED) ) {
@@ -499,20 +487,19 @@ static cnx_t *new_connection(prelude_client_t *client, cnx_list_t *clist,
         
         new->cnx = cnx;
         new->and = NULL;
-        new->parent = clist;
 
-        prelude_client_get_backup_filename(client, buf, sizeof(buf));
+        prelude_client_profile_get_backup_dirname(cp, buf, sizeof(buf));
         snprintf(dirname, sizeof(dirname), "%s/%s:%u", buf,
                  prelude_connection_get_daddr(cnx), prelude_connection_get_dport(cnx));
         
-        new->failover = prelude_failover_new(dirname);
-        if ( ! new->failover ) 
+        ret = prelude_failover_new(&new->failover, dirname);
+        if ( ret < 0 ) 
                 return NULL;
         
         if ( state & PRELUDE_CONNECTION_ESTABLISHED )
                 ret = failover_flush(new->failover, NULL, new);
-        
-        prelude_linked_object_add((prelude_linked_object_t *) new->cnx, &clist->parent->all_cnx);
+
+        prelude_linked_object_add((prelude_linked_object_t *) cnx, &clist->parent->all_cnx);
 
         return new;
 }
@@ -520,26 +507,42 @@ static cnx_t *new_connection(prelude_client_t *client, cnx_list_t *clist,
 
 
 
-static cnx_t *new_connection_from_address(prelude_client_t *client, cnx_list_t *clist, char *addr) 
+static cnx_t *new_connection_from_address(prelude_client_profile_t *cp, cnx_list_t *clist,
+                                          char *addr, prelude_connection_mgr_flags_t flags) 
 {
         int ret;
         cnx_t *new;
         uint16_t port;
         prelude_connection_t *cnx;
-
+        prelude_connection_mgr_event_t event;
+        prelude_connection_mgr_t *mgr = clist->parent;
+        
         parse_address(addr, &port);
         
-        cnx = prelude_connection_new(client, addr, port);
-        if ( ! cnx ) 
+        ret = prelude_connection_new(&cnx, addr, port);        
+        if ( ret < 0 ) {
+                log(LOG_ERR, "%s: %s\n", prelude_strsource(ret), prelude_strerror(ret));
                 return NULL;
+        }
 
-        ret = prelude_connection_connect(cnx);
+        event = PRELUDE_CONNECTION_MGR_EVENT_ALIVE;
         
-        new = new_connection(client, clist, cnx, 1);
+        ret = prelude_connection_connect(cnx, clist->parent->client_profile, clist->parent->capability);
+        if ( ret < 0 ) {
+                event = PRELUDE_CONNECTION_MGR_EVENT_DEAD;
+                prelude_perror(ret, "could not connect to %s:%hu",
+                               prelude_connection_get_daddr(cnx),
+                               prelude_connection_get_dport(cnx));
+        }
+        
+        new = new_connection(cp, clist, cnx, flags);
         if ( ! new ) {
                 log(LOG_ERR, "memory exhausted.\n");
                 return NULL;
         }
+
+        if ( mgr->event_handler && mgr->wanted_event & event )
+                mgr->event_handler(mgr, event, cnx);
         
         return new;
 }
@@ -655,8 +658,8 @@ static int parse_config_line(prelude_connection_mgr_t *cmgr)
                 ret = strcmp(ptr, "&&");
                 if ( ret == 0 )
                         continue;
-
-                *cnx = new_connection_from_address(cmgr->client, clist, ptr);
+                
+                *cnx = new_connection_from_address(cmgr->client_profile, clist, ptr, cmgr->flags);
                 if ( ! *cnx )
                         return -1;
 
@@ -701,51 +704,6 @@ static void broadcast_async_cb(void *obj, void *data)
 
 
 
-static prelude_connection_mgr_t *connection_mgr_new(prelude_client_t *client) 
-{
-        prelude_connection_mgr_t *new;
-        
-        new = malloc(sizeof(*new));
-        if ( ! new ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
-        
-        new->nfd = 0;
-        FD_ZERO(&new->fds);
-
-        new->client = client;
-        new->or_list = NULL;
-        new->failover = NULL;
-        new->notify_cb = NULL;
-        new->connection_string = NULL;
-        new->connection_string_changed = FALSE;
-        
-        PRELUDE_INIT_LIST_HEAD(&new->all_cnx);
-
-        return new;
-}
-
-
-
-static int init_global_failover(prelude_connection_mgr_t *mgr)
-{
-        char dirname[256], buf[256];
-
-        if ( mgr->failover )
-                return 0;
-        
-        prelude_client_get_backup_filename(mgr->client, buf, sizeof(buf));        
-        snprintf(dirname, sizeof(dirname), "%s/global", buf);
-        
-        mgr->failover = prelude_failover_new(dirname);
-        if ( ! mgr->failover )
-                return -1;
-
-        return 0;
-}
-
-
 
 /**
  * prelude_connection_mgr_broadcast:
@@ -760,6 +718,7 @@ void prelude_connection_mgr_broadcast(prelude_connection_mgr_t *cmgr, prelude_ms
         walk_manager_lists(cmgr, msg);        
         prelude_timer_unlock_critical_region();
 }
+
 
 
 
@@ -785,7 +744,19 @@ int prelude_connection_mgr_init(prelude_connection_mgr_t *new)
 {
         int ret;
         cnx_list_t *clist;
+        char dirname[512], buf[512];
+        
+        if ( ! new->failover ) {                
+                prelude_client_profile_get_backup_dirname(new->client_profile, buf, sizeof(buf));        
+                snprintf(dirname, sizeof(dirname), "%s/global", buf);
 
+                ret = prelude_failover_new(&new->failover, dirname);
+                if ( ret < 0 ) {
+                        free(new);
+                        return -1;
+                }
+        }
+        
         if ( ! new->connection_string_changed || ! new->connection_string )
                 return -1;
         
@@ -794,11 +765,7 @@ int prelude_connection_mgr_init(prelude_connection_mgr_t *new)
                 
         new->nfd = 0;
         new->or_list = NULL;
-
-        ret = init_global_failover(new);
-        if ( ret < 0 )
-                return -1;
-                
+        
         ret = parse_config_line(new);
         if ( ret < 0 || ! new->or_list )
                 return -1;
@@ -818,8 +785,12 @@ int prelude_connection_mgr_init(prelude_connection_mgr_t *new)
         prelude_timer_set_data(&new->timer, new);
         prelude_timer_set_expire(&new->timer, 1);
         prelude_timer_set_callback(&new->timer, check_for_data_cb);
-        prelude_timer_init(&new->timer);
-                
+        
+        if ( ret < 0 && new->event_handler ) {
+                new->timer_started = TRUE;
+                prelude_timer_init(&new->timer);
+        }
+        
         return 0;
 }
 
@@ -827,112 +798,98 @@ int prelude_connection_mgr_init(prelude_connection_mgr_t *new)
 
 /**
  * prelude_connection_mgr_new:
- * @client: Use of this object.
+ * @mgr: Pointer to an address where to store the created #prelude_connection_mgr_t object.
+ * @cp: The #prelude_client_profile_t to use for connection.
+ * @capability: Capability the connection in this connection-mgr will declare.
  *
  * prelude_connection_mgr_new() initialize a new Connection Manager object.
  *
- * Returns: a pointer on a #prelude_connection_mgr_t object, or NULL
- * if an error occured.
+ * Returns: 0 on success or a negative value if an error occured.
  */
-prelude_connection_mgr_t *prelude_connection_mgr_new(prelude_client_t *client)
+int prelude_connection_mgr_new(prelude_connection_mgr_t **mgr,
+                               prelude_client_profile_t *cp,
+                               prelude_connection_capability_t capability)
 {
         prelude_connection_mgr_t *new;
         
-        new = connection_mgr_new(client);
-        if ( ! new )
-                return NULL;
-        
-        return new;
-}
-
-
-
-
-
-void prelude_connection_mgr_destroy(prelude_connection_mgr_t *mgr) 
-{
-        if ( mgr->connection_string )
-                free(mgr->connection_string);
-        
-        connection_list_destroy(mgr->or_list);
-        prelude_timer_destroy(&mgr->timer);
-        prelude_failover_destroy(mgr->failover);
-        
-        free(mgr);
-}
-
-
-
-prelude_connection_t *prelude_connection_mgr_search_connection(prelude_connection_mgr_t *mgr, const char *addr)
-{
-        int ret;
-        prelude_list_t *tmp;
-        prelude_connection_t *cnx;
-        
-        if ( ! mgr )
-                return NULL;
-        
-        prelude_list_for_each(tmp, &mgr->all_cnx) {
-                cnx = prelude_linked_object_get_object(tmp, prelude_connection_t);
-
-                ret = strcmp(addr, prelude_connection_get_daddr(cnx));
-                if ( ret == 0 ) 
-                        return cnx;
-        }
-
-        return NULL;
-}
-
-
-
-
-int prelude_connection_mgr_add_connection(prelude_connection_mgr_t **mgr,
-                                          prelude_connection_t *cnx, prelude_connection_mgr_flags_t flags)
-{
-        cnx_t **c;
-        cnx_list_t *clist;
-        
-        if ( ! *mgr ) {
-
-                *mgr = connection_mgr_new(prelude_connection_get_client(cnx));
-                if ( ! *mgr )
-                        return -1;
-
-                prelude_timer_set_expire(&(*mgr)->timer, 1);
-                prelude_timer_set_data(&(*mgr)->timer, *mgr);
-                prelude_timer_set_callback(&(*mgr)->timer, check_for_data_cb);
-
-                if ( flags & PRELUDE_CONNECTION_MGR_USE_TIMER )
-                        prelude_timer_init(&(*mgr)->timer);
-        }
-        
-        clist = create_connection_list(*mgr);
-        if ( ! clist ) 
-                return -1;
-
-        for ( c = &clist->and; (*c); c = &(*c)->and );
-
-        *c = new_connection(prelude_connection_get_client(cnx), clist, cnx, flags);
-        
-        if ( ! (*c) ) {
-                free(clist);
-                return -1;
-        }
-
-        (*mgr)->or_list = clist;
+        *mgr = new = calloc(1, sizeof(*new));
+        if ( ! new ) 
+                return prelude_error_from_errno(errno);
+                
+        FD_ZERO(&new->fds);
+        new->client_profile = cp;
+        new->capability = capability;
+        new->connection_string_changed = FALSE;
+        PRELUDE_INIT_LIST_HEAD(&new->all_cnx);
         
         return 0;
 }
 
 
 
+void prelude_connection_mgr_destroy(prelude_connection_mgr_t *mgr) 
+{        
+        if ( mgr->event_handler && mgr->timer_started )
+                prelude_timer_destroy(&mgr->timer);
+                
+        if ( mgr->connection_string )
+                free(mgr->connection_string);
+        
+        connection_list_destroy(mgr->or_list);
 
+        if ( mgr->failover )
+                prelude_failover_destroy(mgr->failover);
 
-void prelude_connection_mgr_notify_connection(prelude_connection_mgr_t *mgr, void (*callback)(prelude_list_t *clist)) 
-{
-        mgr->notify_cb = callback;
+        free(mgr);
 }
 
+
+
+
+int prelude_connection_mgr_add_connection(prelude_connection_mgr_t *mgr, prelude_connection_t *cnx)
+{
+        cnx_t **c;
+
+        if ( ! mgr->or_list ) {
+                mgr->or_list = create_connection_list(mgr);
+                if ( ! mgr->or_list ) 
+                        return -1;
+        }
+        
+        for ( c = &mgr->or_list->and; (*c); c = &(*c)->and );
+
+        *c = new_connection(mgr->client_profile, mgr->or_list, cnx, mgr->flags);
+        if ( ! (*c) )
+                return -1;
+
+        mgr->or_list->total++;
+        
+        return 0;
+}
+
+
+
+void prelude_connection_mgr_set_listed_event_handler(prelude_connection_mgr_t *mgr,
+                                                     prelude_connection_mgr_event_t wanted_event,
+                                                     int (*callback)(prelude_connection_mgr_t *mgr,
+                                                                     prelude_connection_mgr_event_t events,
+                                                                     prelude_list_t *clist)) 
+{
+        mgr->wanted_event = wanted_event;
+        mgr->event_listed_handler = callback;
+}
+
+
+
+void prelude_connection_mgr_set_event_handler(prelude_connection_mgr_t *mgr,
+                                              prelude_connection_mgr_event_t wanted_event,
+                                              int (*callback)(prelude_connection_mgr_t *mgr,
+                                                              prelude_connection_mgr_event_t events,
+                                                              prelude_connection_t *cnx))
+{
+        mgr->wanted_event = wanted_event;
+        mgr->event_handler = callback;
+}
 
 
 
@@ -960,7 +917,6 @@ int prelude_connection_mgr_tell_connection_dead(prelude_connection_mgr_t *mgr, p
 
 
 
-
 int prelude_connection_mgr_tell_connection_alive(prelude_connection_mgr_t *mgr, prelude_connection_t *cnx) 
 {
         int ret;
@@ -972,14 +928,14 @@ int prelude_connection_mgr_tell_connection_alive(prelude_connection_mgr_t *mgr, 
         
         if ( c->parent->dead == 0 )
                 return 0;
-
+        
         ret = failover_flush(c->failover, NULL, c);
-        if ( ret == communication_error ) 
+        if ( ret < 0 )
                 return -1;
 
         if ( --c->parent->dead == 0 ) {
                 ret = failover_flush(mgr->failover, c->parent, NULL);
-                if ( ret == communication_error ) 
+                if ( ret < 0 )
                         return -1;
         }
         
@@ -1010,4 +966,73 @@ int prelude_connection_mgr_set_connection_string(prelude_connection_mgr_t *mgr, 
 const char *prelude_connection_mgr_get_connection_string(prelude_connection_mgr_t *mgr)
 {
         return mgr->connection_string;
+}
+
+
+
+void prelude_connection_mgr_set_flags(prelude_connection_mgr_t *mgr, prelude_connection_mgr_flags_t flags)
+{
+        mgr->flags = flags;
+}
+
+
+
+int prelude_connection_mgr_recv(prelude_connection_mgr_t *mgr, prelude_msg_t **out, int timeout) 
+{
+        int ret, fd;
+        fd_set rfds;
+        prelude_list_t *tmp;
+        prelude_connection_t *cnx;
+        struct timeval tv, *tvptr = NULL;
+        
+        if ( timeout >= 0 ) {
+                tvptr = &tv;
+                tv.tv_sec = timeout;
+                tv.tv_usec = 0;
+        }
+
+        rfds = mgr->fds;
+        
+        ret = select(mgr->nfd, &rfds, NULL, NULL, tvptr);
+        if ( ret < 0 )
+                return prelude_error_from_errno(ret);
+
+        else if ( ret == 0 )
+                return 0;
+        
+        prelude_list_for_each(tmp, &mgr->all_cnx) {
+                cnx = prelude_linked_object_get_object(tmp, prelude_connection_t);
+                
+                if ( ! (prelude_connection_get_state(cnx) & PRELUDE_CONNECTION_ESTABLISHED) )
+                        continue;
+                
+                fd = prelude_io_get_fd(prelude_connection_get_fd(cnx));
+                
+                ret = FD_ISSET(fd, &rfds);                
+                if ( ! ret )
+                        continue;
+
+                *out = NULL;
+                
+                ret = prelude_msg_read(out, prelude_connection_get_fd(cnx));
+                if ( ret < 0 )
+                        FD_CLR(fd, &rfds);
+                
+                return ret;
+        }
+
+        return -1;
+}
+
+
+
+void prelude_connection_mgr_set_data(prelude_connection_mgr_t *mgr, void *data)
+{
+        mgr->data = data;
+}
+
+
+void *prelude_connection_mgr_get_data(prelude_connection_mgr_t *mgr)
+{
+        return mgr->data;
 }
