@@ -58,6 +58,21 @@ static FILE *get_out_fd(prelude_log_t priority)
 
 
 
+static prelude_bool_t need_to_log(prelude_log_t priority)
+{
+        prelude_bool_t ret = TRUE;
+        
+        if ( priority == PRELUDE_LOG_INFO && log_flags & PRELUDE_LOG_FLAGS_QUIET )
+                ret = FALSE;
+
+        else if ( priority == PRELUDE_LOG_DEBUG && ! (log_flags & PRELUDE_LOG_FLAGS_DEBUG) )
+                ret = FALSE;
+
+        return ret;
+}
+
+
+
 static void syslog_log(prelude_log_t priority, const char *file,
                        const char *function, int line, const char *fmt, va_list *ap) 
 {
@@ -119,20 +134,23 @@ static void standard_log(prelude_log_t priority, const char *file,
 
 
 
+static void do_log_v(prelude_log_t priority, const char *file,
+                     const char *function, int line, const char *fmt, va_list ap)
+{
+        if ( log_flags & PRELUDE_LOG_FLAGS_SYSLOG )
+                syslog_log(priority, file, function, line, fmt, &ap);
+        else
+                standard_log(priority, file, function, line, fmt, &ap);
+}
+
 
 void prelude_log_v(prelude_log_t priority, const char *file,
                    const char *function, int line, const char *fmt, va_list ap) 
 {
-        if ( (priority == PRELUDE_LOG_INFO && log_flags & PRELUDE_LOG_FLAGS_QUIET) ||
-             (priority == PRELUDE_LOG_DEBUG && ! (log_flags & PRELUDE_LOG_FLAGS_DEBUG)) )
+        if ( ! need_to_log(priority) )
                 return;
-        
-        if ( log_flags & PRELUDE_LOG_FLAGS_SYSLOG )
-                syslog_log(priority, file, function, line, fmt, &ap);
 
-        else standard_log(priority, file, function, line, fmt, &ap);
-        
-        errno = 0;
+        do_log_v(priority, file, function, line, fmt, ap);
 }
 
 
@@ -153,9 +171,12 @@ void _prelude_log(prelude_log_t priority, const char *file,
                   const char *function, int line, const char *fmt, ...) 
 {
         va_list ap;
-        
+
+        if ( ! need_to_log(priority) )
+                return;
+                
         va_start(ap, fmt);
-        prelude_log_v(priority, file, function, line, fmt, ap);        
+        do_log_v(priority, file, function, line, fmt, ap);        
         va_end(ap);
 }
 
