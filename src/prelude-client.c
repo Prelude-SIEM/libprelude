@@ -349,9 +349,9 @@ static int set_node_address_category(prelude_option_t *opt, const char *optarg, 
 {
         idmef_address_category_t category;
 
-        category = idmef_address_category_to_numeric(optarg);
+        category = idmef_address_category_to_numeric(optarg);        
         if ( category < 0 ) 
-                return -1;
+                return category;
         
         idmef_address_set_category(context, category);
         
@@ -1029,6 +1029,9 @@ int prelude_client_init(prelude_client_t *client)
                                   &_prelude_internal_argc, _prelude_internal_argv, &err, client);        
         
         prelude_option_set_warnings(old_warnings, NULL);
+
+        if ( ret < 0 )
+                return ret;
         
         ret = _prelude_client_profile_init(client->profile);
         if ( ret < 0 )
