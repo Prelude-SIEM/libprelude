@@ -106,6 +106,11 @@ static int parse_argument(const char *filename, int argc, char **argv)
         opt = prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "manager-addr",
                                  "Address where manager is listening (addr:port)",
                                  required_argument, setup_manager_addr, NULL);
+
+        /*
+         * run this one last, so that application that wish to change
+         * their userID won't get a false message for sensor-adduser (--uid option).
+         */
         prelude_option_set_priority(opt, option_run_last);
         
         prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "heartbeat-time",
