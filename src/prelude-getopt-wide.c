@@ -17,9 +17,10 @@
 
 
 
-static int client_send_msg(prelude_msg_t *msg, void *data) 
+static prelude_msg_t *client_send_msg(prelude_msgbuf_t *msgbuf) 
 {        
-        return prelude_client_send_msg(data, msg);
+        prelude_client_send_msg(prelude_msgbuf_get_data(msgbuf), prelude_msgbuf_get_msg(msgbuf));
+        return NULL;
 }
 
 
@@ -274,6 +275,8 @@ int prelude_option_send_request(prelude_client_t *client, uint32_t request_id, u
                 return -1;
         }
 
+        prelude_msgbuf_set_data(msg, client);
+        prelude_msgbuf_set_callback(msg, client_send_msg);
         prelude_msg_set_tag(prelude_msgbuf_get_msg(msg), PRELUDE_MSG_OPTION_REQUEST);
         
         prelude_msgbuf_set(msg, type, 0, 0);

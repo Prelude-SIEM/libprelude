@@ -819,6 +819,33 @@ void prelude_msg_destroy(prelude_msg_t *msg)
 
 
 
+/**
+ * prelude_msg_set_callback:
+ * @msg: Pointer on a #prelude_msg_t object.
+ * @flush_msg_cb: Pointer on a function responssible of sending the message.
+ *
+ * prelude_msg_set_callback() allow to change the callback used
+ * to flush a message created with prelude_msg_dynamic_new().
+ */
+void prelude_msg_set_callback(prelude_msg_t *msg, prelude_msg_t *(*flush_msg_cb)(void *data)) 
+{
+        msg->flush_msg_cb = flush_msg_cb;
+}
+
+
+
+/**
+ * prelude_msg_set_data:
+ * @msg: Pointer on a #prelude_msg_t object.
+ * @data: Pointer on the data to associate to this message.
+ *
+ * prelude_msg_set_data() allow to change the data passed
+ * to the message sending callback.
+ */
+void prelude_msg_set_data(prelude_msg_t *msg, void *data) 
+{
+        msg->send_msg_data = data;
+}
 
 
 

@@ -40,5 +40,10 @@ void prelude_msgbuf_set(prelude_msgbuf_t *msgbuf, uint8_t tag, uint32_t len, con
 
 prelude_msg_t *prelude_msgbuf_get_msg(prelude_msgbuf_t *msgbuf);
 
+void prelude_msgbuf_set_callback(prelude_msgbuf_t *msgbuf, prelude_msg_t *(*send_msg)(prelude_msgbuf_t *msgbuf));
+
+void prelude_msgbuf_set_data(prelude_msgbuf_t *msgbuf, void *data);
+
+void *prelude_msgbuf_get_data(prelude_msgbuf_t *msgbuf);
 
 #endif /* _LIBPRELUDE_PRELUDE_MESSAGE_BUFFERED_H */

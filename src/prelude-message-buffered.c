@@ -38,6 +38,7 @@
 
 struct prelude_message_buffered {
         int flags;
+        void *data;
         prelude_msg_t *msg;
         prelude_msg_t *(*send_msg)(void *data);
 };
@@ -74,7 +75,7 @@ static prelude_msg_t *send_msg_async(void *data)
 
 
 /**
- * prelude_msgbuf_set:
+é * prelude_msgbuf_set:
  * @msgbuf: Pointer on a #prelude_msgbuf_t object to store the data to.
  * @tag: 8 bits unsigned integer describing the kind of data.
  * @len: len of the data chunk.
@@ -185,6 +186,33 @@ void prelude_msgbuf_close(prelude_msgbuf_t *msgbuf)
 
 
 
+
+/**
+ * @msgbuf: Pointer on a #prelude_msgbuf_t object.
+ *
+ * Associate an application specific callback to this @msgbuf.
+ */
+void prelude_msgbuf_set_callback(prelude_msgbuf_t *msgbuf, prelude_msg_t *(*send_msg)(prelude_msgbuf_t *msgbuf))
+{
+        msgbuf->send_msg = (void *) send_msg;
+        prelude_msg_set_callback(msgbuf->msg, (void *) send_msg);
+}
+
+
+
+
+void prelude_msgbuf_set_data(prelude_msgbuf_t *msgbuf, void *data) 
+{
+        msgbuf->data = data;
+}
+
+
+
+
+void *prelude_msgbuf_get_data(prelude_msgbuf_t *msgbuf)
+{
+        return msgbuf->data;
+}
 
 
 

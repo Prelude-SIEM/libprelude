@@ -102,4 +102,8 @@ void prelude_msg_destroy(prelude_msg_t *msg);
 
 void prelude_msg_reset(prelude_msg_t *msg);
 
+void prelude_msg_set_callback(prelude_msg_t *msg, prelude_msg_t *(*flush_msg_cb)(void *data));
+
+void prelude_msg_set_data(prelude_msg_t *msg, void *data);
+
 #endif /* _LIBPRELUDE_PRELUDE_MESSAGE_H */
