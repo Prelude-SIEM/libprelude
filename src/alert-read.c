@@ -47,17 +47,17 @@ struct alert_container {
 
 
 
-alert_container_t *prelude_alert_read(int fd, uint8_t *tag, readfunc_t *readfunc) 
+alert_container_t *prelude_alert_read(void *fd, uint8_t *tag, readfunc_t *readfunc) 
 {
         int ret;
         uint32_t dlen;
         unsigned char buf[2];
         alert_container_t *ac;
-
+        
         ret = readfunc(fd, buf, sizeof(buf));
         if ( ret <= 0 )
                 return NULL;
-
+        
         if ( buf[0] != PROTOCOL_VERSION ) {
                 log(LOG_ERR, "protocol used isn't the same : (version %d).\n", buf[0]);
                 return NULL;
@@ -86,7 +86,7 @@ alert_container_t *prelude_alert_read(int fd, uint8_t *tag, readfunc_t *readfunc
                 free(ac);
                 return NULL;
         }
-                
+        
         ac->msg_index = 0;
         
         return ac;
