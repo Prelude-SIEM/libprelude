@@ -693,6 +693,63 @@ static cnx_t *search_cnx(prelude_connection_mgr_t *mgr, prelude_connection_t *cn
 
 
 
+static void broadcast_async_cb(void *obj, void *data) 
+{
+        prelude_msg_t *msg = obj;
+        prelude_connection_mgr_t *cmgr = data;
+
+        prelude_connection_mgr_broadcast(cmgr, msg);
+        prelude_msg_destroy(msg);
+}
+
+
+
+static prelude_connection_mgr_t *connection_mgr_new(prelude_client_t *client) 
+{
+        prelude_connection_mgr_t *new;
+        
+        new = malloc(sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }
+        
+        new->nfd = 0;
+        FD_ZERO(&new->fds);
+
+        new->client = client;
+        new->or_list = NULL;
+        new->failover = NULL;
+        new->notify_cb = NULL;
+        new->connection_string = NULL;
+        new->connection_string_changed = FALSE;
+        
+        PRELUDE_INIT_LIST_HEAD(&new->all_cnx);
+
+        return new;
+}
+
+
+
+static int init_global_failover(prelude_connection_mgr_t *mgr)
+{
+        char dirname[256], buf[256];
+
+        if ( mgr->failover )
+                return 0;
+        
+        prelude_client_get_backup_filename(mgr->client, buf, sizeof(buf));        
+        snprintf(dirname, sizeof(dirname), "%s/global", buf);
+        
+        mgr->failover = prelude_failover_new(dirname);
+        if ( ! mgr->failover )
+                return -1;
+
+        return 0;
+}
+
+
+
 /**
  * prelude_connection_mgr_broadcast:
  * @cmgr: Pointer on a client manager object.
@@ -705,18 +762,6 @@ void prelude_connection_mgr_broadcast(prelude_connection_mgr_t *cmgr, prelude_ms
         timer_lock_critical_region();
         walk_manager_lists(cmgr, msg);        
         timer_unlock_critical_region();
-}
-
-
-
-
-static void broadcast_async_cb(void *obj, void *data) 
-{
-        prelude_msg_t *msg = obj;
-        prelude_connection_mgr_t *cmgr = data;
-
-        prelude_connection_mgr_broadcast(cmgr, msg);
-        prelude_msg_destroy(msg);
 }
 
 
@@ -739,45 +784,6 @@ void prelude_connection_mgr_broadcast_async(prelude_connection_mgr_t *cmgr, prel
 
 
 
-
-static prelude_connection_mgr_t *connection_mgr_new(prelude_client_t *client) 
-{
-        char dirname[256], buf[256];
-        prelude_connection_mgr_t *new;
-        
-        new = malloc(sizeof(*new));
-        if ( ! new ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
-        
-        prelude_client_get_backup_filename(client, buf, sizeof(buf));        
-        snprintf(dirname, sizeof(dirname), "%s/global", buf);
-        
-        new->failover = prelude_failover_new(dirname);
-        if ( ! new->failover ) {
-                free(new);
-                return NULL;
-        }
-
-        new->nfd = 0;
-        FD_ZERO(&new->fds);
-
-        new->client = client;
-        new->or_list = NULL;
-        new->notify_cb = NULL;
-        new->connection_string = NULL;
-        new->connection_string_changed = FALSE;
-        
-        PRELUDE_INIT_LIST_HEAD(&new->all_cnx);
-
-        return new;
-}
-
-
-
-
-
 int prelude_connection_mgr_init(prelude_connection_mgr_t *new)
 {
         int ret;
@@ -791,11 +797,15 @@ int prelude_connection_mgr_init(prelude_connection_mgr_t *new)
                 
         new->nfd = 0;
         new->or_list = NULL;
-        
+
+        ret = init_global_failover(new);
+        if ( ret < 0 )
+                return -1;
+                
         ret = parse_config_line(new);
         if ( ret < 0 || ! new->or_list )
                 return -1;
-
+        
         for ( clist = new->or_list; clist != NULL; clist = clist->or ) {
                 if ( clist->dead )
                         continue;
