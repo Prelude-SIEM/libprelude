@@ -269,6 +269,8 @@ class Admin(Client):
             raise Error("PRELUDE_MSG_OPTION_LIST failed")
 
         options = _prelude.prelude_option_recv_list(msg)
+        if not options:
+            return
 
         return self._get_option_list(None, _prelude.prelude_option_get_next(options, None))
 
