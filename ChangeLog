@@ -4,6 +4,8 @@
 	do not match a section if the '[' characters is
 	preceded by other characters.
 
+	(strip_value): handle quoted entry.
+
 	(cmp_section): remove.
 	handle tab everywhere, refactorize code.
 

@@ -240,8 +240,13 @@ static char *strip_value(const char *in)
         end = in + strlen(in) - 1;
         while ( *end == ' ' || *end == '\t' )
                 end--;
-
-        if ( ! (end - start) )
+        
+        if ( *start == '"' && *end == '"' ) {
+                start++;
+                end--;
+        }
+        
+        if ( (end - start) <= 0 )
              return NULL;
         
         ret = malloc((end - start) + 2);
@@ -270,11 +275,12 @@ static int parse_buffer(char *buf, char **entry, char **value)
         *entry = strip_value(ptr);
 
         ptr = strsep(&buf, "=");
-        if ( ! ptr )
-                *value = strdup("");
-        else
+        if ( ptr )
                 *value = strip_value(ptr);
-        
+
+        if ( ! *value )
+                *value = strdup("");
+               
         return 0;
 }
 
