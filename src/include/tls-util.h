@@ -30,4 +30,6 @@ int tls_load_file(const char *filename, gnutls_datum *data);
 
 int tls_certificates_load(const char *keyfile, const char *certfile, gnutls_certificate_credentials cred);
 
+int tls_certificate_get_peer_analyzerid(gnutls_session session, uint64_t *analyzerid);
+
 #endif
