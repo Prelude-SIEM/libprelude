@@ -21,6 +21,8 @@
 *
 *****/
 
+#include "config.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -33,7 +35,6 @@
 
 #include "ltdl.h"
 
-#include "config.h"
 #include "prelude-log.h"
 #include "variable.h"
 #include "prelude-inttypes.h"

@@ -21,6 +21,8 @@
 *
 *****/
 
+#include "config.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -32,7 +34,6 @@
 #include <termios.h>
 #include <gnutls/gnutls.h>
 
-#include "config.h"
 #include "prelude-inttypes.h"
 
 #ifdef HAVE_SYS_FILIO_H

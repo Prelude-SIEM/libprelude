@@ -21,6 +21,8 @@
 *
 *****/
 
+#include "config.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -47,8 +49,6 @@
 #include "idmef-tree-wrap.h"
 #include "prelude-strbuf.h"
 
-
-#include "config.h"
 #include "ntp.h"
 #include "idmef-util.h"
 

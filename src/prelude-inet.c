@@ -21,6 +21,8 @@
 *
 *****/
 
+#include "config.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,7 +33,6 @@
 #include <arpa/inet.h>
 #include <errno.h>
 
-#include "config.h"
 #include "prelude-inttypes.h"
 #include "prelude-log.h"
 #include "prelude-inet.h"
