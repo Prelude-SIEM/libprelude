@@ -84,9 +84,9 @@
 
 
 /*
- * send an heartbeat every hours.
+ * send an heartbeat every 60 minutes.
  */
-#define DEFAULT_HEARTBEAT_INTERVAL 60 * 60
+#define DEFAULT_HEARTBEAT_INTERVAL 60
 
 
 #define CAPABILITY_SEND (PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF| \
@@ -265,7 +265,7 @@ static void heartbeat_expire_cb(void *data)
 
 
 static void setup_heartbeat_timer(prelude_client_t *client, int expire)
-{        
+{
         timer_set_data(&client->heartbeat_timer, client);
         timer_set_expire(&client->heartbeat_timer, expire * 60);
         timer_set_callback(&client->heartbeat_timer, heartbeat_expire_cb);
@@ -592,6 +592,8 @@ static int set_manager_addr(void *context, prelude_option_t *opt, const char *ar
 static int set_heartbeat_interval(void *context, prelude_option_t *opt, const char *arg)
 {
         prelude_client_t *ptr = context;
+
+        printf("arg=%s\n", arg);
         
         setup_heartbeat_timer(ptr, atoi(arg));
         timer_reset(&ptr->heartbeat_timer);
