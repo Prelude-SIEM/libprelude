@@ -1,3 +1,10 @@
+2002-07-11  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/sensor.c (prelude_sensor_init): Move the call
+	to prelude_client_ident_init() after argument parsing.
+	This fix a bug where command line option does not work
+	if the sensor is not registered.
+
 2002-07-03  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-getopt.c (parse_argument): set

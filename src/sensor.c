@@ -214,7 +214,7 @@ static int setup_analyzer_node_address_vlan_name(prelude_option_t *opt, const ch
 
 
 static int setup_address(prelude_option_t *opt, const char *arg) 
-{        
+{  
         address = calloc(1, sizeof(*address));
         if ( ! address ) {
                 log(LOG_ERR, "memory exhausted.\n");
@@ -404,15 +404,14 @@ int prelude_sensor_init(const char *sname, const char *filename, int argc, char 
         get_process_name(argc, argv);
         
         prelude_set_program_name(sname);
-       
-        ret = prelude_client_ident_init(sname);
-        if ( ret < 0 )
-                return -1;
-        
         ret = parse_argument(filename, argc, argv);
         if ( ret == prelude_option_end || ret == prelude_option_error )
                 return ret;
-        
+	       
+        ret = prelude_client_ident_init(sname);
+        if ( ret < 0 )
+                return -1;
+
         return ret;
 }
 
