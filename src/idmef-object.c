@@ -163,15 +163,13 @@ static idmef_value_t *idmef_object_get_nth_internal(idmef_object_t *object,
 
 
 
-static idmef_value_t *idmef_object_get_internal(idmef_object_t *object,
-						int depth,
+static idmef_value_t *idmef_object_get_internal(idmef_object_t *object, int depth,
 						void *parent, idmef_type_t parent_type)
-{    
-
+{
 	void *child;
+        uint8_t which;
         idmef_child_t child_id;
 	idmef_type_t child_type;
-        uint8_t which;
 
         if ( depth < object->depth ) {
 
@@ -182,7 +180,7 @@ static idmef_value_t *idmef_object_get_internal(idmef_object_t *object,
                         return NULL;
 
 		child_type = idmef_type_get_child_object_type(parent_type, child_id);
-
+                
                 which = object->desc[depth].no;
 
 		if ( which == INDEX_FORBIDDEN )
@@ -193,9 +191,8 @@ static idmef_value_t *idmef_object_get_internal(idmef_object_t *object,
 
 		return idmef_object_get_nth_internal(object, depth + 1, child, child_type, which);
 	}
-
-        return parent;
-
+                
+        return (parent_type == -1) ? parent : idmef_value_new_object(parent, child_type);
 }
 
 
