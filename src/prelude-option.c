@@ -232,7 +232,7 @@ static void reorder_argv(int *argc, char **argv, int removed, int *argv_index)
 
 static int check_option_optarg(const char **outptr, const char *option, const char *arg)
 {
-        if ( arg && is_an_argument(arg) == 0 )
+        if ( arg && is_an_argument(arg) )
                 *outptr = arg;
         
         return 0;
@@ -270,7 +270,7 @@ static int check_option_noarg(const char **outptr, const char *option, const cha
 static int check_option(prelude_option_t *option, const char **optarg, const char *arg)
 {
         int ret = -1;
-
+        
         *optarg = NULL;
         
         switch (option->has_arg) {
@@ -394,7 +394,7 @@ static int do_set(void **context, prelude_option_t *opt, const char *value, prel
                 
         if ( ! opt->set )
                 return 0;
-
+        
         ret = opt->set(*context, opt, value, out);        
         if ( ret < 0 )
                 return ret;
