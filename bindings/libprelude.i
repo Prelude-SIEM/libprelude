@@ -207,7 +207,7 @@ typedef unsigned long long uint64_t;
 		$1 = (uint64_t) SvIV($input);
 
 	} else {
-		if ( sscanf(SvPV_nolen($input), "%llu", &($1)) < 1 ) {
+		if ( sscanf(SvPV_nolen($input), "%" PRIu64, &($1)) < 1 ) {
 			croak("Argument %s is not an unsigned 64 bits integer\n", SvPV_nolen($input));
 		}
 	}
@@ -217,7 +217,7 @@ typedef unsigned long long uint64_t;
 	char tmp[32];
 	int len;
 
-	len = snprintf(tmp, sizeof (tmp), "%llu", $1);
+	len = snprintf(tmp, sizeof (tmp), "%" PRIu64, $1);
 
 	if ( len >= 0 && len < sizeof (tmp) ) {
 		$result = sv_2mortal(newSVpv(tmp, len));
