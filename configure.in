@@ -460,7 +460,7 @@ dnl Checks for library functions.
 AC_TYPE_SIGNAL
 AC_FUNC_VPRINTF
 
-dns Needed for FIONREAD under solaris
+dnl Needed for FIONREAD under solaris
 AC_CHECK_HEADERS(sys/filio.h)
 
 AC_CHECK_FUNCS(gettimeofday select socket strdup strerror strstr)
