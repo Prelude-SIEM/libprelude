@@ -76,7 +76,7 @@ struct prelude_option {
 
 struct cb_list {
         struct list_head list;
-        const char *arg;
+        char *arg;
         prelude_option_t *option;
 };
 
@@ -137,10 +137,17 @@ static prelude_option_t *search_cli_option(prelude_optlist_t *optlist, const cha
 
 
 static int check_option_optarg(prelude_optlist_t *optlist,
-                               int argc, char **argv, const char **optarg) 
-{        
-        if ( optlist->argv_index < argc && *argv[optlist->argv_index] != '-' ) {
-                *optarg = argv[optlist->argv_index];
+                               int argc, char **argv, char *optarg, size_t size) 
+{
+        int len = 0;
+        
+        while ( optlist->argv_index < argc && *argv[optlist->argv_index] != '-' ) {
+
+                if ( len > 0 )
+                        optarg[len++] = ' ';
+                
+                strncpy(optarg + len, argv[optlist->argv_index], size - len);
+                len += strlen(argv[optlist->argv_index]);
                 argv[optlist->argv_index++] = "";
         }
         
@@ -151,16 +158,25 @@ static int check_option_optarg(prelude_optlist_t *optlist,
 
 
 static int check_option_reqarg(prelude_optlist_t *optlist, const char *option,
-                               int argc, char **argv, const char **optarg) 
+                               int argc, char **argv, char *optarg, size_t size) 
 {
+        int len = 0;
+        
         if ( optlist->argv_index >= argc || *argv[optlist->argv_index] == '-' ) {
                 fprintf(stderr, "Option %s require an argument.\n", option);
                 return -1;
         }
-        
-        *optarg = argv[optlist->argv_index];
-        argv[optlist->argv_index++] = "";
-        
+
+        while ( optlist->argv_index < argc && *argv[optlist->argv_index] != '-' ) {
+
+                if ( len > 0 )
+                        optarg[len++] = ' ';
+                
+                strncpy(optarg + len, argv[optlist->argv_index], size - len);
+                len += strlen(argv[optlist->argv_index]);
+                argv[optlist->argv_index++] = "";
+        }
+                
         return 0;
 }
 
@@ -182,20 +198,20 @@ static int check_option_noarg(prelude_optlist_t *optlist, const char *option,
 
 
 static int check_option(prelude_optlist_t *optlist, prelude_option_t *option,
-                        const char **optarg, int argc, char **argv) 
+                        char *optarg, size_t size, int argc, char **argv) 
 {
         int ret;
 
-        *optarg = NULL;
+        optarg[0] = '\0';
         
         switch (option->has_arg) {
                 
         case optionnal_argument:
-                ret = check_option_optarg(optlist, argc, argv, optarg);
+                ret = check_option_optarg(optlist, argc, argv, optarg, size);
                 break;
                 
         case required_argument:
-                ret = check_option_reqarg(optlist, option->longopt, argc, argv, optarg);
+                ret = check_option_reqarg(optlist, option->longopt, argc, argv, optarg, size);
                 break;
 
         case no_argument:
@@ -213,24 +229,45 @@ static int check_option(prelude_optlist_t *optlist, prelude_option_t *option,
 
 
 
-
-static int lookup_variable_if_needed(const char **optarg) 
+static char *lookup_variable_if_needed(char *optarg) 
 {
-        /*
-         * This is not a variable.
-         */
-        if ( ! *optarg || **optarg != '$' )
-                return 0;
-                
-        *optarg = variable_get(*optarg + 1);
-        if ( ! *optarg ) {
-                log(LOG_ERR, "couldn't lookup variable %s.\n", *optarg + 1);
-                return -1;
-        }
-        
-        return 0;
-}
+        const char *val;
+        int i, j, len = 0;
+        char out[1024], c;
 
+        if ( ! optarg )
+                return NULL;
+                
+        for ( i = 0; i <= strlen(optarg) && (len + 1) < sizeof(out); i++ ) {
+
+                if ( optarg[i] != '$' ) {
+                        out[len++] = optarg[i];
+                        continue;
+                }
+                
+                /*
+                 * go to the end of the word.
+                 */ 
+                j = i;
+                while ( optarg[i] != '\0' && optarg[i] != ' ' ) i++;
+                
+                /*
+                 * split into token.
+                 */
+                c = optarg[i];
+                optarg[i] = '\0';
+                
+                val = variable_get(optarg + j + 1);
+                if ( ! val ) 
+                        val = optarg + j;
+                
+                strncpy(&out[len], val, sizeof(out) - len);
+                len += strlen(val);
+                optarg[i--] = c;
+        }
+                
+        return strdup(out);
+}
 
 
 
@@ -249,8 +286,12 @@ static int call_option_cb(struct list_head *cblist, prelude_option_t *option, co
                 log(LOG_ERR, "memory exhausted.\n");
                 return -1;
         }
+
+        if ( arg )
+                new->arg = strdup(arg);
+        else
+                new->arg = NULL;
         
-        new->arg = arg;
         new->option = option;
 
         if ( option->priority == option_run_last ) {
@@ -261,8 +302,8 @@ static int call_option_cb(struct list_head *cblist, prelude_option_t *option, co
         list_for_each(tmp, cblist) {
                 
                 cb = list_entry(tmp, struct cb_list, list);
-
-                if ( cb->option->priority <= option->priority )
+                
+                if ( cb->option->priority < option->priority )
                         break;
                 
                 prev = tmp;
@@ -291,10 +332,14 @@ static int call_option_from_cb_list(struct list_head *cblist)
 
                 cb->option->cb_called = 1;
                 
-                ret = cb->option->set(cb->arg);
+                ret = cb->option->set(lookup_variable_if_needed(cb->arg));
                 if ( ret == prelude_option_error || ret == prelude_option_end )
                         return ret;
-                
+
+                /*
+                 * cb->arg isn't freed because client may use them later...
+                 * FIXME: shouldn't the client use strdup() in this case ?
+                 */
                 list_del(&cb->list);
                 free(cb);
         }
@@ -420,7 +465,7 @@ static int parse_argument(struct list_head *cb_list,
                           int argc, char **argv, int depth)
 {
         int ret;
-        const char *optarg;
+        char optarg[256];
         prelude_option_t *opt;
         const char *arg, *old;
         int saved_index = 0, tmp;
@@ -488,17 +533,13 @@ static int parse_argument(struct list_head *cb_list,
                         saved_index = 0;
                 }
 
-                ret = check_option(optlist, opt, &optarg, argc, argv);
+                ret = check_option(optlist, opt, optarg, sizeof(optarg), argc, argv);
                 if ( ret < 0 ) 
                         return -1;
                 
                 if ( tmp ) 
                         optlist->argv_index = tmp;
-                
-                ret = lookup_variable_if_needed(&optarg);
-                if ( ret < 0 )
-                        return -1;
-                
+                                
                 if ( opt->set ) {
                         ret = call_option_cb(cb_list, opt, optarg);
                         if ( ret == prelude_option_end || ret == prelude_option_error )

@@ -1,5 +1,20 @@
 2002-05-15  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/prelude-getopt.c (parse_argument): 
+	don't lookup variable here.
+	(check_option): take a size argument.
+	(check_option_reqarg): 
+	(check_option_optarg): modified theses function so that 
+	option with multiple arguments are taken into account 
+	without the arguments needing to be quoted.
+	
+	(call_option_from_cb_list): call lookup_variable_if_needed() here.
+	
+	(call_option_cb): copy the argument.
+
+	(lookup_variable_if_needed): ability to lookup several 
+	variable in one buffer.
+
 	* src/client-ident.c (declare_ident_to_manager): 
 	On big endian system, copy sensor_ident to nident so that
 	we don't send an uninitialized value.
