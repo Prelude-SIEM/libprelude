@@ -38,8 +38,6 @@
 
 #include "common.h"
 #include "prelude-log.h"
-#include "extract.h"
-#include "prelude-io.h"
 #include "prelude-client.h"
 #include "prelude-message-id.h"
 
