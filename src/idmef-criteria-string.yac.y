@@ -53,6 +53,9 @@ struct parser_control {
 	void *scanner; /* yyscan_t scanner */
 };
 
+#define operator_or 1
+#define operator_and 2
+ 
 #define YYPARSE_PARAM param
 #define YYLEX_PARAM ((struct parser_control *) param)->scanner
 
@@ -65,10 +68,10 @@ static void yyerror (char *s);
 
 %union {
 	char *str;
+        int operator;
 	idmef_criterion_t *criterion;
 	idmef_criteria_t *criteria;
-	idmef_relation_t relation;
-	idmef_operator_t operator;
+	idmef_value_relation_t relation;
 }     
 
 /* BISON Declarations */
@@ -90,7 +93,6 @@ static void yyerror (char *s);
 %token TOK_OPERATOR_OR
 
 %type <criteria> criteria
-%type <criteria> criteria_list
 %type <criteria> criteria_base
 %type <criterion> criterion
 %type <relation> relation
@@ -105,32 +107,34 @@ input: criteria					{
 						}
 ;
 
-criteria: criteria_list				{
-							idmef_criteria_t *criteria;
-
-							criteria = idmef_criteria_new();
-							if ( ! criteria )
-								YYABORT;
-
-							criteria->criteria.next = &($1)->list;
-							criteria->criteria.prev = ($1)->list.prev;
-							($1)->list.prev->next = &criteria->criteria;
-							($1)->list.prev = &criteria->criteria;
-
-							$$ = criteria;
-						}
-;
-
-criteria_list:	criteria_base			{
+criteria:	criteria_base			{
 							$$ = $1;
 						}
-	| criteria_list operator criteria_base	{
-							idmef_criteria_t *criteria_last;
+	| criteria operator criteria_base	{                                                        
+                                                        if ( $2 == operator_or ) {
+                                                                printf("OR ");
+                                                                idmef_criteria_print($1);
+                                                                printf(" WITH ");
+                                                                idmef_criteria_print($3);
+                                                                printf("\n");
+                                                                idmef_criteria_or_criteria($1, $3);
 
-							criteria_last = list_entry(($1)->list.prev, idmef_criteria_t, list);
-							criteria_last->operator = $2;
-							list_add_tail(&($3)->list, &($1)->list);
-							$$ = $1;
+                                                                printf("RESULT: ");
+                                                                idmef_criteria_print($1);
+                                                                printf("\n\n");
+                                                        } else {
+                                                                printf("AND ");
+                                                                idmef_criteria_print($1);
+                                                                printf(" WITH ");
+                                                                idmef_criteria_print($3);
+                                                                printf("\n");
+                                                                idmef_criteria_and_criteria($1, $3);
+                                                                printf("RESULT: ");
+                                                                idmef_criteria_print($1);
+                                                                printf("\n\n");
+                                                        }
+                                                        
+                                                        $$ = $1;
 						}
 ;
 
@@ -142,6 +146,7 @@ criteria_base:	criterion			{
 								YYABORT;
 							criteria->criterion = $1;
 							$$ = criteria;
+                                                        
 						}
 	| '(' criteria ')'			{
 							$$ = $2;
@@ -151,7 +156,7 @@ criteria_base:	criterion			{
 criterion: TOK_STRING relation TOK_STRING 	{
 							idmef_object_t *object = NULL;
 							idmef_criterion_value_t *value = NULL;
-							idmef_relation_t relation;
+							idmef_value_relation_t relation;
 							idmef_criterion_t *criterion;
 
 							object = idmef_object_new_fast($1);
@@ -174,7 +179,7 @@ criterion: TOK_STRING relation TOK_STRING 	{
 
 							relation = $2;
 
-							criterion = idmef_criterion_new(object, relation, value);
+							criterion = idmef_criterion_new(object, value, relation);
 							if ( ! criterion ) {
 								log(LOG_ERR, "cannot build criterion for "
 								    "object: %s and value: %s\n", $1, $3);
@@ -187,13 +192,13 @@ criterion: TOK_STRING relation TOK_STRING 	{
 
 							free($1);
 							free($3);
-
+                                                        
 							$$ = criterion;
 						}
 	| TOK_STRING				{
 							idmef_object_t *object;
 							idmef_criterion_t *criterion;
-
+                                                        
 							object = idmef_object_new_fast($1);
 							if ( ! object ) {
 								log(LOG_ERR, "cannot build object '%s'\n", $1);
@@ -201,7 +206,7 @@ criterion: TOK_STRING relation TOK_STRING 	{
 								YYABORT;
 							}
 
-							criterion = idmef_criterion_new(object, relation_is_not_null, NULL);
+							criterion = idmef_criterion_new(object, NULL, IDMEF_VALUE_RELATION_IS_NOT_NULL);
 							if ( ! criterion ) {
 								log(LOG_ERR,
 								    "cannot build criterion for object: '%s' and value: NULL\n",
@@ -226,7 +231,7 @@ criterion: TOK_STRING relation TOK_STRING 	{
 								YYABORT;
 							}
 
-							criterion = idmef_criterion_new(object, relation_is_null, NULL);
+							criterion = idmef_criterion_new(object, NULL, IDMEF_VALUE_RELATION_IS_NULL);
 							if ( ! criterion ) {
 								log(LOG_ERR,
 								    "cannot build criterion for object: '%s' and value: NULL\n",
@@ -242,19 +247,19 @@ criterion: TOK_STRING relation TOK_STRING 	{
 						}
 ;
 
-relation:	TOK_RELATION_SUBSTRING		{ $$ = relation_substring; }
-	|	TOK_RELATION_REGEXP		{ $$ = relation_regexp; }
-	|	TOK_RELATION_GREATER		{ $$ = relation_greater; }
-	|	TOK_RELATION_GREATER_OR_EQUAL	{ $$ = relation_greater_or_equal; }
-	|	TOK_RELATION_LESS		{ $$ = relation_less; }
-	|	TOK_RELATION_LESS_OR_EQUAL	{ $$ = relation_less_or_equal; }
-	|	TOK_RELATION_EQUAL		{ $$ = relation_equal; }
-	|	TOK_RELATION_NOT_EQUAL		{ $$ = relation_not_equal; }
-	|	TOK_RELATION_IS_NULL		{ $$ = relation_is_null; }
+relation:	TOK_RELATION_SUBSTRING		{ $$ = IDMEF_VALUE_RELATION_SUBSTR; }
+	|	TOK_RELATION_REGEXP		{ $$ = IDMEF_VALUE_RELATION_REGEX; }
+	|	TOK_RELATION_GREATER		{ $$ = IDMEF_VALUE_RELATION_GREATER; }
+	|	TOK_RELATION_GREATER_OR_EQUAL	{ $$ = IDMEF_VALUE_RELATION_GREATER|IDMEF_VALUE_RELATION_EQUAL; }
+	|	TOK_RELATION_LESS		{ $$ = IDMEF_VALUE_RELATION_LESSER; }
+	|	TOK_RELATION_LESS_OR_EQUAL	{ $$ = IDMEF_VALUE_RELATION_LESSER|IDMEF_VALUE_RELATION_EQUAL; }
+	|	TOK_RELATION_EQUAL		{ $$ = IDMEF_VALUE_RELATION_EQUAL; }
+	|	TOK_RELATION_NOT_EQUAL		{ $$ = IDMEF_VALUE_RELATION_NOT_EQUAL; }
+	|	TOK_RELATION_IS_NULL		{ $$ = IDMEF_VALUE_RELATION_IS_NULL; }
 ;
 
 operator:	TOK_OPERATOR_AND		{ $$ = operator_and; }
-	|	TOK_OPERATOR_OR			{ $$ = operator_or; }
+       |	TOK_OPERATOR_OR		        { $$ = operator_or; }
 ;
 
 %%
@@ -269,10 +274,10 @@ static void yyerror(char *s)  /* Called by yyparse on error */
 
 idmef_criteria_t *idmef_criteria_new_string(const char *str)
 {
-	int len;
+        int retval;
+	size_t len;
 	char *buffer;
 	struct parser_control parser_control;
-	int retval;
 
 	/* 
 	 * yy_scan_buffer wants buffer terminated by a DOUBLE null character
@@ -293,13 +298,15 @@ idmef_criteria_t *idmef_criteria_new_string(const char *str)
 	yy_scan_buffer(buffer, len + 2, parser_control.scanner);
 
 	retval = yyparse(&parser_control);
-
+        
 	yylex_destroy(parser_control.scanner);
 	free(buffer);
 
 	if ( retval != 0 ) {
-		idmef_criteria_destroy(parser_control.criteria);
-		return NULL;
+                if ( parser_control.criteria )
+                        idmef_criteria_destroy(parser_control.criteria);
+
+                return NULL;
 	}
 
 	return parser_control.criteria;
