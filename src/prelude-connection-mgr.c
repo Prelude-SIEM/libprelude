@@ -859,6 +859,7 @@ void prelude_connection_mgr_destroy(prelude_connection_mgr_t *mgr)
         
         connection_list_destroy(mgr->or_list);
         timer_destroy(&mgr->timer);
+        prelude_failover_destroy(mgr->failover);
         
         free(mgr);
 }
