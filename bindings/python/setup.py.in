@@ -24,13 +24,17 @@ def is_system_wide_install():
     return os.access(get_python_lib(), os.W_OK)
 
 
+def builddir_is_srcdir():
+    return abspath("@top_srcdir@") == abspath("@top_builddir@")
+
+
 def pre_install():
     if not is_system_wide_install():
         sys.argv.extend(["--prefix", "@prefix@"])
 
 
 def pre_build():
-    if abspath("@top_srcdir@") != abspath("@top_builddir@"):
+    if not builddir_is_srcdir():
         for file in FILES_TO_BE_COPIED:
             src = "@top_srcdir@/bindings/python/" + file
             dst = "@top_builddir@/bindings/python/" + file
@@ -39,8 +43,9 @@ def pre_build():
 
 
 def pre_clean():
-    for file in FILES_TO_BE_COPIED:
-        exists(file) and os.remove(file)
+    if not builddir_is_srcdir():
+        for file in FILES_TO_BE_COPIED:
+            exists(file) and os.remove(file)
 
 
 def uninstall():
