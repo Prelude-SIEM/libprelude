@@ -26,6 +26,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <inttypes.h>
+#include <sys/poll.h>
+#include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -95,6 +97,59 @@ static void auth_error(prelude_client_t *client, const char *auth_kind)
         exit(1);
 }
 
+
+
+
+/*
+ * Check if the tcp connection has been closed by peer
+ * i.e if peer has sent a FIN tcp segment.
+ *
+ * It is important to call this function before writing on
+ * a tcp socket, otherwise the write will succeed despite
+ * the remote socket has been closed and next write will lead
+ * to a broken pipe
+ */
+static int is_tcp_connection_still_established(prelude_io_t *pio)
+{
+        int pending, ret;
+	struct pollfd pfd;
+        
+	pfd.events = POLLIN;
+	pfd.fd = prelude_io_get_fd(pio);
+
+	ret = poll(&pfd, 1, 0);
+	if ( ret < 0 ) {
+		log(LOG_ERR, "poll on tcp socket failed.\n");
+		return -1;
+	}
+
+	if ( ret == 0 )
+		return 0;
+
+	if ( pfd.revents & POLLERR ) {
+		log(LOG_ERR, "error polling tcp socket.\n");
+		return -1;
+	}
+
+	if ( pfd.revents & POLLHUP ) {
+		log(LOG_ERR, "connection hang up.\n");
+		return -1;
+	}
+
+	if ( ! (pfd.revents & POLLIN) )
+		return 0;
+
+	/*
+	 * Get the number of bytes to read
+	 */
+        pending = prelude_io_pending(pio);        
+	if ( pending <= 0 ) {
+		log(LOG_ERR, "connection has been closed by peer.\n");
+		return -1;
+	}
+
+	return 0;
+}
 
 
 
@@ -214,7 +269,6 @@ static int handle_plaintext_connection(prelude_client_t *client, int sock)
         prelude_msg_set(msg, PRELUDE_MSG_AUTH_PLAINTEXT, 0, NULL);
         prelude_msg_set(msg, PRELUDE_MSG_AUTH_USERNAME, ulen, user);
         prelude_msg_set(msg, PRELUDE_MSG_AUTH_PASSWORD, plen, pass);
-        prelude_io_set_socket_io(client->fd, sock);
         
         ret = prelude_msg_write(msg, client->fd);
         if ( ret <= 0 ) {
@@ -365,9 +419,9 @@ static int start_inet_connection(prelude_client_t *client)
                 client->saddr = strdup(inet_ntoa(addr.sin_addr));
                 client->sport = ntohs(addr.sin_port);
         }
-
-        prelude_io_set_socket_io(client->fd, sock);
-
+        
+        prelude_io_set_sys_io(client->fd, sock);
+        
         /*
          * get manager message telling what kind of connection it
          * support. Prefer SSL over plaintext if supported by both end.
@@ -409,9 +463,9 @@ static int start_unix_connection(prelude_client_t *client)
         sock = generic_connect(client->sa, client->sa_len);
         if ( sock < 0 )
                 return -1;
-
-        prelude_io_set_socket_io(client->fd, sock);
-
+        
+        prelude_io_set_sys_io(client->fd, sock);
+        
         ret = get_manager_setup(client->fd, &have_ssl, &have_plaintext);
         if ( ret < 0 ) {
                 close(sock);
@@ -429,7 +483,7 @@ static int start_unix_connection(prelude_client_t *client)
                 close(sock);
                 return -1;
         }
-
+        
         return 0;
 }
 
@@ -661,11 +715,11 @@ int prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
                 return -1;
 
         ret = prelude_msg_write(msg, client->fd);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't send message to Manager.\n");
+        if ( ret < 0 || (ret = is_tcp_connection_still_established(client->fd)) < 0 ) {
+                log(LOG_ERR, "could not send message to Manager.\n");
                 handle_connection_breakage(client);
         }
-
+        
         return ret;
 }
 

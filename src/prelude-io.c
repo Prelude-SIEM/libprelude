@@ -54,66 +54,6 @@ struct prelude_io {
 
 
 
-
-/*
- * Check if the tcp connection has been closed by peer
- * i.e if peer has sent a FIN tcp segment.
- *
- * It is important to call this function before writing on
- * a tcp socket, otherwise the write will succeed despite
- * the remote socket has been closed and next write will lead
- * to a broken pipe
- */
-static int is_tcp_connection_still_established(int fd)
-{
-        int pending;
-	struct pollfd pfd;
-	int ret;
-
-	pfd.fd = fd;
-	pfd.events = POLLIN;
-
-	ret = poll(&pfd, 1, 0);
-
-	if ( ret < 0 ) {
-		log(LOG_ERR, "poll on tcp socket failed.\n");
-		return -1;
-	}
-
-	if ( ret == 0 )
-		return 0;
-
-	if ( pfd.revents & POLLERR ) {
-		log(LOG_ERR, "error polling tcp socket.\n");
-		return -1;
-	}
-
-	if ( pfd.revents & POLLHUP ) {
-		log(LOG_ERR, "connection hang up.\n");
-		return -1;
-	}
-
-	if ( ! (pfd.revents & POLLIN) )
-		return 0;
-
-	/*
-	 * Get the number of bytes to read
-	 */
-	if ( ioctl(fd, FIONREAD, &pending) < 0 ) {
-		log(LOG_ERR, "ioctl FIONREAD failed on tcp socket.\n");
-		return -1;
-	}
-
-	if ( ! pending ) {
-		log(LOG_ERR, "connection has been closed by peer.\n");
-		return -1;
-	}
-
-	return 0;
-}
-
-
-
 /*
  * System IO functions.
  */
@@ -158,7 +98,14 @@ static int sys_close(prelude_io_t *pio)
 
 static ssize_t sys_pending(prelude_io_t *pio) 
 {
-        return -1;
+        ssize_t ret;
+        
+        if ( ioctl(pio->fd, FIONREAD, &ret) < 0 ) {
+                log(LOG_ERR, "ioctl FIONREAD failed on tcp socket.\n");
+                return -1;
+        }
+
+        return ret;
 }
 
 
@@ -214,45 +161,9 @@ static ssize_t file_pending(prelude_io_t *pio)
 
 
 
-
-/*
- * Socket IO functions.
- */
-static ssize_t socket_pending(prelude_io_t *pio)
-{
-        int ret;
-        
-        if ( ioctl(pio->fd, FIONREAD, &ret) < 0 ) {
-                log(LOG_ERR, "ioctl FIONREAD failed on tcp socket.\n");
-                return -1;
-        }
-
-        return ret;
-}
-
-
-
-static ssize_t socket_write(prelude_io_t *pio, const void *buf, size_t count)
-{
-	ssize_t ret;
-
-	if ( is_tcp_connection_still_established(pio->fd) < 0 )
-		return -1;
-
-        do {
-                ret = write(pio->fd, buf, count);
-        } while ( ret < 0 && (errno == EINTR || errno == EAGAIN) );
-
-	return ret;
-}
-
-
-
-
 /*
  * SSL IO functions
  */
-
 #ifdef HAVE_SSL
 
 static int handle_ssl_error(SSL *ssl, int ret, int errnum) 
@@ -311,9 +222,6 @@ static ssize_t ssl_write(prelude_io_t *pio, const void *buf, size_t count)
 {
         int ret;
 
-	if ( is_tcp_connection_still_established(pio->fd) < 0 )
-		return -1;
-
         do {        
                 ret = SSL_write(pio->fd_ptr, buf, count);
 
@@ -342,7 +250,7 @@ static ssize_t ssl_pending(prelude_io_t *pio)
         if ( ret > 0 )
                 return ret;
         
-        ret = socket_pending(pio);
+        ret = sys_pending(pio);
         if ( ret > 0 )
                 return ret;
         
@@ -719,26 +627,6 @@ void prelude_io_set_sys_io(prelude_io_t *pio, int fd)
         pio->write = sys_write;
         pio->close = sys_close;
         pio->pending = sys_pending;
-}
-
-
-
-/**
- * prelude_io_set_socket_io:
- * @pio: A pointer on the #prelude_io_t object.
- * @fd: A socket descriptor.
- *
- * Setup the @pio object to work with system based I/O function.
- * The @pio object is then associated with @fd.
- */
-void prelude_io_set_socket_io(prelude_io_t *pio, int fd) 
-{
-        pio->fd = fd;
-        pio->fd_ptr = NULL;
-        pio->read = sys_read;
-        pio->write = socket_write;
-        pio->close = sys_close;
-        pio->pending = socket_pending;
 }
 
 
