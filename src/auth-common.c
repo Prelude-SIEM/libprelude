@@ -29,8 +29,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include "auth-common.h"
+#include "config.h"
 #include "common.h"
+#include "auth-common.h"
+
 
 
 extern char *crypt(const char *key, const char *salt);

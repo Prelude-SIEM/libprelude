@@ -5,6 +5,8 @@
 	(auth_create_account): Documented. Put the cpass variable 
 	into the #ifdef scope.
 
+	include config.h
+
 2001-08-21  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/include/compat.h: if package is not defined, 
