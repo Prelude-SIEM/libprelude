@@ -750,7 +750,7 @@ prelude_option_t *prelude_option_add(prelude_option_t *parent, int flags,
 
 static void send_option_msg(void *context, prelude_option_t *opt, const char *iname, prelude_msgbuf_t *msg)
 {
-        char value[1024];
+        char value[1024] = { 0 };
         const char *name = (iname) ? iname : opt->longopt;
 
         prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_START, 0, NULL);
@@ -761,7 +761,7 @@ static void send_option_msg(void *context, prelude_option_t *opt, const char *in
         if ( opt->description )
                 prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_DESC, strlen(opt->description) + 1, opt->description);
 
-        if ( context && opt->get && opt->get(context, opt, value, sizeof(value)) >= 0 ) 
+        if ( context && opt->get && opt->get(context, opt, value, sizeof(value)) == 0 && *value ) 
                 prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_VALUE, strlen(value) + 1, value);
 }
 
