@@ -21,6 +21,10 @@
 *
 *****/
 
+#ifndef _LIBPRELUDE_PRELUDE_PATH_H
+#define _LIBPRELUDE_PRELUDE_PATH_H
+
+
 #include <inttypes.h>
 
 void prelude_get_auth_filename(char *buf, size_t size);
@@ -40,3 +44,5 @@ void prelude_set_program_userid(uid_t uid);
 void prelude_get_socket_filename(char *buf, size_t size, uint16_t port); 
 
 const char *prelude_get_sensor_name(void);
+
+#endif /* _LIBPRELUDE_PRELUDE_PATH_H */

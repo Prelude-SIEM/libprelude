@@ -21,6 +21,8 @@
 *
 *****/
 
+#ifndef _LIBPRELUDE_CONFIG_ENGINE_H
+#define _LIBPRELUDE_CONFIG_ENGINE_H
 
 typedef struct config config_t;
 
@@ -33,4 +35,6 @@ int config_set(config_t *cfg, const char *section, const char *entry, const char
 config_t *config_open(const char *filename);
 
 int config_close(config_t *cfg);
+
+#endif /* _LIBPRELUDE_CONFIG_ENGINE_H */
 

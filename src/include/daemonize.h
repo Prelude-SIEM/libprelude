@@ -21,4 +21,9 @@
 *
 *****/
 
+#ifndef _LIBPRELUDE_DAEMONIZE_H
+#define _LIBPRELUDE_DAEMONIZE_H
+
 int prelude_daemonize(const char *lockfile);
+
+#endif /* _LIBPRELUDE_DAEMONIZE_H */

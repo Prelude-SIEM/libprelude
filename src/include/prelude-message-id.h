@@ -21,6 +21,9 @@
 *
 *****/
 
+#ifndef _LIBPRELUDE_PRELUDE_MESSAGE_ID_H
+#define _LIBPRELUDE_PRELUDE_MESSAGE_ID_H
+
 /*
  * Top level message tag (to be used with prelude_msg_new()).
  */
@@ -50,3 +53,5 @@
 #define PRELUDE_MSG_AUTH_SUCCEED   6
 #define PRELUDE_MSG_AUTH_FAILED    7
 #define PRELUDE_MSG_AUTH_EXIST     8
+
+#endif /* _LIBPRELUDE_PRELUDE_MESSAGE_ID_H */

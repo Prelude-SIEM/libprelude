@@ -23,6 +23,10 @@
 /*
  * This enclose an option.
  */
+
+#ifndef _LIBPRELUDE_PRELUDE_GETOPT_WIDE_H
+#define _LIBPRELUDE_PRELUDE_GETOPT_WIDE_H
+
 #define PRELUDE_OPTION_START 0
 #define PRELUDE_OPTION_END   1
 
@@ -34,4 +38,6 @@
 #define PRELUDE_OPTION_INPUT_TYPE 7
 
 #define PRELUDE_OPTION_ARG 8
+
+#endif /* _LIBPRELUDE_PRELUDE_GETOPT_WIDE_H */
 

@@ -21,7 +21,8 @@
 *
 *****/
 
-
+#ifndef _LIBPRELUDE_IDMEF_MESSAGE_ID_H
+#define _LIBPRELUDE_IDMEF_MESSAGE_ID_H
 
 /*
  * Tag value
@@ -294,7 +295,7 @@
 #define MSG_ALERTIDENT_IDENT           0
 #define MSG_ALERTIDENT_ANALYZER_IDENT  1
 
-
+#endif /* _LIBPRELUDE_IDMEF_MESSAGE_ID_H */
 
 
 

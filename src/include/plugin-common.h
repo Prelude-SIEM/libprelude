@@ -21,8 +21,8 @@
 *
 *****/
 
-#ifndef PLUGIN_COMMON_H
-#define PLUGIN_COMMON_H
+#ifndef _LIBPRELUDE_PLUGIN_COMMON_H
+#define _LIBPRELUDE_PLUGIN_COMMON_H
 
 
 #define PLUGIN_GENERIC                 \
@@ -81,5 +81,5 @@ int plugin_unsubscribe(plugin_generic_t *plugin);
  */
 int plugin_request_new_id(void);
 
-#endif
+#endif /* _LIBPRELUDE_PLUGIN_COMMON_H */
 

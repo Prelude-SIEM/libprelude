@@ -1,5 +1,5 @@
-#ifndef STRING_MATCHING_H
-#define STRING_MATCHING_H
+#ifndef _LIBPRELUDE_STRING_MATCHING_H
+#define _LIBPRELUDE_STRING_MATCHING_H
 
 /* Boyer-Moore structure */
 typedef struct {
@@ -25,4 +25,4 @@ int BoyerMoore_CI_StringMatching(char *y, int n, char *x, int m,
 void BoyerMoore_GoodSuffixShift(char *x, int m, int bm_gs[]);
 void BoyerMoore_BadCharacterShift(char *x, int m, int bm_bc[]);
 
-#endif
+#endif LIBPRELUDE_STRING_MATCHING_H

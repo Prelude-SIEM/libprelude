@@ -22,8 +22,8 @@
 *****/
 
 
-#ifndef IDMEF_TREE_H
-#define IDMEF_TREE_H
+#ifndef _LIBPRELUDE_IDMEF_TREE_H
+#define _LIBPRELUDE_IDMEF_TREE_H
 
 #include <inttypes.h>
 
@@ -666,7 +666,7 @@ typedef struct {
         
 } idmef_message_t;
 
-#endif
+#endif /* _LIBPRELUDE_IDMEF_TREE_H */
 
 
 

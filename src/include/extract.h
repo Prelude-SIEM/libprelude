@@ -21,8 +21,8 @@
 *
 *****/
 
-#ifndef EXTRACT_H
-#define EXTRACT_H
+#ifndef _LIBPRELUDE_EXTRACT_H
+#define _LIBPRELUDE_EXTRACT_H
 
 
 #ifdef NEED_ALIGNED_ACCESS
@@ -200,5 +200,5 @@ static inline int extract_string_safe(const char **out, const char *buf, size_t 
 
 
 
-#endif
+#endif /* _LIBPRELUDE_EXTRACT_H */
 

@@ -21,6 +21,9 @@
 *
 *****/
 
+#ifndef _LIBPRELUDE_PRELUDE_IO_H
+#define _LIBPRELUDE_PRELUDE_IO_H
+
 #ifdef SWIG
 
 %module prelude_io
@@ -76,3 +79,5 @@ ssize_t prelude_io_forward(prelude_io_t *dst, prelude_io_t *src, size_t count);
 int prelude_io_get_fd(prelude_io_t *pio);
 
 void *prelude_io_get_fdptr(prelude_io_t *pio);
+
+#endif /* _LIBPRELUDE_PRELUDE_IO_H */

@@ -21,6 +21,9 @@
 *
 *****/
 
+#ifndef _LIBPRELUDE_PRELUDE_LOG_H
+#define _LIBPRELUDE_PRELUDE_LOG_H
+
 #include "syslog.h"
 
 
@@ -55,3 +58,5 @@ void prelude_log(int priority, const char *file, const char *function, int line,
         prelude_log_set_prefix(old_prefix);              \
         (func);                                          \
 } while(0);
+
+#endif /* _LIBPRELUDE_PRELUDE_LOG_H */

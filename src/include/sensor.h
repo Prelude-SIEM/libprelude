@@ -21,6 +21,9 @@
 *
 *****/
 
+#ifndef _LIBPRELUDE_SENSOR_H
+#define _LIBPRELUDE_SENSOR_H
+
 void prelude_sensor_send_msg(prelude_msg_t *msg);
 
 void prelude_sensor_send_msg_async(prelude_msg_t *msg);
@@ -38,3 +41,5 @@ void prelude_set_sensor_name(const char *sname);
 struct list_head *prelude_sensor_get_client_list(void);
 
 void prelude_sensor_notify_mgr_connection(void (*cb)(struct list_head *clist));
+
+#endif /* _LIBPRELUDE_SENSOR_H */

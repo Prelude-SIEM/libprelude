@@ -21,5 +21,9 @@
 *
 *****/
 
+#ifndef _LIBPRELUDE_SSL_SETTINGS_H
+#define _LIBPRELUDE_SSL_SETTINGS_H
+
 void prelude_ssl_ask_settings(int *keysize, int *expire);
 
+#endif /* _LIBPRELUDE_SSL_SETTINGS_H */

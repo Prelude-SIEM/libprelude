@@ -21,6 +21,9 @@
 *
 *****/
 
+#ifndef _LIBPRELUDE_PRELUDE_ASYNC_H
+#define _LIBPRELUDE_PRELUDE_ASYNC_H
+
 typedef void (*prelude_async_func_t)(void *object, void *data);
 
 
@@ -54,12 +57,5 @@ void prelude_async_add(prelude_async_object_t *obj);
 
 void prelude_async_del(prelude_async_object_t *obj);
 
-
-
-
-
-
-
-
-
+#endif /* _LIBPRELUDE_PRELUDE_ASYNC_H */
 

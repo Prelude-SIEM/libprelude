@@ -21,8 +21,8 @@
 *
 *****/
 
-#ifndef _PLUGIN_COMMON_PRV_H
-#define _PLUGIN_COMMON_PRV_H
+#ifndef _LIBPRELUDE_PLUGIN_COMMON_PRV_H
+#define _LIBPRELUDE_PLUGIN_COMMON_PRV_H
 
 #include "list.h"
 #include <inttypes.h>
@@ -120,7 +120,6 @@ int plugin_get_highest_id(void);
         pc->p_count++;                                                         \
 } while (0)
 
-
 /*
  * Macro used to start a plugin.
  */
@@ -135,5 +134,4 @@ int plugin_get_highest_id(void);
         pc->p_count++;                                                         \
 } while (0)
 
-
-#endif
+#endif /* _LIBPRELUDE_PLUGIN_COMMON_PRV_H */

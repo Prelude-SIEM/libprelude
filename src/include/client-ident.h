@@ -21,6 +21,11 @@
 *
 *****/
 
+#ifndef _LIBPRELUDE_CLIENT_IDENT_H
+#define _LIBPRELUDE_CLIENT_IDENT_H
+
 int prelude_client_ident_send(prelude_io_t *fd, int client_type);
 
 int prelude_client_ident_init(const char *sname);
+
+#endif /* _LIBPRELUDE_CLIENT_IDENT_H */

@@ -21,6 +21,9 @@
 *
 *****/
 
+#ifndef _LIBPRELUDE_IDMEF_MSG_SEND_H
+#define _LIBPRELUDE_IDMEF_MSG_SEND_H
+
 void idmef_send_string(prelude_msgbuf_t *msg, uint8_t tag, idmef_string_t *string);
 void idmef_send_uint64(prelude_msgbuf_t *msg, uint8_t tag, uint64_t *data);
 void idmef_send_uint32(prelude_msgbuf_t *msg, uint8_t tag, uint32_t data);
@@ -67,3 +70,5 @@ void idmef_send_heartbeat(prelude_msgbuf_t *msg, idmef_heartbeat_t *hb);
 void idmef_send_assessment(prelude_msgbuf_t *msg, idmef_assessment_t *assessment);
 
 int idmef_msg_send(prelude_msgbuf_t *msgbuf, idmef_message_t *idmef, uint8_t priority);
+
+#endif /* _LIBPRELUDE_IDMEF_MSG_SEND_H */

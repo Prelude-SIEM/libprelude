@@ -21,6 +21,9 @@
 *
 *****/
 
+#ifndef _LIBPRELUDE_PRELUDE_CLIENT_H
+#define _LIBPRELUDE_PRELUDE_CLIENT_H
+
 typedef struct prelude_client prelude_client_t;
 
 void prelude_client_destroy(prelude_client_t *client);
@@ -56,4 +59,4 @@ void prelude_client_set_type(prelude_client_t *client, int type);
  */
 uint64_t prelude_client_get_analyzerid(void);
 
-
+#endif /* _LIBPRELUDE_PRELUDE_CLIENT_H */

@@ -21,6 +21,9 @@
 *
 *****/
 
+#ifndef _LIBPRELUDE_PRELUDE_AUTH_H
+#define _LIBPRELUDE_PRELUDE_AUTH_H
+
 int prelude_auth_create_account(const char *filename, char **user, char **pass,
                                 int crypted, uid_t uid);
 
@@ -40,3 +43,4 @@ int prelude_auth_check(const char *authfile, const char *user, const char *pass)
 int prelude_auth_read_entry(const char *authfile, const char *wanted_user,
                             const char *wanted_pass, char **user, char **pass);
 
+#endif /* _LIBPRELUDE_PRELUDE_AUTH_H */

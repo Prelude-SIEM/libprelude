@@ -20,6 +20,10 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
+
+#ifndef _LIBPRELUDE_PRELUDE_LIST_H
+#define _LIBPRELUDE_PRELUDE_LIST_H
+
 #include "list.h"
 
 #define PRELUDE_LINKED_OBJECT \
@@ -55,3 +59,4 @@ static inline void prelude_list_add_tail(prelude_linked_object_t *obj, struct li
 #define prelude_list_get_object(listentry, type)  \
         (type *) list_entry(listentry, prelude_linked_object_t, list)
 
+#endif /* _LIBPRELUDE_PRELUDE_LIST_H */

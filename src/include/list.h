@@ -3,9 +3,8 @@
    Slight changes were made by Prelude developers.
 */ 
 
-#ifndef LIST_H
-
-#define LIST_H
+#ifndef _LIBPRELUDE_LIST_H
+#define _LIBPRELUDE_LIST_H
 
 /* 
  * NOTE: This file must be always included AFTER <sys/queue.h> (or, any file
@@ -177,5 +176,4 @@ static inline void list_splice(struct list_head *list, struct list_head *head)
         for (pos = (head)->prev, n = pos->prev; pos != (head); \
                  pos = n, n = pos->prev)
 
-
-#endif
+#endif /* _LIBPRELUDE_LIST_H */

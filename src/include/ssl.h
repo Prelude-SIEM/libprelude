@@ -21,8 +21,13 @@
 *
 *****/
 
+#ifndef _LIBPRELUDE_SSL_H
+#define _LIBPRELUDE_SSL_H
+
 #include <openssl/ssl.h>
 
 int ssl_init_client(void);
 
 SSL *ssl_connect_server(int socket);
+
+#endif /* _LIBPRELUDE_SSL_H */

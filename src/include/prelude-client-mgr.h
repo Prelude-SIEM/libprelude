@@ -21,6 +21,8 @@
 *
 *****/
 
+#ifndef _LIBPRELUDE_PRELUDE_CLIENT_MGR_H
+#define _LIBPRELUDE_PRELUDE_CLIENT_MGR_H
 
 typedef struct prelude_client_mgr prelude_client_mgr_t;
 
@@ -34,3 +36,5 @@ prelude_client_mgr_t *prelude_client_mgr_new(int type, const char *cfgline);
 void prelude_client_mgr_notify_connection(prelude_client_mgr_t *mgr, void (*callback)(struct list_head *clist));
 
 struct list_head *prelude_client_mgr_get_client_list(prelude_client_mgr_t *mgr);
+
+#endif /* _LIBPRELUDE_PRELUDE_CLIENT_MGR_H */

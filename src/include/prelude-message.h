@@ -21,6 +21,9 @@
 *
 *****/
 
+#ifndef _LIBPRELUDE_PRELUDE_MESSAGE_H
+#define _LIBPRELUDE_PRELUDE_MESSAGE_H
+
 #ifdef SWIG
 
  %module prelude_message
@@ -100,3 +103,4 @@ void prelude_msg_destroy(prelude_msg_t *msg);
 
 void prelude_msg_reset(prelude_msg_t *msg);
 
+#endif /* _LIBPRELUDE_PRELUDE_MESSAGE_H */

@@ -21,6 +21,8 @@
 *
 *****/
 
+#ifndef _LIBPRELUDE_PRELUDE_GETOPT_H
+#define _LIBPRELUDE_PRELUDE_GETOPT_H
 
 /*
  * prelude_option_add flags
@@ -89,3 +91,5 @@ prelude_option_t *prelude_option_add(prelude_option_t *parent, int flags,
 #define OPT_INVAL_ARG 0x2
 
 void prelude_option_set_warnings(int flags, int *old_flags);
+
+#endif /* _LIBPRELUDE_PRELUDE_GETOPT_H */

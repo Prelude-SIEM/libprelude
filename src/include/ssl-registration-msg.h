@@ -21,9 +21,8 @@
 *
 *****/
 
-#ifndef SSL_REGISTRATION_MSG_H
-
-#define SSL_REGISTRATION_MSG_H
+#ifndef _LIBPRELUDE_SSL_REGISTRATION_MSG_H
+#define _LIBPRELUDE_SSL_REGISTRATION_MSG_H
 
 #include <openssl/des.h>
 #include <openssl/buffer.h>
@@ -66,4 +65,4 @@ int prelude_ssl_send_cert(prelude_io_t *pio, const char *filename,
 
 int prelude_ssl_save_cert(const char *filename, char *cert, int certlen, uid_t uid);
 
-#endif
+#endif /* LBPRELUDE_SSL_REGISTRATION_MSG_H */

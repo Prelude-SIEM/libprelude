@@ -23,11 +23,11 @@
 *
 *****/
 
-#ifndef RULES_VARIABLE_H
-#define RULES_VARIABLE_H
+#ifndef _LIBPRELUDE_RULES_VARIABLE_H
+#define _LIBPRELUDE_RULES_VARIABLE_H
 
 int variable_set(char *variable, char *value);
 int variable_unset(const char *variable);
 char *variable_get(const char *variable);
 
-#endif
+#endif /* _LIBPRELUDE_RULES_VARIABLE_H */

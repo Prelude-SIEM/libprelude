@@ -21,10 +21,8 @@
 *
 *****/
 
-
-#ifndef IDMEF_FUNC_H
-#define IDMEF_FUNC_H
-
+#ifndef _LIBPRELUDE_IDMEF_TREE_FUNC_H
+#define _LIBPRELUDE_IDMEF_TREE_FUNC_H
 
 typedef struct {
         int msglen;
@@ -144,11 +142,4 @@ void idmef_additional_data_free(idmef_additional_data_t *data);
 	(s)->string = (str); (s)->len = strlen((str)) + 1; \
 } while (0)
 
-#endif
-
-
-
-
-
-
-
+#endif LIBPRELUDE_IDMEF_TREE_FUNC_H

@@ -1,3 +1,6 @@
+#ifndef _LIBPRELUDE_THREADS_H
+#define _LIBPRELUDE_THREADS_H
+
 #include "config.h"
 
 #ifdef ENABLE_PROFILING
@@ -108,3 +111,5 @@ static int gprof_pthread_create(pthread_t *thread, pthread_attr_t *attr,
 #define pthread_create gprof_pthread_create
 
 #endif
+
+#endif /* _LIBPRELUDE_THREADS_H */
