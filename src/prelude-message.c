@@ -576,8 +576,10 @@ ssize_t prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst)
 void prelude_msg_recycle(prelude_msg_t *msg) 
 {
         msg->header_index = 0;
-        msg->read_index = PRELUDE_MSG_HDR_SIZE;
         msg->write_index = PRELUDE_MSG_HDR_SIZE;
+
+        if ( msg->read_index )
+                msg->read_index = PRELUDE_MSG_HDR_SIZE;
 }
 
 
