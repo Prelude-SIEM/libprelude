@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2002-2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -30,12 +30,16 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <assert.h>
 #include <errno.h>
+#include <stdarg.h>
+#include <time.h>
 
+#include "prelude-strbuf.h"
 #include "prelude-log.h"
 #include "common.h"
 
@@ -251,4 +255,54 @@ uint64_t prelude_hton64(uint64_t val)
 #endif
         
         return tmp;
+}
+
+
+
+int prelude_get_file_name_and_path(const char *str, char **name, char **path)
+{
+        int ret = 0;
+	char buf[512], cwd[PATH_MAX], *ptr;
+                
+        if ( *str != '/' ) {
+                ret = snprintf(buf, sizeof(buf), "%s/", getcwd(cwd, sizeof(cwd)));
+                if ( ret < 0 || ret >= sizeof(buf) )
+                        return -1;
+        }
+        
+        ptr = strrchr(str, '/');
+        if ( ptr ) {
+                *ptr++ = '\0';
+
+                ret = snprintf(buf + ret, sizeof(buf) - ret, "%s/", str);
+                if ( ret < 0 || ret >= sizeof(buf) )
+                        return -1;
+                
+                str = ptr;
+        }
+        
+        *name = strdup(str);
+        *path = strdup(buf);
+        
+	return ret;
+}
+
+
+
+
+int prelude_get_gmt_offset(time_t time_local, int *gmt_offset)
+{
+        struct tm tm_utc;
+        time_t time_utc, time_local;
+                
+        if ( ! gmtime_r(&time_local, &tm_utc) ) {
+                log(LOG_ERR, "error converting local time to utc time.\n");
+                return -1;
+        }
+        
+        tm_utc.tm_isdst = -1;
+        time_utc = mktime(&tm_utc);
+        *gmt_offset = time_local - time_utc;
+        
+        return 0;
 }

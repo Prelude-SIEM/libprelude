@@ -32,6 +32,7 @@
 #include <errno.h>
 
 #include "list.h"
+#include "common.h"
 #include "prelude-log.h"
 
 #include "idmef-string.h"
@@ -288,7 +289,7 @@ static int get_tm_and_offset(struct tm *tm, int *gmt_offset)
 
 	time(&current_time);
 
-	if ( prelude_get_gmt_offset(gmt_offset) < 0 )
+	if ( prelude_get_gmt_offset(current_time, gmt_offset) < 0 )
 		return -1;
 
 	current_time += *gmt_offset;

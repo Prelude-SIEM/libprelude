@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2002, 2003, 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -36,5 +36,9 @@ int prelude_open_persistant_tmpfile(const char *filename, int flags, mode_t mode
 int prelude_read_multiline(FILE *fd, int *line, char *buf, size_t size);
 
 uint64_t prelude_hton64(uint64_t val);
+
+int prelude_get_file_name_and_path(const char *str, char **name, char **path);
+
+int prelude_get_gmt_offset(time_t time_local, int *gmt_offset);
 
 #endif /* _LIBPRELUDE_COMMON_H */
