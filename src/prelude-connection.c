@@ -50,7 +50,6 @@
 #include "prelude-client.h"
 #include "prelude-log.h"
 #include "prelude-io.h"
-#include "prelude-inet.h"
 #include "prelude-msg.h"
 #include "prelude-message-id.h"
 #include "prelude-client.h"
