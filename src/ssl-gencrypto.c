@@ -340,8 +340,6 @@ X509 *ssl_gen_crypto(int days, int keysize, const char *keyout, int crypt)
          * (see ChangeLog of 2001-03-30).
          */
         old_mask = umask(S_IRWXG|S_IRWXO);
-
-        printf("keyout=%s\n", keyout);
         
 	BIO_printf(bio_err, "Writing new private key to '%s'\n", keyout);
 	if (BIO_write_filename(out, keyout) <= 0) {
