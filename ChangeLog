@@ -1,5 +1,18 @@
 2002-01-15  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/prelude-client-mgr.c (broadcast_saved_message): 
+	(flush_backup_if_needed): Better error handling. Make the difference
+	between communication error, and other error...
+
+	(broadcast_saved_message): if there is a problem when forwarding
+	the data to the client, then increment the count of connection dead
+	and return a communication error.
+
+	(parse_config_line):
+	(client_timer_expire): After a successfull reconnection, check the
+	flush_backup_if_needed() return value. If it indicate a communication
+	error, re-init the connection timer. Else continue.
+	
 	* src/prelude-client.c (prelude_client_forward): 
 	handle the case where the connection break the same way
 	as in prelude_client_send_msg()

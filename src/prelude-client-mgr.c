@@ -115,6 +115,9 @@ static void expand_timeout(prelude_timer_t *timer)
 }
 
 
+#define other_error -2
+#define communication_error -1
+
 
 static int broadcast_saved_message(client_list_t *clist, prelude_io_t *fd, size_t size) 
 {
@@ -130,13 +133,14 @@ static int broadcast_saved_message(client_list_t *clist, prelude_io_t *fd, size_
                 ret = lseek(prelude_io_get_fd(fd), 0L, SEEK_SET);
                 if ( ret < 0 ) {
                         log(LOG_ERR, "couldn't seek to the begining of the file.\n");
-                        return -1;
+                        return other_error; 
                 }
                 
                 ret = prelude_client_forward(client->client, fd, size);
                 if ( ret < 0 ) {
+                        clist->dead++;
                         log(LOG_ERR, "error forwarding saved message.\n");
-                        return -1;
+                        return communication_error;
                 }
         }
 
@@ -146,7 +150,7 @@ static int broadcast_saved_message(client_list_t *clist, prelude_io_t *fd, size_
 
 
 
-static void flush_backup_if_needed(client_list_t *clist) 
+static int flush_backup_if_needed(client_list_t *clist) 
 {
         int ret;
         struct stat st;
@@ -155,23 +159,25 @@ static void flush_backup_if_needed(client_list_t *clist)
         ret = fstat(prelude_io_get_fd(pio), &st);
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't stat backup file descriptor.\n");
-                return;
+                return other_error;
         }
         
         if ( st.st_size == 0 )
-                return; /* no data saved */
+                return 0; /* no data saved */
         
         ret = broadcast_saved_message(clist, pio, st.st_size);
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't broadcast saved message.\n");
-                return;
+                return ret;
         }
         
         ret = ftruncate(prelude_io_get_fd(clist->parent->backup_fd_write), 0);
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't truncate backup FD to 0 bytes.\n");
-                return;
+                return other_error;
         }
+
+        return 0;
 }
 
 
@@ -202,8 +208,11 @@ static void client_timer_expire(void *data)
                  */
                 timer_destroy(&client->timer);
                 
-                if ( --client->parent->dead == 0 ) 
-                        flush_backup_if_needed(client->parent);
+                if ( --client->parent->dead == 0 ) {
+                        ret = flush_backup_if_needed(client->parent);
+                        if ( ret == communication_error )
+                                timer_init(&client->timer);
+                }
         }
 }
 
@@ -362,8 +371,9 @@ static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline)
                          * if it is, flush a potential backup file from previous session.
                          */
                         if ( clist->dead == 0 ) {
-                                working_and = 1;
-                                flush_backup_if_needed(clist);
+                                ret = flush_backup_if_needed(clist);
+                                if ( ret != communication_error )
+                                        working_and = 1;
                         }
                         
                         /*
@@ -465,9 +475,8 @@ static int setup_backup_fd(prelude_client_mgr_t *new)
                 return -1;
         
         new->backup_fd_read = prelude_io_new();
-        if (! new->backup_fd_read ) {
+        if (! new->backup_fd_read ) 
                 return -1;
-        }
         
         /*
          * we want two different descriptor in order to
