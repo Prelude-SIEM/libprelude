@@ -33,15 +33,17 @@
 
 
 typedef enum {
-        PRELUDE_LOG_INFO,
-        PRELUDE_LOG_WARN,
-        PRELUDE_LOG_ERR ,
+        PRELUDE_LOG_INFO =  0x01,
+        PRELUDE_LOG_WARN =  0x02,
+        PRELUDE_LOG_ERR  =  0x04,
+        PRELUDE_LOG_DEBUG = 0x08,
 } prelude_log_t;
 
 
 typedef enum {
         PRELUDE_LOG_FLAGS_QUIET  = 0x01, /* Drop PRELUDE_LOG_PRIORITY_INFO */
-        PRELUDE_LOG_FLAGS_SYSLOG = 0x02
+        PRELUDE_LOG_FLAGS_SYSLOG = 0x02,
+        PRELUDE_LOG_FLAGS_DEBUG  = 0x04,
 } prelude_log_flags_t;
 
 

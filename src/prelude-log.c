@@ -66,7 +66,7 @@ static void syslog_log(prelude_log_t priority, const char *file,
 
         while (*fmt == '\n') fmt++;
         
-        if ( priority == PRELUDE_LOG_ERR ) {
+        if ( priority >= PRELUDE_LOG_ERR ) {
                 
                 len = vsnprintf(buf, sizeof(buf), fmt, *ap);
                 if ( len < 0 || len >= sizeof(buf) )
@@ -102,11 +102,11 @@ static void standard_log(prelude_log_t priority, const char *file,
                          const char *function, int line, const char *fmt, va_list *ap)
 {
         FILE *out = get_out_fd(priority);
-
+        
         if ( global_prefix )
                 fprintf(out, "%s", global_prefix);                
-                
-        if ( priority == PRELUDE_LOG_ERR ) {
+                     
+        if ( priority >= PRELUDE_LOG_ERR ) {
                 if ( errno )
                         fprintf(out, "%s:%s:%d: %s: ", file, function, line, strerror(errno));
                 else
@@ -122,12 +122,15 @@ static void standard_log(prelude_log_t priority, const char *file,
 
 void prelude_log_v(prelude_log_t priority, const char *file,
                    const char *function, int line, const char *fmt, va_list ap) 
-{        
+{
+        if ( (priority == PRELUDE_LOG_INFO && log_flags & PRELUDE_LOG_FLAGS_QUIET) ||
+             (priority == PRELUDE_LOG_DEBUG && ! (log_flags & PRELUDE_LOG_FLAGS_DEBUG)) )
+                return;
+        
         if ( log_flags & PRELUDE_LOG_FLAGS_SYSLOG )
                 syslog_log(priority, file, function, line, fmt, &ap);
 
-        else if ( ! (log_flags & PRELUDE_LOG_FLAGS_QUIET) || priority > PRELUDE_LOG_INFO )
-                standard_log(priority, file, function, line, fmt, &ap);
+        else standard_log(priority, file, function, line, fmt, &ap);
         
         errno = 0;
 }
