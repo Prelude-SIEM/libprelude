@@ -270,7 +270,7 @@ static int parse_buffer(char *str, char **entry, char **value)
         
         *value = *entry = NULL;
 
-        ptr = strsep(&buf, "=");        
+        ptr = prelude_strsep(&buf, "=");        
         if ( ! *ptr )
                 return -1;
         
@@ -279,7 +279,7 @@ static int parse_buffer(char *str, char **entry, char **value)
         if ( buf ) 
                 *(buf - 1) = '=';
         
-        ptr = strsep(&buf, "\0");
+        ptr = prelude_strsep(&buf, "=");
         if ( ptr )
                 *value = strip_value(ptr);
 

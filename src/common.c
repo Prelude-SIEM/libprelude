@@ -358,3 +358,26 @@ char *prelude_strnstr(const char *str, const char *needed, size_t len)
         return NULL;
 }
 
+
+
+char *prelude_strsep(char **stringp, const char *delim)
+{
+        size_t len;
+        char *ptr, *start = *stringp;
+        
+        if ( ! start )
+                return NULL;
+
+        ptr = strstr(start, delim);
+        if ( ! ptr ) {
+                *stringp = NULL;
+                return start;
+        }
+        
+        len = strlen(delim);
+        
+        *ptr = 0;
+        *stringp = ptr + len;
+
+        return start;
+}
