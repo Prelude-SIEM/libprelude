@@ -21,8 +21,6 @@
 *
 *****/
 
-uint64_t prelude_client_get_analyzerid(void);
-
 int prelude_client_ident_send(prelude_io_t *fd);
 
 int prelude_client_ident_init(const char *sname);

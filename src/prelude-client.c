@@ -125,7 +125,7 @@ static int unix_connect(void)
 	}
         
 	addr.sun_family = AF_UNIX;
-	strcpy(addr.sun_path, prelude_get_socket_filename());
+	strncpy(addr.sun_path, prelude_get_socket_filename(), sizeof(addr.sun_path));
 
         ret = generic_connect(sock, (struct sockaddr *)&addr, sizeof(addr));
         if ( ret < 0 ) {

@@ -43,3 +43,8 @@ uint16_t prelude_client_get_sport(prelude_client_t *client);
 uint16_t prelude_client_get_dport(prelude_client_t *client);
 
 int prelude_client_is_alive(prelude_client_t *client);
+
+/*
+ * this one is located in client-ident.c
+ */
+uint64_t prelude_client_get_analyzerid(void);
