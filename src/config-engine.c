@@ -63,21 +63,6 @@ static void free_val(char **val)
 
 
 
-/*
- * Remove '\n' and at the end of the string. 
- */
-static char *chomp(char *string) 
-{
-        char *ptr;
-        
-        if ( (ptr = strrchr(string, '\n')) )
-                *ptr = '\0';
-
-        return string;
-}
-
-
-
 static prelude_bool_t is_line_commented(const char *line) 
 {
         while (*line == ' ' || *line == '\t')
@@ -261,20 +246,22 @@ static int load_file_in_memory(config_t *cfg)
                 return prelude_error_from_errno(errno);
         }
         
-        while ( fgets(line, sizeof(line), fd) ) {
-                len = strlen(line);
-
-                if ( line[len - 1] == '\n' )
-                        line[len - 1] = 0;
-                
-                ret = prelude_string_cat(out, line);
-                if ( ret < 0 )
-                        goto err;
-                
-                if ( line[len - 1] != 0 )
-                        continue;
-                
-                line[len - 1] = 0;
+        do {
+                len = 0;
+                ptr = fgets(line, sizeof(line), fd);
+                if ( ptr ) {
+                        len = strlen(line);
+                        
+                        if ( line[len - 1] == '\n' )
+                                line[len - 1] = 0;
+                        
+                        ret = prelude_string_cat(out, line);
+                        if ( ret < 0 )
+                                goto err;
+                        
+                        if ( line[len - 1] != 0 )
+                                continue;
+                }
                 
                 ret = prelude_string_get_string_released(out, &ptr);
                 if ( ret < 0 )
@@ -285,7 +272,7 @@ static int load_file_in_memory(config_t *cfg)
                         goto err;
                 
                 prelude_string_clear(out);
-        }
+        } while ( ptr );
 
  err:
         prelude_string_destroy(out);
