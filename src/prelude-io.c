@@ -165,14 +165,35 @@ static ssize_t file_pending(prelude_io_t *pio)
 /*
  * TLS IO functions
  */
+static int check_alert(prelude_io_t *pio, int ret)
+{
+        const char *alert;
+
+        if ( ret == GNUTLS_E_WARNING_ALERT_RECEIVED ) {
+                alert = gnutls_alert_get_name(gnutls_alert_get(pio->fd_ptr));
+                log(LOG_INFO, "- TLS: received warning alert: %s.\n", alert);
+                return 0;
+        }
+        
+        else if ( ret == GNUTLS_E_FATAL_ALERT_RECEIVED ) {
+                alert = gnutls_alert_get_name(gnutls_alert_get(pio->fd_ptr));
+                log(LOG_INFO, "- TLS: received fatal alert: %s.\n", alert);
+                return -1;
+        }
+        
+        return ret;
+}
+
+
+
 static ssize_t tls_read(prelude_io_t *pio, void *buf, size_t count) 
 {
         ssize_t ret;
         
         do {
                 ret = gnutls_record_recv(pio->fd_ptr, buf, count);
-                
-        } while ( ret < 0 && (ret == GNUTLS_E_INTERRUPTED || ret == GNUTLS_E_AGAIN) );
+                                              
+        } while ( ret < 0 && (ret == GNUTLS_E_INTERRUPTED || check_alert(pio, ret) == 0) );
         
         return ret;
 }
@@ -185,8 +206,8 @@ static ssize_t tls_write(prelude_io_t *pio, const void *buf, size_t count)
 
         do {        
                 ret = gnutls_record_send(pio->fd_ptr, buf, count);
-
-        } while ( ret < 0 && (ret == GNUTLS_E_INTERRUPTED || ret == GNUTLS_E_AGAIN) );
+                
+        } while ( ret < 0 && (ret == GNUTLS_E_INTERRUPTED || check_alert(pio, ret) == 0) );
         
         return ret;
 }
