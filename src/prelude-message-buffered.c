@@ -33,7 +33,6 @@
 #include "prelude-io.h"
 #include "prelude-message.h"
 #include "idmef-tree.h"
-#include "sensor.h"
 #include "prelude-message-buffered.h"
 
 
@@ -118,7 +117,7 @@ prelude_msgbuf_t *prelude_msgbuf_new(prelude_client_t *client)
 
         msgbuf->client = client;
         
-        if ( prelude_client_get_flags(client) & PRELUDE_CLIENT_ASYNC_SEND )
+        if ( client && prelude_client_get_flags(client) & PRELUDE_CLIENT_ASYNC_SEND )
                 msgbuf->send_msg = send_msg_async;
         else
                 msgbuf->send_msg = send_msg;
@@ -177,9 +176,10 @@ void prelude_msgbuf_mark_end(prelude_msgbuf_t *msgbuf)
  * all data remaining will be flushed before closing it.
  */
 void prelude_msgbuf_close(prelude_msgbuf_t *msgbuf) 
-{
-        msgbuf->send_msg(msgbuf);
-        
+{        
+        if ( msgbuf->msg && ! prelude_msg_is_empty(msgbuf->msg) )
+                msgbuf->send_msg(msgbuf);
+
         if ( msgbuf->msg )
                 prelude_msg_destroy(msgbuf->msg);
 
