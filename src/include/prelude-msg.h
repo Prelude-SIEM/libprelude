@@ -56,7 +56,7 @@ prelude_msg_t *prelude_msg_new(size_t msgcount, size_t msglen, uint8_t tag, uint
 
 void prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *data);
 
-ssize_t prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst);
+int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst);
 
 
 

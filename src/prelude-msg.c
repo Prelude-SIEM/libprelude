@@ -531,9 +531,9 @@ int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src
  * object to @dst. The message should have been created using the
  * prelude_msg_new() and prelude_msg_set() functions.
  *
- * Returns: The number of bytes written, or -1 if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
-ssize_t prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst) 
+int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst) 
 {
         ssize_t ret;
         uint32_t dlen = msg->write_index;
