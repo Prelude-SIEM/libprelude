@@ -127,6 +127,9 @@ inline void idmef_write_time(prelude_msgbuf_t *msg, uint8_t tag, idmef_time_t *d
 \{
         uint32_t tmp;
         unsigned char buf[12];
+
+        if ( ! data )
+                return;
       
         tmp = htonl(idmef_time_get_sec(data));
         memcpy(buf, &tmp, sizeof(tmp));
