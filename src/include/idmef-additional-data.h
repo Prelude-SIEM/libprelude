@@ -45,21 +45,28 @@ idmef_additional_data_t *idmef_additional_data_new_ptr_ref_fast(idmef_additional
 idmef_additional_data_t *idmef_additional_data_new_ptr_dup_fast(idmef_additional_data_type_t type,
                                                                 const unsigned char *data, size_t len);
 idmef_additional_data_t *idmef_additional_data_new_ptr_nodup_fast(idmef_additional_data_type_t type,
-                                                                  unsigned char *data, size_t len);
+                                                                unsigned char *data, size_t len);
 
 int idmef_additional_data_set_ptr_ref_fast(idmef_additional_data_t *ad,
-                                           idmef_additional_data_type_t type, const unsigned char *data, size_t len);
+                                            idmef_additional_data_type_t type, const unsigned char *data, size_t len);
 
 int idmef_additional_data_set_ptr_dup_fast(idmef_additional_data_t *ad,
-                                           idmef_additional_data_type_t type, const unsigned char *data, size_t len);
+                                            idmef_additional_data_type_t type, const unsigned char *data, size_t len);
 
 int idmef_additional_data_set_ptr_nodup_fast(idmef_additional_data_t *ad,
-                                             idmef_additional_data_type_t type, unsigned char *data, size_t len);
+                                            idmef_additional_data_type_t type, unsigned char *data, size_t len);
 
 
 /*
  * string.
  */
+
+int idmef_additional_data_set_str_dup_fast(idmef_additional_data_t *data, idmef_additional_data_type_t type,
+                                            const char *str, size_t len);
+
+idmef_additional_data_t *idmef_additional_data_new_str_dup_fast(idmef_additional_data_type_t type, const char *str,
+                                            size_t len);
+
 #define idmef_additional_data_new_string_ref_fast(data, len) \
         idmef_additional_data_new_ptr_ref_fast(IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
 
