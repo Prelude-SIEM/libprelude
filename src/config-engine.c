@@ -45,7 +45,7 @@
 struct config {
         char *filename; /* filename for this session */
         char **content; /* content of the file */
-        prelude_bool_t need_sync;  /* do the file need to be synced on disk ? */
+        prelude_bool_t need_sync;  /* does the file need to be synced on disk ? */
         unsigned int elements;   /* array number of elements */
 };
 
@@ -78,8 +78,8 @@ static prelude_bool_t is_line_commented(const char *line)
 
 
 /*
- * If line contain a section, return a pointer to
- * the begining of the section name.
+ * If line contains a section, returns a pointer to
+ * the beginning of the section name.
  */
 static prelude_bool_t is_section(const char *line) 
 {
@@ -123,8 +123,8 @@ static char *get_section(const char *in)
 
 
 /*
- * Free old line pointed to by line,
- * and set to the new one.
+ * Frees old line pointed by line,
+ * and sets to the new one.
  */
 static void op_modify_line(char **line, char *nline) 
 {
@@ -165,8 +165,8 @@ static int op_delete_line(config_t *cfg, unsigned int start, unsigned int end)
 
 
 /*
- * Append a line to an array of line.
- * Take the address of the array and the line to append as arguments.
+ * Appends a line to an array of line.
+ * Takes the address of the array and the line to append as arguments.
  *
  * list must be NULL the first time this function is called,
  * in order to initialize indexing variable.
@@ -229,7 +229,7 @@ static int op_insert_line(config_t *cfg, char *line, unsigned int lins)
         
 
 /*
- * Load filename into memory, we use append_line() for that.
+ * Loads filename into memory, we use append_line() for that.
  */
 static int load_file_in_memory(config_t *cfg)
 {
@@ -456,7 +456,7 @@ static int search_section(config_t *cfg, const char *section, unsigned int i)
 
 /*
  * Search an entry (delimited by '=' character) in content.
- * return the line number matching 'entry' or -1.
+ * returns the line number matching 'entry' or -1.
  */
 static int search_entry(config_t *cfg, const char *section,
                         const char *entry, unsigned int *index, char **eout, char **vout) 
@@ -510,7 +510,7 @@ static int search_entry(config_t *cfg, const char *section,
 
 
 /*
- * Create a new line using entry 'entry' & value 'val'.
+ * Creates a new line using entry 'entry' & value 'val'.
  */
 static char *create_new_line(const char *entry, const char *val) 
 {
@@ -570,7 +570,7 @@ static int sync_and_free_file_content(const char *filename, char **content)
 
 
 /*
- * free the 'content' array, and it's pointer.
+ * frees the 'content' array, and its pointer.
  * 'content' is the content of the file loaded into memory.
  */
 static void free_file_content(char **content) 
@@ -663,8 +663,8 @@ static int new_section_line(config_t *cfg, const char *section,
  * @entry: Entry to set.
  * @val: Value for the entry.
  *
- * Set an entry 'entry' to the specified value, and, in case
- * it is not NULL, in the specified section in the config file
+ * Sets an entry 'entry' to the specified value, and, in case
+ * it is not NULL, in the specified section in the configuration file
  * identified by 'cfg'.
  *
  * Returns: 0 on success, -1 otherwise.
@@ -719,12 +719,12 @@ static const char *get_variable_content(config_t *cfg, const char *variable)
         const char *ptr;
         
         /*
-         * Variable set at runtime.
+         * Variable sets at runtime.
          */
         ptr = variable_get(variable);
         if ( ! ptr )
                 /*
-                 * other variable (declared in the configuration file).
+                 * Other variable (declared in the configuration file).
                  */
                 ptr = config_get(cfg, NULL, variable, &line);
 
@@ -741,14 +741,14 @@ static const char *get_variable_content(config_t *cfg, const char *variable)
  * @entry: Pointer address where the current entry should be stored.
  * @line: Pointer to a line number we should start the search at.
  *
- * Parse the whole configuration file starting at @line,
- * and store the current section, entry and value within the
+ * Parses the whole configuration file starting at @line,
+ * and stores the current section, entry and value within the
  * provided argument.
  *
- * The caller has to call config_get_next() until it return -1
+ * The caller has to call config_get_next() until it returns -1
  * or memory will be leaked.
  *
- * If the value gathered start with a '$', which mean it is
+ * If the value gathered starts with a '$', which means it is
  * a variable, the variable is automatically looked up.
  *
  * Returns: 0 on success, -1 if there is nothing more to read.
@@ -794,7 +794,7 @@ int config_get_next(config_t *cfg, char **section, char **entry, char **value, u
 /**
  * config_get_section:
  * @cfg: Configuration file identifier.
- * @section: Section we are searching for.
+ * @section: Section we are searching.
  * @line: Pointer to a line number we should start the search at.
  *
  * If @section is found, @line is updated to reflect
@@ -829,12 +829,12 @@ int config_get_section(config_t *cfg, const char *section, unsigned int *line)
  * @entry: Entry to gather the value from.
  * @line: Pointer to a line number we should start the search at.
  *
- * Get value associated with @entry, in the optionnaly specified
+ * Gets value associated with @entry, in the optionaly specified
  * @section, in the configuration file represented by the @cfg
- * abstract data type. If @entry is found, update @line to reflect
+ * abstracted data type. If @entry is found, update @line to reflect
  * the line it was found at.
  *
- * If the value gathered start with a '$', which mean it is
+ * If the value gathered starts with a '$', which means it is
  * a variable, the variable is automatically looked up.
  *
  * If both @entry and @section are NULL, config_get() will try to
@@ -842,7 +842,7 @@ int config_get_section(config_t *cfg, const char *section, unsigned int *line)
  * section was previously set) as the one previously searched.
  *
  * Returns: The entry value on success, an empty string if the entry
- * exist but have no value, NULL on error.
+ * exists but has no value, NULL on error.
  */
 char *config_get(config_t *cfg, const char *section, const char *entry, unsigned int *line) 
 {
@@ -913,7 +913,7 @@ int config_close(config_t *cfg)
  * config_open:
  * @filename: The configuration file.
  *
- * Open the configuration file pointed to by 'filename' and load it into memory,
+ * Opens the configuration file pointed to by 'filename' and loads it into memory,
  * the returned #config_t object will have to be used for any operation on this
  * configuration file.
  *
