@@ -295,15 +295,13 @@ prelude_failover_t *prelude_failover_new(const char *dirname)
         ret = mkdir(dirname, S_IRUSR|S_IWUSR);
         if ( ret < 0 && errno != EEXIST ) {
                 log(LOG_ERR, "error creating %s.\n", dirname);
-                prelude_io_destroy(new->fd);
-                free(new);
+                prelude_failover_destroy(new);
                 return NULL;
         }
  
         ret = get_current_directory_index(new, dirname);
         if ( ret < 0 ) {
-                prelude_io_destroy(new->fd);
-                free(new);
+                prelude_failover_destroy(new);
                 return NULL;
         }
                 
