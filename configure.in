@@ -72,12 +72,8 @@ AC_SUBST(libprelude_cflags)
 dnl **************************************************
 dnl * Check for missing function replacement         *
 dnl **************************************************
-AC_MSG_RESULT([***
-*** Setting up gnulib compatbility files...
-])
 gl_SOURCE_BASE(libmissing)
 gl_M4_BASE(libmissing/m4)
-dnl gl_MODULES(snprintf vsnprintf strdup strndup)
 gl_INIT
 
 
