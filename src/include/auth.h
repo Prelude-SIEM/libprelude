@@ -1,1 +1,1 @@
-#define SENSORS_AUTH_FILE SENSORS_CONFIG_DIR"/sensors.auth"
+

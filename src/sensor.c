@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -25,12 +25,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
+#include <grp.h>
+#include <sys/types.h>
 #include <inttypes.h>
 #include <unistd.h>
 #include <errno.h>
 
 #include "config.h"
 
+#include "prelude-path.h"
 #include "prelude-list.h"
 #include "config-engine.h"
 #include "plugin-common.h"
@@ -46,26 +49,54 @@
 #include "prelude-client-mgr.h"
 #include "prelude-getopt.h"
 #include "prelude-async.h"
+#include "prelude-auth.h"
 #include "sensor.h"
 #include "client-ident.h"
 
 
-#define SENSORS_BACKUP_DIR "/var/spool/prelude-sensors"
+/*
+ * Path to the defalt sensor configuration file.
+ */
 #define DEFAULT_SENSOR_CONFIG SENSORS_CONFIG_DIR"/sensors-default.conf"
 
 
-static const char *sensorname = NULL;
+
 static prelude_client_mgr_t *manager_list = NULL;
 
 
 
-static int setup_manager_addr(const char *arg) 
+static int create_account(const char *arg) 
 {
-        char filename[1024];
+        int ret;
+        char buf[16];
+        char filename[256];
+        
+        fprintf(stderr, "\n\nAuthentication method (cipher/plaintext) [cipher] : ");
+        fgets(buf, sizeof(buf), stdin);
+        buf[strlen(buf) - 1] = '\0';
+        
+        ret = strcmp(buf, "plaintext");
+        if ( ret == 0 ) {
+                prelude_get_auth_filename(filename, sizeof(filename));
+                ret = prelude_auth_create_account(filename, 0);
+        } else {
+#ifdef HAVE_SSL
+                ret = ssl_add_certificate();
+#else
+                ret = -1;
+                fprintf(stderr, "SSL support is not compiled in.\n");
+#endif
+        }
 
-        snprintf(filename, sizeof(filename), "%s/%s", SENSORS_BACKUP_DIR, sensorname);
-               
-        manager_list = prelude_client_mgr_new(arg, filename);
+        exit(ret);
+}
+
+
+
+
+static int setup_manager_addr(const char *arg) 
+{               
+        manager_list = prelude_client_mgr_new(arg);
         if ( ! manager_list ) 
                 return prelude_option_error;
         
@@ -83,6 +114,10 @@ static int parse_argument(const char *filename, int argc, char **argv)
         /*
          * Declare library options.
          */
+        prelude_option_add(NULL, CLI_HOOK|CFG_HOOK, 'c', "create-account",
+                           "Create an account to be used by this sensor", no_argument,
+                           create_account, NULL);
+        
         prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 'm', "manager-addr",
                            "Address where manager is listening (addr:port)",
                            required_argument, setup_manager_addr, NULL);
@@ -164,7 +199,7 @@ int prelude_sensor_init(const char *sname, const char *filename, int argc, char 
                 return -1;
         }
 
-        sensorname = sname;
+        prelude_set_program_name(sname);
         
         ret = prelude_client_ident_init(sname);
         if ( ret < 0 )

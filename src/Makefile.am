@@ -14,6 +14,7 @@ libprelude_la_SOURCES = 		\
 	ssl.c				\
 	ssl-gencrypto.c			\
 	ssl-registration-msg.c		\
+	ssl-register.c			\
 	string-matching.c		\
 	timer.c				\
 	variable.c			\
@@ -25,6 +26,7 @@ libprelude_la_SOURCES = 		\
 	prelude-message.c		\
 	prelude-async.c			\
 	prelude-ident.c			\
+	prelude-path.c			\
 	sensor.c			\
 	client-ident.c			\
 	common.c			\

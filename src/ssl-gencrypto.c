@@ -413,56 +413,15 @@ X509 *prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int cr
 
 
 
-static void ask_keysize(int *keysize) 
-{
-        char buf[10];
-        
-        fprintf(stderr, "\n\nWhat keysize do you want [1024] ? ");
-        fgets(buf, sizeof(buf), stdin);
-        *keysize = ( *buf == '\n' ) ? 1024 : atoi(buf);
-}
-
-
-
-
-static void ask_expiration_time(int *expire) 
-{
-        char buf[10];
-        
-        fprintf(stderr,
-                "\n\nPlease specify how long the key should be valid.\n"
-                "\t0    = key does not expire\n"
-                "\t<n>  = key expires in n days\n");
-
-        fprintf(stderr, "\nKey is valid for [0] : ");
-        fgets(buf, sizeof(buf), stdin);
-        *expire = ( *buf == '\n' ) ? 0 : atoi(buf);
-}
-
-
-
-static void ask_key_storage(int *crypted) 
-{
-        char buf[10];
-        
-        fprintf(stderr, "\n\nThe private key can be stored encrypted, but this will\n"
-                "require to enter a password each time the sensor start.\n\n"
-                "Should the private key be stored encrypted ? [yes] : ");
-
-        fgets(buf, sizeof(buf), stdin);
-        buf[strlen(buf) - 1] = '\0';
-        
-        *crypted = ( strcmp(buf, "no") == 0 ) ? 0 : 1;
-}
-
-
-
-void prelude_ssl_ask_settings(int *keysize, int *expire, int *crypted) 
-{
-        ask_keysize(keysize);
-        ask_expiration_time(expire);
-        ask_key_storage(crypted);    
-}
-
-
 #endif
+
+
+
+
+
+
+
+
+
+
+

@@ -8,6 +8,7 @@ include_HEADERS = config-engine.h 		\
 		  plugin-common.h		\
 		  plugin-common-prv.h		\
 		  ssl-gencrypto.h		\
+		  ssl-register.h		\
 		  ssl-registration-msg.h	\
 		  daemonize.h			\
 		  common.h 			\
@@ -26,9 +27,10 @@ include_HEADERS = config-engine.h 		\
 		  prelude-message-id.h		\
 		  prelude-async.h		\
 		  prelude-ident.h		\
+		  prelude-path.h		\
 		  sensor.h			\
 		  threads.h			\
 		  extract.h			
 
 
-noinst_HEADERS = ssl.h auth.h client-ident.h
+noinst_HEADERS = ssl.h client-ident.h

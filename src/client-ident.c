@@ -14,8 +14,7 @@
 #include "prelude-message-id.h"
 #include "client-ident.h"
 
-#define PRELUDE_PERSISTANT_DATA_DIR "/var/lib/prelude"
-
+#define IDENTITY_DIR "/var/lib/prelude-sensors/idents"
 
 static char identfile[1024];
 static uint64_t sensor_ident = 0;
@@ -24,27 +23,17 @@ static const char *sensor_name = NULL;
 
 static int generate_filename(const char *sname) 
 {
-        return snprintf(identfile, sizeof(identfile), "%s/%s.ident", PRELUDE_PERSISTANT_DATA_DIR, sname);
+        return snprintf(identfile, sizeof(identfile), "%s/%s.ident", IDENTITY_DIR, sname);
 }
 
 
 
 static int save_ident(void) 
 {
+        int fd;
         FILE *fdp;
-        int fd, mask, old_mask;
-
-        mask = S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH;
-
-        /*
-         * this file absolutly need to be readable by "other".
-         * Because several instance of the same sensor may run
-         * with different right.
-         */
-        old_mask = umask(~mask);
-        fd = open(identfile, O_CREAT|O_WRONLY|O_EXCL, mask);
-        umask(old_mask);
-
+        
+        fd = open(identfile, O_CREAT|O_WRONLY|O_EXCL, S_IRUSR|S_IWUSR);
         if ( fd < 0 ) {
                 log(LOG_ERR, "error opening %s for writing.\n", identfile);
                 return -1;
@@ -209,6 +198,9 @@ int prelude_client_ident_init(const char *sname)
                 return -1;
         }
 
+        /*
+         * scan the 64 bits sensor ident.
+         */
         fscanf(fd, "%llu", &sensor_ident);
         fclose(fd);
 

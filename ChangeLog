@@ -1,5 +1,22 @@
 2002-01-14  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/ssl-register.c: move here.
+	Obsolete sensor-adduser. Sensor now provide a -c option
+	for creating the authentication file.
+
+	* I'm too lazy to list all the change. Basically created
+	a new file, prelude-path.c, with function returning path
+	to stuff commonly shared by Prelude Manager and Libprelude.
+
+	This get rid of some of the path mess.
+
+	* src/prelude-client-mgr.c (setup_backup_fd): 
+	(prelude_client_mgr_new): use new prelude-path API.
+
+	* src/client-ident.c (PRELUDE_PERSISTANT_DATA_DIR): 
+	set to /var/lib/prelude-sensors/idents
+	(save_ident): identity only readable for a given sensor.
+
 	* src/prelude-message.c: lot of cleanup, code comment.
 
 	* src/prelude-io.c (prelude_io_get_fdptr): 

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -54,11 +54,10 @@
 #include "prelude-getopt.h"
 #include "sensor.h"
 #include "client-ident.h"
-#include "auth.h"
+#include "prelude-path.h"
 
 
 #define RECONNECT_TIME_WAIT 10
-#define UNIX_SOCK "/var/lib/prelude/socket"
 
 
 
@@ -122,7 +121,7 @@ static int unix_connect(void)
 	}
         
 	addr.sun_family = AF_UNIX;
-	strcpy(addr.sun_path, UNIX_SOCK);
+	strcpy(addr.sun_path, prelude_get_socket_filename());
 
         ret = generic_connect(sock, (struct sockaddr *)&addr, sizeof(addr));
         if ( ret < 0 ) {
@@ -231,8 +230,11 @@ static int handle_plaintext_connection(prelude_client_t *client, int sock)
         int ulen, plen;
         char *user, *pass;
         prelude_msg_t *msg;
+        char filename[256];
 
-        ret = prelude_auth_read_entry(SENSORS_AUTH_FILE, NULL, &user, &pass);
+        prelude_get_auth_filename(filename, sizeof(filename));
+        
+        ret = prelude_auth_read_entry(filename, NULL, &user, &pass);
         if ( ret < 0 ) {
                 log(LOG_INFO,
                     "\n\ncouldn't get username / password to use for plaintext connection.\n"

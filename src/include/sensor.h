@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -30,3 +30,5 @@ int prelude_sensor_init(const char *sname, const char *filename, int argc, char 
 uint64_t prelude_sensor_get_ident(void);
 
 void prelude_sensor_set_ident(uint64_t *ident);
+
+void prelude_set_sensor_name(const char *sname);

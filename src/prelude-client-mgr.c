@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -40,6 +40,7 @@
 #include "prelude-client.h"
 #include "prelude-client-mgr.h"
 #include "prelude-async.h"
+#include "prelude-path.h"
 
 #define INITIAL_EXPIRATION_TIME 60
 #define MAXIMUM_EXPIRATION_TIME 3600
@@ -147,13 +148,11 @@ static int broadcast_saved_message(client_list_t *clist, prelude_io_t *fd, size_
 
 static void flush_backup_if_needed(client_list_t *clist) 
 {
-        int ret, fd;
+        int ret;
         struct stat st;
         prelude_io_t *pio = clist->parent->backup_fd_read;
-
-        fd = prelude_io_get_fd(pio);
         
-        ret = fstat(fd, &st);
+        ret = fstat(prelude_io_get_fd(pio), &st);
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't stat backup file descriptor.\n");
                 return;
@@ -167,10 +166,8 @@ static void flush_backup_if_needed(client_list_t *clist)
                 log(LOG_ERR, "couldn't broadcast saved message.\n");
                 return;
         }
-
-        fd = prelude_io_get_fd(clist->parent->backup_fd_write);
         
-        ret = ftruncate(fd, 0);
+        ret = ftruncate(prelude_io_get_fd(clist->parent->backup_fd_write), 0);
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't truncate backup FD to 0 bytes.\n");
                 return;
@@ -456,18 +453,13 @@ static int secure_open(const char *filename)
 
 
 
-static int setup_backup_fd(prelude_client_mgr_t *new, const char *path) 
+static int setup_backup_fd(prelude_client_mgr_t *new) 
 {
         int wfd, rfd;
         char filename[1024];
 
-        /*
-         * The backup file can't be shared if two instance of the sensor
-         * run as different user. That's why we append the uid at the end
-         * of the filename.
-         */
-        snprintf(filename, sizeof(filename), "%s.%d", path, getuid());
-        
+        prelude_get_backup_filename(filename, sizeof(filename));
+                
         new->backup_fd_write = prelude_io_new();
         if (! new->backup_fd_write ) 
                 return -1;
@@ -630,7 +622,6 @@ void prelude_client_mgr_broadcast_async(prelude_client_mgr_t *cmgr, prelude_msg_
 
 /**
  * prelude_client_mgr_new:
- * @filename: Path to a file.
  * @cfgline: Manager configuration string.
  *
  * prelude_client_mgr_new() initialize a new Client Manager object.
@@ -639,7 +630,7 @@ void prelude_client_mgr_broadcast_async(prelude_client_mgr_t *cmgr, prelude_msg_
  * Returns: a pointer on a #prelude_client_mgr_t object, or NULL
  * if an error occured.
  */
-prelude_client_mgr_t *prelude_client_mgr_new(const char *cfgline, const char *filename) 
+prelude_client_mgr_t *prelude_client_mgr_new(const char *cfgline) 
 {
         int ret;
         char *dup;
@@ -657,7 +648,7 @@ prelude_client_mgr_t *prelude_client_mgr_new(const char *cfgline, const char *fi
          * Setup a backup file descriptor for this client Manager.
          * It will be used if a message emmission fail.
          */
-        ret = setup_backup_fd(new, filename);
+        ret = setup_backup_fd(new);
         if ( ret < 0 ) {
                 free(new);
                 return NULL;

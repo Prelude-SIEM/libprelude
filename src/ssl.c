@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Jeremie Brebec / Toussaint Mathieu
+* Copyright (C) 2001, 2002 Jeremie Brebec / Toussaint Mathieu
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -26,14 +26,19 @@
 #ifdef HAVE_SSL
 
 #include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 
 #include "ssl.h"
 #include "common.h"
+#include "prelude-path.h"
+
 
 
 static SSL_CTX *ctx;
+
 
 
 SSL *ssl_connect_server(int socket)
@@ -50,16 +55,18 @@ SSL *ssl_connect_server(int socket)
 	err = SSL_set_fd(ssl, socket);
 	if (err <= 0) {
 		ERR_print_errors_fp(stderr);
-		return NULL;
+                SSL_free(ssl);
+                return NULL;
 	}
         
 	/*
          * handshake
          */
-	err = SSL_connect(ssl);
-	if (err <= 0) {
+	err = SSL_connect(ssl);        
+        if (err <= 0) {
 		ERR_print_errors_fp(stderr);
-		return NULL;
+                SSL_free(ssl);
+                return NULL;
 	}
         
         return ssl;
@@ -78,8 +85,9 @@ SSL *ssl_connect_server(int socket)
 int ssl_init_client(void)
 {
         int ret;
-	SSL_METHOD *method;
-
+        char filename[256];
+        SSL_METHOD *method;
+        
         /*
          * OpenSSL Initialisation.
          */
@@ -102,22 +110,30 @@ int ssl_init_client(void)
          * no callback, mutual authentication.
          */
 	SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, NULL);
+
+        prelude_get_ssl_cert_filename(filename, sizeof(filename));
         
-	ret = SSL_CTX_load_verify_locations(ctx, MANAGERS_CERT, NULL);
+	ret = SSL_CTX_load_verify_locations(ctx, filename, NULL);
 	if ( ret <= 0 ) {
-                log(LOG_INFO, "\nNo Manager certificate available. Please run the "
-                    "\"sensor-adduser\" program.\n");
+                log(LOG_INFO, "\nNo Manager certificate available. Please restart with the\n"
+                    "-c command line argument.\n");
                 goto err;
 	}
 
-	ret = SSL_CTX_use_certificate_file(ctx, SENSORS_KEY, SSL_FILETYPE_PEM);
-	if ( ret <= 0 ) 
+        prelude_get_ssl_key_filename(filename, sizeof(filename));
+             
+	ret = SSL_CTX_use_certificate_file(ctx, filename, SSL_FILETYPE_PEM);
+	if ( ret <= 0 ) {
+                log(LOG_ERR, "error loading certificate file %s.\n", filename);
 		goto err;
+        }
 
-	ret = SSL_CTX_use_PrivateKey_file(ctx, SENSORS_KEY, SSL_FILETYPE_PEM);
-	if ( ret <= 0 ) 
-		goto err;
-
+	ret = SSL_CTX_use_PrivateKey_file(ctx, filename, SSL_FILETYPE_PEM);
+	if ( ret <= 0 ) {
+                log(LOG_ERR, "error loading private key file %s.\n", filename);
+                goto err;
+        }
+        
 	if ( ! SSL_CTX_check_private_key(ctx) ) {
 		fprintf(stderr,
 			"Private key does not match the certificate public key\n");
@@ -135,6 +151,15 @@ int ssl_init_client(void)
 }
 
 #endif
+
+
+
+
+
+
+
+
+
 
 
 

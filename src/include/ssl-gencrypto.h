@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Jeremie Brebec / Toussaint Mathieu
+* Copyright (C) 2001, 2002 Jeremie Brebec / Toussaint Mathieu
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -28,7 +28,5 @@
 #define DEFAULT_KEY_LENGTH	512
 
 X509 *prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int crypt);
-
-void prelude_ssl_ask_settings(int *keysize, int *expire, int *store_crypted);
 
 #endif
