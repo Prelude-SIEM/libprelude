@@ -1,3 +1,10 @@
+2004-01-31  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
+	* src/idmef-value.c
+	(idmef_value_clone)
+	bug fix, enum type was not cloned correctly (forget to
+	copy the object_type field of idmef_value)
+
 2004-01-28  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
 	* src/idmef-criterion-value.c:

@@ -446,6 +446,21 @@ static idmef_value_t *idmef_value_list_clone(idmef_value_t *val)
 
 
 
+static idmef_value_t *idmef_value_enum_clone(idmef_value_t *val)
+{
+	idmef_value_t *new;
+
+	new = idmef_value_create(type_enum);
+	if ( ! new )
+		return NULL;
+
+	new->object_type = val->object_type;
+	new->type.data.enum_val = val->type.data.enum_val;
+
+	return new;
+}
+
+
 idmef_value_t *idmef_value_clone(idmef_value_t *val)
 {
         int ret;
@@ -453,6 +468,9 @@ idmef_value_t *idmef_value_clone(idmef_value_t *val)
         
 	if ( val->list )
 		return idmef_value_list_clone(val);
+
+	if ( val->type.id == type_enum )
+		return idmef_value_enum_clone(val);
 
 	new = idmef_value_create(val->type.id);
 	if ( ! new )
