@@ -345,8 +345,8 @@ static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline)
 {
         int ret;
         char *ptr;
-        client_list_t *clist;
-                
+        client_list_t *clist = NULL;
+
         clist = create_client_list(cmgr);
         if ( ! clist )
                 return -1;
@@ -389,8 +389,6 @@ static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline)
                 ret = add_new_client(clist, ptr);
                 if ( ret < 0 )
                         return -1;
-
-                ptr = strtok(NULL, " ");
         } 
 
         return 0;

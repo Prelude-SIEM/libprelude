@@ -58,35 +58,12 @@ prelude-getopt
 @optionnal_argument: 
 @no_argument: 
 
-<!-- ##### FUNCTION prelude_option_new ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-
 <!-- ##### FUNCTION prelude_option_add ##### -->
 <para>
 
 </para>
 
-@optlist: 
-@flags: 
-@shortopt: 
-@longopt: 
-@desc: 
-@has_arg: 
-@set: 
-@Returns: 
-
-
-<!-- ##### FUNCTION prelude_option_wide_add ##### -->
-<para>
-
-</para>
-
-@optlist: 
+@parent: 
 @flags: 
 @shortopt: 
 @longopt: 
@@ -95,6 +72,8 @@ prelude-getopt
 @set: 
 @get: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@optlist: 
 
 
 <!-- ##### FUNCTION prelude_option_parse_arguments ##### -->
@@ -114,8 +93,9 @@ prelude-getopt
 
 </para>
 
-@optlist: 
 @flags: 
+<!-- # Unused Parameters # -->
+@optlist: 
 
 
 <!-- ##### FUNCTION prelude_option_destroy ##### -->
@@ -123,6 +103,8 @@ prelude-getopt
 
 </para>
 
+@option: 
+<!-- # Unused Parameters # -->
 @optlist: 
 
 

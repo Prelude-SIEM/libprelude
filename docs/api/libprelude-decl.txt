@@ -66,12 +66,17 @@ prelude_io_t *pio
 <FUNCTION>
 <NAME>plugin_load_from_dir</NAME>
 <RETURNS>int  </RETURNS>
-const char *dirname, int (*cb)(plugin_container_t *p)
+const char *dirname, int argc, char **argv,int (*subscribe)(plugin_container_t *p), void (*unsubscribe)(plugin_container_t *pc)
 </FUNCTION>
 <FUNCTION>
-<NAME>plugin_register_for_use</NAME>
+<NAME>plugin_add</NAME>
 <RETURNS>int  </RETURNS>
 plugin_container_t *pc, struct list_head *h, const char *infos
+</FUNCTION>
+<FUNCTION>
+<NAME>plugin_del</NAME>
+<RETURNS>void  </RETURNS>
+plugin_container_t *pc
 </FUNCTION>
 <FUNCTION>
 <NAME>plugin_print_stats</NAME>
@@ -402,6 +407,11 @@ prelude_io_t *pio, const char *filename,des_key_schedule *skey1, des_key_schedul
 const char *filename, char *cert, int certlen
 </FUNCTION>
 <FUNCTION>
+<NAME>config_get_section</NAME>
+<RETURNS>int  </RETURNS>
+config_t *cfg, const char *section
+</FUNCTION>
+<FUNCTION>
 <NAME>config_get</NAME>
 <RETURNS>const char  *</RETURNS>
 config_t *cfg, const char *section, const char *entry
@@ -621,7 +631,12 @@ typedef struct {
                                 plugin_desc_len(p) = sizeof((str))
 </MACRO>
 <FUNCTION>
-<NAME>plugin_register</NAME>
+<NAME>plugin_subscribe</NAME>
+<RETURNS>int  </RETURNS>
+plugin_generic_t *plugin
+</FUNCTION>
+<FUNCTION>
+<NAME>plugin_unsubscribe</NAME>
 <RETURNS>int  </RETURNS>
 plugin_generic_t *plugin
 </FUNCTION>
@@ -629,23 +644,6 @@ plugin_generic_t *plugin
 <NAME>plugin_request_new_id</NAME>
 <RETURNS>int  </RETURNS>
 void
-</FUNCTION>
-<TYPEDEF>
-<NAME>plugin_option_t</NAME>
-typedef struct {
-        const char *name;
-        int has_arg;
-        int *flag;
-        int val;
-        
-        void (*cb)(const char *optarg);
-        int called;
-} plugin_option_t;
-</TYPEDEF>
-<FUNCTION>
-<NAME>plugin_config_get</NAME>
-<RETURNS>void  </RETURNS>
-plugin_generic_t *plugin, plugin_option_t *cfg, const char *conffile
 </FUNCTION>
 <MACRO>
 <NAME>PRELUDE_OPTION_START</NAME>
@@ -778,39 +776,29 @@ typedef enum {
 } prelude_option_argument_t;
 </ENUM>
 <FUNCTION>
-<NAME>prelude_option_new</NAME>
-<RETURNS>prelude_optlist_t  *</RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_add</NAME>
-<RETURNS>prelude_option_t  *</RETURNS>
-prelude_optlist_t *optlist, int flags,char shortopt, const char *longopt, const char *desc,prelude_option_argument_t has_arg, int (*set)(const char *optarg)
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_wide_add</NAME>
-<RETURNS>prelude_option_t  *</RETURNS>
-prelude_optlist_t *optlist, int flags,char shortopt, const char *longopt, const char *desc,prelude_option_argument_t has_arg, int (*set)(const char *optarg),int (*get)(char *buf, size_t size)
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_option_parse_arguments</NAME>
-<RETURNS>int  </RETURNS>
-prelude_optlist_t *optlist,const char *filename, int argc, char **argv
-</FUNCTION>
-<FUNCTION>
 <NAME>prelude_option_print</NAME>
 <RETURNS>void  </RETURNS>
-prelude_optlist_t *optlist, int flags
+int flags
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_wide_get_msg</NAME>
 <RETURNS>prelude_msg_t  *</RETURNS>
-prelude_optlist_t *optlist
+void
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_destroy</NAME>
 <RETURNS>void  </RETURNS>
-prelude_optlist_t *optlist
+prelude_option_t *option
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_parse_arguments</NAME>
+<RETURNS>int  </RETURNS>
+prelude_option_t *optlist,const char *filename, int argc, char **argv
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_add</NAME>
+<RETURNS>prelude_option_t  *</RETURNS>
+prelude_option_t *parent, int flags,char shortopt, const char *longopt, const char *desc,prelude_option_argument_t has_arg, int (*set)(const char *optarg),int (*get)(char *buf, size_t size)
 </FUNCTION>
 <MACRO>
 <NAME>OPT_INVAL</NAME>

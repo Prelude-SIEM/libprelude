@@ -330,6 +330,39 @@ thread
 </para>
 
 
+<!-- ##### FUNCTION plugin_config_get ##### -->
+<para>
+
+</para>
+
+@plugin: 
+@cfg: 
+@conffile: 
+
+<!-- ##### TYPEDEF plugin_option_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION plugin_register ##### -->
+<para>
+
+</para>
+
+@plugin: 
+@Returns: 
+
+<!-- ##### FUNCTION plugin_register_for_use ##### -->
+<para>
+
+</para>
+
+@pc: 
+@h: 
+@infos: 
+@Returns: 
+
 <!-- ##### FUNCTION prelude_client_get_inet_address ##### -->
 <para>
 
@@ -355,6 +388,28 @@ thread
 
 @pio: 
 @fd: 
+
+<!-- ##### FUNCTION prelude_option_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION prelude_option_wide_add ##### -->
+<para>
+
+</para>
+
+@optlist: 
+@flags: 
+@shortopt: 
+@longopt: 
+@desc: 
+@has_arg: 
+@set: 
+@get: 
+@Returns: 
 
 <!-- ##### FUNCTION prelude_thread_create ##### -->
 <para>

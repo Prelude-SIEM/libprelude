@@ -1,3 +1,40 @@
+2002-01-04  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/include/plugin-common.h (plugin_request_new_id): 
+	remove plugin_option API. Plugin have to use prelude-getopt
+	API now.
+
+	* src/sensor.c (parse_argument): removed --help option
+	hook. The application have to call prelude_option_print_help()
+	in order for the user to see library option.
+	(parse_argument): do not use prelude_option_new (dead).
+	(parse_argument): handle prelude_option_parse_arguments return
+	value the right way.
+
+	* src/prelude-getopt.c: include string.h
+	(search_cli_option): correctly match short option.
+	(check_option_optarg): remove un-necessary code.
+	(check_option_noarg): ditto.
+	(check_option): initialize optarg to NULL for safety.
+	(process_option_cfg_hook): new function: Try to get value for
+	option that weren't set on command line in the config file.
+
+	Big cleanup and slight API change.
+	
+
+	* src/prelude-client.c (prelude_client_connect): 
+	directly call prelude_option_wide_get_msg().
+
+	* src/prelude-client-mgr.c (parse_config_line): 
+	remove errornous strtok() function call.
+
+	* src/plugin-common.c: API change. allow asynchronous 
+	plugin subscribtion / un-subscribtion. Cleanup.
+
+	* src/config-engine.c (cmp_entry): 
+	(cmp_section): make the matching case unsensitive.
+	(config_get_section): new function, return 0 if section exist.
+
 2002-01-03  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-client-mgr.c (secure_open): 

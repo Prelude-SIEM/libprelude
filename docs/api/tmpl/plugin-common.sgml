@@ -127,36 +127,11 @@ plugin-common
 @str: 
 
 
-<!-- ##### FUNCTION plugin_register ##### -->
-<para>
-
-</para>
-
-@plugin: 
-@Returns: 
-
-
 <!-- ##### FUNCTION plugin_request_new_id ##### -->
 <para>
 
 </para>
 
 @Returns: 
-
-
-<!-- ##### TYPEDEF plugin_option_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION plugin_config_get ##### -->
-<para>
-
-</para>
-
-@plugin: 
-@cfg: 
-@conffile: 
 
 

@@ -110,7 +110,7 @@ static int cmp_entry(char *string, const char *wanted)
         ptr++;
         
         old = *ptr; *ptr = 0;
-        ret = strcmp(string, wanted);
+        ret = strcasecmp(string, wanted);
         *ptr = old;
         
         return ret;
@@ -139,7 +139,7 @@ static int cmp_section(const char *string, const char *wanted)
         eptr++;
         
         old = *eptr; *eptr = 0;        
-        ret = strcmp(ptr, wanted);
+        ret = strcasecmp(ptr, wanted);
         *eptr = old;
 
         return ret;
@@ -472,13 +472,30 @@ static const char *get_variable_content(config_t *cfg, const char *variable)
 
 
 
+int config_get_section(config_t *cfg, const char *section) 
+{
+        int ret;
+        
+        if ( ! cfg->content )
+                return -1;
+
+        ret = search_section(cfg, section);
+        if ( ret < 0 )
+                return -1;
+
+        return 0;
+}
+
+
+
+
 /*
  * config_get:
  * @cfg: Configuration file identifier.
  * @section: Section to gather the entry from.
  * @entry: Entry to gather the value from.
  *
- * Get value associated with @entry, in the optionnaly soecified
+ * Get value associated with @entry, in the optionnaly specified
  * @section, in the configuration file represented by the @cfg
  * abstract data type.
  *

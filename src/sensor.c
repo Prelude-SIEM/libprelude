@@ -51,28 +51,15 @@
 
 
 
-static int launch = 1;
-static prelude_optlist_t *opts;
 static prelude_client_mgr_t *manager_list = NULL;
 
 
 
-static int print_help(const char *optarg) 
+static int setup_manager_addr(const char *arg) 
 {
-        launch = 0;
-
-        fprintf(stderr, "\nGeneric sensor options :\n");
-        prelude_option_print(opts, CLI_HOOK);
-        printf("\n\n");
+        log(LOG_INFO, "\n");
         
-        return prelude_option_end;
-}
-
-
-
-static int setup_manager_addr(const char *optarg) 
-{
-        manager_list = prelude_client_mgr_new("manager", optarg);
+        manager_list = prelude_client_mgr_new("manager", arg);
         if ( ! manager_list ) 
                 return prelude_option_error;
         
@@ -86,19 +73,13 @@ static int parse_argument(const char *filename, int argc, char **argv)
         int ret;
         int old_flags;
         
-        opts = prelude_option_new();
-        if ( ! opts )
-                return -1;
-
+        
         /*
          * Declare library options.
          */
-        prelude_option_wide_add(opts, CLI_HOOK|CFG_HOOK, 'a', "manager-addr",
-                                "Address where manager is listening",
-                                required_argument, setup_manager_addr, NULL);
-
-        prelude_option_add(opts, CLI_HOOK|CFG_HOOK, 'h', "help",
-                           "Print this help", no_argument, print_help);
+        prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 'a', "manager-addr",
+                           "Address where manager is listening",
+                           required_argument, setup_manager_addr, NULL);
 
         /*
          * When parsing our own option, we don't want libprelude to whine
@@ -110,18 +91,15 @@ static int parse_argument(const char *filename, int argc, char **argv)
         /*
          * Parse configuration and command line arguments.
          */        
-        ret = prelude_option_parse_arguments(opts, filename, argc, argv);
-        if ( ret < 0 ) {
+        ret = prelude_option_parse_arguments(NULL, filename, argc, argv);
+        if ( ret == prelude_option_error ) {
                 log(LOG_INFO, "error processing sensor options.\n", filename);
                 goto out;
         }
 
-        /*
-         * help was requested - do not start
-         */
-        if ( ! launch )
-                goto out; 
-
+        if ( ret == prelude_option_end )
+                goto out;
+        
         /*
          * The sensors configuration file we just parsed doesn't contain
          * entry to specify the Manager address we should connect to.
@@ -130,7 +108,7 @@ static int parse_argument(const char *filename, int argc, char **argv)
          */
         if ( ! manager_list ) {
            
-                ret = prelude_option_parse_arguments(opts, DEFAULT_SENSOR_CONFIG, 0, NULL);
+                ret = prelude_option_parse_arguments(NULL, DEFAULT_SENSOR_CONFIG, 0, NULL);
                 if ( ret < 0 ) {
                         log(LOG_INFO, "error processing generic sensors configuration file.\n");
                         goto out;
@@ -149,7 +127,6 @@ static int parse_argument(const char *filename, int argc, char **argv)
         /*
          * Destroy option list and restore old option flags.
          */
-        prelude_option_destroy(opts);
         prelude_option_set_warnings(old_flags, NULL);
 
         return ret;
@@ -172,18 +149,10 @@ int prelude_sensor_init(const char *filename, int argc, char **argv)
 {
         int ret;
 
-        /*
-         * The sensors didn't gave us a default configuration file
-         * to use. We'll use our default configuration file.
-         */
-        
         ret = parse_argument(filename, argc, argv);
         if ( ret < 0 )
                 return -1;
         
-        if ( ! launch )
-                return 0;
-
         ret = prelude_async_init();
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't initialize asynchronous subsystem.\n");
@@ -195,21 +164,11 @@ int prelude_sensor_init(const char *filename, int argc, char **argv)
 
 
 
+
 void prelude_sensor_send_alert(prelude_msg_t *msg) 
 {
         prelude_client_mgr_broadcast_async(manager_list, msg);
 }
-
-
-
-prelude_msg_t *prelude_sensor_get_option_msg(void) 
-{
-        return prelude_option_wide_get_msg(opts);
-}
-
-
-
-
 
 
 

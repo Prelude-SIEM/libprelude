@@ -68,13 +68,17 @@ typedef struct
  * have the ability to use plugin_register_for_use to tell it want
  * to use this plugin.
  */
-int plugin_load_from_dir(const char *dirname, int (*cb)(plugin_container_t *p));
+int plugin_load_from_dir(const char *dirname, int argc, char **argv,
+                         int (*subscribe)(plugin_container_t *p), void (*unsubscribe)(plugin_container_t *pc));
 
 
 /*
  * Call this if you want to use this plugin.
  */ 
-int plugin_register_for_use(plugin_container_t *pc, struct list_head *h, const char *infos);
+int plugin_add(plugin_container_t *pc, struct list_head *h, const char *infos);
+
+void plugin_del(plugin_container_t *pc);
+
 
 /*
  * Print stats for the plugin contained in this container.

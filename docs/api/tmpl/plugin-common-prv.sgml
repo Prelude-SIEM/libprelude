@@ -20,19 +20,13 @@ plugin-common-prv
 </para>
 
 @dirname: 
+@argc: 
+@argv: 
+@subscribe: 
+@unsubscribe: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @cb: 
-@Returns: 
-
-
-<!-- ##### FUNCTION plugin_register_for_use ##### -->
-<para>
-
-</para>
-
-@pc: 
-@h: 
-@infos: 
-@Returns: 
 
 
 <!-- ##### FUNCTION plugin_print_stats ##### -->

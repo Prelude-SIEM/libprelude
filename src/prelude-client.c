@@ -421,7 +421,7 @@ int prelude_client_connect(prelude_client_t *client)
         prelude_msg_t *msg;
         
         ret = do_connect(client);
-        if ( ret == 0 && (msg = prelude_sensor_get_option_msg()) ) 
+        if ( ret == 0 && (msg = prelude_option_wide_get_msg() ) ) 
                 prelude_msg_write(msg, client->fd);
 
         client->connection_broken = (ret < 0) ? 1 : 0;

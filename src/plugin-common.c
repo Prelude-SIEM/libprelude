@@ -47,12 +47,16 @@
 
 
 typedef struct {
-        struct list_head list;
         void *handle;
-
+        struct list_head list;
+        
         struct list_head pclist;
         plugin_generic_t *plugin;
+
+        int (*subscribe)(plugin_container_t *pc);
+        void (*unsubscribe)(plugin_container_t *pc);
 } plugin_entry_t;
+
 
 /*
  * Some definition :
@@ -73,9 +77,8 @@ typedef struct {
  * Internal list
  */
 static LIST_HEAD(all_plugin);
-static int (*register_for_use_cb)(plugin_container_t *pc);
-static void *current_handle;
 static int plugins_id_max = 0;
+
 
 
 /*
@@ -91,30 +94,10 @@ static int is_a_plugin(const char *filename)
 
 
 /*
- * return a filename generated from 'dirname' & 'file'.
+ * Initialize a new plugin entry, and add it to
+ * the entry list.
  */
-static char *generate_filename(const char *dirname, const char *file) 
-{
-        char *filename;
-        int len = strlen(dirname) + strlen(file) + 2;
-
-        filename = malloc(len);
-        if ( ! filename ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
-        
-        snprintf(filename, len, "%s/%s", dirname, file);
-
-        return filename;
-}
-
-
-
-/*
- *
- */
-static plugin_entry_t *add_plugin_entry(void *handle, plugin_generic_t *p) 
+static plugin_entry_t *add_plugin_entry(void) 
 {
         plugin_entry_t *pe;
         
@@ -123,10 +106,8 @@ static plugin_entry_t *add_plugin_entry(void *handle, plugin_generic_t *p)
                 log(LOG_ERR, "memory exhausted.\n");
                 return NULL;
         }
-        
-        pe->handle = handle;
-        pe->plugin = p;
-        
+
+        pe->plugin = NULL;
         INIT_LIST_HEAD(&pe->pclist);
         list_add_tail(&pe->list, &all_plugin);
         
@@ -136,7 +117,30 @@ static plugin_entry_t *add_plugin_entry(void *handle, plugin_generic_t *p)
 
 
 /*
- *
+ * Destroy all container in the plugin entry.
+ */
+static void delete_container(plugin_entry_t *entry) 
+{
+        struct list_head *tmp;
+        plugin_container_t *pc;
+
+        for ( tmp = entry->pclist.next; tmp != &entry->pclist; ) {
+                pc = list_entry(tmp, plugin_container_t, int_list);
+
+                tmp = tmp->next;
+
+                entry->unsubscribe(pc);
+                list_del(&pc->int_list);
+                free(pc);
+        }
+}
+
+
+
+
+/*
+ * Initialize a new container for a plugin,
+ * and add the container to the plugin entry.
  */
 static plugin_container_t *create_container(plugin_entry_t *pe, plugin_generic_t *p) 
 {
@@ -159,7 +163,9 @@ static plugin_container_t *create_container(plugin_entry_t *pe, plugin_generic_t
 
 
 /*
- *
+ * Copy an existing container (because the plugin will probably
+ * linked in several part of the program, and that the container
+ * contain not shared information).
  */
 static plugin_container_t *copy_container(plugin_container_t *pc) 
 {
@@ -182,125 +188,207 @@ static plugin_container_t *copy_container(plugin_container_t *pc)
 
 
 
+
 /*
  * Load a single plugin pointed to by 'filename'.
  */
-static int plugin_load_single(const char *filename) 
+static int plugin_load_single(const char *filename, int argc, char **argv,
+                              int (*subscribe)(plugin_container_t *pc),
+                              void (*unsubscribe)(plugin_container_t *pc)) 
 {
         void *handle;
-        int (*init)(int id);
+        plugin_entry_t *pe;
+        plugin_generic_t *plugin;
+        plugin_generic_t *(*init)(int argc, char **argv);
         
-        current_handle = handle = dlopen(filename, RTLD_NOW);
+        handle = dlopen(filename, RTLD_NOW);
         if ( ! handle ) {
-                printf("can't open %s : %s.\n", filename, dlerror());
-                log(LOG_ERR, "can't open %s : %s.\n", filename, dlerror());
+                log(LOG_INFO, "can't open %s : %s.\n", filename, dlerror());
                 return -1;
         }
 
         init = dlsym(handle, "plugin_init");
         if ( ! init ) {
-                log(LOG_ERR, "couldn't load %s : %s.\n", filename, dlerror());
+                log(LOG_INFO, "couldn't load %s : %s.\n", filename, dlerror());
+                dlclose(handle);
+                return -1;
+        }
+        
+        pe = add_plugin_entry();
+        if ( ! pe ) {
+                dlclose(handle);
                 return -1;
         }
 
-        return init(plugins_id_max);
+        pe->handle = handle;
+        pe->subscribe = subscribe;
+        pe->unsubscribe = unsubscribe;
+        
+        plugin = init(argc, argv);
+        if ( ! plugin ) {
+                log(LOG_ERR, "plugin returned an error.\n");
+                dlclose(handle);
+                free(pe);
+                return -1;
+        }
+        
+        pe->plugin = plugin;
+
+        return 0;
 }
+
 
 
 
 /**
  * plugin_load_from_dir:
- * @dirname: The directory to load the plugin from
- * @cb: A callback to be called each time a plugin register
- *
+ * @dirname: The directory to load the plugin from.
+ * @argc: Argument count for the plugin.
+ * @ærgv: Argument vector for the plugin.
+ * @subscribe: Pointer to a callback function for plugin subscribtion.
+ * @unsubscribe: Pointer to a callback function for plugin un-subscribtion.
+ *  
  * Load all plugins in directory 'dirname'.
- * The CB arguments will be called for each plugin that register
- * (using the plugin_register function), then the application will
- * have the ability to use plugin_register_for_use to tell it want
- * to use this plugin.
+ * Each plugin have a @subscribe and @unsubscribe callback associated with it.
  *
- * Returns: 0 on success, -1 on error.
+ * The plugins are loaded, but not active, until someone call
+ * plugin_subscribe() on one of the plugin. Which'll call @subscribe in order to
+ * register the it.
+ *
+ * @argc and @ærgv are passed to the plugin at initialization time for
+ * option handling.
+ *
+ * Returns: The number of loaded plugins on success, -1 on error.
  */
-int plugin_load_from_dir(const char *dirname, int (*cb)(plugin_container_t *p)) 
+int plugin_load_from_dir(const char *dirname, int argc, char **argv,
+                         int (*subscribe)(plugin_container_t *p),
+                         void (*unsubscribe)(plugin_container_t *pc)) 
 {
-        int ret;
         DIR *dir;
-        char *filename;
         struct dirent *d;
+        int ret, count = 0;
+        char filename[1024];
         
         dir = opendir(dirname);
         if ( ! dir ) {
                 log(LOG_ERR, "couldn't open directory %s.\n", dirname);
                 return -1;
         }
-
-        register_for_use_cb = cb;
         
         while ( ( d = readdir(dir) ) ) {
-                filename = generate_filename(dirname, d->d_name);
-
-                ret = is_a_plugin(filename);
+                
+                ret = is_a_plugin(d->d_name);
+                if ( ret < 0 )
+                        continue;
+                
+                snprintf(filename, sizeof(filename), "%s/%s", dirname, d->d_name);
+                
+                ret = plugin_load_single(filename, argc, argv, subscribe, unsubscribe);
                 if ( ret == 0 )
-                        plugin_load_single(filename);
-
-                free(filename);
+                        count++;
         }
 
         closedir(dir);
 
-        return 0;
+        return count;
 }
 
 
 
+
+
 /**
- * plugin_register:
- * @plugin: A plugin to register
+ * plugin_unsubscribe:
+ * @plugin: Pointer to a plugin.
  *
- * Used by the plugin at initialisation time to register itself.
+ * Set @plugin to be inactive.
  *
- * Returns: 0 on success, -1 on error.
+ * The unsubscribe function specified in plugin_load_from_dir()
+ * is called for plugin un-registration.
+ *
+ * Returns: 0 on success, -1 if an error occured.
  */
-int plugin_register(plugin_generic_t *plugin) 
+int plugin_unsubscribe(plugin_generic_t *plugin) 
 {
-       int ret;
         plugin_entry_t *pe;
-        plugin_container_t *pc;
+        struct list_head *tmp;
+        
+        list_for_each(tmp, &all_plugin) {
+                pe = list_entry(tmp, plugin_entry_t, list);
 
-        if ( ! register_for_use_cb )
+                if ( pe->plugin != plugin )
+                        continue;
+
+                delete_container(pe);                
                 return 0;
-        
-        pe = add_plugin_entry(current_handle, plugin);
-        if ( ! pe )
-                return -1;
-        
-        pc = create_container(pe, plugin);
-        if ( ! pc )
-                return -1;
-        
-        ret = register_for_use_cb(pc);
-        if ( ret < 0 )
-                return -1;
+        }
 
-        plugins_id_max++;
-
-        return 0;
+        log(LOG_ERR, "couldn't find plugin %p in plugin list.\n");
+        return -1;
 }
 
 
 
+
 /**
- * plugin_register_for_use:
- * @pc: The container of the plugin to be used
- * @h: A list where the @pc need to be added
- * @infos: Additionnal informations about the plugin
+ * plugin_subscribe
+ * @plugin: Pointer to a plugin.
  *
- * To be called by application that wish to use the plugin
- * associated with 'pc'.
+ * Set @plugin to be active.
  *
- * Returns: 0 on success, -1 on error.
+ * The subscribe function specified in plugin_load_from_dir()
+ * is called for plugin registration.
+ *
+ * Returns: 0 on success or -1 if an error occured.
  */
-int plugin_register_for_use(plugin_container_t *pc, struct list_head *h, const char *infos)
+int plugin_subscribe(plugin_generic_t *plugin) 
+{
+        plugin_entry_t *pe;
+        struct list_head *tmp;
+        plugin_container_t *pc;
+        
+        list_for_each(tmp, &all_plugin) {
+                pe = list_entry(tmp, plugin_entry_t, list);
+                
+                if ( pe->plugin != NULL && pe->plugin != plugin )
+                        continue;
+
+                /*
+                 * The plugin is subscribing itself
+                 * before it's init() function returned.
+                 */
+                if ( pe->plugin == NULL ) 
+                        pe->plugin = plugin;
+                
+                pc = create_container(pe, plugin);
+                if ( ! pc )
+                        return -1;
+                
+                pe->subscribe(pc);
+
+                return 0;
+        }
+
+        log(LOG_ERR, "couldn't find plugin %p in plugin list.\n");
+        return -1;
+}
+
+
+
+
+/**
+ * plugin_add:
+ * @pc: Pointer to a plugin container
+ * @h: Pointer to a linked list
+ * @infos: Specific informations to associate with the container.
+ *
+ * This function add the plugin associated with @pc to the linked list
+ * specified by @h. If this container is already used somewhere else,
+ * a copy is made, because container doesn't share information).
+ *
+ * Returns: 0 on success or -1 if an error occured.
+ */
+int plugin_add(plugin_container_t *pc, struct list_head *h, const char *infos) 
 {
         if ( pc->already_used++ && ! (pc = copy_container(pc)) ) {
                 log(LOG_ERR, "couldn't duplicate plugin container.\n");
@@ -308,11 +396,26 @@ int plugin_register_for_use(plugin_container_t *pc, struct list_head *h, const c
         }
 
         pc->infos = infos;
-        
         list_add_tail(&pc->ext_list, h);
-             
+
         return 0;
 }
+
+
+
+
+/**
+ * plugin_del:
+ * @pc: Pointer to a plugin container.
+ *
+ * Destroy @pc.
+ */
+void plugin_del(plugin_container_t *pc) 
+{
+        list_del(&pc->ext_list);
+        free(pc);
+}
+
 
 
 
@@ -325,20 +428,22 @@ int plugin_register_for_use(plugin_container_t *pc, struct list_head *h, const c
 void plugin_print_stats(plugin_container_t *pc) 
 {
         log(LOG_INFO, "%s (\"%s\") : plugin called %u time: %fs average\n",
-            pc->plugin->name, pc->infos ? pc->infos : "no infos", pc->p_count, pc->p_time / pc->p_count);
+            pc->plugin->name, pc->infos ? pc->infos : "no infos",
+            pc->p_count, pc->p_time / pc->p_count);
 }
+
 
 
 
 /**
  * plugins_print_stats:
  *
- * Print availlable statistics for all plugins.
+ * Print available statistics for all plugins.
  */
 void plugins_print_stats(void) 
 {
-        plugin_container_t *pc;
         plugin_entry_t *pe;
+        plugin_container_t *pc;
         struct list_head *tmp, *tmp2;
 
         log(LOG_INFO, "*** Plugin stats (not accurate if used > 2e32-1 times) ***\n\n");
@@ -366,236 +471,3 @@ int plugin_request_new_id(void)
 {
         return plugins_id_max++;
 }
-
-
-
-/*
- *
- */
-
-static char **argv = NULL;
-static int argc;
-static int s_optind;
-static int help_flag = 0;
-
-
-/*
- * Search plugin argument.
- * If found, set argv to start at first plugin argument,
- * and argc to count the exact number of args for this plugins.
- */  
-static void get_plugin_opts(char *pname, int *pargc, char ***pargv) 
-{
-        int i, j;
-        
-        for ( i = s_optind; (i + 1) < argc; i++ ) {
-                /*
-                 * Start of a plugin option...
-                 */
-                if ( ! strstr(argv[i], "-m") && ! strstr(argv[i], "-plugin") )
-                        continue;
-
-                /*
-                 * Is it our plugin (pname) ?
-                 */
-                if ( strcmp(argv[i + 1], pname) != 0  )
-                        continue;
-                
-                *pargc = 0;
-
-                /*
-                 * Count argc for theses plugin option.
-                 */
-                for (j = (i + 1); j < argc; j++ ) {
-                        if ( strstr(argv[j], "-m") || strstr(argv[j], "-plugin") )
-                                break;
-                        else
-                                *pargc += 1;
-                }
-                        
-                *pargv = &argv[i + 1];
-                break;
-        }
-}
-
-
-
-/*
- * Get plugin related options (option behind -m pname).
- */
-static void plugin_get_opts(char *pname, int *pargc, char ***pargv) 
-{
-        static char *null_argv[3] = { 0 };
-        
-        optind = 0;
-        *pargc = 1;
-        *pargv = null_argv;
-        null_argv[0] = pname;
-        
-        if ( ! help_flag )
-                get_plugin_opts(pname, pargc, pargv);
-        else {
-                *pargc = 2;
-                null_argv[0] = pname;
-                null_argv[1] = "-h";
-                *pargv = null_argv;
-                optind = 0;
-        }
-}
-
-
-
-/*
- * Try to get all option that were not set from the command line in the config file.
- */
-static void get_missing_options(const char *filename, plugin_generic_t *plugin, plugin_option_t *opts) 
-{
-        int i;
-        const char *str;
-        config_t *cfg = NULL;
-        
-        for ( i = 0; opts[i].name != NULL; i++ ) {
-            
-                if ( opts[i].called )
-                        continue;
-                
-                if ( ! cfg && ! (cfg = config_open(filename)) ) {
-                        log(LOG_ERR, "couldn't open %s.\n", filename);
-                        return;
-                }
-                
-                str = config_get(cfg, plugin_name(plugin), opts[i].name);
-                if ( str ) 
-                        opts[i].cb(str);
-        }
-
-        if ( cfg )
-                config_close(cfg);
-}
-
-
-
-/*
- * Generate a getopt compatible option string from
- * a plugin_option_t array.
- */
-static const char *generate_options_string(plugin_option_t *opts) 
-{
-        int i, ok = 0;
-        static char buf[1024];
-
-        for ( i = 0; opts[i].name != NULL; i++ ) {
-            
-                if ( ok == (sizeof(buf) - 2) ) {
-                        log(LOG_ERR, "Buffer too short.\n");
-                        return NULL;
-                }
-                
-                buf[ok++] = opts[i].val;
-                if ( opts[i].has_arg == optional_argument || opts[i].has_arg == required_argument )
-                        buf[ok++] = ':';
-                
-        }
-
-        buf[ok] = '\0';
-
-        return buf;
-}
-
-
-
-
-/**
- * plugin_config_get:
- * @plugin: The plugin that want to read it's configuration.
- * @cfg: List of options supported by the plugin.
- * @conffile: Config file to read for value not specified on command line.
- *
- * Request the configuration for this plugin to be read.
- * For each option found, the corresponding callback in the #cfg structure is
- * called back. If a variable is specified as argument, it is automatically
- * looked up.
- *
- */
-void plugin_config_get(plugin_generic_t *plugin, plugin_option_t *cfg, const char *conffile) 
-{
-        int c, i, argc;
-        char **argv, *ptr;
-        const char *optstring;
-        
-        plugin_get_opts(plugin_name(plugin), &argc, &argv);
-
-        optstring = generate_options_string(cfg);
-        if ( ! optstring )
-                return;
-        
-        while ( (c = getopt_long(argc, argv, optstring, (struct option *)cfg, NULL)) != -1 ) {
-                
-                for ( i = 0; cfg[i].name != NULL; i++ )
-                        if ( cfg[i].val == c ) {
-
-                                /*
-                                 * If optarg specify a variable, do the lookup.
-                                 */
-                                if ( optarg && *optarg == '$' ) {
-                                        ptr = variable_get(optarg + 1);
-                                        if ( ! ptr ) {
-                                            log(LOG_ERR, "couldn't lookup variable %s.\n", optarg + 1);
-                                            if ( cfg[i].has_arg == required_argument )
-                                                    return;
-                                        }
-                                        optarg = ptr;
-                                }
-                                
-                                cfg[i].cb(optarg);
-                                cfg[i].called = 1;
-                                break;
-                        }
-        }
-        
-        get_missing_options(conffile, plugin, cfg);
-}
-
-
-
-
-/**
- * plugins_print_opts:
- * @dirname: The directory to load plugin from.
- *
- * Print availlable options for all plugins.
- */
-void plugins_print_opts(const char *dirname) 
-{
-        plugin_load_from_dir(dirname, NULL);
-}
-
-
-
-/**
- * plugin_set_args:
- * @ac: argc where plugin configuration start.
- * @av: argv where plugin configuration start.
- *
- * Should be called by the configuration module (the one that parse
- * argc and argv in order to set the beginning of the plugin
- * configuration string).
- */
-void plugin_set_args(int ac, char **av) 
-{        
-        if ( (ac == 0 && av == NULL) || strstr(av[optind - 1], "-h") )
-                help_flag = 1;        
-        
-        argc = ac;
-        argv = av;
-        s_optind = optind - 2;
-}
-
-
-
-
-
-
-
-
-

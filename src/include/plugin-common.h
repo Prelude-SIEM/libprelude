@@ -70,31 +70,16 @@ typedef struct {
 /*
  * Plugin need to call this function in order to get registered.
  */
-int plugin_register(plugin_generic_t *plugin);
+int plugin_subscribe(plugin_generic_t *plugin);
+
+
+int plugin_unsubscribe(plugin_generic_t *plugin);
 
 
 /*
  * Return a valide not used plugin identity.
  */
 int plugin_request_new_id(void);
-
-
-
-typedef struct {
-        const char *name;
-        int has_arg;
-        int *flag;
-        int val;
-        
-        void (*cb)(const char *optarg);
-        int called;
-} plugin_option_t;
-
-/*
- *
- */
-void plugin_config_get(plugin_generic_t *plugin, plugin_option_t *cfg, const char *conffile);
-
 
 #endif
 

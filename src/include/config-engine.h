@@ -24,6 +24,7 @@
 
 typedef struct config config_t;
 
+int config_get_section(config_t *cfg, const char *section);
 
 const char *config_get(config_t *cfg, const char *section, const char *entry);
 

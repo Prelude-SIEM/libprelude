@@ -48,9 +48,7 @@
 #define prelude_option_error -1
 
 
-typedef struct prelude_optlist prelude_optlist_t;
 typedef struct prelude_option prelude_option_t;
-typedef struct prelude_option_wide prelude_option_wide_t;
 
 
 typedef enum {
@@ -61,28 +59,19 @@ typedef enum {
 
 
 
-prelude_optlist_t *prelude_option_new(void);
+void prelude_option_print(int flags, int descoff);
 
-prelude_option_t *prelude_option_add(prelude_optlist_t *optlist, int flags,
-                                     char shortopt, const char *longopt, const char *desc,
-                                     prelude_option_argument_t has_arg, int (*set)(const char *optarg));
+prelude_msg_t *prelude_option_wide_get_msg(void);
 
-prelude_option_t *prelude_option_wide_add(prelude_optlist_t *optlist, int flags,
-                                          char shortopt, const char *longopt, const char *desc,
-                                          prelude_option_argument_t has_arg, int (*set)(const char *optarg),
-                                          int (*get)(char *buf, size_t size));
+void prelude_option_destroy(prelude_option_t *option);
 
-
-int prelude_option_parse_arguments(prelude_optlist_t *optlist,
+int prelude_option_parse_arguments(prelude_option_t *optlist,
                                    const char *filename, int argc, char **argv);
 
-
-void prelude_option_print(prelude_optlist_t *optlist, int flags);
-
-prelude_msg_t *prelude_option_wide_get_msg(prelude_optlist_t *optlist);
-
-
-void prelude_option_destroy(prelude_optlist_t *optlist);
+prelude_option_t *prelude_option_add(prelude_option_t *parent, int flags,
+                                     char shortopt, const char *longopt, const char *desc,
+                                     prelude_option_argument_t has_arg, int (*set)(const char *optarg),
+                                     int (*get)(char *buf, size_t size));
 
 
 
