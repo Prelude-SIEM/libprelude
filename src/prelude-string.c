@@ -561,8 +561,10 @@ int prelude_string_cat(prelude_string_t *string, const char *str)
 
 void prelude_string_clear(prelude_string_t *string)
 {
-        if ( string->data.rwbuf ) {
+        string->index = 0;
+        
+        if ( string->data.rwbuf && string->flags & PRELUDE_STRING_OWN_DATA )
                 *(string->data.rwbuf) = '\0';
-                string->index = 0;
-        }
+
+        else string->data.rwbuf = NULL;
 }
