@@ -34,8 +34,6 @@
 #include "config.h"
 
 
-int config_quiet = 0;
-
 
 int main(int argc, char **argv) 
 {
