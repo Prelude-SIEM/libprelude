@@ -50,9 +50,11 @@ static prelude_msg_t *flush_msg_cb(void *data)
         if ( msgbuf->async_send ) {
                 prelude_sensor_send_msg_async(msgbuf->msg);
                 msgbuf->msg = prelude_msg_dynamic_new(0, 0, data, flush_msg_cb);
-        } else 
+        } else {
                 prelude_sensor_send_msg(msgbuf->msg);
-
+                prelude_msg_recycle(msgbuf->msg);
+        }
+        
         return msgbuf->msg;
 }
 
@@ -123,8 +125,6 @@ prelude_msgbuf_t *prelude_msgbuf_new(int async_send)
         if ( ! msgbuf->msg )
                 return NULL;
 
-        prelude_msg_mark_start(msgbuf->msg);
-
         return msgbuf;
 }
 
@@ -139,16 +139,13 @@ prelude_msgbuf_t *prelude_msgbuf_new(int async_send)
  */
 void prelude_msgbuf_mark_end(prelude_msgbuf_t *msgbuf) 
 {
+        prelude_msg_mark_end(msgbuf->msg);
+        
         /*
          * FIXME:
          * only flush the message if we're not under an alert burst.
          */
         flush_msg_cb(msgbuf);
-
-        /*
-         * tell that we are gonna put another message in the same msg buffer.
-         */
-        prelude_msg_mark_start(msgbuf->msg);
 }
 
 
@@ -165,7 +162,7 @@ void prelude_msgbuf_close(prelude_msgbuf_t *msgbuf)
 {
         flush_msg_cb(msgbuf);
         
-        if ( msgbuf->async_send )
+        if ( ! msgbuf->async_send )
                 prelude_msg_destroy(msgbuf->msg);
 
         free(msgbuf);

@@ -651,7 +651,9 @@ void idmef_send_assessment(prelude_msgbuf_t *msg, idmef_assessment_t *assessment
 
 
 int idmef_msg_send(prelude_msgbuf_t *msgbuf, idmef_message_t *idmef, uint8_t priority)
-{        
+{
+        printf("send\n");
+        
         switch ( idmef->type ) {
 
         case idmef_alert_message:
@@ -664,7 +666,8 @@ int idmef_msg_send(prelude_msgbuf_t *msgbuf, idmef_message_t *idmef, uint8_t pri
         }
 
         prelude_msgbuf_mark_end(msgbuf);
-                
+        printf("ok\n");
+        
         return 0;
 }
 

@@ -87,12 +87,34 @@ static prelude_msg_t *call_alloc_cb(prelude_msg_t *msg)
          * in order to properly address the message buffer. And in order
          * for not all message to not look like fragment.
          */
-        msg->write_index = 0;
+        msg->header_index = 0;
+        msg->write_index = PRELUDE_MSG_HDR_SIZE;
         msg->hdr.is_fragment = 0;
         
         return msg;
 }
 
+
+
+static void msg_mark_end(prelude_msg_t *msg) 
+{
+        uint32_t dlen;
+        uint32_t hdr_offset = msg->header_index;
+        
+        if ( msg->write_index - msg->header_index - PRELUDE_MSG_HDR_SIZE <= 0 ) 
+                return;
+        
+        dlen = htonl(msg->write_index - msg->header_index - PRELUDE_MSG_HDR_SIZE);
+        
+        msg->payload[hdr_offset++] = PRELUDE_MSG_VERSION;
+        msg->payload[hdr_offset++] = msg->hdr.tag;
+        msg->payload[hdr_offset++] = msg->hdr.priority;
+        msg->payload[hdr_offset++] = msg->hdr.is_fragment;
+        msg->payload[hdr_offset++] = dlen;
+        msg->payload[hdr_offset++] = dlen >> 8;
+        msg->payload[hdr_offset++] = dlen >> 16;
+        msg->payload[hdr_offset++] = dlen >> 24;
+}
 
 
 
@@ -101,11 +123,12 @@ inline static int set_data(prelude_msg_t **m, const void *buf, size_t size)
 {
         int remaining;
         prelude_msg_t *msg = *m;
-
+        
         remaining = (msg->hdr.datalen - msg->write_index);
         assert(msg->flush_msg_cb != NULL || remaining >= size);
         
         if ( size > remaining ) {
+                
                 /*
                  * there is not enough free buffer space to store the whole
                  * data in the message. Store what we can, and call the message
@@ -123,22 +146,11 @@ inline static int set_data(prelude_msg_t **m, const void *buf, size_t size)
                  */
                 msg->hdr.is_fragment = 1;
 
-#if 0
-                /*
-                 * mark the end of the header. It can't have being done previously.
-                 */
-                msg_mark_end(msg);
-#endif
                 /*
                  * the caller might destroy the message after this and re-allocate
                  * one... or use synchronous send and reuse the same message.
                  */
                 *m = msg = call_alloc_cb(msg);
-
-                /*
-                 * mark the beginning of a new message, that'll contain remaining data.
-                 */
-                prelude_msg_mark_start(msg);
                 
                 return set_data(m, buf, size);
         }
@@ -313,25 +325,6 @@ static int read_message_content(prelude_msg_t *msg, prelude_io_t *fd)
 }
 
 
-
-
-static void msg_mark_end(prelude_msg_t *msg) 
-{
-        uint32_t dlen;
-        uint32_t hdr_offset = msg->header_index;
-        
-        assert(((msg->write_index - msg->header_index) - PRELUDE_MSG_HDR_SIZE) > 0);
-        dlen = htonl((msg->write_index - msg->header_index) - PRELUDE_MSG_HDR_SIZE);
-        
-        msg->payload[hdr_offset++] = PRELUDE_MSG_VERSION;
-        msg->payload[hdr_offset++] = msg->hdr.tag;
-        msg->payload[hdr_offset++] = msg->hdr.priority;
-        msg->payload[hdr_offset++] = msg->hdr.is_fragment;
-        msg->payload[hdr_offset++] = dlen;
-        msg->payload[hdr_offset++] = dlen >> 8;
-        msg->payload[hdr_offset++] = dlen >> 16;
-        msg->payload[hdr_offset++] = dlen >> 24;
-}
 
 
 
@@ -537,47 +530,69 @@ int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src
  */
 int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst) 
 {
-        msg_mark_end(msg);
+        uint32_t dlen = msg->write_index;
 
-        return prelude_io_write(dst, msg->payload, msg->write_index);
+        /*
+         * if the message header index is 0 (write called, without
+         * prelude_msg_mark_end()), or if the is_fragment flag is set,
+         * mark end of the message, cause the caller didn't do it in theses case.
+         */
+        if ( msg->header_index == 0 || msg->hdr.is_fragment ) 
+                msg_mark_end(msg);
+
+        /*
+         * in this case, prelude_msg_mark_end() was called.
+         */
+        else if ( ! msg->hdr.is_fragment )
+                dlen -= PRELUDE_MSG_HDR_SIZE;
+
+        return prelude_io_write(dst, msg->payload, dlen);
 }
 
 
 
 
 /**
- * prelude_msg_mark_start:
+ * prelude_msg_recycle:
  * @msg: Pointer on #prelude_msg_t object.
  *
- * This function is to be used with message allocated throught
- * prelude_msg_dynamic_new(). The buffer within that kind of message
- * can contain several message.
- *
- * This function should be called for the message subsystem to know
- * we are starting a new message, withing the same message buffer.
- */
-void prelude_msg_mark_start(prelude_msg_t *msg)
+ * Recycle @msg so you can write at it again, even
+ * thought it was written.
+ */ 
+void prelude_msg_recycle(prelude_msg_t *msg) 
 {
+        msg->header_index = 0;
+        msg->write_index = PRELUDE_MSG_HDR_SIZE;
+}
+
+
+
+
+/**
+ * prelude_msg_mark_end:
+ * @msg: Pointer on #prelude_msg_t object.
+ *
+ * Mark end of message in the @msg buffer, so you can continue
+ * adding different message in the same buffer.
+ */
+void prelude_msg_mark_end(prelude_msg_t *msg)
+{
+        msg_mark_end(msg);
+                
         if ( msg->write_index + PRELUDE_MSG_HDR_SIZE + MINIMUM_FRAGMENT_DATA_SIZE > msg->hdr.datalen ) {
+
                 /*
-                 * we don't have enough space to store an header + 1 byte of data.
+                 * we don't have enough space to store an header + MINIMUM_FRAGMENT_DATA_SIZE byte of data.
                  */
+                msg->write_index += PRELUDE_MSG_HDR_SIZE;
+                
                 msg = call_alloc_cb(msg);
                 if ( ! msg ) 
                         return;
         } else {
-                /*
-                 * there is enough room in the buffer to store a new message, or part of it.
-                 * call prelude_msg_mark_end() cause the buffer may already contain a previous
-                 * message, and we need to add an header for it.
-                 */
-                if ( msg->write_index > PRELUDE_MSG_HDR_SIZE )
-                        msg_mark_end(msg);
+                msg->header_index = msg->write_index;
+                msg->write_index += PRELUDE_MSG_HDR_SIZE;
         }
-
-        
-        msg->header_index = msg->write_index;
-        msg->write_index += PRELUDE_MSG_HDR_SIZE;
 }
 
 
@@ -705,7 +720,7 @@ prelude_msg_t *prelude_msg_dynamic_new(uint8_t tag, uint8_t priority, void *data
         msg->send_msg_data = data;
         msg->read_index = 0;
         msg->flush_msg_cb = flush_msg_cb;
-        msg->write_index = 0;
+        msg->write_index = PRELUDE_MSG_HDR_SIZE;
         
         return msg;
 }

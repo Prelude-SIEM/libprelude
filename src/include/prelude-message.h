@@ -66,7 +66,9 @@ int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf)
 /*
  * Write function.
  */
-void prelude_msg_mark_start(prelude_msg_t *msg);
+void prelude_msg_recycle(prelude_msg_t *msg);
+
+void prelude_msg_mark_end(prelude_msg_t *msg);
 
 prelude_msg_t *prelude_msg_dynamic_new(uint8_t tag, uint8_t priority, void *data,
                                        prelude_msg_t *(*flush_msg_cb)(void *data));
