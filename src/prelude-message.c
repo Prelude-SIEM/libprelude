@@ -132,8 +132,8 @@ inline static int set_data(prelude_msg_t **m, const void *buf, size_t size)
 {
         size_t remaining;
         prelude_msg_t *msg = *m;
-        
-        remaining = (msg->hdr.datalen - msg->write_index);
+
+        remaining = (msg->hdr.datalen - msg->write_index);        
         assert(msg->flush_msg_cb != NULL || remaining >= size);
         
         if ( size > remaining ) {
@@ -165,7 +165,7 @@ inline static int set_data(prelude_msg_t **m, const void *buf, size_t size)
                 
                 return set_data(m, buf, size);
         }
-        
+
         memcpy(msg->payload + msg->write_index, buf, size);
         msg->write_index += size;
 
@@ -224,11 +224,12 @@ inline static void slice_message_header(prelude_msg_t *msg, unsigned char *hdrbu
 
 
 
-static prelude_msg_status_t read_message_header(prelude_msg_t *msg, prelude_io_t *fd) 
+static prelude_msg_status_t read_message_header(prelude_msg_t **msgptr, prelude_io_t *fd) 
 {
         size_t count;
         uint32_t old_dlen;
         prelude_msg_status_t status;
+        prelude_msg_t *msg = *msgptr;
         unsigned char *hdrptr = &msg->hdrbuf[msg->header_index];
 
         count = PRELUDE_MSG_HDR_SIZE - msg->header_index;
@@ -274,11 +275,15 @@ static prelude_msg_status_t read_message_header(prelude_msg_t *msg, prelude_io_t
          * allocate our data buffer. We also want our buffer to be able to contain an
          * header so that it can be eventually sent...
          */
-        msg->payload = prelude_realloc(msg->payload, PRELUDE_MSG_HDR_SIZE + msg->hdr.datalen);
-        if ( ! msg->payload ) {
+
+        msg = prelude_realloc(msg, sizeof(*msg) + PRELUDE_MSG_HDR_SIZE + msg->hdr.datalen);
+        if ( ! msg ) {
                 log(LOG_ERR, "couldn't allocate %d bytes.\n", msg->hdr.datalen);
                 return prelude_msg_error;
         }
+
+        *msgptr = msg;
+        msg->payload = ((unsigned char *) msg) + sizeof(*msg);
                 
         return prelude_msg_finished;
 }
@@ -375,7 +380,7 @@ prelude_msg_status_t prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
          */
         if ( (*msg)->header_index != PRELUDE_MSG_HDR_SIZE ) {
                 
-                status = read_message_header(*msg, pio);
+                status = read_message_header(msg, pio);
 
                 if ( status == prelude_msg_error || status == prelude_msg_eof ) {
                         prelude_msg_destroy(*msg);
@@ -535,6 +540,7 @@ int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src
  */
 ssize_t prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst) 
 {
+        ssize_t ret;
         uint32_t dlen = msg->write_index;
         
         /*
@@ -556,11 +562,15 @@ ssize_t prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst)
          */
         else if ( ! msg->hdr.is_fragment )
                 dlen -= PRELUDE_MSG_HDR_SIZE;
-
-        /*
-         * blocking mode has to be set.
-         */
-        return prelude_io_write(dst, msg->payload, dlen);
+        
+        ret = prelude_io_write(dst, msg->payload, dlen);
+        if ( ret < 0 )
+                return prelude_msg_error;
+        
+        msg->payload += ret;
+        msg->write_index -= ret;
+        
+        return (ret == dlen) ? prelude_msg_finished : prelude_msg_unfinished;
 }
 
 
@@ -577,7 +587,8 @@ void prelude_msg_recycle(prelude_msg_t *msg)
 {
         msg->header_index = 0;
         msg->write_index = PRELUDE_MSG_HDR_SIZE;
-
+        msg->payload = (unsigned char *) msg + sizeof(*msg);
+                        
         if ( msg->read_index )
                 msg->read_index = PRELUDE_MSG_HDR_SIZE;
 }
@@ -839,10 +850,7 @@ uint32_t prelude_msg_get_len(prelude_msg_t *msg)
  * to by @msg. All the ressources for this message are freed.
  */
 void prelude_msg_destroy(prelude_msg_t *msg) 
-{        
-        if ( msg->read_index != 0 )
-                free(msg->payload);
-        
+{
         free(msg);
 }
 
