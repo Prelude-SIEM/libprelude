@@ -2,7 +2,7 @@
 /*****
 *
 * Copyright (C) 2001-2005 Yoann Vandoorselaere <yoann@prelude-ids.org>
-* Copyright (C) 2003,2004 Nicolas Delon <nicolas@prelude-ids.org>
+* Copyright (C) 2003-2005 Nicolas Delon <nicolas@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -248,8 +248,9 @@ void idmef_user_id_write(idmef_user_id_t *user_id, prelude_msgbuf_t *msg)
 		uint32_t *tmp;
 
 		tmp = idmef_user_id_get_number(user_id);
-		if ( tmp )
+		if ( tmp ) {
 			uint32_write(*tmp, msg, MSG_USER_ID_NUMBER);
+		}
 	}
         prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
@@ -293,8 +294,9 @@ void idmef_address_write(idmef_address_t *address, prelude_msgbuf_t *msg)
 		int32_t *tmp;
 
 		tmp = idmef_address_get_vlan_num(address);
-		if ( tmp )
+		if ( tmp ) {
 			int32_write(*tmp, msg, MSG_ADDRESS_VLAN_NUM);
+		}
 	}        prelude_string_write(idmef_address_get_address(address), msg, MSG_ADDRESS_ADDRESS);
         prelude_string_write(idmef_address_get_netmask(address), msg, MSG_ADDRESS_NETMASK);
 
@@ -316,8 +318,9 @@ void idmef_process_write(idmef_process_t *process, prelude_msgbuf_t *msg)
 		uint32_t *tmp;
 
 		tmp = idmef_process_get_pid(process);
-		if ( tmp )
+		if ( tmp ) {
 			uint32_write(*tmp, msg, MSG_PROCESS_PID);
+		}
 	}        prelude_string_write(idmef_process_get_path(process), msg, MSG_PROCESS_PATH);
 
         {
@@ -397,23 +400,26 @@ void idmef_service_write(idmef_service_t *service, prelude_msgbuf_t *msg)
 		uint8_t *tmp;
 
 		tmp = idmef_service_get_ip_version(service);
-		if ( tmp )
+		if ( tmp ) {
 			uint8_write(*tmp, msg, MSG_SERVICE_IP_VERSION);
+		}
 	}        prelude_string_write(idmef_service_get_name(service), msg, MSG_SERVICE_NAME);
 
 	{
 		uint16_t *tmp;
 
 		tmp = idmef_service_get_port(service);
-		if ( tmp )
+		if ( tmp ) {
 			uint16_write(*tmp, msg, MSG_SERVICE_PORT);
+		}
 	}
 	{
 		uint8_t *tmp;
 
 		tmp = idmef_service_get_iana_protocol_number(service);
-		if ( tmp )
+		if ( tmp ) {
 			uint8_write(*tmp, msg, MSG_SERVICE_IANA_PROTOCOL_NUMBER);
+		}
 	}        prelude_string_write(idmef_service_get_iana_protocol_name(service), msg, MSG_SERVICE_IANA_PROTOCOL_NAME);
         prelude_string_write(idmef_service_get_portlist(service), msg, MSG_SERVICE_PORTLIST);
         prelude_string_write(idmef_service_get_protocol(service), msg, MSG_SERVICE_PROTOCOL);
@@ -516,36 +522,41 @@ void idmef_inode_write(idmef_inode_t *inode, prelude_msgbuf_t *msg)
 		uint32_t *tmp;
 
 		tmp = idmef_inode_get_number(inode);
-		if ( tmp )
+		if ( tmp ) {
 			uint32_write(*tmp, msg, MSG_INODE_NUMBER);
+		}
 	}
 	{
 		uint32_t *tmp;
 
 		tmp = idmef_inode_get_major_device(inode);
-		if ( tmp )
+		if ( tmp ) {
 			uint32_write(*tmp, msg, MSG_INODE_MAJOR_DEVICE);
+		}
 	}
 	{
 		uint32_t *tmp;
 
 		tmp = idmef_inode_get_minor_device(inode);
-		if ( tmp )
+		if ( tmp ) {
 			uint32_write(*tmp, msg, MSG_INODE_MINOR_DEVICE);
+		}
 	}
 	{
 		uint32_t *tmp;
 
 		tmp = idmef_inode_get_c_major_device(inode);
-		if ( tmp )
+		if ( tmp ) {
 			uint32_write(*tmp, msg, MSG_INODE_C_MAJOR_DEVICE);
+		}
 	}
 	{
 		uint32_t *tmp;
 
 		tmp = idmef_inode_get_c_minor_device(inode);
-		if ( tmp )
+		if ( tmp ) {
 			uint32_write(*tmp, msg, MSG_INODE_C_MINOR_DEVICE);
+		}
 	}
         prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
@@ -586,15 +597,17 @@ void idmef_file_write(idmef_file_t *file, prelude_msgbuf_t *msg)
 		uint64_t *tmp;
 
 		tmp = idmef_file_get_data_size(file);
-		if ( tmp )
+		if ( tmp ) {
 			uint64_write(*tmp, msg, MSG_FILE_DATA_SIZE);
+		}
 	}
 	{
 		uint64_t *tmp;
 
 		tmp = idmef_file_get_disk_size(file);
-		if ( tmp )
+		if ( tmp ) {
 			uint64_write(*tmp, msg, MSG_FILE_DISK_SIZE);
+		}
 	}
         {
                 idmef_file_access_t *file_access = NULL;
@@ -629,8 +642,9 @@ void idmef_file_write(idmef_file_t *file, prelude_msgbuf_t *msg)
 		idmef_file_fstype_t *tmp;
 
 		tmp = idmef_file_get_fstype(file);
-		if ( tmp )
+		if ( tmp ) {
 			uint32_write(*tmp, msg, MSG_FILE_FSTYPE);
+		}
 	}
         prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
@@ -716,8 +730,9 @@ void idmef_alertident_write(idmef_alertident_t *alertident, prelude_msgbuf_t *ms
 		uint64_t *tmp;
 
 		tmp = idmef_alertident_get_analyzerid(alertident);
-		if ( tmp )
+		if ( tmp ) {
 			uint64_write(*tmp, msg, MSG_ALERTIDENT_ANALYZERID);
+		}
 	}
         prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
@@ -735,15 +750,19 @@ void idmef_impact_write(idmef_impact_t *impact, prelude_msgbuf_t *msg)
 		idmef_impact_severity_t *tmp;
 
 		tmp = idmef_impact_get_severity(impact);
-		if ( tmp )
+		if ( tmp ) {
 			uint32_write(*tmp, msg, MSG_IMPACT_SEVERITY);
+			prelude_msg_set_priority(prelude_msgbuf_get_msg(msg),
+					         idmef_impact_severity_to_msg_priority(*tmp));
+		}
 	}
 	{
 		idmef_impact_completion_t *tmp;
 
 		tmp = idmef_impact_get_completion(impact);
-		if ( tmp )
+		if ( tmp ) {
 			uint32_write(*tmp, msg, MSG_IMPACT_COMPLETION);
+		}
 	}        uint32_write(idmef_impact_get_type(impact), msg, MSG_IMPACT_TYPE);
         prelude_string_write(idmef_impact_get_description(impact), msg, MSG_IMPACT_DESCRIPTION);
 
@@ -778,8 +797,9 @@ void idmef_confidence_write(idmef_confidence_t *confidence, prelude_msgbuf_t *ms
 		float *tmp;
 
 		tmp = idmef_confidence_get_confidence(confidence);
-		if ( tmp )
+		if ( tmp ) {
 			float_write(*tmp, msg, MSG_CONFIDENCE_CONFIDENCE);
+		}
 	}
         prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
@@ -866,8 +886,9 @@ void idmef_overflow_alert_write(idmef_overflow_alert_t *overflow_alert, prelude_
 		uint32_t *tmp;
 
 		tmp = idmef_overflow_alert_get_size(overflow_alert);
-		if ( tmp )
+		if ( tmp ) {
 			uint32_write(*tmp, msg, MSG_OVERFLOW_ALERT_SIZE);
+		}
 	}        idmef_data_write(idmef_overflow_alert_get_buffer(overflow_alert), msg, MSG_OVERFLOW_ALERT_BUFFER);
 
         prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);

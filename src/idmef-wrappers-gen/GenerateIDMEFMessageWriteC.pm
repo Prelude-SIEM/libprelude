@@ -1,4 +1,4 @@
-# Copyright (C) 2003,2004 Nicolas Delon <nicolas@prelude-ids.org>
+# Copyright (C) 2003-2005 Nicolas Delon <nicolas@prelude-ids.org>
 # All Rights Reserved
 #
 # This file is part of the Prelude program.
@@ -33,7 +33,7 @@ sub	header
 /*****
 *
 * Copyright (C) 2001-2005 Yoann Vandoorselaere <yoann\@prelude-ids.org>
-* Copyright (C) 2003,2004 Nicolas Delon <nicolas\@prelude-ids.org>
+* Copyright (C) 2003-2005 Nicolas Delon <nicolas\@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -230,10 +230,18 @@ sub	struct_field_normal
 		$field->{typename} *tmp;
 
 		tmp = idmef_$struct->{short_typename}_get_$field->{name}($struct->{short_typename});
-		if ( tmp )
-			$function(*tmp, msg, MSG_",  uc($struct->{short_typename}), "_", uc($field->{name}), ");
-	}");
+		if ( tmp ) \{
+			$function(*tmp, msg, MSG_",  uc($struct->{short_typename}), "_", uc($field->{name}), ");");
 
+	if ( $field->{typename} eq "idmef_impact_severity_t" ) {
+	    $self->output("
+			prelude_msg_set_priority(prelude_msgbuf_get_msg(msg),
+					         idmef_impact_severity_to_msg_priority(*tmp));");
+	}
+
+	$self->output("
+		\}
+	\}");
     } else {
 	$self->output(" " x 8, 
 		      "$function(idmef_$struct->{short_typename}_get_$field->{name}($struct->{short_typename}), ", 
