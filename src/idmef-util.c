@@ -56,11 +56,12 @@
 unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, unsigned char *buf, size_t *size)
 {
         int ret = 0;
-	idmef_data_t *data;
+        idmef_data_t *data;
+        const char *outstr;
 
-	data = idmef_additional_data_get_data(ad);
-	if ( idmef_data_is_empty(data) )
-		return "";
+        data = idmef_additional_data_get_data(ad);
+        if ( idmef_data_is_empty(data) )
+                return "";
 
         switch ( idmef_additional_data_get_type(ad) ) {
 
@@ -68,27 +69,27 @@ unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, 
         case IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER:
                 *size = idmef_data_get_len(data);
                 return idmef_data_get_data(data);
-                
+
         case IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN:
         case IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME:
         case IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST:
         case IDMEF_ADDITIONAL_DATA_TYPE_STRING:
-        case IDMEF_ADDITIONAL_DATA_TYPE_XML:                
-                ret = extract_characters_safe(&buf, idmef_data_get_data(data), idmef_data_get_len(data));
+        case IDMEF_ADDITIONAL_DATA_TYPE_XML:
+                ret = extract_characters_safe(&outstr, idmef_data_get_data(data), idmef_data_get_len(data));
                 *size = idmef_data_get_len(data) - 1; /* 0 string delimiter is included in len */
                 return (ret < 0) ? NULL : buf;
-                
+
         case IDMEF_ADDITIONAL_DATA_TYPE_INTEGER: {
                 uint32_t out32;
-                
+
                 ret = extract_uint32_safe(&out32, idmef_data_get_data(data), idmef_data_get_len(data));
                 if ( ret < 0 )
                         return NULL;
-                
+
                 ret = snprintf(buf, *size, "%u", out32);
                 break;
-	}
-                
+        }
+
         case IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP: {
                 union {
                         uint64_t w_buf;
@@ -101,7 +102,7 @@ unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, 
                 
                 ret = snprintf(buf, *size, "0x%08ux.0x%08ux", d.r_buf[0], d.r_buf[1]);
                 break;
-	}
+        }
 
         case IDMEF_ADDITIONAL_DATA_TYPE_REAL: {
 		uint32_t out32;
@@ -112,7 +113,7 @@ unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, 
                 
                 ret = snprintf(buf, *size, "%f", (float) out32);
                 break;
-	}
+        }
 
         default:
                 log(LOG_ERR, "Unknown data type: %d.\n", idmef_additional_data_get_type(ad));
@@ -123,8 +124,8 @@ unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, 
                 return NULL;
 
         *size = ret;
-        
-	return buf;
+
+        return buf;
 }
 
 
