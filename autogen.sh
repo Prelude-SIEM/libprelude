@@ -1,4 +1,4 @@
-gtkdocize --copy || echo "gtkdocize missing. Please install gtk-doc."; exit 1
+gtkdocize --copy 
 libtoolize -c --force --ltdl --automake
 autoreconf --install --force
 
