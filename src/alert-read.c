@@ -66,7 +66,7 @@ alert_container_t *prelude_alert_read(int fd, uint8_t *tag)
         *tag = buf[1];
         
         ret = read(fd, &dlen, sizeof(dlen));
-        if ( ret <= 0 ) {
+        if ( ret != sizeof(dlen) ) {
                 log(LOG_ERR, "Invalid alert. Couldn't read len field.\n");
                 return NULL;
         }
@@ -82,9 +82,13 @@ alert_container_t *prelude_alert_read(int fd, uint8_t *tag)
         ac->max_msgcount = dlen;
         
         ret = read(fd, ac->msg, dlen);
-        if ( ret <= 0 ) 
+        if ( ret != dlen ) {
+                free(ac);
                 return NULL;
-
+        }
+                
+        ac->msg_index = 0;
+        
         return ac;
 }
 
@@ -93,21 +97,29 @@ alert_container_t *prelude_alert_read(int fd, uint8_t *tag)
 
 int prelude_alert_read_msg(alert_container_t *ac, uint8_t *tag, uint32_t *len, unsigned char **buf) 
 {
-        uint32_t *lenptr = (uint32_t *) ac->msg + ac->msg_index + sizeof(*tag);
-
-        if ( (ac->msg_index + 5) < ac->max_msgcount )
+        if ( ac->msg_index == ac->max_msgcount ) 
+                return 0;
+        
+        if ( (ac->msg_index + 6) > ac->max_msgcount ) 
                 return -1;
         
-        *tag = ntohs(ac->msg[ac->msg_index]);
-        *len = ntohl(*lenptr);
+        *tag = ac->msg[ac->msg_index++];        
+        *len = ntohl( (*(uint32_t *)&ac->msg[ac->msg_index]) );
         
-        if ( (ac->msg_index + *len + 6) < ac->max_msgcount )
+        ac->msg_index += 4;
+        
+        if ( (ac->msg_index + *len + 1) > ac->max_msgcount ) 
                 return -1;
                 
-        *buf = &ac->msg[ac->msg_index + 5];
-        ac->msg_index += *len + 6;
+        *buf = &ac->msg[ac->msg_index];
+        ac->msg_index += *len;
 
-        return 0;
+        /*
+         * Skip end of message.
+         */
+        ac->msg_index++;
+        
+        return 1;
 }
 
 
