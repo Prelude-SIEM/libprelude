@@ -1,5 +1,8 @@
 2001-08-28  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/config-engine.c (cmp_entry): oops, badly synced
+	with last prelude stable branch change.
+
 	* src/include/alert.h: include inttypes.h
 	alert_t now contain a pointer on the private sensor
 	data, and a 8 bits integer representing the kind of

@@ -86,8 +86,8 @@ static int cmp_entry(char *string, const char *wanted)
          * the one that have a value, and the other.
          */
         ptr = strrchr(string, '=');
-        if ( ! ptr )
-                ptr = string + strlen(string);
+        if ( ptr )
+                ptr--;
         else {
                 len = strlen(string);
                 if ( len == 0 )
