@@ -17,8 +17,12 @@ dnl
 AC_DEFUN([AC_PROTOTYPE_ACCEPT],[
 AC_PROTOTYPE(accept,
  [
+#ifndef _WIN32
   #include <sys/types.h>
   #include <sys/socket.h>
+#else
+  #include <winsock.h>
+#endif
  ],
  [
   int a = 0;
