@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <ctype.h>
+#include <inttypes.h>
 
 #include "string-matching.h"
 
@@ -21,7 +22,7 @@ bm_string_t *BoyerMoore_Init( char *y, int n )
 
 	string->length = n;
 
-	string->pattern = (char*) malloc( sizeof(char)*(n+1) );
+	string->pattern = (char*) malloc( sizeof(char)*(n+20) );
 	memcpy( string->pattern, y, n );
 	string->pattern[n] = '\0'; /* just for debugging..*/
 
@@ -110,44 +111,44 @@ void BoyerMoore_GoodSuffixShift(char *x, int m, int *bm_gs)
 }
 
 
-int BoyerMoore_StringMatching(char *y, int n, char *x, int m,
+int BoyerMoore_StringMatching(char *data, int dlen, char *ptrn, int plen,
 			      int bm_bc[], int bm_gs[] ) {
 
 	int i, j;
          
 	i = 0;
 
-	while(i <= n-m) {
+	while(i <= dlen-plen) {
 		
-		for (j=m-1; j >= 0 && y[i+j]==x[j]; --j);
+		for (j = plen - 1; j >= 0 && data[i + j] == ptrn[j]; --j);
 
 		if (j < 0)
 			return i+1;
 		else {
-			int k = bm_bc[ (int)y[i+j] ]-m+j+1;
-			i += k> bm_gs[j+1] ? k : bm_gs[j+1];
+			int k = bm_bc[(uint8_t)data[i + j]] - plen + j + 1;
+			i += (k > bm_gs[j + 1]) ? k : bm_gs[j + 1];
 		}
 	}
 	
 	return 0;
 }
 
-int BoyerMoore_CI_StringMatching(char *y, int n, char *x, int m,
-			      int bm_bc[], int bm_gs[] ) {
+int BoyerMoore_CI_StringMatching(char *data, int dlen, char *ptrn, int plen,
+                                 int bm_bc[], int bm_gs[] ) {
 
 	int i, j;
          
 	i = 0;
 
-	while(i <= n-m) {
+	while (i <= dlen-plen) {
 		
-		for (j=m-1; j >= 0 && toupper(y[i+j])==x[j]; --j);
+		for (j = plen - 1; j >= 0 && toupper(data[i + j]) == ptrn[j]; --j);
 
 		if (j < 0)
 			return i+1;
 		else {
-			int k = bm_bc[ (int)toupper(y[i+j]) ]-m+j+1;
-			i += k> bm_gs[j+1] ? k : bm_gs[j+1];
+			int k = bm_bc[toupper((uint8_t)data[i + j])] - plen + j + 1;
+			i += (k > bm_gs[j + 1]) ? k : bm_gs[j + 1];
 		}
 	}
 	
