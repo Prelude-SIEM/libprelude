@@ -1,3 +1,9 @@
+2002-09-10  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* NEWS: updated.
+
+	* configure.in: bump version number to 0.8.3
+
 2002-09-09  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* sensor-adduser/sensor-adduser.c (register_sensor_ident): 

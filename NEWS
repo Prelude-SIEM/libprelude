@@ -1,3 +1,19 @@
+* 2002-09-10, libprelude-0.8.3:
+	- Make sensor-adduser do exact compareason on sensor name,
+	  so that two sensor with the same prefix can't be confused.
+	  (Yoann Vandoorselaere).
+
+	- If we're running on a big endian system, don't send uninitialized
+	  64bits value.
+	  (Yoann Vandoorselaere).
+
+	- Handle error correctly when processing option from the config
+	  file. Assorted cleanup.
+	  (Yoann Vandoorselaere)
+
+	- Fix possible file descriptor leak when handling error.
+	  (Guillaume Pelat).	
+
 * 2002-08-29, libprelude-0.8.2:
 	- Correct check for OpenSSL, and profiling, so that
 	  you won't end up disabling OpenSSL with 
