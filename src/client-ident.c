@@ -108,5 +108,7 @@ int prelude_client_ident_init(prelude_client_t *client, uint64_t *analyzerid)
         
         sscanf(buf, "%llu", analyzerid);
 
+        fclose(fd);
+
         return 0;
 }
