@@ -300,7 +300,7 @@ static int parse_section_buffer(char *buf, char **entry, char **value)
 
         *e = 0;
         ret = parse_buffer(s + 1, entry, value);
-        *e = '[';
+        *e = ']';
 
         return ret;
 }
