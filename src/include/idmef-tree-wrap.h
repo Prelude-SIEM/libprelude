@@ -1042,7 +1042,7 @@ const char *idmef_target_decoy_to_string(idmef_target_decoy_t val);
  *         prelude_string_t *ident;
  * 
  *         idmef_target_decoy_t decoy;
- *         prelude_string_t interface;
+ *         prelude_string_t *interface;
  * 
  *         idmef_node_t *node;
  *         idmef_user_t *user;

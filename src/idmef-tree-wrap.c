@@ -1175,7 +1175,7 @@ struct idmef_target {
          prelude_string_t *ident;
  
          idmef_target_decoy_t decoy;
-         prelude_string_t interface;
+         prelude_string_t *interface;
  
          idmef_node_t *node;
          idmef_user_t *user;
@@ -9351,7 +9351,7 @@ int idmef_target_get_child(void *p, idmef_class_child_id_t child, void **childpt
                                                                 IDMEF_CLASS_ID_TARGET_DECOY, ptr->decoy);
         
                 case 2:
-                       return get_value_from_string((idmef_value_t **) childptr, & ptr->interface);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->interface);
 		case 3:
                         *childptr = ptr->node;
                         return 0;
@@ -9440,7 +9440,10 @@ static void idmef_target_destroy_internal(idmef_target_t *ptr)
 		ptr->ident = NULL;
 	}
 
-	prelude_string_destroy_internal(&ptr->interface);
+	if ( ptr->interface ) {
+		prelude_string_destroy(ptr->interface);
+		ptr->interface = NULL;
+	}
 
 	if ( ptr->node ) {
 		idmef_node_destroy(ptr->node);
@@ -9604,7 +9607,7 @@ int idmef_target_new_decoy(idmef_target_t *ptr, idmef_target_decoy_t **ret)
  */
 prelude_string_t *idmef_target_get_interface(idmef_target_t *ptr)
 {
-	return &ptr->interface;
+	return ptr->interface;
 }
 
 /**
@@ -9619,9 +9622,10 @@ prelude_string_t *idmef_target_get_interface(idmef_target_t *ptr)
 
 void idmef_target_set_interface(idmef_target_t *ptr, prelude_string_t *interface)
 {
-	prelude_string_destroy_internal(&ptr->interface);
-	memcpy(&ptr->interface, interface, sizeof (ptr->interface));
-	free(interface);
+	if ( ptr->interface )
+		prelude_string_destroy(ptr->interface);
+
+	ptr->interface = interface;
 }
 
 /**
@@ -9636,9 +9640,16 @@ void idmef_target_set_interface(idmef_target_t *ptr, prelude_string_t *interface
  */
 int idmef_target_new_interface(idmef_target_t *ptr, prelude_string_t **ret)
 {
-	prelude_string_destroy_internal(&ptr->interface);
+        int retval;
 
-        *ret = &ptr->interface;
+	if ( ptr->interface )
+		prelude_string_destroy(ptr->interface);
+		
+	retval = prelude_string_new(&ptr->interface);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->interface;
 	return 0;
 }
 
