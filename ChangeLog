@@ -1,5 +1,9 @@
 2002-04-11  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* Makefile.am (install-data-local): 
+	sensors-default.conf: should be world readable. So that non root sensor
+	know where to reach the Prelude Manager.
+
 	* src/include/extract.h: 
 	(align_uint16): 
 	(align_uint32): 

@@ -26,9 +26,9 @@ install-data-local:
                 echo "Installing default configuration in $(sensors_config_dir)/sensors-default.conf-dist";       \
                 echo;                                                                                             \
                 echo "********************************************************************************";          \
-		$(INSTALL) $(top_srcdir)/sensors-default.conf $(sensors_config_dir)/sensors-default.conf-dist;    \
+		$(INSTALL) -m 644 $(top_srcdir)/sensors-default.conf $(sensors_config_dir)/sensors-default.conf-dist;    \
         else                                                                                                      \
-                $(INSTALL) -m 600 $(top_srcdir)/sensors-default.conf $(sensors_config_dir)/;                      \
+                $(INSTALL) -m 644 $(top_srcdir)/sensors-default.conf $(sensors_config_dir)/;                      \
         fi
 
 
