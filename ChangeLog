@@ -1,3 +1,13 @@
+2004-01-11  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/sensor.c (setup_analyzer_node_location) 
+	(setup_analyzer_node_name, setup_analyzer_node_address_address) 
+	(setup_analyzer_node_address_netmask) 
+	(setup_analyzer_node_address_vlan_name) 
+	(prelude_analyzer_fill_infos): 
+	fix invalid memory references... String coming from
+	prelude-getopt should be strdup'd.
+	
 2004-01-10  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* src/config-engine.c (is_section): 

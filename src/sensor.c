@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001-2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -99,7 +99,7 @@ static int setup_analyzer_node_location(prelude_option_t *opt, const char *arg)
 		return prelude_option_error;
 	}
 
-	idmef_string_set_ref(location, arg);
+	idmef_string_set_dup(location, arg);
 
         return prelude_option_success;
 }
@@ -116,7 +116,7 @@ static int setup_analyzer_node_name(prelude_option_t *opt, const char *arg)
 		return prelude_option_error;
 	}
 
-	idmef_string_set_ref(name, arg);
+	idmef_string_set_dup(name, arg);
 
         return prelude_option_success;
 }
@@ -150,7 +150,7 @@ static int setup_analyzer_node_address_address(prelude_option_t *opt, const char
 		return prelude_option_error;
 	}
 
-	idmef_string_set_ref(address, arg);
+	idmef_string_set_dup(address, arg);
 
         return prelude_option_success;
 }
@@ -166,7 +166,7 @@ static int setup_analyzer_node_address_netmask(prelude_option_t *opt, const char
 		return prelude_option_error;
 	}
 
-	idmef_string_set_ref(netmask, arg);
+	idmef_string_set_dup(netmask, arg);
 
         return prelude_option_success;
 }
@@ -206,7 +206,7 @@ static int setup_analyzer_node_address_vlan_name(prelude_option_t *opt, const ch
 		return prelude_option_error;
 	}
 
-	idmef_string_set_ref(vlan_name, arg);
+	idmef_string_set_dup(vlan_name, arg);
 
         return prelude_option_success;
 }
@@ -517,7 +517,7 @@ void prelude_heartbeat_register_cb(void (*cb)(void *data), void *data)
 
 int prelude_analyzer_fill_infos(idmef_analyzer_t *analyzer) 
 {
-        static struct utsname uts;
+        struct utsname uts;
 	idmef_process_t *process;
 	idmef_node_t *node;
         idmef_address_t *address_ptr, *address_new;
@@ -553,14 +553,14 @@ int prelude_analyzer_fill_infos(idmef_analyzer_t *analyzer)
 		log(LOG_ERR, "cannot create ostype field of analyzer\n");
 		return -1;
 	}
-	idmef_string_set_ref(ostype_string, uts.sysname);
+	idmef_string_set_dup(ostype_string, uts.sysname);
 
 	osversion_string = idmef_analyzer_new_osversion(analyzer);
 	if ( ! osversion_string ) {
 		log(LOG_ERR, "cannot create osversion field of analyzer\n");
 		return -1;
 	}
-	idmef_string_set_ref(osversion_string, uts.release);
+	idmef_string_set_dup(osversion_string, uts.release);
 
 	idmef_process_set_pid(process, getpid());
 
@@ -572,7 +572,7 @@ int prelude_analyzer_fill_infos(idmef_analyzer_t *analyzer)
 			log(LOG_ERR, "cannot create name field of process\n");
 			return -1;
 		}
-                idmef_string_set_ref(name_string, process_name);
+                idmef_string_set_dup(name_string, process_name);
 	}
 
         if ( process_path ) {
@@ -583,7 +583,7 @@ int prelude_analyzer_fill_infos(idmef_analyzer_t *analyzer)
 			log(LOG_ERR, "cannot create path field of process\n");
 			return -1;
 		}
-                idmef_string_set_ref(path_string, process_path);
+                idmef_string_set_dup(path_string, process_path);
 	}
 
 	/*
