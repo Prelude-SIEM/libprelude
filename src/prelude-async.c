@@ -146,8 +146,6 @@ int prelude_async_init(void)
 
 
 
-
-
 /**
  * prelude_async_queue:
  */
