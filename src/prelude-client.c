@@ -258,9 +258,13 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
 
 	idmef_process_set_pid(process, getpid());
 
+        if ( ! program )
+                return 0;
+        
         ret = prelude_get_file_name_and_path(program, &name, &path);
         if ( ret < 0 )
                 return -1;
+                
         
         if ( name ) 
                 idmef_process_set_name(process, idmef_string_new_ref(name));
@@ -462,6 +466,16 @@ static int set_heartbeat_interval(void **context, prelude_option_t *opt, const c
 
 
 
+static int get_heartbeat_interval(void **context, char *buf, size_t size)
+{        
+        prelude_client_t *ptr = *context;
+        
+        snprintf(buf, size, "%u", ptr->heartbeat_timer.expire / 60);
+        
+        return 0;
+}
+
+
 
 static int setup_options(prelude_client_t *client, int argc, char **argv)
 {
@@ -471,7 +485,7 @@ static int setup_options(prelude_client_t *client, int argc, char **argv)
         
         prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "heartbeat-interval",
                            "Number of minutes between two heartbeat", required_argument,
-                           set_heartbeat_interval, NULL);
+                           set_heartbeat_interval, get_heartbeat_interval);
 
         
         if ( client->capability & CAPABILITY_SEND ) {
@@ -594,7 +608,9 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
 
         new->name = strdup(sname);
         new->config_filename = config ? strdup(config) : NULL;
-        new->md5sum = generate_md5sum(argv[0]);
+        
+        if ( argv )
+                new->md5sum = generate_md5sum(argv[0]);
         
         new->unique_ident = prelude_ident_new();
         if ( ! new->unique_ident ) {
@@ -638,7 +654,7 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
                 return -1;
         }
         
-        ret = fill_client_infos(new, argv[0]);
+        ret = fill_client_infos(new, argv ? argv[0] : NULL);
         if ( ret < 0 )
                 return -1;
 
