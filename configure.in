@@ -58,6 +58,8 @@ AC_PROG_YACC
 
 
 AC_SYS_LARGEFILE
+AX_CREATE_STDINT_H(src/include/prelude-inttypes.h)
+
 AC_C_BIGENDIAN(libprelude_cflags="$libprelude_cflags -DWORDS_BIGENDIAN")
 
 
@@ -69,6 +71,7 @@ AC_SUBST(libprelude_libs)
 AC_SUBST(libprelude_cflags)
 
 AC_CHECK_FUNCS(strndup)
+
 
 dnl **************************************************
 dnl * Check for networking function                  *

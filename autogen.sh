@@ -1,4 +1,4 @@
-aclocal
+aclocal -I m4
 autoconf
 autoheader
 libtoolize -c --force --ltdl --automake
