@@ -248,6 +248,12 @@ thread
 </para>
 
 
+<!-- ##### MACRO MSG_ALERT_ACTION ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### MACRO MSG_ALERT_ANALYZER_TIME ##### -->
 <para>
 
@@ -261,6 +267,18 @@ thread
 
 
 <!-- ##### MACRO MSG_ALERT_DETECT_TIME ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO MSG_ALERT_IMPACT ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO MSG_WEBSERVICE_METHOD ##### -->
 <para>
 
 </para>

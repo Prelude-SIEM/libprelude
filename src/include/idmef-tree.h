@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -30,6 +30,23 @@
 #define IDMEF_VERSION "0.5"
 
 
+
+
+/*
+ * Time class
+ */
+typedef struct {
+        uint32_t sec;
+        uint32_t usec;
+} idmef_time_t;
+
+#define idmef_create_time_t idmef_time_t
+#define idmef_detect_time_t idmef_time_t
+#define idmef_analyzer_time_t idmef_time_t
+
+
+
+
 /*
  * Additional Data class
  */
@@ -39,7 +56,7 @@ typedef enum {
         character = 2,
         date_time = 3,
         integer   = 4,
-        ntpstamps = 5,
+        ntpstamp  = 5,
         portlist  = 6,
         real      = 7,
         boolean   = 8,
@@ -92,6 +109,7 @@ typedef enum {
         user_privs    = 3,
         current_group = 4,
         group_privs   = 5,
+        other_privs   = 6,
 } idmef_userid_type_t;
 
 
@@ -195,7 +213,7 @@ typedef struct {
 typedef struct {
         const char *url;
         const char *cgi;
-        const char *method;
+        const char *http_method;
         const char *arg;
 } idmef_webservice_t;
 
@@ -252,12 +270,13 @@ typedef enum {
         coda         = 3,
         dfs          = 4,
         dns          = 5,
-        kerberos     = 6,
-        nds          = 7,
-        nis          = 8,
-        nisplus      = 9,
-        nt           = 10,
-        wfw          = 11,
+        hosts        = 6,
+        kerberos     = 7,
+        nds          = 8,
+        nis          = 9,
+        nisplus      = 10,
+        nt           = 11,
+        wfw          = 12,
 } idmef_node_category_t;
 
 
@@ -298,6 +317,87 @@ typedef struct {
 } idmef_source_t;
 
 
+/*
+ * File Access class
+ */
+typedef struct {
+        struct list_head list;
+        idmef_userid_t userid;
+        const char *permission;
+} idmef_file_access_t;
+
+
+/*
+ * Linkage class
+ */
+typedef enum {
+        hard_link     = 0,
+        mount_point   = 1,
+        reparse_point = 2,
+        shortcut      = 3,
+        stream        = 4,
+        symbolic_link = 5,
+} idmef_linkage_category_t;
+
+
+typedef struct {
+        struct list_head list;
+        
+        idmef_linkage_category_t category;
+        const char *name;
+        const char *path;
+        struct idmef_file *file;
+} idmef_linkage_t;
+
+
+
+/*
+ * Inode class
+ */
+typedef struct {
+        idmef_time_t change_time;
+        uint32_t number;
+        uint32_t major_device;
+        uint32_t minor_device;
+        uint32_t c_major_device;
+        uint32_t c_minor_device;
+} idmef_inode_t;
+
+
+
+        
+/*
+ * File class
+ */
+typedef enum {
+        current  = 0,
+        original = 1,
+} idmef_file_category_t;
+        
+        
+typedef struct idmef_file {
+        struct list_head list;
+        
+        uint64_t ident;
+        idmef_file_category_t category;
+        const char *fstype;
+
+        const char *name;
+        const char *path;
+
+        idmef_time_t *create_time;
+        idmef_time_t *modify_time;
+        idmef_time_t *access_time;
+
+        uint32_t data_size;
+        uint32_t disk_size;
+
+        struct list_head file_access_list;
+        struct list_head file_linkage_list;
+
+        idmef_inode_t *inode;
+} idmef_file_t;
+
 
 
 /*
@@ -314,7 +414,7 @@ typedef struct {
         idmef_user_t *user;
         idmef_process_t *process;
         idmef_service_t *service;
-        
+        struct list_head file_list;
 } idmef_target_t;
 
 
@@ -330,34 +430,106 @@ typedef struct {
         const char *model;
         const char *version;
         const char *class;
-
+        const char *ostype;
+        const char *osversion;
+        
         idmef_node_t *node;
         idmef_process_t *process;
 } idmef_analyzer_t;
 
 
 
-
-
 /*
- * Time class
+ *
  */
-typedef struct {
-        uint32_t sec;
-        uint32_t usec;
-} idmef_time_t;
-
-#define idmef_create_time_t idmef_time_t
-#define idmef_detect_time_t idmef_time_t
-#define idmef_analyzer_time_t idmef_time_t
-
-
 
 typedef struct {
         struct list_head list;
         uint64_t alertident;
         uint64_t analyzerid;
 } idmef_alertident_t;
+
+
+
+/*
+ * Impact class
+ */
+typedef enum {
+        impact_low    = 0,
+        impact_medium = 1,
+        impact_high   = 2,
+} idmef_impact_severity_t;
+
+
+typedef enum {
+        unknown_completion = 0,
+        failed     = 1,
+        succeeded  = 2,
+} idmef_impact_completion_t;
+
+
+typedef enum {
+        admin      = 0,
+        dos        = 1,
+        file       = 2,
+        recon      = 3,
+        user       = 4,
+        other      = 5,
+} idmef_impact_type_t;
+
+
+typedef struct {
+        idmef_impact_severity_t severity;
+        idmef_impact_completion_t completion;
+        idmef_impact_type_t type;
+        const char *description;
+} idmef_impact_t;
+
+
+/*
+ * Action class
+ */
+typedef enum {
+        block_installed    = 0,
+        notification_sent  = 1,
+        taken_offline      = 2,
+        action_other       = 3,
+} idmef_action_category_t;
+
+
+typedef struct {
+        struct list_head list;
+        idmef_action_category_t category;
+        const char *description;
+} idmef_action_t;
+
+
+
+/*
+ * Confidence class
+ */
+typedef enum {
+        low     = 0,
+        medium  = 1,
+        high    = 2,
+        numeric = 3,
+} idmef_confidence_rating_t;
+
+
+typedef struct {
+        idmef_confidence_rating_t rating;
+        float confidence;
+} idmef_confidence_t;
+
+
+/*
+ * Assessment class
+ */
+typedef struct {
+        idmef_impact_t *impact;
+        struct list_head action_list;
+        idmef_confidence_t *confidence;
+} idmef_assessment_t;
 
 
 
@@ -429,9 +601,8 @@ typedef enum {
 
 typedef struct {
         uint64_t ident;
-    
-        const char *impact;    
-        const char *action;
+
+        idmef_assessment_t *assessment;
     
         idmef_analyzer_t analyzer;
     

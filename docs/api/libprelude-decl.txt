@@ -1147,6 +1147,25 @@ idmef_additional_data_t *data
 <NAME>IDMEF_VERSION</NAME>
 #define IDMEF_VERSION "0.5"
 </MACRO>
+<TYPEDEF>
+<NAME>idmef_time_t</NAME>
+typedef struct {
+        uint32_t sec;
+        uint32_t usec;
+} idmef_time_t;
+</TYPEDEF>
+<MACRO>
+<NAME>idmef_create_time_t</NAME>
+#define idmef_create_time_t idmef_time_t
+</MACRO>
+<MACRO>
+<NAME>idmef_detect_time_t</NAME>
+#define idmef_detect_time_t idmef_time_t
+</MACRO>
+<MACRO>
+<NAME>idmef_analyzer_time_t</NAME>
+#define idmef_analyzer_time_t idmef_time_t
+</MACRO>
 <ENUM>
 <NAME>idmef_additional_data_type_t</NAME>
 typedef enum {
@@ -1155,7 +1174,7 @@ typedef enum {
         character = 2,
         date_time = 3,
         integer   = 4,
-        ntpstamps = 5,
+        ntpstamp  = 5,
         portlist  = 6,
         real      = 7,
         boolean   = 8,
@@ -1198,6 +1217,7 @@ typedef enum {
         user_privs    = 3,
         current_group = 4,
         group_privs   = 5,
+        other_privs   = 6,
 } idmef_userid_type_t;
 </ENUM>
 <TYPEDEF>
@@ -1292,7 +1312,7 @@ typedef struct {
 typedef struct {
         const char *url;
         const char *cgi;
-        const char *method;
+        const char *http_method;
         const char *arg;
 } idmef_webservice_t;
 </TYPEDEF>
@@ -1337,12 +1357,13 @@ typedef enum {
         coda         = 3,
         dfs          = 4,
         dns          = 5,
-        kerberos     = 6,
-        nds          = 7,
-        nis          = 8,
-        nisplus      = 9,
-        nt           = 10,
-        wfw          = 11,
+        hosts        = 6,
+        kerberos     = 7,
+        nds          = 8,
+        nis          = 9,
+        nisplus      = 10,
+        nt           = 11,
+        wfw          = 12,
 } idmef_node_category_t;
 </ENUM>
 <TYPEDEF>
@@ -1380,6 +1401,79 @@ typedef struct {
 } idmef_source_t;
 </TYPEDEF>
 <TYPEDEF>
+<NAME>idmef_file_access_t</NAME>
+typedef struct {
+        struct list_head list;
+        idmef_userid_t userid;
+        const char *permission;
+} idmef_file_access_t;
+</TYPEDEF>
+<ENUM>
+<NAME>idmef_linkage_category_t</NAME>
+typedef enum {
+        hard_link     = 0,
+        mount_point   = 1,
+        reparse_point = 2,
+        shortcut      = 3,
+        stream        = 4,
+        symbolic_link = 5,
+} idmef_linkage_category_t;
+</ENUM>
+<TYPEDEF>
+<NAME>idmef_file_linkage_t</NAME>
+typedef struct {
+        struct list_head list;
+        
+        idmef_linkage_category_t category;
+        const char *name;
+        const char *path;
+        const char *file;
+} idmef_file_linkage_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>idmef_file_inode_t</NAME>
+typedef struct {
+        idmef_time_t change_time;
+        uint32_t number;
+        uint32_t major_device;
+        uint32_t minor_device;
+        uint32_t c_major_device;
+        uint32_t c_minor_device;
+} idmef_file_inode_t;
+</TYPEDEF>
+<ENUM>
+<NAME>idmef_file_category_t</NAME>
+typedef enum {
+        current  = 0,
+        original = 1,
+} idmef_file_category_t;
+</ENUM>
+<TYPEDEF>
+<NAME>idmef_file_t</NAME>
+typedef struct {
+        struct list_head list;
+        
+        uint64_t ident;
+        idmef_file_category_t category;
+        const char *fstype;
+
+        const char *name;
+        const char *path;
+
+        idmef_time_t *create_time;
+        idmef_time_t *modify_time;
+        idmef_time_t *access_time;
+
+        uint32_t data_size;
+        uint32_t disk_size;
+
+        struct list_head file_access_list;
+        struct list_head file_linkage_list;
+
+        idmef_file_inode_t *inode;
+} idmef_file_t;
+</TYPEDEF>
+<TYPEDEF>
 <NAME>idmef_target_t</NAME>
 typedef struct {
         struct list_head list;
@@ -1392,7 +1486,7 @@ typedef struct {
         idmef_user_t *user;
         idmef_process_t *process;
         idmef_service_t *service;
-        
+        struct list_head file_list;
 } idmef_target_t;
 </TYPEDEF>
 <TYPEDEF>
@@ -1403,30 +1497,13 @@ typedef struct {
         const char *model;
         const char *version;
         const char *class;
-
+        const char *ostype;
+        const char *osversion;
+        
         idmef_node_t *node;
         idmef_process_t *process;
 } idmef_analyzer_t;
 </TYPEDEF>
-<TYPEDEF>
-<NAME>idmef_time_t</NAME>
-typedef struct {
-        uint32_t sec;
-        uint32_t usec;
-} idmef_time_t;
-</TYPEDEF>
-<MACRO>
-<NAME>idmef_create_time_t</NAME>
-#define idmef_create_time_t idmef_time_t
-</MACRO>
-<MACRO>
-<NAME>idmef_detect_time_t</NAME>
-#define idmef_detect_time_t idmef_time_t
-</MACRO>
-<MACRO>
-<NAME>idmef_analyzer_time_t</NAME>
-#define idmef_analyzer_time_t idmef_time_t
-</MACRO>
 <TYPEDEF>
 <NAME>idmef_alertident_t</NAME>
 typedef struct {
@@ -1434,6 +1511,79 @@ typedef struct {
         uint64_t alertident;
         uint64_t analyzerid;
 } idmef_alertident_t;
+</TYPEDEF>
+<ENUM>
+<NAME>idmef_impact_severity_t</NAME>
+typedef enum {
+        impact_low    = 0,
+        impact_medium = 1,
+        impact_high   = 2,
+} idmef_impact_severity_t;
+</ENUM>
+<ENUM>
+<NAME>idmef_impact_completion_t</NAME>
+typedef enum {
+        failed     = 0,
+        succeeded  = 1,
+} idmef_impact_completion_t;
+</ENUM>
+<ENUM>
+<NAME>idmef_impact_type_t</NAME>
+typedef enum {
+        admin      = 0,
+        dos        = 1,
+        file       = 2,
+        recon      = 3,
+        user       = 4,
+        other      = 5,
+} idmef_impact_type_t;
+</ENUM>
+<TYPEDEF>
+<NAME>idmef_impact_t</NAME>
+typedef struct {
+        idmef_impact_severity_t severity;
+        idmef_impact_completion_t completion;
+        idmef_impact_type_t type;
+} idmef_impact_t;
+</TYPEDEF>
+<ENUM>
+<NAME>idmef_action_category_t</NAME>
+typedef enum {
+        block_installed    = 0,
+        notification_sent  = 1,
+        taken_offline      = 2,
+        action_other       = 3,
+} idmef_action_category_t;
+</ENUM>
+<TYPEDEF>
+<NAME>idmef_action_t</NAME>
+typedef struct {
+        struct list_head list;
+        idmef_action_category_t category;
+} idmef_action_t;
+</TYPEDEF>
+<ENUM>
+<NAME>idmef_confidence_rating_t</NAME>
+typedef enum {
+        low     = 0,
+        medium  = 1,
+        high    = 2,
+        numeric = 3,
+} idmef_confidence_rating_t;
+</ENUM>
+<TYPEDEF>
+<NAME>idmef_confidence_t</NAME>
+typedef struct {
+        idmef_confidence_rating_t rating;
+} idmef_confidence_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>idmef_assessment_t</NAME>
+typedef struct {
+        idmef_impact_t *impact;
+        struct list_head action_list;
+        idmef_confidence_t *confidence;
+} idmef_assessment_t;
 </TYPEDEF>
 <TYPEDEF>
 <NAME>idmef_tool_alert_t</NAME>
@@ -1489,9 +1639,8 @@ typedef enum {
 <NAME>detail</NAME>
 typedef struct {
         uint64_t ident;
-    
-        const char *impact;    
-        const char *action;
+
+        idmef_assessment_t *assessment;
     
         idmef_analyzer_t analyzer;
     
@@ -1736,372 +1885,508 @@ char *x, int m, int bm_gs[]
 char *x, int m, int bm_bc[]
 </FUNCTION>
 <MACRO>
-<NAME>MSG_END_OF_TAG</NAME>
-#define MSG_END_OF_TAG 254
-</MACRO>
-<MACRO>
 <NAME>MSG_ALERT_TAG</NAME>
-#define MSG_ALERT_TAG 0
-</MACRO>
-<MACRO>
-<NAME>MSG_ALERT_IDENT</NAME>
-#define MSG_ALERT_IDENT 1
-</MACRO>
-<MACRO>
-<NAME>MSG_ALERT_ACTION</NAME>
-#define MSG_ALERT_ACTION 2
-</MACRO>
-<MACRO>
-<NAME>MSG_ALERT_IMPACT</NAME>
-#define MSG_ALERT_IMPACT 3
+#define MSG_ALERT_TAG                                    0
 </MACRO>
 <MACRO>
 <NAME>MSG_CREATE_TIME_TAG</NAME>
-#define MSG_CREATE_TIME_TAG 4
+#define MSG_CREATE_TIME_TAG                              1
 </MACRO>
 <MACRO>
 <NAME>MSG_DETECT_TIME_TAG</NAME>
-#define MSG_DETECT_TIME_TAG 5
+#define MSG_DETECT_TIME_TAG                              2
 </MACRO>
 <MACRO>
 <NAME>MSG_ANALYZER_TIME_TAG</NAME>
-#define MSG_ANALYZER_TIME_TAG 6
+#define MSG_ANALYZER_TIME_TAG                            3
 </MACRO>
 <MACRO>
 <NAME>MSG_SOURCE_TAG</NAME>
-#define MSG_SOURCE_TAG 7
-</MACRO>
-<MACRO>
-<NAME>MSG_SOURCE_IDENT</NAME>
-#define MSG_SOURCE_IDENT 8
-</MACRO>
-<MACRO>
-<NAME>MSG_SOURCE_SPOOFED</NAME>
-#define MSG_SOURCE_SPOOFED 9
-</MACRO>
-<MACRO>
-<NAME>MSG_SOURCE_INTERFACE</NAME>
-#define MSG_SOURCE_INTERFACE 10
+#define MSG_SOURCE_TAG                                   4
 </MACRO>
 <MACRO>
 <NAME>MSG_NODE_TAG</NAME>
-#define MSG_NODE_TAG 11
-</MACRO>
-<MACRO>
-<NAME>MSG_NODE_IDENT</NAME>
-#define MSG_NODE_IDENT 12
-</MACRO>
-<MACRO>
-<NAME>MSG_NODE_CATEGORY</NAME>
-#define MSG_NODE_CATEGORY 13
-</MACRO>
-<MACRO>
-<NAME>MSG_NODE_LOCATION</NAME>
-#define MSG_NODE_LOCATION 14
-</MACRO>
-<MACRO>
-<NAME>MSG_NODE_NAME</NAME>
-#define MSG_NODE_NAME 15
+#define MSG_NODE_TAG                                     5
 </MACRO>
 <MACRO>
 <NAME>MSG_ADDRESS_TAG</NAME>
-#define MSG_ADDRESS_TAG 16
-</MACRO>
-<MACRO>
-<NAME>MSG_ADDRESS_IDENT</NAME>
-#define MSG_ADDRESS_IDENT 17
-</MACRO>
-<MACRO>
-<NAME>MSG_ADDRESS_CATEGORY</NAME>
-#define MSG_ADDRESS_CATEGORY 18
-</MACRO>
-<MACRO>
-<NAME>MSG_ADDRESS_VLAN_NAME</NAME>
-#define MSG_ADDRESS_VLAN_NAME 19
-</MACRO>
-<MACRO>
-<NAME>MSG_ADDRESS_VLAN_NUM</NAME>
-#define MSG_ADDRESS_VLAN_NUM 20
-</MACRO>
-<MACRO>
-<NAME>MSG_ADDRESS_ADDRESS</NAME>
-#define MSG_ADDRESS_ADDRESS 21
-</MACRO>
-<MACRO>
-<NAME>MSG_ADDRESS_NETMASK</NAME>
-#define MSG_ADDRESS_NETMASK 22
+#define MSG_ADDRESS_TAG                                  6
 </MACRO>
 <MACRO>
 <NAME>MSG_USER_TAG</NAME>
-#define MSG_USER_TAG 23
-</MACRO>
-<MACRO>
-<NAME>MSG_USER_IDENT</NAME>
-#define MSG_USER_IDENT 24
-</MACRO>
-<MACRO>
-<NAME>MSG_USER_CATEGORY</NAME>
-#define MSG_USER_CATEGORY 25
+#define MSG_USER_TAG                                     7
 </MACRO>
 <MACRO>
 <NAME>MSG_USERID_TAG</NAME>
-#define MSG_USERID_TAG 26
-</MACRO>
-<MACRO>
-<NAME>MSG_USERID_IDENT</NAME>
-#define MSG_USERID_IDENT 27
-</MACRO>
-<MACRO>
-<NAME>MSG_USERID_TYPE</NAME>
-#define MSG_USERID_TYPE 28
-</MACRO>
-<MACRO>
-<NAME>MSG_USERID_NAME</NAME>
-#define MSG_USERID_NAME 29
-</MACRO>
-<MACRO>
-<NAME>MSG_USERID_NUMBER</NAME>
-#define MSG_USERID_NUMBER 30
+#define MSG_USERID_TAG                                   8
 </MACRO>
 <MACRO>
 <NAME>MSG_PROCESS_TAG</NAME>
-#define MSG_PROCESS_TAG 31
-</MACRO>
-<MACRO>
-<NAME>MSG_PROCESS_IDENT</NAME>
-#define MSG_PROCESS_IDENT 32
-</MACRO>
-<MACRO>
-<NAME>MSG_PROCESS_NAME</NAME>
-#define MSG_PROCESS_NAME 33
-</MACRO>
-<MACRO>
-<NAME>MSG_PROCESS_PID</NAME>
-#define MSG_PROCESS_PID 34
-</MACRO>
-<MACRO>
-<NAME>MSG_PROCESS_PATH</NAME>
-#define MSG_PROCESS_PATH 35
-</MACRO>
-<MACRO>
-<NAME>MSG_PROCESS_ARG</NAME>
-#define MSG_PROCESS_ARG 36
-</MACRO>
-<MACRO>
-<NAME>MSG_PROCESS_ENV</NAME>
-#define MSG_PROCESS_ENV 37
+#define MSG_PROCESS_TAG                                  9
 </MACRO>
 <MACRO>
 <NAME>MSG_SERVICE_TAG</NAME>
-#define MSG_SERVICE_TAG 38
-</MACRO>
-<MACRO>
-<NAME>MSG_SERVICE_IDENT</NAME>
-#define MSG_SERVICE_IDENT 39
-</MACRO>
-<MACRO>
-<NAME>MSG_SERVICE_NAME</NAME>
-#define MSG_SERVICE_NAME 40
-</MACRO>
-<MACRO>
-<NAME>MSG_SERVICE_PORT</NAME>
-#define MSG_SERVICE_PORT 41
-</MACRO>
-<MACRO>
-<NAME>MSG_SERVICE_PORTLIST</NAME>
-#define MSG_SERVICE_PORTLIST 42
-</MACRO>
-<MACRO>
-<NAME>MSG_SERVICE_PROTOCOL</NAME>
-#define MSG_SERVICE_PROTOCOL 43
+#define MSG_SERVICE_TAG                                 10
 </MACRO>
 <MACRO>
 <NAME>MSG_WEBSERVICE_TAG</NAME>
-#define MSG_WEBSERVICE_TAG 44
-</MACRO>
-<MACRO>
-<NAME>MSG_WEBSERVICE_URL</NAME>
-#define MSG_WEBSERVICE_URL 45
-</MACRO>
-<MACRO>
-<NAME>MSG_WEBSERVICE_CGI</NAME>
-#define MSG_WEBSERVICE_CGI 46
-</MACRO>
-<MACRO>
-<NAME>MSG_WEBSERVICE_METHOD</NAME>
-#define MSG_WEBSERVICE_METHOD 47
-</MACRO>
-<MACRO>
-<NAME>MSG_WEBSERVICE_ARG</NAME>
-#define MSG_WEBSERVICE_ARG 48
+#define MSG_WEBSERVICE_TAG                              11
 </MACRO>
 <MACRO>
 <NAME>MSG_SNMPSERVICE_TAG</NAME>
-#define MSG_SNMPSERVICE_TAG 49
-</MACRO>
-<MACRO>
-<NAME>MSG_SNMPSERVICE_OID</NAME>
-#define MSG_SNMPSERVICE_OID 50
-</MACRO>
-<MACRO>
-<NAME>MSG_SNMPSERVICE_COMMUNITY</NAME>
-#define MSG_SNMPSERVICE_COMMUNITY 51
-</MACRO>
-<MACRO>
-<NAME>MSG_SNMPSERVICE_COMMAND</NAME>
-#define MSG_SNMPSERVICE_COMMAND 52
+#define MSG_SNMPSERVICE_TAG                             12
 </MACRO>
 <MACRO>
 <NAME>MSG_CLASSIFICATION_TAG</NAME>
-#define MSG_CLASSIFICATION_TAG 53
-</MACRO>
-<MACRO>
-<NAME>MSG_CLASSIFICATION_ORIGIN</NAME>
-#define MSG_CLASSIFICATION_ORIGIN 54
-</MACRO>
-<MACRO>
-<NAME>MSG_CLASSIFICATION_NAME</NAME>
-#define MSG_CLASSIFICATION_NAME 55
-</MACRO>
-<MACRO>
-<NAME>MSG_CLASSIFICATION_URL</NAME>
-#define MSG_CLASSIFICATION_URL 56
+#define MSG_CLASSIFICATION_TAG                          13
 </MACRO>
 <MACRO>
 <NAME>MSG_ADDITIONALDATA_TAG</NAME>
-#define MSG_ADDITIONALDATA_TAG 57
-</MACRO>
-<MACRO>
-<NAME>MSG_ADDITIONALDATA_TYPE</NAME>
-#define MSG_ADDITIONALDATA_TYPE 58
-</MACRO>
-<MACRO>
-<NAME>MSG_ADDITIONALDATA_MEANING</NAME>
-#define MSG_ADDITIONALDATA_MEANING 59
-</MACRO>
-<MACRO>
-<NAME>MSG_ADDITIONALDATA_DATA</NAME>
-#define MSG_ADDITIONALDATA_DATA 60
+#define MSG_ADDITIONALDATA_TAG                          14
 </MACRO>
 <MACRO>
 <NAME>MSG_ANALYZER_TAG</NAME>
-#define MSG_ANALYZER_TAG 61
-</MACRO>
-<MACRO>
-<NAME>MSG_ANALYZER_ID</NAME>
-#define MSG_ANALYZER_ID  62
-</MACRO>
-<MACRO>
-<NAME>MSG_ANALYZER_MANUFACTURER</NAME>
-#define MSG_ANALYZER_MANUFACTURER 63
-</MACRO>
-<MACRO>
-<NAME>MSG_ANALYZER_MODEL</NAME>
-#define MSG_ANALYZER_MODEL 64
-</MACRO>
-<MACRO>
-<NAME>MSG_ANALYZER_VERSION</NAME>
-#define MSG_ANALYZER_VERSION 65
-</MACRO>
-<MACRO>
-<NAME>MSG_ANALYZER_CLASS</NAME>
-#define MSG_ANALYZER_CLASS 66
+#define MSG_ANALYZER_TAG                                15
 </MACRO>
 <MACRO>
 <NAME>MSG_TARGET_TAG</NAME>
-#define MSG_TARGET_TAG 67
-</MACRO>
-<MACRO>
-<NAME>MSG_TARGET_IDENT</NAME>
-#define MSG_TARGET_IDENT 68
-</MACRO>
-<MACRO>
-<NAME>MSG_TARGET_DECOY</NAME>
-#define MSG_TARGET_DECOY 69
-</MACRO>
-<MACRO>
-<NAME>MSG_TARGET_INTERFACE</NAME>
-#define MSG_TARGET_INTERFACE 70
+#define MSG_TARGET_TAG                                  16
 </MACRO>
 <MACRO>
 <NAME>MSG_HEARTBEAT_TAG</NAME>
-#define MSG_HEARTBEAT_TAG 71
-</MACRO>
-<MACRO>
-<NAME>MSG_HEARTBEAT_IDENT</NAME>
-#define MSG_HEARTBEAT_IDENT 72
+#define MSG_HEARTBEAT_TAG                               17
 </MACRO>
 <MACRO>
 <NAME>MSG_TOOL_ALERT_TAG</NAME>
-#define MSG_TOOL_ALERT_TAG 73
-</MACRO>
-<MACRO>
-<NAME>MSG_TOOL_ALERT_NAME</NAME>
-#define MSG_TOOL_ALERT_NAME 74
-</MACRO>
-<MACRO>
-<NAME>MSG_TOOL_ALERT_COMMAND</NAME>
-#define MSG_TOOL_ALERT_COMMAND 75
-</MACRO>
-<MACRO>
-<NAME>MSG_TOOL_ALERT_ANALYZER_ID</NAME>
-#define MSG_TOOL_ALERT_ANALYZER_ID 76
+#define MSG_TOOL_ALERT_TAG                              18
 </MACRO>
 <MACRO>
 <NAME>MSG_CORRELATION_ALERT_TAG</NAME>
-#define MSG_CORRELATION_ALERT_TAG 76
-</MACRO>
-<MACRO>
-<NAME>MSG_CORRELATION_ALERT_NAME</NAME>
-#define MSG_CORRELATION_ALERT_NAME 77 
-</MACRO>
-<MACRO>
-<NAME>MSG_CORRELATION_ALERT_IDENT</NAME>
-#define MSG_CORRELATION_ALERT_IDENT 78
+#define MSG_CORRELATION_ALERT_TAG                       19
 </MACRO>
 <MACRO>
 <NAME>MSG_OVERFLOW_ALERT_TAG</NAME>
-#define MSG_OVERFLOW_ALERT_TAG 79
-</MACRO>
-<MACRO>
-<NAME>MSG_OVERFLOW_ALERT_PROGRAM</NAME>
-#define MSG_OVERFLOW_ALERT_PROGRAM 80
-</MACRO>
-<MACRO>
-<NAME>MSG_OVERFLOW_ALERT_SIZE</NAME>
-#define MSG_OVERFLOW_ALERT_SIZE 81
-</MACRO>
-<MACRO>
-<NAME>MSG_OVERFLOW_ALERT_BUFFER</NAME>
-#define MSG_OVERFLOW_ALERT_BUFFER 82
-</MACRO>
-<MACRO>
-<NAME>MSG_TIME_SEC</NAME>
-#define MSG_TIME_SEC 83
-</MACRO>
-<MACRO>
-<NAME>MSG_TIME_USEC</NAME>
-#define MSG_TIME_USEC 84
+#define MSG_OVERFLOW_ALERT_TAG                          20
 </MACRO>
 <MACRO>
 <NAME>MSG_ALERTIDENT_TAG</NAME>
-#define MSG_ALERTIDENT_TAG 85
+#define MSG_ALERTIDENT_TAG                              21
 </MACRO>
 <MACRO>
-<NAME>MSG_ALERTIDENT_IDENT</NAME>
-#define MSG_ALERTIDENT_IDENT 86
+<NAME>MSG_FILE_TAG</NAME>
+#define MSG_FILE_TAG                                    22
 </MACRO>
 <MACRO>
-<NAME>MSG_ALERTIDENT_ANALYZER_IDENT</NAME>
-#define MSG_ALERTIDENT_ANALYZER_IDENT 87
+<NAME>MSG_ACCESS_TAG</NAME>
+#define MSG_ACCESS_TAG                                  23
+</MACRO>
+<MACRO>
+<NAME>MSG_LINKAGE_TAG</NAME>
+#define MSG_LINKAGE_TAG                                 24
+</MACRO>
+<MACRO>
+<NAME>MSG_INODE_TAG</NAME>
+#define MSG_INODE_TAG                                   25
+</MACRO>
+<MACRO>
+<NAME>MSG_CONFIDENCE_TAG</NAME>
+#define MSG_CONFIDENCE_TAG                              26
+</MACRO>
+<MACRO>
+<NAME>MSG_ACTION_TAG</NAME>
+#define MSG_ACTION_TAG                                  27
+</MACRO>
+<MACRO>
+<NAME>MSG_IMPACT_TAG</NAME>
+#define MSG_IMPACT_TAG                                  28
+</MACRO>
+<MACRO>
+<NAME>MSG_ASSESSMENT_TAG</NAME>
+#define MSG_ASSESSMENT_TAG                              29
 </MACRO>
 <MACRO>
 <NAME>MSG_OWN_FORMAT</NAME>
-#define MSG_OWN_FORMAT 88
+#define MSG_OWN_FORMAT                                 253
+</MACRO>
+<MACRO>
+<NAME>MSG_END_OF_TAG</NAME>
+#define MSG_END_OF_TAG                                 254
 </MACRO>
 <MACRO>
 <NAME>MSG_FORMAT_PRELUDE_NIDS</NAME>
-#define MSG_FORMAT_PRELUDE_NIDS 89
+#define MSG_FORMAT_PRELUDE_NIDS 01
+</MACRO>
+<MACRO>
+<NAME>MSG_CONFIDENCE_RATING</NAME>
+#define MSG_CONFIDENCE_RATING 0
+</MACRO>
+<MACRO>
+<NAME>MSG_ACTION_CATEGORY</NAME>
+#define MSG_ACTION_CATEGORY 0
+</MACRO>
+<MACRO>
+<NAME>MSG_IMPACT_SEVERITY</NAME>
+#define MSG_IMPACT_SEVERITY 0
+</MACRO>
+<MACRO>
+<NAME>MSG_IMPACT_COMPLETION</NAME>
+#define MSG_IMPACT_COMPLETION 1
+</MACRO>
+<MACRO>
+<NAME>MSG_IMPACT_TYPE</NAME>
+#define MSG_IMPACT_TYPE 2
+</MACRO>
+<MACRO>
+<NAME>MSG_FILE_IDENT</NAME>
+#define MSG_FILE_IDENT 0
+</MACRO>
+<MACRO>
+<NAME>MSG_FILE_CATEGORY</NAME>
+#define MSG_FILE_CATEGORY 1
+</MACRO>
+<MACRO>
+<NAME>MSG_FILE_FSTYPE</NAME>
+#define MSG_FILE_FSTYPE 2
+</MACRO>
+<MACRO>
+<NAME>MSG_FILE_NAME</NAME>
+#define MSG_FILE_NAME 3
+</MACRO>
+<MACRO>
+<NAME>MSG_FILE_PATH</NAME>
+#define MSG_FILE_PATH 4
+</MACRO>
+<MACRO>
+<NAME>MSG_FILE_CREATE_TIME_TAG</NAME>
+#define MSG_FILE_CREATE_TIME_TAG 5
+</MACRO>
+<MACRO>
+<NAME>MSG_FILE_MODIFY_TIME_TAG</NAME>
+#define MSG_FILE_MODIFY_TIME_TAG 6
+</MACRO>
+<MACRO>
+<NAME>MSG_FILE_ACCESS_TIME_TAG</NAME>
+#define MSG_FILE_ACCESS_TIME_TAG 7
+</MACRO>
+<MACRO>
+<NAME>MSG_FILE_DATASIZE</NAME>
+#define MSG_FILE_DATASIZE 8
+</MACRO>
+<MACRO>
+<NAME>MSG_FILE_DISKSIZE</NAME>
+#define MSG_FILE_DISKSIZE 9
+</MACRO>
+<MACRO>
+<NAME>MSG_LINKAGE_CATEGORY</NAME>
+#define MSG_LINKAGE_CATEGORY 0
+</MACRO>
+<MACRO>
+<NAME>MSG_LINKAGE_NAME</NAME>
+#define MSG_LINKAGE_NAME 1
+</MACRO>
+<MACRO>
+<NAME>MSG_LINKAGE_PATH</NAME>
+#define MSG_LINKAGE_PATH 2
+</MACRO>
+<MACRO>
+<NAME>MSG_LINKAGE_FILE</NAME>
+#define MSG_LINKAGE_FILE 3
+</MACRO>
+<MACRO>
+<NAME>MSG_INODE_CHANGE_TIME</NAME>
+#define MSG_INODE_CHANGE_TIME 0
+</MACRO>
+<MACRO>
+<NAME>MSG_INODE_NUMBER</NAME>
+#define MSG_INODE_NUMBER 1
+</MACRO>
+<MACRO>
+<NAME>MSG_INODE_MAJOR_DEVICE</NAME>
+#define MSG_INODE_MAJOR_DEVICE 2
+</MACRO>
+<MACRO>
+<NAME>MSG_INODE_MINOR_DEVICE</NAME>
+#define MSG_INODE_MINOR_DEVICE 3
+</MACRO>
+<MACRO>
+<NAME>MSG_INODE_C_MAJOR_DEVICE</NAME>
+#define MSG_INODE_C_MAJOR_DEVICE 4
+</MACRO>
+<MACRO>
+<NAME>MSG_INODE_C_MINOR_DEVICE</NAME>
+#define MSG_INODE_C_MINOR_DEVICE 5
+</MACRO>
+<MACRO>
+<NAME>MSG_ACCESS_PERMISSION</NAME>
+#define MSG_ACCESS_PERMISSION 0
+</MACRO>
+<MACRO>
+<NAME>MSG_ALERT_IDENT</NAME>
+#define MSG_ALERT_IDENT  0
+</MACRO>
+<MACRO>
+<NAME>MSG_SOURCE_IDENT</NAME>
+#define MSG_SOURCE_IDENT     0
+</MACRO>
+<MACRO>
+<NAME>MSG_SOURCE_SPOOFED</NAME>
+#define MSG_SOURCE_SPOOFED   1
+</MACRO>
+<MACRO>
+<NAME>MSG_SOURCE_INTERFACE</NAME>
+#define MSG_SOURCE_INTERFACE 2
+</MACRO>
+<MACRO>
+<NAME>MSG_NODE_IDENT</NAME>
+#define MSG_NODE_IDENT       0
+</MACRO>
+<MACRO>
+<NAME>MSG_NODE_CATEGORY</NAME>
+#define MSG_NODE_CATEGORY    1
+</MACRO>
+<MACRO>
+<NAME>MSG_NODE_LOCATION</NAME>
+#define MSG_NODE_LOCATION    2
+</MACRO>
+<MACRO>
+<NAME>MSG_NODE_NAME</NAME>
+#define MSG_NODE_NAME        3
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDRESS_IDENT</NAME>
+#define MSG_ADDRESS_IDENT     0
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDRESS_CATEGORY</NAME>
+#define MSG_ADDRESS_CATEGORY  1
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDRESS_VLAN_NAME</NAME>
+#define MSG_ADDRESS_VLAN_NAME 2
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDRESS_VLAN_NUM</NAME>
+#define MSG_ADDRESS_VLAN_NUM  3
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDRESS_ADDRESS</NAME>
+#define MSG_ADDRESS_ADDRESS   4
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDRESS_NETMASK</NAME>
+#define MSG_ADDRESS_NETMASK   5
+</MACRO>
+<MACRO>
+<NAME>MSG_USER_IDENT</NAME>
+#define MSG_USER_IDENT    0
+</MACRO>
+<MACRO>
+<NAME>MSG_USER_CATEGORY</NAME>
+#define MSG_USER_CATEGORY 1
+</MACRO>
+<MACRO>
+<NAME>MSG_USERID_IDENT</NAME>
+#define MSG_USERID_IDENT  0
+</MACRO>
+<MACRO>
+<NAME>MSG_USERID_TYPE</NAME>
+#define MSG_USERID_TYPE   1
+</MACRO>
+<MACRO>
+<NAME>MSG_USERID_NAME</NAME>
+#define MSG_USERID_NAME   2
+</MACRO>
+<MACRO>
+<NAME>MSG_USERID_NUMBER</NAME>
+#define MSG_USERID_NUMBER 3
+</MACRO>
+<MACRO>
+<NAME>MSG_PROCESS_IDENT</NAME>
+#define MSG_PROCESS_IDENT 0
+</MACRO>
+<MACRO>
+<NAME>MSG_PROCESS_NAME</NAME>
+#define MSG_PROCESS_NAME  1
+</MACRO>
+<MACRO>
+<NAME>MSG_PROCESS_PID</NAME>
+#define MSG_PROCESS_PID   2
+</MACRO>
+<MACRO>
+<NAME>MSG_PROCESS_PATH</NAME>
+#define MSG_PROCESS_PATH  3
+</MACRO>
+<MACRO>
+<NAME>MSG_PROCESS_ARG</NAME>
+#define MSG_PROCESS_ARG   4
+</MACRO>
+<MACRO>
+<NAME>MSG_PROCESS_ENV</NAME>
+#define MSG_PROCESS_ENV   5
+</MACRO>
+<MACRO>
+<NAME>MSG_SERVICE_IDENT</NAME>
+#define MSG_SERVICE_IDENT     0
+</MACRO>
+<MACRO>
+<NAME>MSG_SERVICE_NAME</NAME>
+#define MSG_SERVICE_NAME      1
+</MACRO>
+<MACRO>
+<NAME>MSG_SERVICE_PORT</NAME>
+#define MSG_SERVICE_PORT      2
+</MACRO>
+<MACRO>
+<NAME>MSG_SERVICE_PORTLIST</NAME>
+#define MSG_SERVICE_PORTLIST  3
+</MACRO>
+<MACRO>
+<NAME>MSG_SERVICE_PROTOCOL</NAME>
+#define MSG_SERVICE_PROTOCOL  4
+</MACRO>
+<MACRO>
+<NAME>MSG_WEBSERVICE_URL</NAME>
+#define MSG_WEBSERVICE_URL         0
+</MACRO>
+<MACRO>
+<NAME>MSG_WEBSERVICE_CGI</NAME>
+#define MSG_WEBSERVICE_CGI         1
+</MACRO>
+<MACRO>
+<NAME>MSG_WEBSERVICE_HTTP_METHOD</NAME>
+#define MSG_WEBSERVICE_HTTP_METHOD 2
+</MACRO>
+<MACRO>
+<NAME>MSG_WEBSERVICE_ARG</NAME>
+#define MSG_WEBSERVICE_ARG         3
+</MACRO>
+<MACRO>
+<NAME>MSG_SNMPSERVICE_OID</NAME>
+#define MSG_SNMPSERVICE_OID       0
+</MACRO>
+<MACRO>
+<NAME>MSG_SNMPSERVICE_COMMUNITY</NAME>
+#define MSG_SNMPSERVICE_COMMUNITY 1
+</MACRO>
+<MACRO>
+<NAME>MSG_SNMPSERVICE_COMMAND</NAME>
+#define MSG_SNMPSERVICE_COMMAND   2
+</MACRO>
+<MACRO>
+<NAME>MSG_CLASSIFICATION_ORIGIN</NAME>
+#define MSG_CLASSIFICATION_ORIGIN 0
+</MACRO>
+<MACRO>
+<NAME>MSG_CLASSIFICATION_NAME</NAME>
+#define MSG_CLASSIFICATION_NAME   1
+</MACRO>
+<MACRO>
+<NAME>MSG_CLASSIFICATION_URL</NAME>
+#define MSG_CLASSIFICATION_URL    2
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDITIONALDATA_TYPE</NAME>
+#define MSG_ADDITIONALDATA_TYPE    0
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDITIONALDATA_MEANING</NAME>
+#define MSG_ADDITIONALDATA_MEANING 1
+</MACRO>
+<MACRO>
+<NAME>MSG_ADDITIONALDATA_DATA</NAME>
+#define MSG_ADDITIONALDATA_DATA    2
+</MACRO>
+<MACRO>
+<NAME>MSG_ANALYZER_ID</NAME>
+#define MSG_ANALYZER_ID            0
+</MACRO>
+<MACRO>
+<NAME>MSG_ANALYZER_MANUFACTURER</NAME>
+#define MSG_ANALYZER_MANUFACTURER  1
+</MACRO>
+<MACRO>
+<NAME>MSG_ANALYZER_MODEL</NAME>
+#define MSG_ANALYZER_MODEL         2
+</MACRO>
+<MACRO>
+<NAME>MSG_ANALYZER_VERSION</NAME>
+#define MSG_ANALYZER_VERSION       3
+</MACRO>
+<MACRO>
+<NAME>MSG_ANALYZER_CLASS</NAME>
+#define MSG_ANALYZER_CLASS         4
+</MACRO>
+<MACRO>
+<NAME>MSG_ANALYZER_OSTYPE</NAME>
+#define MSG_ANALYZER_OSTYPE        5
+</MACRO>
+<MACRO>
+<NAME>MSG_ANALYZER_OSVERSION</NAME>
+#define MSG_ANALYZER_OSVERSION     6
+</MACRO>
+<MACRO>
+<NAME>MSG_TARGET_IDENT</NAME>
+#define MSG_TARGET_IDENT           0
+</MACRO>
+<MACRO>
+<NAME>MSG_TARGET_DECOY</NAME>
+#define MSG_TARGET_DECOY           1
+</MACRO>
+<MACRO>
+<NAME>MSG_TARGET_INTERFACE</NAME>
+#define MSG_TARGET_INTERFACE       2
+</MACRO>
+<MACRO>
+<NAME>MSG_HEARTBEAT_IDENT</NAME>
+#define MSG_HEARTBEAT_IDENT        0
+</MACRO>
+<MACRO>
+<NAME>MSG_TOOL_ALERT_NAME</NAME>
+#define MSG_TOOL_ALERT_NAME        0
+</MACRO>
+<MACRO>
+<NAME>MSG_TOOL_ALERT_COMMAND</NAME>
+#define MSG_TOOL_ALERT_COMMAND     1
+</MACRO>
+<MACRO>
+<NAME>MSG_TOOL_ALERT_ANALYZER_ID</NAME>
+#define MSG_TOOL_ALERT_ANALYZER_ID 2
+</MACRO>
+<MACRO>
+<NAME>MSG_CORRELATION_ALERT_NAME</NAME>
+#define MSG_CORRELATION_ALERT_NAME  0 
+</MACRO>
+<MACRO>
+<NAME>MSG_CORRELATION_ALERT_IDENT</NAME>
+#define MSG_CORRELATION_ALERT_IDENT 1
+</MACRO>
+<MACRO>
+<NAME>MSG_OVERFLOW_ALERT_PROGRAM</NAME>
+#define MSG_OVERFLOW_ALERT_PROGRAM 0
+</MACRO>
+<MACRO>
+<NAME>MSG_OVERFLOW_ALERT_SIZE</NAME>
+#define MSG_OVERFLOW_ALERT_SIZE    1
+</MACRO>
+<MACRO>
+<NAME>MSG_OVERFLOW_ALERT_BUFFER</NAME>
+#define MSG_OVERFLOW_ALERT_BUFFER  2
+</MACRO>
+<MACRO>
+<NAME>MSG_TIME_SEC</NAME>
+#define MSG_TIME_SEC  0
+</MACRO>
+<MACRO>
+<NAME>MSG_TIME_USEC</NAME>
+#define MSG_TIME_USEC 1
+</MACRO>
+<MACRO>
+<NAME>MSG_ALERTIDENT_IDENT</NAME>
+#define MSG_ALERTIDENT_IDENT           0
+</MACRO>
+<MACRO>
+<NAME>MSG_ALERTIDENT_ANALYZER_IDENT</NAME>
+#define MSG_ALERTIDENT_ANALYZER_IDENT  1
 </MACRO>
 <FUNCTION>
 <NAME>prelude_daemonize</NAME>

@@ -31,7 +31,7 @@ idmef-tree
 @character: 
 @date_time: 
 @integer: 
-@ntpstamps: 
+@ntpstamp: 
 @portlist: 
 @real: 
 @boolean: 
@@ -70,6 +70,7 @@ idmef-tree
 @user_privs: 
 @current_group: 
 @group_privs: 
+@other_privs: 
 
 <!-- ##### TYPEDEF idmef_userid_t ##### -->
 <para>
@@ -183,6 +184,7 @@ idmef-tree
 @coda: 
 @dfs: 
 @dns: 
+@hosts: 
 @kerberos: 
 @nds: 
 @nis: 

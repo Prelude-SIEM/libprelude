@@ -35,20 +35,6 @@ idmef-message-id
 
 
 
-<!-- ##### MACRO MSG_ALERT_ACTION ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO MSG_ALERT_IMPACT ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### MACRO MSG_CREATE_TIME_TAG ##### -->
 <para>
 
@@ -344,13 +330,6 @@ idmef-message-id
 
 
 <!-- ##### MACRO MSG_WEBSERVICE_CGI ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO MSG_WEBSERVICE_METHOD ##### -->
 <para>
 
 </para>

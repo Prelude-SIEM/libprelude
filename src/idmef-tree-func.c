@@ -28,6 +28,7 @@
 #include <assert.h>
 #include <time.h>
 #include <sys/time.h>
+#include <sys/utsname.h>
 #include <inttypes.h>
 
 #include "list.h"
@@ -65,6 +66,9 @@ static idmef_process_t analyzer_process;
 static idmef_detect_time_t static_detect_time;
 static idmef_analyzer_time_t static_analyzer_time;
 
+static idmef_impact_t static_impact;
+static idmef_confidence_t static_confidence;
+static idmef_assessment_t static_assessment;
 
 
 
@@ -452,7 +456,6 @@ idmef_process_t *idmef_source_process_new(idmef_source_t *source)
 
 
 
-
 /*
  * IDMEF Analyzer.
  */
@@ -476,10 +479,52 @@ void idmef_analyzer_process_new(idmef_analyzer_t *analyzer)
 
 
 
+/*
+ * IDMEF assessment
+ */
+void idmef_assessment_confidence_new(idmef_assessment_t *assessment) 
+{
+        assessment->confidence = &static_confidence;
+        memset(&static_confidence, 0, sizeof(static_confidence));
+}
+
+
+
+idmef_action_t *idmef_assessment_action_new(idmef_assessment_t *assessment) 
+{
+        idmef_action_t *new;
+
+        new = calloc(1, sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }
+
+        list_add(&new->list, &assessment->action_list);
+
+        return new;
+}
+
+
+void idmef_assessment_impact_new(idmef_assessment_t *assessment) 
+{
+        memset(&static_impact, 0, sizeof(static_impact));
+        assessment->impact = &static_impact;
+}
+
+
 
 /*
  * IDMEF Alert
  */
+void idmef_alert_assessment_new(idmef_alert_t *alert) 
+{
+        msgcount += 2;
+        alert->assessment = &static_assessment;
+}
+
+
+
 void idmef_alert_detect_time_new(idmef_alert_t *alert) 
 {
         msgcount += 2;
@@ -507,6 +552,7 @@ idmef_target_t *idmef_alert_target_new(idmef_alert_t *alert)
         }
 
         new->decoy = unknown;
+        INIT_LIST_HEAD(&new->file_list);
         list_add(&new->list, &alert->target_list);
 
         msgcount += 2;
@@ -651,6 +697,12 @@ idmef_message_t *idmef_message_new(void)
         memset(&analyzer_node, 0, sizeof(analyzer_node));
         memset(&analyzer_process, 0, sizeof(analyzer_process));
 
+        /*
+         * assessment
+         */
+        memset(&static_assessment, 0, sizeof(static_assessment));
+        INIT_LIST_HEAD(&static_assessment.action_list);
+        
         /*
          * Re-initialize alert.
          */

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -83,9 +83,17 @@ idmef_alertident_t *idmef_correlation_alert_alertident_new(idmef_correlation_ale
 
 
 /*
+ * Assessment function.
+ */
+void idmef_assessment_impact_new(idmef_assessment_t *assessment);
+void idmef_assessment_confidence_new(idmef_assessment_t *assessment);
+idmef_action_t *idmef_assessment_action_new(idmef_assessment_t *assessment);
+
+/*
  * Alert function
  */
 void idmef_alert_new(idmef_message_t *message);
+void idmef_alert_assessment_new(idmef_alert_t *alert);
 void idmef_alert_detect_time_new(idmef_alert_t *alert);
 void idmef_alert_analyzer_time_new(idmef_alert_t *alert);
 idmef_source_t *idmef_alert_source_new(idmef_alert_t *alert);
