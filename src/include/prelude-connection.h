@@ -31,7 +31,7 @@
 #define PRELUDE_CONNECTION_OWN_FD         0x02
 
 
-typedef struct prelude_client prelude_connection_t;
+typedef struct prelude_connection prelude_connection_t;
 
 void prelude_connection_destroy(prelude_connection_t *cnx);
 

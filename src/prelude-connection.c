@@ -64,7 +64,7 @@
 
 
 
-struct prelude_client {
+struct prelude_connection {
         PRELUDE_LINKED_OBJECT;
         
         char *saddr;
