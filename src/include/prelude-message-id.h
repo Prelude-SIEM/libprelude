@@ -32,6 +32,7 @@
 #define PRELUDE_MSG_OPTION_SET  2
 #define PRELUDE_MSG_ID          3
 #define PRELUDE_MSG_AUTH        4
+#define PRELUDE_MSG_CM          5 
 
 /*
  * PRELUDE_MSG_ID submessage
@@ -53,5 +54,14 @@
 #define PRELUDE_MSG_AUTH_SUCCEED   6
 #define PRELUDE_MSG_AUTH_FAILED    7
 #define PRELUDE_MSG_AUTH_EXIST     8
+
+
+/*
+ * PRELUDE_MSG_CM submessages
+ */
+#define PRELUDE_MSG_CM_FIREWALL 0
+#define PRELUDE_MSG_CM_THROTTLE 1
+#define PRELUDE_MSG_CM_ISLAND   2
+#define PRELUDE_MSG_CM_FEATURE  3
 
 #endif /* _LIBPRELUDE_PRELUDE_MESSAGE_ID_H */
