@@ -26,6 +26,8 @@
 #include <string.h>
 #include <errno.h>
 #include <assert.h>
+#include <inttypes.h>
+#include <sys/types.h>
 
 #include "common.h"
 #include "config-engine.h"
