@@ -55,8 +55,8 @@ libprelude_la_SOURCES = 		\
 	idmef-criteria-string.yac.y	\
 	idmef-criteria-string.lex.l	\
 	idmef-criterion-value.c		\
-	idmef-message-send.c		\
-	idmef-message-recv.c		\
+	idmef-message-write.c		\
+	idmef-message-read.c		\
 	idmef-message.c			\
 	common.c			\
 	$(SSL_SRCS)

@@ -2081,6 +2081,7 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 #undef yy_set_bol
 #undef yy_new_buffer
 #undef yy_set_interactive
+#undef yytext_ptr
 #undef YY_DO_BEFORE_ACTION
 
 #ifdef YY_DECL_IS_OURS

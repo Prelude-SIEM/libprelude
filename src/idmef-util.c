@@ -64,21 +64,21 @@ unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, 
 
         switch ( idmef_additional_data_get_type(ad) ) {
 
-        case byte:
-        case character:
+        case IDMEF_ADDITIONAL_DATA_TYPE_BYTE:
+        case IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER:
                 *size = idmef_data_get_len(data);
                 return idmef_data_get_data(data);
                 
-        case boolean:
-        case date_time:
-        case portlist:
-        case string:
-        case xml:                
+        case IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN:
+        case IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME:
+        case IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST:
+        case IDMEF_ADDITIONAL_DATA_TYPE_STRING:
+        case IDMEF_ADDITIONAL_DATA_TYPE_XML:                
                 ret = extract_characters_safe(&buf, idmef_data_get_data(data), idmef_data_get_len(data));
                 *size = idmef_data_get_len(data) - 1; /* 0 string delimiter is included in len */
                 return (ret < 0) ? NULL : buf;
                 
-        case integer: {
+        case IDMEF_ADDITIONAL_DATA_TYPE_INTEGER: {
                 uint32_t out32;
                 
                 ret = extract_uint32_safe(&out32, idmef_data_get_data(data), idmef_data_get_len(data));
@@ -89,7 +89,7 @@ unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, 
                 break;
 	}
                 
-        case ntpstamp: {
+        case IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP: {
                 union {
                         uint64_t w_buf;
                         uint32_t r_buf[2];
@@ -103,7 +103,7 @@ unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, 
                 break;
 	}
 
-        case real: {
+        case IDMEF_ADDITIONAL_DATA_TYPE_REAL: {
 		uint32_t out32;
 
                 ret = extract_uint32_safe(&out32, idmef_data_get_data(data), idmef_data_get_len(data));

@@ -221,7 +221,7 @@ SWIG_TypeClientData(swig_type_info *ti, void *clientdata) {
  * perl5.swg
  *
  * Perl5 runtime library
- * $Header: /var/lib/cvsd/cvsroot/prelude/libprelude/bindings/perl/Prelude.c,v 1.10 2004/02/06 00:45:05 yoann Exp $
+ * $Header: /cvs/projects/SWIG/Lib/perl5/perlrun.swg,v 1.3 2002/11/30 22:10:08 beazley Exp $
  * ----------------------------------------------------------------------------- */
 
 #define SWIGPERL
@@ -562,8 +562,8 @@ static void _swig_create_magic(CPerlObj *pPerl, SV *sv, const char *name, int (C
 #define  SWIGTYPE_p_f_p_idmef_value_t_p_void__int swig_types[0] 
 #define  SWIGTYPE_p_f_p_void__void swig_types[1] 
 #define  SWIGTYPE_p_f_p_struct_list_head__void swig_types[2] 
-#define  SWIGTYPE_p_f_p_prelude_msgbuf_t__p_prelude_msg_t swig_types[3] 
-#define  SWIGTYPE_p_prelude_msg_t swig_types[4] 
+#define  SWIGTYPE_p_prelude_msg_t swig_types[3] 
+#define  SWIGTYPE_p_f_p_prelude_msgbuf_t__p_prelude_msg_t swig_types[4] 
 #define  SWIGTYPE_p_list_head swig_types[5] 
 #define  SWIGTYPE_p_ssize_t swig_types[6] 
 #define  SWIGTYPE_p_size_t swig_types[7] 
@@ -604,38 +604,40 @@ static void _swig_create_magic(CPerlObj *pPerl, SV *sv, const char *name, int (C
 #define  SWIGTYPE_p_idmef_webservice_t swig_types[42] 
 #define  SWIGTYPE_p_idmef_snmpservice_t swig_types[43] 
 #define  SWIGTYPE_p_idmef_service_t swig_types[44] 
-#define  SWIGTYPE_p_p_char swig_types[45] 
-#define  SWIGTYPE_p_idmef_impact_type_t swig_types[46] 
-#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[47] 
-#define  SWIGTYPE_p_idmef_userid_type_t swig_types[48] 
-#define  SWIGTYPE_p_idmef_file_t swig_types[49] 
-#define  SWIGTYPE_p_idmef_value_type_t swig_types[50] 
-#define  SWIGTYPE_p_idmef_spoofed_t swig_types[51] 
-#define  SWIGTYPE_p_idmef_data_t_data swig_types[52] 
-#define  SWIGTYPE_p_idmef_linkage_t swig_types[53] 
-#define  SWIGTYPE_p_idmef_action_t swig_types[54] 
-#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[55] 
-#define  SWIGTYPE_p_idmef_classification_t swig_types[56] 
-#define  SWIGTYPE_p_idmef_userid_t swig_types[57] 
-#define  SWIGTYPE_p_idmef_assessment_t swig_types[58] 
-#define  SWIGTYPE_p_prelude_client_t swig_types[59] 
-#define  SWIGTYPE_p_prelude_io_t swig_types[60] 
-#define  SWIGTYPE_p_idmef_object_t swig_types[61] 
-#define  SWIGTYPE_p_unsigned_char swig_types[62] 
-#define  SWIGTYPE_p_float swig_types[63] 
-#define  SWIGTYPE_p_idmef_additional_data_t swig_types[64] 
-#define  SWIGTYPE_p_idmef_data_t swig_types[65] 
-#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[66] 
-#define  SWIGTYPE_p_va_list swig_types[67] 
-#define  SWIGTYPE_p_idmef_alertident_t swig_types[68] 
-#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[69] 
-#define  SWIGTYPE_p_idmef_action_category_t swig_types[70] 
-#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[71] 
-#define  SWIGTYPE_p_idmef_file_category_t swig_types[72] 
-#define  SWIGTYPE_p_idmef_user_category_t swig_types[73] 
-#define  SWIGTYPE_p_idmef_address_category_t swig_types[74] 
-#define  SWIGTYPE_p_idmef_node_category_t swig_types[75] 
-static swig_type_info *swig_types[77];
+#define  SWIGTYPE_p_idmef_decoy_t swig_types[45] 
+#define  SWIGTYPE_p_p_char swig_types[46] 
+#define  SWIGTYPE_p_idmef_impact_type_t swig_types[47] 
+#define  SWIGTYPE_p_idmef_file_fstype_t swig_types[48] 
+#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[49] 
+#define  SWIGTYPE_p_idmef_userid_type_t swig_types[50] 
+#define  SWIGTYPE_p_idmef_file_t swig_types[51] 
+#define  SWIGTYPE_p_idmef_value_type_t swig_types[52] 
+#define  SWIGTYPE_p_idmef_spoofed_t swig_types[53] 
+#define  SWIGTYPE_p_idmef_data_t_data swig_types[54] 
+#define  SWIGTYPE_p_idmef_linkage_t swig_types[55] 
+#define  SWIGTYPE_p_idmef_action_t swig_types[56] 
+#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[57] 
+#define  SWIGTYPE_p_idmef_classification_t swig_types[58] 
+#define  SWIGTYPE_p_idmef_userid_t swig_types[59] 
+#define  SWIGTYPE_p_idmef_assessment_t swig_types[60] 
+#define  SWIGTYPE_p_prelude_client_t swig_types[61] 
+#define  SWIGTYPE_p_prelude_io_t swig_types[62] 
+#define  SWIGTYPE_p_idmef_object_t swig_types[63] 
+#define  SWIGTYPE_p_unsigned_char swig_types[64] 
+#define  SWIGTYPE_p_float swig_types[65] 
+#define  SWIGTYPE_p_idmef_additional_data_t swig_types[66] 
+#define  SWIGTYPE_p_idmef_data_t swig_types[67] 
+#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[68] 
+#define  SWIGTYPE_p_va_list swig_types[69] 
+#define  SWIGTYPE_p_idmef_alertident_t swig_types[70] 
+#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[71] 
+#define  SWIGTYPE_p_idmef_action_category_t swig_types[72] 
+#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[73] 
+#define  SWIGTYPE_p_idmef_file_category_t swig_types[74] 
+#define  SWIGTYPE_p_idmef_user_category_t swig_types[75] 
+#define  SWIGTYPE_p_idmef_address_category_t swig_types[76] 
+#define  SWIGTYPE_p_idmef_node_category_t swig_types[77] 
+static swig_type_info *swig_types[79];
 
 /* -------- TYPES TABLE (END) -------- */
 
@@ -672,7 +674,7 @@ SWIGEXPORT(void) SWIG_init (CV *cv, CPerlObj *);
 #include "sensor.h"
 #include "idmef-value-object.h"
 #include "idmef-object-value.h"
-#include "idmef-message-send.h"
+#include "idmef-message-write.h"
 #include "idmef-tree-print.h"
 #include "idmef-tree-to-string.h"
 #include "idmef-util.h"
@@ -11164,6 +11166,61 @@ XS(_wrap_idmef_file_category_to_string) {
 }
 
 
+XS(_wrap_idmef_file_fstype_to_numeric) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        char *arg1 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: idmef_file_fstype_to_numeric(name);");
+        }
+        if (!SvOK((SV*) ST(0))) arg1 = 0;
+        else arg1 = (char *) SvPV(ST(0), PL_na);
+        result = (int)idmef_file_fstype_to_numeric((char const *)arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_file_fstype_to_string) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        int arg1 ;
+        char *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: idmef_file_fstype_to_string(val);");
+        }
+        arg1 = (int) SvIV(ST(0));
+        result = (char *)idmef_file_fstype_to_string(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
 XS(_wrap_idmef_file_new) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
@@ -11562,7 +11619,7 @@ XS(_wrap_idmef_file_get_fstype) {
     const char *_swigerr = _swigmsg;
     {
         idmef_file_t *arg1 = (idmef_file_t *) 0 ;
-        idmef_string_t *result;
+        int result;
         int argvi = 0;
         dXSARGS;
         
@@ -11574,10 +11631,10 @@ XS(_wrap_idmef_file_get_fstype) {
                 SWIG_croak("Type error in argument 1 of idmef_file_get_fstype. Expected _p_idmef_file_t");
             }
         }
-        result = (idmef_string_t *)idmef_file_get_fstype(arg1);
+        result = (int)idmef_file_get_fstype(arg1);
         
         ST(argvi) = sv_newmortal();
-        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_string_t,0);
+        sv_setiv(ST(argvi++), (IV) result);
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -11591,7 +11648,7 @@ XS(_wrap_idmef_file_set_fstype) {
     const char *_swigerr = _swigmsg;
     {
         idmef_file_t *arg1 = (idmef_file_t *) 0 ;
-        idmef_string_t *arg2 = (idmef_string_t *) 0 ;
+        int arg2 ;
         int argvi = 0;
         dXSARGS;
         
@@ -11603,12 +11660,8 @@ XS(_wrap_idmef_file_set_fstype) {
                 SWIG_croak("Type error in argument 1 of idmef_file_set_fstype. Expected _p_idmef_file_t");
             }
         }
-        {
-            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_string_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_file_set_fstype. Expected _p_idmef_string_t");
-            }
-        }
-        idmef_file_set_fstype(arg1,arg2);
+        arg2 = (int) SvIV(ST(1));
+        idmef_file_set_fstype(arg1,(idmef_file_fstype_t )arg2);
         
         
         XSRETURN(argvi);
@@ -11653,7 +11706,7 @@ XS(_wrap_idmef_file_new_fstype) {
     const char *_swigerr = _swigmsg;
     {
         idmef_file_t *arg1 = (idmef_file_t *) 0 ;
-        idmef_string_t *result;
+        idmef_file_fstype_t *result;
         int argvi = 0;
         dXSARGS;
         
@@ -11665,10 +11718,10 @@ XS(_wrap_idmef_file_new_fstype) {
                 SWIG_croak("Type error in argument 1 of idmef_file_new_fstype. Expected _p_idmef_file_t");
             }
         }
-        result = (idmef_string_t *)idmef_file_new_fstype(arg1);
+        result = (idmef_file_fstype_t *)idmef_file_new_fstype(arg1);
         
         ST(argvi) = sv_newmortal();
-        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_string_t,0);
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_file_fstype_t,0);
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -13555,6 +13608,61 @@ XS(_wrap_idmef_linkage_new_file) {
 }
 
 
+XS(_wrap_idmef_decoy_to_numeric) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        char *arg1 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: idmef_decoy_to_numeric(name);");
+        }
+        if (!SvOK((SV*) ST(0))) arg1 = 0;
+        else arg1 = (char *) SvPV(ST(0), PL_na);
+        result = (int)idmef_decoy_to_numeric((char const *)arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_decoy_to_string) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        int arg1 ;
+        char *result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: idmef_decoy_to_string(val);");
+        }
+        arg1 = (int) SvIV(ST(0));
+        result = (char *)idmef_decoy_to_string(arg1);
+        
+        ST(argvi) = sv_newmortal();
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
 XS(_wrap_idmef_target_new) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
@@ -13879,7 +13987,7 @@ XS(_wrap_idmef_target_set_decoy) {
             }
         }
         arg2 = (int) SvIV(ST(1));
-        idmef_target_set_decoy(arg1,(idmef_spoofed_t )arg2);
+        idmef_target_set_decoy(arg1,(idmef_decoy_t )arg2);
         
         
         XSRETURN(argvi);
@@ -13924,7 +14032,7 @@ XS(_wrap_idmef_target_new_decoy) {
     const char *_swigerr = _swigmsg;
     {
         idmef_target_t *arg1 = (idmef_target_t *) 0 ;
-        idmef_spoofed_t *result;
+        idmef_decoy_t *result;
         int argvi = 0;
         dXSARGS;
         
@@ -13936,10 +14044,10 @@ XS(_wrap_idmef_target_new_decoy) {
                 SWIG_croak("Type error in argument 1 of idmef_target_new_decoy. Expected _p_idmef_target_t");
             }
         }
-        result = (idmef_spoofed_t *)idmef_target_new_decoy(arg1);
+        result = (idmef_decoy_t *)idmef_target_new_decoy(arg1);
         
         ST(argvi) = sv_newmortal();
-        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_spoofed_t,0);
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_decoy_t,0);
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -29358,7 +29466,7 @@ XS(_wrap_prelude_msgbuf_get_data) {
 }
 
 
-XS(_wrap_idmef_send_time) {
+XS(_wrap_idmef_write_time) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29369,11 +29477,11 @@ XS(_wrap_idmef_send_time) {
         dXSARGS;
         
         if ((items < 3) || (items > 3)) {
-            SWIG_croak("Usage: idmef_send_time(msg,tag,data);");
+            SWIG_croak("Usage: idmef_write_time(msg,tag,data);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_time. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_time. Expected _p_prelude_msgbuf_t");
             }
         }
         {
@@ -29381,10 +29489,10 @@ XS(_wrap_idmef_send_time) {
         }
         {
             if (SWIG_ConvertPtr(ST(2), (void **) &arg3, SWIGTYPE_p_idmef_time_t,0) < 0) {
-                SWIG_croak("Type error in argument 3 of idmef_send_time. Expected _p_idmef_time_t");
+                SWIG_croak("Type error in argument 3 of idmef_write_time. Expected _p_idmef_time_t");
             }
         }
-        idmef_send_time(arg1,arg2,arg3);
+        idmef_write_time(arg1,arg2,arg3);
         
         
         XSRETURN(argvi);
@@ -29395,7 +29503,7 @@ XS(_wrap_idmef_send_time) {
 }
 
 
-XS(_wrap_idmef_send_additional_data) {
+XS(_wrap_idmef_write_additional_data) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29405,19 +29513,19 @@ XS(_wrap_idmef_send_additional_data) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_additional_data(msg,additional_data);");
+            SWIG_croak("Usage: idmef_write_additional_data(msg,additional_data);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_additional_data. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_additional_data. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_additional_data_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_additional_data. Expected _p_idmef_additional_data_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_additional_data. Expected _p_idmef_additional_data_t");
             }
         }
-        idmef_send_additional_data(arg1,arg2);
+        idmef_write_additional_data(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29428,7 +29536,7 @@ XS(_wrap_idmef_send_additional_data) {
 }
 
 
-XS(_wrap_idmef_send_classification) {
+XS(_wrap_idmef_write_classification) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29438,19 +29546,19 @@ XS(_wrap_idmef_send_classification) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_classification(msg,classification);");
+            SWIG_croak("Usage: idmef_write_classification(msg,classification);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_classification. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_classification. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_classification_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_classification. Expected _p_idmef_classification_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_classification. Expected _p_idmef_classification_t");
             }
         }
-        idmef_send_classification(arg1,arg2);
+        idmef_write_classification(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29461,7 +29569,7 @@ XS(_wrap_idmef_send_classification) {
 }
 
 
-XS(_wrap_idmef_send_userid) {
+XS(_wrap_idmef_write_userid) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29471,19 +29579,19 @@ XS(_wrap_idmef_send_userid) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_userid(msg,userid);");
+            SWIG_croak("Usage: idmef_write_userid(msg,userid);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_userid. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_userid. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_userid_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_userid. Expected _p_idmef_userid_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_userid. Expected _p_idmef_userid_t");
             }
         }
-        idmef_send_userid(arg1,arg2);
+        idmef_write_userid(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29494,7 +29602,7 @@ XS(_wrap_idmef_send_userid) {
 }
 
 
-XS(_wrap_idmef_send_user) {
+XS(_wrap_idmef_write_user) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29504,19 +29612,19 @@ XS(_wrap_idmef_send_user) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_user(msg,user);");
+            SWIG_croak("Usage: idmef_write_user(msg,user);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_user. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_user. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_user_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_user. Expected _p_idmef_user_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_user. Expected _p_idmef_user_t");
             }
         }
-        idmef_send_user(arg1,arg2);
+        idmef_write_user(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29527,7 +29635,7 @@ XS(_wrap_idmef_send_user) {
 }
 
 
-XS(_wrap_idmef_send_address) {
+XS(_wrap_idmef_write_address) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29537,19 +29645,19 @@ XS(_wrap_idmef_send_address) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_address(msg,address);");
+            SWIG_croak("Usage: idmef_write_address(msg,address);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_address. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_address. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_address_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_address. Expected _p_idmef_address_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_address. Expected _p_idmef_address_t");
             }
         }
-        idmef_send_address(arg1,arg2);
+        idmef_write_address(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29560,7 +29668,7 @@ XS(_wrap_idmef_send_address) {
 }
 
 
-XS(_wrap_idmef_send_process) {
+XS(_wrap_idmef_write_process) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29570,19 +29678,19 @@ XS(_wrap_idmef_send_process) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_process(msg,process);");
+            SWIG_croak("Usage: idmef_write_process(msg,process);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_process. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_process. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_process_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_process. Expected _p_idmef_process_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_process. Expected _p_idmef_process_t");
             }
         }
-        idmef_send_process(arg1,arg2);
+        idmef_write_process(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29593,7 +29701,7 @@ XS(_wrap_idmef_send_process) {
 }
 
 
-XS(_wrap_idmef_send_webservice) {
+XS(_wrap_idmef_write_webservice) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29603,19 +29711,19 @@ XS(_wrap_idmef_send_webservice) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_webservice(msg,webservice);");
+            SWIG_croak("Usage: idmef_write_webservice(msg,webservice);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_webservice. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_webservice. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_webservice_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_webservice. Expected _p_idmef_webservice_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_webservice. Expected _p_idmef_webservice_t");
             }
         }
-        idmef_send_webservice(arg1,arg2);
+        idmef_write_webservice(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29626,7 +29734,7 @@ XS(_wrap_idmef_send_webservice) {
 }
 
 
-XS(_wrap_idmef_send_snmpservice) {
+XS(_wrap_idmef_write_snmpservice) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29636,19 +29744,19 @@ XS(_wrap_idmef_send_snmpservice) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_snmpservice(msg,snmpservice);");
+            SWIG_croak("Usage: idmef_write_snmpservice(msg,snmpservice);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_snmpservice. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_snmpservice. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_snmpservice_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_snmpservice. Expected _p_idmef_snmpservice_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_snmpservice. Expected _p_idmef_snmpservice_t");
             }
         }
-        idmef_send_snmpservice(arg1,arg2);
+        idmef_write_snmpservice(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29659,7 +29767,7 @@ XS(_wrap_idmef_send_snmpservice) {
 }
 
 
-XS(_wrap_idmef_send_service) {
+XS(_wrap_idmef_write_service) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29669,19 +29777,19 @@ XS(_wrap_idmef_send_service) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_service(msg,service);");
+            SWIG_croak("Usage: idmef_write_service(msg,service);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_service. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_service. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_service_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_service. Expected _p_idmef_service_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_service. Expected _p_idmef_service_t");
             }
         }
-        idmef_send_service(arg1,arg2);
+        idmef_write_service(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29692,7 +29800,7 @@ XS(_wrap_idmef_send_service) {
 }
 
 
-XS(_wrap_idmef_send_node) {
+XS(_wrap_idmef_write_node) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29702,19 +29810,19 @@ XS(_wrap_idmef_send_node) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_node(msg,node);");
+            SWIG_croak("Usage: idmef_write_node(msg,node);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_node. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_node. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_node_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_node. Expected _p_idmef_node_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_node. Expected _p_idmef_node_t");
             }
         }
-        idmef_send_node(arg1,arg2);
+        idmef_write_node(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29725,7 +29833,7 @@ XS(_wrap_idmef_send_node) {
 }
 
 
-XS(_wrap_idmef_send_source) {
+XS(_wrap_idmef_write_source) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29735,19 +29843,19 @@ XS(_wrap_idmef_send_source) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_source(msg,source);");
+            SWIG_croak("Usage: idmef_write_source(msg,source);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_source. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_source. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_source_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_source. Expected _p_idmef_source_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_source. Expected _p_idmef_source_t");
             }
         }
-        idmef_send_source(arg1,arg2);
+        idmef_write_source(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29758,7 +29866,7 @@ XS(_wrap_idmef_send_source) {
 }
 
 
-XS(_wrap_idmef_send_file_access) {
+XS(_wrap_idmef_write_file_access) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29768,19 +29876,19 @@ XS(_wrap_idmef_send_file_access) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_file_access(msg,file_access);");
+            SWIG_croak("Usage: idmef_write_file_access(msg,file_access);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_file_access. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_file_access. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_file_access_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_file_access. Expected _p_idmef_file_access_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_file_access. Expected _p_idmef_file_access_t");
             }
         }
-        idmef_send_file_access(arg1,arg2);
+        idmef_write_file_access(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29791,7 +29899,7 @@ XS(_wrap_idmef_send_file_access) {
 }
 
 
-XS(_wrap_idmef_send_inode) {
+XS(_wrap_idmef_write_inode) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29801,19 +29909,19 @@ XS(_wrap_idmef_send_inode) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_inode(msg,inode);");
+            SWIG_croak("Usage: idmef_write_inode(msg,inode);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_inode. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_inode. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_inode_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_inode. Expected _p_idmef_inode_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_inode. Expected _p_idmef_inode_t");
             }
         }
-        idmef_send_inode(arg1,arg2);
+        idmef_write_inode(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29824,7 +29932,7 @@ XS(_wrap_idmef_send_inode) {
 }
 
 
-XS(_wrap_idmef_send_file) {
+XS(_wrap_idmef_write_file) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29834,19 +29942,19 @@ XS(_wrap_idmef_send_file) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_file(msg,file);");
+            SWIG_croak("Usage: idmef_write_file(msg,file);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_file. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_file. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_file_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_file. Expected _p_idmef_file_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_file. Expected _p_idmef_file_t");
             }
         }
-        idmef_send_file(arg1,arg2);
+        idmef_write_file(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29857,7 +29965,7 @@ XS(_wrap_idmef_send_file) {
 }
 
 
-XS(_wrap_idmef_send_linkage) {
+XS(_wrap_idmef_write_linkage) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29867,19 +29975,19 @@ XS(_wrap_idmef_send_linkage) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_linkage(msg,linkage);");
+            SWIG_croak("Usage: idmef_write_linkage(msg,linkage);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_linkage. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_linkage. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_linkage_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_linkage. Expected _p_idmef_linkage_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_linkage. Expected _p_idmef_linkage_t");
             }
         }
-        idmef_send_linkage(arg1,arg2);
+        idmef_write_linkage(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29890,7 +29998,7 @@ XS(_wrap_idmef_send_linkage) {
 }
 
 
-XS(_wrap_idmef_send_target) {
+XS(_wrap_idmef_write_target) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29900,19 +30008,19 @@ XS(_wrap_idmef_send_target) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_target(msg,target);");
+            SWIG_croak("Usage: idmef_write_target(msg,target);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_target. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_target. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_target_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_target. Expected _p_idmef_target_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_target. Expected _p_idmef_target_t");
             }
         }
-        idmef_send_target(arg1,arg2);
+        idmef_write_target(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29923,7 +30031,7 @@ XS(_wrap_idmef_send_target) {
 }
 
 
-XS(_wrap_idmef_send_analyzer) {
+XS(_wrap_idmef_write_analyzer) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29933,19 +30041,19 @@ XS(_wrap_idmef_send_analyzer) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_analyzer(msg,analyzer);");
+            SWIG_croak("Usage: idmef_write_analyzer(msg,analyzer);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_analyzer. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_analyzer. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_analyzer_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_analyzer. Expected _p_idmef_analyzer_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_analyzer. Expected _p_idmef_analyzer_t");
             }
         }
-        idmef_send_analyzer(arg1,arg2);
+        idmef_write_analyzer(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29956,7 +30064,7 @@ XS(_wrap_idmef_send_analyzer) {
 }
 
 
-XS(_wrap_idmef_send_alertident) {
+XS(_wrap_idmef_write_alertident) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29966,19 +30074,19 @@ XS(_wrap_idmef_send_alertident) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_alertident(msg,alertident);");
+            SWIG_croak("Usage: idmef_write_alertident(msg,alertident);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_alertident. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_alertident. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_alertident_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_alertident. Expected _p_idmef_alertident_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_alertident. Expected _p_idmef_alertident_t");
             }
         }
-        idmef_send_alertident(arg1,arg2);
+        idmef_write_alertident(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -29989,7 +30097,7 @@ XS(_wrap_idmef_send_alertident) {
 }
 
 
-XS(_wrap_idmef_send_impact) {
+XS(_wrap_idmef_write_impact) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -29999,19 +30107,19 @@ XS(_wrap_idmef_send_impact) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_impact(msg,impact);");
+            SWIG_croak("Usage: idmef_write_impact(msg,impact);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_impact. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_impact. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_impact_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_impact. Expected _p_idmef_impact_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_impact. Expected _p_idmef_impact_t");
             }
         }
-        idmef_send_impact(arg1,arg2);
+        idmef_write_impact(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -30022,7 +30130,7 @@ XS(_wrap_idmef_send_impact) {
 }
 
 
-XS(_wrap_idmef_send_action) {
+XS(_wrap_idmef_write_action) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -30032,19 +30140,19 @@ XS(_wrap_idmef_send_action) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_action(msg,action);");
+            SWIG_croak("Usage: idmef_write_action(msg,action);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_action. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_action. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_action_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_action. Expected _p_idmef_action_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_action. Expected _p_idmef_action_t");
             }
         }
-        idmef_send_action(arg1,arg2);
+        idmef_write_action(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -30055,7 +30163,7 @@ XS(_wrap_idmef_send_action) {
 }
 
 
-XS(_wrap_idmef_send_confidence) {
+XS(_wrap_idmef_write_confidence) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -30065,19 +30173,19 @@ XS(_wrap_idmef_send_confidence) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_confidence(msg,confidence);");
+            SWIG_croak("Usage: idmef_write_confidence(msg,confidence);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_confidence. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_confidence. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_confidence_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_confidence. Expected _p_idmef_confidence_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_confidence. Expected _p_idmef_confidence_t");
             }
         }
-        idmef_send_confidence(arg1,arg2);
+        idmef_write_confidence(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -30088,7 +30196,7 @@ XS(_wrap_idmef_send_confidence) {
 }
 
 
-XS(_wrap_idmef_send_assessment) {
+XS(_wrap_idmef_write_assessment) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -30098,19 +30206,19 @@ XS(_wrap_idmef_send_assessment) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_assessment(msg,assessment);");
+            SWIG_croak("Usage: idmef_write_assessment(msg,assessment);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_assessment. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_assessment. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_assessment_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_assessment. Expected _p_idmef_assessment_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_assessment. Expected _p_idmef_assessment_t");
             }
         }
-        idmef_send_assessment(arg1,arg2);
+        idmef_write_assessment(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -30121,7 +30229,7 @@ XS(_wrap_idmef_send_assessment) {
 }
 
 
-XS(_wrap_idmef_send_tool_alert) {
+XS(_wrap_idmef_write_tool_alert) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -30131,19 +30239,19 @@ XS(_wrap_idmef_send_tool_alert) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_tool_alert(msg,tool_alert);");
+            SWIG_croak("Usage: idmef_write_tool_alert(msg,tool_alert);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_tool_alert. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_tool_alert. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_tool_alert_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_tool_alert. Expected _p_idmef_tool_alert_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_tool_alert. Expected _p_idmef_tool_alert_t");
             }
         }
-        idmef_send_tool_alert(arg1,arg2);
+        idmef_write_tool_alert(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -30154,7 +30262,7 @@ XS(_wrap_idmef_send_tool_alert) {
 }
 
 
-XS(_wrap_idmef_send_correlation_alert) {
+XS(_wrap_idmef_write_correlation_alert) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -30164,19 +30272,19 @@ XS(_wrap_idmef_send_correlation_alert) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_correlation_alert(msg,correlation_alert);");
+            SWIG_croak("Usage: idmef_write_correlation_alert(msg,correlation_alert);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_correlation_alert. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_correlation_alert. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_correlation_alert_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_correlation_alert. Expected _p_idmef_correlation_alert_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_correlation_alert. Expected _p_idmef_correlation_alert_t");
             }
         }
-        idmef_send_correlation_alert(arg1,arg2);
+        idmef_write_correlation_alert(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -30187,7 +30295,7 @@ XS(_wrap_idmef_send_correlation_alert) {
 }
 
 
-XS(_wrap_idmef_send_overflow_alert) {
+XS(_wrap_idmef_write_overflow_alert) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -30197,19 +30305,19 @@ XS(_wrap_idmef_send_overflow_alert) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_overflow_alert(msg,overflow_alert);");
+            SWIG_croak("Usage: idmef_write_overflow_alert(msg,overflow_alert);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_overflow_alert. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_overflow_alert. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_overflow_alert_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_overflow_alert. Expected _p_idmef_overflow_alert_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_overflow_alert. Expected _p_idmef_overflow_alert_t");
             }
         }
-        idmef_send_overflow_alert(arg1,arg2);
+        idmef_write_overflow_alert(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -30220,7 +30328,7 @@ XS(_wrap_idmef_send_overflow_alert) {
 }
 
 
-XS(_wrap_idmef_send_alert) {
+XS(_wrap_idmef_write_alert) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -30230,19 +30338,19 @@ XS(_wrap_idmef_send_alert) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_alert(msg,alert);");
+            SWIG_croak("Usage: idmef_write_alert(msg,alert);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_alert. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_alert. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_alert_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_alert. Expected _p_idmef_alert_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_alert. Expected _p_idmef_alert_t");
             }
         }
-        idmef_send_alert(arg1,arg2);
+        idmef_write_alert(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -30253,7 +30361,7 @@ XS(_wrap_idmef_send_alert) {
 }
 
 
-XS(_wrap_idmef_send_heartbeat) {
+XS(_wrap_idmef_write_heartbeat) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -30263,19 +30371,19 @@ XS(_wrap_idmef_send_heartbeat) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_heartbeat(msg,heartbeat);");
+            SWIG_croak("Usage: idmef_write_heartbeat(msg,heartbeat);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_heartbeat. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_heartbeat. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_heartbeat_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_heartbeat. Expected _p_idmef_heartbeat_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_heartbeat. Expected _p_idmef_heartbeat_t");
             }
         }
-        idmef_send_heartbeat(arg1,arg2);
+        idmef_write_heartbeat(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -30286,7 +30394,7 @@ XS(_wrap_idmef_send_heartbeat) {
 }
 
 
-XS(_wrap_idmef_send_message) {
+XS(_wrap_idmef_write_message) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -30296,19 +30404,19 @@ XS(_wrap_idmef_send_message) {
         dXSARGS;
         
         if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_send_message(msg,message);");
+            SWIG_croak("Usage: idmef_write_message(msg,message);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_send_message. Expected _p_prelude_msgbuf_t");
+                SWIG_croak("Type error in argument 1 of idmef_write_message. Expected _p_prelude_msgbuf_t");
             }
         }
         {
             if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_idmef_message_t,0) < 0) {
-                SWIG_croak("Type error in argument 2 of idmef_send_message. Expected _p_idmef_message_t");
+                SWIG_croak("Type error in argument 2 of idmef_write_message. Expected _p_idmef_message_t");
             }
         }
-        idmef_send_message(arg1,arg2);
+        idmef_write_message(arg1,arg2);
         
         
         XSRETURN(argvi);
@@ -33842,8 +33950,8 @@ XS(_wrap_prelude_heartbeat_fill_infos) {
 static swig_type_info _swigt__p_f_p_idmef_value_t_p_void__int[] = {{"_p_f_p_idmef_value_t_p_void__int", 0, "int (*)(idmef_value_t *,void *)", 0},{"_p_f_p_idmef_value_t_p_void__int"},{0}};
 static swig_type_info _swigt__p_f_p_void__void[] = {{"_p_f_p_void__void", 0, "void (*)(void *)", 0},{"_p_f_p_void__void"},{0}};
 static swig_type_info _swigt__p_f_p_struct_list_head__void[] = {{"_p_f_p_struct_list_head__void", 0, "void (*)(struct list_head *)", 0},{"_p_f_p_struct_list_head__void"},{0}};
-static swig_type_info _swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t[] = {{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t", 0, "prelude_msg_t *(*)(prelude_msgbuf_t *)", 0},{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t"},{0}};
 static swig_type_info _swigt__p_prelude_msg_t[] = {{"_p_prelude_msg_t", 0, "prelude_msg_t *", 0},{"_p_prelude_msg_t"},{0}};
+static swig_type_info _swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t[] = {{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t", 0, "prelude_msg_t *(*)(prelude_msgbuf_t *)", 0},{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t"},{0}};
 static swig_type_info _swigt__p_list_head[] = {{"_p_list_head", 0, "struct list_head *", 0},{"_p_list_head"},{0}};
 static swig_type_info _swigt__p_ssize_t[] = {{"_p_ssize_t", 0, "ssize_t *", 0},{"_p_ssize_t"},{0}};
 static swig_type_info _swigt__p_size_t[] = {{"_p_size_t", 0, "size_t *", 0},{"_p_size_t"},{0}};
@@ -33884,8 +33992,10 @@ static swig_type_info _swigt__p_idmef_impact_t[] = {{"_p_idmef_impact_t", 0, "id
 static swig_type_info _swigt__p_idmef_webservice_t[] = {{"_p_idmef_webservice_t", 0, "idmef_webservice_t *", 0},{"_p_idmef_webservice_t"},{0}};
 static swig_type_info _swigt__p_idmef_snmpservice_t[] = {{"_p_idmef_snmpservice_t", 0, "idmef_snmpservice_t *", 0},{"_p_idmef_snmpservice_t"},{0}};
 static swig_type_info _swigt__p_idmef_service_t[] = {{"_p_idmef_service_t", 0, "idmef_service_t *", 0},{"_p_idmef_service_t"},{0}};
+static swig_type_info _swigt__p_idmef_decoy_t[] = {{"_p_idmef_decoy_t", 0, "idmef_decoy_t *", 0},{"_p_idmef_decoy_t"},{0}};
 static swig_type_info _swigt__p_p_char[] = {{"_p_p_char", 0, "char **", 0},{"_p_p_char"},{0}};
 static swig_type_info _swigt__p_idmef_impact_type_t[] = {{"_p_idmef_impact_type_t", 0, "idmef_impact_type_t *", 0},{"_p_idmef_impact_type_t"},{0}};
+static swig_type_info _swigt__p_idmef_file_fstype_t[] = {{"_p_idmef_file_fstype_t", 0, "idmef_file_fstype_t *", 0},{"_p_idmef_file_fstype_t"},{0}};
 static swig_type_info _swigt__p_idmef_additional_data_type_t[] = {{"_p_idmef_additional_data_type_t", 0, "idmef_additional_data_type_t *", 0},{"_p_idmef_additional_data_type_t"},{0}};
 static swig_type_info _swigt__p_idmef_userid_type_t[] = {{"_p_idmef_userid_type_t", 0, "idmef_userid_type_t *", 0},{"_p_idmef_userid_type_t"},{0}};
 static swig_type_info _swigt__p_idmef_file_t[] = {{"_p_idmef_file_t", 0, "idmef_file_t *", 0},{"_p_idmef_file_t"},{0}};
@@ -33920,8 +34030,8 @@ static swig_type_info *swig_types_initial[] = {
 _swigt__p_f_p_idmef_value_t_p_void__int, 
 _swigt__p_f_p_void__void, 
 _swigt__p_f_p_struct_list_head__void, 
-_swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t, 
 _swigt__p_prelude_msg_t, 
+_swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t, 
 _swigt__p_list_head, 
 _swigt__p_ssize_t, 
 _swigt__p_size_t, 
@@ -33962,8 +34072,10 @@ _swigt__p_idmef_impact_t,
 _swigt__p_idmef_webservice_t, 
 _swigt__p_idmef_snmpservice_t, 
 _swigt__p_idmef_service_t, 
+_swigt__p_idmef_decoy_t, 
 _swigt__p_p_char, 
 _swigt__p_idmef_impact_type_t, 
+_swigt__p_idmef_file_fstype_t, 
 _swigt__p_idmef_additional_data_type_t, 
 _swigt__p_idmef_userid_type_t, 
 _swigt__p_idmef_file_t, 
@@ -34007,97 +34119,109 @@ static swig_constant_info swig_constants[] = {
 { SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_TYPE_ADMIN", (long) 4, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_CONNECTED", (long) 0x01, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "PRELUDE_CLIENT_OWN_FD", (long) 0x02, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "string", (long) string, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "boolean", (long) boolean, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "byte", (long) byte, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "character", (long) character, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "date_time", (long) date_time, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "integer", (long) integer, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "ntpstamp", (long) ntpstamp, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "portlist", (long) portlist, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "real", (long) real, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "xml", (long) xml, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "origin_unknown", (long) origin_unknown, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "bugtraqid", (long) bugtraqid, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "cve", (long) cve, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "vendor_specific", (long) vendor_specific, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "original_user", (long) original_user, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "current_user", (long) current_user, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "target_user", (long) target_user, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "user_privs", (long) user_privs, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "current_group", (long) current_group, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "group_privs", (long) group_privs, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "other_privs", (long) other_privs, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "cat_unknown", (long) cat_unknown, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "application", (long) application, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "os_device", (long) os_device, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "addr_unknown", (long) addr_unknown, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "atm", (long) atm, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "e_mail", (long) e_mail, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "lotus_notes", (long) lotus_notes, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "mac", (long) mac, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "sna", (long) sna, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "vm", (long) vm, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "ipv4_addr", (long) ipv4_addr, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "ipv4_addr_hex", (long) ipv4_addr_hex, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "ipv4_net", (long) ipv4_net, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "ipv4_net_mask", (long) ipv4_net_mask, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "ipv6_addr", (long) ipv6_addr, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "ipv6_addr_hex", (long) ipv6_addr_hex, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "ipv6_net", (long) ipv6_net, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "ipv6_net_mask", (long) ipv6_net_mask, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "no_specific_service", (long) no_specific_service, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "web_service", (long) web_service, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "snmp_service", (long) snmp_service, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "node_unknown", (long) node_unknown, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "ads", (long) ads, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "afs", (long) afs, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "coda", (long) coda, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "dfs", (long) dfs, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "dns", (long) dns, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "hosts", (long) hosts, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "kerberos", (long) kerberos, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "nds", (long) nds, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "nis", (long) nis, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "nisplus", (long) nisplus, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "nt", (long) nt, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "wfw", (long) wfw, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "unknown", (long) unknown, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "yes", (long) yes, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "no", (long) no, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "current", (long) current, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "original", (long) original, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "hard_link", (long) hard_link, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "mount_point", (long) mount_point, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "reparse_point", (long) reparse_point, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "shortcut", (long) shortcut, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "stream", (long) stream, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "symbolic_link", (long) symbolic_link, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "impact_low", (long) impact_low, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "impact_medium", (long) impact_medium, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "impact_high", (long) impact_high, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "failed", (long) failed, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "succeeded", (long) succeeded, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "other", (long) other, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "admin", (long) admin, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "dos", (long) dos, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "file", (long) file, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "recon", (long) recon, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "user", (long) user, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "action_other", (long) action_other, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "block_installed", (long) block_installed, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "notification_sent", (long) notification_sent, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "taken_offline", (long) taken_offline, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "numeric", (long) numeric, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "low", (long) low, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "medium", (long) medium, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "high", (long) high, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "idmef_default", (long) idmef_default, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "idmef_tool_alert", (long) idmef_tool_alert, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "idmef_correlation_alert", (long) idmef_correlation_alert, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "idmef_overflow_alert", (long) idmef_overflow_alert, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "idmef_alert_message", (long) idmef_alert_message, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "idmef_heartbeat_message", (long) idmef_heartbeat_message, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_STRING", (long) IDMEF_ADDITIONAL_DATA_TYPE_STRING, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN", (long) IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_BYTE", (long) IDMEF_ADDITIONAL_DATA_TYPE_BYTE, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER", (long) IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME", (long) IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_INTEGER", (long) IDMEF_ADDITIONAL_DATA_TYPE_INTEGER, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP", (long) IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST", (long) IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_REAL", (long) IDMEF_ADDITIONAL_DATA_TYPE_REAL, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDITIONAL_DATA_TYPE_XML", (long) IDMEF_ADDITIONAL_DATA_TYPE_XML, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_CLASSIFICATION_ORIGIN_UNKNOWN", (long) IDMEF_CLASSIFICATION_ORIGIN_UNKNOWN, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_CLASSIFICATION_ORIGIN_BUGTRAQID", (long) IDMEF_CLASSIFICATION_ORIGIN_BUGTRAQID, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_CLASSIFICATION_ORIGIN_CVE", (long) IDMEF_CLASSIFICATION_ORIGIN_CVE, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_CLASSIFICATION_ORIGIN_VENDOR_SPECIFIC", (long) IDMEF_CLASSIFICATION_ORIGIN_VENDOR_SPECIFIC, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_USERID_TYPE_ORIGINAL_USER", (long) IDMEF_USERID_TYPE_ORIGINAL_USER, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_USERID_TYPE_CURRENT_USER", (long) IDMEF_USERID_TYPE_CURRENT_USER, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_USERID_TYPE_TARGET_USER", (long) IDMEF_USERID_TYPE_TARGET_USER, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_USERID_TYPE_USER_PRIVS", (long) IDMEF_USERID_TYPE_USER_PRIVS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_USERID_TYPE_CURRENT_GROUP", (long) IDMEF_USERID_TYPE_CURRENT_GROUP, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_USERID_TYPE_GROUP_PRIVS", (long) IDMEF_USERID_TYPE_GROUP_PRIVS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_USERID_TYPE_OTHER_PRIVS", (long) IDMEF_USERID_TYPE_OTHER_PRIVS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_USER_CATEGORY_UNKNOWN", (long) IDMEF_USER_CATEGORY_UNKNOWN, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_USER_CATEGORY_APPLICATION", (long) IDMEF_USER_CATEGORY_APPLICATION, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_USER_CATEGORY_OS_DEVICE", (long) IDMEF_USER_CATEGORY_OS_DEVICE, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_UNKNOWN", (long) IDMEF_ADDRESS_CATEGORY_UNKNOWN, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_ATM", (long) IDMEF_ADDRESS_CATEGORY_ATM, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_E_MAIL", (long) IDMEF_ADDRESS_CATEGORY_E_MAIL, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_LOTUS_NOTES", (long) IDMEF_ADDRESS_CATEGORY_LOTUS_NOTES, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_MAC", (long) IDMEF_ADDRESS_CATEGORY_MAC, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_SNA", (long) IDMEF_ADDRESS_CATEGORY_SNA, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_VM", (long) IDMEF_ADDRESS_CATEGORY_VM, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_IPV4_ADDR", (long) IDMEF_ADDRESS_CATEGORY_IPV4_ADDR, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_IPV4_ADDR_HEX", (long) IDMEF_ADDRESS_CATEGORY_IPV4_ADDR_HEX, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_IPV4_NET", (long) IDMEF_ADDRESS_CATEGORY_IPV4_NET, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_IPV4_NET_MASK", (long) IDMEF_ADDRESS_CATEGORY_IPV4_NET_MASK, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_IPV6_ADDR", (long) IDMEF_ADDRESS_CATEGORY_IPV6_ADDR, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_IPV6_ADDR_HEX", (long) IDMEF_ADDRESS_CATEGORY_IPV6_ADDR_HEX, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_IPV6_NET", (long) IDMEF_ADDRESS_CATEGORY_IPV6_NET, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK", (long) IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_SERVICE_TYPE_WEB", (long) IDMEF_SERVICE_TYPE_WEB, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_SERVICE_TYPE_SNMP", (long) IDMEF_SERVICE_TYPE_SNMP, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_UNKNOWN", (long) IDMEF_NODE_CATEGORY_UNKNOWN, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_ADS", (long) IDMEF_NODE_CATEGORY_ADS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_AFS", (long) IDMEF_NODE_CATEGORY_AFS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_CODA", (long) IDMEF_NODE_CATEGORY_CODA, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_DFS", (long) IDMEF_NODE_CATEGORY_DFS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_DNS", (long) IDMEF_NODE_CATEGORY_DNS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_HOSTS", (long) IDMEF_NODE_CATEGORY_HOSTS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_KERBEROS", (long) IDMEF_NODE_CATEGORY_KERBEROS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_NDS", (long) IDMEF_NODE_CATEGORY_NDS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_NIS", (long) IDMEF_NODE_CATEGORY_NIS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_NISPLUS", (long) IDMEF_NODE_CATEGORY_NISPLUS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_NT", (long) IDMEF_NODE_CATEGORY_NT, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_NODE_CATEGORY_WFW", (long) IDMEF_NODE_CATEGORY_WFW, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_SOURCE_SPOOFED_UNKNOWN", (long) IDMEF_SOURCE_SPOOFED_UNKNOWN, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_SOURCE_SPOOFED_YES", (long) IDMEF_SOURCE_SPOOFED_YES, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_SOURCE_SPOOFED_NO", (long) IDMEF_SOURCE_SPOOFED_NO, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_CATEGORY_CURRENT", (long) IDMEF_FILE_CATEGORY_CURRENT, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_CATEGORY_ORIGINAL", (long) IDMEF_FILE_CATEGORY_ORIGINAL, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_FSTYPE_UFS", (long) IDMEF_FILE_FSTYPE_UFS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_FSTYPE_EFS", (long) IDMEF_FILE_FSTYPE_EFS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_FSTYPE_NFS", (long) IDMEF_FILE_FSTYPE_NFS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_FSTYPE_AFS", (long) IDMEF_FILE_FSTYPE_AFS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_FSTYPE_NTFS", (long) IDMEF_FILE_FSTYPE_NTFS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_FSTYPE_FAT16", (long) IDMEF_FILE_FSTYPE_FAT16, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_FSTYPE_FAT32", (long) IDMEF_FILE_FSTYPE_FAT32, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_FSTYPE_PCFS", (long) IDMEF_FILE_FSTYPE_PCFS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_FSTYPE_JOLIET", (long) IDMEF_FILE_FSTYPE_JOLIET, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_FILE_FSTYPE_ISO9660", (long) IDMEF_FILE_FSTYPE_ISO9660, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_LINKAGE_CATEGORY_HARD_LINK", (long) IDMEF_LINKAGE_CATEGORY_HARD_LINK, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_LINKAGE_CATEGORY_MOUNT_POINT", (long) IDMEF_LINKAGE_CATEGORY_MOUNT_POINT, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_LINKAGE_CATEGORY_REPARSE_POINT", (long) IDMEF_LINKAGE_CATEGORY_REPARSE_POINT, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_LINKAGE_CATEGORY_SHORTCUT", (long) IDMEF_LINKAGE_CATEGORY_SHORTCUT, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_LINKAGE_CATEGORY_STREAM", (long) IDMEF_LINKAGE_CATEGORY_STREAM, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_LINKAGE_CATEGORY_SYMBOLIC_LINK", (long) IDMEF_LINKAGE_CATEGORY_SYMBOLIC_LINK, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_TARGET_DECOY_UNKNOWN", (long) IDMEF_TARGET_DECOY_UNKNOWN, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_TARGET_DECOY_YES", (long) IDMEF_TARGET_DECOY_YES, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_TARGET_DECOY_NO", (long) IDMEF_TARGET_DECOY_NO, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_SEVERITY_LOW", (long) IDMEF_IMPACT_SEVERITY_LOW, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_SEVERITY_MEDIUM", (long) IDMEF_IMPACT_SEVERITY_MEDIUM, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_SEVERITY_HIGH", (long) IDMEF_IMPACT_SEVERITY_HIGH, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_COMPLETION_FAILED", (long) IDMEF_IMPACT_COMPLETION_FAILED, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_COMPLETION_SUCCEEDED", (long) IDMEF_IMPACT_COMPLETION_SUCCEEDED, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_TYPE_OTHER", (long) IDMEF_IMPACT_TYPE_OTHER, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_TYPE_ADMIN", (long) IDMEF_IMPACT_TYPE_ADMIN, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_TYPE_DOS", (long) IDMEF_IMPACT_TYPE_DOS, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_TYPE_FILE", (long) IDMEF_IMPACT_TYPE_FILE, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_TYPE_RECON", (long) IDMEF_IMPACT_TYPE_RECON, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_IMPACT_TYPE_USER", (long) IDMEF_IMPACT_TYPE_USER, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ACTION_CATEGORY_OTHER", (long) IDMEF_ACTION_CATEGORY_OTHER, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ACTION_CATEGORY_BLOCK_INSTALLED", (long) IDMEF_ACTION_CATEGORY_BLOCK_INSTALLED, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ACTION_CATEGORY_NOTIFICATION_SENT", (long) IDMEF_ACTION_CATEGORY_NOTIFICATION_SENT, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ACTION_CATEGORY_TAKEN_OFFLINE", (long) IDMEF_ACTION_CATEGORY_TAKEN_OFFLINE, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_CONFIDENCE_RATING_NUMERIC", (long) IDMEF_CONFIDENCE_RATING_NUMERIC, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_CONFIDENCE_RATING_LOW", (long) IDMEF_CONFIDENCE_RATING_LOW, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_CONFIDENCE_RATING_MEDIUM", (long) IDMEF_CONFIDENCE_RATING_MEDIUM, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_CONFIDENCE_RATING_HIGH", (long) IDMEF_CONFIDENCE_RATING_HIGH, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ALERT_TYPE_DEFAULT", (long) IDMEF_ALERT_TYPE_DEFAULT, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ALERT_TYPE_TOOL", (long) IDMEF_ALERT_TYPE_TOOL, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ALERT_TYPE_CORRELATION", (long) IDMEF_ALERT_TYPE_CORRELATION, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_ALERT_TYPE_OVERFLOW", (long) IDMEF_ALERT_TYPE_OVERFLOW, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_MESSAGE_TYPE_ALERT", (long) IDMEF_MESSAGE_TYPE_ALERT, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "IDMEF_MESSAGE_TYPE_HEARTBEAT", (long) IDMEF_MESSAGE_TYPE_HEARTBEAT, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_additional_data_type", (long) 3, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_additional_data", (long) 4, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_classification_origin", (long) 5, 0, 0, 0},
@@ -34120,9 +34244,11 @@ static swig_constant_info swig_constants[] = {
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_file_access", (long) 22, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_inode", (long) 23, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_file_category", (long) 24, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "idmef_type_file_fstype", (long) 25, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_file", (long) 25, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_linkage_category", (long) 26, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_linkage", (long) 27, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "idmef_type_decoy", (long) 20, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_target", (long) 28, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_analyzer", (long) 29, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_alertident", (long) 30, 0, 0, 0},
@@ -34543,6 +34669,8 @@ static swig_command_info swig_commands[] = {
 {"Prelude::idmef_inode_new_c_minor_device", _wrap_idmef_inode_new_c_minor_device},
 {"Prelude::idmef_file_category_to_numeric", _wrap_idmef_file_category_to_numeric},
 {"Prelude::idmef_file_category_to_string", _wrap_idmef_file_category_to_string},
+{"Prelude::idmef_file_fstype_to_numeric", _wrap_idmef_file_fstype_to_numeric},
+{"Prelude::idmef_file_fstype_to_string", _wrap_idmef_file_fstype_to_string},
 {"Prelude::idmef_file_new", _wrap_idmef_file_new},
 {"Prelude::idmef_file_ref", _wrap_idmef_file_ref},
 {"Prelude::idmef_file_get_child", _wrap_idmef_file_get_child},
@@ -34623,6 +34751,8 @@ static swig_command_info swig_commands[] = {
 {"Prelude::idmef_linkage_set_file", _wrap_idmef_linkage_set_file},
 {"Prelude::idmef_linkage_get_file_value", _wrap_idmef_linkage_get_file_value},
 {"Prelude::idmef_linkage_new_file", _wrap_idmef_linkage_new_file},
+{"Prelude::idmef_decoy_to_numeric", _wrap_idmef_decoy_to_numeric},
+{"Prelude::idmef_decoy_to_string", _wrap_idmef_decoy_to_string},
 {"Prelude::idmef_target_new", _wrap_idmef_target_new},
 {"Prelude::idmef_target_ref", _wrap_idmef_target_ref},
 {"Prelude::idmef_target_get_child", _wrap_idmef_target_get_child},
@@ -35150,35 +35280,35 @@ static swig_command_info swig_commands[] = {
 {"Prelude::prelude_msgbuf_set_callback", _wrap_prelude_msgbuf_set_callback},
 {"Prelude::prelude_msgbuf_set_data", _wrap_prelude_msgbuf_set_data},
 {"Prelude::prelude_msgbuf_get_data", _wrap_prelude_msgbuf_get_data},
-{"Prelude::idmef_send_time", _wrap_idmef_send_time},
-{"Prelude::idmef_send_additional_data", _wrap_idmef_send_additional_data},
-{"Prelude::idmef_send_classification", _wrap_idmef_send_classification},
-{"Prelude::idmef_send_userid", _wrap_idmef_send_userid},
-{"Prelude::idmef_send_user", _wrap_idmef_send_user},
-{"Prelude::idmef_send_address", _wrap_idmef_send_address},
-{"Prelude::idmef_send_process", _wrap_idmef_send_process},
-{"Prelude::idmef_send_webservice", _wrap_idmef_send_webservice},
-{"Prelude::idmef_send_snmpservice", _wrap_idmef_send_snmpservice},
-{"Prelude::idmef_send_service", _wrap_idmef_send_service},
-{"Prelude::idmef_send_node", _wrap_idmef_send_node},
-{"Prelude::idmef_send_source", _wrap_idmef_send_source},
-{"Prelude::idmef_send_file_access", _wrap_idmef_send_file_access},
-{"Prelude::idmef_send_inode", _wrap_idmef_send_inode},
-{"Prelude::idmef_send_file", _wrap_idmef_send_file},
-{"Prelude::idmef_send_linkage", _wrap_idmef_send_linkage},
-{"Prelude::idmef_send_target", _wrap_idmef_send_target},
-{"Prelude::idmef_send_analyzer", _wrap_idmef_send_analyzer},
-{"Prelude::idmef_send_alertident", _wrap_idmef_send_alertident},
-{"Prelude::idmef_send_impact", _wrap_idmef_send_impact},
-{"Prelude::idmef_send_action", _wrap_idmef_send_action},
-{"Prelude::idmef_send_confidence", _wrap_idmef_send_confidence},
-{"Prelude::idmef_send_assessment", _wrap_idmef_send_assessment},
-{"Prelude::idmef_send_tool_alert", _wrap_idmef_send_tool_alert},
-{"Prelude::idmef_send_correlation_alert", _wrap_idmef_send_correlation_alert},
-{"Prelude::idmef_send_overflow_alert", _wrap_idmef_send_overflow_alert},
-{"Prelude::idmef_send_alert", _wrap_idmef_send_alert},
-{"Prelude::idmef_send_heartbeat", _wrap_idmef_send_heartbeat},
-{"Prelude::idmef_send_message", _wrap_idmef_send_message},
+{"Prelude::idmef_write_time", _wrap_idmef_write_time},
+{"Prelude::idmef_write_additional_data", _wrap_idmef_write_additional_data},
+{"Prelude::idmef_write_classification", _wrap_idmef_write_classification},
+{"Prelude::idmef_write_userid", _wrap_idmef_write_userid},
+{"Prelude::idmef_write_user", _wrap_idmef_write_user},
+{"Prelude::idmef_write_address", _wrap_idmef_write_address},
+{"Prelude::idmef_write_process", _wrap_idmef_write_process},
+{"Prelude::idmef_write_webservice", _wrap_idmef_write_webservice},
+{"Prelude::idmef_write_snmpservice", _wrap_idmef_write_snmpservice},
+{"Prelude::idmef_write_service", _wrap_idmef_write_service},
+{"Prelude::idmef_write_node", _wrap_idmef_write_node},
+{"Prelude::idmef_write_source", _wrap_idmef_write_source},
+{"Prelude::idmef_write_file_access", _wrap_idmef_write_file_access},
+{"Prelude::idmef_write_inode", _wrap_idmef_write_inode},
+{"Prelude::idmef_write_file", _wrap_idmef_write_file},
+{"Prelude::idmef_write_linkage", _wrap_idmef_write_linkage},
+{"Prelude::idmef_write_target", _wrap_idmef_write_target},
+{"Prelude::idmef_write_analyzer", _wrap_idmef_write_analyzer},
+{"Prelude::idmef_write_alertident", _wrap_idmef_write_alertident},
+{"Prelude::idmef_write_impact", _wrap_idmef_write_impact},
+{"Prelude::idmef_write_action", _wrap_idmef_write_action},
+{"Prelude::idmef_write_confidence", _wrap_idmef_write_confidence},
+{"Prelude::idmef_write_assessment", _wrap_idmef_write_assessment},
+{"Prelude::idmef_write_tool_alert", _wrap_idmef_write_tool_alert},
+{"Prelude::idmef_write_correlation_alert", _wrap_idmef_write_correlation_alert},
+{"Prelude::idmef_write_overflow_alert", _wrap_idmef_write_overflow_alert},
+{"Prelude::idmef_write_alert", _wrap_idmef_write_alert},
+{"Prelude::idmef_write_heartbeat", _wrap_idmef_write_heartbeat},
+{"Prelude::idmef_write_message", _wrap_idmef_write_message},
 {"Prelude::idmef_additional_data_print", _wrap_idmef_additional_data_print},
 {"Prelude::idmef_classification_print", _wrap_idmef_classification_print},
 {"Prelude::idmef_userid_print", _wrap_idmef_userid_print},

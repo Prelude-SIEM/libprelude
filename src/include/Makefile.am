@@ -24,8 +24,8 @@ include_HEADERS = config-engine.h 		\
 		  ntp.h				\
 		  idmef.h			\
 		  idmef-util.h			\
-		  idmef-message-send.h		\
-		  idmef-message-recv.h		\
+		  idmef-message-write.h		\
+		  idmef-message-read.h		\
 		  idmef-msg-send.h		\
 		  plugin-common.h		\
 		  plugin-common-prv.h		\

@@ -644,8 +644,8 @@ SWIG_InstallConstants(PyObject *d, swig_const_info constants[]) {
 #define  SWIGTYPE_p_f_p_idmef_value_t_p_void__int swig_types[0] 
 #define  SWIGTYPE_p_f_p_void__void swig_types[1] 
 #define  SWIGTYPE_p_f_p_struct_list_head__void swig_types[2] 
-#define  SWIGTYPE_p_f_p_prelude_msgbuf_t__p_prelude_msg_t swig_types[3] 
-#define  SWIGTYPE_p_prelude_msg_t swig_types[4] 
+#define  SWIGTYPE_p_prelude_msg_t swig_types[3] 
+#define  SWIGTYPE_p_f_p_prelude_msgbuf_t__p_prelude_msg_t swig_types[4] 
 #define  SWIGTYPE_p_list_head swig_types[5] 
 #define  SWIGTYPE_p_ssize_t swig_types[6] 
 #define  SWIGTYPE_p_size_t swig_types[7] 
@@ -686,38 +686,40 @@ SWIG_InstallConstants(PyObject *d, swig_const_info constants[]) {
 #define  SWIGTYPE_p_idmef_webservice_t swig_types[42] 
 #define  SWIGTYPE_p_idmef_snmpservice_t swig_types[43] 
 #define  SWIGTYPE_p_idmef_service_t swig_types[44] 
-#define  SWIGTYPE_p_p_char swig_types[45] 
-#define  SWIGTYPE_p_idmef_impact_type_t swig_types[46] 
-#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[47] 
-#define  SWIGTYPE_p_idmef_userid_type_t swig_types[48] 
-#define  SWIGTYPE_p_idmef_file_t swig_types[49] 
-#define  SWIGTYPE_p_idmef_value_type_t swig_types[50] 
-#define  SWIGTYPE_p_idmef_spoofed_t swig_types[51] 
-#define  SWIGTYPE_p_idmef_data_t_data swig_types[52] 
-#define  SWIGTYPE_p_idmef_linkage_t swig_types[53] 
-#define  SWIGTYPE_p_idmef_action_t swig_types[54] 
-#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[55] 
-#define  SWIGTYPE_p_idmef_classification_t swig_types[56] 
-#define  SWIGTYPE_p_idmef_userid_t swig_types[57] 
-#define  SWIGTYPE_p_idmef_assessment_t swig_types[58] 
-#define  SWIGTYPE_p_prelude_client_t swig_types[59] 
-#define  SWIGTYPE_p_prelude_io_t swig_types[60] 
-#define  SWIGTYPE_p_idmef_object_t swig_types[61] 
-#define  SWIGTYPE_p_unsigned_char swig_types[62] 
-#define  SWIGTYPE_p_float swig_types[63] 
-#define  SWIGTYPE_p_idmef_additional_data_t swig_types[64] 
-#define  SWIGTYPE_p_idmef_data_t swig_types[65] 
-#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[66] 
-#define  SWIGTYPE_p_va_list swig_types[67] 
-#define  SWIGTYPE_p_idmef_alertident_t swig_types[68] 
-#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[69] 
-#define  SWIGTYPE_p_idmef_action_category_t swig_types[70] 
-#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[71] 
-#define  SWIGTYPE_p_idmef_file_category_t swig_types[72] 
-#define  SWIGTYPE_p_idmef_user_category_t swig_types[73] 
-#define  SWIGTYPE_p_idmef_address_category_t swig_types[74] 
-#define  SWIGTYPE_p_idmef_node_category_t swig_types[75] 
-static swig_type_info *swig_types[77];
+#define  SWIGTYPE_p_idmef_decoy_t swig_types[45] 
+#define  SWIGTYPE_p_p_char swig_types[46] 
+#define  SWIGTYPE_p_idmef_impact_type_t swig_types[47] 
+#define  SWIGTYPE_p_idmef_file_fstype_t swig_types[48] 
+#define  SWIGTYPE_p_idmef_additional_data_type_t swig_types[49] 
+#define  SWIGTYPE_p_idmef_userid_type_t swig_types[50] 
+#define  SWIGTYPE_p_idmef_file_t swig_types[51] 
+#define  SWIGTYPE_p_idmef_value_type_t swig_types[52] 
+#define  SWIGTYPE_p_idmef_spoofed_t swig_types[53] 
+#define  SWIGTYPE_p_idmef_data_t_data swig_types[54] 
+#define  SWIGTYPE_p_idmef_linkage_t swig_types[55] 
+#define  SWIGTYPE_p_idmef_action_t swig_types[56] 
+#define  SWIGTYPE_p_idmef_impact_completion_t swig_types[57] 
+#define  SWIGTYPE_p_idmef_classification_t swig_types[58] 
+#define  SWIGTYPE_p_idmef_userid_t swig_types[59] 
+#define  SWIGTYPE_p_idmef_assessment_t swig_types[60] 
+#define  SWIGTYPE_p_prelude_client_t swig_types[61] 
+#define  SWIGTYPE_p_prelude_io_t swig_types[62] 
+#define  SWIGTYPE_p_idmef_object_t swig_types[63] 
+#define  SWIGTYPE_p_unsigned_char swig_types[64] 
+#define  SWIGTYPE_p_float swig_types[65] 
+#define  SWIGTYPE_p_idmef_additional_data_t swig_types[66] 
+#define  SWIGTYPE_p_idmef_data_t swig_types[67] 
+#define  SWIGTYPE_p_idmef_value_type_data_t swig_types[68] 
+#define  SWIGTYPE_p_va_list swig_types[69] 
+#define  SWIGTYPE_p_idmef_alertident_t swig_types[70] 
+#define  SWIGTYPE_p_idmef_impact_severity_t swig_types[71] 
+#define  SWIGTYPE_p_idmef_action_category_t swig_types[72] 
+#define  SWIGTYPE_p_idmef_linkage_category_t swig_types[73] 
+#define  SWIGTYPE_p_idmef_file_category_t swig_types[74] 
+#define  SWIGTYPE_p_idmef_user_category_t swig_types[75] 
+#define  SWIGTYPE_p_idmef_address_category_t swig_types[76] 
+#define  SWIGTYPE_p_idmef_node_category_t swig_types[77] 
+static swig_type_info *swig_types[79];
 
 /* -------- TYPES TABLE (END) -------- */
 
@@ -739,7 +741,7 @@ static swig_type_info *swig_types[77];
 #include "sensor.h"
 #include "idmef-value-object.h"
 #include "idmef-object-value.h"
-#include "idmef-message-send.h"
+#include "idmef-message-write.h"
 #include "idmef-tree-print.h"
 #include "idmef-tree-to-string.h"
 #include "idmef-util.h"
@@ -7020,6 +7022,48 @@ static PyObject *_wrap_idmef_file_category_to_string(PyObject *self, PyObject *a
 }
 
 
+static PyObject *_wrap_idmef_file_fstype_to_numeric(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    char *arg1 ;
+    int result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_file_fstype_to_numeric",&obj0)) goto fail;
+    {
+        if ( obj0 == Py_None )
+        arg1 = NULL;
+        else if ( PyString_Check(obj0) )
+        arg1 = PyString_AsString(obj0);
+        else {
+            PyErr_Format(PyExc_TypeError,
+            "expected None or string, %s found", obj0->ob_type->tp_name);
+            return NULL;
+        }
+    }
+    result = (int)idmef_file_fstype_to_numeric((char const *)arg1);
+    
+    resultobj = PyInt_FromLong((long)result);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_file_fstype_to_string(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    int arg1 ;
+    char *result;
+    
+    if(!PyArg_ParseTuple(args,(char *)"i:idmef_file_fstype_to_string",&arg1)) goto fail;
+    result = (char *)idmef_file_fstype_to_string(arg1);
+    
+    resultobj = result ? PyString_FromString(result) : Py_BuildValue((char*)"");
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_file_new(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_file_t *result;
@@ -7246,14 +7290,14 @@ static PyObject *_wrap_idmef_file_new_category(PyObject *self, PyObject *args) {
 static PyObject *_wrap_idmef_file_get_fstype(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_file_t *arg1 = (idmef_file_t *) 0 ;
-    idmef_string_t *result;
+    int result;
     PyObject * obj0 = 0 ;
     
     if(!PyArg_ParseTuple(args,(char *)"O:idmef_file_get_fstype",&obj0)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_file_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (idmef_string_t *)idmef_file_get_fstype(arg1);
+    result = (int)idmef_file_get_fstype(arg1);
     
-    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_string_t, 0);
+    resultobj = PyInt_FromLong((long)result);
     return resultobj;
     fail:
     return NULL;
@@ -7263,14 +7307,12 @@ static PyObject *_wrap_idmef_file_get_fstype(PyObject *self, PyObject *args) {
 static PyObject *_wrap_idmef_file_set_fstype(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_file_t *arg1 = (idmef_file_t *) 0 ;
-    idmef_string_t *arg2 = (idmef_string_t *) 0 ;
+    int arg2 ;
     PyObject * obj0 = 0 ;
-    PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_file_set_fstype",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"Oi:idmef_file_set_fstype",&obj0,&arg2)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_file_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_string_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_file_set_fstype(arg1,arg2);
+    idmef_file_set_fstype(arg1,(idmef_file_fstype_t )arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -7299,14 +7341,14 @@ static PyObject *_wrap_idmef_file_get_fstype_value(PyObject *self, PyObject *arg
 static PyObject *_wrap_idmef_file_new_fstype(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_file_t *arg1 = (idmef_file_t *) 0 ;
-    idmef_string_t *result;
+    idmef_file_fstype_t *result;
     PyObject * obj0 = 0 ;
     
     if(!PyArg_ParseTuple(args,(char *)"O:idmef_file_new_fstype",&obj0)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_file_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (idmef_string_t *)idmef_file_new_fstype(arg1);
+    result = (idmef_file_fstype_t *)idmef_file_new_fstype(arg1);
     
-    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_string_t, 0);
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_file_fstype_t, 0);
     return resultobj;
     fail:
     return NULL;
@@ -8425,6 +8467,48 @@ static PyObject *_wrap_idmef_linkage_new_file(PyObject *self, PyObject *args) {
 }
 
 
+static PyObject *_wrap_idmef_decoy_to_numeric(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    char *arg1 ;
+    int result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_decoy_to_numeric",&obj0)) goto fail;
+    {
+        if ( obj0 == Py_None )
+        arg1 = NULL;
+        else if ( PyString_Check(obj0) )
+        arg1 = PyString_AsString(obj0);
+        else {
+            PyErr_Format(PyExc_TypeError,
+            "expected None or string, %s found", obj0->ob_type->tp_name);
+            return NULL;
+        }
+    }
+    result = (int)idmef_decoy_to_numeric((char const *)arg1);
+    
+    resultobj = PyInt_FromLong((long)result);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_decoy_to_string(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    int arg1 ;
+    char *result;
+    
+    if(!PyArg_ParseTuple(args,(char *)"i:idmef_decoy_to_string",&arg1)) goto fail;
+    result = (char *)idmef_decoy_to_string(arg1);
+    
+    resultobj = result ? PyString_FromString(result) : Py_BuildValue((char*)"");
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_target_new(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_target_t *result;
@@ -8605,7 +8689,7 @@ static PyObject *_wrap_idmef_target_set_decoy(PyObject *self, PyObject *args) {
     
     if(!PyArg_ParseTuple(args,(char *)"Oi:idmef_target_set_decoy",&obj0,&arg2)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_target_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_target_set_decoy(arg1,(idmef_spoofed_t )arg2);
+    idmef_target_set_decoy(arg1,(idmef_decoy_t )arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -8634,14 +8718,14 @@ static PyObject *_wrap_idmef_target_get_decoy_value(PyObject *self, PyObject *ar
 static PyObject *_wrap_idmef_target_new_decoy(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_target_t *arg1 = (idmef_target_t *) 0 ;
-    idmef_spoofed_t *result;
+    idmef_decoy_t *result;
     PyObject * obj0 = 0 ;
     
     if(!PyArg_ParseTuple(args,(char *)"O:idmef_target_new_decoy",&obj0)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_target_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (idmef_spoofed_t *)idmef_target_new_decoy(arg1);
+    result = (idmef_decoy_t *)idmef_target_new_decoy(arg1);
     
-    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_spoofed_t, 0);
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_decoy_t, 0);
     return resultobj;
     fail:
     return NULL;
@@ -18080,7 +18164,7 @@ static PyObject *_wrap_prelude_msgbuf_get_data(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_time(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_time(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     uint8_t arg2 ;
@@ -18089,12 +18173,12 @@ static PyObject *_wrap_idmef_send_time(PyObject *self, PyObject *args) {
     PyObject * obj1 = 0 ;
     PyObject * obj2 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OOO:idmef_send_time",&obj0,&obj1,&obj2)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OOO:idmef_write_time",&obj0,&obj1,&obj2)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     arg2 = (uint8_t) PyInt_AsLong(obj1);
     if (PyErr_Occurred()) SWIG_fail;
     if ((SWIG_ConvertPtr(obj2,(void **) &arg3, SWIGTYPE_p_idmef_time_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_time(arg1,arg2,arg3);
+    idmef_write_time(arg1,arg2,arg3);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18103,17 +18187,17 @@ static PyObject *_wrap_idmef_send_time(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_additional_data(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_additional_data(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_additional_data_t *arg2 = (idmef_additional_data_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_additional_data",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_additional_data",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_additional_data_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_additional_data(arg1,arg2);
+    idmef_write_additional_data(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18122,17 +18206,17 @@ static PyObject *_wrap_idmef_send_additional_data(PyObject *self, PyObject *args
 }
 
 
-static PyObject *_wrap_idmef_send_classification(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_classification(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_classification_t *arg2 = (idmef_classification_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_classification",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_classification",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_classification_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_classification(arg1,arg2);
+    idmef_write_classification(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18141,17 +18225,17 @@ static PyObject *_wrap_idmef_send_classification(PyObject *self, PyObject *args)
 }
 
 
-static PyObject *_wrap_idmef_send_userid(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_userid(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_userid_t *arg2 = (idmef_userid_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_userid",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_userid",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_userid_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_userid(arg1,arg2);
+    idmef_write_userid(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18160,17 +18244,17 @@ static PyObject *_wrap_idmef_send_userid(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_user(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_user(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_user_t *arg2 = (idmef_user_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_user",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_user",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_user_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_user(arg1,arg2);
+    idmef_write_user(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18179,17 +18263,17 @@ static PyObject *_wrap_idmef_send_user(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_address(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_address(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_address_t *arg2 = (idmef_address_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_address",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_address",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_address_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_address(arg1,arg2);
+    idmef_write_address(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18198,17 +18282,17 @@ static PyObject *_wrap_idmef_send_address(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_process(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_process(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_process_t *arg2 = (idmef_process_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_process",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_process",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_process_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_process(arg1,arg2);
+    idmef_write_process(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18217,17 +18301,17 @@ static PyObject *_wrap_idmef_send_process(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_webservice(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_webservice(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_webservice_t *arg2 = (idmef_webservice_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_webservice",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_webservice",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_webservice_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_webservice(arg1,arg2);
+    idmef_write_webservice(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18236,17 +18320,17 @@ static PyObject *_wrap_idmef_send_webservice(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_snmpservice(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_snmpservice(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_snmpservice_t *arg2 = (idmef_snmpservice_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_snmpservice",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_snmpservice",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_snmpservice_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_snmpservice(arg1,arg2);
+    idmef_write_snmpservice(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18255,17 +18339,17 @@ static PyObject *_wrap_idmef_send_snmpservice(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_service(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_service(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_service_t *arg2 = (idmef_service_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_service",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_service",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_service_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_service(arg1,arg2);
+    idmef_write_service(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18274,17 +18358,17 @@ static PyObject *_wrap_idmef_send_service(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_node(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_node(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_node_t *arg2 = (idmef_node_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_node",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_node",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_node_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_node(arg1,arg2);
+    idmef_write_node(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18293,17 +18377,17 @@ static PyObject *_wrap_idmef_send_node(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_source(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_source(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_source_t *arg2 = (idmef_source_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_source",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_source",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_source_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_source(arg1,arg2);
+    idmef_write_source(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18312,17 +18396,17 @@ static PyObject *_wrap_idmef_send_source(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_file_access(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_file_access(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_file_access_t *arg2 = (idmef_file_access_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_file_access",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_file_access",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_file_access_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_file_access(arg1,arg2);
+    idmef_write_file_access(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18331,17 +18415,17 @@ static PyObject *_wrap_idmef_send_file_access(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_inode(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_inode(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_inode_t *arg2 = (idmef_inode_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_inode",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_inode",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_inode_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_inode(arg1,arg2);
+    idmef_write_inode(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18350,17 +18434,17 @@ static PyObject *_wrap_idmef_send_inode(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_file(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_file(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_file_t *arg2 = (idmef_file_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_file",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_file",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_file_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_file(arg1,arg2);
+    idmef_write_file(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18369,17 +18453,17 @@ static PyObject *_wrap_idmef_send_file(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_linkage(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_linkage(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_linkage_t *arg2 = (idmef_linkage_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_linkage",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_linkage",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_linkage_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_linkage(arg1,arg2);
+    idmef_write_linkage(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18388,17 +18472,17 @@ static PyObject *_wrap_idmef_send_linkage(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_target(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_target(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_target_t *arg2 = (idmef_target_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_target",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_target",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_target_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_target(arg1,arg2);
+    idmef_write_target(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18407,17 +18491,17 @@ static PyObject *_wrap_idmef_send_target(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_analyzer(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_analyzer(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_analyzer_t *arg2 = (idmef_analyzer_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_analyzer",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_analyzer",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_analyzer_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_analyzer(arg1,arg2);
+    idmef_write_analyzer(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18426,17 +18510,17 @@ static PyObject *_wrap_idmef_send_analyzer(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_alertident(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_alertident(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_alertident_t *arg2 = (idmef_alertident_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_alertident",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_alertident",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_alertident_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_alertident(arg1,arg2);
+    idmef_write_alertident(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18445,17 +18529,17 @@ static PyObject *_wrap_idmef_send_alertident(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_impact(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_impact(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_impact_t *arg2 = (idmef_impact_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_impact",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_impact",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_impact_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_impact(arg1,arg2);
+    idmef_write_impact(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18464,17 +18548,17 @@ static PyObject *_wrap_idmef_send_impact(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_action(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_action(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_action_t *arg2 = (idmef_action_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_action",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_action",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_action_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_action(arg1,arg2);
+    idmef_write_action(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18483,17 +18567,17 @@ static PyObject *_wrap_idmef_send_action(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_confidence(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_confidence(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_confidence_t *arg2 = (idmef_confidence_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_confidence",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_confidence",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_confidence_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_confidence(arg1,arg2);
+    idmef_write_confidence(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18502,17 +18586,17 @@ static PyObject *_wrap_idmef_send_confidence(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_assessment(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_assessment(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_assessment_t *arg2 = (idmef_assessment_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_assessment",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_assessment",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_assessment_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_assessment(arg1,arg2);
+    idmef_write_assessment(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18521,17 +18605,17 @@ static PyObject *_wrap_idmef_send_assessment(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_tool_alert(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_tool_alert(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_tool_alert_t *arg2 = (idmef_tool_alert_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_tool_alert",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_tool_alert",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_tool_alert_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_tool_alert(arg1,arg2);
+    idmef_write_tool_alert(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18540,17 +18624,17 @@ static PyObject *_wrap_idmef_send_tool_alert(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_correlation_alert(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_correlation_alert(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_correlation_alert_t *arg2 = (idmef_correlation_alert_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_correlation_alert",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_correlation_alert",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_correlation_alert_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_correlation_alert(arg1,arg2);
+    idmef_write_correlation_alert(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18559,17 +18643,17 @@ static PyObject *_wrap_idmef_send_correlation_alert(PyObject *self, PyObject *ar
 }
 
 
-static PyObject *_wrap_idmef_send_overflow_alert(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_overflow_alert(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_overflow_alert_t *arg2 = (idmef_overflow_alert_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_overflow_alert",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_overflow_alert",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_overflow_alert_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_overflow_alert(arg1,arg2);
+    idmef_write_overflow_alert(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18578,17 +18662,17 @@ static PyObject *_wrap_idmef_send_overflow_alert(PyObject *self, PyObject *args)
 }
 
 
-static PyObject *_wrap_idmef_send_alert(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_alert(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_alert_t *arg2 = (idmef_alert_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_alert",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_alert",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_alert_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_alert(arg1,arg2);
+    idmef_write_alert(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18597,17 +18681,17 @@ static PyObject *_wrap_idmef_send_alert(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_heartbeat(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_heartbeat(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_heartbeat_t *arg2 = (idmef_heartbeat_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_heartbeat",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_heartbeat",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_heartbeat_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_heartbeat(arg1,arg2);
+    idmef_write_heartbeat(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -18616,17 +18700,17 @@ static PyObject *_wrap_idmef_send_heartbeat(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_send_message(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_write_message(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_msgbuf_t *arg1 = (prelude_msgbuf_t *) 0 ;
     idmef_message_t *arg2 = (idmef_message_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_send_message",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_write_message",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_msgbuf_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_message_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_send_message(arg1,arg2);
+    idmef_write_message(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -21170,6 +21254,8 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_inode_new_c_minor_device", _wrap_idmef_inode_new_c_minor_device, METH_VARARGS },
 	 { (char *)"idmef_file_category_to_numeric", _wrap_idmef_file_category_to_numeric, METH_VARARGS },
 	 { (char *)"idmef_file_category_to_string", _wrap_idmef_file_category_to_string, METH_VARARGS },
+	 { (char *)"idmef_file_fstype_to_numeric", _wrap_idmef_file_fstype_to_numeric, METH_VARARGS },
+	 { (char *)"idmef_file_fstype_to_string", _wrap_idmef_file_fstype_to_string, METH_VARARGS },
 	 { (char *)"idmef_file_new", _wrap_idmef_file_new, METH_VARARGS },
 	 { (char *)"idmef_file_ref", _wrap_idmef_file_ref, METH_VARARGS },
 	 { (char *)"idmef_file_get_child", _wrap_idmef_file_get_child, METH_VARARGS },
@@ -21250,6 +21336,8 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_linkage_set_file", _wrap_idmef_linkage_set_file, METH_VARARGS },
 	 { (char *)"idmef_linkage_get_file_value", _wrap_idmef_linkage_get_file_value, METH_VARARGS },
 	 { (char *)"idmef_linkage_new_file", _wrap_idmef_linkage_new_file, METH_VARARGS },
+	 { (char *)"idmef_decoy_to_numeric", _wrap_idmef_decoy_to_numeric, METH_VARARGS },
+	 { (char *)"idmef_decoy_to_string", _wrap_idmef_decoy_to_string, METH_VARARGS },
 	 { (char *)"idmef_target_new", _wrap_idmef_target_new, METH_VARARGS },
 	 { (char *)"idmef_target_ref", _wrap_idmef_target_ref, METH_VARARGS },
 	 { (char *)"idmef_target_get_child", _wrap_idmef_target_get_child, METH_VARARGS },
@@ -21777,35 +21865,35 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"prelude_msgbuf_set_callback", _wrap_prelude_msgbuf_set_callback, METH_VARARGS },
 	 { (char *)"prelude_msgbuf_set_data", _wrap_prelude_msgbuf_set_data, METH_VARARGS },
 	 { (char *)"prelude_msgbuf_get_data", _wrap_prelude_msgbuf_get_data, METH_VARARGS },
-	 { (char *)"idmef_send_time", _wrap_idmef_send_time, METH_VARARGS },
-	 { (char *)"idmef_send_additional_data", _wrap_idmef_send_additional_data, METH_VARARGS },
-	 { (char *)"idmef_send_classification", _wrap_idmef_send_classification, METH_VARARGS },
-	 { (char *)"idmef_send_userid", _wrap_idmef_send_userid, METH_VARARGS },
-	 { (char *)"idmef_send_user", _wrap_idmef_send_user, METH_VARARGS },
-	 { (char *)"idmef_send_address", _wrap_idmef_send_address, METH_VARARGS },
-	 { (char *)"idmef_send_process", _wrap_idmef_send_process, METH_VARARGS },
-	 { (char *)"idmef_send_webservice", _wrap_idmef_send_webservice, METH_VARARGS },
-	 { (char *)"idmef_send_snmpservice", _wrap_idmef_send_snmpservice, METH_VARARGS },
-	 { (char *)"idmef_send_service", _wrap_idmef_send_service, METH_VARARGS },
-	 { (char *)"idmef_send_node", _wrap_idmef_send_node, METH_VARARGS },
-	 { (char *)"idmef_send_source", _wrap_idmef_send_source, METH_VARARGS },
-	 { (char *)"idmef_send_file_access", _wrap_idmef_send_file_access, METH_VARARGS },
-	 { (char *)"idmef_send_inode", _wrap_idmef_send_inode, METH_VARARGS },
-	 { (char *)"idmef_send_file", _wrap_idmef_send_file, METH_VARARGS },
-	 { (char *)"idmef_send_linkage", _wrap_idmef_send_linkage, METH_VARARGS },
-	 { (char *)"idmef_send_target", _wrap_idmef_send_target, METH_VARARGS },
-	 { (char *)"idmef_send_analyzer", _wrap_idmef_send_analyzer, METH_VARARGS },
-	 { (char *)"idmef_send_alertident", _wrap_idmef_send_alertident, METH_VARARGS },
-	 { (char *)"idmef_send_impact", _wrap_idmef_send_impact, METH_VARARGS },
-	 { (char *)"idmef_send_action", _wrap_idmef_send_action, METH_VARARGS },
-	 { (char *)"idmef_send_confidence", _wrap_idmef_send_confidence, METH_VARARGS },
-	 { (char *)"idmef_send_assessment", _wrap_idmef_send_assessment, METH_VARARGS },
-	 { (char *)"idmef_send_tool_alert", _wrap_idmef_send_tool_alert, METH_VARARGS },
-	 { (char *)"idmef_send_correlation_alert", _wrap_idmef_send_correlation_alert, METH_VARARGS },
-	 { (char *)"idmef_send_overflow_alert", _wrap_idmef_send_overflow_alert, METH_VARARGS },
-	 { (char *)"idmef_send_alert", _wrap_idmef_send_alert, METH_VARARGS },
-	 { (char *)"idmef_send_heartbeat", _wrap_idmef_send_heartbeat, METH_VARARGS },
-	 { (char *)"idmef_send_message", _wrap_idmef_send_message, METH_VARARGS },
+	 { (char *)"idmef_write_time", _wrap_idmef_write_time, METH_VARARGS },
+	 { (char *)"idmef_write_additional_data", _wrap_idmef_write_additional_data, METH_VARARGS },
+	 { (char *)"idmef_write_classification", _wrap_idmef_write_classification, METH_VARARGS },
+	 { (char *)"idmef_write_userid", _wrap_idmef_write_userid, METH_VARARGS },
+	 { (char *)"idmef_write_user", _wrap_idmef_write_user, METH_VARARGS },
+	 { (char *)"idmef_write_address", _wrap_idmef_write_address, METH_VARARGS },
+	 { (char *)"idmef_write_process", _wrap_idmef_write_process, METH_VARARGS },
+	 { (char *)"idmef_write_webservice", _wrap_idmef_write_webservice, METH_VARARGS },
+	 { (char *)"idmef_write_snmpservice", _wrap_idmef_write_snmpservice, METH_VARARGS },
+	 { (char *)"idmef_write_service", _wrap_idmef_write_service, METH_VARARGS },
+	 { (char *)"idmef_write_node", _wrap_idmef_write_node, METH_VARARGS },
+	 { (char *)"idmef_write_source", _wrap_idmef_write_source, METH_VARARGS },
+	 { (char *)"idmef_write_file_access", _wrap_idmef_write_file_access, METH_VARARGS },
+	 { (char *)"idmef_write_inode", _wrap_idmef_write_inode, METH_VARARGS },
+	 { (char *)"idmef_write_file", _wrap_idmef_write_file, METH_VARARGS },
+	 { (char *)"idmef_write_linkage", _wrap_idmef_write_linkage, METH_VARARGS },
+	 { (char *)"idmef_write_target", _wrap_idmef_write_target, METH_VARARGS },
+	 { (char *)"idmef_write_analyzer", _wrap_idmef_write_analyzer, METH_VARARGS },
+	 { (char *)"idmef_write_alertident", _wrap_idmef_write_alertident, METH_VARARGS },
+	 { (char *)"idmef_write_impact", _wrap_idmef_write_impact, METH_VARARGS },
+	 { (char *)"idmef_write_action", _wrap_idmef_write_action, METH_VARARGS },
+	 { (char *)"idmef_write_confidence", _wrap_idmef_write_confidence, METH_VARARGS },
+	 { (char *)"idmef_write_assessment", _wrap_idmef_write_assessment, METH_VARARGS },
+	 { (char *)"idmef_write_tool_alert", _wrap_idmef_write_tool_alert, METH_VARARGS },
+	 { (char *)"idmef_write_correlation_alert", _wrap_idmef_write_correlation_alert, METH_VARARGS },
+	 { (char *)"idmef_write_overflow_alert", _wrap_idmef_write_overflow_alert, METH_VARARGS },
+	 { (char *)"idmef_write_alert", _wrap_idmef_write_alert, METH_VARARGS },
+	 { (char *)"idmef_write_heartbeat", _wrap_idmef_write_heartbeat, METH_VARARGS },
+	 { (char *)"idmef_write_message", _wrap_idmef_write_message, METH_VARARGS },
 	 { (char *)"idmef_additional_data_print", _wrap_idmef_additional_data_print, METH_VARARGS },
 	 { (char *)"idmef_classification_print", _wrap_idmef_classification_print, METH_VARARGS },
 	 { (char *)"idmef_userid_print", _wrap_idmef_userid_print, METH_VARARGS },
@@ -21929,8 +22017,8 @@ static PyMethodDef SwigMethods[] = {
 static swig_type_info _swigt__p_f_p_idmef_value_t_p_void__int[] = {{"_p_f_p_idmef_value_t_p_void__int", 0, "int (*)(idmef_value_t *,void *)", 0},{"_p_f_p_idmef_value_t_p_void__int"},{0}};
 static swig_type_info _swigt__p_f_p_void__void[] = {{"_p_f_p_void__void", 0, "void (*)(void *)", 0},{"_p_f_p_void__void"},{0}};
 static swig_type_info _swigt__p_f_p_struct_list_head__void[] = {{"_p_f_p_struct_list_head__void", 0, "void (*)(struct list_head *)", 0},{"_p_f_p_struct_list_head__void"},{0}};
-static swig_type_info _swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t[] = {{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t", 0, "prelude_msg_t *(*)(prelude_msgbuf_t *)", 0},{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t"},{0}};
 static swig_type_info _swigt__p_prelude_msg_t[] = {{"_p_prelude_msg_t", 0, "prelude_msg_t *", 0},{"_p_prelude_msg_t"},{0}};
+static swig_type_info _swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t[] = {{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t", 0, "prelude_msg_t *(*)(prelude_msgbuf_t *)", 0},{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t"},{0}};
 static swig_type_info _swigt__p_list_head[] = {{"_p_list_head", 0, "struct list_head *", 0},{"_p_list_head"},{0}};
 static swig_type_info _swigt__p_ssize_t[] = {{"_p_ssize_t", 0, "ssize_t *", 0},{"_p_ssize_t"},{0}};
 static swig_type_info _swigt__p_size_t[] = {{"_p_size_t", 0, "size_t *", 0},{"_p_size_t"},{0}};
@@ -21971,8 +22059,10 @@ static swig_type_info _swigt__p_idmef_impact_t[] = {{"_p_idmef_impact_t", 0, "id
 static swig_type_info _swigt__p_idmef_webservice_t[] = {{"_p_idmef_webservice_t", 0, "idmef_webservice_t *", 0},{"_p_idmef_webservice_t"},{0}};
 static swig_type_info _swigt__p_idmef_snmpservice_t[] = {{"_p_idmef_snmpservice_t", 0, "idmef_snmpservice_t *", 0},{"_p_idmef_snmpservice_t"},{0}};
 static swig_type_info _swigt__p_idmef_service_t[] = {{"_p_idmef_service_t", 0, "idmef_service_t *", 0},{"_p_idmef_service_t"},{0}};
+static swig_type_info _swigt__p_idmef_decoy_t[] = {{"_p_idmef_decoy_t", 0, "idmef_decoy_t *", 0},{"_p_idmef_decoy_t"},{0}};
 static swig_type_info _swigt__p_p_char[] = {{"_p_p_char", 0, "char **", 0},{"_p_p_char"},{0}};
 static swig_type_info _swigt__p_idmef_impact_type_t[] = {{"_p_idmef_impact_type_t", 0, "idmef_impact_type_t *", 0},{"_p_idmef_impact_type_t"},{0}};
+static swig_type_info _swigt__p_idmef_file_fstype_t[] = {{"_p_idmef_file_fstype_t", 0, "idmef_file_fstype_t *", 0},{"_p_idmef_file_fstype_t"},{0}};
 static swig_type_info _swigt__p_idmef_additional_data_type_t[] = {{"_p_idmef_additional_data_type_t", 0, "idmef_additional_data_type_t *", 0},{"_p_idmef_additional_data_type_t"},{0}};
 static swig_type_info _swigt__p_idmef_userid_type_t[] = {{"_p_idmef_userid_type_t", 0, "idmef_userid_type_t *", 0},{"_p_idmef_userid_type_t"},{0}};
 static swig_type_info _swigt__p_idmef_file_t[] = {{"_p_idmef_file_t", 0, "idmef_file_t *", 0},{"_p_idmef_file_t"},{0}};
@@ -22007,8 +22097,8 @@ static swig_type_info *swig_types_initial[] = {
 _swigt__p_f_p_idmef_value_t_p_void__int, 
 _swigt__p_f_p_void__void, 
 _swigt__p_f_p_struct_list_head__void, 
-_swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t, 
 _swigt__p_prelude_msg_t, 
+_swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t, 
 _swigt__p_list_head, 
 _swigt__p_ssize_t, 
 _swigt__p_size_t, 
@@ -22049,8 +22139,10 @@ _swigt__p_idmef_impact_t,
 _swigt__p_idmef_webservice_t, 
 _swigt__p_idmef_snmpservice_t, 
 _swigt__p_idmef_service_t, 
+_swigt__p_idmef_decoy_t, 
 _swigt__p_p_char, 
 _swigt__p_idmef_impact_type_t, 
+_swigt__p_idmef_file_fstype_t, 
 _swigt__p_idmef_additional_data_type_t, 
 _swigt__p_idmef_userid_type_t, 
 _swigt__p_idmef_file_t, 
@@ -22094,97 +22186,109 @@ static swig_const_info swig_const_table[] = {
 { SWIG_PY_INT,     (char *)"PRELUDE_CLIENT_TYPE_ADMIN", (long) 4, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"PRELUDE_CLIENT_CONNECTED", (long) 0x01, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"PRELUDE_CLIENT_OWN_FD", (long) 0x02, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"string", (long) string, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"boolean", (long) boolean, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"byte", (long) byte, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"character", (long) character, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"date_time", (long) date_time, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"integer", (long) integer, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"ntpstamp", (long) ntpstamp, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"portlist", (long) portlist, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"real", (long) real, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"xml", (long) xml, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"origin_unknown", (long) origin_unknown, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"bugtraqid", (long) bugtraqid, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"cve", (long) cve, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"vendor_specific", (long) vendor_specific, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"original_user", (long) original_user, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"current_user", (long) current_user, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"target_user", (long) target_user, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"user_privs", (long) user_privs, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"current_group", (long) current_group, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"group_privs", (long) group_privs, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"other_privs", (long) other_privs, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"cat_unknown", (long) cat_unknown, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"application", (long) application, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"os_device", (long) os_device, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"addr_unknown", (long) addr_unknown, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"atm", (long) atm, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"e_mail", (long) e_mail, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"lotus_notes", (long) lotus_notes, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"mac", (long) mac, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"sna", (long) sna, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"vm", (long) vm, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"ipv4_addr", (long) ipv4_addr, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"ipv4_addr_hex", (long) ipv4_addr_hex, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"ipv4_net", (long) ipv4_net, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"ipv4_net_mask", (long) ipv4_net_mask, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"ipv6_addr", (long) ipv6_addr, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"ipv6_addr_hex", (long) ipv6_addr_hex, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"ipv6_net", (long) ipv6_net, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"ipv6_net_mask", (long) ipv6_net_mask, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"no_specific_service", (long) no_specific_service, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"web_service", (long) web_service, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"snmp_service", (long) snmp_service, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"node_unknown", (long) node_unknown, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"ads", (long) ads, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"afs", (long) afs, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"coda", (long) coda, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"dfs", (long) dfs, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"dns", (long) dns, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"hosts", (long) hosts, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"kerberos", (long) kerberos, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"nds", (long) nds, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"nis", (long) nis, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"nisplus", (long) nisplus, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"nt", (long) nt, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"wfw", (long) wfw, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"unknown", (long) unknown, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"yes", (long) yes, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"no", (long) no, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"current", (long) current, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"original", (long) original, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"hard_link", (long) hard_link, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"mount_point", (long) mount_point, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"reparse_point", (long) reparse_point, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"shortcut", (long) shortcut, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"stream", (long) stream, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"symbolic_link", (long) symbolic_link, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"impact_low", (long) impact_low, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"impact_medium", (long) impact_medium, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"impact_high", (long) impact_high, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"failed", (long) failed, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"succeeded", (long) succeeded, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"other", (long) other, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"admin", (long) admin, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"dos", (long) dos, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"file", (long) file, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"recon", (long) recon, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"user", (long) user, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"action_other", (long) action_other, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"block_installed", (long) block_installed, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"notification_sent", (long) notification_sent, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"taken_offline", (long) taken_offline, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"numeric", (long) numeric, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"low", (long) low, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"medium", (long) medium, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"high", (long) high, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"idmef_default", (long) idmef_default, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"idmef_tool_alert", (long) idmef_tool_alert, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"idmef_correlation_alert", (long) idmef_correlation_alert, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"idmef_overflow_alert", (long) idmef_overflow_alert, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"idmef_alert_message", (long) idmef_alert_message, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"idmef_heartbeat_message", (long) idmef_heartbeat_message, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDITIONAL_DATA_TYPE_STRING", (long) IDMEF_ADDITIONAL_DATA_TYPE_STRING, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN", (long) IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDITIONAL_DATA_TYPE_BYTE", (long) IDMEF_ADDITIONAL_DATA_TYPE_BYTE, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER", (long) IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME", (long) IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDITIONAL_DATA_TYPE_INTEGER", (long) IDMEF_ADDITIONAL_DATA_TYPE_INTEGER, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP", (long) IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST", (long) IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDITIONAL_DATA_TYPE_REAL", (long) IDMEF_ADDITIONAL_DATA_TYPE_REAL, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDITIONAL_DATA_TYPE_XML", (long) IDMEF_ADDITIONAL_DATA_TYPE_XML, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_CLASSIFICATION_ORIGIN_UNKNOWN", (long) IDMEF_CLASSIFICATION_ORIGIN_UNKNOWN, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_CLASSIFICATION_ORIGIN_BUGTRAQID", (long) IDMEF_CLASSIFICATION_ORIGIN_BUGTRAQID, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_CLASSIFICATION_ORIGIN_CVE", (long) IDMEF_CLASSIFICATION_ORIGIN_CVE, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_CLASSIFICATION_ORIGIN_VENDOR_SPECIFIC", (long) IDMEF_CLASSIFICATION_ORIGIN_VENDOR_SPECIFIC, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_USERID_TYPE_ORIGINAL_USER", (long) IDMEF_USERID_TYPE_ORIGINAL_USER, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_USERID_TYPE_CURRENT_USER", (long) IDMEF_USERID_TYPE_CURRENT_USER, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_USERID_TYPE_TARGET_USER", (long) IDMEF_USERID_TYPE_TARGET_USER, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_USERID_TYPE_USER_PRIVS", (long) IDMEF_USERID_TYPE_USER_PRIVS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_USERID_TYPE_CURRENT_GROUP", (long) IDMEF_USERID_TYPE_CURRENT_GROUP, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_USERID_TYPE_GROUP_PRIVS", (long) IDMEF_USERID_TYPE_GROUP_PRIVS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_USERID_TYPE_OTHER_PRIVS", (long) IDMEF_USERID_TYPE_OTHER_PRIVS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_USER_CATEGORY_UNKNOWN", (long) IDMEF_USER_CATEGORY_UNKNOWN, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_USER_CATEGORY_APPLICATION", (long) IDMEF_USER_CATEGORY_APPLICATION, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_USER_CATEGORY_OS_DEVICE", (long) IDMEF_USER_CATEGORY_OS_DEVICE, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDRESS_CATEGORY_UNKNOWN", (long) IDMEF_ADDRESS_CATEGORY_UNKNOWN, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDRESS_CATEGORY_ATM", (long) IDMEF_ADDRESS_CATEGORY_ATM, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDRESS_CATEGORY_E_MAIL", (long) IDMEF_ADDRESS_CATEGORY_E_MAIL, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDRESS_CATEGORY_LOTUS_NOTES", (long) IDMEF_ADDRESS_CATEGORY_LOTUS_NOTES, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDRESS_CATEGORY_MAC", (long) IDMEF_ADDRESS_CATEGORY_MAC, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDRESS_CATEGORY_SNA", (long) IDMEF_ADDRESS_CATEGORY_SNA, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDRESS_CATEGORY_VM", (long) IDMEF_ADDRESS_CATEGORY_VM, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDRESS_CATEGORY_IPV4_ADDR", (long) IDMEF_ADDRESS_CATEGORY_IPV4_ADDR, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDRESS_CATEGORY_IPV4_ADDR_HEX", (long) IDMEF_ADDRESS_CATEGORY_IPV4_ADDR_HEX, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDRESS_CATEGORY_IPV4_NET", (long) IDMEF_ADDRESS_CATEGORY_IPV4_NET, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDRESS_CATEGORY_IPV4_NET_MASK", (long) IDMEF_ADDRESS_CATEGORY_IPV4_NET_MASK, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDRESS_CATEGORY_IPV6_ADDR", (long) IDMEF_ADDRESS_CATEGORY_IPV6_ADDR, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDRESS_CATEGORY_IPV6_ADDR_HEX", (long) IDMEF_ADDRESS_CATEGORY_IPV6_ADDR_HEX, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDRESS_CATEGORY_IPV6_NET", (long) IDMEF_ADDRESS_CATEGORY_IPV6_NET, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK", (long) IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_SERVICE_TYPE_WEB", (long) IDMEF_SERVICE_TYPE_WEB, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_SERVICE_TYPE_SNMP", (long) IDMEF_SERVICE_TYPE_SNMP, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_NODE_CATEGORY_UNKNOWN", (long) IDMEF_NODE_CATEGORY_UNKNOWN, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_NODE_CATEGORY_ADS", (long) IDMEF_NODE_CATEGORY_ADS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_NODE_CATEGORY_AFS", (long) IDMEF_NODE_CATEGORY_AFS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_NODE_CATEGORY_CODA", (long) IDMEF_NODE_CATEGORY_CODA, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_NODE_CATEGORY_DFS", (long) IDMEF_NODE_CATEGORY_DFS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_NODE_CATEGORY_DNS", (long) IDMEF_NODE_CATEGORY_DNS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_NODE_CATEGORY_HOSTS", (long) IDMEF_NODE_CATEGORY_HOSTS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_NODE_CATEGORY_KERBEROS", (long) IDMEF_NODE_CATEGORY_KERBEROS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_NODE_CATEGORY_NDS", (long) IDMEF_NODE_CATEGORY_NDS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_NODE_CATEGORY_NIS", (long) IDMEF_NODE_CATEGORY_NIS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_NODE_CATEGORY_NISPLUS", (long) IDMEF_NODE_CATEGORY_NISPLUS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_NODE_CATEGORY_NT", (long) IDMEF_NODE_CATEGORY_NT, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_NODE_CATEGORY_WFW", (long) IDMEF_NODE_CATEGORY_WFW, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_SOURCE_SPOOFED_UNKNOWN", (long) IDMEF_SOURCE_SPOOFED_UNKNOWN, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_SOURCE_SPOOFED_YES", (long) IDMEF_SOURCE_SPOOFED_YES, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_SOURCE_SPOOFED_NO", (long) IDMEF_SOURCE_SPOOFED_NO, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_FILE_CATEGORY_CURRENT", (long) IDMEF_FILE_CATEGORY_CURRENT, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_FILE_CATEGORY_ORIGINAL", (long) IDMEF_FILE_CATEGORY_ORIGINAL, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_FILE_FSTYPE_UFS", (long) IDMEF_FILE_FSTYPE_UFS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_FILE_FSTYPE_EFS", (long) IDMEF_FILE_FSTYPE_EFS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_FILE_FSTYPE_NFS", (long) IDMEF_FILE_FSTYPE_NFS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_FILE_FSTYPE_AFS", (long) IDMEF_FILE_FSTYPE_AFS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_FILE_FSTYPE_NTFS", (long) IDMEF_FILE_FSTYPE_NTFS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_FILE_FSTYPE_FAT16", (long) IDMEF_FILE_FSTYPE_FAT16, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_FILE_FSTYPE_FAT32", (long) IDMEF_FILE_FSTYPE_FAT32, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_FILE_FSTYPE_PCFS", (long) IDMEF_FILE_FSTYPE_PCFS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_FILE_FSTYPE_JOLIET", (long) IDMEF_FILE_FSTYPE_JOLIET, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_FILE_FSTYPE_ISO9660", (long) IDMEF_FILE_FSTYPE_ISO9660, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_LINKAGE_CATEGORY_HARD_LINK", (long) IDMEF_LINKAGE_CATEGORY_HARD_LINK, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_LINKAGE_CATEGORY_MOUNT_POINT", (long) IDMEF_LINKAGE_CATEGORY_MOUNT_POINT, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_LINKAGE_CATEGORY_REPARSE_POINT", (long) IDMEF_LINKAGE_CATEGORY_REPARSE_POINT, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_LINKAGE_CATEGORY_SHORTCUT", (long) IDMEF_LINKAGE_CATEGORY_SHORTCUT, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_LINKAGE_CATEGORY_STREAM", (long) IDMEF_LINKAGE_CATEGORY_STREAM, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_LINKAGE_CATEGORY_SYMBOLIC_LINK", (long) IDMEF_LINKAGE_CATEGORY_SYMBOLIC_LINK, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_TARGET_DECOY_UNKNOWN", (long) IDMEF_TARGET_DECOY_UNKNOWN, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_TARGET_DECOY_YES", (long) IDMEF_TARGET_DECOY_YES, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_TARGET_DECOY_NO", (long) IDMEF_TARGET_DECOY_NO, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_IMPACT_SEVERITY_LOW", (long) IDMEF_IMPACT_SEVERITY_LOW, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_IMPACT_SEVERITY_MEDIUM", (long) IDMEF_IMPACT_SEVERITY_MEDIUM, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_IMPACT_SEVERITY_HIGH", (long) IDMEF_IMPACT_SEVERITY_HIGH, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_IMPACT_COMPLETION_FAILED", (long) IDMEF_IMPACT_COMPLETION_FAILED, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_IMPACT_COMPLETION_SUCCEEDED", (long) IDMEF_IMPACT_COMPLETION_SUCCEEDED, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_IMPACT_TYPE_OTHER", (long) IDMEF_IMPACT_TYPE_OTHER, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_IMPACT_TYPE_ADMIN", (long) IDMEF_IMPACT_TYPE_ADMIN, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_IMPACT_TYPE_DOS", (long) IDMEF_IMPACT_TYPE_DOS, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_IMPACT_TYPE_FILE", (long) IDMEF_IMPACT_TYPE_FILE, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_IMPACT_TYPE_RECON", (long) IDMEF_IMPACT_TYPE_RECON, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_IMPACT_TYPE_USER", (long) IDMEF_IMPACT_TYPE_USER, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ACTION_CATEGORY_OTHER", (long) IDMEF_ACTION_CATEGORY_OTHER, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ACTION_CATEGORY_BLOCK_INSTALLED", (long) IDMEF_ACTION_CATEGORY_BLOCK_INSTALLED, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ACTION_CATEGORY_NOTIFICATION_SENT", (long) IDMEF_ACTION_CATEGORY_NOTIFICATION_SENT, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ACTION_CATEGORY_TAKEN_OFFLINE", (long) IDMEF_ACTION_CATEGORY_TAKEN_OFFLINE, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_CONFIDENCE_RATING_NUMERIC", (long) IDMEF_CONFIDENCE_RATING_NUMERIC, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_CONFIDENCE_RATING_LOW", (long) IDMEF_CONFIDENCE_RATING_LOW, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_CONFIDENCE_RATING_MEDIUM", (long) IDMEF_CONFIDENCE_RATING_MEDIUM, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_CONFIDENCE_RATING_HIGH", (long) IDMEF_CONFIDENCE_RATING_HIGH, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ALERT_TYPE_DEFAULT", (long) IDMEF_ALERT_TYPE_DEFAULT, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ALERT_TYPE_TOOL", (long) IDMEF_ALERT_TYPE_TOOL, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ALERT_TYPE_CORRELATION", (long) IDMEF_ALERT_TYPE_CORRELATION, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_ALERT_TYPE_OVERFLOW", (long) IDMEF_ALERT_TYPE_OVERFLOW, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_MESSAGE_TYPE_ALERT", (long) IDMEF_MESSAGE_TYPE_ALERT, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"IDMEF_MESSAGE_TYPE_HEARTBEAT", (long) IDMEF_MESSAGE_TYPE_HEARTBEAT, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_additional_data_type", (long) 3, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_additional_data", (long) 4, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_classification_origin", (long) 5, 0, 0, 0},
@@ -22207,9 +22311,11 @@ static swig_const_info swig_const_table[] = {
 { SWIG_PY_INT,     (char *)"idmef_type_file_access", (long) 22, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_inode", (long) 23, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_file_category", (long) 24, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"idmef_type_file_fstype", (long) 25, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_file", (long) 25, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_linkage_category", (long) 26, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_linkage", (long) 27, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"idmef_type_decoy", (long) 20, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_target", (long) 28, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_analyzer", (long) 29, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_alertident", (long) 30, 0, 0, 0},

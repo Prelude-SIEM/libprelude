@@ -26,10 +26,10 @@ use GenerateDebug;
 use GenerateIDMEFTreeWrapC;
 use GenerateIDMEFTreeWrapH;
 use GenerateIDMEFTreeData;
-use GenerateIDMEFMessageSendC;
-use GenerateIDMEFMessageSendH;
-use GenerateIDMEFMessageRecvC;
-use GenerateIDMEFMessageRecvH;
+use GenerateIDMEFMessageWriteC;
+use GenerateIDMEFMessageWriteH;
+use GenerateIDMEFMessageReadC;
+use GenerateIDMEFMessageReadH;
 use GenerateIDMEFMessageIdH;
 use GenerateIDMEFTreePrintC;
 use GenerateIDMEFTreePrintH;
@@ -93,21 +93,21 @@ my @generator_list = ({ source => 'GenerateIDMEFTreeWrapC.pm',
 			target => '../include/idmef-tree-to-string.h',
 			func => sub { new GenerateIDMEFTreeToStringH(-filename => shift) } },
 
-		      { source => 'GenerateIDMEFMessageSendC.pm',
-			target => '../idmef-message-send.c',
-			func => sub { new GenerateIDMEFMessageSendC(-filename => shift) } },
+		      { source => 'GenerateIDMEFMessageWriteC.pm',
+			target => '../idmef-message-write.c',
+			func => sub { new GenerateIDMEFMessageWriteC(-filename => shift) } },
 
-		      { source => 'GenerateIDMEFMessageSendH.pm',
-			target => '../include/idmef-message-send.h',
-			func => sub { new GenerateIDMEFMessageSendH(-filename => shift) } },
+		      { source => 'GenerateIDMEFMessageWriteH.pm',
+			target => '../include/idmef-message-write.h',
+			func => sub { new GenerateIDMEFMessageWriteH(-filename => shift) } },
 
-		      { source => 'GenerateIDMEFMessageRecvC.pm',
-			target => '../idmef-message-recv.c',
-			func => sub { new GenerateIDMEFMessageRecvC(-filename => shift) } },
+		      { source => 'GenerateIDMEFMessageReadC.pm',
+			target => '../idmef-message-read.c',
+			func => sub { new GenerateIDMEFMessageReadC(-filename => shift) } },
 
-		      { source => 'GenerateIDMEFMessageRecvH.pm',
-			target => '../include/idmef-message-recv.h',
-			func => sub { new GenerateIDMEFMessageRecvH(-filename => shift) } },
+		      { source => 'GenerateIDMEFMessageReadH.pm',
+			target => '../include/idmef-message-read.h',
+			func => sub { new GenerateIDMEFMessageReadH(-filename => shift) } },
 
 		      { source => 'GenerateIDMEFMessageIdH.pm',
 			target => '../include/idmef-message-id.h',

@@ -816,31 +816,16 @@ int idmef_$enum->{short_typename}_to_numeric(const char *name)
 ");
 
     foreach my $field ( @{ $enum->{field_list} } ) {
+	my $fullname = 'IDMEF_' . uc($enum->{short_typename});
+	my $fieldname = $field->{name};
+	$fieldname =~ s/^${fullname}_//;
+	$fieldname = lc($fieldname);
+	$fieldname =~ tr/_/-/;
+
 	$self->output("
-	if ( strcasecmp(name, \"$field->{name}\" ) == 0)
+	if ( strcasecmp(name, \"$fieldname\" ) == 0)
 		return $field->{name};
 ");
-
-	if ( $field->{name} =~ /_/ ) {
-	    my $dashed_field_name = $field->{name};
-
-	    $dashed_field_name =~ tr/_/-/;
-	    $self->output("
-	if ( strcasecmp(name, \"${dashed_field_name}\" ) == 0)
-		return $field->{name};
-");
-
-	    if ( $enum->{prefix} && $field->{name} =~ /^$enum->{prefix}_/ ) {
-	        my $short_field_name = $field->{name};
-
-		$short_field_name =~ s/^$enum->{prefix}_//;
-		$self->output("
-	if ( strcasecmp(name, \"${short_field_name}\" ) == 0)
-		return $field->{name};
-");    
-
-	    }
-	}
     }
 
     $self->output("
@@ -866,15 +851,15 @@ const char *idmef_$enum->{short_typename}_to_string(int val)
 ");
 	}
 	
-	my $field_name = $field->{name};
-
-	if ( $enum->{prefix} ) {
-	    $field_name =~ s/^$enum->{prefix}_//;
-	}
+	my $fullname = 'IDMEF_' . uc($enum->{short_typename});
+	my $fieldname = $field->{name};
+	$fieldname =~ s/^${fullname}_//;
+	$fieldname = lc($fieldname);
+	$fieldname =~ tr/_/-/;
 
 	$self->output("
 		case $field->{name}:
-			return \"$field_name\";
+			return \"$fieldname\";
 ");
 
 	$cnt++;
