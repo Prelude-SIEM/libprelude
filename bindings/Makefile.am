@@ -38,7 +38,7 @@ endif
 
 
 perl-build:
-	cd perl && $(MAKE)
+	cd perl && $(MAKE) CC=$(CC)
 
 python-build:
 	cd python && $(PYTHON) setup.py build
