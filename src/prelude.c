@@ -175,7 +175,7 @@ void prelude_deinit(void)
         if ( --libprelude_refcount != 0 )
                 return;
         
-        while ( (plugin = prelude_plugin_get_next(&iter)) )
+        while ( (plugin = prelude_plugin_get_next(NULL, &iter)) )
                 prelude_plugin_unload(plugin);
         
         _idmef_path_cache_destroy();
