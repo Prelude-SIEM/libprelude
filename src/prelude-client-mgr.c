@@ -94,8 +94,6 @@ typedef struct {
 
 
 struct prelude_client_mgr {
-        fd_set fds;
-        
         /*
          * Theses are two different descriptor for the same file.
          * This is needed so writing FD is open with the O_APPEND flag set,

@@ -508,9 +508,6 @@ int config_get_section(config_t *cfg, const char *section)
         if ( ret < 0 )
                 return -1;
         
-        if ( *cfg->content[ret] == '#' )
-                return -1;
-
         return ( is_line_commented(cfg->content[ret]) == 0 ) ? -1 : 0;
 }
 
