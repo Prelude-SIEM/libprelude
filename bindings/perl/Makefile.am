@@ -16,10 +16,12 @@ Prelude_so_SOURCES = Prelude.c
 Prelude_so_LDADD = @libprelude_libs@ -lprelude
 noinst_PROGRAMS = Prelude.so
 
+endif
+
 install-exec-local:
+if HAVE_PERL
 	$(INSTALL) -d -m 755 $(DESTDIR)/$(perl_dir)
 	$(INSTALL) -m 644 Prelude.pm $(DESTDIR)/$(perl_dir)
 	$(INSTALL) -d -m 755 $(DESTDIR)/$(perl_dir)/auto/Prelude
 	$(INSTALL) -m 644 Prelude.so $(DESTDIR)/$(perl_dir)/auto/Prelude
-
 endif

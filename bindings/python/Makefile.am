@@ -16,9 +16,11 @@ _prelude_so_SOURCES = _prelude.c
 _prelude_so_LDADD = @libprelude_libs@ -lprelude
 noinst_PROGRAMS = _prelude.so
 
+endif
+
 install-exec-local:
+if HAVE_PYTHON
 	$(INSTALL) -d -m 755 $(DESTDIR)/$(python_dir)
 	$(INSTALL) -m 644 prelude.py $(DESTDIR)/$(python_dir)
 	$(INSTALL) -m 644 _prelude.so $(DESTDIR)/$(python_dir)
-
 endif
