@@ -424,7 +424,7 @@ static int get_missing_options(const char *filename, prelude_optlist_t *rootlist
                                 
                 opt = search_option(optlist, entry, CFG_HOOK, 0);
                 if ( ! opt ) {
-                        option_err(OPT_INVAL, "%s:%d: invalid option %s in section: \"%s\".\n",
+                        option_err(OPT_INVAL, "%s:%d: invalid option \"%s\" in \"%s\" section.\n",
                                    filename, line, entry, (section) ? section : "global");
                         continue;
                 }
