@@ -14,6 +14,12 @@ prelude-io
 
 </para>
 
+<!-- ##### TYPEDEF prelude_io_t ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### FUNCTION prelude_io_new ##### -->
 <para>
 
@@ -156,6 +162,7 @@ prelude-io
 </para>
 
 @pio: 
+@Returns: 
 
 
 <!-- ##### FUNCTION prelude_io_pending ##### -->

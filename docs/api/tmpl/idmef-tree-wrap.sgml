@@ -50,6 +50,12 @@ idmef-tree-wrap
 @Returns: 
 
 
+<!-- ##### TYPEDEF idmef_additional_data_t ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### FUNCTION idmef_additional_data_new ##### -->
 <para>
 
@@ -117,16 +123,6 @@ idmef-tree-wrap
 @type: 
 
 
-<!-- ##### FUNCTION idmef_additional_data_get_type_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_additional_data_new_type ##### -->
 <para>
 
@@ -135,8 +131,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_additional_data_get_meaning ##### -->
@@ -157,16 +151,6 @@ idmef-tree-wrap
 @meaning: 
 
 
-<!-- ##### FUNCTION idmef_additional_data_get_meaning_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_additional_data_new_meaning ##### -->
 <para>
 
@@ -175,8 +159,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_additional_data_get_data ##### -->
@@ -197,16 +179,6 @@ idmef-tree-wrap
 @data: 
 
 
-<!-- ##### FUNCTION idmef_additional_data_get_data_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_additional_data_new_data ##### -->
 <para>
 
@@ -215,8 +187,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### ENUM idmef_reference_origin_t ##### -->
@@ -248,6 +218,12 @@ idmef-tree-wrap
 
 @val: 
 @Returns: 
+
+
+<!-- ##### TYPEDEF idmef_reference_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_reference_new ##### -->
@@ -317,16 +293,6 @@ idmef-tree-wrap
 @origin: 
 
 
-<!-- ##### FUNCTION idmef_reference_get_origin_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_reference_new_origin ##### -->
 <para>
 
@@ -335,8 +301,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_reference_get_name ##### -->
@@ -357,16 +321,6 @@ idmef-tree-wrap
 @name: 
 
 
-<!-- ##### FUNCTION idmef_reference_get_name_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_reference_new_name ##### -->
 <para>
 
@@ -375,8 +329,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_reference_get_url ##### -->
@@ -397,16 +349,6 @@ idmef-tree-wrap
 @url: 
 
 
-<!-- ##### FUNCTION idmef_reference_get_url_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_reference_new_url ##### -->
 <para>
 
@@ -415,8 +357,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_reference_get_meaning ##### -->
@@ -437,16 +377,6 @@ idmef-tree-wrap
 @meaning: 
 
 
-<!-- ##### FUNCTION idmef_reference_get_meaning_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_reference_new_meaning ##### -->
 <para>
 
@@ -455,8 +385,12 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
+
+
+<!-- ##### TYPEDEF idmef_classification_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_classification_new ##### -->
@@ -526,16 +460,6 @@ idmef-tree-wrap
 @ident: 
 
 
-<!-- ##### FUNCTION idmef_classification_get_ident_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_classification_new_ident ##### -->
 <para>
 
@@ -544,8 +468,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_classification_get_text ##### -->
@@ -566,16 +488,6 @@ idmef-tree-wrap
 @text: 
 
 
-<!-- ##### FUNCTION idmef_classification_get_text_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_classification_new_text ##### -->
 <para>
 
@@ -584,8 +496,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_classification_get_next_reference ##### -->
@@ -616,18 +526,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @pos: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@object: 
-
-
-<!-- ##### FUNCTION idmef_classification_get_reference_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
 @Returns: 
 
 
@@ -661,6 +559,12 @@ idmef-tree-wrap
 
 @val: 
 @Returns: 
+
+
+<!-- ##### TYPEDEF idmef_user_id_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_user_id_new ##### -->
@@ -730,16 +634,6 @@ idmef-tree-wrap
 @ident: 
 
 
-<!-- ##### FUNCTION idmef_user_id_get_ident_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_user_id_new_ident ##### -->
 <para>
 
@@ -748,8 +642,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_user_id_get_type ##### -->
@@ -770,16 +662,6 @@ idmef-tree-wrap
 @type: 
 
 
-<!-- ##### FUNCTION idmef_user_id_get_type_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_user_id_new_type ##### -->
 <para>
 
@@ -788,8 +670,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_user_id_get_tty ##### -->
@@ -808,16 +688,6 @@ idmef-tree-wrap
 
 @ptr: 
 @tty: 
-
-
-<!-- ##### FUNCTION idmef_user_id_get_tty_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_user_id_new_tty ##### -->
@@ -848,16 +718,6 @@ idmef-tree-wrap
 @name: 
 
 
-<!-- ##### FUNCTION idmef_user_id_get_name_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_user_id_new_name ##### -->
 <para>
 
@@ -866,8 +726,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_user_id_unset_number ##### -->
@@ -896,16 +754,6 @@ idmef-tree-wrap
 @number: 
 
 
-<!-- ##### FUNCTION idmef_user_id_get_number_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_user_id_new_number ##### -->
 <para>
 
@@ -914,8 +762,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### ENUM idmef_user_category_t ##### -->
@@ -944,6 +790,12 @@ idmef-tree-wrap
 
 @val: 
 @Returns: 
+
+
+<!-- ##### TYPEDEF idmef_user_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_user_new ##### -->
@@ -1013,16 +865,6 @@ idmef-tree-wrap
 @ident: 
 
 
-<!-- ##### FUNCTION idmef_user_get_ident_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_user_new_ident ##### -->
 <para>
 
@@ -1031,8 +873,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_user_get_category ##### -->
@@ -1053,16 +893,6 @@ idmef-tree-wrap
 @category: 
 
 
-<!-- ##### FUNCTION idmef_user_get_category_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_user_new_category ##### -->
 <para>
 
@@ -1071,8 +901,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_user_get_next_user_id ##### -->
@@ -1103,18 +931,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @pos: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@object: 
-
-
-<!-- ##### FUNCTION idmef_user_get_user_id_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
 @Returns: 
 
 
@@ -1156,6 +972,12 @@ idmef-tree-wrap
 
 @val: 
 @Returns: 
+
+
+<!-- ##### TYPEDEF idmef_address_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_address_new ##### -->
@@ -1225,16 +1047,6 @@ idmef-tree-wrap
 @ident: 
 
 
-<!-- ##### FUNCTION idmef_address_get_ident_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_address_new_ident ##### -->
 <para>
 
@@ -1243,8 +1055,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_address_get_category ##### -->
@@ -1265,16 +1075,6 @@ idmef-tree-wrap
 @category: 
 
 
-<!-- ##### FUNCTION idmef_address_get_category_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_address_new_category ##### -->
 <para>
 
@@ -1283,8 +1083,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_address_get_vlan_name ##### -->
@@ -1305,16 +1103,6 @@ idmef-tree-wrap
 @vlan_name: 
 
 
-<!-- ##### FUNCTION idmef_address_get_vlan_name_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_address_new_vlan_name ##### -->
 <para>
 
@@ -1323,8 +1111,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_address_unset_vlan_num ##### -->
@@ -1353,16 +1139,6 @@ idmef-tree-wrap
 @vlan_num: 
 
 
-<!-- ##### FUNCTION idmef_address_get_vlan_num_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_address_new_vlan_num ##### -->
 <para>
 
@@ -1371,8 +1147,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_address_get_address ##### -->
@@ -1393,16 +1167,6 @@ idmef-tree-wrap
 @address: 
 
 
-<!-- ##### FUNCTION idmef_address_get_address_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_address_new_address ##### -->
 <para>
 
@@ -1411,8 +1175,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_address_get_netmask ##### -->
@@ -1433,16 +1195,6 @@ idmef-tree-wrap
 @netmask: 
 
 
-<!-- ##### FUNCTION idmef_address_get_netmask_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_address_new_netmask ##### -->
 <para>
 
@@ -1451,8 +1203,12 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
+
+
+<!-- ##### TYPEDEF idmef_process_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_process_new ##### -->
@@ -1522,16 +1278,6 @@ idmef-tree-wrap
 @ident: 
 
 
-<!-- ##### FUNCTION idmef_process_get_ident_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_process_new_ident ##### -->
 <para>
 
@@ -1540,8 +1286,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_process_get_name ##### -->
@@ -1562,16 +1306,6 @@ idmef-tree-wrap
 @name: 
 
 
-<!-- ##### FUNCTION idmef_process_get_name_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_process_new_name ##### -->
 <para>
 
@@ -1580,8 +1314,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_process_unset_pid ##### -->
@@ -1610,16 +1342,6 @@ idmef-tree-wrap
 @pid: 
 
 
-<!-- ##### FUNCTION idmef_process_get_pid_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_process_new_pid ##### -->
 <para>
 
@@ -1628,8 +1350,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_process_get_path ##### -->
@@ -1650,16 +1370,6 @@ idmef-tree-wrap
 @path: 
 
 
-<!-- ##### FUNCTION idmef_process_get_path_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_process_new_path ##### -->
 <para>
 
@@ -1668,8 +1378,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_process_get_next_arg ##### -->
@@ -1700,18 +1408,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @pos: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@object: 
-
-
-<!-- ##### FUNCTION idmef_process_get_arg_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
 @Returns: 
 
 
@@ -1744,18 +1440,12 @@ idmef-tree-wrap
 @ret: 
 @pos: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
-<!-- ##### FUNCTION idmef_process_get_env_value ##### -->
+<!-- ##### TYPEDEF idmef_web_service_t ##### -->
 <para>
 
 </para>
-
-@ptr: 
-@value: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_web_service_new ##### -->
@@ -1825,16 +1515,6 @@ idmef-tree-wrap
 @url: 
 
 
-<!-- ##### FUNCTION idmef_web_service_get_url_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_web_service_new_url ##### -->
 <para>
 
@@ -1843,8 +1523,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_web_service_get_cgi ##### -->
@@ -1865,16 +1543,6 @@ idmef-tree-wrap
 @cgi: 
 
 
-<!-- ##### FUNCTION idmef_web_service_get_cgi_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_web_service_new_cgi ##### -->
 <para>
 
@@ -1883,8 +1551,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_web_service_get_http_method ##### -->
@@ -1905,16 +1571,6 @@ idmef-tree-wrap
 @http_method: 
 
 
-<!-- ##### FUNCTION idmef_web_service_get_http_method_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_web_service_new_http_method ##### -->
 <para>
 
@@ -1923,8 +1579,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_web_service_get_next_arg ##### -->
@@ -1956,18 +1610,12 @@ idmef-tree-wrap
 @ret: 
 @pos: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
-<!-- ##### FUNCTION idmef_web_service_get_arg_value ##### -->
+<!-- ##### TYPEDEF idmef_snmp_service_t ##### -->
 <para>
 
 </para>
-
-@ptr: 
-@value: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_snmp_service_new ##### -->
@@ -2037,16 +1685,6 @@ idmef-tree-wrap
 @oid: 
 
 
-<!-- ##### FUNCTION idmef_snmp_service_get_oid_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_snmp_service_new_oid ##### -->
 <para>
 
@@ -2055,8 +1693,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_snmp_service_get_community ##### -->
@@ -2077,16 +1713,6 @@ idmef-tree-wrap
 @community: 
 
 
-<!-- ##### FUNCTION idmef_snmp_service_get_community_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_snmp_service_new_community ##### -->
 <para>
 
@@ -2095,8 +1721,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_snmp_service_get_security_name ##### -->
@@ -2117,16 +1741,6 @@ idmef-tree-wrap
 @security_name: 
 
 
-<!-- ##### FUNCTION idmef_snmp_service_get_security_name_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_snmp_service_new_security_name ##### -->
 <para>
 
@@ -2135,8 +1749,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_snmp_service_get_context_name ##### -->
@@ -2157,16 +1769,6 @@ idmef-tree-wrap
 @context_name: 
 
 
-<!-- ##### FUNCTION idmef_snmp_service_get_context_name_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_snmp_service_new_context_name ##### -->
 <para>
 
@@ -2175,8 +1777,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_snmp_service_get_context_engine_id ##### -->
@@ -2197,16 +1797,6 @@ idmef-tree-wrap
 @context_engine_id: 
 
 
-<!-- ##### FUNCTION idmef_snmp_service_get_context_engine_id_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_snmp_service_new_context_engine_id ##### -->
 <para>
 
@@ -2215,8 +1805,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_snmp_service_get_command ##### -->
@@ -2237,16 +1825,6 @@ idmef-tree-wrap
 @command: 
 
 
-<!-- ##### FUNCTION idmef_snmp_service_get_command_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_snmp_service_new_command ##### -->
 <para>
 
@@ -2255,8 +1833,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### ENUM idmef_service_type_t ##### -->
@@ -2285,6 +1861,12 @@ idmef-tree-wrap
 
 @val: 
 @Returns: 
+
+
+<!-- ##### TYPEDEF idmef_service_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_service_new ##### -->
@@ -2354,16 +1936,6 @@ idmef-tree-wrap
 @ident: 
 
 
-<!-- ##### FUNCTION idmef_service_get_ident_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_service_new_ident ##### -->
 <para>
 
@@ -2372,8 +1944,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_service_unset_ip_version ##### -->
@@ -2402,16 +1972,6 @@ idmef-tree-wrap
 @ip_version: 
 
 
-<!-- ##### FUNCTION idmef_service_get_ip_version_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_service_new_ip_version ##### -->
 <para>
 
@@ -2420,8 +1980,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_service_unset_iana_protocol_number ##### -->
@@ -2450,16 +2008,6 @@ idmef-tree-wrap
 @iana_protocol_number: 
 
 
-<!-- ##### FUNCTION idmef_service_get_iana_protocol_number_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_service_new_iana_protocol_number ##### -->
 <para>
 
@@ -2468,8 +2016,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_service_get_iana_protocol_name ##### -->
@@ -2490,16 +2036,6 @@ idmef-tree-wrap
 @iana_protocol_name: 
 
 
-<!-- ##### FUNCTION idmef_service_get_iana_protocol_name_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_service_new_iana_protocol_name ##### -->
 <para>
 
@@ -2508,8 +2044,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_service_get_name ##### -->
@@ -2530,16 +2064,6 @@ idmef-tree-wrap
 @name: 
 
 
-<!-- ##### FUNCTION idmef_service_get_name_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_service_new_name ##### -->
 <para>
 
@@ -2548,8 +2072,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_service_unset_port ##### -->
@@ -2578,16 +2100,6 @@ idmef-tree-wrap
 @port: 
 
 
-<!-- ##### FUNCTION idmef_service_get_port_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_service_new_port ##### -->
 <para>
 
@@ -2596,8 +2108,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_service_get_portlist ##### -->
@@ -2618,16 +2128,6 @@ idmef-tree-wrap
 @portlist: 
 
 
-<!-- ##### FUNCTION idmef_service_get_portlist_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_service_new_portlist ##### -->
 <para>
 
@@ -2636,8 +2136,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_service_get_protocol ##### -->
@@ -2658,16 +2156,6 @@ idmef-tree-wrap
 @protocol: 
 
 
-<!-- ##### FUNCTION idmef_service_get_protocol_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_service_new_protocol ##### -->
 <para>
 
@@ -2676,8 +2164,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_service_get_type ##### -->
@@ -2686,16 +2172,6 @@ idmef-tree-wrap
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_service_get_type_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
 @Returns: 
 
 
@@ -2717,16 +2193,6 @@ idmef-tree-wrap
 @web_service: 
 
 
-<!-- ##### FUNCTION idmef_service_get_web_service_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_service_new_web_service ##### -->
 <para>
 
@@ -2735,8 +2201,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_service_get_snmp_service ##### -->
@@ -2757,16 +2221,6 @@ idmef-tree-wrap
 @snmp_service: 
 
 
-<!-- ##### FUNCTION idmef_service_get_snmp_service_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_service_new_snmp_service ##### -->
 <para>
 
@@ -2775,8 +2229,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### ENUM idmef_node_category_t ##### -->
@@ -2815,6 +2267,12 @@ idmef-tree-wrap
 
 @val: 
 @Returns: 
+
+
+<!-- ##### TYPEDEF idmef_node_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_node_new ##### -->
@@ -2884,16 +2342,6 @@ idmef-tree-wrap
 @ident: 
 
 
-<!-- ##### FUNCTION idmef_node_get_ident_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_node_new_ident ##### -->
 <para>
 
@@ -2902,8 +2350,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_node_get_category ##### -->
@@ -2924,16 +2370,6 @@ idmef-tree-wrap
 @category: 
 
 
-<!-- ##### FUNCTION idmef_node_get_category_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_node_new_category ##### -->
 <para>
 
@@ -2942,8 +2378,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_node_get_location ##### -->
@@ -2964,16 +2398,6 @@ idmef-tree-wrap
 @location: 
 
 
-<!-- ##### FUNCTION idmef_node_get_location_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_node_new_location ##### -->
 <para>
 
@@ -2982,8 +2406,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_node_get_name ##### -->
@@ -3004,16 +2426,6 @@ idmef-tree-wrap
 @name: 
 
 
-<!-- ##### FUNCTION idmef_node_get_name_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_node_new_name ##### -->
 <para>
 
@@ -3022,8 +2434,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_node_get_next_address ##### -->
@@ -3055,18 +2465,6 @@ idmef-tree-wrap
 @ret: 
 @pos: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
-
-
-<!-- ##### FUNCTION idmef_node_get_address_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
 
 
 <!-- ##### ENUM idmef_source_spoofed_t ##### -->
@@ -3095,6 +2493,12 @@ idmef-tree-wrap
 
 @val: 
 @Returns: 
+
+
+<!-- ##### TYPEDEF idmef_source_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_source_new ##### -->
@@ -3164,16 +2568,6 @@ idmef-tree-wrap
 @ident: 
 
 
-<!-- ##### FUNCTION idmef_source_get_ident_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_source_new_ident ##### -->
 <para>
 
@@ -3182,8 +2576,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_source_get_spoofed ##### -->
@@ -3204,16 +2596,6 @@ idmef-tree-wrap
 @spoofed: 
 
 
-<!-- ##### FUNCTION idmef_source_get_spoofed_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_source_new_spoofed ##### -->
 <para>
 
@@ -3222,8 +2604,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_source_get_interface ##### -->
@@ -3244,16 +2624,6 @@ idmef-tree-wrap
 @interface: 
 
 
-<!-- ##### FUNCTION idmef_source_get_interface_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_source_new_interface ##### -->
 <para>
 
@@ -3262,8 +2632,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_source_get_node ##### -->
@@ -3284,16 +2652,6 @@ idmef-tree-wrap
 @node: 
 
 
-<!-- ##### FUNCTION idmef_source_get_node_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_source_new_node ##### -->
 <para>
 
@@ -3302,8 +2660,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_source_get_user ##### -->
@@ -3324,16 +2680,6 @@ idmef-tree-wrap
 @user: 
 
 
-<!-- ##### FUNCTION idmef_source_get_user_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_source_new_user ##### -->
 <para>
 
@@ -3342,8 +2688,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_source_get_process ##### -->
@@ -3364,16 +2708,6 @@ idmef-tree-wrap
 @process: 
 
 
-<!-- ##### FUNCTION idmef_source_get_process_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_source_new_process ##### -->
 <para>
 
@@ -3382,8 +2716,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_source_get_service ##### -->
@@ -3404,16 +2736,6 @@ idmef-tree-wrap
 @service: 
 
 
-<!-- ##### FUNCTION idmef_source_get_service_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_source_new_service ##### -->
 <para>
 
@@ -3422,8 +2744,12 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
+
+
+<!-- ##### TYPEDEF idmef_file_access_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_file_access_new ##### -->
@@ -3493,16 +2819,6 @@ idmef-tree-wrap
 @user_id: 
 
 
-<!-- ##### FUNCTION idmef_file_access_get_user_id_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_file_access_new_user_id ##### -->
 <para>
 
@@ -3511,8 +2827,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_file_access_get_next_permission ##### -->
@@ -3544,18 +2858,12 @@ idmef-tree-wrap
 @ret: 
 @pos: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
-<!-- ##### FUNCTION idmef_file_access_get_permission_value ##### -->
+<!-- ##### TYPEDEF idmef_inode_t ##### -->
 <para>
 
 </para>
-
-@ptr: 
-@value: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_inode_new ##### -->
@@ -3625,16 +2933,6 @@ idmef-tree-wrap
 @change_time: 
 
 
-<!-- ##### FUNCTION idmef_inode_get_change_time_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_inode_new_change_time ##### -->
 <para>
 
@@ -3643,8 +2941,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_inode_unset_number ##### -->
@@ -3673,16 +2969,6 @@ idmef-tree-wrap
 @number: 
 
 
-<!-- ##### FUNCTION idmef_inode_get_number_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_inode_new_number ##### -->
 <para>
 
@@ -3691,8 +2977,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_inode_unset_major_device ##### -->
@@ -3721,16 +3005,6 @@ idmef-tree-wrap
 @major_device: 
 
 
-<!-- ##### FUNCTION idmef_inode_get_major_device_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_inode_new_major_device ##### -->
 <para>
 
@@ -3739,8 +3013,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_inode_unset_minor_device ##### -->
@@ -3769,16 +3041,6 @@ idmef-tree-wrap
 @minor_device: 
 
 
-<!-- ##### FUNCTION idmef_inode_get_minor_device_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_inode_new_minor_device ##### -->
 <para>
 
@@ -3787,8 +3049,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_inode_unset_c_major_device ##### -->
@@ -3817,16 +3077,6 @@ idmef-tree-wrap
 @c_major_device: 
 
 
-<!-- ##### FUNCTION idmef_inode_get_c_major_device_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_inode_new_c_major_device ##### -->
 <para>
 
@@ -3835,8 +3085,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_inode_unset_c_minor_device ##### -->
@@ -3865,16 +3113,6 @@ idmef-tree-wrap
 @c_minor_device: 
 
 
-<!-- ##### FUNCTION idmef_inode_get_c_minor_device_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_inode_new_c_minor_device ##### -->
 <para>
 
@@ -3883,8 +3121,12 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
+
+
+<!-- ##### TYPEDEF idmef_linkage_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### ENUM idmef_checksum_algorithm_t ##### -->
@@ -3920,6 +3162,12 @@ idmef-tree-wrap
 
 @val: 
 @Returns: 
+
+
+<!-- ##### TYPEDEF idmef_checksum_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_checksum_new ##### -->
@@ -3989,16 +3237,6 @@ idmef-tree-wrap
 @value: 
 
 
-<!-- ##### FUNCTION idmef_checksum_get_value_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_checksum_new_value ##### -->
 <para>
 
@@ -4007,8 +3245,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_checksum_get_key ##### -->
@@ -4029,16 +3265,6 @@ idmef-tree-wrap
 @key: 
 
 
-<!-- ##### FUNCTION idmef_checksum_get_key_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_checksum_new_key ##### -->
 <para>
 
@@ -4047,8 +3273,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_checksum_get_algorithm ##### -->
@@ -4069,16 +3293,6 @@ idmef-tree-wrap
 @algorithm: 
 
 
-<!-- ##### FUNCTION idmef_checksum_get_algorithm_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_checksum_new_algorithm ##### -->
 <para>
 
@@ -4087,8 +3301,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### ENUM idmef_file_category_t ##### -->
@@ -4151,6 +3363,12 @@ idmef-tree-wrap
 
 @val: 
 @Returns: 
+
+
+<!-- ##### TYPEDEF idmef_file_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_file_new ##### -->
@@ -4220,16 +3438,6 @@ idmef-tree-wrap
 @ident: 
 
 
-<!-- ##### FUNCTION idmef_file_get_ident_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_file_new_ident ##### -->
 <para>
 
@@ -4238,8 +3446,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_file_get_name ##### -->
@@ -4260,16 +3466,6 @@ idmef-tree-wrap
 @name: 
 
 
-<!-- ##### FUNCTION idmef_file_get_name_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_file_new_name ##### -->
 <para>
 
@@ -4278,8 +3474,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_file_get_path ##### -->
@@ -4300,16 +3494,6 @@ idmef-tree-wrap
 @path: 
 
 
-<!-- ##### FUNCTION idmef_file_get_path_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_file_new_path ##### -->
 <para>
 
@@ -4318,8 +3502,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_file_get_create_time ##### -->
@@ -4340,16 +3522,6 @@ idmef-tree-wrap
 @create_time: 
 
 
-<!-- ##### FUNCTION idmef_file_get_create_time_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_file_new_create_time ##### -->
 <para>
 
@@ -4358,8 +3530,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_file_get_modify_time ##### -->
@@ -4380,16 +3550,6 @@ idmef-tree-wrap
 @modify_time: 
 
 
-<!-- ##### FUNCTION idmef_file_get_modify_time_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_file_new_modify_time ##### -->
 <para>
 
@@ -4398,8 +3558,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_file_get_access_time ##### -->
@@ -4420,16 +3578,6 @@ idmef-tree-wrap
 @access_time: 
 
 
-<!-- ##### FUNCTION idmef_file_get_access_time_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_file_new_access_time ##### -->
 <para>
 
@@ -4438,8 +3586,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_file_unset_data_size ##### -->
@@ -4468,16 +3614,6 @@ idmef-tree-wrap
 @data_size: 
 
 
-<!-- ##### FUNCTION idmef_file_get_data_size_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_file_new_data_size ##### -->
 <para>
 
@@ -4486,8 +3622,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_file_unset_disk_size ##### -->
@@ -4516,16 +3650,6 @@ idmef-tree-wrap
 @disk_size: 
 
 
-<!-- ##### FUNCTION idmef_file_get_disk_size_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_file_new_disk_size ##### -->
 <para>
 
@@ -4534,8 +3658,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_file_get_next_file_access ##### -->
@@ -4566,18 +3688,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @pos: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@object: 
-
-
-<!-- ##### FUNCTION idmef_file_get_file_access_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
 @Returns: 
 
 
@@ -4610,18 +3720,6 @@ idmef-tree-wrap
 @ret: 
 @pos: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
-
-
-<!-- ##### FUNCTION idmef_file_get_linkage_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_file_get_inode ##### -->
@@ -4642,16 +3740,6 @@ idmef-tree-wrap
 @inode: 
 
 
-<!-- ##### FUNCTION idmef_file_get_inode_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_file_new_inode ##### -->
 <para>
 
@@ -4660,8 +3748,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_file_get_next_checksum ##### -->
@@ -4693,18 +3779,6 @@ idmef-tree-wrap
 @ret: 
 @pos: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
-
-
-<!-- ##### FUNCTION idmef_file_get_checksum_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_file_get_category ##### -->
@@ -4725,16 +3799,6 @@ idmef-tree-wrap
 @category: 
 
 
-<!-- ##### FUNCTION idmef_file_get_category_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_file_new_category ##### -->
 <para>
 
@@ -4743,8 +3807,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_file_unset_fstype ##### -->
@@ -4773,16 +3835,6 @@ idmef-tree-wrap
 @fstype: 
 
 
-<!-- ##### FUNCTION idmef_file_get_fstype_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_file_new_fstype ##### -->
 <para>
 
@@ -4791,8 +3843,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### ENUM idmef_linkage_category_t ##### -->
@@ -4893,16 +3943,6 @@ idmef-tree-wrap
 @category: 
 
 
-<!-- ##### FUNCTION idmef_linkage_get_category_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_linkage_new_category ##### -->
 <para>
 
@@ -4911,8 +3951,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_linkage_get_name ##### -->
@@ -4933,16 +3971,6 @@ idmef-tree-wrap
 @name: 
 
 
-<!-- ##### FUNCTION idmef_linkage_get_name_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_linkage_new_name ##### -->
 <para>
 
@@ -4951,8 +3979,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_linkage_get_path ##### -->
@@ -4973,16 +3999,6 @@ idmef-tree-wrap
 @path: 
 
 
-<!-- ##### FUNCTION idmef_linkage_get_path_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_linkage_new_path ##### -->
 <para>
 
@@ -4991,8 +4007,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_linkage_get_file ##### -->
@@ -5013,16 +4027,6 @@ idmef-tree-wrap
 @file: 
 
 
-<!-- ##### FUNCTION idmef_linkage_get_file_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_linkage_new_file ##### -->
 <para>
 
@@ -5031,8 +4035,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### ENUM idmef_target_decoy_t ##### -->
@@ -5061,6 +4063,12 @@ idmef-tree-wrap
 
 @val: 
 @Returns: 
+
+
+<!-- ##### TYPEDEF idmef_target_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_target_new ##### -->
@@ -5130,16 +4138,6 @@ idmef-tree-wrap
 @ident: 
 
 
-<!-- ##### FUNCTION idmef_target_get_ident_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_target_new_ident ##### -->
 <para>
 
@@ -5148,8 +4146,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_target_get_decoy ##### -->
@@ -5170,16 +4166,6 @@ idmef-tree-wrap
 @decoy: 
 
 
-<!-- ##### FUNCTION idmef_target_get_decoy_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_target_new_decoy ##### -->
 <para>
 
@@ -5188,8 +4174,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_target_get_interface ##### -->
@@ -5210,16 +4194,6 @@ idmef-tree-wrap
 @interface: 
 
 
-<!-- ##### FUNCTION idmef_target_get_interface_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_target_new_interface ##### -->
 <para>
 
@@ -5228,8 +4202,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_target_get_node ##### -->
@@ -5250,16 +4222,6 @@ idmef-tree-wrap
 @node: 
 
 
-<!-- ##### FUNCTION idmef_target_get_node_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_target_new_node ##### -->
 <para>
 
@@ -5268,8 +4230,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_target_get_user ##### -->
@@ -5290,16 +4250,6 @@ idmef-tree-wrap
 @user: 
 
 
-<!-- ##### FUNCTION idmef_target_get_user_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_target_new_user ##### -->
 <para>
 
@@ -5308,8 +4258,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_target_get_process ##### -->
@@ -5330,16 +4278,6 @@ idmef-tree-wrap
 @process: 
 
 
-<!-- ##### FUNCTION idmef_target_get_process_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_target_new_process ##### -->
 <para>
 
@@ -5348,8 +4286,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_target_get_service ##### -->
@@ -5370,16 +4306,6 @@ idmef-tree-wrap
 @service: 
 
 
-<!-- ##### FUNCTION idmef_target_get_service_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_target_new_service ##### -->
 <para>
 
@@ -5388,8 +4314,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_target_get_next_file ##### -->
@@ -5421,18 +4345,12 @@ idmef-tree-wrap
 @ret: 
 @pos: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
-<!-- ##### FUNCTION idmef_target_get_file_value ##### -->
+<!-- ##### TYPEDEF idmef_analyzer_t ##### -->
 <para>
 
 </para>
-
-@ptr: 
-@value: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_analyzer_new ##### -->
@@ -5502,16 +4420,6 @@ idmef-tree-wrap
 @analyzerid: 
 
 
-<!-- ##### FUNCTION idmef_analyzer_get_analyzerid_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_analyzer_new_analyzerid ##### -->
 <para>
 
@@ -5520,8 +4428,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_analyzer_get_name ##### -->
@@ -5542,16 +4448,6 @@ idmef-tree-wrap
 @name: 
 
 
-<!-- ##### FUNCTION idmef_analyzer_get_name_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_analyzer_new_name ##### -->
 <para>
 
@@ -5560,8 +4456,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_analyzer_get_manufacturer ##### -->
@@ -5582,16 +4476,6 @@ idmef-tree-wrap
 @manufacturer: 
 
 
-<!-- ##### FUNCTION idmef_analyzer_get_manufacturer_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_analyzer_new_manufacturer ##### -->
 <para>
 
@@ -5600,8 +4484,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_analyzer_get_model ##### -->
@@ -5622,16 +4504,6 @@ idmef-tree-wrap
 @model: 
 
 
-<!-- ##### FUNCTION idmef_analyzer_get_model_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_analyzer_new_model ##### -->
 <para>
 
@@ -5640,8 +4512,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_analyzer_get_version ##### -->
@@ -5662,16 +4532,6 @@ idmef-tree-wrap
 @version: 
 
 
-<!-- ##### FUNCTION idmef_analyzer_get_version_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_analyzer_new_version ##### -->
 <para>
 
@@ -5680,8 +4540,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_analyzer_get_class ##### -->
@@ -5702,16 +4560,6 @@ idmef-tree-wrap
 @class: 
 
 
-<!-- ##### FUNCTION idmef_analyzer_get_class_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_analyzer_new_class ##### -->
 <para>
 
@@ -5720,8 +4568,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_analyzer_get_ostype ##### -->
@@ -5742,16 +4588,6 @@ idmef-tree-wrap
 @ostype: 
 
 
-<!-- ##### FUNCTION idmef_analyzer_get_ostype_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_analyzer_new_ostype ##### -->
 <para>
 
@@ -5760,8 +4596,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_analyzer_get_osversion ##### -->
@@ -5782,16 +4616,6 @@ idmef-tree-wrap
 @osversion: 
 
 
-<!-- ##### FUNCTION idmef_analyzer_get_osversion_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_analyzer_new_osversion ##### -->
 <para>
 
@@ -5800,8 +4624,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_analyzer_get_node ##### -->
@@ -5822,16 +4644,6 @@ idmef-tree-wrap
 @node: 
 
 
-<!-- ##### FUNCTION idmef_analyzer_get_node_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_analyzer_new_node ##### -->
 <para>
 
@@ -5840,8 +4652,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_analyzer_get_process ##### -->
@@ -5862,16 +4672,6 @@ idmef-tree-wrap
 @process: 
 
 
-<!-- ##### FUNCTION idmef_analyzer_get_process_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_analyzer_new_process ##### -->
 <para>
 
@@ -5880,8 +4680,12 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
+
+
+<!-- ##### TYPEDEF idmef_alertident_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_alertident_new ##### -->
@@ -5951,16 +4755,6 @@ idmef-tree-wrap
 @alertident: 
 
 
-<!-- ##### FUNCTION idmef_alertident_get_alertident_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_alertident_new_alertident ##### -->
 <para>
 
@@ -5969,8 +4763,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_alertident_get_analyzerid ##### -->
@@ -5991,16 +4783,6 @@ idmef-tree-wrap
 @analyzerid: 
 
 
-<!-- ##### FUNCTION idmef_alertident_get_analyzerid_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_alertident_new_analyzerid ##### -->
 <para>
 
@@ -6009,8 +4791,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### ENUM idmef_impact_severity_t ##### -->
@@ -6100,6 +4880,12 @@ idmef-tree-wrap
 @Returns: 
 
 
+<!-- ##### TYPEDEF idmef_impact_t ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### FUNCTION idmef_impact_new ##### -->
 <para>
 
@@ -6175,16 +4961,6 @@ idmef-tree-wrap
 @severity: 
 
 
-<!-- ##### FUNCTION idmef_impact_get_severity_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_impact_new_severity ##### -->
 <para>
 
@@ -6193,8 +4969,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_impact_unset_completion ##### -->
@@ -6223,16 +4997,6 @@ idmef-tree-wrap
 @completion: 
 
 
-<!-- ##### FUNCTION idmef_impact_get_completion_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_impact_new_completion ##### -->
 <para>
 
@@ -6241,8 +5005,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_impact_get_type ##### -->
@@ -6263,16 +5025,6 @@ idmef-tree-wrap
 @type: 
 
 
-<!-- ##### FUNCTION idmef_impact_get_type_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_impact_new_type ##### -->
 <para>
 
@@ -6281,8 +5033,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_impact_get_description ##### -->
@@ -6303,16 +5053,6 @@ idmef-tree-wrap
 @description: 
 
 
-<!-- ##### FUNCTION idmef_impact_get_description_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_impact_new_description ##### -->
 <para>
 
@@ -6321,8 +5061,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### ENUM idmef_action_category_t ##### -->
@@ -6352,6 +5090,12 @@ idmef-tree-wrap
 
 @val: 
 @Returns: 
+
+
+<!-- ##### TYPEDEF idmef_action_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_action_new ##### -->
@@ -6421,16 +5165,6 @@ idmef-tree-wrap
 @category: 
 
 
-<!-- ##### FUNCTION idmef_action_get_category_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_action_new_category ##### -->
 <para>
 
@@ -6439,8 +5173,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_action_get_description ##### -->
@@ -6461,16 +5193,6 @@ idmef-tree-wrap
 @description: 
 
 
-<!-- ##### FUNCTION idmef_action_get_description_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_action_new_description ##### -->
 <para>
 
@@ -6479,8 +5201,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### ENUM idmef_confidence_rating_t ##### -->
@@ -6510,6 +5230,12 @@ idmef-tree-wrap
 
 @val: 
 @Returns: 
+
+
+<!-- ##### TYPEDEF idmef_confidence_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_confidence_new ##### -->
@@ -6579,16 +5305,6 @@ idmef-tree-wrap
 @rating: 
 
 
-<!-- ##### FUNCTION idmef_confidence_get_rating_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_confidence_new_rating ##### -->
 <para>
 
@@ -6597,8 +5313,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_confidence_get_confidence ##### -->
@@ -6619,16 +5333,6 @@ idmef-tree-wrap
 @confidence: 
 
 
-<!-- ##### FUNCTION idmef_confidence_get_confidence_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_confidence_new_confidence ##### -->
 <para>
 
@@ -6637,8 +5341,12 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
+
+
+<!-- ##### TYPEDEF idmef_assessment_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_assessment_new ##### -->
@@ -6708,16 +5416,6 @@ idmef-tree-wrap
 @impact: 
 
 
-<!-- ##### FUNCTION idmef_assessment_get_impact_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_assessment_new_impact ##### -->
 <para>
 
@@ -6726,8 +5424,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_assessment_get_next_action ##### -->
@@ -6759,18 +5455,6 @@ idmef-tree-wrap
 @ret: 
 @pos: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
-
-
-<!-- ##### FUNCTION idmef_assessment_get_action_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_assessment_get_confidence ##### -->
@@ -6791,16 +5475,6 @@ idmef-tree-wrap
 @confidence: 
 
 
-<!-- ##### FUNCTION idmef_assessment_get_confidence_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_assessment_new_confidence ##### -->
 <para>
 
@@ -6809,8 +5483,12 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
+
+
+<!-- ##### TYPEDEF idmef_tool_alert_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_tool_alert_new ##### -->
@@ -6880,16 +5558,6 @@ idmef-tree-wrap
 @name: 
 
 
-<!-- ##### FUNCTION idmef_tool_alert_get_name_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_tool_alert_new_name ##### -->
 <para>
 
@@ -6898,8 +5566,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_tool_alert_get_command ##### -->
@@ -6920,16 +5586,6 @@ idmef-tree-wrap
 @command: 
 
 
-<!-- ##### FUNCTION idmef_tool_alert_get_command_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_tool_alert_new_command ##### -->
 <para>
 
@@ -6938,8 +5594,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_tool_alert_get_next_alertident ##### -->
@@ -6971,18 +5625,12 @@ idmef-tree-wrap
 @ret: 
 @pos: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
-<!-- ##### FUNCTION idmef_tool_alert_get_alertident_value ##### -->
+<!-- ##### TYPEDEF idmef_correlation_alert_t ##### -->
 <para>
 
 </para>
-
-@ptr: 
-@value: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_correlation_alert_new ##### -->
@@ -7052,16 +5700,6 @@ idmef-tree-wrap
 @name: 
 
 
-<!-- ##### FUNCTION idmef_correlation_alert_get_name_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_correlation_alert_new_name ##### -->
 <para>
 
@@ -7070,8 +5708,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_correlation_alert_get_next_alertident ##### -->
@@ -7103,18 +5739,12 @@ idmef-tree-wrap
 @ret: 
 @pos: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
-<!-- ##### FUNCTION idmef_correlation_alert_get_alertident_value ##### -->
+<!-- ##### TYPEDEF idmef_overflow_alert_t ##### -->
 <para>
 
 </para>
-
-@ptr: 
-@value: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_overflow_alert_new ##### -->
@@ -7184,16 +5814,6 @@ idmef-tree-wrap
 @program: 
 
 
-<!-- ##### FUNCTION idmef_overflow_alert_get_program_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_overflow_alert_new_program ##### -->
 <para>
 
@@ -7202,8 +5822,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_overflow_alert_unset_size ##### -->
@@ -7232,16 +5850,6 @@ idmef-tree-wrap
 @size: 
 
 
-<!-- ##### FUNCTION idmef_overflow_alert_get_size_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_overflow_alert_new_size ##### -->
 <para>
 
@@ -7250,8 +5858,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_overflow_alert_get_buffer ##### -->
@@ -7272,16 +5878,6 @@ idmef-tree-wrap
 @buffer: 
 
 
-<!-- ##### FUNCTION idmef_overflow_alert_get_buffer_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_overflow_alert_new_buffer ##### -->
 <para>
 
@@ -7290,8 +5886,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### ENUM idmef_alert_type_t ##### -->
@@ -7321,6 +5915,12 @@ idmef-tree-wrap
 
 @val: 
 @Returns: 
+
+
+<!-- ##### TYPEDEF idmef_alert_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_alert_new ##### -->
@@ -7381,16 +5981,6 @@ idmef-tree-wrap
 @messageid: 
 
 
-<!-- ##### FUNCTION idmef_alert_get_messageid_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_alert_new_messageid ##### -->
 <para>
 
@@ -7399,8 +5989,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_alert_get_next_analyzer ##### -->
@@ -7421,8 +6009,6 @@ idmef-tree-wrap
 @ptr: 
 @object: 
 @pos: 
-<!-- # Unused Parameters # -->
-@analyzer: 
 
 
 <!-- ##### FUNCTION idmef_alert_new_analyzer ##### -->
@@ -7433,18 +6019,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @pos: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@object: 
-
-
-<!-- ##### FUNCTION idmef_alert_get_analyzer_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
 @Returns: 
 
 
@@ -7466,16 +6040,6 @@ idmef-tree-wrap
 @create_time: 
 
 
-<!-- ##### FUNCTION idmef_alert_get_create_time_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_alert_new_create_time ##### -->
 <para>
 
@@ -7484,8 +6048,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_alert_get_classification ##### -->
@@ -7506,16 +6068,6 @@ idmef-tree-wrap
 @classification: 
 
 
-<!-- ##### FUNCTION idmef_alert_get_classification_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_alert_new_classification ##### -->
 <para>
 
@@ -7524,8 +6076,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_alert_get_detect_time ##### -->
@@ -7546,16 +6096,6 @@ idmef-tree-wrap
 @detect_time: 
 
 
-<!-- ##### FUNCTION idmef_alert_get_detect_time_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_alert_new_detect_time ##### -->
 <para>
 
@@ -7564,8 +6104,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_alert_get_analyzer_time ##### -->
@@ -7586,16 +6124,6 @@ idmef-tree-wrap
 @analyzer_time: 
 
 
-<!-- ##### FUNCTION idmef_alert_get_analyzer_time_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_alert_new_analyzer_time ##### -->
 <para>
 
@@ -7604,8 +6132,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_alert_get_next_source ##### -->
@@ -7636,18 +6162,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @pos: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@object: 
-
-
-<!-- ##### FUNCTION idmef_alert_get_source_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
 @Returns: 
 
 
@@ -7680,18 +6194,6 @@ idmef-tree-wrap
 @ret: 
 @pos: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
-
-
-<!-- ##### FUNCTION idmef_alert_get_target_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_alert_get_assessment ##### -->
@@ -7712,16 +6214,6 @@ idmef-tree-wrap
 @assessment: 
 
 
-<!-- ##### FUNCTION idmef_alert_get_assessment_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_alert_new_assessment ##### -->
 <para>
 
@@ -7730,8 +6222,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_alert_get_next_additional_data ##### -->
@@ -7763,18 +6253,6 @@ idmef-tree-wrap
 @ret: 
 @pos: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
-
-
-<!-- ##### FUNCTION idmef_alert_get_additional_data_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_alert_get_type ##### -->
@@ -7783,16 +6261,6 @@ idmef-tree-wrap
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_alert_get_type_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
 @Returns: 
 
 
@@ -7814,16 +6282,6 @@ idmef-tree-wrap
 @tool_alert: 
 
 
-<!-- ##### FUNCTION idmef_alert_get_tool_alert_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_alert_new_tool_alert ##### -->
 <para>
 
@@ -7832,8 +6290,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_alert_get_correlation_alert ##### -->
@@ -7854,16 +6310,6 @@ idmef-tree-wrap
 @correlation_alert: 
 
 
-<!-- ##### FUNCTION idmef_alert_get_correlation_alert_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_alert_new_correlation_alert ##### -->
 <para>
 
@@ -7872,8 +6318,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_alert_get_overflow_alert ##### -->
@@ -7894,16 +6338,6 @@ idmef-tree-wrap
 @overflow_alert: 
 
 
-<!-- ##### FUNCTION idmef_alert_get_overflow_alert_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_alert_new_overflow_alert ##### -->
 <para>
 
@@ -7912,8 +6346,12 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
+
+
+<!-- ##### TYPEDEF idmef_heartbeat_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_heartbeat_new ##### -->
@@ -7974,16 +6412,6 @@ idmef-tree-wrap
 @messageid: 
 
 
-<!-- ##### FUNCTION idmef_heartbeat_get_messageid_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_heartbeat_new_messageid ##### -->
 <para>
 
@@ -7992,8 +6420,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_heartbeat_get_next_analyzer ##### -->
@@ -8014,8 +6440,6 @@ idmef-tree-wrap
 @ptr: 
 @object: 
 @pos: 
-<!-- # Unused Parameters # -->
-@analyzer: 
 
 
 <!-- ##### FUNCTION idmef_heartbeat_new_analyzer ##### -->
@@ -8026,18 +6450,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @pos: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@object: 
-
-
-<!-- ##### FUNCTION idmef_heartbeat_get_analyzer_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
 @Returns: 
 
 
@@ -8059,16 +6471,6 @@ idmef-tree-wrap
 @create_time: 
 
 
-<!-- ##### FUNCTION idmef_heartbeat_get_create_time_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_heartbeat_new_create_time ##### -->
 <para>
 
@@ -8077,8 +6479,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_heartbeat_get_analyzer_time ##### -->
@@ -8099,16 +6499,6 @@ idmef-tree-wrap
 @analyzer_time: 
 
 
-<!-- ##### FUNCTION idmef_heartbeat_get_analyzer_time_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_heartbeat_new_analyzer_time ##### -->
 <para>
 
@@ -8117,8 +6507,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_heartbeat_unset_heartbeat_interval ##### -->
@@ -8145,16 +6533,6 @@ idmef-tree-wrap
 
 @ptr: 
 @heartbeat_interval: 
-
-
-<!-- ##### FUNCTION idmef_heartbeat_get_heartbeat_interval_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
 
 
 <!-- ##### FUNCTION idmef_heartbeat_new_heartbeat_interval ##### -->
@@ -8196,18 +6574,6 @@ idmef-tree-wrap
 @ret: 
 @pos: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
-
-
-<!-- ##### FUNCTION idmef_heartbeat_get_additional_data_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
 
 
 <!-- ##### ENUM idmef_message_type_t ##### -->
@@ -8235,6 +6601,12 @@ idmef-tree-wrap
 
 @val: 
 @Returns: 
+
+
+<!-- ##### TYPEDEF idmef_message_t ##### -->
+<para>
+
+</para>
 
 
 <!-- ##### FUNCTION idmef_message_new ##### -->
@@ -8304,16 +6676,6 @@ idmef-tree-wrap
 @version: 
 
 
-<!-- ##### FUNCTION idmef_message_get_version_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_message_new_version ##### -->
 <para>
 
@@ -8322,8 +6684,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_message_get_type ##### -->
@@ -8332,16 +6692,6 @@ idmef-tree-wrap
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_message_get_type_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
 @Returns: 
 
 
@@ -8363,16 +6713,6 @@ idmef-tree-wrap
 @alert: 
 
 
-<!-- ##### FUNCTION idmef_message_get_alert_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_message_new_alert ##### -->
 <para>
 
@@ -8381,8 +6721,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_message_get_heartbeat ##### -->
@@ -8403,16 +6741,6 @@ idmef-tree-wrap
 @heartbeat: 
 
 
-<!-- ##### FUNCTION idmef_message_get_heartbeat_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@value: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_message_new_heartbeat ##### -->
 <para>
 
@@ -8421,8 +6749,6 @@ idmef-tree-wrap
 @ptr: 
 @ret: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_message_set_pmsg ##### -->

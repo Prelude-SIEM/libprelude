@@ -14,6 +14,41 @@ idmef-criteria
 
 </para>
 
+<!-- ##### ENUM idmef_criterion_operator_t ##### -->
+<para>
+
+</para>
+
+@IDMEF_CRITERION_OPERATOR_EQUAL: 
+@IDMEF_CRITERION_OPERATOR_NOT_EQUAL: 
+@IDMEF_CRITERION_OPERATOR_LESSER: 
+@IDMEF_CRITERION_OPERATOR_GREATER: 
+@IDMEF_CRITERION_OPERATOR_SUBSTR: 
+@IDMEF_CRITERION_OPERATOR_REGEX: 
+@IDMEF_CRITERION_OPERATOR_IS_NULL: 
+@IDMEF_CRITERION_OPERATOR_IS_NOT_NULL: 
+
+<!-- ##### TYPEDEF idmef_criteria_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF idmef_criterion_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION idmef_criterion_operator_to_string ##### -->
+<para>
+
+</para>
+
+@operator: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_criterion_new ##### -->
 <para>
 
@@ -22,7 +57,7 @@ idmef-criteria
 @criterion: 
 @path: 
 @value: 
-@relation: 
+@operator: 
 @Returns: 
 
 
@@ -82,7 +117,7 @@ idmef-criteria
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_criterion_get_relation ##### -->
+<!-- ##### FUNCTION idmef_criterion_get_operator ##### -->
 <para>
 
 </para>

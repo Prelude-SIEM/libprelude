@@ -14,6 +14,12 @@ idmef-value
 
 </para>
 
+<!-- ##### TYPEDEF idmef_value_t ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### FUNCTION idmef_value_new_int8 ##### -->
 <para>
 
@@ -173,8 +179,6 @@ idmef-value
 @classid: 
 @buf: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@type: 
 
 
 <!-- ##### FUNCTION idmef_value_new_enum_from_string ##### -->
@@ -186,8 +190,6 @@ idmef-value
 @classid: 
 @buf: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@type: 
 
 
 <!-- ##### FUNCTION idmef_value_new_enum_from_numeric ##### -->
@@ -199,8 +201,6 @@ idmef-value
 @classid: 
 @val: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@type: 
 
 
 <!-- ##### FUNCTION idmef_value_new ##### -->
@@ -432,6 +432,7 @@ idmef-value
 </para>
 
 @value: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_value_iterate ##### -->
@@ -483,6 +484,16 @@ idmef-value
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_value_print ##### -->
+<para>
+
+</para>
+
+@val: 
+@fd: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_value_to_string ##### -->
 <para>
 
@@ -510,26 +521,17 @@ idmef-value
 
 @val1: 
 @val2: 
-@relation: 
+@operator: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_value_check_relation ##### -->
+<!-- ##### FUNCTION idmef_value_check_operator ##### -->
 <para>
 
 </para>
 
 @value: 
-@relation: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_value_relation_to_string ##### -->
-<para>
-
-</para>
-
-@relation: 
+@operator: 
 @Returns: 
 
 

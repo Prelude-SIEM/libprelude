@@ -14,6 +14,22 @@ idmef-time
 
 </para>
 
+<!-- ##### STRUCT idmef_time ##### -->
+<para>
+
+</para>
+
+@refcount: 
+@sec: 
+@usec: 
+@gmt_offset: 
+
+<!-- ##### TYPEDEF idmef_time_t ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### FUNCTION idmef_time_ref ##### -->
 <para>
 

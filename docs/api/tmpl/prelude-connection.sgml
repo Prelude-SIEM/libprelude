@@ -31,14 +31,18 @@ prelude-connection
 
 @PRELUDE_CONNECTION_STATE_ESTABLISHED: 
 
+<!-- ##### TYPEDEF prelude_connection_t ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### FUNCTION prelude_connection_destroy ##### -->
 <para>
 
 </para>
 
 @conn: 
-<!-- # Unused Parameters # -->
-@cnx: 
 
 
 <!-- ##### FUNCTION prelude_connection_send ##### -->
@@ -59,8 +63,6 @@ prelude-connection
 @cnx: 
 @outmsg: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@msg: 
 
 
 <!-- ##### FUNCTION prelude_connection_connect ##### -->
@@ -199,6 +201,7 @@ prelude-connection
 </para>
 
 @cnx: 
+@Returns: 
 
 
 <!-- ##### FUNCTION prelude_connection_get_default_socket_filename ##### -->
@@ -235,8 +238,6 @@ prelude-connection
 @ret: 
 @addr: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@port: 
 
 
 <!-- ##### FUNCTION prelude_connection_new_msgbuf ##### -->

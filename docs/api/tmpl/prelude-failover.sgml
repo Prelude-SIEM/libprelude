@@ -14,6 +14,12 @@ prelude-failover
 
 </para>
 
+<!-- ##### TYPEDEF prelude_failover_t ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### FUNCTION prelude_failover_destroy ##### -->
 <para>
 

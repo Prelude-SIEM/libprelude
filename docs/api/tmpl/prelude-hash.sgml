@@ -14,6 +14,12 @@ prelude-hash
 
 </para>
 
+<!-- ##### TYPEDEF prelude_hash_t ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### FUNCTION prelude_hash_new ##### -->
 <para>
 
@@ -53,6 +59,7 @@ prelude-hash
 
 @hash: 
 @key: 
+@Returns: 
 
 
 <!-- ##### FUNCTION prelude_hash_elem_destroy ##### -->

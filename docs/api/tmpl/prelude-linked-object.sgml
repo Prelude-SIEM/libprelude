@@ -26,7 +26,6 @@ prelude-linked-object
 
 </para>
 
-@T: 
 
 <!-- ##### MACRO prelude_linked_object_get_object ##### -->
 <para>
@@ -34,8 +33,5 @@ prelude-linked-object
 </para>
 
 @object: 
-<!-- # Unused Parameters # -->
-@listentry: 
-@type: 
 
 

@@ -30,6 +30,7 @@ prelude-inet
 </para>
 
 @sa: 
+@Returns: 
 
 
 <!-- ##### FUNCTION prelude_inet_ntop ##### -->

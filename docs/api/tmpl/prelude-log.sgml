@@ -21,13 +21,6 @@ prelude-log
 
 @level: 
 @...: 
-<!-- # Unused Parameters # -->
-@priority: 
-@file: 
-@function: 
-@line: 
-@fmt: 
-@Varargs: 
 
 
 <!-- ##### MACRO prelude_log_debug ##### -->
@@ -116,7 +109,5 @@ prelude-log
 @line: 
 @fmt: 
 @ap: 
-<!-- # Unused Parameters # -->
-@priority: 
 
 

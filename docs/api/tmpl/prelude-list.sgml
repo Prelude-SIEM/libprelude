@@ -14,6 +14,14 @@ prelude-list
 
 </para>
 
+<!-- ##### STRUCT prelude_list_t ##### -->
+<para>
+
+</para>
+
+@next: 
+@prev: 
+
 <!-- ##### MACRO PRELUDE_LIST ##### -->
 <para>
 

@@ -31,6 +31,12 @@ prelude-client
 @PRELUDE_CLIENT_FLAGS_ASYNC_TIMER: 
 @PRELUDE_CLIENT_FLAGS_HEARTBEAT: 
 
+<!-- ##### TYPEDEF prelude_client_t ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### FUNCTION prelude_client_get_unique_ident ##### -->
 <para>
 
@@ -47,8 +53,6 @@ prelude-client
 
 @client: 
 @pool: 
-<!-- # Unused Parameters # -->
-@mgrlist: 
 
 
 <!-- ##### FUNCTION prelude_client_get_manager_list ##### -->
@@ -178,8 +182,6 @@ prelude-client
 
 @error: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@client: 
 
 
 <!-- ##### FUNCTION prelude_client_get_profile ##### -->

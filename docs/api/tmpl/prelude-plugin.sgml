@@ -14,6 +14,12 @@ prelude-plugin
 
 </para>
 
+<!-- ##### TYPEDEF prelude_plugin_instance_t ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### MACRO PRELUDE_PLUGIN_SET_PRELOADED_SYMBOLS ##### -->
 <para>
 
@@ -43,7 +49,6 @@ prelude-plugin
 
 </para>
 
-@C: 
 
 <!-- ##### MACRO prelude_plugin_name ##### -->
 <para>
@@ -229,6 +234,7 @@ prelude-plugin
 </para>
 
 @pi: 
+@Returns: 
 
 
 <!-- ##### FUNCTION prelude_plugin_instance_set_private_data ##### -->
@@ -246,6 +252,7 @@ prelude-plugin
 </para>
 
 @pi: 
+@Returns: 
 
 
 <!-- ##### FUNCTION prelude_plugin_instance_get_name ##### -->
@@ -277,8 +284,6 @@ prelude-plugin
 @subscribe: 
 @unsubscribe: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@data: 
 
 
 <!-- ##### FUNCTION prelude_plugin_add ##### -->
