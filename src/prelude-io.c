@@ -30,12 +30,17 @@
 #include <inttypes.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <termios.h>
 
 #include "config.h"
 
 #ifdef HAVE_SSL
  #include <openssl/ssl.h>
  #include <openssl/err.h>
+#endif
+
+#ifndef TIOCINQ
+ #define TIOCINQ FIONREAD
 #endif
 
 #include "prelude-log.h"
@@ -100,8 +105,8 @@ static ssize_t sys_pending(prelude_io_t *pio)
 {
         ssize_t ret;
         
-        if ( ioctl(pio->fd, FIONREAD, &ret) < 0 ) {
-                log(LOG_ERR, "ioctl FIONREAD failed on tcp socket.\n");
+        if ( ioctl(pio->fd, TIOCINQ, &ret) < 0 ) {
+                log(LOG_ERR, "ioctl TIOCINQ failed on tcp socket.\n");
                 return -1;
         }
 
