@@ -390,6 +390,16 @@ static int set_node_address(void *context, prelude_option_t *opt, const char *ar
 }
 
 
+static int destroy_node_address(void *context, prelude_option_t *opt)
+{
+        idmef_address_t *addr = context;
+        
+        idmef_address_destroy(addr);
+        
+        return 0;
+}
+
+
 
 static int set_node_category(void *context, prelude_option_t *opt, const char *arg) 
 {
@@ -622,6 +632,7 @@ static int setup_options(prelude_client_t *client, int argc, char **argv)
         opt = prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK|HAVE_CONTEXT, 0, "node-address",
                                  "Network or hardware address of the equipment", required_argument, 
                                  set_node_address, NULL);
+        prelude_option_set_destroy_callback(opt, destroy_node_address);
         
         prelude_option_add(opt, CFG_HOOK|WIDE_HOOK, 0, "address",
                            "Address information", required_argument, 
