@@ -236,7 +236,8 @@ static int save_buf(const char *filename, uid_t uid, gid_t gid, char *buf, size_
 
         ret = fchown(fd, uid, gid);
         if ( ret < 0 ) {
-                fprintf(stderr, "couldn't set %s owner to UID %d: %s.\n", filename, uid, strerror(errno));
+                fprintf(stderr, "couldn't set %s owner to UID %d GID %d: %s.\n",
+                        filename, (int) uid, (int) gid, strerror(errno));
                 safe_close(fd);
                 return -1;
         }
