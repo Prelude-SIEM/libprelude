@@ -1,3 +1,7 @@
+2001-09-01  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/alert-read.c: New communication layer.
+
 2001-08-28  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/include/alert.h: 

@@ -10,10 +10,9 @@ include_HEADERS = config-engine.h 		\
 		  auth-common.h			\
 		  daemonize.h			\
 		  common.h 			\
-		  alert.h			\
 		  string-matching.h		\
 		  timer.h			\
-		  alert-common.h		\
+		  alert-read.h			\
 		  auth-common.h			\
 		  list.h			\
 		  variable.h
