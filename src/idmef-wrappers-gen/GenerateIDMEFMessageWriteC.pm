@@ -32,7 +32,7 @@ sub	header
      $self->output("
 /*****
 *
-* Copyright (C) 2001-2004 Yoann Vandoorselaere <yoann\@prelude-ids.org>
+* Copyright (C) 2001-2005 Yoann Vandoorselaere <yoann\@prelude-ids.org>
 * Copyright (C) 2003,2004 Nicolas Delon <nicolas\@prelude-ids.org>
 * All Rights Reserved
 *
