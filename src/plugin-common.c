@@ -450,7 +450,7 @@ plugin_generic_t *plugin_search_by_name(const char *name)
         list_for_each(tmp, &all_plugin) {
                 pe = list_entry(tmp, plugin_entry_t, list);
 
-                if ( strcmp(pe->plugin->name, name) == 0 )
+                if ( strcasecmp(pe->plugin->name, name) == 0 )
                         return pe->plugin;
         }
 
