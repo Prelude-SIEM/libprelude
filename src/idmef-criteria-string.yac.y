@@ -1,8 +1,8 @@
 /*****
 *
-* Copyright (C) 2003 Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
-* Copyright (C) 2003 Nicolas Delon <delon.nicolas@wanadoo.fr>
-* All Rights Reserved
+* Copyright (C) 2003, 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
+* Author: Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
+* Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 *
 * This file is part of the Prelude program.
 *

@@ -1,254 +1,250 @@
-/* 
- * This file is originally (C) Linus Torvalds.
- * It was modified by Prelude developers.
+/*****
+*
+* Copyright (C) 2005 PreludeIDS Technologies. All Rights Reserved.
+* Author: Yoann Vandoorselaere <yoann@prelude-ids.com>
+*
+* This file is part of the Prelude program.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2, or (at your option)
+* any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; see the file COPYING.  If not, write to
+* the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+*
+*****/
+
+/*
+ * This is a blind rewrite of the kernel linked list handling code,
+ * done so that we can dual-license libprelude. The code still look
+ * pretty similar, but there is no way to write such list implementation
+ * in many different manner.
  */
 
-#ifndef _LIBPRELUDE_LIST_H
-#define _LIBPRELUDE_LIST_H
+#ifndef HAVE_LIBPRELUDE_PRELUDE_LIST_H
+#define HAVE_LIBPRELUDE_PRELUDE_LIST_H
 
 #include "prelude-inttypes.h"
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
 
-/*
- * Simple doubly linked list implementation.
- *
- * Some of the internal functions ("__xxx") are useful when
- * manipulating whole lists rather than single entries, as
- * sometimes we already know the next/prev entries and we can
- * generate better code by using them directly rather than
- * using the generic single-entry routines.
- */
+#define PRELUDE_LIST(item) prelude_list_t (item) = { &(item), &(item) }
+
 
 typedef struct prelude_list {
-	struct prelude_list *next, *prev;
+        struct prelude_list *next;
+        struct prelude_list *prev;
 } prelude_list_t;
 
 
-#define PRELUDE_LIST(name) \
-	prelude_list_t name = { &(name), &(name) }
 
-
-
-static inline void prelude_list_init(prelude_list_t *ptr) 
+static inline void __prelude_list_add(prelude_list_t *item, prelude_list_t *prev, prelude_list_t *next)
 {
-        ptr->next = ptr;
-        ptr->prev = ptr;
+        prev->next = item;
+        item->prev = prev;
+        item->next = next;
+        next->prev = item;
+}
+
+
+/**
+ * prelude_list_init:
+ * @item: Pointer to a #prelude_list_t object.
+ *
+ * Initialize @item. Note that this is only required if @item
+ * is the head of a list, but might also be useful in case you
+ * want to use prelude_list_del_init().
+ */
+static inline void prelude_list_init(prelude_list_t *item)
+{
+        item->next = item->prev = item;
 }
 
 
 
-/*
- * Insert a new entry between two known consecutive entries. 
+/**
+ * prelude_list_is_empty:
+ * @item: Pointer to a #prelude_list_t object.
  *
- * This is only for internal list manipulation where we know
- * the prev/next entries already!
+ * Check whether @item is empty or not.
+ *
+ * Returns: TRUE if @item is empty, FALSE otherwise.
  */
-static inline void __prelude_list_add(prelude_list_t *new, prelude_list_t *prev, prelude_list_t *next)
+static inline prelude_bool_t prelude_list_is_empty(prelude_list_t *item)
 {
-	next->prev = new;
-	new->next = next;
-	new->prev = prev;
-	prev->next = new;
+        return (item->next == item) ? TRUE : FALSE;
 }
 
 
 
 /**
  * prelude_list_add:
- * @new: new entry to be added
- * @head: list head to add it after
+ * @head: Pointer to a #prelude_list_t list.
+ * @item: Pointer to a #prelude_list_t object to add to @head.
  *
- * Insert a new entry after the specified head.
- * This is good for implementing stacks.
+ * Add @item at the beginning of @head list.
  */
-static inline void prelude_list_add(prelude_list_t *head, prelude_list_t *new)
+static inline void prelude_list_add(prelude_list_t *head, prelude_list_t *item)
 {
-	__prelude_list_add(new, head, head->next);
+        __prelude_list_add(item, head, head->next);
 }
 
 
 
 /**
  * prelude_list_add_tail:
- * @new: new entry to be added
- * @head: list head to add it before
+ * @head: Pointer to a #prelude_list_t list.
+ * @item: Pointer to a #prelude_list_t object to add to @head.
  *
- * Insert a new entry before the specified head.
- * This is useful for implementing queues.
+ * Add @item at the tail of @head list.
  */
-static inline void prelude_list_add_tail(prelude_list_t *head, prelude_list_t *new)
+static inline void prelude_list_add_tail(prelude_list_t *head, prelude_list_t *item)
 {
-	__prelude_list_add(new, head->prev, head);
-}
-
-
-
-/*
- * Delete a list entry by making the prev/next entries
- * point to each other.
- *
- * This is only for internal list manipulation where we know
- * the prev/next entries already!
- */
-static inline void __prelude_list_del(prelude_list_t *prev, prelude_list_t *next)
-{
-	next->prev = prev;
-	prev->next = next;
+        __prelude_list_add(item, head->prev, head);
 }
 
 
 
 /**
  * prelude_list_del:
- * @entry: the element to delete from the list.
+ * @item: Pointer to a #prelude_list_t object.
  *
- * Deletes entry from list.
- * 
- * Note: prelude_list_empty on entry does not return true after this,
- *       the entry is in an undefined state.
+ * Delete @item from the list it is linked in.
  */
-static inline void prelude_list_del(prelude_list_t *entry)
+static inline void prelude_list_del(prelude_list_t *item)
 {
-	__prelude_list_del(entry->prev, entry->next);
+        item->prev->next = item->next;
+        item->next->prev = item->prev;
 }
 
 
 
 /**
  * prelude_list_del_init:
- * @entry: the element to delete from the list.
+ * @item: Pointer to a #prelude_list_t object.
  *
- * Deletes entry from the list and reinitialize it.
+ * Delete @item from the list it is linked in, and reinitialize
+ * @item member so that the list can be considered as empty.
  */
-static inline void prelude_list_del_init(prelude_list_t *entry)
+static inline void prelude_list_del_init(prelude_list_t *item)
 {
-	__prelude_list_del(entry->prev, entry->next);
-	prelude_list_init(entry); 
+        item->prev->next = item->next;
+        item->next->prev = item->prev;
+        prelude_list_init(item);
 }
-
-
-
-/**
- * prelude_list_empty:
- * @head: the list to test.
- *
- * Tests whether a list is empty.
- *
- * Returns: TRUE if the list is empty, FALSE otherwise.
- */
-static inline prelude_bool_t prelude_list_is_empty(const prelude_list_t *head)
-{
-	return head->next == head;
-}
-
-
-
-
-/**
- * prelude_list_splice:
- * @list: the new list to add.
- * @head: the place to add it in the first list.
- *
- * Join two lists.
- */
-static inline void prelude_list_splice(prelude_list_t *head, prelude_list_t *list)
-{
-	prelude_list_t *first = list->next;
-
-	if ( first != list ) {
-		prelude_list_t *last = list->prev;
-		prelude_list_t *at = head->next;
-
-		first->prev = head;
-		head->next = first;
-
-		last->next = at;
-		at->prev = last;
-	}
-}
-
 
 
 /**
  * prelude_list_entry:
- * @ptr: Pointer to a #prelude_list_t entry.
- * @type: Type of the object @ptr is embedded in.
- * @member: Member name of the list object within @type.
+ * @item: Pointer to a #prelude_list_t object to retrieve the entry from.
+ * @type: Type of the entry to retrieve.
+ * @member: List member in @type used to link it to a list.
  *
- * Get the object associated with @ptr.
- * Return the object associated with @ptr.
+ * Retrieve the entry of type @type from the #prelude_list_t object @tmp,
+ * using the item list member @member.
+ *
+ * Returns: The entry associated with @item.
  */
-#define prelude_list_entry(ptr, type, member) \
-	((type *)((unsigned long)(ptr) - (unsigned long)(&((type *)0)->member)))
-
-
-#define prelude_list_for_each_continue_safe(head, pos, bkp)     \
-        for ( (pos) = (((bkp) == NULL) ? (head)->next : (bkp)); \
-              ((bkp) = (pos)->next), (pos) != (head);           \
-              (pos) = (bkp))
-
-
-
-#define prelude_list_for_each_continue(head, pos)                     \
-        for ( (pos) = (((pos) == NULL) ? (head)->next : (pos)->next); \
-              (pos) != (head);                                        \
-              (pos) = (pos)->next)
+#define prelude_list_entry(item, type, member)                             \
+        (type *) ((unsigned long) item - (unsigned long) &((type *) 0)->member)
 
 
 
 /**
  * prelude_list_for_each:
- * @pos: Pointer to a #prelude_list_t to use as the iterator.
- * @head: Pointer to the head of your list.
+ * @list: Pointer to a #prelude_list_t list.
+ * @pos: Pointer to a #prelude_list_t object pointing to the current list member.
  *
- * Iterate over a @headn from head to tail.
- * It is not safe to delete an entry from the loop.
+ * Iterate through all @list entry. prelude_list_entry() can be used to retrieve
+ * and entry from the @pos pointer. It is not safe to call prelude_list_del() while
+ * iterating using this function, see prelude_list_for_each_safe().
  */
-#define prelude_list_for_each(head, pos) \
-	for (pos = (head)->next; pos != (head); pos = pos->next)
-
-
+#define prelude_list_for_each(list, pos)                                   \
+        for ( (pos) = (list)->next; (pos) != (list); (pos) = (pos)->next )
 
 
 /**
  * prelude_list_for_each_safe:
- * @pos: Pointer to a #prelude_list_t to use as the iterator.
- * @n: Pointer to a #prelude_list_t to use as the backup for the next entry.
- * @head: Pointer to the head of your list.
+ * @list: Pointer to a #prelude_list_t list.
+ * @pos: Pointer to a #prelude_list_t object pointing to the current list member.
+ * @bkp: Pointer to a #prelude_list_t object pointing to the next list member.
  *
- * Iterate over a @head, from head to tail.
- * The next pointer is saved in @n, making it possible to call prelude_list_del()
- * on the current list entry.
+ * Iterate through all @list entry. prelude_list_entry() can be used to retrieve
+ * and entry from the @pos pointer. Calling prelude_list_del() while iterating the
+ * list is safe.
  */
-#define prelude_list_for_each_safe(head, pos, n) \
-        for (pos = (head)->next, n = pos->next; pos != (head); \
-                pos = n, n = pos->next)
+#define prelude_list_for_each_safe(list, pos, bkp)                         \
+        for ( (pos) = (list)->next, (bkp) = (pos)->next; (pos) != (list); (pos) = (bkp), (bkp) = (pos)->next )
 
 
 
 /**
  * prelude_list_for_each_reversed:
- * @pos: Pointer to a #prelude_list_t to use as the iterator.
- * @head: Pointer to the head of your list.
+ * @list: Pointer to a #prelude_list_t list.
+ * @pos: Pointer to a #prelude_list_t object pointing to the current list member.
  *
- * Iterate over @head entry, from tail to head.
- * It is not safe to delete an entry from the loop.
+ * Iterate through all @list entry in reverse order. prelude_list_entry() can be
+ * used to retrieve and entry from the @pos pointer. It is not safe to call
+ * prelude_list_del() while iterating using this function, see
+ * prelude_list_for_each_reversed_safe().
  */
-#define prelude_list_for_each_reversed(head, pos) \
-        for (pos = (head)->prev; pos != (head); pos = pos->prev)
+#define prelude_list_for_each_reversed(list, pos)                          \
+        for ( (pos) = (list)->prev; (pos) != (list); (pos) = (pos)->prev ) 
 
 
 
 /**
  * prelude_list_for_each_reversed_safe:
- * @pos: Pointer to a #prelude_list_t to use as the iterator.
- * @n: Pointer to a #prelude_list_t to use as the backup for the next entry.
- * @head: Pointer to the head of your list.
+ * @list: Pointer to a #prelude_list_t list.
+ * @pos: Pointer to a #prelude_list_t object pointing to the current list member.
+ * @bkp: Pointer to a #prelude_list_t object pointing to the next list member.
  *
- * Iterate over a @head, from tail to head.
- * The next pointer is saved in @n, making it possible to call prelude_list_del()
- * on the current list entry.
+ * Iterate through all @list entry in reverse order. prelude_list_entry() can be used to retrieve
+ * and entry from the @pos pointer. Calling prelude_list_del() while iterating the
+ * list is safe.
  */
+#define prelude_list_for_each_reversed_safe(list, pos, bkp)                \
+        for ( (pos) = (list)->prev, (bkp) = (pos)->prev; (pos) != (list); (pos) = (bkp), (bkp) = (pos)->prev )
+
+
+/**
+ * prelude_list_for_each_continue:
+ * @list: Pointer to a #prelude_list_t list.
+ * @pos: Pointer to a #prelude_list_t object pointing to the current list member.
+ *
+ * Iterate through all @list entry starting from @pos if it is not NULL, or from
+ * the start of @list if it is. prelude_list_entry() can be used to retrieve
+ * and entry from the @pos pointer. Calling prelude_list_del() while iterating the
+ * list is not safe.
+ */
+#define prelude_list_for_each_continue(list, pos)                          \
+        for ( (pos) = ((pos) == NULL) ? (list)->next : (pos)->next; (pos) != (list); (pos) = (pos)->next )
+
+
+/**
+ * prelude_list_for_each_continue_safe:
+ * @list: Pointer to a #prelude_list_t list.
+ * @pos: Pointer to a #prelude_list_t object pointing to the current list member.
+ * @bkp: Pointer to a #prelude_list_t object pointing to the next list member.
+ * 
+ * Iterate through all @list entry starting from @pos if it is not NULL, or from
+ * the start of @list if it is. prelude_list_entry() can be used to retrieve
+ * and entry from the @pos pointer. Calling prelude_list_del() while iterating the
+ * list is safe.
+ */
+#define prelude_list_for_each_continue_safe(list, pos, bkp)                \
+        for ( (pos) = ((bkp) == NULL) ? (list)->next : (bkp); (bkp) = (pos)->next, (pos) != (list); (pos) = (bkp) )
+
+
 
 #define prelude_list_get_next(list, pos, class, member) \
         pos ? \
@@ -269,4 +265,9 @@ static inline void prelude_list_splice(prelude_list_t *head, prelude_list_t *lis
                ((bkp) = (! (pos) ||(pos)->member.next == list ) ? NULL : prelude_list_entry((pos)->member.next, class, member)), \
                (pos))
 
-#endif /* _LIBPRELUDE_LIST_H */
+
+#ifdef __cplusplus
+  }
+#endif
+
+#endif

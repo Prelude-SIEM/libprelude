@@ -32,8 +32,9 @@ sub	header
     $self->output("
 /*****
 *
-* Copyright (C) 2004-2005 Yoann Vandoorselaere <yoann\@prelude-ids.org>
-* All Rights Reserved
+* Copyright (C) 2004,2005 PreludeIDS Technologies. All Rights Reserved.
+* Author: Yoann Vandoorselaere <yoann.v\@prelude-ids.com>
+* Author: Nicolas Delon <nicolas.delon\@prelude-ids.com>
 *
 * This file is part of the Prelude program.
 *

@@ -1,7 +1,8 @@
 /*****
 *
-* Copyright (C) 2004 Nicolas Delon <delon.nicolas@wanadoo.fr>
-* All Rights Reserved
+* Copyright (C) 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
+* Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
+* Author: Yoann Vandoorselaere <yoann@prelude-ids.com>
 *
 * This file is part of the Prelude program.
 *

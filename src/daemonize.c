@@ -1,7 +1,7 @@
 /*****
 *
-* Copyright (C) 1999 - 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
-* All Rights Reserved
+* Copyright (C) 1999 - 2004 PreludeIDS Technologies. All Rights Reserved.
+* Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude program.
 *
