@@ -330,13 +330,15 @@ int idmef_time_get_ntp_timestamp(const idmef_time_t *time, char *outptr, size_t 
 
 
 /**
- * idmef_get_db_timestamp:
+ * idmef_time_get_db_timestamp:
  * @time: Pointer to an IDMEF time structure.
  * @outptr: Output buffer.
  * @size: size of the output buffer.
  *
  * Translate @time to a string suitable for insertion into a database field
  * of type DATETIME.
+ *
+ * Returns: number of bytes written on success, -1 if an error occured.
  */
 int idmef_time_get_db_timestamp(const idmef_time_t *time, char *outptr, size_t size) 
 {
@@ -388,7 +390,7 @@ int idmef_time_set_db_timestamp(idmef_time_t *time, const char *buf)
 
 
 /**
- * idmef_get_idmef_timestamp:
+ * idmef_time_get_idmef_timestamp:
  * @time: Pointer to an IDMEF time structure.
  * @outptr: Output buffer.
  * @size: size of the output buffer.
@@ -396,12 +398,12 @@ int idmef_time_set_db_timestamp(idmef_time_t *time, const char *buf)
  * Translate @time to an user readable string following the IDMEF
  * specification.
  *
- * Returns: 0 on success, -1 if an error occured.
+ * Returns: number of bytes written on success, -1 if an error occured.
  */
 int idmef_time_get_idmef_timestamp(const idmef_time_t *time, char *outptr, size_t size)
 {
         struct tm utc;
-        int ret, len = 0;
+        int ret;
 
         if ( ! gmtime_r((const time_t *) &time->sec, &utc) ) {
                 log(LOG_ERR, "error converting timestamp to gmt time.\n");
@@ -413,25 +415,22 @@ int idmef_time_get_idmef_timestamp(const idmef_time_t *time, char *outptr, size_
                        utc.tm_hour, utc.tm_min, utc.tm_sec,
                        idmef_time_get_usec(time) / 10000 % 60,
                        time->gmt_offset / 3600, time->gmt_offset % 3600 / 60);
-
-        if ( ret < 0 || len >= size )
-		return -1;
         
-	return (ret < 0 || len >= size) ? -1 : len;
+	return (ret < 0 || ret >= size) ? -1 : ret;
 }
 
 
 
 
 /**
- * idmef_get_timestamp:
+ * idmef_time_get_timestamp:
  * @time: Pointer to an IDMEF time structure.
  * @outptr: Output buffer.
  * @size: size of the output buffer.
  *
  * Translate @time to an user readable string.
  *
- * Returns: 0 on success, -1 if an error occured.
+ * Returns: number of bytes written on success, -1 if an error occured.
  */
 int idmef_time_get_timestamp(const idmef_time_t *time, char *outptr, size_t size)
 {
