@@ -1,3 +1,19 @@
+2002-03-12  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-getopt.c (call_option_cb): 
+	simplify, handle option_run_first and option_run_last
+	definition.
+	
+	(prelude_option_add): parent option have option_run_last priority.
+
+	(call_option_cb): fix and simplify.
+
+	(parse_argument): reset saved_index to 0. This could trigger a bug
+	while parsing option.
+
+	(prelude_option_add): set default priority to option_run_no_order.
+	
+
 2002-03-11  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-getopt.c (get_missing_options): 

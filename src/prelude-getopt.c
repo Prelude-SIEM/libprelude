@@ -249,7 +249,7 @@ static int call_option_cb(struct list_head *cblist, prelude_option_t *option, co
                 log(LOG_ERR, "memory exhausted.\n");
                 return -1;
         }
-
+        
         new->arg = arg;
         new->option = option;
 
@@ -261,14 +261,14 @@ static int call_option_cb(struct list_head *cblist, prelude_option_t *option, co
         list_for_each(tmp, cblist) {
                 
                 cb = list_entry(tmp, struct cb_list, list);
-                if ( option->priority < cb->option->priority ) {
-                        prev = tmp;
-                        printf("prev=%s, cur=%s.\n", cb->option->longopt, option->longopt);
+
+                if ( cb->option->priority <= option->priority )
                         break;
-                }
+                
+                prev = tmp;
         }
         
-        if ( ! prev ) 
+        if ( ! prev )
                 prev = cblist;
         
         list_add(&new->list, prev);
@@ -631,9 +631,14 @@ prelude_option_t *prelude_option_add(prelude_option_t *parent, int flags,
         new->get = get;
         new->cb_called = 0;
 
-        if ( parent )
+        if ( parent ) {
                 optlist = &parent->optlist;
-        else 
+                /*
+                 * parent option are always last to be ran,
+                 * because it often depend on the configuration of the child option.
+                 */
+                parent->priority = option_run_last;
+        } else 
                 optlist = get_default_optlist();
         
         list_add_tail(&new->list, &optlist->optlist);
