@@ -75,6 +75,13 @@ void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *pmsg)
 
 
 
+prelude_msg_t *idmef_message_get_pmsg(idmef_message_t *message)
+{
+        return message->pmsg;
+}
+
+
+
 int idmef_message_set(idmef_message_t *message, idmef_object_t *object, idmef_value_t *value)
 {
 	return idmef_object_set(message, object, value);
