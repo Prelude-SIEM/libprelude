@@ -45,7 +45,7 @@
 
 #include "ssl.h"
 #include "prelude-getopt.h"
-#include "prelude-async-job.h"
+#include "prelude-async.h"
 
 
 static int launch = 1;
