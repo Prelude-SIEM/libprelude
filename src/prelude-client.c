@@ -128,7 +128,7 @@ struct prelude_client {
         prelude_msgbuf_t *msgbuf;
         prelude_ident_t *unique_ident;
 
-        prelude_option_t *analyzer_name_opt, *config_file_opt;
+        prelude_option_t *config_file_opt;
         
         void (*heartbeat_cb)(prelude_client_t *client, idmef_message_t *heartbeat);
 };
@@ -638,9 +638,8 @@ static int setup_options(prelude_client_t *client)
                                    "Configuration file for this analyzer", required_argument,
                                    set_configuration_file, NULL);
         
-        client->analyzer_name_opt =
-                prelude_option_add(NULL, CLI_HOOK|CFG_HOOK, 0, "analyzer-name",
-                                   "Name for this analyzer", required_argument, set_name, NULL);
+        prelude_option_add(NULL, CLI_HOOK|CFG_HOOK, 0, "analyzer-name",
+                           "Name for this analyzer", required_argument, set_name, NULL);
         
         prelude_option_add(NULL, CFG_HOOK|WIDE_HOOK, 0, "node-name",
                            "Name of the equipment", required_argument, 
@@ -679,20 +678,6 @@ static int setup_options(prelude_client_t *client)
                            "Number of the Virtual LAN to which the address belongs", 
                            required_argument, set_node_address_vlan_num, get_node_address_vlan_num);
 
-        return 0;
-}
-
-
-static int get_standalone_option(prelude_client_t *client, prelude_option_t *opt, int argc, char **argv)
-{
-        int ret;
-        
-        ret = prelude_option_parse_arguments(client, opt, NULL, argc, argv);
-        if ( ret < 0 )
-                return -1;
-
-        prelude_option_destroy(opt);
-        
         return 0;
 }
 
@@ -758,7 +743,7 @@ prelude_client_t *prelude_client_new(prelude_client_capability_t capability)
  *
  * Returns: 0 on success, -1 if an error occured.
  */
-int prelude_client_init(prelude_client_t *client, const char *sname, const char *config, int argc, char **argv)
+int prelude_client_init(prelude_client_t *client, const char *sname, const char *config, int *argc, char **argv)
 {
         int ret, old_flags;
         char filename[256];
@@ -777,18 +762,46 @@ int prelude_client_init(prelude_client_t *client, const char *sname, const char 
 
         opt = prelude_option_add(NULL, CLI_HOOK, 0, "ignore-startup-error",
                                  NULL, no_argument, set_ignore_error, NULL);
+
         ret = prelude_option_parse_arguments(client, opt, NULL, argc, argv);
-        
-        ret = get_standalone_option(client, client->config_file_opt, argc, argv);
         if ( ret < 0 )
                 return -1;
-
-        ret = get_standalone_option(client, client->analyzer_name_opt, argc, argv);
+        
+        ret = prelude_option_parse_arguments(client, client->config_file_opt, NULL, argc, argv);
         if ( ret < 0 )
                 return -1;
         
         prelude_option_set_warnings(old_flags, NULL);
         
+        client->manager_list = prelude_connection_mgr_new(client);
+        if ( ! client->manager_list )
+                return -1;
+        
+        setup_heartbeat_timer(client, DEFAULT_HEARTBEAT_INTERVAL);
+        timer_init(&client->heartbeat_timer);
+        
+        ret = prelude_option_parse_arguments(client, NULL, client->config_filename, argc, argv);        
+        if ( ret == prelude_option_end )
+                return -1;
+        
+        if ( ret == prelude_option_error ) {
+                log(LOG_INFO, "There was an error processing configuration options.\n");
+                return -1;
+        }
+                
+        /*
+         * need to be done after option parsing, so that there is no error
+         * when prelude-getopt see standalone option.
+         */
+        prelude_option_destroy(client->config_file_opt);
+        prelude_option_destroy(opt);
+        
+        ret = prelude_client_ident_init(client, &client->analyzerid);
+        if ( ret < 0 && ! client->ignore_error ) {
+                prelude_client_installation_error(client);
+                return -1;
+        }
+
         client->credentials = tls_auth_init(client);
         if ( ! client->credentials && ! client->ignore_error ) {
                 prelude_client_installation_error(client);
@@ -799,29 +812,6 @@ int prelude_client_init(prelude_client_t *client, const char *sname, const char 
         ret = access(filename, W_OK);
         if ( ret < 0 && ! client->ignore_error ) {
                 prelude_client_installation_error(client);
-                return -1;
-        }
-        
-        ret = prelude_client_ident_init(client, &client->analyzerid);
-        if ( ret < 0 && ! client->ignore_error ) {
-                prelude_client_installation_error(client);
-                return -1;
-        }
-        
-        client->manager_list = prelude_connection_mgr_new(client);
-        if ( ! client->manager_list )
-                return -1;
-        
-        setup_heartbeat_timer(client, DEFAULT_HEARTBEAT_INTERVAL);
-        timer_init(&client->heartbeat_timer);
-        
-        ret = prelude_option_parse_arguments(client, NULL, client->config_filename, argc, argv);
-        if ( ret == prelude_option_end )
-                return -1;
-        
-        if ( ret == prelude_option_error ) {
-                log(LOG_INFO, "%s: error processing sensor options.\n", client->config_filename);
-                idmef_analyzer_destroy(client->analyzer);
                 return -1;
         }
         
@@ -1090,7 +1080,7 @@ void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status
 {
         if ( status == PRELUDE_CLIENT_EXIT_STATUS_SUCCESS ) {
                 timer_lock_critical_region();
-
+                
                 client->status = CLIENT_STATUS_EXITING;
                 heartbeat_expire_cb(client);
                 timer_destroy(&client->heartbeat_timer);
@@ -1103,7 +1093,7 @@ void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status
 
         if ( client->analyzer )
                 idmef_analyzer_destroy(client->analyzer);
-
+        
         if ( client->config_filename )
                 free(client->config_filename);
 

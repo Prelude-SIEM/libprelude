@@ -49,7 +49,7 @@
  * tell prelude_option_parse_argument that next option should be
  * matched against parent of current option list
  */
-#define prelude_option_end 1
+#define prelude_option_end -2
 
 /*
  * Any parsing will stop.
@@ -84,7 +84,8 @@ int prelude_option_wide_send_msg(void *context, prelude_msgbuf_t *msgbuf);
 
 void prelude_option_destroy(prelude_option_t *option);
 
-int prelude_option_parse_arguments(void *context, prelude_option_t *option, const char *filename, int argc, char **argv);
+int prelude_option_parse_arguments(void *context, prelude_option_t *option,
+                                   const char *filename, int *argc, char **argv);
 
 
 prelude_option_t *prelude_option_add(prelude_option_t *parent, int flags,

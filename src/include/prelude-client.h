@@ -64,7 +64,7 @@ void prelude_client_set_manager_list(prelude_client_t *client, prelude_connectio
 
 prelude_connection_mgr_t *prelude_client_get_manager_list(prelude_client_t *client);
 
-int prelude_client_init(prelude_client_t *client, const char *sname, const char *config, int argc, char **argv);
+int prelude_client_init(prelude_client_t *client, const char *sname, const char *config, int *argc, char **argv);
 
 prelude_client_t *prelude_client_new(prelude_client_capability_t capability);
 
