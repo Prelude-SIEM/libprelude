@@ -53,7 +53,7 @@ done
 
 pthrlib=no
 
-if test -n $pthread_lib && test -n $pthread_include; then
+if test -n "$pthread_lib" && test -n "$pthread_include"; then
 	pthrlib=yes
 	libprelude_libs="$libprelude_libs -L$pthread_lib/lib -lpthread"
 	libprelude_cflags="$libprelude_cflags -I$pthread_include/include -D_REENTRANT"
