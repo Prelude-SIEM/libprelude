@@ -31,16 +31,6 @@ typedef enum {
 
 
 typedef enum {
-        PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF = 0x01,
-        PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF = 0x02,
-        PRELUDE_CLIENT_CAPABILITY_RECV_ADMIN = 0x04,
-        PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN = 0x08,
-        PRELUDE_CLIENT_CAPABILITY_RECV_CM    = 0x10,
-        PRELUDE_CLIENT_CAPABILITY_SEND_CM    = 0x20
-} prelude_client_capability_t;
-
-
-typedef enum {
         PRELUDE_CLIENT_FLAGS_ASYNC_SEND  = 0x01,
         PRELUDE_CLIENT_FLAGS_ASYNC_TIMER = 0x02
 } prelude_client_flags_t;
@@ -49,6 +39,7 @@ typedef enum {
 typedef struct prelude_client prelude_client_t;
 
 
+#include "prelude-client-profile.h"
 #include "prelude-ident.h"
 #include "prelude-connection.h"
 #include "prelude-connection-mgr.h"
@@ -58,25 +49,22 @@ typedef struct prelude_client prelude_client_t;
 
 prelude_ident_t *prelude_client_get_unique_ident(prelude_client_t *client);
 
-void *prelude_client_get_credentials(prelude_client_t *client);
-
 void prelude_client_set_manager_list(prelude_client_t *client, prelude_connection_mgr_t *mgrlist);
 
 prelude_connection_mgr_t *prelude_client_get_manager_list(prelude_client_t *client);
 
-int prelude_client_init(prelude_client_t *client, const char *sname, const char *config, int *argc, char **argv);
+int prelude_client_start(prelude_client_t *client);
 
-prelude_client_t *prelude_client_new(prelude_client_capability_t capability);
+int prelude_client_new(prelude_client_t **client,
+                       prelude_connection_capability_t capability,
+                       const char *profile, const char *config,
+                       int *argc, char **argv);
 
 idmef_analyzer_t *prelude_client_get_analyzer(prelude_client_t *client);
 
 void prelude_client_set_analyzerid(prelude_client_t *client, uint64_t analyzerid);
 
 uint64_t prelude_client_get_analyzerid(prelude_client_t *client);
-
-void prelude_client_set_profile(prelude_client_t *client, const char *name);
-
-const char *prelude_client_get_profile(prelude_client_t *client);
 
 void prelude_client_set_uid(prelude_client_t *client, uid_t uid);
 
@@ -88,7 +76,7 @@ gid_t prelude_client_get_gid(prelude_client_t *client);
 
 prelude_client_flags_t prelude_client_get_flags(prelude_client_t *client);
 
-prelude_client_capability_t prelude_client_get_capability(prelude_client_t *client);
+prelude_connection_capability_t prelude_client_get_capability(prelude_client_t *client);
 
 void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg);
 
@@ -100,28 +88,14 @@ void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status
 
 int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t flags);
 
-int prelude_client_set_capability(prelude_client_t *client, prelude_client_capability_t capability);
-
-void prelude_client_get_ident_filename(prelude_client_t *client, char *buf, size_t size);
-
-void prelude_client_get_tls_key_filename(prelude_client_t *client, char *buf, size_t size);
-
-void prelude_client_get_tls_server_ca_cert_filename(prelude_client_t *client, char *buf, size_t size);
-
-void prelude_client_get_tls_server_keycert_filename(prelude_client_t *client, char *buf, size_t size);
-
-void prelude_client_get_tls_server_trusted_cert_filename(prelude_client_t *client, char *buf, size_t size);
-
-void prelude_client_get_tls_client_keycert_filename(prelude_client_t *client, char *buf, size_t size);
-
-void prelude_client_get_tls_client_trusted_cert_filename(prelude_client_t *client, char *buf, size_t size);
-
-void prelude_client_get_backup_filename(prelude_client_t *client, char *buf, size_t size);
+int prelude_client_set_connection_capability(prelude_client_t *client, prelude_connection_capability_t capability);
 
 const char *prelude_client_get_config_filename(prelude_client_t *client);
 
 void prelude_client_print_setup_error(prelude_client_t *client);
 
 prelude_bool_t prelude_client_is_setup_needed(prelude_client_t *client, prelude_error_t err);
+
+prelude_client_profile_t *prelude_client_get_profile(prelude_client_t *client);
 
 #endif
