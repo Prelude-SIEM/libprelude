@@ -409,6 +409,12 @@ size_t prelude_string_get_len(const prelude_string_t *string)
 
 
 
+const char *prelude_string_get_string_or_default(const prelude_string_t *string, const char *def)
+{
+        return string->data.robuf ? string->data.robuf : def;
+}
+
+
 
 const char *prelude_string_get_string(const prelude_string_t *string)
 {

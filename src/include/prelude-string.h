@@ -92,6 +92,8 @@ prelude_string_t *prelude_string_clone(const prelude_string_t *src);
 
 size_t prelude_string_get_len(const prelude_string_t *string);
 
+const char *prelude_string_get_string_or_default(const prelude_string_t *string, const char *def);
+
 const char *prelude_string_get_string(const prelude_string_t *string);
 
 char *prelude_string_get_string_released(prelude_string_t *string);
