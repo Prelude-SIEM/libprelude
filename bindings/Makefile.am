@@ -36,7 +36,7 @@ endif
 
 python/_prelude.c: $(BINDING_DEPENDS)
 if HAVE_SWIG
-	$(SWIG) -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -o $@ -python -interface _prelude -module prelude $<
+	$(SWIG) -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -o $@ -python -noproxy -interface _prelude -module _prelude $<
 endif
 
 
