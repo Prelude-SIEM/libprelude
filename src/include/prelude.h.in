@@ -33,7 +33,6 @@
 #include "prelude-connection-mgr.h"
 #include "prelude-io.h"
 #include "prelude-getopt.h"
-#include "prelude-strbuf.h"
 #include "prelude-async.h"
 #include "prelude-plugin.h"
 #include "prelude-message.h"
