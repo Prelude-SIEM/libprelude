@@ -371,7 +371,11 @@ static int get_node_address_category(prelude_option_t *opt, prelude_string_t *ou
 
 static int set_node_address_vlan_num(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context) 
 {
-        idmef_address_set_vlan_num(context, atoi(optarg));
+        if ( ! optarg )
+                idmef_address_unset_vlan_num(context);
+        else
+                idmef_address_set_vlan_num(context, atoi(optarg));
+        
         return 0;
 }
 
@@ -927,7 +931,7 @@ int _prelude_client_register_options(void)
         
         ret = prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "vlan-num",
                                  "Number of the Virtual LAN to which the address belongs", 
-                                 PRELUDE_OPTION_ARGUMENT_REQUIRED, set_node_address_vlan_num,
+                                 PRELUDE_OPTION_ARGUMENT_OPTIONAL, set_node_address_vlan_num,
                                  get_node_address_vlan_num);
         if ( ret < 0 )
                 return ret;
