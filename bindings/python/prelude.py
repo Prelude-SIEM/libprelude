@@ -1,4 +1,4 @@
-# Copyright (C) 2003 Nicolas Delon <delon.nicolas@wanadoo.fr>
+# Copyright (C) 2003,2004 Nicolas Delon <nicolas@prelude-ids.org>
 # All Rights Reserved
 #
 # This file is part of the Prelude program.
@@ -318,7 +318,7 @@ class IDMEFTime(object):
         """Return the RFC8601 string representation of the object."""
         buf = "A" * 128
 
-        size = _prelude.idmef_time_get_idmef_timestamp(self.res, buf, len(buf))
+        size = _prelude.idmef_time_to_string(self.res, buf, len(buf))
         if size < 0:
             raise Error()
 
@@ -344,6 +344,9 @@ class IDMEFTime(object):
 
         if name is "usec":
             return _prelude.idmef_time_get_usec(self.res)
+
+        if name is "gmt_offset":
+            return _prelude.idmef_time_get_gmt_offset(self.res)
 
         return object.__getattribute__(self, name)
 
@@ -502,8 +505,10 @@ def idmef_value_c_to_python(value):
         if not time:
             return None
 
-        return IDMEFTime([_prelude.idmef_time_get_sec(time),
-                          _prelude.idmef_time_get_usec(time)])
+        py_time = IDMEFTime()
+        py_time.res = _prelude.idmef_time_clone(time)
+        
+        return py_time
     
     if type == _prelude.IDMEF_VALUE_TYPE_STRING:
         string = _prelude.idmef_value_get_string(value)
