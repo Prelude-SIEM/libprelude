@@ -8,18 +8,18 @@ AC_PREREQ(2.53)
 AC_CANONICAL_TARGET([])
 
 libprelude_major=0
-libprelude_minor=8
-libprelude_micro=10
+libprelude_minor=9
+libprelude_micro=0
 
 dnl version and release information
-libprelude_version=$libprelude_major.$libprelude_minor.$libprelude_micro
+libprelude_version=$libprelude_major.$libprelude_minor.$libprelude_micro-svn
 
 
 dnl library soname 
 dnl check http://sources.redhat.com/autobook/autobook/autobook_91.html#SEC91
-libprelude_current=1
+libprelude_current=2
 libprelude_revision=0
-libprelude_age=1
+libprelude_age=0
 
 libprelude_soname=$libprelude_current:$libprelude_revision:$libprelude_age
 AC_SUBST(libprelude_soname)
@@ -127,9 +127,9 @@ AC_DEFINE(socklen_t, ACCEPT_ARG3, Define socklen_t to accept third argument type
 dnl **************************************************
 dnl * Check for GnuTLS.                              *
 dnl **************************************************
-AC_PATH_GENERIC(libgnutls, , enable_gnutls=yes, enable_gnutls=no)
 
-if test x$enable_gnutls != xyes; then
+AM_PATH_LIBGNUTLS(1.0.17, gnutls=yes, gnutls=no)
+if test x$gnutls != xyes; then
 	AC_MSG_ERROR(libgnutls is required in order to build libprelude.)
 fi
 
@@ -148,9 +148,9 @@ CPPFLAGS=$old_CPPFLAGS
 dnl **************************************************
 dnl * Check for GnuTLS extra.                        *
 dnl **************************************************
-AC_PATH_GENERIC(libgnutls-extra, , enable_gnutls_extra=yes, enable_gnutls_extra=no)
 
-if test x$enable_gnutls_extra != xyes; then
+AM_PATH_LIBGNUTLS_EXTRA(1.0.17, gnutls_extra=yes, gnutls_extra=no)
+if test x$gnutls_extra != xyes; then
 	AC_MSG_ERROR(libgnutls-extra is required in order to build libprelude.)
 fi
 
@@ -432,6 +432,7 @@ global.conf
 libprelude-config
 
 libmissing/Makefile
+m4/Makefile
 
 src/Makefile
 src/include/Makefile
