@@ -39,41 +39,41 @@ sub	value2scalar($)
 
     $type = Prelude::idmef_value_get_type($value);
 
-    if ( $type == $Prelude::type_int16 ) {
+    if ( $type == $Prelude::IDMEF_VALUE_TYPE_INT16 ) {
 	$result = Prelude::idmef_value_get_int16($value);
 
-    } elsif ( $type == $Prelude::type_uint16 ) {
+    } elsif ( $type == $Prelude::IDMEF_VALUE_TYPE_UINT16 ) {
 	$result = Prelude::idmef_value_get_uint16($value);
 
-    } elsif ( $type == $Prelude::type_int32 ) {
+    } elsif ( $type == $Prelude::IDMEF_VALUE_TYPE_INT32 ) {
 	$result = Prelude::idmef_value_get_int32($value);
 
-    } elsif ( $type == $Prelude::type_uint32) {
+    } elsif ( $type == $Prelude::IDMEF_VALUE_TYPE_UINT32) {
 	$result = Prelude::idmef_value_get_uint32($value);
 
-    } elsif ( $type == $Prelude::type_int64 ) {
+    } elsif ( $type == $Prelude::IDMEF_VALUE_TYPE_INT64 ) {
 	$result = Prelude::idmef_value_get_int64($value);
 
-    } elsif ( $type == $Prelude::type_uint64) {
+    } elsif ( $type == $Prelude::IDMEF_VALUE_TYPE_UINT64) {
 	$result = Prelude::idmef_value_get_uint64($value);
 
-    } elsif ( $type == $Prelude::type_float ) {
+    } elsif ( $type == $Prelude::IDMEF_VALUE_TYPE_FLOAT ) {
 	$result = Prelude::idmef_value_get_float($value);
 
-    } elsif ( $type == $Prelude::type_double ) {
+    } elsif ( $type == $Prelude::IDMEF_VALUE_TYPE_DOUBLE ) {
 	$result = Prelude::idmef_value_get_double($value);
 
-    } elsif ( $type == $Prelude::type_string ) {
+    } elsif ( $type == $Prelude::IDMEF_VALUE_TYPE_STRING ) {
 	my $string;
 
 	$string = Prelude::idmef_value_get_string($value) or return undef;
 	$result = Prelude::idmef_string_get_string($string);
 
-    } elsif ( $type == $Prelude::type_enum) {
-	$result = Prelude::idmef_type_enum_to_string(Prelude::idmef_value_get_idmef_type($value),
+    } elsif ( $type == $Prelude::IDMEF_VALUE_TYPE_ENUM) {
+	$result = Prelude::idmef_type_enum_to_string(Prelude::idmef_value_get_object_type($value),
 						     Prelude::idmef_value_get_enum($value));
 
-    } elsif ( $type == $Prelude::type_time ) {
+    } elsif ( $type == $Prelude::IDMEF_VALUE_TYPE_TIME ) {
 	my $time;
 
 	$time = Prelude::idmef_value_get_time($value) or return undef;
@@ -82,7 +82,7 @@ sub	value2scalar($)
 	$result->{sec} = Prelude::idmef_time_get_sec($time);
 	$result->{usec} = Prelude::idmef_time_get_usec($time);
 
-    } elsif ( $type == $Prelude::type_data ) {
+    } elsif ( $type == $Prelude::IDMEF_VALUE_TYPEdata ) {
 	my $data;
 
 	$data = Prelude::idmef_value_get_data($value) or return undef;
@@ -135,7 +135,7 @@ sub	set
 	return 0;
     }
 
-    if ( Prelude::idmef_object_get_type($object) == $Prelude::type_time ) {
+    if ( Prelude::idmef_object_get_type($object) == $Prelude::IDMEF_VALUE_TYPEtime ) {
 	my $time;
 
 	$time = Prelude::idmef_time_new();

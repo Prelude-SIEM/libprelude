@@ -178,38 +178,38 @@ def _idmef_value_time_python_to_c(value):
 
 def _idmef_integer_python_to_c(object, py_value):
      value_type_table = {
-         _prelude.type_int16: { 'py_type': [ int ],
+         _prelude.IDMEF_VALUE_TYPE_INT16: { 'py_type': [ int ],
                                 'check_value': lambda i: i >= -2 ** 15 and i < 2 ** 15,
                                 'convert': _prelude.idmef_value_new_int16 },
         
-         _prelude.type_uint16: { 'py_type': [ int ],
+         _prelude.type_IDMEF_VALUE_TYPE_UINT16: { 'py_type': [ int ],
                                  'check_value': lambda i: i >= 0 and i < 2 ** 16,
                                  'convert': _prelude.idmef_value_new_uint16 },
         
-         _prelude.type_int32: { 'py_type': [ int ],
+         _prelude.IDMEF_VALUE_TYPE_INT32: { 'py_type': [ int ],
                                 'check': lambda i: i >= -2 ** 31 and i < 2 ** 31,
                                 'convert': _prelude.idmef_value_new_int32 },
         
-         _prelude.type_uint32: { 'py_type': [ int ],
+         _prelude.IDMEF_VALUE_TYPE_UINT32: { 'py_type': [ int ],
                                  'check_value': lambda i: i >= 0 and i < 2 ** 32,
                                  'convert': _prelude.idmef_value_new_uint32 },
         
-         _prelude.type_int64: { 'py_type': [ long, int ],
+         _prelude.IDMEF_VALUE_TYPE_INT64: { 'py_type': [ long, int ],
                                 'check_value': lambda i: i >= -2 ** 63 and i < 2 ** 63,
                                 'convert': _prelude.idmef_value_new_int64 },
         
-         _prelude.type_uint64: { 'py_type': [ long, int ],
+         _prelude.IDMEF_VALUE_TYPE_UINT64: { 'py_type': [ long, int ],
                                  'check_value': lambda i: i >= 0 and i < 2 ** 64,
                                  'convert': _prelude.idmef_value_new_uint64 },
         
-         _prelude.type_float: { 'py_type': [ float ],
+         _prelude.IDMEF_VALUE_TYPE_FLOAT: { 'py_type': [ float ],
                                 'convert': _prelude.idmef_value_new_float },
 
-         _prelude.type_double: { 'py_type': [ float ],
+         _prelude.IDMEF_VALUE_TYPE_DOUBLE: { 'py_type': [ float ],
                                  'convert': _prelude.idmef_value_new_double },
          }
 
-     object_type = _prelude.idmef_object_get_type(object)
+     object_type = _prelude.idmef_object_get_value_type(object)
 
      if type(py_value) not in value_type_table[object_type]['py_type']:
          raise IDMEFValueError(py_value, "expected %s, got %s" %
@@ -223,24 +223,24 @@ def _idmef_integer_python_to_c(object, py_value):
 
 
 def _idmef_value_python_to_c(object, py_value):
-    object_type = _prelude.idmef_object_get_type(object)
+    object_type = _prelude.idmef_object_get_value_type(object)
     
-    if object_type is _prelude.type_time:
+    if object_type is _prelude.IDMEF_VALUE_TYPE_TIME:
         time = _idmef_value_time_python_to_c(py_value)
         c_value = _prelude.idmef_value_new_time(time)
         if not c_value:
             raise Error()
 
-    elif object_type in [ _prelude.type_int16, _prelude.type_uint16,
-                          _prelude.type_int32, _prelude.type_uint32,
-                          _prelude.type_int64, _prelude.type_uint64,
-                          _prelude.type_float, _prelude.type_double ]:
+    elif object_type in [ _prelude.IDMEF_VALUE_TYPE_INT16, _prelude.IDMEF_VALUE_TYPE_UINT16,
+                          _prelude.IDMEF_VALUE_TYPE_INT32, _prelude.IDMEF_VALUE_TYPE_UINT32,
+                          _prelude.IDMEF_VALUE_TYPE_INT64, _prelude.IDMEF_VALUE_TYPE_UINT64,
+                          _prelude.IDMEF_VALUE_TYPE_FLOAT, _prelude.IDMEF_VALUE_TYPE_DOUBLE ]:
         c_value = _idmef_integer_python_to_c(object, py_value)
 
-    elif object_type is _prelude.type_enum:
+    elif object_type is _prelude.IDMEF_VALUE_TYPE_ENUM:
         c_value = _prelude.idmef_value_new_enum_string(_prelude.idmef_object_get_idmef_type(object), py_value)
 
-    elif object_type is _prelude.type_string:
+    elif object_type is _prelude.IDMEF_VALUE_TYPE_STRING:
         if type(py_value) is not str:
             raise IDMEFValueError(py_value, "expected %s, got %s" % (str, type(py_value)))
 
@@ -250,7 +250,7 @@ def _idmef_value_python_to_c(object, py_value):
 
         c_value = _prelude.idmef_value_new_string(c_string)
 
-    elif object_type is _prelude.type_data:
+    elif object_type is _prelude.IDMEF_VALUE_TYPE_DATA:
         if type(py_value) is not str:
             raise IDMEFValueError(py_value, "expected %s, got %s" % (str, type(py_value)))
 
@@ -273,19 +273,19 @@ def _idmef_value_python_to_c(object, py_value):
 def idmef_value_c_to_python(value):
 
     func_type_table = {
-        _prelude.type_int16:     _prelude.idmef_value_get_int16,
-        _prelude.type_uint16:    _prelude.idmef_value_get_uint16,
-        _prelude.type_int32:     _prelude.idmef_value_get_int32,
-        _prelude.type_uint32:    _prelude.idmef_value_get_uint32,
-        _prelude.type_int64:     _prelude.idmef_value_get_int64,
-        _prelude.type_uint64:    _prelude.idmef_value_get_uint64,
-        _prelude.type_float:     _prelude.idmef_value_get_float,
-        _prelude.type_double:    _prelude.idmef_value_get_double,
+        _prelude.IDMEF_VALUE_TYPE_INT16:     _prelude.idmef_value_get_int16,
+        _prelude.IDMEF_VALUE_TYPE_UINT16:    _prelude.idmef_value_get_uint16,
+        _prelude.IDMEF_VALUE_TYPE_INT32:     _prelude.idmef_value_get_int32,
+        _prelude.IDMEF_VALUE_TYPE_UINT32:    _prelude.idmef_value_get_uint32,
+        _prelude.IDMEF_VALUE_TYPE_INT64:     _prelude.idmef_value_get_int64,
+        _prelude.IDMEF_VALUE_TYPE_UINT64:    _prelude.idmef_value_get_uint64,
+        _prelude.IDMEF_VALUE_TYPE_FLOAT:     _prelude.idmef_value_get_float,
+        _prelude.IDMEF_VALUE_TYPE_DOUBLE:    _prelude.idmef_value_get_double,
         }
 
     type = _prelude.idmef_value_get_type(value)
 
-    if type == _prelude.type_time:
+    if type == _prelude.IDMEF_VALUE_TYPE_TIME:
         time = _prelude.idmef_value_get_time(value)
         if not time:
             return None
@@ -293,21 +293,21 @@ def idmef_value_c_to_python(value):
         return IDMEFTime([_prelude.idmef_time_get_sec(time),
                           _prelude.idmef_time_get_usec(time)])
     
-    if type == _prelude.type_string:
+    if type == _prelude.IDMEF_VALUE_TYPE_STRING:
         string = _prelude.idmef_value_get_string(value)
         if not string:
             return None
 
         return _prelude.idmef_string_get_string(string)
     
-    if type == _prelude.type_data:
+    if type == _prelude.IDMEF_VALUE_TYPE_DATA:
         data = _prelude.idmef_value_get_data(value)
         if not data:
             return None
 
         return _prelude.idmef_data_get_data(data)
 
-    if type == _prelude.type_enum:
+    if type == _prelude.IDMEF_VALUE_TYPE_ENUM:
         return _prelude.idmef_type_enum_to_string(_prelude.idmef_value_get_idmef_type(value),
                                                   _prelude.idmef_value_get_enum(value))
     
