@@ -58,7 +58,7 @@ static char *strndup(const char *s, size_t n)
 
 %}
 
-STRING		[a-zA-Z0-9_\.\-]+
+STRING          ([a-zA-Z0-9_\-]+(\([0-9]+\))?\.?)+
 SQSTRING	\'([^\\\']|\\.)*\'
 DQSTRING	\"([^\\\"]|\\.)*\"
 BLANK		[ \t\n]+
