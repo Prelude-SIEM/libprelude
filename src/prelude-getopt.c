@@ -412,7 +412,7 @@ static int get_missing_options(const char *filename, prelude_optlist_t *rootlist
                                 continue;
                         }
                         
-                        if ( opt->called_from_cli )
+                        if ( opt->called_from_cli ) 
                                 continue;
                         
                         ret = call_option_cb(&cb_list, opt, NULL);
@@ -421,10 +421,11 @@ static int get_missing_options(const char *filename, prelude_optlist_t *rootlist
                         
                         optlist = &opt->optlist;
                 }
-        
+                                
                 opt = search_option(optlist, entry, CFG_HOOK, 0);
                 if ( ! opt ) {
-                        option_err(OPT_INVAL, "%s:%d: invalid option : \"%s\".\n", filename, line, entry);
+                        option_err(OPT_INVAL, "%s:%d: invalid option %s in section: \"%s\".\n",
+                                   filename, line, entry, (section) ? section : "global");
                         continue;
                 }
                 

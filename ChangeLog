@@ -1,3 +1,8 @@
+2004-01-17  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/prelude-getopt.c (get_missing_options): 
+	carry more information.
+
 2004-01-14  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* src/sensor.c (prelude_analyzer_fill_infos): 
