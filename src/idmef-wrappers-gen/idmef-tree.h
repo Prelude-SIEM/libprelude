@@ -633,10 +633,10 @@ struct {
  */
 ENUM(severity) {
         IDMEF_IMPACT_SEVERITY_ERROR  = -1,
-        IDMEF_IMPACT_SEVERITY_LOW    =  1,
-        IDMEF_IMPACT_SEVERITY_MEDIUM =  2,
-        IDMEF_IMPACT_SEVERITY_HIGH   =  3,
-        IDMEF_IMPACT_SEVERITY_INFO   =  4,
+        IDMEF_IMPACT_SEVERITY_INFO   =  1,
+        IDMEF_IMPACT_SEVERITY_LOW    =  2,
+        IDMEF_IMPACT_SEVERITY_MEDIUM =  3,
+        IDMEF_IMPACT_SEVERITY_HIGH   =  4,
 } TYPE_ID(idmef_impact_severity_t, 33);
 
 

@@ -190,8 +190,8 @@ static inline int idmef_data_write(idmef_data_t *data, prelude_msgbuf_t *msg, ui
  * @additional_data: Pointer to a #idmef_additional_data_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @additional_data within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @additional_data within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -225,8 +225,8 @@ int idmef_additional_data_write(idmef_additional_data_t *additional_data, prelud
  * @reference: Pointer to a #idmef_reference_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @reference within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @reference within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -264,8 +264,8 @@ int idmef_reference_write(idmef_reference_t *reference, prelude_msgbuf_t *msg)
  * @classification: Pointer to a #idmef_classification_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @classification within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @classification within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -306,8 +306,8 @@ int idmef_classification_write(idmef_classification_t *classification, prelude_m
  * @user_id: Pointer to a #idmef_user_id_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @user_id within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @user_id within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -356,8 +356,8 @@ int idmef_user_id_write(idmef_user_id_t *user_id, prelude_msgbuf_t *msg)
  * @user: Pointer to a #idmef_user_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @user within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @user within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -398,8 +398,8 @@ int idmef_user_write(idmef_user_t *user, prelude_msgbuf_t *msg)
  * @address: Pointer to a #idmef_address_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @address within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @address within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -452,8 +452,8 @@ int idmef_address_write(idmef_address_t *address, prelude_msgbuf_t *msg)
  * @process: Pointer to a #idmef_process_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @process within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @process within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -520,8 +520,8 @@ int idmef_process_write(idmef_process_t *process, prelude_msgbuf_t *msg)
  * @web_service: Pointer to a #idmef_web_service_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @web_service within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @web_service within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -566,8 +566,8 @@ int idmef_web_service_write(idmef_web_service_t *web_service, prelude_msgbuf_t *
  * @snmp_service: Pointer to a #idmef_snmp_service_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @snmp_service within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @snmp_service within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -613,8 +613,8 @@ int idmef_snmp_service_write(idmef_snmp_service_t *snmp_service, prelude_msgbuf_
  * @service: Pointer to a #idmef_service_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @service within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @service within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -704,8 +704,8 @@ int idmef_service_write(idmef_service_t *service, prelude_msgbuf_t *msg)
  * @node: Pointer to a #idmef_node_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @node within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @node within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -754,8 +754,8 @@ int idmef_node_write(idmef_node_t *node, prelude_msgbuf_t *msg)
  * @source: Pointer to a #idmef_source_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @source within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @source within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -801,8 +801,8 @@ int idmef_source_write(idmef_source_t *source, prelude_msgbuf_t *msg)
  * @file_access: Pointer to a #idmef_file_access_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @file_access within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @file_access within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -838,8 +838,8 @@ int idmef_file_access_write(idmef_file_access_t *file_access, prelude_msgbuf_t *
  * @inode: Pointer to a #idmef_inode_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @inode within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @inode within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -922,8 +922,8 @@ int idmef_linkage_write(idmef_linkage_t *, prelude_msgbuf_t *);
  * @checksum: Pointer to a #idmef_checksum_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @checksum within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @checksum within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -957,8 +957,8 @@ int idmef_checksum_write(idmef_checksum_t *checksum, prelude_msgbuf_t *msg)
  * @file: Pointer to a #idmef_file_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @file within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @file within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -1077,8 +1077,8 @@ int idmef_file_write(idmef_file_t *file, prelude_msgbuf_t *msg)
  * @linkage: Pointer to a #idmef_linkage_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @linkage within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @linkage within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -1115,8 +1115,8 @@ int idmef_linkage_write(idmef_linkage_t *linkage, prelude_msgbuf_t *msg)
  * @target: Pointer to a #idmef_target_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @target within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @target within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -1173,8 +1173,8 @@ int idmef_target_write(idmef_target_t *target, prelude_msgbuf_t *msg)
  * @analyzer: Pointer to a #idmef_analyzer_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @analyzer within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @analyzer within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -1234,8 +1234,8 @@ int idmef_analyzer_write(idmef_analyzer_t *analyzer, prelude_msgbuf_t *msg)
  * @alertident: Pointer to a #idmef_alertident_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @alertident within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @alertident within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -1265,8 +1265,8 @@ int idmef_alertident_write(idmef_alertident_t *alertident, prelude_msgbuf_t *msg
  * @impact: Pointer to a #idmef_impact_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @impact within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @impact within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -1320,8 +1320,8 @@ int idmef_impact_write(idmef_impact_t *impact, prelude_msgbuf_t *msg)
  * @action: Pointer to a #idmef_action_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @action within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @action within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -1351,8 +1351,8 @@ int idmef_action_write(idmef_action_t *action, prelude_msgbuf_t *msg)
  * @confidence: Pointer to a #idmef_confidence_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @confidence within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @confidence within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -1382,8 +1382,8 @@ int idmef_confidence_write(idmef_confidence_t *confidence, prelude_msgbuf_t *msg
  * @assessment: Pointer to a #idmef_assessment_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @assessment within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @assessment within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -1422,8 +1422,8 @@ int idmef_assessment_write(idmef_assessment_t *assessment, prelude_msgbuf_t *msg
  * @tool_alert: Pointer to a #idmef_tool_alert_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @tool_alert within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @tool_alert within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -1464,8 +1464,8 @@ int idmef_tool_alert_write(idmef_tool_alert_t *tool_alert, prelude_msgbuf_t *msg
  * @correlation_alert: Pointer to a #idmef_correlation_alert_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @correlation_alert within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @correlation_alert within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -1502,8 +1502,8 @@ int idmef_correlation_alert_write(idmef_correlation_alert_t *correlation_alert, 
  * @overflow_alert: Pointer to a #idmef_overflow_alert_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @overflow_alert within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @overflow_alert within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -1544,8 +1544,8 @@ int idmef_overflow_alert_write(idmef_overflow_alert_t *overflow_alert, prelude_m
  * @alert: Pointer to a #idmef_alert_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @alert within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @alert within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -1652,8 +1652,8 @@ int idmef_alert_write(idmef_alert_t *alert, prelude_msgbuf_t *msg)
  * @heartbeat: Pointer to a #idmef_heartbeat_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @heartbeat within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @heartbeat within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -1720,8 +1720,8 @@ int idmef_heartbeat_write(idmef_heartbeat_t *heartbeat, prelude_msgbuf_t *msg)
  * @message: Pointer to a #idmef_message_t object.
  * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
  *
- * Writes @message within @msg message buffer. The buffer is 
- * associated with a #prelude_io_t file descriptor where data will be written.
+ * Write @message within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
