@@ -58,7 +58,7 @@ dnl * Check for Pthread library                      *
 dnl **************************************************
 
 AC_CHECK_LIB(pthread, pthread_create, pthrlib="yes")
-if test x$pthrlib == xyes; then
+if test x$pthrlib = xyes; then
 	PTHREAD_LIBS="-lpthread"
 else
 	AC_CHECK_LIB(c_r, pthread_create, PTHREAD_LIBS="-lc_r")

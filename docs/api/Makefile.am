@@ -14,7 +14,7 @@ DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.sgml
 # The directory containing the source code. Relative to $(srcdir).
 # gtk-doc will search all .c & .h files beneath here for inline comments
 # documenting functions and macros.
-DOC_SOURCE_DIR=$(top_srcdir)/src
+DOC_SOURCE_DIR=$(top_srcdir)
 
 # Extra options to supply to gtkdoc-scan.
 SCAN_OPTIONS=
@@ -52,7 +52,7 @@ GTKDOC_LD=$(LIBTOOL) --mode=link $(CC)
 # If you need to override some of the declarations, place them in this file
 # and uncomment this line.
 #DOC_OVERRIDES = $(DOC_MODULE)-overrides.txt
-DOC_OVERRIDES=
+
 
 
 ###########################################################################
