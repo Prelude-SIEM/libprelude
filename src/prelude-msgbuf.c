@@ -35,51 +35,62 @@
 #include "prelude-msgbuf.h"
 
 
-struct prelude_message_buffered {
+struct prelude_msgbuf {
         int flags;
         void *data;
-        prelude_client_t *client;
         prelude_msg_t *msg;
-        prelude_msg_t *(*send_msg)(prelude_msgbuf_t *msgbuf);
+        int (*send_msg)(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg);
 };
 
 
-
-static prelude_msg_t *do_send_msg(prelude_msgbuf_t *msgbuf) 
-{        
-        prelude_client_send_msg(msgbuf->client, msgbuf->msg);
-        prelude_msg_recycle(msgbuf->msg);
-
-        return msgbuf->msg;
-}
+static int default_send_msg_cb(prelude_msg_t **msg, void *data);
 
 
-
-static prelude_msg_t *do_send_msg_async(prelude_msgbuf_t *msgbuf) 
-{        
-        prelude_client_send_msg(msgbuf->client, msgbuf->msg);
-        
-        msgbuf->msg = prelude_msg_dynamic_new((void *) msgbuf->send_msg, msgbuf);
-        if ( ! msgbuf->msg ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
-
-        return msgbuf->msg;
-}
-
-
-
-static prelude_msg_t *default_send_msg_cb(prelude_msgbuf_t *msgbuf)
+static int do_send_msg(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg) 
 {
-        prelude_msg_t *msg;
+        int ret;
 
-        if ( prelude_client_get_flags(msgbuf->client) & PRELUDE_CLIENT_FLAGS_ASYNC_SEND )
-                msg = do_send_msg_async(msgbuf);
-        else
-                msg = do_send_msg(msgbuf);
+        ret = msgbuf->send_msg(msgbuf, msg);
+        if ( ret < 0 )
+                return ret;
         
-        return msg;
+        prelude_msg_recycle(msg);
+
+        return 0;
+}
+
+
+
+static int do_send_msg_async(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg) 
+{
+        int ret;
+
+        ret = msgbuf->send_msg(msgbuf, msg);
+        if ( ret < 0 )
+                return ret;
+        
+        ret = prelude_msg_dynamic_new(&msgbuf->msg, default_send_msg_cb, msgbuf);
+        if ( ret < 0 )
+                return ret;
+
+        return 0;
+}
+
+
+
+static int default_send_msg_cb(prelude_msg_t **msg, void *data)
+{
+        int ret;
+        prelude_msgbuf_t *msgbuf = data;
+
+        if ( msgbuf->flags & PRELUDE_MSGBUF_FLAGS_ASYNC )
+                ret = do_send_msg_async(msgbuf, *msg);
+        else
+                ret = do_send_msg(msgbuf, *msg);
+
+        *msg = msgbuf->msg;
+        
+        return ret;
 }
 
 
@@ -94,9 +105,9 @@ static prelude_msg_t *default_send_msg_cb(prelude_msgbuf_t *msgbuf)
  * prelude_msgbuf_set() append @len bytes of data from the @data buffer
  * to the @msgbuf object representing a message. The data is tagged with @tag.
  */
-void prelude_msgbuf_set(prelude_msgbuf_t *msgbuf, uint8_t tag, uint32_t len, const void *data)
+int prelude_msgbuf_set(prelude_msgbuf_t *msgbuf, uint8_t tag, uint32_t len, const void *data)
 {
-        prelude_msg_set(msgbuf->msg, tag, len, data);
+        return prelude_msg_set(msgbuf->msg, tag, len, data);
 }
 
 
@@ -114,24 +125,19 @@ void prelude_msgbuf_set(prelude_msgbuf_t *msgbuf, uint8_t tag, uint32_t len, con
  *
  * Returns: a #prelude_msgbuf_t object, or NULL if an error occured.
  */
-prelude_msgbuf_t *prelude_msgbuf_new(prelude_client_t *client)
+int prelude_msgbuf_new(prelude_msgbuf_t **msgbuf)
 {
-        prelude_msgbuf_t *msgbuf;
+        int ret;
 
-        msgbuf = malloc(sizeof(*msgbuf));
-        if ( ! msgbuf ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
-
-        msgbuf->client = client;
-        msgbuf->send_msg = default_send_msg_cb;
+        *msgbuf = calloc(1, sizeof(**msgbuf));
+        if ( ! *msgbuf )
+                return prelude_error_from_errno(errno);
         
-        msgbuf->msg = prelude_msg_dynamic_new((void *) msgbuf->send_msg, msgbuf);     
-        if ( ! msgbuf->msg )
-                return NULL;
-
-        return msgbuf;
+        ret = prelude_msg_dynamic_new(&(*msgbuf)->msg, default_send_msg_cb, msgbuf);     
+        if ( ret < 0 )
+                return ret;
+        
+        return 0;
 }
 
 
@@ -167,23 +173,22 @@ void prelude_msgbuf_mark_end(prelude_msgbuf_t *msgbuf)
          * FIXME:
          * only flush the message if we're not under an alert burst.
          */
-        msgbuf->send_msg(msgbuf);
+        default_send_msg_cb(&msgbuf->msg, msgbuf);
 }
 
 
 
 
 /**
- * prelude_msgbuf_close:
+ * prelude_msgbuf_destroy:
  * @msgbuf: Pointer on a #prelude_msgbuf_t object.
  *
- * Close the message associated with @msgbuf,
- * all data remaining will be flushed before closing it.
+ * Destroy @msgbuf, all data remaining will be flushed.
  */
-void prelude_msgbuf_close(prelude_msgbuf_t *msgbuf) 
+void prelude_msgbuf_destroy(prelude_msgbuf_t *msgbuf) 
 {        
         if ( msgbuf->msg && ! prelude_msg_is_empty(msgbuf->msg) )
-                msgbuf->send_msg(msgbuf);
+                default_send_msg_cb(&msgbuf->msg, msgbuf);
 
         if ( msgbuf->msg )
                 prelude_msg_destroy(msgbuf->msg);
@@ -201,10 +206,10 @@ void prelude_msgbuf_close(prelude_msgbuf_t *msgbuf)
  *
  * Associate an application specific callback to this @msgbuf.
  */
-void prelude_msgbuf_set_callback(prelude_msgbuf_t *msgbuf, prelude_msg_t *(*send_msg)(prelude_msgbuf_t *msgbuf))
+void prelude_msgbuf_set_callback(prelude_msgbuf_t *msgbuf,
+                                 int (*send_msg)(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg))
 {
         msgbuf->send_msg = send_msg;
-        prelude_msg_set_callback(msgbuf->msg, (void *) send_msg);
 }
 
 
@@ -217,20 +222,23 @@ void prelude_msgbuf_set_data(prelude_msgbuf_t *msgbuf, void *data)
 
 
 
-
 void *prelude_msgbuf_get_data(prelude_msgbuf_t *msgbuf)
 {
         return msgbuf->data;
 }
 
 
-
-prelude_client_t *prelude_msgbuf_get_client(prelude_msgbuf_t *msgbuf)
-{
-        return msgbuf->client;
+void prelude_msgbuf_set_flags(prelude_msgbuf_t *msgbuf, prelude_msgbuf_flags_t flags)
+{        
+        msgbuf->flags = flags;
 }
 
 
+
+prelude_msgbuf_flags_t prelude_msgbuf_get_flags(prelude_msgbuf_t *msgbuf)
+{
+        return msgbuf->flags;
+}
 
 
 

@@ -21,32 +21,38 @@
 *
 *****/
 
-#ifndef _LIBPRELUDE_PRELUDE_MESSAGE_BUFFERED_H
-#define _LIBPRELUDE_PRELUDE_MESSAGE_BUFFERED_H
+#ifndef _LIBPRELUDE_PRELUDE_MSGBUF_H
+#define _LIBPRELUDE_PRELUDE_MSGBUF_H
 
-typedef struct prelude_message_buffered prelude_msgbuf_t;
+typedef struct prelude_msgbuf prelude_msgbuf_t;
+
+typedef enum {
+        PRELUDE_MSGBUF_FLAGS_ASYNC = 0x01,
+} prelude_msgbuf_flags_t;
 
 
 #include "prelude-client.h"
 #include "prelude-msg.h"
 
 
-prelude_client_t *prelude_msgbuf_get_client(prelude_msgbuf_t *msgbuf);
+int prelude_msgbuf_new(prelude_msgbuf_t **ret);
 
-prelude_msgbuf_t *prelude_msgbuf_new(prelude_client_t *client);
-
-void prelude_msgbuf_close(prelude_msgbuf_t *msgbuf);
+void prelude_msgbuf_destroy(prelude_msgbuf_t *msgbuf);
 
 void prelude_msgbuf_mark_end(prelude_msgbuf_t *msgbuf);
 
-void prelude_msgbuf_set(prelude_msgbuf_t *msgbuf, uint8_t tag, uint32_t len, const void *data);
+int prelude_msgbuf_set(prelude_msgbuf_t *msgbuf, uint8_t tag, uint32_t len, const void *data);
 
 prelude_msg_t *prelude_msgbuf_get_msg(prelude_msgbuf_t *msgbuf);
 
-void prelude_msgbuf_set_callback(prelude_msgbuf_t *msgbuf, prelude_msg_t *(*send_msg)(prelude_msgbuf_t *msgbuf));
+void prelude_msgbuf_set_callback(prelude_msgbuf_t *msgbuf, int (*send_msg)(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg));
 
 void prelude_msgbuf_set_data(prelude_msgbuf_t *msgbuf, void *data);
 
 void *prelude_msgbuf_get_data(prelude_msgbuf_t *msgbuf);
 
-#endif /* _LIBPRELUDE_PRELUDE_MESSAGE_BUFFERED_H */
+void prelude_msgbuf_set_flags(prelude_msgbuf_t *msgbuf, prelude_msgbuf_flags_t flags);
+
+prelude_msgbuf_flags_t prelude_msgbuf_get_flags(prelude_msgbuf_t *msgbuf);
+
+#endif /* _LIBPRELUDE_PRELUDE_MSGBUF_H */
