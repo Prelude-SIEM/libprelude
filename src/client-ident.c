@@ -45,13 +45,6 @@
 #include "client-ident.h"
 
 
-static void file_error(prelude_client_t *client) 
-{
-        prelude_client_installation_error(client);
-        exit(1);
-}
-
-
 
 static int declare_ident_to_manager(uint64_t analyzerid, prelude_io_t *fd) 
 {
@@ -95,13 +88,13 @@ int prelude_client_ident_init(prelude_client_t *client, uint64_t *analyzerid)
         fd = fopen(filename, "r");
         if ( ! fd ) {
                 log(LOG_ERR, "error opening analyzer identity file: %s.\n", filename);
-                file_error(client);
+                prelude_client_installation_error(client);
                 return -1;
         }
 
         if ( ! fgets(buf, sizeof(buf), fd) ) {
                 log(LOG_ERR, "error reading analyzerid from %s.\n", filename);
-                file_error(client);
+                prelude_client_installation_error(client);
                 fclose(fd);
                 return -1;
         }
