@@ -1,3 +1,7 @@
+2002-07-30  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* configure.in: update version number to 0.8.0.
+
 2002-07-28  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-getopt.c (parse_argument): 
