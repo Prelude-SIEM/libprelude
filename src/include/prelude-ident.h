@@ -24,7 +24,7 @@
 #ifndef _LIBPRELUDE_PRELUDE_IDENT_H
 #define _LIBPRELUDE_PRELUDE_IDENT_H
 
-#include <prelude-inttypes.h>
+#include "prelude-inttypes.h"
 
 typedef struct prelude_ident prelude_ident_t;
 

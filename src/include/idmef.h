@@ -24,7 +24,7 @@
 #ifndef _LIBPRELUDE_IDMEF_H
 #define _LIBPRELUDE_IDMEF_H
 
-#include <prelude-inttypes.h>
+#include "prelude-inttypes.h"
 #include <sys/types.h>
 
 #include "prelude-list.h"
