@@ -32,7 +32,7 @@ typedef struct prelude_io prelude_io_t;
 /*
  * Object creation / destruction functions.
  */
-prelude_io_t *prelude_io_new(void);
+int prelude_io_new(prelude_io_t **pio);
 
 void prelude_io_destroy(prelude_io_t *pio);
 
