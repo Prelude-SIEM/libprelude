@@ -51,7 +51,7 @@ void extract_ipv4_addr(struct in_addr *out, const struct in_addr *addr)
         *out = *addr;
 #else
         struct in_addr tmp;
-        memmove(*out, addr, sizeof(tmp));
+        memmove(out, addr, sizeof(tmp));
 #endif
 }
 
