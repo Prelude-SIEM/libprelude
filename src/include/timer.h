@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-#include "list.h"
+#include <list.h>
 
 
 typedef struct {

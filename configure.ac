@@ -147,10 +147,11 @@ CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declara
 
 AC_CONFIG_FILES([
 Makefile 
+libprelude-config
 src/Makefile 
 src/include/Makefile
 libmissing/Makefile
-])
+], [ chmod +x libprelude-config ])
 AC_OUTPUT
 
 
