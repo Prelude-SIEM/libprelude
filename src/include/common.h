@@ -24,6 +24,8 @@
 #ifndef _LIBPRELUDE_COMMON_H
 #define _LIBPRELUDE_COMMON_H
 
+#include "idmef.h"
+#include "prelude-msg.h"
 #include "prelude-inttypes.h"
 #include <netinet/in.h>
 #include <time.h>
@@ -43,5 +45,7 @@ int prelude_get_file_name_and_path(const char *str, char **name, char **path);
 int prelude_get_gmt_offset(int32_t *gmt_offset);
 
 time_t prelude_timegm(struct tm *tm);
+
+prelude_msg_priority_t idmef_impact_severity_to_msg_priority(idmef_impact_severity_t severity);
 
 #endif /* _LIBPRELUDE_COMMON_H */

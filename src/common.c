@@ -42,9 +42,10 @@
 
 #include "prelude-error.h"
 #include "libmissing.h"
+
+#include "idmef.h"
 #include "prelude-log.h"
 #include "common.h"
-
 
 
 static int find_absolute_path(const char *cwd, const char *file, char **path)
@@ -105,7 +106,7 @@ int prelude_resolve_addr(const char *hostname, struct in_addr *addr)
         if ( ! h )
                 return -1;
 
-        assert(h->h_length <= sizeof(*addr));
+        assert((unsigned int) h->h_length <= sizeof(*addr));
         
         memcpy(addr, h->h_addr, h->h_length);
                 
@@ -308,10 +309,15 @@ int prelude_get_file_name_and_path(const char *str, char **name, char **path)
         }
 
         if ( *str != '/' ) {
+                while ( *str == '.' && *(str + 1) == '.' && (ptr = strrchr(cwd, '/')) ) {
+                        str += 3;
+                        *ptr = '\0';
+                }
+                
                 ret = snprintf(buf, sizeof(buf), "%s/%s", cwd, (*str == '.') ? str + 2 : str);
                 if ( ret < 0 || ret >= sizeof(buf) )
                         return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
-                
+
                 return prelude_get_file_name_and_path(buf, name, path);
         }
         
@@ -373,4 +379,25 @@ time_t prelude_timegm(struct tm *tm)
         tzset();
 
         return retval;
+}
+
+
+
+/*
+ * keep this function consistant with idmef_impact_severity_t value.
+ */
+prelude_msg_priority_t idmef_impact_severity_to_msg_priority(idmef_impact_severity_t severity)
+{        
+        static const prelude_msg_priority_t priority[] = {
+                PRELUDE_MSG_PRIORITY_NONE, /* not bound                         */
+                PRELUDE_MSG_PRIORITY_LOW,  /* IDMEF_IMPACT_SEVERITY_LOW    -> 1 */
+                PRELUDE_MSG_PRIORITY_MID,  /* IDMEF_IMPACT_SEVERITY_MEDIUM -> 2 */
+                PRELUDE_MSG_PRIORITY_HIGH, /* IDMEF_IMPACT_SEVERITY_HIGH   -> 3 */
+                PRELUDE_MSG_PRIORITY_LOW   /* IDMEF_IMPACT_SEVERITY_INFO   -> 4 */
+        };
+                
+        if ( severity >= (sizeof(priority) / sizeof(*priority)) )
+                return PRELUDE_MSG_PRIORITY_NONE;
+        
+        return priority[severity];
 }
