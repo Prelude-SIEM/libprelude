@@ -136,7 +136,7 @@ int prelude_msgbuf_new(prelude_msgbuf_t **msgbuf)
         if ( ! *msgbuf )
                 return prelude_error_from_errno(errno);
         
-        ret = prelude_msg_dynamic_new(&(*msgbuf)->msg, default_send_msg_cb, msgbuf);     
+        ret = prelude_msg_dynamic_new(&(*msgbuf)->msg, default_send_msg_cb, *msgbuf);     
         if ( ret < 0 )
                 return ret;
         
