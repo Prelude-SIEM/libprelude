@@ -29,10 +29,14 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 
-#include "config.h"
-
 #ifndef MISSING_GETADDRINFO
- typedef struct addrinfo prelude_addrinfo_t;
+
+#ifndef AI_CANONNAME
+ #define AI_CANONNAME 0x01
+#endif
+
+typedef struct addrinfo prelude_addrinfo_t;
+
 #else
 
 typedef struct prelude_addrinfo {
