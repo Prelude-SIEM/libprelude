@@ -166,6 +166,7 @@ static int read_option_request(prelude_client_t *client, prelude_msgbuf_t *msgbu
                         
                 case PRELUDE_MSG_OPTION_SET:
                 case PRELUDE_MSG_OPTION_GET:
+                case PRELUDE_MSG_OPTION_COMMIT:
                 case PRELUDE_MSG_OPTION_DESTROY:
                         type = tag;
                         break;
