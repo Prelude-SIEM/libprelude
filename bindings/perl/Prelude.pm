@@ -82,7 +82,7 @@ sub	value2scalar($)
 	$result->{sec} = Prelude::idmef_time_get_sec($time);
 	$result->{usec} = Prelude::idmef_time_get_usec($time);
 
-    } elsif ( $type == $Prelude::IDMEF_VALUE_TYPEdata ) {
+    } elsif ( $type == $Prelude::IDMEF_VALUE_TYPE_DATA ) {
 	my $data;
 
 	$data = Prelude::idmef_value_get_data($value) or return undef;
@@ -135,7 +135,7 @@ sub	set
 	return 0;
     }
 
-    if ( Prelude::idmef_object_get_type($object) == $Prelude::IDMEF_VALUE_TYPEtime ) {
+    if ( Prelude::idmef_object_get_type($object) == $Prelude::IDMEF_VALUE_TYPE_TIME ) {
 	my $time;
 
 	$time = Prelude::idmef_time_new();
@@ -362,10 +362,10 @@ sub	tostring
     return substr($buffer, 0, $retval);
 }
 
-sub	_add_criteria
+sub	_add
 {
     my	$self = shift;
-    my	$operator = shift;
+    my	$add_function = shift;
     my	$criteria;
 
     if ( ref $_[0] eq "IDMEFCriteria" ) {
@@ -379,92 +379,23 @@ sub	_add_criteria
 
     return 0 unless ( $criteria );
 
-    if ( Prelude::idmef_criteria_add_criteria($$self, $criteria, $operator) < 0 ) {
-	Prelude::idmef_criteria_destroy($criteria);
-	return 0;
-    }
+    &$add_function($$self, $criteria);
 
     return 1; 
-}
-
-sub	_add
-{
-    my	$self = shift;
-    my	$operator = shift;
-    my	$object_str;
-    my	$relation_str;
-    my	$value_str;
-    my	$object;
-    my	$relation;
-    my	$value;
-    my	$criterion;
-
-    return $self->_add_criteria($operator, @_) if ( @_ == 1 && defined $_[0] );
-
-    $object_str = shift || return 0;
-    $relation_str = shift || return 0;
-    $value_str = shift || return 0;
-
-    if ( $relation_str eq "=" ) {
-	$relation = $Prelude::relation_equal;
-
-    } elsif ( $relation_str eq "!=" ) {
-	$relation = $Prelude::relation_not_equal;
-    
-    } elsif ( $relation_str eq ">" ) {
-	$relation = $Prelude::relation_greater;
-	
-    } elsif ( $relation_str eq ">=" ) {
-	$relation = $Prelude::relation_greater_or_equal;
-
-    } elsif ( $relation_str eq "<" ) {
-	$relation = $Prelude::relation_less;
-		
-    } elsif ( $relation_str eq "<=" ) {
-	$relation = $Prelude::relation_less_or_equal;
-
-    } else {
-	return 0;
-    }
-
-    $object = Prelude::idmef_object_new_fast($object_str);
-    unless ( $object ) {
-	return 0;
-    }
-
-    $value = Prelude::idmef_criterion_value_new_generic($object, $value_str);
-    unless ( $value ) {
-	Prelude::idmef_object_destroy($object);
-	return 0;
-    }
-
-    $criterion = Prelude::idmef_criterion_new($object, $relation, $value);
-    unless ( $criterion ) {
-	Prelude::idmef_object_destroy($object);
-	Prelude::idmef_criterion_value_destroy($value);
-	return 0;
-    }
-
-    if ( Prelude::idmef_criteria_add_criterion($$self, $criterion, $operator) < 0 ) {
-	Prelude::idmef_criterion_destroy($criterion);
-	return 0;
-    }
-
-    return 1;
 }
 
 sub	and
 {
     my	$self = shift;
 
-    return $self->_add($Prelude::operator_and, @_);
+    return $self->_add(Prelude::idmef_criteria_and_criteria, @_);
 }
 
 sub	or
 {
     my	$self = shift;
 
-    return $self->_add($Prelude::operator_or, @_);
+    return $self->_add(Prelude::idmef_criteria_or_criteria, @_);
 }
 
 sub	DESTROY
@@ -673,21 +604,15 @@ Dump the criteria in the returned scalar.
 
 =item B<< $criteria->and(criteria_new) >>
 
-=item B<< $criteria->and(object, relation, value) >>
-
 Append a new criteria to a given criteria with operator C<< && >>, criteria_new can be either
-a criteria string or a criteria string.
-The new criteria can be a criteria string, a criteria object, or an object + relation + value.
+a criteria string or a criteria object.
 
 Example:
     $criteria = new IDMEFCriteria();
-    $criteria->and("alert.create_time", ">=", "2003-11-11");
     $criteria->and("alert.create_time < 2003-11-12");
     $criteria->and(new IDMEFCriteria("alert.target.service.port == 80"));
 
 =item B<< $criteria->or(criteria_new) >>
-
-=item B<< $criteria->or(object, relation, value) >>
 
 Same as above with operator C<< || >>.
 
