@@ -95,7 +95,7 @@ void timer_elapsed(prelude_timer_t *timer, struct timeval *tv);
  * Wake up time that need it.
  * This function should be called every second to work properly.
  */
-void wake_up_timer(void);
+void prelude_wake_up_timer(void);
 
 
 #endif

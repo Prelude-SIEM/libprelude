@@ -29,7 +29,7 @@
 
 #include "config.h"
 
-#include "list.h"
+#include "prelude-list.h"
 #include "config-engine.h"
 #include "plugin-common.h"
 #include "common.h"

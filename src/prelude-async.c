@@ -21,14 +21,32 @@ static pthread_mutex_t mutex;
 
 
 
+static double get_elapsed_time(struct timeval *start) 
+{
+        struct timeval tv;
+        double current, s;
+        
+        gettimeofday(&tv, NULL);
+        
+        current = (double) tv.tv_sec + (double) (tv.tv_usec * 1e-6);
+        s = (double) start->tv_sec + (double) (start->tv_usec * 1e-6);
+
+        return current - s;
+}
+
+
+
+
 static void wait_timer_and_data(void) 
 {
         int ret = 0;
+        double elapsed;
         struct timespec ts;
         struct timeval now;
+        static struct timeval last_timer_wake_up;
         
         /*
-         * Setup the condition timer.
+         * Setup the condition timer to one second.
          */ 
         gettimeofday(&now, NULL);
         ts.tv_sec = now.tv_sec + 1;
@@ -39,17 +57,31 @@ static void wait_timer_and_data(void)
                 ret = pthread_cond_timedwait(&cond, &mutex, &ts);
         }
         pthread_mutex_unlock(&mutex);
-        
-        if ( ret == ETIMEDOUT ) {
+
+        /*
+         * Data is available for processing, but we also want to check
+         * the average time we spent waiting on the condition. (which may be
+         * > 1 second if the condition was signaled several time).
+         */
+        if ( ret != ETIMEDOUT ) {
+                elapsed = get_elapsed_time(&last_timer_wake_up);
+                if ( elapsed >= 1 ) {
+                        gettimeofday(&last_timer_wake_up, NULL);
+                        prelude_wake_up_timer();
+                }
+        }
+
+        else {
+                gettimeofday(&last_timer_wake_up, NULL);
                 prelude_wake_up_timer();
                 wait_timer_and_data(); /* tail recursion */
-        }
+        } 
 }
 
 
 
 
-static void async_thread(void) 
+static void *async_thread(void *arg) 
 {
         prelude_async_object_t *obj;
         struct list_head *tmp, *bkp;

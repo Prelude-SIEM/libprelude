@@ -1,3 +1,12 @@
+2001-11-07  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-async.c (get_elapsed_time): new function.
+	(wait_timer_and_data): check the average time we spent waiting on
+	the condition. (which may be > 1 second if the condition was signaled 
+	several time).
+
+	* src/sensor.c: include prelude-list.h, not list.h
+
 2001-11-06  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-client-mgr.c (prelude_client_mgr_broadcast_msg): 
