@@ -264,10 +264,13 @@ static char *strip_value(const char *in)
 static int parse_buffer(char *str, char **entry, char **value)
 {
         char *ptr, *buf = str;
-                
+
+        if ( ! *str )
+                return 0;
+        
         *value = *entry = NULL;
 
-        ptr = strsep(&buf, "=");
+        ptr = strsep(&buf, "=");        
         if ( ! *ptr )
                 return -1;
         
@@ -373,6 +376,9 @@ static int search_entry(config_t *cfg, const char *section,
                 if ( ret < 0 )
                         return -1;
 
+                if ( ! *eout )
+                        continue;
+                
                 ret = strcmp(entry, *eout);
                 if ( ret == 0 )
                         return i;
