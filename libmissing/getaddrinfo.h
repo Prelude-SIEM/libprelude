@@ -1,5 +1,5 @@
 /* Get address information.
-   Copyright (C) 1996-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    Contributed by Simon Josefsson <simon@josefsson.org>.
 
    This program is free software; you can redistribute it and/or modify
@@ -19,10 +19,9 @@
 #ifndef GETADDRINFO_H
 # define GETADDRINFO_H
 
-/* Get socklen_t, struct sockaddr. */
+/* Get getaddrinfo declarations, if available.  Also get 'socklen_t',
+   and 'struct sockaddr' via sys/types.h which are used below. */
 # include <sys/types.h>
-
-/* Get getaddrinfo declarations, if available. */
 # include <sys/socket.h>
 # include <netdb.h>
 
