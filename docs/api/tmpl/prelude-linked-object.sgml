@@ -21,12 +21,11 @@ prelude-linked-object
 
 
 
-<!-- ##### STRUCT prelude_linked_object_t ##### -->
+<!-- ##### TYPEDEF prelude_linked_object_t ##### -->
 <para>
 
 </para>
 
-@T: 
 
 <!-- ##### MACRO prelude_linked_object_get_object ##### -->
 <para>

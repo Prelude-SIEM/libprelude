@@ -1,4 +1,4 @@
-# Copyright (C) 2003 Nicolas Delon <delon.nicolas@wanadoo.fr>
+# Copyright (C) 2003,2004 Nicolas Delon <nicolas@prelude-ids.org>
 # All Rights Reserved
 #
 # This file is part of the Prelude program.
@@ -141,7 +141,7 @@ sub	struct_field_normal
     my	$struct = shift;
     my	$field = shift;
     my	$ptr = ($field->{metatype} & (&METATYPE_STRUCT | &METATYPE_LIST)) ? "*" : "";
-    my	$type = shift || $field->{short_typename};
+    my	$type = shift || $field->{value_type};
     my	$var_type = shift || "$field->{typename}";
 
     $self->output("

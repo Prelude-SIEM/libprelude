@@ -1,4 +1,4 @@
-# Copyright (C) 2003 Nicolas Delon <delon.nicolas@wanadoo.fr>
+# Copyright (C) 2003,2004 Nicolas Delon <nicolas@prelude-ids.org>
 # All Rights Reserved
 #
 # This file is part of the Prelude program.
@@ -34,7 +34,7 @@ sub	header
 /*****
 *
 * Copyright (C) 2001-2004 Yoann Vandoorselaere <yoann\@prelude-ids.org>
-* Copyright (C) 2003 Nicolas Delon <delon.nicolas\@wanadoo.fr>
+* Copyright (C) 2003,2004 Nicolas Delon <nicolas\@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -101,7 +101,7 @@ static inline void idmef_string_write(idmef_string_t *string, prelude_msgbuf_t *
 
 
 
-static inline void idmef_uint64_write(uint64_t data, prelude_msgbuf_t *msg, uint8_t tag) 
+static inline void uint64_write(uint64_t data, prelude_msgbuf_t *msg, uint8_t tag) 
 \{
         uint64_t dst;
         
@@ -115,7 +115,7 @@ static inline void idmef_uint64_write(uint64_t data, prelude_msgbuf_t *msg, uint
 
 
 
-static inline void idmef_uint32_write(uint32_t data, prelude_msgbuf_t *msg, uint8_t tag) 
+static inline void uint32_write(uint32_t data, prelude_msgbuf_t *msg, uint8_t tag) 
 \{        
         if ( data == 0 )
                 return;
@@ -126,7 +126,7 @@ static inline void idmef_uint32_write(uint32_t data, prelude_msgbuf_t *msg, uint
 
 
 
-static inline void idmef_uint16_write(uint16_t data, prelude_msgbuf_t *msg, uint8_t tag) 
+static inline void uint16_write(uint16_t data, prelude_msgbuf_t *msg, uint8_t tag) 
 \{
         if ( data == 0 )
                 return;
@@ -137,7 +137,7 @@ static inline void idmef_uint16_write(uint16_t data, prelude_msgbuf_t *msg, uint
 
 
 
-static inline void idmef_float_write(float data, prelude_msgbuf_t *msg, uint8_t tag)
+static inline void float_write(float data, prelude_msgbuf_t *msg, uint8_t tag)
 \{
 	if ( data == 0.0 )
 		return;
@@ -207,7 +207,7 @@ sub	struct_field_normal
     my	$type = shift || $field->{short_typename};
     my	$function;
 
-    $function = $field->{dynamic_ident} ? "idmef_dynamic_ident_write" : "idmef_${type}_write";
+    $function = $field->{dynamic_ident} ? "idmef_dynamic_ident_write" : "${type}_write";
 
     $self->output(" " x 8, 
 		  "$function(idmef_$struct->{short_typename}_get_$field->{name}($struct->{short_typename}), ", 

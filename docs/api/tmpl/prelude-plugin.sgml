@@ -38,12 +38,11 @@ prelude-plugin
 
 
 
-<!-- ##### STRUCT prelude_plugin_generic_t ##### -->
+<!-- ##### TYPEDEF prelude_plugin_generic_t ##### -->
 <para>
 
 </para>
 
-@C: 
 
 <!-- ##### MACRO prelude_plugin_name ##### -->
 <para>

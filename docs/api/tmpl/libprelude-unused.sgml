@@ -1097,6 +1097,12 @@ thread
 </para>
 
 
+<!-- ##### MACRO YYSTYPE_IS_DECLARED ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### FUNCTION analyse_install_msg ##### -->
 <para>
 
@@ -3556,4 +3562,10 @@ thread
 @key1: 
 @key2: 
 @Returns: 
+
+<!-- ##### MACRO yystype ##### -->
+<para>
+
+</para>
+
 

@@ -1,62 +1,58 @@
 <MACRO>
-<NAME>TOK_STRING</NAME>
-#define TOK_STRING 258
-</MACRO>
-<MACRO>
-<NAME>TOK_RELATION_SUBSTRING</NAME>
-#define TOK_RELATION_SUBSTRING 259
-</MACRO>
-<MACRO>
-<NAME>TOK_RELATION_REGEXP</NAME>
-#define TOK_RELATION_REGEXP 260
-</MACRO>
-<MACRO>
-<NAME>TOK_RELATION_GREATER</NAME>
-#define TOK_RELATION_GREATER 261
-</MACRO>
-<MACRO>
-<NAME>TOK_RELATION_GREATER_OR_EQUAL</NAME>
-#define TOK_RELATION_GREATER_OR_EQUAL 262
-</MACRO>
-<MACRO>
-<NAME>TOK_RELATION_LESS</NAME>
-#define TOK_RELATION_LESS 263
-</MACRO>
-<MACRO>
-<NAME>TOK_RELATION_LESS_OR_EQUAL</NAME>
-#define TOK_RELATION_LESS_OR_EQUAL 264
-</MACRO>
-<MACRO>
-<NAME>TOK_RELATION_EQUAL</NAME>
-#define TOK_RELATION_EQUAL 265
-</MACRO>
-<MACRO>
-<NAME>TOK_RELATION_NOT_EQUAL</NAME>
-#define TOK_RELATION_NOT_EQUAL 266
-</MACRO>
-<MACRO>
-<NAME>TOK_RELATION_IS_NULL</NAME>
-#define TOK_RELATION_IS_NULL 267
-</MACRO>
-<MACRO>
-<NAME>TOK_OPERATOR_AND</NAME>
-#define TOK_OPERATOR_AND 268
-</MACRO>
-<MACRO>
-<NAME>TOK_OPERATOR_OR</NAME>
-#define TOK_OPERATOR_OR 269
-</MACRO>
-<MACRO>
-<NAME>yystype</NAME>
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
-</MACRO>
-<MACRO>
-<NAME>YYSTYPE_IS_DECLARED</NAME>
-# define YYSTYPE_IS_DECLARED 1
+<NAME>YYSTYPE</NAME>
+# define YYSTYPE yystype
 </MACRO>
 <MACRO>
 <NAME>YYSTYPE_IS_TRIVIAL</NAME>
 # define YYSTYPE_IS_TRIVIAL 1
+</MACRO>
+<MACRO>
+<NAME>TOK_STRING</NAME>
+# define	TOK_STRING	257
+</MACRO>
+<MACRO>
+<NAME>TOK_RELATION_SUBSTRING</NAME>
+# define	TOK_RELATION_SUBSTRING	258
+</MACRO>
+<MACRO>
+<NAME>TOK_RELATION_REGEXP</NAME>
+# define	TOK_RELATION_REGEXP	259
+</MACRO>
+<MACRO>
+<NAME>TOK_RELATION_GREATER</NAME>
+# define	TOK_RELATION_GREATER	260
+</MACRO>
+<MACRO>
+<NAME>TOK_RELATION_GREATER_OR_EQUAL</NAME>
+# define	TOK_RELATION_GREATER_OR_EQUAL	261
+</MACRO>
+<MACRO>
+<NAME>TOK_RELATION_LESS</NAME>
+# define	TOK_RELATION_LESS	262
+</MACRO>
+<MACRO>
+<NAME>TOK_RELATION_LESS_OR_EQUAL</NAME>
+# define	TOK_RELATION_LESS_OR_EQUAL	263
+</MACRO>
+<MACRO>
+<NAME>TOK_RELATION_EQUAL</NAME>
+# define	TOK_RELATION_EQUAL	264
+</MACRO>
+<MACRO>
+<NAME>TOK_RELATION_NOT_EQUAL</NAME>
+# define	TOK_RELATION_NOT_EQUAL	265
+</MACRO>
+<MACRO>
+<NAME>TOK_RELATION_IS_NULL</NAME>
+# define	TOK_RELATION_IS_NULL	266
+</MACRO>
+<MACRO>
+<NAME>TOK_OPERATOR_AND</NAME>
+# define	TOK_OPERATOR_AND	267
+</MACRO>
+<MACRO>
+<NAME>TOK_OPERATOR_OR</NAME>
+# define	TOK_OPERATOR_OR	268
 </MACRO>
 <VARIABLE>
 <NAME>yylval</NAME>
@@ -119,13 +115,12 @@ extern YYSTYPE yylval;
 #define PRELUDE_LINKED_OBJECT \
         prelude_list_t list
 </MACRO>
-<STRUCT>
+<TYPEDEF>
 <NAME>prelude_linked_object_t</NAME>
-struct prelude_linked_object_t
-{
+typedef struct {
         PRELUDE_LINKED_OBJECT;
-};
-</STRUCT>
+} prelude_linked_object_t;
+</TYPEDEF>
 <MACRO>
 <NAME>prelude_linked_object_get_object</NAME>
 #define prelude_linked_object_get_object(listentry, type)  \
@@ -4613,10 +4608,9 @@ const char *str
 <NAME>s_fp</NAME>
 typedef int32_t s_fp;
 </TYPEDEF>
-<STRUCT>
+<TYPEDEF>
 <NAME>l_fp</NAME>
-struct l_fp
-{
+typedef struct {
         union {
                 uint32_t Xl_ui;
                 int32_t Xl_i;
@@ -4625,8 +4619,8 @@ struct l_fp
                 uint32_t Xl_uf;
                 int32_t Xl_f;
         } Ul_f;
-};
-</STRUCT>
+} l_fp;
+</TYPEDEF>
 <MACRO>
 <NAME>l_ui</NAME>
 #define l_ui    Ul_i.Xl_ui              /* unsigned integral part */
@@ -5387,13 +5381,12 @@ static int prefix ## _get_ ## name(void *context, prelude_option_t *opt, char *b
         char *desc; int desclen;             \
         void (*destroy)(prelude_plugin_instance_t *pi)
 </MACRO>
-<STRUCT>
+<TYPEDEF>
 <NAME>prelude_plugin_generic_t</NAME>
-struct prelude_plugin_generic_t
-{
+typedef struct {
         PRELUDE_PLUGIN_GENERIC;
-};
-</STRUCT>
+} prelude_plugin_generic_t;
+</TYPEDEF>
 <MACRO>
 <NAME>prelude_plugin_name</NAME>
 #define prelude_plugin_name(p) (p)->name
@@ -5645,13 +5638,12 @@ void *object, void *data
         void *data;                            \
         prelude_async_func_t func
 </MACRO>
-<STRUCT>
+<TYPEDEF>
 <NAME>prelude_async_object_t</NAME>
-struct prelude_async_object_t
-{
+typedef struct {
         PRELUDE_ASYNC_OBJECT;
-};
-</STRUCT>
+} prelude_async_object_t;
+</TYPEDEF>
 <FUNCTION>
 <NAME>prelude_async_init</NAME>
 <RETURNS>int  </RETURNS>
@@ -6107,10 +6099,9 @@ config_t *cfg
 <RETURNS>int  </RETURNS>
 config_t *cfg, const char *section, const char *entry
 </FUNCTION>
-<STRUCT>
+<TYPEDEF>
 <NAME>prelude_timer_t</NAME>
-struct prelude_timer_t
-{
+typedef struct {
         prelude_list_t list;
 
         int expire;
@@ -6118,8 +6109,8 @@ struct prelude_timer_t
 
         void *data;
         void (*function)(void *data);
-};
-</STRUCT>
+} prelude_timer_t;
+</TYPEDEF>
 <MACRO>
 <NAME>timer_expire</NAME>
 #define timer_expire(timer) (timer)->expire
@@ -6433,10 +6424,9 @@ idmef_criteria_t *criteria
 <NAME>idmef_type_data</NAME>
 #define idmef_type_data 2
 </MACRO>
-<STRUCT>
+<TYPEDEF>
 <NAME>data</NAME>
-struct data
-{
+typedef struct {
         int refcount;
         
         int flags;
@@ -6445,8 +6435,9 @@ struct data
         union {
                 unsigned char *rw_data;
                 const unsigned char *ro_data;
-        };
-</STRUCT>
+        } data;
+        
+</TYPEDEF>
 <FUNCTION>
 <NAME>idmef_data_new</NAME>
 <RETURNS>idmef_data_t  *</RETURNS>
@@ -6854,28 +6845,26 @@ prelude_client_t *client, prelude_io_t *io, int crypt
 <RETURNS>void  *</RETURNS>
 prelude_client_t *client
 </FUNCTION>
-<STRUCT>
+<TYPEDEF>
 <NAME>children_list_t</NAME>
-struct children_list_t
-{
+typedef struct {
 	char *name;
 	int list;
 	idmef_value_type_id_t type;
 	idmef_object_type_t object_type;
-};
-</STRUCT>
-<STRUCT>
+} children_list_t;
+</TYPEDEF>
+<TYPEDEF>
 <NAME>object_data_t</NAME>
-struct object_data_t
-{
+typedef struct {
 	char *name;
 	children_list_t *children_list;
 	void *(*get_child)(void *ptr, idmef_child_t child);
 	void *(*new_child)(void *ptr, idmef_child_t child, int n);
 	int (*to_numeric)(const char *name);
 	const char *(*to_string)(int val);
-};
-</STRUCT>
+} object_data_t;
+</TYPEDEF>
 <MACRO>
 <NAME>CLI_HOOK</NAME>
 #define CLI_HOOK 0x1 /* Option to be hooked to command line */
@@ -7405,7 +7394,7 @@ prelude_msgbuf_t *msgbuf
 <FUNCTION>
 <NAME>prelude_msgbuf_set_callback</NAME>
 <RETURNS>void  </RETURNS>
-prelude_msgbuf_t *msgbuf, prelude_msg_t *(*send_msg)(void *data)
+prelude_msgbuf_t *msgbuf, prelude_msg_t *(*send_msg)(prelude_msgbuf_t *msgbuf)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_msgbuf_set_data</NAME>
@@ -8531,14 +8520,13 @@ typedef enum {
         IDMEF_VALUE_TYPE_OBJECT  =  14
 } idmef_value_type_id_t;
 </ENUM>
-<STRUCT>
+<TYPEDEF>
 <NAME>idmef_value_type_t</NAME>
-struct idmef_value_type_t
-{
+typedef struct {
         idmef_value_type_id_t id;
         idmef_value_type_data_t data;
-};
-</STRUCT>
+} idmef_value_type_t;
+</TYPEDEF>
 <FUNCTION>
 <NAME>idmef_value_type_copy</NAME>
 <RETURNS>int  </RETURNS>

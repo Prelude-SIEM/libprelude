@@ -15,16 +15,11 @@ when a timer previously set expire.
 
 </para>
 
-<!-- ##### STRUCT prelude_timer_t ##### -->
+<!-- ##### TYPEDEF prelude_timer_t ##### -->
 <para>
 
 </para>
 
-@list: 
-@expire: 
-@start_time: 
-@data: 
-@function: 
 
 <!-- ##### MACRO timer_expire ##### -->
 <para>

@@ -91,20 +91,6 @@ idmef-criteria-string.yac
 
 
 
-<!-- ##### MACRO yystype ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO YYSTYPE_IS_DECLARED ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### MACRO YYSTYPE_IS_TRIVIAL ##### -->
 <para>
 

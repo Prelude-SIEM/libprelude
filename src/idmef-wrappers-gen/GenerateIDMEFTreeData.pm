@@ -1,4 +1,4 @@
-# Copyright (C) 2003 Nicolas Delon <delon.nicolas@wanadoo.fr>
+# Copyright (C) 2003,2004 Nicolas Delon <nicolas@prelude-ids.org>
 # All Rights Reserved
 #
 # This file is part of the Prelude program.
@@ -74,7 +74,7 @@ sub	struct
 	    if ( $field->{metatype} & &METATYPE_NORMAL) {
 
 		if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
-		    $object = "IDMEF_VALUE_TYPE_" . uc("$field->{short_typename}");
+		    $object = "IDMEF_VALUE_TYPE_" . uc("$field->{value_type}");
 		    $object_type = 0;
 
 		} elsif ( $field->{metatype} & &METATYPE_STRUCT ) {

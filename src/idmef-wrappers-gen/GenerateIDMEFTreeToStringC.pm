@@ -1,4 +1,4 @@
-# Copyright (C) 2003 Nicolas Delon <delon.nicolas@wanadoo.fr>
+# Copyright (C) 2003,2004 Nicolas Delon <nicolas@prelude-ids.org>
 # All Rights Reserved
 #
 # This file is part of the Prelude program.
@@ -162,7 +162,7 @@ sub	struct_field_normal
 		if ( field ) \{
 			MY_CONCAT(to_string_indent, indent, buffer, size, offset);
 			MY_SNPRINTF(buffer, size, offset, \"$field->{name}: \");
-			MY_CONCAT(to_string_$field->{short_typename}, field, buffer, size, offset);
+			MY_CONCAT(to_string_$field->{value_type}, field, buffer, size, offset);
 			MY_SNPRINTF(buffer, size, offset, \"\\n\");
 		\}
 	\}
@@ -172,7 +172,7 @@ sub	struct_field_normal
 	    $self->output("
 	MY_CONCAT(to_string_indent, indent, buffer, size, offset);
 	MY_SNPRINTF(buffer, size, offset, \"$field->{name}: \");
-	MY_CONCAT(to_string_$field->{short_typename},
+	MY_CONCAT(to_string_$field->{value_type},
 		  idmef_$struct->{short_typename}_get_$field->{name}(ptr),
 		  buffer, size, offset);
 	MY_SNPRINTF(buffer, size, offset, \"\\n\");
@@ -245,7 +245,7 @@ sub	struct_field_list
     if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
 	$self->output("
 			MY_SNPRINTF(buffer, size, offset, \"$field->{short_name}(%d): \", cnt);
-			MY_CONCAT(to_string_$field->{short_typename}, elem, buffer, size, offset);
+			MY_CONCAT(to_string_$field->{value_type}, elem, buffer, size, offset);
 			MY_SNPRINTF(buffer, size, offset, \"\\n\");
 ");
 

@@ -1,4 +1,4 @@
-# Copyright (C) 2003 Nicolas Delon <delon.nicolas@wanadoo.fr>
+# Copyright (C) 2003,2004 Nicolas Delon <nicolas@prelude-ids.org>
 # All Rights Reserved
 #
 # This file is part of the Prelude program.
@@ -179,7 +179,7 @@ sub	struct_field_normal
 		if ( field ) \{
 			print_indent();
 			printf(\"$field->{name}: \");
-			print_$field->{short_typename}(field);
+			print_$field->{value_type}(field);
 			printf(\"\\n\");
 		\}
 	\}
@@ -189,7 +189,7 @@ sub	struct_field_normal
 	    $self->output("
 	print_indent();
 	printf(\"$field->{name}: \");
-	print_$field->{short_typename}(idmef_$struct->{short_typename}_get_$field->{name}(ptr));
+	print_$field->{value_type}(idmef_$struct->{short_typename}_get_$field->{name}(ptr));
 	printf(\"\\n\");
 ");
 	}

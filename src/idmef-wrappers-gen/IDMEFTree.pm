@@ -1,4 +1,4 @@
-# Copyright (C) 2003 Nicolas Delon <delon.nicolas@wanadoo.fr>
+# Copyright (C) 2003,2004 Nicolas Delon <nicolas@prelude-ids.org>
 # All Rights Reserved
 #
 # This file is part of the Prelude program.
@@ -42,14 +42,24 @@ sub	OBJ_STRUCT			{ 0 }
 sub	OBJ_ENUM			{ 1 }
 sub	OBJ_PRE_DECLARED		{ 2 }
 
-sub	get_short_typename
+sub	get_idmef_name
 {
-    my	$short_typename = shift;
+    my	$name = shift;
 
-    $short_typename =~ s/^idmef_//;
-    $short_typename =~ s/_t$//;
+    $name =~ s/^idmef_//;
+    $name =~ s/_t$//;
 
-    return $short_typename;
+    return $name;
+}
+
+sub	get_value_type
+{
+    my	$type = shift;
+
+    $type =~ s/^[^_]+_//;
+    $type =~ s/_t$//;
+
+    return $type;
 }
 
 sub	debug
@@ -180,7 +190,7 @@ sub	parse_struct
 	} elsif ( ($typename, $ptr, $name) = $line =~ /^\s*struct\s+(\w+)\s+(\**)(\w+)\;$/ ) {
 	    push(@field_list, { metatype => &METATYPE_NORMAL | &METATYPE_STRUCT,
 				typename => $typename . "_t",
-				short_typename => get_short_typename($typename),
+				short_typename => get_idmef_name($typename),
 				name => $name,
 				short_name => $name,
 				ptr => $ptr ? 1 : 0,
@@ -190,47 +200,65 @@ sub	parse_struct
 
 	} elsif ( ($typename, $ptr, $name) = $line =~ /^\s*(\w+)\s+(\**)(\w+)\;/ ) {
 	    my $metatype;
+	    my $short_typename;
+	    my $value_type;
 
 	    if ( defined $self->{primitives}->{$typename} ) {
 		$metatype = $self->{primitives}->{$typename};
+		$short_typename = $typename;
+		$short_typename =~ s/_t$//;
+		$value_type = get_value_type($short_typename);
 
 	    } elsif ( defined $self->{structs}->{$typename} ) {
 		$metatype = &METATYPE_STRUCT;
+		$short_typename = get_idmef_name($typename);
 
 	    } elsif ( defined $self->{enums}->{$typename} ) {
 		$metatype = &METATYPE_ENUM;
+		$short_typename = get_idmef_name($typename);
 
 	    } elsif ( defined $self->{pre_declareds}->{$typename} ) {
 		$metatype = $self->{pre_declareds}->{$typename}->{metatype};
+		$short_typename = get_idmef_name($typename);
 
 	    }
 
 	    push(@field_list, { metatype => &METATYPE_NORMAL | $metatype, 
 				typename => $typename, 
-				short_typename => get_short_typename($typename),
+				short_typename => $short_typename,
+				value_type => $value_type,
 				name => $name,
 				short_name => $name,
 				ptr => ($ptr ? 1 : 0),
 				dynamic_ident => 0 });
+
 	    $self->debug("parse struct field metatype:normal name:$name typename:$typename ptr:", ($ptr ? 1 : 0) ? "yes" : "no", "\n");
 	    
 	} elsif ( ($name, $typename) = $line =~ /\s*LISTED_OBJECT\(\s*(\w+)\s*,\s*(\w+)\s*\)/ ) {
 	    my $short_name;
+	    my $extra_metatype = 0;
+	    my $value_type;
 
 	    $short_name = $name;
 	    $short_name =~ s/_list$//;
+
+	    if ( $self->{primitives}->{$typename} ) {
+		$extra_metatype = &METATYPE_PRIMITIVE;
+		$value_type = get_value_type($typename);
+	    }
 	    
-	    push(@field_list, { metatype => &METATYPE_LIST | ($self->{primitives}->{$typename} ? &METATYPE_PRIMITIVE : 0),
+	    push(@field_list, { metatype => &METATYPE_LIST | $extra_metatype,
 				typename => $typename,
-				short_typename => get_short_typename($typename),
-				name => $name, 
+				short_typename => get_idmef_name($typename),
+				name => $name,
+				value_type => $value_type,
 				short_name => $short_name });
 	    $self->debug("parse struct field metatype:list name:$name typename:$typename\n");
 
 	} elsif ( ($typename, $var) = $line =~ /^\s*UNION\(\s*(\w+)\s*,\s*(\w+)\s*\)\s*\{/ ) {
 	    my $field = { metatype => &METATYPE_UNION, 
 			  typename => $typename,
-			  short_typename => get_short_typename($typename),
+			  short_typename => get_idmef_name($typename),
 			  var => $var,
 			  member_list => [ ] };
 	    my $member;
@@ -244,7 +272,7 @@ sub	parse_struct
 		if ( ($value, $typename, $ptr, $name) = $line =~ /^\s*UNION_MEMBER\(\s*(\w+)\s*,\s*(\w+)\s*,\s*(\**)(\w+)\s*\);/ ) {
 		    $member = { value => $value, 
 				typename => $typename,
-				short_typename => get_short_typename($typename),
+				short_typename => get_idmef_name($typename),
 				name => $name,
 				ptr => ($ptr ? 1 : 0) };
 		    push(@{ $field->{member_list} }, $member);
@@ -263,6 +291,7 @@ sub	parse_struct
 		 { metatype => &METATYPE_NORMAL|&METATYPE_PRIMITIVE,
 		   typename => "uint64_t",
 		   short_typename => "uint64",
+		   value_type => "uint64",
 		   name => $name,
 		   short_name => $name,
 		   ptr => 0,
@@ -271,7 +300,7 @@ sub	parse_struct
 
 	} elsif ( ($typename, $id) = $line =~ /^\}\s*TYPE_ID\(\s*(\w+)\s*,\s*(\d+)\s*\)/ ) {
 	    $struct->{typename} = $typename;
-	    $struct->{short_typename} = get_short_typename($typename);
+	    $struct->{short_typename} = get_idmef_name($typename);
 	    $struct->{id} = $id;
 	    $struct->{field_list} = \@field_list;
 	    $self->{structs}->{$typename} = $struct;
@@ -306,7 +335,7 @@ sub	parse_enum
 	    
 	} elsif ( ($typename, $id) = $line =~ /^\}\s*TYPE_ID\(\s*(\w+)\s*,\s*(\d+)\s*\)/ ) {
 	    $enum->{typename} = $typename;
-	    $enum->{short_typename} = get_short_typename($typename);
+	    $enum->{short_typename} = get_idmef_name($typename);
 	    $enum->{id} = $id;
 	    $enum->{field_list} = \@field_list;
 	    $self->{enums}->{$typename} = $enum;
@@ -330,7 +359,7 @@ sub	parse_pre_declared
     ($typename, $class) = $line =~ /^\s*PRE_DECLARE\(\s*(\w+)\s*,\s*(\w+)\s*\)/;
 
     $pre_declared->{typename} = $typename;
-    $pre_declared->{short_typename} = get_short_typename($typename);
+    $pre_declared->{short_typename} = get_idmef_name($typename);
 
     $pre_declared->{metatype} = &METATYPE_STRUCT if ( $class eq "struct" );
     $pre_declared->{metatype} = &METATYPE_ENUM if ( $class eq "enum" );

@@ -1,4 +1,4 @@
-# Copyright (C) 2003 Nicolas Delon <delon.nicolas@wanadoo.fr>
+# Copyright (C) 2003,2004 Nicolas Delon <nicolas@prelude-ids.org>
 # All Rights Reserved
 #
 # This file is part of the Prelude program.
@@ -35,7 +35,7 @@ sub	header
 /*****
 *
 * Copyright (C) 2001-2004 Yoann Vandoorselaere <yoann\@prelude-ids.org>
-* Copyright (C) 2003 Nicolas Delon <delon.nicolas\@wanadoo.fr>
+* Copyright (C) 2003,2004 Nicolas Delon <nicolas\@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -374,17 +374,24 @@ static void idmef_$struct->{short_typename}_destroy_internal($struct->{typename}
 	}
 ");
 	} elsif ( $field->{metatype} & &METATYPE_STRUCT ) {
+	    my $destroy_func = "$field->{short_typename}_destroy";
+	    my $destroy_internal_func = "${destroy_func}_internal";
 
+	    if ( ! ($field->{metatype} & &METATYPE_PRIMITIVE) ) {
+		$destroy_func = "idmef_${destroy_func}";
+		$destroy_internal_func = "idmef_$destroy_internal_func";
+	    }
+	    
 	    if ( $field->{ptr} ) {
 		$self->output("
 	if ( ptr->$field->{name} ) \{
-		idmef_$field->{short_typename}_destroy(ptr->$field->{name});
+		${destroy_func}(ptr->$field->{name});
 		ptr->$field->{name} = NULL;
 	\}
 ");
 	    } else {
 		$self->output("
-	idmef_$field->{short_typename}_destroy_internal(&ptr->$field->{name});
+	${destroy_internal_func}(&ptr->$field->{name});
 ");
 	    }
 	} elsif ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
@@ -538,13 +545,13 @@ idmef_value_t *idmef_$struct->{short_typename}_get_${name}_value($struct->{typen
 \{");
 	if ( !($field->{metatype} & &METATYPE_STRUCT) && $field->{ptr} ) {
 	    $self->output("
-	return idmef_value_new_$field->{short_typename}(ptr->$field->{name} ? *ptr->$field->{name} : ($field->{typename}) 0);");
+	return idmef_value_new_$field->{value_type}(ptr->$field->{name} ? *ptr->$field->{name} : ($field->{typename}) 0);");
 	    
 	} else {
 	    $self->output("
 	idmef_value_t *value;
 
-	value = idmef_value_new_$field->{short_typename}(${refer}ptr->$field->{name});
+	value = idmef_value_new_$field->{value_type}(${refer}ptr->$field->{name});
 	if ( ! value )
 		return NULL;
 
@@ -594,20 +601,28 @@ idmef_value_t *idmef_$struct->{short_typename}_get_${name}_value($struct->{typen
 
     if ( $field->{metatype} & &METATYPE_STRUCT ) {
 	if ( $field->{ptr} ) {
+	    my $destroy_func = "$field->{short_typename}_destroy";
+
+	    $destroy_func = "idmef_${destroy_func}" if ( ! ($field->{metatype} & &METATYPE_PRIMITIVE) );
+
 	    $self->output("
 void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} *$field->{name})
 \{
 	if ( ptr->$field->{name} )
-		idmef_$field->{short_typename}_destroy(ptr->$field->{name});
+		${destroy_func}(ptr->$field->{name});
 
 	ptr->$field->{name} = $field->{name};
 \}
 ");
 	} else {
+	    my $destroy_internal_func = "$field->{short_typename}_destroy_internal";
+
+	    $destroy_internal_func = "idmef_${destroy_internal_func}" if ( ! ($field->{metatype} & &METATYPE_PRIMITIVE) );
+
 	    $self->output("
 void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} *$field->{name})
 \{
-	idmef_$field->{short_typename}_destroy_internal(&ptr->$field->{name});
+	${destroy_internal_func}(&ptr->$field->{name});
 	memcpy(&ptr->$field->{name}, $field->{name}, sizeof (ptr->$field->{name}));
 	free($field->{name});
 \}
@@ -661,14 +676,14 @@ $field->{typename} *idmef_$struct->{short_typename}_new_${name}($struct->{typena
 
 		$self->output("
 	if ( ptr->$field->{name} )
-		idmef_$field->{short_typename}_destroy(ptr->$field->{name});
+		$field->{short_typename}_destroy(ptr->$field->{name});
 		
-	ptr->$field->{name} = idmef_$field->{short_typename}_new();
+	ptr->$field->{name} = $field->{short_typename}_new();
 ");
 	    } else {
 
 		$self->output("
-	idmef_$field->{short_typename}_destroy_internal(&ptr->$field->{name});
+	$field->{short_typename}_destroy_internal(&ptr->$field->{name});
 ");
 	    }
 
@@ -906,7 +921,7 @@ idmef_value_t *idmef_$struct->{short_typename}_get_$field->{short_name}_value($s
 
     if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
 	$self->output("
-		val = idmef_value_new_$field->{short_typename}(entry);
+		val = idmef_value_new_$field->{value_type}(entry);
 		if ( ! val ) \{
 			idmef_value_destroy(list_val);
 			return NULL;
