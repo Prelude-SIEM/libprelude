@@ -126,7 +126,7 @@ static int remove_old_certificate(const char *filename, uint64_t dn, uint64_t is
                 if ( ret != 0 )
                         fwrite(data.data, 1, data.size, wfd);
                 else
-                        fprintf(stderr, "  - Removing old certificate with subject=%llu issuer=%llu.\n", dn, issuer_dn);
+                        fprintf(stderr, "  - Removing old certificate with subject=%" PRIu64 " issuer=%" PRIu64 ".\n", dn, issuer_dn);
                 
                 prelude_string_clear(out);
                 gnutls_x509_crt_deinit(crt);
@@ -598,7 +598,7 @@ static int check_req(gnutls_x509_crq crq)
                 return -1;
         }
         
-        fprintf(stderr, "  - Analyzer with ID=\"%llu\" ask for registration with permission=\"%s\".\n",
+        fprintf(stderr, "  - Analyzer with ID=\"%" PRIu64 "\" ask for registration with permission=\"%s\".\n",
                 analyzerid, prelude_string_get_string(out));
 
         if ( server_confirm ) {
@@ -607,7 +607,7 @@ static int check_req(gnutls_x509_crq crq)
                         return -1;
         }
         
-        fprintf(stderr, "    Registering analyzer \"%llu\" with permission \"%s\".\n", analyzerid,
+        fprintf(stderr, "    Registering analyzer \"%" PRIu64 "\" with permission \"%s\".\n", analyzerid,
                 prelude_string_get_string(out));
 
         prelude_string_destroy(out);
