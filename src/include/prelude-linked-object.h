@@ -28,8 +28,9 @@
 #include "prelude-list.h"
 
 
-#define PRELUDE_LINKED_OBJECT \
-        prelude_list_t list
+#define PRELUDE_LINKED_OBJECT   \
+        prelude_list_t list;    \
+        unsigned int _object_id
 
 
 typedef struct {
@@ -56,6 +57,19 @@ static inline void prelude_linked_object_add_tail(prelude_list_t *head, prelude_
 {
         prelude_list_add_tail(head, &obj->list);
 }
+
+
+static inline void prelude_linked_object_set_id(prelude_linked_object_t *obj, unsigned int id)
+{
+        obj->_object_id = id;
+}
+
+
+static inline unsigned int prelude_linked_object_get_id(prelude_linked_object_t *obj)
+{
+        return obj->_object_id;
+}
+
 
 
 #define prelude_linked_object_get_object(object)  \
