@@ -681,10 +681,13 @@ static int setup_options(prelude_client_t *client)
         if ( prelude_generic_optlist )
                 return 0;
         
-        root_list = prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG, 0,
+        root_list = prelude_option_add(NULL, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG|
+                                       PRELUDE_OPTION_TYPE_WIDE, 0,
                                        "prelude", "Prelude generic options",
                                        PRELUDE_OPTION_ARGUMENT_NONE, NULL, NULL);
 
+        prelude_option_set_default_context(root_list, client);
+        
         prelude_option_add(root_list, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG, 0, "profile",
                            "Profile to use for this analyzer", PRELUDE_OPTION_ARGUMENT_REQUIRED,
                            set_profile, NULL);
@@ -848,6 +851,7 @@ static int connection_mgr_create(prelude_client_t *client)
         if ( ret < 0 )
                 return ret;
 
+        prelude_connection_mgr_set_data(mgr, client);
         prelude_connection_mgr_set_flags(mgr, PRELUDE_CONNECTION_MGR_FLAGS_RECONNECT);
         prelude_connection_mgr_set_event_handler(mgr, PRELUDE_CONNECTION_MGR_EVENT_INPUT, connection_mgr_event_cb);
 
@@ -894,7 +898,7 @@ int prelude_client_new(prelude_client_t **client,
                 _prelude_client_destroy(new);
                 return prelude_error_from_errno(errno);
         }
-
+        
         new->capability = capability;
         pthread_mutex_init(&new->msgbuf_lock, NULL);
         new->config_filename = config ? strdup(config) : NULL;
