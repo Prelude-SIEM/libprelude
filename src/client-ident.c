@@ -245,6 +245,6 @@ int prelude_client_ident_init(const char *sname)
 
 uint64_t prelude_client_get_analyzerid(void) 
 {
-        return &sensor_id;
+        return sensor_ident;
 }
 
