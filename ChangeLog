@@ -1,3 +1,9 @@
+2002-07-03  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-getopt.c (parse_argument): set
+	called_from_cli when we see a parent option 
+	on command line.
+
 2002-06-27  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-getopt.c (prelude_option_get_private_data): 

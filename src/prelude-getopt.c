@@ -171,10 +171,8 @@ static int check_option_reqarg(prelude_optlist_t *optlist, const char *option,
 {
         int len = 0;
         
-        if ( optlist->argv_index >= argc || *argv[optlist->argv_index] == '-' ) {
-                fprintf(stderr, "Option %s require an argument.\n", option);
+        if ( optlist->argv_index >= argc || *argv[optlist->argv_index] == '-' ) 
                 return -1;
-        }
 
         while ( optlist->argv_index < argc && *argv[optlist->argv_index] != '-' && len < size ) {
                 
@@ -444,12 +442,13 @@ static int section_get_all(struct list_head *cb_list,
 static int process_option_cfg_hook(struct list_head *cb_list, prelude_option_t *opt,
                                    config_t *cfg, const char *section, int line) 
 {
-
-        if ( opt->called_from_cli && ! list_empty(&opt->optlist.optlist) )
+        if ( opt->called_from_cli && ! list_empty(&opt->optlist.optlist) ) {
                 /*
                  * a parent section specified on CLI completly override CFG.
                  */
+                printf("%s: %d\n", opt->longopt, opt->called_from_cli);
                 return prelude_option_success;
+        }
         
         if ( ! (opt->flags & CFG_HOOK) )                
                 return prelude_option_success;
@@ -570,6 +569,8 @@ static int parse_argument(struct list_head *cb_list,
                                 opt->optlist.argv_index = optlist->argv_index + 1;
                         else
                                 opt->optlist.argv_index = optlist->argv_index;
+
+                        opt->called_from_cli = 1;
                         
                         ret = parse_argument(cb_list, &opt->optlist, filename, argc, argv, depth + 1);
                         if ( ret == prelude_option_end || ret == prelude_option_error )
