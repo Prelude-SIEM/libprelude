@@ -26,6 +26,7 @@
 
 #include "prelude-inttypes.h"
 #include <netinet/in.h>
+#include <time.h>
 
 void *prelude_realloc(void *ptr, size_t size);
 
@@ -39,6 +40,8 @@ uint64_t prelude_hton64(uint64_t val);
 
 int prelude_get_file_name_and_path(const char *str, char **name, char **path);
 
-int prelude_get_gmt_offset(time_t time_local, int *gmt_offset);
+int prelude_get_gmt_offset(uint32_t *gmt_offset);
+
+time_t prelude_timegm(struct tm *tm);
 
 #endif /* _LIBPRELUDE_COMMON_H */

@@ -140,32 +140,50 @@ struct {
         IS_LISTED;
 	REFCOUNT;
         idmef_additional_data_type_t type;
-        prelude_string_t meaning;
+        prelude_string_t *meaning;
 	idmef_data_t data;
 } TYPE_ID(idmef_additional_data_t, 4);
+
+
+/*
+ * Reference class
+ * FIXME: IDMEF v12 declare origin as a string. Check with Herve.
+ */
+ENUM(origin) {
+        IDMEF_REFERENCE_ORIGIN_ERROR           = -1,
+        IDMEF_REFERENCE_ORIGIN_UNKNOWN         =  0,
+        IDMEF_REFERENCE_ORIGIN_VENDOR_SPECIFIC =  1,
+        IDMEF_REFERENCE_ORIGIN_USER_SPECIFIC   =  2,
+        IDMEF_REFERENCE_ORIGIN_BUGTRAQID       =  3,
+        IDMEF_REFERENCE_ORIGIN_CVE             =  4,
+        IDMEF_REFERENCE_ORIGIN_OSVDB           =  5
+} TYPE_ID(idmef_reference_origin_t, 5);
+
+
+struct {
+        IS_LISTED;
+        REFCOUNT;
+        idmef_reference_origin_t origin;
+        
+        prelude_string_t name;
+        prelude_string_t url;
+        prelude_string_t *meaning;
+} TYPE_ID(idmef_reference_t, 50);
 
 
 
 /*
  * Classification class
  */
-ENUM(origin) {
-        IDMEF_CLASSIFICATION_ORIGIN_ERROR           = -1,
-        IDMEF_CLASSIFICATION_ORIGIN_UNKNOWN         =  0,
-        IDMEF_CLASSIFICATION_ORIGIN_BUGTRAQID       =  1,
-        IDMEF_CLASSIFICATION_ORIGIN_CVE             =  2,
-        IDMEF_CLASSIFICATION_ORIGIN_VENDOR_SPECIFIC =  3,
-        IDMEF_CLASSIFICATION_ORIGIN_OSVDB           =  4,
-} TYPE_ID(idmef_classification_origin_t, 5);
-
 
 
 struct {
-        IS_LISTED;
-	REFCOUNT;
-        idmef_classification_origin_t origin;
-        prelude_string_t name;
-        prelude_string_t url;
+        REFCOUNT;
+        
+        uint64_t ident;
+        prelude_string_t text;
+        LISTED_OBJECT(reference_list, idmef_reference_t);
+        
 } TYPE_ID(idmef_classification_t, 6);
 
 
@@ -176,25 +194,25 @@ struct {
  * UserId class
  */
 ENUM() {
-        IDMEF_USERID_TYPE_ORIGINAL_ERROR = -1,
-        IDMEF_USERID_TYPE_ORIGINAL_USER  =  0,
-        IDMEF_USERID_TYPE_CURRENT_USER   =  1,
-        IDMEF_USERID_TYPE_TARGET_USER    =  2,
-        IDMEF_USERID_TYPE_USER_PRIVS     =  3,
-        IDMEF_USERID_TYPE_CURRENT_GROUP  =  4,
-        IDMEF_USERID_TYPE_GROUP_PRIVS    =  5,
-        IDMEF_USERID_TYPE_OTHER_PRIVS    =  6
-} TYPE_ID(idmef_userid_type_t, 7);
+        IDMEF_USER_ID_TYPE_ORIGINAL_ERROR = -1,
+        IDMEF_USER_ID_TYPE_ORIGINAL_USER  =  0,
+        IDMEF_USER_ID_TYPE_CURRENT_USER   =  1,
+        IDMEF_USER_ID_TYPE_TARGET_USER    =  2,
+        IDMEF_USER_ID_TYPE_USER_PRIVS     =  3,
+        IDMEF_USER_ID_TYPE_CURRENT_GROUP  =  4,
+        IDMEF_USER_ID_TYPE_GROUP_PRIVS    =  5,
+        IDMEF_USER_ID_TYPE_OTHER_PRIVS    =  6
+} TYPE_ID(idmef_user_id_type_t, 7);
 
 
 struct {
         IS_LISTED;
 	REFCOUNT;
         uint64_t ident;
-        prelude_string_t name;
-        idmef_userid_type_t type;
+        prelude_string_t *name;
+        idmef_user_id_type_t type;
         OPTIONAL_INT(uint32_t, number);
-} TYPE_ID(idmef_userid_t, 8);
+} TYPE_ID(idmef_user_id_t, 8);
 
 
 
@@ -217,7 +235,7 @@ struct {
 	REFCOUNT;
         uint64_t ident;
         idmef_user_category_t category;
-        LISTED_OBJECT(userid_list, idmef_userid_t);
+        LISTED_OBJECT(user_id_list, idmef_user_id_t);
 } TYPE_ID(idmef_user_t, 10);
 
 
@@ -253,10 +271,10 @@ struct {
         REFCOUNT;
         uint64_t ident;
         idmef_address_category_t category;
-        prelude_string_t vlan_name;
+        prelude_string_t *vlan_name;
         OPTIONAL_INT(int32_t, vlan_num);
         prelude_string_t address;
-        prelude_string_t netmask;
+        prelude_string_t *netmask;
 } TYPE_ID(idmef_address_t, 12);
 
 
@@ -269,8 +287,8 @@ struct {
 	REFCOUNT;
         uint64_t ident;
         prelude_string_t name;
-        uint32_t pid;
-        prelude_string_t path;
+        OPTIONAL_INT(uint32_t, pid);
+        prelude_string_t *path;
 
         LISTED_OBJECT(arg_list, prelude_string_t);
         LISTED_OBJECT(env_list, prelude_string_t);
@@ -281,10 +299,10 @@ struct {
 struct {
 	REFCOUNT;
         prelude_string_t url;
-        prelude_string_t cgi;
-        prelude_string_t http_method;
+        prelude_string_t *cgi;
+        prelude_string_t *http_method;
         LISTED_OBJECT(arg_list, prelude_string_t);
-} TYPE_ID(idmef_webservice_t, 14);
+} TYPE_ID(idmef_web_service_t, 14);
 
 
 
@@ -294,10 +312,13 @@ struct {
  */
 struct {
 	REFCOUNT;
-        prelude_string_t oid;
-        prelude_string_t community;
-        prelude_string_t command;
-} TYPE_ID(idmef_snmpservice_t, 15);
+        prelude_string_t *oid;
+        prelude_string_t *community;
+        prelude_string_t *security_name;
+        prelude_string_t *context_name;
+        prelude_string_t *context_engine_id;
+        prelude_string_t *command;
+} TYPE_ID(idmef_snmp_service_t, 15);
 
         
 
@@ -316,14 +337,20 @@ ENUM() {
 struct {
 	REFCOUNT;
         uint64_t ident;
-        prelude_string_t name;
-        uint16_t port;
-        prelude_string_t portlist;
-        prelude_string_t protocol;
+        OPTIONAL_INT(uint8_t, ip_version);
+        
+        prelude_string_t *name;
+        OPTIONAL_INT(uint16_t, port);
+
+        OPTIONAL_INT(uint8_t, iana_protocol_number);
+        prelude_string_t *iana_protocol_name;
+        
+        prelude_string_t *portlist;
+        prelude_string_t *protocol;
 
 	UNION(idmef_service_type_t, type) {
-		UNION_MEMBER(IDMEF_SERVICE_TYPE_WEB, idmef_webservice_t, *web);
-		UNION_MEMBER(IDMEF_SERVICE_TYPE_SNMP, idmef_snmpservice_t, *snmp);
+		UNION_MEMBER(IDMEF_SERVICE_TYPE_WEB, idmef_web_service_t, *web_service);
+		UNION_MEMBER(IDMEF_SERVICE_TYPE_SNMP, idmef_snmp_service_t, *snmp_service);
 	} specific;
         
 } TYPE_ID(idmef_service_t, 17);
@@ -356,8 +383,8 @@ struct {
 	REFCOUNT;
         uint64_t ident;
         idmef_node_category_t category;
-        prelude_string_t location;
-        prelude_string_t name;
+        prelude_string_t *location;
+        prelude_string_t *name;
         LISTED_OBJECT(address_list, idmef_address_t);
 } TYPE_ID(idmef_node_t, 19);
 
@@ -382,7 +409,7 @@ struct {
 
         uint64_t ident;
         idmef_source_spoofed_t spoofed;
-        prelude_string_t interface;
+        prelude_string_t *interface;
 
         idmef_node_t *node;
         idmef_user_t *user;
@@ -392,18 +419,12 @@ struct {
 } TYPE_ID(idmef_source_t, 21);
 
 
-/*
- * File Access class
- */
-
-
-
 struct {
         IS_LISTED;
 	REFCOUNT;
         
-        idmef_userid_t userid;
-        LISTED_OBJECT(permission_list, prelude_string_t);
+        idmef_user_id_t user_id;
+	LISTED_OBJECT(permission_list, prelude_string_t);
 } TYPE_ID(idmef_file_access_t, 22);
 
 
@@ -414,11 +435,11 @@ struct {
 struct {
 	REFCOUNT;
         idmef_time_t *change_time;
-        uint32_t number;
-        uint32_t major_device;
-        uint32_t minor_device;
-        uint32_t c_major_device;
-        uint32_t c_minor_device;
+        OPTIONAL_INT(uint32_t, number);
+        OPTIONAL_INT(uint32_t, major_device);
+        OPTIONAL_INT(uint32_t, minor_device);
+        OPTIONAL_INT(uint32_t, c_major_device);
+        OPTIONAL_INT(uint32_t, c_minor_device);
 } TYPE_ID(idmef_inode_t, 23);
 
 
@@ -427,17 +448,45 @@ struct {
 PRE_DECLARE(idmef_linkage_t, struct)
 
 
+
+/*
+ * Checksum class
+ */
+ENUM() {
+        IDMEF_CHECKSUM_ALGORITHM_ERROR = -1,
+        IDMEF_CHECKSUM_ALGORITHM_MD4   =  1,
+        IDMEF_CHECKSUM_ALGORITHM_MD5 = 2,
+        IDMEF_CHECKSUM_ALGORITHM_SHA1 = 3,
+        IDMEF_CHECKSUM_ALGORITHM_SHA2_256 = 4,
+        IDMEF_CHECKSUM_ALGORITHM_SHA2_384 = 5,
+        IDMEF_CHECKSUM_ALGORITHM_SHA2_512 = 6,
+        IDMEF_CHECKSUM_ALGORITHM_CRC_32 = 7,
+        IDMEF_CHECKSUM_ALGORITHM_HAVAL = 8,
+        IDMEF_CHECKSUM_ALGORITHM_TIGER = 9,
+        IDMEF_CHECKSUM_ALGORITHM_GOST = 11
+} TYPE_ID(idmef_checksum_algorithm_t, 53);
+
+
+struct {
+	IS_LISTED;
+        REFCOUNT;
+        prelude_string_t value;
+        prelude_string_t *key;
+        idmef_checksum_algorithm_t algorithm;
+} TYPE_ID(idmef_checksum_t, 52);
+
+
 /*
  * File class
  */
-ENUM() {
+ENUM(category) {
         IDMEF_FILE_CATEGORY_ERROR    = -1,
         IDMEF_FILE_CATEGORY_CURRENT  =  1,
         IDMEF_FILE_CATEGORY_ORIGINAL =  2
 } TYPE_ID(idmef_file_category_t, 24);
 
 
-ENUM() {
+ENUM(fstype) {
         IDMEF_FILE_FSTYPE_ERROR   = -1,
         IDMEF_FILE_FSTYPE_UFS     =  1,
         IDMEF_FILE_FSTYPE_EFS     =  2,
@@ -456,25 +505,28 @@ ENUM() {
 struct {
         IS_LISTED;
 	REFCOUNT;
-        
         uint64_t ident;
-        idmef_file_category_t category;
-        idmef_file_fstype_t fstype;
-
+        
         prelude_string_t name;
         prelude_string_t path;
-
+        
         idmef_time_t *create_time;
         idmef_time_t *modify_time;
         idmef_time_t *access_time;
 
-        uint32_t data_size;
-        uint32_t disk_size;
-
+        
+        OPTIONAL_INT(uint64_t, data_size);
+        OPTIONAL_INT(uint64_t, disk_size);
+        
         LISTED_OBJECT(file_access_list, idmef_file_access_t);
-        LISTED_OBJECT(file_linkage_list, idmef_linkage_t);
+        LISTED_OBJECT(linkage_list, idmef_linkage_t);
 
         idmef_inode_t *inode;
+	LISTED_OBJECT(checksum_list, idmef_checksum_t);
+        
+        idmef_file_category_t category;
+        OPTIONAL_INT(idmef_file_fstype_t, fstype);
+        
 } TYPE_ID(idmef_file_t, 26);
 
 
@@ -543,12 +595,14 @@ struct {
 	REFCOUNT;
 
         uint64_t analyzerid;
-        prelude_string_t manufacturer;
-        prelude_string_t model;
-        prelude_string_t version;
-        prelude_string_t class;
-        prelude_string_t ostype;
-        prelude_string_t osversion;
+        
+        prelude_string_t *name;
+        prelude_string_t *manufacturer;
+        prelude_string_t *model;
+        prelude_string_t *version;
+        prelude_string_t *class;
+        prelude_string_t *ostype;
+        prelude_string_t *osversion;
         
         idmef_node_t *node;
         idmef_process_t *process;
@@ -567,7 +621,7 @@ struct {
 	REFCOUNT;
 
         uint64_t alertident;
-        uint64_t analyzerid;
+        OPTIONAL_INT(uint64_t, analyzerid);
 } TYPE_ID(idmef_alertident_t, 32);
 
 
@@ -575,7 +629,7 @@ struct {
 /*
  * Impact class
  */
-ENUM(impact) {
+ENUM(severity) {
         IDMEF_IMPACT_SEVERITY_ERROR  = -1,
         IDMEF_IMPACT_SEVERITY_LOW    =  1,
         IDMEF_IMPACT_SEVERITY_MEDIUM =  2,
@@ -584,7 +638,7 @@ ENUM(impact) {
 } TYPE_ID(idmef_impact_severity_t, 33);
 
 
-ENUM() {
+ENUM(completion) {
         IDMEF_IMPACT_COMPLETION_ERROR	   = -1,
         IDMEF_IMPACT_COMPLETION_FAILED     =  1,
         IDMEF_IMPACT_COMPLETION_SUCCEEDED  =  2
@@ -605,10 +659,10 @@ ENUM() {
 struct {
 	REFCOUNT;
 
-        idmef_impact_severity_t severity;
-        idmef_impact_completion_t completion;
+        OPTIONAL_INT(idmef_impact_severity_t, severity);
+        OPTIONAL_INT(idmef_impact_completion_t, completion);
         idmef_impact_type_t type;
-        prelude_string_t description;
+        prelude_string_t *description;
 } TYPE_ID(idmef_impact_t, 36);
 
 
@@ -629,7 +683,7 @@ struct {
 	REFCOUNT;
 
         idmef_action_category_t category;
-        prelude_string_t description;
+        prelude_string_t *description;
 } TYPE_ID(idmef_action_t, 38);
 
 
@@ -650,7 +704,7 @@ struct {
 	REFCOUNT;
 
         idmef_confidence_rating_t rating;
-        float confidence;
+        OPTIONAL_INT(float, confidence);
 } TYPE_ID(idmef_confidence_t, 40);
 
 
@@ -674,7 +728,7 @@ struct {
 	REFCOUNT;
 
         prelude_string_t name;
-        prelude_string_t command;
+        prelude_string_t *command;
         LISTED_OBJECT(alertident_list, idmef_alertident_t);
 } TYPE_ID(idmef_tool_alert_t, 42);
 
@@ -702,7 +756,7 @@ struct {
 	REFCOUNT;
 
         prelude_string_t program;
-        uint32_t *size;
+        OPTIONAL_INT(uint32_t, size);
         idmef_data_t *buffer;
 } TYPE_ID(idmef_overflow_alert_t, 44);
 
@@ -723,19 +777,19 @@ ENUM(idmef) {
 
 
 struct {
-        DYNAMIC_IDENT(ident);
-
-        idmef_assessment_t *assessment;
-    
+        DYNAMIC_IDENT(messageid);
+        
         idmef_analyzer_t *analyzer;
-    
         idmef_time_t create_time;
+        idmef_classification_t *classification;
         idmef_time_t *detect_time;
         idmef_time_t *analyzer_time;
-
+        
         LISTED_OBJECT(source_list, idmef_source_t);
         LISTED_OBJECT(target_list, idmef_target_t);
-        LISTED_OBJECT(classification_list, idmef_classification_t);
+
+        idmef_assessment_t *assessment;
+        
         LISTED_OBJECT(additional_data_list, idmef_additional_data_t);
 
         UNION(idmef_alert_type_t, type) {
@@ -754,7 +808,7 @@ struct {
  * Heartbeat class
  */
 struct {
-        DYNAMIC_IDENT(ident);
+        DYNAMIC_IDENT(messageid);
         idmef_analyzer_t *analyzer;
 
         idmef_time_t create_time;

@@ -24,6 +24,8 @@
 #ifndef _LIBPRELUDE_IDMEF_TIME_H
 #define _LIBPRELUDE_IDMEF_TIME_H
 
+#include <time.h>
+
 #define idmef_object_type_time 1
 
 struct idmef_time {
@@ -37,10 +39,9 @@ typedef struct idmef_time idmef_time_t;
 
 idmef_time_t *idmef_time_ref(idmef_time_t *time);
 idmef_time_t *idmef_time_new(void);
-idmef_time_t *idmef_time_new_gettimeofday(void);
-idmef_time_t *idmef_time_new_string(const char *buf);
-idmef_time_t *idmef_time_new_ntp_timestamp(const char *buf);
-idmef_time_t *idmef_time_new_db_timestamp(const char *buf);
+idmef_time_t *idmef_time_new_from_gettimeofday(void);
+idmef_time_t *idmef_time_new_from_string(const char *buf);
+idmef_time_t *idmef_time_new_from_ntpstamp(const char *buf);
 
 void idmef_time_destroy_internal(idmef_time_t *time);
 void idmef_time_destroy(idmef_time_t *time);
@@ -48,22 +49,24 @@ void idmef_time_destroy(idmef_time_t *time);
 idmef_time_t *idmef_time_clone(const idmef_time_t *src);
 int idmef_time_copy(idmef_time_t *dst, idmef_time_t *src);
 
+void idmef_time_set_from_time(idmef_time_t *time, const time_t *t);
 void idmef_time_set_sec(idmef_time_t *time, uint32_t sec);
 void idmef_time_set_usec(idmef_time_t *time, uint32_t usec);
 void idmef_time_set_gmt_offset(idmef_time_t *time, uint32_t gmtoff);
 
-double idmef_time_get_time(const idmef_time_t *time);
 uint32_t idmef_time_get_sec(const idmef_time_t *time);
 uint32_t idmef_time_get_usec(const idmef_time_t *time);
 int32_t idmef_time_get_gmt_offset(const idmef_time_t *time);
 
-int idmef_time_set_string(idmef_time_t *time, const char *buf);
-int idmef_time_set_ntp_timestamp(idmef_time_t *time, const char *buf);
-int idmef_time_set_db_timestamp(idmef_time_t *time, const char *buf);
+int idmef_time_set_from_string(idmef_time_t *time, const char *buf);
+int idmef_time_set_from_ntpstamp(idmef_time_t *time, const char *buf);
 
-int idmef_time_get_ntp_timestamp(const idmef_time_t *time, char *outptr, size_t size);
-int idmef_time_get_timestamp(const idmef_time_t *time, char *outptr, size_t size);
-int idmef_time_get_db_timestamp(const idmef_time_t *time, char *outptr, size_t size);
-int idmef_time_get_idmef_timestamp(const idmef_time_t *time, char *outptr, size_t size);
+int idmef_time_to_string(const idmef_time_t *time, char *outptr, size_t size);
+int idmef_time_to_ntpstamp(const idmef_time_t *time, char *outptr, size_t size);
+
+
+#define IDMEF_TIME_MAX_STRING_SIZE   64   /* YYYY-MM-DDThh:mm:ss.ssZ */
+#define IDMEF_TIME_MAX_NTPSTAMP_SIZE 22   /* 0xNNNNNNNN.0xNNNNNNNN + \0  */
+
 
 #endif /* _LIBPRELUDE_IDMEF_TIME_H */

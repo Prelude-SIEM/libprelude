@@ -42,15 +42,6 @@ idmef-message-write
 @msg: 
 
 
-<!-- ##### FUNCTION idmef_userid_write ##### -->
-<para>
-
-</para>
-
-@userid: 
-@msg: 
-
-
 <!-- ##### FUNCTION idmef_user_write ##### -->
 <para>
 
@@ -75,24 +66,6 @@ idmef-message-write
 </para>
 
 @process: 
-@msg: 
-
-
-<!-- ##### FUNCTION idmef_webservice_write ##### -->
-<para>
-
-</para>
-
-@webservice: 
-@msg: 
-
-
-<!-- ##### FUNCTION idmef_snmpservice_write ##### -->
-<para>
-
-</para>
-
-@snmpservice: 
 @msg: 
 
 

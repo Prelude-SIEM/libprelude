@@ -61,21 +61,3 @@ prelude-log
 @args...: 
 
 
-<!-- ##### MACRO do_init ##### -->
-<para>
-
-</para>
-
-@func: 
-@name: 
-
-
-<!-- ##### MACRO do_init_nofail ##### -->
-<para>
-
-</para>
-
-@func: 
-@name: 
-
-

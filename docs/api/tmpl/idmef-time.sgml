@@ -38,41 +38,6 @@ idmef-time
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_time_new_gettimeofday ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_time_new_string ##### -->
-<para>
-
-</para>
-
-@buf: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_time_new_ntp_timestamp ##### -->
-<para>
-
-</para>
-
-@buf: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_time_new_db_timestamp ##### -->
-<para>
-
-</para>
-
-@buf: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_time_destroy_internal ##### -->
 <para>
 
@@ -135,15 +100,6 @@ idmef-time
 @gmtoff: 
 
 
-<!-- ##### FUNCTION idmef_time_get_time ##### -->
-<para>
-
-</para>
-
-@time: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_time_get_sec ##### -->
 <para>
 
@@ -168,80 +124,6 @@ idmef-time
 </para>
 
 @time: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_time_set_string ##### -->
-<para>
-
-</para>
-
-@time: 
-@buf: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_time_set_ntp_timestamp ##### -->
-<para>
-
-</para>
-
-@time: 
-@buf: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_time_set_db_timestamp ##### -->
-<para>
-
-</para>
-
-@time: 
-@buf: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_time_get_ntp_timestamp ##### -->
-<para>
-
-</para>
-
-@time: 
-@outptr: 
-@size: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_time_get_timestamp ##### -->
-<para>
-
-</para>
-
-@time: 
-@outptr: 
-@size: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_time_get_db_timestamp ##### -->
-<para>
-
-</para>
-
-@time: 
-@outptr: 
-@size: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_time_get_idmef_timestamp ##### -->
-<para>
-
-</para>
-
-@time: 
-@outptr: 
-@size: 
 @Returns: 
 
 

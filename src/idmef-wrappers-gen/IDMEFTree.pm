@@ -24,19 +24,20 @@ BEGIN
     use Exporter;
 
     @ISA = qw/Exporter/;
-    @EXPORT = qw(METATYPE_PRIMITIVE METATYPE_STRUCT METATYPE_ENUM
-		 METATYPE_NORMAL METATYPE_LIST METATYPE_UNION
+    @EXPORT = qw(METATYPE_PRIMITIVE METATYPE_OPTIONAL_INT METATYPE_STRUCT
+		 METATYPE_ENUM METATYPE_NORMAL METATYPE_LIST METATYPE_UNION
 		 OBJ_STRUCT OBJ_ENUM OBJ_PRE_DECLARED);
 }
 
 use	strict;
 
 sub	METATYPE_PRIMITIVE		{ 0x01 }
-sub	METATYPE_STRUCT			{ 0x02 }
-sub	METATYPE_ENUM			{ 0x04 }
-sub	METATYPE_NORMAL			{ 0x08 }
-sub	METATYPE_LIST			{ 0x10 }
-sub	METATYPE_UNION			{ 0x20 }
+sub	METATYPE_OPTIONAL_INT		{ 0x02 }
+sub	METATYPE_STRUCT			{ 0x04 }
+sub	METATYPE_ENUM			{ 0x08 }
+sub	METATYPE_NORMAL			{ 0x10 }
+sub	METATYPE_LIST			{ 0x20 }
+sub	METATYPE_UNION			{ 0x40 }
 
 sub	OBJ_STRUCT			{ 0 }
 sub	OBJ_ENUM			{ 1 }
@@ -297,6 +298,32 @@ sub	parse_struct
 		   ptr => 0,
 		   dynamic_ident => 1 });
 	    $self->debug("parse struct field metatype:normal name:$name dynamic_ident\n");
+
+	} elsif ( ($typename, $name) = $line =~ /\s*OPTIONAL_INT\(\s*(\w+)\s*,\s*(\w+)\s*\)/ ) {
+	    my $metatype;
+	    my $short_typename;
+	    my $value_type;
+
+	    if ( $self->{enums}->{$typename} ) {
+		$metatype = &METATYPE_ENUM;
+		$short_typename = get_idmef_name($typename);
+
+	    } else {
+		$metatype = &METATYPE_PRIMITIVE;
+		$short_typename = $typename;
+		$short_typename =~ s/_t$//;
+	    }
+
+	    $value_type = get_value_type($short_typename);
+
+	    push(@field_list, { metatype => &METATYPE_NORMAL|&METATYPE_OPTIONAL_INT|$metatype,
+				typename => $typename,
+				short_typename => $short_typename,
+				value_type => $value_type,
+				name => $name,
+				short_name => $name,
+				ptr => 0,
+				dynamic_ident => 0 });
 
 	} elsif ( ($typename, $id) = $line =~ /^\}\s*TYPE_ID\(\s*(\w+)\s*,\s*(\d+)\s*\)/ ) {
 	    $struct->{typename} = $typename;

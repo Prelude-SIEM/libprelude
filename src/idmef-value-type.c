@@ -94,7 +94,8 @@ typedef struct {
 
 } idmef_value_type_operation_t;
 
-
+GENERIC_TWO_BASES_RW_FUNC("%hhd", "%hhx", int8, int8_t)
+GENERIC_TWO_BASES_RW_FUNC("%hhu", "%hhx", uint8, uint8_t)
 GENERIC_TWO_BASES_RW_FUNC("%hd", "%hx", int16, int16_t)
 GENERIC_TWO_BASES_RW_FUNC("%hu", "%hx", uint16, uint16_t)
 GENERIC_TWO_BASES_RW_FUNC("%d", "%x", int32, int32_t)
@@ -157,10 +158,8 @@ static int generic_compare(idmef_value_type_t *t1, idmef_value_type_t *t2,
 static int time_compare(idmef_value_type_t *t1, idmef_value_type_t *t2, size_t size,
                         idmef_value_relation_t relation)
 {
-        double time1, time2;
-
-        time1 = idmef_time_get_time(t1->data.time_val);
-        time2 = idmef_time_get_time(t2->data.time_val);
+	double time1 = idmef_time_get_sec(t1->data.time_val) + idmef_time_get_usec(t1->data.time_val) * 1e-6;
+	double time2 = idmef_time_get_sec(t2->data.time_val) + idmef_time_get_usec(t2->data.time_val) * 1e-6;
 
         if ( relation & IDMEF_VALUE_RELATION_EQUAL && time1 == time2 )
                 return 0;
@@ -178,7 +177,7 @@ static int time_compare(idmef_value_type_t *t1, idmef_value_type_t *t2, size_t s
 
 static int time_read(idmef_value_type_t *dst, const char *buf)
 {
-	dst->data.time_val = idmef_time_new_string(buf);
+	dst->data.time_val = idmef_time_new_from_string(buf);
         if ( ! dst->data.time_val )
                 return -1;
 
@@ -189,7 +188,7 @@ static int time_read(idmef_value_type_t *dst, const char *buf)
 
 static int time_write(char *buffer, size_t size, idmef_value_type_t *src)
 {
-	return idmef_time_get_idmef_timestamp(src->data.time_val, buffer, size);
+	return idmef_time_to_string(src->data.time_val, buffer, size);
 }
 
 
@@ -362,21 +361,37 @@ static void data_destroy(idmef_value_type_t *type)
 
 
 static idmef_value_type_operation_t ops_tbl[] = {
-        { 0, 0, NULL, NULL, NULL, NULL, NULL, NULL                                                           },
-        { sizeof(int16_t), INTEGER_RELATION, generic_copy, generic_clone, NULL, generic_compare, int16_read, int16_write    },
-        { sizeof(uint16_t), INTEGER_RELATION, generic_copy, generic_clone, NULL, generic_compare, uint16_read, uint16_write },
-        { sizeof(int32_t), INTEGER_RELATION, generic_copy, generic_clone, NULL, generic_compare, int32_read, int32_write    },
-        { sizeof(uint32_t), INTEGER_RELATION, generic_copy, generic_clone, NULL, generic_compare, uint32_read, uint32_write },
-        { sizeof(int64_t), INTEGER_RELATION, generic_copy, generic_clone, NULL, generic_compare, int64_read, int64_write    },
-        { sizeof(uint64_t), INTEGER_RELATION, generic_copy, generic_clone, NULL, generic_compare, uint64_read, uint64_write },
-        { sizeof(float), INTEGER_RELATION, generic_copy, generic_clone, NULL, generic_compare, float_read, float_write      },
-        { sizeof(double), INTEGER_RELATION, generic_copy, generic_clone, NULL, generic_compare, double_read, double_write   },
-        { 0, STRING_RELATION, string_copy, string_clone, string_destroy, string_compare, string_read, string_write         },
-        { 0, TIME_RELATION, time_copy, time_clone, time_destroy, time_compare, time_read, time_write                     }, 
-        { 0, DATA_RELATION, data_copy, data_clone, data_destroy, data_compare, data_read, data_write                     },
-        { sizeof(idmef_value_type_id_t), INTEGER_RELATION, generic_copy, generic_clone, NULL, generic_compare, enum_read, enum_write, /* type_enum */ },
-        { 0, 0, NULL, NULL, NULL, NULL, NULL, NULL },
-        { 0, OBJECT_RELATION, NULL, NULL, NULL, NULL, NULL, NULL },
+        { 0, 0, NULL, NULL, NULL, NULL, NULL, NULL},
+        { sizeof(int8_t), INTEGER_RELATION, generic_copy,
+          generic_clone, NULL, generic_compare, int8_read, int8_write             },
+        { sizeof(uint8_t), INTEGER_RELATION, generic_copy,
+          generic_clone, NULL, generic_compare, uint8_read, uint8_write           },
+        { sizeof(int16_t), INTEGER_RELATION, generic_copy,
+          generic_clone, NULL, generic_compare, int16_read, int16_write           },
+        { sizeof(uint16_t), INTEGER_RELATION, generic_copy,
+          generic_clone, NULL, generic_compare, uint16_read, uint16_write         },
+        { sizeof(int32_t), INTEGER_RELATION, generic_copy,
+          generic_clone, NULL, generic_compare, int32_read, int32_write           },
+        { sizeof(uint32_t), INTEGER_RELATION, generic_copy,
+          generic_clone, NULL, generic_compare, uint32_read, uint32_write         },
+        { sizeof(int64_t), INTEGER_RELATION, generic_copy,
+          generic_clone, NULL, generic_compare, int64_read, int64_write           },
+        { sizeof(uint64_t), INTEGER_RELATION, generic_copy, 
+          generic_clone, NULL, generic_compare, uint64_read, uint64_write         },
+        { sizeof(float), INTEGER_RELATION, generic_copy,
+          generic_clone, NULL, generic_compare, float_read, float_write           },
+        { sizeof(double), INTEGER_RELATION, generic_copy,
+          generic_clone, NULL, generic_compare, double_read, double_write         },
+        { 0, STRING_RELATION, string_copy,
+          string_clone, string_destroy, string_compare, string_read, string_write },
+        { 0, TIME_RELATION, time_copy,
+          time_clone, time_destroy, time_compare, time_read, time_write           }, 
+        { 0, DATA_RELATION, data_copy,
+          data_clone, data_destroy, data_compare, data_read, data_write           },
+        { sizeof(idmef_value_type_id_t), INTEGER_RELATION, generic_copy,
+          generic_clone, NULL, generic_compare, enum_read, enum_write, /* enum */ },
+        { 0, 0, NULL, NULL, NULL, NULL, NULL, NULL                                },
+        { 0, OBJECT_RELATION, NULL, NULL, NULL, NULL, NULL, NULL                  },
 };
 
 

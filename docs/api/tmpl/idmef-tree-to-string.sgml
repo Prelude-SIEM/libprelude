@@ -36,17 +36,6 @@ idmef-tree-to-string
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_userid_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@buffer: 
-@size: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_user_to_string ##### -->
 <para>
 
@@ -70,28 +59,6 @@ idmef-tree-to-string
 
 
 <!-- ##### FUNCTION idmef_process_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@buffer: 
-@size: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_webservice_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@buffer: 
-@size: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_snmpservice_to_string ##### -->
 <para>
 
 </para>

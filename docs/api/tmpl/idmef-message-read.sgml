@@ -34,16 +34,6 @@ idmef-message-read
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_userid_read ##### -->
-<para>
-
-</para>
-
-@userid: 
-@msg: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_user_read ##### -->
 <para>
 
@@ -70,26 +60,6 @@ idmef-message-read
 </para>
 
 @process: 
-@msg: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_webservice_read ##### -->
-<para>
-
-</para>
-
-@webservice: 
-@msg: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_snmpservice_read ##### -->
-<para>
-
-</para>
-
-@snmpservice: 
 @msg: 
 @Returns: 
 

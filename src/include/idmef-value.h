@@ -35,6 +35,8 @@ typedef struct idmef_value idmef_value_t;
 #include "idmef-object.h"
 
 
+idmef_value_t *idmef_value_new_int8(int8_t val);
+idmef_value_t *idmef_value_new_uint8(uint8_t val);
 idmef_value_t *idmef_value_new_int16(int16_t val);
 idmef_value_t *idmef_value_new_uint16(uint16_t val);
 idmef_value_t *idmef_value_new_int32(int32_t val);
@@ -54,6 +56,8 @@ idmef_value_t *idmef_value_new_enum_numeric(idmef_object_type_t type, int val);
 idmef_value_t *idmef_value_new_for_object(idmef_object_t *object, const char *buf);
 idmef_value_t *idmef_value_new_generic(idmef_value_type_id_t type, const char *buf);
 
+int8_t idmef_value_get_int8(idmef_value_t *val);
+uint8_t idmef_value_get_uint8(idmef_value_t *val);
 int16_t idmef_value_get_int16(idmef_value_t *val);
 uint16_t idmef_value_get_uint16(idmef_value_t *val);
 int32_t idmef_value_get_int32(idmef_value_t *val);

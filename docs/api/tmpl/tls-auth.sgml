@@ -31,5 +31,6 @@ tls-auth
 </para>
 
 @client: 
+@Returns: 
 
 

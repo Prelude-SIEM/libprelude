@@ -30,14 +30,6 @@ idmef-tree-print
 @ptr: 
 
 
-<!-- ##### FUNCTION idmef_userid_print ##### -->
-<para>
-
-</para>
-
-@ptr: 
-
-
 <!-- ##### FUNCTION idmef_user_print ##### -->
 <para>
 
@@ -55,22 +47,6 @@ idmef-tree-print
 
 
 <!-- ##### FUNCTION idmef_process_print ##### -->
-<para>
-
-</para>
-
-@ptr: 
-
-
-<!-- ##### FUNCTION idmef_webservice_print ##### -->
-<para>
-
-</para>
-
-@ptr: 
-
-
-<!-- ##### FUNCTION idmef_snmpservice_print ##### -->
 <para>
 
 </para>

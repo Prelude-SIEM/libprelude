@@ -336,21 +336,43 @@ int prelude_get_file_name_and_path(const char *str, char **name, char **path)
 
 
 
-int prelude_get_gmt_offset(time_t time_local, int *gmt_offset)
+int prelude_get_gmt_offset(uint32_t *gmtoff)
 {
-        time_t time_utc;
-        struct tm tm_utc;
-                
-        if ( ! gmtime_r(&time_local, &tm_utc) ) {
-                log(LOG_ERR, "error converting local time to utc time.\n");
-                return -1;
-        }
+	time_t t = 0;
+	struct tm tm_local;
+
+	if ( ! localtime_r(&t, &tm_local) ) {
+		log(LOG_ERR, "localtime_r failed.\n");
+		return -1;
+	}
+
+	*gmtoff = tm_local.tm_hour * 3600 + tm_local.tm_min * 60 + tm_local.tm_sec;
+
+	return 0;
+}
+
+
+
+time_t prelude_timegm(struct tm *tm)
+{ 
+        time_t retval;
+        char *old, new[128];
+
+        old = getenv("TZ");
+        putenv("TZ=\"\"");
+        tzset();
         
-        tm_utc.tm_isdst = -1;
-        time_utc = mktime(&tm_utc);
-        *gmt_offset = time_local - time_utc;
-        
-        return 0;
+        retval = mktime(tm);
+
+	if ( old ) {
+		snprintf(new, sizeof (new), "TZ=%s", old);
+		putenv(new);
+	} else {
+		putenv("TZ");
+	}
+        tzset();
+
+        return retval;
 }
 
 

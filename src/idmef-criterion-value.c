@@ -278,13 +278,13 @@ static int tm_calculate(struct tm *tm, int gmt_offset,
 
 
 
-static int get_tm_and_offset(struct tm *tm, int *gmt_offset)
+static int get_tm_and_offset(struct tm *tm, uint32_t *gmt_offset)
 {
 	time_t current_time;
 
 	time(&current_time);
 
-	if ( prelude_get_gmt_offset(current_time, gmt_offset) < 0 )
+	if ( prelude_get_gmt_offset(gmt_offset) < 0 )
 		return -1;
 
 	current_time += *gmt_offset;
@@ -307,7 +307,7 @@ static int parse_last(idmef_criterion_value_non_linear_time_t *t,
 	int ret;
 	int value_offset;
 	struct tm tm;
-	int gmt_offset;
+	uint32_t gmt_offset;
 
 	ret = is_keyword("last", value, &value_offset);
 	if ( ret <= 0 )
@@ -333,7 +333,7 @@ static int parse_current(idmef_criterion_value_non_linear_time_t *t,
 	int ret;
 	int value_offset;
 	struct tm tm;
-	int gmt_offset;
+	uint32_t gmt_offset;
 
 	ret = is_keyword("current", value, &value_offset);
 	if ( ret <= 0 )

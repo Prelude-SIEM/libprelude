@@ -251,7 +251,7 @@ static void heartbeat_expire_cb(void *data)
         add_hb_data(heartbeat, prelude_string_new_constant("Analyzer heartbeat interval"),
                     idmef_data_new_ref(buf, strlen(buf) + 1));
         
-        idmef_heartbeat_set_create_time(heartbeat, idmef_time_new_gettimeofday());
+        idmef_heartbeat_set_create_time(heartbeat, idmef_time_new_from_gettimeofday());
         idmef_heartbeat_set_analyzer(heartbeat, idmef_analyzer_ref(client->analyzer));
                 
         if ( client->heartbeat_cb ) {
@@ -356,7 +356,12 @@ static int set_node_address_vlan_num(void *context, prelude_option_t *opt, const
 
 static int get_node_address_vlan_num(void *context, prelude_option_t *opt, char *out, size_t size)
 {
-        snprintf(out, size, "%d", idmef_address_get_vlan_num(context));
+        int32_t *num;
+
+        num = idmef_address_get_vlan_num(context);
+        if ( num )
+                snprintf(out, size, "%d", *num);
+
         return 0;
 }
 

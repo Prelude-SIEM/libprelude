@@ -203,10 +203,11 @@ idmef_value_t *idmef_object_get(idmef_message_t *message, idmef_object_t *object
 
 int idmef_object_set(idmef_message_t *message, idmef_object_t *object, idmef_value_t *value)
 {
-    	int i, n;
+    	int i;
     	void *ptr;
-    	idmef_object_type_t type, parent_type;
+        idmef_value_type_id_t tid;
         idmef_object_description_t *desc;
+    	idmef_object_type_t type, parent_type;
         
 	ptr = message;
 	parent_type = type = IDMEF_OBJECT_TYPE_MESSAGE;
@@ -215,26 +216,26 @@ int idmef_object_set(idmef_message_t *message, idmef_object_t *object, idmef_val
                 desc = &object->desc[i];
                 
 	    	if ( desc->no == INDEX_UNDEFINED && idmef_type_child_is_list(type, desc->id) )
-			n = -1;
-		else
-			n = desc->no;
-
-	    	ptr = idmef_type_new_child(ptr, type, desc->id, n);
+			return -1;
+		
+	    	ptr = idmef_type_new_child(ptr, type, desc->id, desc->no);
 		if ( ! ptr )
-		    	return -3;
+		    	return -2;
 
-		parent_type = type;
+                parent_type = type;
                 
-		type = idmef_type_get_child_object_type(type, desc->id);
-		if ( type < 0 && i < object->depth - 1 )
-		    	return -4;
-	}
-        
- 	if ( idmef_value_get_type(value) != idmef_type_get_child_type(parent_type, object->desc[object->depth - 1].id) )
-                return -5;
+                type = idmef_type_get_child_object_type(type, desc->id);
+                if ( type < 0 && i < object->depth - 1 )
+                        return -3;
+        }
 
-	if ( idmef_value_get(ptr, value) < 0 )
-	    	return -6;
+        tid = idmef_type_get_child_type(parent_type, object->desc[object->depth - 1].id);
+        
+        if ( idmef_value_get_type(value) != tid )
+                return -4;
+
+        if ( idmef_value_get(ptr, value) < 0 )
+                return -5;
 
 	return 0;
 

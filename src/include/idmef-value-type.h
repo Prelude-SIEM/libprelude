@@ -43,26 +43,30 @@ typedef enum {
 typedef enum {
         IDMEF_VALUE_TYPE_ERROR   =  -1,
         IDMEF_VALUE_TYPE_UNKNOWN =   0,
-        IDMEF_VALUE_TYPE_INT16   =   1,
-        IDMEF_VALUE_TYPE_UINT16  =   2,
-        IDMEF_VALUE_TYPE_INT32   =   3,
-        IDMEF_VALUE_TYPE_UINT32  =   4,
-        IDMEF_VALUE_TYPE_INT64   =   5,
-        IDMEF_VALUE_TYPE_UINT64  =   6,
-        IDMEF_VALUE_TYPE_FLOAT   =   7,
-        IDMEF_VALUE_TYPE_DOUBLE  =   8,
-        IDMEF_VALUE_TYPE_STRING  =   9,
-        IDMEF_VALUE_TYPE_TIME    =  10,
-        IDMEF_VALUE_TYPE_DATA    =  11,
-        IDMEF_VALUE_TYPE_ENUM    =  12,
-        IDMEF_VALUE_TYPE_LIST    =  13,
-        IDMEF_VALUE_TYPE_OBJECT  =  14
+	IDMEF_VALUE_TYPE_INT8	 =   1,
+	IDMEF_VALUE_TYPE_UINT8   =   2,
+        IDMEF_VALUE_TYPE_INT16   =   3,
+        IDMEF_VALUE_TYPE_UINT16  =   4,
+        IDMEF_VALUE_TYPE_INT32   =   5,
+        IDMEF_VALUE_TYPE_UINT32  =   6,
+        IDMEF_VALUE_TYPE_INT64   =   7,
+        IDMEF_VALUE_TYPE_UINT64  =   8,
+        IDMEF_VALUE_TYPE_FLOAT   =   9,
+        IDMEF_VALUE_TYPE_DOUBLE  =  10,
+        IDMEF_VALUE_TYPE_STRING  =  11,
+        IDMEF_VALUE_TYPE_TIME    =  12,
+        IDMEF_VALUE_TYPE_DATA    =  13,
+        IDMEF_VALUE_TYPE_ENUM    =  14,
+        IDMEF_VALUE_TYPE_LIST    =  15,
+        IDMEF_VALUE_TYPE_OBJECT  =  16
 } idmef_value_type_id_t;
 
 
 
 typedef union {
-        int16_t int16_val;
+	int8_t int8_val;
+	uint8_t uint8_val;
+	int16_t int16_val;
         uint16_t uint16_val;
         int32_t int32_val;
         uint32_t uint32_val;

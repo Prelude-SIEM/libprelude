@@ -118,6 +118,8 @@ static idmef_value_t *idmef_value_create(idmef_value_type_id_t type_id)
 
 
 
+idmef_value_new(INT8, int8, int8_t)
+idmef_value_new(UINT8, uint8, uint8_t)
 idmef_value_new(INT16, int16, int16_t)
 idmef_value_new(UINT16, uint16, uint16_t)
 idmef_value_new(INT32, int32, int32_t)
@@ -127,6 +129,8 @@ idmef_value_new(UINT64, uint64, uint64_t)
 idmef_value_new(FLOAT, float, float)
 idmef_value_new(DOUBLE, double, double)
 
+idmef_value_get_(INT8, int8, int8_t)
+idmef_value_get_(UINT8, uint8, uint8_t)
 idmef_value_get_(INT16, int16, int16_t)
 idmef_value_get_(UINT16, uint16, uint16_t)
 idmef_value_get_(INT32, int32, int32_t)
