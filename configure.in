@@ -468,7 +468,9 @@ libmissing/Makefile
 m4/Makefile
 
 src/Makefile
+src/libprelude-error/Makefile
 src/include/Makefile
+
 src/include/prelude.h
 src/include/prelude-inttypes.h
 
