@@ -15,7 +15,6 @@ libprelude_la_SOURCES = 		\
 	config-engine.c 		\
 	plugin-common.c			\
 	daemonize.c			\
-	string-matching.c		\
 	timer.c				\
 	variable.c			\
 	prelude-auth.c			\

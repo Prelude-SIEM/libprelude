@@ -11,7 +11,6 @@ include_HEADERS = config-engine.h 		\
 		  ssl-settings.h		\
 		  ssl-registration-msg.h	\
 		  daemonize.h			\
-		  string-matching.h		\
 		  timer.h			\
 		  list.h			\
 		  variable.h			\
