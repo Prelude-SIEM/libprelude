@@ -174,7 +174,7 @@ class Option:
         self.instantiable = bool(_prelude.prelude_option_get_flags(option) & _prelude.ALLOW_MULTIPLE_CALL)
         if self.name.find("[") != -1:
             self.instance = True
-            m = re.compile("(\w+)\[(\w+)\]").match(self.name)
+            m = re.compile("(.+)\[(.+)\]").match(self.name)
             self.instantiable_name = m.group(1)
             self.instance_name = m.group(2)
         else:
