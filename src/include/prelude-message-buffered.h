@@ -24,6 +24,8 @@
 #ifndef _LIBPRELUDE_PRELUDE_MESSAGE_BUFFERED_H
 #define _LIBPRELUDE_PRELUDE_MESSAGE_BUFFERED_H
 
+#include "prelude-message.h"
+
 typedef struct prelude_message_buffered prelude_msgbuf_t;
 
 
