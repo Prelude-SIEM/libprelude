@@ -478,7 +478,6 @@ static int secure_open(const char *filename)
 static int setup_backup_fd(prelude_client_mgr_t *new) 
 {
         int wfd, rfd;
-        FILE *wfdp, *rfdp;
         char filename[1024];
 
         prelude_get_backup_filename(filename, sizeof(filename));
@@ -621,7 +620,7 @@ static void broadcast_async_cb(void *obj, void *data)
         prelude_msg_t *msg = obj;
         prelude_client_mgr_t *cmgr = data;
 
-            //prelude_client_mgr_broadcast(cmgr, msg);
+        prelude_client_mgr_broadcast(cmgr, msg);
         prelude_msg_destroy(msg);
 }
 
