@@ -208,17 +208,18 @@ ssize_t socket_write(int fd, void *buf, size_t count, write_func_t *mywrite)
 /*
  * socket_read_delimited:
  * @fd: The file descriptor to write to.
- * @buf: The buffer where data should be written to.
- * @count: Size of the buffer.
+ * @buf: A pointer on the address of the buffer where data should be written to.
+ * @myread: read function to use.
  *
  * Used in conjunction with socket_write_delimited(), this
  * function permit to read the exact number of bytes written
- * by the socket_write_delimited() function call.
+ * by the socket_write_delimited() function call. The buffer is dynamically
+ * allocated.
  * 
  * Returns: The number of bytes read,
  * 0 on timeout (3 seconds), -1 on error.
  */
-ssize_t socket_read_delimited(int fd, char *buf, size_t count) 
+ssize_t socket_read_delimited(int fd, void **buf, read_func_t *myread) 
 {
         int ret, len;
 
@@ -234,12 +235,14 @@ ssize_t socket_read_delimited(int fd, char *buf, size_t count)
         }
         
         len = ntohl(len);
-        if ( len > count ) {
-                log(LOG_ERR, "len of packet (%d) overflow our buffer (%d).\n", len, count);
+
+        *buf = malloc(len);
+        if ( ! *buf ) {
+                log(LOG_ERR, "couldn't allocate %d bytes.\n", len);
                 return -1;
         }
-
-        ret = socket_read_nowait(fd, buf, len, read);
+        
+        ret = socket_read_nowait(fd, *buf, len, myread);
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't read packet content.\n");
                 return -1;
@@ -260,6 +263,7 @@ ssize_t socket_read_delimited(int fd, char *buf, size_t count)
  * @fd: The file descriptor to write to.
  * @buf: The buffer where data should be written to.
  * @count: Size of the buffer.
+ * @mywrite: write function to use.
  *
  * This function write the size of the data that will be written
  * on the socket in a portable way before writting the data itself.
@@ -269,13 +273,13 @@ ssize_t socket_read_delimited(int fd, char *buf, size_t count)
  * Returns: The number of bytes written,
  * 0 on timeout (3 seconds), -1 on error.
  */
-ssize_t socket_write_delimited(int sock, char *buf, size_t count) 
+ssize_t socket_write_delimited(int sock, char *buf, size_t count, write_func_t *mywrite) 
 {
 	int ret, len;
         
         len = htonl(count);
         
-        ret = socket_write(sock, &len, sizeof(int), write);
+        ret = socket_write(sock, &len, sizeof(int), mywrite);
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't write %d bytes.\n", sizeof(int));
                 return -1;
@@ -286,7 +290,7 @@ ssize_t socket_write_delimited(int sock, char *buf, size_t count)
                 return -1;
         }
 
-        ret = socket_write(sock, buf, count, write);
+        ret = socket_write(sock, buf, count, mywrite);
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't write %d bytes.\n", count);
                 return -1;
@@ -299,6 +303,22 @@ ssize_t socket_write_delimited(int sock, char *buf, size_t count)
 
         return count;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -26,5 +26,5 @@ ssize_t socket_read_nowait(int fd, void *buf, size_t count, read_func_t *myread)
 ssize_t socket_read(int fd, void *buf, size_t count, read_func_t *myread);
 ssize_t socket_write(int fd, void *buf, size_t count, write_func_t *mywrite);
 
-ssize_t socket_read_delimited(int sock, char *buf, size_t count);
-ssize_t socket_write_delimited(int sock, char *buf, size_t count);
+ssize_t socket_read_delimited(int sock, void **buf, read_func_t *myread);
+ssize_t socket_write_delimited(int sock, char *buf, size_t count, write_func_t *mywrite);

@@ -77,25 +77,40 @@ static int is_section(const char *line)
  */
 static int cmp_entry(char *string, const char *wanted) 
 {
-        int ret;
         char old;
         char *ptr;
+        int ret, len;
 
+        /*
+         * There is 2 kind of entry,
+         * the one that have a value, and the other.
+         */
         ptr = strrchr(string, '=');
         if ( ! ptr )
                 ptr = string + strlen(string);
-        else
+        else {
+                len = strlen(string);
+                if ( len == 0 )
+                        return -1;
+                
+                ptr = string + len - 1;
+        }
+
+        /*
+         * Search for the end of the entry name.
+         * Return -1 if we encounter the end of the string,
+         * which mean this is not an entry.
+         */
+        while ( *ptr == ' ' ) {
+                if ( ptr == string )
+                        return -1;
                 ptr--;
-        
-        while ( ptr != string && *ptr == ' ' )
-                ptr--;
+        }
 
         ptr++;
         
         old = *ptr; *ptr = 0;
-
         ret = strcmp(string, wanted);
-
         *ptr = old;
         
         return ret;
