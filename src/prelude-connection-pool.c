@@ -706,10 +706,10 @@ static void broadcast_async_cb(void *obj, void *data)
 
 /**
  * prelude_connection_pool_broadcast:
- * @pool: Pointer on a client manager object.
+ * @pool: Pointer to a #prelude_connection_pool_t object.
  * @msg: Pointer on a #prelude_msg_t object.
  *
- * Send the message contained in @msg to all the client.
+ * Send the message contained in @msg to all the connection in @pool.
  */
 void prelude_connection_pool_broadcast(prelude_connection_pool_t *pool, prelude_msg_t *msg) 
 {
@@ -722,13 +722,13 @@ void prelude_connection_pool_broadcast(prelude_connection_pool_t *pool, prelude_
 
 
 /**
- * prelude_connection_pool_broadcast_msg:
- * @pool: Pointer on a client manager object.
+ * prelude_connection_pool_broadcast_async:
+ * @pool: Pointer to a #prelude_connection_pool_t object
  * @msg: Pointer on a #prelude_msg_t object.
  *
- * Send the message contained in @msg to all the client
- * in the @pool group of client asynchronously. After the
- * request is processed, the @msg message will be freed.
+ * Send the message contained in @msg to all the connection
+ * in @pool asynchronously. After the request is processed,
+ * the @msg message will be freed.
  */
 void prelude_connection_pool_broadcast_async(prelude_connection_pool_t *pool, prelude_msg_t *msg) 
 {
@@ -739,55 +739,65 @@ void prelude_connection_pool_broadcast_async(prelude_connection_pool_t *pool, pr
 
 
 
-int prelude_connection_pool_init(prelude_connection_pool_t *new)
+/**
+ * prelude_connection_pool_init:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ *
+ * Initialize @pool. This mean that connection that were associated
+ * with @pool using prelude_connection_pool_set_connection_string()
+ * will be established.
+ *
+ * Returns: 0 on success, a negative value on error.
+ */
+int prelude_connection_pool_init(prelude_connection_pool_t *pool)
 {
         int ret;
         cnx_list_t *clist;
         char dirname[512], buf[512];
         
-        if ( ! new->failover ) {                
-                prelude_client_profile_get_backup_dirname(new->client_profile, buf, sizeof(buf));        
+        if ( ! pool->failover ) {                
+                prelude_client_profile_get_backup_dirname(pool->client_profile, buf, sizeof(buf));        
                 snprintf(dirname, sizeof(dirname), "%s/global", buf);
 
-                ret = prelude_failover_new(&new->failover, dirname);                
+                ret = prelude_failover_new(&pool->failover, dirname);                
                 if ( ret < 0 )
                         return ret;
         }
         
-        if ( ! new->connection_string_changed || ! new->connection_string )
+        if ( ! pool->connection_string_changed || ! pool->connection_string )
                 return prelude_error(PRELUDE_ERROR_CONNECTION_STRING);
         
-        new->connection_string_changed = FALSE;
-        connection_list_destroy(new->or_list);
+        pool->connection_string_changed = FALSE;
+        connection_list_destroy(pool->or_list);
                 
-        new->nfd = 0;
-        new->or_list = NULL;
+        pool->nfd = 0;
+        pool->or_list = NULL;
         
-        ret = parse_config_line(new);        
-        if ( ret < 0 || ! new->or_list )
+        ret = parse_config_line(pool);        
+        if ( ret < 0 || ! pool->or_list )
                 return ret;
         
-        for ( clist = new->or_list; clist != NULL; clist = clist->or ) {
+        for ( clist = pool->or_list; clist != NULL; clist = clist->or ) {
                                 
                 if ( clist->dead )
                         continue;
                 
-                ret = failover_flush(new->failover, clist, NULL);
+                ret = failover_flush(pool->failover, clist, NULL);
                 if ( ret == 0 )
                         break;
         }
 
-        if ( new->global_event_handler )
-                new->global_event_handler(new, 0);
+        if ( pool->global_event_handler )
+                pool->global_event_handler(pool, 0);
         
         if ( ret < 0 )
                 prelude_log(PRELUDE_LOG_WARN, "Can't contact configured Manager - Enabling failsafe mode.\n");
                         
-        if ( new->wanted_event & PRELUDE_CONNECTION_POOL_EVENT_INPUT ) {                
-                prelude_timer_set_data(&new->timer, new);
-                prelude_timer_set_expire(&new->timer, 1);
-                prelude_timer_set_callback(&new->timer, check_for_data_cb);
-                prelude_timer_init(&new->timer);
+        if ( pool->wanted_event & PRELUDE_CONNECTION_POOL_EVENT_INPUT ) {                
+                prelude_timer_set_data(&pool->timer, pool);
+                prelude_timer_set_expire(&pool->timer, 1);
+                prelude_timer_set_callback(&pool->timer, check_for_data_cb);
+                prelude_timer_init(&pool->timer);
         }
         
         return 0;
@@ -829,6 +839,12 @@ int prelude_connection_pool_new(prelude_connection_pool_t **ret,
 
 
 
+/**
+ * prelude_connection_pool_destroy:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ *
+ * Destroy @pool and all the connection it handle.
+ */
 void prelude_connection_pool_destroy(prelude_connection_pool_t *pool) 
 {        
         prelude_timer_destroy(&pool->timer);
@@ -846,7 +862,15 @@ void prelude_connection_pool_destroy(prelude_connection_pool_t *pool)
 
 
 
-
+/**
+ * prelude_connection_pool_add_connection:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ * @cnx: Pointer to a #prelude_connection_t object to add to @pool.
+ *
+ * Add @cnx to @pool set of connection.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
 int prelude_connection_pool_add_connection(prelude_connection_pool_t *pool, prelude_connection_t *cnx)
 {
         int ret;
@@ -877,29 +901,55 @@ int prelude_connection_pool_add_connection(prelude_connection_pool_t *pool, prel
 
 
 
+/**
+ * prelude_connection_pool_set_global_event_handler:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ * @wanted_events: Event the user want to be notified about.
+ * @callback: User specific callback to call when an event is available.
+ *
+ * @callback will be called each time one of the event specified in
+ * @wanted_events happen to @pool. However, contrary to
+ * prelude_connection_pool_set_event_handler(), the callback will be called
+ * only once per set of event.
+ */
 void prelude_connection_pool_set_global_event_handler(prelude_connection_pool_t *pool,
-                                                      prelude_connection_pool_event_t wanted_event,
+                                                      prelude_connection_pool_event_t wanted_events,
                                                       int (*callback)(prelude_connection_pool_t *pool,
                                                                       prelude_connection_pool_event_t events)) 
 {
-        pool->wanted_event = wanted_event;
+        pool->wanted_event = wanted_events;
         pool->global_event_handler = callback;
 }
 
 
 
+/**
+ * prelude_connection_pool_set_event_handler:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ * @wanted_events: Event the user want to be notified about.
+ * @callback: User specific callback to call when an event is available.
+ *
+ * @callback will be called each time one of the event specified in
+ * @wanted_events happen to @pool.
+ */
 void prelude_connection_pool_set_event_handler(prelude_connection_pool_t *pool,
-                                               prelude_connection_pool_event_t wanted_event,
+                                               prelude_connection_pool_event_t wanted_events,
                                                int (*callback)(prelude_connection_pool_t *pool,
                                                                prelude_connection_pool_event_t events,
                                                                prelude_connection_t *cnx))
 {
-        pool->wanted_event = wanted_event;
+        pool->wanted_event = wanted_events;
         pool->event_handler = callback;
 }
 
 
 
+/**
+ * prelude_connection_pool_get_connection_list:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ *
+ * Returns: The list of connection handled by @pool.
+ */
 prelude_list_t *prelude_connection_pool_get_connection_list(prelude_connection_pool_t *pool) 
 {
         return &pool->all_cnx;
@@ -907,7 +957,21 @@ prelude_list_t *prelude_connection_pool_get_connection_list(prelude_connection_p
 
 
 
-
+/**
+ * prelude_connection_pool_set_connection_dead:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ * @cnx: Pointer to a #prelude_connection_t object used within @pool.
+ *
+ * Notify @pool that the connection identified bu @cnx is dead.
+ *
+ * Usually, this function is not to be used by the user since @pool is
+ * self sufficiant, and handle connection problem internally. However,
+ * it is sometime useful when the user have several mechanism using the
+ * connection, and that it's own mechanism detect a connection problem
+ * before @pool notice.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
 int prelude_connection_pool_set_connection_dead(prelude_connection_pool_t *pool, prelude_connection_t *cnx)
 {
         cnx_t *c;
@@ -928,6 +992,21 @@ int prelude_connection_pool_set_connection_dead(prelude_connection_pool_t *pool,
 
 
 
+/**
+ * prelude_connection_pool_set_connection_alive:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ * @cnx: Pointer to a #prelude_connection_t object used within @pool.
+ *
+ * Notify @pool that the connection identified bu @cnx went back alive.
+ *
+ * Usually, this function is not to be used by the user since @pool is
+ * self sufficiant, and handle connection problem internally. However,
+ * it is sometime useful when the user have several mechanism using the
+ * connection, and that it's own mechanism detect a connection problem
+ * before @pool notice.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
 int prelude_connection_pool_set_connection_alive(prelude_connection_pool_t *pool, prelude_connection_t *cnx) 
 {
         int ret;
@@ -958,6 +1037,23 @@ int prelude_connection_pool_set_connection_alive(prelude_connection_pool_t *pool
 
 
 
+/**
+ * prelude_connection_pool_set_connection_string:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ * @cfgstr: Connection string.
+ *
+ * Set the connection string for @pool. The connection string should be
+ * in the form of : "address". Special operand like || (OR) and && (AND),
+ * are also accepted: "address && address". 
+ *
+ * Where && mean that alert sent using @pool will go to both configured
+ * address, and || mean that if the left address fail, the right address
+ * will be used.
+ *
+ * prelude_connection_pool_init() should be used to initiate the connection.
+ *
+ * Returns: The connection string.
+ */
 int prelude_connection_pool_set_connection_string(prelude_connection_pool_t *pool, const char *cfgstr)
 {
         char *new;
@@ -977,6 +1073,14 @@ int prelude_connection_pool_set_connection_string(prelude_connection_pool_t *poo
 
 
 
+/**
+ * prelude_connection_pool_get_connection_string:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ *
+ * Used to query the connection string used by @pool.
+ *
+ * Returns: The connection string.
+ */
 const char *prelude_connection_pool_get_connection_string(prelude_connection_pool_t *pool)
 {
         return pool->connection_string;
@@ -984,6 +1088,13 @@ const char *prelude_connection_pool_get_connection_string(prelude_connection_poo
 
 
 
+/**
+ * prelude_connection_pool_set_flags:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ * @flags: Flags to use for @pool.
+ *
+ * Set @flags within @pools.
+ */
 void prelude_connection_pool_set_flags(prelude_connection_pool_t *pool, prelude_connection_pool_flags_t flags)
 {
         pool->flags = flags;
@@ -991,6 +1102,26 @@ void prelude_connection_pool_set_flags(prelude_connection_pool_t *pool, prelude_
 
 
 
+/**
+ * prelude_connection_pool_check_event:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ * @timeout: Time to wait for an event.
+ * @event_cb: User provided callback function to call on received events.
+ * @extra: Pointer to user specific data provided to @event_cb.
+ *
+ * This function query the set of connection available in @pool to see if
+ * events are waiting to be handled. If timeout is zero, then this function
+ * will return immediatly in case there is no event to be handled.
+ *
+ * If timeout is -1, this function won't return until an event is available.
+ * Otherwise this function will return if there is no event after the specified
+ * number of second.
+ *
+ * For each event, @event_cb is called with the concerned @pool, the provided
+ * @extra data, and the @cnx where an event has occured.
+ *
+ * Returns: The number of handled events.
+ */
 int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int timeout,
                                         int (*event_cb)(prelude_connection_pool_t *pool,
                                                         prelude_connection_t *cnx, void *extra), void *extra)
@@ -1058,12 +1189,30 @@ int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int tim
 }
 
 
+/**
+ * prelude_connection_pool_set_data:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ * @data: Pointer to user specific data.
+ *
+ * The user might use this function to associate data with @pool.
+ * The data associated might be retrieved using prelude_connection_pool_get_data().
+ */
 void prelude_connection_pool_set_data(prelude_connection_pool_t *pool, void *data)
 {
         pool->data = data;
 }
 
 
+
+/**
+ * prelude_connection_pool_get_data:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ *
+ * The user might use this function to query data associated with
+ * @pool using prelude_connection_pool_set_data().
+ *
+ * Returns: the user data associated to @pool.
+ */
 void *prelude_connection_pool_get_data(prelude_connection_pool_t *pool)
 {
         return pool->data;

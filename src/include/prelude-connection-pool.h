@@ -46,7 +46,7 @@ void prelude_connection_pool_broadcast(prelude_connection_pool_t *pool, prelude_
 
 void prelude_connection_pool_broadcast_async(prelude_connection_pool_t *pool, prelude_msg_t *msg);
 
-int prelude_connection_pool_init(prelude_connection_pool_t *new);
+int prelude_connection_pool_init(prelude_connection_pool_t *pool);
 
 int prelude_connection_pool_new(prelude_connection_pool_t **ret,
                                 prelude_client_profile_t *cp,
@@ -76,12 +76,12 @@ int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int tim
                                                         prelude_connection_t *cnx, void *extra), void *extra);
 
 void prelude_connection_pool_set_global_event_handler(prelude_connection_pool_t *pool,
-                                                      prelude_connection_pool_event_t events,
+                                                      prelude_connection_pool_event_t wanted_events,
                                                       int (*callback)(prelude_connection_pool_t *pool,
                                                                       prelude_connection_pool_event_t events));
 
 void prelude_connection_pool_set_event_handler(prelude_connection_pool_t *pool,
-                                               prelude_connection_pool_event_t events,
+                                               prelude_connection_pool_event_t wanted_events,
                                                int (*callback)(prelude_connection_pool_t *pool,
                                                                prelude_connection_pool_event_t events,
                                                                prelude_connection_t *cnx));
