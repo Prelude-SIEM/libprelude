@@ -69,7 +69,7 @@ endif
 
 clean-am:
 if HAVE_PERL
-	cd perl && $(MAKE) clean
+	cd perl && if test -f Makefile; then $(MAKE) clean; fi
 endif
 
 if HAVE_PYTHON
