@@ -659,6 +659,8 @@ $field->{typename} ${ptr}idmef_$struct->{short_typename}_get_${name}($struct->{t
     # Generate *_set_* functions #
     ##############################
 
+    my $field_name = ($field->{"name"} eq "class") ? "class_str" : $field->{name};
+
 
     $self->output("
 /**
@@ -674,9 +676,9 @@ $field->{typename} ${ptr}idmef_$struct->{short_typename}_get_${name}($struct->{t
 
     if ( $field->{metatype} & &METATYPE_OPTIONAL_INT ) {
 	$self->output("
-void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} $field->{name})
+void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} $field_name)
 \{
-	ptr->$field->{name} = $field->{name};
+	ptr->$field->{name} = $field_name;
 	ptr->$field->{name}_is_set = 1;
 \}
 
@@ -695,12 +697,12 @@ void idmef_$struct->{short_typename}_unset_$field->{name}($struct->{typename} *p
 	    $destroy_func = "idmef_${destroy_func}" if ( ! ($field->{metatype} & &METATYPE_PRIMITIVE) );
 
 	    $self->output("
-void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} *$field->{name})
+void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} *$field_name)
 \{
 	if ( ptr->$field->{name} )
 		${destroy_func}(ptr->$field->{name});
 
-	ptr->$field->{name} = $field->{name};
+	ptr->$field->{name} = $field_name;
 \}
 ");
 	} else {
@@ -709,10 +711,10 @@ void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr
 	    $destroy_internal_func = "idmef_${destroy_internal_func}" if ( ! ($field->{metatype} & &METATYPE_PRIMITIVE) );
 
 	    $self->output("
-void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} *$field->{name})
+void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} *$field_name)
 \{
 	${destroy_internal_func}(&ptr->$field->{name});
-	memcpy(&ptr->$field->{name}, $field->{name}, sizeof (ptr->$field->{name}));
+	memcpy(&ptr->$field->{name}, $field_name, sizeof (ptr->$field->{name}));
 	free($field->{name});
 \}
 ");
@@ -720,21 +722,21 @@ void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr
     } else {
 	if ( $field->{ptr} ) {
 	    $self->output("
-void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} $field->{name})
+void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} $field_name)
 \{
 	if ( ptr->$field->{name} )
 		free(ptr->$field->{name});
 
 	ptr->$field->{name} = malloc(sizeof (*ptr->$field->{name}));
-	*ptr->$field->{name} = $field->{name};
+	*ptr->$field->{name} = $field_name;
 \}
 ");
 
 	} else {
 	    $self->output("
-void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} $field->{name})
+void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} $field_name)
 \{
-	ptr->$field->{name} = $field->{name};
+	ptr->$field->{name} = $field_name;
 \}
 ");
 	}

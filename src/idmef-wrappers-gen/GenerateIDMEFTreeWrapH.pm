@@ -168,7 +168,9 @@ sub	struct_field_normal
 
     $self->output("$field->{typename} ${refer}idmef_$struct->{short_typename}_get_${name}($struct->{typename} *ptr);\n");
 
-    $self->output("void idmef_$struct->{short_typename}_set_${name}($struct->{typename} *ptr, $field->{typename} ${ptr}${name});\n");
+    my $field_name = ($name eq "class") ? "class_str" : $name;
+
+    $self->output("void idmef_$struct->{short_typename}_set_${name}($struct->{typename} *ptr, $field->{typename} ${ptr}${field_name});\n");
         
     $self->output("int idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr, $field->{typename} **ret);\n");
 	    
