@@ -134,11 +134,11 @@ static int parse_time_gmt(struct tm *tm, uint32_t *gmtoff, const char *buf)
  * @time: Pointer to an #idmef_time_t object.
  * @buf: Pointer to a string describing a time in an IDMEF conforming format.
  *
- * Fill @time object with information retrieved from the user provided
+ * Fills @time object with information retrieved from the user provided
  * @buf, containing a string describing a time in a format conforming
  * to the IDMEF definition  (v. 0.10, section 3.2.6).
  *
- * Additionally, the provided time might be separated with white space, instead
+ * Additionally, the provided time might be separated with white spaces, instead
  * of the IDMEF define 'T' character. The format might not specify a timezone
  * (will assume UTC in this case).
  *
@@ -183,11 +183,11 @@ int idmef_time_set_from_string(idmef_time_t *time, const char *buf)
  * @time: Address where to store the created #idmef_time_t object.
  * @buf: Pointer to a string describing a time in an IDMEF conforming format.
  *
- * Create an #idmef_time_t object filled with information retrieved
+ * Creates an #idmef_time_t object filled with information retrieved
  * from the user provided @buf, containing a string describing a time in a format
  * conforming to the IDMEF definition  (v. 0.10, section 3.2.6).
  *
- * Additionally, the provided time might be separated with white space, instead
+ * Additionally, the provided time might be separated with white spaces, instead
  * of the IDMEF define 'T' character. The format might not specify a timezone
  * (will assume UTC in this case).
  *
@@ -219,7 +219,7 @@ int idmef_time_new_from_string(idmef_time_t **time, const char *buf)
  * @time: Pointer to a #idmef_time_t object.
  * @buf: Pointer to a string containing an NTP timestamp.
  *
- * Fill the @time object with information provided within the @buf NTP timestamp.
+ * Fills the @time object with information provided within the @buf NTP timestamp.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -256,7 +256,7 @@ int idmef_time_set_from_ntpstamp(idmef_time_t *time, const char *buf)
  * @time: Pointer to an IDMEF time structure.
  * @out: Pointer to a #prelude_string_t output buffer.
  *
- * Translate @time to an user readable NTP timestamp string,
+ * Translates @time to an user readable NTP timestamp string,
  * conforming to the IDMEF defined time format.
  *
  * Returns: number of bytes written on success, a negative value if an error occured.
@@ -290,7 +290,7 @@ int idmef_time_to_ntpstamp(const idmef_time_t *time, prelude_string_t *out)
  * @time: Pointer to an IDMEF time structure.
  * @out: Pointer to a #prelude_string_t output buffer.
  *
- * Translate @time to an user readable string conforming to the IDMEF
+ * Translates @time to an user readable string conforming to the IDMEF
  * defined time format.
  *
  * Returns: number of bytes written on success, a negative value if an error occured.
@@ -325,8 +325,8 @@ int idmef_time_to_string(const idmef_time_t *time, prelude_string_t *out)
  * @time: Address where to store the created #idmef_time_t object.
  * @buf: Pointer to a string containing an NTP timestamp.
  *
- * Create an #idmef_time_t object filled with information provided
- * from the @buf NTP timestamp, and store it in @time.
+ * Creates an #idmef_time_t object filled with information provided
+ * from the @buf NTP timestamp, and stores it in @time.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -354,7 +354,7 @@ int idmef_time_new_from_ntpstamp(idmef_time_t **time, const char *buf)
  * @time: Pointer to an #idmef_time_t object.
  * @tv: Pointer to a struct timeval (see gettimeofday()).
  *
- * Fill @time object filled with information provided within the @tv structure.
+ * Fills @time object filled with information provided within the @tv structure.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -381,7 +381,7 @@ int idmef_time_set_from_timeval(idmef_time_t *time, const struct timeval *tv)
  * @time: Address where to store the created #idmef_time_t object.
  * @tv: Pointer to a struct timeval (see gettimeofday()).
  *
- * Create an #idmef_time_t object filled with information provided
+ * Creates an #idmef_time_t object filled with information provided
  * within the @tv structure.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -403,7 +403,7 @@ int idmef_time_new_from_timeval(idmef_time_t **time, const struct timeval *tv)
  * idmef_time_set_from_gettimeofday:
  * @time: Pointer to an #idmef_time_t object.
  *
- * Fill @time with information retrieved using gettimeofday().
+ * Fills @time with information retrieved using gettimeofday().
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -425,8 +425,8 @@ int idmef_time_set_from_gettimeofday(idmef_time_t *time)
  * idmef_time_new_from_gettimeofday:
  * @time: Address where to store the created #idmef_time_t object.
  *
- * Create an #idmef_time_t object filled with information retrieved
- * using gettimeofday(), and store it in @time.
+ * Creates an #idmef_time_t object filled with information retrieved
+ * using gettimeofday(), and stores it in @time.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -448,7 +448,7 @@ int idmef_time_new_from_gettimeofday(idmef_time_t **time)
  * idmef_time_ref:
  * @time: Pointer to an #idmef_time_t object.
  *
- * Increase @time reference count.
+ * Increases @time reference count.
  * idmef_time_destroy() won't destroy @time until the refcount
  * reach 0.
  *
@@ -466,7 +466,7 @@ idmef_time_t *idmef_time_ref(idmef_time_t *time)
  * idmef_time_new:
  * @time: Address where to store the created #idmef_time_t object.
  *
- * Create an empty #idmef_time_t object and store it in @time.
+ * Creates an empty #idmef_time_t object and store it in @time.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -488,7 +488,7 @@ int idmef_time_new(idmef_time_t **time)
  * @src: Pointer to a #idmef_time_t to clone.
  * @dst: Address where to store the cloned @src object.
  *
- * Clone @src and store the result in the @dst address.
+ * Clones @src and stores the result in the @dst address.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -510,7 +510,7 @@ int idmef_time_clone(const idmef_time_t *src, idmef_time_t **dst)
  * @time: Pointer to an #idmef_time_t object.
  * @t: Pointer to a time_t.
  *
- * This function fill @time from the information described by @t.
+ * Fills @time from the information described by @t.
  * @time won't contain micro seconds information, since theses are not
  * available within @t.
  */
@@ -531,7 +531,7 @@ void idmef_time_set_from_time(idmef_time_t *time, const time_t *t)
  * @time: Address where to store the created #idmef_time_t object.
  * @t: Pointer to a time_t.
  *
- * This function create a new #idmef_time_t object and store it in @time.
+ * Creates a new #idmef_time_t object and store it in @time.
  * This object will be filled with information available in @t. The created
  * @time won't contain micro seconds information, since theses are not
  * available within @t.
@@ -558,10 +558,10 @@ int idmef_time_new_from_time(idmef_time_t **time, const time_t *t)
  * @time: Pointer to a #idmef_time_t.
  * @gmtoff: GMT offset for @time, in seconds.
  *
- * Set the GMT offset @gmtoff, in seconds, within @time.
+ * Sets the GMT offset @gmtoff, in seconds, within @time.
  *
  * WARNING: this is just an accessor function, and using it to
- * set @time current time also require the use of idmef_time_set_sec()
+ * set @time current time also requires the use of idmef_time_set_sec()
  * and idmef_time_set_usec().
  */
 void idmef_time_set_gmt_offset(idmef_time_t *time, int32_t gmtoff)
@@ -576,10 +576,10 @@ void idmef_time_set_gmt_offset(idmef_time_t *time, int32_t gmtoff)
  * @time: Pointer to a #idmef_time_t.
  * @sec: Number of seconds since the Epoch.
  *
- * Set the number of second from the Epoch to @sec within @time.
+ * Sets the number of second from the Epoch to @sec within @time.
  *
  * WARNING: this is just an accessor function, and using it to
- * set @time current time also require the use of idmef_time_set_usec()
+ * set @time current time also requires the use of idmef_time_set_usec()
  * and idmef_time_set_gmt_offset().
  */
 void idmef_time_set_sec(idmef_time_t *time, uint32_t sec)
@@ -594,10 +594,10 @@ void idmef_time_set_sec(idmef_time_t *time, uint32_t sec)
  * @time: Pointer to a #idmef_time_t.
  * @usec: Number of micro seconds to set within @time.
  *
- * Set the number of micro second to @usec within @time.
+ * Sets the number of micro second to @usec within @time.
  *
  * WARNING: this is just an accessor function, and using it to
- * set @time current time also require the use of idmef_time_set_sec()
+ * set @time current time also requires the use of idmef_time_set_sec()
  * and idmef_time_set_gmt_offset().
  */
 void idmef_time_set_usec(idmef_time_t *time, uint32_t usec)
@@ -610,7 +610,7 @@ void idmef_time_set_usec(idmef_time_t *time, uint32_t usec)
  * idmef_time_get_gmt_offset:
  * @time: Pointer to a #idmef_time_t.
  *
- * Return the GMT offset that apply to @time.
+ * Returns the GMT offset that applies to @time.
  *
  * Returns: The GMT offset, in seconds.
  */
@@ -626,7 +626,7 @@ int32_t idmef_time_get_gmt_offset(const idmef_time_t *time)
  * idmef_time_get_sec:
  * @time: Pointer to a #idmef_time_t.
  *
- * Return the number of second since the Epoch (00:00:00 UTC, January 1, 1970),
+ * Returns the number of second since the Epoch (00:00:00 UTC, January 1, 1970),
  * previously set within @time.
  *
  * Returns: The number of seconds.
@@ -642,7 +642,7 @@ uint32_t idmef_time_get_sec(const idmef_time_t *time)
  * idmef_time_get_usec:
  * @time: Pointer to a #idmef_time_t.
  *
- * Return the u-second member of @time.
+ * Returns the u-second member of @time.
  *
  * Returns: The number of u-seconds.
  */
@@ -658,7 +658,7 @@ uint32_t idmef_time_get_usec(const idmef_time_t *time)
  * @src: Pointer to a #idmef_time_t to copy data from.
  * @dst: Pointer to a #idmef_time_t to copy data to.
  *
- * Copy @src internal to @dst.
+ * Copies @src internal to @dst.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -685,7 +685,7 @@ void idmef_time_destroy_internal(idmef_time_t *time)
  * idmef_time_destroy:
  * @time: Pointer to an #idmef_time_t object.
  *
- * Destroy @time if refcount reach 0.
+ * Destroys @time if refcount reach 0.
  */
 void idmef_time_destroy(idmef_time_t *time)
 {
