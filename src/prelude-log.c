@@ -115,6 +115,20 @@ static void standard_log(prelude_log_priority_t priority, const char *file,
 
 
 
+void prelude_log_v(prelude_log_priority_t priority, const char *file,
+                   const char *function, int line, const char *fmt, va_list ap) 
+{        
+        if ( log_flags & PRELUDE_LOG_FLAGS_SYSLOG )
+                syslog_log(priority, file, function, line, fmt, &ap);
+
+        else if ( ! (log_flags & PRELUDE_LOG_FLAGS_QUIET) || priority == PRELUDE_LOG_PRIORITY_ERROR )
+                standard_log(priority, file, function, line, fmt, &ap);
+        
+        errno = 0;
+}
+
+
+
 /**
  * prelude_log:
  * @priority: PRELUDE_LOG_PRIORITY_INFO or PRELUDE_LOG_PRIORITY_ERROR.
@@ -133,17 +147,10 @@ void prelude_log(prelude_log_priority_t priority, const char *file,
         va_list ap;
         
         va_start(ap, fmt);
-        
-        if ( log_flags & PRELUDE_LOG_FLAGS_SYSLOG )
-                syslog_log(priority, file, function, line, fmt, &ap);
-
-        else if ( ! (log_flags & PRELUDE_LOG_FLAGS_QUIET) || priority == PRELUDE_LOG_PRIORITY_ERROR )
-                standard_log(priority, file, function, line, fmt, &ap);
-        
+        prelude_log_v(priority, file, function, line, fmt, ap);        
         va_end(ap);
-        errno = 0;
 }
-        
+
 
 
 /**

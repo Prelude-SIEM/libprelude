@@ -24,11 +24,11 @@
 #ifndef _LIBPRELUDE_PRELUDE_LOG_H
 #define _LIBPRELUDE_PRELUDE_LOG_H
 
+#include <stdarg.h>
 #include <syslog.h>
 
 #define log(priority, ...) \
         prelude_log(priority, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
-
 
 #ifndef LOG_ERR
  #define LOG_ERR 1
@@ -62,5 +62,8 @@ void prelude_log_set_prefix(char *prefix);
 
 void prelude_log(prelude_log_priority_t priority, const char *file,
                  const char *function, int line, const char *fmt, ...);
+
+void prelude_log_v(prelude_log_priority_t priority, const char *file,
+                   const char *function, int line, const char *fmt, va_list ap);
 
 #endif /* _LIBPRELUDE_PRELUDE_LOG_H */
