@@ -1,4 +1,23 @@
-* 2005-03-31, libprelude-0.9.0rc2:
+* 2005-04-04, libprelude-0.9.0-rc3:
+
+	- Stop using pcreposix for IDMEF criteria matching, and always rely 
+          on POSIX regex. The way pcreposix define it's symbol make it impossible 
+          to use it from a library if the final program isn't linked against 
+          libpcreposix (example: python / perl program using libprelude bindings).
+
+	- Better incorrect IDMEF criteria detection.
+
+	- Fix some compilation warnings.
+	
+	- Fix OpenBSD compilation.
+
+	- Fix compilation on system that lack pthread_atfork().
+
+	- Correct IDMEF value operator check.
+
+	- Better IDMEF criteria error return value.
+
+* 2005-03-31, libprelude-0.9.0-rc2:
 
 	- Fix Python/Perl bindings linking order. Was linking to old version of the library
 	  on system where old libprelude-0.8 was installed.
@@ -6,7 +25,7 @@
 	- Fix an issue with the Perl bindings on make clean.
 	
 
-* 2005-03-29, libprelude-0.9.0rc1:
+* 2005-03-29, libprelude-0.9.0-rc1:
 
 	Note: due to several years of work and the habit of working with the new 
 	version, it is hard to remind all the enhancement made in this release.
