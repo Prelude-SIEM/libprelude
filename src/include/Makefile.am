@@ -29,4 +29,4 @@ include_HEADERS = config-engine.h 		\
 
 
 
-noinst_HEADERS = ssl.h
+noinst_HEADERS = ssl.h auth.h
