@@ -140,12 +140,29 @@ static void wait_data(void)
 
 
 
+static prelude_async_object_t *get_next_job(void)
+{
+        prelude_list_t *tmp;
+        prelude_async_object_t *obj = NULL;
+
+        pthread_mutex_lock(&mutex);
+        
+        prelude_list_for_each(&joblist, tmp) {
+                obj = prelude_linked_object_get_object(tmp);
+                break;
+        }
+        
+        pthread_mutex_unlock(&mutex);
+
+        return obj;
+}
+
+
 
 static void *async_thread(void *arg) 
 {
         int ret;
         sigset_t set;
-        prelude_list_t *tmp, *next;
         prelude_async_object_t *obj;
 
         ret = sigfillset(&set);
@@ -161,28 +178,16 @@ static void *async_thread(void *arg)
         }
 
         while ( 1 ) {
-
+                
                 if ( async_flags & PRELUDE_ASYNC_FLAGS_TIMER )
                         wait_timer_and_data();
                 else
                         wait_data();
                 
-                pthread_mutex_lock(&mutex);
-                next = ( prelude_list_is_empty(&joblist) ) ? NULL : joblist.next;
-                pthread_mutex_unlock(&mutex);
-                
-                while ( next ) {
-
-                        tmp = next;
-                        
-                        pthread_mutex_lock(&mutex);
-                        next = ( tmp->next != &joblist ) ? tmp->next : NULL;
-                        pthread_mutex_unlock(&mutex);
-                        
-                        obj = prelude_linked_object_get_object(tmp);
+                while ( (obj = get_next_job()) ) {
                         
                         prelude_async_del(obj);
-                        obj->func(obj, obj->data);                     
+                        obj->func(obj, obj->data);       
                 }
         }
 }
