@@ -160,7 +160,7 @@ static void print_add_help(void)
 
 
 
-static int set_uid(void **context, prelude_option_t *opt, const char *optarg) 
+static int set_uid(void *context, prelude_option_t *opt, const char *optarg) 
 {
         uid_set = 1;
         prelude_client_set_uid(client, atoi(optarg));
@@ -169,7 +169,7 @@ static int set_uid(void **context, prelude_option_t *opt, const char *optarg)
 
 
 
-static int set_gid(void **context, prelude_option_t *opt, const char *optarg)
+static int set_gid(void *context, prelude_option_t *opt, const char *optarg)
 {
         gid_set = 1;
         prelude_client_set_gid(client, atoi(optarg));
@@ -178,14 +178,14 @@ static int set_gid(void **context, prelude_option_t *opt, const char *optarg)
 
 
 
-static int set_server_keepalive(void **context, prelude_option_t *opt, const char *optarg)
+static int set_server_keepalive(void *context, prelude_option_t *opt, const char *optarg)
 {
 	server_keepalive = 1;
 	return prelude_option_success;
 }
 
 
-static int set_server_prompt_passwd(void **context, prelude_option_t *opt, const char *optarg)
+static int set_server_prompt_passwd(void *context, prelude_option_t *opt, const char *optarg)
 {
 	server_prompt_passwd = 1;
 	return prelude_option_success;
