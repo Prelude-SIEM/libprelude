@@ -1,3 +1,31 @@
+2002-01-23  Krzysztof Zaraska  <kzaraska@student.uci.agh.edu.pl>
+
+        * sensor-adduser/ssl-register.c:
+        * src/ssl-registration-msg.c:
+        * src/include/ssl-registration-msg.h:
+        Modified to use arbitrary length certificate buffer. 
+
+        This fixes a buffer overrun in sensor-adduser utility occuring
+        after reading large generated SSL certificate during adding
+        a sensor which will be using SSL communication. 
+
+        Although this could lead to local arbitrary code execution, the
+        risk is mitigated by the fact that attacker would need to have
+        write access to the file containing the certificate, which is
+        by default chmod'ed 600 and owned by the user sensor is run as
+        (usually root), or write access to the directory containing the 
+        file (by default owned by root and chmod'ed 755). None of these 
+        two conditions should occur on a properly configured system, 
+        and none of them occurs in default configuration (as they would 
+        introduce obvious security problems related to key management). 
+        Additionally, the exploitation would have to occur in a time 
+        frame between creating the certificate file and reading it. 
+
+        A corresponding fix has been made in manager-adduser utility
+        in prelude-manager module. Note however, that the issue in 
+        manager-adduser did not have any security implications, as the 
+        oversized certificate was rejected immediately after receiving. 
+	
 2003-01-22  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* src/prelude-getopt.c: removed argv_index from

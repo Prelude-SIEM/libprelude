@@ -44,20 +44,20 @@
 #define SUCCESS                0
 
 
-int x509_to_msg(X509 * x509, char *msg, int msglen,
+int x509_to_msg(X509 * x509, char **msg, int msglen,
 		des_key_schedule * key1, des_key_schedule * key2);
 
 X509 *load_x509(const char *certfilename);
 
-int build_install_msg(BUF_MEM * input, char *output, int outputlen,
+int build_install_msg(BUF_MEM * input, char **out,
 		      des_key_schedule * key1, des_key_schedule * key2);
 
-int analyse_install_msg(char *input, int inputlen, char *output,
-			int outpulen, des_key_schedule * key1,
+int analyse_install_msg(char *input, int inputlen, char **out,
+			des_key_schedule * key1,
 			des_key_schedule * key2);
 
 
-int prelude_ssl_recv_cert(prelude_io_t *pio, char *out, int outlen,
+int prelude_ssl_recv_cert(prelude_io_t *pio, char **out, 
                           des_key_schedule *skey1, des_key_schedule *skey2);
 
 int prelude_ssl_send_cert(prelude_io_t *pio, const char *filename,

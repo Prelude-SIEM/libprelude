@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002 Jeremie Brebec / Toussaint Mathieu
+* Copyright (C) 2001, 2002, 2003 Jeremie Brebec / Toussaint Mathieu
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -94,9 +94,9 @@ static int recv_manager_certificate(prelude_io_t *pio, des_key_schedule *skey1,
         uint16_t len;
         BUF_MEM ackbuf;
         int ret, certlen;
+	char *buf2, *cert;
         unsigned char *buf;
         char filename[256];
-        char cert[BUFMAXSIZE];
         
         len = prelude_io_read_delimited(pio, (void **)&buf);
         if ( len <= 0 ) {
@@ -105,7 +105,7 @@ static int recv_manager_certificate(prelude_io_t *pio, des_key_schedule *skey1,
                 return -1;
         }
         
-	certlen = analyse_install_msg(buf, len, cert, len, skey1, skey2);
+	certlen = analyse_install_msg(buf, len, &cert, skey1, skey2);
 	if ( certlen < 0 ) {
 		fprintf(stderr, "Bad message received - Registration failed.\n");
                 return -1;
@@ -132,14 +132,14 @@ static int recv_manager_certificate(prelude_io_t *pio, des_key_schedule *skey1,
 	ackbuf.data = ACK;
 	ackbuf.max = ACKLENGTH;
 
-	len = build_install_msg(&ackbuf, buf, ACKMSGLEN, skey1, skey2);
+	len = build_install_msg(&ackbuf, &buf2, skey1, skey2);
 	if ( len <= 0 ) {
 		fprintf(stderr, "Error building message - Registration failed.\n");
                 unlink(filename);
                 return -1;
 	}
         
-        ret = prelude_io_write_delimited(pio, buf, len);
+        ret = prelude_io_write_delimited(pio, buf2, len);
         if ( ret < 0 ) {
                 fprintf(stderr, "Error sending registration message.\n");
                 unlink(filename);

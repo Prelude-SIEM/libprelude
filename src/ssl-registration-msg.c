@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002 Jeremie Brebec / Toussaint Mathieu
+* Copyright (C) 2001, 2002, 2003 Jeremie Brebec / Toussaint Mathieu
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -61,8 +61,8 @@ X509 *load_x509(const char *certfilename)
 
 
 
-int x509_to_msg(X509 * x509, char *msg, int msglen,
-		des_key_schedule * key1, des_key_schedule * key2)
+int x509_to_msg(X509 *x509, char **msg, int msglen,
+		des_key_schedule *key1, des_key_schedule *key2)
 {
 
 	BIO *mem;
@@ -76,7 +76,7 @@ int x509_to_msg(X509 * x509, char *msg, int msglen,
 		return -1;
 
 	BIO_get_mem_ptr(mem, &mycert);
-	msglen = build_install_msg(mycert, msg, msglen, key1, key2);
+	msglen = build_install_msg(mycert, msg, key1, key2);
 	if (msglen < 0)
 		return -2;
 
@@ -88,25 +88,31 @@ int x509_to_msg(X509 * x509, char *msg, int msglen,
 
 
 
-int build_install_msg(BUF_MEM * input, char *output, int outputlen,
-		      des_key_schedule * key1, des_key_schedule * key2)
+int build_install_msg(BUF_MEM *input, char **out, 
+		      des_key_schedule *key1, des_key_schedule *key2)
 {
+        int len, pad;
+	char *output;
 	des_cblock ivec;
 	char head[HEADLENGTH] = HEAD;
-	int len;
-	int pad;
 
 	len = SHA_DIGEST_LENGTH + HEADLENGTH + input->length - 1;
 	pad = len % sizeof(des_cblock);
-	if (pad != 0) {
+	if ( pad != 0 ) {
 		pad = sizeof(des_cblock) - pad;
 		len += pad;
 	}
-	len += 1;
 
-	if (pad != 0) {
+	output = malloc(len + 1);
+	if ( ! output ) {
+		fprintf(stderr, "memory exhausted!\n");
+		return -1;
+	}
+
+	if ( pad != 0 ) {
 		int i;
-		for (i = 0; i < pad; i++)
+
+                for ( i = 0; i < pad; i++ )
 			output[SHA_DIGEST_LENGTH + i] = 64 + pad;
 	}
 
@@ -119,7 +125,6 @@ int build_install_msg(BUF_MEM * input, char *output, int outputlen,
 	strncat(output + pad + HEADLENGTH + SHA_DIGEST_LENGTH - 1,
 		input->data, input->length);
 
-	--len;
 	/*
          * generate SHA digest of head + txt and add it to the message
          */
@@ -132,7 +137,9 @@ int build_install_msg(BUF_MEM * input, char *output, int outputlen,
 	memset(&ivec, 1, sizeof(des_cblock));
 
 	des_ede3_cbc_encrypt((unsigned char *)output, (unsigned char *)output,
-                             outputlen, *key1, *key2, *key1, &ivec, DES_ENCRYPT);
+                             len, *key1, *key2, *key1, &ivec, DES_ENCRYPT);
+
+	*out = output;
 
 	return len;
 }
@@ -142,20 +149,26 @@ int build_install_msg(BUF_MEM * input, char *output, int outputlen,
 /*
  * decrypt, verify the structure of the message, and extract its content
  */
-int analyse_install_msg(char *input, int inputlen, char *output,
-			int outputlen, des_key_schedule * key1,
-			des_key_schedule * key2)
+int analyse_install_msg(char *input, int inputlen, char **out,
+			des_key_schedule *key1, des_key_schedule *key2)
 {
+        int len;
+	char pad;
+	char *output;
 	des_cblock ivec;
 	char head[HEADLENGTH] = HEAD;
 	char hash[SHA_DIGEST_LENGTH + 1];
-	int len;
-	char pad;
 
 	if (inputlen % sizeof(des_cblock) != 0) {
                 log(LOG_ERR, "packet should only contain DES blocks.\n");
 		return WRONG_SIZE;
         }
+	
+	output = malloc(inputlen);
+	if ( ! output ) {
+		fprintf(stderr, "memory exhausted!\n");
+		return -1;
+	}
 
 	memset(&ivec, 1, sizeof(des_cblock));
 	des_ede3_cbc_encrypt((unsigned char *)input, (unsigned char *)input,
@@ -164,12 +177,13 @@ int analyse_install_msg(char *input, int inputlen, char *output,
 	pad = input[SHA_DIGEST_LENGTH] - 64;
 	if ((pad <= 0) || (pad >= sizeof(des_cblock)))
 		pad = 0;
+
 	len = inputlen - SHA_DIGEST_LENGTH - HEADLENGTH - pad + 1;
 
 	SHA1((unsigned char *)input + SHA_DIGEST_LENGTH,
              inputlen - SHA_DIGEST_LENGTH, (unsigned char *) hash);
 
-	if (len < 0 || len > outputlen) {
+	if ( len < 0 ) {
                 log(LOG_ERR, "len %d is wrong.\n", len);
 		return WRONG_SIZE;
         }
@@ -191,6 +205,8 @@ int analyse_install_msg(char *input, int inputlen, char *output,
                 log(LOG_ERR, "install message corrupted.\n");
 		return INSTALL_MSG_CORRUPTED;
         }
+	
+	*out = output;
 
 	return len;
 }
@@ -198,7 +214,7 @@ int analyse_install_msg(char *input, int inputlen, char *output,
 
 
 
-int prelude_ssl_recv_cert(prelude_io_t *pio, char *out, int outlen,
+int prelude_ssl_recv_cert(prelude_io_t *pio, char **out, 
                           des_key_schedule *skey1, des_key_schedule *skey2) 
 {
         int len, certlen;       
@@ -210,7 +226,7 @@ int prelude_ssl_recv_cert(prelude_io_t *pio, char *out, int outlen,
                 return -1;
         }
         
-	certlen = analyse_install_msg(buf, len, out, outlen, skey1, skey2);
+	certlen = analyse_install_msg(buf, len, out, skey1, skey2);
 	if ( certlen < 0 ) {
 		fprintf(stderr, "Bad message received - Registration failed.\n");
                 return -1;
@@ -226,8 +242,8 @@ int prelude_ssl_send_cert(prelude_io_t *pio, const char *filename,
                           des_key_schedule *skey1, des_key_schedule *skey2) 
 {
         int len;
+        char *buf;
         X509 *x509ss;
-        char buf[BUFMAXSIZE];
         
         x509ss = load_x509(filename);
 	if ( ! x509ss ) {
@@ -235,7 +251,7 @@ int prelude_ssl_send_cert(prelude_io_t *pio, const char *filename,
 		return -1;
 	}
         
-        len = x509_to_msg(x509ss, buf, BUFMAXSIZE, skey1, skey2);
+        len = x509_to_msg(x509ss, &buf, BUFMAXSIZE, skey1, skey2);
         if (len < 0) {
                 fprintf(stderr, "Error reading certificate.\n");
                 return -1;
