@@ -68,17 +68,6 @@ typedef unsigned int prelude_bool_t;
 
 
 
-%typemap(default) prelude_msg_t **outmsg (prelude_msg_t *tmp) {
-	tmp = NULL;
-	$1 = &tmp;
-};
-%typemap(in) prelude_msg_t **outmsg {
-	if ( SWIG_ConvertPtr($input, (void **) $1, SWIGTYPE_p_prelude_msg_t, 0) == -1 )
-		return NULL;
-};
-
-
-
 #ifdef SWIGPYTHON
 %include libprelude_python.i
 #endif /* ! SWIGPYTHON */
