@@ -101,6 +101,7 @@ static int lockfile_get_exclusive(const char *lockfile)
                         log(LOG_INFO, "program is already running.\n");
                 else
                         log(LOG_ERR, "couldn't set write lock.\n");
+                close(fd);
 
                 return -1;
         }
