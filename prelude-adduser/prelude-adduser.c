@@ -62,7 +62,6 @@ struct cmdtbl {
 
 
 static uint16_t port = 5553;
-static const char *addr = NULL;
 static int gid_set = 0, uid_set = 0;
 static prelude_client_profile_t *profile;
 static int server_prompt_passwd = 0, server_keepalive = 0;
@@ -321,24 +320,35 @@ static gnutls_session new_tls_session(int sock, char *passwd)
 
 
 
-static prelude_io_t *connect_manager(struct in_addr in, uint16_t port, char *passwd) 
+static prelude_io_t *connect_manager(const char *addr, uint16_t port, char *passwd) 
 {
         int ret, sock;
         prelude_io_t *fd;
         gnutls_session session;
-        struct sockaddr_in daddr;
+        char buf[sizeof("65535")];
+        struct addrinfo hints, *ai;
         
-        daddr.sin_addr = in;
-        daddr.sin_family = AF_INET;
-        daddr.sin_port = htons(port);
-
+        memset(&hints, 0, sizeof(hints));
+        snprintf(buf, sizeof(buf), "%u", port);
+        
+        hints.ai_family = PF_UNSPEC;
+        hints.ai_socktype = SOCK_STREAM;
+        hints.ai_protocol = IPPROTO_TCP;
+        
+        ret = getaddrinfo(addr, buf, &hints, &ai);
+        if ( ret != 0 ) {
+                fprintf(stderr, "could not resolve %s: %s.\n", addr,
+                        (ret == EAI_SYSTEM) ? strerror(errno) : gai_strerror(ret));
+                return NULL;
+        }
+        
         sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
         if ( sock < 0) {
                 fprintf(stderr, "error creating socket.\n");
                 return NULL;
         }
 
-        ret = connect(sock, (struct sockaddr *) &daddr, sizeof(daddr));
+        ret = connect(sock, ai->ai_addr, ai->ai_addrlen);
         if ( ret < 0 ) {
                 fprintf(stderr, "couldn't connect to %s.\n", addr);
                 close(sock);
@@ -580,7 +590,6 @@ static int register_cmd(int argc, char **argv)
 {
         int ret;
         char *pass;
-        struct in_addr in;
         prelude_io_t *fd;
         prelude_option_t *opt;
         prelude_string_t *err;
@@ -632,7 +641,7 @@ static int register_cmd(int argc, char **argv)
         if ( ret < 0 )
                 return -1;
 
-        ptr = strchr(addr, ':');
+        ptr = strrchr(addr, ':');
         if ( ptr ) {
                 *ptr++ = '\0';
                 port = atoi(ptr);
@@ -640,13 +649,7 @@ static int register_cmd(int argc, char **argv)
         
 	fprintf(stderr, "  - connecting to registration server (%s:%d)...\n", addr, port);
         
-        ret = prelude_resolve_addr(addr, &in);
-        if ( ret < 0 ) {
-                fprintf(stderr, "couldn't resolve %s.\n", addr);
-                return -1;
-        }
-        
-        fd = connect_manager(in, port, pass);
+        fd = connect_manager(addr, port, pass);
         if ( ! fd ) 
                 return -1;
         
