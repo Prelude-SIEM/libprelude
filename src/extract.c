@@ -26,6 +26,7 @@
 #include <inttypes.h>
 #include <sys/types.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 
 #include "config.h"
 #include "extract.h"

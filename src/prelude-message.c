@@ -29,6 +29,7 @@
 #include <sys/uio.h>
 #include <inttypes.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 
 #include "common.h"
 #include "prelude-log.h"

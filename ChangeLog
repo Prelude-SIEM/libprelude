@@ -1,4 +1,13 @@
+2002-03-07  Krzysztof Zaraska  <kzaraska@student.uci.agh.edu.pl>
+	* src/client-ident.c:
+	* src/extract.c:
+	* src/idmef-msg-send.c:
+	* src/prelude-io.c:
+	* src/prelude-message.c:
+	fix warnings on compilation
+
 2002-03-02  Krzysztof Zaraska  <kzaraska@student.uci.agh.edu.pl>
+
 	* configure.in: fixed pthreads-related gcc flags on FreeBSD/OpenBSD
 
 2002-02-28  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
