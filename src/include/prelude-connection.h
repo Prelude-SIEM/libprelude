@@ -68,7 +68,7 @@ prelude_bool_t prelude_connection_is_alive(prelude_connection_t *cnx);
 
 prelude_io_t *prelude_connection_get_fd(prelude_connection_t *cnx);
 
-void prelude_connection_close(prelude_connection_t *cnx);
+int prelude_connection_close(prelude_connection_t *cnx);
 
 void prelude_connection_set_fd_ref(prelude_connection_t *cnx, prelude_io_t *fd);
 
