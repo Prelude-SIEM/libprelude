@@ -20,7 +20,9 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
+
 typedef struct prelude_optlist prelude_optlist_t;
+typedef struct prelude_option prelude_option_t;
 
 typedef enum {
         required_argument,
@@ -31,9 +33,9 @@ typedef enum {
 
 prelude_optlist_t *prelude_option_new(void);
 
-int prelude_option_add(prelude_optlist_t *optlist,
-                       char shortopt, const char *longopt, const char *desc,
-                       prelude_option_argument_t has_arg, void (*set)(const char *optarg));
+prelude_option_t *prelude_option_add(prelude_optlist_t *optlist,
+                                     char shortopt, const char *longopt, const char *desc,
+                                     prelude_option_argument_t has_arg, void (*set)(const char *optarg));
 
 
 int prelude_option_parse_arguments(prelude_optlist_t *optlist,

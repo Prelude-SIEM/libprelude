@@ -31,7 +31,16 @@
 
 
 
-typedef struct prelude_option {
+struct prelude_optlist {    
+        int argv_index;
+        struct list_head optlist;
+};
+
+
+
+struct prelude_option {
+        prelude_optlist_t optlist;
+        
         struct list_head list;
         
         char shortopt;
@@ -42,14 +51,8 @@ typedef struct prelude_option {
         int called;
         void (*cb)(const char *optarg);
         
-} prelude_option_t;
-
-
-
-struct prelude_optlist {    
-        int argv_index;
-        struct list_head optlist;
 };
+
 
 
 
@@ -271,17 +274,19 @@ int prelude_option_parse_arguments(prelude_optlist_t *optlist,
  *
  * prelude_option_add() create a new option and add it to the option list @optlist.
  *
- * Returns: 0 on success, -1 if an error occured.
+ * Returns: Pointer on the option object, or NULL if an error occured.
  */
-int prelude_option_add(prelude_optlist_t *optlist,
-                       char shortopt, const char *longopt, const char *desc,
-                       prelude_option_argument_t has_arg, void (*cb)(const char *optarg)) 
+prelude_option_t *prelude_option_add(prelude_optlist_t *optlist,
+                                     char shortopt, const char *longopt, const char *desc,
+                                     prelude_option_argument_t has_arg, void (*cb)(const char *optarg)) 
 {
         prelude_option_t *new;
 
         new = malloc(sizeof(*new));
         if ( ! new ) 
-                return -1;
+                return NULL;
+
+        INIT_LIST_HEAD(&new->optlist.optlist);
         
         new->has_arg = has_arg;
         new->longopt = longopt;
@@ -290,16 +295,17 @@ int prelude_option_add(prelude_optlist_t *optlist,
         new->cb = cb;
         new->called = 0;
         
-        list_add(&new->list, &optlist->optlist);
+        list_add_tail(&new->list, &optlist->optlist);
 
-        return 0;
+        return new;
 }
 
 
 
-void prelude_option_print(prelude_optlist_t *optlist) 
+
+static void option_print(prelude_optlist_t *optlist, int depth) 
 {
-        int ret;
+        int ret, i;
         prelude_option_t *opt;
         struct list_head *tmp;
 
@@ -307,12 +313,26 @@ void prelude_option_print(prelude_optlist_t *optlist)
 
                 opt = list_entry(tmp, prelude_option_t, list);
 
+                for ( i = 0; i < depth; i++ )
+                        printf("\t");
+                
                 ret = printf("    -%c --%s ", opt->shortopt, opt->longopt);                
                 while ( ret++ < 40 )
                         putchar(' ');
 
                 printf("%s\n", opt->description);
+
+                if ( ! list_empty(&opt->optlist.optlist) ) 
+                        option_print(&opt->optlist, ++depth);
         }
+}
+
+
+
+
+void prelude_option_print(prelude_optlist_t *optlist) 
+{
+        option_print(optlist, 0);
 }
 
 
