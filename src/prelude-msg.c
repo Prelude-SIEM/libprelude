@@ -358,7 +358,7 @@ static int read_message_content(prelude_msg_t *msg, prelude_io_t *fd)
 int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio) 
 {
         int ret = 0;
-
+        
         /*
          * *msg is NULL,
          * this mean the caller want to work on a new message.
@@ -379,20 +379,8 @@ int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
         /*
          * We didn't finished reading the message header yet.
          */
-        if ( (*msg)->header_index != PRELUDE_MSG_HDR_SIZE ) {
-                
+        if ( (*msg)->header_index != PRELUDE_MSG_HDR_SIZE )
                 ret = read_message_header(msg, pio);
-                if ( ret < 0 ) {
-                        prelude_msg_destroy(*msg);
-                        /*
-                         * reset message to NULL, because the caller might not take
-                         * care of the return value enough (and may call us again with an
-                         * undefined *msg address.
-                         */
-                        *msg = NULL;
-                        return ret;
-                }
-        }
 
         /*
          * Notice that ret is initialized to 0 so that we will read
@@ -406,14 +394,17 @@ int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
          * In case it return 0, there is some chance there are other data
          * waiting to be read.
          */
-        if ( (*msg)->payload && ret == 0 ) {
-                
+        if ( (*msg)->payload && ret == 0 )
                 ret = read_message_content(*msg, pio);
-                
-                if ( ret < 0 ) {
-                        prelude_msg_destroy(*msg);
-                        *msg = NULL;
-                }
+
+        if ( ret < 0 && prelude_error_get_code(ret) != PRELUDE_ERROR_EAGAIN ) {
+                prelude_msg_destroy(*msg);
+                /*
+                 * reset message to NULL, because the caller might not take
+                 * care of the return value enough (and may call us again with an
+                 * undefined *msg address.
+                 */
+                *msg = NULL;
         }
         
         return ret;
