@@ -33,7 +33,7 @@ typedef enum {
         IDMEF_VALUE_RELATION_SUBSTR      = 0x10,
         IDMEF_VALUE_RELATION_REGEX       = 0x20,
         IDMEF_VALUE_RELATION_IS_NULL     = 0x40,
-        IDMEF_VALUE_RELATION_IS_NOT_NULL = 0x80,
+        IDMEF_VALUE_RELATION_IS_NOT_NULL = 0x80
 } idmef_value_relation_t;
 
 
@@ -53,7 +53,7 @@ typedef enum {
         IDMEF_VALUE_TYPE_DATA    =  11,
         IDMEF_VALUE_TYPE_ENUM    =  12,
         IDMEF_VALUE_TYPE_LIST    =  13,
-        IDMEF_VALUE_TYPE_OBJECT  =  14,
+        IDMEF_VALUE_TYPE_OBJECT  =  14
 } idmef_value_type_id_t;
 
 
