@@ -135,7 +135,7 @@ void prelude_log_v(prelude_log_t priority, const char *file,
 
 
 /**
- * prelude_log:
+ * _prelude_log:
  * @priority: PRELUDE_LOG_PRIORITY_INFO or PRELUDE_LOG_PRIORITY_ERROR.
  * @file: The caller filename.
  * @function: The caller function name.
@@ -159,7 +159,7 @@ void _prelude_log(prelude_log_t priority, const char *file,
 
 /**
  * prelude_log_set_flags:
- *
+ * @flags:
  */
 void prelude_log_set_flags(prelude_log_flags_t flags) 
 {

@@ -161,7 +161,7 @@ typedef enum {
     PRELUDE_ERROR_SOURCE_CLIENT_PROFILE = 5,
     PRELUDE_ERROR_SOURCE_EXTRACT = 6,
     PRELUDE_ERROR_SOURCE_CONNECTION = 7,
-    PRELUDE_ERROR_SOURCE_CONNECTION_MGR = 8,
+    PRELUDE_ERROR_SOURCE_CONNECTION_POOL = 8,
     PRELUDE_ERROR_SOURCE_CONFIG_ENGINE = 9,
     PRELUDE_ERROR_SOURCE_STRING = 10,
     PRELUDE_ERROR_SOURCE_IDMEF_TREE_WRAP = 11,
@@ -5510,7 +5510,7 @@ prelude_msgbuf_t *msgbuf, void *context
 prelude_option_t *option
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_option_parse_arguments</NAME>
+<NAME>prelude_option_read</NAME>
 <RETURNS>int  </RETURNS>
 prelude_option_t *option, const char **filename,int *argc, char **argv, prelude_string_t **err, void *context
 </FUNCTION>
@@ -6434,11 +6434,11 @@ prelude_client_t *client
 <FUNCTION>
 <NAME>prelude_client_set_manager_list</NAME>
 <RETURNS>void  </RETURNS>
-prelude_client_t *client, prelude_connection_mgr_t *mgrlist
+prelude_client_t *client, prelude_connection_pool_t *pool
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_client_get_manager_list</NAME>
-<RETURNS>prelude_connection_mgr_t  *</RETURNS>
+<RETURNS>prelude_connection_pool_t  *</RETURNS>
 prelude_client_t *client
 </FUNCTION>
 <FUNCTION>
@@ -6614,7 +6614,7 @@ prelude_client_profile_t *cp, gnutls_certificate_credentials *credentials
 <MACRO>
 <NAME>PRELUDE_PLUGIN_OPTION_DECLARE_STRING_CB</NAME>
 #define PRELUDE_PLUGIN_OPTION_DECLARE_STRING_CB(prefix, type, name)                              \
-static int prefix ## _set_ ## name(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)  \
+static int prefix ## _set_ ## name(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)  \
 {                                                                                                \
         char *dup;                                                                               \
         type *ptr = prelude_plugin_instance_get_data(context);                                   \
@@ -6632,7 +6632,7 @@ static int prefix ## _set_ ## name(void *context, prelude_option_t *opt, const c
 }                                                                                                \
                                                                                                  \
                                                                                                  \
-static int prefix ## _get_ ## name(void *context, prelude_option_t *opt, prelude_string_t *out)  \
+static int prefix ## _get_ ## name(prelude_option_t *opt, prelude_string_t *out, void *context)  \
 {                                                                                                \
         type *ptr = prelude_plugin_instance_get_data(context);                                   \
         if ( ptr->name )                                                                         \
@@ -6800,7 +6800,7 @@ prelude_plugin_instance_t *pi, prelude_string_t *err
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_plugin_instance_has_commit_func</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>prelude_bool_t  </RETURNS>
 prelude_plugin_instance_t *pi
 </FUNCTION>
 <FUNCTION>
@@ -6892,6 +6892,105 @@ prelude_failover_t *failover
 <NAME>prelude_failover_get_available_msg_count</NAME>
 <RETURNS>unsigned long  </RETURNS>
 prelude_failover_t *failover
+</FUNCTION>
+<ENUM>
+<NAME>prelude_connection_pool_flags_t</NAME>
+typedef enum {
+        PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT        = 0x01,
+} prelude_connection_pool_flags_t;
+</ENUM>
+<ENUM>
+<NAME>prelude_connection_pool_event_t</NAME>
+typedef enum {
+        PRELUDE_CONNECTION_POOL_EVENT_INPUT            = 0x01,
+        PRELUDE_CONNECTION_POOL_EVENT_DEAD             = 0x02,
+        PRELUDE_CONNECTION_POOL_EVENT_ALIVE            = 0x04
+} prelude_connection_pool_event_t;
+</ENUM>
+<FUNCTION>
+<NAME>prelude_connection_pool_broadcast</NAME>
+<RETURNS>void  </RETURNS>
+prelude_connection_pool_t *pool, prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_pool_broadcast_async</NAME>
+<RETURNS>void  </RETURNS>
+prelude_connection_pool_t *pool, prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_pool_init</NAME>
+<RETURNS>int  </RETURNS>
+prelude_connection_pool_t *new
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_pool_new</NAME>
+<RETURNS>int  </RETURNS>
+prelude_connection_pool_t **ret,prelude_client_profile_t *cp,prelude_connection_capability_t capability
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_pool_get_connection_list</NAME>
+<RETURNS>prelude_list_t  *</RETURNS>
+prelude_connection_pool_t *pool
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_pool_add_connection</NAME>
+<RETURNS>int  </RETURNS>
+prelude_connection_pool_t *pool, prelude_connection_t *cnx
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_pool_set_connection_dead</NAME>
+<RETURNS>int  </RETURNS>
+prelude_connection_pool_t *pool, prelude_connection_t *cnx
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_pool_set_connection_alive</NAME>
+<RETURNS>int  </RETURNS>
+prelude_connection_pool_t *pool, prelude_connection_t *cnx
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_pool_set_connection_string</NAME>
+<RETURNS>int  </RETURNS>
+prelude_connection_pool_t *pool, const char *cfgstr
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_pool_get_connection_string</NAME>
+<RETURNS>const char  *</RETURNS>
+prelude_connection_pool_t *pool
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_pool_destroy</NAME>
+<RETURNS>void  </RETURNS>
+prelude_connection_pool_t *pool
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_pool_set_flags</NAME>
+<RETURNS>void  </RETURNS>
+prelude_connection_pool_t *pool, prelude_connection_pool_flags_t flags
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_pool_set_data</NAME>
+<RETURNS>void  </RETURNS>
+prelude_connection_pool_t *pool, void *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_pool_get_data</NAME>
+<RETURNS>void  *</RETURNS>
+prelude_connection_pool_t *pool
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_pool_recv</NAME>
+<RETURNS>int  </RETURNS>
+prelude_connection_pool_t *pool, prelude_msg_t **out, int timeout
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_pool_set_global_event_handler</NAME>
+<RETURNS>void  </RETURNS>
+prelude_connection_pool_t *pool,prelude_connection_pool_event_t events,int (*callback)(prelude_connection_pool_t *pool,prelude_connection_pool_event_t events)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_connection_pool_set_event_handler</NAME>
+<RETURNS>void  </RETURNS>
+prelude_connection_pool_t *pool,prelude_connection_pool_event_t events,int (*callback)(prelude_connection_pool_t *pool,prelude_connection_pool_event_t events,prelude_connection_t *cnx)
 </FUNCTION>
 <MACRO>
 <NAME>PRELUDE_ASYNC_TIMER</NAME>
@@ -7452,130 +7551,6 @@ uint32_t *gmt_offset
 <NAME>prelude_timegm</NAME>
 <RETURNS>time_t  </RETURNS>
 struct tm *tm
-</FUNCTION>
-<ENUM>
-<NAME>prelude_connection_mgr_flags_t</NAME>
-typedef enum {
-        PRELUDE_CONNECTION_MGR_FLAGS_RECONNECT        = 0x01,
-} prelude_connection_mgr_flags_t;
-</ENUM>
-<ENUM>
-<NAME>prelude_connection_mgr_event_t</NAME>
-typedef enum {
-        PRELUDE_CONNECTION_MGR_EVENT_INPUT            = 0x01,
-        PRELUDE_CONNECTION_MGR_EVENT_DEAD             = 0x02,
-        PRELUDE_CONNECTION_MGR_EVENT_ALIVE            = 0x04
-} prelude_connection_mgr_event_t;
-</ENUM>
-<FUNCTION>
-<NAME>prelude_connection_mgr_broadcast</NAME>
-<RETURNS>void  </RETURNS>
-prelude_connection_mgr_t *cmgr, prelude_msg_t *msg
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_broadcast_async</NAME>
-<RETURNS>void  </RETURNS>
-prelude_connection_mgr_t *cmgr, prelude_msg_t *msg
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_init</NAME>
-<RETURNS>int  </RETURNS>
-prelude_connection_mgr_t *new
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_new</NAME>
-<RETURNS>int  </RETURNS>
-prelude_connection_mgr_t **ret,prelude_client_profile_t *cp,prelude_connection_capability_t capability
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_notify_connection</NAME>
-<RETURNS>void  </RETURNS>
-prelude_connection_mgr_t *mgr, void (*callback)(prelude_list_t *clist)
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_get_connection_list</NAME>
-<RETURNS>prelude_list_t  *</RETURNS>
-prelude_connection_mgr_t *mgr
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_add_connection</NAME>
-<RETURNS>int  </RETURNS>
-prelude_connection_mgr_t *mgr, prelude_connection_t *cnx
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_set_connection_dead</NAME>
-<RETURNS>int  </RETURNS>
-prelude_connection_mgr_t *mgr, prelude_connection_t *cnx
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_search_connection</NAME>
-<RETURNS>prelude_connection_t  *</RETURNS>
-prelude_connection_mgr_t *mgr, const char *addr
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_flush_backup</NAME>
-<RETURNS>int  </RETURNS>
-prelude_connection_mgr_t *mgr, prelude_connection_t *cnx
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_tell_connection_dead</NAME>
-<RETURNS>int  </RETURNS>
-prelude_connection_mgr_t *mgr, prelude_connection_t *cnx
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_tell_connection_alive</NAME>
-<RETURNS>int  </RETURNS>
-prelude_connection_mgr_t *mgr, prelude_connection_t *cnx
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_set_connection_string</NAME>
-<RETURNS>int  </RETURNS>
-prelude_connection_mgr_t *mgr, const char *cfgstr
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_get_connection_string</NAME>
-<RETURNS>const char  *</RETURNS>
-prelude_connection_mgr_t *mgr
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_destroy</NAME>
-<RETURNS>void  </RETURNS>
-prelude_connection_mgr_t *mgr
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_set_flags</NAME>
-<RETURNS>void  </RETURNS>
-prelude_connection_mgr_t *mgr, prelude_connection_mgr_flags_t flags
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_set_data</NAME>
-<RETURNS>void  </RETURNS>
-prelude_connection_mgr_t *mgr, void *data
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_get_data</NAME>
-<RETURNS>void  *</RETURNS>
-prelude_connection_mgr_t *mgr
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_recv</NAME>
-<RETURNS>int  </RETURNS>
-prelude_connection_mgr_t *mgr, prelude_msg_t **out, int timeout
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_get_next_connection</NAME>
-<RETURNS>prelude_connection_t  *</RETURNS>
-prelude_connection_mgr_t *mgr, prelude_list_t **iter
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_set_global_event_handler</NAME>
-<RETURNS>void  </RETURNS>
-prelude_connection_mgr_t *mgr,prelude_connection_mgr_event_t events,int (*callback)(prelude_connection_mgr_t *mgr,prelude_connection_mgr_event_t events)
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_connection_mgr_set_event_handler</NAME>
-<RETURNS>void  </RETURNS>
-prelude_connection_mgr_t *mgr,prelude_connection_mgr_event_t events,int (*callback)(prelude_connection_mgr_t *mgr,prelude_connection_mgr_event_t events,prelude_connection_t *cnx)
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_new</NAME>
@@ -8789,6 +8764,11 @@ idmef_time_t **time, const char *buf
 idmef_time_t **time, const char *buf
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_time_new_from_timeval</NAME>
+<RETURNS>int  </RETURNS>
+idmef_time_t **time, const struct timeval *tv
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_time_destroy_internal</NAME>
 <RETURNS>void  </RETURNS>
 idmef_time_t *time
@@ -8852,6 +8832,11 @@ idmef_time_t *time, const char *buf
 <NAME>idmef_time_set_from_ntpstamp</NAME>
 <RETURNS>int  </RETURNS>
 idmef_time_t *time, const char *buf
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_time_set_from_timeval</NAME>
+<RETURNS>int  </RETURNS>
+idmef_time_t *time, const struct timeval *tv
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_time_to_string</NAME>
@@ -8944,32 +8929,6 @@ void *ptr, idmef_object_type_t type, idmef_child_t child, int n, void **childptr
 <RETURNS>char  *</RETURNS>
 idmef_object_type_t type
 </FUNCTION>
-<MACRO>
-<NAME>MY_CONCAT</NAME>
-#define MY_CONCAT(func, res, buffer, size, offset)		\
-do {								\
-	int __retval;						\
-								\
-	__retval = func(res, buffer + offset, size - offset);	\
-	if ( __retval < 0 || __retval >= size - offset )	\
-		return -1;					\
-								\
-	offset += __retval;					\
-} while ( 0 )
-</MACRO>
-<MACRO>
-<NAME>MY_SNPRINTF</NAME>
-#define MY_SNPRINTF(buffer, size, offset, ...)			\
-do {									\
-	int __retval;							\
-									\
-	__retval = snprintf(buffer + offset, size - offset, __VA_ARGS__);	\
-	if ( __retval < 0 || __retval >= size - offset )		\
-		return -1;						\
-									\
-	offset += __retval;						\
-} while ( 0 )
-</MACRO>
 <MACRO>
 <NAME>byte</NAME>
  #define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[(pos)]

@@ -1128,7 +1128,7 @@ prelude_option_set_priority
 prelude_option_print
 prelude_option_wide_send_msg
 prelude_option_destroy
-prelude_option_parse_arguments
+prelude_option_read
 prelude_option_add
 prelude_option_set_type
 prelude_option_get_type
@@ -1178,26 +1178,26 @@ prelude_option_search
 <SECTION>
 <FILE>prelude-connection</FILE>
 prelude_connection_capability_t
-PRELUDE_CONNECTION_ESTABLISHED
-PRELUDE_CONNECTION_OWN_FD
+prelude_connection_state_t
 prelude_connection_destroy
 prelude_connection_send
 prelude_connection_recv
 prelude_connection_connect
 prelude_connection_forward
-prelude_connection_get_saddr
-prelude_connection_get_daddr
-prelude_connection_get_sport
-prelude_connection_get_dport
+prelude_connection_get_local_addr
+prelude_connection_get_local_port
+prelude_connection_get_peer_addr
+prelude_connection_get_peer_port
 prelude_connection_is_alive
 prelude_connection_get_fd
 prelude_connection_close
-prelude_connection_set_fd
+prelude_connection_set_fd_ref
+prelude_connection_set_fd_nodup
 prelude_connection_set_state
 prelude_connection_get_state
 prelude_connection_set_data
 prelude_connection_get_data
-prelude_connection_get_socket_filename
+prelude_connection_get_default_socket_filename
 prelude_connection_get_peer_analyzerid
 prelude_connection_set_peer_analyzerid
 prelude_connection_new
@@ -1426,7 +1426,6 @@ prelude_plugin_get_next
 prelude_plugin_unload
 prelude_plugin_compute_stats
 prelude_plugin_run
-prelude_plugin_init
 </SECTION>
 
 <SECTION>
@@ -1447,6 +1446,29 @@ prelude_failover_save_msg
 prelude_failover_get_saved_msg
 prelude_failover_get_deleted_msg_count
 prelude_failover_get_available_msg_count
+</SECTION>
+
+<SECTION>
+<FILE>prelude-connection-pool</FILE>
+prelude_connection_pool_flags_t
+prelude_connection_pool_event_t
+prelude_connection_pool_broadcast
+prelude_connection_pool_broadcast_async
+prelude_connection_pool_init
+prelude_connection_pool_new
+prelude_connection_pool_get_connection_list
+prelude_connection_pool_add_connection
+prelude_connection_pool_set_connection_dead
+prelude_connection_pool_set_connection_alive
+prelude_connection_pool_set_connection_string
+prelude_connection_pool_get_connection_string
+prelude_connection_pool_destroy
+prelude_connection_pool_set_flags
+prelude_connection_pool_set_data
+prelude_connection_pool_get_data
+prelude_connection_pool_recv
+prelude_connection_pool_set_global_event_handler
+prelude_connection_pool_set_event_handler
 </SECTION>
 
 <SECTION>
@@ -1499,12 +1521,8 @@ idmef_message_read
 
 <SECTION>
 <FILE>prelude-inet</FILE>
-AI_CANONNAME
 prelude_inet_addr_is_loopback
 prelude_inet_sockaddr_get_inaddr
-prelude_inet_gai_strerror
-prelude_inet_freeaddrinfo
-prelude_inet_getaddrinfo
 prelude_inet_ntop
 </SECTION>
 
@@ -1601,34 +1619,6 @@ prelude_hton64
 prelude_get_file_name_and_path
 prelude_get_gmt_offset
 prelude_timegm
-</SECTION>
-
-<SECTION>
-<FILE>prelude-connection-mgr</FILE>
-prelude_connection_mgr_flags_t
-prelude_connection_mgr_event_t
-prelude_connection_mgr_broadcast
-prelude_connection_mgr_broadcast_async
-prelude_connection_mgr_init
-prelude_connection_mgr_new
-prelude_connection_mgr_notify_connection
-prelude_connection_mgr_get_connection_list
-prelude_connection_mgr_add_connection
-prelude_connection_mgr_set_connection_dead
-prelude_connection_mgr_search_connection
-prelude_connection_mgr_flush_backup
-prelude_connection_mgr_tell_connection_dead
-prelude_connection_mgr_tell_connection_alive
-prelude_connection_mgr_set_connection_string
-prelude_connection_mgr_get_connection_string
-prelude_connection_mgr_destroy
-prelude_connection_mgr_set_flags
-prelude_connection_mgr_set_data
-prelude_connection_mgr_get_data
-prelude_connection_mgr_recv
-prelude_connection_mgr_get_next_connection
-prelude_connection_mgr_set_global_event_handler
-prelude_connection_mgr_set_event_handler
 </SECTION>
 
 <SECTION>
@@ -1904,6 +1894,7 @@ idmef_time_new
 idmef_time_new_from_gettimeofday
 idmef_time_new_from_string
 idmef_time_new_from_ntpstamp
+idmef_time_new_from_timeval
 idmef_time_destroy_internal
 idmef_time_destroy
 idmef_time_clone
@@ -1917,6 +1908,7 @@ idmef_time_get_usec
 idmef_time_get_gmt_offset
 idmef_time_set_from_string
 idmef_time_set_from_ntpstamp
+idmef_time_set_from_timeval
 idmef_time_to_string
 idmef_time_to_ntpstamp
 IDMEF_TIME_MAX_STRING_SIZE
@@ -1940,12 +1932,6 @@ idmef_type_enum_to_string
 idmef_type_get_child
 idmef_type_new_child
 idmef_type_get_name
-</SECTION>
-
-<SECTION>
-<FILE>idmef-util</FILE>
-MY_CONCAT
-MY_SNPRINTF
 </SECTION>
 
 <SECTION>
@@ -2116,6 +2102,7 @@ prelude_timer_set_expire
 prelude_timer_set_data
 prelude_timer_set_callback
 prelude_timer_init
+prelude_timer_init_list
 prelude_timer_reset
 prelude_timer_destroy
 prelude_timer_elapsed

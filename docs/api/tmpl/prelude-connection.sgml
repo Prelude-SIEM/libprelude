@@ -24,6 +24,13 @@ prelude-connection
 @PRELUDE_CONNECTION_CAPABILITY_RECV_IDMEF: 
 @PRELUDE_CONNECTION_CAPABILITY_RECV_CM: 
 
+<!-- ##### ENUM prelude_connection_state_t ##### -->
+<para>
+
+</para>
+
+@PRELUDE_CONNECTION_STATE_ESTABLISHED: 
+
 <!-- ##### FUNCTION prelude_connection_destroy ##### -->
 <para>
 
@@ -76,6 +83,42 @@ prelude-connection
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_connection_get_local_addr ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_get_local_port ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_get_peer_addr ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_get_peer_port ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@Returns: 
+
+
 <!-- ##### FUNCTION prelude_connection_is_alive ##### -->
 <para>
 
@@ -100,6 +143,24 @@ prelude-connection
 </para>
 
 @cnx: 
+
+
+<!-- ##### FUNCTION prelude_connection_set_fd_ref ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@fd: 
+
+
+<!-- ##### FUNCTION prelude_connection_set_fd_nodup ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@fd: 
 
 
 <!-- ##### FUNCTION prelude_connection_set_state ##### -->
@@ -135,6 +196,14 @@ prelude-connection
 </para>
 
 @cnx: 
+
+
+<!-- ##### FUNCTION prelude_connection_get_default_socket_filename ##### -->
+<para>
+
+</para>
+
+@Returns: 
 
 
 <!-- ##### FUNCTION prelude_connection_get_peer_analyzerid ##### -->

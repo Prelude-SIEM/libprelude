@@ -14,26 +14,3 @@ idmef-util
 
 </para>
 
-<!-- ##### MACRO MY_CONCAT ##### -->
-<para>
-
-</para>
-
-@func: 
-@res: 
-@buffer: 
-@size: 
-@offset: 
-
-
-<!-- ##### MACRO MY_SNPRINTF ##### -->
-<para>
-
-</para>
-
-@buffer: 
-@size: 
-@offset: 
-@...: 
-
-

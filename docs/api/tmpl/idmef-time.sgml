@@ -61,6 +61,16 @@ idmef-time
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_time_new_from_timeval ##### -->
+<para>
+
+</para>
+
+@time: 
+@tv: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_time_destroy_internal ##### -->
 <para>
 
@@ -177,6 +187,16 @@ idmef-time
 
 @time: 
 @buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_set_from_timeval ##### -->
+<para>
+
+</para>
+
+@time: 
+@tv: 
 @Returns: 
 
 

@@ -45,6 +45,8 @@ prelude-client
 </para>
 
 @client: 
+@pool: 
+<!-- # Unused Parameters # -->
 @mgrlist: 
 
 
