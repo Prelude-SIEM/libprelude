@@ -1,3 +1,27 @@
+2003-01-22  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/prelude-getopt.c: removed argv_index from
+	the prelude_optlist structure.
+	
+	(check_option_optarg): 
+	(check_option_reqarg): 
+	(check_option_noarg): 
+	(check_option): pass argv_index as a pointer. Stop zeroing
+	processed argument, we don't want to modify the argv array
+	because the application might still need it.
+
+	(parse_argument): take a pointer to an argv_index integer.
+	This simplify the code a little.
+
+	This set of change simplify the parse_argument function a lot,
+	and avoid modifying argv at parsing time.
+	
+	(print_options): don't try to AND match flags if set to zero.
+	Fix a bug where option would not be printed if flags is set to zero.
+	
+	(search_option): fix a possible NULL strcmp that would
+	result in a SIGSEGV for option without longname.
+
 2003-01-21  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/ssl-gencrypto.c (prelude_ssl_gen_crypto): 
