@@ -27,16 +27,56 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <fcntl.h>
 #include <inttypes.h>
+#include <errno.h>
 
 #include "prelude-log.h"
 #include "prelude-io.h"
 #include "prelude-auth.h"
 
-#define SALT "Pr"
+
 
 extern char *crypt(const char *key, const char *salt);
+
+
+
+
+static char *get_random_salt(char *buf, size_t size) 
+{
+        int num, i;
+        struct timeval tv;
+        char sc[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./";
+
+        gettimeofday(&tv, NULL);
+        srand(tv.tv_sec ^ tv.tv_usec ^ getpid());
+
+        for ( i = 0; i < size; i++ ) {
+                
+                num = rand() % (sizeof(sc) - 1);
+                buf[i] = sc[num];
+        }
+        
+        return buf;
+}
+
+
+
+
+static int get_password_salt(const char *pass, char buf[2]) 
+{
+        if ( strlen(pass) < sizeof(buf) ) {
+                log(LOG_ERR, "couldn't gather salt from empty password.\n");
+                return -1;
+        }
+        
+        buf[0] = pass[0];
+        buf[1] = pass[1];
+
+        return 0;
+}
+
 
 
 
@@ -105,6 +145,31 @@ static int auth_read_entry(FILE *fd, int *line, char **user, char **pass)
 
 
 
+
+
+static int cmp_cleartext_with_crypted(const char *cleartext_pass, const char *crypted_pass) 
+{
+        int ret;
+        char salt[2], *cpass;
+        
+        ret = get_password_salt(crypted_pass, salt);
+        if ( ret < 0 )       
+                return -1;
+        
+        cpass = crypt(cleartext_pass, salt);
+        if ( ! cpass ) 
+                return -1;
+
+        ret = strcmp(cpass, crypted_pass);
+        if ( ret != 0 )
+                return -1;
+
+        return 0;
+}
+
+
+
+
 /*
  *
  */
@@ -116,15 +181,12 @@ static int cmp(const char *given_user, const char *user,
         ret = strcmp(given_user, user);
         if ( ret != 0 )
                 return -1;
-        
-        if ( strcmp(pass, given_pass) == 0 )
-                return 0;
-        else {
-                log(LOG_INFO, "Invalid password for %s.\n", user);
-                return -1;
-        }
 
-        return -1;
+        ret = cmp_cleartext_with_crypted(given_pass, pass);
+        if ( ret < 0 ) 
+                return -1;
+
+        return 0;
 }
 
 
@@ -141,17 +203,24 @@ static int check_account(const char *authfile,
         
         fd = fopen(authfile, "r");
         if ( ! fd ) {
+                if ( errno == ENOENT )
+                        /*
+                         * not existing authentication file is not an error.
+                         */
+                        return -1;
+                
                 log(LOG_ERR, "couldn't open %s for reading.\n", authfile);
                 return -1;
         }
 
         while ( auth_read_entry(fd, &line, &user, &pass) == 0 ) {
+
                 ret = cmp(given_user, user, given_pass, pass);
                 
                 free(user);
                 free(pass);
                 
-                if (ret == 0) {
+                if ( ret == 0 ) {
                         fclose(fd);
                         return 0;
                 }
@@ -344,6 +413,8 @@ static int ask_account_infos(FILE *fd, char **user, char **pass)
 
 
 
+
+
 /**
  * prelude_auth_create_account:
  * @filename: The filename to store account in.
@@ -361,7 +432,7 @@ int prelude_auth_create_account(const char *filename, char **user, char **pass, 
 {
         int ret;
         FILE *fd;
-        char *cpass;
+        char *cpass, salt[2];
 
         fd = open_auth_file(filename);
         if ( ! fd ) 
@@ -374,7 +445,7 @@ int prelude_auth_create_account(const char *filename, char **user, char **pass, 
         }
 
         if ( crypted )
-                cpass = crypt(*pass, SALT);
+                cpass = crypt(*pass, get_random_salt(salt, sizeof(salt)));
         else
                 cpass = *pass;
         
@@ -405,6 +476,7 @@ int prelude_auth_create_account(const char *filename, char **user, char **pass, 
 int prelude_auth_create_account_noprompt(const char *filename, const char *user, const char *pass, int crypted) 
 {
         FILE *fd;
+        char salt[2];
         const char *cpass;
         
         fd = open_auth_file(filename);
@@ -412,7 +484,7 @@ int prelude_auth_create_account_noprompt(const char *filename, const char *user,
                 return -1;
 
         if ( crypted )
-                cpass = crypt(pass, SALT);
+                cpass = crypt(pass, get_random_salt(salt, sizeof(salt)));
         else
                 cpass = pass;
 
@@ -425,45 +497,63 @@ int prelude_auth_create_account_noprompt(const char *filename, const char *user,
 
 
 
-
 /**
  * prelude_auth_read_entry:
  * @authfile: Filename containing username/password pair.
- * @wanted_user: Pointer to an username to get entry for or NULL.
+ * @wanted_user: Pointer to an username.
+ * @wanted_pass: Pointer to a password.
  * @user: Address of a pointer where username should be stored.
  * @pass: Address of a pointer where password should be stored.
  *
- * prelude_auth_read_entry() get account information from @authfile,
- * if @wanted_user is not NULL, it will only return success if @wanted_user
- * is found.
+ * prelude_auth_read_entry() try to find @wanted_user in @authfile.
  *
- * Else, the first entry in the file is returned.
+ * If @wanted_user is NULL, the first entry in @authfile is returned.
  *
- * Returns: 0 on success, -1 otherwise.
+ * If @wanted_password is not NULL and that @wanted_user is found,
+ * the password will be compared and an error will be returned if
+ * they don't match.
+ *
+ * Returns: 0 on success, -1 for generic error, @password_does_not match,
+ * @user_does_not_exist.
  */
-int prelude_auth_read_entry(const char *authfile, const char *wanted_user, char **user, char **pass) 
+int prelude_auth_read_entry(const char *authfile, const char *wanted_user,
+                            const char *wanted_pass, char **user, char **pass) 
 {
         FILE *file;
-        int line = 0;
+        int line = 0, ret;
         
         file = fopen(authfile, "r");
-        if (! file ) 
-                return -1;
+        if ( ! file ) {
+                if ( errno == ENOENT )
+                        return user_does_not_exist;
 
-        while ( auth_read_entry(file, &line, user, pass) == 0 ) {
-                if ( wanted_user ) {
-                        if ( strcmp(wanted_user, *user) == 0 )
-                                return 0;
-                        else {
-                                free(*user);
-                                free(*pass);
-                        }
-                }
-                
-                else return 0;
+                return -1;
         }
         
-        return -1;
+        while ( auth_read_entry(file, &line, user, pass) == 0 ) {
+
+                if ( ! wanted_user )
+                        /*
+                         * return first entry.
+                         */
+                        return 0;
+
+                if ( strcmp(wanted_user, *user) != 0 ) {
+                        free(*user);
+                        free(*pass);
+                        continue;
+                }
+
+                if ( wanted_pass ) {
+                        ret = cmp_cleartext_with_crypted(wanted_pass, *pass);
+                        if ( ret < 0 )
+                                return password_does_not_match;
+                }
+                
+                return 0;
+        }
+        
+        return user_does_not_exist;
 }
 
 
@@ -481,7 +571,7 @@ int prelude_auth_read_entry(const char *authfile, const char *wanted_user, char 
  */
 int prelude_auth_check(const char *authfile, const char *user, const char *pass) 
 {
-        return check_account(authfile, user, crypt(pass, SALT));
+        return check_account(authfile, user, pass);
 }
 
 

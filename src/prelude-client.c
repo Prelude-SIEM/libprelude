@@ -251,7 +251,7 @@ static int handle_plaintext_connection(prelude_client_t *client, int sock)
 
         prelude_get_auth_filename(filename, sizeof(filename));
         
-        ret = prelude_auth_read_entry(filename, NULL, &user, &pass);
+        ret = prelude_auth_read_entry(filename, NULL, NULL, &user, &pass);
         if ( ret < 0 ) {
                 /*
                  * the authentication file doesn't exist. Tell

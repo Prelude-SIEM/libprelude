@@ -33,4 +33,6 @@ void prelude_get_backup_filename(char *buf, size_t size);
 
 void prelude_set_program_name(const char *sname);
 
+void prelude_set_program_userid(uid_t uid);
+
 const char *prelude_get_sensor_name(void);

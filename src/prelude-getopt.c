@@ -235,7 +235,7 @@ static int process_option_cfg_hook(prelude_option_t *opt, config_t *cfg, const c
          * specified on the command line. Command line has higher priority.
          */
         if ( opt->cb_called || !(opt->flags & CFG_HOOK) || ! opt->set ) 
-                return 0;
+                return prelude_option_success;
         
         /*
          * Normal option (no suboption)
@@ -244,7 +244,7 @@ static int process_option_cfg_hook(prelude_option_t *opt, config_t *cfg, const c
                 
                 str = config_get(cfg, section, opt->longopt);
                 if ( ! str )
-                        return 0;
+                        return prelude_option_success;
         }
 
         
@@ -257,7 +257,7 @@ static int process_option_cfg_hook(prelude_option_t *opt, config_t *cfg, const c
         else {
                 ret = config_get_section(cfg, opt->longopt);
                 if ( ret < 0 )
-                        return 0;
+                        return prelude_option_success;
         }
 
         /*

@@ -64,6 +64,7 @@ static int set_sensor_uid(const char *optarg)
 {
         uid_set = 1;
         sensor_uid = atoi(optarg);
+        prelude_set_program_userid(sensor_uid);
         return prelude_option_success;
 }
 
@@ -282,7 +283,7 @@ int main(int argc, char **argv)
         if ( ret < 0 )
                 return -1;
         
-        ret = setuid(sensor_uid);
+        ret = seteuid(sensor_uid);
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't set userid to %d.\n", sensor_uid);
                 return -1;

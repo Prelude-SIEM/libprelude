@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <inttypes.h>
+#include <sys/types.h>
 
 #include "prelude-path.h"
 #include "prelude-io.h"
@@ -20,7 +21,7 @@ static int read_plaintext_creation_result(prelude_io_t *fd)
 
         ret = prelude_msg_read(&msg, fd);
         if ( ret <= 0 ) {
-                fprintf(stderr, "error reading plaintext result.\n");
+                fprintf(stderr, "error reading plaintext account creation result.\n");
                 return -1;
         }
 
@@ -38,7 +39,8 @@ static int read_plaintext_creation_result(prelude_io_t *fd)
         }
 
         else if ( tag == PRELUDE_MSG_AUTH_EXIST )
-                fprintf(stderr, "Plaintext account creation failed with Prelude Manager (user already exist).\n");
+                fprintf(stderr, "Plaintext account creation failed with Prelude Manager "
+                        "(user already exist with different password).\n");
         
         else
                 fprintf(stderr, "Plaintext account creation failed with Prelude Manager.\n");

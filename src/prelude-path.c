@@ -50,31 +50,32 @@
 
 
 
+static uid_t userid = 0;
 static const char *sensorname = NULL;
 
 
 
 void prelude_get_auth_filename(char *buf, size_t size) 
 {
-        snprintf(buf, size, "%s/%s.%d", AUTH_DIR, sensorname, getuid());
+        snprintf(buf, size, "%s/%s.%d", AUTH_DIR, sensorname, userid);
 }
 
 
 void prelude_get_ssl_cert_filename(char *buf, size_t size) 
 {
-        snprintf(buf, size, "%s/%s-cert.%d", SSL_DIR, sensorname, getuid());
+        snprintf(buf, size, "%s/%s-cert.%d", SSL_DIR, sensorname, userid);
 }
 
 
 void prelude_get_ssl_key_filename(char *buf, size_t size) 
 {
-        snprintf(buf, size, "%s/%s-key.%d", SSL_DIR, sensorname, getuid());
+        snprintf(buf, size, "%s/%s-key.%d", SSL_DIR, sensorname, userid);
 }
 
 
 void prelude_get_backup_filename(char *buf, size_t size) 
 {
-        snprintf(buf, size, BACKUP_DIR"/backup.%d", getuid());
+        snprintf(buf, size, BACKUP_DIR"/backup.%d", userid);
 }
 
 
@@ -85,8 +86,17 @@ char *prelude_get_socket_filename(void)
 
 
 
+void prelude_set_program_userid(uid_t uid) 
+{
+        userid = uid;
+}
+
+
 void prelude_set_program_name(const char *sname) 
 {
+        if ( ! userid )
+                userid = getuid();
+        
         sensorname = sname;
 }
 

@@ -27,4 +27,14 @@ int prelude_auth_create_account_noprompt(const char *filename, const char *user,
 
 int prelude_auth_check(const char *authfile, const char *user, const char *pass);
 
-int prelude_auth_read_entry(const char *authfile, const char *wanted_user, char **user, char **pass);
+
+/*
+ * theses constant should only be used with
+ * prelude_auth_read_entry() return value.
+ */
+#define user_does_not_exist      -2
+#define password_does_not_match  -3
+
+int prelude_auth_read_entry(const char *authfile, const char *wanted_user,
+                            const char *wanted_pass, char **user, char **pass);
+

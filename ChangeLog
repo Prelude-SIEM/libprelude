@@ -1,3 +1,39 @@
+2002-02-07  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-path.c (prelude_set_program_name): 
+	store userID if not already set.
+	(prelude_set_program_userid): new function.
+	(prelude_get_backup_filename): 
+	(prelude_get_ssl_key_filename): 
+	(prelude_get_ssl_cert_filename): 
+	(prelude_get_auth_filename): 
+	do not call getuid(), use provided uid.
+
+	* src/prelude-auth.c: implement random salt generation.
+	(prelude_auth_read_entry): more detailed return value.
+	Ability to check if we are trying to apply a different password
+	to an already existing user.
+
+	* sensor-adduser/sensor-adduser.c (set_sensor_uid): 
+	call the new prelude_set_program_userid() function.
+	
+	(main): use seteuid() so that file can be created with another
+	userid, without need to call fchown().
+
+	* sensor-adduser/plaintext.c (read_plaintext_creation_result): 
+	made message a little more detailed.
+
+	* sensor-adduser/Makefile.am (sensor_adduser_LDADD): 
+	correct sensor-adduser linkage... Thanks go to 
+	Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl> for 
+	pointing me to the problem.
+
+	* INSTALL:
+	updated installation note.
+
+	* src/prelude-auth.c (prelude_auth_read_entry): 
+	remove un-necessary check.
+
 2002-02-06  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/ssl.c (ssl_init_client): use TLSv1, as suggested by 
