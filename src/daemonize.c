@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 1999 - 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 1999 - 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -36,13 +36,44 @@
 #include "prelude-log.h"
 
 
-static const char *global_lockfile;
+static char slockfile[256];
 
 
 
 static void lockfile_unlink(void) 
 {
-        unlink(global_lockfile);
+        int ret;
+
+        ret = unlink(slockfile);
+        if ( ret < 0 )
+                log(LOG_ERR, "couldn't delete %s.\n", slockfile);
+}
+
+
+
+
+static const char *get_absolute_filename(const char *lockfile)  
+{
+        if ( *lockfile == '/' )
+                snprintf(slockfile, sizeof(slockfile), "%s", lockfile);
+
+        else {
+                char dir[256];
+                
+                /*
+                 * if lockfile is a relative path,
+                 * deletion on exit() will not work because of the chdir("/") call.
+                 * That's why we want to conver it to an absolute path.
+                 */
+                if ( ! getcwd(dir, sizeof(dir)) ) {
+                        log(LOG_ERR, "couldn't get current working directory.\n");
+                        return NULL;
+                }
+                
+                snprintf(slockfile, sizeof(slockfile), "%s/%s", dir, lockfile);
+        }
+        
+        return slockfile;
 }
 
 
@@ -52,7 +83,7 @@ static int lockfile_get_exclusive(const char *lockfile)
 {
         int ret, fd;
         struct flock lock;
-        
+
         fd = open(lockfile, O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR);
         if ( fd < 0 ) {                
                 log(LOG_ERR, "couldn't open %s for writing.\n", lockfile);
@@ -96,7 +127,7 @@ static int lockfile_write_pid(int fd, pid_t pid)
                 return -1;
         }
         
-        snprintf(buf, sizeof(buf), "%d\n", getpid());
+        snprintf(buf, sizeof(buf), "%d\n", pid);
         
         ret = write(fd, buf, strlen(buf));
         if ( ret < 0 ) {
@@ -117,9 +148,7 @@ static int lockfile_write_pid(int fd, pid_t pid)
  * Put the caller in the background.
  * If @lockfile is not NULL, a lock for this program is being created.
  *
- * The lockfile is automatically unlinked on exit,
- * carefull that this function keep a global pointer to @lockfile for
- * this behavior to occur.
+ * The lockfile is automatically unlinked on exit.
  *
  * Returns: 0 on success, -1 if an error occured.
  */
@@ -129,9 +158,14 @@ int prelude_daemonize(const char *lockfile)
         int fd = 0;
         
         if ( lockfile ) {
+                lockfile = get_absolute_filename(lockfile);
+                if ( ! lockfile )
+                        return -1;
+                
                 fd = lockfile_get_exclusive(lockfile);
                 if ( fd < 0 )
                         return -1;
+                
         }
         
 	pid = fork();
@@ -141,7 +175,7 @@ int prelude_daemonize(const char *lockfile)
 	}
 
         else if ( pid ) {
-                if ( lockfile ) 
+                if ( lockfile )
                         lockfile_write_pid(fd, pid);
                 
                 log(LOG_INFO, "Daemon started, PID is %d.\n", (int) pid);
@@ -151,14 +185,12 @@ int prelude_daemonize(const char *lockfile)
         setsid();
         chdir("/");
         umask(0);
-
+        
         /*
          * We want the lock to be unlinked upon normal exit.
          */
-        if ( lockfile ) {
-                global_lockfile = lockfile;
+        if ( lockfile ) 
                 atexit(lockfile_unlink);
-        }
 
         return 0;
 }

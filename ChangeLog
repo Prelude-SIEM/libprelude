@@ -1,5 +1,12 @@
 2002-03-12  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/daemonize.c (get_absolute_filename): 
+	new function, get absolute filename if provided filename
+	is relative (fix a bug on exit where the lockfile wouldn't
+	be deleted because we chdir to /).
+
+	(lockfile_write_pid): use provided pid argument, don't call getpid().
+
 	* src/prelude-getopt.c (call_option_cb): 
 	simplify, handle option_run_first and option_run_last
 	definition.
