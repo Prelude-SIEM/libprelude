@@ -30,6 +30,8 @@ libprelude_la_SOURCES = 		\
 	prelude-log.c			\
 	sensor.c			\
 	client-ident.c			\
+	ntp.c				\
+	idmef-util.c			\
 	idmef-tree-func.c		\
 	idmef-msg-send.c		\
 	common.c

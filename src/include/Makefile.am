@@ -4,6 +4,8 @@ include_HEADERS = config-engine.h 		\
 		  idmef-message-id.h		\
 		  idmef-tree.h			\
 		  idmef-tree-func.h		\
+		  idmef-util.h			\
+		  ntp.h				\
 		  idmef-msg-send.h		\
 		  plugin-common.h		\
 		  plugin-common-prv.h		\
@@ -35,4 +37,4 @@ include_HEADERS = config-engine.h 		\
 		  common.h
 
 
-noinst_HEADERS = ssl.h client-ident.h
+noinst_HEADERS = ssl.h client-ident.h ntp.h
