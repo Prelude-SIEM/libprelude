@@ -33,3 +33,14 @@ void prelude_log(int priority, const char *file, const char *function, int line,
         prelude_log(priority, __FILE__, __FUNCTION__, __LINE__, args)
 
 
+#define do_init(func, name) do {                         \
+        log(LOG_INFO, "- %s\n", name);                   \
+        if ( (func) < 0 )                                \
+                exit(1);                                 \
+} while(0);
+
+
+#define do_init_nofail(func, name) do {                  \
+        log(LOG_INFO, "- %s\n", name);                   \
+        (func);                                          \
+} while(0);
