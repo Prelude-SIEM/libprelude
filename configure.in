@@ -57,6 +57,7 @@ AM_PROG_LEX
 AC_PROG_YACC
 
 
+AC_SYS_LARGEFILE
 AC_C_BIGENDIAN(libprelude_cflags="$libprelude_cflags -DWORDS_BIGENDIAN")
 
 
