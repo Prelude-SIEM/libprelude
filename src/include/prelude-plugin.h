@@ -163,7 +163,7 @@ prelude_plugin_generic_t *prelude_plugin_instance_get_plugin(prelude_plugin_inst
  * have the ability to use plugin_register_for_use to tell it want
  * to use this plugin.
  */
-int prelude_plugin_load_from_dir(const char *dirname, const char *symbol, void *data,
+int prelude_plugin_load_from_dir(const char *dirname, const char *symbol, void *ptr,
                                  int (*subscribe)(prelude_plugin_instance_t *p),
                                  void (*unsubscribe)(prelude_plugin_instance_t *pi));
 

@@ -453,18 +453,18 @@ static int libltdl_load_cb(const char *filename, lt_ptr ptr)
 /**
  * prelude_plugin_load_from_dir:
  * @dirname: The directory to load the plugin from.
+ * @symbol: Symbol to lookup within loaded plugin.
+ * @ptr: Extra pointer to provide to the plugin initialization function.
  * @subscribe: Pointer to a callback function for plugin subscribtion.
  * @unsubscribe: Pointer to a callback function for plugin un-subscribtion.
  *  
- * Load all plugins in directory 'dirname'.
+ * Load all plugins in directory 'dirname', using @symbol entry point.
  * Each plugin have a @subscribe and @unsubscribe callback associated with it.
  *
- * The plugins are loaded, but not active, until someone call
- * plugin_subscribe() on one of the plugin. Which'll call @subscribe in order to
- * register the it.
+ * The plugins are loaded, but not active, until someone call prelude_plugin_subscribe()
+ * on one of the plugin. Which'll call @subscribe in order to register it.
  *
- * @argc and @argv are passed to the plugin at initialization time for
- * option handling.
+ * @ptr is an extra argument provided to the plugin at initialization time.
  *
  * Returns: The number of loaded plugins on success, -1 on error.
  */
