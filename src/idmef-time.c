@@ -37,6 +37,8 @@
 
 #include "libmissing.h"
 #include "prelude-inttypes.h"
+#include "prelude-string.h"
+#include "prelude-error.h"
 #include "ntp.h"
 #include "prelude-log.h"
 #include "common.h"
@@ -220,7 +222,7 @@ int idmef_time_set_from_ntpstamp(idmef_time_t *time, const char *buf)
 
 
 
-int idmef_time_to_ntpstamp(const idmef_time_t *time, char *outptr, size_t size)
+int idmef_time_to_ntpstamp(const idmef_time_t *time, prelude_string_t *out)
 {
         l_fp ts;
         struct timeval tv;
@@ -237,9 +239,9 @@ int idmef_time_to_ntpstamp(const idmef_time_t *time, char *outptr, size_t size)
         ts.l_uf += ts_roundbit;
         ts.l_uf &= ts_mask;
         
-        ret = snprintf(outptr, size, "0x%08lx.0x%08lx", (unsigned long) ts.l_ui, (unsigned long) ts.l_uf);
+        ret = prelude_string_sprintf(out, "0x%08lx.0x%08lx", (unsigned long) ts.l_ui, (unsigned long) ts.l_uf);
 
-        return (ret < 0 || ret >= size) ? -1 : ret;
+        return ret;
 }
 
 
@@ -247,40 +249,35 @@ int idmef_time_to_ntpstamp(const idmef_time_t *time, char *outptr, size_t size)
 /**
  * idmef_time_to_string:
  * @time: Pointer to an IDMEF time structure.
- * @outptr: Output buffer.
- * @size: size of the output buffer.
+ * @out: Pointer to a #prelude_string_t output buffer.
  *
  * Translate @time to an user readable string following the IDMEF
  * specification.
  *
- * Returns: number of bytes written on success, -1 if an error occured.
+ * Returns: number of bytes written on success, a negative value if an error occured.
  */
-int idmef_time_to_string(const idmef_time_t *time, char *outptr, size_t size)
+int idmef_time_to_string(const idmef_time_t *time, prelude_string_t *out)
 {
+        time_t t;
         struct tm utc;
-        int ret;
-	uint32_t hour_off, min_off, sec_off;
-	time_t t;
+        uint32_t hour_off, min_off, sec_off;
 
 	t = time->sec + time->gmt_offset;	
 
-        if ( ! gmtime_r((const time_t *) &t, &utc) ) {
-                log(LOG_ERR, "gmtime_r failed.\n");
-                return -1;
-        }
+        if ( ! gmtime_r((const time_t *) &t, &utc) )
+                return prelude_error_from_errno(errno);
 
 	hour_off = time->gmt_offset / 3600;
 	min_off = time->gmt_offset % 3600 / 60;
 	sec_off = time->gmt_offset % 60;
         
-        ret = snprintf(outptr, size, "%d-%.2d-%.2dT%.2d:%.2d:%.2d.%02u+%.2d:%.2d",
-                       utc.tm_year + 1900, utc.tm_mon + 1, utc.tm_mday,
-                       utc.tm_hour, utc.tm_min, utc.tm_sec,
-                       idmef_time_get_usec(time) / 10000 % 60,
-                       hour_off, min_off);
-        
-        return (ret < 0 || ret >= size) ? -1 : ret;
+        return prelude_string_sprintf(out, "%d-%.2d-%.2dT%.2d:%.2d:%.2d.%02u+%.2d:%.2d",
+                                      utc.tm_year + 1900, utc.tm_mon + 1, utc.tm_mday,
+                                      utc.tm_hour, utc.tm_min, utc.tm_sec,
+                                      idmef_time_get_usec(time) / 10000 % 60,
+                                      hour_off, min_off);
 }
+
 
 
 

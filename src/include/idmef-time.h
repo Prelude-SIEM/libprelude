@@ -61,8 +61,8 @@ int32_t idmef_time_get_gmt_offset(const idmef_time_t *time);
 int idmef_time_set_from_string(idmef_time_t *time, const char *buf);
 int idmef_time_set_from_ntpstamp(idmef_time_t *time, const char *buf);
 
-int idmef_time_to_string(const idmef_time_t *time, char *outptr, size_t size);
-int idmef_time_to_ntpstamp(const idmef_time_t *time, char *outptr, size_t size);
+int idmef_time_to_string(const idmef_time_t *time, prelude_string_t *out);
+int idmef_time_to_ntpstamp(const idmef_time_t *time, prelude_string_t *out);
 
 
 #define IDMEF_TIME_MAX_STRING_SIZE   64   /* YYYY-MM-DDThh:mm:ss.ssZ */
