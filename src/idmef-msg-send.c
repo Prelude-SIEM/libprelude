@@ -635,7 +635,7 @@ void idmef_send_alert(prelude_msgbuf_t *msg, idmef_alert_t *alert)
         idmef_send_analyzer(msg, &alert->analyzer);
         idmef_send_create_time(msg, &alert->create_time);
         idmef_send_detect_time(msg, alert->detect_time);
-        idmef_send_analyzer_time(msg, alert->detect_time);
+        idmef_send_analyzer_time(msg, alert->analyzer_time);
         idmef_send_source_list(msg, &alert->source_list);
         idmef_send_target_list(msg, &alert->target_list);
         idmef_send_classification_list(msg, &alert->classification_list);

@@ -1,3 +1,9 @@
+2002-05-31  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/idmef-msg-send.c (idmef_send_alert): 
+	fix a typo, send analyzer time instead of sending
+	twice detect time.
+
 2002-05-30  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/idmef-msg-send.c (idmef_send_create_time): 
