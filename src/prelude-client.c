@@ -449,7 +449,14 @@ prelude_client_t *prelude_client_new(prelude_client_capability_t capability)
                 log(LOG_ERR, "memory exhausted.\n");
                 return NULL;
         }
-
+        
+        new->analyzer = idmef_analyzer_new();
+        if ( ! new->analyzer ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                free(new);
+                return NULL;
+        }
+        
         new->uid = getuid();
         new->gid = getgid();
         new->capability = capability;
@@ -469,12 +476,6 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
 
         new->unique_ident = prelude_ident_new();
         if ( ! new->unique_ident ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return -1;
-        }
-
-        new->analyzer = idmef_analyzer_new();
-        if ( ! new->analyzer ) {
                 log(LOG_ERR, "memory exhausted.\n");
                 return -1;
         }
