@@ -46,11 +46,11 @@ do {								\
  * call snprintf depending on offset and update offset
  */
 
-#define MY_SNPRINTF(buffer, size, offset, format...)			\
+#define MY_SNPRINTF(buffer, size, offset, ...)			\
 do {									\
 	int __retval;							\
 									\
-	__retval = snprintf(buffer + offset, size - offset, format);	\
+	__retval = snprintf(buffer + offset, size - offset, __VA_ARGS__);	\
 	if ( __retval < 0 || __retval >= size - offset )		\
 		return -1;						\
 									\
