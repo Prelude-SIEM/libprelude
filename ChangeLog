@@ -1,3 +1,15 @@
+2002-07-19  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* README: add a statement saying "This library is 
+	released under the GPL with the additional exemption 
+	that compiling, linking, and/or using OpenSSL is allowed."
+
+	It appear that GPL software linking to OpenSSL have to specify
+	this statement, for legal reason. 
+
+	Please read http://www.openssl.org/support/faq.html#LEGAL2
+	for more informations.
+
 2002-07-17  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/sensor.c (parse_argument): move the call
