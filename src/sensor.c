@@ -47,17 +47,10 @@
 #include "prelude-getopt.h"
 
 
-typedef struct {
-        uint16_t manager_port;
-        char *manager_addr;
-        const char *config;
-} prelude_sensor_t;
-
 
 static int launch = 1;
-static prelude_sensor_t sensor;
 static prelude_optlist_t *opts;
-
+static prelude_client_mgr_t *manager_list = NULL;
 
 
 
@@ -69,28 +62,18 @@ static void print_help(const char *optarg)
 }
 
 
+
 static void setup_manager_addr(const char *optarg) 
-{
-        sensor.manager_addr = strdup(optarg);
-
-        /*
-         * Setup a default port.
-         */
-        sensor.manager_port = 5554;
+{        
+        manager_list = prelude_client_mgr_new("manager", strdup(optarg));
 }
 
-
-static void setup_manager_port(const char *optarg) 
-{
-        sensor.manager_port = atoi(optarg);
-}
 
 
 
 static int parse_argument(const char *filename, int argc, char **argv) 
 {
         int ret;
-        char *optarg;
 
         opts = prelude_option_new();
         if ( ! opts )
@@ -98,8 +81,6 @@ static int parse_argument(const char *filename, int argc, char **argv)
 
         prelude_option_add(opts, 'a', "manager-addr",
                            "Address where manager is listening", required_argument, setup_manager_addr);
-        prelude_option_add(opts, 'p', "manager-port",
-                           "Port where Manager is listening", required_argument, setup_manager_port);
         prelude_option_add(opts, 'h', "help",
                            "Print this help", no_argument, print_help);
         
@@ -109,7 +90,7 @@ static int parse_argument(const char *filename, int argc, char **argv)
 
         prelude_option_destroy(opts);
 
-        if ( ! sensor.manager_addr ) {
+        if ( ! manager_list ) {
                 log(LOG_INFO,
                     "No Manager were configured. You need to setup a Manager for this Sensor\n"
                     "to report events. Please use the \"manager-addr\" entry in the Sensor\n"
@@ -136,32 +117,27 @@ static int parse_argument(const char *filename, int argc, char **argv)
 int prelude_sensor_init(const char *filename, int argc, char **argv)
 {
         int ret;
-        int old_opterr;
-        
-        memset(&sensor, 0, sizeof(sensor));
         
         ret = parse_argument(filename, argc, argv);
         if ( ret < 0 )
                 return -1;
         
-        sensor.config = filename;
-
         if ( ! launch )
                 return 0;
-        
-	ret = prelude_client_mgr_init(sensor.manager_addr, sensor.manager_port);
-	if ( ret < 0 )
-                return -1;
 
         return ret;
 }
 
 
 
-
 void prelude_sensor_send_alert(prelude_msg_t *msg) 
 {
-        prelude_client_mgr_broadcast_msg(msg);
+        int ret;
+        
+        ret = prelude_client_mgr_broadcast_msg(manager_list, msg);
+        if ( ret == 0 )
+                return;
+        
 }
 
 

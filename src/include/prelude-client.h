@@ -20,6 +20,8 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
+
+
 typedef struct prelude_client prelude_client_t;
 
 void prelude_client_destroy(prelude_client_t *client);
@@ -27,4 +29,10 @@ void prelude_client_destroy(prelude_client_t *client);
 prelude_client_t *prelude_client_new(const char *addr, uint16_t port);
 
 int prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg);
+
+int prelude_client_connect(prelude_client_t *client);
+
+ssize_t prelude_client_forward(prelude_client_t *client, prelude_io_t *src, size_t count);
+
+void prelude_client_get_address(prelude_client_t *client, char **addr, uint16_t *port);
 

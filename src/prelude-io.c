@@ -85,7 +85,7 @@ static ssize_t file_read(prelude_io_t *pio, void *buf, size_t count)
 static ssize_t normal_write(prelude_io_t *pio, const void *buf, size_t count) 
 {
         int ret;
-
+        
         do {
                 ret = write(pio->fd, buf, count);
         } while ( ret < 0 && errno == EINTR );

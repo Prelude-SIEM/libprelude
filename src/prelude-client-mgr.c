@@ -20,100 +20,482 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
+
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <inttypes.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
+#include "list.h"
+#include "timer.h"
+#include "common.h"
+#include "config-engine.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
 #include "prelude-client.h"
 #include "prelude-client-mgr.h"
 
-static prelude_client_t *client;
 
+#define INITIAL_EXPIRATION_TIME 60
+#define MAXIMUM_EXPIRATION_TIME 3600
 
-int prelude_client_mgr_init(const char *addr, uint16_t port) 
-{
-        client = prelude_client_new(addr, port);
-        if ( ! client )
-                return -1;
-
-        return 0;
-}
+#define BACKUP_DIR "/var/lib/prelude"
 
 
 
-int prelude_client_mgr_broadcast_msg(prelude_msg_t *msg) 
-{
-        return prelude_client_send_msg(client, msg);
-}
+/*
+ * This list is in fact a boolean AND of client.
+ * When emitting a message, if one of the connection in this
+ * list fail, we'll have to consider a OR (if available), or backup
+ * our message for later emission.
+ */
+typedef struct {
+        struct list_head list;
 
-
-
-
-#if 0
-static LIST_HEAD(manager_list);
-static LIST_HEAD(backup_manager_list);
-
-
-
-static int create_manager_list(config_t *cfg, const char *entry, struct list_head *head) 
-{
-        const char *addr, *port;
-        prelude_client_t *client;
+        /*
+         * If dead is non zero,
+         * it mean one of the client in the list is down. 
+         */
+        unsigned int dead;
         
-        while ( (addr = config_get(cfg, NULL, entry)) ) {
-
-                port = strchr(addr, ':');
-                if ( ! port )
-                        port = "5554";
-                else
-                        port++;
-                
-                client = prelude_client_new();
-                if ( ! client )
-                        return -1;
-
-                prelude_client_set_manager(strdup(addr), atoi(port));
-
-                prelude_list_add_tail((prelude_linked_object_t *) &client, head);
-        }
-
-        return 0;
-}
+        prelude_client_mgr_t *parent;
+        struct list_head client_list;
+} client_list_t;
 
 
 
+typedef struct {
+        struct list_head list;
 
-int prelude_client_mgr_broadcast_message(prelude_msg_t *msg) 
-{
-        struct list_head *tmp;
-        prelude_client_t *client;
+        /*
+         * Timer for client reconnection.
+         */
+        prelude_timer_t timer;
         
-        list_for_each(tmp, &manager_list) {
+        /*
+         * Pointer on a client object.
+         */
+        prelude_client_t *client;
 
-                client = prelude_list_get_object(tmp, prelude_client_t);
+        /*
+         * Pointer to the parent of this client.
+         */
+        client_list_t *parent;
+} client_t;
 
-                prelude_client_send_msg(client, msg);
-        }
+
+
+struct prelude_client_mgr {
+        prelude_io_t *backup_fd;
+        struct list_head or_list;
+};
+
+
+
+
+
+static void expand_timeout(prelude_timer_t *timer) 
+{
+        if ( timer_expire(timer) < MAXIMUM_EXPIRATION_TIME )
+                timer_set_expire(timer, timer_expire(timer) * 2);
 }
 
 
 
-
-
-int prelude_client_mgr_init(config_t *cfg) 
+static int broadcast_saved_message(client_list_t *clist, prelude_io_t *fd, size_t size) 
 {
         int ret;
+        client_t *client;
+        struct list_head *tmp;
 
-        ret = create_manager_list(cfg, "manager", &manager_list);
-        if ( ret < 0 || list_empty(&manager_list) )
-                return -1;
-
-        ret = create_manager_list(cfg, "backup manager", &backup_manager_list);
-        if ( ret < 0 )
-                return -1;
+        log(LOG_INFO, "Flushing saved messages.\n");
+        
+        list_for_each(tmp, &clist->client_list) {
+                client = list_entry(tmp, client_t, list);
+                
+                ret = lseek(prelude_io_get_fd(fd), 0L, SEEK_SET);
+                if ( ret < 0 ) {
+                        log(LOG_ERR, "couldn't seek to the begining of the file.\n");
+                        return -1;
+                }
+                
+                ret = prelude_client_forward(client->client, fd, size);
+                if ( ret < 0 )
+                        return -1;
+        }
 
         return 0;
 }
-#endif
+
+
+
+
+static void flush_backup_if_needed(client_list_t *clist) 
+{
+        int ret, fd;
+        struct stat st;
+        prelude_io_t *pio = clist->parent->backup_fd;
+
+        fd = prelude_io_get_fd(pio);
+        
+        ret = fstat(fd, &st);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "couldn't stat backup file descriptor.\n");
+                return;
+        }
+        
+        if ( st.st_size == 0 )
+                return; /* no data saved */
+        
+        ret = broadcast_saved_message(clist, pio, st.st_size);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "broadcasting saved message failed.\n");
+                return;
+        }
+        
+        ret = ftruncate(fd, 0);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "couldn't truncate backup FD to 0 bytes.\n");
+                return;
+        }
+}
+
+
+
+
+/*
+ * Function called back when one of the client reconnection timer expire.
+ */
+static void client_timer_expire(void *data) 
+{
+        int ret;
+        client_t *client = data;
+
+        ret = prelude_client_connect(client->client);
+        if ( ret < 0 ) {
+                /*
+                 * Connection failed:
+                 * expand the current timeout and reset the timer.
+                 */
+                expand_timeout(&client->timer);
+                timer_reset(&client->timer);
+
+        } else {
+                /*
+                 * Connection succeed:
+                 * Destroy the timer, and if no client in the AND list
+                 * is dead, emmit backuped report.
+                 */
+                timer_destroy(&client->timer);
+                if ( --client->parent->dead == 0 ) 
+                        flush_backup_if_needed(client->parent);
+        }
+}
+
+
+
+
+/*
+ * Separate address and port from a string (x.x.x.x:port).
+ */
+static void parse_address(char *addr, uint16_t *port) 
+{
+        char *ptr;
+        
+        ptr = strchr(addr, ':');
+        if ( ! ptr )
+                *port = 5554;
+        else {
+                *ptr = '\0';
+                *port = atoi(++ptr);
+        }
+}
+
+
+
+
+static int add_new_client(client_list_t *clist, char *addr) 
+{
+        int ret;
+        uint16_t port;
+        client_t *new;
+
+        new = malloc(sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return -1;
+        }
+        parse_address(addr, &port);
+        
+        new->parent = clist;
+
+        new->client = prelude_client_new(addr, port);
+        if ( ! new->client ) {
+                free(new);
+                return -1;
+        }
+
+        timer_set_data(&new->timer, new);
+        timer_set_expire(&new->timer, INITIAL_EXPIRATION_TIME);
+        timer_set_callback(&new->timer, client_timer_expire);
+        
+        ret = prelude_client_connect(new->client);
+        if ( ret < 0 ) {
+                /*
+                 * This client couldn't connect, which mean the whole
+                 * list (boolean AND) of client won't be used. Initialize the
+                 * reconnection timer.
+                 */
+                clist->dead++;
+                timer_init(&new->timer);
+        }
+        
+        list_add_tail(&new->list, &clist->client_list);
+        
+        return 0;
+}
+
+
+
+
+/*
+ * Create a list (boolean AND) of client.
+ */
+static client_list_t *create_client_list(prelude_client_mgr_t *cmgr) 
+{
+        client_list_t *new;
+
+        new = malloc(sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }
+        
+        new->dead = 0;
+        new->parent = cmgr;
+        INIT_LIST_HEAD(&new->client_list);
+        
+        list_add_tail(&new->list, &cmgr->or_list);
+        
+        return new;
+}
+
+
+
+/*
+ * Parse Manager configuration line:
+ * x.x.x.x && y.y.y.y || z.z.z.z
+ */
+static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline) 
+{
+        int ret;
+        char *ptr;
+        client_list_t *clist;
+        
+        ptr = strtok(cfgline, " ");
+        if ( ! ptr ) {
+                log(LOG_ERR, "malformed configuration line.\n");
+                 return -1;
+        }
+        
+        clist = create_client_list(cmgr);
+        if ( ! clist )
+                return -1;
+
+        ret = add_new_client(clist, ptr);
+        if ( ! ret < 0 )
+                return -1;
+
+        while ( (ptr = strtok(NULL, " ")) ) {
+
+                if ( strstr(ptr, "||") ) {
+                        /*
+                         * We just finished adding a AND list.
+                         * if there is backup remaining from a previous session, flush it.
+                         */
+                        if ( clist->dead == 0 )
+                                flush_backup_if_needed(clist);
+                        
+                        clist = create_client_list(cmgr);
+                        if ( ! clist )
+                                return -1;
+
+                        continue;
+                }
+
+                else if ( strstr(ptr, "&&") ) 
+                        continue;
+
+                ret = add_new_client(clist, ptr);
+                if ( ret < 0 )
+                        return -1;
+        } 
+
+        return 0;
+}
+
+
+
+static int setup_backup_fd(prelude_client_mgr_t *new, const char *name) 
+{
+        int fd;
+        char filename[1024];
+        
+        new->backup_fd = prelude_io_new();
+        if (! new->backup_fd ) 
+                return -1;
+        
+        snprintf(filename, sizeof(filename), "%s/%s", BACKUP_DIR, name);
+        
+        fd = open(filename, O_CREAT|O_RDWR, S_IRUSR|S_IWUSR);
+        if ( fd < 0 ) {
+                log(LOG_ERR, "couldn't open %s for writing.\n", filename);
+                prelude_io_destroy(new->backup_fd);
+                return -1;
+        }
+        
+        prelude_io_set_file_io(new->backup_fd, fd);
+        
+        return 0;
+}
+
+
+
+static int broadcast_message(prelude_msg_t *msg, client_list_t *clist)  
+{
+        int ret;
+        client_t *c;
+        struct list_head *tmp;
+        
+        list_for_each(tmp, &clist->client_list) {
+                c = list_entry(tmp, client_t, list);
+                
+                ret = prelude_client_send_msg(c->client, msg);
+                if ( ret < 0 ) {
+                        clist->dead++;
+                        timer_init(&c->timer);
+                        return -1;
+                }
+        }
+
+        return 0;
+}
+
+
+
+
+
+/**
+ * prelude_client_mgr_broadcast_msg:
+ * @cmgr: Pointer on a client manager object.
+ * @msg: Pointer on a #prelude_msg_t object.
+ *
+ * Send the message contained in @msg to all the client
+ * in the @cmgr group of client.
+ *
+ * Returns: 0 on success, -1 if an error occured.
+ */
+int prelude_client_mgr_broadcast_msg(prelude_client_mgr_t *cmgr, prelude_msg_t *msg) 
+{
+        int ret;
+        client_list_t *item;
+        struct list_head *tmp;
+        
+        list_for_each(tmp, &cmgr->or_list) {
+                item = list_entry(tmp, client_list_t, list);
+
+                /*
+                 * There is Manager known to be dead in this list.
+                 * No need to try to emmit a message to theses.
+                 */
+                if ( item->dead )
+                        continue;
+                
+                ret = broadcast_message(msg, item);
+                if ( ret >= 0 ) /* AND of Manager emmission succeed */
+                        return 0;
+        }
+
+        /*
+         * This is not good. All of our boolean AND rule for message emission
+         * failed. Backup the message.
+         */
+        log(LOG_INFO, "Manager emmission failed. Using FailSafe mode.\n");  
+      
+        ret = prelude_msg_write(msg, cmgr->backup_fd);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "could't backup message.\n");
+                return -1;
+        }
+        
+        return 0;
+}
+
+
+
+
+
+/**
+ * prelude_client_mgr_new:
+ * @identifier: Identifier for this clients manager.
+ * @cfgline: Manager configuration string.
+ *
+ * prelude_client_mgr_new() initialize a new Client Manager object.
+ * The @identifier argument will be used to identify the backup file associated
+ * with this object.
+ *
+ *
+ * Returns: a pointer on a #prelude_client_mgr_t object, or NULL
+ * if an error occured.
+ */
+prelude_client_mgr_t *prelude_client_mgr_new(const char *identifier, const char *cfgline) 
+{
+        int ret;
+        char *dup;
+        prelude_client_mgr_t *new;
+
+        new = malloc(sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }        
+        INIT_LIST_HEAD(&new->or_list);
+
+        /*
+         * Setup a backup file descriptor for this client Manager.
+         * It will be used if a message emmission fail.
+         */
+        ret = setup_backup_fd(new, identifier);
+        if ( ret < 0 ) {
+                free(new);
+                return NULL;
+        }
+
+        dup = strdup(cfgline);
+        if ( ! dup ) {
+                log(LOG_ERR, "couldn't duplicate string.\n");
+                prelude_io_close(new->backup_fd);
+                prelude_io_destroy(new->backup_fd);
+                free(new);
+                return NULL;
+        }
+        
+        ret = parse_config_line(new, dup);
+        if ( ret < 0 || list_empty(&new->or_list) ) {
+                prelude_io_close(new->backup_fd);
+                prelude_io_destroy(new->backup_fd);
+                free(new);
+                return NULL;
+        }
+
+        free(dup);
+        
+        return new;
+}
+
+
+

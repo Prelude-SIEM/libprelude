@@ -1,3 +1,31 @@
+2001-10-25  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/sensor.c: remove the prelude_sensor_t private structure.
+	We don't need it anymore. Add a global pointer on a Manager list.
+	(setup_manager_addr): fit the new clients managers API.
+
+	* src/prelude-client.c: remove reconnection / failsafe (message
+	backup) code. This is moved to prelude-client-mgr.c
+
+	(prelude_client_new): Ignore the SIGPIPE signal (we'll check at the
+	write return value thought). Support for Manager implicitly closing
+	the connection should be improved thought.
+
+	(prelude_client_new): Do not connect here.
+	(prelude_client_connect): new function, connect here.
+	(prelude_client_get_address): new function, get the address / port
+	associated with a prelude_client_t object.
+	
+	Change Prelude Report to Prelude Manager in several place.
+
+	* sensor-adduser/sensor-adduser.c: we don't need networking
+	header here.
+
+	* src/prelude-client-mgr.c: Finish the implementation of the
+	clients manager. Have to beautify and comment the code a little
+	more thought. Parsing of the configuration line should probably 
+	be more robust too.
+
 2001-10-18  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-message.c (prelude_msg_read): Changed message

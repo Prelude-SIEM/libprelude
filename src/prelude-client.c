@@ -32,6 +32,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
+#include <signal.h>
 
 #include "config.h"
 
@@ -42,7 +43,6 @@
 #include "list.h"
 #include "common.h"
 #include "config-engine.h"
-#include "timer.h"
 #include "plugin-common.h"
 #include "socket-op.h"
 
@@ -53,9 +53,7 @@
 
 
 #define RECONNECT_TIME_WAIT 10
-
 #define UNIX_SOCK "/var/lib/prelude/socket"
-#define BACKUP_FILENAME "/var/lib/prelude/report"
 
 
 
@@ -68,18 +66,11 @@ struct prelude_client {
          * for writing to the Manager.
          */
         prelude_io_t *fd;
-        prelude_timer_t timer;
         uint8_t connection_broken;
 };
 
 
 
-
-static inline void expand_timeout(prelude_timer_t *timer) 
-{
-        if ( timer_expire(timer) < 3600 )
-                timer_set_expire(timer, timer_expire(timer) * 2);
-}
 
 
 
@@ -116,7 +107,7 @@ static int unix_connect(void)
         int ret, sock;
     	struct sockaddr_un addr;
         
-	log(LOG_INFO, "- Connecting to Unix prelude report server.\n");
+	log(LOG_INFO, "- Connecting to Unix prelude Manager server.\n");
         
 	sock = socket(AF_UNIX, SOCK_STREAM, 0);
 	if ( sock < 0 ) {
@@ -129,7 +120,7 @@ static int unix_connect(void)
 
         ret = generic_connect(sock, (struct sockaddr *)&addr, sizeof(addr));
         if ( ret < 0 ) {
-                log(LOG_ERR,"Error connecting to report server.\n");
+                log(LOG_ERR,"Error connecting to Manager server.\n");
                 close(sock);
                 return -1;
         }
@@ -148,7 +139,7 @@ static int inet_connect(const char *addr, unsigned int port)
         int ret, on, len, sock;
 	struct sockaddr_in daddr, saddr;
         
-	log(LOG_INFO, "- Connecting to Tcp prelude report server.\n");
+	log(LOG_INFO, "- Connecting to Tcp prelude Manager server %s:%d.\n", addr, port);
 
         sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if ( sock < 0 ) {
@@ -253,10 +244,10 @@ static int check_ssl_option(const char *optbuf)
 {
 #ifdef HAVE_SSL
         if ( strstr(optbuf, "ssl=supported;") ) {
-                log(LOG_INFO, "- Report Server support SSL, initializing SSL subsystem.\n");
+                log(LOG_INFO, "- Manager support SSL, initializing SSL subsystem.\n");
                 return 1;
         } else 
-                log(LOG_INFO, "\t- Report Server do not support SSL, not using encryption.\n");
+                log(LOG_INFO, "\t- Manager do not support SSL, not using encryption.\n");
 #endif
         
         return 0;
@@ -281,7 +272,7 @@ static int setup_inet_connection(int sock, int *use_ssl)
         
         ret = socket_read_delimited(sock, (void **) &ptr, read);
         if ( ret < 0 ) {
-                log(LOG_ERR, "error waiting for Report server config string.\n");
+                log(LOG_ERR, "error waiting for Manager config string.\n");
                 return -1;
         }
         
@@ -294,7 +285,7 @@ static int setup_inet_connection(int sock, int *use_ssl)
         
 	ret = socket_write_delimited(sock, buf, ++len, write);
 	if ( ret != len ) {
-                log(LOG_ERR, "couldn't write config string to Report Server.\n");
+                log(LOG_ERR, "couldn't write config string to Manager.\n");
                 return -1;
         }
         
@@ -366,51 +357,24 @@ static int do_connect(prelude_client_t *client)
 
 
 
-static void expire(void *data) 
-{
-        int ret;
-        prelude_client_t *client = data;
-        
-        ret = do_connect(client);
-        if ( ret < 0 ) {
-                log(LOG_ERR,"can't reconnect to report server.\n");
-                expand_timeout(&client->timer);
-                timer_reset(&client->timer);
-        } else {
-                timer_destroy(&client->timer);
-                client->connection_broken = 0;
-        }
-}
-
-
 
 static void handle_connection_breakage(prelude_client_t *client)
 {
         client->connection_broken = 1;
-        
         prelude_io_close(client->fd);
-        
-        timer_set_callback(&client->timer, expire);
-        timer_set_data(&client->timer, client);
-        timer_set_expire(&client->timer, RECONNECT_TIME_WAIT);
-        timer_init(&client->timer);
 }
 
 
 
 
 /*
- * function called back when a report timer expire.
+ * function called back when a connection timer expire.
  */
-
 
 void prelude_client_destroy(prelude_client_t *client) 
 {
         prelude_io_close(client->fd);
         prelude_io_destroy(client->fd);
-
-        timer_destroy(&client->timer);
-        
         free(client);
 }
 
@@ -419,8 +383,9 @@ void prelude_client_destroy(prelude_client_t *client)
 
 prelude_client_t *prelude_client_new(const char *addr, uint16_t port) 
 {
-        int ret;
         prelude_client_t *new;
+
+        signal(SIGPIPE, SIG_IGN);
         
         new = malloc(sizeof(*new));
         if (! new )
@@ -435,14 +400,16 @@ prelude_client_t *prelude_client_new(const char *addr, uint16_t port)
                 free(new);
                 return NULL;        
         }
-                
-        ret = do_connect(new);
-        if ( ret < 0 ) {
-                //prelude_client_destroy(new);
-                return NULL;
-        }
         
         return new;
+}
+
+
+
+
+int prelude_client_connect(prelude_client_t *client) 
+{
+        return do_connect(client);
 }
 
 
@@ -468,7 +435,18 @@ int prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
 
 
 
+void prelude_client_get_address(prelude_client_t *client, char **addr, uint16_t *port) 
+{
+        *addr = client->addr;
+        *port = client->port;
+}
 
+
+
+ssize_t prelude_client_forward(prelude_client_t *client, prelude_io_t *src, size_t count) 
+{
+        return prelude_io_forward(client->fd, src, count);
+}
 
 
 
