@@ -32,7 +32,7 @@
 
 
 int _prelude_internal_argc = 0;
-char *_prelude_internal_argv[8];
+char *_prelude_internal_argv[1024];
 extern prelude_option_t *_prelude_generic_optlist;
 
 
