@@ -301,7 +301,7 @@ static int do_connect(prelude_connection_t *cnx)
 
 
 static void close_connection_fd(prelude_connection_t *cnx) 
-{
+{        
         if ( ! (cnx->state & PRELUDE_CONNECTION_ESTABLISHED) )
                 return;
 
@@ -460,6 +460,10 @@ int prelude_connection_connect(prelude_connection_t *cnx)
         if ( ret < 0 ) 
                 return -1;
         
+        ret = prelude_client_ident_send(prelude_client_get_analyzerid(cnx->client), cnx->fd);
+        if ( ret < 0 ) 
+                goto err;
+        
         msg = prelude_msg_new(1, sizeof(uint8_t), PRELUDE_MSG_CLIENT_CAPABILITY, 0);
         if ( ! msg )
                 goto err;
@@ -470,11 +474,7 @@ int prelude_connection_connect(prelude_connection_t *cnx)
 
         if ( ret < 0 )
                 goto err;
-        
-        ret = prelude_client_ident_send(prelude_client_get_analyzerid(cnx->client), cnx->fd);
-        if ( ret < 0 ) 
-                goto err;
-        
+                
         cnx->state |= PRELUDE_CONNECTION_ESTABLISHED;
         
         return ret;
