@@ -48,15 +48,11 @@
 
 #include "idmef-criteria-string.h"
 
-struct parser_control {
-	idmef_criteria_t *criteria;
-};
+idmef_criteria_t *criteria;
 
 #define operator_or 1
 #define operator_and 2
  
-#define YYPARSE_PARAM param
-
 extern int yylex();
 extern void yylex_init();
 extern void yylex_destroy();
@@ -99,7 +95,7 @@ static void yyerror (char *s);
 %%
 
 input: criteria					{
-							((struct parser_control *) param)->criteria = $1;
+							criteria = $1;
 						}
 ;
 
@@ -254,22 +250,19 @@ static void yyerror(char *s)  /* Called by yyparse on error */
 idmef_criteria_t *idmef_criteria_new_string(const char *str)
 {
         int retval;
-	struct parser_control parser_control;
 	pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-	parser_control.criteria = NULL;
-	
 	pthread_mutex_lock(&mutex);
-	yy_scan_string(str);
-	retval = yyparse(&parser_control);
-	pthread_mutex_unlock(&mutex);
-        
-	if ( retval != 0 ) {
-                if ( parser_control.criteria )
-                        idmef_criteria_destroy(parser_control.criteria);
 
-                return NULL;
+	criteria = NULL;
+	yy_scan_string(str);
+	retval = yyparse();
+	if ( retval != 0 && criteria ) {
+		idmef_criteria_destroy(criteria);
+		criteria = NULL;
 	}
 
-	return parser_control.criteria;
+	pthread_mutex_unlock(&mutex);
+        
+	return criteria;
 }
