@@ -43,6 +43,16 @@
 #endif
 
 
+#ifndef TRUE
+ #define TRUE 1
+#endif
+
+#ifndef FALSE
+ #define FALSE 0
+#endif
+
+
+
 /*
  * Minimum of signed integral types.
  */
@@ -174,6 +184,11 @@
 /*
  * Type definition
  */
+typedef enum { 
+	PRELUDE_BOOL_TRUE = TRUE, 
+	PRELUDE_BOOL_FALSE = FALSE 
+} prelude_bool_t;
+
 
 #ifndef __PRELUDE_STDINT_HAVE_UINT8
  typedef signed char int8_t;

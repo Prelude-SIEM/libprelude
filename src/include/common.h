@@ -27,16 +27,6 @@
 #include "prelude-inttypes.h"
 #include <netinet/in.h>
 
-#ifndef TRUE
- #define TRUE 1
-#endif
-
-#ifndef FALSE
- #define FALSE 0
-#endif
-
-typedef enum { PRELUDE_BOOL_TRUE = TRUE, PRELUDE_BOOL_FALSE = FALSE } prelude_bool_t;
-
 void *prelude_realloc(void *ptr, size_t size);
 
 int prelude_resolve_addr(const char *hostname, struct in_addr *addr);
