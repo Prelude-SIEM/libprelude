@@ -165,7 +165,7 @@ prelude_option_t *prelude_option_get_parent(prelude_option_t *opt);
 
 
 void prelude_option_set_destroy_callback(prelude_option_t *opt,
-                                         int (*destroy)(void *context, prelude_option_t *opt, const char *arg));
+                                         int (*destroy)(void *context, prelude_option_t *opt));
 
 void *prelude_option_get_destroy_callback(prelude_option_t *opt);
 

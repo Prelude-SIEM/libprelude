@@ -246,7 +246,7 @@ static void destroy_instance(prelude_plugin_instance_t *instance)
 
 
 
-static int plugin_desactivate(void *context, prelude_option_t *opt, const char *arg)
+static int plugin_desactivate(void *context, prelude_option_t *opt)
 {
         prelude_plugin_instance_t *pi = pi;
         

@@ -22402,13 +22402,13 @@ static PyObject *_wrap_prelude_option_get_parent(PyObject *self, PyObject *args)
 static PyObject *_wrap_prelude_option_set_destroy_callback(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     prelude_option_t *arg1 = (prelude_option_t *) 0 ;
-    int (*arg2)(void *,prelude_option_t *,char const *) = (int (*)(void *,prelude_option_t *,char const *)) 0 ;
+    int (*arg2)(void *,prelude_option_t *) = (int (*)(void *,prelude_option_t *)) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
     if(!PyArg_ParseTuple(args,(char *)"OO:prelude_option_set_destroy_callback",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_prelude_option_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_f_p_void_p_prelude_option_t_p_q_const__char__int,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_f_p_void_p_prelude_option_t__int,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     prelude_option_set_destroy_callback(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
@@ -24439,8 +24439,9 @@ static swig_const_info swig_const_table[] = {
 { SWIG_PY_INT,     (char *)"CLI_HOOK", (long) 0x1, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"CFG_HOOK", (long) 0x2, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"WIDE_HOOK", (long) 0x4, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"HAVE_CONTEXT", (long) 0x8, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"ALLOW_MULTIPLE_CALL", (long) 0x8, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"DESTROY_HOOK", (long) 0x20, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"HAVE_CONTEXT", (long) 0x40, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"prelude_option_success", (long) 0, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"prelude_option_end", (long) 1, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"prelude_option_error", (long) -1, 0, 0, 0},

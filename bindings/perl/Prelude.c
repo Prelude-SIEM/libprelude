@@ -34044,7 +34044,7 @@ XS(_wrap_prelude_option_get_parent) {
 XS(_wrap_prelude_option_set_destroy_callback) {
     {
         prelude_option_t *arg1 = (prelude_option_t *) 0 ;
-        int (*arg2)(void *,prelude_option_t *,char const *) = (int (*)(void *,prelude_option_t *,char const *)) 0 ;
+        int (*arg2)(void *,prelude_option_t *) = (int (*)(void *,prelude_option_t *)) 0 ;
         int argvi = 0;
         dXSARGS;
         
@@ -34057,8 +34057,8 @@ XS(_wrap_prelude_option_set_destroy_callback) {
             }
         }
         {
-            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_f_p_void_p_prelude_option_t_p_q_const__char__int,0) < 0) {
-                SWIG_croak("Type error in argument 2 of prelude_option_set_destroy_callback. Expected _p_f_p_void_p_prelude_option_t_p_q_const__char__int");
+            if (SWIG_ConvertPtr(ST(1), (void **) &arg2, SWIGTYPE_p_f_p_void_p_prelude_option_t__int,0) < 0) {
+                SWIG_croak("Type error in argument 2 of prelude_option_set_destroy_callback. Expected _p_f_p_void_p_prelude_option_t__int");
             }
         }
         prelude_option_set_destroy_callback(arg1,arg2);
@@ -35031,8 +35031,9 @@ static swig_constant_info swig_constants[] = {
 { SWIG_INT,     (char *) SWIG_prefix "CLI_HOOK", (long) 0x1, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "CFG_HOOK", (long) 0x2, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "WIDE_HOOK", (long) 0x4, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "HAVE_CONTEXT", (long) 0x8, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "ALLOW_MULTIPLE_CALL", (long) 0x8, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "DESTROY_HOOK", (long) 0x20, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "HAVE_CONTEXT", (long) 0x40, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "prelude_option_success", (long) 0, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "prelude_option_end", (long) 1, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "prelude_option_error", (long) -1, 0, 0, 0},

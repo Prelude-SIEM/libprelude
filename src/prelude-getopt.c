@@ -75,7 +75,7 @@ struct prelude_option {
 	int (*commit)(void *context, prelude_option_t *opt);
         int (*set)(void *context, prelude_option_t *opt, const char *optarg);
         int (*get)(void *context, prelude_option_t *opt, char *ibuf, size_t size);
-	int (*destroy)(void *context, prelude_option_t *opt, const char *optarg);
+	int (*destroy)(void *context, prelude_option_t *opt);
         
         const char *help;
         const char *input_validation_regex;
@@ -1042,7 +1042,7 @@ void *prelude_option_get_set_callback(prelude_option_t *opt)
 
 
 void prelude_option_set_destroy_callback(prelude_option_t *opt,
-                                         int (*destroy)(void *context, prelude_option_t *opt, const char *arg))
+                                         int (*destroy)(void *context, prelude_option_t *opt))
 {
         opt->destroy = destroy;
         opt->flags |= DESTROY_HOOK;
@@ -1193,7 +1193,7 @@ int prelude_option_invoke_destroy(void *context, prelude_option_t *opt, const ch
 		context = oc->data;
 	}
 	
-        ret = opt->destroy(context, opt, NULL);
+        ret = opt->destroy(context, opt);
 	if ( ret < 0 ) {
 		snprintf(err, size, "error in the destruction callback for %s", opt->longopt);
 		return -1;
