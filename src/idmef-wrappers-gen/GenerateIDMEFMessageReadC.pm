@@ -300,6 +300,16 @@ sub	struct
     my	$struct = shift;
 
     $self->output("
+/**
+ * idmef_$struct->{short_typename}_read:
+ * \@$struct->{short_typename}: Pointer to a #$struct->{typename} object.
+ * \@msg: Pointer to a #prelude_msg_t object, containing a message.
+ *
+ * Read an idmef_$struct->{short_typename} from the \@msg message, and 
+ * store it into \@$struct->{short_typename}.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
 int idmef_$struct->{short_typename}_read($struct->{typename} *$struct->{short_typename}, prelude_msg_t *msg)
 \{
         int ret;

@@ -63,8 +63,6 @@ sub	header
 #include \"prelude-string.h\"
 #include \"prelude-msgbuf.h\"
 
-
-void idmef_time_write(idmef_time_t *data, prelude_msgbuf_t *msg, uint8_t tag);
 ");
 }
 
@@ -83,7 +81,7 @@ sub	struct
     my	$tree = shift;
     my	$struct = shift;
 
-    $self->output("void idmef_$struct->{short_typename}_write($struct->{typename} *$struct->{short_typename}, prelude_msgbuf_t *msg);\n");
+    $self->output("int idmef_$struct->{short_typename}_write($struct->{typename} *$struct->{short_typename}, prelude_msgbuf_t *msg);\n");
 }
 
 1;

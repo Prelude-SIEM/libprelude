@@ -375,6 +375,14 @@ sub	struct
     my	$struct = shift;
 
     $self->output("
+/**
+ * idmef_$struct->{short_typename}_print:
+ * \@ptr: Pointer to an $struct->{typename} object.
+ * \@fd: Pointer to a #prelude_io_t object where to print \@ptr to.
+ *
+ * This function will convert \@ptr to a string suitable for writing,
+ * and write it to the provided \@fd descriptor.
+ */
 void idmef_$struct->{short_typename}_print($struct->{typename} *ptr, prelude_io_t *fd)
 \{
 	if ( ! ptr )

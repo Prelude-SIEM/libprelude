@@ -57,74 +57,73 @@
  */
 
 
-static inline void prelude_string_write(prelude_string_t *string, prelude_msgbuf_t *msg, uint8_t tag)
+static inline int prelude_string_write(prelude_string_t *string, prelude_msgbuf_t *msg, uint8_t tag)
 {
         if ( ! string || prelude_string_is_empty(string) )
-                return;
+                return 0;
 
-        prelude_msgbuf_set(msg, tag, prelude_string_get_len(string) + 1, prelude_string_get_string(string));
+        return prelude_msgbuf_set(msg, tag, prelude_string_get_len(string) + 1, prelude_string_get_string(string));
 }
 
 
 
-static inline void uint64_write(uint64_t data, prelude_msgbuf_t *msg, uint8_t tag) 
+static inline int uint64_write(uint64_t data, prelude_msgbuf_t *msg, uint8_t tag) 
 {
         uint64_t dst;
         
         dst = prelude_hton64(data);
         
-        prelude_msgbuf_set(msg, tag, sizeof(dst), &dst);
+        return prelude_msgbuf_set(msg, tag, sizeof(dst), &dst);
 }
 
 
 
-static inline void uint32_write(uint32_t data, prelude_msgbuf_t *msg, uint8_t tag) 
+static inline int uint32_write(uint32_t data, prelude_msgbuf_t *msg, uint8_t tag) 
 {        
         data = htonl(data);
-        prelude_msgbuf_set(msg, tag, sizeof(data), &data);
+        return prelude_msgbuf_set(msg, tag, sizeof(data), &data);
 }
 
 
 
-static inline void int32_write(uint32_t data, prelude_msgbuf_t *msg, uint8_t tag) 
+static inline int int32_write(uint32_t data, prelude_msgbuf_t *msg, uint8_t tag) 
 {
-	uint32_write(data, msg, tag);
+	return uint32_write(data, msg, tag);
 }
 
 
 
-static inline void uint8_write(uint8_t data, prelude_msgbuf_t *msg, uint8_t tag)
+static inline int uint8_write(uint8_t data, prelude_msgbuf_t *msg, uint8_t tag)
 {
-	prelude_msgbuf_set(msg, tag, sizeof (data), &data);
+	return prelude_msgbuf_set(msg, tag, sizeof (data), &data);
 }
 
 
 
-static inline void uint16_write(uint16_t data, prelude_msgbuf_t *msg, uint8_t tag) 
+static inline int uint16_write(uint16_t data, prelude_msgbuf_t *msg, uint8_t tag) 
 {
         data = htons(data);
-        prelude_msgbuf_set(msg, tag, sizeof(data), &data);
+        return prelude_msgbuf_set(msg, tag, sizeof(data), &data);
 }
 
 
 
-static inline void float_write(float data, prelude_msgbuf_t *msg, uint8_t tag)
+static inline int float_write(float data, prelude_msgbuf_t *msg, uint8_t tag)
 {
 	if ( data == 0.0 )
-		return;
+		return 0;
 
-	prelude_msgbuf_set(msg, tag, sizeof (data), &data);
+	return prelude_msgbuf_set(msg, tag, sizeof (data), &data);
 }
 
 
-
-inline void idmef_time_write(idmef_time_t *data, prelude_msgbuf_t *msg, uint8_t tag) 
+static inline int idmef_time_write(idmef_time_t *data, prelude_msgbuf_t *msg, uint8_t tag) 
 {
         uint32_t tmp;
         unsigned char buf[12];
 
         if ( ! data )
-                return;
+                return 0;
       
         tmp = htonl(idmef_time_get_sec(data));
         memcpy(buf, &tmp, sizeof(tmp));
@@ -135,200 +134,368 @@ inline void idmef_time_write(idmef_time_t *data, prelude_msgbuf_t *msg, uint8_t 
         tmp = htonl(idmef_time_get_gmt_offset(data));
         memcpy(buf + 8, &tmp, sizeof(tmp));
 
-        prelude_msgbuf_set(msg, tag, sizeof (buf), buf);
+        return prelude_msgbuf_set(msg, tag, sizeof (buf), buf);
 }
 
 
 
-static inline void idmef_data_write(idmef_data_t *data, prelude_msgbuf_t *msg, uint8_t tag)
+static inline int idmef_data_write(idmef_data_t *data, prelude_msgbuf_t *msg, uint8_t tag)
 {
+        int ret;
 	idmef_data_type_t type;
 
 	if ( ! data )
-		return;
+		return 0;
 
 	type = idmef_data_get_type(data);
 	if ( type == IDMEF_DATA_TYPE_UNKNOWN )
-		return;
+		return 0;
 
-	uint32_write(idmef_data_get_type(data), msg, tag);
+	ret = uint32_write(idmef_data_get_type(data), msg, tag);
+        if ( ret < 0 )
+                return ret;
 
 	switch ( type ) {
-	case IDMEF_DATA_TYPE_CHAR: case IDMEF_DATA_TYPE_BYTE:
-		uint8_write(* (const uint8_t *) idmef_data_get_data(data), msg, tag);
+	case IDMEF_DATA_TYPE_CHAR: 
+        case IDMEF_DATA_TYPE_BYTE:
+		ret = uint8_write(* (const uint8_t *) idmef_data_get_data(data), msg, tag);
 		break;
 
 	case IDMEF_DATA_TYPE_UINT32:
-		uint32_write(idmef_data_get_uint32(data), msg, tag);
+		ret = uint32_write(idmef_data_get_uint32(data), msg, tag);
 		break;
 
 	case IDMEF_DATA_TYPE_UINT64:
-		uint64_write(idmef_data_get_uint64(data), msg, tag);
+		ret = uint64_write(idmef_data_get_uint64(data), msg, tag);
 		break;
 
 	case IDMEF_DATA_TYPE_FLOAT:
-		float_write(idmef_data_get_uint64(data), msg, tag);
+		ret = float_write(idmef_data_get_uint64(data), msg, tag);
 		break;
 
 	case IDMEF_DATA_TYPE_CHAR_STRING: case IDMEF_DATA_TYPE_BYTE_STRING:
-		prelude_msgbuf_set(msg, tag, idmef_data_get_len(data), idmef_data_get_data(data));
+		ret = prelude_msgbuf_set(msg, tag, idmef_data_get_len(data), idmef_data_get_data(data));
 		break;
 
 	case IDMEF_DATA_TYPE_UNKNOWN:
 		/* nop */;
 	}
-}
 
-void idmef_additional_data_write(idmef_additional_data_t *additional_data, prelude_msgbuf_t *msg)
-{
-        if ( ! additional_data )
-                return;
-
-        prelude_msgbuf_set(msg, IDMEF_MSG_ADDITIONAL_DATA_TAG, 0, NULL);
-
-        uint32_write(idmef_additional_data_get_type(additional_data), msg, IDMEF_MSG_ADDITIONAL_DATA_TYPE);
-        prelude_string_write(idmef_additional_data_get_meaning(additional_data), msg, IDMEF_MSG_ADDITIONAL_DATA_MEANING);
-        idmef_data_write(idmef_additional_data_get_data(additional_data), msg, IDMEF_MSG_ADDITIONAL_DATA_DATA);
-
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return ret;
 }
 
 
-void idmef_reference_write(idmef_reference_t *reference, prelude_msgbuf_t *msg)
+/**
+ * idmef_additional_data_write:
+ * @additional_data: Pointer to a #idmef_additional_data_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @additional_data within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_additional_data_write(idmef_additional_data_t *additional_data, prelude_msgbuf_t *msg)
 {
-        if ( ! reference )
-                return;
+         int ret;        if ( ! additional_data )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_REFERENCE_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_ADDITIONAL_DATA_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = uint32_write(idmef_additional_data_get_type(additional_data), msg, IDMEF_MSG_ADDITIONAL_DATA_TYPE);
+        if ( ret < 0 )
+                return ret;
 
-        uint32_write(idmef_reference_get_origin(reference), msg, IDMEF_MSG_REFERENCE_ORIGIN);
-        prelude_string_write(idmef_reference_get_name(reference), msg, IDMEF_MSG_REFERENCE_NAME);
-        prelude_string_write(idmef_reference_get_url(reference), msg, IDMEF_MSG_REFERENCE_URL);
-        prelude_string_write(idmef_reference_get_meaning(reference), msg, IDMEF_MSG_REFERENCE_MEANING);
+        ret = prelude_string_write(idmef_additional_data_get_meaning(additional_data), msg, IDMEF_MSG_ADDITIONAL_DATA_MEANING);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        ret = idmef_data_write(idmef_additional_data_get_data(additional_data), msg, IDMEF_MSG_ADDITIONAL_DATA_DATA);
+        if ( ret < 0 )
+                return ret;
+
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_classification_write(idmef_classification_t *classification, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_reference_write:
+ * @reference: Pointer to a #idmef_reference_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @reference within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_reference_write(idmef_reference_t *reference, prelude_msgbuf_t *msg)
 {
-        if ( ! classification )
-                return;
+         int ret;        if ( ! reference )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_CLASSIFICATION_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_REFERENCE_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = uint32_write(idmef_reference_get_origin(reference), msg, IDMEF_MSG_REFERENCE_ORIGIN);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_classification_get_ident(classification), msg, IDMEF_MSG_CLASSIFICATION_IDENT);
-        prelude_string_write(idmef_classification_get_text(classification), msg, IDMEF_MSG_CLASSIFICATION_TEXT);
+        ret = prelude_string_write(idmef_reference_get_name(reference), msg, IDMEF_MSG_REFERENCE_NAME);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_reference_get_url(reference), msg, IDMEF_MSG_REFERENCE_URL);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_reference_get_meaning(reference), msg, IDMEF_MSG_REFERENCE_MEANING);
+        if ( ret < 0 )
+                return ret;
+
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+}
+
+
+
+/**
+ * idmef_classification_write:
+ * @classification: Pointer to a #idmef_classification_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @classification within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_classification_write(idmef_classification_t *classification, prelude_msgbuf_t *msg)
+{
+         int ret;        if ( ! classification )
+                return 0;
+
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_CLASSIFICATION_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_classification_get_ident(classification), msg, IDMEF_MSG_CLASSIFICATION_IDENT);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_classification_get_text(classification), msg, IDMEF_MSG_CLASSIFICATION_TEXT);
+        if ( ret < 0 )
+                return ret;
+
 
         {
                 idmef_reference_t *reference = NULL;
 
                 while ( (reference = idmef_classification_get_next_reference(classification, reference)) ) {
-                        idmef_reference_write(reference, msg);
+                        ret = idmef_reference_write(reference, msg);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
-
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_user_id_write(idmef_user_id_t *user_id, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_user_id_write:
+ * @user_id: Pointer to a #idmef_user_id_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @user_id within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_user_id_write(idmef_user_id_t *user_id, prelude_msgbuf_t *msg)
 {
-        if ( ! user_id )
-                return;
+         int ret;        if ( ! user_id )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_USER_ID_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_USER_ID_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_user_id_get_ident(user_id), msg, IDMEF_MSG_USER_ID_IDENT);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_user_id_get_ident(user_id), msg, IDMEF_MSG_USER_ID_IDENT);
-        uint32_write(idmef_user_id_get_type(user_id), msg, IDMEF_MSG_USER_ID_TYPE);
-        prelude_string_write(idmef_user_id_get_tty(user_id), msg, IDMEF_MSG_USER_ID_TTY);
-        prelude_string_write(idmef_user_id_get_name(user_id), msg, IDMEF_MSG_USER_ID_NAME);
+        ret = uint32_write(idmef_user_id_get_type(user_id), msg, IDMEF_MSG_USER_ID_TYPE);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_user_id_get_tty(user_id), msg, IDMEF_MSG_USER_ID_TTY);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_user_id_get_name(user_id), msg, IDMEF_MSG_USER_ID_NAME);
+        if ( ret < 0 )
+                return ret;
+
 
 	{
 		uint32_t *tmp;
 
 		tmp = idmef_user_id_get_number(user_id);
 		if ( tmp ) {
-			uint32_write(*tmp, msg, IDMEF_MSG_USER_ID_NUMBER);
+			ret = uint32_write(*tmp, msg, IDMEF_MSG_USER_ID_NUMBER);
+                        if ( ret < 0 )
+                                return ret;
 		}
 	}
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_user_write(idmef_user_t *user, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_user_write:
+ * @user: Pointer to a #idmef_user_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @user within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_user_write(idmef_user_t *user, prelude_msgbuf_t *msg)
 {
-        if ( ! user )
-                return;
+         int ret;        if ( ! user )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_USER_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_USER_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_user_get_ident(user), msg, IDMEF_MSG_USER_IDENT);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_user_get_ident(user), msg, IDMEF_MSG_USER_IDENT);
-        uint32_write(idmef_user_get_category(user), msg, IDMEF_MSG_USER_CATEGORY);
+        ret = uint32_write(idmef_user_get_category(user), msg, IDMEF_MSG_USER_CATEGORY);
+        if ( ret < 0 )
+                return ret;
+
 
         {
                 idmef_user_id_t *user_id = NULL;
 
                 while ( (user_id = idmef_user_get_next_user_id(user, user_id)) ) {
-                        idmef_user_id_write(user_id, msg);
+                        ret = idmef_user_id_write(user_id, msg);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
-
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_address_write(idmef_address_t *address, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_address_write:
+ * @address: Pointer to a #idmef_address_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @address within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_address_write(idmef_address_t *address, prelude_msgbuf_t *msg)
 {
-        if ( ! address )
-                return;
+         int ret;        if ( ! address )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_ADDRESS_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_ADDRESS_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_address_get_ident(address), msg, IDMEF_MSG_ADDRESS_IDENT);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_address_get_ident(address), msg, IDMEF_MSG_ADDRESS_IDENT);
-        uint32_write(idmef_address_get_category(address), msg, IDMEF_MSG_ADDRESS_CATEGORY);
-        prelude_string_write(idmef_address_get_vlan_name(address), msg, IDMEF_MSG_ADDRESS_VLAN_NAME);
+        ret = uint32_write(idmef_address_get_category(address), msg, IDMEF_MSG_ADDRESS_CATEGORY);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_address_get_vlan_name(address), msg, IDMEF_MSG_ADDRESS_VLAN_NAME);
+        if ( ret < 0 )
+                return ret;
+
 
 	{
 		int32_t *tmp;
 
 		tmp = idmef_address_get_vlan_num(address);
 		if ( tmp ) {
-			int32_write(*tmp, msg, IDMEF_MSG_ADDRESS_VLAN_NUM);
+			ret = int32_write(*tmp, msg, IDMEF_MSG_ADDRESS_VLAN_NUM);
+                        if ( ret < 0 )
+                                return ret;
 		}
-	}        prelude_string_write(idmef_address_get_address(address), msg, IDMEF_MSG_ADDRESS_ADDRESS);
-        prelude_string_write(idmef_address_get_netmask(address), msg, IDMEF_MSG_ADDRESS_NETMASK);
+	}
+        ret = prelude_string_write(idmef_address_get_address(address), msg, IDMEF_MSG_ADDRESS_ADDRESS);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        ret = prelude_string_write(idmef_address_get_netmask(address), msg, IDMEF_MSG_ADDRESS_NETMASK);
+        if ( ret < 0 )
+                return ret;
+
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_process_write(idmef_process_t *process, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_process_write:
+ * @process: Pointer to a #idmef_process_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @process within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_process_write(idmef_process_t *process, prelude_msgbuf_t *msg)
 {
-        if ( ! process )
-                return;
+         int ret;        if ( ! process )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_PROCESS_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_PROCESS_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_process_get_ident(process), msg, IDMEF_MSG_PROCESS_IDENT);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_process_get_ident(process), msg, IDMEF_MSG_PROCESS_IDENT);
-        prelude_string_write(idmef_process_get_name(process), msg, IDMEF_MSG_PROCESS_NAME);
+        ret = prelude_string_write(idmef_process_get_name(process), msg, IDMEF_MSG_PROCESS_NAME);
+        if ( ret < 0 )
+                return ret;
+
 
 	{
 		uint32_t *tmp;
 
 		tmp = idmef_process_get_pid(process);
 		if ( tmp ) {
-			uint32_write(*tmp, msg, IDMEF_MSG_PROCESS_PID);
+			ret = uint32_write(*tmp, msg, IDMEF_MSG_PROCESS_PID);
+                        if ( ret < 0 )
+                                return ret;
 		}
-	}        prelude_string_write(idmef_process_get_path(process), msg, IDMEF_MSG_PROCESS_PATH);
+	}
+        ret = prelude_string_write(idmef_process_get_path(process), msg, IDMEF_MSG_PROCESS_PATH);
+        if ( ret < 0 )
+                return ret;
+
 
         {
                 prelude_string_t *arg = NULL;
 
                 while ( (arg = idmef_process_get_next_arg(process, arg)) ) {
-                        prelude_string_write(arg, msg, IDMEF_MSG_PROCESS_ARG);
+                        ret = prelude_string_write(arg, msg, IDMEF_MSG_PROCESS_ARG);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
@@ -337,284 +504,526 @@ void idmef_process_write(idmef_process_t *process, prelude_msgbuf_t *msg)
                 prelude_string_t *env = NULL;
 
                 while ( (env = idmef_process_get_next_env(process, env)) ) {
-                        prelude_string_write(env, msg, IDMEF_MSG_PROCESS_ENV);
+                        ret = prelude_string_write(env, msg, IDMEF_MSG_PROCESS_ENV);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
-
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_web_service_write(idmef_web_service_t *web_service, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_web_service_write:
+ * @web_service: Pointer to a #idmef_web_service_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @web_service within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_web_service_write(idmef_web_service_t *web_service, prelude_msgbuf_t *msg)
 {
-        if ( ! web_service )
-                return;
+         int ret;        if ( ! web_service )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_WEB_SERVICE_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_WEB_SERVICE_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_web_service_get_url(web_service), msg, IDMEF_MSG_WEB_SERVICE_URL);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_web_service_get_url(web_service), msg, IDMEF_MSG_WEB_SERVICE_URL);
-        prelude_string_write(idmef_web_service_get_cgi(web_service), msg, IDMEF_MSG_WEB_SERVICE_CGI);
-        prelude_string_write(idmef_web_service_get_http_method(web_service), msg, IDMEF_MSG_WEB_SERVICE_HTTP_METHOD);
+        ret = prelude_string_write(idmef_web_service_get_cgi(web_service), msg, IDMEF_MSG_WEB_SERVICE_CGI);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_web_service_get_http_method(web_service), msg, IDMEF_MSG_WEB_SERVICE_HTTP_METHOD);
+        if ( ret < 0 )
+                return ret;
+
 
         {
                 prelude_string_t *arg = NULL;
 
                 while ( (arg = idmef_web_service_get_next_arg(web_service, arg)) ) {
-                        prelude_string_write(arg, msg, IDMEF_MSG_WEB_SERVICE_ARG);
+                        ret = prelude_string_write(arg, msg, IDMEF_MSG_WEB_SERVICE_ARG);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
-
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_snmp_service_write(idmef_snmp_service_t *snmp_service, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_snmp_service_write:
+ * @snmp_service: Pointer to a #idmef_snmp_service_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @snmp_service within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_snmp_service_write(idmef_snmp_service_t *snmp_service, prelude_msgbuf_t *msg)
 {
-        if ( ! snmp_service )
-                return;
+         int ret;        if ( ! snmp_service )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_SNMP_SERVICE_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_SNMP_SERVICE_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_snmp_service_get_oid(snmp_service), msg, IDMEF_MSG_SNMP_SERVICE_OID);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_snmp_service_get_oid(snmp_service), msg, IDMEF_MSG_SNMP_SERVICE_OID);
-        prelude_string_write(idmef_snmp_service_get_community(snmp_service), msg, IDMEF_MSG_SNMP_SERVICE_COMMUNITY);
-        prelude_string_write(idmef_snmp_service_get_security_name(snmp_service), msg, IDMEF_MSG_SNMP_SERVICE_SECURITY_NAME);
-        prelude_string_write(idmef_snmp_service_get_context_name(snmp_service), msg, IDMEF_MSG_SNMP_SERVICE_CONTEXT_NAME);
-        prelude_string_write(idmef_snmp_service_get_context_engine_id(snmp_service), msg, IDMEF_MSG_SNMP_SERVICE_CONTEXT_ENGINE_ID);
-        prelude_string_write(idmef_snmp_service_get_command(snmp_service), msg, IDMEF_MSG_SNMP_SERVICE_COMMAND);
+        ret = prelude_string_write(idmef_snmp_service_get_community(snmp_service), msg, IDMEF_MSG_SNMP_SERVICE_COMMUNITY);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        ret = prelude_string_write(idmef_snmp_service_get_security_name(snmp_service), msg, IDMEF_MSG_SNMP_SERVICE_SECURITY_NAME);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_snmp_service_get_context_name(snmp_service), msg, IDMEF_MSG_SNMP_SERVICE_CONTEXT_NAME);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_snmp_service_get_context_engine_id(snmp_service), msg, IDMEF_MSG_SNMP_SERVICE_CONTEXT_ENGINE_ID);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_snmp_service_get_command(snmp_service), msg, IDMEF_MSG_SNMP_SERVICE_COMMAND);
+        if ( ret < 0 )
+                return ret;
+
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_service_write(idmef_service_t *service, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_service_write:
+ * @service: Pointer to a #idmef_service_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @service within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_service_write(idmef_service_t *service, prelude_msgbuf_t *msg)
 {
-        if ( ! service )
-                return;
+         int ret;        if ( ! service )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_SERVICE_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_SERVICE_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_service_get_ident(service), msg, IDMEF_MSG_SERVICE_IDENT);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_service_get_ident(service), msg, IDMEF_MSG_SERVICE_IDENT);
 
 	{
 		uint8_t *tmp;
 
 		tmp = idmef_service_get_ip_version(service);
 		if ( tmp ) {
-			uint8_write(*tmp, msg, IDMEF_MSG_SERVICE_IP_VERSION);
+			ret = uint8_write(*tmp, msg, IDMEF_MSG_SERVICE_IP_VERSION);
+                        if ( ret < 0 )
+                                return ret;
 		}
 	}
+
 	{
 		uint8_t *tmp;
 
 		tmp = idmef_service_get_iana_protocol_number(service);
 		if ( tmp ) {
-			uint8_write(*tmp, msg, IDMEF_MSG_SERVICE_IANA_PROTOCOL_NUMBER);
+			ret = uint8_write(*tmp, msg, IDMEF_MSG_SERVICE_IANA_PROTOCOL_NUMBER);
+                        if ( ret < 0 )
+                                return ret;
 		}
-	}        prelude_string_write(idmef_service_get_iana_protocol_name(service), msg, IDMEF_MSG_SERVICE_IANA_PROTOCOL_NAME);
-        prelude_string_write(idmef_service_get_name(service), msg, IDMEF_MSG_SERVICE_NAME);
+	}
+        ret = prelude_string_write(idmef_service_get_iana_protocol_name(service), msg, IDMEF_MSG_SERVICE_IANA_PROTOCOL_NAME);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_service_get_name(service), msg, IDMEF_MSG_SERVICE_NAME);
+        if ( ret < 0 )
+                return ret;
+
 
 	{
 		uint16_t *tmp;
 
 		tmp = idmef_service_get_port(service);
 		if ( tmp ) {
-			uint16_write(*tmp, msg, IDMEF_MSG_SERVICE_PORT);
+			ret = uint16_write(*tmp, msg, IDMEF_MSG_SERVICE_PORT);
+                        if ( ret < 0 )
+                                return ret;
 		}
-	}        prelude_string_write(idmef_service_get_portlist(service), msg, IDMEF_MSG_SERVICE_PORTLIST);
-        prelude_string_write(idmef_service_get_protocol(service), msg, IDMEF_MSG_SERVICE_PROTOCOL);
+	}
+        ret = prelude_string_write(idmef_service_get_portlist(service), msg, IDMEF_MSG_SERVICE_PORTLIST);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_service_get_protocol(service), msg, IDMEF_MSG_SERVICE_PROTOCOL);
+        if ( ret < 0 )
+                return ret;
+
 
         switch ( idmef_service_get_type(service) ) {
 
                 case IDMEF_SERVICE_TYPE_WEB:
-                        idmef_web_service_write(idmef_service_get_web_service(service), msg);
+                        ret = idmef_web_service_write(idmef_service_get_web_service(service), msg);
                         break;
 
                 case IDMEF_SERVICE_TYPE_SNMP:
-                        idmef_snmp_service_write(idmef_service_get_snmp_service(service), msg);
+                        ret = idmef_snmp_service_write(idmef_service_get_snmp_service(service), msg);
                         break;
 
                 default:
                         /* nop */;
 
         }
-
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_node_write(idmef_node_t *node, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_node_write:
+ * @node: Pointer to a #idmef_node_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @node within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_node_write(idmef_node_t *node, prelude_msgbuf_t *msg)
 {
-        if ( ! node )
-                return;
+         int ret;        if ( ! node )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_NODE_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_NODE_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_node_get_ident(node), msg, IDMEF_MSG_NODE_IDENT);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_node_get_ident(node), msg, IDMEF_MSG_NODE_IDENT);
-        uint32_write(idmef_node_get_category(node), msg, IDMEF_MSG_NODE_CATEGORY);
-        prelude_string_write(idmef_node_get_location(node), msg, IDMEF_MSG_NODE_LOCATION);
-        prelude_string_write(idmef_node_get_name(node), msg, IDMEF_MSG_NODE_NAME);
+        ret = uint32_write(idmef_node_get_category(node), msg, IDMEF_MSG_NODE_CATEGORY);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_node_get_location(node), msg, IDMEF_MSG_NODE_LOCATION);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_node_get_name(node), msg, IDMEF_MSG_NODE_NAME);
+        if ( ret < 0 )
+                return ret;
+
 
         {
                 idmef_address_t *address = NULL;
 
                 while ( (address = idmef_node_get_next_address(node, address)) ) {
-                        idmef_address_write(address, msg);
+                        ret = idmef_address_write(address, msg);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
-
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_source_write(idmef_source_t *source, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_source_write:
+ * @source: Pointer to a #idmef_source_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @source within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_source_write(idmef_source_t *source, prelude_msgbuf_t *msg)
 {
-        if ( ! source )
-                return;
+         int ret;        if ( ! source )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_SOURCE_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_SOURCE_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_source_get_ident(source), msg, IDMEF_MSG_SOURCE_IDENT);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_source_get_ident(source), msg, IDMEF_MSG_SOURCE_IDENT);
-        uint32_write(idmef_source_get_spoofed(source), msg, IDMEF_MSG_SOURCE_SPOOFED);
-        prelude_string_write(idmef_source_get_interface(source), msg, IDMEF_MSG_SOURCE_INTERFACE);
-        idmef_node_write(idmef_source_get_node(source), msg);
-        idmef_user_write(idmef_source_get_user(source), msg);
-        idmef_process_write(idmef_source_get_process(source), msg);
-        idmef_service_write(idmef_source_get_service(source), msg);
+        ret = uint32_write(idmef_source_get_spoofed(source), msg, IDMEF_MSG_SOURCE_SPOOFED);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        ret = prelude_string_write(idmef_source_get_interface(source), msg, IDMEF_MSG_SOURCE_INTERFACE);
+        if ( ret < 0 )
+                return ret;
+
+        ret = idmef_node_write(idmef_source_get_node(source), msg);
+        if ( ret < 0 )
+                return ret;
+        ret = idmef_user_write(idmef_source_get_user(source), msg);
+        if ( ret < 0 )
+                return ret;
+        ret = idmef_process_write(idmef_source_get_process(source), msg);
+        if ( ret < 0 )
+                return ret;
+        ret = idmef_service_write(idmef_source_get_service(source), msg);
+        if ( ret < 0 )
+                return ret;
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_file_access_write(idmef_file_access_t *file_access, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_file_access_write:
+ * @file_access: Pointer to a #idmef_file_access_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @file_access within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_file_access_write(idmef_file_access_t *file_access, prelude_msgbuf_t *msg)
 {
-        if ( ! file_access )
-                return;
+         int ret;        if ( ! file_access )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_FILE_ACCESS_TAG, 0, NULL);
-
-        idmef_user_id_write(idmef_file_access_get_user_id(file_access), msg);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_FILE_ACCESS_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = idmef_user_id_write(idmef_file_access_get_user_id(file_access), msg);
+        if ( ret < 0 )
+                return ret;
 
         {
                 prelude_string_t *permission = NULL;
 
                 while ( (permission = idmef_file_access_get_next_permission(file_access, permission)) ) {
-                        prelude_string_write(permission, msg, IDMEF_MSG_FILE_ACCESS_PERMISSION);
+                        ret = prelude_string_write(permission, msg, IDMEF_MSG_FILE_ACCESS_PERMISSION);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
-
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_inode_write(idmef_inode_t *inode, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_inode_write:
+ * @inode: Pointer to a #idmef_inode_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @inode within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_inode_write(idmef_inode_t *inode, prelude_msgbuf_t *msg)
 {
-        if ( ! inode )
-                return;
+         int ret;        if ( ! inode )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_INODE_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_INODE_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = idmef_time_write(idmef_inode_get_change_time(inode), msg, IDMEF_MSG_INODE_CHANGE_TIME);
+        if ( ret < 0 )
+                return ret;
 
-        idmef_time_write(idmef_inode_get_change_time(inode), msg, IDMEF_MSG_INODE_CHANGE_TIME);
 
 	{
 		uint32_t *tmp;
 
 		tmp = idmef_inode_get_number(inode);
 		if ( tmp ) {
-			uint32_write(*tmp, msg, IDMEF_MSG_INODE_NUMBER);
+			ret = uint32_write(*tmp, msg, IDMEF_MSG_INODE_NUMBER);
+                        if ( ret < 0 )
+                                return ret;
 		}
 	}
+
 	{
 		uint32_t *tmp;
 
 		tmp = idmef_inode_get_major_device(inode);
 		if ( tmp ) {
-			uint32_write(*tmp, msg, IDMEF_MSG_INODE_MAJOR_DEVICE);
+			ret = uint32_write(*tmp, msg, IDMEF_MSG_INODE_MAJOR_DEVICE);
+                        if ( ret < 0 )
+                                return ret;
 		}
 	}
+
 	{
 		uint32_t *tmp;
 
 		tmp = idmef_inode_get_minor_device(inode);
 		if ( tmp ) {
-			uint32_write(*tmp, msg, IDMEF_MSG_INODE_MINOR_DEVICE);
+			ret = uint32_write(*tmp, msg, IDMEF_MSG_INODE_MINOR_DEVICE);
+                        if ( ret < 0 )
+                                return ret;
 		}
 	}
+
 	{
 		uint32_t *tmp;
 
 		tmp = idmef_inode_get_c_major_device(inode);
 		if ( tmp ) {
-			uint32_write(*tmp, msg, IDMEF_MSG_INODE_C_MAJOR_DEVICE);
+			ret = uint32_write(*tmp, msg, IDMEF_MSG_INODE_C_MAJOR_DEVICE);
+                        if ( ret < 0 )
+                                return ret;
 		}
 	}
+
 	{
 		uint32_t *tmp;
 
 		tmp = idmef_inode_get_c_minor_device(inode);
 		if ( tmp ) {
-			uint32_write(*tmp, msg, IDMEF_MSG_INODE_C_MINOR_DEVICE);
+			ret = uint32_write(*tmp, msg, IDMEF_MSG_INODE_C_MINOR_DEVICE);
+                        if ( ret < 0 )
+                                return ret;
 		}
 	}
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_linkage_write(idmef_linkage_t *, prelude_msgbuf_t *);
+int idmef_linkage_write(idmef_linkage_t *, prelude_msgbuf_t *);
 
-void idmef_checksum_write(idmef_checksum_t *checksum, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_checksum_write:
+ * @checksum: Pointer to a #idmef_checksum_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @checksum within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_checksum_write(idmef_checksum_t *checksum, prelude_msgbuf_t *msg)
 {
-        if ( ! checksum )
-                return;
+         int ret;        if ( ! checksum )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_CHECKSUM_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_CHECKSUM_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_checksum_get_value(checksum), msg, IDMEF_MSG_CHECKSUM_VALUE);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_checksum_get_value(checksum), msg, IDMEF_MSG_CHECKSUM_VALUE);
-        prelude_string_write(idmef_checksum_get_key(checksum), msg, IDMEF_MSG_CHECKSUM_KEY);
-        uint32_write(idmef_checksum_get_algorithm(checksum), msg, IDMEF_MSG_CHECKSUM_ALGORITHM);
+        ret = prelude_string_write(idmef_checksum_get_key(checksum), msg, IDMEF_MSG_CHECKSUM_KEY);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        ret = uint32_write(idmef_checksum_get_algorithm(checksum), msg, IDMEF_MSG_CHECKSUM_ALGORITHM);
+        if ( ret < 0 )
+                return ret;
+
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_file_write(idmef_file_t *file, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_file_write:
+ * @file: Pointer to a #idmef_file_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @file within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_file_write(idmef_file_t *file, prelude_msgbuf_t *msg)
 {
-        if ( ! file )
-                return;
+         int ret;        if ( ! file )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_FILE_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_FILE_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_file_get_ident(file), msg, IDMEF_MSG_FILE_IDENT);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_file_get_ident(file), msg, IDMEF_MSG_FILE_IDENT);
-        prelude_string_write(idmef_file_get_name(file), msg, IDMEF_MSG_FILE_NAME);
-        prelude_string_write(idmef_file_get_path(file), msg, IDMEF_MSG_FILE_PATH);
-        idmef_time_write(idmef_file_get_create_time(file), msg, IDMEF_MSG_FILE_CREATE_TIME);
-        idmef_time_write(idmef_file_get_modify_time(file), msg, IDMEF_MSG_FILE_MODIFY_TIME);
-        idmef_time_write(idmef_file_get_access_time(file), msg, IDMEF_MSG_FILE_ACCESS_TIME);
+        ret = prelude_string_write(idmef_file_get_name(file), msg, IDMEF_MSG_FILE_NAME);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_file_get_path(file), msg, IDMEF_MSG_FILE_PATH);
+        if ( ret < 0 )
+                return ret;
+
+        ret = idmef_time_write(idmef_file_get_create_time(file), msg, IDMEF_MSG_FILE_CREATE_TIME);
+        if ( ret < 0 )
+                return ret;
+
+        ret = idmef_time_write(idmef_file_get_modify_time(file), msg, IDMEF_MSG_FILE_MODIFY_TIME);
+        if ( ret < 0 )
+                return ret;
+
+        ret = idmef_time_write(idmef_file_get_access_time(file), msg, IDMEF_MSG_FILE_ACCESS_TIME);
+        if ( ret < 0 )
+                return ret;
+
 
 	{
 		uint64_t *tmp;
 
 		tmp = idmef_file_get_data_size(file);
 		if ( tmp ) {
-			uint64_write(*tmp, msg, IDMEF_MSG_FILE_DATA_SIZE);
+			ret = uint64_write(*tmp, msg, IDMEF_MSG_FILE_DATA_SIZE);
+                        if ( ret < 0 )
+                                return ret;
 		}
 	}
+
 	{
 		uint64_t *tmp;
 
 		tmp = idmef_file_get_disk_size(file);
 		if ( tmp ) {
-			uint64_write(*tmp, msg, IDMEF_MSG_FILE_DISK_SIZE);
+			ret = uint64_write(*tmp, msg, IDMEF_MSG_FILE_DISK_SIZE);
+                        if ( ret < 0 )
+                                return ret;
 		}
 	}
+
         {
                 idmef_file_access_t *file_access = NULL;
 
                 while ( (file_access = idmef_file_get_next_file_access(file, file_access)) ) {
-                        idmef_file_access_write(file_access, msg);
+                        ret = idmef_file_access_write(file_access, msg);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
@@ -623,291 +1032,569 @@ void idmef_file_write(idmef_file_t *file, prelude_msgbuf_t *msg)
                 idmef_linkage_t *linkage = NULL;
 
                 while ( (linkage = idmef_file_get_next_linkage(file, linkage)) ) {
-                        idmef_linkage_write(linkage, msg);
+                        ret = idmef_linkage_write(linkage, msg);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
-        idmef_inode_write(idmef_file_get_inode(file), msg);
+        ret = idmef_inode_write(idmef_file_get_inode(file), msg);
+        if ( ret < 0 )
+                return ret;
 
         {
                 idmef_checksum_t *checksum = NULL;
 
                 while ( (checksum = idmef_file_get_next_checksum(file, checksum)) ) {
-                        idmef_checksum_write(checksum, msg);
+                        ret = idmef_checksum_write(checksum, msg);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
-        uint32_write(idmef_file_get_category(file), msg, IDMEF_MSG_FILE_CATEGORY);
+        ret = uint32_write(idmef_file_get_category(file), msg, IDMEF_MSG_FILE_CATEGORY);
+        if ( ret < 0 )
+                return ret;
+
 
 	{
 		idmef_file_fstype_t *tmp;
 
 		tmp = idmef_file_get_fstype(file);
 		if ( tmp ) {
-			uint32_write(*tmp, msg, IDMEF_MSG_FILE_FSTYPE);
+			ret = uint32_write(*tmp, msg, IDMEF_MSG_FILE_FSTYPE);
+                        if ( ret < 0 )
+                                return ret;
 		}
 	}
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_linkage_write(idmef_linkage_t *linkage, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_linkage_write:
+ * @linkage: Pointer to a #idmef_linkage_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @linkage within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_linkage_write(idmef_linkage_t *linkage, prelude_msgbuf_t *msg)
 {
-        if ( ! linkage )
-                return;
+         int ret;        if ( ! linkage )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_LINKAGE_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_LINKAGE_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = uint32_write(idmef_linkage_get_category(linkage), msg, IDMEF_MSG_LINKAGE_CATEGORY);
+        if ( ret < 0 )
+                return ret;
 
-        uint32_write(idmef_linkage_get_category(linkage), msg, IDMEF_MSG_LINKAGE_CATEGORY);
-        prelude_string_write(idmef_linkage_get_name(linkage), msg, IDMEF_MSG_LINKAGE_NAME);
-        prelude_string_write(idmef_linkage_get_path(linkage), msg, IDMEF_MSG_LINKAGE_PATH);
-        idmef_file_write(idmef_linkage_get_file(linkage), msg);
+        ret = prelude_string_write(idmef_linkage_get_name(linkage), msg, IDMEF_MSG_LINKAGE_NAME);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        ret = prelude_string_write(idmef_linkage_get_path(linkage), msg, IDMEF_MSG_LINKAGE_PATH);
+        if ( ret < 0 )
+                return ret;
+
+        ret = idmef_file_write(idmef_linkage_get_file(linkage), msg);
+        if ( ret < 0 )
+                return ret;
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_target_write(idmef_target_t *target, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_target_write:
+ * @target: Pointer to a #idmef_target_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @target within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_target_write(idmef_target_t *target, prelude_msgbuf_t *msg)
 {
-        if ( ! target )
-                return;
+         int ret;        if ( ! target )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_TARGET_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_TARGET_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_target_get_ident(target), msg, IDMEF_MSG_TARGET_IDENT);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_target_get_ident(target), msg, IDMEF_MSG_TARGET_IDENT);
-        uint32_write(idmef_target_get_decoy(target), msg, IDMEF_MSG_TARGET_DECOY);
-        prelude_string_write(idmef_target_get_interface(target), msg, IDMEF_MSG_TARGET_INTERFACE);
-        idmef_node_write(idmef_target_get_node(target), msg);
-        idmef_user_write(idmef_target_get_user(target), msg);
-        idmef_process_write(idmef_target_get_process(target), msg);
-        idmef_service_write(idmef_target_get_service(target), msg);
+        ret = uint32_write(idmef_target_get_decoy(target), msg, IDMEF_MSG_TARGET_DECOY);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_target_get_interface(target), msg, IDMEF_MSG_TARGET_INTERFACE);
+        if ( ret < 0 )
+                return ret;
+
+        ret = idmef_node_write(idmef_target_get_node(target), msg);
+        if ( ret < 0 )
+                return ret;
+        ret = idmef_user_write(idmef_target_get_user(target), msg);
+        if ( ret < 0 )
+                return ret;
+        ret = idmef_process_write(idmef_target_get_process(target), msg);
+        if ( ret < 0 )
+                return ret;
+        ret = idmef_service_write(idmef_target_get_service(target), msg);
+        if ( ret < 0 )
+                return ret;
 
         {
                 idmef_file_t *file = NULL;
 
                 while ( (file = idmef_target_get_next_file(target, file)) ) {
-                        idmef_file_write(file, msg);
+                        ret = idmef_file_write(file, msg);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
-
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_analyzer_write(idmef_analyzer_t *analyzer, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_analyzer_write:
+ * @analyzer: Pointer to a #idmef_analyzer_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @analyzer within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_analyzer_write(idmef_analyzer_t *analyzer, prelude_msgbuf_t *msg)
 {
-        if ( ! analyzer )
-                return;
+         int ret;        if ( ! analyzer )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_ANALYZER_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_ANALYZER_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_analyzer_get_analyzerid(analyzer), msg, IDMEF_MSG_ANALYZER_ANALYZERID);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_analyzer_get_analyzerid(analyzer), msg, IDMEF_MSG_ANALYZER_ANALYZERID);
-        prelude_string_write(idmef_analyzer_get_name(analyzer), msg, IDMEF_MSG_ANALYZER_NAME);
-        prelude_string_write(idmef_analyzer_get_manufacturer(analyzer), msg, IDMEF_MSG_ANALYZER_MANUFACTURER);
-        prelude_string_write(idmef_analyzer_get_model(analyzer), msg, IDMEF_MSG_ANALYZER_MODEL);
-        prelude_string_write(idmef_analyzer_get_version(analyzer), msg, IDMEF_MSG_ANALYZER_VERSION);
-        prelude_string_write(idmef_analyzer_get_class(analyzer), msg, IDMEF_MSG_ANALYZER_CLASS);
-        prelude_string_write(idmef_analyzer_get_ostype(analyzer), msg, IDMEF_MSG_ANALYZER_OSTYPE);
-        prelude_string_write(idmef_analyzer_get_osversion(analyzer), msg, IDMEF_MSG_ANALYZER_OSVERSION);
-        idmef_node_write(idmef_analyzer_get_node(analyzer), msg);
-        idmef_process_write(idmef_analyzer_get_process(analyzer), msg);
+        ret = prelude_string_write(idmef_analyzer_get_name(analyzer), msg, IDMEF_MSG_ANALYZER_NAME);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        ret = prelude_string_write(idmef_analyzer_get_manufacturer(analyzer), msg, IDMEF_MSG_ANALYZER_MANUFACTURER);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_analyzer_get_model(analyzer), msg, IDMEF_MSG_ANALYZER_MODEL);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_analyzer_get_version(analyzer), msg, IDMEF_MSG_ANALYZER_VERSION);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_analyzer_get_class(analyzer), msg, IDMEF_MSG_ANALYZER_CLASS);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_analyzer_get_ostype(analyzer), msg, IDMEF_MSG_ANALYZER_OSTYPE);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_string_write(idmef_analyzer_get_osversion(analyzer), msg, IDMEF_MSG_ANALYZER_OSVERSION);
+        if ( ret < 0 )
+                return ret;
+
+        ret = idmef_node_write(idmef_analyzer_get_node(analyzer), msg);
+        if ( ret < 0 )
+                return ret;
+        ret = idmef_process_write(idmef_analyzer_get_process(analyzer), msg);
+        if ( ret < 0 )
+                return ret;
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_alertident_write(idmef_alertident_t *alertident, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_alertident_write:
+ * @alertident: Pointer to a #idmef_alertident_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @alertident within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_alertident_write(idmef_alertident_t *alertident, prelude_msgbuf_t *msg)
 {
-        if ( ! alertident )
-                return;
+         int ret;        if ( ! alertident )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_ALERTIDENT_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_ALERTIDENT_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_alertident_get_alertident(alertident), msg, IDMEF_MSG_ALERTIDENT_ALERTIDENT);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_alertident_get_alertident(alertident), msg, IDMEF_MSG_ALERTIDENT_ALERTIDENT);
-        prelude_string_write(idmef_alertident_get_analyzerid(alertident), msg, IDMEF_MSG_ALERTIDENT_ANALYZERID);
+        ret = prelude_string_write(idmef_alertident_get_analyzerid(alertident), msg, IDMEF_MSG_ALERTIDENT_ANALYZERID);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_impact_write(idmef_impact_t *impact, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_impact_write:
+ * @impact: Pointer to a #idmef_impact_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @impact within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_impact_write(idmef_impact_t *impact, prelude_msgbuf_t *msg)
 {
-        if ( ! impact )
-                return;
+         int ret;        if ( ! impact )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_IMPACT_TAG, 0, NULL);
-
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_IMPACT_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
 
 	{
 		idmef_impact_severity_t *tmp;
 
 		tmp = idmef_impact_get_severity(impact);
 		if ( tmp ) {
-			uint32_write(*tmp, msg, IDMEF_MSG_IMPACT_SEVERITY);
+			ret = uint32_write(*tmp, msg, IDMEF_MSG_IMPACT_SEVERITY);
+                        if ( ret < 0 )
+                                return ret;
 			prelude_msg_set_priority(prelude_msgbuf_get_msg(msg),
 					         idmef_impact_severity_to_msg_priority(*tmp));
 		}
 	}
+
 	{
 		idmef_impact_completion_t *tmp;
 
 		tmp = idmef_impact_get_completion(impact);
 		if ( tmp ) {
-			uint32_write(*tmp, msg, IDMEF_MSG_IMPACT_COMPLETION);
+			ret = uint32_write(*tmp, msg, IDMEF_MSG_IMPACT_COMPLETION);
+                        if ( ret < 0 )
+                                return ret;
 		}
-	}        uint32_write(idmef_impact_get_type(impact), msg, IDMEF_MSG_IMPACT_TYPE);
-        prelude_string_write(idmef_impact_get_description(impact), msg, IDMEF_MSG_IMPACT_DESCRIPTION);
+	}
+        ret = uint32_write(idmef_impact_get_type(impact), msg, IDMEF_MSG_IMPACT_TYPE);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        ret = prelude_string_write(idmef_impact_get_description(impact), msg, IDMEF_MSG_IMPACT_DESCRIPTION);
+        if ( ret < 0 )
+                return ret;
+
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_action_write(idmef_action_t *action, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_action_write:
+ * @action: Pointer to a #idmef_action_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @action within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_action_write(idmef_action_t *action, prelude_msgbuf_t *msg)
 {
-        if ( ! action )
-                return;
+         int ret;        if ( ! action )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_ACTION_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_ACTION_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = uint32_write(idmef_action_get_category(action), msg, IDMEF_MSG_ACTION_CATEGORY);
+        if ( ret < 0 )
+                return ret;
 
-        uint32_write(idmef_action_get_category(action), msg, IDMEF_MSG_ACTION_CATEGORY);
-        prelude_string_write(idmef_action_get_description(action), msg, IDMEF_MSG_ACTION_DESCRIPTION);
+        ret = prelude_string_write(idmef_action_get_description(action), msg, IDMEF_MSG_ACTION_DESCRIPTION);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_confidence_write(idmef_confidence_t *confidence, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_confidence_write:
+ * @confidence: Pointer to a #idmef_confidence_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @confidence within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_confidence_write(idmef_confidence_t *confidence, prelude_msgbuf_t *msg)
 {
-        if ( ! confidence )
-                return;
+         int ret;        if ( ! confidence )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_CONFIDENCE_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_CONFIDENCE_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = uint32_write(idmef_confidence_get_rating(confidence), msg, IDMEF_MSG_CONFIDENCE_RATING);
+        if ( ret < 0 )
+                return ret;
 
-        uint32_write(idmef_confidence_get_rating(confidence), msg, IDMEF_MSG_CONFIDENCE_RATING);
-        float_write(idmef_confidence_get_confidence(confidence), msg, IDMEF_MSG_CONFIDENCE_CONFIDENCE);
+        ret = float_write(idmef_confidence_get_confidence(confidence), msg, IDMEF_MSG_CONFIDENCE_CONFIDENCE);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_assessment_write(idmef_assessment_t *assessment, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_assessment_write:
+ * @assessment: Pointer to a #idmef_assessment_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @assessment within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_assessment_write(idmef_assessment_t *assessment, prelude_msgbuf_t *msg)
 {
-        if ( ! assessment )
-                return;
+         int ret;        if ( ! assessment )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_ASSESSMENT_TAG, 0, NULL);
-
-        idmef_impact_write(idmef_assessment_get_impact(assessment), msg);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_ASSESSMENT_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = idmef_impact_write(idmef_assessment_get_impact(assessment), msg);
+        if ( ret < 0 )
+                return ret;
 
         {
                 idmef_action_t *action = NULL;
 
                 while ( (action = idmef_assessment_get_next_action(assessment, action)) ) {
-                        idmef_action_write(action, msg);
+                        ret = idmef_action_write(action, msg);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
-        idmef_confidence_write(idmef_assessment_get_confidence(assessment), msg);
-
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        ret = idmef_confidence_write(idmef_assessment_get_confidence(assessment), msg);
+        if ( ret < 0 )
+                return ret;
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_tool_alert_write(idmef_tool_alert_t *tool_alert, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_tool_alert_write:
+ * @tool_alert: Pointer to a #idmef_tool_alert_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @tool_alert within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_tool_alert_write(idmef_tool_alert_t *tool_alert, prelude_msgbuf_t *msg)
 {
-        if ( ! tool_alert )
-                return;
+         int ret;        if ( ! tool_alert )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_TOOL_ALERT_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_TOOL_ALERT_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_tool_alert_get_name(tool_alert), msg, IDMEF_MSG_TOOL_ALERT_NAME);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_tool_alert_get_name(tool_alert), msg, IDMEF_MSG_TOOL_ALERT_NAME);
-        prelude_string_write(idmef_tool_alert_get_command(tool_alert), msg, IDMEF_MSG_TOOL_ALERT_COMMAND);
+        ret = prelude_string_write(idmef_tool_alert_get_command(tool_alert), msg, IDMEF_MSG_TOOL_ALERT_COMMAND);
+        if ( ret < 0 )
+                return ret;
+
 
         {
                 idmef_alertident_t *alertident = NULL;
 
                 while ( (alertident = idmef_tool_alert_get_next_alertident(tool_alert, alertident)) ) {
-                        idmef_alertident_write(alertident, msg);
+                        ret = idmef_alertident_write(alertident, msg);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
-
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_correlation_alert_write(idmef_correlation_alert_t *correlation_alert, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_correlation_alert_write:
+ * @correlation_alert: Pointer to a #idmef_correlation_alert_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @correlation_alert within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_correlation_alert_write(idmef_correlation_alert_t *correlation_alert, prelude_msgbuf_t *msg)
 {
-        if ( ! correlation_alert )
-                return;
+         int ret;        if ( ! correlation_alert )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_CORRELATION_ALERT_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_CORRELATION_ALERT_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_correlation_alert_get_name(correlation_alert), msg, IDMEF_MSG_CORRELATION_ALERT_NAME);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_correlation_alert_get_name(correlation_alert), msg, IDMEF_MSG_CORRELATION_ALERT_NAME);
 
         {
                 idmef_alertident_t *alertident = NULL;
 
                 while ( (alertident = idmef_correlation_alert_get_next_alertident(correlation_alert, alertident)) ) {
-                        idmef_alertident_write(alertident, msg);
+                        ret = idmef_alertident_write(alertident, msg);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
-
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_overflow_alert_write(idmef_overflow_alert_t *overflow_alert, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_overflow_alert_write:
+ * @overflow_alert: Pointer to a #idmef_overflow_alert_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @overflow_alert within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_overflow_alert_write(idmef_overflow_alert_t *overflow_alert, prelude_msgbuf_t *msg)
 {
-        if ( ! overflow_alert )
-                return;
+         int ret;        if ( ! overflow_alert )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_OVERFLOW_ALERT_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_OVERFLOW_ALERT_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_overflow_alert_get_program(overflow_alert), msg, IDMEF_MSG_OVERFLOW_ALERT_PROGRAM);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_overflow_alert_get_program(overflow_alert), msg, IDMEF_MSG_OVERFLOW_ALERT_PROGRAM);
 
 	{
 		uint32_t *tmp;
 
 		tmp = idmef_overflow_alert_get_size(overflow_alert);
 		if ( tmp ) {
-			uint32_write(*tmp, msg, IDMEF_MSG_OVERFLOW_ALERT_SIZE);
+			ret = uint32_write(*tmp, msg, IDMEF_MSG_OVERFLOW_ALERT_SIZE);
+                        if ( ret < 0 )
+                                return ret;
 		}
-	}        idmef_data_write(idmef_overflow_alert_get_buffer(overflow_alert), msg, IDMEF_MSG_OVERFLOW_ALERT_BUFFER);
+	}
+        ret = idmef_data_write(idmef_overflow_alert_get_buffer(overflow_alert), msg, IDMEF_MSG_OVERFLOW_ALERT_BUFFER);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_alert_write(idmef_alert_t *alert, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_alert_write:
+ * @alert: Pointer to a #idmef_alert_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @alert within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_alert_write(idmef_alert_t *alert, prelude_msgbuf_t *msg)
 {
-        if ( ! alert )
-                return;
+         int ret;        if ( ! alert )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_ALERT_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_ALERT_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_alert_get_messageid(alert), msg, IDMEF_MSG_ALERT_MESSAGEID);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_alert_get_messageid(alert), msg, IDMEF_MSG_ALERT_MESSAGEID);
 
         {
                 idmef_analyzer_t *analyzer = NULL;
 
                 while ( (analyzer = idmef_alert_get_next_analyzer(alert, analyzer)) ) {
-                        idmef_analyzer_write(analyzer, msg);
+                        ret = idmef_analyzer_write(analyzer, msg);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
-        idmef_time_write(idmef_alert_get_create_time(alert), msg, IDMEF_MSG_ALERT_CREATE_TIME);
-        idmef_classification_write(idmef_alert_get_classification(alert), msg);
-        idmef_time_write(idmef_alert_get_detect_time(alert), msg, IDMEF_MSG_ALERT_DETECT_TIME);
-        idmef_time_write(idmef_alert_get_analyzer_time(alert), msg, IDMEF_MSG_ALERT_ANALYZER_TIME);
+        ret = idmef_time_write(idmef_alert_get_create_time(alert), msg, IDMEF_MSG_ALERT_CREATE_TIME);
+        if ( ret < 0 )
+                return ret;
+
+        ret = idmef_classification_write(idmef_alert_get_classification(alert), msg);
+        if ( ret < 0 )
+                return ret;
+        ret = idmef_time_write(idmef_alert_get_detect_time(alert), msg, IDMEF_MSG_ALERT_DETECT_TIME);
+        if ( ret < 0 )
+                return ret;
+
+        ret = idmef_time_write(idmef_alert_get_analyzer_time(alert), msg, IDMEF_MSG_ALERT_ANALYZER_TIME);
+        if ( ret < 0 )
+                return ret;
+
 
         {
                 idmef_source_t *source = NULL;
 
                 while ( (source = idmef_alert_get_next_source(alert, source)) ) {
-                        idmef_source_write(source, msg);
+                        ret = idmef_source_write(source, msg);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
@@ -916,17 +1603,23 @@ void idmef_alert_write(idmef_alert_t *alert, prelude_msgbuf_t *msg)
                 idmef_target_t *target = NULL;
 
                 while ( (target = idmef_alert_get_next_target(alert, target)) ) {
-                        idmef_target_write(target, msg);
+                        ret = idmef_target_write(target, msg);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
-        idmef_assessment_write(idmef_alert_get_assessment(alert), msg);
+        ret = idmef_assessment_write(idmef_alert_get_assessment(alert), msg);
+        if ( ret < 0 )
+                return ret;
 
         {
                 idmef_additional_data_t *additional_data = NULL;
 
                 while ( (additional_data = idmef_alert_get_next_additional_data(alert, additional_data)) ) {
-                        idmef_additional_data_write(additional_data, msg);
+                        ret = idmef_additional_data_write(additional_data, msg);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
@@ -934,90 +1627,129 @@ void idmef_alert_write(idmef_alert_t *alert, prelude_msgbuf_t *msg)
         switch ( idmef_alert_get_type(alert) ) {
 
                 case IDMEF_ALERT_TYPE_TOOL:
-                        idmef_tool_alert_write(idmef_alert_get_tool_alert(alert), msg);
+                        ret = idmef_tool_alert_write(idmef_alert_get_tool_alert(alert), msg);
                         break;
 
                 case IDMEF_ALERT_TYPE_CORRELATION:
-                        idmef_correlation_alert_write(idmef_alert_get_correlation_alert(alert), msg);
+                        ret = idmef_correlation_alert_write(idmef_alert_get_correlation_alert(alert), msg);
                         break;
 
                 case IDMEF_ALERT_TYPE_OVERFLOW:
-                        idmef_overflow_alert_write(idmef_alert_get_overflow_alert(alert), msg);
+                        ret = idmef_overflow_alert_write(idmef_alert_get_overflow_alert(alert), msg);
                         break;
 
                 default:
                         /* nop */;
 
         }
-
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_heartbeat_write(idmef_heartbeat_t *heartbeat, prelude_msgbuf_t *msg)
+
+/**
+ * idmef_heartbeat_write:
+ * @heartbeat: Pointer to a #idmef_heartbeat_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @heartbeat within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_heartbeat_write(idmef_heartbeat_t *heartbeat, prelude_msgbuf_t *msg)
 {
-        if ( ! heartbeat )
-                return;
+         int ret;        if ( ! heartbeat )
+                return 0;
 
-        prelude_msgbuf_set(msg, IDMEF_MSG_HEARTBEAT_TAG, 0, NULL);
+        ret = prelude_msgbuf_set(msg, IDMEF_MSG_HEARTBEAT_TAG, 0, NULL);
+        if ( ret < 0 )
+                return ret;
+        ret = prelude_string_write(idmef_heartbeat_get_messageid(heartbeat), msg, IDMEF_MSG_HEARTBEAT_MESSAGEID);
+        if ( ret < 0 )
+                return ret;
 
-        prelude_string_write(idmef_heartbeat_get_messageid(heartbeat), msg, IDMEF_MSG_HEARTBEAT_MESSAGEID);
 
         {
                 idmef_analyzer_t *analyzer = NULL;
 
                 while ( (analyzer = idmef_heartbeat_get_next_analyzer(heartbeat, analyzer)) ) {
-                        idmef_analyzer_write(analyzer, msg);
+                        ret = idmef_analyzer_write(analyzer, msg);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
-        idmef_time_write(idmef_heartbeat_get_create_time(heartbeat), msg, IDMEF_MSG_HEARTBEAT_CREATE_TIME);
-        idmef_time_write(idmef_heartbeat_get_analyzer_time(heartbeat), msg, IDMEF_MSG_HEARTBEAT_ANALYZER_TIME);
+        ret = idmef_time_write(idmef_heartbeat_get_create_time(heartbeat), msg, IDMEF_MSG_HEARTBEAT_CREATE_TIME);
+        if ( ret < 0 )
+                return ret;
+
+        ret = idmef_time_write(idmef_heartbeat_get_analyzer_time(heartbeat), msg, IDMEF_MSG_HEARTBEAT_ANALYZER_TIME);
+        if ( ret < 0 )
+                return ret;
+
 
 	{
 		uint32_t *tmp;
 
 		tmp = idmef_heartbeat_get_heartbeat_interval(heartbeat);
 		if ( tmp ) {
-			uint32_write(*tmp, msg, IDMEF_MSG_HEARTBEAT_HEARTBEAT_INTERVAL);
+			ret = uint32_write(*tmp, msg, IDMEF_MSG_HEARTBEAT_HEARTBEAT_INTERVAL);
+                        if ( ret < 0 )
+                                return ret;
 		}
 	}
+
         {
                 idmef_additional_data_t *additional_data = NULL;
 
                 while ( (additional_data = idmef_heartbeat_get_next_additional_data(heartbeat, additional_data)) ) {
-                        idmef_additional_data_write(additional_data, msg);
+                        ret = idmef_additional_data_write(additional_data, msg);
+                        if ( ret < 0 )
+                                return ret;
                 }
         }
 
-
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 
-void idmef_message_write(idmef_message_t *message, prelude_msgbuf_t *msg)
-{
-        if ( ! message )
-                return;
 
-        prelude_string_write(idmef_message_get_version(message), msg, IDMEF_MSG_MESSAGE_VERSION);
+/**
+ * idmef_message_write:
+ * @message: Pointer to a #idmef_message_t object.
+ * @msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write @message within @msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_message_write(idmef_message_t *message, prelude_msgbuf_t *msg)
+{
+         int ret;        if ( ! message )
+                return 0;
+
+        ret = prelude_string_write(idmef_message_get_version(message), msg, IDMEF_MSG_MESSAGE_VERSION);
+        if ( ret < 0 )
+                return ret;
+
 
         switch ( idmef_message_get_type(message) ) {
 
                 case IDMEF_MESSAGE_TYPE_ALERT:
-                        idmef_alert_write(idmef_message_get_alert(message), msg);
+                        ret = idmef_alert_write(idmef_message_get_alert(message), msg);
                         break;
 
                 case IDMEF_MESSAGE_TYPE_HEARTBEAT:
-                        idmef_heartbeat_write(idmef_message_get_heartbeat(message), msg);
+                        ret = idmef_heartbeat_write(idmef_message_get_heartbeat(message), msg);
                         break;
 
                 default:
                         /* nop */;
 
         }
-
-        prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
+        return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
 

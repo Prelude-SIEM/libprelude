@@ -188,6 +188,14 @@ static void print_enum(const char *s, int i, prelude_io_t *fd)
 }
 
 
+/**
+ * idmef_additional_data_print:
+ * @ptr: Pointer to an idmef_additional_data_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_additional_data_print(idmef_additional_data_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -239,6 +247,14 @@ void idmef_additional_data_print(idmef_additional_data_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_reference_print:
+ * @ptr: Pointer to an idmef_reference_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_reference_print(idmef_reference_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -304,6 +320,14 @@ void idmef_reference_print(idmef_reference_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_classification_print:
+ * @ptr: Pointer to an idmef_classification_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_classification_print(idmef_classification_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -358,6 +382,14 @@ void idmef_classification_print(idmef_classification_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_user_id_print:
+ * @ptr: Pointer to an idmef_user_id_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_user_id_print(idmef_user_id_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -437,6 +469,14 @@ void idmef_user_id_print(idmef_user_id_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_user_print:
+ * @ptr: Pointer to an idmef_user_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_user_print(idmef_user_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -490,6 +530,14 @@ void idmef_user_print(idmef_user_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_address_print:
+ * @ptr: Pointer to an idmef_address_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_address_print(idmef_address_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -583,6 +631,14 @@ void idmef_address_print(idmef_address_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_process_print:
+ * @ptr: Pointer to an idmef_process_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_process_print(idmef_process_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -683,6 +739,14 @@ void idmef_process_print(idmef_process_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_web_service_print:
+ * @ptr: Pointer to an idmef_web_service_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_web_service_print(idmef_web_service_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -752,6 +816,14 @@ void idmef_web_service_print(idmef_web_service_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_snmp_service_print:
+ * @ptr: Pointer to an idmef_snmp_service_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_snmp_service_print(idmef_snmp_service_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -846,6 +918,14 @@ void idmef_snmp_service_print(idmef_snmp_service_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_service_print:
+ * @ptr: Pointer to an idmef_service_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_service_print(idmef_service_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -985,6 +1065,14 @@ void idmef_service_print(idmef_service_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_node_print:
+ * @ptr: Pointer to an idmef_node_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_node_print(idmef_node_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -1066,6 +1154,14 @@ void idmef_node_print(idmef_node_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_source_print:
+ * @ptr: Pointer to an idmef_source_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_source_print(idmef_source_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -1165,6 +1261,14 @@ void idmef_source_print(idmef_source_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_file_access_print:
+ * @ptr: Pointer to an idmef_file_access_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_file_access_print(idmef_file_access_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -1204,6 +1308,14 @@ void idmef_file_access_print(idmef_file_access_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_inode_print:
+ * @ptr: Pointer to an idmef_inode_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_inode_print(idmef_inode_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -1298,6 +1410,14 @@ void idmef_inode_print(idmef_inode_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_checksum_print:
+ * @ptr: Pointer to an idmef_checksum_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_checksum_print(idmef_checksum_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -1349,6 +1469,14 @@ void idmef_checksum_print(idmef_checksum_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_file_print:
+ * @ptr: Pointer to an idmef_file_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_file_print(idmef_file_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -1559,6 +1687,14 @@ void idmef_file_print(idmef_file_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_linkage_print:
+ * @ptr: Pointer to an idmef_linkage_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_linkage_print(idmef_linkage_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -1622,6 +1758,14 @@ void idmef_linkage_print(idmef_linkage_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_target_print:
+ * @ptr: Pointer to an idmef_target_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_target_print(idmef_target_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -1737,6 +1881,14 @@ void idmef_target_print(idmef_target_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_analyzer_print:
+ * @ptr: Pointer to an idmef_analyzer_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_analyzer_print(idmef_analyzer_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -1883,6 +2035,14 @@ void idmef_analyzer_print(idmef_analyzer_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_alertident_print:
+ * @ptr: Pointer to an idmef_alertident_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_alertident_print(idmef_alertident_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -1921,6 +2081,14 @@ void idmef_alertident_print(idmef_alertident_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_impact_print:
+ * @ptr: Pointer to an idmef_impact_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_impact_print(idmef_impact_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -1988,6 +2156,14 @@ void idmef_impact_print(idmef_impact_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_action_print:
+ * @ptr: Pointer to an idmef_action_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_action_print(idmef_action_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -2025,6 +2201,14 @@ void idmef_action_print(idmef_action_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_confidence_print:
+ * @ptr: Pointer to an idmef_confidence_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_confidence_print(idmef_confidence_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -2053,6 +2237,14 @@ void idmef_confidence_print(idmef_confidence_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_assessment_print:
+ * @ptr: Pointer to an idmef_assessment_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_assessment_print(idmef_assessment_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -2103,6 +2295,14 @@ void idmef_assessment_print(idmef_assessment_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_tool_alert_print:
+ * @ptr: Pointer to an idmef_tool_alert_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_tool_alert_print(idmef_tool_alert_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -2157,6 +2357,14 @@ void idmef_tool_alert_print(idmef_tool_alert_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_correlation_alert_print:
+ * @ptr: Pointer to an idmef_correlation_alert_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_correlation_alert_print(idmef_correlation_alert_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -2197,6 +2405,14 @@ void idmef_correlation_alert_print(idmef_correlation_alert_t *ptr, prelude_io_t 
 	indent -= 8;
 }
 
+/**
+ * idmef_overflow_alert_print:
+ * @ptr: Pointer to an idmef_overflow_alert_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_overflow_alert_print(idmef_overflow_alert_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -2249,6 +2465,14 @@ void idmef_overflow_alert_print(idmef_overflow_alert_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_alert_print:
+ * @ptr: Pointer to an idmef_alert_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_alert_print(idmef_alert_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -2426,6 +2650,14 @@ void idmef_alert_print(idmef_alert_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_heartbeat_print:
+ * @ptr: Pointer to an idmef_heartbeat_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_heartbeat_print(idmef_heartbeat_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )
@@ -2524,6 +2756,14 @@ void idmef_heartbeat_print(idmef_heartbeat_t *ptr, prelude_io_t *fd)
 	indent -= 8;
 }
 
+/**
+ * idmef_message_print:
+ * @ptr: Pointer to an idmef_message_t object.
+ * @fd: Pointer to a #prelude_io_t object where to print @ptr to.
+ *
+ * This function will convert @ptr to a string suitable for writing,
+ * and write it to the provided @fd descriptor.
+ */
 void idmef_message_print(idmef_message_t *ptr, prelude_io_t *fd)
 {
 	if ( ! ptr )

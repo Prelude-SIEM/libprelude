@@ -88,74 +88,73 @@ sub	header
  */
 
 
-static inline void prelude_string_write(prelude_string_t *string, prelude_msgbuf_t *msg, uint8_t tag)
+static inline int prelude_string_write(prelude_string_t *string, prelude_msgbuf_t *msg, uint8_t tag)
 \{
         if ( ! string || prelude_string_is_empty(string) )
-                return;
+                return 0;
 
-        prelude_msgbuf_set(msg, tag, prelude_string_get_len(string) + 1, prelude_string_get_string(string));
+        return prelude_msgbuf_set(msg, tag, prelude_string_get_len(string) + 1, prelude_string_get_string(string));
 \}
 
 
 
-static inline void uint64_write(uint64_t data, prelude_msgbuf_t *msg, uint8_t tag) 
+static inline int uint64_write(uint64_t data, prelude_msgbuf_t *msg, uint8_t tag) 
 \{
         uint64_t dst;
         
         dst = prelude_hton64(data);
         
-        prelude_msgbuf_set(msg, tag, sizeof(dst), &dst);
+        return prelude_msgbuf_set(msg, tag, sizeof(dst), &dst);
 \}
 
 
 
-static inline void uint32_write(uint32_t data, prelude_msgbuf_t *msg, uint8_t tag) 
+static inline int uint32_write(uint32_t data, prelude_msgbuf_t *msg, uint8_t tag) 
 \{        
         data = htonl(data);
-        prelude_msgbuf_set(msg, tag, sizeof(data), &data);
+        return prelude_msgbuf_set(msg, tag, sizeof(data), &data);
 \}
 
 
 
-static inline void int32_write(uint32_t data, prelude_msgbuf_t *msg, uint8_t tag) 
+static inline int int32_write(uint32_t data, prelude_msgbuf_t *msg, uint8_t tag) 
 \{
-	uint32_write(data, msg, tag);
+	return uint32_write(data, msg, tag);
 \}
 
 
 
-static inline void uint8_write(uint8_t data, prelude_msgbuf_t *msg, uint8_t tag)
+static inline int uint8_write(uint8_t data, prelude_msgbuf_t *msg, uint8_t tag)
 \{
-	prelude_msgbuf_set(msg, tag, sizeof (data), &data);
+	return prelude_msgbuf_set(msg, tag, sizeof (data), &data);
 \}
 
 
 
-static inline void uint16_write(uint16_t data, prelude_msgbuf_t *msg, uint8_t tag) 
+static inline int uint16_write(uint16_t data, prelude_msgbuf_t *msg, uint8_t tag) 
 \{
         data = htons(data);
-        prelude_msgbuf_set(msg, tag, sizeof(data), &data);
+        return prelude_msgbuf_set(msg, tag, sizeof(data), &data);
 \}
 
 
 
-static inline void float_write(float data, prelude_msgbuf_t *msg, uint8_t tag)
+static inline int float_write(float data, prelude_msgbuf_t *msg, uint8_t tag)
 \{
 	if ( data == 0.0 )
-		return;
+		return 0;
 
-	prelude_msgbuf_set(msg, tag, sizeof (data), &data);
+	return prelude_msgbuf_set(msg, tag, sizeof (data), &data);
 \}
 
 
-
-inline void idmef_time_write(idmef_time_t *data, prelude_msgbuf_t *msg, uint8_t tag) 
+static inline int idmef_time_write(idmef_time_t *data, prelude_msgbuf_t *msg, uint8_t tag) 
 \{
         uint32_t tmp;
         unsigned char buf[12];
 
         if ( ! data )
-                return;
+                return 0;
       
         tmp = htonl(idmef_time_get_sec(data));
         memcpy(buf, &tmp, sizeof(tmp));
@@ -166,48 +165,54 @@ inline void idmef_time_write(idmef_time_t *data, prelude_msgbuf_t *msg, uint8_t 
         tmp = htonl(idmef_time_get_gmt_offset(data));
         memcpy(buf + 8, &tmp, sizeof(tmp));
 
-        prelude_msgbuf_set(msg, tag, sizeof (buf), buf);
+        return prelude_msgbuf_set(msg, tag, sizeof (buf), buf);
 \}
 
 
 
-static inline void idmef_data_write(idmef_data_t *data, prelude_msgbuf_t *msg, uint8_t tag)
+static inline int idmef_data_write(idmef_data_t *data, prelude_msgbuf_t *msg, uint8_t tag)
 \{
+        int ret;
 	idmef_data_type_t type;
 
 	if ( ! data )
-		return;
+		return 0;
 
 	type = idmef_data_get_type(data);
 	if ( type == IDMEF_DATA_TYPE_UNKNOWN )
-		return;
+		return 0;
 
-	uint32_write(idmef_data_get_type(data), msg, tag);
+	ret = uint32_write(idmef_data_get_type(data), msg, tag);
+        if ( ret < 0 )
+                return ret;
 
 	switch ( type ) \{
-	case IDMEF_DATA_TYPE_CHAR: case IDMEF_DATA_TYPE_BYTE:
-		uint8_write(* (const uint8_t *) idmef_data_get_data(data), msg, tag);
+	case IDMEF_DATA_TYPE_CHAR: 
+        case IDMEF_DATA_TYPE_BYTE:
+		ret = uint8_write(* (const uint8_t *) idmef_data_get_data(data), msg, tag);
 		break;
 
 	case IDMEF_DATA_TYPE_UINT32:
-		uint32_write(idmef_data_get_uint32(data), msg, tag);
+		ret = uint32_write(idmef_data_get_uint32(data), msg, tag);
 		break;
 
 	case IDMEF_DATA_TYPE_UINT64:
-		uint64_write(idmef_data_get_uint64(data), msg, tag);
+		ret = uint64_write(idmef_data_get_uint64(data), msg, tag);
 		break;
 
 	case IDMEF_DATA_TYPE_FLOAT:
-		float_write(idmef_data_get_uint64(data), msg, tag);
+		ret = float_write(idmef_data_get_uint64(data), msg, tag);
 		break;
 
 	case IDMEF_DATA_TYPE_CHAR_STRING: case IDMEF_DATA_TYPE_BYTE_STRING:
-		prelude_msgbuf_set(msg, tag, idmef_data_get_len(data), idmef_data_get_data(data));
+		ret = prelude_msgbuf_set(msg, tag, idmef_data_get_len(data), idmef_data_get_data(data));
 		break;
 
 	case IDMEF_DATA_TYPE_UNKNOWN:
 		/* nop */;
 	\}
+
+        return ret;
 \}
 
 ");
@@ -231,7 +236,9 @@ sub	struct_field_normal
 
 		tmp = idmef_$struct->{short_typename}_get_$field->{name}($struct->{short_typename});
 		if ( tmp ) \{
-			$function(*tmp, msg, IDMEF_MSG_",  uc($struct->{short_typename}), "_", uc($field->{name}), ");");
+			ret = $function(*tmp, msg, IDMEF_MSG_",  uc($struct->{short_typename}), "_", uc($field->{name}), ");
+                        if ( ret < 0 )
+                                return ret;");
 
 	if ( $field->{typename} eq "idmef_impact_severity_t" ) {
 	    $self->output("
@@ -241,12 +248,15 @@ sub	struct_field_normal
 
 	$self->output("
 		\}
-	\}");
+	\}\n");
     } else {
 	$self->output(" " x 8, 
-		      "$function(idmef_$struct->{short_typename}_get_$field->{name}($struct->{short_typename}), ", 
+		      "ret = $function(idmef_$struct->{short_typename}_get_$field->{name}($struct->{short_typename}), ", 
 		      "msg, IDMEF_MSG_",  uc($struct->{short_typename}), "_", uc($field->{name}),
-		      ");\n");
+		      ");\n",
+                      " " x 8, "if ( ret < 0 )\n",
+                      " " x 16, "return ret;\n\n");
+                      
     }
 }
 
@@ -258,8 +268,8 @@ sub	struct_field_struct
     my	$field = shift;
 
     $self->output(" " x 8, 
-		  "idmef_$field->{short_typename}_write(idmef_$struct->{short_typename}_get_$field->{name}($struct->{short_typename}), msg);",
-		  "\n");
+		  "ret = idmef_$field->{short_typename}_write(idmef_$struct->{short_typename}_get_$field->{name}($struct->{short_typename}), msg);\n",
+                  " " x 8, "if ( ret < 0 )\n", " " x 16, "return ret;\n");
 }
 
 sub	struct_field_list
@@ -276,12 +286,13 @@ sub	struct_field_list
 
     if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {
 	$self->output(" " x 24,
-		      "$field->{short_typename}_write($field->{short_name}, msg, ",
-		      "IDMEF_MSG_", uc($struct->{short_typename}), "_", uc($field->{short_name}),
-		      ");\n");
+		      "ret = $field->{short_typename}_write($field->{short_name}, msg, ",
+		      "IDMEF_MSG_", uc($struct->{short_typename}), "_", uc($field->{short_name}), ");\n",
+                      " " x 24, "if ( ret < 0 )\n", " " x 32, "return ret;\n");
 
     } else {
-	$self->output(" " x 24, "idmef_$field->{short_typename}_write($field->{short_name}, msg);", "\n");
+	$self->output(" " x 24, "ret = idmef_$field->{short_typename}_write($field->{short_name}, msg);\n",
+                      " " x 24, "if ( ret < 0 )\n", " " x 32, "return ret;\n");
     }
 
     $self->output(" " x 16, "}\n");
@@ -301,7 +312,7 @@ sub	struct_field_union
 
     foreach my $member ( @{$field->{member_list}} ) {
 	$self->output(" " x 16, "case $member->{value}:", "\n");
-	$self->output(" " x 24, "idmef_$member->{short_typename}_write(idmef_$struct->{short_typename}_get_$member->{name}($struct->{short_typename}), msg);", "\n");
+	$self->output(" " x 24, "ret = idmef_$member->{short_typename}_write(idmef_$struct->{short_typename}_get_$member->{name}($struct->{short_typename}), msg);", "\n");
 	$self->output(" " x 24, "break;", "\n\n");
     }
 
@@ -316,7 +327,7 @@ sub	pre_declared
     my	$tree = shift;
     my	$struct = shift;
 
-    $self->output("void idmef_$struct->{short_typename}_write($struct->{typename} *, prelude_msgbuf_t *);", "\n\n");
+    $self->output("int idmef_$struct->{short_typename}_write($struct->{typename} *, prelude_msgbuf_t *);", "\n\n");
 }
 
 sub	struct
@@ -325,14 +336,26 @@ sub	struct
     my	$tree = shift;
     my	$struct = shift;
 
-    $self->output("void idmef_$struct->{short_typename}_write($struct->{typename} *$struct->{short_typename}, prelude_msgbuf_t *msg)\n\{\n");
+    $self->output("
+/**
+ * idmef_$struct->{short_typename}_write:
+ * \@$struct->{short_typename}: Pointer to a #$struct->{typename} object.
+ * \@msg: Pointer to a #prelude_msgbuf_t object, where the message should be written.
+ *
+ * Write \@$struct->{short_typename} within \@msg message buffer. The buffer is 
+ * associated with a #prelude_io_t file descriptor where the data will be written.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_$struct->{short_typename}_write($struct->{typename} *$struct->{short_typename}, prelude_msgbuf_t *msg)\n\{\n", " " x 8, " int ret;");
 
     $self->output(" " x 8, "if ( ! $struct->{short_typename} )", "\n",
-		  " " x 16, "return;",
+		  " " x 16, "return 0;",
 		  "\n\n");
 
     if ( ! $struct->{toplevel} ) {
-	$self->output(" " x 8, "prelude_msgbuf_set(msg, ", "IDMEF_MSG_" . uc($struct->{short_typename}) . "_TAG", ", 0, NULL);", "\n\n");
+	$self->output(" " x 8, "ret = prelude_msgbuf_set(msg, ", "IDMEF_MSG_" . uc($struct->{short_typename}) . "_TAG", ", 0, NULL);\n",
+" " x 8, "if ( ret < 0 )\n", " " x 16, "return ret;\n");
     }
 
     foreach my $field ( @{ $struct->{field_list} } ) {
@@ -357,9 +380,7 @@ sub	struct
 	}
     }
 
-    $self->output("\n", " " x 8, "prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);", "\n");
-  
-
+    $self->output(" " x 8, "return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);\n");
     $self->output("\}\n\n\n");
 }
 
