@@ -69,7 +69,7 @@ static int get_absolute_filename(const char *lockfile)
                 /*
                  * if lockfile is a relative path,
                  * deletion on exit() will not work because of the chdir("/") call.
-                 * That's why we want to conver it to an absolute path.
+                 * That's why we want to convert it to an absolute path.
                  */
                 if ( ! getcwd(dir, sizeof(dir)) )
                         return prelude_error_from_errno(errno);
@@ -94,7 +94,7 @@ static int lockfile_get_exclusive(const char *lockfile)
 
         lock.l_type = F_WRLCK;    /* write lock */
         lock.l_start = 0;         /* from offset 0 */
-        lock.l_whence = SEEK_SET; /* at the beggining of the file */
+        lock.l_whence = SEEK_SET; /* at the beginning of the file */
         lock.l_len = 0;           /* until EOF */
         
         ret = fcntl(fd, F_SETLK, &lock);
@@ -107,7 +107,7 @@ static int lockfile_get_exclusive(const char *lockfile)
         }
 
         /*
-         * lock is now held until program exit.
+         * lock is now held until program exits.
          */
         return fd;     
 }
@@ -120,7 +120,7 @@ static int lockfile_write_pid(int fd, pid_t pid)
         char buf[50];
 
         /*
-         * Reset file size to 0.
+         * Resets file size to 0.
          */
         ret = ftruncate(fd, 0);
         if ( ret < 0 )
@@ -142,8 +142,8 @@ static int lockfile_write_pid(int fd, pid_t pid)
  * prelude_daemonize:
  * @lockfile: Filename to a lockfile.
  *
- * Put the caller in the background.
- * If @lockfile is not NULL, a lock for this program is being created.
+ * Puts caller in background.
+ * If @lockfile is not NULL, a lock for this program is created.
  *
  * The lockfile is automatically unlinked on exit.
  *
