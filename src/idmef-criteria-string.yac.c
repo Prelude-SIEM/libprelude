@@ -95,7 +95,6 @@
 #include <stdarg.h>
 #include <ctype.h>
 
-#include "list.h"
 #include "prelude-log.h"
 
 #include "idmef-string.h"
@@ -143,7 +142,7 @@ static void yyerror (char *s);
 #endif
 
 #if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
-#line 69 "idmef-criteria-string.yac.y"
+#line 68 "idmef-criteria-string.yac.y"
 typedef union YYSTYPE {
 	char *str;
         int operator;
@@ -152,7 +151,7 @@ typedef union YYSTYPE {
 	idmef_value_relation_t relation;
 } YYSTYPE;
 /* Line 191 of yacc.c.  */
-#line 155 "idmef-criteria-string.yac.c"
+#line 154 "idmef-criteria-string.yac.c"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1
@@ -164,7 +163,7 @@ typedef union YYSTYPE {
 
 
 /* Line 214 of yacc.c.  */
-#line 167 "idmef-criteria-string.yac.c"
+#line 166 "idmef-criteria-string.yac.c"
 
 #if ! defined (yyoverflow) || YYERROR_VERBOSE
 
@@ -336,9 +335,9 @@ static const yysigned_char yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const unsigned short yyrline[] =
 {
-       0,   104,   104,   110,   113,   141,   151,   156,   198,   223,
-     250,   251,   252,   253,   254,   255,   256,   257,   258,   261,
-     262
+       0,   103,   103,   109,   112,   140,   150,   155,   197,   222,
+     249,   250,   251,   252,   253,   254,   255,   256,   257,   260,
+     261
 };
 #endif
 
@@ -1051,7 +1050,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 104 "idmef-criteria-string.yac.y"
+#line 103 "idmef-criteria-string.yac.y"
     {
 							((struct parser_control *) param)->criteria = yyvsp[0].criteria;
 	
@@ -1059,14 +1058,14 @@ yyreduce:
     break;
 
   case 3:
-#line 110 "idmef-criteria-string.yac.y"
+#line 109 "idmef-criteria-string.yac.y"
     {
 							yyval.criteria = yyvsp[0].criteria;
 						}
     break;
 
   case 4:
-#line 113 "idmef-criteria-string.yac.y"
+#line 112 "idmef-criteria-string.yac.y"
     {                                                        
                                                         if ( yyvsp[-1].operator == operator_or ) {
                                                                 printf("OR ");
@@ -1096,7 +1095,7 @@ yyreduce:
     break;
 
   case 5:
-#line 141 "idmef-criteria-string.yac.y"
+#line 140 "idmef-criteria-string.yac.y"
     {
 							idmef_criteria_t *criteria;
 
@@ -1110,14 +1109,14 @@ yyreduce:
     break;
 
   case 6:
-#line 151 "idmef-criteria-string.yac.y"
+#line 150 "idmef-criteria-string.yac.y"
     {
 							yyval.criteria = yyvsp[-1].criteria;
 						}
     break;
 
   case 7:
-#line 156 "idmef-criteria-string.yac.y"
+#line 155 "idmef-criteria-string.yac.y"
     {
 							idmef_object_t *object = NULL;
 							idmef_criterion_value_t *value = NULL;
@@ -1163,7 +1162,7 @@ yyreduce:
     break;
 
   case 8:
-#line 198 "idmef-criteria-string.yac.y"
+#line 197 "idmef-criteria-string.yac.y"
     {
 							idmef_object_t *object;
 							idmef_criterion_t *criterion;
@@ -1192,7 +1191,7 @@ yyreduce:
     break;
 
   case 9:
-#line 223 "idmef-criteria-string.yac.y"
+#line 222 "idmef-criteria-string.yac.y"
     {
 							idmef_object_t *object;
 							idmef_criterion_t *criterion;
@@ -1221,57 +1220,57 @@ yyreduce:
     break;
 
   case 10:
-#line 250 "idmef-criteria-string.yac.y"
+#line 249 "idmef-criteria-string.yac.y"
     { yyval.relation = IDMEF_VALUE_RELATION_SUBSTR; }
     break;
 
   case 11:
-#line 251 "idmef-criteria-string.yac.y"
+#line 250 "idmef-criteria-string.yac.y"
     { yyval.relation = IDMEF_VALUE_RELATION_REGEX; }
     break;
 
   case 12:
-#line 252 "idmef-criteria-string.yac.y"
+#line 251 "idmef-criteria-string.yac.y"
     { yyval.relation = IDMEF_VALUE_RELATION_GREATER; }
     break;
 
   case 13:
-#line 253 "idmef-criteria-string.yac.y"
+#line 252 "idmef-criteria-string.yac.y"
     { yyval.relation = IDMEF_VALUE_RELATION_GREATER|IDMEF_VALUE_RELATION_EQUAL; }
     break;
 
   case 14:
-#line 254 "idmef-criteria-string.yac.y"
+#line 253 "idmef-criteria-string.yac.y"
     { yyval.relation = IDMEF_VALUE_RELATION_LESSER; }
     break;
 
   case 15:
-#line 255 "idmef-criteria-string.yac.y"
+#line 254 "idmef-criteria-string.yac.y"
     { yyval.relation = IDMEF_VALUE_RELATION_LESSER|IDMEF_VALUE_RELATION_EQUAL; }
     break;
 
   case 16:
-#line 256 "idmef-criteria-string.yac.y"
+#line 255 "idmef-criteria-string.yac.y"
     { yyval.relation = IDMEF_VALUE_RELATION_EQUAL; }
     break;
 
   case 17:
-#line 257 "idmef-criteria-string.yac.y"
+#line 256 "idmef-criteria-string.yac.y"
     { yyval.relation = IDMEF_VALUE_RELATION_NOT_EQUAL; }
     break;
 
   case 18:
-#line 258 "idmef-criteria-string.yac.y"
+#line 257 "idmef-criteria-string.yac.y"
     { yyval.relation = IDMEF_VALUE_RELATION_IS_NULL; }
     break;
 
   case 19:
-#line 261 "idmef-criteria-string.yac.y"
+#line 260 "idmef-criteria-string.yac.y"
     { yyval.operator = operator_and; }
     break;
 
   case 20:
-#line 262 "idmef-criteria-string.yac.y"
+#line 261 "idmef-criteria-string.yac.y"
     { yyval.operator = operator_or; }
     break;
 
@@ -1279,7 +1278,7 @@ yyreduce:
     }
 
 /* Line 999 of yacc.c.  */
-#line 1282 "idmef-criteria-string.yac.c"
+#line 1281 "idmef-criteria-string.yac.c"
 
   yyvsp -= yylen;
   yyssp -= yylen;
@@ -1473,7 +1472,7 @@ yyreturn:
 }
 
 
-#line 265 "idmef-criteria-string.yac.y"
+#line 264 "idmef-criteria-string.yac.y"
 
 
 

@@ -25,22 +25,26 @@
 #include <stdlib.h>
 
 #include "prelude-log.h"
-#include "list.h"
+#include "prelude-list.h"
 
 #include "prelude-hash.h"
 
+
 #define	HASH_DEFAULT_SIZE	16
 
+
+
 typedef struct hash_elem {
-	struct list_head list;
+	prelude_list_t list;
 	void *key;
 	void *value;
-}	hash_elem_t;
+} hash_elem_t;
 
-struct	prelude_hash {
+
+struct prelude_hash {
 	int			lists_size;
 	int			elems_num;
-	struct list_head	*lists;
+	prelude_list_t	*lists;
 	unsigned int		(*hash_func)(const void *);
 	int			(*key_cmp_func)(const void *, const void *);
 	void			(*key_destroy_func)(void *);
@@ -83,14 +87,14 @@ static unsigned int hash_value_calc(prelude_hash_t *hash, const void *key)
 
 static hash_elem_t *hash_elem_get(prelude_hash_t *hash, const void *key)
 {
-	struct list_head *list;
-	struct list_head *ptr;
+	prelude_list_t *list;
+	prelude_list_t *ptr;
 	hash_elem_t *hash_elem;
 
 	list = hash->lists + hash_value_calc(hash, key);
 
-	list_for_each(ptr, list) {
-		hash_elem = list_entry(ptr, hash_elem_t, list);
+	prelude_list_for_each(ptr, list) {
+		hash_elem = prelude_list_entry(ptr, hash_elem_t, list);
 		if ( hash->key_cmp_func(key, hash_elem->key) == 0 )
 			return hash_elem;
 	}
@@ -146,31 +150,31 @@ prelude_hash_t *prelude_hash_new(unsigned int (*hash_func)(const void *),
 	hash->key_destroy_func = key_destroy_func;
 	hash->value_destroy_func = value_destroy_func;
 
-	for ( cnt = 0; cnt < hash->lists_size; cnt++ ) {
-		INIT_LIST_HEAD(hash->lists + cnt);
-	}
+	for ( cnt = 0; cnt < hash->lists_size; cnt++ )
+		PRELUDE_INIT_LIST_HEAD(hash->lists + cnt);
 
 	return hash;
 }
 
 
 
-void	prelude_hash_destroy(prelude_hash_t *hash)
+void prelude_hash_destroy(prelude_hash_t *hash)
 {
-	struct list_head *list;
-	struct list_head *ptr;
-	struct list_head *tmp;
+	prelude_list_t *list;
+	prelude_list_t *ptr;
+	prelude_list_t *tmp;
 	hash_elem_t *hash_elem;
 	int cnt;
 
 	for ( cnt = 0; cnt < hash->lists_size; cnt++ ) {
 		list = hash->lists + cnt;
 
-		list_for_each_safe(ptr, tmp, list) {
-			hash_elem = list_entry(ptr, hash_elem_t, list);
+		prelude_list_for_each_safe(ptr, tmp, list) {
+			hash_elem = prelude_list_entry(ptr, hash_elem_t, list);
+                        
 			hash_elem_key_destroy(hash, hash_elem);
 			hash_elem_value_destroy(hash, hash_elem);
-			list_del(&hash_elem->list);
+			prelude_list_del(&hash_elem->list);
 			free(hash_elem);
 		}
 	}
@@ -184,7 +188,7 @@ void	prelude_hash_destroy(prelude_hash_t *hash)
 int	prelude_hash_set(prelude_hash_t *hash, void *key, void *value)
 {
 	hash_elem_t *hash_elem;
-	struct list_head *list;
+	prelude_list_t *list;
 
 	hash_elem = hash_elem_get(hash, key);
 
@@ -206,7 +210,7 @@ int	prelude_hash_set(prelude_hash_t *hash, void *key, void *value)
 	hash_elem->value = value;
 
 	list = hash->lists + hash_value_calc(hash, key);
-	list_add(&hash_elem->list, list);
+	prelude_list_add(&hash_elem->list, list);
 
 	hash->elems_num++;
 
@@ -235,7 +239,7 @@ int	prelude_hash_elem_destroy(prelude_hash_t *hash, const void *key)
 
 	hash_elem_key_destroy(hash, hash_elem);
 	hash_elem_value_destroy(hash, hash_elem);
-	list_del(&hash_elem->list);
+	prelude_list_del(&hash_elem->list);
 	free(hash_elem);
 
 	return 0;

@@ -152,7 +152,7 @@ int prelude_plugin_load_from_dir(const char *dirname,
 /*
  * Call this if you want to use this plugin.
  */ 
-int prelude_plugin_add(prelude_plugin_instance_t *pc, struct list_head *h, const char *infos);
+int prelude_plugin_add(prelude_plugin_instance_t *pc, prelude_list_t *h, const char *infos);
 
 void prelude_plugin_del(prelude_plugin_instance_t *pc);
 

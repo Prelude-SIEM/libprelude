@@ -40,7 +40,7 @@ sub	header
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#include \"list.h\"
+#include \"prelude-list.h\"
 #include \"prelude-log.h\"
 #include \"extract.h\"
 #include \"prelude-io.h\"

@@ -25,6 +25,9 @@
 #define _LIBPRELUDE_PRELUDE_ASYNC_H
 
 
+#include "prelude-linked-object.h"
+
+
 #define PRELUDE_ASYNC_TIMER 0x01
 
 

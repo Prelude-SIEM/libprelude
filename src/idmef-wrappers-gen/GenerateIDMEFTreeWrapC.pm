@@ -41,7 +41,7 @@ sub	header
 #include <strings.h>
 #include <sys/types.h>
 
-#include \"list.h\"
+#include \"prelude-list.h\"
 
 #include \"idmef-string.h\"
 #include \"idmef-time.h\"
@@ -87,7 +87,7 @@ $struct->{typename} *idmef_$struct->{short_typename}_new(void)
 
     if ( $struct->{is_listed} ) {
 	$self->output("
-	INIT_LIST_HEAD(&ret->list);
+	PRELUDE_INIT_LIST_HEAD(&ret->list);
 ");
     }
 
@@ -99,7 +99,7 @@ $struct->{typename} *idmef_$struct->{short_typename}_new(void)
 
     foreach my $field ( map { $_->{metatype} & &METATYPE_LIST ? $_ : () } @{ $struct->{field_list} } ) {
 	$self->output("
-	INIT_LIST_HEAD(&ret->$field->{name});
+	PRELUDE_INIT_LIST_HEAD(&ret->$field->{name});
     
 ");
 
@@ -201,8 +201,8 @@ void *idmef_$struct->{short_typename}_new_child(void *p, idmef_child_t child, in
 	if ( $field->{metatype} & &METATYPE_LIST ) {
 	    $self->output("
 		case $n: \{
-			struct list_head *tmp;
-		    	int i,j;
+                        int i, j;
+			prelude_list_t *tmp;
 			void *entry = NULL;
 
 			if ( n < 0 ) \{
@@ -214,8 +214,8 @@ void *idmef_$struct->{short_typename}_new_child(void *p, idmef_child_t child, in
 			
 				/* get n-th element of the list */
 				i = 0;
-				list_for_each(tmp, &ptr->$field->{name}) \{
-			    		entry = list_entry(tmp, $field->{typename}, list);
+				prelude_list_for_each(tmp, &ptr->$field->{name}) \{
+			    		entry = prelude_list_entry(tmp, $field->{typename}, list);
 					if ( i++ == n )
 						return entry;
 				
@@ -283,7 +283,7 @@ static void idmef_$struct->{short_typename}_destroy_internal($struct->{typename}
     }
 
     $self->output("
-	list_del(&ptr->list);
+	prelude_list_del(&ptr->list);
 ") if ( $struct->{is_listed} );
 
     foreach my $field ( @{ $struct->{field_list} } ) {
@@ -291,11 +291,11 @@ static void idmef_$struct->{short_typename}_destroy_internal($struct->{typename}
 
 	    $self->output("
 	\{
-		struct list_head *n, *tmp;
+		prelude_list_t *n, *tmp;
 		$field->{typename} *entry;
 
-		list_for_each_safe(tmp, n, &ptr->$field->{name}) \{
-			entry = list_entry(tmp, $field->{typename}, list);
+		prelude_list_for_each_safe(tmp, n, &ptr->$field->{name}) \{
+			entry = prelude_list_entry(tmp, $field->{typename}, list);
 			idmef_$field->{short_typename}_destroy(entry);
 		\}
 	\}
@@ -706,12 +706,12 @@ sub	struct_field_list
     
 $field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object)
 \{
-    	return list_get_next(object, &ptr->$field->{name}, $field->{typename}, list);
+    	return prelude_list_get_next(object, &ptr->$field->{name}, $field->{typename}, list);
 \}
 
 void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object)
 \{
-	list_add_tail(&object->list, &ptr->$field->{name});
+	prelude_list_add_tail(&object->list, &ptr->$field->{name});
 \}
 
 $field->{typename} *idmef_$struct->{short_typename}_new_$field->{short_name}($struct->{typename} *ptr)
@@ -722,23 +722,23 @@ $field->{typename} *idmef_$struct->{short_typename}_new_$field->{short_name}($st
 	if ( ! object )
 		return NULL;
 	
-	list_add_tail(&object->list, &ptr->$field->{name});
+	prelude_list_add_tail(&object->list, &ptr->$field->{name});
 	
 	return object;
 \}
 
 idmef_value_t *idmef_$struct->{short_typename}_get_$field->{short_name}_value($struct->{typename} *ptr)
 \{
+        prelude_list_t *tmp;
 	idmef_value_t *val, *list_val;
-	struct list_head *tmp;
 	$field->{typename} *entry;
 	
 	list_val = idmef_value_new_list();
 	if ( ! list_val )
 		return NULL;
 	
-	list_for_each(tmp, &ptr->$field->{name}) \{
-		entry = list_entry(tmp, $field->{typename}, list);
+	prelude_list_for_each(tmp, &ptr->$field->{name}) \{
+		entry = prelude_list_entry(tmp, $field->{typename}, list);
 ");
 
     if ( $field->{metatype} & &METATYPE_PRIMITIVE ) {

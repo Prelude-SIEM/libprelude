@@ -113,18 +113,17 @@ static idmef_value_t *idmef_object_get_internal(idmef_object_t *, int,	void *, i
 
 static idmef_value_t *idmef_object_get_list_internal(idmef_object_t *object,
 						     int depth,
-						     struct list_head *list,
+						     prelude_list_t *list,
 						     idmef_object_type_t parent_type)
 {
-	idmef_value_t *value_list;
-	idmef_value_t *value;
-	struct list_head *ptr;
+	prelude_list_t *ptr;
+	idmef_value_t *value_list, *value;
 
 	value_list = idmef_value_new_list();
 	if ( ! value_list )
 		return NULL;
 
-	list_for_each(ptr, list) {
+	prelude_list_for_each(ptr, list) {
 		value = idmef_object_get_internal(object, depth, ptr, parent_type);
 		if ( ! value ) {
 			idmef_value_destroy(value_list);
@@ -141,15 +140,15 @@ static idmef_value_t *idmef_object_get_list_internal(idmef_object_t *object,
 
 static idmef_value_t *idmef_object_get_nth_internal(idmef_object_t *object,
 						    int depth,
-						    struct list_head *list,
+						    prelude_list_t *list,
 						    idmef_object_type_t parent_type,
 						    int which)
 {
-	struct list_head *ptr;
 	int cnt;
-
+	prelude_list_t *ptr;
+        
 	cnt = 0;
-	list_for_each(ptr, list) {
+	prelude_list_for_each(ptr, list) {
 		if ( cnt == which )
 			return idmef_object_get_internal(object, depth, ptr, parent_type);
 		cnt++;
@@ -274,7 +273,7 @@ static int idmef_object_create(const char *buffer, idmef_object_t **object)
 	}
 
         (*object)->refcount = 1;
-	INIT_LIST_HEAD(&(*object)->list);
+	PRELUDE_INIT_LIST_HEAD(&(*object)->list);
 	pthread_mutex_init(&(*object)->mutex, NULL);
 
 	return 0;
@@ -663,7 +662,7 @@ void idmef_object_destroy(idmef_object_t *object)
 	    	return;
 	}
 
-	list_del(&object->list);
+	prelude_list_del(&object->list);
 	pthread_mutex_unlock(&object->mutex);
 	pthread_mutex_destroy(&object->mutex);
 	free(object);
@@ -713,7 +712,7 @@ idmef_object_t *idmef_object_clone(idmef_object_t *object)
 	new->refcount = 1;
 	new->depth = object->depth;
 
-	INIT_LIST_HEAD(&new->list);
+	PRELUDE_INIT_LIST_HEAD(&new->list);
 
 	strncpy(new->name, object->name, sizeof(object->name)); 
         memcpy(new->desc, object->desc, object->depth * sizeof(idmef_object_description_t));

@@ -31,7 +31,7 @@
 #include <ctype.h>
 #include <assert.h>
 
-#include "list.h"
+#include "prelude-list.h"
 #include "prelude-log.h"
 #include "idmef-string.h"
 #include "idmef.h"

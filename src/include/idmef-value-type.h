@@ -71,7 +71,7 @@ typedef union {
         idmef_time_t *time_val;
         idmef_data_t *data_val;
         void *object_val;
-        struct list_head list_val;
+        prelude_list_t list_val;
         int enum_val;
 } idmef_value_type_data_t;
 

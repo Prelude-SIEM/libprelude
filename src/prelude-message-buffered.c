@@ -27,6 +27,7 @@
 #include <inttypes.h>
 
 #include "prelude-log.h"
+#include "prelude-list.h"
 #include "prelude-linked-object.h"
 #include "prelude-async.h"
 #include "prelude-io.h"

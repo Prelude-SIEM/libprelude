@@ -24,6 +24,11 @@
 #ifndef _LIBPRELUDE_PRELUDE_GETOPT_H
 #define _LIBPRELUDE_PRELUDE_GETOPT_H
 
+
+#include "prelude-message.h"
+
+
+
 /*
  * prelude_option_add flags
  */

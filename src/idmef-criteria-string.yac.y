@@ -32,7 +32,6 @@
 #include <stdarg.h>
 #include <ctype.h>
 
-#include "list.h"
 #include "prelude-log.h"
 
 #include "idmef-string.h"

@@ -28,17 +28,17 @@
  * using the generic single-entry routines.
  */
 
-struct list_head {
-	struct list_head *next, *prev;
-};
+typedef struct prelude_list_head {
+	struct prelude_list_head *next, *prev;
+} prelude_list_t;
 
 
-#define LIST_HEAD_INIT(name) { &(name), &(name) }
+#define PRELUDE_LIST_HEAD_INIT(name) { &(name), &(name) }
 
-#define LIST_HEAD(name) \
-	struct list_head name = LIST_HEAD_INIT(name)
+#define PRELUDE_LIST_HEAD(name) \
+	prelude_list_t name = PRELUDE_LIST_HEAD_INIT(name)
 
-#define INIT_LIST_HEAD(ptr) do { \
+#define PRELUDE_INIT_LIST_HEAD(ptr) do { \
 	(ptr)->next = (ptr); (ptr)->prev = (ptr); \
 } while (0)
 
@@ -48,9 +48,9 @@ struct list_head {
  * This is only for internal list manipulation where we know
  * the prev/next entries already!
  */
-static inline void __list_add(struct list_head * new,
-	struct list_head * prev,
-	struct list_head * next)
+static inline void __prelude_list_add(prelude_list_t * new,
+	prelude_list_t * prev,
+	prelude_list_t * next)
 {
 	next->prev = new;
 	new->next = next;
@@ -59,29 +59,29 @@ static inline void __list_add(struct list_head * new,
 }
 
 /**
- * list_add - add a new entry
+ * prelude_list_add - add a new entry
  * @new: new entry to be added
  * @head: list head to add it after
  *
  * Insert a new entry after the specified head.
  * This is good for implementing stacks.
  */
-static inline void list_add(struct list_head *new, struct list_head *head)
+static inline void prelude_list_add(prelude_list_t *new, prelude_list_t *head)
 {
-	__list_add(new, head, head->next);
+	__prelude_list_add(new, head, head->next);
 }
 
 /**
- * list_add_tail - add a new entry
+ * prelude_list_add_tail - add a new entry
  * @new: new entry to be added
  * @head: list head to add it before
  *
  * Insert a new entry before the specified head.
  * This is useful for implementing queues.
  */
-static inline void list_add_tail(struct list_head *new, struct list_head *head)
+static inline void prelude_list_add_tail(prelude_list_t *new, prelude_list_t *head)
 {
-	__list_add(new, head->prev, head);
+	__prelude_list_add(new, head->prev, head);
 }
 
 /*
@@ -91,54 +91,54 @@ static inline void list_add_tail(struct list_head *new, struct list_head *head)
  * This is only for internal list manipulation where we know
  * the prev/next entries already!
  */
-static inline void __list_del(struct list_head * prev,
-				  struct list_head * next)
+static inline void __prelude_list_del(prelude_list_t * prev,
+				  prelude_list_t * next)
 {
 	next->prev = prev;
 	prev->next = next;
 }
 
 /**
- * list_del - deletes entry from list.
+ * prelude_list_del - deletes entry from list.
  * @entry: the element to delete from the list.
- * Note: list_empty on entry does not return true after this, the entry is in an undefined state.
+ * Note: prelude_list_empty on entry does not return true after this, the entry is in an undefined state.
  */
-static inline void list_del(struct list_head *entry)
+static inline void prelude_list_del(prelude_list_t *entry)
 {
-	__list_del(entry->prev, entry->next);
+	__prelude_list_del(entry->prev, entry->next);
 }
 
 /**
- * list_del_init - deletes entry from list and reinitialize it.
+ * prelude_list_del_init - deletes entry from list and reinitialize it.
  * @entry: the element to delete from the list.
  */
-static inline void list_del_init(struct list_head *entry)
+static inline void prelude_list_del_init(prelude_list_t *entry)
 {
-	__list_del(entry->prev, entry->next);
-	INIT_LIST_HEAD(entry); 
+	__prelude_list_del(entry->prev, entry->next);
+	PRELUDE_INIT_LIST_HEAD(entry); 
 }
 
 /**
- * list_empty - tests whether a list is empty
+ * prelude_list_empty - tests whether a list is empty
  * @head: the list to test.
  */
-static inline int list_empty(const struct list_head *head)
+static inline int prelude_list_empty(const prelude_list_t *head)
 {
 	return head->next == head;
 }
 
 /**
- * list_splice - join two lists
+ * prelude_list_splice - join two lists
  * @list: the new list to add.
  * @head: the place to add it in the first list.
  */
-static inline void list_splice(struct list_head *list, struct list_head *head)
+static inline void prelude_list_splice(prelude_list_t *list, prelude_list_t *head)
 {
-	struct list_head *first = list->next;
+	prelude_list_t *first = list->next;
 
 	if (first != list) {
-		struct list_head *last = list->prev;
-		struct list_head *at = head->next;
+		prelude_list_t *last = list->prev;
+		prelude_list_t *at = head->next;
 
 		first->prev = head;
 		head->next = first;
@@ -149,12 +149,12 @@ static inline void list_splice(struct list_head *list, struct list_head *head)
 }
 
 /**
- * list_entry - get the struct for this entry
- * @ptr:	the &struct list_head pointer.
+ * prelude_list_entry - get the struct for this entry
+ * @ptr:	the &prelude_list_t pointer.
  * @type:	the type of the struct this is embedded in.
  * @member:	the name of the list_struct within the struct.
  */
-#define list_entry(ptr, type, member) \
+#define prelude_list_entry(ptr, type, member) \
 	((type *)((unsigned long)(ptr) - (unsigned long)(&((type *)0)->member)))
 
 
@@ -164,46 +164,46 @@ static inline void list_splice(struct list_head *list, struct list_head *head)
  * @pos:    a list iterator pointer (class *). 
             If NULL, will be set to the list head. 
  *          Will be set to NULL after iterating over last list member. 
- * @list:   a pointer to list head. (struct list_head *)
+ * @list:   a pointer to list head. (prelude_list_t *)
  * @class:  object type
  * @member: list member in object (usually 'list')
  */
-#define list_get_next(pos, list, class, member) \
+#define prelude_list_get_next(pos, list, class, member) \
         pos ? \
                 ((pos)->member.next == (list)) ? NULL : \
-                                list_entry((pos)->member.next, class, member) \
+                                prelude_list_entry((pos)->member.next, class, member) \
         : \
                 ((list)->next == (list)) ? NULL : \
-                                list_entry((list)->next, class, member)
+                                prelude_list_entry((list)->next, class, member)
 
 
-#define list_get_next_safe(pos, bkp, list, class, member)                                                                \
+#define prelude_list_get_next_safe(pos, bkp, list, class, member)                                                                \
         pos ?                                                                                                            \
               (((pos) = bkp),                                                                                            \
-               ((bkp) = (! (bkp) || (bkp)->member.next == list) ? NULL : list_entry((pos)->member.next, class, member)), \
+               ((bkp) = (! (bkp) || (bkp)->member.next == list) ? NULL : prelude_list_entry((pos)->member.next, class, member)), \
                (pos))                                                                                                    \
         :                                                                                                                \
-              (((pos) = ((list)->next == list) ? NULL : list_entry((list)->next, class, member)),                        \
-               ((bkp) = (! (pos) ||(pos)->member.next == list ) ? NULL : list_entry((pos)->member.next, class, member)), \
+              (((pos) = ((list)->next == list) ? NULL : prelude_list_entry((list)->next, class, member)),                        \
+               ((bkp) = (! (pos) ||(pos)->member.next == list ) ? NULL : prelude_list_entry((pos)->member.next, class, member)), \
                (pos))
 
 
 /**
  * list_for_each	-	iterate over a list
- * @pos:	the &struct list_head to use as a loop counter.
+ * @pos:	the &prelude_list_t to use as a loop counter.
  * @head:	the head for your list.
  */
-#define list_for_each(pos, head) \
+#define prelude_list_for_each(pos, head) \
 	for (pos = (head)->next; pos != (head); pos = pos->next)
 
-#define list_for_each_safe(pos, n, head) \
+#define prelude_list_for_each_safe(pos, n, head) \
         for (pos = (head)->next, n = pos->next; pos != (head); \
                 pos = n, n = pos->next)
 
-#define list_for_each_reversed(pos, head) \
+#define prelude_list_for_each_reversed(pos, head) \
         for (pos = (head)->prev; pos != (head); pos = pos->prev)
 
-#define list_for_each_reversed_safe(pos, n, head) \
+#define prelude_list_for_each_reversed_safe(pos, n, head) \
         for (pos = (head)->prev, n = pos->prev; pos != (head); \
                  pos = n, n = pos->prev)
 

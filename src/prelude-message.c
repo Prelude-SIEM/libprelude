@@ -35,6 +35,7 @@
 #include "prelude-log.h"
 #include "extract.h"
 #include "prelude-io.h"
+#include "prelude-list.h"
 #include "prelude-linked-object.h"
 #include "prelude-async.h"
 #include "prelude-message.h"
@@ -44,6 +45,7 @@
 #define PRELUDE_MSG_VERSION 0
 #define PRELUDE_MSG_HDR_SIZE 8
 #define MINIMUM_FRAGMENT_DATA_SIZE 8
+
 
 typedef struct {
         uint8_t version;

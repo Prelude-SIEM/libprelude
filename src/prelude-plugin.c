@@ -58,8 +58,8 @@ typedef struct {
 
 typedef struct {
         void *handle;
-        struct list_head list;        
-        struct list_head instance_list;
+        prelude_list_t list;        
+        prelude_list_t instance_list;
 
         char *tmp_instance_name;
         prelude_plugin_generic_t *plugin;
@@ -95,7 +95,7 @@ struct prelude_plugin_instance {
         /*
          * List members for internal list (inside plugin_entry).
          */
-        struct list_head int_list;
+        prelude_list_t int_list;
         
         /*
          * pointer to the plugin
@@ -136,17 +136,17 @@ struct prelude_plugin_instance {
  *        Contain shared plugin data.
  */
 
-static LIST_HEAD(all_plugins);
+static PRELUDE_LIST_HEAD(all_plugins);
 
 
 
 static plugin_entry_t *search_plugin_entry(prelude_plugin_generic_t *plugin)
 {
         plugin_entry_t *pe;
-        struct list_head *tmp;
+        prelude_list_t *tmp;
         
-        list_for_each_reversed(tmp, &all_plugins) {
-                pe = list_entry(tmp, plugin_entry_t, list);
+        prelude_list_for_each_reversed(tmp, &all_plugins) {
+                pe = prelude_list_entry(tmp, plugin_entry_t, list);
                 
                 if ( pe->plugin == NULL || pe->plugin == plugin )
                         return pe;
@@ -161,10 +161,10 @@ static plugin_entry_t *search_plugin_entry(prelude_plugin_generic_t *plugin)
 static plugin_entry_t *search_plugin_entry_by_name(const char *name) 
 {
         plugin_entry_t *pe;
-        struct list_head *tmp;
+        prelude_list_t *tmp;
         
-        list_for_each(tmp, &all_plugins) {
-                pe = list_entry(tmp, plugin_entry_t, list);
+        prelude_list_for_each(tmp, &all_plugins) {
+                pe = prelude_list_entry(tmp, plugin_entry_t, list);
 
                 if ( pe->plugin && strcasecmp(pe->plugin->name, name) == 0 ) 
                         return pe;
@@ -178,11 +178,11 @@ static plugin_entry_t *search_plugin_entry_by_name(const char *name)
 
 static prelude_plugin_instance_t *search_instance_from_entry(plugin_entry_t *pe, const char *name)
 {
-        struct list_head *tmp;
+        prelude_list_t *tmp;
         prelude_plugin_instance_t *pi;
         
-        list_for_each(tmp, &pe->instance_list) {
-                pi = list_entry(tmp, prelude_plugin_instance_t, int_list);
+        prelude_list_for_each(tmp, &pe->instance_list) {
+                pi = prelude_list_entry(tmp, prelude_plugin_instance_t, int_list);
                 
                 if ( strcasecmp(pi->name, name) == 0 )
                         return pi;
@@ -216,7 +216,7 @@ static prelude_plugin_instance_t *create_instance(plugin_entry_t *pe, const char
         pi->entry = pe;
         pi->data = data;
         
-        list_add_tail(&pi->int_list, &pe->instance_list);
+        prelude_list_add_tail(&pi->int_list, &pe->instance_list);
         
         return pi;
 }
@@ -377,9 +377,9 @@ static plugin_entry_t *add_plugin_entry(void)
         }
 
         pe->plugin = NULL;
-        INIT_LIST_HEAD(&pe->instance_list);
+        PRELUDE_INIT_LIST_HEAD(&pe->instance_list);
         
-        list_add_tail(&pe->list, &all_plugins);
+        prelude_list_add_tail(&pe->list, &all_plugins);
         
         return pe;
 }
@@ -394,7 +394,7 @@ static void destroy_instance(prelude_plugin_instance_t *instance)
         
         free(instance->name);
         
-        list_del(&instance->int_list);
+        prelude_list_del(&instance->int_list);
 
         free(instance);
 }
@@ -428,7 +428,7 @@ static prelude_plugin_instance_t *copy_instance(prelude_plugin_instance_t *pi)
                 return NULL;
         }
         
-        list_add_tail(&new->int_list, &pi->entry->instance_list);
+        prelude_list_add_tail(&new->int_list, &pi->entry->instance_list);
         
         return new;
 }
@@ -475,7 +475,7 @@ static int plugin_load_single(const char *filename,
         plugin = plugin_init();
         if ( ! plugin ) {
                 log(LOG_ERR, "plugin returned an error.\n");
-                list_del(&pe->list);
+                prelude_list_del(&pe->list);
                 lt_dlclose(handle);
                 free(pe);
                 return -1;
@@ -682,7 +682,7 @@ int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
  *
  * Returns: 0 on success or -1 if an error occured.
  */
-int prelude_plugin_add(prelude_plugin_instance_t *pi, struct list_head *h, const char *infos) 
+int prelude_plugin_add(prelude_plugin_instance_t *pi, prelude_list_t *h, const char *infos) 
 {
         if ( pi->already_used++ && ! (pi = copy_instance(pi)) ) {
                 log(LOG_ERR, "couldn't duplicate plugin container.\n");

@@ -30,7 +30,7 @@
  *  - IS_LISTED: use within object that will be a member of the list
  *    always put this field as the first field of the struct, idmef-object.c
  *    access idmef structure as a void * and therefore cannot use list_entry
- *    to retrieve the list entry, thus it assumes that the struct list_head
+ *    to retrieve the list entry, thus it assumes that the prelude_list_t
  *    is the first field of the struct
  *
  *  - LISTED_OBJECT(name, type): include list named 'name' consisted of objects 
@@ -63,9 +63,9 @@
 #include "prelude-io.h"
 #include "prelude-message.h"
 
-#define LISTED_OBJECT(name, type) struct list_head name
+#define LISTED_OBJECT(name, type) prelude_list_t name
 
-#define IS_LISTED struct list_head list
+#define IS_LISTED prelude_list_t list
 
 #define	UNION(type, var) type var; union
 

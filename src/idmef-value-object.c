@@ -28,7 +28,7 @@
 #include <sys/types.h>
 #include <stdarg.h>
 
-#include "list.h"
+#include "prelude-list.h"
 #include "prelude-log.h"
 
 #include "idmef-string.h"
@@ -41,6 +41,9 @@
 #include "idmef-tree-wrap.h"
 #include "idmef-object.h"
 #include "idmef-value-object.h"
+
+
+
 
 idmef_value_t *idmef_value_new_for_object(idmef_object_t *object, const char *buf)
 {

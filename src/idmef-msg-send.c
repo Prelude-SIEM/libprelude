@@ -132,9 +132,9 @@ void idmef_send_additional_data(prelude_msgbuf_t *msg, idmef_additional_data_t *
        
 
 
-void idmef_send_additional_data_list(prelude_msgbuf_t *msg, struct list_head *head) 
+void idmef_send_additional_data_list(prelude_msgbuf_t *msg, prelude_list_t *head) 
 {
-        struct list_head *tmp;
+        prelude_list_t *tmp;
         idmef_additional_data_t *data;
         
         list_for_each(tmp, head) {
@@ -155,7 +155,7 @@ void idmef_send_web_service_arg(prelude_msgbuf_t *msg, idmef_webservice_arg_t *a
 
 void idmef_send_web_service(prelude_msgbuf_t *msg, idmef_webservice_t *web) 
 {
-        struct list_head *tmp;
+        prelude_list_t *tmp;
         idmef_webservice_arg_t *arg;
         
         prelude_msgbuf_set(msg, MSG_WEBSERVICE_TAG, 0, NULL);
@@ -228,9 +228,9 @@ void idmef_send_address(prelude_msgbuf_t *msg, idmef_address_t *address)
 
 
 
-void idmef_send_address_list(prelude_msgbuf_t *msg, struct list_head *address_list) 
+void idmef_send_address_list(prelude_msgbuf_t *msg, prelude_list_t *address_list) 
 {
-        struct list_head *tmp;
+        prelude_list_t *tmp;
         idmef_address_t *address;
         
         list_for_each(tmp, address_list) {
@@ -241,9 +241,9 @@ void idmef_send_address_list(prelude_msgbuf_t *msg, struct list_head *address_li
 
 
 
-void idmef_send_string_list(prelude_msgbuf_t *msg, uint8_t tag, struct list_head *head)
+void idmef_send_string_list(prelude_msgbuf_t *msg, uint8_t tag, prelude_list_t *head)
 {
-        struct list_head *tmp;
+        prelude_list_t *tmp;
         idmef_string_item_t *string;
         
         list_for_each(tmp, head) {
@@ -304,10 +304,10 @@ void idmef_send_userid(prelude_msgbuf_t *msg, idmef_userid_t *uid)
 
 
 
-void idmef_send_userid_list(prelude_msgbuf_t *msg, struct list_head *head) 
+void idmef_send_userid_list(prelude_msgbuf_t *msg, prelude_list_t *head) 
 {
         idmef_userid_t *uid;
-        struct list_head *tmp;
+        prelude_list_t *tmp;
 
         list_for_each(tmp, head) {
                 uid = list_entry(tmp, idmef_userid_t, list);
@@ -349,9 +349,9 @@ void idmef_send_source(prelude_msgbuf_t *msg, idmef_source_t *source)
 
 
 
-void idmef_send_source_list(prelude_msgbuf_t *msg, struct list_head *head) 
+void idmef_send_source_list(prelude_msgbuf_t *msg, prelude_list_t *head) 
 {
-        struct list_head *tmp;
+        prelude_list_t *tmp;
         idmef_source_t *source;
 
         list_for_each(tmp, head) {
@@ -375,9 +375,9 @@ void idmef_send_file_access(prelude_msgbuf_t *msg, idmef_file_access_t *access)
 
 
 
-void idmef_send_file_access_list(prelude_msgbuf_t *msg, struct list_head *head) 
+void idmef_send_file_access_list(prelude_msgbuf_t *msg, prelude_list_t *head) 
 {
-        struct list_head *tmp;
+        prelude_list_t *tmp;
         idmef_file_access_t *access;
 
         list_for_each(tmp, head) {
@@ -405,9 +405,9 @@ void idmef_send_linkage(prelude_msgbuf_t *msg, idmef_linkage_t *linkage)
 
 
 
-void idmef_send_linkage_list(prelude_msgbuf_t *msg, struct list_head *head) 
+void idmef_send_linkage_list(prelude_msgbuf_t *msg, prelude_list_t *head) 
 {
-        struct list_head *tmp;
+        prelude_list_t *tmp;
         idmef_linkage_t *linkage;
 
         list_for_each(tmp, head) {
@@ -462,10 +462,10 @@ void idmef_send_file(prelude_msgbuf_t *msg, idmef_file_t *file)
 
 
 
-void idmef_send_file_list(prelude_msgbuf_t *msg, struct list_head *head) 
+void idmef_send_file_list(prelude_msgbuf_t *msg, prelude_list_t *head) 
 {
         idmef_file_t *file;
-        struct list_head *tmp;
+        prelude_list_t *tmp;
 
         list_for_each(tmp, head) {
 
@@ -496,9 +496,9 @@ void idmef_send_target(prelude_msgbuf_t *msg, idmef_target_t *target)
 
 
 
-void idmef_send_target_list(prelude_msgbuf_t *msg, struct list_head *head) 
+void idmef_send_target_list(prelude_msgbuf_t *msg, prelude_list_t *head) 
 {
-        struct list_head *tmp;
+        prelude_list_t *tmp;
         idmef_target_t *target;
 
         list_for_each(tmp, head) {
@@ -563,9 +563,9 @@ void idmef_send_classification(prelude_msgbuf_t *msg, idmef_classification_t *cl
 
 
 
-void idmef_send_classification_list(prelude_msgbuf_t *msg, struct list_head *head) 
+void idmef_send_classification_list(prelude_msgbuf_t *msg, prelude_list_t *head) 
 {
-        struct list_head *tmp;
+        prelude_list_t *tmp;
         idmef_classification_t *classification;
 
         list_for_each(tmp, head) {
@@ -605,9 +605,9 @@ void idmef_send_action(prelude_msgbuf_t *msg, idmef_action_t *action)
 
 
 
-void idmef_send_action_list(prelude_msgbuf_t *msg, struct list_head *head) 
+void idmef_send_action_list(prelude_msgbuf_t *msg, prelude_list_t *head) 
 {
-        struct list_head *tmp;
+        prelude_list_t *tmp;
         idmef_action_t *action;
 
         list_for_each(tmp, head) {
@@ -649,9 +649,9 @@ void idmef_send_alertident(prelude_msgbuf_t *msg, idmef_alertident_t *alertident
 
 
 
-void idmef_send_alertident_list(prelude_msgbuf_t *msg, struct list_head *head)
+void idmef_send_alertident_list(prelude_msgbuf_t *msg, prelude_list_t *head)
 {
-        struct list_head *tmp;
+        prelude_list_t *tmp;
         idmef_alertident_t *ident;
         
         list_for_each(tmp, head) {

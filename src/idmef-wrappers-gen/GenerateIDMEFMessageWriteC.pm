@@ -40,10 +40,12 @@ sub	header
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/time.h>
+#include <assert.h>
 
-#include \"list.h\"
+#include \"prelude-list.h\"
 #include \"prelude-log.h\"
 #include \"prelude-io.h\"
+#include \"prelude-ident.h\"
 #include \"prelude-message.h\"
 #include \"prelude-message-buffered.h\"
 #include \"prelude-message-id.h\"
@@ -54,6 +56,11 @@ sub	header
 #include \"sensor.h\"
 #include \"prelude-client.h\"
 #include \"common.h\"
+
+
+extern prelude_ident_t *sensor_dynamic_ident;
+
+
 
 /*
  * If you wonder why we do this, and why life is complicated,
@@ -143,6 +150,22 @@ static inline void idmef_write_data(prelude_msgbuf_t *msg, uint8_t tag, idmef_da
 	prelude_msgbuf_set(msg, tag, idmef_data_get_len(data), idmef_data_get_data(data));
 \}
 
+
+
+static inline void idmef_write_dynamic_ident(prelude_msgbuf_t *msg, uint8_t tag, uint64_t data) 
+\{
+        uint64_t dst;
+
+        if ( ! data ) {
+                assert(sensor_dynamic_ident != NULL);
+                data = prelude_ident_inc(sensor_dynamic_ident);
+        }
+
+        dst = prelude_hton64(data);
+
+        prelude_msgbuf_set(msg, tag, sizeof(dst), &dst);
+\}
+
 ");
 }
 
@@ -153,9 +176,12 @@ sub	struct_field_normal
     my	$struct = shift;
     my	$field = shift;
     my	$type = shift || $field->{short_typename};
+    my	$function;
+
+    $function = $field->{dynamic_ident} ? "idmef_write_dynamic_ident" : "idmef_write_${type}";
 
     $self->output(" " x 8, 
-		  "idmef_write_${type}(msg, ", 
+		  "$function(msg, ", 
 		  "MSG_",  uc($struct->{short_typename}), "_", uc($field->{name}),
 		  ", idmef_$struct->{short_typename}_get_$field->{name}($struct->{short_typename}));\n");
 }

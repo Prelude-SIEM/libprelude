@@ -27,10 +27,12 @@
 #include <assert.h>
 #include <pthread.h>
 
-#include "timer.h"
 #include "prelude-log.h"
+#include "prelude-list.h"
 #include "prelude-linked-object.h"
 #include "prelude-async.h"
+
+#include "timer.h"
 
 
 #ifdef DEBUG
@@ -41,7 +43,7 @@
 
 
 static int count = 0;
-static LIST_HEAD(timer_list);
+static PRELUDE_LIST_HEAD(timer_list);
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
@@ -116,12 +118,12 @@ static void walk_and_wake_up_timer(time_t now)
 {
         int ret, woke = 0;
         prelude_timer_t *timer;
-        struct list_head *tmp, *bkp;
+        prelude_list_t *tmp, *bkp;
         
         timer_lock_list();
 
-        list_for_each_safe(tmp, bkp, &timer_list) {
-                timer = list_entry(tmp, prelude_timer_t, list);
+        prelude_list_for_each_safe(tmp, bkp, &timer_list) {
+                timer = prelude_list_entry(tmp, prelude_timer_t, list);
 
                 ret = wake_up_if_needed(timer, now);
                 if ( ret < 0 )
@@ -141,14 +143,14 @@ static void walk_and_wake_up_timer(time_t now)
  * search the timer list forward for the timer entry
  * that should be before our inserted timer.
  */
-static struct list_head *search_previous_forward(prelude_timer_t *timer, time_t expire) 
+static prelude_list_t *search_previous_forward(prelude_timer_t *timer, time_t expire) 
 {
         int hop = 0;
         prelude_timer_t *cur;
-        struct list_head *tmp, *prev = NULL;
+        prelude_list_t *tmp, *prev = NULL;
         
-        list_for_each(tmp, &timer_list) {
-                cur = list_entry(tmp, prelude_timer_t, list);
+        prelude_list_for_each(tmp, &timer_list) {
+                cur = prelude_list_entry(tmp, prelude_timer_t, list);
 
                 hop++;
 
@@ -196,15 +198,15 @@ static struct list_head *search_previous_forward(prelude_timer_t *timer, time_t 
  * search the timer list backward for the timer entry
  * that should be before our inserted timer.
  */
-static struct list_head *search_previous_backward(prelude_timer_t *timer, time_t expire) 
+static prelude_list_t *search_previous_backward(prelude_timer_t *timer, time_t expire) 
 {
         int hop = 0;
         prelude_timer_t *cur;
-        struct list_head *tmp;
+        prelude_list_t *tmp;
         
         for ( tmp = timer_list.prev; tmp != &timer_list; tmp = tmp->prev ) {
                 
-                cur = list_entry(tmp, prelude_timer_t, list);
+                cur = prelude_list_entry(tmp, prelude_timer_t, list);
                 
                 if ( (cur->start_time + cur->expire) <= expire ) {
                         dprint("[expire=%d] found backward in %d hop at %p\n", timer->expire, hop + 1, cur);
@@ -227,7 +229,7 @@ static struct list_head *search_previous_backward(prelude_timer_t *timer, time_t
 
 inline static prelude_timer_t *get_first_timer(void) 
 {
-        return list_entry(timer_list.next, prelude_timer_t, list);
+        return prelude_list_entry(timer_list.next, prelude_timer_t, list);
 }
 
 
@@ -235,7 +237,7 @@ inline static prelude_timer_t *get_first_timer(void)
 
 inline static prelude_timer_t *get_last_timer(void) 
 {
-        return list_entry(timer_list.prev, prelude_timer_t, list);
+        return prelude_list_entry(timer_list.prev, prelude_timer_t, list);
 }
 
 
@@ -245,7 +247,7 @@ inline static prelude_timer_t *get_last_timer(void)
  * - expire is > than first_expire.
  * - expire is < than last_expire.
  */
-static struct list_head *search_previous_timer(prelude_timer_t *timer) 
+static prelude_list_t *search_previous_timer(prelude_timer_t *timer) 
 {
         time_t expire;
         prelude_timer_t *last, *first;
@@ -306,7 +308,7 @@ static struct list_head *search_previous_timer(prelude_timer_t *timer)
 static void timer_destroy_unlocked(prelude_timer_t *timer) 
 {
         count--;
-        list_del(&timer->list);
+        prelude_list_del(&timer->list);
 }
 
 
@@ -314,17 +316,17 @@ static void timer_destroy_unlocked(prelude_timer_t *timer)
 
 static void timer_init_unlocked(prelude_timer_t *timer) 
 {
-        struct list_head *prev;
+        prelude_list_t *prev;
 
         count++;
         timer->start_time = time(NULL);
         
-        if ( ! list_empty(&timer_list) ) {
+        if ( ! prelude_list_empty(&timer_list) ) {
                 prev = search_previous_timer(timer);
         } else
                 prev = &timer_list;
 
-        list_add(&timer->list, prev);
+        prelude_list_add(&timer->list, prev);
 }
 
 

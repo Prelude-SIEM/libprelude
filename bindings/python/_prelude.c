@@ -685,33 +685,33 @@ SWIG_Python_InstallConstants(PyObject *d, swig_const_info constants[]) {
 
 #define  SWIGTYPE_p_f_p_idmef_value_t_p_void__int swig_types[0] 
 #define  SWIGTYPE_p_f_p_void__void swig_types[1] 
-#define  SWIGTYPE_p_f_p_struct_list_head__void swig_types[2] 
+#define  SWIGTYPE_p_f_p_prelude_list_t__void swig_types[2] 
 #define  SWIGTYPE_p_prelude_msg_t swig_types[3] 
 #define  SWIGTYPE_p_f_p_prelude_msgbuf_t__p_prelude_msg_t swig_types[4] 
-#define  SWIGTYPE_p_list_head swig_types[5] 
-#define  SWIGTYPE_p_ssize_t swig_types[6] 
-#define  SWIGTYPE_p_size_t swig_types[7] 
-#define  SWIGTYPE_p_idmef_heartbeat_t swig_types[8] 
-#define  SWIGTYPE_p_idmef_target_t swig_types[9] 
-#define  SWIGTYPE_p_idmef_time swig_types[10] 
-#define  SWIGTYPE_p_idmef_confidence_t swig_types[11] 
-#define  SWIGTYPE_p_idmef_confidence_rating_t swig_types[12] 
-#define  SWIGTYPE_p_idmef_message_t swig_types[13] 
-#define  SWIGTYPE_p_idmef_alert_t swig_types[14] 
-#define  SWIGTYPE_p_idmef_overflow_alert_t swig_types[15] 
-#define  SWIGTYPE_p_idmef_correlation_alert_t swig_types[16] 
-#define  SWIGTYPE_p_idmef_tool_alert_t swig_types[17] 
-#define  SWIGTYPE_p_idmef_inode_t swig_types[18] 
-#define  SWIGTYPE_p_idmef_node_t swig_types[19] 
-#define  SWIGTYPE_p_idmef_file_access_t swig_types[20] 
-#define  SWIGTYPE_p_idmef_process_t swig_types[21] 
-#define  SWIGTYPE_p_uint32_t swig_types[22] 
-#define  SWIGTYPE_p_void swig_types[23] 
-#define  SWIGTYPE_p_idmef_source_t swig_types[24] 
-#define  SWIGTYPE_p_idmef_classification_origin_t swig_types[25] 
-#define  SWIGTYPE_p_idmef_criteria swig_types[26] 
-#define  SWIGTYPE_p_idmef_criterion_t swig_types[27] 
-#define  SWIGTYPE_p_idmef_object_value_list_t swig_types[28] 
+#define  SWIGTYPE_p_ssize_t swig_types[5] 
+#define  SWIGTYPE_p_size_t swig_types[6] 
+#define  SWIGTYPE_p_idmef_heartbeat_t swig_types[7] 
+#define  SWIGTYPE_p_idmef_target_t swig_types[8] 
+#define  SWIGTYPE_p_idmef_time swig_types[9] 
+#define  SWIGTYPE_p_idmef_confidence_t swig_types[10] 
+#define  SWIGTYPE_p_idmef_confidence_rating_t swig_types[11] 
+#define  SWIGTYPE_p_idmef_message_t swig_types[12] 
+#define  SWIGTYPE_p_idmef_alert_t swig_types[13] 
+#define  SWIGTYPE_p_idmef_overflow_alert_t swig_types[14] 
+#define  SWIGTYPE_p_idmef_correlation_alert_t swig_types[15] 
+#define  SWIGTYPE_p_idmef_tool_alert_t swig_types[16] 
+#define  SWIGTYPE_p_idmef_inode_t swig_types[17] 
+#define  SWIGTYPE_p_idmef_node_t swig_types[18] 
+#define  SWIGTYPE_p_idmef_file_access_t swig_types[19] 
+#define  SWIGTYPE_p_idmef_process_t swig_types[20] 
+#define  SWIGTYPE_p_uint32_t swig_types[21] 
+#define  SWIGTYPE_p_void swig_types[22] 
+#define  SWIGTYPE_p_idmef_source_t swig_types[23] 
+#define  SWIGTYPE_p_idmef_classification_origin_t swig_types[24] 
+#define  SWIGTYPE_p_idmef_criteria swig_types[25] 
+#define  SWIGTYPE_p_idmef_criterion_t swig_types[26] 
+#define  SWIGTYPE_p_idmef_object_value_list_t swig_types[27] 
+#define  SWIGTYPE_p_prelude_list_t swig_types[28] 
 #define  SWIGTYPE_p_idmef_time_t swig_types[29] 
 #define  SWIGTYPE_p_idmef_criteria_t swig_types[30] 
 #define  SWIGTYPE_p_idmef_object_value_t swig_types[31] 
@@ -1332,12 +1332,12 @@ static PyObject *_wrap_prelude_sensor_init(PyObject *self, PyObject *args) {
 
 static PyObject *_wrap_prelude_sensor_get_client_list(PyObject *self, PyObject *args) {
     PyObject *resultobj;
-    struct list_head *result;
+    prelude_list_t *result;
     
     if(!PyArg_ParseTuple(args,(char *)":prelude_sensor_get_client_list")) goto fail;
-    result = (struct list_head *)prelude_sensor_get_client_list();
+    result = (prelude_list_t *)prelude_sensor_get_client_list();
     
-    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_list_head, 0);
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_prelude_list_t, 0);
     return resultobj;
     fail:
     return NULL;
@@ -1346,11 +1346,11 @@ static PyObject *_wrap_prelude_sensor_get_client_list(PyObject *self, PyObject *
 
 static PyObject *_wrap_prelude_sensor_notify_mgr_connection(PyObject *self, PyObject *args) {
     PyObject *resultobj;
-    void (*arg1)(struct list_head *) = (void (*)(struct list_head *)) 0 ;
+    void (*arg1)(prelude_list_t *) = (void (*)(prelude_list_t *)) 0 ;
     PyObject * obj0 = 0 ;
     
     if(!PyArg_ParseTuple(args,(char *)"O:prelude_sensor_notify_mgr_connection",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_f_p_struct_list_head__void,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_f_p_prelude_list_t__void,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     prelude_sensor_notify_mgr_connection(arg1);
     
     Py_INCREF(Py_None); resultobj = Py_None;
@@ -16100,14 +16100,14 @@ static PyObject *_wrap_idmef_data_t_len_get(PyObject *self, PyObject *args) {
 static PyObject *_wrap_idmef_data_t_list_set(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_data_t *arg1 = (idmef_data_t *) 0 ;
-    struct list_head arg2 ;
-    struct list_head *argp2 ;
+    prelude_list_t arg2 ;
+    prelude_list_t *argp2 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
     if(!PyArg_ParseTuple(args,(char *)"OO:idmef_data_t_list_set",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_data_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj1,(void **) &argp2, SWIGTYPE_p_list_head,SWIG_POINTER_EXCEPTION) == -1)) SWIG_fail;
+    if ((SWIG_ConvertPtr(obj1,(void **) &argp2, SWIGTYPE_p_prelude_list_t,SWIG_POINTER_EXCEPTION) == -1)) SWIG_fail;
     arg2 = *argp2; 
     if (arg1) (arg1)->list = arg2;
     
@@ -16121,7 +16121,7 @@ static PyObject *_wrap_idmef_data_t_list_set(PyObject *self, PyObject *args) {
 static PyObject *_wrap_idmef_data_t_list_get(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_data_t *arg1 = (idmef_data_t *) 0 ;
-    struct list_head result;
+    prelude_list_t result;
     PyObject * obj0 = 0 ;
     
     if(!PyArg_ParseTuple(args,(char *)"O:idmef_data_t_list_get",&obj0)) goto fail;
@@ -16129,10 +16129,10 @@ static PyObject *_wrap_idmef_data_t_list_get(PyObject *self, PyObject *args) {
     result =  ((arg1)->list);
     
     {
-        struct list_head * resultptr;
-        resultptr = (struct list_head *) malloc(sizeof(struct list_head));
-        memmove(resultptr, &result, sizeof(struct list_head));
-        resultobj = SWIG_NewPointerObj((void *) resultptr, SWIGTYPE_p_list_head, 1);
+        prelude_list_t * resultptr;
+        resultptr = (prelude_list_t *) malloc(sizeof(prelude_list_t));
+        memmove(resultptr, &result, sizeof(prelude_list_t));
+        resultobj = SWIG_NewPointerObj((void *) resultptr, SWIGTYPE_p_prelude_list_t, 1);
     }
     return resultobj;
     fail:
@@ -17264,14 +17264,14 @@ static PyObject *_wrap_delete_idmef_criterion_t(PyObject *self, PyObject *args) 
 static PyObject *_wrap_idmef_criteria_t_list_set(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_criteria_t *arg1 = (idmef_criteria_t *) 0 ;
-    struct list_head arg2 ;
-    struct list_head *argp2 ;
+    prelude_list_t arg2 ;
+    prelude_list_t *argp2 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
     if(!PyArg_ParseTuple(args,(char *)"OO:idmef_criteria_t_list_set",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_criteria_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj1,(void **) &argp2, SWIGTYPE_p_list_head,SWIG_POINTER_EXCEPTION) == -1)) SWIG_fail;
+    if ((SWIG_ConvertPtr(obj1,(void **) &argp2, SWIGTYPE_p_prelude_list_t,SWIG_POINTER_EXCEPTION) == -1)) SWIG_fail;
     arg2 = *argp2; 
     if (arg1) (arg1)->list = arg2;
     
@@ -17285,7 +17285,7 @@ static PyObject *_wrap_idmef_criteria_t_list_set(PyObject *self, PyObject *args)
 static PyObject *_wrap_idmef_criteria_t_list_get(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_criteria_t *arg1 = (idmef_criteria_t *) 0 ;
-    struct list_head result;
+    prelude_list_t result;
     PyObject * obj0 = 0 ;
     
     if(!PyArg_ParseTuple(args,(char *)"O:idmef_criteria_t_list_get",&obj0)) goto fail;
@@ -17293,10 +17293,10 @@ static PyObject *_wrap_idmef_criteria_t_list_get(PyObject *self, PyObject *args)
     result =  ((arg1)->list);
     
     {
-        struct list_head * resultptr;
-        resultptr = (struct list_head *) malloc(sizeof(struct list_head));
-        memmove(resultptr, &result, sizeof(struct list_head));
-        resultobj = SWIG_NewPointerObj((void *) resultptr, SWIGTYPE_p_list_head, 1);
+        prelude_list_t * resultptr;
+        resultptr = (prelude_list_t *) malloc(sizeof(prelude_list_t));
+        memmove(resultptr, &result, sizeof(prelude_list_t));
+        resultobj = SWIG_NewPointerObj((void *) resultptr, SWIGTYPE_p_prelude_list_t, 1);
     }
     return resultobj;
     fail:
@@ -20225,14 +20225,14 @@ static PyObject *_wrap_idmef_value_type_data_t_object_val_get(PyObject *self, Py
 static PyObject *_wrap_idmef_value_type_data_t_list_val_set(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_value_type_data_t *arg1 = (idmef_value_type_data_t *) 0 ;
-    struct list_head arg2 ;
-    struct list_head *argp2 ;
+    prelude_list_t arg2 ;
+    prelude_list_t *argp2 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
     if(!PyArg_ParseTuple(args,(char *)"OO:idmef_value_type_data_t_list_val_set",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_value_type_data_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if ((SWIG_ConvertPtr(obj1,(void **) &argp2, SWIGTYPE_p_list_head,SWIG_POINTER_EXCEPTION) == -1)) SWIG_fail;
+    if ((SWIG_ConvertPtr(obj1,(void **) &argp2, SWIGTYPE_p_prelude_list_t,SWIG_POINTER_EXCEPTION) == -1)) SWIG_fail;
     arg2 = *argp2; 
     if (arg1) (arg1)->list_val = arg2;
     
@@ -20246,7 +20246,7 @@ static PyObject *_wrap_idmef_value_type_data_t_list_val_set(PyObject *self, PyOb
 static PyObject *_wrap_idmef_value_type_data_t_list_val_get(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_value_type_data_t *arg1 = (idmef_value_type_data_t *) 0 ;
-    struct list_head result;
+    prelude_list_t result;
     PyObject * obj0 = 0 ;
     
     if(!PyArg_ParseTuple(args,(char *)"O:idmef_value_type_data_t_list_val_get",&obj0)) goto fail;
@@ -20254,10 +20254,10 @@ static PyObject *_wrap_idmef_value_type_data_t_list_val_get(PyObject *self, PyOb
     result =  ((arg1)->list_val);
     
     {
-        struct list_head * resultptr;
-        resultptr = (struct list_head *) malloc(sizeof(struct list_head));
-        memmove(resultptr, &result, sizeof(struct list_head));
-        resultobj = SWIG_NewPointerObj((void *) resultptr, SWIGTYPE_p_list_head, 1);
+        prelude_list_t * resultptr;
+        resultptr = (prelude_list_t *) malloc(sizeof(prelude_list_t));
+        memmove(resultptr, &result, sizeof(prelude_list_t));
+        resultobj = SWIG_NewPointerObj((void *) resultptr, SWIGTYPE_p_prelude_list_t, 1);
     }
     return resultobj;
     fail:
@@ -22044,10 +22044,9 @@ static PyMethodDef SwigMethods[] = {
 
 static swig_type_info _swigt__p_f_p_idmef_value_t_p_void__int[] = {{"_p_f_p_idmef_value_t_p_void__int", 0, "int (*)(idmef_value_t *,void *)", 0},{"_p_f_p_idmef_value_t_p_void__int"},{0}};
 static swig_type_info _swigt__p_f_p_void__void[] = {{"_p_f_p_void__void", 0, "void (*)(void *)", 0},{"_p_f_p_void__void"},{0}};
-static swig_type_info _swigt__p_f_p_struct_list_head__void[] = {{"_p_f_p_struct_list_head__void", 0, "void (*)(struct list_head *)", 0},{"_p_f_p_struct_list_head__void"},{0}};
+static swig_type_info _swigt__p_f_p_prelude_list_t__void[] = {{"_p_f_p_prelude_list_t__void", 0, "void (*)(prelude_list_t *)", 0},{"_p_f_p_prelude_list_t__void"},{0}};
 static swig_type_info _swigt__p_prelude_msg_t[] = {{"_p_prelude_msg_t", 0, "prelude_msg_t *", 0},{"_p_prelude_msg_t"},{0}};
 static swig_type_info _swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t[] = {{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t", 0, "prelude_msg_t *(*)(prelude_msgbuf_t *)", 0},{"_p_f_p_prelude_msgbuf_t__p_prelude_msg_t"},{0}};
-static swig_type_info _swigt__p_list_head[] = {{"_p_list_head", 0, "struct list_head *", 0},{"_p_list_head"},{0}};
 static swig_type_info _swigt__p_ssize_t[] = {{"_p_ssize_t", 0, "ssize_t *", 0},{"_p_ssize_t"},{0}};
 static swig_type_info _swigt__p_size_t[] = {{"_p_size_t", 0, "size_t *", 0},{"_p_size_t"},{0}};
 static swig_type_info _swigt__p_idmef_heartbeat_t[] = {{"_p_idmef_heartbeat_t", 0, "idmef_heartbeat_t *", 0},{"_p_idmef_heartbeat_t"},{0}};
@@ -22071,6 +22070,7 @@ static swig_type_info _swigt__p_idmef_classification_origin_t[] = {{"_p_idmef_cl
 static swig_type_info _swigt__p_idmef_criteria[] = {{"_p_idmef_criteria", 0, "struct idmef_criteria *", 0},{"_p_idmef_criteria_t"},{"_p_idmef_criteria"},{0}};
 static swig_type_info _swigt__p_idmef_criterion_t[] = {{"_p_idmef_criterion_t", 0, "idmef_criterion_t *", 0},{"_p_idmef_criterion_t"},{0}};
 static swig_type_info _swigt__p_idmef_object_value_list_t[] = {{"_p_idmef_object_value_list_t", 0, "idmef_object_value_list_t *", 0},{"_p_idmef_object_value_list_t"},{0}};
+static swig_type_info _swigt__p_prelude_list_t[] = {{"_p_prelude_list_t", 0, "prelude_list_t *", 0},{"_p_prelude_list_t"},{0}};
 static swig_type_info _swigt__p_idmef_time_t[] = {{"_p_idmef_time_t", 0, "idmef_time_t *", 0},{"_p_idmef_time_t"},{"_p_idmef_time"},{0}};
 static swig_type_info _swigt__p_idmef_criteria_t[] = {{"_p_idmef_criteria_t", 0, "idmef_criteria_t *", 0},{"_p_idmef_criteria_t"},{"_p_idmef_criteria"},{0}};
 static swig_type_info _swigt__p_idmef_object_value_t[] = {{"_p_idmef_object_value_t", 0, "idmef_object_value_t *", 0},{"_p_idmef_object_value_t"},{0}};
@@ -22124,10 +22124,9 @@ static swig_type_info _swigt__p_idmef_node_category_t[] = {{"_p_idmef_node_categ
 static swig_type_info *swig_types_initial[] = {
 _swigt__p_f_p_idmef_value_t_p_void__int, 
 _swigt__p_f_p_void__void, 
-_swigt__p_f_p_struct_list_head__void, 
+_swigt__p_f_p_prelude_list_t__void, 
 _swigt__p_prelude_msg_t, 
 _swigt__p_f_p_prelude_msgbuf_t__p_prelude_msg_t, 
-_swigt__p_list_head, 
 _swigt__p_ssize_t, 
 _swigt__p_size_t, 
 _swigt__p_idmef_heartbeat_t, 
@@ -22151,6 +22150,7 @@ _swigt__p_idmef_classification_origin_t,
 _swigt__p_idmef_criteria, 
 _swigt__p_idmef_criterion_t, 
 _swigt__p_idmef_object_value_list_t, 
+_swigt__p_prelude_list_t, 
 _swigt__p_idmef_time_t, 
 _swigt__p_idmef_criteria_t, 
 _swigt__p_idmef_object_value_t, 

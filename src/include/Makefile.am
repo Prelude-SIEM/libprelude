@@ -32,11 +32,11 @@ include_HEADERS = config-engine.h 		\
 		  ssl-registration-msg.h	\
 		  daemonize.h			\
 		  timer.h			\
-		  list.h			\
 		  variable.h			\
 		  prelude-auth.h		\
 		  prelude-hash.h		\
 		  prelude-linked-object.h	\
+		  prelude-list.h		\
 		  prelude-client.h		\
 		  prelude-client-mgr.h		\
 		  prelude-getopt.h		\

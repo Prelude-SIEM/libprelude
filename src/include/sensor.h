@@ -30,9 +30,9 @@ void prelude_sensor_send_msg_async(prelude_msg_t *msg);
 
 int prelude_sensor_init(const char *sname, const char *filename, int argc, char **argv);
 
-struct list_head *prelude_sensor_get_client_list(void);
+prelude_list_t *prelude_sensor_get_client_list(void);
 
-void prelude_sensor_notify_mgr_connection(void (*cb)(struct list_head *clist));
+void prelude_sensor_notify_mgr_connection(void (*cb)(prelude_list_t *clist));
 
 void prelude_heartbeat_register_cb(void (*cb)(void *data), void *data);
 

@@ -31,7 +31,6 @@
 #include <stdarg.h>
 #include <errno.h>
 
-#include "list.h"
 #include "common.h"
 #include "prelude-log.h"
 

@@ -28,31 +28,31 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "list.h"
+#include "prelude-list.h"
 #include "prelude-log.h"
 #include "variable.h"
 
 
 typedef struct {
-        struct list_head list;
+        prelude_list_t list;
         char *variable;
         char *value;
 } variable_t;
 
 
 
-static LIST_HEAD(variable_list);
+static PRELUDE_LIST_HEAD(variable_list);
 
 
 
 static variable_t *search_entry(const char *variable) 
 {
         int ret;
-        struct list_head *tmp;
+        prelude_list_t *tmp;
         variable_t *item = NULL;
         
-        list_for_each(tmp, &variable_list) {
-                item = list_entry(tmp, variable_t, list);
+        prelude_list_for_each(tmp, &variable_list) {
+                item = prelude_list_entry(tmp, variable_t, list);
 
                 ret = strcasecmp(item->variable, variable);
 
@@ -79,7 +79,7 @@ static int create_entry(char *variable, char *value)
         item->variable = variable;
         item->value = value;
 
-        list_add(&item->list, &variable_list);
+        prelude_list_add(&item->list, &variable_list);
 
         return 0;
 }
@@ -150,7 +150,7 @@ int variable_unset(const char *variable)
         if ( ! item )
                 return -1;
 
-        list_del(&item->list);
+        prelude_list_del(&item->list);
         
         free(item->variable);
         free(item->value);

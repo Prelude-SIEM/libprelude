@@ -29,6 +29,7 @@
 #include <errno.h>
 #include <signal.h>
 
+#include "prelude-list.h"
 #include "prelude-linked-object.h"
 #include "timer.h"
 #include "prelude-log.h"
@@ -39,7 +40,7 @@
 
 
 
-static LIST_HEAD(joblist);
+static PRELUDE_LIST_HEAD(joblist);
 
 
 static int async_flags = PRELUDE_ASYNC_TIMER;
@@ -85,11 +86,11 @@ static void wait_timer_and_data(void)
 
                 pthread_mutex_lock(&mutex);
 
-                while ( list_empty(&joblist) && ret != ETIMEDOUT && ! stop_processing ) {
+                while ( prelude_list_empty(&joblist) && ret != ETIMEDOUT && ! stop_processing ) {
                         ret = pthread_cond_timedwait(&cond, &mutex, &ts);
                 }
                 
-                if ( list_empty(&joblist) && stop_processing ) {
+                if ( prelude_list_empty(&joblist) && stop_processing ) {
                         pthread_mutex_unlock(&mutex);
                         pthread_exit(NULL);
                 }
@@ -120,10 +121,10 @@ static void wait_data(void)
 {        
         pthread_mutex_lock(&mutex);
         
-        while ( list_empty(&joblist) && ! stop_processing ) 
+        while ( prelude_list_empty(&joblist) && ! stop_processing ) 
                 pthread_cond_wait(&cond, &mutex);
 
-        if ( list_empty(&joblist) && stop_processing ) {
+        if ( prelude_list_empty(&joblist) && stop_processing ) {
                 pthread_mutex_unlock(&mutex);
                 pthread_exit(NULL);
         }
@@ -138,8 +139,8 @@ static void *async_thread(void *arg)
 {
         int ret;
         sigset_t set;
+        prelude_list_t *tmp, *next;
         prelude_async_object_t *obj;
-        struct list_head *tmp, *next;
 
         ret = sigfillset(&set);
         if ( ret < 0 ) {
@@ -161,7 +162,7 @@ static void *async_thread(void *arg)
                         wait_data();
                 
                 pthread_mutex_lock(&mutex);
-                next = ( list_empty(&joblist) ) ? NULL : joblist.next;
+                next = ( prelude_list_empty(&joblist) ) ? NULL : joblist.next;
                 pthread_mutex_unlock(&mutex);
                 
                 while ( next ) {

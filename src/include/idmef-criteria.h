@@ -39,7 +39,7 @@ typedef struct idmef_criterion {
 
 
 typedef struct idmef_criteria {
-	struct list_head list;
+	prelude_list_t list;
         
 	idmef_criterion_t *criterion;
         

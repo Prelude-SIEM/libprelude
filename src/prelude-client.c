@@ -56,6 +56,7 @@
 #include "prelude-getopt.h"
 #include "client-ident.h"
 #include "prelude-path.h"
+#include "prelude-list.h"
 #include "prelude-linked-object.h"
 
 

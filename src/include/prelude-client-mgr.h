@@ -33,9 +33,9 @@ void prelude_client_mgr_broadcast_async(prelude_client_mgr_t *cmgr, prelude_msg_
 
 prelude_client_mgr_t *prelude_client_mgr_new(int type, const char *cfgline);
 
-void prelude_client_mgr_notify_connection(prelude_client_mgr_t *mgr, void (*callback)(struct list_head *clist));
+void prelude_client_mgr_notify_connection(prelude_client_mgr_t *mgr, void (*callback)(prelude_list_t *clist));
 
-struct list_head *prelude_client_mgr_get_client_list(prelude_client_mgr_t *mgr);
+prelude_list_t *prelude_client_mgr_get_client_list(prelude_client_mgr_t *mgr);
 
 int prelude_client_mgr_add_client(prelude_client_mgr_t **mgr_ptr, prelude_client_t *client, int use_timer);
 

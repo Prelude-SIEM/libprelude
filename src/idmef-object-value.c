@@ -28,7 +28,7 @@
 #include <sys/types.h>
 #include <stdarg.h>
 
-#include "list.h"
+#include "prelude-list.h"
 #include "prelude-log.h"
 
 #include "idmef-string.h"
@@ -44,14 +44,14 @@
 
 
 struct idmef_object_value {
-	struct list_head list;
+	prelude_list_t list;
 	idmef_object_t *object;
 	idmef_value_t *value;
 };
 
 struct idmef_object_value_list {
 	idmef_object_value_t *iterator;
-	struct list_head value_list;
+	prelude_list_t value_list;
 };
 
 
@@ -117,7 +117,7 @@ idmef_object_value_list_t *idmef_object_value_list_new(void)
 		return NULL;
 	}
 	
-	INIT_LIST_HEAD(&ret->value_list);
+	PRELUDE_INIT_LIST_HEAD(&ret->value_list);
 	
 	return ret;
 }
@@ -130,7 +130,7 @@ int idmef_object_value_list_add(idmef_object_value_list_t *list, idmef_object_va
 	if ( ! list || ! objval )
 		return -1;
 	
-	list_add_tail(&objval->list, &list->value_list);
+	prelude_list_add_tail(&objval->list, &list->value_list);
 	
 	return 0;
 }
@@ -143,10 +143,10 @@ idmef_object_value_t *idmef_object_value_list_get_next(idmef_object_value_list_t
 	if ( ! list )
 		return NULL;
 
-	list->iterator = list_get_next(list->iterator, 
-				       &list->value_list,
-				       idmef_object_value_t,
-				       list);
+	list->iterator = prelude_list_get_next(list->iterator, 
+                                               &list->value_list,
+                                               idmef_object_value_t,
+                                               list);
 
 	return list->iterator;
 }
@@ -156,15 +156,16 @@ idmef_object_value_t *idmef_object_value_list_get_next(idmef_object_value_list_t
 
 void idmef_object_value_list_destroy(idmef_object_value_list_t *list)
 {
-	struct list_head *n, *tmp;
+	prelude_list_t *n, *tmp;
 	idmef_object_value_t *entry;
 
 	if ( ! list )
 		return ;
 		
-	list_for_each_safe(tmp, n, &list->value_list) {
-		entry = list_entry(tmp, idmef_object_value_t, list);
-		list_del(&entry->list);
+	prelude_list_for_each_safe(tmp, n, &list->value_list) {
+		entry = prelude_list_entry(tmp, idmef_object_value_t, list);
+
+                prelude_list_del(&entry->list);
 		idmef_object_value_destroy(entry);
 	}
 	

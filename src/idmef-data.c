@@ -42,7 +42,6 @@
 #define IDMEF_DATA_OWN_DATA       0x2
 
 
-
 /*
  * creates an empty data
  */

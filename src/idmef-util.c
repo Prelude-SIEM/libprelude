@@ -32,7 +32,7 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "list.h"
+#include "prelude-list.h"
 #include "prelude-log.h"
 #include "extract.h"
 #include "idmef-tree.h"

@@ -28,7 +28,6 @@
 #include <sys/types.h>
 #include <stdarg.h>
 
-#include "list.h"
 #include "prelude-log.h"
 
 #include "idmef-string.h"

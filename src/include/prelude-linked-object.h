@@ -24,10 +24,12 @@
 #ifndef _LIBPRELUDE_PRELUDE_LINKED_OBJECT_H
 #define _LIBPRELUDE_PRELUDE_LINKED_OBJECT_H
 
-#include "list.h"
+
+#include "prelude-list.h"
+
 
 #define PRELUDE_LINKED_OBJECT \
-        struct list_head list
+        prelude_list_t list
 
 
 typedef struct {
@@ -38,26 +40,26 @@ typedef struct {
 
 static inline void prelude_linked_object_del(prelude_linked_object_t *obj) 
 {
-        list_del(&obj->list);
+        prelude_list_del(&obj->list);
 }
 
 
 
-static inline void prelude_linked_object_add(prelude_linked_object_t *obj, struct list_head *head) 
+static inline void prelude_linked_object_add(prelude_linked_object_t *obj, prelude_list_t *head) 
 {
-        list_add(&obj->list, head);
+        prelude_list_add(&obj->list, head);
 }
 
 
 
-static inline void prelude_linked_object_add_tail(prelude_linked_object_t *obj, struct list_head *head) 
+static inline void prelude_linked_object_add_tail(prelude_linked_object_t *obj, prelude_list_t *head) 
 {
-        list_add_tail(&obj->list, head);
+        prelude_list_add_tail(&obj->list, head);
 }
 
 
 #define prelude_linked_object_get_object(listentry, type)  \
-        (type *) list_entry(listentry, prelude_linked_object_t, list)
+        (type *) prelude_list_entry(listentry, prelude_linked_object_t, list)
 
 
 #endif /* _LIBPRELUDE_PRELUDE_LINKED_OBJECT_H */

@@ -24,14 +24,12 @@
 #ifndef _LIBPRELUDE_TIMER_H
 #define _LIBPRELUDE_TIMER_H
 
-#include <stdlib.h>
-#include <sys/time.h>
 
-#include "list.h"
+#include "prelude-list.h"
 
 
 typedef struct {
-        struct list_head list;
+        prelude_list_t list;
 
         short int expire;
         time_t start_time;

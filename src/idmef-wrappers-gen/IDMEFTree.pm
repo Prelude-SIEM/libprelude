@@ -199,7 +199,8 @@ sub	parse_struct
 				short_typename => get_short_typename($typename),
 				name => $name,
 				short_name => $name,
-				ptr => ($ptr ? 1 : 0) });
+				ptr => ($ptr ? 1 : 0),
+				dynamic_ident => 0 });
 	    $self->debug("parse struct field metatype:normal name:$name typename:$typename ptr:", ($ptr ? 1 : 0) ? "yes" : "no", "\n");
 	    
 	} elsif ( ($name, $typename) = $line =~ /\s*LISTED_OBJECT\(\s*(\w+)\s*,\s*(\w+)\s*\)/ ) {
@@ -212,7 +213,7 @@ sub	parse_struct
 				typename => $typename,
 				short_typename => get_short_typename($typename),
 				name => $name, 
-				short_name => $short_name } );
+				short_name => $short_name });
 	    $self->debug("parse struct field metatype:list name:$name typename:$typename\n");
 
 	} elsif ( ($typename, $var) = $line =~ /^\s*UNION\(\s*(\w+)\s*,\s*(\w+)\s*\)\s*\{/ ) {
@@ -245,7 +246,18 @@ sub	parse_struct
 		    last;
 		}
 	    }
-	    
+
+	} elsif ( ($name) = $line =~ /\s*DYNAMIC_IDENT\(\s*(\w+)\s*\)/ ) {
+	    push(@field_list, 
+		 { metatype => &METATYPE_NORMAL|&METATYPE_PRIMITIVE,
+		   typename => "uint64_t",
+		   short_typename => "uint64",
+		   name => $name,
+		   short_name => $name,
+		   ptr => 0,
+		   dynamic_ident => 1 });
+	    $self->debug("parse struct field metatype:normal name:$name dynamic_ident\n");
+
 	} elsif ( ($typename, $id) = $line =~ /^\}\s*TYPE_ID\(\s*(\w+)\s*,\s*(\d+)\s*\)/ ) {
 	    $struct->{typename} = $typename;
 	    $struct->{short_typename} = get_short_typename($typename);

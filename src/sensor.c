@@ -39,6 +39,7 @@
 #include "config-engine.h"
 #include "prelude-log.h"
 
+#include "prelude-ident.h"
 #include "prelude-linked-object.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
@@ -87,6 +88,8 @@ static prelude_client_mgr_t *manager_list = NULL;
 
 
 char *program_name = NULL;
+prelude_ident_t *sensor_dynamic_ident;
+
 
 
 static int setup_analyzer_node_location(void **context, prelude_option_t *opt, const char *arg) 
@@ -385,6 +388,10 @@ static int parse_argument(const char *filename, int argc, char **argv, int type)
  */
 int prelude_sensor_init(const char *sname, const char *filename, int argc, char **argv)
 {
+        sensor_dynamic_ident = prelude_ident_new();
+        if ( ! sensor_dynamic_ident )
+                return -1;
+        
 	analyzer_node = idmef_node_new();
 	if ( ! analyzer_node ) {
 		log(LOG_ERR, "cannot create analyzer node\n");
@@ -440,7 +447,7 @@ void prelude_sensor_send_msg(prelude_msg_t *msg)
  *
  * Returns: a list of Manager connection (prelude_client_t).
  */
-struct list_head *prelude_sensor_get_client_list(void)
+prelude_list_t *prelude_sensor_get_client_list(void)
 {
         return prelude_client_mgr_get_client_list(manager_list);
 }
@@ -454,7 +461,7 @@ struct list_head *prelude_sensor_get_client_list(void)
  * Tell the prelude library to call the @cb callback whenever the connection
  * state change.
  */
-void prelude_sensor_notify_mgr_connection(void (*cb)(struct list_head *clist)) 
+void prelude_sensor_notify_mgr_connection(void (*cb)(prelude_list_t *clist)) 
 {
         prelude_client_mgr_notify_connection(manager_list, cb);
 }

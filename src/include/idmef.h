@@ -27,7 +27,7 @@
 #include <inttypes.h>
 #include <sys/types.h>
 
-#include "list.h"
+#include "prelude-list.h"
 #include "idmef-string.h"
 #include "idmef-time.h"
 #include "idmef-data.h"

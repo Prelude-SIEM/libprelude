@@ -39,6 +39,7 @@
 #include <assert.h>
 
 #include "common.h"
+#include "prelude-list.h"
 #include "prelude-linked-object.h"
 #include "timer.h"
 #include "prelude-log.h"
@@ -69,7 +70,7 @@
  * our message for later emission.
  */
 typedef struct {
-        struct list_head list;
+        prelude_list_t list;
 
         /*
          * If dead is non zero,
@@ -78,13 +79,13 @@ typedef struct {
         unsigned int dead;
         
         prelude_client_mgr_t *parent;
-        struct list_head client_list;
+        prelude_list_t client_list;
 } client_list_t;
 
 
 
 typedef struct {
-        struct list_head list;
+        prelude_list_t list;
 
         /*
          * Timer for client reconnection.
@@ -114,9 +115,9 @@ struct prelude_client_mgr {
         prelude_io_t *backup_fd_read;
         prelude_io_t *backup_fd_write;
     
-        void (*notify_cb)(struct list_head *clist);
-        struct list_head all_client;
-        struct list_head or_list;
+        void (*notify_cb)(prelude_list_t *clist);
+        prelude_list_t all_client;
+        prelude_list_t or_list;
 
         int nfd;
         fd_set fds;
@@ -154,8 +155,8 @@ static void check_for_data_cb(void *arg)
 	int ret, fd;
         fd_set rfds;
         struct timeval tv;
-        struct list_head *tmp;
         prelude_client_t *client;
+        prelude_list_t *tmp;
         prelude_client_mgr_t *mgr = (prelude_client_mgr_t *) arg;
 
         /*
@@ -180,7 +181,7 @@ static void check_for_data_cb(void *arg)
         if ( ret <= 0 )
                 return;
 
-        list_for_each(tmp, &mgr->all_client) {
+        prelude_list_for_each(tmp, &mgr->all_client) {
                 client = prelude_linked_object_get_object(tmp, prelude_client_t);
 
                 fd = prelude_io_get_fd(prelude_client_get_fd(client));
@@ -211,12 +212,12 @@ static int broadcast_saved_message(client_list_t *clist, prelude_io_t *fd, size_
 {
         int ret;
         client_t *client;
-        struct list_head *tmp;
+        prelude_list_t *tmp;
 
         log(LOG_INFO, "Flushing saved messages.\n");
         
-        list_for_each(tmp, &clist->client_list) {
-                client = list_entry(tmp, client_t, list);
+        prelude_list_for_each(tmp, &clist->client_list) {
+                client = prelude_list_entry(tmp, client_t, list);
                 
                 ret = lseek(prelude_io_get_fd(fd), 0L, SEEK_SET);
                 if ( ret < 0 ) {
@@ -366,7 +367,7 @@ static int add_new_client(client_list_t *clist, prelude_client_t *client, int us
         }
         
         prelude_linked_object_add((prelude_linked_object_t *) new->client, &clist->parent->all_client);
-        list_add_tail(&new->list, &clist->client_list);
+        prelude_list_add_tail(&new->list, &clist->client_list);
 
         return 0;
 }
@@ -421,7 +422,7 @@ static int create_new_client(client_list_t *clist, char *addr, int type)
                 clist->parent->nfd = MAX(fd + 1, clist->parent->nfd);
         }
         
-        list_add_tail(&new->list, &clist->client_list);
+        prelude_list_add_tail(&new->list, &clist->client_list);
         
         return 0;
 }
@@ -444,9 +445,9 @@ static client_list_t *create_client_list(prelude_client_mgr_t *cmgr)
         
         new->dead = 0;
         new->parent = cmgr;
-        INIT_LIST_HEAD(&new->client_list);
+        PRELUDE_INIT_LIST_HEAD(&new->client_list);
         
-        list_add_tail(&new->list, &cmgr->or_list);
+        prelude_list_add_tail(&new->list, &cmgr->or_list);
         
         return new;
 }
@@ -629,12 +630,12 @@ static int broadcast_message(prelude_msg_t *msg, client_list_t *clist)
 {
         int ret;
         client_t *c;
-        struct list_head *tmp;
+        prelude_list_t *tmp;
 
-        assert(! list_empty(&clist->client_list));
+        assert(! prelude_list_empty(&clist->client_list));
         
-        list_for_each(tmp, &clist->client_list) {
-                c = list_entry(tmp, client_t, list);
+        prelude_list_for_each(tmp, &clist->client_list) {
+                c = prelude_list_entry(tmp, client_t, list);
 
                 ret = prelude_client_send_msg(c->client, msg);
                 if ( ret < 0 ) {
@@ -663,10 +664,10 @@ static int walk_manager_lists(prelude_client_mgr_t *cmgr, prelude_msg_t *msg)
 {
         int ret = 0;
         client_list_t *item;
-        struct list_head *tmp;
+        prelude_list_t *tmp;
         
-        list_for_each(tmp, &cmgr->or_list) {
-                item = list_entry(tmp, client_list_t, list);
+        prelude_list_for_each(tmp, &cmgr->or_list) {
+                item = prelude_list_entry(tmp, client_list_t, list);
                 
                 /*
                  * There is Manager(s) known to be dead in this list.
@@ -692,13 +693,13 @@ static client_t *search_client(prelude_client_mgr_t *mgr, prelude_client_t *clie
 {
         client_t *c;
         client_list_t *clist;
-        struct list_head *tmp, *tmp2;
+        prelude_list_t *tmp, *tmp2;
         
-        list_for_each(tmp, &mgr->or_list) {
-                clist = list_entry(tmp, client_list_t, list);
+        prelude_list_for_each(tmp, &mgr->or_list) {
+                clist = prelude_list_entry(tmp, client_list_t, list);
                 
-                list_for_each(tmp2, &clist->client_list) {
-                        c = list_entry(tmp2, client_t, list);
+                prelude_list_for_each(tmp2, &clist->client_list) {
+                        c = prelude_list_entry(tmp2, client_t, list);
                                                 
                         if ( c->client == client )
                                 return c;
@@ -782,8 +783,8 @@ static prelude_client_mgr_t *client_mgr_new(void)
         }
 
         new->notify_cb = NULL;
-        INIT_LIST_HEAD(&new->or_list);
-        INIT_LIST_HEAD(&new->all_client);
+        PRELUDE_INIT_LIST_HEAD(&new->or_list);
+        PRELUDE_INIT_LIST_HEAD(&new->all_client);
         
 	FD_ZERO(&new->fds);
 	new->nfd = 0;
@@ -835,7 +836,7 @@ prelude_client_mgr_t *prelude_client_mgr_new(int type, const char *cfgline)
         }
         
         ret = parse_config_line(new, dup, type);
-        if ( ret < 0 || list_empty(&new->or_list) ) {
+        if ( ret < 0 || prelude_list_empty(&new->or_list) ) {
                 close_backup_fd(new);
                 free(new);
                 return NULL;
@@ -858,13 +859,13 @@ void prelude_client_mgr_destroy(prelude_client_mgr_t *mgr)
 {
         client_t *client;
         client_list_t *clist;
-        struct list_head *tmp, *tmp2, *bkp, *bkp2;
+        prelude_list_t *tmp, *tmp2, *bkp, *bkp2;
 
-        list_for_each_safe(tmp, bkp, &mgr->or_list) {
-                clist = list_entry(tmp, client_list_t, list);
+        prelude_list_for_each_safe(tmp, bkp, &mgr->or_list) {
+                clist = prelude_list_entry(tmp, client_list_t, list);
                 
-                list_for_each_safe(tmp2, bkp2, &clist->client_list) {
-                        client = list_entry(tmp2, client_t, list);
+                prelude_list_for_each_safe(tmp2, bkp2, &clist->client_list) {
+                        client = prelude_list_entry(tmp2, client_t, list);
                         
                         prelude_client_destroy(client->client);
                         free(client);
@@ -884,13 +885,13 @@ void prelude_client_mgr_destroy(prelude_client_mgr_t *mgr)
 prelude_client_t *prelude_client_mgr_search_client(prelude_client_mgr_t *mgr, const char *addr, int type) 
 {
         int ret;
-        struct list_head *tmp;
         prelude_client_t *client;
-
+        prelude_list_t *tmp;
+        
         if ( ! mgr )
                 return NULL;
         
-        list_for_each(tmp, &mgr->all_client) {
+        prelude_list_for_each(tmp, &mgr->all_client) {
                 client = prelude_linked_object_get_object(tmp, prelude_client_t);
                 
                 if ( type != prelude_client_get_type(client) )
@@ -953,7 +954,7 @@ int prelude_client_mgr_add_client(prelude_client_mgr_t **mgr_ptr, prelude_client
 
 
 
-void prelude_client_mgr_notify_connection(prelude_client_mgr_t *mgr, void (*callback)(struct list_head *clist)) 
+void prelude_client_mgr_notify_connection(prelude_client_mgr_t *mgr, void (*callback)(prelude_list_t *clist)) 
 {
         mgr->notify_cb = callback;
 }
@@ -961,7 +962,7 @@ void prelude_client_mgr_notify_connection(prelude_client_mgr_t *mgr, void (*call
 
 
 
-struct list_head *prelude_client_mgr_get_client_list(prelude_client_mgr_t *mgr) 
+prelude_list_t *prelude_client_mgr_get_client_list(prelude_client_mgr_t *mgr) 
 {
         return &mgr->all_client;
 }

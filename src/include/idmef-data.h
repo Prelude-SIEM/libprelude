@@ -24,14 +24,15 @@
 #ifndef _LIBPRELUDE_IDMEF_DATA_H
 #define _LIBPRELUDE_IDMEF_DATA_H
 
-
-#include "list.h"
-
+#include "prelude-list.h"
 
 
 /*
- * FIXME: move to idmef-data.c, if possible.
+ * Make sure that this ID does not conflict with any in idmef-tree-wrap.h
  */
+#define idmef_type_data 2
+
+
 typedef struct {
         
         int flags;
@@ -42,14 +43,9 @@ typedef struct {
                 const unsigned char *ro_data;
         } data;
         
-        struct list_head list;
+        prelude_list_t list;
 } idmef_data_t;
 
-
-/*
- * Make sure that this ID does not conflict with any in idmef-tree-wrap.h
- */
-#define idmef_type_data 2
 
 
 /**
