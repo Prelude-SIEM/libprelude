@@ -262,7 +262,7 @@ static FILE *open_auth_file(const char *filename, uid_t uid)
                 return NULL;
         }
 
-        ret = fchown(fileno(fd), uid, 0);
+        ret = fchown(fileno(fd), uid, -1);
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't change %s to UID %d.\n", filename, uid);
                 fclose(fd);

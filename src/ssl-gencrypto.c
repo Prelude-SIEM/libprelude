@@ -380,9 +380,9 @@ int prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int cryp
                 ret = -1; goto ferr;
         }
 
-        ret = fchown(fd, uid, 0);
+        ret = fchown(fd, uid, -1);
         if ( ret < 0 ) {
-                fprintf(stderr, "couldn't change file owner to UID %d.\n", uid);
+                fprintf(stderr, "couldn't change owner pf %s to UID %d.\n", keyout, uid);
                 goto err;
         }
 

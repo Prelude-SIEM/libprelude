@@ -267,9 +267,9 @@ int prelude_ssl_save_cert(const char *filename, char *cert, int certlen, uid_t u
                 return -1;
         }
 
-        ret = fchown(fd, uid, 0);
+        ret = fchown(fd, uid, -1);
         if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't set file owner to UID %d.\n", uid);
+                log(LOG_ERR, "couldn't set %s owner to UID %d.\n", filename, uid);
                 close(fd);
                 return -1;
         }

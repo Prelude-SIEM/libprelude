@@ -276,6 +276,12 @@ thread
 </para>
 
 
+<!-- ##### MACRO LIST_H ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### MACRO MANAGERS_CERT ##### -->
 <para>
 
@@ -361,6 +367,12 @@ thread
 
 
 <!-- ##### MACRO SSL_GENCRYPTO_H ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO SSL_REGISTRATION_MSG_H ##### -->
 <para>
 
 </para>

@@ -1,7 +1,13 @@
 2002-05-16  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/ssl-registration-msg.c (prelude_ssl_save_cert): 
+	* src/ssl-gencrypto.c (prelude_ssl_gen_crypto): 
 	* src/prelude-auth.c (open_auth_file): 
-	show more information on error.
+
+	Show more information on error. 
+	Use -1 instead of 0 as the fchown() GID argument.
+	This avoid problem when sensor-adduser is used by a non 
+	priviledged user.
 
 2002-05-16  Baptiste Malguy  <baptiste@malguy.net>
 
