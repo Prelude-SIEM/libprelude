@@ -68,13 +68,12 @@ static int send_own_certificate(prelude_io_t *pio, des_key_schedule *skey1,
                                 des_key_schedule *skey2, int expire, int keysize) 
 {
         int ret;
-        X509 *x509ss;
         char filename[256];
 
         prelude_get_ssl_key_filename(filename, sizeof(filename));
-                
-	x509ss = prelude_ssl_gen_crypto(keysize, expire, filename, 0);
-	if ( ! x509ss ) {
+
+        ret = prelude_ssl_gen_crypto(keysize, expire, filename, 0);
+	if ( ret < 0 ) {
 		fprintf(stderr, "\nRegistration failed\n");
 		return -1;
 	}
@@ -208,9 +207,9 @@ static int tell_ssl_usage(prelude_io_t *fd)
 int ssl_add_certificate(prelude_io_t *fd, char *pass, size_t size)
 {
 	int ret;
+        int keysize, expire;
         des_cblock pre1, pre2;
 	des_key_schedule skey1, skey2;
-        int keysize, expire;
 
         des_string_to_2keys(pass, &pre1, &pre2);
         memset(pass, 0, size);
@@ -233,6 +232,12 @@ int ssl_add_certificate(prelude_io_t *fd, char *pass, size_t size)
                 return -1;
 
         ask_configuration(&keysize, &expire);
+
+        if ( expire == 0 ) 
+                /*
+                 * Does SSL allow for key that never expire ?
+                 */
+                expire = 36500;
         
         ret = send_own_certificate(fd, &skey1, &skey2, expire, keysize);
         if ( ret < 0 ) {

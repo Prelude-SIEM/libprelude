@@ -4,7 +4,7 @@
 
 /*****
 *
-* Copyright (C) 2001 Jeremie Brebec / Toussaint Mathieu
+* Copyright (C) 2001, 2002 Jeremie Brebec / Toussaint Mathieu
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -31,6 +31,11 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/time.h>
+#include <fcntl.h>
+
+#include <inttypes.h>
+
 #include <openssl/bio.h>
 #include <openssl/evp.h>
 #include <openssl/conf.h>
@@ -42,52 +47,51 @@
 #include <openssl/pem.h>
 #include <openssl/e_os.h>
 
+#include "prelude-log.h"
+#include "prelude-path.h"
+#include "prelude-io.h"
+#include "prelude-message.h"
+#include "prelude-client.h"
 #include "ssl-gencrypto.h"
+
 
 
 static int req_check_len(int len, int min, int max)
 {
 
-	if (len < min) {
-		fprintf(stderr,
-			"string is too short, it needs to be at least %d bytes long\n",
-			min);
-		return 0;
+	if ( len < min ) {
+                log(LOG_ERR, "string is too short, it needs to be at least %d bytes long\n", min);
+		return -1;
 	}
 
-	if ((max != 0) && (len > max)) {
-		fprintf(stderr,
-			"string is too long, it needs to be less than  %d bytes long\n",
-			max);
-		return 0;
+	if ( (max != 0) && (len > max) ) {
+		log(LOG_ERR, "string is too long, it needs to be less than  %d bytes long\n", max);
+		return -1;
 	}
 
-	return (1);
+	return 0;
 }
 
 
 
-static int get_full_hostname(char *str, size_t len) 
+static int get_full_hostname(char *buf, size_t len) 
 {
         int ret, i;
-        char buf[1024];
         
-        ret = gethostname(buf, sizeof(buf));
+        ret = gethostname(buf, len - 1);
         if ( ret < 0 ) {
                 fprintf(stderr, "couldn't get system hostname.\n");
                 return -1;
         }
-        
-        i = snprintf(str, len, "%s", buf);
 
-        ret = getdomainname(buf, sizeof(buf));
+        i = strlen(buf);
+        buf[i++] = '.';
+        
+        ret = getdomainname(buf + i, len - i);
         if ( ret < 0 ) {
                 fprintf(stderr, "couldn't get system domainname.\n");
                 return -1;
         }
-        
-        snprintf(str + i, len - i, "%c%s",
-                 (buf[0] != '\0') ? '.' : ' ', buf);
 
         return 0;
 }
@@ -97,45 +101,29 @@ static int get_full_hostname(char *str, size_t len)
 
 static int add_DN_object(X509_NAME *n, char *text, int nid, int min, int max)
 {
-
-        int i, ret;
-        char buf[1024];
-        char def[1024], *ptr;
-
-        def[0] = '\0';
-        ret = get_full_hostname(def, sizeof(def));
-        if ( ! buf )
-                return -1;
-        
- start:
-	fprintf(stderr, "%s [%s]: ", text, def);
+        int ret;
+        struct timeval tv;
+        char buf[1024], host[256];
         
         buf[0] = '\0';
-        fgets(buf, 1024, stdin);
-        
-	if (buf[0] == '\n')
-                ptr = def;
-        else
-                ptr = buf;
-        
-        i = strlen(ptr);
-        if ( buf[i - 1] == '\n' )
-                buf[--i] = '\0';
-        
-        /*
-         * If Prelude Report get two Prelude certificate with the same
-         * name, it will act like if theses two certificate doesn't
-         * exist... This is why we use rand() to prevent this.
-         */
-        snprintf(ptr + i, sizeof(buf) - i, " - %d", rand());
-        
-	if (!req_check_len(i, min, max))
-		goto start;
 
-	if (!X509_NAME_add_entry_by_NID(n, nid, MBSTRING_ASC,
-                                        (unsigned char *) ptr, -1, -1, 0))
+        ret = get_full_hostname(host, sizeof(host));
+        if ( ret < 0 ) 
+                return -1;        
+
+        gettimeofday(&tv, NULL);
+        srand(getpid() * tv.tv_usec);
+        
+        ret = snprintf(buf, sizeof(buf), "%s:%s:%llu:%d", host, prelude_get_sensor_name(),
+                       prelude_client_get_analyzerid(), rand());
+        
+	if ( req_check_len(ret, min, max) < 0)
 		return -1;
-
+        
+        ret = X509_NAME_add_entry_by_NID(n, nid, MBSTRING_ASC, (unsigned char *) buf, -1, -1, 0);
+	if ( ! ret )
+		return -1;
+        
 	return 0;
 }
 
@@ -150,19 +138,15 @@ static int prompt_info(X509_REQ * req)
 
 	subj = X509_REQ_get_subject_name(req);
 
-	fprintf(stderr,
-		"You will be asked a name that will be enclosed in your certificate\n");
-	fprintf(stderr, "If you type enter, a default value will be used.\n");
-
 	v.name = "CN";
 	v.value = "Name";
 	min = 5;
 	max = 100;
 	nid = OBJ_txt2nid(v.name);
 
-	if ( add_DN_object(subj, v.value, nid, min, max) < 0 )
+        if ( add_DN_object(subj, v.value, nid, min, max) < 0 )
 		return 0;
-
+        
 	/*
          * we need one DN at least
          */
@@ -201,7 +185,7 @@ static int make_REQ(X509_REQ * req, EVP_PKEY * pkey)
 static void MS_CALLBACK req_cb(int p, int n, void *arg)
 {
 
-	char c = '*';
+	char c = 'B';
 
 	switch (p) {
 	case 0:
@@ -218,22 +202,33 @@ static void MS_CALLBACK req_cb(int p, int n, void *arg)
 		break;
 	}
 
-	BIO_write((BIO *) arg, &c, 1);
-	(void) BIO_flush((BIO *) arg);
+        fputc(c, stderr);
 }
 
 
 
-static EVP_PKEY *ssl_gen_privkey(int len, BIO * bio_err)
+static EVP_PKEY *generate_private_key(int len)
 {
-	EVP_PKEY *pkey;
-
-	if ((pkey = EVP_PKEY_new()) == NULL)
-		return NULL;;
-
-	if (!EVP_PKEY_assign_RSA
-	    (pkey, RSA_generate_key(len, 0x10001, req_cb, bio_err)))
+        int ret;
+        RSA *rsa;
+        EVP_PKEY *pkey;
+        
+        pkey = EVP_PKEY_new();
+        if ( ! pkey )
 		return NULL;
+
+        rsa = RSA_generate_key(len, RSA_F4, req_cb, NULL);
+        if ( ! rsa ) {
+                EVP_PKEY_free(pkey);
+                return NULL;
+        }
+
+        ret = EVP_PKEY_assign_RSA(pkey, rsa);
+        if ( ! ret ) {
+                RSA_free(rsa);
+                EVP_PKEY_free(pkey);
+                return NULL;
+        }
 
 	return pkey;
 }
@@ -241,53 +236,46 @@ static EVP_PKEY *ssl_gen_privkey(int len, BIO * bio_err)
 
 
 
-static X509 *ssl_gen_sscert(EVP_PKEY * pkey, const EVP_MD * digest, int days)
+static X509 *generate_self_signed_certificate(EVP_PKEY *pkey, int days)
 {
-	X509_REQ *req;
-	EVP_PKEY *tmppkey;
-	X509V3_CTX ext_ctx;
 	X509 *x509ss;
+	X509_REQ *req;
+	X509V3_CTX ext_ctx;
+
+        x509ss = X509_new();
+        if ( ! x509ss )
+                return NULL;
 
 	req = X509_REQ_new();
-	if (req == NULL)
-		return NULL;
-
-	if (!make_REQ(req, pkey)) {
+	if ( ! req ) {
+                X509_free(x509ss);
+                return NULL;
+        }
+        
+	if ( ! make_REQ(req, pkey) ) {
 		X509_REQ_free(req);
-		return NULL;
+                return NULL;
 	}
 
-	if ((x509ss = X509_new()) == NULL) {
-		X509_REQ_free(req);
-		return NULL;
-	};
+        
+        X509_set_issuer_name(x509ss, X509_REQ_get_subject_name(req));
+        X509_set_subject_name(x509ss, X509_REQ_get_subject_name(req));
 
 	/*
          * Set version to V3
          */
-	if (!X509_set_version(x509ss, 2)) {
-		X509_REQ_free(req);
-		X509_free(x509ss);
-		return NULL;
-	}
-
-	ASN1_INTEGER_set(X509_get_serialNumber(x509ss), 0L);
-	X509_set_issuer_name(x509ss, X509_REQ_get_subject_name(req));
-	X509_gmtime_adj(X509_get_notBefore(x509ss), 0);
-	X509_gmtime_adj(X509_get_notAfter(x509ss),
-			(long) 60 * 60 * 24 * days);
-	X509_set_subject_name(x509ss, X509_REQ_get_subject_name(req));
-	tmppkey = X509_REQ_get_pubkey(req);
-	X509_set_pubkey(x509ss, tmppkey);
-	EVP_PKEY_free(tmppkey);
-
+        X509_set_version(x509ss, 3);
+	ASN1_INTEGER_set(X509_get_serialNumber(x509ss), 0);
+        X509_gmtime_adj(X509_get_notBefore(x509ss), 0);
+	X509_gmtime_adj(X509_get_notAfter(x509ss), (long) 60 * 60 * 24 * days);
+        X509_set_pubkey(x509ss, pkey);
+      
 	/*
          * Set up V3 context struct
          */
-        
 	X509V3_set_ctx(&ext_ctx, x509ss, x509ss, NULL, NULL, 0);
 
-	if (!X509_sign(x509ss, pkey, digest)) {
+	if ( ! X509_sign(x509ss, pkey, EVP_md5()) ) {
 		X509_free(x509ss);
 		return NULL;
 	}
@@ -299,119 +287,117 @@ static X509 *ssl_gen_sscert(EVP_PKEY * pkey, const EVP_MD * digest, int days)
 
 
 
-X509 *prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int crypt)
+
+
+static void check_key_size(int keysize) 
 {
-	int i;
-        mode_t old_mask;
-	X509 *x509ss = NULL;
-	EVP_PKEY *pkey = NULL;
-	BIO *out = NULL, *bio_err = NULL;
-	EVP_CIPHER *cipher = NULL;
-	const EVP_MD *digest = EVP_md5();
-
-        if ( crypt )
-                cipher = EVP_des_ede3_cbc();
-
         /*
-         * FIXME: What is that ?
-         * Don't it cause exportation issue ?
+         * RSA key < 1024 bits are weak. We can't override the provided size
+         * due to exportation issue. We'll warn the user at least.
          */
-	if ( keysize < DEFAULT_KEY_LENGTH )
-                keysize = DEFAULT_KEY_LENGTH;
-
-	if ((bio_err = BIO_new(BIO_s_file())) != NULL)
-		BIO_set_fp(bio_err, stderr, BIO_NOCLOSE | BIO_FP_TEXT);
-
-	out = BIO_new(BIO_s_file());
-	if ((out == NULL) || bio_err == NULL) {
-		BIO_free_all(out);
-		return NULL;
-	}
-        
-	BIO_printf(bio_err, "Generating a %d bit RSA private key\n", keysize);
-	pkey = ssl_gen_privkey(keysize, bio_err);
-	if (pkey == NULL) {
-		ERR_print_errors(bio_err);
-		BIO_printf(bio_err, "problems making RSA private key\n");
-		BIO_free_all(out);
-		return NULL;
-	}
-
-        /*
-         * FIXME : BIO API probably have a way to set
-         * permission... don't do a chmod() to avoid a race
-         * (see ChangeLog of 2001-03-30).
-         */
-        old_mask = umask(S_IRWXG|S_IRWXO);
-        
-	BIO_printf(bio_err, "Writing new private key to '%s'\n", keyout);
-	if (BIO_write_filename(out, keyout) <= 0) {
-		perror(keyout);
-		BIO_free_all(out);
-		EVP_PKEY_free(pkey);
-                umask(old_mask);
-		return NULL;
-	}
-        umask(old_mask);
-
-	i = 0;
-
-        while ( ! PEM_write_bio_PrivateKey(out, pkey, cipher, NULL, 0, NULL, NULL) ) {
-                if ((ERR_GET_REASON(ERR_peek_error()) ==
-                     PEM_R_PROBLEMS_GETTING_PASSWORD) && (i < 3)) {
-			ERR_clear_error();
-			i++;
-                        continue;
-		}
-
-                ERR_print_errors(bio_err);
-		BIO_printf(bio_err, "problems making RSA private key\n");
-		BIO_free_all(out);
-		EVP_PKEY_free(pkey);
-
-                return NULL;
+	if ( keysize < 1024 ) {
+                fprintf(stderr,
+                        "\n\nYou requested the creation of a key with size being %d.\n"
+                        "We have to warn you that RSA key with size < 1024 should be considered insecure.\n\n",
+                        keysize);
         }
-        
-	BIO_printf(bio_err, "-----\n");
-
-	//-----------------------------------------------------
-	x509ss = ssl_gen_sscert(pkey, digest, expire);
-	if (x509ss == NULL) {
-		ERR_print_errors(bio_err);
-		BIO_printf(bio_err, "problems making self signed Certificate\n");
-		BIO_free_all(out);
-		EVP_PKEY_free(pkey);
-		return NULL;
-	}
-
-	BIO_printf(bio_err, "Adding self signed Certificate to '%s'\n", keyout);
-	//------------------------------------------------
-	if (!(int) BIO_append_filename(out, keyout)) {
-		perror(keyout);
-		BIO_free_all(out);
-		EVP_PKEY_free(pkey);
-		X509_free(x509ss);
-		return NULL;
-	}
-
-	if (!PEM_write_bio_X509(out, x509ss)) {
-		ERR_print_errors(bio_err);
-		BIO_printf(bio_err, "unable to write X509 certificate\n");
-		BIO_free_all(out);
-		EVP_PKEY_free(pkey);
-		X509_free(x509ss);
-		return NULL;
-	}
-
-	BIO_free_all(out);
-	EVP_PKEY_free(pkey);
-	OBJ_cleanup();
-
-	return x509ss;
 }
 
 
 
+
+
+/**
+ * prelude_ssl_gen_crypto:
+ * @keysize: Size of the RSA key to create.
+ * @expire: Number of day this key will expire in.
+ * @keyout: Place where the create key should be stored.
+ * @crypt: Whether the key should be crypted or not.
+ *
+ * Create a new private key of @keysize bits, expiring in @expire days,
+ * along with a self signed certificate for this key. Both the key and
+ * the certificate are saved in @keyout.
+ *
+ * If @crypt is true, the key will be stored encrypted.
+ *
+ * Returns: 0 on success, or -1 if an error occured.
+ */
+int prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int crypt)
+{
+        FILE *fdp;
+	int ret, fd;
+	X509 *x509ss = NULL;
+	EVP_PKEY *pkey = NULL;
+	EVP_CIPHER *cipher = NULL;
+
+        if ( crypt )
+                cipher = EVP_des_ede3_cbc();
+
+        check_key_size(keysize);
+
+        /*
+         * Create the private key.
+         */
+        fprintf(stderr, "Generating a %d bit RSA private key...\n", keysize);
+        
+	pkey = generate_private_key(keysize);
+	if ( ! pkey ) {
+                fprintf(stderr, "Problem generating RSA private key.\n");
+		return -1;
+	}
+        
+        x509ss = generate_self_signed_certificate(pkey, expire);
+	if ( ! x509ss ) {
+		ERR_print_errors_fp(stderr);
+                fprintf(stderr, "problems making self signed Certificate.\n");
+		EVP_PKEY_free(pkey);
+                return -1;
+        }
+        
+        /*
+         * write it to the keyout file.
+         */
+        fprintf(stderr, "Writing new private key to '%s'.\n", keyout);
+
+        fd = open(keyout, O_CREAT|O_TRUNC|O_RDWR, S_IRUSR|S_IWUSR);
+        if ( fd < 0 ) {
+                fprintf(stderr, "couldn't open %s for writing.\n", keyout);
+                ret = -1; goto ferr;
+        }
+
+        fdp = fdopen(fd, "w");
+        if ( ! fdp ) {
+                fprintf(stderr, "couldn't open %s for writing.\n", keyout);
+                close(fd);
+                ret = -1; goto ferr;
+        }
+
+        ret = PEM_write_PrivateKey(fdp, pkey, cipher, NULL, 0, NULL, NULL);
+        if ( ! ret ) {
+                ERR_print_errors_fp(stderr);
+                fprintf(stderr, "couldn't write private key to %s.\n", keyout);
+                goto err;
+        }
+
+        fprintf(stderr, "Adding self signed Certificate to '%s'\n", keyout);
+        
+        ret = PEM_write_X509(fdp, x509ss);
+        if ( ! ret ) {
+                ERR_print_errors_fp(stderr);
+		fprintf(stderr, "unable to write X509 certificate.\n");
+        }
+
+  err:
+        fclose(fdp);
+        close(fd);
+        
+  ferr:
+        X509_free(x509ss);
+	EVP_PKEY_free(pkey);
+	OBJ_cleanup();
+
+	return ret;
+}
 
 #endif
 

@@ -1,3 +1,33 @@
+2002-02-06  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/ssl.c (ssl_init_client): use TLSv1, as suggested by 
+	Michael Samuel <michael@miknet.net>.
+
+	* src/ssl-gencrypto.c: cleanup the got, get rid of un-needed thing.
+	Stop using SSL BIO, and use libc IO operation for storing the key.
+	
+	(add_DN_object): subject is host:sensorname:sensorid:random-number.
+	So we can be sure subject are uniq (else we'll end up not finding the
+	good certificate to use with this client on the Manager side).
+
+	* src/prelude-client.c: prelude_client_t object include an 
+	in_addr member (which is the resolved Manager address).
+	(inet_connect): use the previously resolved addr.
+	(auth_error): new function.
+
+	(do_connect): if resolved address is 127.0.0.1 use UNIX connection.
+
+	(handle_plaintext_connection): 
+	(handle_ssl_connection): call auth_error when necessary, telling
+	the user how to do to setup the sensor.
+
+	* sensor-adduser/sensor-adduser.c (main): 
+	use plaintext for authentication if we're connecting to 
+	localhost. SSL otherwise.
+
+	* sensors-default.conf (manager-addr): 
+	unix is deprecated, use 127.0.0.1 (we'll use UNIX internally).
+
 2002-02-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/idmef-msg-send.c (idmef_send_web_service): 

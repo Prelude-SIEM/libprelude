@@ -14,20 +14,6 @@ ssl-gencrypto
 
 </para>
 
-<!-- ##### MACRO SSL_GENCRYPTO_H ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO DEFAULT_KEY_LENGTH ##### -->
-<para>
-
-</para>
-
-
-
 <!-- ##### FUNCTION prelude_ssl_gen_crypto ##### -->
 <para>
 

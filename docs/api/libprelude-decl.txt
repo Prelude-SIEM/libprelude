@@ -293,7 +293,7 @@ int *keysize, int *expire
 <FUNCTION>
 <NAME>prelude_auth_create_account</NAME>
 <RETURNS>int  </RETURNS>
-const char *filename, int crypted
+const char *filename, char **user, char **pass, int crypted
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_auth_create_account_noprompt</NAME>
@@ -344,6 +344,11 @@ prelude_msgbuf_t *msg, idmef_additional_data_t *data
 <NAME>idmef_send_additional_data_list</NAME>
 <RETURNS>void  </RETURNS>
 prelude_msgbuf_t *msg, struct list_head *head
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_send_web_service_arg</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msgbuf_t *msg, idmef_webservice_arg_t *arg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_send_web_service</NAME>
@@ -791,6 +796,11 @@ char *buf, size_t size
 <RETURNS>void  </RETURNS>
 const char *sname
 </FUNCTION>
+<FUNCTION>
+<NAME>prelude_get_sensor_name</NAME>
+<RETURNS>const char  *</RETURNS>
+void
+</FUNCTION>
 <TYPEDEF>
 <NAME>prelude_timer_t</NAME>
 typedef struct {
@@ -1084,17 +1094,9 @@ const char *sname
 <RETURNS>void  </RETURNS>
 void (*cb)(struct list_head *clist)
 </FUNCTION>
-<MACRO>
-<NAME>SSL_GENCRYPTO_H</NAME>
-#define SSL_GENCRYPTO_H
-</MACRO>
-<MACRO>
-<NAME>DEFAULT_KEY_LENGTH</NAME>
-#define DEFAULT_KEY_LENGTH	512
-</MACRO>
 <FUNCTION>
 <NAME>prelude_ssl_gen_crypto</NAME>
-<RETURNS>X509  *</RETURNS>
+<RETURNS>int  </RETURNS>
 int keysize, int expire, const char *keyout, int crypt
 </FUNCTION>
 <MACRO>
@@ -1239,6 +1241,11 @@ idmef_user_t *user
 <NAME>idmef_node_address_new</NAME>
 <RETURNS>idmef_address_t  *</RETURNS>
 idmef_node_t *node
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_webservice_arg_new</NAME>
+<RETURNS>idmef_webservice_arg_t  *</RETURNS>
+idmef_webservice_t *w
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_webservice_new</NAME>
@@ -1548,12 +1555,19 @@ typedef struct {
 } idmef_process_t;
 </TYPEDEF>
 <TYPEDEF>
+<NAME>idmef_webservice_arg_t</NAME>
+typedef struct {
+        struct list_head list;
+        idmef_string_t arg;
+} idmef_webservice_arg_t;
+</TYPEDEF>
+<TYPEDEF>
 <NAME>idmef_webservice_t</NAME>
 typedef struct {
         idmef_string_t url;
         idmef_string_t cgi;
         idmef_string_t http_method;
-        idmef_string_t arg;
+        struct list_head arg_list;
 } idmef_webservice_t;
 </TYPEDEF>
 <TYPEDEF>

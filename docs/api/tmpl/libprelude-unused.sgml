@@ -98,6 +98,12 @@ libmissing
 thread
 
 
+<!-- ##### MACRO DEFAULT_KEY_LENGTH ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### MACRO HAVE_CRYPT ##### -->
 <para>
 
@@ -309,6 +315,12 @@ thread
 
 
 <!-- ##### MACRO SENSORS_KEY ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO SSL_GENCRYPTO_H ##### -->
 <para>
 
 </para>

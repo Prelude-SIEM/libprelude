@@ -29,6 +29,7 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <arpa/inet.h>
 
 #include "common.h"
 #include "prelude-message-id.h"
@@ -98,7 +99,7 @@ static int print_help(const char *optarg)
 
 
 
-static prelude_io_t *connect_manager(const char *addr, uint16_t port) 
+static prelude_io_t *connect_manager(struct in_addr in, uint16_t port) 
 {
         int ret, sock;
         prelude_io_t *fd;
@@ -106,12 +107,8 @@ static prelude_io_t *connect_manager(const char *addr, uint16_t port)
 
         daddr.sin_family = AF_INET;
         daddr.sin_port = htons(port);
-        
-        ret = prelude_resolve_addr(addr, &daddr.sin_addr);
-        if ( ret < 0 ) {
-                fprintf(stderr, "couldn't resolve %s.\n", addr);
-                return NULL;
-        }
+
+        daddr.sin_addr = in;
 
         sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
         if ( sock < 0) {
@@ -276,8 +273,9 @@ static int handle_argument(int argc, char **argv)
 int main(int argc, char **argv) 
 {
         int ret;
-        char buf[256], *pass;
         prelude_io_t *fd;
+        struct in_addr in;
+        char buf[256], *pass;
         int have_ssl = 0, have_plaintext = 0;
 
         ret = handle_argument(argc, argv);
@@ -307,8 +305,14 @@ int main(int argc, char **argv)
                 return -1;
         
 	fprintf(stderr, "connecting to Manager host (%s:%d)... ", addr, port);
-
-        fd = connect_manager(addr, port);
+        
+        ret = prelude_resolve_addr(addr, &in);
+        if ( ret < 0 ) {
+                fprintf(stderr, "couldn't resolve %s.\n", addr);
+                return -1;
+        }
+        
+        fd = connect_manager(in, port);
         if ( ! fd ) 
                 return -1;
 
@@ -319,7 +323,7 @@ int main(int argc, char **argv)
         prelude_get_auth_filename(buf, sizeof(buf));
 
 #ifdef HAVE_SSL
-        if ( have_ssl && strcmp(addr, "127.0.0.1") != 0 && strcmp(addr, "unix") != 0 ) {
+        if ( have_ssl && strcmp(inet_ntoa(in), "127.0.0.1") != 0 ) {
                 ret = ssl_add_certificate(fd, pass, strlen(pass));
                 goto end;
         }

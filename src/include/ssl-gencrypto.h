@@ -22,11 +22,8 @@
 *****/
 
 #ifndef SSL_GENCRYPTO_H
-
 #define SSL_GENCRYPTO_H
 
-#define DEFAULT_KEY_LENGTH	512
-
-X509 *prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int crypt);
+int prelude_ssl_gen_crypto(int keysize, int expire, const char *keyout, int crypt);
 
 #endif

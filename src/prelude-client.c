@@ -69,6 +69,8 @@ struct prelude_client {
 
         char *daddr;
         uint16_t dport;
+
+        struct in_addr in;
         
         /*
          * This pointer point to the object suitable
@@ -78,6 +80,16 @@ struct prelude_client {
         uint8_t connection_broken;
 };
 
+
+
+
+static void auth_error(prelude_client_t *client, const char *auth_kind) 
+{
+        log(LOG_INFO, "\n%s authentication failed. Please run :\n"
+            "sensor-adduser --sensorname %s --uid %d --manager-addr %s\n"
+            "program on the sensor host to create an account for this sensor.\n\n",
+            auth_kind, prelude_get_sensor_name(), getuid(), client->daddr);
+}
 
 
 
@@ -143,21 +155,17 @@ static int unix_connect(void)
 /*
  * Setup an Inet connection.
  */
-static int inet_connect(const char *addr, unsigned int port)
+static int inet_connect(prelude_client_t *client)
 {
         int ret, on, len, sock;
 	struct sockaddr_in daddr, saddr;
         
-	log(LOG_INFO, "- Connecting to Tcp prelude Manager server %s:%d.\n", addr, port);
+	log(LOG_INFO, "- Connecting to Tcp prelude Manager server %s:%d.\n",
+            client->daddr, client->dport);
         
 	daddr.sin_family = AF_INET;
-	daddr.sin_port = htons(port);
-        
-        ret = prelude_resolve_addr(addr, &daddr.sin_addr);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "couldn't resolve %s.\n", addr);
-                return -1;
-        }
+	daddr.sin_port = htons(client->dport);
+        daddr.sin_addr.s_addr = client->in.s_addr;
         
         sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if ( sock < 0 ) {
@@ -178,7 +186,7 @@ static int inet_connect(const char *addr, unsigned int port)
         
         ret = generic_connect(sock, (struct sockaddr *)&daddr, sizeof(daddr));
         if ( ret < 0 ) {
-                log(LOG_ERR,"Error connecting to %s.\n", addr);
+                log(LOG_ERR,"Error connecting to %s.\n", client->daddr);
                 goto err;
         }
 
@@ -245,13 +253,17 @@ static int handle_plaintext_connection(prelude_client_t *client, int sock)
         
         ret = prelude_auth_read_entry(filename, NULL, &user, &pass);
         if ( ret < 0 ) {
-                log(LOG_INFO, "\nPlaintext authentication failed. Please run :\n"
-                    "sensor-adduser --sensorname %s --uid %d\n"
-                    "program on the Sensor host to create an account for this sensor.\n\n",
-                    prelude_get_sensor_name(), getuid());
+                /*
+                 * the authentication file doesn't exist. Tell
+                 * the user it have to create it and exit.
+                 */
+                auth_error(client, "Plaintext");
                 exit(1);
         }
-        
+
+        /*
+         * create message containing plaintext authentication informations.
+         */
         ulen = strlen(user) + 1;
         plen = strlen(pass) + 1;
         
@@ -294,8 +306,14 @@ static int handle_ssl_connection(prelude_client_t *client, int sock)
         
         if ( ! ssl_initialized ) {
                 ret = ssl_init_client();
-                if ( ret < 0 )
-                        return -1;
+                if ( ret < 0 ) {
+                         /*
+                          * SSL key / certificate doesn't exist. Tell the
+                          * use how to create them and exit.
+                          */
+                        auth_error(client, "SSL");
+                        exit(1);
+                }
                 
                 ssl_initialized = 1;
         }
@@ -315,11 +333,11 @@ static int handle_ssl_connection(prelude_client_t *client, int sock)
         
         ssl = ssl_connect_server(sock);
         if ( ! ssl ) {
-                log(LOG_INFO,
-                    "\nSSL authentication failed. Please run : "
-                    "sensor-adduser --sensorname %s --uid %d\n"
-                    "program on the Sensor host to create an account for this sensor.\n\n",
-                    prelude_get_sensor_name(), getuid());
+                /*
+                 * SSL authentication failed,
+                 * tell the user how to setup SSL auth and exit.
+                 */
+                auth_error(client, "SSL");
                 exit(1);
         }
         
@@ -389,11 +407,19 @@ static int start_inet_connection(prelude_client_t *client)
         struct sockaddr_in addr;
         int have_ssl  = 0, have_plaintext = 0, sock;
         
-        sock = inet_connect(client->daddr, client->dport);
+        len = sizeof(addr);
+        
+        /*
+         * connect to the Manager.
+         */
+        sock = inet_connect(client);
         if ( sock < 0 )
                 return -1;
 
-        len = sizeof(addr);
+        /*
+         * Get information about the connection,
+         * because the sensor might want to know source addr/port used.
+         */
         ret = getsockname(sock, (struct sockaddr *) &addr, &len);
         if ( ret < 0 ) 
                 log(LOG_ERR, "couldn't get connection informations.\n");
@@ -403,7 +429,11 @@ static int start_inet_connection(prelude_client_t *client)
         }
 
         prelude_io_set_sys_io(client->fd, sock);
-        
+
+        /*
+         * get manager message telling what kind of connection it
+         * support. Prefer SSL over plaintext if supported by both end.
+         */
         ret = get_manager_setup(client->fd, &have_ssl, &have_plaintext);
         if ( ret < 0 ) {
                 close(sock);
@@ -471,12 +501,22 @@ static int start_unix_connection(prelude_client_t *client)
 static int do_connect(prelude_client_t *client) 
 {
         int ret;
-        
-	if ( strcmp(client->daddr, "unix") == 0 || strcmp(client->daddr, "127.0.0.1") == 0 ) {
-		ret = start_unix_connection(client);
-        } else {
-                ret = start_inet_connection(client);
+        const char *real_addr;
+
+        /*
+         * translate the resolved address to a string,
+         * so that we can see if it is resolved to 127.0.0.1.
+         */
+        real_addr = inet_ntoa(client->in);
+        if ( ! real_addr ) {
+                log(LOG_ERR, "couldn't get real address.\n");
+                return -1;
         }
+        
+	if ( strcmp(real_addr, "127.0.0.1") == 0 ) 
+		ret = start_unix_connection(client);
+        else 
+                ret = start_inet_connection(client);
         
         return ret;
 }
@@ -514,13 +554,20 @@ void prelude_client_destroy(prelude_client_t *client)
 
 prelude_client_t *prelude_client_new(const char *addr, uint16_t port) 
 {
+        int ret;
         prelude_client_t *new;
-
-        signal(SIGPIPE, SIG_IGN);
         
+        signal(SIGPIPE, SIG_IGN);
+
         new = malloc(sizeof(*new));
         if (! new )
                 return NULL;
+        
+        ret = prelude_resolve_addr(addr, &new->in);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "couldn't resolve %s.\n", addr);
+                return NULL;
+        }
         
         new->saddr = NULL;
         new->sport = 0;
@@ -531,6 +578,7 @@ prelude_client_t *prelude_client_new(const char *addr, uint16_t port)
         
         new->fd = prelude_io_new();
         if ( ! new->fd ) {
+                free(new->daddr);
                 free(new);
                 return NULL;        
         }
@@ -678,3 +726,16 @@ ssize_t prelude_client_forward(prelude_client_t *client, prelude_io_t *src, size
 
         return ret;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

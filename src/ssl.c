@@ -94,7 +94,7 @@ int ssl_init_client(void)
 	SSL_load_error_strings();
 	SSL_library_init();
 
-	method = SSLv3_client_method();
+	method = TLSv1_client_method();
 
 	ctx = SSL_CTX_new(method);
 	if ( ! ctx ) {
@@ -103,7 +103,6 @@ int ssl_init_client(void)
 		return -1;
 	}
 
-	SSL_CTX_set_options(ctx, SSL_OP_NO_SSLv2 | SSL_OP_NO_TLSv1);
 	SSL_CTX_set_verify_depth(ctx, 1);
         
 	/*
@@ -115,13 +114,12 @@ int ssl_init_client(void)
         
 	ret = SSL_CTX_load_verify_locations(ctx, filename, NULL);
 	if ( ret <= 0 ) {
-                log(LOG_INFO, "\nNo Manager certificate available. Please restart with the\n"
-                    "-c command line argument.\n");
+                log(LOG_ERR, "error loading certificate file %s.\n", filename);
                 goto err;
-	}
-
+        }
+        
         prelude_get_ssl_key_filename(filename, sizeof(filename));
-             
+        
 	ret = SSL_CTX_use_certificate_file(ctx, filename, SSL_FILETYPE_PEM);
 	if ( ret <= 0 ) {
                 log(LOG_ERR, "error loading certificate file %s.\n", filename);
