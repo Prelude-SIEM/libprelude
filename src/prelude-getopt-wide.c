@@ -268,13 +268,13 @@ int prelude_option_send_request(prelude_client_t *client, uint32_t request_id, u
         uint64_t tmp;
         prelude_msgbuf_t *msg;
 
-        msg = prelude_msgbuf_new(0, client_send_msg);
+        msg = prelude_msgbuf_new(PRELUDE_MSGBUF_ASYNC_SEND);
         if ( ! msg ) {
                 log(LOG_ERR, "error creating option message.\n");
                 return -1;
         }
 
-        prelude_msgbuf_set_data(msg, client);
+        prelude_msg_set_tag(prelude_msgbuf_get_msg(msg), PRELUDE_MSG_OPTION_REQUEST);
         
         prelude_msgbuf_set(msg, type, 0, 0);
 
@@ -292,7 +292,6 @@ int prelude_option_send_request(prelude_client_t *client, uint32_t request_id, u
         if ( value )
                 prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_VALUE, strlen(value) + 1, value);
         
-        prelude_msgbuf_set_header(msg, PRELUDE_MSG_OPTION_REQUEST, 0);
         prelude_msgbuf_close(msg);
         
         return 0;

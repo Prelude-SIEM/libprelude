@@ -37,49 +37,39 @@
 
 
 struct prelude_message_buffered {
-        int async_send;
+        int flags;
         prelude_msg_t *msg;
+        prelude_msg_t *(*send_msg)(void *data);
 };
 
 
 
-static prelude_msg_t *flush_msg_cb(void *data) 
+static prelude_msg_t *send_msg(void *data) 
 {
         prelude_msgbuf_t *msgbuf = data;
-
-        if ( msgbuf->async_send ) {
-                prelude_sensor_send_msg_async(msgbuf->msg);
-
-                msgbuf->msg = prelude_msg_dynamic_new(0, 0, data, flush_msg_cb);
-                if ( ! msgbuf->msg ) 
-                        log(LOG_ERR, "memory exhausted.\n");
-                
-        } else {
-                prelude_sensor_send_msg(msgbuf->msg);
-                prelude_msg_recycle(msgbuf->msg);
-        }
         
+        prelude_sensor_send_msg(msgbuf->msg);
+        prelude_msg_recycle(msgbuf->msg);
+
         return msgbuf->msg;
 }
 
 
 
-/**
- * prelude_msgbuf_set_header:
- * @msgbuf: Pointer on #prelude_msgbuf_t object.
- * @tag: Tag to associate to the current message within @msgbuf.
- * @priority: Priority to associate to the current message within @msgbuf.
- *
- * Associate @tag and @priority, with the current message being constructed
- * in the @msgbuf message buffer. This function should be called before
- * prelude_msgbuf_mark_end().
- */
-void prelude_msgbuf_set_header(prelude_msgbuf_t *msgbuf, uint8_t tag, uint8_t priority) 
+static prelude_msg_t *send_msg_async(void *data) 
 {
-        prelude_msg_set_tag(msgbuf->msg, tag);
-        prelude_msg_set_priority(msgbuf->msg, priority);
-}
+        prelude_msgbuf_t *msgbuf = data;
+        
+        prelude_sensor_send_msg_async(msgbuf->msg);
+        
+        msgbuf->msg = prelude_msg_dynamic_new(send_msg_async, msgbuf);
+        if ( ! msgbuf->msg ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }
 
+        return msgbuf->msg;
+}
 
 
 
@@ -103,7 +93,7 @@ void prelude_msgbuf_set(prelude_msgbuf_t *msgbuf, uint8_t tag, uint32_t len, con
 
 /**
  * prelude_msgbuf_new:
- * @async_send: Tell if the message should be written asynchronously or not.
+ * @flags: Tell if the message should be written asynchronously or not.
  *
  * Create a new #prelude_msgbuf_t object. You can then write data to
  * @msgbuf using the prelude_msgbuf_set function.
@@ -113,7 +103,7 @@ void prelude_msgbuf_set(prelude_msgbuf_t *msgbuf, uint8_t tag, uint32_t len, con
  *
  * Returns: a #prelude_msgbuf_t object, or NULL if an error occured.
  */
-prelude_msgbuf_t *prelude_msgbuf_new(int async_send) 
+prelude_msgbuf_t *prelude_msgbuf_new(int flags) 
 {
         prelude_msgbuf_t *msgbuf;
 
@@ -122,15 +112,36 @@ prelude_msgbuf_t *prelude_msgbuf_new(int async_send)
                 log(LOG_ERR, "memory exhausted.\n");
                 return NULL;
         }
-        
-        msgbuf->async_send = async_send;
 
-        msgbuf->msg = prelude_msg_dynamic_new(0, 0, msgbuf, flush_msg_cb);
+        msgbuf->flags = flags;
+        
+        if ( flags & PRELUDE_MSGBUF_ASYNC_SEND )
+                msgbuf->send_msg = send_msg_async;
+        else
+                msgbuf->send_msg = send_msg;
+
+        msgbuf->msg = prelude_msg_dynamic_new(msgbuf->send_msg, msgbuf);     
         if ( ! msgbuf->msg )
                 return NULL;
 
         return msgbuf;
 }
+
+
+
+
+/**
+ * prelude_msgbuf_get_msg:
+ * @msgbuf: Pointer on a #prelude_msgbuf_t object.
+ *
+ * Returns: This function return the current message associated with
+ * the message buffer.
+ */
+prelude_msg_t *prelude_msgbuf_get_msg(prelude_msgbuf_t *msgbuf)
+{
+        return msgbuf->msg;
+}
+
 
 
 
@@ -149,7 +160,7 @@ void prelude_msgbuf_mark_end(prelude_msgbuf_t *msgbuf)
          * FIXME:
          * only flush the message if we're not under an alert burst.
          */
-        flush_msg_cb(msgbuf);
+        msgbuf->send_msg(msgbuf);
 }
 
 
@@ -164,13 +175,17 @@ void prelude_msgbuf_mark_end(prelude_msgbuf_t *msgbuf)
  */
 void prelude_msgbuf_close(prelude_msgbuf_t *msgbuf) 
 {
-        flush_msg_cb(msgbuf);
+        msgbuf->send_msg(msgbuf);
         
-        if ( ! msgbuf->async_send )
+        if ( ! (msgbuf->flags & PRELUDE_MSGBUF_ASYNC_SEND) && msgbuf->msg )
                 prelude_msg_destroy(msgbuf->msg);
 
         free(msgbuf);
 }
+
+
+
+
 
 
 

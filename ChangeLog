@@ -1,3 +1,21 @@
+2002-12-18  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-message.c (prelude_msg_dynamic_new): 
+	remove un-necessary arguments. Tag and priority can be
+	set using prelude_msg_set_tag() / prelude_msg_set_priority().
+
+	* src/prelude-message-buffered.c: 
+	fit prelude-message API change. Cleanup.
+	
+	(prelude_msgbuf_get_msg): implemented. Permit to set 
+	message specific option (priority, tag).
+
+	* src/prelude-getopt-wide.c (prelude_option_send_request): 
+	fit prelude-message-buffered API change.
+
+	* sensor-adduser/sensor-adduser.c (print_help): fit
+	prelude-getopt API change.
+
 2002-11-22  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-getopt.c: 

@@ -73,8 +73,7 @@ void prelude_msg_recycle(prelude_msg_t *msg);
 
 void prelude_msg_mark_end(prelude_msg_t *msg);
 
-prelude_msg_t *prelude_msg_dynamic_new(uint8_t tag, uint8_t priority, void *data,
-                                       prelude_msg_t *(*flush_msg_cb)(void *data));
+prelude_msg_t *prelude_msg_dynamic_new(prelude_msg_t *(*flush_msg_cb)(void *data), void *data);
 
 prelude_msg_t *prelude_msg_new(size_t msgcount, size_t msglen, uint8_t tag, uint8_t priority);
 

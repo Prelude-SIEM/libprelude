@@ -683,10 +683,8 @@ prelude_msg_t *prelude_msg_new(size_t msgcount, size_t msglen, uint8_t tag, uint
 
 /**
  * prelude_msg_dynamic_new:
- * @tag: A tag identifying the kind of message.
- * @priority: The priority of this message.
- * @data: Data to pass to the @flush_msg_cb callback function.
  * @flush_msg_cb: Callback function to call when the buffer need to be flushed.
+ * @data: Data to pass to the @flush_msg_cb callback function.
  *
  * Allocate a new #prelude_msg_t object. prelude_msg_set() can then be used to
  * add chunk of data to the message, and prelude_msg_mark_start() to separate
@@ -699,8 +697,7 @@ prelude_msg_t *prelude_msg_new(size_t msgcount, size_t msglen, uint8_t tag, uint
  *
  * Returns: A pointer on a #prelude_msg_t object or NULL if an error occured.
  */
-prelude_msg_t *prelude_msg_dynamic_new(uint8_t tag, uint8_t priority, void *data,
-                                       prelude_msg_t *(*flush_msg_cb)(void *data)) 
+prelude_msg_t *prelude_msg_dynamic_new(prelude_msg_t *(*flush_msg_cb)(void *data), void *data) 
 {
         prelude_msg_t *msg;
         
@@ -709,11 +706,11 @@ prelude_msg_t *prelude_msg_dynamic_new(uint8_t tag, uint8_t priority, void *data
                 log(LOG_ERR, "memory exhausted.\n");
                 return NULL;
         }
-                
-        msg->hdr.version = PRELUDE_MSG_VERSION;
-        msg->hdr.tag = tag;
-        msg->hdr.priority = priority;
+
+        msg->hdr.tag = 0;
+        msg->hdr.priority = 0;
         msg->hdr.is_fragment = 0;
+        msg->hdr.version = PRELUDE_MSG_VERSION;
         msg->hdr.datalen = MSGBUF_SIZE;
 
         msg->payload = (unsigned char *) msg + sizeof(prelude_msg_t);

@@ -99,7 +99,7 @@ static int set_manager_addr(prelude_option_t *opt, const char *optarg)
 
 static int print_help(prelude_option_t *opt, const char *optarg) 
 {
-        prelude_option_print(CLI_HOOK, 50);
+        prelude_option_print(NULL, CLI_HOOK, 50);
         return prelude_option_end;
 }
 
