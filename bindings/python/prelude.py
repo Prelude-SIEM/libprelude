@@ -392,7 +392,7 @@ def idmef_value_c_to_python(value):
         return _prelude.idmef_data_get_data(data)
 
     if type == _prelude.IDMEF_VALUE_TYPE_ENUM:
-        return _prelude.idmef_type_enum_to_string(_prelude.idmef_value_get_idmef_type(value),
+        return _prelude.idmef_type_enum_to_string(_prelude.idmef_value_get_object_type(value),
                                                   _prelude.idmef_value_get_enum(value))
     
     try:
