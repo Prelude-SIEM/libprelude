@@ -337,8 +337,8 @@ static int call_option_cb(void **context, prelude_list_t *cblist, prelude_option
         prelude_list_for_each(tmp, cblist) {
                 
                 cb = prelude_list_entry(tmp, struct cb_list, list);
-                
-                if ( cb->option->priority < option->priority )
+
+                if ( cb->option->priority < option->priority ) 
                         break;
                 
                 prev = tmp;
@@ -385,7 +385,7 @@ static int call_option_from_cb_list(prelude_list_t *cblist, int option_kind)
                 prelude_list_del(&cb->list);
                 free(cb);
         }
-
+        
         return ret;
 }
 
@@ -418,6 +418,7 @@ static int get_missing_options(config_t *cfg, void **context,
         int ret;
         void *bkp;
         prelude_option_t *opt;
+        PRELUDE_LIST_HEAD(newlist);
         char *section = NULL, *entry = NULL, *value = NULL;
 
         while ( (config_get_next(cfg, &section, &entry, &value, line)) == 0 ) {
@@ -434,24 +435,24 @@ static int get_missing_options(config_t *cfg, void **context,
                         else
                                 option_err(OPT_INVAL, "%s:%d: invalid option \"%s\" in \"%s\" section.\n",
                                            filename, *line, entry, (section) ? section : "global");
-                        
-                        return prelude_option_error;
+
+                        continue;
                 }
                         
                 if ( section && ! entry ) {
                         bkp = *context;
                         
-                        ret = call_option_cb(context, cblist, opt, value);
+                        ret = call_option_cb(context, &newlist, opt, value);
                         if ( ret == prelude_option_error || ret == prelude_option_end ) 
                                 return ret;
 
-                        ret = get_missing_options(cfg, context, filename, cblist, &opt->optlist, line, depth + 1);
+                        ret = get_missing_options(cfg, context, filename, &newlist, &opt->optlist, line, depth + 1);
                         if ( ret == prelude_option_error || ret == prelude_option_end )
                                 return ret;
                         
-                        call_init_func(context, cblist, opt);
+                        call_init_func(context, &newlist, opt);
                         
-                        ret = call_option_from_cb_list(cblist, option_run_all);
+                        ret = call_option_from_cb_list(&newlist, option_run_all);
                         if ( ret == prelude_option_error || ret == prelude_option_end )
                                 return ret;
 
@@ -593,7 +594,7 @@ int prelude_option_parse_arguments(void **context, prelude_option_t *option,
                 ret = get_missing_options(cfg, context, filename, &cb_list, optlist, &line, 0);
                 if ( ret == prelude_option_error || ret == prelude_option_end )
                         return ret;
-
+                
                 ret = call_option_from_cb_list(&cb_list, option_run_all);
                 if ( ret == prelude_option_error || ret == prelude_option_end )
                         return ret;
