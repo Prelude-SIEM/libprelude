@@ -53,7 +53,6 @@ sub	header
 #include \"idmef.h\"
 #include \"idmef-tree-wrap.h\"
 #include \"idmef-message-write.h\"
-#include \"sensor.h\"
 #include \"prelude-client.h\"
 #include \"common.h\"
 
