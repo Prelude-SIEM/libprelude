@@ -365,24 +365,11 @@ static int set_heartbeat_interval(void **context, prelude_option_t *opt, const c
 
 
 
-static int get_this_option(prelude_client_t *client, prelude_option_t *opt, int argc, char **argv)
-{
-        int ret, old_flags;
-        void *context = client;
-        
-        prelude_option_set_warnings(0, &old_flags);
-        ret = prelude_option_parse_arguments(&context, opt, NULL, argc, argv);
-        prelude_option_set_warnings(old_flags, NULL);
-
-        return (ret != prelude_option_error) ? 0 : -1;
-}
-
-
-
 
 static int setup_options(prelude_client_t *client, int argc, char **argv)
 {
         int ret;
+        int old_flags;
         prelude_option_t *opt;
         
         prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "heartbeat-interval",
@@ -399,7 +386,10 @@ static int setup_options(prelude_client_t *client, int argc, char **argv)
         opt = prelude_option_add(NULL, CLI_HOOK, 0, "config-file",
                                  "Configuration file for this analyzer", required_argument, set_configuration_file, NULL);
 
-        ret = get_this_option(client, NULL, argc, argv);
+        prelude_option_set_warnings(0, &old_flags);
+        ret = prelude_option_parse_arguments((void *) &client, opt, NULL, argc, argv);
+        prelude_option_set_warnings(old_flags, NULL);
+        
         if ( ret < 0 )
                 return -1;
         
