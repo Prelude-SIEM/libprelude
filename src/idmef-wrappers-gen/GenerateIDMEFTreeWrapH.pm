@@ -162,6 +162,10 @@ sub	struct_field_normal
     $ptr = "*", $refer = "*" if ( $field->{metatype} & &METATYPE_STRUCT );
     $refer = "*" if ( $field->{metatype} & &METATYPE_OPTIONAL_INT );
 
+    if ( $field->{metatype} & &METATYPE_OPTIONAL_INT ) {
+	$self->output("void idmef_$struct->{short_typename}_unset_${name}($struct->{typename} *ptr);\n");
+    }
+
     $self->output("$field->{typename} ${refer}idmef_$struct->{short_typename}_get_${name}($struct->{typename} *ptr);\n");
 
     $self->output("void idmef_$struct->{short_typename}_set_${name}($struct->{typename} *ptr, $field->{typename} ${ptr}${name});\n");

@@ -654,6 +654,13 @@ void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr
 	ptr->$field->{name} = $field->{name};
 	ptr->$field->{name}_is_set = 1;
 \}
+
+
+void idmef_$struct->{short_typename}_unset_$field->{name}($struct->{typename} *ptr)
+\{
+        ptr->$field->{name}_is_set = 0;
+\}
+
 ");
 
     } elsif ( $field->{metatype} & &METATYPE_STRUCT ) {

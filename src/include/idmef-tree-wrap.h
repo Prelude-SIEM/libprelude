@@ -238,6 +238,7 @@ void idmef_user_id_set_type(idmef_user_id_t *ptr, idmef_user_id_type_t type);
 int idmef_user_id_get_type_value(idmef_user_id_t *ptr, idmef_value_t **value);
 int idmef_user_id_new_type(idmef_user_id_t *ptr, idmef_user_id_type_t **ret);
 
+void idmef_user_id_unset_number(idmef_user_id_t *ptr);
 uint32_t *idmef_user_id_get_number(idmef_user_id_t *ptr);
 void idmef_user_id_set_number(idmef_user_id_t *ptr, uint32_t number);
 int idmef_user_id_get_number_value(idmef_user_id_t *ptr, idmef_value_t **value);
@@ -353,6 +354,7 @@ void idmef_address_set_vlan_name(idmef_address_t *ptr, prelude_string_t *vlan_na
 int idmef_address_get_vlan_name_value(idmef_address_t *ptr, idmef_value_t **value);
 int idmef_address_new_vlan_name(idmef_address_t *ptr, prelude_string_t **ret);
 
+void idmef_address_unset_vlan_num(idmef_address_t *ptr);
 int32_t *idmef_address_get_vlan_num(idmef_address_t *ptr);
 void idmef_address_set_vlan_num(idmef_address_t *ptr, int32_t vlan_num);
 int idmef_address_get_vlan_num_value(idmef_address_t *ptr, idmef_value_t **value);
@@ -402,6 +404,7 @@ void idmef_process_set_name(idmef_process_t *ptr, prelude_string_t *name);
 int idmef_process_get_name_value(idmef_process_t *ptr, idmef_value_t **value);
 int idmef_process_new_name(idmef_process_t *ptr, prelude_string_t **ret);
 
+void idmef_process_unset_pid(idmef_process_t *ptr);
 uint32_t *idmef_process_get_pid(idmef_process_t *ptr);
 void idmef_process_set_pid(idmef_process_t *ptr, uint32_t pid);
 int idmef_process_get_pid_value(idmef_process_t *ptr, idmef_value_t **value);
@@ -567,6 +570,7 @@ void idmef_service_set_ident(idmef_service_t *ptr, uint64_t ident);
 int idmef_service_get_ident_value(idmef_service_t *ptr, idmef_value_t **value);
 int idmef_service_new_ident(idmef_service_t *ptr, uint64_t **ret);
 
+void idmef_service_unset_ip_version(idmef_service_t *ptr);
 uint8_t *idmef_service_get_ip_version(idmef_service_t *ptr);
 void idmef_service_set_ip_version(idmef_service_t *ptr, uint8_t ip_version);
 int idmef_service_get_ip_version_value(idmef_service_t *ptr, idmef_value_t **value);
@@ -577,11 +581,13 @@ void idmef_service_set_name(idmef_service_t *ptr, prelude_string_t *name);
 int idmef_service_get_name_value(idmef_service_t *ptr, idmef_value_t **value);
 int idmef_service_new_name(idmef_service_t *ptr, prelude_string_t **ret);
 
+void idmef_service_unset_port(idmef_service_t *ptr);
 uint16_t *idmef_service_get_port(idmef_service_t *ptr);
 void idmef_service_set_port(idmef_service_t *ptr, uint16_t port);
 int idmef_service_get_port_value(idmef_service_t *ptr, idmef_value_t **value);
 int idmef_service_new_port(idmef_service_t *ptr, uint16_t **ret);
 
+void idmef_service_unset_iana_protocol_number(idmef_service_t *ptr);
 uint8_t *idmef_service_get_iana_protocol_number(idmef_service_t *ptr);
 void idmef_service_set_iana_protocol_number(idmef_service_t *ptr, uint8_t iana_protocol_number);
 int idmef_service_get_iana_protocol_number_value(idmef_service_t *ptr, idmef_value_t **value);
@@ -817,26 +823,31 @@ void idmef_inode_set_change_time(idmef_inode_t *ptr, idmef_time_t *change_time);
 int idmef_inode_get_change_time_value(idmef_inode_t *ptr, idmef_value_t **value);
 int idmef_inode_new_change_time(idmef_inode_t *ptr, idmef_time_t **ret);
 
+void idmef_inode_unset_number(idmef_inode_t *ptr);
 uint32_t *idmef_inode_get_number(idmef_inode_t *ptr);
 void idmef_inode_set_number(idmef_inode_t *ptr, uint32_t number);
 int idmef_inode_get_number_value(idmef_inode_t *ptr, idmef_value_t **value);
 int idmef_inode_new_number(idmef_inode_t *ptr, uint32_t **ret);
 
+void idmef_inode_unset_major_device(idmef_inode_t *ptr);
 uint32_t *idmef_inode_get_major_device(idmef_inode_t *ptr);
 void idmef_inode_set_major_device(idmef_inode_t *ptr, uint32_t major_device);
 int idmef_inode_get_major_device_value(idmef_inode_t *ptr, idmef_value_t **value);
 int idmef_inode_new_major_device(idmef_inode_t *ptr, uint32_t **ret);
 
+void idmef_inode_unset_minor_device(idmef_inode_t *ptr);
 uint32_t *idmef_inode_get_minor_device(idmef_inode_t *ptr);
 void idmef_inode_set_minor_device(idmef_inode_t *ptr, uint32_t minor_device);
 int idmef_inode_get_minor_device_value(idmef_inode_t *ptr, idmef_value_t **value);
 int idmef_inode_new_minor_device(idmef_inode_t *ptr, uint32_t **ret);
 
+void idmef_inode_unset_c_major_device(idmef_inode_t *ptr);
 uint32_t *idmef_inode_get_c_major_device(idmef_inode_t *ptr);
 void idmef_inode_set_c_major_device(idmef_inode_t *ptr, uint32_t c_major_device);
 int idmef_inode_get_c_major_device_value(idmef_inode_t *ptr, idmef_value_t **value);
 int idmef_inode_new_c_major_device(idmef_inode_t *ptr, uint32_t **ret);
 
+void idmef_inode_unset_c_minor_device(idmef_inode_t *ptr);
 uint32_t *idmef_inode_get_c_minor_device(idmef_inode_t *ptr);
 void idmef_inode_set_c_minor_device(idmef_inode_t *ptr, uint32_t c_minor_device);
 int idmef_inode_get_c_minor_device_value(idmef_inode_t *ptr, idmef_value_t **value);
@@ -1000,11 +1011,13 @@ void idmef_file_set_access_time(idmef_file_t *ptr, idmef_time_t *access_time);
 int idmef_file_get_access_time_value(idmef_file_t *ptr, idmef_value_t **value);
 int idmef_file_new_access_time(idmef_file_t *ptr, idmef_time_t **ret);
 
+void idmef_file_unset_data_size(idmef_file_t *ptr);
 uint64_t *idmef_file_get_data_size(idmef_file_t *ptr);
 void idmef_file_set_data_size(idmef_file_t *ptr, uint64_t data_size);
 int idmef_file_get_data_size_value(idmef_file_t *ptr, idmef_value_t **value);
 int idmef_file_new_data_size(idmef_file_t *ptr, uint64_t **ret);
 
+void idmef_file_unset_disk_size(idmef_file_t *ptr);
 uint64_t *idmef_file_get_disk_size(idmef_file_t *ptr);
 void idmef_file_set_disk_size(idmef_file_t *ptr, uint64_t disk_size);
 int idmef_file_get_disk_size_value(idmef_file_t *ptr, idmef_value_t **value);
@@ -1035,6 +1048,7 @@ void idmef_file_set_category(idmef_file_t *ptr, idmef_file_category_t category);
 int idmef_file_get_category_value(idmef_file_t *ptr, idmef_value_t **value);
 int idmef_file_new_category(idmef_file_t *ptr, idmef_file_category_t **ret);
 
+void idmef_file_unset_fstype(idmef_file_t *ptr);
 idmef_file_fstype_t *idmef_file_get_fstype(idmef_file_t *ptr);
 void idmef_file_set_fstype(idmef_file_t *ptr, idmef_file_fstype_t fstype);
 int idmef_file_get_fstype_value(idmef_file_t *ptr, idmef_value_t **value);
@@ -1288,6 +1302,7 @@ void idmef_alertident_set_alertident(idmef_alertident_t *ptr, uint64_t alertiden
 int idmef_alertident_get_alertident_value(idmef_alertident_t *ptr, idmef_value_t **value);
 int idmef_alertident_new_alertident(idmef_alertident_t *ptr, uint64_t **ret);
 
+void idmef_alertident_unset_analyzerid(idmef_alertident_t *ptr);
 uint64_t *idmef_alertident_get_analyzerid(idmef_alertident_t *ptr);
 void idmef_alertident_set_analyzerid(idmef_alertident_t *ptr, uint64_t analyzerid);
 int idmef_alertident_get_analyzerid_value(idmef_alertident_t *ptr, idmef_value_t **value);
@@ -1354,11 +1369,13 @@ int idmef_impact_get_child(void *p, idmef_child_t child, void **childptr);
 int idmef_impact_new_child(void *p, idmef_child_t child, int n, void **ret);
 
 void idmef_impact_destroy(idmef_impact_t *ptr);
+void idmef_impact_unset_severity(idmef_impact_t *ptr);
 idmef_impact_severity_t *idmef_impact_get_severity(idmef_impact_t *ptr);
 void idmef_impact_set_severity(idmef_impact_t *ptr, idmef_impact_severity_t severity);
 int idmef_impact_get_severity_value(idmef_impact_t *ptr, idmef_value_t **value);
 int idmef_impact_new_severity(idmef_impact_t *ptr, idmef_impact_severity_t **ret);
 
+void idmef_impact_unset_completion(idmef_impact_t *ptr);
 idmef_impact_completion_t *idmef_impact_get_completion(idmef_impact_t *ptr);
 void idmef_impact_set_completion(idmef_impact_t *ptr, idmef_impact_completion_t completion);
 int idmef_impact_get_completion_value(idmef_impact_t *ptr, idmef_value_t **value);
@@ -1456,6 +1473,7 @@ void idmef_confidence_set_rating(idmef_confidence_t *ptr, idmef_confidence_ratin
 int idmef_confidence_get_rating_value(idmef_confidence_t *ptr, idmef_value_t **value);
 int idmef_confidence_new_rating(idmef_confidence_t *ptr, idmef_confidence_rating_t **ret);
 
+void idmef_confidence_unset_confidence(idmef_confidence_t *ptr);
 float *idmef_confidence_get_confidence(idmef_confidence_t *ptr);
 void idmef_confidence_set_confidence(idmef_confidence_t *ptr, float confidence);
 int idmef_confidence_get_confidence_value(idmef_confidence_t *ptr, idmef_value_t **value);
@@ -1589,6 +1607,7 @@ void idmef_overflow_alert_set_program(idmef_overflow_alert_t *ptr, prelude_strin
 int idmef_overflow_alert_get_program_value(idmef_overflow_alert_t *ptr, idmef_value_t **value);
 int idmef_overflow_alert_new_program(idmef_overflow_alert_t *ptr, prelude_string_t **ret);
 
+void idmef_overflow_alert_unset_size(idmef_overflow_alert_t *ptr);
 uint32_t *idmef_overflow_alert_get_size(idmef_overflow_alert_t *ptr);
 void idmef_overflow_alert_set_size(idmef_overflow_alert_t *ptr, uint32_t size);
 int idmef_overflow_alert_get_size_value(idmef_overflow_alert_t *ptr, idmef_value_t **value);

@@ -3212,6 +3212,13 @@ void idmef_user_id_set_number(idmef_user_id_t *ptr, uint32_t number)
 	ptr->number_is_set = 1;
 }
 
+
+void idmef_user_id_unset_number(idmef_user_id_t *ptr)
+{
+        ptr->number_is_set = 0;
+}
+
+
 /**
  * idmef_user_id_new_number:
  * @ptr: pointer to a #idmef_user_id_t object.
@@ -3933,6 +3940,13 @@ void idmef_address_set_vlan_num(idmef_address_t *ptr, int32_t vlan_num)
 	ptr->vlan_num_is_set = 1;
 }
 
+
+void idmef_address_unset_vlan_num(idmef_address_t *ptr)
+{
+        ptr->vlan_num_is_set = 0;
+}
+
+
 /**
  * idmef_address_new_vlan_num:
  * @ptr: pointer to a #idmef_address_t object.
@@ -4458,6 +4472,13 @@ void idmef_process_set_pid(idmef_process_t *ptr, uint32_t pid)
 	ptr->pid = pid;
 	ptr->pid_is_set = 1;
 }
+
+
+void idmef_process_unset_pid(idmef_process_t *ptr)
+{
+        ptr->pid_is_set = 0;
+}
+
 
 /**
  * idmef_process_new_pid:
@@ -6080,6 +6101,13 @@ void idmef_service_set_ip_version(idmef_service_t *ptr, uint8_t ip_version)
 	ptr->ip_version_is_set = 1;
 }
 
+
+void idmef_service_unset_ip_version(idmef_service_t *ptr)
+{
+        ptr->ip_version_is_set = 0;
+}
+
+
 /**
  * idmef_service_new_ip_version:
  * @ptr: pointer to a #idmef_service_t object.
@@ -6212,6 +6240,13 @@ void idmef_service_set_port(idmef_service_t *ptr, uint16_t port)
 	ptr->port_is_set = 1;
 }
 
+
+void idmef_service_unset_port(idmef_service_t *ptr)
+{
+        ptr->port_is_set = 0;
+}
+
+
 /**
  * idmef_service_new_port:
  * @ptr: pointer to a #idmef_service_t object.
@@ -6269,6 +6304,13 @@ void idmef_service_set_iana_protocol_number(idmef_service_t *ptr, uint8_t iana_p
 	ptr->iana_protocol_number = iana_protocol_number;
 	ptr->iana_protocol_number_is_set = 1;
 }
+
+
+void idmef_service_unset_iana_protocol_number(idmef_service_t *ptr)
+{
+        ptr->iana_protocol_number_is_set = 0;
+}
+
 
 /**
  * idmef_service_new_iana_protocol_number:
@@ -8342,6 +8384,13 @@ void idmef_inode_set_number(idmef_inode_t *ptr, uint32_t number)
 	ptr->number_is_set = 1;
 }
 
+
+void idmef_inode_unset_number(idmef_inode_t *ptr)
+{
+        ptr->number_is_set = 0;
+}
+
+
 /**
  * idmef_inode_new_number:
  * @ptr: pointer to a #idmef_inode_t object.
@@ -8399,6 +8448,13 @@ void idmef_inode_set_major_device(idmef_inode_t *ptr, uint32_t major_device)
 	ptr->major_device = major_device;
 	ptr->major_device_is_set = 1;
 }
+
+
+void idmef_inode_unset_major_device(idmef_inode_t *ptr)
+{
+        ptr->major_device_is_set = 0;
+}
+
 
 /**
  * idmef_inode_new_major_device:
@@ -8458,6 +8514,13 @@ void idmef_inode_set_minor_device(idmef_inode_t *ptr, uint32_t minor_device)
 	ptr->minor_device_is_set = 1;
 }
 
+
+void idmef_inode_unset_minor_device(idmef_inode_t *ptr)
+{
+        ptr->minor_device_is_set = 0;
+}
+
+
 /**
  * idmef_inode_new_minor_device:
  * @ptr: pointer to a #idmef_inode_t object.
@@ -8516,6 +8579,13 @@ void idmef_inode_set_c_major_device(idmef_inode_t *ptr, uint32_t c_major_device)
 	ptr->c_major_device_is_set = 1;
 }
 
+
+void idmef_inode_unset_c_major_device(idmef_inode_t *ptr)
+{
+        ptr->c_major_device_is_set = 0;
+}
+
+
 /**
  * idmef_inode_new_c_major_device:
  * @ptr: pointer to a #idmef_inode_t object.
@@ -8573,6 +8643,13 @@ void idmef_inode_set_c_minor_device(idmef_inode_t *ptr, uint32_t c_minor_device)
 	ptr->c_minor_device = c_minor_device;
 	ptr->c_minor_device_is_set = 1;
 }
+
+
+void idmef_inode_unset_c_minor_device(idmef_inode_t *ptr)
+{
+        ptr->c_minor_device_is_set = 0;
+}
+
 
 /**
  * idmef_inode_new_c_minor_device:
@@ -9668,6 +9745,13 @@ void idmef_file_set_data_size(idmef_file_t *ptr, uint64_t data_size)
 	ptr->data_size_is_set = 1;
 }
 
+
+void idmef_file_unset_data_size(idmef_file_t *ptr)
+{
+        ptr->data_size_is_set = 0;
+}
+
+
 /**
  * idmef_file_new_data_size:
  * @ptr: pointer to a #idmef_file_t object.
@@ -9725,6 +9809,13 @@ void idmef_file_set_disk_size(idmef_file_t *ptr, uint64_t disk_size)
 	ptr->disk_size = disk_size;
 	ptr->disk_size_is_set = 1;
 }
+
+
+void idmef_file_unset_disk_size(idmef_file_t *ptr)
+{
+        ptr->disk_size_is_set = 0;
+}
+
 
 /**
  * idmef_file_new_disk_size:
@@ -10161,6 +10252,13 @@ void idmef_file_set_fstype(idmef_file_t *ptr, idmef_file_fstype_t fstype)
 	ptr->fstype = fstype;
 	ptr->fstype_is_set = 1;
 }
+
+
+void idmef_file_unset_fstype(idmef_file_t *ptr)
+{
+        ptr->fstype_is_set = 0;
+}
+
 
 /**
  * idmef_file_new_fstype:
@@ -12418,6 +12516,13 @@ void idmef_alertident_set_analyzerid(idmef_alertident_t *ptr, uint64_t analyzeri
 	ptr->analyzerid_is_set = 1;
 }
 
+
+void idmef_alertident_unset_analyzerid(idmef_alertident_t *ptr)
+{
+        ptr->analyzerid_is_set = 0;
+}
+
+
 /**
  * idmef_alertident_new_analyzerid:
  * @ptr: pointer to a #idmef_alertident_t object.
@@ -12590,6 +12695,13 @@ void idmef_impact_set_severity(idmef_impact_t *ptr, idmef_impact_severity_t seve
 	ptr->severity_is_set = 1;
 }
 
+
+void idmef_impact_unset_severity(idmef_impact_t *ptr)
+{
+        ptr->severity_is_set = 0;
+}
+
+
 /**
  * idmef_impact_new_severity:
  * @ptr: pointer to a #idmef_impact_t object.
@@ -12646,6 +12758,13 @@ void idmef_impact_set_completion(idmef_impact_t *ptr, idmef_impact_completion_t 
 	ptr->completion = completion;
 	ptr->completion_is_set = 1;
 }
+
+
+void idmef_impact_unset_completion(idmef_impact_t *ptr)
+{
+        ptr->completion_is_set = 0;
+}
+
 
 /**
  * idmef_impact_new_completion:
@@ -13204,6 +13323,13 @@ void idmef_confidence_set_confidence(idmef_confidence_t *ptr, float confidence)
 	ptr->confidence = confidence;
 	ptr->confidence_is_set = 1;
 }
+
+
+void idmef_confidence_unset_confidence(idmef_confidence_t *ptr)
+{
+        ptr->confidence_is_set = 0;
+}
+
 
 /**
  * idmef_confidence_new_confidence:
@@ -14467,6 +14593,13 @@ void idmef_overflow_alert_set_size(idmef_overflow_alert_t *ptr, uint32_t size)
 	ptr->size = size;
 	ptr->size_is_set = 1;
 }
+
+
+void idmef_overflow_alert_unset_size(idmef_overflow_alert_t *ptr)
+{
+        ptr->size_is_set = 0;
+}
+
 
 /**
  * idmef_overflow_alert_new_size:
