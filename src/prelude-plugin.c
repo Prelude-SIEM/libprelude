@@ -62,6 +62,7 @@ typedef struct {
         prelude_list_t instance_list;
 
         char *tmp_instance_name;
+        prelude_option_t *root_opt;
         prelude_plugin_generic_t *plugin;
 
         int (*subscribe)(prelude_plugin_instance_t *pc);
@@ -94,6 +95,7 @@ struct prelude_plugin_instance {
          */
         void *data;
         void *private_data;
+
         prelude_option_instance_t *opt_instance;
         
         char *name;
@@ -538,6 +540,12 @@ prelude_plugin_instance_t *prelude_plugin_new_instance(prelude_plugin_generic_t 
                 pi = create_instance(pe, name, NULL);
                 if ( ! pi )
                         return NULL;
+
+                if ( pe->root_opt ) {
+                        pi->opt_instance = prelude_option_instance_new(pe->root_opt, name, pi);
+                        if ( ! pi->opt_instance )
+                                return -1;
+                }
                 
                 if ( pe->create_instance && pe->create_instance(pi, NULL, name) < 0 )
                         return NULL;
@@ -606,7 +614,8 @@ int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
                                  plugin_desactivate, NULL);
         if ( ! new )
                 return -1;
-        
+
+        pe->root_opt = opt;
         pe->create_instance = prelude_option_get_set_callback(opt);
         
 
