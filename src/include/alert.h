@@ -30,6 +30,10 @@
 #include "timer.h"
 
 
+#define ID_NO_DATA           0
+#define ID_PRELUDE_NIDS_DATA 1
+
+
 typedef enum { normal, maybe_faked, maybe_not_reliable, guess } rkind_t;
 
 typedef struct {
@@ -60,6 +64,9 @@ typedef struct {
          * Received packet.
          */
         uint8_t sensor_data_id;
+        
+        uint16_t sensor_data_len;
+        
         void *sensor_data;
 } alert_t;
 

@@ -21,18 +21,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "list.h"
-
 #include "common.h"
-#include "plugin-common.h"
 #include "alert.h"
 #include "alert-common.h"
 #include "socket-op.h"
 
 
-#define do_read(fd, ptr, size, mread) do {                    \
-        if ( socket_read_nowait(fd, ptr, size, mread) <= 0)   \
-               goto err;                                      \
+#define do_read(fd, ptr, size, mread) do {                      \
+        if ( socket_read_nowait(fd, ptr, size, mread) <= 0) {   \
+               log(LOG_ERR, "couldn't read %d bytes.\n", size); \
+               goto err;                                        \
+        }                                                       \
 } while(0)
 
 
@@ -48,7 +47,7 @@ static int read_alert(int fd, alert_t *alert,
         plugin_generic_t *p = alert_plugin(alert);
 
         ret = socket_read(fd, &plugin_name_len(p), sizeof(plugin_name_len(p)), my_read);
-        if ( ret <= 0 )
+        if ( ret <= 0 ) 
                 goto err;
 
         do_read(fd, &plugin_author_len(p), sizeof(plugin_author_len(p)), my_read);
@@ -78,88 +77,55 @@ static int read_alert(int fd, alert_t *alert,
                 goto err;
         
         ret = socket_read_nowait(fd, plugin_name(p), plugin_name_len(p), my_read);
-        if ( ret <= 0 ) {
-                free(plugin_name(p));
+        if ( ret <= 0 ) 
                 goto err;
-        }
         plugin_name(p)[plugin_name_len(p)] = '\0';
 
         plugin_author(p) = malloc(plugin_author_len(p) + 1);
-        if (! plugin_author(p) ) {
-                free(plugin_name(p));
+        if (! plugin_author(p) ) 
                 goto err;
-        }
 
         ret = socket_read_nowait(fd, plugin_author(p), plugin_author_len(p), my_read);
-        if ( ret <= 0 ) {
-                free(plugin_name(p));
-                free(plugin_author(p));
+        if ( ret <= 0 )
                 goto err;
-        }
         plugin_author(p)[plugin_author_len(p)] = '\0';
         
-
         plugin_contact(p) = malloc(plugin_contact_len(p) + 1);
-        if ( ! plugin_contact(p) ) {
-                free(plugin_name(p));
-                free(plugin_author(p));
+        if ( ! plugin_contact(p) ) 
                 goto err;
-        }
 
         ret = socket_read_nowait(fd, plugin_contact(p), plugin_contact_len(p), my_read);
-        if ( ret <= 0 ) {
-                free(plugin_name(p));
-                free(plugin_author(p));
-                free(plugin_contact(p));
+        if ( ret <= 0 ) 
                 goto err;
-        }
         plugin_contact(p)[plugin_contact_len(p)] = '\0';
         
-
         plugin_desc(p) = malloc(plugin_desc_len(p) + 1);
-        if ( ! plugin_desc(p) ) {
-                free(plugin_name(p));
-                free(plugin_author(p));
-                free(plugin_contact(p));
+        if ( ! plugin_desc(p) ) 
                 goto err;
-        }
 
         ret = socket_read_nowait(fd, plugin_desc(p), plugin_desc_len(p), my_read);
-        if ( ret <= 0 ) {
-                free(plugin_name(p));
-                free(plugin_author(p));
-                free(plugin_contact(p));
-                free(plugin_desc(p));
+        if ( ret <= 0 ) 
                 goto err;
-        }
         plugin_desc(p)[plugin_desc_len(p)] = '\0';
         
         alert_quickmsg(alert) = malloc(alert_quickmsg_len(alert) + 1);
-        if ( ! alert_quickmsg(alert) ) {
-                free(plugin_name(p));
-                free(plugin_author(p));
-                free(plugin_contact(p));
-                free(plugin_desc(p));
+        if ( ! alert_quickmsg(alert) )
                 goto err;
-        }
 
         ret = socket_read_nowait(fd, alert_quickmsg(alert), alert_quickmsg_len(alert), my_read);
-        if ( ret <= 0 ) {
-                free(plugin_name(p));
-                free(plugin_author(p));
-                free(plugin_contact(p));
-                free(plugin_desc(p));
-                free(alert_quickmsg(alert));
+        if ( ret <= 0 ) 
                 goto err;
-        }
         alert_quickmsg(alert)[alert_quickmsg_len(alert)] = '\0';
         
-        return ret;
+        do_read(fd, &alert->sensor_data_id, sizeof(alert->sensor_data_id), my_read);
+        do_read(fd, &alert->sensor_data_len, sizeof(alert->sensor_data_len), my_read);
+        
+        return 1;
 
  err:
         if ( ret < 0 )
                 log(LOG_ERR, "Error reading alert.\n");
-
+        
         return ret;
 }
 
@@ -192,7 +158,7 @@ int alert_read(int sock, alert_t *alert,
 /*
  *
  */
-void alert_free(alert_t *alert, int dfree) 
+void alert_free(alert_t *alert, int pfree) 
 {
         if ( plugin_name(alert_plugin(alert)) )
                 free(plugin_name(alert_plugin(alert)));

@@ -1,5 +1,11 @@
 2001-08-28  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/include/alert.h: 
+	include a sensor_data_len member (16bits).
+
+	* src/alert-common.c (read_alert): read sensor data id
+	and sensor data len.
+
 	* src/config-engine.c (cmp_entry): oops, badly synced
 	with last prelude stable branch change.
 
