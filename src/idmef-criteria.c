@@ -190,6 +190,7 @@ idmef_criterion_t *idmef_criterion_new(idmef_object_t *object,
 {
 	idmef_criterion_t *criterion;
         
+        printf("criterion new value=%p\n", value);
 	if ( value && idmef_criterion_check(object, value, relation) < 0 )
 		return NULL;
 
@@ -317,10 +318,13 @@ int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message
 	if ( ! value ) 
 		return (criterion->relation == IDMEF_VALUE_RELATION_IS_NULL) ? 0 : -1;
         
+        if ( ! criterion->value )
+                return (criterion->relation == IDMEF_VALUE_RELATION_IS_NOT_NULL) ? 0 : -1; 
+        
 	switch ( idmef_criterion_value_get_type(criterion->value) ) {
                 
         case idmef_criterion_value_type_fixed:
-		ret = idmef_value_match(value,
+        	ret = idmef_value_match(value,
                                         idmef_criterion_value_get_fixed(criterion->value),
                                         criterion->relation);
 		break;
