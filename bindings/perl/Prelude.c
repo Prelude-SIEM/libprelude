@@ -221,7 +221,7 @@ SWIG_TypeClientData(swig_type_info *ti, void *clientdata) {
  * perl5.swg
  *
  * Perl5 runtime library
- * $Header: /var/lib/cvsd/cvsroot/prelude/libprelude/bindings/perl/Prelude.c,v 1.9 2004/02/05 16:00:07 yoann Exp $
+ * $Header: /var/lib/cvsd/cvsroot/prelude/libprelude/bindings/perl/Prelude.c,v 1.10 2004/02/06 00:45:05 yoann Exp $
  * ----------------------------------------------------------------------------- */
 
 #define SWIGPERL
@@ -663,6 +663,7 @@ SWIGEXPORT(void) SWIG_init (CV *cv, CPerlObj *);
 #include <stdarg.h>
 #include <inttypes.h>
 
+#include "common.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
 #include "prelude-message-buffered.h"
@@ -33314,7 +33315,7 @@ XS(_wrap_idmef_additionaldata_data_to_string) {
     {
         idmef_additional_data_t *arg1 = (idmef_additional_data_t *) 0 ;
         unsigned char *arg2 = (unsigned char *) 0 ;
-        size_t arg3 ;
+        size_t *arg3 = (size_t *) 0 ;
         unsigned char *result;
         int argvi = 0;
         dXSARGS;
@@ -33332,7 +33333,11 @@ XS(_wrap_idmef_additionaldata_data_to_string) {
                 SWIG_croak("Type error in argument 2 of idmef_additionaldata_data_to_string. Expected _p_unsigned_char");
             }
         }
-        arg3 = (size_t) SvUV(ST(2));
+        {
+            if (SWIG_ConvertPtr(ST(2), (void **) &arg3, SWIGTYPE_p_size_t,0) < 0) {
+                SWIG_croak("Type error in argument 3 of idmef_additionaldata_data_to_string. Expected _p_size_t");
+            }
+        }
         result = (unsigned char *)idmef_additionaldata_data_to_string(arg1,arg2,arg3);
         
         {

@@ -1,3 +1,15 @@
+2004-02-06  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* bindings/:
+	regenerated.
+
+	* src/include/extract.h (extract_characters_safe): 
+	check that length is at least 2 byte for safety.
+
+	* src/idmef-util.c (idmef_additionaldata_data_to_string): 
+	make size a pointer. Uppon return, size is updated to fit
+	the length of additional data.
+
 2004-02-05  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* bindings/libprelude.i: Include common.h, 

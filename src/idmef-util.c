@@ -53,9 +53,9 @@
 #include "idmef-util.h"
 
 
-unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, unsigned char *buf, size_t size)
+unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, unsigned char *buf, size_t *size)
 {
-        int ret;
+        int ret = 0;
 	idmef_data_t *data;
 
 	data = idmef_additional_data_get_data(ad);
@@ -66,8 +66,18 @@ unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, 
 
         case byte:
         case character:
+                *size = idmef_data_get_len(data);
                 return idmef_data_get_data(data);
-
+                
+        case boolean:
+        case date_time:
+        case portlist:
+        case string:
+        case xml:                
+                ret = extract_characters_safe(&buf, idmef_data_get_data(data), idmef_data_get_len(data));
+                *size = idmef_data_get_len(data) - 1; /* 0 string delimiter is included in len */
+                return (ret < 0) ? NULL : buf;
+                
         case integer: {
                 uint32_t out32;
                 
@@ -75,7 +85,7 @@ unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, 
                 if ( ret < 0 )
                         return NULL;
                 
-                ret = snprintf(buf, size, "%u", out32);
+                ret = snprintf(buf, *size, "%u", out32);
                 break;
 	}
                 
@@ -89,7 +99,7 @@ unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, 
                 if ( ret < 0 )
                         return NULL;
                 
-                ret = snprintf(buf, size, "0x%08ux.0x%08ux", d.r_buf[0], d.r_buf[1]);
+                ret = snprintf(buf, *size, "0x%08ux.0x%08ux", d.r_buf[0], d.r_buf[1]);
                 break;
 	}
 
@@ -100,31 +110,21 @@ unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, 
                 if ( ret < 0 )
                         return NULL;
                 
-                ret = snprintf(buf, size, "%f", (float) out32);
+                ret = snprintf(buf, *size, "%f", (float) out32);
                 break;
 	}
-
-        case boolean:
-        case date_time:
-        case portlist:
-        case string:
-        case xml: 
-                ret = extract_characters_safe(&buf, idmef_data_get_data(data), idmef_data_get_len(data));
-                break;
 
         default:
                 log(LOG_ERR, "Unknown data type: %d.\n", idmef_additional_data_get_type(ad));
                 return NULL;
         }
 
-        /*
-         * Since glibc 2.1 snprintf follow the C99 standard and return
-         * the number of characters (excluding the trailing '\0') which
-         * would have been written to the final string if enought space
-         * had been available.
-         */
+        if ( ret < 0 || ret >= *size )
+                return NULL;
 
-	return (ret < 0 || ret >= size) ? NULL : buf;
+        *size = ret;
+        
+	return buf;
 }
 
 

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2002, 2003, 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -236,7 +236,7 @@ static inline int extract_uint64_safe(uint64_t *out, const void *buf, size_t len
 
 static inline int extract_float_safe(float *out, const void *buf, size_t len)
 {
-	if ( len != sizeof (*out) ) {
+	if ( len != sizeof(*out) ) {
 		log(LOG_ERR, "Datatype error, buffer doesn't contain a float.\n");
 		return -1;
 	}
@@ -250,7 +250,7 @@ static inline int extract_float_safe(float *out, const void *buf, size_t len)
 
 static inline int extract_characters_safe(const char **out, char *buf, size_t len)
 {
-	if ( buf[len - 1] != '\0' ) {
+	if ( len < 2 || buf[len - 1] != '\0' ) {
                 log(LOG_ERR, "Datatype error: buffer is not a string.\n");
                 return -1;
         }

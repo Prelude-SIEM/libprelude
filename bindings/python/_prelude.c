@@ -730,6 +730,7 @@ static swig_type_info *swig_types[77];
 #include <stdarg.h>
 #include <inttypes.h>
 
+#include "common.h"
 #include "prelude-io.h"
 #include "prelude-message.h"
 #include "prelude-message-buffered.h"
@@ -20466,7 +20467,7 @@ static PyObject *_wrap_idmef_additionaldata_data_to_string(PyObject *self, PyObj
     PyObject *resultobj;
     idmef_additional_data_t *arg1 = (idmef_additional_data_t *) 0 ;
     unsigned char *arg2 = (unsigned char *) 0 ;
-    size_t arg3 ;
+    size_t *arg3 = (size_t *) 0 ;
     unsigned char *result;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
@@ -20475,8 +20476,7 @@ static PyObject *_wrap_idmef_additionaldata_data_to_string(PyObject *self, PyObj
     if(!PyArg_ParseTuple(args,(char *)"OOO:idmef_additionaldata_data_to_string",&obj0,&obj1,&obj2)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_additional_data_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_unsigned_char,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    arg3 = (size_t) PyInt_AsLong(obj2);
-    if (PyErr_Occurred()) SWIG_fail;
+    if ((SWIG_ConvertPtr(obj2,(void **) &arg3, SWIGTYPE_p_size_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     result = (unsigned char *)idmef_additionaldata_data_to_string(arg1,arg2,arg3);
     
     {
