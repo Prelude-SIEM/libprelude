@@ -190,11 +190,14 @@ class Option:
         self.value = _prelude.prelude_option_get_value(option)
         self.description = _prelude.prelude_option_get_description(option)
         self.options = [ ]
-        nodes = [ self.name ]
+        self.path = self.name
+        if self.instance:
+            self.instantiable_path = self.instantiable_name
         while parent:
-            nodes.insert(0, parent.name)
+            self.path = parent.name + "." + self.path
+            if self.instance:
+                self.instantiable_path = parent.name + "." + self.instantiable_path
             parent = parent.parent
-        self.path = ".".join(nodes)
 
     def find(self, prefix):
         if self.path.find(prefix) == 0:
