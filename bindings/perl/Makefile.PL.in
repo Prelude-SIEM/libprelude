@@ -35,8 +35,11 @@ package MY;
 sub install
 {
     my $str = shift->SUPER::install(@_);
+    my @files = ((map { "\$(INSTALLSITEARCH)/$_" } qw/perllocal.pod Prelude.pm/),
+                 (map { "\$(INSTALLSITEARCH)/auto/Prelude/$_" } qw/Prelude.bs Prelude.so .packlist/),
+                 '$(INSTALLMAN3DIR)/Prelude.$(MAN3EXT)');
 
-    $str =~ s/(uninstall_from_sitedirs.+)\n.+\n/$1\n\t\$(RM_F) \`cat \$(INSTALLSITEARCH)\/auto\/\$(FULLEXT)\/.packlist\`\n\t\$(RM_F) \$(INSTALLSITEARCH)\/auto\/\$(FULLEXT)\/.packlist/;
+    $str =~ s/(uninstall_from_sitedirs.+)\n.+\n/"$1\n\t\$(RM_F) " . join(" ", @files) . "\n"/e;
 
     return $str;
 }

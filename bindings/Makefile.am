@@ -54,7 +54,6 @@ if HAVE_PYTHON
 	cd python && $(PYTHON) setup.py install `test -n "$(DESTDIR)" && echo --root $(DESTDIR)`
 endif
 
-
 uninstall-hook:
 if HAVE_PERL
 	cd perl && DESTDIR=$(DESTDIR) prefix=$(prefix) $(PERL) Makefile.PL && $(MAKE) uninstall
