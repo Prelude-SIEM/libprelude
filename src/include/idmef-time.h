@@ -24,7 +24,7 @@
 #ifndef _LIBPRELUDE_IDMEF_TIME_H
 #define _LIBPRELUDE_IDMEF_TIME_H
 
-#define idmef_type_time 1
+#define idmef_object_type_time 1
 
 struct idmef_time {
 	uint32_t sec;

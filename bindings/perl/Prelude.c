@@ -26486,60 +26486,6 @@ XS(_wrap_idmef_criteria_t_list_get) {
 }
 
 
-XS(_wrap_idmef_criteria_t_refcount_set) {
-    {
-        idmef_criteria_t *arg1 = (idmef_criteria_t *) 0 ;
-        int arg2 ;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 2) || (items > 2)) {
-            SWIG_croak("Usage: idmef_criteria_t_refcount_set(self,refcount);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_criteria_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_criteria_t_refcount_set. Expected _p_idmef_criteria_t");
-            }
-        }
-        arg2 = (int) SvIV(ST(1));
-        if (arg1) (arg1)->refcount = arg2;
-        
-        
-        XSRETURN(argvi);
-        fail:
-        ;
-    }
-    croak(Nullch);
-}
-
-
-XS(_wrap_idmef_criteria_t_refcount_get) {
-    {
-        idmef_criteria_t *arg1 = (idmef_criteria_t *) 0 ;
-        int result;
-        int argvi = 0;
-        dXSARGS;
-        
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: idmef_criteria_t_refcount_get(self);");
-        }
-        {
-            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_criteria_t,0) < 0) {
-                SWIG_croak("Type error in argument 1 of idmef_criteria_t_refcount_get. Expected _p_idmef_criteria_t");
-            }
-        }
-        result = (int) ((arg1)->refcount);
-        
-        ST(argvi) = sv_newmortal();
-        sv_setiv(ST(argvi++), (IV) result);
-        XSRETURN(argvi);
-        fail:
-        ;
-    }
-    croak(Nullch);
-}
-
-
 XS(_wrap_idmef_criteria_t_criterion_set) {
     {
         idmef_criteria_t *arg1 = (idmef_criteria_t *) 0 ;
@@ -33381,8 +33327,6 @@ static swig_command_info swig_commands[] = {
 {"Preludec::delete_idmef_criterion_t", _wrap_delete_idmef_criterion_t},
 {"Preludec::idmef_criteria_t_list_set", _wrap_idmef_criteria_t_list_set},
 {"Preludec::idmef_criteria_t_list_get", _wrap_idmef_criteria_t_list_get},
-{"Preludec::idmef_criteria_t_refcount_set", _wrap_idmef_criteria_t_refcount_set},
-{"Preludec::idmef_criteria_t_refcount_get", _wrap_idmef_criteria_t_refcount_get},
 {"Preludec::idmef_criteria_t_criterion_set", _wrap_idmef_criteria_t_criterion_set},
 {"Preludec::idmef_criteria_t_criterion_get", _wrap_idmef_criteria_t_criterion_get},
 {"Preludec::idmef_criteria_t_or_set", _wrap_idmef_criteria_t_or_set},

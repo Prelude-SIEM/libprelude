@@ -17391,40 +17391,6 @@ static PyObject *_wrap_idmef_criteria_t_list_get(PyObject *self, PyObject *args)
 }
 
 
-static PyObject *_wrap_idmef_criteria_t_refcount_set(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    idmef_criteria_t *arg1 = (idmef_criteria_t *) 0 ;
-    int arg2 ;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"Oi:idmef_criteria_t_refcount_set",&obj0,&arg2)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_criteria_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    if (arg1) (arg1)->refcount = arg2;
-    
-    Py_INCREF(Py_None); resultobj = Py_None;
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
-static PyObject *_wrap_idmef_criteria_t_refcount_get(PyObject *self, PyObject *args) {
-    PyObject *resultobj;
-    idmef_criteria_t *arg1 = (idmef_criteria_t *) 0 ;
-    int result;
-    PyObject * obj0 = 0 ;
-    
-    if(!PyArg_ParseTuple(args,(char *)"O:idmef_criteria_t_refcount_get",&obj0)) goto fail;
-    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_criteria_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (int) ((arg1)->refcount);
-    
-    resultobj = PyInt_FromLong((long)result);
-    return resultobj;
-    fail:
-    return NULL;
-}
-
-
 static PyObject *_wrap_idmef_criteria_t_criterion_set(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_criteria_t *arg1 = (idmef_criteria_t *) 0 ;
@@ -17845,17 +17811,17 @@ static PyObject *_wrap_idmef_criteria_get_criterion(PyObject *self, PyObject *ar
 }
 
 
-static PyObject *_wrap_idmef_criteria_add_criterion(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_criteria_set_criterion(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_criteria_t *arg1 = (idmef_criteria_t *) 0 ;
     idmef_criterion_t *arg2 = (idmef_criterion_t *) 0 ;
     PyObject * obj0 = 0 ;
     PyObject * obj1 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_criteria_add_criterion",&obj0,&obj1)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OO:idmef_criteria_set_criterion",&obj0,&obj1)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_criteria_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
     if ((SWIG_ConvertPtr(obj1,(void **) &arg2, SWIGTYPE_p_idmef_criterion_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_criteria_add_criterion(arg1,arg2);
+    idmef_criteria_set_criterion(arg1,arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -21970,8 +21936,6 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"delete_idmef_criterion_t", _wrap_delete_idmef_criterion_t, METH_VARARGS },
 	 { (char *)"idmef_criteria_t_list_set", _wrap_idmef_criteria_t_list_set, METH_VARARGS },
 	 { (char *)"idmef_criteria_t_list_get", _wrap_idmef_criteria_t_list_get, METH_VARARGS },
-	 { (char *)"idmef_criteria_t_refcount_set", _wrap_idmef_criteria_t_refcount_set, METH_VARARGS },
-	 { (char *)"idmef_criteria_t_refcount_get", _wrap_idmef_criteria_t_refcount_get, METH_VARARGS },
 	 { (char *)"idmef_criteria_t_criterion_set", _wrap_idmef_criteria_t_criterion_set, METH_VARARGS },
 	 { (char *)"idmef_criteria_t_criterion_get", _wrap_idmef_criteria_t_criterion_get, METH_VARARGS },
 	 { (char *)"idmef_criteria_t_or_set", _wrap_idmef_criteria_t_or_set, METH_VARARGS },
@@ -21996,7 +21960,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_criteria_to_string", _wrap_idmef_criteria_to_string, METH_VARARGS },
 	 { (char *)"idmef_criteria_is_criterion", _wrap_idmef_criteria_is_criterion, METH_VARARGS },
 	 { (char *)"idmef_criteria_get_criterion", _wrap_idmef_criteria_get_criterion, METH_VARARGS },
-	 { (char *)"idmef_criteria_add_criterion", _wrap_idmef_criteria_add_criterion, METH_VARARGS },
+	 { (char *)"idmef_criteria_set_criterion", _wrap_idmef_criteria_set_criterion, METH_VARARGS },
 	 { (char *)"idmef_criteria_or_criteria", _wrap_idmef_criteria_or_criteria, METH_VARARGS },
 	 { (char *)"idmef_criteria_and_criteria", _wrap_idmef_criteria_and_criteria, METH_VARARGS },
 	 { (char *)"idmef_criteria_match", _wrap_idmef_criteria_match, METH_VARARGS },
