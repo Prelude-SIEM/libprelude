@@ -38,6 +38,7 @@
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
 #include <signal.h>
+#include <gnutls/gnutls.h>
 
 #include "config.h"
 
@@ -199,11 +200,11 @@ static int generic_connect(struct sockaddr *sa, socklen_t sa_len)
 
 
 
-static int gnutls_authenticate(prelude_connection_t *cnx, int crypt)
+static int handle_authentication(prelude_connection_t *cnx, int crypt)
 {
         int ret;
         
-        ret = tls_auth_client(cnx->client, cnx->fd, crypt);
+        ret = tls_auth_connection(cnx->client, cnx->fd, crypt);
         if ( ret < 0 ) {
                 /*
                  * SSL authentication failed,
@@ -248,7 +249,7 @@ static int start_inet_connection(prelude_connection_t *cnx)
         
         prelude_io_set_sys_io(cnx->fd, sock);
         
-        ret = gnutls_authenticate(cnx, 1);
+        ret = handle_authentication(cnx, 1);
         if ( ret < 0 )
                 close(sock);
         
@@ -268,7 +269,7 @@ static int start_unix_connection(prelude_connection_t *cnx)
         
         prelude_io_set_sys_io(cnx->fd, sock);
         
-        ret = gnutls_authenticate(cnx, 0);
+        ret = handle_authentication(cnx, 0);
         if ( ret < 0 )
                 close(sock);
                 

@@ -24,6 +24,8 @@
 #ifndef _LIBPRELUDE_PRELUDE_CLIENT_H
 #define _LIBPRELUDE_PRELUDE_CLIENT_H
 
+#include <gnutls/gnutls.h>
+
 
 typedef enum {
         PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF = 0x01,
@@ -34,17 +36,23 @@ typedef enum {
         PRELUDE_CLIENT_CAPABILITY_SEND_CM    = 0x20,
 } prelude_client_capability_t;
 
+
 #define PRELUDE_CLIENT_ASYNC_SEND  0x01
 #define PRELUDE_CLIENT_ASYNC_TIMER 0x02
 
+
 typedef struct prelude_client prelude_client_t;
+
 
 #include "prelude-ident.h"
 #include "prelude-connection.h"
 #include "prelude-connection-mgr.h"
 #include "idmef.h"
 
+
 prelude_ident_t *prelude_client_get_unique_ident(prelude_client_t *client);
+
+void *prelude_client_get_credentials(prelude_client_t *client);
 
 prelude_connection_mgr_t *prelude_client_get_manager_list(prelude_client_t *client);
 

@@ -15,17 +15,14 @@
 #include "prelude-client.h"
 #include "tls-util.h"
 
-#define MIN(x, y) (((x) < (y)) ? (x) : (y))
-
 /*
  * can be:
  * -----BEGIN CERTIFICATE-----
  * -----BEGIN X509 CERTIFICATE-----
  */
 
-#define END_WITHIN_LEN     (sizeof("X509 CERTIFICATE-----") - 1)
-#define BEGIN_CERT_STR     "-----BEGIN "
-#define END_CERT_STR       "CERTIFICATE-----"
+#define BEGIN_STR       "-----BEGIN "
+#define END_STR         "-----END "
 
 
  
@@ -51,55 +48,57 @@ static int cmp_certificate_issuer(gnutls_x509_crt crt, const char *dn, size_t dn
 
 
 
-
-static gnutls_x509_crt *create_certificate_table(gnutls_datum *src)
+static int load_individual_cert(FILE *fd, gnutls_certificate_credentials cred)
 {
-        int ret;
-        char *ptr, *start;
-        size_t i = 1, nlen;
-        gnutls_datum data;
-        gnutls_x509_crt *crt_tbl = NULL;
-
-        data.data = src->data;
-        data.size = src->size;
+        size_t len;
+        char buf[65535];
+        gnutls_datum cert, key;
+        int ret = -1, got_start = 0, got_key = 0;
         
-        while ( (ptr = prelude_strnstr(data.data, BEGIN_CERT_STR, data.size)) ) {
+        cert.data = buf;
+        
+        for ( cert.size = 0;
+              cert.size < sizeof(buf) && fgets(buf + cert.size, sizeof(buf) - cert.size, fd);
+              cert.size += len ) {
 
-                start = ptr;
-                ptr += sizeof(BEGIN_CERT_STR) - 1;
-                nlen = data.size - (ptr - (char *) data.data);
+                len = strlen(buf + cert.size);
                 
-                if ( ! prelude_strnstr(ptr, END_CERT_STR, MIN(nlen, END_WITHIN_LEN)) ) {
-                        data.size = nlen;
-                        data.data = ptr;
+                if ( ! got_start && strstr(buf + cert.size, BEGIN_STR) ) {
+                        got_start = 1;
+                        
+                        if ( ! got_key && strstr(buf + cert.size, "KEY") )
+                                got_key = 1;
+                        
+                        continue;
+                }
+
+                if ( ! strstr(buf + cert.size, END_STR) ) 
+                        continue;
+
+                cert.size += len;
+                
+                if ( got_key ) {
+                        key.data = strdup(buf);
+                        key.size = cert.size;
+                        got_key = cert.size = len = 0;
                         continue;
                 }
                 
-                crt_tbl = prelude_realloc(crt_tbl, ++i * sizeof(void *));
-                if ( ! crt_tbl ) {
-                        log(LOG_ERR, "memory exhausted.\n");
-                        return NULL;
-                }
-
-                crt_tbl[i - 1] = NULL;
-                gnutls_x509_crt_init(&crt_tbl[i - 2]);
-                
-                data.data = start;
-                
-                ret = gnutls_x509_crt_import(crt_tbl[i - 2], &data, GNUTLS_X509_FMT_PEM);
+                ret = gnutls_certificate_set_x509_key_mem(cred, &cert, &key, GNUTLS_X509_FMT_PEM);
                 if ( ret < 0 ) {
-                        log(LOG_ERR, "error importing certificate: %s.\n", gnutls_strerror(ret));
-                        free(crt_tbl);
-                        return NULL;
+                        log(LOG_ERR, "error importing certificate: %s.\n", gnutls_strerror(ret));                        
+                        goto out;
                 }
-
-                data.size = nlen;
-                data.data = ptr;
+                
+                len = cert.size = 0;
         }
 
-        return crt_tbl;
+  out:
+        if ( key.data )
+                free(key.data);
+        
+        return ret;
 }
-
 
 
 
@@ -144,44 +143,19 @@ void tls_unload_file(gnutls_datum *data)
 
 
 
-gnutls_x509_crt *tls_certificates_load(const char *filename, gnutls_x509_privkey *key)
+int tls_certificates_load(const char *filename, gnutls_certificate_credentials cred)
 {
         int ret;
-        gnutls_datum data;
-        gnutls_x509_crt *crt_tbl;
-        
-        ret = tls_load_file(filename, &data);
-        if ( ret < 0 )
-                return NULL;
-        
-        gnutls_x509_privkey_init(key);
-        gnutls_x509_privkey_import(*key, &data, GNUTLS_X509_FMT_PEM);
-        
-        crt_tbl = create_certificate_table(&data);
-        tls_unload_file(&data);
+        FILE *fd;
 
-        if ( ! crt_tbl )
-                gnutls_x509_privkey_deinit(*key);
-        
-        return crt_tbl;
-}
-
-
-
-
-gnutls_x509_crt *tls_certificates_search(gnutls_x509_crt *tbl, const char *dn, size_t size)
-{
-        int i, ret;
-
-        for ( i = 0; tbl[i] != NULL; i++ ) {
-                
-                ret = cmp_certificate_issuer(tbl[i], dn, size);
-                if ( ret == 0 )
-                        return &tbl[i];
+        fd = fopen(filename, "r");
+        if ( ! fd ) {
+                log(LOG_ERR, "error opening %s for reading.\n", filename);
+                return -1;
         }
-
-        return NULL;
-}
-
-
         
+        ret = load_individual_cert(fd, cred);
+        fclose(fd);
+        
+        return ret;
+}

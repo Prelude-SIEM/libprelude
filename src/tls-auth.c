@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
@@ -33,56 +34,6 @@
 
 #include "tls-util.h"
 #include "tls-auth.h"
-
-
-static gnutls_x509_privkey key;
-static gnutls_x509_crt *crt_tbl;
-
-
-
-static int cert_callback(gnutls_session session,
-                         const gnutls_datum *req_ca_rdn, int nreqs,
-                         const gnutls_pk_algorithm *sign_algos, int sign_algos_length,
-                         gnutls_retr_st *st)
-{
-        int i, ret;
-        size_t len;
-        gnutls_x509_crt *crt;
-        char issuer_dn[1024];
-        
-        if ( ! nreqs ) {
-                log(LOG_ERR, "Server did not send us any trusted authorities names.\n");
-                return -1;
-        }
-        
-        if ( gnutls_certificate_type_get(session) != GNUTLS_CRT_X509 ) {
-                log(LOG_ERR, "Server requested certificate type is not x509.\n");
-                return -1;
-        }
-
-        for ( i = 0; i < nreqs; i++ ) {
-                len = sizeof(issuer_dn);
-                
-                ret = gnutls_x509_rdn_get(&req_ca_rdn[i], issuer_dn, &len);
-                if ( ret < 0 ) {
-                        log(LOG_ERR, "couldn't get CA RDN: %s.\n", gnutls_strerror(ret));
-                        return -1;
-                }
-
-                crt = tls_certificates_search(crt_tbl, issuer_dn, len);
-                if ( crt ) {
-                        st->ncerts = 1;
-                        st->deinit_all = 0;
-                        st->key.x509 = key;
-                        st->cert.x509 = crt;
-                        st->type = GNUTLS_CRT_X509;
-
-                        return 0;
-                }
-        }
-        
-        return -1;
-}
 
 
 
@@ -128,41 +79,19 @@ static void handle_gnutls_error(gnutls_session session, int ret)
                 log(LOG_INFO, "- Received alert: %s.\n", gnutls_alert_get_name(last_alert));
         }
 
-        log(LOG_INFO, "- GnuTLS handshake failed: %s.\n", gnutls_strerror(ret));
+        log(LOG_INFO, "- TLS handshake failed: %s.\n", gnutls_strerror(ret));
 }
 
 
 
-int tls_auth_client(prelude_client_t *client, prelude_io_t *io, int crypt)
+int tls_auth_connection(prelude_client_t *client, prelude_io_t *io, int crypt)
 {
 	int ret, fd;
-        char filename[256];
         gnutls_session session;
-        gnutls_certificate_credentials cred;
-        
-        gnutls_global_init();
+        gnutls_certificate_credentials cred = prelude_client_get_credentials(client);
         
         gnutls_init(&session, GNUTLS_CLIENT);
         gnutls_set_default_priority(session);
-        gnutls_certificate_allocate_credentials(&cred);
-        
-        gnutls_certificate_client_set_retrieve_function(cred, cert_callback);
-
-        
-        prelude_client_get_tls_key_filename(client, filename, sizeof(filename));
-        crt_tbl = tls_certificates_load(filename, &key);
-        if ( ! crt_tbl ) {
-                log(LOG_ERR, "error loading certificate list.\n");
-                return -1;
-        }
-        
-        prelude_client_get_tls_cert_filename(client, filename, sizeof(filename));
-        ret = gnutls_certificate_set_x509_trust_file(cred, filename, GNUTLS_X509_FMT_PEM);
-        if ( ret < 0 ) {
-                log(LOG_INFO, "- couldn't set x509 trust file: %s.\n", gnutls_strerror(ret));
-                return -1;
-        }
-
         gnutls_credentials_set(session, GNUTLS_CRD_CERTIFICATE, cred);
         
         fd = prelude_io_get_fd(io);
@@ -171,7 +100,7 @@ int tls_auth_client(prelude_client_t *client, prelude_io_t *io, int crypt)
         ret = gnutls_handshake(session);
         if ( ret < 0 ) {
                 handle_gnutls_error(session, ret);
-                log(LOG_INFO, "- GnuTLS handshake failed: %s.\n", gnutls_strerror(ret));
+                log(LOG_INFO, "- TLS handshake failed: %s.\n", gnutls_strerror(ret));
                 gnutls_deinit(session);
                 return -1;
         }
@@ -196,3 +125,39 @@ int tls_auth_client(prelude_client_t *client, prelude_io_t *io, int crypt)
         return 0;
 }
 
+
+
+void *tls_auth_init(prelude_client_t *client)
+{
+        int ret;
+        char filename[256];
+        gnutls_certificate_credentials cred;
+        
+        gnutls_global_init();
+        gnutls_certificate_allocate_credentials(&cred);
+
+        prelude_client_get_tls_key_filename(client, filename, sizeof(filename));
+
+        ret = tls_certificates_load(filename, cred);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "error loading certificate list.\n");
+                return NULL;
+        }
+        
+        prelude_client_get_tls_cert_filename(client, filename, sizeof(filename));
+
+        /*
+         * manager only have a trust file in case of relaying.
+         */
+        ret = access(filename, F_OK);
+        if ( ret < 0 )
+                return cred;
+                
+        ret = gnutls_certificate_set_x509_trust_file(cred, filename, GNUTLS_X509_FMT_PEM);
+        if ( ret < 0 ) {
+                log(LOG_INFO, "- couldn't set x509 trust file: %s.\n", gnutls_strerror(ret));
+                return NULL;
+        }
+
+        return cred;
+}

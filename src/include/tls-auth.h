@@ -24,6 +24,8 @@
 #ifndef _LIBPRELUDE_TLS_AUTH_H
 #define _LIBPRELUDE_TLS_AUTH_H
 
-int tls_auth_client(prelude_client_t *client, prelude_io_t *io, int crypt);
+int tls_auth_connection(prelude_client_t *client, prelude_io_t *io, int crypt);
+
+void *tls_auth_init(prelude_client_t *client);
 
 #endif

@@ -39,6 +39,7 @@
 #include "prelude-client.h"
 #include "idmef-message-write.h"
 #include "config-engine.h"
+#include "tls-auth.h"
 
 
 /*
@@ -86,6 +87,8 @@ struct prelude_client {
         
         idmef_address_t *address;
         idmef_analyzer_t *analyzer;
+
+        void *credentials;
         prelude_connection_mgr_t *manager_list;
         prelude_timer_t heartbeat_timer;
         
@@ -503,7 +506,11 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
 
         new->name = strdup(sname);
         new->config_filename = config ? strdup(config) : NULL;
-
+        
+        new->credentials = tls_auth_init(new);
+        if ( ! new->credentials )
+                return -1;
+        
         new->unique_ident = prelude_ident_new();
         if ( ! new->unique_ident ) {
                 log(LOG_ERR, "memory exhausted.\n");
@@ -738,6 +745,13 @@ void prelude_client_get_backup_filename(prelude_client_t *client, char *buf, siz
 prelude_ident_t *prelude_client_get_unique_ident(prelude_client_t *client)
 {
         return client->unique_ident;
+}
+
+
+
+void *prelude_client_get_credentials(prelude_client_t *client)
+{
+        return client->credentials;
 }
 
 

@@ -28,8 +28,6 @@ void tls_unload_file(gnutls_datum *data);
 
 int tls_load_file(const char *filename, gnutls_datum *data);
 
-gnutls_x509_crt *tls_certificates_load(const char *filename, gnutls_x509_privkey *key);
-
-gnutls_x509_crt *tls_certificates_search(gnutls_x509_crt *tbl, const char *dn, size_t size);
+int tls_certificates_load(const char *filename, gnutls_certificate_credentials res);
 
 #endif
