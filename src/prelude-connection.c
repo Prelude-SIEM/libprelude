@@ -325,23 +325,45 @@ static int do_connect(prelude_connection_t *cnx, prelude_client_profile_t *profi
 
 
 
-static void close_connection_fd(prelude_connection_t *cnx) 
-{        
-        if ( ! (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) )
-                return;
+static int close_connection_fd(prelude_connection_t *cnx) 
+{
+        int ret;
         
-        if ( cnx->saddr )
+        if ( ! (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) )
+                return -1;
+        
+        ret = prelude_io_close(cnx->fd);
+        if ( ret < 0 )
+                return ret;
+        
+        if ( cnx->saddr ) {
                 free(cnx->saddr);
+                cnx->saddr = NULL;
+        }
         
         cnx->state &= ~PRELUDE_CONNECTION_STATE_ESTABLISHED;
-        prelude_io_close(cnx->fd);
+
+        return 0;
+}
+
+
+
+static int close_connection_fd_block(prelude_connection_t *cnx)
+{
+        int ret;
+        
+        do {
+                ret = close_connection_fd(cnx);
+        } while ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN );
+
+        return ret;
 }
 
 
 
 static void destroy_connection_fd(prelude_connection_t *cnx)
 {
-        close_connection_fd(cnx);
+        close_connection_fd_block(cnx);
         
         if ( cnx->state & PRELUDE_CONNECTION_OWN_FD )
                 prelude_io_destroy(cnx->fd);
@@ -450,18 +472,23 @@ static int resolve_addr(prelude_connection_t *cnx, const char *addr)
 
 
 
-/*
- * function called back when a connection timer expire.
+/**
+ * prelude_connection_destroy:
+ * @conn: Pointer to a #prelude_connection_t object.
+ *
+ * Destroy the connection referenced by @conn.
+ *
+ * In case the connection is still alive, it is closed in a blocking
+ * manner. Use prelude_connection_close() if you want to close the
+ * connection in a non blocking manner prior prelude_connection_destroy().
  */
-
-void prelude_connection_destroy(prelude_connection_t *cnx) 
-{        
-	free(cnx->sa);
+void prelude_connection_destroy(prelude_connection_t *conn) 
+{
+        destroy_connection_fd(conn);
         
-        destroy_connection_fd(cnx);
-                
-        free(cnx->daddr);
-        free(cnx);
+        free(conn->daddr);
+        free(conn->sa);
+        free(conn);
 }
 
 
@@ -519,6 +546,7 @@ void prelude_connection_set_fd_nodup(prelude_connection_t *cnx, prelude_io_t *fd
 }
 
 
+
 int prelude_connection_connect(prelude_connection_t *conn,
                                prelude_client_profile_t *profile,
                                prelude_connection_capability_t capability)
@@ -526,7 +554,7 @@ int prelude_connection_connect(prelude_connection_t *conn,
         int ret;
         prelude_msg_t *msg;
         
-        close_connection_fd(conn);
+        close_connection_fd_block(conn);
                 
         ret = do_connect(conn, profile);
         if ( ret < 0 ) 
@@ -552,7 +580,7 @@ int prelude_connection_connect(prelude_connection_t *conn,
         return ret;
         
  err:
-        prelude_io_close(conn->fd);
+        close_connection_fd_block(conn);
         
         return ret;
 }
@@ -560,9 +588,9 @@ int prelude_connection_connect(prelude_connection_t *conn,
 
 
 
-void prelude_connection_close(prelude_connection_t *cnx) 
+int prelude_connection_close(prelude_connection_t *cnx) 
 {
-        close_connection_fd(cnx);
+        return close_connection_fd(cnx);
 }
 
 
@@ -576,19 +604,12 @@ int prelude_connection_send(prelude_connection_t *cnx, prelude_msg_t *msg)
                 return -1;
 
         ret = prelude_msg_write(msg, cnx->fd);
-        if ( ret < 0 ) {
-                if ( prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN )
-                        return ret;
-                
-                close_connection_fd(cnx);
+        if ( ret < 0 )                
                 return ret;
-        }
 
         ret = is_tcp_connection_still_established(cnx->fd);
-        if ( ret < 0 ) {
-                close_connection_fd(cnx);
+        if ( ret < 0 )
                 return ret;
-        }
         
         return ret;
 }
@@ -596,28 +617,11 @@ int prelude_connection_send(prelude_connection_t *cnx, prelude_msg_t *msg)
 
 
 int prelude_connection_recv(prelude_connection_t *cnx, prelude_msg_t **msg)
-{
-        int ret;
-        
+{        
         if ( ! (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) )
                 return -1;
 
-        ret = prelude_msg_read(msg, cnx->fd);
-        if ( ret < 0 ) {
-                if ( prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN )
-                        return ret;
-                
-                close_connection_fd(cnx);
-                return ret;
-        }
-
-        ret = is_tcp_connection_still_established(cnx->fd);
-        if ( ret < 0 ) {
-                close_connection_fd(cnx);
-                return ret;
-        }
-
-        return ret;
+        return prelude_msg_read(msg, cnx->fd);
 }
 
 
@@ -704,15 +708,13 @@ ssize_t prelude_connection_forward(prelude_connection_t *cnx, prelude_io_t *src,
         
         ret = prelude_io_forward(cnx->fd, src, count);
         if ( ret < 0 )
-                close_connection_fd(cnx);
-
-        ret = is_tcp_connection_still_established(cnx->fd);
-        if ( ret < 0 ) {
-                close_connection_fd(cnx);
                 return ret;
-        }
         
-        return ret;
+        ret = is_tcp_connection_still_established(cnx->fd);
+        if ( ret < 0 )
+                return ret;
+        
+        return 0;
 }
 
 
