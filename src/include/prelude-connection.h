@@ -21,8 +21,8 @@
 *
 *****/
 
-#ifndef _LIBPRELUDE_PRELUDE_CLIENT_H
-#define _LIBPRELUDE_PRELUDE_CLIENT_H
+#ifndef _LIBPRELUDE_PRELUDE_CONNECTION_H
+#define _LIBPRELUDE_PRELUDE_CONNECTION_H
 
 #include "prelude-message.h"
 
@@ -70,4 +70,4 @@ prelude_client_t *prelude_connection_get_client(prelude_connection_t *cnx);
 
 prelude_connection_t *prelude_connection_new(prelude_client_t *client, const char *addr, uint16_t port);
 
-#endif /* _LIBPRELUDE_PRELUDE_CLIENT_H */
+#endif /* _LIBPRELUDE_PRELUDE_CONNECTION_H */
