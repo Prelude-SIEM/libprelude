@@ -168,7 +168,7 @@ static int set_data(prelude_msg_t **m, const void *buf, size_t size)
                  * the caller might destroy the message after this and re-allocate
                  * one... or use synchronous send and reuse the same message.
                  */
-                ret = call_alloc_cb(&msg);
+                ret = call_alloc_cb(m);
                 if ( ret < 0 )
                         return ret;
                                 
