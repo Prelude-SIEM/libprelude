@@ -190,7 +190,6 @@ idmef_criterion_t *idmef_criterion_new(idmef_object_t *object,
 {
 	idmef_criterion_t *criterion;
         
-        printf("criterion new value=%p\n", value);
 	if ( value && idmef_criterion_check(object, value, relation) < 0 )
 		return NULL;
 
