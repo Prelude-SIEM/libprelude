@@ -135,12 +135,15 @@ static char *generate_md5sum(const char *filename)
                 return NULL;
         
         ret = fstat(fd, &st);
-        if ( ret < 0 )
+        if ( ret < 0 || ! S_ISREG(st.st_mode) ) {
+                close(fd);
                 return NULL;
+        }
         
         data = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
         if ( ! data ) {
                 log(LOG_ERR, "could not mmap %s.\n", filename);
+                close(fd);
                 return NULL;
         }
         
@@ -237,9 +240,9 @@ static void setup_heartbeat_timer(prelude_client_t *client, int expire)
 static int fill_client_infos(prelude_client_t *client, const char *program) 
 {
         int ret;
-        char *name, *path;
         struct utsname uts;
 	idmef_process_t *process;
+        char filename[256], *name, *path;
         
 	idmef_analyzer_set_analyzerid(client->analyzer, client->analyzerid);
         
@@ -266,11 +269,11 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
         if ( ret < 0 )
                 return -1;
         
-        if ( name ) 
-                idmef_process_set_name(process, idmef_string_new_ref(name));
-
-        if ( path )
-                idmef_process_set_path(process, idmef_string_new_ref(path));
+        idmef_process_set_name(process, idmef_string_new_ref(name));
+        idmef_process_set_path(process, idmef_string_new_ref(path));
+        
+        snprintf(filename, sizeof(filename), "%s/%s", path, name);
+        client->md5sum = generate_md5sum(filename);
         
         return 0;
 }
@@ -596,9 +599,6 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
         
         new->name = strdup(sname);
         new->config_filename = config ? strdup(config) : NULL;
-        
-        if ( argv )
-                new->md5sum = generate_md5sum(argv[0]);
         
         new->unique_ident = prelude_ident_new();
         if ( ! new->unique_ident ) {
