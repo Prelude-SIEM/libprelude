@@ -62,6 +62,6 @@ int idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, char *out, 
 int prelude_get_process_name_and_path(const char *str, char **name, char **path);
 
 #define MAX_UTC_DATETIME_SIZE  64   /* YYYY-MM-DDThh:mm:ss.ssZ */
-#define MAX_NTP_TIMESTAMP_SIZE 21   /* 0xNNNNNNNN.0xNNNNNNNN   */
+#define MAX_NTP_TIMESTAMP_SIZE 22   /* 0xNNNNNNNN.0xNNNNNNNN + \0  */
 
 #endif /* _LIBPRELUDE_IDMEF_UTIL_H */

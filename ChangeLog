@@ -1,5 +1,18 @@
 2003-12-29  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
+	* src/idmef-time.c:
+	(idmef_time_get_idmef_timestamp)
+	(idmef_time_get_idmef_timestamp)
+	(idmef_time_get_timestamp)
+	bug fix: also check if the snprintf return value
+	is not bigger than the given size
+
+	* src/include/idmef-util.h:
+	MAX_NTP_TIMESTAMP_SIZE: include the trailing nul byte
+	in the size, it fix a bug in libpreludedb
+
+2003-12-29  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
 	* bindings/python/prelude.py:
 	cleanup
 
