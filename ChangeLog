@@ -1,5 +1,8 @@
 2002-03-11  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/prelude-getopt.c (get_missing_options): 
+	add missing call to call_option_from_cb_list().
+
 	* src/extract.c (extract_ipv4_addr): 
 	only align when needed.
 

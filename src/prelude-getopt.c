@@ -273,6 +273,8 @@ static int call_option_cb(struct list_head *cblist, prelude_option_t *option, co
                 list_add_tail(&new->list, cblist);
         else
                 list_add(&new->list, prev);
+
+        return 0;
 }
 
 
@@ -388,9 +390,15 @@ static int get_missing_options(const char *filename, prelude_optlist_t *optlist)
         }
 
         ret = get_from_config(&cb_list, optlist, cfg, NULL);
+        if ( ret < 0 )
+                goto err;
 
+
+        ret = call_option_from_cb_list(&cb_list);
+        
+ err:
         config_close(cfg);
-
+        
         return ret;
 }
 
