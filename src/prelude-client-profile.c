@@ -221,10 +221,6 @@ int _prelude_client_profile_init(prelude_client_profile_t *cp)
         ret = get_profile_analyzerid(cp);
         if ( ret < 0 )
                 return ret;
-
-        ret = tls_auth_init(cp, &cp->credentials);
-        if ( ret < 0 )
-                return ret;
         
         cp->uid = geteuid();
         cp->gid = getegid();
@@ -400,7 +396,20 @@ int prelude_client_profile_set_name(prelude_client_profile_t *cp, const char *na
 
 
 
-gnutls_certificate_credentials prelude_client_profile_get_credentials(prelude_client_profile_t *cp)
+int prelude_client_profile_get_credentials(prelude_client_profile_t *cp, gnutls_certificate_credentials *credentials)
 {
-        return cp->credentials;
+        int ret;
+        
+        if ( cp->credentials ) {
+                *credentials = cp->credentials;
+                return 0;
+        }
+        
+        ret = tls_auth_init(cp, &cp->credentials);        
+        if ( ret < 0 )
+                return ret;
+
+        *credentials = cp->credentials;
+        
+        return 0;
 }

@@ -48,6 +48,6 @@ uint64_t prelude_client_profile_get_analyzerid(prelude_client_profile_t *cp);
 
 void prelude_client_profile_set_analyzerid(prelude_client_profile_t *cp, uint64_t analyzerid);
 
-gnutls_certificate_credentials prelude_client_profile_get_credentials(prelude_client_profile_t *cp);
+int prelude_client_profile_get_credentials(prelude_client_profile_t *cp, gnutls_certificate_credentials *credentials);
 
 #endif

@@ -132,7 +132,11 @@ int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int cryp
 {
 	int ret, fd;
         gnutls_session session;
-        gnutls_certificate_credentials cred = prelude_client_profile_get_credentials(cp);
+        gnutls_certificate_credentials cred;
+
+        ret = prelude_client_profile_get_credentials(cp, &cred);
+        if ( ret < 0 )
+                return ret;
         
         gnutls_init(&session, GNUTLS_CLIENT);
         gnutls_set_default_priority(session);
