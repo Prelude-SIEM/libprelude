@@ -227,6 +227,10 @@ static int register_sensor_ident(const char *name, uint64_t *ident)
                 fprintf(stderr, "error opening %s: %s.\n", filename, strerror(errno));
                 return -1;
         }
+
+        ret = fchown(fileno(fd), prelude_client_get_uid(client), prelude_client_get_gid(client));
+        if ( ret < 0 ) 
+                fprintf(stderr, "couldn't change %s owner.\n", filename);
         
         ret = fchmod(fileno(fd), S_IRUSR|S_IWUSR|S_IRGRP);
         if ( ret < 0 ) 
