@@ -546,6 +546,9 @@ def idmef_value_c_to_python(value):
         _prelude.IDMEF_VALUE_TYPE_DOUBLE:    _prelude.idmef_value_get_double,
         }
 
+    if value is None:
+        return None
+
     type = _prelude.idmef_value_get_type(value)
 
     if type == _prelude.IDMEF_VALUE_TYPE_TIME:
@@ -675,7 +678,8 @@ class IDMEFMessage:
         try:
             py_value = _idmef_value_list_c_to_python(c_value)
         finally:
-            _prelude.idmef_value_destroy(c_value)
+            if c_value != None:
+                _prelude.idmef_value_destroy(c_value)
 
         return py_value
         
