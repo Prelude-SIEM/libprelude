@@ -1,12 +1,12 @@
 /*****
 *
-* Copyright (C) 2001 Jeremie Brebec / Toussaint Mathieu
+* Copyright (C) 1998 - 2000 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
 *
 * This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
+* it under the terms of the GNU General Public License as published by 
 * the Free Software Foundation; either version 2, or (at your option)
 * any later version.
 *
@@ -21,29 +21,19 @@
 *
 *****/
 
-#ifndef SSL_CONFIG_H
-
-#define SSL_CONFIG_H
-
+#include <openssl/ssl.h>
 
 /*
- * Port of registration for report
+ * Place where the Manager certificate is saved.
  */
-#define REGISTRATION_PORT 5554
+#define MANAGERS_CERT CONFIG_DIR"/managers.cert"
+#define SENSORS_CERT CONFIG_DIR"/sensors.cert"
+
+#define MANAGER_KEY CONFIG_DIR"/manager.key"
+#define SENSORS_KEY CONFIG_DIR"/sensors.key"
 
 
 
-void ssl_read_config(config_t *cfg, const char *section);
+int ssl_init_client(void);
 
-int ssl_get_key_length(void);
-
-int ssl_get_days(void);
-
-char *ssl_get_server_addr(void);
-
-int ssl_get_server_port(void);
-
-#endif
-
-
-
+SSL *ssl_connect_server(int socket);
