@@ -537,8 +537,6 @@ int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src
  */
 int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst) 
 {
-        uint32_t dlen;
-
         msg_mark_end(msg);
 
         return prelude_io_write(dst, msg->payload, msg->write_index);
