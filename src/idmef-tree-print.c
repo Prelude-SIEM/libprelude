@@ -108,7 +108,12 @@ static void print_time(idmef_time_t *t)
 
 static void print_data(idmef_data_t *data)
 {
-	printf("%s", (const char *) idmef_data_get_data(data));
+	char buffer[512];
+
+	if ( idmef_data_to_string(data, buffer, sizeof (buffer)) < 0 )
+		return;
+
+	printf("%s", buffer);
 }
 
 
