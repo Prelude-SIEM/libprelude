@@ -209,12 +209,13 @@ static int handle_plaintext_connection(prelude_client_t *client, int sock)
         ulen = strlen(user) + 1;
         plen = strlen(pass) + 1;
         
-        msg = prelude_msg_new(2, ulen + plen, PRELUDE_MSG_AUTH_PLAINTEXT, 0);
+        msg = prelude_msg_new(3, ulen + plen, PRELUDE_MSG_AUTH, 0);
         if ( ! msg ) {
                 ret = -1;
                 goto err;
         }
 
+        prelude_msg_set(msg, PRELUDE_MSG_AUTH_PLAINTEXT, 0, NULL);
         prelude_msg_set(msg, PRELUDE_MSG_AUTH_USERNAME, ulen, user);
         prelude_msg_set(msg, PRELUDE_MSG_AUTH_PASSWORD, plen, pass);
         prelude_io_set_sys_io(client->fd, sock);
