@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string.h>
+#include <sys/types.h>
 #include <netinet/in.h>
 
 #include "prelude-log.h"
