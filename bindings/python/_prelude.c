@@ -686,7 +686,7 @@ SWIG_InstallConstants(PyObject *d, swig_const_info constants[]) {
 #define  SWIGTYPE_p_idmef_webservice_t swig_types[42] 
 #define  SWIGTYPE_p_idmef_snmpservice_t swig_types[43] 
 #define  SWIGTYPE_p_idmef_service_t swig_types[44] 
-#define  SWIGTYPE_p_idmef_decoy_t swig_types[45] 
+#define  SWIGTYPE_p_idmef_target_decoy_t swig_types[45] 
 #define  SWIGTYPE_p_p_char swig_types[46] 
 #define  SWIGTYPE_p_idmef_impact_type_t swig_types[47] 
 #define  SWIGTYPE_p_idmef_file_fstype_t swig_types[48] 
@@ -694,7 +694,7 @@ SWIG_InstallConstants(PyObject *d, swig_const_info constants[]) {
 #define  SWIGTYPE_p_idmef_userid_type_t swig_types[50] 
 #define  SWIGTYPE_p_idmef_file_t swig_types[51] 
 #define  SWIGTYPE_p_idmef_value_type_t swig_types[52] 
-#define  SWIGTYPE_p_idmef_spoofed_t swig_types[53] 
+#define  SWIGTYPE_p_idmef_source_spoofed_t swig_types[53] 
 #define  SWIGTYPE_p_idmef_data_t_data swig_types[54] 
 #define  SWIGTYPE_p_idmef_linkage_t swig_types[55] 
 #define  SWIGTYPE_p_idmef_action_t swig_types[56] 
@@ -5629,13 +5629,13 @@ static PyObject *_wrap_idmef_node_get_address_value(PyObject *self, PyObject *ar
 }
 
 
-static PyObject *_wrap_idmef_spoofed_to_numeric(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_source_spoofed_to_numeric(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     char *arg1 ;
     int result;
     PyObject * obj0 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"O:idmef_spoofed_to_numeric",&obj0)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_source_spoofed_to_numeric",&obj0)) goto fail;
     {
         if ( obj0 == Py_None )
         arg1 = NULL;
@@ -5647,7 +5647,7 @@ static PyObject *_wrap_idmef_spoofed_to_numeric(PyObject *self, PyObject *args) 
             return NULL;
         }
     }
-    result = (int)idmef_spoofed_to_numeric((char const *)arg1);
+    result = (int)idmef_source_spoofed_to_numeric((char const *)arg1);
     
     resultobj = PyInt_FromLong((long)result);
     return resultobj;
@@ -5656,13 +5656,13 @@ static PyObject *_wrap_idmef_spoofed_to_numeric(PyObject *self, PyObject *args) 
 }
 
 
-static PyObject *_wrap_idmef_spoofed_to_string(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_source_spoofed_to_string(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     int arg1 ;
     char *result;
     
-    if(!PyArg_ParseTuple(args,(char *)"i:idmef_spoofed_to_string",&arg1)) goto fail;
-    result = (char *)idmef_spoofed_to_string(arg1);
+    if(!PyArg_ParseTuple(args,(char *)"i:idmef_source_spoofed_to_string",&arg1)) goto fail;
+    result = (char *)idmef_source_spoofed_to_string(arg1);
     
     resultobj = result ? PyString_FromString(result) : Py_BuildValue((char*)"");
     return resultobj;
@@ -5851,7 +5851,7 @@ static PyObject *_wrap_idmef_source_set_spoofed(PyObject *self, PyObject *args) 
     
     if(!PyArg_ParseTuple(args,(char *)"Oi:idmef_source_set_spoofed",&obj0,&arg2)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_source_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_source_set_spoofed(arg1,(idmef_spoofed_t )arg2);
+    idmef_source_set_spoofed(arg1,(idmef_source_spoofed_t )arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -5880,14 +5880,14 @@ static PyObject *_wrap_idmef_source_get_spoofed_value(PyObject *self, PyObject *
 static PyObject *_wrap_idmef_source_new_spoofed(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_source_t *arg1 = (idmef_source_t *) 0 ;
-    idmef_spoofed_t *result;
+    idmef_source_spoofed_t *result;
     PyObject * obj0 = 0 ;
     
     if(!PyArg_ParseTuple(args,(char *)"O:idmef_source_new_spoofed",&obj0)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_source_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (idmef_spoofed_t *)idmef_source_new_spoofed(arg1);
+    result = (idmef_source_spoofed_t *)idmef_source_new_spoofed(arg1);
     
-    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_spoofed_t, 0);
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_source_spoofed_t, 0);
     return resultobj;
     fail:
     return NULL;
@@ -8467,13 +8467,13 @@ static PyObject *_wrap_idmef_linkage_new_file(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_decoy_to_numeric(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_target_decoy_to_numeric(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     char *arg1 ;
     int result;
     PyObject * obj0 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"O:idmef_decoy_to_numeric",&obj0)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_target_decoy_to_numeric",&obj0)) goto fail;
     {
         if ( obj0 == Py_None )
         arg1 = NULL;
@@ -8485,7 +8485,7 @@ static PyObject *_wrap_idmef_decoy_to_numeric(PyObject *self, PyObject *args) {
             return NULL;
         }
     }
-    result = (int)idmef_decoy_to_numeric((char const *)arg1);
+    result = (int)idmef_target_decoy_to_numeric((char const *)arg1);
     
     resultobj = PyInt_FromLong((long)result);
     return resultobj;
@@ -8494,13 +8494,13 @@ static PyObject *_wrap_idmef_decoy_to_numeric(PyObject *self, PyObject *args) {
 }
 
 
-static PyObject *_wrap_idmef_decoy_to_string(PyObject *self, PyObject *args) {
+static PyObject *_wrap_idmef_target_decoy_to_string(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     int arg1 ;
     char *result;
     
-    if(!PyArg_ParseTuple(args,(char *)"i:idmef_decoy_to_string",&arg1)) goto fail;
-    result = (char *)idmef_decoy_to_string(arg1);
+    if(!PyArg_ParseTuple(args,(char *)"i:idmef_target_decoy_to_string",&arg1)) goto fail;
+    result = (char *)idmef_target_decoy_to_string(arg1);
     
     resultobj = result ? PyString_FromString(result) : Py_BuildValue((char*)"");
     return resultobj;
@@ -8689,7 +8689,7 @@ static PyObject *_wrap_idmef_target_set_decoy(PyObject *self, PyObject *args) {
     
     if(!PyArg_ParseTuple(args,(char *)"Oi:idmef_target_set_decoy",&obj0,&arg2)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_target_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    idmef_target_set_decoy(arg1,(idmef_decoy_t )arg2);
+    idmef_target_set_decoy(arg1,(idmef_target_decoy_t )arg2);
     
     Py_INCREF(Py_None); resultobj = Py_None;
     return resultobj;
@@ -8718,14 +8718,14 @@ static PyObject *_wrap_idmef_target_get_decoy_value(PyObject *self, PyObject *ar
 static PyObject *_wrap_idmef_target_new_decoy(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_target_t *arg1 = (idmef_target_t *) 0 ;
-    idmef_decoy_t *result;
+    idmef_target_decoy_t *result;
     PyObject * obj0 = 0 ;
     
     if(!PyArg_ParseTuple(args,(char *)"O:idmef_target_new_decoy",&obj0)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_target_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (idmef_decoy_t *)idmef_target_new_decoy(arg1);
+    result = (idmef_target_decoy_t *)idmef_target_new_decoy(arg1);
     
-    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_decoy_t, 0);
+    resultobj = SWIG_NewPointerObj((void *) result, SWIGTYPE_p_idmef_target_decoy_t, 0);
     return resultobj;
     fail:
     return NULL;
@@ -21175,8 +21175,8 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_node_set_address", _wrap_idmef_node_set_address, METH_VARARGS },
 	 { (char *)"idmef_node_new_address", _wrap_idmef_node_new_address, METH_VARARGS },
 	 { (char *)"idmef_node_get_address_value", _wrap_idmef_node_get_address_value, METH_VARARGS },
-	 { (char *)"idmef_spoofed_to_numeric", _wrap_idmef_spoofed_to_numeric, METH_VARARGS },
-	 { (char *)"idmef_spoofed_to_string", _wrap_idmef_spoofed_to_string, METH_VARARGS },
+	 { (char *)"idmef_source_spoofed_to_numeric", _wrap_idmef_source_spoofed_to_numeric, METH_VARARGS },
+	 { (char *)"idmef_source_spoofed_to_string", _wrap_idmef_source_spoofed_to_string, METH_VARARGS },
 	 { (char *)"idmef_source_new", _wrap_idmef_source_new, METH_VARARGS },
 	 { (char *)"idmef_source_ref", _wrap_idmef_source_ref, METH_VARARGS },
 	 { (char *)"idmef_source_get_child", _wrap_idmef_source_get_child, METH_VARARGS },
@@ -21336,8 +21336,8 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_linkage_set_file", _wrap_idmef_linkage_set_file, METH_VARARGS },
 	 { (char *)"idmef_linkage_get_file_value", _wrap_idmef_linkage_get_file_value, METH_VARARGS },
 	 { (char *)"idmef_linkage_new_file", _wrap_idmef_linkage_new_file, METH_VARARGS },
-	 { (char *)"idmef_decoy_to_numeric", _wrap_idmef_decoy_to_numeric, METH_VARARGS },
-	 { (char *)"idmef_decoy_to_string", _wrap_idmef_decoy_to_string, METH_VARARGS },
+	 { (char *)"idmef_target_decoy_to_numeric", _wrap_idmef_target_decoy_to_numeric, METH_VARARGS },
+	 { (char *)"idmef_target_decoy_to_string", _wrap_idmef_target_decoy_to_string, METH_VARARGS },
 	 { (char *)"idmef_target_new", _wrap_idmef_target_new, METH_VARARGS },
 	 { (char *)"idmef_target_ref", _wrap_idmef_target_ref, METH_VARARGS },
 	 { (char *)"idmef_target_get_child", _wrap_idmef_target_get_child, METH_VARARGS },
@@ -22059,7 +22059,7 @@ static swig_type_info _swigt__p_idmef_impact_t[] = {{"_p_idmef_impact_t", 0, "id
 static swig_type_info _swigt__p_idmef_webservice_t[] = {{"_p_idmef_webservice_t", 0, "idmef_webservice_t *", 0},{"_p_idmef_webservice_t"},{0}};
 static swig_type_info _swigt__p_idmef_snmpservice_t[] = {{"_p_idmef_snmpservice_t", 0, "idmef_snmpservice_t *", 0},{"_p_idmef_snmpservice_t"},{0}};
 static swig_type_info _swigt__p_idmef_service_t[] = {{"_p_idmef_service_t", 0, "idmef_service_t *", 0},{"_p_idmef_service_t"},{0}};
-static swig_type_info _swigt__p_idmef_decoy_t[] = {{"_p_idmef_decoy_t", 0, "idmef_decoy_t *", 0},{"_p_idmef_decoy_t"},{0}};
+static swig_type_info _swigt__p_idmef_target_decoy_t[] = {{"_p_idmef_target_decoy_t", 0, "idmef_target_decoy_t *", 0},{"_p_idmef_target_decoy_t"},{0}};
 static swig_type_info _swigt__p_p_char[] = {{"_p_p_char", 0, "char **", 0},{"_p_p_char"},{0}};
 static swig_type_info _swigt__p_idmef_impact_type_t[] = {{"_p_idmef_impact_type_t", 0, "idmef_impact_type_t *", 0},{"_p_idmef_impact_type_t"},{0}};
 static swig_type_info _swigt__p_idmef_file_fstype_t[] = {{"_p_idmef_file_fstype_t", 0, "idmef_file_fstype_t *", 0},{"_p_idmef_file_fstype_t"},{0}};
@@ -22067,7 +22067,7 @@ static swig_type_info _swigt__p_idmef_additional_data_type_t[] = {{"_p_idmef_add
 static swig_type_info _swigt__p_idmef_userid_type_t[] = {{"_p_idmef_userid_type_t", 0, "idmef_userid_type_t *", 0},{"_p_idmef_userid_type_t"},{0}};
 static swig_type_info _swigt__p_idmef_file_t[] = {{"_p_idmef_file_t", 0, "idmef_file_t *", 0},{"_p_idmef_file_t"},{0}};
 static swig_type_info _swigt__p_idmef_value_type_t[] = {{"_p_idmef_value_type_t", 0, "idmef_value_type_t *", 0},{"_p_idmef_value_type_t"},{0}};
-static swig_type_info _swigt__p_idmef_spoofed_t[] = {{"_p_idmef_spoofed_t", 0, "idmef_spoofed_t *", 0},{"_p_idmef_spoofed_t"},{0}};
+static swig_type_info _swigt__p_idmef_source_spoofed_t[] = {{"_p_idmef_source_spoofed_t", 0, "idmef_source_spoofed_t *", 0},{"_p_idmef_source_spoofed_t"},{0}};
 static swig_type_info _swigt__p_idmef_data_t_data[] = {{"_p_idmef_data_t_data", 0, "idmef_data_t_data *", 0},{"_p_idmef_data_t_data"},{0}};
 static swig_type_info _swigt__p_idmef_linkage_t[] = {{"_p_idmef_linkage_t", 0, "idmef_linkage_t *", 0},{"_p_idmef_linkage_t"},{0}};
 static swig_type_info _swigt__p_idmef_action_t[] = {{"_p_idmef_action_t", 0, "idmef_action_t *", 0},{"_p_idmef_action_t"},{0}};
@@ -22139,7 +22139,7 @@ _swigt__p_idmef_impact_t,
 _swigt__p_idmef_webservice_t, 
 _swigt__p_idmef_snmpservice_t, 
 _swigt__p_idmef_service_t, 
-_swigt__p_idmef_decoy_t, 
+_swigt__p_idmef_target_decoy_t, 
 _swigt__p_p_char, 
 _swigt__p_idmef_impact_type_t, 
 _swigt__p_idmef_file_fstype_t, 
@@ -22147,7 +22147,7 @@ _swigt__p_idmef_additional_data_type_t,
 _swigt__p_idmef_userid_type_t, 
 _swigt__p_idmef_file_t, 
 _swigt__p_idmef_value_type_t, 
-_swigt__p_idmef_spoofed_t, 
+_swigt__p_idmef_source_spoofed_t, 
 _swigt__p_idmef_data_t_data, 
 _swigt__p_idmef_linkage_t, 
 _swigt__p_idmef_action_t, 
@@ -22307,7 +22307,7 @@ static swig_const_info swig_const_table[] = {
 { SWIG_PY_INT,     (char *)"idmef_type_service", (long) 17, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_node_category", (long) 18, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_node", (long) 19, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"idmef_type_spoofed", (long) 20, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"idmef_type_source_spoofed", (long) 20, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_source", (long) 21, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_file_access", (long) 22, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_inode", (long) 23, 0, 0, 0},
@@ -22316,7 +22316,7 @@ static swig_const_info swig_const_table[] = {
 { SWIG_PY_INT,     (char *)"idmef_type_file", (long) 26, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_linkage_category", (long) 27, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_linkage", (long) 28, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"idmef_type_decoy", (long) 29, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"idmef_type_target_decoy", (long) 29, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_target", (long) 30, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_analyzer", (long) 31, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"idmef_type_alertident", (long) 32, 0, 0, 0},

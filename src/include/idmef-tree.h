@@ -362,7 +362,7 @@ ENUM() {
         IDMEF_SOURCE_SPOOFED_UNKNOWN = 0,
         IDMEF_SOURCE_SPOOFED_YES     = 1,
         IDMEF_SOURCE_SPOOFED_NO      = 2
-} TYPE_ID(idmef_spoofed_t, 20);
+} TYPE_ID(idmef_source_spoofed_t, 20);
 
 
 typedef struct {
@@ -370,7 +370,7 @@ typedef struct {
 	REFCOUNT;
 
         uint64_t ident;
-        idmef_spoofed_t spoofed;
+        idmef_source_spoofed_t spoofed;
         idmef_string_t interface;
 
         idmef_node_t *node;
@@ -499,7 +499,7 @@ ENUM() {
         IDMEF_TARGET_DECOY_UNKNOWN = 0,
         IDMEF_TARGET_DECOY_YES     = 1,
         IDMEF_TARGET_DECOY_NO      = 2
-} TYPE_ID(idmef_decoy_t, 29);
+} TYPE_ID(idmef_target_decoy_t, 29);
 
 
 typedef struct {
@@ -507,7 +507,7 @@ typedef struct {
 	REFCOUNT;
         
         uint64_t ident;
-        idmef_decoy_t decoy;
+        idmef_target_decoy_t decoy;
         idmef_string_t interface;
 
         idmef_node_t *node;

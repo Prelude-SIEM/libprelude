@@ -604,7 +604,7 @@ static void _swig_create_magic(CPerlObj *pPerl, SV *sv, const char *name, int (C
 #define  SWIGTYPE_p_idmef_webservice_t swig_types[42] 
 #define  SWIGTYPE_p_idmef_snmpservice_t swig_types[43] 
 #define  SWIGTYPE_p_idmef_service_t swig_types[44] 
-#define  SWIGTYPE_p_idmef_decoy_t swig_types[45] 
+#define  SWIGTYPE_p_idmef_target_decoy_t swig_types[45] 
 #define  SWIGTYPE_p_p_char swig_types[46] 
 #define  SWIGTYPE_p_idmef_impact_type_t swig_types[47] 
 #define  SWIGTYPE_p_idmef_file_fstype_t swig_types[48] 
@@ -612,7 +612,7 @@ static void _swig_create_magic(CPerlObj *pPerl, SV *sv, const char *name, int (C
 #define  SWIGTYPE_p_idmef_userid_type_t swig_types[50] 
 #define  SWIGTYPE_p_idmef_file_t swig_types[51] 
 #define  SWIGTYPE_p_idmef_value_type_t swig_types[52] 
-#define  SWIGTYPE_p_idmef_spoofed_t swig_types[53] 
+#define  SWIGTYPE_p_idmef_source_spoofed_t swig_types[53] 
 #define  SWIGTYPE_p_idmef_data_t_data swig_types[54] 
 #define  SWIGTYPE_p_idmef_linkage_t swig_types[55] 
 #define  SWIGTYPE_p_idmef_action_t swig_types[56] 
@@ -8831,7 +8831,7 @@ XS(_wrap_idmef_node_get_address_value) {
 }
 
 
-XS(_wrap_idmef_spoofed_to_numeric) {
+XS(_wrap_idmef_source_spoofed_to_numeric) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -8841,11 +8841,11 @@ XS(_wrap_idmef_spoofed_to_numeric) {
         dXSARGS;
         
         if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: idmef_spoofed_to_numeric(name);");
+            SWIG_croak("Usage: idmef_source_spoofed_to_numeric(name);");
         }
         if (!SvOK((SV*) ST(0))) arg1 = 0;
         else arg1 = (char *) SvPV(ST(0), PL_na);
-        result = (int)idmef_spoofed_to_numeric((char const *)arg1);
+        result = (int)idmef_source_spoofed_to_numeric((char const *)arg1);
         
         ST(argvi) = sv_newmortal();
         sv_setiv(ST(argvi++), (IV) result);
@@ -8857,7 +8857,7 @@ XS(_wrap_idmef_spoofed_to_numeric) {
 }
 
 
-XS(_wrap_idmef_spoofed_to_string) {
+XS(_wrap_idmef_source_spoofed_to_string) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -8867,10 +8867,10 @@ XS(_wrap_idmef_spoofed_to_string) {
         dXSARGS;
         
         if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: idmef_spoofed_to_string(val);");
+            SWIG_croak("Usage: idmef_source_spoofed_to_string(val);");
         }
         arg1 = (int) SvIV(ST(0));
-        result = (char *)idmef_spoofed_to_string(arg1);
+        result = (char *)idmef_source_spoofed_to_string(arg1);
         
         ST(argvi) = sv_newmortal();
         if (result) {
@@ -9210,7 +9210,7 @@ XS(_wrap_idmef_source_set_spoofed) {
             }
         }
         arg2 = (int) SvIV(ST(1));
-        idmef_source_set_spoofed(arg1,(idmef_spoofed_t )arg2);
+        idmef_source_set_spoofed(arg1,(idmef_source_spoofed_t )arg2);
         
         
         XSRETURN(argvi);
@@ -9255,7 +9255,7 @@ XS(_wrap_idmef_source_new_spoofed) {
     const char *_swigerr = _swigmsg;
     {
         idmef_source_t *arg1 = (idmef_source_t *) 0 ;
-        idmef_spoofed_t *result;
+        idmef_source_spoofed_t *result;
         int argvi = 0;
         dXSARGS;
         
@@ -9267,10 +9267,10 @@ XS(_wrap_idmef_source_new_spoofed) {
                 SWIG_croak("Type error in argument 1 of idmef_source_new_spoofed. Expected _p_idmef_source_t");
             }
         }
-        result = (idmef_spoofed_t *)idmef_source_new_spoofed(arg1);
+        result = (idmef_source_spoofed_t *)idmef_source_new_spoofed(arg1);
         
         ST(argvi) = sv_newmortal();
-        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_spoofed_t,0);
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_source_spoofed_t,0);
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -13608,7 +13608,7 @@ XS(_wrap_idmef_linkage_new_file) {
 }
 
 
-XS(_wrap_idmef_decoy_to_numeric) {
+XS(_wrap_idmef_target_decoy_to_numeric) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -13618,11 +13618,11 @@ XS(_wrap_idmef_decoy_to_numeric) {
         dXSARGS;
         
         if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: idmef_decoy_to_numeric(name);");
+            SWIG_croak("Usage: idmef_target_decoy_to_numeric(name);");
         }
         if (!SvOK((SV*) ST(0))) arg1 = 0;
         else arg1 = (char *) SvPV(ST(0), PL_na);
-        result = (int)idmef_decoy_to_numeric((char const *)arg1);
+        result = (int)idmef_target_decoy_to_numeric((char const *)arg1);
         
         ST(argvi) = sv_newmortal();
         sv_setiv(ST(argvi++), (IV) result);
@@ -13634,7 +13634,7 @@ XS(_wrap_idmef_decoy_to_numeric) {
 }
 
 
-XS(_wrap_idmef_decoy_to_string) {
+XS(_wrap_idmef_target_decoy_to_string) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
     {
@@ -13644,10 +13644,10 @@ XS(_wrap_idmef_decoy_to_string) {
         dXSARGS;
         
         if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: idmef_decoy_to_string(val);");
+            SWIG_croak("Usage: idmef_target_decoy_to_string(val);");
         }
         arg1 = (int) SvIV(ST(0));
-        result = (char *)idmef_decoy_to_string(arg1);
+        result = (char *)idmef_target_decoy_to_string(arg1);
         
         ST(argvi) = sv_newmortal();
         if (result) {
@@ -13987,7 +13987,7 @@ XS(_wrap_idmef_target_set_decoy) {
             }
         }
         arg2 = (int) SvIV(ST(1));
-        idmef_target_set_decoy(arg1,(idmef_decoy_t )arg2);
+        idmef_target_set_decoy(arg1,(idmef_target_decoy_t )arg2);
         
         
         XSRETURN(argvi);
@@ -14032,7 +14032,7 @@ XS(_wrap_idmef_target_new_decoy) {
     const char *_swigerr = _swigmsg;
     {
         idmef_target_t *arg1 = (idmef_target_t *) 0 ;
-        idmef_decoy_t *result;
+        idmef_target_decoy_t *result;
         int argvi = 0;
         dXSARGS;
         
@@ -14044,10 +14044,10 @@ XS(_wrap_idmef_target_new_decoy) {
                 SWIG_croak("Type error in argument 1 of idmef_target_new_decoy. Expected _p_idmef_target_t");
             }
         }
-        result = (idmef_decoy_t *)idmef_target_new_decoy(arg1);
+        result = (idmef_target_decoy_t *)idmef_target_new_decoy(arg1);
         
         ST(argvi) = sv_newmortal();
-        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_decoy_t,0);
+        SWIG_MakePtr(ST(argvi++), (void *) result, SWIGTYPE_p_idmef_target_decoy_t,0);
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -33992,7 +33992,7 @@ static swig_type_info _swigt__p_idmef_impact_t[] = {{"_p_idmef_impact_t", 0, "id
 static swig_type_info _swigt__p_idmef_webservice_t[] = {{"_p_idmef_webservice_t", 0, "idmef_webservice_t *", 0},{"_p_idmef_webservice_t"},{0}};
 static swig_type_info _swigt__p_idmef_snmpservice_t[] = {{"_p_idmef_snmpservice_t", 0, "idmef_snmpservice_t *", 0},{"_p_idmef_snmpservice_t"},{0}};
 static swig_type_info _swigt__p_idmef_service_t[] = {{"_p_idmef_service_t", 0, "idmef_service_t *", 0},{"_p_idmef_service_t"},{0}};
-static swig_type_info _swigt__p_idmef_decoy_t[] = {{"_p_idmef_decoy_t", 0, "idmef_decoy_t *", 0},{"_p_idmef_decoy_t"},{0}};
+static swig_type_info _swigt__p_idmef_target_decoy_t[] = {{"_p_idmef_target_decoy_t", 0, "idmef_target_decoy_t *", 0},{"_p_idmef_target_decoy_t"},{0}};
 static swig_type_info _swigt__p_p_char[] = {{"_p_p_char", 0, "char **", 0},{"_p_p_char"},{0}};
 static swig_type_info _swigt__p_idmef_impact_type_t[] = {{"_p_idmef_impact_type_t", 0, "idmef_impact_type_t *", 0},{"_p_idmef_impact_type_t"},{0}};
 static swig_type_info _swigt__p_idmef_file_fstype_t[] = {{"_p_idmef_file_fstype_t", 0, "idmef_file_fstype_t *", 0},{"_p_idmef_file_fstype_t"},{0}};
@@ -34000,7 +34000,7 @@ static swig_type_info _swigt__p_idmef_additional_data_type_t[] = {{"_p_idmef_add
 static swig_type_info _swigt__p_idmef_userid_type_t[] = {{"_p_idmef_userid_type_t", 0, "idmef_userid_type_t *", 0},{"_p_idmef_userid_type_t"},{0}};
 static swig_type_info _swigt__p_idmef_file_t[] = {{"_p_idmef_file_t", 0, "idmef_file_t *", 0},{"_p_idmef_file_t"},{0}};
 static swig_type_info _swigt__p_idmef_value_type_t[] = {{"_p_idmef_value_type_t", 0, "idmef_value_type_t *", 0},{"_p_idmef_value_type_t"},{0}};
-static swig_type_info _swigt__p_idmef_spoofed_t[] = {{"_p_idmef_spoofed_t", 0, "idmef_spoofed_t *", 0},{"_p_idmef_spoofed_t"},{0}};
+static swig_type_info _swigt__p_idmef_source_spoofed_t[] = {{"_p_idmef_source_spoofed_t", 0, "idmef_source_spoofed_t *", 0},{"_p_idmef_source_spoofed_t"},{0}};
 static swig_type_info _swigt__p_idmef_data_t_data[] = {{"_p_idmef_data_t_data", 0, "idmef_data_t_data *", 0},{"_p_idmef_data_t_data"},{0}};
 static swig_type_info _swigt__p_idmef_linkage_t[] = {{"_p_idmef_linkage_t", 0, "idmef_linkage_t *", 0},{"_p_idmef_linkage_t"},{0}};
 static swig_type_info _swigt__p_idmef_action_t[] = {{"_p_idmef_action_t", 0, "idmef_action_t *", 0},{"_p_idmef_action_t"},{0}};
@@ -34072,7 +34072,7 @@ _swigt__p_idmef_impact_t,
 _swigt__p_idmef_webservice_t, 
 _swigt__p_idmef_snmpservice_t, 
 _swigt__p_idmef_service_t, 
-_swigt__p_idmef_decoy_t, 
+_swigt__p_idmef_target_decoy_t, 
 _swigt__p_p_char, 
 _swigt__p_idmef_impact_type_t, 
 _swigt__p_idmef_file_fstype_t, 
@@ -34080,7 +34080,7 @@ _swigt__p_idmef_additional_data_type_t,
 _swigt__p_idmef_userid_type_t, 
 _swigt__p_idmef_file_t, 
 _swigt__p_idmef_value_type_t, 
-_swigt__p_idmef_spoofed_t, 
+_swigt__p_idmef_source_spoofed_t, 
 _swigt__p_idmef_data_t_data, 
 _swigt__p_idmef_linkage_t, 
 _swigt__p_idmef_action_t, 
@@ -34240,7 +34240,7 @@ static swig_constant_info swig_constants[] = {
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_service", (long) 17, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_node_category", (long) 18, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_node", (long) 19, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "idmef_type_spoofed", (long) 20, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "idmef_type_source_spoofed", (long) 20, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_source", (long) 21, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_file_access", (long) 22, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_inode", (long) 23, 0, 0, 0},
@@ -34249,7 +34249,7 @@ static swig_constant_info swig_constants[] = {
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_file", (long) 26, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_linkage_category", (long) 27, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_linkage", (long) 28, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "idmef_type_decoy", (long) 29, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "idmef_type_target_decoy", (long) 29, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_target", (long) 30, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_analyzer", (long) 31, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "idmef_type_alertident", (long) 32, 0, 0, 0},
@@ -34591,8 +34591,8 @@ static swig_command_info swig_commands[] = {
 {"Prelude::idmef_node_set_address", _wrap_idmef_node_set_address},
 {"Prelude::idmef_node_new_address", _wrap_idmef_node_new_address},
 {"Prelude::idmef_node_get_address_value", _wrap_idmef_node_get_address_value},
-{"Prelude::idmef_spoofed_to_numeric", _wrap_idmef_spoofed_to_numeric},
-{"Prelude::idmef_spoofed_to_string", _wrap_idmef_spoofed_to_string},
+{"Prelude::idmef_source_spoofed_to_numeric", _wrap_idmef_source_spoofed_to_numeric},
+{"Prelude::idmef_source_spoofed_to_string", _wrap_idmef_source_spoofed_to_string},
 {"Prelude::idmef_source_new", _wrap_idmef_source_new},
 {"Prelude::idmef_source_ref", _wrap_idmef_source_ref},
 {"Prelude::idmef_source_get_child", _wrap_idmef_source_get_child},
@@ -34752,8 +34752,8 @@ static swig_command_info swig_commands[] = {
 {"Prelude::idmef_linkage_set_file", _wrap_idmef_linkage_set_file},
 {"Prelude::idmef_linkage_get_file_value", _wrap_idmef_linkage_get_file_value},
 {"Prelude::idmef_linkage_new_file", _wrap_idmef_linkage_new_file},
-{"Prelude::idmef_decoy_to_numeric", _wrap_idmef_decoy_to_numeric},
-{"Prelude::idmef_decoy_to_string", _wrap_idmef_decoy_to_string},
+{"Prelude::idmef_target_decoy_to_numeric", _wrap_idmef_target_decoy_to_numeric},
+{"Prelude::idmef_target_decoy_to_string", _wrap_idmef_target_decoy_to_string},
 {"Prelude::idmef_target_new", _wrap_idmef_target_new},
 {"Prelude::idmef_target_ref", _wrap_idmef_target_ref},
 {"Prelude::idmef_target_get_child", _wrap_idmef_target_get_child},
