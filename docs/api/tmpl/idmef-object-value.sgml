@@ -1,0 +1,87 @@
+<!-- ##### SECTION Title ##### -->
+idmef-object-value
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION idmef_object_value_new ##### -->
+<para>
+
+</para>
+
+@object: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_value_get_object ##### -->
+<para>
+
+</para>
+
+@objval: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_value_get_value ##### -->
+<para>
+
+</para>
+
+@objval: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_value_destroy ##### -->
+<para>
+
+</para>
+
+@objval: 
+
+
+<!-- ##### FUNCTION idmef_object_value_list_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_value_list_add ##### -->
+<para>
+
+</para>
+
+@list: 
+@objval: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_value_list_get_next ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_value_list_destroy ##### -->
+<para>
+
+</para>
+
+@list: 
+
+

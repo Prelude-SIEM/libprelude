@@ -1,0 +1,64 @@
+<!-- ##### SECTION Title ##### -->
+idmef-util
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO MY_CONCAT ##### -->
+<para>
+
+</para>
+
+@func: 
+@res: 
+@buffer: 
+@size: 
+@offset: 
+
+
+<!-- ##### MACRO MY_SNPRINTF ##### -->
+<para>
+
+</para>
+
+@buffer: 
+@size: 
+@offset: 
+@...: 
+
+
+<!-- ##### FUNCTION idmef_additionaldata_data_to_string ##### -->
+<para>
+
+</para>
+
+@ad: 
+@buf: 
+@size: 
+@Returns: 
+
+
+<!-- ##### MACRO MAX_UTC_DATETIME_SIZE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO MAX_NTP_TIMESTAMP_SIZE ##### -->
+<para>
+
+</para>
+
+
+

@@ -1,0 +1,35 @@
+<!-- ##### SECTION Title ##### -->
+tls-auth
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION tls_auth_connection ##### -->
+<para>
+
+</para>
+
+@client: 
+@io: 
+@crypt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION tls_auth_init ##### -->
+<para>
+
+</para>
+
+@client: 
+
+

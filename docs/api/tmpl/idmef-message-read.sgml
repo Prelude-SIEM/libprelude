@@ -1,0 +1,286 @@
+<!-- ##### SECTION Title ##### -->
+idmef-message-read
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION idmef_read_additional_data ##### -->
+<para>
+
+</para>
+
+@msg: 
+@additional_data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_classification ##### -->
+<para>
+
+</para>
+
+@msg: 
+@classification: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_userid ##### -->
+<para>
+
+</para>
+
+@msg: 
+@userid: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_user ##### -->
+<para>
+
+</para>
+
+@msg: 
+@user: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_address ##### -->
+<para>
+
+</para>
+
+@msg: 
+@address: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_process ##### -->
+<para>
+
+</para>
+
+@msg: 
+@process: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_webservice ##### -->
+<para>
+
+</para>
+
+@msg: 
+@webservice: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_snmpservice ##### -->
+<para>
+
+</para>
+
+@msg: 
+@snmpservice: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_service ##### -->
+<para>
+
+</para>
+
+@msg: 
+@service: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_node ##### -->
+<para>
+
+</para>
+
+@msg: 
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_source ##### -->
+<para>
+
+</para>
+
+@msg: 
+@source: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_file_access ##### -->
+<para>
+
+</para>
+
+@msg: 
+@file_access: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_inode ##### -->
+<para>
+
+</para>
+
+@msg: 
+@inode: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_file ##### -->
+<para>
+
+</para>
+
+@msg: 
+@file: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_linkage ##### -->
+<para>
+
+</para>
+
+@msg: 
+@linkage: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_target ##### -->
+<para>
+
+</para>
+
+@msg: 
+@target: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_analyzer ##### -->
+<para>
+
+</para>
+
+@msg: 
+@analyzer: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_alertident ##### -->
+<para>
+
+</para>
+
+@msg: 
+@alertident: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_impact ##### -->
+<para>
+
+</para>
+
+@msg: 
+@impact: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_action ##### -->
+<para>
+
+</para>
+
+@msg: 
+@action: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_confidence ##### -->
+<para>
+
+</para>
+
+@msg: 
+@confidence: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_assessment ##### -->
+<para>
+
+</para>
+
+@msg: 
+@assessment: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_tool_alert ##### -->
+<para>
+
+</para>
+
+@msg: 
+@tool_alert: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_correlation_alert ##### -->
+<para>
+
+</para>
+
+@msg: 
+@correlation_alert: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_overflow_alert ##### -->
+<para>
+
+</para>
+
+@msg: 
+@overflow_alert: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_alert ##### -->
+<para>
+
+</para>
+
+@msg: 
+@alert: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_read_heartbeat ##### -->
+<para>
+
+</para>
+
+@msg: 
+@heartbeat: 
+@Returns: 
+
+

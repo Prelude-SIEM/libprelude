@@ -1,0 +1,217 @@
+<!-- ##### SECTION Title ##### -->
+idmef-criteria
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION idmef_criterion_new ##### -->
+<para>
+
+</para>
+
+@object: 
+@value: 
+@relation: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_destroy ##### -->
+<para>
+
+</para>
+
+@criterion: 
+
+
+<!-- ##### FUNCTION idmef_criterion_clone ##### -->
+<para>
+
+</para>
+
+@criterion: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_print ##### -->
+<para>
+
+</para>
+
+@criterion: 
+
+
+<!-- ##### FUNCTION idmef_criterion_to_string ##### -->
+<para>
+
+</para>
+
+@criterion: 
+@buffer: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_get_object ##### -->
+<para>
+
+</para>
+
+@criterion: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_get_value ##### -->
+<para>
+
+</para>
+
+@criterion: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_get_relation ##### -->
+<para>
+
+</para>
+
+@criterion: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_match ##### -->
+<para>
+
+</para>
+
+@criterion: 
+@message: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criteria_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criteria_destroy ##### -->
+<para>
+
+</para>
+
+@criteria: 
+
+
+<!-- ##### FUNCTION idmef_criteria_clone ##### -->
+<para>
+
+</para>
+
+@criteria: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criteria_print ##### -->
+<para>
+
+</para>
+
+@criteria: 
+
+
+<!-- ##### FUNCTION idmef_criteria_to_string ##### -->
+<para>
+
+</para>
+
+@criteria: 
+@buffer: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criteria_is_criterion ##### -->
+<para>
+
+</para>
+
+@criteria: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criteria_get_criterion ##### -->
+<para>
+
+</para>
+
+@criteria: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criteria_set_criterion ##### -->
+<para>
+
+</para>
+
+@criteria: 
+@criterion: 
+
+
+<!-- ##### FUNCTION idmef_criteria_or_criteria ##### -->
+<para>
+
+</para>
+
+@criteria: 
+@criteria2: 
+
+
+<!-- ##### FUNCTION idmef_criteria_and_criteria ##### -->
+<para>
+
+</para>
+
+@criteria: 
+@criteria2: 
+
+
+<!-- ##### FUNCTION idmef_criteria_match ##### -->
+<para>
+
+</para>
+
+@criteria: 
+@message: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criteria_get_or ##### -->
+<para>
+
+</para>
+
+@criteria: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criteria_get_and ##### -->
+<para>
+
+</para>
+
+@criteria: 
+@Returns: 
+
+

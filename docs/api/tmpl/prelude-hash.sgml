@@ -1,0 +1,66 @@
+<!-- ##### SECTION Title ##### -->
+prelude-hash
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION prelude_hash_new ##### -->
+<para>
+
+</para>
+
+@hash_func: 
+@key_cmp_func: 
+@key_destroy_func: 
+@value_destroy_func: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_hash_destroy ##### -->
+<para>
+
+</para>
+
+@hash: 
+
+
+<!-- ##### FUNCTION prelude_hash_set ##### -->
+<para>
+
+</para>
+
+@hash: 
+@key: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_hash_get ##### -->
+<para>
+
+</para>
+
+@hash: 
+@key: 
+
+
+<!-- ##### FUNCTION prelude_hash_elem_destroy ##### -->
+<para>
+
+</para>
+
+@hash: 
+@key: 
+@Returns: 
+
+

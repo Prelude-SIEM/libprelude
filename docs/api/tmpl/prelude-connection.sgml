@@ -1,0 +1,187 @@
+<!-- ##### SECTION Title ##### -->
+prelude-connection
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO PRELUDE_CONNECTION_ESTABLISHED ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_CONNECTION_OWN_FD ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION prelude_connection_destroy ##### -->
+<para>
+
+</para>
+
+@cnx: 
+
+
+<!-- ##### FUNCTION prelude_connection_send_msg ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_connect ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_forward ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@src: 
+@count: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_get_saddr ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_get_daddr ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_get_sport ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_get_dport ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_is_alive ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_get_fd ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_close ##### -->
+<para>
+
+</para>
+
+@cnx: 
+
+
+<!-- ##### FUNCTION prelude_connection_set_fd ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@fd: 
+
+
+<!-- ##### FUNCTION prelude_connection_set_state ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@state: 
+
+
+<!-- ##### FUNCTION prelude_connection_get_state ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_get_socket_filename ##### -->
+<para>
+
+</para>
+
+@buf: 
+@size: 
+@port: 
+
+
+<!-- ##### FUNCTION prelude_connection_get_client ##### -->
+<para>
+
+</para>
+
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_new ##### -->
+<para>
+
+</para>
+
+@client: 
+@addr: 
+@port: 
+@Returns: 
+
+

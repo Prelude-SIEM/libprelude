@@ -1,0 +1,248 @@
+<!-- ##### SECTION Title ##### -->
+idmef-string
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### TYPEDEF idmef_string_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO idmef_type_string ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION idmef_string_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_new_nodup ##### -->
+<para>
+
+</para>
+
+@str: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_new_ref ##### -->
+<para>
+
+</para>
+
+@str: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_new_dup ##### -->
+<para>
+
+</para>
+
+@str: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_new_dup_fast ##### -->
+<para>
+
+</para>
+
+@str: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_destroy ##### -->
+<para>
+
+</para>
+
+@string: 
+
+
+<!-- ##### FUNCTION idmef_string_destroy_internal ##### -->
+<para>
+
+</para>
+
+@string: 
+
+
+<!-- ##### FUNCTION idmef_string_new_nodup_fast ##### -->
+<para>
+
+</para>
+
+@str: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_new_ref_fast ##### -->
+<para>
+
+</para>
+
+@str: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_set_dup_fast ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_set_dup ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_set_nodup_fast ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_set_nodup ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_set_ref_fast ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_set_ref ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_copy_ref ##### -->
+<para>
+
+</para>
+
+@dst: 
+@src: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_copy_dup ##### -->
+<para>
+
+</para>
+
+@dst: 
+@src: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_get_len ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_get_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_string_is_empty ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+
+<!-- ##### MACRO idmef_string_set_constant ##### -->
+<para>
+
+</para>
+
+@istr: 
+@str: 
+<!-- # Unused Parameters # -->
+@s: 
+
+
+<!-- ##### MACRO idmef_string_new_constant ##### -->
+<para>
+
+</para>
+
+@str: 
+
+

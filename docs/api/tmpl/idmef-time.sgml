@@ -1,0 +1,247 @@
+<!-- ##### SECTION Title ##### -->
+idmef-time
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO idmef_object_type_time ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION idmef_time_ref ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_new_gettimeofday ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_new_string ##### -->
+<para>
+
+</para>
+
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_new_ntp_timestamp ##### -->
+<para>
+
+</para>
+
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_new_db_timestamp ##### -->
+<para>
+
+</para>
+
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_destroy_internal ##### -->
+<para>
+
+</para>
+
+@time: 
+
+
+<!-- ##### FUNCTION idmef_time_destroy ##### -->
+<para>
+
+</para>
+
+@time: 
+
+
+<!-- ##### FUNCTION idmef_time_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_copy ##### -->
+<para>
+
+</para>
+
+@dst: 
+@src: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_set_sec ##### -->
+<para>
+
+</para>
+
+@time: 
+@sec: 
+
+
+<!-- ##### FUNCTION idmef_time_set_usec ##### -->
+<para>
+
+</para>
+
+@time: 
+@usec: 
+
+
+<!-- ##### FUNCTION idmef_time_set_gmt_offset ##### -->
+<para>
+
+</para>
+
+@time: 
+@gmtoff: 
+
+
+<!-- ##### FUNCTION idmef_time_get_time ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_get_sec ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_get_usec ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_get_gmt_offset ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_set_string ##### -->
+<para>
+
+</para>
+
+@time: 
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_set_ntp_timestamp ##### -->
+<para>
+
+</para>
+
+@time: 
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_set_db_timestamp ##### -->
+<para>
+
+</para>
+
+@time: 
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_get_ntp_timestamp ##### -->
+<para>
+
+</para>
+
+@time: 
+@outptr: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_get_timestamp ##### -->
+<para>
+
+</para>
+
+@time: 
+@outptr: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_get_db_timestamp ##### -->
+<para>
+
+</para>
+
+@time: 
+@outptr: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_get_idmef_timestamp ##### -->
+<para>
+
+</para>
+
+@time: 
+@outptr: 
+@size: 
+@Returns: 
+
+

@@ -1,0 +1,80 @@
+<!-- ##### SECTION Title ##### -->
+prelude-failover
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION prelude_failover_destroy ##### -->
+<para>
+
+</para>
+
+@failover: 
+
+
+<!-- ##### FUNCTION prelude_failover_new ##### -->
+<para>
+
+</para>
+
+@dirname: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_failover_set_quota ##### -->
+<para>
+
+</para>
+
+@failover: 
+@limit: 
+
+
+<!-- ##### FUNCTION prelude_failover_save_msg ##### -->
+<para>
+
+</para>
+
+@failover: 
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_failover_get_saved_msg ##### -->
+<para>
+
+</para>
+
+@failover: 
+@out: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_failover_get_deleted_msg_count ##### -->
+<para>
+
+</para>
+
+@failover: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_failover_get_available_msg_count ##### -->
+<para>
+
+</para>
+
+@failover: 
+@Returns: 
+
+

@@ -1,0 +1,206 @@
+<!-- ##### SECTION Title ##### -->
+idmef-data
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO idmef_type_data ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### STRUCT data ##### -->
+<para>
+
+</para>
+
+@refcount: 
+@flags: 
+@len: 
+@rw_data: 
+@ro_data: 
+
+<!-- ##### FUNCTION idmef_data_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_ref ##### -->
+<para>
+
+</para>
+
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_new_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_new_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_new_ref ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_destroy ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### FUNCTION idmef_data_set_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+@buf: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_set_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+@buf: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_set_ref ##### -->
+<para>
+
+</para>
+
+@data: 
+@buf: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_copy_ref ##### -->
+<para>
+
+</para>
+
+@dst: 
+@src: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_copy_dup ##### -->
+<para>
+
+</para>
+
+@dst: 
+@src: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_clone ##### -->
+<para>
+
+</para>
+
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_get_len ##### -->
+<para>
+
+</para>
+
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_get_data ##### -->
+<para>
+
+</para>
+
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_is_empty ##### -->
+<para>
+
+</para>
+
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_to_string ##### -->
+<para>
+
+</para>
+
+@data: 
+@buf: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_destroy_internal ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_data_set_constant_ref ##### -->
+<para>
+
+</para>
+
+@data: 
+@buf: 
+
+

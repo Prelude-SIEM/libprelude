@@ -1,0 +1,312 @@
+<!-- ##### SECTION Title ##### -->
+idmef-criterion-value
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### ENUM idmef_criterion_value_type_t ##### -->
+<para>
+
+</para>
+
+@idmef_criterion_value_type_fixed: 
+@idmef_criterion_value_type_non_linear_time: 
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_new_string ##### -->
+<para>
+
+</para>
+
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_destroy ##### -->
+<para>
+
+</para>
+
+@time: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_set_year ##### -->
+<para>
+
+</para>
+
+@time: 
+@year: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_set_month ##### -->
+<para>
+
+</para>
+
+@time: 
+@month: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_set_yday ##### -->
+<para>
+
+</para>
+
+@time: 
+@yday: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_set_mday ##### -->
+<para>
+
+</para>
+
+@time: 
+@mday: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_set_wday ##### -->
+<para>
+
+</para>
+
+@time: 
+@wday: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_set_hour ##### -->
+<para>
+
+</para>
+
+@time: 
+@hour: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_set_min ##### -->
+<para>
+
+</para>
+
+@time: 
+@min: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_set_sec ##### -->
+<para>
+
+</para>
+
+@time: 
+@sec: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_get_year ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_get_month ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_get_yday ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_get_mday ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_get_wday ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_get_hour ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_get_min ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_get_sec ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_print ##### -->
+<para>
+
+</para>
+
+@time: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_non_linear_time_to_string ##### -->
+<para>
+
+</para>
+
+@time: 
+@buffer: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_new_fixed ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_new_non_linear_time ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_new_generic ##### -->
+<para>
+
+</para>
+
+@object: 
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_destroy ##### -->
+<para>
+
+</para>
+
+@value: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_get_type ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_get_fixed ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_get_non_linear_time ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_print ##### -->
+<para>
+
+</para>
+
+@value: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_to_string ##### -->
+<para>
+
+</para>
+
+@value: 
+@buffer: 
+@size: 
+@Returns: 
+
+

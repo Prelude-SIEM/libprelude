@@ -1,0 +1,39 @@
+<!-- ##### SECTION Title ##### -->
+prelude-linked-object
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO PRELUDE_LINKED_OBJECT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### STRUCT prelude_linked_object_t ##### -->
+<para>
+
+</para>
+
+@T: 
+
+<!-- ##### MACRO prelude_linked_object_get_object ##### -->
+<para>
+
+</para>
+
+@listentry: 
+@type: 
+
+

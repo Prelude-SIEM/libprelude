@@ -1,0 +1,369 @@
+<!-- ##### SECTION Title ##### -->
+idmef-value
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION idmef_value_new_int16 ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_uint16 ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_int32 ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_uint32 ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_int64 ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_uint64 ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_float ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_double ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_time ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_data ##### -->
+<para>
+
+</para>
+
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_object ##### -->
+<para>
+
+</para>
+
+@object: 
+@object_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_list ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_enum ##### -->
+<para>
+
+</para>
+
+@type: 
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_enum_string ##### -->
+<para>
+
+</para>
+
+@type: 
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_enum_numeric ##### -->
+<para>
+
+</para>
+
+@type: 
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_new_generic ##### -->
+<para>
+
+</para>
+
+@type: 
+@buf: 
+@Returns: 
+
+
+<!-- ##### MACRO idmef_value_get_hdr ##### -->
+<para>
+
+</para>
+
+@n: 
+@t: 
+
+
+<!-- ##### MACRO idmef_value_get_struct_hdr ##### -->
+<para>
+
+</para>
+
+@n: 
+
+
+<!-- ##### FUNCTION idmef_value_list_add ##### -->
+<para>
+
+</para>
+
+@list: 
+@new: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_is_list ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_list_empty ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_have_own_data ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_dont_have_own_data ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get_type ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get_object_type ##### -->
+<para>
+
+</para>
+
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get_object ##### -->
+<para>
+
+</para>
+
+@value: 
+
+
+<!-- ##### FUNCTION idmef_value_iterate ##### -->
+<para>
+
+</para>
+
+@value: 
+@extra: 
+@callback: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get_nth ##### -->
+<para>
+
+</para>
+
+@val: 
+@n: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get_count ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_clone ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_ref ##### -->
+<para>
+
+</para>
+
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_to_string ##### -->
+<para>
+
+</para>
+
+@val: 
+@buf: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_get ##### -->
+<para>
+
+</para>
+
+@res: 
+@val: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_match ##### -->
+<para>
+
+</para>
+
+@val1: 
+@val2: 
+@relation: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_check_relation ##### -->
+<para>
+
+</para>
+
+@value: 
+@relation: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_relation_to_string ##### -->
+<para>
+
+</para>
+
+@relation: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_destroy ##### -->
+<para>
+
+</para>
+
+@val: 
+
+

@@ -1,0 +1,246 @@
+<!-- ##### SECTION Title ##### -->
+prelude-inttypes
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO INT8_MIN ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO INT16_MIN ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO INT32_MIN ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO INT64_MIN ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO INT8_MAX ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO INT16_MAX ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO INT32_MAX ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO INT64_MAX ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO UINT8_MAX ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO UINT16_MAX ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO UINT32_MAX ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO UINT64_MAX ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO INTMAX_MIN ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO INTMAX_MAX ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO UINTMAX_MAX ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRId64 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRIi64 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRIo64 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRIx64 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRIX64 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRIu64 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO SCNd64 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO SCNi64 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO SCNo64 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO SCNx64 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO SCNu64 ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### TYPEDEF int8_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF uint8_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF int16_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF uint16_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF int32_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF uint32_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF int64_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF uint64_t ##### -->
+<para>
+
+</para>
+
+

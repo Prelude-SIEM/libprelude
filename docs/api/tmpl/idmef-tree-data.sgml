@@ -1,0 +1,38 @@
+<!-- ##### SECTION Title ##### -->
+idmef-tree-data
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT children_list_t ##### -->
+<para>
+
+</para>
+
+@name: 
+@list: 
+@type: 
+@object_type: 
+
+<!-- ##### STRUCT object_data_t ##### -->
+<para>
+
+</para>
+
+@name: 
+@children_list: 
+@get_child: 
+@new_child: 
+@to_numeric: 
+@to_string: 
+

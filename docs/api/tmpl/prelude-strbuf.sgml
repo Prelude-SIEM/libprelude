@@ -1,0 +1,118 @@
+<!-- ##### SECTION Title ##### -->
+prelude-strbuf
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION prelude_strbuf_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_strbuf_destroy ##### -->
+<para>
+
+</para>
+
+@s: 
+
+
+<!-- ##### FUNCTION prelude_strbuf_sprintf ##### -->
+<para>
+
+</para>
+
+@s: 
+@fmt: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_strbuf_vprintf ##### -->
+<para>
+
+</para>
+
+@s: 
+@fmt: 
+@ap: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_strbuf_cat ##### -->
+<para>
+
+</para>
+
+@s: 
+@str: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_strbuf_ncat ##### -->
+<para>
+
+</para>
+
+@s: 
+@str: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_strbuf_dont_own ##### -->
+<para>
+
+</para>
+
+@s: 
+
+
+<!-- ##### FUNCTION prelude_strbuf_get_len ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_strbuf_get_string ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_strbuf_is_empty ##### -->
+<para>
+
+</para>
+
+@s: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_strbuf_clear ##### -->
+<para>
+
+</para>
+
+@s: 
+
+

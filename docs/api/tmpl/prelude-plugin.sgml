@@ -1,0 +1,361 @@
+<!-- ##### SECTION Title ##### -->
+prelude-plugin
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO PRELUDE_PLUGIN_SET_PRELOADED_SYMBOLS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO PRELUDE_PLUGIN_OPTION_DECLARE_STRING_CB ##### -->
+<para>
+
+</para>
+
+@prefix: 
+@type: 
+@name: 
+
+
+<!-- ##### MACRO PRELUDE_PLUGIN_GENERIC ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### STRUCT prelude_plugin_generic_t ##### -->
+<para>
+
+</para>
+
+@C: 
+
+<!-- ##### MACRO prelude_plugin_name ##### -->
+<para>
+
+</para>
+
+@p: 
+
+
+<!-- ##### MACRO prelude_plugin_name_len ##### -->
+<para>
+
+</para>
+
+@p: 
+
+
+<!-- ##### MACRO prelude_plugin_author ##### -->
+<para>
+
+</para>
+
+@p: 
+
+
+<!-- ##### MACRO prelude_plugin_author_len ##### -->
+<para>
+
+</para>
+
+@p: 
+
+
+<!-- ##### MACRO prelude_plugin_contact ##### -->
+<para>
+
+</para>
+
+@p: 
+
+
+<!-- ##### MACRO prelude_plugin_contact_len ##### -->
+<para>
+
+</para>
+
+@p: 
+
+
+<!-- ##### MACRO prelude_plugin_desc ##### -->
+<para>
+
+</para>
+
+@p: 
+
+
+<!-- ##### MACRO prelude_plugin_desc_len ##### -->
+<para>
+
+</para>
+
+@p: 
+
+
+<!-- ##### MACRO prelude_plugin_set_name ##### -->
+<para>
+
+</para>
+
+@p: 
+@str: 
+
+
+<!-- ##### MACRO prelude_plugin_set_author ##### -->
+<para>
+
+</para>
+
+@p: 
+@str: 
+
+
+<!-- ##### MACRO prelude_plugin_set_contact ##### -->
+<para>
+
+</para>
+
+@p: 
+@str: 
+
+
+<!-- ##### MACRO prelude_plugin_set_desc ##### -->
+<para>
+
+</para>
+
+@p: 
+@str: 
+
+
+<!-- ##### MACRO prelude_plugin_set_destroy_func ##### -->
+<para>
+
+</para>
+
+@p: 
+@func: 
+
+
+<!-- ##### FUNCTION prelude_plugin_set_activation_option ##### -->
+<para>
+
+</para>
+
+@plugin: 
+@opt: 
+@commit: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_plugin_subscribe ##### -->
+<para>
+
+</para>
+
+@pi: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_plugin_new_instance ##### -->
+<para>
+
+</para>
+
+@plugin: 
+@name: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_plugin_unsubscribe ##### -->
+<para>
+
+</para>
+
+@pi: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_plugin_search_by_name ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_plugin_search_instance_by_name ##### -->
+<para>
+
+</para>
+
+@pname: 
+@iname: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_plugin_instance_set_data ##### -->
+<para>
+
+</para>
+
+@pi: 
+@data: 
+
+
+<!-- ##### FUNCTION prelude_plugin_instance_get_data ##### -->
+<para>
+
+</para>
+
+@pi: 
+
+
+<!-- ##### FUNCTION prelude_plugin_instance_set_private_data ##### -->
+<para>
+
+</para>
+
+@pi: 
+@data: 
+
+
+<!-- ##### FUNCTION prelude_plugin_instance_get_private_data ##### -->
+<para>
+
+</para>
+
+@pi: 
+
+
+<!-- ##### FUNCTION prelude_plugin_instance_get_name ##### -->
+<para>
+
+</para>
+
+@pi: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_plugin_instance_get_plugin ##### -->
+<para>
+
+</para>
+
+@pi: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_plugin_load_from_dir ##### -->
+<para>
+
+</para>
+
+@dirname: 
+@subscribe: 
+@unsubscribe: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_plugin_add ##### -->
+<para>
+
+</para>
+
+@pi: 
+@h: 
+@infos: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_plugin_del ##### -->
+<para>
+
+</para>
+
+@pi: 
+
+
+<!-- ##### FUNCTION prelude_plugin_instance_compute_time ##### -->
+<para>
+
+</para>
+
+@pi: 
+@start: 
+@end: 
+
+
+<!-- ##### FUNCTION prelude_plugin_instance_call_commit_func ##### -->
+<para>
+
+</para>
+
+@pi: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_plugin_instance_has_commit_func ##### -->
+<para>
+
+</para>
+
+@pi: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_plugin_set_preloaded_symbols ##### -->
+<para>
+
+</para>
+
+@symlist: 
+
+
+<!-- ##### MACRO prelude_plugin_compute_stats ##### -->
+<para>
+
+</para>
+
+@pi: 
+@func: 
+
+
+<!-- ##### MACRO prelude_plugin_run ##### -->
+<para>
+
+</para>
+
+@pi: 
+@type: 
+@member: 
+@arg...: 
+
+
+<!-- ##### FUNCTION prelude_plugin_init ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

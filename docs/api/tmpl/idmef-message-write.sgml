@@ -1,0 +1,278 @@
+<!-- ##### SECTION Title ##### -->
+idmef-message-write
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION idmef_write_time ##### -->
+<para>
+
+</para>
+
+@msg: 
+@tag: 
+@data: 
+
+
+<!-- ##### FUNCTION idmef_write_additional_data ##### -->
+<para>
+
+</para>
+
+@msg: 
+@additional_data: 
+
+
+<!-- ##### FUNCTION idmef_write_classification ##### -->
+<para>
+
+</para>
+
+@msg: 
+@classification: 
+
+
+<!-- ##### FUNCTION idmef_write_userid ##### -->
+<para>
+
+</para>
+
+@msg: 
+@userid: 
+
+
+<!-- ##### FUNCTION idmef_write_user ##### -->
+<para>
+
+</para>
+
+@msg: 
+@user: 
+
+
+<!-- ##### FUNCTION idmef_write_address ##### -->
+<para>
+
+</para>
+
+@msg: 
+@address: 
+
+
+<!-- ##### FUNCTION idmef_write_process ##### -->
+<para>
+
+</para>
+
+@msg: 
+@process: 
+
+
+<!-- ##### FUNCTION idmef_write_webservice ##### -->
+<para>
+
+</para>
+
+@msg: 
+@webservice: 
+
+
+<!-- ##### FUNCTION idmef_write_snmpservice ##### -->
+<para>
+
+</para>
+
+@msg: 
+@snmpservice: 
+
+
+<!-- ##### FUNCTION idmef_write_service ##### -->
+<para>
+
+</para>
+
+@msg: 
+@service: 
+
+
+<!-- ##### FUNCTION idmef_write_node ##### -->
+<para>
+
+</para>
+
+@msg: 
+@node: 
+
+
+<!-- ##### FUNCTION idmef_write_source ##### -->
+<para>
+
+</para>
+
+@msg: 
+@source: 
+
+
+<!-- ##### FUNCTION idmef_write_file_access ##### -->
+<para>
+
+</para>
+
+@msg: 
+@file_access: 
+
+
+<!-- ##### FUNCTION idmef_write_inode ##### -->
+<para>
+
+</para>
+
+@msg: 
+@inode: 
+
+
+<!-- ##### FUNCTION idmef_write_file ##### -->
+<para>
+
+</para>
+
+@msg: 
+@file: 
+
+
+<!-- ##### FUNCTION idmef_write_linkage ##### -->
+<para>
+
+</para>
+
+@msg: 
+@linkage: 
+
+
+<!-- ##### FUNCTION idmef_write_target ##### -->
+<para>
+
+</para>
+
+@msg: 
+@target: 
+
+
+<!-- ##### FUNCTION idmef_write_analyzer ##### -->
+<para>
+
+</para>
+
+@msg: 
+@analyzer: 
+
+
+<!-- ##### FUNCTION idmef_write_alertident ##### -->
+<para>
+
+</para>
+
+@msg: 
+@alertident: 
+
+
+<!-- ##### FUNCTION idmef_write_impact ##### -->
+<para>
+
+</para>
+
+@msg: 
+@impact: 
+
+
+<!-- ##### FUNCTION idmef_write_action ##### -->
+<para>
+
+</para>
+
+@msg: 
+@action: 
+
+
+<!-- ##### FUNCTION idmef_write_confidence ##### -->
+<para>
+
+</para>
+
+@msg: 
+@confidence: 
+
+
+<!-- ##### FUNCTION idmef_write_assessment ##### -->
+<para>
+
+</para>
+
+@msg: 
+@assessment: 
+
+
+<!-- ##### FUNCTION idmef_write_tool_alert ##### -->
+<para>
+
+</para>
+
+@msg: 
+@tool_alert: 
+
+
+<!-- ##### FUNCTION idmef_write_correlation_alert ##### -->
+<para>
+
+</para>
+
+@msg: 
+@correlation_alert: 
+
+
+<!-- ##### FUNCTION idmef_write_overflow_alert ##### -->
+<para>
+
+</para>
+
+@msg: 
+@overflow_alert: 
+
+
+<!-- ##### FUNCTION idmef_write_alert ##### -->
+<para>
+
+</para>
+
+@msg: 
+@alert: 
+
+
+<!-- ##### FUNCTION idmef_write_heartbeat ##### -->
+<para>
+
+</para>
+
+@msg: 
+@heartbeat: 
+
+
+<!-- ##### FUNCTION idmef_write_message ##### -->
+<para>
+
+</para>
+
+@msg: 
+@message: 
+
+

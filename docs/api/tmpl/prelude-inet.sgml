@@ -1,0 +1,82 @@
+<!-- ##### SECTION Title ##### -->
+prelude-inet
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO AI_CANONNAME ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION prelude_inet_addr_is_loopback ##### -->
+<para>
+
+</para>
+
+@af: 
+@addr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_inet_sockaddr_get_inaddr ##### -->
+<para>
+
+</para>
+
+@sa: 
+
+
+<!-- ##### FUNCTION prelude_inet_gai_strerror ##### -->
+<para>
+
+</para>
+
+@errcode: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_inet_freeaddrinfo ##### -->
+<para>
+
+</para>
+
+@info: 
+
+
+<!-- ##### FUNCTION prelude_inet_getaddrinfo ##### -->
+<para>
+
+</para>
+
+@node: 
+@service: 
+@hints: 
+@res: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_inet_ntop ##### -->
+<para>
+
+</para>
+
+@af: 
+@src: 
+@dst: 
+@cnt: 
+@Returns: 
+
+

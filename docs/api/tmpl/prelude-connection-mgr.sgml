@@ -1,0 +1,131 @@
+<!-- ##### SECTION Title ##### -->
+prelude-connection-mgr
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION prelude_connection_mgr_broadcast ##### -->
+<para>
+
+</para>
+
+@cmgr: 
+@msg: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_broadcast_async ##### -->
+<para>
+
+</para>
+
+@cmgr: 
+@msg: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_new ##### -->
+<para>
+
+</para>
+
+@client: 
+@cfgline: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_notify_connection ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@callback: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_get_connection_list ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_add_connection ##### -->
+<para>
+
+</para>
+
+@mgr_ptr: 
+@cnx: 
+@use_timer: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_set_connection_dead ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_search_connection ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@addr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_flush_backup ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_tell_connection_dead ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_tell_connection_alive ##### -->
+<para>
+
+</para>
+
+@mgr: 
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_mgr_destroy ##### -->
+<para>
+
+</para>
+
+@mgr: 
+
+

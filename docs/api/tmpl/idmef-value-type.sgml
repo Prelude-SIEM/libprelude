@@ -1,0 +1,130 @@
+<!-- ##### SECTION Title ##### -->
+idmef-value-type
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### ENUM idmef_value_relation_t ##### -->
+<para>
+
+</para>
+
+@IDMEF_VALUE_RELATION_EQUAL: 
+@IDMEF_VALUE_RELATION_NOT_EQUAL: 
+@IDMEF_VALUE_RELATION_LESSER: 
+@IDMEF_VALUE_RELATION_GREATER: 
+@IDMEF_VALUE_RELATION_SUBSTR: 
+@IDMEF_VALUE_RELATION_REGEX: 
+@IDMEF_VALUE_RELATION_IS_NULL: 
+@IDMEF_VALUE_RELATION_IS_NOT_NULL: 
+
+<!-- ##### ENUM idmef_value_type_id_t ##### -->
+<para>
+
+</para>
+
+@IDMEF_VALUE_TYPE_ERROR: 
+@IDMEF_VALUE_TYPE_UNKNOWN: 
+@IDMEF_VALUE_TYPE_INT16: 
+@IDMEF_VALUE_TYPE_UINT16: 
+@IDMEF_VALUE_TYPE_INT32: 
+@IDMEF_VALUE_TYPE_UINT32: 
+@IDMEF_VALUE_TYPE_INT64: 
+@IDMEF_VALUE_TYPE_UINT64: 
+@IDMEF_VALUE_TYPE_FLOAT: 
+@IDMEF_VALUE_TYPE_DOUBLE: 
+@IDMEF_VALUE_TYPE_STRING: 
+@IDMEF_VALUE_TYPE_TIME: 
+@IDMEF_VALUE_TYPE_DATA: 
+@IDMEF_VALUE_TYPE_ENUM: 
+@IDMEF_VALUE_TYPE_LIST: 
+@IDMEF_VALUE_TYPE_OBJECT: 
+
+<!-- ##### STRUCT idmef_value_type_t ##### -->
+<para>
+
+</para>
+
+@id: 
+@data: 
+
+<!-- ##### FUNCTION idmef_value_type_copy ##### -->
+<para>
+
+</para>
+
+@dst: 
+@src: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_type_read ##### -->
+<para>
+
+</para>
+
+@dst: 
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_type_write ##### -->
+<para>
+
+</para>
+
+@buf: 
+@size: 
+@src: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_type_destroy ##### -->
+<para>
+
+</para>
+
+@type: 
+
+
+<!-- ##### FUNCTION idmef_value_type_clone ##### -->
+<para>
+
+</para>
+
+@dst: 
+@src: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_type_compare ##### -->
+<para>
+
+</para>
+
+@type1: 
+@type2: 
+@relation: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_value_type_check_relation ##### -->
+<para>
+
+</para>
+
+@type: 
+@relation: 
+@Returns: 
+
+

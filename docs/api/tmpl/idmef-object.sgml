@@ -1,0 +1,207 @@
+<!-- ##### SECTION Title ##### -->
+idmef-object
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION idmef_object_get ##### -->
+<para>
+
+</para>
+
+@message: 
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_set ##### -->
+<para>
+
+</para>
+
+@message: 
+@object: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_new ##### -->
+<para>
+
+</para>
+
+@format: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_new_v ##### -->
+<para>
+
+</para>
+
+@format: 
+@args: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_new_fast ##### -->
+<para>
+
+</para>
+
+@buffer: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_get_type ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_get_value_type ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_set_number ##### -->
+<para>
+
+</para>
+
+@object: 
+@depth: 
+@number: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_undefine_number ##### -->
+<para>
+
+</para>
+
+@object: 
+@depth: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_get_number ##### -->
+<para>
+
+</para>
+
+@object: 
+@depth: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_make_child ##### -->
+<para>
+
+</para>
+
+@object: 
+@child_name: 
+@n: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_make_parent ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_destroy ##### -->
+<para>
+
+</para>
+
+@object: 
+
+
+<!-- ##### FUNCTION idmef_object_compare ##### -->
+<para>
+
+</para>
+
+@o1: 
+@o2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_clone ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_ref ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_get_numeric ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_get_name ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_is_ambiguous ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_object_has_lists ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+
+
