@@ -108,6 +108,7 @@ static int parse_auth_line(char *line, char **user, char **pass)
         end = strchr(line , ':');
         if (! end ) {
                 log(LOG_INFO, "couldn't found password delimiter.\n");
+                free(*user);
                 return -1;
         }
 
@@ -309,8 +310,9 @@ static char *ask_username(void)
         
         fprintf(stderr, "\nUsername to use to authenticate : ");
         
-        fgets(buf, sizeof(buf), stdin);
-
+        if ( ! fgets(buf, sizeof(buf), stdin) )
+                return NULL;
+        
         /* strip \n */
         buf[strlen(buf) - 1] = '\0';
         
@@ -378,12 +380,15 @@ static int account_already_exist(FILE *fd, const char *nuser)
  */
 static int comfirm_account_creation(const char *user) 
 {
-        char buf[3];
+        char buf[5];
 
-        while ( buf[0] != 'y' && buf[0] != 'n' ) {
+        do {
                 fprintf(stderr, "Register user \"%s\" ? [y/n] : ", user);
-                fgets(buf, sizeof(buf), stdin);
-        }
+
+                if ( ! fgets(buf, sizeof(buf), stdin) )
+                        continue;
+                
+        } while ( buf[0] != 'y' && buf[0] != 'n' );
 
         return (buf[0] == 'y') ? 0 : -1;
 }

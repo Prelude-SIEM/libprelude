@@ -159,37 +159,33 @@ static int recv_manager_certificate(prelude_io_t *pio, des_key_schedule *skey1,
 
 static void ask_configuration(int *keysize, int *expire) 
 {
-        int ret;
         char buf[1024];
-        
-        prelude_ssl_ask_settings(keysize, expire);
-        
-        if ( *expire )
-                snprintf(buf, sizeof(buf), "%d days", *expire);
-        else
-                snprintf(buf, sizeof(buf), "Never");
-        
-        fprintf(stderr, "\n\n"
-                "Key length        : %d\n"
-                "Expire            : %s\n", *keysize, buf);
 
+        do {     
+                prelude_ssl_ask_settings(keysize, expire);
         
-        while ( 1 ) {
-                fprintf(stderr, "\nIs this okay [yes/no] : ");
+                if ( *expire )
+                        snprintf(buf, sizeof(buf), "%d days", *expire);
+                else
+                        snprintf(buf, sizeof(buf), "Never");
+        
+                fprintf(stderr, "\n\n"
+                        "Key length        : %d\n"
+                        "Expire            : %s\n", *keysize, buf);
+                
+                do {
+                        fprintf(stderr, "\nIs this okay [yes/no] : ");
 
-                fgets(buf, sizeof(buf), stdin);
-                buf[strlen(buf) - 1] = '\0';
-                
-                ret = strcmp(buf, "yes");
-                if ( ret == 0 )
-                        break;
-                
-                ret = strcmp(buf, "no");
-                if ( ret == 0 )
-                        ask_configuration(keysize, expire);
-        }
-        
-        fprintf(stderr, "\n");
+                        if ( ! fgets(buf, sizeof(buf), stdin) ) {
+                                fprintf(stderr, "\n");
+                                continue;
+                        }
+                        
+                        buf[strlen(buf) - 1] = '\0';
+                        
+                } while ( buf[0] != 'y' || buf[0] != 'n' );
+
+        } while ( buf[0] == 'n' );
 }
 
 
@@ -240,9 +236,9 @@ int ssl_add_certificate(prelude_io_t *fd, char *pass, size_t size, uid_t uid)
         if ( ret < 0 )
                 return -1;
 
-        ask_configuration(&keysize, &expire);
+        ask_configuration(&keysize, &expire); 
 
-        
+
         ret = send_own_certificate(fd, &skey1, &skey2, expire, keysize, uid);
         if ( ret < 0 ) {
                 fprintf(stderr, "Error sending own certificate - Registration failed.\n");

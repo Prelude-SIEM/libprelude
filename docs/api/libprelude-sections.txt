@@ -48,6 +48,7 @@ PRELUDE_MSG_OPTION_LIST
 PRELUDE_MSG_OPTION_SET
 PRELUDE_MSG_ID
 PRELUDE_MSG_AUTH
+PRELUDE_MSG_CM
 PRELUDE_MSG_ID_DECLARE
 PRELUDE_MSG_AUTH_HAVE_SSL
 PRELUDE_MSG_AUTH_HAVE_PLAINTEXT
@@ -58,6 +59,10 @@ PRELUDE_MSG_AUTH_PASSWORD
 PRELUDE_MSG_AUTH_SUCCEED
 PRELUDE_MSG_AUTH_FAILED
 PRELUDE_MSG_AUTH_EXIST
+PRELUDE_MSG_CM_FIREWALL
+PRELUDE_MSG_CM_THROTTLE
+PRELUDE_MSG_CM_ISLAND
+PRELUDE_MSG_CM_FEATURE
 </SECTION>
 
 <SECTION>
@@ -126,6 +131,8 @@ idmef_send_target
 idmef_send_target_list
 idmef_send_analyzer
 idmef_send_create_time
+idmef_send_detect_time
+idmef_send_analyzer_time
 idmef_send_classification
 idmef_send_classification_list
 idmef_send_confidence
@@ -158,6 +165,8 @@ prelude_client_get_daddr
 prelude_client_get_sport
 prelude_client_get_dport
 prelude_client_is_alive
+prelude_client_get_fd
+prelude_client_close
 PRELUDE_CLIENT_TYPE_OTHER
 PRELUDE_CLIENT_TYPE_SENSOR
 PRELUDE_CLIENT_TYPE_MANAGER
@@ -190,7 +199,6 @@ pthread_create
 
 <SECTION>
 <FILE>ssl-registration-msg</FILE>
-SSL_REGISTRATION_MSG_H
 HEAD
 HEADLENGTH
 ACK
@@ -222,7 +230,6 @@ config_close
 
 <SECTION>
 <FILE>prelude-path</FILE>
-prelude_get_socket_filename
 prelude_get_auth_filename
 prelude_get_ssl_cert_filename
 prelude_get_ssl_key_filename
@@ -230,6 +237,7 @@ prelude_get_backup_filename
 prelude_get_program_userid
 prelude_set_program_name
 prelude_set_program_userid
+prelude_get_socket_filename
 prelude_get_sensor_name
 </SECTION>
 
@@ -249,6 +257,7 @@ timer_reset
 timer_destroy
 timer_elapsed
 prelude_wake_up_timer
+timer_flush
 </SECTION>
 
 <SECTION>
@@ -256,6 +265,7 @@ prelude_wake_up_timer
 prelude_realloc
 prelude_resolve_addr
 prelude_open_persistant_tmpfile
+prelude_read_multiline
 </SECTION>
 
 <SECTION>
@@ -302,7 +312,6 @@ PRELUDE_OPTION_ARG
 
 <SECTION>
 <FILE>list</FILE>
-LIST_H
 LIST_HEAD_INIT
 LIST_HEAD
 INIT_LIST_HEAD
@@ -323,6 +332,9 @@ prelude_sensor_get_ident
 prelude_sensor_set_ident
 prelude_set_sensor_name
 prelude_sensor_notify_mgr_connection
+prelude_heartbeat_register_cb
+prelude_heartbeat_send
+prelude_analyzer_fill_infos
 </SECTION>
 
 <SECTION>
@@ -351,6 +363,10 @@ prelude_option_add
 OPT_INVAL
 OPT_INVAL_ARG
 prelude_option_set_warnings
+prelude_option_get_shortname
+prelude_option_get_longname
+prelude_option_set_private_data
+prelude_option_get_private_data
 </SECTION>
 
 <SECTION>
@@ -366,6 +382,16 @@ idmef_target_process_new
 idmef_target_service_new
 idmef_analyzer_node_new
 idmef_analyzer_process_new
+idmef_inode_change_time_new
+idmef_file_access_permission_new
+idmef_linkage_file_new
+idmef_file_create_time_new
+idmef_file_modify_time_new
+idmef_file_access_time_new
+idmef_file_inode_new
+idmef_file_linkage_new
+idmef_file_access_new
+idmef_target_file_new
 idmef_process_env_new
 idmef_process_arg_new
 idmef_user_userid_new
@@ -423,6 +449,7 @@ idmef_address_t
 idmef_string_item_t
 idmef_process_env_t
 idmef_process_arg_t
+idmef_file_access_permission_t
 idmef_process_t
 idmef_webservice_arg_t
 idmef_webservice_t
@@ -663,5 +690,6 @@ prelude_daemonize
 <FILE>client-ident</FILE>
 prelude_client_ident_send
 prelude_client_ident_init
+prelude_client_set_analyzer_id
 </SECTION>
 
