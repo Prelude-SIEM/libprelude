@@ -39,12 +39,6 @@ Prelude Communication
     Using IDMEF, Prelude provides a generic method for virtually any type 
     of sensors to describe precisely the content of an alert.
 
-    Thanks to decoding plugins of the Manager side, a sensor can decide 
-    not to use the IDMEF facilities and send information using a customized 
-    protocol based on low-level  Prelude Messaging API (note: It is then 
-    necessary to provide the correct decoding  plugin on the Manager side). 
-    Note that the sensor can also use both methods.
-
 
 
 IRC
@@ -61,12 +55,12 @@ Get Support
 
 
 Prelude-user mailing list archives can be accessed at:
+	http://www.prelude-ids.org/mailman/listinfo
 
-	http://listes.tuxfamily.org/?A=LIST&L=prelude-user_prelude-ids.org
 
-If you want to subscribe to the list, please send a mail to:
+Commercial Support is available through the PreludeIDS Technologies company:
+	http://www.prelude-ids.com, info@prelude-ids.com
 
-	prelude-user-subscribe@prelude-ids.org
 
 
 Help development
@@ -83,14 +77,14 @@ prelude-devel mailing list by sending a mail to:
 and post your patch with a description of functionality.
 You can also attach patches to bugs on 
 
-        http://bugs.prelude-ids.org
+        http://trac.prelude-ids.org
 
 
 2. BUGS
 
 If you find any bugs, please report them to:
 
-	http://bugs.prelude-ids.org
+	http://trac.prelude-ids.org
 
 Please make sure that what you're reporting is actually a BUG and not
 a problem on your side.
@@ -126,7 +120,7 @@ If everything works, su to root and type:
 2. Generic sensor installation
 
 First, all sensors get some generic configuration files, installed in:
- - $prefix/etc/prelude/default/client.conf [specific to sensor]
+ - $prefix/etc/prelude/default/idmef-client.conf [specific to sensor]
  - $prefix/etc/prelude/default/global.conf [used by sensor and manager]
 
 Theses file contains entry that *may* be shared between several sensor.
@@ -136,13 +130,13 @@ then the sensor will by default use it's own entry.
 Example of a shared entry (in the default provided generic sensor 
 configuration file) is :
 
-manager-addr = 127.0.0.1:5554 || x.x.x.x;
+server-addr = 127.0.0.1:5554 || x.x.x.x;
 
 Which tells the sensor to try to connect to both 127.0.0.1:5554 
 and x.x.x.x:5554. If both connections work, only the first will be used,
 but the contrary would happen if you were to use : 
 
-manager-addr = 127.0.0.1:5554 && x.x.x.x;
+server-addr = 127.0.0.1:5554 && x.x.x.x;
 
 Which mean that both connections should be okay for a sensor message to
 be considered to be successfully sent.
@@ -157,7 +151,7 @@ like :
 
 "
 Basic file configuration does not exist. Please run :
-prelude-adduser register prelude-lml <manager address>
+prelude-adduser register prelude-lml "idmef:w admin:r" <manager address>
 program on the analyzer host to setup this analyzer.
 "
 

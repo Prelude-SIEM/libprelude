@@ -1,7 +1,7 @@
 /*****
 *
-* Copyright (C) 2002, 2003, 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
-* All Rights Reserved
+* Copyright (C) 2002, 2003, 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
+* Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude program.
 *
@@ -69,14 +69,6 @@ static inline uint32_t prelude_align_uint32(const void *buf)
 }
 
 
-
-static inline float prelude_align_float(const void *buf) 
-{
-        return  byte(float, buf, 0) << 24 | byte(float, buf, 1) << 16 |
-                byte(float, buf, 2) <<  8 | byte(float, buf, 3);
-}
-
-
 static inline uint64_t prelude_align_uint64(const void *buf) 
 {
         return  byte(uint64_t, buf, 0) << 56 | byte(uint64_t, buf, 1) << 48 | byte(uint64_t, buf, 2) << 40 |
@@ -86,11 +78,9 @@ static inline uint64_t prelude_align_uint64(const void *buf)
 
 
 
-static inline float prelude_align_float(const void *buf) 
+static inline float prelude_align_float(const void *buf)
 {
-        return  byte(float, buf, 0) << 56 | byte(float, buf, 1) << 48 | byte(uint64_t, buf, 2) << 40 |
-                byte(uint64_t, buf, 3) << 32 | byte(uint64_t, buf, 4) << 24 | byte(uint64_t, buf, 5) << 16 |
-                byte(uint64_t, buf, 6) <<  8 | byte(uint64_t, buf, 7);
+        return (float) prelude_align_uint32(buf);
 }
 
 
@@ -111,6 +101,8 @@ static inline struct in_addr prelude_align_ipv4_addr(const void *buf)
 #define prelude_align_int32(x) (*(const int32_t *) (x))
 #define prelude_align_uint32(x) (*(const uint32_t *) (x))
 #define prelude_align_uint64(x) (*(const uint64_t *) (x))
+#define prelude_align_float(x) (*(const float *) (x))
+
 #define prelude_align_ipv4_addr(x) *((const struct in_addr *) (x))
 
 #endif

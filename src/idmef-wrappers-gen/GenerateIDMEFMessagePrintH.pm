@@ -1,5 +1,5 @@
-# Copyright (C) 2003 Nicolas Delon <delon.nicolas@wanadoo.fr>
-# All Rights Reserved
+# Copyright (C) 2003, 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
+# Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 #
 # This file is part of the Prelude program.
 #
@@ -32,8 +32,8 @@ sub	header
     $self->output("
 /*****
 *
-* Copyright (C) 2003-2005 Yoann Vandoorselaere <yoann\@prelude-ids.org>
-* All Rights Reserved
+* Copyright (C) 2003, 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
+* Author: Yoann Vandoorselaere <yoann.v\@prelude-ids.com>
 *
 * This file is part of the Prelude program.
 *
