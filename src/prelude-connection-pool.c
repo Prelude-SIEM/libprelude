@@ -111,7 +111,8 @@ struct prelude_connection_pool {
         
         int nfd;
         fd_set fds;
-
+        int refcount;
+        
         char *connection_string;
         prelude_connection_permission_t permission;
         
@@ -703,9 +704,11 @@ static void broadcast_async_cb(void *obj, void *data)
 {
         prelude_msg_t *msg = obj;
         prelude_connection_pool_t *pool = data;
-
+        
         prelude_connection_pool_broadcast(pool, msg);
         prelude_msg_destroy(msg);
+
+        prelude_connection_pool_destroy(pool);
 }
 
 
@@ -739,6 +742,8 @@ void prelude_connection_pool_broadcast(prelude_connection_pool_t *pool, prelude_
  */
 void prelude_connection_pool_broadcast_async(prelude_connection_pool_t *pool, prelude_msg_t *msg) 
 {
+        pool->refcount++;
+        
         prelude_async_set_callback((prelude_async_object_t *) msg, &broadcast_async_cb);
         prelude_async_set_data((prelude_async_object_t *) msg, pool);
         prelude_async_add((prelude_async_object_t *) msg);
@@ -836,6 +841,7 @@ int prelude_connection_pool_new(prelude_connection_pool_t **ret,
                 return prelude_error_from_errno(errno);
                 
         FD_ZERO(&new->fds);
+        new->refcount = 1;
         new->client_profile = cp;
         new->permission = permission;
         new->connection_string_changed = FALSE;
@@ -858,13 +864,16 @@ int prelude_connection_pool_new(prelude_connection_pool_t **ret,
  */
 void prelude_connection_pool_destroy(prelude_connection_pool_t *pool) 
 {        
+        if ( --pool->refcount != 0 )
+                return;
+        
         prelude_timer_destroy(&pool->timer);
                 
         if ( pool->connection_string )
                 free(pool->connection_string);
         
         connection_list_destroy(pool->or_list);
-
+        
         if ( pool->failover )
                 prelude_failover_destroy(pool->failover);
 
