@@ -183,6 +183,10 @@ int prelude_plugin_instance_has_commit_func(prelude_plugin_instance_t *pi);
 
 void prelude_plugin_set_preloaded_symbols(void *symlist);
 
+prelude_plugin_generic_t *prelude_plugin_get_next(prelude_list_t **iter);
+
+void prelude_plugin_unload(prelude_plugin_generic_t *plugin);
+
 
 /*
  *

@@ -64,8 +64,6 @@ typedef struct {
         void *handle;
         prelude_list_t instance_list;
 
-        char *tmp_instance_name;
-        prelude_option_t *root_opt;
         prelude_plugin_generic_t *plugin;
 
         int (*subscribe)(prelude_plugin_instance_t *pc);
@@ -130,7 +128,7 @@ struct prelude_plugin_instance {
  */
 
 static PRELUDE_LIST_HEAD(all_plugins);
-
+static prelude_bool_t ltdl_need_init = TRUE;
 
 
 static plugin_entry_t *search_plugin_entry(prelude_plugin_generic_t *plugin)
@@ -421,7 +419,7 @@ static int plugin_load_single(const char *filename,
                 lt_dlclose(handle);
                 return -1;
         }
-        
+
         pe->handle = handle;
         pe->subscribe = subscribe;
         pe->unsubscribe = unsubscribe;
@@ -434,7 +432,7 @@ static int plugin_load_single(const char *filename,
                 free(pe);
                 return -1;
         }
-
+        
         pe->plugin = plugin;
         
         return 0;
@@ -480,11 +478,16 @@ int prelude_plugin_load_from_dir(const char *dirname,
 {
         int ret;
         libltdl_data_t data;
-        
-        ret = lt_dlinit();
-        if ( ret < 0 ) {
-                log(LOG_ERR, "error initializing libltdl.\n");
-                return -1;
+
+        if ( ltdl_need_init ) {
+
+                ret = lt_dlinit();
+                if ( ret < 0 ) {
+                        log(LOG_ERR, "error initializing libltdl.\n");
+                        return -1;
+                }
+
+                ltdl_need_init = FALSE;
         }
 
         data.count = 0;
@@ -560,17 +563,6 @@ prelude_plugin_instance_t *prelude_plugin_new_instance(prelude_plugin_generic_t 
                 pi = create_instance(pe, name, NULL);
                 if ( ! pi )
                         return NULL;
-
-#if 0
-                if ( pe->root_opt ) {
-                        pi->opt_context = prelude_option_context_new(pe->root_opt, name, pi);
-                        if ( ! pi->opt_context )
-                                return NULL;
-                }
-                
-                if ( pe->create_instance && pe->create_instance(pi, NULL, name) < 0 )
-                        return NULL;
-#endif
         }
         
         return pi;
@@ -600,7 +592,6 @@ int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
         prelude_option_set_destroy_callback(opt, plugin_desactivate);
         prelude_option_set_flags(opt, prelude_option_get_flags(opt) | HAVE_CONTEXT);
         
-        pe->root_opt = opt;
         pe->create_instance = prelude_option_get_set_callback(opt);
 
         prelude_option_set_get_callback(opt, NULL);
@@ -778,4 +769,42 @@ int prelude_plugin_instance_has_commit_func(prelude_plugin_instance_t *pi)
 void prelude_plugin_set_preloaded_symbols(void *symlist)
 {
         lt_dlpreload_default(symlist);
+}
+
+
+
+prelude_plugin_generic_t *prelude_plugin_get_next(prelude_list_t **iter)
+{
+        plugin_entry_t *pe;
+        prelude_list_t *tmp;
+
+        prelude_list_for_each_continue_safe(tmp, *iter, &all_plugins) {
+                pe = prelude_list_entry(tmp, plugin_entry_t, list);
+                return pe->plugin;
+        }
+        
+        return NULL;
+}
+
+
+
+void prelude_plugin_unload(prelude_plugin_generic_t *plugin)
+{
+        plugin_entry_t *pe;
+        prelude_list_t *tmp, *bkp;
+        
+        prelude_list_for_each_safe(tmp, bkp, &all_plugins) {
+                pe = prelude_list_entry(tmp, plugin_entry_t, list);
+
+                if ( ! plugin || pe->plugin == plugin ) {
+                        lt_dlclose(pe->handle);
+                        prelude_list_del(&pe->list);
+                        free(pe);
+                }
+        }
+
+        if ( prelude_list_empty(&all_plugins) && ! ltdl_need_init ) {
+                lt_dlexit();
+                ltdl_need_init = TRUE;
+        }
 }
