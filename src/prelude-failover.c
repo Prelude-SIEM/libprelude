@@ -139,37 +139,6 @@ static int get_current_directory_index(prelude_failover_t *failover, const char 
 
 
 
-static ssize_t flush_message(prelude_failover_t *failover, int index, prelude_io_t *out)
-{
-        int ret;
-        ssize_t size;
-        char filename[256];
-        prelude_msg_t *msg = NULL;
-        
-        ret = open_failover_fd(failover, filename, sizeof(filename), index, O_RDONLY);
-        if ( ret < 0 ) 
-                return -1;
-        
-        while ( (ret = prelude_msg_read(&msg, failover->fd)) == prelude_msg_unfinished );
-        prelude_io_close(failover->fd);
-        
-        if ( ret == prelude_msg_error ) {
-                log(LOG_ERR, "error reading message index=%d.\n", index);
-                return -1;
-        }
-        
-        size = prelude_msg_write(msg, out);        
-        if ( size < 0 ) 
-                log(LOG_ERR, "error writing message index=%d size=%d.\n", index, size);
-
-        prelude_msg_destroy(msg);
-        unlink(filename);
-
-        return size;
-}
-
-
-
 
 static int failover_apply_quota(prelude_failover_t *failover, prelude_msg_t *new, unsigned int older_index)
 {
