@@ -574,7 +574,7 @@ class IDMEFMessage:
             _prelude.idmef_object_destroy(object)
             raise
 
-        ret = _prelude.idmef_message_set(self.res, object, c_value)
+        ret = _prelude.idmef_object_set(self.res, object, c_value)
         
         _prelude.idmef_object_destroy(object)
         _prelude.idmef_value_destroy(c_value)
@@ -588,7 +588,7 @@ class IDMEFMessage:
         if not object:
             raise IDMEFObjectError(object_name)
         
-        c_value = _prelude.idmef_message_get(self.res, object)
+        c_value = _prelude.idmef_object_get(self.res, object)
         _prelude.idmef_object_destroy(object)
 
         if not c_value:

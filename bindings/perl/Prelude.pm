@@ -303,7 +303,7 @@ sub	set
 	}
     }
 
-    $ret = Prelude::idmef_message_set($$self, $object, $value);
+    $ret = Prelude::idmef_object_set($$self, $object, $value);
 
     Prelude::idmef_object_destroy($object);
     Prelude::idmef_value_destroy($value);
@@ -339,7 +339,7 @@ sub	get
 
     foreach my $object_str ( @object_str_list ) {
 	$object = Prelude::idmef_object_new_fast($object_str) or return ();
-	$value = Prelude::idmef_message_get($$self, $object);
+	$value = Prelude::idmef_object_get($$self, $object);
 	Prelude::idmef_object_destroy($object);
 	push(@ret, _convert_value($value));
 	Prelude::idmef_value_destroy($value) if ( $value );
