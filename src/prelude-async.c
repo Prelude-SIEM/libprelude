@@ -70,12 +70,12 @@ static double get_elapsed_time(struct timeval *now, struct timeval *start)
 
 static void wait_timer_and_data(void) 
 {
-        int ret;
         double elapsed;
         struct timeval now;
         struct timespec ts;
+        int ret, old_async_flags;
         static struct timeval last_timer_wake_up;
-
+        
         while ( 1 ) {
                 ret = 0;
                 
@@ -88,9 +88,11 @@ static void wait_timer_and_data(void)
 
                 pthread_mutex_lock(&mutex);
 
-                while ( prelude_list_empty(&joblist) && ret != ETIMEDOUT && ! stop_processing ) {
+                old_async_flags = async_flags;
+                
+                while ( prelude_list_empty(&joblist) && ret != ETIMEDOUT
+                        && ! stop_processing && async_flags == old_async_flags )
                         ret = pthread_cond_timedwait(&cond, &mutex, &ts);
-                }
                 
                 if ( prelude_list_empty(&joblist) && stop_processing ) {
                         pthread_mutex_unlock(&mutex);
@@ -120,10 +122,13 @@ static void wait_timer_and_data(void)
 
 
 static void wait_data(void) 
-{        
-        pthread_mutex_lock(&mutex);
+{
+        int old_async_flags;
         
-        while ( prelude_list_empty(&joblist) && ! stop_processing ) 
+        pthread_mutex_lock(&mutex);
+        old_async_flags = async_flags;
+        
+        while ( prelude_list_empty(&joblist) && ! stop_processing && async_flags == old_async_flags ) 
                 pthread_cond_wait(&cond, &mutex);
 
         if ( prelude_list_empty(&joblist) && stop_processing ) {
@@ -218,10 +223,12 @@ static void init_async(void)
 
 void prelude_async_set_flags(int flags) 
 {
+        pthread_mutex_lock(&mutex);
+        
         async_flags = flags;
+        pthread_cond_signal(&cond);
 
-        if ( flags & PRELUDE_ASYNC_TIMER )
-                pthread_cond_signal(&cond);
+        pthread_mutex_unlock(&mutex);
 }
 
 
