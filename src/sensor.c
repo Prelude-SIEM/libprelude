@@ -98,15 +98,16 @@ static int parse_argument(const char *filename, int argc, char **argv)
 {
         int ret;
         int old_flags;
-        
+        prelude_option_t *opt;
         
         /*
          * Declare library options.
          */
-        prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "manager-addr",
-                           "Address where manager is listening (addr:port)",
-                           required_argument, setup_manager_addr, NULL);
-
+        opt = prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "manager-addr",
+                                 "Address where manager is listening (addr:port)",
+                                 required_argument, setup_manager_addr, NULL);
+        prelude_option_set_priority(opt, option_run_last);
+        
         prelude_option_add(NULL, CLI_HOOK|CFG_HOOK|WIDE_HOOK, 0, "heartbeat-time",
                            "Send hearbeat at the specified time (default 60 minutes)",
                            required_argument, setup_heartbeat_repeat_time, NULL);

@@ -1,5 +1,11 @@
 2002-06-01  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/sensor.c (parse_argument): 
+	set --manager-addr option to be ran last, so that applications
+	that change user throught prelude-getopt don't get a message
+	telling to run sensor-adduser with --uid 0 when it should be
+	another uid.
+
 	* src/ssl-gencrypto.c (add_DN_object): 
 	use X509_NAME_add_entry() together with 
 	X509_NAME_ENTRY_create_by_NID() so that we work on 
