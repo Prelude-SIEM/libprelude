@@ -148,24 +148,6 @@ static inline void idmef_data_write(idmef_data_t *data, prelude_msgbuf_t *msg, u
 	prelude_msgbuf_set(msg, tag, idmef_data_get_len(data), idmef_data_get_data(data));
 }
 
-
-
-static inline void idmef_dynamic_ident_write(uint64_t data, prelude_msgbuf_t *msg, uint8_t tag) 
-{
-        uint64_t dst;
-        prelude_ident_t *unique_ident;
-        prelude_client_t *client = prelude_msgbuf_get_client(msg);
-
-        if ( ! data ) {
-                unique_ident = prelude_client_get_unique_ident(client);
-                data = prelude_ident_inc(unique_ident);
-        }
-
-        dst = prelude_hton64(data);
-
-        prelude_msgbuf_set(msg, tag, sizeof(dst), &dst);
-}
-
 void idmef_additional_data_write(idmef_additional_data_t *additional_data, prelude_msgbuf_t *msg)
 {
         if ( ! additional_data )
@@ -868,7 +850,7 @@ void idmef_alert_write(idmef_alert_t *alert, prelude_msgbuf_t *msg)
 
         prelude_msgbuf_set(msg, MSG_ALERT_TAG, 0, NULL);
 
-        idmef_dynamic_ident_write(idmef_alert_get_messageid(alert), msg, MSG_ALERT_MESSAGEID);
+        uint64_write(idmef_alert_get_messageid(alert), msg, MSG_ALERT_MESSAGEID);
         idmef_analyzer_write(idmef_alert_get_analyzer(alert), msg);
         idmef_time_write(idmef_alert_get_create_time(alert), msg, MSG_ALERT_CREATE_TIME);
         idmef_classification_write(idmef_alert_get_classification(alert), msg);
@@ -933,7 +915,7 @@ void idmef_heartbeat_write(idmef_heartbeat_t *heartbeat, prelude_msgbuf_t *msg)
 
         prelude_msgbuf_set(msg, MSG_HEARTBEAT_TAG, 0, NULL);
 
-        idmef_dynamic_ident_write(idmef_heartbeat_get_messageid(heartbeat), msg, MSG_HEARTBEAT_MESSAGEID);
+        uint64_write(idmef_heartbeat_get_messageid(heartbeat), msg, MSG_HEARTBEAT_MESSAGEID);
         idmef_analyzer_write(idmef_heartbeat_get_analyzer(heartbeat), msg);
         idmef_time_write(idmef_heartbeat_get_create_time(heartbeat), msg, MSG_HEARTBEAT_CREATE_TIME);
         idmef_time_write(idmef_heartbeat_get_analyzer_time(heartbeat), msg, MSG_HEARTBEAT_ANALYZER_TIME);
@@ -972,6 +954,8 @@ void idmef_message_write(idmef_message_t *message, prelude_msgbuf_t *msg)
                         /* nop */;
 
         }
+
+        prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
 

@@ -179,24 +179,6 @@ static inline void idmef_data_write(idmef_data_t *data, prelude_msgbuf_t *msg, u
 	prelude_msgbuf_set(msg, tag, idmef_data_get_len(data), idmef_data_get_data(data));
 \}
 
-
-
-static inline void idmef_dynamic_ident_write(uint64_t data, prelude_msgbuf_t *msg, uint8_t tag) 
-\{
-        uint64_t dst;
-        prelude_ident_t *unique_ident;
-        prelude_client_t *client = prelude_msgbuf_get_client(msg);
-
-        if ( ! data ) {
-                unique_ident = prelude_client_get_unique_ident(client);
-                data = prelude_ident_inc(unique_ident);
-        }
-
-        dst = prelude_hton64(data);
-
-        prelude_msgbuf_set(msg, tag, sizeof(dst), &dst);
-\}
-
 ");
 }
 
@@ -209,7 +191,7 @@ sub	struct_field_normal
     my	$type = shift || $field->{short_typename};
     my	$function;
 
-    $function = $field->{dynamic_ident} ? "idmef_dynamic_ident_write" : "${type}_write";
+    $function = "${type}_write";
 
     if ( $field->{metatype} & &METATYPE_OPTIONAL_INT ) {
 	$self->output("
@@ -336,9 +318,8 @@ sub	struct
 	}
     }
 
-    if ( ! $struct->{toplevel} ) {
-	$self->output("\n", " " x 8, "prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);", "\n");
-    }
+    $self->output("\n", " " x 8, "prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);", "\n");
+  
 
     $self->output("\}\n\n\n");
 }
