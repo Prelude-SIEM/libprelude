@@ -1,5 +1,9 @@
 2001-09-02  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/alert-read.c (prelude_alert_read_msg): 
+	* src/include/alert-read.h (prelude_alert_read_msg): 
+	buf is void.
+
 	* src/include/alert-id.h (ID_PRELUDE_NIDS_ALERT): 
 	new file, define known alert ID.
 
