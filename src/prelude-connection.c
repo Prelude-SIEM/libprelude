@@ -84,7 +84,7 @@ struct prelude_connection {
         char *daddr;
         unsigned int dport;
         
-        socklen_t sa_len;
+        socklen_t salen;
         struct sockaddr *sa;
         
         prelude_io_t *fd;
@@ -179,7 +179,7 @@ static int is_tcp_connection_still_established(prelude_io_t *pio)
  * Connect to the specified address in a generic manner
  * (can be Unix or Inet ).
  */
-static int generic_connect(struct sockaddr *sa, socklen_t sa_len)
+static int generic_connect(struct sockaddr *sa, socklen_t salen)
 {
         int ret, sock, proto;
 
@@ -198,7 +198,7 @@ static int generic_connect(struct sockaddr *sa, socklen_t sa_len)
                 return prelude_error_from_errno(errno);
         }
 
-        ret = connect(sock, sa, sa_len);
+        ret = connect(sock, sa, salen);
 	if ( ret < 0 ) {
                 close(sock);
                 return prelude_error_from_errno(errno);
@@ -265,7 +265,7 @@ static int start_inet_connection(prelude_connection_t *cnx,
         int sock, ret;
         struct sockaddr_in addr;
         
-        sock = generic_connect(cnx->sa, cnx->sa_len);
+        sock = generic_connect(cnx->sa, cnx->salen);
         if ( sock < 0 )
                 return sock;
 
@@ -302,7 +302,7 @@ static int start_unix_connection(prelude_connection_t *cnx,
 {
         int ret, sock;
         
-        sock = generic_connect(cnx->sa, cnx->sa_len);
+        sock = generic_connect(cnx->sa, cnx->salen);
         if ( sock < 0 )
                 return sock;
         
@@ -467,7 +467,7 @@ static int resolve_addr(prelude_connection_t *cnx, const char *addr)
                 return prelude_error_from_errno(errno);
         }
 
-        cnx->sa_len = ai_addrlen;
+        cnx->salen = ai_addrlen;
         cnx->sa->sa_family = ai_family;
                 
         if ( ai_family != AF_UNIX ) {
