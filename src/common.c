@@ -40,6 +40,7 @@
 #include <stdarg.h>
 #include <time.h>
 
+#include "libmissing.h"
 #include "prelude-strbuf.h"
 #include "prelude-log.h"
 #include "common.h"
@@ -53,7 +54,7 @@ static int find_absolute_path(const char *cwd, const char *file, char **path)
         const char *ptr;
         char *pathenv = strdup(getenv("PATH")), *old = pathenv;
         
-        while ( (ptr = prelude_strsep(&pathenv, ":")) ) {
+        while ( (ptr = strsep(&pathenv, ":")) ) {
 
                 ret = strcmp(ptr, ".");
                 if ( ret == 0 )
@@ -349,80 +350,4 @@ int prelude_get_gmt_offset(time_t time_local, int *gmt_offset)
         *gmt_offset = time_local - time_utc;
         
         return 0;
-}
-
-
-
-char *prelude_strndup(const char *src, size_t n)
-{
-	size_t len;
-	char *dst;
-
-	len = strlen(src);
-	if ( n < len )
-		len = n;
-
-	dst = malloc(len + 1);
-	if ( ! dst )
-		return NULL;
-
-	memcpy(dst, src, len);
-	dst[len] = 0;
-
-	return dst;
-}
-
-
-
-
-char *prelude_strnstr(const char *str, const char *needed, size_t len)
-{
-        char *ptr;
-        size_t nlen = strlen(needed);
-        
-        if ( ! *needed )
-                return NULL;
-        
-        while ( (ptr = memchr(str, *needed, len)) ) {
-
-                len -= (ptr - str);
-                if ( len < nlen )
-                        break;
-                
-                if ( memcmp(ptr, needed, nlen) == 0 )
-                        return ptr;
-
-                len--;
-                str = ptr + 1;
-        }
-
-        return NULL;
-}
-
-
-
-char *prelude_strsep(char **stringp, const char *delim)
-{
-        size_t len;
-        char *ptr, *start = *stringp;
-        
-        if ( ! start )
-                return NULL;
-        
-        if ( ! *delim ) 
-                ptr = start + strlen(start); 
-        else {
-                ptr = strstr(start, delim);
-                if ( ! ptr ) {
-                        *stringp = NULL;
-                        return start;
-                }
-        }
-        
-        len = strlen(delim);
-        
-        *ptr = 0;
-        *stringp = ptr + len;
-
-        return start;
 }

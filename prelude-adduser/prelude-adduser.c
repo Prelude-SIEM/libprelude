@@ -37,6 +37,7 @@
 #include <gnutls/extra.h>
 
 #include "common.h"
+#include "libmissing.h"
 #include "config-engine.h"
 #include "prelude-inttypes.h"
 #include "prelude-client.h"

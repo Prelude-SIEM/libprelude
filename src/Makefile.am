@@ -1,12 +1,13 @@
 SUBDIRS = include
 
-AM_CPPFLAGS = -I$(top_builddir)/src/include @PTHREAD_CFLAGS@ @INCLTDL@ @libprelude_cflags@ -I$(srcdir)/include \
-	      -DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\" -DPRELUDE_SPOOL_DIR=\"@prelude_spool_dir@\"
+AM_CPPFLAGS = @PTHREAD_CFLAGS@ -I$(srcdir)/include -I$(top_builddir)/src/include 	\
+		-I$(top_srcdir)/libmissing @INCLTDL@ @libprelude_cflags@		\
+		-DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\" -DPRELUDE_SPOOL_DIR=\"@prelude_spool_dir@\"
 
 
 libpreludeincludedir = $(includedir)/
 libprelude_la_LIBADD = @libprelude_libs@ @LIBLTDL@
-libprelude_la_LDFLAGS = @PTHREAD_CFLAGS@ -no-undefined -version-info @libprelude_soname@
+libprelude_la_LDFLAGS = @PTHREAD_CFLAGS@ -no-undefined -version-info @libprelude_soname@ ../libmissing/libmissing.la
 lib_LTLIBRARIES = libprelude.la
 
 AM_YFLAGS = -d

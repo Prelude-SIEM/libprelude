@@ -35,6 +35,7 @@
 
 #include <gcrypt.h>
 
+#include "libmissing.h"
 #include "idmef.h"
 #include "timer.h"
 #include "common.h"

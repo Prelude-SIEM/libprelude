@@ -30,6 +30,7 @@
 #include <stdarg.h>
 #include <assert.h>
 
+#include "libmissing.h"
 #include "prelude-log.h"
 #include "prelude-inttypes.h"
 

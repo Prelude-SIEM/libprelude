@@ -27,7 +27,6 @@
 #include <string.h>
 
 #include "prelude-log.h"
-
 #include "prelude-strbuf.h"
 
 

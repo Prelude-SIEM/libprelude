@@ -28,6 +28,7 @@
 #include <stdarg.h>
 #include <pthread.h>
 
+#include "libmissing.h"
 #include "prelude-hash.h"
 #include "prelude-log.h"
 #include "prelude-inttypes.h"

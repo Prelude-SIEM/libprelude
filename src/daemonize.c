@@ -31,7 +31,7 @@
 #include <fcntl.h>
 #include <errno.h>
 
-
+#include "libmissing.h"
 #include "daemonize.h"
 #include "prelude-log.h"
 

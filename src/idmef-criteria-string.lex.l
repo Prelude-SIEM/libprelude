@@ -24,8 +24,7 @@
 
 %{
 
-#include <string.h>
-
+#include "libmissing.h"
 #include "idmef.h"
 #include "common.h"
 #include "idmef-criteria-string.yac.h"
@@ -72,11 +71,11 @@ or|OR			{ return TOK_OPERATOR_OR; }
 				return TOK_STRING;
 			}
 {SQSTRING}		{
-				yylval.str = prelude_strndup(yytext + 1, yyleng - 2);
+				yylval.str = strndup(yytext + 1, yyleng - 2);
 				return TOK_STRING;
 			}
 {DQSTRING}		{
-				yylval.str = prelude_strndup(yytext + 1, yyleng - 2);
+				yylval.str = strndup(yytext + 1, yyleng - 2);
 				return TOK_STRING;
 			}
 

@@ -35,6 +35,7 @@
 
 #include "ltdl.h"
 
+#include "libmissing.h"
 #include "prelude-log.h"
 #include "variable.h"
 #include "prelude-inttypes.h"

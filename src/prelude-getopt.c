@@ -28,6 +28,7 @@
 #include <sys/types.h>
 #include <assert.h>
 
+#include "libmissing.h"
 #include "prelude-inttypes.h"
 #include "prelude-message-id.h"
 #include "prelude-message-buffered.h"

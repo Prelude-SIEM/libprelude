@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 
+#include "libmissing.h"
 #include "prelude-log.h"
 #include "extract.h"
 #include "prelude-io.h"
@@ -104,9 +105,9 @@ static int parse_request(prelude_client_t *client, int rtype, char *request, cha
         }
         
         value = request;
-        prelude_strsep(&value, "=");
+        strsep(&value, "=");
         
-        while ( (str = (prelude_strsep(&request, "."))) ) {
+        while ( (str = (strsep(&request, "."))) ) {
                 
                 if ( ! request ) {
                         ptr = value;

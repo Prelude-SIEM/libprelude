@@ -26,6 +26,7 @@
 #include <string.h>
 #include <assert.h>
 
+#include "libmissing.h"
 #include "prelude-inttypes.h"
 #include "idmef-time.h"
 #include "idmef-data.h"

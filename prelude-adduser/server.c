@@ -12,6 +12,7 @@
 #include <gnutls/gnutls.h>
 #include <gnutls/extra.h>
 
+#include "libmissing.h"
 #include "prelude-client.h"
 #include "prelude-inet.h"
 #include "server.h"

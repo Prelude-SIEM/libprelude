@@ -28,6 +28,7 @@
 #include <assert.h>
 #include <sys/types.h>
 
+#include "libmissing.h"
 #include "prelude-inttypes.h"
 #include "common.h"
 #include "config-engine.h"
@@ -307,7 +308,7 @@ static int parse_buffer(char *str, char **entry, char **value)
         if ( ! *str )
                 return 0;
 
-        ptr = prelude_strsep(&buf, "=");        
+        ptr = strsep(&buf, "=");        
         if ( ! *ptr )
                 return -1;
         
@@ -316,7 +317,7 @@ static int parse_buffer(char *str, char **entry, char **value)
         if ( buf ) 
                 *(buf - 1) = '=';
         
-        ptr = prelude_strsep(&buf, "");
+        ptr = strsep(&buf, "");
         if ( ptr )
                 *value = strip_value(ptr);
 

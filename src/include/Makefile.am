@@ -54,4 +54,4 @@ include_HEADERS = config-engine.h 		\
 
 nodist_include_HEADERS = prelude-inttypes.h
 
-noinst_HEADERS = client-ident.h ntp.h idmef-tree-data.h tls-auth.h tls-util.h
+noinst_HEADERS = client-ident.h libmissing.h idmef-tree-data.h ntp.h tls-auth.h tls-util.h

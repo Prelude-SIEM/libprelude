@@ -35,6 +35,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "libmissing.h"
 #include "prelude-inttypes.h"
 #include "ntp.h"
 #include "prelude-log.h"

@@ -33,6 +33,7 @@
 #include <string.h>
 #include <stdarg.h>
 
+#include "libmissing.h"
 #include "prelude-list.h"
 #include "prelude-log.h"
 #include "prelude-inttypes.h"

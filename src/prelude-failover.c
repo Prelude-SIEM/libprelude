@@ -31,6 +31,7 @@
 #include <fcntl.h>
 #include <errno.h>
 
+#include "libmissing.h"
 #include "prelude-log.h"
 #include "prelude-io.h"
 #include "prelude-message.h"

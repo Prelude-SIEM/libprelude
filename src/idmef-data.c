@@ -27,6 +27,7 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include "libmissing.h"
 #include "prelude-inttypes.h"
 #include "idmef-data.h"
 

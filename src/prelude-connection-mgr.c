@@ -38,6 +38,7 @@
 #include <netinet/in.h> /* required by common.h */
 #include <assert.h>
 
+#include "libmissing.h"
 #include "prelude-inttypes.h"
 #include "common.h"
 #include "prelude-list.h"

@@ -42,6 +42,7 @@
 #include <gnutls/gnutls.h>
 
 #include "common.h"
+#include "libmissing.h"
 #include "prelude-inttypes.h"
 #include "prelude-client.h"
 #include "prelude-log.h"

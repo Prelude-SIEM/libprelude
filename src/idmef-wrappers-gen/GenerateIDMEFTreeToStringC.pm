@@ -36,6 +36,7 @@ sub	header
 #include <stdio.h>
 #include <time.h>
 
+#include \"libmissing.h\"
 #include \"idmef.h\"
 #include \"idmef-util.h\"
 #include \"idmef-tree-wrap.h\"
