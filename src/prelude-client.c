@@ -46,7 +46,6 @@
 #include "libmissing.h"
 #include "idmef.h"
 #include "common.h"
-#include "client-ident.h"
 #include "prelude-log.h"
 #include "prelude-ident.h"
 #include "prelude-async.h"
