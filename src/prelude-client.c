@@ -884,7 +884,6 @@ int prelude_client_new(prelude_client_t **client,
                        int *argc, char **argv)
 {
         int ret;
-        char filename[256];
         prelude_client_t *new;
         prelude_option_t *opt;
         prelude_option_warning_t old_warnings;
