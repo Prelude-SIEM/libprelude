@@ -1955,16 +1955,11 @@ size_t msgcount, size_t msglen, uint8_t tag, uint8_t priority
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_msg_set</NAME>
-<RETURNS>int  </RETURNS>
+<RETURNS>void  </RETURNS>
 prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *data
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_msg_write</NAME>
-<RETURNS>int  </RETURNS>
-prelude_msg_t *msg, prelude_io_t *dst
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_msg_write_no_header</NAME>
 <RETURNS>int  </RETURNS>
 prelude_msg_t *msg, prelude_io_t *dst
 </FUNCTION>

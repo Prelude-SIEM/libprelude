@@ -1,3 +1,8 @@
+2002-01-26  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/client-ident.c (prelude_client_get_analyzerid): 
+	new function.
+
 2002-01-25  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/include/idmef-tree.h: replace each occurence of

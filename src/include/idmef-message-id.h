@@ -240,8 +240,11 @@
 #define MSG_ANALYZER_MODEL         2
 #define MSG_ANALYZER_VERSION       3
 #define MSG_ANALYZER_CLASS         4
-#define MSG_ANALYZER_OSTYPE        5
-#define MSG_ANALYZER_OSVERSION     6
+/*
+ * skip ID 5 used by node inside analyzed
+ */
+#define MSG_ANALYZER_OSTYPE        6
+#define MSG_ANALYZER_OSVERSION     7
 
 
 
