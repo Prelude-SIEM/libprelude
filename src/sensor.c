@@ -45,7 +45,7 @@
 
 #include "ssl.h"
 #include "prelude-getopt.h"
-
+#include "prelude-async-job.h"
 
 
 static int launch = 1;
@@ -60,6 +60,7 @@ static void print_help(const char *optarg)
         fprintf(stderr, "\nSensor options\n");
         prelude_option_print(opts);
 }
+
 
 
 
@@ -125,6 +126,12 @@ int prelude_sensor_init(const char *filename, int argc, char **argv)
         if ( ! launch )
                 return 0;
 
+        ret = prelude_async_init();
+        if ( ret < 0 ) {
+                log(LOG_ERR, "couldn't initialize asynchronous subsystem.\n");
+                return -1;
+        }
+        
         return ret;
 }
 
@@ -132,12 +139,7 @@ int prelude_sensor_init(const char *filename, int argc, char **argv)
 
 void prelude_sensor_send_alert(prelude_msg_t *msg) 
 {
-        int ret;
-        
-        ret = prelude_client_mgr_broadcast_msg(manager_list, msg);
-        if ( ret == 0 )
-                return;
-        
+        prelude_client_mgr_broadcast_msg(manager_list, msg);
 }
 
 

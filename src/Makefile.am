@@ -22,7 +22,9 @@ libprelude_la_SOURCES = 		\
 	prelude-getopt.c		\
 	prelude-io.c			\
 	prelude-message.c		\
+	prelude-async.c			\
 	sensor.c
 
 
-libprelude_la_LIBADD = ../libmissing/libmissing.a
+libprelude_la_LIBADD = ../libmissing/libmissing.a -lpthread
+

@@ -31,6 +31,7 @@
 #include "common.h"
 #include "prelude-io.h"
 #include "prelude-list.h"
+#include "prelude-async.h"
 #include "prelude-message.h"
 
 
@@ -49,7 +50,7 @@ typedef struct {
 
 
 struct prelude_msg {
-        PRELUDE_LINKED_OBJECT;
+        PRELUDE_ASYNC_OBJECT;
 
         uint32_t msg_index;
         
@@ -92,7 +93,7 @@ static int read_message_header(prelude_msg_t *msg, prelude_io_t *pio)
                 return -1;
         }
         
-        else if ( ret == 0)
+        else if ( ret == 0) 
                 return -1;
 
         msg->msg_index += ret;
@@ -143,7 +144,7 @@ static int read_message_content(prelude_msg_t *msg, prelude_io_t *pio)
                 return -1;
         }
 
-        else if ( ret == 0 )
+        else if ( ret == 0 ) 
                 return -1;
 
         msg->msg_index += ret;
@@ -183,7 +184,7 @@ int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
         }
         
         if ( ! (*msg)->payload ) {
-                ret = read_message_header(*msg, pio);                
+                ret = read_message_header(*msg, pio);
                 if ( ret <= 0 )
                         return ret;
         }

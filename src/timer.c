@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 1999,2000 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 1999 - 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -25,13 +25,15 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <assert.h>
+#include <pthread.h>
 
 #include "timer.h"
 #include "common.h"
 
 
 static LIST_HEAD(timer_list);
-static prelude_timer_t *current_timer;
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
 
 
 /*
@@ -65,10 +67,10 @@ static void wake_up_if_needed(prelude_timer_t *timer)
 
         if ( time_elapsed(timer) >= timer_expire(timer) ) {
                 timer->start.tv_sec = -1;
-                current_timer = timer;
                 timer_func(timer)(timer_data(timer));
         }
 }
+
 
 
 
@@ -79,16 +81,23 @@ static void wake_up_if_needed(prelude_timer_t *timer)
 static int walk_and_wake_up_timer(void) 
 {
         prelude_timer_t *timer;
-        struct list_head *tmp, *bkp;
+        struct list_head *tmp, *next;
         int usage = 0;
-
-        for ( tmp = timer_list.next; tmp != &timer_list; tmp = bkp ) {
-                usage++;
+        
+        pthread_mutex_lock(&mutex);
+        next = ( list_empty(&timer_list) ) ? NULL : timer_list.next;
+        pthread_mutex_unlock(&mutex);
+        
+        while ( next ) {
+                tmp = next;
+                
+                pthread_mutex_lock(&mutex);
+                next = ( tmp->next != &timer_list ) ? tmp->next : NULL;
+                pthread_mutex_unlock(&mutex);
                 
                 timer = list_entry(tmp, prelude_timer_t, list);
-                bkp = tmp->next;
-
                 wake_up_if_needed(timer);
+                usage++;
         }
         
         return usage;
@@ -105,33 +114,10 @@ static int walk_and_wake_up_timer(void)
 void timer_init(prelude_timer_t *timer)
 {
         gettimeofday(&timer->start, NULL);
+
+        pthread_mutex_lock(&mutex);
         list_add(&timer->list, &timer_list);
-}
-
-
-
-/**
- * timer_destroy_current:
- *
- * Destroy currently expiring timer,
- * this is only to be called from a timer expire callback.
- */
-void timer_destroy_current(void) 
-{
-        timer_destroy(current_timer);
-}
-
-
-
-/**
- * timer_reset_current:
- *
- * Reset currently expiring timer,
- * this is only to be called from a timer expire callback.
- */
-void timer_reset_current(void) 
-{
-        timer_reset(current_timer);
+        pthread_mutex_unlock(&mutex);
 }
 
 
@@ -158,7 +144,9 @@ void timer_reset(prelude_timer_t *timer)
  */
 void timer_destroy(prelude_timer_t *timer) 
 {
+        pthread_mutex_lock(&mutex);
         list_del(&timer->list);
+        pthread_mutex_unlock(&mutex);
 }
 
 
@@ -184,15 +172,15 @@ void timer_elapsed(prelude_timer_t *timer, struct timeval *tv)
 
 
 
+
 /**
- * wake_up_timer:
+ * prelude_wake_up_timer:
  *
- * Wake up time that need it.
+ * Wake up timer that need it.
  * This function should be called every second to work properly.
  */
-void wake_up_timer(void) 
+void prelude_wake_up_timer(void) 
 {
-    
 #if 0
         struct timeval tv, end; 
         int usage = 0;
@@ -208,11 +196,6 @@ void wake_up_timer(void)
         
         walk_and_wake_up_timer();
 }
-
-
-
-
-
 
 
 

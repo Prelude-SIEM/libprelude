@@ -1,3 +1,17 @@
+2001-11-06  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-client-mgr.c (prelude_client_mgr_broadcast_msg): 
+	make this function void. Set the message to be processed asynchronously.
+
+	* src/sensor.c (prelude_sensor_init): Initialize
+	the asynchronous subsystem.
+
+	* src/prelude-message.c: prelude_message_t inherit of 
+	prelude_async_object_t capability.
+
+	* src/timer.c: Thread safety.
+	* src/prelude-async.c: New asynchronous queue implementation.
+
 2001-11-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-client-mgr.c (prelude_client_mgr_broadcast_msg): 

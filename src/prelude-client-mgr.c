@@ -30,7 +30,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include "list.h"
+#include "prelude-list.h"
 #include "timer.h"
 #include "common.h"
 #include "config-engine.h"
@@ -38,7 +38,7 @@
 #include "prelude-message.h"
 #include "prelude-client.h"
 #include "prelude-client-mgr.h"
-
+#include "prelude-async.h"
 
 #define INITIAL_EXPIRATION_TIME 60
 #define MAXIMUM_EXPIRATION_TIME 3600
@@ -419,6 +419,66 @@ static int broadcast_message(prelude_msg_t *msg, client_list_t *clist)
 
 
 
+/*
+ * Return 0 on sucess, -1 on an already signaled failure,
+ * -2 on an already signaled failure.
+ */
+static int walk_manager_lists(prelude_client_mgr_t *cmgr, prelude_msg_t *msg) 
+{
+        int ret;
+        client_list_t *item;
+        struct list_head *tmp;
+        
+        list_for_each(tmp, &cmgr->or_list) {
+                item = list_entry(tmp, client_list_t, list);
+                
+                /*
+                 * There is Manager(s) known to be dead in this list.
+                 * No need to try to emmit a message to theses.
+                 */                
+                if ( item->dead ) {
+                        ret = -2;
+                        continue;
+                }
+                
+                ret = broadcast_message(msg, item);                
+                if ( ret >= 0 ) { /* AND of Manager emmission succeed */
+                        prelude_msg_destroy(msg);
+                        return 0;
+                }
+        }
+
+        return -1;
+}
+
+
+
+
+static void broadcast_msg_cb(void *obj, void *data) 
+{
+        int ret;
+        prelude_msg_t *msg = obj;
+        prelude_client_mgr_t *cmgr = data;
+
+        ret = walk_manager_lists(cmgr, msg);
+        if ( ret == 0 )
+                return;
+        
+        /*
+         * This is not good. All of our boolean AND rule for message emission
+         * failed. Backup the message.
+         */
+        if ( ret == -2 )
+                log(LOG_INFO, "Manager emmission failed. Enabling failsafe mode.\n");  
+      
+        ret = prelude_msg_write(msg, cmgr->backup_fd);
+        if ( ret < 0 ) 
+                log(LOG_ERR, "could't backup message.\n");
+        
+        prelude_msg_destroy(msg);
+}
+
+
 
 
 /**
@@ -428,49 +488,13 @@ static int broadcast_message(prelude_msg_t *msg, client_list_t *clist)
  *
  * Send the message contained in @msg to all the client
  * in the @cmgr group of client.
- *
- * Returns: 0 on success, -1 if an error occured.
  */
-int prelude_client_mgr_broadcast_msg(prelude_client_mgr_t *cmgr, prelude_msg_t *msg) 
+void prelude_client_mgr_broadcast_msg(prelude_client_mgr_t *cmgr, prelude_msg_t *msg) 
 {
-        int ret;
-        int print_failure = 0;
-        client_list_t *item;
-        struct list_head *tmp;
-        
-        list_for_each(tmp, &cmgr->or_list) {
-                item = list_entry(tmp, client_list_t, list);
-
-                /*
-                 * There is Manager known to be dead in this list.
-                 * No need to try to emmit a message to theses.
-                 */                
-                if ( item->dead ) 
-                        continue;
-                
-                ret = broadcast_message(msg, item);                
-                if ( ret >= 0 ) /* AND of Manager emmission succeed */
-                        return 0;
-                else
-                        print_failure = 1;
-        }
-
-        /*
-         * This is not good. All of our boolean AND rule for message emission
-         * failed. Backup the message.
-         */
-        if ( print_failure )
-                log(LOG_INFO, "Manager emmission failed. Enabling failsafe mode.\n");  
-      
-        ret = prelude_msg_write(msg, cmgr->backup_fd);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "could't backup message.\n");
-                return -1;
-        }
-        
-        return 0;
+        prelude_async_set_callback((prelude_async_object_t *)msg, &broadcast_msg_cb);
+        prelude_async_set_data((prelude_async_object_t *)msg, cmgr);
+        prelude_async_add((prelude_async_object_t *)msg);
 }
-
 
 
 
@@ -500,7 +524,7 @@ prelude_client_mgr_t *prelude_client_mgr_new(const char *identifier, const char 
                 return NULL;
         }        
         INIT_LIST_HEAD(&new->or_list);
-
+        
         /*
          * Setup a backup file descriptor for this client Manager.
          * It will be used if a message emmission fail.
@@ -532,6 +556,15 @@ prelude_client_mgr_t *prelude_client_mgr_new(const char *identifier, const char 
         
         return new;
 }
+
+
+
+
+
+
+
+
+
 
 
 
