@@ -1,3 +1,18 @@
+2002-05-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	make dist should now work. Also localstatedir
+	is now respected. (Existing sensors / manager
+	installation should re-create sensors account).
+	
+	* configure.in (sensors_config_dir): 
+	declare sensor_ident_dir.
+
+	* Makefile.am (install-data-local): 
+	move authentication file to configuration dir.
+
+	* configure.in: modify call to AC_DEFINE() so that
+	we don't need acconfig.h anymore.
+
 2002-04-30  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-client-mgr.c (prelude_client_mgr_new): 

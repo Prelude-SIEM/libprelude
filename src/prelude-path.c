@@ -35,12 +35,12 @@
 /*
  * directory where plaintext authentication file are stored.
  */
-#define AUTH_DIR "/var/lib/prelude-sensors/plaintext"
+#define AUTH_DIR SENSORS_CONFIG_DIR "/plaintext"
 
 /*
  * directory where SSL authentication file are stored.
  */
-#define SSL_DIR "/var/lib/prelude-sensors/ssl"
+#define SSL_DIR SENSORS_CONFIG_DIR "/ssl"
 
 /*
  * Path to the Prelude Unix socket.

@@ -15,9 +15,9 @@ bin_SCRIPTS = $(top_srcdir)/libprelude-config
 
 install-data-local:
 	$(INSTALL) -d -m 755 $(sensors_config_dir);
-	$(INSTALL) -d -m 755 /var/lib/prelude-sensors/plaintext;
-	$(INSTALL) -d -m 755 /var/lib/prelude-sensors/ssl;
-	$(INSTALL) -d -m 1733 /var/lib/prelude-sensors/idents;
+	$(INSTALL) -d -m 755 $(sensors_config_dir)/ssl;
+	$(INSTALL) -d -m 755 $(sensors_config_dir)/plaintext;
+	$(INSTALL) -d -m 1733 $(sensors_ident_dir)/prelude-sensors;
 	@if test -f $(sensors_config_dir)/sensors-default.conf; then                                              \
 		echo "********************************************************************************";          \
                 echo;                                                                                             \

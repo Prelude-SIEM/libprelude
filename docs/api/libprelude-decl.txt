@@ -603,6 +603,23 @@ prelude_client_t *client
 <RETURNS>int  </RETURNS>
 prelude_client_t *client
 </FUNCTION>
+<MACRO>
+<NAME>PRELUDE_CLIENT_TYPE_OTHER</NAME>
+#define PRELUDE_CLIENT_TYPE_OTHER   0
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_CLIENT_TYPE_SENSOR</NAME>
+#define PRELUDE_CLIENT_TYPE_SENSOR  1
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_CLIENT_TYPE_MANAGER</NAME>
+#define PRELUDE_CLIENT_TYPE_MANAGER 2
+</MACRO>
+<FUNCTION>
+<NAME>prelude_client_set_type</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_t *client, int type
+</FUNCTION>
 <FUNCTION>
 <NAME>prelude_client_get_analyzerid</NAME>
 <RETURNS>uint64_t  </RETURNS>
@@ -918,7 +935,7 @@ prelude_client_mgr_t *cmgr, prelude_msg_t *msg
 <FUNCTION>
 <NAME>prelude_client_mgr_new</NAME>
 <RETURNS>prelude_client_mgr_t  *</RETURNS>
-const char *cfgline
+int type, const char *cfgline
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_client_mgr_notify_connection</NAME>
@@ -2768,7 +2785,7 @@ const char *lockfile
 <FUNCTION>
 <NAME>prelude_client_ident_send</NAME>
 <RETURNS>int  </RETURNS>
-prelude_io_t *fd
+prelude_io_t *fd, int client_type
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_client_ident_init</NAME>

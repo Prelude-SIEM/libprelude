@@ -40,8 +40,7 @@
 #include "prelude-message-id.h"
 #include "client-ident.h"
 
-#define IDENTITY_DIR "/var/lib/prelude-sensors/idents"
-
+#define IDENTITY_DIR SENSORS_IDENT_DIR
 
 static char identfile[1024];
 static uint64_t sensor_ident = 0;
