@@ -45,7 +45,7 @@ inline static int is_aligned(const void *ptr, size_t size)
 
 
 
-void extract_ipv4_addr(struct in_addr *out, struct in_addr *addr) 
+void extract_ipv4_addr(struct in_addr *out, const struct in_addr *addr) 
 {
 #ifndef NEED_ALIGNED_ACCESS
         *out = *addr;
