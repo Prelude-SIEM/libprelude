@@ -103,6 +103,8 @@ static inline prelude_error_t prelude_error_from_errno(int err)
 }
 
 
+void prelude_perror(prelude_error_t err, const char *fmt, ...);
+
 const char *prelude_strerror(prelude_error_t err);
 
 const char *prelude_strsource(prelude_error_t err);

@@ -1,4 +1,5 @@
 includedir = $(prefix)/include/libprelude
+DEFS = -I $(top_srcdir)/src/include
 
 EXTRA_DIST = mkstrtable.awk err-sources.h.in err-codes.h.in \
 	mkerrnos.awk errnos.in mkerrcodes.awk mkerrcodes1.awk mkerrcodes2.awk mkerrcodes.c \
@@ -9,7 +10,7 @@ BUILT_SOURCES = err-sources.h err-codes.h code-from-errno.h code-to-errno.h err-
 nodist_include_HEADERS = prelude-error.h
 
 noinst_LTLIBRARIES = libprelude-error.la
-libprelude_error_la_SOURCES = prelude-error.h gettext.h strsource.c strerror.c code-to-errno.c code-from-errno.c
+libprelude_error_la_SOURCES = prelude-error.h gettext.h strsource.c strerror.c perror.c code-to-errno.c code-from-errno.c
 
 err-sources.h: Makefile mkstrtable.awk err-sources.h.in
 	$(AWK) -f $(srcdir)/mkstrtable.awk -v textidx=3 \
