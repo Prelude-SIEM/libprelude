@@ -1,0 +1,896 @@
+<!-- ##### SECTION Title ##### -->
+idmef-additional-data
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION idmef_additional_data_new_real ##### -->
+<para>
+
+</para>
+
+@ret: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_new_byte ##### -->
+<para>
+
+</para>
+
+@ret: 
+@byte: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_new_integer ##### -->
+<para>
+
+</para>
+
+@ret: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_new_boolean ##### -->
+<para>
+
+</para>
+
+@ret: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_new_character ##### -->
+<para>
+
+</para>
+
+@ret: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_set_real ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@data: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_set_byte ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@byte: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_set_integer ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@data: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_set_boolean ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@data: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_set_character ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@data: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_new_ptr_ref_fast ##### -->
+<para>
+
+</para>
+
+@nd: 
+@type: 
+@data: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_new_ptr_dup_fast ##### -->
+<para>
+
+</para>
+
+@nd: 
+@type: 
+@data: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_new_ptr_nodup_fast ##### -->
+<para>
+
+</para>
+
+@nd: 
+@type: 
+@data: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_set_ptr_ref_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@type: 
+@data: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_set_ptr_dup_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@type: 
+@data: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_set_ptr_nodup_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@type: 
+@data: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_set_str_dup_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@type: 
+@str: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_new_str_dup_fast ##### -->
+<para>
+
+</para>
+
+@nd: 
+@type: 
+@str: 
+@len: 
+@Returns: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_string_ref_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_string_ref_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_string_dup_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_string_dup_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_string_nodup_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_string_nodup_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_string_ref ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_string_ref ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_string_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_string_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_string_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_string_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_ntpstamp_ref_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_ntpstamp_ref_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_ntpstamp_dup_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_ntpstamp_dup_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_ntpstamp_nodup_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_ntpstamp_nodup_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_ntpstamp_ref ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_ntpstamp_ref ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_ntpstamp_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_ntpstamp_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_ntpstamp_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_ntpstamp_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_byte_string_ref ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_byte_string_ref ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_byte_string_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_byte_string_dup ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_byte_string_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_byte_string_nodup ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_portlist_ref_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_portlist_ref_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_portlist_dup_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_portlist_dup_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_portlist_nodup_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_portlist_nodup_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_portlist_ref ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_portlist_ref ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_portlist_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_portlist_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_portlist_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_portlist_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_datetime_ref_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_datetime_ref_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_datetime_dup_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_datetime_dup_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_datetime_nodup_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_datetime_nodup_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_datetime_ref ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_datetime_ref ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_datetime_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_datetime_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_datetime_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_datetime_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_xml_ref_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_xml_ref_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_xml_dup_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_xml_dup_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_xml_nodup_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_xml_nodup_fast ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+@len: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_xml_ref ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_xml_ref ##### -->
+<para>
+
+</para>
+
+@ad: 
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_xml_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_xml_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_new_xml_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### MACRO idmef_additional_data_set_xml_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_destroy_internal ##### -->
+<para>
+
+</para>
+
+@data: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_copy_ref ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_copy_dup ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_get_real ##### -->
+<para>
+
+</para>
+
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_get_integer ##### -->
+<para>
+
+</para>
+
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_get_boolean ##### -->
+<para>
+
+</para>
+
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_get_character ##### -->
+<para>
+
+</para>
+
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_get_len ##### -->
+<para>
+
+</para>
+
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_is_empty ##### -->
+<para>
+
+</para>
+
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_data_to_string ##### -->
+<para>
+
+</para>
+
+@ad: 
+@out: 
+@Returns: 
+
+

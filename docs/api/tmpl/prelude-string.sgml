@@ -1,0 +1,351 @@
+<!-- ##### SECTION Title ##### -->
+prelude-string
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO idmef_type_string ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO prelude_type_string ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### STRUCT prelude_string ##### -->
+<para>
+
+</para>
+
+@list: 
+@flags: 
+@refcount: 
+
+<!-- ##### TYPEDEF prelude_string_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION prelude_string_new ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_new_nodup ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_new_ref ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_new_dup ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_new_dup_fast ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_destroy ##### -->
+<para>
+
+</para>
+
+@string: 
+
+
+<!-- ##### FUNCTION prelude_string_destroy_internal ##### -->
+<para>
+
+</para>
+
+@string: 
+
+
+<!-- ##### FUNCTION prelude_string_new_nodup_fast ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_new_ref_fast ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_set_dup_fast ##### -->
+<para>
+
+</para>
+
+@string: 
+@buf: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_set_dup ##### -->
+<para>
+
+</para>
+
+@string: 
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_set_nodup_fast ##### -->
+<para>
+
+</para>
+
+@string: 
+@buf: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_set_nodup ##### -->
+<para>
+
+</para>
+
+@string: 
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_set_ref_fast ##### -->
+<para>
+
+</para>
+
+@string: 
+@buf: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_set_ref ##### -->
+<para>
+
+</para>
+
+@string: 
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_copy_ref ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_copy_dup ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_ref ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_get_len ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_get_string_or_default ##### -->
+<para>
+
+</para>
+
+@string: 
+@def: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_get_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_get_string_released ##### -->
+<para>
+
+</para>
+
+@string: 
+@outptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_is_empty ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_clear ##### -->
+<para>
+
+</para>
+
+@string: 
+
+
+<!-- ##### FUNCTION prelude_string_cat ##### -->
+<para>
+
+</para>
+
+@dst: 
+@str: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_ncat ##### -->
+<para>
+
+</para>
+
+@dst: 
+@str: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_sprintf ##### -->
+<para>
+
+</para>
+
+@string: 
+@fmt: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_string_vprintf ##### -->
+<para>
+
+</para>
+
+@string: 
+@fmt: 
+@ap: 
+@Returns: 
+
+
+<!-- ##### MACRO prelude_string_set_constant ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+
+
+<!-- ##### MACRO prelude_string_new_constant ##### -->
+<para>
+
+</para>
+
+@string: 
+@str: 
+
+

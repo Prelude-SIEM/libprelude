@@ -1,0 +1,246 @@
+<!-- ##### SECTION Title ##### -->
+prelude-connection-pool
+
+<!-- ##### SECTION Short_Description ##### -->
+
+Pool of connection handling
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+This API handle pool of connection, allowing to address a set of connection using only one object.
+</para>
+
+<para>
+AND &amp; OR of connection are supported, so that it is possible to
+address several connection at once, or to only address a set of connection 
+if another connection went down.
+</para>
+
+<para>
+Additionally it provide failover in case one of the connection in
+the pool goes down, and automatic reconnection and flushing of the
+information that could not be sent due to the connection status.
+</para>
+
+<para>
+It is usually not necessary to access this API directly, however if 
+you are looking at how to read events from a pool of connection, you're most 
+probably looking for the prelude_connection_pool_check_event() function.
+</para>
+
+<para>
+If this is the case, use prelude_connection_pool_check_event() for polling the
+pool or prelude_connection_set_event_handler() / prelude_connection_set_global_event_handler()
+if you want asynchronous notification of event.
+</para>
+
+<para>
+Note that prelude_connection_set_event_handler() and prelude_connection_set_global_event_handler()
+are only asynchronous if timer are running in asynchronous mode. Otherwise, the callback for theses
+function might be called when you call the prelude_timer_wake_up() function.
+</para>
+
+<para>
+In the provided callback, you might use prelude_connection_recv() to retrieve an event of type
+#PRELUDE_CONNECTION_POOL_EVENT_INPUT. And, you could, for example, if the retrieved message has
+the #PRELUDE_MSG_ID_IDMEF tag, provide the returned #prelude_msg_t object to idmef_message_read() 
+in order to convert the received message to a #idmef_message_t object.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+#prelude_connection_t
+idmef_message_read()
+</para>
+
+<!-- ##### ENUM prelude_connection_pool_flags_t ##### -->
+<para>
+
+</para>
+
+@PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT: 
+
+<!-- ##### ENUM prelude_connection_pool_event_t ##### -->
+<para>
+
+</para>
+
+@PRELUDE_CONNECTION_POOL_EVENT_INPUT: 
+@PRELUDE_CONNECTION_POOL_EVENT_DEAD: 
+@PRELUDE_CONNECTION_POOL_EVENT_ALIVE: 
+
+<!-- ##### TYPEDEF prelude_connection_pool_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION prelude_connection_pool_broadcast ##### -->
+<para>
+
+</para>
+
+@pool: 
+@msg: 
+
+
+<!-- ##### FUNCTION prelude_connection_pool_broadcast_async ##### -->
+<para>
+
+</para>
+
+@pool: 
+@msg: 
+
+
+<!-- ##### FUNCTION prelude_connection_pool_init ##### -->
+<para>
+
+</para>
+
+@pool: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@new: 
+
+
+<!-- ##### FUNCTION prelude_connection_pool_new ##### -->
+<para>
+
+</para>
+
+@ret: 
+@cp: 
+@capability: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_pool_get_connection_list ##### -->
+<para>
+
+</para>
+
+@pool: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_pool_add_connection ##### -->
+<para>
+
+</para>
+
+@pool: 
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_pool_set_connection_dead ##### -->
+<para>
+
+</para>
+
+@pool: 
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_pool_set_connection_alive ##### -->
+<para>
+
+</para>
+
+@pool: 
+@cnx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_pool_set_connection_string ##### -->
+<para>
+
+</para>
+
+@pool: 
+@cfgstr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_pool_get_connection_string ##### -->
+<para>
+
+</para>
+
+@pool: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_pool_destroy ##### -->
+<para>
+
+</para>
+
+@pool: 
+
+
+<!-- ##### FUNCTION prelude_connection_pool_set_flags ##### -->
+<para>
+
+</para>
+
+@pool: 
+@flags: 
+
+
+<!-- ##### FUNCTION prelude_connection_pool_set_data ##### -->
+<para>
+
+</para>
+
+@pool: 
+@data: 
+
+
+<!-- ##### FUNCTION prelude_connection_pool_get_data ##### -->
+<para>
+
+</para>
+
+@pool: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_pool_check_event ##### -->
+<para>
+
+</para>
+
+@pool: 
+@timeout: 
+@event_cb: 
+@extra: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_connection_pool_set_global_event_handler ##### -->
+<para>
+
+</para>
+
+@pool: 
+@wanted_events: 
+@callback: 
+<!-- # Unused Parameters # -->
+@events: 
+
+
+<!-- ##### FUNCTION prelude_connection_pool_set_event_handler ##### -->
+<para>
+
+</para>
+
+@pool: 
+@wanted_events: 
+@callback: 
+<!-- # Unused Parameters # -->
+@events: 
+
+

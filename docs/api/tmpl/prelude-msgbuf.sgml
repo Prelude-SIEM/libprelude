@@ -1,0 +1,120 @@
+<!-- ##### SECTION Title ##### -->
+prelude-msgbuf
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### TYPEDEF prelude_msgbuf_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM prelude_msgbuf_flags_t ##### -->
+<para>
+
+</para>
+
+@PRELUDE_MSGBUF_FLAGS_ASYNC: 
+
+<!-- ##### FUNCTION prelude_msgbuf_new ##### -->
+<para>
+
+</para>
+
+@msgbuf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msgbuf_destroy ##### -->
+<para>
+
+</para>
+
+@msgbuf: 
+
+
+<!-- ##### FUNCTION prelude_msgbuf_mark_end ##### -->
+<para>
+
+</para>
+
+@msgbuf: 
+
+
+<!-- ##### FUNCTION prelude_msgbuf_set ##### -->
+<para>
+
+</para>
+
+@msgbuf: 
+@tag: 
+@len: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msgbuf_get_msg ##### -->
+<para>
+
+</para>
+
+@msgbuf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msgbuf_set_callback ##### -->
+<para>
+
+</para>
+
+@msgbuf: 
+@send_msg: 
+
+
+<!-- ##### FUNCTION prelude_msgbuf_set_data ##### -->
+<para>
+
+</para>
+
+@msgbuf: 
+@data: 
+
+
+<!-- ##### FUNCTION prelude_msgbuf_get_data ##### -->
+<para>
+
+</para>
+
+@msgbuf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msgbuf_set_flags ##### -->
+<para>
+
+</para>
+
+@msgbuf: 
+@flags: 
+
+
+<!-- ##### FUNCTION prelude_msgbuf_get_flags ##### -->
+<para>
+
+</para>
+
+@msgbuf: 
+@Returns: 
+
+

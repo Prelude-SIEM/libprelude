@@ -1,0 +1,346 @@
+<!-- ##### SECTION Title ##### -->
+idmef-path
+
+<!-- ##### SECTION Short_Description ##### -->
+
+The High level IDMEF API.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+The IDMEF path API provide a methodes to define a "path" in the IDMEF tree. 
+Once this path is defined, the user might set or retrieve this path.
+
+</para>
+
+<para>
+Here is an example of how to use this API in order to set a given path within
+a #idmef_message_t root object:
+</para>
+
+<para>
+First, we need to create a path to the object we want to create. If for example,
+we wish to create the alert.classification.text path within our message, we will use:
+
+<programlisting>
+int ret;
+idmef_path_t *path;
+
+ret = idmef_path_new(&amp;path; "alert.classification.text");
+if ( ret &lt; 0 )
+        return ret;
+</programlisting>
+
+Using the above, we just created a "pointer" to a given path in our #idmef_message_t. This
+path doesn't yet exist, but might be used to read, or to write a value.
+
+<programlisting>
+int ret;
+idmef_value_t *value;
+
+ret = idmef_value_new_from_path(&amp;value, path, "A value");
+if ( ret &lt; 0 )
+        return ret;
+</programlisting>
+
+Here we just created a value applicable to the previously created path. That is, if our path
+is pointing to a value of type string, the created #idmef_value_t object will be of this type.
+
+<programlisting>
+idmef_message_t *msg;
+
+/* 
+ * create our top message 
+ */
+ret = idmef_message_new(&amp;idmef);
+
+/*
+ * Set the previously defined path to the previously created value
+ * in the top level idmef message 'message'.
+ */
+ret = idmef_path_set(path, message, value);
+</programlisting>
+
+And finally, we create our top level #idmef_message_t object and set the created #idmef_value_t 
+as the value for our created #idmef_path_t.
+</para>
+
+<para>
+
+Given our previous example, we can write the following function:
+
+<programlisting>
+static int set_idmef_path(idmef_message_t *message, const char *pathname, const char *value)
+{
+        int ret;
+        idmef_value_t *val;
+        idmef_path_t *path;
+        
+        ret = idmef_path_new(&amp;path, pathname);
+        if ( ret &lt; 0 )
+                return ret;
+
+        ret = idmef_value_new_from_path(&amp;val, path, value);
+        if ( ret &lt; 0 ) {
+                idmef_path_destroy(path);
+                return ret;
+        }
+
+        ret = idmef_path_set(message, path, val);
+
+        idmef_value_destroy(val);
+        idmef_path_destroy(path);
+        
+        return ret;
+}
+</programlisting>
+
+You will then be able to set any field of the IDMEF message using:
+
+<programlisting>
+idmef_message_t *idmef;
+
+ret = idmef_message_new(&amp;idmef);
+if ( ret &lt; 0 )
+        return ret;
+
+set_idmef_path(idmef, "alert.classification.text", "My classification text");
+set_idmef_path(idmef, "alert.classification.reference(0).name", "OSVDB-XXXX");
+set_idmef_path(idmef, "alert.classification.reference(0).origin", "osvdb");
+set_idmef_path(idmef, "alert.classification.reference(0).url", "http://my.url/");
+set_idmef_path(idmef, "alert.source(0).node.address(0).address", "127.0.0.1");
+</programlisting>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+#idmef_value_t for setting #idmef_path_t value.
+</para>
+
+<!-- ##### TYPEDEF idmef_path_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION idmef_path_get ##### -->
+<para>
+
+</para>
+
+@path: 
+@message: 
+@ret: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_path_set ##### -->
+<para>
+
+</para>
+
+@path: 
+@message: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_path_new ##### -->
+<para>
+
+</para>
+
+@path: 
+@format: 
+@Varargs: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_path_new_v ##### -->
+<para>
+
+</para>
+
+@path: 
+@format: 
+@args: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_path_new_fast ##### -->
+<para>
+
+</para>
+
+@path: 
+@buffer: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_path_get_class ##### -->
+<para>
+
+</para>
+
+@path: 
+@depth: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_path_get_value_type ##### -->
+<para>
+
+</para>
+
+@path: 
+@depth: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_path_set_index ##### -->
+<para>
+
+</para>
+
+@path: 
+@depth: 
+@index: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@number: 
+
+
+<!-- ##### FUNCTION idmef_path_undefine_index ##### -->
+<para>
+
+</para>
+
+@path: 
+@depth: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_path_get_index ##### -->
+<para>
+
+</para>
+
+@path: 
+@depth: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_path_make_child ##### -->
+<para>
+
+</para>
+
+@path: 
+@child_name: 
+@index: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_path_make_parent ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_path_destroy ##### -->
+<para>
+
+</para>
+
+@path: 
+
+
+<!-- ##### FUNCTION idmef_path_ncompare ##### -->
+<para>
+
+</para>
+
+@p1: 
+@p2: 
+@depth: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_path_compare ##### -->
+<para>
+
+</para>
+
+@p1: 
+@p2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_path_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_path_ref ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@object: 
+
+
+<!-- ##### FUNCTION idmef_path_get_name ##### -->
+<para>
+
+</para>
+
+@path: 
+@depth: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@object: 
+
+
+<!-- ##### FUNCTION idmef_path_is_ambiguous ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@object: 
+
+
+<!-- ##### FUNCTION idmef_path_has_lists ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@object: 
+
+
+<!-- ##### FUNCTION idmef_path_get_depth ##### -->
+<para>
+
+</para>
+
+@path: 
+@Returns: 
+
+

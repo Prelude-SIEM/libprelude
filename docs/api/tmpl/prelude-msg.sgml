@@ -1,0 +1,231 @@
+<!-- ##### SECTION Title ##### -->
+prelude-msg
+
+<!-- ##### SECTION Short_Description ##### -->
+Prelude Messaging API
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+This Mesaging API is used for differents Prelude program to communicate
+together. It feature compatibility between version, and use a way to describe
+data similar to XML.
+</para>
+
+<para>
+The Message header contain the protocol version, which is only to be used
+in case the main protocol structure change (compatibility break), The tag 
+describe the kind of message, The fragment field may be used if a message 
+is sent in several time, The priority may be used by the receiving end 
+to priorityze task, The datalen contain the size of the whole message in 
+network byte order
+
+<programlisting>
+
+   8bits    8bits   8bits     8bits                32bits
++--------+--------+--------+----------+------------------------------+
+|version |   tag  |priority| fragment |            datalen           |
++--------+--------+--------+----------+------------------------------+
+
+</programlisting>
+</para>
+
+
+<para>
+Then the message itself contain submessage composed of :
+
+A tag describing the kind of payload, the len of the payload (in network byte order),
+the payload itself, and an end of message byte (0xff) in order to resynchronize in 
+case of problem.
+
+<programlisting>
+
+  8bits              32bits                                   8bits
++--------+--------------------------------+-----------------+--------+
+|  tag   |             len                |     payload     |  0xff  |                     
++--------+--------------------------------+-----------------+--------+
+
+</programlisting>
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+prelude-msgbuf
+</para>
+
+<!-- ##### TYPEDEF prelude_msg_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM prelude_msg_priority_t ##### -->
+<para>
+
+</para>
+
+@PRELUDE_MSG_PRIORITY_NONE: 
+@PRELUDE_MSG_PRIORITY_LOW: 
+@PRELUDE_MSG_PRIORITY_MID: 
+@PRELUDE_MSG_PRIORITY_HIGH: 
+
+<!-- ##### FUNCTION prelude_msg_read ##### -->
+<para>
+
+</para>
+
+@msg: 
+@pio: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msg_forward ##### -->
+<para>
+
+</para>
+
+@msg: 
+@dst: 
+@src: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msg_get ##### -->
+<para>
+
+</para>
+
+@msg: 
+@tag: 
+@len: 
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msg_recycle ##### -->
+<para>
+
+</para>
+
+@msg: 
+
+
+<!-- ##### FUNCTION prelude_msg_mark_end ##### -->
+<para>
+
+</para>
+
+@msg: 
+
+
+<!-- ##### FUNCTION prelude_msg_dynamic_new ##### -->
+<para>
+
+</para>
+
+@ret: 
+@flush_msg_cb: 
+@data: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@tag: 
+@priority: 
+
+
+<!-- ##### FUNCTION prelude_msg_new ##### -->
+<para>
+
+</para>
+
+@ret: 
+@msgcount: 
+@msglen: 
+@tag: 
+@priority: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msg_set ##### -->
+<para>
+
+</para>
+
+@msg: 
+@tag: 
+@len: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msg_write ##### -->
+<para>
+
+</para>
+
+@msg: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msg_set_tag ##### -->
+<para>
+
+</para>
+
+@msg: 
+@tag: 
+
+
+<!-- ##### FUNCTION prelude_msg_set_priority ##### -->
+<para>
+
+</para>
+
+@msg: 
+@priority: 
+
+
+<!-- ##### FUNCTION prelude_msg_get_tag ##### -->
+<para>
+
+</para>
+
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msg_get_version ##### -->
+<para>
+
+</para>
+
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msg_get_priority ##### -->
+<para>
+
+</para>
+
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msg_get_len ##### -->
+<para>
+
+</para>
+
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msg_get_datalen ##### -->
+<para>
+
+</para>
+
+@msg: 
+@Returns: 
+
+
