@@ -1,37 +1,61 @@
-EXTRA_DIST = libprelude.i perl/Makefile.PL perl/Prelude.pm python/setup.py python/prelude.py
-
-
-if HAVE_SWIG
+EXTRA_DIST = libprelude.i perl/Makefile.PL perl/Prelude.pm perl/Prelude.c python/setup.py python/prelude.py python/_prelude.c
 
 all-am: perl python
 
 
+if HAVE_PERL
+perl: perl/Prelude.c perl/Makefile perl-build
+else
+perl:
+endif
 
-perl: perl/Prelude.c perl/Makefile
-	cd perl && make
 
-perl/Prelude.c: libprelude.i
-	swig -I$(top_srcdir)/src/include -o $@ -perl5 -nopm $<
+if HAVE_PYTHON
+python: python/_prelude.c python-build
+else
+python:
+endif
+
+
 
 perl/Makefile: perl/Makefile.PL
 	cd perl && perl Makefile.PL
 
-
-
-python: python/_prelude.c
-	cd python && python setup.py build
+perl/Prelude.c: libprelude.i
+if HAVE_SWIG
+	swig -I$(top_srcdir)/src/include -o $@ -perl5 -nopm $<
+endif
 
 python/_prelude.c: libprelude.i
+if HAVE_SWIG
 	swig -I$(top_srcdir)/src/include -o $@ -python -interface _prelude -module _prelude -noproxy $<
+endif
+
+
+perl-build:
+	cd perl && $(MAKE)
+
+python-build:
+	cd python && python setup.py build
 
 
 
 install-exec-hook:
-	cd perl && make install
+if HAVE_PERL
+	cd perl && $(MAKE) install
+endif
+
+if HAVE_PYTHON
 	cd python && python setup.py install
+endif
+
+
 
 clean-am: perl/Makefile
-	cd perl && make clean
-	cd python && python setup.py clean
+if HAVE_PERL
+	cd perl && $(MAKE) clean
+endif
 
+if HAVE_PYTHON
+	cd python && python setup.py clean -a
 endif
