@@ -182,7 +182,7 @@ static int read_option_request(prelude_client_t *client, prelude_msgbuf_t *msgbu
         uint32_t request_id;
         uint64_t source_id;
 
-        while ( prelude_msg_get(msg, &tag, &len, &buf) > 0 ) {
+        while ( prelude_msg_get(msg, &tag, &len, &buf) == 0 ) {
 
                 switch (tag) {
                 case PRELUDE_MSG_OPTION_LIST:
@@ -280,7 +280,7 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
         if ( ! opt )
                 return -1;
         
-        while ( (ret = prelude_msg_get(msg, &tag, &dlen, &buf)) > 0 ) {
+        while ( (ret = prelude_msg_get(msg, &tag, &dlen, &buf)) == 0 ) {
                 
                 switch (tag) {
                 
@@ -424,7 +424,7 @@ int prelude_option_recv_reply(prelude_msg_t *msg, uint64_t *source_id, uint32_t 
         
         *value = NULL;
 
-        while ( (ret = prelude_msg_get(msg, &tag, &dlen, &buf)) ) {
+        while ( (ret = prelude_msg_get(msg, &tag, &dlen, &buf)) == 0 ) {
 
                 switch (tag) {
 
