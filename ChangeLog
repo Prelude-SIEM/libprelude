@@ -1,5 +1,12 @@
 2003-12-18  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
+	* src/prelude-io.c:
+	(is_tcp_connection_still_established)
+	handle the case where poll returns 0 (which means that
+	no fd have been selected)
+
+2003-12-18  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
 	* src/prelude-strbuf.c:
 	* src/include/prelude-strbuf.h:
 	(prelude_strbuf_cat)

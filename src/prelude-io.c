@@ -68,14 +68,20 @@ static int is_tcp_connection_still_established(int fd)
 {
         int pending;
 	struct pollfd pfd;
+	int ret;
 
 	pfd.fd = fd;
 	pfd.events = POLLIN;
 
-	if ( poll(&pfd, 1, 0) < 0 ) {
+	ret = poll(&pfd, 1, 0);
+
+	if ( ret < 0 ) {
 		log(LOG_ERR, "poll on tcp socket failed.\n");
 		return -1;
 	}
+
+	if ( ret == 0 )
+		return 0;
 
 	if ( pfd.revents & POLLERR ) {
 		log(LOG_ERR, "error polling tcp socket.\n");
