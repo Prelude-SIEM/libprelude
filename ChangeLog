@@ -1,5 +1,8 @@
 2002-05-21  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* sensor-adduser/sensor-adduser.c (handle_argument): 
+	explain better what the different command line option does.
+
 	* src/client-ident.c: include stdlib.h.
 
 2002-5-17  Baptiste Malguy <baptiste@malguy.net>

@@ -244,13 +244,13 @@ static int handle_argument(int argc, char **argv)
         prelude_option_add(NULL, CLI_HOOK, 'h', "help", "Print this help",
                            no_argument, print_help, NULL);
         
-        prelude_option_add(NULL, CLI_HOOK, 's', "sensorname", "Sensor name",
+        prelude_option_add(NULL, CLI_HOOK, 's', "sensorname", "Name of the sensor to register",
                            required_argument, set_sensor_name, NULL);
         
-        prelude_option_add(NULL, CLI_HOOK, 'u', "uid", "Sensor user ID",
+        prelude_option_add(NULL, CLI_HOOK, 'u', "uid", "UserID used by the sensor to regieter",
                            required_argument, set_sensor_uid, NULL);
 
-        prelude_option_add(NULL, CLI_HOOK, 'm', "manager-addr", "Manager address",
+        prelude_option_add(NULL, CLI_HOOK, 'm', "manager-addr", "Address where the Prelude Manager is listening",
                            required_argument, set_manager_addr, NULL);
         
         ret = prelude_option_parse_arguments(NULL, NULL, argc, argv);
