@@ -331,7 +331,7 @@ ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count)
         pfd.events = POLLIN;
         
         do {
-                ret = poll(&pfd, 1, 10000);                
+                ret = poll(&pfd, 1, -1);                
                 if ( ret <= 0 )
                         return -1;
 
