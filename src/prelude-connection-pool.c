@@ -141,6 +141,22 @@ struct prelude_connection_pool {
 
 
 
+static int do_send(prelude_connection_t *conn, prelude_msg_t *msg)
+{
+        int ret;
+
+        /*
+         * handle EAGAIN in case the caller use non blocking IO.
+         */
+        do {
+                ret = prelude_connection_send(conn, msg);
+        } while ( ret < 0 && prelude_error_get_code(ret) == EAGAIN );
+
+        return ret;
+}
+
+
+
 static int get_connection_backup_path(prelude_connection_t *cn, const char *path, char **out)
 {
         int ret;
@@ -329,10 +345,7 @@ static void broadcast_message(prelude_msg_t *msg, cnx_t *cnx)
         
         if ( prelude_connection_is_alive(cnx->cnx) ) {
 
-                do {
-                        ret = prelude_connection_send(cnx->cnx, msg);
-                } while ( ret < 0 && prelude_error_get_code(ret) == EAGAIN );
-                
+                ret = do_send(cnx->cnx, msg);                
                 if ( ret < 0 )
                         notify_dead(cnx, ret, FALSE);
         }
@@ -409,7 +422,7 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
                                 break;
                         }
                 } else {
-                        ret = prelude_connection_send(cnx->cnx, msg);                        
+                        ret = do_send(cnx->cnx, msg);
                         if ( ret < 0 ) {
                                 notify_dead(cnx, ret, FALSE);
                                 break;
