@@ -300,6 +300,20 @@ typedef struct {
         (type *) list_entry(listentry, prelude_linked_object_t, list)
 </MACRO>
 <MACRO>
+<NAME>pthread_create</NAME>
+#define pthread_create gprof_pthread_create
+</MACRO>
+<FUNCTION>
+<NAME>start_routine</NAME>
+<RETURNS>return  </RETURNS>
+arg
+</FUNCTION>
+<FUNCTION>
+<NAME>gprof_pthread_create</NAME>
+<RETURNS>int  </RETURNS>
+pthread_t *thread, pthread_attr_t *attr,void *(*start_routine)(void *), void *arg){int ret;thread_wrapper_t wrapper_data;wrapper_data.arg = arg;wrapper_data.start_routine = start_routine;getitimer(ITIMER_PROF, &wrapper_data.itimer
+</FUNCTION>
+<MACRO>
 <NAME>SSL_REGISTRATION_MSG_H</NAME>
 #define SSL_REGISTRATION_MSG_H
 </MACRO>
@@ -703,21 +717,6 @@ plugin_generic_t *plugin, plugin_option_t *cfg, const char *conffile
 #define list_for_each(pos, head) \
 	for (pos = (head)->next; pos != (head); pos = pos->next)
 </MACRO>
-<MACRO>
-<NAME>PRELUDE_OPTION_GENERIC</NAME>
-#define PRELUDE_OPTION_GENERIC             \
-        prelude_optlist_t optlist;         \
-        struct list_head list;             \
-                                           \
-        int flags;                         \
-        char shortopt;                     \
-        const char *longopt;               \
-        const char *description;           \
-        prelude_option_argument_t has_arg; \
-                                           \
-        int cb_called;                     \
-        int (*set)(const char *optarg)
-</MACRO>
 <FUNCTION>
 <NAME>prelude_sensor_send_alert</NAME>
 <RETURNS>void  </RETURNS>
@@ -817,6 +816,19 @@ prelude_optlist_t *optlist
 <NAME>prelude_option_destroy</NAME>
 <RETURNS>void  </RETURNS>
 prelude_optlist_t *optlist
+</FUNCTION>
+<MACRO>
+<NAME>OPT_INVAL</NAME>
+#define OPT_INVAL     0x1
+</MACRO>
+<MACRO>
+<NAME>OPT_INVAL_ARG</NAME>
+#define OPT_INVAL_ARG 0x2
+</MACRO>
+<FUNCTION>
+<NAME>prelude_option_set_warnings</NAME>
+<RETURNS>void  </RETURNS>
+int flags, int *old_flags
 </FUNCTION>
 <MACRO>
 <NAME>IDMEF_VERSION</NAME>
@@ -1294,23 +1306,6 @@ prelude_msg_t *msg
 <RETURNS>void  </RETURNS>
 prelude_msg_t *msg
 </FUNCTION>
-<MACRO>
-<NAME>extract_int</NAME>
-#define extract_int(type, buf, blen, dst) do {                                              \
-        int ret;                                                                            \
-        ret = extract_ ## type (&dst, buf, blen);                                           \
-        if ( ret < 0 ) {                                                                    \
-                const char *string = type;
-</MACRO>
-<MACRO>
-<NAME>extract_string</NAME>
-#define extract_string(buf, blen, dst)                                    \
-        dst = extract_str(buf, blen);                                     \
-        if ( ! dst ) {                                                    \
-               log(LOG_ERR, "Datatype error, buffer is not a string.\n"); \
-               return -1;                                                 \
-        }                                                                 
-</MACRO>
 <TYPEDEF>
 <NAME>bm_string_t</NAME>
 typedef struct {

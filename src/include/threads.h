@@ -70,8 +70,8 @@ static void *wrapper_routine(void *data)
  * Same prototype as pthread_create; use some #define magic to
  * transparently replace it in other files
  */
-int gprof_pthread_create(pthread_t *thread, pthread_attr_t *attr,
-                         void *(*start_routine)(void *), void *arg)
+static int gprof_pthread_create(pthread_t *thread, pthread_attr_t *attr,
+                                void *(*start_routine)(void *), void *arg)
 {
         int ret;
         thread_wrapper_t wrapper_data;
