@@ -1,3 +1,11 @@
+2002-02-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-message.c (prelude_msg_write): 
+	don't send empty message. 
+
+	* sensor-adduser/sensor-adduser.c (set_manager_addr): 
+	fix a bug when parsing provided Manager address.
+
 2002-02-04  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* sensor-adduser is back from the dead.

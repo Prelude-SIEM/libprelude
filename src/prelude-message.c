@@ -533,6 +533,12 @@ int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst)
         uint32_t dlen = msg->write_index;
 
         /*
+         * no need to send... There's no data in this message.
+         */
+        if ( msg->write_index == PRELUDE_MSG_HDR_SIZE )
+                return 0;
+        
+        /*
          * if the message header index is 0 (write called, without
          * prelude_msg_mark_end()), or if the is_fragment flag is set,
          * mark end of the message, cause the caller didn't do it in theses case.

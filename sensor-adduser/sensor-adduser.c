@@ -80,7 +80,7 @@ static int set_manager_addr(const char *optarg)
 
         ptr = strchr(addr, ':');
         if ( ptr ) {
-                *ptr = '\0';
+                *ptr++ = '\0';
                 port = atoi(ptr);
         } 
         
