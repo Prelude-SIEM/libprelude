@@ -113,6 +113,27 @@ CPPFLAGS=$old_CPPFLAGS
 
 
 dnl **************************************************
+dnl * Check for GnuTLS extra.                        *
+dnl **************************************************
+AC_PATH_GENERIC(libgnutls-extra, , enable_gnutls_extra=yes, enable_gnutls_extra=no)
+
+if test x$enable_gnutls_extra != xyes; then
+	AC_MSG_ERROR(libgnutls-extra is required in order to build libprelude.)
+fi
+
+AC_SUBST(LIBGNUTLS_EXTRA_LIBS)
+AC_SUBST(LIBGNUTLS_EXTRA_CFLAGS)
+
+old_CPPFLAGS=$CPPFLAGS
+CPPFLAGS="$libprelude_cflags $LIBGNUTLS_EXTRA_CFLAGS"
+
+AC_CHECK_HEADER(gnutls/extra.h, ,
+       		AC_MSG_ERROR("libgnutls-extra development headers are required to build libprelude"))
+CPPFLAGS=$old_CPPFLAGS
+
+
+
+dnl **************************************************
 dnl * Check for Pthread library                      *
 dnl **************************************************
 

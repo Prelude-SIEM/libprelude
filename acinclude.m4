@@ -3,8 +3,8 @@ AC_DEFUN(AC_REAL_PATH_GENERIC,
 dnl
 dnl we're going to need uppercase, lowercase and user-friendly versions of the
 dnl string `LIBRARY'
-pushdef([UP], translit([$1], [a-z], [A-Z]))dnl
-pushdef([DOWN], translit([$1], [A-Z], [a-z]))dnl
+pushdef([UP], translit([$1], [a-z-], [A-Z_]))dnl
+pushdef([DOWN], translit([$1], [A-Z-], [a-z_]))dnl
 
 dnl
 dnl Get the cflags and libraries from the LIBRARY-config script
@@ -164,4 +164,3 @@ AC_CHECK_TYPE([$2], , [
 
 ], [$1])
 ])
-
