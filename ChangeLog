@@ -1,3 +1,9 @@
+2001-12-14  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/include/prelude-ident.h: 
+	* src/prelude-ident.c: new ident API. Use to generate unique 
+	64 bits ident, remembered across program run (usage of memory mapped IO).
+
 2001-12-13  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* sensor-adduser/Makefile.am: 

@@ -23,6 +23,7 @@ libprelude_la_SOURCES = 		\
 	prelude-io.c			\
 	prelude-message.c		\
 	prelude-async.c			\
+	prelude-ident.c			\
 	sensor.c			\
 	common.c
 
