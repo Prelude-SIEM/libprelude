@@ -201,8 +201,12 @@ static ssize_t ssl_write(prelude_io_t *pio, const void *buf, size_t count)
 
 static int ssl_close(prelude_io_t *pio) 
 {
-        int ret;
+        int ret, fd;
 
+        fd = SSL_get_fd(pio->fd_ptr);
+
+        close(fd);
+        
         ret = SSL_shutdown(pio->fd_ptr);
         if ( ret <= 0 )
                 return -1;
@@ -561,6 +565,7 @@ void prelude_io_set_ssl_io(prelude_io_t *pio, void *ssl)
 void prelude_io_set_sys_io(prelude_io_t *pio, int fd) 
 {
         pio->fd = fd;
+        pio->fd_ptr = NULL;
         pio->read = sys_read;
         pio->write = sys_write;
         pio->close = sys_close;
@@ -579,6 +584,17 @@ int prelude_io_get_fd(prelude_io_t *pio)
         return pio->fd;
 }
 
+
+/**
+ * prelude_io_get_fdptr:
+ * @pio: A pointer on a #prelude_io_t object.
+ *
+ * Returns: Pointer associated with this object (file, ssl, or NULL).
+ */
+void *prelude_io_get_fdptr(prelude_io_t *pio) 
+{
+        return pio->fd_ptr;
+}
 
 
 
