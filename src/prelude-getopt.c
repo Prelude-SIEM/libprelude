@@ -519,7 +519,6 @@ static int parse_argument(struct list_head *cb_list,
         char optarg[256];
         prelude_option_t *opt;
         const char *arg, *old;
-        int saved_index = 0, tmp;
         
         while ( optlist->argv_index < argc ) {
                 
@@ -550,14 +549,25 @@ static int parse_argument(struct list_head *cb_list,
 
                 
                 argv[optlist->argv_index - 1] = "";
+
+                ret = check_option(optlist, opt, optarg, sizeof(optarg), argc, argv);
+                if ( ret < 0 ) 
+                        return -1;
+                
+                if ( opt->set ) {
+                        opt->called_from_cli = 1;
+                        
+                        ret = call_option_cb(cb_list, opt, optarg);
+                        if ( ret == prelude_option_end || ret == prelude_option_error )
+                                return ret;        
+                }
                 
                 /*
                  * If the option we just found have sub-option.
                  * Try to match the rest of our argument against them.
                  */
                 if ( ! list_empty(&opt->optlist.optlist) ) {
-                        saved_index = optlist->argv_index;
-
+                       
                         if ( opt->has_arg == required_argument ||
                              (opt->has_arg == optionnal_argument && *argv[optlist->argv_index + 1] == '-') ) 
                                 opt->optlist.argv_index = optlist->argv_index + 1;
@@ -571,34 +581,6 @@ static int parse_argument(struct list_head *cb_list,
                                 return ret;
     
                         optlist->argv_index = opt->optlist.argv_index;
-                }
-
-                                
-                /*
-                 * check option *after* sub-option, so the caller can do some kind
-                 * of dependancy between option. We use the saved argument index, because
-                 * suboption parsing could have incremented the argument index.
-                 */
-                tmp = 0;
-                if ( saved_index ) {
-                        tmp = optlist->argv_index;
-                        optlist->argv_index = saved_index;
-                        saved_index = 0;
-                }
-
-                ret = check_option(optlist, opt, optarg, sizeof(optarg), argc, argv);
-                if ( ret < 0 ) 
-                        return -1;
-                
-                if ( tmp ) 
-                        optlist->argv_index = tmp;
-                                
-                if ( opt->set ) {
-                        opt->called_from_cli = 1;
-                        
-                        ret = call_option_cb(cb_list, opt, optarg);
-                        if ( ret == prelude_option_end || ret == prelude_option_error )
-                                return ret;        
                 }
         }
         
