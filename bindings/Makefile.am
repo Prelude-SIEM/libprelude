@@ -1,4 +1,4 @@
-EXTRA_DIST = libprelude.i perl/Makefile.PL perl/Prelude.pm perl/Prelude.c python/setup.py python/prelude.py python/_prelude.c
+EXTRA_DIST = libprelude.i perl/Makefile.PL.in perl/Prelude.pm perl/Prelude.c python/setup.py.in	 python/prelude.py python/_prelude.c
 
 all-am: perl python
 
