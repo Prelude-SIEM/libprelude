@@ -324,6 +324,9 @@ static int do_set(prelude_option_t *opt, const char *value, prelude_string_t *ou
                 
         if ( ! opt->set )
                 return 0;
+
+        if ( value && ! *value )
+                value = NULL;
         
         ret = opt->set(opt, value, out, *context);        
         if ( ret < 0 )
