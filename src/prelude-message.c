@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -85,32 +85,64 @@ static void msg_write_destroy(prelude_msg_t *msg)
 
 
 
-
-static int read_message_header(prelude_msg_t *msg, prelude_io_t *pio) 
+inline static prelude_msg_status_t read_message_data(unsigned char *dst, size_t *size, prelude_io_t *fd) 
 {
-        int ret;
+        ssize_t ret;
         
         /*
          * Read the whole header.
          */
-        ret = prelude_io_read(pio, &msg->hdrbuf[msg->read_index], PRELUDE_MSG_HDR_SIZE - msg->read_index);        
+        ret = prelude_io_read(fd, dst, *size);
         if ( ret < 0 ) {
                 log(LOG_ERR, "error reading message.\n");
                 return prelude_msg_error;
         }
 
-        else if ( ret == 0 )
+        *size = ret;
+        
+        if ( ret == 0 )
                 return prelude_msg_eof;
         
-        msg->read_index += ret;
+        else if ( ret != *size )
+                return prelude_msg_unfinished;
+        
+        return prelude_msg_finished;
+}
+
+
+
+inline static void slice_message_header(prelude_msg_hdr_t *hdr, unsigned char *hdrbuf) 
+{
+        hdr->version  = hdrbuf[0];
+        hdr->tag      = hdrbuf[1];
+        hdr->priority = hdrbuf[2];
+        hdr->datalen  = *((uint32_t *) &hdrbuf[3]);
+}
+
+
+
+
+static prelude_msg_status_t read_message_header(prelude_msg_t *msg, prelude_io_t *fd) 
+{
+        prelude_msg_status_t status;
+        size_t count = PRELUDE_MSG_HDR_SIZE - msg->read_index;
+        unsigned char *hdrptr = &msg->hdrbuf[msg->read_index];
+
+        status = read_message_data(hdrptr, &count, fd);
+
+        msg->read_index += count;
+        
+        if ( status != prelude_msg_finished )
+                return status;
         
         if ( msg->read_index < PRELUDE_MSG_HDR_SIZE )
                 return prelude_msg_unfinished;
-                
-        msg->hdr.version  = msg->hdrbuf[0];
-        msg->hdr.tag      = msg->hdrbuf[1];
-        msg->hdr.priority = msg->hdrbuf[2];
-        msg->hdr.datalen  = *((uint32_t *) &msg->hdrbuf[3]);
+
+        /*
+         * we have a full header. Move it from our buffer
+         * into a real header structure.
+         */
+        slice_message_header(&msg->hdr, msg->hdrbuf);
         
         /*
          * Check protocol version.
@@ -125,7 +157,7 @@ static int read_message_header(prelude_msg_t *msg, prelude_io_t *pio)
         msg->write_index = msg->hdr.datalen; /* we might want to send this msg later */
         
         msg->payload = malloc(msg->hdr.datalen);
-        if (! msg->payload ) {
+        if ( ! msg->payload ) {
                 log(LOG_ERR, "couldn't allocate %d bytes.\n", msg->hdr.datalen);
                 return prelude_msg_error;
         }
@@ -136,31 +168,24 @@ static int read_message_header(prelude_msg_t *msg, prelude_io_t *pio)
 
 
 
-static int read_message_content(prelude_msg_t *msg, prelude_io_t *pio) 
+static int read_message_content(prelude_msg_t *msg, prelude_io_t *fd) 
 {
-        int ret;
         size_t count;
+        prelude_msg_status_t status;
         
         count = msg->hdr.datalen - msg->read_index;
+        status = read_message_data(&msg->payload[msg->read_index], &count, fd);
+
+        msg->read_index += count;
         
-        ret = prelude_io_read(pio, &msg->payload[msg->read_index], count);        
-        if ( ret < 0 ) {
-                log(LOG_ERR, "error reading message content (%d).\n", count);
-                return prelude_msg_error;
+        if ( status == prelude_msg_finished ) {
+                /*
+                 * reset so that we can read again from buffer.
+                 */
+                msg->read_index = PRELUDE_MSG_HDR_SIZE; 
         }
 
-        else if ( ret == 0 )
-                /* EOF should not happen in the middle of a message */
-                return prelude_msg_error;
-
-        msg->read_index += ret;
-
-        if ( msg->read_index == msg->hdr.datalen ) {
-                msg->read_index = PRELUDE_MSG_HDR_SIZE;
-                return prelude_msg_finished;
-        }
-        
-        return prelude_msg_unfinished;
+        return status;
 }
 
 
@@ -179,8 +204,12 @@ static int read_message_content(prelude_msg_t *msg, prelude_io_t *pio)
  */
 prelude_msg_status_t prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio) 
 {
-        int ret = 0;
-        
+        prelude_msg_status_t status = prelude_msg_finished;
+
+        /*
+         * *msg is NULL,
+         * this mean the caller want to work on a new message.
+         */
         if ( ! *msg ) {                
                 *msg = malloc(sizeof(prelude_msg_t));
                 if ( ! *msg ) {
@@ -193,26 +222,50 @@ prelude_msg_status_t prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
                 (*msg)->payload = NULL;
                 (*msg)->destroy = msg_read_destroy;
         }
-        
+
+        /*
+         * Payload pointer is not allocated yet.
+         * We didn't finished reading the message header yet.
+         */
         if ( ! (*msg)->payload ) {
-                ret = read_message_header(*msg, pio);
-                if ( ret == prelude_msg_error || ret == prelude_msg_eof ) {
+
+                status = read_message_header(*msg, pio);
+
+                if ( status == prelude_msg_error || status == prelude_msg_eof ) {
+                        prelude_msg_destroy(*msg);
+                        /*
+                         * reset message to NULL, because the caller might not take
+                         * care of the return value enough (and may call us again with an
+                         * undefined *msg address.
+                         */
+                        *msg = NULL;
+                        return status;
+                }
+        }
+
+        /*
+         * Notice that status is initialized to prelude_msg_finished
+         * so that we will read the message if this function is called
+         * and we already read the header.
+         *
+         * In case read_message_header return prelude_msg_unfinished,
+         * we don't want to try to read the rest of the message right now,
+         * as it is unlikely we can read something.
+         *
+         * In case it return prelude_msg_finished, there is some chance
+         * there are other data waiting to be read.
+         */
+        if ( (*msg)->payload && status == prelude_msg_finished ) {
+
+                status = read_message_content(*msg, pio);
+                
+                if ( status == prelude_msg_error || status == prelude_msg_eof ) {
                         prelude_msg_destroy(*msg);
                         *msg = NULL;
-                        return ret;
                 }
         }
         
-        if ( (*msg)->payload && (*msg)->hdr.datalen > PRELUDE_MSG_HDR_SIZE ) {
-                ret = read_message_content(*msg, pio);
-                if ( ret == prelude_msg_error || ret == prelude_msg_eof ) {
-                        prelude_msg_destroy(*msg);
-                        *msg = NULL;
-                        return ret;
-                }
-        }
-        
-        return ret;
+        return status;
 }
 
 
@@ -234,21 +287,35 @@ prelude_msg_status_t prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
  * an error occured.
  */
 int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf) 
-{
-        if ( msg->read_index == msg->hdr.datalen ) 
-                return 0; /* no more sub - messages */
-        
+{        
+        if ( msg->read_index == msg->hdr.datalen )
+                /*
+                 * no more sub - messages in the buffer.
+                 */
+                return 0;
+
+        /*
+         * bound check our buffer,
+         * so that we won't overflow if it doesn't contain tag and len.
+         */        
         if ( (msg->read_index + 5) > msg->hdr.datalen ) {
                 log(LOG_ERR, "buffer size (%d) is too short to contain another message.\n",
                     msg->hdr.datalen);
                 return -1;
         }
-             
+
+        /*
+         * slice wanted data.
+         */
         *tag = msg->payload[msg->read_index++];
         *len = *(uint32_t *)&msg->payload[msg->read_index];
         *len = ntohl(*len);
-        msg->read_index += 4;
         
+        msg->read_index += 4;
+
+        /*
+         * bound check again, against specified len + end of message.
+         */
         if ( (msg->read_index + *len + 1) > msg->hdr.datalen ) {
                 log(LOG_ERR, "message len (%d) overflow our buffer size (%d).\n",
                     (msg->read_index + *len + 1), msg->hdr.datalen);

@@ -1,5 +1,7 @@
 2002-01-14  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/prelude-message.c: lot of cleanup, code comment.
+
 	* src/prelude-io.c (prelude_io_get_fdptr): 
 	new function. Return file or ssl pointer associated with
 	this file descriptor.
