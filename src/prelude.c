@@ -31,11 +31,6 @@
 #include "prelude-option.h"
 
 
-void _idmef_path_cache_lock(void);
-void _idmef_path_cache_unlock(void);
-void _idmef_path_cache_destroy(void);
-
-
 int _prelude_internal_argc = 0;
 char *_prelude_internal_argv[1024];
 extern pthread_mutex_t _criteria_parse_mutex;
