@@ -117,7 +117,7 @@ void idmef_send_additional_data(prelude_msgbuf_t *msg, idmef_additional_data_t *
         prelude_msgbuf_set(msg, MSG_ADDITIONALDATA_TAG, 0, NULL);
         idmef_send_uint32(msg, MSG_ADDITIONALDATA_TYPE, data->type);
         idmef_send_string(msg, MSG_ADDITIONALDATA_MEANING, &data->meaning);
-        idmef_send_string(msg, MSG_ADDITIONALDATA_DATA, &data->data);
+        prelude_msgbuf_set(msg, MSG_ADDITIONALDATA_DATA, data->dlen, data->data);
         prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
        

@@ -1,3 +1,15 @@
+2002-05-30  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/include/idmef-tree-func.h (idmef_additional_data_set_data): 
+	new inline function.
+
+	* src/idmef-msg-send.c (idmef_send_additional_data): 
+	don't use idmef_send_string for AdditionalData data
+	field.
+
+	* src/include/idmef-tree.h: AdditionalData data
+	field is not an idmef_string_t...
+
 2002-05-30  Laurent Oudot  <oudot.laurent@wanadoo.fr>
 	
 	* sensor-adduser/sensor-adduser.c:

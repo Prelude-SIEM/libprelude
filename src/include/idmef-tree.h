@@ -80,10 +80,11 @@ typedef struct {
         struct list_head list;
         idmef_additional_data_type_t type;
         idmef_string_t meaning;
-        idmef_string_t data;
+
+        uint32_t dlen;
+        const void *data;
+        
 } idmef_additional_data_t;
-
-
 
 
 

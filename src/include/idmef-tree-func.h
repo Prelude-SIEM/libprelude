@@ -142,4 +142,18 @@ void idmef_additional_data_free(idmef_additional_data_t *data);
 	(s)->string = (str); (s)->len = strlen((str)) + 1; \
 } while (0)
 
+
+/*
+ * special case for additional data.
+ */
+inline static void
+idmef_additional_data_set_data(idmef_additional_data_t *ad,
+                               idmef_additional_data_type_t type, const void *data, uint32_t dlen) 
+{
+        ad->type = type;
+        ad->dlen = dlen;
+        ad->data = data;
+}
+
+
 #endif /* _LIBPRELUDE_IDMEF_TREE_FUNC_H */

@@ -186,6 +186,10 @@ const char *variable
 #define PRELUDE_MSG_AUTH        4
 </MACRO>
 <MACRO>
+<NAME>PRELUDE_MSG_CM</NAME>
+#define PRELUDE_MSG_CM          5 
+</MACRO>
+<MACRO>
 <NAME>PRELUDE_MSG_ID_DECLARE</NAME>
 #define PRELUDE_MSG_ID_DECLARE  0
 </MACRO>
@@ -224,6 +228,22 @@ const char *variable
 <MACRO>
 <NAME>PRELUDE_MSG_AUTH_EXIST</NAME>
 #define PRELUDE_MSG_AUTH_EXIST     8
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_CM_FIREWALL</NAME>
+#define PRELUDE_MSG_CM_FIREWALL 0
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_CM_THROTTLE</NAME>
+#define PRELUDE_MSG_CM_THROTTLE 1
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_CM_ISLAND</NAME>
+#define PRELUDE_MSG_CM_ISLAND   2
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_CM_FEATURE</NAME>
+#define PRELUDE_MSG_CM_FEATURE  3
 </MACRO>
 <FUNCTION>
 <NAME>prelude_log_use_syslog</NAME>
@@ -896,6 +916,11 @@ prelude_timer_t *timer, struct timeval *tv
 void
 </FUNCTION>
 <FUNCTION>
+<NAME>timer_flush</NAME>
+<RETURNS>void  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_realloc</NAME>
 <RETURNS>void  *</RETURNS>
 void *ptr, size_t size
@@ -1447,6 +1472,12 @@ idmef_additional_data_t *data
 } while (0)
 </MACRO>
 <MACRO>
+<NAME>idmef_data_set</NAME>
+#define idmef_data_set(ad, dptr, len) do {                 \
+        (ad)->data = dptr; (ad)->dlen = (len);             \
+} while (0)
+</MACRO>
+<MACRO>
 <NAME>IDMEF_VERSION</NAME>
 #define IDMEF_VERSION "0.6"
 </MACRO>
@@ -1497,7 +1528,15 @@ typedef struct {
         struct list_head list;
         idmef_additional_data_type_t type;
         idmef_string_t meaning;
-        idmef_string_t data;
+
+        /*
+         * this is the same as idmef_string_t,
+         * except we use a void... Doing that to not
+         * break the API...
+         */
+        uint16_t len;
+        const void *data;
+        
 } idmef_additional_data_t;
 </TYPEDEF>
 <ENUM>
