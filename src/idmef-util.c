@@ -125,13 +125,13 @@ int idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, char *buffe
                 union {
                         uint64_t w_buf;
                         uint32_t r_buf[2];
-                } data;
+                } d;
 
-                retval = extract_uint64_safe(&data.w_buf, idmef_data_get_data(data), idmef_data_get_len(data));
+                retval = extract_uint64_safe(&d.w_buf, idmef_data_get_data(data), idmef_data_get_len(data));
                 if ( retval < 0 )
                         return -1;
                 
-                retval = snprintf(buffer, size, "0x%08ux.0x%08ux", data.r_buf[0], data.r_buf[1]);
+                retval = snprintf(buffer, size, "0x%08ux.0x%08ux", d.r_buf[0], d.r_buf[1]);
                 break;
 	}
 

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -136,5 +136,7 @@ void prelude_option_set_input_type(prelude_option_t *opt, uint8_t input_type);
 uint8_t prelude_option_get_input_type(prelude_option_t *opt);
 
 prelude_option_t *prelude_option_get_root(void);
+
+prelude_option_t *prelude_option_get_parent(prelude_option_t *opt);
 
 #endif /* _LIBPRELUDE_PRELUDE_GETOPT_H */
