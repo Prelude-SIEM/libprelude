@@ -224,14 +224,14 @@ int prelude_sensor_init(const char *sname, const char *filename, int argc, char 
 
 
 /** 
- * prelude_sensor_send_alert-async:
+ * prelude_sensor_send_msg_async:
  * @msg: Pointer on a message to send.
  *
  * Asynchronously send @msg to all Manager server we're connected to.
  * When this function return, @msg is invalid and shouldn't be used
  * anymore.
  */
-void prelude_sensor_send_alert_async(prelude_msg_t *msg) 
+void prelude_sensor_send_msg_async(prelude_msg_t *msg) 
 {
         prelude_client_mgr_broadcast_async(manager_list, msg);
 }
@@ -239,12 +239,12 @@ void prelude_sensor_send_alert_async(prelude_msg_t *msg)
 
 
 /**
- * prelude_sensor_send_alert:
+ * prelude_sensor_send_msg:
  * @msg: Pointer on a message to send.
  *
  * Send @msg to all Manager server we're connected to.
  */
-void prelude_sensor_send_alert(prelude_msg_t *msg) 
+void prelude_sensor_send_msg(prelude_msg_t *msg) 
 {
         prelude_client_mgr_broadcast(manager_list, msg);
 }

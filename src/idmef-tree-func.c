@@ -587,7 +587,7 @@ idmef_additional_data_t *idmef_alert_additional_data_new(idmef_alert_t *alert)
                 return NULL;
         }
 
-        new->type = idmef_constant(string);
+        new->type = string;
         list_add(&new->list, &alert->additional_data_list);
         
         return new;
@@ -619,7 +619,7 @@ idmef_additional_data_t *idmef_heartbeat_additional_data_new(idmef_heartbeat_t *
         }
 
         list_add(&new->list, &hb->additional_data_list);
-        new->type = idmef_constant(string);
+        new->type = string;
         
         return new;
 }
@@ -636,7 +636,7 @@ void idmef_heartbeat_analyzer_time_new(idmef_heartbeat_t *heartbeat)
 void idmef_heartbeat_new(idmef_message_t *message) 
 {
         message->message.heartbeat = &heartbeat;
-        message->type = idmef_constant(idmef_heartbeat_message);
+        message->type = idmef_heartbeat_message;
 }
 
 

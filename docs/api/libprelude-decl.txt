@@ -296,23 +296,6 @@ const char *authfile, const char *user, const char *pass
 <RETURNS>int  </RETURNS>
 const char *authfile, const char *wanted_user, char **user, char **pass
 </FUNCTION>
-<MACRO>
-<NAME>idmef_constant</NAME>
-#define idmef_constant(x)                       \
-        x;                                      \
-        idmef_adjust_msg_size(sizeof((x)))    
-</MACRO>
-<MACRO>
-<NAME>idmef_string</NAME>
-#define idmef_string(x)                         \
-        x;                                      \
-        idmef_adjust_msg_size(strlen(x) + 1)    
-</MACRO>
-<FUNCTION>
-<NAME>idmef_adjust_msg_size</NAME>
-<RETURNS>void  </RETURNS>
-size_t size
-</FUNCTION>
 <FUNCTION>
 <NAME>idmef_msg_send</NAME>
 <RETURNS>int  </RETURNS>
@@ -853,7 +836,12 @@ void
 int *keysize, int *expire
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_sensor_send_alert</NAME>
+<NAME>prelude_sensor_send_msg</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_sensor_send_msg_async</NAME>
 <RETURNS>void  </RETURNS>
 prelude_msg_t *msg
 </FUNCTION>
@@ -1079,9 +1067,29 @@ idmef_tool_alert_t *alert
 idmef_correlation_alert_t *alert
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_assessment_impact_new</NAME>
+<RETURNS>void  </RETURNS>
+idmef_assessment_t *assessment
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_assessment_confidence_new</NAME>
+<RETURNS>void  </RETURNS>
+idmef_assessment_t *assessment
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_assessment_action_new</NAME>
+<RETURNS>idmef_action_t  *</RETURNS>
+idmef_assessment_t *assessment
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_alert_new</NAME>
 <RETURNS>void  </RETURNS>
 idmef_message_t *message
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_alert_assessment_new</NAME>
+<RETURNS>void  </RETURNS>
+idmef_alert_t *alert
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_detect_time_new</NAME>
@@ -1420,18 +1428,18 @@ typedef enum {
 } idmef_linkage_category_t;
 </ENUM>
 <TYPEDEF>
-<NAME>idmef_file_linkage_t</NAME>
+<NAME>idmef_linkage_t</NAME>
 typedef struct {
         struct list_head list;
         
         idmef_linkage_category_t category;
         const char *name;
         const char *path;
-        const char *file;
-} idmef_file_linkage_t;
+        struct idmef_file *file;
+} idmef_linkage_t;
 </TYPEDEF>
 <TYPEDEF>
-<NAME>idmef_file_inode_t</NAME>
+<NAME>idmef_inode_t</NAME>
 typedef struct {
         idmef_time_t change_time;
         uint32_t number;
@@ -1439,7 +1447,7 @@ typedef struct {
         uint32_t minor_device;
         uint32_t c_major_device;
         uint32_t c_minor_device;
-} idmef_file_inode_t;
+} idmef_inode_t;
 </TYPEDEF>
 <ENUM>
 <NAME>idmef_file_category_t</NAME>
@@ -1448,31 +1456,6 @@ typedef enum {
         original = 1,
 } idmef_file_category_t;
 </ENUM>
-<TYPEDEF>
-<NAME>idmef_file_t</NAME>
-typedef struct {
-        struct list_head list;
-        
-        uint64_t ident;
-        idmef_file_category_t category;
-        const char *fstype;
-
-        const char *name;
-        const char *path;
-
-        idmef_time_t *create_time;
-        idmef_time_t *modify_time;
-        idmef_time_t *access_time;
-
-        uint32_t data_size;
-        uint32_t disk_size;
-
-        struct list_head file_access_list;
-        struct list_head file_linkage_list;
-
-        idmef_file_inode_t *inode;
-} idmef_file_t;
-</TYPEDEF>
 <TYPEDEF>
 <NAME>idmef_target_t</NAME>
 typedef struct {
@@ -1523,8 +1506,9 @@ typedef enum {
 <ENUM>
 <NAME>idmef_impact_completion_t</NAME>
 typedef enum {
-        failed     = 0,
-        succeeded  = 1,
+        unknown_completion = 0,
+        failed     = 1,
+        succeeded  = 2,
 } idmef_impact_completion_t;
 </ENUM>
 <ENUM>
@@ -1544,6 +1528,7 @@ typedef struct {
         idmef_impact_severity_t severity;
         idmef_impact_completion_t completion;
         idmef_impact_type_t type;
+        const char *description;
 } idmef_impact_t;
 </TYPEDEF>
 <ENUM>
@@ -1560,6 +1545,7 @@ typedef enum {
 typedef struct {
         struct list_head list;
         idmef_action_category_t category;
+        const char *description;
 } idmef_action_t;
 </TYPEDEF>
 <ENUM>
@@ -1575,6 +1561,7 @@ typedef enum {
 <NAME>idmef_confidence_t</NAME>
 typedef struct {
         idmef_confidence_rating_t rating;
+        float confidence;
 } idmef_confidence_t;
 </TYPEDEF>
 <TYPEDEF>
@@ -1800,6 +1787,11 @@ prelude_msg_t *msg
 prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_msg_reset</NAME>
+<RETURNS>void  </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
 <NAME>extract_uint64</NAME>
 <RETURNS>int  </RETURNS>
 uint64_t *dst, void *buf, uint32_t blen
@@ -2021,8 +2013,16 @@ char *x, int m, int bm_bc[]
 #define MSG_CONFIDENCE_RATING 0
 </MACRO>
 <MACRO>
+<NAME>MSG_CONFIDENCE_CONFIDENCE</NAME>
+#define MSG_CONFIDENCE_CONFIDENCE 1
+</MACRO>
+<MACRO>
 <NAME>MSG_ACTION_CATEGORY</NAME>
 #define MSG_ACTION_CATEGORY 0
+</MACRO>
+<MACRO>
+<NAME>MSG_ACTION_DESCRIPTION</NAME>
+#define MSG_ACTION_DESCRIPTION 1
 </MACRO>
 <MACRO>
 <NAME>MSG_IMPACT_SEVERITY</NAME>
@@ -2035,6 +2035,10 @@ char *x, int m, int bm_bc[]
 <MACRO>
 <NAME>MSG_IMPACT_TYPE</NAME>
 #define MSG_IMPACT_TYPE 2
+</MACRO>
+<MACRO>
+<NAME>MSG_IMPACT_DESCRIPTION</NAME>
+#define MSG_IMPACT_DESCRIPTION 3
 </MACRO>
 <MACRO>
 <NAME>MSG_FILE_IDENT</NAME>

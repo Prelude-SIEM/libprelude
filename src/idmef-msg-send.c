@@ -627,9 +627,12 @@ int idmef_msg_send(idmef_message_t *idmef, uint8_t priority)
                 break;
         }
         
-        prelude_sensor_send_alert(msg);
+        prelude_sensor_send_msg(msg);
                 
         return 0;
 }
+
+
+
 
 

@@ -352,6 +352,27 @@ thread
 @longindex: 
 @Returns: 
 
+<!-- ##### FUNCTION idmef_adjust_msg_size ##### -->
+<para>
+
+</para>
+
+@size: 
+
+<!-- ##### MACRO idmef_constant ##### -->
+<para>
+
+</para>
+
+@x: 
+
+<!-- ##### MACRO idmef_string ##### -->
+<para>
+
+</para>
+
+@x: 
+
 <!-- ##### MACRO no_argument ##### -->
 <para>
 
@@ -472,6 +493,13 @@ thread
 @set: 
 @get: 
 @Returns: 
+
+<!-- ##### FUNCTION prelude_sensor_send_alert ##### -->
+<para>
+
+</para>
+
+@msg: 
 
 <!-- ##### FUNCTION prelude_thread_create ##### -->
 <para>
