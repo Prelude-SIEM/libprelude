@@ -34,6 +34,7 @@
 #include "common.h"
 #include "prelude-io.h"
 #include "prelude-log.h"
+#include "prelude-error.h"
 #include "prelude-msg.h"
 #include "prelude-msgbuf.h"
 #include "prelude-client.h"
