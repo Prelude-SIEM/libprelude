@@ -465,7 +465,7 @@ static int get_missing_options(config_t *cfg, const char *filename, prelude_list
                 }
                                 
                 if ( ! opt ) {
-                        if ( opt = search_option(plist, (section && ! entry) ? section : entry, ~0, FALSE) ) {
+                        if ( (opt = search_option(plist, (section && ! entry) ? section : entry, ~0, FALSE)) ) {
                                 plist = opt;
                                 continue;
                         } else plist = _prelude_generic_optlist;
