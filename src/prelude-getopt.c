@@ -132,7 +132,7 @@ static prelude_option_t *search_option(prelude_optlist_t *optlist,
         prelude_list_for_each(tmp, &optlist->optlist) {
                 item = prelude_list_entry(tmp, prelude_option_t, list);
                 
-                if ( walk_children ) {
+                if ( walk_children || (! item->longopt && ! item->shortopt) ) {
                         ret = search_option(&item->optlist, optname, flags, walk_children);
                         if ( ret )
                                 return ret;
