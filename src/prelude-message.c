@@ -905,8 +905,10 @@ int prelude_msg_is_empty(prelude_msg_t *msg)
 
 
 
-void prelude_msg_get_time(prelude_msg_t *msg, struct timeval *tv)
+struct timeval *prelude_msg_get_time(prelude_msg_t *msg, struct timeval *tv)
 {
         tv->tv_sec = msg->hdr.tv_sec;
         tv->tv_usec = msg->hdr.tv_usec;
+
+        return tv;
 }
