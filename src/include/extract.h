@@ -28,8 +28,9 @@
 #ifdef NEED_ALIGNED_ACCESS
 
 /*
- * Using memmove make the generated code 200% slower,
- * that's the reason we use theses hack.
+ * Using memmove make the generated code substencially slower,
+ * we seen difference from 20MB/s to 200MB/s from the memmove version
+ * to this version in doing checksum test.
  */
 
 #define byte(buf, x) ((uint8_t *) (buf))[(x)]
