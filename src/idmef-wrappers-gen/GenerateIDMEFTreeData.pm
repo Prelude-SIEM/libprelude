@@ -58,8 +58,6 @@ sub	struct
 
 	if ( $field->{metatype} == &METATYPE_UNION ) {
 
-	    $self->output("        \{ \"$field->{var}\", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_" . uc("$field->{short_typename}") . " \},\n");
-
 	    foreach my $member ( @{ $field->{member_list} } ) {
 
 		$self->output("        \{ \"$member->{name}\", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_" . uc("$member->{short_typename}") . " \},\n");

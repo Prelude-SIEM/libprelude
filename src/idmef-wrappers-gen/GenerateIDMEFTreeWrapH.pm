@@ -169,9 +169,7 @@ sub	struct_field_normal
     $self->output("$field->{typename} ${refer}idmef_$struct->{short_typename}_get_${name}($struct->{typename} *ptr);\n");
 
     $self->output("void idmef_$struct->{short_typename}_set_${name}($struct->{typename} *ptr, $field->{typename} ${ptr}${name});\n");
-    
-    $self->output("int idmef_$struct->{short_typename}_get_${name}_value($struct->{typename} *ptr, idmef_value_t **value);\n");
-    
+        
     $self->output("int idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr, $field->{typename} **ret);\n");
 	    
     $self->output("\n");
@@ -185,7 +183,6 @@ sub	struct_field_union
     my	$field = shift;
 
     $self->output("$field->{typename} idmef_$struct->{short_typename}_get_$field->{var}($struct->{typename} *ptr);\n");
-    $self->output("int idmef_$struct->{short_typename}_get_$field->{var}_value($struct->{typename} *ptr, idmef_value_t **value);\n");
 
     foreach my $member ( @{ $field->{member_list} } ) {
 	$self->struct_field_normal($tree, $struct, 
@@ -209,7 +206,6 @@ sub	struct_field_list
 "$field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object);
 void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object, int pos);
 int idmef_$struct->{short_typename}_new_$field->{short_name}($struct->{typename} *ptr, $field->{typename} **ret, int pos);
-int idmef_$struct->{short_typename}_get_$field->{short_name}_value($struct->{typename} *ptr, idmef_value_t **value);
 
 ");
 }

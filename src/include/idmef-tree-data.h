@@ -93,7 +93,6 @@ const children_list_t idmef_service_children_list[] = {
         { "port", 0, IDMEF_VALUE_TYPE_UINT16, 0 },
         { "portlist", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "protocol", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "type", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_SERVICE_TYPE },
         { "web_service", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_WEB_SERVICE },
         { "snmp_service", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_SNMP_SERVICE },
         { NULL, 0, 0, 0 }
@@ -258,7 +257,6 @@ const children_list_t idmef_alert_children_list[] = {
         { "target", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_TARGET },
         { "assessment", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ASSESSMENT },
         { "additional_data", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ADDITIONAL_DATA },
-        { "type", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_ALERT_TYPE },
         { "tool_alert", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_TOOL_ALERT },
         { "correlation_alert", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CORRELATION_ALERT },
         { "overflow_alert", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_OVERFLOW_ALERT },
@@ -277,7 +275,6 @@ const children_list_t idmef_heartbeat_children_list[] = {
 
 const children_list_t idmef_message_children_list[] = {
         { "version", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "type", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_MESSAGE_TYPE },
         { "alert", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_ALERT },
         { "heartbeat", 0, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_HEARTBEAT },
         { NULL, 0, 0, 0 }
