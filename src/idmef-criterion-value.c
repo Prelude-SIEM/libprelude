@@ -339,7 +339,13 @@ int idmef_criterion_value_new_from_string(idmef_criterion_value_t **cv,
         if ( ret < 0 )
                 return ret;
         
-	return idmef_criterion_value_new_value(cv, val, operator);
+	ret = idmef_criterion_value_new_value(cv, val, operator);
+	if ( ret < 0 ) {
+		idmef_value_destroy(val);
+		return ret;
+	}
+
+	return 0;
 }
 
 
