@@ -1,3 +1,9 @@
+2002-04-14  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-getopt.c (print_wrapped): 
+	don't print \0 at the end of the line. This fix bug
+	#0000029 (control character at end of help lines).
+
 2002-04-13  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-io.c (handle_ssl_error): new function,

@@ -749,11 +749,12 @@ static void print_wrapped(const char *line, int descoff)
                 max = get_max_char(&line[i], descoff);
                 
                 while ( max-- >= 0 ) {
-                        putchar(line[i]);
-                        if ( line[i++] == '\0' ) {
+                        
+                        if ( line[i] == '\0' ) {
                                 putchar('\n');
                                 return;
-                        }
+                        } else
+                                putchar(line[i++]);
                 }
                         
                 putchar('\n');
