@@ -518,15 +518,20 @@ void idmef_send_analyzer(prelude_msgbuf_t *msg, idmef_analyzer_t *analyzer)
 
 void idmef_send_create_time(prelude_msgbuf_t *msg, idmef_time_t *time) 
 {
-        struct timeval tv;
-
-        gettimeofday(&tv, NULL);
-        time->sec = tv.tv_sec;
-        time->usec = tv.tv_usec;
-
         idmef_send_time(msg, MSG_CREATE_TIME_TAG, time);
 }
 
+
+void idmef_send_detect_time(prelude_msgbuf_t *msg, idmef_time_t *time) 
+{
+        idmef_send_time(msg, MSG_DETECT_TIME_TAG, time);
+}
+
+
+void idmef_send_analyzer_time(prelude_msgbuf_t *msg, idmef_time_t *time) 
+{
+        idmef_send_time(msg, MSG_ANALYZER_TIME_TAG, time);
+}
 
 
 void idmef_send_classification(prelude_msgbuf_t *msg, idmef_classification_t *classification) 
@@ -624,8 +629,8 @@ void idmef_send_alert(prelude_msgbuf_t *msg, idmef_alert_t *alert)
         idmef_send_assessment(msg, alert->assessment);
         idmef_send_analyzer(msg, &alert->analyzer);
         idmef_send_create_time(msg, &alert->create_time);
-        idmef_send_time(msg, MSG_DETECT_TIME_TAG, alert->detect_time);
-        idmef_send_time(msg, MSG_ANALYZER_TIME_TAG, alert->analyzer_time);
+        idmef_send_detect_time(msg, alert->detect_time);
+        idmef_send_analyzer_time(msg, alert->detect_time);
         idmef_send_source_list(msg, &alert->source_list);
         idmef_send_target_list(msg, &alert->target_list);
         idmef_send_classification_list(msg, &alert->classification_list);
@@ -643,7 +648,7 @@ void idmef_send_heartbeat(prelude_msgbuf_t *msg, idmef_heartbeat_t *hb)
 
         idmef_send_analyzer(msg, &hb->analyzer);
         idmef_send_create_time(msg, &hb->create_time);
-        idmef_send_time(msg, MSG_ANALYZER_TIME_TAG, hb->analyzer_time);
+        idmef_send_analyzer_time(msg, hb->analyzer_time);
         idmef_send_additional_data_list(msg, &hb->additional_data_list);
         
         prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);

@@ -1,5 +1,12 @@
 2002-05-30  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/idmef-msg-send.c (idmef_send_create_time): 
+	don't get create time here since it prevent caller
+	to override the value.
+
+	* src/idmef-tree-func.c (idmef_alert_new): 
+	get create time here.
+
 	* src/include/idmef-tree-func.h (idmef_additional_data_set_data): 
 	new inline function.
 

@@ -59,6 +59,8 @@ void idmef_send_target(prelude_msgbuf_t *msg, idmef_target_t *target);
 void idmef_send_target_list(prelude_msgbuf_t *msg, struct list_head *head);
 void idmef_send_analyzer(prelude_msgbuf_t *msg, idmef_analyzer_t *analyzer);
 void idmef_send_create_time(prelude_msgbuf_t *msg, idmef_time_t *time);
+void idmef_send_detect_time(prelude_msgbuf_t *msg, idmef_time_t *time);
+void idmef_send_analyzer_time(prelude_msgbuf_t *msg, idmef_time_t *time);
 void idmef_send_classification(prelude_msgbuf_t *msg, idmef_classification_t *classification);
 void idmef_send_classification_list(prelude_msgbuf_t *msg, struct list_head *head);
 void idmef_send_confidence(prelude_msgbuf_t *msg, idmef_confidence_t *confidence);

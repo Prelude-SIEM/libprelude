@@ -630,6 +630,12 @@ idmef_additional_data_t *idmef_alert_additional_data_new(idmef_alert_t *alert)
 
 void idmef_alert_new(idmef_message_t *message) 
 {
+        struct timeval tv;
+
+        gettimeofday(&tv, NULL);
+        alert.create_time.sec = tv.tv_sec;
+        alert.create_time.usec = tv.tv_usec;
+        
         message->message.alert = &alert;
         message->type = idmef_alert_message;
         alert.analyzer.analyzerid = prelude_client_get_analyzerid();
