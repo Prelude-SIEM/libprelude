@@ -42,6 +42,7 @@
 #include "idmef-criteria.h"
 
 
+static int real_ret = 0;
 static idmef_criteria_t *processed_criteria;
 pthread_mutex_t _criteria_parse_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -112,11 +113,10 @@ criteria:	criteria_base			{
 ;
 
 criteria_base:	criterion			{
-                                                        int ret;
 							idmef_criteria_t *criteria;
 
-							ret = idmef_criteria_new(&criteria);
-							if ( ret < 0 )
+							real_ret = idmef_criteria_new(&criteria);
+							if ( real_ret < 0 )
 								YYABORT;
 
                                                         idmef_criteria_set_criterion(criteria, $1);
@@ -129,34 +129,28 @@ criteria_base:	criterion			{
 ;
 
 criterion: TOK_STRING relation TOK_STRING 	{
-                                                        int ret;
 							idmef_path_t *path = NULL;
 							idmef_criterion_value_t *value = NULL;
 							idmef_criterion_operator_t operator = $2;
 							idmef_criterion_t *criterion;
 
-							ret = idmef_path_new_fast(&path, $1);
-							if ( ret < 0 ) {
-								prelude_perror(ret, "cannot build path '%s'", $1);
+							real_ret = idmef_path_new_fast(&path, $1);
+							if ( real_ret < 0 ) {
 								free($1);
 								free($3);
 								YYABORT;
 							}
                                                         
-							ret = idmef_criterion_value_new_from_string(&value, path, $3, operator);
-							if ( ret < 0 ) {
-								prelude_perror(ret, "cannot build value '%s' for path '%s'",
-                                                                               $3, $1);
+							real_ret = idmef_criterion_value_new_from_string(&value, path, $3, operator);
+							if ( real_ret < 0 ) {
 								free($1);
 								free($3);
 								idmef_path_destroy(path);
 								YYABORT;
 							}
 
-							ret = idmef_criterion_new(&criterion, path, value, operator);
-							if ( ret < 0 ) {
-								prelude_perror(ret, "cannot build criterion for "
-								    "path '%s' and value '%s'", $1, $3);
+							real_ret = idmef_criterion_new(&criterion, path, value, operator);
+							if ( real_ret < 0 ) {
 								free($1);
 								free($3);
 								idmef_path_destroy(path);
@@ -170,21 +164,17 @@ criterion: TOK_STRING relation TOK_STRING 	{
 							$$ = criterion;
 						}
 	| TOK_STRING				{
-                                                        int ret;
 							idmef_path_t *path;
 							idmef_criterion_t *criterion;
                                                         
-							ret = idmef_path_new_fast(&path, $1);
-							if ( ret < 0 ) {
-                                                                prelude_perror(ret, "cannot build path '%s'", $1);
+							real_ret = idmef_path_new_fast(&path, $1);
+							if ( real_ret < 0 ) {
 								free($1);
 								YYABORT;
 							}
 
-							ret = idmef_criterion_new(&criterion, path, NULL, IDMEF_CRITERION_OPERATOR_IS_NOT_NULL);
-							if ( ret < 0 ) {
-								prelude_perror(ret, "cannot build criterion for path '%s' and value: NULL",
-								    $1);
+							real_ret = idmef_criterion_new(&criterion, path, NULL, IDMEF_CRITERION_OPERATOR_IS_NOT_NULL);
+							if ( real_ret < 0 ) {
 								free($1);
 								idmef_path_destroy(path);
 								YYABORT;
@@ -195,22 +185,17 @@ criterion: TOK_STRING relation TOK_STRING 	{
 							$$ = criterion;
 						}
 	| TOK_RELATION_IS_NULL TOK_STRING	{
-                                                        int ret;
 							idmef_path_t *path;
 							idmef_criterion_t *criterion;
 
-							ret = idmef_path_new_fast(&path, $2);
-							if ( ret < 0) {
-								prelude_perror(ret, "cannot build path '%s'", $2);
+							real_ret = idmef_path_new_fast(&path, $2);
+							if ( real_ret < 0) {
 								free($2);
 								YYABORT;
 							}
 
-							ret = idmef_criterion_new(&criterion, path, NULL, IDMEF_CRITERION_OPERATOR_IS_NULL);
-							if ( ret < 0 ) {
-								prelude_perror(ret,
-								    "cannot build criterion for path: '%s' and value: NULL",
-								    $2);
+							real_ret = idmef_criterion_new(&criterion, path, NULL, IDMEF_CRITERION_OPERATOR_IS_NULL);
+							if ( real_ret < 0 ) {
 								free($2);
 								idmef_path_destroy(path);
 								YYABORT;
@@ -253,7 +238,8 @@ int idmef_criteria_new_from_string(idmef_criteria_t **new_criteria, const char *
 	void *state;
         
 	pthread_mutex_lock(&_criteria_parse_mutex);
-        
+
+        real_ret = 0;
 	processed_criteria = NULL;
         
 	state = yy_scan_string(str);
@@ -261,9 +247,12 @@ int idmef_criteria_new_from_string(idmef_criteria_t **new_criteria, const char *
 	yy_delete_buffer(state);
 
         if ( ret != 0 ) {
-		ret = prelude_error_make(PRELUDE_ERROR_SOURCE_IDMEF_CRITERIA, PRELUDE_ERROR_IDMEF_CRITERIA_PARSE);
+                if ( real_ret )
+                        ret = real_ret;
+                else
+                        ret = prelude_error_make(PRELUDE_ERROR_SOURCE_IDMEF_CRITERIA, PRELUDE_ERROR_IDMEF_CRITERIA_PARSE);
 
-		if ( processed_criteria )
+                if ( processed_criteria )
 			idmef_criteria_destroy(processed_criteria);
 	}
 
