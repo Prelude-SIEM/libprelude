@@ -1,5 +1,39 @@
 2002-01-15  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/timer.c: now work with a timer_t instead of a timeval
+	structure. This is cleaner as we don't care about useconds anyway.
+
+	Also updated the algorithm. The new algorithm use O(1) for timer
+	insertion most of the time. And allow us to keep the timer sorted
+	in the timer list. 
+
+	When waking up timer, this avoid us to look at the whole list. 
+	We can stop as soon as we meet an un-wokable timer (which is very
+	advantaging where there is a lot of timer arround).
+	
+	(search_previous_timer): new function, deduce, in O(1) time, if the
+	new timer should be the first or the last in the list. In both case
+	insertion is O(1). 
+
+	If none of theses statement are true, then try to guess if the 
+	previous timer entry (in regards to the new timer) is located on the 
+	beginning or end of the list. Then call the needed insertion function.
+
+	(search_previous_forward): new function. Search previous timer entry
+	from end of the list to begining of the list.
+
+	(search_previous_backward): ditto, but do it backward.
+
+	(walk_and_wake_up_timer): handle wake_up_if_needed() return value.
+	Now that the list is sorted, we can break as soon as we meet a timer
+	we cannot wake. This is disabled for now for integrity checking.
+
+	(wake_up_if_needed): return 0 if we woke the timer up, or -1 if
+	time remaing before expiration. 
+
+	(time_elapsed):  updated avoid some float() calculation.
+	(time_remaining): new function.
+
 	* src/prelude-client-mgr.c (broadcast_saved_message): 
 	(flush_backup_if_needed): Better error handling. Make the difference
 	between communication error, and other error...

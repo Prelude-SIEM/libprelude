@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 1999 - 2001 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 1999 - 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -32,7 +32,16 @@
 
 
 static LIST_HEAD(timer_list);
+static int count = 0;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+
+
+static void set_expiration_time(prelude_timer_t *timer) 
+{
+        timer->start_time = time(NULL);
+}
+
 
 
 
@@ -40,17 +49,19 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
  * Return the time elapsed by a timer 'timer' from now,
  * to the time it was created / reset.
  */
-static double time_elapsed(prelude_timer_t *timer) 
+static time_t time_elapsed(prelude_timer_t *timer, time_t now) 
 {
-        struct timeval tv;
-        double current, start;
-        
-        gettimeofday(&tv, NULL);
-        current = (double) tv.tv_sec + (double) (tv.tv_usec * 1e-6);
-        start = (double)timer->start.tv_sec + (double) (timer->start.tv_usec * 1e-6); 
-
-        return current - start;
+        return now - timer->start_time;
 }
+
+
+
+
+static time_t time_remaining(prelude_timer_t *timer, time_t now)
+{
+        return timer->expire - time_elapsed(timer, now);
+}
+
 
 
 
@@ -61,14 +72,17 @@ static double time_elapsed(prelude_timer_t *timer)
  *
  * All expired timer should be destroyed.
  */
-static void wake_up_if_needed(prelude_timer_t *timer) 
+static int wake_up_if_needed(prelude_timer_t *timer, time_t now) 
 {
-        assert(timer->start.tv_sec != -1);
+        assert(timer->start_time != -1);
 
-        if ( time_elapsed(timer) >= timer_expire(timer) ) {
-                timer->start.tv_sec = -1;
+        if ( time_elapsed(timer, now) >= timer_expire(timer) ) {
+                timer->start_time = -1;
                 timer_func(timer)(timer_data(timer));
+                return 0;
         }
+
+        return -1;
 }
 
 
@@ -78,11 +92,12 @@ static void wake_up_if_needed(prelude_timer_t *timer)
  * Walk the list of timer,
  * call the wake_up_if_need_function on each timer.
  */
-static int walk_and_wake_up_timer(void) 
+static void walk_and_wake_up_timer(time_t now) 
 {
+        int ret, woke = 0;
         prelude_timer_t *timer;
+        time_t prev_remaining = 0;
         struct list_head *tmp, *next;
-        int usage = 0;
         
         pthread_mutex_lock(&mutex);
         next = ( list_empty(&timer_list) ) ? NULL : timer_list.next;
@@ -96,12 +111,167 @@ static int walk_and_wake_up_timer(void)
                 pthread_mutex_unlock(&mutex);
                 
                 timer = list_entry(tmp, prelude_timer_t, list);
-                wake_up_if_needed(timer);
-                usage++;
+
+                if ( prev_remaining > time_remaining(timer, now) ) {
+                        log(LOG_ERR, "Timer list integrity check failed (prev=%d > cur=%d).\n"
+                            "Please email yoann@mandrakesoft.com\n", prev_remaining, time_remaining(timer, now));
+                        abort();
+                }
+                
+                prev_remaining = time_remaining(timer, now);
+                ret = wake_up_if_needed(timer, now);
+#if 0
+                if ( ret < 0 )
+                        /*
+                         * no timer remaining in the list will be expired.
+                         */
+                        break;
+
+                woke++;
+#endif
         }
-        
-        return usage;
+#ifdef DEBUG
+        printf("woke up %d/%d timer\n", woke, count);
+#endif
 }
+
+
+
+
+static struct list_head *search_previous_forward(prelude_timer_t *timer, time_t expire) 
+{
+        int hop = 0;
+        prelude_timer_t *cur;
+        struct list_head *tmp, *prev = NULL;
+        
+        list_for_each(tmp, &timer_list) {
+                cur = list_entry(tmp, prelude_timer_t, list);
+
+                hop++;
+                
+                if ( (cur->start_time + cur->expire) < expire ) {
+                        prev = tmp;
+                        continue; 
+                }
+
+                else if ( (cur->start_time + cur->expire) >= expire ) {
+#ifdef DEBUG
+                        printf("[expire=%d] found forward in O(%d) at %p\n", timer->expire, hop, cur);
+#endif
+                        return prev;
+                }
+        }
+
+        /*
+         * this should never happen, as search_previous_timer verify
+         * if timer should be inserted last.
+         */
+        abort();
+}
+
+
+
+
+static struct list_head *search_previous_backward(prelude_timer_t *timer, time_t expire) 
+{
+        int hop = 0;
+        prelude_timer_t *cur;
+        struct list_head *tmp;
+        
+        for ( tmp = timer_list.prev; tmp != &timer_list; tmp = tmp->prev ) {
+                
+                cur = list_entry(tmp, prelude_timer_t, list);
+                
+                if ( (cur->start_time + cur->expire) <= expire ) {
+#ifdef DEBUG
+                        printf("[expire=%d] found backward in O(%d) at %p\n", timer->expire, hop + 1, cur);
+#endif
+                        return tmp;
+                }
+
+                hop++;
+        }
+
+        /*
+         * this should never happen, as search_previous_timer verify
+         * if timer should be inserted first.
+         */
+        abort();
+}
+
+
+
+
+inline static prelude_timer_t *get_first_timer(void) 
+{
+        return list_entry(timer_list.next, prelude_timer_t, list);
+}
+
+
+
+
+inline static prelude_timer_t *get_last_timer(void) 
+{
+        return list_entry(timer_list.prev, prelude_timer_t, list);
+}
+
+
+
+/*
+ * On entering in this function, we know that :
+ * - expire is > than first_expire.
+ * - expire is < than last_expire.
+ */
+static struct list_head *search_previous_timer(prelude_timer_t *timer) 
+{
+        time_t expire;
+        prelude_timer_t *last, *first;
+        time_t last_remaining, first_remaining;
+
+        last = get_last_timer();
+        first = get_first_timer();
+
+        /*
+         * timer we want to insert expire after the known to be
+         * expiring last timer. This mean we should insert the new
+         * timer at the end of the list.
+         */
+        if ( timer->expire > time_remaining(last, timer->start_time) ) 
+                return timer_list.prev;
+        
+        /*
+         * timer we want to insert expire before, the known to be expiring
+         * first timer. This mean we should insert the new timer in the head.
+         */
+        if ( timer->expire < time_remaining(first, timer->start_time) ) 
+                return &timer_list;
+
+        /*
+         * we now know we expire after the first expiring timer,
+         * but before the last expiring one. 
+         *
+         * compute expiration time for current, last, and first timer.
+         */
+        expire = timer->expire + timer->start_time;        
+        last_remaining = time_remaining(last, timer->start_time);
+        first_remaining = time_remaining(first, timer->start_time);
+
+        /*
+         * use the better list iterating function to find the previous timer.
+         */
+        if ( (last_remaining - timer->expire) > (timer->expire - first_remaining) )
+                /*
+                 * previous is probably near the beginning of the list.
+                 */
+                return search_previous_forward(timer, timer->expire + timer->start_time);
+        else
+                /*
+                 * previous is probably near the end of the list.
+                 */
+                return search_previous_backward(timer, timer->expire + timer->start_time);
+}
+
+
 
 
 
@@ -113,11 +283,22 @@ static int walk_and_wake_up_timer(void)
  */
 void timer_init(prelude_timer_t *timer)
 {
-        gettimeofday(&timer->start, NULL);
-
+        struct list_head *prev;
+        
+        set_expiration_time(timer);
+        
         pthread_mutex_lock(&mutex);
-        list_add(&timer->list, &timer_list);
+        count++;
+        
+        if ( ! list_empty(&timer_list) ) {
+                prev = search_previous_timer(timer);
+        } else
+                prev = &timer_list;
+
+        list_add(&timer->list, prev);
+        
         pthread_mutex_unlock(&mutex);
+
 }
 
 
@@ -130,7 +311,8 @@ void timer_init(prelude_timer_t *timer)
  */
 void timer_reset(prelude_timer_t *timer) 
 {
-        gettimeofday(&timer->start, NULL);
+        timer_destroy(timer);
+        timer_init(timer);
 }
 
 
@@ -145,29 +327,9 @@ void timer_reset(prelude_timer_t *timer)
 void timer_destroy(prelude_timer_t *timer) 
 {
         pthread_mutex_lock(&mutex);
+        count--;
         list_del(&timer->list);
         pthread_mutex_unlock(&mutex);
-}
-
-
-
-/**
- * timer_elapsed:
- * @timer: the timer to get elapsed time from.
- * @tv: a #timeval structure to store the result in.
- *
- * Give the time elapsed by timer 'timer' from the last time
- * it was reset'd or from the time it was started.
- * The result is stored in a #timeval structure given as argument.
- */
-void timer_elapsed(prelude_timer_t *timer, struct timeval *tv) 
-{
-        struct timeval current;
-
-        gettimeofday(&current, NULL);
-        
-        tv->tv_sec  = current.tv_sec - timer->start.tv_sec;
-        tv->tv_usec = current.tv_usec - timer->start.tv_usec;
 }
 
 
@@ -181,21 +343,14 @@ void timer_elapsed(prelude_timer_t *timer, struct timeval *tv)
  */
 void prelude_wake_up_timer(void) 
 {
-#if 0
-        struct timeval tv, end; 
-        int usage = 0;
-                
-        gettimeofday(&tv, NULL);
-        usage = walk_and_wake_up_timer();
-        gettimeofday(&end, NULL);
+        time_t now = time(NULL);
         
-        log(LOG_INFO, "Debug: %u timer in use, wake up took %fs\n", usage,
-            (end.tv_sec + (double) (end.tv_usec * 1e-6)) -
-            (tv.tv_sec  + (double) (tv.tv_usec * 1e-6)));
-#endif
-        
-        walk_and_wake_up_timer();
+        walk_and_wake_up_timer(now);
 }
+
+
+
+
 
 
 
