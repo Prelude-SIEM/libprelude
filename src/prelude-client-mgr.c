@@ -124,8 +124,10 @@ static int broadcast_saved_message(client_list_t *clist, prelude_io_t *fd, size_
                 }
                 
                 ret = prelude_client_forward(client->client, fd, size);
-                if ( ret < 0 )
+                if ( ret < 0 ) {
+                        log(LOG_ERR, "error forwarding saved message.\n");
                         return -1;
+                }
         }
 
         return 0;
@@ -153,13 +155,19 @@ static void flush_backup_if_needed(client_list_t *clist)
         
         ret = broadcast_saved_message(clist, pio, st.st_size);
         if ( ret < 0 ) {
-                log(LOG_ERR, "broadcasting saved message failed.\n");
+                log(LOG_ERR, "couldn't broadcast saved message.\n");
                 return;
         }
         
         ret = ftruncate(fd, 0);
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't truncate backup FD to 0 bytes.\n");
+                return;
+        }
+
+        ret = lseek(fd, 0, SEEK_SET);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "couldn't seek to the begining of the file.\n");
                 return;
         }
 }
@@ -426,6 +434,7 @@ static int broadcast_message(prelude_msg_t *msg, client_list_t *clist)
 int prelude_client_mgr_broadcast_msg(prelude_client_mgr_t *cmgr, prelude_msg_t *msg) 
 {
         int ret;
+        int print_failure = 0;
         client_list_t *item;
         struct list_head *tmp;
         
@@ -435,20 +444,23 @@ int prelude_client_mgr_broadcast_msg(prelude_client_mgr_t *cmgr, prelude_msg_t *
                 /*
                  * There is Manager known to be dead in this list.
                  * No need to try to emmit a message to theses.
-                 */
+                 */                
                 if ( item->dead ) 
                         continue;
                 
                 ret = broadcast_message(msg, item);                
                 if ( ret >= 0 ) /* AND of Manager emmission succeed */
                         return 0;
+                else
+                        print_failure = 1;
         }
 
         /*
          * This is not good. All of our boolean AND rule for message emission
          * failed. Backup the message.
          */
-        log(LOG_INFO, "Manager emmission failed. Using FailSafe mode.\n");  
+        if ( print_failure )
+                log(LOG_INFO, "Manager emmission failed. Enabling failsafe mode.\n");  
       
         ret = prelude_msg_write(msg, cmgr->backup_fd);
         if ( ret < 0 ) {

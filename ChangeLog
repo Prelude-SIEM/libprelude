@@ -1,5 +1,12 @@
 2001-11-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/prelude-client-mgr.c (prelude_client_mgr_broadcast_msg): 
+	Do not print that failsafe mode is enabled for each message.
+	(broadcast_saved_message): print an error if message forwarding fail.
+
+	(flush_backup_if_needed): ftruncate doesn't modify the file offset. 
+	Seek to the beginning of the file.
+
 	* src/prelude-client.c (prelude_client_connect): set
 	the connection_broken member here. This'll avoid bug
 	on reconnection.
