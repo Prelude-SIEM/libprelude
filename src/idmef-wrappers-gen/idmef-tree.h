@@ -593,6 +593,7 @@ struct {
  * Analyzer class
  */
 struct {
+        IS_LISTED;
 	REFCOUNT;
         prelude_string_t *analyzerid;
         
@@ -606,7 +607,6 @@ struct {
         
         idmef_node_t *node;
         idmef_process_t *process;
-        struct idmef_analyzer *analyzer;
         
 } TYPE_ID(idmef_analyzer_t, 31);
 
@@ -621,8 +621,9 @@ struct {
         IS_LISTED;
 	REFCOUNT;
 
-        uint64_t alertident;
-        OPTIONAL_INT(uint64_t, analyzerid);
+        prelude_string_t alertident;
+        prelude_string_t *analyzerid;
+        
 } TYPE_ID(idmef_alertident_t, 32);
 
 
@@ -779,8 +780,9 @@ ENUM(idmef) {
 
 struct {
         prelude_string_t *messageid;
+
+        LISTED_OBJECT(analyzer_list, idmef_analyzer_t);
         
-        idmef_analyzer_t *analyzer;
         idmef_time_t create_time;
         idmef_classification_t *classification;
         idmef_time_t *detect_time;
@@ -810,7 +812,7 @@ struct {
  */
 struct {
         prelude_string_t *messageid;
-        idmef_analyzer_t *analyzer;
+        LISTED_OBJECT(analyzer_list, idmef_analyzer_t);
 
         idmef_time_t create_time;
         idmef_time_t *analyzer_time;

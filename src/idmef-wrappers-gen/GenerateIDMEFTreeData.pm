@@ -52,7 +52,7 @@ sub	struct
     my	$object;
     my	$object_type;
 
-    $self->output("children_list_t idmef_$struct->{short_typename}_children_list[] = \{\n");
+    $self->output("const children_list_t idmef_$struct->{short_typename}_children_list[] = \{\n");
 
     foreach my $field ( @{ $struct->{field_list} } ) {
 
@@ -116,7 +116,7 @@ sub	footer
     $self->output("
 typedef struct \{
 	char *name;
-	children_list_t *children_list;
+	const children_list_t *children_list;
 	int (*get_child)(void *ptr, idmef_child_t child, void **ret);
 	int (*new_child)(void *ptr, idmef_child_t child, int n, void **ret);
 	int (*to_numeric)(const char *name);
@@ -124,7 +124,7 @@ typedef struct \{
 \} object_data_t;
 
 
-object_data_t object_data[] = \{
+const object_data_t object_data[] = \{
 ");
     
     foreach my $obj ( sort { $a->{id} <=> $b->{id} } map { ($_->{obj_type} != &OBJ_PRE_DECLARED ? $_ : () ) } @{ $tree->{obj_list} } ) {

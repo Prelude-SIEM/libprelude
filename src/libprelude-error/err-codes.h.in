@@ -74,20 +74,20 @@
 39	PRELUDE_ERROR_IDMEF_PATH_INDEX_RESERVED	Provided index value is reserved
 40	PRELUDE_ERROR_IDMEF_PATH_INDEX_FORBIDDEN	Element forbid indexing
 41	PRELUDE_ERROR_IDMEF_PATH_INDEX_UNDEFINED	Element index is undefined
+42	PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED	An index below the one specified is undefined
 
-42	PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING	Unknown enumeration string
-43	PRELUDE_ERROR_DAEMONIZE_LOCK_HELD	File lock is held by another process
-44	PRELUDE_ERROR_PLUGIN_LTDL_INIT		Unable to initialize LTDL
+43	PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING	Unknown enumeration string
+44	PRELUDE_ERROR_DAEMONIZE_LOCK_HELD	File lock is held by another process
+45	PRELUDE_ERROR_PLUGIN_LTDL_INIT		Unable to initialize LTDL
 
-45	PRELUDE_ERROR_TLS_HANDSHAKE		TLS handshake failed
-46	PRELUDE_ERROR_TLS_INVALID_CERTIFICATE	Unable to verify peer certificate
-47	PRELUDE_ERROR_TLS_REMOTE_AUTH		Peer rejected authentication
+46	PRELUDE_ERROR_TLS_HANDSHAKE		TLS handshake failed
+47	PRELUDE_ERROR_TLS_INVALID_CERTIFICATE	Unable to verify peer certificate
+48	PRELUDE_ERROR_TLS_REMOTE_AUTH		Peer rejected authentication
 		
-48	PRELUDE_ERROR_STRING_NOT_NULL_TERMINATED	String is not 'null' terminated
+49	PRELUDE_ERROR_STRING_NOT_NULL_TERMINATED	String is not 'null' terminated
+50	PRELUDE_ERROR_CANT_RESOLVE		Could not resolve address
 
-49	PRELUDE_ERROR_CANT_RESOLVE		Could not resolve address
-
-#49 to 16381 are free to be used.
+#50 to 16381 are free to be used.
 
 16382	PRELUDE_ERROR_UNKNOWN_ERRNO		Unknown system error
 

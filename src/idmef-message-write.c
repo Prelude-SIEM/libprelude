@@ -712,7 +712,6 @@ void idmef_analyzer_write(idmef_analyzer_t *analyzer, prelude_msgbuf_t *msg)
         prelude_string_write(idmef_analyzer_get_osversion(analyzer), msg, MSG_ANALYZER_OSVERSION);
         idmef_node_write(idmef_analyzer_get_node(analyzer), msg);
         idmef_process_write(idmef_analyzer_get_process(analyzer), msg);
-        idmef_analyzer_write(idmef_analyzer_get_analyzer(analyzer), msg);
 
         prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
@@ -725,16 +724,9 @@ void idmef_alertident_write(idmef_alertident_t *alertident, prelude_msgbuf_t *ms
 
         prelude_msgbuf_set(msg, MSG_ALERTIDENT_TAG, 0, NULL);
 
-        uint64_write(idmef_alertident_get_alertident(alertident), msg, MSG_ALERTIDENT_ALERTIDENT);
+        prelude_string_write(idmef_alertident_get_alertident(alertident), msg, MSG_ALERTIDENT_ALERTIDENT);
+        prelude_string_write(idmef_alertident_get_analyzerid(alertident), msg, MSG_ALERTIDENT_ANALYZERID);
 
-	{
-		uint64_t *tmp;
-
-		tmp = idmef_alertident_get_analyzerid(alertident);
-		if ( tmp ) {
-			uint64_write(*tmp, msg, MSG_ALERTIDENT_ANALYZERID);
-		}
-	}
         prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
 
@@ -897,7 +889,15 @@ void idmef_alert_write(idmef_alert_t *alert, prelude_msgbuf_t *msg)
         prelude_msgbuf_set(msg, MSG_ALERT_TAG, 0, NULL);
 
         prelude_string_write(idmef_alert_get_messageid(alert), msg, MSG_ALERT_MESSAGEID);
-        idmef_analyzer_write(idmef_alert_get_analyzer(alert), msg);
+
+        {
+                idmef_analyzer_t *analyzer = NULL;
+
+                while ( (analyzer = idmef_alert_get_next_analyzer(alert, analyzer)) ) {
+                        idmef_analyzer_write(analyzer, msg);
+                }
+        }
+
         idmef_time_write(idmef_alert_get_create_time(alert), msg, MSG_ALERT_CREATE_TIME);
         idmef_classification_write(idmef_alert_get_classification(alert), msg);
         idmef_time_write(idmef_alert_get_detect_time(alert), msg, MSG_ALERT_DETECT_TIME);
@@ -962,7 +962,15 @@ void idmef_heartbeat_write(idmef_heartbeat_t *heartbeat, prelude_msgbuf_t *msg)
         prelude_msgbuf_set(msg, MSG_HEARTBEAT_TAG, 0, NULL);
 
         prelude_string_write(idmef_heartbeat_get_messageid(heartbeat), msg, MSG_HEARTBEAT_MESSAGEID);
-        idmef_analyzer_write(idmef_heartbeat_get_analyzer(heartbeat), msg);
+
+        {
+                idmef_analyzer_t *analyzer = NULL;
+
+                while ( (analyzer = idmef_heartbeat_get_next_analyzer(heartbeat, analyzer)) ) {
+                        idmef_analyzer_write(analyzer, msg);
+                }
+        }
+
         idmef_time_write(idmef_heartbeat_get_create_time(heartbeat), msg, MSG_HEARTBEAT_CREATE_TIME);
         idmef_time_write(idmef_heartbeat_get_analyzer_time(heartbeat), msg, MSG_HEARTBEAT_ANALYZER_TIME);
 

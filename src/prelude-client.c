@@ -171,7 +171,7 @@ static int add_hb_data(idmef_heartbeat_t *hb, prelude_string_t *meaning, const c
         int ret;
         idmef_additional_data_t *ad;
         
-        ret = idmef_heartbeat_new_additional_data(hb, &ad);
+        ret = idmef_heartbeat_new_additional_data(hb, &ad, -1);
         if ( ret < 0 )
                 return ret;
 
@@ -242,7 +242,7 @@ static void heartbeat_expire_cb(void *data)
                 return;
         
         idmef_heartbeat_set_create_time(heartbeat, time);
-        idmef_heartbeat_set_analyzer(heartbeat, idmef_analyzer_ref(client->analyzer));
+        idmef_heartbeat_set_analyzer(heartbeat, idmef_analyzer_ref(client->analyzer), 0);
                 
         if ( client->heartbeat_cb ) {
                 client->heartbeat_cb(client, message);
@@ -501,7 +501,7 @@ static int set_node_address(prelude_option_t *opt, const char *optarg, prelude_s
         if ( ret < 0 )
                 return ret;
         
-        ret = idmef_node_new_address(node, &addr);
+        ret = idmef_node_new_address(node, &addr, -1);
         if ( ret < 0 )
                 return -1;
 

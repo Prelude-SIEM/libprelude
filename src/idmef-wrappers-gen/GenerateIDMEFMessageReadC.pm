@@ -226,11 +226,19 @@ sub	struct_field_normal
                                 ret = prelude_extract_${type}_safe(&tmp, buf, len${extra_msg});
                                 if ( ret < 0 )
                                         return ret;
+");
 
+    if ( $field->{metatype} & &METATYPE_LIST ) {
+           $self->output("
+				idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{short_typename}, tmp, -1);
+				break;
+			\}
+"); } else {
+           $self->output("
 				idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{short_typename}, tmp);
 				break;
 			\}
-");
+"); }
 }
 
 sub	struct_field_struct
@@ -245,10 +253,24 @@ sub	struct_field_struct
 			case MSG_",  uc($field->{short_typename}), "_TAG", ": \{
                                 int ret;
 				$field->{typename} *tmp;
+");
 
+    if ( $field->{metatype} & &METATYPE_LIST ) {
+           $self->output("
+				ret = idmef_$struct->{short_typename}_new_${name}($struct->{short_typename}, &tmp, -1);
+				if ( ret < 0 )
+					return ret;
+");
+    } else {
+           $self->output("
 				ret = idmef_$struct->{short_typename}_new_${name}($struct->{short_typename}, &tmp);
 				if ( ret < 0 )
 					return ret;
+");
+    }
+
+    $self->output("
+
 
                                 ret = idmef_$field->{short_typename}_read(tmp, msg);
 				if ( ret < 0 )

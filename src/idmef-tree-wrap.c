@@ -73,6 +73,33 @@
 
 #define IDENT(name) uint64_t name
 
+
+
+static void list_insert(prelude_list_t *head, prelude_list_t *item, int pos)
+{
+        prelude_list_t *tmp;
+        
+        if ( pos < 0 )
+                prelude_list_add_tail(head, item);
+
+        else if ( pos == 0 )
+	        prelude_list_add(head, item);
+
+        else {
+	        int i = 0;
+
+                prelude_list_for_each(head, tmp) {
+		        if ( i == pos )
+			        break;
+
+                        i++;
+                }
+
+                prelude_list_add_tail(tmp, item);
+        }
+}
+
+
 /**
  * idmef_additional_data_type_to_numeric:
  * @name: pointer to an IDMEF string representation of a #idmef_additional_data_type_t value.
@@ -81,41 +108,30 @@
  */
 idmef_additional_data_type_t idmef_additional_data_type_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_additional_data_type_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN, "boolean" },
+            { IDMEF_ADDITIONAL_DATA_TYPE_BYTE, "byte" },
+            { IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER, "character" },
+            { IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, "date-time" },
+            { IDMEF_ADDITIONAL_DATA_TYPE_INTEGER, "integer" },
+            { IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, "ntpstamp" },
+            { IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, "portlist" },
+            { IDMEF_ADDITIONAL_DATA_TYPE_REAL, "real" },
+            { IDMEF_ADDITIONAL_DATA_TYPE_STRING, "string" },
+            { IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, "byte-string" },
+            { IDMEF_ADDITIONAL_DATA_TYPE_XML, "xml" },
+        };
 
-	if ( strcasecmp(name, "boolean" ) == 0)
-		return IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "byte" ) == 0)
-		return IDMEF_ADDITIONAL_DATA_TYPE_BYTE;
-
-	if ( strcasecmp(name, "character" ) == 0)
-		return IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER;
-
-	if ( strcasecmp(name, "date-time" ) == 0)
-		return IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME;
-
-	if ( strcasecmp(name, "integer" ) == 0)
-		return IDMEF_ADDITIONAL_DATA_TYPE_INTEGER;
-
-	if ( strcasecmp(name, "ntpstamp" ) == 0)
-		return IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP;
-
-	if ( strcasecmp(name, "portlist" ) == 0)
-		return IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST;
-
-	if ( strcasecmp(name, "real" ) == 0)
-		return IDMEF_ADDITIONAL_DATA_TYPE_REAL;
-
-	if ( strcasecmp(name, "string" ) == 0)
-		return IDMEF_ADDITIONAL_DATA_TYPE_STRING;
-
-	if ( strcasecmp(name, "byte-string" ) == 0)
-		return IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING;
-
-	if ( strcasecmp(name, "xml" ) == 0)
-		return IDMEF_ADDITIONAL_DATA_TYPE_XML;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -128,46 +144,27 @@ idmef_additional_data_type_t idmef_additional_data_type_to_numeric(const char *n
  */
 const char *idmef_additional_data_type_to_string(idmef_additional_data_type_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_additional_data_type_t val;
+              const char *name;
+        } tbl[] = {
+                { IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN, "boolean" },
+                { IDMEF_ADDITIONAL_DATA_TYPE_BYTE, "byte" },
+                { IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER, "character" },
+                { IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, "date-time" },
+                { IDMEF_ADDITIONAL_DATA_TYPE_INTEGER, "integer" },
+                { IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, "ntpstamp" },
+                { IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, "portlist" },
+                { IDMEF_ADDITIONAL_DATA_TYPE_REAL, "real" },
+                { IDMEF_ADDITIONAL_DATA_TYPE_STRING, "string" },
+                { IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, "byte-string" },
+                { IDMEF_ADDITIONAL_DATA_TYPE_XML, "xml" },
+        };
 
-		case IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN:
-			return "boolean";
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_ADDITIONAL_DATA_TYPE_BYTE:
-			return "byte";
-
-		case IDMEF_ADDITIONAL_DATA_TYPE_CHARACTER:
-			return "character";
-
-		case IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME:
-			return "date-time";
-
-		case IDMEF_ADDITIONAL_DATA_TYPE_INTEGER:
-			return "integer";
-
-		case IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP:
-			return "ntpstamp";
-
-		case IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST:
-			return "portlist";
-
-		case IDMEF_ADDITIONAL_DATA_TYPE_REAL:
-			return "real";
-
-		case IDMEF_ADDITIONAL_DATA_TYPE_STRING:
-			return "string";
-
-		case IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING:
-			return "byte-string";
-
-		case IDMEF_ADDITIONAL_DATA_TYPE_XML:
-			return "xml";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 
@@ -189,26 +186,25 @@ struct idmef_additional_data {
  */
 idmef_reference_origin_t idmef_reference_origin_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_reference_origin_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_REFERENCE_ORIGIN_UNKNOWN, "unknown" },
+            { IDMEF_REFERENCE_ORIGIN_VENDOR_SPECIFIC, "vendor-specific" },
+            { IDMEF_REFERENCE_ORIGIN_USER_SPECIFIC, "user-specific" },
+            { IDMEF_REFERENCE_ORIGIN_BUGTRAQID, "bugtraqid" },
+            { IDMEF_REFERENCE_ORIGIN_CVE, "cve" },
+            { IDMEF_REFERENCE_ORIGIN_OSVDB, "osvdb" },
+        };
 
-	if ( strcasecmp(name, "unknown" ) == 0)
-		return IDMEF_REFERENCE_ORIGIN_UNKNOWN;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "vendor-specific" ) == 0)
-		return IDMEF_REFERENCE_ORIGIN_VENDOR_SPECIFIC;
-
-	if ( strcasecmp(name, "user-specific" ) == 0)
-		return IDMEF_REFERENCE_ORIGIN_USER_SPECIFIC;
-
-	if ( strcasecmp(name, "bugtraqid" ) == 0)
-		return IDMEF_REFERENCE_ORIGIN_BUGTRAQID;
-
-	if ( strcasecmp(name, "cve" ) == 0)
-		return IDMEF_REFERENCE_ORIGIN_CVE;
-
-	if ( strcasecmp(name, "osvdb" ) == 0)
-		return IDMEF_REFERENCE_ORIGIN_OSVDB;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -221,31 +217,22 @@ idmef_reference_origin_t idmef_reference_origin_to_numeric(const char *name)
  */
 const char *idmef_reference_origin_to_string(idmef_reference_origin_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_reference_origin_t val;
+              const char *name;
+        } tbl[] = {
+                { IDMEF_REFERENCE_ORIGIN_UNKNOWN, "unknown" },
+                { IDMEF_REFERENCE_ORIGIN_VENDOR_SPECIFIC, "vendor-specific" },
+                { IDMEF_REFERENCE_ORIGIN_USER_SPECIFIC, "user-specific" },
+                { IDMEF_REFERENCE_ORIGIN_BUGTRAQID, "bugtraqid" },
+                { IDMEF_REFERENCE_ORIGIN_CVE, "cve" },
+                { IDMEF_REFERENCE_ORIGIN_OSVDB, "osvdb" },
+        };
 
-		case IDMEF_REFERENCE_ORIGIN_UNKNOWN:
-			return "unknown";
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_REFERENCE_ORIGIN_VENDOR_SPECIFIC:
-			return "vendor-specific";
-
-		case IDMEF_REFERENCE_ORIGIN_USER_SPECIFIC:
-			return "user-specific";
-
-		case IDMEF_REFERENCE_ORIGIN_BUGTRAQID:
-			return "bugtraqid";
-
-		case IDMEF_REFERENCE_ORIGIN_CVE:
-			return "cve";
-
-		case IDMEF_REFERENCE_ORIGIN_OSVDB:
-			return "osvdb";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 
@@ -280,29 +267,26 @@ struct idmef_classification {
  */
 idmef_user_id_type_t idmef_user_id_type_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_user_id_type_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_USER_ID_TYPE_ORIGINAL_USER, "original-user" },
+            { IDMEF_USER_ID_TYPE_CURRENT_USER, "current-user" },
+            { IDMEF_USER_ID_TYPE_TARGET_USER, "target-user" },
+            { IDMEF_USER_ID_TYPE_USER_PRIVS, "user-privs" },
+            { IDMEF_USER_ID_TYPE_CURRENT_GROUP, "current-group" },
+            { IDMEF_USER_ID_TYPE_GROUP_PRIVS, "group-privs" },
+            { IDMEF_USER_ID_TYPE_OTHER_PRIVS, "other-privs" },
+        };
 
-	if ( strcasecmp(name, "original-user" ) == 0)
-		return IDMEF_USER_ID_TYPE_ORIGINAL_USER;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "current-user" ) == 0)
-		return IDMEF_USER_ID_TYPE_CURRENT_USER;
-
-	if ( strcasecmp(name, "target-user" ) == 0)
-		return IDMEF_USER_ID_TYPE_TARGET_USER;
-
-	if ( strcasecmp(name, "user-privs" ) == 0)
-		return IDMEF_USER_ID_TYPE_USER_PRIVS;
-
-	if ( strcasecmp(name, "current-group" ) == 0)
-		return IDMEF_USER_ID_TYPE_CURRENT_GROUP;
-
-	if ( strcasecmp(name, "group-privs" ) == 0)
-		return IDMEF_USER_ID_TYPE_GROUP_PRIVS;
-
-	if ( strcasecmp(name, "other-privs" ) == 0)
-		return IDMEF_USER_ID_TYPE_OTHER_PRIVS;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -315,34 +299,23 @@ idmef_user_id_type_t idmef_user_id_type_to_numeric(const char *name)
  */
 const char *idmef_user_id_type_to_string(idmef_user_id_type_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_user_id_type_t val;
+              const char *name;
+        } tbl[] = {
+                { IDMEF_USER_ID_TYPE_ORIGINAL_USER, "original-user" },
+                { IDMEF_USER_ID_TYPE_CURRENT_USER, "current-user" },
+                { IDMEF_USER_ID_TYPE_TARGET_USER, "target-user" },
+                { IDMEF_USER_ID_TYPE_USER_PRIVS, "user-privs" },
+                { IDMEF_USER_ID_TYPE_CURRENT_GROUP, "current-group" },
+                { IDMEF_USER_ID_TYPE_GROUP_PRIVS, "group-privs" },
+                { IDMEF_USER_ID_TYPE_OTHER_PRIVS, "other-privs" },
+        };
 
-		case IDMEF_USER_ID_TYPE_ORIGINAL_USER:
-			return "original-user";
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_USER_ID_TYPE_CURRENT_USER:
-			return "current-user";
-
-		case IDMEF_USER_ID_TYPE_TARGET_USER:
-			return "target-user";
-
-		case IDMEF_USER_ID_TYPE_USER_PRIVS:
-			return "user-privs";
-
-		case IDMEF_USER_ID_TYPE_CURRENT_GROUP:
-			return "current-group";
-
-		case IDMEF_USER_ID_TYPE_GROUP_PRIVS:
-			return "group-privs";
-
-		case IDMEF_USER_ID_TYPE_OTHER_PRIVS:
-			return "other-privs";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 
@@ -366,17 +339,22 @@ struct idmef_user_id {
  */
 idmef_user_category_t idmef_user_category_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_user_category_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_USER_CATEGORY_UNKNOWN, "unknown" },
+            { IDMEF_USER_CATEGORY_APPLICATION, "application" },
+            { IDMEF_USER_CATEGORY_OS_DEVICE, "os-device" },
+        };
 
-	if ( strcasecmp(name, "unknown" ) == 0)
-		return IDMEF_USER_CATEGORY_UNKNOWN;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "application" ) == 0)
-		return IDMEF_USER_CATEGORY_APPLICATION;
-
-	if ( strcasecmp(name, "os-device" ) == 0)
-		return IDMEF_USER_CATEGORY_OS_DEVICE;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -389,22 +367,19 @@ idmef_user_category_t idmef_user_category_to_numeric(const char *name)
  */
 const char *idmef_user_category_to_string(idmef_user_category_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_user_category_t val;
+              const char *name;
+        } tbl[] = {
+                { IDMEF_USER_CATEGORY_UNKNOWN, "unknown" },
+                { IDMEF_USER_CATEGORY_APPLICATION, "application" },
+                { IDMEF_USER_CATEGORY_OS_DEVICE, "os-device" },
+        };
 
-		case IDMEF_USER_CATEGORY_UNKNOWN:
-			return "unknown";
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_USER_CATEGORY_APPLICATION:
-			return "application";
-
-		case IDMEF_USER_CATEGORY_OS_DEVICE:
-			return "os-device";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 
@@ -425,53 +400,34 @@ struct idmef_user {
  */
 idmef_address_category_t idmef_address_category_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_address_category_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_ADDRESS_CATEGORY_UNKNOWN, "unknown" },
+            { IDMEF_ADDRESS_CATEGORY_ATM, "atm" },
+            { IDMEF_ADDRESS_CATEGORY_E_MAIL, "e-mail" },
+            { IDMEF_ADDRESS_CATEGORY_LOTUS_NOTES, "lotus-notes" },
+            { IDMEF_ADDRESS_CATEGORY_MAC, "mac" },
+            { IDMEF_ADDRESS_CATEGORY_SNA, "sna" },
+            { IDMEF_ADDRESS_CATEGORY_VM, "vm" },
+            { IDMEF_ADDRESS_CATEGORY_IPV4_ADDR, "ipv4-addr" },
+            { IDMEF_ADDRESS_CATEGORY_IPV4_ADDR_HEX, "ipv4-addr-hex" },
+            { IDMEF_ADDRESS_CATEGORY_IPV4_NET, "ipv4-net" },
+            { IDMEF_ADDRESS_CATEGORY_IPV4_NET_MASK, "ipv4-net-mask" },
+            { IDMEF_ADDRESS_CATEGORY_IPV6_ADDR, "ipv6-addr" },
+            { IDMEF_ADDRESS_CATEGORY_IPV6_ADDR_HEX, "ipv6-addr-hex" },
+            { IDMEF_ADDRESS_CATEGORY_IPV6_NET, "ipv6-net" },
+            { IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK, "ipv6-net-mask" },
+        };
 
-	if ( strcasecmp(name, "unknown" ) == 0)
-		return IDMEF_ADDRESS_CATEGORY_UNKNOWN;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "atm" ) == 0)
-		return IDMEF_ADDRESS_CATEGORY_ATM;
-
-	if ( strcasecmp(name, "e-mail" ) == 0)
-		return IDMEF_ADDRESS_CATEGORY_E_MAIL;
-
-	if ( strcasecmp(name, "lotus-notes" ) == 0)
-		return IDMEF_ADDRESS_CATEGORY_LOTUS_NOTES;
-
-	if ( strcasecmp(name, "mac" ) == 0)
-		return IDMEF_ADDRESS_CATEGORY_MAC;
-
-	if ( strcasecmp(name, "sna" ) == 0)
-		return IDMEF_ADDRESS_CATEGORY_SNA;
-
-	if ( strcasecmp(name, "vm" ) == 0)
-		return IDMEF_ADDRESS_CATEGORY_VM;
-
-	if ( strcasecmp(name, "ipv4-addr" ) == 0)
-		return IDMEF_ADDRESS_CATEGORY_IPV4_ADDR;
-
-	if ( strcasecmp(name, "ipv4-addr-hex" ) == 0)
-		return IDMEF_ADDRESS_CATEGORY_IPV4_ADDR_HEX;
-
-	if ( strcasecmp(name, "ipv4-net" ) == 0)
-		return IDMEF_ADDRESS_CATEGORY_IPV4_NET;
-
-	if ( strcasecmp(name, "ipv4-net-mask" ) == 0)
-		return IDMEF_ADDRESS_CATEGORY_IPV4_NET_MASK;
-
-	if ( strcasecmp(name, "ipv6-addr" ) == 0)
-		return IDMEF_ADDRESS_CATEGORY_IPV6_ADDR;
-
-	if ( strcasecmp(name, "ipv6-addr-hex" ) == 0)
-		return IDMEF_ADDRESS_CATEGORY_IPV6_ADDR_HEX;
-
-	if ( strcasecmp(name, "ipv6-net" ) == 0)
-		return IDMEF_ADDRESS_CATEGORY_IPV6_NET;
-
-	if ( strcasecmp(name, "ipv6-net-mask" ) == 0)
-		return IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -484,58 +440,31 @@ idmef_address_category_t idmef_address_category_to_numeric(const char *name)
  */
 const char *idmef_address_category_to_string(idmef_address_category_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_address_category_t val;
+              const char *name;
+        } tbl[] = {
+                { IDMEF_ADDRESS_CATEGORY_UNKNOWN, "unknown" },
+                { IDMEF_ADDRESS_CATEGORY_ATM, "atm" },
+                { IDMEF_ADDRESS_CATEGORY_E_MAIL, "e-mail" },
+                { IDMEF_ADDRESS_CATEGORY_LOTUS_NOTES, "lotus-notes" },
+                { IDMEF_ADDRESS_CATEGORY_MAC, "mac" },
+                { IDMEF_ADDRESS_CATEGORY_SNA, "sna" },
+                { IDMEF_ADDRESS_CATEGORY_VM, "vm" },
+                { IDMEF_ADDRESS_CATEGORY_IPV4_ADDR, "ipv4-addr" },
+                { IDMEF_ADDRESS_CATEGORY_IPV4_ADDR_HEX, "ipv4-addr-hex" },
+                { IDMEF_ADDRESS_CATEGORY_IPV4_NET, "ipv4-net" },
+                { IDMEF_ADDRESS_CATEGORY_IPV4_NET_MASK, "ipv4-net-mask" },
+                { IDMEF_ADDRESS_CATEGORY_IPV6_ADDR, "ipv6-addr" },
+                { IDMEF_ADDRESS_CATEGORY_IPV6_ADDR_HEX, "ipv6-addr-hex" },
+                { IDMEF_ADDRESS_CATEGORY_IPV6_NET, "ipv6-net" },
+                { IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK, "ipv6-net-mask" },
+        };
 
-		case IDMEF_ADDRESS_CATEGORY_UNKNOWN:
-			return "unknown";
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_ADDRESS_CATEGORY_ATM:
-			return "atm";
-
-		case IDMEF_ADDRESS_CATEGORY_E_MAIL:
-			return "e-mail";
-
-		case IDMEF_ADDRESS_CATEGORY_LOTUS_NOTES:
-			return "lotus-notes";
-
-		case IDMEF_ADDRESS_CATEGORY_MAC:
-			return "mac";
-
-		case IDMEF_ADDRESS_CATEGORY_SNA:
-			return "sna";
-
-		case IDMEF_ADDRESS_CATEGORY_VM:
-			return "vm";
-
-		case IDMEF_ADDRESS_CATEGORY_IPV4_ADDR:
-			return "ipv4-addr";
-
-		case IDMEF_ADDRESS_CATEGORY_IPV4_ADDR_HEX:
-			return "ipv4-addr-hex";
-
-		case IDMEF_ADDRESS_CATEGORY_IPV4_NET:
-			return "ipv4-net";
-
-		case IDMEF_ADDRESS_CATEGORY_IPV4_NET_MASK:
-			return "ipv4-net-mask";
-
-		case IDMEF_ADDRESS_CATEGORY_IPV6_ADDR:
-			return "ipv6-addr";
-
-		case IDMEF_ADDRESS_CATEGORY_IPV6_ADDR_HEX:
-			return "ipv6-addr-hex";
-
-		case IDMEF_ADDRESS_CATEGORY_IPV6_NET:
-			return "ipv6-net";
-
-		case IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK:
-			return "ipv6-net-mask";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 
@@ -598,17 +527,22 @@ struct idmef_snmp_service {
  */
 idmef_service_type_t idmef_service_type_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_service_type_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_SERVICE_TYPE_DEFAULT, "default" },
+            { IDMEF_SERVICE_TYPE_WEB, "web" },
+            { IDMEF_SERVICE_TYPE_SNMP, "snmp" },
+        };
 
-	if ( strcasecmp(name, "default" ) == 0)
-		return IDMEF_SERVICE_TYPE_DEFAULT;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "web" ) == 0)
-		return IDMEF_SERVICE_TYPE_WEB;
-
-	if ( strcasecmp(name, "snmp" ) == 0)
-		return IDMEF_SERVICE_TYPE_SNMP;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -621,22 +555,19 @@ idmef_service_type_t idmef_service_type_to_numeric(const char *name)
  */
 const char *idmef_service_type_to_string(idmef_service_type_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_service_type_t val;
+              const char *name;
+        } tbl[] = {
+                { IDMEF_SERVICE_TYPE_DEFAULT, "default" },
+                { IDMEF_SERVICE_TYPE_WEB, "web" },
+                { IDMEF_SERVICE_TYPE_SNMP, "snmp" },
+        };
 
-		case IDMEF_SERVICE_TYPE_DEFAULT:
-			return "default";
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_SERVICE_TYPE_WEB:
-			return "web";
-
-		case IDMEF_SERVICE_TYPE_SNMP:
-			return "snmp";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 
@@ -670,47 +601,32 @@ struct idmef_service {
  */
 idmef_node_category_t idmef_node_category_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_node_category_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_NODE_CATEGORY_UNKNOWN, "unknown" },
+            { IDMEF_NODE_CATEGORY_ADS, "ads" },
+            { IDMEF_NODE_CATEGORY_AFS, "afs" },
+            { IDMEF_NODE_CATEGORY_CODA, "coda" },
+            { IDMEF_NODE_CATEGORY_DFS, "dfs" },
+            { IDMEF_NODE_CATEGORY_DNS, "dns" },
+            { IDMEF_NODE_CATEGORY_HOSTS, "hosts" },
+            { IDMEF_NODE_CATEGORY_KERBEROS, "kerberos" },
+            { IDMEF_NODE_CATEGORY_NDS, "nds" },
+            { IDMEF_NODE_CATEGORY_NIS, "nis" },
+            { IDMEF_NODE_CATEGORY_NISPLUS, "nisplus" },
+            { IDMEF_NODE_CATEGORY_NT, "nt" },
+            { IDMEF_NODE_CATEGORY_WFW, "wfw" },
+        };
 
-	if ( strcasecmp(name, "unknown" ) == 0)
-		return IDMEF_NODE_CATEGORY_UNKNOWN;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "ads" ) == 0)
-		return IDMEF_NODE_CATEGORY_ADS;
-
-	if ( strcasecmp(name, "afs" ) == 0)
-		return IDMEF_NODE_CATEGORY_AFS;
-
-	if ( strcasecmp(name, "coda" ) == 0)
-		return IDMEF_NODE_CATEGORY_CODA;
-
-	if ( strcasecmp(name, "dfs" ) == 0)
-		return IDMEF_NODE_CATEGORY_DFS;
-
-	if ( strcasecmp(name, "dns" ) == 0)
-		return IDMEF_NODE_CATEGORY_DNS;
-
-	if ( strcasecmp(name, "hosts" ) == 0)
-		return IDMEF_NODE_CATEGORY_HOSTS;
-
-	if ( strcasecmp(name, "kerberos" ) == 0)
-		return IDMEF_NODE_CATEGORY_KERBEROS;
-
-	if ( strcasecmp(name, "nds" ) == 0)
-		return IDMEF_NODE_CATEGORY_NDS;
-
-	if ( strcasecmp(name, "nis" ) == 0)
-		return IDMEF_NODE_CATEGORY_NIS;
-
-	if ( strcasecmp(name, "nisplus" ) == 0)
-		return IDMEF_NODE_CATEGORY_NISPLUS;
-
-	if ( strcasecmp(name, "nt" ) == 0)
-		return IDMEF_NODE_CATEGORY_NT;
-
-	if ( strcasecmp(name, "wfw" ) == 0)
-		return IDMEF_NODE_CATEGORY_WFW;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -723,52 +639,29 @@ idmef_node_category_t idmef_node_category_to_numeric(const char *name)
  */
 const char *idmef_node_category_to_string(idmef_node_category_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_node_category_t val;
+              const char *name;
+        } tbl[] = {
+                { IDMEF_NODE_CATEGORY_UNKNOWN, "unknown" },
+                { IDMEF_NODE_CATEGORY_ADS, "ads" },
+                { IDMEF_NODE_CATEGORY_AFS, "afs" },
+                { IDMEF_NODE_CATEGORY_CODA, "coda" },
+                { IDMEF_NODE_CATEGORY_DFS, "dfs" },
+                { IDMEF_NODE_CATEGORY_DNS, "dns" },
+                { IDMEF_NODE_CATEGORY_HOSTS, "hosts" },
+                { IDMEF_NODE_CATEGORY_KERBEROS, "kerberos" },
+                { IDMEF_NODE_CATEGORY_NDS, "nds" },
+                { IDMEF_NODE_CATEGORY_NIS, "nis" },
+                { IDMEF_NODE_CATEGORY_NISPLUS, "nisplus" },
+                { IDMEF_NODE_CATEGORY_NT, "nt" },
+                { IDMEF_NODE_CATEGORY_WFW, "wfw" },
+        };
 
-		case IDMEF_NODE_CATEGORY_UNKNOWN:
-			return "unknown";
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_NODE_CATEGORY_ADS:
-			return "ads";
-
-		case IDMEF_NODE_CATEGORY_AFS:
-			return "afs";
-
-		case IDMEF_NODE_CATEGORY_CODA:
-			return "coda";
-
-		case IDMEF_NODE_CATEGORY_DFS:
-			return "dfs";
-
-		case IDMEF_NODE_CATEGORY_DNS:
-			return "dns";
-
-		case IDMEF_NODE_CATEGORY_HOSTS:
-			return "hosts";
-
-		case IDMEF_NODE_CATEGORY_KERBEROS:
-			return "kerberos";
-
-		case IDMEF_NODE_CATEGORY_NDS:
-			return "nds";
-
-		case IDMEF_NODE_CATEGORY_NIS:
-			return "nis";
-
-		case IDMEF_NODE_CATEGORY_NISPLUS:
-			return "nisplus";
-
-		case IDMEF_NODE_CATEGORY_NT:
-			return "nt";
-
-		case IDMEF_NODE_CATEGORY_WFW:
-			return "wfw";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 
@@ -791,17 +684,22 @@ struct idmef_node {
  */
 idmef_source_spoofed_t idmef_source_spoofed_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_source_spoofed_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_SOURCE_SPOOFED_UNKNOWN, "unknown" },
+            { IDMEF_SOURCE_SPOOFED_YES, "yes" },
+            { IDMEF_SOURCE_SPOOFED_NO, "no" },
+        };
 
-	if ( strcasecmp(name, "unknown" ) == 0)
-		return IDMEF_SOURCE_SPOOFED_UNKNOWN;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "yes" ) == 0)
-		return IDMEF_SOURCE_SPOOFED_YES;
-
-	if ( strcasecmp(name, "no" ) == 0)
-		return IDMEF_SOURCE_SPOOFED_NO;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -814,22 +712,19 @@ idmef_source_spoofed_t idmef_source_spoofed_to_numeric(const char *name)
  */
 const char *idmef_source_spoofed_to_string(idmef_source_spoofed_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_source_spoofed_t val;
+              const char *name;
+        } tbl[] = {
+                { IDMEF_SOURCE_SPOOFED_UNKNOWN, "unknown" },
+                { IDMEF_SOURCE_SPOOFED_YES, "yes" },
+                { IDMEF_SOURCE_SPOOFED_NO, "no" },
+        };
 
-		case IDMEF_SOURCE_SPOOFED_UNKNOWN:
-			return "unknown";
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_SOURCE_SPOOFED_YES:
-			return "yes";
-
-		case IDMEF_SOURCE_SPOOFED_NO:
-			return "no";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 
@@ -882,38 +777,29 @@ struct idmef_inode {
  */
 idmef_checksum_algorithm_t idmef_checksum_algorithm_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_checksum_algorithm_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_CHECKSUM_ALGORITHM_MD4, "md4" },
+            { IDMEF_CHECKSUM_ALGORITHM_MD5, "md5" },
+            { IDMEF_CHECKSUM_ALGORITHM_SHA1, "sha1" },
+            { IDMEF_CHECKSUM_ALGORITHM_SHA2_256, "sha2-256" },
+            { IDMEF_CHECKSUM_ALGORITHM_SHA2_384, "sha2-384" },
+            { IDMEF_CHECKSUM_ALGORITHM_SHA2_512, "sha2-512" },
+            { IDMEF_CHECKSUM_ALGORITHM_CRC_32, "crc-32" },
+            { IDMEF_CHECKSUM_ALGORITHM_HAVAL, "haval" },
+            { IDMEF_CHECKSUM_ALGORITHM_TIGER, "tiger" },
+            { IDMEF_CHECKSUM_ALGORITHM_GOST, "gost" },
+        };
 
-	if ( strcasecmp(name, "md4" ) == 0)
-		return IDMEF_CHECKSUM_ALGORITHM_MD4;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "md5" ) == 0)
-		return IDMEF_CHECKSUM_ALGORITHM_MD5;
-
-	if ( strcasecmp(name, "sha1" ) == 0)
-		return IDMEF_CHECKSUM_ALGORITHM_SHA1;
-
-	if ( strcasecmp(name, "sha2-256" ) == 0)
-		return IDMEF_CHECKSUM_ALGORITHM_SHA2_256;
-
-	if ( strcasecmp(name, "sha2-384" ) == 0)
-		return IDMEF_CHECKSUM_ALGORITHM_SHA2_384;
-
-	if ( strcasecmp(name, "sha2-512" ) == 0)
-		return IDMEF_CHECKSUM_ALGORITHM_SHA2_512;
-
-	if ( strcasecmp(name, "crc-32" ) == 0)
-		return IDMEF_CHECKSUM_ALGORITHM_CRC_32;
-
-	if ( strcasecmp(name, "haval" ) == 0)
-		return IDMEF_CHECKSUM_ALGORITHM_HAVAL;
-
-	if ( strcasecmp(name, "tiger" ) == 0)
-		return IDMEF_CHECKSUM_ALGORITHM_TIGER;
-
-	if ( strcasecmp(name, "gost" ) == 0)
-		return IDMEF_CHECKSUM_ALGORITHM_GOST;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -926,46 +812,26 @@ idmef_checksum_algorithm_t idmef_checksum_algorithm_to_numeric(const char *name)
  */
 const char *idmef_checksum_algorithm_to_string(idmef_checksum_algorithm_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_checksum_algorithm_t val;
+              const char *name;
+        } tbl[] = {{ 0, NULL },
+                { IDMEF_CHECKSUM_ALGORITHM_MD4, "md4" },
+                { IDMEF_CHECKSUM_ALGORITHM_MD5, "md5" },
+                { IDMEF_CHECKSUM_ALGORITHM_SHA1, "sha1" },
+                { IDMEF_CHECKSUM_ALGORITHM_SHA2_256, "sha2-256" },
+                { IDMEF_CHECKSUM_ALGORITHM_SHA2_384, "sha2-384" },
+                { IDMEF_CHECKSUM_ALGORITHM_SHA2_512, "sha2-512" },
+                { IDMEF_CHECKSUM_ALGORITHM_CRC_32, "crc-32" },
+                { IDMEF_CHECKSUM_ALGORITHM_HAVAL, "haval" },
+                { IDMEF_CHECKSUM_ALGORITHM_TIGER, "tiger" },
+                { IDMEF_CHECKSUM_ALGORITHM_GOST, "gost" },
+        };
 
-		case 0:
-			return NULL;
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_CHECKSUM_ALGORITHM_MD4:
-			return "md4";
-
-		case IDMEF_CHECKSUM_ALGORITHM_MD5:
-			return "md5";
-
-		case IDMEF_CHECKSUM_ALGORITHM_SHA1:
-			return "sha1";
-
-		case IDMEF_CHECKSUM_ALGORITHM_SHA2_256:
-			return "sha2-256";
-
-		case IDMEF_CHECKSUM_ALGORITHM_SHA2_384:
-			return "sha2-384";
-
-		case IDMEF_CHECKSUM_ALGORITHM_SHA2_512:
-			return "sha2-512";
-
-		case IDMEF_CHECKSUM_ALGORITHM_CRC_32:
-			return "crc-32";
-
-		case IDMEF_CHECKSUM_ALGORITHM_HAVAL:
-			return "haval";
-
-		case IDMEF_CHECKSUM_ALGORITHM_TIGER:
-			return "tiger";
-
-		case IDMEF_CHECKSUM_ALGORITHM_GOST:
-			return "gost";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 
@@ -987,14 +853,21 @@ struct idmef_checksum {
  */
 idmef_file_category_t idmef_file_category_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_file_category_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_FILE_CATEGORY_CURRENT, "current" },
+            { IDMEF_FILE_CATEGORY_ORIGINAL, "original" },
+        };
 
-	if ( strcasecmp(name, "current" ) == 0)
-		return IDMEF_FILE_CATEGORY_CURRENT;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "original" ) == 0)
-		return IDMEF_FILE_CATEGORY_ORIGINAL;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1007,22 +880,18 @@ idmef_file_category_t idmef_file_category_to_numeric(const char *name)
  */
 const char *idmef_file_category_to_string(idmef_file_category_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_file_category_t val;
+              const char *name;
+        } tbl[] = {{ 0, NULL },
+                { IDMEF_FILE_CATEGORY_CURRENT, "current" },
+                { IDMEF_FILE_CATEGORY_ORIGINAL, "original" },
+        };
 
-		case 0:
-			return NULL;
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_FILE_CATEGORY_CURRENT:
-			return "current";
-
-		case IDMEF_FILE_CATEGORY_ORIGINAL:
-			return "original";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 /**
@@ -1033,38 +902,29 @@ const char *idmef_file_category_to_string(idmef_file_category_t val)
  */
 idmef_file_fstype_t idmef_file_fstype_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_file_fstype_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_FILE_FSTYPE_UFS, "ufs" },
+            { IDMEF_FILE_FSTYPE_EFS, "efs" },
+            { IDMEF_FILE_FSTYPE_NFS, "nfs" },
+            { IDMEF_FILE_FSTYPE_AFS, "afs" },
+            { IDMEF_FILE_FSTYPE_NTFS, "ntfs" },
+            { IDMEF_FILE_FSTYPE_FAT16, "fat16" },
+            { IDMEF_FILE_FSTYPE_FAT32, "fat32" },
+            { IDMEF_FILE_FSTYPE_PCFS, "pcfs" },
+            { IDMEF_FILE_FSTYPE_JOLIET, "joliet" },
+            { IDMEF_FILE_FSTYPE_ISO9660, "iso9660" },
+        };
 
-	if ( strcasecmp(name, "ufs" ) == 0)
-		return IDMEF_FILE_FSTYPE_UFS;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "efs" ) == 0)
-		return IDMEF_FILE_FSTYPE_EFS;
-
-	if ( strcasecmp(name, "nfs" ) == 0)
-		return IDMEF_FILE_FSTYPE_NFS;
-
-	if ( strcasecmp(name, "afs" ) == 0)
-		return IDMEF_FILE_FSTYPE_AFS;
-
-	if ( strcasecmp(name, "ntfs" ) == 0)
-		return IDMEF_FILE_FSTYPE_NTFS;
-
-	if ( strcasecmp(name, "fat16" ) == 0)
-		return IDMEF_FILE_FSTYPE_FAT16;
-
-	if ( strcasecmp(name, "fat32" ) == 0)
-		return IDMEF_FILE_FSTYPE_FAT32;
-
-	if ( strcasecmp(name, "pcfs" ) == 0)
-		return IDMEF_FILE_FSTYPE_PCFS;
-
-	if ( strcasecmp(name, "joliet" ) == 0)
-		return IDMEF_FILE_FSTYPE_JOLIET;
-
-	if ( strcasecmp(name, "iso9660" ) == 0)
-		return IDMEF_FILE_FSTYPE_ISO9660;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1077,46 +937,26 @@ idmef_file_fstype_t idmef_file_fstype_to_numeric(const char *name)
  */
 const char *idmef_file_fstype_to_string(idmef_file_fstype_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_file_fstype_t val;
+              const char *name;
+        } tbl[] = {{ 0, NULL },
+                { IDMEF_FILE_FSTYPE_UFS, "ufs" },
+                { IDMEF_FILE_FSTYPE_EFS, "efs" },
+                { IDMEF_FILE_FSTYPE_NFS, "nfs" },
+                { IDMEF_FILE_FSTYPE_AFS, "afs" },
+                { IDMEF_FILE_FSTYPE_NTFS, "ntfs" },
+                { IDMEF_FILE_FSTYPE_FAT16, "fat16" },
+                { IDMEF_FILE_FSTYPE_FAT32, "fat32" },
+                { IDMEF_FILE_FSTYPE_PCFS, "pcfs" },
+                { IDMEF_FILE_FSTYPE_JOLIET, "joliet" },
+                { IDMEF_FILE_FSTYPE_ISO9660, "iso9660" },
+        };
 
-		case 0:
-			return NULL;
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_FILE_FSTYPE_UFS:
-			return "ufs";
-
-		case IDMEF_FILE_FSTYPE_EFS:
-			return "efs";
-
-		case IDMEF_FILE_FSTYPE_NFS:
-			return "nfs";
-
-		case IDMEF_FILE_FSTYPE_AFS:
-			return "afs";
-
-		case IDMEF_FILE_FSTYPE_NTFS:
-			return "ntfs";
-
-		case IDMEF_FILE_FSTYPE_FAT16:
-			return "fat16";
-
-		case IDMEF_FILE_FSTYPE_FAT32:
-			return "fat32";
-
-		case IDMEF_FILE_FSTYPE_PCFS:
-			return "pcfs";
-
-		case IDMEF_FILE_FSTYPE_JOLIET:
-			return "joliet";
-
-		case IDMEF_FILE_FSTYPE_ISO9660:
-			return "iso9660";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 
@@ -1157,26 +997,25 @@ struct idmef_file {
  */
 idmef_linkage_category_t idmef_linkage_category_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_linkage_category_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_LINKAGE_CATEGORY_HARD_LINK, "hard-link" },
+            { IDMEF_LINKAGE_CATEGORY_MOUNT_POINT, "mount-point" },
+            { IDMEF_LINKAGE_CATEGORY_REPARSE_POINT, "reparse-point" },
+            { IDMEF_LINKAGE_CATEGORY_SHORTCUT, "shortcut" },
+            { IDMEF_LINKAGE_CATEGORY_STREAM, "stream" },
+            { IDMEF_LINKAGE_CATEGORY_SYMBOLIC_LINK, "symbolic-link" },
+        };
 
-	if ( strcasecmp(name, "hard-link" ) == 0)
-		return IDMEF_LINKAGE_CATEGORY_HARD_LINK;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "mount-point" ) == 0)
-		return IDMEF_LINKAGE_CATEGORY_MOUNT_POINT;
-
-	if ( strcasecmp(name, "reparse-point" ) == 0)
-		return IDMEF_LINKAGE_CATEGORY_REPARSE_POINT;
-
-	if ( strcasecmp(name, "shortcut" ) == 0)
-		return IDMEF_LINKAGE_CATEGORY_SHORTCUT;
-
-	if ( strcasecmp(name, "stream" ) == 0)
-		return IDMEF_LINKAGE_CATEGORY_STREAM;
-
-	if ( strcasecmp(name, "symbolic-link" ) == 0)
-		return IDMEF_LINKAGE_CATEGORY_SYMBOLIC_LINK;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1189,34 +1028,22 @@ idmef_linkage_category_t idmef_linkage_category_to_numeric(const char *name)
  */
 const char *idmef_linkage_category_to_string(idmef_linkage_category_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_linkage_category_t val;
+              const char *name;
+        } tbl[] = {{ 0, NULL },
+                { IDMEF_LINKAGE_CATEGORY_HARD_LINK, "hard-link" },
+                { IDMEF_LINKAGE_CATEGORY_MOUNT_POINT, "mount-point" },
+                { IDMEF_LINKAGE_CATEGORY_REPARSE_POINT, "reparse-point" },
+                { IDMEF_LINKAGE_CATEGORY_SHORTCUT, "shortcut" },
+                { IDMEF_LINKAGE_CATEGORY_STREAM, "stream" },
+                { IDMEF_LINKAGE_CATEGORY_SYMBOLIC_LINK, "symbolic-link" },
+        };
 
-		case 0:
-			return NULL;
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_LINKAGE_CATEGORY_HARD_LINK:
-			return "hard-link";
-
-		case IDMEF_LINKAGE_CATEGORY_MOUNT_POINT:
-			return "mount-point";
-
-		case IDMEF_LINKAGE_CATEGORY_REPARSE_POINT:
-			return "reparse-point";
-
-		case IDMEF_LINKAGE_CATEGORY_SHORTCUT:
-			return "shortcut";
-
-		case IDMEF_LINKAGE_CATEGORY_STREAM:
-			return "stream";
-
-		case IDMEF_LINKAGE_CATEGORY_SYMBOLIC_LINK:
-			return "symbolic-link";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 
@@ -1240,17 +1067,22 @@ struct idmef_linkage {
  */
 idmef_target_decoy_t idmef_target_decoy_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_target_decoy_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_TARGET_DECOY_UNKNOWN, "unknown" },
+            { IDMEF_TARGET_DECOY_YES, "yes" },
+            { IDMEF_TARGET_DECOY_NO, "no" },
+        };
 
-	if ( strcasecmp(name, "unknown" ) == 0)
-		return IDMEF_TARGET_DECOY_UNKNOWN;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "yes" ) == 0)
-		return IDMEF_TARGET_DECOY_YES;
-
-	if ( strcasecmp(name, "no" ) == 0)
-		return IDMEF_TARGET_DECOY_NO;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1263,22 +1095,19 @@ idmef_target_decoy_t idmef_target_decoy_to_numeric(const char *name)
  */
 const char *idmef_target_decoy_to_string(idmef_target_decoy_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_target_decoy_t val;
+              const char *name;
+        } tbl[] = {
+                { IDMEF_TARGET_DECOY_UNKNOWN, "unknown" },
+                { IDMEF_TARGET_DECOY_YES, "yes" },
+                { IDMEF_TARGET_DECOY_NO, "no" },
+        };
 
-		case IDMEF_TARGET_DECOY_UNKNOWN:
-			return "unknown";
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_TARGET_DECOY_YES:
-			return "yes";
-
-		case IDMEF_TARGET_DECOY_NO:
-			return "no";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 
@@ -1301,6 +1130,7 @@ struct idmef_target {
 
 
 struct idmef_analyzer { 
+         IS_LISTED;
   REFCOUNT;
          prelude_string_t *analyzerid;
  
@@ -1314,7 +1144,6 @@ struct idmef_analyzer {
  
          idmef_node_t *node;
          idmef_process_t *process;
-         struct idmef_analyzer *analyzer;
  
  
 };
@@ -1325,8 +1154,9 @@ struct idmef_alertident {
          IS_LISTED;
   REFCOUNT;
  
-         uint64_t alertident;
-         OPTIONAL_INT(uint64_t, analyzerid);
+         prelude_string_t alertident;
+         prelude_string_t *analyzerid;
+ 
  
 };
 
@@ -1339,20 +1169,23 @@ struct idmef_alertident {
  */
 idmef_impact_severity_t idmef_impact_severity_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_impact_severity_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_IMPACT_SEVERITY_LOW, "low" },
+            { IDMEF_IMPACT_SEVERITY_MEDIUM, "medium" },
+            { IDMEF_IMPACT_SEVERITY_HIGH, "high" },
+            { IDMEF_IMPACT_SEVERITY_INFO, "info" },
+        };
 
-	if ( strcasecmp(name, "low" ) == 0)
-		return IDMEF_IMPACT_SEVERITY_LOW;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "medium" ) == 0)
-		return IDMEF_IMPACT_SEVERITY_MEDIUM;
-
-	if ( strcasecmp(name, "high" ) == 0)
-		return IDMEF_IMPACT_SEVERITY_HIGH;
-
-	if ( strcasecmp(name, "info" ) == 0)
-		return IDMEF_IMPACT_SEVERITY_INFO;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1365,28 +1198,20 @@ idmef_impact_severity_t idmef_impact_severity_to_numeric(const char *name)
  */
 const char *idmef_impact_severity_to_string(idmef_impact_severity_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_impact_severity_t val;
+              const char *name;
+        } tbl[] = {{ 0, NULL },
+                { IDMEF_IMPACT_SEVERITY_LOW, "low" },
+                { IDMEF_IMPACT_SEVERITY_MEDIUM, "medium" },
+                { IDMEF_IMPACT_SEVERITY_HIGH, "high" },
+                { IDMEF_IMPACT_SEVERITY_INFO, "info" },
+        };
 
-		case 0:
-			return NULL;
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_IMPACT_SEVERITY_LOW:
-			return "low";
-
-		case IDMEF_IMPACT_SEVERITY_MEDIUM:
-			return "medium";
-
-		case IDMEF_IMPACT_SEVERITY_HIGH:
-			return "high";
-
-		case IDMEF_IMPACT_SEVERITY_INFO:
-			return "info";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 /**
@@ -1397,14 +1222,21 @@ const char *idmef_impact_severity_to_string(idmef_impact_severity_t val)
  */
 idmef_impact_completion_t idmef_impact_completion_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_impact_completion_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_IMPACT_COMPLETION_FAILED, "failed" },
+            { IDMEF_IMPACT_COMPLETION_SUCCEEDED, "succeeded" },
+        };
 
-	if ( strcasecmp(name, "failed" ) == 0)
-		return IDMEF_IMPACT_COMPLETION_FAILED;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "succeeded" ) == 0)
-		return IDMEF_IMPACT_COMPLETION_SUCCEEDED;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1417,22 +1249,18 @@ idmef_impact_completion_t idmef_impact_completion_to_numeric(const char *name)
  */
 const char *idmef_impact_completion_to_string(idmef_impact_completion_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_impact_completion_t val;
+              const char *name;
+        } tbl[] = {{ 0, NULL },
+                { IDMEF_IMPACT_COMPLETION_FAILED, "failed" },
+                { IDMEF_IMPACT_COMPLETION_SUCCEEDED, "succeeded" },
+        };
 
-		case 0:
-			return NULL;
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_IMPACT_COMPLETION_FAILED:
-			return "failed";
-
-		case IDMEF_IMPACT_COMPLETION_SUCCEEDED:
-			return "succeeded";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 /**
@@ -1443,26 +1271,25 @@ const char *idmef_impact_completion_to_string(idmef_impact_completion_t val)
  */
 idmef_impact_type_t idmef_impact_type_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_impact_type_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_IMPACT_TYPE_OTHER, "other" },
+            { IDMEF_IMPACT_TYPE_ADMIN, "admin" },
+            { IDMEF_IMPACT_TYPE_DOS, "dos" },
+            { IDMEF_IMPACT_TYPE_FILE, "file" },
+            { IDMEF_IMPACT_TYPE_RECON, "recon" },
+            { IDMEF_IMPACT_TYPE_USER, "user" },
+        };
 
-	if ( strcasecmp(name, "other" ) == 0)
-		return IDMEF_IMPACT_TYPE_OTHER;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "admin" ) == 0)
-		return IDMEF_IMPACT_TYPE_ADMIN;
-
-	if ( strcasecmp(name, "dos" ) == 0)
-		return IDMEF_IMPACT_TYPE_DOS;
-
-	if ( strcasecmp(name, "file" ) == 0)
-		return IDMEF_IMPACT_TYPE_FILE;
-
-	if ( strcasecmp(name, "recon" ) == 0)
-		return IDMEF_IMPACT_TYPE_RECON;
-
-	if ( strcasecmp(name, "user" ) == 0)
-		return IDMEF_IMPACT_TYPE_USER;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1475,31 +1302,22 @@ idmef_impact_type_t idmef_impact_type_to_numeric(const char *name)
  */
 const char *idmef_impact_type_to_string(idmef_impact_type_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_impact_type_t val;
+              const char *name;
+        } tbl[] = {
+                { IDMEF_IMPACT_TYPE_OTHER, "other" },
+                { IDMEF_IMPACT_TYPE_ADMIN, "admin" },
+                { IDMEF_IMPACT_TYPE_DOS, "dos" },
+                { IDMEF_IMPACT_TYPE_FILE, "file" },
+                { IDMEF_IMPACT_TYPE_RECON, "recon" },
+                { IDMEF_IMPACT_TYPE_USER, "user" },
+        };
 
-		case IDMEF_IMPACT_TYPE_OTHER:
-			return "other";
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_IMPACT_TYPE_ADMIN:
-			return "admin";
-
-		case IDMEF_IMPACT_TYPE_DOS:
-			return "dos";
-
-		case IDMEF_IMPACT_TYPE_FILE:
-			return "file";
-
-		case IDMEF_IMPACT_TYPE_RECON:
-			return "recon";
-
-		case IDMEF_IMPACT_TYPE_USER:
-			return "user";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 
@@ -1522,20 +1340,23 @@ struct idmef_impact {
  */
 idmef_action_category_t idmef_action_category_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_action_category_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_ACTION_CATEGORY_OTHER, "other" },
+            { IDMEF_ACTION_CATEGORY_BLOCK_INSTALLED, "block-installed" },
+            { IDMEF_ACTION_CATEGORY_NOTIFICATION_SENT, "notification-sent" },
+            { IDMEF_ACTION_CATEGORY_TAKEN_OFFLINE, "taken-offline" },
+        };
 
-	if ( strcasecmp(name, "other" ) == 0)
-		return IDMEF_ACTION_CATEGORY_OTHER;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "block-installed" ) == 0)
-		return IDMEF_ACTION_CATEGORY_BLOCK_INSTALLED;
-
-	if ( strcasecmp(name, "notification-sent" ) == 0)
-		return IDMEF_ACTION_CATEGORY_NOTIFICATION_SENT;
-
-	if ( strcasecmp(name, "taken-offline" ) == 0)
-		return IDMEF_ACTION_CATEGORY_TAKEN_OFFLINE;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1548,25 +1369,20 @@ idmef_action_category_t idmef_action_category_to_numeric(const char *name)
  */
 const char *idmef_action_category_to_string(idmef_action_category_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_action_category_t val;
+              const char *name;
+        } tbl[] = {
+                { IDMEF_ACTION_CATEGORY_OTHER, "other" },
+                { IDMEF_ACTION_CATEGORY_BLOCK_INSTALLED, "block-installed" },
+                { IDMEF_ACTION_CATEGORY_NOTIFICATION_SENT, "notification-sent" },
+                { IDMEF_ACTION_CATEGORY_TAKEN_OFFLINE, "taken-offline" },
+        };
 
-		case IDMEF_ACTION_CATEGORY_OTHER:
-			return "other";
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_ACTION_CATEGORY_BLOCK_INSTALLED:
-			return "block-installed";
-
-		case IDMEF_ACTION_CATEGORY_NOTIFICATION_SENT:
-			return "notification-sent";
-
-		case IDMEF_ACTION_CATEGORY_TAKEN_OFFLINE:
-			return "taken-offline";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 
@@ -1588,20 +1404,23 @@ struct idmef_action {
  */
 idmef_confidence_rating_t idmef_confidence_rating_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_confidence_rating_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_CONFIDENCE_RATING_NUMERIC, "numeric" },
+            { IDMEF_CONFIDENCE_RATING_LOW, "low" },
+            { IDMEF_CONFIDENCE_RATING_MEDIUM, "medium" },
+            { IDMEF_CONFIDENCE_RATING_HIGH, "high" },
+        };
 
-	if ( strcasecmp(name, "numeric" ) == 0)
-		return IDMEF_CONFIDENCE_RATING_NUMERIC;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "low" ) == 0)
-		return IDMEF_CONFIDENCE_RATING_LOW;
-
-	if ( strcasecmp(name, "medium" ) == 0)
-		return IDMEF_CONFIDENCE_RATING_MEDIUM;
-
-	if ( strcasecmp(name, "high" ) == 0)
-		return IDMEF_CONFIDENCE_RATING_HIGH;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1614,25 +1433,20 @@ idmef_confidence_rating_t idmef_confidence_rating_to_numeric(const char *name)
  */
 const char *idmef_confidence_rating_to_string(idmef_confidence_rating_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_confidence_rating_t val;
+              const char *name;
+        } tbl[] = {
+                { IDMEF_CONFIDENCE_RATING_NUMERIC, "numeric" },
+                { IDMEF_CONFIDENCE_RATING_LOW, "low" },
+                { IDMEF_CONFIDENCE_RATING_MEDIUM, "medium" },
+                { IDMEF_CONFIDENCE_RATING_HIGH, "high" },
+        };
 
-		case IDMEF_CONFIDENCE_RATING_NUMERIC:
-			return "numeric";
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_CONFIDENCE_RATING_LOW:
-			return "low";
-
-		case IDMEF_CONFIDENCE_RATING_MEDIUM:
-			return "medium";
-
-		case IDMEF_CONFIDENCE_RATING_HIGH:
-			return "high";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 
@@ -1696,20 +1510,23 @@ struct idmef_overflow_alert {
  */
 idmef_alert_type_t idmef_alert_type_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_alert_type_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_ALERT_TYPE_DEFAULT, "default" },
+            { IDMEF_ALERT_TYPE_TOOL, "tool" },
+            { IDMEF_ALERT_TYPE_CORRELATION, "correlation" },
+            { IDMEF_ALERT_TYPE_OVERFLOW, "overflow" },
+        };
 
-	if ( strcasecmp(name, "default" ) == 0)
-		return IDMEF_ALERT_TYPE_DEFAULT;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "tool" ) == 0)
-		return IDMEF_ALERT_TYPE_TOOL;
-
-	if ( strcasecmp(name, "correlation" ) == 0)
-		return IDMEF_ALERT_TYPE_CORRELATION;
-
-	if ( strcasecmp(name, "overflow" ) == 0)
-		return IDMEF_ALERT_TYPE_OVERFLOW;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1722,32 +1539,28 @@ idmef_alert_type_t idmef_alert_type_to_numeric(const char *name)
  */
 const char *idmef_alert_type_to_string(idmef_alert_type_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_alert_type_t val;
+              const char *name;
+        } tbl[] = {
+                { IDMEF_ALERT_TYPE_DEFAULT, "default" },
+                { IDMEF_ALERT_TYPE_TOOL, "tool" },
+                { IDMEF_ALERT_TYPE_CORRELATION, "correlation" },
+                { IDMEF_ALERT_TYPE_OVERFLOW, "overflow" },
+        };
 
-		case IDMEF_ALERT_TYPE_DEFAULT:
-			return "default";
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_ALERT_TYPE_TOOL:
-			return "tool";
-
-		case IDMEF_ALERT_TYPE_CORRELATION:
-			return "correlation";
-
-		case IDMEF_ALERT_TYPE_OVERFLOW:
-			return "overflow";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 
 struct idmef_alert { 
          prelude_string_t *messageid;
  
-         idmef_analyzer_t *analyzer;
+         LISTED_OBJECT(analyzer_list, idmef_analyzer_t);
+ 
          idmef_time_t create_time;
          idmef_classification_t *classification;
          idmef_time_t *detect_time;
@@ -1773,7 +1586,7 @@ struct idmef_alert {
 
 struct idmef_heartbeat { 
          prelude_string_t *messageid;
-         idmef_analyzer_t *analyzer;
+         LISTED_OBJECT(analyzer_list, idmef_analyzer_t);
  
          idmef_time_t create_time;
          idmef_time_t *analyzer_time;
@@ -1792,14 +1605,21 @@ struct idmef_heartbeat {
  */
 idmef_message_type_t idmef_message_type_to_numeric(const char *name)
 {
+        int i;
+        const struct {
+              idmef_message_type_t val;
+              const char *name;
+        } tbl[] = {
+            { IDMEF_MESSAGE_TYPE_ALERT, "alert" },
+            { IDMEF_MESSAGE_TYPE_HEARTBEAT, "heartbeat" },
+        };
 
-	if ( strcasecmp(name, "alert" ) == 0)
-		return IDMEF_MESSAGE_TYPE_ALERT;
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
 
-	if ( strcasecmp(name, "heartbeat" ) == 0)
-		return IDMEF_MESSAGE_TYPE_HEARTBEAT;
-
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 }	
 
 /**
@@ -1812,22 +1632,18 @@ idmef_message_type_t idmef_message_type_to_numeric(const char *name)
  */
 const char *idmef_message_type_to_string(idmef_message_type_t val)
 {
-	switch ( val ) {
+        const struct {
+              idmef_message_type_t val;
+              const char *name;
+        } tbl[] = {{ 0, NULL },
+                { IDMEF_MESSAGE_TYPE_ALERT, "alert" },
+                { IDMEF_MESSAGE_TYPE_HEARTBEAT, "heartbeat" },
+        };
 
-		case 0:
-			return NULL;
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
 
-		case IDMEF_MESSAGE_TYPE_ALERT:
-			return "alert";
-
-		case IDMEF_MESSAGE_TYPE_HEARTBEAT:
-			return "heartbeat";
-
-		default:
-			return NULL;
-	}
-
-	return NULL;
+        return tbl[val].name;
 }
 
 
@@ -2592,35 +2408,23 @@ int idmef_classification_new_child(void *p, idmef_child_t child, int n, void **r
 			return idmef_classification_new_text(ptr, (prelude_string_t **) ret);
 
 		case 2: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_classification_new_reference(ptr, (idmef_reference_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->reference_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, idmef_reference_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_classification_new_reference(ptr, (idmef_reference_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_classification_new_reference(ptr, (idmef_reference_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->reference_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, idmef_reference_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_classification_new_reference(ptr, (idmef_reference_t **) ret, n);
 		}
 
 		default:
@@ -2825,17 +2629,19 @@ idmef_reference_t *idmef_classification_get_next_reference(idmef_classification_
         return NULL;
 }
 
+
 /**
  * idmef_classification_set_reference:
  * @ptr: pointer to a #idmef_classification_t object.
  * @object: pointer to a #idmef_reference_t object.
  *
- * Add @object to the tail of @ptr list of #idmef_reference_t object.
+ * Add @object to the beginning of @ptr list of #idmef_reference_t object.
  */
-void idmef_classification_set_reference(idmef_classification_t *ptr, idmef_reference_t *object)
+void idmef_classification_set_reference(idmef_classification_t *ptr, idmef_reference_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->reference_list, &object->list);
+        list_insert(&ptr->reference_list, &object->list, pos);
 }
+
 
 /**
  * idmef_classification_new_reference:
@@ -2847,7 +2653,7 @@ void idmef_classification_set_reference(idmef_classification_t *ptr, idmef_refer
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_classification_new_reference(idmef_classification_t *ptr, idmef_reference_t **ret)
+int idmef_classification_new_reference(idmef_classification_t *ptr, idmef_reference_t **ret, int pos)
 {	
         int retval;
 
@@ -2855,9 +2661,9 @@ int idmef_classification_new_reference(idmef_classification_t *ptr, idmef_refere
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->reference_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->reference_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 
@@ -3442,35 +3248,23 @@ int idmef_user_new_child(void *p, idmef_child_t child, int n, void **ret)
 			return idmef_user_new_category(ptr, (idmef_user_category_t **) ret);
 
 		case 2: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_user_new_user_id(ptr, (idmef_user_id_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->user_id_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, idmef_user_id_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_user_new_user_id(ptr, (idmef_user_id_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_user_new_user_id(ptr, (idmef_user_id_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->user_id_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, idmef_user_id_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_user_new_user_id(ptr, (idmef_user_id_t **) ret, n);
 		}
 
 		default:
@@ -3662,17 +3456,19 @@ idmef_user_id_t *idmef_user_get_next_user_id(idmef_user_t *ptr, idmef_user_id_t 
         return NULL;
 }
 
+
 /**
  * idmef_user_set_user_id:
  * @ptr: pointer to a #idmef_user_t object.
  * @object: pointer to a #idmef_user_id_t object.
  *
- * Add @object to the tail of @ptr list of #idmef_user_id_t object.
+ * Add @object to the beginning of @ptr list of #idmef_user_id_t object.
  */
-void idmef_user_set_user_id(idmef_user_t *ptr, idmef_user_id_t *object)
+void idmef_user_set_user_id(idmef_user_t *ptr, idmef_user_id_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->user_id_list, &object->list);
+        list_insert(&ptr->user_id_list, &object->list, pos);
 }
+
 
 /**
  * idmef_user_new_user_id:
@@ -3684,7 +3480,7 @@ void idmef_user_set_user_id(idmef_user_t *ptr, idmef_user_id_t *object)
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_user_new_user_id(idmef_user_t *ptr, idmef_user_id_t **ret)
+int idmef_user_new_user_id(idmef_user_t *ptr, idmef_user_id_t **ret, int pos)
 {	
         int retval;
 
@@ -3692,9 +3488,9 @@ int idmef_user_new_user_id(idmef_user_t *ptr, idmef_user_id_t **ret)
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->user_id_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->user_id_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 
@@ -4370,67 +4166,43 @@ int idmef_process_new_child(void *p, idmef_child_t child, int n, void **ret)
 			return idmef_process_new_path(ptr, (prelude_string_t **) ret);
 
 		case 4: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_process_new_arg(ptr, (prelude_string_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->arg_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, prelude_string_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_process_new_arg(ptr, (prelude_string_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_process_new_arg(ptr, (prelude_string_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->arg_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_process_new_arg(ptr, (prelude_string_t **) ret, n);
 		}
 
 		case 5: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_process_new_env(ptr, (prelude_string_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->env_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, prelude_string_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_process_new_env(ptr, (prelude_string_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_process_new_env(ptr, (prelude_string_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->env_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_process_new_env(ptr, (prelude_string_t **) ret, n);
 		}
 
 		default:
@@ -4789,17 +4561,19 @@ prelude_string_t *idmef_process_get_next_arg(idmef_process_t *ptr, prelude_strin
         return NULL;
 }
 
+
 /**
  * idmef_process_set_arg:
  * @ptr: pointer to a #idmef_process_t object.
  * @object: pointer to a #prelude_string_t object.
  *
- * Add @object to the tail of @ptr list of #prelude_string_t object.
+ * Add @object to the beginning of @ptr list of #prelude_string_t object.
  */
-void idmef_process_set_arg(idmef_process_t *ptr, prelude_string_t *object)
+void idmef_process_set_arg(idmef_process_t *ptr, prelude_string_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->arg_list, &object->list);
+        list_insert(&ptr->arg_list, &object->list, pos);
 }
+
 
 /**
  * idmef_process_new_arg:
@@ -4811,7 +4585,7 @@ void idmef_process_set_arg(idmef_process_t *ptr, prelude_string_t *object)
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_process_new_arg(idmef_process_t *ptr, prelude_string_t **ret)
+int idmef_process_new_arg(idmef_process_t *ptr, prelude_string_t **ret, int pos)
 {	
         int retval;
 
@@ -4819,9 +4593,9 @@ int idmef_process_new_arg(idmef_process_t *ptr, prelude_string_t **ret)
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->arg_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->arg_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 
@@ -4879,17 +4653,19 @@ prelude_string_t *idmef_process_get_next_env(idmef_process_t *ptr, prelude_strin
         return NULL;
 }
 
+
 /**
  * idmef_process_set_env:
  * @ptr: pointer to a #idmef_process_t object.
  * @object: pointer to a #prelude_string_t object.
  *
- * Add @object to the tail of @ptr list of #prelude_string_t object.
+ * Add @object to the beginning of @ptr list of #prelude_string_t object.
  */
-void idmef_process_set_env(idmef_process_t *ptr, prelude_string_t *object)
+void idmef_process_set_env(idmef_process_t *ptr, prelude_string_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->env_list, &object->list);
+        list_insert(&ptr->env_list, &object->list, pos);
 }
+
 
 /**
  * idmef_process_new_env:
@@ -4901,7 +4677,7 @@ void idmef_process_set_env(idmef_process_t *ptr, prelude_string_t *object)
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_process_new_env(idmef_process_t *ptr, prelude_string_t **ret)
+int idmef_process_new_env(idmef_process_t *ptr, prelude_string_t **ret, int pos)
 {	
         int retval;
 
@@ -4909,9 +4685,9 @@ int idmef_process_new_env(idmef_process_t *ptr, prelude_string_t **ret)
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->env_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->env_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 
@@ -5030,35 +4806,23 @@ int idmef_web_service_new_child(void *p, idmef_child_t child, int n, void **ret)
 			return idmef_web_service_new_http_method(ptr, (prelude_string_t **) ret);
 
 		case 3: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_web_service_new_arg(ptr, (prelude_string_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->arg_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, prelude_string_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_web_service_new_arg(ptr, (prelude_string_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_web_service_new_arg(ptr, (prelude_string_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->arg_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_web_service_new_arg(ptr, (prelude_string_t **) ret, n);
 		}
 
 		default:
@@ -5342,17 +5106,19 @@ prelude_string_t *idmef_web_service_get_next_arg(idmef_web_service_t *ptr, prelu
         return NULL;
 }
 
+
 /**
  * idmef_web_service_set_arg:
  * @ptr: pointer to a #idmef_web_service_t object.
  * @object: pointer to a #prelude_string_t object.
  *
- * Add @object to the tail of @ptr list of #prelude_string_t object.
+ * Add @object to the beginning of @ptr list of #prelude_string_t object.
  */
-void idmef_web_service_set_arg(idmef_web_service_t *ptr, prelude_string_t *object)
+void idmef_web_service_set_arg(idmef_web_service_t *ptr, prelude_string_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->arg_list, &object->list);
+        list_insert(&ptr->arg_list, &object->list, pos);
 }
+
 
 /**
  * idmef_web_service_new_arg:
@@ -5364,7 +5130,7 @@ void idmef_web_service_set_arg(idmef_web_service_t *ptr, prelude_string_t *objec
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_web_service_new_arg(idmef_web_service_t *ptr, prelude_string_t **ret)
+int idmef_web_service_new_arg(idmef_web_service_t *ptr, prelude_string_t **ret, int pos)
 {	
         int retval;
 
@@ -5372,9 +5138,9 @@ int idmef_web_service_new_arg(idmef_web_service_t *ptr, prelude_string_t **ret)
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->arg_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->arg_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 
@@ -7059,35 +6825,23 @@ int idmef_node_new_child(void *p, idmef_child_t child, int n, void **ret)
 			return idmef_node_new_name(ptr, (prelude_string_t **) ret);
 
 		case 4: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_node_new_address(ptr, (idmef_address_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->address_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, idmef_address_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_node_new_address(ptr, (idmef_address_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_node_new_address(ptr, (idmef_address_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->address_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, idmef_address_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_node_new_address(ptr, (idmef_address_t **) ret, n);
 		}
 
 		default:
@@ -7437,17 +7191,19 @@ idmef_address_t *idmef_node_get_next_address(idmef_node_t *ptr, idmef_address_t 
         return NULL;
 }
 
+
 /**
  * idmef_node_set_address:
  * @ptr: pointer to a #idmef_node_t object.
  * @object: pointer to a #idmef_address_t object.
  *
- * Add @object to the tail of @ptr list of #idmef_address_t object.
+ * Add @object to the beginning of @ptr list of #idmef_address_t object.
  */
-void idmef_node_set_address(idmef_node_t *ptr, idmef_address_t *object)
+void idmef_node_set_address(idmef_node_t *ptr, idmef_address_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->address_list, &object->list);
+        list_insert(&ptr->address_list, &object->list, pos);
 }
+
 
 /**
  * idmef_node_new_address:
@@ -7459,7 +7215,7 @@ void idmef_node_set_address(idmef_node_t *ptr, idmef_address_t *object)
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_node_new_address(idmef_node_t *ptr, idmef_address_t **ret)
+int idmef_node_new_address(idmef_node_t *ptr, idmef_address_t **ret, int pos)
 {	
         int retval;
 
@@ -7467,9 +7223,9 @@ int idmef_node_new_address(idmef_node_t *ptr, idmef_address_t **ret)
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->address_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->address_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 
@@ -8187,35 +7943,23 @@ int idmef_file_access_new_child(void *p, idmef_child_t child, int n, void **ret)
 			return idmef_file_access_new_user_id(ptr, (idmef_user_id_t **) ret);
 
 		case 1: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_file_access_new_permission(ptr, (prelude_string_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->permission_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, prelude_string_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_file_access_new_permission(ptr, (prelude_string_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_file_access_new_permission(ptr, (prelude_string_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->permission_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_file_access_new_permission(ptr, (prelude_string_t **) ret, n);
 		}
 
 		default:
@@ -8334,17 +8078,19 @@ prelude_string_t *idmef_file_access_get_next_permission(idmef_file_access_t *ptr
         return NULL;
 }
 
+
 /**
  * idmef_file_access_set_permission:
  * @ptr: pointer to a #idmef_file_access_t object.
  * @object: pointer to a #prelude_string_t object.
  *
- * Add @object to the tail of @ptr list of #prelude_string_t object.
+ * Add @object to the beginning of @ptr list of #prelude_string_t object.
  */
-void idmef_file_access_set_permission(idmef_file_access_t *ptr, prelude_string_t *object)
+void idmef_file_access_set_permission(idmef_file_access_t *ptr, prelude_string_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->permission_list, &object->list);
+        list_insert(&ptr->permission_list, &object->list, pos);
 }
+
 
 /**
  * idmef_file_access_new_permission:
@@ -8356,7 +8102,7 @@ void idmef_file_access_set_permission(idmef_file_access_t *ptr, prelude_string_t
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_file_access_new_permission(idmef_file_access_t *ptr, prelude_string_t **ret)
+int idmef_file_access_new_permission(idmef_file_access_t *ptr, prelude_string_t **ret, int pos)
 {	
         int retval;
 
@@ -8364,9 +8110,9 @@ int idmef_file_access_new_permission(idmef_file_access_t *ptr, prelude_string_t 
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->permission_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->permission_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 
@@ -9376,102 +9122,66 @@ int idmef_file_new_child(void *p, idmef_child_t child, int n, void **ret)
 			return idmef_file_new_disk_size(ptr, (uint64_t **) ret);
 
 		case 8: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_file_new_file_access(ptr, (idmef_file_access_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->file_access_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, idmef_file_access_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_file_new_file_access(ptr, (idmef_file_access_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_file_new_file_access(ptr, (idmef_file_access_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->file_access_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, idmef_file_access_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_file_new_file_access(ptr, (idmef_file_access_t **) ret, n);
 		}
 
 		case 9: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_file_new_linkage(ptr, (idmef_linkage_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->linkage_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, idmef_linkage_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_file_new_linkage(ptr, (idmef_linkage_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_file_new_linkage(ptr, (idmef_linkage_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->linkage_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, idmef_linkage_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_file_new_linkage(ptr, (idmef_linkage_t **) ret, n);
 		}
 
 		case 10:
 			return idmef_file_new_inode(ptr, (idmef_inode_t **) ret);
 
 		case 11: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_file_new_checksum(ptr, (idmef_checksum_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->checksum_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, idmef_checksum_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_file_new_checksum(ptr, (idmef_checksum_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_file_new_checksum(ptr, (idmef_checksum_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->checksum_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, idmef_checksum_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_file_new_checksum(ptr, (idmef_checksum_t **) ret, n);
 		}
 
 		case 12:
@@ -10140,17 +9850,19 @@ idmef_file_access_t *idmef_file_get_next_file_access(idmef_file_t *ptr, idmef_fi
         return NULL;
 }
 
+
 /**
  * idmef_file_set_file_access:
  * @ptr: pointer to a #idmef_file_t object.
  * @object: pointer to a #idmef_file_access_t object.
  *
- * Add @object to the tail of @ptr list of #idmef_file_access_t object.
+ * Add @object to the beginning of @ptr list of #idmef_file_access_t object.
  */
-void idmef_file_set_file_access(idmef_file_t *ptr, idmef_file_access_t *object)
+void idmef_file_set_file_access(idmef_file_t *ptr, idmef_file_access_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->file_access_list, &object->list);
+        list_insert(&ptr->file_access_list, &object->list, pos);
 }
+
 
 /**
  * idmef_file_new_file_access:
@@ -10162,7 +9874,7 @@ void idmef_file_set_file_access(idmef_file_t *ptr, idmef_file_access_t *object)
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_file_new_file_access(idmef_file_t *ptr, idmef_file_access_t **ret)
+int idmef_file_new_file_access(idmef_file_t *ptr, idmef_file_access_t **ret, int pos)
 {	
         int retval;
 
@@ -10170,9 +9882,9 @@ int idmef_file_new_file_access(idmef_file_t *ptr, idmef_file_access_t **ret)
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->file_access_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->file_access_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 
@@ -10229,17 +9941,19 @@ idmef_linkage_t *idmef_file_get_next_linkage(idmef_file_t *ptr, idmef_linkage_t 
         return NULL;
 }
 
+
 /**
  * idmef_file_set_linkage:
  * @ptr: pointer to a #idmef_file_t object.
  * @object: pointer to a #idmef_linkage_t object.
  *
- * Add @object to the tail of @ptr list of #idmef_linkage_t object.
+ * Add @object to the beginning of @ptr list of #idmef_linkage_t object.
  */
-void idmef_file_set_linkage(idmef_file_t *ptr, idmef_linkage_t *object)
+void idmef_file_set_linkage(idmef_file_t *ptr, idmef_linkage_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->linkage_list, &object->list);
+        list_insert(&ptr->linkage_list, &object->list, pos);
 }
+
 
 /**
  * idmef_file_new_linkage:
@@ -10251,7 +9965,7 @@ void idmef_file_set_linkage(idmef_file_t *ptr, idmef_linkage_t *object)
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_file_new_linkage(idmef_file_t *ptr, idmef_linkage_t **ret)
+int idmef_file_new_linkage(idmef_file_t *ptr, idmef_linkage_t **ret, int pos)
 {	
         int retval;
 
@@ -10259,9 +9973,9 @@ int idmef_file_new_linkage(idmef_file_t *ptr, idmef_linkage_t **ret)
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->linkage_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->linkage_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 
@@ -10380,17 +10094,19 @@ idmef_checksum_t *idmef_file_get_next_checksum(idmef_file_t *ptr, idmef_checksum
         return NULL;
 }
 
+
 /**
  * idmef_file_set_checksum:
  * @ptr: pointer to a #idmef_file_t object.
  * @object: pointer to a #idmef_checksum_t object.
  *
- * Add @object to the tail of @ptr list of #idmef_checksum_t object.
+ * Add @object to the beginning of @ptr list of #idmef_checksum_t object.
  */
-void idmef_file_set_checksum(idmef_file_t *ptr, idmef_checksum_t *object)
+void idmef_file_set_checksum(idmef_file_t *ptr, idmef_checksum_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->checksum_list, &object->list);
+        list_insert(&ptr->checksum_list, &object->list, pos);
 }
+
 
 /**
  * idmef_file_new_checksum:
@@ -10402,7 +10118,7 @@ void idmef_file_set_checksum(idmef_file_t *ptr, idmef_checksum_t *object)
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_file_new_checksum(idmef_file_t *ptr, idmef_checksum_t **ret)
+int idmef_file_new_checksum(idmef_file_t *ptr, idmef_checksum_t **ret, int pos)
 {	
         int retval;
 
@@ -10410,9 +10126,9 @@ int idmef_file_new_checksum(idmef_file_t *ptr, idmef_checksum_t **ret)
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->checksum_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->checksum_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 
@@ -11032,35 +10748,23 @@ int idmef_target_new_child(void *p, idmef_child_t child, int n, void **ret)
 			return idmef_target_new_service(ptr, (idmef_service_t **) ret);
 
 		case 7: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_target_new_file(ptr, (idmef_file_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->file_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, idmef_file_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_target_new_file(ptr, (idmef_file_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_target_new_file(ptr, (idmef_file_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->file_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, idmef_file_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_target_new_file(ptr, (idmef_file_t **) ret, n);
 		}
 
 		default:
@@ -11586,17 +11290,19 @@ idmef_file_t *idmef_target_get_next_file(idmef_target_t *ptr, idmef_file_t *obje
         return NULL;
 }
 
+
 /**
  * idmef_target_set_file:
  * @ptr: pointer to a #idmef_target_t object.
  * @object: pointer to a #idmef_file_t object.
  *
- * Add @object to the tail of @ptr list of #idmef_file_t object.
+ * Add @object to the beginning of @ptr list of #idmef_file_t object.
  */
-void idmef_target_set_file(idmef_target_t *ptr, idmef_file_t *object)
+void idmef_target_set_file(idmef_target_t *ptr, idmef_file_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->file_list, &object->list);
+        list_insert(&ptr->file_list, &object->list, pos);
 }
+
 
 /**
  * idmef_target_new_file:
@@ -11608,7 +11314,7 @@ void idmef_target_set_file(idmef_target_t *ptr, idmef_file_t *object)
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_target_new_file(idmef_target_t *ptr, idmef_file_t **ret)
+int idmef_target_new_file(idmef_target_t *ptr, idmef_file_t **ret, int pos)
 {	
         int retval;
 
@@ -11616,9 +11322,9 @@ int idmef_target_new_file(idmef_target_t *ptr, idmef_file_t **ret)
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->file_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->file_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 
@@ -11667,6 +11373,8 @@ int idmef_analyzer_new(idmef_analyzer_t **ret)
 	*ret = calloc(1, sizeof(**ret));
 	if ( ! *ret )
 		return prelude_error_from_errno(errno);
+
+	prelude_list_init(&(*ret)->list);
 
 	(*ret)->refcount = 1;
 
@@ -11736,10 +11444,6 @@ int idmef_analyzer_get_child(void *p, idmef_child_t child, void **childptr)
                         *childptr = ptr->process;
                         return 0;
 
-		case 10:
-                        *childptr = ptr->analyzer;
-                        return 0;
-
 		default:
 			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
@@ -11781,9 +11485,6 @@ int idmef_analyzer_new_child(void *p, idmef_child_t child, int n, void **ret)
 		case 9:
 			return idmef_analyzer_new_process(ptr, (idmef_process_t **) ret);
 
-		case 10:
-			return idmef_analyzer_new_analyzer(ptr, (idmef_analyzer_t **) ret);
-
 		default:
 			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
@@ -11792,6 +11493,9 @@ int idmef_analyzer_new_child(void *p, idmef_child_t child, int n, void **ret)
 static void idmef_analyzer_destroy_internal(idmef_analyzer_t *ptr)
 {
 
+       if ( ! prelude_list_is_empty(&ptr->list) )
+               prelude_list_del_init(&ptr->list);
+    
 	if ( ptr->analyzerid ) {
 		prelude_string_destroy(ptr->analyzerid);
 		ptr->analyzerid = NULL;
@@ -11840,11 +11544,6 @@ static void idmef_analyzer_destroy_internal(idmef_analyzer_t *ptr)
 	if ( ptr->process ) {
 		idmef_process_destroy(ptr->process);
 		ptr->process = NULL;
-	}
-
-	if ( ptr->analyzer ) {
-		idmef_analyzer_destroy(ptr->analyzer);
-		ptr->analyzer = NULL;
 	}
 
 
@@ -12585,68 +12284,6 @@ int idmef_analyzer_new_process(idmef_analyzer_t *ptr, idmef_process_t **ret)
 }
 
 /**
- * *idmef_analyzer_get_analyzer:
- * @ptr: pointer to a #idmef_analyzer_t object.
- *
- * Get analyzer children of the #idmef_analyzer_t object.
- *
- * Returns: a pointer to a idmef_analyzer_t object, or NULL if the children object is not set.
- */
-idmef_analyzer_t *idmef_analyzer_get_analyzer(idmef_analyzer_t *ptr)
-{
-	return ptr->analyzer;
-}
-
-int idmef_analyzer_get_analyzer_value(idmef_analyzer_t *ptr, idmef_value_t **value)
-{
-	if ( ! ptr->analyzer ) {
-		*value = NULL;
-                return 0;
-        }
-
-	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_ANALYZER, ptr->analyzer);
-}
-
-/**
- * idmef_analyzer_set_analyzer:
- * @ptr: pointer to a #idmef_analyzer_t object.
- * @analyzer: pointer to a #idmef_analyzer_t object.
- *
- * Set @analyzer object as a children of @ptr.
- * if @ptr already contain an @analyzer object, then it is destroyed,
- * and updated to point to the provided @analyzer object.
- */
-
-void idmef_analyzer_set_analyzer(idmef_analyzer_t *ptr, idmef_analyzer_t *analyzer)
-{
-	if ( ptr->analyzer )
-		idmef_analyzer_destroy(ptr->analyzer);
-
-	ptr->analyzer = analyzer;
-}
-
-/**
- * idmef_analyzer_new_analyzer:
- * @ptr: pointer to a #idmef_analyzer_t object.
- * @ret: pointer to an address where to store the created #idmef_analyzer_t object.
- *
- * Create a new analyzer object, children of #idmef_analyzer_t.
- * If @ptr already contain a #idmef_analyzer_t object, then it is destroyed.
- *
- * Returns: 0 on success, or a negative value if an error occured.
- */
-int idmef_analyzer_new_analyzer(idmef_analyzer_t *ptr, idmef_analyzer_t **ret)
-{
-        int retval;
-
-	if ( ! ptr->analyzer )
-		retval = idmef_analyzer_new(&ptr->analyzer);
-
-        *ret = ptr->analyzer;
-	return 0;
-}
-
-/**
  * idmef_alertident_new:
  * @ret: Pointer where to store the created #idmef_alertident_t object.
  *
@@ -12710,10 +12347,10 @@ int idmef_alertident_new_child(void *p, idmef_child_t child, int n, void **ret)
 	switch ( child ) {
 
 		case 0:
-			return idmef_alertident_new_alertident(ptr, (uint64_t **) ret);
+			return idmef_alertident_new_alertident(ptr, (prelude_string_t **) ret);
 
 		case 1:
-			return idmef_alertident_new_analyzerid(ptr, (uint64_t **) ret);
+			return idmef_alertident_new_analyzerid(ptr, (prelude_string_t **) ret);
 
 		default:
 			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
@@ -12726,6 +12363,13 @@ static void idmef_alertident_destroy_internal(idmef_alertident_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
+	prelude_string_destroy_internal(&ptr->alertident);
+
+	if ( ptr->analyzerid ) {
+		prelude_string_destroy(ptr->analyzerid);
+		ptr->analyzerid = NULL;
+	}
+
 
 	/* free() should be done by the caller */
 }
@@ -12748,23 +12392,23 @@ void idmef_alertident_destroy(idmef_alertident_t *ptr)
 }
 
 /**
- * idmef_alertident_get_alertident:
+ * *idmef_alertident_get_alertident:
  * @ptr: pointer to a #idmef_alertident_t object.
  *
  * Get alertident children of the #idmef_alertident_t object.
  *
- * Returns: a pointer to a uint64_t object, or NULL if the children object is not set.
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
  */
-uint64_t idmef_alertident_get_alertident(idmef_alertident_t *ptr)
+prelude_string_t *idmef_alertident_get_alertident(idmef_alertident_t *ptr)
 {
-	return ptr->alertident;
+	return &ptr->alertident;
 }
 
 int idmef_alertident_get_alertident_value(idmef_alertident_t *ptr, idmef_value_t **value)
 {
         int ret;
 
-	ret = idmef_value_new_uint64(value, ptr->alertident);
+	ret = idmef_value_new_string(value, &ptr->alertident);
 	if ( ret < 0 )
 		return ret;
 
@@ -12776,30 +12420,34 @@ int idmef_alertident_get_alertident_value(idmef_alertident_t *ptr, idmef_value_t
 /**
  * idmef_alertident_set_alertident:
  * @ptr: pointer to a #idmef_alertident_t object.
- * @alertident: pointer to a #uint64_t object.
+ * @alertident: pointer to a #prelude_string_t object.
  *
  * Set @alertident object as a children of @ptr.
  * if @ptr already contain an @alertident object, then it is destroyed,
  * and updated to point to the provided @alertident object.
  */
 
-void idmef_alertident_set_alertident(idmef_alertident_t *ptr, uint64_t alertident)
+void idmef_alertident_set_alertident(idmef_alertident_t *ptr, prelude_string_t *alertident)
 {
-	ptr->alertident = alertident;
+	prelude_string_destroy_internal(&ptr->alertident);
+	memcpy(&ptr->alertident, alertident, sizeof (ptr->alertident));
+	free(alertident);
 }
 
 /**
  * idmef_alertident_new_alertident:
  * @ptr: pointer to a #idmef_alertident_t object.
- * @ret: pointer to an address where to store the created #uint64_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new alertident object, children of #idmef_alertident_t.
- * If @ptr already contain a #uint64_t object, then it is destroyed.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_alertident_new_alertident(idmef_alertident_t *ptr, uint64_t **ret)
+int idmef_alertident_new_alertident(idmef_alertident_t *ptr, prelude_string_t **ret)
 {
+	prelude_string_destroy_internal(&ptr->alertident);
+
         *ret = &ptr->alertident;
 	return 0;
 }
@@ -12810,62 +12458,71 @@ int idmef_alertident_new_alertident(idmef_alertident_t *ptr, uint64_t **ret)
  *
  * Get analyzerid children of the #idmef_alertident_t object.
  *
- * Returns: a pointer to a uint64_t object, or NULL if the children object is not set.
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
  */
-uint64_t *idmef_alertident_get_analyzerid(idmef_alertident_t *ptr)
+prelude_string_t *idmef_alertident_get_analyzerid(idmef_alertident_t *ptr)
 {
-	return ptr->analyzerid_is_set ? &ptr->analyzerid : NULL;
+	return ptr->analyzerid;
 }
 
 int idmef_alertident_get_analyzerid_value(idmef_alertident_t *ptr, idmef_value_t **value)
 {
-        if ( ! ptr->analyzerid_is_set ) {
+	if ( ! ptr->analyzerid ) {
                 *value = NULL;
-                return 0;
+		return 0;
         }
 
-	return idmef_value_new_uint64(value, ptr->analyzerid);
+        int ret;
 
+	ret = idmef_value_new_string(value, ptr->analyzerid);
+	if ( ret < 0 )
+		return ret;
+
+	idmef_value_dont_have_own_data(*value);
+
+	return 0;
 }
 
 /**
  * idmef_alertident_set_analyzerid:
  * @ptr: pointer to a #idmef_alertident_t object.
- * @analyzerid: pointer to a #uint64_t object.
+ * @analyzerid: pointer to a #prelude_string_t object.
  *
  * Set @analyzerid object as a children of @ptr.
  * if @ptr already contain an @analyzerid object, then it is destroyed,
  * and updated to point to the provided @analyzerid object.
  */
 
-void idmef_alertident_set_analyzerid(idmef_alertident_t *ptr, uint64_t analyzerid)
+void idmef_alertident_set_analyzerid(idmef_alertident_t *ptr, prelude_string_t *analyzerid)
 {
+	if ( ptr->analyzerid )
+		prelude_string_destroy(ptr->analyzerid);
+
 	ptr->analyzerid = analyzerid;
-	ptr->analyzerid_is_set = 1;
 }
-
-
-void idmef_alertident_unset_analyzerid(idmef_alertident_t *ptr)
-{
-        ptr->analyzerid_is_set = 0;
-}
-
 
 /**
  * idmef_alertident_new_analyzerid:
  * @ptr: pointer to a #idmef_alertident_t object.
- * @ret: pointer to an address where to store the created #uint64_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
  *
  * Create a new analyzerid object, children of #idmef_alertident_t.
- * If @ptr already contain a #uint64_t object, then it is destroyed.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_alertident_new_analyzerid(idmef_alertident_t *ptr, uint64_t **ret)
+int idmef_alertident_new_analyzerid(idmef_alertident_t *ptr, prelude_string_t **ret)
 {
-	ptr->analyzerid_is_set = 1;
+        int retval;
 
-        *ret = &ptr->analyzerid;
+	if ( ptr->analyzerid )
+		prelude_string_destroy(ptr->analyzerid);
+		
+	retval = prelude_string_new(&ptr->analyzerid);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->analyzerid;
 	return 0;
 }
 
@@ -13741,35 +13398,23 @@ int idmef_assessment_new_child(void *p, idmef_child_t child, int n, void **ret)
 			return idmef_assessment_new_impact(ptr, (idmef_impact_t **) ret);
 
 		case 1: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_assessment_new_action(ptr, (idmef_action_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->action_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, idmef_action_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_assessment_new_action(ptr, (idmef_action_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_assessment_new_action(ptr, (idmef_action_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->action_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, idmef_action_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_assessment_new_action(ptr, (idmef_action_t **) ret, n);
 		}
 
 		case 2:
@@ -13907,17 +13552,19 @@ idmef_action_t *idmef_assessment_get_next_action(idmef_assessment_t *ptr, idmef_
         return NULL;
 }
 
+
 /**
  * idmef_assessment_set_action:
  * @ptr: pointer to a #idmef_assessment_t object.
  * @object: pointer to a #idmef_action_t object.
  *
- * Add @object to the tail of @ptr list of #idmef_action_t object.
+ * Add @object to the beginning of @ptr list of #idmef_action_t object.
  */
-void idmef_assessment_set_action(idmef_assessment_t *ptr, idmef_action_t *object)
+void idmef_assessment_set_action(idmef_assessment_t *ptr, idmef_action_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->action_list, &object->list);
+        list_insert(&ptr->action_list, &object->list, pos);
 }
+
 
 /**
  * idmef_assessment_new_action:
@@ -13929,7 +13576,7 @@ void idmef_assessment_set_action(idmef_assessment_t *ptr, idmef_action_t *object
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_assessment_new_action(idmef_assessment_t *ptr, idmef_action_t **ret)
+int idmef_assessment_new_action(idmef_assessment_t *ptr, idmef_action_t **ret, int pos)
 {	
         int retval;
 
@@ -13937,9 +13584,9 @@ int idmef_assessment_new_action(idmef_assessment_t *ptr, idmef_action_t **ret)
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->action_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->action_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 
@@ -14112,35 +13759,23 @@ int idmef_tool_alert_new_child(void *p, idmef_child_t child, int n, void **ret)
 			return idmef_tool_alert_new_command(ptr, (prelude_string_t **) ret);
 
 		case 2: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_tool_alert_new_alertident(ptr, (idmef_alertident_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->alertident_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, idmef_alertident_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_tool_alert_new_alertident(ptr, (idmef_alertident_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_tool_alert_new_alertident(ptr, (idmef_alertident_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->alertident_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_tool_alert_new_alertident(ptr, (idmef_alertident_t **) ret, n);
 		}
 
 		default:
@@ -14345,17 +13980,19 @@ idmef_alertident_t *idmef_tool_alert_get_next_alertident(idmef_tool_alert_t *ptr
         return NULL;
 }
 
+
 /**
  * idmef_tool_alert_set_alertident:
  * @ptr: pointer to a #idmef_tool_alert_t object.
  * @object: pointer to a #idmef_alertident_t object.
  *
- * Add @object to the tail of @ptr list of #idmef_alertident_t object.
+ * Add @object to the beginning of @ptr list of #idmef_alertident_t object.
  */
-void idmef_tool_alert_set_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t *object)
+void idmef_tool_alert_set_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->alertident_list, &object->list);
+        list_insert(&ptr->alertident_list, &object->list, pos);
 }
+
 
 /**
  * idmef_tool_alert_new_alertident:
@@ -14367,7 +14004,7 @@ void idmef_tool_alert_set_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_tool_alert_new_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t **ret)
+int idmef_tool_alert_new_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t **ret, int pos)
 {	
         int retval;
 
@@ -14375,9 +14012,9 @@ int idmef_tool_alert_new_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t 
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->alertident_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->alertident_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 
@@ -14481,35 +14118,23 @@ int idmef_correlation_alert_new_child(void *p, idmef_child_t child, int n, void 
 			return idmef_correlation_alert_new_name(ptr, (prelude_string_t **) ret);
 
 		case 1: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_correlation_alert_new_alertident(ptr, (idmef_alertident_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->alertident_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, idmef_alertident_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_correlation_alert_new_alertident(ptr, (idmef_alertident_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_correlation_alert_new_alertident(ptr, (idmef_alertident_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->alertident_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_correlation_alert_new_alertident(ptr, (idmef_alertident_t **) ret, n);
 		}
 
 		default:
@@ -14635,17 +14260,19 @@ idmef_alertident_t *idmef_correlation_alert_get_next_alertident(idmef_correlatio
         return NULL;
 }
 
+
 /**
  * idmef_correlation_alert_set_alertident:
  * @ptr: pointer to a #idmef_correlation_alert_t object.
  * @object: pointer to a #idmef_alertident_t object.
  *
- * Add @object to the tail of @ptr list of #idmef_alertident_t object.
+ * Add @object to the beginning of @ptr list of #idmef_alertident_t object.
  */
-void idmef_correlation_alert_set_alertident(idmef_correlation_alert_t *ptr, idmef_alertident_t *object)
+void idmef_correlation_alert_set_alertident(idmef_correlation_alert_t *ptr, idmef_alertident_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->alertident_list, &object->list);
+        list_insert(&ptr->alertident_list, &object->list, pos);
 }
+
 
 /**
  * idmef_correlation_alert_new_alertident:
@@ -14657,7 +14284,7 @@ void idmef_correlation_alert_set_alertident(idmef_correlation_alert_t *ptr, idme
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_correlation_alert_new_alertident(idmef_correlation_alert_t *ptr, idmef_alertident_t **ret)
+int idmef_correlation_alert_new_alertident(idmef_correlation_alert_t *ptr, idmef_alertident_t **ret, int pos)
 {	
         int retval;
 
@@ -14665,9 +14292,9 @@ int idmef_correlation_alert_new_alertident(idmef_correlation_alert_t *ptr, idmef
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->alertident_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->alertident_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 
@@ -15027,6 +14654,9 @@ int idmef_alert_new(idmef_alert_t **ret)
 	if ( ! *ret )
 		return prelude_error_from_errno(errno);
 
+	prelude_list_init(&(*ret)->analyzer_list);
+    
+
 	prelude_list_init(&(*ret)->source_list);
     
 
@@ -15051,8 +14681,8 @@ int idmef_alert_get_child(void *p, idmef_child_t child, void **childptr)
 
 
 		case 1:
-                        *childptr = ptr->analyzer;
-                        return 0;
+                        *childptr = &ptr->analyzer_list;
+			return 0;
 
 		case 2:
 			return idmef_alert_get_create_time_value(ptr, (idmef_value_t **) childptr);
@@ -15115,8 +14745,25 @@ int idmef_alert_new_child(void *p, idmef_child_t child, int n, void **ret)
 		case 0:
 			return idmef_alert_new_messageid(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_alert_new_analyzer(ptr, (idmef_analyzer_t **) ret);
+		case 1: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n < 0 )
+                               return idmef_alert_new_analyzer(ptr, (idmef_analyzer_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->analyzer_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_alert_new_analyzer(ptr, (idmef_analyzer_t **) ret, n);
+		}
 
 		case 2:
 			return idmef_alert_new_create_time(ptr, (idmef_time_t **) ret);
@@ -15131,102 +14778,66 @@ int idmef_alert_new_child(void *p, idmef_child_t child, int n, void **ret)
 			return idmef_alert_new_analyzer_time(ptr, (idmef_time_t **) ret);
 
 		case 6: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_alert_new_source(ptr, (idmef_source_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->source_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, idmef_source_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_alert_new_source(ptr, (idmef_source_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_alert_new_source(ptr, (idmef_source_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->source_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, idmef_source_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_alert_new_source(ptr, (idmef_source_t **) ret, n);
 		}
 
 		case 7: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_alert_new_target(ptr, (idmef_target_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->target_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, idmef_target_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_alert_new_target(ptr, (idmef_target_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_alert_new_target(ptr, (idmef_target_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->target_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, idmef_target_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_alert_new_target(ptr, (idmef_target_t **) ret, n);
 		}
 
 		case 8:
 			return idmef_alert_new_assessment(ptr, (idmef_assessment_t **) ret);
 
 		case 9: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_alert_new_additional_data(ptr, (idmef_additional_data_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->additional_data_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, idmef_additional_data_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_alert_new_additional_data(ptr, (idmef_additional_data_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_alert_new_additional_data(ptr, (idmef_additional_data_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->additional_data_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_alert_new_additional_data(ptr, (idmef_additional_data_t **) ret, n);
 		}
 
 		case 11:
@@ -15251,9 +14862,14 @@ static void idmef_alert_destroy_internal(idmef_alert_t *ptr)
 		ptr->messageid = NULL;
 	}
 
-	if ( ptr->analyzer ) {
-		idmef_analyzer_destroy(ptr->analyzer);
-		ptr->analyzer = NULL;
+	{
+		prelude_list_t *n, *tmp;
+		idmef_analyzer_t *entry;
+
+		prelude_list_for_each_safe(&ptr->analyzer_list, tmp, n) {
+			entry = prelude_list_entry(tmp, idmef_analyzer_t, list);
+			idmef_analyzer_destroy(entry);
+		}
 	}
 
 	idmef_time_destroy_internal(&ptr->create_time);
@@ -15422,66 +15038,95 @@ int idmef_alert_new_messageid(idmef_alert_t *ptr, prelude_string_t **ret)
 }
 
 /**
- * *idmef_alert_get_analyzer:
+ * idmef_alert_get_next_analyzer:
  * @ptr: pointer to a #idmef_alert_t object.
+ * @object: pointer to a #idmef_analyzer_t object.
  *
- * Get analyzer children of the #idmef_alert_t object.
- *
- * Returns: a pointer to a idmef_analyzer_t object, or NULL if the children object is not set.
+ * Get the next #idmef_analyzer_t object listed in @ptr.
+ * When iterating over the idmef_analyzer_t object listed in @ptr,
+ * @object should be set to the latest returned #idmef_analyzer_t object.
+ * 
+ * Returns: the next #idmef_analyzer_t in the list.
  */
-idmef_analyzer_t *idmef_alert_get_analyzer(idmef_alert_t *ptr)
+idmef_analyzer_t *idmef_alert_get_next_analyzer(idmef_alert_t *ptr, idmef_analyzer_t *object)
 {
-	return ptr->analyzer;
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->analyzer_list, tmp)
+                return prelude_list_entry(tmp, idmef_analyzer_t, list);
+
+        return NULL;
 }
 
-int idmef_alert_get_analyzer_value(idmef_alert_t *ptr, idmef_value_t **value)
-{
-	if ( ! ptr->analyzer ) {
-		*value = NULL;
-                return 0;
-        }
-
-	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_ANALYZER, ptr->analyzer);
-}
 
 /**
  * idmef_alert_set_analyzer:
  * @ptr: pointer to a #idmef_alert_t object.
- * @analyzer: pointer to a #idmef_analyzer_t object.
+ * @object: pointer to a #idmef_analyzer_t object.
  *
- * Set @analyzer object as a children of @ptr.
- * if @ptr already contain an @analyzer object, then it is destroyed,
- * and updated to point to the provided @analyzer object.
+ * Add @object to the beginning of @ptr list of #idmef_analyzer_t object.
  */
-
-void idmef_alert_set_analyzer(idmef_alert_t *ptr, idmef_analyzer_t *analyzer)
+void idmef_alert_set_analyzer(idmef_alert_t *ptr, idmef_analyzer_t *object, int pos)
 {
-	if ( ptr->analyzer )
-		idmef_analyzer_destroy(ptr->analyzer);
-
-	ptr->analyzer = analyzer;
+        list_insert(&ptr->analyzer_list, &object->list, pos);
 }
+
 
 /**
  * idmef_alert_new_analyzer:
  * @ptr: pointer to a #idmef_alert_t object.
  * @ret: pointer to an address where to store the created #idmef_analyzer_t object.
  *
- * Create a new analyzer object, children of #idmef_alert_t.
- * If @ptr already contain a #idmef_analyzer_t object, then it is destroyed.
- *
+ * Create a new #idmef_analyzer_t children of @ptr,
+ * and add it to the tail of @ptr list of #idmef_analyzer_t object.
+ * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_alert_new_analyzer(idmef_alert_t *ptr, idmef_analyzer_t **ret)
-{
+int idmef_alert_new_analyzer(idmef_alert_t *ptr, idmef_analyzer_t **ret, int pos)
+{	
         int retval;
 
-	if ( ! ptr->analyzer )
-		retval = idmef_analyzer_new(&ptr->analyzer);
+	retval = idmef_analyzer_new(ret);
+	if ( retval < 0 )
+		return retval;
+	
+        list_insert(&ptr->analyzer_list, &(*ret)->list, pos);
 
-        *ret = ptr->analyzer;
+        return 0;
+}
+
+
+int idmef_alert_get_analyzer_value(idmef_alert_t *ptr, idmef_value_t **value)
+{
+        int ret;
+	idmef_value_t *val;
+        prelude_list_t *tmp;
+	idmef_analyzer_t *entry;
+	
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
+	
+	prelude_list_for_each(&ptr->analyzer_list, tmp) {
+		entry = prelude_list_entry(tmp, idmef_analyzer_t, list);
+
+		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_ANALYZER, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
+		}
+
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			idmef_value_destroy(val);
+			return ret;
+		}
+	}
+	
 	return 0;
 }
+
 
 /**
  * *idmef_alert_get_create_time:
@@ -15775,17 +15420,19 @@ idmef_source_t *idmef_alert_get_next_source(idmef_alert_t *ptr, idmef_source_t *
         return NULL;
 }
 
+
 /**
  * idmef_alert_set_source:
  * @ptr: pointer to a #idmef_alert_t object.
  * @object: pointer to a #idmef_source_t object.
  *
- * Add @object to the tail of @ptr list of #idmef_source_t object.
+ * Add @object to the beginning of @ptr list of #idmef_source_t object.
  */
-void idmef_alert_set_source(idmef_alert_t *ptr, idmef_source_t *object)
+void idmef_alert_set_source(idmef_alert_t *ptr, idmef_source_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->source_list, &object->list);
+        list_insert(&ptr->source_list, &object->list, pos);
 }
+
 
 /**
  * idmef_alert_new_source:
@@ -15797,7 +15444,7 @@ void idmef_alert_set_source(idmef_alert_t *ptr, idmef_source_t *object)
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_alert_new_source(idmef_alert_t *ptr, idmef_source_t **ret)
+int idmef_alert_new_source(idmef_alert_t *ptr, idmef_source_t **ret, int pos)
 {	
         int retval;
 
@@ -15805,9 +15452,9 @@ int idmef_alert_new_source(idmef_alert_t *ptr, idmef_source_t **ret)
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->source_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->source_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 
@@ -15864,17 +15511,19 @@ idmef_target_t *idmef_alert_get_next_target(idmef_alert_t *ptr, idmef_target_t *
         return NULL;
 }
 
+
 /**
  * idmef_alert_set_target:
  * @ptr: pointer to a #idmef_alert_t object.
  * @object: pointer to a #idmef_target_t object.
  *
- * Add @object to the tail of @ptr list of #idmef_target_t object.
+ * Add @object to the beginning of @ptr list of #idmef_target_t object.
  */
-void idmef_alert_set_target(idmef_alert_t *ptr, idmef_target_t *object)
+void idmef_alert_set_target(idmef_alert_t *ptr, idmef_target_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->target_list, &object->list);
+        list_insert(&ptr->target_list, &object->list, pos);
 }
+
 
 /**
  * idmef_alert_new_target:
@@ -15886,7 +15535,7 @@ void idmef_alert_set_target(idmef_alert_t *ptr, idmef_target_t *object)
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_alert_new_target(idmef_alert_t *ptr, idmef_target_t **ret)
+int idmef_alert_new_target(idmef_alert_t *ptr, idmef_target_t **ret, int pos)
 {	
         int retval;
 
@@ -15894,9 +15543,9 @@ int idmef_alert_new_target(idmef_alert_t *ptr, idmef_target_t **ret)
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->target_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->target_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 
@@ -16015,17 +15664,19 @@ idmef_additional_data_t *idmef_alert_get_next_additional_data(idmef_alert_t *ptr
         return NULL;
 }
 
+
 /**
  * idmef_alert_set_additional_data:
  * @ptr: pointer to a #idmef_alert_t object.
  * @object: pointer to a #idmef_additional_data_t object.
  *
- * Add @object to the tail of @ptr list of #idmef_additional_data_t object.
+ * Add @object to the beginning of @ptr list of #idmef_additional_data_t object.
  */
-void idmef_alert_set_additional_data(idmef_alert_t *ptr, idmef_additional_data_t *object)
+void idmef_alert_set_additional_data(idmef_alert_t *ptr, idmef_additional_data_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->additional_data_list, &object->list);
+        list_insert(&ptr->additional_data_list, &object->list, pos);
 }
+
 
 /**
  * idmef_alert_new_additional_data:
@@ -16037,7 +15688,7 @@ void idmef_alert_set_additional_data(idmef_alert_t *ptr, idmef_additional_data_t
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_alert_new_additional_data(idmef_alert_t *ptr, idmef_additional_data_t **ret)
+int idmef_alert_new_additional_data(idmef_alert_t *ptr, idmef_additional_data_t **ret, int pos)
 {	
         int retval;
 
@@ -16045,9 +15696,9 @@ int idmef_alert_new_additional_data(idmef_alert_t *ptr, idmef_additional_data_t 
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->additional_data_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->additional_data_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 
@@ -16412,6 +16063,9 @@ int idmef_heartbeat_new(idmef_heartbeat_t **ret)
 	if ( ! *ret )
 		return prelude_error_from_errno(errno);
 
+	prelude_list_init(&(*ret)->analyzer_list);
+    
+
 	prelude_list_init(&(*ret)->additional_data_list);
     
 
@@ -16430,8 +16084,8 @@ int idmef_heartbeat_get_child(void *p, idmef_child_t child, void **childptr)
 
 
 		case 1:
-                        *childptr = ptr->analyzer;
-                        return 0;
+                        *childptr = &ptr->analyzer_list;
+			return 0;
 
 		case 2:
 			return idmef_heartbeat_get_create_time_value(ptr, (idmef_value_t **) childptr);
@@ -16463,8 +16117,25 @@ int idmef_heartbeat_new_child(void *p, idmef_child_t child, int n, void **ret)
 		case 0:
 			return idmef_heartbeat_new_messageid(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_heartbeat_new_analyzer(ptr, (idmef_analyzer_t **) ret);
+		case 1: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n < 0 )
+                               return idmef_heartbeat_new_analyzer(ptr, (idmef_analyzer_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->analyzer_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_heartbeat_new_analyzer(ptr, (idmef_analyzer_t **) ret, n);
+		}
 
 		case 2:
 			return idmef_heartbeat_new_create_time(ptr, (idmef_time_t **) ret);
@@ -16476,35 +16147,23 @@ int idmef_heartbeat_new_child(void *p, idmef_child_t child, int n, void **ret)
 			return idmef_heartbeat_new_heartbeat_interval(ptr, (uint32_t **) ret);
 
 		case 5: {
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) {
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_heartbeat_new_additional_data(ptr, (idmef_additional_data_t **) ret);
-			} else {
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->additional_data_list, tmp) {
-			    		*ret = prelude_list_entry(tmp, idmef_additional_data_t, list);
-					if ( i++ == n )
-						return 0;
-				
-				}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) {
-			    		retval = idmef_heartbeat_new_additional_data(ptr, (idmef_additional_data_t **) ret);
-					if ( retval < 0 )
-						return retval;
-				}
-			}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_heartbeat_new_additional_data(ptr, (idmef_additional_data_t **) ret, n);
+
+                        prelude_list_for_each(&ptr->additional_data_list, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_heartbeat_new_additional_data(ptr, (idmef_additional_data_t **) ret, n);
 		}
 
 		default:
@@ -16520,9 +16179,14 @@ static void idmef_heartbeat_destroy_internal(idmef_heartbeat_t *ptr)
 		ptr->messageid = NULL;
 	}
 
-	if ( ptr->analyzer ) {
-		idmef_analyzer_destroy(ptr->analyzer);
-		ptr->analyzer = NULL;
+	{
+		prelude_list_t *n, *tmp;
+		idmef_analyzer_t *entry;
+
+		prelude_list_for_each_safe(&ptr->analyzer_list, tmp, n) {
+			entry = prelude_list_entry(tmp, idmef_analyzer_t, list);
+			idmef_analyzer_destroy(entry);
+		}
 	}
 
 	idmef_time_destroy_internal(&ptr->create_time);
@@ -16635,66 +16299,95 @@ int idmef_heartbeat_new_messageid(idmef_heartbeat_t *ptr, prelude_string_t **ret
 }
 
 /**
- * *idmef_heartbeat_get_analyzer:
+ * idmef_heartbeat_get_next_analyzer:
  * @ptr: pointer to a #idmef_heartbeat_t object.
+ * @object: pointer to a #idmef_analyzer_t object.
  *
- * Get analyzer children of the #idmef_heartbeat_t object.
- *
- * Returns: a pointer to a idmef_analyzer_t object, or NULL if the children object is not set.
+ * Get the next #idmef_analyzer_t object listed in @ptr.
+ * When iterating over the idmef_analyzer_t object listed in @ptr,
+ * @object should be set to the latest returned #idmef_analyzer_t object.
+ * 
+ * Returns: the next #idmef_analyzer_t in the list.
  */
-idmef_analyzer_t *idmef_heartbeat_get_analyzer(idmef_heartbeat_t *ptr)
+idmef_analyzer_t *idmef_heartbeat_get_next_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t *object)
 {
-	return ptr->analyzer;
+        prelude_list_t *tmp = (object) ? &object->list : NULL;
+
+        prelude_list_for_each_continue(&ptr->analyzer_list, tmp)
+                return prelude_list_entry(tmp, idmef_analyzer_t, list);
+
+        return NULL;
 }
 
-int idmef_heartbeat_get_analyzer_value(idmef_heartbeat_t *ptr, idmef_value_t **value)
-{
-	if ( ! ptr->analyzer ) {
-		*value = NULL;
-                return 0;
-        }
-
-	return idmef_value_new_object(value, IDMEF_OBJECT_TYPE_ANALYZER, ptr->analyzer);
-}
 
 /**
  * idmef_heartbeat_set_analyzer:
  * @ptr: pointer to a #idmef_heartbeat_t object.
- * @analyzer: pointer to a #idmef_analyzer_t object.
+ * @object: pointer to a #idmef_analyzer_t object.
  *
- * Set @analyzer object as a children of @ptr.
- * if @ptr already contain an @analyzer object, then it is destroyed,
- * and updated to point to the provided @analyzer object.
+ * Add @object to the beginning of @ptr list of #idmef_analyzer_t object.
  */
-
-void idmef_heartbeat_set_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t *analyzer)
+void idmef_heartbeat_set_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t *object, int pos)
 {
-	if ( ptr->analyzer )
-		idmef_analyzer_destroy(ptr->analyzer);
-
-	ptr->analyzer = analyzer;
+        list_insert(&ptr->analyzer_list, &object->list, pos);
 }
+
 
 /**
  * idmef_heartbeat_new_analyzer:
  * @ptr: pointer to a #idmef_heartbeat_t object.
  * @ret: pointer to an address where to store the created #idmef_analyzer_t object.
  *
- * Create a new analyzer object, children of #idmef_heartbeat_t.
- * If @ptr already contain a #idmef_analyzer_t object, then it is destroyed.
- *
+ * Create a new #idmef_analyzer_t children of @ptr,
+ * and add it to the tail of @ptr list of #idmef_analyzer_t object.
+ * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_heartbeat_new_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t **ret)
-{
+int idmef_heartbeat_new_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t **ret, int pos)
+{	
         int retval;
 
-	if ( ! ptr->analyzer )
-		retval = idmef_analyzer_new(&ptr->analyzer);
+	retval = idmef_analyzer_new(ret);
+	if ( retval < 0 )
+		return retval;
+	
+        list_insert(&ptr->analyzer_list, &(*ret)->list, pos);
 
-        *ret = ptr->analyzer;
+        return 0;
+}
+
+
+int idmef_heartbeat_get_analyzer_value(idmef_heartbeat_t *ptr, idmef_value_t **value)
+{
+        int ret;
+	idmef_value_t *val;
+        prelude_list_t *tmp;
+	idmef_analyzer_t *entry;
+	
+	ret = idmef_value_new_list(value);
+	if ( ret < 0 )
+		return ret;
+	
+	prelude_list_for_each(&ptr->analyzer_list, tmp) {
+		entry = prelude_list_entry(tmp, idmef_analyzer_t, list);
+
+		ret = idmef_value_new_object(&val, IDMEF_OBJECT_TYPE_ANALYZER, entry);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			return ret;
+		}
+
+                ret = idmef_value_list_add(*value, val);
+		if ( ret < 0 ) {
+			idmef_value_destroy(*value);
+			idmef_value_destroy(val);
+			return ret;
+		}
+	}
+	
 	return 0;
 }
+
 
 /**
  * *idmef_heartbeat_get_create_time:
@@ -16917,17 +16610,19 @@ idmef_additional_data_t *idmef_heartbeat_get_next_additional_data(idmef_heartbea
         return NULL;
 }
 
+
 /**
  * idmef_heartbeat_set_additional_data:
  * @ptr: pointer to a #idmef_heartbeat_t object.
  * @object: pointer to a #idmef_additional_data_t object.
  *
- * Add @object to the tail of @ptr list of #idmef_additional_data_t object.
+ * Add @object to the beginning of @ptr list of #idmef_additional_data_t object.
  */
-void idmef_heartbeat_set_additional_data(idmef_heartbeat_t *ptr, idmef_additional_data_t *object)
+void idmef_heartbeat_set_additional_data(idmef_heartbeat_t *ptr, idmef_additional_data_t *object, int pos)
 {
-	prelude_list_add_tail(&ptr->additional_data_list, &object->list);
+        list_insert(&ptr->additional_data_list, &object->list, pos);
 }
+
 
 /**
  * idmef_heartbeat_new_additional_data:
@@ -16939,7 +16634,7 @@ void idmef_heartbeat_set_additional_data(idmef_heartbeat_t *ptr, idmef_additiona
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_heartbeat_new_additional_data(idmef_heartbeat_t *ptr, idmef_additional_data_t **ret)
+int idmef_heartbeat_new_additional_data(idmef_heartbeat_t *ptr, idmef_additional_data_t **ret, int pos)
 {	
         int retval;
 
@@ -16947,9 +16642,9 @@ int idmef_heartbeat_new_additional_data(idmef_heartbeat_t *ptr, idmef_additional
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->additional_data_list, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->additional_data_list, &(*ret)->list, pos);
+
+        return 0;
 }
 
 

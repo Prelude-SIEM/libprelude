@@ -1880,18 +1880,6 @@ void idmef_analyzer_print(idmef_analyzer_t *ptr, prelude_io_t *fd)
 		}
 	}	
 
-	{
-		idmef_analyzer_t *field;
-
-		field = idmef_analyzer_get_analyzer(ptr);
-
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "analyzer:\n", sizeof("analyzer:\n") - 1);
-			idmef_analyzer_print(field, fd);
-		}
-	}	
-
 	indent -= 8;
 }
 
@@ -1902,13 +1890,22 @@ void idmef_alertident_print(idmef_alertident_t *ptr, prelude_io_t *fd)
 
 	indent += 8;
 
-	print_indent(fd);
-	prelude_io_write(fd, "alertident: ", sizeof("alertident: ") - 1);
-	print_uint64(idmef_alertident_get_alertident(ptr), fd);
-	prelude_io_write(fd, "\n", sizeof("\n") - 1);
+	{
+		prelude_string_t *field;
+                const char tmp[] = "alertident: ";
+
+		field = idmef_alertident_get_alertident(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
 
 	{
-		uint64_t *field;
+		prelude_string_t *field;
                 const char tmp[] = "analyzerid: ";
 
 		field = idmef_alertident_get_analyzerid(ptr);
@@ -1916,7 +1913,7 @@ void idmef_alertident_print(idmef_alertident_t *ptr, prelude_io_t *fd)
 		if ( field ) {
 			print_indent(fd);
 			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint64(*field, fd);
+			print_string(field, fd);
 			prelude_io_write(fd, "\n", sizeof("\n") - 1);
 		}
 	}
@@ -2274,16 +2271,20 @@ void idmef_alert_print(idmef_alert_t *ptr, prelude_io_t *fd)
 	}
 
 	{
-		idmef_analyzer_t *field;
+                char buf[128];
+		idmef_analyzer_t *elem = NULL;
+		int cnt = 0, len;
 
-		field = idmef_alert_get_analyzer(ptr);
-
-		if ( field ) {
+		while ( (elem = idmef_alert_get_next_analyzer(ptr, elem)) ) {
 			print_indent(fd);
-			prelude_io_write(fd, "analyzer:\n", sizeof("analyzer:\n") - 1);
-			idmef_analyzer_print(field, fd);
+
+                        len = snprintf(buf, sizeof(buf), "analyzer(%d): \n", cnt);
+			prelude_io_write(fd, buf, len);
+			idmef_analyzer_print(elem, fd);
+
+			cnt++;
 		}
-	}	
+	}
 
 	{
 		idmef_time_t *field;
@@ -2447,16 +2448,20 @@ void idmef_heartbeat_print(idmef_heartbeat_t *ptr, prelude_io_t *fd)
 	}
 
 	{
-		idmef_analyzer_t *field;
+                char buf[128];
+		idmef_analyzer_t *elem = NULL;
+		int cnt = 0, len;
 
-		field = idmef_heartbeat_get_analyzer(ptr);
-
-		if ( field ) {
+		while ( (elem = idmef_heartbeat_get_next_analyzer(ptr, elem)) ) {
 			print_indent(fd);
-			prelude_io_write(fd, "analyzer:\n", sizeof("analyzer:\n") - 1);
-			idmef_analyzer_print(field, fd);
+
+                        len = snprintf(buf, sizeof(buf), "analyzer(%d): \n", cnt);
+			prelude_io_write(fd, buf, len);
+			idmef_analyzer_print(elem, fd);
+
+			cnt++;
 		}
-	}	
+	}
 
 	{
 		idmef_time_t *field;

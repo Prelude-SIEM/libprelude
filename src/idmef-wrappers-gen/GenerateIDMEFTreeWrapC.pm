@@ -104,6 +104,33 @@ sub	header
 #define OPTIONAL_INT(type, name) type name; int name ## _is_set:1
 
 #define IDENT(name) uint64_t name
+
+
+
+static void list_insert(prelude_list_t *head, prelude_list_t *item, int pos)
+{
+        prelude_list_t *tmp;
+        
+        if ( pos < 0 )
+                prelude_list_add_tail(head, item);
+
+        else if ( pos == 0 )
+	        prelude_list_add(head, item);
+
+        else {
+	        int i = 0;
+
+                prelude_list_for_each(head, tmp) {
+		        if ( i == pos )
+			        break;
+
+                        i++;
+                }
+
+                prelude_list_add_tail(tmp, item);
+        }
+}
+
 ");
 }
 
@@ -264,35 +291,23 @@ int idmef_$struct->{short_typename}_new_child(void *p, idmef_child_t child, int 
 	if ( $field->{metatype} & &METATYPE_LIST ) {
 	    $self->output("
 		case $n: \{
-                        int i, j;
-                        int retval;
-			prelude_list_t *tmp;
+                        int i = 0;
+                        prelude_list_t *tmp;
 
-			if ( n < 0 ) \{
-				 /* n < 0 denotes that we just have to add a list element */
-				
-				 retval = idmef_$struct->{short_typename}_new_$field->{short_name}(ptr, ($field->{typename} **) ret);
-			\} else \{
-				/* n >= 0, so the new element has to be n-th in the list  */
-			
-				/* get n-th element of the list */
-				i = 0;
-				prelude_list_for_each(&ptr->$field->{name}, tmp) \{
-			    		*ret = prelude_list_entry(tmp, $field->{typename}, list);
-					if ( i++ == n )
-						return 0;
-				
-				\}
-			
-				/* we must add n-i list elements */
-				for ( j = i; j <= n; j++ ) \{
-			    		retval = idmef_$struct->{short_typename}_new_$field->{short_name}(ptr, ($field->{typename} **) ret);
-					if ( retval < 0 )
-						return retval;
-				\}
-			\}
-			
-			return 0;
+                        if ( n < 0 )
+                               return idmef_$struct->{short_typename}_new_$field->{short_name}(ptr, ($field->{typename} **) ret, n);
+
+                        prelude_list_for_each(&ptr->$field->{name}, tmp) {
+                               if ( i++ == n ) {
+                                       *ret = prelude_list_entry(tmp, $field->{typename}, list);
+                                       return 0;
+                               }
+                        }
+
+                        if ( i != n )
+                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+
+                        return idmef_$struct->{short_typename}_new_$field->{short_name}(ptr, ($field->{typename} **) ret, n);
 		\}
 ");
 	} elsif ( $field->{metatype} & &METATYPE_UNION ) {
@@ -967,17 +982,19 @@ $field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name
         return NULL;
 \}
 
+
 /**
  * idmef_$struct->{short_typename}_set_$field->{short_name}:
  * \@ptr: pointer to a #$struct->{typename} object.
  * \@object: pointer to a #$field->{typename} object.
  *
- * Add \@object to the tail of \@ptr list of #$field->{typename} object.
+ * Add \@object to the beginning of \@ptr list of #$field->{typename} object.
  */
-void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object)
+void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object, int pos)
 \{
-	prelude_list_add_tail(&ptr->$field->{name}, &object->list);
+        list_insert(&ptr->$field->{name}, &object->list, pos);
 \}
+
 
 /**
  * idmef_$struct->{short_typename}_new_$field->{short_name}:
@@ -989,7 +1006,7 @@ void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename
  * 
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_$struct->{short_typename}_new_$field->{short_name}($struct->{typename} *ptr, $field->{typename} **ret)
+int idmef_$struct->{short_typename}_new_$field->{short_name}($struct->{typename} *ptr, $field->{typename} **ret, int pos)
 \{	
         int retval;
 
@@ -997,9 +1014,9 @@ int idmef_$struct->{short_typename}_new_$field->{short_name}($struct->{typename}
 	if ( retval < 0 )
 		return retval;
 	
-	prelude_list_add_tail(&ptr->$field->{name}, &(*ret)->list);
-	
-	return 0;
+        list_insert(&ptr->$field->{name}, &(*ret)->list, pos);
+
+        return 0;
 \}
 
 
@@ -1105,7 +1122,11 @@ sub	enum
  */
 $enum->{typename} idmef_$enum->{short_typename}_to_numeric(const char *name)
 \{
-");
+        int i;
+        const struct {
+              $enum->{typename} val;
+              const char *name;
+        } tbl[] = {");
 
     foreach my $field ( @{ $enum->{field_list} } ) {
 	my $fullname = 'IDMEF_' . uc($enum->{short_typename});
@@ -1115,13 +1136,18 @@ $enum->{typename} idmef_$enum->{short_typename}_to_numeric(const char *name)
 	$fieldname =~ tr/_/-/;
 
 	$self->output("
-	if ( strcasecmp(name, \"$fieldname\" ) == 0)
-		return $field->{name};
-");
+            { $field->{name}, \"$fieldname\" },");
     }
 
-    $self->output("
-	return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+   $self->output("
+        };
+
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcasecmp(name, tbl[i].name) == 0 )
+                        return tbl[i].val;
+        }
+
+        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
 \}	
 ");
 
@@ -1136,18 +1162,17 @@ $enum->{typename} idmef_$enum->{short_typename}_to_numeric(const char *name)
  */
 const char *idmef_$enum->{short_typename}_to_string($enum->{typename} val)
 \{
-	switch ( val ) \{
-");
+        const struct {
+              $enum->{typename} val;
+              const char *name;
+        } tbl[] = {");
 
     my $cnt = 0;
 
     foreach my $field ( @{ $enum->{field_list} } ) {
 
 	if ( $cnt == 0 && $field->{value} != 0 ) {
-	    $self->output("
-		case 0:
-			return NULL;
-");
+	    $self->output("{ 0, NULL },");
 	}
 	
 	my $fullname = 'IDMEF_' . uc($enum->{short_typename});
@@ -1157,20 +1182,18 @@ const char *idmef_$enum->{short_typename}_to_string($enum->{typename} val)
 	$fieldname =~ tr/_/-/;
 
 	$self->output("
-		case $field->{name}:
-			return \"$fieldname\";
-");
+                { $field->{name}, \"$fieldname\" },");
 
 	$cnt++;
     }
 
-
     $self->output("
-		default:
-			return NULL;
-	\}
+        };
 
-	return NULL;
+        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+	        return NULL;
+
+        return tbl[val].name;
 \}
 ");
 }
