@@ -25,6 +25,9 @@
 #define _LIBPRELUDE_PLUGIN_H
 
 
+#include "prelude-list.h"
+#include "prelude-getopt.h"
+
 
 typedef struct prelude_plugin_instance prelude_plugin_instance_t;
 
