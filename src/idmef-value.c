@@ -325,6 +325,34 @@ idmef_value_t *idmef_value_new_generic(idmef_value_type_id_t type, const char *b
 
 
 
+idmef_value_t *idmef_value_new_for_object(idmef_object_t *object, const char *buf)
+{
+        idmef_value_t *value;
+        idmef_object_type_t object_type;
+    	idmef_value_type_id_t value_type;
+
+    	if ( ! object || ! buf )
+	    	return NULL;
+		
+	value_type = idmef_object_get_value_type(object);
+	if ( value_type < 0 )
+                return NULL;
+
+        if ( value_type != IDMEF_VALUE_TYPE_ENUM )
+                value = idmef_value_new_generic(value_type, buf);
+        else {
+                object_type = idmef_object_get_type(object);
+                if ( object_type < 0 )
+                        return NULL;
+                
+                value = idmef_value_new_enum(object_type, buf);
+        }
+        
+        return value;
+}
+
+
+
 static int idmef_value_set_own_data(idmef_value_t *value, int own_data)
 {
 	int cnt;

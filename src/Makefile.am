@@ -45,7 +45,6 @@ libprelude_la_SOURCES = 		\
 	idmef-type.c			\
 	idmef-object.c			\
 	idmef-value.c			\
-	idmef-value-object.c		\
 	idmef-value-type.c		\
 	idmef-object-value.c		\
 	idmef-criteria.c		\

@@ -12,7 +12,6 @@ include_HEADERS = config-engine.h 		\
 		  idmef-tree-wrap.h		\
 		  idmef-type.h			\
 		  idmef-value.h			\
-		  idmef-value-object.h		\
 		  idmef-value-type.h		\
 		  idmef-object-value.h		\
 		  idmef-criteria.h		\
