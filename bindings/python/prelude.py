@@ -172,6 +172,7 @@ class Option:
         self.parent = parent
         self.name = _prelude.prelude_option_get_longopt(option)
         self.instantiable = bool(_prelude.prelude_option_get_flags(option) & _prelude.HAVE_CONTEXT)
+        self.destroyable = bool(_prelude.prelude_option_get_flags(option) & _prelude.DESTROY_HOOK)
         if self.name.find("[") != -1:
             self.instance = True
             m = re.compile("(.+)\[(.+)\]").match(self.name)
