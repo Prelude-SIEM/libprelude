@@ -398,12 +398,17 @@ idmef_object_t *idmef_object_new_fast(const char *buffer)
 	if ( ret == 1 )
 		return idmef_object_ref(object);
 
-        ret = idmef_object_parse_new(buffer, object);
-        if ( ret < 0 ) {
-		pthread_mutex_destroy(&object->mutex);
-		free(object);
-		return NULL;
-	}
+        if ( *buffer == '\0' )
+                object->desc[0].object_type = IDMEF_OBJECT_TYPE_MESSAGE;
+        else {
+                
+                ret = idmef_object_parse_new(buffer, object);
+                if ( ret < 0 ) {
+                        pthread_mutex_destroy(&object->mutex);
+                        free(object);
+                        return NULL;
+                }
+        }
 
 	pthread_mutex_lock(&cached_object_mutex);
         	
