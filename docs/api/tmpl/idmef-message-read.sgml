@@ -3,9 +3,39 @@ idmef-message-read
 
 <!-- ##### SECTION Short_Description ##### -->
 
+Reading a message from a #prelude_msg_t buffer
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+
+Once you read a #prelude_msg_t object, you need to decode this message.
+In case this is an IDMEF style message, the following API allow to read
+the relevant IDMEF fields from the #prelude_msg_t object, and create the
+IDMEF object from it's content.
+
+</para>
+
+<para>
+
+The function you're most probably looking to use is idmef_message_read(), and here
+is an example on how to use it:
+
+<programlisting>
+int ret;
+prelude_msg_t *pmsg;
+idmef_message_t *message;
+
+pmsg = whatever_method_to_get_a_prelude_msg();
+
+ret = idmef_message_new(&amp;message);
+if ( ret &lt; 0 )
+        return ret;
+
+ret = idmef_message_read(message, pmsg);
+</programlisting>
+
+This will decode the full IDMEF message stored within pmsg into the #idmef_message_t
+IDMEF object and it's childrens.
 
 </para>
 

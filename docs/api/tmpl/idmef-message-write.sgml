@@ -3,26 +3,39 @@ idmef-message-write
 
 <!-- ##### SECTION Short_Description ##### -->
 
+Writing IDMEF class to a message buffer
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+If you're not willing to use the prelude_client_send_idmef() function, because for
+example you want more control over how a message is sent, you can use the idmef-message-write
+API to send your message manually.
+</para>
 
+<para>
+The functions defined in this API all take an IDMEF object as an argument and
+dump this object in a format suitable for writing it to a socket or a file 
+(covering, for example, convertion from host byte order to network byte order), 
+to the provided #prelude_msgbuf_t buffer.
+</para>
+
+<para>
+The #prelude_msgbuf_t object is just a buffer holding a #prelude_msg_t object. When
+the buffer is full, the user defined function for #prelude_msgbuf_t will be called,
+and the user can write his message using the prelude_msg_write() function.
+</para>
+
+<para>
+<programlisting>
+idmef_message_write(message, msgbuf);
+</programlisting>
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+#prelude_msgbuf_t
+#prelude_msg_t
 </para>
-
-<!-- ##### FUNCTION idmef_time_write ##### -->
-<para>
-
-</para>
-
-@data: 
-@msg: 
-@tag: 
-
 
 <!-- ##### FUNCTION idmef_additional_data_write ##### -->
 <para>
@@ -31,6 +44,7 @@ idmef-message-write
 
 @additional_data: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_reference_write ##### -->
@@ -40,6 +54,7 @@ idmef-message-write
 
 @reference: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_classification_write ##### -->
@@ -49,6 +64,7 @@ idmef-message-write
 
 @classification: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_user_id_write ##### -->
@@ -58,6 +74,7 @@ idmef-message-write
 
 @user_id: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_user_write ##### -->
@@ -67,6 +84,7 @@ idmef-message-write
 
 @user: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_address_write ##### -->
@@ -76,6 +94,7 @@ idmef-message-write
 
 @address: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_process_write ##### -->
@@ -85,6 +104,7 @@ idmef-message-write
 
 @process: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_web_service_write ##### -->
@@ -94,6 +114,7 @@ idmef-message-write
 
 @web_service: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_snmp_service_write ##### -->
@@ -103,6 +124,7 @@ idmef-message-write
 
 @snmp_service: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_service_write ##### -->
@@ -112,6 +134,7 @@ idmef-message-write
 
 @service: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_node_write ##### -->
@@ -121,6 +144,7 @@ idmef-message-write
 
 @node: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_source_write ##### -->
@@ -130,6 +154,7 @@ idmef-message-write
 
 @source: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_file_access_write ##### -->
@@ -139,6 +164,7 @@ idmef-message-write
 
 @file_access: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_inode_write ##### -->
@@ -148,6 +174,7 @@ idmef-message-write
 
 @inode: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_checksum_write ##### -->
@@ -157,6 +184,7 @@ idmef-message-write
 
 @checksum: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_file_write ##### -->
@@ -166,6 +194,7 @@ idmef-message-write
 
 @file: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_linkage_write ##### -->
@@ -175,6 +204,7 @@ idmef-message-write
 
 @linkage: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_target_write ##### -->
@@ -184,6 +214,7 @@ idmef-message-write
 
 @target: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_analyzer_write ##### -->
@@ -193,6 +224,7 @@ idmef-message-write
 
 @analyzer: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_alertident_write ##### -->
@@ -202,6 +234,7 @@ idmef-message-write
 
 @alertident: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_impact_write ##### -->
@@ -211,6 +244,7 @@ idmef-message-write
 
 @impact: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_action_write ##### -->
@@ -220,6 +254,7 @@ idmef-message-write
 
 @action: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_confidence_write ##### -->
@@ -229,6 +264,7 @@ idmef-message-write
 
 @confidence: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_assessment_write ##### -->
@@ -238,6 +274,7 @@ idmef-message-write
 
 @assessment: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_tool_alert_write ##### -->
@@ -247,6 +284,7 @@ idmef-message-write
 
 @tool_alert: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_correlation_alert_write ##### -->
@@ -256,6 +294,7 @@ idmef-message-write
 
 @correlation_alert: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_overflow_alert_write ##### -->
@@ -265,6 +304,7 @@ idmef-message-write
 
 @overflow_alert: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_alert_write ##### -->
@@ -274,6 +314,7 @@ idmef-message-write
 
 @alert: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_heartbeat_write ##### -->
@@ -283,6 +324,7 @@ idmef-message-write
 
 @heartbeat: 
 @msg: 
+@Returns: 
 
 
 <!-- ##### FUNCTION idmef_message_write ##### -->
@@ -292,5 +334,6 @@ idmef-message-write
 
 @message: 
 @msg: 
+@Returns: 
 
 

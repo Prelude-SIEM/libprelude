@@ -3,9 +3,57 @@ idmef-time
 
 <!-- ##### SECTION Short_Description ##### -->
 
+Time representation in IDMEF message
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+
+The #idmef_time_t type is used in order to represent a time value in 
+an IDMEF message. This object contain information such as the number 
+of seconds since the Epoch, the local GMT offset, the number of micro second (if applicable).
+
+</para>
+
+
+<para>
+When creating an IDMEF message, you need to insert a timestamp in it.
+IDMEF provide differents time field to be used for this:
+
+<itemizedlist>
+
+ <listitem>AnalyzerTime<para>The AnalyzerTime class is used to indicate the current date and time
+   on the analyzer. Its values should be filled in as late as possible in the message transmission 
+   process, ideally immediately before placing the message "on the wire."</para></listitem>
+
+ <listitem>CreateTime<para>The CreateTime class is used to indicate the date and time the alert
+   or heartbeat was created by the analyzer.</para></listitem>
+
+ <listitem>DetectTime<para>The DetectTime class is used to indicate the date and time the
+   event(s) producing an alert was detected by the analyzer. In the case of more than one event, 
+   the time the first event was detected. (This may or may not be the same time as CreateTime; 
+   analyzers are not required to send alerts immediately upon detection).</para></listitem>
+
+</itemizedlist>
+
+You don't need to take care of the AnalyzerTime field, since in Prelude, once an events
+is handed to the library, and if the sending of the message fail, there will be a fallback
+to backuping the event for later retransmission. 
+
+Thus the library has to take care of setting the AnalyzerTime for you (since the message might
+not be emited immediatly in this specific case.
+
+</para>
+
+<para>
+Several helper are available in order to create #idmef_time_t object. Most probably, the function
+that you will need are the one bellow:
+
+<itemizedlist>
+ <listitem>idmef_time_new_from_gettimeofday() and idmef_time_set_from_gettimeofday()</listitem>
+ <listitem>idmef_time_new_from_timeval() and idmef_time_set_from_timeval()</listitem>
+ <listitem>idmef_time_new_from_time() and idmef_time_set_from_time()</listitem>
+ <listitem>idmef_time_new_from_string() and idmef_time_set_from_string()</listitem>
+</itemizedlist>
 
 </para>
 
@@ -19,10 +67,6 @@ idmef-time
 
 </para>
 
-@refcount: 
-@sec: 
-@usec: 
-@gmt_offset: 
 
 <!-- ##### TYPEDEF idmef_time_t ##### -->
 <para>
@@ -45,6 +89,16 @@ idmef-time
 </para>
 
 @time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_new_from_time ##### -->
+<para>
+
+</para>
+
+@time: 
+@t: 
 @Returns: 
 
 
@@ -78,6 +132,54 @@ idmef-time
 
 
 <!-- ##### FUNCTION idmef_time_new_from_timeval ##### -->
+<para>
+
+</para>
+
+@time: 
+@tv: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_set_from_time ##### -->
+<para>
+
+</para>
+
+@time: 
+@t: 
+
+
+<!-- ##### FUNCTION idmef_time_set_from_gettimeofday ##### -->
+<para>
+
+</para>
+
+@time: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_set_from_string ##### -->
+<para>
+
+</para>
+
+@time: 
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_set_from_ntpstamp ##### -->
+<para>
+
+</para>
+
+@time: 
+@buf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_set_from_timeval ##### -->
 <para>
 
 </para>
@@ -121,15 +223,6 @@ idmef-time
 @src: 
 @dst: 
 @Returns: 
-
-
-<!-- ##### FUNCTION idmef_time_set_from_time ##### -->
-<para>
-
-</para>
-
-@time: 
-@t: 
 
 
 <!-- ##### FUNCTION idmef_time_set_sec ##### -->
@@ -186,36 +279,6 @@ idmef-time
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_time_set_from_string ##### -->
-<para>
-
-</para>
-
-@time: 
-@buf: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_time_set_from_ntpstamp ##### -->
-<para>
-
-</para>
-
-@time: 
-@buf: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_time_set_from_timeval ##### -->
-<para>
-
-</para>
-
-@time: 
-@tv: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_time_to_string ##### -->
 <para>
 
@@ -234,19 +297,5 @@ idmef-time
 @time: 
 @out: 
 @Returns: 
-
-
-<!-- ##### MACRO IDMEF_TIME_MAX_STRING_SIZE ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO IDMEF_TIME_MAX_NTPSTAMP_SIZE ##### -->
-<para>
-
-</para>
-
 
 

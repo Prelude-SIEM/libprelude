@@ -6,12 +6,48 @@
     <title>Prelude library Reference Manual</title>
   </bookinfo>
 
-  <chapter>
-    <title>Creating sensors with libprelude</title>
+  <part>
+    <title>Using libprelude to interoperate with prelude-manager</title>
     <xi:include href="xml/prelude.xml"/>
     <xi:include href="xml/prelude-client.xml"/>
-    <xi:include href="xml/idmef-tree-wrap.xml"/>
-    <xi:include href="xml/idmef-path.xml"/>
+  </part>
+
+  <part>
+    <title>Sending events with libprelude</title>
+    <chapter>
+      <title>The low level IDMEF API</title>
+      <xi:include href="xml/idmef-tree-wrap.xml"/>
+      <xi:include href="xml/idmef-additional-data.xml"/>
+      <xi:include href="xml/idmef-time.xml"/>
+      <xi:include href="xml/idmef-data.xml"/>
+    </chapter>
+
+    <chapter>
+      <title>The high level IDMEF API</title>
+      <xi:include href="xml/idmef-path.xml"/>
+      <xi:include href="xml/idmef-value.xml"/>
+    </chapter>
+  </part>
+
+  <part>
+    <title>Reading events from the collector</title>
+    <xi:include href="xml/idmef-message-read.xml"/>
+    <xi:include href="xml/prelude-connection-pool.xml"/>
+  </part>
+
+  <part>
+    <title>Filtering operation on IDMEF messages</title>
+    <xi:include href="xml/idmef-criteria.xml"/>
+    <xi:include href="xml/idmef-criterion-value.xml"/>
+  </part>
+
+  <chapter>
+    <title>Utility functions</title>
+    <xi:include href="xml/idmef-message-print.xml"/>
+  </chapter>
+
+  <chapter>
+    <title>Others</title>
     <xi:include href="xml/prelude-error.xml"/>
     <xi:include href="xml/prelude-linked-object.xml"/>
     <xi:include href="xml/prelude-io.xml"/>
@@ -20,7 +56,6 @@
     <xi:include href="xml/prelude-option.xml"/>
     <xi:include href="xml/prelude-connection.xml"/>
     <xi:include href="xml/prelude-string.xml"/>
-    <xi:include href="xml/idmef-message-print.xml"/>
     <xi:include href="xml/prelude-msgbuf.xml"/>
     <xi:include href="xml/idmef-message-write.xml"/>
     <xi:include href="xml/prelude-ident.xml"/>
@@ -28,20 +63,12 @@
     <xi:include href="xml/prelude-plugin.xml"/>
     <xi:include href="xml/prelude-hash.xml"/>
     <xi:include href="xml/prelude-failover.xml"/>
-    <xi:include href="xml/prelude-connection-pool.xml"/>
     <xi:include href="xml/prelude-async.xml"/>
-    <xi:include href="xml/idmef-message-read.xml"/>
     <xi:include href="xml/prelude-inet.xml"/>
     <xi:include href="xml/prelude-list.xml"/>
     <xi:include href="xml/prelude-inttypes.xml"/>
     <xi:include href="xml/prelude-option-wide.xml"/>
-    <xi:include href="xml/idmef-criteria.xml"/>
-    <xi:include href="xml/idmef-data.xml"/>
-    <xi:include href="xml/idmef-criterion-value.xml"/>
-    <xi:include href="xml/idmef-additional-data.xml"/>
-    <xi:include href="xml/idmef-time.xml"/>
     <xi:include href="xml/prelude-extract.xml"/>
     <xi:include href="xml/prelude-timer.xml"/>
-    <xi:include href="xml/idmef-value.xml"/>
   </chapter>
 </book>

@@ -1,3 +1,7 @@
+<MACRO>
+<NAME>PRELUDE_ERROR_SYSTEM_ERROR</NAME>
+#define PRELUDE_ERROR_SYSTEM_ERROR    (1 << 15)
+</MACRO>
 <ENUM>
 <NAME>prelude_error_source_t</NAME>
 typedef enum {
@@ -75,8 +79,6 @@ typedef enum {
     PRELUDE_ERROR_STRING_NOT_NULL_TERMINATED = 49,
     PRELUDE_ERROR_CANT_RESOLVE = 50,
     PRELUDE_ERROR_UNKNOWN_ERRNO = 16382,
-
-#define PRELUDE_ERROR_SYSTEM_ERROR    (1 << 15)
     PRELUDE_ERROR_E2BIG = PRELUDE_ERROR_SYSTEM_ERROR | 0,
     PRELUDE_ERROR_EACCES = PRELUDE_ERROR_SYSTEM_ERROR | 1,
     PRELUDE_ERROR_EADDRINUSE = PRELUDE_ERROR_SYSTEM_ERROR | 2,
@@ -5238,158 +5240,153 @@ prelude_msgbuf_t *msgbuf, prelude_msgbuf_flags_t flags
 prelude_msgbuf_t *msgbuf
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_time_write</NAME>
-<RETURNS>void </RETURNS>
-idmef_time_t *data, prelude_msgbuf_t *msg, uint8_t tag
-</FUNCTION>
-<FUNCTION>
 <NAME>idmef_additional_data_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_additional_data_t *additional_data, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_reference_t *reference, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_classification_t *classification, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_user_id_t *user_id, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_user_t *user, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_address_t *address, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_process_t *process, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_web_service_t *web_service, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_snmp_service_t *snmp_service, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_service_t *service, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_node_t *node, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_source_t *source, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_access_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_file_access_t *file_access, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_inode_t *inode, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_checksum_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_checksum_t *checksum, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_file_t *file, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_linkage_t *linkage, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_target_t *target, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_analyzer_t *analyzer, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alertident_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_alertident_t *alertident, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_impact_t *impact, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_action_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_action_t *action, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_confidence_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_confidence_t *confidence, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_assessment_t *assessment, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_tool_alert_t *tool_alert, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_correlation_alert_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_correlation_alert_t *correlation_alert, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_overflow_alert_t *overflow_alert, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_alert_t *alert, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_heartbeat_t *heartbeat, prelude_msgbuf_t *msg
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_write</NAME>
-<RETURNS>void </RETURNS>
+<RETURNS>int </RETURNS>
 idmef_message_t *message, prelude_msgbuf_t *msg
 </FUNCTION>
 <TYPEDEF>
@@ -5948,7 +5945,7 @@ prelude_connection_pool_t *pool, prelude_msg_t *msg
 <FUNCTION>
 <NAME>prelude_connection_pool_init</NAME>
 <RETURNS>int </RETURNS>
-prelude_connection_pool_t *new
+prelude_connection_pool_t *pool
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_connection_pool_new</NAME>
@@ -6013,12 +6010,12 @@ prelude_connection_pool_t *pool, int timeout,int (*event_cb)(prelude_connection_
 <FUNCTION>
 <NAME>prelude_connection_pool_set_global_event_handler</NAME>
 <RETURNS>void </RETURNS>
-prelude_connection_pool_t *pool,prelude_connection_pool_event_t events,int (*callback)(prelude_connection_pool_t *pool,prelude_connection_pool_event_t events)
+prelude_connection_pool_t *pool,prelude_connection_pool_event_t wanted_events,int (*callback)(prelude_connection_pool_t *pool,prelude_connection_pool_event_t events)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_connection_pool_set_event_handler</NAME>
 <RETURNS>void </RETURNS>
-prelude_connection_pool_t *pool,prelude_connection_pool_event_t events,int (*callback)(prelude_connection_pool_t *pool,prelude_connection_pool_event_t events,prelude_connection_t *cnx)
+prelude_connection_pool_t *pool,prelude_connection_pool_event_t wanted_events,int (*callback)(prelude_connection_pool_t *pool,prelude_connection_pool_event_t events,prelude_connection_t *cnx)
 </FUNCTION>
 <MACRO>
 <NAME>PRELUDE_ASYNC_TIMER</NAME>
@@ -7612,6 +7609,7 @@ idmef_additional_data_t *ad, prelude_string_t *out
 <STRUCT>
 <NAME>idmef_time</NAME>
 struct idmef_time {
+        /* <private> */
         int refcount;
         uint32_t sec;
         uint32_t usec;
@@ -7631,6 +7629,11 @@ idmef_time_t *time
 <NAME>idmef_time_new</NAME>
 <RETURNS>int </RETURNS>
 idmef_time_t **time
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_time_new_from_time</NAME>
+<RETURNS>int </RETURNS>
+idmef_time_t **time, const time_t *t
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_time_new_from_gettimeofday</NAME>
@@ -7653,6 +7656,31 @@ idmef_time_t **time, const char *buf
 idmef_time_t **time, const struct timeval *tv
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_time_set_from_time</NAME>
+<RETURNS>void </RETURNS>
+idmef_time_t *time, const time_t *t
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_time_set_from_gettimeofday</NAME>
+<RETURNS>int </RETURNS>
+idmef_time_t *time
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_time_set_from_string</NAME>
+<RETURNS>int </RETURNS>
+idmef_time_t *time, const char *buf
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_time_set_from_ntpstamp</NAME>
+<RETURNS>int </RETURNS>
+idmef_time_t *time, const char *buf
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_time_set_from_timeval</NAME>
+<RETURNS>int </RETURNS>
+idmef_time_t *time, const struct timeval *tv
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_time_destroy_internal</NAME>
 <RETURNS>void </RETURNS>
 idmef_time_t *time
@@ -7671,11 +7699,6 @@ const idmef_time_t *src, idmef_time_t **dst
 <NAME>idmef_time_copy</NAME>
 <RETURNS>int </RETURNS>
 const idmef_time_t *src, idmef_time_t *dst
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_time_set_from_time</NAME>
-<RETURNS>void </RETURNS>
-idmef_time_t *time, const time_t *t
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_time_set_sec</NAME>
@@ -7708,21 +7731,6 @@ const idmef_time_t *time
 const idmef_time_t *time
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_time_set_from_string</NAME>
-<RETURNS>int </RETURNS>
-idmef_time_t *time, const char *buf
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_time_set_from_ntpstamp</NAME>
-<RETURNS>int </RETURNS>
-idmef_time_t *time, const char *buf
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_time_set_from_timeval</NAME>
-<RETURNS>int </RETURNS>
-idmef_time_t *time, const struct timeval *tv
-</FUNCTION>
-<FUNCTION>
 <NAME>idmef_time_to_string</NAME>
 <RETURNS>int </RETURNS>
 const idmef_time_t *time, prelude_string_t *out
@@ -7732,14 +7740,6 @@ const idmef_time_t *time, prelude_string_t *out
 <RETURNS>int </RETURNS>
 const idmef_time_t *time, prelude_string_t *out
 </FUNCTION>
-<MACRO>
-<NAME>IDMEF_TIME_MAX_STRING_SIZE</NAME>
-#define IDMEF_TIME_MAX_STRING_SIZE   64   /* YYYY-MM-DDThh:mm:ss.ssZ */
-</MACRO>
-<MACRO>
-<NAME>IDMEF_TIME_MAX_NTPSTAMP_SIZE</NAME>
-#define IDMEF_TIME_MAX_NTPSTAMP_SIZE 22   /* 0xNNNNNNNN.0xNNNNNNNN + \0  */
-</MACRO>
 <MACRO>
 <NAME>byte</NAME>
  #define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[(pos)]

@@ -133,7 +133,6 @@ PRELUDE_CLIENT_STATUS_EXIT_FAILED exit status. This is also the case if your per
 is interrupted by a signal. 
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
