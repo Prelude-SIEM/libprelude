@@ -36,6 +36,11 @@
 #include "prelude-log.h"
 
 
+#ifndef PATH_MAX
+ #define PATH_MAX 1024
+#endif
+
+
 static char slockfile[256];
 
 
@@ -58,7 +63,7 @@ static const char *get_absolute_filename(const char *lockfile)
                 snprintf(slockfile, sizeof(slockfile), "%s", lockfile);
 
         else {
-                char dir[256];
+                char dir[PATH_MAX];
                 
                 /*
                  * if lockfile is a relative path,
