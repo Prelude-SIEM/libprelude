@@ -185,7 +185,6 @@ docs/Makefile
 docs/api/Makefile
 
 libmissing/Makefile
-sensor-adduser/Makefile
 
 src/Makefile 
 src/include/Makefile

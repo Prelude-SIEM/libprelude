@@ -48,7 +48,6 @@
 #include <openssl/bio.h>
 
 #include "ssl.h"
-#include "path.h"
 #include "ssl-register.h"
 #include "ssl-gencrypto.h"
 #include "prelude-io.h"
