@@ -128,11 +128,12 @@ static int generic_connect(int sock, struct sockaddr *addr, socklen_t addrlen)
 /*
  * Connect to an UNIX socket.
  */
-static int unix_connect(void)
+static int unix_connect(uint16_t port)
 {
         int ret, sock;
     	struct sockaddr_un addr;
-        
+        char filename[256];
+
 	log(LOG_INFO, "- Connecting to Unix prelude Manager server.\n");
         
 	sock = socket(AF_UNIX, SOCK_STREAM, 0);
@@ -142,7 +143,10 @@ static int unix_connect(void)
 	}
         
 	addr.sun_family = AF_UNIX;
-	strncpy(addr.sun_path, prelude_get_socket_filename(), sizeof(addr.sun_path));
+
+        prelude_get_socket_filename(filename, sizeof(filename), port);
+
+	strncpy(addr.sun_path, filename, sizeof(addr.sun_path));
 
         ret = generic_connect(sock, (struct sockaddr *)&addr, sizeof(addr));
         if ( ret < 0 ) {
@@ -481,7 +485,7 @@ static int start_unix_connection(prelude_client_t *client)
 {
         int ret, sock, have_ssl = 0, have_plaintext = 0;
         
-        sock = unix_connect();
+        sock = unix_connect(client->dport);
         if ( sock < 0 )
                 return -1;
 
@@ -728,7 +732,6 @@ void prelude_client_set_type(prelude_client_t *client, int type)
 {
         client->type = type;
 }
-
 
 
 

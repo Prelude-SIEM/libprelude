@@ -79,9 +79,9 @@ void prelude_get_backup_filename(char *buf, size_t size)
 }
 
 
-const char *prelude_get_socket_filename(void) 
+void prelude_get_socket_filename(char *buf, size_t size, uint16_t port) 
 {
-        return UNIX_SOCKET;
+        snprintf(buf, size, "%s-%u", UNIX_SOCKET, port);
 }
 
 

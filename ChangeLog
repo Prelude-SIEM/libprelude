@@ -1,3 +1,15 @@
+2002-05-14 Vincent Glaume <glaume@enseirb.fr>
+
+	* src/include/prelude-path.h:
+	(prelude_get_socket_filename) has a new prototype.
+	
+	* src/prelude-path.c (prelude_get_socket_filename):
+	builds a filename based on a port number for the unix
+	socket, which allows to use several unix sockets.
+	
+	* src/prelude-client.c:
+	complies to the new unix socket management.
+
 2002-05-13  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-client.c (prelude_client_connect): 
