@@ -550,7 +550,7 @@ ssize_t prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst)
          */
         if ( msg->header_index == 0 ) 
                 write_message_header(msg);
-
+        
         /*
          * in this case, prelude_msg_mark_end() was called.
          */
@@ -576,9 +576,9 @@ ssize_t prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst)
 void prelude_msg_recycle(prelude_msg_t *msg) 
 {
         msg->header_index = 0;
+        msg->read_index = PRELUDE_MSG_HDR_SIZE;
         msg->write_index = PRELUDE_MSG_HDR_SIZE;
 }
-
 
 
 
@@ -900,7 +900,7 @@ int prelude_msg_is_fragment(prelude_msg_t *msg)
  */
 int prelude_msg_is_empty(prelude_msg_t *msg)
 {
-        return (msg->write_index - PRELUDE_MSG_HDR_SIZE <= 0) ? 1 : 0;
+        return (msg->write_index - msg->header_index - PRELUDE_MSG_HDR_SIZE <= 0) ? 1 : 0;
 }
 
 
