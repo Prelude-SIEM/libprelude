@@ -82,7 +82,7 @@ static char *process_name = NULL, *process_path = NULL;
 /*
  *
  */
-static const char *manager_cfg_line = NULL;
+static char *manager_cfg_line = NULL;
 static prelude_client_mgr_t *manager_list = NULL;
 
 
