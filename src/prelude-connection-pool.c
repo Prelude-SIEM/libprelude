@@ -328,8 +328,11 @@ static void broadcast_message(prelude_msg_t *msg, cnx_t *cnx)
                 return;
         
         if ( prelude_connection_is_alive(cnx->cnx) ) {
+
+                do {
+                        ret = prelude_connection_send(cnx->cnx, msg);
+                } while ( ret < 0 && prelude_error_get_code(ret) == EAGAIN );
                 
-                ret = prelude_connection_send(cnx->cnx, msg);                
                 if ( ret < 0 )
                         notify_dead(cnx, ret, FALSE);
         }
