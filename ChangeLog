@@ -1,3 +1,26 @@
+2002-05-08  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/client-ident.c: removed code for requesting
+	an ID to the Manager, since we now generate the 
+	ident number ourselv.
+	
+	(prelude_client_ident_init): read the ident generated
+	by sensor-adduser from the ident file.
+
+	* sensor-adduser/sensor-adduser.c (elf_hash): 
+	(time_hash): 
+	(generate_sensor_ident): 
+	(register_sensor_ident):
+	
+	(setup_sensor_files): generate, and register sensor
+	ident.
+
+	* configure.in (sensors_config_dir): 
+	declare sensor_ident_file.
+
+	* Makefile.am (install-data-local): remove
+	sensor_ident_dir.
+
 2002-05-06  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* docs/api/Makefile.am: included PATCH from 

@@ -32,6 +32,8 @@
 #include <arpa/inet.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/time.h>
+#include <time.h>
 
 #include "common.h"
 #include "prelude-message-id.h"
@@ -51,6 +53,7 @@ static int uid_set = 0;
 static uid_t sensor_uid;
 static const char *addr = NULL;
 static const char *sensor_name = NULL;
+
 
 
 static int set_sensor_name(const char *optarg) 
@@ -275,10 +278,115 @@ static int handle_argument(int argc, char **argv)
 
 
 
+/*
+ * the elf_hash function was stolen from binutil :
+ * binutils-2.12.90.0.7/bfd/elf.c:
+ *
+ * Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002
+ * Free Software Foundation, Inc.
+ */
+static uint32_t elf_hash(const unsigned char *name)
+{
+        uint32_t h, g;
+        unsigned char c;
+
+        h = 0;
+        while ( (c = *name++) != '\0' ) {
+
+                h = (h << 4) + c;
+
+                if ( (g = (h & 0xf0000000)) != 0 )
+                        h ^= g >> 24;
+
+                h &= ~g;
+        }
+
+        return h;
+}
+
+
+
+static uint32_t time_hash(void) 
+{
+        struct timeval tv;
+
+        gettimeofday(&tv, NULL);
+        
+        return tv.tv_sec ^ tv.tv_usec;
+}
+
+
+
+static uint64_t generate_sensor_ident(const char *hostname, const char *sensorname) 
+{
+        uint32_t *ptr;
+        uint64_t ident;
+        
+        ptr = (uint32_t *) &ident;
+
+        ptr[0] = time_hash();
+        ptr[1] = elf_hash(hostname) ^ elf_hash(sensorname);
+        
+        return ident;
+}
+
+
+
+
+static int register_sensor_ident(const char *sname, uint64_t *ident) 
+{
+        int ret;
+        FILE *fd;
+        char buf[256], *ptr;
+        
+        fd = fopen(SENSORS_IDENT_FILE, "a+");
+        if ( ! fd ) {
+                log(LOG_ERR, "error opening %s for writing.\n", SENSORS_IDENT_FILE);
+                return -1;
+        }
+
+        rewind(fd);
+
+        while ( fgets(buf, sizeof(buf), fd) ) {
+                
+                if ( strstr(buf, sname) ) {
+                        /*
+                         * sensor already have an ident.
+                         */
+                        ptr = strrchr(buf, ':');
+                        if ( ! ptr )
+                                return -1;
+
+                        sscanf(ptr + 1, "%llu", ident);
+                        fclose(fd);
+                        
+                        return -1;
+                }
+        }
+        
+        fprintf(fd, "%s:%llu\n", sname, *ident);
+
+        /*
+         * make sure the file is readable by all.
+         */
+        ret = fchmod(fileno(fd), S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
+        if ( ret < 0 ) 
+                log(LOG_ERR, "couldn't make ident file readable for all.\n");
+        
+        fclose(fd);
+        
+        return ret;
+}
+
+
+
+
 static int setup_sensor_files(void) 
 {
         int fd, ret;
         char buf[256];
+        uint64_t ident;
+        char hostname[256];
 
         prelude_get_backup_filename(buf, sizeof(buf));
 
@@ -297,7 +405,16 @@ static int setup_sensor_files(void)
                 log(LOG_ERR, "couldn't chown %s to UID %d.\n", buf, sensor_uid);
                 return -1;
         }
-        
+
+        gethostname(hostname, sizeof(hostname));
+        ident = generate_sensor_ident(sensor_name, hostname);
+
+        ret = register_sensor_ident(sensor_name, &ident);
+        if ( ret == 0 )
+                fprintf(stderr, "Allocated ident for %s@%s: %llu.\n", sensor_name, hostname, ident);
+        else
+                fprintf(stderr, "Using already allocated ident for %s@%s: %llu.\n", sensor_name, hostname, ident);
+
         return 0;
 }
 
@@ -369,7 +486,7 @@ int main(int argc, char **argv)
  end:
         if ( ret < 0 )
                 exit(ret);
-
+        
         exit(setup_sensor_files());
 }
 
