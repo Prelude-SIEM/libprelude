@@ -114,9 +114,13 @@ fi
 libprelude_libs="$libprelude_libs $LIBGNUTLS_LIBS"
 libprelude_cflags="$libprelude_cflags $LIBGNUTLS_CFLAGS"
 
+old_CPPFLAGS=$CPPFLAGS
+CPPFLAGS=$libprelude_cflags
+
 AC_CHECK_HEADER(gnutls/gnutls.h,
        		libprelude_cflags="$libprelude_cflags",
        		AC_MSG_ERROR("libgnutls development headers are required to build libprelude"))
+CPPFLAGS=$old_CPPFLAGS
 
 
 dnl **************************************************

@@ -1,5 +1,5 @@
 INCLUDES = -I$(top_srcdir)/src/include -I$(top_srcdir)
-DEFS = -DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\"
+DEFS = -DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\" @libprelude_cflags@
 
 bin_PROGRAMS = prelude-adduser
 prelude_adduser_LDFLAGS = -export-dynamic
