@@ -142,6 +142,7 @@ pthrlib=no
 for dir in /usr /usr/local /usr/pkg; do
 	AC_CHECK_FILE($dir/lib/libpthread.so, pthread_lib_dir=$dir)
 	AC_CHECK_FILE($dir/lib/libpthread.dylib, pthread_lib_dir=$dir)
+	AC_CHECK_FILE($dir/lib/libpthread.a, pthread_lib_dir=$dir)
 	AC_CHECK_FILE($dir/include/pthread.h, pthread_include_dir=$dir)
 done
 
