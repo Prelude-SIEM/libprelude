@@ -334,8 +334,10 @@ static int process_option_cfg_hook(struct list_head *cb_list, prelude_option_t *
                          * of the same name.
                          */
                         section = entry = NULL;
-                        call_option_cb(cb_list, opt, str);
                         
+                        ret = call_option_cb(cb_list, opt, str);
+                        if ( ret == prelude_option_error || ret == prelude_option_end )
+                                return ret;
                 }
         }
 
@@ -350,12 +352,9 @@ static int process_option_cfg_hook(struct list_head *cb_list, prelude_option_t *
                 ret = config_get_section(cfg, opt->longopt);
                 if ( ret < 0 )
                         return prelude_option_success;
-        }
 
-        /*
-         * This is the only call that can return an error.
-         */
-        return call_option_cb(cb_list, opt, str);
+                return call_option_cb(cb_list, opt, str);
+        }
 }
 
 
@@ -728,9 +727,8 @@ static int get_max_char(const char *line, int descoff)
         
         for ( i = 0; i < desclen; i++ ) {
 
-                if ( line[i] == '\0' ) {
+                if ( line[i] == '\0' )
                         return i;
-                }
                 
                 if ( line[i] == ' ' )
                         max = i;

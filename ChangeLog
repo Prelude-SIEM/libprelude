@@ -1,5 +1,8 @@
 2002-04-14  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/prelude-getopt.c (process_option_cfg_hook): 
+	(get_max_char): slight cleanup.
+
 	* src/config-engine.c (config_get_section): 
 	don't check if the line is a comment here.
 	(search_section): do it here.
