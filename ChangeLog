@@ -1,5 +1,21 @@
 2003-12-28  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
+	* src/prelude-client.c (prelude_client_send_msg): 
+	after writing a message, check that the tcp connection is
+	still established, otherwise, handle breakage and trigger
+	failover.
+	
+	(is_tcp_connection_still_established): moved from prelude-io.c.
+
+	(start_inet_connection): 
+	(start_unix_connection): s/socket_io/sys_io/
+
+	* src/prelude-io.c: 
+	remove the socket_io IO type. The check issued by this type
+	really shouldn't be done here.
+
+	(sys_pending): implement, using FIONREAD.
+
 	* src/prelude-message.c (set_data, prelude_msg_forward):
 	datatype safety.
 
