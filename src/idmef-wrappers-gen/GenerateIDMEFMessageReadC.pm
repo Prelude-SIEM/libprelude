@@ -108,7 +108,7 @@ static inline int prelude_extract_time_safe(idmef_time_t **out, void *buf, size_
 \}
 
 
-static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, size_t len, prelude_msg_t *msg)
+static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, uint32_t len, prelude_msg_t *msg)
 \{
         int ret;
 	uint8_t tag;
