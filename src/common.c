@@ -110,21 +110,21 @@ static int find_absolute_path(const char *cwd, const char *file, char **path)
  * @ptr: Pointer on a memory block.
  * @size: New size.
  *
- * prelude_realloc() changes the size of the memory block pointed to by @ptr
+ * prelude_realloc() changes the size of the memory block pointed by @ptr
  * to @size bytes. The contents will be unchanged to the minimum of the old
  * and new sizes; newly allocated memory will be uninitialized.  If ptr is NULL,
  * the call is equivalent to malloc(@size); if @size is equal to zero, the call
  * is equivalent to free(ptr). Unless ptr is NULL, it must have been returned by
  * an earlier call to malloc(), calloc() or realloc().
  *
- * This function exist because some version of realloc() doesn't handle the
- * case where @ptr is NULL. Even thought ANSI allow it.
+ * This function exists because some versions of realloc() don't handle the
+ * case where @ptr is NULL. Even though ANSI requires it.
  *
- * Returns: returns a pointer to the newly allocated memory, which is suitably
+ * Returns: a pointer to the newly allocated memory, which is suitably
  * aligned for any kind of variable and may be different from ptr, or NULL if the
  * request fails. If size was equal to 0, either NULL or a pointer suitable to be
- * passed to free() is returned.  If  realloc() fails the original block is left
- * untouched - it is not freed or moved.
+ * passed to free() is returned.  If  realloc() fails, the original block is left
+ * untouched - it is not freed nor moved.
  *
  * Returns: a pointer to the newly allocated memory.
  */
@@ -146,9 +146,9 @@ void *_prelude_realloc(void *ptr, size_t size)
  * @buf: Pointer to a buffer where the line should be stored.
  * @size: Size of the @buf buffer.
  *
- * This function handle reading line separated by the '\' character.
+ * This function handles line reading separated by the '\' character.
  *
- * Returns: 0 on success, -1 if an error ocurred.
+ * Returns: 0 on success, -1 if an error occured.
  */
 int prelude_read_multiline(FILE *fd, int *line, char *buf, size_t size) 
 {
@@ -160,7 +160,7 @@ int prelude_read_multiline(FILE *fd, int *line, char *buf, size_t size)
         (*line)++;
          
         /*
-         * We don't want to handle multiline in case this is a comment.
+         * We don't want to handle multilines in case this is a comment.
          */
         for ( i = 0; buf[i] != '\0' && isspace((int) buf[i]); i++ );
                 
@@ -204,7 +204,7 @@ uint64_t prelude_hton64(uint64_t val)
 	combo_r.val64 = val;
 	
         /*
-         * Put in network byte order
+         * Puts in network byte order
          */
 	combo_w.val32[0] = htonl(combo_r.val32[1]);
 	combo_w.val32[1] = htonl(combo_r.val32[0]);
