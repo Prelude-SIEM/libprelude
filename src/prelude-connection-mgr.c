@@ -256,7 +256,7 @@ static int broadcast_message(prelude_msg_t *msg, cnx_list_t *clist, cnx_t *cnx)
                         notify_dead(clist, cnx);
         }
 
-        if ( ret < 0 )
+        if ( ret < 0 ) 
                 prelude_failover_save_msg(cnx->failover, msg);
         
         return broadcast_message(msg, clist, cnx->and);
@@ -284,7 +284,7 @@ static int walk_manager_lists(prelude_connection_mgr_t *cmgr, prelude_msg_t *msg
                 if ( ret == 0 )  /* AND of Manager emission succeed */
                         return 0;
         }
-
+        
         prelude_failover_save_msg(cmgr->failover, msg);
         
         return ret;
@@ -292,7 +292,7 @@ static int walk_manager_lists(prelude_connection_mgr_t *cmgr, prelude_msg_t *msg
 
 
 
-static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, prelude_connection_t *cnx)
+static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t *cnx)
 {
         char name[128];
         ssize_t size, ret;
@@ -307,7 +307,8 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, prelu
         if ( clist )
                 snprintf(name, sizeof(name), "any");
         else
-                snprintf(name, sizeof(name), "%s:%u", prelude_connection_get_daddr(cnx), prelude_connection_get_dport(cnx));
+                snprintf(name, sizeof(name), "%s:%u",
+                         prelude_connection_get_daddr(cnx->cnx), prelude_connection_get_dport(cnx->cnx));
         
         log(LOG_INFO, "- Flushing %u message to %s manager (%u erased due to quota)...\n",
             available, name, prelude_failover_get_deleted_msg_count(failover));
@@ -319,8 +320,11 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, prelu
 
                 if ( clist )
                         ret = broadcast_message(msg, clist, clist->and);
-                else
-                        ret = prelude_connection_send_msg(cnx, msg);
+                else {
+                        ret = prelude_connection_send_msg(cnx->cnx, msg);
+                        if ( ret < 0 )
+                                notify_dead(clist, cnx);
+                }
                 
                 prelude_msg_destroy(msg);
 
@@ -365,30 +369,24 @@ static void connection_timer_expire(void *data)
                  * Destroy the timer, and if no client in the AND list
                  * is dead, emit backuped report.
                  */
+                cnx->parent->dead--;
                 timer_destroy(&cnx->timer);
                 
-                ret = failover_flush(cnx->failover, NULL, cnx->cnx);
-                if ( ret == communication_error ) {
-                        timer_init(&cnx->timer);
+                if ( mgr->notify_cb )
+                        mgr->notify_cb(&mgr->all_cnx);
+                
+                ret = failover_flush(cnx->failover, NULL, cnx);
+                if ( ret == communication_error ) 
                         return;
-                }
-
-                if ( --cnx->parent->dead == 0 ) {
+                
+                if ( cnx->parent->dead == 0 ) {
                         ret = failover_flush(mgr->failover, cnx->parent, NULL);
-                        if ( ret == communication_error ) {
-                                timer_init(&cnx->timer);
+                        if ( ret == communication_error )
                                 return;
-                        }
                 }
                 
                 timer_set_expire(&cnx->timer, INITIAL_EXPIRATION_TIME);
                 
-                /*
-                 * notify the user about a new connection.
-                 */
-                if ( mgr->notify_cb )
-                        mgr->notify_cb(&mgr->all_cnx);
-
 		/*
 		 * put the fd in fdset for read from manager.
 		 */
@@ -424,7 +422,7 @@ static void parse_address(char *addr, uint16_t *port)
 static cnx_t *new_connection(prelude_client_t *client, cnx_list_t *clist, prelude_connection_t *cnx, int use_timer) 
 {
         cnx_t *new;
-        int state, fd;
+        int state, fd, ret;
         char dirname[256], buf[256];
         
         new = malloc(sizeof(*new));
@@ -449,7 +447,7 @@ static cnx_t *new_connection(prelude_client_t *client, cnx_list_t *clist, prelud
                 FD_SET(fd, &clist->parent->fds);
                 clist->parent->nfd = MAX(fd + 1, clist->parent->nfd);
         }
-
+        
         new->cnx = cnx;
         new->and = NULL;
         new->parent = clist;
@@ -463,6 +461,9 @@ static cnx_t *new_connection(prelude_client_t *client, cnx_list_t *clist, prelud
         if ( ! new->failover ) 
                 return NULL;
         
+        if ( state & PRELUDE_CONNECTION_ESTABLISHED )
+                ret = failover_flush(new->failover, NULL, new);
+        
         prelude_linked_object_add((prelude_linked_object_t *) new->cnx, &clist->parent->all_cnx);
 
         return new;
@@ -473,6 +474,7 @@ static cnx_t *new_connection(prelude_client_t *client, cnx_list_t *clist, prelud
 
 static cnx_t *new_connection_from_address(prelude_client_t *client, cnx_list_t *clist, char *addr) 
 {
+        int ret;
         cnx_t *new;
         uint16_t port;
         prelude_connection_t *cnx;
@@ -483,7 +485,7 @@ static cnx_t *new_connection_from_address(prelude_client_t *client, cnx_list_t *
         if ( ! cnx ) 
                 return NULL;
 
-        prelude_connection_connect(cnx);
+        ret = prelude_connection_connect(cnx);
         
         new = new_connection(client, clist, cnx, 1);
         if ( ! new ) {
@@ -916,18 +918,14 @@ int prelude_connection_mgr_tell_connection_alive(prelude_connection_mgr_t *mgr, 
         if ( c->parent->dead == 0 )
                 return 0;
 
-        ret = failover_flush(c->failover, NULL, cnx);
-        if ( ret == communication_error ) {
-                timer_init(&c->timer);
+        ret = failover_flush(c->failover, NULL, c);
+        if ( ret == communication_error ) 
                 return -1;
-        }
 
         if ( --c->parent->dead == 0 ) {
                 ret = failover_flush(mgr->failover, c->parent, NULL);
-                if ( ret == communication_error ) {
-                        timer_init(&c->timer);
+                if ( ret == communication_error ) 
                         return -1;
-                }
         }
         
         return 0;
