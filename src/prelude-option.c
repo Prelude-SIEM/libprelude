@@ -457,13 +457,10 @@ static int call_option_from_cb_list(void *default_context, prelude_list_t *cblis
         
         prelude_list_for_each_safe(tmp, bkp, cblist) {
                 cb = prelude_list_entry(tmp, struct cb_list, list);
-                
-                if ( cb->option->set ) {
-                        
-                        ret = do_set(&context, cb->option, cb->arg);                        
-                        if ( ret < 0 ) 
-                                return ret;
-                }
+                                
+                ret = do_set(&context, cb->option, cb->arg);                        
+                if ( ret < 0 ) 
+                        return ret;
                 
                 if ( ! prelude_list_empty(&cb->children) ) {
                                                                         
