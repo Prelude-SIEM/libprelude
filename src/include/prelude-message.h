@@ -29,19 +29,7 @@ typedef struct prelude_msg prelude_msg_t;
 #define PRELUDE_MSG_PRIORITY_LOW  2
 
 
-
-/*
- * Sequential read function.
- */
-prelude_msg_t *prelude_msg_read_header(prelude_io_t *src);
-
-int prelude_msg_read_content(prelude_msg_t *msg, prelude_io_t *src);
-
-
-/*
- * Plain read function
- */
-prelude_msg_t *prelude_msg_read(prelude_io_t *src);
+int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio);
 
 int prelude_msg_forward(prelude_msg_t *pmsg, prelude_io_t *dst, prelude_io_t *src);
 

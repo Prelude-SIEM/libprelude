@@ -227,66 +227,66 @@ ssize_t prelude_io_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
  * The case where the read function would be interrupted by a signal is
  * handled internally. So you don't have to check for EINTR.
  *
- * prelude_io_read() always return the number of bytes requested. Or an
- * error if the internal timeout expire and the read couldn't be completed.
- * If you don't know how many bytes have to be read, it mean you are wrong
- * and should use the prelude_io_write_delimited() / prelude_io_read_delimited()
- * or the prelude_message API.
- *
  * Returns: On success, the number of bytes read is returned (zero
- * indicates end of file). 
+ * indicates end of file). It is not an error if this number is smaller
+ * than the number of bytes requested; this may happen for example because
+ * fewer bytes are actually available right now or because read() was
+ * interrupted by a signal.
  *
  * On error, -1 is returned, and errno is set appropriately. In this
  * case it is left unspecified whether the file position (if any) changes.
  */
 ssize_t prelude_io_read(prelude_io_t *pio, void *buf, size_t count) 
 {
-        int i = 0;
-        ssize_t ret;
-        struct pollfd pfd;
-
-        pfd.fd = pio->fd;
-        pfd.events = POLLIN;
-        
-        do {
-                ret = poll(&pfd, 1, 10000);
-                if ( ret < 0 ) {
-                        log(LOG_ERR, "poll returned an error.\n");
-                        return -1;
-                }
-                
-                if ( ret == 0 )
-                        return -1;
-
-                if ( pfd.revents == POLLIN ) {
-                        ret = pio->read(pio, &((unsigned char *)buf)[i], count - i);
-                        if ( ret < 0 ) {
-                                log(LOG_ERR, "couldn't read %d bytes.\n", count - i);
-                                return -1;
-                        }
-
-                        if ( ret == 0 )
-                                return 0;
-                        
-                        i += ret;
-                }
-                
-                else if ( pfd.revents == POLLHUP ) {
-                        log(LOG_ERR, "hang up.\n");
-                        return 0;
-                }
-
-                else {
-                        log(LOG_ERR, "poll error (%x)\n", pfd.revents);
-                        return -1;
-                }
-                
-        } while ( i != count );
-        
-        return count;
+        return pio->read(pio, buf, count);
 }
 
 
+
+
+/**
+ * prelude_io_read_wait:
+ * @pio: Pointer to a #prelude_io_t object.
+ * buf: Pointer to the buffer to store data into.
+ * count: Number of bytes to read.
+ *
+ * prelude_io_read_wait() attempts to read up to @count bytes from the
+ * file descriptor identified by @pio into the buffer starting at @buf.
+ *
+ * If @count is zero, prelude_io_read() returns zero and has no other
+ * results. If @count is greater than SSIZE_MAX, the result is unspecified.
+ *
+ * The case where the read function would be interrupted by a signal is
+ * handled internally. So you don't have to check for EINTR.
+ *
+ * prelude_io_read_wait() always return the number of bytes requested.
+ * Be carefull that this function is blocking.
+ *
+ * Returns: On success, the number of bytes read is returned (zero
+ * indicates end of file).
+ *
+ * On error, -1 is returned, and errno is set appropriately. In this
+ * case it is left unspecified whether the file position (if any) changes.
+ */
+ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count) 
+{
+        ssize_t n = 0, ret;
+        unsigned char *in = buf;
+        
+        do {
+                ret = prelude_io_read(pio, &in[n], count - n);
+                if ( ret <= 0 )
+                        return ret;
+
+                n += ret;
+                
+        } while ( n != count );
+        
+        return n;
+}
+
+
+                       
 
 
 /**
@@ -317,7 +317,7 @@ ssize_t prelude_io_read_delimited(prelude_io_t *pio, void **buf)
         size_t count;
         uint16_t msglen;
         
-        ret = prelude_io_read(pio, &msglen, sizeof(msglen));
+        ret = prelude_io_read_wait(pio, &msglen, sizeof(msglen));
         if ( ret <= 0 ) {
                 log(LOG_ERR, "couldn't read len message of %d bytes.\n", sizeof(msglen));
                 return ret;
@@ -331,7 +331,7 @@ ssize_t prelude_io_read_delimited(prelude_io_t *pio, void **buf)
                 return -1;
         }       
         
-        ret = prelude_io_read(pio, *buf, count);
+        ret = prelude_io_read_wait(pio, *buf, count);
         if ( ret <= 0 ) {
                 log(LOG_ERR, "couldn't read %d bytes.\n", count);
                 return ret;
@@ -513,6 +513,19 @@ void prelude_io_set_socket_io(prelude_io_t *pio, int fd)
 
 
 
+/**
+ * prelude_io_get_fd:
+ * @pio: A pointer on a #prelude_io_t object.
+ *
+ * Returns: The FD associated with this object.
+ */
+int prelude_io_get_fd(prelude_io_t *pio) 
+{
+        return pio->fd;
+}
+
+
+
 
 /**
  * prelude_io_destroy:
@@ -524,6 +537,7 @@ void prelude_io_destroy(prelude_io_t *pio)
 {
         free(pio);
 }
+
 
 
 

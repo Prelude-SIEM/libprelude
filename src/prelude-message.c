@@ -25,7 +25,6 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <sys/uio.h>
-#include <pthread.h>
 #include <inttypes.h>
 #include <netinet/in.h>
 
@@ -51,11 +50,13 @@ typedef struct {
 
 struct prelude_msg {
         PRELUDE_LINKED_OBJECT;
-        
-        uint32_t msg_index;
-        prelude_msg_hdr_t hdr;
-        unsigned char *payload;
 
+        uint32_t msg_index;
+        
+        prelude_msg_hdr_t hdr;
+        unsigned char hdrbuf[PRELUDE_MSG_HDR_SIZE];
+
+        unsigned char *payload;
         void (*destroy)(prelude_msg_t *msg);
 };
 
@@ -78,23 +79,33 @@ static void msg_write_destroy(prelude_msg_t *msg)
 
 
 
-
-static int read_message_header(prelude_msg_t *msg, prelude_io_t *src) 
+static int read_message_header(prelude_msg_t *msg, prelude_io_t *pio) 
 {
         int ret;
-        unsigned char buf[PRELUDE_MSG_HDR_SIZE];
         
         /*
          * Read the whole header.
          */
-        ret = prelude_io_read(src, buf, sizeof(buf));
-        if ( ret <= 0 )
+        ret = prelude_io_read(pio, &msg->hdrbuf[msg->msg_index], PRELUDE_MSG_HDR_SIZE - msg->msg_index);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "error reading message.\n");
+                return -1;
+        }
+        
+        else if ( ret == 0)
                 return -1;
 
-        msg->hdr.version  = buf[0];
-        msg->hdr.tag      = buf[1];
-        msg->hdr.priority = buf[2];
-        msg->hdr.datalen  = *((uint32_t *) &buf[3]);
+        msg->msg_index += ret;
+        
+        if ( msg->msg_index < PRELUDE_MSG_HDR_SIZE )
+                return 0;
+        
+        msg->msg_index = 0;
+        
+        msg->hdr.version  = msg->hdrbuf[0];
+        msg->hdr.tag      = msg->hdrbuf[1];
+        msg->hdr.priority = msg->hdrbuf[2];
+        msg->hdr.datalen  = *((uint32_t *) &msg->hdrbuf[3]);
         
         /*
          * Check protocol version.
@@ -106,81 +117,42 @@ static int read_message_header(prelude_msg_t *msg, prelude_io_t *src)
         }
 
         msg->hdr.datalen = ntohl(msg->hdr.datalen);
-        
-        return 0;
-}
 
-
-
-
-/**
- * prelude_msg_read_header:
- * @src: Pointer on a #prelude_io_t object representing the FD to get data from.
- *
- * prelude_msg_read_header() read the next availlable message header
- * on the file descriptor represented by @src. It will wait until enough
- * data are available then return.
- *
- * This function should only be used in combination with
- * prelude_msg_read_content().
- *
- * Returns: a #prelude_msg_t object representating the current message
- * or NULL if an error occured.
- */
-prelude_msg_t *prelude_msg_read_header(prelude_io_t *src) 
-{
-        int ret;
-        prelude_msg_t *msg;
-
-        msg = malloc(sizeof(prelude_msg_t));
-        if (! msg )
-                return NULL;
-        
-        ret = read_message_header(msg, src);
-        if ( ret < 0 ) {
-                free(msg);
-                return NULL;
-        }
-        
-        msg->payload = NULL;
-        msg->destroy = msg_read_destroy;
-        
-        return msg;
-}
-
-
-
-/**
- * prelude_msg_read_content:
- * @msg: Pointer on a #prelude_msg_t object to store the content into.
- * @src: Pointer on a #prelude_io_t object representating the FD to get data from.
- *
- * prelude_msg_read_content() read the next availlable message following
- * a header that should have been gathered using the prelude_msg_read_header()
- * function.
- *
- * The @msg object used as argument is the one returned by prelude_msg_read_header().
- *
- * Returns: 0 on success, -1 if an error occured.
- */
-int prelude_msg_read_content(prelude_msg_t *msg, prelude_io_t *src) 
-{
-        int ret;
-
-        assert(msg->payload == NULL);
-        
         msg->payload = malloc(msg->hdr.datalen);
-        if ( ! msg->payload ) 
+        if (! msg->payload ) {
+                log(LOG_ERR, "couldn't allocate %d bytes.\n", msg->hdr.datalen);
                 return -1;
+        }
         
-        ret = prelude_io_read(src, msg->payload, msg->hdr.datalen);
-        if ( ret <= 0 ) {
-                free(msg->payload);
+        return 1;
+}
+
+
+
+
+static int read_message_content(prelude_msg_t *msg, prelude_io_t *pio) 
+{
+        int ret;
+        size_t count;
+        
+        count = msg->hdr.datalen - msg->msg_index;
+        
+        ret = prelude_io_read(pio, &msg->payload[msg->msg_index], count);        
+        if ( ret < 0 ) {
+                log(LOG_ERR, "error reading message content.\n");
                 return -1;
         }
 
-        msg->msg_index = 0;
+        else if ( ret == 0 )
+                return -1;
 
+        msg->msg_index += ret;
+
+        if ( msg->msg_index == msg->hdr.datalen ) {
+                msg->msg_index = 0;
+                return 1;
+        }
+        
         return 0;
 }
 
@@ -188,30 +160,38 @@ int prelude_msg_read_content(prelude_msg_t *msg, prelude_io_t *src)
 
 
 /**
- * prelude_msg_read:
- * @src: Pointer on a #prelude_io_t object representating the FD to read data from.
+ * prelude_msg_read_notify:
+ * @msg: Pointer on a #prelude_msg_t object.
  *
- * prelude_msg_read() read the next available message (including the message
- * header), and store it into the returned #prelude_msg_t object.
- *
- * Returns: a #prelude_msg_t object, or NULL if an error occured.
+ * Returns: -1 on end of stream or error.
+ * 1 if the message is complete, 0 if not.
  */
-prelude_msg_t *prelude_msg_read(prelude_io_t *src) 
+int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio) 
 {
         int ret;
-        prelude_msg_t *msg;
-
-        msg = prelude_msg_read_header(src);
-        if ( ! msg )
-                return NULL;
         
-        ret = prelude_msg_read_content(msg, src);
-        if ( ret < 0 ) {
-                free(msg);
-                return NULL;
+        if ( ! *msg ) {                
+                *msg = malloc(sizeof(prelude_msg_t));
+                if ( ! *msg ) {
+                        log(LOG_ERR, "memory exhausted.\n");
+                        return -1;
+                }
+                
+                (*msg)->msg_index = 0;
+                (*msg)->payload = NULL;
+                (*msg)->destroy = msg_read_destroy;
         }
         
-        return msg;
+        if ( ! (*msg)->payload ) {
+                ret = read_message_header(*msg, pio);                
+                if ( ret <= 0 )
+                        return ret;
+        }
+        
+        if ( (*msg)->payload )
+                return read_message_content(*msg, pio);
+        
+        return 0;
 }
 
 
@@ -233,7 +213,7 @@ prelude_msg_t *prelude_msg_read(prelude_io_t *src)
  * an error occured.
  */
 int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf) 
-{
+{        
         if ( msg->msg_index == msg->hdr.datalen ) 
                 return 0; /* no more sub - messages */
         
@@ -259,6 +239,7 @@ int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf)
         
         return 1;
 }
+
 
 
 
