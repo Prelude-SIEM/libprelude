@@ -145,6 +145,8 @@ static int broadcast_saved_message(client_list_t *clist, prelude_io_t *fd, size_
                 }
         }
 
+        log(LOG_INFO, "Flushed %u bytes.\n", size);
+
         return 0;
 }
 

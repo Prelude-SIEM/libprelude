@@ -1,5 +1,11 @@
 2002-04-08  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/prelude-client-mgr.c (broadcast_saved_message): 
+	print how many bytes we flushed...
+
+	* src/prelude-message.c (prelude_msg_forward): 
+	use memcpy() to copy dlen.
+
 	* src/plugin-common.c (plugin_search_by_name): 
 	new function, search a plugin by name.
 

@@ -493,12 +493,9 @@ int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src
         buf[1] = msg->hdr.tag;
         buf[2] = msg->hdr.priority;
         buf[3] = msg->hdr.is_fragment;
-        
-        buf[3] = dlen;
-        buf[4] = dlen >> 8;
-        buf[5] = dlen >> 16;
-        buf[6] = dlen >> 24;
-              
+
+        memcpy(&buf[3], &dlen, sizeof(dlen));
+                      
         ret = prelude_io_write(dst, buf, sizeof(buf));
         if ( ret < 0 )
                 return -1;
