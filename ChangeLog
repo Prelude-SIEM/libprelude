@@ -1,4 +1,12 @@
+2004-02-08  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/common.c (prelude_get_gmt_offset): 
+	fix shadowing parameters.
+
 2004-02-06  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/idmef-message.c (idmef_message_new): 
+	simplify.
 
 	* bindings/:
 	regenerated.

@@ -292,8 +292,8 @@ int prelude_get_file_name_and_path(const char *str, char **name, char **path)
 
 int prelude_get_gmt_offset(time_t time_local, int *gmt_offset)
 {
+        time_t time_utc;
         struct tm tm_utc;
-        time_t time_utc, time_local;
                 
         if ( ! gmtime_r(&time_local, &tm_utc) ) {
                 log(LOG_ERR, "error converting local time to utc time.\n");
