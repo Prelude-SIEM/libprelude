@@ -138,8 +138,18 @@ static void free_analyzer(idmef_analyzer_t *analyzer)
 
 
 
+static void free_assessment(idmef_assessment_t *assessment) 
+{
+        generic_free_list(idmef_action_t, &assessment->action_list);
+}
+
+
+
 static void free_alert(idmef_alert_t *alert) 
 {
+        if ( alert->assessment )
+                free_assessment(alert->assessment);
+        
         free_source_or_target(&alert->source_list);
         free_source_or_target(&alert->target_list);
         

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2000 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2000, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -27,6 +27,7 @@
 #include <errno.h>
 #include <assert.h>
 
+#include "common.h"
 #include "config-engine.h"
 #include "variable.h"
 #include "prelude-log.h"
@@ -192,7 +193,7 @@ static int op_append_line(config_t *cfg, char *line)
         
         cfg->elements++;
         
-        cfg->content = realloc(cfg->content, cfg->elements * sizeof(char **));
+        cfg->content = prelude_realloc(cfg->content, cfg->elements * sizeof(char **));
         if ( ! cfg->content )
                 return -1;        
         
@@ -216,7 +217,7 @@ static int op_insert_line(config_t *cfg, char *line, int lins)
 
         cfg->elements++;
         
-        cfg->content = realloc(cfg->content, cfg->elements * sizeof(char **));
+        cfg->content = prelude_realloc(cfg->content, cfg->elements * sizeof(char **));
         if (! cfg->content )
                 return -1;
         

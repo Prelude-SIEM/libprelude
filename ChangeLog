@@ -1,3 +1,26 @@
+2002-02-20  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/idmef-tree-func.c (free_alert): 
+	(free_assessment): free action list.
+
+	* src/common.c (prelude_realloc): 
+	new function. Emulate realloc() behavior for system that
+	doesn't comform to ANSI C.
+
+	* src/prelude-message.c (read_message_header): 
+	* src/config-engine.c (op_append_line): 
+	(op_insert_line): use prelude_realloc().
+
+	* src/prelude-auth.c (get_password_salt): 
+	(cmp_cleartext_with_crypted): 
+	(prelude_auth_create_account): 
+	(get_random_salt): 
+	salt end with \0. We're not sure if crypt() require this,
+	so this is for sanity only.
+
+	* src/prelude-message.c (prelude_msg_new): initialize
+	flush_msg_cb callback to NULL. Avoid an unitialized read.
+
 2002-02-08  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-getopt.c (parse_argument): 

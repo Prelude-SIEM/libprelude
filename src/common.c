@@ -61,6 +61,37 @@ int prelude_resolve_addr(const char *hostname, struct in_addr *addr)
 
 
 
+/**
+ * prelude_realloc:
+ * @ptr: Pointer on a memory block.
+ * @size: New size.
+ *
+ * prelude_realloc() changes the size of the memory block pointed to by @ptr
+ * to @size bytes. The contents will be unchanged to the minimum of the old
+ * and new sizes; newly allocated memory will be uninitialized.  If ptr is NULL,
+ * the call is equivalent to malloc(@size); if @size is equal to zero, the call
+ * is equivalent to free(ptr). Unless ptr is NULL, it must have been returned by
+ * an earlier call to malloc(), calloc() or realloc().
+ *
+ * This function exist because some version of realloc() doesn't handle the
+ * case where @ptr is NULL. Even thought ANSI allow it.
+ *
+ * Returns: returns a pointer to the newly allocated memory, which is suitably
+ * aligned for any kind of variable and may be different from ptr, or NULL if the
+ * request fails. If size was equal to 0, either NULL or a pointer suitable to be
+ * passed to free() is returned.  If  realloc() fails the original block is left
+ * untouched - it is not freed or moved.
+ */
+void *prelude_realloc(void *ptr, size_t size) 
+{
+        if ( ptr == NULL )
+                return malloc(size);
+        else
+                return realloc(ptr, size);
+}
+
+
+
 
 /**
  * prelude_open_persistant_tmpfile:

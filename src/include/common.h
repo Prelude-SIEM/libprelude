@@ -21,6 +21,10 @@
 *
 *****/
 
+#include <netinet/in.h>
+
+void *prelude_realloc(void *ptr, size_t size);
+
 int prelude_resolve_addr(const char *hostname, struct in_addr *addr);
 
 int prelude_open_persistant_tmpfile(const char *filename, int flags, mode_t mode);

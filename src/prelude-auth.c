@@ -64,7 +64,7 @@ static char *get_random_salt(char *buf, size_t size)
 
 
 
-static int get_password_salt(const char *pass, char buf[2]) 
+static int get_password_salt(const char *pass, char buf[3]) 
 {
         if ( strlen(pass) < sizeof(buf) ) {
                 log(LOG_ERR, "couldn't gather salt from empty password.\n");
@@ -73,6 +73,7 @@ static int get_password_salt(const char *pass, char buf[2])
         
         buf[0] = pass[0];
         buf[1] = pass[1];
+        buf[2] = '\0';
 
         return 0;
 }
@@ -150,7 +151,7 @@ static int auth_read_entry(FILE *fd, int *line, char **user, char **pass)
 static int cmp_cleartext_with_crypted(const char *cleartext_pass, const char *crypted_pass) 
 {
         int ret;
-        char salt[2], *cpass;
+        char salt[3], *cpass;
         
         ret = get_password_salt(crypted_pass, salt);
         if ( ret < 0 )       
@@ -432,7 +433,7 @@ int prelude_auth_create_account(const char *filename, char **user, char **pass, 
 {
         int ret;
         FILE *fd;
-        char *cpass, salt[2];
+        char *cpass, salt[3];
 
         fd = open_auth_file(filename);
         if ( ! fd ) 

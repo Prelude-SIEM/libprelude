@@ -886,6 +886,11 @@ prelude_timer_t *timer, struct timeval *tv
 void
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_realloc</NAME>
+<RETURNS>void  *</RETURNS>
+void *ptr, size_t size
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_resolve_addr</NAME>
 <RETURNS>int  </RETURNS>
 const char *hostname, struct in_addr *addr

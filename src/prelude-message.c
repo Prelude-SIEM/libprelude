@@ -266,7 +266,7 @@ static prelude_msg_status_t read_message_header(prelude_msg_t *msg, prelude_io_t
          * allocate our data buffer. We also want our buffer to be able to contain an
          * header so that it can be eventually sent...
          */
-        msg->payload = realloc(msg->payload, PRELUDE_MSG_HDR_SIZE + msg->hdr.datalen);
+        msg->payload = prelude_realloc(msg->payload, PRELUDE_MSG_HDR_SIZE + msg->hdr.datalen);
         if ( ! msg->payload ) {
                 log(LOG_ERR, "couldn't allocate %d bytes.\n", msg->hdr.datalen);
                 return prelude_msg_error;
@@ -679,6 +679,7 @@ prelude_msg_t *prelude_msg_new(size_t msgcount, size_t msglen, uint8_t tag, uint
         msg->hdr.datalen = len;
         msg->read_index = 0;
         msg->write_index = PRELUDE_MSG_HDR_SIZE;
+        msg->flush_msg_cb = NULL;
         
         return msg;
 }
