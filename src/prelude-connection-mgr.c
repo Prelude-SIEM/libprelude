@@ -808,7 +808,7 @@ int prelude_connection_mgr_init(prelude_connection_mgr_t *new)
 
 /**
  * prelude_connection_mgr_new:
- * @mgr: Pointer to an address where to store the created #prelude_connection_mgr_t object.
+ * @ret: Pointer to an address where to store the created #prelude_connection_mgr_t object.
  * @cp: The #prelude_client_profile_t to use for connection.
  * @capability: Capability the connection in this connection-mgr will declare.
  *
@@ -816,13 +816,13 @@ int prelude_connection_mgr_init(prelude_connection_mgr_t *new)
  *
  * Returns: 0 on success or a negative value if an error occured.
  */
-int prelude_connection_mgr_new(prelude_connection_mgr_t **mgr,
+int prelude_connection_mgr_new(prelude_connection_mgr_t **ret,
                                prelude_client_profile_t *cp,
                                prelude_connection_capability_t capability)
 {
         prelude_connection_mgr_t *new;
         
-        *mgr = new = calloc(1, sizeof(*new));
+        *ret = new = calloc(1, sizeof(*new));
         if ( ! new ) 
                 return prelude_error_from_errno(errno);
                 
