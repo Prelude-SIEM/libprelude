@@ -390,7 +390,14 @@ static int set_node_address_vlan_name(void *context, prelude_option_t *opt, cons
 
 static int get_node_address_vlan_name(void *context, prelude_option_t *opt, char *out, size_t size)
 {
-        snprintf(out, size, "%s", prelude_string_get_string(idmef_address_get_vlan_name(context)));
+        prelude_string_t *str;
+        
+        str = idmef_address_get_vlan_name(context);
+        if ( ! str || prelude_string_is_empty(str) )
+                return 0;
+        
+        snprintf(out, size, "%s", prelude_string_get_string(str));
+        
         return 0;
 }
 
@@ -406,7 +413,14 @@ static int set_node_address_address(void *context, prelude_option_t *opt, const 
 
 static int get_node_address_address(void *context, prelude_option_t *opt, char *out, size_t size)
 {
-        snprintf(out, size, "%s", prelude_string_get_string(idmef_address_get_address(context)));
+        prelude_string_t *str;
+
+        str = idmef_address_get_address(context);
+        if ( ! str || prelude_string_is_empty(str) )
+                return 0;
+        
+        snprintf(out, size, "%s", prelude_string_get_string(str));
+
         return 0;
 }
 
@@ -422,7 +436,14 @@ static int set_node_address_netmask(void *context, prelude_option_t *opt, const 
 
 static int get_node_address_netmask(void *context, prelude_option_t *opt, char *out, size_t size)
 {
-        snprintf(out, size, "%s", prelude_string_get_string(idmef_address_get_netmask(context)));
+        prelude_string_t *str;
+        
+        str = idmef_address_get_netmask(context);
+        if ( ! str || prelude_string_is_empty(str) )
+                return 0;
+                
+        snprintf(out, size, "%s", prelude_string_get_string(str));
+
         return 0;
 }
 
@@ -487,7 +508,7 @@ static int get_node_category(void *context, prelude_option_t *opt, char *out, si
         idmef_node_t *node = idmef_analyzer_get_node(client->analyzer);
         
         if ( ! node )
-                return -1;
+                return 0;
         
         category = idmef_node_get_category(node);
         snprintf(out, size, "%s", idmef_node_category_to_string(category));
@@ -515,13 +536,18 @@ static int set_node_location(void *context, prelude_option_t *opt, const char *a
 
 static int get_node_location(void *context, prelude_option_t *opt, char *out, size_t size)
 {
+        prelude_string_t *str;
         prelude_client_t *client = context;
         idmef_node_t *node = idmef_analyzer_get_node(client->analyzer);
         
         if ( ! node )
-                return -1;
+                return 0;
+
+        str = idmef_node_get_location(node);
+        if ( ! str )
+                return 0;
         
-        snprintf(out, size, "%s", prelude_string_get_string(idmef_node_get_location(node)));
+        snprintf(out, size, "%s", prelude_string_get_string(str));
         
         return 0;
 }
@@ -546,13 +572,18 @@ static int set_node_name(void *context, prelude_option_t *opt, const char *arg)
 
 static int get_node_name(void *context, prelude_option_t *opt, char *out, size_t size)
 {
+        prelude_string_t *str;
         prelude_client_t *client = context;
         idmef_node_t *node = idmef_analyzer_get_node(client->analyzer);
         
         if ( ! node )
-                return -1;
+                return 0;
+
+        str = idmef_node_get_name(node);
+        if ( ! str )
+                return 0;
         
-        snprintf(out, size, "%s", prelude_string_get_string(idmef_node_get_name(node)));
+        snprintf(out, size, "%s", prelude_string_get_string(str));
         
         return 0;
 }
