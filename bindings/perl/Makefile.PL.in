@@ -21,7 +21,7 @@ if ( abs_path("@top_srcdir@") ne abs_path("@top_builddir@") ) {
 if ( -w $Config{"sitelib"} ) {
     $attributs{"INSTALLDIRS"} = "site";
 } else {
-    $attributs{"PREFIX"} = "@prefix@";
+    $attributs{"PREFIX"} = "$ENV{DESTDIR}/@prefix@";
 }
 
 WriteMakefile(%attributs);
