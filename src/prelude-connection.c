@@ -98,30 +98,6 @@ struct prelude_connection {
 
 
 
-static int declare_ident(prelude_io_t *fd, uint64_t analyzerid) 
-{
-        int ret;
-        uint64_t nident;
-        prelude_msg_t *msg;
-        
-        ret = prelude_msg_new(&msg, 1, sizeof(uint64_t), PRELUDE_MSG_ID, 0);
-        if ( ret < 0 )
-                return ret;
-
-        nident = prelude_hton64(analyzerid);
-        
-        /*
-         * send message
-         */
-        prelude_msg_set(msg, PRELUDE_MSG_ID_DECLARE, sizeof(uint64_t), &nident);
-        ret = prelude_msg_write(msg, fd);
-        prelude_msg_destroy(msg);
-        
-        return ret;
-}
-
-
-
 static int connection_write_msgbuf(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg) 
 {        
         return prelude_connection_send(prelude_msgbuf_get_data(msgbuf), msg);
@@ -262,7 +238,7 @@ static int start_inet_connection(prelude_connection_t *cnx, prelude_client_profi
         
         ret = handle_authentication(cnx, profile, 1);
         if ( ret < 0 ) {
-                close(sock);
+                prelude_io_close(cnx->fd);
                 return ret;
         }
         
@@ -298,7 +274,7 @@ static int start_unix_connection(prelude_connection_t *cnx, prelude_client_profi
         
         ret = handle_authentication(cnx, profile, 0);
         if ( ret < 0 )
-                close(sock);
+                prelude_io_close(cnx->fd);
                 
         return ret;
 }
@@ -559,11 +535,7 @@ int prelude_connection_connect(prelude_connection_t *conn,
         ret = do_connect(conn, profile);
         if ( ret < 0 ) 
                 return ret;
-                
-        ret = declare_ident(conn->fd, prelude_client_profile_get_analyzerid(profile));
-        if ( ret < 0 ) 
-                goto err;
-                
+        
         ret = prelude_msg_new(&msg, 1, sizeof(uint8_t), PRELUDE_MSG_CONNECTION_CAPABILITY, 0);
         if ( ret < 0 )
                 goto err;
