@@ -94,13 +94,13 @@ void prelude_msgbuf_set(prelude_msgbuf_t *msgbuf, uint8_t tag, uint32_t len, con
 
 /**
  * prelude_msgbuf_new:
- * @flags: Tell if the message should be written asynchronously or not.
+ * @client: Pointer to the #prelude_client_t to flush message to.
  *
  * Create a new #prelude_msgbuf_t object. You can then write data to
  * @msgbuf using the prelude_msgbuf_set function.
  *
- * When the message buffer is full, the message will be flushed either
- * asynchronously if @async_send is TRUE, or synchronously otherwise.
+ * When the message buffer is full, the message will be flushed to the
+ * list of #prelude_connection_manager_t pointed to the @client object.
  *
  * Returns: a #prelude_msgbuf_t object, or NULL if an error occured.
  */
