@@ -261,10 +261,10 @@ static char *strip_value(const char *in)
 
 
 
-static int parse_buffer(char *buf, char **entry, char **value)
+static int parse_buffer(char *str, char **entry, char **value)
 {
-        char *ptr;
-
+        char *ptr, *buf = str;
+                
         *value = *entry = NULL;
 
         ptr = strsep(&buf, "=");
@@ -273,6 +273,9 @@ static int parse_buffer(char *buf, char **entry, char **value)
         
         *entry = strip_value(ptr);
 
+        if ( buf ) 
+                *(buf - 1) = '=';
+        
         ptr = strsep(&buf, "\0");
         if ( ptr )
                 *value = strip_value(ptr);
@@ -301,7 +304,7 @@ static int parse_section_buffer(char *buf, char **entry, char **value)
         *e = 0;
         ret = parse_buffer(s + 1, entry, value);
         *e = ']';
-
+        
         return ret;
 }
 
@@ -618,6 +621,7 @@ int config_get_next(config_t *cfg, char **section, char **entry, char **value, i
                         return parse_buffer(ptr, entry, value);
         }
 
+        (*line)--;
         free_val(section);
         
         return -1;
