@@ -488,7 +488,7 @@ static int get_missing_options(const char *filename, prelude_optlist_t *optlist)
         int ret;
         LIST_HEAD(cb_list);
         config_t *cfg = NULL;
-
+        
         cfg = config_open(filename);
         if ( ! cfg ) {
                 log(LOG_INFO, "couldn't open %s.\n", filename);

@@ -53,7 +53,7 @@ typedef enum {
         prelude_msg_error      = -1,
         prelude_msg_eof        =  0,
         prelude_msg_unfinished =  1,
-        prelude_msg_finished   =  2,
+        prelude_msg_finished   =  2
 } prelude_msg_status_t;
 
 

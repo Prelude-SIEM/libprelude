@@ -22,6 +22,7 @@ method to access your configuration file.
 
 @cfg: 
 @section: 
+@line: 
 @Returns: 
 
 
@@ -33,6 +34,7 @@ method to access your configuration file.
 @cfg: 
 @section: 
 @entry: 
+@line: 
 @Returns: 
 
 

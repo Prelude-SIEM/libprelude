@@ -71,7 +71,7 @@ typedef enum {
         ntpstamp  = 6,
         portlist  = 7,
         real      = 8,
-        xml       = 9,
+        xml       = 9
 } idmef_additional_data_type_t;
 
 
@@ -95,7 +95,7 @@ typedef enum {
         origin_unknown  = 0,
         bugtraqid       = 1,
         cve             = 2,
-        vendor_specific = 3,
+        vendor_specific = 3
 } idmef_classification_origin_t;
 
 
@@ -121,7 +121,7 @@ typedef enum {
         user_privs    = 3,
         current_group = 4,
         group_privs   = 5,
-        other_privs   = 6,
+        other_privs   = 6
 } idmef_userid_type_t;
 
 
@@ -145,7 +145,7 @@ typedef struct {
 typedef enum {
         cat_unknown  = 0,
         application  = 1,
-        os_device    = 2,
+        os_device    = 2
 } idmef_user_category_t;
 
 
@@ -177,7 +177,7 @@ typedef enum {
         ipv6_addr     = 11,
         ipv6_addr_hex = 12,
         ipv6_net      = 13,
-        ipv6_net_mask = 14,
+        ipv6_net_mask = 14
 } idmef_address_category_t;
 
 
@@ -253,7 +253,7 @@ typedef struct {
 typedef enum {
         no_specific_service = 0,
         web_service = 1,
-        snmp_service = 2,
+        snmp_service = 2
 } idmef_service_type_t;
 
 
@@ -295,7 +295,7 @@ typedef enum {
         nis          = 9,
         nisplus      = 10,
         nt           = 11,
-        wfw          = 12,
+        wfw          = 12
 } idmef_node_category_t;
 
 
@@ -317,7 +317,7 @@ typedef struct {
 typedef enum {
         unknown = 0,
         yes     = 1,
-        no      = 2,
+        no      = 2
 } idmef_spoofed_t;
 
 
@@ -355,7 +355,7 @@ typedef enum {
         reparse_point = 3,
         shortcut      = 4,
         stream        = 5,
-        symbolic_link = 6,
+        symbolic_link = 6
 } idmef_linkage_category_t;
 
 
@@ -390,7 +390,7 @@ typedef struct {
  */
 typedef enum {
         current  = 1,
-        original = 2,
+        original = 2
 } idmef_file_category_t;
         
         
@@ -476,13 +476,13 @@ typedef struct {
 typedef enum {
         impact_low    = 1,
         impact_medium = 2,
-        impact_high   = 3,
+        impact_high   = 3
 } idmef_impact_severity_t;
 
 
 typedef enum {
         failed     = 1,
-        succeeded  = 2,
+        succeeded  = 2
 } idmef_impact_completion_t;
 
 
@@ -492,7 +492,7 @@ typedef enum {
         dos        = 2,
         file       = 3,
         recon      = 4,
-        user       = 5,
+        user       = 5
 } idmef_impact_type_t;
 
 
@@ -511,7 +511,7 @@ typedef enum {
         action_other       = 0,
         block_installed    = 1,
         notification_sent  = 2,
-        taken_offline      = 3,
+        taken_offline      = 3
 } idmef_action_category_t;
 
 
@@ -530,7 +530,7 @@ typedef enum {
         numeric = 0,
         low     = 1,
         medium  = 2,
-        high    = 3,
+        high    = 3
 } idmef_confidence_rating_t;
 
 
@@ -594,7 +594,7 @@ typedef enum {
         idmef_default           = 0,
         idmef_tool_alert        = 1,
         idmef_correlation_alert = 2,
-        idmef_overflow_alert    = 3,
+        idmef_overflow_alert    = 3
 } idmef_alert_type_t;
 
 
@@ -649,7 +649,7 @@ typedef struct {
  */
 typedef enum {
         idmef_alert_message     = 1,
-        idmef_heartbeat_message = 2,
+        idmef_heartbeat_message = 2
 } idmef_message_type_t;
 
 

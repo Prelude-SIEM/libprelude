@@ -56,7 +56,7 @@ typedef struct prelude_option prelude_option_t;
 typedef enum {
         required_argument,
         optionnal_argument,
-        no_argument,
+        no_argument
 } prelude_option_argument_t;
 
 

@@ -165,7 +165,8 @@ static int unix_connect(uint16_t port)
  */
 static int inet_connect(prelude_client_t *client)
 {
-        int ret, len, sock;
+        socklen_t len;
+        int ret, sock;
 	struct sockaddr_in daddr, saddr;
         
 	log(LOG_INFO, "- Connecting to Tcp prelude Manager server %s:%d.\n",
@@ -419,9 +420,9 @@ static int get_manager_setup(prelude_io_t *fd, int *have_ssl, int *have_plaintex
 
 static int start_inet_connection(prelude_client_t *client) 
 {
-        int len, ret = -1;
+        socklen_t len;
         struct sockaddr_in addr;
-        int have_ssl  = 0, have_plaintext = 0, sock;
+        int have_ssl  = 0, have_plaintext = 0, sock, ret = -1;
         
         len = sizeof(addr);
         

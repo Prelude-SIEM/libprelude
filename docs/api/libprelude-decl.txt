@@ -625,6 +625,16 @@ prelude_client_t *client
 <RETURNS>int  </RETURNS>
 prelude_client_t *client
 </FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_get_fd</NAME>
+<RETURNS>prelude_io_t  *</RETURNS>
+prelude_client_t *client
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_close</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_t *client
+</FUNCTION>
 <MACRO>
 <NAME>PRELUDE_CLIENT_TYPE_OTHER</NAME>
 #define PRELUDE_CLIENT_TYPE_OTHER   0
@@ -787,12 +797,12 @@ const char *filename, char *cert, int certlen, uid_t uid
 <FUNCTION>
 <NAME>config_get_section</NAME>
 <RETURNS>int  </RETURNS>
-config_t *cfg, const char *section
+config_t *cfg, const char *section, int *line
 </FUNCTION>
 <FUNCTION>
 <NAME>config_get</NAME>
 <RETURNS>const char  *</RETURNS>
-config_t *cfg, const char *section, const char *entry
+config_t *cfg, const char *section, const char *entry, int *line
 </FUNCTION>
 <FUNCTION>
 <NAME>config_set</NAME>
@@ -944,6 +954,11 @@ const char *hostname, struct in_addr *addr
 <NAME>prelude_open_persistant_tmpfile</NAME>
 <RETURNS>int  </RETURNS>
 const char *filename, int flags, mode_t mode
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_read_multiline</NAME>
+<RETURNS>int  </RETURNS>
+FILE *fd, int *line, char *buf, size_t size
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_client_mgr_broadcast</NAME>
@@ -1213,7 +1228,7 @@ int keysize, int expire, const char *keyout, int crypt, uid_t uid
 typedef enum {
         required_argument,
         optionnal_argument,
-        no_argument,
+        no_argument
 } prelude_option_argument_t;
 </ENUM>
 <MACRO>
@@ -1256,7 +1271,7 @@ prelude_option_t *option,const char *filename, int argc, char **argv
 <FUNCTION>
 <NAME>prelude_option_add</NAME>
 <RETURNS>prelude_option_t  *</RETURNS>
-prelude_option_t *parent, int flags,char shortopt, const char *longopt, const char *desc,prelude_option_argument_t has_arg, int (*set)(const char *optarg),int (*get)(char *buf, size_t size)
+prelude_option_t *parent, int flags,char shortopt, const char *longopt, const char *desc,prelude_option_argument_t has_arg,int (*set)(prelude_option_t *opt, const char *optarg),int (*get)(char *buf, size_t size)
 </FUNCTION>
 <MACRO>
 <NAME>OPT_INVAL</NAME>
@@ -1270,6 +1285,26 @@ prelude_option_t *parent, int flags,char shortopt, const char *longopt, const ch
 <NAME>prelude_option_set_warnings</NAME>
 <RETURNS>void  </RETURNS>
 int flags, int *old_flags
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_shortname</NAME>
+<RETURNS>char  </RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_longname</NAME>
+<RETURNS>const char  *</RETURNS>
+prelude_option_t *opt
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_set_private_data</NAME>
+<RETURNS>void  </RETURNS>
+prelude_option_t *opt, void *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_get_private_data</NAME>
+<RETURNS>void  *</RETURNS>
+prelude_option_t *opt
 </FUNCTION>
 <TYPEDEF>
 <NAME>idmef_msg_send_t</NAME>
@@ -1323,6 +1358,56 @@ idmef_analyzer_t *analyzer
 <NAME>idmef_analyzer_process_new</NAME>
 <RETURNS>void  </RETURNS>
 idmef_analyzer_t *analyzer
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_inode_change_time_new</NAME>
+<RETURNS>idmef_time_t  *</RETURNS>
+idmef_inode_t *inode
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_file_access_permission_new</NAME>
+<RETURNS>idmef_file_access_permission_t  *</RETURNS>
+idmef_file_access_t *access
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_linkage_file_new</NAME>
+<RETURNS>idmef_file_t  *</RETURNS>
+idmef_linkage_t *linkage
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_file_create_time_new</NAME>
+<RETURNS>idmef_time_t  *</RETURNS>
+idmef_file_t *file
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_file_modify_time_new</NAME>
+<RETURNS>idmef_time_t  *</RETURNS>
+idmef_file_t *file
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_file_access_time_new</NAME>
+<RETURNS>idmef_time_t  *</RETURNS>
+idmef_file_t *file
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_file_inode_new</NAME>
+<RETURNS>idmef_inode_t  *</RETURNS>
+idmef_file_t *file
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_file_linkage_new</NAME>
+<RETURNS>idmef_linkage_t  *</RETURNS>
+idmef_file_t *file
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_file_access_new</NAME>
+<RETURNS>idmef_file_access_t  *</RETURNS>
+idmef_file_t *file
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_target_file_new</NAME>
+<RETURNS>idmef_file_t  *</RETURNS>
+idmef_target_t *target
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_env_new</NAME>
@@ -1538,7 +1623,7 @@ typedef enum {
         ntpstamp  = 6,
         portlist  = 7,
         real      = 8,
-        xml       = 9,
+        xml       = 9
 } idmef_additional_data_type_t;
 </ENUM>
 <TYPEDEF>
@@ -1559,7 +1644,7 @@ typedef enum {
         origin_unknown  = 0,
         bugtraqid       = 1,
         cve             = 2,
-        vendor_specific = 3,
+        vendor_specific = 3
 } idmef_classification_origin_t;
 </ENUM>
 <TYPEDEF>
@@ -1580,7 +1665,7 @@ typedef enum {
         user_privs    = 3,
         current_group = 4,
         group_privs   = 5,
-        other_privs   = 6,
+        other_privs   = 6
 } idmef_userid_type_t;
 </ENUM>
 <TYPEDEF>
@@ -1599,7 +1684,7 @@ typedef struct {
 typedef enum {
         cat_unknown  = 0,
         application  = 1,
-        os_device    = 2,
+        os_device    = 2
 } idmef_user_category_t;
 </ENUM>
 <TYPEDEF>
@@ -1627,7 +1712,7 @@ typedef enum {
         ipv6_addr     = 11,
         ipv6_addr_hex = 12,
         ipv6_net      = 13,
-        ipv6_net_mask = 14,
+        ipv6_net_mask = 14
 } idmef_address_category_t;
 </ENUM>
 <TYPEDEF>
@@ -1657,6 +1742,10 @@ typedef struct {
 <MACRO>
 <NAME>idmef_process_arg_t</NAME>
 #define idmef_process_arg_t idmef_string_item_t
+</MACRO>
+<MACRO>
+<NAME>idmef_file_access_permission_t</NAME>
+#define idmef_file_access_permission_t idmef_string_item_t
 </MACRO>
 <TYPEDEF>
 <NAME>idmef_process_t</NAME>
@@ -1699,7 +1788,7 @@ typedef struct {
 typedef enum {
         no_specific_service = 0,
         web_service = 1,
-        snmp_service = 2,
+        snmp_service = 2
 } idmef_service_type_t;
 </ENUM>
 <TYPEDEF>
@@ -1733,7 +1822,7 @@ typedef enum {
         nis          = 9,
         nisplus      = 10,
         nt           = 11,
-        wfw          = 12,
+        wfw          = 12
 } idmef_node_category_t;
 </ENUM>
 <TYPEDEF>
@@ -1751,7 +1840,7 @@ typedef struct {
 typedef enum {
         unknown = 0,
         yes     = 1,
-        no      = 2,
+        no      = 2
 } idmef_spoofed_t;
 </ENUM>
 <TYPEDEF>
@@ -1775,7 +1864,7 @@ typedef struct {
 typedef struct {
         struct list_head list;
         idmef_userid_t userid;
-        idmef_string_t permission;
+        struct list_head permission_list;
 } idmef_file_access_t;
 </TYPEDEF>
 <ENUM>
@@ -1786,7 +1875,7 @@ typedef enum {
         reparse_point = 3,
         shortcut      = 4,
         stream        = 5,
-        symbolic_link = 6,
+        symbolic_link = 6
 } idmef_linkage_category_t;
 </ENUM>
 <TYPEDEF>
@@ -1803,7 +1892,7 @@ typedef struct {
 <TYPEDEF>
 <NAME>idmef_inode_t</NAME>
 typedef struct {
-        idmef_time_t change_time;
+        idmef_time_t *change_time;
         uint32_t number;
         uint32_t major_device;
         uint32_t minor_device;
@@ -1815,7 +1904,7 @@ typedef struct {
 <NAME>idmef_file_category_t</NAME>
 typedef enum {
         current  = 1,
-        original = 2,
+        original = 2
 } idmef_file_category_t;
 </ENUM>
 <TYPEDEF>
@@ -1862,14 +1951,14 @@ typedef struct {
 typedef enum {
         impact_low    = 1,
         impact_medium = 2,
-        impact_high   = 3,
+        impact_high   = 3
 } idmef_impact_severity_t;
 </ENUM>
 <ENUM>
 <NAME>idmef_impact_completion_t</NAME>
 typedef enum {
         failed     = 1,
-        succeeded  = 2,
+        succeeded  = 2
 } idmef_impact_completion_t;
 </ENUM>
 <ENUM>
@@ -1880,7 +1969,7 @@ typedef enum {
         dos        = 2,
         file       = 3,
         recon      = 4,
-        user       = 5,
+        user       = 5
 } idmef_impact_type_t;
 </ENUM>
 <TYPEDEF>
@@ -1898,7 +1987,7 @@ typedef enum {
         action_other       = 0,
         block_installed    = 1,
         notification_sent  = 2,
-        taken_offline      = 3,
+        taken_offline      = 3
 } idmef_action_category_t;
 </ENUM>
 <TYPEDEF>
@@ -1915,7 +2004,7 @@ typedef enum {
         numeric = 0,
         low     = 1,
         medium  = 2,
-        high    = 3,
+        high    = 3
 } idmef_confidence_rating_t;
 </ENUM>
 <TYPEDEF>
@@ -1962,7 +2051,7 @@ typedef enum {
         idmef_default           = 0,
         idmef_tool_alert        = 1,
         idmef_correlation_alert = 2,
-        idmef_overflow_alert    = 3,
+        idmef_overflow_alert    = 3
 } idmef_alert_type_t;
 </ENUM>
 <TYPEDEF>
@@ -2007,7 +2096,7 @@ typedef struct {
 <NAME>idmef_message_type_t</NAME>
 typedef enum {
         idmef_alert_message     = 1,
-        idmef_heartbeat_message = 2,
+        idmef_heartbeat_message = 2
 } idmef_message_type_t;
 </ENUM>
 <TYPEDEF>
@@ -2089,7 +2178,7 @@ typedef enum {
         prelude_msg_error      = -1,
         prelude_msg_eof        =  0,
         prelude_msg_unfinished =  1,
-        prelude_msg_finished   =  2,
+        prelude_msg_finished   =  2
 } prelude_msg_status_t;
 </ENUM>
 <FUNCTION>
