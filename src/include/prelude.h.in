@@ -24,6 +24,13 @@
 #ifndef _LIBPRELUDE_PRELUDE_H
 #define _LIBPRELUDE_PRELUDE_H
 
+/**
+ * LIBPRELUDE_VERSION:
+ * Version of libprelude this header come from.
+ *
+ * This is mostly used by the libprelude detection routine in libprelude.m4
+ * to make sure that the header version is consistant with the linked library.
+ */
 #define LIBPRELUDE_VERSION "@VERSION@"
 
 #include "prelude-inttypes.h"
@@ -45,7 +52,7 @@ int prelude_init(int *argc, char **argv);
 
 void prelude_deinit(void);
 
-const char *prelude_check_version(const char *rq_version);
+const char *prelude_check_version(const char *req_version);
 
 
 #endif /* _LIBPRELUDE_PRELUDE_H */

@@ -261,6 +261,17 @@ static int idmef_path_get_internal(idmef_value_t **value, idmef_path_t *path,
 
 
 
+/**
+ * idmef_path_get:
+ * @path: Pointer to a #idmef_path_t object.
+ * @message: Pointer to a #idmef_message_t object.
+ * @ret: Address where to store the retrieved #idmef_value_t.
+ *
+ * This function retrieve the value for @path within @message,
+ * and store it into the provided @ret address of type #idmef_value_t.
+ *
+ * Returns: The number of element retrieved, or a negative value if an error occured.
+ */
 int idmef_path_get(idmef_path_t *path, idmef_message_t *message, idmef_value_t **ret)
 {
 	return idmef_path_get_internal(ret, path, 0, message, IDMEF_CLASS_ID_MESSAGE);
@@ -268,6 +279,16 @@ int idmef_path_get(idmef_path_t *path, idmef_message_t *message, idmef_value_t *
 
 
 
+/**
+ * idmef_path_set:
+ * @path: Pointer to a #idmef_path_t object.
+ * @message: Pointer to a #idmef_message_t object.
+ * @value: Pointer to a #idmef_value_t object.
+ *
+ * This function set the provided @value for @path within @message.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
 int idmef_path_set(idmef_path_t *path, idmef_message_t *message, idmef_value_t *value)
 {
     	int i, ret;
@@ -443,6 +464,15 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
 
 
 
+/**
+ * idmef_path_new_fast:
+ * @path: Address where to store the created #idmef_path_t object.
+ * @buffer: Name of the path to create.
+ *
+ * Create a #idmef_path_t object pointing to @buffer, and store it within @path.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
 int idmef_path_new_fast(idmef_path_t **path, const char *buffer)
 {
         int ret;
@@ -486,6 +516,17 @@ int idmef_path_new_fast(idmef_path_t **path, const char *buffer)
 
 
 
+/**
+ * idmef_path_new_v:
+ * @path: Address where to store the created #idmef_path_t object.
+ * @format: Format string.
+ * @args: Pointer to a variable argument list.
+ *
+ * Create a #idmef_path_t object pointing to the provided format
+ * string @format and @args, and store it within @path.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
 int idmef_path_new_v(idmef_path_t **path, const char *format, va_list args)
 {
         int ret;
@@ -500,6 +541,17 @@ int idmef_path_new_v(idmef_path_t **path, const char *format, va_list args)
 
 
 
+/**
+ * idmef_path_new:
+ * @path: Address where to store the created #idmef_path_t object.
+ * @format: Format string.
+ * @...: Arguments list.
+ *
+ * Create a #idmef_path_t object pointing to the provided format
+ * string @format and @..., and store it within @path.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
 int idmef_path_new(idmef_path_t **path, const char *format, ...)
 {
         int ret;
@@ -514,6 +566,16 @@ int idmef_path_new(idmef_path_t **path, const char *format, ...)
 
 
 
+/**
+ * idmef_path_get_class:
+ * @path: Pointer to an #idmef_path_t object.
+ * @depth: Depth of @path to retrieve the #idmef_class_id_t from.
+ *
+ * Retrieve the #idmef_class_id_t value for the element of @path
+ * located at @depth. If depth is -1, the last element depth is addressed.
+ *
+ * Returns: The #idmef_class_id_t for the elemnt, or a negative value if an error occured.
+ */
 idmef_class_id_t idmef_path_get_class(const idmef_path_t *path, int depth)
 {
         if ( depth < 0 )
@@ -527,6 +589,17 @@ idmef_class_id_t idmef_path_get_class(const idmef_path_t *path, int depth)
 
 
 
+/**
+ * idmef_path_get_value_type:
+ * @path: Pointer to an #idmef_path_t object.
+ * @depth: Depth of @path to retrieve the #idmef_value_type_id_t from.
+ *
+ * Retrieve the #idmef_value_type_id_t identifying the type of value
+ * acceptable for this path element, for the @path element located at
+ * @depth. If depth is -1, the last element depth is addressed.
+ *
+ * Returns: The #idmef_value_type_id_t for the element, or a negative value if an error occured.
+ */
 idmef_value_type_id_t idmef_path_get_value_type(const idmef_path_t *path, int depth)
 {
         if ( depth < 0 )
@@ -592,6 +665,17 @@ static inline int invalidate(idmef_path_t *path)
 
 
 
+/**
+ * idmef_path_set_index:
+ * @path: Pointer to an #idmef_path_t object.
+ * @depth: Depth of @path to set @index for.
+ * @index: Index for the provided element @depth.
+ *
+ * Modify @index for the element located at @depth of the provided @path.
+ * This function is only applicable for element that accept listed value.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
 int idmef_path_set_index(idmef_path_t *path, unsigned int depth, unsigned int index)
 {
         int ret;
@@ -620,6 +704,18 @@ int idmef_path_set_index(idmef_path_t *path, unsigned int depth, unsigned int in
 
 
 
+/**
+ * idmef_path_undefine_index:
+ * @path: Pointer to an #idmef_path_t object.
+ * @depth: Depth of @path to undefine the index for.
+ *
+ * Modify the element located at @depth of the provided @path so that it's
+ * index is undefined.
+ *
+ * This function is only applicable for element that accept listed value.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
 int idmef_path_undefine_index(idmef_path_t *path, unsigned int depth)
 {
         return idmef_path_set_index(path, depth, INDEX_UNDEFINED);
@@ -627,6 +723,16 @@ int idmef_path_undefine_index(idmef_path_t *path, unsigned int depth)
 
 
 
+/**
+ * idmef_path_get_index:
+ * @path: Pointer to an #idmef_path_t object.
+ * @depth: Depth of @path to retrieve the index from.
+ *
+ * Get the current index for element located at @depth of @path.
+ * This function is only applicable for element that accept listed value.
+ *
+ * Returns: The element index, or a negative value if an error occured.
+ */
 int idmef_path_get_index(const idmef_path_t *path, unsigned int depth)
 {
         if ( depth > (path->depth - 1) )
@@ -643,6 +749,19 @@ int idmef_path_get_index(const idmef_path_t *path, unsigned int depth)
 
 
 
+/**
+ * idmef_path_make_child:
+ * @path: Pointer to an #idmef_path_t object.
+ * @child_name: Name of the child element to create.
+ * @index: Index for @child_name, if applicable.
+ *
+ * Modify @path so that it point to the child node identified by @child_name,
+ * children of the current path. That is if the path is currently pointing to
+ * alert.classification, and @child_name is set to "text", @path will be
+ * modified to point to alert.classification.text.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
 int idmef_path_make_child(idmef_path_t *path, const char *child_name, unsigned int index)
 {
         int ret;
@@ -684,7 +803,15 @@ int idmef_path_make_child(idmef_path_t *path, const char *child_name, unsigned i
 }
 
 
-
+/**
+ * idmef_path_make_parent:
+ * @path: Pointer to an #idmef_path_t object.
+ *
+ * Remove the last element of the path. That is, if @path is currently pointing to
+ * alert.classification, @path will be modified to point to alert.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
 int idmef_path_make_parent(idmef_path_t *path)
 {
         int ret;
@@ -712,6 +839,12 @@ int idmef_path_make_parent(idmef_path_t *path)
 
 
 
+/**
+ * idmef_path_destroy:
+ * @path: Pointer to an #idmef_path_t object.
+ *
+ * Destroy the provided @path object.
+ */
 void idmef_path_destroy(idmef_path_t *path)
 {        
         pthread_mutex_lock(&path->mutex);
@@ -729,16 +862,26 @@ void idmef_path_destroy(idmef_path_t *path)
 
 
 
-int idmef_path_ncompare(const idmef_path_t *o1, const idmef_path_t *o2, unsigned int depth)
+/**
+ * idmef_path_ncompare:
+ * @p1: Pointer to an #idmef_path_t object.
+ * @p2: Pointer to another #idmef_path_t object.
+ * @depth: Maximum depth to use for path comparison.
+ *
+ * Compare @p1 and @p2 elements up to @depth.
+ *
+ * Returns: 0 if both element match, a negative value otherwise.
+ */
+int idmef_path_ncompare(const idmef_path_t *p1, const idmef_path_t *p2, unsigned int depth)
 {
         unsigned int i;
         
         for ( i = 0; i < depth; i++ ) {
                 
-                if ( o1->elem[i].index != o2->elem[i].index )
+                if ( p1->elem[i].index != p2->elem[i].index )
                         return -1;
                 
-                if ( o1->elem[i].position - o2->elem[i].position )
+                if ( p1->elem[i].position - p2->elem[i].position )
                         return -1;
         }
 
@@ -747,17 +890,35 @@ int idmef_path_ncompare(const idmef_path_t *o1, const idmef_path_t *o2, unsigned
 
 
 
-int idmef_path_compare(const idmef_path_t *o1, const idmef_path_t *o2)
+/**
+ * idmef_path_compare:
+ * @p1: Pointer to an #idmef_path_t object.
+ * @p2: Pointer to another #idmef_path_t object.
+ *
+ * Compare @p1 and @p2 elements.
+ *
+ * Returns: 0 if both element match, a negative value otherwise.
+ */
+int idmef_path_compare(const idmef_path_t *p1, const idmef_path_t *p2)
 {
-        if ( o1->depth != o2->depth )
+        if ( p1->depth != p2->depth )
                 return -1;
 
-        return idmef_path_ncompare(o1, o2, o1->depth);
+        return idmef_path_ncompare(p1, p2, p1->depth);
 }
 
 
 
 
+/**
+ * idmef_path_clone:
+ * @src: Pointer to an #idmef_path_t object.
+ * @dst: Address where to store the copy of @src.
+ *
+ * Clone @src and store the result in the provided @dst address.
+ *
+ * Returns: 0 on success, a negative value otherwise.
+ */
 int idmef_path_clone(const idmef_path_t *src, idmef_path_t **dst)
 {
         *dst = calloc(1, sizeof(**dst));
@@ -778,6 +939,17 @@ int idmef_path_clone(const idmef_path_t *src, idmef_path_t **dst)
 
 
 
+/**
+ * idmef_path_ref:
+ * @path: Pointer to an #idmef_path_t object.
+ *
+ * Increase @path reference count.
+ *
+ * idmef_path_destroy() will destroy the refcount until it reach 0,
+ * at which point the path will be destroyed.
+ *
+ * Returns: The provided @path is returned.
+ */
 idmef_path_t *idmef_path_ref(idmef_path_t *path)
 {        
         pthread_mutex_lock(&path->mutex);
@@ -789,6 +961,15 @@ idmef_path_t *idmef_path_ref(idmef_path_t *path)
 
 
 
+/**
+ * idmef_path_is_ambiguous:
+ * @path: Pointer to an #idmef_path_t object.
+ *
+ * Return TRUE if @path contain elements that are supposed
+ * to be listed, but for which no index were provided.
+ *
+ * Returns: TRUE if the object is ambiguous, FALSE otherwise.
+ */
 prelude_bool_t idmef_path_is_ambiguous(idmef_path_t *path)
 {
 	int i;
@@ -803,6 +984,12 @@ prelude_bool_t idmef_path_is_ambiguous(idmef_path_t *path)
 
 
 
+/**
+ * idmef_path_has_list:
+ * @path: Pointer to an #idmef_path_t object.
+ *
+ * Returns: the number of listed element within @path.
+ */
 int idmef_path_has_lists(idmef_path_t *path)
 {
 	int i, ret = 0;
@@ -829,6 +1016,12 @@ void _idmef_path_cache_destroy(void)
 
 
 
+/**
+ * idmef_path_get_depth:
+ * @path: Pointer to an #idmef_path_t object.
+ *
+ * Returns: @depth number of elements.
+ */
 unsigned int idmef_path_get_depth(const idmef_path_t *path)
 {
         return path->depth;
@@ -836,6 +1029,19 @@ unsigned int idmef_path_get_depth(const idmef_path_t *path)
 
 
 
+/**
+ * idmef_path_get_name:
+ * @path: Pointer to an #idmef_path_t object.
+ * @depth: Depth of the @path element to get the name from.
+ *
+ * Return the full path name if the provided @depth is -1, or the specific
+ * element name if depth is set. That is, for a @path pointing to
+ * "alert.classification.text": A depth of -1 would return "alert.classification.text";
+ * a depth of 0 would return "alert"; a depth of 1 would return "classification"; and
+ * a depth of 2 would return "text".
+ *
+ * Returns: @path name relative to the provided @dept.
+ */
 const char *idmef_path_get_name(const idmef_path_t *path, int depth)
 {
         const char *ret;

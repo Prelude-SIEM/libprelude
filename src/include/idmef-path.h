@@ -21,8 +21,8 @@
 *
 *****/
 
-#ifndef _LIBPRELUDE_IDMEF_OBJECT_H
-#define _LIBPRELUDE_IDMEF_OBJECT_H
+#ifndef _LIBPRELUDE_IDMEF_PATH_H
+#define _LIBPRELUDE_IDMEF_PATH_H
 
 typedef struct idmef_path idmef_path_t;
 
@@ -42,7 +42,7 @@ idmef_class_id_t idmef_path_get_class(const idmef_path_t *path, int depth);
 
 idmef_value_type_id_t idmef_path_get_value_type(const idmef_path_t *path, int depth);
 
-int idmef_path_set_index(idmef_path_t *path, unsigned int depth, unsigned int number);
+int idmef_path_set_index(idmef_path_t *path, unsigned int depth, unsigned int index);
 
 int idmef_path_undefine_index(idmef_path_t *path, unsigned int depth);
 
@@ -60,16 +60,16 @@ int idmef_path_compare(const idmef_path_t *p1, const idmef_path_t *p2);
 
 int idmef_path_clone(const idmef_path_t *src, idmef_path_t **dst);
 
-idmef_path_t *idmef_path_ref(idmef_path_t *object);
+idmef_path_t *idmef_path_ref(idmef_path_t *path);
 
-const char *idmef_path_get_name(const idmef_path_t *object, int depth);
+const char *idmef_path_get_name(const idmef_path_t *path, int depth);
 
-prelude_bool_t idmef_path_is_ambiguous(idmef_path_t *object);
+prelude_bool_t idmef_path_is_ambiguous(idmef_path_t *path);
 
-int idmef_path_has_lists(idmef_path_t *object);
+int idmef_path_has_lists(idmef_path_t *path);
 
 unsigned int idmef_path_get_depth(const idmef_path_t *path);
 
 void _idmef_path_cache_destroy(void);
 
-#endif /* _LIBPRELUDE_IDMEF_OBJECT_H */
+#endif /* _LIBPRELUDE_IDMEF_PATH_H */

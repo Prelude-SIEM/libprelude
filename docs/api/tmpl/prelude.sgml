@@ -3,9 +3,23 @@ prelude
 
 <!-- ##### SECTION Short_Description ##### -->
 
+Initializing the library
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+
+Before any operation are done using the prelude library, the user first need 
+to initialize it using the prelude_init() function.
+
+<programlisting>
+int ret;
+
+ret = prelude_init(&amp;argc, argv);
+if ( ret &lt; 0 ) {
+        prelude_perror(ret, "unable to initialize the prelude library");
+        return -1;
+}
+</programlisting>
 
 </para>
 
@@ -43,7 +57,9 @@ prelude
 
 </para>
 
-@rq_version: 
+@req_version: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@rq_version: 
 
 

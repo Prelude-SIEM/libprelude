@@ -3,14 +3,17 @@
                "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
   <bookinfo>
-    <title>[Insert name here] Reference Manual</title>
+    <title>Prelude library Reference Manual</title>
   </bookinfo>
 
   <chapter>
-    <title>[Insert title here]</title>
+    <title>Creating sensors with libprelude</title>
+    <xi:include href="xml/prelude.xml"/>
+    <xi:include href="xml/prelude-client.xml"/>
+    <xi:include href="xml/idmef-tree-wrap.xml"/>
+    <xi:include href="xml/idmef-path.xml"/>
     <xi:include href="xml/prelude-error.xml"/>
     <xi:include href="xml/prelude-linked-object.xml"/>
-    <xi:include href="xml/idmef-tree-wrap.xml"/>
     <xi:include href="xml/prelude-io.xml"/>
     <xi:include href="xml/prelude-log.xml"/>
     <xi:include href="xml/prelude-msg.xml"/>
@@ -21,7 +24,6 @@
     <xi:include href="xml/prelude-msgbuf.xml"/>
     <xi:include href="xml/idmef-message-write.xml"/>
     <xi:include href="xml/prelude-ident.xml"/>
-    <xi:include href="xml/prelude-client.xml"/>
     <xi:include href="xml/prelude-client-profile.xml"/>
     <xi:include href="xml/prelude-plugin.xml"/>
     <xi:include href="xml/prelude-hash.xml"/>
@@ -32,12 +34,10 @@
     <xi:include href="xml/prelude-inet.xml"/>
     <xi:include href="xml/prelude-list.xml"/>
     <xi:include href="xml/prelude-inttypes.xml"/>
-    <xi:include href="xml/prelude.xml"/>
     <xi:include href="xml/prelude-option-wide.xml"/>
     <xi:include href="xml/idmef-criteria.xml"/>
     <xi:include href="xml/idmef-data.xml"/>
     <xi:include href="xml/idmef-criterion-value.xml"/>
-    <xi:include href="xml/idmef-path.xml"/>
     <xi:include href="xml/idmef-additional-data.xml"/>
     <xi:include href="xml/idmef-time.xml"/>
     <xi:include href="xml/prelude-extract.xml"/>

@@ -3,14 +3,142 @@ prelude-client
 
 <!-- ##### SECTION Short_Description ##### -->
 
+Creating a Prelude Client
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+In order to send or to read data from a Prelude collector (prelude-manager),
+you will need to create a #prelude_client_t object. This object will be necessary 
+for most of the work you are going to do with prelude.
+</para>
+
+
+<title>Creating the client</title>
+<para>
+The creation of a #prelude_client_t object involve several steps, including, but 
+not limited to:
+
+<itemizedlist>
+ <listitem>Parsing specific Prelude command line / configuration file options.</listitem>
+ <listitem>Checking that the profile has been registered (the "my-analyzer" argument ahead).</listitem>
+</itemizedlist>
+ 
+</para>
+
+<para>
+The prelude_client_new() function should be used for this task, and the #prelude_connection_capability_t
+argument should reflect the kind of use for this client:
+
+<itemizedlist>
+    <listitem>PRELUDE_CONNECTION_CAPABILITY_CONNECT - This client should connect to a peer.</listitem>
+    <listitem>PRELUDE_CONNECTION_CAPABILITY_RECV_IDMEF - This client receive IDMEF message from a collector.</listitem>
+    <listitem>See #prelude_connection_capability_t for more.</listitem> 
+</itemizedlist>
+
+<programlisting>
+int ret;
+prelude_client_t *client;
+        
+ret = prelude_client_new(&amp;client, PRELUDE_CONNECTION_CAPABILITY_CONNECT, "my-analyzer", "/etc/my-analyzer.conf");
+if ( ! client ) {
+        prelude_perror(ret, "Unable to create a prelude client object");
+        return -1;
+}
+</programlisting>
+
+Once the client is created and you have everything setup, you will need to start your client. 
+The prelude_client_start() function is responsible for this, and will trigger the connection to 
+the configured manager, and send the initial client heartbeat.
+
+<programlisting>
+ret = prelude_client_start(client);
+if ( ret &lt; 0 ) {
+       prelude_log(ret, "Unable to start prelude client");
+       return -1;
+}
+</programlisting>
+
+Additionally, it is possible to set additional client flags, however, you should be careful 
+since some of theses flags (marked asynchronous) will result in creating an internal thread, 
+which should only be done after an eventual fork of the program since threads are not copied 
+accross a fork call.
+</para>
+
+<para>
+The prelude library will also register an internal timer in order to send heartbeat message at 
+the defined interval. Timer registered by the library itself or by the program will either be called 
+automatically if the #PRELUDE_CLIENT_FLAGS_ASYNC_TIMER flags is set, otherwise, the program is responsible 
+for calling the prelude_timer_wake_up() function every second from it's main loop, in order to check the 
+registered timer.
+
+<itemizedlist>
+    <listitem>#PRELUDE_CLIENT_FLAGS_HEARTBEAT - Used for client to send heartbeat (this is the default).</listitem>
+    <listitem>#PRELUDE_CLIENT_FLAGS_ASYNC_SEND - Used if you want message to be sent asynchronously.</listitem>
+    <listitem>#PRELUDE_CLIENT_FLAGS_ASYNC_TIMER - Used if you want timer to be automatically called from the asynchronous thread.</listitem>
+    <listitem>See #prelude_client_flags_t for a list of available flags.</listitem> 
+</itemizedlist>
+
+<programlisting>
+ret = prelude_client_set_flags(client, PRELUDE_CLIENT_FLAGS_ASYNC_SEND|PRELUDE_CLIENT_FLAGS_ASYNC_TIMER);
+if ( ret &lt; 0 ) {
+       fprintf(stderr, "Unable to set asynchronous send and timer.\n");
+       return -1;
+}
+</programlisting>
 
 </para>
 
+<title>Sending IDMEF message</title>
+
+<para>
+For documentation on how to create IDMEF message, please see #idmef_message_t
+or #idmef_path_t.
+</para>
+
+<para>
+Once you created and IDMEF message, you should use the prelude_client_send_idmef() function
+in order to send it to the collector you are connected to. 
+
+<informalexample><programlisting>
+prelude_client_send_idmef(client, idmef);
+</programlisting></informalexample>
+</para>
+
+
+<title>Destroying the client</title>
+
+<para>
+In case the analyzer you are developing is not a persistant analyzer (meaning an 
+analyzer that is not supposed to exit), it is important that you call the prelude_client_destroy() 
+function prior to exiting. This function have the side effect of sending an heartbeat to the remote 
+manager, as well as an information regarding the analyzer state.
+</para>
+
+<para>
+This state information is important since an analyzer not reporting a successful exit status, 
+or an analyzer which stop sending heartbeat at all will be reported as having a problem.
+
+<itemizedlist>
+ <listitem>PRELUDE_CLIENT_STATUS_EXIT_SUCCESS - Exiting the sensor is the expected behavior.</listitem>
+ <listitem>PRELUDE_CLIENT_STATUS_EXIT_FAILED - There is something wrong going on, notice the security analyst.</listitem>
+</itemizedlist> 
+
+<informalexample><programlisting>
+prelude_client_destroy(client, PRELUDE_CLIENT_STATUS_EXIT_SUCCESS);
+</programlisting></informalexample>
+
+As a side note, please remember that a persistant sensor should never use this function 
+(except maybe if it is working in batch mode), unless it want to report the 
+PRELUDE_CLIENT_STATUS_EXIT_FAILED exit status. This is also the case if your persistant sensor 
+is interrupted by a signal. 
+</para>
+
+
 <!-- ##### SECTION See_Also ##### -->
 <para>
+
+#idmef_message_t
+#idmef_path_t
 
 </para>
 

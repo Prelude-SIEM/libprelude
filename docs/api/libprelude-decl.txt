@@ -6472,7 +6472,7 @@ void
 <FUNCTION>
 <NAME>prelude_check_version</NAME>
 <RETURNS>const char *</RETURNS>
-const char *rq_version
+const char *req_version
 </FUNCTION>
 <MACRO>
 <NAME>PRELUDE_OPTION_REPLY_TYPE_SET</NAME>
@@ -6962,6 +6962,14 @@ idmef_data_t *data
 <NAME>idmef_criterion_value_t</NAME>
 typedef struct idmef_criterion_value idmef_criterion_value_t;
 </TYPEDEF>
+<ENUM>
+<NAME>idmef_criterion_value_type_t</NAME>
+typedef enum {
+        IDMEF_CRITERION_VALUE_TYPE_ERROR  = -1,
+        IDMEF_CRITERION_VALUE_TYPE_VALUE  =  0,
+        IDMEF_CRITERION_VALUE_TYPE_REGEX  =  1,
+} idmef_criterion_value_type_t;
+</ENUM>
 <FUNCTION>
 <NAME>idmef_criterion_value_new</NAME>
 <RETURNS>int </RETURNS>
@@ -7007,6 +7015,16 @@ idmef_criterion_value_t *value, prelude_string_t *out
 <RETURNS>int </RETURNS>
 idmef_criterion_value_t *cv, idmef_value_t *value, idmef_criterion_operator_t operator
 </FUNCTION>
+<FUNCTION>
+<NAME>idmef_criterion_value_get_value</NAME>
+<RETURNS>const void *</RETURNS>
+idmef_criterion_value_t *cv
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_criterion_value_get_type</NAME>
+<RETURNS>idmef_criterion_value_type_t </RETURNS>
+idmef_criterion_value_t *cv
+</FUNCTION>
 <TYPEDEF>
 <NAME>idmef_path_t</NAME>
 typedef struct idmef_path idmef_path_t;
@@ -7049,7 +7067,7 @@ const idmef_path_t *path, int depth
 <FUNCTION>
 <NAME>idmef_path_set_index</NAME>
 <RETURNS>int </RETURNS>
-idmef_path_t *path, unsigned int depth, unsigned int number
+idmef_path_t *path, unsigned int depth, unsigned int index
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_path_undefine_index</NAME>
@@ -7094,22 +7112,22 @@ const idmef_path_t *src, idmef_path_t **dst
 <FUNCTION>
 <NAME>idmef_path_ref</NAME>
 <RETURNS>idmef_path_t *</RETURNS>
-idmef_path_t *object
+idmef_path_t *path
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_path_get_name</NAME>
 <RETURNS>const char *</RETURNS>
-const idmef_path_t *object, int depth
+const idmef_path_t *path, int depth
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_path_is_ambiguous</NAME>
 <RETURNS>prelude_bool_t </RETURNS>
-idmef_path_t *object
+idmef_path_t *path
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_path_has_lists</NAME>
 <RETURNS>int </RETURNS>
-idmef_path_t *object
+idmef_path_t *path
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_path_get_depth</NAME>

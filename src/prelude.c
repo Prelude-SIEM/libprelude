@@ -71,7 +71,7 @@ static void slice_arguments(int *argc, char **argv)
                 
                 while ( *ptr == '-' ) ptr++;
                 
-                opt = prelude_option_search(_prelude_generic_optlist, ptr, PRELUDE_OPTION_TYPE_CLI, TRUE);                
+                opt = prelude_option_search(_prelude_generic_optlist, ptr, PRELUDE_OPTION_TYPE_CLI, TRUE); 
                 if ( ! opt )
                         continue;
                 
@@ -94,7 +94,18 @@ static void slice_arguments(int *argc, char **argv)
 
 
 
-
+/**
+ * prelude_init:
+ * @argc: Address of the argc parameter of your main() function.
+ * @argv: Address of the argv parameter of your main() function.
+ * 
+ * Call this function before using any other Prelude functions in your applications.
+ * It will initialize everything needed to operate the library and parses some standard
+ * command line options. @argc and @argv are adjusted accordingly so your own code will
+ * never see those standard arguments.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
 int prelude_init(int *argc, char **argv)
 {
         slice_arguments(argc, argv);
@@ -103,6 +114,12 @@ int prelude_init(int *argc, char **argv)
 
 
 
+/**
+ * prelude_deinit:
+ *
+ * Call this function if you're done using the library and want to free global
+ * shared ressource allocated by libprelude.
+ */
 void prelude_deinit(void)
 {
         prelude_list_t *iter = NULL;
@@ -118,6 +135,17 @@ void prelude_deinit(void)
 
 
 
+/**
+ * prelude_check_version:
+ * @req_version: The minimum acceptable version number.
+ *
+ * If @req_version is NULL this function will return the version of the library.
+ * Otherwise, @req_version will be compared to the current library version. If
+ * the library version is higher or equal, this function will return the current
+ * library version. Otherwise, NULL is returned.
+ *
+ * Returns: The current library version, or NULL if @req_version doesn't match.
+ */
 const char *prelude_check_version(const char *req_version)
 {
         int ret;

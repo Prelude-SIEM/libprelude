@@ -3,15 +3,92 @@ idmef-tree-wrap
 
 <!-- ##### SECTION Short_Description ##### -->
 
+Generating events using the low level IDMEF API
 
 <!-- ##### SECTION Long_Description ##### -->
+
 <para>
+
+The IDMEF API is used by a sensor in order to generate events.  IDMEF is an alert description
+format allowing almost any alert information to fit within an IDMEF alert, independantly of the
+type of analyzer used.
+
+</para>
+
+<para> 
+Here is real world example taken from the Snort Prelude sensors. The top level IDMEF object is always 
+of type #idmef_message_t. You should refer to the <ulink url="http://www.ietf.org/internet-drafts/draft-ietf-idwg-idmef-xml-14.txt">IDMEF draft</ulink>, or to the Prelude API documentation in order to get a complete 
+listing of theses objects, or a description of what information an object may carry.
+
+<programlisting>
+void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
+{
+        int ret;
+        idmef_time_t *time;
+        idmef_alert_t *alert;
+        prelude_string_t *str;
+        idmef_message_t *idmef;
+        idmef_classification_t *class;
+        prelude_client_t *client = data;
+        
+        ret = idmef_message_new(&amp;idmef);
+        if ( ret &lt; 0 )
+                return;
+
+        ret = idmef_message_new_alert(idmef, &amp;alert);
+        if ( ret &lt; 0 )
+                goto err;
+
+        ret = idmef_alert_new_classification(alert, &amp;class);
+        if ( ret &lt; 0 )
+                goto err;
+
+        ret = idmef_classification_new_text(class, &amp;str);
+        if ( ret &lt; 0 )
+                goto err;
+
+        prelude_string_set_ref(str, msg);
+
+        ret = event_to_impact(event, alert);
+        if ( ret &lt; 0 )
+                goto err;
+
+        ret = event_to_reference(event, class);
+        if ( ret &lt; 0 )
+                goto err;
+        
+        ret = event_to_source_target(p, alert);
+        if ( ret &lt; 0 )
+                goto err;
+        
+        ret = packet_to_data(p, event, alert);
+        if ( ret &lt; 0 )
+                goto err;
+        
+        ret = idmef_alert_new_detect_time(alert, &amp;time);
+        if ( ret &lt; 0 )
+                goto err;
+        idmef_time_set_from_timeval(time, &amp;p->pkth->ts);
+        
+        ret = idmef_time_new_from_gettimeofday(&amp;time);
+        if ( ret &lt; 0 )
+                goto err; 
+        idmef_alert_set_create_time(alert, time);
+                
+        idmef_alert_set_analyzer(alert, idmef_analyzer_ref(prelude_client_get_analyzer(client)), 0);
+        prelude_client_send_idmef(client, idmef);
+                
+ err:
+        idmef_message_destroy(idmef);
+	prelude_perror(ret, "Unable to create IDMEF alert");
+}
+</programlisting>
 
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
-
+#idmef_path_t for the high level IDMEF API.
 </para>
 
 <!-- ##### ENUM idmef_additional_data_type_t ##### -->

@@ -1303,8 +1303,8 @@ prelude_connection_capability_t prelude_client_get_capability(prelude_client_t *
  * prelude_client_get_config_filename:
  * @client: pointer on a #prelude_client_t object.
  *
- * Return the filename used to store @client configuration.
- * This filename is originally set by the prelude_async_init() function.
+ * Return the filename where @client configuration is stored.
+ * This filename is originally set by the prelude_client_new() function.
  *
  * Returns: a pointer to @client configuration filename.
  */
