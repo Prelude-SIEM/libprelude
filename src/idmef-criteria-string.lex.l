@@ -83,7 +83,7 @@ or|OR			{ return TOK_OPERATOR_OR; }
 				/* nop */;
 			}
 
-[^ ]+			{
-				/* unrecognized token */
+.			{
+				/* invalid token */
 				return TOK_ERROR;
 			}
