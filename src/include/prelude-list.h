@@ -176,8 +176,7 @@ static inline void prelude_list_splice(prelude_list_t *head, prelude_list_t *lis
  * @member: Member name of the list object within @type.
  *
  * Get the object associated with @ptr.
- *
- * Returns: The object associated with @ptr.
+ * Return the object associated with @ptr.
  */
 #define prelude_list_entry(ptr, type, member) \
 	((type *)((unsigned long)(ptr) - (unsigned long)(&((type *)0)->member)))
