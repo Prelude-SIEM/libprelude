@@ -31,6 +31,13 @@
 #include "common.h"
 
 
+#ifdef DEBUG
+ #define dprint(args...) fprintf(stderr, args)
+#else
+ #define dprint(args...)
+#endif
+
+
 static LIST_HEAD(timer_list);
 static int count = 0;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -96,13 +103,13 @@ static void walk_and_wake_up_timer(time_t now)
 {
         int ret, woke = 0;
         prelude_timer_t *timer;
-        time_t prev_remaining = 0;
         struct list_head *tmp, *next;
+        time_t prev_remaining = (time_t) -1000000; /* in case we're lagging */
         
         pthread_mutex_lock(&mutex);
         next = ( list_empty(&timer_list) ) ? NULL : timer_list.next;
         pthread_mutex_unlock(&mutex);
-        
+                
         while ( next ) {
                 tmp = next;
                 
@@ -113,14 +120,15 @@ static void walk_and_wake_up_timer(time_t now)
                 timer = list_entry(tmp, prelude_timer_t, list);
 
                 if ( prev_remaining > time_remaining(timer, now) ) {
-                        log(LOG_ERR, "Timer list integrity check failed (prev=%d > cur=%d).\n"
-                            "Please email yoann@mandrakesoft.com\n", prev_remaining, time_remaining(timer, now));
+                        dprint("Timer list integrity check failed (prev=%d > cur=%d).\n"
+                               "Please email yoann@mandrakesoft.com\n", prev_remaining, time_remaining(timer, now));
                         abort();
                 }
-                
+
                 prev_remaining = time_remaining(timer, now);
                 ret = wake_up_if_needed(timer, now);
 #if 0
+                ret = wake_up_if_needed(timer, now);
                 if ( ret < 0 )
                         /*
                          * no timer remaining in the list will be expired.
@@ -130,14 +138,16 @@ static void walk_and_wake_up_timer(time_t now)
                 woke++;
 #endif
         }
-#ifdef DEBUG
-        printf("woke up %d/%d timer\n", woke, count);
-#endif
+
+        dprint("woke up %d/%d timer\n", woke, count);
 }
 
 
 
-
+/*
+ * search the timer list forward for the timer entry
+ * that should be before our inserted timer.
+ */
 static struct list_head *search_previous_forward(prelude_timer_t *timer, time_t expire) 
 {
         int hop = 0;
@@ -148,16 +158,33 @@ static struct list_head *search_previous_forward(prelude_timer_t *timer, time_t 
                 cur = list_entry(tmp, prelude_timer_t, list);
 
                 hop++;
-                
+
                 if ( (cur->start_time + cur->expire) < expire ) {
+                        /*
+                         * we found a previous timer (expiring before us),
+                         * but we're walking the list forward, and there could be more...
+                         * save and continue.
+                         */
                         prev = tmp;
                         continue; 
                 }
 
-                else if ( (cur->start_time + cur->expire) >= expire ) {
-#ifdef DEBUG
-                        printf("[expire=%d] found forward in O(%d) at %p\n", timer->expire, hop, cur);
-#endif
+                else if ( (cur->start_time + cur->expire) == expire ) {
+                        /*
+                         * we found a timer that's expiring at the same time
+                         * as us. Return it as the previous insertion point.
+                         */
+                        dprint("[expire=%d] found forward in O(%d) at %p\n", timer->expire, hop, cur);
+                        return tmp;
+                }
+
+                else if ( (cur->start_time + cur->expire) > expire ) {
+                        /*
+                         * we found a timer expiring after us. We can return 
+                         * the previously saved entry.
+                         */
+                        dprint("[expire=%d] found forward in O(%d) at %p\n", timer->expire, hop, cur);
+                        assert(prev);
                         return prev;
                 }
         }
@@ -172,6 +199,10 @@ static struct list_head *search_previous_forward(prelude_timer_t *timer, time_t 
 
 
 
+/*
+ * search the timer list backward for the timer entry
+ * that should be before our inserted timer.
+ */
 static struct list_head *search_previous_backward(prelude_timer_t *timer, time_t expire) 
 {
         int hop = 0;
@@ -183,9 +214,8 @@ static struct list_head *search_previous_backward(prelude_timer_t *timer, time_t
                 cur = list_entry(tmp, prelude_timer_t, list);
                 
                 if ( (cur->start_time + cur->expire) <= expire ) {
-#ifdef DEBUG
-                        printf("[expire=%d] found backward in O(%d) at %p\n", timer->expire, hop + 1, cur);
-#endif
+                        dprint("[expire=%d] found backward in O(%d) at %p\n", timer->expire, hop + 1, cur);
+                        assert(tmp);
                         return tmp;
                 }
 
@@ -232,19 +262,26 @@ static struct list_head *search_previous_timer(prelude_timer_t *timer)
         first = get_first_timer();
 
         /*
-         * timer we want to insert expire after the known to be
-         * expiring last timer. This mean we should insert the new
-         * timer at the end of the list.
+         * timer we want to insert expire after (or at the same time) the known
+         * to be expiring last timer. This mean we should insert the new timer
+         * at the end of the list.
          */
-        if ( timer->expire > time_remaining(last, timer->start_time) ) 
+        if ( timer->expire >= time_remaining(last, timer->start_time) ) {
+                assert(timer_list.prev);
+                dprint("[expire=%d] found without search (insert last) in O(1)\n", timer->expire);
                 return timer_list.prev;
+        }
         
         /*
-         * timer we want to insert expire before, the known to be expiring
-         * first timer. This mean we should insert the new timer in the head.
+         * timer we want to insert expire before (or at the same time), the known
+         * to be expiring first timer. This mean we should insert the new timer at
+         * the beginning of the list.
          */
-        if ( timer->expire < time_remaining(first, timer->start_time) ) 
+        if ( timer->expire <= time_remaining(first, timer->start_time) ) {
+                assert(&timer_list);
+                dprint("[expire=%d] found without search (insert first) in O(1)\n", timer->expire);
                 return &timer_list;
+        }
 
         /*
          * we now know we expire after the first expiring timer,

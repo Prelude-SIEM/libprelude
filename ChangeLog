@@ -1,3 +1,21 @@
+2002-01-18  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/timer.c (walk_and_wake_up_timer): 
+	set prev_remaining to a big negative value, so that the new
+	timer algorithm debuging check won't blow at us because there is 
+	lag.
+
+	(search_previous_timer): if the timer we want to insert expire
+	at the same time as the known to be expiring last timer, replace it.	
+
+	(search_previous_timer): if the timer we want to insert expire
+	at the same time as the known to be expiring first timer, replace it.
+
+	(search_previous_backward): 
+	(search_previous_forward): handle case where we find an entry
+	with the same expire time as our inserted timer.
+	
+
 2002-01-17  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-io.c (prelude_io_read_wait): 
