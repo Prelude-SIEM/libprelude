@@ -6,7 +6,7 @@ DEFS = 	-DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\"	\
 	@libprelude_cflags@ @pthread_cflags@
 
 libpreludeincludedir = $(includedir)/
-libprelude_la_LIBADD = @LIBLTDL@ @LIBGNUTLS_LIBS@
+libprelude_la_LIBADD = @libprelude_libs@ @LIBLTDL@
 libprelude_la_LDFLAGS = -no-undefined -version-info @libprelude_soname@
 lib_LTLIBRARIES = libprelude.la
 
