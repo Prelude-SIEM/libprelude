@@ -313,8 +313,8 @@ if test "_$ac_cv_header_prix64_works" == "_yes" ; then
   echo "#define _STDINT_HAVE_WORKING_PRIx64" "1" >>$ac_stdint
   echo "#include <$ac_cv_header_prix64>" >>$ac_stdint
 else
-  echo "#define __PRELUDE_PRI64_PREFIX" "$ac_prelude_pri64_prefix" >>$ac_stdint
-  echo "#define __PRELUDE_PRIPTR_PREFIX" "$ac_prelude_pri64_prefix" >>$ac_stdint
+  echo "#define __PRELUDE_PRI64_PREFIX" "\"$ac_prelude_pri64_prefix\"" >>$ac_stdint
+  echo "#define __PRELUDE_PRIPTR_PREFIX" "\"$ac_prelude_pri64_prefix\"" >>$ac_stdint
 fi
 
 cat >>$ac_stdint <<STDINT_EOF
