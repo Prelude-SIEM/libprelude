@@ -1,5 +1,5 @@
-libtoolize -c --force
 aclocal
+libtoolize -c --force
 autoheader
 automake --gnu -a -c
 autoconf

@@ -33,7 +33,6 @@
 #include "common.h"
 
 
-
 extern char *crypt(const char *key, const char *salt);
 
 
@@ -316,12 +315,13 @@ int auth_create_account(const char *filename, const int crypted)
         
         ret = comfirm_account_creation(user);
         if ( ret == 0 ) {
+#ifdef HAVE_CRYPT
                 if ( crypted ) {
                         cpass = strdup(crypt(pass, SALT));
                         free(pass);
                         pass = cpass;
                 }
-                 
+#endif
                 write_account(fd, user, pass);
         }
 

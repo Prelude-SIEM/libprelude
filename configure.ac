@@ -1,6 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(src)
+AC_INIT
+AC_CONFIG_SRCDIR([src])
 AM_INIT_AUTOMAKE(libprelude, 0.4.1)
 AM_CONFIG_HEADER(config.h)
 AM_DISABLE_STATIC
@@ -23,51 +24,33 @@ AC_SUBST(LDFLAGS)
 
 
 dnl **************************************************
-dnl * Check for networking function                  *
-dnl **************************************************
-
-AC_CHECK_LIB(c, inet_ntoa, libc_inet_ntoa=yes)
-if test x$libc_inet_ntoa != xyes; then
-	AC_CHECK_LIB(nsl, inet_ntoa, COMMON_LIBS="$COMMON_LIBS -lnsl")
-fi
-
-AC_CHECK_LIB(c, socket, libc_socket=yes)
-if test x$libc_socket != xyes; then
-	AC_CHECK_LIB(socket, socket, COMMON_LIBS="$COMMON_LIBS -lsocket")
-fi
-
-AC_CHECK_LIB(c, inet_aton, libc_inet_aton=yes)
-if test x$libc_inet_aton != xyes; then
-	AC_CHECK_LIB(resolv, inet_aton, COMMON_LIBS="$COMMON_LIBS -lresolv")
-fi
-
-
-dnl **************************************************
 dnl * Check for getopt_long                          *
 dnl **************************************************
 
-AC_CHECK_HEADER(getopt.h, getopt_long_hdr=yes)
+AC_CHECK_HEADERS(getopt.h, getopt_long_hdr=yes)
 AC_CHECK_LIB(c, getopt_long, getopt_long_func=yes)
 
 if test x$getopt_long_hdr = xyes && test x$getopt_long_func = xyes; then
-	defined="-DHAVE_GETOPT_LONG";
+	AC_DEFINE(HAVE_GETOPT_LONG)
 fi
-
 
 
 dnl **************************************************
 dnl * Check for demand loading of shared lib library *
 dnl **************************************************
-AC_CHECK_LIB(dl, dlopen, COMMON_LIBS="$COMMON_LIBS -ldl")
+AC_CHECK_LIB(dl, dlopen, LIBS="-ldl")
 
 
 
 dnl **************************************************
 dnl * Check for crypt library                        *
 dnl **************************************************
+AC_CHECK_LIB(crypt, crypt, cryptlib=true)
 
-AC_CHECK_LIB(crypt, crypt, COMMON_LIBS="$COMMON_LIBS -lcrypt")
-
+if test x$cryptlib = xtrue; then
+	AC_DEFINE(HAVE_CRYPT)
+	LIBS="$LIBS -lcrypt";
+fi
 
 
 dnl **************************************************
@@ -75,13 +58,14 @@ dnl * Check for OpenSSL.                             *
 dnl **************************************************
 
 AC_CHECK_HEADER(openssl/ssl.h, openssl_header=yes)
-AC_ARG_ENABLE(openssl, [  --enable-openssl  Use OpenSSL to communicate with Report Server [default=auto]], \
+
+AC_ARG_ENABLE(openssl, [  --enable-openssl Use OpenSSL to communicate with Report Server [default=auto]], \
 	      enable_openssl="$enableval", enable_openssl=auto)
 
 if test x$enable_openssl = xauto ; then
 	if test x$openssl_header = xyes; then
-		COMMON_LIBS="$COMMON_LIBS -lssl -lcrypto"
-		defined="$defined -DHAVE_SSL"
+		LIBS="$LIBS -lssl -lcrypto"
+		AC_DEFINE(HAVE_SSL)
     		enable_openssl=yes
   	else
     		enable_openssl=no
@@ -155,32 +139,20 @@ AC_CHECK_FUNCS(gettimeofday select socket strdup strerror strstr)
 configdir=$sysconfdir/prelude
 plugindir=$libdir/prelude
 
-AC_SUBST(defined)
 AC_SUBST(configdir)
-AC_SUBST(localstatedir)
-AC_SUBST(COMMON_LIBS)
-AC_SUBST(PRELUDE_LIBS)
-
-
-if test "x$prefix" = "xNONE"; then
-	prefix="/usr/local"
-fi
-
-if test "x$localstatedir" = "x\${prefix}/var"; then
-	localstatedir="$prefix/var"
-fi
-	
+AC_SUBST(LIBS)
 
 CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations \
 -Wbad-function-cast -Wcast-qual -Wcast-align -Wnested-externs"
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile 
 docs/Makefile
 docs/api/Makefile
 src/Makefile 
 src/include/Makefile
 ])
+AC_OUTPUT
 
 
 echo

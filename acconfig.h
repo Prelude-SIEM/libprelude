@@ -1,0 +1,3 @@
+#undef HAVE_GETOPT_LONG
+#undef HAVE_CRYPT
+#undef HAVE_SSL

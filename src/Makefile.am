@@ -1,5 +1,5 @@
 SUBDIRS = include
-DEFS = @defined@ -DCONFIG_DIR=\"@configdir@\" -DLOCALSTATEDIR=\"@localstatedir@\"
+DEFS = -DCONFIG_DIR=\"@configdir@\"
 INCLUDES = -I$(top_srcdir)/include -I$(srcdir)/include
 
 libpreludeincludedir = $(includedir)/
