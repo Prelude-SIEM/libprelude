@@ -76,17 +76,17 @@ int prelude_option_recv_set(prelude_msg_t *msg)
 	uint32_t request_id;
 	char *str;
 	int retval;
-	
-	return prelude_option_recv_reply(msg, &source_id, &request_id, (void **) &str) != 
-		PRELUDE_OPTION_REPLY_TYPE_ERROR;
+
+	return prelude_option_recv_reply(msg, &source_id, &request_id, (void **) &str) !=
+		PRELUDE_OPTION_REPLY_TYPE_ERROR;	     
 }
 
-
+#ifdef SWIGPYTHON
 PyObject *swig_idmef_data_get_byte_string(idmef_data_t *data)
 {
 	return PyString_FromStringAndSize(idmef_data_get_byte_string(data), idmef_data_get_len(data));
 }
-
+#endif
 
 %}
 
@@ -313,7 +313,10 @@ typedef unsigned int prelude_bool_t;
 prelude_msg_t *my_prelude_msg_read(prelude_io_t *pio);
 prelude_option_t *prelude_option_recv_list(prelude_msg_t *msg);
 int prelude_option_recv_set(prelude_msg_t *msg);
+
+#ifdef SWIGPYTHON
 PyObject *swig_idmef_data_get_byte_string(idmef_data_t *data);
+#endif
 
 %include "prelude-client.h"
 %include "prelude-client-profile.h"
