@@ -127,7 +127,7 @@ static gnutls_x509_crt generate_certificate(prelude_client_t *client, gnutls_x50
         gnutls_x509_crt_set_activation_time(crt, time(NULL));
         gnutls_x509_crt_set_expiration_time(crt, expire);
         
-        ret = snprintf(buf, sizeof(buf), "%llu", prelude_client_get_analyzerid(client));
+        ret = snprintf(buf, sizeof(buf), "%" PRIu64, prelude_client_get_analyzerid(client));
         ret = gnutls_x509_crt_set_dn_by_oid(crt, GNUTLS_OID_X520_COMMON_NAME, 0, buf, ret);
         if ( ret < 0 ) {
                 fprintf(stderr, "error setting common name: %s.\n", gnutls_strerror(ret));
@@ -292,7 +292,7 @@ static gnutls_x509_crq generate_certificate_request(prelude_client_t *client,
         
         gnutls_x509_crq_set_version(crq, 1);
         
-        ret = snprintf(buf, *size, "%llu", prelude_client_get_analyzerid(client));
+        ret = snprintf(buf, *size, "%" PRIu64, prelude_client_get_analyzerid(client));
         ret = gnutls_x509_crq_set_dn_by_oid(crq, GNUTLS_OID_X520_COMMON_NAME, 0, buf, ret);
         if ( ret < 0 ) {
                 fprintf(stderr, "error setting common name: %s.\n", gnutls_strerror(ret));

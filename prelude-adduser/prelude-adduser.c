@@ -243,19 +243,19 @@ static int register_sensor_ident(const char *name, uint64_t *ident)
                         return register_sensor_ident(name, ident);
                 }
                 
-                if ( ! sscanf(buf, "%llu", ident) ) {
+                if ( ! sscanf(buf, "%" SCNu64, ident) ) {
                         fclose(fd);
                         unlink(filename);
                         return register_sensor_ident(name, ident);
                 }
                 
-                fprintf(stderr, "  - Using already allocated ident for %s: %llu.\n", name, *ident);
+                fprintf(stderr, "  - Using already allocated ident for %s: %" PRIu64 ".\n", name, *ident);
                 
                 return 0;
         }
 
-        fprintf(fd, "%llu\n", *ident);
-        fprintf(stderr, "  - Allocated ident for %s: %llu.\n", name, *ident);
+        fprintf(fd, "%" PRIu64 "\n", *ident);
+        fprintf(stderr, "  - Allocated ident for %s: %" PRIu64 ".\n", name, *ident);
         fclose(fd);
         
         return 0;

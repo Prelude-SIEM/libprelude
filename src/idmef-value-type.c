@@ -32,6 +32,7 @@
 #include "idmef-string.h"
 #include "idmef-value-type.h"
 
+
 #define OBJECT_RELATION  IDMEF_VALUE_RELATION_IS_NULL|IDMEF_VALUE_RELATION_IS_NOT_NULL
 
 #define DATA_RELATION    IDMEF_VALUE_RELATION_EQUAL|IDMEF_VALUE_RELATION_NOT_EQUAL| \
@@ -50,12 +51,12 @@
 #define GENERIC_ONE_BASE_RW_FUNC(fmt, name, type)                                  \
         static int name ## _read(idmef_value_type_t *dst, const char *buf)         \
         {                                                                          \
-                return sscanf(buf, fmt, &(dst)->data. name ##_val);                \
+                return sscanf(buf, (fmt), &(dst)->data. name ##_val);                \
         }                                                                          \
                                                                                    \
         static int name ## _write(char *buf, size_t size, idmef_value_type_t *src) \
         {                                                                          \
-                return snprintf(buf, size, fmt, src->data.name ##_val);            \
+                return snprintf(buf, size, (fmt), src->data.name ##_val);            \
         }
 
 
@@ -63,14 +64,14 @@
         static int name ## _read(idmef_value_type_t *dst, const char *buf)		\
         {										\
 		if ( strncasecmp(buf, "0x", 2) == 0 )					\
-			return sscanf(buf, fmt_hex, &(dst)->data. name ##_val);		\
+			return sscanf(buf, (fmt_hex), &(dst)->data. name ##_val);		\
 											\
-		return sscanf(buf, fmt_dec, &(dst)->data. name ##_val);			\
+		return sscanf(buf, (fmt_dec), &(dst)->data. name ##_val);			\
 	}										\
 											\
         static int name ## _write(char *buf, size_t size, idmef_value_type_t *src)	\
         {										\
-                return snprintf(buf, size, fmt_dec, src->data.name ##_val);		\
+                return snprintf(buf, size, (fmt_dec), src->data.name ##_val);		\
         }
 
 
@@ -96,9 +97,8 @@ GENERIC_TWO_BASES_RW_FUNC("%hd", "%hx", int16, int16_t)
 GENERIC_TWO_BASES_RW_FUNC("%hu", "%hx", uint16, uint16_t)
 GENERIC_TWO_BASES_RW_FUNC("%d", "%x", int32, int32_t)
 GENERIC_TWO_BASES_RW_FUNC("%u", "%x", uint32, uint32_t)
-GENERIC_TWO_BASES_RW_FUNC("%lld", "%llx", int64, int64_t)
-GENERIC_TWO_BASES_RW_FUNC("%llu", "%llx", uint64, uint64_t)
-
+GENERIC_TWO_BASES_RW_FUNC("%" PRId64, "%" PRIx64, int64, int64_t)
+GENERIC_TWO_BASES_RW_FUNC("%" PRIu64, "%" PRIx64, uint64, uint64_t)
 GENERIC_ONE_BASE_RW_FUNC("%d", enum, enum);
 GENERIC_ONE_BASE_RW_FUNC("%f", float, float)
 GENERIC_ONE_BASE_RW_FUNC("%lf", double, double)

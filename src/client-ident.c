@@ -45,7 +45,6 @@
 #include "client-ident.h"
 
 
-
 static int declare_ident_to_manager(uint64_t analyzerid, prelude_io_t *fd) 
 {
         int ret;
@@ -99,7 +98,7 @@ int prelude_client_ident_init(prelude_client_t *client, uint64_t *analyzerid)
                 return -1;
         }
         
-        sscanf(buf, "%llu", analyzerid);
+        sscanf(buf, "%" PRIu64, analyzerid);
 
         fclose(fd);
 
