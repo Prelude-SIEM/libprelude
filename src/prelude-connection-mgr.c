@@ -283,7 +283,7 @@ static int walk_manager_lists(prelude_connection_mgr_t *cmgr, prelude_msg_t *msg
 
         prelude_failover_save_msg(cmgr->failover, msg);
         
-        return -1;
+        return ret;
 }
 
 
@@ -376,7 +376,9 @@ static void connection_timer_expire(void *data)
                                 return;
                         }
                 }
-
+                
+                timer_set_expire(&cnx->timer, INITIAL_EXPIRATION_TIME);
+                
                 /*
                  * notify the user about a new connection.
                  */
@@ -646,21 +648,9 @@ static cnx_t *search_cnx(prelude_connection_mgr_t *mgr, prelude_connection_t *cn
  */
 void prelude_connection_mgr_broadcast(prelude_connection_mgr_t *cmgr, prelude_msg_t *msg) 
 {
-        int ret;
-
         timer_lock_critical_region();
-        ret = walk_manager_lists(cmgr, msg);        
+        walk_manager_lists(cmgr, msg);        
         timer_unlock_critical_region();
-        
-        if ( ret == 0 )
-                return;
-        
-        /*
-         * This is not good. All of our boolean AND rule for message emission
-         * failed. Backup the message.
-         */
-        if ( ret == -1 )
-                log(LOG_INFO, "Manager emission failed. Enabling failsafe mode.\n");  
 }
 
 
