@@ -1,5 +1,12 @@
 2002-04-14  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/config-engine.c (config_get_section): 
+	don't check if the line is a comment here.
+	(search_section): do it here.
+	
+	This fix a bug where we wouldn't find an option 
+	because a commented one would match.
+
 	* src/prelude-getopt.c (print_wrapped): 
 	don't print \0 at the end of the line. This fix bug
 	#0000029 (control character at end of help lines).

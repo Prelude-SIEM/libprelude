@@ -276,6 +276,9 @@ static int search_section(config_t *cfg, const char *section)
                 return -1;
         
         for ( i = 0; cfg->content[i] != NULL; i++ ) {
+                if ( is_line_commented(cfg->content[i]) == 0 )
+                        continue;
+                
                 if ( cmp_section(cfg->content[i], section) == 0 )
                         return i;
         }
@@ -513,16 +516,10 @@ static const char *get_variable_content(config_t *cfg, const char *variable)
 
 int config_get_section(config_t *cfg, const char *section) 
 {
-        int ret;
-        
         if ( ! cfg->content )
                 return -1;
 
-        ret = search_section(cfg, section);
-        if ( ret < 0 )
-                return -1;
-        
-        return ( is_line_commented(cfg->content[ret]) == 0 ) ? -1 : 0;
+        return (search_section(cfg, section) > 0) ? 0 : -1;
 }
 
 
