@@ -1,3 +1,9 @@
+2002-03-19  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-io.c (ssl_close): 
+	avoid a leak when SSL_shutdown return 0.
+	(ssl_close): don't close the fd two time. 
+
 2002-03-14  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* Makefile.am (install-data-hook): stop using sticky bit on

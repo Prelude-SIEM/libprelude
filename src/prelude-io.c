@@ -205,18 +205,11 @@ static ssize_t ssl_write(prelude_io_t *pio, const void *buf, size_t count)
 
 static int ssl_close(prelude_io_t *pio) 
 {
-        int ret, fd;
-
-        fd = SSL_get_fd(pio->fd_ptr);
-
-        close(fd);
+        int ret;
         
-        ret = SSL_shutdown(pio->fd_ptr);
-        if ( ret <= 0 )
-                return -1;
-        
+        SSL_shutdown(pio->fd_ptr);
         SSL_free(pio->fd_ptr);
-
+        
         return sys_close(pio);
 }
 
