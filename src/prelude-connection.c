@@ -97,8 +97,6 @@ static void auth_error(prelude_connection_t *cnx)
             "program on the sensor host to create an account for this sensor.\n\n",
             prelude_client_get_name(cnx->client), cnx->daddr,
             prelude_client_get_uid(cnx->client), prelude_client_get_gid(cnx->client));
-
-        exit(1);
 }
 
 
@@ -212,6 +210,7 @@ static int handle_authentication(prelude_connection_t *cnx, int crypt)
                  */
                 log(LOG_INFO, "- TLS authentication failed with Prelude Manager.\n");
                 auth_error(cnx);
+                return -1;
         }
 
         log(LOG_INFO, "- TLS authentication succeed with Prelude Manager.\n");
