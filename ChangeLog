@@ -1,3 +1,33 @@
+2004-01-09  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/prelude-getopt.c (search_option): 
+	use strcasecmp to search the option.
+
+	(get_missing_options): complete rewrite of the code
+	getting missing option from the configuration file,
+	so that we don't lookup option on a per option basis,
+	but in the order they were specified in the config
+	file. This allow the caller to much easily deal with
+	option that depend on each other. Mainly LML now can
+	deal with different logfile with different format.
+
+	* src/config-engine.c (is_line_commented, is_section): 
+	consistency fix, handle tab.
+
+	(config_get): use new helper function. The return value
+	now have to be freed.
+
+	(config_get_next): new function. Allow the caller to
+	parse the whole configuration file. 
+
+	(parse_buffer): impl. separate entry and value from the buffer.
+	(strip_value): impl. Strip out extra value characters.
+	(get_section): impl. Return section name.
+	
+	(load_file_in_memory): do not use prelude_read_multiline(),
+	as it would cause problem when reporting line number, and
+	we don't care about multiline handling here.
+
 2004-01-07  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
 	* src/idmef-message.c:

@@ -100,11 +100,6 @@ static int warnings_flags = OPT_INVAL|OPT_INVAL_ARG;
 static prelude_optlist_t *root_optlist = NULL;
 
 
-
-static int get_from_config(struct list_head *cb_list,
-                           prelude_optlist_t *optlist, config_t *cfg, const char *section, int line);
-
-
 static void option_err(int flag, const char *fmt, ...) 
 {
         if ( warnings_flags & flag || flag == 1 ) {
@@ -122,7 +117,8 @@ static void option_err(int flag, const char *fmt, ...)
 /*
  * Search an option of a given name in the given option list.
  */
-static prelude_option_t *search_option(prelude_optlist_t *optlist, const char *optname, int flags, int walk_children) 
+static prelude_option_t *search_option(prelude_optlist_t *optlist,
+                                       const char *optname, int flags, int walk_children) 
 {
         struct list_head *tmp;
         prelude_option_t *item, *ret;
@@ -139,13 +135,13 @@ static prelude_option_t *search_option(prelude_optlist_t *optlist, const char *o
                 if ( ! (item->flags & flags) )
                         continue;
                 
-                if ( item->longopt && strcmp(item->longopt, optname) == 0 )
+                if ( item->longopt && strcasecmp(item->longopt, optname) == 0 )
                         return item;
                 
                 if ( strlen(optname) == 1 && item->shortopt == *optname )
                         return item;
         }
-
+        
         return NULL;
 }
 
@@ -311,6 +307,9 @@ static int call_option_cb(struct list_head *cblist, prelude_option_t *option, co
 {
         struct cb_list *new, *cb;
         struct list_head *tmp, *prev = NULL;
+
+        if ( ! option->set )
+                return 0;
         
         if ( option->priority == option_run_first ) 
                 return option->set(option, arg);
@@ -363,8 +362,8 @@ static int call_option_from_cb_list(struct list_head *cblist, int option_kind)
 
                 if ( option_kind != option_run_all && option_kind != cb->option->priority ) 
                         continue;
-
-                ret = cb->option->set(cb->option, (str = lookup_variable_if_needed(cb->arg)));
+                
+                ret = cb->option->set(cb->option, (str = lookup_variable_if_needed(cb->arg)));                
                 if ( str )
                         free(str);
 
@@ -385,142 +384,16 @@ static int call_option_from_cb_list(struct list_head *cblist, int option_kind)
 
 
 /*
- * Get the option represented by 'opt' from the config file,
- * and call the call_option_cb() function as much time as it exist.
- */
-static int option_get_all(struct list_head *cb_list,
-                          prelude_option_t *opt, config_t *cfg, const char *section, int line) 
-{
-        int ret;
-        const char *str, *entry;
-
-        if ( opt->called_from_cli )
-                return prelude_option_success;
-        
-        entry = opt->longopt;
-        
-        while ( 1 ) {
-                str = config_get(cfg, section, entry, &line);
-                if ( ! str )
-                        return prelude_option_success;
-                
-                line++;
-                
-                ret = call_option_cb(cb_list, opt, str);
-                if ( ret == prelude_option_error || ret == prelude_option_end )
-                        return ret;
-        }
-
-        return 0;
-}
-
-
-
-
-/*
- * Get the section represented by 'opt' from the config file,
- * and call the call_option_cb() function as much time as it exist.
- * Initial 'opt' have to be a parent option.
- */
-static int section_get_all(struct list_head *cb_list,
-                           prelude_option_t *opt, config_t *cfg) 
-{
-        int ret, line = 0;
-        
-        /*
-         * we are a parent option.
-         * For each section in the config file, corresponding to
-         * this parent,
-         */
-        while ( 1 ) {
-                ret = config_get_section(cfg, opt->longopt, &line);
-                if ( ret < 0 )
-                        return 0;
-                
-                line++;
-                
-                if ( opt->set && ! opt->called_from_cli ) {
-                        /*
-                         * call the parent callback.
-                         */
-                        ret = call_option_cb(cb_list, opt, NULL);
-                        if ( ret == prelude_option_error || ret == prelude_option_end ) 
-                                return ret;
-                }
-
-                /*
-                 * there may be suboption, which we want to proceed.
-                 */
-                ret = get_from_config(cb_list, &opt->optlist, cfg, opt->longopt, line);
-                if ( ret == prelude_option_error || ret == prelude_option_end ) 
-                        return ret;
-
-                /*
-                 * flush queued option when leaving the parent,
-                 * because some option may be associated with only *this* parent.
-                 */
-                ret = call_option_from_cb_list(cb_list, option_run_no_order);
-                if ( ret == prelude_option_error || ret == prelude_option_end ) 
-                        return ret;
-        }
-
-        return 0;
-}
-
-
-
-
-static int process_option_cfg_hook(struct list_head *cb_list, prelude_option_t *opt,
-                                   config_t *cfg, const char *section, int line) 
-{        
-        if ( ! (opt->flags & CFG_HOOK) )                
-                return prelude_option_success;
-
-        if ( list_empty(&opt->optlist.optlist) ) 
-                /*
-                 * Normal option (no suboption)
-                 */
-                return option_get_all(cb_list, opt, cfg, section, line);
-        else 
-                return section_get_all(cb_list, opt, cfg);
-        
-        return 0;
-}
-
-
-
-
-static int get_from_config(struct list_head *cb_list,
-                           prelude_optlist_t *optlist, config_t *cfg, const char *section, int line) 
-{
-        int ret;
-        struct list_head *tmp;
-        prelude_option_t *optitem;
-
-        /*
-         * for each option in the option list.
-         */
-        list_for_each(tmp, &optlist->optlist) {
-                optitem = list_entry(tmp, prelude_option_t, list);
-
-                ret = process_option_cfg_hook(cb_list, optitem, cfg, section, line);
-                if ( ret == prelude_option_error || ret == prelude_option_end )
-                        return ret;
-        }
-
-        return 0;
-}
-
-
-
-/*
  * Try to get all option that were not set from the command line in the config file.
  */
-static int get_missing_options(const char *filename, prelude_optlist_t *optlist) 
+static int get_missing_options(const char *filename, prelude_optlist_t *rootlist) 
 {
-        int ret;
+        int ret, line = 0;
         LIST_HEAD(cb_list);
         config_t *cfg = NULL;
+        prelude_option_t *opt;
+        prelude_optlist_t *optlist;
+        char *section = NULL, *entry = NULL, *value = NULL;
         
         cfg = config_open(filename);
         if ( ! cfg ) {
@@ -528,14 +401,42 @@ static int get_missing_options(const char *filename, prelude_optlist_t *optlist)
                 return -1;
         }
 
-        ret = get_from_config(&cb_list, optlist, cfg, NULL, 0);
-        if ( ret < 0 )
-                goto err;
+        optlist = rootlist;
 
-
-        ret = call_option_from_cb_list(&cb_list, option_run_all);
+        while ( config_get_next(cfg, &section, &entry, &value, &line) == 0 ) {
+                
+                if ( section ) {
+                        opt = search_option(rootlist, section, CFG_HOOK, 1);
+                        if ( ! opt ) {
+                                option_err(OPT_INVAL, "%s:%d: invalid section : \"%s\".\n", filename, line, section);
+                                continue;
+                        }
+                        
+                        if ( opt->called_from_cli )
+                                continue;
+                        
+                        ret = call_option_cb(&cb_list, opt, NULL);
+                        if ( ret == prelude_option_error || ret == prelude_option_end ) 
+                                return ret;
+                        
+                        optlist = &opt->optlist;
+                }
         
- err:
+                opt = search_option(optlist, entry, CFG_HOOK, 0);
+                if ( ! opt ) {
+                        option_err(OPT_INVAL, "%s:%d: invalid option : \"%s\".\n", filename, line, entry);
+                        continue;
+                }
+                
+                if ( opt->called_from_cli )
+                        continue;
+                
+                ret = call_option_cb(&cb_list, opt, value);  
+                if ( ret == prelude_option_error || ret == prelude_option_end ) 
+                        return ret;
+        }
+        
+        ret = call_option_from_cb_list(&cb_list, option_run_all);
         config_close(cfg);
         
         return ret;
@@ -562,7 +463,7 @@ static int parse_argument(struct list_head *cb_list,
                          * If arg == "", this is an argument we processed, and so nullified.
                          */
                         if ( arg != "" )
-                                option_err(OPT_INVAL_ARG, "Invalid argument : \"%s\".\n", arg);
+                                option_err(OPT_INVAL_ARG, "invalid argument : \"%s\".\n", arg);
                         
                         continue;
                 }
@@ -570,13 +471,12 @@ static int parse_argument(struct list_head *cb_list,
                 while ( *arg == '-' ) arg++;
                 
                 opt = search_option(optlist, arg, CLI_HOOK, 0);
-                                
+                
                 if ( ! opt ) {        
-                        if ( depth == 0 ) {
-                                option_err(OPT_INVAL, "Invalid option : \"%s\".\n", arg);
+                        if ( depth == 0 ) 
                                 continue;
-                        }
-                        
+
+                        option_err(OPT_INVAL, "invalid option : \"%s\".\n", arg);
                         (*argv_index)--;
                         
                         return 0;

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2000, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2000, 2002, 2003, 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -61,13 +61,13 @@ static char *chomp(char *string)
 
 static int is_line_commented(const char *line) 
 {
-        while ( *line != '\0' && *line == ' ')
+        while ( *line != '\0' && (*line == ' ' || *line == '\t') )
                 line++;
-
+        
         if ( *line == '#' )
-                return 0;
+                return 1;
 
-        return -1;
+        return 0;
 }
 
 
@@ -79,10 +79,10 @@ static int is_line_commented(const char *line)
  */
 static int is_section(const char *line) 
 {
-
         if ( strchr(line, '[') && strchr(line, ']') )
-                return 0;
-        return -1;
+                return 1;
+        
+        return 0;
 }
 
 
@@ -93,17 +93,16 @@ static int is_section(const char *line)
  */
 static int cmp_entry(char *string, const char *wanted) 
 {
-        char old;
-        char *ptr;
         int ret;
         size_t len;
+        char old, *ptr;
 
         /*
          * skip space;
          */
         while ( *string == ' ' && *string != '\0' )
                 string++;
-        
+                                                                     
         /*
          * There is 2 kind of entry,
          * the one that have a value, and the other.
@@ -115,10 +114,10 @@ static int cmp_entry(char *string, const char *wanted)
                 len = strlen(string);
                 if ( len == 0 )
                         return -1;
-                
+                                                                     
                 ptr = string + len - 1;
         }
-
+                                                                     
         /*
          * Search for the end of the entry name.
          * Return -1 if we encounter the end of the string,
@@ -129,13 +128,13 @@ static int cmp_entry(char *string, const char *wanted)
                         return -1;
                 ptr--;
         }
-
+                                                                     
         ptr++;
-        
+                                                                     
         old = *ptr; *ptr = 0;
         ret = strcasecmp(string, wanted);
         *ptr = old;
-        
+                                                                     
         return ret;
 }
 
@@ -167,6 +166,32 @@ static int cmp_section(const char *string, const char *wanted)
 
         return ret;
 }
+
+
+
+
+static char *get_section(const char *in) 
+{
+        char *eptr, *ret, old;
+        
+        in = strchr(in, '[');
+        if ( ! in )
+                return NULL;
+        while ( *in++ == ' ' );
+           
+        eptr = strchr(in, ']');
+        if ( ! eptr )
+                return NULL;
+        while (*eptr-- == ' ');
+        eptr++;
+        
+        old = *eptr; *eptr = 0;        
+        ret = strdup(in);
+        *eptr = old;
+
+        return ret;
+}
+
 
 
 
@@ -240,8 +265,8 @@ static int op_insert_line(config_t *cfg, char *line, int lins)
  */
 static int load_file_in_memory(config_t *cfg)
 {
+        int ret;
         FILE *fd;
-        int ret, l = 0;
         char line[1024];
         
         fd = fopen(cfg->filename, "r");
@@ -250,7 +275,7 @@ static int load_file_in_memory(config_t *cfg)
                 return -1;
         }
         
-        while ( prelude_read_multiline(fd, &l, line, sizeof(line)) == 0 ) {
+        while ( fgets(line, sizeof(line), fd) ) {
                 
                 ret = op_append_line(cfg, strdup(chomp(line)));
                 if ( ret < 0 ) {
@@ -277,7 +302,7 @@ static int search_section(config_t *cfg, const char *section, int line)
         
         for ( ; cfg->content[i] != NULL; i++ ) {
                             
-                if ( is_line_commented(cfg->content[i]) == 0 )
+                if ( is_line_commented(cfg->content[i]) )
                         continue;
                 
                 if ( cmp_section(cfg->content[i], section) == 0 )
@@ -308,7 +333,7 @@ static int search_entry(config_t *cfg, const char *section, const char *entry, i
                 if ( i < 0 )
                         return -1;
 
-                if ( is_line_commented(cfg->content[i]) == 0 )
+                if ( is_line_commented(cfg->content[i]) )
                         return -1;
                         
                 i++;
@@ -505,6 +530,124 @@ static const char *get_variable_content(config_t *cfg, const char *variable)
 
 
 
+static char *strip_value(const char *in)
+{
+        char *ret;
+        const char *start, *end;
+        
+        start = in;
+        while ( *in == ' ' || *in == '\t' )
+                start = ++in;
+
+        end = in + strlen(in) - 1;
+        while ( *end == ' ' || *end == '\t' )
+                end--;
+
+        ret = malloc((end - start) + 2);
+        if ( ! ret )
+                return NULL;
+
+        strncpy(ret, start, end - start + 1);
+        ret[end - start + 1] = '\0';
+        
+        return ret;
+}
+
+
+
+
+static int parse_buffer(char *buf, char **entry, char **value)
+{
+        char *ptr;
+
+        *value = *entry = NULL;
+
+        ptr = strsep(&buf, "=");
+        if ( ! *ptr )
+                return -1;
+        
+        *entry = strip_value(ptr);
+
+        ptr = strsep(&buf, "=");
+        if ( ! ptr )
+                *value = strdup("");
+        else
+                *value = strip_value(ptr);
+        
+        return 0;
+}
+
+
+
+
+static void free_val(char **val)
+{
+        if ( ! *val )
+                return;
+        
+        free(*val);
+        *val = NULL;
+}
+
+
+
+
+/*
+ * config_get_next:
+ * @cfg: Configuration file identifier.
+ * @section: Pointer address where the current section should be stored.
+ * @entry: Pointer address where the current entry should be stored.
+ * @line: Pointer to a line number we should start the search at.
+ *
+ * Parse the whole configuration file starting at @line,
+ * and store the current section, entry and value within the
+ * provided argument.
+ *
+ * The caller has to call config_get_next() until it return -1
+ * or memory will be leaked.
+ *
+ * If the value gathered start with a '$', which mean it is
+ * a variable, the variable is automatically looked up.
+ *
+ * Returns: 0 on success, -1 if there is nothing more to read.
+ */
+int config_get_next(config_t *cfg, char **section,
+                    char **entry, char **value, int *line)
+{
+        char *ptr;
+
+        if ( ! *line )
+                *section = NULL;
+        
+        if ( ! cfg->content )
+                return -1;
+        
+        free_val(entry);
+        free_val(value);
+        free_val(section);
+        
+        for ( (*line)++; cfg->content[*line - 1] != NULL; (*line)++ ) {
+                
+                ptr = cfg->content[*line - 1];
+                
+                while ( *ptr == ' ' || *ptr == '\t' )
+                        ptr++;
+                
+                if ( ! *ptr || is_line_commented(ptr) )
+                        continue;
+                
+                if ( is_section(ptr) ) 
+                        *section = get_section(ptr);
+                else 
+                        return parse_buffer(ptr, entry, value);
+        }
+        
+        return -1;
+}
+
+
+
+
 /**
  * config_get_section:
  * @¢fg: Configuration file identifier.
@@ -558,10 +701,11 @@ int config_get_section(config_t *cfg, const char *section, int *line)
  * Returns: The entry value on success, an empty string if the entry
  * exist but have no value, NULL on error.
  */
-const char *config_get(config_t *cfg, const char *section, const char *entry, int *line) 
+char *config_get(config_t *cfg, const char *section, const char *entry, int *line) 
 {
-        int l;
-        char *ret, *p;
+        int l, ret;
+        const char *var;
+        char *tmp, *value;
         
         if ( ! cfg->content )
                 return NULL;
@@ -571,27 +715,25 @@ const char *config_get(config_t *cfg, const char *section, const char *entry, in
                 return NULL;
 
         *line = l;
+
+        ret = parse_buffer(cfg->content[l], &tmp, &value);
+        if ( ret < 0 )
+                return NULL;
         
-        ret = strchr(cfg->content[l], '=');
-        if ( ! ret )
-                return "";
-
-        ret++;
-
-        /*
-         * Strip trailling white space.
-         */
-        while ( *ret == ' ' ) ret++;
-        for ( p = ret + strlen(ret); p && *p == ' '; p-- )
-                *p = 0;
+        free(tmp);
         
         /*
          * The requested value point to a variable.
          */
-        if ( ret[0] == '$' )
-                return get_variable_content(cfg, ret + 1);
+        if ( value[0] == '$' ) {
+                var = get_variable_content(cfg, value + 1);
+                if ( var ) {
+                        free(value);
+                        value = strdup(var);
+                }
+        }
         
-        return ret;
+        return value;
 }
 
 

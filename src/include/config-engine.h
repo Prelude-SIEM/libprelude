@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2000, 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2000, 2002, 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -26,9 +26,12 @@
 
 typedef struct config config_t;
 
+int config_get_next(config_t *cfg, char **section,
+                    char **entry, char **value, int *line);
+
 int config_get_section(config_t *cfg, const char *section, int *line);
 
-const char *config_get(config_t *cfg, const char *section, const char *entry, int *line);
+char *config_get(config_t *cfg, const char *section, const char *entry, int *line);
 
 int config_set(config_t *cfg, const char *section, const char *entry, const char *val);
 
