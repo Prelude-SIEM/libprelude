@@ -28,7 +28,7 @@ perl/Makefile: perl/Makefile.PL
 perl/Prelude.c: libprelude.i
 if HAVE_SWIG
 	$(SWIG) -I$(top_srcdir)/src/include -o $@ -perl5 -nopm \
-	 `swig -perl5 -help 2>&1 | grep noproxy > /dev/null && echo -noproxy` $<
+	 `$(SWIG) -perl5 -help 2>&1 | grep noproxy > /dev/null && echo -noproxy` $<
 endif
 
 python/_prelude.c: libprelude.i
