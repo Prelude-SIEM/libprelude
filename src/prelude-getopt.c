@@ -416,7 +416,8 @@ static int call_option_from_cb_list(void **context, prelude_list_t *cblist)
         prelude_list_for_each_safe(tmp, bkp, cblist) {
 
                 cb = prelude_list_entry(tmp, struct cb_list, list);
-                old = *context;
+		if ( context )
+			old = *context;
                 
                 ret = cb->option->set(context, cb->option, (str = lookup_variable_if_needed(cb->arg)));
                 if ( str )
@@ -435,7 +436,9 @@ static int call_option_from_cb_list(void **context, prelude_list_t *cblist)
                         if ( ret == prelude_option_error || ret == prelude_option_end )
                                 return ret;
                 }
-                *context = old;
+
+		if ( context )
+			*context = old;
                 
                 if ( cb->arg )
                         free(cb->arg);
