@@ -26,7 +26,6 @@ include_HEADERS = config-engine.h 		\
 		  idmef-util.h			\
 		  idmef-message-write.h		\
 		  idmef-message-read.h		\
-		  idmef-msg-send.h		\
 		  ssl-gencrypto.h		\
 		  ssl-settings.h		\
 		  ssl-registration-msg.h	\
