@@ -112,10 +112,8 @@ static void msg_mark_end(prelude_msg_t *msg)
         msg->payload[hdr_offset++] = msg->hdr.tag;
         msg->payload[hdr_offset++] = msg->hdr.priority;
         msg->payload[hdr_offset++] = msg->hdr.is_fragment;
-        msg->payload[hdr_offset++] = dlen;
-        msg->payload[hdr_offset++] = dlen >> 8;
-        msg->payload[hdr_offset++] = dlen >> 16;
-        msg->payload[hdr_offset++] = dlen >> 24;
+
+        memcpy(&msg->payload[hdr_offset], &dlen, sizeof(dlen));
 }
 
 

@@ -1,3 +1,13 @@
+2002-04-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-message.c (msg_mark_end): 
+	use memcpy instead of shifting dlen and copying it 8bits
+	by 8bits. This fix problem on big endian machine. 
+
+	Thanks to Vincent Glaume <glaume@enseirb.fr> who helped a lot 
+	on this issue.
+	
+
 2002-04-05  Krzysztof Zaraska  <kzaraska@student.uci.agh.edu.pl>
 
 	* src/include/idmef-tree.h: added missing comment labeling 
