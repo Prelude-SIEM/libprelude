@@ -253,7 +253,7 @@ void idmef_criterion_print(const idmef_criterion_t *criterion)
         assert(operator);
 
         if ( ! criterion->value ) {
-                printf("%s %s", operator, idmef_object_get_name(criterion->object));
+	        printf("%s %s", operator, idmef_object_get_name(criterion->object));
                 return;
         }
 
@@ -334,10 +334,6 @@ int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message
 
 	idmef_value_destroy(value);
 
-        printf("MATCH: ");
-        idmef_criterion_print(criterion);
-        printf(" ret=%d\n", ret);
-        
 	return ret;
 }
 
@@ -518,5 +514,3 @@ int idmef_criteria_match(idmef_criteria_t *criteria, idmef_message_t *message)
                 
         return idmef_criteria_match(next, message);
 }
-
-
