@@ -1,7 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT
-AC_CONFIG_SRCDIR([src])
+AC_INIT(src)
 AM_INIT_AUTOMAKE(libprelude, 0.4.1)
 AM_CONFIG_HEADER(config.h)
 AM_DISABLE_STATIC
