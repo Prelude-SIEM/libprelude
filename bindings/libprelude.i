@@ -96,6 +96,14 @@ char *prelude_option_recv_set(prelude_msg_t *msg)
 	return str;
 }
 
+
+int swig_prelude_client_init(prelude_client_t *client, const char *sname, const char *config,
+			     int argc, char **argv)
+{
+	return prelude_client_init(client, sname, config, &argc, argv);
+}
+
+
 %}
 
 typedef char int8_t;
@@ -229,6 +237,8 @@ int prelude_client_set_connection(prelude_client_t *client, prelude_connection_t
 prelude_msg_t *my_prelude_msg_read(prelude_io_t *pio);
 prelude_option_t *prelude_option_recv_list(prelude_msg_t *msg);
 char *prelude_option_recv_set(prelude_msg_t *msg);
+int swig_prelude_client_init(prelude_client_t *client, const char *sname, const char *config,
+			     int argc, char **argv);
 
 %include "prelude-client.h"
 %include "idmef-tree-wrap.h"
@@ -251,3 +261,10 @@ char *prelude_option_recv_set(prelude_msg_t *msg);
 %include "prelude-option-wide.h"
 %include "prelude-message-id.h"
 %include "prelude-log.h"
+%include "prelude-msgbuf.h"
+
+typedef signed int prelude_error_t;
+
+const char *prelude_strerror(prelude_error_t err);
+const char *prelude_strsource(prelude_error_t err);
+int prelude_error_code_to_errno(prelude_error_code_t code);

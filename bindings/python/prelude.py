@@ -33,11 +33,15 @@ class Error(Exception):
 
 
 class ClientError(Error):
-    def __init__(self, message=""):
-        self._message = message
-
+    def __init__(self, errno=0):
+        self._errno = errno
+        
     def __str__(self):
-        return self._message
+        if self._errno != 0:
+            return "%s: %s (code:%d)" % (_prelude.prelude_strsource(self._errno),
+                                         _prelude.prelude_strerror(self._errno), self._errno)
+        else:
+            return ""
 
 
 
@@ -86,6 +90,11 @@ def log_use_syslog():
 
 
 
+def get_libprelude_prefix():
+    return os.popen("libprelude-config --prefix").read()[:-1]
+
+
+
 class Client:
     RECV_IDMEF = _prelude.PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF
     SEND_IDMEF = _prelude.PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF
@@ -107,14 +116,17 @@ class Client:
             raise ClientError()
 
         #if _prelude.prelude_client_init(self._client, name, config, 1, [ sys.argv[0] ]) < 0:
-        if _prelude.prelude_client_init(self._client, name, config, 0, [ ]) < 0:
-            raise ClientError()
+        retval = _prelude.swig_prelude_client_init(self._client, name, config, 0, [ ])
+        if retval < 0:
+            error = ClientError(retval)
+            print error
+            raise error
 
         if capability & (Client.SEND_IDMEF | Client.SEND_ADMIN | Client.SEND_CM):
             self._msgbuf = _prelude.prelude_msgbuf_new(self._client)
             if not self._msgbuf:
                 raise ClientError()
-
+            
     def set_success(self):
         self._exit_status = _prelude.PRELUDE_CLIENT_EXIT_STATUS_SUCCESS
 
@@ -135,10 +147,7 @@ class Client:
 class Sensor(Client):
     def __init__(self, name, config=None):
         if not config:
-            file = os.popen("libprelude-config --prefix")
-            path = file.read()
-            file.close()
-            config = path[:-1] + "/etc/prelude/default/client.conf"
+            config = get_libprelude_prefix() + "/etc/prelude/default/idmef-client.conf"
         
         Client.__init__(self, Client.SEND_IDMEF, name, config)
         
@@ -175,8 +184,10 @@ class Option:
     def __init__(self, parent, option):
         self.parent = parent
         self.name = _prelude.prelude_option_get_longopt(option)
-        self.instantiable = bool(_prelude.prelude_option_get_flags(option) & _prelude.HAVE_CONTEXT)
-        self.destroyable = bool(_prelude.prelude_option_get_flags(option) & _prelude.DESTROY_HOOK)
+        self.instantiable = bool(_prelude.prelude_option_get_type(option) &
+                                 _prelude.PRELUDE_OPTION_TYPE_CONTEXT)
+        self.destroyable = bool(_prelude.prelude_option_get_type(option) &
+                                _prelude.PRELUDE_OPTION_TYPE_DESTROY)
         if self.name.find("[") != -1:
             self.instance = True
             m = re.compile("(.+)\[(.+)\]").match(self.name)
@@ -184,7 +195,7 @@ class Option:
             self.instance_name = m.group(2)
         else:
             self.instance = False
-        self.boolean = _prelude.prelude_option_get_has_arg(option) == _prelude.no_argument
+        self.boolean = _prelude.prelude_option_get_has_arg(option) == _prelude.PRELUDE_OPTION_ARGUMENT_NONE
         self.value = _prelude.prelude_option_get_value(option)
         self.description = _prelude.prelude_option_get_description(option)
         self.options = [ ]
@@ -212,7 +223,8 @@ class Option:
 
 class Admin(Client):
     def __init__(self, name=None, address="127.0.0.1", port=5554):
-        Client.__init__(self, Client.SEND_ADMIN, name, None)
+        Client.__init__(self, Client.SEND_ADMIN, name,
+                        get_libprelude_prefix() + "/etc/prelude/default/client.conf")
         
         self._manager_connection = _prelude.prelude_connection_new(self._client, address, port)
         if not self._manager_connection:
@@ -250,9 +262,19 @@ class Admin(Client):
         return msg
         
     def get_option_list(self, analyzerid):
+        print "--- before PRELUDE_MSG_OPTION_LIST"
         msg = self._request(analyzerid, _prelude.PRELUDE_MSG_OPTION_LIST)
-        options = _prelude.prelude_option_recv_list(msg)
+        print "--- after PRELUDE_MSG_OPTION_LIST"
         
+        if not msg:
+            raise Error("PRELUDE_MSG_OPTION_LIST failed")
+
+        print "--- before prelude_option_recv_list"
+        
+        options = _prelude.prelude_option_recv_list(msg)
+
+        print "--- after prelude_option_recv_list"
+
         return self._get_option_list(None, _prelude.prelude_option_get_next(options, None))
 
     def get_option(self, analyzerid, name):

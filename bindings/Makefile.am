@@ -29,13 +29,13 @@ perl/Makefile: perl/Makefile.PL
 # to not generate them
 perl/Prelude.c: $(BINDING_DEPENDS)
 if HAVE_SWIG
-	$(SWIG) -I$(top_srcdir)/src/include -o $@ -perl5 -nopm \
+	$(SWIG) -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -o $@ -perl5 -nopm \
 	 `$(SWIG) -perl5 -help 2>&1 | grep noproxy > /dev/null && echo -noproxy` $<
 endif
 
 python/_prelude.c: $(BINDING_DEPENDS)
 if HAVE_SWIG
-	$(SWIG) -I$(top_srcdir)/src/include -o $@ -python -interface _prelude -module _prelude -noproxy $<
+	$(SWIG) -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -o $@ -python -interface _prelude -module _prelude -noproxy $<
 endif
 
 
