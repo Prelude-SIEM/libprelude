@@ -146,19 +146,22 @@ static prelude_option_t *search_cli_option(prelude_optlist_t *optlist, const cha
 
 
 static int check_option_optarg(prelude_optlist_t *optlist,
-                               int argc, char **argv, char *optarg, size_t size) 
+                               int argc, char **argv, char **optarg, size_t size) 
 {
         int len = 0;
         
         while ( optlist->argv_index < argc && *argv[optlist->argv_index] != '-' && len < size ) {
 
                 if ( len > 0 )
-                        optarg[len++] = ' ';
+                        (*optarg)[len++] = ' ';
                 
-                strncpy(optarg + len, argv[optlist->argv_index], size - len);
+                strncpy((*optarg) + len, argv[optlist->argv_index], size - len);
                 len += strlen(argv[optlist->argv_index]);
                 argv[optlist->argv_index++] = "";
         }
+
+        if ( len == 0 )
+                *optarg = NULL;
         
         return 0;
 }
@@ -167,7 +170,7 @@ static int check_option_optarg(prelude_optlist_t *optlist,
 
 
 static int check_option_reqarg(prelude_optlist_t *optlist, const char *option,
-                               int argc, char **argv, char *optarg, size_t size) 
+                               int argc, char **argv, char **optarg, size_t size) 
 {
         int len = 0;
         
@@ -179,13 +182,16 @@ static int check_option_reqarg(prelude_optlist_t *optlist, const char *option,
         while ( optlist->argv_index < argc && *argv[optlist->argv_index] != '-' && len < size ) {
                 
                 if ( len > 0 )
-                        optarg[len++] = ' ';
+                        *optarg[len++] = ' ';
                 
-                strncpy(optarg + len, argv[optlist->argv_index], size - len);
+                strncpy(*optarg + len, argv[optlist->argv_index], size - len);
                 len += strlen(argv[optlist->argv_index]);
                 argv[optlist->argv_index++] = "";
         }
-                
+
+        if ( len == 0 )
+                *optarg = NULL;
+        
         return 0;
 }
 
@@ -207,11 +213,11 @@ static int check_option_noarg(prelude_optlist_t *optlist, const char *option,
 
 
 static int check_option(prelude_optlist_t *optlist, prelude_option_t *option,
-                        char *optarg, size_t size, int argc, char **argv) 
+                        char **optarg, size_t size, int argc, char **argv) 
 {
         int ret;
 
-        *optarg = '\0';
+        **optarg = '\0';
         
         switch (option->has_arg) {
                 
@@ -224,6 +230,7 @@ static int check_option(prelude_optlist_t *optlist, prelude_option_t *option,
                 break;
 
         case no_argument:
+                *optarg = NULL;
                 ret = check_option_noarg(optlist, option->longopt, argc, argv);
                 break;
 
@@ -294,11 +301,7 @@ static int call_option_cb(struct list_head *cblist, prelude_option_t *option, co
                 return -1;
         }
 
-        if ( arg )
-                new->arg = strdup(arg);
-        else
-                new->arg = NULL;
-        
+        new->arg = (arg) ? strdup(arg) : NULL;
         new->option = option;
 
         if ( option->priority == option_run_last ) {
@@ -344,7 +347,9 @@ static int call_option_from_cb_list(struct list_head *cblist, int option_kind)
                 if ( ret == prelude_option_error || ret == prelude_option_end )
                         return ret;
 
-                free(cb->arg);
+                if ( cb->arg )
+                        free(cb->arg);
+                
                 list_del(&cb->list);
                 free(cb);
         }
@@ -516,9 +521,9 @@ static int parse_argument(struct list_head *cb_list,
                           int argc, char **argv, int depth)
 {
         int ret;
-        char optarg[256];
         prelude_option_t *opt;
         const char *arg, *old;
+        char optarg[256], *argptr;
         
         while ( optlist->argv_index < argc ) {
                 
@@ -550,14 +555,16 @@ static int parse_argument(struct list_head *cb_list,
                 
                 argv[optlist->argv_index - 1] = "";
 
-                ret = check_option(optlist, opt, optarg, sizeof(optarg), argc, argv);
+                argptr = optarg;
+                
+                ret = check_option(optlist, opt, &argptr, sizeof(optarg), argc, argv);
                 if ( ret < 0 ) 
                         return -1;
                 
                 if ( opt->set ) {
                         opt->called_from_cli = 1;
                         
-                        ret = call_option_cb(cb_list, opt, optarg);
+                        ret = call_option_cb(cb_list, opt, argptr);
                         if ( ret == prelude_option_end || ret == prelude_option_error )
                                 return ret;        
                 }

@@ -183,7 +183,7 @@ static void ask_configuration(int *keysize, int *expire)
                         
                         buf[strlen(buf) - 1] = '\0';
                         
-                } while ( buf[0] != 'y' || buf[0] != 'n' );
+                } while ( buf[0] != 'y' && buf[0] != 'n' );
 
         } while ( buf[0] == 'n' );
 }

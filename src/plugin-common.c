@@ -173,7 +173,6 @@ static plugin_container_t *copy_container(plugin_container_t *pc)
 
 
 
-
 static int is_plugin_already_loaded(void *handle) 
 {
         plugin_entry_t *pe;
@@ -188,7 +187,6 @@ static int is_plugin_already_loaded(void *handle)
 
         return -1;
 }
-
 
 
 
