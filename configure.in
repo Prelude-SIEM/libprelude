@@ -58,7 +58,7 @@ AC_PROG_YACC
 
 
 AC_SYS_LARGEFILE
-AX_CREATE_STDINT_H(src/include/prelude-inttypes.h)
+AX_CREATE_PRELUDE_INTTYPES_H(src/include/prelude-inttypes.h)
 
 AC_C_BIGENDIAN(libprelude_cflags="$libprelude_cflags -DWORDS_BIGENDIAN")
 
@@ -447,6 +447,7 @@ libprelude-config
 
 src/Makefile
 src/include/Makefile
+src/include/prelude-inttypes.h
 
 prelude-adduser/Makefile
 
