@@ -95,6 +95,12 @@ static int cmp_entry(char *string, const char *wanted)
         int ret, len;
 
         /*
+         * skip space;
+         */
+        while ( *string == ' ' && *string != '\0' )
+                string++;
+        
+        /*
          * There is 2 kind of entry,
          * the one that have a value, and the other.
          */
@@ -112,7 +118,7 @@ static int cmp_entry(char *string, const char *wanted)
         /*
          * Search for the end of the entry name.
          * Return -1 if we encounter the end of the string,
-         * which mean this is not an entry.
+         * which mean this is an empty line.
          */
         while ( *ptr == ' ' ) {
                 if ( ptr == string )
