@@ -302,10 +302,11 @@ static int read_message_header(prelude_msg_t **msgptr, prelude_io_t *fd)
 
 
 
-static int read_message_content(prelude_msg_t *msg, prelude_io_t *fd) 
+static int read_message_content(prelude_msg_t **m, prelude_io_t *fd) 
 {
         int ret;
         size_t count;
+        prelude_msg_t *msg = *m;
         
         count = (msg->hdr.datalen + PRELUDE_MSG_HDR_SIZE) - msg->read_index;
 
@@ -325,7 +326,7 @@ static int read_message_content(prelude_msg_t *msg, prelude_io_t *fd)
                  * to trigger header read on next prelude_msg_read() call.
                  */
                 msg->header_index = 0;
-                return prelude_error(PRELUDE_ERROR_EAGAIN);
+                return prelude_msg_read(m, fd);
         }
 
         
@@ -408,7 +409,7 @@ int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
          * waiting to be read.
          */
         if ( (*msg)->payload && ret == 0 )
-                ret = read_message_content(*msg, pio);
+                ret = read_message_content(msg, pio);
 
         if ( ret < 0 && prelude_error_get_code(ret) != PRELUDE_ERROR_EAGAIN ) {
                 prelude_msg_destroy(*msg);
