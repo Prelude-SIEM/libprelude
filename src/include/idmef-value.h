@@ -26,33 +26,28 @@
 #define _LIBPRELUDE_IDMEF_VALUE_H
 
 #include "idmef-value-type.h"
+#include "idmef-type.h"
+
 
 typedef struct idmef_value idmef_value_t;
 
-#include "idmef-type.h"
 
-#define idmef_value_new_hdr(n, t) idmef_value_t *idmef_value_new_ ## n ( t  val ) 
-
-idmef_value_new_hdr(int16, int16_t);
-idmef_value_new_hdr(uint16, uint16_t);
-idmef_value_new_hdr(int32, int32_t);
-idmef_value_new_hdr(uint32, uint32_t);
-idmef_value_new_hdr(int64, int64_t);
-idmef_value_new_hdr(uint64, uint64_t);
-idmef_value_new_hdr(float, float);
-idmef_value_new_hdr(double, double);
-/* idmef_value_new_hdr(void, void *); */
-/* idmef_value_new_hdr(char, char *); */
-/* idmef_value_new_hdr(uchar, uchar_t *); */
-
+idmef_value_t *idmef_value_new_int16(int16_t val);
+idmef_value_t *idmef_value_new_uint16(uint16_t val);
+idmef_value_t *idmef_value_new_int32(int32_t val);
+idmef_value_t *idmef_value_new_uint32(uint32_t val);
+idmef_value_t *idmef_value_new_int64(int64_t val);
+idmef_value_t *idmef_value_new_uint64(uint64_t val);
+idmef_value_t *idmef_value_new_float(float val);
+idmef_value_t *idmef_value_new_double(double val);
 idmef_value_t *idmef_value_new_string(idmef_string_t *string);
 idmef_value_t *idmef_value_new_time(idmef_time_t *time);
 idmef_value_t *idmef_value_new_data(idmef_data_t *data);
-idmef_value_t *idmef_value_new_object(void *object, idmef_type_t object_type);
+idmef_value_t *idmef_value_new_object(void *object, idmef_object_type_t object_type);
 idmef_value_t *idmef_value_new_list(void);
-idmef_value_t *idmef_value_new_enum(idmef_type_t type, const char *buf);
-idmef_value_t *idmef_value_new_enum_string(idmef_type_t type, const char *buf);
-idmef_value_t *idmef_value_new_enum_numeric(idmef_type_t type, int val);
+idmef_value_t *idmef_value_new_enum(idmef_object_type_t type, const char *buf);
+idmef_value_t *idmef_value_new_enum_string(idmef_object_type_t type, const char *buf);
+idmef_value_t *idmef_value_new_enum_numeric(idmef_object_type_t type, int val);
 idmef_value_t *idmef_value_new_generic(idmef_value_type_id_t type, const char *buf);
 
 #define idmef_value_get_hdr(n, t) t idmef_value_get_ ## n (idmef_value_t *val)
@@ -81,7 +76,7 @@ int idmef_value_have_own_data(idmef_value_t *value);
 int idmef_value_dont_have_own_data(idmef_value_t *value);
 
 idmef_value_type_id_t idmef_value_get_type(idmef_value_t *value);
-idmef_type_t idmef_value_get_idmef_type(idmef_value_t *value);
+idmef_object_type_t idmef_value_get_idmef_type(idmef_value_t *value);
 
 void *idmef_value_get_object(idmef_value_t *value);
 
@@ -99,7 +94,11 @@ int idmef_value_to_string(idmef_value_t *val, char *buf, size_t len);
 
 int idmef_value_get(void *res, idmef_value_t *val);
 
-int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_relation_t relation);
+int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_value_relation_t relation);
+
+int idmef_value_check_relation(idmef_value_t *value, idmef_value_relation_t relation);
+
+const char *idmef_value_relation_to_string(idmef_value_relation_t relation);
 
 void idmef_value_destroy(idmef_value_t *val);
 

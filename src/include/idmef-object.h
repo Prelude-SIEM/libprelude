@@ -38,9 +38,9 @@ idmef_object_t *idmef_object_new(const char * format, ...);
 idmef_object_t *idmef_object_new_v(const char * format, va_list args);
 idmef_object_t *idmef_object_new_fast(const char *buffer);
 
-idmef_type_t idmef_object_get_idmef_type(idmef_object_t *object);
+idmef_object_type_t idmef_object_get_object_type(idmef_object_t *object);
 
-idmef_value_type_id_t idmef_object_get_type(idmef_object_t *object);
+idmef_value_type_id_t idmef_object_get_value_type(idmef_object_t *object);
 
 int idmef_object_set_number(idmef_object_t *object, uint8_t depth, uint8_t number);
 
@@ -75,6 +75,6 @@ void idmef_object_list_add(idmef_object_list_t *object_list, idmef_object_t *obj
 
 idmef_object_t *idmef_object_list_get_next(idmef_object_list_t *object_list, idmef_object_t *object);
 
-int	idmef_object_list_get_size(idmef_object_list_t *object_list);
+int idmef_object_list_get_size(idmef_object_list_t *object_list);
 
 #endif /* _LIBPRELUDE_IDMEF_OBJECT_H */

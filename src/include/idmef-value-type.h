@@ -25,50 +25,35 @@
 #define _IDMEF_VALUE_TYPE_H
 
 
-#define IDMEF_RELATION_EQUAL       0x01
-#define IDMEF_RELATION_NOT_EQUAL   0x02
-#define IDMEF_RELATION_LESSER      0x04
-#define IDMEF_RELATION_GREATER     0x08
-#define IDMEF_RELATION_SUBSTR      0x10
-#define IDMEF_RELATION_REGEX       0x20
-#define IDMEF_RELATION_IS_NULL	   0x40
-#define IDMEF_RELATION_IS_NOT_NULL 0x80
+typedef enum {
+        IDMEF_VALUE_RELATION_EQUAL       = 0x01,
+        IDMEF_VALUE_RELATION_NOT_EQUAL   = 0x02,
+        IDMEF_VALUE_RELATION_LESSER      = 0x04,
+        IDMEF_VALUE_RELATION_GREATER     = 0x08,
+        IDMEF_VALUE_RELATION_SUBSTR      = 0x10,
+        IDMEF_VALUE_RELATION_REGEX       = 0x20,
+        IDMEF_VALUE_RELATION_IS_NULL     = 0x40,
+        IDMEF_VALUE_RELATION_IS_NOT_NULL = 0x80,
+} idmef_value_relation_t;
 
 
 typedef enum {
-        relation_error = 0,
-        relation_substring        = IDMEF_RELATION_SUBSTR,
-        relation_regexp           = IDMEF_RELATION_REGEX,
-        relation_greater          = IDMEF_RELATION_GREATER,
-        relation_greater_or_equal = IDMEF_RELATION_GREATER|IDMEF_RELATION_EQUAL,
-        relation_less             = IDMEF_RELATION_LESSER,
-        relation_less_or_equal    = IDMEF_RELATION_LESSER|IDMEF_RELATION_EQUAL,
-        relation_equal            = IDMEF_RELATION_EQUAL,
-        relation_not_equal        = IDMEF_RELATION_NOT_EQUAL,
-        relation_is_null          = IDMEF_RELATION_IS_NULL,
-        relation_is_not_null      = IDMEF_RELATION_IS_NOT_NULL
-} idmef_relation_t;
-
-
-
-typedef enum {
-	type_error = -1,
-	type_unknown = 0,
-	type_int16 = 1,
-	type_uint16 = 2,
-	type_int32 = 3,
-	type_uint32 = 4,
-	type_int64 = 5,
-	type_uint64 = 6,
-	type_float = 7,
-	type_double = 8,
-	type_string = 9,
-	type_time = 10,
-	type_data = 11,
-        type_enum = 12,
-
-        type_list = 99,
-        type_object = 100,
+        IDMEF_VALUE_TYPE_ERROR   =  -1,
+        IDMEF_VALUE_TYPE_UNKNOWN =   0,
+        IDMEF_VALUE_TYPE_INT16   =   1,
+        IDMEF_VALUE_TYPE_UINT16  =   2,
+        IDMEF_VALUE_TYPE_INT32   =   3,
+        IDMEF_VALUE_TYPE_UINT32  =   4,
+        IDMEF_VALUE_TYPE_INT64   =   5,
+        IDMEF_VALUE_TYPE_UINT64  =   6,
+        IDMEF_VALUE_TYPE_FLOAT   =   7,
+        IDMEF_VALUE_TYPE_DOUBLE  =   8,
+        IDMEF_VALUE_TYPE_STRING  =   9,
+        IDMEF_VALUE_TYPE_TIME    =  10,
+        IDMEF_VALUE_TYPE_DATA    =  11,
+        IDMEF_VALUE_TYPE_ENUM    =  12,
+        IDMEF_VALUE_TYPE_LIST    =  99,
+        IDMEF_VALUE_TYPE_OBJECT  = 100,
 } idmef_value_type_id_t;
 
 
@@ -107,7 +92,8 @@ void idmef_value_type_destroy(idmef_value_type_t *type);
 
 int idmef_value_type_clone(idmef_value_type_t *dst, idmef_value_type_t *src);
 
-int idmef_value_type_compare(idmef_value_type_t *type1, idmef_value_type_t *type2, idmef_relation_t relation);
+int idmef_value_type_compare(idmef_value_type_t *type1, idmef_value_type_t *type2, idmef_value_relation_t relation);
 
+int idmef_value_type_check_relation(idmef_value_type_t *type, idmef_value_relation_t relation);
 
 #endif
