@@ -290,18 +290,23 @@ static int exist_and_valid(const char *filename)
 
 
 
-/*
- * Ask for a new account creation which will be stored
- * into 'filename' which is the authentication file.
+
+/**
+ * auth_create_account:
+ * @filename: The filename to store account in.
+ * @crypted: Tell the pass have to be crypted with the crypt function.
  *
- * crypted mean if the password will be written in
- * a crypted fashion or not.
+ * Ask for a new account creation which will be stored into 'filename'
+ * which is the authentication file. crypted mean if the password will
+ * be written in a crypted fashion or not.
+ *
+ * Returns: 0 on sucess, -1 otherwise
  */
 int auth_create_account(const char *filename, const int crypted) 
 {
-        FILE *fd;
         int ret;
-        char *user, *pass, *cpass;
+        FILE *fd;
+        char *user, *pass;
 
         fd = open_auth_file(filename);
         if ( ! fd ) 
@@ -317,6 +322,8 @@ int auth_create_account(const char *filename, const int crypted)
         if ( ret == 0 ) {
 #ifdef HAVE_CRYPT
                 if ( crypted ) {
+                        char *cpass;
+                        
                         cpass = strdup(crypt(pass, SALT));
                         free(pass);
                         pass = cpass;
@@ -335,12 +342,19 @@ int auth_create_account(const char *filename, const int crypted)
 
 
 
-/*
- * read the authentication file pointed by fd,
- * store the current line, user, and pass in their
- * corresponding pointer.
+
+/**
+ * auth_read_entry:
+ * @fd: File descriptor pointing to the authentication file.
+ * @line: where the current read line will be stored.
+ * @user: where the username read will be stored.
+ * @pass: where the password read will be stored.
  *
+ * Read the next entry in the authentication file pointed by fd,
+ * store the current line, user, and pass in their corresponding pointer.
  * If not NULL, user & pass pointer must be freed.
+ *
+ * Return: 0 on success, -1 otherwise.
  */
 int auth_read_entry(FILE *fd, int *line, char **user, char **pass) 
 {
@@ -364,12 +378,17 @@ int auth_read_entry(FILE *fd, int *line, char **user, char **pass)
 
 
 
-/*
- * If the authentication file 'filename' do not exist,
- * create it, asking for the creation of a new user.
+
+/**
+ * auth_file_exist_or_create:
+ * @filename: The authentication filename .
+ * @crypted: wether to crypt if password if we create an account.
  *
- * crypted mean if the password will be written in a
- * crypted fashion or not.
+ * If the authentication file 'filename' does not exist, create it,
+ * asking for the creation of a new user. crypted mean if the password
+ * will be written in a crypted fashion or not.
+ *
+ * Return: 0 on success, -1 otherwise.
  */
 int auth_file_exist_or_create(const char *filename, int crypted) 
 {
@@ -381,4 +400,17 @@ int auth_file_exist_or_create(const char *filename, int crypted)
 
         return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 

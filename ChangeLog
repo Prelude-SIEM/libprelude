@@ -1,3 +1,10 @@
+2001-08-23  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/auth-common.c (auth_file_exist_or_create): 
+	(auth_read_entry): 
+	(auth_create_account): Documented. Put the cpass variable 
+	into the #ifdef scope.
+
 2001-08-21  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/include/compat.h: if package is not defined, 
