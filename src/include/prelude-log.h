@@ -36,8 +36,8 @@ void prelude_log_set_prefix(char *prefix);
 void prelude_log(int priority, const char *file, const char *function, int line, const char *fmt, ...);
 
 
-#define log(priority, args...) \
-        prelude_log(priority, __FILE__, __FUNCTION__, __LINE__, args)
+#define log(priority, ...) \
+        prelude_log(priority, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
 
 
 #define do_init(func, name) do {                         \
