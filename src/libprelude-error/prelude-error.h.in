@@ -35,6 +35,9 @@
  * Bit 16 to 32 are set to the code of the error.
  */
 
+
+#define PRELUDE_ERROR_SYSTEM_ERROR    (1 << 15)
+
 typedef enum {
 @include err-sources.in
 
@@ -43,8 +46,6 @@ typedef enum {
 
 typedef enum {
 @include err-codes.in
-
-#define PRELUDE_ERROR_SYSTEM_ERROR    (1 << 15)
 @include errnos.in	
 
 	PRELUDE_ERROR_CODE_DIM = 65536
