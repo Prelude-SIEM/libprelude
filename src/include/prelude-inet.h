@@ -31,13 +31,13 @@
 
 #ifndef MISSING_GETADDRINFO
 
-#ifndef AI_CANONNAME
- #define AI_CANONNAME 0x01
-#endif
-
 typedef struct addrinfo prelude_addrinfo_t;
 
 #else
+
+#ifndef AI_CANONNAME
+ #define AI_CANONNAME 0x01
+#endif
 
 typedef struct prelude_addrinfo {
         int     ai_flags;
