@@ -162,6 +162,13 @@ size_t idmef_string_get_len(idmef_string_t *string)
 
 
 
+int idmef_string_is_empty(const idmef_string_t *string)
+{
+	return idmef_data_is_empty(string);
+}
+
+
+
 char *idmef_string_get_string(const idmef_string_t *string)
 {
         return idmef_data_get_data(string);

@@ -244,6 +244,14 @@ unsigned char *idmef_data_get_data(const idmef_data_t *data)
 
 
 
+int idmef_data_is_empty(const idmef_data_t *data)
+{
+	return (data->len == 0);
+}
+
+
+
+
 int idmef_data_to_string(idmef_data_t *data, char *buf, size_t size)
 {
         int ret;

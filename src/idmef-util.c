@@ -66,26 +66,22 @@
 /**
  * idmef_additionaldata_data_to_string:
  * @ad: An additional data object.
- * @buffer: A buffer where the output should be stored.
- * @size: The size of the destination buffer.
  *
  * This function take care of converting the IDMEF AdditionalData data
  * member to a string suitable to be outputed in the IDMEF database.
  *
- * Returns: -1 on error, the len of the string written otherwise
+ * Returns: NULL on error, string written otherwise
  *
  */
-int idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, char *buffer, size_t size)
+const char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad)
 {
+	static char buffer[128];
 	idmef_data_t *data;
         int retval = 0;
 
-	if ( ! ad )
-		return -1;
-
 	data = idmef_additional_data_get_data(ad);
-	if ( ! data || ! idmef_data_get_data(data) )
-		return -1;
+	if ( idmef_data_is_empty(data) )
+		return "";
 
         switch ( idmef_additional_data_get_type(ad) ) {
 
@@ -114,7 +110,7 @@ int idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, char *buffe
                 break;
 
         case character:
-                retval = snprintf(buffer, size, "%c", *(const char *) idmef_data_get_data(data));
+                retval = snprintf(buffer, sizeof (buffer), "%c", *(const char *) idmef_data_get_data(data));
                 break;
 
         case integer: {
@@ -122,9 +118,9 @@ int idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, char *buffe
 
                 retval = extract_uint32_safe(&out32, idmef_data_get_data(data), idmef_data_get_len(data));
                 if ( retval < 0 )
-                        return -1;
+                        return NULL;
                 
-                retval = snprintf(buffer, size, "%d", out32);
+                retval = snprintf(buffer, sizeof (buffer), "%u", out32);
                 break;
 	}
                 
@@ -136,9 +132,9 @@ int idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, char *buffe
 
                 retval = extract_uint64_safe(&d.w_buf, idmef_data_get_data(data), idmef_data_get_len(data));
                 if ( retval < 0 )
-                        return -1;
+                        return NULL;
                 
-                retval = snprintf(buffer, size, "0x%08ux.0x%08ux", d.r_buf[0], d.r_buf[1]);
+                retval = snprintf(buffer, sizeof (buffer), "0x%08ux.0x%08ux", d.r_buf[0], d.r_buf[1]);
                 break;
 	}
 
@@ -147,9 +143,9 @@ int idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, char *buffe
 
                 retval = extract_uint32_safe(&out32, idmef_data_get_data(data), idmef_data_get_len(data));
                 if ( retval < 0 )
-                        return -1;
+                        return NULL;
                 
-                retval = snprintf(buffer, size, "%f", (float) out32);
+                retval = snprintf(buffer, sizeof (buffer), "%f", (float) out32);
                 break;
 	}
 
@@ -161,26 +157,23 @@ int idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, char *buffe
 		const char *ptr;
 
                 retval = extract_characters_safe(&ptr, idmef_data_get_data(data), idmef_data_get_len(data));
-                if ( retval < 0 )
-                        return -1;
 
-		retval = snprintf(buffer, size, "%s", ptr);
-		break;
+		return (retval < 0) ? NULL : ptr;
 	}
 
         default:
                 log(LOG_ERR, "Unknown data type: %d.\n", idmef_additional_data_get_type(ad));
-                return -1;
+                return NULL;
         }
 
         /*
          * Since glibc 2.1 snprintf follow the C99 standard and return
-         * the number of characters (excluding the trailibng '\0') which
+         * the number of characters (excluding the trailing '\0') which
          * would have been written to the final string if enought space
          * had been available.
          */
 
-        return (retval < size) ? retval : -1;
+	return (retval < 0 || retval >= sizeof (buffer)) ? NULL : buffer;
 }
 
 

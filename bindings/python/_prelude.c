@@ -16500,6 +16500,23 @@ static PyObject *_wrap_idmef_data_get_data(PyObject *self, PyObject *args) {
 }
 
 
+static PyObject *_wrap_idmef_data_is_empty(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_data_t *arg1 = (idmef_data_t *) 0 ;
+    int result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_data_is_empty",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_data_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (int)idmef_data_is_empty((idmef_data_t const *)arg1);
+    
+    resultobj = PyInt_FromLong((long)result);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_data_to_string(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_data_t *arg1 = (idmef_data_t *) 0 ;
@@ -16984,6 +17001,23 @@ static PyObject *_wrap_idmef_string_get_string(PyObject *self, PyObject *args) {
     result = (char *)idmef_string_get_string((idmef_string_t const *)arg1);
     
     resultobj = result ? PyString_FromString(result) : Py_BuildValue((char*)"");
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
+static PyObject *_wrap_idmef_string_is_empty(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    idmef_string_t *arg1 = (idmef_string_t *) 0 ;
+    int result;
+    PyObject * obj0 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_string_is_empty",&obj0)) goto fail;
+    if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_string_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
+    result = (int)idmef_string_is_empty((idmef_string_t const *)arg1);
+    
+    resultobj = PyInt_FromLong((long)result);
     return resultobj;
     fail:
     return NULL;
@@ -20407,19 +20441,14 @@ static PyObject *_wrap_idmef_value_type_compare(PyObject *self, PyObject *args) 
 static PyObject *_wrap_idmef_additionaldata_data_to_string(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_additional_data_t *arg1 = (idmef_additional_data_t *) 0 ;
-    char *arg2 ;
-    size_t arg3 ;
-    int result;
+    char *result;
     PyObject * obj0 = 0 ;
-    PyObject * obj2 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"OsO:idmef_additionaldata_data_to_string",&obj0,&arg2,&obj2)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"O:idmef_additionaldata_data_to_string",&obj0)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_additional_data_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    arg3 = (size_t) PyInt_AsLong(obj2);
-    if (PyErr_Occurred()) SWIG_fail;
-    result = (int)idmef_additionaldata_data_to_string(arg1,arg2,arg3);
+    result = (char *)idmef_additionaldata_data_to_string(arg1);
     
-    resultobj = PyInt_FromLong((long)result);
+    resultobj = result ? PyString_FromString(result) : Py_BuildValue((char*)"");
     return resultobj;
     fail:
     return NULL;
@@ -21711,6 +21740,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_data_clone", _wrap_idmef_data_clone, METH_VARARGS },
 	 { (char *)"idmef_data_get_len", _wrap_idmef_data_get_len, METH_VARARGS },
 	 { (char *)"idmef_data_get_data", _wrap_idmef_data_get_data, METH_VARARGS },
+	 { (char *)"idmef_data_is_empty", _wrap_idmef_data_is_empty, METH_VARARGS },
 	 { (char *)"idmef_data_to_string", _wrap_idmef_data_to_string, METH_VARARGS },
 	 { (char *)"idmef_data_destroy_internal", _wrap_idmef_data_destroy_internal, METH_VARARGS },
 	 { (char *)"idmef_string_new", _wrap_idmef_string_new, METH_VARARGS },
@@ -21733,6 +21763,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_string_clone", _wrap_idmef_string_clone, METH_VARARGS },
 	 { (char *)"idmef_string_get_len", _wrap_idmef_string_get_len, METH_VARARGS },
 	 { (char *)"idmef_string_get_string", _wrap_idmef_string_get_string, METH_VARARGS },
+	 { (char *)"idmef_string_is_empty", _wrap_idmef_string_is_empty, METH_VARARGS },
 	 { (char *)"idmef_criterion_t_object_set", _wrap_idmef_criterion_t_object_set, METH_VARARGS },
 	 { (char *)"idmef_criterion_t_object_get", _wrap_idmef_criterion_t_object_get, METH_VARARGS },
 	 { (char *)"idmef_criterion_t_value_set", _wrap_idmef_criterion_t_value_set, METH_VARARGS },
@@ -22285,7 +22316,7 @@ static swig_const_info swig_const_table[] = {
 { SWIG_PY_INT,     (char *)"type_list", (long) type_list, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"type_object", (long) type_object, 0, 0, 0},
 { SWIG_PY_INT,     (char *)"MAX_UTC_DATETIME_SIZE", (long) 64, 0, 0, 0},
-{ SWIG_PY_INT,     (char *)"MAX_NTP_TIMESTAMP_SIZE", (long) 21, 0, 0, 0},
+{ SWIG_PY_INT,     (char *)"MAX_NTP_TIMESTAMP_SIZE", (long) 22, 0, 0, 0},
 {0}};
 
 #ifdef __cplusplus

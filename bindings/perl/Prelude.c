@@ -221,7 +221,7 @@ SWIG_TypeClientData(swig_type_info *ti, void *clientdata) {
  * perl5.swg
  *
  * Perl5 runtime library
- * $Header: /var/lib/cvsd/cvsroot/prelude/libprelude/bindings/perl/Prelude.c,v 1.4 2003/12/28 17:34:47 nicolas Exp $
+ * $Header: /var/lib/cvsd/cvsroot/prelude/libprelude/bindings/perl/Prelude.c,v 1.5 2004/01/01 23:17:42 nicolas Exp $
  * ----------------------------------------------------------------------------- */
 
 #define SWIGPERL
@@ -26920,6 +26920,35 @@ XS(_wrap_idmef_data_get_data) {
 }
 
 
+XS(_wrap_idmef_data_is_empty) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        idmef_data_t *arg1 = (idmef_data_t *) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: idmef_data_is_empty(data);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_data_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of idmef_data_is_empty. Expected _p_idmef_data_t");
+            }
+        }
+        result = (int)idmef_data_is_empty((idmef_data_t const *)arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
 XS(_wrap_idmef_data_to_string) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
@@ -27571,6 +27600,35 @@ XS(_wrap_idmef_string_get_string) {
         }else {
             sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
         }
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
+XS(_wrap_idmef_string_is_empty) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        idmef_string_t *arg1 = (idmef_string_t *) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: idmef_string_is_empty(string);");
+        }
+        {
+            if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_string_t,0) < 0) {
+                SWIG_croak("Type error in argument 1 of idmef_string_is_empty. Expected _p_idmef_string_t");
+            }
+        }
+        result = (int)idmef_string_is_empty((idmef_string_t const *)arg1);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -33254,27 +33312,26 @@ XS(_wrap_idmef_additionaldata_data_to_string) {
     const char *_swigerr = _swigmsg;
     {
         idmef_additional_data_t *arg1 = (idmef_additional_data_t *) 0 ;
-        char *arg2 ;
-        size_t arg3 ;
-        int result;
+        char *result;
         int argvi = 0;
         dXSARGS;
         
-        if ((items < 3) || (items > 3)) {
-            SWIG_croak("Usage: idmef_additionaldata_data_to_string(ad,out,size);");
+        if ((items < 1) || (items > 1)) {
+            SWIG_croak("Usage: idmef_additionaldata_data_to_string(ad);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_additional_data_t,0) < 0) {
                 SWIG_croak("Type error in argument 1 of idmef_additionaldata_data_to_string. Expected _p_idmef_additional_data_t");
             }
         }
-        if (!SvOK((SV*) ST(1))) arg2 = 0;
-        else arg2 = (char *) SvPV(ST(1), PL_na);
-        arg3 = (size_t) SvUV(ST(2));
-        result = (int)idmef_additionaldata_data_to_string(arg1,arg2,arg3);
+        result = (char *)idmef_additionaldata_data_to_string(arg1);
         
         ST(argvi) = sv_newmortal();
-        sv_setiv(ST(argvi++), (IV) result);
+        if (result) {
+            sv_setpv((SV*)ST(argvi++), (char *) result);
+        }else {
+            sv_setsv((SV*)ST(argvi++), &PL_sv_undef);
+        }
         XSRETURN(argvi);
         fail:
         (void) _swigerr;
@@ -34189,7 +34246,7 @@ static swig_constant_info swig_constants[] = {
 { SWIG_INT,     (char *) SWIG_prefix "type_list", (long) type_list, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "type_object", (long) type_object, 0, 0, 0},
 { SWIG_INT,     (char *) SWIG_prefix "MAX_UTC_DATETIME_SIZE", (long) 64, 0, 0, 0},
-{ SWIG_INT,     (char *) SWIG_prefix "MAX_NTP_TIMESTAMP_SIZE", (long) 21, 0, 0, 0},
+{ SWIG_INT,     (char *) SWIG_prefix "MAX_NTP_TIMESTAMP_SIZE", (long) 22, 0, 0, 0},
 {0}
 };
 #ifdef __cplusplus
@@ -35072,6 +35129,7 @@ static swig_command_info swig_commands[] = {
 {"Prelude::idmef_data_clone", _wrap_idmef_data_clone},
 {"Prelude::idmef_data_get_len", _wrap_idmef_data_get_len},
 {"Prelude::idmef_data_get_data", _wrap_idmef_data_get_data},
+{"Prelude::idmef_data_is_empty", _wrap_idmef_data_is_empty},
 {"Prelude::idmef_data_to_string", _wrap_idmef_data_to_string},
 {"Prelude::idmef_data_destroy_internal", _wrap_idmef_data_destroy_internal},
 {"Prelude::idmef_string_new", _wrap_idmef_string_new},
@@ -35094,6 +35152,7 @@ static swig_command_info swig_commands[] = {
 {"Prelude::idmef_string_clone", _wrap_idmef_string_clone},
 {"Prelude::idmef_string_get_len", _wrap_idmef_string_get_len},
 {"Prelude::idmef_string_get_string", _wrap_idmef_string_get_string},
+{"Prelude::idmef_string_is_empty", _wrap_idmef_string_is_empty},
 {"Prelude::idmef_criterion_t_object_set", _wrap_idmef_criterion_t_object_set},
 {"Prelude::idmef_criterion_t_object_get", _wrap_idmef_criterion_t_object_get},
 {"Prelude::idmef_criterion_t_value_set", _wrap_idmef_criterion_t_value_set},

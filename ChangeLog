@@ -1,3 +1,32 @@
+2004-01-01  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
+	* bindings/perl/Prelude.c:
+	* bindings/python/_prelude.c:
+	regenerated
+
+	* src/idmef-data.c:
+	* src/include/idmef-data.h:
+	(idmef_data_is_empty)
+	new function
+
+	* src/idmef-string.c:
+	* src/include/idmef-string.h:
+	(idmef_string_is_empty)
+	new function
+
+	* src/idmef-time.c:
+	(idmef_time_get_db_timestamp)
+	feed buffer with "NULL" if the given pointer is NULL
+	and add simple quote to the db timestamp string
+
+	* src/idmef-util.c:
+	(idmef_additionaldata_data_to_string)
+	instead of writing to a given buffer, return a const char *
+	thats point to a function static buffer (if a conversion was needed)
+	or to the data field within the additional_data given
+
+	Happy new year to our ChangeLog readers ! ;)
+
 2003-12-29  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
 	* src/idmef-time.c:

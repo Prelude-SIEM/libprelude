@@ -75,6 +75,8 @@ size_t idmef_string_get_len(idmef_string_t *string);
 
 char *idmef_string_get_string(const idmef_string_t *string);
 
+int idmef_string_is_empty(const idmef_string_t *string);
+
 
 /*
  * FIXME: backward compatibility
@@ -91,6 +93,3 @@ char *idmef_string_get_string(const idmef_string_t *string);
 	idmef_string_new_ref_fast(str, sizeof(str))
                                                          
 #endif /* _LIBPRELUDE_IDMEF_STRING_H */
-
-
-

@@ -228,6 +228,16 @@ unsigned char *idmef_data_get_data(const idmef_data_t *data);
 
 
 /**
+ * idmef_data_is_empty:
+ * @data: Pointer to an #idmef_data_t object.
+ *
+ * Returns: 1 if the data is empty, 0 otherwise.
+ */
+int idmef_data_is_empty(const idmef_data_t *data);
+
+
+
+/**
  * idmef_data_to_string:
  * @data: Pointer to an #idmef_data_t object.
  * @buf: Buffer to store the formated data into.
@@ -270,9 +280,3 @@ void idmef_data_destroy_internal(idmef_data_t *data);
 #define idmef_data_len idmef_data_get_len
 
 #endif /* _LIBPRELUDE_IDMEF_DATA_H */
-
-
-
-
-
-

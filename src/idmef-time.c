@@ -286,23 +286,29 @@ int idmef_time_get_db_timestamp(const idmef_time_t *time, char *outptr, size_t s
         int ret;
         time_t sec;
         struct tm utc;
-        
+
+	if ( ! time ) {
+		ret = snprintf(outptr, size, "NULL");
+
+		return (ret < 0 || ret >= size) ? -1 : ret;
+	}
+
 	sec = idmef_time_get_sec(time);
-        
+
         /*
          * Convert from localtime to UTC.
          */
         if ( ! gmtime_r(&sec, &utc) ) {
                 log(LOG_ERR, "error converting timestamp to gmt time.\n");
-                return -1;
-        }
-        
-        ret = strftime(outptr, size, "%Y-%m-%d%H:%M:%S", &utc);
-        if ( ret == 0 ) {
-                log(LOG_ERR, "error converting UTC time to string.\n");
                 return -2;
         }
-        
+
+        ret = strftime(outptr, size, "'%Y-%m-%d%H:%M:%S'", &utc);
+        if ( ret == 0 ) {
+                log(LOG_ERR, "error converting UTC time to string.\n");
+                return -3;
+        }
+
         return ret;
 }
 

@@ -58,7 +58,7 @@ do {									\
 } while ( 0 )
 
 
-int idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, char *out, size_t size);
+const char *idmef_additionaldata_data_to_string(idmef_additional_data_t *ad);
 int prelude_get_process_name_and_path(const char *str, char **name, char **path);
 
 #define MAX_UTC_DATETIME_SIZE  64   /* YYYY-MM-DDThh:mm:ss.ssZ */
