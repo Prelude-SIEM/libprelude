@@ -35,7 +35,6 @@
 #include "prelude-log.h"
 #include "extract.h"
 #include "prelude-io.h"
-#include "prelude-list.h"
 #include "prelude-linked-object.h"
 #include "prelude-async.h"
 #include "prelude-message.h"
@@ -45,7 +44,6 @@
 #define PRELUDE_MSG_VERSION 0
 #define PRELUDE_MSG_HDR_SIZE 8
 #define MINIMUM_FRAGMENT_DATA_SIZE 8
-
 
 typedef struct {
         uint8_t version;
@@ -528,16 +526,17 @@ ssize_t prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst)
         
         /*
          * no need to send... There's no data in this message.
-         */        
-        if ( msg->write_index - msg->header_index - PRELUDE_MSG_HDR_SIZE <= 0 ) 
+         */
+        
+        if ( msg->write_index - PRELUDE_MSG_HDR_SIZE <= 0 ) 
                 return 0;
         
         /*
          * if the message header index is 0 (write called, without
-         * prelude_msg_mark_end()), or if the is_fragment flag is set,
-         * mark end of the message, cause the caller didn't do it in theses case.
+         * prelude_msg_mark_end() first), mark end of the message
+         * cause the caller didn't do it in this case.
          */
-        if ( msg->header_index == 0 || msg->hdr.is_fragment ) 
+        if ( msg->header_index == 0 ) 
                 write_message_header(msg);
 
         /*
@@ -546,6 +545,9 @@ ssize_t prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst)
         else if ( ! msg->hdr.is_fragment )
                 dlen -= PRELUDE_MSG_HDR_SIZE;
 
+        /*
+         * blocking mode has to be set.
+         */
         return prelude_io_write(dst, msg->payload, dlen);
 }
 
@@ -577,10 +579,13 @@ void prelude_msg_recycle(prelude_msg_t *msg)
  */
 void prelude_msg_mark_end(prelude_msg_t *msg)
 {
+        if ( msg->write_index - msg->header_index - PRELUDE_MSG_HDR_SIZE <= 0 ) 
+                return;
+
         write_message_header(msg);
                 
         if ( msg->write_index + PRELUDE_MSG_HDR_SIZE + MINIMUM_FRAGMENT_DATA_SIZE > msg->hdr.datalen ) {
-                                
+
                 msg = call_alloc_cb(msg);
                 if ( ! msg ) 
                         return;
