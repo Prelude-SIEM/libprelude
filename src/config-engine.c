@@ -673,8 +673,6 @@ int config_set(config_t *cfg, const char *section, const char *entry, const char
 {
         int ret;
         unsigned int index = 0;
-
-        printf("insert [%s] %s=%s (%u)\n", section, entry, val, val ? strlen(val) : 0);
         
         if ( section )
                 ret = new_section_line(cfg, section, entry, val, &index);
