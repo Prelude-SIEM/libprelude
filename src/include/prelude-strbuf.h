@@ -24,6 +24,8 @@
 #ifndef _LIBPRELUDEDB_STRBUF_H
 #define _LIBPRELUDEDB_STRBUF_H
 
+#include <stdarg.h>
+
 typedef struct prelude_strbuf prelude_strbuf_t;
 
 prelude_strbuf_t *prelude_strbuf_new(void);
