@@ -19,7 +19,7 @@ endif
 
 
 perl/Makefile: perl/Makefile.PL
-	cd perl && perl Makefile.PL
+	cd perl && $(PERL) Makefile.PL
 
 
 # proxy classes are an option for swig <= 1.3.19 and are activated by default with swig > 1.3.19
@@ -27,13 +27,13 @@ perl/Makefile: perl/Makefile.PL
 # to not generate them
 perl/Prelude.c: libprelude.i
 if HAVE_SWIG
-	swig -I$(top_srcdir)/src/include -o $@ -perl5 -nopm \
+	$(SWIG) -I$(top_srcdir)/src/include -o $@ -perl5 -nopm \
 	 `swig -perl5 -help 2>&1 | grep noproxy > /dev/null && echo -noproxy` $<
 endif
 
 python/_prelude.c: libprelude.i
 if HAVE_SWIG
-	swig -I$(top_srcdir)/src/include -o $@ -python -interface _prelude -module _prelude -noproxy $<
+	$(SWIG) -I$(top_srcdir)/src/include -o $@ -python -interface _prelude -module _prelude -noproxy $<
 endif
 
 
@@ -41,7 +41,7 @@ perl-build:
 	cd perl && $(MAKE)
 
 python-build:
-	cd python && python setup.py build
+	cd python && $(PYTHON) setup.py build
 
 
 
@@ -51,7 +51,7 @@ if HAVE_PERL
 endif
 
 if HAVE_PYTHON
-	cd python && python setup.py install
+	cd python && $(PYTHON) setup.py install
 endif
 
 # uninstall-hook:
@@ -70,5 +70,5 @@ if HAVE_PERL
 endif
 
 if HAVE_PYTHON
-	cd python && python setup.py clean -a
+	cd python && $(PYTHON) setup.py clean -a
 endif
