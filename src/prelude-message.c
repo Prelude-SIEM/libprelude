@@ -30,6 +30,7 @@
 #include <inttypes.h>
 #include <netinet/in.h>
 
+#include "common.h"
 #include "prelude-log.h"
 #include "extract.h"
 #include "prelude-io.h"
