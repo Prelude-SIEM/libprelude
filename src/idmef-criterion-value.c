@@ -204,12 +204,16 @@ static void tm_to_non_linear_time(idmef_criterion_value_non_linear_time_t *time,
 }
 
 
-static int is_current(const char *value, int *offset)
+static int is_keyword(const char *keyword, const char *value, int *offset)
 {
-	if ( strncmp(value, "current", sizeof ("current") - 1 )  != 0 )
+	size_t keyword_len;
+
+	keyword_len = strlen(keyword);
+
+	if ( strncmp(value, keyword, keyword_len)  != 0 )
 		return 0;
 
-	value += sizeof ("current") - 1;
+	value += keyword_len;
 
 	switch ( *value ) {
 	case '+':
@@ -277,39 +281,92 @@ static int tm_calculate(struct tm *tm, int gmt_offset,
 }
 
 
+
+static int get_tm_and_offset(struct tm *tm, int *gmt_offset)
+{
+	time_t current_time;
+
+	time(&current_time);
+
+	if ( prelude_get_gmt_offset(gmt_offset) < 0 )
+		return -1;
+
+	current_time += *gmt_offset;
+
+	memset(tm, 0, sizeof (*tm));
+	tm->tm_isdst = -1;
+
+	if ( ! gmtime_r(&current_time, tm) )
+		return -1;
+
+	return 0;
+}
+
+
+
+static int parse_last(idmef_criterion_value_non_linear_time_t *t,
+		      enum non_linear_time_elem elem,
+		      const char *value)
+{
+	int ret;
+	int value_offset;
+	struct tm tm;
+	int gmt_offset;
+
+	ret = is_keyword("last", value, &value_offset);
+	if ( ret <= 0 )
+		return ret;
+
+	if ( get_tm_and_offset(&tm, &gmt_offset) < 0 )
+		return -1;
+
+	if ( tm_calculate(&tm, gmt_offset, elem, value_offset - 1) < 0 )
+		return -1;
+
+	tm_to_non_linear_time(t, &tm, elem_sec);
+
+	return 1;		
+}
+
+
+
 static int parse_current(idmef_criterion_value_non_linear_time_t *t,
 			 enum non_linear_time_elem elem,
 			 const char *value)
 {
 	int ret;
+	int value_offset;
 	struct tm tm;
-	time_t current_time;
-	int current_time_offset;
 	int gmt_offset;
 
-	ret = is_current(value, &current_time_offset);
+	ret = is_keyword("current", value, &value_offset);
 	if ( ret <= 0 )
 		return ret;
 
-	time(&current_time);
-
-	if ( prelude_get_gmt_offset(&gmt_offset) < 0 )
+	if ( get_tm_and_offset(&tm, &gmt_offset) < 0 )
 		return -1;
 
-	current_time += gmt_offset;
-
-	memset(&tm, 0, sizeof (tm));
-	tm.tm_isdst = -1;
-
-	if ( ! gmtime_r(&current_time, &tm) )
-		return -1;
-
-	if ( tm_calculate(&tm, gmt_offset, elem, current_time_offset) < 0 )
+	if ( tm_calculate(&tm, gmt_offset, elem, value_offset) < 0 )
 		return -1;
 
 	tm_to_non_linear_time(t, &tm, elem);
 
 	return 1;
+}
+
+
+
+static int parse_keyword(idmef_criterion_value_non_linear_time_t *t,
+			 enum non_linear_time_elem elem,
+			 const char *value)
+{
+	int ret;
+
+	ret = parse_current(t, elem, value);
+	if ( ret != 0 )
+		return ret;
+
+	return parse_last(t, elem, value);
 }
 
 
@@ -356,6 +413,8 @@ static int parse_month(idmef_criterion_value_non_linear_time_t *time, const char
 static int parse_yday(idmef_criterion_value_non_linear_time_t *time, const char *value)
 {
 	idmef_criterion_value_non_linear_time_set_yday(time, atoi(value));
+
+	return 1;
 }
 
 
@@ -363,6 +422,8 @@ static int parse_yday(idmef_criterion_value_non_linear_time_t *time, const char 
 static int parse_mday(idmef_criterion_value_non_linear_time_t *time, const char *value)
 {
 	idmef_criterion_value_non_linear_time_set_mday(time, atoi(value));
+
+	return 1;
 }
 
 
@@ -446,7 +507,7 @@ static int parse_non_linear_time(idmef_criterion_value_non_linear_time_t *time, 
 
 		for ( i = 0; i < sizeof (keys) / sizeof (keys[0]); i++ ) {
 			if ( strcmp(key, keys[i].name) == 0 ) {
-				ret2 = parse_current(time, keys[i].elem, value);
+				ret2 = parse_keyword(time, keys[i].elem, value);
 				if ( ret2 == 0 )
 					ret2 = keys[i].func(time, value);
 				break;

@@ -1,3 +1,14 @@
+2004-01-28  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
+	* src/idmef-criterion-value.c:
+	add the "last" keyword for non linear time values
+	relation '=' with this keyword will not work as
+	expected for the moment (because it requires to be
+	transformed into a criteria (to have a range) and not
+	a simple criterion)
+	btw, it can be done manually with two idmef_criterion
+	while waiting for a correct implementation
+
 2004-01-25  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
 	* bindings/perl/Prelude.c:
