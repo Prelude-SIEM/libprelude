@@ -174,19 +174,16 @@ static prelude_msg_t *send_msg(prelude_msgbuf_t *msgbuf)
 
 static int read_option_request(prelude_client_t *client, prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
 {
-        int ret, type = -1;
         void *buf;
         uint8_t tag;
-        uint32_t len;
-        char out[1024] = { 0 }, *request;
+        uint32_t len, hop;
+        int ret, type = -1;
         uint32_t request_id;
-        uint64_t source_id;
+        char out[1024] = { 0 }, *request;
 
         while ( prelude_msg_get(msg, &tag, &len, &buf) == 0 ) {
 
                 switch (tag) {
-                case PRELUDE_MSG_OPTION_LIST:
-                        return prelude_option_wide_send_msg(client, msgbuf); 
                         
                 case PRELUDE_MSG_OPTION_SET:
                 case PRELUDE_MSG_OPTION_GET:
@@ -194,26 +191,31 @@ static int read_option_request(prelude_client_t *client, prelude_msgbuf_t *msgbu
                 case PRELUDE_MSG_OPTION_DESTROY:
                         type = tag;
                         break;
-                
-                case PRELUDE_MSG_OPTION_TARGET_ID:
-                        break;
-                        
-                case PRELUDE_MSG_OPTION_SOURCE_ID:
-                        ret = prelude_extract_uint64_safe(&source_id, buf, len);
+
+                case PRELUDE_MSG_OPTION_HOP:
+                        ret = prelude_extract_uint32_safe(&hop, buf, len);
                         if ( ret < 0 )
                                 return ret;
                         
-                        prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_TARGET_ID, len, buf);
+                        hop = htonl(hop - 1);
+                        prelude_msgbuf_set(msgbuf, tag, len, &hop);
                         break;
                         
-                case PRELUDE_MSG_OPTION_ID:
+                case PRELUDE_MSG_OPTION_TARGET_ID:                        
+                        prelude_msgbuf_set(msgbuf, tag, len, buf);
+                        break;
+                                                
+                case PRELUDE_MSG_OPTION_REQUEST_ID:
                         ret = prelude_extract_uint32_safe(&request_id, buf, len);
                         if ( ret < 0 )
                                 return ret;
                         
-                        prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_ID, len, buf);
+                        prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_REQUEST_ID, len, buf);
                         break;
                         
+                case PRELUDE_MSG_OPTION_LIST:
+                        return prelude_option_wide_send_msg(client, msgbuf); 
+
                 case PRELUDE_MSG_OPTION_VALUE:
                         ret = prelude_extract_characters_safe((const char **) &request, buf, len);
                         if (ret < 0 )
@@ -225,7 +227,7 @@ static int read_option_request(prelude_client_t *client, prelude_msgbuf_t *msgbu
                                 return -1;
                         }
                         
-                        ret = parse_request(client, type, request, out, sizeof(out));                                                
+                        ret = parse_request(client, type, request, out, sizeof(out));
                         if ( ret < 0 )
                                 prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_ERROR, *out ? strlen(out) + 1 : 0, out);
 				
@@ -249,7 +251,6 @@ static int handle_option_request(prelude_client_t *client, prelude_io_t *fd, pre
 {
         int ret = 0;
         prelude_msgbuf_t *msgbuf;
-        uint64_t analyzerid = prelude_client_get_analyzerid(client);
             
         msgbuf = prelude_msgbuf_new(client);
         if ( ! msgbuf ) 
@@ -258,10 +259,8 @@ static int handle_option_request(prelude_client_t *client, prelude_io_t *fd, pre
         prelude_msgbuf_set_data(msgbuf, fd);
         prelude_msgbuf_set_callback(msgbuf, send_msg);
         prelude_msg_set_tag(prelude_msgbuf_get_msg(msgbuf), PRELUDE_MSG_OPTION_REPLY);
-
-        prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_SOURCE_ID, sizeof(analyzerid), &analyzerid);
         
-        ret = read_option_request(client, msgbuf, msg);        
+        ret = read_option_request(client, msgbuf, msg);
         prelude_msgbuf_close(msgbuf);
 
         return ret;
@@ -395,21 +394,29 @@ int prelude_option_push_request(prelude_msgbuf_t *msg, int type, const char *req
 
 
 
-int prelude_option_new_request(prelude_client_t *client, prelude_msgbuf_t *msgbuf, uint32_t request_id, uint64_t target_id)
+int prelude_option_new_request(prelude_client_t *client,
+                               prelude_msgbuf_t *msgbuf,
+                               uint32_t request_id, uint64_t *target_id, size_t size)
 {
-        uint64_t tmp;
+        int i;
+        uint32_t hop;
         
         prelude_msg_set_tag(prelude_msgbuf_get_msg(msgbuf), PRELUDE_MSG_OPTION_REQUEST);
 
-        tmp = prelude_hton64(prelude_client_get_analyzerid(client));
-        prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_SOURCE_ID, sizeof(tmp), &tmp);
+        /*
+         * the caller is supposed to provide a full path,
+         * from him to the destination, to the original hop is 1.
+         */
+        hop = htonl(1); 
+        prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_HOP, sizeof(hop), &hop);
 
-        tmp = prelude_hton64(target_id);
-        prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_TARGET_ID, sizeof(tmp), &tmp);
-
+        for ( i = 0; i < size; i++ )
+                target_id[i] = prelude_hton64(target_id[i]);
+        
         request_id = htonl(request_id);
-        prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_ID, sizeof(request_id), &request_id);
-                
+        prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_REQUEST_ID, sizeof(request_id), &request_id);
+        prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_TARGET_ID, i * sizeof(*target_id), target_id);
+
         return 0;
 }
 
@@ -427,8 +434,10 @@ int prelude_option_recv_reply(prelude_msg_t *msg, uint64_t *source_id, uint32_t 
         while ( (ret = prelude_msg_get(msg, &tag, &dlen, &buf)) == 0 ) {
 
                 switch (tag) {
-
-                case PRELUDE_MSG_OPTION_ID:
+                case PRELUDE_MSG_OPTION_HOP:
+                        break;
+                        
+                case PRELUDE_MSG_OPTION_REQUEST_ID:
                         type = PRELUDE_OPTION_REPLY_TYPE_SET;
                         
                         ret = prelude_extract_uint32_safe(request_id, buf, dlen);
@@ -455,13 +464,7 @@ int prelude_option_recv_reply(prelude_msg_t *msg, uint64_t *source_id, uint32_t 
                         if ( ret < 0 )
                                 return ret;
                         break;
-                        
-                case PRELUDE_MSG_OPTION_SOURCE_ID:
-                        ret = prelude_extract_uint64_safe(source_id, buf, dlen);
-                        if ( ret < 0 )
-                                return ret;
-                        break;
-                        
+                                                
                 case PRELUDE_MSG_OPTION_TARGET_ID:
                         break;
 

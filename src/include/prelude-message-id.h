@@ -59,12 +59,11 @@
  * PRELUDE_MSG_OPTION submessages
  */
 #define PRELUDE_MSG_OPTION_TARGET_ID        0
-#define PRELUDE_MSG_OPTION_SOURCE_ID        1
 #define PRELUDE_MSG_OPTION_LIST             2
 #define PRELUDE_MSG_OPTION_VALUE            3
 #define PRELUDE_MSG_OPTION_SET              4
 #define PRELUDE_MSG_OPTION_GET              5
-#define PRELUDE_MSG_OPTION_ID               6
+#define PRELUDE_MSG_OPTION_REQUEST_ID       6
 #define PRELUDE_MSG_OPTION_ERROR            7
 #define PRELUDE_MSG_OPTION_START            8
 #define PRELUDE_MSG_OPTION_END              9
@@ -78,5 +77,6 @@
 #define PRELUDE_MSG_OPTION_TYPE             17
 #define PRELUDE_MSG_OPTION_DESTROY          18
 #define PRELUDE_MSG_OPTION_COMMIT           19
+#define PRELUDE_MSG_OPTION_HOP              20
 
 #endif /* _LIBPRELUDE_PRELUDE_MESSAGE_ID_H */
