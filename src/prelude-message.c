@@ -30,6 +30,7 @@
 #include <inttypes.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <sys/time.h>
 
 #include "common.h"
 #include "prelude-log.h"
@@ -41,9 +42,10 @@
 
 
 #define MSGBUF_SIZE 8192
-#define PRELUDE_MSG_VERSION 0
-#define PRELUDE_MSG_HDR_SIZE 8
-#define MINIMUM_FRAGMENT_DATA_SIZE 8
+#define PRELUDE_MSG_VERSION 1
+#define PRELUDE_MSG_HDR_SIZE 16
+#define MINIMUM_FRAGMENT_DATA_SIZE 1
+
 
 typedef struct {
         uint8_t version;
@@ -51,6 +53,8 @@ typedef struct {
         uint8_t priority;
         uint8_t is_fragment;
         uint32_t datalen;
+        uint32_t tv_sec;
+        uint32_t tv_usec;
 } prelude_msg_hdr_t;
 
 
@@ -101,6 +105,7 @@ static prelude_msg_t *call_alloc_cb(prelude_msg_t *msg)
 static void write_message_header(prelude_msg_t *msg) 
 {
         uint32_t dlen;
+        struct timeval tv;
         uint32_t hdr_offset = msg->header_index;
         
         dlen = htonl(msg->write_index - msg->header_index - PRELUDE_MSG_HDR_SIZE);
@@ -110,7 +115,14 @@ static void write_message_header(prelude_msg_t *msg)
         msg->payload[hdr_offset++] = msg->hdr.priority;
         msg->payload[hdr_offset++] = msg->hdr.is_fragment;
 
+        gettimeofday(&tv, NULL);
+                
+        msg->hdr.tv_sec = htonl(tv.tv_sec);
+        msg->hdr.tv_usec = htonl(tv.tv_usec);
+        
         memcpy(&msg->payload[hdr_offset], &dlen, sizeof(dlen));
+        memcpy(&msg->payload[hdr_offset + 4], &msg->hdr.tv_sec, sizeof(msg->hdr.tv_sec));
+        memcpy(&msg->payload[hdr_offset + 8], &msg->hdr.tv_usec, sizeof(msg->hdr.tv_usec));
 }
 
 
@@ -198,12 +210,13 @@ inline static void slice_message_header(prelude_msg_t *msg, unsigned char *hdrbu
                 /*
                  * tag and priority are set on first fragment only.
                  */
+                msg->hdr.version = hdrbuf[0];
                 msg->hdr.tag = hdrbuf[1];
                 msg->hdr.priority = hdrbuf[2];
-                
+                msg->hdr.tv_sec = extract_uint32(hdrbuf + 8);
+                msg->hdr.tv_usec = extract_uint32(hdrbuf + 12);
         }
         
-        msg->hdr.version = hdrbuf[0];
         msg->hdr.is_fragment = hdrbuf[3];
         msg->hdr.datalen += extract_uint32(hdrbuf + 4);
 }
@@ -888,4 +901,12 @@ int prelude_msg_is_fragment(prelude_msg_t *msg)
 int prelude_msg_is_empty(prelude_msg_t *msg)
 {
         return (msg->write_index - PRELUDE_MSG_HDR_SIZE <= 0) ? 1 : 0;
+}
+
+
+
+void prelude_msg_get_time(prelude_msg_t *msg, struct timeval *tv)
+{
+        tv->tv_sec = msg->hdr.tv_sec;
+        tv->tv_usec = msg->hdr.tv_usec;
 }
