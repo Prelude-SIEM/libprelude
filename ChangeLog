@@ -1,5 +1,9 @@
 2002-02-07  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/prelude-getopt.c (print_options): 
+	remove an errornous putchar().
+	(print_options): description offset should include depth.
+
 	* sensor-adduser/Makefile.am (sensor_adduser_LDADD): correct
 	libprelude.so linkage.
 

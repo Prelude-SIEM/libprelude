@@ -638,10 +638,6 @@ static void print_options(prelude_optlist_t *optlist, int flags, int descoff, in
                 if ( !(opt->flags & flags) )
                         continue;
                 
-                separator = (strlen(opt->description) > (80 - descoff)) ? 1 : 0;
-                if ( separator )
-                        putchar('\n');
-                
                 for ( i = 0; i < depth; i++ )
                         printf("  ");
                 
@@ -654,8 +650,9 @@ static void print_options(prelude_optlist_t *optlist, int flags, int descoff, in
                 while ( i++ < descoff )
                         putchar(' ');
 
-                print_wrapped(opt->description, descoff);
-
+                print_wrapped(opt->description, depth + descoff);
+                
+                separator = (strlen(opt->description) > (80 - descoff)) ? 1 : 0;
                 if ( separator )
                         putchar('\n');
                 
