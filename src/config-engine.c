@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2000, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2000, 2002, 2003 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -486,6 +486,7 @@ int config_set(config_t *cfg, const char *section, const char *entry, const char
 
 static const char *get_variable_content(config_t *cfg, const char *variable) 
 {
+        int line = 0;
         const char *ptr;
         
         /*
@@ -496,7 +497,7 @@ static const char *get_variable_content(config_t *cfg, const char *variable)
                 /*
                  * other variable (declared in the configuration file).
                  */
-                ptr = config_get(cfg, NULL, variable, 0);
+                ptr = config_get(cfg, NULL, variable, &line);
 
         return ptr;
 }

@@ -1,3 +1,10 @@
+2003-02-03  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/config-engine.c (get_variable_content): 
+	Fix config_get(). We were calling config_get() with a value
+	of 0 for the line argument. Line should be a pointer to a valid
+	memory address. This fix a possible SIGSEGV.
+
 2002-01-23  Krzysztof Zaraska  <kzaraska@student.uci.agh.edu.pl>
 
         * sensor-adduser/ssl-register.c:
