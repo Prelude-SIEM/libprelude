@@ -45,6 +45,40 @@
 #include "common.h"
 
 
+
+static int find_absolute_path(const char *cwd, const char *file, char **path)
+{
+        int ret;
+        char buf[PATH_MAX];
+        const char *ptr;
+        char *pathenv = strdup(getenv("PATH")), *old = pathenv;
+        
+        while ( (ptr = prelude_strsep(&pathenv, ":")) ) {
+
+                ret = strcmp(ptr, ".");
+                if ( ret == 0 )
+                        ptr = cwd;
+                        
+                snprintf(buf, sizeof(buf), "%s/%s", ptr, file);
+
+                ret = access(buf, F_OK);
+                if ( ret < 0 )
+                        continue;
+                
+                free(old);
+                *path = strdup(ptr);
+
+                return 0;
+        }
+
+        free(old);
+        
+        return -1;
+}
+
+
+
+
 /**
  * prelude_resolve_addr:
  * @hostname: Hostname to lookup.
@@ -263,29 +297,29 @@ uint64_t prelude_hton64(uint64_t val)
 int prelude_get_file_name_and_path(const char *str, char **name, char **path)
 {
         int ret = 0;
-	char buf[512], cwd[PATH_MAX], *ptr, tmp;
-        
+	char buf[512], *ptr, tmp, cwd[PATH_MAX];
+
         if ( *str != '/' ) {
                 ret = snprintf(buf, sizeof(buf), "%s/", getcwd(cwd, sizeof(cwd)));
                 if ( ret < 0 || ret >= sizeof(buf) )
                         return -1;
         }
         
-        ptr = strrchr(str, '/');
-        if ( ptr ) {
-                tmp = *ptr;
-                *ptr = '\0';
+        if ( (ptr = strrchr(str, '/')) ) {
+                tmp = *ptr; *ptr = '\0';
 
-                ret = snprintf(buf + ret, sizeof(buf) - ret, "%s/", str);
+                ret = snprintf(buf + ret, sizeof(buf) - ret, "%s", str);
                 if ( ret < 0 || ret >= sizeof(buf) )
                         return -1;
-
+                
+                *path = strdup(buf);
                 str = ptr + 1;
                 *ptr = tmp;
         }
-        
+
+        else ret = find_absolute_path(cwd, str, path);
+                
         *name = strdup(str);
-        *path = strdup(buf);
         
 	return ret;
 }
