@@ -24,7 +24,7 @@
 #ifndef _LIBPRELUDE_PRELUDE_H
 #define _LIBPRELUDE_PRELUDE_H
 
-#define LIBPRELUDE_VERSION @VERSION@
+#define LIBPRELUDE_VERSION "@VERSION@"
 
 #include "prelude-inttypes.h"
 #include "common.h"
