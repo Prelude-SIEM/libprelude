@@ -7,11 +7,11 @@
 
 # Try to connect on a Manager listening on 127.0.0.1.
 #
-# manager-addr = x.x.x.x:port || y.y.y.y && z.z.z.z
+# prelude-server-addr = x.x.x.x:port || y.y.y.y && z.z.z.z
 #
 # This mean the emission should occur on x.x.x.x:port or, if it fail,
 # on y.y.y.y and z.z.z.z (if one of the two host in the AND fail, 
 # the emission will be considered as failed involving saving the 
 # message locally).
 
-manager-addr = 127.0.0.1
+prelude-server-addr = 127.0.0.1

@@ -34,6 +34,7 @@
 2	PRELUDE_ERROR_SOURCE_MESSAGE		prelude-message
 3	PRELUDE_ERROR_SOURCE_FAILOVER		prelude-failover
 4	PRELUDE_ERROR_SOURCE_CLIENT		prelude-client
+5	PRELUDE_ERROR_SOURCE_EXTRACT		prelude-extract
 
 # 4 to 255 are free to be used.
 	PRELUDE_ERROR_SOURCE_DIM		Unknown source

@@ -39,15 +39,9 @@
 #include <assert.h>
 
 #include "libmissing.h"
-#include "prelude-inttypes.h"
 #include "common.h"
-#include "prelude-list.h"
-#include "prelude-linked-object.h"
 #include "prelude-timer.h"
 #include "prelude-log.h"
-#include "config-engine.h"
-#include "prelude-io.h"
-#include "prelude-msg.h"
 #include "prelude-message-id.h"
 #include "prelude-async.h"
 #include "prelude-client.h"
@@ -55,7 +49,7 @@
 #include "prelude-option-wide.h"
 #include "prelude-failover.h"
 #include "prelude-error.h"
-#include "extract.h"
+
 
 #define other_error -2
 #define communication_error -1

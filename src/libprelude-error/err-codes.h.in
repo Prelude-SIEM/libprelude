@@ -42,8 +42,16 @@
 10	PRELUDE_ERROR_TLS_CERTIFICATE	Could not access TLS certificate file
 11	PRELUDE_ERROR_TLS_CERTIFICATE_PARSE	Could not parse TLS certificate
 12	PRELUDE_ERROR_TLS_KEY		Could not access TLS private key
+13	PRELUDE_ERROR_IDMEF_UNKNOWN_TAG	IDMEF message tag is unknown
+14	PRELUDE_ERROR_INVAL_INT8	Buffer does not contain a 8 bits integer
+15	PRELUDE_ERROR_INVAL_INT16	Buffer does not contain a 16 bits integer
+16	PRELUDE_ERROR_INVAL_INT32	Buffer does not contain a 32 bits integer
+17	PRELUDE_ERROR_INVAL_INT64	Buffer does not contain a 64 bits integer
+18	PRELUDE_ERROR_INVAL_FLOAT	Buffer does not contain a 32 bits float
+19	PRELUDE_ERROR_INVAL_CHAR	Buffer is not zero terminated
+20	PRELUDE_ERROR_INVAL_IDMEF_TIME	Buffer does not contain an IDMEF time type
 
-#11 to 16381 are free to be used.
+#21 to 16381 are free to be used.
 
 16382	PRELUDE_ERROR_UNKNOWN_ERRNO		Unknown system error
 16383	PRELUDE_ERROR_EOF			End of file

@@ -93,7 +93,7 @@ static void permission_warning(void)
 static void print_delete_help(void)
 {
         fprintf(stderr, "\ndel: Delete an existing analyzer.\n");
-        fprintf(stderr, "usage: del <analyzer-name>\n\n");
+        fprintf(stderr, "usage: del <analyzer profile>\n\n");
 
         fprintf(stderr,
                 "The delete command will remove the sensor files created through\n"
@@ -105,7 +105,7 @@ static void print_delete_help(void)
 static void print_rename_help(void)
 {
         fprintf(stderr, "\nrename: Rename an existing analyzer.\n");
-        fprintf(stderr, "usage: rename <analyzer-name> <analyzer-name>\n\n");
+        fprintf(stderr, "usage: rename <analyzer profile> <analyzer profile>\n\n");
 }
 
 
@@ -113,14 +113,14 @@ static void print_rename_help(void)
 static void print_registration_server_help(void)
 {
         fprintf(stderr, "\nregistration-server: Start the analyzer registration-server.\n");
-        fprintf(stderr, "usage: registration-server <analyzer-name> [options]\n\n");
+        fprintf(stderr, "usage: registration-server <analyzer profile> [options]\n\n");
 
         fprintf(stderr,
                 "Start a registration server that will be used to register sensors.\n"
                 "This is used in order to register 'sending' analyzer to 'receiving'\n"
-                "analyzer. <analyzer-name> should be set to the name of the 'receiving'\n"
-                "analyzer, the one where 'sending' analyzer will register to.\n\n");
-                
+                "analyzer. <analyzer profile> should be set to the profile name of the\n"
+                "'receiving' analyzer, the one where 'sending' analyzer will register to.\n\n");
+        
         fprintf(stderr, "Valid options:\n");
 
         fprintf(stderr, "\t--uid arg\t\t: UID to use to setup 'receiving' analyzer files.\n");
@@ -134,7 +134,7 @@ static void print_registration_server_help(void)
 static void print_register_help(void)
 {
         fprintf(stderr, "register: Register an analyzer.\n");
-        fprintf(stderr, "usage: register <analyzer-name> <registration-server address> [options]\n\n");
+        fprintf(stderr, "usage: register <analyzer profile> <registration-server address> [options]\n\n");
 
         fprintf(stderr,
                 "Register both \"add\" the analyzer basic setup if needed\n"
@@ -151,7 +151,7 @@ static void print_register_help(void)
 static void print_add_help(void)
 {
         fprintf(stderr, "add: Setup a new analyzer.\n");
-        fprintf(stderr, "usage: add <analyzer-name> [options]\n\n");
+        fprintf(stderr, "usage: add <analyzer profile> [options]\n\n");
 
         fprintf(stderr, "Valid options:\n");
         fprintf(stderr, "\t--uid arg\t\t: UID to use to setup analyzer files.\n");
@@ -387,7 +387,7 @@ static int setup_analyzer_files(prelude_client_t *client, uint64_t analyzerid,
         char buf[256];
         const char *name;
         
-        name = prelude_client_get_name(client);
+        name = prelude_client_get_profile(client);
         ret = register_sensor_ident(name, &analyzerid);
         if ( ret < 0 )
                 return -1;
@@ -436,10 +436,10 @@ static int rename_cmd(int argc, char **argv)
         fprintf(stderr, "Renaming analyzer %s to %s\n", sname, dname);
         
         sclient = prelude_client_new(0);
-        prelude_client_set_name(sclient, sname);
+        prelude_client_set_profile(sclient, sname);
         
         dclient = prelude_client_new(0);
-        prelude_client_set_name(dclient, dname);
+        prelude_client_set_profile(dclient, dname);
 
         prelude_client_get_ident_filename(sclient, spath, sizeof(spath));
         prelude_client_get_ident_filename(dclient, dpath, sizeof(dpath));
@@ -493,7 +493,7 @@ static int add_analyzer(const char *name, gnutls_x509_privkey *key, gnutls_x509_
         
         fprintf(stderr, "- Adding analyzer %s.\n", name);
 
-        prelude_client_set_name(client, name);
+        prelude_client_set_profile(client, name);
         
         if ( ! uid_set || ! gid_set ) {
                 if ( ! uid_set )
@@ -547,7 +547,7 @@ static int del_cmd(int argc, char **argv)
         if ( ! client )
                 return -1;
 
-        prelude_client_set_name(client, argv[2]);
+        prelude_client_set_profile(client, argv[2]);
         fprintf(stderr, "- Deleting analyzer %s\n", argv[2]);
         
         prelude_client_get_backup_filename(client, buf, sizeof(buf));
@@ -620,9 +620,14 @@ static int register_cmd(int argc, char **argv)
         fprintf(stderr,
                 "  You now need to start \"prelude-adduser\" on the server host where\n"
                 "  you need to register to:\n\n"
-
-                "  use: \"prelude-adduser registration-server <analyzer-name>\"\n\n"
+                        
+                "  use: \"prelude-adduser registration-server <analyzer profile>\"\n"
+                "  example: \"prelude-adduser registration-server prelude-manager\"\n"
                 
+                "This is used in order to register the 'sending' analyzer to the 'receiving'\n"
+                "analyzer. <analyzer profile> should be set to the profile name of the\n"
+                "'receiving' analyzer, the one where 'sending' analyzer will register to.\n\n"
+        
                 "  Please remember that \"prelude-adduser\" should be used to register\n"
                 "  every server used by this analyzer.\n\n");
 

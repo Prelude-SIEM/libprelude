@@ -80,11 +80,8 @@ sub	struct
     my	$tree = shift;
     my	$struct = shift;
 
-    if ( ! $struct->{toplevel} ) {
-	$self->output("
-$struct->{typename} *idmef_$struct->{short_typename}_read($struct->{typename} *$struct->{short_typename}, prelude_msg_t *msg);\n");
-
-    }
+    $self->output("
+int idmef_$struct->{short_typename}_read($struct->{typename} *$struct->{short_typename}, prelude_msg_t *msg);\n");
 }
 
 1;

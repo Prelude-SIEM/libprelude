@@ -37,7 +37,8 @@
 #include "prelude-list.h"
 #include "prelude-log.h"
 #include "prelude-inttypes.h"
-#include "extract.h"
+#include "prelude-error.h"
+#include "prelude-extract.h"
 #include "prelude-ident.h"
 
 #include "idmef-time.h"
@@ -73,14 +74,14 @@ const unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t
         case IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST:
         case IDMEF_ADDITIONAL_DATA_TYPE_STRING:
         case IDMEF_ADDITIONAL_DATA_TYPE_XML:
-                ret = extract_characters_safe(&outstr, idmef_data_get_data(data), idmef_data_get_len(data));
+                ret = prelude_extract_characters_safe(&outstr, idmef_data_get_data(data), idmef_data_get_len(data));
                 *size = idmef_data_get_len(data) - 1; /* 0 string delimiter is included in len */
                 return (ret < 0) ? NULL : outstr;
 
         case IDMEF_ADDITIONAL_DATA_TYPE_INTEGER: {
                 uint32_t out32;
 
-                ret = extract_uint32_safe(&out32, idmef_data_get_data(data), idmef_data_get_len(data));
+                ret = prelude_extract_uint32_safe(&out32, idmef_data_get_data(data), idmef_data_get_len(data));
                 if ( ret < 0 )
                         return NULL;
 
@@ -94,7 +95,7 @@ const unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t
                         uint32_t r_buf[2];
                 } d;
 
-                ret = extract_uint64_safe(&d.w_buf, idmef_data_get_data(data), idmef_data_get_len(data));
+                ret = prelude_extract_uint64_safe(&d.w_buf, idmef_data_get_data(data), idmef_data_get_len(data));
                 if ( ret < 0 )
                         return NULL;
                 
@@ -105,7 +106,7 @@ const unsigned char *idmef_additionaldata_data_to_string(idmef_additional_data_t
         case IDMEF_ADDITIONAL_DATA_TYPE_REAL: {
 		uint32_t out32;
 
-                ret = extract_uint32_safe(&out32, idmef_data_get_data(data), idmef_data_get_len(data));
+                ret = prelude_extract_uint32_safe(&out32, idmef_data_get_data(data), idmef_data_get_len(data));
                 if ( ret < 0 )
                         return NULL;
                 

@@ -32,62 +32,64 @@
 #include "prelude-msgbuf.h"
 
 
-idmef_additional_data_t *idmef_additional_data_read(idmef_additional_data_t *additional_data, prelude_msg_t *msg);
+int idmef_additional_data_read(idmef_additional_data_t *additional_data, prelude_msg_t *msg);
 
-idmef_reference_t *idmef_reference_read(idmef_reference_t *reference, prelude_msg_t *msg);
+int idmef_reference_read(idmef_reference_t *reference, prelude_msg_t *msg);
 
-idmef_classification_t *idmef_classification_read(idmef_classification_t *classification, prelude_msg_t *msg);
+int idmef_classification_read(idmef_classification_t *classification, prelude_msg_t *msg);
 
-idmef_user_id_t *idmef_user_id_read(idmef_user_id_t *user_id, prelude_msg_t *msg);
+int idmef_user_id_read(idmef_user_id_t *user_id, prelude_msg_t *msg);
 
-idmef_user_t *idmef_user_read(idmef_user_t *user, prelude_msg_t *msg);
+int idmef_user_read(idmef_user_t *user, prelude_msg_t *msg);
 
-idmef_address_t *idmef_address_read(idmef_address_t *address, prelude_msg_t *msg);
+int idmef_address_read(idmef_address_t *address, prelude_msg_t *msg);
 
-idmef_process_t *idmef_process_read(idmef_process_t *process, prelude_msg_t *msg);
+int idmef_process_read(idmef_process_t *process, prelude_msg_t *msg);
 
-idmef_web_service_t *idmef_web_service_read(idmef_web_service_t *web_service, prelude_msg_t *msg);
+int idmef_web_service_read(idmef_web_service_t *web_service, prelude_msg_t *msg);
 
-idmef_snmp_service_t *idmef_snmp_service_read(idmef_snmp_service_t *snmp_service, prelude_msg_t *msg);
+int idmef_snmp_service_read(idmef_snmp_service_t *snmp_service, prelude_msg_t *msg);
 
-idmef_service_t *idmef_service_read(idmef_service_t *service, prelude_msg_t *msg);
+int idmef_service_read(idmef_service_t *service, prelude_msg_t *msg);
 
-idmef_node_t *idmef_node_read(idmef_node_t *node, prelude_msg_t *msg);
+int idmef_node_read(idmef_node_t *node, prelude_msg_t *msg);
 
-idmef_source_t *idmef_source_read(idmef_source_t *source, prelude_msg_t *msg);
+int idmef_source_read(idmef_source_t *source, prelude_msg_t *msg);
 
-idmef_file_access_t *idmef_file_access_read(idmef_file_access_t *file_access, prelude_msg_t *msg);
+int idmef_file_access_read(idmef_file_access_t *file_access, prelude_msg_t *msg);
 
-idmef_inode_t *idmef_inode_read(idmef_inode_t *inode, prelude_msg_t *msg);
+int idmef_inode_read(idmef_inode_t *inode, prelude_msg_t *msg);
 
-idmef_checksum_t *idmef_checksum_read(idmef_checksum_t *checksum, prelude_msg_t *msg);
+int idmef_checksum_read(idmef_checksum_t *checksum, prelude_msg_t *msg);
 
-idmef_file_t *idmef_file_read(idmef_file_t *file, prelude_msg_t *msg);
+int idmef_file_read(idmef_file_t *file, prelude_msg_t *msg);
 
-idmef_linkage_t *idmef_linkage_read(idmef_linkage_t *linkage, prelude_msg_t *msg);
+int idmef_linkage_read(idmef_linkage_t *linkage, prelude_msg_t *msg);
 
-idmef_target_t *idmef_target_read(idmef_target_t *target, prelude_msg_t *msg);
+int idmef_target_read(idmef_target_t *target, prelude_msg_t *msg);
 
-idmef_analyzer_t *idmef_analyzer_read(idmef_analyzer_t *analyzer, prelude_msg_t *msg);
+int idmef_analyzer_read(idmef_analyzer_t *analyzer, prelude_msg_t *msg);
 
-idmef_alertident_t *idmef_alertident_read(idmef_alertident_t *alertident, prelude_msg_t *msg);
+int idmef_alertident_read(idmef_alertident_t *alertident, prelude_msg_t *msg);
 
-idmef_impact_t *idmef_impact_read(idmef_impact_t *impact, prelude_msg_t *msg);
+int idmef_impact_read(idmef_impact_t *impact, prelude_msg_t *msg);
 
-idmef_action_t *idmef_action_read(idmef_action_t *action, prelude_msg_t *msg);
+int idmef_action_read(idmef_action_t *action, prelude_msg_t *msg);
 
-idmef_confidence_t *idmef_confidence_read(idmef_confidence_t *confidence, prelude_msg_t *msg);
+int idmef_confidence_read(idmef_confidence_t *confidence, prelude_msg_t *msg);
 
-idmef_assessment_t *idmef_assessment_read(idmef_assessment_t *assessment, prelude_msg_t *msg);
+int idmef_assessment_read(idmef_assessment_t *assessment, prelude_msg_t *msg);
 
-idmef_tool_alert_t *idmef_tool_alert_read(idmef_tool_alert_t *tool_alert, prelude_msg_t *msg);
+int idmef_tool_alert_read(idmef_tool_alert_t *tool_alert, prelude_msg_t *msg);
 
-idmef_correlation_alert_t *idmef_correlation_alert_read(idmef_correlation_alert_t *correlation_alert, prelude_msg_t *msg);
+int idmef_correlation_alert_read(idmef_correlation_alert_t *correlation_alert, prelude_msg_t *msg);
 
-idmef_overflow_alert_t *idmef_overflow_alert_read(idmef_overflow_alert_t *overflow_alert, prelude_msg_t *msg);
+int idmef_overflow_alert_read(idmef_overflow_alert_t *overflow_alert, prelude_msg_t *msg);
 
-idmef_alert_t *idmef_alert_read(idmef_alert_t *alert, prelude_msg_t *msg);
+int idmef_alert_read(idmef_alert_t *alert, prelude_msg_t *msg);
 
-idmef_heartbeat_t *idmef_heartbeat_read(idmef_heartbeat_t *heartbeat, prelude_msg_t *msg);
+int idmef_heartbeat_read(idmef_heartbeat_t *heartbeat, prelude_msg_t *msg);
+
+int idmef_message_read(idmef_message_t *message, prelude_msg_t *msg);
 
 #endif /* _LIBPRELUDE_IDMEF_MESSAGE_READ_H */

@@ -24,12 +24,6 @@
 #ifndef _LIBPRELUDE_PRELUDE_CLIENT_H
 #define _LIBPRELUDE_PRELUDE_CLIENT_H
 
-
-#define PRELUDE_CLIENT_NEED_SETUP (PRELUDE_ERROR_ANALYZERID_FILE | \
-                                   PRELUDE_ERROR_ANALYZERID_PARSE| \
-                                   PRELUDE_ERROR_BACKUP_DIRECTORY)
-
-
 typedef enum {
         PRELUDE_CLIENT_EXIT_STATUS_SUCCESS = 0,
         PRELUDE_CLIENT_EXIT_STATUS_FAILURE = -1
@@ -58,6 +52,7 @@ typedef struct prelude_client prelude_client_t;
 #include "prelude-ident.h"
 #include "prelude-connection.h"
 #include "prelude-connection-mgr.h"
+#include "prelude-error.h"
 #include "idmef.h"
 
 
@@ -79,9 +74,9 @@ void prelude_client_set_analyzerid(prelude_client_t *client, uint64_t analyzerid
 
 uint64_t prelude_client_get_analyzerid(prelude_client_t *client);
 
-void prelude_client_set_name(prelude_client_t *client, const char *name);
+void prelude_client_set_profile(prelude_client_t *client, const char *name);
 
-const char *prelude_client_get_name(prelude_client_t *client);
+const char *prelude_client_get_profile(prelude_client_t *client);
 
 void prelude_client_set_uid(prelude_client_t *client, uid_t uid);
 
@@ -125,7 +120,8 @@ void prelude_client_get_backup_filename(prelude_client_t *client, char *buf, siz
 
 const char *prelude_client_get_config_filename(prelude_client_t *client);
 
-void prelude_client_installation_error(prelude_client_t *client);
+void prelude_client_print_setup_error(prelude_client_t *client);
 
+prelude_bool_t prelude_client_is_setup_needed(prelude_client_t *client, prelude_error_t err);
 
 #endif

@@ -28,8 +28,9 @@
 #include <netinet/in.h>
 
 #include "libmissing.h"
+#include "prelude-error.h"
 #include "prelude-log.h"
-#include "extract.h"
+#include "prelude-extract.h"
 #include "prelude-io.h"
 #include "prelude-msgbuf.h"
 #include "prelude-client.h"
@@ -198,25 +199,25 @@ static int read_option_request(prelude_client_t *client, prelude_msgbuf_t *msgbu
                         break;
                         
                 case PRELUDE_MSG_OPTION_SOURCE_ID:
-                        ret = extract_uint64_safe(&source_id, buf, len);
+                        ret = prelude_extract_uint64_safe(&source_id, buf, len);
                         if ( ret < 0 )
-                                return -1;
+                                return ret;
                         
                         prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_TARGET_ID, len, buf);
                         break;
                         
                 case PRELUDE_MSG_OPTION_ID:
-                        ret = extract_uint32_safe(&request_id, buf, len);
+                        ret = prelude_extract_uint32_safe(&request_id, buf, len);
                         if ( ret < 0 )
-                                return -1;
+                                return ret;
                         
                         prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_ID, len, buf);
                         break;
                         
                 case PRELUDE_MSG_OPTION_VALUE:
-                        ret = extract_characters_safe((const char **) &request, buf, len);
+                        ret = prelude_extract_characters_safe((const char **) &request, buf, len);
                         if (ret < 0 )
-                                return -1;
+                                return ret;
                                                 
                         if ( type < 0 ) {
                                 snprintf(out, sizeof(out), "no request type specified.\n");
@@ -291,65 +292,65 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         return 0;
                         
                 case PRELUDE_MSG_OPTION_VALUE:
-                        ret = extract_characters_safe(&tmp, buf, dlen);
+                        ret = prelude_extract_characters_safe(&tmp, buf, dlen);
                         if ( ret < 0 ) 
-                                return -1;
+                                return ret;
                         
                         prelude_option_set_value(opt, tmp);
                         break;
 
                 case PRELUDE_MSG_OPTION_NAME:
-                        ret = extract_characters_safe(&tmp, buf, dlen);
+                        ret = prelude_extract_characters_safe(&tmp, buf, dlen);
                         if ( ret < 0 )
-                                return -1;
+                                return ret;
                         
                         prelude_option_set_longopt(opt, tmp);
                         break;
                         
                 case PRELUDE_MSG_OPTION_DESC:
-                        ret = extract_characters_safe(&tmp, buf, dlen);
+                        ret = prelude_extract_characters_safe(&tmp, buf, dlen);
                         if ( ret < 0 )
-                                return -1;
+                                return ret;
 
                         prelude_option_set_description(opt, tmp);
                         break;
                         
                 case PRELUDE_MSG_OPTION_HELP:
-                        ret = extract_characters_safe(&tmp, buf, dlen);
+                        ret = prelude_extract_characters_safe(&tmp, buf, dlen);
                         if ( ret < 0 )
-                                return -1;
+                                return ret;
                         
                         prelude_option_set_help(opt, tmp);
                         break;
                         
                 case PRELUDE_MSG_OPTION_INPUT_VALIDATION:
-                        ret = extract_characters_safe(&tmp, buf, dlen);
+                        ret = prelude_extract_characters_safe(&tmp, buf, dlen);
                         if ( ret < 0 )
-                                return -1;
+                                return ret;
                         
                         prelude_option_set_input_validation_regex(opt, tmp);
                         break;
 
                 case PRELUDE_MSG_OPTION_HAS_ARG:
-                        ret = extract_uint8_safe(&tmpint, buf, dlen);
+                        ret = prelude_extract_uint8_safe(&tmpint, buf, dlen);
                         if ( ret < 0 )
-                                return -1;
+                                return ret;
 
                         prelude_option_set_has_arg(opt, tmpint);
                         break;
 
                 case PRELUDE_MSG_OPTION_TYPE:
-                        ret = extract_uint8_safe(&tmpint, buf, dlen);
+                        ret = prelude_extract_uint8_safe(&tmpint, buf, dlen);
                         if ( ret < 0 )
-                                return -1;
+                                return ret;
 
                         prelude_option_set_type(opt, tmpint);
                         break;
                         
                 case PRELUDE_MSG_OPTION_INPUT_TYPE:
-                        ret = extract_uint8_safe(&tmpint, buf, dlen);
+                        ret = prelude_extract_uint8_safe(&tmpint, buf, dlen);
                         if ( ret < 0 )
-                                return -1;
+                                return ret;
                         
                         break;
                         
@@ -430,17 +431,17 @@ int prelude_option_recv_reply(prelude_msg_t *msg, uint64_t *source_id, uint32_t 
                 case PRELUDE_MSG_OPTION_ID:
                         type = PRELUDE_OPTION_REPLY_TYPE_SET;
                         
-                        ret = extract_uint32_safe(request_id, buf, dlen);
+                        ret = prelude_extract_uint32_safe(request_id, buf, dlen);
                         if ( ret < 0 )
-                                return -1;
+                                return ret;
                         break;
                         
                 case PRELUDE_MSG_OPTION_VALUE:
                         type = PRELUDE_OPTION_REPLY_TYPE_GET;
                         
-                        ret = extract_characters_safe((const char **) value, buf, dlen);                        
+                        ret = prelude_extract_characters_safe((const char **) value, buf, dlen);                        
                         if ( ret < 0 )
-                                return -1;
+                                return ret;
                         break;
 
                 case PRELUDE_MSG_OPTION_ERROR:
@@ -450,15 +451,15 @@ int prelude_option_recv_reply(prelude_msg_t *msg, uint64_t *source_id, uint32_t 
                                 break;
                         }
 			
-                        ret = extract_characters_safe((const char **) value, buf, dlen);
+                        ret = prelude_extract_characters_safe((const char **) value, buf, dlen);
                         if ( ret < 0 )
-                                return -1;
+                                return ret;
                         break;
                         
                 case PRELUDE_MSG_OPTION_SOURCE_ID:
-                        ret = extract_uint64_safe(source_id, buf, dlen);
+                        ret = prelude_extract_uint64_safe(source_id, buf, dlen);
                         if ( ret < 0 )
-                                return -1;
+                                return ret;
                         break;
                         
                 case PRELUDE_MSG_OPTION_TARGET_ID:
@@ -470,7 +471,7 @@ int prelude_option_recv_reply(prelude_msg_t *msg, uint64_t *source_id, uint32_t 
                         
                         ret = read_option_list(msg, *value, NULL);
                         if ( ret < 0 )
-                                return -1;
+                                return ret;
                         break;
                         
                 default:

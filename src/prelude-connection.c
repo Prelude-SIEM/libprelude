@@ -96,7 +96,7 @@ static void auth_error(prelude_connection_t *cnx)
         log(LOG_INFO, "\nTLS authentication failed. Please run :\n"
             "prelude-adduser register %s %s --uid %d --gid %d\n"
             "program on the sensor host to create an account for this sensor.\n\n",
-            prelude_client_get_name(cnx->client), cnx->daddr,
+            prelude_client_get_profile(cnx->client), cnx->daddr,
             prelude_client_get_uid(cnx->client), prelude_client_get_gid(cnx->client));
 }
 
@@ -501,7 +501,8 @@ int prelude_connection_send_msg(prelude_connection_t *cnx, prelude_msg_t *msg)
 
         ret = prelude_msg_write(msg, cnx->fd);
         if ( ret < 0 || (ret = is_tcp_connection_still_established(cnx->fd)) < 0 ) {
-                log(LOG_ERR, "could not send message to Manager.\n");
+                log(LOG_INFO, "%s: could not write message to %s:%hu %s.\n",
+                    prelude_strsource(ret), cnx->daddr, cnx->dport, prelude_strerror(ret));
                 close_connection_fd(cnx);
         }
         

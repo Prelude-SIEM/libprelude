@@ -62,10 +62,10 @@ sub	header
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include \"prelude-error.h\"
 #include \"prelude-inttypes.h\"
 #include \"prelude-list.h\"
-#include \"prelude-log.h\"
-#include \"extract.h\"
+#include \"prelude-extract.h\"
 #include \"prelude-io.h\"
 #include \"idmef-message-id.h\"
 #include \"idmef.h\"
@@ -74,7 +74,7 @@ sub	header
 #include \"idmef-message-read.h\"
 #include \"idmef-util.h\"
 
-#define extract_string_safe(out, buf, len) extract_string_safe_f(__FUNCTION__, __LINE__, out, buf, len)
+#define prelude_extract_string_safe(out, buf, len) extract_string_safe_f(__FUNCTION__, __LINE__, out, buf, len)
 
 static inline int extract_string_safe_f(const char *f, int line, prelude_string_t **out, char *buf, size_t len)
 \{
@@ -84,43 +84,37 @@ static inline int extract_string_safe_f(const char *f, int line, prelude_string_
 
         *out = prelude_string_new_ref_fast(buf, len - 1);
         if ( ! *out ) \
-                return -2;
+                return prelude_error_from_errno(errno);
 
         return 0;
 \}
 
 
-static inline int extract_time_safe(idmef_time_t **out, void *buf, size_t len)
+static inline int prelude_extract_time_safe(idmef_time_t **out, void *buf, size_t len)
 \{
         /*
          * sizeof(sec) + sizeof(usec) + sizeof(gmt offset).
          */
-        if ( len != 12 ) \{
-                log(LOG_ERR, \"Datatype error: buffer is not a idmef time.\\n\");
-                return -1;
-        \}
+        if ( len != 12 )
+                return prelude_error_make(PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_IDMEF_TIME);
 
         *out = idmef_time_new();
-        if ( ! *out ) \{
-                log(LOG_ERR, \"memory exhausted.\\n\");
-                return -2;
-        \}
+        if ( ! *out )
+                return prelude_error_from_errno(errno);
 
-        idmef_time_set_sec(*out, extract_uint32(buf));
-        idmef_time_set_usec(*out, extract_uint32(buf + 4));
-        idmef_time_set_gmt_offset(*out, extract_int32(buf + 8));
+        idmef_time_set_sec(*out, prelude_extract_uint32(buf));
+        idmef_time_set_usec(*out, prelude_extract_uint32(buf + 4));
+        idmef_time_set_gmt_offset(*out, prelude_extract_int32(buf + 8));
 
         return 0;
 \}
 
 
-static inline int extract_data_safe(idmef_data_t **out, void *buf, size_t len)
+static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, size_t len)
 \{
         *out = idmef_data_new_ref(buf, len);
-        if ( ! *out ) \{
-                log(LOG_ERR, \"memory exhausted.\\n\");
-                return -1;
-        \}
+        if ( ! *out ) 
+                return prelude_error_from_errno(errno);
 
         return 0;
 \}
@@ -143,8 +137,9 @@ sub	struct_field_normal
 			case MSG_",  uc($struct->{short_typename}), "_", uc($field->{short_name}), ": \{
                                 ${var_type} ${ptr}tmp;
 
-				if ( extract_${type}_safe(&tmp, buf, len) < 0 )
-					goto error;
+                                ret = prelude_extract_${type}_safe(&tmp, buf, len);
+                                if ( ret < 0 )
+                                        return ret;
 
 				idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{short_typename}, tmp);
 				break;
@@ -166,10 +161,11 @@ sub	struct_field_struct
 
 				tmp = idmef_$struct->{short_typename}_new_${name}($struct->{short_typename});
 				if ( ! tmp)
-					goto error;
+					return prelude_error_from_errno(errno);
 
-				if ( ! idmef_$field->{short_typename}_read(tmp, msg) )
-					goto error;
+                                ret = idmef_$field->{short_typename}_read(tmp, msg);
+				if ( ret < 0 )
+					return ret;
 
 				break;
 			\}
@@ -194,27 +190,18 @@ sub	struct
     my	$tree = shift;
     my	$struct = shift;
 
-    if ( $struct->{toplevel} ) {
-	$self->output("
-/*
- * It is up to the caller to implement the toplevel function in order to handle
- * specific stuff
- */
-");
-	return;
-    }
-
     $self->output("
-$struct->{typename} *idmef_$struct->{short_typename}_read($struct->{typename} *$struct->{short_typename}, prelude_msg_t *msg)
+int idmef_$struct->{short_typename}_read($struct->{typename} *$struct->{short_typename}, prelude_msg_t *msg)
 \{
+        int ret;
 	void *buf;
 	uint8_t tag;
 	uint32_t len;
 
 	while ( 1 ) \{
-
-		if ( prelude_msg_get(msg, &tag, &len, &buf) < 0 )
-			goto error;
+                ret = prelude_msg_get(msg, &tag, &len, &buf);
+                if ( ret < 0 )
+		        return ret;
 
 		switch ( tag ) \{
 ");
@@ -248,20 +235,15 @@ $struct->{typename} *idmef_$struct->{short_typename}_read($struct->{typename} *$
 
     $self->output("
 			case MSG_END_OF_TAG:
-				return $struct->{short_typename};
+				return 0;
 
 			default:
-				log(LOG_ERR, \"couldn't handle tag %d.\\n\", tag);
-				goto error;
+				return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG);
 		\}
 
 	\}
 
-	return $struct->{short_typename};
-
-error:
-	/* idmef_$struct->{short_typename}_destroy($struct->{short_typename}); */
-	return NULL;
+	return 0;
 \}
 ");
 }

@@ -31,19 +31,17 @@
 #include <arpa/inet.h>
 #include <sys/time.h>
 
-#include <errno.h>
+#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_MESSAGE
+#include "prelude-error.h"
 
 #include "common.h"
 #include "prelude-log.h"
 #include "prelude-inttypes.h"
-#include "extract.h"
+#include "prelude-extract.h"
 #include "prelude-io.h"
 #include "prelude-linked-object.h"
 #include "prelude-async.h"
 #include "prelude-msg.h"
-
-#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_MESSAGE
-#include "prelude-error.h"
 
 
 #define MSGBUF_SIZE 8192
@@ -218,17 +216,17 @@ inline static int slice_message_header(prelude_msg_t *msg, unsigned char *hdrbuf
                 msg->hdr.version = hdrbuf[0];
                 msg->hdr.tag = hdrbuf[1];
                 msg->hdr.priority = hdrbuf[2];
-                msg->hdr.tv_sec = extract_uint32(hdrbuf + 8);
-                msg->hdr.tv_usec = extract_uint32(hdrbuf + 12);
+                msg->hdr.tv_sec = prelude_extract_uint32(hdrbuf + 8);
+                msg->hdr.tv_usec = prelude_extract_uint32(hdrbuf + 12);
         }
         
         msg->hdr.is_fragment = hdrbuf[3];
-        tmp = extract_uint32(hdrbuf + 4);
+        tmp = prelude_extract_uint32(hdrbuf + 4);
         
         if ( (msg->hdr.datalen + tmp) <= msg->hdr.datalen )
                 return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
         
-        msg->hdr.datalen += extract_uint32(hdrbuf + 4);
+        msg->hdr.datalen += prelude_extract_uint32(hdrbuf + 4);
 
         return 0;
 }
@@ -444,32 +442,36 @@ int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
  */
 int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf) 
 {        
-        if ( msg->read_index == (msg->hdr.datalen + PRELUDE_MSG_HDR_SIZE) )
+        if ( msg->read_index == (msg->hdr.datalen + PRELUDE_MSG_HDR_SIZE) ) {
                 /*
                  * no more sub - messages in the buffer.
                  */
                 return prelude_error(PRELUDE_ERROR_EOF);
+        }
 
         /*
          * bound check our buffer,
          * so that we won't overflow if it doesn't contain tag and len.
          */
-        if ( (msg->read_index + 5) > (msg->hdr.datalen + PRELUDE_MSG_HDR_SIZE) )
+        if ( msg->read_index > (msg->hdr.datalen + PRELUDE_MSG_HDR_SIZE - 5) )
                 return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
-
+        
         /*
          * slice wanted data.
          */
         *tag = msg->payload[msg->read_index++];
-        *len = extract_uint32(&msg->payload[msg->read_index]);
+        *len = prelude_extract_uint32(&msg->payload[msg->read_index]);
         msg->read_index += sizeof(uint32_t);
 
         /*
          * bound check again, against specified len + end of message.
          */
+        if ( (*len + 1) <= *len || (msg->read_index + *len + 1) <= msg->read_index )
+                return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
+        
         if ( (msg->read_index + *len + 1) > (msg->hdr.datalen + PRELUDE_MSG_HDR_SIZE) )
                 return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
-                
+        
         *buf = &msg->payload[msg->read_index];
         msg->read_index += *len;
 

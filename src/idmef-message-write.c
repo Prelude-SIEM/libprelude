@@ -38,7 +38,6 @@
 #include "prelude-log.h"
 #include "prelude-io.h"
 #include "prelude-ident.h"
-#include "prelude-msgbuf.h"
 #include "prelude-message-id.h"
 #include "idmef-message-id.h"
 #include "idmef.h"
