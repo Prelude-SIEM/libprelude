@@ -482,7 +482,7 @@ int prelude_plugin_load_from_dir(const char *dirname,
 {
         int ret;
         libltdl_data_t data;
-
+        
         ret = lt_dlinit();
         if ( ret < 0 ) {
                 log(LOG_ERR, "error initializing libltdl.\n");
@@ -773,4 +773,11 @@ int prelude_plugin_instance_call_commit_func(prelude_plugin_instance_t *pi)
 int prelude_plugin_instance_has_commit_func(prelude_plugin_instance_t *pi)
 {
         return (pi->entry->commit_instance) ? 1 : 0;
+}
+
+
+
+void prelude_plugin_set_preloaded_symbols(void *symlist)
+{
+        lt_dlpreload_default(symlist);
 }

@@ -28,9 +28,18 @@
 #include "prelude-list.h"
 #include "prelude-getopt.h"
 
-
 typedef struct prelude_plugin_instance prelude_plugin_instance_t;
 
+
+/*
+ * Hack for plugin preloading,
+ * without having the end program depend on ltdl.
+ */
+extern const void *lt_preloaded_symbols[];
+
+
+#define PRELUDE_PLUGIN_SET_PRELOADED_SYMBOLS()                     \
+        prelude_plugin_set_preloaded_symbols(lt_preloaded_symbols)
 
 
 #define PRELUDE_PLUGIN_OPTION_DECLARE_STRING_CB(prefix, type, name)                              \
@@ -171,6 +180,8 @@ void prelude_plugin_instance_compute_time(prelude_plugin_instance_t *pi, struct 
 int prelude_plugin_instance_call_commit_func(prelude_plugin_instance_t *pi);
 
 int prelude_plugin_instance_has_commit_func(prelude_plugin_instance_t *pi);
+
+void prelude_plugin_set_preloaded_symbols(void *symlist);
 
 
 /*
