@@ -456,11 +456,11 @@ int prelude_io_write_delimited(prelude_io_t *pio, const void *buf, uint16_t coun
         nlen = htons(count);
         
         ret = prelude_io_write(pio, &nlen, sizeof(nlen));
-        if ( ret < 0 ) 
+        if ( ret <= 0 ) 
                 return -1;
         
         ret = prelude_io_write(pio, buf, count);
-        if ( ret < 0 )
+        if ( ret <= 0 )
                 return -1;
 
         return count;
