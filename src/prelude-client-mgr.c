@@ -229,10 +229,11 @@ static int add_new_client(client_list_t *clist, char *addr)
                 log(LOG_ERR, "memory exhausted.\n");
                 return -1;
         }
+        
         parse_address(addr, &port);
         
         new->parent = clist;
-
+        
         new->client = prelude_client_new(addr, port);
         if ( ! new->client ) {
                 free(new);
@@ -286,6 +287,33 @@ static client_list_t *create_client_list(prelude_client_mgr_t *cmgr)
 
 
 
+static char *parse_config_string(char **strp) 
+{
+        char *out, *str = *strp;
+
+        if ( ! *strp ) 
+                return NULL;
+        
+        while ( *str != '\0' && *str == ' ' )
+                str++;
+
+        out = str;
+
+        while ( *str != '\0' && *str != ' ' )
+                str++;
+
+        if ( *str == ' ' ) {
+                *str = '\0';
+                *strp = str + 1;
+        } else
+                *strp = NULL;
+        
+        return out;
+}
+
+
+
+
 /*
  * Parse Manager configuration line:
  * x.x.x.x && y.y.y.y || z.z.z.z
@@ -295,24 +323,23 @@ static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline)
         int ret;
         char *ptr;
         client_list_t *clist;
-        
-        ptr = strtok(cfgline, " ");
-        if ( ! ptr ) {
-                log(LOG_ERR, "malformed configuration line.\n");
-                 return -1;
-        }
-        
+                
         clist = create_client_list(cmgr);
         if ( ! clist )
                 return -1;
 
-        ret = add_new_client(clist, ptr);
-        if ( ! ret < 0 )
-                return -1;
+        while ( 1 ) {
 
-        while ( (ptr = strtok(NULL, " ")) ) {
+                ptr = parse_config_string(&cfgline);                
+                if ( ! ptr )
+                        break;
 
-                if ( strstr(ptr, "||") ) {
+                ret = strcmp(ptr, "&&");
+                if ( ret == 0 )
+                        continue;
+
+                ret = strcmp(ptr, "||");
+                if ( ret == 0 ) {
                         /*
                          * We just finished adding a AND list.
                          * if there is backup remaining from a previous session, flush it.
@@ -326,10 +353,7 @@ static int parse_config_line(prelude_client_mgr_t *cmgr, char *cfgline)
 
                         continue;
                 }
-
-                else if ( strstr(ptr, "&&") ) 
-                        continue;
-
+                
                 ret = add_new_client(clist, ptr);
                 if ( ret < 0 )
                         return -1;
@@ -412,10 +436,10 @@ int prelude_client_mgr_broadcast_msg(prelude_client_mgr_t *cmgr, prelude_msg_t *
                  * There is Manager known to be dead in this list.
                  * No need to try to emmit a message to theses.
                  */
-                if ( item->dead )
+                if ( item->dead ) 
                         continue;
                 
-                ret = broadcast_message(msg, item);
+                ret = broadcast_message(msg, item);                
                 if ( ret >= 0 ) /* AND of Manager emmission succeed */
                         return 0;
         }
@@ -457,7 +481,7 @@ prelude_client_mgr_t *prelude_client_mgr_new(const char *identifier, const char 
         int ret;
         char *dup;
         prelude_client_mgr_t *new;
-
+        
         new = malloc(sizeof(*new));
         if ( ! new ) {
                 log(LOG_ERR, "memory exhausted.\n");

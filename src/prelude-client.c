@@ -22,6 +22,7 @@
 *****/
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <inttypes.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -44,7 +45,6 @@
 #include "common.h"
 #include "config-engine.h"
 #include "plugin-common.h"
-#include "socket-op.h"
 
 #include "prelude-io.h"
 #include "prelude-auth.h"
@@ -189,7 +189,7 @@ static int handle_plaintext_connection(prelude_client_t *client, int sock)
 {
         int ret;
         
-        ret = prelude_auth_send(sock, client->addr);
+        ret = prelude_auth_send(client->fd, client->addr);
         if ( ret < 0 ) {
                 log(LOG_INFO,
                     "\nPlaintext authentication failed. Use the \"manager-adduser\"\n"
@@ -264,13 +264,13 @@ static int check_ssl_option(const char *optbuf)
  *
  * The string have to be terminated with a '\n\0'.
  */
-static int setup_inet_connection(int sock, int *use_ssl) 
+static int setup_inet_connection(prelude_io_t *fd, int *use_ssl) 
 {
         const char *ssl;
         int len = 0, ret;
         char *ptr, buf[1024];
         
-        ret = socket_read_delimited(sock, (void **) &ptr, read);
+        ret = prelude_io_read_delimited(fd, (void **) &ptr);
         if ( ret < 0 ) {
                 log(LOG_ERR, "error waiting for Manager config string.\n");
                 return -1;
@@ -283,7 +283,7 @@ static int setup_inet_connection(int sock, int *use_ssl)
         ssl = (*use_ssl == 1) ? "yes" : "no";
         len = snprintf(buf, sizeof(buf), "use_ssl=%s;\n", ssl);
         
-	ret = socket_write_delimited(sock, buf, ++len, write);
+	ret = prelude_io_write_delimited(fd, buf, ++len);
 	if ( ret != len ) {
                 log(LOG_ERR, "couldn't write config string to Manager.\n");
                 return -1;
@@ -303,7 +303,9 @@ static int start_inet_connection(prelude_client_t *client)
         if ( sock < 0 )
                 return -1;
 
-        ret = setup_inet_connection(sock, &use_ssl);
+        prelude_io_set_socket_io(client->fd, sock);
+        
+        ret = setup_inet_connection(client->fd, &use_ssl);
         if ( ret < 0 ) {
                 close(sock);
                 return -1;
@@ -329,11 +331,13 @@ static int start_inet_connection(prelude_client_t *client)
 static int start_unix_connection(prelude_client_t *client) 
 {
         int sock;
-
+        
         sock = unix_connect();
         if ( sock < 0 )
                 return -1;
 
+        prelude_io_set_socket_io(client->fd, sock);
+        
         return handle_plaintext_connection(client, sock);
 }
 

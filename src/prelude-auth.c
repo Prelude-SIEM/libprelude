@@ -28,9 +28,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <inttypes.h>
 
 #include "common.h"
-#include "socket-op.h"
+#include "prelude-io.h"
 #include "prelude-auth.h"
 
 
@@ -227,41 +228,29 @@ static int check_account(const char *given_client, const char *given_user, const
 /*
  *
  */
-static int get_account_infos(int sock, char **user, char **pass) 
+static int get_account_infos(prelude_io_t *fd, char **user, char **pass) 
 {
-        int tlen, ret, i = 1;       
-        char *buf, *u = NULL, *p = NULL;
+        int ret;
 
-        do {
-                tlen = socket_read_delimited(sock, (void **) &buf, read);                
-                if ( tlen <= 0 ) {
-                        if ( tlen < 0 )
-                                log(LOG_ERR, "error reading socket.\n");
-                        goto err;
-                }
+        ret = prelude_io_read_delimited(fd, (void **) user);
+        if ( ret <= 0 ) {
+                if ( ret < 0 )
+                        log(LOG_ERR, "error reading data.\n");
+                goto err;
+        }
 
-                ret = filter_string(buf, tlen);
-                if ( ret < 0 ) {
-                        log(LOG_ERR, "No string delimiter (\\n) found.\n");
-                        goto err;
-                }
-                
-                ret = separate_string(buf, tlen, &u, &p);
-                if ( ret < 0 ) {
-                        log(LOG_ERR, "there was an error parsing the command.\n");
-                        goto err;
-                }
-                
-        } while ( (u == NULL || p == NULL) && i-- );
-
-        *user = u;
-        *pass = p;
+        ret = prelude_io_read_delimited(fd, (void **) pass);
+        if ( ret <= 0 ) {
+                if ( ret < 0 )
+                        log(LOG_ERR, "error reading data.\n");
+                goto err;
+        }
         
         return 0;
 
  err:
-        if ( u ) free(u);
-        if ( p ) free(p);
+        if ( *user ) free(*user);
+        if ( *pass ) free(*pass);
 
         return -1;
 }
@@ -271,18 +260,21 @@ static int get_account_infos(int sock, char **user, char **pass)
 
 
 /*
- * Send authentication informations (user, pass) on socket.
+ * Send authentication informations (user, pass).
  */
-static int write_auth_infos(int sock, const char *user, const char *pass) 
+static int write_auth_infos(prelude_io_t *fd, const char *user, const char *pass) 
 {
-        int ret, len;
-        char buf[1024];
-        
-        len = snprintf(buf, sizeof(buf), "user %s\npass %s\n", user, pass);
+        int ret;
 
-        ret = socket_write_delimited(sock, buf, len, write);
+        ret = prelude_io_write_delimited(fd, user, strlen(user) + 1);
         if ( ret < 0 ) {
-                log(LOG_ERR,"error while writing authentication infos on socket.\n");
+                log(LOG_ERR, "error writing username for authentication.\n");
+                return -1;
+        }
+
+        ret = prelude_io_write_delimited(fd, pass, strlen(pass) + 1);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "error writing password for authentication.\n");
                 return -1;
         }
 
@@ -292,20 +284,23 @@ static int write_auth_infos(int sock, const char *user, const char *pass)
 
 
 /*
- * Read authentication result on our socket.
+ * Read authentication result.
  */
-static int read_auth_result(int sock) 
+static int read_auth_result(prelude_io_t *fd) 
 {
         int ret;
         char *buf;
         
-        ret = socket_read_delimited(sock, (void **) &buf, read);
+        ret = prelude_io_read_delimited(fd, (void **) &buf);
         if ( ret < 0 ) {
-                log(LOG_ERR,"error while reading authentication result on socket.\n");
+                log(LOG_ERR,"couldn't read authentication result.\n");
                 return -1;
         }
         
-        return strncmp(buf, "ok", sizeof(buf));
+        ret = strncmp(buf, "ok", sizeof(buf));
+        free(buf);
+
+        return ret;
 }
 
 
@@ -314,15 +309,15 @@ static int read_auth_result(int sock)
  * Do the authentication procedure :
  * sending authentication informations and reading the result.
  */
-static int do_auth(int sock, const char *user, const char *pass) 
+static int do_auth(prelude_io_t *fd, const char *user, const char *pass) 
 {
         int ret;
 
-        ret = write_auth_infos(sock, user, pass);
+        ret = write_auth_infos(fd, user, pass);
         if ( ret < 0 ) 
                 return -1;
 
-        ret = read_auth_result(sock);
+        ret = read_auth_result(fd);
         if ( ret < 0 ) 
                 return -1;
 
@@ -579,7 +574,7 @@ int prelude_auth_create_account(const char *filename)
 
 /**
  * prelude_auth_send:
- * @sock: Socket where authentication information should be sent.
+ * @fd: Pointer on a #prelude_io_t object where authentication should occur.
  * @addr: Address of the server authentication is sent to.
  *
  * prelude_auth_send() get account information from @filename
@@ -587,25 +582,25 @@ int prelude_auth_create_account(const char *filename)
  *
  * Returns: 0 if authentication was sucessful, -1 otherwise.
  */
-int prelude_auth_send(int sock, const char *addr) 
+int prelude_auth_send(prelude_io_t *fd, const char *addr) 
 {
-        FILE *fd;
+        FILE *file;
         int ret, line;
         char *user, *pass, *client;
 
-        fd = fopen(SENSORS_AUTH_FILE, "r");
-        if (! fd ) {
+        file = fopen(SENSORS_AUTH_FILE, "r");
+        if (! file ) {
                 log(LOG_ERR,"couldn't open authentication file %s.\n", SENSORS_AUTH_FILE);
                 return -1;
         }
 
-        ret = auth_read_entry(fd, &line, &client, &user, &pass);
+        ret = auth_read_entry(file, &line, &client, &user, &pass);
         if ( ret < 0 )
                 log(LOG_ERR,"couldn't read authentication file %s.\n", SENSORS_AUTH_FILE);
         else 
-                ret = do_auth(sock, user, pass);
+                ret = do_auth(fd, user, pass);
         
-        fclose(fd);
+        fclose(file);
         if (user) free(user);
         if (pass) free(pass);
 
@@ -618,29 +613,29 @@ int prelude_auth_send(int sock, const char *addr)
 
 /** 
  * prelude_auth_recv:
- * @sock: socket where authentication information should be read.
+ * @fd: Pointer on a #prelude_io_t object to read authentication from.
  * @addr: Address of the remote host to get login/password associated with.
  *
  * Authenticate the client sending authentication information on @sock.
  *
  * Returns: 0 on success, -1 if an error occured or authentication failed.
  */
-int prelude_auth_recv(int sock, const char *addr) 
+int prelude_auth_recv(prelude_io_t *fd, const char *addr) 
 {
         int ret;
         char *user = NULL, *pass = NULL;
         
-        ret = get_account_infos(sock, &user, &pass);
+        ret = get_account_infos(fd, &user, &pass);
         if ( ret < 0 ) {
                 log(LOG_ERR, "couldn't read remote authentication informations.\n");
                 return -1;
         }
         
         ret = check_account(addr, user, pass);
-        if ( ret < 0 ) 
-                socket_write_delimited(sock, "failed", 6, write);
+        if ( ret < 0 )
+                prelude_io_write_delimited(fd, "failed", 6);
         else
-                socket_write_delimited(sock, "ok", 2, write);
+                prelude_io_write_delimited(fd, "ok", 2);
         
         free(user);
         free(pass);

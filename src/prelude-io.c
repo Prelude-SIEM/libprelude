@@ -463,7 +463,9 @@ prelude_io_t *prelude_io_new(void)
 void prelude_io_set_file_io(prelude_io_t *pio, int fd) 
 {
         pio->fd = fd;
+#ifdef HAVE_SSL
         pio->ssl = NULL;
+#endif
         pio->read = file_read;
         pio->write = normal_write;
         pio->close = normal_close;
@@ -505,7 +507,9 @@ void prelude_io_set_ssl_io(prelude_io_t *pio, void *ssl)
 void prelude_io_set_socket_io(prelude_io_t *pio, int fd) 
 {
         pio->fd = fd;
+#ifdef HAVE_SSL
         pio->ssl = NULL;
+#endif
         pio->read = normal_read;
         pio->write = normal_write;
         pio->close = normal_close;

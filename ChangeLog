@@ -1,3 +1,26 @@
+2001-10-30  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/prelude-io.c: compile properly even if SSL is not available.
+
+	* src/prelude-client-mgr.c (parse_config_string): 
+	new function, stop using strtok() which doesn't really fit
+	our need. This also fix a bug where another NULL client would be added
+	causing AND of client emission to fail.
+
+	* sensor-adduser/sensor-adduser.c (main): 
+	Handle case where SSL is not installed.
+
+	* src/prelude-auth.c: 
+	Modify to work with a prelude-io object.
+	
+	* src/prelude-client.c: 
+	Fit prelude-auth API change.
+	
+	* src/Makefile.am (libprelude_la_SOURCES): 
+	* src/include/Makefile.am (include_HEADERS):
+	remove socket-op.h and socket-op.c, 
+	it is obsoleted by the prelude-io API.
+	
 2001-10-25  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/sensor.c: remove the prelude_sensor_t private structure.

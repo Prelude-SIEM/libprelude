@@ -26,6 +26,6 @@
 
 int prelude_auth_create_account(const char *filename);
 
-int prelude_auth_send(int sock, const char *addr);
+int prelude_auth_send(prelude_io_t *fd, const char *addr);
 
-int prelude_auth_recv(int sock, const char *addr);
+int prelude_auth_recv(prelude_io_t *fd, const char *addr);

@@ -6,7 +6,6 @@ include_HEADERS = config-engine.h 		\
 		  ssl.h				\
 		  ssl-gencrypto.h		\
 		  ssl-registration-msg.h	\
-		  socket-op.h			\
 		  daemonize.h			\
 		  common.h 			\
 		  string-matching.h		\
