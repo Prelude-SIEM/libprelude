@@ -1,7 +1,6 @@
 /*****
 *
-* Copyright (C) 2002,2003, 2004 Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
-* Copyright (C) 2003 Nicolas Delon <delon.nicolas@wanadoo.fr>
+* Copyright (C) 2004-2005 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -59,5 +58,7 @@ int idmef_criteria_match(idmef_criteria_t *criteria, idmef_message_t *message);
 idmef_criteria_t *idmef_criteria_get_or(idmef_criteria_t *criteria);
 
 idmef_criteria_t *idmef_criteria_get_and(idmef_criteria_t *criteria);
+
+int idmef_criteria_new_from_string(idmef_criteria_t **criteria, const char *str);
 
 #endif /* _LIBPRELUDE_IDMEF_CRITERIA_H */

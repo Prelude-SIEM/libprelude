@@ -6,7 +6,6 @@ include_HEADERS = common.h			\
 		  idmef.h			\
 		  idmef-additional-data.h	\
 		  idmef-criteria.h		\
-		  idmef-criteria-string.h	\
 		  idmef-criterion-value.h	\
 		  idmef-data.h			\
 		  idmef-message-id.h		\

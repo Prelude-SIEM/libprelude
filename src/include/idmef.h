@@ -37,7 +37,6 @@
 #include "idmef-path.h"
 #include "idmef-criterion-value.h"
 #include "idmef-criteria.h"
-#include "idmef-criteria-string.h"
 #include "idmef-message-read.h"
 #include "idmef-message-write.h"
 #include "idmef-additional-data.h"

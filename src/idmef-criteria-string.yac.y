@@ -40,7 +40,7 @@
 
 #include "idmef.h"
 #include "idmef-criteria.h"
-#include "idmef-criteria-string.h"
+
 
 idmef_criteria_t *processed_criteria;
 
@@ -247,7 +247,7 @@ static void yyerror(char *s)  /* Called by yyparse on error */
 
 
 
-int idmef_criteria_new_string(idmef_criteria_t **new_criteria, const char *str)
+int idmef_criteria_new_from_string(idmef_criteria_t **new_criteria, const char *str)
 {
         int ret;
 	pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
