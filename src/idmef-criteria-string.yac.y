@@ -84,6 +84,8 @@ extern void yy_delete_buffer(void *);
 %token TOK_OPERATOR_AND
 %token TOK_OPERATOR_OR
 
+%token TOK_ERROR
+
 %type <criteria> criteria
 %type <criteria> criteria_base
 %type <criterion> criterion
