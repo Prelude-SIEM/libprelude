@@ -22,10 +22,15 @@
 *****/
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
+#include <limits.h>
 #include <sys/time.h>
 #include <inttypes.h>
 #include <netinet/in.h> /* for extract.h */
+#include <string.h>
+#include <stdarg.h>
 
 #include "list.h"
 #include "prelude-log.h"
@@ -40,6 +45,8 @@
 #include "idmef-value.h"
 #include "idmef-tree.h"
 #include "idmef-tree-wrap.h"
+#include "prelude-strbuf.h"
+
 
 #include "config.h"
 #include "ntp.h"
@@ -174,4 +181,69 @@ int idmef_additionaldata_data_to_string(idmef_additional_data_t *ad, char *buffe
          */
 
         return (retval < size) ? retval : -1;
+}
+
+
+
+int prelude_get_process_name_and_path(const char *str, char **name, char **path)
+{
+	char cwd[PATH_MAX];
+	prelude_strbuf_t *strbuf = NULL;
+	char *ptr;
+
+	*name = NULL;
+	*path = NULL;
+
+	ptr = strrchr(str, '/');
+	if ( ptr ) {
+		*name = strdup(ptr + 1);
+		if ( ! *name ) {
+			log(LOG_ERR, "memory exhausted.\n");
+			return -1;
+		}
+
+		strbuf = prelude_strbuf_new();
+		if ( ! strbuf )
+			goto error;
+
+		if ( *str != '/' ) {
+			if ( getcwd(cwd, sizeof (cwd)) < 0 ) {
+				free(*name);
+				return -1;
+			}
+
+			if ( prelude_strbuf_sprintf(strbuf, "%s/", cwd) < 0 )
+				goto error;
+		}
+
+		if ( prelude_strbuf_ncat(strbuf, str, (ptr == str) ? 1 : (ptr - str)) < 0 )
+			goto error;
+
+		prelude_strbuf_dont_own(strbuf);
+		*path = prelude_strbuf_get_string(strbuf);
+		prelude_strbuf_destroy(strbuf);
+
+		return 2;
+
+	}
+
+	*name = strdup(str);
+	if ( ! *name ) {
+		log(LOG_ERR, "memory exhausted.\n");
+		return -1;
+	}
+
+	return 1;
+
+ error:
+	if ( *name )
+		free(*name);
+
+	if ( *path )
+		free(*path);
+
+	if ( strbuf )
+		prelude_strbuf_destroy(strbuf);
+
+	return -1;
 }

@@ -221,7 +221,7 @@ SWIG_TypeClientData(swig_type_info *ti, void *clientdata) {
  * perl5.swg
  *
  * Perl5 runtime library
- * $Header: /var/lib/cvsd/cvsroot/prelude/libprelude/bindings/perl/Prelude.c,v 1.3 2003/12/27 00:32:40 nicolas Exp $
+ * $Header: /var/lib/cvsd/cvsroot/prelude/libprelude/bindings/perl/Prelude.c,v 1.4 2003/12/28 17:34:47 nicolas Exp $
  * ----------------------------------------------------------------------------- */
 
 #define SWIGPERL
@@ -675,7 +675,60 @@ SWIGEXPORT(void) SWIG_init (CV *cv, CPerlObj *);
 #include "idmef-tree-to-string.h"
 #include "idmef-util.h"
 
-static	int prelude_alert_fill_infos(idmef_message_t *message)
+static int prelude_message_analyzer_fill_infos(idmef_analyzer_t *analyzer,
+					       int argc, char **argv)
+{
+	idmef_process_t *process;
+	idmef_string_t *process_name;
+	idmef_string_t *process_path;
+	char *name;
+	char *path;
+	int ret = 0;
+
+	if ( prelude_analyzer_fill_infos(analyzer) < 0 )
+		return -1;
+
+	process = idmef_analyzer_get_process(analyzer);
+	if ( ! process )
+		return -1;
+
+	ret = prelude_get_process_name_and_path(argv[0], &name, &path);
+	if ( ret < 0 )
+		return -1;
+
+	process_name = idmef_process_new_name(process);
+	if ( ! process_name ) {
+		free(name);
+		if ( ret == 2 )
+			free(path);
+		return -1;
+	}
+
+	if ( idmef_string_set_nodup(process_name, name) < 0 ) {
+		free(name);
+		if ( ret == 2 )
+			free(path);
+		return -1;
+	}
+
+	if ( ret == 2 ) {
+		process_path = idmef_process_new_path(process);
+		if ( ! process_path ) {
+			free(path);
+			return -1;
+		}
+
+		if ( idmef_string_set_nodup(process_path, path) < 0 ) {
+			free(path);
+			return -1;
+		}
+	}
+
+	return 0;
+}
+
+static	int prelude_alert_fill_infos(idmef_message_t *message,
+				     int argc, char **argv)
 {
 	idmef_alert_t *alert;
 	idmef_analyzer_t *analyzer;
@@ -696,10 +749,11 @@ static	int prelude_alert_fill_infos(idmef_message_t *message)
 	if ( ! analyzer )
 		return -1;
 
-	return prelude_analyzer_fill_infos(analyzer);
+	return prelude_message_analyzer_fill_infos(analyzer, argc, argv);
 }
 
-static	int prelude_heartbeat_fill_infos(idmef_message_t *message)
+static	int prelude_heartbeat_fill_infos(idmef_message_t *message,
+					 int argc, char **argv)
 {
 	idmef_heartbeat_t *heartbeat;
 	idmef_analyzer_t *analyzer;
@@ -719,7 +773,7 @@ static	int prelude_heartbeat_fill_infos(idmef_message_t *message)
 	if ( ! analyzer )
 		return -1;
 
-	return prelude_analyzer_fill_infos(analyzer);
+	return prelude_message_analyzer_fill_infos(analyzer, argc, argv);
 }
 
 
@@ -33229,6 +33283,80 @@ XS(_wrap_idmef_additionaldata_data_to_string) {
 }
 
 
+XS(_wrap_prelude_get_process_name_and_path) {
+    char _swigmsg[SWIG_MAX_ERRMSG] = "";
+    const char *_swigerr = _swigmsg;
+    {
+        char *arg1 ;
+        char **arg2 = (char **) 0 ;
+        char **arg3 = (char **) 0 ;
+        int result;
+        int argvi = 0;
+        dXSARGS;
+        
+        if ((items < 3) || (items > 3)) {
+            SWIG_croak("Usage: prelude_get_process_name_and_path(str,name,path);");
+        }
+        if (!SvOK((SV*) ST(0))) arg1 = 0;
+        else arg1 = (char *) SvPV(ST(0), PL_na);
+        {
+            AV *tempav;
+            I32 len;
+            int i;
+            SV  **tv;
+            
+            if ( ! SvROK(ST(1)) )
+            croak("Argument 2 is not a reference.");
+            
+            if ( SvTYPE(SvRV(ST(1))) != SVt_PVAV )
+            croak("Argument 2 is not an array.");
+            
+            tempav = (AV*) SvRV(ST(1));
+            len = av_len(tempav);
+            arg2 = (char **) malloc((len+2)*sizeof(char *));
+            if ( ! arg2 )
+            croak("out of memory\n");
+            for (i = 0; i <= len; i++) {
+                tv = av_fetch(tempav, i, 0);	
+                arg2[i] = (char *) SvPV_nolen(*tv);
+            }
+            arg2[i] = NULL;
+        }
+        {
+            AV *tempav;
+            I32 len;
+            int i;
+            SV  **tv;
+            
+            if ( ! SvROK(ST(2)) )
+            croak("Argument 3 is not a reference.");
+            
+            if ( SvTYPE(SvRV(ST(2))) != SVt_PVAV )
+            croak("Argument 3 is not an array.");
+            
+            tempav = (AV*) SvRV(ST(2));
+            len = av_len(tempav);
+            arg3 = (char **) malloc((len+2)*sizeof(char *));
+            if ( ! arg3 )
+            croak("out of memory\n");
+            for (i = 0; i <= len; i++) {
+                tv = av_fetch(tempav, i, 0);	
+                arg3[i] = (char *) SvPV_nolen(*tv);
+            }
+            arg3[i] = NULL;
+        }
+        result = (int)prelude_get_process_name_and_path((char const *)arg1,arg2,arg3);
+        
+        ST(argvi) = sv_newmortal();
+        sv_setiv(ST(argvi++), (IV) result);
+        XSRETURN(argvi);
+        fail:
+        (void) _swigerr;
+    }
+    croak(_swigerr);
+}
+
+
 XS(_wrap_idmef_type_find_child) {
     char _swigmsg[SWIG_MAX_ERRMSG] = "";
     const char *_swigerr = _swigmsg;
@@ -33608,19 +33736,45 @@ XS(_wrap_prelude_alert_fill_infos) {
     const char *_swigerr = _swigmsg;
     {
         idmef_message_t *arg1 = (idmef_message_t *) 0 ;
+        int arg2 ;
+        char **arg3 = (char **) 0 ;
         int result;
         int argvi = 0;
         dXSARGS;
         
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: prelude_alert_fill_infos(message);");
+        if ((items < 3) || (items > 3)) {
+            SWIG_croak("Usage: prelude_alert_fill_infos(message,argc,argv);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_message_t,0) < 0) {
                 SWIG_croak("Type error in argument 1 of prelude_alert_fill_infos. Expected _p_idmef_message_t");
             }
         }
-        result = (int)prelude_alert_fill_infos(arg1);
+        arg2 = (int) SvIV(ST(1));
+        {
+            AV *tempav;
+            I32 len;
+            int i;
+            SV  **tv;
+            
+            if ( ! SvROK(ST(2)) )
+            croak("Argument 3 is not a reference.");
+            
+            if ( SvTYPE(SvRV(ST(2))) != SVt_PVAV )
+            croak("Argument 3 is not an array.");
+            
+            tempav = (AV*) SvRV(ST(2));
+            len = av_len(tempav);
+            arg3 = (char **) malloc((len+2)*sizeof(char *));
+            if ( ! arg3 )
+            croak("out of memory\n");
+            for (i = 0; i <= len; i++) {
+                tv = av_fetch(tempav, i, 0);	
+                arg3[i] = (char *) SvPV_nolen(*tv);
+            }
+            arg3[i] = NULL;
+        }
+        result = (int)prelude_alert_fill_infos(arg1,arg2,arg3);
         
         ST(argvi) = sv_newmortal();
         sv_setiv(ST(argvi++), (IV) result);
@@ -33637,19 +33791,45 @@ XS(_wrap_prelude_heartbeat_fill_infos) {
     const char *_swigerr = _swigmsg;
     {
         idmef_message_t *arg1 = (idmef_message_t *) 0 ;
+        int arg2 ;
+        char **arg3 = (char **) 0 ;
         int result;
         int argvi = 0;
         dXSARGS;
         
-        if ((items < 1) || (items > 1)) {
-            SWIG_croak("Usage: prelude_heartbeat_fill_infos(message);");
+        if ((items < 3) || (items > 3)) {
+            SWIG_croak("Usage: prelude_heartbeat_fill_infos(message,argc,argv);");
         }
         {
             if (SWIG_ConvertPtr(ST(0), (void **) &arg1, SWIGTYPE_p_idmef_message_t,0) < 0) {
                 SWIG_croak("Type error in argument 1 of prelude_heartbeat_fill_infos. Expected _p_idmef_message_t");
             }
         }
-        result = (int)prelude_heartbeat_fill_infos(arg1);
+        arg2 = (int) SvIV(ST(1));
+        {
+            AV *tempav;
+            I32 len;
+            int i;
+            SV  **tv;
+            
+            if ( ! SvROK(ST(2)) )
+            croak("Argument 3 is not a reference.");
+            
+            if ( SvTYPE(SvRV(ST(2))) != SVt_PVAV )
+            croak("Argument 3 is not an array.");
+            
+            tempav = (AV*) SvRV(ST(2));
+            len = av_len(tempav);
+            arg3 = (char **) malloc((len+2)*sizeof(char *));
+            if ( ! arg3 )
+            croak("out of memory\n");
+            for (i = 0; i <= len; i++) {
+                tv = av_fetch(tempav, i, 0);	
+                arg3[i] = (char *) SvPV_nolen(*tv);
+            }
+            arg3[i] = NULL;
+        }
+        result = (int)prelude_heartbeat_fill_infos(arg1,arg2,arg3);
         
         ST(argvi) = sv_newmortal();
         sv_setiv(ST(argvi++), (IV) result);
@@ -35099,6 +35279,7 @@ static swig_command_info swig_commands[] = {
 {"Prelude::idmef_value_type_clone", _wrap_idmef_value_type_clone},
 {"Prelude::idmef_value_type_compare", _wrap_idmef_value_type_compare},
 {"Prelude::idmef_additionaldata_data_to_string", _wrap_idmef_additionaldata_data_to_string},
+{"Prelude::prelude_get_process_name_and_path", _wrap_prelude_get_process_name_and_path},
 {"Prelude::idmef_type_find_child", _wrap_idmef_type_find_child},
 {"Prelude::idmef_type_child_is_list", _wrap_idmef_type_child_is_list},
 {"Prelude::idmef_type_get_child_type", _wrap_idmef_type_get_child_type},

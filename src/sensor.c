@@ -246,22 +246,10 @@ static int setup_heartbeat_repeat_time(prelude_option_t *opt, const char *arg)
 
 static int get_process_name(int argc, char **argv) 
 {
-        char *ptr;
-        
         if ( ! argc || ! argv )
                 return -1;
 
-        ptr = strrchr(argv[0], '/');
-        if ( ! ptr )
-                process_name = argv[0];
-        else {
-                *ptr = '\0';
-                process_path = strdup(argv[0]);
-                process_name = strdup(ptr + 1);
-                *ptr = '/';
-        }
-
-        return 0;
+	return prelude_get_process_name_and_path(argv[0], &process_name, &process_path);
 }
 
 

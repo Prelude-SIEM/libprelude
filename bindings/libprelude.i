@@ -44,7 +44,60 @@
 #include "idmef-tree-to-string.h"
 #include "idmef-util.h"
 
-static	int prelude_alert_fill_infos(idmef_message_t *message)
+static int prelude_message_analyzer_fill_infos(idmef_analyzer_t *analyzer,
+					       int argc, char **argv)
+{
+	idmef_process_t *process;
+	idmef_string_t *process_name;
+	idmef_string_t *process_path;
+	char *name;
+	char *path;
+	int ret = 0;
+
+	if ( prelude_analyzer_fill_infos(analyzer) < 0 )
+		return -1;
+
+	process = idmef_analyzer_get_process(analyzer);
+	if ( ! process )
+		return -1;
+
+	ret = prelude_get_process_name_and_path(argv[0], &name, &path);
+	if ( ret < 0 )
+		return -1;
+
+	process_name = idmef_process_new_name(process);
+	if ( ! process_name ) {
+		free(name);
+		if ( ret == 2 )
+			free(path);
+		return -1;
+	}
+
+	if ( idmef_string_set_nodup(process_name, name) < 0 ) {
+		free(name);
+		if ( ret == 2 )
+			free(path);
+		return -1;
+	}
+
+	if ( ret == 2 ) {
+		process_path = idmef_process_new_path(process);
+		if ( ! process_path ) {
+			free(path);
+			return -1;
+		}
+
+		if ( idmef_string_set_nodup(process_path, path) < 0 ) {
+			free(path);
+			return -1;
+		}
+	}
+
+	return 0;
+}
+
+static	int prelude_alert_fill_infos(idmef_message_t *message,
+				     int argc, char **argv)
 {
 	idmef_alert_t *alert;
 	idmef_analyzer_t *analyzer;
@@ -65,10 +118,11 @@ static	int prelude_alert_fill_infos(idmef_message_t *message)
 	if ( ! analyzer )
 		return -1;
 
-	return prelude_analyzer_fill_infos(analyzer);
+	return prelude_message_analyzer_fill_infos(analyzer, argc, argv);
 }
 
-static	int prelude_heartbeat_fill_infos(idmef_message_t *message)
+static	int prelude_heartbeat_fill_infos(idmef_message_t *message,
+					 int argc, char **argv)
 {
 	idmef_heartbeat_t *heartbeat;
 	idmef_analyzer_t *analyzer;
@@ -88,7 +142,7 @@ static	int prelude_heartbeat_fill_infos(idmef_message_t *message)
 	if ( ! analyzer )
 		return -1;
 
-	return prelude_analyzer_fill_infos(analyzer);
+	return prelude_message_analyzer_fill_infos(analyzer, argc, argv);
 }
 
 %}
@@ -244,5 +298,5 @@ typedef unsigned long long uint64_t;
 %include "../../src/include/idmef-util.h"
 %include "../../src/include/idmef-type.h"
 
-int prelude_alert_fill_infos(idmef_message_t *message);
-int prelude_heartbeat_fill_infos(idmef_message_t *message);
+int prelude_alert_fill_infos(idmef_message_t *message, int argc, char **argv);
+int prelude_heartbeat_fill_infos(idmef_message_t *message, int argc, char **argv);

@@ -742,7 +742,60 @@ static swig_type_info *swig_types[76];
 #include "idmef-tree-to-string.h"
 #include "idmef-util.h"
 
-static	int prelude_alert_fill_infos(idmef_message_t *message)
+static int prelude_message_analyzer_fill_infos(idmef_analyzer_t *analyzer,
+					       int argc, char **argv)
+{
+	idmef_process_t *process;
+	idmef_string_t *process_name;
+	idmef_string_t *process_path;
+	char *name;
+	char *path;
+	int ret = 0;
+
+	if ( prelude_analyzer_fill_infos(analyzer) < 0 )
+		return -1;
+
+	process = idmef_analyzer_get_process(analyzer);
+	if ( ! process )
+		return -1;
+
+	ret = prelude_get_process_name_and_path(argv[0], &name, &path);
+	if ( ret < 0 )
+		return -1;
+
+	process_name = idmef_process_new_name(process);
+	if ( ! process_name ) {
+		free(name);
+		if ( ret == 2 )
+			free(path);
+		return -1;
+	}
+
+	if ( idmef_string_set_nodup(process_name, name) < 0 ) {
+		free(name);
+		if ( ret == 2 )
+			free(path);
+		return -1;
+	}
+
+	if ( ret == 2 ) {
+		process_path = idmef_process_new_path(process);
+		if ( ! process_path ) {
+			free(path);
+			return -1;
+		}
+
+		if ( idmef_string_set_nodup(process_path, path) < 0 ) {
+			free(path);
+			return -1;
+		}
+	}
+
+	return 0;
+}
+
+static	int prelude_alert_fill_infos(idmef_message_t *message,
+				     int argc, char **argv)
 {
 	idmef_alert_t *alert;
 	idmef_analyzer_t *analyzer;
@@ -763,10 +816,11 @@ static	int prelude_alert_fill_infos(idmef_message_t *message)
 	if ( ! analyzer )
 		return -1;
 
-	return prelude_analyzer_fill_infos(analyzer);
+	return prelude_message_analyzer_fill_infos(analyzer, argc, argv);
 }
 
-static	int prelude_heartbeat_fill_infos(idmef_message_t *message)
+static	int prelude_heartbeat_fill_infos(idmef_message_t *message,
+					 int argc, char **argv)
 {
 	idmef_heartbeat_t *heartbeat;
 	idmef_analyzer_t *analyzer;
@@ -786,7 +840,7 @@ static	int prelude_heartbeat_fill_infos(idmef_message_t *message)
 	if ( ! analyzer )
 		return -1;
 
-	return prelude_analyzer_fill_infos(analyzer);
+	return prelude_message_analyzer_fill_infos(analyzer, argc, argv);
 }
 
 
@@ -20372,6 +20426,83 @@ static PyObject *_wrap_idmef_additionaldata_data_to_string(PyObject *self, PyObj
 }
 
 
+static PyObject *_wrap_prelude_get_process_name_and_path(PyObject *self, PyObject *args) {
+    PyObject *resultobj;
+    char *arg1 ;
+    char **arg2 = (char **) 0 ;
+    char **arg3 = (char **) 0 ;
+    int result;
+    PyObject * obj0 = 0 ;
+    PyObject * obj1 = 0 ;
+    PyObject * obj2 = 0 ;
+    
+    if(!PyArg_ParseTuple(args,(char *)"OOO:prelude_get_process_name_and_path",&obj0,&obj1,&obj2)) goto fail;
+    {
+        if ( obj0 == Py_None )
+        arg1 = NULL;
+        else if ( PyString_Check(obj0) )
+        arg1 = PyString_AsString(obj0);
+        else {
+            PyErr_Format(PyExc_TypeError,
+            "expected None or string, %s found", obj0->ob_type->tp_name);
+            return NULL;
+        }
+    }
+    {
+        /* Check if is a list */
+        if ( PyList_Check(obj1) ) {
+            int size = PyList_Size(obj1);
+            int i = 0;
+            
+            arg2 = (char **) malloc((size+1) * sizeof(char *));
+            for ( i = 0; i < size; i++ ) {
+                PyObject *o = PyList_GetItem(obj1,i);
+                if ( PyString_Check(o) )
+                arg2[i] = PyString_AsString(PyList_GetItem(obj1, i));
+                else {
+                    PyErr_SetString(PyExc_TypeError, "list must contain strings");
+                    free(arg2);
+                    return NULL;
+                }
+            }
+            arg2[i] = 0;
+        }else {
+            PyErr_SetString(PyExc_TypeError, "not a list");
+            return NULL;
+        }
+    }
+    {
+        /* Check if is a list */
+        if ( PyList_Check(obj2) ) {
+            int size = PyList_Size(obj2);
+            int i = 0;
+            
+            arg3 = (char **) malloc((size+1) * sizeof(char *));
+            for ( i = 0; i < size; i++ ) {
+                PyObject *o = PyList_GetItem(obj2,i);
+                if ( PyString_Check(o) )
+                arg3[i] = PyString_AsString(PyList_GetItem(obj2, i));
+                else {
+                    PyErr_SetString(PyExc_TypeError, "list must contain strings");
+                    free(arg3);
+                    return NULL;
+                }
+            }
+            arg3[i] = 0;
+        }else {
+            PyErr_SetString(PyExc_TypeError, "not a list");
+            return NULL;
+        }
+    }
+    result = (int)prelude_get_process_name_and_path((char const *)arg1,arg2,arg3);
+    
+    resultobj = PyInt_FromLong((long)result);
+    return resultobj;
+    fail:
+    return NULL;
+}
+
+
 static PyObject *_wrap_idmef_type_find_child(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_type_t arg1 ;
@@ -20623,12 +20754,38 @@ static PyObject *_wrap_idmef_type_get_name(PyObject *self, PyObject *args) {
 static PyObject *_wrap_prelude_alert_fill_infos(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_message_t *arg1 = (idmef_message_t *) 0 ;
+    int arg2 ;
+    char **arg3 = (char **) 0 ;
     int result;
     PyObject * obj0 = 0 ;
+    PyObject * obj2 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"O:prelude_alert_fill_infos",&obj0)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OiO:prelude_alert_fill_infos",&obj0,&arg2,&obj2)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_message_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (int)prelude_alert_fill_infos(arg1);
+    {
+        /* Check if is a list */
+        if ( PyList_Check(obj2) ) {
+            int size = PyList_Size(obj2);
+            int i = 0;
+            
+            arg3 = (char **) malloc((size+1) * sizeof(char *));
+            for ( i = 0; i < size; i++ ) {
+                PyObject *o = PyList_GetItem(obj2,i);
+                if ( PyString_Check(o) )
+                arg3[i] = PyString_AsString(PyList_GetItem(obj2, i));
+                else {
+                    PyErr_SetString(PyExc_TypeError, "list must contain strings");
+                    free(arg3);
+                    return NULL;
+                }
+            }
+            arg3[i] = 0;
+        }else {
+            PyErr_SetString(PyExc_TypeError, "not a list");
+            return NULL;
+        }
+    }
+    result = (int)prelude_alert_fill_infos(arg1,arg2,arg3);
     
     resultobj = PyInt_FromLong((long)result);
     return resultobj;
@@ -20640,12 +20797,38 @@ static PyObject *_wrap_prelude_alert_fill_infos(PyObject *self, PyObject *args) 
 static PyObject *_wrap_prelude_heartbeat_fill_infos(PyObject *self, PyObject *args) {
     PyObject *resultobj;
     idmef_message_t *arg1 = (idmef_message_t *) 0 ;
+    int arg2 ;
+    char **arg3 = (char **) 0 ;
     int result;
     PyObject * obj0 = 0 ;
+    PyObject * obj2 = 0 ;
     
-    if(!PyArg_ParseTuple(args,(char *)"O:prelude_heartbeat_fill_infos",&obj0)) goto fail;
+    if(!PyArg_ParseTuple(args,(char *)"OiO:prelude_heartbeat_fill_infos",&obj0,&arg2,&obj2)) goto fail;
     if ((SWIG_ConvertPtr(obj0,(void **) &arg1, SWIGTYPE_p_idmef_message_t,SWIG_POINTER_EXCEPTION | 0 )) == -1) SWIG_fail;
-    result = (int)prelude_heartbeat_fill_infos(arg1);
+    {
+        /* Check if is a list */
+        if ( PyList_Check(obj2) ) {
+            int size = PyList_Size(obj2);
+            int i = 0;
+            
+            arg3 = (char **) malloc((size+1) * sizeof(char *));
+            for ( i = 0; i < size; i++ ) {
+                PyObject *o = PyList_GetItem(obj2,i);
+                if ( PyString_Check(o) )
+                arg3[i] = PyString_AsString(PyList_GetItem(obj2, i));
+                else {
+                    PyErr_SetString(PyExc_TypeError, "list must contain strings");
+                    free(arg3);
+                    return NULL;
+                }
+            }
+            arg3[i] = 0;
+        }else {
+            PyErr_SetString(PyExc_TypeError, "not a list");
+            return NULL;
+        }
+    }
+    result = (int)prelude_heartbeat_fill_infos(arg1,arg2,arg3);
     
     resultobj = PyInt_FromLong((long)result);
     return resultobj;
@@ -21735,6 +21918,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"idmef_value_type_clone", _wrap_idmef_value_type_clone, METH_VARARGS },
 	 { (char *)"idmef_value_type_compare", _wrap_idmef_value_type_compare, METH_VARARGS },
 	 { (char *)"idmef_additionaldata_data_to_string", _wrap_idmef_additionaldata_data_to_string, METH_VARARGS },
+	 { (char *)"prelude_get_process_name_and_path", _wrap_prelude_get_process_name_and_path, METH_VARARGS },
 	 { (char *)"idmef_type_find_child", _wrap_idmef_type_find_child, METH_VARARGS },
 	 { (char *)"idmef_type_child_is_list", _wrap_idmef_type_child_is_list, METH_VARARGS },
 	 { (char *)"idmef_type_get_child_type", _wrap_idmef_type_get_child_type, METH_VARARGS },

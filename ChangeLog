@@ -1,3 +1,27 @@
+2003-12-28  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
+	* bindings/libprelude.i:
+	(prelude_alert_fill_infos)
+	(prelude_heartbeat_fill_infos)
+	setup process name and path with prelude_get_process_name_and_path
+
+	* bindings/perl/Prelude.c:
+	* bindings/python/_prelude.c:
+	regenerated
+
+	* bindings/perl/Prelude.pm:
+	* bindings/python/prelude.py:
+	fit prelude_alert_fill_infos last changes
+
+	* src/idmef-util.c:
+	* src/include/idmef-util.h:
+	(prelude_get_process_name_and_path)
+	new function
+
+	* src/sensor.c:
+	(get_process_name)
+	updated to use prelude_get_process_name_and_path
+
 2003-12-28  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* src/prelude-client.c (prelude_client_send_msg): 

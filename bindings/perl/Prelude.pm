@@ -273,10 +273,13 @@ sub	new
 {
     my	$class = shift;
     my	$self;
+    my	@argv;
 
     $self = new IDMEFMessage() or return undef;
 
-    Prelude::prelude_alert_fill_infos($$self) < 0 and return undef;
+    @argv = ($0, @ARGV);
+
+    Prelude::prelude_alert_fill_infos($$self, scalar(@argv), \@argv) < 0 and return undef;
 
     return $self;
 }

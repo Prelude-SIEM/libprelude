@@ -409,7 +409,7 @@ class IDMEFAlert(IDMEFMessage):
     def __init__(self):
         """Create a message alert with with some message alert's field already built."""
         IDMEFMessage.__init__(self)
-        if prelude_alert_fill_infos(self.res) < 0:
+        if prelude_alert_fill_infos(self.res, len(sys.argv), sys.argv) < 0:
             raise PreludeError()
 
 
