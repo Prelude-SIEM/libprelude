@@ -251,7 +251,7 @@ ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg
 
         prelude_io_close(failover->fd);
         
-        if ( ret == prelude_msg_error ) {
+        if ( ret != prelude_msg_finished ) {
                 log(LOG_ERR, "error reading message index=%d.\n", failover->older_index);
                 return -1;
         }
