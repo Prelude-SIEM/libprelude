@@ -335,6 +335,14 @@ sub	struct_destroy_internal
 static void idmef_$struct->{short_typename}_destroy_internal($struct->{typename} *ptr)
 \{
 ");
+
+    $self->output("
+       if ( ! prelude_list_empty(&ptr->list) ) \{
+               prelude_list_del(&ptr->list);
+               PRELUDE_INIT_LIST_HEAD(&ptr->list);
+       \}
+    ") if ( $struct->{is_listed} );
+
     foreach my $field ( @{ $struct->{field_list} } ) {
 	my $destroy_func = "$field->{short_typename}_destroy";
 	my $destroy_internal_func = "${destroy_func}_internal";
@@ -353,7 +361,6 @@ static void idmef_$struct->{short_typename}_destroy_internal($struct->{typename}
 
 		prelude_list_for_each_safe(tmp, n, &ptr->$field->{name}) \{
 			entry = prelude_list_entry(tmp, $field->{typename}, list);
-			prelude_list_del(&entry->list);
 			$destroy_func(entry);
 		\}
 	\}

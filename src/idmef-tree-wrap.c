@@ -1951,6 +1951,11 @@ void *idmef_additional_data_new_child(void *p, idmef_child_t child, int n)
 static void idmef_additional_data_destroy_internal(idmef_additional_data_t *ptr)
 {
 
+       if ( ! prelude_list_empty(&ptr->list) ) {
+               prelude_list_del(&ptr->list);
+               PRELUDE_INIT_LIST_HEAD(&ptr->list);
+       }
+    
 	if ( ptr->meaning ) {
 		prelude_string_destroy(ptr->meaning);
 		ptr->meaning = NULL;
@@ -2245,6 +2250,11 @@ void *idmef_reference_new_child(void *p, idmef_child_t child, int n)
 static void idmef_reference_destroy_internal(idmef_reference_t *ptr)
 {
 
+       if ( ! prelude_list_empty(&ptr->list) ) {
+               prelude_list_del(&ptr->list);
+               PRELUDE_INIT_LIST_HEAD(&ptr->list);
+       }
+    
 	prelude_string_destroy_internal(&ptr->name);
 
 	prelude_string_destroy_internal(&ptr->url);
@@ -2632,7 +2642,6 @@ static void idmef_classification_destroy_internal(idmef_classification_t *ptr)
 
 		prelude_list_for_each_safe(tmp, n, &ptr->reference_list) {
 			entry = prelude_list_entry(tmp, idmef_reference_t, list);
-			prelude_list_del(&entry->list);
 			idmef_reference_destroy(entry);
 		}
 	}
@@ -2801,18 +2810,10 @@ void idmef_classification_set_reference(idmef_classification_t *ptr, idmef_refer
 }
 
 /**
-<<<<<<< .mine
- * idmef_classification_new_HASH(0x82783d8):
-=======
- * idmef_classification_new_HASH(0x8023e900):
->>>>>>> .r4599
+ * idmef_classification_new_HASH(0x80242350):
  * @ptr: pointer to a #idmef_classification_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x82783d8) children of @ptr,
-=======
- * Create a new HASH(0x8023e900) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x80242350) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_reference_t object.
  * 
  * Returns: a pointer to the created #idmef_reference_t object, or NULL if an error occured.
@@ -2953,6 +2954,11 @@ void *idmef_user_id_new_child(void *p, idmef_child_t child, int n)
 static void idmef_user_id_destroy_internal(idmef_user_id_t *ptr)
 {
 
+       if ( ! prelude_list_empty(&ptr->list) ) {
+               prelude_list_del(&ptr->list);
+               PRELUDE_INIT_LIST_HEAD(&ptr->list);
+       }
+    
 	if ( ptr->name ) {
 		prelude_string_destroy(ptr->name);
 		ptr->name = NULL;
@@ -3322,7 +3328,6 @@ static void idmef_user_destroy_internal(idmef_user_t *ptr)
 
 		prelude_list_for_each_safe(tmp, n, &ptr->user_id_list) {
 			entry = prelude_list_entry(tmp, idmef_user_id_t, list);
-			prelude_list_del(&entry->list);
 			idmef_user_id_destroy(entry);
 		}
 	}
@@ -3480,18 +3485,10 @@ void idmef_user_set_user_id(idmef_user_t *ptr, idmef_user_id_t *object)
 }
 
 /**
-<<<<<<< .mine
- * idmef_user_new_HASH(0x827b164):
-=======
- * idmef_user_new_HASH(0x802414b4):
->>>>>>> .r4599
+ * idmef_user_new_HASH(0x80245e40):
  * @ptr: pointer to a #idmef_user_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x827b164) children of @ptr,
-=======
- * Create a new HASH(0x802414b4) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x80245e40) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_user_id_t object.
  * 
  * Returns: a pointer to the created #idmef_user_id_t object, or NULL if an error occured.
@@ -3644,6 +3641,11 @@ void *idmef_address_new_child(void *p, idmef_child_t child, int n)
 static void idmef_address_destroy_internal(idmef_address_t *ptr)
 {
 
+       if ( ! prelude_list_empty(&ptr->list) ) {
+               prelude_list_del(&ptr->list);
+               PRELUDE_INIT_LIST_HEAD(&ptr->list);
+       }
+    
 	if ( ptr->vlan_name ) {
 		prelude_string_destroy(ptr->vlan_name);
 		ptr->vlan_name = NULL;
@@ -4202,7 +4204,6 @@ static void idmef_process_destroy_internal(idmef_process_t *ptr)
 
 		prelude_list_for_each_safe(tmp, n, &ptr->arg_list) {
 			entry = prelude_list_entry(tmp, prelude_string_t, list);
-			prelude_list_del(&entry->list);
 			prelude_string_destroy(entry);
 		}
 	}
@@ -4213,7 +4214,6 @@ static void idmef_process_destroy_internal(idmef_process_t *ptr)
 
 		prelude_list_for_each_safe(tmp, n, &ptr->env_list) {
 			entry = prelude_list_entry(tmp, prelude_string_t, list);
-			prelude_list_del(&entry->list);
 			prelude_string_destroy(entry);
 		}
 	}
@@ -4499,18 +4499,10 @@ void idmef_process_set_arg(idmef_process_t *ptr, prelude_string_t *object)
 }
 
 /**
-<<<<<<< .mine
- * idmef_process_new_HASH(0x827f708):
-=======
- * idmef_process_new_HASH(0x80244fb0):
->>>>>>> .r4599
+ * idmef_process_new_HASH(0x8024a3fc):
  * @ptr: pointer to a #idmef_process_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x827f708) children of @ptr,
-=======
- * Create a new HASH(0x80244fb0) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x8024a3fc) children of @ptr,
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
  * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
@@ -4588,18 +4580,10 @@ void idmef_process_set_env(idmef_process_t *ptr, prelude_string_t *object)
 }
 
 /**
-<<<<<<< .mine
- * idmef_process_new_HASH(0x827f774):
-=======
- * idmef_process_new_HASH(0x80246a60):
->>>>>>> .r4599
+ * idmef_process_new_HASH(0x8024a468):
  * @ptr: pointer to a #idmef_process_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x827f774) children of @ptr,
-=======
- * Create a new HASH(0x80246a60) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x8024a468) children of @ptr,
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
  * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
@@ -4789,7 +4773,6 @@ static void idmef_web_service_destroy_internal(idmef_web_service_t *ptr)
 
 		prelude_list_for_each_safe(tmp, n, &ptr->arg_list) {
 			entry = prelude_list_entry(tmp, prelude_string_t, list);
-			prelude_list_del(&entry->list);
 			prelude_string_destroy(entry);
 		}
 	}
@@ -5035,18 +5018,10 @@ void idmef_web_service_set_arg(idmef_web_service_t *ptr, prelude_string_t *objec
 }
 
 /**
-<<<<<<< .mine
- * idmef_web_service_new_HASH(0x82808a8):
-=======
- * idmef_web_service_new_HASH(0x80246d30):
->>>>>>> .r4599
+ * idmef_web_service_new_HASH(0x8024a738):
  * @ptr: pointer to a #idmef_web_service_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x82808a8) children of @ptr,
-=======
- * Create a new HASH(0x80246d30) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x8024a738) children of @ptr,
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
  * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
@@ -6629,7 +6604,6 @@ static void idmef_node_destroy_internal(idmef_node_t *ptr)
 
 		prelude_list_for_each_safe(tmp, n, &ptr->address_list) {
 			entry = prelude_list_entry(tmp, idmef_address_t, list);
-			prelude_list_del(&entry->list);
 			idmef_address_destroy(entry);
 		}
 	}
@@ -6919,18 +6893,10 @@ void idmef_node_set_address(idmef_node_t *ptr, idmef_address_t *object)
 }
 
 /**
-<<<<<<< .mine
- * idmef_node_new_HASH(0x828622c):
-=======
- * idmef_node_new_HASH(0x8024ce84):
->>>>>>> .r4599
+ * idmef_node_new_HASH(0x8025085c):
  * @ptr: pointer to a #idmef_node_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x828622c) children of @ptr,
-=======
- * Create a new HASH(0x8024ce84) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x8025085c) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_address_t object.
  * 
  * Returns: a pointer to the created #idmef_address_t object, or NULL if an error occured.
@@ -7089,6 +7055,11 @@ void *idmef_source_new_child(void *p, idmef_child_t child, int n)
 static void idmef_source_destroy_internal(idmef_source_t *ptr)
 {
 
+       if ( ! prelude_list_empty(&ptr->list) ) {
+               prelude_list_del(&ptr->list);
+               PRELUDE_INIT_LIST_HEAD(&ptr->list);
+       }
+    
 	if ( ptr->interface ) {
 		prelude_string_destroy(ptr->interface);
 		ptr->interface = NULL;
@@ -7641,6 +7612,11 @@ void *idmef_file_access_new_child(void *p, idmef_child_t child, int n)
 static void idmef_file_access_destroy_internal(idmef_file_access_t *ptr)
 {
 
+       if ( ! prelude_list_empty(&ptr->list) ) {
+               prelude_list_del(&ptr->list);
+               PRELUDE_INIT_LIST_HEAD(&ptr->list);
+       }
+    
 	idmef_user_id_destroy_internal(&ptr->user_id);
 
 	{
@@ -7649,7 +7625,6 @@ static void idmef_file_access_destroy_internal(idmef_file_access_t *ptr)
 
 		prelude_list_for_each_safe(tmp, n, &ptr->permission_list) {
 			entry = prelude_list_entry(tmp, prelude_string_t, list);
-			prelude_list_del(&entry->list);
 			prelude_string_destroy(entry);
 		}
 	}
@@ -7753,18 +7728,10 @@ void idmef_file_access_set_permission(idmef_file_access_t *ptr, prelude_string_t
 }
 
 /**
-<<<<<<< .mine
- * idmef_file_access_new_HASH(0x8288778):
-=======
- * idmef_file_access_new_HASH(0x8024ef40):
->>>>>>> .r4599
+ * idmef_file_access_new_HASH(0x802529d0):
  * @ptr: pointer to a #idmef_file_access_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x8288778) children of @ptr,
-=======
- * Create a new HASH(0x8024ef40) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x802529d0) children of @ptr,
  * and add it to the tail of @ptr list of #prelude_string_t object.
  * 
  * Returns: a pointer to the created #prelude_string_t object, or NULL if an error occured.
@@ -8350,6 +8317,11 @@ void *idmef_checksum_new_child(void *p, idmef_child_t child, int n)
 static void idmef_checksum_destroy_internal(idmef_checksum_t *ptr)
 {
 
+       if ( ! prelude_list_empty(&ptr->list) ) {
+               prelude_list_del(&ptr->list);
+               PRELUDE_INIT_LIST_HEAD(&ptr->list);
+       }
+    
 	prelude_string_destroy_internal(&ptr->value);
 
 	if ( ptr->key ) {
@@ -8800,6 +8772,11 @@ void *idmef_file_new_child(void *p, idmef_child_t child, int n)
 static void idmef_file_destroy_internal(idmef_file_t *ptr)
 {
 
+       if ( ! prelude_list_empty(&ptr->list) ) {
+               prelude_list_del(&ptr->list);
+               PRELUDE_INIT_LIST_HEAD(&ptr->list);
+       }
+    
 	prelude_string_destroy_internal(&ptr->name);
 
 	prelude_string_destroy_internal(&ptr->path);
@@ -8825,7 +8802,6 @@ static void idmef_file_destroy_internal(idmef_file_t *ptr)
 
 		prelude_list_for_each_safe(tmp, n, &ptr->file_access_list) {
 			entry = prelude_list_entry(tmp, idmef_file_access_t, list);
-			prelude_list_del(&entry->list);
 			idmef_file_access_destroy(entry);
 		}
 	}
@@ -8836,7 +8812,6 @@ static void idmef_file_destroy_internal(idmef_file_t *ptr)
 
 		prelude_list_for_each_safe(tmp, n, &ptr->linkage_list) {
 			entry = prelude_list_entry(tmp, idmef_linkage_t, list);
-			prelude_list_del(&entry->list);
 			idmef_linkage_destroy(entry);
 		}
 	}
@@ -8852,7 +8827,6 @@ static void idmef_file_destroy_internal(idmef_file_t *ptr)
 
 		prelude_list_for_each_safe(tmp, n, &ptr->checksum_list) {
 			entry = prelude_list_entry(tmp, idmef_checksum_t, list);
-			prelude_list_del(&entry->list);
 			idmef_checksum_destroy(entry);
 		}
 	}
@@ -9380,18 +9354,10 @@ void idmef_file_set_file_access(idmef_file_t *ptr, idmef_file_access_t *object)
 }
 
 /**
-<<<<<<< .mine
- * idmef_file_new_HASH(0x828e0dc):
-=======
- * idmef_file_new_HASH(0x80254c6c):
->>>>>>> .r4599
+ * idmef_file_new_HASH(0x80259510):
  * @ptr: pointer to a #idmef_file_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x828e0dc) children of @ptr,
-=======
- * Create a new HASH(0x80254c6c) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x80259510) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_file_access_t object.
  * 
  * Returns: a pointer to the created #idmef_file_access_t object, or NULL if an error occured.
@@ -9468,18 +9434,10 @@ void idmef_file_set_linkage(idmef_file_t *ptr, idmef_linkage_t *object)
 }
 
 /**
-<<<<<<< .mine
- * idmef_file_new_HASH(0x828e148):
-=======
- * idmef_file_new_HASH(0x80255f9c):
->>>>>>> .r4599
+ * idmef_file_new_HASH(0x8025957c):
  * @ptr: pointer to a #idmef_file_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x828e148) children of @ptr,
-=======
- * Create a new HASH(0x80255f9c) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x8025957c) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_linkage_t object.
  * 
  * Returns: a pointer to the created #idmef_linkage_t object, or NULL if an error occured.
@@ -9612,18 +9570,10 @@ void idmef_file_set_checksum(idmef_file_t *ptr, idmef_checksum_t *object)
 }
 
 /**
-<<<<<<< .mine
- * idmef_file_new_HASH(0x828fc4c):
-=======
- * idmef_file_new_HASH(0x8025608c):
->>>>>>> .r4599
+ * idmef_file_new_HASH(0x8025966c):
  * @ptr: pointer to a #idmef_file_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x828fc4c) children of @ptr,
-=======
- * Create a new HASH(0x8025608c) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x8025966c) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_checksum_t object.
  * 
  * Returns: a pointer to the created #idmef_checksum_t object, or NULL if an error occured.
@@ -9862,6 +9812,11 @@ void *idmef_linkage_new_child(void *p, idmef_child_t child, int n)
 static void idmef_linkage_destroy_internal(idmef_linkage_t *ptr)
 {
 
+       if ( ! prelude_list_empty(&ptr->list) ) {
+               prelude_list_del(&ptr->list);
+               PRELUDE_INIT_LIST_HEAD(&ptr->list);
+       }
+    
 	prelude_string_destroy_internal(&ptr->name);
 
 	prelude_string_destroy_internal(&ptr->path);
@@ -10263,6 +10218,11 @@ void *idmef_target_new_child(void *p, idmef_child_t child, int n)
 static void idmef_target_destroy_internal(idmef_target_t *ptr)
 {
 
+       if ( ! prelude_list_empty(&ptr->list) ) {
+               prelude_list_del(&ptr->list);
+               PRELUDE_INIT_LIST_HEAD(&ptr->list);
+       }
+    
 	prelude_string_destroy_internal(&ptr->interface);
 
 	if ( ptr->node ) {
@@ -10291,7 +10251,6 @@ static void idmef_target_destroy_internal(idmef_target_t *ptr)
 
 		prelude_list_for_each_safe(tmp, n, &ptr->file_list) {
 			entry = prelude_list_entry(tmp, idmef_file_t, list);
-			prelude_list_del(&entry->list);
 			idmef_file_destroy(entry);
 		}
 	}
@@ -10732,18 +10691,10 @@ void idmef_target_set_file(idmef_target_t *ptr, idmef_file_t *object)
 }
 
 /**
-<<<<<<< .mine
- * idmef_target_new_HASH(0x8292e80):
-=======
- * idmef_target_new_HASH(0x80259630):
->>>>>>> .r4599
+ * idmef_target_new_HASH(0x8025cc30):
  * @ptr: pointer to a #idmef_target_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x8292e80) children of @ptr,
-=======
- * Create a new HASH(0x80259630) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x8025cc30) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_file_t object.
  * 
  * Returns: a pointer to the created #idmef_file_t object, or NULL if an error occured.
@@ -11761,6 +11712,11 @@ void *idmef_alertident_new_child(void *p, idmef_child_t child, int n)
 static void idmef_alertident_destroy_internal(idmef_alertident_t *ptr)
 {
 
+       if ( ! prelude_list_empty(&ptr->list) ) {
+               prelude_list_del(&ptr->list);
+               PRELUDE_INIT_LIST_HEAD(&ptr->list);
+       }
+    
 
 	/* free() should be done by the caller */
 }
@@ -12300,6 +12256,11 @@ void *idmef_action_new_child(void *p, idmef_child_t child, int n)
 static void idmef_action_destroy_internal(idmef_action_t *ptr)
 {
 
+       if ( ! prelude_list_empty(&ptr->list) ) {
+               prelude_list_del(&ptr->list);
+               PRELUDE_INIT_LIST_HEAD(&ptr->list);
+       }
+    
 	if ( ptr->description ) {
 		prelude_string_destroy(ptr->description);
 		ptr->description = NULL;
@@ -12767,7 +12728,6 @@ static void idmef_assessment_destroy_internal(idmef_assessment_t *ptr)
 
 		prelude_list_for_each_safe(tmp, n, &ptr->action_list) {
 			entry = prelude_list_entry(tmp, idmef_action_t, list);
-			prelude_list_del(&entry->list);
 			idmef_action_destroy(entry);
 		}
 	}
@@ -12883,18 +12843,10 @@ void idmef_assessment_set_action(idmef_assessment_t *ptr, idmef_action_t *object
 }
 
 /**
-<<<<<<< .mine
- * idmef_assessment_new_HASH(0x829ae3c):
-=======
- * idmef_assessment_new_HASH(0x8026160c):
->>>>>>> .r4599
+ * idmef_assessment_new_HASH(0x80265034):
  * @ptr: pointer to a #idmef_assessment_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x829ae3c) children of @ptr,
-=======
- * Create a new HASH(0x8026160c) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x80265034) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_action_t object.
  * 
  * Returns: a pointer to the created #idmef_action_t object, or NULL if an error occured.
@@ -13128,7 +13080,6 @@ static void idmef_tool_alert_destroy_internal(idmef_tool_alert_t *ptr)
 
 		prelude_list_for_each_safe(tmp, n, &ptr->alertident_list) {
 			entry = prelude_list_entry(tmp, idmef_alertident_t, list);
-			prelude_list_del(&entry->list);
 			idmef_alertident_destroy(entry);
 		}
 	}
@@ -13308,18 +13259,10 @@ void idmef_tool_alert_set_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t
 }
 
 /**
-<<<<<<< .mine
- * idmef_tool_alert_new_HASH(0x829b124):
-=======
- * idmef_tool_alert_new_HASH(0x80262680):
->>>>>>> .r4599
+ * idmef_tool_alert_new_HASH(0x80265d20):
  * @ptr: pointer to a #idmef_tool_alert_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x829b124) children of @ptr,
-=======
- * Create a new HASH(0x80262680) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x80265d20) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_alertident_t object.
  * 
  * Returns: a pointer to the created #idmef_alertident_t object, or NULL if an error occured.
@@ -13486,7 +13429,6 @@ static void idmef_correlation_alert_destroy_internal(idmef_correlation_alert_t *
 
 		prelude_list_for_each_safe(tmp, n, &ptr->alertident_list) {
 			entry = prelude_list_entry(tmp, idmef_alertident_t, list);
-			prelude_list_del(&entry->list);
 			idmef_alertident_destroy(entry);
 		}
 	}
@@ -13600,18 +13542,10 @@ void idmef_correlation_alert_set_alertident(idmef_correlation_alert_t *ptr, idme
 }
 
 /**
-<<<<<<< .mine
- * idmef_correlation_alert_new_HASH(0x829bdd0):
-=======
- * idmef_correlation_alert_new_HASH(0x80262860):
->>>>>>> .r4599
+ * idmef_correlation_alert_new_HASH(0x80265f00):
  * @ptr: pointer to a #idmef_correlation_alert_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x829bdd0) children of @ptr,
-=======
- * Create a new HASH(0x80262860) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x80265f00) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_alertident_t object.
  * 
  * Returns: a pointer to the created #idmef_alertident_t object, or NULL if an error occured.
@@ -14208,7 +14142,6 @@ static void idmef_alert_destroy_internal(idmef_alert_t *ptr)
 
 		prelude_list_for_each_safe(tmp, n, &ptr->source_list) {
 			entry = prelude_list_entry(tmp, idmef_source_t, list);
-			prelude_list_del(&entry->list);
 			idmef_source_destroy(entry);
 		}
 	}
@@ -14219,7 +14152,6 @@ static void idmef_alert_destroy_internal(idmef_alert_t *ptr)
 
 		prelude_list_for_each_safe(tmp, n, &ptr->target_list) {
 			entry = prelude_list_entry(tmp, idmef_target_t, list);
-			prelude_list_del(&entry->list);
 			idmef_target_destroy(entry);
 		}
 	}
@@ -14235,7 +14167,6 @@ static void idmef_alert_destroy_internal(idmef_alert_t *ptr)
 
 		prelude_list_for_each_safe(tmp, n, &ptr->additional_data_list) {
 			entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
-			prelude_list_del(&entry->list);
 			idmef_additional_data_destroy(entry);
 		}
 	}
@@ -14666,18 +14597,10 @@ void idmef_alert_set_source(idmef_alert_t *ptr, idmef_source_t *object)
 }
 
 /**
-<<<<<<< .mine
- * idmef_alert_new_HASH(0x829e2e0):
-=======
- * idmef_alert_new_HASH(0x80264df8):
->>>>>>> .r4599
+ * idmef_alert_new_HASH(0x80268f0c):
  * @ptr: pointer to a #idmef_alert_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x829e2e0) children of @ptr,
-=======
- * Create a new HASH(0x80264df8) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x80268f0c) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_source_t object.
  * 
  * Returns: a pointer to the created #idmef_source_t object, or NULL if an error occured.
@@ -14754,18 +14677,10 @@ void idmef_alert_set_target(idmef_alert_t *ptr, idmef_target_t *object)
 }
 
 /**
-<<<<<<< .mine
- * idmef_alert_new_HASH(0x829e34c):
-=======
- * idmef_alert_new_HASH(0x80264e64):
->>>>>>> .r4599
+ * idmef_alert_new_HASH(0x80268f78):
  * @ptr: pointer to a #idmef_alert_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x829e34c) children of @ptr,
-=======
- * Create a new HASH(0x80264e64) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x80268f78) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_target_t object.
  * 
  * Returns: a pointer to the created #idmef_target_t object, or NULL if an error occured.
@@ -14898,18 +14813,10 @@ void idmef_alert_set_additional_data(idmef_alert_t *ptr, idmef_additional_data_t
 }
 
 /**
-<<<<<<< .mine
- * idmef_alert_new_HASH(0x829e454):
-=======
- * idmef_alert_new_HASH(0x802659a0):
->>>>>>> .r4599
+ * idmef_alert_new_HASH(0x80269080):
  * @ptr: pointer to a #idmef_alert_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x829e454) children of @ptr,
-=======
- * Create a new HASH(0x802659a0) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x80269080) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_additional_data_t object.
  * 
  * Returns: a pointer to the created #idmef_additional_data_t object, or NULL if an error occured.
@@ -15365,7 +15272,6 @@ static void idmef_heartbeat_destroy_internal(idmef_heartbeat_t *ptr)
 
 		prelude_list_for_each_safe(tmp, n, &ptr->additional_data_list) {
 			entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
-			prelude_list_del(&entry->list);
 			idmef_additional_data_destroy(entry);
 		}
 	}
@@ -15653,18 +15559,10 @@ void idmef_heartbeat_set_additional_data(idmef_heartbeat_t *ptr, idmef_additiona
 }
 
 /**
-<<<<<<< .mine
- * idmef_heartbeat_new_HASH(0x82a077c):
-=======
- * idmef_heartbeat_new_HASH(0x80266754):
->>>>>>> .r4599
+ * idmef_heartbeat_new_HASH(0x8026a60c):
  * @ptr: pointer to a #idmef_heartbeat_t object.
  * 
-<<<<<<< .mine
- * Create a new HASH(0x82a077c) children of @ptr,
-=======
- * Create a new HASH(0x80266754) children of @ptr,
->>>>>>> .r4599
+ * Create a new HASH(0x8026a60c) children of @ptr,
  * and add it to the tail of @ptr list of #idmef_additional_data_t object.
  * 
  * Returns: a pointer to the created #idmef_additional_data_t object, or NULL if an error occured.
