@@ -1,3 +1,11 @@
+2001-10-09  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/include/prelude-io.h: 
+	* src/prelude-io.c: 
+
+	New standard / SSL - read / write / close abstraction.
+	
+	
 2001-10-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/auth-common.c (write_account): better error reporting.

@@ -18,6 +18,7 @@ libprelude_la_SOURCES = 		\
 	string-matching.c		\
 	timer.c				\
 	alert-read.c			\
-	variable.c
+	variable.c			\
+	prelude-io.c
 
 libprelude_la_LIBADD = ../libmissing/libmissing.a
