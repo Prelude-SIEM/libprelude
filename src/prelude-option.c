@@ -252,18 +252,6 @@ static int check_option_reqarg(const char **outptr, const char *option, const ch
 
 
 
-static int check_option_noarg(const char **outptr, const char *option, const char *arg)
-{        
-        if ( arg && is_an_argument(arg) ) {
-                fprintf(stderr, "Option '%s' does not take an argument.\n", option);
-                return -1;
-        }
-        
-        return 0;
-}
-
-
-
 static int check_option(prelude_option_t *option, const char **optarg, const char *arg)
 {
         int ret = -1;
@@ -314,36 +302,14 @@ static int process_cfg_file(prelude_list_t *cblist, prelude_option_t *optlist,
 
 static int call_option_cb(struct cb_list **cbl, prelude_list_t *cblist, prelude_option_t *option, const char *arg) 
 {
-        int ret, got_prev = 0;
         struct cb_list *new, *cb;
         prelude_list_t *tmp, *prev = NULL;
         
         prelude_list_for_each(cblist, tmp) {
-                
                 cb = prelude_list_entry(tmp, struct cb_list, list);
-
+                
                 if ( ! prev && option->priority < cb->option->priority )
                         prev = tmp;
-#if 0
-                if ( option->priority < cb->option->priority ) 
-                        got_prev = 1;
-                
-                if ( ! got_prev )
-                        prev = tmp;
-                if ( option->type & PRELUDE_OPTION_TYPE_ALLOW_MULTIPLE_CALL || option->type & PRELUDE_OPTION_TYPE_CONTEXT ) 
-                        continue;
-                
-                ret = strcmp(cb->option->longopt, option->longopt);
-                if ( ret == 0 ) {
-                        if ( cb->arg )
-                                free(cb->arg);
-                        
-                        cb->arg = (arg) ? strdup(arg) : NULL;
-                        *cbl = cb;
-                        
-                        return 0;
-                }
-#endif
         }
         
         *cbl = new = malloc(sizeof(*new));
@@ -359,11 +325,11 @@ static int call_option_cb(struct cb_list **cbl, prelude_list_t *cblist, prelude_
                 prelude_list_add_tail(cblist, &new->list);
                 return 0;
         }
-        
+
         if ( ! prev )
                 prev = cblist;
         
-        prelude_list_add(prev, &new->list);
+        prelude_list_add_tail(prev, &new->list);
         *cbl = new;
         
         return 0;
@@ -412,7 +378,7 @@ static int do_set(prelude_option_t *opt, const char *value, prelude_string_t *ou
 
 
 
-static int call_option_from_cb_list(prelude_list_t *cblist, prelude_string_t *err, void *default_context) 
+static int call_option_from_cb_list(prelude_list_t *cblist, prelude_string_t *err, void *default_context, int depth) 
 {
         int ret = 0;
         struct cb_list *cb;
@@ -421,14 +387,16 @@ static int call_option_from_cb_list(prelude_list_t *cblist, prelude_string_t *er
 
         prelude_list_for_each_safe(cblist, tmp, bkp) {
                 cb = prelude_list_entry(tmp, struct cb_list, list);
+
+                prelude_log_debug(2, "%s(%s)\n", cb->option->longopt, cb->arg);
                 
                 ret = do_set(cb->option, cb->arg, err, &context);                
                 if ( ret < 0 ) 
                         return ret;
                 
                 if ( ! prelude_list_is_empty(&cb->children) ) {
-                                                                        
-                        ret = call_option_from_cb_list(&cb->children, err, context);
+                        
+                        ret = call_option_from_cb_list(&cb->children, err, context, depth + 1);
                         if ( ret < 0 )
                                 return ret;
                         
@@ -572,7 +540,7 @@ static int parse_argument(prelude_list_t *cb_list, prelude_option_t *optlist,
 
                 if ( argptr )
                         reorder_argv(argc, argv, *argv_index, argv_index);
-                        
+
                 ret = call_option_cb(&cbitem, cb_list, opt, argptr);
                 if ( ret < 0 )
                         return ret;
@@ -608,15 +576,11 @@ static int get_option_from_optlist(void *context, prelude_option_t *optlist, pre
                 ret = parse_argument(cb_list, optlist, argc, argv, &argv_index, 0);
                 if ( ret < 0 )
                         return ret;
-                
-                ret = call_option_from_cb_list(cb_list, *err, context);
-                if ( ret < 0 )
-                        return ret;
         }
         
         if ( filename && *filename )
                 ret = process_cfg_file(cb_list, optlist, *filename, *err);
-        
+
         return ret;
 }
 
@@ -652,7 +616,7 @@ int prelude_option_read(prelude_option_t *option, const char **filename,
         int ret;
         PRELUDE_LIST(optlist);
         PRELUDE_LIST(cb_list);
-
+        
         ret = prelude_string_new(err);
         if ( ret < 0 )
                 return ret;
@@ -665,7 +629,7 @@ int prelude_option_read(prelude_option_t *option, const char **filename,
         if ( ret < 0 )
                 goto err;
                 
-        ret = call_option_from_cb_list(&cb_list, *err, context);        
+        ret = call_option_from_cb_list(&cb_list, *err, context, 0);        
 
  err:
         if ( prelude_string_is_empty(*err) ) {
