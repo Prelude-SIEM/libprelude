@@ -1,4 +1,4 @@
-* 2002-08-26, libprelude-0.8.2:
+* 2002-08-26, libprelude-0.8.1:
 	- Act as a LIFO when subscribing a plugin, so that
 	  a plugin loading another, both subscribing from
 	  plugin_init() won't end up with undefined result (Yoann Vandoorselaere).
