@@ -112,23 +112,28 @@ static inline int prelude_extract_time_safe(idmef_time_t **out, void *buf, size_
 
 static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, size_t len, prelude_msg_t *msg)
 \{
-	idmef_data_type_t type;
+        int ret;
 	uint8_t tag;
+	idmef_data_type_t type;
 
-	if ( prelude_extract_uint32_safe(&type, buf, len) < 0 )
-		return -1;
+        ret = prelude_extract_uint32_safe(&type, buf, len);
+	if ( ret < 0 )
+		return ret;
 
-	if ( prelude_msg_get(msg, &tag, &len, &buf) < 0 )
-		return -1;
+        ret = prelude_msg_get(msg, &tag, &len, &buf);
+	if ( ret < 0 )
+		return ret;
 
 	*out = NULL;
 
 	switch ( type ) \{
 	case IDMEF_DATA_TYPE_CHAR: \{
 		char tmp;
+  
+                ret = prelude_extract_uint8_safe(&tmp, buf, len);
+		if ( ret < 0 )
+			return ret;
 
-		if ( prelude_extract_uint8_safe(&tmp, buf, len) < 0 )
-			return -1;
 		*out = idmef_data_new_char(tmp);
 		break;
 	\}
@@ -136,8 +141,10 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, size_
 	case IDMEF_DATA_TYPE_BYTE: \{
 		uint8_t tmp;
 
-		if ( prelude_extract_uint8_safe(&tmp, buf, len) < 0 )
-			return -1;
+                ret = prelude_extract_uint8_safe(&tmp, buf, len);
+		if ( ret < 0 )
+			return ret;
+
 		*out = idmef_data_new_byte(tmp);
 		break;
 	\}
@@ -145,8 +152,10 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, size_
 	case IDMEF_DATA_TYPE_UINT32: \{
 		uint32_t tmp;
 
-		if ( prelude_extract_uint32_safe(&tmp, buf, len) < 0 )
-			return -1;
+                ret = prelude_extract_uint32_safe(&tmp, buf, len);
+		if ( ret < 0 )
+			return ret;
+
 		*out = idmef_data_new_uint32(tmp);
 		break;
 	\}
@@ -154,8 +163,10 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, size_
 	case IDMEF_DATA_TYPE_UINT64: \{
 		uint64_t tmp;
 
-		if ( prelude_extract_uint64_safe(&tmp, buf, len) < 0 )
-			return -1;
+                ret = prelude_extract_uint64_safe(&tmp, buf, len);
+                if ( ret < 0 )
+			return ret;
+
 		*out = idmef_data_new_uint64(tmp);
 		break;
 	\}
@@ -163,17 +174,26 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, size_
 	case IDMEF_DATA_TYPE_FLOAT: \{
 		float tmp;
 
-		if ( prelude_extract_float_safe(&tmp, buf, len) < 0 )
-			return -1;
+                ret = prelude_extract_float_safe(&tmp, buf, len);
+		if ( ret < 0 )
+			return ret;
+
 		*out = idmef_data_new_float(tmp);
 		break;
 	\}
 
-	case IDMEF_DATA_TYPE_CHAR_STRING: case IDMEF_DATA_TYPE_BYTE_STRING: \{
+        case IDMEF_DATA_TYPE_BYTE_STRING: \{
+                *out = idmef_data_new_ptr_ref_fast(type, buf, len);
+                break;
+        \}
+
+	case IDMEF_DATA_TYPE_CHAR_STRING: \{
 		const char *tmp;
 
-		if ( prelude_extract_characters_safe(&tmp, buf, len) < 0 )
-			return -1;
+                ret = prelude_extract_characters_safe(&tmp, buf, len);
+		if ( ret < 0 )
+			return ret;
+
 		*out = idmef_data_new_ptr_ref_fast(type, tmp, len);
 		break;		
 	\}
