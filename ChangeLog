@@ -1,3 +1,9 @@
+2002-03-28  Krzysztof Zaraska  <kzaraska@student.uci.agh.edu.pl>
+
+	* INSTALL:
+	* README:
+	minor language corrections
+
 2002-03-25  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/include/extract.h (extract_uint16): 
@@ -115,6 +121,7 @@
 	responssability.
 
 2002-03-07  Krzysztof Zaraska  <kzaraska@student.uci.agh.edu.pl>
+
 	* src/client-ident.c:
 	* src/extract.c:
 	* src/idmef-msg-send.c:

@@ -5,11 +5,11 @@ by Yoann Vandoorselaere <yoann@mandrakesoft.com>
 Prelude Library Overview
 ========================
 
-The Prelude Library is used to make sensor developers life better by 
+The Prelude Library is used to make sensor developers' life better by 
 providing features used by every sensor:
 
-    - Manager(s) Connection managment. (with fallback in case every 
-      configured Manager are down, and automatic reconnection).
+    - Manager(s) Connection management (with fallback in case all 
+      configured Managers are down, and automatic reconnection).
     
     - Interface to communicate with the Prelude Manager.
     
@@ -18,10 +18,10 @@ providing features used by every sensor:
 
     - Asynchronous timer interface.
 
-    - Generic configuration API, providing a generic abstraction to command-line, 
-      configuration file option, and wide-option support.
+    - Generic configuration API, providing a generic abstraction for 
+      command-line, configuration file option, and wide option support.
 
-    - Wide option managment allowing sensors exported option to be directly 
+    - Wide option managment allowing sensor-exported options to be directly 
       accessible from the Manager administrative console.
 
     - Generic plugin API.
@@ -33,15 +33,17 @@ Prelude Communication
 =====================
 
     Prelude IDS uses unique optimized implementation of the XML based IDMEF 
-    message format to transmit alerts between the sensors and the manager and between managers.
+    message format to transmit alerts between the sensors and the manager 
+    and between managers.
     
     Using IDMEF, Prelude provides a generic method for virtually any type 
     of sensors to describe precisely the content of an alert.
 
-    Thanks to decoding plugins of the Manager side, a sensor can decide not to use the IDMEF 
-    facilities and send information using a customized protocol based on low-level 
-    Prelude Messaging API (note: It is then necessary to provide the correct decoding 
-    plugin on the Manager side). Note that the sensor can also use both method.
+    Thanks to decoding plugins of the Manager side, a sensor can decide 
+    not to use the IDMEF facilities and send information using a customized 
+    protocol based on low-level  Prelude Messaging API (note: It is then 
+    necessary to provide the correct decoding  plugin on the Manager side). 
+    Note that the sensor can also use both methods.
 
 
 
@@ -88,7 +90,7 @@ If you find any bugs, please report them to:
 	http://sourceforge.net/tracker/?group_id=1840&atid=101840
 
 Please make sure that what you're reporting is actually a BUG and not
-a problem on your end.
+a problem at your end.
 
 
 3. SUGGESTIONS
