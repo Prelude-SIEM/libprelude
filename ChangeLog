@@ -1,3 +1,9 @@
+2002-05-06  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* docs/api/Makefile.am: included PATCH from 
+	Yann Droneaud <meuh@sherkan.tuxfamily.net> so that
+	make distcheck work again with newest automake.
+
 2002-05-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	make dist should now work. Also localstatedir

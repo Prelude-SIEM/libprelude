@@ -54,7 +54,7 @@ GTKDOC_LD=$(LIBTOOL) --mode=link $(CC)
 #DOC_OVERRIDES = $(DOC_MODULE)-overrides.txt
 DOC_OVERRIDES =
 
-
+TEMPLATES = $(shell ls tmpl/*.sgml)
 
 ###########################################################################
 # Everything below here is generic and you shouldn't need to change it.
@@ -72,7 +72,7 @@ EXTRA_DIST = 				\
 	$(DOC_OVERRIDES)
 
 DOC_STAMPS=scan-build.stamp tmpl-build.stamp sgml-build.stamp html-build.stamp \
-	   $(srcdir)/tmpl.stamp $(srcdir)/sgml.stamp $(srcdir)/html.stamp
+	   tmpl.stamp sgml.stamp html.stamp
 
 SCANOBJ_FILES = 		\
 	$(DOC_MODULE).args 	\
@@ -87,15 +87,13 @@ all-local: html-build.stamp
 scan-build.stamp: $(HFILE_GLOB)
 	@echo '*** Scanning header files ***'
 	if grep -l '^..*$$' $(srcdir)/$(DOC_MODULE).types > /dev/null ; then \
-	    CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)" CFLAGS="$(GTKDOC_CFLAGS)" LDFLAGS="$(GTKDOC_LIBS)" gtkdoc-scanobj --module=$(DOC_MODULE) --output-dir=$(srcdir) ; \
+	    CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)" CFLAGS="$(GTKDOC_CFLAGS)" LDFLAGS="$(GTKDOC_LIBS)" gtkdoc-scanobj --module=$(DOC_MODULE) --output-dir=. ; \
 	else \
-	    cd $(srcdir) ; \
 	    for i in $(SCANOBJ_FILES) ; do \
                test -f $$i || touch $$i ; \
 	    done \
 	fi
-	cd $(srcdir) && \
-	  gtkdoc-scan --module=$(DOC_MODULE) --source-dir=$(DOC_SOURCE_DIR) --ignore-headers="$(IGNORE_HFILES)" $(SCAN_OPTIONS) $(EXTRA_HFILES)
+	gtkdoc-scan --module=$(DOC_MODULE) --source-dir=$(DOC_SOURCE_DIR) --ignore-headers="$(IGNORE_HFILES)" $(SCAN_OPTIONS) $(EXTRA_HFILES) 
 	touch scan-build.stamp
 
 $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES): scan-build.stamp
@@ -105,7 +103,7 @@ $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES): scan-build.stamp
 
 tmpl-build.stamp: $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(DOC_MODULE)-sections.txt $(DOC_OVERRIDES)
 	@echo '*** Rebuilding template files ***'
-	cd $(srcdir) && gtkdoc-mktmpl --module=$(DOC_MODULE)
+	gtkdoc-mktmpl --module=$(DOC_MODULE)
 	touch tmpl-build.stamp
 
 tmpl.stamp: tmpl-build.stamp
@@ -113,9 +111,8 @@ tmpl.stamp: tmpl-build.stamp
 
 #### sgml ####
 
-sgml-build.stamp: tmpl.stamp $(CFILE_GLOB) $(srcdir)/tmpl/*.sgml
+sgml-build.stamp: tmpl.stamp $(CFILE_GLOB) $(TEMPLATES)
 	@echo '*** Building SGML ***'
-	cd $(srcdir) && \
 	gtkdoc-mkdb --module=$(DOC_MODULE) --source-dir=$(DOC_SOURCE_DIR) --main-sgml-file=$(DOC_MAIN_SGML_FILE) $(MKDB_OPTIONS)
 	touch sgml-build.stamp
 
@@ -126,36 +123,41 @@ sgml.stamp: sgml-build.stamp
 
 html-build.stamp: sgml.stamp $(DOC_MAIN_SGML_FILE) $(content_files)
 	@echo '*** Building HTML ***'
-	test -d $(srcdir)/html || mkdir $(srcdir)/html
-	cd $(srcdir)/html && gtkdoc-mkhtml $(DOC_MODULE) ../$(DOC_MAIN_SGML_FILE)
-	test "x$(HTML_IMAGES)" = "x" || ( cd $(srcdir) && cp $(HTML_IMAGES) html )
+	test -d html || mkdir html
+	cd html && gtkdoc-mkhtml $(DOC_MODULE) ../$(DOC_MAIN_SGML_FILE)
+	test "x$(HTML_IMAGES)" = "x" || cp $(HTML_IMAGES) html
 	@echo '-- Fixing Crossreferences' 
-	cd $(srcdir) && gtkdoc-fixxref --module-dir=html --html-dir=$(HTML_DIR) $(FIXXREF_OPTIONS)
+	gtkdoc-fixxref --module-dir=html --html-dir=$(HTML_DIR) $(FIXXREF_OPTIONS)
 	touch html-build.stamp
 endif
 
 ##############
 
+distclean-local:
+	rm -rf html/ tmpl/ sgml/ $(DOC_MAIN_SGML_FILE) \
+	$(DOC_MODULE)-decl-list.txt $(DOC_MODULE)-decl.txt $(DOC_MODULE)-sections.txt $(DOC_MODULE)-undocumented.txt 
 clean-local:
 	rm -f *~ *.bak $(SCANOBJ_FILES) *-unused.txt $(DOC_STAMPS)
 
 maintainer-clean-local: clean
-	cd $(srcdir) && rm -rf sgml html $(DOC_MODULE)-decl-list.txt $(DOC_MODULE)-decl.txt
+	rm -rf sgml html $(DOC_MODULE)-decl-list.txt $(DOC_MODULE)-decl.txt
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(TARGET_DIR)
-	(installfiles=`echo $(srcdir)/html/*.html`; \
-	if test "$$installfiles" = '$(srcdir)/html/*.html'; \
+	(installfiles=`echo html/*.html`; \
+	if test "$$installfiles" = 'html/*.html'; \
 	then echo '-- Nothing to install' ; \
 	else \
 	  for i in $$installfiles; do \
 	    echo '-- Installing '$$i ; \
 	    $(INSTALL_DATA) $$i $(DESTDIR)$(TARGET_DIR); \
 	  done; \
-	  echo '-- Installing $(srcdir)/html/index.sgml' ; \
-	  $(INSTALL_DATA) $(srcdir)/html/index.sgml $(DESTDIR)$(TARGET_DIR); \
+	  echo '-- Installing html/index.sgml' ; \
+	  $(INSTALL_DATA) html/index.sgml $(DESTDIR)$(TARGET_DIR); \
 	fi)
 
+uninstall-local:
+	-rm -rf $(DESTDIR)$(TARGET_DIR)
 #
 # Require gtk-doc when making dist
 #
@@ -171,10 +173,10 @@ dist-hook: dist-check-gtkdoc dist-hook-local
 	mkdir $(distdir)/tmpl
 	mkdir $(distdir)/sgml
 	mkdir $(distdir)/html
-	-cp $(srcdir)/tmpl/*.sgml $(distdir)/tmpl
-	-cp $(srcdir)/sgml/*.sgml $(distdir)/sgml
-	-cp $(srcdir)/html/index.sgml $(distdir)/html
-	-cp $(srcdir)/html/*.html $(srcdir)/html/*.css $(distdir)/html
+	-cp tmpl/*.sgml $(distdir)/tmpl
+	-cp sgml/*.sgml $(distdir)/sgml
+	-cp html/index.sgml $(distdir)/html
+	-cp html/*.html html/*.css $(distdir)/html
 
 	images=$(HTML_IMAGES) ;    	      \
 	for i in $$images ; do		      \
