@@ -1,0 +1,96 @@
+Prelude Library (http://www.prelude-ids.org)
+by Yoann Vandoorselaere <yoann@mandrakesoft.com>
+
+
+Prelude Library Overview
+========================
+
+The Prelude Library is used to make sensor developers life better by 
+providing features used by every sensor:
+
+    - Manager(s) Connection managment. (with fallback in case every 
+      configured Manager are down, and automatic reconnection).
+    
+    - Interface to communicate with the Prelude Manager.
+    
+    - Asynchronous Message interface (allowing sensor to emmit message 
+      without blocking, even if there is latency on the wire).
+
+    - Asynchronous timer interface.
+
+    - Generic configuration API, providing a generic abstraction to command-line, 
+      configuration file option, and wide-option support.
+
+    - Wide option managment allowing sensors exported option to be directly 
+      accessible from the Manager administrative console.
+
+    - Generic plugin API.
+
+
+
+
+Prelude Communication
+=====================
+
+    Prelude IDS uses unique optimized implementation of the XML based IDMEF 
+    message format to transmit alerts between the sensors and the manager and between managers.
+    
+    Using IDMEF, Prelude provides a generic method for virtually any type 
+    of sensors to describe precisely the content of an alert.
+
+    Thanks to decoding plugins of the Manager side, a sensor can decide not to use the IDMEF 
+    facilities and send information using a customized protocol based on low-level 
+    Prelude Messaging API (note: It is then necessary to provide the correct decoding 
+    plugin on the Manager side). Note that the sensor can also use both method.
+
+
+
+IRC
+===
+
+If there's something you just can't find out elsewhere, you want to 
+give feedback directly to the authors or you're just bored, visit 
+#prelude on irc.openprojects.net
+
+
+
+Get Support
+===========
+
+
+Prelude-user mailing list:
+
+	 http://lists.sourceforge.net/lists/listinfo/prelude-list
+
+
+
+Help development
+================
+
+1. SUBMITTING PATCHES
+
+The Prelude source is constantly changing. If you want to submit a patch,
+please do so from the most recent CVS source tree, subscribe to the 
+prelude-devel mailing list by visiting:
+
+        http://lists.sourceforge.net/lists/listinfo/prelude-devel
+
+and post your patch with a description of functionality.
+You can also attach patches to bugs on 
+
+        http://sourceforge.net/tracker/?group_id=1840&atid=101840
+
+
+2. BUGS
+
+If you find any bugs, please report them to:
+
+	http://sourceforge.net/tracker/?group_id=1840&atid=101840
+
+Please make sure that what you're reporting is actually a BUG and not
+a problem on your end.
+
+
+3. SUGGESTIONS
+
+Subscribe to prelude-devel and give us your suggestions.
