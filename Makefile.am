@@ -4,7 +4,6 @@ includedir=$(prefix)/libprelude/include
 include_HEADERS=config.h
 
 EXTRA_DIST = sensors-default.conf
-
 bin_SCRIPTS = $(top_srcdir)/libprelude-config
 
 
@@ -14,12 +13,22 @@ bin_SCRIPTS = $(top_srcdir)/libprelude-config
 #
 # Spool directory for report saving is mode 
 
-install-data-hook:
-	install -d -m 755 $(sensors_config_dir);         	   \
-	install -d -m 755 /var/lib/prelude-sensors/plaintext;      \
-	install -d -m 755 /var/lib/prelude-sensors/ssl;	  	   \
-	install -d -m 755 /var/spool/prelude-sensors;		   \
-	install -d -m 1733 /var/lib/prelude-sensors/idents;	   \
-	install -m 644 $(top_srcdir)/sensors-default.conf $(sensors_config_dir)/sensors-default.conf;
+install-data-local:
+	$(INSTALL) -d -m 755 $(sensors_config_dir);
+	$(INSTALL) -d -m 755 /var/lib/prelude-sensors/plaintext;
+	$(INSTALL) -d -m 755 /var/lib/prelude-sensors/ssl;
+	$(INSTALL) -d -m 755 /var/spool/prelude-sensor;
+	$(INSTALL) -d -m 1733 /var/lib/prelude-sensors/idents;
+	@if test -f $(sensors_config_dir)/sensors-default.conf; then                                              \
+		echo "********************************************************************************";          \
+                echo;                                                                                             \
+                echo "$(sensors_config_dir)/sensors-default.conf already exist...";                               \
+                echo "Installing default configuration in $(sensors_config_dir)/sensors-default.conf-dist";       \
+                echo;                                                                                             \
+                echo "********************************************************************************";          \
+		$(INSTALL) $(top_srcdir)/sensors-default.conf $(sensors_config_dir)/sensors-default.conf-dist;    \
+        else                                                                                                      \
+                $(INSTALL) -m 600 $(top_srcdir)/sensors-default.conf $(sensors_config_dir)/;                      \
+        fi
 
 

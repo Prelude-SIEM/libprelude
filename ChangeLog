@@ -1,3 +1,10 @@
+2002-04-08  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* Makefile.am (install-data-local): 
+	Only install default configuration file if it does not
+	exit... If a configuration file is already present, warn
+	the user and install in sensors-default.conf-dist.
+
 2002-04-05  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-auth.c (parse_auth_line): 
