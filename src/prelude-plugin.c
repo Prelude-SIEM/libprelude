@@ -66,6 +66,7 @@ typedef struct {
         void *handle;
         prelude_list_t instance_list;
 
+        prelude_option_t *root_opt;
         prelude_plugin_generic_t *plugin;
 
         int (*subscribe)(prelude_plugin_instance_t *pc);
@@ -293,7 +294,7 @@ static int intercept_plugin_activation_option(prelude_option_t *opt, const char 
                 ret = pi->entry->create_instance(opt, optarg, err, pi);
                 if ( ret < 0 )
                         return ret;
-                
+
                 ret = prelude_option_new_context(opt, &octx, optarg, pi);
                 if ( ret < 0 ) {
                         destroy_instance(pi);
@@ -540,7 +541,8 @@ int prelude_plugin_new_instance(prelude_plugin_instance_t **pi,
 {
         int ret = 0;
         plugin_entry_t *pe;
-
+        prelude_option_context_t *octx;
+        
         if ( ! name || ! *name )
                 name = DEFAULT_INSTANCE_NAME;
                 
@@ -554,9 +556,25 @@ int prelude_plugin_new_instance(prelude_plugin_instance_t **pi,
         pe->plugin = plugin;
         
         *pi = search_instance_from_entry(pe, name);
-        if ( ! *pi )
-                ret = create_instance(pi, pe, name, NULL);
+        if ( ! *pi ) {
+                ret = create_instance(pi, pe, name, data);
+                if ( ret < 0 )
+                        return ret;
                 
+                ret = pe->create_instance(pe->root_opt, name, NULL, *pi);
+                if ( ret < 0 )
+                        return ret;
+                
+                ret = prelude_option_new_context(pe->root_opt, &octx, name, *pi);
+                if ( ret < 0 ) {
+                        destroy_instance(*pi);
+                        return ret;
+                }
+                
+                if ( ! pe->commit_instance )
+                        ret = subscribe_instance(*pi);
+        }
+        
         return ret;
 }
 
@@ -581,6 +599,8 @@ int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
         pe = search_plugin_entry(plugin);        
         if ( ! pe )
                 return -1;
+
+        pe->root_opt = opt;
         
         prelude_option_set_destroy_callback(opt, plugin_desactivate);
         prelude_option_set_type(opt, prelude_option_get_type(opt) | PRELUDE_OPTION_TYPE_CONTEXT);
