@@ -1,6 +1,6 @@
 /* Formatted output to strings.
    Copyright (C) 2004 Free Software Foundation, Inc.
-   Written by Yoann Vandoorselaere <yoann@prelude-ids.org>
+   Written by Simon Josefsson and Yoann Vandoorselaere <yoann@prelude-ids.org>.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -19,11 +19,13 @@
 #ifndef VSNPRINTF_H
 #define VSNPRINTF_H
 
-/* Get snprintf declaration, if available.  */
+#include <stdarg.h>
+
+/* Get vsnprintf declaration, if available.  */
 #include <stdio.h>
 
 #if defined HAVE_DECL_VSNPRINTF && !HAVE_DECL_VSNPRINTF
-int vsnprintf(char *str, size_t size, const char *format, va_list ap);
+int vsnprintf (char *str, size_t size, const char *format, va_list args);
 #endif
 
 #endif /* VSNPRINTF_H */

@@ -20,10 +20,14 @@
 #ifndef GNULIB_STRSEP_H_
 #define GNULIB_STRSEP_H_
 
+#if HAVE_STRSEP
+
 /*
- * Get strsep, if available.
+ * Get strsep() declaration.
  */
 #include <string.h>
+
+#else
 
 /* Searches the next delimiter (char listed in DELIM) starting at *STRINGP.
    If one is found, it is overwritten with a NUL, and *STRINGP is advanced
@@ -38,8 +42,8 @@
    Caveat: It doesn't work with multibyte strings unless all of the delimiter
            characters are ASCII characters < 0x30.  */
 
-#if defined HAVE_DECL_STRSEP && !HAVE_DECL_STRSEP
 extern char *strsep (char **stringp, const char *delim);
+
 #endif
 
 #endif /* GNULIB_STRSEP_H_ */
