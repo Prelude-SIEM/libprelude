@@ -376,8 +376,13 @@ int plugin_subscribe(plugin_generic_t *plugin)
         plugin_entry_t *pe;
         struct list_head *tmp;
         plugin_container_t *pc;
-        
-        list_for_each(tmp, &all_plugin) {
+
+        /*
+         * Walk the list in reverse order so that we work
+         * as a LIFO and a plugin loading another, both subscribing
+         * from plugin_init(), won't end up with undefined result.
+         */
+        list_for_each_reversed(tmp, &all_plugin) {
                 pe = list_entry(tmp, plugin_entry_t, list);
 
                 /*
