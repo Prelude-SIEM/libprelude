@@ -738,12 +738,12 @@ void idmef_criterion_value_destroy(idmef_criterion_value_t *value)
 int idmef_criterion_value_clone(const idmef_criterion_value_t *src, idmef_criterion_value_t **dst)
 {
         int ret;
-
+        idmef_value_t *fixed;
+        idmef_criterion_value_non_linear_time_t *time;
+        
 	switch ( src->type ) {
 
-        case IDMEF_CRITERION_VALUE_TYPE_FIXED: {
-		idmef_value_t *fixed;
-
+        case IDMEF_CRITERION_VALUE_TYPE_FIXED:
 		ret = idmef_value_clone(src->val.fixed, &fixed);
 		if ( ret < 0 )
 			return ret;
@@ -755,11 +755,8 @@ int idmef_criterion_value_clone(const idmef_criterion_value_t *src, idmef_criter
 		}
 
 		break;
-	}
 
-	case IDMEF_CRITERION_VALUE_TYPE_NON_LINEAR_TIME: {
-		idmef_criterion_value_non_linear_time_t *time;
-
+	case IDMEF_CRITERION_VALUE_TYPE_NON_LINEAR_TIME:
 		ret = idmef_criterion_value_non_linear_time_clone(src->val.non_linear_time, &time);
 		if ( ret < 0 )
 			return ret;
@@ -771,10 +768,12 @@ int idmef_criterion_value_clone(const idmef_criterion_value_t *src, idmef_criter
 		}
                 
 		break;
+
+        default:
+                return -1;
 	}
-	}
-	
-	return -1;
+        
+	return ret;
 }
 
 
