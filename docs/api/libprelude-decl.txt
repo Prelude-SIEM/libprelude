@@ -322,9 +322,29 @@ prelude_client_t *client
 prelude_client_t *client, prelude_io_t *src, size_t count
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_client_get_address</NAME>
-<RETURNS>void  </RETURNS>
-prelude_client_t *client, char **addr, uint16_t *port
+<NAME>prelude_client_get_saddr</NAME>
+<RETURNS>const char  *</RETURNS>
+prelude_client_t *client
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_get_daddr</NAME>
+<RETURNS>const char  *</RETURNS>
+prelude_client_t *client
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_get_sport</NAME>
+<RETURNS>uint16_t  </RETURNS>
+prelude_client_t *client
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_get_dport</NAME>
+<RETURNS>uint16_t  </RETURNS>
+prelude_client_t *client
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_is_alive</NAME>
+<RETURNS>int  </RETURNS>
+prelude_client_t *client
 </FUNCTION>
 <USER_FUNCTION>
 <NAME>prelude_async_func_t</NAME>
@@ -650,18 +670,6 @@ int priority, const char *file, const char *function, int line, const char *fmt,
         (func);                                          \
 } while(0);
 </MACRO>
-<TYPEDEF>
-<NAME>prelude_client_notification_t</NAME>
-typedef struct {
-        const char *saddr;
-        uint16_t sport;
-
-        const char *daddr;
-        uint16_t dport;
-        
-        struct list_head list;
-} prelude_client_notification_t;
-</TYPEDEF>
 <FUNCTION>
 <NAME>prelude_client_mgr_broadcast</NAME>
 <RETURNS>void  </RETURNS>
@@ -676,6 +684,11 @@ prelude_client_mgr_t *cmgr, prelude_msg_t *msg
 <NAME>prelude_client_mgr_new</NAME>
 <RETURNS>prelude_client_mgr_t  *</RETURNS>
 const char *cfgline
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_mgr_notify_connection</NAME>
+<RETURNS>void  </RETURNS>
+prelude_client_mgr_t *mgr, void (*callback)(struct list_head *clist)
 </FUNCTION>
 <MACRO>
 <NAME>PLUGIN_GENERIC</NAME>
@@ -823,6 +836,12 @@ void
 #define list_for_each(pos, head) \
 	for (pos = (head)->next; pos != (head); pos = pos->next)
 </MACRO>
+<MACRO>
+<NAME>list_for_each_safe</NAME>
+#define list_for_each_safe(pos, n, head) \
+        for (pos = (head)->next, n = pos->next; pos != (head); \
+                pos = n, n = pos->next)
+</MACRO>
 <FUNCTION>
 <NAME>ssl_add_certificate</NAME>
 <RETURNS>int  </RETURNS>
@@ -862,6 +881,11 @@ uint64_t *ident
 <NAME>prelude_set_sensor_name</NAME>
 <RETURNS>void  </RETURNS>
 const char *sname
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_sensor_notify_mgr_connection</NAME>
+<RETURNS>void  </RETURNS>
+void (*cb)(struct list_head *clist)
 </FUNCTION>
 <MACRO>
 <NAME>SSL_GENCRYPTO_H</NAME>

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2000 Yoann Vandoorselaere <yoann@mandrakesoft.com>
+* Copyright (C) 2000, 2002 Yoann Vandoorselaere <yoann@mandrakesoft.com>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -165,74 +165,6 @@ static int check_account(const char *authfile,
 
 
 
-
-/*
- * Send authentication informations (user, pass).
- */
-static int write_auth_infos(prelude_io_t *fd, const char *user, const char *pass) 
-{
-        int ret;
-
-        ret = prelude_io_write_delimited(fd, user, strlen(user) + 1);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "error writing username for authentication.\n");
-                return -1;
-        }
-
-        ret = prelude_io_write_delimited(fd, pass, strlen(pass) + 1);
-        if ( ret < 0 ) {
-                log(LOG_ERR, "error writing password for authentication.\n");
-                return -1;
-        }
-
-        return 0;
-}
-
-
-
-/*
- * Read authentication result.
- */
-static int read_auth_result(prelude_io_t *fd) 
-{
-        int ret;
-        char *buf;
-        
-        ret = prelude_io_read_delimited(fd, (void **) &buf);
-        if ( ret <= 0 ) {
-                log(LOG_ERR,"couldn't read authentication result.\n");
-                return -1;
-        }
-        
-        ret = strncmp(buf, "ok", sizeof(buf));
-        free(buf);
-
-        return ret;
-}
-
-
-
-/*
- * Do the authentication procedure :
- * sending authentication informations and reading the result.
- */
-static int do_auth(prelude_io_t *fd, const char *user, const char *pass) 
-{
-        int ret;
-
-        ret = write_auth_infos(fd, user, pass);
-        if ( ret < 0 ) 
-                return -1;
-
-        ret = read_auth_result(fd);
-        if ( ret < 0 ) 
-                return -1;
-
-        return 0;
-}
-
-
-
 /*
  * Open authentication filename in append mode,
  * with stream positionned at the end of the file,
@@ -330,21 +262,6 @@ static char *ask_password(void)
         }
 
         return pass;
-}
-
-
-
-static char *ask_manager_address(void) 
-{
-        char buf[1024];
-        
-        fprintf(stderr, "\n\nWhat is the Manager address ? ");
-        fgets(buf, sizeof(buf), stdin);
-
-        /* strip \n */
-        buf[strlen(buf) - 1] = '\0';
-        
-        return strdup(buf);
 }
 
 

@@ -250,9 +250,8 @@ static prelude_io_t *connect_server(const char *server, uint16_t port)
 
 static void ask_manager_addr(char **addr, uint16_t *port) 
 {
-        char *str;
         char buf[1024];
-        
+ 
         fprintf(stderr, "\n\nWhat is the Manager address ? ");
         fgets(buf, sizeof(buf), stdin);
 

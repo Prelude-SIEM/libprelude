@@ -17,10 +17,10 @@ AC_PROG_MAKE_SET
 AC_C_INLINE
 AC_C_BIGENDIAN
 
-AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 AC_SUBST(libprelude_libs)
+
 
 dnl **************************************************
 dnl * Check for demand loading of shared lib library *
@@ -104,8 +104,29 @@ AC_ARG_ENABLE(profiling, [  --enable-profiling Enable Gprof profiling - with thr
 	      enable_profiling=yes, enable_profiling=no)
 
 if test x$enable_profiling = xyes ; then
-	CFLAGS="$CFLAGS -O0 -pg"
+	CFLAGS="$CFLAGS -pg"	
 	AC_DEFINE(ENABLE_PROFILING)
+
+	dnl *** for gcc3 ***
+	
+	cat > conftest.c << EOF 
+
+	int main(void)
+	{
+		exit(0);
+	}
+EOF
+
+	AC_MSG_CHECKING(whether compiler support -fprofile-arcs)
+
+        ${CC-cc} -o conftest $CFLAGS $CPPFLAGS $LDFLAGS conftest.c $LIBS >/dev/null 2>&1
+	if test -x conftest ; then
+        	CFLAGS="$CFLAGS -fprofile-arcs";
+		AC_MSG_RESULT(yes);
+		rm -f conftest;
+	else
+		AC_MSG_RESULT(no);
+	fi
 fi
 
 
@@ -136,7 +157,6 @@ if $GTKDOC; then
 EOF
       		AC_MSG_RESULT(yes);
    	else
-		echo "set to false"
       		AC_MSG_RESULT(no);
       		GTKDOC=false;
    	fi
@@ -177,8 +197,10 @@ sensors_config_dir=$sysconfdir/prelude-sensors
 AC_SUBST(sensors_config_dir)
 
 CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations \
--Wbad-function-cast -Wcast-qual -Wcast-align -Wnested-externs -DREENTRANT"
+-Wbad-function-cast -Wcast-qual -Wcast-align -Wnested-externs -Wunused -fomit-frame-pointer -D_REENTRANT"
 
+
+AC_SUBST(CFLAGS)
 
 AC_OUTPUT([
 

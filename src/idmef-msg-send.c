@@ -12,6 +12,7 @@
 #include "idmef-message-id.h"
 #include "idmef-tree.h"
 #include "idmef-msg-send.h"
+#include "sensor.h"
 
 
 static void send_string(prelude_msg_t *msg, uint8_t tag, const char *string)
