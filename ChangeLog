@@ -1,6 +1,9 @@
 2002-01-16  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
-	* src/prelude-io.c (ssl_write): 
+	* src/client-ident.c (save_ident): 
+	identity file should be readable for all.
+
+	* src/prelude-io.c (ssl_read): 
 	(ssl_write): handle ssl error correctly.
 
 2002-01-15  Yoann Vandoorselaere  <yoann@mandrakesoft.com>

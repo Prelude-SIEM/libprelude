@@ -33,7 +33,7 @@ static int save_ident(void)
         int fd;
         FILE *fdp;
         
-        fd = open(identfile, O_CREAT|O_WRONLY|O_EXCL, S_IRUSR|S_IWUSR);
+        fd = open(identfile, O_CREAT|O_WRONLY|O_EXCL, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
         if ( fd < 0 ) {
                 log(LOG_ERR, "error opening %s for writing.\n", identfile);
                 return -1;
