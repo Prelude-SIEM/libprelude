@@ -88,7 +88,7 @@ struct idmef_value {
 static int string_isdigit(const char *s)
 {
 	while ( *s ) {
-		if ( ! isdigit(*s) )
+		if ( ! isdigit((int) *s) )
 			return -1;
 		s++;
 	}

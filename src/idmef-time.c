@@ -133,7 +133,7 @@ static char *parse_time_ymd(struct tm *tm, const char *buf)
 	/*
          * The IDMEF draft only permits the 'T' variant here
          */
-        while ( isspace(*ptr) )
+        while ( isspace((int) *ptr) )
                 ptr++;
         
         if ( *ptr == 'T' )
@@ -161,7 +161,7 @@ static char *parse_time_hmsu(struct tm *tm, uint32_t *usec, const char *buf)
 
 		*usec = fraction * 10000;
 
-		while ( isdigit(*ptr) )
+		while ( isdigit((int) *ptr) )
 			ptr++;
 	}
 

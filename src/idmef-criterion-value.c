@@ -802,7 +802,7 @@ static idmef_criterion_value_t *build_non_linear_time_value(const char *buf)
 
 idmef_criterion_value_t *idmef_criterion_value_new_generic(idmef_object_t *object, const char *buf)
 {
-	if ( idmef_object_get_value_type(object) == IDMEF_VALUE_TYPE_TIME && isalpha(*buf) )
+	if ( idmef_object_get_value_type(object) == IDMEF_VALUE_TYPE_TIME && isalpha((int) *buf) )
 		return build_non_linear_time_value(buf);
 
 	return build_fixed_value(object, buf);
