@@ -708,22 +708,6 @@ static int create_heartbeat_msgbuf(prelude_client_t *client)
 
 
 
-
-static void file_error(prelude_client_t *client) 
-{       
-        log(LOG_INFO, "\nBasic file configuration does not exist. Please run :\n"
-            "prelude-adduser register %s <manager address> --uid %d --gid %d\n"
-            "program on the analyzer host to setup this analyzer.\n\n"
-            
-            "Be aware that you should also replace the <manager address> argument\n"
-            "with the address of the server that your analyzer is trying to connect to.\n"
-            "\"prelude-adduser\" should be called for each configured manager address.\n\n",
-            prelude_client_get_name(client), prelude_client_get_uid(client),
-            prelude_client_get_gid(client));
-}
-
-
-
 /**
  * prelude_client_new:
  * @capability: set of capability for this client.
@@ -807,20 +791,20 @@ int prelude_client_init(prelude_client_t *client, const char *sname, const char 
         
         client->credentials = tls_auth_init(client);
         if ( ! client->credentials && ! client->ignore_error ) {
-                file_error(client);
+                prelude_client_installation_error(client);
                 return -1;
         }
         
         prelude_client_get_backup_filename(client, filename, sizeof(filename));
         ret = access(filename, W_OK);
         if ( ret < 0 && ! client->ignore_error ) {
-                file_error(client);
+                prelude_client_installation_error(client);
                 return -1;
         }
         
         ret = prelude_client_ident_init(client, &client->analyzerid);
         if ( ret < 0 && ! client->ignore_error ) {
-                file_error(client);
+                prelude_client_installation_error(client);
                 return -1;
         }
         
@@ -1389,8 +1373,7 @@ void prelude_client_installation_error(prelude_client_t *client)
         } else {
                 log(LOG_INFO,
                     "\nBasic file configuration does not exist. Please run :\n"
-                    "prelude-adduser add %s --uid %d --gid %d\n"
-                    "program on the sensor host to create an account for this sensor.\n\n",
+                    "prelude-adduser add %s --uid %d --gid %d\n\n",
                     client->name, client->uid, client->gid);
         }
 }
