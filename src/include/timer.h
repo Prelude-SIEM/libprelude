@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 1998 - 2000 Vandoorselaere Yoann
+* Copyright (C) 1998 - 2000, 2002 Vandoorselaere Yoann
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -33,20 +33,21 @@
 typedef struct {
         struct list_head list;
 
-        long expire;
-        struct timeval start;
+        short int expire;
+        time_t start_time;
 
         void *data;
         void (*function)(void *data);
 } prelude_timer_t;
 
 /*
- * Use theses macros for compatibility purprose
+ * Use theses macros for compatibility purpose
  * if the internal timer structure change.
  */
 #define timer_expire(timer) (timer)->expire
 #define timer_data(timer) (timer)->data
 #define timer_func(timer) (timer)->function
+
 #define timer_set_expire(timer, x) timer_expire((timer)) = (x)
 #define timer_set_data(timer, x) timer_data((timer)) = (x)
 #define timer_set_callback(timer, x) timer_func((timer)) = (x)
