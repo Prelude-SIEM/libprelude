@@ -85,6 +85,11 @@ prelude_io_t *pio
 prelude_io_t *pio
 </FUNCTION>
 <FUNCTION>
+<NAME>plugin_search_by_name</NAME>
+<RETURNS>plugin_generic_t  *</RETURNS>
+const char *name
+</FUNCTION>
+<FUNCTION>
 <NAME>plugin_load_from_dir</NAME>
 <RETURNS>int  </RETURNS>
 const char *dirname, int argc, char **argv,int (*subscribe)(plugin_container_t *p), void (*unsubscribe)(plugin_container_t *pc)
