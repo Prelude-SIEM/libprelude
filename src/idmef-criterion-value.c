@@ -197,6 +197,7 @@ static int do_match_cb(idmef_value_t *value, void *extra)
 
 void idmef_criterion_value_destroy(idmef_criterion_value_t *value)
 {
+	value->destroy(value);
 	free(value);
 }
 
