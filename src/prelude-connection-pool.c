@@ -443,10 +443,12 @@ static void connection_timer_expire(void *data)
                 ret = failover_flush(cnx->failover, NULL, cnx);
                 if ( ret < 0 )
                         return;
-                
-                ret = failover_flush(pool->failover, cnx->parent, NULL);
-                if ( ret < 0 )
-                        return;
+
+                if ( pool->failover ) {
+                        ret = failover_flush(pool->failover, cnx->parent, NULL);
+                        if ( ret < 0 )
+                                return;
+                }
                 
                 prelude_timer_destroy(&cnx->timer);
                 prelude_timer_set_expire(&cnx->timer, INITIAL_EXPIRATION_TIME);
@@ -787,10 +789,12 @@ int prelude_connection_pool_init(prelude_connection_pool_t *pool)
                                 
                 if ( clist->dead )
                         continue;
-                
-                ret = failover_flush(pool->failover, clist, NULL);
-                if ( ret == 0 )
-                        break;
+
+                if ( pool->failover ) {
+                        ret = failover_flush(pool->failover, clist, NULL);
+                        if ( ret == 0 )
+                                break;
+                }
         }
 
         if ( pool->global_event_handler )
@@ -897,7 +901,7 @@ int prelude_connection_pool_add_connection(prelude_connection_pool_t *pool, prel
 
         pool->or_list->total++;
 
-        if ( (*c)->parent->dead == 0 ) {
+        if ( (*c)->parent->dead == 0 && pool->failover ) {
                 ret = failover_flush(pool->failover, (*c)->parent, NULL);
                 if ( ret < 0 )
                         return ret;
@@ -1033,7 +1037,7 @@ int prelude_connection_pool_set_connection_alive(prelude_connection_pool_t *pool
         if ( ret < 0 )
                 return ret;
         
-        if ( c->parent->dead == 0 ) {
+        if ( c->parent->dead == 0 && pool->failover ) {
                 ret = failover_flush(pool->failover, c->parent, NULL);
                 if ( ret < 0 )
                         return ret;
