@@ -48,15 +48,15 @@
                          IDMEF_VALUE_RELATION_EQUAL|IDMEF_VALUE_RELATION_NOT_EQUAL
 
 
-#define GENERIC_ONE_BASE_RW_FUNC(fmt, name, type)                                  \
+#define GENERIC_ONE_BASE_RW_FUNC(scanfmt, printfmt, name, type)                    \
         static int name ## _read(idmef_value_type_t *dst, const char *buf)         \
         {                                                                          \
-                return sscanf(buf, (fmt), &(dst)->data. name ##_val);                \
+                return sscanf(buf, (scanfmt), &(dst)->data. name ##_val);          \
         }                                                                          \
                                                                                    \
         static int name ## _write(char *buf, size_t size, idmef_value_type_t *src) \
         {                                                                          \
-                return snprintf(buf, size, (fmt), src->data.name ##_val);            \
+                return snprintf(buf, size, (printfmt), src->data.name ##_val);     \
         }
 
 
@@ -64,9 +64,9 @@
         static int name ## _read(idmef_value_type_t *dst, const char *buf)		\
         {										\
 		if ( strncasecmp(buf, "0x", 2) == 0 )					\
-			return sscanf(buf, (fmt_hex), &(dst)->data. name ##_val);		\
+                        return sscanf(buf, (fmt_hex), &(dst)->data. name ##_val);       \
 											\
-		return sscanf(buf, (fmt_dec), &(dst)->data. name ##_val);			\
+		return sscanf(buf, (fmt_dec), &(dst)->data. name ##_val);               \
 	}										\
 											\
         static int name ## _write(char *buf, size_t size, idmef_value_type_t *src)	\
@@ -99,9 +99,10 @@ GENERIC_TWO_BASES_RW_FUNC("%d", "%x", int32, int32_t)
 GENERIC_TWO_BASES_RW_FUNC("%u", "%x", uint32, uint32_t)
 GENERIC_TWO_BASES_RW_FUNC("%" PRId64, "%" PRIx64, int64, int64_t)
 GENERIC_TWO_BASES_RW_FUNC("%" PRIu64, "%" PRIx64, uint64, uint64_t)
-GENERIC_ONE_BASE_RW_FUNC("%d", enum, enum);
-GENERIC_ONE_BASE_RW_FUNC("%f", float, float)
-GENERIC_ONE_BASE_RW_FUNC("%f", double, double)
+
+GENERIC_ONE_BASE_RW_FUNC("%d", "%d", enum, enum);
+GENERIC_ONE_BASE_RW_FUNC("%f", "%f", float, float)
+GENERIC_ONE_BASE_RW_FUNC("%lf", "%f", double, double)
 
 
 
