@@ -382,7 +382,7 @@ typedef enum {
 
 
 typedef struct {
-        const char *ident;
+        uint64_t ident;
         const char *impact;
         const char *action;
     

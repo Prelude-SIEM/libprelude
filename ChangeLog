@@ -1,5 +1,10 @@
 2001-12-14  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/prelude-ident.c (setup_filedes_if_needed): 
+	new function. Correctly setup filed. Will avoid SIGBUS. 
+
+	* src/include/idmef-tree.h: ident is a 64 bit unsigned integer.
+
 	* src/include/prelude-ident.h: 
 	* src/prelude-ident.c: new ident API. Use to generate unique 
 	64 bits ident, remembered across program run (usage of memory mapped IO).

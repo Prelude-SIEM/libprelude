@@ -18,6 +18,42 @@ struct prelude_ident {
         
 
 
+
+static int setup_filedes_if_needed(prelude_ident_t *new) 
+{
+        int ret;
+        struct stat st;
+        uint64_t value = 0;
+        
+        ret = fstat(new->fd, &st);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "couldn't stat FD %d.\n", new->fd);
+                return -1;
+        }
+
+        /*
+         * our IDENT file is the good size.
+         * No need to initialize it.
+         */
+        if ( st.st_size == sizeof(*new->ident) )
+                return 0;
+
+        /*
+         * Need to write a default value, to set the file size.
+         * (unless we want a SIGBUS when writing to *new->ident).
+         */
+        ret = write(new->fd, &value, sizeof(value));
+        if ( ret < 0 ) {
+                log(LOG_ERR, "couldn't write %d bytes to ident fd.\n", sizeof(value));
+                return -1;
+        }
+        
+        return 0;
+}
+
+
+
+
 /**
  * prelude_ident_new:
  * @filename: Pointer to a filename where the ident should be stored.
@@ -29,7 +65,7 @@ struct prelude_ident {
  */
 prelude_ident_t *prelude_ident_new(const char *filename) 
 {
-        int exist;
+        int ret;
         prelude_ident_t *new;
 
         new = malloc(sizeof(*new));
@@ -37,8 +73,6 @@ prelude_ident_t *prelude_ident_new(const char *filename)
                 log(LOG_ERR, "memory exhausted.\n");
                 return NULL;
         }
-
-        exist = access(filename, F_OK);
         
         new->fd = open(filename, O_CREAT|O_RDWR, S_IRUSR|S_IWUSR);
         if ( new->fd < 0 ) {
@@ -47,6 +81,13 @@ prelude_ident_t *prelude_ident_new(const char *filename)
                 return NULL;
         }
 
+        ret = setup_filedes_if_needed(new);
+        if ( ret < 0 ) {
+                close(new->fd);
+                free(new);
+                return NULL;
+        }
+        
         new->ident = mmap(0, sizeof(*new->ident), PROT_READ|PROT_WRITE, MAP_SHARED, new->fd, 0);
         if ( ! new->ident ) {
                 log(LOG_ERR, "mmap failed.\n");
@@ -54,10 +95,7 @@ prelude_ident_t *prelude_ident_new(const char *filename)
                 free(new);
                 return NULL;
         }
-
-        if ( exit < 0 )
-                (*new->ident) = 0;
-
+        
         return new;
 }
 
