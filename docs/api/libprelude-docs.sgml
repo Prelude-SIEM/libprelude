@@ -33,7 +33,7 @@
   </bookinfo>
 
   <chapter>
-    <title>[Insert title here]</title>
+    <title>Prelude Library</title>
     &libprelude-config;
     &libprelude-prelude-io;
     &libprelude-plugin-common-prv;
