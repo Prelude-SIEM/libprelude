@@ -86,6 +86,8 @@ static const char *manager_cfg_line = NULL;
 static prelude_client_mgr_t *manager_list = NULL;
 
 
+char *program_name = NULL;
+
 
 static int find_category(const char **tbl, const char *arg) 
 {
@@ -243,22 +245,34 @@ static int setup_heartbeat_repeat_time(const char *arg)
 
 
 
-static int parse_argument(const char *filename, int argc, char **argv) 
+static int get_process_name(int argc, char **argv) 
 {
-        int ret;
         char *ptr;
-        int old_flags;
-        prelude_option_t *opt;
+        
+        if ( !argc || !argv  )
+                return -1;
 
         ptr = strrchr(argv[0], '/');
-        if ( ptr ) {
+        if ( ! ptr )
+                process_name = argv[0];
+        else {
                 *ptr = '\0';
                 process_path = argv[0];
                 process_name = strdup(ptr + 1);
 
-        } else
-                process_name = argv[0];
-                
+        }
+
+        return 0;
+}
+
+
+
+static int parse_argument(const char *filename, int argc, char **argv) 
+{
+        int ret;
+        int old_flags;
+        prelude_option_t *opt;
+                        
         /*
          * Declare library options.
          */
@@ -363,7 +377,7 @@ static int parse_argument(const char *filename, int argc, char **argv)
 
 
 /**
- * libprelude_sensor_init:
+ * prelude_sensor_init:
  * @sname: Name of the sensor.
  * @filename: Configuration file of the calling sensor.
  * @argc: Argument count provided to the calling sensor.
@@ -387,6 +401,8 @@ int prelude_sensor_init(const char *sname, const char *filename, int argc, char 
                 return -1;
         }
 
+        get_process_name(argc, argv);
+        
         prelude_set_program_name(sname);
        
         ret = prelude_client_ident_init(sname);
@@ -573,4 +589,5 @@ int prelude_analyzer_fill_infos(idmef_analyzer_t *analyzer)
         
         return 0;
 }
+
 
