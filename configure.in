@@ -414,6 +414,7 @@ AC_SUBST(prelude_ident_file)
 dnl We use no-strict-prototype because of SSL warning.
 
 AX_CFLAGS_GCC_OPTION(-Wall)
+AX_CFLAGS_GCC_OPTION(-Wstrict-prototypes)
 AX_CFLAGS_GCC_OPTION(-Wmissing-prototypes)
 AX_CFLAGS_GCC_OPTION(-Wmissing-declarations)
 AX_CFLAGS_GCC_OPTION(-Wbad-function-cast)
