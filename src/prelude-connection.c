@@ -633,9 +633,9 @@ uint16_t prelude_connection_get_dport(prelude_connection_t *cnx)
  *
  * Returns: 0 if the connection associated with @cnx is alive, -1 otherwise.
  */
-int prelude_connection_is_alive(prelude_connection_t *cnx) 
+prelude_bool_t prelude_connection_is_alive(prelude_connection_t *cnx) 
 {
-        return (cnx->state & PRELUDE_CONNECTION_ESTABLISHED) ? 0 : -1;
+        return (cnx->state & PRELUDE_CONNECTION_ESTABLISHED) ? TRUE : FALSE;
 }
 
 

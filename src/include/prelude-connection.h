@@ -62,7 +62,7 @@ uint16_t prelude_connection_get_sport(prelude_connection_t *cnx);
 
 uint16_t prelude_connection_get_dport(prelude_connection_t *cnx);
 
-int prelude_connection_is_alive(prelude_connection_t *cnx);
+prelude_bool_t prelude_connection_is_alive(prelude_connection_t *cnx);
 
 prelude_io_t *prelude_connection_get_fd(prelude_connection_t *cnx);
 

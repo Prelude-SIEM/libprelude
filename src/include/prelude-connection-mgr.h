@@ -82,12 +82,12 @@ void *prelude_connection_mgr_get_data(prelude_connection_mgr_t *mgr);
 
 int prelude_connection_mgr_recv(prelude_connection_mgr_t *mgr, prelude_msg_t **out, int timeout);
 
+prelude_connection_t *prelude_connection_mgr_get_next_connection(prelude_connection_mgr_t *mgr, prelude_list_t **iter);
 
-void prelude_connection_mgr_set_listed_event_handler(prelude_connection_mgr_t *mgr,
+void prelude_connection_mgr_set_global_event_handler(prelude_connection_mgr_t *mgr,
                                                      prelude_connection_mgr_event_t events,
                                                      int (*callback)(prelude_connection_mgr_t *mgr,
-                                                                     prelude_connection_mgr_event_t events,
-                                                                     prelude_list_t *clist));
+                                                                     prelude_connection_mgr_event_t events));
 
 void prelude_connection_mgr_set_event_handler(prelude_connection_mgr_t *mgr,
                                               prelude_connection_mgr_event_t events,
