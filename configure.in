@@ -308,8 +308,8 @@ dnl **************************************************
 dnl * Swig support                                   *
 dnl **************************************************
 
-AC_PATH_PROG(SWIG, swig, yes, no)
-AM_CONDITIONAL(HAVE_SWIG, test x$SWIG = xno)
+AC_PATH_PROG(SWIG, swig, no)
+AM_CONDITIONAL(HAVE_SWIG, test x$SWIG != xno)
 
 
 dnl **************************************************

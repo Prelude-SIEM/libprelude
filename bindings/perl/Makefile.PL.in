@@ -1,8 +1,9 @@
 use Config;
 use ExtUtils::MakeMaker;
 use File::Copy;
+use Cwd "abs_path";
 
-if ( "@top_srcdir@" ne "@top_builddir@" ) {
+if ( abs_path("@top_srcdir@") ne abs_path("@top_builddir@") ) {
     foreach my $filename ( qw/Prelude.c Prelude.pm/ ) {
 	my $src = "@top_srcdir@/bindings/perl/$filename";
 	my $dst = "@top_builddir@/bindings/perl/$filename";

@@ -17,7 +17,7 @@ if sys.argv[1] == "install":
         sys.argv.extend(["--prefix", "@prefix@"])
 
 if sys.argv[1] == "build":
-    if "@top_srcdir@" != "@top_builddir@":
+    if abspath("@top_srcdir@") != abspath("@top_builddir@"):
         for filename in "_prelude.c", "prelude.py":
             src = "@top_srcdir@/bindings/python/" + filename
             dst = "@top_builddir@/bindings/python/" + filename
