@@ -35,6 +35,8 @@
 
 int _prelude_internal_argc = 0;
 char *_prelude_internal_argv[1024];
+
+static int libprelude_refcount = 0;
 extern pthread_mutex_t _criteria_parse_mutex;
 extern prelude_option_t *_prelude_generic_optlist;
 
@@ -138,13 +140,18 @@ static void slice_arguments(int *argc, char **argv)
  * Returns: 0 on success, a negative value if an error occured.
  */
 int prelude_init(int *argc, char **argv)
-{
+{        
+        if ( libprelude_refcount++ > 0 )
+                return 0;
+                
 #ifdef HAVE_PTHREAD_ATFORK
-        int ret;
-        
-        ret = pthread_atfork(prepare_fork_cb, in_fork_cb, in_fork_cb);
-        if ( ret != 0 )
-                return prelude_error_from_errno(ret);
+        {
+                int ret;
+                
+                ret = pthread_atfork(prepare_fork_cb, in_fork_cb, in_fork_cb);
+                if ( ret != 0 )
+                        return prelude_error_from_errno(ret);
+        }
 #endif
         
         slice_arguments(argc, argv);
@@ -164,6 +171,9 @@ void prelude_deinit(void)
 {
         prelude_list_t *iter = NULL;
         prelude_plugin_generic_t *plugin;
+        
+        if ( --libprelude_refcount != 0 )
+                return;
         
         while ( (plugin = prelude_plugin_get_next(&iter)) )
                 prelude_plugin_unload(plugin);
