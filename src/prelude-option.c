@@ -101,12 +101,12 @@ struct cb_list {
 
 static int get_missing_options(config_t *cfg,
                                const char *filename, prelude_list_t *cblist,
-                               prelude_list_t *rootlist, int *line, int depth);
+                               prelude_option_t *rootlist, int *line, int depth);
 
 /*
  * contain all option
  */
-static PRELUDE_LIST_HEAD(root_optlist);
+static prelude_option_t *root_optlist = NULL;
 extern prelude_option_t *prelude_generic_optlist;
 
 
@@ -153,32 +153,48 @@ static prelude_option_context_t *search_context(prelude_option_t *opt, const cha
 
 
 
+static int cmp_option(prelude_option_t *opt, const char *optname, prelude_option_type_t type)
+{
+        if ( ! (opt->type & type) )
+                return -1;
+        
+        if ( opt->longopt && strcasecmp(opt->longopt, optname) == 0 )
+                return 0;
+                
+        if ( strlen(optname) == 1 && opt->shortopt == *optname )
+                return 0;
+
+        return -1;
+}
+
+
+
 
 /*
  * Search an option of a given name in the given option list.
  */
-static prelude_option_t *search_option(prelude_list_t *optlist,
+static prelude_option_t *search_option(prelude_option_t *root,
                                        const char *optname, prelude_option_type_t type, int walk_children) 
 {
-        prelude_option_t *item, *ret;
+        int cmp;
         prelude_list_t *tmp;
+        prelude_option_t *item, *ret;
+
+        cmp = cmp_option(root, optname, type);
+        if ( cmp == 0 )
+                return root;
         
-        prelude_list_for_each(tmp, optlist) {
+        prelude_list_for_each(tmp, &root->optlist) {
                 item = prelude_list_entry(tmp, prelude_option_t, list);
                 
                 if ( walk_children || (! item->longopt && ! item->shortopt) ) {
-                        ret = search_option(&item->optlist, optname, type, walk_children);
+                        ret = search_option(item, optname, type, walk_children);
                         if ( ret )
                                 return ret;
                 }
 
-                if ( ! (item->type & type) )
-                        continue;
-
-                if ( item->longopt && strcasecmp(item->longopt, optname) == 0 )
-                        return item;
-                
-                if ( strlen(optname) == 1 && item->shortopt == *optname )
+                cmp = cmp_option(item, optname, type);
+                if ( cmp == 0 )
                         return item;
         }
         
@@ -191,8 +207,8 @@ static prelude_bool_t is_option_prelude_specific(const char *longopt)
 {
         prelude_option_t *opt;
 
-        opt = search_option(&prelude_generic_optlist->optlist, longopt, ~0, 1);
-
+        opt = search_option(prelude_generic_optlist, longopt, ~0, 1);
+        
         return (opt) ? TRUE : FALSE;
 }
 
@@ -222,7 +238,7 @@ static void reorder_argv(int *argc, char **argv, int removed, int *argv_index)
 
 
 
-static int check_option_optarg(prelude_list_t *optlist, int *argc,
+static int check_option_optarg(int *argc,
                                char **argv, int *argv_index, char **optarg) 
 {
         if ( *argv_index < *argc && is_an_argument(argv[*argv_index]) == 0 ) {
@@ -236,7 +252,7 @@ static int check_option_optarg(prelude_list_t *optlist, int *argc,
 
 
 
-static int check_option_reqarg(prelude_list_t *optlist, const char *option,
+static int check_option_reqarg(const char *option,
                                int *argc, char **argv, int *argv_index, char **optarg) 
 {        
         if ( *argv_index >= *argc || is_an_argument(argv[*argv_index]) < 0 ) {
@@ -253,7 +269,7 @@ static int check_option_reqarg(prelude_list_t *optlist, const char *option,
 
 
 
-static int check_option(prelude_list_t *optlist, prelude_option_t *option,
+static int check_option(prelude_option_t *option,
                         char **optarg, int *argc, char **argv, int *argv_index) 
 {
         int ret;
@@ -261,11 +277,11 @@ static int check_option(prelude_list_t *optlist, prelude_option_t *option,
         switch (option->has_arg) {
                 
         case PRELUDE_OPTION_ARGUMENT_OPTIONAL:
-                ret = check_option_optarg(optlist, argc, argv, argv_index, optarg);
+                ret = check_option_optarg(argc, argv, argv_index, optarg);
                 break;
                 
         case PRELUDE_OPTION_ARGUMENT_REQUIRED:
-                ret = check_option_reqarg(optlist, option->longopt, argc, argv, argv_index, optarg);
+                ret = check_option_reqarg(option->longopt, argc, argv, argv_index, optarg);
                 break;
 
         case PRELUDE_OPTION_ARGUMENT_NONE:
@@ -325,7 +341,7 @@ static char *lookup_variable_if_needed(char *optarg)
 
 
 
-static int process_cfg_file(prelude_list_t *cblist, prelude_list_t *optlist, const char *filename) 
+static int process_cfg_file(prelude_list_t *cblist, prelude_option_t *optlist, const char *filename) 
 {
         config_t *cfg;
         int line = 0, ret;
@@ -487,7 +503,7 @@ static int call_option_from_cb_list(void *default_context, prelude_list_t *cblis
  * Try to get all option that were not set from the command line in the config file.
  */
 static int get_missing_options(config_t *cfg, const char *filename,
-                               prelude_list_t *cblist, prelude_list_t *rootlist, int *line, int depth) 
+                               prelude_list_t *cblist, prelude_option_t *rootlist, int *line, int depth) 
 {
         int ret;
         prelude_option_t *opt;
@@ -519,8 +535,8 @@ static int get_missing_options(config_t *cfg, const char *filename,
                         }
 
                         ret = is_option_prelude_specific((section && ! entry) ? section : entry);
-                        if ( ret == 0 )
-                                return 0;
+                        if ( ret )
+                                continue;
                         
                         if ( section && ! entry )
                                 option_err(PRELUDE_OPTION_WARNING_OPTION,
@@ -538,7 +554,7 @@ static int get_missing_options(config_t *cfg, const char *filename,
                         if ( ! cbitem ) 
                                 return -1;
                         
-                        ret = get_missing_options(cfg, filename, &cbitem->children, &opt->optlist, line, depth + 1);
+                        ret = get_missing_options(cfg, filename, &cbitem->children, opt, line, depth + 1);
                         if ( ret < 0 )
                                 return -1;
                                                
@@ -555,7 +571,7 @@ static int get_missing_options(config_t *cfg, const char *filename,
 
 
 static int parse_argument(prelude_list_t *cb_list,
-                          prelude_list_t *optlist, const char *filename,
+                          prelude_option_t *optlist, const char *filename,
                           int *argc, char **argv, int *argv_index, int depth)
 {
         int ret;
@@ -590,7 +606,7 @@ static int parse_argument(prelude_list_t *cb_list,
                 argptr = NULL;
                 reorder_argv(argc, argv, *argv_index - 1, argv_index);
                 
-                ret = check_option(optlist, opt, &argptr, argc, argv, argv_index);
+                ret = check_option(opt, &argptr, argc, argv, argv_index);
                 if ( ret < 0 ) 
                         return -1;
                                                 
@@ -604,7 +620,7 @@ static int parse_argument(prelude_list_t *cb_list,
                  */
                 if ( ! prelude_list_empty(&opt->optlist) ) {
                         
-                        ret = parse_argument(&cbitem->children, &opt->optlist,
+                        ret = parse_argument(&cbitem->children, opt,
                                              filename, argc, argv, argv_index, depth + 1);
 
                         if ( ret < 0 )
@@ -618,7 +634,7 @@ static int parse_argument(prelude_list_t *cb_list,
 
 
 
-static int get_option_from_optlist(prelude_list_t *optlist, prelude_list_t *cb_list,
+static int get_option_from_optlist(prelude_option_t *optlist, prelude_list_t *cb_list,
                                    const char *filename, int *argc, char **argv)
 {
         int argv_index = 1, ret;
@@ -664,21 +680,13 @@ int prelude_option_parse_arguments(void *context, prelude_option_t *option,
                                    const char *filename, int *argc, char **argv) 
 {
         int ret, opt_index;
-        prelude_list_t tmpl;
         PRELUDE_LIST_HEAD(optlist);
         PRELUDE_LIST_HEAD(cb_list);
-
-        if ( option ) {
-                tmpl.prev = option->list.prev;
-                tmpl.next = option->list.next;
-                
-                prelude_list_add_tail(&option->list, &optlist);
-                opt_index = get_option_from_optlist(&optlist, &cb_list, filename, argc, argv);
-
-                option->list.prev = tmpl.prev;
-                option->list.next = tmpl.next;
-        } else
-                opt_index = get_option_from_optlist(&root_optlist, &cb_list, filename, argc, argv);
+        
+        if ( option )
+                opt_index = get_option_from_optlist(option, &cb_list, filename, argc, argv);
+        else
+                opt_index = get_option_from_optlist(root_optlist, &cb_list, filename, argc, argv);
 
         if ( opt_index < 0 )
                 return -1;
@@ -721,9 +729,8 @@ prelude_option_t *prelude_option_add(prelude_option_t *parent, prelude_option_ty
                                      int (*get)(void *context, prelude_option_t *opt, char *buf, size_t size)) 
 {
         prelude_option_t *new;
-        prelude_list_t *optlist;
         
-        new = calloc(1, sizeof(*new));
+        new = prelude_option_new(parent);
         if ( ! new ) 
                 return NULL;
 
@@ -738,15 +745,7 @@ prelude_option_t *prelude_option_add(prelude_option_t *parent, prelude_option_ty
         new->description = desc;
         new->set = set;
         new->get = get;
-        new->parent = parent;
-
-        if ( parent )
-                optlist = &parent->optlist;
-        else 
-                optlist = &root_optlist;
-        
-        prelude_list_add_tail(&new->list, optlist);
-                
+                                
         return (prelude_option_t *) new;
 }
 
@@ -778,14 +777,14 @@ static void send_option_msg(prelude_bool_t parent_need_context,
 
 
 static void construct_option_msg(prelude_bool_t parent_need_context,
-                                 void *default_context, prelude_msgbuf_t *msg, prelude_list_t *optlist) 
+                                 void *default_context, prelude_msgbuf_t *msg, prelude_option_t *root) 
 {
         char value[1024];
         prelude_option_t *opt;
         prelude_list_t *tmp, *tmp2;
 	prelude_option_context_t *oc;
                         
-        prelude_list_for_each(tmp, optlist) {
+        prelude_list_for_each(tmp, &root->optlist) {
                 opt = prelude_list_entry(tmp, prelude_option_t, list);
                                 
                 prelude_list_for_each(tmp2, &opt->context_list) {
@@ -796,7 +795,7 @@ static void construct_option_msg(prelude_bool_t parent_need_context,
                         if ( opt->type & PRELUDE_OPTION_TYPE_WIDE )
                                 send_option_msg(TRUE, oc->data, opt, value, msg);
                         
-                        construct_option_msg(TRUE, oc->data, msg, &opt->optlist);
+                        construct_option_msg(TRUE, oc->data, msg, opt);
 
                         if ( opt->type & PRELUDE_OPTION_TYPE_WIDE )
                                 prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_END, 0, NULL);
@@ -812,7 +811,7 @@ static void construct_option_msg(prelude_bool_t parent_need_context,
                         if ( opt->type & PRELUDE_OPTION_TYPE_WIDE )
                                 send_option_msg(need_ctx, ctx, opt, NULL, msg);
                         
-                        construct_option_msg(need_ctx, ctx, msg, &opt->optlist);
+                        construct_option_msg(need_ctx, ctx, msg, opt);
                         
                         if ( opt->type & PRELUDE_OPTION_TYPE_WIDE )
                                 prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_END, 0, NULL);
@@ -828,7 +827,7 @@ int prelude_option_wide_send_msg(void *context, prelude_msgbuf_t *msgbuf)
         prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_LIST, 0, NULL);
         prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_START, 0, NULL);
         
-        construct_option_msg(FALSE, context, msgbuf, &root_optlist);
+        construct_option_msg(FALSE, context, msgbuf, root_optlist);
         
         return 0;
 }
@@ -881,13 +880,13 @@ static void print_wrapped(const char *line, int descoff)
 
 
 
-static void print_options(prelude_list_t *optlist, prelude_option_type_t type, int descoff, int depth) 
+static void print_options(prelude_option_t *root, prelude_option_type_t type, int descoff, int depth) 
 {
         int i;
         prelude_option_t *opt;
         prelude_list_t *tmp;
         
-        prelude_list_for_each(tmp, optlist) {
+        prelude_list_for_each(tmp, &root->optlist) {
                 
                 opt = prelude_list_entry(tmp, prelude_option_t, list);
 
@@ -895,7 +894,7 @@ static void print_options(prelude_list_t *optlist, prelude_option_type_t type, i
                  * If type is not there, continue.
                  */
                 if ( opt->type == PRELUDE_OPTION_TYPE_ROOT )
-                        print_options(&opt->optlist, type, descoff, depth);
+                        print_options(opt, type, descoff, depth);
                 else {                          
                         if ( type && ! (opt->type & type) ) 
                                 continue;
@@ -921,7 +920,7 @@ static void print_options(prelude_list_t *optlist, prelude_option_type_t type, i
                                 putchar('\n');
 
                         if ( ! prelude_list_empty(&opt->optlist) )
-                                print_options(&opt->optlist, type, descoff, depth + 1);
+                                print_options(opt, type, descoff, depth + 1);
                 }
         }
         putchar('\n');
@@ -941,10 +940,8 @@ static void print_options(prelude_list_t *optlist, prelude_option_type_t type, i
  * If @opt is NULL, then the root of the option list is used.
  */
 void prelude_option_print(prelude_option_t *opt, prelude_option_type_t type, int descoff) 
-{
-        prelude_list_t *optlist = (opt) ? &opt->optlist : &root_optlist;
-        
-        print_options(optlist, type, descoff, 0);
+{        
+        print_options(opt ? opt : root_optlist, type, descoff, 0);
 }
 
 
@@ -983,26 +980,23 @@ void prelude_option_set_priority(prelude_option_t *option, prelude_option_priori
  */
 void prelude_option_destroy(prelude_option_t *option)
 {
+        prelude_list_t *tmp, *bkp;
         prelude_option_t *opt;
-        prelude_list_t *tmp, *bkp, *optlist;
         
         if ( ! option )
-                optlist = &root_optlist;
-        else {
-                optlist = &option->optlist;
-                prelude_list_del(&option->list);
-        }
+                option = root_optlist;
         
-        prelude_list_for_each_safe(tmp, bkp, optlist) {
-                
+        prelude_list_for_each_safe(tmp, bkp, &option->optlist) {
                 opt = prelude_list_entry(tmp, prelude_option_t, list);
                 prelude_option_destroy(opt);
         }
 
-        if ( option ) {
+        if ( option ) {                
                 if ( option->value )
                         free(option->value);
-        
+
+                prelude_list_del(&option->list);
+                
                 free(option);
         }
 }
@@ -1271,8 +1265,23 @@ int prelude_option_invoke_get(void *context, prelude_option_t *opt, const char *
 prelude_option_t *prelude_option_new(prelude_option_t *parent) 
 {
         prelude_option_t *new;
-        prelude_list_t *optlist = parent ? &parent->optlist : &root_optlist;
+
+        if ( ! parent ) {
+                if ( ! root_optlist ) {
+                        
+                        root_optlist = calloc(1, sizeof(*new));
+                        if ( ! root_optlist ) 
+                                return NULL;
+                        
+                        root_optlist->parent = parent;
+                        PRELUDE_INIT_LIST_HEAD(&root_optlist->optlist);
+                        PRELUDE_INIT_LIST_HEAD(&root_optlist->context_list);
+
+                }
                 
+                parent = root_optlist;
+        }
+        
         new = calloc(1, sizeof(*new));
         if ( ! new ) 
                 return NULL;
@@ -1281,7 +1290,7 @@ prelude_option_t *prelude_option_new(prelude_option_t *parent)
         PRELUDE_INIT_LIST_HEAD(&new->optlist);
         PRELUDE_INIT_LIST_HEAD(&new->context_list);
         
-        prelude_list_add_tail(&new->list, optlist);
+        prelude_list_add_tail(&new->list, &parent->optlist);
 
         return new;
 }
@@ -1459,6 +1468,5 @@ void prelude_option_context_destroy(prelude_option_context_t *oc)
 prelude_option_t *prelude_option_search(prelude_option_t *parent, const char *name,
                                         prelude_option_type_t type, int walk_children)
 {
-        prelude_list_t *optlist = parent ? &parent->optlist : &root_optlist;
-        return search_option(optlist, name, type, walk_children);
+        return search_option(parent ? parent : root_optlist, name, type, walk_children);
 }
