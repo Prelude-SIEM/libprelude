@@ -1048,6 +1048,7 @@ void prelude_option_set_destroy_callback(prelude_option_t *opt,
                                          int (*destroy)(prelude_option_t *opt, prelude_string_t *out, void *context))
 {
         opt->destroy = destroy;
+        opt->type |= PRELUDE_OPTION_TYPE_DESTROY;
 }
 
 

@@ -33,7 +33,8 @@ typedef enum {
         PRELUDE_OPTION_TYPE_CFG  = 0x02,
         PRELUDE_OPTION_TYPE_WIDE = 0x04,
         PRELUDE_OPTION_TYPE_CONTEXT = 0x08,
-        PRELUDE_OPTION_TYPE_ROOT    = 0x10
+        PRELUDE_OPTION_TYPE_ROOT    = 0x10,
+        PRELUDE_OPTION_TYPE_DESTROY = 0x20
 } prelude_option_type_t;
 
 
