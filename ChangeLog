@@ -1,3 +1,26 @@
+2002-03-25  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/include/extract.h (extract_uint16): 
+	(extract_uint32): 
+	(extract_uint64):
+	(extract_ipv4_addr): theses function are now inlined. 
+
+	(extract_uint8_safe): 
+	(extract_uint16_safe): 
+	(extract_uint32_safe): 
+	(extract_uint64_safe): 
+	(extract_string_safe): 
+	New function,
+	check buffer size before doing anything.
+	
+	* src/prelude-message.c (slice_message_header): 
+	(prelude_msg_get): 
+	* src/client-ident.c (recv_ident): 
+
+	* src/extract.c: obsoleted, theses function are now inline.
+	* configure.in: put NEED_ALIGNED_ACCESS in libprelude-config --cflags.
+	
+
 2002-03-19  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-io.c (ssl_close): 

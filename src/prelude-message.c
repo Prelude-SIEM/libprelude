@@ -196,9 +196,7 @@ inline static prelude_msg_status_t read_message_data(unsigned char *dst, size_t 
 
 
 inline static void slice_message_header(prelude_msg_t *msg, unsigned char *hdrbuf) 
-{
-        uint32_t dlen;
-        
+{    
         if ( ! msg->hdr.datalen ) {
                 /*
                  * tag and priority are set on first fragment only.
@@ -210,9 +208,7 @@ inline static void slice_message_header(prelude_msg_t *msg, unsigned char *hdrbu
         
         msg->hdr.version = hdrbuf[0];
         msg->hdr.is_fragment = hdrbuf[3];
-
-        extract_uint32(&dlen, hdrbuf + 4, sizeof(dlen));
-        msg->hdr.datalen += dlen;
+        msg->hdr.datalen += extract_uint32(hdrbuf + 4);
 }
 
 
@@ -448,7 +444,7 @@ int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf)
          * slice wanted data.
          */
         *tag = msg->payload[msg->read_index++];
-        extract_uint32(len, &msg->payload[msg->read_index], sizeof(uint32_t));
+        *len = extract_uint32(&msg->payload[msg->read_index]);
         msg->read_index += sizeof(uint32_t);
 
         /*

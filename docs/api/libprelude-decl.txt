@@ -822,6 +822,8 @@ typedef struct {
         short int expire;
         time_t start_time;
 
+        pthread_mutex_t mutex;
+        
         void *data;
         void (*function)(void *data);
 } prelude_timer_t;
@@ -1072,6 +1074,26 @@ void
         for (pos = (head)->next, n = pos->next; pos != (head); \
                 pos = n, n = pos->next)
 </MACRO>
+<MACRO>
+<NAME>prelude_assert</NAME>
+#define prelude_assert(expr) \
+        ((expr) ? 0 : _prelude_assert(#expr, __FILE__, __LINE__, __FUNCTION__))
+</MACRO>
+<FUNCTION>
+<NAME>prelude_realloc</NAME>
+<RETURNS>void  *</RETURNS>
+void *ptr, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_resolve_addr</NAME>
+<RETURNS>int  </RETURNS>
+const char *hostname, struct in_addr *addr
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_open_persistant_tmpfile</NAME>
+<RETURNS>int  </RETURNS>
+const char *filename, int flags, mode_t mode
+</FUNCTION>
 <FUNCTION>
 <NAME>prelude_sensor_send_msg</NAME>
 <RETURNS>void  </RETURNS>
@@ -1412,11 +1434,15 @@ idmef_additional_data_t *data
 </MACRO>
 <MACRO>
 <NAME>idmef_string_set_constant</NAME>
-#define idmef_string_set_constant(s, str) (s)->string = (str); (s)->len = sizeof((str))
+#define idmef_string_set_constant(s, str) do {             \
+	(s)->string = (str); (s)->len = sizeof((str));     \
+} while (0);
 </MACRO>
 <MACRO>
 <NAME>idmef_string_set</NAME>
-#define idmef_string_set(s, str) (s)->string = (str); (s)->len = strlen((str)) + 1
+#define idmef_string_set(s, str) do {                      \
+	(s)->string = (str); (s)->len = strlen((str)) + 1; \
+} while (0);
 </MACRO>
 <MACRO>
 <NAME>IDMEF_VERSION</NAME>

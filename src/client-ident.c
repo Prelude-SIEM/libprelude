@@ -112,10 +112,10 @@ static int recv_ident(prelude_io_t *pio)
         if ( ret < 0 )
                 return -1;
         
-        ret = extract_uint64(&sensor_ident, buf, len);
-        if ( ret < 0 ) 
+        ret = extract_uint64_safe(&sensor_ident, buf, len);
+        if ( ret < 0 )
                 return -1;
-
+        
         log(LOG_INFO, "- Manager server allocated id %llu.\n", sensor_ident);
 
         return 0;

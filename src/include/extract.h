@@ -21,31 +21,142 @@
 *
 *****/
 
-void extract_ipv4_addr(struct in_addr *out, const struct in_addr *addr);
-
-int extract_uint64(uint64_t *dst, const void *buf, uint32_t blen);
-
-int extract_uint32(uint32_t *dst, const void *buf, uint32_t blen);
-
-int extract_uint16(uint16_t *dst, const void *buf, uint32_t blen);
-
-int extract_uint8(uint8_t *dst, const void *buf, uint32_t blen);
-
-const char *extract_str(void *buf, uint32_t blen);
+#ifndef EXTRACT_H
+#define EXTRACT_H
 
 
+#ifdef NEED_ALIGNED_ACCESS
 
-#define extract_int(type, buf, blen, dst) do {        \
-        int ret;                                      \
-        ret = extract_ ## type (&dst, buf, blen);     \
-        if ( ret < 0 )                                \
-                return -1;                            \
-} while (0)
-           
+static inline uint16_t extract_uint16(const void *buf)
+{
+        uint16_t tmp;
+        
+        memmove(&tmp, buf, sizeof(tmp));
+        return ntohs(tmp);
+}
 
-#define extract_string(buf, blen, dst)                                    \
-        dst = extract_str(buf, blen);                                     \
-        if ( ! dst ) {                                                    \
-               log(LOG_ERR, "Datatype error, buffer is not a string.\n"); \
-               return -1;                                                 \
+
+static inline uint32_t extract_uint32(const void *buf) 
+{
+        uint32_t tmp;
+
+        memmove(&tmp, buf, sizeof(tmp));
+        return ntohl(tmp);
+}
+
+
+static inline uint64_t extract_uint64(const void *buf) 
+{
+        uint64_t tmp, swap;
+
+        memmove(&tmp, buf, sizeof(tmp));
+        
+        ((uint32_t *) swap)[0] = ntohl(((uint32_t *) tmp)[1]);
+        ((uint32_t *) swap)[1] = ntohl(((uint32_t *) tmp)[0]);
+
+        return swap;
+}
+
+
+
+static inline struct in_addr extract_ipv4_addr(const void *buf) 
+{
+        struct in_addr tmp;
+        
+        memmove(&tmp, buf, sizeof(tmp));
+        return tmp;
+}
+
+
+#else
+
+#define extract_uint16(x) ntohs((*(const uint16_t *) (x)))
+#define extract_uint32(x) ntohl((*(const uint32_t *) (x)))
+#define extract_ipv4_addr(x) *((const struct in_addr *) (x))
+
+static inline uint64_t extract_uint64(const void *buf) 
+{
+        uint64_t tmp;
+        
+        ((uint32_t *) &tmp)[0] = ntohl(((const uint32_t *) buf)[1]);
+        ((uint32_t *) &tmp)[1] = ntohl(((const uint32_t *) buf)[0]);
+
+        return tmp;
+}
+
+#endif
+
+
+
+/*
+ * Theses function check the buffer size for safety. 
+ */
+static inline int extract_uint8_safe(uint8_t *out, const void *buf, size_t len) 
+{
+        if ( len != sizeof(uint8_t) ) {
+                log(LOG_ERR, "Datatype error, buffer doesn't contain 8 bits integer.\n");
+                return -1;
         }
+
+        *out = *(const uint8_t *) buf;
+        
+        return 0;
+}
+
+
+static inline int extract_uint16_safe(uint16_t *out, const void *buf, size_t len) 
+{
+        if ( len != sizeof(uint16_t) ) {
+                log(LOG_ERR, "Datatype error, buffer doesn't contain 16 bits integer.\n");
+                return -1;
+        }
+
+        *out = extract_uint16(buf);
+
+        return 0;
+}
+
+
+
+static inline int extract_uint32_safe(uint32_t *out, const void *buf, size_t len) 
+{
+        if ( len != sizeof(uint32_t) ) {
+                log(LOG_ERR, "Datatype error buffer doesn't contain 32 bits integer.\n");
+                return -1;
+        }
+
+        *out = extract_uint32(buf);
+
+        return 0;
+}
+
+
+
+static inline int extract_uint64_safe(uint64_t *out, const void *buf, size_t len) 
+{
+        if ( len != sizeof(uint64_t) ) {
+                log(LOG_ERR, "Datatype error buffer doesn't contain 64 bits integer.\n");
+                return -1;
+        }
+        
+        *out = extract_uint64(buf);
+
+        return 0;
+}
+
+
+
+static inline int extract_string_safe(char **out, char *buf, size_t len) 
+{
+        if ( buf[len] != '\0' )
+                return -1;
+
+        *out = buf;
+
+        return 0;
+}
+
+
+
+#endif
+
