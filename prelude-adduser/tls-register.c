@@ -42,10 +42,6 @@
 
 #include <assert.h>
 
-#ifndef GNUTLS_OID_X520_DN_QUALIFIER
- #define GNUTLS_OID_X520_DN_QUALIFIER GNUTLS_OID_X520_COMMON_NAME
-#endif
-
 
 extern int server_confirm;
 extern int generated_key_size;
