@@ -31,9 +31,38 @@
 
 #include "prelude-log.h"
 #include "prelude-client.h"
+#include "prelude-message-id.h"
 
 #include "tls-util.h"
 #include "tls-auth.h"
+
+
+
+static int read_auth_result(prelude_io_t *fd)
+{
+        int ret;
+        void *buf;
+        uint8_t tag;
+        uint32_t len;
+        prelude_msg_t *msg = NULL;
+        
+        do {
+                ret = prelude_msg_read(&msg, fd);
+                
+        } while ( ret == prelude_msg_unfinished );
+
+        if ( ret == prelude_msg_error )
+                return -1;
+        
+        if ( prelude_msg_get_tag(msg) != PRELUDE_MSG_AUTH ) {
+                prelude_msg_destroy(msg);
+                return -1;
+        }
+        
+        prelude_msg_get(msg, &tag, &len, &buf);
+        
+        return (tag == PRELUDE_MSG_AUTH_SUCCEED) ? 0 : -1;
+}
 
 
 
@@ -110,19 +139,29 @@ int tls_auth_connection(prelude_client_t *client, prelude_io_t *io, int crypt)
                 gnutls_deinit(session);
                 return -1;
         }
+        
+        prelude_io_set_tls_io(io, session);
 
-        if ( crypt )
-                prelude_io_set_tls_io(io, session);
-        else {
+        ret = read_auth_result(io);
+        if ( ret < 0 ) {
+                gnutls_deinit(session);
+                return -1;
+        }
+
+        if ( ! crypt ) {
+                
                 do {
                         ret = gnutls_bye(session, GNUTLS_SHUT_RDWR);
                 } while ( ret < 0 && ret == GNUTLS_E_INTERRUPTED );
 
+                if ( ret < 0 )
+                        log(LOG_ERR, "gnutls_bye() error: %s.\n", gnutls_strerror(ret));
+                
                 gnutls_deinit(session);
                 prelude_io_set_sys_io(io, fd);
         }
         
-        return 0;
+        return ret;
 }
 
 
