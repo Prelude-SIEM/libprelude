@@ -85,6 +85,7 @@ struct prelude_connection {
         prelude_io_t *fd;
 
         uint8_t state;
+        uint64_t peer_analyzerid;
         prelude_client_t *client;
 };
 
@@ -203,7 +204,7 @@ static int handle_authentication(prelude_connection_t *cnx, int crypt)
 {
         int ret;
         
-        ret = tls_auth_connection(cnx->client, cnx->fd, crypt);
+        ret = tls_auth_connection(cnx->client, cnx->fd, crypt, &cnx->peer_analyzerid);
         if ( ret < 0 ) {
                 /*
                  * SSL authentication failed,
@@ -635,4 +636,11 @@ prelude_client_t *prelude_connection_get_client(prelude_connection_t *cnx)
 void prelude_connection_get_socket_filename(char *buf, size_t size, uint16_t port) 
 {
         snprintf(buf, size, "%s-%u", UNIX_SOCKET, port);
+}
+
+
+
+uint64_t prelude_connection_get_peer_analyzerid(prelude_connection_t *cnx)
+{
+        return cnx->peer_analyzerid;
 }

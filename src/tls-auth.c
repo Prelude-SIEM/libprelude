@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <netinet/in.h>
 
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
@@ -33,13 +34,14 @@
 #include "prelude-client.h"
 #include "prelude-message-id.h"
 #include "prelude-error.h"
+#include "prelude-extract.h"
 
 #include "tls-util.h"
 #include "tls-auth.h"
 
 
 
-static int read_auth_result(prelude_io_t *fd)
+static int read_auth_result(prelude_io_t *fd, uint64_t *analyzerid)
 {
         int ret;
         void *buf;
@@ -60,10 +62,16 @@ static int read_auth_result(prelude_io_t *fd)
                 return -1;
         }
         
-        prelude_msg_get(msg, &tag, &len, &buf);
-        prelude_msg_destroy(msg);
+        ret = prelude_msg_get(msg, &tag, &len, &buf);
+        if ( ret < 0 || tag != PRELUDE_MSG_AUTH_SUCCEED ) {
+                prelude_msg_destroy(msg);
+                return -1;
+        }
         
-        return (tag == PRELUDE_MSG_AUTH_SUCCEED) ? 0 : -1;
+        ret = prelude_extract_uint64_safe(analyzerid, buf, len);
+        prelude_msg_destroy(msg);
+                
+        return ret;
 }
 
 
@@ -116,7 +124,7 @@ static int handle_gnutls_error(gnutls_session session, int ret)
 
 
 
-int tls_auth_connection(prelude_client_t *client, prelude_io_t *io, int crypt)
+int tls_auth_connection(prelude_client_t *client, prelude_io_t *io, int crypt, uint64_t *analyzerid)
 {
 	int ret, fd;
         gnutls_session session;
@@ -147,7 +155,7 @@ int tls_auth_connection(prelude_client_t *client, prelude_io_t *io, int crypt)
         
         prelude_io_set_tls_io(io, session);
 
-        ret = read_auth_result(io);
+        ret = read_auth_result(io, analyzerid);
         if ( ret < 0 ) {
                 gnutls_deinit(session);
                 return -1;
@@ -175,7 +183,7 @@ int tls_auth_init(prelude_client_t *client, gnutls_certificate_credentials *cred
 {
         int ret;
         char keyfile[256], certfile[256];
-        
+       
         prelude_client_get_tls_key_filename(client, keyfile, sizeof(keyfile));
         prelude_client_get_tls_client_keycert_filename(client, certfile, sizeof(certfile));
 

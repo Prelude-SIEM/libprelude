@@ -63,6 +63,8 @@ int prelude_connection_get_state(prelude_connection_t *cnx);
 
 void prelude_connection_get_socket_filename(char *buf, size_t size, uint16_t port);
 
+uint64_t prelude_connection_get_peer_analyzerid(prelude_connection_t *cnx);
+
 
 #include "prelude-client.h"
 
