@@ -398,11 +398,6 @@ static int create_new_cnx(prelude_client_t *client, cnx_list_t *clist, char *add
                 return -1;
         }
 
-            /*
-             * FIXME:
-             *
-             * prelude_connection_set_type(new->client, type);
-             */
         prelude_linked_object_add((prelude_linked_object_t *) new->cnx, &clist->parent->all_cnx);
 
         new->use_timer = 1;
@@ -901,12 +896,6 @@ prelude_connection_t *prelude_connection_mgr_search_connection(prelude_connectio
         prelude_list_for_each(tmp, &mgr->all_cnx) {
                 cnx = prelude_linked_object_get_object(tmp, prelude_connection_t);
 
-                /*
-                 * FIXME:
-                 
-                if ( type != prelude_connection_get_type(cnx) )
-                        continue;
-                */
                 ret = strcmp(addr, prelude_connection_get_daddr(cnx));
                 if ( ret == 0 ) 
                         return cnx;
