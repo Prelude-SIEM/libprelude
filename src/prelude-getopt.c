@@ -796,6 +796,7 @@ static void send_option_msg(void *context, prelude_option_t *opt, const char *in
         prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_START, 0, NULL);
         prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_NAME, strlen(name) + 1, name);
         prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_HAS_ARG, sizeof(uint8_t), &opt->has_arg);
+        prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_FLAGS, sizeof(uint8_t), &opt->flags);
         
         if ( opt->description )
                 prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_DESC, strlen(opt->description) + 1, opt->description);
