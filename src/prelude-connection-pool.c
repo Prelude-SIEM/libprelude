@@ -70,7 +70,7 @@ typedef struct cnx_list {
         
         /*
          * If dead is non zero,
-         * it mean one of the client in the list is down. 
+         * it means one of the client in the list is down. 
          */
         unsigned int dead;
         unsigned int total;
@@ -319,7 +319,7 @@ static void broadcast_message(prelude_msg_t *msg, cnx_t *cnx)
 
 
 /*
- * Return 0 on sucess, -1 on a new failure,
+ * Returns 0 on sucess, -1 on a new failure,
  * -2 on an already signaled failure.
  */
 static int walk_manager_lists(prelude_connection_pool_t *pool, prelude_msg_t *msg) 
@@ -330,7 +330,7 @@ static int walk_manager_lists(prelude_connection_pool_t *pool, prelude_msg_t *ms
         for ( or = pool->or_list; or != NULL; or = or->or ) {
 
                 /*
-                 * if all connection are dead and we have a or, go to next.
+                 * if all connections are dead and we have a or, go to next.
                  */
                 if ( or->dead == or->total && (pool->flags & PRELUDE_CONNECTION_POOL_FLAGS_GLOBAL_FAILOVER) ) {
                         ret = -2;
@@ -410,7 +410,7 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
 
 
 /*
- * Function called back when one of the client reconnection timer expire.
+ * Function called back when one of the client reconnection timer expires.
  */
 static void connection_timer_expire(void *data) 
 {
@@ -454,7 +454,7 @@ static void connection_timer_expire(void *data)
                 prelude_timer_set_expire(&cnx->timer, INITIAL_EXPIRATION_TIME);
                 
 		/*
-		 * put the fd in fdset for read from manager.
+		 * put the fd in fdset to read from manager.
 		 */
                 fd = prelude_io_get_fd(prelude_connection_get_fd(cnx->cnx));
 
@@ -565,7 +565,7 @@ static int new_connection_from_address(cnx_t **new,
 
 
 /*
- * Create a list (boolean AND) of connection.
+ * Creates a list (boolean AND) of connections.
  */
 static int create_connection_list(cnx_list_t **new, prelude_connection_pool_t *pool) 
 {
@@ -639,7 +639,7 @@ static int parse_config_line(prelude_connection_pool_t *pool)
                 
                 /*
                  * If we meet end of line or "||",
-                 * it mean we just finished adding a AND list.
+                 * it means we just finished adding a AND list.
                  */
                 if ( ! ptr || (ret = strcmp(ptr, "||") == 0) ) {
                                                                         
@@ -716,7 +716,7 @@ static void broadcast_async_cb(void *obj, void *data)
  * @pool: Pointer to a #prelude_connection_pool_t object.
  * @msg: Pointer on a #prelude_msg_t object.
  *
- * Send the message contained in @msg to all the connection in @pool.
+ * Sends the message contained in @msg to all the connection in @pool.
  */
 void prelude_connection_pool_broadcast(prelude_connection_pool_t *pool, prelude_msg_t *msg) 
 {
@@ -733,7 +733,7 @@ void prelude_connection_pool_broadcast(prelude_connection_pool_t *pool, prelude_
  * @pool: Pointer to a #prelude_connection_pool_t object
  * @msg: Pointer on a #prelude_msg_t object.
  *
- * Send the message contained in @msg to all the connection
+ * Sends the message contained in @msg to all connections
  * in @pool asynchronously. After the request is processed,
  * the @msg message will be freed.
  */
@@ -750,7 +750,7 @@ void prelude_connection_pool_broadcast_async(prelude_connection_pool_t *pool, pr
  * prelude_connection_pool_init:
  * @pool: Pointer to a #prelude_connection_pool_t object.
  *
- * Initialize @pool. This mean that connection that were associated
+ * Initializes @pool. This means that connection associated
  * with @pool using prelude_connection_pool_set_connection_string()
  * will be established.
  *
@@ -821,7 +821,7 @@ int prelude_connection_pool_init(prelude_connection_pool_t *pool)
  * @cp: The #prelude_client_profile_t to use for connection.
  * @permission: Permission the connection in this connection-pool will require.
  *
- * prelude_connection_pool_new() initialize a new Connection Manager object.
+ * prelude_connection_pool_new() initializes a new Connection Manager object.
  *
  * Returns: 0 on success or a negative value if an error occured.
  */
@@ -854,7 +854,7 @@ int prelude_connection_pool_new(prelude_connection_pool_t **ret,
  * prelude_connection_pool_destroy:
  * @pool: Pointer to a #prelude_connection_pool_t object.
  *
- * Destroy @pool and all the connection it handle.
+ * Destroys @pool and all connections handled.
  */
 void prelude_connection_pool_destroy(prelude_connection_pool_t *pool) 
 {        
@@ -878,7 +878,7 @@ void prelude_connection_pool_destroy(prelude_connection_pool_t *pool)
  * @pool: Pointer to a #prelude_connection_pool_t object.
  * @cnx: Pointer to a #prelude_connection_t object to add to @pool.
  *
- * Add @cnx to @pool set of connection.
+ * Adds @cnx to @pool set of connections.
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
@@ -941,7 +941,7 @@ void prelude_connection_pool_set_global_event_handler(prelude_connection_pool_t 
  * @callback: User specific callback to call when an event is available.
  *
  * @callback will be called each time one of the event specified in
- * @wanted_events happen to @pool.
+ * @wanted_events happens to @pool.
  */
 void prelude_connection_pool_set_event_handler(prelude_connection_pool_t *pool,
                                                prelude_connection_pool_event_t wanted_events,
@@ -959,7 +959,7 @@ void prelude_connection_pool_set_event_handler(prelude_connection_pool_t *pool,
  * prelude_connection_pool_get_connection_list:
  * @pool: Pointer to a #prelude_connection_pool_t object.
  *
- * Returns: The list of connection handled by @pool.
+ * Returns: The list of connections handled by @pool.
  */
 prelude_list_t *prelude_connection_pool_get_connection_list(prelude_connection_pool_t *pool) 
 {
@@ -973,12 +973,12 @@ prelude_list_t *prelude_connection_pool_get_connection_list(prelude_connection_p
  * @pool: Pointer to a #prelude_connection_pool_t object.
  * @cnx: Pointer to a #prelude_connection_t object used within @pool.
  *
- * Notify @pool that the connection identified bu @cnx is dead.
+ * Notifies @pool that the connection identified by @cnx is dead.
  *
- * Usually, this function is not to be used by the user since @pool is
- * self sufficiant, and handle connection problem internally. However,
- * it is sometime useful when the user have several mechanism using the
- * connection, and that it's own mechanism detect a connection problem
+ * Usually, this function should not be used since @pool is
+ * self sufficient, and handles connections issues internally. However,
+ * it is sometime useful when the user has several mechanisms using the
+ * connection, and that its own mechanism detects a connection problem
  * before @pool notice.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -1008,12 +1008,12 @@ int prelude_connection_pool_set_connection_dead(prelude_connection_pool_t *pool,
  * @pool: Pointer to a #prelude_connection_pool_t object.
  * @cnx: Pointer to a #prelude_connection_t object used within @pool.
  *
- * Notify @pool that the connection identified bu @cnx went back alive.
+ * Notifies @pool that the connection identified by @cnx went back alive.
  *
- * Usually, this function is not to be used by the user since @pool is
- * self sufficiant, and handle connection problem internally. However,
- * it is sometime useful when the user have several mechanism using the
- * connection, and that it's own mechanism detect a connection problem
+ * Usually, this function should not be used since @pool is
+ * self sufficient, and handles connection issues internally. However,
+ * it is sometime useful when the user has several mechanisms using the
+ * connection, and that its own mechanism detects a connection problem
  * before @pool notice.
  *
  * Returns: 0 on success, a negative value if an error occured.
@@ -1053,17 +1053,17 @@ int prelude_connection_pool_set_connection_alive(prelude_connection_pool_t *pool
  * @pool: Pointer to a #prelude_connection_pool_t object.
  * @cfgstr: Connection string.
  *
- * Set the connection string for @pool. The connection string should be
+ * Sets the connection string for @pool. The connection string should be
  * in the form of : "address". Special operand like || (OR) and && (AND),
  * are also accepted: "address && address". 
  *
- * Where && mean that alert sent using @pool will go to both configured
- * address, and || mean that if the left address fail, the right address
+ * Where && means that alert sent using @pool will go to both configured
+ * addresses, and || means that if the left address fails, the right address
  * will be used.
  *
- * prelude_connection_pool_init() should be used to initiate the connection.
+ * prelude_connection_pool_init() should be used to initiates the connection.
  *
- * Returns: The connection string.
+ * Returns: 0 on success, a negative value if an error occured.
  */
 int prelude_connection_pool_set_connection_string(prelude_connection_pool_t *pool, const char *cfgstr)
 {
@@ -1104,7 +1104,7 @@ const char *prelude_connection_pool_get_connection_string(prelude_connection_poo
  * @pool: Pointer to a #prelude_connection_pool_t object.
  * @flags: Flags to use for @pool.
  *
- * Set @flags within @pools.
+ * Sets @flags within @pools.
  */
 void prelude_connection_pool_set_flags(prelude_connection_pool_t *pool, prelude_connection_pool_flags_t flags)
 {
@@ -1115,8 +1115,6 @@ void prelude_connection_pool_set_flags(prelude_connection_pool_t *pool, prelude_
 /**
  * prelude_connection_pool_get_flags:
  * @pool: Pointer to a #prelude_connection_pool_t object.
- *
- * Return the #prelude_connection_pool_flags_t used in @pool.
  *
  * Returns: the #prelude_connection_pool_flags_t used in @pool.
  */
@@ -1134,7 +1132,7 @@ prelude_connection_pool_flags_t prelude_connection_pool_get_flags(prelude_connec
  * @event_cb: User provided callback function to call on received events.
  * @extra: Pointer to user specific data provided to @event_cb.
  *
- * This function query the set of connection available in @pool to see if
+ * This function queries the set of connections available in @pool to see if
  * events are waiting to be handled. If timeout is zero, then this function
  * will return immediatly in case there is no event to be handled.
  *
