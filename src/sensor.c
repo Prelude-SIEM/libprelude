@@ -230,7 +230,7 @@ static int setup_address(prelude_option_t *opt, const char *arg)
 
 static int setup_manager_addr(prelude_option_t *opt, const char *arg) 
 {
-        manager_cfg_line = arg;                
+        manager_cfg_line = strdup(arg);                
         return prelude_option_success;
 }
 
@@ -267,7 +267,7 @@ static int get_process_name(int argc, char **argv)
 
 
 
-static int parse_argument(const char *filename, int argc, char **argv) 
+static int parse_argument(const char *filename, int argc, char **argv, int type) 
 {
         int ret;
         int old_flags;
@@ -363,13 +363,13 @@ static int parse_argument(const char *filename, int argc, char **argv)
          * Here we try using the default sensors configuration file.
          */
         if ( ! manager_cfg_line ||
-             ! (manager_list = prelude_client_mgr_new(PRELUDE_CLIENT_TYPE_SENSOR, manager_cfg_line)) ) {
+             ! (manager_list = prelude_client_mgr_new(type, manager_cfg_line)) ) {
                 log(LOG_INFO,
                     "No Manager were configured. You need to setup a Manager for this Sensor\n"
                     "to report events. Please use the \"manager-addr\" entry in the Sensor\n"
                     "config file or the -a and eventually -p command line options.\n");
         }
-
+        free(manager_cfg_line);
  out:
         /*
          * Destroy option list and restore old option flags.
@@ -378,9 +378,6 @@ static int parse_argument(const char *filename, int argc, char **argv)
 
         return ret;
 }
-
-
-
 
 
 
@@ -413,12 +410,14 @@ int prelude_sensor_init(const char *sname, const char *filename, int argc, char 
         get_process_name(argc, argv);
         
         prelude_set_program_name(sname);
-        ret = parse_argument(filename, argc, argv);
+
+        ret = parse_argument(filename, argc, argv, PRELUDE_CLIENT_TYPE_SENSOR);
         if ( ret == prelude_option_end || ret == prelude_option_error )
                 return ret;
 
         return ret;
 }
+
 
 
 

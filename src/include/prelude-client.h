@@ -48,6 +48,7 @@ int prelude_client_is_alive(prelude_client_t *client);
 
 prelude_io_t *prelude_client_get_fd(prelude_client_t *client);
 
+void prelude_client_close(prelude_client_t *client);
 
 #define PRELUDE_CLIENT_TYPE_OTHER   0
 #define PRELUDE_CLIENT_TYPE_SENSOR  1

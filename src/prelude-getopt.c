@@ -344,10 +344,7 @@ static int call_option_from_cb_list(struct list_head *cblist, int option_kind)
                 if ( ret == prelude_option_error || ret == prelude_option_end )
                         return ret;
 
-                /*
-                 * cb->arg isn't freed because client may use them later...
-                 * FIXME: shouldn't the client use strdup() in this case ?
-                 */
+                free(cb->arg);
                 list_del(&cb->list);
                 free(cb);
         }

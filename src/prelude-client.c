@@ -591,7 +591,7 @@ prelude_client_t *prelude_client_new(const char *addr, uint16_t port)
         new->dport = port;
         new->type = PRELUDE_CLIENT_TYPE_OTHER;
         
-        new->connection_broken = 0;
+        new->connection_broken = 1;
         
         new->fd = prelude_io_new();
         if ( ! new->fd ) {
@@ -634,6 +634,14 @@ int prelude_client_connect(prelude_client_t *client)
         return ret;
 }
 
+
+
+
+void prelude_client_close(prelude_client_t *client) 
+{
+        prelude_io_close(client->fd);
+        client->connection_broken = 1;
+}
 
 
 
