@@ -7,8 +7,8 @@
 #
 # Optionnal data gathered with the alert.
 #
-# node-name = Name of the equipment;
-# node-location = Location of the equipment;
+# node-name = Name of the equipment
+# node-location = Location of the equipment
 # node-category = Type of node:
 #
 # unknown            Domain unknown or not relevant
@@ -31,12 +31,12 @@
 # 
 # [Node-Address]
 #
-# address = Address of the equipment;
-# netmask = Netmask for this address;
-# vlan-name = Name of the Virtual LAN to which the address belongs;
-# vlan-num = Number of the Virtual LAN to which the address belongs;
+# address = Address of the equipment
+# netmask = Netmask for this address
+# vlan-name = Name of the Virtual LAN to which the address belongs
+# vlan-num = Number of the Virtual LAN to which the address belongs
 #
-# category = Type of address represented; 
+# category = Type of address represented 
 # 
 # Permitted values for category are (default to unknown) :
 #
