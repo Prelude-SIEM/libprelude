@@ -26,6 +26,7 @@
 #include <inttypes.h>
 #include <pthread.h>
 #include <errno.h>
+#include <signal.h>
 
 #include "prelude-list.h"
 #include "timer.h"
@@ -109,9 +110,22 @@ static void wait_timer_and_data(void)
 
 static void *async_thread(void *arg) 
 {
+        int ret;
+        sigset_t set;
         prelude_async_object_t *obj;
         struct list_head *tmp, *next;
+
+        ret = sigfillset(&set);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "sigfillset returned an error.\n");
+                return NULL;
+        }
         
+        ret = pthread_sigmask(SIG_BLOCK, &set, NULL);
+        if ( ret < 0 ) {
+                log(LOG_ERR, "pthread_sigmask returned an error.\n");
+                return NULL;
+        }
         
         while ( 1 ) {
                 

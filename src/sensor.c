@@ -87,8 +87,8 @@ static int parse_argument(const char *filename, int argc, char **argv)
         if ( ! opts )
                 return -1;
 
-        prelude_option_add(opts, CLI_HOOK|CFG_HOOK, 'a', "manager-addr",
-                           "Address where manager is listening", required_argument, setup_manager_addr);
+        prelude_option_wide_add(opts, CLI_HOOK|CFG_HOOK, 'a', "manager-addr",
+                           "Address where manager is listening", required_argument, setup_manager_addr, NULL);
 
         prelude_option_add(opts, CLI_HOOK|CFG_HOOK, 'h', "help",
                            "Print this help", no_argument, print_help);
@@ -156,6 +156,10 @@ void prelude_sensor_send_alert(prelude_msg_t *msg)
 
 
 
+prelude_msg_t *prelude_sensor_get_option_msg(void) 
+{
+        return prelude_option_wide_get_msg(opts);
+}
 
 
 

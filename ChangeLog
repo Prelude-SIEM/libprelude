@@ -1,3 +1,26 @@
+2001-12-19  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
+
+	* src/sensor.c (parse_argument): manager address is a wide option.
+	(prelude_sensor_get_option_msg): return the wide option message
+	for our wide option set.
+
+	* src/prelude-io.c (prelude_io_read_wait): use poll() in order
+	to wait data. This also fix a bug where we were returning 0 even
+	if we couldn't read the specified amount of bytes.
+
+	* src/prelude-getopt.c (prelude_option_wide_add): 
+	(prelude_option_new): compute message len on each wide option add.
+
+	(prelude_option_wide_get_msg): generate, and cache a message
+	containing all the wide option.
+
+	* src/prelude-client.c (prelude_client_connect): 
+	send wide option message on connect.
+
+	* src/prelude-async.c (async_thread): don't catch signals.
+
+	* configure.ac (CFLAGS): add -DREENTRANT to cflags.
+
 2001-12-14  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
 	* src/prelude-ident.c (setup_filedes_if_needed): 

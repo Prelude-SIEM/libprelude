@@ -19,8 +19,10 @@ include_HEADERS = config-engine.h 		\
 		  prelude-client.h		\
 		  prelude-client-mgr.h		\
 		  prelude-getopt.h		\
+		  prelude-getopt-wide.h		\
 		  prelude-io.h			\
 		  prelude-message.h		\
+		  prelude-message-id.h		\
 		  prelude-async.h		\
 		  prelude-ident.h		\
 		  sensor.h

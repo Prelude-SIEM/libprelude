@@ -27,7 +27,7 @@
  */
 #define CLI_HOOK 0x1 /* Option to be hooked to command line */
 #define CFG_HOOK 0x2 /* Option to be hooked to config file  */
-
+#define WIDE_HOOK 0x4
 
 /*
  * Possible return value for set() callback.
@@ -78,6 +78,8 @@ int prelude_option_parse_arguments(prelude_optlist_t *optlist,
 
 
 void prelude_option_print(prelude_optlist_t *optlist, int flags);
+
+prelude_msg_t *prelude_option_wide_get_msg(prelude_optlist_t *optlist);
 
 
 void prelude_option_destroy(prelude_optlist_t *optlist);

@@ -23,6 +23,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <inttypes.h>
+
+#include "prelude-io.h"
+#include "prelude-message.h"
+#include "prelude-getopt-wide.h"
+#include "prelude-message-id.h"
 
 #include "list.h"
 #include "common.h"
@@ -34,6 +40,11 @@
 
 struct prelude_optlist {    
         int argv_index;
+
+        int wide_msglen;
+        int wide_msgcount;
+        prelude_msg_t *wide_msg;
+        
         struct list_head optlist;
 };
 
@@ -398,7 +409,7 @@ prelude_option_t *prelude_option_wide_add(prelude_optlist_t *optlist, int flags,
 
         INIT_LIST_HEAD(&new->optlist.optlist);
 
-        new->flags = flags;
+        new->flags = flags | WIDE_HOOK;
         new->has_arg = has_arg;
         new->longopt = longopt;
         new->shortopt = shortopt;
@@ -409,10 +420,61 @@ prelude_option_t *prelude_option_wide_add(prelude_optlist_t *optlist, int flags,
         
         list_add_tail(&new->list, &optlist->optlist);
 
+        optlist->wide_msgcount += 4; /* longopt && has_arg && start && end*/
+        optlist->wide_msglen += strlen(longopt) + 1 + sizeof(uint8_t);
+        
+        if ( desc ) {
+                optlist->wide_msgcount++;
+                optlist->wide_msglen += strlen(desc) + 1;
+        }
+#if 0
+        if ( help ) {
+                optlist->wide_msgcount++;
+                optlist->wide_msglen += strlen(help) + 1;
+        }
+#endif           
         return (prelude_option_t *) new;
 }
 
 
+
+
+prelude_msg_t *prelude_option_wide_get_msg(prelude_optlist_t *optlist) 
+{
+        prelude_msg_t *msg;
+        struct list_head *tmp;
+        prelude_option_wide_t *opt;
+
+        if ( optlist->wide_msg )
+                return optlist->wide_msg;
+        
+        msg = optlist->wide_msg = prelude_msg_new(optlist->wide_msgcount, optlist->wide_msglen,
+                                                  PRELUDE_MSG_OPTION_LIST, PRELUDE_MSG_PRIORITY_HIGH);
+        if ( ! msg ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }
+        
+        
+        list_for_each(tmp, &optlist->optlist) {
+                opt = list_entry(tmp, prelude_option_wide_t, list);
+
+                if ( !(opt->flags & WIDE_HOOK) )
+                        continue;
+
+                prelude_msg_set(msg, PRELUDE_OPTION_START, 0, NULL);
+                prelude_msg_set(msg, PRELUDE_OPTION_NAME, strlen(opt->longopt) + 1, opt->longopt);
+                prelude_msg_set(msg, PRELUDE_OPTION_DESC, strlen(opt->description) + 1, opt->description);
+                prelude_msg_set(msg, PRELUDE_OPTION_HAS_ARG, sizeof(uint8_t), &opt->has_arg);
+                prelude_msg_set(msg, PRELUDE_OPTION_END, 0, NULL);
+                
+                if ( opt->help )
+                        prelude_msg_set(msg, PRELUDE_OPTION_HELP, strlen(opt->help), opt->help);
+                    
+        }
+
+        return optlist->wide_msg;
+}
 
 
 
@@ -481,6 +543,10 @@ prelude_optlist_t *prelude_option_new(void)
         if ( ! list )
                 return NULL;
 
+        list->wide_msg = NULL;
+        list->wide_msgcount = 0;
+        list->wide_msglen = 0;
+        
         list->argv_index = 1;
         INIT_LIST_HEAD(&list->optlist);
 
@@ -514,3 +580,17 @@ void prelude_option_destroy(prelude_optlist_t *optlist)
                 free(opt);
         }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

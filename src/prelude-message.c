@@ -97,7 +97,7 @@ static int read_message_header(prelude_msg_t *msg, prelude_io_t *pio)
                 return -1;
         }
 
-        else if ( ret == 0) 
+        else if ( ret == 0 )
                 return -1;
         
         msg->read_index += ret;

@@ -284,10 +284,21 @@ ssize_t prelude_io_read(prelude_io_t *pio, void *buf, size_t count)
  */
 ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count) 
 {
+        struct pollfd pfd;
         ssize_t n = 0, ret;
         unsigned char *in = buf;
+
+        pfd.fd = prelude_io_get_fd(pio);
+        pfd.events = POLLIN;
         
         do {
+                ret = poll(&pfd, 1, 10000);                
+                if ( ret <= 0 )
+                        return -1;
+
+                if ( ! (pfd.revents & POLLIN) )
+                     return -1;
+                
                 ret = prelude_io_read(pio, &in[n], count - n);
                 if ( ret <= 0 )
                         return ret;

@@ -140,6 +140,18 @@ const char *variable
 const char *variable
 </FUNCTION>
 <MACRO>
+<NAME>PRELUDE_MSG_IDMEF</NAME>
+#define PRELUDE_MSG_IDMEF       0
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_OPTION_LIST</NAME>
+#define PRELUDE_MSG_OPTION_LIST 1
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_MSG_OPTION_SET</NAME>
+#define PRELUDE_MSG_OPTION_SET  2
+</MACRO>
+<MACRO>
 <NAME>MANAGERS_CERT</NAME>
 #define MANAGERS_CERT CONFIG_DIR"/managers.cert"
 </MACRO>
@@ -187,6 +199,26 @@ prelude_io_t *fd, const char *addr
 <NAME>prelude_auth_recv</NAME>
 <RETURNS>int  </RETURNS>
 prelude_io_t *fd, const char *addr
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_ident_inc</NAME>
+<RETURNS>uint64_t  </RETURNS>
+prelude_ident_t *ident
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_ident_dec</NAME>
+<RETURNS>uint64_t  </RETURNS>
+prelude_ident_t *ident
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_ident_destroy</NAME>
+<RETURNS>void  </RETURNS>
+prelude_ident_t *ident
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_ident_new</NAME>
+<RETURNS>prelude_ident_t  *</RETURNS>
+const char *filename
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_client_destroy</NAME>
@@ -590,6 +622,42 @@ typedef struct {
 plugin_generic_t *plugin, plugin_option_t *cfg, const char *conffile
 </FUNCTION>
 <MACRO>
+<NAME>PRELUDE_OPTION_START</NAME>
+#define PRELUDE_OPTION_START 0
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_OPTION_END</NAME>
+#define PRELUDE_OPTION_END   1
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_OPTION_NAME</NAME>
+#define PRELUDE_OPTION_NAME  2
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_OPTION_DESC</NAME>
+#define PRELUDE_OPTION_DESC  3
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_OPTION_HAS_ARG</NAME>
+#define PRELUDE_OPTION_HAS_ARG 4
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_OPTION_HELP</NAME>
+#define PRELUDE_OPTION_HELP 5
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_OPTION_INPUT_VALIDATION</NAME>
+#define PRELUDE_OPTION_INPUT_VALIDATION 6
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_OPTION_INPUT_TYPE</NAME>
+#define PRELUDE_OPTION_INPUT_TYPE 7
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_OPTION_ARG</NAME>
+#define PRELUDE_OPTION_ARG 8
+</MACRO>
+<MACRO>
 <NAME>LIST_H</NAME>
 #define LIST_H
 </MACRO>
@@ -617,6 +685,21 @@ plugin_generic_t *plugin, plugin_option_t *cfg, const char *conffile
 <NAME>list_for_each</NAME>
 #define list_for_each(pos, head) \
 	for (pos = (head)->next; pos != (head); pos = pos->next)
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_OPTION_GENERIC</NAME>
+#define PRELUDE_OPTION_GENERIC             \
+        prelude_optlist_t optlist;         \
+        struct list_head list;             \
+                                           \
+        int flags;                         \
+        char shortopt;                     \
+        const char *longopt;               \
+        const char *description;           \
+        prelude_option_argument_t has_arg; \
+                                           \
+        int cb_called;                     \
+        int (*set)(const char *optarg)
 </MACRO>
 <FUNCTION>
 <NAME>prelude_sensor_send_alert</NAME>
@@ -653,6 +736,10 @@ int *keysize, int *expire, int *store_crypted
 <MACRO>
 <NAME>CFG_HOOK</NAME>
 #define CFG_HOOK 0x2 /* Option to be hooked to config file  */
+</MACRO>
+<MACRO>
+<NAME>WIDE_HOOK</NAME>
+#define WIDE_HOOK 0x4
 </MACRO>
 <MACRO>
 <NAME>prelude_option_success</NAME>
@@ -698,6 +785,11 @@ prelude_optlist_t *optlist,const char *filename, int argc, char **argv
 <NAME>prelude_option_print</NAME>
 <RETURNS>void  </RETURNS>
 prelude_optlist_t *optlist, int flags
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_wide_get_msg</NAME>
+<RETURNS>prelude_msg_t  *</RETURNS>
+prelude_optlist_t *optlist
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_destroy</NAME>
@@ -985,7 +1077,7 @@ typedef enum {
 <TYPEDEF>
 <NAME>detail</NAME>
 typedef struct {
-        const char *ident;
+        uint64_t ident;
         const char *impact;
         const char *action;
     

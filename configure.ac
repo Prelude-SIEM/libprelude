@@ -159,7 +159,7 @@ AC_SUBST(configdir)
 AC_SUBST(LIBS)
 
 CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations \
--Wbad-function-cast -Wcast-qual -Wcast-align -Wnested-externs"
+-Wbad-function-cast -Wcast-qual -Wcast-align -Wnested-externs -DREENTRANT"
 
 
 AC_OUTPUT([
