@@ -44,6 +44,38 @@ idmef_service_t *idmef_source_service_new(idmef_source_t *source);
 void idmef_analyzer_node_new(idmef_analyzer_t *analyzer);
 void idmef_analyzer_process_new(idmef_analyzer_t *analyzer);
 
+/*
+ * Inode.
+ */
+idmef_time_t *idmef_inode_change_time_new(idmef_inode_t *inode);
+
+/*
+ * Access.
+ */
+idmef_file_access_permission_t *idmef_file_access_permission_new(idmef_file_access_t *access);
+
+/*
+ * Linkage.
+ */
+idmef_file_t *idmef_linkage_file_new(idmef_linkage_t *linkage);
+
+/*
+ * File
+ */
+idmef_time_t *idmef_file_create_time_new(idmef_file_t *file);
+idmef_time_t *idmef_file_modify_time_new(idmef_file_t *file);
+idmef_time_t *idmef_file_access_time_new(idmef_file_t *file);
+
+idmef_inode_t *idmef_file_inode_new(idmef_file_t *file);
+idmef_linkage_t *idmef_file_linkage_new(idmef_file_t *file);
+idmef_file_access_t *idmef_file_access_new(idmef_file_t *file);
+
+
+/*
+ * Target
+ */
+idmef_file_t *idmef_target_file_new(idmef_target_t *target);
+
 
 /*
  * Process 

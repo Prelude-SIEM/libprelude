@@ -360,7 +360,7 @@ void idmef_send_file_access(prelude_msgbuf_t *msg, idmef_file_access_t *access)
         prelude_msgbuf_set(msg, MSG_ACCESS_TAG, 0, NULL);
 
         idmef_send_userid(msg, &access->userid);
-        idmef_send_string(msg, MSG_ACCESS_PERMISSION, &access->permission);
+        idmef_send_string_list(msg, MSG_ACCESS_PERMISSION, &access->permission_list);
         
         prelude_msgbuf_set(msg, MSG_END_OF_TAG, 0, NULL);
 }
@@ -413,9 +413,12 @@ void idmef_send_linkage_list(prelude_msgbuf_t *msg, struct list_head *head)
 
 void idmef_send_inode(prelude_msgbuf_t *msg, idmef_inode_t *inode) 
 {
+        if ( ! inode )
+                return;
+        
         prelude_msgbuf_set(msg, MSG_INODE_TAG, 0, NULL);
         
-        idmef_send_time(msg, MSG_INODE_CHANGE_TIME, &inode->change_time);
+        idmef_send_time(msg, MSG_INODE_CHANGE_TIME, inode->change_time);
         idmef_send_uint32(msg, MSG_INODE_NUMBER, inode->number);
         idmef_send_uint32(msg, MSG_INODE_MAJOR_DEVICE, inode->major_device);
         idmef_send_uint32(msg, MSG_INODE_MINOR_DEVICE, inode->minor_device);

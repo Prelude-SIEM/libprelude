@@ -52,6 +52,10 @@
 
 
 
+static void free_file(idmef_file_t *file);
+
+
+
 static idmef_heartbeat_t heartbeat;
 
 static idmef_alert_t alert;
@@ -69,7 +73,6 @@ static idmef_analyzer_time_t static_analyzer_time;
 static idmef_impact_t static_impact;
 static idmef_confidence_t static_confidence;
 static idmef_assessment_t static_assessment;
-
 
 
 static void free_service(idmef_service_t *service) 
@@ -93,7 +96,75 @@ static void free_service(idmef_service_t *service)
 
 
 
-static void free_source_or_target(struct list_head *source_list) 
+static void free_time(idmef_time_t *time) 
+{
+        if ( ! time )
+                return;
+
+        free(time);
+}
+
+
+
+static void free_inode(idmef_inode_t *inode) 
+{
+        if ( ! inode )
+                return;
+
+        free_time(inode->change_time);
+        free(inode);
+}
+
+
+
+static void free_linkage(idmef_linkage_t *linkage)
+{
+        if ( ! linkage )
+                return;
+        
+        free_file(linkage->file);
+        free(linkage);
+}
+
+
+static void free_access(idmef_file_access_t *access) 
+{
+        if ( ! access )
+                return;
+        
+        generic_free_list(idmef_string_item_t, &access->permission_list);
+        free(access);
+}
+
+
+
+static void free_file(idmef_file_t *file) 
+{
+        idmef_linkage_t *linkage;
+        idmef_file_access_t *access;
+        struct list_head *tmp, *bkp;
+        
+        list_for_each_safe(tmp, bkp, &file->file_access_list) {
+                access = list_entry(tmp, idmef_file_access_t, list);
+                free_access(access);
+        }
+
+        list_for_each_safe(tmp, bkp, &file->file_linkage_list) {
+                linkage = list_entry(tmp, idmef_linkage_t, list);
+                free_linkage(linkage);
+        }
+
+        free_inode(file->inode);
+        free_time(file->create_time);
+        free_time(file->modify_time);
+        free_time(file->access_time);
+
+        free(file);
+}
+
+
+
+static void free_source_or_target(char type, struct list_head *source_list) 
 {
         struct list_head *tmp;
         idmef_source_t *source;
@@ -119,7 +190,10 @@ static void free_source_or_target(struct list_head *source_list)
 
                 if ( source->service )
                         free_service(source->service);
-                                
+
+                if ( type == 'T' )
+                        generic_free_list(idmef_file_t, &((idmef_target_t *) source)->file_list);
+                
                 tmp = tmp->next;
                 free(source);
         }
@@ -152,8 +226,8 @@ static void free_alert(idmef_alert_t *alert)
         if ( alert->assessment )
                 free_assessment(alert->assessment);
         
-        free_source_or_target(&alert->source_list);
-        free_source_or_target(&alert->target_list);
+        free_source_or_target('S', &alert->source_list);
+        free_source_or_target('T', &alert->target_list);
         
         generic_free_list(idmef_classification_t, &alert->classification_list);
         generic_free_list(idmef_additional_data_t, &alert->additional_data_list);
@@ -524,6 +598,206 @@ void idmef_assessment_impact_new(idmef_assessment_t *assessment)
 {
         memset(&static_impact, 0, sizeof(static_impact));
         assessment->impact = &static_impact;
+}
+
+
+/*
+ * IDMEF Inode.
+ */
+idmef_time_t *idmef_inode_change_time_new(idmef_inode_t *inode) 
+{
+        idmef_time_t *new;
+
+        assert(inode->change_time == NULL);
+        
+        new = calloc(1, sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }
+
+        inode->change_time = new;
+
+        return new;
+}
+
+
+
+
+/*
+ * IDMEF Linkage.
+ */
+idmef_file_t *idmef_linkage_file_new(idmef_linkage_t *linkage) 
+{
+        assert(linkage->file == NULL);
+        
+        linkage->file = calloc(1, sizeof(*linkage->file));
+        if ( ! linkage->file ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }
+
+        INIT_LIST_HEAD(&linkage->file->file_access_list);
+        INIT_LIST_HEAD(&linkage->file->file_linkage_list);
+
+        return linkage->file;
+}
+
+
+
+/*
+ * IDMEF Access.
+ */
+idmef_file_access_permission_t *idmef_file_access_permission_new(idmef_file_access_t *access) 
+{
+        idmef_file_access_permission_t *new;
+
+        new = calloc(1, sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }
+
+        list_add_tail(&new->list, &access->permission_list);
+
+        return 0;
+}
+
+
+
+/*
+ * IDMEF File.
+ */
+idmef_time_t *idmef_file_create_time_new(idmef_file_t *file) 
+{
+        idmef_time_t *new;
+
+        assert(file->create_time == NULL);
+        
+        new = calloc(1, sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }
+
+        file->create_time = new;
+
+        return new;
+}
+
+
+
+idmef_time_t *idmef_file_modify_time_new(idmef_file_t *file) 
+{
+        idmef_time_t *new;
+        
+        assert(file->modify_time == NULL);
+
+        new = calloc(1, sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }
+
+        file->modify_time = new;
+
+        return new;
+}
+
+
+
+idmef_time_t *idmef_file_access_time_new(idmef_file_t *file) 
+{
+        idmef_time_t *new;
+        
+        assert(file->access_time == NULL);
+
+        new = calloc(1, sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }
+
+        file->access_time = new;
+
+        return new;
+}
+
+
+
+idmef_inode_t *idmef_file_inode_new(idmef_file_t *file) 
+{
+        idmef_inode_t *new;
+
+        new = calloc(1, sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }
+
+        assert(file->inode == NULL);
+        file->inode = new;
+
+        return new;
+}
+
+
+
+idmef_file_access_t *idmef_file_access_new(idmef_file_t *file) 
+{
+        idmef_file_access_t *new;
+
+        new = calloc(1, sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }
+
+        list_add_tail(&new->list, &file->file_access_list);
+
+        return 0;
+}
+
+
+
+
+idmef_linkage_t *idmef_file_linkage_new(idmef_file_t *file) 
+{
+        idmef_linkage_t *new;
+
+        new = calloc(1, sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }
+
+        list_add_tail(&new->list, &file->file_linkage_list);
+
+        return 0;
+}
+
+
+
+
+/*
+ * IDMEF Target
+ */
+idmef_file_t *idmef_target_file_new(idmef_target_t *target) 
+{
+        idmef_file_t *new;
+
+        new = calloc(1, sizeof(*new));
+        if ( ! new ) {
+                log(LOG_ERR, "memory exhausted.\n");
+                return NULL;
+        }
+
+        INIT_LIST_HEAD(&new->file_access_list);
+        INIT_LIST_HEAD(&new->file_linkage_list);
+        
+        list_add_tail(&new->list, &target->file_list);
+
+        return new;
 }
 
 

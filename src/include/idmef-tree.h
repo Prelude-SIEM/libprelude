@@ -206,6 +206,7 @@ typedef struct {
 
 #define idmef_process_env_t idmef_string_item_t
 #define idmef_process_arg_t idmef_string_item_t
+#define idmef_file_access_permission_t idmef_string_item_t
 
 typedef struct {
         uint64_t ident;
@@ -341,7 +342,7 @@ typedef struct {
 typedef struct {
         struct list_head list;
         idmef_userid_t userid;
-        idmef_string_t permission;
+        struct list_head permission_list;
 } idmef_file_access_t;
 
 
@@ -373,7 +374,7 @@ typedef struct {
  * Inode class
  */
 typedef struct {
-        idmef_time_t change_time;
+        idmef_time_t *change_time;
         uint32_t number;
         uint32_t major_device;
         uint32_t minor_device;
