@@ -673,7 +673,7 @@ int prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *d
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
-int prelude_msg_new(prelude_msg_t **ret, size_t msgcount, size_t msglen, uint8_t tag, uint8_t priority) 
+int prelude_msg_new(prelude_msg_t **ret, size_t msgcount, size_t msglen, uint8_t tag, prelude_msg_priority_t priority) 
 {
         size_t len;
         prelude_msg_t *msg;
@@ -784,7 +784,7 @@ void prelude_msg_set_tag(prelude_msg_t *msg, uint8_t tag)
  *
  * Associate @priority with @msg.
  */
-void prelude_msg_set_priority(prelude_msg_t *msg, uint8_t priority) 
+void prelude_msg_set_priority(prelude_msg_t *msg, prelude_msg_priority_t priority) 
 {
         msg->hdr.priority = priority;
 }
@@ -815,7 +815,7 @@ uint8_t prelude_msg_get_tag(prelude_msg_t *msg)
  *
  * Returns: A priority.
  */
-uint8_t prelude_msg_get_priority(prelude_msg_t *msg) 
+prelude_msg_priority_t prelude_msg_get_priority(prelude_msg_t *msg) 
 {
         return msg->hdr.priority;
 }

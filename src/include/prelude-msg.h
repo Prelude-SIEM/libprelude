@@ -30,9 +30,11 @@
 typedef struct prelude_msg prelude_msg_t;
 
 
-#define PRELUDE_MSG_PRIORITY_HIGH 0
-#define PRELUDE_MSG_PRIORITY_MID  1
-#define PRELUDE_MSG_PRIORITY_LOW  2
+typedef enum {
+        PRELUDE_MSG_PRIORITY_HIGH = 0,
+        PRELUDE_MSG_PRIORITY_MID  = 1,
+        PRELUDE_MSG_PRIORITY_LOW  = 2
+} prelude_msg_priority_t;
 
 
 int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio);
@@ -52,7 +54,7 @@ void prelude_msg_mark_end(prelude_msg_t *msg);
 
 int prelude_msg_dynamic_new(prelude_msg_t **ret, int (*flush_msg_cb)(prelude_msg_t **msg, void *data), void *data);
 
-int prelude_msg_new(prelude_msg_t **ret, size_t msgcount, size_t msglen, uint8_t tag, uint8_t priority);
+int prelude_msg_new(prelude_msg_t **ret, size_t msgcount, size_t msglen, uint8_t tag, prelude_msg_priority_t priority);
 
 int prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *data);
 
@@ -65,13 +67,13 @@ int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst);
  */
 void prelude_msg_set_tag(prelude_msg_t *msg, uint8_t tag);
 
-void prelude_msg_set_priority(prelude_msg_t *msg, uint8_t priority);
+void prelude_msg_set_priority(prelude_msg_t *msg, prelude_msg_priority_t priority);
 
 uint8_t prelude_msg_get_tag(prelude_msg_t *msg);
 
 uint8_t prelude_msg_get_version(prelude_msg_t *msg);
 
-uint8_t prelude_msg_get_priority(prelude_msg_t *msg);
+prelude_msg_priority_t prelude_msg_get_priority(prelude_msg_t *msg);
 
 uint32_t prelude_msg_get_len(prelude_msg_t *msg);
 
