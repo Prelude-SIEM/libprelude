@@ -311,6 +311,7 @@ prelude-plugin
 </para>
 
 @pi: 
+@err: 
 @Returns: 
 
 

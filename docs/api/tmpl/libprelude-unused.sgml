@@ -1,23 +1,3 @@
-<!-- ##### SECTION ./tmpl/acconfig.sgml:Long_Description ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### SECTION ./tmpl/acconfig.sgml:See_Also ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### SECTION ./tmpl/acconfig.sgml:Short_Description ##### -->
-
-
-
-<!-- ##### SECTION ./tmpl/acconfig.sgml:Title ##### -->
-acconfig
-
-
 <!-- ##### SECTION ./tmpl/client-ident.sgml:Long_Description ##### -->
 <para>
 
@@ -178,6 +158,46 @@ idmef-string
 idmef-tree-func
 
 
+<!-- ##### SECTION ./tmpl/idmef-tree-print.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/idmef-tree-print.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/idmef-tree-print.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/idmef-tree-print.sgml:Title ##### -->
+idmef-tree-print
+
+
+<!-- ##### SECTION ./tmpl/idmef-tree-to-string.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/idmef-tree-to-string.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/idmef-tree-to-string.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/idmef-tree-to-string.sgml:Title ##### -->
+idmef-tree-to-string
+
+
 <!-- ##### SECTION ./tmpl/idmef-value-object.sgml:Long_Description ##### -->
 <para>
 
@@ -216,6 +236,46 @@ idmef-value-object
 
 <!-- ##### SECTION ./tmpl/list.sgml:Title ##### -->
 list
+
+
+<!-- ##### SECTION ./tmpl/manager-auth.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/manager-auth.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/manager-auth.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/manager-auth.sgml:Title ##### -->
+manager-auth
+
+
+<!-- ##### SECTION ./tmpl/pconfig.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/pconfig.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/pconfig.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/pconfig.sgml:Title ##### -->
+pconfig
 
 
 <!-- ##### SECTION ./tmpl/plugin-common-prv.sgml:Long_Description ##### -->
@@ -298,6 +358,26 @@ prelude-auth
 
 <!-- ##### SECTION ./tmpl/prelude-client-mgr.sgml:Title ##### -->
 prelude-client-mgr
+
+
+<!-- ##### SECTION ./tmpl/prelude-data.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/prelude-data.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/prelude-data.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/prelude-data.sgml:Title ##### -->
+prelude-data
 
 
 <!-- ##### SECTION ./tmpl/prelude-getopt-wide.sgml:Long_Description ##### -->
@@ -438,6 +518,26 @@ prelude-message
 prelude-path
 
 
+<!-- ##### SECTION ./tmpl/prelude-stdint.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/prelude-stdint.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/prelude-stdint.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/prelude-stdint.sgml:Title ##### -->
+prelude-stdint
+
+
 <!-- ##### SECTION ./tmpl/prelude-strbuf.sgml:Long_Description ##### -->
 <para>
 
@@ -456,6 +556,26 @@ prelude-path
 
 <!-- ##### SECTION ./tmpl/prelude-strbuf.sgml:Title ##### -->
 prelude-strbuf
+
+
+<!-- ##### SECTION ./tmpl/prelude-timer-config.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/prelude-timer-config.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/prelude-timer-config.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/prelude-timer-config.sgml:Title ##### -->
+prelude-timer-config
 
 
 <!-- ##### SECTION ./tmpl/sensor.sgml:Long_Description ##### -->
@@ -671,12 +791,6 @@ timer
 </para>
 
 
-<!-- ##### MACRO ALLOW_MULTIPLE_CALL ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### MACRO BUFMAXSIZE ##### -->
 <para>
 
@@ -743,181 +857,6 @@ timer
 @bm_gs: 
 @Returns: 
 
-<!-- ##### MACRO CFG_HOOK ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO CLI_HOOK ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO DEFAULT_KEY_LENGTH ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO DESTROY_HOOK ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO DYNAMIC_IDENT ##### -->
-<para>
-
-</para>
-
-@x: 
-
-<!-- ##### TYPEDEF FILE ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_CONTEXT ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_CRYPT ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_DIRENT_H ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_DLFCN_H ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_GETOPT_H ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_GETOPT_LONG ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_GETTIMEOFDAY ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_INTTYPES_H ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_MEMORY_H ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_SELECT ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_SOCKET ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_SSL ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_STDINT_H ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_STDLIB_H ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_STRDUP ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_STRERROR ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_STRINGS_H ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_STRING_H ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_STRSTR ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_SYS_STAT_H ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_SYS_TYPES_H ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_UNISTD_H ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO HAVE_VPRINTF ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### MACRO HEAD ##### -->
 <para>
 
@@ -925,36 +864,6 @@ timer
 
 
 <!-- ##### MACRO HEADLENGTH ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO IDMEF_OBJECT_TYPE_CLASSIFICATION_ORIGIN ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO IDMEF_OBJECT_TYPE_SNMPSERVICE ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO IDMEF_OBJECT_TYPE_USERID ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO IDMEF_OBJECT_TYPE_USERID_TYPE ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO IDMEF_OBJECT_TYPE_WEBSERVICE ##### -->
 <para>
 
 </para>
@@ -968,12 +877,6 @@ timer
 @ptr: 
 
 <!-- ##### MACRO INSTALL_MSG_CORRUPTED ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO LIST_H ##### -->
 <para>
 
 </para>
@@ -993,319 +896,7 @@ timer
 
 @name: 
 
-<!-- ##### MACRO MANAGERS_CERT ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MANAGER_AUTH_FILE ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MANAGER_KEY ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MAX_NTP_TIMESTAMP_SIZE ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MAX_UTC_DATETIME_SIZE ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_ACCESS_PERMISSION ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_ACCESS_TAG ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_ADDITIONALDATA_DATA ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_ADDITIONALDATA_MEANING ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_ADDITIONALDATA_TAG ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_ADDITIONALDATA_TYPE ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_ALERTIDENT_ANALYZER_IDENT ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_ALERTIDENT_IDENT ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_ALERT_ACTION ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_ALERT_IDENT ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_ALERT_IMPACT ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_ANALYZER_ID ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_ANALYZER_TIME_TAG ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_CLASSIFICATION_NAME ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_CLASSIFICATION_ORIGIN ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_CLASSIFICATION_URL ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_CORRELATION_ALERT_IDENT ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_CREATE_TIME_TAG ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_DETECT_TIME_TAG ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_FILE_ACCESS_TIME_TAG ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_FILE_CREATE_TIME_TAG ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_FILE_DATASIZE ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_FILE_DISKSIZE ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_FILE_MODIFY_TIME_TAG ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_HEARTBEAT_IDENT ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_LINKAGE_FILE ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_SNMPSERVICE_COMMAND ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_SNMPSERVICE_COMMUNITY ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_SNMPSERVICE_OID ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_SNMPSERVICE_TAG ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_TIME_SEC ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_TIME_USEC ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_TOOL_ALERT_ANALYZER_ID ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_USERID_IDENT ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_USERID_NAME ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_USERID_NUMBER ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_USERID_TAG ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_USERID_TYPE ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_WEBSERVICE_ARG ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_WEBSERVICE_CGI ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_WEBSERVICE_HTTP_METHOD ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_WEBSERVICE_METHOD ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_WEBSERVICE_TAG ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO MSG_WEBSERVICE_URL ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### MACRO NOT_INSTALL_MSG ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO OPT_INVAL ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO OPT_INVAL_ARG ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PACKAGE ##### -->
 <para>
 
 </para>
@@ -1323,198 +914,6 @@ timer
 </para>
 
 
-<!-- ##### MACRO PRELUDE_CLIENT_ASYNC_SEND ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_CLIENT_ASYNC_TIMER ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_CLIENT_TYPE_MANAGER ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_CLIENT_TYPE_OTHER ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_CLIENT_TYPE_SENSOR ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_MSG_AUTH_EXIST ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_MSG_AUTH_HAVE_PLAINTEXT ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_MSG_AUTH_HAVE_SSL ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_MSG_AUTH_PASSWORD ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_MSG_AUTH_PLAINTEXT ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_MSG_AUTH_SSL ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_MSG_AUTH_USERNAME ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_MSG_CLIENT_CAPABILITY ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_MSG_OPTION_FLAGS ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_MSG_OPTION_ID ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_MSG_OPTION_SOURCE_ID ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_OPTION_ARG ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_OPTION_DESC ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_OPTION_END ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_OPTION_HAS_ARG ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_OPTION_HELP ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_OPTION_INPUT_TYPE ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_OPTION_INPUT_VALIDATION ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_OPTION_NAME ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO PRELUDE_OPTION_START ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO RETSIGTYPE ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO SENSORS_AUTH_FILE ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO SENSORS_CERT ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO SENSORS_KEY ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO SSL_GENCRYPTO_H ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO SSL_REGISTRATION_MSG_H ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO STDC_HEADERS ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### MACRO SUCCESS ##### -->
 <para>
 
@@ -1527,66 +926,11 @@ timer
 </para>
 
 
-<!-- ##### MACRO TIME_WITH_SYS_TIME ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO VERSION ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO WIDE_HOOK ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### MACRO WRONG_SIZE ##### -->
 <para>
 
 </para>
 
-
-<!-- ##### MACRO align_int32 ##### -->
-<para>
-
-</para>
-
-@x: 
-
-<!-- ##### FUNCTION align_ipv4_addr ##### -->
-<para>
-
-</para>
-
-@Varargs: 
-@Returns: 
-
-<!-- ##### MACRO align_uint16 ##### -->
-<para>
-
-</para>
-
-@x: 
-
-<!-- ##### MACRO align_uint32 ##### -->
-<para>
-
-</para>
-
-@x: 
-
-<!-- ##### FUNCTION align_uint64 ##### -->
-<para>
-
-</para>
-
-@Varargs: 
-@Returns: 
 
 <!-- ##### FUNCTION analyse_install_msg ##### -->
 <para>
@@ -1619,299 +963,12 @@ timer
 @key2: 
 @Returns: 
 
-<!-- ##### FUNCTION daemon_start ##### -->
-<para>
-
-</para>
-
-@lockfile: 
-@Returns: 
-
-<!-- ##### FUNCTION des_generate_2key ##### -->
-<para>
-
-</para>
-
-@key1: 
-@key2: 
-@verify: 
-@Returns: 
-
-<!-- ##### TYPEDEF detail ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO do_init ##### -->
-<para>
-
-</para>
-
-@func: 
-@name: 
-
-<!-- ##### MACRO do_init_nofail ##### -->
-<para>
-
-</para>
-
-@func: 
-@name: 
-
-<!-- ##### MACRO extract_int ##### -->
-<para>
-
-</para>
-
-@type: 
-@buf: 
-@blen: 
-@dst: 
-
-<!-- ##### FUNCTION extract_str ##### -->
-<para>
-
-</para>
-
-@buf: 
-@blen: 
-@Returns: 
-
-<!-- ##### MACRO extract_string ##### -->
-<para>
-
-</para>
-
-@buf: 
-@blen: 
-@dst: 
-
-<!-- ##### MACRO extract_uint16 ##### -->
-<para>
-
-</para>
-
-@x: 
-@Returns: 
-@dst: 
-@buf: 
-@blen: 
-
-<!-- ##### MACRO extract_uint32 ##### -->
-<para>
-
-</para>
-
-@x: 
-@Returns: 
-@dst: 
-@buf: 
-@blen: 
-
-<!-- ##### FUNCTION extract_uint64 ##### -->
-<para>
-
-</para>
-
-@dst: 
-@buf: 
-@blen: 
-@Returns: 
-
-<!-- ##### FUNCTION extract_uint8 ##### -->
-<para>
-
-</para>
-
-@dst: 
-@buf: 
-@blen: 
-@Returns: 
-
-<!-- ##### FUNCTION getopt_long ##### -->
-<para>
-
-</para>
-
-@argc: 
-@argv: 
-@optstring: 
-@longopts: 
-@longindex: 
-@Returns: 
-
-<!-- ##### TYPEDEF idmef_action_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_action_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
 <!-- ##### FUNCTION idmef_additional_data_free ##### -->
 <para>
 
 </para>
 
 @data: 
-
-<!-- ##### FUNCTION idmef_additional_data_get_datetime ##### -->
-<para>
-
-</para>
-
-@data: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_additional_data_get_ntpstamp ##### -->
-<para>
-
-</para>
-
-@data: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_additional_data_get_portlist ##### -->
-<para>
-
-</para>
-
-@data: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_additional_data_get_string ##### -->
-<para>
-
-</para>
-
-@data: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_additional_data_get_xml ##### -->
-<para>
-
-</para>
-
-@data: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_additional_data_new_data_dup ##### -->
-<para>
-
-</para>
-
-@data: 
-@len: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_additional_data_new_data_nodup ##### -->
-<para>
-
-</para>
-
-@data: 
-@len: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_additional_data_new_data_ref ##### -->
-<para>
-
-</para>
-
-@data: 
-@len: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_additional_data_set_data_dup ##### -->
-<para>
-
-</para>
-
-@data: 
-@buf: 
-@len: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_additional_data_set_data_nodup ##### -->
-<para>
-
-</para>
-
-@data: 
-@buf: 
-@len: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_additional_data_set_data_ref ##### -->
-<para>
-
-</para>
-
-@data: 
-@buf: 
-@len: 
-@Returns: 
-
-<!-- ##### TYPEDEF idmef_additional_data_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_additional_data_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
-<!-- ##### FUNCTION idmef_additionaldata_data_to_string ##### -->
-<para>
-
-</para>
-
-@ad: 
-@buf: 
-@size: 
-@Returns: 
-
-<!-- ##### TYPEDEF idmef_address_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_address_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
-<!-- ##### FUNCTION idmef_adjust_msg_size ##### -->
-<para>
-
-</para>
-
-@size: 
 
 <!-- ##### FUNCTION idmef_alert_additional_data_new ##### -->
 <para>
@@ -1950,66 +1007,6 @@ timer
 
 @alert: 
 
-<!-- ##### FUNCTION idmef_alert_get_ident ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_alert_get_ident_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_alert_get_next_classification ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@object: 
-@Returns: 
-
-<!-- ##### ENUM idmef_alert_impact_t ##### -->
-<para>
-
-</para>
-
-@unknown_impact: 
-@bad_unknown: 
-@not_suspicious: 
-@attempted_admin: 
-@successful_admin: 
-@attempted_dos: 
-@successful_dos: 
-@attempted_recon: 
-@successful_recon: 
-@successful_recon_limited: 
-@successful_recon_largescale: 
-@attempted_user: 
-@successful_user: 
-
-<!-- ##### FUNCTION idmef_alert_new_ident ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_alert_set_ident ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@ident: 
-
 <!-- ##### FUNCTION idmef_alert_source_new ##### -->
 <para>
 
@@ -2026,34 +1023,6 @@ timer
 @alert: 
 @Returns: 
 
-<!-- ##### FUNCTION idmef_alert_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
-<!-- ##### TYPEDEF idmef_alertident_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_alertident_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
 <!-- ##### FUNCTION idmef_analyzer_node_new ##### -->
 <para>
 
@@ -2067,29 +1036,6 @@ timer
 </para>
 
 @analyzer: 
-
-<!-- ##### TYPEDEF idmef_analyzer_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO idmef_analyzer_time_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_analyzer_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
 
 <!-- ##### FUNCTION idmef_assessment_action_new ##### -->
 <para>
@@ -2113,323 +1059,12 @@ timer
 
 @assessment: 
 
-<!-- ##### TYPEDEF idmef_assessment_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_assessment_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
-<!-- ##### FUNCTION idmef_checksum_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
-<!-- ##### FUNCTION idmef_classification_get_name ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_classification_get_name_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_classification_get_origin ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_classification_get_origin_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_classification_get_url ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_classification_get_url_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_classification_new_name ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_classification_new_origin ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_classification_new_url ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### ENUM idmef_classification_origin_t ##### -->
-<para>
-
-</para>
-
-@IDMEF_CLASSIFICATION_ORIGIN_ERROR: 
-@IDMEF_CLASSIFICATION_ORIGIN_UNKNOWN: 
-@IDMEF_CLASSIFICATION_ORIGIN_BUGTRAQID: 
-@IDMEF_CLASSIFICATION_ORIGIN_CVE: 
-@IDMEF_CLASSIFICATION_ORIGIN_VENDOR_SPECIFIC: 
-@IDMEF_CLASSIFICATION_ORIGIN_OSVDB: 
-
-<!-- ##### FUNCTION idmef_classification_origin_to_numeric ##### -->
-<para>
-
-</para>
-
-@name: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_classification_origin_to_string ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_classification_set_name ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@name: 
-
-<!-- ##### FUNCTION idmef_classification_set_origin ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@origin: 
-
-<!-- ##### FUNCTION idmef_classification_set_url ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@url: 
-
-<!-- ##### TYPEDEF idmef_classification_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_classification_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
-<!-- ##### TYPEDEF idmef_confidence_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_confidence_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
-<!-- ##### MACRO idmef_constant ##### -->
-<para>
-
-</para>
-
-@x: 
-
 <!-- ##### FUNCTION idmef_correlation_alert_alertident_new ##### -->
 <para>
 
 </para>
 
 @alert: 
-@Returns: 
-
-<!-- ##### TYPEDEF idmef_correlation_alert_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_correlation_alert_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
-<!-- ##### MACRO idmef_create_time_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_data_new_dup ##### -->
-<para>
-
-</para>
-
-@data: 
-@len: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_data_new_nodup ##### -->
-<para>
-
-</para>
-
-@data: 
-@len: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_data_new_ref ##### -->
-<para>
-
-</para>
-
-@data: 
-@len: 
-@Returns: 
-
-<!-- ##### MACRO idmef_data_set_constant_ref ##### -->
-<para>
-
-</para>
-
-@data: 
-@buf: 
-
-<!-- ##### FUNCTION idmef_data_set_dup ##### -->
-<para>
-
-</para>
-
-@data: 
-@buf: 
-@len: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_data_set_nodup ##### -->
-<para>
-
-</para>
-
-@data: 
-@buf: 
-@len: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_data_set_ref ##### -->
-<para>
-
-</para>
-
-@data: 
-@buf: 
-@len: 
-@Returns: 
-
-<!-- ##### MACRO idmef_detect_time_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_file_access_get_userid ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_file_access_get_userid_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_file_access_new_userid ##### -->
-<para>
-
-</para>
-
-@ptr: 
 @Returns: 
 
 <!-- ##### FUNCTION idmef_file_access_permission_new ##### -->
@@ -2440,26 +1075,6 @@ timer
 @access: 
 @Returns: 
 
-<!-- ##### MACRO idmef_file_access_permission_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_file_access_set_userid ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@userid: 
-
-<!-- ##### TYPEDEF idmef_file_access_t ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### FUNCTION idmef_file_access_time_new ##### -->
 <para>
 
@@ -2468,40 +1083,12 @@ timer
 @file: 
 @Returns: 
 
-<!-- ##### FUNCTION idmef_file_access_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
 <!-- ##### FUNCTION idmef_file_create_time_new ##### -->
 <para>
 
 </para>
 
 @file: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_file_get_file_linkage_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_file_get_next_file_linkage ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@object: 
 @Returns: 
 
 <!-- ##### FUNCTION idmef_file_inode_new ##### -->
@@ -2528,33 +1115,6 @@ timer
 @file: 
 @Returns: 
 
-<!-- ##### FUNCTION idmef_file_new_file_linkage ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_file_set_file_linkage ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@object: 
-
-<!-- ##### FUNCTION idmef_file_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
 <!-- ##### FUNCTION idmef_heartbeat_additional_data_new ##### -->
 <para>
 
@@ -2570,72 +1130,6 @@ timer
 
 @heartbeat: 
 
-<!-- ##### FUNCTION idmef_heartbeat_get_ident ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_heartbeat_get_ident_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_heartbeat_new_ident ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_heartbeat_set_ident ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@ident: 
-
-<!-- ##### TYPEDEF idmef_heartbeat_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_heartbeat_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
-<!-- ##### TYPEDEF idmef_impact_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_impact_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
 <!-- ##### FUNCTION idmef_inode_change_time_new ##### -->
 <para>
 
@@ -2643,23 +1137,6 @@ timer
 
 @inode: 
 @Returns: 
-
-<!-- ##### TYPEDEF idmef_inode_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_inode_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
 
 <!-- ##### FUNCTION idmef_linkage_file_new ##### -->
 <para>
@@ -2669,40 +1146,12 @@ timer
 @linkage: 
 @Returns: 
 
-<!-- ##### TYPEDEF idmef_linkage_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_linkage_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
 <!-- ##### FUNCTION idmef_message_free ##### -->
 <para>
 
 </para>
 
 @msg: 
-
-<!-- ##### FUNCTION idmef_message_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
 
 <!-- ##### FUNCTION idmef_msg_send ##### -->
 <para>
@@ -2728,40 +1177,6 @@ timer
 @node: 
 @Returns: 
 
-<!-- ##### TYPEDEF idmef_node_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_node_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
-<!-- ##### TYPEDEF idmef_overflow_alert_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_overflow_alert_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
 <!-- ##### FUNCTION idmef_process_arg_new ##### -->
 <para>
 
@@ -2770,12 +1185,6 @@ timer
 @process: 
 @Returns: 
 
-<!-- ##### MACRO idmef_process_arg_t ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### FUNCTION idmef_process_env_new ##### -->
 <para>
 
@@ -2783,283 +1192,6 @@ timer
 
 @process: 
 @Returns: 
-
-<!-- ##### MACRO idmef_process_env_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF idmef_process_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_process_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
-<!-- ##### FUNCTION idmef_read_action ##### -->
-<para>
-
-</para>
-
-@msg: 
-@action: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_additional_data ##### -->
-<para>
-
-</para>
-
-@msg: 
-@additional_data: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_address ##### -->
-<para>
-
-</para>
-
-@msg: 
-@address: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_alert ##### -->
-<para>
-
-</para>
-
-@msg: 
-@alert: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_alertident ##### -->
-<para>
-
-</para>
-
-@msg: 
-@alertident: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_analyzer ##### -->
-<para>
-
-</para>
-
-@msg: 
-@analyzer: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_assessment ##### -->
-<para>
-
-</para>
-
-@msg: 
-@assessment: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_classification ##### -->
-<para>
-
-</para>
-
-@msg: 
-@classification: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_confidence ##### -->
-<para>
-
-</para>
-
-@msg: 
-@confidence: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_correlation_alert ##### -->
-<para>
-
-</para>
-
-@msg: 
-@correlation_alert: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_file ##### -->
-<para>
-
-</para>
-
-@msg: 
-@file: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_file_access ##### -->
-<para>
-
-</para>
-
-@msg: 
-@file_access: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_heartbeat ##### -->
-<para>
-
-</para>
-
-@msg: 
-@heartbeat: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_impact ##### -->
-<para>
-
-</para>
-
-@msg: 
-@impact: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_inode ##### -->
-<para>
-
-</para>
-
-@msg: 
-@inode: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_linkage ##### -->
-<para>
-
-</para>
-
-@msg: 
-@linkage: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_node ##### -->
-<para>
-
-</para>
-
-@msg: 
-@node: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_overflow_alert ##### -->
-<para>
-
-</para>
-
-@msg: 
-@overflow_alert: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_process ##### -->
-<para>
-
-</para>
-
-@msg: 
-@process: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_service ##### -->
-<para>
-
-</para>
-
-@msg: 
-@service: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_snmpservice ##### -->
-<para>
-
-</para>
-
-@msg: 
-@snmpservice: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_source ##### -->
-<para>
-
-</para>
-
-@msg: 
-@source: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_target ##### -->
-<para>
-
-</para>
-
-@msg: 
-@target: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_tool_alert ##### -->
-<para>
-
-</para>
-
-@msg: 
-@tool_alert: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_user ##### -->
-<para>
-
-</para>
-
-@msg: 
-@user: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_userid ##### -->
-<para>
-
-</para>
-
-@msg: 
-@userid: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_read_webservice ##### -->
-<para>
-
-</para>
-
-@msg: 
-@webservice: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_reference_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
 
 <!-- ##### FUNCTION idmef_send_action ##### -->
 <para>
@@ -3411,70 +1543,6 @@ timer
 @msg: 
 @arg: 
 
-<!-- ##### FUNCTION idmef_service_get_snmp ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_service_get_snmp_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_service_get_web ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_service_get_web_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_service_new_snmp ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_service_new_web ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_service_set_snmp ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@snmp: 
-
-<!-- ##### FUNCTION idmef_service_set_web ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@web: 
-
 <!-- ##### FUNCTION idmef_service_snmpservice_new ##### -->
 <para>
 
@@ -3483,17 +1551,6 @@ timer
 @service: 
 @Returns: 
 
-<!-- ##### FUNCTION idmef_service_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
 <!-- ##### FUNCTION idmef_service_webservice_new ##### -->
 <para>
 
@@ -3501,192 +1558,6 @@ timer
 
 @service: 
 @Returns: 
-
-<!-- ##### FUNCTION idmef_snmp_service_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
-<!-- ##### FUNCTION idmef_snmpservice_destroy ##### -->
-<para>
-
-</para>
-
-@ptr: 
-
-<!-- ##### FUNCTION idmef_snmpservice_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-
-<!-- ##### FUNCTION idmef_snmpservice_get_command ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_snmpservice_get_command_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_snmpservice_get_community ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_snmpservice_get_community_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_snmpservice_get_oid ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_snmpservice_get_oid_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_snmpservice_new ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-<!-- ##### FUNCTION idmef_snmpservice_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-
-<!-- ##### FUNCTION idmef_snmpservice_new_command ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_snmpservice_new_community ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_snmpservice_new_oid ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_snmpservice_print ##### -->
-<para>
-
-</para>
-
-@ptr: 
-
-<!-- ##### FUNCTION idmef_snmpservice_read ##### -->
-<para>
-
-</para>
-
-@snmpservice: 
-@msg: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_snmpservice_ref ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_snmpservice_set_command ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@command: 
-
-<!-- ##### FUNCTION idmef_snmpservice_set_community ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@community: 
-
-<!-- ##### FUNCTION idmef_snmpservice_set_oid ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@oid: 
-
-<!-- ##### TYPEDEF idmef_snmpservice_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_snmpservice_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@buffer: 
-@size: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_snmpservice_write ##### -->
-<para>
-
-</para>
-
-@snmpservice: 
-@msg: 
 
 <!-- ##### FUNCTION idmef_source_node_new ##### -->
 <para>
@@ -3712,23 +1583,6 @@ timer
 @source: 
 @Returns: 
 
-<!-- ##### TYPEDEF idmef_source_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_source_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
 <!-- ##### FUNCTION idmef_source_user_new ##### -->
 <para>
 
@@ -3736,15 +1590,6 @@ timer
 
 @source: 
 @Returns: 
-
-<!-- ##### ENUM idmef_spoofed_t ##### -->
-<para>
-
-</para>
-
-@unknown: 
-@yes: 
-@no: 
 
 <!-- ##### MACRO idmef_string ##### -->
 <para>
@@ -3824,12 +1669,6 @@ timer
 
 @string: 
 @Returns: 
-
-<!-- ##### TYPEDEF idmef_string_item_t ##### -->
-<para>
-
-</para>
-
 
 <!-- ##### MACRO idmef_string_len ##### -->
 <para>
@@ -4011,141 +1850,12 @@ timer
 
 @target: 
 
-<!-- ##### TYPEDEF idmef_target_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_target_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
 <!-- ##### MACRO idmef_target_user_new ##### -->
 <para>
 
 </para>
 
 @target: 
-
-<!-- ##### FUNCTION idmef_time_get_db_timestamp ##### -->
-<para>
-
-</para>
-
-@time: 
-@outptr: 
-@size: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_time_get_idmef_timestamp ##### -->
-<para>
-
-</para>
-
-@time: 
-@outptr: 
-@size: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_time_get_ntp_timestamp ##### -->
-<para>
-
-</para>
-
-@time: 
-@outptr: 
-@size: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_time_get_time ##### -->
-<para>
-
-</para>
-
-@time: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_time_get_timestamp ##### -->
-<para>
-
-</para>
-
-@time: 
-@outptr: 
-@size: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_time_new_db_timestamp ##### -->
-<para>
-
-</para>
-
-@buf: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_time_new_gettimeofday ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-<!-- ##### FUNCTION idmef_time_new_ntp_timestamp ##### -->
-<para>
-
-</para>
-
-@buf: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_time_new_string ##### -->
-<para>
-
-</para>
-
-@buf: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_time_set_db_timestamp ##### -->
-<para>
-
-</para>
-
-@time: 
-@buf: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_time_set_ntp_timestamp ##### -->
-<para>
-
-</para>
-
-@time: 
-@buf: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_time_set_string ##### -->
-<para>
-
-</para>
-
-@time: 
-@buf: 
-@Returns: 
-
-<!-- ##### TYPEDEF idmef_time_t ##### -->
-<para>
-
-</para>
-
 
 <!-- ##### FUNCTION idmef_tool_alert_alertident_new ##### -->
 <para>
@@ -4155,84 +1865,6 @@ timer
 @alert: 
 @Returns: 
 
-<!-- ##### TYPEDEF idmef_tool_alert_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_tool_alert_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
-<!-- ##### FUNCTION idmef_user_get_next_userid ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@object: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_user_get_userid_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_user_id_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
-<!-- ##### FUNCTION idmef_user_new_userid ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_user_set_userid ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@object: 
-
-<!-- ##### TYPEDEF idmef_user_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_user_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
 <!-- ##### FUNCTION idmef_user_userid_new ##### -->
 <para>
 
@@ -4241,269 +1873,6 @@ timer
 @user: 
 @Returns: 
 
-<!-- ##### FUNCTION idmef_userid_destroy ##### -->
-<para>
-
-</para>
-
-@ptr: 
-
-<!-- ##### FUNCTION idmef_userid_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-
-<!-- ##### FUNCTION idmef_userid_get_ident ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_userid_get_ident_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_userid_get_name ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_userid_get_name_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_userid_get_number ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_userid_get_number_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_userid_get_type ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_userid_get_type_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_userid_new ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-<!-- ##### FUNCTION idmef_userid_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-
-<!-- ##### FUNCTION idmef_userid_new_ident ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_userid_new_name ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_userid_new_number ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_userid_new_type ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_userid_print ##### -->
-<para>
-
-</para>
-
-@ptr: 
-
-<!-- ##### FUNCTION idmef_userid_read ##### -->
-<para>
-
-</para>
-
-@userid: 
-@msg: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_userid_ref ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_userid_set_ident ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@ident: 
-
-<!-- ##### FUNCTION idmef_userid_set_name ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@name: 
-
-<!-- ##### FUNCTION idmef_userid_set_number ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@number: 
-
-<!-- ##### FUNCTION idmef_userid_set_type ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@type: 
-
-<!-- ##### TYPEDEF idmef_userid_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_userid_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@buffer: 
-@size: 
-@Returns: 
-
-<!-- ##### ENUM idmef_userid_type_t ##### -->
-<para>
-
-</para>
-
-@IDMEF_USERID_TYPE_ORIGINAL_ERROR: 
-@IDMEF_USERID_TYPE_ORIGINAL_USER: 
-@IDMEF_USERID_TYPE_CURRENT_USER: 
-@IDMEF_USERID_TYPE_TARGET_USER: 
-@IDMEF_USERID_TYPE_USER_PRIVS: 
-@IDMEF_USERID_TYPE_CURRENT_GROUP: 
-@IDMEF_USERID_TYPE_GROUP_PRIVS: 
-@IDMEF_USERID_TYPE_OTHER_PRIVS: 
-
-<!-- ##### FUNCTION idmef_userid_type_to_numeric ##### -->
-<para>
-
-</para>
-
-@name: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_userid_type_to_string ##### -->
-<para>
-
-</para>
-
-@val: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_userid_write ##### -->
-<para>
-
-</para>
-
-@userid: 
-@msg: 
-
-<!-- ##### MACRO idmef_value_get_hdr ##### -->
-<para>
-
-</para>
-
-@n: 
-@t: 
-
-<!-- ##### MACRO idmef_value_get_struct_hdr ##### -->
-<para>
-
-</para>
-
-@n: 
-
-<!-- ##### FUNCTION idmef_web_service_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@out: 
-@Returns: 
-@buffer: 
-@size: 
-
 <!-- ##### FUNCTION idmef_webservice_arg_new ##### -->
 <para>
 
@@ -4511,453 +1880,6 @@ timer
 
 @w: 
 @Returns: 
-
-<!-- ##### TYPEDEF idmef_webservice_arg_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_webservice_destroy ##### -->
-<para>
-
-</para>
-
-@ptr: 
-
-<!-- ##### FUNCTION idmef_webservice_get_arg_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_webservice_get_cgi ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_webservice_get_cgi_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_webservice_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-
-<!-- ##### FUNCTION idmef_webservice_get_http_method ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_webservice_get_http_method_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_webservice_get_next_arg ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@object: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_webservice_get_url ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_webservice_get_url_value ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_webservice_new ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
-<!-- ##### FUNCTION idmef_webservice_new_arg ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_webservice_new_cgi ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_webservice_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-
-<!-- ##### FUNCTION idmef_webservice_new_http_method ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_webservice_new_url ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_webservice_print ##### -->
-<para>
-
-</para>
-
-@ptr: 
-
-<!-- ##### FUNCTION idmef_webservice_read ##### -->
-<para>
-
-</para>
-
-@webservice: 
-@msg: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_webservice_ref ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_webservice_set_arg ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@object: 
-
-<!-- ##### FUNCTION idmef_webservice_set_cgi ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@cgi: 
-
-<!-- ##### FUNCTION idmef_webservice_set_http_method ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@http_method: 
-
-<!-- ##### FUNCTION idmef_webservice_set_url ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@url: 
-
-<!-- ##### TYPEDEF idmef_webservice_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION idmef_webservice_to_string ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@buffer: 
-@size: 
-@Returns: 
-
-<!-- ##### FUNCTION idmef_webservice_write ##### -->
-<para>
-
-</para>
-
-@webservice: 
-@msg: 
-
-<!-- ##### FUNCTION idmef_write_action ##### -->
-<para>
-
-</para>
-
-@msg: 
-@action: 
-
-<!-- ##### FUNCTION idmef_write_additional_data ##### -->
-<para>
-
-</para>
-
-@msg: 
-@additional_data: 
-
-<!-- ##### FUNCTION idmef_write_address ##### -->
-<para>
-
-</para>
-
-@msg: 
-@address: 
-
-<!-- ##### FUNCTION idmef_write_alert ##### -->
-<para>
-
-</para>
-
-@msg: 
-@alert: 
-
-<!-- ##### FUNCTION idmef_write_alertident ##### -->
-<para>
-
-</para>
-
-@msg: 
-@alertident: 
-
-<!-- ##### FUNCTION idmef_write_analyzer ##### -->
-<para>
-
-</para>
-
-@msg: 
-@analyzer: 
-
-<!-- ##### FUNCTION idmef_write_assessment ##### -->
-<para>
-
-</para>
-
-@msg: 
-@assessment: 
-
-<!-- ##### FUNCTION idmef_write_classification ##### -->
-<para>
-
-</para>
-
-@msg: 
-@classification: 
-
-<!-- ##### FUNCTION idmef_write_confidence ##### -->
-<para>
-
-</para>
-
-@msg: 
-@confidence: 
-
-<!-- ##### FUNCTION idmef_write_correlation_alert ##### -->
-<para>
-
-</para>
-
-@msg: 
-@correlation_alert: 
-
-<!-- ##### FUNCTION idmef_write_file ##### -->
-<para>
-
-</para>
-
-@msg: 
-@file: 
-
-<!-- ##### FUNCTION idmef_write_file_access ##### -->
-<para>
-
-</para>
-
-@msg: 
-@file_access: 
-
-<!-- ##### FUNCTION idmef_write_heartbeat ##### -->
-<para>
-
-</para>
-
-@msg: 
-@heartbeat: 
-
-<!-- ##### FUNCTION idmef_write_impact ##### -->
-<para>
-
-</para>
-
-@msg: 
-@impact: 
-
-<!-- ##### FUNCTION idmef_write_inode ##### -->
-<para>
-
-</para>
-
-@msg: 
-@inode: 
-
-<!-- ##### FUNCTION idmef_write_linkage ##### -->
-<para>
-
-</para>
-
-@msg: 
-@linkage: 
-
-<!-- ##### FUNCTION idmef_write_message ##### -->
-<para>
-
-</para>
-
-@msg: 
-@message: 
-
-<!-- ##### FUNCTION idmef_write_node ##### -->
-<para>
-
-</para>
-
-@msg: 
-@node: 
-
-<!-- ##### FUNCTION idmef_write_overflow_alert ##### -->
-<para>
-
-</para>
-
-@msg: 
-@overflow_alert: 
-
-<!-- ##### FUNCTION idmef_write_process ##### -->
-<para>
-
-</para>
-
-@msg: 
-@process: 
-
-<!-- ##### FUNCTION idmef_write_service ##### -->
-<para>
-
-</para>
-
-@msg: 
-@service: 
-
-<!-- ##### FUNCTION idmef_write_snmpservice ##### -->
-<para>
-
-</para>
-
-@msg: 
-@snmpservice: 
-
-<!-- ##### FUNCTION idmef_write_source ##### -->
-<para>
-
-</para>
-
-@msg: 
-@source: 
-
-<!-- ##### FUNCTION idmef_write_target ##### -->
-<para>
-
-</para>
-
-@msg: 
-@target: 
-
-<!-- ##### FUNCTION idmef_write_time ##### -->
-<para>
-
-</para>
-
-@msg: 
-@tag: 
-@data: 
-
-<!-- ##### FUNCTION idmef_write_tool_alert ##### -->
-<para>
-
-</para>
-
-@msg: 
-@tool_alert: 
-
-<!-- ##### FUNCTION idmef_write_user ##### -->
-<para>
-
-</para>
-
-@msg: 
-@user: 
-
-<!-- ##### FUNCTION idmef_write_userid ##### -->
-<para>
-
-</para>
-
-@msg: 
-@userid: 
-
-<!-- ##### FUNCTION idmef_write_webservice ##### -->
-<para>
-
-</para>
-
-@msg: 
-@webservice: 
 
 <!-- ##### MACRO list_entry ##### -->
 <para>
@@ -5010,42 +1932,6 @@ timer
 @certfilename: 
 @Returns: 
 
-<!-- ##### TYPEDEF message ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO no_argument ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO option_run_first ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO option_run_last ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO option_run_no_order ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO optional_argument ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### MACRO password_does_not_match ##### -->
 <para>
 
@@ -5075,15 +1961,6 @@ timer
 </para>
 
 @p: 
-
-<!-- ##### FUNCTION plugin_config_get ##### -->
-<para>
-
-</para>
-
-@plugin: 
-@cfg: 
-@conffile: 
 
 <!-- ##### MACRO plugin_contact ##### -->
 <para>
@@ -5160,36 +2037,12 @@ timer
 
 @p: 
 
-<!-- ##### TYPEDEF plugin_option_t ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### FUNCTION plugin_print_stats ##### -->
 <para>
 
 </para>
 
 @pc: 
-
-<!-- ##### FUNCTION plugin_register ##### -->
-<para>
-
-</para>
-
-@plugin: 
-@Returns: 
-
-<!-- ##### FUNCTION plugin_register_for_use ##### -->
-<para>
-
-</para>
-
-@pc: 
-@h: 
-@infos: 
-@Returns: 
 
 <!-- ##### FUNCTION plugin_request_new_id ##### -->
 <para>
@@ -5226,14 +2079,6 @@ timer
 
 @name: 
 @Returns: 
-
-<!-- ##### FUNCTION plugin_set_args ##### -->
-<para>
-
-</para>
-
-@ac: 
-@av: 
 
 <!-- ##### MACRO plugin_set_author ##### -->
 <para>
@@ -5350,271 +2195,6 @@ timer
 @pass: 
 @Returns: 
 
-<!-- ##### FUNCTION prelude_auth_recv ##### -->
-<para>
-
-</para>
-
-@authfile: 
-@fd: 
-@addr: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_auth_send ##### -->
-<para>
-
-</para>
-
-@authfile: 
-@fd: 
-@addr: 
-@Returns: 
-
-<!-- ##### ENUM prelude_client_capability_t ##### -->
-<para>
-
-</para>
-
-@PRELUDE_CLIENT_CAPABILITY_RECV_IDMEF: 
-@PRELUDE_CLIENT_CAPABILITY_SEND_IDMEF: 
-@PRELUDE_CLIENT_CAPABILITY_RECV_ADMIN: 
-@PRELUDE_CLIENT_CAPABILITY_SEND_ADMIN: 
-@PRELUDE_CLIENT_CAPABILITY_RECV_CM: 
-@PRELUDE_CLIENT_CAPABILITY_SEND_CM: 
-
-<!-- ##### FUNCTION prelude_client_close ##### -->
-<para>
-
-</para>
-
-@client: 
-
-<!-- ##### FUNCTION prelude_client_connect ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_client_forward ##### -->
-<para>
-
-</para>
-
-@client: 
-@src: 
-@count: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_client_get_analyzerid ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_client_get_backup_filename ##### -->
-<para>
-
-</para>
-
-@client: 
-@buf: 
-@size: 
-
-<!-- ##### FUNCTION prelude_client_get_credentials ##### -->
-<para>
-
-</para>
-
-@client: 
-
-<!-- ##### FUNCTION prelude_client_get_daddr ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_client_get_dport ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_client_get_fd ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_client_get_gid ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_client_get_ident_filename ##### -->
-<para>
-
-</para>
-
-@client: 
-@buf: 
-@size: 
-
-<!-- ##### FUNCTION prelude_client_get_inet_address ##### -->
-<para>
-
-</para>
-
-@client: 
-@saddr: 
-@daddr: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_client_get_name ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_client_get_saddr ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_client_get_sport ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_client_get_tls_client_keycert_filename ##### -->
-<para>
-
-</para>
-
-@client: 
-@buf: 
-@size: 
-
-<!-- ##### FUNCTION prelude_client_get_tls_client_trusted_cert_filename ##### -->
-<para>
-
-</para>
-
-@client: 
-@buf: 
-@size: 
-
-<!-- ##### FUNCTION prelude_client_get_tls_key_filename ##### -->
-<para>
-
-</para>
-
-@client: 
-@buf: 
-@size: 
-
-<!-- ##### FUNCTION prelude_client_get_tls_server_ca_cert_filename ##### -->
-<para>
-
-</para>
-
-@client: 
-@buf: 
-@size: 
-
-<!-- ##### FUNCTION prelude_client_get_tls_server_keycert_filename ##### -->
-<para>
-
-</para>
-
-@client: 
-@buf: 
-@size: 
-
-<!-- ##### FUNCTION prelude_client_get_tls_server_trusted_cert_filename ##### -->
-<para>
-
-</para>
-
-@client: 
-@buf: 
-@size: 
-
-<!-- ##### FUNCTION prelude_client_get_uid ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_client_ident_init ##### -->
-<para>
-
-</para>
-
-@client: 
-@analyzerid: 
-@Returns: 
-@sname: 
-
-<!-- ##### FUNCTION prelude_client_ident_send ##### -->
-<para>
-
-</para>
-
-@analyzerid: 
-@fd: 
-@Returns: 
-@client_type: 
-
-<!-- ##### FUNCTION prelude_client_init ##### -->
-<para>
-
-</para>
-
-@client: 
-@sname: 
-@config: 
-@argc: 
-@argv: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_client_installation_error ##### -->
-<para>
-
-</para>
-
-@client: 
-
-<!-- ##### FUNCTION prelude_client_is_alive ##### -->
-<para>
-
-</para>
-
-@client: 
-@Returns: 
-
 <!-- ##### FUNCTION prelude_client_mgr_broadcast ##### -->
 <para>
 
@@ -5630,14 +2210,6 @@ timer
 
 @cmgr: 
 @msg: 
-
-<!-- ##### FUNCTION prelude_client_mgr_get_manager_list ##### -->
-<para>
-
-</para>
-
-@mgr: 
-@cb: 
 
 <!-- ##### FUNCTION prelude_client_mgr_new ##### -->
 <para>
@@ -5656,78 +2228,6 @@ timer
 
 @mgr: 
 @callback: 
-
-<!-- ##### FUNCTION prelude_client_set_analyzer_id ##### -->
-<para>
-
-</para>
-
-@id: 
-
-<!-- ##### FUNCTION prelude_client_set_analyzerid ##### -->
-<para>
-
-</para>
-
-@client: 
-@analyzerid: 
-
-<!-- ##### FUNCTION prelude_client_set_capability ##### -->
-<para>
-
-</para>
-
-@client: 
-@capability: 
-
-<!-- ##### FUNCTION prelude_client_set_gid ##### -->
-<para>
-
-</para>
-
-@client: 
-@gid: 
-
-<!-- ##### FUNCTION prelude_client_set_name ##### -->
-<para>
-
-</para>
-
-@client: 
-@name: 
-
-<!-- ##### FUNCTION prelude_client_set_type ##### -->
-<para>
-
-</para>
-
-@client: 
-@type: 
-
-<!-- ##### FUNCTION prelude_client_set_uid ##### -->
-<para>
-
-</para>
-
-@client: 
-@uid: 
-
-<!-- ##### FUNCTION prelude_connection_get_client ##### -->
-<para>
-
-</para>
-
-@cnx: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_connection_send_msg ##### -->
-<para>
-
-</para>
-
-@cnx: 
-@msg: 
-@Returns: 
 
 <!-- ##### FUNCTION prelude_get_auth_filename ##### -->
 <para>
@@ -5800,120 +2300,6 @@ timer
 
 @Returns: 
 
-<!-- ##### FUNCTION prelude_io_set_socket_io ##### -->
-<para>
-
-</para>
-
-@pio: 
-@fd: 
-
-<!-- ##### FUNCTION prelude_io_set_ssl_io ##### -->
-<para>
-
-</para>
-
-@pio: 
-@ssl: 
-
-<!-- ##### MACRO prelude_list_get_object ##### -->
-<para>
-
-</para>
-
-@listentry: 
-@type: 
-
-<!-- ##### ENUM prelude_msg_status_t ##### -->
-<para>
-
-</para>
-
-@prelude_msg_error: 
-@prelude_msg_eof: 
-@prelude_msg_unfinished: 
-@prelude_msg_finished: 
-
-<!-- ##### FUNCTION prelude_msgbuf_close ##### -->
-<para>
-
-</para>
-
-@msgbuf: 
-
-<!-- ##### FUNCTION prelude_msgbuf_get_client ##### -->
-<para>
-
-</para>
-
-@msgbuf: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_msgbuf_set_header ##### -->
-<para>
-
-</para>
-
-@msgbuf: 
-@tag: 
-@priority: 
-
-<!-- ##### MACRO prelude_option_end ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO prelude_option_error ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION prelude_option_get_flags ##### -->
-<para>
-
-</para>
-
-@opt: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_option_set_flags ##### -->
-<para>
-
-</para>
-
-@opt: 
-@flags: 
-
-<!-- ##### MACRO prelude_option_success ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION prelude_option_wide_add ##### -->
-<para>
-
-</para>
-
-@optlist: 
-@flags: 
-@shortopt: 
-@longopt: 
-@desc: 
-@has_arg: 
-@set: 
-@get: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_option_wide_get_msg ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
 <!-- ##### FUNCTION prelude_sensor_get_ident ##### -->
 <para>
 
@@ -5945,13 +2331,6 @@ timer
 </para>
 
 @cb: 
-
-<!-- ##### FUNCTION prelude_sensor_send_alert ##### -->
-<para>
-
-</para>
-
-@msg: 
 
 <!-- ##### FUNCTION prelude_sensor_send_msg ##### -->
 <para>
@@ -6140,75 +2519,6 @@ timer
 @ap: 
 @Returns: 
 
-<!-- ##### FUNCTION prelude_string_dont_own ##### -->
-<para>
-
-</para>
-
-@string: 
-
-<!-- ##### FUNCTION prelude_thread_create ##### -->
-<para>
-
-</para>
-
-@thread: 
-@attr: 
-@Returns: 
-
-<!-- ##### FUNCTION prelude_wake_up_timer ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO pthread_create ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO required_argument ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION save_cert ##### -->
-<para>
-
-</para>
-
-@filename: 
-@cert: 
-@certlen: 
-@Returns: 
-
-<!-- ##### TYPEDEF size_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF specific ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### TYPEDEF ssize_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION ssl_add_certificate ##### -->
-<para>
-
-</para>
-
-@Returns: 
-
 <!-- ##### FUNCTION ssl_connect_server ##### -->
 <para>
 
@@ -6223,118 +2533,6 @@ timer
 </para>
 
 @Returns: 
-
-<!-- ##### FUNCTION start_routine ##### -->
-<para>
-
-</para>
-
-@Varargs: 
-@Returns: 
-
-<!-- ##### MACRO timer_data ##### -->
-<para>
-
-</para>
-
-@timer: 
-
-<!-- ##### FUNCTION timer_destroy ##### -->
-<para>
-
-</para>
-
-@timer: 
-
-<!-- ##### FUNCTION timer_destroy_current ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION timer_elapsed ##### -->
-<para>
-
-</para>
-
-@timer: 
-@tv: 
-
-<!-- ##### MACRO timer_expire ##### -->
-<para>
-
-</para>
-
-@timer: 
-
-<!-- ##### FUNCTION timer_flush ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO timer_func ##### -->
-<para>
-
-</para>
-
-@timer: 
-
-<!-- ##### FUNCTION timer_init ##### -->
-<para>
-
-</para>
-
-@timer: 
-
-<!-- ##### FUNCTION timer_lock_critical_region ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### FUNCTION timer_reset ##### -->
-<para>
-
-</para>
-
-@timer: 
-
-<!-- ##### FUNCTION timer_reset_current ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO timer_set_callback ##### -->
-<para>
-
-</para>
-
-@timer: 
-@x: 
-
-<!-- ##### MACRO timer_set_data ##### -->
-<para>
-
-</para>
-
-@timer: 
-@x: 
-
-<!-- ##### MACRO timer_set_expire ##### -->
-<para>
-
-</para>
-
-@timer: 
-@x: 
-
-<!-- ##### FUNCTION timer_unlock_critical_region ##### -->
-<para>
-
-</para>
-
 
 <!-- ##### MACRO user_does_not_exist ##### -->
 <para>

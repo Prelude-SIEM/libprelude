@@ -4979,17 +4979,6 @@ prelude_io_t *pio
 <RETURNS>ssize_t  </RETURNS>
 prelude_io_t *pio
 </FUNCTION>
-<MACRO>
-<NAME>errno_to_idx</NAME>
-#define errno_to_idx(code) (0 ? -1 \
-  : ((code >= 1) && (code <= 11)) ? (code - 1) \
-  : ((code >= 11) && (code <= 35)) ? (code - 0) \
-  : ((code >= 35) && (code <= 40)) ? (code - -1) \
-  : ((code >= 42) && (code <= 57)) ? (code - 0) \
-  : ((code >= 59) && (code <= 95)) ? (code - 1) \
-  : ((code >= 95) && (code <= 125)) ? (code - 0) \
-  : -1)
-</MACRO>
 <FUNCTION>
 <NAME>variable_set</NAME>
 <RETURNS>int  </RETURNS>
@@ -5504,12 +5493,12 @@ prelude_option_t *option
 <FUNCTION>
 <NAME>prelude_option_parse_arguments</NAME>
 <RETURNS>int  </RETURNS>
-void *context, prelude_option_t *option,const char *filename, int *argc, char **argv
+void *context, prelude_option_t *option,const char *filename, int *argc, char **argv, prelude_string_t **err
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_add</NAME>
 <RETURNS>prelude_option_t  *</RETURNS>
-prelude_option_t *parent, prelude_option_type_t type,char shortopt, const char *longopt, const char *desc,prelude_option_argument_t has_arg,int (*set)(void *context, prelude_option_t *opt, const char *optarg),int (*get)(void *context, prelude_option_t *opt, char *buf, size_t size)
+prelude_option_t *parent, prelude_option_type_t type,char shortopt, const char *longopt, const char *desc,prelude_option_argument_t has_arg,int (*set)(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err),int (*get)(void *context, prelude_option_t *opt, prelude_string_t *out)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_set_type</NAME>
@@ -5549,22 +5538,22 @@ prelude_option_t *opt
 <FUNCTION>
 <NAME>prelude_option_invoke_commit</NAME>
 <RETURNS>int  </RETURNS>
-void *context, prelude_option_t *opt, const char *value, char *err, size_t size
+void *context, prelude_option_t *opt, const char *ctname, prelude_string_t *value
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_invoke_set</NAME>
 <RETURNS>int  </RETURNS>
-void **context, prelude_option_t *opt, const char *value, char *err, size_t size
+void **context, prelude_option_t *opt, const char *ctname, prelude_string_t *value
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_invoke_get</NAME>
 <RETURNS>int  </RETURNS>
-void *context, prelude_option_t *opt, const char *value, char *buf, size_t size
+void *context, prelude_option_t *opt, const char *ctname, prelude_string_t *value
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_invoke_destroy</NAME>
 <RETURNS>int  </RETURNS>
-void *context, prelude_option_t *opt, const char *value, char *buf, size_t err
+void *context, prelude_option_t *opt, const char *ctname, prelude_string_t *value
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_new_root</NAME>
@@ -5669,7 +5658,7 @@ prelude_option_t *opt
 <FUNCTION>
 <NAME>prelude_option_set_destroy_callback</NAME>
 <RETURNS>void  </RETURNS>
-prelude_option_t *opt,int (*destroy)(void *context, prelude_option_t *opt)
+prelude_option_t *opt,int (*destroy)(void *context,prelude_option_t *opt,prelude_string_t *out)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_get_destroy_callback</NAME>
@@ -5679,7 +5668,7 @@ prelude_option_t *opt
 <FUNCTION>
 <NAME>prelude_option_set_set_callback</NAME>
 <RETURNS>void  </RETURNS>
-prelude_option_t *opt,int (*set)(void *context, prelude_option_t *opt, const char *optarg)
+prelude_option_t *opt,int (*set)(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_get_set_callback</NAME>
@@ -5689,7 +5678,7 @@ prelude_option_t *opt
 <FUNCTION>
 <NAME>prelude_option_set_get_callback</NAME>
 <RETURNS>void  </RETURNS>
-prelude_option_t *opt,int (*get)(void *context, prelude_option_t *opt, char *buf, size_t size)
+prelude_option_t *opt,int (*get)(void *context, prelude_option_t *opt, prelude_string_t *out)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_get_get_callback</NAME>
@@ -5699,7 +5688,7 @@ prelude_option_t *opt
 <FUNCTION>
 <NAME>prelude_option_set_commit_callback</NAME>
 <RETURNS>void  </RETURNS>
-prelude_option_t *opt, int (*commit)(void *context, prelude_option_t *opt)
+prelude_option_t *opt, int (*commit)(void *context,prelude_option_t *opt,prelude_string_t *out)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_get_commit_callback</NAME>
@@ -5713,8 +5702,8 @@ prelude_option_t *opt, void *context
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_new_context</NAME>
-<RETURNS>prelude_option_context_t  *</RETURNS>
-prelude_option_t *opt, const char *name, void *data
+<RETURNS>int  </RETURNS>
+prelude_option_context_t **ctx, prelude_option_t *opt, const char *name, void *data
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_context_destroy</NAME>
@@ -6373,118 +6362,6 @@ idmef_heartbeat_t *heartbeat, prelude_msgbuf_t *msg
 <RETURNS>void  </RETURNS>
 idmef_message_t *message, prelude_msgbuf_t *msg
 </FUNCTION>
-<TYPEDEF>
-<NAME>idmef_data_t</NAME>
-typedef prelude_data_t idmef_data_t;
-</TYPEDEF>
-<MACRO>
-<NAME>idmef_type_data</NAME>
-#define idmef_type_data 2
-</MACRO>
-<STRUCT>
-<NAME>data</NAME>
-struct data
-{
-        int refcount;
-        
-        int flags;
-        size_t len;
-
-        union {
-                unsigned char *rw_data;
-                const unsigned char *ro_data;
-        };
-</STRUCT>
-<FUNCTION>
-<NAME>prelude_data_new</NAME>
-<RETURNS>prelude_data_t  *</RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_data_ref</NAME>
-<RETURNS>prelude_data_t  *</RETURNS>
-prelude_data_t *data
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_data_new_dup</NAME>
-<RETURNS>prelude_data_t  *</RETURNS>
-const unsigned char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_data_new_nodup</NAME>
-<RETURNS>prelude_data_t  *</RETURNS>
-unsigned char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_data_new_ref</NAME>
-<RETURNS>prelude_data_t  *</RETURNS>
-const unsigned char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_data_destroy</NAME>
-<RETURNS>void  </RETURNS>
-prelude_data_t *data
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_data_set_nodup</NAME>
-<RETURNS>int  </RETURNS>
-prelude_data_t *data, unsigned char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_data_set_dup</NAME>
-<RETURNS>int  </RETURNS>
-prelude_data_t *data, const unsigned char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_data_set_ref</NAME>
-<RETURNS>int  </RETURNS>
-prelude_data_t *data, const unsigned char *buf, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_data_copy_ref</NAME>
-<RETURNS>int  </RETURNS>
-prelude_data_t *dst, const prelude_data_t *src
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_data_copy_dup</NAME>
-<RETURNS>int  </RETURNS>
-prelude_data_t *dst, const prelude_data_t *src
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_data_clone</NAME>
-<RETURNS>prelude_data_t  *</RETURNS>
-const prelude_data_t *data
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_data_get_len</NAME>
-<RETURNS>size_t  </RETURNS>
-const prelude_data_t *data
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_data_get_data</NAME>
-<RETURNS>unsigned char  *</RETURNS>
-const prelude_data_t *data
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_data_is_empty</NAME>
-<RETURNS>int  </RETURNS>
-const prelude_data_t *data
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_data_to_string</NAME>
-<RETURNS>int  </RETURNS>
-prelude_data_t *data, char *buf, size_t size
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_data_destroy_internal</NAME>
-<RETURNS>void  </RETURNS>
-prelude_data_t *data
-</FUNCTION>
-<MACRO>
-<NAME>prelude_data_set_constant_ref</NAME>
-#define prelude_data_set_constant_ref(data, buf)      \
-        prelude_data_set_ref(data, buf, sizeof(buf))
-</MACRO>
 <FUNCTION>
 <NAME>prelude_ident_inc</NAME>
 <RETURNS>uint64_t  </RETURNS>
@@ -6711,16 +6588,14 @@ prelude_client_profile_t *cp, gnutls_certificate_credentials *credentials
 <MACRO>
 <NAME>PRELUDE_PLUGIN_OPTION_DECLARE_STRING_CB</NAME>
 #define PRELUDE_PLUGIN_OPTION_DECLARE_STRING_CB(prefix, type, name)                              \
-static int prefix ## _set_ ## name(void *context, prelude_option_t *opt, const char *arg)        \
+static int prefix ## _set_ ## name(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)  \
 {                                                                                                \
         char *dup;                                                                               \
         type *ptr = prelude_plugin_instance_get_data(context);                                   \
                                                                                                  \
-        dup = strdup(arg);                                                                       \
-        if ( ! dup ) {                                                                           \
-                log(LOG_ERR, "memory exhausted.\n");                                             \
-                return -1;                                                                       \
-        }                                                                                        \
+        dup = strdup(optarg);                                                                    \
+        if ( ! dup )                                                                             \
+                return prelude_error_from_errno(errno);                                          \
                                                                                                  \
         if ( ptr->name )                                                                         \
                 free(ptr->name);                                                                 \
@@ -6731,10 +6606,12 @@ static int prefix ## _set_ ## name(void *context, prelude_option_t *opt, const c
 }                                                                                                \
                                                                                                  \
                                                                                                  \
-static int prefix ## _get_ ## name(void *context, prelude_option_t *opt, char *buf, size_t size) \
+static int prefix ## _get_ ## name(void *context, prelude_option_t *opt, prelude_string_t *out)  \
 {                                                                                                \
         type *ptr = prelude_plugin_instance_get_data(context);                                   \
-        snprintf(buf, size, "%s", ptr->name);                                                    \
+        if ( ptr->name )                                                                         \
+                prelude_string_cat(out, ptr->name);                                              \
+                                                                                                 \
         return 0;                                                                                \
 }
 </MACRO>
@@ -6745,7 +6622,7 @@ static int prefix ## _get_ ## name(void *context, prelude_option_t *opt, char *b
         char *author; int authorlen;         \
         char *contact; int contactlen;       \
         char *desc; int desclen;             \
-        void (*destroy)(prelude_plugin_instance_t *pi)
+        void (*destroy)(prelude_plugin_instance_t *pi, prelude_string_t *err)
 </MACRO>
 <STRUCT>
 <NAME>prelude_plugin_generic_t</NAME>
@@ -6813,7 +6690,7 @@ struct prelude_plugin_generic_t
 <FUNCTION>
 <NAME>prelude_plugin_set_activation_option</NAME>
 <RETURNS>int  </RETURNS>
-prelude_plugin_generic_t *plugin,prelude_option_t *opt, int (*commit)(prelude_plugin_instance_t *pi)
+prelude_plugin_generic_t *plugin,prelude_option_t *opt, int (*commit)(prelude_plugin_instance_t *pi,prelude_string_t *err)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_plugin_subscribe</NAME>
@@ -6893,7 +6770,7 @@ prelude_plugin_instance_t *pi, struct timeval *start, struct timeval *end
 <FUNCTION>
 <NAME>prelude_plugin_instance_call_commit_func</NAME>
 <RETURNS>int  </RETURNS>
-prelude_plugin_instance_t *pi
+prelude_plugin_instance_t *pi, prelude_string_t *err
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_plugin_instance_has_commit_func</NAME>
@@ -8805,11 +8682,6 @@ idmef_additional_data_t *data
 <RETURNS>int  </RETURNS>
 idmef_additional_data_t *ad, prelude_string_t *out
 </FUNCTION>
-<FUNCTION>
-<NAME>pconfig_init</NAME>
-<RETURNS>int  </RETURNS>
-int argc, char **argv
-</FUNCTION>
 <MACRO>
 <NAME>idmef_object_type_time</NAME>
 #define idmef_object_type_time 1
@@ -9021,21 +8893,6 @@ do {									\
 	offset += __retval;						\
 } while ( 0 )
 </MACRO>
-<FUNCTION>
-<NAME>manager_auth_disable_encryption</NAME>
-<RETURNS>int  </RETURNS>
-server_generic_client_t *client, prelude_io_t *pio
-</FUNCTION>
-<FUNCTION>
-<NAME>manager_auth_client</NAME>
-<RETURNS>int  </RETURNS>
-server_generic_client_t *client, prelude_io_t *pio
-</FUNCTION>
-<FUNCTION>
-<NAME>manager_auth_init</NAME>
-<RETURNS>int  </RETURNS>
-prelude_client_t *client, int dh_bits, int dh_regenerate
-</FUNCTION>
 <MACRO>
 <NAME>byte</NAME>
  #define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[(pos)]

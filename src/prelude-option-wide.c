@@ -62,15 +62,15 @@ static int config_save_value(config_t *cfg, int rtype, prelude_option_t *last,
                         free(*prev);
                 
                 *prev = strdup(buf);
-
+                                
                 if ( rtype == PRELUDE_MSG_OPTION_SET )
                         return config_set(cfg, buf, NULL, NULL);
                 else
                         return config_del(cfg, buf, NULL);
                         
         }
-
-        if ( rtype == PRELUDE_MSG_OPTION_SET )
+        
+        if ( rtype == PRELUDE_MSG_OPTION_SET ) 
                 ret = config_set(cfg, *prev, option, value);
         else
                 ret = config_del(cfg, *prev, option);
@@ -81,38 +81,38 @@ static int config_save_value(config_t *cfg, int rtype, prelude_option_t *last,
 
 
 static int parse_single(void **context, prelude_option_t **last, int is_last_cmd,
-                        int rtype, const char *option, const char *value, char *out, size_t size)
+                        int rtype, const char *option, const char *value, prelude_string_t *out)
 {
         int ret = 0;
 	
         *last = prelude_option_search(*last, option, PRELUDE_OPTION_TYPE_WIDE, 0);
         if ( ! *last ) {
-                snprintf(out, size, "Unknown option: %s.\n", option);
+                prelude_string_sprintf(out, "Unknown option: %s.\n", option);
                 return -1;
         }
 
         if ( rtype == PRELUDE_MSG_OPTION_SET )
-                ret = prelude_option_invoke_set(context, *last, value, out, size);
+                ret = prelude_option_invoke_set(context, *last, value, out);
         
         else if ( is_last_cmd ) {
 		
                 if ( rtype == PRELUDE_MSG_OPTION_DESTROY ) 
-                        ret = prelude_option_invoke_destroy(*context, *last, value, out, size);
+                        ret = prelude_option_invoke_destroy(*context, *last, value, out);
                 
                 else if ( rtype == PRELUDE_MSG_OPTION_GET )
-                        ret = prelude_option_invoke_get(*context, *last, value, out, size);
+                        ret = prelude_option_invoke_get(*context, *last, value, out);
         
 		else if ( rtype == PRELUDE_MSG_OPTION_COMMIT )
-			ret = prelude_option_invoke_commit(*context, *last, value, out, size);
+			ret = prelude_option_invoke_commit(*context, *last, value, out);
 	}
-	
+        
         return ret;
 }
 
 
 
 
-static int parse_request(prelude_client_t *client, int rtype, char *request, char *out, size_t size)
+static int parse_request(prelude_client_t *client, int rtype, char *request, prelude_string_t *out)
 {
         config_t *cfg;
         void *context = NULL;
@@ -120,7 +120,7 @@ static int parse_request(prelude_client_t *client, int rtype, char *request, cha
         int ret = 0, last_cmd = 0, ent;
         prelude_option_t *last = NULL;
         char *str, *value, *prev = NULL, *ptr = NULL;
-	
+        
         cfg = config_open(prelude_client_get_config_filename(client));
         if ( ! cfg ) {
                 log(LOG_ERR, "error opening %s.\n", prelude_client_get_config_filename(client));
@@ -133,17 +133,20 @@ static int parse_request(prelude_client_t *client, int rtype, char *request, cha
         while ( (str = (strsep(&request, "."))) ) {
                 
                 if ( ! request ) {
-                        ptr = value;
                         last_cmd = 1;
+                        ptr = value;
                 }
 
+                *pname = 0;
+                *iname = 0;
+                
                 ent = sscanf(str, "%255[^[][%255[^]]", pname, iname);
                 if ( ent <= 0 ) {
-                        snprintf(out, size, "error parsing option path");
+                        prelude_string_sprintf(out, "error parsing option path");
                         return -1;
                 }
 
-                ret = parse_single(&context, &last, last_cmd, rtype, pname, (ent == 2) ? iname : ptr, out, size);
+                ret = parse_single(&context, &last, last_cmd, rtype, pname, (ent == 2) ? iname : ptr, out);
                 if ( ret < 0 )
                         break;
                 
@@ -172,18 +175,32 @@ static int send_msg(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
 
 
 
+static void send_string(prelude_msgbuf_t *msgbuf, prelude_string_t *out, int type)
+{
+        size_t len;
+        
+        len = prelude_string_is_empty(out) ? 0 : (prelude_string_get_len(out) + 1);
+        prelude_msgbuf_set(msgbuf, type, len, prelude_string_get_string(out));
+}
+
+
 
 static int read_option_request(prelude_client_t *client, prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
 {
         void *buf;
         uint8_t tag;
+        char *request;
         uint32_t len, hop;
         int ret, type = -1;
         uint32_t request_id;
-        char out[1024] = { 0 }, *request;
+        prelude_string_t *out;
 
+        out = prelude_string_new();
+        if ( ! out )
+                return -1;
+        
         while ( prelude_msg_get(msg, &tag, &len, &buf) == 0 ) {
-
+                
                 switch (tag) {
                         
                 case PRELUDE_MSG_OPTION_SET:
@@ -223,22 +240,22 @@ static int read_option_request(prelude_client_t *client, prelude_msgbuf_t *msgbu
                                 return ret;
                                                 
                         if ( type < 0 ) {
-                                snprintf(out, sizeof(out), "no request type specified.\n");
-                                prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_ERROR, strlen(out) + 1, out);
+                                prelude_string_sprintf(out, "no request type specified.\n");
+                                send_string(msgbuf, out, PRELUDE_MSG_OPTION_ERROR);
                                 return -1;
                         }
                         
-                        ret = parse_request(client, type, request, out, sizeof(out));
+                        ret = parse_request(client, type, request, out);
                         if ( ret < 0 )
-                                prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_ERROR, *out ? strlen(out) + 1 : 0, out);
+                                send_string(msgbuf, out, PRELUDE_MSG_OPTION_ERROR);
 				
-                        else if ( *out )
-                                prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_VALUE, strlen(out) + 1, out);
+                        else send_string(msgbuf, out, PRELUDE_MSG_OPTION_VALUE);
+                        
                         break;
                         
                 default:
-                        snprintf(out, sizeof(out), "unknown option tag: %d.\n", tag);
-                        prelude_msgbuf_set(msgbuf, PRELUDE_MSG_OPTION_ERROR, strlen(out) + 1, out);
+                        prelude_string_sprintf(out, "unknown option tag: %d.\n", tag);
+                        send_string(msgbuf, out, PRELUDE_MSG_OPTION_ERROR);
                         return -1;
                 }
         }
@@ -263,7 +280,7 @@ static int handle_option_request(prelude_client_t *client, prelude_io_t *fd, pre
         
         ret = read_option_request(client, msgbuf, msg);
         prelude_msgbuf_destroy(msgbuf);
-
+        
         return ret;
 }
 
@@ -400,7 +417,7 @@ int prelude_option_new_request(prelude_msgbuf_t *msgbuf,
 {
         int i;
         uint32_t hop;
-        
+                                
         prelude_msg_set_tag(prelude_msgbuf_get_msg(msgbuf), PRELUDE_MSG_OPTION_REQUEST);
 
         /*
@@ -443,6 +460,7 @@ int prelude_option_recv_reply(prelude_msg_t *msg, uint64_t *source_id, uint32_t 
                         ret = prelude_extract_uint32_safe(request_id, buf, dlen);
                         if ( ret < 0 )
                                 return ret;
+                        
                         break;
                         
                 case PRELUDE_MSG_OPTION_VALUE:
@@ -468,7 +486,7 @@ int prelude_option_recv_reply(prelude_msg_t *msg, uint64_t *source_id, uint32_t 
                 case PRELUDE_MSG_OPTION_TARGET_ID:
                         break;
 
-                case PRELUDE_MSG_OPTION_LIST:
+                case PRELUDE_MSG_OPTION_LIST:                        
                         type = PRELUDE_OPTION_REPLY_TYPE_LIST;
                         *value = prelude_option_new(NULL);
                         

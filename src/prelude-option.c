@@ -72,10 +72,10 @@ struct prelude_option {
         const char *description;
         prelude_option_argument_t has_arg;
         
-	int (*commit)(void *context, prelude_option_t *opt);
-        int (*set)(void *context, prelude_option_t *opt, const char *optarg);
-        int (*get)(void *context, prelude_option_t *opt, char *ibuf, size_t size);
-	int (*destroy)(void *context, prelude_option_t *opt);
+	int (*commit)(void *context, prelude_option_t *opt, prelude_string_t *out);
+        int (*set)(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *out);
+        int (*get)(void *context, prelude_option_t *opt, prelude_string_t *out);
+	int (*destroy)(void *context, prelude_option_t *opt, prelude_string_t *out);
         
         const char *help;
         const char *input_validation_regex;
@@ -138,7 +138,7 @@ static prelude_option_context_t *search_context(prelude_option_t *opt, const cha
 
         if ( ! name || ! *name )
                 name = DEFAULT_INSTANCE_NAME;
-        
+                
         prelude_list_for_each(tmp, &opt->context_list) {
 
                 ptr = prelude_list_entry(tmp, prelude_option_context_t, list);
@@ -289,19 +289,23 @@ static int check_option(prelude_option_t *option,
 
 
 
-static char *lookup_variable_if_needed(char *optarg) 
+#if 0
+static int lookup_variable_if_needed(char *optarg, char **new) 
 {
+        char c;
+        size_t i, j;
+        char tmp[128];
         const char *val;
-        char out[1024], c;
-        size_t i, j, len = 0;
+        prelude_string_t *new;
 
-        if ( ! optarg )
-                return NULL;
-
-        for ( i = 0; i <= strlen(optarg) && (len + 1) < sizeof(out); i++ ) {
+        new = prelude_string_new();
+        if ( ! new )
+                return -1;
+                
+        for ( i = 0; i <= strlen(optarg); i++ ) {
 
                 if ( optarg[i] != '$' ) {
-                        out[len++] = optarg[i];
+                        prelude_string_ncat(new, &optarg[i], 1);
                         continue;
                 }
                 
@@ -320,15 +324,14 @@ static char *lookup_variable_if_needed(char *optarg)
                 val = variable_get(optarg + j + 1);
                 if ( ! val ) 
                         val = optarg + j;
-                
-                strncpy(&out[len], val, sizeof(out) - len);
-                len += strlen(val);
+
+                prelude_string_cat(new, val);
                 optarg[i--] = c;
         }
                 
-        return strdup(out);
+        return prelude_string_get_string_released(new);
 }
-
+#endif
 
 
 static int process_cfg_file(prelude_list_t *cblist, prelude_option_t *optlist, const char *filename) 
@@ -408,68 +411,68 @@ static struct cb_list *call_option_cb(prelude_list_t *cblist, prelude_option_t *
 
 
 
-static int do_set(void **context, prelude_option_t *opt, const char *value)
+static int do_set(void **context, prelude_option_t *opt, const char *value, prelude_string_t *out)
 {
         int ret;
-        char *str;
         prelude_option_context_t *oc;
-        
-        if ( ! value || ! *value )
-                value = DEFAULT_INSTANCE_NAME;
-
+                
         if ( opt->default_context )
                 *context = opt->default_context;
         
         if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
+
+                if ( ! value )
+                        value = DEFAULT_INSTANCE_NAME;
+                
                 oc = search_context(opt, value);
                 if ( oc ) {
                         *context = oc->data;
                         return 0;
                 }
         }
-
+                
         if ( ! opt->set )
                 return 0;
         
-        ret = opt->set(*context, opt, (str = lookup_variable_if_needed(value)));
-        if ( str )
-                free(str);
-        
+        ret = opt->set(*context, opt, value, out);        
+        if ( ret < 0 )
+                return -1;
+
         if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
-                oc = search_context(opt, value);                                
+                oc = search_context(opt, value);                
                 if ( ! oc )
 		        return -1;
-	        
+                
                 *context = oc->data;
         }
-	
+
         return ret;
 }
 
 
 
-static int call_option_from_cb_list(void *default_context, prelude_list_t *cblist) 
+static int call_option_from_cb_list(void *default_context, prelude_list_t *cblist, prelude_string_t **err) 
 {
         int ret = 0;
         struct cb_list *cb;
         prelude_list_t *tmp, *bkp;
 	void *context = default_context;
-        
+
         prelude_list_for_each_safe(tmp, bkp, cblist) {
                 cb = prelude_list_entry(tmp, struct cb_list, list);
                                 
-                ret = do_set(&context, cb->option, cb->arg);                        
+                ret = do_set(&context, cb->option, cb->arg, *err);
                 if ( ret < 0 ) 
                         return ret;
                 
                 if ( ! prelude_list_empty(&cb->children) ) {
                                                                         
-                        ret = call_option_from_cb_list(context, &cb->children);
+                        ret = call_option_from_cb_list(context, &cb->children, err);
                         if ( ret < 0 )
                                 return ret;
                         
 			if ( cb->option->commit ) 
-				ret = cb->option->commit(context, cb->option);
+				ret = cb->option->commit(context, cb->option, *err);
                 }
 		
                 context = default_context;
@@ -653,6 +656,7 @@ static int get_option_from_optlist(prelude_option_t *optlist, prelude_list_t *cb
  * @filename: Pointer to the config filename.
  * @argc: Number of argument.
  * @argv: Argument list.
+ * @err: Pointer to a #prelude_string_t object where to store an error string.
  *
  * prelude_option_parse_arguments(), parse the given argument and try to
  * match them against option in @option. If an option match, it's associated
@@ -667,12 +671,12 @@ static int get_option_from_optlist(prelude_option_t *optlist, prelude_list_t *cb
  * the callback returned -1 to request interruption of parsing), -1 if an error occured.
  */
 int prelude_option_parse_arguments(void *context, prelude_option_t *option,
-                                   const char *filename, int *argc, char **argv) 
+                                   const char *filename, int *argc, char **argv, prelude_string_t **err) 
 {
         int ret, opt_index;
         PRELUDE_LIST_HEAD(optlist);
         PRELUDE_LIST_HEAD(cb_list);
-        
+                
         if ( option )
                 opt_index = get_option_from_optlist(option, &cb_list, filename, argc, argv);
         else
@@ -681,7 +685,17 @@ int prelude_option_parse_arguments(void *context, prelude_option_t *option,
         if ( opt_index < 0 )
                 return -1;
         
-        ret = call_option_from_cb_list(context, &cb_list);
+        *err = prelude_string_new();
+        if ( ! *err )
+                return -1;
+
+        ret = call_option_from_cb_list(context, &cb_list, err);        
+
+        if ( prelude_string_is_empty(*err) ) {
+                prelude_string_destroy(*err);
+                *err = NULL;
+        }
+        
         if ( ret < 0 )
                 return ret;
 
@@ -715,8 +729,8 @@ int prelude_option_parse_arguments(void *context, prelude_option_t *option,
 prelude_option_t *prelude_option_add(prelude_option_t *parent, prelude_option_type_t type,
                                      char shortopt, const char *longopt, const char *desc,
                                      prelude_option_argument_t has_arg,
-                                     int (*set)(void *context, prelude_option_t *opt, const char *optarg),
-                                     int (*get)(void *context, prelude_option_t *opt, char *buf, size_t size)) 
+                                     int (*set)(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err),
+                                     int (*get)(void *context, prelude_option_t *opt, prelude_string_t *out)) 
 {
         prelude_option_t *new;
         
@@ -744,7 +758,8 @@ prelude_option_t *prelude_option_add(prelude_option_t *parent, prelude_option_ty
 static void send_option_msg(prelude_bool_t parent_need_context,
                             void *context, prelude_option_t *opt, const char *iname, prelude_msgbuf_t *msg)
 {
-        char value[1024] = { 0 };
+        int ret;
+        prelude_string_t *value;
         const char *name = (iname) ? iname : opt->longopt;
 
         prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_START, 0, NULL);
@@ -760,9 +775,22 @@ static void send_option_msg(prelude_bool_t parent_need_context,
 
         if ( parent_need_context && ! context )
                 return;
-                
-        if ( opt->get && opt->get(context, opt, value, sizeof(value)) == 0 && *value ) 
-                prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_VALUE, strlen(value) + 1, value);
+
+        value = prelude_string_new();
+        if ( ! value )
+                return;
+
+        if ( ! opt->get )
+                return;
+
+        ret = opt->get(context, opt, value);
+        if ( ret < 0 )
+                return;
+
+        if ( ! prelude_string_is_empty(value) ) 
+                prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_VALUE,
+                                   prelude_string_get_len(value) + 1,
+                                   prelude_string_get_string(value));
 }
 
 
@@ -1015,7 +1043,7 @@ void prelude_option_set_warnings(prelude_option_warning_t new, prelude_option_wa
 
 
 void prelude_option_set_commit_callback(prelude_option_t *opt,
-     	                                int (*commit)(void *context, prelude_option_t *opt))
+     	                                int (*commit)(void *context, prelude_option_t *opt, prelude_string_t *out))
 {
 	opt->commit = commit;
 }
@@ -1028,7 +1056,7 @@ void *prelude_option_get_commit_callback(prelude_option_t *opt)
 
 
 void prelude_option_set_get_callback(prelude_option_t *opt,
-                                     int (*get)(void *context, prelude_option_t *opt, char *buf, size_t size))
+                                     int (*get)(void *context, prelude_option_t *opt, prelude_string_t *out))
 {
         opt->get = get;
 }
@@ -1044,7 +1072,7 @@ void *prelude_option_get_get_callback(prelude_option_t *opt)
 
 
 void prelude_option_set_set_callback(prelude_option_t *opt,
-                                     int (*set)(void *context, prelude_option_t *opt, const char *optarg))
+                                     int (*set)(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *out))
 {
         opt->set = set;
 }
@@ -1059,7 +1087,7 @@ void *prelude_option_get_set_callback(prelude_option_t *opt)
 
 
 void prelude_option_set_destroy_callback(prelude_option_t *opt,
-                                         int (*destroy)(void *context, prelude_option_t *opt))
+                                         int (*destroy)(void *context, prelude_option_t *opt, prelude_string_t *out))
 {
         opt->destroy = destroy;
         opt->type |= PRELUDE_OPTION_TYPE_DESTROY;
@@ -1140,27 +1168,24 @@ void *prelude_option_get_private_data(prelude_option_t *opt)
 
 
 
-int prelude_option_invoke_set(void **context, prelude_option_t *opt, const char *value, char *err, size_t size)
+int prelude_option_invoke_set(void **context, prelude_option_t *opt, const char *value, prelude_string_t *err)
 {        
-        if ( value && ! *value )
-                value = NULL;
-        
-        if ( opt->has_arg == PRELUDE_OPTION_ARGUMENT_NONE && value != NULL ) {
-                snprintf(err, size, "%s does not take an argument", opt->longopt);
+        if ( opt->has_arg == PRELUDE_OPTION_ARGUMENT_NONE && value ) {
+                prelude_string_sprintf(err, "%s does not take an argument", opt->longopt);
                 return -1;
         }
         
-        if ( opt->has_arg == PRELUDE_OPTION_ARGUMENT_REQUIRED && value == NULL ) {
-                snprintf(err, size, "%s require an argument", opt->longopt);
+        if ( opt->has_arg == PRELUDE_OPTION_ARGUMENT_REQUIRED && ! value ) {
+                prelude_string_sprintf(err, "%s require an argument", opt->longopt);
                 return -1;
         }
 
-        return do_set(context, opt, value);
+        return do_set(context, opt, value, err);
 }
 
 
 
-int prelude_option_invoke_commit(void *context, prelude_option_t *opt, const char *value, char *err, size_t size)
+int prelude_option_invoke_commit(void *context, prelude_option_t *opt, const char *ctname, prelude_string_t *value)
 {
 	int ret;
 	prelude_option_context_t *oc = NULL;
@@ -1172,30 +1197,31 @@ int prelude_option_invoke_commit(void *context, prelude_option_t *opt, const cha
                 context = opt->default_context;
         
 	if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
-		oc = search_context(opt, value);
+		oc = search_context(opt, ctname);
 		if ( ! oc ) {
-			snprintf(err, size, "could not find option with context %s[%s]", opt->longopt, value);
+			prelude_string_sprintf(value, "could not find option with context %s[%s]",
+                                               opt->longopt, ctname);
 			return -1;
 		}
 		context = oc->data;
 	}
 	
-        ret = opt->commit(context, opt);
+        ret = opt->commit(context, opt, value);
 	if ( ret < 0 )
-		snprintf(err, size, "error in commit callback for %s", opt->longopt);
+		prelude_string_sprintf(value, "commit failed for %s", opt->longopt);
 	
 	return ret;
 }
 
 
 
-int prelude_option_invoke_destroy(void *context, prelude_option_t *opt, const char *value, char *err, size_t size)
+int prelude_option_invoke_destroy(void *context, prelude_option_t *opt, const char *ctname, prelude_string_t *value)
 {
 	int ret;
 	prelude_option_context_t *oc = NULL;
 	
         if ( ! opt->destroy ) {
-                snprintf(err, size, "%s does not support destruction", opt->longopt);
+                prelude_string_sprintf(value, "%s does not support destruction", opt->longopt);
 		return -1;
 	}
 
@@ -1203,18 +1229,19 @@ int prelude_option_invoke_destroy(void *context, prelude_option_t *opt, const ch
                 context = opt->default_context;
         
 	if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
-		oc = search_context(opt, value);
+		oc = search_context(opt, ctname);
 		if ( ! oc ) {
-			snprintf(err, size, "could not find option with context %s[%s]", opt->longopt, value);
+			prelude_string_sprintf(value, "could not find option with context %s[%s]",
+                                               opt->longopt, ctname);
 			return -1;
 		}
                 
 		context = oc->data;
 	}
         
-        ret = opt->destroy(context, opt);
+        ret = opt->destroy(context, opt, value);
 	if ( ret < 0 ) {
-		snprintf(err, size, "error in the destruction callback for %s", opt->longopt);
+		prelude_string_sprintf(value, "destruction for %s[%s] failed", opt->longopt, ctname);
 		return -1;
 	}
 	
@@ -1226,12 +1253,12 @@ int prelude_option_invoke_destroy(void *context, prelude_option_t *opt, const ch
 
 
 
-int prelude_option_invoke_get(void *context, prelude_option_t *opt, const char *value, char *buf, size_t size)
+int prelude_option_invoke_get(void *context, prelude_option_t *opt, const char *ctname, prelude_string_t *value)
 {
 	prelude_option_context_t *oc;
 	
         if ( ! opt->get ) {
-                snprintf(buf, size, "%s doesn't support value retrieval", opt->longopt);
+                prelude_string_sprintf(value, "%s doesn't support value retrieval", opt->longopt);
                 return -1;
         }
 
@@ -1239,16 +1266,17 @@ int prelude_option_invoke_get(void *context, prelude_option_t *opt, const char *
                 context = opt->default_context;
         
 	if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
-		oc = search_context(opt, value);
+		oc = search_context(opt, ctname);
 		if ( ! oc ) {
-			snprintf(buf, size, "could not find option with context %s[%s]", opt->longopt, value);
+			prelude_string_sprintf(value, "could not find option with context %s[%s]",
+                                               opt->longopt, ctname);
 			return -1;
 		}
 		
 		context = oc->data;
 	}
-	
-        return opt->get(context, opt, buf, size);
+        
+        return opt->get(context, opt, value);
 }
 
 
@@ -1418,15 +1446,13 @@ void prelude_option_set_default_context(prelude_option_t *opt, void *data)
 
 
 
-prelude_option_context_t *prelude_option_new_context(prelude_option_t *opt, const char *name, void *data)
+int prelude_option_new_context(prelude_option_context_t **ctx, prelude_option_t *opt, const char *name, void *data)
 {
         prelude_option_context_t *new;
 	
         new = malloc(sizeof(*new));
-        if ( ! new ) {
-                log(LOG_ERR, "memory exhausted.\n");
-                return NULL;
-        }
+        if ( ! new )
+                return prelude_error_from_errno(errno);
 
         if ( name && ! *name )
                 name = DEFAULT_INSTANCE_NAME;
@@ -1440,8 +1466,10 @@ prelude_option_context_t *prelude_option_new_context(prelude_option_t *opt, cons
         } else {         	
 		PRELUDE_INIT_LIST_HEAD(&new->list);
         }
-	
-        return new;
+
+        *ctx = new;
+        
+        return 0;
 }
 
 

@@ -43,16 +43,14 @@ extern const void *lt_preloaded_symbols[];
 
 
 #define PRELUDE_PLUGIN_OPTION_DECLARE_STRING_CB(prefix, type, name)                              \
-static int prefix ## _set_ ## name(void *context, prelude_option_t *opt, const char *arg)        \
+static int prefix ## _set_ ## name(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)  \
 {                                                                                                \
         char *dup;                                                                               \
         type *ptr = prelude_plugin_instance_get_data(context);                                   \
                                                                                                  \
-        dup = strdup(arg);                                                                       \
-        if ( ! dup ) {                                                                           \
-                log(LOG_ERR, "memory exhausted.\n");                                             \
-                return -1;                                                                       \
-        }                                                                                        \
+        dup = strdup(optarg);                                                                    \
+        if ( ! dup )                                                                             \
+                return prelude_error_from_errno(errno);                                          \
                                                                                                  \
         if ( ptr->name )                                                                         \
                 free(ptr->name);                                                                 \
@@ -63,10 +61,12 @@ static int prefix ## _set_ ## name(void *context, prelude_option_t *opt, const c
 }                                                                                                \
                                                                                                  \
                                                                                                  \
-static int prefix ## _get_ ## name(void *context, prelude_option_t *opt, char *buf, size_t size) \
+static int prefix ## _get_ ## name(void *context, prelude_option_t *opt, prelude_string_t *out)  \
 {                                                                                                \
         type *ptr = prelude_plugin_instance_get_data(context);                                   \
-        snprintf(buf, size, "%s", ptr->name);                                                    \
+        if ( ptr->name )                                                                         \
+                prelude_string_cat(out, ptr->name);                                              \
+                                                                                                 \
         return 0;                                                                                \
 }
 
@@ -79,7 +79,7 @@ static int prefix ## _get_ ## name(void *context, prelude_option_t *opt, char *b
         char *author; int authorlen;         \
         char *contact; int contactlen;       \
         char *desc; int desclen;             \
-        void (*destroy)(prelude_plugin_instance_t *pi)
+        void (*destroy)(prelude_plugin_instance_t *pi, prelude_string_t *err)
 
 
 typedef struct {
@@ -124,7 +124,8 @@ typedef struct {
  */
 
 int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
-                                         prelude_option_t *opt, int (*commit)(prelude_plugin_instance_t *pi));
+                                         prelude_option_t *opt, int (*commit)(prelude_plugin_instance_t *pi,
+                                                                              prelude_string_t *err));
 
 int prelude_plugin_subscribe(prelude_plugin_instance_t *pi);
 
@@ -177,7 +178,7 @@ void prelude_plugin_del(prelude_plugin_instance_t *pi);
 void prelude_plugin_instance_compute_time(prelude_plugin_instance_t *pi, struct timeval *start, struct timeval *end);
 
 
-int prelude_plugin_instance_call_commit_func(prelude_plugin_instance_t *pi);
+int prelude_plugin_instance_call_commit_func(prelude_plugin_instance_t *pi, prelude_string_t *err);
 
 int prelude_plugin_instance_has_commit_func(prelude_plugin_instance_t *pi);
 

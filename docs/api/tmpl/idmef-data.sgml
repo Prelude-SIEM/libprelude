@@ -42,7 +42,13 @@ idmef-data
 
 @refcount: 
 @flags: 
+@type: 
 @len: 
+@char_data: 
+@byte_data: 
+@uint32_data: 
+@uint64_data: 
+@float_data: 
 @rw_data: 
 @ro_data: 
 

@@ -69,8 +69,8 @@ typedef struct {
         int (*subscribe)(prelude_plugin_instance_t *pc);
         void (*unsubscribe)(prelude_plugin_instance_t *pc);
         
-        int (*commit_instance)(prelude_plugin_instance_t *pi);
-        int (*create_instance)(prelude_plugin_instance_t *pi, prelude_option_t *opt, const char *optarg);
+        int (*commit_instance)(prelude_plugin_instance_t *pi, prelude_string_t *out);
+        int (*create_instance)(prelude_plugin_instance_t *pi, prelude_option_t *opt, const char *optarg, prelude_string_t *err);
 } plugin_entry_t;
 
 
@@ -242,19 +242,19 @@ static void destroy_instance(prelude_plugin_instance_t *instance)
 
 
 
-static int plugin_desactivate(void *context, prelude_option_t *opt)
+static int plugin_desactivate(void *context, prelude_option_t *opt, prelude_string_t *out)
 {
         prelude_plugin_instance_t *pi = context;
         
         if ( ! pi ) {
-                log(LOG_ERR, "referenced instance not available.\n");
+                prelude_string_sprintf(out, "referenced instance not available");
                 return -1;
         }
 
         /*
          * destroy plugin data.
          */
-        pi->entry->plugin->destroy(pi);
+        pi->entry->plugin->destroy(pi, out);
 
         /*
          * unsubscribe the plugin, only if it is subscribed
@@ -270,27 +270,30 @@ static int plugin_desactivate(void *context, prelude_option_t *opt)
 
 
 
-static int intercept_plugin_activation_option(void *context, prelude_option_t *opt, const char *name)
+static int intercept_plugin_activation_option(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)
 {
         int ret = 0;
         plugin_entry_t *pe;
         prelude_plugin_instance_t *pi;
+        prelude_option_context_t *octx;
         
         pe = prelude_option_get_private_data(opt);
         assert(pe);
                 
-        if ( ! name || *name == 0 )
-                name = DEFAULT_INSTANCE_NAME;
-
-        pi = search_instance_from_entry(pe, name);
+        if ( ! optarg || ! *optarg )
+                optarg = DEFAULT_INSTANCE_NAME;
+                
+        pi = search_instance_from_entry(pe, optarg);
         if ( ! pi ) {
-                pi = create_instance(pe, name, NULL);
+                pi = create_instance(pe, optarg, NULL);
                 if ( ! pi )
                         return -1;
               
-                prelude_option_new_context(opt, name, pi);
+                ret = prelude_option_new_context(&octx, opt, optarg, pi);
+                if ( ret < 0 )
+                        destroy_instance(pi);
                 
-                ret = pi->entry->create_instance(pi, opt, name);
+                ret = pi->entry->create_instance(pi, opt, optarg, err);
                 if ( ret < 0 )
                         return -1;
                 
@@ -303,20 +306,20 @@ static int intercept_plugin_activation_option(void *context, prelude_option_t *o
 
 
 
-static int intercept_plugin_commit_option(void *context, prelude_option_t *opt)
+static int intercept_plugin_commit_option(void *context, prelude_option_t *opt, prelude_string_t *out)
 {
         int ret;
         plugin_entry_t *pe;
         prelude_plugin_instance_t *pi = context;
-	
+        
         if ( ! pi ) {
-                log(LOG_ERR, "referenced instance not available.\n");
+                prelude_string_sprintf(out, "referenced instance not available");
                 return -1;
         }
         
         pe = pi->entry;
         
-        ret = pe->commit_instance(pi);
+        ret = pe->commit_instance(pi, out);
         if ( pi->already_subscribed )
                 return ret;
         
@@ -577,7 +580,8 @@ int prelude_plugin_subscribe(prelude_plugin_instance_t *pi)
 
 
 int prelude_plugin_set_activation_option(prelude_plugin_generic_t *plugin,
-                                         prelude_option_t *opt, int (*commit)(prelude_plugin_instance_t *pi))
+                                         prelude_option_t *opt, int (*commit)(prelude_plugin_instance_t *pi,
+                                                                              prelude_string_t *out))
 {
         int ret = 0;
         plugin_entry_t *pe;
@@ -749,9 +753,9 @@ void prelude_plugin_instance_compute_time(prelude_plugin_instance_t *pi,
 
 
 
-int prelude_plugin_instance_call_commit_func(prelude_plugin_instance_t *pi)
+int prelude_plugin_instance_call_commit_func(prelude_plugin_instance_t *pi, prelude_string_t *err)
 {
-        return pi->entry->commit_instance(pi);
+        return pi->entry->commit_instance(pi, err);
 }
 
 

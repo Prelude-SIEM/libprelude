@@ -63,6 +63,15 @@ as well as some read / write / forward operation.
 @fd: 
 
 
+<!-- ##### FUNCTION prelude_io_set_buffer_io ##### -->
+<para>
+
+</para>
+
+@pio: 
+@Returns: 
+
+
 <!-- ##### FUNCTION prelude_io_close ##### -->
 <para>
 

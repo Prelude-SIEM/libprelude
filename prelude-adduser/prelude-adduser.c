@@ -162,7 +162,7 @@ static void print_add_help(void)
 
 
 
-static int set_uid(void *context, prelude_option_t *opt, const char *optarg) 
+static int set_uid(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)
 {
         uid_set = 1;
         prelude_client_profile_set_uid(profile, atoi(optarg));
@@ -171,7 +171,7 @@ static int set_uid(void *context, prelude_option_t *opt, const char *optarg)
 
 
 
-static int set_gid(void *context, prelude_option_t *opt, const char *optarg)
+static int set_gid(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)
 {
         gid_set = 1;
         prelude_client_profile_set_gid(profile, atoi(optarg));
@@ -180,14 +180,14 @@ static int set_gid(void *context, prelude_option_t *opt, const char *optarg)
 
 
 
-static int set_server_keepalive(void *context, prelude_option_t *opt, const char *optarg)
+static int set_server_keepalive(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)
 {
 	server_keepalive = 1;
 	return 0;
 }
 
 
-static int set_server_prompt_passwd(void *context, prelude_option_t *opt, const char *optarg)
+static int set_server_prompt_passwd(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err)
 {
 	server_prompt_passwd = 1;
 	return 0;
@@ -519,6 +519,7 @@ static int add_analyzer(const char *name, gnutls_x509_privkey *key, gnutls_x509_
 static int add_cmd(int argc, char **argv)
 {
         int ret;
+        prelude_string_t *err;
         prelude_option_t *opt;
         gnutls_x509_privkey key;
 
@@ -530,7 +531,7 @@ static int add_cmd(int argc, char **argv)
 
         argc -= 2;
         
-        ret = prelude_option_parse_arguments(NULL, opt, NULL, &argc, &argv[2]);
+        ret = prelude_option_parse_arguments(NULL, opt, NULL, &argc, &argv[2], &err);
         if ( ret < 0 )
                 return -1;
 
@@ -596,6 +597,7 @@ static int register_cmd(int argc, char **argv)
         struct in_addr in;
         prelude_io_t *fd;
         prelude_option_t *opt;
+        prelude_string_t *err;
         gnutls_x509_privkey key;
         char *ptr, *addr = strdup(argv[3]);
 
@@ -607,7 +609,7 @@ static int register_cmd(int argc, char **argv)
 
         argc -= 3;
         
-        ret = prelude_option_parse_arguments(NULL, opt, NULL, &argc, &argv[3]);
+        ret = prelude_option_parse_arguments(NULL, opt, NULL, &argc, &argv[3], &err);
         if ( ret < 0 )
                 return -1;
         
@@ -673,6 +675,7 @@ static int register_cmd(int argc, char **argv)
 static int registration_server_cmd(int argc, char **argv)
 {
         int ret;
+        prelude_string_t *err;
         prelude_option_t *opt;
         gnutls_x509_privkey key;
         gnutls_x509_crt ca_crt, crt;
@@ -691,7 +694,7 @@ static int registration_server_cmd(int argc, char **argv)
 
         argc -= 2;
         
-        ret = prelude_option_parse_arguments(NULL, opt, NULL, &argc, &argv[2]);
+        ret = prelude_option_parse_arguments(NULL, opt, NULL, &argc, &argv[2], &err);
         if ( ret < 0 )
                 return -1;
         

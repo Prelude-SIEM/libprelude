@@ -72,14 +72,14 @@ int prelude_option_wide_send_msg(void *context, prelude_msgbuf_t *msgbuf);
 void prelude_option_destroy(prelude_option_t *option);
 
 int prelude_option_parse_arguments(void *context, prelude_option_t *option,
-                                   const char *filename, int *argc, char **argv);
+                                   const char *filename, int *argc, char **argv, prelude_string_t **err);
 
 
 prelude_option_t *prelude_option_add(prelude_option_t *parent, prelude_option_type_t type,
                                      char shortopt, const char *longopt, const char *desc,
                                      prelude_option_argument_t has_arg,
-                                     int (*set)(void *context, prelude_option_t *opt, const char *optarg),
-                                     int (*get)(void *context, prelude_option_t *opt, char *buf, size_t size));
+                                     int (*set)(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err),
+                                     int (*get)(void *context, prelude_option_t *opt, prelude_string_t *out));
 
 void prelude_option_set_type(prelude_option_t *opt, prelude_option_type_t type);
 
@@ -96,13 +96,13 @@ void prelude_option_set_private_data(prelude_option_t *opt, void *data);
 void *prelude_option_get_private_data(prelude_option_t *opt);
 
 
-int prelude_option_invoke_commit(void *context, prelude_option_t *opt, const char *value, char *err, size_t size);
+int prelude_option_invoke_commit(void *context, prelude_option_t *opt, const char *ctname, prelude_string_t *value);
 
-int prelude_option_invoke_set(void **context, prelude_option_t *opt, const char *value, char *err, size_t size);
+int prelude_option_invoke_set(void **context, prelude_option_t *opt, const char *ctname, prelude_string_t *value);
 
-int prelude_option_invoke_get(void *context, prelude_option_t *opt, const char *value, char *buf, size_t size);
+int prelude_option_invoke_get(void *context, prelude_option_t *opt, const char *ctname, prelude_string_t *value);
 
-int prelude_option_invoke_destroy(void *context, prelude_option_t *opt, const char *value, char *buf, size_t err);
+int prelude_option_invoke_destroy(void *context, prelude_option_t *opt, const char *ctname, prelude_string_t *value);
 
 
 /*
@@ -150,30 +150,34 @@ prelude_option_t *prelude_option_get_parent(prelude_option_t *opt);
 
 
 void prelude_option_set_destroy_callback(prelude_option_t *opt,
-                                         int (*destroy)(void *context, prelude_option_t *opt));
+                                         int (*destroy)(void *context,
+                                                        prelude_option_t *opt,
+                                                        prelude_string_t *out));
 
 void *prelude_option_get_destroy_callback(prelude_option_t *opt);
 
 
 void prelude_option_set_set_callback(prelude_option_t *opt,
-                                     int (*set)(void *context, prelude_option_t *opt, const char *optarg));
+                                     int (*set)(void *context, prelude_option_t *opt, const char *optarg, prelude_string_t *err));
 
 void *prelude_option_get_set_callback(prelude_option_t *opt);
 
 
 void prelude_option_set_get_callback(prelude_option_t *opt,
-                                     int (*get)(void *context, prelude_option_t *opt, char *buf, size_t size));
+                                     int (*get)(void *context, prelude_option_t *opt, prelude_string_t *out));
 
 void *prelude_option_get_get_callback(prelude_option_t *opt);
 
 
-void prelude_option_set_commit_callback(prelude_option_t *opt, int (*commit)(void *context, prelude_option_t *opt));
+void prelude_option_set_commit_callback(prelude_option_t *opt, int (*commit)(void *context,
+                                                                             prelude_option_t *opt,
+                                                                             prelude_string_t *out));
 
 void *prelude_option_get_commit_callback(prelude_option_t *opt);
 
 void prelude_option_set_default_context(prelude_option_t *opt, void *context);
 
-prelude_option_context_t *prelude_option_new_context(prelude_option_t *opt, const char *name, void *data);
+int prelude_option_new_context(prelude_option_context_t **ctx, prelude_option_t *opt, const char *name, void *data);
 
 void prelude_option_context_destroy(prelude_option_context_t *oc);
 
