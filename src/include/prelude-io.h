@@ -59,7 +59,7 @@ ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf);
 
 ssize_t prelude_io_write(prelude_io_t *pio, const void *buf, size_t count);
 
-int prelude_io_write_delimited(prelude_io_t *pio, const void *buf, uint16_t count);
+ssize_t prelude_io_write_delimited(prelude_io_t *pio, const void *buf, uint16_t count);
 
 
 ssize_t prelude_io_forward(prelude_io_t *dst, prelude_io_t *src, size_t count);

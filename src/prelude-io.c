@@ -405,7 +405,7 @@ ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count)
  */
 ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf) 
 {
-        int ret;
+        ssize_t ret;
         size_t count;
         uint16_t msglen;
         
@@ -484,7 +484,7 @@ ssize_t prelude_io_write(prelude_io_t *pio, const void *buf, size_t count)
  * indicates nothing was written). On error, -1 is returned, and errno
  * is set appropriately.
  */
-int prelude_io_write_delimited(prelude_io_t *pio, const void *buf, uint16_t count) 
+ssize_t prelude_io_write_delimited(prelude_io_t *pio, const void *buf, uint16_t count) 
 {
         int ret;
         uint16_t nlen;
