@@ -207,11 +207,18 @@ void idmef_criterion_value_destroy(idmef_criterion_value_t *value)
 int idmef_criterion_value_clone(const idmef_criterion_value_t *src, idmef_criterion_value_t **dst)
 {
         int ret;
-        
+
         ret = idmef_criterion_value_new(dst);
         if ( ret < 0 )
                 return ret;
-        
+
+	(*dst)->type = src->type;
+	(*dst)->clone = src->clone;
+	(*dst)->print = src->print;
+	(*dst)->to_string = src->to_string;
+	(*dst)->match = src->match;
+	(*dst)->destroy = src->destroy;
+
         ret = src->clone(src, *dst);
         if ( ret < 0 ) {
                 free(*dst);
@@ -304,7 +311,7 @@ int idmef_criterion_value_new_value(idmef_criterion_value_t **cv,
                                     idmef_value_t *value, idmef_criterion_operator_t op)
 {
         int ret;
-        
+
         ret = idmef_value_check_operator(value, op);
         if ( ret < 0 )
                 return ret;
@@ -333,7 +340,7 @@ int idmef_criterion_value_new_from_string(idmef_criterion_value_t **cv,
 {
         int ret;
         idmef_value_t *val;
-        
+
         if ( operator == IDMEF_CRITERION_OPERATOR_REGEX )
                 return idmef_criterion_value_new_regex(cv, value);
 
