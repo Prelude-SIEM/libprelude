@@ -225,6 +225,11 @@ static int plugin_desactivate(prelude_option_t *opt, prelude_string_t *out, void
                 return -1;
         }
 
+        if ( ! pi->entry->plugin->destroy ) {
+                prelude_string_sprintf(out, "%s does not support destruction method", pi->entry->plugin->name);
+                return -1;
+        }
+        
         /*
          * destroy plugin data.
          */
