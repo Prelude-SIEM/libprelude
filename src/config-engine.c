@@ -246,7 +246,7 @@ static char *strip_value(const char *in)
                 end--;
         }
         
-        if ( (end - start) <= 0 )
+        if ( (end - start) < 0 )
              return NULL;
         
         ret = malloc((end - start) + 2);

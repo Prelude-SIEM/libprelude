@@ -1,5 +1,8 @@
 2004-01-11  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
+	* src/config-engine.c (strip_value): 
+	fix NULL return for 1 characters entry...
+
 	* sensor-adduser/sensor-adduser.c (set_sensor_name): 
 	dup optarg.
 
