@@ -84,3 +84,10 @@ If you use this flags, you don't need to call prelude_wake_up_timer() anymore.
 @obj: 
 
 
+<!-- ##### FUNCTION prelude_async_exit ##### -->
+<para>
+
+</para>
+
+
+

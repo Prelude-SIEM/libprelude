@@ -1113,7 +1113,6 @@ prelude_client_profile_get_analyzerid_filename
 prelude_client_profile_get_tls_key_filename
 prelude_client_profile_get_tls_server_ca_cert_filename
 prelude_client_profile_get_tls_server_keycert_filename
-prelude_client_profile_get_tls_server_trusted_cert_filename
 prelude_client_profile_get_tls_client_keycert_filename
 prelude_client_profile_get_tls_client_trusted_cert_filename
 prelude_client_profile_get_backup_dirname
@@ -1182,6 +1181,7 @@ prelude_hash_destroy
 prelude_hash_set
 prelude_hash_get
 prelude_hash_elem_destroy
+prelude_hash_iterate
 </SECTION>
 
 <SECTION>
@@ -1232,6 +1232,7 @@ prelude_async_get_flags
 prelude_async_set_flags
 prelude_async_add
 prelude_async_del
+prelude_async_exit
 </SECTION>
 
 <SECTION>

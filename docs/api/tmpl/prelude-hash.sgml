@@ -72,3 +72,12 @@ prelude-hash
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_hash_iterate ##### -->
+<para>
+
+</para>
+
+@hash: 
+@cb: 
+
+

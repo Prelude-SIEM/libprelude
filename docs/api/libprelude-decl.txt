@@ -4435,13 +4435,12 @@ prelude_msg_t *msg
 <ENUM>
 <NAME>prelude_option_type_t</NAME>
 typedef enum {
-        PRELUDE_OPTION_TYPE_CLI  = 0x1,
-        PRELUDE_OPTION_TYPE_CFG  = 0x2,
-        PRELUDE_OPTION_TYPE_WIDE = 0x4,
-        PRELUDE_OPTION_TYPE_ALLOW_MULTIPLE_CALL = 0x8,
-        PRELUDE_OPTION_TYPE_DESTROY = 0x20,
-        PRELUDE_OPTION_TYPE_CONTEXT = 0x40,
-        PRELUDE_OPTION_TYPE_ROOT    = 0x80
+        PRELUDE_OPTION_TYPE_CLI  = 0x01,
+        PRELUDE_OPTION_TYPE_CFG  = 0x02,
+        PRELUDE_OPTION_TYPE_WIDE = 0x04,
+        PRELUDE_OPTION_TYPE_CONTEXT = 0x08,
+        PRELUDE_OPTION_TYPE_ROOT    = 0x10,
+        PRELUDE_OPTION_TYPE_DESTROY = 0x20
 } prelude_option_type_t;
 </ENUM>
 <TYPEDEF>
@@ -4463,9 +4462,10 @@ typedef enum {
 <ENUM>
 <NAME>prelude_option_priority_t</NAME>
 typedef enum {
-        PRELUDE_OPTION_PRIORITY_FIRST    = -1,
-        PRELUDE_OPTION_PRIORITY_NONE     =  0,
-        PRELUDE_OPTION_PRIORITY_LAST     =  2
+        PRELUDE_OPTION_PRIORITY_IMMEDIATE = -2,
+        PRELUDE_OPTION_PRIORITY_FIRST     = -1,
+        PRELUDE_OPTION_PRIORITY_NONE      =  0,
+        PRELUDE_OPTION_PRIORITY_LAST      =  2
 } prelude_option_priority_t;
 </ENUM>
 <ENUM>
@@ -4483,7 +4483,7 @@ prelude_option_t *option, prelude_option_priority_t priority
 <FUNCTION>
 <NAME>prelude_option_print</NAME>
 <RETURNS>void </RETURNS>
-prelude_option_t *opt, prelude_option_type_t type, int descoff
+prelude_option_t *opt, prelude_option_type_t type, int descoff, FILE *fd
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_wide_send_msg</NAME>
@@ -5594,11 +5594,6 @@ prelude_client_profile_t *cp, char *buf, size_t size
 prelude_client_profile_t *cp, char *buf, size_t size
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_client_profile_get_tls_server_trusted_cert_filename</NAME>
-<RETURNS>void </RETURNS>
-prelude_client_profile_t *cp, char *buf, size_t size
-</FUNCTION>
-<FUNCTION>
 <NAME>prelude_client_profile_get_tls_client_keycert_filename</NAME>
 <RETURNS>void </RETURNS>
 prelude_client_profile_t *cp, char *buf, size_t size
@@ -5922,6 +5917,11 @@ prelude_hash_t *hash, const void *key
 <RETURNS>int </RETURNS>
 prelude_hash_t *hash, const void *key
 </FUNCTION>
+<FUNCTION>
+<NAME>prelude_hash_iterate</NAME>
+<RETURNS>void </RETURNS>
+prelude_hash_t *hash, void (*cb)(void *data)
+</FUNCTION>
 <TYPEDEF>
 <NAME>prelude_failover_t</NAME>
 typedef struct prelude_failover prelude_failover_t;
@@ -6085,8 +6085,8 @@ void *object, void *data
 <NAME>PRELUDE_ASYNC_OBJECT</NAME>
 #define PRELUDE_ASYNC_OBJECT                   \
         PRELUDE_LINKED_OBJECT;                 \
-        void *data;                            \
-        prelude_async_func_t func
+        void *_async_data;                     \
+        prelude_async_func_t _async_func
 </MACRO>
 <STRUCT>
 <NAME>prelude_async_object_t</NAME>
@@ -6118,6 +6118,11 @@ prelude_async_object_t *obj
 <NAME>prelude_async_del</NAME>
 <RETURNS>void </RETURNS>
 prelude_async_object_t *obj
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_async_exit</NAME>
+<RETURNS>void </RETURNS>
+void
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_read</NAME>
@@ -7817,17 +7822,7 @@ uint32_t, buf, 0) << 24 | byte(uint32_t, buf, 1) << 16 |byte(uint32_t, buf, 2) <
 <FUNCTION>
 <NAME>byte</NAME>
 <RETURNS>return  </RETURNS>
-float, buf, 0) << 24 | byte(float, buf, 1) << 16 |byte(float, buf, 2) <<  8 | byte(float, buf, 3
-</FUNCTION>
-<FUNCTION>
-<NAME>byte</NAME>
-<RETURNS>return  </RETURNS>
 uint64_t, buf, 0) << 56 | byte(uint64_t, buf, 1) << 48 | byte(uint64_t, buf, 2) << 40 |byte(uint64_t, buf, 3) << 32 | byte(uint64_t, buf, 4) << 24 | byte(uint64_t, buf, 5) << 16 |byte(uint64_t, buf, 6) <<  8 | byte(uint64_t, buf, 7
-</FUNCTION>
-<FUNCTION>
-<NAME>byte</NAME>
-<RETURNS>return  </RETURNS>
-float, buf, 0) << 56 | byte(float, buf, 1) << 48 | byte(uint64_t, buf, 2) << 40 |byte(uint64_t, buf, 3) << 32 | byte(uint64_t, buf, 4) << 24 | byte(uint64_t, buf, 5) << 16 |byte(uint64_t, buf, 6) <<  8 | byte(uint64_t, buf, 7
 </FUNCTION>
 <STRUCT>
 <NAME>prelude_timer_t</NAME>
@@ -8022,57 +8017,57 @@ idmef_value_t **value, idmef_value_type_id_t type, const char *buf
 <FUNCTION>
 <NAME>idmef_value_get_int8</NAME>
 <RETURNS>int8_t </RETURNS>
-idmef_value_t *val
+const idmef_value_t *val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_uint8</NAME>
 <RETURNS>uint8_t </RETURNS>
-idmef_value_t *val
+const idmef_value_t *val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_int16</NAME>
 <RETURNS>int16_t </RETURNS>
-idmef_value_t *val
+const idmef_value_t *val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_uint16</NAME>
 <RETURNS>uint16_t </RETURNS>
-idmef_value_t *val
+const idmef_value_t *val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_int32</NAME>
 <RETURNS>int32_t </RETURNS>
-idmef_value_t *val
+const idmef_value_t *val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_uint32</NAME>
 <RETURNS>uint32_t </RETURNS>
-idmef_value_t *val
+const idmef_value_t *val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_int64</NAME>
 <RETURNS>int64_t </RETURNS>
-idmef_value_t *val
+const idmef_value_t *val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_uint64</NAME>
 <RETURNS>uint64_t </RETURNS>
-idmef_value_t *val
+const idmef_value_t *val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_enum</NAME>
 <RETURNS>int </RETURNS>
-idmef_value_t *val
+const idmef_value_t *val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_float</NAME>
 <RETURNS>float </RETURNS>
-idmef_value_t *val
+const idmef_value_t *val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_double</NAME>
 <RETURNS>double </RETURNS>
-idmef_value_t *val
+const idmef_value_t *val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_time</NAME>
@@ -8117,12 +8112,12 @@ idmef_value_t *value
 <FUNCTION>
 <NAME>idmef_value_get_type</NAME>
 <RETURNS>idmef_value_type_id_t </RETURNS>
-idmef_value_t *value
+const idmef_value_t *value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_class</NAME>
 <RETURNS>idmef_class_id_t </RETURNS>
-idmef_value_t *value
+const idmef_value_t *value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_object</NAME>
@@ -8142,7 +8137,7 @@ idmef_value_t *val, int n
 <FUNCTION>
 <NAME>idmef_value_get_count</NAME>
 <RETURNS>int </RETURNS>
-idmef_value_t *val
+const idmef_value_t *val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_clone</NAME>
@@ -8157,12 +8152,12 @@ idmef_value_t *val
 <FUNCTION>
 <NAME>idmef_value_print</NAME>
 <RETURNS>int </RETURNS>
-idmef_value_t *val, prelude_io_t *fd
+const idmef_value_t *val, prelude_io_t *fd
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_to_string</NAME>
 <RETURNS>int </RETURNS>
-idmef_value_t *val, prelude_string_t *out
+const idmef_value_t *val, prelude_string_t *out
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get</NAME>
