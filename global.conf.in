@@ -5,6 +5,12 @@
 # provided by the respective program configuration file.
 
 #
+# Set heartbeat interval, the default value is 60 minutes.
+#
+# heartbeat-interval = 60
+
+
+#
 # Optionnal data gathered with the alert.
 #
 # node-name = Name of the equipment
