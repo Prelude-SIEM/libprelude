@@ -54,6 +54,8 @@ prelude_client_t *prelude_client_new(prelude_client_capability_t capability);
 
 idmef_analyzer_t *prelude_client_get_analyzer(prelude_client_t *client);
 
+void prelude_client_set_analyzerid(prelude_client_t *client, uint64_t analyzerid);
+
 uint64_t prelude_client_get_analyzerid(prelude_client_t *client);
 
 void prelude_client_set_name(prelude_client_t *client, const char *name);
@@ -82,12 +84,15 @@ int prelude_client_set_flags(prelude_client_t *client, int flags);
 
 void prelude_client_set_capability(prelude_client_t *client, prelude_client_capability_t capability);
 
-void prelude_client_get_auth_filename(prelude_client_t *client, char *buf, size_t size);
+void prelude_client_get_ident_filename(prelude_client_t *client, char *buf, size_t size);
 
-void prelude_client_get_ssl_cert_filename(prelude_client_t *client, char *buf, size_t size);
+void prelude_client_get_tls_cert_filename(prelude_client_t *client, char *buf, size_t size);
 
-void prelude_client_get_ssl_key_filename(prelude_client_t *client, char *buf, size_t size);
+void prelude_client_get_tls_key_filename(prelude_client_t *client, char *buf, size_t size);
 
 void prelude_client_get_backup_filename(prelude_client_t *client, char *buf, size_t size);
+
+void prelude_client_installation_error(prelude_client_t *client);
+
 
 #endif

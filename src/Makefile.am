@@ -1,15 +1,14 @@
 SUBDIRS = include
-DEFS = -DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\" -DPRELUDE_SPOOL_DIR=\"@prelude_spool_dir@\" -DPRELUDE_IDENT_FILE=\"@prelude_ident_file@\" @libprelude_cflags@ @pthread_cflags@
 INCLUDES = -I$(top_srcdir) -I$(srcdir)/include @INCLTDL@
+
+DEFS = 	-DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\"	\
+	-DPRELUDE_SPOOL_DIR=\"@prelude_spool_dir@\" 	\
+	@libprelude_cflags@ @pthread_cflags@
 
 libpreludeincludedir = $(includedir)/
 libprelude_la_LIBADD = @LIBLTDL@
 libprelude_la_LDFLAGS = -version-info @libprelude_soname@
 lib_LTLIBRARIES = libprelude.la
-
-if HAVE_SSL
-SSL_SRCS=ssl.c ssl-gencrypto.c ssl-registration-msg.c ssl-settings.c
-endif
 
 AM_YFLAGS = -d
 LEX_OUTPUT_ROOT = lex.yy
@@ -19,7 +18,6 @@ libprelude_la_SOURCES = 		\
 	daemonize.c			\
 	timer.c				\
 	variable.c			\
-	prelude-auth.c			\
 	prelude-client.c		\
 	prelude-connection.c		\
 	prelude-connection-mgr.c	\
@@ -59,6 +57,7 @@ libprelude_la_SOURCES = 		\
 	idmef-message-read.c		\
 	idmef-message.c			\
 	common.c			\
-	$(SSL_SRCS)
+	tls-auth.c			\
+	tls-util.c			
 
 

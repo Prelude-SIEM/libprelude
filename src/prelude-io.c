@@ -33,11 +33,8 @@
 #include <termios.h>
 
 #include "config.h"
+#include <gnutls/gnutls.h>
 
-#ifdef HAVE_SSL
- #include <openssl/ssl.h>
- #include <openssl/err.h>
-#endif
 
 #ifndef TIOCINQ
  #define TIOCINQ FIONREAD
@@ -68,7 +65,7 @@ static ssize_t sys_read(prelude_io_t *pio, void *buf, size_t count)
 
         do {
                 ret = read(pio->fd, buf, count);        
-        } while ( ret < 0 && (errno == EINTR || errno == EAGAIN) );
+        } while ( ret < 0 && errno == EINTR );
         
         return ret;
 }
@@ -81,8 +78,8 @@ static ssize_t sys_write(prelude_io_t *pio, const void *buf, size_t count)
         
         do {
                 ret = write(pio->fd, buf, count);
-        } while ( ret < 0 && (errno == EINTR || errno == EAGAIN) );
-
+        } while ( ret < 0 && errno == EINTR );
+        
         return ret;
 }
 
@@ -94,9 +91,9 @@ static int sys_close(prelude_io_t *pio)
 
         do {
                 ret = close(pio->fd);
-        } while ( ret < 0 && (errno == EINTR || errno == EAGAIN) );
+        } while ( ret < 0 && errno == EINTR );
 
-        return ret;
+        return (ret >= 0) ? ret : errno;
 }
 
 
@@ -167,91 +164,51 @@ static ssize_t file_pending(prelude_io_t *pio)
 
 
 /*
- * SSL IO functions
+ * TLS IO functions
  */
-#ifdef HAVE_SSL
-
-static int handle_ssl_error(SSL *ssl, int ret, int errnum) 
+static ssize_t tls_read(prelude_io_t *pio, void *buf, size_t count) 
 {
-        int ssl_error;
-
-        ssl_error = SSL_get_error(ssl, ret);
-        
-        switch (ssl_error) {
-                
-        case SSL_ERROR_WANT_READ:
-        case SSL_ERROR_WANT_WRITE:
-                return 1;
-
-        case SSL_ERROR_ZERO_RETURN:
-                return 0;
-
-        case SSL_ERROR_SYSCALL:
-                if ( ret == 0 )
-                        /*
-                         * an EOF was observed that violates the protocol
-                         */
-                        return 0;
-                
-                if ( ret == -1 && (errnum == EAGAIN || errnum == EINTR) )
-                        /*
-                         * we got interrupted, let's try again.
-                         */
-                        return 1;
-
-                return -1;
-                
-        default:
-                log(LOG_ERR, "SSL error : %s.\n", ERR_reason_error_string(ERR_get_error()));
-                return -1;
-        }
-}
-
-
-
-static ssize_t ssl_read(prelude_io_t *pio, void *buf, size_t count) 
-{
-        int ret;
+        ssize_t ret;
         
         do {
-                ret = SSL_read(pio->fd_ptr, buf, count);
+                ret = gnutls_record_recv(pio->fd_ptr, buf, count);
                 
-        } while ( ret <= 0 && (ret = handle_ssl_error(pio->fd_ptr, ret, errno)) == 1);
+        } while ( ret < 0 && (ret == GNUTLS_E_INTERRUPTED || ret == GNUTLS_E_AGAIN) );
         
         return ret;
 }
 
 
 
-static ssize_t ssl_write(prelude_io_t *pio, const void *buf, size_t count) 
+static ssize_t tls_write(prelude_io_t *pio, const void *buf, size_t count) 
 {
-        int ret;
+        ssize_t ret;
 
         do {        
-                ret = SSL_write(pio->fd_ptr, buf, count);
+                ret = gnutls_record_send(pio->fd_ptr, buf, count);
 
-        } while ( ret < 0 && (ret = handle_ssl_error(pio->fd_ptr, ret, errno)) == 1);
+        } while ( ret < 0 && (ret == GNUTLS_E_INTERRUPTED || ret == GNUTLS_E_AGAIN) );
         
         return ret;
 }
 
 
 
-static int ssl_close(prelude_io_t *pio) 
+static int tls_close(prelude_io_t *pio) 
 {        
-        SSL_shutdown(pio->fd_ptr);
-        SSL_free(pio->fd_ptr);
+        gnutls_bye(pio->fd_ptr, GNUTLS_SHUT_RDWR);
+        gnutls_deinit(pio->fd_ptr);
         
         return sys_close(pio);
 }
 
 
 
-static ssize_t ssl_pending(prelude_io_t *pio)
+static ssize_t tls_pending(prelude_io_t *pio)
 {
         ssize_t ret;
         
-        ret = SSL_pending(pio->fd_ptr);
+        ret = gnutls_record_check_pending(pio->fd_ptr);
         if ( ret > 0 )
                 return ret;
         
@@ -261,10 +218,6 @@ static ssize_t ssl_pending(prelude_io_t *pio)
         
         return 0;
 }
-
-#endif
-
-
 
 
 
@@ -408,8 +361,6 @@ ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count)
 
 
                        
-
-
 /**
  * prelude_io_read_delimited:
  * @pio: Pointer to a #prelude_io_t object.
@@ -592,27 +543,29 @@ void prelude_io_set_file_io(prelude_io_t *pio, FILE *fdptr)
 
 
 
-#ifdef HAVE_SSL
 
 /**
- * prelude_io_set_ssl_io:
+ * prelude_io_set_tls_io:
  * @pio: A pointer on the #prelude_io_t object.
- * @ssl: Pointer on the SSL structure holding the TLS/SSL connection data.
+ * @tls: Pointer on the TLS structure holding the TLS connection data.
  *
- * Setup the @pio object to work with SSL based I/O function.
- * The @pio object is then associated with @ssl.
+ * Setup the @pio object to work with TLS based I/O function.
+ * The @pio object is then associated with @tls.
  */
-void prelude_io_set_ssl_io(prelude_io_t *pio, void *ssl) 
+void prelude_io_set_tls_io(prelude_io_t *pio, void *tls) 
 {
-        pio->fd = SSL_get_fd(ssl);
-        pio->fd_ptr = ssl;
-        pio->read = ssl_read;
-        pio->write = ssl_write;
-        pio->close = ssl_close;
-        pio->pending = ssl_pending;
+        gnutls_transport_ptr ptr;
+
+        ptr = gnutls_transport_get_ptr(tls);
+        pio->fd = (int) ptr;
+        
+        pio->fd_ptr = tls;
+        pio->read = tls_read;
+        pio->write = tls_write;
+        pio->close = tls_close;
+        pio->pending = tls_pending;
 }
 
-#endif
 
 
 
@@ -652,7 +605,7 @@ int prelude_io_get_fd(prelude_io_t *pio)
  * prelude_io_get_fdptr:
  * @pio: A pointer on a #prelude_io_t object.
  *
- * Returns: Pointer associated with this object (file, ssl, or NULL).
+ * Returns: Pointer associated with this object (file, tls, or NULL).
  */
 void *prelude_io_get_fdptr(prelude_io_t *pio) 
 {
@@ -680,10 +633,10 @@ void prelude_io_destroy(prelude_io_t *pio)
  * @pio: Pointer to a #prelude_io_t object.
  *
  * prelude_io_pending return the number of bytes waiting to
- * be read on an SSL or socket fd.
+ * be read on an TLS or socket fd.
  *
  * Returns: Number of byte waiting to be read on @pio, or -1
- * if @pio is not of type SSL or socket. 
+ * if @pio is not of type TLS or socket. 
  */
 ssize_t prelude_io_pending(prelude_io_t *pio)
 {

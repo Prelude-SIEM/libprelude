@@ -26,13 +26,9 @@ include_HEADERS = config-engine.h 		\
 		  idmef-util.h			\
 		  idmef-message-write.h		\
 		  idmef-message-read.h		\
-		  ssl-gencrypto.h		\
-		  ssl-settings.h		\
-		  ssl-registration-msg.h	\
 		  daemonize.h			\
 		  timer.h			\
 		  variable.h			\
-		  prelude-auth.h		\
 		  prelude-hash.h		\
 		  prelude-linked-object.h	\
 		  prelude-list.h		\
@@ -57,4 +53,4 @@ include_HEADERS = config-engine.h 		\
 		  common.h
 
 
-noinst_HEADERS = ssl.h client-ident.h ntp.h idmef-tree-data.h
+noinst_HEADERS = client-ident.h ntp.h idmef-tree-data.h tls-auth.h tls-util.h

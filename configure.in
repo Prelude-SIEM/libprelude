@@ -103,26 +103,20 @@ fi
 
 
 dnl **************************************************
-dnl * Check for OpenSSL.                             *
+dnl * Check for GnuTLS.                              *
 dnl **************************************************
+AC_PATH_GENERIC(libgnutls, , enable_gnutls=yes, enable_gnutls=no)
 
-AC_ARG_ENABLE(openssl, [  --enable-openssl	
-Use OpenSSL to communicate with Manager [default=auto]], enable_openssl="$enableval", enable_openssl=yes)
-
-if test x$enable_openssl = xyes ; then
-	
-	AC_CHECK_HEADER(openssl/ssl.h, openssl_header=yes)
-
-	if test x$openssl_header = xyes; then
-		libprelude_libs="$libprelude_libs -lssl -lcrypto"
-		AC_DEFINE(HAVE_SSL, , 1)
-  	else
-    		enable_openssl=no
-  	fi
+if test x$enable_gnutls != xyes; then
+	AC_MSG_ERROR(libgnutls is required in order to build libprelude.)
 fi
 
-AM_CONDITIONAL(HAVE_SSL, test x$enable_openssl = xyes && test x$openssl_header = xyes)
+libprelude_libs="$libprelude_libs $LIBGNUTLS_LIBS"
+libprelude_cflags="$libprelude_cflags $LIBGNUTLS_CFLAGS"
 
+AC_CHECK_HEADER(gnutls/gnutls.h,
+       		libprelude_cflags="$libprelude_cflags",
+       		AC_MSG_ERROR("libgnutls development headers are required to build libprelude"))
 
 
 dnl **************************************************
@@ -480,7 +474,7 @@ libprelude-config
 src/Makefile
 src/include/Makefile
 
-sensor-adduser/Makefile
+prelude-adduser/Makefile
 
 docs/Makefile
 docs/api/Makefile
@@ -496,7 +490,6 @@ AC_OUTPUT
 
 echo
 echo "*** Dumping configuration ***"
-echo "    - Use OpenSSL            : $enable_openssl"
 echo "    - Generate documentation : $enable_gtk_doc"
 echo "    - Perl binding           : $enable_perl"
 echo "    - Python binding         : $enable_python"

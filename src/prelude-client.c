@@ -42,14 +42,20 @@
 
 
 /*
- * directory where SSL authentication file are stored.
+ * directory where TLS private keys file are stored.
  */
-#define SSL_DIR PRELUDE_CONFIG_DIR "/ssl"
+#define KEY_DIR PRELUDE_CONFIG_DIR "/keys"
 
 /*
- * directory where plaintext authentication file are stored.
+ * directory where TLS certificates file are stored.
  */
-#define AUTH_DIR PRELUDE_CONFIG_DIR "/plaintext"
+#define CERT_DIR PRELUDE_CONFIG_DIR "/certs"
+
+/*
+ * directory where analyzerID file are stored.
+ */
+#define IDENT_DIR PRELUDE_CONFIG_DIR "/analyzerid"
+
 
 /*
  * send an heartbeat every hours.
@@ -384,7 +390,8 @@ static int setup_options(prelude_client_t *client, int argc, char **argv)
         }
         
         opt = prelude_option_add(NULL, CLI_HOOK, 0, "config-file",
-                                 "Configuration file for this analyzer", required_argument, set_configuration_file, NULL);
+                                 "Configuration file for this analyzer", required_argument,
+                                 set_configuration_file, NULL);
 
         prelude_option_set_warnings(0, &old_flags);
         ret = prelude_option_parse_arguments((void *) &client, opt, NULL, argc, argv);
@@ -395,7 +402,13 @@ static int setup_options(prelude_client_t *client, int argc, char **argv)
         
         opt = prelude_option_add(NULL, CLI_HOOK|CFG_HOOK, 0, "analyzer-name",
                                  "Name for this analyzer", required_argument, set_name, NULL);
-        prelude_option_set_priority(opt, option_run_first);
+        
+        prelude_option_set_warnings(0, &old_flags);
+        ret = prelude_option_parse_arguments((void *) &client, opt, NULL, argc, argv);
+        prelude_option_set_warnings(old_flags, NULL);
+        
+        if ( ret < 0 )
+                return -1;
         
         prelude_option_add(NULL, CFG_HOOK, 0, "node-name",
                            NULL, required_argument, set_node_name, NULL);
@@ -440,6 +453,22 @@ static int create_heartbeat_msgbuf(prelude_client_t *client)
 
 
 
+static void file_error(prelude_client_t *client) 
+{       
+        log(LOG_INFO, "\nBasic file configuration does not exist. Please run :\n"
+            "prelude-adduser register %s <manager address> --uid %d --gid %d\n"
+            "program on the analyzer host to setup this analyzer.\n\n"
+            
+            "Be aware that you should also replace the <manager address> argument\n"
+            "with the address of the server that your analyzer is trying to connect to.\n"
+            "\"prelude-adduser\" should be called for each configured manager address.\n\n",
+            prelude_client_get_name(client), prelude_client_get_uid(client),
+            prelude_client_get_gid(client));
+}
+
+
+
+
 prelude_client_t *prelude_client_new(prelude_client_capability_t capability)
 {
         prelude_client_t *new;
@@ -469,6 +498,7 @@ prelude_client_t *prelude_client_new(prelude_client_capability_t capability)
 int prelude_client_init(prelude_client_t *new, const char *sname, const char *config, int argc, char **argv)
 {
         int ret;
+        char filename[256];
         void *context = new;
 
         new->name = strdup(sname);
@@ -483,12 +513,17 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
         ret = setup_options(new, argc, argv);
         if ( ret < 0 )
                 return -1;
-        
-        if ( new->capability & CAPABILITY_SEND ) {
-                ret = prelude_client_ident_init(new, &new->analyzerid);
-                if ( ret < 0 )
-                        return -1;
+
+        prelude_client_get_backup_filename(new, filename, sizeof(filename));
+        ret = access(filename, W_OK);
+        if ( ret < 0 ) {
+                file_error(new);
+                return -1;
         }
+        
+        ret = prelude_client_ident_init(new, &new->analyzerid);
+        if ( ret < 0 )
+                return -1;
         
         setup_heartbeat_timer(new, DEFAULT_HEARTBEAT_INTERVAL);
         timer_init(&new->heartbeat_timer);
@@ -523,6 +558,13 @@ int prelude_client_init(prelude_client_t *new, const char *sname, const char *co
 idmef_analyzer_t *prelude_client_get_analyzer(prelude_client_t *client)
 {
         return client->analyzer;
+}
+
+
+
+void prelude_client_set_analyzerid(prelude_client_t *client, uint64_t analyzerid)
+{
+        client->analyzerid = analyzerid;
 }
 
 
@@ -626,6 +668,8 @@ void prelude_client_destroy(prelude_client_t *client)
 int prelude_client_set_flags(prelude_client_t *client, int flags)
 {
         int ret = 0;
+
+        client->flags = flags;
         
         if ( flags & PRELUDE_CLIENT_ASYNC_SEND ) {
                 printf("Async send requested.\n");
@@ -665,28 +709,28 @@ prelude_client_capability_t prelude_client_get_capability(prelude_client_t *clie
 
 
 
-void prelude_client_get_auth_filename(prelude_client_t *client, char *buf, size_t size) 
+void prelude_client_get_ident_filename(prelude_client_t *client, char *buf, size_t size) 
 {
-        snprintf(buf, size, AUTH_DIR "/%s.%d.%d", client->name, (int) client->uid, (int) client->gid);
+        snprintf(buf, size, IDENT_DIR "/%s", client->name);
 }
 
 
 
-void prelude_client_get_ssl_cert_filename(prelude_client_t *client, char *buf, size_t size) 
+void prelude_client_get_tls_cert_filename(prelude_client_t *client, char *buf, size_t size) 
 {
-        snprintf(buf, size, SSL_DIR "/%s-cert.%d.%d", client->name, (int) client->uid, (int) client->gid);
+        snprintf(buf, size, CERT_DIR "/%s", client->name);
 }
 
 
-void prelude_client_get_ssl_key_filename(prelude_client_t *client, char *buf, size_t size) 
+void prelude_client_get_tls_key_filename(prelude_client_t *client, char *buf, size_t size) 
 {
-        snprintf(buf, size, SSL_DIR "/%s-key.%d.%d", client->name, (int) client->uid, (int) client->gid);
+        snprintf(buf, size, KEY_DIR "/%s", client->name);
 }
 
 
 void prelude_client_get_backup_filename(prelude_client_t *client, char *buf, size_t size) 
 {
-        snprintf(buf, size, PRELUDE_SPOOL_DIR "/%s.%d.%d", client->name, (int) client->uid, (int) client->gid);
+        snprintf(buf, size, PRELUDE_SPOOL_DIR "/%s", client->name);
 }
 
 
@@ -694,4 +738,28 @@ void prelude_client_get_backup_filename(prelude_client_t *client, char *buf, siz
 prelude_ident_t *prelude_client_get_unique_ident(prelude_client_t *client)
 {
         return client->unique_ident;
+}
+
+
+
+void prelude_client_installation_error(prelude_client_t *client) 
+{
+        if ( client->capability & CAPABILITY_SEND ) {
+                log(LOG_INFO,
+                    "\nBasic file configuration does not exist. Please run :\n"
+                    "prelude-adduser register %s <manager address> --uid %d --gid %d\n"
+                    "program to setup the analyzer.\n\n"
+                    
+                    "Be aware that you should replace the \"<manager address>\" argument with\n"
+                    "the server address this analyzer is reporting to as argument.\n"
+                    "\"prelude-adduser\" should be called for each configured server address.\n\n",
+                    client->name, client->uid, client->gid);
+                
+        } else {
+                log(LOG_INFO,
+                    "\nBasic file configuration does not exist. Please run :\n"
+                    "prelude-adduser add %s --uid %d --gid %d\n"
+                    "program on the sensor host to create an account for this sensor.\n\n",
+                    client->name, client->uid, client->gid);
+        }
 }

@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002 Jeremie Brebec / Toussaint Mathieu
+* Copyright (C) 2004 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -21,10 +21,9 @@
 *
 *****/
 
-#ifndef _LIBPRELUDE_SSL_GENCRYPTO_H
-#define _LIBPRELUDE_SSL_GENCRYPTO_H
+int tls_request_certificate(prelude_client_t *client, prelude_io_t *fd, gnutls_x509_privkey key);
 
-int prelude_ssl_gen_crypto(uint64_t analyzerid, const char *sname,
-                           int keysize, int expire, const char *keyout, int crypt, uid_t uid);
+int tls_handle_certificate_request(prelude_client_t *client, prelude_io_t *fd,
+                                   gnutls_x509_privkey cakey, gnutls_x509_crt cacrt);
 
-#endif /* _LIBPRELUDE_SSL_GENCRYPTO_H */
+int tls_create_privkey(prelude_client_t *client, gnutls_x509_privkey *key, gnutls_x509_crt *crt);

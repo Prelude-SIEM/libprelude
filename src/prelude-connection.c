@@ -41,15 +41,10 @@
 
 #include "config.h"
 
-#ifdef HAVE_SSL
-#include "ssl.h"
-#endif
-
 #include "common.h"
 #include "prelude-client.h"
 #include "prelude-log.h"
 #include "prelude-io.h"
-#include "prelude-auth.h"
 #include "prelude-inet.h"
 #include "prelude-message.h"
 #include "prelude-message-id.h"
@@ -58,6 +53,8 @@
 #include "client-ident.h"
 #include "prelude-list.h"
 #include "prelude-linked-object.h"
+
+#include "tls-auth.h"
 
 
 /*
@@ -92,14 +89,13 @@ struct prelude_client {
 
 
 
-static void auth_error(prelude_connection_t *cnx, const char *auth_kind) 
+static void auth_error(prelude_connection_t *cnx) 
 {
-        log(LOG_INFO, "\n%s authentication failed. Please run :\n"
-            "sensor-adduser --sensorname %s --uid %d --gid %d --manager-addr %s\n"
+        log(LOG_INFO, "\nTLS authentication failed. Please run :\n"
+            "prelude-adduser register %s %s --uid %d --gid %d\n"
             "program on the sensor host to create an account for this sensor.\n\n",
-            auth_kind, prelude_client_get_name(cnx->client),
-            prelude_client_get_uid(cnx->client),
-            prelude_client_get_gid(cnx->client), cnx->daddr);
+            prelude_client_get_name(cnx->client), cnx->daddr,
+            prelude_client_get_uid(cnx->client), prelude_client_get_gid(cnx->client));
 
         exit(1);
 }
@@ -202,203 +198,26 @@ static int generic_connect(struct sockaddr *sa, socklen_t sa_len)
 
 
 
-static int read_plaintext_authentication_result(prelude_connection_t *cnx)
+
+static int gnutls_authenticate(prelude_connection_t *cnx, int crypt)
 {
         int ret;
-        void *buf;
-        uint8_t tag;
-        uint32_t dlen;
-        prelude_msg_t *msg = NULL;
-        prelude_msg_status_t status;
-
-        do {
-                status = prelude_msg_read(&msg, cnx->fd);
-        } while ( status == prelude_msg_unfinished );
         
-        if ( status != prelude_msg_finished ) {
-                log(LOG_ERR, "error reading authentication result.\n");
-                return -1;
-        }
-
-        ret = prelude_msg_get(msg, &tag, &dlen, &buf);
-        prelude_msg_destroy(msg);
-        
-        if ( ret <= 0 ) {
-                log(LOG_ERR, "error reading authentication result.\n");
-                return -1;
-        }
-        
-        if ( tag == PRELUDE_MSG_AUTH_SUCCEED ) {
-                log(LOG_INFO, "- Plaintext authentication succeed with Prelude Manager.\n");
-                return 0;
-        }
-        
-        log(LOG_INFO, "- Plaintext authentication failed with Prelude Manager.\n");
-        auth_error(cnx, "Plaintext");
-        
-        return -1;
-}
-
-
-
-
-static int handle_plaintext_connection(prelude_connection_t *cnx, int sock) 
-{
-        int ret;
-        size_t ulen, plen;
-        char *user, *pass;
-        prelude_msg_t *msg;
-        char filename[256];
-
-        prelude_client_get_auth_filename(cnx->client, filename, sizeof(filename));
-        
-        ret = prelude_auth_read_entry(filename, NULL, NULL, &user, &pass);
+        ret = tls_auth_client(cnx->client, cnx->fd, crypt);
         if ( ret < 0 ) {
-                /*
-                 * the authentication file doesn't exist. Tell
-                 * the user it have to create it and exit.
-                 */
-                auth_error(cnx, "Plaintext");
-        }
-
-        /*
-         * create message containing plaintext authentication informations.
-         */
-        ulen = strlen(user) + 1;
-        plen = strlen(pass) + 1;
-        
-        msg = prelude_msg_new(3, ulen + plen, PRELUDE_MSG_AUTH, 0);
-        if ( ! msg ) {
-                ret = -1;
-                goto err;
-        }
-
-        prelude_msg_set(msg, PRELUDE_MSG_AUTH_PLAINTEXT, 0, NULL);
-        prelude_msg_set(msg, PRELUDE_MSG_AUTH_USERNAME, ulen, user);
-        prelude_msg_set(msg, PRELUDE_MSG_AUTH_PASSWORD, plen, pass);
-        
-        ret = prelude_msg_write(msg, cnx->fd);
-        if ( ret <= 0 ) {
-                log(LOG_ERR, "error sending plaintext authentication message.\n");
-                ret = -1;
-        }
-
-        prelude_msg_destroy(msg);
-
-  err:
-        free(user);
-        free(pass);
-
-        return read_plaintext_authentication_result(cnx);
-}
-
-
-
-#ifdef HAVE_SSL
-
-static int handle_ssl_connection(prelude_connection_t *cnx, int sock) 
-{
-        int ret;
-        SSL *ssl;
-        prelude_msg_t *msg;
-        static int ssl_initialized = 0;
-        
-        if ( ! ssl_initialized ) {
-                ret = ssl_init_client(cnx->client);
-                if ( ret < 0 ) {
-                         /*
-                          * SSL key / certificate doesn't exist. Tell the
-                          * use how to create them and exit.
-                          */
-                        auth_error(cnx, "SSL");
-                }
-                
-                ssl_initialized = 1;
-        }
-        
-        msg = prelude_msg_new(1, 0, PRELUDE_MSG_AUTH, 0);
-        if ( ! msg )
-                return -1;
-
-        prelude_msg_set(msg, PRELUDE_MSG_AUTH_SSL, 0, NULL);
-        ret = prelude_msg_write(msg, cnx->fd);
-        prelude_msg_destroy(msg);        
-        
-        if ( ret < 0 ) {
-                log(LOG_ERR, "error sending SSL authentication message.\n");
-                return -1;
-        }
-        
-        ssl = ssl_connect_server(sock);
-        if ( ! ssl ) {
                 /*
                  * SSL authentication failed,
                  * tell the user how to setup SSL auth and exit.
                  */
-                log(LOG_INFO, "- SSL authentication failed with Prelude Manager.\n");
-                auth_error(cnx, "SSL");
+                log(LOG_INFO, "- TLS authentication failed with Prelude Manager.\n");
+                auth_error(cnx);
         }
 
-        log(LOG_INFO, "- SSL authentication succeed with Prelude Manager.\n");
-        prelude_io_set_ssl_io(cnx->fd, ssl);
+        log(LOG_INFO, "- TLS authentication succeed with Prelude Manager.\n");
 
         return 0;
 }
 
-#endif
-
-
-
-
-/*
- * Report server should send us a message containing
- * information about the kind of connecition it support.
- */
-static int get_manager_setup(prelude_io_t *fd, int *have_ssl, int *have_plaintext) 
-{
-        int ret;
-        void *buf;
-        uint8_t tag;
-        uint32_t dlen;
-        prelude_msg_t *msg = NULL;
-        prelude_msg_status_t status;
-
-        do {
-                status = prelude_msg_read(&msg, fd);
-        } while ( status == prelude_msg_unfinished );
-        
-        if ( status != prelude_msg_finished ) {
-                log(LOG_ERR, "error reading Manager configuration message (status=%d).\n", status);
-                return -1;
-        }
-
-        if ( prelude_msg_get_tag(msg) != PRELUDE_MSG_AUTH ) {
-                log(LOG_ERR, "Manager didn't sent us any authentication message.\n");
-                return -1;
-        }
-
-        while ( (ret = prelude_msg_get(msg, &tag, &dlen, &buf)) > 0  ) {
-                
-                switch (tag) {
-
-                case PRELUDE_MSG_AUTH_HAVE_SSL:
-                        *have_ssl = 1;
-                        break;
-
-                case PRELUDE_MSG_AUTH_HAVE_PLAINTEXT:
-                        *have_plaintext = 1;
-                        break;
-
-                default:
-                        log(LOG_ERR, "Invalid authentication tag %d.\n", tag);
-                        goto err;
-                }
-        }
-        
- err:
-        prelude_msg_destroy(msg);
-        return ret;
-}
 
 
 
@@ -406,8 +225,8 @@ static int get_manager_setup(prelude_io_t *fd, int *have_ssl, int *have_plaintex
 static int start_inet_connection(prelude_connection_t *cnx) 
 {
         socklen_t len;
+        int sock, ret = -1;
         struct sockaddr_in addr;
-        int have_ssl = 0, have_plaintext = 0, sock, ret = -1;
         
         sock = generic_connect(cnx->sa, cnx->sa_len);
         if ( sock < 0 )
@@ -429,31 +248,7 @@ static int start_inet_connection(prelude_connection_t *cnx)
         
         prelude_io_set_sys_io(cnx->fd, sock);
         
-        /*
-         * get manager message telling what kind of connection it
-         * support. Prefer SSL over plaintext if supported by both end.
-         */
-        ret = get_manager_setup(cnx->fd, &have_ssl, &have_plaintext);
-        if ( ret < 0 ) {
-                close(sock);
-                return -1;
-        }
-                
-#ifdef HAVE_SSL
-        if ( have_ssl ) {
-                ret = handle_ssl_connection(cnx, sock);
-                goto end;
-        }
-#endif
-
-        if ( have_plaintext ) {
-                ret = handle_plaintext_connection(cnx, sock);
-                goto end;
-        } else {
-                log(LOG_INFO, "couldn't agree on a protocol to use.\n");
-                ret = -1;
-        }
- end:
+        ret = gnutls_authenticate(cnx, 1);
         if ( ret < 0 )
                 close(sock);
         
@@ -465,7 +260,7 @@ static int start_inet_connection(prelude_connection_t *cnx)
 
 static int start_unix_connection(prelude_connection_t *cnx) 
 {
-        int ret, sock, have_ssl = 0, have_plaintext = 0;
+        int ret, sock;
         
         sock = generic_connect(cnx->sa, cnx->sa_len);
         if ( sock < 0 )
@@ -473,25 +268,11 @@ static int start_unix_connection(prelude_connection_t *cnx)
         
         prelude_io_set_sys_io(cnx->fd, sock);
         
-        ret = get_manager_setup(cnx->fd, &have_ssl, &have_plaintext);
-        if ( ret < 0 ) {
+        ret = gnutls_authenticate(cnx, 0);
+        if ( ret < 0 )
                 close(sock);
-                return -1;
-        }
-
-        if ( ! have_plaintext ) {
-                log(LOG_INFO, "Unix connection used, but Manager report plaintext unavailable.\n");
-                close(sock);
-                return -1;
-        }
-        
-        ret = handle_plaintext_connection(cnx, sock);
-        if ( ret < 0 ) {
-                close(sock);
-                return -1;
-        }
-        
-        return 0;
+                
+        return ret;
 }
 
 

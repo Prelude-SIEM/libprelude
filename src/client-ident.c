@@ -30,6 +30,7 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <fcntl.h>
 #include <errno.h>
 
@@ -46,16 +47,7 @@
 
 static void file_error(prelude_client_t *client) 
 {
-        log(LOG_INFO, "\nBasic file configuration does not exist. Please run :\n"
-            "sensor-adduser --sensorname %s --uid %d --gid %d\n"
-            "program on the sensor host to create an account for this sensor.\n\n"
-            
-            "Be aware that you should also pass the \"--manager-addr\" option with the\n"
-            "manager address as argument. \"sensor-adduser\" should be called for\n"
-            "each configured manager address.\n\n", 
-            prelude_client_get_name(client),
-            prelude_client_get_uid(client), prelude_client_get_gid(client));
-
+        prelude_client_installation_error(client);
         exit(1);
 }
 
@@ -93,44 +85,28 @@ int prelude_client_ident_send(uint64_t analyzerid, prelude_io_t *fd)
 
 
 
-
 int prelude_client_ident_init(prelude_client_t *client, uint64_t *analyzerid) 
 {
-        int ret;
         FILE *fd;
-        char buf[1024], *name, *ident, *ptr;
+        char filename[256], buf[256];
+
+        prelude_client_get_ident_filename(client, filename, sizeof(filename));
         
-        fd = fopen(PRELUDE_IDENT_FILE, "r");
+        fd = fopen(filename, "r");
         if ( ! fd ) {
-                log(LOG_ERR, "error opening sensors identity file: %s.\n", PRELUDE_IDENT_FILE);
+                log(LOG_ERR, "error opening analyzer identity file: %s.\n", filename);
                 file_error(client);
                 return -1;
         }
 
-        ptr = buf;
-        while ( fgets(buf, sizeof(buf), fd) ) {
-                
-                name = strtok(ptr, ":");
-                if ( ! name )
-                        break;
-                
-                ident = strtok(NULL, ":");
-                if ( ! ident )
-                        break;
-
-                sscanf(ident, "%llu", analyzerid);
-                            
-                ret = strcmp(name, prelude_client_get_name(client));
-                if ( ret == 0 ) {
-                        fclose(fd);
-                        return 0;
-                }
+        if ( ! fgets(buf, sizeof(buf), fd) ) {
+                log(LOG_ERR, "error reading analyzerid from %s.\n", filename);
+                file_error(client);
+                fclose(fd);
+                return -1;
         }
-                
-        log(LOG_INFO, "No ident configured for sensor %s.\n", prelude_client_get_name(client));
-
-        file_error(client);
-        fclose(fd);
         
-        return -1;
+        sscanf(buf, "%llu", analyzerid);
+
+        return 0;
 }

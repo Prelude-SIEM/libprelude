@@ -1,4 +1,4 @@
-SUBDIRS = libltdl src sensor-adduser bindings docs
+SUBDIRS = libltdl src prelude-adduser bindings docs
 
 EXTRA_DIST = COPYING.OpenSSL client.conf global.conf
 bin_SCRIPTS = $(top_srcdir)/libprelude-config
@@ -14,8 +14,10 @@ install-data-local:
 	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_spool_dir);
 	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_config_dir);
 	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_config_dir)/default;
-	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_config_dir)/ssl;
-	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_config_dir)/plaintext;
+	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_config_dir)/ca;
+	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_config_dir)/keys;
+	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_config_dir)/certs;
+	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_config_dir)/analyzerid;
 	@if test -f $(DESTDIR)$(prelude_config_dir)/default/client.conf; then							\
 		echo;														\
 		echo "********************************************************************************";          		\
