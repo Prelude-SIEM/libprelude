@@ -369,7 +369,7 @@ static idmef_value_type_operation_t ops_tbl[] = {
         { 0, STRING_RELATION, string_copy, string_clone, string_destroy, string_compare, string_read, string_write         },
         { 0, TIME_RELATION, time_copy, time_clone, time_destroy, time_compare, time_read, time_write                     }, 
         { 0, DATA_RELATION, data_copy, data_clone, data_destroy, data_compare, data_read, data_write                     },
-        { sizeof(idmef_value_type_t), INTEGER_RELATION, generic_copy, generic_clone, NULL, generic_compare, enum_read, enum_write, /* type_enum */ },
+        { sizeof(idmef_value_type_id_t), INTEGER_RELATION, generic_copy, generic_clone, NULL, generic_compare, enum_read, enum_write, /* type_enum */ },
 };
 
 
@@ -414,7 +414,7 @@ int idmef_value_type_copy(void *dst, idmef_value_type_t *src)
 
         if ( ! ops_tbl[src->id].copy )
                 return -1;
-
+        
         return ops_tbl[src->id].copy(dst, src, ops_tbl[src->id].len);
 }
 
