@@ -297,31 +297,38 @@ uint64_t prelude_hton64(uint64_t val)
 int prelude_get_file_name_and_path(const char *str, char **name, char **path)
 {
         int ret = 0;
-	char buf[512], *ptr, tmp, cwd[PATH_MAX];
+	char buf[512], *ptr, cwd[PATH_MAX];
+                
+        getcwd(cwd, sizeof(cwd));
+        
+        ptr = strrchr(str, '/');
+        if ( ! ptr ) {                
+                ret = find_absolute_path(cwd, str, path);
+                if ( ret == 0 ) {
+                        *name = strdup(str);
+                        return 0;
+                }
+        }
 
         if ( *str != '/' ) {
-                ret = snprintf(buf, sizeof(buf), "%s/", getcwd(cwd, sizeof(cwd)));
-                if ( ret < 0 || ret >= sizeof(buf) )
-                        return -1;
-        }
-        
-        if ( (ptr = strrchr(str, '/')) ) {
-                tmp = *ptr; *ptr = '\0';
-
-                ret = snprintf(buf + ret, sizeof(buf) - ret, "%s", str);
+                ret = snprintf(buf, sizeof(buf), "%s/%s", cwd, (*str == '.') ? str + 2 : str);
                 if ( ret < 0 || ret >= sizeof(buf) )
                         return -1;
                 
-                *path = strdup(buf);
-                str = ptr + 1;
-                *ptr = tmp;
+                return prelude_get_file_name_and_path(buf, name, path);
         }
-
-        else ret = find_absolute_path(cwd, str, path);
-                
-        *name = strdup(str);
         
-	return ret;
+        ret = access(str, F_OK);
+        if ( ret < 0 )
+                return -1;
+        
+        *ptr = 0;       
+        *path = strdup(str);
+        *ptr = '/';
+        
+        *name = strdup(ptr + 1);
+                
+	return 0;
 }
 
 
