@@ -497,7 +497,7 @@ int prelude_option_recv_reply(prelude_msg_t *msg, uint64_t *source_id, uint32_t 
                 case PRELUDE_MSG_OPTION_LIST:                        
                         type = PRELUDE_OPTION_REPLY_TYPE_LIST;
 
-                        ret = prelude_option_new(NULL, value);
+                        ret = prelude_option_new(NULL, (prelude_option_t **) value);
                         if ( ret < 0 )
                                 return ret;
                         
