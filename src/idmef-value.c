@@ -55,8 +55,8 @@ int idmef_value_new_ ## vname (idmef_value_t **value, vtype val) {   \
 }
 
 
-#define idmef_value_get_decl(mtype, vname, vtype)	         \
-vtype idmef_value_get_ ## vname (idmef_value_t *val)	         \
+#define idmef_value_get_decl(value, mtype, vname, vtype)	 \
+vtype idmef_value_get_ ## vname (value *val)                     \
 {							         \
 	if ( val->type.id != IDMEF_VALUE_TYPE_ ## mtype )        \
 		return (vtype) 0;			         \
@@ -125,20 +125,20 @@ idmef_value_new_decl(UINT64, uint64, uint64_t)
 idmef_value_new_decl(FLOAT, float, float)
 idmef_value_new_decl(DOUBLE, double, double)
 
-idmef_value_get_decl(INT8, int8, int8_t)
-idmef_value_get_decl(UINT8, uint8, uint8_t)
-idmef_value_get_decl(INT16, int16, int16_t)
-idmef_value_get_decl(UINT16, uint16, uint16_t)
-idmef_value_get_decl(INT32, int32, int32_t)
-idmef_value_get_decl(UINT32, uint32, uint32_t)
-idmef_value_get_decl(INT64, int64, int64_t)
-idmef_value_get_decl(UINT64, uint64, uint64_t)
-idmef_value_get_decl(ENUM, enum, int)
-idmef_value_get_decl(FLOAT, float, float)
-idmef_value_get_decl(DOUBLE, double, double)
-idmef_value_get_decl(STRING, string, prelude_string_t *)
-idmef_value_get_decl(DATA, data, idmef_data_t *)
-idmef_value_get_decl(TIME, time, idmef_time_t *)
+idmef_value_get_decl(const idmef_value_t, INT8, int8, int8_t)
+idmef_value_get_decl(const idmef_value_t, UINT8, uint8, uint8_t)
+idmef_value_get_decl(const idmef_value_t, INT16, int16, int16_t)
+idmef_value_get_decl(const idmef_value_t, UINT16, uint16, uint16_t)
+idmef_value_get_decl(const idmef_value_t, INT32, int32, int32_t)
+idmef_value_get_decl(const idmef_value_t, UINT32, uint32, uint32_t)
+idmef_value_get_decl(const idmef_value_t, INT64, int64, int64_t)
+idmef_value_get_decl(const idmef_value_t, UINT64, uint64, uint64_t)
+idmef_value_get_decl(const idmef_value_t, ENUM, enum, int)
+idmef_value_get_decl(const idmef_value_t, FLOAT, float, float)
+idmef_value_get_decl(const idmef_value_t, DOUBLE, double, double)
+idmef_value_get_decl(idmef_value_t, STRING, string, prelude_string_t *)
+idmef_value_get_decl(idmef_value_t, DATA, data, idmef_data_t *)
+idmef_value_get_decl(idmef_value_t, TIME, time, idmef_time_t *)
 
 
 
@@ -387,14 +387,14 @@ int idmef_value_dont_have_own_data(idmef_value_t *value)
 
 
 
-idmef_value_type_id_t idmef_value_get_type(idmef_value_t *value)
+idmef_value_type_id_t idmef_value_get_type(const idmef_value_t *value)
 {
 	return value->type.id;
 }
 
 
 
-idmef_class_id_t idmef_value_get_class(idmef_value_t *value)
+idmef_class_id_t idmef_value_get_class(const idmef_value_t *value)
 {
 	return (value->type.id == IDMEF_VALUE_TYPE_CLASS ||
                 value->type.id == IDMEF_VALUE_TYPE_ENUM) ? value->class : -1;
@@ -441,7 +441,7 @@ idmef_value_t *idmef_value_get_nth(idmef_value_t *val, int n)
 
 
 
-int idmef_value_get_count(idmef_value_t *val)
+int idmef_value_get_count(const idmef_value_t *val)
 {
 	return val->list ? val->list_elems : 1;
 }
@@ -527,7 +527,7 @@ idmef_value_t *idmef_value_ref(idmef_value_t *val)
 
 
 
-int idmef_value_to_string(idmef_value_t *val, prelude_string_t *out)
+int idmef_value_to_string(const idmef_value_t *val, prelude_string_t *out)
 {
 	int ret;
         const char *str;
@@ -543,7 +543,7 @@ int idmef_value_to_string(idmef_value_t *val, prelude_string_t *out)
 
 
 
-int idmef_value_print(idmef_value_t *val, prelude_io_t *fd)
+int idmef_value_print(const idmef_value_t *val, prelude_io_t *fd)
 {
         int ret;
         const char *str;
