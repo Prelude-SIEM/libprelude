@@ -1190,7 +1190,7 @@ const char *idmef_$enum->{short_typename}_to_string($enum->{typename} val)
     $self->output("
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;

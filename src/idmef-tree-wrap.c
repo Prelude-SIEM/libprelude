@@ -161,7 +161,7 @@ const char *idmef_additional_data_type_to_string(idmef_additional_data_type_t va
                 { IDMEF_ADDITIONAL_DATA_TYPE_XML, "xml" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -229,7 +229,7 @@ const char *idmef_reference_origin_to_string(idmef_reference_origin_t val)
                 { IDMEF_REFERENCE_ORIGIN_OSVDB, "osvdb" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -312,7 +312,7 @@ const char *idmef_user_id_type_to_string(idmef_user_id_type_t val)
                 { IDMEF_USER_ID_TYPE_OTHER_PRIVS, "other-privs" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -376,7 +376,7 @@ const char *idmef_user_category_to_string(idmef_user_category_t val)
                 { IDMEF_USER_CATEGORY_OS_DEVICE, "os-device" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -461,7 +461,7 @@ const char *idmef_address_category_to_string(idmef_address_category_t val)
                 { IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK, "ipv6-net-mask" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -564,7 +564,7 @@ const char *idmef_service_type_to_string(idmef_service_type_t val)
                 { IDMEF_SERVICE_TYPE_SNMP, "snmp" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -658,7 +658,7 @@ const char *idmef_node_category_to_string(idmef_node_category_t val)
                 { IDMEF_NODE_CATEGORY_WFW, "wfw" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -721,7 +721,7 @@ const char *idmef_source_spoofed_to_string(idmef_source_spoofed_t val)
                 { IDMEF_SOURCE_SPOOFED_NO, "no" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -828,7 +828,7 @@ const char *idmef_checksum_algorithm_to_string(idmef_checksum_algorithm_t val)
                 { IDMEF_CHECKSUM_ALGORITHM_GOST, "gost" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -888,7 +888,7 @@ const char *idmef_file_category_to_string(idmef_file_category_t val)
                 { IDMEF_FILE_CATEGORY_ORIGINAL, "original" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -953,7 +953,7 @@ const char *idmef_file_fstype_to_string(idmef_file_fstype_t val)
                 { IDMEF_FILE_FSTYPE_ISO9660, "iso9660" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -1040,7 +1040,7 @@ const char *idmef_linkage_category_to_string(idmef_linkage_category_t val)
                 { IDMEF_LINKAGE_CATEGORY_SYMBOLIC_LINK, "symbolic-link" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -1104,7 +1104,7 @@ const char *idmef_target_decoy_to_string(idmef_target_decoy_t val)
                 { IDMEF_TARGET_DECOY_NO, "no" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -1208,7 +1208,7 @@ const char *idmef_impact_severity_to_string(idmef_impact_severity_t val)
                 { IDMEF_IMPACT_SEVERITY_INFO, "info" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -1257,7 +1257,7 @@ const char *idmef_impact_completion_to_string(idmef_impact_completion_t val)
                 { IDMEF_IMPACT_COMPLETION_SUCCEEDED, "succeeded" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -1314,7 +1314,7 @@ const char *idmef_impact_type_to_string(idmef_impact_type_t val)
                 { IDMEF_IMPACT_TYPE_USER, "user" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -1379,7 +1379,7 @@ const char *idmef_action_category_to_string(idmef_action_category_t val)
                 { IDMEF_ACTION_CATEGORY_TAKEN_OFFLINE, "taken-offline" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -1443,7 +1443,7 @@ const char *idmef_confidence_rating_to_string(idmef_confidence_rating_t val)
                 { IDMEF_CONFIDENCE_RATING_HIGH, "high" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -1549,7 +1549,7 @@ const char *idmef_alert_type_to_string(idmef_alert_type_t val)
                 { IDMEF_ALERT_TYPE_OVERFLOW, "overflow" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
@@ -1640,7 +1640,7 @@ const char *idmef_message_type_to_string(idmef_message_type_t val)
                 { IDMEF_MESSAGE_TYPE_HEARTBEAT, "heartbeat" },
         };
 
-        if ( val < 0 || val >= sizeof(sizeof(tbl) / sizeof(*tbl)) )
+        if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )
 	        return NULL;
 
         return tbl[val].name;
