@@ -48,7 +48,7 @@
 GCRY_THREAD_OPTION_PTHREAD_IMPL;
 
 
-static int read_auth_result(prelude_io_t *fd, uint64_t *analyzerid)
+static int read_auth_result(prelude_io_t *fd)
 {
         int ret;
         void *buf;
@@ -79,10 +79,9 @@ static int read_auth_result(prelude_io_t *fd, uint64_t *analyzerid)
                 return prelude_error(PRELUDE_ERROR_TLS_REMOTE_AUTH);
         }
         
-        ret = prelude_extract_uint64_safe(analyzerid, buf, len);
         prelude_msg_destroy(msg);
                 
-        return ret;
+        return 0;
 }
 
 
@@ -176,18 +175,20 @@ int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int cryp
         
         prelude_io_set_tls_io(io, session);
 
-        ret = read_auth_result(io, analyzerid);
-        if ( ret < 0 ) {
-                gnutls_deinit(session);
+        ret = read_auth_result(io);
+        if ( ret < 0 )
                 return ret;
-        }
 
+        ret = tls_certificate_get_peer_analyzerid(session, analyzerid);
+        if ( ret < 0 )
+                return ret;
+                
         if ( ! crypt ) {
                 
                 do {
                         ret = gnutls_bye(session, GNUTLS_SHUT_RDWR);
-                } while ( ret < 0 && ret == GNUTLS_E_INTERRUPTED );
-
+                } while ( ret < 0 && (ret == GNUTLS_E_INTERRUPTED || ret == GNUTLS_E_AGAIN) );
+                
                 if ( ret < 0 )
                         prelude_log(PRELUDE_LOG_WARN, "gnutls bye failed with error: %s.\n", gnutls_strerror(ret));
                 
