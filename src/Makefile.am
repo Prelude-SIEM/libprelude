@@ -1,6 +1,7 @@
 SUBDIRS = include
 DEFS = -DCONFIG_DIR=\"@configdir@\"
-INCLUDES = -I$(top_srcdir)/include -I$(srcdir)/include
+
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libmissing -I$(srcdir)/include 
 
 libpreludeincludedir = $(includedir)/
 lib_LTLIBRARIES = libprelude.la
@@ -14,12 +15,8 @@ libprelude_la_SOURCES = 		\
 	ssl-gencrypto.c			\
 	ssl-config.c			\
 	socket-op.c			\
-	compat.c			\
 	string-matching.c		\
 	timer.c				\
 	alert-common.c
 
-
-
-
-
+libprelude_la_LIBADD = ../libmissing/libmissing.a

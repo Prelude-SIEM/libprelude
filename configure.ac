@@ -151,6 +151,7 @@ docs/Makefile
 docs/api/Makefile
 src/Makefile 
 src/include/Makefile
+libmissing/Makefile
 ])
 AC_OUTPUT
 

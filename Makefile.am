@@ -1,4 +1,3 @@
-SUBDIRS = src docs
+SUBDIRS = libmissing src docs
 
 includedir=$(prefix)/libprelude/include
-include_HEADERS=config.h

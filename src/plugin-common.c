@@ -37,8 +37,8 @@
 #include "common.h"
 #include "plugin-common.h"
 #include "plugin-common-prv.h"
-#include "compat.h"
 #include "config-engine.h"
+#include "libmissing.h"
 
 #ifndef RTLD_NOW
 #define RTLD_NOW RTLD_LAZY

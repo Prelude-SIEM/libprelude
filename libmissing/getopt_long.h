@@ -18,19 +18,29 @@
  *  Authors: Yoann Vandoorselaere <yoann@mandrakesoft.com>
  *
  */
-#include <stdio.h>
-#include <unistd.h>
-
-#include "compat.h"
+#ifndef GETOPT_LONG_H
+#define GETOPT_LONG_H
 
 #ifndef HAVE_GETOPT_LONG
 
+#define no_argument 0
+#define optional_argument 1
+#define required_argument 2
+
+struct option {
+        const char *name;
+        int has_arg;
+        int *flag;
+        int val;
+};
+
 int getopt_long(int argc, char * const argv[],
                 const char *optstring,
-                const struct option *longopts, int *longindex) 
-{
-        return getopt(argc, argv, optstring);
-}
+                const struct option *longopts, int *longindex);
+
+#else
+#include <getopt.h>
+#endif
 
 
 #endif
