@@ -68,6 +68,59 @@ static time_t my_timegm(struct tm *tm)
 
 
 
+static int get_gmt_offset(time_t time, int *gmt_offset)
+{
+	struct tm tm_utc;
+	time_t time_utc;
+
+	if ( ! gmtime_r(&time, &tm_utc) ) {
+		log(LOG_ERR, "error converting local time to utc time.\n");
+		return -1;
+	}
+
+	tm_utc.tm_isdst = -1;
+	time_utc = mktime(&tm_utc);
+	*gmt_offset = time - time_utc;
+
+	return 0;
+}
+
+
+
+static int time_local_to_utc(time_t *time_utc, time_t time_local)
+{
+	struct tm tm_utc;
+
+	if ( ! gmtime_r(&time_local, &tm_utc) ) {
+		log(LOG_ERR, "error converting local time to utc time.\n");
+		return -1;
+	}
+
+	tm_utc.tm_isdst = -1;
+	*time_utc = mktime(&tm_utc);
+
+	return 0;
+}
+
+
+
+static int time_utc_to_local(time_t *time_local, time_t time_utc)
+{
+	struct tm tm_local;
+
+	if ( ! localtime_r(&time_utc, &tm_local) ) {
+		log(LOG_ERR, "error converting utc time to local time.\n");
+		return -1;
+	}
+
+	tm_local.tm_isdst = -1;
+	*time_local = my_timegm(&tm_local);
+
+	return 0;
+}
+
+
+
 static char *parse_time_ymd(struct tm *tm, const char *buf)
 {
 	char *ptr;
@@ -237,7 +290,9 @@ int idmef_time_set_ntp_timestamp(idmef_time_t *time, const char *buf)
 	ts.l_uf &= ts_mask;
 	TSTOTV(&ts, &tv);
 
-	time->sec = tv.tv_sec;
+	if ( time_utc_to_local(&time->sec, tv.tv_sec) < 0 )
+		return -1;
+
 	time->usec = tv.tv_usec;
 
 	return 0;
@@ -254,7 +309,9 @@ int idmef_time_get_ntp_timestamp(const idmef_time_t *time, char *outptr, size_t 
         unsigned ts_roundbit = TS_ROUNDBIT;     /* defaults to 20 bits (us) */
 	int ret;
 
-        tv.tv_sec = idmef_time_get_sec(time);
+	if ( time_local_to_utc(&tv.tv_sec, idmef_time_get_sec(time)) < 0 )
+		return -1;
+
         tv.tv_usec = idmef_time_get_usec(time);
         
         sTVTOTS(&tv, &ts);
@@ -265,7 +322,7 @@ int idmef_time_get_ntp_timestamp(const idmef_time_t *time, char *outptr, size_t 
         
         ret = snprintf(outptr, size, "0x%08lx.0x%08lx", (unsigned long) ts.l_ui, (unsigned long) ts.l_uf);
 
-	return (ret < 0 || ret >= size)	? -1 : 0;
+	return (ret < 0 || ret >= size)	? -1 : ret;
 }
 
 
@@ -314,6 +371,26 @@ int idmef_time_get_db_timestamp(const idmef_time_t *time, char *outptr, size_t s
 
 
 
+int idmef_time_set_db_timestamp(idmef_time_t *time, const char *buf)
+{
+	struct tm tm;
+
+	memset(&tm, 0, sizeof (tm));
+
+	if ( sscanf(buf, "%d-%d-%d %d:%d:%d",
+		    &tm.tm_year, &tm.tm_mon, &tm.tm_mday, &tm.tm_hour, &tm.tm_min, &tm.tm_sec) < 6 )
+		return -1;
+
+	tm.tm_year -= 1900;
+	tm.tm_mon -= 1;
+
+	time->sec = my_timegm(&tm);
+	time->usec = 0;
+
+	return 0;
+}
+
+
 
 /**
  * idmef_get_idmef_timestamp:
@@ -329,9 +406,9 @@ int idmef_time_get_db_timestamp(const idmef_time_t *time, char *outptr, size_t s
 int idmef_time_get_idmef_timestamp(const idmef_time_t *time, char *outptr, size_t size)
 {
         char gmt_sign;
-        time_t time_utc, sec;
+        time_t sec;
         int ret, len = 0, gmt_offset;
-	struct tm tm_localtime, tm_utc;
+	struct tm tm_localtime;
 
 	sec = idmef_time_get_sec(time);
 	if ( ! localtime_r(&sec, &tm_localtime) ) {
@@ -339,25 +416,18 @@ int idmef_time_get_idmef_timestamp(const idmef_time_t *time, char *outptr, size_
 		return -1;
 	}
 
-        if ( ! gmtime_r(&sec, &tm_utc) ) {
-                log(LOG_ERR, "error converting timestamp to utc time.\n");
-                return -1;
-        }
-
-	tm_utc.tm_isdst = -1;
-	time_utc = mktime(&tm_utc);
-	gmt_offset = sec - time_utc;
+	if ( get_gmt_offset(sec, &gmt_offset) < 0 )
+		return -1;
 
         len += ret = strftime(outptr, size, "%Y-%m-%dT%H:%M:%S", &tm_localtime);
-        if ( ret < 0 ) {
+        if ( ret == 0 ) {
                 log(LOG_ERR, "error converting localtime to string.\n");
                 return -1;
         }
 
-        ret = snprintf(outptr + len, size - len, ".%02u", idmef_time_get_usec(time) / 10000 % 60);
-	if ( ret < 0 || ret >= size - len )
+        len += ret = snprintf(outptr + len, size - len, ".%02u", idmef_time_get_usec(time) / 10000 % 60);
+	if ( ret < 0 || len >= size )
 		return -1;
-	len += ret;
 
 	if ( gmt_offset < 0 ) {
 		gmt_sign = '-';
@@ -367,10 +437,10 @@ int idmef_time_get_idmef_timestamp(const idmef_time_t *time, char *outptr, size_
 		gmt_sign = '+';
 	}
 
-	ret = snprintf(outptr + len, size - len, "%c%.2u:%.2u", 
-		       gmt_sign, gmt_offset / 3600, gmt_offset % 3600 / 60);
+	len += ret = snprintf(outptr + len, size - len, "%c%.2u:%.2u", 
+			      gmt_sign, gmt_offset / 3600, gmt_offset % 3600 / 60);
 
-	return (ret < 0 || ret >= size - len) ? -1 : 0;
+	return (ret < 0 || len >= size) ? -1 : len;
 }
 
 
@@ -393,27 +463,26 @@ int idmef_time_get_timestamp(const idmef_time_t *time, char *outptr, size_t size
         int ret, len = 0;
 
 	sec = idmef_time_get_sec(time);
-        
+
         if ( ! localtime_r( (const time_t *) &sec, &lt) ) {
                 log(LOG_ERR, "error converting timestamp to local time.\n");
                 return -1;
         }
-        
+
         len += ret = strftime(outptr, size, "%Y-%m-%d %H:%M:%S", &lt);
         if ( ret == 0 ) {
                 log(LOG_ERR, "error converting UTC time to string.\n");
-                return -2;
+                return -1;
         }
 
-        ret = snprintf(outptr + len, size - len, ".%03u", idmef_time_get_usec(time) / 1000);
-	if ( ret < 0 || ret >= size - len  )
+        len += ret = snprintf(outptr + len, size - len, ".%03u", idmef_time_get_usec(time) / 1000);
+	if ( ret < 0 || len >= size )
 		return -1;
-	len += ret;
-        
+
         len += ret = strftime(outptr + len, size - len, "%z", &lt);
         if ( ret == 0 ) {
                 log(LOG_ERR, "error converting UTC time to string.\n");
-                return -3;
+                return -1;
         }
 
         return len;
@@ -436,6 +505,24 @@ idmef_time_t *idmef_time_new_ntp_timestamp(const char *buf)
 	}
 
 	return time;	
+}
+
+
+
+idmef_time_t *idmef_time_new_db_timestamp(const char *buf)
+{
+	idmef_time_t *time;
+
+	time = idmef_time_new();
+	if ( ! time )
+		return NULL;
+
+	if ( idmef_time_set_db_timestamp(time, buf) < 0 ) {
+		free(time);
+		return NULL;
+	}
+
+	return time;
 }
 
 

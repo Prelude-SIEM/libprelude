@@ -107,7 +107,7 @@ class IDMEFTime(object):
         buf = "A" * 128
 
         size = _prelude.idmef_time_get_idmef_timestamp(self.res, buf, len(buf))
-        if len < 0:
+        if size < 0:
             raise Error()
 
         return buf[:size]

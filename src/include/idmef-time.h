@@ -35,27 +35,15 @@ typedef struct idmef_time idmef_time_t;
 
 idmef_time_t *idmef_time_new(void);
 idmef_time_t *idmef_time_new_gettimeofday(void);
-
-/*
- * Convert a string to a time. The input format is the one specified
- * by the IDMEF draft (v. 0.10, section 3.2.6), with the following
- * changes:
- *
- *  - Date and time can be separated with a white space, instead of 'T'
- *
- *  - With timezone specification, only the first two digits are analyzed
- *    (e.g. both +01:23 and +0123 are valid, but both evaluate to UTC+01). 
- *
- *  - Timezone specification may be skipped (will assume UTC). 
- */
-
-int idmef_time_set_string(idmef_time_t *time, const char *buf);
 idmef_time_t *idmef_time_new_string(const char *buf);
-
-int idmef_time_set_ntp_timestamp(idmef_time_t *time, const char *buf);
 idmef_time_t *idmef_time_new_ntp_timestamp(const char *buf);
+idmef_time_t *idmef_time_new_db_timestamp(const char *buf);
+
+void idmef_time_destroy_internal(idmef_time_t *time);
+void idmef_time_destroy(idmef_time_t *time);
 
 idmef_time_t *idmef_time_clone(const idmef_time_t *src);
+int idmef_time_copy(idmef_time_t *dst, idmef_time_t *src);
 
 void idmef_time_set_sec(idmef_time_t *time, uint32_t sec);
 void idmef_time_set_usec(idmef_time_t *time, uint32_t usec);
@@ -64,11 +52,9 @@ double idmef_time_get_time(const idmef_time_t *time);
 uint32_t idmef_time_get_sec(const idmef_time_t *time);
 uint32_t idmef_time_get_usec(const idmef_time_t *time);
 
-int idmef_time_copy(idmef_time_t *dst, idmef_time_t *src);
-
-void idmef_time_destroy_internal(idmef_time_t *time);
-void idmef_time_destroy(idmef_time_t *time);
-
+int idmef_time_set_string(idmef_time_t *time, const char *buf);
+int idmef_time_set_ntp_timestamp(idmef_time_t *time, const char *buf);
+int idmef_time_set_db_timestamp(idmef_time_t *time, const char *buf);
 
 int idmef_time_get_ntp_timestamp(const idmef_time_t *time, char *outptr, size_t size);
 int idmef_time_get_timestamp(const idmef_time_t *time, char *outptr, size_t size);

@@ -1,3 +1,25 @@
+2004-01-02  Nicolas Delon  <delon.nicolas@wanadoo.fr>
+
+	* bindings/python/prelude.py:
+	bug fix: bad variable name
+
+	* src/idmef-time.c:
+	(idmef_time_get_idmef_timestamp)
+	(idmef_time_get_ntp_timestamp)
+	(idmef_time_get_timestamp)
+	bug fix (bug was introduced the 2003-12-29):
+	0 was returned instead of the len of the buffer
+	(idmef_time_set_db_timestamp)
+	(idmef_time_new_db_timestamp)
+	new functions, set an idmef_time_t with a datetime db field
+	(idmef_time_set_ntp_timestamp)
+	convert time in UTC
+	(idmef_time_set_ntp_timestamp)
+	convert time in localtime
+
+	* src/include/idmef-time.h:
+	cleanup
+
 2004-01-01  Nicolas Delon  <delon.nicolas@wanadoo.fr>
 
 	* bindings/perl/Prelude.c:
@@ -31,7 +53,7 @@
 
 	* src/idmef-time.c:
 	(idmef_time_get_idmef_timestamp)
-	(idmef_time_get_idmef_timestamp)
+	(idmef_time_get_ntp_timestamp)
 	(idmef_time_get_timestamp)
 	bug fix: also check if the snprintf return value
 	is not bigger than the given size
