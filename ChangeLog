@@ -1,3 +1,11 @@
+2003-04-28  Yoann Vandoorselaere  <yoann@prelude-ids.org>
+
+	* src/timer.c (timer_lock): 
+	(timer_unlock): only lock the mutex if async_timer 
+	is set.
+
+	use timer_lock / timer_unlock everywhere.
+
 2003-03-23  Yoann Vandoorselaere  <yoann@prelude-ids.org>
 
 	* src/ssl-gencrypto.c (add_DN_object): 

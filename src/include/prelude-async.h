@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 2001, 2002, 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -23,6 +23,11 @@
 
 #ifndef _LIBPRELUDE_PRELUDE_ASYNC_H
 #define _LIBPRELUDE_PRELUDE_ASYNC_H
+
+
+#define PRELUDE_ASYNC_TIMER 0x01
+
+
 
 typedef void (*prelude_async_func_t)(void *object, void *data);
 
@@ -52,6 +57,10 @@ static inline void prelude_async_set_callback(prelude_async_object_t *obj, prelu
 }
 
 int prelude_async_init(void);
+
+int prelude_async_get_flags(void);
+
+void prelude_async_set_flags(int flags);
 
 void prelude_async_add(prelude_async_object_t *obj);
 

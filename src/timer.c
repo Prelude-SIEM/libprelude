@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 1999 - 2002 Yoann Vandoorselaere <yoann@prelude-ids.org>
+* Copyright (C) 1999 - 2003 Yoann Vandoorselaere <yoann@prelude-ids.org>
 * All Rights Reserved
 *
 * This file is part of the Prelude program.
@@ -38,9 +38,27 @@
 #endif
 
 
-static LIST_HEAD(timer_list);
 static int count = 0;
+static int async_timer = 0;
+static LIST_HEAD(timer_list);
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+
+
+inline static void timer_lock(void) 
+{
+        if ( async_timer )
+                pthread_mutex_lock(&mutex);
+}
+
+
+
+inline static void timer_unlock(void) 
+{
+        if ( async_timer )
+                pthread_mutex_unlock(&mutex);
+}
+
 
 
 
@@ -104,17 +122,17 @@ static void walk_and_wake_up_timer(time_t now)
         int ret, woke = 0;
         prelude_timer_t *timer;
         struct list_head *tmp, *next;
-        
-        pthread_mutex_lock(&mutex);
+
+        timer_lock();
         next = ( list_empty(&timer_list) ) ? NULL : timer_list.next;
-        pthread_mutex_unlock(&mutex);
+        timer_unlock();
                 
         while ( next ) {
                 tmp = next;
-                
-                pthread_mutex_lock(&mutex);
+
+                timer_lock();
                 next = ( tmp->next != &timer_list ) ? tmp->next : NULL;
-                pthread_mutex_unlock(&mutex);
+                timer_unlock();
                 
                 timer = list_entry(tmp, prelude_timer_t, list);
 
@@ -312,8 +330,8 @@ void timer_init(prelude_timer_t *timer)
         struct list_head *prev;
         
         set_expiration_time(timer);
-        
-        pthread_mutex_lock(&mutex);
+
+        timer_lock();
         count++;
         
         if ( ! list_empty(&timer_list) ) {
@@ -322,9 +340,8 @@ void timer_init(prelude_timer_t *timer)
                 prev = &timer_list;
 
         list_add(&timer->list, prev);
-        
-        pthread_mutex_unlock(&mutex);
 
+        timer_unlock();
 }
 
 
@@ -352,10 +369,12 @@ void timer_reset(prelude_timer_t *timer)
  */
 void timer_destroy(prelude_timer_t *timer) 
 {
-        pthread_mutex_lock(&mutex);
+        timer_lock();
+        
         count--;
         list_del(&timer->list);
-        pthread_mutex_unlock(&mutex);
+
+        timer_unlock();
 }
 
 
