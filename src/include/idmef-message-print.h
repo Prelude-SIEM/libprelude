@@ -27,6 +27,10 @@
 #ifndef _LIBPRELUDE_IDMEF_MESSAGE_PRINT_H
 #define _LIBPRELUDE_IDMEF_MESSAGE_PRINT_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 
 void idmef_additional_data_print(idmef_additional_data_t *ptr, prelude_io_t *fd);
 void idmef_reference_print(idmef_reference_t *ptr, prelude_io_t *fd);
@@ -58,5 +62,9 @@ void idmef_overflow_alert_print(idmef_overflow_alert_t *ptr, prelude_io_t *fd);
 void idmef_alert_print(idmef_alert_t *ptr, prelude_io_t *fd);
 void idmef_heartbeat_print(idmef_heartbeat_t *ptr, prelude_io_t *fd);
 void idmef_message_print(idmef_message_t *ptr, prelude_io_t *fd);
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif /* _LIBPRELUDE_IDMEF_MESSAGE_PRINT_H */
