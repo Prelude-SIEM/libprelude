@@ -418,7 +418,6 @@ docs/Makefile
 docs/api/Makefile
 
 bindings/Makefile
-bindings/libprelude.i
 bindings/perl/Makefile.PL
 bindings/python/setup.py
 
