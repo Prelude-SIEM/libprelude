@@ -1,5 +1,9 @@
 2002-05-15  Yoann Vandoorselaere  <yoann@mandrakesoft.com>
 
+	* src/client-ident.c (declare_ident_to_manager): 
+	On big endian system, copy sensor_ident to nident so that
+	we don't send an uninitialized value.
+
 	Fix last remaining prefix problem.
 	
 	* Makefile.am (install-data-local): 

@@ -75,7 +75,9 @@ static int declare_ident_to_manager(prelude_io_t *fd)
                 return -1;
 
         
-#ifndef WORDS_BIGENDIAN
+#ifdef WORDS_BIGENDIAN
+        nident = sensor_ident;
+#else
         /*
          * Put in network byte order
          */
