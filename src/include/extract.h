@@ -33,12 +33,16 @@
  * to this version in doing checksum test.
  */
 
-#define byte(buf, x) ((uint8_t *) (buf))[(x)]
+#ifdef WORDS_BIGENDIAN
+ #define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[(pos)]
+#else
+ #define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[sizeof(type) - 1 - (pos)]
+#endif
 
 
 static inline uint16_t align_uint16(const void *buf)
 {
-        return byte(buf, 0) | byte(buf, 1);
+        return byte(uint16_t, buf, 0) << 8 | byte(uint16_t, buf, 1);
 }
 
 
@@ -46,7 +50,8 @@ static inline uint16_t align_uint16(const void *buf)
 
 static inline uint32_t align_uint32(const void *buf) 
 {
-        return byte(buf, 0) | byte(buf, 1) | byte(buf, 2) | byte(buf, 3);
+        return  byte(uint32_t, buf, 0) << 24 | byte(uint32_t, buf, 1) << 16 |
+                byte(uint32_t, buf, 2) <<  8 | byte(uint32_t, buf, 3);
 }
 
 
@@ -54,8 +59,9 @@ static inline uint32_t align_uint32(const void *buf)
 
 static inline uint64_t align_uint64(const void *buf) 
 {
-        return  byte(buf, 0) | byte(buf, 1) | byte(buf, 2) | byte(buf, 3) |
-                byte(buf, 4) | byte(buf, 5) | byte(buf, 6) | byte(buf, 7);
+        return  byte(uint64_t, buf, 0) << 56 | byte(uint64_t, buf, 1) << 48 | byte(uint64_t, buf, 2) << 40 |
+                byte(uint64_t, buf, 3) << 32 | byte(uint64_t, buf, 4) << 24 | byte(uint64_t, buf, 5) << 16 |
+                byte(uint64_t, buf, 6) <<  8 | byte(uint64_t, buf, 7);
 }
 
 
@@ -103,7 +109,12 @@ static inline uint32_t extract_uint32(const void *buf)
 
 
 static inline uint64_t extract_uint64(const void *buf) 
-{
+{    
+#ifdef WORDS_BIGENDIAN
+        
+        return align_uint64(buf);
+
+#else
         uint64_t tmp, swap;
 
         tmp = align_uint64(buf);
@@ -112,6 +123,7 @@ static inline uint64_t extract_uint64(const void *buf)
         ((uint32_t *) &swap)[1] = ntohl(((uint32_t *) &tmp)[0]);
         
         return swap;
+#endif
 }
 
 
