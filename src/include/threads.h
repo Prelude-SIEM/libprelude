@@ -10,8 +10,6 @@
  */
 
 
-#define pthread_create gprof_pthread_create
-
 /* 
  * pthread_create wrapper for gprof compatibility
  *
@@ -106,5 +104,7 @@ static int gprof_pthread_create(pthread_t *thread, pthread_attr_t *attr,
 
         return ret;
 }
+
+#define pthread_create gprof_pthread_create
 
 #endif
