@@ -217,9 +217,13 @@ static int read_plaintext_authentication_result(prelude_client_t *client)
         uint8_t tag;
         uint32_t dlen;
         prelude_msg_t *msg = NULL;
+        prelude_msg_status_t status;
 
-        ret = prelude_msg_read(&msg, client->fd);
-        if ( ret <= 0 ) {
+        do {
+                status = prelude_msg_read(&msg, client->fd);
+        } while ( status == prelude_msg_unfinished );
+        
+        if ( status != prelude_msg_finished ) {
                 log(LOG_ERR, "error reading authentication result.\n");
                 return -1;
         }
@@ -367,8 +371,11 @@ static int get_manager_setup(prelude_io_t *fd, int *have_ssl, int *have_plaintex
         uint32_t dlen;
         prelude_msg_t *msg = NULL;
         prelude_msg_status_t status;
+
+        do {
+                status = prelude_msg_read(&msg, fd);
+        } while ( status == prelude_msg_unfinished );
         
-        status = prelude_msg_read(&msg, fd);
         if ( status != prelude_msg_finished ) {
                 log(LOG_ERR, "error reading Manager configuration message (status=%d).\n", status);
                 return -1;

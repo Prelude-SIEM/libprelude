@@ -158,7 +158,6 @@ static int get_manager_setup(prelude_io_t *fd, int *have_ssl, int *have_plaintex
 
         do {
                 status = prelude_msg_read(&msg, fd);
-                                
         } while ( status == prelude_msg_unfinished );
 
         if ( status != prelude_msg_finished ) {
