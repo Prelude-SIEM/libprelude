@@ -243,6 +243,7 @@ static int plugin_load_single(const char *filename, int argc, char **argv,
         if ( ! plugin ) {
                 log(LOG_ERR, "plugin returned an error.\n");
                 lt_dlclose(handle);
+                list_del(&pe->list);
                 free(pe);
                 return -1;
         }
@@ -450,7 +451,7 @@ plugin_generic_t *plugin_search_by_name(const char *name)
         list_for_each(tmp, &all_plugin) {
                 pe = list_entry(tmp, plugin_entry_t, list);
 
-                if ( strcasecmp(pe->plugin->name, name) == 0 )
+                if ( pe->plugin && strcasecmp(pe->plugin->name, name) == 0 )
                         return pe->plugin;
         }
 
