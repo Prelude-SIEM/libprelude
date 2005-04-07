@@ -99,7 +99,7 @@ void _prelude_option_set_private_data(prelude_option_t *opt, void *data);
 
 void *_prelude_option_get_private_data(prelude_option_t *opt);
 
-         void prelude_option_set_data(prelude_option_t *opt, void *data);
+void prelude_option_set_data(prelude_option_t *opt, void *data);
 
 void *prelude_option_get_data(prelude_option_t *opt);
 

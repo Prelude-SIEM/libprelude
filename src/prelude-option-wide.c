@@ -161,20 +161,6 @@ static int parse_request(prelude_client_t *client, int rtype, char *request, pre
 
 
 
-static int send_msg(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg) 
-{
-        int ret;
-        prelude_io_t *fd = prelude_msgbuf_get_data(msgbuf);
-
-        do {
-                ret = prelude_msg_write(msg, fd);
-        } while ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN );
-
-        return ret;
-}
-
-
-
 static void send_string(prelude_msgbuf_t *msgbuf, prelude_string_t *out, int type)
 {
         size_t len;
@@ -264,27 +250,6 @@ static int read_option_request(prelude_client_t *client, prelude_msgbuf_t *msgbu
         }
         
         return 0;
-}
-
-
-
-static int handle_option_request(prelude_client_t *client, prelude_io_t *fd, prelude_msg_t *msg)
-{
-        int ret = 0;
-        prelude_msgbuf_t *msgbuf;
-            
-        ret = prelude_msgbuf_new(&msgbuf);
-        if ( ret < 0 ) 
-                return ret;
-        
-        prelude_msgbuf_set_data(msgbuf, fd);
-        prelude_msgbuf_set_callback(msgbuf, send_msg);
-        prelude_msg_set_tag(prelude_msgbuf_get_msg(msgbuf), PRELUDE_MSG_OPTION_REPLY);
-        
-        ret = read_option_request(client, msgbuf, msg);
-        prelude_msgbuf_destroy(msgbuf);
-        
-        return ret;
 }
 
 
@@ -392,8 +357,7 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
 
 
 
-
-int prelude_option_process_request(prelude_client_t *client, prelude_io_t *fd, prelude_msg_t *msg)
+int prelude_option_process_request(prelude_client_t *client, prelude_msg_t *msg, prelude_msgbuf_t *out)
 {
         uint8_t tag;
         
@@ -401,8 +365,10 @@ int prelude_option_process_request(prelude_client_t *client, prelude_io_t *fd, p
         
         if ( tag != PRELUDE_MSG_OPTION_REQUEST )
                 return -1;
-        
-        return handle_option_request(client, fd, msg);
+
+        prelude_msg_set_tag(prelude_msgbuf_get_msg(out), PRELUDE_MSG_OPTION_REPLY);
+
+        return read_option_request(client, out, msg);
 }
 
 

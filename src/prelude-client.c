@@ -684,13 +684,20 @@ static int get_manager_addr(prelude_option_t *opt, prelude_string_t *out, void *
 
 
 
+static int send_reply(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
+{
+        prelude_connection_t *conn = prelude_msgbuf_get_data(msgbuf);
+        return prelude_connection_send(conn, msg);
+}
+
+
 
 static int connection_pool_event_cb(prelude_connection_pool_t *pool,
                                     prelude_connection_pool_event_t event,
                                     prelude_connection_t *conn)
 {
         int ret;
-        prelude_io_t *fd;
+        prelude_msgbuf_t *msgbuf;
         prelude_client_t *client;
         prelude_msg_t *msg = NULL;
         
@@ -704,13 +711,33 @@ static int connection_pool_event_cb(prelude_connection_pool_t *pool,
         if ( ret < 0 )
                 return ret;
         
-        if ( prelude_msg_get_tag(msg) != PRELUDE_MSG_OPTION_REQUEST )
+        if ( prelude_msg_get_tag(msg) != PRELUDE_MSG_OPTION_REQUEST ) {
+                prelude_msg_destroy(msg);
                 return ret;
-
-        fd = prelude_connection_get_fd(conn);
+        }
+        
+        ret = prelude_msgbuf_new(&msgbuf);
+        if ( ret < 0 ) {
+                prelude_msg_destroy(msg);
+                return ret;
+        }
+        
         client = prelude_connection_pool_get_data(pool);
         
-        return prelude_option_process_request(client, fd, msg);
+        prelude_msgbuf_set_data(msgbuf, conn);
+        prelude_msgbuf_set_callback(msgbuf, send_reply);
+        
+        pthread_mutex_lock(&client->msgbuf_lock);
+        
+        ret = prelude_option_process_request(client, msg, msgbuf);        
+        prelude_msgbuf_mark_end(client->msgbuf);
+        
+        pthread_mutex_unlock(&client->msgbuf_lock);
+
+        prelude_msgbuf_destroy(msgbuf);
+        prelude_msg_destroy(msg);
+        
+        return ret;
 }
 
 
@@ -1005,7 +1032,7 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
         prelude_timer_init_list(&new->heartbeat_timer);
 
         new->flags = PRELUDE_CLIENT_FLAGS_HEARTBEAT|PRELUDE_CLIENT_FLAGS_CONNECT;
-        new->permission = PRELUDE_CONNECTION_PERMISSION_IDMEF_WRITE|PRELUDE_CONNECTION_PERMISSION_ADMIN_READ;
+        new->permission = PRELUDE_CONNECTION_PERMISSION_IDMEF_WRITE;
         
         ret = idmef_analyzer_new(&new->analyzer);
         if ( ret < 0 ) {
