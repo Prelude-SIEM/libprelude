@@ -618,12 +618,16 @@ static int new_section_line(config_t *cfg, const char *section,
         int ret, el;
         char *eout, *vout;
         
-        ret = search_section(cfg, section, *index);
+        ret = search_section(cfg, section, *index);        
         if ( ret < 0 ) {
                 char buf[1024];
 
                 snprintf(buf, sizeof(buf), " \n[%s]", section);
-                op_append_line(cfg, strdup(buf));
+
+                if ( *index )
+                        op_insert_line(cfg, strdup(buf), *index + 1);
+                else
+                        op_append_line(cfg, strdup(buf));
 
                 if ( ! entry ) {
                         *index = cfg->elements - 2;
@@ -669,15 +673,14 @@ static int new_section_line(config_t *cfg, const char *section,
  *
  * Returns: 0 on success, -1 otherwise.
  */
-int config_set(config_t *cfg, const char *section, const char *entry, const char *val) 
+int config_set(config_t *cfg, const char *section, const char *entry, const char *val, unsigned int *index) 
 {
         int ret;
-        unsigned int index = 0;
         
         if ( section )
-                ret = new_section_line(cfg, section, entry, val, &index);
+                ret = new_section_line(cfg, section, entry, val, index);
         else
-                ret = new_entry_line(cfg, entry, val, &index);
+                ret = new_entry_line(cfg, entry, val, index);
         
         if ( ret == 0 ) 
                 cfg->need_sync = TRUE;

@@ -42,8 +42,8 @@
 
 
 
-static int config_save_value(config_t *cfg, int rtype, prelude_option_t *last,
-                             char **prev, const char *option, const char *value)
+static int config_save_value(config_t *cfg, int rtype, prelude_option_t *last, int is_last_cmd,
+                             char **prev, const char *option, const char *value, unsigned int *line)
 {
         int ret;
         char buf[1024];
@@ -66,15 +66,17 @@ static int config_save_value(config_t *cfg, int rtype, prelude_option_t *last,
                         return prelude_error_from_errno(errno);
                 
                 if ( rtype == PRELUDE_MSG_OPTION_SET )
-                        return config_set(cfg, buf, NULL, NULL);
-                else
+                        return config_set(cfg, buf, NULL, NULL, line);
+
+                else if ( is_last_cmd )
                         return config_del(cfg, buf, NULL);
                         
         }
         
         if ( rtype == PRELUDE_MSG_OPTION_SET ) 
-                ret = config_set(cfg, *prev, option, value);
-        else
+                ret = config_set(cfg, *prev, option, value, line);
+
+        else if ( is_last_cmd )
                 ret = config_del(cfg, *prev, option);
         
         return ret;
@@ -122,6 +124,7 @@ static int parse_request(prelude_client_t *client, int rtype, char *request, pre
         prelude_option_t *last = NULL;
         int ret = 0, last_cmd = 0, ent;
         char *str, *value, *prev = NULL, *ptr = NULL;
+        unsigned int line = 0;
         
         ret = config_open(&cfg, prelude_client_get_config_filename(client));
         if ( ret < 0 )
@@ -150,7 +153,7 @@ static int parse_request(prelude_client_t *client, int rtype, char *request, pre
                 if ( ret < 0 )
                         break;
                 
-                config_save_value(cfg, rtype, last, &prev, pname, (ent == 2) ? iname : ptr);
+                config_save_value(cfg, rtype, last, last_cmd, &prev, pname, (ent == 2) ? iname : ptr, &line);
         }
         
         config_close(cfg);

@@ -33,7 +33,7 @@ int config_get_section(config_t *cfg, const char *section, unsigned int *line);
 
 char *config_get(config_t *cfg, const char *section, const char *entry, unsigned int *line);
 
-int config_set(config_t *cfg, const char *section, const char *entry, const char *val);
+int config_set(config_t *cfg, const char *section, const char *entry, const char *val, unsigned int *line);
 
 int config_open(config_t **ret, const char *filename);
 
