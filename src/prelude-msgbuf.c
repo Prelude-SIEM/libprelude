@@ -51,13 +51,10 @@ static int do_send_msg(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
 {
         int ret;
 
-        ret = msgbuf->send_msg(msgbuf, msg);
-        if ( ret < 0 )
-                return ret;
-        
+        ret = msgbuf->send_msg(msgbuf, msg);        
         prelude_msg_recycle(msg);
 
-        return 0;
+        return ret;
 }
 
 
@@ -157,7 +154,6 @@ prelude_msg_t *prelude_msgbuf_get_msg(prelude_msgbuf_t *msgbuf)
 {
         return msgbuf->msg;
 }
-
 
 
 
