@@ -463,23 +463,20 @@ int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf)
         *len = prelude_extract_uint32(&msg->payload[msg->read_index]);
         msg->read_index += sizeof(uint32_t);
 
+        if ( ! *len )
+                return 0;
+        
         /*
-         * bound check again, against specified len + end of message.
+         * bound check again, against specified len.
          */
-        if ( (*len + 1) <= *len || (msg->read_index + *len + 1) <= msg->read_index )
+        if ( (msg->read_index + *len) <= msg->read_index )
                 return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
         
-        if ( (msg->read_index + *len + 1) > (msg->hdr.datalen + PRELUDE_MSG_HDR_SIZE) )
+        if ( (msg->read_index + *len) > (msg->hdr.datalen + PRELUDE_MSG_HDR_SIZE) )
                 return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
         
         *buf = &msg->payload[msg->read_index];
         msg->read_index += *len;
-
-        /*
-         * Verify and skip end of message.
-         */
-        if ( msg->payload[msg->read_index++] != 0xff )
-                return prelude_error(PRELUDE_ERROR_INVAL_MESSAGE);
         
         return 0;
 }
@@ -646,7 +643,6 @@ int prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *d
 {
         int ret;
         uint32_t l;
-        uint8_t end_of_tag = 0xff;
 
         l = htonl(len);
         
@@ -658,11 +654,7 @@ int prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *d
         if ( ret < 0 )
                 return ret;
         
-        ret = set_data(&msg, data, len);
-        if ( ret < 0 )
-                return ret;
-        
-        return set_data(&msg, &end_of_tag, sizeof(end_of_tag));
+        return set_data(&msg, data, len);
 }
 
 
@@ -691,12 +683,11 @@ int prelude_msg_new(prelude_msg_t **ret, size_t msgcount, size_t msglen, uint8_t
         len = msglen;
         
         /*
-         * 6 bytes of header by chunks :
+         * 5 bytes of header by chunks :
          * - 1 byte:  tag
          * - 4 bytes: len
-         * - 1 byte:  end of message
          */ 
-        len += msgcount * 6;
+        len += msgcount * 5;
         
         /*
          * For alert header.
