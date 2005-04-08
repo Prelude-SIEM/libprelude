@@ -64,6 +64,8 @@ char *prelude_log_get_prefix(void);
 
 void prelude_log_set_prefix(char *prefix);
 
+void prelude_log_set_log_callback(void log_cb(prelude_log_t, const char *str));
+         
 void prelude_log_v(prelude_log_t level, const char *file,
                    const char *function, int line, const char *fmt, va_list ap);
 

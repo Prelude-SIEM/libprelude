@@ -32,26 +32,35 @@
 #include "prelude-inttypes.h"
 
 
+static void do_log_print(prelude_log_t level, const char *str);
+
+
+
 static char *global_prefix = NULL;
 static int log_level = PRELUDE_LOG_INFO;
 static prelude_log_flags_t log_flags = 0;
-
-
-
-static char *strip_return(char *buf, size_t len)
-{
-        while ( buf[--len] == '\n' );
-        
-        buf[++len] = '\0';
-        
-        return buf;
-}
-
+static void (*global_log_cb)(prelude_log_t level, const char *str) = do_log_print;
 
 
 static inline FILE *get_out_fd(prelude_log_t level)
 {
         return (level < PRELUDE_LOG_INFO) ? stderr : stdout;
+}
+
+
+
+static void do_log_print(prelude_log_t level, const char *str)
+{
+        FILE *out = get_out_fd(level);
+        fprintf(out, "%s", str);
+}
+
+
+
+static void do_log_syslog(prelude_log_t level, const char *str)
+{
+        while (*str == '\n' ) str++;
+        syslog(level, "%s", str);
 }
 
 
@@ -63,22 +72,20 @@ static inline prelude_bool_t need_to_log(prelude_log_t level)
 
 
 
-static void syslog_log(prelude_log_t level, const char *file,
-                       const char *function, int line, const char *fmt, va_list ap) 
+static void do_log_v(prelude_log_t level, const char *file,
+                     const char *function, int line, const char *fmt, va_list ap)
 {
-        int len, ret;
-        char buf[512];
-
-        while (*fmt == '\n') fmt++;
+        char buf[1024];
+        ssize_t ret, len;
         
         if ( level >= PRELUDE_LOG_DEBUG || level == PRELUDE_LOG_ERR ) {
-                
-                len = vsnprintf(buf, sizeof(buf), fmt, ap);
+
+                len = snprintf(buf, sizeof(buf), "%s%s:%s:%d: ", (global_prefix) ?
+                               global_prefix : "", file, function, line);
                 if ( len < 0 || len >= sizeof(buf) )
                         return;
                 
-                syslog(level, "%s%s:%s:%d: %s", (global_prefix) ? global_prefix : "",
-                       file, function, line, strip_return(buf, len));
+                vsnprintf(buf + len, sizeof(buf) - len, fmt, ap);
         }
 
         else {
@@ -89,38 +96,11 @@ static void syslog_log(prelude_log_t level, const char *file,
                 ret = vsnprintf(buf + len, sizeof(buf) - len, fmt, ap);
                 if ( ret < 0 || (ret + len) >= sizeof(buf) )
                         return;
-                
-                syslog(level, "%s", strip_return(buf, ret + len));
         }
+
+        global_log_cb(level, buf);
 }
 
-
-
-
-static void standard_log(prelude_log_t level, const char *file,
-                         const char *function, int line, const char *fmt, va_list ap)
-{
-        FILE *out = get_out_fd(level);
-        
-        if ( global_prefix )
-                fprintf(out, "%s", global_prefix);                
-
-        if ( level >= PRELUDE_LOG_DEBUG || level == PRELUDE_LOG_ERR )
-                fprintf(out, "%s:%s:%d: ", file, function, line);
-        
-        vfprintf(out, fmt, ap);
-}
-
-
-
-static void do_log_v(prelude_log_t level, const char *file,
-                     const char *function, int line, const char *fmt, va_list ap)
-{
-        if ( log_flags & PRELUDE_LOG_FLAGS_SYSLOG )
-                syslog_log(level, file, function, line, fmt, ap);
-        else
-                standard_log(level, file, function, line, fmt, ap);
-}
 
 
 void prelude_log_v(prelude_log_t level, const char *file,
@@ -169,6 +149,11 @@ void prelude_log_set_flags(prelude_log_flags_t flags)
 {
         if ( flags & PRELUDE_LOG_FLAGS_QUIET )
                 log_level = PRELUDE_LOG_WARN;
+
+        if ( flags & PRELUDE_LOG_FLAGS_SYSLOG )
+                global_log_cb = do_log_syslog;
+        else
+                global_log_cb = do_log_print;
         
         log_flags = flags;
 }
@@ -214,3 +199,7 @@ char *prelude_log_get_prefix(void)
 }
 
 
+void prelude_log_set_log_callback(void log_cb(prelude_log_t, const char *str))
+{
+        global_log_cb = log_cb;
+}
