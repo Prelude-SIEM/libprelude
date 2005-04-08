@@ -392,7 +392,6 @@ static gnutls_x509_crt generate_ca_certificate(prelude_client_profile_t *cp, gnu
 
 
 
-
 static gnutls_x509_privkey generate_private_key(void)
 {
         int ret;
@@ -404,9 +403,12 @@ static gnutls_x509_privkey generate_private_key(void)
                 return NULL;
         }
 
-        fprintf(stderr, "    - Generating %d bits RSA private key... ", generated_key_size);
-        tcdrain(STDOUT_FILENO);
+        fprintf(stderr, "    - Generating RSA private key... This might take a very long time.\n");
+        fprintf(stderr, "      [Increasing system activity will speed-up the process.]\n\n");
         
+        fprintf(stderr, "    - Generating %d bits RSA private key... ", generated_key_size);
+        tcdrain(STDERR_FILENO);
+
         ret = gnutls_x509_privkey_generate(key, GNUTLS_PK_RSA, generated_key_size, 0);
         if ( ret < 0 ) {
                 fprintf(stderr, "error generating private RSA key: %s\n", gnutls_strerror(ret));
