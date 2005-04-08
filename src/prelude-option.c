@@ -45,6 +45,9 @@
 #include "common.h"
 
 
+#define SET_FROM_CLI  1
+#define SET_FROM_CFG  2
+
 #define DEFAULT_INSTANCE_NAME "default"
 
 
@@ -60,8 +63,7 @@ struct prelude_option {
         
         prelude_list_t optlist;
         prelude_option_t *parent;
-
-        prelude_bool_t already_set;
+        
         prelude_option_type_t type;
         prelude_option_priority_t priority;
         char shortopt;
@@ -82,7 +84,6 @@ struct prelude_option {
 
         void *data;
         void *private_data;
-        
         prelude_list_t value_list;
 
         void *default_context;
@@ -94,6 +95,7 @@ struct prelude_option {
 struct cb_list {
         prelude_list_t list;
         char *arg;
+        int set_from;
         prelude_list_t children;
         prelude_option_t *option;
 };
@@ -348,23 +350,33 @@ static int do_set(prelude_option_t *opt, const char *value, prelude_string_t *ou
 
 
 static int call_option_cb(void *context, struct cb_list **cbl, prelude_list_t *cblist,
-                          prelude_option_t *option, const char *arg, prelude_string_t *err)
+                          prelude_option_t *option, const char *arg, prelude_string_t *err, int set_from)
 {
         struct cb_list *new, *cb;
+        prelude_option_priority_t pri;
         prelude_list_t *tmp, *prev = NULL;
-
+        
         if ( option->priority == PRELUDE_OPTION_PRIORITY_IMMEDIATE ) {
                 prelude_log_debug(3, "[immediate] %s(%s)\n", option->longopt, arg);
                 return do_set(option, arg, err, &context);
         }
-
+                
         prelude_log_debug(3, "[queue=%p] %s(%s)\n", cblist,  option->longopt, arg);
         
         prelude_list_for_each(cblist, tmp) {
                 cb = prelude_list_entry(tmp, struct cb_list, list);
                 
-                if ( ! prev && option->priority < cb->option->priority )
+                pri = option->priority;
+                
+                if ( set_from == SET_FROM_CFG && option->priority == cb->option->priority && cb->set_from == SET_FROM_CLI ) {
                         prev = tmp;
+                        break;
+                }
+                
+                else if ( pri < cb->option->priority ) {
+                        prev = tmp;
+                        break;
+                }
         }
         
         *cbl = new = malloc(sizeof(*new));
@@ -372,9 +384,11 @@ static int call_option_cb(void *context, struct cb_list **cbl, prelude_list_t *c
                 return prelude_error_from_errno(errno);
 
         prelude_list_init(&new->children);
-                
-        new->arg = (arg) ? strdup(arg) : NULL;
+
+
         new->option = option;
+        new->set_from = set_from;
+        new->arg = (arg) ? strdup(arg) : NULL;
 
         if ( option->priority == PRELUDE_OPTION_PRIORITY_LAST ) {
                 prelude_list_add_tail(cblist, &new->list);
@@ -496,7 +510,7 @@ static int get_missing_options(void *context, config_t *cfg, const char *filenam
                                 if ( ret < 0 )
                                         return ret;
                                 
-                                ret = call_option_cb(context, &cbitem, cblist, opt, argptr, err);
+                                ret = call_option_cb(context, &cbitem, cblist, opt, argptr, err, SET_FROM_CFG);
                                 if ( ret < 0 ) 
                                         return ret;
                         }
@@ -513,7 +527,7 @@ static int get_missing_options(void *context, config_t *cfg, const char *filenam
                         if ( ret < 0 )
                                 return ret;
                         
-                        ret = call_option_cb(context, &cbitem, cblist, opt, argptr, err);
+                        ret = call_option_cb(context, &cbitem, cblist, opt, argptr, err, SET_FROM_CFG);
                         if ( ret < 0 ) 
                                 return ret;
                 }
@@ -564,11 +578,9 @@ static int parse_argument(void *context, prelude_list_t *cb_list, prelude_option
                 if ( argptr )
                         reorder_argv(argc, argv, *argv_index, argv_index);
                 
-                ret = call_option_cb(context, &cbitem, cb_list, opt, argptr, err);
+                ret = call_option_cb(context, &cbitem, cb_list, opt, argptr, err, SET_FROM_CLI);
                 if ( ret < 0 )
                         return ret;
-
-                opt->already_set = TRUE;
                 
                 /*
                  * If the option we just found have sub-option.
@@ -597,7 +609,7 @@ static int get_option_from_optlist(void *context, prelude_option_t *optlist,
         int argv_index = 1, ret = 0;
                   
         prelude_list_init(&cblist);
-
+        
         if ( argc ) {                
                 ret = parse_argument(context, &cblist, optlist, argc, argv, &argv_index, 0, *err);
                 if ( ret < 0 )
