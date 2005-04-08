@@ -4878,10 +4878,10 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 </para>
 
 @IDMEF_IMPACT_SEVERITY_ERROR: 
+@IDMEF_IMPACT_SEVERITY_INFO: 
 @IDMEF_IMPACT_SEVERITY_LOW: 
 @IDMEF_IMPACT_SEVERITY_MEDIUM: 
 @IDMEF_IMPACT_SEVERITY_HIGH: 
-@IDMEF_IMPACT_SEVERITY_INFO: 
 
 <!-- ##### FUNCTION idmef_impact_severity_to_numeric ##### -->
 <para>

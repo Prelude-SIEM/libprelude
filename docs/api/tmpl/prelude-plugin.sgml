@@ -50,98 +50,7 @@ prelude-plugin
 </para>
 
 
-<!-- ##### MACRO prelude_plugin_name ##### -->
-<para>
-
-</para>
-
-@p: 
-
-
-<!-- ##### MACRO prelude_plugin_name_len ##### -->
-<para>
-
-</para>
-
-@p: 
-
-
-<!-- ##### MACRO prelude_plugin_author ##### -->
-<para>
-
-</para>
-
-@p: 
-
-
-<!-- ##### MACRO prelude_plugin_author_len ##### -->
-<para>
-
-</para>
-
-@p: 
-
-
-<!-- ##### MACRO prelude_plugin_contact ##### -->
-<para>
-
-</para>
-
-@p: 
-
-
-<!-- ##### MACRO prelude_plugin_contact_len ##### -->
-<para>
-
-</para>
-
-@p: 
-
-
-<!-- ##### MACRO prelude_plugin_desc ##### -->
-<para>
-
-</para>
-
-@p: 
-
-
-<!-- ##### MACRO prelude_plugin_desc_len ##### -->
-<para>
-
-</para>
-
-@p: 
-
-
 <!-- ##### MACRO prelude_plugin_set_name ##### -->
-<para>
-
-</para>
-
-@p: 
-@str: 
-
-
-<!-- ##### MACRO prelude_plugin_set_author ##### -->
-<para>
-
-</para>
-
-@p: 
-@str: 
-
-
-<!-- ##### MACRO prelude_plugin_set_contact ##### -->
-<para>
-
-</para>
-
-@p: 
-@str: 
-
-
-<!-- ##### MACRO prelude_plugin_set_desc ##### -->
 <para>
 
 </para>
@@ -164,19 +73,12 @@ prelude-plugin
 
 </para>
 
-@plugin: 
+@pe: 
 @opt: 
 @commit: 
 @Returns: 
-
-
-<!-- ##### FUNCTION prelude_plugin_subscribe ##### -->
-<para>
-
-</para>
-
-@pi: 
-@Returns: 
+<!-- # Unused Parameters # -->
+@plugin: 
 
 
 <!-- ##### FUNCTION prelude_plugin_new_instance ##### -->
@@ -191,20 +93,12 @@ prelude-plugin
 @Returns: 
 
 
-<!-- ##### FUNCTION prelude_plugin_unsubscribe ##### -->
-<para>
-
-</para>
-
-@pi: 
-@Returns: 
-
-
 <!-- ##### FUNCTION prelude_plugin_search_by_name ##### -->
 <para>
 
 </para>
 
+@head: 
 @name: 
 @Returns: 
 
@@ -214,6 +108,7 @@ prelude-plugin
 
 </para>
 
+@head: 
 @pname: 
 @iname: 
 @Returns: 
@@ -278,31 +173,13 @@ prelude-plugin
 
 </para>
 
+@head: 
 @dirname: 
 @symbol: 
 @ptr: 
 @subscribe: 
 @unsubscribe: 
 @Returns: 
-
-
-<!-- ##### FUNCTION prelude_plugin_add ##### -->
-<para>
-
-</para>
-
-@pi: 
-@h: 
-@infos: 
-@Returns: 
-
-
-<!-- ##### FUNCTION prelude_plugin_del ##### -->
-<para>
-
-</para>
-
-@pi: 
 
 
 <!-- ##### FUNCTION prelude_plugin_instance_compute_time ##### -->
@@ -347,6 +224,7 @@ prelude-plugin
 
 </para>
 
+@head: 
 @iter: 
 @Returns: 
 
