@@ -31,12 +31,12 @@ endif
 perl/Prelude.c: $(BINDING_DEPENDS)
 if HAVE_SWIG
 	$(SWIG) -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -o $@ -perl5 -nopm \
-	`$(SWIG) -perl5 -help 2>&1 | grep noproxy > /dev/null && echo -noproxy` $<
+	`$(SWIG) -perl5 -help 2>&1 | grep noproxy > /dev/null && echo -noproxy` libprelude.i
 endif
 
 python/_prelude.c: $(BINDING_DEPENDS)
 if HAVE_SWIG
-	$(SWIG) -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -o $@ -python -noproxy -interface _prelude -module _prelude $<
+	$(SWIG) -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -o $@ -python -noproxy -interface _prelude -module _prelude libprelude.i
 endif
 
 
