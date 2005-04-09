@@ -57,7 +57,7 @@ validate_family (int family)
 /* Translate name of a service location and/or a service name to set of
    socket addresses. */
 int
-getaddrinfo (const char *restrict nodename,
+getaddrinfox (const char *restrict nodename,
 	     const char *restrict servname,
 	     const struct addrinfo *restrict hints,
 	     struct addrinfo **restrict res)
@@ -74,15 +74,15 @@ getaddrinfo (const char *restrict nodename,
   if (hints && !validate_family (hints->ai_family))
     return EAI_FAMILY;
 
-  if (hints && hints->ai_socktype)
-    /* FIXME: Support more socket types. */
-    return EAI_SOCKTYPE;
-
   if (hints &&
-      hints->ai_protocol != SOCK_STREAM && hints->ai_protocol != SOCK_DGRAM)
-    /* FIXME: Support other protocols. */
-    return EAI_SERVICE;		/* FIXME: Better return code? */
+      hints->ai_socktype != SOCK_STREAM && hints->ai_socktype != SOCK_DGRAM)
+    /* FIXME: Support other socktype. */
+    return EAI_SOCKTYPE; /* FIXME: Better return code? */
 
+  if (hints && hints->ai_protocol != IPPROTO_TCP && hints->ai_protocol != IPPROTO_UDP )
+    /* FIXME: Support more socket types. */
+          return EAI_SERVICE;
+  
   if (!nodename)
     /* FIXME: Support server bind mode. */
     return EAI_NONAME;
@@ -90,7 +90,7 @@ getaddrinfo (const char *restrict nodename,
   if (servname)
     {
       const char *proto =
-	(hints && hints->ai_protocol == SOCK_DGRAM) ? "udp" : "tcp";
+	(hints && hints->ai_socktype == SOCK_DGRAM) ? "udp" : "tcp";
 
       /* FIXME: Use getservbyname_r if available. */
       se = getservbyname (servname, proto);
