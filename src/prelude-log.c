@@ -199,7 +199,15 @@ char *prelude_log_get_prefix(void)
 }
 
 
-void prelude_log_set_log_callback(void log_cb(prelude_log_t, const char *str))
+
+/**
+ * prelude_log_set_callback:
+ * @log_cb: Callback function.
+ *
+ * @log_cb() will be called in place of the prelude function usally
+ * used for loging.
+ */
+void prelude_log_set_callback(void log_cb(prelude_log_t, const char *str))
 {
         global_log_cb = log_cb;
 }
