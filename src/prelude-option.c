@@ -80,7 +80,7 @@ struct prelude_option {
         
         const char *help;
         const char *input_validation_regex;
-        enum { string, integer, boolean } input_type;
+        prelude_option_input_type_t input_type;
 
         void *data;
         void *private_data;
@@ -724,8 +724,10 @@ int prelude_option_add(prelude_option_t *parent, prelude_option_t **retopt, prel
 
         prelude_list_init(&new->optlist);
         prelude_list_init(&new->context_list);
-                
+        
         new->priority = PRELUDE_OPTION_PRIORITY_NONE;
+        new->input_type = PRELUDE_OPTION_INPUT_TYPE_STRING;
+        
         new->type = type;
         new->has_arg = has_arg;
         new->longopt = longopt;
@@ -742,6 +744,14 @@ int prelude_option_add(prelude_option_t *parent, prelude_option_t **retopt, prel
 
 
 
+static int uint32_write(uint32_t data, prelude_msgbuf_t *msg, uint8_t tag) 
+{        
+        data = htonl(data);
+        return prelude_msgbuf_set(msg, tag, sizeof(data), &data);
+}
+
+
+
 static void send_option_msg(prelude_bool_t parent_need_context,
                             void *context, prelude_option_t *opt, const char *iname, prelude_msgbuf_t *msg)
 {
@@ -751,9 +761,11 @@ static void send_option_msg(prelude_bool_t parent_need_context,
 
         prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_START, 0, NULL);
         prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_NAME, strlen(name) + 1, name);
-        prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_HAS_ARG, sizeof(uint8_t), &opt->has_arg);
-        prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_TYPE, sizeof(uint8_t), &opt->type);
-        
+
+        uint32_write(opt->type, msg, PRELUDE_MSG_OPTION_TYPE);
+        uint32_write(opt->has_arg, msg, PRELUDE_MSG_OPTION_HAS_ARG);
+        uint32_write(opt->input_type, msg, PRELUDE_MSG_OPTION_INPUT_TYPE);
+                
         if ( opt->description )
                 prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_DESC, strlen(opt->description) + 1, opt->description);
 
@@ -1317,7 +1329,7 @@ int prelude_option_new(prelude_option_t *parent, prelude_option_t **retopt)
         if ( ! new ) 
                 return prelude_error_from_errno(errno);
 
-        new->parent = parent;
+        new->parent = parent;        
         prelude_list_init(&new->optlist);
         prelude_list_init(&new->context_list);
         prelude_linked_object_add_tail(&parent->optlist, (prelude_linked_object_t *) new);
@@ -1430,14 +1442,14 @@ const char *prelude_option_get_input_validation_regex(prelude_option_t *opt)
 
 
 
-void prelude_option_set_input_type(prelude_option_t *opt, uint8_t input_type) 
+void prelude_option_set_input_type(prelude_option_t *opt, prelude_option_input_type_t input_type) 
 {
         opt->input_type = input_type;
 }
 
 
 
-uint8_t prelude_option_get_input_type(prelude_option_t *opt)
+prelude_option_input_type_t prelude_option_get_input_type(prelude_option_t *opt)
 {
         return opt->input_type;
 }

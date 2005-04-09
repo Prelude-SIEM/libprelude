@@ -261,9 +261,9 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
 {
         int ret;
         void *buf;
-        uint32_t dlen;
+        uint8_t tag;
         const char *tmp;
-        uint8_t tag, tmpint;
+        uint32_t dlen, tmpint;
         prelude_option_t *newopt;
         
         if ( ! opt )
@@ -325,7 +325,7 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         break;
 
                 case PRELUDE_MSG_OPTION_HAS_ARG:
-                        ret = prelude_extract_uint8_safe(&tmpint, buf, dlen);
+                        ret = prelude_extract_uint32_safe(&tmpint, buf, dlen);
                         if ( ret < 0 )
                                 return ret;
 
@@ -333,7 +333,7 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         break;
 
                 case PRELUDE_MSG_OPTION_TYPE:
-                        ret = prelude_extract_uint8_safe(&tmpint, buf, dlen);
+                        ret = prelude_extract_uint32_safe(&tmpint, buf, dlen);
                         if ( ret < 0 )
                                 return ret;
 
@@ -341,10 +341,11 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
                         break;
                         
                 case PRELUDE_MSG_OPTION_INPUT_TYPE:
-                        ret = prelude_extract_uint8_safe(&tmpint, buf, dlen);
+                        ret = prelude_extract_uint32_safe(&tmpint, buf, dlen);
                         if ( ret < 0 )
                                 return ret;
-                        
+
+                        prelude_option_set_input_type(opt, tmpint);
                         break;
                         
                 default:

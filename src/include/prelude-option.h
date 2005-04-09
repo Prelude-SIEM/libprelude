@@ -41,6 +41,13 @@ typedef enum {
         PRELUDE_OPTION_TYPE_DESTROY = 0x20
 } prelude_option_type_t;
 
+         
+typedef enum {
+        PRELUDE_OPTION_INPUT_TYPE_STRING   = 1,
+        PRELUDE_OPTION_INPUT_TYPE_INTEGER  = 2,
+        PRELUDE_OPTION_INPUT_TYPE_BOOLEAN  = 3
+} prelude_option_input_type_t;
+         
 
 typedef struct prelude_option prelude_option_t;
 typedef struct prelude_option_context prelude_option_context_t;
@@ -144,9 +151,9 @@ void prelude_option_set_input_validation_regex(prelude_option_t *opt, const char
 
 const char *prelude_option_get_input_validation_regex(prelude_option_t *opt);
 
-void prelude_option_set_input_type(prelude_option_t *opt, uint8_t input_type);
+void prelude_option_set_input_type(prelude_option_t *opt, prelude_option_input_type_t input_type);
 
-uint8_t prelude_option_get_input_type(prelude_option_t *opt);
+prelude_option_input_type_t prelude_option_get_input_type(prelude_option_t *opt);
 
 prelude_list_t *prelude_option_get_optlist(prelude_option_t *opt);
 
