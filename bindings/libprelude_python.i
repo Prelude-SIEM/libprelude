@@ -213,7 +213,7 @@ PyObject *swig_python_data(idmef_data_t *data)
 	if ( *$3 ) {
 		switch ( ret ) {
 		case PRELUDE_OPTION_REPLY_TYPE_LIST:
-			value_obj = SWIG_NewPointerObj((void *) * $3, SWIGTYPE_p_prelude_option_t, 0);
+			value_obj = SWIG_NewPointerObj((void *) * $3, SWIG_TypeQuery("prelude_option_t *"), 0);
 			break;
 		default:
 			value_obj = PyString_FromString(* $3);
@@ -264,7 +264,7 @@ PyObject *swig_python_data(idmef_data_t *data)
 		Py_INCREF(Py_None);
 
 	} else {
-		$result = SWIG_NewPointerObj((void *) * $1, SWIGTYPE_p_idmef_value_t, 0);
+		$result = SWIG_NewPointerObj((void *) * $1, $*1_descriptor, 0);
 	}
 };
 
@@ -291,7 +291,7 @@ PyObject *swig_python_data(idmef_data_t *data)
 
 
 %typemap(in) prelude_msg_t **outmsg {
-	if ( SWIG_ConvertPtr($input, (void **) $1, SWIGTYPE_p_prelude_msg_t, 0) == -1 )
+	if ( SWIG_ConvertPtr($input, (void **) $1, $*1_descriptor, 0) == -1 )
 		return NULL;
 };
 

@@ -145,7 +145,7 @@ SV *swig_perl_data(idmef_data_t *data)
 	if ( *$3 ) {
 		switch ( ret ) {
 		case PRELUDE_OPTION_REPLY_TYPE_LIST:
-			XPUSHs(sv_2mortal(SWIG_NewPointerObj((void *) * $3, SWIGTYPE_p_prelude_option_t, 0)));
+			XPUSHs(sv_2mortal(SWIG_NewPointerObj((void *) * $3, SWIG_TypeQuery("prelude_option_t *"), 0)));
 			break;
 		default:
 			XPUSHs(sv_2mortal(newSVpv(*$3, strlen(*$3))));
@@ -194,7 +194,7 @@ SV *swig_perl_data(idmef_data_t *data)
 		$result = &PL_sv_undef;
 
 	} else {
-		$result = SWIG_NewPointerObj((void *) * $1, SWIGTYPE_p_idmef_value_t, 0);
+		$result = SWIG_NewPointerObj((void *) * $1, $*1_descriptor, 0);
 	}
 };
 
@@ -221,7 +221,7 @@ SV *swig_perl_data(idmef_data_t *data)
 
 
 %typemap(in) prelude_msg_t **outmsg {
-	if ( SWIG_ConvertPtr($input, (void **) $1, SWIGTYPE_p_prelude_msg_t, 0) == -1 )
+	if ( SWIG_ConvertPtr($input, (void **) $1, $*1_descriptor, 0) == -1 )
 		croak("invalid argument\n");
 };
 
