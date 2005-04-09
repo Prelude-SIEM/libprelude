@@ -45,7 +45,7 @@
 static int config_save_value(config_t *cfg, int rtype, prelude_option_t *last, int is_last_cmd,
                              char **prev, const char *option, const char *value, unsigned int *line)
 {
-        int ret;
+        int ret = 0;
         char buf[1024];
         
         if ( ! (prelude_option_get_type(last) & PRELUDE_OPTION_TYPE_CFG) )
