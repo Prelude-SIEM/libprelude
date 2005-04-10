@@ -375,8 +375,11 @@ void idmef_$struct->{short_typename}_print($struct->{typename} *ptr, prelude_io_
 	if ( ! ptr )
 		return;
 
-	indent += 8;
 ");
+
+    if ( $struct->{short_typename} ne "message" ) {
+	$self->output("        indent += 8;\n");
+    }
 
     foreach my $field ( @{ $struct->{field_list} } ) {
 
@@ -391,10 +394,11 @@ void idmef_$struct->{short_typename}_print($struct->{typename} *ptr, prelude_io_
 	}
     }
 
-    $self->output("
-	indent -= 8;
-\}
-");
+    if ( $struct->{short_typename} ne "message" ) {
+	$self->output("\n        indent -= 8;\n");
+    }
+    
+    $self->output("}\n");
 }
 
 sub	footer

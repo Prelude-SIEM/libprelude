@@ -188,7 +188,7 @@ void idmef_additional_data_print(idmef_additional_data_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		int i = idmef_additional_data_get_type(ptr);
@@ -231,7 +231,7 @@ void idmef_additional_data_print(idmef_additional_data_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -247,7 +247,7 @@ void idmef_reference_print(idmef_reference_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		int i = idmef_reference_get_origin(ptr);
@@ -304,7 +304,7 @@ void idmef_reference_print(idmef_reference_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -320,7 +320,7 @@ void idmef_classification_print(idmef_classification_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -366,7 +366,7 @@ void idmef_classification_print(idmef_classification_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -382,7 +382,7 @@ void idmef_user_id_print(idmef_user_id_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -453,7 +453,7 @@ void idmef_user_id_print(idmef_user_id_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -469,7 +469,7 @@ void idmef_user_print(idmef_user_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -514,7 +514,7 @@ void idmef_user_print(idmef_user_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -530,7 +530,7 @@ void idmef_address_print(idmef_address_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -615,7 +615,7 @@ void idmef_address_print(idmef_address_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -631,7 +631,7 @@ void idmef_process_print(idmef_process_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -723,7 +723,7 @@ void idmef_process_print(idmef_process_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -739,7 +739,7 @@ void idmef_web_service_print(idmef_web_service_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -800,7 +800,7 @@ void idmef_web_service_print(idmef_web_service_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -816,7 +816,7 @@ void idmef_snmp_service_print(idmef_snmp_service_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -902,7 +902,7 @@ void idmef_snmp_service_print(idmef_snmp_service_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -918,7 +918,7 @@ void idmef_service_print(idmef_service_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -1049,7 +1049,7 @@ void idmef_service_print(idmef_service_t *ptr, prelude_io_t *fd)
 		break;
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -1065,7 +1065,7 @@ void idmef_node_print(idmef_node_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -1138,7 +1138,7 @@ void idmef_node_print(idmef_node_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -1154,7 +1154,7 @@ void idmef_source_print(idmef_source_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -1245,7 +1245,7 @@ void idmef_source_print(idmef_source_t *ptr, prelude_io_t *fd)
 		}
 	}	
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -1261,7 +1261,7 @@ void idmef_file_access_print(idmef_file_access_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		idmef_user_id_t *field;
@@ -1292,7 +1292,7 @@ void idmef_file_access_print(idmef_file_access_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -1308,7 +1308,7 @@ void idmef_inode_print(idmef_inode_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		idmef_time_t *field;
@@ -1394,7 +1394,7 @@ void idmef_inode_print(idmef_inode_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -1410,7 +1410,7 @@ void idmef_checksum_print(idmef_checksum_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -1453,7 +1453,7 @@ void idmef_checksum_print(idmef_checksum_t *ptr, prelude_io_t *fd)
 		}
         }
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -1469,7 +1469,7 @@ void idmef_file_print(idmef_file_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -1671,7 +1671,7 @@ void idmef_file_print(idmef_file_t *ptr, prelude_io_t *fd)
 		}
         }
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -1687,7 +1687,7 @@ void idmef_linkage_print(idmef_linkage_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		int i = idmef_linkage_get_category(ptr);
@@ -1742,7 +1742,7 @@ void idmef_linkage_print(idmef_linkage_t *ptr, prelude_io_t *fd)
 		}
 	}	
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -1758,7 +1758,7 @@ void idmef_target_print(idmef_target_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -1865,7 +1865,7 @@ void idmef_target_print(idmef_target_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -1881,7 +1881,7 @@ void idmef_analyzer_print(idmef_analyzer_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -2019,7 +2019,7 @@ void idmef_analyzer_print(idmef_analyzer_t *ptr, prelude_io_t *fd)
 		}
 	}	
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -2035,7 +2035,7 @@ void idmef_alertident_print(idmef_alertident_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -2065,7 +2065,7 @@ void idmef_alertident_print(idmef_alertident_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -2081,7 +2081,7 @@ void idmef_impact_print(idmef_impact_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		int *i = idmef_impact_get_severity(ptr);
@@ -2140,7 +2140,7 @@ void idmef_impact_print(idmef_impact_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -2156,7 +2156,7 @@ void idmef_action_print(idmef_action_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		int i = idmef_action_get_category(ptr);
@@ -2185,7 +2185,7 @@ void idmef_action_print(idmef_action_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -2201,7 +2201,7 @@ void idmef_confidence_print(idmef_confidence_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		int i = idmef_confidence_get_rating(ptr);
@@ -2221,7 +2221,7 @@ void idmef_confidence_print(idmef_confidence_t *ptr, prelude_io_t *fd)
 	print_float(idmef_confidence_get_confidence(ptr), fd);
 	prelude_io_write(fd, "\n", sizeof("\n") - 1);
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -2237,7 +2237,7 @@ void idmef_assessment_print(idmef_assessment_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		idmef_impact_t *field;
@@ -2279,7 +2279,7 @@ void idmef_assessment_print(idmef_assessment_t *ptr, prelude_io_t *fd)
 		}
 	}	
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -2295,7 +2295,7 @@ void idmef_tool_alert_print(idmef_tool_alert_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -2341,7 +2341,7 @@ void idmef_tool_alert_print(idmef_tool_alert_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -2357,7 +2357,7 @@ void idmef_correlation_alert_print(idmef_correlation_alert_t *ptr, prelude_io_t 
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -2389,7 +2389,7 @@ void idmef_correlation_alert_print(idmef_correlation_alert_t *ptr, prelude_io_t 
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -2405,7 +2405,7 @@ void idmef_overflow_alert_print(idmef_overflow_alert_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -2449,7 +2449,7 @@ void idmef_overflow_alert_print(idmef_overflow_alert_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -2465,7 +2465,7 @@ void idmef_alert_print(idmef_alert_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -2634,7 +2634,7 @@ void idmef_alert_print(idmef_alert_t *ptr, prelude_io_t *fd)
 		break;
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -2650,7 +2650,7 @@ void idmef_heartbeat_print(idmef_heartbeat_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
+        indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -2740,7 +2740,7 @@ void idmef_heartbeat_print(idmef_heartbeat_t *ptr, prelude_io_t *fd)
 		}
 	}
 
-	indent -= 8;
+        indent -= 8;
 }
 
 /**
@@ -2756,7 +2756,6 @@ void idmef_message_print(idmef_message_t *ptr, prelude_io_t *fd)
 	if ( ! ptr )
 		return;
 
-	indent += 8;
 
 	{
 		prelude_string_t *field;
@@ -2788,6 +2787,4 @@ void idmef_message_print(idmef_message_t *ptr, prelude_io_t *fd)
 	default:
 		break;
 	}
-
-	indent -= 8;
 }
