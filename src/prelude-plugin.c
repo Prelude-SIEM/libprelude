@@ -370,6 +370,7 @@ static int plugin_load_single(prelude_list_t *head,
 {
         int ret;
         void *handle;
+        const char *pname;
         prelude_plugin_entry_t *pe;
         int (*plugin_version)(void);
         int (*plugin_init)(prelude_plugin_entry_t *pe, void *data);
@@ -380,16 +381,20 @@ static int plugin_load_single(prelude_list_t *head,
                 return -1;
         }
 
+        pname = strrchr(filename, '/');
+        pname = (pname) ? pname + 1 : filename;
+        
         plugin_version = lt_dlsym(handle, "prelude_plugin_version");
         if ( ! plugin_version ) {
-                prelude_log(PRELUDE_LOG_WARN, "%s.\n", lt_dlerror());
+                prelude_log(PRELUDE_LOG_WARN, "%s: %s.\n", pname, lt_dlerror());
                 lt_dlclose(handle);
                 return -1;
         }
 
-        if ( plugin_version() != PRELUDE_PLUGIN_API_VERSION ) {
-                prelude_log(PRELUDE_LOG_WARN, "plugin version %d does not match API version %d.\n",
-                            plugin_version(), PRELUDE_PLUGIN_API_VERSION);
+        ret = plugin_version();
+        if ( ret != PRELUDE_PLUGIN_API_VERSION ) {
+                prelude_log(PRELUDE_LOG_WARN, "%s: API version %d does not match plugin API version %d.\n",
+                            pname, ret, PRELUDE_PLUGIN_API_VERSION);
                 lt_dlclose(handle);
                 return -1;
         }
