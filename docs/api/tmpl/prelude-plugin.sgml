@@ -14,7 +14,33 @@ prelude-plugin
 
 </para>
 
+<!-- ##### MACRO PRELUDE_PLUGIN_API_VERSION ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### TYPEDEF prelude_plugin_entry_t ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### TYPEDEF prelude_plugin_instance_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO PRELUDE_PLUGIN_GENERIC ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### STRUCT prelude_plugin_generic_t ##### -->
 <para>
 
 </para>
@@ -37,17 +63,12 @@ prelude-plugin
 @name: 
 
 
-<!-- ##### MACRO PRELUDE_PLUGIN_GENERIC ##### -->
+<!-- ##### MACRO prelude_plugin_get_name ##### -->
 <para>
 
 </para>
 
-
-
-<!-- ##### STRUCT prelude_plugin_generic_t ##### -->
-<para>
-
-</para>
+@p: 
 
 
 <!-- ##### MACRO prelude_plugin_set_name ##### -->
@@ -68,6 +89,15 @@ prelude-plugin
 @func: 
 
 
+<!-- ##### FUNCTION prelude_plugin_entry_set_plugin ##### -->
+<para>
+
+</para>
+
+@pe: 
+@pl: 
+
+
 <!-- ##### FUNCTION prelude_plugin_set_activation_option ##### -->
 <para>
 
@@ -79,6 +109,24 @@ prelude-plugin
 @Returns: 
 <!-- # Unused Parameters # -->
 @plugin: 
+
+
+<!-- ##### FUNCTION prelude_plugin_instance_subscribe ##### -->
+<para>
+
+</para>
+
+@pi: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_plugin_instance_unsubscribe ##### -->
+<para>
+
+</para>
+
+@pi: 
+@Returns: 
 
 
 <!-- ##### FUNCTION prelude_plugin_new_instance ##### -->
@@ -132,7 +180,7 @@ prelude-plugin
 @Returns: 
 
 
-<!-- ##### FUNCTION prelude_plugin_instance_set_private_data ##### -->
+<!-- ##### FUNCTION prelude_plugin_instance_set_plugin_data ##### -->
 <para>
 
 </para>
@@ -141,7 +189,7 @@ prelude-plugin
 @data: 
 
 
-<!-- ##### FUNCTION prelude_plugin_instance_get_private_data ##### -->
+<!-- ##### FUNCTION prelude_plugin_instance_get_plugin_data ##### -->
 <para>
 
 </para>
@@ -180,6 +228,24 @@ prelude-plugin
 @subscribe: 
 @unsubscribe: 
 @Returns: 
+
+
+<!-- ##### FUNCTION prelude_plugin_instance_add ##### -->
+<para>
+
+</para>
+
+@pi: 
+@h: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_plugin_instance_del ##### -->
+<para>
+
+</para>
+
+@pi: 
 
 
 <!-- ##### FUNCTION prelude_plugin_instance_compute_time ##### -->

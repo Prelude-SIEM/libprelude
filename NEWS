@@ -1,4 +1,11 @@
-* 2005-04-05, libprelude-0.9.0-rc3:
+* 2005-04-09, libprelude-0.9.0-rc3:
+
+	- Change to the plugin infrastructure to check the API version
+	  a given plugin was compiled with.
+
+	- Make analyzer deletion work on all architecture.
+
+	- Fix bindings Makefile so that they can be used with BSD make.
 
 	- Stop using pcreposix for IDMEF criteria matching, always rely 
           on POSIX regex. The way pcreposix define it's symbol make it impossible 

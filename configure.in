@@ -12,7 +12,7 @@ libprelude_minor=9
 libprelude_micro=0
 
 dnl version and release information
-libprelude_version=$libprelude_major.$libprelude_minor.$libprelude_micro-rc2
+libprelude_version=$libprelude_major.$libprelude_minor.$libprelude_micro-rc3
 
 
 dnl library soname 

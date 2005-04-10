@@ -2929,10 +2929,10 @@ idmef_alertident_t *ptr, prelude_string_t **ret
 <NAME>idmef_impact_severity_t</NAME>
 typedef enum {
         IDMEF_IMPACT_SEVERITY_ERROR = -1,
-        IDMEF_IMPACT_SEVERITY_LOW = 1,
-        IDMEF_IMPACT_SEVERITY_MEDIUM = 2,
-        IDMEF_IMPACT_SEVERITY_HIGH = 3,
-        IDMEF_IMPACT_SEVERITY_INFO = 4,
+        IDMEF_IMPACT_SEVERITY_INFO = 1,
+        IDMEF_IMPACT_SEVERITY_LOW = 2,
+        IDMEF_IMPACT_SEVERITY_MEDIUM = 3,
+        IDMEF_IMPACT_SEVERITY_HIGH = 4,
 } idmef_impact_severity_t;
 </ENUM>
 <FUNCTION>
@@ -4339,6 +4339,11 @@ void
 char *prefix
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_log_set_callback</NAME>
+<RETURNS>void </RETURNS>
+void log_cb(prelude_log_t, const char *str)
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_log_v</NAME>
 <RETURNS>void </RETURNS>
 prelude_log_t level, const char *file,const char *function, int line, const char *fmt, va_list ap
@@ -4447,6 +4452,14 @@ typedef enum {
         PRELUDE_OPTION_TYPE_DESTROY = 0x20
 } prelude_option_type_t;
 </ENUM>
+<ENUM>
+<NAME>prelude_option_input_type_t</NAME>
+typedef enum {
+        PRELUDE_OPTION_INPUT_TYPE_STRING   = 1,
+        PRELUDE_OPTION_INPUT_TYPE_INTEGER  = 2,
+        PRELUDE_OPTION_INPUT_TYPE_BOOLEAN  = 3
+} prelude_option_input_type_t;
+</ENUM>
 <TYPEDEF>
 <NAME>prelude_option_t</NAME>
 typedef struct prelude_option prelude_option_t;
@@ -4535,12 +4548,12 @@ prelude_option_t *opt
 prelude_option_t *opt
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_option_set_private_data</NAME>
+<NAME>prelude_option_set_data</NAME>
 <RETURNS>void </RETURNS>
 prelude_option_t *opt, void *data
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_option_get_private_data</NAME>
+<NAME>prelude_option_get_data</NAME>
 <RETURNS>void *</RETURNS>
 prelude_option_t *opt
 </FUNCTION>
@@ -4637,11 +4650,11 @@ prelude_option_t *opt
 <FUNCTION>
 <NAME>prelude_option_set_input_type</NAME>
 <RETURNS>void </RETURNS>
-prelude_option_t *opt, uint8_t input_type
+prelude_option_t *opt, prelude_option_input_type_t input_type
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_get_input_type</NAME>
-<RETURNS>uint8_t </RETURNS>
+<RETURNS>prelude_option_input_type_t </RETURNS>
 prelude_option_t *opt
 </FUNCTION>
 <FUNCTION>
@@ -5654,10 +5667,31 @@ prelude_client_profile_t *cp, uint64_t analyzerid
 <RETURNS>int </RETURNS>
 prelude_client_profile_t *cp, void **credentials
 </FUNCTION>
+<MACRO>
+<NAME>PRELUDE_PLUGIN_API_VERSION</NAME>
+#define PRELUDE_PLUGIN_API_VERSION 1
+</MACRO>
+<TYPEDEF>
+<NAME>prelude_plugin_entry_t</NAME>
+typedef struct prelude_plugin_entry prelude_plugin_entry_t;
+</TYPEDEF>
 <TYPEDEF>
 <NAME>prelude_plugin_instance_t</NAME>
 typedef struct prelude_plugin_instance prelude_plugin_instance_t;
 </TYPEDEF>
+<MACRO>
+<NAME>PRELUDE_PLUGIN_GENERIC</NAME>
+#define PRELUDE_PLUGIN_GENERIC               \
+        prelude_plugin_entry_t *_pe;         \
+        char *name;                          \
+        void (*destroy)(prelude_plugin_instance_t *pi, prelude_string_t *err)
+</MACRO>
+<STRUCT>
+<NAME>prelude_plugin_generic_t</NAME>
+typedef struct {
+        PRELUDE_PLUGIN_GENERIC;
+} prelude_plugin_generic_t;
+</STRUCT>
 <MACRO>
 <NAME>PRELUDE_PLUGIN_SET_PRELOADED_SYMBOLS</NAME>
 #define PRELUDE_PLUGIN_SET_PRELOADED_SYMBOLS()                     \
@@ -5669,7 +5703,7 @@ typedef struct prelude_plugin_instance prelude_plugin_instance_t;
 static int prefix ## _set_ ## name(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)  \
 {                                                                                                \
         char *dup;                                                                               \
-        type *ptr = prelude_plugin_instance_get_data(context);                                   \
+        type *ptr = prelude_plugin_instance_get_plugin_data(context);                            \
                                                                                                  \
         dup = strdup(optarg);                                                                    \
         if ( ! dup )                                                                             \
@@ -5686,7 +5720,7 @@ static int prefix ## _set_ ## name(prelude_option_t *opt, const char *optarg, pr
                                                                                                  \
 static int prefix ## _get_ ## name(prelude_option_t *opt, prelude_string_t *out, void *context)  \
 {                                                                                                \
-        type *ptr = prelude_plugin_instance_get_data(context);                                   \
+        type *ptr = prelude_plugin_instance_get_plugin_data(context);                            \
         if ( ptr->name )                                                                         \
                 prelude_string_cat(out, ptr->name);                                              \
                                                                                                  \
@@ -5694,105 +5728,51 @@ static int prefix ## _get_ ## name(prelude_option_t *opt, prelude_string_t *out,
 }
 </MACRO>
 <MACRO>
-<NAME>PRELUDE_PLUGIN_GENERIC</NAME>
-#define PRELUDE_PLUGIN_GENERIC               \
-        char *name; int namelen;             \
-        char *author; int authorlen;         \
-        char *contact; int contactlen;       \
-        char *desc; int desclen;             \
-        void (*destroy)(prelude_plugin_instance_t *pi, prelude_string_t *err)
-</MACRO>
-<STRUCT>
-<NAME>prelude_plugin_generic_t</NAME>
-typedef struct {
-        PRELUDE_PLUGIN_GENERIC;
-} prelude_plugin_generic_t;
-</STRUCT>
-<MACRO>
-<NAME>prelude_plugin_name</NAME>
-#define prelude_plugin_name(p) (p)->name
-</MACRO>
-<MACRO>
-<NAME>prelude_plugin_name_len</NAME>
-#define prelude_plugin_name_len(p) (p)->namelen
-</MACRO>
-<MACRO>
-<NAME>prelude_plugin_author</NAME>
-#define prelude_plugin_author(p) (p)->author
-</MACRO>
-<MACRO>
-<NAME>prelude_plugin_author_len</NAME>
-#define prelude_plugin_author_len(p) (p)->authorlen
-</MACRO>
-<MACRO>
-<NAME>prelude_plugin_contact</NAME>
-#define prelude_plugin_contact(p) (p)->contact
-</MACRO>
-<MACRO>
-<NAME>prelude_plugin_contact_len</NAME>
-#define prelude_plugin_contact_len(p) (p)->contactlen
-</MACRO>
-<MACRO>
-<NAME>prelude_plugin_desc</NAME>
-#define prelude_plugin_desc(p) (p)->desc
-</MACRO>
-<MACRO>
-<NAME>prelude_plugin_desc_len</NAME>
-#define prelude_plugin_desc_len(p) (p)->desclen
+<NAME>prelude_plugin_get_name</NAME>
+#define prelude_plugin_get_name(p) (p)->name
 </MACRO>
 <MACRO>
 <NAME>prelude_plugin_set_name</NAME>
-#define prelude_plugin_set_name(p, str) prelude_plugin_name(p) = (str); \
-                                prelude_plugin_name_len(p) = sizeof((str))
-</MACRO>
-<MACRO>
-<NAME>prelude_plugin_set_author</NAME>
-#define prelude_plugin_set_author(p, str) prelude_plugin_author(p) = (str); \
-                                  prelude_plugin_author_len(p) = sizeof((str))
-</MACRO>
-<MACRO>
-<NAME>prelude_plugin_set_contact</NAME>
-#define prelude_plugin_set_contact(p, str) prelude_plugin_contact(p) = (str); \
-                                   prelude_plugin_contact_len(p) = sizeof((str))
-</MACRO>
-<MACRO>
-<NAME>prelude_plugin_set_desc</NAME>
-#define prelude_plugin_set_desc(p, str) prelude_plugin_desc(p) = (str); \
-                                prelude_plugin_desc_len(p) = sizeof((str))
+#define prelude_plugin_set_name(p, str) (p)->name = (str)
 </MACRO>
 <MACRO>
 <NAME>prelude_plugin_set_destroy_func</NAME>
 #define prelude_plugin_set_destroy_func(p, func) (p)->destroy = func
 </MACRO>
 <FUNCTION>
-<NAME>prelude_plugin_set_activation_option</NAME>
-<RETURNS>int </RETURNS>
-prelude_plugin_generic_t *plugin,prelude_option_t *opt, int (*commit)(prelude_plugin_instance_t *pi,prelude_string_t *err)
+<NAME>prelude_plugin_entry_set_plugin</NAME>
+<RETURNS>void </RETURNS>
+prelude_plugin_entry_t *pe, prelude_plugin_generic_t *pl
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_plugin_subscribe</NAME>
+<NAME>prelude_plugin_set_activation_option</NAME>
+<RETURNS>int </RETURNS>
+prelude_plugin_entry_t *pe, prelude_option_t *opt,int (*commit)(prelude_plugin_instance_t *pi, prelude_string_t *err)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_plugin_instance_subscribe</NAME>
+<RETURNS>int </RETURNS>
+prelude_plugin_instance_t *pi
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_plugin_instance_unsubscribe</NAME>
 <RETURNS>int </RETURNS>
 prelude_plugin_instance_t *pi
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_plugin_new_instance</NAME>
 <RETURNS>int </RETURNS>
-prelude_plugin_instance_t **pi, prelude_plugin_generic_t *plugin, const char *name, void *data
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_plugin_unsubscribe</NAME>
-<RETURNS>int </RETURNS>
-prelude_plugin_instance_t *pi
+prelude_plugin_instance_t **pi,prelude_plugin_generic_t *plugin, const char *name, void *data
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_plugin_search_by_name</NAME>
 <RETURNS>prelude_plugin_generic_t *</RETURNS>
-const char *name
+prelude_list_t *head, const char *name
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_plugin_search_instance_by_name</NAME>
 <RETURNS>prelude_plugin_instance_t *</RETURNS>
-const char *pname, const char *iname
+prelude_list_t *head,const char *pname, const char *iname
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_plugin_instance_set_data</NAME>
@@ -5805,12 +5785,12 @@ prelude_plugin_instance_t *pi, void *data
 prelude_plugin_instance_t *pi
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_plugin_instance_set_private_data</NAME>
+<NAME>prelude_plugin_instance_set_plugin_data</NAME>
 <RETURNS>void </RETURNS>
 prelude_plugin_instance_t *pi, void *data
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_plugin_instance_get_private_data</NAME>
+<NAME>prelude_plugin_instance_get_plugin_data</NAME>
 <RETURNS>void *</RETURNS>
 prelude_plugin_instance_t *pi
 </FUNCTION>
@@ -5827,22 +5807,22 @@ prelude_plugin_instance_t *pi
 <FUNCTION>
 <NAME>prelude_plugin_load_from_dir</NAME>
 <RETURNS>int </RETURNS>
-const char *dirname, const char *symbol, void *ptr,int (*subscribe)(prelude_plugin_instance_t *p),void (*unsubscribe)(prelude_plugin_instance_t *pi)
+prelude_list_t *head,const char *dirname, const char *symbol, void *ptr,int (*subscribe)(prelude_plugin_instance_t *p),void (*unsubscribe)(prelude_plugin_instance_t *pi)
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_plugin_add</NAME>
+<NAME>prelude_plugin_instance_add</NAME>
 <RETURNS>int </RETURNS>
-prelude_plugin_instance_t *pi, prelude_list_t *h, const char *infos
+prelude_plugin_instance_t *pi, prelude_list_t *h
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_plugin_del</NAME>
+<NAME>prelude_plugin_instance_del</NAME>
 <RETURNS>void </RETURNS>
 prelude_plugin_instance_t *pi
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_plugin_instance_compute_time</NAME>
 <RETURNS>void </RETURNS>
-prelude_plugin_instance_t *pi, struct timeval *start, struct timeval *end
+prelude_plugin_instance_t *pi,struct timeval *start, struct timeval *end
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_plugin_instance_call_commit_func</NAME>
@@ -5862,7 +5842,7 @@ void *symlist
 <FUNCTION>
 <NAME>prelude_plugin_get_next</NAME>
 <RETURNS>prelude_plugin_generic_t *</RETURNS>
-prelude_list_t **iter
+prelude_list_t *head, prelude_list_t **iter
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_plugin_unload</NAME>
@@ -6563,7 +6543,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.0-rc2"
+#define LIBPRELUDE_VERSION "0.9.0-rc3"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
@@ -6609,7 +6589,7 @@ prelude_msgbuf_t *msgbuf,uint32_t request_id, uint64_t *target_id, size_t size
 <FUNCTION>
 <NAME>prelude_option_process_request</NAME>
 <RETURNS>int </RETURNS>
-prelude_client_t *client, prelude_io_t *fd, prelude_msg_t *msg
+prelude_client_t *client, prelude_msg_t *msg, prelude_msgbuf_t *reply
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_recv_reply</NAME>
