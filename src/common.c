@@ -268,15 +268,20 @@ int _prelude_get_file_name_and_path(const char *str, char **name, char **path)
 
 
 
-int prelude_get_gmt_offset(int32_t *gmtoff)
+int prelude_get_gmt_offset(long *gmtoff)
 {
-	time_t t = 0;
-	struct tm tm_local;
+	time_t utc, local;
+	struct tm tm;
 
-	if ( ! localtime_r(&t, &tm_local) )
+	time(&utc);
+
+	if ( ! localtime_r(&utc, &tm) )
 		return prelude_error_from_errno(errno);
 
-	*gmtoff = tm_local.tm_hour * 3600 + tm_local.tm_min * 60 + tm_local.tm_sec;
+	tm.tm_isdst = -1;
+	local = prelude_timegm(&tm);
+
+	*gmtoff = local - utc;
 
 	return 0;
 }

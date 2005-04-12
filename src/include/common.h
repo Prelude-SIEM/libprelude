@@ -34,7 +34,7 @@ uint64_t prelude_hton64(uint64_t val);
 
 time_t prelude_timegm(struct tm *tm);
 
-int prelude_get_gmt_offset(int32_t *gmt_offset);
+int prelude_get_gmt_offset(long *gmt_offset);
 
 int prelude_read_multiline(FILE *fd, int *line, char *buf, size_t size);
 
