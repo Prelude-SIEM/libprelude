@@ -361,7 +361,7 @@ int idmef_time_new_from_ntpstamp(idmef_time_t **time, const char *buf)
 int idmef_time_set_from_timeval(idmef_time_t *time, const struct timeval *tv)
 {
         int ret;
-        uint32_t gmtoff;
+        long gmtoff;
 
         ret = prelude_get_gmt_offset(&gmtoff);
         if ( ret < 0 )
@@ -369,7 +369,7 @@ int idmef_time_set_from_timeval(idmef_time_t *time, const struct timeval *tv)
 
         time->sec = tv->tv_sec;
         time->usec = tv->tv_usec;
-        time->gmt_offset = gmtoff;
+        time->gmt_offset = (int32_t) gmtoff;
 
         return 0;
 }
@@ -516,11 +516,11 @@ int idmef_time_clone(const idmef_time_t *src, idmef_time_t **dst)
  */
 void idmef_time_set_from_time(idmef_time_t *time, const time_t *t)
 {
-	uint32_t gmtoff;
+	long gmtoff;
 
 	prelude_get_gmt_offset(&gmtoff);
 	
-	time->gmt_offset = gmtoff;
+	time->gmt_offset = (int32_t) gmtoff;
 	time->sec = *t;
 }
 
