@@ -1230,7 +1230,7 @@ int prelude_option_invoke_commit(prelude_option_t *opt, const char *ctname, prel
 	}
 	
         ret = opt->commit(opt, value, context);
-	if ( ret < 0 )
+	if ( ret < 0 && prelude_string_is_empty(value) )
 		prelude_string_sprintf(value, "commit failed for %s", opt->longopt);
 	
 	return ret;
@@ -1263,7 +1263,7 @@ int prelude_option_invoke_destroy(prelude_option_t *opt, const char *ctname, pre
 	}
         
         ret = opt->destroy(opt, value, context);
-	if ( ret < 0 ) {
+	if ( ret < 0 && prelude_string_is_empty(value) ) {
 		prelude_string_sprintf(value, "destruction for %s[%s] failed", opt->longopt, ctname);
 		return -1;
 	}
