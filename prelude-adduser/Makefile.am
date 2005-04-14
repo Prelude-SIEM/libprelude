@@ -3,7 +3,7 @@ AM_CPPFLAGS = 	-I$(top_builddir)/src/include -I$(top_srcdir)/src/include -I$(top
 		@LIBGNUTLS_EXTRA_CFLAGS@ -DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\"
 
 bin_PROGRAMS = prelude-adduser
-prelude_adduser_LDADD = @libprelude_libs@ @LIBGNUTLS_EXTRA_LIBS@ $(top_builddir)/src/libprelude.la
+prelude_adduser_LDADD = $(top_builddir)/src/libprelude.la @prelude_adduser_libs@
 
 prelude_adduser_SOURCES = 		\
 	prelude-adduser.c		\

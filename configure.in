@@ -91,6 +91,7 @@ AC_SUBST(LDFLAGS)
 
 AC_SUBST(libprelude_libs)
 AC_SUBST(libprelude_cflags)
+AC_SUBST(prelude_adduser_libs)
 
 
 dnl **************************************************
@@ -159,68 +160,12 @@ dnl **************************************************
 dnl * Check for networking function                  *
 dnl **************************************************
 
-AC_CHECK_LIB(c, inet_ntoa, libc_inet_ntoa=yes)
-if test x$libc_inet_ntoa != xyes; then
-	AC_CHECK_LIB(nsl, inet_ntoa, libprelude_libs="$libprelude_libs -lnsl")
-fi
-
-AC_CHECK_LIB(c, socket, libc_socket=yes)
-if test x$libc_socket != xyes; then
-	AC_CHECK_LIB(socket, socket, libprelude_libs="$libprelude_libs -lsocket")
-fi
-
-AC_CHECK_LIB(c, inet_aton, libc_inet_aton=yes)
-if test x$libc_inet_aton != xyes; then
-	AC_CHECK_LIB(resolv, inet_aton, libprelude_libs="$libprelude_libs -lresolv")
-fi
-
-
-dnl **************************************************
-dnl * Check what type to use in place of socklen_t   *
-dnl **************************************************
-
-AC_PROTOTYPE_ACCEPT
-AC_DEFINE(socklen_t, ACCEPT_ARG3, Define socklen_t to accept third argument type)
-
-
-
-dnl **************************************************
-dnl * Check for GnuTLS.                              *
-dnl **************************************************
-
-AM_PATH_LIBGNUTLS(1.0.17, gnutls=yes, gnutls=no)
-if test x$gnutls != xyes; then
-	AC_MSG_ERROR(libgnutls is required in order to build libprelude.)
-fi
-
-libprelude_libs="$libprelude_libs $LIBGNUTLS_LIBS"
-
-old_CPPFLAGS=$CPPFLAGS
-CPPFLAGS="$LIBGNUTLS_CFLAGS"
-
-AC_CHECK_HEADER(gnutls/gnutls.h, ,
-       		AC_MSG_ERROR("libgnutls development headers are required to build libprelude"))
-CPPFLAGS=$old_CPPFLAGS
-
-
-dnl **************************************************
-dnl * Check for GnuTLS extra.                        *
-dnl **************************************************
-
-AM_PATH_LIBGNUTLS_EXTRA(1.0.17, gnutls_extra=yes, gnutls_extra=no)
-if test x$gnutls_extra != xyes; then
-	AC_MSG_ERROR(libgnutls-extra is required in order to build libprelude.)
-fi
-
-AC_SUBST(LIBGNUTLS_EXTRA_LIBS)
-AC_SUBST(LIBGNUTLS_EXTRA_CFLAGS)
-
-old_CPPFLAGS=$CPPFLAGS
-CPPFLAGS="$LIBGNUTLS_EXTRA_CFLAGS"
-
-AC_CHECK_HEADER(gnutls/extra.h, ,
-       		AC_MSG_ERROR("libgnutls-extra development headers are required to build libprelude"))
-CPPFLAGS=$old_CPPFLAGS
+LIBS_bkp=$LIBS
+LIBS=""
+AC_SEARCH_LIBS(inet_ntoa, socket nsl resolv)
+AC_SEARCH_LIBS(socket, socket nsl resolv)
+COMMON_LIBS="$LIBS"
+LIBS=$LIBS_bkp
 
 
 
@@ -245,11 +190,11 @@ if test x$libc_poll != xyes; then
 		CPPFLAGS="-I/sw/include"
 
 		AC_CHECK_LIB(poll, poll,
-       		                     libprelude_libs="$libprelude_libs -L/sw/lib -lpoll",
+       		             COMMON_LIBS="$COMMON_LIBS -L/sw/lib -lpoll",
 				     AC_MSG_ERROR("Could not find libpoll. Try installing libpoll via the Fink Package Manager http://fink.sourceforge.net/"))
 		AC_CHECK_HEADER(sys/poll.h,
-       		                     libprelude_cflags="$libprelude_cflags -I/sw/include",
-       		                     AC_MSG_ERROR("Could not find sys/poll.h."))
+       		                libprelude_cflags="$libprelude_cflags -I/sw/include",
+       		                AC_MSG_ERROR("Could not find sys/poll.h."))
 
 		dnl restore vars
 		CFLAGS=$CFLAGS_SAVE
@@ -258,9 +203,60 @@ if test x$libc_poll != xyes; then
 
        dnl poll() not found in libc, let's check in libpoll
        else
-               AC_CHECK_LIB(poll, poll, libprelude_libs="$libprelude_libs -lpoll")
+               AC_SEARCH_LIBS(poll, poll, COMMON_LIBS="$COMMON_LIBS -lpoll")
        fi
 fi
+
+
+
+dnl **************************************************
+dnl * Check what type to use in place of socklen_t   *
+dnl **************************************************
+
+AC_PROTOTYPE_ACCEPT
+AC_DEFINE(socklen_t, ACCEPT_ARG3, Define socklen_t to accept third argument type)
+
+
+
+dnl **************************************************
+dnl * Check for GnuTLS.                              *
+dnl **************************************************
+
+AM_PATH_LIBGNUTLS(1.0.17, gnutls=yes, gnutls=no)
+if test x$gnutls != xyes; then
+	AC_MSG_ERROR(libgnutls is required in order to build libprelude.)
+fi
+
+libprelude_libs="$LIBGNUTLS_LIBS $COMMON_LIBS"
+
+old_CPPFLAGS=$CPPFLAGS
+CPPFLAGS="$LIBGNUTLS_CFLAGS"
+
+AC_CHECK_HEADER(gnutls/gnutls.h, ,
+       		AC_MSG_ERROR("libgnutls development headers are required to build libprelude"))
+CPPFLAGS=$old_CPPFLAGS
+
+
+dnl **************************************************
+dnl * Check for GnuTLS extra.                        *
+dnl **************************************************
+
+AM_PATH_LIBGNUTLS_EXTRA(1.0.17, gnutls_extra=yes, gnutls_extra=no)
+if test x$gnutls_extra != xyes; then
+	AC_MSG_ERROR(libgnutls-extra is required in order to build libprelude.)
+fi
+
+prelude_adduser_libs="$LIBGNUTLS_EXTRA_LIBS $COMMON_LIBS"
+AC_SUBST(LIBGNUTLS_EXTRA_LIBS)
+AC_SUBST(LIBGNUTLS_EXTRA_CFLAGS)
+
+old_CPPFLAGS=$CPPFLAGS
+CPPFLAGS="$LIBGNUTLS_EXTRA_CFLAGS"
+
+AC_CHECK_HEADER(gnutls/extra.h, ,
+       		AC_MSG_ERROR("libgnutls-extra development headers are required to build libprelude"))
+CPPFLAGS=$old_CPPFLAGS
+
 
 
 dnl **************************************************
