@@ -31,8 +31,13 @@
 
 #include "config.h"
 #include <alloca.h>
+#include "allocsa.h"
 #include "getaddrinfo.h"
+#include "gettext.h"
+#include "inet_ntop.h"
 #include "minmax.h"
+#include "regex.h"
+#include "setenv.h"
 #include "snprintf.h"
 #include <stdbool.h>
 #include "strdup.h"
@@ -42,6 +47,5 @@
 #include "vasnprintf.h"
 #include "vsnprintf.h"
 #include "xsize.h"
-#include "inet_ntop.h"
 
 #endif /* _LIBPRELUDE_LIBMISSING_H */

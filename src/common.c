@@ -289,22 +289,21 @@ int prelude_get_gmt_offset(long *gmtoff)
 
 
 time_t prelude_timegm(struct tm *tm)
-{ 
+{
+        char *tz;
         time_t retval;
-        char *old, new[128];
 
-        old = getenv("TZ");
-        putenv("TZ=\"\"");
+        tz = getenv("TZ");
+        setenv("TZ", "", 1);
         tzset();
-        
+
         retval = mktime(tm);
 
-	if ( old ) {
-		snprintf(new, sizeof (new), "TZ=%s", old);
-		putenv(new);
-	} else {
-		putenv("TZ");
-	}
+        if ( tz )
+                setenv("TZ", tz, 1);
+        else
+                unsetenv("TZ");
+
         tzset();
 
         return retval;
