@@ -410,7 +410,10 @@ int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
         if ( (*msg)->payload && ret == 0 )
                 ret = read_message_content(msg, pio);
 
-        if ( ret < 0 && prelude_error_get_code(ret) != PRELUDE_ERROR_EAGAIN ) {
+        /*
+         * check for msg as well since this function can be called recursively.
+         */
+        if ( *msg && ret < 0 && prelude_error_get_code(ret) != PRELUDE_ERROR_EAGAIN ) {
                 prelude_msg_destroy(*msg);
                 /*
                  * reset message to NULL, because the caller might not take
