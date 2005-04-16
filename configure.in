@@ -214,7 +214,12 @@ dnl * Check what type to use in place of socklen_t   *
 dnl **************************************************
 
 AC_PROTOTYPE_ACCEPT
-AC_DEFINE(socklen_t, ACCEPT_ARG3, Define socklen_t to accept third argument type)
+AC_CHECK_TYPES([socklen_t], , 
+               AC_DEFINE(socklen_t, ACCEPT_ARG3, Define socklen_t to accept third argument type), 
+               [ 
+                 #include <stdio.h>
+                 #include <sys/types.h> 
+                 #include <sys/socket.h> ])
 
 
 
