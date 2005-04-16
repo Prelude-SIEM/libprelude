@@ -340,7 +340,7 @@ static prelude_io_t *connect_manager(const char *addr, unsigned int port, char *
         
         hints.ai_family = PF_UNSPEC;
         hints.ai_socktype = SOCK_STREAM;
-        hints.ai_protocol = IPPROTO_TCP;
+        hints.ai_protocol = 0;
         
         ret = getaddrinfo(addr, buf, &hints, &ai);
         if ( ret != 0 ) {

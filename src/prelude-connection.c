@@ -181,14 +181,9 @@ static int is_tcp_connection_still_established(prelude_io_t *pio)
  */
 static int generic_connect(struct sockaddr *sa, socklen_t salen)
 {
-        int ret, sock, proto;
-
-        if ( sa->sa_family == AF_UNIX ) 
-                proto = 0;
-        else
-                proto = IPPROTO_TCP;
+        int ret, sock;
         
-        sock = socket(sa->sa_family, SOCK_STREAM, proto);
+        sock = socket(sa->sa_family, SOCK_STREAM, 0);
 	if ( sock < 0 ) 
 		return prelude_error_from_errno(errno);
         
@@ -422,7 +417,7 @@ static int do_getaddrinfo(prelude_connection_t *cnx, struct addrinfo **ai, const
         
         hints.ai_family = PF_UNSPEC;
         hints.ai_socktype = SOCK_STREAM;
-        hints.ai_protocol = IPPROTO_TCP;
+        hints.ai_protocol = 0;
         
         ret = getaddrinfo(addr, buf, &hints, ai);
         if ( ret != 0 ) {
