@@ -31,7 +31,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/time.h>
-#include <ftw.h>
+#include <fts.h>
 
 #include <errno.h>
 #include <gnutls/gnutls.h>
@@ -69,7 +69,6 @@ struct cmdtbl {
 
 
 static unsigned int port = 5553;
-static PRELUDE_LIST(rm_dir_list);
 static int gid_set = 0, uid_set = 0;
 static prelude_client_profile_t *profile;
 static int server_prompt_passwd = 0, server_keepalive = 0;
@@ -570,60 +569,34 @@ static int add_cmd(int argc, char **argv)
 
 
 
-static int add_to_rm_dir_list(const char *filename)
-{
-        struct rm_dir_s *new;
-
-        new = malloc(sizeof(*new));
-        if ( ! new ) {
-                fprintf(stderr, "memory exhausted.\n");
-                return -1;
-        }
-
-        new->filename = strdup(filename);
-        prelude_list_add(&rm_dir_list, &new->list);
-
-        return 0;
-}
-
-
-
-static int flush_rm_dir_list(void)
+static int delete_dir(char *path)
 {
         int ret;
-        struct rm_dir_s *dir;
-        prelude_list_t *tmp, *bkp;
+        FTS *dir;
+        FTSENT *file;
+        char *arg[] = { path, NULL };
 
-        prelude_list_for_each_safe(&rm_dir_list, tmp, bkp) {
-                dir = prelude_list_entry(tmp, struct rm_dir_s, list);
+        dir = fts_open(arg, FTS_LOGICAL|FTS_NOSTAT, NULL);
+        if ( ! dir ) 
+                fprintf(stderr, "error opening %s: %s.\n", path, strerror(errno));
 
-                ret = rmdir(dir->filename);
-                if ( ret < 0 ) {
-                        fprintf(stderr, "could not delete directory %s: %s.\n", dir->filename, strerror(errno));
-                        return -1;
-                }
+        while ( (file = fts_read(dir)) ) {
+                ret = 0;
+                
+                if ( file->fts_info == FTS_F )
+                        ret = unlink(file->fts_path);
+                
+                else if ( file->fts_info == FTS_DP )
+                        ret = rmdir(file->fts_path);
 
-                prelude_list_del(&dir->list);
-                free(dir->filename);
-                free(dir);
+                else continue;
+                
+                fprintf(stderr, "     Removing '%s': %s.\n", file->fts_path, strerror(errno));
         }
 
+        fts_close(dir);
+        
         return 0;
-}
-
-
-static int del_cb(const char *filename, const struct stat *st, int flag)
-{
-        int ret;
-        
-        if ( flag != FTW_F )
-                return add_to_rm_dir_list(filename);
-        
-        ret = unlink(filename);
-        if ( ret < 0 )
-                fprintf(stderr, "unlink %s: %s.\n", filename, strerror(errno));
-
-        return ret;
 }
 
 
@@ -632,31 +605,19 @@ static int del_cmd(int argc, char **argv)
 {
         int ret;
         char buf[512];
-
+             
         ret = prelude_client_profile_new(&profile, argv[2]);
         if ( ret < 0 )
                 return -1;
-                
+        
         fprintf(stderr, "- Deleting analyzer %s\n", argv[2]);
         
         prelude_client_profile_get_profile_dirname(profile, buf, sizeof(buf));
-        fprintf(stderr, "  - Removing %s...\n", buf);
-
-        ret = ftw(buf, del_cb, 10);
-        if ( ret < 0 )
-                return -1;
-
-        flush_rm_dir_list();
-        
+        delete_dir(buf);
         
         prelude_client_profile_get_backup_dirname(profile, buf, sizeof(buf));
-        fprintf(stderr, "  - Removing %s...\n", buf);
+        delete_dir(buf);
         
-        ret = ftw(buf, del_cb, 10);
-        if ( ret < 0 )
-                return -1;
-
-        flush_rm_dir_list();
                                 
         return 0;
 }
