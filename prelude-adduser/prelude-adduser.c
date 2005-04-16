@@ -616,8 +616,7 @@ static int del_cmd(int argc, char **argv)
         delete_dir(buf);
         
         prelude_client_profile_get_backup_dirname(profile, buf, sizeof(buf));
-        delete_dir(buf);
-        
+        delete_dir(buf);        
                                 
         return 0;
 }
