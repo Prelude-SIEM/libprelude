@@ -185,6 +185,9 @@ PyObject *swig_python_data(idmef_data_t *data)
 	$result = PyInt_FromLong($1);
 };
 
+%typemap(out) int32_t {
+        $result = PyInt_FromLong($1);
+};
 
 %typemap(in) const time_t * (time_t tmp) {
 	if ( PyInt_Check($input) )
