@@ -28,18 +28,10 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <string.h>
-#include <unistd.h>
 #include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <sys/socket.h>
 #include <sys/time.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <assert.h>
 #include <errno.h>
-#include <stdarg.h>
 #include <time.h>
 
 #include "prelude-error.h"

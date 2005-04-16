@@ -27,7 +27,9 @@
 #include "idmef.h"
 #include "prelude-msg.h"
 #include "prelude-inttypes.h"
-#include <netinet/in.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+
 #include <time.h>
 
 uint64_t prelude_hton64(uint64_t val);
