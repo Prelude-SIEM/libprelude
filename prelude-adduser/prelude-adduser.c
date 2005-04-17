@@ -551,7 +551,8 @@ static int add_cmd(int argc, char **argv)
         prelude_string_t *err;
         prelude_option_t *opt;
         gnutls_x509_privkey key;
-
+        gnutls_x509_crt ca_crt, crt;
+        
         ret = _prelude_client_profile_new(&profile);
         ret = prelude_option_new(NULL, &opt);
         setup_permission_options(opt);
@@ -564,7 +565,23 @@ static int add_cmd(int argc, char **argv)
 
         prelude_option_destroy(opt);
 
-        return add_analyzer(argv[2], &key, NULL);
+        ret = add_analyzer(argv[2], &key, NULL);
+        if ( ret < 0 )
+                return -1;
+        
+        ret = tls_load_ca_certificate(profile, key, &ca_crt);
+        if ( ret < 0 )
+                return -1;
+
+        ret = tls_load_ca_signed_certificate(profile, key, ca_crt, &crt);
+        if ( ret < 0 )
+                return -1;
+        
+        gnutls_x509_privkey_deinit(key);
+        gnutls_x509_crt_deinit(crt);
+        gnutls_x509_crt_deinit(ca_crt);
+        
+        return 0;
 }
 
 
