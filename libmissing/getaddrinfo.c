@@ -57,7 +57,7 @@ validate_family (int family)
 /* Translate name of a service location and/or a service name to set of
    socket addresses. */
 int
-getaddrinfox (const char *restrict nodename,
+getaddrinfo (const char *restrict nodename,
 	     const char *restrict servname,
 	     const struct addrinfo *restrict hints,
 	     struct addrinfo **restrict res)
@@ -78,10 +78,6 @@ getaddrinfox (const char *restrict nodename,
       hints->ai_socktype != SOCK_STREAM && hints->ai_socktype != SOCK_DGRAM)
     /* FIXME: Support other socktype. */
     return EAI_SOCKTYPE; /* FIXME: Better return code? */
-
-  if (hints && hints->ai_protocol != IPPROTO_TCP && hints->ai_protocol != IPPROTO_UDP )
-    /* FIXME: Support more socket types. */
-          return EAI_SERVICE;
   
   if (!nodename)
     /* FIXME: Support server bind mode. */
@@ -171,6 +167,8 @@ getaddrinfox (const char *restrict nodename,
       return EAI_NODATA;
     }
 
+  tmp->ai_protocol = (hints) ? hints->ai_protocol : 0;
+  tmp->ai_socktype = (hints) ? hints->ai_socktype : 0;
   tmp->ai_addr->sa_family = he->h_addrtype;
 
   /* FIXME: If more than one address, create linked list of addrinfo's. */

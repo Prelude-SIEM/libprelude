@@ -186,7 +186,7 @@ is interrupted by a signal.
 @Returns: 
 
 
-<!-- ##### FUNCTION prelude_client_set_manager_list ##### -->
+<!-- ##### FUNCTION prelude_client_set_connection_pool ##### -->
 <para>
 
 </para>
@@ -195,7 +195,7 @@ is interrupted by a signal.
 @pool: 
 
 
-<!-- ##### FUNCTION prelude_client_get_manager_list ##### -->
+<!-- ##### FUNCTION prelude_client_get_connection_pool ##### -->
 <para>
 
 </para>

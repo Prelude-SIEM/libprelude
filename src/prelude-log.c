@@ -207,7 +207,7 @@ char *prelude_log_get_prefix(void)
  * @log_cb() will be called in place of the prelude function usally
  * used for loging.
  */
-void prelude_log_set_callback(void log_cb(prelude_log_t, const char *str))
+void prelude_log_set_callback(void log_cb(prelude_log_t level, const char *str))
 {
         global_log_cb = log_cb;
 }
