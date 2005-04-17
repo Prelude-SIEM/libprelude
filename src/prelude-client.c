@@ -103,7 +103,7 @@ struct prelude_client {
         char *config_filename;
         idmef_analyzer_t *analyzer;
         
-        prelude_connection_pool_t *manager_list;
+        prelude_connection_pool_t *cpool;
         prelude_timer_t heartbeat_timer;
 
         
@@ -676,10 +676,10 @@ static int get_manager_addr(prelude_option_t *opt, prelude_string_t *out, void *
 {
         prelude_client_t *ptr = context;
         
-        if ( ! ptr->manager_list )
+        if ( ! ptr->cpool )
                 return 0;
         
-        return prelude_string_cat(out, prelude_connection_pool_get_connection_string(ptr->manager_list));
+        return prelude_string_cat(out, prelude_connection_pool_get_connection_string(ptr->cpool));
 }
 
 
@@ -748,7 +748,7 @@ static int set_manager_addr(prelude_option_t *opt, const char *optarg, prelude_s
         prelude_connection_pool_t *pool;
         prelude_client_t *client = context;
         
-        if ( ! client->manager_list ) {
+        if ( ! client->cpool ) {
                 ret = prelude_connection_pool_new(&pool, client->profile, client->permission);
                 if ( ret < 0 )
                         return ret;
@@ -758,11 +758,10 @@ static int set_manager_addr(prelude_option_t *opt, const char *optarg, prelude_s
                                                   PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT);
                 prelude_connection_pool_set_event_handler(pool, PRELUDE_CONNECTION_POOL_EVENT_INPUT, connection_pool_event_cb);
                 
-                client->manager_list = pool;
+                client->cpool = pool;
         }
         
-        ret = prelude_connection_pool_set_connection_string(client->manager_list, optarg);
-        return (ret == 0) ? 0 : ret;
+        return prelude_connection_pool_set_connection_string(client->cpool, optarg);
 }
 
 
@@ -889,8 +888,8 @@ static void _prelude_client_destroy(prelude_client_t *client)
         if ( client->config_filename )
                 free(client->config_filename);
         
-        if ( client->manager_list )
-                prelude_connection_pool_destroy(client->manager_list);
+        if ( client->cpool )
+                prelude_connection_pool_destroy(client->cpool);
         
         if ( client->unique_ident )
                 prelude_ident_destroy(client->unique_ident);
@@ -1165,19 +1164,19 @@ int prelude_client_start(prelude_client_t *client)
         }
         
         if ( client->flags & PRELUDE_CLIENT_FLAGS_CONNECT ) {
-                if ( ! client->manager_list )
+                if ( ! client->cpool )
                         return prelude_error(PRELUDE_ERROR_CONNECTION_STRING);
                 
                 ret = prelude_client_profile_get_credentials(client->profile, &credentials);
                 if ( ret < 0 )
                         return ret;
                 
-                ret = prelude_connection_pool_init(client->manager_list);                
+                ret = prelude_connection_pool_init(client->cpool);                
                 if ( ret < 0 )
                         return ret;
         }
         
-        if ( (client->manager_list || client->heartbeat_cb) && client->flags & PRELUDE_CLIENT_FLAGS_HEARTBEAT ) {
+        if ( (client->cpool || client->heartbeat_cb) && client->flags & PRELUDE_CLIENT_FLAGS_HEARTBEAT ) {
                 client->status = CLIENT_STATUS_STARTING;
                 /*
                  * this will reset, and thus initialize the timer.
@@ -1223,9 +1222,9 @@ idmef_analyzer_t *prelude_client_get_analyzer(prelude_client_t *client)
 void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
 {
         if ( client->flags & PRELUDE_CLIENT_FLAGS_ASYNC_SEND )
-                prelude_connection_pool_broadcast_async(client->manager_list, msg);
+                prelude_connection_pool_broadcast_async(client->cpool, msg);
         else 
-                prelude_connection_pool_broadcast(client->manager_list, msg);
+                prelude_connection_pool_broadcast(client->cpool, msg);
 }
 
 
@@ -1259,7 +1258,7 @@ void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg)
 
 
 /**
- * prelude_client_get_manager_list:
+ * prelude_client_get_connection_pool:
  * @client: pointer to a #prelude_client_t object.
  *
  * Return a pointer to the #prelude_connection_pool_t object used by @client
@@ -1267,15 +1266,15 @@ void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg)
  *
  * Returns: a pointer to a #prelude_connection_pool_t object.
  */
-prelude_connection_pool_t *prelude_client_get_manager_list(prelude_client_t *client)
+prelude_connection_pool_t *prelude_client_get_connection_pool(prelude_client_t *client)
 {
-        return client->manager_list;
+        return client->cpool;
 }
 
 
 
 /**
- * prelude_client_set_manager_list:
+ * prelude_client_set_connection_pool:
  * @client: pointer to a #prelude_client_t object.
  * @pool: pointer to a #prelude_client_pool_t object.
  *
@@ -1283,9 +1282,9 @@ prelude_connection_pool_t *prelude_client_get_manager_list(prelude_client_t *cli
  * should send message too. This might be usefull in case you don't want
  * this to be automated by prelude_client_init().
  */
-void prelude_client_set_manager_list(prelude_client_t *client, prelude_connection_pool_t *pool)
+void prelude_client_set_connection_pool(prelude_client_t *client, prelude_connection_pool_t *pool)
 {        
-        client->manager_list = pool;
+        client->cpool = pool;
 }
 
 

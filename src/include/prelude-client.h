@@ -54,9 +54,9 @@ typedef struct prelude_client prelude_client_t;
 
 prelude_ident_t *prelude_client_get_unique_ident(prelude_client_t *client);
 
-void prelude_client_set_manager_list(prelude_client_t *client, prelude_connection_pool_t *pool);
+void prelude_client_set_connection_pool(prelude_client_t *client, prelude_connection_pool_t *pool);
 
-prelude_connection_pool_t *prelude_client_get_manager_list(prelude_client_t *client);
+prelude_connection_pool_t *prelude_client_get_connection_pool(prelude_client_t *client);
 
 int prelude_client_start(prelude_client_t *client);
 
