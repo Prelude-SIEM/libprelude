@@ -1,3 +1,26 @@
+* 2005-04-17, libprelude-0.9.0-rc4:
+
+	- Fix an issue with the prelude-adduser 'add' command not creating all
+	  files needed for a Manager. Resulting in later client authentication
+	  failure.
+
+	- Don't treat negative GMT offset as an error in Python bindings.
+
+	- Better socklen_t datatype check. Fix compilation on NetBSD system.
+
+	- Use fts in place of ftw for portability (Fix prelude-adduser on MacOSX).
+
+	- Fix possible double free on recursive message read error (fragmented message).
+
+	- Fix GMT offset issue on OpenBSD machine. Include compatibility code for machine
+	  that does not support setenv/unsetenv.
+
+	- Fix compilation problem on system where libprelude-0.8 is installed due to the
+	  library inclusion path.
+
+	- IDMEF text output beautification.
+	
+
 * 2005-04-09, libprelude-0.9.0-rc3:
 
 	- Change to the plugin infrastructure to check the API version

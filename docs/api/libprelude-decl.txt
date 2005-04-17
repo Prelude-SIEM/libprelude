@@ -4341,7 +4341,7 @@ char *prefix
 <FUNCTION>
 <NAME>prelude_log_set_callback</NAME>
 <RETURNS>void </RETURNS>
-void log_cb(prelude_log_t, const char *str)
+void log_cb(prelude_log_t level, const char *str)
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_log_v</NAME>
@@ -5469,12 +5469,12 @@ typedef struct prelude_client prelude_client_t;
 prelude_client_t *client
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_client_set_manager_list</NAME>
+<NAME>prelude_client_set_connection_pool</NAME>
 <RETURNS>void </RETURNS>
 prelude_client_t *client, prelude_connection_pool_t *pool
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_client_get_manager_list</NAME>
+<NAME>prelude_client_get_connection_pool</NAME>
 <RETURNS>prelude_connection_pool_t *</RETURNS>
 prelude_client_t *client
 </FUNCTION>
@@ -6543,7 +6543,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.0-rc3"
+#define LIBPRELUDE_VERSION "0.9.0-rc4"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
