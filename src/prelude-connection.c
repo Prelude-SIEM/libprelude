@@ -808,8 +808,8 @@ void *prelude_connection_get_data(prelude_connection_t *conn)
 int prelude_connection_permission_new_from_string(prelude_connection_permission_t *out, const char *permission)
 {
         int i, c;
+        const char *tptr;
         char buf[1024], *tmp;
-        const char *tptr, *wptr;
         const struct {
                 const char *name;
                 prelude_connection_permission_t val_read;
@@ -824,26 +824,37 @@ int prelude_connection_permission_new_from_string(prelude_connection_permission_
         strncpy(buf, permission, sizeof(buf));
 
         tmp = buf;
-        while ( (tptr = strsep(&tmp, ": ")) ) {
-                
+        while ( (tptr = strsep(&tmp, ":")) ) {
+
+                while ( *tptr == ' ' ) tptr++;
+                if ( ! *tptr )
+                        continue;
+                                
                 for ( i = 0; tbl[i].name; i++ ) {
                         if ( strcmp(tbl[i].name, tptr) != 0 )
                                 continue;
-                        
-                        wptr = strsep(&tmp, " ");
-                        if ( ! wptr )
-                                return prelude_error(PRELUDE_ERROR_UNKNOWN_PERMISSION_TYPE);
-                        
-                        while ( (c = *wptr++) ) {
-                                if ( c == 'r' )
-                                        *out |= tbl[i].val_read;
-                                
-                                else if ( c == 'w' )
-                                        *out |= tbl[i].val_write;
-                                
-                                else return prelude_error(PRELUDE_ERROR_UNKNOWN_PERMISSION_BIT);
-                        }
+
                         break;
+                }
+
+                if ( ! tbl[i].name )
+                        return prelude_error(PRELUDE_ERROR_UNKNOWN_PERMISSION_TYPE);
+                
+                while ( *tmp == ' ' )
+                        tmp++;
+                                        
+                while ( (c = *tmp++) ) {
+                        
+                        if ( c == 'r' )
+                                *out |= tbl[i].val_read;
+                        
+                        else if ( c == 'w' )
+                                *out |= tbl[i].val_write;
+                        
+                        else if ( c == ' ' )
+                                break;
+                        
+                        else return prelude_error(PRELUDE_ERROR_UNKNOWN_PERMISSION_BIT);
                 }
         }
 
