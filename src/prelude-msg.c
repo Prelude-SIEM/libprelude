@@ -193,15 +193,15 @@ inline static int read_message_data(unsigned char *dst, size_t *size, prelude_io
         /*
          * Read the whole header.
          */
-        ret = prelude_io_read(fd, dst, count);
-        if ( ret < 0 )
-                return ret;
+        do {
+                ret = prelude_io_read(fd, dst + *size, count - *size);
+                if ( ret < 0 )
+                        return ret;
+                
+                *size += ret;
 
-        *size = ret;
-        
-        if ( ret != count )
-                return prelude_error(PRELUDE_ERROR_EAGAIN);
-        
+        } while ( *size != count );
+                
         return 0;
 }
 
@@ -497,7 +497,7 @@ int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf)
  * containing the message header previously gathered using prelude_msg_read_header()
  * from the @src object, and transfer it to @dst. The header is also transfered.
  *
- * Returns: 0 on success, -1 if an error occured.
+ * Returns: 0 on success, or a negative value if an error occured.
  */
 int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src) 
 {
