@@ -656,8 +656,10 @@ static int register_cmd(int argc, char **argv)
         setup_permission_options(opt);
         
         ret = prelude_connection_permission_new_from_string(&permission_bits, argv[3]);
-        if ( ret < 0 )
+        if ( ret < 0 ) {
+                fprintf(stderr, "could not parse permission: %s.\n", prelude_strerror(ret));
                 return -1;
+        }
         
         argc -= 4;
         
