@@ -68,14 +68,15 @@ struct cmdtbl {
 };
 
 
+static char *addr = NULL;
 static unsigned int port = 5553;
-static int gid_set = 0, uid_set = 0;
 static prelude_client_profile_t *profile;
-static int server_prompt_passwd = 0, server_keepalive = 0;
+static prelude_bool_t gid_set = FALSE, uid_set = FALSE;
+static prelude_bool_t server_prompt_passwd = FALSE, server_keepalive = FALSE;
 
 
-int server_confirm = 1;
 int generated_key_size = 0;
+prelude_bool_t server_confirm = TRUE;
 int authority_certificate_lifetime = 0;
 int generated_certificate_lifetime = 0;
 static gnutls_srp_client_credentials cred;
@@ -138,6 +139,7 @@ static void print_registration_server_help(void)
         fprintf(stderr, "\t--prompt\t\t: Prompt for a password instead of auto generating it.\n");
         fprintf(stderr, "\t--keepalive\t\t: Register analyzer in an infinite loop.\n");
         fprintf(stderr, "\t--no-confirm\t\t: Do not ask for confirmation on sensor registration.\n");
+        fprintf(stderr, "\t--listen\t\t: Address to listen on for registration request (default is any:5553).\n");
 }
 
 
@@ -174,7 +176,7 @@ static void print_add_help(void)
 
 static int set_uid(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
-        uid_set = 1;
+        uid_set = TRUE;
         prelude_client_profile_set_uid(profile, atoi(optarg));
         return 0;
 }
@@ -183,7 +185,7 @@ static int set_uid(prelude_option_t *opt, const char *optarg, prelude_string_t *
 
 static int set_gid(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
-        gid_set = 1;
+        gid_set = TRUE;
         prelude_client_profile_set_gid(profile, atoi(optarg));
         return 0;
 }
@@ -192,22 +194,35 @@ static int set_gid(prelude_option_t *opt, const char *optarg, prelude_string_t *
 
 static int set_server_keepalive(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
-	server_keepalive = 1;
+	server_keepalive = TRUE;
 	return 0;
 }
 
 
 static int set_server_prompt_passwd(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
-	server_prompt_passwd = 1;
+	server_prompt_passwd = TRUE;
 	return 0;
 }
 
 
 static int set_server_no_confirm(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
-	server_confirm = 0;
+	server_confirm = FALSE;
 	return 0;
+}
+
+
+
+static int set_server_listen_address(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
+{
+        int ret;
+
+        ret = prelude_parse_address(optarg, &addr, &port);        
+        if ( ret < 0 )
+                fprintf(stderr, "could not parse address '%s'.\n", optarg);
+
+        return ret;
 }
 
 
@@ -357,7 +372,7 @@ static prelude_io_t *connect_manager(const char *addr, unsigned int port, char *
 
         ret = connect(sock, ai->ai_addr, ai->ai_addrlen);
         if ( ret < 0 ) {
-                fprintf(stderr, "couldn't connect to %s.\n", addr);
+                fprintf(stderr, "could not connect to %s port %s.\n", addr, buf);
                 close(sock);
                 return NULL;
         }
@@ -648,7 +663,7 @@ static int register_cmd(int argc, char **argv)
         prelude_option_t *opt;
         prelude_string_t *err;
         gnutls_x509_privkey key;
-        char *ptr, *addr = strdup(argv[4]);
+        char *addrstr = strdup(argv[4]);
         prelude_connection_permission_t permission_bits;
                                                                
         ret = _prelude_client_profile_new(&profile);
@@ -668,12 +683,18 @@ static int register_cmd(int argc, char **argv)
                 return -1;
         
         prelude_option_destroy(opt);
+
+        ret = prelude_parse_address(addrstr, &addr, &port);
+        if ( ret < 0 ) {
+                fprintf(stderr, "error parsing address '%s'.\n", addrstr);
+                return -1;
+        }
         
         ret = add_analyzer(argv[2], &key, NULL);
         if ( ret < 0 )
                 return -1;
-
-        fprintf(stderr, "\n- Registring analyzer %s to %s.\n\n", argv[2], argv[4]);
+        
+        fprintf(stderr, "\n- Registering analyzer %s to %s:%u.\n\n", argv[3], addr, port);
         
         fprintf(stderr,
                 "  You now need to start \"prelude-adduser\" on the server host where\n"
@@ -696,12 +717,6 @@ static int register_cmd(int argc, char **argv)
         ret = ask_one_shot_password(&pass);
         if ( ret < 0 )
                 return -1;
-
-        ptr = strrchr(addr, ':');
-        if ( ptr ) {
-                *ptr++ = '\0';
-                port = atoi(ptr);
-        }
         
 	fprintf(stderr, "  - connecting to registration server (%s:%u)...\n", addr, port);
         
@@ -743,6 +758,9 @@ static int registration_server_cmd(int argc, char **argv)
 
         prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 'n', "no-confirm", NULL,
                            PRELUDE_OPTION_ARGUMENT_NONE, set_server_no_confirm, NULL);
+
+        prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 'l', "listen", NULL,
+                           PRELUDE_OPTION_ARGUMENT_REQUIRED, set_server_listen_address, NULL);
         
         setup_permission_options(opt);
         
@@ -767,8 +785,9 @@ static int registration_server_cmd(int argc, char **argv)
                 return -1;
         
         fprintf(stderr, "\n- Starting registration server.\n");
-        ret = server_create(profile, server_keepalive, server_prompt_passwd, key, ca_crt, crt);
-
+        ret = server_create(profile, addr, port,
+                            server_keepalive, server_prompt_passwd, key, ca_crt, crt);
+        
         gnutls_x509_privkey_deinit(key);
         gnutls_x509_crt_deinit(crt);
         gnutls_x509_crt_deinit(ca_crt);

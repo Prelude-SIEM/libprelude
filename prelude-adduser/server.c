@@ -157,40 +157,58 @@ static int wait_connection(prelude_client_profile_t *cp, int sock, int keepalive
 
 
 
-static int setup_server(void)
+static int setup_server(const char *addr, unsigned int port)
 {
         int sock, ret, on = 1;
-        struct sockaddr_in sa_server;
+        char buf[sizeof("65535")];
+        struct addrinfo *ai, hints;
+
+        snprintf(buf, sizeof(buf), "%u", port);
+
+        memset(&hints, 0, sizeof(hints));
         
-	sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+        hints.ai_flags = AI_PASSIVE;
+        hints.ai_family = PF_UNSPEC;
+        hints.ai_socktype = SOCK_STREAM;
+        hints.ai_protocol = 0;
+
+        printf("addr=%s port=%s\n", addr, buf);
+        
+        ret = getaddrinfo(addr, buf, &hints, &ai);
+        if ( ret != 0 ) {
+                fprintf(stderr, "could not resolve %s: %s.\n", addr,
+                        (ret == EAI_SYSTEM) ? strerror(errno) : gai_strerror(ret));
+                return -1;
+        }
+
+        sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock < 0) {
 		perror("socket");
-		return -1;
+                freeaddrinfo(ai);
+                return -1;
 	}
-
-	memset(&sa_server, '\0', sizeof(sa_server));
-	sa_server.sin_family = AF_INET;
-	sa_server.sin_addr.s_addr = INADDR_ANY;
-	sa_server.sin_port = htons(5553);
-
+        
         ret = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(int));
         if ( ret < 0 ) {
                 perror("setsockopt");
+                freeaddrinfo(ai);
                 return -1;
         }
         
-	ret = bind(sock, (struct sockaddr *) &sa_server, sizeof(sa_server));
+	ret = bind(sock, ai->ai_addr, ai->ai_addrlen);
 	if ( ret < 0 ) {
 		perror("bind");
+                freeaddrinfo(ai);
 		return -1;
 	}
 
 	ret = listen(sock, 5);
 	if ( ret < 0 ) {
 		perror("listen");
+                freeaddrinfo(ai);
 		return -1;
 	}
-
+        
         return sock;
 }
 
@@ -315,7 +333,8 @@ static int srp_callback(gnutls_session session, const char *username, gnutls_dat
 
 
 
-int server_create(prelude_client_profile_t *cp, int keepalive, int prompt,
+int server_create(prelude_client_profile_t *cp, const char *addr, unsigned int port,
+                  prelude_bool_t keepalive, prelude_bool_t prompt,
                   gnutls_x509_privkey key, gnutls_x509_crt cacrt, gnutls_x509_crt crt) 
 {
         int sock, ret;
@@ -334,7 +353,7 @@ int server_create(prelude_client_profile_t *cp, int keepalive, int prompt,
         if ( ret < 0 )
                 return -1;
         
-        sock = setup_server();
+        sock = setup_server(addr, port);
         if ( sock < 0 )
                 return -1;
 
