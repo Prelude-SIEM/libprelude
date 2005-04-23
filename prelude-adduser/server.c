@@ -171,8 +171,6 @@ static int setup_server(const char *addr, unsigned int port)
         hints.ai_family = PF_UNSPEC;
         hints.ai_socktype = SOCK_STREAM;
         hints.ai_protocol = 0;
-
-        printf("addr=%s port=%s\n", addr, buf);
         
         ret = getaddrinfo(addr, buf, &hints, &ai);
         if ( ret != 0 ) {
