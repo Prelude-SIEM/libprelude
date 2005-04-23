@@ -212,7 +212,7 @@ int _prelude_get_file_name_and_path(const char *str, char **name, char **path)
 {
         int ret = 0;
 	char buf[512], *ptr, cwd[PATH_MAX];
-                
+        
         getcwd(cwd, sizeof(cwd));
         
         ptr = strrchr(str, '/');
@@ -223,14 +223,14 @@ int _prelude_get_file_name_and_path(const char *str, char **name, char **path)
                         return (*name) ? 0 : prelude_error_from_errno(errno);
                 }
         }
-
+                
         if ( *str != '/' ) {
                 while ( *str == '.' && *(str + 1) == '.' && (ptr = strrchr(cwd, '/')) ) {
                         str += 3;
                         *ptr = '\0';
                 }
                 
-                ret = snprintf(buf, sizeof(buf), "%s/%s", cwd, (*str == '.') ? str + 2 : str);
+                ret = snprintf(buf, sizeof(buf), "%s/%s", cwd, (*str == '.') ? str + 2 : str);                
                 if ( ret < 0 || ret >= sizeof(buf) )
                         return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
 
@@ -318,6 +318,47 @@ void *prelude_sockaddr_get_inaddr(struct sockaddr *sa)
         return ret;
 }
 
+
+
+int prelude_parse_address(const char *str, char **addr, unsigned int *port)
+{
+        char *input, *endptr = NULL;
+        char *ptr, *port_ptr;
+                
+        ptr = strchr(str, '[');
+        if ( ! ptr ) {
+                input = strdup(str);
+                port_ptr = input;
+        }
+
+        else {
+                input = strdup(ptr + 1);
+
+                ptr = strchr(input, ']');
+                if ( ! ptr ) {
+                        free(input);
+                        return -1;
+                }
+                
+                *ptr = 0;
+                port_ptr = ptr + 1;
+        }
+
+        *addr = input;
+        
+        ptr = strrchr(port_ptr, ':');
+        if ( ptr ) {
+                *port = strtoul(ptr + 1, &endptr, 10);
+                if ( endptr && *endptr != 0 ) {
+                        free(input);
+                        return -1;
+                }
+                
+                *ptr = 0;
+        }
+
+        return 0;
+}
 
 
 

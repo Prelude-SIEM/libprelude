@@ -32,6 +32,8 @@
 
 #include <time.h>
 
+int prelude_parse_address(const char *str, char **addr, unsigned int *port);
+
 uint64_t prelude_hton64(uint64_t val);
 
 time_t prelude_timegm(struct tm *tm);
