@@ -7114,7 +7114,8 @@ void idmef_file_access_set_user_id(idmef_file_access_t *ptr, idmef_user_id_t *us
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_file_access_new_user_id(idmef_file_access_t *ptr, idmef_user_id_t **ret)
-{
+{        
+        prelude_list_init(&ptr->user_id.list);
         *ret = &ptr->user_id;
 	return 0;
 }

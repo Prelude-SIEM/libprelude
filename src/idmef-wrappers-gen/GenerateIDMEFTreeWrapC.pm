@@ -798,13 +798,20 @@ int idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr, $field
 	}
 
     } else {
-	if ( $field->{metatype} & &METATYPE_STRUCT && $field->{ptr} ) {
-	    $self->output("
+	if ( $field->{metatype} & &METATYPE_STRUCT ) {
+	    if ( $field->{ptr} ) {
+		$self->output("
         int retval;
 
 	if ( ! ptr->$field->{name} )
 		retval = idmef_$field->{short_typename}_new(&ptr->$field->{name});
 ");
+	    } else {
+		if ( $tree->{objs}->{$field->{typename}}->{is_listed} ) {
+		     $self->output("        
+        prelude_list_init(&ptr->$field->{name}.list);");
+		 }
+	    }
 	}
     }
 
