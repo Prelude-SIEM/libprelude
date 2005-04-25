@@ -723,9 +723,7 @@ static void broadcast_async_cb(void *obj, void *data)
  */
 void prelude_connection_pool_broadcast(prelude_connection_pool_t *pool, prelude_msg_t *msg) 
 {
-        prelude_timer_lock_critical_region();
-        walk_manager_lists(pool, msg);        
-        prelude_timer_unlock_critical_region();
+        walk_manager_lists(pool, msg);
 }
 
 
@@ -1156,6 +1154,7 @@ prelude_connection_pool_flags_t prelude_connection_pool_get_flags(prelude_connec
  */
 int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int timeout,
                                         int (*event_cb)(prelude_connection_pool_t *pool,
+                                                        prelude_connection_pool_event_t event,
                                                         prelude_connection_t *cnx, void *extra), void *extra)
 {
         cnx_t *cnx;
@@ -1193,7 +1192,7 @@ int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int tim
                 global_event |= PRELUDE_CONNECTION_POOL_EVENT_INPUT;
 
                 if ( event_cb ) {
-                        ret = event_cb(pool, cnx->cnx, extra);                        
+                        ret = event_cb(pool, PRELUDE_CONNECTION_POOL_EVENT_INPUT, cnx->cnx, extra);
                         if ( ret < 0 ) {
                                 global_event |= PRELUDE_CONNECTION_POOL_EVENT_DEAD;
                                 notify_dead(cnx, ret, FALSE);
