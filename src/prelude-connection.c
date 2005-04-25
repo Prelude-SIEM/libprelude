@@ -399,19 +399,17 @@ static prelude_bool_t is_unix_addr(prelude_connection_t *cnx, const char *addr)
 
 
 
-static int do_getaddrinfo(prelude_connection_t *cnx, struct addrinfo **ai, const char *addr)
+static int do_getaddrinfo(prelude_connection_t *cnx, struct addrinfo **ai, const char *addr_string)
 {
         int ret;
         struct addrinfo hints;
-        char buf[1024], *ptr;
+        char buf[1024], *addr;
         unsigned int port = DEFAULT_PORT;
+
+        ret = prelude_parse_address(addr_string, &addr, &port);
+        if ( ret < 0 )
+                return ret;
         
-        ptr = strrchr(addr, ':');
-        if ( ptr ) {
-                *ptr = 0;
-                port = atoi(ptr + 1);
-        }
-                        
         memset(&hints, 0, sizeof(hints));
         snprintf(buf, sizeof(buf), "%u", port);
         
@@ -427,8 +425,8 @@ static int do_getaddrinfo(prelude_connection_t *cnx, struct addrinfo **ai, const
         }
         
         snprintf(buf, sizeof(buf), "%s:%d", addr, port);
+        free(addr);
         
-        if ( ptr ) *ptr = ':';
         cnx->daddr = strdup(buf);
         
         return 0;
@@ -628,7 +626,7 @@ int prelude_connection_recv(prelude_connection_t *cnx, prelude_msg_t **msg)
         if ( ! (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) )
                 return -1;
 
-        ret = prelude_msg_read(msg, cnx->fd);
+        ret = prelude_msg_read(msg, cnx->fd);        
         if ( ret < 0 )
                 return ret;
 
