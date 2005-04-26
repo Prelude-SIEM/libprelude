@@ -247,7 +247,7 @@ int idmef_value_new_list(idmef_value_t **value)
 {
         int ret;
         
-	ret = idmef_value_create(value, IDMEF_VALUE_TYPE_CLASS);
+	ret = idmef_value_create(value, IDMEF_VALUE_TYPE_LIST);
 	if ( ret < 0 )
 		return ret;
 
