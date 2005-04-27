@@ -1,6 +1,6 @@
-BINDING_DEPENDS=libprelude.i libprelude_python.i libprelude_perl.i $(top_srcdir)/src/include/prelude-client.h $(top_srcdir)/src/include/idmef-tree-wrap.h $(top_srcdir)/src/include/idmef-value.h $(top_srcdir)/src/include/idmef-path.h $(top_srcdir)/src/include/idmef-time.h $(top_srcdir)/src/include/idmef-data.h $(top_srcdir)/src/include/prelude-string.h $(top_srcdir)/src/include/idmef-criteria.h $(top_srcdir)/src/include/prelude-msgbuf.h $(top_srcdir)/src/include/idmef-message-write.h $(top_srcdir)/src/include/idmef-message-print.h $(top_srcdir)/src/include/idmef-value-type.h $(top_srcdir)/src/include/idmef-class.h $(top_srcdir)/src/include/prelude-connection.h $(top_srcdir)/src/include/prelude-option.h $(top_srcdir)/src/include/prelude-option-wide.h $(top_srcdir)/src/include/prelude-message-id.h $(top_srcdir)/src/include/prelude-log.h
+BINDING_DEPENDS=libprelude.i libprelude_python.i libprelude_perl.i idmef-value-class-mapping.h $(top_srcdir)/src/include/prelude-client.h $(top_srcdir)/src/include/idmef-tree-wrap.h $(top_srcdir)/src/include/idmef-value.h $(top_srcdir)/src/include/idmef-path.h $(top_srcdir)/src/include/idmef-time.h $(top_srcdir)/src/include/idmef-data.h $(top_srcdir)/src/include/prelude-string.h $(top_srcdir)/src/include/idmef-criteria.h $(top_srcdir)/src/include/prelude-msgbuf.h $(top_srcdir)/src/include/idmef-message-write.h $(top_srcdir)/src/include/idmef-message-print.h $(top_srcdir)/src/include/idmef-value-type.h $(top_srcdir)/src/include/idmef-class.h $(top_srcdir)/src/include/prelude-connection.h $(top_srcdir)/src/include/prelude-option.h $(top_srcdir)/src/include/prelude-option-wide.h $(top_srcdir)/src/include/prelude-message-id.h $(top_srcdir)/src/include/prelude-log.h
 
-EXTRA_DIST = libprelude.i libprelude_python.i libprelude_perl.i perl/Makefile.PL.in perl/Prelude.c python/setup.py.in \
+EXTRA_DIST = libprelude.i libprelude_python.i libprelude_perl.i idmef-value-class-mapping.h perl/Makefile.PL.in perl/Prelude.c python/setup.py.in \
 	python/prelude.py python/_prelude.c
 
 all-am: perl python
@@ -30,13 +30,13 @@ endif
 # to not generate them
 perl/Prelude.c: $(BINDING_DEPENDS)
 if HAVE_SWIG
-	$(SWIG) -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -o $@ -perl5 -nopm \
+	$(SWIG) -I$(top_srcdir)/bindings -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -o $@ -perl5 -nopm \
 	`$(SWIG) -perl5 -help 2>&1 | grep noproxy > /dev/null && echo -noproxy` libprelude.i
 endif
 
 python/_prelude.c: $(BINDING_DEPENDS)
 if HAVE_SWIG
-	$(SWIG) -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -o $@ -python -noproxy -interface _prelude -module _prelude libprelude.i
+	$(SWIG) -I$(top_srcdir)/bindings -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -o $@ -python -noproxy -interface _prelude -module _prelude libprelude.i
 endif
 
 

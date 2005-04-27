@@ -55,7 +55,6 @@ SV *swig_perl_data(idmef_data_t *data)
 	}
 }
 
-
 %}
 
 %typemap(perl5, in) char **argv {
@@ -81,6 +80,7 @@ SV *swig_perl_data(idmef_data_t *data)
         }
 	$1[i] = NULL;
 };
+
 
 
 %typemap(freearg) char **argv {
@@ -185,6 +185,18 @@ SV *swig_perl_data(idmef_data_t *data)
 
 %typemap(out) idmef_data_t * {
 	$result = swig_perl_data($1);
+};
+
+
+%typemap(out) void * idmef_value_get_object {
+	void *swig_type;
+
+	swig_type = swig_idmef_value_get_descriptor(arg1);
+	if ( ! swig_type ) {
+		$result = &PL_sv_undef;
+	} else {
+		$result = SWIG_NewPointerObj($1, swig_type, 0);
+	}
 };
 
 

@@ -33,6 +33,9 @@
 #include "idmef.h"
 #include "idmef-message-write.h"
 #include "idmef-message-print.h"
+
+#include "idmef-tree-wrap.h"
+#include "idmef-value-class-mapping.h"
 %}
 
 /*

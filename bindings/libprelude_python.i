@@ -69,6 +69,7 @@ PyObject *swig_python_data(idmef_data_t *data)
 		return NULL;
 	}
 }
+
 %}
 
 
@@ -257,6 +258,19 @@ PyObject *swig_python_data(idmef_data_t *data)
 
 %typemap(python, out) idmef_data_t * {
 	$result = swig_python_data($1);
+};
+
+
+%typemap(python, out) void * idmef_value_get_object {
+	void *swig_type;
+
+	swig_type = swig_idmef_value_get_descriptor(arg1);
+	if ( ! swig_type ) {
+		$result = Py_None;
+		Py_INCREF(Py_None);
+	} else {
+		$result = SWIG_NewPointerObj($1, swig_type, 0);
+	}
 };
 
 
