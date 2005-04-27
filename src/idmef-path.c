@@ -1022,6 +1022,17 @@ int idmef_path_has_lists(idmef_path_t *path)
 
 
 
+prelude_bool_t idmef_path_is_list(idmef_path_t *path, int depth)
+{
+        if ( depth < 0 )
+                depth = path->depth - 1;
+
+        return path->elem[depth].index != INDEX_FORBIDDEN;
+}
+
+
+
+
 /**
  * idmef_path_get_depth:
  * @path: Pointer to an #idmef_path_t object.
