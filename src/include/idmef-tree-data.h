@@ -156,6 +156,7 @@ const children_list_t idmef_file_children_list[] = {
         { "checksum", 1, IDMEF_VALUE_TYPE_CLASS, IDMEF_CLASS_ID_CHECKSUM },
         { "category", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_FILE_CATEGORY },
         { "fstype", 0, IDMEF_VALUE_TYPE_ENUM, IDMEF_CLASS_ID_FILE_FSTYPE },
+        { "file_type", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { NULL, 0, 0, 0 }
 };
 

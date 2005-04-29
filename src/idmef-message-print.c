@@ -1671,6 +1671,20 @@ void idmef_file_print(idmef_file_t *ptr, prelude_io_t *fd)
 		}
         }
 
+	{
+		prelude_string_t *field;
+                const char tmp[] = "file_type: ";
+
+		field = idmef_file_get_file_type(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
+
         indent -= 8;
 }
 

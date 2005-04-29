@@ -65,9 +65,9 @@
 
 #define IS_LISTED prelude_list_t list
 
-#define	UNION(type, var) type var; union
+#define UNION(type, var) type var; union
 
-#define	UNION_MEMBER(value, type, name) type name
+#define UNION_MEMBER(value, type, name) type name
 
 #define ENUM(...) typedef enum
 
@@ -130,20 +130,20 @@ ENUM() {
         IDMEF_ADDITIONAL_DATA_TYPE_INTEGER     =  4,
         IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP    =  5,
         IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST    =  6,
-	IDMEF_ADDITIONAL_DATA_TYPE_REAL        =  7,
+        IDMEF_ADDITIONAL_DATA_TYPE_REAL        =  7,
         IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN     =  8,
-	IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING =  9,
-	IDMEF_ADDITIONAL_DATA_TYPE_XML         = 10,
+        IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING =  9,
+        IDMEF_ADDITIONAL_DATA_TYPE_XML         = 10,
 } TYPE_ID(idmef_additional_data_type_t, 3);
 
 
 
 struct {
         IS_LISTED;
-	REFCOUNT;
+        REFCOUNT;
         idmef_additional_data_type_t type;
         prelude_string_t *meaning;
-	idmef_data_t data;
+        idmef_data_t data;
 } TYPE_ID(idmef_additional_data_t, 4);
 
 
@@ -208,7 +208,7 @@ ENUM() {
 
 struct {
         IS_LISTED;
-	REFCOUNT;
+        REFCOUNT;
         prelude_string_t *ident;
         idmef_user_id_type_t type;
         prelude_string_t *tty;
@@ -225,7 +225,7 @@ struct {
  * User class
  */
 ENUM(cat) {
-        IDMEF_USER_CATEGORY_ERROR	 = -1,
+        IDMEF_USER_CATEGORY_ERROR        = -1,
         IDMEF_USER_CATEGORY_UNKNOWN      =  0,
         IDMEF_USER_CATEGORY_APPLICATION  =  1,
         IDMEF_USER_CATEGORY_OS_DEVICE    =  2
@@ -234,7 +234,7 @@ ENUM(cat) {
 
 
 struct {
-	REFCOUNT;
+        REFCOUNT;
         prelude_string_t *ident;
         idmef_user_category_t category;
         LISTED_OBJECT(user_id_list, idmef_user_id_t);
@@ -247,7 +247,7 @@ struct {
  * Address class
  */
 ENUM(addr) {
-        IDMEF_ADDRESS_CATEGORY_ERROR	     = -1,
+        IDMEF_ADDRESS_CATEGORY_ERROR         = -1,
         IDMEF_ADDRESS_CATEGORY_UNKNOWN       =  0,
         IDMEF_ADDRESS_CATEGORY_ATM           =  1,
         IDMEF_ADDRESS_CATEGORY_E_MAIL        =  2,
@@ -286,7 +286,7 @@ struct {
  */
 
 struct {
-	REFCOUNT;
+        REFCOUNT;
         prelude_string_t *ident;
         prelude_string_t name;
         OPTIONAL_INT(uint32_t, pid);
@@ -299,7 +299,7 @@ struct {
 
 
 struct {
-	REFCOUNT;
+        REFCOUNT;
         prelude_string_t url;
         prelude_string_t *cgi;
         prelude_string_t *http_method;
@@ -313,7 +313,7 @@ struct {
  * SNMPService class
  */
 struct {
-	REFCOUNT;
+        REFCOUNT;
         prelude_string_t *oid;
         prelude_string_t *community;
         prelude_string_t *security_name;
@@ -337,7 +337,7 @@ ENUM() {
  * Service class
  */
 struct {
-	REFCOUNT;
+        REFCOUNT;
         prelude_string_t *ident;
         
         OPTIONAL_INT(uint8_t, ip_version);
@@ -349,10 +349,10 @@ struct {
         prelude_string_t *portlist;
         prelude_string_t *protocol;
 
-	UNION(idmef_service_type_t, type) {
-		UNION_MEMBER(IDMEF_SERVICE_TYPE_WEB, idmef_web_service_t, *web_service);
-		UNION_MEMBER(IDMEF_SERVICE_TYPE_SNMP, idmef_snmp_service_t, *snmp_service);
-	} specific;
+        UNION(idmef_service_type_t, type) {
+                UNION_MEMBER(IDMEF_SERVICE_TYPE_WEB, idmef_web_service_t, *web_service);
+                UNION_MEMBER(IDMEF_SERVICE_TYPE_SNMP, idmef_snmp_service_t, *snmp_service);
+        } specific;
         
 } TYPE_ID(idmef_service_t, 17);
 
@@ -363,7 +363,7 @@ struct {
  * Node class
  */
 ENUM(node) {
-        IDMEF_NODE_CATEGORY_ERROR	 = -1,        
+        IDMEF_NODE_CATEGORY_ERROR        = -1,        
         IDMEF_NODE_CATEGORY_UNKNOWN      =  0,
         IDMEF_NODE_CATEGORY_ADS          =  1,
         IDMEF_NODE_CATEGORY_AFS          =  2,
@@ -381,7 +381,7 @@ ENUM(node) {
 
 
 struct {
-	REFCOUNT;
+        REFCOUNT;
         prelude_string_t *ident;
         idmef_node_category_t category;
         prelude_string_t *location;
@@ -406,7 +406,7 @@ ENUM() {
 
 struct {
         IS_LISTED;
-	REFCOUNT;
+        REFCOUNT;
         prelude_string_t *ident;
         
         idmef_source_spoofed_t spoofed;
@@ -422,10 +422,10 @@ struct {
 
 struct {
         IS_LISTED;
-	REFCOUNT;
+        REFCOUNT;
         
         idmef_user_id_t user_id;
-	LISTED_OBJECT(permission_list, prelude_string_t);
+        LISTED_OBJECT(permission_list, prelude_string_t);
 } TYPE_ID(idmef_file_access_t, 22);
 
 
@@ -434,7 +434,7 @@ struct {
  * Inode class
  */
 struct {
-	REFCOUNT;
+        REFCOUNT;
         idmef_time_t *change_time;
         OPTIONAL_INT(uint32_t, number);
         OPTIONAL_INT(uint32_t, major_device);
@@ -469,7 +469,7 @@ ENUM() {
 
 
 struct {
-	IS_LISTED;
+        IS_LISTED;
         REFCOUNT;
         prelude_string_t value;
         prelude_string_t *key;
@@ -505,7 +505,7 @@ ENUM(fstype) {
 
 struct {
         IS_LISTED;
-	REFCOUNT;
+        REFCOUNT;
         prelude_string_t *ident;
         
         prelude_string_t name;
@@ -523,10 +523,11 @@ struct {
         LISTED_OBJECT(linkage_list, idmef_linkage_t);
 
         idmef_inode_t *inode;
-	LISTED_OBJECT(checksum_list, idmef_checksum_t);
+        LISTED_OBJECT(checksum_list, idmef_checksum_t);
         
         idmef_file_category_t category;
         OPTIONAL_INT(idmef_file_fstype_t, fstype);
+        prelude_string_t *file_type;
         
 } TYPE_ID(idmef_file_t, 26);
 
@@ -535,7 +536,7 @@ struct {
  * Linkage class
  */
 ENUM() {
-        IDMEF_LINKAGE_CATEGORY_ERROR	     = -1,
+        IDMEF_LINKAGE_CATEGORY_ERROR         = -1,
         IDMEF_LINKAGE_CATEGORY_HARD_LINK     =  1,
         IDMEF_LINKAGE_CATEGORY_MOUNT_POINT   =  2,
         IDMEF_LINKAGE_CATEGORY_REPARSE_POINT =  3,
@@ -547,7 +548,7 @@ ENUM() {
 
 struct {
         IS_LISTED;
-	REFCOUNT;
+        REFCOUNT;
         
         idmef_linkage_category_t category;
         prelude_string_t name;
@@ -572,7 +573,7 @@ ENUM() {
 
 struct {
         IS_LISTED;
-	REFCOUNT;
+        REFCOUNT;
         prelude_string_t *ident;
         
         idmef_target_decoy_t decoy;
@@ -594,7 +595,7 @@ struct {
  */
 struct {
         IS_LISTED;
-	REFCOUNT;
+        REFCOUNT;
         prelude_string_t *analyzerid;
         
         prelude_string_t *name;
@@ -619,7 +620,7 @@ struct {
 
 struct {
         IS_LISTED;
-	REFCOUNT;
+        REFCOUNT;
 
         prelude_string_t alertident;
         prelude_string_t *analyzerid;
@@ -641,14 +642,14 @@ ENUM(severity) {
 
 
 ENUM(completion) {
-        IDMEF_IMPACT_COMPLETION_ERROR	   = -1,
+        IDMEF_IMPACT_COMPLETION_ERROR      = -1,
         IDMEF_IMPACT_COMPLETION_FAILED     =  1,
         IDMEF_IMPACT_COMPLETION_SUCCEEDED  =  2
 } TYPE_ID(idmef_impact_completion_t, 34);
 
 
 ENUM() {
-        IDMEF_IMPACT_TYPE_ERROR	     = -1,
+        IDMEF_IMPACT_TYPE_ERROR      = -1,
         IDMEF_IMPACT_TYPE_OTHER      =  0,
         IDMEF_IMPACT_TYPE_ADMIN      =  1,
         IDMEF_IMPACT_TYPE_DOS        =  2,
@@ -659,7 +660,7 @@ ENUM() {
 
 
 struct {
-	REFCOUNT;
+        REFCOUNT;
 
         OPTIONAL_INT(idmef_impact_severity_t, severity);
         OPTIONAL_INT(idmef_impact_completion_t, completion);
@@ -672,7 +673,7 @@ struct {
  * Action class
  */
 ENUM(action) {
-        IDMEF_ACTION_CATEGORY_ERROR	         = -1,
+        IDMEF_ACTION_CATEGORY_ERROR              = -1,
         IDMEF_ACTION_CATEGORY_OTHER              =  0,
         IDMEF_ACTION_CATEGORY_BLOCK_INSTALLED    =  1,
         IDMEF_ACTION_CATEGORY_NOTIFICATION_SENT  =  2,
@@ -682,7 +683,7 @@ ENUM(action) {
 
 struct {
         IS_LISTED;
-	REFCOUNT;
+        REFCOUNT;
 
         idmef_action_category_t category;
         prelude_string_t *description;
@@ -703,7 +704,7 @@ ENUM() {
 
 
 struct {
-	REFCOUNT;
+        REFCOUNT;
 
         idmef_confidence_rating_t rating;
         float confidence; /* FIXME was optional int */
@@ -714,7 +715,7 @@ struct {
  * Assessment class
  */
 struct {
-	REFCOUNT;
+        REFCOUNT;
 
         idmef_impact_t *impact;
         LISTED_OBJECT(action_list, idmef_action_t);
@@ -727,7 +728,7 @@ struct {
  * Toolalert class
  */
 struct {
-	REFCOUNT;
+        REFCOUNT;
 
         prelude_string_t name;
         prelude_string_t *command;
@@ -742,7 +743,7 @@ struct {
  * CorrelationAlert class
  */
 struct {
-	REFCOUNT;
+        REFCOUNT;
 
         prelude_string_t name;
         LISTED_OBJECT(alertident_list, idmef_alertident_t);
@@ -755,7 +756,7 @@ struct {
  * OverflowAlert class
  */
 struct {
-	REFCOUNT;
+        REFCOUNT;
 
         prelude_string_t program;
         OPTIONAL_INT(uint32_t, size);
@@ -840,11 +841,11 @@ struct {
         prelude_string_t version;
 
         UNION(idmef_message_type_t, type) {
-		UNION_MEMBER(IDMEF_MESSAGE_TYPE_ALERT, idmef_alert_t, *alert);
-		UNION_MEMBER(IDMEF_MESSAGE_TYPE_HEARTBEAT, idmef_heartbeat_t, *heartbeat);
+                UNION_MEMBER(IDMEF_MESSAGE_TYPE_ALERT, idmef_alert_t, *alert);
+                UNION_MEMBER(IDMEF_MESSAGE_TYPE_HEARTBEAT, idmef_heartbeat_t, *heartbeat);
         } message;
 
-	HIDE(prelude_msg_t *, pmsg);
+        HIDE(prelude_msg_t *, pmsg);
         
 } TYPE_ID(idmef_message_t, 49);
 

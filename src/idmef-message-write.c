@@ -1067,6 +1067,10 @@ int idmef_file_write(idmef_file_t *file, prelude_msgbuf_t *msg)
                                 return ret;
 		}
 	}
+        ret = prelude_string_write(idmef_file_get_file_type(file), msg, IDMEF_MSG_FILE_FILE_TYPE);
+        if ( ret < 0 )
+                return ret;
+
         return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 

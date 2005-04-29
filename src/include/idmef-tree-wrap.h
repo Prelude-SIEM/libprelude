@@ -901,6 +901,7 @@ const char *idmef_file_fstype_to_string(idmef_file_fstype_t val);
  * 
  *         idmef_file_category_t category;
  *         OPTIONAL_INT(idmef_file_fstype_t, fstype);
+ *         prelude_string_t *file_type;
  * 
  * } TYPE_ID(idmef_file_t, 26);
  */
@@ -972,6 +973,10 @@ void idmef_file_unset_fstype(idmef_file_t *ptr);
 idmef_file_fstype_t *idmef_file_get_fstype(idmef_file_t *ptr);
 void idmef_file_set_fstype(idmef_file_t *ptr, idmef_file_fstype_t fstype);
 int idmef_file_new_fstype(idmef_file_t *ptr, idmef_file_fstype_t **ret);
+
+prelude_string_t *idmef_file_get_file_type(idmef_file_t *ptr);
+void idmef_file_set_file_type(idmef_file_t *ptr, prelude_string_t *file_type);
+int idmef_file_new_file_type(idmef_file_t *ptr, prelude_string_t **ret);
 
 typedef enum {
         IDMEF_LINKAGE_CATEGORY_ERROR = -1,

@@ -1042,6 +1042,7 @@ struct idmef_file {
  
          idmef_file_category_t category;
          OPTIONAL_INT(idmef_file_fstype_t, fstype);
+         prelude_string_t *file_type;
  
  
 };
@@ -7998,7 +7999,9 @@ int idmef_file_get_child(void *p, idmef_class_child_id_t child, void **childptr)
                                return 0;
                        return idmef_value_new_enum_from_numeric((idmef_value_t **) childptr, 
                                                                 IDMEF_CLASS_ID_FILE_FSTYPE, ptr->fstype);
-
+        
+                case 14:
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->file_type);
 		default:
 			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
@@ -8103,6 +8106,9 @@ int idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **re
 		case 13:
 			return idmef_file_new_fstype(ptr, (idmef_file_fstype_t **) ret);
 
+		case 14:
+			return idmef_file_new_file_type(ptr, (prelude_string_t **) ret);
+
 		default:
 			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
 	}
@@ -8174,6 +8180,11 @@ static void idmef_file_destroy_internal(idmef_file_t *ptr)
                         prelude_list_del_init(&entry->list);
 			idmef_checksum_destroy(entry);
 		}
+	}
+
+	if ( ptr->file_type ) {
+		prelude_string_destroy(ptr->file_type);
+		ptr->file_type = NULL;
 	}
 
 
@@ -8979,6 +8990,62 @@ int idmef_file_new_fstype(idmef_file_t *ptr, idmef_file_fstype_t **ret)
 	ptr->fstype_is_set = 1;
 
         *ret = &ptr->fstype;
+	return 0;
+}
+
+/**
+ * *idmef_file_get_file_type:
+ * @ptr: pointer to a #idmef_file_t object.
+ *
+ * Get file_type children of the #idmef_file_t object.
+ *
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
+ */
+prelude_string_t *idmef_file_get_file_type(idmef_file_t *ptr)
+{
+	return ptr->file_type;
+}
+
+/**
+ * idmef_file_set_file_type:
+ * @ptr: pointer to a #idmef_file_t object.
+ * @file_type: pointer to a #prelude_string_t object.
+ *
+ * Set @file_type object as a children of @ptr.
+ * if @ptr already contain an @file_type object, then it is destroyed,
+ * and updated to point to the provided @file_type object.
+ */
+
+void idmef_file_set_file_type(idmef_file_t *ptr, prelude_string_t *file_type)
+{
+	if ( ptr->file_type )
+		prelude_string_destroy(ptr->file_type);
+
+	ptr->file_type = file_type;
+}
+
+/**
+ * idmef_file_new_file_type:
+ * @ptr: pointer to a #idmef_file_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
+ *
+ * Create a new file_type object, children of #idmef_file_t.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
+int idmef_file_new_file_type(idmef_file_t *ptr, prelude_string_t **ret)
+{
+        int retval;
+
+	if ( ptr->file_type )
+		prelude_string_destroy(ptr->file_type);
+		
+	retval = prelude_string_new(&ptr->file_type);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->file_type;
 	return 0;
 }
 
