@@ -33,7 +33,7 @@
 
 typedef enum {
         PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT        = 0x01,
-        PRELUDE_CONNECTION_POOL_FLAGS_GLOBAL_FAILOVER  = 0x02
+        PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER         = 0x02
 } prelude_connection_pool_flags_t;
 
 
@@ -73,6 +73,8 @@ prelude_connection_pool_flags_t prelude_connection_pool_get_flags(prelude_connec
 
 void prelude_connection_pool_set_flags(prelude_connection_pool_t *pool, prelude_connection_pool_flags_t flags);
 
+void prelude_connection_pool_set_required_permission(prelude_connection_pool_t *pool, prelude_connection_permission_t req_perm);
+         
 void prelude_connection_pool_set_data(prelude_connection_pool_t *pool, void *data);
 
 void *prelude_connection_pool_get_data(prelude_connection_pool_t *pool);

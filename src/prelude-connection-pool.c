@@ -333,7 +333,7 @@ static int walk_manager_lists(prelude_connection_pool_t *pool, prelude_msg_t *ms
                 /*
                  * if all connections are dead and we have a or, go to next.
                  */
-                if ( or->dead == or->total && (pool->flags & PRELUDE_CONNECTION_POOL_FLAGS_GLOBAL_FAILOVER) ) {
+                if ( or->dead == or->total && (pool->flags & PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER) ) {
                         ret = -2;
                         continue;
                 }
@@ -356,9 +356,11 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
         size_t totsize = 0;
         ssize_t size, ret = 0;
         unsigned int available, count = 0;
+
+        if ( ! failover )
+                return 0;
         
-        available = prelude_failover_get_available_msg_count(failover);
-                
+        available = prelude_failover_get_available_msg_count(failover);        
         if ( ! available ) 
                 return 0;
 
@@ -478,6 +480,7 @@ static int new_connection(cnx_t **ncnx, prelude_client_profile_t *cp, cnx_list_t
         if ( ! new )
                 return prelude_error_from_errno(errno);
 
+        new->failover = NULL;
         new->parent = clist;
         new->is_dead = FALSE;
         prelude_timer_init_list(&new->timer);
@@ -488,16 +491,19 @@ static int new_connection(cnx_t **ncnx, prelude_client_profile_t *cp, cnx_list_t
                 prelude_timer_set_callback(&new->timer, connection_timer_expire);
         }
 
-        prelude_client_profile_get_backup_dirname(cp, buf, sizeof(buf));
-        ret = get_connection_backup_path(cnx, buf, &dirname);
-        if ( ret < 0 )
-                return ret;
+        if ( flags & PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER ) {
+                prelude_client_profile_get_backup_dirname(cp, buf, sizeof(buf));
+
+                ret = get_connection_backup_path(cnx, buf, &dirname);
+                if ( ret < 0 )
+                        return ret;
         
-        ret = prelude_failover_new(&new->failover, dirname);        
-        free(dirname);
-        if ( ret < 0 ) {
-                free(new);
-                return ret;
+                ret = prelude_failover_new(&new->failover, dirname);        
+                free(dirname);
+                if ( ret < 0 ) {
+                        free(new);
+                        return ret;
+                }
         }
         
         state = prelude_connection_get_state(cnx);
@@ -765,7 +771,7 @@ int prelude_connection_pool_init(prelude_connection_pool_t *pool)
         cnx_list_t *clist;
         char dirname[512], buf[512];
         
-        if ( ! pool->failover && (pool->flags & PRELUDE_CONNECTION_POOL_FLAGS_GLOBAL_FAILOVER) ) {          
+        if ( ! pool->failover && (pool->flags & PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER) ) {          
                 prelude_client_profile_get_backup_dirname(pool->client_profile, buf, sizeof(buf));        
                 snprintf(dirname, sizeof(dirname), "%s/global", buf);
 
@@ -783,8 +789,8 @@ int prelude_connection_pool_init(prelude_connection_pool_t *pool)
         pool->nfd = 0;
         pool->or_list = NULL;
         prelude_list_init(&pool->all_cnx);
-        
-        ret = parse_config_line(pool);        
+
+        ret = parse_config_line(pool);
         if ( ret < 0 || ! pool->or_list )
                 return ret;
         
@@ -792,14 +798,14 @@ int prelude_connection_pool_init(prelude_connection_pool_t *pool)
                                 
                 if ( clist->dead )
                         continue;
-
+                
                 if ( pool->failover ) {
                         ret = failover_flush(pool->failover, clist, NULL);
                         if ( ret == 0 )
                                 break;
                 }
         }
-
+                
         if ( pool->global_event_handler )
                 pool->global_event_handler(pool, 0);
         
@@ -843,7 +849,7 @@ int prelude_connection_pool_new(prelude_connection_pool_t **ret,
         new->client_profile = cp;
         new->permission = permission;
         new->connection_string_changed = FALSE;
-        new->flags = PRELUDE_CONNECTION_POOL_FLAGS_GLOBAL_FAILOVER;
+        new->flags = PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER;
         
         prelude_list_init(&new->all_cnx);
         prelude_list_init(&new->int_cnx);
@@ -1117,6 +1123,15 @@ void prelude_connection_pool_set_flags(prelude_connection_pool_t *pool, prelude_
 {
         pool->flags = flags;
 }
+
+
+
+void prelude_connection_pool_set_required_permission(prelude_connection_pool_t *pool, prelude_connection_permission_t req_perm)
+{
+        pool->permission = req_perm;
+}
+
+
 
 
 /**

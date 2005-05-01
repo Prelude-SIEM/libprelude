@@ -744,23 +744,7 @@ static int connection_pool_event_cb(prelude_connection_pool_t *pool,
 
 static int set_manager_addr(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
-        int ret;
-        prelude_connection_pool_t *pool;
         prelude_client_t *client = context;
-        
-        if ( ! client->cpool ) {
-                ret = prelude_connection_pool_new(&pool, client->profile, client->permission);
-                if ( ret < 0 )
-                        return ret;
-                
-                prelude_connection_pool_set_data(pool, client);
-                prelude_connection_pool_set_flags(pool, prelude_connection_pool_get_flags(pool) |
-                                                  PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT);
-                prelude_connection_pool_set_event_handler(pool, PRELUDE_CONNECTION_POOL_EVENT_INPUT, connection_pool_event_cb);
-                
-                client->cpool = pool;
-        }
-        
         return prelude_connection_pool_set_connection_string(client->cpool, optarg);
 }
 
@@ -1055,6 +1039,16 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
                 return ret;
         }
         
+        ret = prelude_connection_pool_new(&new->cpool, new->profile, new->permission);
+        if ( ret < 0 )
+                return ret;
+        
+        prelude_connection_pool_set_data(new->cpool, client);
+        prelude_connection_pool_set_flags(new->cpool, prelude_connection_pool_get_flags(new->cpool) |
+                                          PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT | PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER);
+        prelude_connection_pool_set_event_handler(new->cpool, PRELUDE_CONNECTION_POOL_EVENT_INPUT, connection_pool_event_cb);
+
+        
         setup_heartbeat_timer(new, DEFAULT_HEARTBEAT_INTERVAL);
         
         ret = create_heartbeat_msgbuf(new);
@@ -1170,8 +1164,8 @@ int prelude_client_start(prelude_client_t *client)
                 ret = prelude_client_profile_get_credentials(client->profile, &credentials);
                 if ( ret < 0 )
                         return ret;
-                
-                ret = prelude_connection_pool_init(client->cpool);                
+
+                ret = prelude_connection_pool_init(client->cpool);
                 if ( ret < 0 )
                         return ret;
         }
@@ -1418,6 +1412,7 @@ prelude_connection_permission_t prelude_client_get_required_permission(prelude_c
 void prelude_client_set_required_permission(prelude_client_t *client, prelude_connection_permission_t permission)
 {
         client->permission = permission;
+        prelude_connection_pool_set_required_permission(client->cpool, permission);
 }
 
 
