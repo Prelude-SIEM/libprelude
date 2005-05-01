@@ -4282,6 +4282,11 @@ prelude_io_t *pio
 <RETURNS>ssize_t </RETURNS>
 prelude_io_t *pio
 </FUNCTION>
+<FUNCTION>
+<NAME>swig_idmef_value_get_descriptor</NAME>
+<RETURNS>void *</RETURNS>
+idmef_value_t *value){unsigned int i = 0;void *object = idmef_value_get_object(value
+</FUNCTION>
 <MACRO>
 <NAME>prelude_log</NAME>
 #define prelude_log(level, ...) \
@@ -5941,7 +5946,7 @@ prelude_failover_t *failover
 <NAME>prelude_connection_pool_flags_t</NAME>
 typedef enum {
         PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT        = 0x01,
-        PRELUDE_CONNECTION_POOL_FLAGS_GLOBAL_FAILOVER  = 0x02
+        PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER         = 0x02
 } prelude_connection_pool_flags_t;
 </ENUM>
 <ENUM>
@@ -6034,7 +6039,7 @@ prelude_connection_pool_t *pool
 <FUNCTION>
 <NAME>prelude_connection_pool_check_event</NAME>
 <RETURNS>int </RETURNS>
-prelude_connection_pool_t *pool, int timeout,int (*event_cb)(prelude_connection_pool_t *pool,prelude_connection_t *cnx, void *extra), void *extra
+prelude_connection_pool_t *pool, int timeout,int (*event_cb)(prelude_connection_pool_t *pool,prelude_connection_pool_event_t event,prelude_connection_t *cnx, void *extra), void *extra
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_connection_pool_set_global_event_handler</NAME>
@@ -7210,6 +7215,11 @@ idmef_path_t *path
 <NAME>idmef_path_has_lists</NAME>
 <RETURNS>int </RETURNS>
 idmef_path_t *path
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_path_is_list</NAME>
+<RETURNS>prelude_bool_t </RETURNS>
+idmef_path_t *path, int depth
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_path_get_depth</NAME>

@@ -59,7 +59,7 @@ idmef_message_read()
 </para>
 
 @PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT: 
-@PRELUDE_CONNECTION_POOL_FLAGS_GLOBAL_FAILOVER: 
+@PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER: 
 
 <!-- ##### ENUM prelude_connection_pool_event_t ##### -->
 <para>
