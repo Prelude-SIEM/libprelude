@@ -357,11 +357,11 @@ static int call_option_cb(void *context, struct cb_list **cbl, prelude_list_t *c
         prelude_list_t *tmp, *prev = NULL;
         
         if ( option->priority == PRELUDE_OPTION_PRIORITY_IMMEDIATE ) {
-                prelude_log_debug(3, "[immediate] %s(%s)\n", option->longopt, arg);
+                prelude_log_debug(3, "[immediate] %s(%s)\n", option->longopt, arg ? arg : "");
                 return do_set(option, arg, err, &context);
         }
                 
-        prelude_log_debug(3, "[queue=%p] %s(%s)\n", cblist,  option->longopt, arg);
+        prelude_log_debug(3, "[queue=%p] %s(%s)\n", cblist,  option->longopt, arg ? arg : "");
         
         prelude_list_for_each(cblist, tmp) {
                 cb = prelude_list_entry(tmp, struct cb_list, list);
@@ -417,7 +417,7 @@ static int call_option_from_cb_list(prelude_list_t *cblist, prelude_string_t *er
                 cb = prelude_list_entry(tmp, struct cb_list, list);
 
                 prelude_log_debug(2, "%s(%s) context=%p default=%p\n",
-                                  cb->option->longopt, cb->arg, context, default_context);
+                                  cb->option->longopt, cb->arg ? cb->arg : "", context, default_context);
                 
                 ret = do_set(cb->option, cb->arg, err, &context);                
                 if ( ret < 0 ) 
@@ -717,6 +717,12 @@ int prelude_option_add(prelude_option_t *parent, prelude_option_t **retopt, prel
 {
         int ret;
         prelude_option_t *new;
+
+        if ( parent && longopt && prelude_option_search(parent, longopt, ~0, FALSE) ) {
+                prelude_log(PRELUDE_LOG_WARN, "An option with the name '%s' already exist at the same depth.\n", longopt);
+                return -1;
+        }
+        
         
         ret = prelude_option_new(parent, &new);
         if ( ret < 0 )
@@ -1201,7 +1207,7 @@ int prelude_option_invoke_set(prelude_option_t *opt, const char *value, prelude_
                 return -1;
         }
 
-        prelude_log_debug(3, "opt=%s value=%s\n", opt->longopt, value);
+        prelude_log_debug(3, "opt=%s value=%s\n", opt->longopt, value ? value : "");
         
         return do_set(opt, value, err, context);
 }
