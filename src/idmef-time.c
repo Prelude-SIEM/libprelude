@@ -314,7 +314,7 @@ int idmef_time_to_string(const idmef_time_t *time, prelude_string_t *out)
 	min_off = time->gmt_offset % 3600 / 60;
 	sec_off = time->gmt_offset % 60;
         
-        return prelude_string_sprintf(out, "%d-%.2d-%.2dT%.2d:%.2d:%.2d.%02u+%.2d:%.2d",
+        return prelude_string_sprintf(out, "%d-%.2d-%.2dT%.2d:%.2d:%.2d.%02u%+.2d:%.2d",
                                       utc.tm_year + 1900, utc.tm_mon + 1, utc.tm_mday,
                                       utc.tm_hour, utc.tm_min, utc.tm_sec,
                                       idmef_time_get_usec(time) / 10000 % 60,
