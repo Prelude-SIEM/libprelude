@@ -21,6 +21,11 @@
 *
 *****/
 
+/*
+ * This is required on Solaris so that multiple call to
+ * strptime() won't reset the tm structure.
+ */
+#define _STRPTIME_DONTZERO
 
 #include <sys/types.h>
 #include <stdlib.h>
@@ -43,7 +48,6 @@
 #include "prelude-log.h"
 #include "common.h"
 #include "idmef-time.h"
-
 
 
 static char *parse_time_ymd(struct tm *tm, const char *buf)
