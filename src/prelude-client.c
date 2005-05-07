@@ -676,7 +676,7 @@ static int get_manager_addr(prelude_option_t *opt, prelude_string_t *out, void *
 {
         prelude_client_t *ptr = context;
         
-        if ( ! ptr->cpool )
+        if ( ! ptr->cpool || ! prelude_connection_pool_get_connection_string(ptr->cpool) )
                 return 0;
         
         return prelude_string_cat(out, prelude_connection_pool_get_connection_string(ptr->cpool));
