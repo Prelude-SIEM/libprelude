@@ -262,41 +262,38 @@ int _prelude_get_file_name_and_path(const char *str, char **name, char **path)
 
 int prelude_get_gmt_offset(long *gmtoff)
 {
-	time_t utc, local;
-	struct tm tm;
+        struct tm lt;
+        time_t utc, local, now;
 
-	time(&utc);
+        now = time(NULL);
+        if ( ! localtime_r(&now, &lt) )
+                return -1;
+        
+        local = mktime(lt);
 
-	if ( ! localtime_r(&utc, &tm) )
-		return prelude_error_from_errno(errno);
+        if ( ! gmtime_r(&now, &lt) )
+                return -1;
+        
+        lt->tm_isdst = -1;
+        utc = mktime(lt);
 
-	tm.tm_isdst = -1;
-	local = prelude_timegm(&tm);
+        *gmtoff = local - utc;
 
-	*gmtoff = local - utc;
-
-	return 0;
+        return 0;
 }
 
 
 
 time_t prelude_timegm(struct tm *tm)
 {
-        char *tz;
+        long gmtoff;
         time_t retval;
 
-        tz = getenv("TZ");
-        setenv("TZ", "", 1);
-        tzset();
+        prelude_get_gmt_offset(&gmtoff);
 
+        tm->tm_isdst = -1;
         retval = mktime(tm);
-
-        if ( tz )
-                setenv("TZ", tz, 1);
-        else
-                unsetenv("TZ");
-
-        tzset();
+        retval += gmtoff;
 
         return retval;
 }
