@@ -1043,7 +1043,7 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
         if ( ret < 0 )
                 return ret;
         
-        prelude_connection_pool_set_data(new->cpool, client);
+        prelude_connection_pool_set_data(new->cpool, new);
         prelude_connection_pool_set_flags(new->cpool, prelude_connection_pool_get_flags(new->cpool) |
                                           PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT | PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER);
         prelude_connection_pool_set_event_handler(new->cpool, PRELUDE_CONNECTION_POOL_EVENT_INPUT, connection_pool_event_cb);
