@@ -269,13 +269,13 @@ int prelude_get_gmt_offset(long *gmtoff)
         if ( ! localtime_r(&now, &lt) )
                 return -1;
         
-        local = mktime(lt);
+        local = mktime(&lt);
 
         if ( ! gmtime_r(&now, &lt) )
                 return -1;
         
-        lt->tm_isdst = -1;
-        utc = mktime(lt);
+        lt.tm_isdst = -1;
+        utc = mktime(&lt);
 
         *gmtoff = local - utc;
 
