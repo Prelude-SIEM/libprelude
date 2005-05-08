@@ -456,7 +456,10 @@ int idmef_data_to_string(const idmef_data_t *data, prelude_string_t *out)
 		break;
 
 	case IDMEF_DATA_TYPE_BYTE:
-		ret = prelude_string_sprintf(out, "%hhu", data->data.byte_data);
+                /*
+                 * %hh convertion specifier is not portable.
+                 */
+		ret = prelude_string_sprintf(out, "%u", (unsigned int) data->data.byte_data);
 		break;
 
 	case IDMEF_DATA_TYPE_UINT32:

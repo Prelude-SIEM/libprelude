@@ -91,7 +91,10 @@ static void print_uint8(uint8_t i, prelude_io_t *fd)
         int len;
         char buf[sizeof(\"255\")];
 	
-        len = snprintf(buf, sizeof(buf), \"\%hhu\", i);
+        /* 
+         * %hh convertion specifier is not portable.
+         */
+        len = snprintf(buf, sizeof(buf), \"\%u\", (unsigned int) i);
         prelude_io_write(fd, buf, len);
 \}
 
@@ -165,7 +168,11 @@ static void print_time(idmef_time_t *t, prelude_io_t *fd)
 	if ( strftime(tmp, sizeof(tmp), \"%H:%M:%S %d/%m/%Y\", &_tm) == 0 )
 		return;
 
-	len = snprintf(buf, sizeof(buf), \"%s (\%u.\%u)\", tmp, idmef_time_get_sec(t), idmef_time_get_usec(t));
+        len = snprintf(buf, sizeof(buf), \"%s %+.2d:%.2d (%u.%u)\",
+                       tmp, idmef_time_get_gmt_offset(t) / 3600,
+                       idmef_time_get_gmt_offset(t) % 3600 / 60,
+                       idmef_time_get_sec(t), idmef_time_get_usec(t));
+   
         prelude_io_write(fd, buf, len);
 \}
 
