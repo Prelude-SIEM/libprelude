@@ -205,7 +205,7 @@ int tls_certificate_get_peer_analyzerid(gnutls_session session, uint64_t *analyz
 int tls_certificate_get_permission(gnutls_session session,
                                    prelude_connection_permission_t *permission)
 {
-        int ret;
+        int ret, tmp;
         char buf[1024];
         gnutls_x509_crt cert;
         size_t size = sizeof(buf);
@@ -229,12 +229,13 @@ int tls_certificate_get_permission(gnutls_session session,
         
         gnutls_x509_crt_get_dn_by_oid(cert, GNUTLS_OID_X520_COMMON_NAME, 0, 0, buf, &size);
         
-        ret = sscanf(buf, "%d", (int *) permission);
+        ret = sscanf(buf, "%d", &tmp);
         if ( ret != 1 ) {
                 gnutls_x509_crt_deinit(cert);
                 return prelude_error(PRELUDE_ERROR_TLS_INVALID_CERTIFICATE);
         }
-        
+
+        *permission = (prelude_connection_permission_t) tmp;
         gnutls_x509_crt_deinit(cert);
         
         return 0;
