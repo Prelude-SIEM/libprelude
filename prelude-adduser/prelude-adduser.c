@@ -352,10 +352,14 @@ static prelude_io_t *connect_manager(const char *addr, unsigned int port, char *
         
         memset(&hints, 0, sizeof(hints));
         snprintf(buf, sizeof(buf), "%u", port);
+
+#ifdef AI_ADDRCONFIG
+        hints.ai_flags = AI_ADDRCONFIG;
+#endif
         
         hints.ai_family = PF_UNSPEC;
         hints.ai_socktype = SOCK_STREAM;
-        hints.ai_protocol = 0;
+        hints.ai_protocol = IPPROTO_TCP;
         
         ret = getaddrinfo(addr, buf, &hints, &ai);
         if ( ret != 0 ) {
@@ -364,7 +368,7 @@ static prelude_io_t *connect_manager(const char *addr, unsigned int port, char *
                 return NULL;
         }
         
-        sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+        sock = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
         if ( sock < 0) {
                 fprintf(stderr, "error creating socket.\n");
                 return NULL;

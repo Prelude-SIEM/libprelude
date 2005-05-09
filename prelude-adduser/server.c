@@ -164,13 +164,12 @@ static int setup_server(const char *addr, unsigned int port)
         struct addrinfo *ai, hints;
 
         snprintf(buf, sizeof(buf), "%u", port);
-
         memset(&hints, 0, sizeof(hints));
         
         hints.ai_flags = AI_PASSIVE;
         hints.ai_family = PF_UNSPEC;
         hints.ai_socktype = SOCK_STREAM;
-        hints.ai_protocol = 0;
+        hints.ai_protocol = IPPROTO_TCP;
         
         ret = getaddrinfo(addr, buf, &hints, &ai);
         if ( ret != 0 ) {
@@ -179,7 +178,7 @@ static int setup_server(const char *addr, unsigned int port)
                 return -1;
         }
 
-        sock = socket(AF_INET, SOCK_STREAM, 0);
+        sock = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
 	if (sock < 0) {
 		perror("socket");
                 freeaddrinfo(ai);

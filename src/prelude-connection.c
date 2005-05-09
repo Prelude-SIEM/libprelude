@@ -412,10 +412,14 @@ static int do_getaddrinfo(prelude_connection_t *cnx, struct addrinfo **ai, const
         
         memset(&hints, 0, sizeof(hints));
         snprintf(buf, sizeof(buf), "%u", port);
+
+#ifdef AI_ADDRCONFIG
+        hints.ai_flags = AI_ADDRCONFIG;
+#endif
         
         hints.ai_family = PF_UNSPEC;
         hints.ai_socktype = SOCK_STREAM;
-        hints.ai_protocol = 0;
+        hints.ai_protocol = IPPROTO_TCP;
         
         ret = getaddrinfo(addr, buf, &hints, ai);
         if ( ret != 0 ) {
