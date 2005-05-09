@@ -32,6 +32,7 @@
 
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_IDMEF_VALUE_TYPE
 #include "prelude-error.h"
+#include "prelude-inttypes.h"
 
 #include "idmef-time.h"
 #include "idmef-data.h"
@@ -56,7 +57,7 @@
 #define GENERIC_ONE_BASE_RW_FUNC(scanfmt, printfmt, name, type)                          \
         static int name ## _read(idmef_value_type_t *dst, const char *buf)               \
         {                                                                                \
-                return sscanf(buf, (scanfmt), &(dst)->data. name ##_val);                \
+                return sscanf(buf, (scanfmt), &(dst)->data. name ##_val) == 1 ? 0 : -1;  \
         }                                                                                \
                                                                                          \
         static int name ## _write(const idmef_value_type_t *src, prelude_string_t *out)  \
@@ -67,11 +68,15 @@
 
 #define GENERIC_TWO_BASES_RW_FUNC(fmt_dec, fmt_hex, name, type)				\
         static int name ## _read(idmef_value_type_t *dst, const char *buf)		\
-        {										\
-		if ( strncasecmp(buf, "0x", 2) == 0 )					\
-                        return sscanf(buf, (fmt_hex), &(dst)->data. name ##_val);       \
-											\
-		return sscanf(buf, (fmt_dec), &(dst)->data. name ##_val);               \
+        {                                                                               \
+                int ret;                                                                \
+                                                                                        \
+		if ( strncasecmp(buf, "0x", 2) == 0 )                                   \
+                        ret = sscanf(buf, (fmt_hex), &(dst)->data. name ##_val);        \
+		else                                                                    \
+		        ret = sscanf(buf, (fmt_dec), &(dst)->data. name ##_val);        \
+                                                                                        \
+                return (ret <= 0) ? -1 : 0;                                             \
 	}										\
 											\
         static int name ## _write(const idmef_value_type_t *src, prelude_string_t *out)	\
@@ -97,8 +102,45 @@ typedef struct {
 
 } idmef_value_type_operation_t;
 
-GENERIC_TWO_BASES_RW_FUNC("%hhd", "%hhx", int8, int8_t)
-GENERIC_TWO_BASES_RW_FUNC("%hhu", "%hhx", uint8, uint8_t)
+
+
+static int byte_read(idmef_value_type_t *dst, const char *buf, unsigned int min, unsigned int max)
+{
+        char *endptr;
+        long int tmp;
+
+        tmp = strtol(buf, &endptr, 0);
+        if ( tmp < min || tmp > max )
+                return -1;
+        
+        dst->data.int8_val = (int8_t) tmp;
+
+        return 0;
+}
+
+
+static int int8_write(const idmef_value_type_t *src, prelude_string_t *out)
+{
+        return prelude_string_sprintf(out, "%d", (int) src->data.int8_val);
+}
+
+static int uint8_write(const idmef_value_type_t *src, prelude_string_t *out)
+{
+        return prelude_string_sprintf(out, "%u", (int) src->data.int8_val);
+}
+
+static int int8_read(idmef_value_type_t *dst, const char *buf)
+{
+        return byte_read(dst, buf, PRELUDE_INT8_MIN, PRELUDE_INT8_MAX);
+}
+
+static int uint8_read(idmef_value_type_t *dst, const char *buf)
+{
+        return byte_read(dst, buf, 0, PRELUDE_UINT8_MAX);
+}
+
+
+
 GENERIC_TWO_BASES_RW_FUNC("%hd", "%hx", int16, int16_t)
 GENERIC_TWO_BASES_RW_FUNC("%hu", "%hx", uint16, uint16_t)
 GENERIC_TWO_BASES_RW_FUNC("%d", "%x", int32, int32_t)
@@ -467,8 +509,10 @@ int idmef_value_type_read(idmef_value_type_t *dst, const char *buf)
 
         if ( ! ops_tbl[dst->id].read )
                 return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_READ_UNAVAILABLE);
+
+        ret = ops_tbl[dst->id].read(dst, buf);
         
-        return ops_tbl[dst->id].read(dst, buf);
+        return (ret < 0) ? prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE) : 0;
 }
 
 
