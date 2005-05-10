@@ -24,6 +24,7 @@
 #include "config.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
 #include <gnutls/gnutls.h>
@@ -31,6 +32,7 @@
 #include "prelude.h"
 #include "idmef-path.h"
 #include "prelude-option.h"
+#include "prelude-log.h"
 
 
 int _prelude_internal_argc = 0;
@@ -140,10 +142,16 @@ static void slice_arguments(int *argc, char **argv)
  * Returns: 0 on success, a negative value if an error occured.
  */
 int prelude_init(int *argc, char **argv)
-{        
+{
+        const char *debug;
+        
         if ( libprelude_refcount++ > 0 )
                 return 0;
-                
+
+        debug = getenv("LIBPRELUDE_DEBUG");
+        if ( debug )
+                prelude_log_set_debug_level(atoi(debug));
+        
 #ifdef HAVE_PTHREAD_ATFORK
         {
                 int ret;
