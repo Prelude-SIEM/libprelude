@@ -30,20 +30,22 @@
 #define _LIBPRELUDE_LIBMISSING_H
 
 #include "config.h"
+
 #include <alloca.h>
-#include "allocsa.h"
 #include "getaddrinfo.h"
 #include "gettext.h"
 #include "inet_ntop.h"
 #include "minmax.h"
+#include <time.h>
 #include "regex.h"
-#include "setenv.h"
 #include "snprintf.h"
 #include <stdbool.h>
 #include "strdup.h"
 #include "strndup.h"
 #include "strpbrk.h"
 #include "strsep.h"
+#include "timegm.h"
+#include "time_r.h"
 #include "vasnprintf.h"
 #include "vsnprintf.h"
 #include "xsize.h"
