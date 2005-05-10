@@ -780,8 +780,6 @@ static int set_profile(prelude_option_t *opt, const char *optarg, prelude_string
         int ret;
         char buf[512];
         prelude_client_t *client = context;
-
-        printf("SET PROF %s\n", optarg);
         
         ret = prelude_client_profile_set_name(client->profile, optarg);
         if ( ret < 0 )
@@ -796,7 +794,6 @@ static int set_profile(prelude_option_t *opt, const char *optarg, prelude_string
                 free(client->config_filename);
         
         client->config_filename = strdup(buf);
-        printf("conf now %s\n", client->config_filename);
         
         return 0;
 }
@@ -1061,8 +1058,7 @@ int prelude_client_init(prelude_client_t *client)
         prelude_option_warning_t old_warnings;
         
         prelude_option_set_warnings(0, &old_warnings);
-        printf("INIT\n");
-        
+                
         ret = prelude_option_read(_prelude_generic_optlist, (const char **)&client->config_filename,
                                   &_prelude_internal_argc, _prelude_internal_argv, &err, client);
         
