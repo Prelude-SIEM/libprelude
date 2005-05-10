@@ -1,5 +1,5 @@
 /* Get address information (partial implementation).
-   Copyright (C) 1997, 2001, 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2001, 2002, 2004, 2005 Free Software Foundation, Inc.
    Contributed by Simon Josefsson <simon@josefsson.org>.
 
    This program is free software; you can redistribute it and/or modify
@@ -78,7 +78,7 @@ getaddrinfo (const char *restrict nodename,
       hints->ai_socktype != SOCK_STREAM && hints->ai_socktype != SOCK_DGRAM)
     /* FIXME: Support other socktype. */
     return EAI_SOCKTYPE; /* FIXME: Better return code? */
-  
+
   if (!nodename)
     /* FIXME: Support server bind mode. */
     return EAI_NONAME;
