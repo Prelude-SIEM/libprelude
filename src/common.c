@@ -259,43 +259,57 @@ int _prelude_get_file_name_and_path(const char *str, char **name, char **path)
 
 
 
+int prelude_get_gmt_offset_from_time(const time_t *utc, long *gmtoff)
+{
+        time_t local;
+        struct tm lt;
+
+        if ( ! localtime_r(utc, &lt) )
+                return prelude_error_from_errno(errno);
+
+        local = timegm(&lt);
+        
+        *gmtoff = local - *utc;
+        
+        return 0;
+}
+
+
+
+int prelude_get_gmt_offset_from_tm(struct tm *tm, long *gmtoff)
+{
+        int tmp;
+        time_t local, utc;
+
+        /*
+         * timegm will reset tm_isdst to 0
+         */
+        tmp = tm->tm_isdst;
+        utc = timegm(tm);
+        tm->tm_isdst = tmp;
+
+        local = mktime(tm);
+        if ( local == (time_t) -1 )
+                return prelude_error_from_errno(errno);
+        
+        *gmtoff = utc - mktime(tm);
+        
+        return 0;
+}
+
+
 
 int prelude_get_gmt_offset(long *gmtoff)
 {
-        struct tm lt;
-        time_t utc, local, now;
-
-        now = time(NULL);
-        if ( ! localtime_r(&now, &lt) )
-                return -1;
-        
-        local = mktime(&lt);
-
-        if ( ! gmtime_r(&now, &lt) )
-                return -1;
-        
-        lt.tm_isdst = -1;
-        utc = mktime(&lt);
-
-        *gmtoff = local - utc;
-
-        return 0;
+        time_t t = time(NULL);
+        return prelude_get_gmt_offset_from_time(&t, gmtoff);
 }
 
 
 
 time_t prelude_timegm(struct tm *tm)
 {
-        long gmtoff;
-        time_t retval;
-
-        prelude_get_gmt_offset(&gmtoff);
-
-        tm->tm_isdst = -1;
-        retval = mktime(tm);
-        retval += gmtoff;
-
-        return retval;
+        return timegm(tm);
 }
 
 
