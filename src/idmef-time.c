@@ -367,7 +367,7 @@ int idmef_time_set_from_timeval(idmef_time_t *time, const struct timeval *tv)
         int ret;
         long gmtoff;
 
-        ret = prelude_get_gmt_offset_from_time((time_t *) &tv->tv_sec, &gmtoff);
+        ret = prelude_get_gmt_offset_from_time((const time_t *) &tv->tv_sec, &gmtoff);
         if ( ret < 0 )
                 return ret;
 
