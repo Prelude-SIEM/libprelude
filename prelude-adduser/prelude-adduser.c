@@ -255,6 +255,50 @@ static uint64_t generate_analyzerid(void)
 
 
 
+/*
+ * If the client provided no configuration filename, it is important
+ * that we use the default configuration (idmef-client.conf). Here,
+ * we do a copy of this file to the analyzer profile directory, so
+ * that admin request to the analyzer can be saved locally for this
+ * analyzer.
+ */
+static int create_template_config_file(prelude_client_profile_t *profile)
+{
+        int ret;
+        FILE *fd, *tfd;
+        char buf[1024];
+
+        prelude_client_profile_get_config_filename(profile, buf, sizeof(buf));
+        
+        ret = access(buf, F_OK);
+        if ( ret == 0 )
+                return 0;
+
+        tfd = fopen(PRELUDE_CONFIG_DIR "/default/idmef-client.conf", "r");
+        if ( ! tfd ) {
+                fprintf(stderr, "could not open template configuration file: %s.\n", strerror(errno));
+                return -1;
+        }
+        
+        fd = fopen(buf, "w");
+        if ( ! fd ) {
+                fclose(tfd);
+                fprintf(stderr, "could not open sensor configuration file: %s.\n", strerror(errno));
+                return -1;
+        }
+
+        fchmod(fileno(fd), S_IRUSR|S_IWUSR|S_IRGRP);
+        fchown(fileno(fd), prelude_client_profile_get_uid(profile), prelude_client_profile_get_gid(profile));
+        
+        while ( fgets(buf, sizeof(buf), tfd) )
+                fwrite(buf, 1, strlen(buf), fd);
+
+        fclose(fd);
+        fclose(tfd);
+        
+        return 0;
+}
+
 
 static int register_sensor_ident(const char *name, uint64_t *ident) 
 {
@@ -478,6 +522,11 @@ static int setup_analyzer_files(prelude_client_profile_t *profile, uint64_t anal
         }
         
         name = prelude_client_profile_get_name(profile);
+
+        ret = create_template_config_file(profile);
+        if ( ret < 0 )
+                return -1;
+        
         ret = register_sensor_ident(name, &analyzerid);
         if ( ret < 0 )
                 return -1;

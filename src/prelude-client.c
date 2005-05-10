@@ -101,6 +101,8 @@ struct prelude_client {
          */        
         char *md5sum;
         char *config_filename;
+        prelude_bool_t config_external;
+        
         idmef_analyzer_t *analyzer;
         
         prelude_connection_pool_t *cpool;
@@ -775,8 +777,28 @@ static int get_heartbeat_interval(prelude_option_t *opt, prelude_string_t *out, 
 
 static int set_profile(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
+        int ret;
+        char buf[512];
         prelude_client_t *client = context;
-        return prelude_client_profile_set_name(client->profile, optarg);
+
+        printf("SET PROF %s\n", optarg);
+        
+        ret = prelude_client_profile_set_name(client->profile, optarg);
+        if ( ret < 0 )
+                return ret;
+
+        if ( client->config_external == TRUE )
+                return 0;
+        
+        prelude_client_profile_get_config_filename(client->profile, buf, sizeof(buf));
+
+        if ( client->config_filename )
+                free(client->config_filename);
+        
+        client->config_filename = strdup(buf);
+        printf("conf now %s\n", client->config_filename);
+        
+        return 0;
 }
 
 
@@ -800,54 +822,6 @@ static int create_heartbeat_msgbuf(prelude_client_t *client)
 
         prelude_msgbuf_set_data(client->msgbuf, client);
         prelude_msgbuf_set_callback(client->msgbuf, client_write_msgbuf);
-        
-        return 0;
-}
-
-
-
-
-/*
- * If the client provided no configuration filename, it is important
- * that we use the default configuration (idmef-client.conf). Here,
- * we do a copy of this file to the analyzer profile directory, so
- * that admin request to the analyzer can be saved locally for this
- * analyzer.
- */
-static int create_template_config_file(prelude_client_t *client)
-{
-        int ret;
-        FILE *fd, *tfd;
-        char buf[1024];
-
-        prelude_client_profile_get_config_filename(client->profile, buf, sizeof(buf));        
-        client->config_filename = strdup(buf);
-        
-        ret = access(client->config_filename, F_OK);
-        if ( ret == 0 )
-                return 0;
-
-        tfd = fopen(PRELUDE_CONFIG_DIR "/default/idmef-client.conf", "r");
-        if ( ! tfd ) {
-                prelude_log_debug(3, "could not open template configuration file: %s.\n", strerror(errno));
-                return prelude_error_from_errno(errno);
-        }
-        
-        fd = fopen(client->config_filename, "w");
-        if ( ! fd ) {
-                fclose(tfd);
-                prelude_log_debug(3, "could not open sensor configuration file: %s.\n", strerror(errno));
-                return prelude_error(PRELUDE_ERROR_PROFILE);
-        }
-
-        fchmod(fileno(fd), S_IRUSR|S_IWUSR|S_IRGRP);
-        fchown(fileno(fd), prelude_client_profile_get_uid(client->profile), prelude_client_profile_get_gid(client->profile));
-        
-        while ( fgets(buf, sizeof(buf), tfd) )
-                fwrite(buf, 1, strlen(buf), fd);
-
-        fclose(fd);
-        fclose(tfd);
         
         return 0;
 }
@@ -907,6 +881,7 @@ int _prelude_client_register_options(void)
                                  set_profile, NULL);
         if ( ret < 0 )
                 return ret;
+        prelude_option_set_priority(opt, PRELUDE_OPTION_PRIORITY_IMMEDIATE);
         
         ret = prelude_option_add(root_list, NULL, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG
                                  |PRELUDE_OPTION_TYPE_WIDE, 0, "heartbeat-interval",
@@ -1006,7 +981,7 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
 {
         int ret;
         prelude_client_t *new;
-                
+        
         new = calloc(1, sizeof(*new));
         if ( ! new )
                 return prelude_error_from_errno(errno);
@@ -1022,7 +997,7 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
                 _prelude_client_destroy(new);
                 return ret;
         }
-                
+
         set_analyzer_name(NULL, profile, NULL, new);
 
         ret = _prelude_client_profile_new(&new->profile);
@@ -1030,8 +1005,8 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
                 _prelude_client_destroy(new);
                 return ret;
         }
-
-        prelude_client_profile_set_name(new->profile, profile);
+        
+        set_profile(NULL, profile, NULL, new);
         
         ret = prelude_ident_new(&new->unique_ident);
         if ( ret < 0 ) {
@@ -1081,31 +1056,12 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
  */
 int prelude_client_init(prelude_client_t *client)
 {
-        int ret, i;
+        int ret;
         prelude_string_t *err = NULL;
-        char *tmp[_prelude_internal_argc];
         prelude_option_warning_t old_warnings;
-
-        /*
-         * Chicken and egg problem, where we need to get the profile used by the client
-         * from the command line. We then need to use the profile (default or parsed),
-         * create a configuration template, and read everything from it, but we need to overwrite
-         * option from the config file by the one provided on the CLI since it take precedence.
-         */
-        for ( i = 0; i < _prelude_internal_argc; i++ )
-                tmp[i] = _prelude_internal_argv[i];
-
+        
         prelude_option_set_warnings(0, &old_warnings);
-        
-        ret = prelude_option_read(_prelude_generic_optlist, (const char **) &client->config_filename, &i, tmp, &err, client);
-        
-        if ( ! client->config_filename ) {
-                ret = create_template_config_file(client);
-                if ( ret < 0 ) {
-                        prelude_option_set_warnings(old_warnings, NULL);
-                        return ret;
-                }
-        }
+        printf("INIT\n");
         
         ret = prelude_option_read(_prelude_generic_optlist, (const char **)&client->config_filename,
                                   &_prelude_internal_argc, _prelude_internal_argv, &err, client);
@@ -1114,7 +1070,7 @@ int prelude_client_init(prelude_client_t *client)
         
         if ( ret < 0 )
                 return ret;
-        
+
         ret = _prelude_client_profile_init(client->profile);
         if ( ret < 0 )
                 return ret;
@@ -1446,7 +1402,7 @@ const char *prelude_client_get_config_filename(prelude_client_t *client)
  * Returns: 0 on success, -1 if an error occured.
  */
 int prelude_client_set_config_filename(prelude_client_t *client, const char *filename)
-{
+{        
         if ( client->config_filename )
                 free(client->config_filename);
         
@@ -1454,6 +1410,8 @@ int prelude_client_set_config_filename(prelude_client_t *client, const char *fil
         if ( ! client->config_filename )
                 return prelude_error_from_errno(errno);
 
+        client->config_external = TRUE;
+        
         return 0;
 }
 
@@ -1493,7 +1451,8 @@ prelude_bool_t prelude_client_is_setup_needed(int error)
                  code == PRELUDE_ERROR_ANALYZERID_PARSE     ||
                  code == PRELUDE_ERROR_TLS_KEY_FILE         ||
                  code == PRELUDE_ERROR_TLS_CERTIFICATE_FILE ||
-                 code == PRELUDE_ERROR_TLS_CERTIFICATE_PARSE ) ? TRUE : FALSE;
+                 code == PRELUDE_ERROR_TLS_CERTIFICATE_PARSE ||
+                 prelude_error_get_source(error) == PRELUDE_ERROR_SOURCE_CONFIG_ENGINE ) ? TRUE : FALSE;
 }
 
 
