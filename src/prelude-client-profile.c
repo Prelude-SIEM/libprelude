@@ -237,6 +237,9 @@ int _prelude_client_profile_new(prelude_client_profile_t **ret)
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
 
+        (*ret)->uid = geteuid();
+        (*ret)->gid = getegid();
+        
         return 0;
 }
 
@@ -245,9 +248,6 @@ int _prelude_client_profile_new(prelude_client_profile_t **ret)
 int _prelude_client_profile_init(prelude_client_profile_t *cp)
 {
         int ret;
-        
-        cp->uid = geteuid();
-        cp->gid = getegid();
         
         ret = get_profile_analyzerid(cp);
         if ( ret < 0 )
@@ -272,11 +272,11 @@ int prelude_client_profile_new(prelude_client_profile_t **ret, const char *name)
 {
         int retval;
         prelude_client_profile_t *cp;
-        
-        cp = calloc(1, sizeof(*cp));
-        if ( ! cp )
-                return prelude_error_from_errno(errno);
 
+        retval = _prelude_client_profile_new(&cp);
+        if ( retval < 0 )
+                return retval;
+        
         cp->name = strdup(name);
         if ( ! cp->name ) {
                 free(cp);
