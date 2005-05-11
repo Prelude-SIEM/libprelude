@@ -27,7 +27,9 @@
 #ifdef __cplusplus
   extern "C" {
 #endif
-        
+
+#include <stdio.h>
+#include <unistd.h>
 #include "prelude-inttypes.h"
 
 
