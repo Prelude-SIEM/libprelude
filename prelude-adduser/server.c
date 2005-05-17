@@ -92,7 +92,8 @@ static int handle_client_connection(prelude_client_profile_t *cp, prelude_io_t *
 
 
 
-static int wait_connection(prelude_client_profile_t *cp, int sock, int keepalive,
+static int wait_connection(prelude_client_profile_t *cp, int sock,
+                           struct addrinfo *ai, int keepalive,
                            gnutls_srp_server_credentials cred, gnutls_x509_privkey key,
                            gnutls_x509_crt cacrt, gnutls_x509_crt crt)
 {
@@ -102,13 +103,14 @@ static int wait_connection(prelude_client_profile_t *cp, int sock, int keepalive
         socklen_t len;
         prelude_io_t *fd;
         struct sockaddr *sa;
-        unsigned short *port;
 #ifndef HAVE_IPV6
         struct sockaddr_in addr;
 #else
         struct sockaddr_in6 addr;
 #endif
 
+        sa = (struct sockaddr *) &addr;
+        
         ret = prelude_io_new(&fd);
         if ( ret < 0 ) {
                 fprintf(stderr, "%s: error creating a new IO object: %s.\n",
@@ -117,15 +119,12 @@ static int wait_connection(prelude_client_profile_t *cp, int sock, int keepalive
         }
         
         do {
-                fprintf(stderr, "\n  - Waiting for peers install request...\n");
-                sa = (struct sockaddr *) &addr;
+                inet_ntop(ai->ai_family, prelude_sockaddr_get_inaddr(ai->ai_addr), buf, sizeof(buf));
+                      
+                fprintf(stderr, "\n  - Waiting for peers install request on %s:%u...\n",
+                        buf, ntohs(((struct sockaddr_in *) ai->ai_addr)->sin_port));
+                
                 len = sizeof(addr);
-
-#ifdef HAVE_IPV6
-                port = &addr.sin6_port;
-#else
-                port = &addr.sin_port;
-#endif
                 csock = accept(sock, sa, &len);
                 if ( csock < 0 ) {
                         fprintf(stderr, "accept returned an error: %s.\n", strerror(errno));
@@ -137,7 +136,8 @@ static int wait_connection(prelude_client_profile_t *cp, int sock, int keepalive
                         return -1;
                 
                 inet_ntop(sa->sa_family, inaddr, buf, sizeof(buf));                
-                snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf), ":%u", *port);
+                snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf), ":%u",
+                         ntohs(((struct sockaddr_in *) sa)->sin_port));
                 
                 fprintf(stderr, "  - Connection from %s.\n", buf);
                 prelude_io_set_sys_io(fd, csock);
@@ -157,52 +157,101 @@ static int wait_connection(prelude_client_profile_t *cp, int sock, int keepalive
 
 
 
-static int setup_server(const char *addr, unsigned int port)
+
+/*
+ * Try to guessd the default address family.
+ */
+static int find_default_family(void)
+{
+#if HAVE_IPV6
+        int sock, ret;
+        struct addrinfo *ai, hints;
+        
+        memset(&hints, 0, sizeof(hints));
+        
+        hints.ai_family = PF_INET6; 
+        hints.ai_flags = AI_PASSIVE;
+        hints.ai_socktype = SOCK_STREAM;
+        hints.ai_protocol = IPPROTO_TCP;
+
+        sock = socket(PF_INET6, SOCK_STREAM, IPPROTO_TCP);
+        if ( sock < 0 )
+                return PF_INET;
+        
+        ret = getaddrinfo(NULL, "0", &hints, &ai);
+        if ( ret < 0 ) {
+                close(sock);
+                return PF_INET;
+        }
+        
+        ret = bind(sock, ai->ai_addr, ai->ai_addrlen);
+        if ( ret < 0 ) {
+                close(sock);
+                freeaddrinfo(ai);
+                return PF_INET;
+        }
+
+        close(sock);
+        freeaddrinfo(ai);
+        
+        return PF_INET6;
+#endif
+        
+        return PF_INET;
+}
+
+
+
+static int setup_server(const char *addr, unsigned int port, struct addrinfo **ai)
 {
         int sock, ret, on = 1;
-        char buf[sizeof("65535")];
-        struct addrinfo *ai, hints;
+        char buf[1024];
+        struct addrinfo hints;
 
         snprintf(buf, sizeof(buf), "%u", port);
         memset(&hints, 0, sizeof(hints));
         
         hints.ai_flags = AI_PASSIVE;
-        hints.ai_family = PF_UNSPEC;
         hints.ai_socktype = SOCK_STREAM;
         hints.ai_protocol = IPPROTO_TCP;
+        hints.ai_family = find_default_family();
         
-        ret = getaddrinfo(addr, buf, &hints, &ai);
+#ifdef AI_ADDRCONFIG
+        hints.ai_flags |= AI_ADDRCONFIG;
+#endif
+        
+        ret = getaddrinfo(addr, buf, &hints, ai);
         if ( ret != 0 ) {
-                fprintf(stderr, "could not resolve %s: %s.\n", addr,
+                fprintf(stderr, "could not resolve %s: %s.\n", addr ? addr : "",
                         (ret == EAI_SYSTEM) ? strerror(errno) : gai_strerror(ret));
                 return -1;
         }
 
-        sock = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
+        sock = socket((*ai)->ai_family, (*ai)->ai_socktype, (*ai)->ai_protocol);
 	if (sock < 0) {
 		perror("socket");
-                freeaddrinfo(ai);
+                freeaddrinfo(*ai);
                 return -1;
 	}
         
         ret = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(int));
         if ( ret < 0 ) {
                 perror("setsockopt");
-                freeaddrinfo(ai);
+                freeaddrinfo(*ai);
                 return -1;
         }
         
-	ret = bind(sock, ai->ai_addr, ai->ai_addrlen);
+	ret = bind(sock, (*ai)->ai_addr, (*ai)->ai_addrlen);
 	if ( ret < 0 ) {
 		perror("bind");
-                freeaddrinfo(ai);
+                freeaddrinfo(*ai);
 		return -1;
 	}
 
-	ret = listen(sock, 5);
+	ret = listen(sock, 1);
 	if ( ret < 0 ) {
 		perror("listen");
-                freeaddrinfo(ai);
+                freeaddrinfo(*ai);
 		return -1;
 	}
         
@@ -335,6 +384,7 @@ int server_create(prelude_client_profile_t *cp, const char *addr, unsigned int p
                   gnutls_x509_privkey key, gnutls_x509_crt cacrt, gnutls_x509_crt crt) 
 {
         int sock, ret;
+        struct addrinfo *ai;
         gnutls_srp_server_credentials cred;
 
         if ( ! prompt )
@@ -350,7 +400,7 @@ int server_create(prelude_client_profile_t *cp, const char *addr, unsigned int p
         if ( ret < 0 )
                 return -1;
         
-        sock = setup_server(addr, port);
+        sock = setup_server(addr, port, &ai);
         if ( sock < 0 )
                 return -1;
 
@@ -362,7 +412,10 @@ int server_create(prelude_client_profile_t *cp, const char *addr, unsigned int p
         }
 
         gnutls_srp_set_server_credentials_function(cred, srp_callback);
-        wait_connection(cp, sock, keepalive, cred, key, cacrt, crt);
+
+        wait_connection(cp, sock, ai, keepalive, cred, key, cacrt, crt);
+        freeaddrinfo(ai);
+        
         gnutls_srp_free_server_credentials(cred);
         
         return 0;

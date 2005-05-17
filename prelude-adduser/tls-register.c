@@ -227,6 +227,7 @@ static ssize_t safe_write(int fd, const char *buf, size_t size)
 static int save_buf(const char *filename, uid_t uid, gid_t gid, char *buf, size_t size)
 {
         int fd, ret;
+        ssize_t sret;
         
         fd = open(filename, O_CREAT|O_WRONLY|O_APPEND, S_IRUSR|S_IWUSR|S_IRGRP);
         if ( fd < 0 ) {
@@ -242,8 +243,8 @@ static int save_buf(const char *filename, uid_t uid, gid_t gid, char *buf, size_
                 return -1;
         }
         
-        ret = safe_write(fd, buf, size);        
-        if ( ret != size ) {
+        sret = safe_write(fd, buf, size);        
+        if ( sret != size ) {
                 fprintf(stderr, "error writing to %s: %s.\n", filename, strerror(errno));
                 safe_close(fd);
                 return -1;
