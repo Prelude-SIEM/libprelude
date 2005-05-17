@@ -31,7 +31,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/time.h>
-#include <fts.h>
 
 #include <errno.h>
 #include <gnutls/gnutls.h>
