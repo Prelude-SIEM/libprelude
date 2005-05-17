@@ -430,9 +430,9 @@ static const idmef_value_type_operation_t ops_tbl[] = {
 
 static int is_type_valid(idmef_value_type_id_t type) 
 {
-        if ( type < 0 || type > (sizeof(ops_tbl) / sizeof(*ops_tbl)) )
+        if ( type < 0 || type >= (sizeof(ops_tbl) / sizeof(*ops_tbl)) )
                 return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_UNKNOWN);
-
+        
         return 0;
 }
 
