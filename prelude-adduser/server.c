@@ -161,7 +161,7 @@ static int wait_connection(prelude_client_profile_t *cp, int sock,
 /*
  * Try to guessd the default address family.
  */
-static int find_default_family(void)
+int find_default_family(void)
 {
 #if HAVE_IPV6
         int sock, ret;
@@ -214,7 +214,7 @@ static int setup_server(const char *addr, unsigned int port, struct addrinfo **a
         hints.ai_flags = AI_PASSIVE;
         hints.ai_socktype = SOCK_STREAM;
         hints.ai_protocol = IPPROTO_TCP;
-        hints.ai_family = find_default_family();
+        hints.ai_family = (addr) ? PF_UNSPEC : find_default_family();
         
 #ifdef AI_ADDRCONFIG
         hints.ai_flags |= AI_ADDRCONFIG;
