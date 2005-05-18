@@ -57,3 +57,9 @@ libprelude_la_SOURCES = 		\
 	idmef-value.c			\
 	idmef-value-type.c		
 
+
+idmef-criteria-string.lex.c: idmef-criteria-string.lex.l
+	echo "#include \"config.h\"" > $(srcdir)/idmef-criteria-string.lex.c
+	$(LEX) -o -t $(srcdir)/idmef-criteria-string.lex.l >> $(srcdir)/idmef-criteria-string.lex.c
+
+idmef-criteria-string.lex.o: idmef-criteria-string.lex.c
