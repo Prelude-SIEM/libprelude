@@ -40,9 +40,9 @@
  */
 
 #ifdef PRELUDE_WORDS_BIGENDIAN
- #define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[(pos)]
+# define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[(pos)]
 #else
- #define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[sizeof(type) - 1 - (pos)]
+# define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[sizeof(type) - 1 - (pos)]
 #endif
 
 

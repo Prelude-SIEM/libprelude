@@ -36,9 +36,9 @@
 
 
 #ifdef DEBUG
- #define dprint(args...) fprintf(stderr, args)
+# define dprint(args...) fprintf(stderr, args)
 #else
- #define dprint(args...)
+# define dprint(args...)
 #endif
 
 

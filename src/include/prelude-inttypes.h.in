@@ -39,19 +39,20 @@
 
 
 #ifdef __PRELUDE_HAVE_STDINT_H
-  #include <stdint.h>
+# include <stdint.h>
 #endif
+
 #ifdef __PRELUDE_HAVE_INTTYPES_H
-  #include <inttypes.h>
+# include <inttypes.h>
 #endif
 
 
 #ifndef TRUE
- #define TRUE 1
+# define TRUE 1
 #endif
 
 #ifndef FALSE
- #define FALSE 0
+# define FALSE 0
 #endif
 
 
@@ -97,13 +98,13 @@
  * format specifier
  */
 #ifdef __PRELUDE_HAVE_64BIT_LONG
- #define __PRELUDE_PRI64_PREFIX     "l"
- #define __PRELUDE_INT64_SUFFIX(c)  c ## L
- #define __PRELUDE_UINT64_SUFFIX(c) c ## UL
+# define __PRELUDE_PRI64_PREFIX     "l"
+# define __PRELUDE_INT64_SUFFIX(c)  c ## L
+# define __PRELUDE_UINT64_SUFFIX(c) c ## UL
 #else
- #define __PRELUDE_PRI64_PREFIX     "ll"
- #define __PRELUDE_INT64_SUFFIX(c)  c ## LL
- #define __PRELUDE_UINT64_SUFFIX(c) c ## ULL
+# define __PRELUDE_PRI64_PREFIX     "ll"
+# define __PRELUDE_INT64_SUFFIX(c)  c ## LL
+# define __PRELUDE_UINT64_SUFFIX(c) c ## ULL
 #endif
 
 #define PRELUDE_PRId64      __PRELUDE_PRI64_PREFIX "d"
@@ -169,17 +170,17 @@ typedef enum {
 #endif
 
 #ifndef __PRELUDE_STDINT_HAVE_UINT64
- #ifdef __PRELUDE_HAVE_64BIT_LONG
+# ifdef __PRELUDE_HAVE_64BIT_LONG
 
   typedef long int64_t;
   typedef unsigned long uint64_t;
 
- #else
+# else
 
   typedef long long int64_t;
   typedef unsigned long long uint64_t;
 
- #endif
+# endif
 #endif
 
 #ifdef __cplusplus
