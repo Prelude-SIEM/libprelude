@@ -336,8 +336,8 @@ static int register_sensor_ident(const char *name, uint64_t *ident)
                         return register_sensor_ident(name, ident);
                 }
                 
+                fclose(fd);
                 fprintf(stderr, "  - Using already allocated ident for %s: %" PRELUDE_PRIu64 ".\n", name, *ident);
-                
                 return 0;
         }
 
@@ -413,13 +413,13 @@ static prelude_io_t *connect_manager(const char *addr, unsigned int port, char *
         
         sock = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
         if ( sock < 0) {
-                fprintf(stderr, "error creating socket.\n");
+                fprintf(stderr, "error creating socket: %s.\n", strerror(errno));
                 return NULL;
         }
 
         ret = connect(sock, ai->ai_addr, ai->ai_addrlen);
         if ( ret < 0 ) {
-                fprintf(stderr, "could not connect to %s port %s.\n", addr, buf);
+                fprintf(stderr, "could not connect to %s port %s: %s.\n", addr, buf, strerror(errno));
                 close(sock);
                 return NULL;
         }
