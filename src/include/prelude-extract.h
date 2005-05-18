@@ -25,6 +25,10 @@
 #define _LIBPRELUDE_EXTRACT_H
 
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include "prelude-inttypes.h"
 
 

@@ -25,6 +25,10 @@
 #ifndef _LIBPRELUDE_CLIENT_PROFILE_H
 #define _LIBPRELUDE_CLIENT_PROFILE_H
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include <unistd.h>
 
 #include "prelude-inttypes.h"

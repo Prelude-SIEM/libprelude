@@ -25,9 +25,13 @@
 #ifndef _LIBPRELUDE_IDMEF_H
 #define _LIBPRELUDE_IDMEF_H
 
-#include "prelude-inttypes.h"
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include <sys/types.h>
 
+#include "prelude-inttypes.h"
 #include "prelude-list.h"
 #include "prelude-string.h"
 #include "idmef-time.h"

@@ -24,8 +24,11 @@
 #ifndef _LIBPRELUDE_PRELUDE_LOG_H
 #define _LIBPRELUDE_PRELUDE_LOG_H
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include <stdarg.h>
-#include <syslog.h>
 
 #ifdef __cplusplus
  extern "C" {

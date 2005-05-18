@@ -30,6 +30,10 @@
  extern "C" {
 #endif
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 typedef struct idmef_path idmef_path_t;
 
 #include <stdarg.h>

@@ -37,6 +37,9 @@
 @__PRELUDE_STDINT_HAVE_UINT64@
 @__PRELUDE_HAVE_WORKING_PRI64_PREFIX@
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #ifdef __PRELUDE_HAVE_STDINT_H
 # include <stdint.h>

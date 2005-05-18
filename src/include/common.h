@@ -24,6 +24,10 @@
 #ifndef _LIBPRELUDE_COMMON_H
 #define _LIBPRELUDE_COMMON_H
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include "idmef.h"
 #include "prelude-msg.h"
 #include "prelude-inttypes.h"

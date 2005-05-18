@@ -24,6 +24,10 @@
 #ifndef _LIBPRELUDE_PRELUDE_STRING_H
 #define _LIBPRELUDE_PRELUDE_STRING_H
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include <stdarg.h>
 
 #include "prelude-list.h"
