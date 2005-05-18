@@ -175,8 +175,8 @@ static int cmp_option(prelude_option_t *opt, const char *optname, prelude_option
 /*
  * Search an option of a given name in the given option list.
  */
-static prelude_option_t *search_option(prelude_option_t *root,
-                                       const char *optname, prelude_option_type_t type, int walk_children) 
+static prelude_option_t *search_option(prelude_option_t *root, const char *optname,
+                                       prelude_option_type_t type, int walk_children) 
 {
         int cmp;
         prelude_list_t *tmp;
@@ -718,12 +718,23 @@ int prelude_option_add(prelude_option_t *parent, prelude_option_t **retopt, prel
         int ret;
         prelude_option_t *new;
 
-        if ( parent && longopt && prelude_option_search(parent, longopt, ~0, FALSE) ) {
-                prelude_log(PRELUDE_LOG_WARN, "An option with the name '%s' already exist at the same depth.\n", longopt);
-                return -1;
+        if ( parent ) {
+                prelude_option_t *dup;
+                char tmp[2] = { shortopt, 0 };
+                
+                if ( longopt && (dup = prelude_option_search(parent, longopt, ~0, FALSE)) ) {
+                        prelude_log(PRELUDE_LOG_WARN, "New option '%s' ('%c') conflict with '%s' ('%c').\n",
+                                    longopt, shortopt, dup->longopt, dup->shortopt);
+                        return -1;
+                } 
+                
+                if ( shortopt && (dup = prelude_option_search(parent, tmp, ~0, FALSE)) ) {
+                        prelude_log(PRELUDE_LOG_WARN, "New option '%s' ('%c') conflict with '%s' ('%c').\n",
+                                    longopt, shortopt, dup->longopt, dup->shortopt);
+                        return -1;
+                }
         }
-        
-        
+
         ret = prelude_option_new(parent, &new);
         if ( ret < 0 )
                 return ret;
