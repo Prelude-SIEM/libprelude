@@ -1,3 +1,35 @@
+* 2005-05-18, libprelude-0.9.0-rc6:
+
+	- Fix compilation problem on system lacking the FTS interface.
+
+	- Fix compilation problem on some MacOSX system.
+
+	- Move generation of the Prelude configuration template from sensor
+	  first launch to prelude-adduser. More intuitive to the user.
+
+	- You can now use the LIBPRELUDE_DEBUG environment variable to specify
+	  a libprelude debug level.
+
+	- Fix problem with prelude-adduser register/registration-server on
+	  machine where ipv6 is enabled but no interface actually use it. It
+	  happened that prelude-adduser would use an incorrect address family.
+
+	- Make idmef_message_print report GMT offset.
+
+	- Avoid unportable convertion specifier, this was causing issue mainly
+	  on Solaris system. 
+
+	- Fix handling of GMT time. Stop messing with environment variable.
+	  People who has been experiencing issue with GMT offset or time should
+	  try this release.
+
+	- Fix parsing time on Solaris. This resulted in wrong database query
+	  from Prewikka.
+
+	- Various bugfix
+
+
+
 * 2005-05-01, libprelude-0.9.0-rc5:
 	
 	- Make permission parser more tolerant.

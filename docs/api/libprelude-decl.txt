@@ -2412,6 +2412,21 @@ idmef_file_t *ptr, idmef_file_fstype_t fstype
 <RETURNS>int </RETURNS>
 idmef_file_t *ptr, idmef_file_fstype_t **ret
 </FUNCTION>
+<FUNCTION>
+<NAME>idmef_file_get_file_type</NAME>
+<RETURNS>prelude_string_t *</RETURNS>
+idmef_file_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_file_set_file_type</NAME>
+<RETURNS>void </RETURNS>
+idmef_file_t *ptr, prelude_string_t *file_type
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_file_new_file_type</NAME>
+<RETURNS>int </RETURNS>
+idmef_file_t *ptr, prelude_string_t **ret
+</FUNCTION>
 <ENUM>
 <NAME>idmef_linkage_category_t</NAME>
 typedef enum {
@@ -6027,6 +6042,11 @@ prelude_connection_pool_t *pool
 prelude_connection_pool_t *pool, prelude_connection_pool_flags_t flags
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_connection_pool_set_required_permission</NAME>
+<RETURNS>void </RETURNS>
+prelude_connection_pool_t *pool, prelude_connection_permission_t req_perm
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_connection_pool_set_data</NAME>
 <RETURNS>void </RETURNS>
 prelude_connection_pool_t *pool, void *data
@@ -6548,7 +6568,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.0-rc4"
+#define LIBPRELUDE_VERSION "0.9.0-rc5"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
@@ -7837,11 +7857,11 @@ const idmef_time_t *time, prelude_string_t *out
 </FUNCTION>
 <MACRO>
 <NAME>byte</NAME>
- #define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[(pos)]
+# define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[(pos)]
 </MACRO>
 <MACRO>
 <NAME>byte</NAME>
- #define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[sizeof(type) - 1 - (pos)]
+# define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[sizeof(type) - 1 - (pos)]
 </MACRO>
 <FUNCTION>
 <NAME>byte</NAME>
