@@ -31,31 +31,25 @@
 
 #include "config.h"
 
-#include "cycle-check.h"
-#include "dirfd.h"
-#include "fts_.h"
+#include "ftw_.h"
 #include "getaddrinfo.h"
 #include "gettext.h"
-#include "hash.h"
 #include "inet_ntop.h"
 #include "minmax.h"
+#include "pathmax.h"
 #include "regex.h"
 #include "snprintf.h"
-#include "stat-macros.h"
 #include "strdup.h"
 #include "strndup.h"
 #include "strpbrk.h"
 #include "strsep.h"
 #include "time_r.h"
 #include "timegm.h"
-#include "unistd-safer.h"
 #include "vasnprintf.h"
 #include "vsnprintf.h"
-#include "xalloc.h"
 #include "xsize.h"
 #include <alloca.h>
 #include <stdbool.h>
-#include <sys/stat.h>
 #include <time.h>
 
 #endif /* _LIBPRELUDE_LIBMISSING_H */

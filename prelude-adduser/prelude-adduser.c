@@ -69,6 +69,7 @@ struct cmdtbl {
 
 static char *addr = NULL;
 static unsigned int port = 5553;
+static PRELUDE_LIST(rm_dir_list);
 static prelude_client_profile_t *profile;
 static prelude_bool_t gid_set = FALSE, uid_set = FALSE;
 static prelude_bool_t server_prompt_passwd = FALSE, server_keepalive = FALSE;
@@ -399,10 +400,10 @@ static prelude_io_t *connect_manager(const char *addr, unsigned int port, char *
 #ifdef AI_ADDRCONFIG
         hints.ai_flags = AI_ADDRCONFIG;
 #endif
-        
+
         hints.ai_socktype = SOCK_STREAM;
         hints.ai_protocol = IPPROTO_TCP;
-        hints.ai_family = (addr) ? PF_UNSPEC : find_default_family();
+        hints.ai_family = find_default_family();
         
         ret = getaddrinfo(addr, buf, &hints, &ai);
         if ( ret != 0 ) {
@@ -653,36 +654,76 @@ static int add_cmd(int argc, char **argv)
 
 
 
-static int delete_dir(char *path)
+static int add_to_rm_dir_list(const char *filename)
 {
-        int ret;
-        FTS *dir;
-        FTSENT *file;
-        char *arg[] = { path, NULL };
+        struct rm_dir_s *new;
 
-        dir = fts_open(arg, FTS_LOGICAL|FTS_NOSTAT, NULL);
-        if ( ! dir ) 
-                fprintf(stderr, "error opening %s: %s.\n", path, strerror(errno));
-
-        while ( (file = fts_read(dir)) ) {
-                ret = 0;
-                
-                if ( file->fts_info == FTS_F )
-                        ret = unlink(file->fts_path);
-                
-                else if ( file->fts_info == FTS_DP )
-                        ret = rmdir(file->fts_path);
-
-                else continue;
-                
-                fprintf(stderr, "     Removing '%s': %s.\n", file->fts_path, strerror(errno));
+        new = malloc(sizeof(*new));
+        if ( ! new ) {
+                fprintf(stderr, "memory exhausted.\n");
+                return -1;
         }
 
-        fts_close(dir);
-        
+        new->filename = strdup(filename);
+        prelude_list_add(&rm_dir_list, &new->list);
+
         return 0;
 }
 
+
+
+static int flush_rm_dir_list(void)
+{
+        int ret;
+        struct rm_dir_s *dir;
+        prelude_list_t *tmp, *bkp;
+
+        prelude_list_for_each_safe(&rm_dir_list, tmp, bkp) {
+                dir = prelude_list_entry(tmp, struct rm_dir_s, list);
+
+                ret = rmdir(dir->filename);
+                if ( ret < 0 ) {
+                        fprintf(stderr, "could not delete directory %s: %s.\n", dir->filename, strerror(errno));
+                        return -1;
+                }
+
+                prelude_list_del(&dir->list);
+                free(dir->filename);
+                free(dir);
+        }
+
+        return 0;
+}
+
+
+static int del_cb(const char *filename, const struct stat *st, int flag)
+{
+        int ret;
+        
+        if ( flag != FTW_F )
+                return add_to_rm_dir_list(filename);
+        
+        ret = unlink(filename);
+        if ( ret < 0 )
+                fprintf(stderr, "unlink %s: %s.\n", filename, strerror(errno));
+
+        return ret;
+}
+
+
+
+static void delete_dir(const char *dirname)
+{
+        int ret;
+        
+        fprintf(stderr, "  - Removing %s...\n", dirname);
+        
+        ret = ftw(dirname, del_cb, 10);
+        if ( ret < 0 )
+                return;
+        
+        flush_rm_dir_list();
+}
 
         
 static int del_cmd(int argc, char **argv)
