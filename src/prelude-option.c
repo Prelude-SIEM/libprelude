@@ -332,9 +332,14 @@ static int do_set(prelude_option_t *opt, const char *value, prelude_string_t *ou
                 value = NULL;
         
         ret = opt->set(opt, value, out, *context);        
-        if ( ret < 0 )
+        if ( ret < 0 ) {
+                if ( prelude_string_is_empty(out) )
+                        prelude_string_sprintf(out, "could not set option %s: %s",
+                                               opt->longopt, prelude_strerror(ret));
+                
                 return ret;
-
+        }
+        
         if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
                                 
                 oc = search_context(opt, value);
@@ -734,6 +739,9 @@ int prelude_option_add(prelude_option_t *parent, prelude_option_t **retopt, prel
                         return -1;
                 }
         }
+
+        if ( type & PRELUDE_OPTION_TYPE_WIDE && ! longopt )
+                return -1;
 
         ret = prelude_option_new(parent, &new);
         if ( ret < 0 )
