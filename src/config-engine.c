@@ -128,6 +128,9 @@ static char *get_section(const char *in)
  */
 static void op_modify_line(char **line, char *nline) 
 {
+        if ( ! nline )
+                return;
+        
         free(*line); *line = nline;
 }
 
@@ -205,7 +208,7 @@ static int op_insert_line(config_t *cfg, char *line, unsigned int lins)
 {
         unsigned int i;
 
-        if ( lins >= cfg->elements )
+        if ( lins >= cfg->elements || ! line )
                 return -1;
         
         cfg->elements++;
@@ -514,27 +517,28 @@ static int search_entry(config_t *cfg, const char *section,
  */
 static char *create_new_line(const char *entry, const char *val) 
 {
+        int ret;
         char *line;
         size_t len = 0;
-
+        
         if ( ! entry )
                 return NULL;
-        
-        if ( val )
-                len = strlen(val) + 3;
-        else
-                len = 2;
 
-        line = malloc(strlen(entry) + len);
+        if ( val )
+                len = strlen(entry) + strlen(val) + 2;
+        else
+                len = strlen(entry) + 1;
+
+        line = malloc(len);
         if (! line )
                 return NULL;
 
         if ( val )
-                sprintf(line, "%s=%s", entry, val);
+                ret = snprintf(line, len, "%s=%s", entry, val);
         else
-                sprintf(line, "%s", entry);
+                ret = snprintf(line, len, "%s", entry);
         
-        return line;
+        return (ret < 0 || ret >= len) ? NULL : line;
 }
 
 
@@ -625,10 +629,13 @@ static int new_section_line(config_t *cfg, const char *section,
                 snprintf(buf, sizeof(buf), " \n[%s]", section);
 
                 if ( *index )
-                        op_insert_line(cfg, strdup(buf), *index + 1);
+                        ret = op_insert_line(cfg, strdup(buf), *index + 1);
                 else
-                        op_append_line(cfg, strdup(buf));
+                        ret = op_append_line(cfg, strdup(buf));
 
+                if ( ret < 0 )
+                        return ret;
+                
                 if ( ! entry ) {
                         *index = cfg->elements - 2;
                         return 0;
