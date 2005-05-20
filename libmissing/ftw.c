@@ -55,7 +55,7 @@ static int get_path_infos(const char *path, struct stat *st, int *flag)
 
 
 
-int my_ftw(const char *dir,
+int ftw(const char *dir,
         int (*fn)(const char *file, const struct stat *sb, int flag), int nopenfd) 
 {
         DIR *d;
@@ -110,16 +110,4 @@ int my_ftw(const char *dir,
         closedir(d);
 
         return ret;
-}
-
-
-int fn(const char *filename, const struct stat *st, int flag)
-{
-        printf("%s (%d)\n", filename, flag);
-        return 0;
-}
-
-int main(int argc, char **argv)
-{
-        my_ftw(argv[1], fn, 1);
 }
