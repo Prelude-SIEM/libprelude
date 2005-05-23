@@ -799,22 +799,26 @@ static void send_option_msg(prelude_bool_t parent_need_context,
 
         if ( parent_need_context && ! context )
                 return;
-
+        
+        if ( ! opt->get )
+                return;
+        
         ret = prelude_string_new(&value);
         if ( ret < 0 )
                 return;
 
-        if ( ! opt->get )
-                return;
-
         ret = opt->get(opt, value, context);
-        if ( ret < 0 )
+        if ( ret < 0 ) {
+                prelude_string_destroy(value);
                 return;
-
+        }
+        
         if ( ! prelude_string_is_empty(value) ) 
                 prelude_msgbuf_set(msg, PRELUDE_MSG_OPTION_VALUE,
                                    prelude_string_get_len(value) + 1,
                                    prelude_string_get_string(value));
+        
+        prelude_string_destroy(value);
 }
 
 
