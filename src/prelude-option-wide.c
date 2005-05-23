@@ -177,6 +177,28 @@ static void send_string(prelude_msgbuf_t *msgbuf, prelude_string_t *out, int typ
 
 
 
+static void send_error(prelude_msgbuf_t *msgbuf, const char *fmt, ...)
+{
+        int ret;
+        va_list ap;
+        prelude_string_t *out;
+        
+        va_start(ap, fmt);
+
+        ret = prelude_string_new(&out);
+        if ( ret < 0 )
+                return;
+        
+        prelude_string_vprintf(out, fmt, ap);
+
+        va_end(ap);
+
+        send_string(msgbuf, out, PRELUDE_MSG_OPTION_ERROR);
+        prelude_string_destroy(out);
+}
+
+
+
 static int read_option_request(prelude_client_t *client, prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
 {
         void *buf;
@@ -186,10 +208,6 @@ static int read_option_request(prelude_client_t *client, prelude_msgbuf_t *msgbu
         int ret, type = -1;
         uint32_t request_id;
         prelude_string_t *out;
-
-        ret = prelude_string_new(&out);
-        if ( ret < 0 )
-                return ret;
         
         while ( prelude_msg_get(msg, &tag, &len, &buf) == 0 ) {
                 
@@ -224,30 +242,30 @@ static int read_option_request(prelude_client_t *client, prelude_msgbuf_t *msgbu
                         break;
                         
                 case PRELUDE_MSG_OPTION_LIST:
-                        return prelude_option_wide_send_msg(msgbuf, client); 
-
+                        return prelude_option_wide_send_msg(msgbuf, client);
+                        
                 case PRELUDE_MSG_OPTION_VALUE:
                         ret = prelude_extract_characters_safe((const char **) &request, buf, len);
-                        if (ret < 0 )
+                        if ( ret < 0 )
                                 return ret;
-                                                
+                        
                         if ( type < 0 || ! request ) {
-                                prelude_string_sprintf(out, "No request specified");
-                                send_string(msgbuf, out, PRELUDE_MSG_OPTION_ERROR);
+                                send_error(msgbuf, "No request specified");
                                 return -1;
                         }
                         
-                        ret = parse_request(client, type, request, out);
+                        ret = prelude_string_new(&out);
                         if ( ret < 0 )
-                                send_string(msgbuf, out, PRELUDE_MSG_OPTION_ERROR);
-				
-                        else send_string(msgbuf, out, PRELUDE_MSG_OPTION_VALUE);
+                                return ret;
                         
+                        ret = parse_request(client, type, request, out);
+                        send_string(msgbuf, out, (ret < 0) ? PRELUDE_MSG_OPTION_ERROR : PRELUDE_MSG_OPTION_VALUE);
+
+                        prelude_string_destroy(out);
                         break;
                         
                 default:
-                        prelude_string_sprintf(out, "Unknown option tag: %d", tag);
-                        send_string(msgbuf, out, PRELUDE_MSG_OPTION_ERROR);
+                        send_error(msgbuf, "Unknown option tag: %d", tag);
                         return -1;
                 }
         }
