@@ -73,13 +73,13 @@ int idmef_value_get_enum(const idmef_value_t *val);
 float idmef_value_get_float(const idmef_value_t *val);
 double idmef_value_get_double(const idmef_value_t *val);
 
-idmef_time_t *idmef_value_get_time(idmef_value_t *val);
-idmef_data_t *idmef_value_get_data(idmef_value_t *val);
-prelude_string_t *idmef_value_get_string(idmef_value_t *val);
+idmef_time_t *idmef_value_get_time(const idmef_value_t *val);
+idmef_data_t *idmef_value_get_data(const idmef_value_t *val);
+prelude_string_t *idmef_value_get_string(const idmef_value_t *val);
 
 int idmef_value_list_add(idmef_value_t *list, idmef_value_t *item);
-prelude_bool_t idmef_value_is_list(idmef_value_t *list);
-prelude_bool_t idmef_value_list_is_empty(idmef_value_t *list);
+prelude_bool_t idmef_value_is_list(const idmef_value_t *list);
+prelude_bool_t idmef_value_list_is_empty(const idmef_value_t *list);
 
 int idmef_value_have_own_data(idmef_value_t *value);
 int idmef_value_dont_have_own_data(idmef_value_t *value);
@@ -87,7 +87,7 @@ int idmef_value_dont_have_own_data(idmef_value_t *value);
 idmef_value_type_id_t idmef_value_get_type(const idmef_value_t *value);
 idmef_class_id_t idmef_value_get_class(const idmef_value_t *value);
 
-void *idmef_value_get_object(idmef_value_t *value);
+void *idmef_value_get_object(const idmef_value_t *value);
 
 int idmef_value_iterate(idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra);
 
@@ -95,7 +95,7 @@ idmef_value_t *idmef_value_get_nth(idmef_value_t *val, int n);
 
 int idmef_value_get_count(const idmef_value_t *val);
 
-int idmef_value_clone(idmef_value_t *val, idmef_value_t **dst);
+int idmef_value_clone(const idmef_value_t *val, idmef_value_t **dst);
 
 idmef_value_t *idmef_value_ref(idmef_value_t *val);
 
@@ -103,11 +103,11 @@ int idmef_value_print(const idmef_value_t *val, prelude_io_t *fd);
 
 int idmef_value_to_string(const idmef_value_t *val, prelude_string_t *out);
 
-int idmef_value_get(idmef_value_t *val, void *res);
+int idmef_value_get(const idmef_value_t *val, void *res);
 
 int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_operator_t op);
 
-int idmef_value_check_operator(idmef_value_t *value, idmef_criterion_operator_t op);
+int idmef_value_check_operator(const idmef_value_t *value, idmef_criterion_operator_t op);
 
 void idmef_value_destroy(idmef_value_t *val);
 
