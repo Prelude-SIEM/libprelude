@@ -29,9 +29,29 @@
 #include "common.h"
 #include "idmef-criteria-string.yac.h"
 
+#define YY_NO_UNPUT
+
+#ifndef MIN
+# define MIN(x, y) ((x) < (y) ? (x) : (y))
+#endif
+
 int yylex(void);
 
-#define YY_NO_UNPUT
+
+static char *yy_strndup(const char *str, size_t len)
+{
+       char *ptr;
+
+       len = MIN(len, strlen(str));
+
+       ptr = malloc(len + 1);
+       if ( ! ptr )
+              return NULL;
+
+       ptr[len] = '\0';
+       return memcpy(ptr, str, len);
+}
+
 
 %}
 
@@ -74,13 +94,13 @@ SUBSTR			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING; }
 \)			{ return ')'; }
 
 <IDMEF_VALUE>{SQSTRING}	{
-				yylval.str = strndup(yytext + 1, yyleng - 2);
+				yylval.str = yy_strndup(yytext + 1, yyleng - 2);
 				yy_pop_state();
 				return TOK_IDMEF_VALUE;
 			}
 
 <IDMEF_VALUE>{DQSTRING}	{
-				yylval.str = strndup(yytext + 1, yyleng - 2);
+				yylval.str = yy_strndup(yytext + 1, yyleng - 2);
 				yy_pop_state();
 				return TOK_IDMEF_VALUE;
 			}
