@@ -53,6 +53,28 @@ static char *yy_strndup(const char *str, size_t len)
 }
 
 
+
+static char *escape_str(char *str)
+{
+        size_t w = 0, i = 0;
+        int escape_next = FALSE;
+
+        for ( i = 0; str[i]; i++ ) {
+
+                if ( ! escape_next && str[i] == '\\' ) { 
+                        escape_next = TRUE;
+                        continue;
+                }
+
+                str[w++] = str[i];
+                escape_next = FALSE;
+        }
+
+        str[w] = 0;
+        return str;
+}
+
+
 %}
 
 IDMEF_PATH      ([a-zA-Z0-9_\-]+(\(\-?[0-9]+\))?\.?)+
@@ -94,19 +116,19 @@ SUBSTR			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING; }
 \)			{ return ')'; }
 
 <IDMEF_VALUE>{SQSTRING}	{
-				yylval.str = yy_strndup(yytext + 1, yyleng - 2);
+				yylval.str = escape_str(yy_strndup(yytext + 1, yyleng - 2));
 				yy_pop_state();
 				return TOK_IDMEF_VALUE;
 			}
 
 <IDMEF_VALUE>{DQSTRING}	{
-				yylval.str = yy_strndup(yytext + 1, yyleng - 2);
+				yylval.str = escape_str(yy_strndup(yytext + 1, yyleng - 2));
 				yy_pop_state();
 				return TOK_IDMEF_VALUE;
 			}
 
 <IDMEF_VALUE>[^ \t\(\)\&\|]+ {
-				yylval.str = strdup(yytext);
+				yylval.str = escape_str(strdup(yytext));
 				yy_pop_state();
 				return TOK_IDMEF_VALUE;
 			}
