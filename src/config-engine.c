@@ -21,6 +21,8 @@
 *
 *****/
 
+#include "config.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -90,33 +92,6 @@ static prelude_bool_t is_section(const char *line)
                 return TRUE;
         
         return FALSE;
-}
-
-
-
-
-static char *get_section(const char *in) 
-{
-        char *eptr, *ret, old;
-        
-        in = strchr(in, '[');
-        if ( ! in )
-                return NULL;
-        in++;
-        while ( *in == ' ' || *in == '\t' ) in++;
-           
-        eptr = strchr(in, ']');
-        if ( ! eptr )
-                return NULL;
-        eptr--;
-        while (*eptr == ' ' || *eptr == '\t' ) eptr--;
-        eptr++;
-        
-        old = *eptr; *eptr = 0;        
-        ret = strdup(in);
-        *eptr = old;
-
-        return ret;
 }
 
 
@@ -294,88 +269,75 @@ static int load_file_in_memory(config_t *cfg)
 
 
 
-
-static char *strip_value(const char *in)
+static int strip_value(char **out, const char *in, size_t tlen)
 {
-        char *ret;
-        size_t len;
-        const char *start, *end;
+        size_t slen, elen;
         
-        start = in;
-        while ( *in == ' ' || *in == '\t' )
-                start = ++in;
+        slen = strspn(in, " \"\t");
 
-        len = strlen(start);
-        end = start + (len ? len - 1 : 0);
-        while ( end != start && (*end == ' ' || *end == '\t') )
-                end--;
-        
-        if ( *start == '"' && *end == '"' ) {
-                start++;
-                end--;
+        elen = tlen - slen;
+        if ( ! elen ) {
+                *out = strdup("");
+                return (*out) ? 0 : prelude_error_from_errno(errno);
         }
         
-        if ( (end - start) < 0 )
-             return NULL;
+        elen--;        
+        while ( in[elen] == ' ' || in[elen] == '\t' || in[elen] == '\"' ) {
+                elen--;
+        }
         
-        ret = malloc((end - start) + 2);
-        if ( ! ret )
-                return NULL;
+        *out = strndup(in + slen, elen + 1);
 
-        strncpy(ret, start, end - start + 1);
-        ret[end - start + 1] = '\0';
-        
-        return ret;
+        return (*out) ? 0 : prelude_error_from_errno(errno);
 }
 
 
 
-static int parse_buffer(char *str, char **entry, char **value)
+static int parse_buffer(const char *str, char **entry, char **value)
 {
-        char *ptr, *buf = str;
-        
-        *value = *entry = NULL;
+        int ret;
+        size_t len;
+        const char *ptr;
         
         if ( ! *str )
                 return 0;
-
-        ptr = strsep(&buf, "=");        
-        if ( ! *ptr )
-                return -1;
         
-        *entry = strip_value(ptr);
-
-        if ( buf ) 
-                *(buf - 1) = '=';
+        *value = *entry = NULL;
         
-        ptr = strsep(&buf, "");
-        if ( ptr )
-                *value = strip_value(ptr);
-
-        if ( ! *value )
-                *value = strdup("");
+        ptr = strchr(str, '=');
+        len = (ptr) ? ptr - str : strlen(str);
         
-        return 0;
+        ret = strip_value(entry, str, len);
+        if ( ret < 0 )
+                return ret;
+        
+        if ( ! ptr )
+                return 0;
+        
+        return  strip_value(value, ptr + 1, strlen(ptr + 1));
 }
 
 
-
-static int parse_section_buffer(char *buf, char **entry, char **value)
+static int parse_section_buffer(const char *buf, char **entry, char **value)
 {
         int ret;
-        char *s, *e;
+        char *ptr;
 
-        s = strchr(buf, '[');
-        if ( ! s )
-                return -1;
+        buf += strspn(buf, "[");
+        
+        ptr = strchr(buf, ']');
+        if ( ptr )
+                *ptr = 0;
+        
+        ret = parse_buffer(buf, entry, value);
+        if ( ptr )
+                *ptr = ']';
 
-        e = strchr(buf, ']');
-        if ( ! e )
-                return -1;
-
-        *e = 0;
-        ret = parse_buffer(s + 1, entry, value);
-        *e = ']';
+        if ( ret < 0 )
+                return ret;
+        
+        if ( ! *value )
+                *value = strdup("default");
         
         return ret;
 }
@@ -386,23 +348,15 @@ static int parse_section_buffer(char *buf, char **entry, char **value)
 static int search_section(config_t *cfg, const char *section, unsigned int i) 
 {
         int ret;
-        char *ptr, *entry, *value, *wentry, *wvalue;
+        char *entry, *value, *wentry, *wvalue;
         
         if ( ! cfg->content )
                 return -1;
 
-        ret = parse_buffer(section, &wentry, &wvalue);
+        ret = parse_section_buffer(section, &wentry, &wvalue);        
         if ( ret < 0 )
                 return ret;
-
-        if ( ! *wvalue ) {
-                free(wvalue);
                 
-                wvalue = strdup("default");
-                if ( ! wvalue )
-                        return prelude_error_from_errno(errno);
-        }
-        
         for ( ; cfg->content[i] != NULL; i++ ) {
                             
                 if ( is_line_commented(cfg->content[i]) )
@@ -411,15 +365,9 @@ static int search_section(config_t *cfg, const char *section, unsigned int i)
                 if ( ! is_section(cfg->content[i]) )
                         continue;
                 
-                ptr = get_section(cfg->content[i]);
-                if ( ! ptr )
-                        continue;
-                
-                ret = parse_buffer(ptr, &entry, &value);
+                ret = parse_section_buffer(cfg->content[i], &entry, &value);                
                 if ( ret < 0 )
                         return ret;
-                
-                free(ptr);
                 
                 ret = strcasecmp(entry, wentry);
                 free(entry);
@@ -427,14 +375,6 @@ static int search_section(config_t *cfg, const char *section, unsigned int i)
                 if ( ret != 0 ) {
                         free(value);
                         continue;
-                }
-                
-                if ( ! *value ) {
-                        free(value);
-                        
-                        value = strdup("default");
-                        if ( ! value )
-                                break;
                 }
                 
                 ret = strcasecmp(value, wvalue);
@@ -766,7 +706,7 @@ static const char *get_variable_content(config_t *cfg, const char *variable)
 int config_get_next(config_t *cfg, char **section, char **entry, char **value, unsigned int *line)
 {
         char *ptr;
-
+        
         if ( ! *line ) 
                 free_val(section);
         
