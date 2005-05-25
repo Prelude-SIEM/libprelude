@@ -502,8 +502,7 @@ int prelude_string_copy_ref(const prelude_string_t *src, prelude_string_t *dst)
         dst->size = src->size;
         dst->index = src->index;
         dst->data.robuf = src->data.robuf;
-                
-        dst->flags = src->flags & ~(PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC);
+        dst->flags &= ~(PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC);
                 
         return 0;
 }
