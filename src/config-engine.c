@@ -613,6 +613,7 @@ static int new_section_line(config_t *cfg, const char *section,
  * @section: Section where the entry should be set.
  * @entry: Entry to set.
  * @val: Value for the entry.
+ * @index: Optional position where the entry will be written.
  *
  * Sets an entry 'entry' to the specified value, and, in case
  * it is not NULL, in the specified section in the configuration file
@@ -689,6 +690,7 @@ static const char *get_variable_content(config_t *cfg, const char *variable)
  * @cfg: Configuration file identifier.
  * @section: Pointer address where the current section should be stored.
  * @entry: Pointer address where the current entry should be stored.
+ * @value: Pointer address where the current value should be stored.
  * @line: Pointer to a line number we should start the search at.
  *
  * Parses the whole configuration file starting at @line,
@@ -861,13 +863,14 @@ int config_close(config_t *cfg)
 
 /**
  * config_open:
+ * @new: Pointer address where to store the new #config_t object.
  * @filename: The configuration file.
  *
  * Opens the configuration file pointed to by 'filename' and loads it into memory,
  * the returned #config_t object will have to be used for any operation on this
  * configuration file.
  *
- * Returns: a #config_t object on success, NULL otherwise.
+ * Returns: 0 on success, negative value otherwise.
  */
 int config_open(config_t **new, const char *filename) 
 {
