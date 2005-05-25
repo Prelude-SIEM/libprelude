@@ -1961,8 +1961,10 @@ idmef_data_t *idmef_additional_data_get_data(idmef_additional_data_t *ptr)
 void idmef_additional_data_set_data(idmef_additional_data_t *ptr, idmef_data_t *data)
 {
 	idmef_data_destroy_internal(&ptr->data);
-	memcpy(&ptr->data, data, sizeof (ptr->data));
-	free(data);
+        if ( data ) {
+                memcpy(&ptr->data, data, sizeof (ptr->data));
+	        free(data);
+        }
 }
 
 /**
@@ -2173,8 +2175,10 @@ prelude_string_t *idmef_reference_get_name(idmef_reference_t *ptr)
 void idmef_reference_set_name(idmef_reference_t *ptr, prelude_string_t *name)
 {
 	prelude_string_destroy_internal(&ptr->name);
-	memcpy(&ptr->name, name, sizeof (ptr->name));
-	free(name);
+        if ( name ) {
+                memcpy(&ptr->name, name, sizeof (ptr->name));
+	        free(name);
+        }
 }
 
 /**
@@ -2221,8 +2225,10 @@ prelude_string_t *idmef_reference_get_url(idmef_reference_t *ptr)
 void idmef_reference_set_url(idmef_reference_t *ptr, prelude_string_t *url)
 {
 	prelude_string_destroy_internal(&ptr->url);
-	memcpy(&ptr->url, url, sizeof (ptr->url));
-	free(url);
+        if ( url ) {
+                memcpy(&ptr->url, url, sizeof (ptr->url));
+	        free(url);
+        }
 }
 
 /**
@@ -2520,8 +2526,10 @@ prelude_string_t *idmef_classification_get_text(idmef_classification_t *ptr)
 void idmef_classification_set_text(idmef_classification_t *ptr, prelude_string_t *text)
 {
 	prelude_string_destroy_internal(&ptr->text);
-	memcpy(&ptr->text, text, sizeof (ptr->text));
-	free(text);
+        if ( text ) {
+                memcpy(&ptr->text, text, sizeof (ptr->text));
+	        free(text);
+        }
 }
 
 /**
@@ -3692,8 +3700,10 @@ prelude_string_t *idmef_address_get_address(idmef_address_t *ptr)
 void idmef_address_set_address(idmef_address_t *ptr, prelude_string_t *address)
 {
 	prelude_string_destroy_internal(&ptr->address);
-	memcpy(&ptr->address, address, sizeof (ptr->address));
-	free(address);
+        if ( address ) {
+                memcpy(&ptr->address, address, sizeof (ptr->address));
+	        free(address);
+        }
 }
 
 /**
@@ -4045,8 +4055,10 @@ prelude_string_t *idmef_process_get_name(idmef_process_t *ptr)
 void idmef_process_set_name(idmef_process_t *ptr, prelude_string_t *name)
 {
 	prelude_string_destroy_internal(&ptr->name);
-	memcpy(&ptr->name, name, sizeof (ptr->name));
-	free(name);
+        if ( name ) {
+                memcpy(&ptr->name, name, sizeof (ptr->name));
+	        free(name);
+        }
 }
 
 /**
@@ -4490,8 +4502,10 @@ prelude_string_t *idmef_web_service_get_url(idmef_web_service_t *ptr)
 void idmef_web_service_set_url(idmef_web_service_t *ptr, prelude_string_t *url)
 {
 	prelude_string_destroy_internal(&ptr->url);
-	memcpy(&ptr->url, url, sizeof (ptr->url));
-	free(url);
+        if ( url ) {
+                memcpy(&ptr->url, url, sizeof (ptr->url));
+	        free(url);
+        }
 }
 
 /**
@@ -7100,8 +7114,10 @@ idmef_user_id_t *idmef_file_access_get_user_id(idmef_file_access_t *ptr)
 void idmef_file_access_set_user_id(idmef_file_access_t *ptr, idmef_user_id_t *user_id)
 {
 	idmef_user_id_destroy_internal(&ptr->user_id);
-	memcpy(&ptr->user_id, user_id, sizeof (ptr->user_id));
-	free(user_id);
+        if ( user_id ) {
+                memcpy(&ptr->user_id, user_id, sizeof (ptr->user_id));
+	        free(user_id);
+        }
 }
 
 /**
@@ -7779,8 +7795,10 @@ prelude_string_t *idmef_checksum_get_value(idmef_checksum_t *ptr)
 void idmef_checksum_set_value(idmef_checksum_t *ptr, prelude_string_t *value)
 {
 	prelude_string_destroy_internal(&ptr->value);
-	memcpy(&ptr->value, value, sizeof (ptr->value));
-	free(value);
+        if ( value ) {
+                memcpy(&ptr->value, value, sizeof (ptr->value));
+	        free(value);
+        }
 }
 
 /**
@@ -8290,8 +8308,10 @@ prelude_string_t *idmef_file_get_name(idmef_file_t *ptr)
 void idmef_file_set_name(idmef_file_t *ptr, prelude_string_t *name)
 {
 	prelude_string_destroy_internal(&ptr->name);
-	memcpy(&ptr->name, name, sizeof (ptr->name));
-	free(name);
+        if ( name ) {
+                memcpy(&ptr->name, name, sizeof (ptr->name));
+	        free(name);
+        }
 }
 
 /**
@@ -8338,8 +8358,10 @@ prelude_string_t *idmef_file_get_path(idmef_file_t *ptr)
 void idmef_file_set_path(idmef_file_t *ptr, prelude_string_t *path)
 {
 	prelude_string_destroy_internal(&ptr->path);
-	memcpy(&ptr->path, path, sizeof (ptr->path));
-	free(path);
+        if ( path ) {
+                memcpy(&ptr->path, path, sizeof (ptr->path));
+	        free(path);
+        }
 }
 
 /**
@@ -9241,8 +9263,10 @@ prelude_string_t *idmef_linkage_get_name(idmef_linkage_t *ptr)
 void idmef_linkage_set_name(idmef_linkage_t *ptr, prelude_string_t *name)
 {
 	prelude_string_destroy_internal(&ptr->name);
-	memcpy(&ptr->name, name, sizeof (ptr->name));
-	free(name);
+        if ( name ) {
+                memcpy(&ptr->name, name, sizeof (ptr->name));
+	        free(name);
+        }
 }
 
 /**
@@ -9289,8 +9313,10 @@ prelude_string_t *idmef_linkage_get_path(idmef_linkage_t *ptr)
 void idmef_linkage_set_path(idmef_linkage_t *ptr, prelude_string_t *path)
 {
 	prelude_string_destroy_internal(&ptr->path);
-	memcpy(&ptr->path, path, sizeof (ptr->path));
-	free(path);
+        if ( path ) {
+                memcpy(&ptr->path, path, sizeof (ptr->path));
+	        free(path);
+        }
 }
 
 /**
@@ -10875,8 +10901,10 @@ prelude_string_t *idmef_alertident_get_alertident(idmef_alertident_t *ptr)
 void idmef_alertident_set_alertident(idmef_alertident_t *ptr, prelude_string_t *alertident)
 {
 	prelude_string_destroy_internal(&ptr->alertident);
-	memcpy(&ptr->alertident, alertident, sizeof (ptr->alertident));
-	free(alertident);
+        if ( alertident ) {
+                memcpy(&ptr->alertident, alertident, sizeof (ptr->alertident));
+	        free(alertident);
+        }
 }
 
 /**
@@ -12154,8 +12182,10 @@ prelude_string_t *idmef_tool_alert_get_name(idmef_tool_alert_t *ptr)
 void idmef_tool_alert_set_name(idmef_tool_alert_t *ptr, prelude_string_t *name)
 {
 	prelude_string_destroy_internal(&ptr->name);
-	memcpy(&ptr->name, name, sizeof (ptr->name));
-	free(name);
+        if ( name ) {
+                memcpy(&ptr->name, name, sizeof (ptr->name));
+	        free(name);
+        }
 }
 
 /**
@@ -12456,8 +12486,10 @@ prelude_string_t *idmef_correlation_alert_get_name(idmef_correlation_alert_t *pt
 void idmef_correlation_alert_set_name(idmef_correlation_alert_t *ptr, prelude_string_t *name)
 {
 	prelude_string_destroy_internal(&ptr->name);
-	memcpy(&ptr->name, name, sizeof (ptr->name));
-	free(name);
+        if ( name ) {
+                memcpy(&ptr->name, name, sizeof (ptr->name));
+	        free(name);
+        }
 }
 
 /**
@@ -12680,8 +12712,10 @@ prelude_string_t *idmef_overflow_alert_get_program(idmef_overflow_alert_t *ptr)
 void idmef_overflow_alert_set_program(idmef_overflow_alert_t *ptr, prelude_string_t *program)
 {
 	prelude_string_destroy_internal(&ptr->program);
-	memcpy(&ptr->program, program, sizeof (ptr->program));
-	free(program);
+        if ( program ) {
+                memcpy(&ptr->program, program, sizeof (ptr->program));
+	        free(program);
+        }
 }
 
 /**
@@ -13281,8 +13315,10 @@ idmef_time_t *idmef_alert_get_create_time(idmef_alert_t *ptr)
 void idmef_alert_set_create_time(idmef_alert_t *ptr, idmef_time_t *create_time)
 {
 	idmef_time_destroy_internal(&ptr->create_time);
-	memcpy(&ptr->create_time, create_time, sizeof (ptr->create_time));
-	free(create_time);
+        if ( create_time ) {
+                memcpy(&ptr->create_time, create_time, sizeof (ptr->create_time));
+	        free(create_time);
+        }
 }
 
 /**
@@ -14326,8 +14362,10 @@ idmef_time_t *idmef_heartbeat_get_create_time(idmef_heartbeat_t *ptr)
 void idmef_heartbeat_set_create_time(idmef_heartbeat_t *ptr, idmef_time_t *create_time)
 {
 	idmef_time_destroy_internal(&ptr->create_time);
-	memcpy(&ptr->create_time, create_time, sizeof (ptr->create_time));
-	free(create_time);
+        if ( create_time ) {
+                memcpy(&ptr->create_time, create_time, sizeof (ptr->create_time));
+	        free(create_time);
+        }
 }
 
 /**
@@ -14657,8 +14695,10 @@ prelude_string_t *idmef_message_get_version(idmef_message_t *ptr)
 void idmef_message_set_version(idmef_message_t *ptr, prelude_string_t *version)
 {
 	prelude_string_destroy_internal(&ptr->version);
-	memcpy(&ptr->version, version, sizeof (ptr->version));
-	free(version);
+        if ( version ) {
+                memcpy(&ptr->version, version, sizeof (ptr->version));
+	        free(version);
+        }
 }
 
 /**

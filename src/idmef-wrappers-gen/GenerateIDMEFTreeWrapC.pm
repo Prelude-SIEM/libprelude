@@ -714,8 +714,10 @@ void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr
 void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} *$field_name)
 \{
 	${destroy_internal_func}(&ptr->$field->{name});
-	memcpy(&ptr->$field->{name}, $field_name, sizeof (ptr->$field->{name}));
-	free($field->{name});
+        if ( $field_name ) {
+                memcpy(&ptr->$field->{name}, $field_name, sizeof (ptr->$field->{name}));
+	        free($field->{name});
+        }
 \}
 ");
 	}
