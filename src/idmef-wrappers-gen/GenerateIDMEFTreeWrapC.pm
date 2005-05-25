@@ -705,15 +705,15 @@ void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr
 	ptr->$field->{name} = $field_name;
 \}
 ");
-	} else {
-	    my $destroy_internal_func = "$field->{short_typename}_destroy_internal";
+        } else {
+            my $destroy_internal_func = "$field->{short_typename}_destroy_internal";
 
-	    $destroy_internal_func = "idmef_${destroy_internal_func}" if ( ! ($field->{metatype} & &METATYPE_PRIMITIVE) );
+            $destroy_internal_func = "idmef_${destroy_internal_func}" if ( ! ($field->{metatype} & &METATYPE_PRIMITIVE) );
 
-	    $self->output("
+            $self->output("
 void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} *$field_name)
 \{
-	${destroy_internal_func}(&ptr->$field->{name});
+        ${destroy_internal_func}(&ptr->$field->{name});
         if ( $field_name ) {
                 memcpy(&ptr->$field->{name}, $field_name, sizeof (ptr->$field->{name}));
 	        free($field->{name});
