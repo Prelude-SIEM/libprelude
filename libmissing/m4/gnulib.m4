@@ -28,6 +28,7 @@ AC_SUBST(LTALLOCA)
   gl_GETADDRINFO
   dnl you must add AM_GNU_GETTEXT([external]) or similar to configure.ac.
   gl_INET_NTOP
+  gl_MINMAX
   gl_FUNC_MKTIME
   gl_PATHMAX
   gl_REGEX
