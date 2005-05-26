@@ -30,6 +30,7 @@
 #include "idmef-criteria-string.yac.h"
 
 #define YY_NO_UNPUT
+#define YY_NO_TOP_STATE
 
 #ifndef MIN
 # define MIN(x, y) ((x) < (y) ? (x) : (y))
