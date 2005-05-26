@@ -144,7 +144,7 @@ static int parse_request(prelude_client_t *client, int rtype, char *request, pre
                 *iname = 0;
                 
                 ent = ret = sscanf(str, "%255[^[][%255[^]]", pname, iname);
-                if ( ret <= 0 ) {
+                if ( ret < 1 ) {
                         prelude_string_sprintf(out, "Error parsing option path");
                         break;
                 }
