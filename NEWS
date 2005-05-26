@@ -1,3 +1,17 @@
+* 2005-05-26, libprelude-0.9.0-rc7:
+
+	- Correct IDMEF criteria value escaping. Criteria containing
+	  single or double quote should now behave as expected.
+
+	- Make it possible to unset implicitly embedded IDMEF structure.
+
+	- Fix GnuLib FTW module for architecture lacking it.
+	
+	- Fix some memory leak.
+
+	- Various bugfix.
+
+
 * 2005-05-18, libprelude-0.9.0-rc6:
 
 	- Fix compilation problem on system lacking the FTS interface.

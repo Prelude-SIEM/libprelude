@@ -6568,7 +6568,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.0-rc5"
+#define LIBPRELUDE_VERSION "0.9.0-rc7"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
@@ -8216,17 +8216,17 @@ const idmef_value_t *val
 <FUNCTION>
 <NAME>idmef_value_get_time</NAME>
 <RETURNS>idmef_time_t *</RETURNS>
-idmef_value_t *val
+const idmef_value_t *val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_data</NAME>
 <RETURNS>idmef_data_t *</RETURNS>
-idmef_value_t *val
+const idmef_value_t *val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_string</NAME>
 <RETURNS>prelude_string_t *</RETURNS>
-idmef_value_t *val
+const idmef_value_t *val
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_list_add</NAME>
@@ -8236,12 +8236,12 @@ idmef_value_t *list, idmef_value_t *item
 <FUNCTION>
 <NAME>idmef_value_is_list</NAME>
 <RETURNS>prelude_bool_t </RETURNS>
-idmef_value_t *list
+const idmef_value_t *list
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_list_is_empty</NAME>
 <RETURNS>prelude_bool_t </RETURNS>
-idmef_value_t *list
+const idmef_value_t *list
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_have_own_data</NAME>
@@ -8266,7 +8266,7 @@ const idmef_value_t *value
 <FUNCTION>
 <NAME>idmef_value_get_object</NAME>
 <RETURNS>void *</RETURNS>
-idmef_value_t *value
+const idmef_value_t *value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_iterate</NAME>
@@ -8286,7 +8286,7 @@ const idmef_value_t *val
 <FUNCTION>
 <NAME>idmef_value_clone</NAME>
 <RETURNS>int </RETURNS>
-idmef_value_t *val, idmef_value_t **dst
+const idmef_value_t *val, idmef_value_t **dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_ref</NAME>
@@ -8306,7 +8306,7 @@ const idmef_value_t *val, prelude_string_t *out
 <FUNCTION>
 <NAME>idmef_value_get</NAME>
 <RETURNS>int </RETURNS>
-idmef_value_t *val, void *res
+const idmef_value_t *val, void *res
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_match</NAME>
@@ -8316,7 +8316,7 @@ idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_operator_t op
 <FUNCTION>
 <NAME>idmef_value_check_operator</NAME>
 <RETURNS>int </RETURNS>
-idmef_value_t *value, idmef_criterion_operator_t op
+const idmef_value_t *value, idmef_criterion_operator_t op
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_destroy</NAME>
