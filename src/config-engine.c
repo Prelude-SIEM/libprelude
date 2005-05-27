@@ -299,8 +299,12 @@ static int strip_value(char **out, const char *in, size_t tlen)
                         elen++;
                 }
         }
+
+        if ( ! elen )
+                return 0;
         
         *out = strndup(in, elen);        
+        
         return (*out) ? 0 : prelude_error_from_errno(errno);
 }
 
@@ -325,7 +329,7 @@ static int parse_buffer(const char *str, char **entry, char **value)
         
         if ( ! ptr )
                 return 0;
-        
+
         return strip_value(value, ptr + 1, strlen(ptr + 1));
 }
 
@@ -344,7 +348,7 @@ static int parse_section_buffer(const char *buf, char **entry, char **value)
         ret = parse_buffer(buf, entry, value);
         if ( ptr )
                 *ptr = ']';
-
+        
         if ( ret < 0 )
                 return ret;
         
