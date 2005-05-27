@@ -186,7 +186,7 @@ static int op_insert_line(config_t *cfg, char *line, unsigned int lins)
 {
         unsigned int i;
         
-        if ( lins >= cfg->elements || ! line )
+        if ( lins > cfg->elements || ! line )
                 return -1;
 
         if ( cfg->elements + 1 < cfg->elements )
