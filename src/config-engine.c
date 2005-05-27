@@ -276,22 +276,31 @@ static int load_file_in_memory(config_t *cfg)
 static int strip_value(char **out, const char *in, size_t tlen)
 {
         size_t slen, elen;
+        prelude_bool_t have_start_quote = FALSE;
+                
+        in += slen = strspn(in, " \t");
+        if ( *in == '"' ) {
+                in++; slen++;
+                have_start_quote = TRUE;
+        }
         
-        slen = strspn(in, " \"\t");
-
         elen = tlen - slen;
-        if ( ! elen ) {
-                *out = strdup("");
-                return (*out) ? 0 : prelude_error_from_errno(errno);
-        }
+        if ( ! elen )
+                return 0;
         
-        elen--;        
-        while ( in[elen] == ' ' || in[elen] == '\t' || in[elen] == '\"' ) {
+        while ( in[elen - 1] == ' ' || in[elen - 1] == '\t' )
                 elen--;
+
+        if ( have_start_quote && elen ) {                
+                if ( in[elen - 1] == '"' )
+                        elen--;
+                else {
+                        in--;
+                        elen++;
+                }
         }
         
-        *out = strndup(in + slen, elen + 1);
-
+        *out = strndup(in, elen);        
         return (*out) ? 0 : prelude_error_from_errno(errno);
 }
 
@@ -317,7 +326,7 @@ static int parse_buffer(const char *str, char **entry, char **value)
         if ( ! ptr )
                 return 0;
         
-        return  strip_value(value, ptr + 1, strlen(ptr + 1));
+        return strip_value(value, ptr + 1, strlen(ptr + 1));
 }
 
 
@@ -325,7 +334,7 @@ static int parse_section_buffer(const char *buf, char **entry, char **value)
 {
         int ret;
         char *ptr;
-
+        
         buf += strspn(buf, "\n [");
         
         ptr = strchr(buf, ']');
@@ -368,7 +377,7 @@ static int search_section(config_t *cfg, const char *section, unsigned int i)
                 if ( ! is_section(cfg->content[i]) )
                         continue;
                 
-                ret = parse_section_buffer(cfg->content[i], &entry, &value);                
+                ret = parse_section_buffer(cfg->content[i], &entry, &value);
                 if ( ret < 0 )
                         continue;
                 
@@ -718,20 +727,18 @@ int config_get_next(config_t *cfg, char **section, char **entry, char **value, u
 {
         char *ptr;
         
-        if ( ! *line ) 
-                free_val(section);
-        
-        if ( ! cfg->content || *line >= cfg->elements )
-                return -1;
-
         free_val(entry);
         free_val(value);
         free_val(section);
-        
-        for ( (*line)++ ; *line < cfg->elements; (*line)++ ) {
                 
-                ptr = cfg->content[*line - 1];
+        if ( ! cfg->content || *line >= cfg->elements )
+                return -1;
+        
+        while ( *line < cfg->elements ) {
+                
+                ptr = cfg->content[*line];
                 ptr += strspn(ptr, " \t");
+                (*line)++;
                 
                 if ( ! *ptr || is_line_commented(ptr) )
                         continue;
