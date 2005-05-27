@@ -65,12 +65,14 @@ extern const void *lt_preloaded_symbols[];
 #define PRELUDE_PLUGIN_OPTION_DECLARE_STRING_CB(prefix, type, name)                              \
 static int prefix ## _set_ ## name(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)  \
 {                                                                                                \
-        char *dup;                                                                               \
+        char *dup = NULL;                                                                        \
         type *ptr = prelude_plugin_instance_get_plugin_data(context);                            \
                                                                                                  \
-        dup = strdup(optarg);                                                                    \
-        if ( ! dup )                                                                             \
-                return prelude_error_from_errno(errno);                                          \
+        if ( optarg ) {                                                                          \
+                dup = strdup(optarg);                                                            \
+                if ( ! dup )                                                                     \
+                        return prelude_error_from_errno(errno);                                  \
+        }                                                                                        \
                                                                                                  \
         if ( ptr->name )                                                                         \
                 free(ptr->name);                                                                 \
