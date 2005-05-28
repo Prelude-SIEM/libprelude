@@ -1,3 +1,10 @@
+* 2005-05-27, libprelude-0.9.0-rc8:
+
+	- Avoid AI family mixup on prelude-adduser connection registration.
+
+	- Fix some bug in the configuration parser.
+
+
 * 2005-05-26, libprelude-0.9.0-rc7:
 
 	- Correct IDMEF criteria value escaping. Criteria containing
