@@ -443,9 +443,9 @@ static int search_entry(config_t *cfg, const char *section,
                 }
                 
                 ret = parse_buffer(cfg->content[i], eout, vout);
-                if ( ret < 0 )
+                if ( ret < 0 || ! *eout )
                         continue;
-
+                
                 ret = strcmp(entry, *eout);
                 if ( ret == 0 )
                         return i;
@@ -676,7 +676,10 @@ int config_del(config_t *cfg, const char *section, const char *entry)
                 start = search_entry(cfg, section, entry, &l, &tmp, &value);
                 if ( start < 0 )
                         return -1;
-                
+
+                free_val(&tmp);
+                free_val(&value);
+
                 end = start + 1;
         }
         
