@@ -5722,12 +5722,14 @@ typedef struct {
 #define PRELUDE_PLUGIN_OPTION_DECLARE_STRING_CB(prefix, type, name)                              \
 static int prefix ## _set_ ## name(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)  \
 {                                                                                                \
-        char *dup;                                                                               \
+        char *dup = NULL;                                                                        \
         type *ptr = prelude_plugin_instance_get_plugin_data(context);                            \
                                                                                                  \
-        dup = strdup(optarg);                                                                    \
-        if ( ! dup )                                                                             \
-                return prelude_error_from_errno(errno);                                          \
+        if ( optarg ) {                                                                          \
+                dup = strdup(optarg);                                                            \
+                if ( ! dup )                                                                     \
+                        return prelude_error_from_errno(errno);                                  \
+        }                                                                                        \
                                                                                                  \
         if ( ptr->name )                                                                         \
                 free(ptr->name);                                                                 \
@@ -6568,7 +6570,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.0-rc7"
+#define LIBPRELUDE_VERSION "0.9.0-rc8"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
@@ -7072,9 +7074,10 @@ typedef struct idmef_criterion_value idmef_criterion_value_t;
 <ENUM>
 <NAME>idmef_criterion_value_type_t</NAME>
 typedef enum {
-        IDMEF_CRITERION_VALUE_TYPE_ERROR  = -1,
-        IDMEF_CRITERION_VALUE_TYPE_VALUE  =  0,
-        IDMEF_CRITERION_VALUE_TYPE_REGEX  =  1,
+        IDMEF_CRITERION_VALUE_TYPE_ERROR            = -1,
+        IDMEF_CRITERION_VALUE_TYPE_VALUE            =  0,
+        IDMEF_CRITERION_VALUE_TYPE_REGEX            =  1,
+        IDMEF_CRITERION_VALUE_TYPE_BROKEN_DOWN_TIME =  2,
 } idmef_criterion_value_type_t;
 </ENUM>
 <FUNCTION>
@@ -7096,6 +7099,11 @@ idmef_criterion_value_t **cv, idmef_value_t *value,idmef_criterion_operator_t op
 <NAME>idmef_criterion_value_new_from_string</NAME>
 <RETURNS>int </RETURNS>
 idmef_criterion_value_t **cv, idmef_path_t *path,const char *value, idmef_criterion_operator_t op
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_criterion_value_new_broken_down_time</NAME>
+<RETURNS>int </RETURNS>
+idmef_criterion_value_t **cv, const char *time
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_clone</NAME>
