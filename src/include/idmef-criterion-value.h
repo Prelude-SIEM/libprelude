@@ -31,9 +31,10 @@
 typedef struct idmef_criterion_value idmef_criterion_value_t;
 
 typedef enum {
-        IDMEF_CRITERION_VALUE_TYPE_ERROR  = -1,
-        IDMEF_CRITERION_VALUE_TYPE_VALUE  =  0,
-        IDMEF_CRITERION_VALUE_TYPE_REGEX  =  1,
+        IDMEF_CRITERION_VALUE_TYPE_ERROR            = -1,
+        IDMEF_CRITERION_VALUE_TYPE_VALUE            =  0,
+        IDMEF_CRITERION_VALUE_TYPE_REGEX            =  1,
+        IDMEF_CRITERION_VALUE_TYPE_BROKEN_DOWN_TIME =  2,
 } idmef_criterion_value_type_t;
 
         
@@ -51,6 +52,8 @@ int idmef_criterion_value_new_value(idmef_criterion_value_t **cv, idmef_value_t 
 int idmef_criterion_value_new_from_string(idmef_criterion_value_t **cv, idmef_path_t *path,
                                           const char *value, idmef_criterion_operator_t op);
 
+int idmef_criterion_value_new_broken_down_time(idmef_criterion_value_t **cv, const char *time);
+         
 int idmef_criterion_value_clone(const idmef_criterion_value_t *src, idmef_criterion_value_t **dst);
 
 void idmef_criterion_value_destroy(idmef_criterion_value_t *value);
