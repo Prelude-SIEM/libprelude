@@ -54,10 +54,13 @@ def uninstall():
     else:
         prefix = "@prefix@"
     
-    for file in "prelude.py", "prelude.pyc", "_prelude.so":
-        file = get_root() + "/" + get_python_lib(prefix=prefix) + "/" + file
+    for f in "prelude.py", "prelude.pyc", "_prelude.so":
+        file = get_root() + "/" + get_python_lib(prefix=prefix) + "/" + f
         exists(file) and os.remove(file)
-    
+
+        file = get_root() + "/" + get_python_lib(plat_specific=True, prefix=prefix) + "/" + f
+        exists(file) and os.remove(file)
+
     sys.exit(0)
 
 
