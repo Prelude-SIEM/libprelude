@@ -356,7 +356,11 @@ static gnutls_session new_tls_session(int sock, char *passwd)
         int ret;
         gnutls_session session;
         const int kx_priority[] = { GNUTLS_KX_SRP, GNUTLS_KX_SRP_DSS, GNUTLS_KX_SRP_RSA, 0 };
-                
+        union {
+                int fd;
+                void *ptr;
+        } data;
+        
         gnutls_init(&session, GNUTLS_CLIENT);
         gnutls_set_default_priority(session);
         gnutls_kx_set_priority(session, kx_priority);
@@ -365,7 +369,8 @@ static gnutls_session new_tls_session(int sock, char *passwd)
         gnutls_srp_set_client_credentials(cred, "prelude-adduser", passwd); 
         gnutls_credentials_set(session, GNUTLS_CRD_SRP, cred);
 
-        gnutls_transport_set_ptr(session, (gnutls_transport_ptr) sock);
+        data.fd = sock;
+        gnutls_transport_set_ptr(session, data.ptr);
         
         ret = gnutls_handshake(session);
         if ( ret < 0 ) {

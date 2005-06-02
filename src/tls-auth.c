@@ -145,6 +145,20 @@ static int handle_gnutls_error(gnutls_session session, int ret)
 
 
 
+static void *fd_to_ptr(int fd)
+{
+        union {
+                void *ptr;
+                int fd;
+        } data;
+
+        data.fd = fd;
+
+        return data.ptr;
+}
+
+
+
 int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int crypt,
                         uint64_t *analyzerid, prelude_connection_permission_t *permission)
 {
@@ -159,9 +173,9 @@ int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int cryp
         gnutls_init(&session, GNUTLS_CLIENT);
         gnutls_set_default_priority(session);
         gnutls_credentials_set(session, GNUTLS_CRD_CERTIFICATE, cred);
-        
+
         fd = prelude_io_get_fd(io);
-        gnutls_transport_set_ptr(session, (gnutls_transport_ptr) fd);
+        gnutls_transport_set_ptr(session, fd_to_ptr(fd));
 
         do {
                 ret = gnutls_handshake(session);

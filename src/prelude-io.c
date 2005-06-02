@@ -673,10 +673,13 @@ void prelude_io_set_file_io(prelude_io_t *pio, FILE *fdptr)
  */
 void prelude_io_set_tls_io(prelude_io_t *pio, void *tls) 
 {
-        gnutls_transport_ptr ptr;
-
-        ptr = gnutls_transport_get_ptr(tls);
-        pio->fd = (int) ptr;
+        union {
+                void *ptr;
+                int fd;
+        } data;
+        
+        data.ptr = gnutls_transport_get_ptr(tls);
+        pio->fd = data.fd;
         
         pio->fd_ptr = tls;
         pio->read = tls_read;

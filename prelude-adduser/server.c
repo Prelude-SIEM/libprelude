@@ -53,16 +53,20 @@ static gnutls_session new_tls_session(int sock, gnutls_srp_server_credentials cr
         int ret;
         gnutls_session session;
         const int kx_priority[] = { GNUTLS_KX_SRP, GNUTLS_KX_SRP_DSS, GNUTLS_KX_SRP_RSA, 0 };
+        union {
+                int fd;
+                void *ptr;
+        } data;
         
         gnutls_init(&session, GNUTLS_SERVER);
         
         gnutls_set_default_priority(session);
         gnutls_kx_set_priority(session, kx_priority);
-        gnutls_credentials_set(session, GNUTLS_CRD_SRP, cred);
-                
+        gnutls_credentials_set(session, GNUTLS_CRD_SRP, cred);        
         gnutls_certificate_server_set_request(session, GNUTLS_CERT_IGNORE);
 
-        gnutls_transport_set_ptr(session, (gnutls_transport_ptr) sock);
+        data.fd = sock;
+        gnutls_transport_set_ptr(session, data.ptr);
         
         ret = gnutls_handshake(session);        
         if ( ret < 0 ) {
