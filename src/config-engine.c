@@ -162,6 +162,25 @@ static int op_append_line(config_t *cfg, char *line)
 
 
 
+static unsigned int adjust_insertion_point(config_t *cfg, unsigned int l)
+{        
+        /*
+         * We want to insert this entry at the end of the current section.
+         */
+        while ( l < cfg->elements ) {
+                l++;
+                
+                if ( l == cfg->elements )
+                        break;
+
+                if ( is_section(cfg->content[l]) )
+                        break;
+        }
+
+        return l;
+}
+
+
 
 /*
  *
@@ -565,21 +584,17 @@ static int new_section_line(config_t *cfg, const char *section,
                 char buf[1024];
                 
                 snprintf(buf, sizeof(buf), "[%s]", section);
-               
-                if ( *index && (*index + 1) < cfg->elements ) {
-                        ret = op_insert_line(cfg, strdup(buf), (*index + 1));
-                        if ( ret < 0 )
-                                return ret;
-                        
-                        return (! entry) ? 0 : op_insert_line(cfg, create_new_line(entry, val), (*index + 2));
-                } else {
-                        ret = op_append_line(cfg, strdup(buf));
-                        if ( ret < 0 )
-                                return ret;
-                        
-                        *index = cfg->elements - 1;
-                        return ( ! entry) ? 0 : op_append_line(cfg, create_new_line(entry, val));
-                }
+		
+		if ( *index )
+			*index = adjust_insertion_point(cfg, *index);
+		else
+			*index = cfg->elements;
+
+		ret = op_insert_line(cfg, strdup(buf), *index);
+		if ( ret < 0 )
+			return ret;
+		
+		return (! entry) ? 0 : op_insert_line(cfg, create_new_line(entry, val), *index + 1);
         }
 
         *index = ret;
