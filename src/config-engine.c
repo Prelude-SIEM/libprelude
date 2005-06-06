@@ -162,22 +162,6 @@ static int op_append_line(config_t *cfg, char *line)
 
 
 
-static unsigned int adjust_insertion_point(config_t *cfg, unsigned int l)
-{        
-        /*
-         * We want to insert this entry at the end of the current section.
-         */
-        while ( (l + 1) < cfg->elements ) {
-                l++;
-                
-                if ( is_section(cfg->content[l]) )
-                        break;
-        }
-
-        return l;
-}
-
-
 
 /*
  *
@@ -567,7 +551,6 @@ static int new_entry_line(config_t *cfg, const char *entry, const char *val, uns
 
 
 
-
 /*
  *
  */
@@ -582,27 +565,21 @@ static int new_section_line(config_t *cfg, const char *section,
                 char buf[1024];
                 
                 snprintf(buf, sizeof(buf), "[%s]", section);
-                
-                if ( *index ) {
-                        *index = adjust_insertion_point(cfg, *index);
-                        
+               
+                if ( *index && (*index + 1) < cfg->elements ) {
                         ret = op_insert_line(cfg, strdup(buf), *index);
                         if ( ret < 0 )
                                 return ret;
                         
-                        ret = op_insert_line(cfg, strdup("\n"), (*index + 1));
+                        return (! entry) ? 0 : op_insert_line(cfg, create_new_line(entry, val), (*index + 1));
                 } else {
-                        *index = cfg->elements - 1;
                         ret = op_append_line(cfg, strdup(buf));
+                        if ( ret < 0 )
+                                return ret;
+                        
+                        *index = cfg->elements - 1;
+                        return ( ! entry) ? 0 : op_append_line(cfg, create_new_line(entry, val));
                 }
-
-                if ( ret < 0 )
-                        return ret;
-                                
-                if ( ! entry )
-                        return 0;
-                                                
-                return op_append_line(cfg, create_new_line(entry, val));
         }
 
         *index = ret;
