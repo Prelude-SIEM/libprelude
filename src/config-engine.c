@@ -567,11 +567,11 @@ static int new_section_line(config_t *cfg, const char *section,
                 snprintf(buf, sizeof(buf), "[%s]", section);
                
                 if ( *index && (*index + 1) < cfg->elements ) {
-                        ret = op_insert_line(cfg, strdup(buf), *index);
+                        ret = op_insert_line(cfg, strdup(buf), (*index + 1));
                         if ( ret < 0 )
                                 return ret;
                         
-                        return (! entry) ? 0 : op_insert_line(cfg, create_new_line(entry, val), (*index + 1));
+                        return (! entry) ? 0 : op_insert_line(cfg, create_new_line(entry, val), (*index + 2));
                 } else {
                         ret = op_append_line(cfg, strdup(buf));
                         if ( ret < 0 )
