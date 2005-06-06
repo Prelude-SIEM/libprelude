@@ -686,6 +686,8 @@ void prelude_string_destroy_internal(prelude_string_t *string)
                 string->data.rwbuf = NULL;
         }
 
+        string->index = string->size = 0;
+
         /*
          * free() should be done by the caller
          */
