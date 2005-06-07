@@ -26,7 +26,7 @@ we wish to create the alert.classification.text path within our message, we will
 int ret;
 idmef_path_t *path;
 
-ret = idmef_path_new(&amp;path; "alert.classification.text");
+ret = idmef_path_new(&amp;path, "alert.classification.text");
 if ( ret &lt; 0 )
         return ret;
 </programlisting>
@@ -47,7 +47,7 @@ Here we just created a value applicable to the previously created path. That is,
 is pointing to a value of type string, the created #idmef_value_t object will be of this type.
 
 <programlisting>
-idmef_message_t *msg;
+idmef_message_t *idmef;
 
 /* 
  * create our top message 
@@ -56,9 +56,9 @@ ret = idmef_message_new(&amp;idmef);
 
 /*
  * Set the previously defined path to the previously created value
- * in the top level idmef message 'message'.
+ * in the top level idmef message 'idmef'.
  */
-ret = idmef_path_set(path, message, value);
+ret = idmef_path_set(path, idmef, value);
 </programlisting>
 
 And finally, we create our top level #idmef_message_t object and set the created #idmef_value_t 
@@ -86,7 +86,7 @@ static int set_idmef_path(idmef_message_t *message, const char *pathname, const 
                 return ret;
         }
 
-        ret = idmef_path_set(message, path, val);
+        ret = idmef_path_set(path, message, val);
 
         idmef_value_destroy(val);
         idmef_path_destroy(path);
