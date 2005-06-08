@@ -439,7 +439,9 @@ static void connection_timer_expire(void *data)
                  * is dead, emit backuped report.
                  */
                 cnx->parent->dead--;
-                cnx->is_dead = FALSE;
+                cnx->is_dead = FALSE;		
+                prelude_timer_destroy(&cnx->timer);
+                prelude_timer_set_expire(&cnx->timer, INITIAL_EXPIRATION_TIME);
 
                 notify_event(pool, PRELUDE_CONNECTION_POOL_EVENT_ALIVE, cnx->cnx);
                                 
@@ -452,9 +454,6 @@ static void connection_timer_expire(void *data)
                         if ( ret < 0 )
                                 return;
                 }
-                
-                prelude_timer_destroy(&cnx->timer);
-                prelude_timer_set_expire(&cnx->timer, INITIAL_EXPIRATION_TIME);
                 
 		/*
 		 * put the fd in fdset to read from manager.
