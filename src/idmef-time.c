@@ -98,7 +98,7 @@ static char *parse_time_hmsu(struct tm *tm, uint32_t *usec, const char *buf)
 
 
 
-static int parse_time_gmt(struct tm *tm, uint32_t *gmtoff, const char *buf)
+static int parse_time_gmt(struct tm *tm, int32_t *gmtoff, const char *buf)
 {
         int ret;
         unsigned int offset_hour, offset_min;
