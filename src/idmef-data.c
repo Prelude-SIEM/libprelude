@@ -395,7 +395,7 @@ static int bytes_to_string(prelude_string_t *out, const unsigned char *src, size
                 c = src[i];
                 
                 if ( c >= 32 && c <= 127 ) {
-                        ret = prelude_string_ncat(out, &c, 1);
+                        ret = prelude_string_ncat(out, (char *) &c, 1);
                         if ( ret < 0 )
                                 return ret;
                         
