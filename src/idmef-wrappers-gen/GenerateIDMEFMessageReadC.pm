@@ -126,13 +126,13 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, uint3
 
 	switch ( type ) \{
 	case IDMEF_DATA_TYPE_CHAR: \{
-		char tmp;
+		uint8_t tmp;
   
                 ret = prelude_extract_uint8_safe(&tmp, buf, len);
 		if ( ret < 0 )
 			return ret;
 
-		ret = idmef_data_new_char(out, tmp);
+		ret = idmef_data_new_char(out, (char) tmp);
 		break;
 	\}
 
