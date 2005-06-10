@@ -59,7 +59,7 @@ static int load_individual_cert(FILE *fd, gnutls_datum *key, gnutls_certificate_
         gnutls_datum cert;
         int ret = -1, got_start = 0;
         
-        cert.data = buf;
+        cert.data = (unsigned char *) buf;
         
         for ( cert.size = 0;
               cert.size < sizeof(buf) && fgets(buf + cert.size, sizeof(buf) - cert.size, fd);
@@ -160,10 +160,11 @@ int tls_certificates_load(const char *keyfile, const char *certfile, gnutls_cert
 
 int tls_certificate_get_peer_analyzerid(gnutls_session session, uint64_t *analyzerid)
 {
+        int ret;
         char buf[1024];
         gnutls_x509_crt cert;
-        int cert_list_size, ret;
         size_t size = sizeof(buf);
+        unsigned int cert_list_size;
         const gnutls_datum *cert_list;
         
         cert_list = gnutls_certificate_get_peers(session, &cert_list_size);
