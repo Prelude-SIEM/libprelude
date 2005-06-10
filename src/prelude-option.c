@@ -287,9 +287,10 @@ static int check_option(prelude_option_t *option, const char **optarg, const cha
 static int process_cfg_file(void *context, prelude_list_t *cblist, prelude_option_t *optlist,
                             const char *filename, prelude_string_t *err) 
 {
+        int ret;
         config_t *cfg;
-        int line = 0, ret;
-
+        unsigned int line = 0;
+        
         prelude_log_debug(3, "Using configuration file: %s.\n", filename);
         
         ret = config_open(&cfg, filename);
