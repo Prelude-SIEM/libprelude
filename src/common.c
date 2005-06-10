@@ -142,7 +142,7 @@ void *_prelude_realloc(void *ptr, size_t size)
  *
  * Returns: 0 on success, -1 if an error occured.
  */
-int prelude_read_multiline(FILE *fd, int *line, char *buf, size_t size) 
+int prelude_read_multiline(FILE *fd, unsigned int *line, char *buf, size_t size) 
 {
         size_t i;
 

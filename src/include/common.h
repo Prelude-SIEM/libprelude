@@ -48,7 +48,7 @@ int prelude_get_gmt_offset_from_tm(struct tm *tm, long *gmtoff);
 
 int prelude_get_gmt_offset_from_time(const time_t *utc, long *gmtoff);
 
-int prelude_read_multiline(FILE *fd, int *line, char *buf, size_t size);
+int prelude_read_multiline(FILE *fd, unsigned int *line, char *buf, size_t size);
 
 void *prelude_sockaddr_get_inaddr(struct sockaddr *sa);
 
