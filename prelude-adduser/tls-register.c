@@ -149,7 +149,7 @@ static int remove_old_certificate(const char *filename, uint64_t dn, uint64_t is
 
 
 
-static int remove_old(const char *filename, char *buf, size_t size)
+static int remove_old(const char *filename, unsigned char *buf, size_t size)
 {
         int ret;
         char out[512];
@@ -157,9 +157,9 @@ static int remove_old(const char *filename, char *buf, size_t size)
         gnutls_x509_crt crt;
         uint64_t dn, issuer_dn;
         
-        data.data = buf;
         data.size = size;
-
+        data.data = buf;
+        
         gnutls_x509_crt_init(&crt);
         
         ret = gnutls_x509_crt_import(crt, &data, GNUTLS_X509_FMT_PEM);
@@ -209,7 +209,7 @@ static int safe_close(int fd)
 
 
 
-static ssize_t safe_write(int fd, const char *buf, size_t size)
+static ssize_t safe_write(int fd, const unsigned char *buf, size_t size)
 {
         ssize_t ret;
         
@@ -224,7 +224,7 @@ static ssize_t safe_write(int fd, const char *buf, size_t size)
 
 
 
-static int save_buf(const char *filename, uid_t uid, gid_t gid, char *buf, size_t size)
+static int save_buf(const char *filename, uid_t uid, gid_t gid, const unsigned char *buf, size_t size)
 {
         int fd, ret;
         ssize_t sret;
@@ -297,7 +297,7 @@ static gnutls_x509_crt generate_certificate(prelude_client_profile_t *cp, gnutls
         
         gnutls_x509_crt_set_key(crt, key);
         
-        ret = gnutls_x509_crt_get_key_id(crt, 0, buf, &size);
+        ret = gnutls_x509_crt_get_key_id(crt, 0, (unsigned char *) buf, &size);
         if ( ret == 0 ) {
 
                 ret = gnutls_x509_crt_set_subject_key_id(crt, buf, size);
@@ -319,8 +319,8 @@ static gnutls_x509_crt generate_signed_certificate(prelude_client_profile_t *cp,
                                                    gnutls_x509_crq crq)
 {
         int ret;
-        char buf[65535];
         gnutls_x509_crt crt;
+        unsigned char buf[65535];
         size_t size = sizeof(buf);
         
         crt = generate_certificate(cp, NULL, generated_certificate_lifetime);
@@ -426,7 +426,7 @@ static gnutls_x509_privkey generate_private_key(void)
 
 static gnutls_x509_crq generate_certificate_request(prelude_client_profile_t *cp,
                                                     prelude_connection_permission_t permission,
-                                                    gnutls_x509_privkey key, char *buf, size_t *size)
+                                                    gnutls_x509_privkey key, unsigned char *buf, size_t *size)
 {
         int ret;
         gnutls_x509_crq crq;
@@ -445,7 +445,7 @@ static gnutls_x509_crq generate_certificate_request(prelude_client_profile_t *cp
         }
         
         if ( permission ) {
-                ret = snprintf(buf, *size, "%d", (int) permission);
+                ret = snprintf((char *) buf, *size, "%d", (int) permission);
                 ret = gnutls_x509_crq_set_dn_by_oid(crq, GNUTLS_OID_X520_COMMON_NAME, 0, buf, ret);
                 if ( ret < 0 ) {
                         fprintf(stderr, "error setting common name: %s.\n", gnutls_strerror(ret));
@@ -455,7 +455,7 @@ static gnutls_x509_crq generate_certificate_request(prelude_client_profile_t *cp
         
         gnutls_x509_crq_set_version(crq, 3);
 
-        ret = snprintf(buf, *size, "%" PRELUDE_PRIu64, prelude_client_profile_get_analyzerid(cp));
+        ret = snprintf((char*) buf, *size, "%" PRELUDE_PRIu64, prelude_client_profile_get_analyzerid(cp));
         ret = gnutls_x509_crq_set_dn_by_oid(crq, GNUTLS_OID_X520_DN_QUALIFIER, 0, buf, ret);
         if ( ret < 0 ) {
                 fprintf(stderr, "error setting common name: %s.\n", gnutls_strerror(ret));
@@ -502,7 +502,7 @@ static gnutls_x509_privkey gen_crypto(prelude_client_profile_t *cp,
                 return NULL;
         }
         
-        ret = save_buf(filename, uid, gid, buf, size);
+        ret = save_buf(filename, uid, gid, (unsigned char *) buf, size);
         if ( ret < 0 ) {
                 fprintf(stderr, "error saving private key.\n");
                 return NULL;
@@ -701,15 +701,15 @@ int tls_request_certificate(prelude_client_profile_t *cp, prelude_io_t *fd,
                             gnutls_x509_privkey key, prelude_connection_permission_t permission)
 {
         ssize_t ret;
+        ssize_t rsize;
+        char buf[65535];
         unsigned char *rbuf;
         gnutls_x509_crq crq;
-        unsigned char buf[65535];
-        ssize_t rsize;
         size_t size = sizeof(buf);
 
         fprintf(stderr, "  - Sending certificate request.\n");
 
-        crq = generate_certificate_request(cp, permission, key, buf, &size);
+        crq = generate_certificate_request(cp, permission, key, (unsigned char *) buf, &size);
         if ( ! crq )
                 return -1;
 
@@ -766,9 +766,9 @@ int tls_request_certificate(prelude_client_profile_t *cp, prelude_io_t *fd,
 int tls_load_ca_certificate(prelude_client_profile_t *cp, gnutls_x509_privkey key, gnutls_x509_crt *crt)
 {
         int ret;
-        char buf[65535];
         gnutls_datum data;
         char filename[256];
+        unsigned char buf[65535];
         size_t size = sizeof(buf);
         
         prelude_client_profile_get_tls_server_ca_cert_filename(cp, filename, sizeof(filename));
@@ -821,10 +821,10 @@ int tls_load_ca_signed_certificate(prelude_client_profile_t *cp,
                                    gnutls_x509_crt *crt)
 {
         int ret;
-        char buf[65535];
         gnutls_datum data;
         char filename[256];
         gnutls_x509_crq crq;
+        unsigned char buf[65535];
         size_t size = sizeof(buf);
         
         prelude_client_profile_get_tls_server_keycert_filename(cp, filename, sizeof(filename));
