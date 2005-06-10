@@ -651,9 +651,10 @@ int config_set(config_t *cfg, const char *section, const char *entry, const char
 
 int config_del(config_t *cfg, const char *section, const char *entry)
 {
+        int start, end;
         char *tmp, *value;
-        int start, end, l = 0;
-                
+        unsigned int line = 0;
+        
         if ( ! entry ) {
                 start = search_section(cfg, section, 0);
                 if ( start < 0 )
@@ -665,7 +666,7 @@ int config_del(config_t *cfg, const char *section, const char *entry)
                         start--;
                 
         } else {
-                start = search_entry(cfg, section, entry, &l, &tmp, &value);
+                start = search_entry(cfg, section, entry, &line, &tmp, &value);
                 if ( start < 0 )
                         return -1;
 
@@ -683,8 +684,8 @@ int config_del(config_t *cfg, const char *section, const char *entry)
 
 static const char *get_variable_content(config_t *cfg, const char *variable) 
 {
-        int line = 0;
         const char *ptr;
+        unsigned int line = 0;
         
         /*
          * Variable sets at runtime.
