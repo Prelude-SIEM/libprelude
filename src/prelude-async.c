@@ -152,6 +152,7 @@ static prelude_async_object_t *get_next_job(void)
         
         prelude_list_for_each(&joblist, tmp) {
                 obj = prelude_linked_object_get_object(tmp);
+                prelude_linked_object_del((prelude_linked_object_t *) obj);
                 break;
         }
         
@@ -187,11 +188,8 @@ static void *async_thread(void *arg)
                 else
                         wait_data();
                 
-                while ( (obj = get_next_job()) ) {
-                        
-                        prelude_async_del(obj);
-                        obj->_async_func(obj, obj->_async_data);       
-                }
+                while ( (obj = get_next_job()) )
+                        obj->_async_func(obj, obj->_async_data);
         }
 }
 
