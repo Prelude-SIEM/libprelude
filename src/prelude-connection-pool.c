@@ -374,7 +374,7 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
                     available, name, prelude_failover_get_deleted_msg_count(failover));
 
         do {
-                size = prelude_failover_get_saved_msg(failover, &msg);
+                size = prelude_failover_get_saved_msg(failover, &msg);                
                 if ( size < 0 )
                         continue;
 				
@@ -382,7 +382,7 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
                         break;
 
                 if ( clist ) {
-                        broadcast_message(msg, clist->and);
+                        broadcast_message(msg, clist->and);                        
                         if ( clist->dead )
                                 ret = -1;
                 } else {
@@ -449,7 +449,7 @@ static void connection_timer_expire(void *data)
                 if ( ret < 0 )
                         return;
 
-                if ( pool->failover ) {
+                if ( pool->failover && cnx->parent->dead == 0 ) {
                         ret = failover_flush(pool->failover, cnx->parent, NULL);
                         if ( ret < 0 )
                                 return;
