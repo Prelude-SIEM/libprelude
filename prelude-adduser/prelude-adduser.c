@@ -22,6 +22,7 @@
 *****/
 
 #include <stdio.h>
+#include <ctype.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
@@ -31,6 +32,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/time.h>
+#include <pwd.h>
+#include <grp.h>
 
 #include <errno.h>
 #include <gnutls/gnutls.h>
@@ -101,6 +104,24 @@ static void permission_warning(void)
 
 
 
+
+static void change_permission_warning(int exist_uid, int exist_gid)
+{
+        fprintf(stderr,
+                "\n\n*** WARNING ***\n"
+                "A profile of name %s already exist with UID:%d, GID:%d.\n"
+                "If you continue, '%s' permission will be updated to UID:%d, GID:%d.\n\n"
+                "[Please press enter if this is what you plan to do]\n",
+                prelude_client_profile_get_name(profile), exist_uid, exist_gid,
+                prelude_client_profile_get_name(profile),
+                (int) prelude_client_profile_get_uid(profile), (int) prelude_client_profile_get_gid(profile));
+
+        
+        while ( getchar() != '\n' );
+}
+
+
+
 static void print_delete_help(void)
 {
         fprintf(stderr, "\ndel: Delete an existing analyzer.\n");
@@ -134,8 +155,8 @@ static void print_registration_server_help(void)
         
         fprintf(stderr, "Valid options:\n");
 
-        fprintf(stderr, "\t--uid arg\t\t: UID to use to setup 'receiving' analyzer files.\n");
-        fprintf(stderr, "\t--gid arg\t\t: GID to use to setup 'receiving' analyzer files.\n");
+        fprintf(stderr, "\t--uid arg\t\t: UID or user to use to setup 'receiving' analyzer files.\n");
+        fprintf(stderr, "\t--gid arg\t\t: GID or group to use to setup 'receiving' analyzer files.\n");
         fprintf(stderr, "\t--prompt\t\t: Prompt for a password instead of auto generating it.\n");
         fprintf(stderr, "\t--keepalive\t\t: Register analyzer in an infinite loop.\n");
         fprintf(stderr, "\t--no-confirm\t\t: Do not ask for confirmation on sensor registration.\n");
@@ -155,8 +176,8 @@ static void print_register_help(void)
                 "receiving analyzer (like a Manager) through the specified registration-server.\n\n");
         
         fprintf(stderr, "Valid options:\n");
-        fprintf(stderr, "\t--uid arg\t\t: UID to use to setup analyzer files.\n");
-        fprintf(stderr, "\t--gid arg\t\t: GID to use to setup analyzer files.\n");
+        fprintf(stderr, "\t--uid arg\t\t: UID or user to use to setup analyzer files.\n");
+        fprintf(stderr, "\t--gid arg\t\t: GID or group to use to setup analyzer files.\n");
 }
 
 
@@ -167,8 +188,8 @@ static void print_add_help(void)
         fprintf(stderr, "usage: add <analyzer profile> [options]\n\n");
 
         fprintf(stderr, "Valid options:\n");
-        fprintf(stderr, "\t--uid arg\t\t: UID to use to setup analyzer files.\n");
-        fprintf(stderr, "\t--gid arg\t\t: GID to use to setup analyzer files.\n");
+        fprintf(stderr, "\t--uid arg\t\t: UID or user to use to setup analyzer files.\n");
+        fprintf(stderr, "\t--gid arg\t\t: GID or group to use to setup analyzer files.\n");
 }
 
 
@@ -176,8 +197,27 @@ static void print_add_help(void)
 
 static int set_uid(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
+        uid_t uid;
+        const char *p;
+        struct passwd *pw;
+
+        for ( p = optarg; isdigit(*p); p++ );
+        
+        if ( *p == 0 )
+                uid = atoi(optarg);
+        else {
+                pw = getpwnam(optarg);
+                if ( ! pw ) {
+                        fprintf(stderr, "could not lookup user '%s'.\n", optarg);
+                        return -1;
+                }
+
+                uid = pw->pw_uid;
+        }
+
         uid_set = TRUE;
-        prelude_client_profile_set_uid(profile, atoi(optarg));
+        prelude_client_profile_set_uid(profile, uid);
+
         return 0;
 }
 
@@ -185,8 +225,27 @@ static int set_uid(prelude_option_t *opt, const char *optarg, prelude_string_t *
 
 static int set_gid(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
+        uid_t gid;
+        const char *p;
+        struct group *grp;
+        
+        for ( p = optarg; isdigit(*p); p++ );
+
+        if ( *p == 0 )
+                gid = atoi(optarg);
+        else {
+                grp = getgrnam(optarg);
+                if ( ! grp ) {
+                        fprintf(stderr, "could not lookup group '%s'.\n", optarg);
+                        return -1;
+                }
+
+                gid = grp->gr_gid;
+        }
+        
         gid_set = TRUE;
         prelude_client_profile_set_gid(profile, atoi(optarg));
+
         return 0;
 }
 
@@ -486,11 +545,17 @@ static int ask_one_shot_password(char **buf)
 
 
 
+static const char *update_or_create(const char *path)
+{        
+        return access(path, F_OK) == 0 ? "Using" : "Creating";
+}
+
+
 static int create_directory(prelude_client_profile_t *profile, const char *dirname)
 {
         int ret;
         
-        fprintf(stderr, "  - Creating %s...\n", dirname);
+        fprintf(stderr, "  - %s %s...\n", update_or_create(dirname), dirname);
 
         ret = mkdir(dirname, S_IRWXU|S_IRWXG);
         if ( ret < 0 && errno != EEXIST ) {
@@ -590,14 +655,51 @@ static int rename_cmd(int argc, char **argv)
 
 
 
+static int get_existing_profile_owner(const char *buf)
+{
+        int ret;
+        struct stat st;
+
+        ret = stat(buf, &st);
+        if ( ret < 0 ) {
+                if ( errno == ENOENT )
+                        return 0;
+
+                fprintf(stderr, "error stating %s: %s.\n", buf, strerror(errno));
+                return -1;
+        }
+
+        if ( ! uid_set )
+                prelude_client_profile_set_uid(profile, st.st_uid);
+
+        if ( ! gid_set )
+                prelude_client_profile_set_gid(profile, st.st_gid);
+        
+        if ( (uid_set && st.st_uid != prelude_client_profile_get_uid(profile)) ||
+             (gid_set && st.st_gid != prelude_client_profile_get_gid(profile)) ) {
+                change_permission_warning(st.st_uid, st.st_gid);
+                return 0;
+        }
+        
+        uid_set = gid_set = TRUE;
+        prelude_client_profile_set_uid(profile, st.st_uid);
+        prelude_client_profile_set_gid(profile, st.st_gid);
+
+        return 0;
+}
+
+
+
 static int add_analyzer(const char *name, gnutls_x509_privkey *key, gnutls_x509_crt *crt)
 {
         int ret;
         char buf[256];
         
-        fprintf(stderr, "- Adding analyzer %s.\n", name);
-
         prelude_client_profile_set_name(profile, name);
+        prelude_client_profile_get_profile_dirname(profile, buf, sizeof(buf));
+        fprintf(stderr, "- %s analyzer %s.\n", update_or_create(buf), name);
+        
+        get_existing_profile_owner(buf);
         
         if ( ! uid_set || ! gid_set ) {
                 if ( ! uid_set )
@@ -926,8 +1028,9 @@ static const char *lifetime_to_str(char *out, size_t size, int lifetime)
 
 static int read_tls_setting(void)
 {
+        int ret;
         config_t *cfg;
-        int line = 0, ret;
+        unsigned int line;
         char buf[128], *ptr;
         
         ret = config_open(&cfg, TLS_CONFIG);
@@ -936,6 +1039,7 @@ static int read_tls_setting(void)
                 return -1;
         }
 
+        line = 0;
         ptr = config_get(cfg, NULL, "generated-key-size", &line);
         if ( ! ptr ) {
                 fprintf(stderr, "%s: couldn't find \"generated-key-size\" setting.\n", TLS_CONFIG);
@@ -944,8 +1048,8 @@ static int read_tls_setting(void)
         
         generated_key_size = atoi(ptr);
         free(ptr);
-        
-        line=0;
+
+        line = 0;
         ptr = config_get(cfg, NULL, "authority-certificate-lifetime", &line);
         if ( ! ptr ) {
                 fprintf(stderr, "%s: couldn't find \"authority-certificate-lifetime\" setting.\n", TLS_CONFIG);
@@ -954,7 +1058,8 @@ static int read_tls_setting(void)
         
         authority_certificate_lifetime = atoi(ptr);
         free(ptr);
-        
+
+        line = 0;
         ptr = config_get(cfg, NULL, "generated-certificate-lifetime", &line);
         if ( ! ptr ) {
                 fprintf(stderr, "%s: couldn't find \"generated-certificate-lifetime\" setting.\n", TLS_CONFIG);
@@ -971,7 +1076,7 @@ static int read_tls_setting(void)
                 lifetime_to_str(buf, sizeof(buf), authority_certificate_lifetime));
         
         fprintf(stderr, "  - Generated certificate lifetime: %s.\n\n",
-                lifetime_to_str(buf, sizeof(buf), authority_certificate_lifetime));
+                lifetime_to_str(buf, sizeof(buf), generated_certificate_lifetime));
 
   err:        
         config_close(cfg);
