@@ -200,8 +200,8 @@ static void print_chown_help(void)
         fprintf(stderr, "usage: chown <analyzer profile> [--uid UID] [--gid GID]\n\n");
 
         fprintf(stderr, "Valid options:\n");
-        fprintf(stderr, "\t--uid arg\t\t: UID to use to setup analyzer files.\n");
-        fprintf(stderr, "\t--gid arg\t\t: GID to use to setup analyzer files.\n");
+        fprintf(stderr, "\t--uid arg\t\t: UID or user to use to setup analyzer files.\n");
+        fprintf(stderr, "\t--gid arg\t\t: GID to group to use to setup analyzer files.\n");
 }
 
 
