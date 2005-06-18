@@ -194,6 +194,17 @@ static void print_add_help(void)
 
 
 
+static void print_chown_help(void)
+{
+        fprintf(stderr, "chown: Change analyzer owner.\n");
+        fprintf(stderr, "usage: chown <analyzer profile> [--uid UID] [--gid GID]\n\n");
+
+        fprintf(stderr, "Valid options:\n");
+        fprintf(stderr, "\t--uid arg\t\t: UID to use to setup analyzer files.\n");
+        fprintf(stderr, "\t--gid arg\t\t: GID to use to setup analyzer files.\n");
+}
+
+
 
 static int set_uid(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
@@ -253,22 +264,22 @@ static int set_gid(prelude_option_t *opt, const char *optarg, prelude_string_t *
 
 static int set_server_keepalive(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
-	server_keepalive = TRUE;
-	return 0;
+        server_keepalive = TRUE;
+        return 0;
 }
 
 
 static int set_server_prompt_passwd(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
-	server_prompt_passwd = TRUE;
-	return 0;
+        server_prompt_passwd = TRUE;
+        return 0;
 }
 
 
 static int set_server_no_confirm(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
-	server_confirm = FALSE;
-	return 0;
+        server_confirm = FALSE;
+        return 0;
 }
 
 
@@ -763,6 +774,59 @@ static int add_cmd(int argc, char **argv)
 
 
 
+static int chown_cb(const char *filename, const struct stat *st, int flag)
+{
+        int ret;
+        uid_t uid;
+        gid_t gid;
+
+        uid = uid_set ? prelude_client_profile_get_uid(profile) : -1;
+        gid = gid_set ? prelude_client_profile_get_gid(profile) : -1;
+
+        ret = chown(filename, uid,gid);
+        if ( ret < 0 )
+                fprintf(stderr, "could not set %s to UID:%d GID:%d: %s.\n", filename, uid, gid, strerror(errno));
+        
+        return ret;
+}
+
+
+
+static int chown_cmd(int argc, char **argv)
+{
+        int ret;
+        char dirname[1024];
+        prelude_option_t *opt;
+        prelude_string_t *err;
+        
+        ret = _prelude_client_profile_new(&profile);
+        ret = prelude_option_new(NULL, &opt);
+        setup_permission_options(opt);
+        
+        argc -= 2;
+        
+        ret = prelude_option_read(opt, NULL, &argc, &argv[2], &err, NULL);
+        if ( ret < 0 )
+                return -1;
+
+        fprintf(stderr, "- Chowning '%s' using UID:%d GID:%d.\n", argv[2],
+                uid_set ? prelude_client_profile_get_uid(profile) : -1, gid_set ? prelude_client_profile_get_gid(profile) : -1);
+        
+        prelude_client_profile_set_name(profile, argv[2]);
+
+        prelude_client_profile_get_profile_dirname(profile, dirname, sizeof(dirname));
+        
+        ret = ftw(dirname, chown_cb, 10);
+        if ( ret < 0 )
+                return -1;
+        
+        prelude_client_profile_get_backup_dirname(profile, dirname, sizeof(dirname));
+        
+        return ftw(dirname, chown_cb, 10);
+}
+
+
+
 static int add_to_rm_dir_list(const char *filename)
 {
         struct rm_dir_s *new;
@@ -920,7 +984,7 @@ static int register_cmd(int argc, char **argv)
         if ( ret < 0 )
                 return -1;
         
-	fprintf(stderr, "  - connecting to registration server (%s:%u)...\n", addr, port);
+        fprintf(stderr, "  - connecting to registration server (%s:%u)...\n", addr, port);
         
         fd = connect_manager(addr, port, pass);
         if ( ! fd ) 
@@ -954,8 +1018,8 @@ static int registration_server_cmd(int argc, char **argv)
         
         prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 'k', "keepalive", NULL,
                            PRELUDE_OPTION_ARGUMENT_NONE, set_server_keepalive, NULL);
-		
-	prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 'p', "prompt", NULL,
+                
+        prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 'p', "prompt", NULL,
                            PRELUDE_OPTION_ARGUMENT_NONE, set_server_prompt_passwd, NULL);
 
         prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 'n', "no-confirm", NULL,
@@ -1093,6 +1157,7 @@ int main(int argc, char **argv)
         int i, k, ret = -1;
         struct cmdtbl tbl[] = {
                 { "add", 1, add_cmd, print_add_help                                                 },
+                { "chown", 1, chown_cmd, print_chown_help                                           },
                 { "del", 1, del_cmd, print_delete_help                                              },
                 { "rename", 2, rename_cmd, print_rename_help                                        },
                 { "register", 3, register_cmd, print_register_help                                  },
