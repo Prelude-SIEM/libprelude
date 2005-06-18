@@ -330,9 +330,11 @@ static int create_template_config_file(prelude_client_profile_t *profile)
         prelude_client_profile_get_config_filename(profile, buf, sizeof(buf));
         
         ret = access(buf, F_OK);
-        if ( ret == 0 )
+        if ( ret == 0 ) {
+                chown(buf, prelude_client_profile_get_uid(profile), prelude_client_profile_get_gid(profile));
                 return 0;
-
+        }
+        
         tfd = fopen(PRELUDE_CONFIG_DIR "/default/idmef-client.conf", "r");
         if ( ! tfd ) {
                 fprintf(stderr, "could not open template configuration file: %s.\n", strerror(errno));
