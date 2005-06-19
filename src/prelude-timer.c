@@ -35,14 +35,7 @@
 #include "prelude-timer.h"
 
 
-#ifdef DEBUG
-# define dprint(args...) fprintf(stderr, args)
-#else
-# define dprint(args...)
-#endif
-
-
-static int count = 0;
+static unsigned int count = 0;
 static PRELUDE_LIST(timer_list);
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -95,7 +88,7 @@ static time_t time_remaining(prelude_timer_t *timer, time_t now)
 static int wake_up_if_needed(prelude_timer_t *timer, time_t now) 
 {
         assert(timer->start_time != -1);
-
+        
         if ( now == -1 || time_elapsed(timer, now) >= prelude_timer_get_expire(timer) ) {
                 timer->start_time = -1;
                 
@@ -110,6 +103,25 @@ static int wake_up_if_needed(prelude_timer_t *timer, time_t now)
 
 
 
+static prelude_timer_t *get_next_timer(void)
+{
+        prelude_list_t *tmp;
+        prelude_timer_t *timer = NULL;
+        
+        pthread_mutex_lock(&mutex);
+        
+        prelude_list_for_each(&timer_list, tmp) {
+                timer = prelude_list_entry(tmp, prelude_timer_t, list);
+                break;
+        }
+        
+        pthread_mutex_unlock(&mutex);
+
+        return timer;
+}
+
+
+
 /*
  * Walk the list of timer,
  * call the wake_up_if_need_function on each timer.
@@ -118,12 +130,8 @@ static void walk_and_wake_up_timer(time_t now)
 {
         int ret, woke = 0;
         prelude_timer_t *timer;
-        prelude_list_t *tmp, *bkp;
         
-        timer_lock_list();
-
-        prelude_list_for_each_safe(&timer_list, tmp, bkp) {
-                timer = prelude_list_entry(tmp, prelude_timer_t, list);
+        while ( (timer = get_next_timer()) ) {
 
                 ret = wake_up_if_needed(timer, now);
                 if ( ret < 0 )
@@ -132,9 +140,7 @@ static void walk_and_wake_up_timer(time_t now)
                 woke++;
         }
 
-        timer_unlock_list();
-        
-        dprint("woke up %d/%d timer\n", woke, count);
+        prelude_log_debug(5, "woke up %d/%d timer\n", woke, count);
 }
 
 
@@ -169,7 +175,7 @@ static prelude_list_t *search_previous_forward(prelude_timer_t *timer, time_t ex
                          * we found a timer that's expiring at the same time
                          * as us. Return it as the previous insertion point.
                          */
-                        dprint("[expire=%d] found forward in %d hop at %p\n", timer->expire, hop, cur);
+                        prelude_log_debug(5, "[expire=%d] found forward in %d hop at %p\n", timer->expire, hop, cur);
                         return tmp;
                 }
 
@@ -178,7 +184,7 @@ static prelude_list_t *search_previous_forward(prelude_timer_t *timer, time_t ex
                          * we found a timer expiring after us. We can return 
                          * the previously saved entry.
                          */
-                        dprint("[expire=%d] found forward in %d hop at %p\n", timer->expire, hop, cur);
+                        prelude_log_debug(5, "[expire=%d] found forward in %d hop at %p\n", timer->expire, hop, cur);
                         assert(prev);
                         return prev;
                 }
@@ -209,7 +215,7 @@ static prelude_list_t *search_previous_backward(prelude_timer_t *timer, time_t e
                 cur = prelude_list_entry(tmp, prelude_timer_t, list);
                 
                 if ( (cur->start_time + cur->expire) <= expire ) {
-                        dprint("[expire=%d] found backward in %d hop at %p\n", timer->expire, hop + 1, cur);
+                        prelude_log_debug(5, "[expire=%d] found backward in %d hop at %p\n", timer->expire, hop + 1, cur);
                         assert(tmp);
                         return tmp;
                 }
@@ -263,7 +269,7 @@ static prelude_list_t *search_previous_timer(prelude_timer_t *timer)
          */
         if ( timer->expire >= time_remaining(last, timer->start_time) ) {
                 assert(timer_list.prev);
-                dprint("[expire=%d] found without search (insert last)\n", timer->expire);
+                prelude_log_debug(5, "[expire=%d] found without search (insert last)\n", timer->expire);
                 return timer_list.prev;
         }
         
@@ -274,7 +280,7 @@ static prelude_list_t *search_previous_timer(prelude_timer_t *timer)
          */
         if ( timer->expire <= time_remaining(first, timer->start_time) ) {
                 assert(&timer_list);
-                dprint("[expire=%d] found without search (insert first)\n", timer->expire);
+                prelude_log_debug(5, "[expire=%d] found without search (insert first)\n", timer->expire);
                 return &timer_list;
         }
 
@@ -334,7 +340,6 @@ static void timer_init_unlocked(prelude_timer_t *timer)
 
 
 
-
 /**
  * prelude_timer_init:
  * @timer: timer to initialize.
@@ -343,7 +348,9 @@ static void timer_init_unlocked(prelude_timer_t *timer)
  */
 void prelude_timer_init(prelude_timer_t *timer)
 {
+        timer_lock_list();
         timer_init_unlocked(timer);
+        timer_unlock_list();
 }
 
 
@@ -372,8 +379,12 @@ void prelude_timer_init_list(prelude_timer_t *timer)
  */
 void prelude_timer_reset(prelude_timer_t *timer) 
 {
+        timer_lock_list();
+        
         timer_destroy_unlocked(timer);
         timer_init_unlocked(timer);
+
+        timer_unlock_list();
 }
 
 
@@ -388,7 +399,9 @@ void prelude_timer_reset(prelude_timer_t *timer)
  */
 void prelude_timer_destroy(prelude_timer_t *timer) 
 {
+        timer_lock_list();
         timer_destroy_unlocked(timer);
+        timer_unlock_list();
 }
 
 
