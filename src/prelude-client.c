@@ -21,6 +21,9 @@
 *
 *****/
 
+#include "config.h"
+#include "libmissing.h"
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -43,7 +46,6 @@
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_CLIENT
 #include "prelude-error.h"
 
-#include "libmissing.h"
 #include "idmef.h"
 #include "common.h"
 #include "prelude-log.h"

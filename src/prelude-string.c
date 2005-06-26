@@ -27,6 +27,9 @@
  * is now part of prelude-string.
  */
 
+#include "config.h"
+#include "libmissing.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,7 +37,6 @@
 #include <assert.h>
 
 #include "common.h"
-#include "libmissing.h"
 #include "prelude-log.h"
 #include "prelude-inttypes.h"
 #include "prelude-string.h"

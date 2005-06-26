@@ -21,13 +21,15 @@
 *
 *****/
 
+#include "config.h"
+#include "libmissing.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <netinet/in.h>
 
-#include "libmissing.h"
 #include "prelude-error.h"
 #include "prelude-log.h"
 #include "prelude-extract.h"
