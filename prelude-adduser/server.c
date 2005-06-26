@@ -21,6 +21,10 @@
 *
 *****/
 
+
+#include "config.h"
+#include "libmissing.h"
+
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
@@ -35,7 +39,6 @@
 #include <gnutls/gnutls.h>
 #include <gnutls/extra.h>
 
-#include "libmissing.h"
 #include "prelude-client.h"
 #include "prelude-error.h"
 #include "common.h"

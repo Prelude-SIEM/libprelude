@@ -21,6 +21,9 @@
 *
 *****/
 
+#include "config.h"
+#include "libmissing.h"
+
 #include <stdio.h>
 #include <ctype.h>
 #include <unistd.h>
@@ -41,7 +44,6 @@
 #include <gnutls/extra.h>
 
 #include "common.h"
-#include "libmissing.h"
 #include "config-engine.h"
 #include "prelude-error.h"
 #include "prelude-inttypes.h"
