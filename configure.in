@@ -114,9 +114,10 @@ AX_CFLAGS_GCC_OPTION(-Werror -Wmissing-braces, buggy_pthread_cppflags)
 ACX_PTHREAD(, AC_MSG_ERROR(couldn't find suitable pthread implementation))
 
 dnl Export pthread stuff wide for libmissing and libprelude-error
+
 LIBS="$LIBS $PTHREAD_LIBS"
 CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
-LDFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+LDFLAGS="$LDFLAGS $PTHREAD_CFLAGS"
 CC="$PTHREAD_CC"
 
 
@@ -124,6 +125,12 @@ AC_CHECK_FUNC(pthread_atfork, have_pthread_atfork=yes, have_pthread_atfork=no)
 if test x$have_pthread_atfork = xyes; then
    AC_DEFINE_UNQUOTED(HAVE_PTHREAD_ATFORK, , Define wether pthread_atfork is available)
 fi
+
+AC_CHECK_FUNC(pthread_condattr_setclock, have_pthread_condattr_setclock=yes, have_pthread_condattr_setclock=no)
+if test x$have_pthread_condattr_setclock = xyes; then
+   AC_DEFINE_UNQUOTED(HAVE_PTHREAD_CONDATTR_SETCLOCK, , Define wether pthread_condattr_setclock is available)
+fi
+
 
 old_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS $buggy_pthread_cppflags"
@@ -167,6 +174,16 @@ AC_SEARCH_LIBS(socket, socket nsl resolv)
 COMMON_LIBS="$LIBS"
 LIBS=$LIBS_bkp
 
+
+dnl **************************************************
+dnl * Check for POSIX timer function                 *
+dnl **************************************************
+
+LIBS_bkp=$LIBS
+LIBS=""
+AC_SEARCH_LIBS(clock_gettime, rt)
+COMMON_LIBS="$LIBS"
+LIBS=$LIBS_bkp
 
 
 dnl **************************************************
