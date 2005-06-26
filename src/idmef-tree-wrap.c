@@ -69,7 +69,7 @@
 
 #define DYNAMIC_IDENT(x) uint64_t x
 
-#define OPTIONAL_INT(type, name) type name; int name ## _is_set:1
+#define OPTIONAL_INT(type, name) type name; unsigned int name ## _is_set:1
 
 #define IDENT(name) uint64_t name
 

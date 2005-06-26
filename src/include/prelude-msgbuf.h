@@ -31,7 +31,7 @@
 typedef struct prelude_msgbuf prelude_msgbuf_t;
 
 typedef enum {
-        PRELUDE_MSGBUF_FLAGS_ASYNC = 0x01,
+        PRELUDE_MSGBUF_FLAGS_ASYNC = 0x01
 } prelude_msgbuf_flags_t;
 
 

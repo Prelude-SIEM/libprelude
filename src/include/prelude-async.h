@@ -33,7 +33,7 @@
          
 
 typedef enum {
-        PRELUDE_ASYNC_FLAGS_TIMER   = 0x01, 
+        PRELUDE_ASYNC_FLAGS_TIMER   = 0x01
 } prelude_async_flags_t;
 
 typedef void (*prelude_async_func_t)(void *object, void *data);

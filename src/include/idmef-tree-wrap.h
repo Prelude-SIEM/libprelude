@@ -49,7 +49,7 @@ typedef enum {
         IDMEF_ADDITIONAL_DATA_TYPE_REAL = 7,
         IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN = 8,
         IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING = 9,
-        IDMEF_ADDITIONAL_DATA_TYPE_XML = 10,
+        IDMEF_ADDITIONAL_DATA_TYPE_XML = 10
 } idmef_additional_data_type_t;
 
 
@@ -297,7 +297,7 @@ typedef enum {
         IDMEF_ADDRESS_CATEGORY_IPV6_ADDR = 11,
         IDMEF_ADDRESS_CATEGORY_IPV6_ADDR_HEX = 12,
         IDMEF_ADDRESS_CATEGORY_IPV6_NET = 13,
-        IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK = 14,
+        IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK = 14
 } idmef_address_category_t;
 
 
@@ -866,7 +866,7 @@ typedef enum {
         IDMEF_FILE_FSTYPE_FAT32 = 7,
         IDMEF_FILE_FSTYPE_PCFS = 8,
         IDMEF_FILE_FSTYPE_JOLIET = 9,
-        IDMEF_FILE_FSTYPE_ISO9660 = 10,
+        IDMEF_FILE_FSTYPE_ISO9660 = 10
 } idmef_file_fstype_t;
 
 
@@ -1207,7 +1207,7 @@ typedef enum {
         IDMEF_IMPACT_SEVERITY_INFO = 1,
         IDMEF_IMPACT_SEVERITY_LOW = 2,
         IDMEF_IMPACT_SEVERITY_MEDIUM = 3,
-        IDMEF_IMPACT_SEVERITY_HIGH = 4,
+        IDMEF_IMPACT_SEVERITY_HIGH = 4
 } idmef_impact_severity_t;
 
 

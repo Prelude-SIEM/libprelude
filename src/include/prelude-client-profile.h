@@ -30,6 +30,7 @@
 #endif
 
 #include <unistd.h>
+#include <sys/types.h>
 
 #include "prelude-inttypes.h"
 

@@ -32,12 +32,12 @@ typedef enum {
         PRELUDE_CONNECTION_PERMISSION_IDMEF_READ      = 0x01, /* client might read received IDMEF message */
         PRELUDE_CONNECTION_PERMISSION_ADMIN_READ      = 0x02, /* client might read received ADMIN message */
         PRELUDE_CONNECTION_PERMISSION_IDMEF_WRITE     = 0x04, /* client might send IDMEF message          */
-        PRELUDE_CONNECTION_PERMISSION_ADMIN_WRITE     = 0x08, /* client might issue OPTION request        */
+        PRELUDE_CONNECTION_PERMISSION_ADMIN_WRITE     = 0x08  /* client might issue OPTION request        */
 } prelude_connection_permission_t;
 
 
 typedef enum {
-        PRELUDE_CONNECTION_STATE_ESTABLISHED     = 0x01,
+        PRELUDE_CONNECTION_STATE_ESTABLISHED     = 0x01
 } prelude_connection_state_t;
 
 

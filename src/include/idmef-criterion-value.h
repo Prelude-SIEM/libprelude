@@ -34,7 +34,7 @@ typedef enum {
         IDMEF_CRITERION_VALUE_TYPE_ERROR            = -1,
         IDMEF_CRITERION_VALUE_TYPE_VALUE            =  0,
         IDMEF_CRITERION_VALUE_TYPE_REGEX            =  1,
-        IDMEF_CRITERION_VALUE_TYPE_BROKEN_DOWN_TIME =  2,
+        IDMEF_CRITERION_VALUE_TYPE_BROKEN_DOWN_TIME =  2
 } idmef_criterion_value_type_t;
 
         
