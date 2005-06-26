@@ -1,5 +1,5 @@
 includedir = $(prefix)/include/libprelude
-DEFS = -I $(top_srcdir)/src/include
+DEFS = -DHAVE_CONFIG_H -I $(top_srcdir)/src/include
 
 EXTRA_DIST = mkstrtable.awk err-sources.h.in err-codes.h.in \
 	mkerrnos.awk errnos.in mkerrcodes.awk mkerrcodes1.awk mkerrcodes2.awk mkerrcodes.c \
