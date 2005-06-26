@@ -194,8 +194,8 @@ void prelude_plugin_unload(prelude_plugin_generic_t *plugin);
 /*
  * Macro used to start a plugin.
  */
-#define prelude_plugin_run(pi, type, member, arg...) \
-        (((type *)prelude_plugin_instance_get_plugin(pi))->member(arg))
+#define prelude_plugin_run(pi, type, member, ...) \
+        (((type *)prelude_plugin_instance_get_plugin(pi))->member(__VA_ARGS__))
 
 #ifdef __cplusplus
  } 
