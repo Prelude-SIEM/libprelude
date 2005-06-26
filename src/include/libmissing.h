@@ -39,6 +39,7 @@
 #include "pathmax.h"
 #include "regex.h"
 #include "snprintf.h"
+#include "strcase.h"
 #include "strdup.h"
 #include "strndup.h"
 #include "strpbrk.h"
