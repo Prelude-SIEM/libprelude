@@ -21,6 +21,9 @@
 *
 *****/
 
+#include "config.h"
+#include "libmissing.h"
+
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -29,7 +32,6 @@
 #include <sys/types.h>
 #include <assert.h>
 
-#include "libmissing.h"
 #include "prelude-inttypes.h"
 #include "prelude-message-id.h"
 #include "prelude-msgbuf.h"
@@ -1075,27 +1077,27 @@ void prelude_option_set_warnings(prelude_option_warning_t new_warnings, prelude_
 
 
 void prelude_option_set_commit_callback(prelude_option_t *opt,
-     	                                int (*commit)(prelude_option_t *opt, prelude_string_t *out, void *context))
+                                        prelude_option_commit_callback_t commit)
 {
 	opt->commit = commit;
 }
 
 
-void *prelude_option_get_commit_callback(prelude_option_t *opt)
+prelude_option_commit_callback_t prelude_option_get_commit_callback(prelude_option_t *opt)
 {
 	return opt->commit;
 }
 
 
 void prelude_option_set_get_callback(prelude_option_t *opt,
-                                     int (*get)(prelude_option_t *opt, prelude_string_t *out, void *context))
+                                     prelude_option_get_callback_t get)
 {
         opt->get = get;
 }
 
 
 
-void *prelude_option_get_get_callback(prelude_option_t *opt)
+prelude_option_get_callback_t prelude_option_get_get_callback(prelude_option_t *opt)
 {
         return opt->get;
 }
@@ -1111,7 +1113,7 @@ void prelude_option_set_set_callback(prelude_option_t *opt,
 
 
 
-void *prelude_option_get_set_callback(prelude_option_t *opt)
+prelude_option_set_callback_t prelude_option_get_set_callback(prelude_option_t *opt)
 {
         return opt->set;
 }
@@ -1119,7 +1121,7 @@ void *prelude_option_get_set_callback(prelude_option_t *opt)
 
 
 void prelude_option_set_destroy_callback(prelude_option_t *opt,
-                                         int (*destroy)(prelude_option_t *opt, prelude_string_t *out, void *context))
+                                         prelude_option_destroy_callback_t destroy)
 {
         opt->destroy = destroy;
         opt->type |= PRELUDE_OPTION_TYPE_DESTROY;
@@ -1127,7 +1129,7 @@ void prelude_option_set_destroy_callback(prelude_option_t *opt,
 
 
 
-void *prelude_option_get_destroy_callback(prelude_option_t *opt)
+prelude_option_destroy_callback_t prelude_option_get_destroy_callback(prelude_option_t *opt)
 {
         return opt->destroy;
 }

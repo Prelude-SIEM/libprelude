@@ -31,7 +31,6 @@
  extern "C" {
 #endif
 
-
 typedef enum {
         PRELUDE_OPTION_TYPE_CLI  = 0x01,
         PRELUDE_OPTION_TYPE_CFG  = 0x02,
@@ -51,6 +50,11 @@ typedef enum {
 
 typedef struct prelude_option prelude_option_t;
 typedef struct prelude_option_context prelude_option_context_t;
+
+typedef int (*prelude_option_destroy_callback_t)(prelude_option_t *opt, prelude_string_t *out, void *context);         
+typedef int (*prelude_option_commit_callback_t)(prelude_option_t *opt, prelude_string_t *out, void *context);
+typedef int (*prelude_option_get_callback_t)(prelude_option_t *opt, prelude_string_t *out, void *context);
+typedef int (*prelude_option_set_callback_t)(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context);
 
 
 typedef enum {
@@ -165,30 +169,25 @@ prelude_option_t *prelude_option_get_parent(prelude_option_t *opt);
 
 
 void prelude_option_set_destroy_callback(prelude_option_t *opt,
-                                         int (*destroy)(prelude_option_t *opt,
-                                                        prelude_string_t *out, void *context));
-
-void *prelude_option_get_destroy_callback(prelude_option_t *opt);
+                                         prelude_option_destroy_callback_t destroy);
+         
+prelude_option_destroy_callback_t prelude_option_get_destroy_callback(prelude_option_t *opt);
 
 
 void prelude_option_set_set_callback(prelude_option_t *opt,
-                                     int (*set)(prelude_option_t *opt,
-                                                const char *optarg, prelude_string_t *err, void *context));
+                                     prelude_option_set_callback_t set);
 
-void *prelude_option_get_set_callback(prelude_option_t *opt);
+prelude_option_set_callback_t prelude_option_get_set_callback(prelude_option_t *opt);
 
 
 void prelude_option_set_get_callback(prelude_option_t *opt,
                                      int (*get)(prelude_option_t *opt, prelude_string_t *out, void *context));
 
-void *prelude_option_get_get_callback(prelude_option_t *opt);
+prelude_option_get_callback_t prelude_option_get_get_callback(prelude_option_t *opt);
 
+void prelude_option_set_commit_callback(prelude_option_t *opt, prelude_option_commit_callback_t commit);
 
-void prelude_option_set_commit_callback(prelude_option_t *opt, int (*commit)(prelude_option_t *opt,
-                                                                             prelude_string_t *out,
-                                                                             void *context));
-
-void *prelude_option_get_commit_callback(prelude_option_t *opt);
+prelude_option_commit_callback_t prelude_option_get_commit_callback(prelude_option_t *opt);
 
 void prelude_option_set_default_context(prelude_option_t *opt, void *context);
 
