@@ -45,13 +45,13 @@ typedef enum {
         PRELUDE_LOG_ERR  =  0,
         PRELUDE_LOG_WARN =  1,
         PRELUDE_LOG_INFO =  2,
-        PRELUDE_LOG_DEBUG = 3,
+        PRELUDE_LOG_DEBUG = 3
 } prelude_log_t;
 
 
 typedef enum {
         PRELUDE_LOG_FLAGS_QUIET  = 0x01, /* Drop PRELUDE_LOG_PRIORITY_INFO */
-        PRELUDE_LOG_FLAGS_SYSLOG = 0x02,
+        PRELUDE_LOG_FLAGS_SYSLOG = 0x02
 } prelude_log_flags_t;
 
 
