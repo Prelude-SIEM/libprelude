@@ -148,7 +148,7 @@ GENERIC_TWO_BASES_RW_FUNC("%u", "%x", uint32, uint32_t)
 GENERIC_TWO_BASES_RW_FUNC("%" PRELUDE_PRId64, "%" PRELUDE_PRIx64, int64, int64_t)
 GENERIC_TWO_BASES_RW_FUNC("%" PRELUDE_PRIu64, "%" PRELUDE_PRIx64, uint64, uint64_t)
 
-GENERIC_ONE_BASE_RW_FUNC("%d", "%d", enum, enum);
+GENERIC_ONE_BASE_RW_FUNC("%d", "%d", enum, enum)
 GENERIC_ONE_BASE_RW_FUNC("%f", "%f", float, float)
 GENERIC_ONE_BASE_RW_FUNC("%lf", "%f", double, double)
 
