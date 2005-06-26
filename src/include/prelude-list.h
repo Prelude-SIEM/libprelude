@@ -31,6 +31,10 @@
 #ifndef HAVE_LIBPRELUDE_PRELUDE_LIST_H
 #define HAVE_LIBPRELUDE_PRELUDE_LIST_H
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include "prelude-inttypes.h"
 
 #ifdef __cplusplus

@@ -24,6 +24,10 @@
 #ifndef _LIBPRELUDE_PRELUDE_ERROR_H
 #define _LIBPRELUDE_PRELUDE_ERROR_H
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include <errno.h>
 
 #ifdef __cplusplus
