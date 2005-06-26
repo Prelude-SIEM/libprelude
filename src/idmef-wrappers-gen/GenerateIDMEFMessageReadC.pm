@@ -101,8 +101,8 @@ static inline int prelude_extract_time_safe(idmef_time_t **out, void *buf, size_
                 return ret;
 
         idmef_time_set_sec(*out, prelude_extract_uint32(buf));
-        idmef_time_set_usec(*out, prelude_extract_uint32(buf + 4));
-        idmef_time_set_gmt_offset(*out, prelude_extract_int32(buf + 8));
+        idmef_time_set_usec(*out, prelude_extract_uint32((unsigned char *) buf + 4));
+        idmef_time_set_gmt_offset(*out, prelude_extract_int32((unsigned char *) buf + 8));
 
         return 0;
 \}
