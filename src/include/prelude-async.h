@@ -36,14 +36,14 @@ typedef enum {
         PRELUDE_ASYNC_FLAGS_TIMER   = 0x01
 } prelude_async_flags_t;
 
-typedef void (*prelude_async_func_t)(void *object, void *data);
+typedef void (*prelude_async_callback_t)(void *object, void *data);
 
 
 
 #define PRELUDE_ASYNC_OBJECT                   \
         PRELUDE_LINKED_OBJECT;                 \
         void *_async_data;                     \
-        prelude_async_func_t _async_func
+        prelude_async_callback_t _async_func
 
 
 typedef struct {
@@ -58,7 +58,7 @@ static inline void prelude_async_set_data(prelude_async_object_t *obj, void *dat
 }
 
 
-static inline void prelude_async_set_callback(prelude_async_object_t *obj, prelude_async_func_t func) 
+static inline void prelude_async_set_callback(prelude_async_object_t *obj, prelude_async_callback_t func) 
 {
         obj->_async_func = func;
 }
