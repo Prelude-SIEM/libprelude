@@ -319,7 +319,7 @@ typedef enum {
         IDMEF_ADDITIONAL_DATA_TYPE_REAL = 7,
         IDMEF_ADDITIONAL_DATA_TYPE_BOOLEAN = 8,
         IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING = 9,
-        IDMEF_ADDITIONAL_DATA_TYPE_XML = 10,
+        IDMEF_ADDITIONAL_DATA_TYPE_XML = 10
 } idmef_additional_data_type_t;
 </ENUM>
 <FUNCTION>
@@ -834,7 +834,7 @@ typedef enum {
         IDMEF_ADDRESS_CATEGORY_IPV6_ADDR = 11,
         IDMEF_ADDRESS_CATEGORY_IPV6_ADDR_HEX = 12,
         IDMEF_ADDRESS_CATEGORY_IPV6_NET = 13,
-        IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK = 14,
+        IDMEF_ADDRESS_CATEGORY_IPV6_NET_MASK = 14
 } idmef_address_category_t;
 </ENUM>
 <FUNCTION>
@@ -2145,7 +2145,7 @@ typedef enum {
         IDMEF_FILE_FSTYPE_FAT32 = 7,
         IDMEF_FILE_FSTYPE_PCFS = 8,
         IDMEF_FILE_FSTYPE_JOLIET = 9,
-        IDMEF_FILE_FSTYPE_ISO9660 = 10,
+        IDMEF_FILE_FSTYPE_ISO9660 = 10
 } idmef_file_fstype_t;
 </ENUM>
 <FUNCTION>
@@ -2947,7 +2947,7 @@ typedef enum {
         IDMEF_IMPACT_SEVERITY_INFO = 1,
         IDMEF_IMPACT_SEVERITY_LOW = 2,
         IDMEF_IMPACT_SEVERITY_MEDIUM = 3,
-        IDMEF_IMPACT_SEVERITY_HIGH = 4,
+        IDMEF_IMPACT_SEVERITY_HIGH = 4
 } idmef_impact_severity_t;
 </ENUM>
 <FUNCTION>
@@ -4308,9 +4308,19 @@ idmef_value_t *value){unsigned int i = 0;void *object = idmef_value_get_object(v
         _prelude_log(level, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
 </MACRO>
 <MACRO>
+<NAME>prelude_log_v</NAME>
+#define prelude_log_v(level, fmt, ap) \
+        _prelude_log_v(level, __FILE__, __FUNCTION__, __LINE__, fmt, ap)
+</MACRO>
+<MACRO>
 <NAME>prelude_log_debug</NAME>
 #define prelude_log_debug(level, ...) \
         _prelude_log(PRELUDE_LOG_DEBUG + level, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
+</MACRO>
+<MACRO>
+<NAME>prelude_log_debug_v</NAME>
+#define prelude_log_debug_v(level, fmt, ap) \
+        _prelude_log_v(PRELUDE_LOG_DEBUG + level, __FILE__, __FUNCTION__, __LINE__, fmt, ap)
 </MACRO>
 <ENUM>
 <NAME>prelude_log_t</NAME>
@@ -4318,14 +4328,14 @@ typedef enum {
         PRELUDE_LOG_ERR  =  0,
         PRELUDE_LOG_WARN =  1,
         PRELUDE_LOG_INFO =  2,
-        PRELUDE_LOG_DEBUG = 3,
+        PRELUDE_LOG_DEBUG = 3
 } prelude_log_t;
 </ENUM>
 <ENUM>
 <NAME>prelude_log_flags_t</NAME>
 typedef enum {
         PRELUDE_LOG_FLAGS_QUIET  = 0x01, /* Drop PRELUDE_LOG_PRIORITY_INFO */
-        PRELUDE_LOG_FLAGS_SYSLOG = 0x02,
+        PRELUDE_LOG_FLAGS_SYSLOG = 0x02
 } prelude_log_flags_t;
 </ENUM>
 <FUNCTION>
@@ -4363,11 +4373,6 @@ char *prefix
 <RETURNS>void </RETURNS>
 void log_cb(prelude_log_t level, const char *str)
 </FUNCTION>
-<FUNCTION>
-<NAME>prelude_log_v</NAME>
-<RETURNS>void </RETURNS>
-prelude_log_t level, const char *file,const char *function, int line, const char *fmt, va_list ap
-</FUNCTION>
 <TYPEDEF>
 <NAME>prelude_msg_t</NAME>
 typedef struct prelude_msg prelude_msg_t;
@@ -4378,7 +4383,7 @@ typedef enum {
         PRELUDE_MSG_PRIORITY_NONE = 0,
         PRELUDE_MSG_PRIORITY_LOW  = 1,
         PRELUDE_MSG_PRIORITY_MID  = 2,
-        PRELUDE_MSG_PRIORITY_HIGH = 3,
+        PRELUDE_MSG_PRIORITY_HIGH = 3
 } prelude_msg_priority_t;
 </ENUM>
 <FUNCTION>
@@ -4488,6 +4493,26 @@ typedef struct prelude_option prelude_option_t;
 <NAME>prelude_option_context_t</NAME>
 typedef struct prelude_option_context prelude_option_context_t;
 </TYPEDEF>
+<USER_FUNCTION>
+<NAME>prelude_option_destroy_callback_t</NAME>
+<RETURNS>int </RETURNS>
+prelude_option_t *opt, prelude_string_t *out, void *context
+</USER_FUNCTION>
+<USER_FUNCTION>
+<NAME>prelude_option_commit_callback_t</NAME>
+<RETURNS>int </RETURNS>
+prelude_option_t *opt, prelude_string_t *out, void *context
+</USER_FUNCTION>
+<USER_FUNCTION>
+<NAME>prelude_option_get_callback_t</NAME>
+<RETURNS>int </RETURNS>
+prelude_option_t *opt, prelude_string_t *out, void *context
+</USER_FUNCTION>
+<USER_FUNCTION>
+<NAME>prelude_option_set_callback_t</NAME>
+<RETURNS>int </RETURNS>
+prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context
+</USER_FUNCTION>
 <ENUM>
 <NAME>prelude_option_argument_t</NAME>
 typedef enum {
@@ -4700,21 +4725,21 @@ prelude_option_t *opt
 <FUNCTION>
 <NAME>prelude_option_set_destroy_callback</NAME>
 <RETURNS>void </RETURNS>
-prelude_option_t *opt,int (*destroy)(prelude_option_t *opt,prelude_string_t *out, void *context)
+prelude_option_t *opt,prelude_option_destroy_callback_t destroy
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_get_destroy_callback</NAME>
-<RETURNS>void *</RETURNS>
+<RETURNS>prelude_option_destroy_callback_t </RETURNS>
 prelude_option_t *opt
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_set_set_callback</NAME>
 <RETURNS>void </RETURNS>
-prelude_option_t *opt,int (*set)(prelude_option_t *opt,const char *optarg, prelude_string_t *err, void *context)
+prelude_option_t *opt,prelude_option_set_callback_t set
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_get_set_callback</NAME>
-<RETURNS>void *</RETURNS>
+<RETURNS>prelude_option_set_callback_t </RETURNS>
 prelude_option_t *opt
 </FUNCTION>
 <FUNCTION>
@@ -4724,17 +4749,17 @@ prelude_option_t *opt,int (*get)(prelude_option_t *opt, prelude_string_t *out, v
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_get_get_callback</NAME>
-<RETURNS>void *</RETURNS>
+<RETURNS>prelude_option_get_callback_t </RETURNS>
 prelude_option_t *opt
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_set_commit_callback</NAME>
 <RETURNS>void </RETURNS>
-prelude_option_t *opt, int (*commit)(prelude_option_t *opt,prelude_string_t *out,void *context)
+prelude_option_t *opt, prelude_option_commit_callback_t commit
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_option_get_commit_callback</NAME>
-<RETURNS>void *</RETURNS>
+<RETURNS>prelude_option_commit_callback_t </RETURNS>
 prelude_option_t *opt
 </FUNCTION>
 <FUNCTION>
@@ -4763,13 +4788,13 @@ typedef enum {
         PRELUDE_CONNECTION_PERMISSION_IDMEF_READ      = 0x01, /* client might read received IDMEF message */
         PRELUDE_CONNECTION_PERMISSION_ADMIN_READ      = 0x02, /* client might read received ADMIN message */
         PRELUDE_CONNECTION_PERMISSION_IDMEF_WRITE     = 0x04, /* client might send IDMEF message          */
-        PRELUDE_CONNECTION_PERMISSION_ADMIN_WRITE     = 0x08, /* client might issue OPTION request        */
+        PRELUDE_CONNECTION_PERMISSION_ADMIN_WRITE     = 0x08  /* client might issue OPTION request        */
 } prelude_connection_permission_t;
 </ENUM>
 <ENUM>
 <NAME>prelude_connection_state_t</NAME>
 typedef enum {
-        PRELUDE_CONNECTION_STATE_ESTABLISHED     = 0x01,
+        PRELUDE_CONNECTION_STATE_ESTABLISHED     = 0x01
 } prelude_connection_state_t;
 </ENUM>
 <TYPEDEF>
@@ -5236,7 +5261,7 @@ typedef struct prelude_msgbuf prelude_msgbuf_t;
 <ENUM>
 <NAME>prelude_msgbuf_flags_t</NAME>
 typedef enum {
-        PRELUDE_MSGBUF_FLAGS_ASYNC = 0x01,
+        PRELUDE_MSGBUF_FLAGS_ASYNC = 0x01
 } prelude_msgbuf_flags_t;
 </ENUM>
 <FUNCTION>
@@ -5883,8 +5908,8 @@ prelude_plugin_generic_t *plugin
 </MACRO>
 <MACRO>
 <NAME>prelude_plugin_run</NAME>
-#define prelude_plugin_run(pi, type, member, arg...) \
-        (((type *)prelude_plugin_instance_get_plugin(pi))->member(arg))
+#define prelude_plugin_run(pi, type, member, ...) \
+        (((type *)prelude_plugin_instance_get_plugin(pi))->member(__VA_ARGS__))
 </MACRO>
 <TYPEDEF>
 <NAME>prelude_hash_t</NAME>
@@ -6076,11 +6101,11 @@ prelude_connection_pool_t *pool,prelude_connection_pool_event_t wanted_events,in
 <ENUM>
 <NAME>prelude_async_flags_t</NAME>
 typedef enum {
-        PRELUDE_ASYNC_FLAGS_TIMER   = 0x01, 
+        PRELUDE_ASYNC_FLAGS_TIMER   = 0x01
 } prelude_async_flags_t;
 </ENUM>
 <USER_FUNCTION>
-<NAME>prelude_async_func_t</NAME>
+<NAME>prelude_async_callback_t</NAME>
 <RETURNS>void </RETURNS>
 void *object, void *data
 </USER_FUNCTION>
@@ -6089,7 +6114,7 @@ void *object, void *data
 #define PRELUDE_ASYNC_OBJECT                   \
         PRELUDE_LINKED_OBJECT;                 \
         void *_async_data;                     \
-        prelude_async_func_t _async_func
+        prelude_async_callback_t _async_func
 </MACRO>
 <STRUCT>
 <NAME>prelude_async_object_t</NAME>
@@ -6570,7 +6595,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.0-rc8"
+#define LIBPRELUDE_VERSION "0.9.0-rc9"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
@@ -7077,7 +7102,7 @@ typedef enum {
         IDMEF_CRITERION_VALUE_TYPE_ERROR            = -1,
         IDMEF_CRITERION_VALUE_TYPE_VALUE            =  0,
         IDMEF_CRITERION_VALUE_TYPE_REGEX            =  1,
-        IDMEF_CRITERION_VALUE_TYPE_BROKEN_DOWN_TIME =  2,
+        IDMEF_CRITERION_VALUE_TYPE_BROKEN_DOWN_TIME =  2
 } idmef_criterion_value_type_t;
 </ENUM>
 <FUNCTION>
@@ -7346,18 +7371,18 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </FUNCTION>
 <MACRO>
 <NAME>idmef_additional_data_new_string_ref_fast</NAME>
-#define idmef_additional_data_new_string_ref_fast(data, len) \
-        idmef_additional_data_new_ptr_ref_fast(IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
+#define idmef_additional_data_new_string_ref_fast(ad, data, len) \
+        idmef_additional_data_new_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_string_ref_fast</NAME>
 #define idmef_additional_data_set_string_ref_fast(ad, data, len) \
-        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
+        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING, (const unsigned char *) data, len + 1)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_string_dup_fast</NAME>
-#define idmef_additional_data_new_string_dup_fast(data, len) \
-        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len)
+#define idmef_additional_data_new_string_dup_fast(ad, data, len) \
+        idmef_additional_data_new_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_string_dup_fast</NAME>
@@ -7366,8 +7391,8 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_string_nodup_fast</NAME>
-#define idmef_additional_data_new_string_nodup_fast(data, len) \
-        idmef_additional_data_new_ptr_nodup_fast(IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
+#define idmef_additional_data_new_string_nodup_fast(ad, data, len) \
+        idmef_additional_data_new_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_string_nodup_fast</NAME>
@@ -7376,8 +7401,8 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_string_ref</NAME>
-#define idmef_additional_data_new_string_ref(data) \
-        idmef_additional_data_new_string_ref_fast(data, strlen(data))
+#define idmef_additional_data_new_string_ref(ad, data) \
+        idmef_additional_data_new_string_ref_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_string_ref</NAME>
@@ -7386,38 +7411,38 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_string_dup</NAME>
-#define idmef_additional_data_new_string_dup(data) \
-        idmef_additional_data_new_string_dup_fast(data, strlen(data))
+#define idmef_additional_data_new_string_dup(ad, data) \
+        idmef_additional_data_new_string_dup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_string_dup</NAME>
-#define idmef_additional_data_set_string_dup(data) \
-        idmef_additional_data_set_string_dup_fast(data, strlen(data))
+#define idmef_additional_data_set_string_dup(ad, data) \
+        idmef_additional_data_set_string_dup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_string_nodup</NAME>
-#define idmef_additional_data_new_string_nodup(data) \
-        idmef_additional_data_new_string_nodup_fast(data, strlen(data))
+#define idmef_additional_data_new_string_nodup(ad, data) \
+        idmef_additional_data_new_string_nodup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_string_nodup</NAME>
-#define idmef_additional_data_set_string_nodup(data) \
-        idmef_additional_data_set_string_nodup_fast(data, strlen(data))
+#define idmef_additional_data_set_string_nodup(ad, data) \
+        idmef_additional_data_set_string_nodup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_ntpstamp_ref_fast</NAME>
-#define idmef_additional_data_new_ntpstamp_ref_fast(data, len) \
-        idmef_additional_data_new_ptr_ref_fast(IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len + 1)
+#define idmef_additional_data_new_ntpstamp_ref_fast(ad, data, len) \
+        idmef_additional_data_new_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len + 1)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_ntpstamp_ref_fast</NAME>
 #define idmef_additional_data_set_ntpstamp_ref_fast(ad, data, len) \
-        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len + 1)
+        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, (const unsigned char *) data, len + 1)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_ntpstamp_dup_fast</NAME>
-#define idmef_additional_data_new_ntpstamp_dup_fast(data, len) \
-        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len)
+#define idmef_additional_data_new_ntpstamp_dup_fast(ad, data, len) \
+        idmef_additional_data_new_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_ntpstamp_dup_fast</NAME>
@@ -7426,8 +7451,8 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_ntpstamp_nodup_fast</NAME>
-#define idmef_additional_data_new_ntpstamp_nodup_fast(data, len) \
-        idmef_additional_data_new_ptr_nodup_fast(IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len + 1)
+#define idmef_additional_data_new_ntpstamp_nodup_fast(ad, data, len) \
+        idmef_additional_data_new_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len + 1)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_ntpstamp_nodup_fast</NAME>
@@ -7436,8 +7461,8 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_ntpstamp_ref</NAME>
-#define idmef_additional_data_new_ntpstamp_ref(data) \
-        idmef_additional_data_new_ntpstamp_ref_fast(data, strlen(data))
+#define idmef_additional_data_new_ntpstamp_ref(ad, data) \
+        idmef_additional_data_new_ntpstamp_ref_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_ntpstamp_ref</NAME>
@@ -7446,28 +7471,28 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_ntpstamp_dup</NAME>
-#define idmef_additional_data_new_ntpstamp_dup(data) \
-        idmef_additional_data_new_ntpstamp_dup_fast(data, strlen(data))
+#define idmef_additional_data_new_ntpstamp_dup(ad, data) \
+        idmef_additional_data_new_ntpstamp_dup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_ntpstamp_dup</NAME>
-#define idmef_additional_data_set_ntpstamp_dup(data) \
-        idmef_additional_data_set_ntpstamp_dup_fast(data, strlen(data))
+#define idmef_additional_data_set_ntpstamp_dup(ad, data) \
+        idmef_additional_data_set_ntpstamp_dup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_ntpstamp_nodup</NAME>
-#define idmef_additional_data_new_ntpstamp_nodup(data) \
-        idmef_additional_data_new_ntpstamp_nodup_fast(data, strlen(data))
+#define idmef_additional_data_new_ntpstamp_nodup(ad, data) \
+        idmef_additional_data_new_ntpstamp_nodup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_ntpstamp_nodup</NAME>
-#define idmef_additional_data_set_ntpstamp_nodup(data) \
-        idmef_additional_data_set_ntpstamp_nodup_fast(data, strlen(data))
+#define idmef_additional_data_set_ntpstamp_nodup(ad, data) \
+        idmef_additional_data_set_ntpstamp_nodup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_byte_string_ref</NAME>
-#define idmef_additional_data_new_byte_string_ref(data, len) \
-        idmef_additional_data_new_ptr_ref_fast(IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
+#define idmef_additional_data_new_byte_string_ref(ad, data, len) \
+        idmef_additional_data_new_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_byte_string_ref</NAME>
@@ -7476,8 +7501,8 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_byte_string_dup</NAME>
-#define idmef_additional_data_new_byte_string_dup(data, len) \
-        idmef_additional_data_new_ptr_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
+#define idmef_additional_data_new_byte_string_dup(ad, data, len) \
+        idmef_additional_data_new_ptr_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_byte_string_dup</NAME>
@@ -7486,8 +7511,8 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_byte_string_nodup</NAME>
-#define idmef_additional_data_new_byte_string_nodup(data, len) \
-        idmef_additional_data_new_ptr_nodup_fast(IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
+#define idmef_additional_data_new_byte_string_nodup(ad, data, len) \
+        idmef_additional_data_new_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_byte_string_nodup</NAME>
@@ -7496,18 +7521,18 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_portlist_ref_fast</NAME>
-#define idmef_additional_data_new_portlist_ref_fast(data, len) \
-        idmef_additional_data_new_ptr_ref_fast(IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len + 1)
+#define idmef_additional_data_new_portlist_ref_fast(ad, data, len) \
+        idmef_additional_data_new_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len + 1)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_portlist_ref_fast</NAME>
 #define idmef_additional_data_set_portlist_ref_fast(ad, data, len) \
-        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len + 1)
+        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, (const unsigned char *) data, len + 1)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_portlist_dup_fast</NAME>
-#define idmef_additional_data_new_portlist_dup_fast(data, len) \
-        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len)
+#define idmef_additional_data_new_portlist_dup_fast(ad, data, len) \
+        idmef_additional_data_new_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_portlist_dup_fast</NAME>
@@ -7516,8 +7541,8 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_portlist_nodup_fast</NAME>
-#define idmef_additional_data_new_portlist_nodup_fast(data, len) \
-        idmef_additional_data_new_ptr_nodup_fast(IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len + 1)
+#define idmef_additional_data_new_portlist_nodup_fast(ad, data, len) \
+        idmef_additional_data_new_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len + 1)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_portlist_nodup_fast</NAME>
@@ -7526,8 +7551,8 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_portlist_ref</NAME>
-#define idmef_additional_data_new_portlist_ref(data) \
-        idmef_additional_data_new_portlist_ref_fast(data, strlen(data))
+#define idmef_additional_data_new_portlist_ref(ad, data) \
+        idmef_additional_data_new_portlist_ref_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_portlist_ref</NAME>
@@ -7536,38 +7561,38 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_portlist_dup</NAME>
-#define idmef_additional_data_new_portlist_dup(data) \
-        idmef_additional_data_new_portlist_dup_fast(data, strlen(data))
+#define idmef_additional_data_new_portlist_dup(ad, data) \
+        idmef_additional_data_new_portlist_dup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_portlist_dup</NAME>
-#define idmef_additional_data_set_portlist_dup(data) \
-        idmef_additional_data_set_portlist_dup_fast(data, strlen(data))
+#define idmef_additional_data_set_portlist_dup(ad, data) \
+        idmef_additional_data_set_portlist_dup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_portlist_nodup</NAME>
-#define idmef_additional_data_new_portlist_nodup(data) \
-        idmef_additional_data_new_portlist_nodup_fast(data, strlen(data))
+#define idmef_additional_data_new_portlist_nodup(ad, data) \
+        idmef_additional_data_new_portlist_nodup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_portlist_nodup</NAME>
-#define idmef_additional_data_set_portlist_nodup(data) \
-        idmef_additional_data_set_portlist_nodup_fast(data, strlen(data))
+#define idmef_additional_data_set_portlist_nodup(ad, data) \
+        idmef_additional_data_set_portlist_nodup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_datetime_ref_fast</NAME>
-#define idmef_additional_data_new_datetime_ref_fast(data, len) \
-        idmef_additional_data_new_ptr_ref_fast(IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len + 1)
+#define idmef_additional_data_new_datetime_ref_fast(ad, data, len) \
+        idmef_additional_data_new_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len + 1)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_datetime_ref_fast</NAME>
 #define idmef_additional_data_set_datetime_ref_fast(ad, data, len) \
-        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len + 1)
+        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, (const unsigned char *) data, len + 1)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_datetime_dup_fast</NAME>
-#define idmef_additional_data_new_datetime_dup_fast(data, len) \
-        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len)
+#define idmef_additional_data_new_datetime_dup_fast(ad, data, len) \
+        idmef_additional_data_new_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_datetime_dup_fast</NAME>
@@ -7576,8 +7601,8 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_datetime_nodup_fast</NAME>
-#define idmef_additional_data_new_datetime_nodup_fast(data, len) \
-        idmef_additional_data_new_ptr_nodup_fast(IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len + 1)
+#define idmef_additional_data_new_datetime_nodup_fast(ad, data, len) \
+        idmef_additional_data_new_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len + 1)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_datetime_nodup_fast</NAME>
@@ -7586,8 +7611,8 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_datetime_ref</NAME>
-#define idmef_additional_data_new_datetime_ref(data) \
-        idmef_additional_data_new_datetime_ref_fast(data, strlen(data))
+#define idmef_additional_data_new_datetime_ref(ad, data) \
+        idmef_additional_data_new_datetime_ref_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_datetime_ref</NAME>
@@ -7596,38 +7621,38 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_datetime_dup</NAME>
-#define idmef_additional_data_new_datetime_dup(data) \
-        idmef_additional_data_new_datetime_dup_fast(data, strlen(data))
+#define idmef_additional_data_new_datetime_dup(ad, data) \
+        idmef_additional_data_new_datetime_dup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_datetime_dup</NAME>
-#define idmef_additional_data_set_datetime_dup(data) \
-        idmef_additional_data_set_datetime_dup_fast(data, strlen(data))
+#define idmef_additional_data_set_datetime_dup(ad, data) \
+        idmef_additional_data_set_datetime_dup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_datetime_nodup</NAME>
-#define idmef_additional_data_new_datetime_nodup(data) \
-        idmef_additional_data_new_datetime_nodup_fast(data, strlen(data))
+#define idmef_additional_data_new_datetime_nodup(ad, data) \
+        idmef_additional_data_new_datetime_nodup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_datetime_nodup</NAME>
-#define idmef_additional_data_set_datetime_nodup(data) \
-        idmef_additional_data_set_datetime_nodup_fast(data, strlen(data))
+#define idmef_additional_data_set_datetime_nodup(ad, data) \
+        idmef_additional_data_set_datetime_nodup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_xml_ref_fast</NAME>
-#define idmef_additional_data_new_xml_ref_fast(data, len) \
-        idmef_additional_data_new_ptr_ref_fast(IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len + 1)
+#define idmef_additional_data_new_xml_ref_fast(ad, data, len) \
+        idmef_additional_data_new_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len + 1)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_xml_ref_fast</NAME>
 #define idmef_additional_data_set_xml_ref_fast(ad, data, len) \
-        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len + 1)
+        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_XML, (const unsigned char *) data, len + 1)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_xml_dup_fast</NAME>
-#define idmef_additional_data_new_xml_dup_fast(data, len) \
-        idmef_additional_data_new_str_dup_fast(IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len)
+#define idmef_additional_data_new_xml_dup_fast(ad, data, len) \
+        idmef_additional_data_new_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_xml_dup_fast</NAME>
@@ -7636,8 +7661,8 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_xml_nodup_fast</NAME>
-#define idmef_additional_data_new_xml_nodup_fast(data, len) \
-        idmef_additional_data_new_ptr_nodup_fast(IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len + 1)
+#define idmef_additional_data_new_xml_nodup_fast(ad, data, len) \
+        idmef_additional_data_new_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len + 1)
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_xml_nodup_fast</NAME>
@@ -7646,8 +7671,8 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_xml_ref</NAME>
-#define idmef_additional_data_new_xml_ref(data) \
-        idmef_additional_data_new_xml_ref_fast(data, strlen(data))
+#define idmef_additional_data_new_xml_ref(ad, data) \
+        idmef_additional_data_new_xml_ref_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_xml_ref</NAME>
@@ -7656,23 +7681,23 @@ idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str,
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_xml_dup</NAME>
-#define idmef_additional_data_new_xml_dup(data) \
-        idmef_additional_data_new_xml_dup_fast(data, strlen(data))
+#define idmef_additional_data_new_xml_dup(ad, data) \
+        idmef_additional_data_new_xml_dup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_xml_dup</NAME>
-#define idmef_additional_data_set_xml_dup(data) \
-        idmef_additional_data_set_xml_dup_fast(data, strlen(data))
+#define idmef_additional_data_set_xml_dup(ad, data) \
+        idmef_additional_data_set_xml_dup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_new_xml_nodup</NAME>
-#define idmef_additional_data_new_xml_nodup(data) \
-        idmef_additional_data_new_xml_nodup_fast(data, strlen(data))
+#define idmef_additional_data_new_xml_nodup(ad, data) \
+        idmef_additional_data_new_xml_nodup_fast(ad, data, strlen(data))
 </MACRO>
 <MACRO>
 <NAME>idmef_additional_data_set_xml_nodup</NAME>
-#define idmef_additional_data_set_xml_nodup(data) \
-        idmef_additional_data_set_xml_nodup_fast(data, strlen(data))
+#define idmef_additional_data_set_xml_nodup(ad, data) \
+        idmef_additional_data_set_xml_nodup_fast(ad, data, strlen(data))
 </MACRO>
 <FUNCTION>
 <NAME>idmef_additional_data_destroy_internal</NAME>

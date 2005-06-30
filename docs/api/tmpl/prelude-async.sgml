@@ -22,7 +22,7 @@ If you use this flags, you don't need to call prelude_wake_up_timer() anymore.
 
 @PRELUDE_ASYNC_FLAGS_TIMER: 
 
-<!-- ##### USER_FUNCTION prelude_async_func_t ##### -->
+<!-- ##### USER_FUNCTION prelude_async_callback_t ##### -->
 <para>
 
 </para>

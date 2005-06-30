@@ -1217,7 +1217,7 @@ prelude_connection_pool_set_event_handler
 <SECTION>
 <FILE>prelude-async</FILE>
 prelude_async_flags_t
-prelude_async_func_t
+prelude_async_callback_t
 PRELUDE_ASYNC_OBJECT
 prelude_async_object_t
 prelude_async_init
