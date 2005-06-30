@@ -211,10 +211,13 @@ static prelude_option_t *search_option(prelude_option_t *root, const char *optna
 
 static prelude_bool_t is_an_argument(const char *stuff) 
 {
+        prelude_option_t *opt;
         size_t len = strlen(stuff);
         
-        if ( stuff[0] == '-' && (len == 2 || (len > 2 && stuff[1] == '-')) ) 
-                return FALSE;
+        if ( stuff[0] == '-' && (len == 2 || (len > 2 && stuff[1] == '-')) ) {
+                opt = prelude_option_search(NULL, stuff + strspn(stuff, "-"), ~0, TRUE);                
+                return opt ? FALSE : TRUE;
+        }
         
         return TRUE;
 }
