@@ -103,8 +103,8 @@ static void do_log_v(prelude_log_t level, const char *file,
 
 
 
-void prelude_log_v(prelude_log_t level, const char *file,
-                   const char *function, int line, const char *fmt, va_list ap) 
+void _prelude_log_v(prelude_log_t level, const char *file,
+                    const char *function, int line, const char *fmt, va_list ap) 
 {
         if ( ! need_to_log(level) )
                 return;

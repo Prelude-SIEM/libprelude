@@ -75,7 +75,7 @@ typedef unsigned int prelude_bool_t;
 
 %ignore idmef_path_new_v;
 %ignore prelude_string_vprintf;
-%ignore prelude_log_v;
+%ignore _prelude_log_v;
 
 %include "prelude.h"
 %include "prelude-client.h"
