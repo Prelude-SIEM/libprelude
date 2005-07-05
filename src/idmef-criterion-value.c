@@ -23,6 +23,7 @@
 *****/
 
 #include "config.h"
+#include "libmissing.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,7 +34,6 @@
 #include <stdarg.h>
 #include <errno.h>
 
-#include "libmissing.h"
 #include "common.h"
 #include "prelude-log.h"
 #include "prelude-error.h"

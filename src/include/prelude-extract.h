@@ -29,6 +29,7 @@
 # include "config.h"
 #endif
 
+#include <netinet/in.h>
 #include "prelude-inttypes.h"
 
 
