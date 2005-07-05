@@ -22,6 +22,7 @@
 *****/
 
 #include "config.h"
+#include "libmissing.h"
 
 #include <stdio.h>
 #include <ctype.h>
@@ -30,13 +31,10 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <sys/time.h>
 #include <errno.h>
 #include <time.h>
 
 #include "prelude-error.h"
-#include "libmissing.h"
-
 #include "idmef.h"
 #include "prelude-log.h"
 #include "common.h"

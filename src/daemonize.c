@@ -21,6 +21,8 @@
 *
 *****/
 
+#include "libmissing.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -31,7 +33,6 @@
 #include <fcntl.h>
 #include <errno.h>
 
-#include "libmissing.h"
 #include "daemonize.h"
 #include "prelude-log.h"
 #include "prelude-error.h"

@@ -29,9 +29,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/time.h>
-#include <assert.h>
 
 #include "prelude-inttypes.h"
 #include "prelude-list.h"

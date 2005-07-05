@@ -22,6 +22,7 @@
 *****/
 
 #include "config.h"
+#include "libmissing.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,7 +31,6 @@
 #include <assert.h>
 #include <sys/types.h>
 
-#include "libmissing.h"
 #include "prelude-inttypes.h"
 #include "common.h"
 #include "config-engine.h"

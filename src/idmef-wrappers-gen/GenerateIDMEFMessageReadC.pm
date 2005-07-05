@@ -58,9 +58,6 @@ sub	header
 
 #include <stdio.h>
 #include <unistd.h>
-#include <sys/time.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_IDMEF_MESSAGE_READ
 #include \"prelude-error.h\"

@@ -21,6 +21,7 @@
 *
 *****/
 
+#include "libmissing.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,7 +29,6 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 
-#include "libmissing.h"
 #include "prelude-log.h"
 #include "prelude-string.h"
 #include "prelude-inttypes.h"

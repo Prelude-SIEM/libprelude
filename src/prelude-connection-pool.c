@@ -21,10 +21,8 @@
 *
 *****/
 
-/*
- * needed for 64 bits file offset.
- */
 #include "config.h"
+#include "libmissing.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,13 +30,10 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/time.h>
 #include <fcntl.h>
 #include <errno.h>
-#include <netinet/in.h> /* required by common.h */
 #include <assert.h>
 
-#include "libmissing.h"
 #include "common.h"
 #include "prelude-timer.h"
 #include "prelude-log.h"

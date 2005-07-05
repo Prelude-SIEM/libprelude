@@ -21,6 +21,8 @@
 *
 *****/
 
+#include "libmissing.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,13 +36,10 @@
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
 
-#include "libmissing.h"
 #include "prelude-client.h"
 #include "prelude-error.h"
 #include "tls-register.h"
 #include "tls-util.h"
-
-#include <assert.h>
 
 
 extern int server_confirm;
