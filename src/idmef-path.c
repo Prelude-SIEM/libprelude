@@ -22,6 +22,8 @@
 *
 *****/
 
+#include "libmissing.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,7 +31,6 @@
 #include <stdarg.h>
 #include <pthread.h>
 
-#include "libmissing.h"
 #include "prelude-hash.h"
 #include "prelude-log.h"
 #include "prelude-inttypes.h"
@@ -92,6 +93,12 @@ static void path_lock_cb(void *data)
         pthread_mutex_lock(&path->mutex);
 }
 
+
+static void path_reinit_cb(void *data)
+{
+        idmef_path_t *path = data;
+        pthread_mutex_init(&path->mutex, NULL);
+}
 
 
 static void path_unlock_cb(void *data)
@@ -1086,6 +1093,17 @@ void _idmef_path_cache_lock(void)
         if ( cached_path )
                 prelude_hash_iterate(cached_path, path_lock_cb);
 }
+
+
+
+void _idmef_path_cache_reinit(void)
+{
+        pthread_mutex_init(&cached_path_mutex, NULL);
+        
+        if ( cached_path )
+                prelude_hash_iterate(cached_path, path_reinit_cb);
+}
+
 
 
 
