@@ -7,9 +7,8 @@ AM_CPPFLAGS = \
 
 
 libpreludeincludedir = $(includedir)/
-libprelude_la_LIBADD = @libprelude_libs@ @LIBLTDL@
-libprelude_la_LDFLAGS = -no-undefined -version-info @libprelude_soname@ \
-			../libmissing/libmissing.la libprelude-error/libprelude-error.la
+libprelude_la_LIBADD = @libprelude_libs@ @LIBLTDL@ ../libmissing/libmissing.la libprelude-error/libprelude-error.la
+libprelude_la_LDFLAGS = -no-undefined -version-info @libprelude_soname@
 lib_LTLIBRARIES = libprelude.la
 
 AM_YFLAGS = -d
