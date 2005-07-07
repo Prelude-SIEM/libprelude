@@ -31,13 +31,21 @@
 #include "prelude-list.h"
 #include "prelude-linked-object.h"
 #include "prelude-async.h"
+#include "prelude-error.h"
 
 #include "prelude-timer.h"
 
 
+static pthread_mutex_t mutex;
 static unsigned int count = 0;
 static PRELUDE_LIST(timer_list);
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+
+static void child_fork_cb(void)
+{
+        prelude_list_init(&timer_list);
+        pthread_mutex_init(&mutex, NULL);
+}
 
 
 
@@ -460,6 +468,21 @@ void prelude_timer_unlock_critical_region(void)
 
 
 
+int _prelude_timer_init(void)
+{
+        int ret;
+
+        ret = pthread_mutex_init(&mutex, NULL);
+        if ( ret != 0 )
+                return prelude_error_from_errno(ret);
+        
+        ret = pthread_atfork(prelude_timer_lock_critical_region,
+                             prelude_timer_unlock_critical_region, child_fork_cb);
+        if ( ret !=0 )
+                return prelude_error_from_errno(ret);
+
+        return 0;
+}
 
 
 

@@ -106,6 +106,12 @@ void prelude_timer_lock_critical_region(void);
  */
 void prelude_timer_unlock_critical_region(void);
 
+         
+/*
+ *
+ */
+int _prelude_timer_init(void);
+         
 #ifdef __cplusplus
  }
 #endif
