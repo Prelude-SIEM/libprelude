@@ -4373,6 +4373,11 @@ char *prefix
 <RETURNS>void </RETURNS>
 void log_cb(prelude_log_t level, const char *str)
 </FUNCTION>
+<FUNCTION>
+<NAME>prelude_log_set_logfile</NAME>
+<RETURNS>int </RETURNS>
+const char *filename
+</FUNCTION>
 <TYPEDEF>
 <NAME>prelude_msg_t</NAME>
 typedef struct prelude_msg prelude_msg_t;
