@@ -33,6 +33,7 @@
 #include "idmef-path.h"
 #include "prelude-option.h"
 #include "prelude-log.h"
+#include "prelude-timer.h"
 
 
 int _prelude_internal_argc = 0;
@@ -54,10 +55,18 @@ static void prepare_fork_cb(void)
 
 
 
-static void in_fork_cb(void)
+static void parent_fork_cb(void)
 {
         _idmef_path_cache_unlock();
         pthread_mutex_unlock(&_criteria_parse_mutex);
+}
+
+
+
+static void child_fork_cb(void)
+{
+        _idmef_path_cache_reinit();
+        pthread_mutex_init(&_criteria_parse_mutex, NULL);
 }
 
 #endif
@@ -143,11 +152,16 @@ static void slice_arguments(int *argc, char **argv)
  */
 int prelude_init(int *argc, char **argv)
 {
+        int ret;
         const char *debug;
         
         if ( libprelude_refcount++ > 0 )
                 return 0;
 
+        ret = _prelude_timer_init();
+        if ( ret < 0 )
+                return ret;
+        
         debug = getenv("LIBPRELUDE_DEBUG");
         if ( debug )
                 prelude_log_set_debug_level(atoi(debug));
@@ -156,7 +170,7 @@ int prelude_init(int *argc, char **argv)
         {
                 int ret;
                 
-                ret = pthread_atfork(prepare_fork_cb, in_fork_cb, in_fork_cb);
+                ret = pthread_atfork(prepare_fork_cb, parent_fork_cb, child_fork_cb);
                 if ( ret != 0 )
                         return prelude_error_from_errno(ret);
         }

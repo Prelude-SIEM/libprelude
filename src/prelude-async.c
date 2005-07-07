@@ -41,6 +41,7 @@
 #include "prelude-async.h"
 
 
+
 /*
  * On POSIX systems where clock_gettime() is available, the symbol
  * _POSIX_TIMERS should be defined to a value greater than 0. 
@@ -72,15 +73,15 @@
 static PRELUDE_LIST(joblist);
 
 
-static int async_init_ret = -1;
 static prelude_async_flags_t async_flags = 0;
 static prelude_bool_t stop_processing = FALSE;
 
 
 static pthread_t thread;
 static pthread_cond_t cond;
-static pthread_once_t init_once = PTHREAD_ONCE_INIT;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t mutex;
+
+static volatile sig_atomic_t is_initialized = FALSE;
 
 
 
@@ -248,14 +249,12 @@ static void async_exit(void)
 static void prepare_fork_cb(void)
 {
         pthread_mutex_lock(&mutex);
-        prelude_timer_lock_critical_region();
 }
 
 
 
 static void parent_fork_cb(void)
 {
-        prelude_timer_unlock_critical_region();
         pthread_mutex_unlock(&mutex);
 }
 
@@ -263,54 +262,61 @@ static void parent_fork_cb(void)
 
 static void child_fork_cb(void)
 {
-        /*
-         * We can't assume the user won't use prelude-async in the children
-         * thread, thus we re-create the thread.
-         */
-        async_init_ret = pthread_create(&thread, NULL, async_thread, NULL);
-        if ( async_init_ret != 0 )
-                return;
-        
-        prelude_timer_unlock_critical_region();
-        pthread_mutex_unlock(&mutex);
+        is_initialized = FALSE;
+        prelude_list_init(&joblist);
 }
+
 #endif
 
 
 
-static void init_async_once(void)
+static int do_init_async(void)
 {
+        int ret;
         pthread_condattr_t attr;
-
-        async_init_ret = pthread_condattr_init(&attr);
-        if ( async_init_ret != 0 ) {
-                prelude_log(PRELUDE_LOG_ERR, "error initializing condition attribute: %s.\n", strerror(async_init_ret));
-                return;
+        static volatile sig_atomic_t fork_handler_registered = FALSE;
+        
+        ret = pthread_condattr_init(&attr);
+        if ( ret != 0 ) {
+                prelude_log(PRELUDE_LOG_ERR, "error initializing condition attribute: %s.\n", strerror(ret));
+                return ret;
         }
         
 #if defined(HAVE_PTHREAD_CONDATTR_SETCLOCK) && _POSIX_TIMER - 0 > 0
-        async_init_ret = pthread_condattr_setclock(&attr, COND_CLOCK_TYPE);
-        if ( async_init_ret != 0 ) {
-                prelude_log(PRELUDE_LOG_ERR, "error setting condition clock attribute: %s.\n", strerror(async_init_ret));
-                return;
+        ret = pthread_condattr_setclock(&attr, COND_CLOCK_TYPE);
+        if ( ret != 0 ) {
+                prelude_log(PRELUDE_LOG_ERR, "error setting condition clock attribute: %s.\n", strerror(ret));
+                return ret;
         }
 #endif
         
-        async_init_ret = pthread_cond_init(&cond, &attr);
-        if ( async_init_ret != 0 ) {
-                prelude_log(PRELUDE_LOG_ERR, "error creating condition: %s.\n", strerror(async_init_ret));
-                return;
+        ret = pthread_cond_init(&cond, &attr);
+        if ( ret != 0 ) {
+                prelude_log(PRELUDE_LOG_ERR, "error creating condition: %s.\n", strerror(ret));
+                return ret;
         }
-        
+
+        ret = pthread_mutex_init(&mutex, NULL);
+        if ( ret != 0 ) {
+                prelude_log(PRELUDE_LOG_ERR, "error creating mutex: %s.\n", strerror(ret));
+                return ret;
+        }
+
+                  
 #ifdef HAVE_PTHREAD_ATFORK
-        pthread_atfork(prepare_fork_cb, parent_fork_cb, child_fork_cb);
+        if ( ! fork_handler_registered ) {
+                fork_handler_registered = TRUE;
+                pthread_atfork(prepare_fork_cb, parent_fork_cb, child_fork_cb);
+        }
 #endif
         
-        async_init_ret = pthread_create(&thread, NULL, async_thread, NULL);
-        if ( async_init_ret != 0 )
-                return;        
+        ret = pthread_create(&thread, NULL, async_thread, NULL);
+        if ( ret != 0 ) {
+                prelude_log(PRELUDE_LOG_ERR, "error creating asynchronous thread: %s.\n", strerror(ret));
+                return ret;
+        }
         
-        atexit(async_exit);
+        return atexit(async_exit);
 }
 
 
@@ -357,8 +363,12 @@ prelude_async_flags_t prelude_async_get_flags(void)
  */
 int prelude_async_init(void) 
 {
-        pthread_once(&init_once, init_async_once);
-        return async_init_ret;
+        if ( ! is_initialized ) {
+                is_initialized = TRUE;                
+                return do_init_async();
+        }
+        
+        return 0;
 }
 
 
@@ -370,7 +380,7 @@ int prelude_async_init(void)
  * Adds @obj to the asynchronous processing list.
  */
 void prelude_async_add(prelude_async_object_t *obj) 
-{
+{        
         pthread_mutex_lock(&mutex);
         
         prelude_linked_object_add_tail(&joblist, (prelude_linked_object_t *) obj);        
@@ -399,9 +409,6 @@ void prelude_async_del(prelude_async_object_t *obj)
 
 void prelude_async_exit(void)
 {        
-        if ( async_init_ret != 0 )
-                return;
-        
         pthread_mutex_lock(&mutex);
 
         stop_processing = TRUE;
