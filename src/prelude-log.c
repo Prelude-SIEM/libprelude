@@ -21,14 +21,16 @@
 *
 *****/
 
+#include "libmissing.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
 #include <errno.h>
 #include <syslog.h>
 
-#include "libmissing.h"
 #include "prelude-log.h"
+#include "prelude-error.h"
 #include "prelude-inttypes.h"
 
 
@@ -36,6 +38,7 @@ static void do_log_print(prelude_log_t level, const char *str);
 
 
 
+static FILE *global_logfile = NULL;
 static char *global_prefix = NULL;
 static int log_level = PRELUDE_LOG_INFO;
 static prelude_log_flags_t log_flags = 0;
@@ -43,7 +46,10 @@ static void (*global_log_cb)(prelude_log_t level, const char *str) = do_log_prin
 
 
 static inline FILE *get_out_fd(prelude_log_t level)
-{
+{        
+        if ( global_logfile )
+                return global_logfile;
+        
         return (level < PRELUDE_LOG_INFO) ? stderr : stdout;
 }
 
@@ -210,4 +216,22 @@ char *prelude_log_get_prefix(void)
 void prelude_log_set_callback(void log_cb(prelude_log_t level, const char *str))
 {
         global_log_cb = log_cb;
+}
+
+
+
+int prelude_log_set_logfile(const char *filename)
+{
+        if ( ! filename && global_logfile ) {
+                fclose(global_logfile);
+                global_logfile = NULL;
+        }
+
+        else {        
+                global_logfile = fopen(filename, "a");
+                if ( ! global_logfile )
+                        return prelude_error_from_errno(errno);
+        }
+        
+        return 0;
 }
