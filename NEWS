@@ -1,3 +1,35 @@
+* 2005-07-07, libprelude-0.9.0-rc9:
+
+	- Improve prelude-async and prelude-timer thread safety. Use
+	  a monotonic clock if available. Fix pthread problem due to
+	  broken behavior with fork handler on FreeBSD.
+
+	- Ability for the user to set the LIBPRELUDE_LOGFILE environment
+	  variable, defining a place where all prelude log goes.
+
+	- Add the prelude-adduser "chown" command, allowing to change
+	  an existing analyzer UID/GID.
+
+	- Make prelude-adduser not reset the profile UID/GID when
+	  used on an existing profile (example: you are not required to 
+	  specify --uid and --gid anymore for each call to registration-server).	
+
+	- Fix a timer assertion in case we reconnected fine, 
+	  but we failed flushing the failover pool. Only flush the
+	  global failover when all connection are up.
+
+	- Include missing Prelude.pm in the distributed tarball.
+
+	- Introduce broken down time criteria.	
+
+	- GCC4 warning fixes, 64 bits warnings fix, distcheck fix on 64 
+	  bits platform using lib64. More C89 friendlyness.
+
+	- Fix printing of usecond.
+
+	- Various bugfix.
+
+
 * 2005-05-27, libprelude-0.9.0-rc8:
 
 	- Avoid AI family mixup on prelude-adduser connection registration.
