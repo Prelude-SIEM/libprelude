@@ -153,7 +153,7 @@ static void slice_arguments(int *argc, char **argv)
 int prelude_init(int *argc, char **argv)
 {
         int ret;
-        const char *debug;
+        const char *env;
         
         if ( libprelude_refcount++ > 0 )
                 return 0;
@@ -162,9 +162,13 @@ int prelude_init(int *argc, char **argv)
         if ( ret < 0 )
                 return ret;
         
-        debug = getenv("LIBPRELUDE_DEBUG");
-        if ( debug )
-                prelude_log_set_debug_level(atoi(debug));
+        env = getenv("LIBPRELUDE_DEBUG");
+        if ( env )
+                prelude_log_set_debug_level(atoi(env));
+
+        env = getenv("LIBPRELUDE_LOGFILE");
+        if ( env )
+                prelude_log_set_logfile(env);
         
 #ifdef HAVE_PTHREAD_ATFORK
         {
