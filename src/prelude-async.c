@@ -282,7 +282,7 @@ static int do_init_async(void)
                 return ret;
         }
         
-#if defined(HAVE_PTHREAD_CONDATTR_SETCLOCK) && _POSIX_TIMER - 0 > 0
+#if defined(HAVE_PTHREAD_CONDATTR_SETCLOCK) && _POSIX_TIMERS - 0 > 0
         ret = pthread_condattr_setclock(&attr, COND_CLOCK_TYPE);
         if ( ret != 0 ) {
                 prelude_log(PRELUDE_LOG_ERR, "error setting condition clock attribute: %s.\n", strerror(ret));
