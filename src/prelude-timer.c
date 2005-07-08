@@ -475,12 +475,14 @@ int _prelude_timer_init(void)
         ret = pthread_mutex_init(&mutex, NULL);
         if ( ret != 0 )
                 return prelude_error_from_errno(ret);
-        
+
+#ifdef HAVE_PTHREAD_ATFORK
         ret = pthread_atfork(prelude_timer_lock_critical_region,
                              prelude_timer_unlock_critical_region, child_fork_cb);
-        if ( ret !=0 )
+        if ( ret != 0 )
                 return prelude_error_from_errno(ret);
-
+#endif
+        
         return 0;
 }
 
