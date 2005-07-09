@@ -38,12 +38,8 @@
 #include "prelude-error.h"
 
 
-#ifndef PATH_MAX
-# define PATH_MAX 1024
-#endif
 
-
-static char slockfile[256];
+static char slockfile[PATH_MAX];
 
 
 
