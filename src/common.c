@@ -41,6 +41,10 @@
 
 
 
+extern char _prelude_init_cwd[PATH_MAX];
+
+
+
 static prelude_string_t *get_message_ident(prelude_ident_t *ident)
 {
         int ret;
@@ -209,13 +213,11 @@ uint64_t prelude_hton64(uint64_t val)
 int _prelude_get_file_name_and_path(const char *str, char **name, char **path)
 {
         int ret = 0;
-	char buf[512], *ptr, cwd[PATH_MAX];
-        
-        getcwd(cwd, sizeof(cwd));
-        
+	char buf[512], *ptr;
+
         ptr = strrchr(str, '/');
         if ( ! ptr ) {                
-                ret = find_absolute_path(cwd, str, path);
+                ret = find_absolute_path(_prelude_init_cwd, str, path);
                 if ( ret == 0 ) {
                         *name = strdup(str);
                         return (*name) ? 0 : prelude_error_from_errno(errno);
@@ -223,12 +225,12 @@ int _prelude_get_file_name_and_path(const char *str, char **name, char **path)
         }
                 
         if ( *str != '/' ) {
-                while ( *str == '.' && *(str + 1) == '.' && (ptr = strrchr(cwd, '/')) ) {
+                while ( *str == '.' && *(str + 1) == '.' && (ptr = strrchr(_prelude_init_cwd, '/')) ) {
                         str += 3;
                         *ptr = '\0';
                 }
                 
-                ret = snprintf(buf, sizeof(buf), "%s/%s", cwd, (*str == '.') ? str + 2 : str);                
+                ret = snprintf(buf, sizeof(buf), "%s/%s", _prelude_init_cwd, (*str == '.') ? str + 2 : str);                
                 if ( ret < 0 || ret >= sizeof(buf) )
                         return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
 

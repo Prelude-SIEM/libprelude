@@ -22,6 +22,7 @@
 *****/
 
 #include "config.h"
+#include "libmissing.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,6 +40,7 @@
 int _prelude_internal_argc = 0;
 char *_prelude_internal_argv[1024];
 
+char _prelude_init_cwd[PATH_MAX];
 static int libprelude_refcount = 0;
 extern pthread_mutex_t _criteria_parse_mutex;
 extern prelude_option_t *_prelude_generic_optlist;
@@ -157,7 +159,10 @@ int prelude_init(int *argc, char **argv)
         
         if ( libprelude_refcount++ > 0 )
                 return 0;
-
+        
+        if ( ! getcwd(_prelude_init_cwd, sizeof(_prelude_init_cwd)) )
+                return prelude_error_from_errno(errno);
+        
         ret = _prelude_timer_init();
         if ( ret < 0 )
                 return ret;
