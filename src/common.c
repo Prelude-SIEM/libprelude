@@ -210,43 +210,70 @@ uint64_t prelude_hton64(uint64_t val)
 
 
 
+
+static void normalize_path(char *path) 
+{
+        int ret;
+        char *ptr, *end;
+        
+        while ( (ptr = strstr(path, "./")) ) {
+                
+                end = ptr + 2;
+                
+                if ( ptr == path || *(ptr - 1) != '.' ) {
+                        memmove(ptr, end, strlen(end) + 1);
+                        continue;
+                }
+
+                ret = 0;
+                while ( ptr != path ) {
+                        
+                        if ( *(ptr - 1) == '/' && ++ret == 2 )
+                                break;
+                        
+                        ptr--;
+                }
+
+                memmove(ptr == path ? ptr + 1 : ptr, end, strlen(end) + 1);
+        }
+}
+
+
+
 int _prelude_get_file_name_and_path(const char *str, char **name, char **path)
 {
         int ret = 0;
-	char buf[512], *ptr;
-
+	char *ptr, pathname[PATH_MAX] = { 0 };
+        
         ptr = strrchr(str, '/');
         if ( ! ptr ) {                
                 ret = find_absolute_path(_prelude_init_cwd, str, path);
-                if ( ret == 0 ) {
-                        *name = strdup(str);
-                        return (*name) ? 0 : prelude_error_from_errno(errno);
-                }
-        }
-                
-        if ( *str != '/' ) {
-                while ( *str == '.' && *(str + 1) == '.' && (ptr = strrchr(_prelude_init_cwd, '/')) ) {
-                        str += 3;
-                        *ptr = '\0';
-                }
-                
-                ret = snprintf(buf, sizeof(buf), "%s/%s", _prelude_init_cwd, (*str == '.') ? str + 2 : str);                
-                if ( ret < 0 || ret >= sizeof(buf) )
-                        return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
+                if ( ret < 0 )
+                        return ret;
 
-                return _prelude_get_file_name_and_path(buf, name, path);
+                *name = strdup(str);
+                return (*name) ? 0 :  prelude_error_from_errno(errno);
+        }
+
+        if ( *str != '/' ) {
+                ret = snprintf(pathname, sizeof(pathname), "%s%c", _prelude_init_cwd,
+                               (_prelude_init_cwd[strlen(_prelude_init_cwd) - 1] != '/') ? '/' : '\0');
+                if ( ret < 0 || ret >= sizeof(pathname) )
+                        return prelude_error_from_errno(errno);
         }
         
-        ret = access(str, F_OK);
+        strncat(pathname, str, sizeof(pathname) - strlen(pathname));
+        normalize_path(pathname);
+                
+        ret = access(pathname, F_OK);
         if ( ret < 0 )
                 return prelude_error_from_errno(errno);
+
+        ptr = strrchr(pathname, '/');
         
-        *ptr = 0;       
-        *path = strdup(str);
+        *path = strndup(pathname, ptr - pathname);
         if ( ! *path )
                 return prelude_error_from_errno(errno);
-        
-        *ptr = '/';
         
         *name = strdup(ptr + 1);
         if ( ! *name ) {
