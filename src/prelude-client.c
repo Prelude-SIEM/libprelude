@@ -280,7 +280,7 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
         struct utsname uts;
         prelude_string_t *str;
 	idmef_process_t *process;
-        char buf[512], *name, *path;
+        char buf[PATH_MAX], *name, *path;
 
         snprintf(buf, sizeof(buf), "%" PRELUDE_PRIu64, prelude_client_profile_get_analyzerid(client->profile));
         ret = prelude_string_new_dup(&str, buf);
@@ -311,37 +311,42 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
         
         if ( ! program )
                 return 0;
-        
-        ret = _prelude_get_file_name_and_path(program, &name, &path);
-        if ( ret < 0 )
-                return ret;
 
-        ret = prelude_string_new_nodup(&str, name);
-        if ( ret < 0 )
-                return ret;
-        
-        idmef_process_set_name(process, str);
+        name = path = NULL;
+        _prelude_get_file_name_and_path(program, &name, &path);
 
-        ret = prelude_string_new_nodup(&str, path);
-        if ( ret < 0 )
-                return ret;
-        
-        idmef_process_set_path(process, str);
+        if ( name ) {
+                ret = prelude_string_new_nodup(&str, name);
+                if ( ret < 0 )
+                        return ret;
+                
+                idmef_process_set_name(process, str);
+        }
 
-        ret = prelude_string_new(&str);
-        if ( ret < 0 )
-                return ret;
-        
-        snprintf(buf, sizeof(buf), "%s/%s", path, name);
+        if ( path ) {
+                ret = prelude_string_new_nodup(&str, path);
+                if ( ret < 0 )
+                        return ret;
+                
+                idmef_process_set_path(process, str);
+        }
 
-        ret = generate_md5sum(buf, str);
-        if ( ret < 0 )
+        if ( path && name ) {
+                ret = prelude_string_new(&str);
+                if ( ret < 0 )
+                        return ret;
+                
+                snprintf(buf, sizeof(buf), "%s/%s", path, name);
+                
+                ret = generate_md5sum(buf, str);
+                if ( ret < 0 )
+                        return ret;
+        
+                ret = prelude_string_get_string_released(str, &client->md5sum);
+                prelude_string_destroy(str);
+                
                 return ret;
-        
-        ret = prelude_string_get_string_released(str, &client->md5sum);
-        prelude_string_destroy(str);
-        
-        return ret;
+        }
 }
 
 
