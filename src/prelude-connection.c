@@ -181,12 +181,19 @@ static int is_tcp_connection_still_established(prelude_io_t *pio)
  */
 static int generic_connect(struct sockaddr *sa, socklen_t salen)
 {
-        int ret, sock;
+        int ret, sock, flags = FD_CLOEXEC;
         
         sock = socket(sa->sa_family, SOCK_STREAM, 0);
 	if ( sock < 0 ) 
 		return prelude_error_from_errno(errno);
-        
+
+
+        ret = fcntl(sock, F_SETFD, &flags);
+        if ( ret < 0 ) {
+                close(sock);
+                return prelude_error_from_errno(errno);
+        }
+                
         ret = fcntl(sock, F_SETOWN, getpid());
         if ( ret < 0 ) {
                 close(sock);
