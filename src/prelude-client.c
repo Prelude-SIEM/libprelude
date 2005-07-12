@@ -344,9 +344,9 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
         
                 ret = prelude_string_get_string_released(str, &client->md5sum);
                 prelude_string_destroy(str);
-                
-                return ret;
         }
+
+        return ret;
 }
 
 
