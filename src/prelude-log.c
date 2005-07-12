@@ -47,9 +47,6 @@ static void (*global_log_cb)(prelude_log_t level, const char *str) = do_log_prin
 
 static inline FILE *get_out_fd(prelude_log_t level)
 {        
-        if ( global_logfile )
-                return global_logfile;
-        
         return (level < PRELUDE_LOG_INFO) ? stderr : stdout;
 }
 
@@ -105,6 +102,9 @@ static void do_log_v(prelude_log_t level, const char *file,
         }
 
         global_log_cb(level, buf);
+        
+        if ( global_logfile )
+                fprintf(global_logfile, "%s", buf);
 }
 
 
