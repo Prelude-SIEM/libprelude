@@ -1189,8 +1189,7 @@ void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
  * Send @msg to the peers @client is communicating with.
  *
  * The message will be sent asynchronously if @PRELUDE_CLIENT_FLAGS_ASYNC_SEND
- * was set using prelude_client_set_flags() in which case the caller should
- * not call prelude_msg_destroy() on @msg.
+ * was set using prelude_client_set_flags().
  */
 void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg)
 {        
