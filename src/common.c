@@ -213,7 +213,7 @@ uint64_t prelude_hton64(uint64_t val)
 
 static void normalize_path(char *path) 
 {
-        int ret;
+        int cnt;
         char *ptr, *end;
         
         while ( (ptr = strstr(path, "./")) ) {
@@ -225,10 +225,10 @@ static void normalize_path(char *path)
                         continue;
                 }
 
-                ret = 0;
+                cnt = 0;
                 while ( ptr != path ) {
                         
-                        if ( *(ptr - 1) == '/' && ++ret == 2 )
+                        if ( *(ptr - 1) == '/' && ++cnt == 2 )
                                 break;
                         
                         ptr--;
