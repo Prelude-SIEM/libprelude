@@ -37,12 +37,15 @@
 static void do_log_print(prelude_log_t level, const char *str);
 
 
-
-static FILE *global_logfile = NULL;
-static char *global_prefix = NULL;
+static int debug_level = 0;
 static int log_level = PRELUDE_LOG_INFO;
+
+
+static char *global_prefix = NULL;
+static FILE *debug_logfile = NULL;
 static prelude_log_flags_t log_flags = 0;
 static void (*global_log_cb)(prelude_log_t level, const char *str) = do_log_print;
+
 
 
 static inline FILE *get_out_fd(prelude_log_t level)
@@ -68,9 +71,9 @@ static void do_log_syslog(prelude_log_t level, const char *str)
 
 
 
-static inline prelude_bool_t need_to_log(prelude_log_t level)
+static inline prelude_bool_t need_to_log(prelude_log_t level, prelude_log_t cur)
 {
-        return (level > log_level) ? FALSE : TRUE;
+        return (level > cur) ? FALSE : TRUE;
 }
 
 
@@ -101,10 +104,15 @@ static void do_log_v(prelude_log_t level, const char *file,
                         return;
         }
 
-        global_log_cb(level, buf);
+        if ( need_to_log(level, log_level) )
+                global_log_cb(level, buf);
         
-        if ( global_logfile )
-                fprintf(global_logfile, "%s", buf);
+        else if ( need_to_log(level, debug_level) ) {
+                if ( debug_logfile )
+                        fprintf(debug_logfile, "%s", buf);
+                else
+                        global_log_cb(level, buf);
+        }
 }
 
 
@@ -112,9 +120,9 @@ static void do_log_v(prelude_log_t level, const char *file,
 void _prelude_log_v(prelude_log_t level, const char *file,
                     const char *function, int line, const char *fmt, va_list ap) 
 {
-        if ( ! need_to_log(level) )
+        if ( ! need_to_log(level, log_level) && ! need_to_log(level, debug_level) )
                 return;
-
+        
         do_log_v(level, file, function, line, fmt, ap);
 }
 
@@ -136,10 +144,10 @@ void _prelude_log(prelude_log_t level, const char *file,
                   const char *function, int line, const char *fmt, ...) 
 {
         va_list ap;
-
-        if ( ! need_to_log(level) )
+        
+        if ( ! need_to_log(level, log_level) && ! need_to_log(level, debug_level) )
                 return;
-                
+        
         va_start(ap, fmt);
         do_log_v(level, file, function, line, fmt, ap);        
         va_end(ap);
@@ -180,7 +188,7 @@ void prelude_log_set_level(prelude_log_t level)
 
 void prelude_log_set_debug_level(int level)
 {
-        log_level = PRELUDE_LOG_DEBUG + level;
+        debug_level = PRELUDE_LOG_DEBUG + level;
 }
 
 
@@ -222,14 +230,14 @@ void prelude_log_set_callback(void log_cb(prelude_log_t level, const char *str))
 
 int prelude_log_set_logfile(const char *filename)
 {
-        if ( ! filename && global_logfile ) {
-                fclose(global_logfile);
-                global_logfile = NULL;
+        if ( ! filename && debug_logfile ) {
+                fclose(debug_logfile);
+                debug_logfile = NULL;
         }
 
         else {        
-                global_logfile = fopen(filename, "a");
-                if ( ! global_logfile )
+                debug_logfile = fopen(filename, "a");
+                if ( ! debug_logfile )
                         return prelude_error_from_errno(errno);
         }
         
