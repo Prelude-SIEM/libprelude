@@ -233,7 +233,9 @@ static void connection_list_destroy(cnx_list_t *clist)
                         prelude_list_del(&cnx->list);
                         
                         prelude_connection_destroy(cnx->cnx);
-                        prelude_failover_destroy(cnx->failover);
+
+                        if ( cnx->failover )
+                                prelude_failover_destroy(cnx->failover);
                         
                         free(cnx);
                 }
@@ -336,8 +338,9 @@ static int walk_manager_lists(prelude_connection_pool_t *pool, prelude_msg_t *ms
                 broadcast_message(msg, or->and);                
                 return 0;
         }
-        
-        prelude_failover_save_msg(pool->failover, msg);
+
+        if ( pool->failover )
+                prelude_failover_save_msg(pool->failover, msg);
         
         return ret;
 }
