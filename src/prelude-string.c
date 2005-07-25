@@ -737,14 +737,16 @@ void prelude_string_destroy(prelude_string_t *string)
 int prelude_string_vprintf(prelude_string_t *string, const char *fmt, va_list ap)
 {
         int ret;
-
+        va_list bkp;
+        
         if ( ! (string->flags & PRELUDE_STRING_CAN_REALLOC) ) {
 
                 ret = allocate_more_chunk_if_needed(string, 0);
                 if ( ret < 0 )
                         return ret;
         }
-        
+
+        va_copy(bkp, ap);
         ret = vsnprintf(string->data.rwbuf + string->index, string->size - string->index, fmt, ap);
         
         /*
@@ -760,14 +762,18 @@ int prelude_string_vprintf(prelude_string_t *string, const char *fmt, va_list ap
          */
         if ( ret >= 0 && ret < string->size - string->index ) {
                 string->index += ret;
-                return ret;
+                goto end;
         }
 
         ret = allocate_more_chunk_if_needed(string, (ret < 0) ? 0 : ret + 1);
         if ( ret < 0 )
-		return ret;
+                goto end;
         
-        return prelude_string_vprintf(string, fmt, ap);
+        ret = prelude_string_vprintf(string, fmt, bkp);
+
+ end:
+        va_end(bkp);
+        return ret;
 }
 
 
