@@ -477,9 +477,10 @@ int prelude_option_recv_reply(prelude_msg_t *msg, uint64_t *source_id,
                         break;
                                                 
                 case PRELUDE_MSG_OPTION_TARGET_ID:
-                        ret = prelude_extract_uint64_safe(source_id, buf, dlen);
-                        if ( ret < 0 )
-                                return ret;
+                        if ( dlen % sizeof(uint64_t) != 0 || dlen < 2 * sizeof(uint64_t) )
+                                return -1;
+                        
+                        *source_id = prelude_extract_uint64(buf + dlen);
                         break;
 
                 case PRELUDE_MSG_OPTION_LIST:                        
