@@ -257,7 +257,7 @@ static int set_gid(prelude_option_t *opt, const char *optarg, prelude_string_t *
         }
         
         gid_set = TRUE;
-        prelude_client_profile_set_gid(profile, atoi(optarg));
+        prelude_client_profile_set_gid(profile, gid);
 
         return 0;
 }
