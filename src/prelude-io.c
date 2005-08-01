@@ -281,7 +281,7 @@ static int tls_check_error(prelude_io_t *pio, int ret)
 #endif
                 }
                 
-                if ( ret == GNUTLS_E_INVALID_SESSION ) {
+                else if ( ret == GNUTLS_E_INVALID_SESSION ) {
                         prelude_log(PRELUDE_LOG_DEBUG, "TLS: %s.\n", gnutls_strerror(ret));
                         return prelude_error(PRELUDE_ERROR_EOF);
                 }
