@@ -105,7 +105,7 @@ my @generator_list = ({ source => 'GenerateIDMEFTreeWrapC.pm',
 			func => sub { new GenerateIDMEFMessageIdH(-filename => shift) } },
 
 		      { source => 'GenerateIDMEFValueClasstSwigMapping.pm',
-			target => '../../bindings/idmef-value-class-mapping.h',
+			target => '../../bindings/idmef-value-class-mapping.i',
 			func => sub { new GenerateIDMEFValueClassSwigMapping(-filename => shift) } }
 		      );
 
