@@ -150,7 +150,7 @@ static int generate_md5sum(const char *filename, prelude_string_t *out)
         }
         
         data = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-        if ( ! data ) {
+        if ( data == MAP_FAILED ) {
                 close(fd);
                 return prelude_error_from_errno(errno);
         }

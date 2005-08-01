@@ -109,7 +109,7 @@ int tls_load_file(const char *filename, gnutls_datum *data)
         }
         
         data->data = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
-        if ( ! data->data ) {
+        if ( data->data == MAP_FAILED ) {
                 close(fd);
                 return prelude_error_from_errno(errno);
         }
