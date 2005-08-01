@@ -1,3 +1,18 @@
+* 2005-08-01, libprelude-0.9.0-rc11:
+
+	- Better TLS error reporting.
+
+	- SWIG API usage correction for portability.
+
+	- Fix crash on destroy in case no failover was created.
+
+	- Fix memory issue with prelude_string_vprintf() on some platform	
+	  with specific va_list handling.
+
+	- prelude-adduser --gid did not lookup the group name GID correctly.
+
+
+
 * 2005-07-14, libprelude-0.9.0-rc10:
 
 	- Fix a typo that could lead to 100% application CPU usage

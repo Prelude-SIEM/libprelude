@@ -52,6 +52,9 @@ case of problem.
 prelude-msgbuf
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### TYPEDEF prelude_msg_t ##### -->
 <para>
 

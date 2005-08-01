@@ -37,6 +37,9 @@ idmef_message_write(message, msgbuf);
 #prelude_msg_t
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### FUNCTION idmef_additional_data_write ##### -->
 <para>
 

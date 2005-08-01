@@ -91,6 +91,9 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 #idmef_path_t for the high level IDMEF API.
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### ENUM idmef_additional_data_type_t ##### -->
 <para>
 

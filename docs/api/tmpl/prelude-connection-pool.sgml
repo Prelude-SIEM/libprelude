@@ -53,6 +53,9 @@ in order to convert the received message to a #idmef_message_t object.
 idmef_message_read()
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### ENUM prelude_connection_pool_flags_t ##### -->
 <para>
 

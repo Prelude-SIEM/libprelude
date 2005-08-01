@@ -28,6 +28,9 @@ if ( ret &lt; 0 ) {
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### MACRO LIBPRELUDE_VERSION ##### -->
 <para>
 
