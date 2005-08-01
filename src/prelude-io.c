@@ -272,7 +272,7 @@ static int tls_check_error(prelude_io_t *pio, int ret)
         }
 
         else
-                prelude_log(PRELUDE_LOG_ERR, "TLS: %s.\n", gnutls_strerror(ret));
+                prelude_log(PRELUDE_LOG_DEBUG, "TLS: %s.\n", gnutls_strerror(ret));
         
         return prelude_error(PRELUDE_ERROR_TLS);
 }
