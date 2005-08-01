@@ -142,15 +142,15 @@ static ssize_t sys_read(prelude_io_t *pio, void *buf, size_t count)
         ssize_t ret;
 
         do {
-                ret = read(pio->fd, buf, count);        
+                ret = read(pio->fd, buf, count);
         } while ( ret < 0 && errno == EINTR );
-
+        
         if ( ret == 0 )
                 return prelude_error(PRELUDE_ERROR_EOF);
         
         if ( ret < 0 )
                 return prelude_error_from_errno(errno);
-
+        
         return ret;
 }
 
@@ -272,7 +272,16 @@ static int tls_check_error(prelude_io_t *pio, int ret)
         }
 
         else {
-                if ( ret == GNUTLS_E_UNEXPECTED_PACKET_LENGTH || ret == GNUTLS_E_INVALID_SESSION ) {
+                if ( ret == GNUTLS_E_UNEXPECTED_PACKET_LENGTH ) {
+                        prelude_log(PRELUDE_LOG_DEBUG, "TLS: %s.\n", gnutls_strerror(ret));
+#ifdef ECONNRESET
+                        return prelude_error_from_errno(ECONNRESET);
+#else
+                        return prelude_error(PRELUDE_ERROR_EOF);
+#endif
+                }
+                
+                if ( ret == GNUTLS_E_INVALID_SESSION ) {
                         prelude_log(PRELUDE_LOG_DEBUG, "TLS: %s.\n", gnutls_strerror(ret));
                         return prelude_error(PRELUDE_ERROR_EOF);
                 }
