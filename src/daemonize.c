@@ -88,7 +88,9 @@ static int lockfile_get_exclusive(const char *lockfile)
         fd = open(lockfile, O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR);
         if ( fd < 0 )
                 return prelude_error_from_errno(errno);
-
+        
+        fcntl(fd, F_SETFD, fcntl(fd, F_GETFD) | FD_CLOEXEC);
+        
         lock.l_type = F_WRLCK;    /* write lock */
         lock.l_start = 0;         /* from offset 0 */
         lock.l_whence = SEEK_SET; /* at the beginning of the file */
