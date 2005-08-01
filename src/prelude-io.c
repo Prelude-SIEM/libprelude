@@ -271,8 +271,14 @@ static int tls_check_error(prelude_io_t *pio, int ret)
                 prelude_log(PRELUDE_LOG_ERR, "TLS: received fatal alert: %s.\n", alert);
         }
 
-        else
-                prelude_log(PRELUDE_LOG_DEBUG, "TLS: %s.\n", gnutls_strerror(ret));
+        else {
+                if ( ret == GNUTLS_E_UNEXPECTED_PACKET_LENGTH || ret == GNUTLS_E_INVALID_SESSION ) {
+                        prelude_log(PRELUDE_LOG_DEBUG, "TLS: %s.\n", gnutls_strerror(ret));
+                        return prelude_error(PRELUDE_ERROR_EOF);
+                }
+                
+                prelude_log(PRELUDE_LOG_ERR, "TLS: %s.\n", gnutls_strerror(ret));
+        }
         
         return prelude_error(PRELUDE_ERROR_TLS);
 }
