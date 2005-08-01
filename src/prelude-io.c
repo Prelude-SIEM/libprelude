@@ -262,15 +262,18 @@ static int tls_check_error(prelude_io_t *pio, int ret)
         
         else if ( ret == GNUTLS_E_WARNING_ALERT_RECEIVED ) {
                 alert = gnutls_alert_get_name(gnutls_alert_get(pio->fd_ptr));
-                prelude_log(PRELUDE_LOG_WARN, "- TLS: received warning alert: %s.\n", alert);
+                prelude_log(PRELUDE_LOG_WARN, "TLS: received warning alert: %s.\n", alert);
                 return 0;
         }
         
         else if ( ret == GNUTLS_E_FATAL_ALERT_RECEIVED ) {
                 alert = gnutls_alert_get_name(gnutls_alert_get(pio->fd_ptr));
-                prelude_log(PRELUDE_LOG_ERR, "- TLS: received fatal alert: %s.\n", alert);
+                prelude_log(PRELUDE_LOG_ERR, "TLS: received fatal alert: %s.\n", alert);
         }
 
+        else
+                prelude_log(PRELUDE_LOG_ERR, "TLS: %s.\n", gnutls_strerror(ret));
+        
         return prelude_error(PRELUDE_ERROR_TLS);
 }
 
