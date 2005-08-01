@@ -508,7 +508,7 @@ static int get_missing_options(void *context, config_t *cfg, const char *filenam
                                            "%s:%d: invalid section : \"%s\".\n", filename, *line, section, depth);
                         else
                                 option_err(PRELUDE_OPTION_WARNING_ARG,
-                                           "%s:%d: invalid option \"%s\" in \"%s\" section depth=%d.\n",
+                                           "%s:%d: invalid option \"%s\" in \"%s\" section at depth %d.\n",
                                            filename, *line, entry, (section) ? section : "global", depth);
 
                         continue;
