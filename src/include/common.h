@@ -32,7 +32,12 @@
 #include "prelude-msg.h"
 #include "prelude-inttypes.h"
 #include <sys/types.h>
-#include <sys/socket.h>
+
+#ifdef WIN32
+# include <WinSock2.h>
+#else
+# include <sys/socket.h>
+#endif
 
 #include <time.h>
 

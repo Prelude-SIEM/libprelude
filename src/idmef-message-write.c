@@ -28,7 +28,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <netinet/in.h>
+
+#ifdef WIN32
+# include <WinSock2.h>
+#else
+# include <netinet/in.h>
+#endif
 
 #include "prelude-inttypes.h"
 #include "prelude-list.h"
