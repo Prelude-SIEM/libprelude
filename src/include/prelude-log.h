@@ -24,6 +24,8 @@
 #ifndef _LIBPRELUDE_PRELUDE_LOG_H
 #define _LIBPRELUDE_PRELUDE_LOG_H
 
+#include "prelude-config.h"
+
 #ifdef HAVE_CONFIG_H
 # include "config.h"
 #endif
@@ -33,18 +35,6 @@
 #ifdef __cplusplus
  extern "C" {
 #endif
-
-#define prelude_log(level, ...) \
-        _prelude_log(level, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
-
-#define prelude_log_v(level, fmt, ap) \
-        _prelude_log_v(level, __FILE__, __FUNCTION__, __LINE__, fmt, ap)
-         
-#define prelude_log_debug(level, ...) \
-        _prelude_log(PRELUDE_LOG_DEBUG + level, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
-
-#define prelude_log_debug_v(level, fmt, ap) \
-        _prelude_log_v(PRELUDE_LOG_DEBUG + level, __FILE__, __FUNCTION__, __LINE__, fmt, ap)
 
          
 typedef enum {
@@ -59,6 +49,36 @@ typedef enum {
         PRELUDE_LOG_FLAGS_QUIET  = 0x01, /* Drop PRELUDE_LOG_PRIORITY_INFO */
         PRELUDE_LOG_FLAGS_SYSLOG = 0x02
 } prelude_log_flags_t;
+
+
+         
+void _prelude_log_v(prelude_log_t level, const char *file,
+                    const char *function, int line, const char *fmt, va_list ap);
+
+void _prelude_log(prelude_log_t level, const char *file,
+                  const char *function, int line, const char *fmt, ...);
+
+         
+#ifdef HAVE_VARIADIC_MACROS
+         
+#define prelude_log(level, ...) \
+        _prelude_log(level, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
+
+#define prelude_log_debug(level, ...) \
+        _prelude_log(PRELUDE_LOG_DEBUG + level, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
+#else
+
+void prelude_log(prelude_log_t level, const char *fmt, ...);
+void prelude_log_debug(prelude_log_t level, const char *fmt, ...);
+
+#endif
+
+         
+#define prelude_log_v(level, fmt, ap) \
+        _prelude_log_v(level, __FILE__, __FUNCTION__, __LINE__, fmt, ap)
+         
+#define prelude_log_debug_v(level, fmt, ap) \
+        _prelude_log_v(PRELUDE_LOG_DEBUG + level, __FILE__, __FUNCTION__, __LINE__, fmt, ap)
 
 
 void prelude_log_set_level(prelude_log_t level);
@@ -76,12 +96,6 @@ void prelude_log_set_prefix(char *prefix);
 void prelude_log_set_callback(void log_cb(prelude_log_t level, const char *str));
 
 int prelude_log_set_logfile(const char *filename);
-         
-void _prelude_log_v(prelude_log_t level, const char *file,
-                    const char *function, int line, const char *fmt, va_list ap);
-
-void _prelude_log(prelude_log_t level, const char *file,
-                  const char *function, int line, const char *fmt, ...);
 
 #ifdef __cplusplus
  }

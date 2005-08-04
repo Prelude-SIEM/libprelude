@@ -243,3 +243,28 @@ int prelude_log_set_logfile(const char *filename)
         
         return 0;
 }
+
+
+
+#ifndef HAVE_VARIADIC_MACROS
+
+void prelude_log(prelude_log_t level, const char *fmt, ...)
+{
+        va_list ap;
+
+        va_start(ap, fmt);
+        _prelude_log_v(level, "", "", 0, fmt, ap);
+        va_end(ap);
+}
+         
+
+void prelude_log_debug(prelude_log_t level, const char *fmt, ...)
+{
+        va_list ap;
+
+        va_start(ap, fmt);
+        _prelude_log_v(PRELUDE_LOG_DEBUG + level, "", "", 0, fmt, ap);
+        va_end(ap);
+}
+
+#endif
