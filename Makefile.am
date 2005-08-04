@@ -9,6 +9,17 @@ bin_SCRIPTS = $(top_builddir)/libprelude-config
 
 distuninstallcheck_listfiles = find . -type f -print | grep -v 'perl' | grep -v '3pm'
 
+includedir = $(prefix)/include/libprelude
+include_HEADERS = prelude-config.h
+
+MOSTLYCLEANFILES = prelude-config.h
+BUILT_SOURCES = prelude-config.h
+
+prelude-config.h: $(top_builddir)/config.h
+	rm -f prelude-config.h
+	$(SED) -e 's|\(#define PACKAGE.*\)|/* do not publish: \1 */|' \
+	-e 's|\(#define VERSION.*\)|/* do not publish: \1 */|' < $(top_builddir)/config.h > prelude-config.h
+
 
 #
 # Install default sensors configuration with mode 644
