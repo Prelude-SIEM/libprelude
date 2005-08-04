@@ -24,13 +24,22 @@
 #ifndef _LIBPRELUDE_IDMEF_TIME_H
 #define _LIBPRELUDE_IDMEF_TIME_H
 
+#include "prelude-config.h"
+
 #ifdef HAVE_CONFIG_H
 # include "config.h"
 #endif
 
-#include <time.h>
-#include <sys/time.h>
-
+#if TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else
+# if HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else
+#  include <time.h>
+# endif
+#endif
 
 #ifdef __cplusplus
  extern "C" {
