@@ -274,8 +274,7 @@ static int do_init_async(void)
 {
         int ret;
         pthread_condattr_t attr;
-        static volatile sig_atomic_t fork_handler_registered = FALSE;
-        
+
         ret = pthread_condattr_init(&attr);
         if ( ret != 0 ) {
                 prelude_log(PRELUDE_LOG_ERR, "error initializing condition attribute: %s.\n", strerror(ret));
@@ -304,9 +303,13 @@ static int do_init_async(void)
 
                   
 #ifdef HAVE_PTHREAD_ATFORK
-        if ( ! fork_handler_registered ) {
-                fork_handler_registered = TRUE;
-                pthread_atfork(prepare_fork_cb, parent_fork_cb, child_fork_cb);
+        {
+                static volatile sig_atomic_t fork_handler_registered = FALSE;
+                
+                if ( ! fork_handler_registered ) {
+                        fork_handler_registered = TRUE;
+                        pthread_atfork(prepare_fork_cb, parent_fork_cb, child_fork_cb);
+                }
         }
 #endif
         

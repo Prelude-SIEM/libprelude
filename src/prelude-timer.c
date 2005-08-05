@@ -41,12 +41,15 @@ static unsigned int count = 0;
 static PRELUDE_LIST(timer_list);
 
 
+#ifdef HAVE_PTHREAD_ATFORK
+
 static void child_fork_cb(void)
 {
         prelude_list_init(&timer_list);
         pthread_mutex_init(&mutex, NULL);
 }
 
+#endif
 
 
 inline static void timer_lock_list(void) 
