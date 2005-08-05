@@ -41,6 +41,7 @@
 #include "prelude-inttypes.h"
 #include "prelude-string.h"
 
+
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_STRING
 #include "prelude-error.h"
 
@@ -66,6 +67,23 @@
 
 
 #define check_string(str, len) check_string_f(__FUNCTION__, __LINE__, (str), (len))
+
+
+
+#if ! defined (PRELUDE_VA_COPY)
+
+# if defined (__GNUC__) && defined (__PPC__) && (defined (_CALL_SYSV) || defined (_WIN32))
+#  define PRELUDE_VA_COPY(ap1, ap2)     (*(ap1) = *(ap2))
+
+# elif defined (PRELUDE_VA_COPY_AS_ARRAY)
+#  define PRELUDE_VA_COPY(ap1, ap2)     memmove ((ap1), (ap2), sizeof(va_list))
+
+# else /* va_list is a pointer */
+#  define PRELUDE_VA_COPY(ap1, ap2)     ((ap1) = (ap2))
+
+# endif
+#endif
+
 
 
 inline static int check_string_f(const char *f, int l, const char *str, size_t len)
@@ -746,7 +764,7 @@ int prelude_string_vprintf(prelude_string_t *string, const char *fmt, va_list ap
                         return ret;
         }
 
-        va_copy(bkp, ap);
+        PRELUDE_VA_COPY(bkp, ap);
         ret = vsnprintf(string->data.rwbuf + string->index, string->size - string->index, fmt, ap);
         
         /*
