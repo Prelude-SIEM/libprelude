@@ -9,7 +9,7 @@ AC_SUBST(__PRELUDE_STDINT_HAVE_UINT8)
 AC_SUBST(__PRELUDE_STDINT_HAVE_UINT16)
 AC_SUBST(__PRELUDE_STDINT_HAVE_UINT32)
 AC_SUBST(__PRELUDE_STDINT_HAVE_UINT64)
-AC_SUBST(__PRELUDE_HAVE_WORKING_PRI64_PREFIX)
+AC_SUBST(__PRELUDE_64BIT_FORMAT_PREFIX)
 
 
 ac_cv_have_stdint_h=
@@ -74,63 +74,68 @@ else
   __PRELUDE_STDINT_HAVE_UINT64="/* #define __PRELUDE_STDINT_HAVE_UINT64 */"
 fi
 
-AC_MSG_CHECKING([for working PRIx64])
-ac_cv_working_prix64=
-AC_RUN_IFELSE(
-[
-  AC_LANG_SOURCE(
-    [[
-      #include <stdio.h>
 
-      $__PRELUDE_HAVE_STDINT_H
-      $__PRELUDE_HAVE_INTTYPES_H
-      $__PRELUDE_STDINT_HAVE_UINT64
 
-      #ifdef __PRELUDE_HAVE_STDINT_H
-       #include <stdint.h>
-      #endif
+dnl
+dnl This check is adapted from glib.
 
-      #ifdef __PRELUDE_HAVE_INTTYPES_H
-       #include <inttypes.h>
-      #endif
+AC_MSG_CHECKING(for printf and scanf 64 bits conversion specifier)
 
-      #ifndef __PRELUDE_STDINT_HAVE_UINT64
-       #ifdef __PRELUDE_HAVE_64BIT_LONG
+for format in l ll q I64; do
+AC_TRY_RUN([
 
-        typedef long int64_t;
-        typedef unsigned long uint64_t;
+#include <stdio.h>
+#include <stdlib.h>
 
-       #else
+$__PRELUDE_HAVE_STDINT_H
+$__PRELUDE_HAVE_INTTYPES_H
+$__PRELUDE_STDINT_HAVE_UINT64
 
-        typedef long long int64_t;
-        typedef unsigned long long uint64_t;
+#ifdef __PRELUDE_HAVE_STDINT_H
+# include <stdint.h>
+#endif
 
-       #endif
-      #endif
+#ifdef __PRELUDE_HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
 
-      main()
-        {
-          uint64_t t = 1;
+#ifndef __PRELUDE_STDINT_HAVE_UINT64
+# ifdef __PRELUDE_HAVE_64BIT_LONG
 
-          char strbuf[16+1];
-          sprintf(strbuf, "%016" PRIx64, t << 32);
-          if (strcmp(strbuf, "0000000100000000") == 0)
-            exit(0);
-          else
-            exit(1);
-        }
-    ]])
-],[
-  AC_MSG_RESULT(yes)
-  ac_cv_header_prix64_works=yes
-],[
-  AC_MSG_RESULT(no)
-  ac_cv_header_prix64_works=no
-])
+typedef long int64_t;
+typedef unsigned long uint64_t;
 
-if test "$ac_cv_header_prix64_works" = "yes" ; then
-  __PRELUDE_HAVE_WORKING_PRI64_PREFIX="#define __PRELUDE_HAVE_WORKING_PRI64_PREFIX"
+# else
+
+typedef long long int64_t;
+typedef unsigned long long uint64_t;
+
+# endif
+#endif
+
+int main(void)
+{
+	char buf[1024];
+	int64_t parsed;
+	int64_t orig = -0x3afafafafafafafaLL;
+
+	snprintf(buf, sizeof(buf), "%${format}u", orig);
+	sscanf(buf, "%${format}u", &parsed);
+
+	exit(parsed != orig);
+}
+
+], [format64_prefix=${format} break], )
+
+done
+
+
+if test -n "$format64_prefix"; then
+	AC_MSG_RESULT($format64_prefix)
+	__PRELUDE_64BIT_FORMAT_PREFIX="#define __PRELUDE_64BIT_FORMAT_PREFIX \"$format64_prefix\""
 else
-  __PRELUDE_HAVE_WORKING_PRI64_PREFIX="/* #define __PRELUDE_HAVE_WORKING_PRI64_PREFIX */"
+	AC_MSG_RESULT(none found)
+	AC_MSG_ERROR(could not find required prefix for 64bit format)
 fi
+
 ])
