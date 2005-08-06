@@ -205,10 +205,13 @@ static ssize_t file_read(prelude_io_t *pio, void *buf, size_t count)
 {
         size_t ret;
         
-        ret = fread(buf, count, 1, pio->fd_ptr);
-        if ( ret <= 0 )
+        ret = fread(buf, count, 1, pio->fd_ptr);        
+        if ( ret <= 0 ) {        
+                ret = ferror(pio->fd_ptr) ? prelude_error_from_errno(errno) : prelude_error(PRELUDE_ERROR_EOF);
+                clearerr(pio->fd_ptr);
                 return ret;
-
+        }
+        
         /*
          * fread return the number of *item* read.
          */
