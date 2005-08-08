@@ -125,7 +125,8 @@ int main(void)
 	exit(parsed != orig);
 }
 
-], [format64_prefix=${format} break], )
+], [format64_prefix=${format} 
+    break], [], [:])
 
 done
 
