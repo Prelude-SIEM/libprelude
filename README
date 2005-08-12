@@ -130,13 +130,13 @@ then the sensor will by default use it's own entry.
 Example of a shared entry (in the default provided generic sensor 
 configuration file) is :
 
-server-addr = 127.0.0.1:5554 || x.x.x.x;
+server-addr = 127.0.0.1:4690 || x.x.x.x;
 
-Which tells the sensor to try to connect to both 127.0.0.1:5554 
-and x.x.x.x:5554. If both connections work, only the first will be used,
+Which tells the sensor to try to connect to both 127.0.0.1:4690 
+and x.x.x.x:4690. If both connections work, only the first will be used,
 but the contrary would happen if you were to use : 
 
-server-addr = 127.0.0.1:5554 && x.x.x.x;
+server-addr = 127.0.0.1:4690 && x.x.x.x;
 
 Which mean that both connections should be okay for a sensor message to
 be considered to be successfully sent.

@@ -66,7 +66,7 @@
 /*
  * Default port to connect to.
  */
-#define DEFAULT_PORT 5554
+#define DEFAULT_PORT 4690
 
 /*
  * Path to the default Unix socket.
