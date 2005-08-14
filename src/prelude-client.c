@@ -278,7 +278,7 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
 {
         int ret;
         struct utsname uts;
-        prelude_string_t *str;
+        prelude_string_t *str, *md5;
 	idmef_process_t *process;
         char buf[PATH_MAX], *name, *path;
 
@@ -323,29 +323,30 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
                 idmef_process_set_name(process, str);
         }
 
-        if ( path ) {
-                ret = prelude_string_new_nodup(&str, path);
-                if ( ret < 0 )
-                        return ret;
-                
-                idmef_process_set_path(process, str);
-        }
-
         if ( path && name ) {
-                ret = prelude_string_new(&str);
+                ret = idmef_process_new_path(process, &str);
+                if ( ret < 0 )
+                        return ret;
+
+                ret = prelude_string_sprintf(str, "%s/%s", path, name);
                 if ( ret < 0 )
                         return ret;
                 
-                snprintf(buf, sizeof(buf), "%s/%s", path, name);
+                ret = prelude_string_new(&md5);
+                if ( ret < 0 )
+                        return ret;
                 
-                ret = generate_md5sum(buf, str);
+                ret = generate_md5sum(prelude_string_get_string(str), md5);
                 if ( ret < 0 )
                         return ret;
         
-                ret = prelude_string_get_string_released(str, &client->md5sum);
-                prelude_string_destroy(str);
+                ret = prelude_string_get_string_released(md5, &client->md5sum);
+                prelude_string_destroy(md5);
         }
-
+        
+        if ( path )
+                free(path); /* copied above */
+        
         return ret;
 }
 
