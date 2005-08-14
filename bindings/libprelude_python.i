@@ -109,7 +109,7 @@ PyObject *swig_python_data(idmef_data_t *data)
 };
 
 
-%typemap(out) unsigned char * {
+%typemap(out) unsigned char *idmef_data_get_byte_string {
 	$result = $1 ? PyString_FromString($1) : Py_BuildValue((char *) "");
 };
 
