@@ -40,19 +40,19 @@
 #include "idmef-value-type.h"
 
 
-#define OBJECT_OPERATOR  IDMEF_CRITERION_OPERATOR_IS_NULL|IDMEF_CRITERION_OPERATOR_IS_NOT_NULL
+#define OBJECT_OPERATOR  IDMEF_CRITERION_OPERATOR_NULL|IDMEF_CRITERION_OPERATOR_NOT
 
-#define DATA_OPERATOR    IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT_EQUAL| \
+#define DATA_OPERATOR    IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT| \
                          IDMEF_CRITERION_OPERATOR_LESSER|IDMEF_CRITERION_OPERATOR_GREATER
 
 #define TIME_OPERATOR    IDMEF_CRITERION_OPERATOR_LESSER|IDMEF_CRITERION_OPERATOR_GREATER| \
-                         IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT_EQUAL
+                         IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT
 
 #define STRING_OPERATOR  IDMEF_CRITERION_OPERATOR_SUBSTR|IDMEF_CRITERION_OPERATOR_EQUAL| \
-                         IDMEF_CRITERION_OPERATOR_NOT_EQUAL
+                         IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_NOCASE
 
 #define INTEGER_OPERATOR IDMEF_CRITERION_OPERATOR_LESSER|IDMEF_CRITERION_OPERATOR_GREATER|\
-                         IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT_EQUAL
+                         IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT
 
 
 #define GENERIC_ONE_BASE_RW_FUNC(scanfmt, printfmt, name, type)                          \
@@ -186,12 +186,12 @@ static int generic_compare(const idmef_value_type_t *t1, const idmef_value_type_
         if ( ret == 0 && op & IDMEF_CRITERION_OPERATOR_EQUAL ) 
                 return 0;
 
-        else if ( ret < 0 && op & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_LESSER) )
+        if ( ret < 0 && op & IDMEF_CRITERION_OPERATOR_LESSER )
                 return 0;
 
-        else if ( ret > 0 && op & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_GREATER) )
+        if ( ret > 0 && op & IDMEF_CRITERION_OPERATOR_GREATER )
                 return 0;
-
+                
         return -1;
 }
 
@@ -209,11 +209,11 @@ static int time_compare(const idmef_value_type_t *t1, const idmef_value_type_t *
 
         if ( op & IDMEF_CRITERION_OPERATOR_EQUAL && time1 == time2 )
                 return 0;
-
-        else if ( op & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_LESSER) && time1 < time2 )
+        
+        else if ( op & IDMEF_CRITERION_OPERATOR_LESSER && time1 < time2 )
                 return 0;
 
-        else if ( op & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_GREATER) && time1 > time2 )
+        else if ( op & IDMEF_CRITERION_OPERATOR_GREATER && time1 > time2 )
                 return 0;
 
         return -1;
@@ -276,14 +276,17 @@ static int string_compare(const idmef_value_type_t *t1, const idmef_value_type_t
         
         s1 = prelude_string_get_string(t1->data.string_val);
         s2 = prelude_string_get_string(t2->data.string_val);
+                
+        if ( op == (IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE) && strcasecmp(s1, s2) == 0 )
+                return 0;
         
-        if ( op & IDMEF_CRITERION_OPERATOR_EQUAL && strcmp(s1, s2) == 0 )
+        else if ( op == IDMEF_CRITERION_OPERATOR_EQUAL && strcmp(s1, s2) == 0 )
+                return 0;
+        
+        else if ( op == (IDMEF_CRITERION_OPERATOR_SUBSTR|IDMEF_CRITERION_OPERATOR_NOCASE) && strcasestr(s1, s2) )
                 return 0;
 
-        else if ( op & IDMEF_CRITERION_OPERATOR_NOT_EQUAL && strcmp(s1, s2) != 0 )
-                return 0;
-        
-        else if ( op & IDMEF_CRITERION_OPERATOR_SUBSTR && strstr(s1, s2) )
+        else if ( op == IDMEF_CRITERION_OPERATOR_SUBSTR && strstr(s1, s2) )
                 return 0;
         
         return -1;
@@ -347,10 +350,10 @@ static int data_compare(const idmef_value_type_t *t1, const idmef_value_type_t *
         if ( ret == 0 && op & IDMEF_CRITERION_OPERATOR_EQUAL )
                 return 0;
 
-        else if ( ret < 0 && op & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_LESSER) )
+        else if ( ret < 0 && op & IDMEF_CRITERION_OPERATOR_LESSER )
                 return 0;
 
-        else if ( ret > 0 && op & (IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_GREATER) )
+        else if ( ret > 0 && op & IDMEF_CRITERION_OPERATOR_GREATER )
                 return 0;
                                 
         return -1;
@@ -481,7 +484,7 @@ int idmef_value_type_compare(const idmef_value_type_t *type1,
                              idmef_criterion_operator_t op)
 {
         int ret;
-
+        
         if ( type1->id != type2->id )
                 return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_MISMATCH);
                         
@@ -494,7 +497,11 @@ int idmef_value_type_compare(const idmef_value_type_t *type1,
         if ( ! ops_tbl[type1->id].compare )
                 return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_UNAVAILABLE);
         
-        return ops_tbl[type1->id].compare(type1, type2, ops_tbl[type1->id].len, op);
+        ret = ops_tbl[type1->id].compare(type1, type2, ops_tbl[type1->id].len, op & ~IDMEF_CRITERION_OPERATOR_NOT);
+        if ( op & IDMEF_CRITERION_OPERATOR_NOT )
+                return (ret == 0) ? -1 : 0;
+        else
+                return ret;
 }
 
 

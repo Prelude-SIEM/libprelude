@@ -53,6 +53,13 @@ struct match_cb {
 };
 
 
+struct regex_value {
+        regex_t regex;
+        char *regex_string;
+};
+
+
+
 struct idmef_criterion_value {
         
         void *value;
@@ -70,22 +77,24 @@ struct idmef_criterion_value {
 /*
  * time stuff
  */
-static int btime_parse_simple(const char *integer)
+static int btime_parse_simple(const char *integer, int *out)
 {
-        return atoi(integer);
+        *out = atoi(integer);
+        return 0;
 }
 
 
 
 
-static int btime_parse_year(const char *integer)
+static int btime_parse_year(const char *integer, int *out)
 {
-        return atoi(integer) - 1900;
+        *out = atoi(integer) - 1900;
+        return 0;
 }
 
 
 
-static int btime_parse_month(const char *value)
+static int btime_parse_month(const char *value, int *out)
 {
         int i;  
         const char *months[] = {  
@@ -103,22 +112,27 @@ static int btime_parse_month(const char *value)
                 "december"  
         };
 
-        if ( isdigit(*value) )
-                return atoi(value);
-        
-        for ( i = 0; i < sizeof(months) / sizeof(*months); i++ ) {  
-                if ( strcasecmp(value, months[i]) == 0 )
-                        return i + 1;
+        if ( isdigit(*value) ) {
+                *out = atoi(value) - 1;
+                return 0;
         }
         
+        for ( i = 0; i < sizeof(months) / sizeof(*months); i++ ) {  
+                if ( strcasecmp(value, months[i]) == 0 ) {
+                        *out = i; /* Numbered 0 to 11 */
+                        return 0;
+                }
+        }
         
         return -1;  
 }
 
-static int btime_parse_wday(const char *value)
+
+static int btime_parse_wday(const char *value, int *out)
 {
         int i;
         const char *days[] = {
+                "sunday",
                 "monday",
                 "tuesday",
                 /* happy days ! ;) */
@@ -126,72 +140,78 @@ static int btime_parse_wday(const char *value)
                 "thursday",
                 "friday",
                 "saturday",
-                "sunday"
         };
         
-        if ( isdigit(*value) )
-                return atoi(value);
+        if ( isdigit(*value) ) {
+                *out = atoi(value) - 1;
+                return 0;
+        }
         
         for ( i = 0; i < sizeof(days) / sizeof(*days); i++ ) {
                                 
-                if ( strcasecmp(value, days[i]) == 0 )
-                        return i + 1;
+                if ( strcasecmp(value, days[i]) == 0 ) {
+                        *out = i; /* Numbered 0 (sunday) to 6 */
+                        return 0;
+                }
         }
 
         return -1;
 }
 
 
-
-static inline int btime_match_integer(int matched, idmef_criterion_operator_t op, int wanted)
+static int do_btime_match(const idmef_criterion_value_t *cv, idmef_criterion_operator_t op, idmef_value_t *value)
 {
-        if ( wanted == -1 )
-                return 0;
-        
-        if ( op == IDMEF_CRITERION_OPERATOR_EQUAL )
-                return wanted == matched ? 0 : -1;
-        else
-                return wanted != matched ? 0 : -1;
-}
-
-
-static int btime_match(const idmef_criterion_value_t *cv, idmef_criterion_operator_t operator, idmef_value_t *value)
-{
-        time_t sec;
+        time_t sec, wanted, matched;
         struct tm lt, *comp = cv->value;
         
         if ( idmef_value_get_type(value) != IDMEF_VALUE_TYPE_TIME )
                 return -1;
-
+        
         sec = idmef_time_get_sec(idmef_value_get_time(value));
-        if ( ! localtime_r(&sec, &lt) )
-                return -1;
+        if ( ! gmtime_r(&sec, &lt) )
+                return prelude_error_from_errno(errno);
 
-        if ( btime_match_integer(lt.tm_sec, operator, comp->tm_sec) < 0 )
-                return -1;
-        
-        if ( btime_match_integer(lt.tm_min, operator, comp->tm_min) < 0 )
-                return -1;
-        
-        if ( btime_match_integer(lt.tm_hour, operator, comp->tm_hour) < 0 )
-                return -1;
-        
-        if ( btime_match_integer(lt.tm_mday, operator, comp->tm_mday) < 0 )
-                return -1;
-        
-        if ( btime_match_integer(lt.tm_mon, operator, comp->tm_mon) < 0 )
-                return -1;
-        
-        if ( btime_match_integer(lt.tm_year, operator, comp->tm_year) < 0 )
-                return -1;
-        
-        if ( btime_match_integer(lt.tm_wday, operator, comp->tm_wday) < 0 )
-                return -1;
+        /*
+         * Apply mask
+         */
+        if ( comp->tm_sec < 0 ) lt.tm_sec = -1;
+        if ( comp->tm_min < 0 ) lt.tm_min = -1;
+        if ( comp->tm_mon < 0 ) lt.tm_mon = -1;
+        if ( comp->tm_hour < 0 ) lt.tm_hour = -1;
+        if ( comp->tm_mday < 0 ) lt.tm_mday = -1;
+        if ( comp->tm_year < 0 ) lt.tm_year = -1;
+        if ( comp->tm_wday < 0 ) lt.tm_wday = -1;
+        if ( comp->tm_yday < 0 ) lt.tm_yday = -1;
 
-        if ( btime_match_integer(lt.tm_yday, operator, comp->tm_yday) < 0 )
-                return -1;
+        wanted  = timegm(comp);
+        matched = timegm(&lt);
+        
+        if ( op & IDMEF_CRITERION_OPERATOR_EQUAL && matched == wanted )
+                return 1;
+
+        if ( op & IDMEF_CRITERION_OPERATOR_LESSER && matched < wanted)
+                return 1;
+        
+        if ( op & IDMEF_CRITERION_OPERATOR_GREATER && matched > wanted )
+                return 1;
         
         return 0;
+}
+
+
+
+static int btime_match(const idmef_criterion_value_t *cv, idmef_criterion_operator_t operator, idmef_value_t *value)
+{
+        int ret;
+
+        ret = do_btime_match(cv, operator, value);
+        if ( ret < 0 )
+                return ret;
+        
+        if ( operator & IDMEF_CRITERION_OPERATOR_NOT )
+                return (ret == 1) ? 0 : 1;
+        else
+                return (ret == 1) ? 1 : 0;
 }
 
 
@@ -277,8 +297,10 @@ static void btime_destroy(idmef_criterion_value_t *cv)
  */
 static int regex_match(const idmef_criterion_value_t *cv, idmef_criterion_operator_t operator, idmef_value_t *value)
 {
-        const char *str;
+        int ret;
+        const char *str = NULL;
         idmef_class_id_t class;
+        struct regex_value *rv = cv->value;
         
         if ( idmef_value_get_type(value) == IDMEF_VALUE_TYPE_STRING )
                 str = prelude_string_get_string(idmef_value_get_string(value));
@@ -288,15 +310,22 @@ static int regex_match(const idmef_criterion_value_t *cv, idmef_criterion_operat
                 str = idmef_class_enum_to_string(class, idmef_value_get_enum(value));
         }
 
-        else return -1;
-        
-        return ( regexec(cv->value, str, 0, NULL, 0) == 0 ) ? 1 : 0;
+        if ( ! str )
+                return 0;
+
+        ret = regexec(&rv->regex, str, 0, NULL, 0);
+        if ( operator & IDMEF_CRITERION_OPERATOR_NOT )
+                return (ret == REG_NOMATCH) ? 1 : 0;
+        else
+                return (ret != REG_NOMATCH) ? 1 : 0;
 }
 
 
 
 static int regex_print(const idmef_criterion_value_t *cv, prelude_io_t *fd)
 {
+        struct regex_value *rv = cv->value;
+        prelude_io_write(fd, rv->regex_string, strlen(rv->regex_string));
         return 0;
 }
 
@@ -304,19 +333,28 @@ static int regex_print(const idmef_criterion_value_t *cv, prelude_io_t *fd)
 
 static int regex_to_string(const idmef_criterion_value_t *cv, prelude_string_t *out)
 {
-        return 0;
+        struct regex_value *rv = cv->value;
+        return prelude_string_cat(out, rv->regex_string);
 }
 
 
 
 static int regex_clone(const idmef_criterion_value_t *src, idmef_criterion_value_t *dst)
 {
-        dst->value = malloc(sizeof(regex_t));
-        if ( ! dst->value )
+        struct regex_value *drv, *srv = src->value;
+        
+        dst->value = drv = malloc(sizeof(*drv));
+        if ( ! drv )
                 return prelude_error_from_errno(errno);
 
-        memcpy(dst->value, src->value, sizeof(regex_t));
+        memcpy(drv, srv, sizeof(*drv));
 
+        drv->regex_string = strdup(srv->regex_string);
+        if ( ! drv->regex_string ) {
+                free(drv);
+                return prelude_error_from_errno(errno);
+        }
+        
         return 0;
 }
 
@@ -324,8 +362,11 @@ static int regex_clone(const idmef_criterion_value_t *src, idmef_criterion_value
 
 static void regex_destroy(idmef_criterion_value_t *cv)
 {
-        regfree(cv->value);
-        free(cv->value);
+        struct regex_value *rv = cv->value;
+
+        free(rv->regex_string);
+        regfree(&rv->regex);
+        free(rv);
 }
 
 
@@ -476,15 +517,21 @@ int idmef_criterion_value_new(idmef_criterion_value_t **cv)
 
 
 
+static int btime_parse_gmtoff(const char *param, int *out)
+{
+        *out = atoi(param) * 60 * 60;
+        return 0;
+}
+
 
 static int btime_parse(struct tm *lt, const char *time)
 {
-        int i, ret;
+        int i, ret, gmt_offset;
         struct {
                 const char *field;
                 size_t len;
                 int *ptr;
-                int (*func)(const char *param);
+                int (*func)(const char *param, int *output);
         } tbl[] = {
                 { "month", 5, &lt->tm_mon, btime_parse_month  },
                 { "wday", 4, &lt->tm_wday, btime_parse_wday   },  
@@ -494,8 +541,13 @@ static int btime_parse(struct tm *lt, const char *time)
                 { "hour", 4, &lt->tm_hour, btime_parse_simple },
                 { "min", 3, &lt->tm_min, btime_parse_simple   },
                 { "sec", 3, &lt->tm_sec, btime_parse_simple   },
+                { "gmtoff", 6, &gmt_offset, btime_parse_gmtoff }
         };
-                
+
+        ret = prelude_get_gmt_offset(&gmt_offset);
+        if ( ret < 0 )
+                return ret;
+        
         do {                
                 for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
                         
@@ -507,24 +559,26 @@ static int btime_parse(struct tm *lt, const char *time)
 
                         time += tbl[i].len + 1;
                         
-                        ret = tbl[i].func(time);                        
+                        ret = tbl[i].func(time, tbl[i].ptr);                        
                         if ( ret < 0 )
                                 return -1;
                         
-                        *tbl[i].ptr = ret;
                         break;
                 }
-                                
+                
                 if ( i == sizeof(tbl) / sizeof(*tbl) )
                         return -1;
                 
-                time = strchr(time, ' ');
+                time = strchr(time, ' ');                
                 if ( ! time )
                         break;
 
                 time++;
                 
         } while ( time );
+
+        if ( lt->tm_hour != -1 )
+                lt->tm_hour -= (gmt_offset / (60 * 60));
         
         return 0;
 }
@@ -532,7 +586,7 @@ static int btime_parse(struct tm *lt, const char *time)
 
 
 
-int idmef_criterion_value_new_broken_down_time(idmef_criterion_value_t **cv, const char *time)
+int idmef_criterion_value_new_broken_down_time(idmef_criterion_value_t **cv, const char *time, idmef_criterion_operator_t op)
 {
         int ret;
         struct tm *lt;
@@ -548,7 +602,7 @@ int idmef_criterion_value_new_broken_down_time(idmef_criterion_value_t **cv, con
         }
         
         memset(lt, -1, sizeof(*lt));
-
+        
         ret = btime_parse(lt, time);
         if ( ret < 0 ) {
                 free(lt);
@@ -570,25 +624,44 @@ int idmef_criterion_value_new_broken_down_time(idmef_criterion_value_t **cv, con
 
 
 
-int idmef_criterion_value_new_regex(idmef_criterion_value_t **cv, const char *regex)
+int idmef_criterion_value_new_regex(idmef_criterion_value_t **cv, const char *regex, idmef_criterion_operator_t op)
 {
         int ret;
-
+        struct regex_value *rv;
+        int flags = REG_EXTENDED|REG_NOSUB;
+        
         ret = idmef_criterion_value_new(cv);
         if ( ret < 0 )
                 return ret;
 
-        (*cv)->value = malloc(sizeof(regex_t));
-        if ( ! (*cv)->value ) {
+        rv = (*cv)->value = malloc(sizeof(*rv));
+        if ( ! rv ) {
                 free(*cv);
                 return prelude_error_from_errno(errno);
         }
 
-        ret = regcomp((*cv)->value, regex, REG_EXTENDED);
-        if ( ret < 0 ) {
-                free((*cv)->value);
+        rv->regex_string = strdup(regex);
+        if ( ! rv->regex_string ) {
+                free(rv);
                 free(*cv);
                 return prelude_error_from_errno(errno);
+        }
+
+        if ( op & IDMEF_CRITERION_OPERATOR_NOCASE )
+                flags |= REG_ICASE;
+        
+        ret = regcomp(&rv->regex, rv->regex_string, flags);        
+        if ( ret != 0 ) {
+                char errbuf[1024];
+                
+                regerror(ret, &rv->regex, errbuf, sizeof(errbuf));
+                prelude_log(PRELUDE_LOG_DEBUG, "%s.\n", errbuf);
+                
+                free(rv->regex_string);
+                free(rv);
+                free(*cv);
+
+                return prelude_error(PRELUDE_ERROR_IDMEF_CRITERION_INVALID_REGEX);
         }
 
         (*cv)->match = regex_match;
@@ -636,12 +709,12 @@ int idmef_criterion_value_new_from_string(idmef_criterion_value_t **cv,
 {
         int ret;
         idmef_value_t *val;
-
-        if ( operator == IDMEF_CRITERION_OPERATOR_REGEX )
-                return idmef_criterion_value_new_regex(cv, value);
+        
+        if ( operator & IDMEF_CRITERION_OPERATOR_REGEX )
+                return idmef_criterion_value_new_regex(cv, value, operator);
 
         if ( idmef_path_get_value_type(path, -1) == IDMEF_VALUE_TYPE_TIME ) {
-                ret = idmef_criterion_value_new_broken_down_time(cv, value);
+                ret = idmef_criterion_value_new_broken_down_time(cv, value, operator);
                 if ( ret == 0 )
                         return ret;
         }
@@ -661,11 +734,24 @@ int idmef_criterion_value_new_from_string(idmef_criterion_value_t **cv,
 
 
 
-const void *idmef_criterion_value_get_value(idmef_criterion_value_t *cv)
+const idmef_value_t *idmef_criterion_value_get_value(idmef_criterion_value_t *cv)
 {
-        return cv->value;
+        return cv->type == IDMEF_CRITERION_VALUE_TYPE_VALUE ? cv->value : NULL;
 }
 
+
+
+const struct tm *idmef_criterion_value_get_broken_down_time(idmef_criterion_value_t *cv)
+{
+        return cv->type == IDMEF_CRITERION_VALUE_TYPE_BROKEN_DOWN_TIME ? cv->value : NULL;
+}
+
+
+
+const char *idmef_criterion_value_get_regex(idmef_criterion_value_t *cv)
+{
+        return cv->type == IDMEF_CRITERION_VALUE_TYPE_REGEX ? cv->value : NULL;
+}
 
 
 idmef_criterion_value_type_t idmef_criterion_value_get_type(idmef_criterion_value_t *cv)

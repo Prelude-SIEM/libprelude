@@ -37,14 +37,15 @@ typedef enum {
         IDMEF_CRITERION_VALUE_TYPE_BROKEN_DOWN_TIME =  2
 } idmef_criterion_value_type_t;
 
-        
+         
 #include "idmef-criteria.h"
 #include "idmef-value.h"
-
+#include <time.h>
+         
 
 int idmef_criterion_value_new(idmef_criterion_value_t **cv);
 
-int idmef_criterion_value_new_regex(idmef_criterion_value_t **cv, const char *regex);
+int idmef_criterion_value_new_regex(idmef_criterion_value_t **cv, const char *regex, idmef_criterion_operator_t op);
 
 int idmef_criterion_value_new_value(idmef_criterion_value_t **cv, idmef_value_t *value,
                                     idmef_criterion_operator_t op);
@@ -52,7 +53,7 @@ int idmef_criterion_value_new_value(idmef_criterion_value_t **cv, idmef_value_t 
 int idmef_criterion_value_new_from_string(idmef_criterion_value_t **cv, idmef_path_t *path,
                                           const char *value, idmef_criterion_operator_t op);
 
-int idmef_criterion_value_new_broken_down_time(idmef_criterion_value_t **cv, const char *time);
+int idmef_criterion_value_new_broken_down_time(idmef_criterion_value_t **cv, const char *time, idmef_criterion_operator_t op);
          
 int idmef_criterion_value_clone(const idmef_criterion_value_t *src, idmef_criterion_value_t **dst);
 
@@ -64,8 +65,12 @@ int idmef_criterion_value_to_string(idmef_criterion_value_t *value, prelude_stri
 
 int idmef_criterion_value_match(idmef_criterion_value_t *cv, idmef_value_t *value, idmef_criterion_operator_t op);
 
-const void *idmef_criterion_value_get_value(idmef_criterion_value_t *cv);
+const idmef_value_t *idmef_criterion_value_get_value(idmef_criterion_value_t *cv);
 
+const char *idmef_criterion_value_get_regex(idmef_criterion_value_t *cv);
+
+const struct tm *idmef_criterion_value_get_broken_down_time(idmef_criterion_value_t *cv);
+         
 idmef_criterion_value_type_t idmef_criterion_value_get_type(idmef_criterion_value_t *cv);
 
 #ifdef __cplusplus

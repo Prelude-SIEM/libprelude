@@ -95,8 +95,9 @@
 
 55	PRELUDE_ERROR_IDMEF_CRITERIA_PARSE	Could not parse IDMEF criteria
 56	PRELUDE_ERROR_IDMEF_CRITERION_UNSUPPORTED_OPERATOR	Unsupported criterion operator
+57	PRELUDE_ERROR_IDMEF_CRITERION_INVALID_REGEX	Criterion regular expression is not valid
 
-#57 to 16381 are free to be used.
+#58 to 16381 are free to be used.
 
 16382	PRELUDE_ERROR_UNKNOWN_ERRNO		Unknown system error
 

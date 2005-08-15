@@ -73,16 +73,26 @@ const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t op)
                 idmef_criterion_operator_t operator;
                 const char *name;
         } tbl[] = {
-                { IDMEF_CRITERION_OPERATOR_EQUAL, "=="                        },
-                { IDMEF_CRITERION_OPERATOR_NOT_EQUAL, "!="                    },
-                { IDMEF_CRITERION_OPERATOR_LESSER, "<"                        },
-                { IDMEF_CRITERION_OPERATOR_GREATER, ">"                       },
-                { IDMEF_CRITERION_OPERATOR_SUBSTR, "subsr"                    },
-                { IDMEF_CRITERION_OPERATOR_REGEX, "=~"                        },
-                { IDMEF_CRITERION_OPERATOR_IS_NULL, "!"                       },
-                { IDMEF_CRITERION_OPERATOR_IS_NOT_NULL, ""                    },
-                { IDMEF_CRITERION_OPERATOR_LESSER|IDMEF_CRITERION_OPERATOR_EQUAL, "<="  },
-                { IDMEF_CRITERION_OPERATOR_GREATER|IDMEF_CRITERION_OPERATOR_EQUAL, ">=" },
+                { IDMEF_CRITERION_OPERATOR_EQUAL,     "="            },
+                { IDMEF_CRITERION_OPERATOR_NOT_EQUAL, "!="           },
+
+                { IDMEF_CRITERION_OPERATOR_LESSER, "<"               },
+                { IDMEF_CRITERION_OPERATOR_GREATER, ">"              },
+                { IDMEF_CRITERION_OPERATOR_LESSER_OR_EQUAL, "<="     },
+                { IDMEF_CRITERION_OPERATOR_GREATER_OR_EQUAL, ">="    },
+
+                { IDMEF_CRITERION_OPERATOR_REGEX, "~"                },
+                { IDMEF_CRITERION_OPERATOR_REGEX_NOCASE, "~*"        },
+                { IDMEF_CRITERION_OPERATOR_NOT_REGEX, "!~"           },
+                { IDMEF_CRITERION_OPERATOR_NOT_REGEX_NOCASE, "!~*"   },
+                                
+                { IDMEF_CRITERION_OPERATOR_SUBSTR, "<>"              },
+                { IDMEF_CRITERION_OPERATOR_SUBSTR_NOCASE, "<>*"      },
+                { IDMEF_CRITERION_OPERATOR_NOT_SUBSTR, "!<>"         },
+                { IDMEF_CRITERION_OPERATOR_NOT_SUBSTR_NOCASE, "!<>*" },
+                
+                { IDMEF_CRITERION_OPERATOR_NOT_NULL, "!"             },
+                { IDMEF_CRITERION_OPERATOR_NULL, ""                  },
         };
 
         for ( i = 0; tbl[i].operator != 0; i++ ) 
@@ -110,7 +120,7 @@ const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t op)
 int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
                         idmef_criterion_value_t *value, idmef_criterion_operator_t op)
 {
-        if ( ! value && op != IDMEF_CRITERION_OPERATOR_IS_NULL && op != IDMEF_CRITERION_OPERATOR_IS_NOT_NULL )
+        if ( ! value && ! (op & IDMEF_CRITERION_OPERATOR_NULL) )
                 return -1;
         
 	*criterion = calloc(1, sizeof(**criterion));
@@ -320,10 +330,10 @@ int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message
                 return ret;
         
         if ( ret == 0 ) 
-		return (criterion->operator == IDMEF_CRITERION_OPERATOR_IS_NULL) ? 1 : 0;
+		return (criterion->operator == IDMEF_CRITERION_OPERATOR_NULL) ? 1 : 0;
         
         if ( ! criterion->value )
-                return (criterion->operator == IDMEF_CRITERION_OPERATOR_IS_NOT_NULL) ? 1 : 0;
+                return (criterion->operator == (IDMEF_CRITERION_OPERATOR_NULL|IDMEF_CRITERION_OPERATOR_NOT)) ? 1 : 0;
         
         ret = idmef_criterion_value_match(criterion->value, value, criterion->operator);
         idmef_value_destroy(value);

@@ -96,21 +96,35 @@ BLANK		[ \t\n]+
 %%
 
 substr			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING; }
-SUBSTR			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING; }
+\!substr		{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_SUBSTRING; }
+substr\*		{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING_NOCASE; }
+\!substr\*		{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_SUBSTRING_NOCASE; }
 
 {IDMEF_PATH}		{ 
 				yylval.str = strdup(yytext);
 				return TOK_IDMEF_PATH; 
 			}
 
-\=\~			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_REGEXP; }
+\<\> 		        { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING; }
+\<\>\*	  	        { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING_NOCASE; }
+\!\<\>  		{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_SUBSTRING; }
+\!\<\>\*		{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_SUBSTRING_NOCASE; }
+
 \>			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_GREATER; }
 \>\=			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_GREATER_OR_EQUAL; }
 \<			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_LESS; }
 \<\=			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_LESS_OR_EQUAL; }
+
+\~			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_REGEXP; }
+\~\*			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_REGEXP_NOCASE; }
+\!\~			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_REGEXP; } 
+\!\~\*			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_REGEXP_NOCASE; }
+
 \=\=			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_EQUAL; }
 \=			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_EQUAL; }
+\=\*			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_EQUAL_NOCASE; }
 \!\=			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_EQUAL; }
+\!\=\*			{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_EQUAL_NOCASE; }
 \!			{ return TOK_RELATION_IS_NULL; }
 
 \&\&			{ return TOK_OPERATOR_AND; }
