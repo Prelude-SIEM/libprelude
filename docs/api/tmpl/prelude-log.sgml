@@ -17,21 +17,27 @@ prelude-log
 <!-- ##### SECTION Stability_Level ##### -->
 
 
-<!-- ##### MACRO prelude_log ##### -->
+<!-- ##### FUNCTION prelude_log ##### -->
 <para>
 
 </para>
 
 @level: 
+@fmt: 
+@Varargs: 
+<!-- # Unused Parameters # -->
 @...: 
 
 
-<!-- ##### MACRO prelude_log_debug ##### -->
+<!-- ##### FUNCTION prelude_log_debug ##### -->
 <para>
 
 </para>
 
 @level: 
+@fmt: 
+@Varargs: 
+<!-- # Unused Parameters # -->
 @...: 
 
 

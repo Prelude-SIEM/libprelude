@@ -49,6 +49,7 @@ idmef-criterion-value
 
 @cv: 
 @regex: 
+@op: 
 @Returns: 
 
 

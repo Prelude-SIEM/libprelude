@@ -1,3 +1,20 @@
+* 2005-08-17, libprelude-0.9.0-rc12:
+
+	- Workaround for system without variadic macros.
+
+	- 64 bit conversion specifier detection: fix integer truncation issue
+	  on system that did not support %llu.
+
+	- Fix compilation issue on system without va_copy().
+
+	- Change connection port number (5554) to IANA reserved Prelude port number (4690).
+
+	- Record full analyzer process path, as per IDMEFv14 recommandation.
+
+	- More IDMEF Criteria operator. Allow case insensitive match.
+
+
+
 * 2005-08-01, libprelude-0.9.0-rc11:
 
 	- Better TLS error reporting.

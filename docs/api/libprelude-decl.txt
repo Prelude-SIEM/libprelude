@@ -87,6 +87,7 @@ typedef enum {
     PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS = 54,
     PRELUDE_ERROR_IDMEF_CRITERIA_PARSE = 55,
     PRELUDE_ERROR_IDMEF_CRITERION_UNSUPPORTED_OPERATOR = 56,
+    PRELUDE_ERROR_IDMEF_CRITERION_INVALID_REGEX = 57,
     PRELUDE_ERROR_UNKNOWN_ERRNO = 16382,
     PRELUDE_ERROR_E2BIG = PRELUDE_ERROR_SYSTEM_ERROR | 0,
     PRELUDE_ERROR_EACCES = PRELUDE_ERROR_SYSTEM_ERROR | 1,
@@ -4302,26 +4303,6 @@ prelude_io_t *pio
 <RETURNS>void *</RETURNS>
 idmef_value_t *value){unsigned int i = 0;void *object = idmef_value_get_object(value
 </FUNCTION>
-<MACRO>
-<NAME>prelude_log</NAME>
-#define prelude_log(level, ...) \
-        _prelude_log(level, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
-</MACRO>
-<MACRO>
-<NAME>prelude_log_v</NAME>
-#define prelude_log_v(level, fmt, ap) \
-        _prelude_log_v(level, __FILE__, __FUNCTION__, __LINE__, fmt, ap)
-</MACRO>
-<MACRO>
-<NAME>prelude_log_debug</NAME>
-#define prelude_log_debug(level, ...) \
-        _prelude_log(PRELUDE_LOG_DEBUG + level, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
-</MACRO>
-<MACRO>
-<NAME>prelude_log_debug_v</NAME>
-#define prelude_log_debug_v(level, fmt, ap) \
-        _prelude_log_v(PRELUDE_LOG_DEBUG + level, __FILE__, __FUNCTION__, __LINE__, fmt, ap)
-</MACRO>
 <ENUM>
 <NAME>prelude_log_t</NAME>
 typedef enum {
@@ -4338,6 +4319,36 @@ typedef enum {
         PRELUDE_LOG_FLAGS_SYSLOG = 0x02
 } prelude_log_flags_t;
 </ENUM>
+<MACRO>
+<NAME>prelude_log</NAME>
+#define prelude_log(level, ...) \
+        _prelude_log(level, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
+</MACRO>
+<MACRO>
+<NAME>prelude_log_debug</NAME>
+#define prelude_log_debug(level, ...) \
+        _prelude_log(PRELUDE_LOG_DEBUG + level, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
+</MACRO>
+<FUNCTION>
+<NAME>prelude_log</NAME>
+<RETURNS>void </RETURNS>
+prelude_log_t level, const char *fmt, ...
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_log_debug</NAME>
+<RETURNS>void </RETURNS>
+prelude_log_t level, const char *fmt, ...
+</FUNCTION>
+<MACRO>
+<NAME>prelude_log_v</NAME>
+#define prelude_log_v(level, fmt, ap) \
+        _prelude_log_v(level, __FILE__, __FUNCTION__, __LINE__, fmt, ap)
+</MACRO>
+<MACRO>
+<NAME>prelude_log_debug_v</NAME>
+#define prelude_log_debug_v(level, fmt, ap) \
+        _prelude_log_v(PRELUDE_LOG_DEBUG + level, __FILE__, __FUNCTION__, __LINE__, fmt, ap)
+</MACRO>
 <FUNCTION>
 <NAME>prelude_log_set_level</NAME>
 <RETURNS>void </RETURNS>
@@ -6437,27 +6448,27 @@ typedef struct prelude_list {
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_PRId64</NAME>
-#define PRELUDE_PRId64      __PRELUDE_PRI64_PREFIX "d"
+#define PRELUDE_PRId64      __PRELUDE_64BIT_FORMAT_PREFIX "d"
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_PRIi64</NAME>
-#define PRELUDE_PRIi64      __PRELUDE_PRI64_PREFIX "i"
+#define PRELUDE_PRIi64      __PRELUDE_64BIT_FORMAT_PREFIX "i"
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_PRIo64</NAME>
-#define PRELUDE_PRIo64      __PRELUDE_PRI64_PREFIX "o"
+#define PRELUDE_PRIo64      __PRELUDE_64BIT_FORMAT_PREFIX "o"
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_PRIx64</NAME>
-#define PRELUDE_PRIx64      __PRELUDE_PRI64_PREFIX "x"
+#define PRELUDE_PRIx64      __PRELUDE_64BIT_FORMAT_PREFIX "x"
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_PRIX64</NAME>
-#define PRELUDE_PRIX64      __PRELUDE_PRI64_PREFIX "X"
+#define PRELUDE_PRIX64      __PRELUDE_64BIT_FORMAT_PREFIX "X"
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_PRIu64</NAME>
-#define PRELUDE_PRIu64      __PRELUDE_PRI64_PREFIX "u"
+#define PRELUDE_PRIu64      __PRELUDE_64BIT_FORMAT_PREFIX "u"
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_PRId32</NAME>
@@ -6533,23 +6544,23 @@ typedef struct prelude_list {
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_SCNd64</NAME>
-#define PRELUDE_SCNd64      __PRELUDE_PRI64_PREFIX "d"
+#define PRELUDE_SCNd64      __PRELUDE_64BIT_FORMAT_PREFIX "d"
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_SCNi64</NAME>
-#define PRELUDE_SCNi64      __PRELUDE_PRI64_PREFIX "i"
+#define PRELUDE_SCNi64      __PRELUDE_64BIT_FORMAT_PREFIX "i"
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_SCNo64</NAME>
-#define PRELUDE_SCNo64      __PRELUDE_PRI64_PREFIX "o"
+#define PRELUDE_SCNo64      __PRELUDE_64BIT_FORMAT_PREFIX "o"
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_SCNx64</NAME>
-#define PRELUDE_SCNx64      __PRELUDE_PRI64_PREFIX "x"
+#define PRELUDE_SCNx64      __PRELUDE_64BIT_FORMAT_PREFIX "x"
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_SCNu64</NAME>
-#define PRELUDE_SCNu64      __PRELUDE_PRI64_PREFIX "u"
+#define PRELUDE_SCNu64      __PRELUDE_64BIT_FORMAT_PREFIX "u"
 </MACRO>
 <ENUM>
 <NAME>prelude_bool_t</NAME>
@@ -6600,7 +6611,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.0-rc11"
+#define LIBPRELUDE_VERSION "0.9.0-rc12"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
@@ -6656,14 +6667,34 @@ prelude_msg_t *msg, uint64_t *source_id, uint32_t *request_id, void **value
 <ENUM>
 <NAME>idmef_criterion_operator_t</NAME>
 typedef enum {
-        IDMEF_CRITERION_OPERATOR_EQUAL       = 0x01,
-        IDMEF_CRITERION_OPERATOR_NOT_EQUAL   = 0x02,
-        IDMEF_CRITERION_OPERATOR_LESSER      = 0x04,
-        IDMEF_CRITERION_OPERATOR_GREATER     = 0x08,
-        IDMEF_CRITERION_OPERATOR_SUBSTR      = 0x10,
-        IDMEF_CRITERION_OPERATOR_REGEX       = 0x20,
-        IDMEF_CRITERION_OPERATOR_IS_NULL     = 0x40,
-        IDMEF_CRITERION_OPERATOR_IS_NOT_NULL = 0x80
+        IDMEF_CRITERION_OPERATOR_NOT               = 0x8000,
+        IDMEF_CRITERION_OPERATOR_NOCASE            = 0x4000,
+
+        IDMEF_CRITERION_OPERATOR_EQUAL             = 0x0001,
+        IDMEF_CRITERION_OPERATOR_EQUAL_NOCASE      = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE,
+        IDMEF_CRITERION_OPERATOR_NOT_EQUAL         = IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_EQUAL,
+        IDMEF_CRITERION_OPERATOR_NOT_EQUAL_NOCASE  = IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_EQUAL_NOCASE,
+        
+        IDMEF_CRITERION_OPERATOR_LESSER            = 0x0002,
+        IDMEF_CRITERION_OPERATOR_LESSER_OR_EQUAL   = IDMEF_CRITERION_OPERATOR_LESSER|IDMEF_CRITERION_OPERATOR_EQUAL,
+
+        IDMEF_CRITERION_OPERATOR_GREATER           = 0x0004,
+        IDMEF_CRITERION_OPERATOR_GREATER_OR_EQUAL  = IDMEF_CRITERION_OPERATOR_GREATER|IDMEF_CRITERION_OPERATOR_EQUAL,
+        
+        IDMEF_CRITERION_OPERATOR_SUBSTR            = 0x0008,
+        IDMEF_CRITERION_OPERATOR_SUBSTR_NOCASE     = IDMEF_CRITERION_OPERATOR_SUBSTR|IDMEF_CRITERION_OPERATOR_NOCASE,
+        IDMEF_CRITERION_OPERATOR_NOT_SUBSTR        = IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_SUBSTR,
+        IDMEF_CRITERION_OPERATOR_NOT_SUBSTR_NOCASE = IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_SUBSTR_NOCASE,
+        
+        IDMEF_CRITERION_OPERATOR_REGEX             = 0x0010,
+        IDMEF_CRITERION_OPERATOR_REGEX_NOCASE      = IDMEF_CRITERION_OPERATOR_REGEX|IDMEF_CRITERION_OPERATOR_NOCASE,
+        IDMEF_CRITERION_OPERATOR_NOT_REGEX         = IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_REGEX,
+        IDMEF_CRITERION_OPERATOR_NOT_REGEX_NOCASE  = IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_REGEX_NOCASE,
+
+        
+        IDMEF_CRITERION_OPERATOR_NULL              = 0x0020,
+        IDMEF_CRITERION_OPERATOR_NOT_NULL          = IDMEF_CRITERION_OPERATOR_NULL|IDMEF_CRITERION_OPERATOR_NOT
+        
 } idmef_criterion_operator_t;
 </ENUM>
 <TYPEDEF>
@@ -7118,7 +7149,7 @@ idmef_criterion_value_t **cv
 <FUNCTION>
 <NAME>idmef_criterion_value_new_regex</NAME>
 <RETURNS>int </RETURNS>
-idmef_criterion_value_t **cv, const char *regex
+idmef_criterion_value_t **cv, const char *regex, idmef_criterion_operator_t op
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_new_value</NAME>
@@ -7133,7 +7164,7 @@ idmef_criterion_value_t **cv, idmef_path_t *path,const char *value, idmef_criter
 <FUNCTION>
 <NAME>idmef_criterion_value_new_broken_down_time</NAME>
 <RETURNS>int </RETURNS>
-idmef_criterion_value_t **cv, const char *time
+idmef_criterion_value_t **cv, const char *time, idmef_criterion_operator_t op
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_clone</NAME>
@@ -7162,13 +7193,213 @@ idmef_criterion_value_t *cv, idmef_value_t *value, idmef_criterion_operator_t op
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_get_value</NAME>
-<RETURNS>const void *</RETURNS>
+<RETURNS>const idmef_value_t *</RETURNS>
+idmef_criterion_value_t *cv
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_criterion_value_get_regex</NAME>
+<RETURNS>const char *</RETURNS>
+idmef_criterion_value_t *cv
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_criterion_value_get_broken_down_time</NAME>
+<RETURNS>const struct tm *</RETURNS>
 idmef_criterion_value_t *cv
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_value_get_type</NAME>
 <RETURNS>idmef_criterion_value_type_t </RETURNS>
 idmef_criterion_value_t *cv
+</FUNCTION>
+<ENUM>
+<NAME>idmef_message_to_path_flags_t</NAME>
+typedef enum {
+        IDMEF_MESSAGE_TO_PATH_EMULATE_LAST_INDEX = 0x01,
+} idmef_message_to_path_flags_t;
+</ENUM>
+<TYPEDEF>
+<NAME>idmef_message_to_path_t</NAME>
+typedef struct idmef_message_to_path idmef_message_to_path_t;
+</TYPEDEF>
+<FUNCTION>
+<NAME>idmef_message_to_path_set_flags</NAME>
+<RETURNS>void </RETURNS>
+idmef_message_to_path_t *handler, idmef_message_to_path_flags_t flags
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_message_to_path_new</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t **ret
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_message_to_path_destroy</NAME>
+<RETURNS>void </RETURNS>
+idmef_message_to_path_t *pt
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_message_to_path_get_data</NAME>
+<RETURNS>void *</RETURNS>
+idmef_message_to_path_t *pt
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_message_to_path_set_data</NAME>
+<RETURNS>void </RETURNS>
+idmef_message_to_path_t *pt, void *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_message_to_path_set_callback</NAME>
+<RETURNS>void </RETURNS>
+idmef_message_to_path_t *pt,int (*cb)(idmef_message_to_path_t *pt, const char *path, const idmef_value_t *value)
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_additional_data_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_reference_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_reference_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_classification_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_classification_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_user_id_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_user_id_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_user_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_user_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_address_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_address_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_process_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_process_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_web_service_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_web_service_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_snmp_service_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_snmp_service_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_service_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_service_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_node_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_node_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_source_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_source_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_file_access_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_file_access_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_inode_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_inode_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_checksum_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_checksum_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_file_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_file_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_linkage_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_linkage_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_target_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_target_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_analyzer_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_analyzer_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_alertident_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_alertident_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_impact_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_impact_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_action_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_action_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_confidence_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_confidence_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_assessment_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_assessment_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_tool_alert_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_tool_alert_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_correlation_alert_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_correlation_alert_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_overflow_alert_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_overflow_alert_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_alert_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_alert_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_heartbeat_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_heartbeat_t *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_message_to_path</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_to_path_t *handler, idmef_message_t *ptr
 </FUNCTION>
 <TYPEDEF>
 <NAME>idmef_path_t</NAME>
