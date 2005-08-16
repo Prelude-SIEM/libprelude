@@ -526,11 +526,12 @@ static int btime_parse_gmtoff(const char *param, int *out)
 
 static int btime_parse(struct tm *lt, const char *time)
 {
-        int i, ret, gmt_offset;
+        int i, ret;
+        long gmt_offset;
         struct {
                 const char *field;
                 size_t len;
-                int *ptr;
+                void *ptr;
                 int (*func)(const char *param, int *output);
         } tbl[] = {
                 { "month", 5, &lt->tm_mon, btime_parse_month  },
@@ -750,7 +751,7 @@ const struct tm *idmef_criterion_value_get_broken_down_time(idmef_criterion_valu
 
 const char *idmef_criterion_value_get_regex(idmef_criterion_value_t *cv)
 {
-        return cv->type == IDMEF_CRITERION_VALUE_TYPE_REGEX ? cv->value : NULL;
+        return cv->type == IDMEF_CRITERION_VALUE_TYPE_REGEX ? ((struct regex_value *)cv->value)->regex_string : NULL;
 }
 
 
