@@ -203,12 +203,18 @@ static ssize_t sys_pending(prelude_io_t *pio)
  */
 static ssize_t file_read(prelude_io_t *pio, void *buf, size_t count) 
 {
+        FILE *fd; 
         size_t ret;
+
+        /*
+         * ferror / clearerror can be macro that might dereference fd_ptr.
+         */
+        fd = pio->fd_ptr;
         
-        ret = fread(buf, count, 1, pio->fd_ptr);        
+        ret = fread(buf, count, 1, fd);        
         if ( ret <= 0 ) {        
-                ret = ferror(pio->fd_ptr) ? prelude_error_from_errno(errno) : prelude_error(PRELUDE_ERROR_EOF);
-                clearerr(pio->fd_ptr);
+                ret = ferror(fd) ? prelude_error_from_errno(errno) : prelude_error(PRELUDE_ERROR_EOF);
+                clearerr(fd);
                 return ret;
         }
         
