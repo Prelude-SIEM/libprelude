@@ -1,3 +1,9 @@
+* 2005-08-17, libprelude-0.9.0-rc13:
+
+	- Fix compilation problem on system where ferror/clearerror are 
+	  declared as macro.
+
+
 * 2005-08-17, libprelude-0.9.0-rc12:
 
 	- Workaround for system without variadic macros.
