@@ -32,7 +32,8 @@ SV *swig_perl_string(prelude_string_t *string)
 SV *swig_perl_data(idmef_data_t *data)
 {
 	switch ( idmef_data_get_type(data) ) {
-	case IDMEF_DATA_TYPE_CHAR: case IDMEF_DATA_TYPE_BYTE:
+	case IDMEF_DATA_TYPE_CHAR: 
+	case IDMEF_DATA_TYPE_BYTE:
 		return newSVpv(idmef_data_get_data(data), 1);
 
 	case IDMEF_DATA_TYPE_CHAR_STRING: 
@@ -51,7 +52,7 @@ SV *swig_perl_data(idmef_data_t *data)
 		return newSVpvf("%hf", idmef_data_get_float(data));
 
 	default:
-		return NULL;
+		return &PL_sv_undef;
 	}
 }
 

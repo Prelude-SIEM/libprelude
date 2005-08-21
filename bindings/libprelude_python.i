@@ -47,7 +47,8 @@ PyObject *swig_python_string(prelude_string_t *string)
 PyObject *swig_python_data(idmef_data_t *data)
 {
 	switch ( idmef_data_get_type(data) ) {
-	case IDMEF_DATA_TYPE_CHAR: case IDMEF_DATA_TYPE_BYTE:
+	case IDMEF_DATA_TYPE_CHAR: 
+	case IDMEF_DATA_TYPE_BYTE:
 		return PyString_FromStringAndSize(idmef_data_get_data(data), 1);
 
 	case IDMEF_DATA_TYPE_CHAR_STRING: 
@@ -66,7 +67,8 @@ PyObject *swig_python_data(idmef_data_t *data)
 		return PyFloat_FromDouble((double) idmef_data_get_float(data));
 
 	default:
-		return NULL;
+		Py_INCREF(Py_None);
+		return Py_None;
 	}
 }
 
