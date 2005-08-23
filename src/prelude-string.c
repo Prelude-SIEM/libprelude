@@ -89,7 +89,7 @@
 inline static int check_string_f(const char *f, int l, const char *str, size_t len)
 {
         if ( str[len] != 0 ) {
-                fprintf(stderr, "*** %s:%d: warning, string is not NULL terminated.\n", f, l);
+                prelude_log(PRELUDE_LOG_WARN, "%s:%d: warning, string is not NULL terminated.\n", f, l);
                 return prelude_error(PRELUDE_ERROR_STRING_NOT_NULL_TERMINATED);
         }
 
