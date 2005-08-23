@@ -53,7 +53,8 @@ static int do_send_msg(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
 
         ret = msgbuf->send_msg(msgbuf, msg);        
         prelude_msg_recycle(msg);
-
+        prelude_msg_set_priority(msg, PRELUDE_MSG_PRIORITY_NONE);
+        
         return ret;
 }
 
