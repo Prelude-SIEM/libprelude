@@ -58,6 +58,8 @@ void prelude_deinit(void);
 
 const char *prelude_check_version(const char *req_version);
 
+int prelude_thread_init(void *future_use);
+
 #ifdef __cplusplus
  }
 #endif

@@ -38,7 +38,6 @@
 #include "minmax.h"
 #include "pathmax.h"
 #include "regex.h"
-#include "size_max.h"
 #include "snprintf.h"
 #include "strcase.h"
 #include "strcasestr.h"
