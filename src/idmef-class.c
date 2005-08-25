@@ -22,6 +22,7 @@
 *
 *****/
 
+#include "config.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,6 +30,7 @@
 #include <sys/types.h>
 #include <stdarg.h>
 
+#include "libmissing.h"
 #include "prelude-list.h"
 #include "prelude-log.h"
 #include "prelude-inttypes.h"
