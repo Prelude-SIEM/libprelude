@@ -38,11 +38,13 @@
 #include "minmax.h"
 #include "pathmax.h"
 #include "regex.h"
+#include "size_max.h"
 #include "snprintf.h"
 #include "strcase.h"
 #include "strcasestr.h"
 #include "strdup.h"
 #include "strndup.h"
+#include "strnlen1.h"
 #include "strpbrk.h"
 #include "strsep.h"
 #include "time_r.h"
@@ -52,6 +54,7 @@
 #include "xsize.h"
 #include <alloca.h>
 #include <stdbool.h>
+#include <string.h>
 #include <time.h>
 
 #endif /* _LIBPRELUDE_LIBMISSING_H */
