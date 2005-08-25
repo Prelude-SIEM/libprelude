@@ -140,7 +140,7 @@ int prelude_thread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
 }
 
 
-int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex, const struct timespec *abstime)
+int prelude_thread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex, const struct timespec *abstime)
 {
         THR_FUNC(pthread_cond_timedwait(cond, mutex, abstime));
 }
