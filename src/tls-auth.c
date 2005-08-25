@@ -27,7 +27,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <netinet/in.h>
-#include <pthread.h>
 
 #include <gcrypt.h>
 #include <gnutls/gnutls.h>
@@ -40,6 +39,7 @@
 #include "prelude-client.h"
 #include "prelude-message-id.h"
 #include "prelude-extract.h"
+#include "prelude-thread.h"
 
 #include "tls-util.h"
 #include "tls-auth.h"
@@ -229,8 +229,9 @@ int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *
 {
         int ret;
         char keyfile[256], certfile[256];
-        
-        gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread);
+
+        if ( _prelude_thread_in_use() )
+                gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread);
         
         ret = gnutls_global_init();
         if ( ret < 0 ) {

@@ -32,8 +32,8 @@
 #include <sys/types.h>
 #include <stdarg.h>
 #include <ctype.h>
-#include <pthread.h>
-
+        
+#include "prelude-thread.h"
 #include "prelude-log.h"
 #include "prelude-error.h"
 #include "prelude-inttypes.h"
@@ -263,7 +263,7 @@ int idmef_criteria_new_from_string(idmef_criteria_t **new_criteria, const char *
         int ret;
 	void *state;
         
-	pthread_mutex_lock(&_criteria_parse_mutex);
+	prelude_thread_mutex_lock(&_criteria_parse_mutex);
 
         real_ret = 0;
 	processed_criteria = NULL;
@@ -284,7 +284,7 @@ int idmef_criteria_new_from_string(idmef_criteria_t **new_criteria, const char *
 
         else *new_criteria = processed_criteria;
 
-	pthread_mutex_unlock(&_criteria_parse_mutex);
+	prelude_thread_mutex_unlock(&_criteria_parse_mutex);
 
 	return ret;
 }

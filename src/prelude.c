@@ -27,7 +27,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <pthread.h>
 #include <gnutls/gnutls.h>
 
 #include "prelude.h"
@@ -35,6 +34,7 @@
 #include "prelude-option.h"
 #include "prelude-log.h"
 #include "prelude-timer.h"
+#include "prelude-thread.h"
 
 
 int _prelude_internal_argc = 0;
@@ -42,17 +42,14 @@ char *_prelude_internal_argv[1024];
 
 char _prelude_init_cwd[PATH_MAX];
 static int libprelude_refcount = 0;
-extern pthread_mutex_t _criteria_parse_mutex;
 extern prelude_option_t *_prelude_generic_optlist;
+extern pthread_mutex_t _criteria_parse_mutex;
 
-
-
-#ifdef HAVE_PTHREAD_ATFORK
 
 static void prepare_fork_cb(void)
 {
         _idmef_path_cache_lock();
-        pthread_mutex_lock(&_criteria_parse_mutex);
+        prelude_thread_mutex_lock(&_criteria_parse_mutex);
 }
 
 
@@ -60,7 +57,7 @@ static void prepare_fork_cb(void)
 static void parent_fork_cb(void)
 {
         _idmef_path_cache_unlock();
-        pthread_mutex_unlock(&_criteria_parse_mutex);
+        prelude_thread_mutex_unlock(&_criteria_parse_mutex);
 }
 
 
@@ -68,10 +65,9 @@ static void parent_fork_cb(void)
 static void child_fork_cb(void)
 {
         _idmef_path_cache_reinit();
-        pthread_mutex_init(&_criteria_parse_mutex, NULL);
+        prelude_thread_mutex_init(&_criteria_parse_mutex, NULL);
 }
 
-#endif
 
 
 static void remove_argv(int *argc, char **argv, int removed)
@@ -160,13 +156,6 @@ int prelude_init(int *argc, char **argv)
         if ( libprelude_refcount++ > 0 )
                 return 0;
         
-        if ( ! getcwd(_prelude_init_cwd, sizeof(_prelude_init_cwd)) )
-                return prelude_error_from_errno(errno);
-        
-        ret = _prelude_timer_init();
-        if ( ret < 0 )
-                return ret;
-        
         env = getenv("LIBPRELUDE_DEBUG");
         if ( env )
                 prelude_log_set_debug_level(atoi(env));
@@ -175,15 +164,18 @@ int prelude_init(int *argc, char **argv)
         if ( env )
                 prelude_log_set_logfile(env);
         
-#ifdef HAVE_PTHREAD_ATFORK
-        {
-                int ret;
+        _prelude_thread_in_use();
+        
+        if ( ! getcwd(_prelude_init_cwd, sizeof(_prelude_init_cwd)) )
+                return prelude_error_from_errno(errno);
+        
+        ret = _prelude_timer_init();
+        if ( ret < 0 )
+                return ret;
                 
-                ret = pthread_atfork(prepare_fork_cb, parent_fork_cb, child_fork_cb);
-                if ( ret != 0 )
-                        return prelude_error_from_errno(ret);
-        }
-#endif
+        ret = prelude_thread_atfork(prepare_fork_cb, parent_fork_cb, child_fork_cb);
+        if ( ret != 0 )
+                return prelude_error_from_errno(ret);
         
         slice_arguments(argc, argv);
 

@@ -4303,6 +4303,124 @@ prelude_io_t *pio
 <RETURNS>void *</RETURNS>
 idmef_value_t *value){unsigned int i = 0;void *object = idmef_value_get_object(value
 </FUNCTION>
+<MACRO>
+<NAME>PRELUDE_THREAD_MUTEX_INITIALIZER</NAME>
+#define PRELUDE_THREAD_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
+</MACRO>
+<TYPEDEF>
+<NAME>prelude_thread_t</NAME>
+typedef pthread_t prelude_thread_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>prelude_thread_attr_t</NAME>
+typedef pthread_attr_t prelude_thread_attr_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>prelude_thread_mutex_t</NAME>
+typedef pthread_mutex_t prelude_thread_mutex_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>prelude_thread_cond_t</NAME>
+typedef pthread_cond_t  prelude_thread_cond_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>prelude_thread_condattr_t</NAME>
+typedef pthread_condattr_t prelude_thread_condattr_t;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>prelude_thread_mutexattr_t</NAME>
+typedef pthread_mutexattr_t prelude_thread_mutexattr_t;
+</TYPEDEF>
+<FUNCTION>
+<NAME>prelude_thread_atfork</NAME>
+<RETURNS>int </RETURNS>
+void (*prepare)(void), void (*parent)(void), void (*child)(void)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_mutex_lock</NAME>
+<RETURNS>int </RETURNS>
+prelude_thread_mutex_t *mutex
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_mutex_unlock</NAME>
+<RETURNS>int </RETURNS>
+prelude_thread_mutex_t *mutex
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_mutex_init</NAME>
+<RETURNS>int </RETURNS>
+prelude_thread_mutex_t *mutex, const prelude_thread_mutexattr_t *attr
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_mutex_destroy</NAME>
+<RETURNS>int </RETURNS>
+prelude_thread_mutex_t *mutex
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_cond_init</NAME>
+<RETURNS>int </RETURNS>
+prelude_thread_cond_t *cond, prelude_thread_condattr_t *attr
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_cond_signal</NAME>
+<RETURNS>int </RETURNS>
+prelude_thread_cond_t *cond
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_cond_broadcast</NAME>
+<RETURNS>int </RETURNS>
+prelude_thread_cond_t *cond
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_cond_wait</NAME>
+<RETURNS>int </RETURNS>
+prelude_thread_cond_t *cond, prelude_thread_mutex_t *mutex
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_cond_timedwait</NAME>
+<RETURNS>int </RETURNS>
+prelude_thread_cond_t *cond, prelude_thread_mutex_t *mutex, const struct timespec *abstime
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_cond_destroy</NAME>
+<RETURNS>int </RETURNS>
+prelude_thread_cond_t *cond
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_condattr_init</NAME>
+<RETURNS>int </RETURNS>
+prelude_thread_condattr_t *attr
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_condattr_setclock</NAME>
+<RETURNS>int </RETURNS>
+prelude_thread_condattr_t *attr, clockid_t clock_id
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_sigmask</NAME>
+<RETURNS>int </RETURNS>
+int how, const sigset_t *newmask, sigset_t *oldmask
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_create</NAME>
+<RETURNS>int </RETURNS>
+prelude_thread_t *thread, prelude_thread_attr_t *attr, void *(*start_routine)(void *), void *arg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_exit</NAME>
+<RETURNS>void </RETURNS>
+void *retval
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_join</NAME>
+<RETURNS>int </RETURNS>
+prelude_thread_t th, void **thread_return
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_init</NAME>
+<RETURNS>int </RETURNS>
+void *nil
+</FUNCTION>
 <ENUM>
 <NAME>prelude_log_t</NAME>
 typedef enum {
@@ -6611,7 +6729,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.0-rc12"
+#define LIBPRELUDE_VERSION "0.9.0-rc13"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>

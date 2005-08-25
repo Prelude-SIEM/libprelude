@@ -40,8 +40,8 @@ include_HEADERS = common.h			\
 		  prelude-option-wide.h		\
 		  prelude-plugin.h		\
 		  prelude-string.h		\
-		  prelude-timer.h		
+		  prelude-timer.h
 
 nodist_include_HEADERS = prelude.h prelude-inttypes.h
 
-noinst_HEADERS = config-engine.h libmissing.h idmef-tree-data.h ntp.h tls-auth.h tls-util.h
+noinst_HEADERS = config-engine.h libmissing.h idmef-tree-data.h ntp.h tls-auth.h tls-util.h prelude-thread.h

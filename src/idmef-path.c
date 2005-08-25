@@ -29,8 +29,8 @@
 #include <string.h>
 #include <sys/types.h>
 #include <stdarg.h>
-#include <pthread.h>
 
+#include "prelude-thread.h"
 #include "prelude-hash.h"
 #include "prelude-log.h"
 #include "prelude-inttypes.h"
@@ -90,21 +90,21 @@ static pthread_mutex_t cached_path_mutex = PTHREAD_MUTEX_INITIALIZER;
 static void path_lock_cb(void *data)
 {
         idmef_path_t *path = data;
-        pthread_mutex_lock(&path->mutex);
+        prelude_thread_mutex_lock(&path->mutex);
 }
 
 
 static void path_reinit_cb(void *data)
 {
         idmef_path_t *path = data;
-        pthread_mutex_init(&path->mutex, NULL);
+        prelude_thread_mutex_init(&path->mutex, NULL);
 }
 
 
 static void path_unlock_cb(void *data)
 {
         idmef_path_t *path = data;
-        pthread_mutex_unlock(&path->mutex);
+        prelude_thread_mutex_unlock(&path->mutex);
 }
 
 
@@ -138,7 +138,7 @@ static int build_name(idmef_path_t *path)
         idmef_class_id_t class;
         
         /* 
-         * we don't need pthread_mutex_{,un}lock since the path has no name
+         * we don't need prelude_thread_mutex_{,un}lock since the path has no name
          * it means that it is not in the cache and thus, not shared
          */
         path->name[0] = '\0';
@@ -365,17 +365,17 @@ int idmef_path_set(idmef_path_t *path, idmef_message_t *message, idmef_value_t *
 static int idmef_path_create(idmef_path_t **path, const char *buffer)
 {
         int ret;
-        
-	pthread_mutex_lock(&cached_path_mutex);
+
+	prelude_thread_mutex_lock(&cached_path_mutex);
 
         ret = initialize_path_cache_if_needed();
         if ( ret < 0 ) {
-                pthread_mutex_unlock(&cached_path_mutex);
+                prelude_thread_mutex_unlock(&cached_path_mutex);
                 return ret;
         }
         
 	*path = prelude_hash_get(cached_path, buffer);
-        pthread_mutex_unlock(&cached_path_mutex);
+        prelude_thread_mutex_unlock(&cached_path_mutex);
 
 	if ( *path )
 		return 1;
@@ -385,7 +385,7 @@ static int idmef_path_create(idmef_path_t **path, const char *buffer)
 		return prelude_error_from_errno(errno);
 
         (*path)->refcount = 1;
-	pthread_mutex_init(&(*path)->mutex, NULL);
+	prelude_thread_mutex_init(&(*path)->mutex, NULL);
         
 	return 0;
 }
@@ -518,23 +518,23 @@ int idmef_path_new_fast(idmef_path_t **path, const char *buffer)
         else {
                 ret = idmef_path_parse_new(*path, buffer);
                 if ( ret < 0 ) {
-                        pthread_mutex_destroy(&(*path)->mutex);
+                        prelude_thread_mutex_destroy(&(*path)->mutex);
                         free(*path);
                         return ret;
                 }
         }
 
-	pthread_mutex_lock(&cached_path_mutex);
+	prelude_thread_mutex_lock(&cached_path_mutex);
         
 	if ( prelude_hash_set(cached_path, (*path)->name, *path) < 0 ) {
                 
-                pthread_mutex_destroy(&(*path)->mutex);
+                prelude_thread_mutex_destroy(&(*path)->mutex);
 		free(*path);
-		pthread_mutex_unlock(&cached_path_mutex);
+		prelude_thread_mutex_unlock(&cached_path_mutex);
 		return ret;
 	}
         
-	pthread_mutex_unlock(&cached_path_mutex);
+	prelude_thread_mutex_unlock(&cached_path_mutex);
 
 	idmef_path_ref(*path);
 
@@ -644,10 +644,10 @@ static inline int invalidate(idmef_path_t *path)
 {
         int ret;
                 
-        pthread_mutex_lock(&path->mutex);
+        prelude_thread_mutex_lock(&path->mutex);
         
         if ( path->refcount == 1 ) {
-                pthread_mutex_unlock(&path->mutex);
+                prelude_thread_mutex_unlock(&path->mutex);
                 return 0; /* not cached */
         }
 
@@ -668,24 +668,24 @@ static inline int invalidate(idmef_path_t *path)
          */
 
         if ( path->refcount > 2 ) {
-                pthread_mutex_unlock(&path->mutex);
+                prelude_thread_mutex_unlock(&path->mutex);
                 return -1;
         }
 
         if ( path->refcount == 2 ) {
-                pthread_mutex_lock(&cached_path_mutex);
+                prelude_thread_mutex_lock(&cached_path_mutex);
                 ret = prelude_hash_elem_destroy(cached_path, path->name);
-                pthread_mutex_unlock(&cached_path_mutex);
+                prelude_thread_mutex_unlock(&cached_path_mutex);
                 
                 if ( ret == 0 )
                         path->refcount--;  /* path was present in a hash */
                 else {
-                        pthread_mutex_unlock(&path->mutex);
+                        prelude_thread_mutex_unlock(&path->mutex);
                         return -1; /* path was not present in a hash and refcount != 1 */
                 }
         }
 
-        pthread_mutex_unlock(&path->mutex);
+        prelude_thread_mutex_unlock(&path->mutex);
 
         return 0; /* successfully invalidated */
 }
@@ -874,15 +874,15 @@ int idmef_path_make_parent(idmef_path_t *path)
  */
 void idmef_path_destroy(idmef_path_t *path)
 {        
-        pthread_mutex_lock(&path->mutex);
+        prelude_thread_mutex_lock(&path->mutex);
         
         if ( --path->refcount ) {
-                pthread_mutex_unlock(&path->mutex);
+                prelude_thread_mutex_unlock(&path->mutex);
                 return;
         }
         
-        pthread_mutex_unlock(&path->mutex);
-        pthread_mutex_destroy(&path->mutex);
+        prelude_thread_mutex_unlock(&path->mutex);
+        prelude_thread_mutex_destroy(&path->mutex);
         free(path);
 }
 
@@ -957,7 +957,7 @@ int idmef_path_clone(const idmef_path_t *src, idmef_path_t **dst)
         strncpy((*dst)->name, src->name, sizeof(src->name)); 
         memcpy((*dst)->elem, src->elem, src->depth * sizeof(idmef_path_element_t));
         
-        pthread_mutex_init(&((*dst)->mutex), NULL);
+        prelude_thread_mutex_init(&((*dst)->mutex), NULL);
 
         return 0;
 }
@@ -977,9 +977,9 @@ int idmef_path_clone(const idmef_path_t *src, idmef_path_t **dst)
  */
 idmef_path_t *idmef_path_ref(idmef_path_t *path)
 {        
-        pthread_mutex_lock(&path->mutex);
+        prelude_thread_mutex_lock(&path->mutex);
         path->refcount++;
-        pthread_mutex_unlock(&path->mutex);
+        prelude_thread_mutex_unlock(&path->mutex);
 
         return path;
 }
@@ -1088,7 +1088,7 @@ const char *idmef_path_get_name(const idmef_path_t *path, int depth)
 
 void _idmef_path_cache_lock(void)
 {
-        pthread_mutex_lock(&cached_path_mutex);
+        prelude_thread_mutex_lock(&cached_path_mutex);
 
         if ( cached_path )
                 prelude_hash_iterate(cached_path, path_lock_cb);
@@ -1098,7 +1098,7 @@ void _idmef_path_cache_lock(void)
 
 void _idmef_path_cache_reinit(void)
 {
-        pthread_mutex_init(&cached_path_mutex, NULL);
+        prelude_thread_mutex_init(&cached_path_mutex, NULL);
         
         if ( cached_path )
                 prelude_hash_iterate(cached_path, path_reinit_cb);
@@ -1112,7 +1112,7 @@ void _idmef_path_cache_unlock(void)
         if ( cached_path )
                 prelude_hash_iterate(cached_path, path_unlock_cb);
 
-        pthread_mutex_unlock(&cached_path_mutex);
+        prelude_thread_mutex_unlock(&cached_path_mutex);
 }
 
 

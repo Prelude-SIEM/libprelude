@@ -25,8 +25,8 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <assert.h>
-#include <pthread.h>
 
+#include "prelude-thread.h"
 #include "prelude-log.h"
 #include "prelude-list.h"
 #include "prelude-linked-object.h"
@@ -36,26 +36,22 @@
 #include "prelude-timer.h"
 
 
-static pthread_mutex_t mutex;
 static unsigned int count = 0;
 static PRELUDE_LIST(timer_list);
+static pthread_mutex_t mutex;
 
-
-#ifdef HAVE_PTHREAD_ATFORK
 
 static void child_fork_cb(void)
 {
         prelude_list_init(&timer_list);
-        pthread_mutex_init(&mutex, NULL);
+        prelude_thread_mutex_init(&mutex, NULL);
 }
-
-#endif
 
 
 inline static void timer_lock_list(void) 
 {
         if ( prelude_async_get_flags() & PRELUDE_ASYNC_FLAGS_TIMER )
-                pthread_mutex_lock(&mutex);
+                prelude_thread_mutex_lock(&mutex);
 }
 
 
@@ -63,7 +59,7 @@ inline static void timer_lock_list(void)
 inline static void timer_unlock_list(void) 
 {
         if ( prelude_async_get_flags() & PRELUDE_ASYNC_FLAGS_TIMER )
-                pthread_mutex_unlock(&mutex);
+                prelude_thread_mutex_unlock(&mutex);
 }
 
 
@@ -119,14 +115,14 @@ static prelude_timer_t *get_next_timer(void)
         prelude_list_t *tmp;
         prelude_timer_t *timer = NULL;
         
-        pthread_mutex_lock(&mutex);
+        prelude_thread_mutex_lock(&mutex);
         
         prelude_list_for_each(&timer_list, tmp) {
                 timer = prelude_list_entry(tmp, prelude_timer_t, list);
                 break;
         }
         
-        pthread_mutex_unlock(&mutex);
+        prelude_thread_mutex_unlock(&mutex);
 
         return timer;
 }
@@ -475,16 +471,14 @@ int _prelude_timer_init(void)
 {
         int ret;
 
-        ret = pthread_mutex_init(&mutex, NULL);
+        ret = prelude_thread_mutex_init(&mutex, NULL);
         if ( ret != 0 )
                 return prelude_error_from_errno(ret);
 
-#ifdef HAVE_PTHREAD_ATFORK
-        ret = pthread_atfork(prelude_timer_lock_critical_region,
-                             prelude_timer_unlock_critical_region, child_fork_cb);
+        ret = prelude_thread_atfork(prelude_timer_lock_critical_region,
+                                    prelude_timer_unlock_critical_region, child_fork_cb);
         if ( ret != 0 )
                 return prelude_error_from_errno(ret);
-#endif
         
         return 0;
 }

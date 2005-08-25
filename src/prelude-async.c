@@ -31,7 +31,9 @@
 #include <pthread.h>
 #include <errno.h>
 #include <signal.h>
+#include <assert.h>
 
+#include "prelude-thread.h"
 #include "prelude-list.h"
 #include "prelude-inttypes.h"
 #include "prelude-linked-object.h"
@@ -367,6 +369,8 @@ prelude_async_flags_t prelude_async_get_flags(void)
 int prelude_async_init(void) 
 {
         if ( ! is_initialized ) {
+                assert(_prelude_thread_in_use() == TRUE);
+                
                 is_initialized = TRUE;                
                 return do_init_async();
         }

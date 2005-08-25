@@ -35,7 +35,6 @@
 #include <sys/utsname.h>
 #include <fcntl.h>
 #include <assert.h>
-#include <pthread.h>
 #include <errno.h>
 
 #include <gcrypt.h>
@@ -46,6 +45,7 @@
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_CLIENT
 #include "prelude-error.h"
 
+#include "prelude-thread.h"
 #include "idmef.h"
 #include "common.h"
 #include "prelude-log.h"
@@ -736,12 +736,12 @@ static int connection_pool_event_cb(prelude_connection_pool_t *pool,
         prelude_msgbuf_set_data(msgbuf, conn);
         prelude_msgbuf_set_callback(msgbuf, send_reply);
         
-        pthread_mutex_lock(&client->msgbuf_lock);
+        prelude_thread_mutex_lock(&client->msgbuf_lock);
         
         ret = prelude_option_process_request(client, msg, msgbuf);        
         prelude_msgbuf_mark_end(client->msgbuf);
         
-        pthread_mutex_unlock(&client->msgbuf_lock);
+        prelude_thread_mutex_unlock(&client->msgbuf_lock);
 
         prelude_msgbuf_destroy(msgbuf);
         prelude_msg_destroy(msg);
@@ -990,7 +990,7 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
         if ( ! new )
                 return prelude_error_from_errno(errno);
         
-        pthread_mutex_init(&new->msgbuf_lock, NULL);
+        prelude_thread_mutex_init(&new->msgbuf_lock, NULL);
         prelude_timer_init_list(&new->heartbeat_timer);
 
         new->flags = PRELUDE_CLIENT_FLAGS_HEARTBEAT|PRELUDE_CLIENT_FLAGS_CONNECT;
@@ -1198,13 +1198,13 @@ void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg)
          * we need to hold a lock since asynchronous heartbeat
          * could write the message buffer at the same time we do.
          */
-        pthread_mutex_lock(&client->msgbuf_lock);
+        prelude_thread_mutex_lock(&client->msgbuf_lock);
         
         _idmef_message_assign_messageid(msg, client->unique_ident);
         idmef_message_write(msg, client->msgbuf);
         prelude_msgbuf_mark_end(client->msgbuf);
 
-        pthread_mutex_unlock(&client->msgbuf_lock);
+        prelude_thread_mutex_unlock(&client->msgbuf_lock);
 }
 
 

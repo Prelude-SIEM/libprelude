@@ -40,6 +40,7 @@ libprelude_la_SOURCES = 		\
 	prelude-plugin.c		\
 	prelude-string.c		\
 	prelude-timer.c			\
+	prelude-thread.c		\
 	idmef-additional-data.c		\
 	idmef-class.c			\
 	idmef-criteria.c		\
