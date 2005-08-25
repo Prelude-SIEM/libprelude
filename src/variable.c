@@ -21,11 +21,13 @@
 *
 *****/
 
+#include "config.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "libmissing.h"
 #include "prelude-list.h"
 #include "prelude-error.h"
 #include "variable.h"
