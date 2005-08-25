@@ -1,5 +1,4 @@
-/* Case-insensitive searching in a string.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+/* Copyright (C) 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -13,18 +12,27 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-#ifdef __cplusplus
-extern "C" {
+
+#ifdef HAVE_CONFIG_H
+# include <config.h>
 #endif
 
-/* Find the first occurrence of NEEDLE in HAYSTACK, using case-insensitive
-   comparison.
-   Note: This function may, in multibyte locales, return success even if
-   strlen (haystack) < strlen (needle) !  */
-extern char *strcasestr (const char *haystack, const char *needle);
+#include <limits.h>
 
-#ifdef __cplusplus
-}
-#endif
+#include "mbchar.h"
+
+#if IS_BASIC_ASCII
+
+/* Bit table of characters in the ISO C "basic character set".  */
+unsigned int is_basic_table [UCHAR_MAX / 32 + 1] =
+{
+  0x00001a00,		/* '\t' '\v' '\f' */
+  0xffffffef,		/* ' '...'#' '%'...'?' */
+  0xfffffffe,		/* 'A'...'Z' '[' '\\' ']' '^' '_' */
+  0x7ffffffe		/* 'a'...'z' '{' '|' '}' '~' */
+  /* The remaining bits are 0.  */
+};
+
+#endif /* IS_BASIC_ASCII */
