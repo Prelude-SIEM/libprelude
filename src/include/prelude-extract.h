@@ -29,7 +29,12 @@
 # include "config.h"
 #endif
 
-#include <netinet/in.h>
+#ifndef WIN32
+# include <netinet/in.h>
+#else
+# include <winsock2.h>
+#endif
+
 #include "prelude-inttypes.h"
 
 
