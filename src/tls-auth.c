@@ -26,7 +26,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <netinet/in.h>
 
 #include <gcrypt.h>
 #include <gnutls/gnutls.h>
