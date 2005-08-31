@@ -89,6 +89,7 @@ typedef unsigned int prelude_bool_t;
 %include "prelude-string.h"
 %include "idmef-criteria.h"
 %include "idmef-message-write.h"
+%include "idmef-additional-data.h"
 %include "idmef-value-type.h"
 %include "idmef-class.h"
 %include "prelude-connection.h"
@@ -103,3 +104,4 @@ typedef signed int prelude_error_t;
 const char *prelude_strerror(prelude_error_t err);
 const char *prelude_strsource(prelude_error_t err);
 int prelude_error_code_to_errno(prelude_error_code_t code);
+
