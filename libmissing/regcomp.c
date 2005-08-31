@@ -311,7 +311,8 @@ re_compile_fastmap_iter (regex_t *bufp, const re_dfastate_t *init_state,
 #ifdef RE_ENABLE_I18N
 	  if ((bufp->re_syntax & REG_IGNORE_CASE) && dfa->mb_cur_max > 1)
 	    {
-	      unsigned char *buf = alloca (dfa->mb_cur_max), *p;
+	      unsigned char buf[MB_LEN_MAX];
+	      unsigned char *p;
 	      wchar_t wc;
 	      mbstate_t state;
 
@@ -496,7 +497,8 @@ weak_alias (__regcomp, regcomp)
    from either regcomp or regexec.   We don't use PREG here.  */
 
 size_t
-regerror (int errcode, const regex_t *preg, char *errbuf, size_t errbuf_size)
+regerror (int errcode, const regex_t *__restrict preg,
+	  char *__restrict errbuf, size_t errbuf_size)
 {
   const char *msg;
   size_t msg_size;
@@ -816,7 +818,7 @@ init_dfa (re_dfa_t *dfa, int pat_len)
     if (table_size > pat_len)
       break;
 
-  dfa->state_table = calloc (sizeof (struct re_state_table_entry), table_size);
+  dfa->state_table = re_calloc (struct re_state_table_entry, table_size);
   dfa->state_hash_mask = table_size - 1;
 
   dfa->mb_cur_max = MB_CUR_MAX;
@@ -859,7 +861,7 @@ init_dfa (re_dfa_t *dfa, int pat_len)
 	{
 	  int i, j, ch;
 
-	  dfa->sb_char = (re_bitset_ptr_t) calloc (sizeof (bitset), 1);
+	  dfa->sb_char = re_calloc (unsigned int, BITSET_UINTS);
 	  if (BE (dfa->sb_char == NULL, 0))
 	    return REG_ESPACE;
 
@@ -2962,9 +2964,9 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
 						   _NL_COLLATE_SYMB_EXTRAMB);
     }
 #endif
-  sbcset = (re_bitset_ptr_t) calloc (sizeof (unsigned int), BITSET_UINTS);
+  sbcset = re_calloc (unsigned int, BITSET_UINTS);
 #ifdef RE_ENABLE_I18N
-  mbcset = (re_charset_t *) calloc (sizeof (re_charset_t), 1);
+  mbcset = re_calloc (re_charset_t, 1);
 #endif /* RE_ENABLE_I18N */
 #ifdef RE_ENABLE_I18N
   if (BE (sbcset == NULL || mbcset == NULL, 0))
@@ -3491,9 +3493,9 @@ build_charclass_op (re_dfa_t *dfa, unsigned REG_TRANSLATE_TYPE trans,
   re_token_t br_token;
   bin_tree_t *tree;
 
-  sbcset = (re_bitset_ptr_t) calloc (sizeof (unsigned int), BITSET_UINTS);
+  sbcset = re_calloc (unsigned int, BITSET_UINTS);
 #ifdef RE_ENABLE_I18N
-  mbcset = (re_charset_t *) calloc (sizeof (re_charset_t), 1);
+  mbcset = re_calloc (re_charset_t, 1);
 #endif /* RE_ENABLE_I18N */
 
 #ifdef RE_ENABLE_I18N

@@ -258,7 +258,7 @@ build_wcs_buffer (re_string_t *pstr)
 /* Build wide character buffer PSTR->WCS like build_wcs_buffer,
    but for REG_ICASE.  */
 
-static int
+static reg_errcode_t
 internal_function
 build_wcs_upper_buffer (re_string_t *pstr)
 {
@@ -707,7 +707,7 @@ re_string_reconstruct (re_string_t *pstr, int idx, int eflags)
     {
       if (pstr->icase)
 	{
-	  int ret = build_wcs_upper_buffer (pstr);
+	  reg_errcode_t ret = build_wcs_upper_buffer (pstr);
 	  if (BE (ret != REG_NOERROR, 0))
 	    return ret;
 	}
@@ -731,7 +731,7 @@ re_string_reconstruct (re_string_t *pstr, int idx, int eflags)
 }
 
 static unsigned char
-internal_function
+internal_function __attribute ((pure))
 re_string_peek_byte_case (const re_string_t *pstr, int idx)
 {
   int ch, off;
@@ -767,7 +767,7 @@ re_string_peek_byte_case (const re_string_t *pstr, int idx)
 }
 
 static unsigned char
-internal_function
+internal_function __attribute ((pure))
 re_string_fetch_byte_case (re_string_t *pstr)
 {
   if (BE (!pstr->mbs_allocated, 1))
@@ -1253,7 +1253,7 @@ re_node_set_insert_last (re_node_set *set, int elem)
    return 1 if SET1 and SET2 are equivalent, return 0 otherwise.  */
 
 static int
-internal_function
+internal_function __attribute ((pure))
 re_node_set_compare (const re_node_set *set1, const re_node_set *set2)
 {
   int i;
@@ -1268,7 +1268,7 @@ re_node_set_compare (const re_node_set *set1, const re_node_set *set2)
 /* Return (idx + 1) if SET contains the element ELEM, return 0 otherwise.  */
 
 static int
-internal_function
+internal_function __attribute ((pure))
 re_node_set_contains (const re_node_set *set, int elem)
 {
   unsigned int idx, right, mid;
@@ -1504,7 +1504,7 @@ create_ci_newstate (re_dfa_t *dfa, const re_node_set *nodes, unsigned int hash)
   reg_errcode_t err;
   re_dfastate_t *newstate;
 
-  newstate = (re_dfastate_t *) calloc (sizeof (re_dfastate_t), 1);
+  newstate = re_calloc (re_dfastate_t, 1);
   if (BE (newstate == NULL, 0))
     return NULL;
   err = re_node_set_init_copy (&newstate->nodes, nodes);
@@ -1554,7 +1554,7 @@ create_cd_newstate (re_dfa_t *dfa, const re_node_set *nodes,
   reg_errcode_t err;
   re_dfastate_t *newstate;
 
-  newstate = (re_dfastate_t *) calloc (sizeof (re_dfastate_t), 1);
+  newstate = re_calloc (re_dfastate_t, 1);
   if (BE (newstate == NULL, 0))
     return NULL;
   err = re_node_set_init_copy (&newstate->nodes, nodes);
