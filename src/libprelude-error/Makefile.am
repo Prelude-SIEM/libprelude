@@ -47,7 +47,7 @@ mkerrcodes: mkerrcodes.c mkerrcodes.h Makefile
 	$(CC) -I. -I$(srcdir) -o $@ $(srcdir)/mkerrcodes.c
 
 code-from-errno.h: mkerrcodes Makefile
-	./mkerrcodes | LANG="" $(AWK) -f $(srcdir)/mkerrcodes2.awk >$@
+	LANG="" ./mkerrcodes | $(AWK) -f $(srcdir)/mkerrcodes2.awk >$@
 
 errnos-sym.h: Makefile mkstrtable.awk errnos.in
 	LANG="" $(AWK) -f $(srcdir)/mkstrtable.awk -v textidx=2 -v nogettext=1 \
