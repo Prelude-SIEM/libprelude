@@ -38,7 +38,7 @@ code-to-errno.h: Makefile mkerrnos.awk errnos.in
 
 mkerrcodes.h: Makefile mkerrcodes.awk
 	LANG="" $(AWK) -f $(srcdir)/mkerrcodes1.awk $(srcdir)/errnos.in >_$@
-	$(CPP) _$@ | grep PRELUDE_ERROR_ | $(AWK) -f $(srcdir)/mkerrcodes.awk >$@
+	$(CPP) _$@ | grep PRELUDE_ERROR_ | LANG="" $(AWK) -f $(srcdir)/mkerrcodes.awk >$@
 	-rm _$@
 
 # It is correct to use $(CC_FOR_BUILD) here.  We want to run the
@@ -47,7 +47,7 @@ mkerrcodes: mkerrcodes.c mkerrcodes.h Makefile
 	$(CC) -I. -I$(srcdir) -o $@ $(srcdir)/mkerrcodes.c
 
 code-from-errno.h: mkerrcodes Makefile
-	LANG="" ./mkerrcodes | $(AWK) -f $(srcdir)/mkerrcodes2.awk >$@
+	./mkerrcodes | LANG="" $(AWK) -f $(srcdir)/mkerrcodes2.awk >$@
 
 errnos-sym.h: Makefile mkstrtable.awk errnos.in
 	LANG="" $(AWK) -f $(srcdir)/mkstrtable.awk -v textidx=2 -v nogettext=1 \
