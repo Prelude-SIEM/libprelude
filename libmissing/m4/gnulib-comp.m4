@@ -34,6 +34,7 @@ AC_SUBST([LTALLOCA])
   dnl gl_USE_SYSTEM_EXTENSIONS must be added quite early to configure.ac.
   gl_FUNC_FTW
   gl_GETADDRINFO
+  dnl you must add AM_GNU_GETTEXT([external]) or similar to configure.ac.
   gl_INET_NTOP
   AC_FUNC_MALLOC
   gl_MBCHAR
@@ -64,6 +65,7 @@ AC_SUBST([LTALLOCA])
 # This macro records the list of files which have been installed by
 # gnulib-tool and may be removed by future gnulib-tool invocations.
 AC_DEFUN([gl_FILE_LIST], [
+  build-aux/config.rpath
   lib/alloca.c
   lib/alloca_.h
   lib/asnprintf.c
@@ -129,9 +131,22 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/extensions.m4
   m4/ftw.m4
   m4/getaddrinfo.m4
+  m4/gettext.m4
+  m4/glibc21.m4
+  m4/glibc2.m4
+  m4/iconv.m4
   m4/inet_ntop.m4
+  m4/intdiv0.m4
+  m4/intmax.m4
   m4/intmax_t.m4
   m4/inttypes_h.m4
+  m4/inttypes.m4
+  m4/inttypes-pri.m4
+  m4/isc-posix.m4
+  m4/lcmessage.m4
+  m4/lib-ld.m4
+  m4/lib-link.m4
+  m4/lib-prefix.m4
   m4/longdouble.m4
   m4/longlong.m4
   m4/mbchar.m4
@@ -140,8 +155,12 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/memchr.m4
   m4/minmax.m4
   m4/mktime.m4
+  m4/nls.m4
   m4/onceonly_2_57.m4
   m4/pathmax.m4
+  m4/po.m4
+  m4/printf-posix.m4
+  m4/progtest.m4
   m4/regex.m4
   m4/restrict.m4
   m4/signed.m4
@@ -159,6 +178,8 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/strsep.m4
   m4/timegm.m4
   m4/time_r.m4
+  m4/uintmax_t.m4
+  m4/ulonglong.m4
   m4/vasnprintf.m4
   m4/vsnprintf.m4
   m4/wchar_t.m4

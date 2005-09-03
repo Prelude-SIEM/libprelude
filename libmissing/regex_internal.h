@@ -22,6 +22,7 @@
 
 #include <assert.h>
 #include <ctype.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -90,8 +91,6 @@
 # define inline
 #endif
 
-/* Number of bits in a byte.  */
-#define BYTE_BITS 8
 /* Number of single byte character.  */
 #define SBC_MAX 256
 
@@ -123,17 +122,42 @@
 extern const char __re_error_msgid[] attribute_hidden;
 extern const size_t __re_error_msgid_idx[] attribute_hidden;
 
+typedef __re_idx_t Idx;
+
+/* Special return value for failure to match.  */
+#define REG_MISSING ((Idx) -1)
+
+/* Special return value for internal error.  */
+#define REG_ERROR ((Idx) -2)
+
+/* Test whether N is a valid index, and is not one of the above.  */
+#ifdef _REGEX_LARGE_OFFSETS
+# define REG_VALID_INDEX(n) ((Idx) (n) < REG_ERROR)
+#else
+# define REG_VALID_INDEX(n) (0 <= (n))
+#endif
+
+/* Test whether N is a valid nonzero index.  */
+#ifdef _REGEX_LARGE_OFFSETS
+# define REG_VALID_NONZERO_INDEX(n) ((Idx) ((n) - 1) < (Idx) (REG_ERROR - 1))
+#else
+# define REG_VALID_NONZERO_INDEX(n) (0 < (n))
+#endif
+
+/* A hash value, suitable for computing hash tables.  */
+typedef __re_size_t re_hashval_t;
+
 /* Number of bits in an unsinged int.  */
-#define UINT_BITS (sizeof (unsigned int) * BYTE_BITS)
+#define UINT_BITS (sizeof (unsigned int) * CHAR_BIT)
 /* Number of unsigned int in an bit_set.  */
 #define BITSET_UINTS ((SBC_MAX + UINT_BITS - 1) / UINT_BITS)
 typedef unsigned int bitset[BITSET_UINTS];
 typedef unsigned int *re_bitset_ptr_t;
 typedef const unsigned int *re_const_bitset_ptr_t;
 
-#define bitset_set(set,i) (set[i / UINT_BITS] |= 1 << i % UINT_BITS)
-#define bitset_clear(set,i) (set[i / UINT_BITS] &= ~(1 << i % UINT_BITS))
-#define bitset_contain(set,i) (set[i / UINT_BITS] & (1 << i % UINT_BITS))
+#define bitset_set(set,i) (set[i / UINT_BITS] |= 1u << i % UINT_BITS)
+#define bitset_clear(set,i) (set[i / UINT_BITS] &= ~(1u << i % UINT_BITS))
+#define bitset_contain(set,i) (set[i / UINT_BITS] & (1u << i % UINT_BITS))
 #define bitset_empty(set) memset (set, 0, sizeof (unsigned int) * BITSET_UINTS)
 #define bitset_set_all(set) \
   memset (set, 255, sizeof (unsigned int) * BITSET_UINTS)
@@ -167,9 +191,9 @@ typedef enum
 
 typedef struct
 {
-  int alloc;
-  int nelem;
-  int *elems;
+  Idx alloc;
+  Idx nelem;
+  Idx *elems;
 } re_node_set;
 
 typedef enum
@@ -255,19 +279,19 @@ typedef struct
   unsigned int non_match : 1;
 
   /* # of multibyte characters.  */
-  int nmbchars;
+  Idx nmbchars;
 
   /* # of collating symbols.  */
-  int ncoll_syms;
+  Idx ncoll_syms;
 
   /* # of equivalence classes. */
-  int nequiv_classes;
+  Idx nequiv_classes;
 
   /* # of range expressions. */
-  int nranges;
+  Idx nranges;
 
   /* # of character classes. */
-  int nchar_classes;
+  Idx nchar_classes;
 } re_charset_t;
 #endif /* RE_ENABLE_I18N */
 
@@ -280,7 +304,7 @@ typedef struct
 #ifdef RE_ENABLE_I18N
     re_charset_t *mbcset;	/* for COMPLEX_BRACKET */
 #endif /* RE_ENABLE_I18N */
-    int idx;			/* for BACK_REF */
+    Idx idx;			/* for BACK_REF */
     re_context_type ctx_type;	/* for ANCHOR */
   } opr;
 #if __GNUC__ >= 2
@@ -314,30 +338,30 @@ struct re_string_t
 #ifdef RE_ENABLE_I18N
   /* Store the wide character string which is corresponding to MBS.  */
   wint_t *wcs;
-  int *offsets;
+  Idx *offsets;
   mbstate_t cur_state;
 #endif
   /* Index in RAW_MBS.  Each character mbs[i] corresponds to
      raw_mbs[raw_mbs_idx + i].  */
-  int raw_mbs_idx;
+  Idx raw_mbs_idx;
   /* The length of the valid characters in the buffers.  */
-  int valid_len;
+  Idx valid_len;
   /* The corresponding number of bytes in raw_mbs array.  */
-  int valid_raw_len;
+  Idx valid_raw_len;
   /* The length of the buffers MBS and WCS.  */
-  int bufs_len;
+  Idx bufs_len;
   /* The index in MBS, which is updated by re_string_fetch_byte.  */
-  int cur_idx;
+  Idx cur_idx;
   /* length of RAW_MBS array.  */
-  int raw_len;
+  Idx raw_len;
   /* This is RAW_LEN - RAW_MBS_IDX + VALID_LEN - VALID_RAW_LEN.  */
-  int len;
+  Idx len;
   /* End of the buffer may be shorter than its length in the cases such
      as re_match_2, re_search_2.  Then, we use STOP for end of the buffer
      instead of LEN.  */
-  int raw_stop;
+  Idx raw_stop;
   /* This is RAW_STOP - RAW_MBS_IDX adjusted through OFFSETS.  */
-  int stop;
+  Idx stop;
 
   /* The context of mbs[0].  We store the context independently, since
      the context of mbs[0] may be different from raw_mbs[0], which is
@@ -347,7 +371,7 @@ struct re_string_t
   unsigned REG_TRANSLATE_TYPE trans;
   /* Copy of re_dfa_t's word_char.  */
   re_const_bitset_ptr_t word_char;
-  /* 1 if REG_ICASE.  */
+  /* true if REG_ICASE.  */
   unsigned char icase;
   unsigned char is_utf8;
   unsigned char map_notascii;
@@ -372,7 +396,7 @@ typedef struct re_dfa_t re_dfa_t;
 #endif
 
 static reg_errcode_t re_string_realloc_buffers (re_string_t *pstr,
-						int new_buf_len)
+						Idx new_buf_len)
      internal_function;
 #ifdef RE_ENABLE_I18N
 static void build_wcs_buffer (re_string_t *pstr) internal_function;
@@ -381,8 +405,8 @@ static reg_errcode_t build_wcs_upper_buffer (re_string_t *pstr)
 #endif /* RE_ENABLE_I18N */
 static void build_upper_buffer (re_string_t *pstr) internal_function;
 static void re_string_translate_buffer (re_string_t *pstr) internal_function;
-static unsigned int re_string_context_at (const re_string_t *input, int idx,
-					  int eflags)
+static unsigned int re_string_context_at (const re_string_t *input,
+					  Idx idx, int eflags)
      internal_function __attribute ((pure));
 
 #define re_string_peek_byte(pstr, offset) \
@@ -418,9 +442,69 @@ static unsigned int re_string_context_at (const re_string_t *input, int idx,
 #endif
 
 #define re_malloc(t,n) ((t *) malloc ((n) * sizeof (t)))
+#define re_xmalloc(t,n) ((t *) re_xnmalloc (n, sizeof (t)))
 #define re_calloc(t,n) ((t *) calloc (n, sizeof (t)))
 #define re_realloc(p,t,n) ((t *) realloc (p, (n) * sizeof (t)))
+#define re_xrealloc(p,t,n) ((t *) re_xnrealloc (p, n, sizeof (t)))
+#define re_x2realloc(p,t,pn) ((t *) re_x2nrealloc (p, pn, sizeof (t)))
 #define re_free(p) free (p)
+
+#ifndef SIZE_MAX
+# define SIZE_MAX ((size_t) -1)
+#endif
+
+/* Return true if an array of N objects, each of size S, cannot exist
+   due to size arithmetic overflow.  S must be nonzero.  */
+static inline bool
+re_alloc_oversized (size_t n, size_t s)
+{
+  return BE (SIZE_MAX / s < n, 0);
+}
+
+/* Return true if an array of (2 * N + 1) objects, each of size S,
+   cannot exist due to size arithmetic overflow.  S must be nonzero.  */
+static inline bool
+re_x2alloc_oversized (size_t n, size_t s)
+{
+  return BE ((SIZE_MAX / s - 1) / 2 < n, 0);
+}
+
+/* Allocate an array of N objects, each with S bytes of memory,
+   dynamically, with error checking.  S must be nonzero.  */
+static inline void *
+re_xnmalloc (size_t n, size_t s)
+{
+  return re_alloc_oversized (n, s) ? NULL : malloc (n * s);
+}
+
+/* Change the size of an allocated block of memory P to an array of N
+   objects each of S bytes, with error checking.  S must be nonzero.  */
+static inline void *
+re_xnrealloc (void *p, size_t n, size_t s)
+{
+  return re_alloc_oversized (n, s) ? NULL : realloc (p, n * s);
+}
+
+/* Reallocate a block of memory P to an array of (2 * (*PN) + 1)
+   objects each of S bytes, with error checking.  S must be nonzero.
+   If the allocation is successful, set *PN to the new allocation
+   count and return the resulting pointer.  Otherwise, return
+   NULL.  */
+static inline void *
+re_x2nrealloc (void *p, size_t *pn, size_t s)
+{
+  if (re_x2alloc_oversized (*pn, s))
+    return NULL;
+  else
+    {
+      /* Add 1 in case *PN is zero.  */
+      size_t n1 = 2 * *pn + 1;
+      p = realloc (p, n1 * s);
+      if (BE (p != NULL, 1))
+	*pn = n1;
+      return p;
+    }
+}
 
 struct bin_tree_t
 {
@@ -434,7 +518,7 @@ struct bin_tree_t
 
   /* `node_idx' is the index in dfa->nodes, if `type' == 0.
      Otherwise `type' indicate the type of this node.  */
-  int node_idx;
+  Idx node_idx;
 };
 typedef struct bin_tree_t bin_tree_t;
 
@@ -478,7 +562,7 @@ typedef struct bin_tree_storage_t bin_tree_storage_t;
 
 struct re_dfastate_t
 {
-  unsigned int hash;
+  re_hashval_t hash;
   re_node_set nodes;
   re_node_set non_eps_nodes;
   re_node_set inveclosure;
@@ -498,8 +582,8 @@ typedef struct re_dfastate_t re_dfastate_t;
 
 struct re_state_table_entry
 {
-  int num;
-  int alloc;
+  Idx num;
+  Idx alloc;
   re_dfastate_t **array;
 };
 
@@ -507,8 +591,8 @@ struct re_state_table_entry
 
 typedef struct
 {
-  int next_idx;
-  int alloc;
+  Idx next_idx;
+  Idx alloc;
   re_dfastate_t **array;
 } state_array_t;
 
@@ -516,8 +600,8 @@ typedef struct
 
 typedef struct
 {
-  int node;
-  int str_idx; /* The position NODE match at.  */
+  Idx node;
+  Idx str_idx; /* The position NODE match at.  */
   state_array_t path;
 } re_sub_match_last_t;
 
@@ -527,21 +611,20 @@ typedef struct
 
 typedef struct
 {
-  int str_idx;
-  int node;
-  int next_last_offset;
+  Idx str_idx;
+  Idx node;
   state_array_t *path;
-  int alasts; /* Allocation size of LASTS.  */
-  int nlasts; /* The number of LASTS.  */
+  Idx alasts; /* Allocation size of LASTS.  */
+  Idx nlasts; /* The number of LASTS.  */
   re_sub_match_last_t **lasts;
 } re_sub_match_top_t;
 
 struct re_backref_cache_entry
 {
-  int node;
-  int str_idx;
-  int subexp_from;
-  int subexp_to;
+  Idx node;
+  Idx str_idx;
+  Idx subexp_from;
+  Idx subexp_to;
   char more;
   char unused;
   unsigned short int eps_reachable_subexps_map;
@@ -559,18 +642,18 @@ typedef struct
   /* EFLAGS of the argument of regexec.  */
   int eflags;
   /* Where the matching ends.  */
-  int match_last;
-  int last_node;
+  Idx match_last;
+  Idx last_node;
   /* The state log used by the matcher.  */
   re_dfastate_t **state_log;
-  int state_log_top;
+  Idx state_log_top;
   /* Back reference cache.  */
-  int nbkref_ents;
-  int abkref_ents;
+  Idx nbkref_ents;
+  Idx abkref_ents;
   struct re_backref_cache_entry *bkref_ents;
   int max_mb_elem_len;
-  int nsub_tops;
-  int asub_tops;
+  Idx nsub_tops;
+  Idx asub_tops;
   re_sub_match_top_t **sub_tops;
 } re_match_context_t;
 
@@ -578,33 +661,33 @@ typedef struct
 {
   re_dfastate_t **sifted_states;
   re_dfastate_t **limited_states;
-  int last_node;
-  int last_str_idx;
+  Idx last_node;
+  Idx last_str_idx;
   re_node_set limits;
 } re_sift_context_t;
 
 struct re_fail_stack_ent_t
 {
-  int idx;
-  int node;
+  Idx idx;
+  Idx node;
   regmatch_t *regs;
   re_node_set eps_via_nodes;
 };
 
 struct re_fail_stack_t
 {
-  int num;
-  int alloc;
+  Idx num;
+  Idx alloc;
   struct re_fail_stack_ent_t *stack;
 };
 
 struct re_dfa_t
 {
   re_token_t *nodes;
-  int nodes_alloc;
-  int nodes_len;
-  int *nexts;
-  int *org_indices;
+  Idx nodes_alloc;
+  Idx nodes_len;
+  Idx *nexts;
+  Idx *org_indices;
   re_node_set *edests;
   re_node_set *eclosures;
   re_node_set *inveclosures;
@@ -619,10 +702,9 @@ struct re_dfa_t
   int str_tree_storage_idx;
 
   /* number of subexpressions `re_nsub' is in regex_t.  */
-  unsigned int state_hash_mask;
-  int states_alloc;
-  int init_node;
-  int nbackref; /* The number of backreference in this dfa.  */
+  re_hashval_t state_hash_mask;
+  Idx init_node;
+  Idx nbackref; /* The number of backreference in this dfa.  */
 
   /* Bitmap expressing which backreference is used.  */
   unsigned int used_bkref_map;
@@ -639,7 +721,7 @@ struct re_dfa_t
   int mb_cur_max;
   bitset word_char;
   reg_syntax_t syntax;
-  int *subexp_map;
+  Idx *subexp_map;
 #ifdef DEBUG
   char* re_str;
 #endif
@@ -713,7 +795,7 @@ bitset_mask (bitset dest, const bitset src)
 /* Inline functions for re_string.  */
 static inline int
 internal_function __attribute ((pure))
-re_string_char_size_at (const re_string_t *pstr, int idx)
+re_string_char_size_at (const re_string_t *pstr, Idx idx)
 {
   int byte_idx;
   if (pstr->mb_cur_max == 1)
@@ -726,7 +808,7 @@ re_string_char_size_at (const re_string_t *pstr, int idx)
 
 static inline wint_t
 internal_function __attribute ((pure))
-re_string_wchar_at (const re_string_t *pstr, int idx)
+re_string_wchar_at (const re_string_t *pstr, Idx idx)
 {
   if (pstr->mb_cur_max == 1)
     return (wint_t) pstr->mbs[idx];
@@ -735,7 +817,7 @@ re_string_wchar_at (const re_string_t *pstr, int idx)
 
 static int
 internal_function __attribute ((pure))
-re_string_elem_size_at (const re_string_t *pstr, int idx)
+re_string_elem_size_at (const re_string_t *pstr, Idx idx)
 {
 #ifdef _LIBC
   const unsigned char *p, *extra;

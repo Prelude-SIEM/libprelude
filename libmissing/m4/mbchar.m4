@@ -9,6 +9,13 @@ dnl From Bruno Haible.
 
 AC_DEFUN([gl_MBCHAR],
 [
+  AC_LIBSOURCES([mbchar.c, mbchar.h])
+  AC_CHECK_HEADERS_ONCE(wchar.h wctype.h)
+
+  if test x$ac_cv_header_wchar_h = xyes && test x$ac_cv_header_wctype_h = xyes; then
+  	AC_LIBOBJ(mbchar)
+  fi
+
   AC_REQUIRE([AC_GNU_SOURCE])
   :
 ])

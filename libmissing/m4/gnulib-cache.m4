@@ -14,10 +14,10 @@
 
 
 # Specification in the form of a command-line invocation:
-#   gnulib-tool --import --dir=. --lib=libmissing --source-base=libmissing --m4-base=libmissing/m4 --aux-dir=. --libtool -macro-prefix=gl ftw getaddrinfo inet_ntop pathmax regex snprintf strcase strcasestr strdup strndup strsep timegm vsnprintf
+#   gnulib-tool --import --dir=. --lib=libmissing --source-base=libmissing --m4-base=libmissing/m4 --aux-dir=. --libtool --macro-prefix=gl ftw getaddrinfo gettext inet_ntop pathmax regex snprintf strcase strcasestr strdup strndup strsep timegm vsnprintf
 
 # Specification in the form of a few gnulib-tool.m4 macro invocations:
-gl_MODULES([ftw getaddrinfo inet_ntop pathmax regex snprintf strcase strcasestr strdup strndup strsep timegm vsnprintf])
+gl_MODULES([ftw getaddrinfo gettext inet_ntop pathmax regex snprintf strcase strcasestr strdup strndup strsep timegm vsnprintf])
 gl_AVOID([])
 gl_SOURCE_BASE([libmissing])
 gl_M4_BASE([libmissing/m4])
