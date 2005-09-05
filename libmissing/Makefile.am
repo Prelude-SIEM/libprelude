@@ -80,6 +80,12 @@ libmissing_la_SOURCES += minmax.h
 
 ## end   gnulib module minmax
 
+## begin gnulib module size_max
+
+libmissing_la_SOURCES += size_max.h
+
+## end   gnulib module size_max
+
 ## begin gnulib module snprintf
 
 libmissing_la_SOURCES += snprintf.h
