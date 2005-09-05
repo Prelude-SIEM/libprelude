@@ -1,0 +1,16 @@
+This directory and its children contain LibPrelude, a library for using
+the Prelude framework.
+
+Changes: if you wish to contribute a change which is a significant one
+in terms of the amount of code changes, please be aware that PreludeIDS 
+Technologies SARL wishes to retain copyright of the Prelude library. Therefore 
+you will have to sign over copyright ownership of your code to PreludeIDS 
+Technologies SARL before we can include your changes in the main source tree.
+
+Before you start modifying anything for real, you should probably join
+the prelude-devel mailing list and send a mail describing what you want to 
+do and how you want to do it so you don't waste time working on something we 
+can't integrate. This also allows us to keep track of what's being worked on 
+so efforts aren't duplicated.
+
+Please also read the information in the file LICENSE.README.
