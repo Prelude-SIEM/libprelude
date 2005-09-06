@@ -308,7 +308,7 @@ static void broadcast_message(prelude_msg_t *msg, cnx_t *cnx)
                         notify_dead(cnx, ret, FALSE);
         }
 
-        if ( ret < 0 )
+        if ( ret < 0 && cnx->failover )
                 prelude_failover_save_msg(cnx->failover, msg);
         
         broadcast_message(msg, cnx->and);
@@ -387,7 +387,8 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
                         ret = do_send(cnx->cnx, msg);
                         if ( ret < 0 ) {
                                 notify_dead(cnx, ret, FALSE);
-                                prelude_failover_save_msg(cnx->failover, msg);
+                                if ( cnx->failover )
+                                        prelude_failover_save_msg(cnx->failover, msg);
                         }
                 }
 
