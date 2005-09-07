@@ -130,6 +130,33 @@ c_type idmef_additional_data_get_ ## name(idmef_additional_data_t *ptr)			\
 }
 
 
+
+/*
+ * Backward compatibility stuff, remove once 0.9.0 is released.
+ */
+int idmef_additional_data_new_ptr_ref_fast(idmef_additional_data_t **nd,
+                                           idmef_additional_data_type_t type,
+                                           const void *ptr, size_t len);
+
+int idmef_additional_data_new_ptr_dup_fast(idmef_additional_data_t **nd,
+                                           idmef_additional_data_type_t type,
+                                           const void *ptr, size_t len);
+
+int idmef_additional_data_new_ptr_nodup_fast(idmef_additional_data_t **nd,
+                                             idmef_additional_data_type_t type,
+                                             void *ptr, size_t len);
+
+int idmef_additional_data_set_ptr_ref_fast(idmef_additional_data_t *data,
+                                           idmef_additional_data_type_t type, const void *ptr, size_t len);
+
+int idmef_additional_data_set_ptr_dup_fast(idmef_additional_data_t *data,
+                                           idmef_additional_data_type_t type, const void *ptr, size_t len);
+
+int idmef_additional_data_set_ptr_nodup_fast(idmef_additional_data_t *data,
+                                             idmef_additional_data_type_t type, void *ptr, size_t len);
+
+
+
 static const struct {
 	idmef_additional_data_type_t ad_type;
 	idmef_data_type_t d_type;
@@ -180,9 +207,9 @@ static idmef_data_type_t idmef_additional_data_type_to_data_type(idmef_additiona
 
 
 
-static int idmef_additional_data_new_ptr_ref_fast(idmef_additional_data_t **nd,
-                                                  idmef_additional_data_type_t type,
-                                                  const void *ptr, size_t len) 
+int idmef_additional_data_new_ptr_ref_fast(idmef_additional_data_t **nd,
+                                           idmef_additional_data_type_t type,
+                                           const void *ptr, size_t len) 
 {
         int ret;
         idmef_data_type_t dtype;
@@ -209,9 +236,9 @@ static int idmef_additional_data_new_ptr_ref_fast(idmef_additional_data_t **nd,
 
 
 
-static int idmef_additional_data_new_ptr_dup_fast(idmef_additional_data_t **nd,
-                                                  idmef_additional_data_type_t type,
-                                                  const void *ptr, size_t len) 
+int idmef_additional_data_new_ptr_dup_fast(idmef_additional_data_t **nd,
+                                           idmef_additional_data_type_t type,
+                                           const void *ptr, size_t len) 
 {
         int ret;
         idmef_data_type_t dtype;
@@ -238,9 +265,9 @@ static int idmef_additional_data_new_ptr_dup_fast(idmef_additional_data_t **nd,
 
 
 
-static int idmef_additional_data_new_ptr_nodup_fast(idmef_additional_data_t **nd,
-                                                    idmef_additional_data_type_t type,
-                                                    void *ptr, size_t len) 
+int idmef_additional_data_new_ptr_nodup_fast(idmef_additional_data_t **nd,
+                                             idmef_additional_data_type_t type,
+                                             void *ptr, size_t len) 
 {
         int ret;
         idmef_data_type_t dtype;
@@ -267,8 +294,8 @@ static int idmef_additional_data_new_ptr_nodup_fast(idmef_additional_data_t **nd
 
 
 
-static int idmef_additional_data_set_ptr_ref_fast(idmef_additional_data_t *data,
-                                                  idmef_additional_data_type_t type, const void *ptr, size_t len)
+int idmef_additional_data_set_ptr_ref_fast(idmef_additional_data_t *data,
+                                           idmef_additional_data_type_t type, const void *ptr, size_t len)
 {
         int ret;
 
@@ -284,8 +311,8 @@ static int idmef_additional_data_set_ptr_ref_fast(idmef_additional_data_t *data,
 
 
 
-static int idmef_additional_data_set_ptr_dup_fast(idmef_additional_data_t *data,
-                                                  idmef_additional_data_type_t type, const void *ptr, size_t len)
+int idmef_additional_data_set_ptr_dup_fast(idmef_additional_data_t *data,
+                                           idmef_additional_data_type_t type, const void *ptr, size_t len)
 {
         int ret;
 
@@ -301,8 +328,8 @@ static int idmef_additional_data_set_ptr_dup_fast(idmef_additional_data_t *data,
 
 
 
-static int idmef_additional_data_set_ptr_nodup_fast(idmef_additional_data_t *data,
-                                                    idmef_additional_data_type_t type, void *ptr, size_t len)
+int idmef_additional_data_set_ptr_nodup_fast(idmef_additional_data_t *data,
+                                             idmef_additional_data_type_t type, void *ptr, size_t len)
 {
         int ret;
 
