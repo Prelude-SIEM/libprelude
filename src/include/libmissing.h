@@ -36,7 +36,16 @@
 #include "gettext.h"
 #include "inet_ntop.h"
 #include "minmax.h"
-#include "pathmax.h"
+
+/*
+ * Workaround til GnuLib pathxmax.h get LGPL'd.
+ * #include "pathmax.h"
+ */
+
+#ifndef PATH_MAX
+# define PATH_MAX 512
+#endif
+
 #include "regex.h"
 #include "snprintf.h"
 #include "strcase.h"
