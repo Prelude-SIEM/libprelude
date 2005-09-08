@@ -107,7 +107,10 @@ int idmef_data_set_char_string_ref(idmef_data_t *data, const char *ptr);
 int idmef_data_set_char_string_dup(idmef_data_t *data, const char *ptr);
 int idmef_data_set_char_string_nodup(idmef_data_t *data, char *ptr);
 
+#define idmef_data_set_char_string_constant(string, str)		\
+	idmef_data_set_char_string_ref_fast((string), (str), sizeof((str)) - 1)
 
+         
 /*
  * Byte functions
  */
