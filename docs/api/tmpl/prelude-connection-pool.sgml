@@ -205,6 +205,15 @@ idmef_message_read()
 @flags: 
 
 
+<!-- ##### FUNCTION prelude_connection_pool_set_required_permission ##### -->
+<para>
+
+</para>
+
+@pool: 
+@req_perm: 
+
+
 <!-- ##### FUNCTION prelude_connection_pool_set_data ##### -->
 <para>
 

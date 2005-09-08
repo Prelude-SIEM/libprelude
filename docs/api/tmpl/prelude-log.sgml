@@ -17,6 +17,24 @@ prelude-log
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### ENUM prelude_log_t ##### -->
+<para>
+
+</para>
+
+@PRELUDE_LOG_ERR: 
+@PRELUDE_LOG_WARN: 
+@PRELUDE_LOG_INFO: 
+@PRELUDE_LOG_DEBUG: 
+
+<!-- ##### ENUM prelude_log_flags_t ##### -->
+<para>
+
+</para>
+
+@PRELUDE_LOG_FLAGS_QUIET: 
+@PRELUDE_LOG_FLAGS_SYSLOG: 
+
 <!-- ##### FUNCTION prelude_log ##### -->
 <para>
 
@@ -41,23 +59,29 @@ prelude-log
 @...: 
 
 
-<!-- ##### ENUM prelude_log_t ##### -->
+<!-- ##### MACRO prelude_log_v ##### -->
 <para>
 
 </para>
 
-@PRELUDE_LOG_ERR: 
-@PRELUDE_LOG_WARN: 
-@PRELUDE_LOG_INFO: 
-@PRELUDE_LOG_DEBUG: 
+@level: 
+@fmt: 
+@ap: 
+<!-- # Unused Parameters # -->
+@file: 
+@function: 
+@line: 
 
-<!-- ##### ENUM prelude_log_flags_t ##### -->
+
+<!-- ##### MACRO prelude_log_debug_v ##### -->
 <para>
 
 </para>
 
-@PRELUDE_LOG_FLAGS_QUIET: 
-@PRELUDE_LOG_FLAGS_SYSLOG: 
+@level: 
+@fmt: 
+@ap: 
+
 
 <!-- ##### FUNCTION prelude_log_set_level ##### -->
 <para>
@@ -114,17 +138,12 @@ prelude-log
 
 
 
-<!-- ##### MACRO prelude_log_v ##### -->
+<!-- ##### FUNCTION prelude_log_set_logfile ##### -->
 <para>
 
 </para>
 
-@level: 
-@fmt: 
-@ap: 
-<!-- # Unused Parameters # -->
-@file: 
-@function: 
-@line: 
+@filename: 
+@Returns: 
 
 

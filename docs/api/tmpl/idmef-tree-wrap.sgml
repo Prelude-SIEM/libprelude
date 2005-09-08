@@ -3925,6 +3925,34 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_file_get_file_type ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_set_file_type ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@file_type: 
+
+
+<!-- ##### FUNCTION idmef_file_new_file_type ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@ret: 
+@Returns: 
+
+
 <!-- ##### ENUM idmef_linkage_category_t ##### -->
 <para>
 

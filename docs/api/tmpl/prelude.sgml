@@ -66,3 +66,12 @@ if ( ret &lt; 0 ) {
 @rq_version: 
 
 
+<!-- ##### FUNCTION prelude_thread_init ##### -->
+<para>
+
+</para>
+
+@future_use: 
+@Returns: 
+
+

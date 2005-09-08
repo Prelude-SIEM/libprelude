@@ -159,11 +159,13 @@ idmef-data
 
 </para>
 
-@nd: 
-@type: 
 @data: 
+@type: 
+@ptr: 
 @len: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@nd: 
 
 
 <!-- ##### FUNCTION idmef_data_new_ptr_dup_fast ##### -->
@@ -171,11 +173,13 @@ idmef-data
 
 </para>
 
-@nd: 
-@type: 
 @data: 
+@type: 
+@ptr: 
 @len: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@nd: 
 
 
 <!-- ##### FUNCTION idmef_data_new_ptr_nodup_fast ##### -->
@@ -183,11 +187,13 @@ idmef-data
 
 </para>
 
-@nd: 
-@type: 
 @data: 
+@type: 
+@ptr: 
 @len: 
 @Returns: 
+<!-- # Unused Parameters # -->
+@nd: 
 
 
 <!-- ##### FUNCTION idmef_data_set_ptr_ref_fast ##### -->
@@ -248,93 +254,118 @@ idmef-data
 @Returns: 
 
 
-<!-- ##### MACRO idmef_data_new_char_string_ref_fast ##### -->
+<!-- ##### FUNCTION idmef_data_new_char_string_ref_fast ##### -->
 <para>
 
 </para>
 
 @data: 
+@ptr: 
 @len: 
+@Returns: 
 
 
-<!-- ##### MACRO idmef_data_new_char_string_nodup_fast ##### -->
+<!-- ##### FUNCTION idmef_data_new_char_string_nodup_fast ##### -->
 <para>
 
 </para>
 
 @data: 
+@ptr: 
 @len: 
+@Returns: 
 
 
-<!-- ##### MACRO idmef_data_set_char_string_ref_fast ##### -->
+<!-- ##### FUNCTION idmef_data_set_char_string_ref_fast ##### -->
 <para>
 
 </para>
 
-@idmef_data: 
 @data: 
+@ptr: 
 @len: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@idmef_data: 
 
 
-<!-- ##### MACRO idmef_data_set_char_string_nodup_fast ##### -->
+<!-- ##### FUNCTION idmef_data_set_char_string_nodup_fast ##### -->
 <para>
 
 </para>
 
-@idmef_data: 
 @data: 
+@ptr: 
 @len: 
-
-
-<!-- ##### MACRO idmef_data_new_char_string_ref ##### -->
-<para>
-
-</para>
-
-@data: 
-
-
-<!-- ##### MACRO idmef_data_new_char_string_dup ##### -->
-<para>
-
-</para>
-
-@data: 
-
-
-<!-- ##### MACRO idmef_data_new_char_string_nodup ##### -->
-<para>
-
-</para>
-
-@data: 
-
-
-<!-- ##### MACRO idmef_data_set_char_string_ref ##### -->
-<para>
-
-</para>
-
+@Returns: 
+<!-- # Unused Parameters # -->
 @idmef_data: 
-@data: 
 
 
-<!-- ##### MACRO idmef_data_set_char_string_dup ##### -->
+<!-- ##### FUNCTION idmef_data_new_char_string_ref ##### -->
 <para>
 
 </para>
 
-@idmef_data: 
 @data: 
+@ptr: 
+@Returns: 
 
 
-<!-- ##### MACRO idmef_data_set_char_string_nodup ##### -->
+<!-- ##### FUNCTION idmef_data_new_char_string_dup ##### -->
 <para>
 
 </para>
 
-@idmef_data: 
 @data: 
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_new_char_string_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_set_char_string_ref ##### -->
+<para>
+
+</para>
+
+@data: 
+@ptr: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@idmef_data: 
+
+
+<!-- ##### FUNCTION idmef_data_set_char_string_dup ##### -->
+<para>
+
+</para>
+
+@data: 
+@ptr: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@idmef_data: 
+
+
+<!-- ##### FUNCTION idmef_data_set_char_string_nodup ##### -->
+<para>
+
+</para>
+
+@data: 
+@ptr: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@idmef_data: 
 
 
 <!-- ##### MACRO idmef_data_set_char_string_constant ##### -->
@@ -342,65 +373,83 @@ idmef-data
 
 </para>
 
+@string: 
+@str: 
+<!-- # Unused Parameters # -->
 @idmef_data: 
 @data: 
 
 
-<!-- ##### MACRO idmef_data_new_byte_string_ref ##### -->
+<!-- ##### FUNCTION idmef_data_new_byte_string_ref ##### -->
 <para>
 
 </para>
 
 @data: 
+@ptr: 
 @len: 
+@Returns: 
 
 
-<!-- ##### MACRO idmef_data_new_byte_string_dup ##### -->
+<!-- ##### FUNCTION idmef_data_new_byte_string_dup ##### -->
 <para>
 
 </para>
 
 @data: 
+@ptr: 
 @len: 
+@Returns: 
 
 
-<!-- ##### MACRO idmef_data_new_byte_string_nodup ##### -->
+<!-- ##### FUNCTION idmef_data_new_byte_string_nodup ##### -->
 <para>
 
 </para>
 
 @data: 
+@ptr: 
 @len: 
+@Returns: 
 
 
-<!-- ##### MACRO idmef_data_set_byte_string_ref ##### -->
+<!-- ##### FUNCTION idmef_data_set_byte_string_ref ##### -->
 <para>
 
 </para>
 
+@data: 
+@ptr: 
+@len: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @idmef_data: 
-@data: 
-@len: 
 
 
-<!-- ##### MACRO idmef_data_set_byte_string_dup ##### -->
+<!-- ##### FUNCTION idmef_data_set_byte_string_dup ##### -->
 <para>
 
 </para>
 
-@idmef_data: 
 @data: 
+@ptr: 
 @len: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@idmef_data: 
 
 
-<!-- ##### MACRO idmef_data_set_byte_string_nodup ##### -->
+<!-- ##### FUNCTION idmef_data_set_byte_string_nodup ##### -->
 <para>
 
 </para>
 
-@idmef_data: 
 @data: 
+@ptr: 
 @len: 
+@Returns: 
+<!-- # Unused Parameters # -->
+@idmef_data: 
 
 
 <!-- ##### FUNCTION idmef_data_destroy ##### -->

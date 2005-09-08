@@ -80,6 +80,17 @@ idmef-criterion-value
 @operator: 
 
 
+<!-- ##### FUNCTION idmef_criterion_value_new_broken_down_time ##### -->
+<para>
+
+</para>
+
+@cv: 
+@time: 
+@op: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_criterion_value_clone ##### -->
 <para>
 
@@ -132,6 +143,24 @@ idmef-criterion-value
 
 
 <!-- ##### FUNCTION idmef_criterion_value_get_value ##### -->
+<para>
+
+</para>
+
+@cv: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_get_regex ##### -->
+<para>
+
+</para>
+
+@cv: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criterion_value_get_broken_down_time ##### -->
 <para>
 
 </para>

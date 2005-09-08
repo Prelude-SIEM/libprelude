@@ -4299,11 +4299,6 @@ prelude_io_t *pio
 prelude_io_t *pio
 </FUNCTION>
 <FUNCTION>
-<NAME>swig_idmef_value_get_descriptor</NAME>
-<RETURNS>void *</RETURNS>
-idmef_value_t *value){unsigned int i = 0;void *object = idmef_value_get_object(value
-</FUNCTION>
-<FUNCTION>
 <NAME>prelude_thread_atfork</NAME>
 <RETURNS>int </RETURNS>
 void (*prepare)(void), void (*parent)(void), void (*child)(void)
@@ -6708,6 +6703,11 @@ void
 <RETURNS>const char *</RETURNS>
 const char *req_version
 </FUNCTION>
+<FUNCTION>
+<NAME>prelude_thread_init</NAME>
+<RETURNS>int </RETURNS>
+void *future_use
+</FUNCTION>
 <MACRO>
 <NAME>PRELUDE_OPTION_REPLY_TYPE_SET</NAME>
 #define PRELUDE_OPTION_REPLY_TYPE_SET   0x01
@@ -6999,19 +6999,9 @@ idmef_data_t *data, uint64_t i
 idmef_data_t *data, float f
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_data_new_ptr_ref_fast</NAME>
+<NAME>idmef_data_set_ptr_dup_fast</NAME>
 <RETURNS>int </RETURNS>
-idmef_data_t **nd, idmef_data_type_t type, const void *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_data_new_ptr_dup_fast</NAME>
-<RETURNS>int </RETURNS>
-idmef_data_t **nd, idmef_data_type_t type, const void *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_data_new_ptr_nodup_fast</NAME>
-<RETURNS>int </RETURNS>
-idmef_data_t **nd, idmef_data_type_t type, void *data, size_t len
+idmef_data_t *data, idmef_data_type_t type, const void *ptr, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_set_ptr_ref_fast</NAME>
@@ -7019,14 +7009,24 @@ idmef_data_t **nd, idmef_data_type_t type, void *data, size_t len
 idmef_data_t *data, idmef_data_type_t type, const void *ptr, size_t len
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_data_set_ptr_dup_fast</NAME>
-<RETURNS>int </RETURNS>
-idmef_data_t *data, idmef_data_type_t type, const void *ptr, size_t len
-</FUNCTION>
-<FUNCTION>
 <NAME>idmef_data_set_ptr_nodup_fast</NAME>
 <RETURNS>int </RETURNS>
 idmef_data_t *data, idmef_data_type_t type, void *ptr, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_new_ptr_dup_fast</NAME>
+<RETURNS>int </RETURNS>
+idmef_data_t **data, idmef_data_type_t type, const void *ptr, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_new_ptr_ref_fast</NAME>
+<RETURNS>int </RETURNS>
+idmef_data_t **data, idmef_data_type_t type, const void *ptr, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_new_ptr_nodup_fast</NAME>
+<RETURNS>int </RETURNS>
+idmef_data_t **data, idmef_data_type_t type, void *ptr, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_set_char_string_dup_fast</NAME>
@@ -7038,91 +7038,91 @@ idmef_data_t *data, const char *str, size_t len
 <RETURNS>int </RETURNS>
 idmef_data_t **data, const char *str, size_t len
 </FUNCTION>
-<MACRO>
+<FUNCTION>
 <NAME>idmef_data_new_char_string_ref_fast</NAME>
-#define idmef_data_new_char_string_ref_fast(data, len) \
-	idmef_data_new_ptr_ref_fast(IDMEF_DATA_TYPE_CHAR_STRING, data, len + 1)
-</MACRO>
-<MACRO>
+<RETURNS>int </RETURNS>
+idmef_data_t **data, const char *ptr, size_t len
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_data_new_char_string_nodup_fast</NAME>
-#define idmef_data_new_char_string_nodup_fast(data, len) \
-	idmef_data_new_ptr_nodup_fast(IDMEF_DATA_TYPE_CHAR_STRING, data, len + 1)
-</MACRO>
-<MACRO>
+<RETURNS>int </RETURNS>
+idmef_data_t **data, char *ptr, size_t len
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_data_set_char_string_ref_fast</NAME>
-#define idmef_data_set_char_string_ref_fast(idmef_data, data, len) \
-	idmef_data_set_ptr_ref_fast(idmef_data, IDMEF_DATA_TYPE_CHAR_STRING, data, len + 1)
-</MACRO>
-<MACRO>
+<RETURNS>int </RETURNS>
+idmef_data_t *data, const char *ptr, size_t len
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_data_set_char_string_nodup_fast</NAME>
-#define idmef_data_set_char_string_nodup_fast(idmef_data, data, len) \
-	idmef_data_set_ptr_nodup_fast(idmef_data, IDMEF_DATA_TYPE_CHAR_STRING, data, len + 1)
-</MACRO>
-<MACRO>
+<RETURNS>int </RETURNS>
+idmef_data_t *data, char *ptr, size_t len
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_data_new_char_string_ref</NAME>
-#define idmef_data_new_char_string_ref(data) \
-	idmef_data_new_ptr_ref_fast(IDMEF_DATA_TYPE_CHAR_STRING, data, strlen(data))
-</MACRO>
-<MACRO>
+<RETURNS>int </RETURNS>
+idmef_data_t **data, const char *ptr
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_data_new_char_string_dup</NAME>
-#define idmef_data_new_char_string_dup(data) \
-	idmef_data_new_char_string_dup_fast(data, strlen(data))
-</MACRO>
-<MACRO>
+<RETURNS>int </RETURNS>
+idmef_data_t **data, const char *ptr
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_data_new_char_string_nodup</NAME>
-#define idmef_data_new_char_string_nodup(data) \
-	idmef_data_new_ptr_nodup_fast(IDMEF_DATA_TYPE_CHAR_STRING, data, strlen(data))
-</MACRO>
-<MACRO>
+<RETURNS>int </RETURNS>
+idmef_data_t **data, char *ptr
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_data_set_char_string_ref</NAME>
-#define idmef_data_set_char_string_ref(idmef_data, data) \
-	idmef_data_set_ptr_ref_fast(idmef_data, IDMEF_DATA_TYPE_CHAR_STRING, data, strlen(data))
-</MACRO>
-<MACRO>
+<RETURNS>int </RETURNS>
+idmef_data_t *data, const char *ptr
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_data_set_char_string_dup</NAME>
-#define idmef_data_set_char_string_dup(idmef_data, data) \
-	idmef_data_set_char_string_dup_fast(idmef_data, data, strlen(data))
-</MACRO>
-<MACRO>
+<RETURNS>int </RETURNS>
+idmef_data_t *data, const char *ptr
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_data_set_char_string_nodup</NAME>
-#define idmef_data_set_char_string_nodup(idmef_data, data) \
-	idmef_data_set_ptr_nodup_fast(idmef_data, IDMEF_DATA_TYPE_CHAR_STRING, data, strlen(data))
-</MACRO>
+<RETURNS>int </RETURNS>
+idmef_data_t *data, char *ptr
+</FUNCTION>
 <MACRO>
 <NAME>idmef_data_set_char_string_constant</NAME>
-#define idmef_data_set_char_string_constant(idmef_data, data) \
-	idmef_data_set_ptr_ref_fast(idmef_data, IDMEF_DATA_TYPE_CHAR_STRING, data, sizeof (data))
+#define idmef_data_set_char_string_constant(string, str)		\
+	idmef_data_set_char_string_ref_fast((string), (str), sizeof((str)) - 1)
 </MACRO>
-<MACRO>
+<FUNCTION>
 <NAME>idmef_data_new_byte_string_ref</NAME>
-#define idmef_data_new_byte_string_ref(data, len) \
-	idmef_data_new_ptr_ref_fast(IDMEF_DATA_TYPE_BYTE_STRING, data, len)
-</MACRO>
-<MACRO>
+<RETURNS>int </RETURNS>
+idmef_data_t **data, const unsigned char *ptr, size_t len
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_data_new_byte_string_dup</NAME>
-#define idmef_data_new_byte_string_dup(data, len) \
-	idmef_data_new_ptr_dup_fast(IDMEF_DATA_TYPE_BYTE_STRING, data, len)
-</MACRO>
-<MACRO>
+<RETURNS>int </RETURNS>
+idmef_data_t **data, const unsigned char *ptr, size_t len
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_data_new_byte_string_nodup</NAME>
-#define idmef_data_new_byte_string_nodup(data, len) \
-	idmef_data_new_ptr_nodup_fast(IDMEF_DATA_TYPE_BYTE_STRING, data, len)
-</MACRO>
-<MACRO>
+<RETURNS>int </RETURNS>
+idmef_data_t **data, unsigned char *ptr, size_t len
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_data_set_byte_string_ref</NAME>
-#define idmef_data_set_byte_string_ref(idmef_data, data, len) \
-	idmef_data_set_ptr_ref_fast(idmef_data, IDMEF_DATA_TYPE_BYTE_STRING, data, len)
-</MACRO>
-<MACRO>
+<RETURNS>int </RETURNS>
+idmef_data_t *data, const unsigned char *ptr, size_t len
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_data_set_byte_string_dup</NAME>
-#define idmef_data_set_byte_string_dup(idmef_data, data, len) \
-	idmef_data_set_ptr_dup_fast(idmef_data, IDMEF_DATA_TYPE_BYTE_STRING, data, len)
-</MACRO>
-<MACRO>
+<RETURNS>int </RETURNS>
+idmef_data_t *data, const unsigned char *ptr, size_t len
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_data_set_byte_string_nodup</NAME>
-#define idmef_data_set_byte_string_nodup(idmef_data, data, len) \
-	idmef_data_set_ptr_nodup_fast(idmef_data, IDMEF_DATA_TYPE_BYTE_STRING, data, len)
-</MACRO>
+<RETURNS>int </RETURNS>
+idmef_data_t *data, unsigned char *ptr, size_t len
+</FUNCTION>
 <FUNCTION>
 <NAME>idmef_data_destroy</NAME>
 <RETURNS>void </RETURNS>
@@ -7646,379 +7646,34 @@ idmef_additional_data_t *ptr, prelude_bool_t data
 idmef_additional_data_t *ptr, char data
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_additional_data_new_ptr_ref_fast</NAME>
-<RETURNS>int </RETURNS>
-idmef_additional_data_t **nd,idmef_additional_data_type_t type,const unsigned char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_ptr_dup_fast</NAME>
-<RETURNS>int </RETURNS>
-idmef_additional_data_t **nd,idmef_additional_data_type_t type,const unsigned char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_ptr_nodup_fast</NAME>
-<RETURNS>int </RETURNS>
-idmef_additional_data_t **nd,idmef_additional_data_type_t type,unsigned char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_ptr_ref_fast</NAME>
-<RETURNS>int </RETURNS>
-idmef_additional_data_t *ad,idmef_additional_data_type_t type, const unsigned char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_ptr_dup_fast</NAME>
-<RETURNS>int </RETURNS>
-idmef_additional_data_t *ad,idmef_additional_data_type_t type, const unsigned char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_ptr_nodup_fast</NAME>
-<RETURNS>int </RETURNS>
-idmef_additional_data_t *ad,idmef_additional_data_type_t type, unsigned char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_set_str_dup_fast</NAME>
-<RETURNS>int </RETURNS>
-idmef_additional_data_t *data, idmef_additional_data_type_t type,const char *str, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_str_dup_fast</NAME>
-<RETURNS>int </RETURNS>
-idmef_additional_data_t **nd,idmef_additional_data_type_t type, const char *str, size_t len
-</FUNCTION>
-<MACRO>
-<NAME>idmef_additional_data_new_string_ref_fast</NAME>
-#define idmef_additional_data_new_string_ref_fast(ad, data, len) \
-        idmef_additional_data_new_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_string_ref_fast</NAME>
-#define idmef_additional_data_set_string_ref_fast(ad, data, len) \
-        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING, (const unsigned char *) data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_string_dup_fast</NAME>
-#define idmef_additional_data_new_string_dup_fast(ad, data, len) \
-        idmef_additional_data_new_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_string_dup_fast</NAME>
-#define idmef_additional_data_set_string_dup_fast(ad, data, len) \
-        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_string_nodup_fast</NAME>
-#define idmef_additional_data_new_string_nodup_fast(ad, data, len) \
-        idmef_additional_data_new_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_string_nodup_fast</NAME>
-#define idmef_additional_data_set_string_nodup_fast(ad, data, len) \
-        idmef_additional_data_set_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_STRING, data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_string_ref</NAME>
-#define idmef_additional_data_new_string_ref(ad, data) \
-        idmef_additional_data_new_string_ref_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_string_ref</NAME>
-#define idmef_additional_data_set_string_ref(ad, data) \
-        idmef_additional_data_set_string_ref_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_string_dup</NAME>
-#define idmef_additional_data_new_string_dup(ad, data) \
-        idmef_additional_data_new_string_dup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_string_dup</NAME>
-#define idmef_additional_data_set_string_dup(ad, data) \
-        idmef_additional_data_set_string_dup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_string_nodup</NAME>
-#define idmef_additional_data_new_string_nodup(ad, data) \
-        idmef_additional_data_new_string_nodup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_string_nodup</NAME>
-#define idmef_additional_data_set_string_nodup(ad, data) \
-        idmef_additional_data_set_string_nodup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_ntpstamp_ref_fast</NAME>
-#define idmef_additional_data_new_ntpstamp_ref_fast(ad, data, len) \
-        idmef_additional_data_new_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_ntpstamp_ref_fast</NAME>
-#define idmef_additional_data_set_ntpstamp_ref_fast(ad, data, len) \
-        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, (const unsigned char *) data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_ntpstamp_dup_fast</NAME>
-#define idmef_additional_data_new_ntpstamp_dup_fast(ad, data, len) \
-        idmef_additional_data_new_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_ntpstamp_dup_fast</NAME>
-#define idmef_additional_data_set_ntpstamp_dup_fast(ad, data, len) \
-        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_ntpstamp_nodup_fast</NAME>
-#define idmef_additional_data_new_ntpstamp_nodup_fast(ad, data, len) \
-        idmef_additional_data_new_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_ntpstamp_nodup_fast</NAME>
-#define idmef_additional_data_set_ntpstamp_nodup_fast(ad, data, len) \
-        idmef_additional_data_set_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_NTPSTAMP, data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_ntpstamp_ref</NAME>
-#define idmef_additional_data_new_ntpstamp_ref(ad, data) \
-        idmef_additional_data_new_ntpstamp_ref_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_ntpstamp_ref</NAME>
-#define idmef_additional_data_set_ntpstamp_ref(ad, data) \
-        idmef_additional_data_set_ntpstamp_ref_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_ntpstamp_dup</NAME>
-#define idmef_additional_data_new_ntpstamp_dup(ad, data) \
-        idmef_additional_data_new_ntpstamp_dup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_ntpstamp_dup</NAME>
-#define idmef_additional_data_set_ntpstamp_dup(ad, data) \
-        idmef_additional_data_set_ntpstamp_dup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_ntpstamp_nodup</NAME>
-#define idmef_additional_data_new_ntpstamp_nodup(ad, data) \
-        idmef_additional_data_new_ntpstamp_nodup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_ntpstamp_nodup</NAME>
-#define idmef_additional_data_set_ntpstamp_nodup(ad, data) \
-        idmef_additional_data_set_ntpstamp_nodup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
 <NAME>idmef_additional_data_new_byte_string_ref</NAME>
-#define idmef_additional_data_new_byte_string_ref(ad, data, len) \
-        idmef_additional_data_new_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_byte_string_ref</NAME>
-#define idmef_additional_data_set_byte_string_ref(ad, data, len) \
-        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_byte_string_dup</NAME>
-#define idmef_additional_data_new_byte_string_dup(ad, data, len) \
-        idmef_additional_data_new_ptr_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_byte_string_dup</NAME>
-#define idmef_additional_data_set_byte_string_dup(ad, data, len) \
-        idmef_additional_data_set_ptr_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_byte_string_nodup</NAME>
-#define idmef_additional_data_new_byte_string_nodup(ad, data, len) \
-        idmef_additional_data_new_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_byte_string_nodup</NAME>
-#define idmef_additional_data_set_byte_string_nodup(ad, data, len) \
-        idmef_additional_data_set_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_BYTE_STRING, data, len)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_portlist_ref_fast</NAME>
-#define idmef_additional_data_new_portlist_ref_fast(ad, data, len) \
-        idmef_additional_data_new_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_portlist_ref_fast</NAME>
-#define idmef_additional_data_set_portlist_ref_fast(ad, data, len) \
-        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, (const unsigned char *) data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_portlist_dup_fast</NAME>
-#define idmef_additional_data_new_portlist_dup_fast(ad, data, len) \
-        idmef_additional_data_new_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_portlist_dup_fast</NAME>
-#define idmef_additional_data_set_portlist_dup_fast(ad, data, len) \
-        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_portlist_nodup_fast</NAME>
-#define idmef_additional_data_new_portlist_nodup_fast(ad, data, len) \
-        idmef_additional_data_new_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_portlist_nodup_fast</NAME>
-#define idmef_additional_data_set_portlist_nodup_fast(ad, data, len) \
-        idmef_additional_data_set_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_PORTLIST, data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_portlist_ref</NAME>
-#define idmef_additional_data_new_portlist_ref(ad, data) \
-        idmef_additional_data_new_portlist_ref_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_portlist_ref</NAME>
-#define idmef_additional_data_set_portlist_ref(ad, data) \
-        idmef_additional_data_set_portlist_ref_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_portlist_dup</NAME>
-#define idmef_additional_data_new_portlist_dup(ad, data) \
-        idmef_additional_data_new_portlist_dup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_portlist_dup</NAME>
-#define idmef_additional_data_set_portlist_dup(ad, data) \
-        idmef_additional_data_set_portlist_dup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_portlist_nodup</NAME>
-#define idmef_additional_data_new_portlist_nodup(ad, data) \
-        idmef_additional_data_new_portlist_nodup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_portlist_nodup</NAME>
-#define idmef_additional_data_set_portlist_nodup(ad, data) \
-        idmef_additional_data_set_portlist_nodup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_datetime_ref_fast</NAME>
-#define idmef_additional_data_new_datetime_ref_fast(ad, data, len) \
-        idmef_additional_data_new_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_datetime_ref_fast</NAME>
-#define idmef_additional_data_set_datetime_ref_fast(ad, data, len) \
-        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, (const unsigned char *) data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_datetime_dup_fast</NAME>
-#define idmef_additional_data_new_datetime_dup_fast(ad, data, len) \
-        idmef_additional_data_new_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_datetime_dup_fast</NAME>
-#define idmef_additional_data_set_datetime_dup_fast(ad, data, len) \
-        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_datetime_nodup_fast</NAME>
-#define idmef_additional_data_new_datetime_nodup_fast(ad, data, len) \
-        idmef_additional_data_new_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_datetime_nodup_fast</NAME>
-#define idmef_additional_data_set_datetime_nodup_fast(ad, data, len) \
-        idmef_additional_data_set_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_DATE_TIME, data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_datetime_ref</NAME>
-#define idmef_additional_data_new_datetime_ref(ad, data) \
-        idmef_additional_data_new_datetime_ref_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_datetime_ref</NAME>
-#define idmef_additional_data_set_datetime_ref(ad, data) \
-        idmef_additional_data_set_datetime_ref_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_datetime_dup</NAME>
-#define idmef_additional_data_new_datetime_dup(ad, data) \
-        idmef_additional_data_new_datetime_dup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_datetime_dup</NAME>
-#define idmef_additional_data_set_datetime_dup(ad, data) \
-        idmef_additional_data_set_datetime_dup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_datetime_nodup</NAME>
-#define idmef_additional_data_new_datetime_nodup(ad, data) \
-        idmef_additional_data_new_datetime_nodup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_datetime_nodup</NAME>
-#define idmef_additional_data_set_datetime_nodup(ad, data) \
-        idmef_additional_data_set_datetime_nodup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_xml_ref_fast</NAME>
-#define idmef_additional_data_new_xml_ref_fast(ad, data, len) \
-        idmef_additional_data_new_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_xml_ref_fast</NAME>
-#define idmef_additional_data_set_xml_ref_fast(ad, data, len) \
-        idmef_additional_data_set_ptr_ref_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_XML, (const unsigned char *) data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_xml_dup_fast</NAME>
-#define idmef_additional_data_new_xml_dup_fast(ad, data, len) \
-        idmef_additional_data_new_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_xml_dup_fast</NAME>
-#define idmef_additional_data_set_xml_dup_fast(ad, data, len) \
-        idmef_additional_data_set_str_dup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_xml_nodup_fast</NAME>
-#define idmef_additional_data_new_xml_nodup_fast(ad, data, len) \
-        idmef_additional_data_new_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_xml_nodup_fast</NAME>
-#define idmef_additional_data_set_xml_nodup_fast(ad, data, len) \
-        idmef_additional_data_set_ptr_nodup_fast(ad, IDMEF_ADDITIONAL_DATA_TYPE_XML, data, len + 1)
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_xml_ref</NAME>
-#define idmef_additional_data_new_xml_ref(ad, data) \
-        idmef_additional_data_new_xml_ref_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_xml_ref</NAME>
-#define idmef_additional_data_set_xml_ref(ad, data) \
-        idmef_additional_data_set_xml_ref_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_xml_dup</NAME>
-#define idmef_additional_data_new_xml_dup(ad, data) \
-        idmef_additional_data_new_xml_dup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_xml_dup</NAME>
-#define idmef_additional_data_set_xml_dup(ad, data) \
-        idmef_additional_data_set_xml_dup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_new_xml_nodup</NAME>
-#define idmef_additional_data_new_xml_nodup(ad, data) \
-        idmef_additional_data_new_xml_nodup_fast(ad, data, strlen(data))
-</MACRO>
-<MACRO>
-<NAME>idmef_additional_data_set_xml_nodup</NAME>
-#define idmef_additional_data_set_xml_nodup(ad, data) \
-        idmef_additional_data_set_xml_nodup_fast(ad, data, strlen(data))
-</MACRO>
+<RETURNS>int </RETURNS>
+idmef_additional_data_t **ad, const unsigned char *data, size_t len
+</FUNCTION>
 <FUNCTION>
-<NAME>idmef_additional_data_destroy_internal</NAME>
-<RETURNS>void </RETURNS>
-idmef_additional_data_t *data
+<NAME>idmef_additional_data_set_byte_string_ref</NAME>
+<RETURNS>int </RETURNS>
+idmef_additional_data_t *ad, const unsigned char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_byte_string_dup</NAME>
+<RETURNS>int </RETURNS>
+idmef_additional_data_t **ad, const unsigned char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_byte_string_dup</NAME>
+<RETURNS>int </RETURNS>
+idmef_additional_data_t *ad, const unsigned char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_new_byte_string_nodup</NAME>
+<RETURNS>int </RETURNS>
+idmef_additional_data_t **ad, unsigned char *data, size_t len
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_set_byte_string_nodup</NAME>
+<RETURNS>int </RETURNS>
+idmef_additional_data_t *ad, unsigned char *data, size_t len
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_clone</NAME>
@@ -8053,6 +7708,11 @@ idmef_additional_data_t *data
 <FUNCTION>
 <NAME>idmef_additional_data_get_character</NAME>
 <RETURNS>char </RETURNS>
+idmef_additional_data_t *data
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_get_byte</NAME>
+<RETURNS>uint8_t </RETURNS>
 idmef_additional_data_t *data
 </FUNCTION>
 <FUNCTION>
