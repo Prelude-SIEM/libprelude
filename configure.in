@@ -33,7 +33,7 @@ AM_MAINTAINER_MODE
 dnl Check for GNUlib
 
 # for prelude-config.h generation
-AC_PATH_PROG(SED, sed, no)
+AC_PATH_PROG(GREP, grep, no)
 
 AC_PROG_CC
 AC_PROG_CPP
@@ -196,7 +196,7 @@ dnl * Check endianess                                *
 dnl **************************************************
 
 AC_C_BIGENDIAN(libprelude_cflags="$libprelude_cflags -DPRELUDE_WORDS_BIGENDIAN")
-
+AC_C_BIGENDIAN(AC_DEFINE_UNQUOTED(PRELUDE_WORDS_BIGENDIAN, , Byte ordering))
 
 
 dnl **************************************************
@@ -425,6 +425,7 @@ EOF
     
 AC_MSG_RESULT($ac_cv_lbl_unaligned_fail)
 if test $ac_cv_lbl_unaligned_fail = yes ; then
+	AC_DEFINE_UNQUOTED(PRELUDE_ALIGNED_ACCESS, , Define wether we need to take care with alignment)
 	libprelude_cflags="$libprelude_cflags -DPRELUDE_ALIGNED_ACCESS"
 fi
 

@@ -17,9 +17,11 @@ BUILT_SOURCES = prelude-config.h
 
 prelude-config.h: $(top_builddir)/config.h
 	rm -f prelude-config.h
-	$(SED) -e 's|\(#define PACKAGE.*\)|/* do not publish: \1 */|' \
-	-e 's|\(#define VERSION.*\)|/* do not publish: \1 */|' < $(top_builddir)/config.h > prelude-config.h
-
+	echo "/* Used from libprelude headers */" >> prelude-config.h
+	$(GREP) "HAVE_VARIADIC_MACROS"	< $(top_builddir)/config.h >> prelude-config.h
+	$(GREP) "TIME_WITH_SYS_TIME"		< $(top_builddir)/config.h >> prelude-config.h
+	$(GREP) "PRELUDE_ALIGNED_ACCESS"	< $(top_builddir)/config.h >> prelude-config.h
+	$(GREP) "PRELUDE_WORDS_BIGENDIAN"	< $(top_builddir)/config.h >> prelude-config.h
 
 #
 # Install default sensors configuration with mode 644
