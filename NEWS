@@ -1,3 +1,16 @@
+* 2005-09-08, libprelude-0.9.0-rc15:
+
+	- Fix OpenBSD compilation issue.
+
+	- Fix crash when using connection pool with no failover.
+
+	- Fix libprelude-error source generation issue under some locale.
+
+	- Make IDMEF AdditionalData helper available from the SWIG bindings.
+
+	- Filter out prelude-config.h exported definition.
+
+
 * 2005-08-25, libprelude-0.9.0-rc14:
 
 	- Fix Python exception on NULL data.
