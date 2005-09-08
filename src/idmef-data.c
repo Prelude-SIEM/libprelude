@@ -202,35 +202,6 @@ int idmef_data_new_ptr_nodup_fast(idmef_data_t **data, idmef_data_type_t type, v
 
 
 
-int idmef_data_set_char_string_dup_fast(idmef_data_t *data, const char *str, size_t len)
-{
-	char *new;
-
-	new = strndup(str, len);
-	if ( ! new )
-		return -1;
-
-	return idmef_data_set_ptr_nodup_fast(data, IDMEF_DATA_TYPE_CHAR_STRING, new, len + 1);
-}
-
-
-
-int idmef_data_new_char_string_dup_fast(idmef_data_t **data, const char *str, size_t len)
-{
-        int ret;
-
-        ret = idmef_data_new(data);
-	if ( ret < 0 )
-		return ret;
-        
-        ret = idmef_data_set_char_string_dup_fast(*data, str, len);
-        if ( ret < 0 )
-		idmef_data_destroy(*data);
-
-	return ret;		
-}
-
-
 
 /**
  * idmef_data_copy_ref:
@@ -524,4 +495,105 @@ void idmef_data_destroy(idmef_data_t *data)
         
         if ( data->flags & IDMEF_DATA_OWN_STRUCTURE )
                 free(data);
+}
+
+
+int idmef_data_new_char_string_ref_fast(idmef_data_t **data, const char *ptr, size_t len)
+{
+        return idmef_data_new_ptr_ref_fast(data, IDMEF_DATA_TYPE_CHAR_STRING, ptr, len + 1);
+}
+
+int idmef_data_new_char_string_dup_fast(idmef_data_t **data, const char *ptr, size_t len)
+{
+        return idmef_data_new_ptr_dup_fast(data, IDMEF_DATA_TYPE_CHAR_STRING, ptr, len + 1);
+}
+
+int idmef_data_new_char_string_nodup_fast(idmef_data_t **data, char *ptr, size_t len)
+{
+        return idmef_data_new_ptr_nodup_fast(data, IDMEF_DATA_TYPE_CHAR_STRING, ptr, len + 1);
+}
+
+int idmef_data_set_char_string_ref_fast(idmef_data_t *data, const char *ptr, size_t len)
+{
+        return idmef_data_set_ptr_ref_fast(data, IDMEF_DATA_TYPE_CHAR_STRING, ptr, len + 1);
+}
+
+int idmef_data_set_char_string_dup_fast(idmef_data_t *data, const char *ptr, size_t len)
+{
+        return idmef_data_set_ptr_dup_fast(data, IDMEF_DATA_TYPE_CHAR_STRING, ptr, len + 1);
+}
+
+int idmef_data_set_char_string_nodup_fast(idmef_data_t *data, char *ptr, size_t len)
+{
+        return idmef_data_set_ptr_nodup_fast(data, IDMEF_DATA_TYPE_CHAR_STRING, ptr, len + 1);
+}
+
+
+int idmef_data_new_char_string_ref(idmef_data_t **data, const char *ptr)
+{
+        return idmef_data_new_char_string_ref_fast(data, ptr, strlen(ptr));
+}
+
+int idmef_data_new_char_string_dup(idmef_data_t **data, const char *ptr)
+{
+        return idmef_data_new_char_string_dup_fast(data, ptr, strlen(ptr));
+}
+
+int idmef_data_new_char_string_nodup(idmef_data_t **data, char *ptr)
+{
+        return idmef_data_new_char_string_nodup_fast(data, ptr, strlen(ptr));
+}
+
+int idmef_data_set_char_string_ref(idmef_data_t *data, const char *ptr)
+{
+        return idmef_data_set_char_string_ref_fast(data, ptr, strlen(ptr));
+}
+
+int idmef_data_set_char_string_dup(idmef_data_t *data, const char *ptr)
+{
+        return idmef_data_set_char_string_dup_fast(data, ptr, strlen(ptr));
+}
+
+int idmef_data_set_char_string_nodup(idmef_data_t *data, char *ptr)
+{
+        return idmef_data_set_char_string_nodup_fast(data, ptr, strlen(ptr));
+}
+
+
+/*
+ *
+ */
+int idmef_data_new_byte_string_ref(idmef_data_t **data, const unsigned char *ptr, size_t len)
+{
+	return idmef_data_new_ptr_ref_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
+}
+
+
+int idmef_data_new_byte_string_dup(idmef_data_t **data, const unsigned char *ptr, size_t len)
+{
+	return idmef_data_new_ptr_dup_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
+}
+
+
+int idmef_data_new_byte_string_nodup(idmef_data_t **data, unsigned char *ptr, size_t len)
+{
+	return idmef_data_new_ptr_nodup_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
+}
+
+
+int idmef_data_set_byte_string_ref(idmef_data_t *data, const unsigned char *ptr, size_t len)
+{
+	return idmef_data_set_ptr_ref_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
+}
+
+
+int idmef_data_set_byte_string_dup(idmef_data_t *data, const unsigned char *ptr, size_t len)
+{
+	return idmef_data_set_ptr_dup_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
+}
+
+
+int idmef_data_set_byte_string_nodup(idmef_data_t *data, unsigned char *ptr, size_t len)
+{
+	return idmef_data_set_ptr_nodup_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
 }
