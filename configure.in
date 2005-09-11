@@ -194,8 +194,6 @@ fi
 dnl **************************************************
 dnl * Check endianess                                *
 dnl **************************************************
-
-AC_C_BIGENDIAN(libprelude_cflags="$libprelude_cflags -DPRELUDE_WORDS_BIGENDIAN")
 AC_C_BIGENDIAN(AC_DEFINE_UNQUOTED(PRELUDE_WORDS_BIGENDIAN, , Byte ordering))
 
 
@@ -426,7 +424,6 @@ EOF
 AC_MSG_RESULT($ac_cv_lbl_unaligned_fail)
 if test $ac_cv_lbl_unaligned_fail = yes ; then
 	AC_DEFINE_UNQUOTED(PRELUDE_ALIGNED_ACCESS, , Define wether we need to take care with alignment)
-	libprelude_cflags="$libprelude_cflags -DPRELUDE_ALIGNED_ACCESS"
 fi
 
 
