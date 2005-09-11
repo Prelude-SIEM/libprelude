@@ -66,6 +66,7 @@
 #define PRELUDE_STRING_CAN_REALLOC    0x4
 
 
+
 #define check_string(str, len) check_string_f(__FUNCTION__, __LINE__, (str), (len))
 
 
@@ -88,6 +89,11 @@
 
 inline static int check_string_f(const char *f, int l, const char *str, size_t len)
 {
+        if ( (len + 1) < len ) {
+                prelude_log(PRELUDE_LOG_WARN, "%s:%d: warning, wrap around detected.\n", f, l);
+                return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
+        }
+        
         if ( str[len] != 0 ) {
                 prelude_log(PRELUDE_LOG_WARN, "%s:%d: warning, string is not NULL terminated.\n", f, l);
                 return prelude_error(PRELUDE_ERROR_STRING_NOT_NULL_TERMINATED);
@@ -133,7 +139,10 @@ static int allocate_more_chunk_if_needed(prelude_string_t *s, size_t needed_len)
                 len = MAX(needed_len - (s->size - s->index), CHUNK_SIZE);
         else
                 len = CHUNK_SIZE;
-        
+
+        if ( s->size + len < s->size )
+                return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
+                
         if ( s->flags & PRELUDE_STRING_CAN_REALLOC ) {
                 
                 ptr = _prelude_realloc(s->data.rwbuf, s->size + len);
@@ -273,7 +282,7 @@ int prelude_string_new_nodup_fast(prelude_string_t **string, char *str, size_t l
         ret = check_string(str, len);
         if ( ret < 0 )
                 return ret;
-                        
+
         ret = prelude_string_new(string);
         if ( ret < 0 )
                 return ret;
@@ -469,7 +478,7 @@ int prelude_string_set_nodup(prelude_string_t *string, char *buf)
 int prelude_string_set_ref_fast(prelude_string_t *string, const char *buf, size_t len)
 {
         int ret;
-                
+
         ret = check_string(buf, len);
         if ( ret < 0 )
                 return ret;
@@ -665,6 +674,9 @@ int prelude_string_get_string_released(prelude_string_t *string, char **outptr)
                 *outptr = strdup(string->data.robuf);
                 return (*outptr) ? 0 : prelude_error_from_errno(errno);
         }
+
+        if ( string->index + 1 <= string->index )
+                return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
         
         *outptr = _prelude_realloc(string->data.rwbuf, string->index + 1);
         if ( ! *outptr )
@@ -837,8 +849,8 @@ int prelude_string_sprintf(prelude_string_t *string, const char *fmt, ...)
 int prelude_string_ncat(prelude_string_t *dst, const char *str, size_t len)
 {
         int ret;
-        
-	if ( dst->flags & PRELUDE_STRING_CAN_REALLOC && len < dst->size - dst->index ) {
+
+	if ( dst->flags & PRELUDE_STRING_CAN_REALLOC && len < (dst->size - dst->index) ) {
                 
                 memcpy(dst->data.rwbuf + dst->index, str, len);
 
@@ -848,6 +860,9 @@ int prelude_string_ncat(prelude_string_t *dst, const char *str, size_t len)
 		return len;
 	}
 
+        if ( len + 1 < len )
+                return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
+        
         ret = allocate_more_chunk_if_needed(dst, len + 1);
 	if ( ret < 0 )
                 return ret;
