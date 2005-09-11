@@ -28,6 +28,7 @@
 # include "config.h"
 #endif
 
+#include <signal.h>
 #include <pthread.h>
 #include "prelude-inttypes.h"
 
