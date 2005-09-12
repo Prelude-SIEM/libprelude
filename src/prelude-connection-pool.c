@@ -269,6 +269,8 @@ static void notify_dead(cnx_t *cnx, prelude_error_t error, prelude_bool_t init_t
 
         if ( ! init_time ) {
                 fd = prelude_io_get_fd(prelude_connection_get_fd(cnx->cnx));
+                assert(fd < FD_SETSIZE);
+
                 FD_CLR(fd, &clist->parent->fds);
         }
 }
@@ -458,7 +460,8 @@ static void connection_timer_expire(void *data)
 		 * put the fd in fdset to read from manager.
 		 */
                 fd = prelude_io_get_fd(prelude_connection_get_fd(cnx->cnx));
-
+                assert(fd < FD_SETSIZE);
+                
                 FD_SET(fd, &pool->fds);
                 pool->nfd = MAX(fd + 1, pool->nfd);
         }
@@ -507,6 +510,8 @@ static int new_connection(cnx_t **ncnx, prelude_client_profile_t *cp, cnx_list_t
         state = prelude_connection_get_state(cnx);
         if ( state & PRELUDE_CONNECTION_STATE_ESTABLISHED ) {
                 fd = prelude_io_get_fd(prelude_connection_get_fd(cnx));
+                assert(fd < FD_SETSIZE);
+                
                 FD_SET(fd, &clist->parent->fds);
                 clist->parent->nfd = MAX(fd + 1, clist->parent->nfd);
         }
