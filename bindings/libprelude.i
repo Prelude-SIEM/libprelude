@@ -33,6 +33,7 @@
 #include "idmef.h"
 #include "idmef-message-write.h"
 #include "idmef-message-print.h"
+#include "idmef-additional-data.h"
 
 #include "idmef-tree-wrap.h"
 %}
@@ -86,7 +87,6 @@ typedef unsigned int prelude_bool_t;
 %include "idmef-path.h"
 %include "idmef-time.h"
 %include "idmef-data.h"
-%include "prelude-string.h"
 %include "idmef-criteria.h"
 %include "idmef-message-write.h"
 %include "idmef-additional-data.h"
