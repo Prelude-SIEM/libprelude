@@ -41,7 +41,12 @@ void swig_python_raise_exception(int error)
 
 PyObject *swig_python_string(prelude_string_t *string)
 {
-	return PyString_FromStringAndSize(prelude_string_get_string(string), prelude_string_get_len(string));
+	if ( string )
+		return PyString_FromStringAndSize(prelude_string_get_string(string), prelude_string_get_len(string));
+	else {
+		Py_INCREF(Py_None);
+		return Py_None;
+	}
 }
 
 PyObject *swig_python_data(idmef_data_t *data)
@@ -156,8 +161,52 @@ PyObject *swig_python_data(idmef_data_t *data)
  * Prelude specific typemaps
  */
 
+%typemap(in) (char *data, size_t len) {
+	if ( ! PyString_Check($input) ) {
+		PyErr_SetString(PyExc_ValueError, "Expected a string");
+    		return NULL;
+  	}
+
+	$1 = PyString_AsString($input);
+	$2 = PyString_Size($input);
+};
+
+%typemap(in) (const char *data, size_t len) {
+	if ( ! PyString_Check($input) ) {
+		PyErr_SetString(PyExc_ValueError, "Expected a string");
+    		return NULL;
+  	}
+
+	$1 = PyString_AsString($input);
+	$2 = PyString_Size($input);
+};
+
+%typemap(in) (unsigned char *data, size_t len) {
+	if ( ! PyString_Check($input) ) {
+		PyErr_SetString(PyExc_ValueError, "Expected a string");
+    		return NULL;
+  	}
+
+	$1 = PyString_AsString($input);
+	$2 = PyString_Size($input);
+};
+
+%typemap(in) (const unsigned char *data, size_t len) {
+	if ( ! PyString_Check($input) ) {
+		PyErr_SetString(PyExc_ValueError, "Expected a string");
+    		return NULL;
+  	}
+
+	$1 = PyString_AsString($input);
+	$2 = PyString_Size($input);	
+};
 
 %typemap(in) (const void *data, size_t len) {
+	if ( ! PyString_Check($input) ) {
+		PyErr_SetString(PyExc_ValueError, "Expected a string");
+    		return NULL;
+  	}
+
 	$1 = PyString_AsString($input);
 	$2 = PyString_Size($input);
 };
@@ -243,13 +292,13 @@ PyObject *swig_python_data(idmef_data_t *data)
 
 
 %typemap(in) prelude_string_t * {
-	int ret;
+       int ret;
 
-	ret = prelude_string_new_dup_fast(&($1), PyString_AsString($input), PyString_Size($input));
-	if ( ret < 0 ) {
-		swig_python_raise_exception(ret);
-		return NULL;
-	}
+       ret = prelude_string_new_dup_fast(&($1), PyString_AsString($input), PyString_Size($input));
+       if ( ret < 0 ) {
+               swig_python_raise_exception(ret);
+               return NULL;
+       }
 };
 
 

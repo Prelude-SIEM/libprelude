@@ -29,6 +29,7 @@ SV *swig_perl_string(prelude_string_t *string)
 	return newSVpv(prelude_string_get_string(string), prelude_string_get_len(string));
 }
 
+
 SV *swig_perl_data(idmef_data_t *data)
 {
 	switch ( idmef_data_get_type(data) ) {
@@ -97,7 +98,25 @@ SV *swig_perl_data(idmef_data_t *data)
 /**
  * Prelude specific typemaps
  */
+%typemap(in) (char *data, size_t len) {
+	$1 = SvPV_nolen($input);
+	$2 = SvCUR($input);
+};
 
+%typemap(in) (const char *data, size_t len) {
+	$1 = SvPV_nolen($input);
+	$2 = SvCUR($input);
+};
+
+%typemap(in) (unsigned char *data, size_t len) {
+	$1 = SvPV_nolen($input);
+	$2 = SvCUR($input);
+};
+
+%typemap(in) (const unsigned char *data, size_t len) {
+	$1 = SvPV_nolen($input);
+	$2 = SvCUR($input);
+};
 
 %typemap(in) (const void *data, size_t len) {
 	$1 = SvPV_nolen($input);
@@ -122,6 +141,7 @@ SV *swig_perl_data(idmef_data_t *data)
 		$1[i] = strtoull(SvPV_nolen(*sv), NULL, 0);
 	}
 };
+
 %typemap(freearg) uint64_t *target_id {
 	free($1);
 };
@@ -181,11 +201,13 @@ SV *swig_perl_data(idmef_data_t *data)
 
 %typemap(out) prelude_string_t * {
 	$result = swig_perl_string($1);
+	argvi++;
 };
 
 
 %typemap(out) idmef_data_t * {
 	$result = swig_perl_data($1);
+	argvi++;
 };
 
 
@@ -223,6 +245,7 @@ SV *swig_perl_data(idmef_data_t *data)
 };
 %typemap(argout) prelude_string_t *out {
 	$result = newSVpv(prelude_string_get_string($1), prelude_string_get_len($1));
+	argvi++;
 	prelude_string_destroy($1);
 };
 
