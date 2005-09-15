@@ -1,3 +1,18 @@
+* 2005-09-15, libprelude-0.9.0-rc16:
+
+	- Fix compilation issue on system where __FUNCTION__ is missing
+	  (Example: Solaris 9).
+
+	- Perl bindings would fail to compile if perl was compiled using
+	  the platform (non gcc) compiler.
+
+	- Fix a lot of bugs with Perl bindings.
+
+	- Fix compilation failure on Solaris 9 (#99)
+
+	- Fix warnings.
+
+
 * 2005-09-08, libprelude-0.9.0-rc15:
 
 	- Fix OpenBSD compilation issue.
