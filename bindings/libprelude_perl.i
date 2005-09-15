@@ -109,12 +109,12 @@ SV *swig_perl_data(idmef_data_t *data)
 };
 
 %typemap(in) (unsigned char *data, size_t len) {
-	$1 = SvPV_nolen($input);
+	$1 = (unsigned char *) SvPV_nolen($input);
 	$2 = SvCUR($input);
 };
 
 %typemap(in) (const unsigned char *data, size_t len) {
-	$1 = SvPV_nolen($input);
+	$1 = (const unsigned char *) SvPV_nolen($input);
 	$2 = SvCUR($input);
 };
 
