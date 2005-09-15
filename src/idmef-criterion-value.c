@@ -112,7 +112,7 @@ static int btime_parse_month(const char *value, int *out)
                 "december"  
         };
 
-        if ( isdigit(*value) ) {
+        if ( isdigit((int) *value) ) {
                 *out = atoi(value) - 1;
                 return 0;
         }
@@ -142,7 +142,7 @@ static int btime_parse_wday(const char *value, int *out)
                 "saturday",
         };
         
-        if ( isdigit(*value) ) {
+        if ( isdigit((int) *value) ) {
                 *out = atoi(value) - 1;
                 return 0;
         }
