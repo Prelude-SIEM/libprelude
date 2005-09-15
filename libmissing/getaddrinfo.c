@@ -20,6 +20,8 @@
 # include <config.h>
 #endif
 
+#include "getaddrinfo.h"
+
 /* Get calloc. */
 #include <stdlib.h>
 
@@ -35,7 +37,7 @@
 #define _(String) gettext (String)
 #define N_(String) String
 
-#include "getaddrinfo.h"
+#include "strdup.h"
 
 static inline bool
 validate_family (int family)
@@ -66,10 +68,6 @@ getaddrinfo (const char *restrict nodename,
   struct servent *se;
   struct hostent *he;
   size_t sinlen;
-
-  if (hints && hints->ai_flags)
-    /* FIXME: Support more flags. */
-    return EAI_BADFLAGS;
 
   if (hints && !validate_family (hints->ai_family))
     return EAI_FAMILY;
@@ -127,7 +125,7 @@ getaddrinfo (const char *restrict nodename,
 #if HAVE_IPV6
     case PF_INET6:
       {
-	struct sockaddr_in6 *sinp = (void *) tmp + sizeof (*tmp);
+	struct sockaddr_in6 *sinp = (char *) tmp + sizeof (*tmp);
 
 	if (se)
 	  sinp->sin6_port = se->s_port;
@@ -146,7 +144,7 @@ getaddrinfo (const char *restrict nodename,
 #if HAVE_IPV4
     case PF_INET:
       {
-	struct sockaddr_in *sinp = (void *) tmp + sizeof (*tmp);
+	struct sockaddr_in *sinp = (char *) tmp + sizeof (*tmp);
 
 	if (se)
 	  sinp->sin_port = se->s_port;
@@ -165,6 +163,22 @@ getaddrinfo (const char *restrict nodename,
     default:
       free (tmp);
       return EAI_NODATA;
+    }
+
+  if (hints && hints->ai_flags & AI_CANONNAME)
+    {
+      const char *cn;
+      if (he->h_name)
+	cn = he->h_name;
+      else
+	cn = nodename;
+
+      tmp->ai_canonname = strdup (cn);
+      if (!tmp->ai_canonname)
+	{
+	  free (tmp);
+	  return EAI_MEMORY;
+	}
     }
 
   tmp->ai_protocol = (hints) ? hints->ai_protocol : 0;
@@ -188,6 +202,8 @@ freeaddrinfo (struct addrinfo *ai)
 
       cur = ai;
       ai = ai->ai_next;
+
+      if (cur->ai_canonname) free (cur->ai_canonname);
       free (cur);
     }
 }
