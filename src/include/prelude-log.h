@@ -32,10 +32,17 @@
 
 #include <stdarg.h>
 
+#ifndef __FUNCTION__
+# ifdef __func__
+#  define __FUNCTION__ __func__
+# else
+#  define __FUNCTION__ "MisingFunctionMacro"
+# endif
+#endif
+
 #ifdef __cplusplus
  extern "C" {
 #endif
-
          
 typedef enum {
         PRELUDE_LOG_ERR  =  0,
