@@ -214,7 +214,7 @@ static int set_uid(prelude_option_t *opt, const char *optarg, prelude_string_t *
         const char *p;
         struct passwd *pw;
 
-        for ( p = optarg; isdigit(*p); p++ );
+        for ( p = optarg; isdigit((int) *p); p++ );
         
         if ( *p == 0 )
                 uid = atoi(optarg);
@@ -242,7 +242,7 @@ static int set_gid(prelude_option_t *opt, const char *optarg, prelude_string_t *
         const char *p;
         struct group *grp;
         
-        for ( p = optarg; isdigit(*p); p++ );
+        for ( p = optarg; isdigit((int) *p); p++ );
 
         if ( *p == 0 )
                 gid = atoi(optarg);
@@ -787,7 +787,7 @@ static int chown_cb(const char *filename, const struct stat *st, int flag)
 
         ret = chown(filename, uid,gid);
         if ( ret < 0 )
-                fprintf(stderr, "could not set %s to UID:%d GID:%d: %s.\n", filename, uid, gid, strerror(errno));
+                fprintf(stderr, "could not set %s to UID:%d GID:%d: %s.\n", filename, (int) uid, (int) gid, strerror(errno));
         
         return ret;
 }
@@ -812,7 +812,8 @@ static int chown_cmd(int argc, char **argv)
                 return -1;
 
         fprintf(stderr, "- Chowning '%s' using UID:%d GID:%d.\n", argv[2],
-                uid_set ? prelude_client_profile_get_uid(profile) : -1, gid_set ? prelude_client_profile_get_gid(profile) : -1);
+                uid_set ? (int) prelude_client_profile_get_uid(profile) : -1,
+                gid_set ? (int) prelude_client_profile_get_gid(profile) : -1);
         
         prelude_client_profile_set_name(profile, argv[2]);
 
