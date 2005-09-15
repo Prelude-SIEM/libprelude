@@ -24,6 +24,15 @@
 %module Prelude
 
 %{
+void swig_perl_raise_error(int error)
+{
+	char buf[1024];
+
+	snprintf(buf, sizeof(buf), "Prelude error - %s: %s", prelude_strsource(error), prelude_strerror(error));
+	croak(buf);
+}
+
+
 SV *swig_perl_string(prelude_string_t *string)
 {
 	return newSVpv(prelude_string_get_string(string), prelude_string_get_len(string));
@@ -114,7 +123,7 @@ SV *swig_perl_data(idmef_data_t *data)
 };
 
 %typemap(in) (const unsigned char *data, size_t len) {
-	$1 = (const unsigned char *) SvPV_nolen($input);
+	$1 = (unsigned char *) SvPV_nolen($input);
 	$2 = SvCUR($input);
 };
 
@@ -190,7 +199,7 @@ SV *swig_perl_data(idmef_data_t *data)
 	STRLEN len;
 
 	str = SvPV($input, len);
-
+	
 	ret = prelude_string_new_dup_fast(&($1), str, len);
 	if ( ret < 0 ) {
 		swig_perl_raise_error(ret);
