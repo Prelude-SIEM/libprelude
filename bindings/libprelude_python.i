@@ -375,53 +375,13 @@ PyObject *swig_python_data(idmef_data_t *data)
 };
 
 
-%apply SWIGTYPE **OUTPARAM {
-	prelude_client_t **,
-	prelude_client_profile_t **, 
-	prelude_msgbuf_t **,
-	prelude_msg_t **,
-	prelude_connection_t **,
-	idmef_path_t **,
-	idmef_value_t **,
-	idmef_criteria_t **,
-	idmef_time_t **,
-        idmef_data_t **
-};
+%typemap(in) SWIGTYPE *INPARAM {
+	if ( $input == Py_None )
+		return NULL;
 
-
-%apply SWIGTYPE **OUTPARAM {
-	idmef_additional_data_t **,
-	idmef_reference_t **,
-	idmef_classification_t **,
-	idmef_user_id_t **,
-	idmef_user_t **,
-	idmef_address_t **,
-	idmef_process_t **,
-	idmef_web_service_t **,
-	idmef_snmp_service_t **,
-	idmef_service_t **,
-	idmef_node_t **,
-	idmef_source_t **,
-	idmef_file_access_t **,
-	idmef_inode_t **,
-	idmef_linkage_t **,
-	idmef_checksum_t **,
-	idmef_file_t **,
-	idmef_target_t **,
-	idmef_analyzer_t **,
-	idmef_alertident_t **,
-	idmef_impact_t **,
-	idmef_action_t **,
-	idmef_confidence_t **,
-	idmef_assessment_t **,
-	idmef_tool_alert_t **,
-	idmef_correlation_alert_t **,
-	idmef_overflow_alert_t **,
-	idmef_alert_t **,
-	idmef_heartbeat_t **,
-	idmef_message_t **
-};
-
+	if ( SWIG_ConvertPtr($input, (void **)&arg$argnum, $1_descriptor, SWIG_POINTER_EXCEPTION|0) )
+		return NULL;
+}
 
 
 %pythoncode %{
