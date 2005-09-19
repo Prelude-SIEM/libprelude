@@ -42,6 +42,7 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_MEMCHR
   gl_MINMAX
   gl_FUNC_MKTIME
+  gl_PATHMAX
   gl_REGEX
   gl_C_RESTRICT
   gl_SIZE_MAX
@@ -83,6 +84,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/memchr.c
   lib/minmax.h
   lib/mktime.c
+  lib/pathmax.h
   lib/printf-args.c
   lib/printf-args.h
   lib/printf-parse.c
@@ -155,6 +157,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/mktime.m4
   m4/nls.m4
   m4/onceonly_2_57.m4
+  m4/pathmax.m4
   m4/po.m4
   m4/printf-posix.m4
   m4/progtest.m4
@@ -183,5 +186,3 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/wint_t.m4
   m4/xsize.m4
 ])
-
-# gnulib-comp.m4 ends here

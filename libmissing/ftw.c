@@ -28,12 +28,7 @@
 #include <errno.h>
 
 #include "ftw_.h"
-/*
- * FIXME: workaround til GnuLib pathmax is not LGPL'd.
- */
-#ifndef PATH_MAX
- #define PATH_MAX 512
-#endif
+#include "pathmax.h"
 
 
 static int get_path_infos(const char *path, struct stat *st, int *flag)
