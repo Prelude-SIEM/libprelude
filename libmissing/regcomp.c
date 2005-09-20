@@ -282,7 +282,7 @@ weak_alias (__re_compile_fastmap, re_compile_fastmap)
 #endif
 
 static inline void
-__attribute ((always_inline))
+attribute_always_inline
 re_set_fastmap (char *fastmap, bool icase, int ch)
 {
   fastmap[ch] = 1;
@@ -2718,7 +2718,7 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
      Return the index of the symbol in the SYMB_TABLE.  */
 
   auto inline int32_t
-  __attribute ((always_inline))
+  attribute_always_inline
   seek_collating_symbol_entry (const unsigned char *name, size_t name_len)
     {
       int32_t hash = elem_hash ((const char *) name, name_len);
@@ -2749,7 +2749,7 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
      Return the value if succeeded, UINT_MAX otherwise.  */
 
   auto inline unsigned int
-  __attribute ((always_inline))
+  attribute_always_inline
   lookup_collation_sequence_value (bracket_elem_t *br_elem)
     {
       if (br_elem->type == SB_CHAR)
@@ -2816,7 +2816,7 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
      update it.  */
 
   auto inline reg_errcode_t
-  __attribute ((always_inline))
+  attribute_always_inline
   build_range_exp (bitset sbcset, re_charset_t *mbcset,
 		   Idx *range_alloc,
 		   bracket_elem_t *start_elem, bracket_elem_t *end_elem)
@@ -2896,7 +2896,7 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
      pointer argument sinse we may update it.  */
 
   auto inline reg_errcode_t
-  __attribute ((always_inline))
+  attribute_always_inline
   build_collating_symbol (bitset sbcset, re_charset_t *mbcset,
 			  Idx *coll_sym_alloc, const unsigned char *name)
     {

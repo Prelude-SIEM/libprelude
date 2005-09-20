@@ -734,7 +734,7 @@ re_string_reconstruct (re_string_t *pstr, Idx idx, int eflags)
 }
 
 static unsigned char
-internal_function __attribute ((pure))
+internal_function attribute_pure
 re_string_peek_byte_case (const re_string_t *pstr, Idx idx)
 {
   int ch;
@@ -771,7 +771,7 @@ re_string_peek_byte_case (const re_string_t *pstr, Idx idx)
 }
 
 static unsigned char
-internal_function __attribute ((pure))
+internal_function attribute_pure
 re_string_fetch_byte_case (re_string_t *pstr)
 {
   if (BE (!pstr->mbs_allocated, 1))
@@ -1266,7 +1266,7 @@ re_node_set_insert_last (re_node_set *set, Idx elem)
    Return true if SET1 and SET2 are equivalent.  */
 
 static bool
-internal_function __attribute ((pure))
+internal_function attribute_pure
 re_node_set_compare (const re_node_set *set1, const re_node_set *set2)
 {
   Idx i;
@@ -1281,7 +1281,7 @@ re_node_set_compare (const re_node_set *set1, const re_node_set *set2)
 /* Return (idx + 1) if SET contains the element ELEM, return 0 otherwise.  */
 
 static Idx
-internal_function __attribute ((pure))
+internal_function attribute_pure
 re_node_set_contains (const re_node_set *set, Idx elem)
 {
   __re_size_t idx, right, mid;
