@@ -93,10 +93,6 @@
 # endif
 #endif
 
-#if !__GNUC_PREREQ (3, 1)
-# define always_inline
-#endif
-
 #if __GNUC__ >= 3
 # define BE(expr, val) __builtin_expect (expr, val)
 #else
