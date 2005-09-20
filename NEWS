@@ -1,3 +1,10 @@
+* 2005-09-20, libprelude-0.9.0:
+
+	- 0.9.0 final.
+
+	- Make Perl/Python bindings more fault tolerant.
+
+
 * 2005-09-15, libprelude-0.9.0-rc16:
 
 	- Fix compilation issue on system where __FUNCTION__ is missing
