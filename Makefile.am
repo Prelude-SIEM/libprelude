@@ -22,6 +22,7 @@ prelude-config.h: $(top_builddir)/config.h
 	$(GREP) "TIME_WITH_SYS_TIME"            < $(top_builddir)/config.h >> prelude-config.h
 	$(GREP) "PRELUDE_ALIGNED_ACCESS"        < $(top_builddir)/config.h >> prelude-config.h
 	$(GREP) "PRELUDE_WORDS_BIGENDIAN"       < $(top_builddir)/config.h >> prelude-config.h
+	$(GREP) "__PRELUDE_FUNC__"              < $(top_builddir)/config.h >> prelude-config.h
 
 #
 # Install default sensors configuration with mode 644

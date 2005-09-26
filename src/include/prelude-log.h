@@ -32,13 +32,6 @@
 
 #include <stdarg.h>
 
-#ifndef __FUNCTION__
-# ifdef __func__
-#  define __FUNCTION__ __func__
-# else
-#  define __FUNCTION__ "MisingFunctionMacro"
-# endif
-#endif
 
 #ifdef __cplusplus
  extern "C" {
@@ -69,10 +62,10 @@ void _prelude_log(prelude_log_t level, const char *file,
 #ifdef HAVE_VARIADIC_MACROS
          
 #define prelude_log(level, ...) \
-        _prelude_log(level, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
+        _prelude_log(level, __FILE__, __PRELUDE_FUNC__, __LINE__, __VA_ARGS__)
 
 #define prelude_log_debug(level, ...) \
-        _prelude_log(PRELUDE_LOG_DEBUG + level, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
+        _prelude_log(PRELUDE_LOG_DEBUG + level, __FILE__, __PRELUDE_FUNC__, __LINE__, __VA_ARGS__)
 #else
 
 void prelude_log(prelude_log_t level, const char *fmt, ...);
@@ -82,10 +75,10 @@ void prelude_log_debug(prelude_log_t level, const char *fmt, ...);
 
          
 #define prelude_log_v(level, fmt, ap) \
-        _prelude_log_v(level, __FILE__, __FUNCTION__, __LINE__, fmt, ap)
+        _prelude_log_v(level, __FILE__, __PRELUDE_FUNC__, __LINE__, fmt, ap)
          
 #define prelude_log_debug_v(level, fmt, ap) \
-        _prelude_log_v(PRELUDE_LOG_DEBUG + level, __FILE__, __FUNCTION__, __LINE__, fmt, ap)
+        _prelude_log_v(PRELUDE_LOG_DEBUG + level, __FILE__, __PRELUDE_FUNC__, __LINE__, fmt, ap)
 
 
 void prelude_log_set_level(prelude_log_t level);
