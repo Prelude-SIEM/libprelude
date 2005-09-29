@@ -181,7 +181,7 @@ static int is_tcp_connection_still_established(prelude_io_t *pio)
  */
 static int generic_connect(struct sockaddr *sa, socklen_t salen)
 {
-        int ret, sock;
+        int ret, sock, on = 1;
         
         sock = socket(sa->sa_family, SOCK_STREAM, 0);
 	if ( sock < 0 ) 
@@ -195,6 +195,10 @@ static int generic_connect(struct sockaddr *sa, socklen_t salen)
                 return prelude_error_from_errno(errno);
         }
 
+        ret = setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE, &on, sizeof(int));
+        if ( ret < 0 )
+                prelude_log(PRELUDE_LOG_ERR, "could not set SO_KEEPALIVE socket option: %s.\n", strerror(errno)); 
+       
         ret = connect(sock, sa, salen);
 	if ( ret < 0 ) {
                 close(sock);
