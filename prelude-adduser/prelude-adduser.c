@@ -1177,7 +1177,10 @@ int main(int argc, char **argv)
 
         ret = -1;
         gnutls_global_init();
+
+#ifdef NEED_GNUTLS_EXTRA
         gnutls_global_init_extra();
+#endif
         
         for ( i = 0; tbl[i].cmd; i++ ) {
                 if ( strcmp(tbl[i].cmd, argv[1]) != 0 )

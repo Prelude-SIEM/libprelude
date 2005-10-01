@@ -315,34 +315,64 @@ fi
 
 libprelude_libs="$LIBGNUTLS_LIBS $COMMON_LIBS"
 
+old_LIBS=$LIBS
 old_CPPFLAGS=$CPPFLAGS
+LIBS="$LIBGNUTLS_LIBS"
 CPPFLAGS="$LIBGNUTLS_CFLAGS"
 
 AC_CHECK_HEADER(gnutls/gnutls.h, ,
        		AC_MSG_ERROR("libgnutls development headers are required to build libprelude"))
+
+dnl
+dnl Recent GnuTLS version moved SRP function from libgnutls-extra to libgnutls
+dnl
+AC_CHECK_LIB(gnutls, gnutls_srp_verifier, srp_available=yes, srp_available=no)
+
+LIBS=$old_LIBS
 CPPFLAGS=$old_CPPFLAGS
 
+AC_SUBST(PRELUDE_ADDUSER_LIBS)
+AC_SUBST(PRELUDE_ADDUSER_CFLAGS)
 
-dnl **************************************************
-dnl * Check for GnuTLS extra.                        *
-dnl **************************************************
+if test x$srp_available = xno; then
+   dnl **************************************************
+   dnl * Check for SRP function in GnuTLS extra.        *
+   dnl **************************************************
 
-AM_PATH_LIBGNUTLS_EXTRA(1.0.17, gnutls_extra=yes, gnutls_extra=no)
-if test x$gnutls_extra != xyes; then
+   AM_PATH_LIBGNUTLS_EXTRA(1.0.17, gnutls_extra=yes, gnutls_extra=no)
+   if test x$gnutls_extra != xyes; then
 	AC_MSG_ERROR(libgnutls-extra is required in order to build libprelude.)
-fi
+   fi
 
-prelude_adduser_libs="$LIBGNUTLS_EXTRA_LIBS $COMMON_LIBS"
-AC_SUBST(LIBGNUTLS_EXTRA_LIBS)
-AC_SUBST(LIBGNUTLS_EXTRA_CFLAGS)
+   PRELUDE_ADDUSER_CFLAGS="-DNEED_GNUTLS_EXTRA $LIBGNUTLS_EXTRA_CFLAGS"
+   PRELUDE_ADDUSER_LIBS="$LIBGNUTLS_EXTRA_LIBS $COMMON_LIBS"
+ 
+   old_LIBS=$LIBS
+   LIBS="$LIBGNUTLS_EXTRA_LIBS"
+   old_CPPFLAGS=$CPPFLAGS
+   CPPFLAGS="$LIBGNUTLS_EXTRA_CFLAGS"
 
-old_CPPFLAGS=$CPPFLAGS
-CPPFLAGS="$LIBGNUTLS_EXTRA_CFLAGS"
-
-AC_CHECK_HEADER(gnutls/extra.h, ,
+   AC_CHECK_HEADER(gnutls/extra.h, ,
        		AC_MSG_ERROR("libgnutls-extra development headers are required to build libprelude"))
-CPPFLAGS=$old_CPPFLAGS
 
+   AC_CHECK_LIB(gnutls-extra, gnutls_srp_verifier, [], [AC_MSG_ERROR([
+
+Your operating system distribution provides the GnuTLS library.
+Unfortunately, the provided binary lacks support for the SRP protocol.
+
+If you are seeing this message, it probably mean you're running on Redhat Fedora, 
+which distributes a stripped down version of the GnuTLS library. 
+Unfortunately, removing part of a library's API break certain applications relying on the library.
+
+Solutions:
+	- Install GnuTLS from http://www.gnutls.org
+	- File a Redhat ticket on https://bugzilla.redhat.com/
+
+])])
+
+   LIBS=$old_LIBS
+   CPPFLAGS=$old_CPPFLAGS
+fi
 
 
 dnl **************************************************
