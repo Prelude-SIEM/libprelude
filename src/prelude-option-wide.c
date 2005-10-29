@@ -90,7 +90,7 @@ static int parse_single(void **context, prelude_option_t **last, int is_last_cmd
                         int rtype, const char *option, const char *value, prelude_string_t *out)
 {
         int ret = 0;
-	
+        
         *last = prelude_option_search(*last, option, PRELUDE_OPTION_TYPE_WIDE, 0);
         if ( ! *last ) {
                 prelude_string_sprintf(out, "Unknown option: %s.\n", option);
@@ -102,19 +102,53 @@ static int parse_single(void **context, prelude_option_t **last, int is_last_cmd
         
         else if ( is_last_cmd ) {
 		
-                if ( rtype == PRELUDE_MSG_OPTION_DESTROY ) 
+                if ( rtype == PRELUDE_MSG_OPTION_DESTROY )
                         ret = prelude_option_invoke_destroy(*last, value, out, *context);
                 
                 else if ( rtype == PRELUDE_MSG_OPTION_GET )
                         ret = prelude_option_invoke_get(*last, value, out, *context);
-        
-		else if ( rtype == PRELUDE_MSG_OPTION_COMMIT )
-			ret = prelude_option_invoke_commit(*last, value, out, *context);
-	}
+                
+                else if ( rtype == PRELUDE_MSG_OPTION_COMMIT )
+                        ret = prelude_option_invoke_commit(*last, value, out, *context);
+        }
         
         return ret;
 }
 
+
+
+
+static char *option_strsep(char **request)
+{
+        char *start = *request;
+        prelude_bool_t ignore = FALSE;
+
+        if ( ! *request )
+                return NULL;
+        
+        while ( **request ) {
+                if ( ignore == TRUE && **request == ']' )
+                        ignore = FALSE;
+
+                if ( ignore == FALSE && **request == '[' )
+                        ignore = TRUE;
+                
+                if ( ignore == FALSE && **request == '.' ) {
+                        **request = 0;
+                        *request = *request + 1;
+                        return start;
+                }
+                
+                (*request)++;
+        }
+
+        if ( start != *request ) {
+                *request = NULL;
+                return start;
+        }
+
+        return NULL;
+}
 
 
 
@@ -135,7 +169,7 @@ static int parse_request(prelude_client_t *client, int rtype, char *request, pre
         value = request;
         strsep(&value, "=");
         
-        while ( (str = (strsep(&request, "."))) ) {
+        while ( (str = (option_strsep(&request))) ) {
                 
                 if ( ! request ) {
                         last_cmd = 1;
@@ -144,13 +178,13 @@ static int parse_request(prelude_client_t *client, int rtype, char *request, pre
 
                 *pname = 0;
                 *iname = 0;
-                
+
                 ent = ret = sscanf(str, "%255[^[][%255[^]]", pname, iname);
                 if ( ret < 1 ) {
                         prelude_string_sprintf(out, "Error parsing option path");
                         break;
                 }
-
+                
                 ret = parse_single(&context, &last, last_cmd, rtype, pname, (ent == 2) ? iname : ptr, out);
                 if ( ret < 0 )
                         break;
