@@ -215,10 +215,13 @@ PyObject *swig_python_data(idmef_data_t *data)
 %typemap(in) (uint64_t *target_id, size_t size) {
 	int i;
 	$2 = PyList_Size($input);
-	$1 = malloc($2 * sizeof (uint64_t));
+	$1 = malloc($2 * sizeof(uint64_t));
 	for ( i = 0; i < $2; i++ ) {
 		PyObject *o = PyList_GetItem($input, i);
-		$1[i] = PyLong_AsUnsignedLongLong(o);
+		if ( PyInt_Check(o) ) 
+			$1[i] = (unsigned long) PyInt_AsLong(o);
+		else
+			$1[i] = PyLong_AsUnsignedLongLong(o);
 	}
 };
 
