@@ -140,7 +140,7 @@ void prelude_client_profile_get_tls_key_filename(prelude_client_profile_t *cp, c
 
 
 /**
- * prelude_client_profile_get_tls_server_filename:
+ * prelude_client_profile_get_tls_server_ca_cert_filename:
  * @cp: pointer on a #prelude_client_profile_t object.
  * @buf: buffer to write the returned filename to.
  * @size: size of @buf.
@@ -161,7 +161,7 @@ void prelude_client_profile_get_tls_server_ca_cert_filename(prelude_client_profi
  * @buf: buffer to write the returned filename to.
  * @size: size of @buf.
  *
- * Writes the filename used to store certificate for @cp private key.
+ * Writes the filename used to store certificate for @cp server.
  * This only apply to @cp receiving connection from analyzer (server).
  */
 void prelude_client_profile_get_tls_server_keycert_filename(prelude_client_profile_t *cp, char *buf, size_t size) 
@@ -169,6 +169,21 @@ void prelude_client_profile_get_tls_server_keycert_filename(prelude_client_profi
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/server.keycrt", cp->name);
 }
 
+
+
+/**
+ * prelude_client_profile_get_tls_server_crl_filename:
+ * @cp: pointer on a #prelude_client_profile_t object.
+ * @buf: buffer to write the returned filename to.
+ * @size: size of @buf.
+ *
+ * Writes the filename used to store CRL for @cp server.
+ * This only apply to @cp receiving connection from analyzer (server).
+ */
+void prelude_client_profile_get_tls_server_crl_filename(prelude_client_profile_t *cp, char *buf, size_t size) 
+{
+        snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/server.crl", cp->name);
+}
 
 
 
