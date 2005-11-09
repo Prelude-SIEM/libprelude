@@ -1200,7 +1200,7 @@ void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg)
          */
         prelude_thread_mutex_lock(&client->msgbuf_lock);
         
-        _idmef_message_assign_messageid(msg, client->unique_ident);
+        _idmef_message_assign_missing(client, msg);
         idmef_message_write(msg, client->msgbuf);
         prelude_msgbuf_mark_end(client->msgbuf);
 

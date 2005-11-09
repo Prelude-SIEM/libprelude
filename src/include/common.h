@@ -63,6 +63,6 @@ int _prelude_get_file_name_and_path(const char *str, char **name, char **path);
 
 prelude_msg_priority_t _idmef_impact_severity_to_msg_priority(idmef_impact_severity_t severity);
 
-int _idmef_message_assign_messageid(idmef_message_t *msg, prelude_ident_t *ident);
+int _idmef_message_assign_missing(prelude_client_t *client, idmef_message_t *msg);
 
 #endif /* _LIBPRELUDE_COMMON_H */

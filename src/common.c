@@ -420,21 +420,41 @@ prelude_msg_priority_t _idmef_impact_severity_to_msg_priority(idmef_impact_sever
 
 
 
-int _idmef_message_assign_messageid(idmef_message_t *msg, prelude_ident_t *ident)
+int _idmef_message_assign_missing(prelude_client_t *client, idmef_message_t *msg)
 {
+        int ret;
+        idmef_time_t *time;
         idmef_alert_t *alert;
         idmef_heartbeat_t *heartbeat;
+        prelude_ident_t *ident = prelude_client_get_unique_ident(client);
         
         if ( idmef_message_get_type(msg) == IDMEF_MESSAGE_TYPE_ALERT ) {
                 alert = idmef_message_get_alert(msg);
                 
                 if ( ! idmef_alert_get_messageid(alert) )
                         idmef_alert_set_messageid(alert, get_message_ident(ident));
+
+                if ( ! idmef_alert_get_create_time(alert) ) {
+                        ret = idmef_time_new_from_gettimeofday(&time);
+                        if ( ret < 0 )
+                                return ret;
+
+                        idmef_alert_set_create_time(alert, time);
+                }
+                
         } else {       
                 heartbeat = idmef_message_get_heartbeat(msg);
 
                 if ( ! idmef_heartbeat_get_messageid(heartbeat) )
                         idmef_heartbeat_set_messageid(heartbeat, get_message_ident(ident));
+
+                if ( ! idmef_heartbeat_get_create_time(heartbeat) ) {
+                        ret = idmef_time_new_from_gettimeofday(&time);
+                        if ( ret < 0 )
+                                return ret;
+
+                        idmef_heartbeat_set_create_time(heartbeat, time);
+                }
         }
 
         return 0;
