@@ -26,6 +26,7 @@ AC_DEFUN([gl_EARLY],
 # "Check for header files, types and library functions".
 AC_DEFUN([gl_INIT],
 [
+AM_CONDITIONAL([GL_COND_LIBTOOL], [true])
 changequote(,)dnl
 LTALLOCA=`echo "$ALLOCA" | sed 's/\.[^.]* /.lo /g;s/\.[^.]*$/.lo/'`
 changequote([, ])dnl
@@ -47,6 +48,7 @@ AC_SUBST([LTALLOCA])
   gl_C_RESTRICT
   gl_SIZE_MAX
   gl_FUNC_SNPRINTF
+  gl_SOCKLEN_T
   AM_STDBOOL_H
   gl_STRCASE
   gl_FUNC_STRCASESTR
@@ -55,8 +57,8 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_STRNLEN
   gl_FUNC_STRPBRK
   gl_FUNC_STRSEP
-  gl_FUNC_TIMEGM
   gl_TIME_R
+  gl_FUNC_TIMEGM
   gl_FUNC_VASNPRINTF
   gl_FUNC_VSNPRINTF
   gl_XSIZE
@@ -91,16 +93,16 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/printf-parse.h
   lib/regcomp.c
   lib/regex.c
-  lib/regexec.c
   lib/regex.h
   lib/regex_internal.c
   lib/regex_internal.h
+  lib/regexec.c
   lib/size_max.h
   lib/snprintf.c
   lib/snprintf.h
   lib/stdbool_.h
-  lib/strcasecmp.c
   lib/strcase.h
+  lib/strcasecmp.c
   lib/strcasestr.c
   lib/strcasestr.h
   lib/strdup.c
@@ -108,18 +110,18 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/strncasecmp.c
   lib/strndup.c
   lib/strndup.h
-  lib/strnlen1.c
-  lib/strnlen1.h
   lib/strnlen.c
   lib/strnlen.h
+  lib/strnlen1.c
+  lib/strnlen1.h
   lib/strpbrk.c
   lib/strpbrk.h
   lib/strsep.c
   lib/strsep.h
-  lib/timegm.c
-  lib/timegm.h
   lib/time_r.c
   lib/time_r.h
+  lib/timegm.c
+  lib/timegm.h
   lib/vasnprintf.c
   lib/vasnprintf.h
   lib/vsnprintf.c
@@ -132,16 +134,16 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/ftw.m4
   m4/getaddrinfo.m4
   m4/gettext.m4
-  m4/glibc21.m4
   m4/glibc2.m4
+  m4/glibc21.m4
   m4/iconv.m4
   m4/inet_ntop.m4
   m4/intdiv0.m4
   m4/intmax.m4
   m4/intmax_t.m4
-  m4/inttypes_h.m4
-  m4/inttypes.m4
   m4/inttypes-pri.m4
+  m4/inttypes.m4
+  m4/inttypes_h.m4
   m4/isc-posix.m4
   m4/lcmessage.m4
   m4/lib-ld.m4
@@ -166,6 +168,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/signed.m4
   m4/size_max.m4
   m4/snprintf.m4
+  m4/socklen.m4
   m4/sockpfaf.m4
   m4/stdbool.m4
   m4/stdint_h.m4
@@ -176,8 +179,8 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/strnlen.m4
   m4/strpbrk.m4
   m4/strsep.m4
-  m4/timegm.m4
   m4/time_r.m4
+  m4/timegm.m4
   m4/uintmax_t.m4
   m4/ulonglong.m4
   m4/vasnprintf.m4

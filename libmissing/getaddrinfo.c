@@ -22,14 +22,15 @@
 
 #include "getaddrinfo.h"
 
+#if HAVE_NETINET_IN_H
+# include <netinet/in.h>
+#endif
+
 /* Get calloc. */
 #include <stdlib.h>
 
 /* Get memcpy. */
 #include <string.h>
-
-/* Get struct hostent. */
-#include <netdb.h>
 
 #include <stdbool.h>
 
@@ -65,9 +66,22 @@ getaddrinfo (const char *restrict nodename,
 	     struct addrinfo **restrict res)
 {
   struct addrinfo *tmp;
-  struct servent *se;
+  struct servent *se = NULL;
   struct hostent *he;
-  size_t sinlen;
+  void *storage;
+  size_t size;
+#if HAVE_IPV6
+  struct v6_pair {
+    struct addrinfo addrinfo;
+    struct sockaddr_in6 sockaddr_in6;
+  };
+#endif
+#if HAVE_IPV4
+  struct v4_pair {
+    struct addrinfo addrinfo;
+    struct sockaddr_in sockaddr_in;
+  };
+#endif
 
   if (hints && !validate_family (hints->ai_family))
     return EAI_FAMILY;
@@ -102,13 +116,13 @@ getaddrinfo (const char *restrict nodename,
     {
 #if HAVE_IPV6
     case PF_INET6:
-      sinlen = sizeof (struct sockaddr_in6);
+      size = sizeof (struct v6_pair);
       break;
 #endif
 
 #if HAVE_IPV4
     case PF_INET:
-      sinlen = sizeof (struct sockaddr_in);
+      size = sizeof (struct v4_pair);
       break;
 #endif
 
@@ -116,8 +130,8 @@ getaddrinfo (const char *restrict nodename,
       return EAI_NODATA;
     }
 
-  tmp = calloc (1, sizeof (*tmp) + sinlen);
-  if (!tmp)
+  storage = calloc (1, size);
+  if (!storage)
     return EAI_MEMORY;
 
   switch (he->h_addrtype)
@@ -125,18 +139,23 @@ getaddrinfo (const char *restrict nodename,
 #if HAVE_IPV6
     case PF_INET6:
       {
-	struct sockaddr_in6 *sinp = (char *) tmp + sizeof (*tmp);
+	struct v6_pair *p = storage;
+	struct sockaddr_in6 *sinp = &p->sockaddr_in6;
+	tmp = &p->addrinfo;
 
 	if (se)
 	  sinp->sin6_port = se->s_port;
 
 	if (he->h_length != sizeof (sinp->sin6_addr))
-	  return EAI_SYSTEM; /* FIXME: Better return code?  Set errno? */
+	  {
+	    free (storage);
+	    return EAI_SYSTEM; /* FIXME: Better return code?  Set errno? */
+	  }
 
-	memcpy (&sinp->sin6_addr, he->h_addr_list[0], he->h_length);
+	memcpy (&sinp->sin6_addr, he->h_addr_list[0], sizeof sinp->sin6_addr);
 
 	tmp->ai_addr = (struct sockaddr *) sinp;
-	tmp->ai_addrlen = sinlen;
+	tmp->ai_addrlen = sizeof *sinp;
       }
       break;
 #endif
@@ -144,24 +163,29 @@ getaddrinfo (const char *restrict nodename,
 #if HAVE_IPV4
     case PF_INET:
       {
-	struct sockaddr_in *sinp = (char *) tmp + sizeof (*tmp);
+	struct v4_pair *p = storage;
+	struct sockaddr_in *sinp = &p->sockaddr_in;
+	tmp = &p->addrinfo;
 
 	if (se)
 	  sinp->sin_port = se->s_port;
 
 	if (he->h_length != sizeof (sinp->sin_addr))
-	  return EAI_SYSTEM; /* FIXME: Better return code?  Set errno? */
+	  {
+	    free (storage);
+	    return EAI_SYSTEM; /* FIXME: Better return code?  Set errno? */
+	  }
 
-	memcpy (&sinp->sin_addr, he->h_addr_list[0], he->h_length);
+	memcpy (&sinp->sin_addr, he->h_addr_list[0], sizeof sinp->sin_addr);
 
 	tmp->ai_addr = (struct sockaddr *) sinp;
-	tmp->ai_addrlen = sinlen;
+	tmp->ai_addrlen = sizeof *sinp;
       }
       break;
 #endif
 
     default:
-      free (tmp);
+      free (storage);
       return EAI_NODATA;
     }
 
@@ -176,7 +200,7 @@ getaddrinfo (const char *restrict nodename,
       tmp->ai_canonname = strdup (cn);
       if (!tmp->ai_canonname)
 	{
-	  free (tmp);
+	  free (storage);
 	  return EAI_MEMORY;
 	}
     }

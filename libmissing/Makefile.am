@@ -68,6 +68,12 @@ libmissing_la_SOURCES += inet_ntop.h
 
 ## end   gnulib module inet_ntop
 
+## begin gnulib module mbchar
+
+libmissing_la_SOURCES += mbchar.h
+
+## end   gnulib module mbchar
+
 ## begin gnulib module mbuiter
 
 libmissing_la_SOURCES += mbuiter.h
@@ -136,17 +142,17 @@ libmissing_la_SOURCES += strsep.h
 
 ## end   gnulib module strsep
 
-## begin gnulib module timegm
-
-libmissing_la_SOURCES += timegm.h
-
-## end   gnulib module timegm
-
 ## begin gnulib module time_r
 
 libmissing_la_SOURCES += time_r.h
 
 ## end   gnulib module time_r
+
+## begin gnulib module timegm
+
+libmissing_la_SOURCES += timegm.h
+
+## end   gnulib module timegm
 
 ## begin gnulib module vasnprintf
 

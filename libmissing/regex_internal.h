@@ -27,6 +27,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifndef _LIBC
+# include "strcase.h"
+#endif
+
 #if defined HAVE_LANGINFO_H || defined HAVE_LANGINFO_CODESET || defined _LIBC
 # include <langinfo.h>
 #endif
@@ -84,28 +88,10 @@
 # define RE_ENABLE_I18N
 #endif
 
-#ifndef __GNUC_PREREQ
-# if defined __GNUC__ && defined __GNUC_MINOR__
-#  define __GNUC_PREREQ(maj, min) \
-	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
-# else
-#  define __GNUC_PREREQ(maj, min) 0
-# endif
-#endif
-
-#if __GNUC_PREREQ (3, 1)
-# define attribute_always_inline __attribute((always_inline))
-#else
-# define attribute_always_inline
-#endif
-
 #if __GNUC__ >= 3
 # define BE(expr, val) __builtin_expect (expr, val)
-# define attribute_pure __attribute((pure))
 #else
 # define BE(expr, val) (expr)
-# define inline
-# define attribute_pure
 #endif
 
 /* Number of single byte character.  */
@@ -130,7 +116,7 @@
 # define attribute_hidden
 #endif /* not _LIBC */
 
-#ifdef __GNUC__
+#if __GNUC__ >= 4 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1)
 # define __attribute(arg) __attribute__ (arg)
 #else
 # define __attribute(arg)
@@ -450,7 +436,7 @@ static void build_upper_buffer (re_string_t *pstr) internal_function;
 static void re_string_translate_buffer (re_string_t *pstr) internal_function;
 static unsigned int re_string_context_at (const re_string_t *input,
 					  Idx idx, int eflags)
-     internal_function attribute_pure;
+     internal_function __attribute ((pure));
 
 #define re_string_peek_byte(pstr, offset) \
   ((pstr)->mbs[(pstr)->cur_idx + offset])
@@ -873,7 +859,7 @@ bitset_mask (bitset dest, const bitset src)
 #if defined RE_ENABLE_I18N
 /* Inline functions for re_string.  */
 static inline int
-internal_function attribute_pure
+internal_function __attribute ((pure))
 re_string_char_size_at (const re_string_t *pstr, Idx idx)
 {
   int byte_idx;
@@ -886,7 +872,7 @@ re_string_char_size_at (const re_string_t *pstr, Idx idx)
 }
 
 static inline wint_t
-internal_function attribute_pure
+internal_function __attribute ((pure))
 re_string_wchar_at (const re_string_t *pstr, Idx idx)
 {
   if (pstr->mb_cur_max == 1)
@@ -895,7 +881,7 @@ re_string_wchar_at (const re_string_t *pstr, Idx idx)
 }
 
 static int
-internal_function attribute_pure
+internal_function __attribute ((pure))
 re_string_elem_size_at (const re_string_t *pstr, Idx idx)
 {
 #ifdef _LIBC
