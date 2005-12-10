@@ -499,6 +499,9 @@ static int set_node_address(prelude_option_t *opt, const char *optarg, prelude_s
         idmef_address_t *addr;
         prelude_option_context_t *octx;
         prelude_client_t *ptr = context;
+
+        if ( prelude_option_search_context(opt, optarg) )
+                return 0;
         
         ret = idmef_analyzer_new_node(ptr->analyzer, &node);
         if ( ret < 0 )
