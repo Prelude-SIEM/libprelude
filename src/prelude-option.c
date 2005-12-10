@@ -134,29 +134,6 @@ static void option_err(int flag, const char *fmt, ...)
 
 
 
-static prelude_option_context_t *search_context(prelude_option_t *opt, const char *name)
-{
-        int ret;
-        prelude_list_t *tmp;
-        prelude_option_context_t *ptr;
-
-        if ( ! name || ! *name )
-                name = DEFAULT_INSTANCE_NAME;
-                
-        prelude_list_for_each(&opt->context_list, tmp) {
-
-                ptr = prelude_list_entry(tmp, prelude_option_context_t, list);
-
-                ret = strcasecmp(ptr->name, name);
-                if ( ret == 0 )
-                        return ptr;
-        }
-
-        return NULL;
-}
-
-
-
 static int cmp_option(prelude_option_t *opt, const char *optname, prelude_option_type_t type)
 {
         if ( ! (opt->type & type) )
@@ -192,7 +169,7 @@ static prelude_option_t *search_option(prelude_option_t *root, const char *optna
         
         prelude_list_for_each(&root->optlist, tmp) {
                 item = prelude_linked_object_get_object(tmp);
-                                
+                
                 if ( walk_children || (! item->longopt && ! item->shortopt) ) {
                         ret = search_option(item, optname, type, walk_children);
                         if ( ret )
@@ -322,15 +299,6 @@ static int do_set(prelude_option_t *opt, const char *value, prelude_string_t *ou
         if ( opt->default_context )
                 *context = opt->default_context;
         
-        if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
-                
-                oc = search_context(opt, value);
-                if ( oc ) {
-                        *context = oc->data;
-                        return 0;
-                }
-        }
-                
         if ( ! opt->set )
                 return 0;
 
@@ -348,7 +316,7 @@ static int do_set(prelude_option_t *opt, const char *value, prelude_string_t *ou
         
         if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
                                 
-                oc = search_context(opt, value);
+                oc = prelude_option_search_context(opt, value);
                 if ( ! oc )
 		        return -1;
                 
@@ -565,10 +533,10 @@ static int parse_argument(void *context, prelude_list_t *cb_list, prelude_option
                         continue;
                                 
                 while ( *arg == '-' ) arg++;
-
+                
                 if ( ! isalnum((int) *arg) )
                         continue;
-                     
+  
                 opt = search_option(optlist, arg, PRELUDE_OPTION_TYPE_CLI, 0);                
                 if ( ! opt ) {                        
                         if ( depth ) {
@@ -908,25 +876,35 @@ static int get_max_char(const char *line, int descoff)
 
 
 
+static int print_space(FILE *fd, size_t num)
+{
+        char buf[num + 1];
+        
+        memset(buf, ' ', sizeof(buf) - 1);
+        buf[num] = 0;
+        
+        fprintf(fd, buf);
+
+        return num;
+}
+
+
 static void print_wrapped(FILE *fd, const char *line, int descoff) 
 {
-        int max, i = 0, j;
+        int max;
+        size_t size = 0, i;
         
-        while ( 1 ) {
-                max = get_max_char(&line[i], descoff);
-                
-                while ( max-- >= 0 ) {
-                        
-                        if ( line[i] == '\0' ) {
-                                fputc('\n', fd);
-                                return;
-                        } else
-                                fputc(line[i++], fd);
+        while ( 1 ) {             
+                max = get_max_char(line + size, descoff);
+                               
+                size += i= fwrite(line + size, 1, max, fd);                
+                if ( line[size] == '\0' ) {
+                        fputc('\n', fd);
+                        return;
                 }
-                        
+
                 fputc('\n', fd);
-                for ( j = 0; j < descoff; j++ )
-                        fputc(' ', fd);
+                print_space(fd, descoff - 1);
         }
 }
 
@@ -947,12 +925,15 @@ static void print_options(FILE *fd, prelude_option_t *root, prelude_option_type_
                  */
                 if ( opt->type == PRELUDE_OPTION_TYPE_ROOT )
                         print_options(fd, opt, type, descoff, depth);
-                else {                          
+                else {
+                        i = 0;
                         if ( type && ! (opt->type & type) ) 
                                 continue;
 
-                        for ( i = 0; i < depth; i++ )
-                                fprintf(fd, "  ");
+                        if ( depth ) {
+                                i += depth;
+                                print_space(fd, depth * 2);
+                        }
                         
                         if ( ! prelude_list_is_empty(&opt->optlist) )
                                 fputc('\n', fd);
@@ -962,10 +943,10 @@ static void print_options(FILE *fd, prelude_option_t *root, prelude_option_type_
                         
                         if ( opt->longopt )
                                 i += fprintf(fd, "--%s ", opt->longopt);
-                        
-                        while ( i++ < descoff )
-                                fputc(' ', fd);
-                        
+
+                        if ( i < descoff )
+                                i += print_space(fd, descoff - i);
+                                                
                         if ( opt->description )
                                 print_wrapped(fd, opt->description, depth + descoff);
                         else
@@ -1255,7 +1236,7 @@ int prelude_option_invoke_commit(prelude_option_t *opt, const char *ctname, prel
                 context = opt->default_context;
         
 	if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
-		oc = search_context(opt, ctname);
+		oc = prelude_option_search_context(opt, ctname);
 		if ( ! oc ) {
 			prelude_string_sprintf(value, "could not find option with context %s[%s]",
                                                opt->longopt, ctname);
@@ -1287,7 +1268,7 @@ int prelude_option_invoke_destroy(prelude_option_t *opt, const char *ctname, pre
                 context = opt->default_context;
         
 	if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
-		oc = search_context(opt, ctname);
+		oc = prelude_option_search_context(opt, ctname);
 		if ( ! oc ) {
 			prelude_string_sprintf(value, "could not find option with context %s[%s]",
                                                opt->longopt, ctname);
@@ -1324,7 +1305,7 @@ int prelude_option_invoke_get(prelude_option_t *opt, const char *ctname, prelude
                 context = opt->default_context;
         
 	if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
-		oc = search_context(opt, ctname);
+		oc = prelude_option_search_context(opt, ctname);
 		if ( ! oc ) {
 			prelude_string_sprintf(value, "could not find option with context %s[%s]",
                                                opt->longopt, ctname);
@@ -1555,4 +1536,27 @@ prelude_option_t *prelude_option_search(prelude_option_t *parent, const char *na
                                         prelude_option_type_t type, prelude_bool_t walk_children)
 {
         return search_option(parent ? parent : root_optlist, name, type, walk_children);
+}
+
+
+
+prelude_option_context_t *prelude_option_search_context(prelude_option_t *opt, const char *name)
+{
+        int ret;
+        prelude_list_t *tmp;
+        prelude_option_context_t *ptr;
+
+        if ( ! name || ! *name )
+                name = DEFAULT_INSTANCE_NAME;
+                
+        prelude_list_for_each(&opt->context_list, tmp) {
+
+                ptr = prelude_list_entry(tmp, prelude_option_context_t, list);
+
+                ret = strcasecmp(ptr->name, name);
+                if ( ret == 0 )
+                        return ptr;
+        }
+
+        return NULL;
 }
