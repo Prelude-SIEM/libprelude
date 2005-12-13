@@ -4397,12 +4397,12 @@ typedef enum {
 <MACRO>
 <NAME>prelude_log</NAME>
 #define prelude_log(level, ...) \
-        _prelude_log(level, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
+        _prelude_log(level, __FILE__, __PRELUDE_FUNC__, __LINE__, __VA_ARGS__)
 </MACRO>
 <MACRO>
 <NAME>prelude_log_debug</NAME>
 #define prelude_log_debug(level, ...) \
-        _prelude_log(PRELUDE_LOG_DEBUG + level, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__)
+        _prelude_log(PRELUDE_LOG_DEBUG + level, __FILE__, __PRELUDE_FUNC__, __LINE__, __VA_ARGS__)
 </MACRO>
 <FUNCTION>
 <NAME>prelude_log</NAME>
@@ -4417,12 +4417,12 @@ prelude_log_t level, const char *fmt, ...
 <MACRO>
 <NAME>prelude_log_v</NAME>
 #define prelude_log_v(level, fmt, ap) \
-        _prelude_log_v(level, __FILE__, __FUNCTION__, __LINE__, fmt, ap)
+        _prelude_log_v(level, __FILE__, __PRELUDE_FUNC__, __LINE__, fmt, ap)
 </MACRO>
 <MACRO>
 <NAME>prelude_log_debug_v</NAME>
 #define prelude_log_debug_v(level, fmt, ap) \
-        _prelude_log_v(PRELUDE_LOG_DEBUG + level, __FILE__, __FUNCTION__, __LINE__, fmt, ap)
+        _prelude_log_v(PRELUDE_LOG_DEBUG + level, __FILE__, __PRELUDE_FUNC__, __LINE__, fmt, ap)
 </MACRO>
 <FUNCTION>
 <NAME>prelude_log_set_level</NAME>
@@ -4873,6 +4873,11 @@ prelude_option_context_t *oc
 <RETURNS>prelude_option_t *</RETURNS>
 prelude_option_t *parent, const char *name,prelude_option_type_t type, prelude_bool_t walk_children
 </FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_search_context</NAME>
+<RETURNS>prelude_option_context_t *</RETURNS>
+prelude_option_t *opt, const char *name
+</FUNCTION>
 <ENUM>
 <NAME>prelude_connection_permission_t</NAME>
 typedef enum {
@@ -5021,6 +5026,11 @@ prelude_connection_permission_t perm, prelude_string_t *out
 <NAME>prelude_connection_permission_new_from_string</NAME>
 <RETURNS>int </RETURNS>
 prelude_connection_permission_t *out, const char *buf
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_option_file_register</NAME>
+<RETURNS>int </RETURNS>
+const char *froot
 </FUNCTION>
 <STRUCT>
 <NAME>prelude_string</NAME>
@@ -5735,6 +5745,11 @@ prelude_client_profile_t *cp, char *buf, size_t size
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_client_profile_get_tls_server_keycert_filename</NAME>
+<RETURNS>void </RETURNS>
+prelude_client_profile_t *cp, char *buf, size_t size
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_profile_get_tls_server_crl_filename</NAME>
 <RETURNS>void </RETURNS>
 prelude_client_profile_t *cp, char *buf, size_t size
 </FUNCTION>
@@ -6686,7 +6701,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.0"
+#define LIBPRELUDE_VERSION "0.9.1"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>

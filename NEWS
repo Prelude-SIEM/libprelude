@@ -1,3 +1,30 @@
+* 2005-12-13, libprelude-0.9.1:
+	
+	- Take care of assigning a default CreateTime field if the caller
+	  did not already take care of it. 
+
+	- Workaround invalid library run path added through MakeMaker generated Makefile.
+
+        - Fix Perl bindings Makefile generated with DESTDIR appended twice.
+
+	- When compiling against recent GnuTLS version, don't link prelude-adduser to
+	  libgnutls-extra since, SRP symbols were moved to libgnutls.
+
+	- If the user is running a modified GnuTLS version with the SRP API removed
+	  (namely, this happen on Fedora), warn the user that he should install GnuTLS 
+	  from source, and that he might want to open a ticket on RedHat bug tracker 
+	  about it.
+
+	- Fix a problem where "MissingFunctionMacros" was reported instead of the function name
+	  on error.
+
+	- Set keepalive option for the Prelude client socket.
+
+	- Make option printing buffered.
+
+	- Various bugfix.
+
+
 * 2005-09-20, libprelude-0.9.0:
 
 	- 0.9.0 final.
