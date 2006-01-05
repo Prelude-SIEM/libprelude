@@ -85,7 +85,7 @@ static char *parse_time_ymd(struct tm *tm, const char *buf)
 static char *parse_time_hmsu(struct tm *tm, uint32_t *usec, const char *buf)
 {
         char *ptr;
-        int fraction;
+        unsigned int fraction;
 
         ptr = strptime(buf, "%H:%M:%S", tm);
         if ( ! ptr )
