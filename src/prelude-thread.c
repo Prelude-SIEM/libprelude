@@ -70,7 +70,7 @@
 
 
 #define THR_FUNC_NORETURN(func)                         \
-        if ( use_thread ) return func; else return
+        if ( use_thread ) func
 
 
 
