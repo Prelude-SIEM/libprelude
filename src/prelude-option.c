@@ -201,20 +201,6 @@ static prelude_bool_t is_an_argument(const char *stuff)
 
 
 
-static void reorder_argv(int *argc, char **argv, int removed, int *argv_index)
-{
-        int i;
-        
-        for ( i = removed; (i + 1) < *argc; i++ ) 
-                argv[i] = argv[i + 1];
-
-        (*argc)--;
-        (*argv_index)--;
-}
-
-
-
-
 static int check_option_optarg(const char **outptr, const char *option, const char *arg)
 {
         if ( arg && is_an_argument(arg) )
@@ -234,7 +220,7 @@ static int check_option_reqarg(const char **outptr, const char *option, const ch
         }
 
         *outptr = arg;
-                
+        
         return 0;
 }
 
@@ -516,50 +502,78 @@ static int get_missing_options(void *context, config_t *cfg, const char *filenam
 }
 
 
+static void remove_argv(int argc, char **argv, char **unhandled, int *unhandled_index, int removed)
+{
+        int i;
 
-static int parse_argument(void *context, prelude_list_t *cb_list, prelude_option_t *optlist,
-                          int *argc, char **argv, int *argv_index, int depth, prelude_string_t *err)
+        unhandled[(*unhandled_index)++] = argv[removed];
+        
+        for ( i = removed; (i + 1) < argc; i++ ) 
+                argv[i] = argv[i + 1];
+}
+
+
+
+static int parse_argument(void *context, prelude_list_t *cb_list,
+                          prelude_option_t *root_optlist, prelude_option_t *optlist,
+                          int *argc, char **argv, int *argv_index,
+                          char **unhandled, int *unhandled_index,
+                          int depth, prelude_string_t *err, prelude_bool_t ignore)
 {
         int ret;
-        prelude_option_t *opt;
+        prelude_option_t *opt, *tmp;
         struct cb_list *cbitem;
         const char *arg, *old, *argptr;
         
-        while ( *argv_index < *argc ) {
-                                
+        while ( *argv_index < (*argc - *unhandled_index) ) {
+
                 old = arg = argv[(*argv_index)++];
-                
-                if ( *arg != '-' )
+                if ( *arg != '-' ) {
+                        remove_argv(*argc, argv, unhandled, unhandled_index, --(*argv_index));
                         continue;
-                                
+                }
+                
+                if ( strcmp(arg, "--") == 0 ) {
+                        for ( ret = *argv_index; ret < *argc; ret++ )
+                                remove_argv(*argc, argv, unhandled, unhandled_index, ret);
+                        break;
+                }
+                
                 while ( *arg == '-' ) arg++;
                 
                 if ( ! isalnum((int) *arg) )
                         continue;
-  
+                
                 opt = search_option(optlist, arg, PRELUDE_OPTION_TYPE_CLI, 0);                
-                if ( ! opt ) {                        
+                if ( root_optlist != _prelude_generic_optlist && (tmp = search_option(_prelude_generic_optlist, arg, ~0, FALSE)) ) {
+                        opt = tmp;
+                        ignore = TRUE;
+                }
+                
+                if ( ! opt ) {
+                         
                         if ( depth ) {
                                 (*argv_index)--;
                                 return 0;
                         }
                         
+                        remove_argv(*argc, argv, unhandled, unhandled_index, --(*argv_index));
                         option_err(PRELUDE_OPTION_WARNING_OPTION, "invalid option -- \"%s\" (%d).\n", arg, depth);
                         continue;
                 }
                 
-                reorder_argv(argc, argv, *argv_index - 1, argv_index);
-                
                 ret = check_option(opt, &argptr, (*argv_index < *argc) ? argv[*argv_index] : NULL);
                 if ( ret < 0 ) 
-                        return -1;
-
-                if ( argptr )
-                        reorder_argv(argc, argv, *argv_index, argv_index);
-                
-                ret = call_option_cb(context, &cbitem, cb_list, opt, argptr, err, SET_FROM_CLI);
-                if ( ret < 0 )
                         return ret;
+
+                if ( argptr ) 
+                        (*argv_index)++;
+                
+                if ( ! ignore ) {
+                        ret = call_option_cb(context, &cbitem, cb_list, opt, argptr, err, SET_FROM_CLI);
+                        if ( ret < 0 )
+                                return ret;
+                }
                 
                 /*
                  * If the option we just found have sub-option.
@@ -567,12 +581,14 @@ static int parse_argument(void *context, prelude_list_t *cb_list, prelude_option
                  */
                 if ( ! prelude_list_is_empty(&opt->optlist) ) {
                         
-                        ret = parse_argument(context, &cbitem->children, opt,
-                                             argc, argv, argv_index, depth + 1, err);
+                        ret = parse_argument(context, &cbitem->children, root_optlist, opt,
+                                             argc, argv, argv_index, unhandled, unhandled_index, depth + 1, err, ignore);
 
                         if ( ret < 0 )
                                 return ret;
                 }
+                
+                ignore = FALSE;
         }
         
         return 0;
@@ -584,15 +600,29 @@ static int parse_argument(void *context, prelude_list_t *cb_list, prelude_option
 static int get_option_from_optlist(void *context, prelude_option_t *optlist,
                                    const char **filename, int *argc, char **argv, prelude_string_t **err)
 {
+        char **unhandled;
         prelude_list_t cblist;
-        int argv_index = 1, ret = 0;
+        int i, unhandled_index = 0, argv_index = 1, ret = 0;
                   
         prelude_list_init(&cblist);
         
-        if ( argc ) {                
-                ret = parse_argument(context, &cblist, optlist, argc, argv, &argv_index, 0, *err);
+        if ( argc ) {
+                unhandled = malloc(*argc * sizeof(*unhandled));
+                if ( ! unhandled )
+                        return prelude_error_from_errno(errno);
+                
+                ret = parse_argument(context, &cblist, optlist, optlist, argc, argv, &argv_index,
+                                     unhandled, &unhandled_index, 0, *err, FALSE);
+                
+                for ( i = 0; i < unhandled_index; i++)
+                        argv[*argc - unhandled_index + i] = unhandled[i];
+
+                free(unhandled);
+                
                 if ( ret < 0 )
                         return ret;
+
+                unhandled_index += ret;
         }
         
         if ( filename && *filename ) {                     
@@ -605,7 +635,7 @@ static int get_option_from_optlist(void *context, prelude_option_t *optlist,
         if ( ret < 0 )
                 return ret;
         
-        return ret;
+        return *argc - unhandled_index;
 }
 
 
@@ -631,8 +661,8 @@ static int get_option_from_optlist(void *context, prelude_option_t *optlist,
  *
  * if @option is NULL, all system option will be matched against argc, and argv.
  *
- * Returns: 0 if parsing the option succeed (including the case where one of
- * the callback returned -1 to request interruption of parsing), -1 if an error occured.
+ * Returns: The index of the first unhandled parameter if option parsing succeeded,
+ * or a negative value if an error occured.
  */
 int prelude_option_read(prelude_option_t *option, const char **filename,
                         int *argc, char **argv, prelude_string_t **err, void *context) 
@@ -658,10 +688,7 @@ int prelude_option_read(prelude_option_t *option, const char **filename,
                 *err = NULL;
         }
         
-        if ( ret < 0 )
-                return ret;
-
-        return 0;
+        return ret;
 }
 
 
@@ -878,13 +905,18 @@ static int get_max_char(const char *line, int descoff)
 
 static int print_space(FILE *fd, size_t num)
 {
-        char buf[num + 1];
+        char buf[3];
+        size_t len, totlen = 0;
         
-        memset(buf, ' ', sizeof(buf) - 1);
-        buf[num] = 0;
-        
-        fprintf(fd, buf);
-
+        do {
+                len = MIN(sizeof(buf), num - totlen);
+                
+                memset(buf, ' ', len);
+                fwrite(buf, 1, len, fd);
+                totlen += len;
+                
+        } while ( totlen < num );
+       
         return num;
 }
 

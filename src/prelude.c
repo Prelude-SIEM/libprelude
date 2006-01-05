@@ -70,19 +70,6 @@ static void child_fork_cb(void)
 
 
 
-static void remove_argv(int *argc, char **argv, int removed)
-{
-        int i;
-        
-        for ( i = removed; (i + 1) < *argc; i++ )                
-                argv[i] = argv[i + 1];
-        
-        (*argc)--;
-}
-
-
-
-
 static void slice_arguments(int *argc, char **argv)
 {
         int i;
@@ -118,7 +105,6 @@ static void slice_arguments(int *argc, char **argv)
                 }
                 
                 _prelude_internal_argv[_prelude_internal_argc++] = argv[i];
-                remove_argv(argc, argv, i--);
                 
                 if ( (i + 1) == *argc )
                         break;
@@ -130,7 +116,6 @@ static void slice_arguments(int *argc, char **argv)
                         continue;
                 
                 _prelude_internal_argv[_prelude_internal_argc++] = argv[i + 1];
-                remove_argv(argc, argv, i + 1);
         }
 }
 
