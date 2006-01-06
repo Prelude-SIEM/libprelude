@@ -384,7 +384,7 @@ static int plugin_load_single(prelude_list_t *head,
         pname = strrchr(filename, '/');
         pname = (pname) ? pname + 1 : filename;
 
-        *(void **) &plugin_version = lt_dlsym(handle, "prelude_plugin_version");
+        plugin_version = lt_dlsym(handle, "prelude_plugin_version");
         if ( ! plugin_version ) {
                 prelude_log(PRELUDE_LOG_WARN, "%s: %s.\n", pname, lt_dlerror());
                 lt_dlclose(handle);
@@ -399,7 +399,7 @@ static int plugin_load_single(prelude_list_t *head,
                 return -1;
         }
         
-        *(void **) &plugin_init = lt_dlsym(handle, symbol);
+        plugin_init = lt_dlsym(handle, symbol);
         if ( ! plugin_init ) {
                 prelude_log(PRELUDE_LOG_WARN, "%s.\n", lt_dlerror());
                 lt_dlclose(handle);
