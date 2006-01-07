@@ -208,6 +208,17 @@ static void print_chown_help(void)
 
 
 
+static void print_revoke_help(void)
+{
+        fprintf(stderr, "revoke: Revoke access to <profile> for the given analyzerID.\n");
+        fprintf(stderr, "usage: revoke <profile> <analyzerID> [options]\n\n");
+
+        fprintf(stderr, "Valid options:\n");
+        fprintf(stderr, "\t--uid arg\t\t: UID or user to use to setup analyzer files.\n");
+        fprintf(stderr, "\t--gid arg\t\t: GID to group to use to setup analyzer files.\n");
+}
+
+
 static int set_uid(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         uid_t uid;
@@ -1066,6 +1077,46 @@ static int registration_server_cmd(int argc, char **argv)
 
 
 
+static int revoke_cmd(int argc, char **argv)
+{
+        int ret;
+        uint64_t analyzerid;
+        prelude_string_t *err;
+        prelude_option_t *opt;
+        gnutls_x509_privkey key;
+        gnutls_x509_crt ca_crt, crt;
+        
+        ret = _prelude_client_profile_new(&profile);
+        ret = prelude_option_new(NULL, &opt);
+        setup_permission_options(opt);
+        
+        argc -= 2;
+        
+        ret = prelude_option_read(opt, NULL, &argc, &argv[2], &err, NULL);
+        if ( ret < 0 )
+                return -1;
+
+        prelude_option_destroy(opt);
+
+        ret = add_analyzer(argv[2], &key, NULL);
+        if ( ret < 0 )
+                return -1;
+        
+        ret = tls_load_ca_certificate(profile, key, &ca_crt);
+        if ( ret < 0 )
+                return -1;
+        
+        ret = tls_load_ca_signed_certificate(profile, key, ca_crt, &crt);
+        if ( ret < 0 )
+                return -1;
+        
+        analyzerid = strtoull(argv[3], NULL, 0);
+
+        fprintf(stderr, "\n- Issuing revocation for analyzer %" PRELUDE_PRIu64 ".\n", analyzerid);
+        return tls_revoke_analyzer(profile, key, crt, analyzerid);
+}
+
+
 
 static int print_help(struct cmdtbl *tbl)
 {
@@ -1165,6 +1216,7 @@ int main(int argc, char **argv)
                 { "rename", 2, rename_cmd, print_rename_help                                        },
                 { "register", 3, register_cmd, print_register_help                                  },
                 { "registration-server", 1, registration_server_cmd, print_registration_server_help },
+                { "revoke", 2, revoke_cmd, print_revoke_help                                        },
                 { NULL, 0, NULL, NULL },
         };
 

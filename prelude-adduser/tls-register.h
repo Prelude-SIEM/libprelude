@@ -39,3 +39,6 @@ int tls_load_ca_signed_certificate(prelude_client_profile_t *cp,
                                    gnutls_x509_privkey cakey,
                                    gnutls_x509_crt cacrt,
                                    gnutls_x509_crt *crt);
+
+int tls_revoke_analyzer(prelude_client_profile_t *cp, gnutls_x509_privkey key,
+                        gnutls_x509_crt crt, uint64_t revoked_analyzerid);

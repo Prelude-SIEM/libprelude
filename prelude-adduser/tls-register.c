@@ -259,6 +259,7 @@ static gnutls_x509_crt generate_certificate(prelude_client_profile_t *cp, gnutls
         int ret;
         char buf[1024];
         gnutls_x509_crt crt;
+        uint64_t analyzerid;
         size_t size = sizeof(buf);
         
         ret = gnutls_x509_crt_init(&crt);
@@ -276,20 +277,17 @@ static gnutls_x509_crt generate_certificate(prelude_client_profile_t *cp, gnutls
         gnutls_x509_crt_set_ca_status(crt, 0);
         gnutls_x509_crt_set_activation_time(crt, time(NULL));
         gnutls_x509_crt_set_expiration_time(crt, expire);
+
+        analyzerid = prelude_client_profile_get_analyzerid(cp);
         
-        ret = snprintf(buf, sizeof(buf), "%" PRELUDE_PRIu64, prelude_client_profile_get_analyzerid(cp));
+        ret = snprintf(buf, sizeof(buf), "%" PRELUDE_PRIu64, analyzerid);
         ret = gnutls_x509_crt_set_dn_by_oid(crt, GNUTLS_OID_X520_DN_QUALIFIER, 0, buf, ret);
         if ( ret < 0 ) {
                 fprintf(stderr, "error setting common name: %s.\n", gnutls_strerror(ret));
                 return NULL;
         }
-        
-        buf[3] = 0 & 0xff;
-        buf[2] = (0 >> 8) & 0xff;
-        buf[1] = (0 >> 16) & 0xff;
-        buf[0] = 0;
 
-        gnutls_x509_crt_set_serial(crt, buf, 4);
+        gnutls_x509_crt_set_serial(crt, &analyzerid, sizeof(analyzerid));
 
         if ( ! key )
                 return crt;
@@ -313,6 +311,7 @@ static gnutls_x509_crt generate_certificate(prelude_client_profile_t *cp, gnutls
 
 
 static gnutls_x509_crt generate_signed_certificate(prelude_client_profile_t *cp,
+                                                   uint64_t analyzerid,
                                                    gnutls_x509_crt ca_crt,
                                                    gnutls_x509_privkey ca_key,
                                                    gnutls_x509_crq crq)
@@ -329,6 +328,12 @@ static gnutls_x509_crt generate_signed_certificate(prelude_client_profile_t *cp,
         ret = gnutls_x509_crt_set_crq(crt, crq);
         if ( ret < 0 ) {
                 fprintf(stderr, "error associating certificate with CRQ: %s.\n", gnutls_strerror(ret));
+                goto err;
+        }
+        
+        ret = gnutls_x509_crt_set_serial(crt, &analyzerid, sizeof(analyzerid));
+        if ( ret < 0 ) {
+                fprintf(stderr, "error setting certificate serial: %s.\n", gnutls_strerror(ret));
                 goto err;
         }
         
@@ -565,12 +570,11 @@ static char ask_req_confirmation(void)
 
 
 
-static int check_req(gnutls_x509_crq crq)
+static int check_req(gnutls_x509_crq crq, uint64_t *analyzerid)
 {
         int ret;
         size_t size;
         char buf[128], c;
-        uint64_t analyzerid;
         prelude_string_t *out;
         prelude_connection_permission_t perms;
         
@@ -580,7 +584,7 @@ static int check_req(gnutls_x509_crq crq)
                 fprintf(stderr, "could not retrieve dn qualifier: %s.\n", gnutls_strerror(ret));
                 return -1;
         }
-        analyzerid = strtoull(buf, NULL, 10);
+        *analyzerid = strtoull(buf, NULL, 10);
         
         size = sizeof(buf);
         ret = gnutls_x509_crq_get_dn_by_oid(crq, GNUTLS_OID_X520_COMMON_NAME, 0, 0, buf, &size);
@@ -603,7 +607,7 @@ static int check_req(gnutls_x509_crq crq)
         }
         
         fprintf(stderr, "  - Analyzer with ID=\"%" PRELUDE_PRIu64 "\" ask for registration with permission=\"%s\".\n",
-                analyzerid, prelude_string_get_string(out));
+                *analyzerid, prelude_string_get_string(out));
 
         if ( server_confirm ) {
                 c = ask_req_confirmation();
@@ -611,7 +615,7 @@ static int check_req(gnutls_x509_crq crq)
                         return -1;
         }
         
-        fprintf(stderr, "    Registering analyzer \"%" PRELUDE_PRIu64 "\" with permission \"%s\".\n", analyzerid,
+        fprintf(stderr, "    Registering analyzer \"%" PRELUDE_PRIu64 "\" with permission \"%s\".\n", *analyzerid,
                 prelude_string_get_string(out));
 
         prelude_string_destroy(out);
@@ -631,6 +635,7 @@ int tls_handle_certificate_request(prelude_client_profile_t *cp, prelude_io_t *f
         gnutls_datum data;
         gnutls_x509_crq crq;
         unsigned char *rbuf;
+        uint64_t analyzerid;
         gnutls_x509_crt gencrt;
         
         /*
@@ -649,7 +654,7 @@ int tls_handle_certificate_request(prelude_client_profile_t *cp, prelude_io_t *f
         gnutls_x509_crq_import(crq, &data, GNUTLS_X509_FMT_PEM);
         free(rbuf);
 
-        ret = check_req(crq);
+        ret = check_req(crq, &analyzerid);
         if ( ret < 0 )
                 return ret;
         
@@ -658,7 +663,7 @@ int tls_handle_certificate_request(prelude_client_profile_t *cp, prelude_io_t *f
          */
         fprintf(stderr, "  - Generating signed certificate for client.\n");
         
-        gencrt = generate_signed_certificate(cp, cacrt, cakey, crq);   
+        gencrt = generate_signed_certificate(cp, analyzerid, cacrt, cakey, crq);   
         if ( ! gencrt ) {
                 fprintf(stderr, "error generating signed certificate for this request.\n");
                 return -1;
@@ -847,7 +852,7 @@ int tls_load_ca_signed_certificate(prelude_client_profile_t *cp,
         if ( ! crq )
                 return -1;
         
-        *crt = generate_signed_certificate(cp, cacrt, cakey, crq);
+        *crt = generate_signed_certificate(cp, prelude_client_profile_get_analyzerid(cp), cacrt, cakey, crq);
         if ( ! *crt )
                 return -1;
         
@@ -870,3 +875,77 @@ int tls_load_ca_signed_certificate(prelude_client_profile_t *cp,
         return 0;
 }
 
+
+
+int tls_revoke_analyzer(prelude_client_profile_t *cp, gnutls_x509_privkey key,
+                        gnutls_x509_crt crt, uint64_t revoked_analyzerid)
+{
+        int ret, i;
+        size_t len;
+        gnutls_datum data;
+        gnutls_x509_crl crl;
+        uint64_t analyzerid;
+        char crlfile[PATH_MAX], buf[65535];
+        
+        ret = gnutls_x509_crl_init(&crl);
+        prelude_client_profile_get_tls_server_crl_filename(cp, crlfile, sizeof(crlfile));
+
+        ret = access(crlfile, R_OK);
+        if ( ret == 0 ) {
+                ret = tls_load_file(crlfile, &data);
+                if ( ret < 0 )
+                        return -1;
+
+                ret = gnutls_x509_crl_import(crl, &data, GNUTLS_X509_FMT_PEM);
+                if ( ret < 0 ) {
+                        fprintf(stderr, "error importing CRL: %s.\n", gnutls_strerror(ret));
+                        return -1;
+                }
+        }
+        
+        for ( i = 0; i < gnutls_x509_crl_get_crt_count(crl); i++ ) {
+                len = sizeof(analyzerid);
+                gnutls_x509_crl_get_crt_serial(crl, i, (unsigned char *) &analyzerid, &len, NULL);
+                
+                if ( analyzerid == revoked_analyzerid ) {
+                        fprintf(stderr, "  - AnalyzerID %" PRELUDE_PRIu64 " already revoked.\n", revoked_analyzerid);
+                        return 0;
+                }
+        }
+        
+        ret = gnutls_x509_crl_set_crt_serial(crl, &revoked_analyzerid, sizeof(revoked_analyzerid), time(NULL));
+        if ( ret < 0 ) {
+                fprintf(stderr, "error setting CRL certificate serial: %s.\n", gnutls_strerror(ret));
+                return -1;
+        }
+
+        gnutls_x509_crl_set_version(crl, 2);
+        gnutls_x509_crl_set_next_update(crl, time(NULL));
+        gnutls_x509_crl_set_this_update(crl, time(NULL));
+
+        ret = gnutls_x509_crl_sign(crl, crt, key);
+        if ( ret < 0 ) {
+                fprintf(stderr, "error signing CRL: %s.\n", gnutls_strerror(ret));
+                return -1;
+        }
+        
+        len = sizeof(buf);
+        ret = gnutls_x509_crl_export(crl, GNUTLS_X509_FMT_PEM, buf, &len);
+        if ( ret < 0 ) {
+                fprintf(stderr, "error exporting certificate revocation list: %s\n", gnutls_strerror(ret));
+                gnutls_x509_crl_deinit(crl);
+                return -1;
+        }
+
+        gnutls_x509_crl_deinit(crl);
+
+        unlink(crlfile);
+        ret = save_buf(crlfile, prelude_client_profile_get_uid(cp),
+                       prelude_client_profile_get_gid(cp), (unsigned char *) buf, len);
+        if ( ret < 0 ) {
+                fprintf(stderr, "error saving private key.\n");
+                return -1;
+        }
+        
+        return 0;
+}
