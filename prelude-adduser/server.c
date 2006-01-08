@@ -46,16 +46,66 @@
 #include "server.h"
 #include "tls-register.h"
 
-#include "config.h"
+
+#define ANON_DH_BITS 1024
+
 
 static char *one_shot_passwd;
+static gnutls_anon_server_credentials anoncred;
 
 
-static gnutls_session new_tls_session(int sock, gnutls_srp_server_credentials cred)
+#ifndef GNUTLS_SRP_DISABLED
+ static gnutls_srp_server_credentials srpcred;
+#endif
+
+
+static int anon_check_passwd(prelude_io_t *fd)
+{
+        ssize_t ret;
+        const char *result;
+        unsigned char *rbuf;
+        
+        ret = prelude_io_read_delimited(fd, &rbuf);
+        if ( ret < 0 ) {
+                fprintf(stderr, "error receiving authentication result: %s.\n", prelude_strerror(ret));
+                return -1;
+        }
+
+        if ( rbuf[ret - 1] != 0 ) {
+                fprintf(stderr, "invalid password token received.\n");
+                return -1;
+        }
+        
+        if ( strcmp(rbuf, one_shot_passwd) == 0 )  {
+                result = "OK";
+                fprintf(stderr, "  - Anonymous authentication one-shot password check successful.\n");
+        } else {        
+                result = "NOK";
+                fprintf(stderr, "  - Anonymous authentication one-shot password check failed.\n");
+        }
+        
+        free(rbuf);
+        
+        ret = prelude_io_write_delimited(fd, result, strlen(result));
+        if ( ret < 0 ) {
+                fprintf(stderr, "error sending authentication token: %s.\n", prelude_strerror(ret));
+                return -1;
+        }
+
+        return *result == 'O' ? 0 : -1;
+}
+
+
+
+static gnutls_session new_tls_session(int sock)
 {
         int ret;
         gnutls_session session;
-        const int kx_priority[] = { GNUTLS_KX_SRP, GNUTLS_KX_SRP_DSS, GNUTLS_KX_SRP_RSA, 0 };
+        const int kx_priority[] = {
+#ifndef GNUTLS_SRP_DISABLED
+                GNUTLS_KX_SRP, GNUTLS_KX_SRP_DSS, GNUTLS_KX_SRP_RSA,
+#endif
+                GNUTLS_KX_ANON_DH, 0 };
         union {
                 int fd;
                 void *ptr;
@@ -65,8 +115,12 @@ static gnutls_session new_tls_session(int sock, gnutls_srp_server_credentials cr
         
         gnutls_set_default_priority(session);
         gnutls_kx_set_priority(session, kx_priority);
-        gnutls_credentials_set(session, GNUTLS_CRD_SRP, cred);        
+
+#ifndef GNUTLS_SRP_DISABLED
+        gnutls_credentials_set(session, GNUTLS_CRD_SRP, srpcred);
         gnutls_certificate_server_set_request(session, GNUTLS_CERT_IGNORE);
+#endif
+        gnutls_credentials_set(session, GNUTLS_CRD_ANON, anoncred);
 
         data.fd = sock;
         gnutls_transport_set_ptr(session, data.ptr);
@@ -76,23 +130,26 @@ static gnutls_session new_tls_session(int sock, gnutls_srp_server_credentials cr
                 fprintf(stderr, "  - GnuTLS handshake failed: %s.\n", gnutls_strerror(ret));
                 return NULL;
         }
-        
+                
         return session;
 }
 
 
 
 static int handle_client_connection(prelude_client_profile_t *cp, prelude_io_t *fd,
-                                    gnutls_srp_server_credentials cred, gnutls_x509_privkey key,
+                                    gnutls_x509_privkey key,
                                     gnutls_x509_crt cacrt, gnutls_x509_crt crt)
 {
         gnutls_session session;
         
-        session = new_tls_session(prelude_io_get_fd(fd), cred);
+        session = new_tls_session(prelude_io_get_fd(fd));
         if ( ! session )
                 return -1;
         
         prelude_io_set_tls_io(fd, session);
+        
+        if ( gnutls_auth_get_type(session) == GNUTLS_CRD_ANON && anon_check_passwd(fd) < 0 )
+                return -1;
         
         return tls_handle_certificate_request(cp, fd, key, cacrt, crt);
 }
@@ -101,7 +158,7 @@ static int handle_client_connection(prelude_client_profile_t *cp, prelude_io_t *
 
 static int wait_connection(prelude_client_profile_t *cp, int sock,
                            struct addrinfo *ai, int keepalive,
-                           gnutls_srp_server_credentials cred, gnutls_x509_privkey key,
+                           gnutls_x509_privkey key,
                            gnutls_x509_crt cacrt, gnutls_x509_crt crt)
 {
         void *inaddr;
@@ -149,7 +206,7 @@ static int wait_connection(prelude_client_profile_t *cp, int sock,
                 fprintf(stderr, "  - Connection from %s.\n", buf);
                 prelude_io_set_sys_io(fd, csock);
                 
-                ret = handle_client_connection(cp, fd, cred, key, cacrt, crt);
+                ret = handle_client_connection(cp, fd, key, cacrt, crt);
                 if ( ret == 0 )
                         fprintf(stderr, "  - %s successfully registered.\n", buf);
                 
@@ -336,6 +393,7 @@ static int generate_one_shot_password(char **buf)
 
 
 
+#ifndef GNUTLS_SRP_DISABLED
 
 static int copy_datum(gnutls_datum *dst, const gnutls_datum *src)
 {
@@ -351,7 +409,6 @@ static int copy_datum(gnutls_datum *dst, const gnutls_datum *src)
 
         return 0;
 }
-
 
 
 
@@ -384,6 +441,7 @@ static int srp_callback(gnutls_session session, const char *username, gnutls_dat
         return gnutls_srp_verifier(username, one_shot_passwd, salt, generator, prime, verifier);
 }
 
+#endif
 
 
 int server_create(prelude_client_profile_t *cp, const char *addr, unsigned int port,
@@ -392,8 +450,8 @@ int server_create(prelude_client_profile_t *cp, const char *addr, unsigned int p
 {
         int sock, ret;
         struct addrinfo *ai;
-        gnutls_srp_server_credentials cred;
-
+        gnutls_dh_params dh_params;
+        
         if ( ! prompt )
     		ret = generate_one_shot_password(&one_shot_passwd);
         else {
@@ -411,19 +469,32 @@ int server_create(prelude_client_profile_t *cp, const char *addr, unsigned int p
         if ( sock < 0 )
                 return -1;
 
-        ret = gnutls_srp_allocate_server_credentials(&cred);
+#ifndef GNUTLS_SRP_DISABLED
+        ret = gnutls_srp_allocate_server_credentials(&srpcred);
         if ( ret < 0 ) {
                 fprintf(stderr, "error creating SRP credentials: %s.\n", gnutls_strerror(ret));
                 close(sock);
                 return -1;
         }
-
-        gnutls_srp_set_server_credentials_function(cred, srp_callback);
-
-        wait_connection(cp, sock, ai, keepalive, cred, key, cacrt, crt);
-        freeaddrinfo(ai);
         
-        gnutls_srp_free_server_credentials(cred);
+        gnutls_srp_set_server_credentials_function(srpcred, srp_callback);
+#endif
+        
+        gnutls_anon_allocate_server_credentials(&anoncred);
+
+        fprintf(stderr, "\n  - Generating %d bits Diffie-Hellman key for anonymous authentication...", ANON_DH_BITS);
+        gnutls_dh_params_init(&dh_params);
+        gnutls_dh_params_generate2(dh_params, ANON_DH_BITS);
+        gnutls_anon_set_server_dh_params(anoncred, dh_params);
+        
+        wait_connection(cp, sock, ai, keepalive, key, cacrt, crt);
+        freeaddrinfo(ai);
+
+#ifndef GNUTLS_SRP_DISABLED
+        gnutls_srp_free_server_credentials(srpcred);
+#endif
+
+        gnutls_anon_free_server_credentials(anoncred);
         
         return 0;
 }

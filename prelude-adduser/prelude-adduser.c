@@ -84,7 +84,6 @@ int generated_key_size = 0;
 prelude_bool_t server_confirm = TRUE;
 int authority_certificate_lifetime = 0;
 int generated_certificate_lifetime = 0;
-static gnutls_srp_client_credentials cred;
 
 
 
@@ -436,11 +435,51 @@ static int register_sensor_ident(const char *name, uint64_t *ident)
 
 
 
+static int anon_check_passwd(prelude_io_t *fd, char *passwd)
+{
+        int ret;
+        ssize_t size;
+        unsigned char *rbuf;
+        
+        size = prelude_io_write_delimited(fd, passwd, strlen(passwd) + 1);
+        if ( size < 0 ) {
+                fprintf(stderr, "error sending authentication token: %s.\n", prelude_strerror(size));
+                return -1;
+        }
+
+        size = prelude_io_read_delimited(fd, &rbuf);
+        if ( size < 2 ) {
+                fprintf(stderr, "error receiving authentication result: %s.\n", prelude_strerror(size));
+                return -1;
+        }
+
+        ret = memcmp(rbuf, "OK", 2);
+        free(rbuf);
+        
+        if ( ret != 0 ) {
+                fprintf(stderr, "\n- Anonymous authentication to registration-server failed.\n\n");
+                return -1;
+        }
+
+        fprintf(stderr, "  - Anonymous authentication to registration-server successful.\n");
+        return 0;
+}
+
+
+
 static gnutls_session new_tls_session(int sock, char *passwd)
 {
         int ret;
         gnutls_session session;
-        const int kx_priority[] = { GNUTLS_KX_SRP, GNUTLS_KX_SRP_DSS, GNUTLS_KX_SRP_RSA, 0 };
+        gnutls_anon_client_credentials anoncred;
+
+        const int kx_priority[] = {
+#ifndef GNUTLS_SRP_DISABLED
+                GNUTLS_KX_SRP, GNUTLS_KX_SRP_DSS, GNUTLS_KX_SRP_RSA,
+#endif
+                GNUTLS_KX_ANON_DH, 0
+        };
+
         union {
                 int fd;
                 void *ptr;
@@ -449,11 +488,19 @@ static gnutls_session new_tls_session(int sock, char *passwd)
         gnutls_init(&session, GNUTLS_CLIENT);
         gnutls_set_default_priority(session);
         gnutls_kx_set_priority(session, kx_priority);
-        
-        gnutls_srp_allocate_client_credentials(&cred);
-        gnutls_srp_set_client_credentials(cred, "prelude-adduser", passwd); 
-        gnutls_credentials_set(session, GNUTLS_CRD_SRP, cred);
 
+#ifndef GNUTLS_SRP_DISABLED
+        {
+                gnutls_srp_client_credentials srpcred;
+                gnutls_srp_allocate_client_credentials(&srpcred); 
+                gnutls_srp_set_client_credentials(srpcred, "prelude-adduser", passwd);
+                gnutls_credentials_set(session, GNUTLS_CRD_SRP, srpcred);
+        }
+#endif
+      
+        gnutls_anon_allocate_client_credentials(&anoncred);
+        gnutls_credentials_set(session, GNUTLS_CRD_ANON, anoncred);
+        
         data.fd = sock;
         gnutls_transport_set_ptr(session, data.ptr);
         
@@ -529,6 +576,9 @@ static prelude_io_t *connect_manager(const char *addr, unsigned int port, char *
                 
         prelude_io_set_tls_io(fd, session);
 
+        if ( gnutls_auth_get_type(session) == GNUTLS_CRD_ANON && anon_check_passwd(fd, passwd) < 0 ) 
+                return NULL;
+        
         return fd;
 }
 
