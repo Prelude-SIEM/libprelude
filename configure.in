@@ -352,7 +352,7 @@ if test x$srp_available = xno; then
    AC_CHECK_HEADER(gnutls/extra.h, ,
        		AC_MSG_ERROR("libgnutls-extra development headers are required to build libprelude"))
 
-   AC_CHECK_LIB(gnutls-extra, gnutls_srp_verifier, [], AC_DEFINE_UNQUOTED(GNUTLS_SRP_DISABLED, , Define whether SRP support is disabled))
+   AC_CHECK_LIB(gnutls-extra, gnutls_srp_verifier, srp_available=yes, AC_DEFINE_UNQUOTED(GNUTLS_SRP_DISABLED, , Define whether SRP support is disabled))
    if test x$srp_available = xyes; then
          PRELUDE_ADDUSER_CFLAGS="-DNEED_GNUTLS_EXTRA $LIBGNUTLS_EXTRA_CFLAGS"
 	 PRELUDE_ADDUSER_LIBS="$LIBGNUTLS_EXTRA_LIBS $COMMON_LIBS"
