@@ -161,6 +161,9 @@ static prelude_option_t *search_option(prelude_option_t *root, const char *optna
         prelude_list_t *tmp;
         prelude_option_t *item, *ret;
 
+        if ( ! root )
+                return NULL;
+
 #if 0
         cmp = cmp_option(root, optname, type);
         if ( cmp == 0 )
