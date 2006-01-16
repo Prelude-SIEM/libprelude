@@ -172,6 +172,42 @@ int prelude_read_multiline(FILE *fd, unsigned int *line, char *buf, size_t size)
 
 
 
+/**
+ * prelude_read_multiline2:
+ * @fd: File descriptor to read input from.
+ * @line: Pointer to a line counter.
+ * @out: Pointer to a #prelude_string_t object where the line should be stored.
+ *
+ * This function handles line reading separated by the '\' character.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int prelude_read_multiline2(FILE *fd, unsigned int *line, prelude_string_t *out) 
+{
+        int ret;
+        char buf[8192];
+        
+        prelude_string_clear(out);
+
+        do {
+                ret = prelude_read_multiline(fd, line, buf, sizeof(buf));
+                if ( ret < 0 )
+                        break;
+
+                ret = prelude_string_cat(out, buf);
+                if ( ret < 0 )
+                        break;
+                
+                if ( buf[strlen(buf) - 1 ] == '\n' )
+                        break;
+                
+        } while ( 1 );
+
+        return ret;
+}
+
+
+
 
 /**
  * prelude_hton64:
