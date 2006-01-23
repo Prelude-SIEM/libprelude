@@ -90,7 +90,10 @@ int prelude_thread_join(pthread_t th, void **thread_return);
  */
 prelude_bool_t _prelude_thread_in_use(void);
 
+int _prelude_thread_set_error(const char *error);
 
+const char *_prelude_thread_get_error(void);
+         
 #ifdef __cplusplus
  }
 #endif

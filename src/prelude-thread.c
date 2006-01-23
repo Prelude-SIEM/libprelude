@@ -24,6 +24,7 @@
 #include "config.h"
 
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <pthread.h>
@@ -74,7 +75,28 @@
 
 
 
+static pthread_key_t thread_error_key;
+static char *shared_error_buffer = NULL;
 static prelude_bool_t use_thread = FALSE;
+
+
+
+static void thread_error_key_destroy(void *nil)
+{
+        char *ptr = pthread_getspecific(thread_error_key);
+
+        if ( ptr )
+                free(ptr);
+
+        pthread_key_delete(thread_error_key);
+}
+
+
+
+static void thread_error_key_create(void)
+{
+        pthread_key_create(&thread_error_key, thread_error_key_destroy);
+}
 
 
 
@@ -248,5 +270,43 @@ prelude_bool_t _prelude_thread_in_use(void)
         prelude_log(PRELUDE_LOG_DEBUG, "[init] thread used=%d\n", use_thread);
         
         return use_thread;
+}
+
+
+
+
+int _prelude_thread_set_error(const char *error)
+{
+        char *previous;
+        static pthread_once_t thread_error_key_once = PTHREAD_ONCE_INIT;
+        
+        if ( ! use_thread ) {                
+                if ( shared_error_buffer )
+                        free(shared_error_buffer);
+                
+                shared_error_buffer = strdup(error);
+        }
+
+        else {
+                pthread_once(&thread_error_key_once, thread_error_key_create);
+
+                previous = pthread_getspecific(thread_error_key);
+                if ( previous )
+                        free(previous);
+
+                pthread_setspecific(thread_error_key, strdup(error));
+        }
+        
+        return 0;
+}
+
+
+
+const char *_prelude_thread_get_error(void)
+{
+        if ( use_thread )
+                return pthread_getspecific(thread_error_key);
+        else
+                return shared_error_buffer;
 }
 
