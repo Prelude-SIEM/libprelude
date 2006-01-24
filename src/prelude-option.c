@@ -297,7 +297,7 @@ static int do_set(prelude_option_t *opt, const char *value, prelude_string_t *ou
         ret = opt->set(opt, value, out, *context);        
         if ( ret < 0 ) {
                 if ( prelude_string_is_empty(out) )
-                        prelude_string_sprintf(out, "could not set option %s: %s",
+                        prelude_string_sprintf(out, "error setting option \"%s\": %s",
                                                opt->longopt, prelude_strerror(ret));
                 
                 return ret;
