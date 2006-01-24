@@ -58,7 +58,10 @@
 #define GENERIC_ONE_BASE_RW_FUNC(scanfmt, printfmt, name, type)                          \
         static int name ## _read(idmef_value_type_t *dst, const char *buf)               \
         {                                                                                \
-                return sscanf(buf, (scanfmt), &(dst)->data. name ##_val) == 1 ? 0 : -1;  \
+                int ret;                                                                 \
+                ret = sscanf(buf, (scanfmt), &(dst)->data. name ##_val);                 \
+                return (ret == 1) ? 0 : prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE, \
+                                                              "Reading " #name " value failed");    \
         }                                                                                \
                                                                                          \
         static int name ## _write(const idmef_value_type_t *src, prelude_string_t *out)  \
@@ -77,7 +80,8 @@
 		else                                                                    \
 		        ret = sscanf(buf, (fmt_dec), &(dst)->data. name ##_val);        \
                                                                                         \
-                return (ret <= 0) ? -1 : 0;                                             \
+                return (ret == 1) ? 0 : prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE, \
+                                                              "Reading " #name " value failed");    \
 	}										\
 											\
         static int name ## _write(const idmef_value_type_t *src, prelude_string_t *out)	\
@@ -110,9 +114,11 @@ static int byte_read(idmef_value_type_t *dst, const char *buf, unsigned int min,
         char *endptr;
         long int tmp;
 
-        tmp = strtol(buf, &endptr, 0);
+        tmp = strtol(buf, &endptr, 0);        
         if ( tmp < min || tmp > max )
-                return -1;
+                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE,
+                                             "Value out of range, required: [%u-%u], got %s",
+                                             min, max, buf);
         
         dst->data.int8_val = (int8_t) tmp;
 
@@ -232,8 +238,9 @@ static int time_read(idmef_value_type_t *dst, const char *buf)
 	ret = idmef_time_new_from_string(&dst->data.time_val, buf);
         if ( ret == 0 )
                 return 0;
-        
-        return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE);
+
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE,
+                                     "Invalid time format specified: '%s'", buf);
 }
 
 
@@ -435,7 +442,7 @@ static const idmef_value_type_operation_t ops_tbl[] = {
 static int is_type_valid(idmef_value_type_id_t type) 
 {
         if ( type < 0 || type >= (sizeof(ops_tbl) / sizeof(*ops_tbl)) )
-                return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_UNKNOWN);
+                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_UNKNOWN, "Unknown IDMEF type id: '%d'", type);
         
         return 0;
 }
@@ -519,8 +526,7 @@ int idmef_value_type_read(idmef_value_type_t *dst, const char *buf)
                 return prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_READ_UNAVAILABLE);
 
         ret = ops_tbl[dst->id].read(dst, buf);
-        
-        return (ret < 0) ? prelude_error(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE) : 0;
+        return (ret < 0) ? ret : 0;
 }
 
 
