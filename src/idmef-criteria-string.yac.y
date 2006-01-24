@@ -253,7 +253,9 @@ operator:       TOK_OPERATOR_AND		{ $$ = operator_and; }
 
 static void yyerror(char *s)  /* Called by yyparse on error */
 {
-	/* nop */
+        real_ret = prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_IDMEF_CRITERIA,
+                                              PRELUDE_ERROR_IDMEF_CRITERIA_PARSE,
+                                              "Criteria parser reported: %s", s);
 }
 
 
