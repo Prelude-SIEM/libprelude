@@ -28,11 +28,19 @@
 # include "config.h"
 #endif
 
+#include <stdio.h>
+#include <unistd.h>
+#include <stdarg.h>
 #include <errno.h>
+
+
+#include "prelude-thread.h"
+#include "prelude-string.h"
 
 #ifdef __cplusplus
  extern "C" {
 #endif
+
 
 
 /*
@@ -40,7 +48,8 @@
  *
  * Bit 1 of prelude_error_t remain set (negative value).
  * Bit 2 to 9 are set to the source of the error.
- * Bit 10 to 16 are unspecified.
+ * Bit 10 specify whether there is a verbose error available.
+ * Bit 11 to 16 are unspecified.
  * Bit 16 to 32 are set to the code of the error.
  */
 
@@ -69,6 +78,8 @@ typedef enum {
 #define PRELUDE_ERROR_SOURCE_MASK     (PRELUDE_ERROR_SOURCE_DIM - 1)
 #define PRELUDE_ERROR_SOURCE_SHIFT    23
 
+#define PRELUDE_ERROR_VERBOSE_SHIFT  22
+#define PRELUDE_ERROR_VERBOSE_MASK   (1)
 
 typedef signed int prelude_error_t;
 
@@ -95,6 +106,63 @@ static inline prelude_error_t prelude_error(prelude_error_code_t code)
 }
 
 
+
+static prelude_error_t _prelude_error_verbose_common(prelude_error_source_t source,
+					       	      prelude_error_code_t code, const char *fmt, va_list ap)
+{
+	int ret;
+	prelude_string_t *str;
+
+	ret = prelude_string_new(&str);
+	if ( ret < 0 )
+		return ret;
+
+	ret = prelude_string_vprintf(str, fmt, ap);
+	if ( ret < 0 ) {
+		prelude_string_destroy(str);
+		return ret;
+	}
+
+	ret = _prelude_thread_set_error(prelude_string_get_string(str));
+	prelude_string_destroy(str);
+	
+	if ( ret < 0 )
+		return ret;
+
+	return -(-prelude_error_make(source, code) | (1 << PRELUDE_ERROR_VERBOSE_SHIFT));
+}
+
+	
+
+static inline prelude_error_t prelude_error_verbose_make(prelude_error_source_t source,
+						         prelude_error_code_t code, const char *fmt, ...)
+{
+	int ret;
+	va_list ap;
+
+	va_start(ap, fmt);
+	ret = _prelude_error_verbose_common(source, code, fmt, ap);
+	va_end(ap);
+
+	return ret;
+}
+
+
+
+static inline prelude_error_t prelude_error_verbose(prelude_error_code_t code, const char *fmt, ...)
+{
+	int ret;
+	va_list ap;
+
+	va_start(ap, fmt);
+	ret = _prelude_error_verbose_common(PRELUDE_ERROR_SOURCE_DEFAULT, code, fmt, ap);
+	va_end(ap);
+
+	return ret;
+}
+
+
+
 static inline prelude_error_code_t prelude_error_get_code(prelude_error_t error)
 {
         return (prelude_error_code_t) ((-error) & PRELUDE_ERROR_CODE_MASK);
@@ -110,6 +178,12 @@ static inline prelude_error_source_t prelude_error_get_source(prelude_error_t er
 static inline prelude_error_t prelude_error_from_errno(int err)
 {
         return prelude_error_make(PRELUDE_ERROR_SOURCE_DEFAULT, prelude_error_code_from_errno(err));
+}
+
+
+static inline prelude_bool_t prelude_error_is_verbose(prelude_error_t err)
+{
+	return ((-err) >> PRELUDE_ERROR_VERBOSE_SHIFT) & PRELUDE_ERROR_VERBOSE_MASK;
 }
 
 
