@@ -91,12 +91,12 @@ inline static int check_string_f(const char *f, int l, const char *str, size_t l
 {
         if ( (len + 1) < len ) {
                 prelude_log(PRELUDE_LOG_WARN, "%s:%d: warning, wrap around detected.\n", f, l);
-                return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
+                return prelude_error_verbose(PRELUDE_ERROR_INVAL_LENGTH, "string warning: wrap around would occur");
         }
         
         if ( str[len] != 0 ) {
                 prelude_log(PRELUDE_LOG_WARN, "%s:%d: warning, string is not NULL terminated.\n", f, l);
-                return prelude_error(PRELUDE_ERROR_STRING_NOT_NULL_TERMINATED);
+                return prelude_error_verbose(PRELUDE_ERROR_STRING_NOT_NULL_TERMINATED, "string warning: not nul terminated");
         }
 
         return 0;
