@@ -40,7 +40,7 @@
 #include "idmef-value-type.h"
 
 
-#define OBJECT_OPERATOR  IDMEF_CRITERION_OPERATOR_NULL|IDMEF_CRITERION_OPERATOR_NOT
+#define CLASS_OPERATOR  IDMEF_CRITERION_OPERATOR_NULL|IDMEF_CRITERION_OPERATOR_NOT
 
 #define DATA_OPERATOR    IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT| \
                          IDMEF_CRITERION_OPERATOR_LESSER|IDMEF_CRITERION_OPERATOR_GREATER
@@ -92,8 +92,10 @@
 
 
 typedef struct {
+        const char *name;
+        
         size_t len;
-
+        
         idmef_criterion_operator_t operator;
         
         int (*copy)(const idmef_value_type_t *src, void *dst, size_t size);
@@ -404,37 +406,37 @@ static void data_destroy(idmef_value_type_t *type)
 
 
 static const idmef_value_type_operation_t ops_tbl[] = {
-        { 0, 0, NULL, NULL, NULL, NULL, NULL, NULL},
-        { sizeof(int8_t), INTEGER_OPERATOR, generic_copy,
+        { "unknown", 0, 0, NULL, NULL, NULL, NULL, NULL, NULL                     },
+        { "int8", sizeof(int8_t), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, int8_read, int8_write             },
-        { sizeof(uint8_t), INTEGER_OPERATOR, generic_copy,
+        { "uint8", sizeof(uint8_t), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, uint8_read, uint8_write           },
-        { sizeof(int16_t), INTEGER_OPERATOR, generic_copy,
+        { "int16", sizeof(int16_t), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, int16_read, int16_write           },
-        { sizeof(uint16_t), INTEGER_OPERATOR, generic_copy,
+        { "uint16", sizeof(uint16_t), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, uint16_read, uint16_write         },
-        { sizeof(int32_t), INTEGER_OPERATOR, generic_copy,
+        { "int32", sizeof(int32_t), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, int32_read, int32_write           },
-        { sizeof(uint32_t), INTEGER_OPERATOR, generic_copy,
+        { "uint32", sizeof(uint32_t), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, uint32_read, uint32_write         },
-        { sizeof(int64_t), INTEGER_OPERATOR, generic_copy,
+        { "int64", sizeof(int64_t), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, int64_read, int64_write           },
-        { sizeof(uint64_t), INTEGER_OPERATOR, generic_copy, 
+        { "uint64", sizeof(uint64_t), INTEGER_OPERATOR, generic_copy, 
           generic_clone, NULL, generic_compare, uint64_read, uint64_write         },
-        { sizeof(float), INTEGER_OPERATOR, generic_copy,
+        { "float", sizeof(float), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, float_read, float_write           },
-        { sizeof(double), INTEGER_OPERATOR, generic_copy,
+        { "double", sizeof(double), INTEGER_OPERATOR, generic_copy,
           generic_clone, NULL, generic_compare, double_read, double_write         },
-        { 0, STRING_OPERATOR, string_copy,
+        { "string", 0, STRING_OPERATOR, string_copy,
           string_clone, string_destroy, string_compare, string_read, string_write },
-        { 0, TIME_OPERATOR, time_copy,
+        { "time", 0, TIME_OPERATOR, time_copy,
           time_clone, time_destroy, time_compare, time_read, time_write           }, 
-        { 0, DATA_OPERATOR, data_copy,
+        { "data", 0, DATA_OPERATOR, data_copy,
           data_clone, data_destroy, data_compare, data_read, data_write           },
-        { sizeof(idmef_value_type_id_t), INTEGER_OPERATOR, generic_copy,
-          generic_clone, NULL, generic_compare, enum_read, enum_write, /* enum */ },
-        { 0, 0, NULL, NULL, NULL, NULL, NULL, NULL                                },
-        { 0, OBJECT_OPERATOR, NULL, NULL, NULL, NULL, NULL, NULL                  },
+        { "enum", sizeof(idmef_value_type_id_t), INTEGER_OPERATOR, generic_copy,
+          generic_clone, NULL, generic_compare, enum_read, enum_write,            },
+        { "list", 0, 0, NULL, NULL, NULL, NULL, NULL, NULL                        },
+        { "class", 0, CLASS_OPERATOR, NULL, NULL, NULL, NULL, NULL, NULL          },
 };
 
 
@@ -448,6 +450,12 @@ static int is_type_valid(idmef_value_type_id_t type)
 }
 
 
+
+static const char *type_id_to_string(idmef_value_type_id_t type)
+{
+        return ops_tbl[type].name;
+        
+}
 
 
 int idmef_value_type_clone(const idmef_value_type_t *src, idmef_value_type_t *dst)
@@ -575,6 +583,10 @@ int idmef_value_type_check_operator(const idmef_value_type_t *type, idmef_criter
         
         if ( (~ops_tbl[type->id].operator & op) == 0 )
                 return 0;
+        
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CRITERION_UNSUPPORTED_OPERATOR,
+                                     "Object type '%s' does not support operator '%s'",
+                                     type_id_to_string(type->id), idmef_criterion_operator_to_string(op));
         
         return prelude_error(PRELUDE_ERROR_IDMEF_CRITERION_UNSUPPORTED_OPERATOR);
 }
