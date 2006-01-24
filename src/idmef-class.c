@@ -60,7 +60,7 @@ idmef_class_child_id_t idmef_class_find_child(idmef_class_id_t class, const char
 		if ( strcasecmp(list[i].name, name) == 0)
 			return i;
 
-	return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_NAME);
+	return prelude_error_verbose(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_NAME, "Unknown IDMEF element '%s'", name);
 }
 
 
