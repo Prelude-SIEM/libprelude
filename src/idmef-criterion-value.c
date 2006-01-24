@@ -124,7 +124,7 @@ static int btime_parse_month(const char *value, int *out)
                 }
         }
         
-        return -1;  
+        return -1;
 }
 
 
@@ -656,13 +656,13 @@ int idmef_criterion_value_new_regex(idmef_criterion_value_t **cv, const char *re
                 char errbuf[1024];
                 
                 regerror(ret, &rv->regex, errbuf, sizeof(errbuf));
-                prelude_log(PRELUDE_LOG_DEBUG, "%s.\n", errbuf);
-                
+                                 
                 free(rv->regex_string);
                 free(rv);
                 free(*cv);
 
-                return prelude_error(PRELUDE_ERROR_IDMEF_CRITERION_INVALID_REGEX);
+                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CRITERION_INVALID_REGEX,
+                                             "error compiling regex: %s", errbuf);
         }
 
         (*cv)->match = regex_match;
@@ -710,22 +710,35 @@ int idmef_criterion_value_new_from_string(idmef_criterion_value_t **cv,
 {
         int ret;
         idmef_value_t *val;
-        
-        if ( operator & IDMEF_CRITERION_OPERATOR_REGEX )
-                return idmef_criterion_value_new_regex(cv, value, operator);
-
+        idmef_value_type_t type;
+                
         if ( idmef_path_get_value_type(path, -1) == IDMEF_VALUE_TYPE_TIME ) {
                 ret = idmef_criterion_value_new_broken_down_time(cv, value, operator);
                 if ( ret == 0 )
                         return ret;
         }
+
+        else if ( operator & IDMEF_CRITERION_OPERATOR_REGEX &&
+                  (idmef_path_get_value_type(path, -1) == IDMEF_VALUE_TYPE_STRING ||
+                   idmef_path_get_value_type(path, -1) == IDMEF_VALUE_TYPE_ENUM) )
+                return idmef_criterion_value_new_regex(cv, value, operator);
+
+        /*
+         * It's more understandable for the user if we check the operator
+         * prior to checking the value.
+         */
+        type.id = idmef_path_get_value_type(path, -1);
         
+        ret = idmef_value_type_check_operator(&type, operator);
+        if ( ret < 0 )
+                return ret;
+
         ret = idmef_value_new_from_path(&val, path, value);
         if ( ret < 0 )
                 return ret;
         
-	ret = idmef_criterion_value_new_value(cv, val, operator);
-	if ( ret < 0 ) {
+	ret = idmef_criterion_value_new_value(cv, val, operator);        
+        if ( ret < 0 ) {
 		idmef_value_destroy(val);
 		return ret;
 	}
