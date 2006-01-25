@@ -105,10 +105,13 @@ static int connection_write_msgbuf(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
 
 
 
-static void auth_error(prelude_connection_t *cnx, prelude_connection_permission_t reqperms,
-                       prelude_client_profile_t *cp) 
+static int auth_error(prelude_connection_t *cnx,
+                      prelude_connection_permission_t reqperms,
+                      prelude_client_profile_t *cp, prelude_error_t error, const char *fmt, ...) 
 {
-        char *tmp;
+        int ret;
+        va_list ap;
+        char *tmp, buf[1024];
         prelude_string_t *out;
 
         prelude_string_new(&out);
@@ -117,16 +120,22 @@ static void auth_error(prelude_connection_t *cnx, prelude_connection_permission_
         tmp = strrchr(cnx->daddr, ':');
         if ( tmp )
                 *tmp = '\0';
+
+        va_start(ap, fmt);
+        vsnprintf(buf, sizeof(buf), fmt, ap);
+        va_end(ap);
         
-        prelude_log(PRELUDE_LOG_WARN, "\nTLS authentication failed. Please run :\n"
-                    "prelude-adduser register %s \"%s\" %s --uid %d --gid %d\n"
-                    "program on the sensor host to create an account for this sensor.\n\n",
-                    prelude_client_profile_get_name(cp), prelude_string_get_string(out), cnx->daddr,
-                    prelude_client_profile_get_uid(cp), prelude_client_profile_get_gid(cp));
-        
+        ret = prelude_error_verbose_make(prelude_error_get_source(error), prelude_error_get_code(error), "%s.\n\n"
+                 "In order to register this sensor, please run:\n"
+                 "prelude-adduser register %s \"%s\" %s --uid %d --gid %d\n",
+                 buf, prelude_client_profile_get_name(cp), prelude_string_get_string(out), cnx->daddr,
+                 prelude_client_profile_get_uid(cp), prelude_client_profile_get_gid(cp));
+                 
         prelude_string_destroy(out);
         if ( tmp )
                 *tmp = ':';
+
+        return ret;
 }
 
 
@@ -219,10 +228,8 @@ static int handle_authentication(prelude_connection_t *cnx,
         prelude_string_t *gbuf, *wbuf;
         
         ret = tls_auth_connection(cp, cnx->fd, crypt, &cnx->peer_analyzerid, &cnx->permission);
-        if ( ret < 0 ) {
-                auth_error(cnx, reqperms, cp);
-                return ret;
-        }
+        if ( ret < 0 )
+                return auth_error(cnx, reqperms, cp, ret, "%s", prelude_strerror(ret));
 
         if ( (cnx->permission & reqperms) != reqperms ) {
                 ret = prelude_string_new(&gbuf);
@@ -237,16 +244,15 @@ static int handle_authentication(prelude_connection_t *cnx,
                                 
                 prelude_connection_permission_to_string(cnx->permission, gbuf);
                 prelude_connection_permission_to_string(reqperms, wbuf);
-
-                ret = prelude_error_verbose(PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS,
-                                            "Insufficient credentials: got '%s' but at least '%s' required",
-                                            prelude_string_get_string(gbuf), prelude_string_get_string(wbuf));
+                
+                ret = auth_error(cnx, reqperms, cp, prelude_error(PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS),
+                                 "Insufficient credentials: got '%s' but at least '%s' required",
+                                 prelude_string_get_string(gbuf), prelude_string_get_string(wbuf));
                 
                 prelude_string_destroy(gbuf);
                 prelude_string_destroy(wbuf);
                 
         err:
-                auth_error(cnx, reqperms, cp);
                 return ret;
         }
 

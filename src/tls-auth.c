@@ -90,35 +90,24 @@ static int read_auth_result(prelude_io_t *fd)
 static int verify_certificate(gnutls_session session)
 {
 	int ret;
+        const prelude_error_code_t code = PRELUDE_ERROR_TLS_INVALID_CERTIFICATE;
         
 	ret = gnutls_certificate_verify_peers(session);
-	if ( ret < 0 ) {
-                prelude_log(PRELUDE_LOG_WARN, "- TLS certificate error: %s.\n", gnutls_strerror(ret));
-                return -1;
-        }
+	if ( ret < 0 )
+                return prelude_error_verbose(code, "TLS certificate verification: %s", gnutls_strerror(ret));
+
+	if ( ret == GNUTLS_E_NO_CERTIFICATE_FOUND )
+                return prelude_error_verbose(code, "TLS server did not send any certificate");
         
-	if ( ret == GNUTLS_E_NO_CERTIFICATE_FOUND ) {
-		prelude_log(PRELUDE_LOG_WARN, "- TLS certificate error: server did not send any certificate.\n");
-		return -1;
-	}
-
-        if ( ret & GNUTLS_CERT_SIGNER_NOT_FOUND) {
-		prelude_log(PRELUDE_LOG_WARN, "- TLS certificate error: server certificate issuer is unknown.\n");
-                return -1;
-        }
+        if ( ret & GNUTLS_CERT_SIGNER_NOT_FOUND)
+                return prelude_error_verbose(code, "TLS server certificate issuer is unknown");
         
-        if ( ret & GNUTLS_CERT_INVALID ) {
-                prelude_log(PRELUDE_LOG_WARN, "- TLS certificate error: server certificate is NOT trusted.\n");
-                return -1;
-        }
-
-        if ( ret & GNUTLS_CERT_SIGNER_NOT_CA ) {
-                prelude_log(PRELUDE_LOG_WARN, "- TLS certificate error: server certificate issuer is not a CA.\n");
-                return -1;
-        }
-
-        prelude_log(PRELUDE_LOG_INFO, "- TLS certificate: server certificate is trusted.\n");
-
+        if ( ret & GNUTLS_CERT_INVALID )
+                return prelude_error_verbose(code, "TLS server certificate is NOT trusted");
+        
+        if ( ret & GNUTLS_CERT_SIGNER_NOT_CA )
+                return prelude_error_verbose(code, "TLS server certificate issuer is not a CA");
+        
         return 0;
 }
 
@@ -191,7 +180,7 @@ int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int cryp
         ret = verify_certificate(session);        
         if ( ret < 0 ) {
                 gnutls_deinit(session);
-                return prelude_error(PRELUDE_ERROR_TLS_INVALID_CERTIFICATE);
+                return ret;
         }
         
         prelude_io_set_tls_io(io, session);
