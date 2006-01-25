@@ -1,4 +1,4 @@
-/* Find the length of STRING, but scan at most MAXLEN characters.
+/* Provide a sys/socket header file for systems lacking it (read: mingw32).
    Copyright (C) 2005, 2006 Free Software Foundation, Inc.
    Written by Simon Josefsson.
 
@@ -16,18 +16,33 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
+#ifndef _SYS_SOCKET_H
+#define _SYS_SOCKET_H
+
+/* This file is supposed to be used on platforms that lack
+   sys/socket.h.  It is intended to provide definitions and prototypes
+   needed by an application.
+
+   Currently only mingw32 is supported, which has the header files
+   winsock2.h and ws2tcpip.h that declare the sys/socket.h definitions
+   we need. */
+
+#if HAVE_WINSOCK2_H
+# include <winsock2.h>
+#endif
+#if HAVE_WS2TCPIP_H
+# include <ws2tcpip.h>
 #endif
 
-#include "strnlen.h"
+/* For shutdown(). */
+#if !defined SHUT_RD && defined SD_RECEIVE
+# define SHUT_RD SD_RECEIVE
+#endif
+#if !defined SHUT_WR && defined SD_SEND
+# define SHUT_WR SD_SEND
+#endif
+#if !defined SHUT_RDWR && defined SD_BOTH
+# define SHUT_RDWR SD_BOTH
+#endif
 
-/* Find the length of STRING, but scan at most MAXLEN characters.
-   If no '\0' terminator is found in that many characters, return MAXLEN.  */
-
-size_t
-strnlen (const char *string, size_t maxlen)
-{
-  const char *end = memchr (string, '\0', maxlen);
-  return end ? (size_t) (end - string) : maxlen;
-}
+#endif /* _SYS_SOCKET_H */

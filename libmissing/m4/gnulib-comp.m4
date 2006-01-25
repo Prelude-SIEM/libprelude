@@ -18,6 +18,7 @@
 # any checks for libraries, header files, types and library functions.
 AC_DEFUN([gl_EARLY],
 [
+  AC_REQUIRE([AC_PROG_RANLIB])
   AC_REQUIRE([AC_GNU_SOURCE])
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
 ])
@@ -26,7 +27,7 @@ AC_DEFUN([gl_EARLY],
 # "Check for header files, types and library functions".
 AC_DEFUN([gl_INIT],
 [
-AM_CONDITIONAL([GL_COND_LIBTOOL], [true])
+  AM_CONDITIONAL([GL_COND_LIBTOOL], [true])
 changequote(,)dnl
 LTALLOCA=`echo "$ALLOCA" | sed 's/\.[^.]* /.lo /g;s/\.[^.]*$/.lo/'`
 changequote([, ])dnl
@@ -56,6 +57,7 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_STRNLEN
   gl_FUNC_STRPBRK
   gl_FUNC_STRSEP
+  gl_HEADER_SYS_SOCKET
   gl_TIME_R
   gl_FUNC_TIMEGM
   gl_FUNC_VASNPRINTF
@@ -98,6 +100,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/size_max.h
   lib/snprintf.c
   lib/snprintf.h
+  lib/socket_.h
   lib/stdbool_.h
   lib/strcase.h
   lib/strcasecmp.c
@@ -160,6 +163,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/strnlen.m4
   m4/strpbrk.m4
   m4/strsep.m4
+  m4/sys_socket_h.m4
   m4/time_r.m4
   m4/timegm.m4
   m4/vasnprintf.m4
