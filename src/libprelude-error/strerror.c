@@ -35,6 +35,9 @@ const char *prelude_strerror(prelude_error_t err)
 {
 	int no;
   	prelude_error_code_t code = prelude_error_get_code(err);
+
+        if ( prelude_error_is_verbose(err) )
+                return _prelude_thread_get_error();
         
   	if ( code & PRELUDE_ERROR_SYSTEM_ERROR ) {
       		no = prelude_error_code_to_errno(code);
@@ -43,9 +46,6 @@ const char *prelude_strerror(prelude_error_t err)
       		else
 			code = PRELUDE_ERROR_UNKNOWN_ERRNO;
     	}
-        
-        if ( prelude_error_is_verbose(err) )
-                return _prelude_thread_get_error();
         
   	return dgettext(PACKAGE, msgstr + msgidx[msgidxof(code)]);
 }
