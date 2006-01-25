@@ -278,27 +278,22 @@ static int tls_check_error(prelude_io_t *pio, int ret)
         else if ( ret == GNUTLS_E_FATAL_ALERT_RECEIVED ) {
                 alert = gnutls_alert_get_name(gnutls_alert_get(pio->fd_ptr));
                 prelude_log(PRELUDE_LOG_ERR, "TLS: received fatal alert: %s.\n", alert);
+                return prelude_error_verbose(PRELUDE_ERROR_TLS, "TLS: %s", alert);
         }
 
         else {
-                if ( ret == GNUTLS_E_UNEXPECTED_PACKET_LENGTH ) {
-                        prelude_log(PRELUDE_LOG_DEBUG, "TLS: %s.\n", gnutls_strerror(ret));
-#ifdef ECONNRESET
-                        return prelude_error_from_errno(ECONNRESET);
-#else
-                        return prelude_error(PRELUDE_ERROR_EOF);
-#endif
-                }
+                if ( ret == GNUTLS_E_UNEXPECTED_PACKET_LENGTH )
+                        return prelude_error_verbose(PRELUDE_ERROR_EOF, "TLS: %s", gnutls_strerror(ret));
                 
                 else if ( ret == GNUTLS_E_INVALID_SESSION ) {
                         prelude_log(PRELUDE_LOG_DEBUG, "TLS: %s.\n", gnutls_strerror(ret));
-                        return prelude_error(PRELUDE_ERROR_EOF);
+                        return prelude_error_verbose(PRELUDE_ERROR_EOF, "TLS: %s", gnutls_strerror(ret));
                 }
                 
                 prelude_log(PRELUDE_LOG_ERR, "TLS: %s.\n", gnutls_strerror(ret));
         }
         
-        return prelude_error(PRELUDE_ERROR_TLS);
+        return prelude_error_verbose(PRELUDE_ERROR_TLS, "TLS: %s", gnutls_strerror(ret));
 }
 
 
@@ -337,9 +332,9 @@ static ssize_t tls_write(prelude_io_t *pio, const void *buf, size_t count)
 static int tls_close(prelude_io_t *pio) 
 {
         int ret;
-
+        
         do {
-                ret = gnutls_bye(pio->fd_ptr, GNUTLS_SHUT_RDWR);
+                ret = gnutls_bye(pio->fd_ptr, GNUTLS_SHUT_WR);                
         } while ( ret < 0 && (ret = tls_check_error(pio, ret)) == 0 );
 
         if ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN )
