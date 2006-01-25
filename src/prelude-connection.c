@@ -238,16 +238,16 @@ static int handle_authentication(prelude_connection_t *cnx,
                 prelude_connection_permission_to_string(cnx->permission, gbuf);
                 prelude_connection_permission_to_string(reqperms, wbuf);
 
-                prelude_log(PRELUDE_LOG_WARN,
-                            "- Insufficient credentials: got \"%s\" but at least \"%s\" required.\n",
-                            prelude_string_get_string(gbuf), prelude_string_get_string(wbuf));
-
+                ret = prelude_error_verbose(PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS,
+                                            "Insufficient credentials: got '%s' but at least '%s' required",
+                                            prelude_string_get_string(gbuf), prelude_string_get_string(wbuf));
+                
                 prelude_string_destroy(gbuf);
                 prelude_string_destroy(wbuf);
-
+                
         err:
                 auth_error(cnx, reqperms, cp);
-                return prelude_error(PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS);
+                return ret;
         }
 
         prelude_log(PRELUDE_LOG_INFO, "- TLS authentication succeed with Prelude Manager.\n");
@@ -285,8 +285,8 @@ static int start_inet_connection(prelude_connection_t *cnx,
         len = sizeof(addr);
 
         ret = getsockname(sock, (struct sockaddr *) &addr, &len);
-        if ( ret < 0 ) 
-                prelude_log(PRELUDE_LOG_ERR, "couldn't get connection informations.\n");
+        if ( ret < 0 )
+                ret = prelude_error_verbose(PRELUDE_ERROR_SYSTEM_ERROR, "getsockname failed: %s", strerror(errno));
         else {
                 cnx->saddr = strdup(inet_ntoa(addr.sin_addr));
                 cnx->sport = ntohs(addr.sin_port);
@@ -429,9 +429,10 @@ static int do_getaddrinfo(prelude_connection_t *cnx, struct addrinfo **ai, const
         
         ret = getaddrinfo(addr, buf, &hints, ai);
         if ( ret != 0 ) {
-                prelude_log(PRELUDE_LOG_WARN, "could not resolve %s: %s.\n",
-                            addr, (ret == EAI_SYSTEM) ? strerror(errno) : gai_strerror(ret));
-                return prelude_error(PRELUDE_ERROR_CANT_RESOLVE);
+                ret = prelude_error_verbose(PRELUDE_ERROR_CANT_RESOLVE, "could not resolve '%s': %s",
+                                            addr, (ret == EAI_SYSTEM) ? strerror(errno) : gai_strerror(ret));
+                free(addr);
+                return ret;
         }
         
         snprintf(buf, sizeof(buf), "%s:%d", addr, port);
@@ -532,7 +533,7 @@ int prelude_connection_new(prelude_connection_t **out, const char *addr)
                 if ( ret < 0 ) {
                         prelude_io_destroy(new->fd);
                         free(new);
-                        return prelude_error(PRELUDE_ERROR_CANT_RESOLVE);
+                        return ret;
                 }
         }
         
@@ -641,15 +642,13 @@ int prelude_connection_recv(prelude_connection_t *cnx, prelude_msg_t **msg)
                 return ret;
 
         tag = prelude_msg_get_tag(*msg);
-        if ( tag == PRELUDE_MSG_IDMEF && !(cnx->permission & PRELUDE_CONNECTION_PERMISSION_IDMEF_READ) ) {
-                prelude_log(PRELUDE_LOG_WARN, "insufficiant credentials for receiving IDMEF message.\n");
-                return prelude_error(PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS);
-        }
+        if ( tag == PRELUDE_MSG_IDMEF && !(cnx->permission & PRELUDE_CONNECTION_PERMISSION_IDMEF_READ) )
+                return prelude_error_verbose(PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS,
+                                             "Insufficient credentials for receiving IDMEF message");
         
-        if ( tag == PRELUDE_MSG_OPTION_REQUEST && !(cnx->permission & PRELUDE_CONNECTION_PERMISSION_ADMIN_READ) ) {
-                prelude_log(PRELUDE_LOG_WARN, "insufficiant credentials for receiving IDMEF message.\n");
-                return prelude_error(PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS);
-        }
+        if ( tag == PRELUDE_MSG_OPTION_REQUEST && !(cnx->permission & PRELUDE_CONNECTION_PERMISSION_ADMIN_READ) )
+                return prelude_error_verbose(PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS,
+                                             "Insufficient credentials for receiving administrative message");
         
         return ret;
 }
