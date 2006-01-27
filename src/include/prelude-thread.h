@@ -93,6 +93,8 @@ prelude_bool_t _prelude_thread_in_use(void);
 int _prelude_thread_set_error(const char *error);
 
 const char *_prelude_thread_get_error(void);
+
+void _prelude_thread_exit(void);
          
 #ifdef __cplusplus
  }

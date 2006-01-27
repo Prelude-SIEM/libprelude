@@ -219,6 +219,18 @@ int prelude_thread_init(void *nil)
 }
 
 
+/*
+ *
+ */
+void _prelude_thread_exit(void)
+{
+        if ( ! use_thread && shared_error_buffer ) {
+                free(shared_error_buffer);
+                shared_error_buffer = NULL;
+        }
+}
+
+
 
 /*
  * Pthread stubs detection code for Solaris/Hp from GnuLib.
