@@ -332,7 +332,9 @@ int idmef_path_set(idmef_path_t *path, idmef_message_t *message, idmef_value_t *
                 elem = &path->elem[i];
                 
 	    	if ( elem->index == INDEX_UNDEFINED && idmef_class_is_child_list(class, elem->position) )
-			return prelude_error(PRELUDE_ERROR_IDMEF_PATH_MISS_INDEX);
+			return prelude_error_verbose(PRELUDE_ERROR_IDMEF_PATH_MISS_INDEX,
+                                                     "IDMEF path element '%s' need indexing",
+                                                     idmef_class_get_name(elem->class));
 
                 ret = idmef_class_new_child(ptr, class, elem->position, elem->index, &child);
                 if ( ret < 0 )
@@ -460,8 +462,9 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
                         *ptr2 = '(';
                         
                         if ( ! idmef_class_is_child_list(class, child) )
-			    	return prelude_error(PRELUDE_ERROR_IDMEF_PATH_INDEX_FORBIDDEN);
-
+			    	return prelude_error_verbose(PRELUDE_ERROR_IDMEF_PATH_INDEX_FORBIDDEN,
+                                                             "Invalid IDMEF path element '%s': indexing not supported", ptr);
+                        
                         path->elem[depth].index = index;
                 }
 
