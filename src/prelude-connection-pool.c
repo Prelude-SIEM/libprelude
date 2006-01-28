@@ -256,8 +256,9 @@ static void notify_dead(cnx_t *cnx, prelude_error_t error, prelude_bool_t init_t
         if ( cnx->is_dead )
                 return;
 
-        prelude_log(PRELUDE_LOG_WARN, "Failover enabled: connection error with %s: %s\n",
-                    prelude_connection_get_peer_addr(cnx->cnx), prelude_strerror(error));
+        if ( ! init_time || ! prelude_client_is_setup_needed(error) ) 
+                prelude_log(PRELUDE_LOG_WARN, "Failover enabled: connection error with %s: %s\n\n",
+                            prelude_connection_get_peer_addr(cnx->cnx), prelude_strerror(error));
         
         clist->dead++;
         cnx->is_dead = TRUE;
@@ -424,7 +425,7 @@ static void connection_timer_expire(void *data)
         
         ret = prelude_connection_connect(cnx->cnx, pool->client_profile, pool->permission);
         if ( ret < 0 ) {
-                prelude_log(PRELUDE_LOG_WARN, "Failover enabled: connection error with %s: %s\n",
+                prelude_log(PRELUDE_LOG_WARN, "Failover enabled: connection error with %s: %s\n\n",
                             prelude_connection_get_peer_addr(cnx->cnx), prelude_strerror(ret));
                                 
                 /*
