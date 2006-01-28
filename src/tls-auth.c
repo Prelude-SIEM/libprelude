@@ -89,26 +89,55 @@ static int read_auth_result(prelude_io_t *fd)
 
 static int verify_certificate(gnutls_session session)
 {
-	int ret;
+        time_t now;
+	int ret, status, alert = 0;
         const prelude_error_code_t code = PRELUDE_ERROR_TLS_INVALID_CERTIFICATE;
         
-	ret = gnutls_certificate_verify_peers(session);
-	if ( ret < 0 )
-                return prelude_error_verbose(code, "TLS certificate verification: %s", gnutls_strerror(ret));
+	ret = gnutls_certificate_verify_peers2(session, &status);
+	if ( ret < 0 ) {
+                gnutls_alert_send_appropriate(session, ret);
+                return prelude_error_verbose(code, "TLS certificate verification failed: %s", gnutls_strerror(ret));
+        }        
+        
+        if ( status & GNUTLS_CERT_INVALID ) {
+                alert = GNUTLS_A_BAD_CERTIFICATE;
+                ret = prelude_error_verbose(code, "TLS server certificate is NOT trusted");
+        }
+        
+        else if ( status & GNUTLS_CERT_REVOKED ) {
+                alert = GNUTLS_A_CERTIFICATE_REVOKED;
+                ret = prelude_error_verbose(code, "TLS server certificate was revoked");
+        }
+        
+        else if ( status & GNUTLS_CERT_SIGNER_NOT_FOUND) {
+                alert = GNUTLS_A_UNKNOWN_CA;
+                ret = prelude_error_verbose(code, "TLS server certificate issuer is unknown");
+        }
+        
+        else if ( status & GNUTLS_CERT_SIGNER_NOT_CA ) {
+                alert = GNUTLS_A_CERTIFICATE_UNKNOWN;
+                ret = prelude_error_verbose(code, "TLS server certificate issuer is not a CA");
+        }
 
-	if ( ret == GNUTLS_E_NO_CERTIFICATE_FOUND )
-                return prelude_error_verbose(code, "TLS server did not send any certificate");
+#ifdef GNUTLS_CERT_INSECURE_ALGORITHM
+        else if ( status & GNUTLS_CERT_INSECURE_ALGORITHM ) {
+                alert = GNUTLS_A_INSUFFICIENT_SECURITY;
+                ret = prelude_error_verbose(code, "TLS server certificate use insecure algorithm");
+        }
+#endif
+
+        now = time(NULL);
         
-        if ( ret & GNUTLS_CERT_SIGNER_NOT_FOUND)
-                return prelude_error_verbose(code, "TLS server certificate issuer is unknown");
+        if ( gnutls_certificate_activation_time_peers(session) > now )
+                ret = prelude_error_verbose(code, "TLS server certificate not yet activated.\n");
+
+        if ( gnutls_certificate_expiration_time_peers(session) < now )
+                ret = prelude_error_verbose(code, "TLS server certificate expired.\n");
         
-        if ( ret & GNUTLS_CERT_INVALID )
-                return prelude_error_verbose(code, "TLS server certificate is NOT trusted");
+        if ( ret < 0 )
+                gnutls_alert_send(session, GNUTLS_AL_FATAL, alert);
         
-        if ( ret & GNUTLS_CERT_SIGNER_NOT_CA )
-                return prelude_error_verbose(code, "TLS server certificate issuer is not a CA");
-        
-        return 0;
+        return ret;
 }
 
 
@@ -224,10 +253,9 @@ int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *
                 gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread);
         
         ret = gnutls_global_init();
-        if ( ret < 0 ) {
-                prelude_log(PRELUDE_LOG_ERR, "GnuTLS initialization failed: %s.\n", gnutls_strerror(ret));
-                return prelude_error_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS);
-        }
+        if ( ret < 0 )
+                return prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS,
+                                                  "GnuTLS initialization failed: %s", gnutls_strerror(ret));
         
         prelude_client_profile_get_tls_key_filename(cp, keyfile, sizeof(keyfile));
         prelude_client_profile_get_tls_client_keycert_filename(cp, certfile, sizeof(certfile));
@@ -235,10 +263,9 @@ int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *
         gnutls_certificate_allocate_credentials(cred);
         
         ret = access(certfile, F_OK);
-        if ( ret < 0 ) {
-                prelude_log(PRELUDE_LOG_ERR, "access to %s failed: %s.\n", certfile, strerror(errno));
-                return prelude_error_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS_CERTIFICATE_FILE);
-        }
+        if ( ret < 0 )
+                return prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS_CERTIFICATE_FILE,
+                                                  "access to %s failed: %s", certfile, strerror(errno));
         
         ret = tls_certificates_load(keyfile, certfile, *cred);
         if ( ret < 0 )
@@ -247,10 +274,9 @@ int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *
         prelude_client_profile_get_tls_client_trusted_cert_filename(cp, certfile, sizeof(certfile));
         
         ret = gnutls_certificate_set_x509_trust_file(*cred, certfile, GNUTLS_X509_FMT_PEM);
-        if ( ret < 0 ) {
-                prelude_log(PRELUDE_LOG_ERR, "could not set x509 trust file '%s': %s.\n", certfile, gnutls_strerror(ret));
-                return prelude_error_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS_CERTIFICATE_PARSE);
-        }
+        if ( ret < 0 )
+                return prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS_CERTIFICATE_PARSE,
+                                                  "could not set x509 trust file '%s': %s", certfile, gnutls_strerror(ret));
         
         return 0;
 }
