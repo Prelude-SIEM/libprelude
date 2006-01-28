@@ -127,7 +127,7 @@ static int auth_error(prelude_connection_t *cnx,
         
         ret = prelude_error_verbose_make(prelude_error_get_source(error), prelude_error_get_code(error), "%s.\n\n"
                  "In order to register this sensor, please run:\n"
-                 "prelude-adduser register %s \"%s\" %s --uid %d --gid %d\n",
+                 "prelude-adduser register %s \"%s\" %s --uid %d --gid %d",
                  buf, prelude_client_profile_get_name(cp), prelude_string_get_string(out), cnx->daddr,
                  prelude_client_profile_get_uid(cp), prelude_client_profile_get_gid(cp));
                  
@@ -269,7 +269,7 @@ static int start_inet_connection(prelude_connection_t *cnx,
                                  prelude_connection_permission_t reqperms, prelude_client_profile_t *profile) 
 {
         socklen_t len;
-        int sock, ret;
+        int sock, ret, tmp;
         struct sockaddr_in addr;
         
         sock = generic_connect(cnx->sa, cnx->salen);
@@ -280,7 +280,10 @@ static int start_inet_connection(prelude_connection_t *cnx,
         
         ret = handle_authentication(cnx, reqperms, profile, 1);
         if ( ret < 0 ) {
-                prelude_io_close(cnx->fd);
+                do {
+                        tmp = prelude_io_close(cnx->fd);
+                } while ( tmp < 0 && prelude_io_is_error_fatal(cnx->fd, tmp) );
+                
                 return ret;
         }
         
@@ -307,7 +310,7 @@ static int start_inet_connection(prelude_connection_t *cnx,
 static int start_unix_connection(prelude_connection_t *cnx,
                                  prelude_connection_permission_t reqperms, prelude_client_profile_t *profile) 
 {
-        int ret, sock;
+        int ret, sock, tmp;
         
         sock = generic_connect(cnx->sa, cnx->salen);
         if ( sock < 0 )
@@ -317,8 +320,10 @@ static int start_unix_connection(prelude_connection_t *cnx,
         
         ret = handle_authentication(cnx, reqperms, profile, 0);
         if ( ret < 0 )
-                prelude_io_close(cnx->fd);
-                
+                do {
+                        tmp = prelude_io_close(cnx->fd);
+                } while ( tmp < 0 && ! prelude_io_is_error_fatal(cnx->fd, tmp) );
+        
         return ret;
 }
 
@@ -374,8 +379,8 @@ static int close_connection_fd_block(prelude_connection_t *cnx)
         
         do {
                 ret = close_connection_fd(cnx);
-        } while ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN );
-
+        } while ( ret < 0 && ! prelude_io_is_error_fatal(cnx->fd, ret) );
+        
         return ret;
 }
 
@@ -506,7 +511,7 @@ static int resolve_addr(prelude_connection_t *cnx, const char *addr)
  * connection in a non blocking manner prior prelude_connection_destroy().
  */
 void prelude_connection_destroy(prelude_connection_t *conn) 
-{        
+{
         destroy_connection_fd(conn);
         
         free(conn->daddr);
@@ -608,7 +613,7 @@ int prelude_connection_connect(prelude_connection_t *conn,
 
 
 int prelude_connection_close(prelude_connection_t *cnx) 
-{
+{        
         return close_connection_fd(cnx);
 }
 
@@ -618,7 +623,7 @@ int prelude_connection_close(prelude_connection_t *cnx)
 int prelude_connection_send(prelude_connection_t *cnx, prelude_msg_t *msg) 
 {
         ssize_t ret;
-                
+        
         if ( ! (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) )
                 return -1;
 
@@ -639,7 +644,7 @@ int prelude_connection_recv(prelude_connection_t *cnx, prelude_msg_t **msg)
 {
         int ret;
         uint8_t tag;
-        
+
         if ( ! (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) )
                 return -1;
 
