@@ -175,7 +175,7 @@ static ssize_t sys_write(prelude_io_t *pio, const void *buf, size_t count)
 static int sys_close(prelude_io_t *pio) 
 {
         int ret;
-
+        
         do {
                 ret = close(pio->fd);
         } while ( ret < 0 && errno == EINTR );
@@ -251,7 +251,7 @@ static int file_close(prelude_io_t *pio)
 
 static ssize_t file_pending(prelude_io_t *pio)
 {
-        return -1;
+        return prelude_error_from_errno(ENOTSUP);
 }
 
 
@@ -259,39 +259,43 @@ static ssize_t file_pending(prelude_io_t *pio)
 /*
  * TLS IO functions
  */
-static int tls_check_error(prelude_io_t *pio, int ret)
+static int tls_check_error(prelude_io_t *pio, int error)
 {
+        int ret = 0;
         const char *alert;
         
-        if ( ret == GNUTLS_E_INTERRUPTED )
-                return 0;
-
-        else if ( ret == GNUTLS_E_AGAIN )
-                return prelude_error(PRELUDE_ERROR_EAGAIN);
+        if ( error == GNUTLS_E_AGAIN )
+                ret = prelude_error(PRELUDE_ERROR_EAGAIN);
         
-        else if ( ret == GNUTLS_E_WARNING_ALERT_RECEIVED ) {
+        else if ( error == GNUTLS_E_WARNING_ALERT_RECEIVED ) {
                 alert = gnutls_alert_get_name(gnutls_alert_get(pio->fd_ptr));
-                prelude_log(PRELUDE_LOG_WARN, "TLS: received warning alert: %s.\n", alert);
-                return 0;
+                ret = prelude_error_verbose(PRELUDE_ERROR_TLS_WARNING_ALERT, "TLS warning alert from peer: %s", alert);
         }
         
-        else if ( ret == GNUTLS_E_FATAL_ALERT_RECEIVED ) {
+        else if ( error == GNUTLS_E_FATAL_ALERT_RECEIVED ) {
                 alert = gnutls_alert_get_name(gnutls_alert_get(pio->fd_ptr));
-                prelude_log(PRELUDE_LOG_ERR, "TLS: received fatal alert: %s.\n", alert);
-                return prelude_error_verbose(PRELUDE_ERROR_TLS, "TLS: %s", alert);
+                ret = prelude_error_verbose(PRELUDE_ERROR_TLS_FATAL_ALERT, "TLS fatal alert from peer: %s", alert);
         }
 
-        else {
-                if ( ret == GNUTLS_E_UNEXPECTED_PACKET_LENGTH )
-                        return prelude_error_verbose(PRELUDE_ERROR_EOF, "TLS: %s", gnutls_strerror(ret));
-                
-                else if ( ret == GNUTLS_E_INVALID_SESSION ) {
-                        prelude_log(PRELUDE_LOG_DEBUG, "TLS: %s.\n", gnutls_strerror(ret));
-                        return prelude_error_verbose(PRELUDE_ERROR_EOF, "TLS: %s", gnutls_strerror(ret));
-                }
+        else if ( error == GNUTLS_E_UNEXPECTED_PACKET_LENGTH || error == GNUTLS_E_INVALID_SESSION )
+                ret = prelude_error_verbose(PRELUDE_ERROR_EOF, "TLS: %s", gnutls_strerror(ret));
+
+        else    ret = prelude_error_verbose(PRELUDE_ERROR_TLS, "TLS: %s", gnutls_strerror(ret));
+
+        /*
+         * If the error is fatal, deinitialize the session and revert
+         * to system IO. The caller is then expected to call prelude_io_close()
+         * again until it return 0.
+         *
+         * If it's non fatal, simply return the error. The caller is supposed
+         * to resume the prelude_io_close() call still.
+         */
+        if ( gnutls_error_is_fatal(error) ) {
+                gnutls_deinit(pio->fd_ptr);
+                prelude_io_set_sys_io(pio, pio->fd);
         }
-        
-        return prelude_error_verbose(PRELUDE_ERROR_TLS, "TLS: %s", gnutls_strerror(ret));
+
+        return ret;
 }
 
 
@@ -302,9 +306,11 @@ static ssize_t tls_read(prelude_io_t *pio, void *buf, size_t count)
         
         do {
                 ret = gnutls_record_recv(pio->fd_ptr, buf, count);
+        } while ( ret < 0 && ret == GNUTLS_E_INTERRUPTED );
 
-        } while ( ret < 0 && (ret = tls_check_error(pio, ret)) == 0 );
-
+        if ( ret < 0 )                
+                return tls_check_error(pio, ret);
+        
         if ( ret == 0 )
                 return prelude_error(PRELUDE_ERROR_EOF);
         
@@ -318,9 +324,11 @@ static ssize_t tls_write(prelude_io_t *pio, const void *buf, size_t count)
         ssize_t ret;
 
         do {        
-                ret = gnutls_record_send(pio->fd_ptr, buf, count);
-                                
-        } while ( ret < 0 && (ret = tls_check_error(pio, ret)) == 0 );
+                ret = gnutls_record_send(pio->fd_ptr, buf, count);         
+        } while ( ret < 0 && ret == GNUTLS_E_INTERRUPTED );
+
+        if ( ret < 0 )
+                return tls_check_error(pio, ret);
         
         return ret;
 }
@@ -332,14 +340,18 @@ static int tls_close(prelude_io_t *pio)
         int ret;
         
         do {
-                ret = gnutls_bye(pio->fd_ptr, GNUTLS_SHUT_WR);                
-        } while ( ret < 0 && (ret = tls_check_error(pio, ret)) == 0 );
+                ret = gnutls_bye(pio->fd_ptr, GNUTLS_SHUT_RDWR);        
+        } while ( ret < 0 && ret == GNUTLS_E_INTERRUPTED );
 
-        if ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN )
-                return ret;
-        
+        if ( ret < 0 )
+                return tls_check_error(pio, ret);
+
         gnutls_deinit(pio->fd_ptr);
         
+        /*
+         * this is not expected to fail
+         */
+        prelude_io_set_sys_io(pio, pio->fd);
         return sys_close(pio);
 }
 
@@ -379,13 +391,13 @@ static ssize_t copy_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
                 
                 ret = prelude_io_read(src, buf, ret);
                 if ( ret <= 0 ) 
-                        return -1;
+                        return ret;
 
                 count -= ret;
                 
                 ret = prelude_io_write(dst, buf, ret);
                 if ( ret < 0 ) 
-                        return -1;
+                        return ret;
         }
         
         return scount;
@@ -437,8 +449,8 @@ ssize_t prelude_io_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
  * fewer bytes are actually available right now or because read() was
  * interrupted by a signal.
  *
- * On error, -1 is returned, and errno is set appropriately. In this
- * case it is left unspecified whether the file position (if any) changes.
+ * On error, a negative value is returned. In this case it is left unspecified
+ * whether the file position (if any) changes.
  */
 ssize_t prelude_io_read(prelude_io_t *pio, void *buf, size_t count) 
 {
@@ -483,11 +495,11 @@ ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count)
         
         do {
                 ret = poll(&pfd, 1, -1);                
-                if ( ret <= 0 )
-                        return -1;
+                if ( ret < 0 )
+                        return prelude_error_from_errno(errno);
 
                 if ( ! (pfd.revents & POLLIN) )
-                     return -1;
+                        return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected POLLIN event");
                 
                 ret = prelude_io_read(pio, &in[n], count - n);
                 if ( ret <= 0 )
@@ -530,10 +542,8 @@ ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf)
         uint16_t msglen;
         
         ret = prelude_io_read_wait(pio, &msglen, sizeof(msglen));
-        if ( ret <= 0 ) {
-                prelude_log(PRELUDE_LOG_ERR, "couldn't read len message of %d bytes.\n", sizeof(msglen));
-                return ret;
-        }
+        if ( ret <= 0 )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "could not read message length of %d bytes", sizeof(msglen));
 
         count = ntohs(msglen);
 
@@ -543,7 +553,7 @@ ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf)
         
         ret = prelude_io_read_wait(pio, *buf, count);
         if ( ret < 0 )
-                return prelude_error_from_errno(errno);
+                return ret;
 
         if ( ret == 0 )
                 return prelude_error(PRELUDE_ERROR_EOF);
@@ -612,11 +622,11 @@ ssize_t prelude_io_write_delimited(prelude_io_t *pio, const void *buf, uint16_t 
         
         ret = prelude_io_write(pio, &nlen, sizeof(nlen));
         if ( ret <= 0 ) 
-                return -1;
+                return ret;
         
         ret = prelude_io_write(pio, buf, count);
         if ( ret <= 0 )
-                return -1;
+                return ret;
 
         return count;
 }
@@ -632,6 +642,10 @@ ssize_t prelude_io_write_delimited(prelude_io_t *pio, const void *buf, uint16_t 
  *
  * The case where the close() function would be interrupted by a signal is
  * handled internally. So you don't have to check for EINTR.
+ *
+ * However, and especially when the underlaying layer is TLS, prelude_io_close()
+ * might return error. If this happen, you should continue calling the function
+ * until it return zero.
  *
  * Returns: zero on success, or -1 if an error occurred.
  */
@@ -720,7 +734,7 @@ void prelude_io_set_tls_io(prelude_io_t *pio, void *tls)
  * The @pio object is then associated with @fd.
  */
 void prelude_io_set_sys_io(prelude_io_t *pio, int fd) 
-{
+{        
         pio->fd = fd;
         pio->fd_ptr = NULL;
         pio->read = sys_read;
@@ -779,7 +793,7 @@ void *prelude_io_get_fdptr(prelude_io_t *pio)
  * Destroy the @pio object.
  */
 void prelude_io_destroy(prelude_io_t *pio) 
-{
+{        
         free(pio);
 }
 
@@ -799,4 +813,30 @@ void prelude_io_destroy(prelude_io_t *pio)
 ssize_t prelude_io_pending(prelude_io_t *pio)
 {
         return pio->pending(pio);
+}
+
+
+
+
+/**
+ * prelude_io_is_error_fatal:
+ * @pio: Pointer to a #prelude_io_t object.
+ * @error: Error returned by one of the #prelude_io_t function.
+ *
+ * Check whether the returned error is fatal, or not.
+ *
+ * Returns: TRUE if error is fatal, FALSE if it is not.
+ */
+prelude_bool_t prelude_io_is_error_fatal(prelude_io_t *pio, int error)
+{
+        prelude_error_code_t code;
+
+        if ( ! error )
+                return FALSE;
+        
+        code = prelude_error_get_code(error);
+        if ( code == PRELUDE_ERROR_EAGAIN || code == PRELUDE_ERROR_EINTR || code == PRELUDE_ERROR_TLS_WARNING_ALERT )
+                return FALSE;
+        
+        return TRUE;
 }

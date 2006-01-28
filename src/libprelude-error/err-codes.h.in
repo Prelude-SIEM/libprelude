@@ -97,7 +97,10 @@
 56	PRELUDE_ERROR_IDMEF_CRITERION_UNSUPPORTED_OPERATOR	Unsupported criterion operator
 57	PRELUDE_ERROR_IDMEF_CRITERION_INVALID_REGEX	Criterion regular expression is not valid
 
-#58 to 16381 are free to be used.
+58	PRELUDE_ERROR_TLS_WARNING_ALERT		TLS layer returned a warning alert
+59	PRELUDE_ERROR_TLS_FATAL_ALERT		TLS layer returned a fatal alert
+
+#60 to 16381 are free to be used.
 
 16382	PRELUDE_ERROR_UNKNOWN_ERRNO		Unknown system error
 

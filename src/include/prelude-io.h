@@ -80,6 +80,7 @@ void *prelude_io_get_fdptr(prelude_io_t *pio);
 
 ssize_t prelude_io_pending(prelude_io_t *pio);
 
+prelude_bool_t prelude_io_is_error_fatal(prelude_io_t *pio, int error);
           
 #ifdef __cplusplus
   }
