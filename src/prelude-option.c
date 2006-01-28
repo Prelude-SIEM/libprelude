@@ -300,7 +300,7 @@ static int do_set(prelude_option_t *opt, const char *value, prelude_string_t *ou
                         prelude_string_sprintf(out, "error while setting option '%s'", opt->longopt);
 
                         if ( prelude_error_get_code(ret) != PRELUDE_ERROR_GENERIC )
-                                prelude_string_sprintf(out, ": '%s'", prelude_strerror(ret));
+                                prelude_string_sprintf(out, ": %s", prelude_strerror(ret));
                 }
                 
                 return ret;
