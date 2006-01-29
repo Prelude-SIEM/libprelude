@@ -278,10 +278,11 @@ static int tls_check_error(prelude_io_t *pio, int error)
         }
 
         else if ( error == GNUTLS_E_UNEXPECTED_PACKET_LENGTH || error == GNUTLS_E_INVALID_SESSION )
-                ret = prelude_error_verbose(PRELUDE_ERROR_EOF, "TLS: %s", gnutls_strerror(ret));
+                ret = prelude_error_verbose(PRELUDE_ERROR_EOF, "TLS: %s", gnutls_strerror(error));
 
-        else    ret = prelude_error_verbose(PRELUDE_ERROR_TLS, "TLS: %s", gnutls_strerror(ret));
-
+        else                
+                ret = prelude_error_verbose(PRELUDE_ERROR_TLS, "TLS: %s", gnutls_strerror(error));
+        
         /*
          * If the error is fatal, deinitialize the session and revert
          * to system IO. The caller is then expected to call prelude_io_close()
