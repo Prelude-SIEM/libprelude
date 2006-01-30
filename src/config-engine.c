@@ -228,7 +228,8 @@ static int load_file_in_memory(config_t *cfg)
         fd = fopen(cfg->filename, "r");
         if ( ! fd ) {
                 prelude_string_destroy(out);
-                return prelude_error_from_errno(errno);
+                return prelude_error_verbose(prelude_error_code_from_errno(errno), "could not open '%s' for reading: %s",
+                                             cfg->filename, strerror(errno));
         }
         
         do {
@@ -506,7 +507,8 @@ static int sync_and_free_file_content(config_t *cfg)
         
         fd = fopen(cfg->filename, "w");
         if ( ! fd ) 
-                return prelude_error_from_errno(errno);
+                return prelude_error_verbose(prelude_error_code_from_errno(errno), "could not open '%s' for writing: %s",
+                                             cfg->filename, strerror(errno));
         
         for ( i = 0; i < cfg->elements; i++ ) {
                 
