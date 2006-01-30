@@ -64,7 +64,6 @@
     <xi:include href="xml/prelude-hash.xml"/>
     <xi:include href="xml/prelude-failover.xml"/>
     <xi:include href="xml/prelude-async.xml"/>
-    <xi:include href="xml/prelude-inet.xml"/>
     <xi:include href="xml/prelude-list.xml"/>
     <xi:include href="xml/prelude-inttypes.xml"/>
     <xi:include href="xml/prelude-option-wide.xml"/>

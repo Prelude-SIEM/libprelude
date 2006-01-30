@@ -9,7 +9,7 @@ AC_CANONICAL_TARGET([])
 
 libprelude_major=0
 libprelude_minor=9
-libprelude_micro=3
+libprelude_micro=4
 
 dnl version and release information
 libprelude_version=$libprelude_major.$libprelude_minor.$libprelude_micro
@@ -17,9 +17,9 @@ libprelude_version=$libprelude_major.$libprelude_minor.$libprelude_micro
 
 dnl library soname 
 dnl check http://sources.redhat.com/autobook/autobook/autobook_91.html#SEC91
-libprelude_current=4
-libprelude_revision=1
-libprelude_age=2
+libprelude_current=5
+libprelude_revision=0
+libprelude_age=3
 
 libprelude_soname=$libprelude_current:$libprelude_revision:$libprelude_age
 AC_SUBST(libprelude_soname)

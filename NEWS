@@ -1,3 +1,15 @@
+* 2005-01-30, libprelude-0.9.4:
+
+	- Some useful API addition.
+
+	- Much improved, verbose error reporting.
+
+	- Cleaned up TLS handling, various bugfix.
+
+	- In case an error occur when verifying the peer certificate,
+	  notify the peer about the failure.
+
+
 * 2005-01-09, libprelude-0.9.3:
 
 	- Implement analyzer revocation in prelude-adduser. This will require an upcoming 

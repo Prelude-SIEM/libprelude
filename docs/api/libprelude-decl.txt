@@ -88,6 +88,8 @@ typedef enum {
     PRELUDE_ERROR_IDMEF_CRITERIA_PARSE = 55,
     PRELUDE_ERROR_IDMEF_CRITERION_UNSUPPORTED_OPERATOR = 56,
     PRELUDE_ERROR_IDMEF_CRITERION_INVALID_REGEX = 57,
+    PRELUDE_ERROR_TLS_WARNING_ALERT = 58,
+    PRELUDE_ERROR_TLS_FATAL_ALERT = 59,
     PRELUDE_ERROR_UNKNOWN_ERRNO = 16382,
     PRELUDE_ERROR_E2BIG = PRELUDE_ERROR_SYSTEM_ERROR | 0,
     PRELUDE_ERROR_EACCES = PRELUDE_ERROR_SYSTEM_ERROR | 1,
@@ -249,6 +251,14 @@ typedef enum {
 <MACRO>
 <NAME>PRELUDE_ERROR_SOURCE_SHIFT</NAME>
 #define PRELUDE_ERROR_SOURCE_SHIFT    23
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_ERROR_VERBOSE_SHIFT</NAME>
+#define PRELUDE_ERROR_VERBOSE_SHIFT  22
+</MACRO>
+<MACRO>
+<NAME>PRELUDE_ERROR_VERBOSE_MASK</NAME>
+#define PRELUDE_ERROR_VERBOSE_MASK   (1)
 </MACRO>
 <TYPEDEF>
 <NAME>prelude_error_t</NAME>
@@ -4752,6 +4762,11 @@ prelude_io_t *pio
 prelude_io_t *pio
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_io_is_error_fatal</NAME>
+<RETURNS>prelude_bool_t </RETURNS>
+prelude_io_t *pio, int error
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_thread_atfork</NAME>
 <RETURNS>int </RETURNS>
 void (*prepare)(void), void (*parent)(void), void (*child)(void)
@@ -6148,6 +6163,11 @@ prelude_client_t *client, const char *filename
 prelude_client_t *client
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_client_get_setup_error</NAME>
+<RETURNS>const char *</RETURNS>
+prelude_client_t *client
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_client_print_setup_error</NAME>
 <RETURNS>void </RETURNS>
 prelude_client_t *client
@@ -7154,7 +7174,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.3"
+#define LIBPRELUDE_VERSION "0.9.4"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
