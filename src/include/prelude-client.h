@@ -86,6 +86,8 @@ int prelude_client_set_config_filename(prelude_client_t *client, const char *fil
 
 const char *prelude_client_get_config_filename(prelude_client_t *client);
 
+const char *prelude_client_get_setup_error(prelude_client_t *client);
+
 void prelude_client_print_setup_error(prelude_client_t *client);
 
 prelude_bool_t prelude_client_is_setup_needed(int error);

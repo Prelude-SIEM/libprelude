@@ -1450,50 +1450,74 @@ prelude_bool_t prelude_client_is_setup_needed(int error)
 {
         prelude_error_code_t code = prelude_error_get_code(error);
         
-        return ( code == PRELUDE_ERROR_BACKUP_DIRECTORY     ||
-                 code == PRELUDE_ERROR_PROFILE              ||
-                 code == PRELUDE_ERROR_ANALYZERID_FILE      ||
-                 code == PRELUDE_ERROR_ANALYZERID_PARSE     ||
-                 code == PRELUDE_ERROR_TLS_KEY_FILE         ||
-                 code == PRELUDE_ERROR_TLS_CERTIFICATE_FILE ||
+        return ( code == PRELUDE_ERROR_BACKUP_DIRECTORY      ||
+                 code == PRELUDE_ERROR_PROFILE               ||
+                 code == PRELUDE_ERROR_ANALYZERID_FILE       ||
+                 code == PRELUDE_ERROR_ANALYZERID_PARSE      ||
+                 code == PRELUDE_ERROR_TLS_KEY_FILE          ||
+                 code == PRELUDE_ERROR_TLS_CERTIFICATE_FILE  ||
                  code == PRELUDE_ERROR_TLS_CERTIFICATE_PARSE ||
                  prelude_error_get_source(error) == PRELUDE_ERROR_SOURCE_CONFIG_ENGINE ) ? TRUE : FALSE;
 }
 
 
 
-void prelude_client_print_setup_error(prelude_client_t *client) 
+const char *prelude_client_get_setup_error(prelude_client_t *client)
 {
         int ret;
-        prelude_string_t *out;
+        prelude_string_t *out, *perm;
 
-        if ( client->flags & PRELUDE_CLIENT_FLAGS_CONNECT ) {
-                ret = prelude_string_new(&out);
-                if ( ret < 0 )
-                        return;
+        ret = prelude_string_new(&out);
+        if ( ret < 0 )
+                return NULL;
+        
+        if ( client->flags & PRELUDE_CLIENT_FLAGS_CONNECT ) { 
+                ret = prelude_string_new(&perm);
+                if ( ret < 0 ) {
+                        prelude_string_destroy(out);
+                        return NULL;
+                }
                 
-                prelude_connection_permission_to_string(client->permission, out);
+                prelude_connection_permission_to_string(client->permission, perm);
 
-                prelude_log(PRELUDE_LOG_WARN,
-                            "\nBasic file configuration does not exist. Please run :\n"
-                            "prelude-adduser register %s \"%s\" <manager address> --uid %d --gid %d\n"
-                            "program to setup the analyzer.\n\n"
-                            
-                            "Be aware that you should replace the \"<manager address>\" argument with\n"
-                            "the server address this analyzer is reporting to as argument.\n"
-                            "\"prelude-adduser\" should be called for each configured server address.\n\n",
-                            prelude_client_profile_get_name(client->profile), prelude_string_get_string(out),
-                            prelude_client_profile_get_uid(client->profile),
-                            prelude_client_profile_get_gid(client->profile));                
+                ret = prelude_string_sprintf(out, 
+                                       "\nBasic file configuration does not exist. Please run :\n"
+                                       "prelude-adduser register %s \"%s\" <manager address> --uid %d --gid %d\n"
+                                       "program to setup the analyzer.\n\n"
+                                       
+                                       "Be aware that you should replace the \"<manager address>\" argument with\n"
+                                       "the server address this analyzer is reporting to as argument.\n"
+                                       "\"prelude-adduser\" should be called for each configured server address.\n\n",
+                                       prelude_client_profile_get_name(client->profile),
+                                       prelude_string_get_string(perm),
+                                       prelude_client_profile_get_uid(client->profile),
+                                       prelude_client_profile_get_gid(client->profile));                
 
-                prelude_string_destroy(out);
+                prelude_string_destroy(perm);
                 
         } else {
-                prelude_log(PRELUDE_LOG_WARN,
-                            "\nBasic file configuration does not exist. Please run :\n"
-                            "prelude-adduser add %s --uid %d --gid %d\n\n",
-                            prelude_client_profile_get_name(client->profile),
-                            prelude_client_profile_get_uid(client->profile),
-                            prelude_client_profile_get_gid(client->profile));
+                ret = prelude_string_sprintf(out,
+                                       "\nBasic file configuration does not exist. Please run :\n"
+                                       "prelude-adduser add %s --uid %d --gid %d\n\n",
+                                       prelude_client_profile_get_name(client->profile),
+                                       prelude_client_profile_get_uid(client->profile),
+                                       prelude_client_profile_get_gid(client->profile));
         }
+
+        if ( ret < 0 )
+                return NULL;
+        
+        _prelude_thread_set_error(prelude_string_get_string(out));
+        prelude_string_destroy(out);
+        
+        return _prelude_thread_get_error();
 }
+
+
+
+void prelude_client_print_setup_error(prelude_client_t *client) 
+{
+        prelude_log(PRELUDE_LOG_WARN, "%s", prelude_client_get_setup_error(client));
+}
+
+
