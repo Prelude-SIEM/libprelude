@@ -251,7 +251,11 @@ static int file_close(prelude_io_t *pio)
 
 static ssize_t file_pending(prelude_io_t *pio)
 {
+#ifdef ENOTSUP
         return prelude_error_from_errno(ENOTSUP);
+#else
+        return prelude_error(PRELUDE_ERROR_GENERIC);
+#endif
 }
 
 
