@@ -177,3 +177,13 @@ prelude-io
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_io_is_error_fatal ##### -->
+<para>
+
+</para>
+
+@pio: 
+@error: 
+@Returns: 
+
+

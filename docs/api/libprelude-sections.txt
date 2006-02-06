@@ -7,6 +7,8 @@ PRELUDE_ERROR_SOURCE_DEFAULT
 PRELUDE_ERROR_CODE_MASK
 PRELUDE_ERROR_SOURCE_MASK
 PRELUDE_ERROR_SOURCE_SHIFT
+PRELUDE_ERROR_VERBOSE_MASK
+PRELUDE_ERROR_VERBOSE_SHIFT
 prelude_error_t
 prelude_error_code_from_errno
 prelude_error_make
@@ -816,6 +818,7 @@ prelude_io_forward
 prelude_io_get_fd
 prelude_io_get_fdptr
 prelude_io_pending
+prelude_io_is_error_fatal
 </SECTION>
 
 <SECTION>
@@ -940,6 +943,7 @@ prelude_option_set_default_context
 prelude_option_new_context
 prelude_option_context_destroy
 prelude_option_search
+prelude_option_search_context
 </SECTION>
 
 <SECTION>
@@ -1128,6 +1132,7 @@ prelude_client_set_flags
 prelude_client_set_config_filename
 prelude_client_get_config_filename
 prelude_client_print_setup_error
+prelude_client_get_setup_error
 prelude_client_is_setup_needed
 prelude_client_get_profile
 </SECTION>
@@ -1142,6 +1147,7 @@ prelude_client_profile_get_analyzerid_filename
 prelude_client_profile_get_tls_key_filename
 prelude_client_profile_get_tls_server_ca_cert_filename
 prelude_client_profile_get_tls_server_keycert_filename
+prelude_client_profile_get_tls_server_crl_filename
 prelude_client_profile_get_tls_client_keycert_filename
 prelude_client_profile_get_tls_client_trusted_cert_filename
 prelude_client_profile_get_backup_dirname

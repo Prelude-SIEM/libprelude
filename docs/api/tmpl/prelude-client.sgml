@@ -347,6 +347,15 @@ is interrupted by a signal.
 @client: 
 
 
+<!-- ##### FUNCTION prelude_client_get_setup_error ##### -->
+<para>
+
+</para>
+
+@client: 
+@Returns: 
+
+
 <!-- ##### FUNCTION prelude_client_is_setup_needed ##### -->
 <para>
 

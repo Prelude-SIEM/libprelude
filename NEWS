@@ -1,3 +1,17 @@
+* 2006-02-06, libprelude-0.9.5:
+
+	- More TLS cleanup.
+
+	- Application can now report error without using specific prelude_client
+	  error reporting function.
+
+	- More work and improved verbose error reporting.
+
+	- Fix compilation problem with prelude_error_is_verbose() (#130).
+
+	- Fix OpenBSD compilation problem.
+
+
 * 2006-01-30, libprelude-0.9.4:
 
 	- Some useful API addition.
