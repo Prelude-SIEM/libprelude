@@ -281,7 +281,7 @@ static int process_cfg_file(void *context, prelude_list_t *cblist, prelude_optio
         
         ret = config_open(&cfg, filename);
         if ( ret < 0 )
-                return option_ret_error(ret, err, "%s: could not open %s: %s", prelude_strsource(ret), filename, prelude_strerror(ret));
+                return ret;
         
         ret = get_missing_options(context, cfg, filename, cblist, optlist, &line, 0, err);
         
