@@ -107,8 +107,8 @@ static inline prelude_error_t prelude_error(prelude_error_code_t code)
 
 
 
-static prelude_error_t _prelude_error_verbose_common(prelude_error_source_t source,
-					       	      prelude_error_code_t code, const char *fmt, va_list ap)
+static prelude_error_t prelude_error_verbose_make_v(prelude_error_source_t source, 
+						    prelude_error_code_t code, const char *fmt, va_list ap)
 {
 	int ret;
 	prelude_string_t *str;
@@ -141,7 +141,7 @@ static inline prelude_error_t prelude_error_verbose_make(prelude_error_source_t 
 	va_list ap;
 
 	va_start(ap, fmt);
-	ret = _prelude_error_verbose_common(source, code, fmt, ap);
+	ret = prelude_error_verbose_make_v(source, code, fmt, ap);
 	va_end(ap);
 
 	return ret;
@@ -155,7 +155,7 @@ static inline prelude_error_t prelude_error_verbose(prelude_error_code_t code, c
 	va_list ap;
 
 	va_start(ap, fmt);
-	ret = _prelude_error_verbose_common(PRELUDE_ERROR_SOURCE_DEFAULT, code, fmt, ap);
+	ret = prelude_error_verbose_make_v(PRELUDE_ERROR_SOURCE_DEFAULT, code, fmt, ap);
 	va_end(ap);
 
 	return ret;
@@ -183,7 +183,7 @@ static inline prelude_error_t prelude_error_from_errno(int err)
 
 static inline prelude_bool_t prelude_error_is_verbose(prelude_error_t err)
 {
-	return ((-err) >> PRELUDE_ERROR_VERBOSE_SHIFT) & PRELUDE_ERROR_VERBOSE_MASK;
+	return (((-err) >> PRELUDE_ERROR_VERBOSE_SHIFT) & PRELUDE_ERROR_VERBOSE_MASK) ? TRUE : FALSE;
 }
 
 
