@@ -291,7 +291,8 @@ static int read_message_header(prelude_msg_t **msgptr, prelude_io_t *fd)
          * Check protocol version.
          */
         if ( msg->hdr.version != PRELUDE_MSG_VERSION )
-                return prelude_error(PRELUDE_ERROR_PROTOCOL_VERSION);
+                return prelude_error_verbose(PRELUDE_ERROR_PROTOCOL_VERSION, "invalid protocol version '%d' (expected %d)",
+                                             msg->hdr.version, PRELUDE_MSG_VERSION);
         
         msg->write_index = msg->hdr.datalen + PRELUDE_MSG_HDR_SIZE; 
 
