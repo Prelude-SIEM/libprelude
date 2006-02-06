@@ -183,7 +183,7 @@ static inline prelude_error_t prelude_error_from_errno(int err)
 
 static inline prelude_bool_t prelude_error_is_verbose(prelude_error_t err)
 {
-	return (((-err) >> PRELUDE_ERROR_VERBOSE_SHIFT) & PRELUDE_ERROR_VERBOSE_MASK) ? TRUE : FALSE;
+	return (((-err) >> PRELUDE_ERROR_VERBOSE_SHIFT) & PRELUDE_ERROR_VERBOSE_MASK) ? PRELUDE_BOOL_TRUE : PRELUDE_BOOL_FALSE;
 }
 
 
