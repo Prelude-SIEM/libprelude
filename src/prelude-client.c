@@ -1091,9 +1091,11 @@ int prelude_client_init(prelude_client_t *client)
         code = prelude_error_get_code(ret);
         source = prelude_error_get_source(ret);
         
-        if ( ret < 0 && (code == PRELUDE_ERROR_PROFILE || source == PRELUDE_ERROR_SOURCE_CONFIG_ENGINE) )
-                ret = prelude_error_verbose(prelude_error_get_code(ret), "%s\n%s",
-                                            _prelude_thread_get_error(), prelude_client_get_setup_error(client));
+        if ( ret < 0 && (code == PRELUDE_ERROR_PROFILE || source == PRELUDE_ERROR_SOURCE_CONFIG_ENGINE) ) {
+                char *tmp = strdup(_prelude_thread_get_error());
+                ret = prelude_error_verbose(prelude_error_get_code(ret), "%s\n%s", dup, prelude_client_get_setup_error(client));
+                free(tmp);
+        }
         
         return ret;
 }
