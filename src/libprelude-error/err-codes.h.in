@@ -36,16 +36,8 @@
 4	PRELUDE_ERROR_INVAL_MESSAGE	Invalid message
 5	PRELUDE_ERROR_PROTOCOL_VERSION	Invalid protocol version
 6	PRELUDE_ERROR_EOF		End of file
-7	PRELUDE_ERROR_BACKUP_DIRECTORY	Could not access Analyzer backup directory 
 8	PRELUDE_ERROR_PROFILE		Client profile does not exist or have wrong permissions
-9	PRELUDE_ERROR_ANALYZERID_FILE	Could not open AnalyzerId file
-10	PRELUDE_ERROR_ANALYZERID_PARSE	Error parsing AnalyzerId file
 
-11	PRELUDE_ERROR_TLS_CERTIFICATE_FILE	Could not access TLS certificate file
-12	PRELUDE_ERROR_TLS_CERTIFICATE_PARSE	Could not parse TLS certificate
-13	PRELUDE_ERROR_TLS_KEY_FILE		Could not access TLS private key
-14	PRELUDE_ERROR_TLS_HANDSHAKE		TLS handshake failed
-15	PRELUDE_ERROR_TLS_INVALID_CERTIFICATE	Unable to verify peer certificate
 16	PRELUDE_ERROR_TLS_AUTH_REJECTED		Peer rejected authentication
 
 17	PRELUDE_ERROR_INVAL_INT8	Buffer does not contain a 8 bits integer
@@ -91,7 +83,6 @@
 
 52	PRELUDE_ERROR_UNKNOWN_PERMISSION_TYPE	Specified permission type is unknown
 53	PRELUDE_ERROR_UNKNOWN_PERMISSION_BIT	Specified permission bit is not known
-54	PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS	Insufficient credentials for requested operation
 
 55	PRELUDE_ERROR_IDMEF_CRITERIA_PARSE	Could not parse IDMEF criteria
 56	PRELUDE_ERROR_IDMEF_CRITERION_UNSUPPORTED_OPERATOR	Unsupported criterion operator
