@@ -91,7 +91,7 @@ static int verify_certificate(gnutls_session session)
 {
         time_t now;
 	int ret, status, alert = 0;
-        const prelude_error_code_t code = PRELUDE_ERROR_TLS_INVALID_CERTIFICATE;
+        const prelude_error_code_t code = PRELUDE_ERROR_PROFILE;
         
 	ret = gnutls_certificate_verify_peers2(session, &status);
 	if ( ret < 0 ) {
@@ -199,11 +199,10 @@ int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int cryp
         do {
                 ret = gnutls_handshake(session);
         } while ( ret < 0 && handle_gnutls_error(session, ret) == 0 );
-        
+
         if ( ret < 0 ) {
                 gnutls_deinit(session);
-                prelude_log(PRELUDE_LOG_WARN, "- TLS handshake failed: %s.\n", gnutls_strerror(ret));
-                return prelude_error(PRELUDE_ERROR_TLS_HANDSHAKE);
+                return prelude_error_verbose(PRELUDE_ERROR_PROFILE, "TLS handshake failed: %s", gnutls_strerror(ret));
         }
 
         ret = verify_certificate(session);        
@@ -233,13 +232,13 @@ int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int cryp
                 } while ( ret < 0 && (ret == GNUTLS_E_INTERRUPTED || ret == GNUTLS_E_AGAIN) );
                 
                 if ( ret < 0 )
-                        prelude_log(PRELUDE_LOG_WARN, "gnutls bye failed with error: %s.\n", gnutls_strerror(ret));
+                        ret = prelude_error_verbose(PRELUDE_ERROR_TLS, "TLS bye failed: %s", gnutls_strerror(ret));
                 
                 gnutls_deinit(session);
                 prelude_io_set_sys_io(io, fd);
         }
         
-        return 0;
+        return ret;
 }
 
 
@@ -255,7 +254,7 @@ int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *
         ret = gnutls_global_init();
         if ( ret < 0 )
                 return prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS,
-                                                  "GnuTLS initialization failed: %s", gnutls_strerror(ret));
+                                                  "TLS initialization failed: %s", gnutls_strerror(ret));
         
         prelude_client_profile_get_tls_key_filename(cp, keyfile, sizeof(keyfile));
         prelude_client_profile_get_tls_client_keycert_filename(cp, certfile, sizeof(certfile));
@@ -264,7 +263,7 @@ int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *
         
         ret = access(certfile, F_OK);
         if ( ret < 0 )
-                return prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS_CERTIFICATE_FILE,
+                return prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_PROFILE,
                                                   "access to %s failed: %s", certfile, strerror(errno));
         
         ret = tls_certificates_load(keyfile, certfile, *cred);
@@ -275,7 +274,7 @@ int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *
         
         ret = gnutls_certificate_set_x509_trust_file(*cred, certfile, GNUTLS_X509_FMT_PEM);
         if ( ret < 0 )
-                return prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS_CERTIFICATE_PARSE,
+                return prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_PROFILE,
                                                   "could not set x509 trust file '%s': %s", certfile, gnutls_strerror(ret));
         
         return 0;
