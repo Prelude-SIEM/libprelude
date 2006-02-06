@@ -250,13 +250,16 @@ static void connection_list_destroy(cnx_list_t *clist)
 static void notify_dead(cnx_t *cnx, prelude_error_t error, prelude_bool_t init_time)
 {
         int fd;
+        prelude_error_code_t code;
         cnx_list_t *clist = cnx->parent;
         prelude_connection_pool_t *pool = clist->parent;
 
         if ( cnx->is_dead )
                 return;
 
-        if ( ! init_time || ! prelude_client_is_setup_needed(error) ) 
+        code = prelude_error_get_code(error);
+        
+        if ( ! init_time || (! prelude_client_is_setup_needed(error) && code != PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS) )
                 prelude_log(PRELUDE_LOG_WARN, "Failover enabled: connection error with %s: %s\n\n",
                             prelude_connection_get_peer_addr(cnx->cnx), prelude_strerror(error));
         
@@ -563,7 +566,7 @@ static int new_connection_from_address(cnx_t **new,
         if ( cret < 0 ) {
                 notify_dead(*new, cret, TRUE);
                 
-                if ( prelude_client_is_setup_needed(cret) )
+                if ( prelude_client_is_setup_needed(cret) || prelude_error_get_code(cret) == PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS )
                         return cret;
         }
         
