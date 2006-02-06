@@ -259,7 +259,7 @@ static void notify_dead(cnx_t *cnx, prelude_error_t error, prelude_bool_t init_t
 
         code = prelude_error_get_code(error);
         
-        if ( ! init_time || (! prelude_client_is_setup_needed(error) && code != PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS) )
+        if ( ! init_time || code != PRELUDE_ERROR_PROFILE )
                 prelude_log(PRELUDE_LOG_WARN, "Failover enabled: connection error with %s: %s\n\n",
                             prelude_connection_get_peer_addr(cnx->cnx), prelude_strerror(error));
         
@@ -299,6 +299,17 @@ static void check_for_data_cb(void *arg)
 }
 
 
+static int failover_save_msg(prelude_failover_t *failover, prelude_msg_t *msg)
+{
+        int ret;
+        
+        ret = prelude_failover_save_msg(failover, msg);
+        if ( ret < 0 )
+                prelude_log(PRELUDE_LOG_WARN, "failover error: %s.\n", prelude_strerror(ret));
+
+        return ret;
+}
+
 
 static void broadcast_message(prelude_msg_t *msg, cnx_t *cnx)
 {
@@ -308,14 +319,14 @@ static void broadcast_message(prelude_msg_t *msg, cnx_t *cnx)
                 return;
         
         if ( prelude_connection_is_alive(cnx->cnx) ) {
-
+                
                 ret = do_send(cnx->cnx, msg);                
                 if ( ret < 0 )
                         notify_dead(cnx, ret, FALSE);
         }
 
         if ( ret < 0 && cnx->failover )
-                prelude_failover_save_msg(cnx->failover, msg);
+                failover_save_msg(cnx->failover, msg);
         
         broadcast_message(msg, cnx->and);
 }
@@ -346,7 +357,7 @@ static int walk_manager_lists(prelude_connection_pool_t *pool, prelude_msg_t *ms
         }
 
         if ( pool->failover )
-                prelude_failover_save_msg(pool->failover, msg);
+                failover_save_msg(pool->failover, msg);
         
         return ret;
 }
@@ -394,7 +405,7 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
                         if ( ret < 0 ) {
                                 notify_dead(cnx, ret, FALSE);
                                 if ( cnx->failover )
-                                        prelude_failover_save_msg(cnx->failover, msg);
+                                        failover_save_msg(cnx->failover, msg);
                         }
                 }
 
@@ -504,7 +515,7 @@ static int new_connection(cnx_t **ncnx, prelude_client_profile_t *cp, cnx_list_t
                 if ( ret < 0 )
                         return ret;
         
-                ret = prelude_failover_new(&new->failover, dirname);        
+                ret = prelude_failover_new(&new->failover, dirname);
                 free(dirname);
                 if ( ret < 0 ) {
                         free(new);
@@ -566,7 +577,7 @@ static int new_connection_from_address(cnx_t **new,
         if ( cret < 0 ) {
                 notify_dead(*new, cret, TRUE);
                 
-                if ( prelude_client_is_setup_needed(cret) || prelude_error_get_code(cret) == PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS )
+                if ( prelude_error_get_code(cret) == PRELUDE_ERROR_PROFILE )
                         return cret;
         }
         
