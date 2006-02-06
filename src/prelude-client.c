@@ -1093,7 +1093,7 @@ int prelude_client_init(prelude_client_t *client)
         
         if ( ret < 0 && (code == PRELUDE_ERROR_PROFILE || source == PRELUDE_ERROR_SOURCE_CONFIG_ENGINE) ) {
                 char *tmp = strdup(_prelude_thread_get_error());
-                ret = prelude_error_verbose(prelude_error_get_code(ret), "%s\n%s", dup, prelude_client_get_setup_error(client));
+                ret = prelude_error_verbose(code, "%s\n%s", tmp, prelude_client_get_setup_error(client));
                 free(tmp);
         }
         
