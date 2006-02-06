@@ -245,7 +245,7 @@ static int handle_authentication(prelude_connection_t *cnx,
                 prelude_connection_permission_to_string(cnx->permission, gbuf);
                 prelude_connection_permission_to_string(reqperms, wbuf);
                 
-                ret = auth_error(cnx, reqperms, cp, prelude_error(PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS),
+                ret = auth_error(cnx, reqperms, cp, prelude_error(PRELUDE_ERROR_PROFILE),
                                  "Insufficient credentials: got '%s' but at least '%s' required",
                                  prelude_string_get_string(gbuf), prelude_string_get_string(wbuf));
                 
@@ -280,9 +280,9 @@ static int start_inet_connection(prelude_connection_t *cnx,
         
         ret = handle_authentication(cnx, reqperms, profile, 1);
         if ( ret < 0 ) {
-                do {
+                do {                        
                         tmp = prelude_io_close(cnx->fd);
-                } while ( tmp < 0 && prelude_io_is_error_fatal(cnx->fd, tmp) );
+                } while ( tmp < 0 && ! prelude_io_is_error_fatal(cnx->fd, tmp) );
                 
                 return ret;
         }
@@ -654,11 +654,11 @@ int prelude_connection_recv(prelude_connection_t *cnx, prelude_msg_t **msg)
 
         tag = prelude_msg_get_tag(*msg);
         if ( tag == PRELUDE_MSG_IDMEF && !(cnx->permission & PRELUDE_CONNECTION_PERMISSION_IDMEF_READ) )
-                return prelude_error_verbose(PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS,
+                return prelude_error_verbose(PRELUDE_ERROR_PROFILE,
                                              "Insufficient credentials for receiving IDMEF message");
         
         if ( tag == PRELUDE_MSG_OPTION_REQUEST && !(cnx->permission & PRELUDE_CONNECTION_PERMISSION_ADMIN_READ) )
-                return prelude_error_verbose(PRELUDE_ERROR_INSUFFICIENT_CREDENTIALS,
+                return prelude_error_verbose(PRELUDE_ERROR_PROFILE,
                                              "Insufficient credentials for receiving administrative message");
         
         return ret;
@@ -856,7 +856,7 @@ int prelude_connection_permission_new_from_string(prelude_connection_permission_
                 }
 
                 if ( ! tbl[i].name )
-                        return prelude_error(PRELUDE_ERROR_UNKNOWN_PERMISSION_TYPE);
+                        return prelude_error_verbose(PRELUDE_ERROR_UNKNOWN_PERMISSION_TYPE, "unknown permission type '%s'", tptr);
                 
                 while ( *tmp == ' ' )
                         tmp++;
@@ -872,7 +872,7 @@ int prelude_connection_permission_new_from_string(prelude_connection_permission_
                         else if ( c == ' ' )
                                 break;
                         
-                        else return prelude_error(PRELUDE_ERROR_UNKNOWN_PERMISSION_BIT);
+                        else return prelude_error_verbose(PRELUDE_ERROR_UNKNOWN_PERMISSION_BIT, "unknown permission bit: '%c'", c);
                 }
         }
 
