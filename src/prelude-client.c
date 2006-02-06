@@ -1064,6 +1064,7 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
 int prelude_client_init(prelude_client_t *client)
 {
         int ret;
+        prelude_error_code_t code;
         prelude_string_t *err = NULL;
         prelude_option_warning_t old_warnings;
         
@@ -1075,17 +1076,23 @@ int prelude_client_init(prelude_client_t *client)
         prelude_option_set_warnings(old_warnings, NULL);
         
         if ( ret < 0 )
-                return ret;
+                goto err;
 
         ret = _prelude_client_profile_init(client->profile);
         if ( ret < 0 )
-                return ret;
+                goto err;
         
         ret = fill_client_infos(client, _prelude_internal_argv[0]);
         if ( ret < 0 )
-                return ret;
+                goto err;
+
+ err:
+        code = prelude_error_get_code(ret);
+        if ( ret < 0 && (code == PRELUDE_ERROR_PROFILE || code == PRELUDE_ERROR_SOURCE_CONFIG_ENGINE) )
+                ret = prelude_error_verbose(prelude_error_get_code(ret), "%s\n%s",
+                                            _prelude_thread_get_error(), prelude_client_get_setup_error(client));
         
-        return 0;
+        return ret;
 }
 
 
@@ -1444,20 +1451,16 @@ prelude_client_profile_t *prelude_client_get_profile(prelude_client_t *client)
  * the prelude_client_start() function, to know if the analyzer
  * need to be registered.
  *
+ * DEPRECATED: use standard error API.
+ *
  * Returns: TRUE if setup is needed, FALSE otherwise.
  */
 prelude_bool_t prelude_client_is_setup_needed(int error)
 {
-        prelude_error_code_t code = prelude_error_get_code(error);
-        
-        return ( code == PRELUDE_ERROR_BACKUP_DIRECTORY      ||
-                 code == PRELUDE_ERROR_PROFILE               ||
-                 code == PRELUDE_ERROR_ANALYZERID_FILE       ||
-                 code == PRELUDE_ERROR_ANALYZERID_PARSE      ||
-                 code == PRELUDE_ERROR_TLS_KEY_FILE          ||
-                 code == PRELUDE_ERROR_TLS_CERTIFICATE_FILE  ||
-                 code == PRELUDE_ERROR_TLS_CERTIFICATE_PARSE ||
-                 prelude_error_get_source(error) == PRELUDE_ERROR_SOURCE_CONFIG_ENGINE ) ? TRUE : FALSE;
+        /*
+         * Deprecated.
+         */
+        return FALSE;
 }
 
 
@@ -1480,36 +1483,31 @@ const char *prelude_client_get_setup_error(prelude_client_t *client)
                 
                 prelude_connection_permission_to_string(client->permission, perm);
 
-                ret = prelude_string_sprintf(out, 
-                                       "\nBasic file configuration does not exist. Please run :\n"
-                                       "prelude-adduser register %s \"%s\" <manager address> --uid %d --gid %d\n"
-                                       "program to setup the analyzer.\n\n"
-                                       
-                                       "Be aware that you should replace the \"<manager address>\" argument with\n"
-                                       "the server address this analyzer is reporting to as argument.\n"
-                                       "\"prelude-adduser\" should be called for each configured server address.\n\n",
-                                       prelude_client_profile_get_name(client->profile),
-                                       prelude_string_get_string(perm),
-                                       prelude_client_profile_get_uid(client->profile),
-                                       prelude_client_profile_get_gid(client->profile));                
+                ret = prelude_string_sprintf(out, "\nProfile '%s' does not exist. In order to create it, please run:\n"
+                                             "prelude-adduser register %s \"%s\" <manager address> --uid %d --gid %d",
+                                             prelude_client_profile_get_name(client->profile),
+                                             prelude_client_profile_get_name(client->profile),
+                                             prelude_string_get_string(perm),
+                                             prelude_client_profile_get_uid(client->profile),
+                                             prelude_client_profile_get_gid(client->profile));                
 
                 prelude_string_destroy(perm);
                 
         } else {
-                ret = prelude_string_sprintf(out,
-                                       "\nBasic file configuration does not exist. Please run :\n"
-                                       "prelude-adduser add %s --uid %d --gid %d\n\n",
-                                       prelude_client_profile_get_name(client->profile),
-                                       prelude_client_profile_get_uid(client->profile),
-                                       prelude_client_profile_get_gid(client->profile));
+                ret = prelude_string_sprintf(out, "\nProfile '%s' does not exist. In order to create it, please run:\n"
+                                             "prelude-adduser add %s --uid %d --gid %d",
+                                             prelude_client_profile_get_name(client->profile),
+                                             prelude_client_profile_get_name(client->profile),
+                                             prelude_client_profile_get_uid(client->profile),
+                                             prelude_client_profile_get_gid(client->profile));
         }
 
         if ( ret < 0 )
                 return NULL;
-        
+
         _prelude_thread_set_error(prelude_string_get_string(out));
         prelude_string_destroy(out);
-        
+                
         return _prelude_thread_get_error();
 }
 
@@ -1517,7 +1515,7 @@ const char *prelude_client_get_setup_error(prelude_client_t *client)
 
 void prelude_client_print_setup_error(prelude_client_t *client) 
 {
-        prelude_log(PRELUDE_LOG_WARN, "%s", prelude_client_get_setup_error(client));
+        prelude_log(PRELUDE_LOG_WARN, "%s\n\n", prelude_client_get_setup_error(client));
 }
 
 
