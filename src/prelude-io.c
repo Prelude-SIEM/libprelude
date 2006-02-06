@@ -282,11 +282,7 @@ static int tls_check_error(prelude_io_t *pio, int error)
         }
         
         else if ( error == GNUTLS_E_UNEXPECTED_PACKET_LENGTH )
-#ifdef ECONNRESET
-                ret = prelude_error_from_errno(ECONNRESET);
-#else
-                ret = prelude_error_verbose(PRELUDE_ERROR_EOF, "TLS: %s", gnutls_strerror(error));
-#endif
+                ret = prelude_error_verbose(PRELUDE_ERROR_TLS, "connection reset by peer");
         
         else                
                 ret = prelude_error_verbose(PRELUDE_ERROR_TLS, "TLS: %s", gnutls_strerror(error));
@@ -321,7 +317,7 @@ static ssize_t tls_read(prelude_io_t *pio, void *buf, size_t count)
                 return tls_check_error(pio, ret);
         
         if ( ret == 0 )
-                return prelude_error(PRELUDE_ERROR_EOF);
+                return prelude_error_verbose(PRELUDE_ERROR_EOF, "connection reset by peer");
         
         return ret;
 }
