@@ -77,17 +77,17 @@ static int get_profile_analyzerid(prelude_client_profile_t *cp)
         
         fd = fopen(filename, "r");
         if ( ! fd )
-                return prelude_error(PRELUDE_ERROR_ANALYZERID_FILE);
+                return prelude_error_verbose(PRELUDE_ERROR_PROFILE, "could not open '%s' for reading", filename);
 
         ptr = fgets(buf, sizeof(buf), fd);
         fclose(fd);
         
         if ( ! ptr )
-                return prelude_error(PRELUDE_ERROR_ANALYZERID_PARSE);
+                return prelude_error_verbose(PRELUDE_ERROR_PROFILE, "could not read analyzerID from '%s'", filename);
         
         ret = sscanf(buf, "%" PRELUDE_PRIu64, &cp->analyzerid);
         if ( ret != 1 )
-                return prelude_error(PRELUDE_ERROR_ANALYZERID_PARSE);
+                return prelude_error_verbose(PRELUDE_ERROR_PROFILE, "'%s' is not a valid analyzerID", buf);
         
         return 0;
 }
