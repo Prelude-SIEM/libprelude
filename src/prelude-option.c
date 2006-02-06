@@ -134,6 +134,23 @@ static void option_err(int flag, const char *fmt, ...)
 
 
 
+static int option_ret_error(prelude_error_code_t code, prelude_string_t *err, const char *fmt, ...)
+{
+        int ret;
+        va_list ap;
+
+        va_start(ap, fmt);
+        
+        prelude_string_vprintf(err, fmt, ap);
+        ret = prelude_error_verbose(code, prelude_string_get_string(err));
+
+        va_end(ap);
+
+        return ret;
+}
+
+
+
 static int cmp_option(prelude_option_t *opt, const char *optname, prelude_option_type_t type)
 {
         if ( ! (opt->type & type) )
@@ -215,12 +232,10 @@ static int check_option_optarg(const char **outptr, const char *option, const ch
 
 
 
-static int check_option_reqarg(const char **outptr, const char *option, const char *arg)
+static int check_option_reqarg(const char **outptr, const char *option, const char *arg, prelude_string_t *err)
 {        
-        if ( ! arg || ! is_an_argument(arg) ) {                
-                fprintf(stderr, "Option %s require an argument.\n", option);
-                return -1;
-        }
+        if ( ! arg || ! is_an_argument(arg) )
+                return option_ret_error(PRELUDE_ERROR_GENERIC, err, "option '%s' require an argument", option);
 
         *outptr = arg;
         
@@ -229,7 +244,7 @@ static int check_option_reqarg(const char **outptr, const char *option, const ch
 
 
 
-static int check_option(prelude_option_t *option, const char **optarg, const char *arg)
+static int check_option(prelude_option_t *option, const char **optarg, const char *arg, prelude_string_t *err)
 {
         int ret = -1;
         
@@ -242,7 +257,7 @@ static int check_option(prelude_option_t *option, const char **optarg, const cha
                 break;
                 
         case PRELUDE_OPTION_ARGUMENT_REQUIRED:
-                ret = check_option_reqarg(optarg, option->longopt, arg);
+                ret = check_option_reqarg(optarg, option->longopt, arg, err);
                 break;
 
         case PRELUDE_OPTION_ARGUMENT_NONE:
@@ -265,10 +280,8 @@ static int process_cfg_file(void *context, prelude_list_t *cblist, prelude_optio
         prelude_log_debug(3, "Using configuration file: %s.\n", filename);
         
         ret = config_open(&cfg, filename);
-        if ( ret < 0 ) {
-                prelude_string_sprintf(err, "%s: could not open %s: %s", prelude_strsource(ret), filename, prelude_strerror(ret));
-                return ret;
-        }
+        if ( ret < 0 )
+                return option_ret_error(ret, err, "%s: could not open %s: %s", prelude_strsource(ret), filename, prelude_strerror(ret));
         
         ret = get_missing_options(context, cfg, filename, cblist, optlist, &line, 0, err);
         
@@ -477,7 +490,7 @@ static int get_missing_options(void *context, config_t *cfg, const char *filenam
                 if ( section && ! entry ) {
 
                         if ( cblist ) {
-                                ret = check_option(opt, &argptr, value);
+                                ret = check_option(opt, &argptr, value, err);
                                 if ( ret < 0 )
                                         return ret;
                                 
@@ -494,7 +507,7 @@ static int get_missing_options(void *context, config_t *cfg, const char *filenam
                 }
 
                 else if ( cblist ) {
-                        ret = check_option(opt, &argptr, value);                        
+                        ret = check_option(opt, &argptr, value, err);                        
                         if ( ret < 0 )
                                 return ret;
                         
@@ -568,7 +581,7 @@ static int parse_argument(void *context, prelude_list_t *cb_list,
                         continue;
                 }
                 
-                ret = check_option(opt, &argptr, (*argv_index < *argc) ? argv[*argv_index] : NULL);
+                ret = check_option(opt, &argptr, (*argv_index < *argc) ? argv[*argv_index] : NULL, err);
                 if ( ret < 0 ) 
                         return ret;
 
@@ -1245,16 +1258,12 @@ void *prelude_option_get_data(prelude_option_t *opt)
 
 int prelude_option_invoke_set(prelude_option_t *opt, const char *value, prelude_string_t *err, void **context)
 {        
-        if ( opt->has_arg == PRELUDE_OPTION_ARGUMENT_NONE && value ) {
-                prelude_string_sprintf(err, "%s does not take an argument", opt->longopt);
-                return -1;
-        }
+        if ( opt->has_arg == PRELUDE_OPTION_ARGUMENT_NONE && value )
+                return option_ret_error(PRELUDE_ERROR_GENERIC, err, "option '%s' does not take argument", opt->longopt);
         
-        if ( opt->has_arg == PRELUDE_OPTION_ARGUMENT_REQUIRED && ! value ) {
-                prelude_string_sprintf(err, "%s require an argument", opt->longopt);
-                return -1;
-        }
-
+        if ( opt->has_arg == PRELUDE_OPTION_ARGUMENT_REQUIRED && ! value )
+                return option_ret_error(PRELUDE_ERROR_GENERIC, err, "option '%s' require an argument", opt->longopt);
+        
         prelude_log_debug(3, "opt=%s value=%s\n", opt->longopt, value ? value : "");
         
         return do_set(opt, value, err, context);
@@ -1275,17 +1284,16 @@ int prelude_option_invoke_commit(prelude_option_t *opt, const char *ctname, prel
         
 	if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
 		oc = prelude_option_search_context(opt, ctname);
-		if ( ! oc ) {
-			prelude_string_sprintf(value, "could not find option with context %s[%s]",
-                                               opt->longopt, ctname);
-			return -1;
-		}
+		if ( ! oc )
+                        return option_ret_error(PRELUDE_ERROR_GENERIC, value,
+                                                "could not find option with context %s[%s]", opt->longopt, ctname);
 		context = oc->data;
 	}
 	
         ret = opt->commit(opt, value, context);
 	if ( ret < 0 && prelude_string_is_empty(value) )
-		prelude_string_sprintf(value, "commit failed for %s", opt->longopt);
+                ret = option_ret_error(prelude_error_get_code(ret), value,
+                                       "could not find option with context %s[%s]", opt->longopt, ctname);
 	
 	return ret;
 }
@@ -1297,30 +1305,24 @@ int prelude_option_invoke_destroy(prelude_option_t *opt, const char *ctname, pre
 	int ret;
 	prelude_option_context_t *oc = NULL;
 	
-        if ( ! opt->destroy ) {
-                prelude_string_sprintf(value, "%s does not support destruction", opt->longopt);
-		return -1;
-	}
+        if ( ! opt->destroy )
+                return option_ret_error(PRELUDE_ERROR_GENERIC, value, "%s does not support destruction", opt->longopt);
 
         if ( opt->default_context )
                 context = opt->default_context;
         
 	if ( opt->type & PRELUDE_OPTION_TYPE_CONTEXT ) {
 		oc = prelude_option_search_context(opt, ctname);
-		if ( ! oc ) {
-			prelude_string_sprintf(value, "could not find option with context %s[%s]",
-                                               opt->longopt, ctname);
-			return -1;
-		}
+		if ( ! oc )
+                        return option_ret_error(PRELUDE_ERROR_GENERIC, value,
+                                                "could not find option with context %s[%s]", opt->longopt, ctname);
                 
 		context = oc->data;
 	}
         
         ret = opt->destroy(opt, value, context);
-	if ( ret < 0 && prelude_string_is_empty(value) ) {
-		prelude_string_sprintf(value, "destruction for %s[%s] failed", opt->longopt, ctname);
-		return -1;
-	}
+	if ( ret < 0 && prelude_string_is_empty(value) )
+                return option_ret_error(PRELUDE_ERROR_GENERIC, value, "destruction for %s[%s] failed", opt->longopt, ctname);
 	
 	if ( oc ) 
 		prelude_option_context_destroy(oc);
