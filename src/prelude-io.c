@@ -148,8 +148,13 @@ static ssize_t sys_read(prelude_io_t *pio, void *buf, size_t count)
         if ( ret == 0 )
                 return prelude_error(PRELUDE_ERROR_EOF);
         
-        if ( ret < 0 )
+        if ( ret < 0 ) {
+#ifdef ECONNRESET
+                if ( errno == ECONNRESET )
+                        return prelude_error(PRELUDE_ERROR_EOF);
+#endif
                 return prelude_error_from_errno(errno);
+        }
         
         return ret;
 }
@@ -179,7 +184,7 @@ static int sys_close(prelude_io_t *pio)
         do {
                 ret = close(pio->fd);
         } while ( ret < 0 && errno == EINTR );
-
+        
         return (ret >= 0) ? ret : prelude_error_from_errno(errno);
 }
 
@@ -267,25 +272,31 @@ static int tls_check_error(prelude_io_t *pio, int error)
 {
         int ret = 0;
         const char *alert;
-        
-        if ( error == GNUTLS_E_AGAIN )
+
+        switch(error) {
+        case GNUTLS_E_AGAIN:
                 ret = prelude_error(PRELUDE_ERROR_EAGAIN);
-        
-        else if ( error == GNUTLS_E_WARNING_ALERT_RECEIVED ) {
+                break;
+
+        case GNUTLS_E_WARNING_ALERT_RECEIVED:
                 alert = gnutls_alert_get_name(gnutls_alert_get(pio->fd_ptr));
                 ret = prelude_error_verbose(PRELUDE_ERROR_TLS_WARNING_ALERT, "TLS warning alert from peer: %s", alert);
-        }
+                break;
         
-        else if ( error == GNUTLS_E_FATAL_ALERT_RECEIVED ) {
+        case GNUTLS_E_FATAL_ALERT_RECEIVED:
                 alert = gnutls_alert_get_name(gnutls_alert_get(pio->fd_ptr));
                 ret = prelude_error_verbose(PRELUDE_ERROR_TLS_FATAL_ALERT, "TLS fatal alert from peer: %s", alert);
-        }
-        
-        else if ( error == GNUTLS_E_UNEXPECTED_PACKET_LENGTH )
-                ret = prelude_error_verbose(PRELUDE_ERROR_TLS, "connection reset by peer");
-        
-        else                
+                break;
+
+        case GNUTLS_E_PUSH_ERROR:
+        case GNUTLS_E_PULL_ERROR:
+        case GNUTLS_E_UNEXPECTED_PACKET_LENGTH:
+                ret = prelude_error(PRELUDE_ERROR_EOF);
+                break;
+
+        default:                
                 ret = prelude_error_verbose(PRELUDE_ERROR_TLS, "TLS: %s", gnutls_strerror(error));
+        }
         
         /*
          * If the error is fatal, deinitialize the session and revert
@@ -317,7 +328,7 @@ static ssize_t tls_read(prelude_io_t *pio, void *buf, size_t count)
                 return tls_check_error(pio, ret);
         
         if ( ret == 0 )
-                return prelude_error_verbose(PRELUDE_ERROR_EOF, "connection reset by peer");
+                return prelude_error(PRELUDE_ERROR_EOF);
         
         return ret;
 }
@@ -347,7 +358,7 @@ static int tls_close(prelude_io_t *pio)
         do {
                 ret = gnutls_bye(pio->fd_ptr, GNUTLS_SHUT_RDWR);        
         } while ( ret < 0 && ret == GNUTLS_E_INTERRUPTED );
-
+        
         if ( ret < 0 )
                 return tls_check_error(pio, ret);
 
@@ -507,7 +518,7 @@ ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count)
                         return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected POLLIN event");
                 
                 ret = prelude_io_read(pio, &in[n], count - n);
-                if ( ret <= 0 )
+                if ( ret < 0 )
                         return ret;
 
                 n += ret;
@@ -559,9 +570,6 @@ ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf)
         ret = prelude_io_read_wait(pio, *buf, count);
         if ( ret < 0 )
                 return ret;
-
-        if ( ret == 0 )
-                return prelude_error(PRELUDE_ERROR_EOF);
         
         return count;
 }
