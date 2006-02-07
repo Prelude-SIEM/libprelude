@@ -78,17 +78,13 @@
 static pthread_key_t thread_error_key;
 static char *shared_error_buffer = NULL;
 static prelude_bool_t use_thread = FALSE;
+static pthread_once_t thread_error_key_once = PTHREAD_ONCE_INIT;
 
 
 
-static void thread_error_key_destroy(void *nil)
+static void thread_error_key_destroy(void *value)
 {
-        char *ptr = pthread_getspecific(thread_error_key);
-
-        if ( ptr )
-                free(ptr);
-
-        pthread_key_delete(thread_error_key);
+        free(value);
 }
 
 
@@ -224,7 +220,12 @@ int prelude_thread_init(void *nil)
  */
 void _prelude_thread_exit(void)
 {
-        if ( ! use_thread && shared_error_buffer ) {
+        if ( use_thread ) {
+                pthread_key_delete(thread_error_key);
+                thread_error_key_once = PTHREAD_ONCE_INIT;
+        }
+        
+        else if ( shared_error_buffer ) {
                 free(shared_error_buffer);
                 shared_error_buffer = NULL;
         }
@@ -290,8 +291,7 @@ prelude_bool_t _prelude_thread_in_use(void)
 int _prelude_thread_set_error(const char *error)
 {
         char *previous;
-        static pthread_once_t thread_error_key_once = PTHREAD_ONCE_INIT;
-        
+
         if ( ! use_thread ) {                
                 if ( shared_error_buffer )
                         free(shared_error_buffer);
@@ -305,7 +305,7 @@ int _prelude_thread_set_error(const char *error)
                 previous = pthread_getspecific(thread_error_key);
                 if ( previous )
                         free(previous);
-
+                
                 pthread_setspecific(thread_error_key, strdup(error));
         }
         
@@ -315,7 +315,7 @@ int _prelude_thread_set_error(const char *error)
 
 
 const char *_prelude_thread_get_error(void)
-{
+{        
         if ( use_thread )
                 return pthread_getspecific(thread_error_key);
         else
