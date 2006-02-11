@@ -203,7 +203,7 @@ int prelude_read_multiline2(FILE *fd, unsigned int *line, prelude_string_t *out)
                 
         } while ( 1 );
 
-        return ret;
+        return 0;
 }
 
 
