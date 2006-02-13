@@ -76,8 +76,6 @@ void prelude_msg_set_priority(prelude_msg_t *msg, prelude_msg_priority_t priorit
 
 uint8_t prelude_msg_get_tag(prelude_msg_t *msg);
 
-uint8_t prelude_msg_get_version(prelude_msg_t *msg);
-
 prelude_msg_priority_t prelude_msg_get_priority(prelude_msg_t *msg);
 
 uint32_t prelude_msg_get_len(prelude_msg_t *msg);
@@ -91,8 +89,6 @@ int prelude_msg_is_empty(prelude_msg_t *msg);
 int prelude_msg_is_fragment(prelude_msg_t *msg);
 
 void prelude_msg_destroy(prelude_msg_t *msg);
-
-void prelude_msg_reset(prelude_msg_t *msg);
 
 void prelude_msg_set_callback(prelude_msg_t *msg, int (*flush_msg_cb)(prelude_msg_t **msg, void *data));
 
