@@ -148,7 +148,7 @@ int prelude_read_multiline(FILE *fd, unsigned int *line, char *buf, size_t size)
         size_t i;
 
         if ( ! fgets(buf, size, fd) )
-                return -1;
+                return prelude_error(PRELUDE_ERROR_EOF);
 
         (*line)++;
          
@@ -192,7 +192,7 @@ int prelude_read_multiline2(FILE *fd, unsigned int *line, prelude_string_t *out)
         do {
                 ret = prelude_read_multiline(fd, line, buf, sizeof(buf));
                 if ( ret < 0 )
-                        break;
+                        return ret;
 
                 ret = prelude_string_cat(out, buf);
                 if ( ret < 0 )
