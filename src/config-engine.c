@@ -64,7 +64,7 @@ static void free_val(char **val)
 
 static prelude_bool_t is_line_commented(const char *line) 
 {
-        line += strspn(line, " \t");
+        line += strspn(line, " \t\r");
         return ( *line == '#' ) ? TRUE : FALSE;
 }
 
@@ -77,7 +77,7 @@ static prelude_bool_t is_line_commented(const char *line)
  */
 static prelude_bool_t is_section(const char *line) 
 {
-        line += strspn(line, " \t\n");
+        line += strspn(line, " \t\r\n");
                 
         if ( *line == '[' && strchr(line, ']') )
                 return TRUE;
@@ -279,7 +279,7 @@ static int strip_value(char **out, const char *in, size_t tlen)
         size_t slen, elen;
         prelude_bool_t have_start_quote = FALSE;
                 
-        in += slen = strspn(in, " \t");
+        in += slen = strspn(in, " \t\r");
         if ( *in == '"' ) {
                 in++; slen++;
                 have_start_quote = TRUE;
@@ -289,7 +289,7 @@ static int strip_value(char **out, const char *in, size_t tlen)
         if ( ! elen )
                 return 0;
         
-        while ( in[elen - 1] == ' ' || in[elen - 1] == '\t' )
+        while ( in[elen - 1] == ' ' || in[elen - 1] == '\t' || in[elen - 1] == '\r' )
                 elen--;
 
         if ( have_start_quote && elen ) {                
@@ -731,11 +731,11 @@ int config_get_next(config_t *cfg, char **section, char **entry, char **value, u
                 return -1;
         
         while ( *line < cfg->elements ) {
-                
+                                
                 ptr = cfg->content[*line];
-                ptr += strspn(ptr, " \t");
+                ptr += strspn(ptr, " \t\r");
                 (*line)++;
-                
+
                 if ( ! *ptr || is_line_commented(ptr) )
                         continue;
                 
