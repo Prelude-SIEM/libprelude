@@ -528,6 +528,7 @@ static int btime_parse(struct tm *lt, const char *time)
 {
         int i, ret;
         long gmt_offset;
+        char *end = NULL;
         struct {
                 const char *field;
                 size_t len;
@@ -559,23 +560,25 @@ static int btime_parse(struct tm *lt, const char *time)
                                 continue;
 
                         time += tbl[i].len + 1;
+
+                        end = strchr(time, ' ');                
+                        if ( end ) {
+                                *end++ = 0;
+                                while ( *end == ' ' ) end++;
+                        }
                         
-                        ret = tbl[i].func(time, tbl[i].ptr);                        
+                        ret = tbl[i].func(time, tbl[i].ptr);
                         if ( ret < 0 )
                                 return -1;
-                        
+
+                        time = end + 1;
                         break;
                 }
                 
                 if ( i == sizeof(tbl) / sizeof(*tbl) )
                         return -1;
-                
-                time = strchr(time, ' ');                
-                if ( ! time )
-                        break;
 
-                time++;
-                
+                time = end;
         } while ( time );
 
         if ( lt->tm_hour != -1 )
