@@ -238,7 +238,10 @@ SV *swig_perl_data(idmef_data_t *data)
 		$result = &PL_sv_undef;
 
 	} else {
-		$result = SWIG_NewPointerObj((void *) * $1, $*1_descriptor, 0);
+		SV *sv;
+
+		sv = SvRV($input);
+		sv_setsv(sv, SWIG_NewPointerObj((void *) * $1, $*1_descriptor, 0));
 	}
 };
 
