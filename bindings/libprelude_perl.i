@@ -35,7 +35,12 @@ void swig_perl_raise_error(int error)
 
 SV *swig_perl_string(prelude_string_t *string)
 {
-	return newSVpv(prelude_string_get_string(string), prelude_string_get_len(string));
+	if ( string ) {
+		return newSVpv(prelude_string_get_string(string), prelude_string_get_len(string));
+	} else {
+		SvREFCNT_inc (& PL_sv_undef);
+		return &PL_sv_undef;
+	}
 }
 
 
@@ -62,6 +67,7 @@ SV *swig_perl_data(idmef_data_t *data)
 		return newSVpvf("%hf", idmef_data_get_float(data));
 
 	default:
+		SvREFCNT_inc (& PL_sv_undef);
 		return &PL_sv_undef;
 	}
 }
@@ -87,8 +93,9 @@ SV *swig_perl_data(idmef_data_t *data)
 		croak("out of memory\n");
 	for (i = 0; i <= len; i++) {
 	    tv = av_fetch(tempav, i, 0);	
-	    $1[i] = (char *) SvPV_nolen(*tv);
-        }
+	    SvREFCNT_inc(*tv);
+            $1[i] = (char *) SvPV_nolen(*tv);
+	}
 	$1[i] = NULL;
 };
 
@@ -97,9 +104,6 @@ SV *swig_perl_data(idmef_data_t *data)
 %typemap(freearg) char **argv {
 	free($1);
 };
-
-
-
 
 
 
@@ -158,11 +162,12 @@ SV *swig_perl_data(idmef_data_t *data)
 
 %typemap(out) int {
 	$result = newSViv($1);
-	argvi++;
+    	argvi++;
 
 	if ( $1 < 0 )
 		XSRETURN(argvi);
 };
+
 
 
 %typemap(argout) (uint64_t *source_id, uint32_t *request_id, void **value) {
@@ -182,6 +187,7 @@ SV *swig_perl_data(idmef_data_t *data)
 			break;
 		}
 	} else {
+		SvREFCNT_inc (& PL_sv_undef);
 		XPUSHs(&PL_sv_undef);
 	}
 };
@@ -225,16 +231,26 @@ SV *swig_perl_data(idmef_data_t *data)
 
 	swig_type = swig_idmef_value_get_descriptor(arg1);
 	if ( ! swig_type ) {
+		SvREFCNT_inc (& PL_sv_undef);
 		$result = &PL_sv_undef;
 	} else {
 		$result = SWIG_NewPointerObj($1, swig_type, 0);
 	}
+
+	argvi++;
 };
 
 
 %clear idmef_value_t **ret;
 %typemap(argout) idmef_value_t **ret {
-	if ( SvIV($result) == 0 ) {
+
+	if ( ! SvROK($input) ) {
+		croak("Argument $argnum is not a reference.");
+		return;
+	}
+
+	if ( result == 0 ) {
+		SvREFCNT_inc (& PL_sv_undef);
 		$result = &PL_sv_undef;
 
 	} else {
@@ -255,6 +271,7 @@ SV *swig_perl_data(idmef_data_t *data)
 		return;
 	}
 };
+
 %typemap(argout) prelude_string_t *out {
 	$result = newSVpv(prelude_string_get_string($1), prelude_string_get_len($1));
 	argvi++;
@@ -283,6 +300,11 @@ SV *swig_perl_data(idmef_data_t *data)
 %typemap(argout) SWIGTYPE **OUTPARAM {
 	SV *sv;
 
+	if ( ! SvROK($input) ) {
+		croak("Argument $argnum is not a reference.");
+		return;
+	}
+
 	sv = SvRV($input);
 	sv_setsv(sv, SWIG_NewPointerObj((void *) * $1, $*1_descriptor, 0));
 };
@@ -294,6 +316,8 @@ SV *swig_perl_data(idmef_data_t *data)
 		return;
 	}
 
-	if ( SWIG_ConvertPtr($input, (void **)&arg$argnum, $1_descriptor, 0) )
+	if ( SWIG_ConvertPtr($input, (void **)&arg$argnum, $1_descriptor, 0) ) {
+		croak("Expected type $1_type for argument $argnum.");
 		return;
+	}
 }
