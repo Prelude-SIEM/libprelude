@@ -21,6 +21,7 @@
 *
 *****/
 
+
 %{
 void swig_python_raise_exception(int error)
 {
@@ -305,17 +306,17 @@ PyObject *swig_python_data(idmef_data_t *data)
 };
 
 
-%typemap(python, out) prelude_string_t * {
+%typemap(out) prelude_string_t * {
 	$result = swig_python_string($1);
 };
 
 
-%typemap(python, out) idmef_data_t * {
+%typemap(out) idmef_data_t * {
 	$result = swig_python_data($1);
 };
 
 
-%typemap(python, out) void * idmef_value_get_object {
+%typemap(out) void * idmef_value_get_object {
 	void *swig_type;
 
 	swig_type = swig_idmef_value_get_descriptor(arg1);
@@ -329,7 +330,7 @@ PyObject *swig_python_data(idmef_data_t *data)
 
 
 %clear idmef_value_t **ret;
-%typemap(python, argout) idmef_value_t **ret {
+%typemap(argout) idmef_value_t **ret {
 	if ( PyInt_AsLong($result) == 0 ) {
 		$result = Py_None;
 		Py_INCREF(Py_None);
@@ -340,7 +341,7 @@ PyObject *swig_python_data(idmef_data_t *data)
 };
 
 
-%typemap(python, in, numinputs=0) prelude_string_t *out {
+%typemap(in, numinputs=0) prelude_string_t *out {
 	int ret;
 	
 	ret = prelude_string_new(&($1));
@@ -349,7 +350,7 @@ PyObject *swig_python_data(idmef_data_t *data)
 		return NULL;
 	}
 };
-%typemap(python, argout) prelude_string_t *out {
+%typemap(argout) prelude_string_t *out {
 	$result = PyString_FromStringAndSize(prelude_string_get_string($1), prelude_string_get_len($1));
 	prelude_string_destroy($1);
 };

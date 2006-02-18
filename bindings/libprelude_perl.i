@@ -74,7 +74,7 @@ SV *swig_perl_data(idmef_data_t *data)
 
 %}
 
-%typemap(perl5, in) char **argv {
+%typemap(in) char **argv {
 	AV *tempav;
 	I32 len;
 	int i;
