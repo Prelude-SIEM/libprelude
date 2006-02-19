@@ -559,7 +559,7 @@ ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf)
         
         ret = prelude_io_read_wait(pio, &msglen, sizeof(msglen));
         if ( ret <= 0 )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "could not read message length of %d bytes", sizeof(msglen));
+                return ret;
 
         count = ntohs(msglen);
 
