@@ -230,13 +230,13 @@ static int save_buf(const char *filename, uid_t uid, gid_t gid, const unsigned c
         
         fd = open(filename, O_CREAT|O_WRONLY|O_APPEND, S_IRUSR|S_IWUSR|S_IRGRP);
         if ( fd < 0 ) {
-                fprintf(stderr, "couldn't open %s for appending: %s.\n", filename, strerror(errno));
+                fprintf(stderr, "couldn't open %s for writing: %s.\n", filename, strerror(errno));
                 return -1;
         }
 
         ret = fchown(fd, uid, gid);
         if ( ret < 0 ) {
-                fprintf(stderr, "couldn't set %s owner to UID %d GID %d: %s.\n",
+                fprintf(stderr, "could not set %s owner to UID %d GID %d: %s.\n",
                         filename, (int) uid, (int) gid, strerror(errno));
                 safe_close(fd);
                 return -1;
@@ -644,7 +644,7 @@ int tls_handle_certificate_request(prelude_client_profile_t *cp, prelude_io_t *f
         fprintf(stderr, "  - Waiting for client certificate request.\n");
         ret = prelude_io_read_delimited(fd, &rbuf);
         if ( ret < 0 ) {
-                fprintf(stderr, "error receiving client certificate request.\n");
+                prelude_perror(ret, "error receiving client certificate request");
                 return -1;
         }
         
@@ -675,7 +675,7 @@ int tls_handle_certificate_request(prelude_client_profile_t *cp, prelude_io_t *f
 
         ret = prelude_io_write_delimited(fd, buf, size);    
         if ( ret != size ) {
-                fprintf(stderr, "error sending signed certificate.\n");
+                prelude_perror(ret, "error sending signed certificate");
                 return -1;
         }
 
@@ -691,7 +691,7 @@ int tls_handle_certificate_request(prelude_client_profile_t *cp, prelude_io_t *f
 
         ret = prelude_io_write_delimited(fd, buf, size);
         if ( ret != size ) {
-                fprintf(stderr, "error sending signed certificate.\n");
+                prelude_perror(ret, "error sending signed certificate");
                 return -1;
         }
         
@@ -721,14 +721,14 @@ int tls_request_certificate(prelude_client_profile_t *cp, prelude_io_t *fd,
         
         ret = prelude_io_write_delimited(fd, buf, size);
         if ( ret != size ) {
-                fprintf(stderr, "error sending certificate request.\n");
+                prelude_perror(ret, "error sending certificate request");
                 return -1;
         }
         
         fprintf(stderr, "  - Receiving signed certificate.\n");
-        rsize = prelude_io_read_delimited(fd, &rbuf);
+        rsize = prelude_io_read_delimited(fd, &rbuf);        
         if ( rsize < 0 ) {
-                fprintf(stderr, "error receiving CA-signed certificate.\n");
+                prelude_perror(rsize, "error receiving CA-signed certificate");
                 return -1;
         }
         
@@ -747,7 +747,7 @@ int tls_request_certificate(prelude_client_profile_t *cp, prelude_io_t *fd,
 
         rsize = prelude_io_read_delimited(fd, &rbuf);
         if ( rsize < 0 ) {
-                fprintf(stderr, "error receiving server certificate.\n");
+                prelude_perror(rsize, "error receiving server certificate");
                 return -1;
         }
         
