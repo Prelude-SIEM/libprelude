@@ -159,7 +159,11 @@ static int handle_gnutls_error(gnutls_session session, int ret)
                 return -1;
         }
 
-        return (ret == GNUTLS_E_AGAIN || ret == GNUTLS_E_INTERRUPTED) ? 0 : ret;
+        if ( ret == GNUTLS_E_AGAIN || ret == GNUTLS_E_INTERRUPTED )
+                return 0;
+
+        gnutls_alert_send_appropriate(session, ret);
+        return ret;
 }
 
 
@@ -228,8 +232,8 @@ int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int cryp
         if ( ! crypt ) {
                 
                 do {
-                        ret = gnutls_bye(session, GNUTLS_SHUT_RDWR);
-                } while ( ret < 0 && (ret == GNUTLS_E_INTERRUPTED || ret == GNUTLS_E_AGAIN) );
+                        ret = gnutls_bye(session, GNUTLS_SHUT_RDWR);                        
+                } while ( ret < 0 && handle_gnutls_error(session, ret) == 0 );
                 
                 if ( ret < 0 )
                         ret = prelude_error_verbose(PRELUDE_ERROR_TLS, "TLS bye failed: %s", gnutls_strerror(ret));
