@@ -50,7 +50,7 @@
 #define ANON_DH_BITS 1024
 
 
-static char *one_shot_passwd;
+static const char *one_shot_passwd;
 static gnutls_anon_server_credentials anoncred;
 
 
@@ -128,6 +128,7 @@ static gnutls_session new_tls_session(int sock)
         ret = gnutls_handshake(session);        
         if ( ret < 0 ) {
                 fprintf(stderr, "  - GnuTLS handshake failed: %s.\n", gnutls_strerror(ret));
+                gnutls_alert_send_appropriate(session, ret);
                 return NULL;
         }
                 
@@ -137,8 +138,7 @@ static gnutls_session new_tls_session(int sock)
 
 
 static int handle_client_connection(prelude_client_profile_t *cp, prelude_io_t *fd,
-                                    gnutls_x509_privkey key,
-                                    gnutls_x509_crt cacrt, gnutls_x509_crt crt)
+                                    gnutls_x509_privkey key, gnutls_x509_crt cacrt, gnutls_x509_crt crt)
 {
         gnutls_session session;
         
@@ -158,8 +158,7 @@ static int handle_client_connection(prelude_client_profile_t *cp, prelude_io_t *
 
 static int wait_connection(prelude_client_profile_t *cp, int sock,
                            struct addrinfo *ai, int keepalive,
-                           gnutls_x509_privkey key,
-                           gnutls_x509_crt cacrt, gnutls_x509_crt crt)
+                           gnutls_x509_privkey key, gnutls_x509_crt cacrt, gnutls_x509_crt crt)
 {
         void *inaddr;
         char buf[512];
@@ -210,8 +209,7 @@ static int wait_connection(prelude_client_profile_t *cp, int sock,
                 if ( ret == 0 )
                         fprintf(stderr, "  - %s successfully registered.\n", buf);
                 
-                prelude_io_close(fd);
-                
+                prelude_io_close(fd);                
         } while ( keepalive || ret < 0 );
 
         prelude_io_destroy(fd);
@@ -324,75 +322,6 @@ static int setup_server(const char *addr, unsigned int port, struct addrinfo **a
 
 
 
-static int ask_one_shot_password(char **buf)
-{
-        int ret;
-	char *pass1, *pass2;
-		
-	pass1 = getpass("  - enter registration one-shot password: ");
-	if ( ! pass1 )
-		return -1;
-	
-	pass1 = strdup(pass1);
-	if ( ! pass1 )
-		return -1;
-	
-	pass2 = getpass("  - confirm registration one-shot password: ");
-	if ( ! pass2 )
-		return -1;
-
-	ret = strcmp(pass1, pass2);
-	memset(pass2, 0, strlen(pass2));
-	
-	if ( ret == 0 ) {
-		*buf = pass1;
-		return 0;
-	}
-
-	memset(pass1, 0, strlen(pass1));
-	free(pass1);
-	
-	return ask_one_shot_password(buf);
-
-}
-
-
-
-
-static int generate_one_shot_password(char **buf) 
-{
-        int i;
-        char c, *mybuf;
-        struct timeval tv;
-        const int passlen = 8;
-	const char letters[] = "01234567890abcdefghijklmnopqrstuvwxyz";
-
-        gettimeofday(&tv, NULL);
-        
-        srand((unsigned int) getpid() * tv.tv_usec);
-        
-	mybuf = malloc(passlen + 1);
-	if ( ! mybuf )
-		return -1;
-	
-        for ( i = 0; i < passlen; i++ ) {
-		c = letters[rand() % (sizeof(letters) - 1)];
-                mybuf[i] = c;
-        }
-
-        mybuf[passlen] = '\0';
-
-	*buf = mybuf;
-
-        fprintf(stderr, "  - generated one-shot password is \"%s\".\n\n"
-                "    This password will be requested by \"prelude-adduser\" in order to connect.\n"
-                "    Please remove the first and last quote from this password before using it.\n", mybuf);
-        
-        return 0;
-}
-
-
-
 #ifndef GNUTLS_SRP_DISABLED
 
 static int copy_datum(gnutls_datum *dst, const gnutls_datum *src)
@@ -445,25 +374,13 @@ static int srp_callback(gnutls_session session, const char *username, gnutls_dat
 
 
 int server_create(prelude_client_profile_t *cp, const char *addr, unsigned int port,
-                  prelude_bool_t keepalive, prelude_bool_t prompt,
-                  gnutls_x509_privkey key, gnutls_x509_crt cacrt, gnutls_x509_crt crt) 
+                  prelude_bool_t keepalive, const char *pass, gnutls_x509_privkey key, gnutls_x509_crt cacrt, gnutls_x509_crt crt) 
 {
         int sock, ret;
         struct addrinfo *ai;
         gnutls_dh_params dh_params;
-        
-        if ( ! prompt )
-    		ret = generate_one_shot_password(&one_shot_passwd);
-        else {
-                fprintf(stderr,
-                        "\n  Please enter registration one-shot password.\n"
-                        "  This password will be requested by \"prelude-adduser\" in order to connect.\n\n");
-                
-		ret = ask_one_shot_password(&one_shot_passwd);
-	}
 
-        if ( ret < 0 )
-                return -1;
+        one_shot_passwd = pass;
         
         sock = setup_server(addr, port, &ai);
         if ( sock < 0 )

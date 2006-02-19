@@ -72,12 +72,12 @@ struct cmdtbl {
 };
 
 
-static char *addr = NULL;
 static unsigned int port = 5553;
 static PRELUDE_LIST(rm_dir_list);
 static prelude_client_profile_t *profile;
+static char *addr = NULL, *one_shot_passwd = NULL;
 static prelude_bool_t gid_set = FALSE, uid_set = FALSE;
-static prelude_bool_t server_prompt_passwd = FALSE, server_keepalive = FALSE;
+static prelude_bool_t prompt_passwd = FALSE, server_keepalive = FALSE, pass_from_stdin = FALSE;
 
 
 int generated_key_size = 0;
@@ -156,9 +156,11 @@ static void print_registration_server_help(void)
         
         fprintf(stderr, "Valid options:\n");
 
-        fprintf(stderr, "\t--uid arg\t\t: UID or user to use to setup 'receiving' analyzer files.\n");
-        fprintf(stderr, "\t--gid arg\t\t: GID or group to use to setup 'receiving' analyzer files.\n");
+        fprintf(stderr, "\t--uid=UID\t\t: UID or user to use to setup 'receiving' analyzer files.\n");
+        fprintf(stderr, "\t--gid=GID\t\t: GID or group to use to setup 'receiving' analyzer files.\n");
         fprintf(stderr, "\t--prompt\t\t: Prompt for a password instead of auto generating it.\n");
+        fprintf(stderr, "\t--passwd=PASSWD\t\t: Use provided password instead of auto generating it.\n");
+        fprintf(stderr, "\t--passwd-file=-|FILE\t: Read password from file instead of auto generating it (- for stdin).\n");
         fprintf(stderr, "\t--keepalive\t\t: Register analyzer in an infinite loop.\n");
         fprintf(stderr, "\t--no-confirm\t\t: Do not ask for confirmation on sensor registration.\n");
         fprintf(stderr, "\t--listen\t\t: Address to listen on for registration request (default is any:5553).\n");
@@ -177,8 +179,10 @@ static void print_register_help(void)
                 "receiving analyzer (like a Manager) through the specified registration-server.\n\n");
         
         fprintf(stderr, "Valid options:\n");
-        fprintf(stderr, "\t--uid arg\t\t: UID or user to use to setup analyzer files.\n");
-        fprintf(stderr, "\t--gid arg\t\t: GID or group to use to setup analyzer files.\n");
+        fprintf(stderr, "\t--uid=UID\t\t: UID or user to use to setup analyzer files.\n");
+        fprintf(stderr, "\t--gid=GID\t\t: GID or group to use to setup analyzer files.\n");
+        fprintf(stderr, "\t--passwd=PASSWD\t\t: Use provided password instead of prompting it.\n");
+        fprintf(stderr, "\t--passwd-file=-|FILE\t: Read password from file instead of prompting it (- for stdin).\n");
 }
 
 
@@ -189,8 +193,8 @@ static void print_add_help(void)
         fprintf(stderr, "usage: add <analyzer profile> [options]\n\n");
 
         fprintf(stderr, "Valid options:\n");
-        fprintf(stderr, "\t--uid arg\t\t: UID or user to use to setup analyzer files.\n");
-        fprintf(stderr, "\t--gid arg\t\t: GID or group to use to setup analyzer files.\n");
+        fprintf(stderr, "\t--uid=UID\t\t: UID or user to use to setup analyzer files.\n");
+        fprintf(stderr, "\t--gid=GID\t\t: GID or group to use to setup analyzer files.\n");
 }
 
 
@@ -201,8 +205,8 @@ static void print_chown_help(void)
         fprintf(stderr, "usage: chown <analyzer profile> [--uid UID] [--gid GID]\n\n");
 
         fprintf(stderr, "Valid options:\n");
-        fprintf(stderr, "\t--uid arg\t\t: UID or user to use to setup analyzer files.\n");
-        fprintf(stderr, "\t--gid arg\t\t: GID to group to use to setup analyzer files.\n");
+        fprintf(stderr, "\t--uid=UID\t\t: UID or user to use to setup analyzer files.\n");
+        fprintf(stderr, "\t--gid=GID\t\t: GID to group to use to setup analyzer files.\n");
 }
 
 
@@ -213,8 +217,8 @@ static void print_revoke_help(void)
         fprintf(stderr, "usage: revoke <profile> <analyzerID> [options]\n\n");
 
         fprintf(stderr, "Valid options:\n");
-        fprintf(stderr, "\t--uid arg\t\t: UID or user to use to setup analyzer files.\n");
-        fprintf(stderr, "\t--gid arg\t\t: GID to group to use to setup analyzer files.\n");
+        fprintf(stderr, "\t--uid=UID\t\t: UID or user to use to setup analyzer files.\n");
+        fprintf(stderr, "\t--gid=GID\t\t: GID to group to use to setup analyzer files.\n");
 }
 
 
@@ -281,9 +285,49 @@ static int set_server_keepalive(prelude_option_t *opt, const char *optarg, prelu
 }
 
 
-static int set_server_prompt_passwd(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
+
+static int set_passwd(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
-        server_prompt_passwd = TRUE;
+        one_shot_passwd = strdup(optarg);
+        return 0;
+}
+
+
+static int set_passwd_file(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
+{
+        FILE *fd;
+        char buf[1024], *ptr;
+
+        prompt_passwd = FALSE;
+        
+        if ( strcmp(optarg, "-") == 0 ) {
+                fd = stdin;
+                server_confirm = FALSE;
+                pass_from_stdin = TRUE;
+        } else {
+                fd = fopen(optarg, "r");
+                if ( ! fd ) {
+                        fprintf(stderr, "could not open file '%s': %s\n", optarg, strerror(errno));
+                        return -1;
+                }
+        }
+
+        ptr = fgets(buf, sizeof(buf), fd);
+        if ( fd != stdin )
+                fclose(fd);
+
+        if ( ! ptr )
+                return -1;
+
+        one_shot_passwd = strdup(buf);
+                                
+        return 0;
+}
+
+
+static int set_prompt_passwd(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
+{
+        prompt_passwd = TRUE;
         return 0;
 }
 
@@ -513,7 +557,7 @@ static gnutls_session new_tls_session(int sock, char *passwd)
                 else
                         errstr = gnutls_strerror(ret);
                         
-                fprintf(stderr, "- GnuTLS handshake failed: %s.\n", errstr);
+                fprintf(stderr, "  - GnuTLS handshake failed: %s.\n", errstr);
                 
                 return NULL;
         }
@@ -586,41 +630,6 @@ static prelude_io_t *connect_manager(const char *addr, unsigned int port, char *
 
 
 
-static int ask_one_shot_password(char **buf) 
-{
-        int ret;
-        char *pass, *confirm;
-        
-        pass = getpass("\n  - Enter registration one shot password: ");
-        if ( ! pass )
-                return -1;
-
-        pass = strdup(pass);
-        if ( ! pass )
-                return -1;
-        
-        confirm = getpass("  - Please confirm one shot password: ");
-        if ( ! confirm )
-                return -1;
-
-        ret = strcmp(pass, confirm);
-        memset(confirm, 0, strlen(confirm));
-
-        if ( ret == 0 ) {
-                *buf = pass;
-                return 0;
-        }
-
-        fprintf(stderr, "    - Bad password, they don't match.\n");
-        
-        memset(pass, 0, strlen(pass));
-        free(pass);
-        
-        return ask_one_shot_password(buf);
-}
-
-
-
 static const char *update_or_create(const char *path)
 {        
         return access(path, F_OK) == 0 ? "Using" : "Creating";
@@ -686,6 +695,40 @@ static int setup_analyzer_files(prelude_client_profile_t *profile, uint64_t anal
         prelude_client_profile_get_backup_dirname(profile, buf, sizeof(buf));
 
         return create_directory(profile, buf);
+}
+
+
+
+static int ask_one_shot_password(char **buf)
+{
+        int ret;
+	char *pass1, *pass2;
+		
+	pass1 = getpass("  - enter registration one-shot password: ");
+	if ( ! pass1 )
+		return -1;
+	
+	pass1 = strdup(pass1);
+	if ( ! pass1 )
+		return -1;
+	
+	pass2 = getpass("  - confirm registration one-shot password: ");
+	if ( ! pass2 )
+		return -1;
+
+	ret = strcmp(pass1, pass2);
+	memset(pass2, 0, strlen(pass2));
+	
+	if ( ret == 0 ) {
+		*buf = pass1;
+		return 0;
+	}
+
+	memset(pass1, 0, strlen(pass1));
+	free(pass1);
+	
+	return ask_one_shot_password(buf);
+
 }
 
 
@@ -811,11 +854,13 @@ static int add_cmd(int argc, char **argv)
         argc -= 2;
         
         ret = prelude_option_read(opt, NULL, &argc, &argv[2], &err, NULL);
-        if ( ret < 0 )
-                return -1;
-
         prelude_option_destroy(opt);
-
+        
+        if ( ret < 0 ) {
+                prelude_perror(ret, "Option error");
+                return -1;
+        }
+        
         ret = add_analyzer(argv[2], &key, NULL);
         if ( ret < 0 )
                 return -1;
@@ -869,9 +914,13 @@ static int chown_cmd(int argc, char **argv)
         argc -= 2;
         
         ret = prelude_option_read(opt, NULL, &argc, &argv[2], &err, NULL);
-        if ( ret < 0 )
+        prelude_option_destroy(opt);
+        
+        if ( ret < 0 ) {
+                prelude_perror(ret, "Option error");
                 return -1;
-
+        }
+        
         fprintf(stderr, "- Chowning '%s' using UID:%d GID:%d.\n", argv[2],
                 uid_set ? (int) prelude_client_profile_get_uid(profile) : -1,
                 gid_set ? (int) prelude_client_profile_get_gid(profile) : -1);
@@ -988,7 +1037,6 @@ static int del_cmd(int argc, char **argv)
 static int register_cmd(int argc, char **argv)
 {
         int ret;
-        char *pass;
         prelude_io_t *fd;
         prelude_option_t *opt;
         prelude_string_t *err;
@@ -1000,6 +1048,12 @@ static int register_cmd(int argc, char **argv)
         ret = prelude_option_new(NULL, &opt);
         setup_permission_options(opt);
         
+        prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "passwd", NULL,
+                           PRELUDE_OPTION_ARGUMENT_REQUIRED, set_passwd, NULL);
+        
+        prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "passwd-file", NULL,
+                           PRELUDE_OPTION_ARGUMENT_REQUIRED, set_passwd_file, NULL);
+                
         ret = prelude_connection_permission_new_from_string(&permission_bits, argv[3]);
         if ( ret < 0 ) {
                 fprintf(stderr, "could not parse permission: %s.\n", prelude_strerror(ret));
@@ -1009,11 +1063,13 @@ static int register_cmd(int argc, char **argv)
         argc -= 4;
         
         ret = prelude_option_read(opt, NULL, &argc, &argv[4], &err, NULL);
-        if ( ret < 0 )
-                return -1;
-        
         prelude_option_destroy(opt);
 
+        if ( ret < 0 ) {
+                prelude_perror(ret, "Option error");
+                return -1;
+        }
+        
         ret = prelude_parse_address(addrstr, &addr, &port);
         if ( ret < 0 ) {
                 fprintf(stderr, "error parsing address '%s'.\n", addrstr);
@@ -1039,18 +1095,21 @@ static int register_cmd(int argc, char **argv)
         
                 "  Please remember that \"prelude-adduser\" should be used to register\n"
                 "  every server used by this analyzer.\n\n");
-
         
-        fprintf(stderr,
-                "  Enter the one-shot password provided by the \"prelude-adduser\" program:\n");
-
-        ret = ask_one_shot_password(&pass);
-        if ( ret < 0 )
-                return -1;
+        if ( prompt_passwd ) {
+                
+                fprintf(stderr,
+                        "  Enter the one-shot password provided by the \"prelude-adduser\" program:\n");
+        
+                ret = ask_one_shot_password(&one_shot_passwd);
+                if ( ret < 0 )
+                        return -1;
+        }
         
         fprintf(stderr, "  - connecting to registration server (%s:%u)...\n", addr, port);
         
-        fd = connect_manager(addr, port, pass);
+        fd = connect_manager(addr, port, one_shot_passwd);
+        memset(one_shot_passwd, 0, strlen(one_shot_passwd));        
         if ( ! fd ) 
                 return -1;
         
@@ -1068,6 +1127,40 @@ static int register_cmd(int argc, char **argv)
 }
 
 
+static int generate_one_shot_password(char **buf) 
+{
+        int i;
+        char c, *mybuf;
+        struct timeval tv;
+        const int passlen = 8;
+	const char letters[] = "01234567890abcdefghijklmnopqrstuvwxyz";
+
+        gettimeofday(&tv, NULL);
+        
+        srand((unsigned int) getpid() * tv.tv_usec);
+        
+	mybuf = malloc(passlen + 1);
+	if ( ! mybuf )
+		return -1;
+	
+        for ( i = 0; i < passlen; i++ ) {
+		c = letters[rand() % (sizeof(letters) - 1)];
+                mybuf[i] = c;
+        }
+
+        mybuf[passlen] = '\0';
+
+	*buf = mybuf;
+
+        fprintf(stderr, "  - generated one-shot password is \"%s\".\n\n"
+                "    This password will be requested by \"prelude-adduser\" in order to connect.\n"
+                "    Please remove the first and last quote from this password before using it.\n", mybuf);
+        
+        return 0;
+}
+
+
+
 
 static int registration_server_cmd(int argc, char **argv)
 {
@@ -1082,9 +1175,15 @@ static int registration_server_cmd(int argc, char **argv)
         
         prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 'k', "keepalive", NULL,
                            PRELUDE_OPTION_ARGUMENT_NONE, set_server_keepalive, NULL);
-                
+
+        prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "passwd", NULL,
+                           PRELUDE_OPTION_ARGUMENT_REQUIRED, set_passwd, NULL);
+
+        prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "passwd-file", NULL,
+                           PRELUDE_OPTION_ARGUMENT_REQUIRED, set_passwd_file, NULL);
+        
         prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 'p', "prompt", NULL,
-                           PRELUDE_OPTION_ARGUMENT_NONE, set_server_prompt_passwd, NULL);
+                           PRELUDE_OPTION_ARGUMENT_NONE, set_prompt_passwd, NULL);
 
         prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 'n', "no-confirm", NULL,
                            PRELUDE_OPTION_ARGUMENT_NONE, set_server_no_confirm, NULL);
@@ -1097,10 +1196,20 @@ static int registration_server_cmd(int argc, char **argv)
         argc -= 2;
         
         ret = prelude_option_read(opt, NULL, &argc, &argv[2], &err, NULL);
-        if ( ret < 0 )
-                return -1;
-        
         prelude_option_destroy(opt);
+        
+        if ( ret < 0 ) {
+                prelude_perror(ret, "Option error");
+                return -1;
+        }
+
+        if ( pass_from_stdin )
+                fprintf(stderr, "Warning: registration confirmation disabled as a result of reading from a pipe.\n\n");
+        
+        if ( prompt_passwd && one_shot_passwd ) {
+                fprintf(stderr, "Options --prompt, --passwd, and --passwd-file are incompatible.\n\n");
+                return -1;
+        }
         
         ret = add_analyzer(argv[2], &key, NULL);
         if ( ret < 0 )
@@ -1115,8 +1224,23 @@ static int registration_server_cmd(int argc, char **argv)
                 return -1;
         
         fprintf(stderr, "\n- Starting registration server.\n");
-        ret = server_create(profile, addr, port,
-                            server_keepalive, server_prompt_passwd, key, ca_crt, crt);
+
+        if ( prompt_passwd ) {
+                fprintf(stderr,
+                        "\n  Please enter registration one-shot password.\n"
+                        "  This password will be requested by \"prelude-adduser\" in order to connect.\n\n");
+                
+                ret = ask_one_shot_password(&one_shot_passwd);
+        }
+
+        else if ( ! one_shot_passwd )
+                ret = generate_one_shot_password(&one_shot_passwd);
+        
+        if ( ret < 0 )
+                return -1;
+
+        ret = server_create(profile, addr, port, server_keepalive, one_shot_passwd, key, ca_crt, crt);
+        memset(one_shot_passwd, 0, strlen(one_shot_passwd));
         
         gnutls_x509_privkey_deinit(key);
         gnutls_x509_crt_deinit(crt);
@@ -1143,11 +1267,13 @@ static int revoke_cmd(int argc, char **argv)
         argc -= 2;
         
         ret = prelude_option_read(opt, NULL, &argc, &argv[2], &err, NULL);
-        if ( ret < 0 )
-                return -1;
-
         prelude_option_destroy(opt);
 
+        if ( ret < 0 ) {
+                prelude_perror(ret, "Option error");
+                return -1;
+        }
+        
         ret = add_analyzer(argv[2], &key, NULL);
         if ( ret < 0 )
                 return -1;
@@ -1172,7 +1298,7 @@ static int print_help(struct cmdtbl *tbl)
 {
         int i;
         
-        fprintf(stderr, "Usage prelude-adduser <subcommand> [options] [args]\n");
+        fprintf(stderr, "\nUsage prelude-adduser <subcommand> [options] [args]\n");
         fprintf(stderr, "Type \"prelude-adduser <subcommand>\" for help on a specific subcommand.\n\n");
         fprintf(stderr, "Available subcommands:\n");
         
@@ -1283,6 +1409,8 @@ int main(int argc, char **argv)
 #ifdef NEED_GNUTLS_EXTRA
         gnutls_global_init_extra();
 #endif
+
+        signal(SIGPIPE, SIG_IGN);
         
         for ( i = 0; tbl[i].cmd; i++ ) {
                 if ( strcmp(tbl[i].cmd, argv[1]) != 0 )

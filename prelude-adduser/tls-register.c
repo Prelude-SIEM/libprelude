@@ -570,7 +570,7 @@ static char ask_req_confirmation(void)
 
 
 
-static int check_req(gnutls_x509_crq crq, uint64_t *analyzerid)
+static int check_req(prelude_io_t *fd, gnutls_x509_crq crq, uint64_t *analyzerid)
 {
         int ret;
         size_t size;
@@ -611,8 +611,10 @@ static int check_req(gnutls_x509_crq crq, uint64_t *analyzerid)
 
         if ( server_confirm ) {
                 c = ask_req_confirmation();
-                if ( c != 'y' )
+                if ( c != 'y' ) {
+                        gnutls_alert_send(prelude_io_get_fdptr(fd), GNUTLS_AL_FATAL, GNUTLS_A_USER_CANCELED);
                         return -1;
+                }
         }
         
         fprintf(stderr, "    Registering analyzer \"%" PRELUDE_PRIu64 "\" with permission \"%s\".\n", *analyzerid,
@@ -654,7 +656,7 @@ int tls_handle_certificate_request(prelude_client_profile_t *cp, prelude_io_t *f
         gnutls_x509_crq_import(crq, &data, GNUTLS_X509_FMT_PEM);
         free(rbuf);
 
-        ret = check_req(crq, &analyzerid);
+        ret = check_req(fd, crq, &analyzerid);
         if ( ret < 0 )
                 return ret;
         
