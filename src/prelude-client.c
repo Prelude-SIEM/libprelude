@@ -872,9 +872,6 @@ int _prelude_client_register_options(void)
         prelude_option_t *opt;
         prelude_option_t *root_list;
 
-        if ( _prelude_generic_optlist )
-                return 0;
-
         prelude_option_new_root(&_prelude_generic_optlist);
 
         ret = prelude_option_add(_prelude_generic_optlist, &root_list,

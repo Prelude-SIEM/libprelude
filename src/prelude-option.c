@@ -1067,26 +1067,26 @@ void prelude_option_destroy(prelude_option_t *option)
         prelude_list_t *tmp, *bkp;
         prelude_option_t *opt;
         
-        if ( ! option )
+        if ( ! option ) {
                 option = root_optlist;
+                root_optlist = NULL;
+        }
         
         prelude_list_for_each_safe(&option->optlist, tmp, bkp) {
                 opt = prelude_linked_object_get_object(tmp);
                 prelude_option_destroy(opt);
         }
+        
+        if ( option->value )
+                free(option->value);
 
-        if ( option ) {                
-                if ( option->value )
-                        free(option->value);
-
-                prelude_list_for_each_safe(&option->context_list, tmp, bkp)
-                        prelude_option_context_destroy(prelude_list_entry(tmp, prelude_option_context_t, list));
+        prelude_list_for_each_safe(&option->context_list, tmp, bkp)
+                prelude_option_context_destroy(prelude_list_entry(tmp, prelude_option_context_t, list));
                 
-                if ( ! prelude_list_is_empty(&option->_list) )
-                        prelude_linked_object_del((prelude_linked_object_t *) option);
+        if ( ! prelude_list_is_empty(&option->_list) )
+                prelude_linked_object_del((prelude_linked_object_t *) option);
                 
-                free(option);
-        }
+        free(option);
 }
 
 
