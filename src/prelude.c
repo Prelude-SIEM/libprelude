@@ -190,7 +190,7 @@ void prelude_deinit(void)
         prelude_option_destroy(NULL);
         gnutls_global_deinit();
 
-        _prelude_thread_exit();
+        _prelude_thread_deinit();
 }
 
 

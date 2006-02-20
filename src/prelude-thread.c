@@ -77,8 +77,7 @@
 
 static pthread_key_t thread_error_key;
 static char *shared_error_buffer = NULL;
-static prelude_bool_t use_thread = FALSE;
-static pthread_once_t thread_error_key_once = PTHREAD_ONCE_INIT;
+static prelude_bool_t use_thread = FALSE, need_init = TRUE;
 
 
 
@@ -88,12 +87,14 @@ static void thread_error_key_destroy(void *value)
 }
 
 
-
-static void thread_error_key_create(void)
+static void thread_init_if_needed(void)
 {
+        if ( ! need_init )
+                return;
+        
         pthread_key_create(&thread_error_key, thread_error_key_destroy);
+        need_init = FALSE;
 }
-
 
 
 int prelude_thread_atfork(void (*prepare)(void), void (*parent)(void), void (*child)(void))
@@ -204,25 +205,26 @@ int prelude_thread_sigmask(int how, const sigset_t *newmask, sigset_t *oldmask)
 }
 
 
-
 /*
  *
  */
 int prelude_thread_init(void *nil)
 {
+        thread_init_if_needed();
         use_thread = TRUE;
         return 0;
 }
 
 
+
 /*
  *
  */
-void _prelude_thread_exit(void)
+void _prelude_thread_deinit(void)
 {
         if ( use_thread ) {
                 pthread_key_delete(thread_error_key);
-                thread_error_key_once = PTHREAD_ONCE_INIT;
+                need_init = TRUE;
         }
         
         else if ( shared_error_buffer ) {
@@ -274,18 +276,19 @@ prelude_bool_t _prelude_thread_in_use(void)
 {
         static prelude_bool_t tested = FALSE;
         
-        if ( tested )
+        if ( tested ) {
+                thread_init_if_needed();
                 return use_thread;
+        }
         
         use_thread = __prelude_thread_in_use();
         tested = TRUE;
-        
+
         prelude_log(PRELUDE_LOG_DEBUG, "[init] thread used=%d\n", use_thread);
+        thread_init_if_needed();
         
         return use_thread;
 }
-
-
 
 
 int _prelude_thread_set_error(const char *error)
@@ -300,8 +303,6 @@ int _prelude_thread_set_error(const char *error)
         }
 
         else {
-                pthread_once(&thread_error_key_once, thread_error_key_create);
-
                 previous = pthread_getspecific(thread_error_key);
                 if ( previous )
                         free(previous);
