@@ -28,7 +28,7 @@ SCAN_OPTIONS=
 
 # Extra options to supply to gtkdoc-mkdb.
 # e.g. MKDB_OPTIONS=--sgml-mode --output-format=xml
-MKDB_OPTIONS=--sgml-mode --output-format=xml
+MKDB_OPTIONS=--sgml-mode --output-format=xml --ignore-files=idmef-criteria-string.lex.c
 
 # Extra options to supply to gtkdoc-fixref. Not normally needed.
 # e.g. FIXXREF_OPTIONS=--extra-dir=../gdk-pixbuf/html --extra-dir=../gdk/html
@@ -42,7 +42,7 @@ CFILE_GLOB=
 
 # Header files to ignore when scanning.
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h
-IGNORE_HFILES=config-engine.h libmissing.h idmef-tree-data.h ntp.h tls-auth.h tls-util.h code-from-errno.h code-to-errno.h err-codes-sym.h err-codes.h err-sources-sym.h err-sources.h errnos-sym.h gettext.h mkerrcodes.h idmef-criteria-string.yac.h idmef-tree.h prelude-message-id.h idmef-message-id.h idmef-class.h idmef-value-type.h daemonize.h common.h variable.h
+IGNORE_HFILES=config-engine.h libmissing.h idmef-tree-data.h ntp.h tls-auth.h tls-util.h code-from-errno.h code-to-errno.h err-codes-sym.h err-codes.h err-sources-sym.h err-sources.h errnos-sym.h gettext.h mkerrcodes.h idmef-criteria-string.yac.h idmef-tree.h prelude-extract.h prelude-message-id.h idmef-message-id.h idmef-class.h idmef-value-type.h daemonize.h common.h variable.h
 
 # Images to copy into HTML directory.
 # e.g. HTML_IMAGES=$(top_srcdir)/gtk/stock-icons/stock_about_24.png
