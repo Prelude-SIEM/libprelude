@@ -4544,11 +4544,6 @@ prelude_msg_t *msg, prelude_msg_priority_t priority
 prelude_msg_t *msg
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_msg_get_version</NAME>
-<RETURNS>uint8_t </RETURNS>
-prelude_msg_t *msg
-</FUNCTION>
-<FUNCTION>
 <NAME>prelude_msg_get_priority</NAME>
 <RETURNS>prelude_msg_priority_t </RETURNS>
 prelude_msg_t *msg
@@ -7884,119 +7879,6 @@ const idmef_time_t *time, prelude_string_t *out
 <NAME>idmef_time_to_ntpstamp</NAME>
 <RETURNS>int </RETURNS>
 const idmef_time_t *time, prelude_string_t *out
-</FUNCTION>
-<MACRO>
-<NAME>byte</NAME>
-# define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[(pos)]
-</MACRO>
-<MACRO>
-<NAME>byte</NAME>
-# define byte(type, buf, pos) (type) ((const uint8_t *) (buf))[sizeof(type) - 1 - (pos)]
-</MACRO>
-<FUNCTION>
-<NAME>byte</NAME>
-<RETURNS>return </RETURNS>
-uint16_t, buf, 0) << 8 | byte(uint16_t, buf, 1
-</FUNCTION>
-<FUNCTION>
-<NAME>byte</NAME>
-<RETURNS>return  </RETURNS>
-int32_t, buf, 0) << 24 | byte(int32_t, buf, 1) << 16 |byte(int32_t, buf, 2) <<  8 | byte(int32_t, buf, 3
-</FUNCTION>
-<FUNCTION>
-<NAME>byte</NAME>
-<RETURNS>return  </RETURNS>
-uint32_t, buf, 0) << 24 | byte(uint32_t, buf, 1) << 16 |byte(uint32_t, buf, 2) <<  8 | byte(uint32_t, buf, 3
-</FUNCTION>
-<FUNCTION>
-<NAME>byte</NAME>
-<RETURNS>return  </RETURNS>
-uint64_t, buf, 0) << 56 | byte(uint64_t, buf, 1) << 48 | byte(uint64_t, buf, 2) << 40 |byte(uint64_t, buf, 3) << 32 | byte(uint64_t, buf, 4) << 24 | byte(uint64_t, buf, 5) << 16 |byte(uint64_t, buf, 6) <<  8 | byte(uint64_t, buf, 7
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_align_uint32</NAME>
-<RETURNS>return </RETURNS>
-buf
-</FUNCTION>
-<MACRO>
-<NAME>prelude_align_uint16</NAME>
-#define prelude_align_uint16(x) (*(const uint16_t *) (x))
-</MACRO>
-<MACRO>
-<NAME>prelude_align_int32</NAME>
-#define prelude_align_int32(x) (*(const int32_t *) (x))
-</MACRO>
-<MACRO>
-<NAME>prelude_align_uint32</NAME>
-#define prelude_align_uint32(x) (*(const uint32_t *) (x))
-</MACRO>
-<MACRO>
-<NAME>prelude_align_uint64</NAME>
-#define prelude_align_uint64(x) (*(const uint64_t *) (x))
-</MACRO>
-<MACRO>
-<NAME>prelude_align_float</NAME>
-#define prelude_align_float(x) (*(const float *) (x))
-</MACRO>
-<FUNCTION>
-<NAME>ntohs</NAME>
-<RETURNS>return </RETURNS>
-prelude_align_uint16(buf)
-</FUNCTION>
-<FUNCTION>
-<NAME>ntohl</NAME>
-<RETURNS>return </RETURNS>
-prelude_align_int32(buf)
-</FUNCTION>
-<FUNCTION>
-<NAME>ntohl</NAME>
-<RETURNS>return </RETURNS>
-prelude_align_uint32(buf)
-</FUNCTION>
-<FUNCTION>
-<NAME>ntohl</NAME>
-<RETURNS>return </RETURNS>
-prelude_align_uint32(buf)
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_align_uint64</NAME>
-<RETURNS>return </RETURNS>
-buf
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_error_make</NAME>
-<RETURNS>return </RETURNS>
-PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT8
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_error_make</NAME>
-<RETURNS>return </RETURNS>
-PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT16
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_error_make</NAME>
-<RETURNS>return </RETURNS>
-PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT32
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_error_make</NAME>
-<RETURNS>return </RETURNS>
-PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT32
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_error_make</NAME>
-<RETURNS>return </RETURNS>
-PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT64
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_error_make</NAME>
-<RETURNS>return </RETURNS>
-PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_FLOAT
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_error_make</NAME>
-<RETURNS>return </RETURNS>
-PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_CHAR
 </FUNCTION>
 <STRUCT>
 <NAME>prelude_timer_t</NAME>

@@ -875,7 +875,6 @@ prelude_msg_write
 prelude_msg_set_tag
 prelude_msg_set_priority
 prelude_msg_get_tag
-prelude_msg_get_version
 prelude_msg_get_priority
 prelude_msg_get_len
 prelude_msg_get_datalen
@@ -1634,19 +1633,6 @@ idmef_time_get_usec
 idmef_time_get_gmt_offset
 idmef_time_to_string
 idmef_time_to_ntpstamp
-</SECTION>
-
-<SECTION>
-<FILE>prelude-extract</FILE>
-byte
-prelude_align_uint32
-prelude_align_uint16
-prelude_align_int32
-prelude_align_uint64
-prelude_align_float
-ntohs
-ntohl
-prelude_error_make
 </SECTION>
 
 <SECTION>

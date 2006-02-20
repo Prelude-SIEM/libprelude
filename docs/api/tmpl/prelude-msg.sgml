@@ -196,15 +196,6 @@ prelude-msgbuf
 @Returns: 
 
 
-<!-- ##### FUNCTION prelude_msg_get_version ##### -->
-<para>
-
-</para>
-
-@msg: 
-@Returns: 
-
-
 <!-- ##### FUNCTION prelude_msg_get_priority ##### -->
 <para>
 
