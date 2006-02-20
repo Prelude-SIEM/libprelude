@@ -49,9 +49,9 @@
 
 #else
 
-#  if !PTHREAD_IN_USE_DETECTION_HARD
-#   define __prelude_thread_in_use() 1
-#  endif
+# if !PTHREAD_IN_USE_DETECTION_HARD
+#  define __prelude_thread_in_use() TRUE
+# endif
 
 # endif
 
