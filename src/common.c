@@ -379,13 +379,21 @@ time_t prelude_timegm(struct tm *tm)
 void *prelude_sockaddr_get_inaddr(struct sockaddr *sa) 
 {
         void *ret = NULL;
-        
+        union {
+                struct sockaddr *sa;
+                struct sockaddr_in *sa4;
+#ifdef HAVE_IPV6
+                struct sockaddr_in6 *sa6;
+#endif
+        } val;
+
+        val.sa = sa;
         if ( sa->sa_family == AF_INET )
-                ret = &((struct sockaddr_in *) sa)->sin_addr;
+                ret = &val.sa4->sin_addr;
 
 #ifdef HAVE_IPV6
         else if ( sa->sa_family == AF_INET6 )
-                ret = &((struct sockaddr_in6 *) sa)->sin6_addr;
+                ret = &val.sa6->sin6_addr;
 #endif
         
         return ret;
