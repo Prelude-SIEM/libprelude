@@ -1096,7 +1096,7 @@ static int register_cmd(int argc, char **argv)
                 "  Please remember that \"prelude-adduser\" should be used to register\n"
                 "  every server used by this analyzer.\n\n");
         
-        if ( prompt_passwd ) {
+        if ( ! one_shot_passwd ) {
                 
                 fprintf(stderr,
                         "  Enter the one-shot password provided by the \"prelude-adduser\" program:\n");
