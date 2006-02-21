@@ -21,8 +21,6 @@
 *
 *****/
 
-int find_default_family(void);
-
 int server_create(prelude_client_profile_t *cp, const char *addr, unsigned int port,
                   prelude_bool_t keepalive, const char *pass, gnutls_x509_privkey key,
                   gnutls_x509_crt cacrt, gnutls_x509_crt crt);

@@ -34,6 +34,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <sys/poll.h>
 
 #include <gcrypt.h>
 #include <gnutls/gnutls.h>
@@ -156,15 +157,13 @@ static int handle_client_connection(prelude_client_profile_t *cp, prelude_io_t *
 
 
 
-static int wait_connection(prelude_client_profile_t *cp, int sock,
-                           struct addrinfo *ai, int keepalive,
-                           gnutls_x509_privkey key, gnutls_x509_crt cacrt, gnutls_x509_crt crt)
+static int process_event(prelude_client_profile_t *cp, int server_sock, prelude_io_t *fd,
+                         gnutls_x509_privkey key, gnutls_x509_crt cacrt, gnutls_x509_crt crt)
 {
-        void *inaddr;
         char buf[512];
-        int csock, ret;
+        void *inaddr;
         socklen_t len;
-        prelude_io_t *fd;
+        int ret, csock;
         struct sockaddr *sa;
 #ifndef HAVE_IPV6
         struct sockaddr_in addr;
@@ -172,7 +171,44 @@ static int wait_connection(prelude_client_profile_t *cp, int sock,
         struct sockaddr_in6 addr;
 #endif
 
+        len = sizeof(addr);
         sa = (struct sockaddr *) &addr;
+        
+        csock = accept(server_sock, sa, &len);
+        if ( csock < 0 ) {
+                fprintf(stderr, "accept returned an error: %s.\n", strerror(errno));
+                return -1;
+        }
+        
+        inaddr = prelude_sockaddr_get_inaddr(sa);
+        if ( ! inaddr )
+                return -1;
+                
+        inet_ntop(sa->sa_family, inaddr, buf, sizeof(buf));                
+        snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf), ":%u",
+                 ntohs(((struct sockaddr_in *) sa)->sin_port));
+                
+        fprintf(stderr, "\n  - Connection from %s.\n", buf);
+        prelude_io_set_sys_io(fd, csock);
+                
+        ret = handle_client_connection(cp, fd, key, cacrt, crt);
+        if ( ret == 0 )
+                fprintf(stderr, "  - %s successfully registered.\n", buf);
+                
+        prelude_io_close(fd);
+
+        return ret;
+}
+
+
+
+static int wait_connection(prelude_client_profile_t *cp, int sock,
+                           struct pollfd *pfd, size_t size, int keepalive,
+                           gnutls_x509_privkey key, gnutls_x509_crt cacrt, gnutls_x509_crt crt)
+{
+        size_t i;
+        prelude_io_t *fd;
+        int ret, active_fd;
         
         ret = prelude_io_new(&fd);
         if ( ret < 0 ) {
@@ -181,35 +217,20 @@ static int wait_connection(prelude_client_profile_t *cp, int sock,
                 return -1;
         }
         
-        do {
-                inet_ntop(ai->ai_family, prelude_sockaddr_get_inaddr(ai->ai_addr), buf, sizeof(buf));
-                      
-                fprintf(stderr, "\n  - Waiting for peers install request on %s:%u...\n",
-                        buf, ntohs(((struct sockaddr_in *) ai->ai_addr)->sin_port));
-                
-                len = sizeof(addr);
-                csock = accept(sock, sa, &len);
-                if ( csock < 0 ) {
-                        fprintf(stderr, "accept returned an error: %s.\n", strerror(errno));
+        do {                
+                active_fd = poll(pfd, size, -1);
+                if ( active_fd < 0 ) {
+                        perror("poll");
                         return -1;
                 }
 
-                inaddr = prelude_sockaddr_get_inaddr(sa);
-                if ( ! inaddr )
-                        return -1;
-                
-                inet_ntop(sa->sa_family, inaddr, buf, sizeof(buf));                
-                snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf), ":%u",
-                         ntohs(((struct sockaddr_in *) sa)->sin_port));
-                
-                fprintf(stderr, "  - Connection from %s.\n", buf);
-                prelude_io_set_sys_io(fd, csock);
-                
-                ret = handle_client_connection(cp, fd, key, cacrt, crt);
-                if ( ret == 0 )
-                        fprintf(stderr, "  - %s successfully registered.\n", buf);
-                
-                prelude_io_close(fd);                
+                for ( i = 0; i < size && active_fd > 0; i++ ) {
+                        if ( pfd[i].revents & POLLIN ) {
+                                active_fd--;
+                                ret = process_event(cp, pfd[i].fd, fd, key, cacrt, crt);                                
+                        }
+                }
+                                
         } while ( keepalive || ret < 0 );
 
         prelude_io_destroy(fd);
@@ -219,105 +240,74 @@ static int wait_connection(prelude_client_profile_t *cp, int sock,
 
 
 
-
-/*
- * Try to guessd the default address family.
- */
-int find_default_family(void)
+static int setup_server(const char *addr, unsigned int port, struct pollfd *pfd, size_t *size)
 {
-#if HAVE_IPV6
-        int sock, ret;
-        struct addrinfo *ai, hints;
-        
-        memset(&hints, 0, sizeof(hints));
-        
-        hints.ai_family = PF_INET6; 
-        hints.ai_flags = AI_PASSIVE;
-        hints.ai_socktype = SOCK_STREAM;
-        hints.ai_protocol = IPPROTO_TCP;
-
-        sock = socket(PF_INET6, SOCK_STREAM, IPPROTO_TCP);
-        if ( sock < 0 )
-                return PF_INET;
-        
-        ret = getaddrinfo(NULL, "0", &hints, &ai);
-        if ( ret < 0 ) {
-                close(sock);
-                return PF_INET;
-        }
-        
-        ret = bind(sock, ai->ai_addr, ai->ai_addrlen);
-        if ( ret < 0 ) {
-                close(sock);
-                freeaddrinfo(ai);
-                return PF_INET;
-        }
-
-        close(sock);
-        freeaddrinfo(ai);
-        
-        return PF_INET6;
-#endif
-        
-        return PF_INET;
-}
-
-
-
-static int setup_server(const char *addr, unsigned int port, struct addrinfo **ai)
-{
-        int sock, ret, on = 1;
+        size_t i = 0;
         char buf[1024];
-        struct addrinfo hints;
+        int sock, ret, on = 1;
+        struct addrinfo hints, *ai, *ai_start;
 
         snprintf(buf, sizeof(buf), "%u", port);
         memset(&hints, 0, sizeof(hints));
-        
+
         hints.ai_flags = AI_PASSIVE;
         hints.ai_socktype = SOCK_STREAM;
         hints.ai_protocol = IPPROTO_TCP;
-        hints.ai_family = (addr) ? PF_UNSPEC : find_default_family();
+        hints.ai_family = PF_UNSPEC;
         
 #ifdef AI_ADDRCONFIG
         hints.ai_flags |= AI_ADDRCONFIG;
 #endif
         
-        ret = getaddrinfo(addr, buf, &hints, ai);
+        ret = getaddrinfo(addr, buf, &hints, &ai);
         if ( ret != 0 ) {
                 fprintf(stderr, "could not resolve %s: %s.\n", addr ? addr : "",
                         (ret == EAI_SYSTEM) ? strerror(errno) : gai_strerror(ret));
                 return -1;
         }
-
-        sock = socket((*ai)->ai_family, (*ai)->ai_socktype, (*ai)->ai_protocol);
-	if (sock < 0) {
-		perror("socket");
-                freeaddrinfo(*ai);
-                return -1;
-	}
         
-        ret = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(int));
-        if ( ret < 0 ) {
-                perror("setsockopt");
-                freeaddrinfo(*ai);
-                return -1;
+        ai_start = ai;
+        while ( ai && i < *size ) {
+                inet_ntop(ai->ai_family, prelude_sockaddr_get_inaddr(ai->ai_addr), buf, sizeof(buf));
+                
+                fprintf(stderr, "  - Waiting for peers install request on %s:%u...\n",
+                        buf, ntohs(((struct sockaddr_in *) ai->ai_addr)->sin_port));
+
+                sock = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
+                if ( sock < 0 ) {
+                        perror("socket");
+                        break;
+                }
+        
+                ret = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(int));
+                if ( ret < 0 ) {
+                        perror("setsockopt");
+                        break;
+                }
+
+                ret = bind(sock, ai->ai_addr, ai->ai_addrlen);
+                if ( ret < 0 ) {
+                        perror("bind");
+                        break;
+                }
+
+                ret = listen(sock, 1);
+                if ( ret < 0 ) {
+                        perror("listen");
+                        break;
+                }
+
+                pfd[i].fd = sock;
+                pfd[i].events = POLLIN;
+                
+                ai = ai->ai_next;
+                i++;
         }
-        
-	ret = bind(sock, (*ai)->ai_addr, (*ai)->ai_addrlen);
-	if ( ret < 0 ) {
-		perror("bind");
-                freeaddrinfo(*ai);
-		return -1;
-	}
 
-	ret = listen(sock, 1);
-	if ( ret < 0 ) {
-		perror("listen");
-                freeaddrinfo(*ai);
-		return -1;
-	}
+        freeaddrinfo(ai_start);
+        *size = i;
         
-        return sock;
+        return ret;
 }
 
 
@@ -376,21 +366,17 @@ static int srp_callback(gnutls_session session, const char *username, gnutls_dat
 int server_create(prelude_client_profile_t *cp, const char *addr, unsigned int port,
                   prelude_bool_t keepalive, const char *pass, gnutls_x509_privkey key, gnutls_x509_crt cacrt, gnutls_x509_crt crt) 
 {
+        size_t size;
         int sock, ret;
-        struct addrinfo *ai;
+        struct pollfd pfd[128];
         gnutls_dh_params dh_params;
 
         one_shot_passwd = pass;
-        
-        sock = setup_server(addr, port, &ai);
-        if ( sock < 0 )
-                return -1;
 
 #ifndef GNUTLS_SRP_DISABLED
         ret = gnutls_srp_allocate_server_credentials(&srpcred);
         if ( ret < 0 ) {
                 fprintf(stderr, "error creating SRP credentials: %s.\n", gnutls_strerror(ret));
-                close(sock);
                 return -1;
         }
         
@@ -398,14 +384,19 @@ int server_create(prelude_client_profile_t *cp, const char *addr, unsigned int p
 #endif
         
         gnutls_anon_allocate_server_credentials(&anoncred);
-
+        
         fprintf(stderr, "\n  - Generating %d bits Diffie-Hellman key for anonymous authentication...", ANON_DH_BITS);
         gnutls_dh_params_init(&dh_params);
         gnutls_dh_params_generate2(dh_params, ANON_DH_BITS);
         gnutls_anon_set_server_dh_params(anoncred, dh_params);
+        fprintf(stderr, "\n");
         
-        wait_connection(cp, sock, ai, keepalive, key, cacrt, crt);
-        freeaddrinfo(ai);
+        size = sizeof(pfd) / sizeof(*pfd);
+        sock = setup_server(addr, port, pfd, &size);
+        if ( sock < 0 )
+                return -1;
+        
+        wait_connection(cp, sock, pfd, size, keepalive, key, cacrt, crt);
 
 #ifndef GNUTLS_SRP_DISABLED
         gnutls_srp_free_server_credentials(srpcred);
