@@ -28,13 +28,13 @@
 
 #include "prelude.h"
 #include "prelude-log.h"
+#include "prelude-msg.h"
 #include "prelude-option.h"
 #include "prelude-option-wide.h"
 #include "idmef.h"
 #include "idmef-message-write.h"
 #include "idmef-message-print.h"
 #include "idmef-additional-data.h"
-
 #include "idmef-tree-wrap.h"
 %}
 
@@ -193,6 +193,7 @@ typedef unsigned int prelude_bool_t;
 %include "prelude-connection.h"
 %include "prelude-option.h"
 %include "prelude-option-wide.h"
+%include "prelude-msg.h"
 %include "prelude-message-id.h"
 %include "prelude-log.h"
 %include "prelude-msgbuf.h"

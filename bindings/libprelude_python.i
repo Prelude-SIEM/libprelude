@@ -227,7 +227,7 @@ PyObject *swig_python_data(idmef_data_t *data)
 };
 
 
-%typemap(freearg) uint64_t *target_id {
+%typemap(freearg) (uint64_t *target_id, size_t size) {
 	free($1);
 };
 
