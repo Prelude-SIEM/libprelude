@@ -864,6 +864,23 @@ static void _prelude_client_destroy(prelude_client_t *client)
 
 
 
+static int handle_client_error(prelude_client_t *client, int error)
+{
+        prelude_error_code_t code;
+        prelude_error_source_t source;
+        
+        code = prelude_error_get_code(error);
+        source = prelude_error_get_source(error);
+        
+        if ( error < 0 && (code == PRELUDE_ERROR_PROFILE || source == PRELUDE_ERROR_SOURCE_CONFIG_ENGINE) ) {
+                char *tmp = strdup(_prelude_thread_get_error());
+                error = prelude_error_verbose(code, "%s\n%s", tmp, prelude_client_get_setup_error(client));
+                free(tmp);
+        }
+        
+        return error;
+}
+
 
 
 int _prelude_client_register_options(void)
@@ -1061,9 +1078,7 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
 int prelude_client_init(prelude_client_t *client)
 {
         int ret;
-        prelude_error_code_t code;
-        prelude_string_t *err = NULL;
-        prelude_error_source_t source;
+        prelude_string_t *err;
         prelude_option_warning_t old_warnings;
         
         prelude_option_set_warnings(0, &old_warnings);
@@ -1074,27 +1089,17 @@ int prelude_client_init(prelude_client_t *client)
         prelude_option_set_warnings(old_warnings, NULL);
         
         if ( ret < 0 )
-                goto err;
+                return handle_client_error(client, ret);
 
         ret = _prelude_client_profile_init(client->profile);
         if ( ret < 0 )
-                goto err;
+                return handle_client_error(client, ret);
         
         ret = fill_client_infos(client, _prelude_internal_argv[0]);
         if ( ret < 0 )
-                goto err;
+                return handle_client_error(client, ret);
 
- err:
-        code = prelude_error_get_code(ret);
-        source = prelude_error_get_source(ret);
-        
-        if ( ret < 0 && (code == PRELUDE_ERROR_PROFILE || source == PRELUDE_ERROR_SOURCE_CONFIG_ENGINE) ) {
-                char *tmp = strdup(_prelude_thread_get_error());
-                ret = prelude_error_verbose(code, "%s\n%s", tmp, prelude_client_get_setup_error(client));
-                free(tmp);
-        }
-        
-        return ret;
+        return 0;
 }
 
 
@@ -1132,13 +1137,13 @@ int prelude_client_start(prelude_client_t *client)
                 if ( ! client->cpool )
                         return prelude_error(PRELUDE_ERROR_CONNECTION_STRING);
                 
-                ret = prelude_client_profile_get_credentials(client->profile, &credentials);
+                ret = prelude_client_profile_get_credentials(client->profile, &credentials);                
                 if ( ret < 0 )
-                        return ret;
-
+                        return handle_client_error(client, ret);
+                
                 ret = prelude_connection_pool_init(client->cpool);
                 if ( ret < 0 )
-                        return ret;
+                        return handle_client_error(client, ret);
         }
         
         if ( (client->cpool || client->heartbeat_cb) && client->flags & PRELUDE_CLIENT_FLAGS_HEARTBEAT ) {
@@ -1149,7 +1154,7 @@ int prelude_client_start(prelude_client_t *client)
                 heartbeat_expire_cb(client);
                 client->status = CLIENT_STATUS_RUNNING;
         }
-        
+                
         return 0;
 }
 
