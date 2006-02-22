@@ -79,6 +79,8 @@ void prelude_connection_pool_set_data(prelude_connection_pool_t *pool, void *dat
 
 void *prelude_connection_pool_get_data(prelude_connection_pool_t *pool);
 
+int prelude_connection_pool_recv(prelude_connection_pool_t *pool, int timeout, prelude_msg_t **outmsg);
+
 int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int timeout,
                                         int (*event_cb)(prelude_connection_pool_t *pool,
                                                         prelude_connection_pool_event_t event,

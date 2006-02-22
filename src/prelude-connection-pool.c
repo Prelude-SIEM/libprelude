@@ -260,7 +260,7 @@ static void notify_dead(cnx_t *cnx, prelude_error_t error, prelude_bool_t init_t
         code = prelude_error_get_code(error);
         
         if ( ! init_time || code != PRELUDE_ERROR_PROFILE )
-                prelude_log(PRELUDE_LOG_WARN, "%sconnection error with %s: %s\n\n",
+                prelude_log(PRELUDE_LOG_WARN, "* %sconnection error with %s: %s\n",
                             (pool->flags & PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER) ? "Failover enabled: " : "",
                             prelude_connection_get_peer_addr(cnx->cnx), prelude_strerror(error));
         
@@ -440,7 +440,7 @@ static void connection_timer_expire(void *data)
         
         ret = prelude_connection_connect(cnx->cnx, pool->client_profile, pool->permission);
         if ( ret < 0 ) {
-                prelude_log(PRELUDE_LOG_WARN, "%sconnection error with %s: %s\n\n",
+                prelude_log(PRELUDE_LOG_WARN, "* %sconnection error with %s: %s\n",
                             (pool->flags & PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER) ? "Failover enabled: " : "",
                             prelude_connection_get_peer_addr(cnx->cnx), prelude_strerror(ret));
                                 
@@ -1188,10 +1188,11 @@ prelude_connection_pool_flags_t prelude_connection_pool_get_flags(prelude_connec
  *
  * Returns: The number of handled events.
  */
-int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int timeout,
-                                        int (*event_cb)(prelude_connection_pool_t *pool,
-                                                        prelude_connection_pool_event_t event,
-                                                        prelude_connection_t *cnx, void *extra), void *extra)
+static int connection_pool_check_event(prelude_connection_pool_t *pool, int timeout,
+                                       int (*event_cb)(prelude_connection_pool_t *pool,
+                                                       prelude_connection_pool_event_t event,
+                                                       prelude_connection_t *cnx, void *extra),
+                                       void *extra, prelude_msg_t **outmsg)
 {
         cnx_t *cnx;
         fd_set rfds;
@@ -1215,7 +1216,7 @@ int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int tim
         else if ( ret == 0 )
                 return 0;
         
-        prelude_list_for_each(&pool->int_cnx, tmp) {
+        prelude_list_for_each(&pool->int_cnx, tmp) {                
                 cnx = prelude_list_entry(tmp, cnx_t, list);
                 
                 if ( ! prelude_connection_is_alive(cnx->cnx) )
@@ -1227,7 +1228,21 @@ int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int tim
 
                 global_event |= PRELUDE_CONNECTION_POOL_EVENT_INPUT;
 
-                if ( event_cb ) {
+                i++;
+                if ( outmsg ) {
+                        do {
+                                ret = prelude_connection_recv(cnx->cnx, outmsg);
+                        } while ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN );
+                        
+                        if ( ret < 0 ) {
+                                global_event |= PRELUDE_CONNECTION_POOL_EVENT_DEAD;
+                                notify_dead(cnx, ret, FALSE);
+                        }
+                        
+                        break;
+                }
+                
+                else if ( event_cb ) {
                         ret = event_cb(pool, PRELUDE_CONNECTION_POOL_EVENT_INPUT, cnx->cnx, extra);
                         if ( ret < 0 ) {
                                 global_event |= PRELUDE_CONNECTION_POOL_EVENT_DEAD;
@@ -1235,15 +1250,13 @@ int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int tim
                         }
                 }
 
-                else {
+                else if ( pool->event_handler ) {
                         ret = pool->event_handler(pool, PRELUDE_CONNECTION_POOL_EVENT_INPUT, cnx->cnx);
                         if ( ret < 0 || ! prelude_connection_is_alive(cnx->cnx) ) {
                                 global_event |= PRELUDE_CONNECTION_POOL_EVENT_DEAD;
                                 notify_dead(cnx, ret, FALSE);
                         }
                 }
-                
-                i++;
         }
 
         if ( global_event & pool->wanted_event && pool->global_event_handler )
@@ -1254,6 +1267,63 @@ int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int tim
         
         return i;
 }
+
+
+
+/**
+ * prelude_connection_pool_check_event:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ * @timeout: Time to wait for an event.
+ * @event_cb: User provided callback function to call on received events.
+ * @extra: Pointer to user specific data provided to @event_cb.
+ *
+ * This function queries the set of connections available in @pool to see if
+ * events are waiting to be handled. If timeout is zero, then this function
+ * will return immediatly in case there is no event to be handled.
+ *
+ * If timeout is -1, this function won't return until an event is available.
+ * Otherwise this function will return if there is no event after the specified
+ * number of second.
+ *
+ * For each event, @event_cb is called with the concerned @pool, the provided
+ * @extra data, and the @cnx where an event has occured.
+ *
+ * Returns: The number of handled events, or a negative value if an error occured.
+ */
+int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int timeout,
+                                        int (*event_cb)(prelude_connection_pool_t *pool,
+                                                        prelude_connection_pool_event_t event,
+                                                        prelude_connection_t *cnx, void *extra), void *extra)
+{
+        return connection_pool_check_event(pool, timeout, event_cb, extra, NULL);
+}
+
+
+
+/**
+ * prelude_connection_pool_recv:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ * @timeout: Time to wait for an event.
+ * @outmsg: Pointer where the next message that will be read should be stored.
+ *
+ * This function queries the set of connections available in @pool to see if
+ * events are waiting to be handled. If timeout is zero, then this function
+ * will return immediatly in case there is no event to be handled.
+ *
+ * If timeout is -1, this function won't return until an event is available.
+ * Otherwise this function will return if there is no event after the specified
+ * number of second.
+ *
+ * If an event is available, it will be read and stored in the @outmsg pointer.
+ *
+ * Returns: The number of handled events (0 or 1) or a negative value if an error occured.
+ */
+int prelude_connection_pool_recv(prelude_connection_pool_t *pool, int timeout, prelude_msg_t **outmsg)
+{
+        return connection_pool_check_event(pool, timeout, NULL, NULL, outmsg);
+}
+
+
 
 
 /**
