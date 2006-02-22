@@ -1291,14 +1291,12 @@ void prelude_client_set_heartbeat_cb(prelude_client_t *client,
  */
 void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status_t status)
 {
+        prelude_timer_destroy(&client->heartbeat_timer);
+        
         if ( status == PRELUDE_CLIENT_EXIT_STATUS_SUCCESS && client->flags & PRELUDE_CLIENT_FLAGS_HEARTBEAT ) {
                 client->status = CLIENT_STATUS_EXITING;
                 heartbeat_expire_cb(client);
         }
-        
-        prelude_timer_lock_critical_region();
-        prelude_timer_destroy(&client->heartbeat_timer);
-        prelude_timer_unlock_critical_region();
         
         _prelude_client_destroy(client);
 }
