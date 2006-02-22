@@ -356,15 +356,9 @@ PyObject *swig_python_data(idmef_data_t *data)
 };
 
 
-%typemap(default) prelude_msg_t **outmsg (prelude_msg_t *tmp) {
+%typemap(in, numinputs=0) prelude_msg_t **outmsg ($*1_type tmp) {
 	tmp = NULL;
-	$1 = &tmp;
-};
-
-
-%typemap(in) prelude_msg_t **outmsg {
-	if ( SWIG_ConvertPtr($input, (void **) $1, $*1_descriptor, 0) == -1 )
-		return NULL;
+	$1 = ($1_ltype) &tmp;
 };
 
 

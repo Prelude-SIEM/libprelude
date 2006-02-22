@@ -279,15 +279,9 @@ SV *swig_perl_data(idmef_data_t *data)
 };
 
 
-%typemap(default) prelude_msg_t **outmsg (prelude_msg_t *tmp) {
+%typemap(in) prelude_msg_t **outmsg ($*1_type tmp) {
 	tmp = NULL;
-	$1 = &tmp;
-};
-
-
-%typemap(in) prelude_msg_t **outmsg {
-	if ( SWIG_ConvertPtr($input, (void **) $1, $*1_descriptor, 0) == -1 )
-		croak("invalid argument\n");
+	$1 = ($1_ltype) &tmp;
 };
 
 
