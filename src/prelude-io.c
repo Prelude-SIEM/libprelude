@@ -192,8 +192,8 @@ static int sys_close(prelude_io_t *pio)
 
 static ssize_t sys_pending(prelude_io_t *pio) 
 {
-        ssize_t ret;
-        
+        ssize_t ret = 0;
+
         if ( ioctl(pio->fd, FIONREAD, &ret) < 0 )
                 return prelude_error_from_errno(errno);
 
