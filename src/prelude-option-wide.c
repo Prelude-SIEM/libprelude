@@ -57,8 +57,11 @@ static int config_save_value(config_t *cfg, int rtype, prelude_option_t *last, i
                 return -1;
         
         if ( prelude_option_has_optlist(last) ) {
-                
-                snprintf(buf, sizeof(buf), "%s=%s", option, (value) ? value : "default");
+
+                if ( prelude_option_get_type(last) & PRELUDE_OPTION_TYPE_CONTEXT )
+                        snprintf(buf, sizeof(buf), "%s=%s", option, (value) ? value : "default");
+                else
+                        snprintf(buf, sizeof(buf), "%s", option);
                 
                 if ( *prev )
                         free(*prev);

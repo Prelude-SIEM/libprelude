@@ -335,7 +335,7 @@ static int parse_buffer(const char *str, char **entry, char **value)
 }
 
 
-static int parse_section_buffer(const char *buf, char **entry, char **value)
+static int parse_section_buffer(const char *buf, char **entry, char **value, prelude_bool_t default_value)
 {
         int ret;
         char *ptr;
@@ -349,6 +349,9 @@ static int parse_section_buffer(const char *buf, char **entry, char **value)
         ret = parse_buffer(buf, entry, value);
         if ( ptr )
                 *ptr = ']';
+        
+        if ( ! *value && default_value )
+                *value = strdup("default");
 
         return ret;
 }
@@ -364,7 +367,7 @@ static int search_section(config_t *cfg, const char *section, unsigned int i)
         if ( ! cfg->content )
                 return -1;
 
-        ret = parse_section_buffer(section, &wentry, &wvalue);        
+        ret = parse_section_buffer(section, &wentry, &wvalue, TRUE);        
         if ( ret < 0 )
                 return ret;
                 
@@ -376,12 +379,9 @@ static int search_section(config_t *cfg, const char *section, unsigned int i)
                 if ( ! is_section(cfg->content[i]) )
                         continue;
                 
-                ret = parse_section_buffer(cfg->content[i], &entry, &value);
+                ret = parse_section_buffer(cfg->content[i], &entry, &value, TRUE);
                 if ( ret < 0 )
                         continue;
-
-                if ( ! value )
-                        value = strdup("default");
                 
                 ret = strcasecmp(entry, wentry);
                 free(entry);
@@ -390,7 +390,7 @@ static int search_section(config_t *cfg, const char *section, unsigned int i)
                         free(value);
                         continue;
                 }
-                
+
                 ret = strcasecmp(value, wvalue);
                 free(value);
                 
@@ -737,7 +737,7 @@ int config_get_next(config_t *cfg, char **section, char **entry, char **value, u
                         continue;
                 
                 if ( is_section(ptr) )
-                        return parse_section_buffer(ptr, section, value);
+                        return parse_section_buffer(ptr, section, value, FALSE);
                 else          
                         return parse_buffer(ptr, entry, value);
         }
