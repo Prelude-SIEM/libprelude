@@ -46,6 +46,7 @@
 #include "prelude-plugin.h"
 #include "prelude-msg.h"
 #include "prelude-msgbuf.h"
+#include "prelude-timer.h"
 #include "idmef.h"
 
 #ifdef __cplusplus
