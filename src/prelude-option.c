@@ -464,8 +464,10 @@ static int get_missing_options(void *context, config_t *cfg, const char *filenam
 
                         if ( cblist ) {                                
                                 ret = check_option(opt, value, err);
-                                if ( ret < 0 )
-                                        return ret;
+                                if ( ret < 0 ) {
+                                        const char *tmp = _prelude_thread_get_error();
+                                        return prelude_error_verbose(prelude_error_get_code(ret), "%s:%d: %s", filename, *line, tmp);
+                                }
                                 
                                 ret = call_option_cb(context, &cbitem, cblist, opt, value, err, SET_FROM_CFG);
                                 if ( ret < 0 ) 
@@ -475,14 +477,16 @@ static int get_missing_options(void *context, config_t *cfg, const char *filenam
                         ret = get_missing_options(context, cfg, filename, (cblist) ?
                                                   &cbitem->children : NULL, opt, line, depth + 1, err);
                         if ( ret < 0 )
-                                return -1;
+                                return ret;
                         
                 }
 
                 else if ( cblist ) {
-                        ret = check_option(opt, value, err);                        
-                        if ( ret < 0 )
-                                return ret;
+                        ret = check_option(opt, value, err);
+                        if ( ret < 0 ) {
+                                const char *tmp = _prelude_thread_get_error();
+                                return prelude_error_verbose(prelude_error_get_code(ret), "%s:%d: %s", filename, *line, tmp);
+                        }
                         
                         ret = call_option_cb(context, &cbitem, cblist, opt, value, err, SET_FROM_CFG);
                         if ( ret < 0 ) 
@@ -1297,12 +1301,12 @@ void *prelude_option_get_data(prelude_option_t *opt)
 
 
 int prelude_option_invoke_set(prelude_option_t *opt, const char *value, prelude_string_t *err, void **context)
-{        
-        if ( opt->has_arg == PRELUDE_OPTION_ARGUMENT_NONE && value )
-                return option_ret_error(PRELUDE_ERROR_GENERIC, err, "option '%s' does not take argument", opt->longopt);
+{
+        int ret;
         
-        if ( opt->has_arg == PRELUDE_OPTION_ARGUMENT_REQUIRED && ! value )
-                return option_ret_error(PRELUDE_ERROR_GENERIC, err, "option '%s' require an argument", opt->longopt);
+        ret = check_option(opt, value, err);        
+        if ( ret < 0 )
+                return ret;
         
         prelude_log_debug(3, "opt=%s value=%s\n", opt->longopt, value ? value : "");
         
