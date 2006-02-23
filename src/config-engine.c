@@ -349,13 +349,7 @@ static int parse_section_buffer(const char *buf, char **entry, char **value)
         ret = parse_buffer(buf, entry, value);
         if ( ptr )
                 *ptr = ']';
-        
-        if ( ret < 0 )
-                return ret;
-        
-        if ( ! *value )
-                *value = strdup("default");
-        
+
         return ret;
 }
 
@@ -385,6 +379,9 @@ static int search_section(config_t *cfg, const char *section, unsigned int i)
                 ret = parse_section_buffer(cfg->content[i], &entry, &value);
                 if ( ret < 0 )
                         continue;
+
+                if ( ! value )
+                        value = strdup("default");
                 
                 ret = strcasecmp(entry, wentry);
                 free(entry);

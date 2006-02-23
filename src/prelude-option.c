@@ -210,9 +210,9 @@ static prelude_bool_t is_an_argument(const char *stuff)
 {
         prelude_option_t *opt;
         size_t len = strlen(stuff);
-        
-        if ( stuff[0] == '-' && (len == 2 || (len > 2 && stuff[1] == '-')) ) {
-                opt = prelude_option_search(NULL, stuff + strspn(stuff, "-"), ~0, TRUE);                
+
+        if ( stuff[0] == '-' && (len == 2 || (len > 2 && stuff[1] == '-')) ) {                
+                opt = prelude_option_search(NULL, stuff + strspn(stuff, "-"), ~0, TRUE);
                 return opt ? FALSE : TRUE;
         }
         
@@ -220,51 +220,25 @@ static prelude_bool_t is_an_argument(const char *stuff)
 }
 
 
-
-static int check_option_optarg(const char **outptr, const char *option, const char *arg)
+static int check_option(prelude_option_t *option, const char *arg, prelude_string_t *err)
 {
-        if ( arg && is_an_argument(arg) )
-                *outptr = arg;
-        
-        return 0;
-}
-
-
-
-
-static int check_option_reqarg(const char **outptr, const char *option, const char *arg, prelude_string_t *err)
-{        
-        if ( ! arg || ! is_an_argument(arg) )
-                return option_ret_error(PRELUDE_ERROR_GENERIC, err, "option '%s' require an argument", option);
-
-        *outptr = arg;
-        
-        return 0;
-}
-
-
-
-static int check_option(prelude_option_t *option, const char **optarg, const char *arg, prelude_string_t *err)
-{
-        int ret = -1;
-        
-        *optarg = NULL;
+        int ret = 0;
         
         switch (option->has_arg) {
                 
+        case PRELUDE_OPTION_ARGUMENT_NONE:
+                if ( arg )
+                        ret = option_ret_error(PRELUDE_ERROR_GENERIC, err, "option '%s' does not take an argument", option->longopt);
+                
         case PRELUDE_OPTION_ARGUMENT_OPTIONAL:
-                ret = check_option_optarg(optarg, option->longopt, arg);
                 break;
                 
-        case PRELUDE_OPTION_ARGUMENT_REQUIRED:
-                ret = check_option_reqarg(optarg, option->longopt, arg, err);
-                break;
-
-        case PRELUDE_OPTION_ARGUMENT_NONE:
-                ret = 0;
+        case PRELUDE_OPTION_ARGUMENT_REQUIRED:                
+                if ( ! arg || ! is_an_argument(arg) )
+                        ret = option_ret_error(PRELUDE_ERROR_GENERIC, err, "option '%s' require an argument", option->longopt);
                 break;
         }
-
+        
         return ret;
 }
 
@@ -444,7 +418,6 @@ static int get_missing_options(void *context, config_t *cfg, const char *filenam
                                prelude_option_t *rootlist, unsigned int *line, int depth, prelude_string_t *err)
 {
         int ret;
-        const char *argptr;
         prelude_option_t *opt;
         struct cb_list *cbitem;
         char *section = NULL, *entry = NULL, *value = NULL;
@@ -489,12 +462,12 @@ static int get_missing_options(void *context, config_t *cfg, const char *filenam
                 
                 if ( section && ! entry ) {
 
-                        if ( cblist ) {
-                                ret = check_option(opt, &argptr, value, err);
+                        if ( cblist ) {                                
+                                ret = check_option(opt, value, err);
                                 if ( ret < 0 )
                                         return ret;
                                 
-                                ret = call_option_cb(context, &cbitem, cblist, opt, argptr, err, SET_FROM_CFG);
+                                ret = call_option_cb(context, &cbitem, cblist, opt, value, err, SET_FROM_CFG);
                                 if ( ret < 0 ) 
                                         return ret;
                         }
@@ -507,11 +480,11 @@ static int get_missing_options(void *context, config_t *cfg, const char *filenam
                 }
 
                 else if ( cblist ) {
-                        ret = check_option(opt, &argptr, value, err);                        
+                        ret = check_option(opt, value, err);                        
                         if ( ret < 0 )
                                 return ret;
                         
-                        ret = call_option_cb(context, &cbitem, cblist, opt, argptr, err, SET_FROM_CFG);
+                        ret = call_option_cb(context, &cbitem, cblist, opt, value, err, SET_FROM_CFG);
                         if ( ret < 0 ) 
                                 return ret;
                 }
@@ -533,6 +506,71 @@ static void remove_argv(int argc, char **argv, char **unhandled, int *unhandled_
 
 
 
+static int parse_option(prelude_option_t *root_optlist, prelude_option_t *optlist,
+                        int *argc, char **argv, int *argv_index,
+                        char **unhandled, int *unhandled_index, char **option, const char **value,
+                        prelude_option_t **opt, prelude_bool_t *ignore)
+{
+        size_t len;
+        int ret, optch = 0;
+        prelude_option_t *tmp;
+        
+        *value = NULL;
+        
+        *option = argv[(*argv_index)++];
+        len = strlen(*option);
+        
+        if ( **option != '-' || len == 1 ) {
+                remove_argv(*argc, argv, unhandled, unhandled_index, --(*argv_index));
+                return 0;
+        }
+        
+        if ( strcmp(*option, "--") == 0 ) {                
+                for ( ret = *argv_index; ret < *argc; ret++ )
+                        remove_argv(*argc, argv, unhandled, unhandled_index, ret);
+
+                return -1; /* break */
+        }
+                
+        while ( **option == '-' ) {
+                (*option)++;
+                optch++;
+        }
+        
+        if ( ! isalnum((int) **option) )
+                return 0;
+        
+        /*
+         * FIXME: handle consecutive shortopt
+         */
+        
+        *value = strchr(*option, '=');
+        if ( ! *value )
+                *option = strdup(*option);
+        
+        if ( *value ) {
+                *option = strndup(*option, strcspn(*option, "="));
+                (*value)++;
+        }
+
+        *opt = search_option(optlist, *option, PRELUDE_OPTION_TYPE_CLI, 0);                
+        if ( root_optlist != _prelude_generic_optlist &&
+             (tmp = search_option(_prelude_generic_optlist, *option, ~0, FALSE)) ) {
+                *opt = tmp;
+                *ignore = TRUE;
+        }
+        
+        if ( ! *opt )
+                return 1;
+
+        if ( (*opt)->has_arg == PRELUDE_OPTION_ARGUMENT_REQUIRED && ! *value && (*argv_index < *argc)  )
+                *value = argv[(*argv_index)++];
+        
+        return 1;
+}
+
+
+
 static int parse_argument(void *context, prelude_list_t *cb_list,
                           prelude_option_t *root_optlist, prelude_option_t *optlist,
                           int *argc, char **argv, int *argv_index,
@@ -540,56 +578,41 @@ static int parse_argument(void *context, prelude_list_t *cb_list,
                           int depth, prelude_string_t *err, prelude_bool_t ignore)
 {
         int ret;
-        prelude_option_t *opt, *tmp;
+        char *option;
+        const char *arg;
+        prelude_option_t *opt;
         struct cb_list *cbitem;
-        const char *arg, *old, *argptr;
         
-        while ( *argv_index < (*argc - *unhandled_index) ) {
-
-                old = arg = argv[(*argv_index)++];
-                if ( *arg != '-' ) {
-                        remove_argv(*argc, argv, unhandled, unhandled_index, --(*argv_index));
-                        continue;
-                }
-                
-                if ( strcmp(arg, "--") == 0 ) {
-                        for ( ret = *argv_index; ret < *argc; ret++ )
-                                remove_argv(*argc, argv, unhandled, unhandled_index, ret);
+        while ( *argv_index < (*argc - *unhandled_index) ) {                
+                ret = parse_option(root_optlist, optlist, argc, argv, argv_index,
+                                   unhandled, unhandled_index, &option, &arg, &opt, &ignore);
+                if ( ret < 0 )
                         break;
-                }
                 
-                while ( *arg == '-' ) arg++;
-                
-                if ( ! isalnum((int) *arg) )
+                else if ( ret == 0 )
                         continue;
-                
-                opt = search_option(optlist, arg, PRELUDE_OPTION_TYPE_CLI, 0);                
-                if ( root_optlist != _prelude_generic_optlist && (tmp = search_option(_prelude_generic_optlist, arg, ~0, FALSE)) ) {
-                        opt = tmp;
-                        ignore = TRUE;
-                }
-                
+
                 if ( ! opt ) {
-                         
                         if ( depth ) {
                                 (*argv_index)--;
                                 return 0;
                         }
                         
                         remove_argv(*argc, argv, unhandled, unhandled_index, --(*argv_index));
-                        option_err(PRELUDE_OPTION_WARNING_OPTION, "invalid option -- \"%s\" (%d).\n", arg, depth);
+                        option_err(PRELUDE_OPTION_WARNING_OPTION, "Invalid option -- \"%s\" (%d).\n", option, depth);
+                        free(option);
+                        
                         continue;
                 }
-                
-                ret = check_option(opt, &argptr, (*argv_index < *argc) ? argv[*argv_index] : NULL, err);
-                if ( ret < 0 ) 
-                        return ret;
 
-                if ( argptr ) 
-                        (*argv_index)++;
+                free(option);
+                
+                ret = check_option(opt, arg, err);
+                if ( ret < 0 )
+                        return ret;
                 
                 if ( ! ignore ) {
-                        ret = call_option_cb(context, &cbitem, cb_list, opt, argptr, err, SET_FROM_CLI);
+                        ret = call_option_cb(context, &cbitem, cb_list, opt, arg, err, SET_FROM_CLI);
                         if ( ret < 0 )
                                 return ret;
                 }
@@ -990,11 +1013,27 @@ static void print_options(FILE *fd, prelude_option_t *root, prelude_option_type_
                                 fputc('\n', fd);
                         
                         if ( opt->shortopt != 0 )
-                                i += fprintf(fd, "-%c ", opt->shortopt);
-                        
-                        if ( opt->longopt )
-                                i += fprintf(fd, "--%s ", opt->longopt);
+                                i += fprintf(fd, "-%c%s", opt->shortopt, opt->longopt ? ", " : " ");
 
+                        if ( opt->longopt ) {
+                                if ( ! opt->shortopt && prelude_list_is_empty(&opt->optlist) )
+                                        i += fprintf(fd, "    ");
+                                
+                                i += fprintf(fd, "--%s", opt->longopt);
+                                if ( (opt->has_arg == PRELUDE_OPTION_ARGUMENT_OPTIONAL ||
+                                      opt->has_arg == PRELUDE_OPTION_ARGUMENT_REQUIRED) &&
+                                     ! prelude_list_is_empty(&opt->optlist) )        
+                                        i += fprintf(fd, "=[INAME] ");
+                                
+                                else if ( opt->has_arg == PRELUDE_OPTION_ARGUMENT_REQUIRED )
+                                        i += fprintf(fd, "=ARG ");
+                                
+                                else if ( opt->has_arg == PRELUDE_OPTION_ARGUMENT_OPTIONAL )
+                                        i += fprintf(fd, "=[ARG] ");
+                                else
+                                        i+= fprintf(fd, " ");
+                        }
+                        
                         if ( i < descoff )
                                 i += print_space(fd, descoff - i);
                                                 
@@ -1024,7 +1063,8 @@ static void print_options(FILE *fd, prelude_option_t *root, prelude_option_type_
  * If @opt is NULL, then the root of the option list is used.
  */
 void prelude_option_print(prelude_option_t *opt, prelude_option_type_t type, int descoff, FILE *fd) 
-{        
+{
+        descoff += 9;
         print_options(fd, opt ? opt : root_optlist, type, descoff, 0);
 }
 
