@@ -1237,8 +1237,11 @@ static int connection_pool_check_event(prelude_connection_pool_t *pool, int time
                         if ( ret < 0 ) {
                                 global_event |= PRELUDE_CONNECTION_POOL_EVENT_DEAD;
                                 notify_dead(cnx, ret, FALSE);
+                                                                
+                                i--;
+                                continue;
                         }
-                        
+
                         break;
                 }
                 
