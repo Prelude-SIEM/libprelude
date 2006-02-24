@@ -1384,6 +1384,9 @@ prelude_connection_permission_t prelude_client_get_required_permission(prelude_c
  */
 void prelude_client_set_required_permission(prelude_client_t *client, prelude_connection_permission_t permission)
 {
+        if ( permission & PRELUDE_CONNECTION_PERMISSION_IDMEF_READ )
+                prelude_connection_pool_set_event_handler(client->cpool, 0, NULL);
+        
         client->permission = permission;
         prelude_connection_pool_set_required_permission(client->cpool, permission);
 }
