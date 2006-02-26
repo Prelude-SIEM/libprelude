@@ -231,7 +231,7 @@ static int idmef_path_get_nth_internal(idmef_value_t **value, idmef_path_t *path
                                        idmef_class_id_t parent_class, int which)
 {
 	unsigned int cnt = 0;
-	prelude_list_t *tmp, *last;
+	prelude_list_t *tmp;
 
         if ( which >= 0 ) {
                 prelude_list_for_each(list, tmp) {                
