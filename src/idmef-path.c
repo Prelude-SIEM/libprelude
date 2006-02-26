@@ -29,6 +29,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <stdarg.h>
+#include <limits.h>
 
 #include "prelude-thread.h"
 #include "prelude-hash.h"
@@ -54,9 +55,8 @@
 #define MAX_DEPTH     16
 #define MAX_NAME_LEN 128
 
-#define INDEX_UNDEFINED -2
-#define INDEX_FORBIDDEN -3
-
+#define INDEX_UNDEFINED INT_MIN
+#define INDEX_FORBIDDEN (INT_MIN + 1)
 
 
 typedef struct idmef_path_element {
@@ -231,18 +231,23 @@ static int idmef_path_get_nth_internal(idmef_value_t **value, idmef_path_t *path
                                        idmef_class_id_t parent_class, int which)
 {
 	unsigned int cnt = 0;
-	prelude_list_t *tmp, *last = NULL;
-        
-	prelude_list_for_each(list, tmp) {                
-		if ( cnt++ == which )
-			return idmef_path_get_internal(value, path, depth, tmp, parent_class);
+	prelude_list_t *tmp, *last;
 
-                last = tmp;
+        if ( which >= 0 ) {
+                prelude_list_for_each(list, tmp) {                
+                        if ( cnt++ == which )
+                                return idmef_path_get_internal(value, path, depth, tmp, parent_class);
+                }
+        } else {                
+                which = -which;
+                which--; /* With negative value, -1 is the base, translate to 0 */
+                
+                prelude_list_for_each_reversed(list, tmp) {                
+                        if ( cnt++ == which )
+                                return idmef_path_get_internal(value, path, depth, tmp, parent_class);
+                }
         }
-
-        if ( which == -1 && last )
-                return idmef_path_get_internal(value, path, depth, last, parent_class);
-
+        
 	return 0;
 }
 
