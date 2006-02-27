@@ -128,6 +128,15 @@ extern char *_prelude_internal_argv[1024];
 prelude_option_t *_prelude_generic_optlist = NULL;
 
 
+
+static int client_write_cb(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
+{
+        prelude_client_send_msg(prelude_msgbuf_get_data(msgbuf), msg);
+        return 0;
+}
+
+
+
 static int generate_md5sum(const char *filename, prelude_string_t *out)
 {
         void *data;
@@ -696,21 +705,13 @@ static int get_manager_addr(prelude_option_t *opt, prelude_string_t *out, void *
 
 
 
-static int send_reply(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
-{
-        prelude_connection_t *conn = prelude_msgbuf_get_data(msgbuf);
-        return prelude_connection_send(conn, msg);
-}
-
-
-
 static int connection_pool_event_cb(prelude_connection_pool_t *pool,
                                     prelude_connection_pool_event_t event,
                                     prelude_connection_t *conn)
 {
         int ret;
-        prelude_msgbuf_t *msgbuf;
         prelude_client_t *client;
+        prelude_msgbuf_t *msgbuf;
         prelude_msg_t *msg = NULL;
         
         if ( event != PRELUDE_CONNECTION_POOL_EVENT_INPUT )
@@ -719,36 +720,21 @@ static int connection_pool_event_cb(prelude_connection_pool_t *pool,
         do {
                 ret = prelude_connection_recv(conn, &msg);
         } while ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN );
-
+                
         if ( ret < 0 )
                 return ret;
-        
-        if ( prelude_msg_get_tag(msg) != PRELUDE_MSG_OPTION_REQUEST ) {
-                prelude_msg_destroy(msg);
-                return ret;
-        }
-        
-        ret = prelude_msgbuf_new(&msgbuf);
-        if ( ret < 0 ) {
-                prelude_msg_destroy(msg);
-                return ret;
-        }
-        
+
         client = prelude_connection_pool_get_data(pool);
         
-        prelude_msgbuf_set_data(msgbuf, conn);
-        prelude_msgbuf_set_callback(msgbuf, send_reply);
-        
-        prelude_thread_mutex_lock(&client->msgbuf_lock);
-        
-        ret = prelude_option_process_request(client, msg, msgbuf);        
-        prelude_msgbuf_mark_end(client->msgbuf);
-        
-        prelude_thread_mutex_unlock(&client->msgbuf_lock);
+        ret = prelude_connection_new_msgbuf(conn, &msgbuf);
+        if ( ret < 0 )
+                return ret;
+                
+        ret = prelude_client_handle_msg_default(client, msg, msgbuf);
 
-        prelude_msgbuf_destroy(msgbuf);
         prelude_msg_destroy(msg);
-        
+        prelude_msgbuf_destroy(msgbuf);
+
         return ret;
 }
 
@@ -807,32 +793,6 @@ static int set_profile(prelude_option_t *opt, const char *optarg, prelude_string
         
         return 0;
 }
-
-
-
-
-static int client_write_msgbuf(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
-{
-        prelude_client_send_msg(prelude_msgbuf_get_data(msgbuf), msg);
-        return 0;
-}
-
-
-
-static int create_heartbeat_msgbuf(prelude_client_t *client)
-{
-        int ret;
-        
-        ret = prelude_msgbuf_new(&client->msgbuf);
-        if ( ret < 0 )
-                return ret;
-
-        prelude_msgbuf_set_data(client->msgbuf, client);
-        prelude_msgbuf_set_callback(client->msgbuf, client_write_msgbuf);
-        
-        return 0;
-}
-
 
 
 
@@ -1038,7 +998,7 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
         ret = prelude_connection_pool_new(&new->cpool, new->profile, new->permission);
         if ( ret < 0 )
                 return ret;
-        
+
         prelude_connection_pool_set_data(new->cpool, new);
         prelude_connection_pool_set_flags(new->cpool, prelude_connection_pool_get_flags(new->cpool) |
                                           PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT | PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER);
@@ -1046,13 +1006,14 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
 
         
         setup_heartbeat_timer(new, DEFAULT_HEARTBEAT_INTERVAL);
+
         
-        ret = create_heartbeat_msgbuf(new);
+        ret = prelude_client_new_msgbuf(new, &new->msgbuf);
         if ( ret < 0 ) {
                 _prelude_client_destroy(new);
                 return ret;
         }
-        
+                
         *client = new;
         
         return 0;
@@ -1527,3 +1488,41 @@ void prelude_client_print_setup_error(prelude_client_t *client)
 }
 
 
+
+int prelude_client_handle_msg_default(prelude_client_t *client, prelude_msg_t *msg, prelude_msgbuf_t *msgbuf)
+{
+        int ret;
+        uint8_t tag;
+        
+        tag = prelude_msg_get_tag(msg);
+        if ( tag != PRELUDE_MSG_OPTION_REQUEST )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "Unexpected message type '%d' received", tag);
+        
+        /*
+         * lock, handle the request, send reply.
+         */
+        prelude_thread_mutex_lock(&client->msgbuf_lock);
+
+        ret = prelude_option_process_request(client, msg, msgbuf);
+        prelude_msgbuf_mark_end(client->msgbuf);
+        
+        prelude_thread_mutex_unlock(&client->msgbuf_lock);
+        
+        return ret;
+}
+
+
+
+int prelude_client_new_msgbuf(prelude_client_t *client, prelude_msgbuf_t **msgbuf)
+{
+        int ret;
+
+        ret = prelude_msgbuf_new(msgbuf);
+        if ( ret < 0 )
+                return ret;
+
+        prelude_msgbuf_set_data(*msgbuf, client);
+        prelude_msgbuf_set_callback(*msgbuf, client_write_cb);
+
+        return 0;
+}

@@ -90,6 +90,10 @@ prelude_bool_t prelude_client_is_setup_needed(int error);
 
 prelude_client_profile_t *prelude_client_get_profile(prelude_client_t *client);
 
+int prelude_client_new_msgbuf(prelude_client_t *client, prelude_msgbuf_t **msgbuf);
+         
+int prelude_client_handle_msg_default(prelude_client_t *client, prelude_msg_t *msg, prelude_msgbuf_t *msgbuf);
+        
 int _prelude_client_register_options(void);
 
 /*
