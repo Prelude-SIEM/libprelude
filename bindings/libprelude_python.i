@@ -235,10 +235,10 @@ PyObject *swig_python_data(idmef_data_t *data)
 %typemap(out) int {
 	if ( $1 < 0 ) {
 		swig_python_raise_exception($1);
-		return NULL;
+		$result = NULL;
+	} else {
+		$result = PyInt_FromLong($1);
 	}
-
-	$result = PyInt_FromLong($1);
 };
 
 %typemap(out) int32_t {
@@ -335,7 +335,7 @@ PyObject *swig_python_data(idmef_data_t *data)
 		$result = Py_None;
 		Py_INCREF(Py_None);
 
-	} else {
+	} else if ( PyInt_AsLong($result) > 0 ) {
 		$result = SWIG_NewPointerObj((void *) * $1, $*1_descriptor, 0);
 	}
 };
@@ -350,13 +350,21 @@ PyObject *swig_python_data(idmef_data_t *data)
 		return NULL;
 	}
 };
+
 %typemap(argout) prelude_string_t *out {
-	$result = PyString_FromStringAndSize(prelude_string_get_string($1), prelude_string_get_len($1));
+	if ( result >= 0 )
+		$result = PyString_FromStringAndSize(prelude_string_get_string($1), prelude_string_get_len($1));
+
 	prelude_string_destroy($1);
 };
 
 
 %typemap(in, numinputs=0) prelude_msg_t **outmsg ($*1_type tmp) {
+	tmp = NULL;
+	$1 = ($1_ltype) &tmp;
+};
+
+%typemap(in, numinputs=0) prelude_connection_t **outconn ($*1_type tmp) {
 	tmp = NULL;
 	$1 = ($1_ltype) &tmp;
 };
@@ -369,7 +377,8 @@ PyObject *swig_python_data(idmef_data_t *data)
 
 
 %typemap(argout) SWIGTYPE **OUTPARAM {
-	$result = SWIG_NewPointerObj((void *) * $1, $*1_descriptor, 0);
+	if ( result >= 0 )
+		$result = SWIG_NewPointerObj((void *) * $1, $*1_descriptor, 0);
 };
 
 
