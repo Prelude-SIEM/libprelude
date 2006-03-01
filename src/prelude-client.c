@@ -255,7 +255,7 @@ static void heartbeat_expire_cb(void *data)
                 return;
         
         idmef_heartbeat_set_create_time(heartbeat, time);
-        idmef_heartbeat_set_analyzer(heartbeat, idmef_analyzer_ref(client->analyzer), 0);
+        idmef_heartbeat_set_analyzer(heartbeat, idmef_analyzer_ref(client->analyzer), IDMEF_LIST_PREPEND);
         
         if ( client->heartbeat_cb ) {
                 client->heartbeat_cb(client, message);
