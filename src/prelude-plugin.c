@@ -25,6 +25,7 @@
 #include "libmissing.h"
 
 #include <stdio.h>
+#include <ctype.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
@@ -359,6 +360,28 @@ static int copy_instance(prelude_plugin_instance_t **dst, prelude_plugin_instanc
 
 
 
+/*
+ * lt_dlopenext will fail looking up the symbol in case the libtool
+ * archive is missing.
+ */
+static const char *libtool_is_buggy(const char *pname, const char *sym, char *out, size_t size)
+{
+        size_t i;
+        
+        for ( i = 0; i < size && pname[i]; i++ ) {
+                        
+                if ( isalnum((int) pname[i]) )
+                        out[i] = pname[i];
+                else
+                        out[i] = '_';
+        }
+
+        snprintf(out + i, sizeof(out) - i, "_LTX_%s", sym);
+
+        return out;
+}
+
+
 
 /*
  * Load a single plugin pointed to by 'filename'.
@@ -372,6 +395,8 @@ static int plugin_load_single(prelude_list_t *head,
         void *handle;
         const char *pname;
         prelude_plugin_entry_t *pe;
+        char buf[1024];
+        prelude_bool_t buggy_libtool = FALSE;
         int (*plugin_version)(void);
         int (*plugin_init)(prelude_plugin_entry_t *pe, void *data);
         
@@ -386,6 +411,12 @@ static int plugin_load_single(prelude_list_t *head,
 
         plugin_version = lt_dlsym(handle, "prelude_plugin_version");
         if ( ! plugin_version ) {
+                buggy_libtool = TRUE;
+                plugin_version = lt_dlsym(handle, libtool_is_buggy(pname, "prelude_plugin_version", buf, sizeof(buf)));
+                
+        }
+        
+        if ( ! plugin_version ) {
                 prelude_log(PRELUDE_LOG_WARN, "%s: %s.\n", pname, lt_dlerror());
                 lt_dlclose(handle);
                 return -1;
@@ -399,9 +430,9 @@ static int plugin_load_single(prelude_list_t *head,
                 return -1;
         }
         
-        plugin_init = lt_dlsym(handle, symbol);
+        plugin_init = lt_dlsym(handle, buggy_libtool ? libtool_is_buggy(pname, symbol, buf, sizeof(buf)) : symbol);
         if ( ! plugin_init ) {
-                prelude_log(PRELUDE_LOG_WARN, "%s.\n", lt_dlerror());
+                prelude_log(PRELUDE_LOG_WARN, "plugin initialization failed: '%s'.\n", lt_dlerror());
                 lt_dlclose(handle);
                 return -1;
         }
@@ -417,7 +448,7 @@ static int plugin_load_single(prelude_list_t *head,
         pe->unsubscribe = unsubscribe;
 
         ret = plugin_init(pe, data);
-        if ( ret < 0 || ! pe->plugin ) {
+        if ( ret < 0 || ! pe->plugin ) {                
                 prelude_log(PRELUDE_LOG_WARN, "%s initialization failure.\n", filename);
                 prelude_list_del(&pe->list);
                 lt_dlclose(handle);
