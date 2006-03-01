@@ -193,7 +193,6 @@ typedef unsigned int prelude_bool_t;
 %include "idmef-class.h"
 %include "prelude-connection.h"
 %include "prelude-connection-pool.h"
-%include "prelude-error.h"
 %include "prelude-option.h"
 %include "prelude-option-wide.h"
 %include "prelude-msg.h"

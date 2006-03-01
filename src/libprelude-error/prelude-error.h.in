@@ -41,7 +41,6 @@
  extern "C" {
 #endif
 
-#ifndef SWIG
 
 /*
  * This is inspired from the GPG error interface.
@@ -185,8 +184,6 @@ static inline prelude_bool_t prelude_error_is_verbose(prelude_error_t err)
 {
 	return (((-err) >> PRELUDE_ERROR_VERBOSE_SHIFT) & PRELUDE_ERROR_VERBOSE_MASK) ? PRELUDE_BOOL_TRUE : PRELUDE_BOOL_FALSE;
 }
-
-#endif /* SWIG */
 
 
 void prelude_perror(prelude_error_t err, const char *fmt, ...);
