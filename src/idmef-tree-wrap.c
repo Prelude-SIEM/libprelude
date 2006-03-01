@@ -53,9 +53,9 @@
 
 #define IS_LISTED prelude_list_t list
 
-#define	UNION(type, var) type var; union
+#define UNION(type, var) type var; union
 
-#define	UNION_MEMBER(value, type, name) type name
+#define UNION_MEMBER(value, type, name) type name
 
 #define ENUM(...) typedef enum
 
@@ -81,19 +81,19 @@
 static int get_value_from_string(idmef_value_t **value, prelude_string_t *str)
 {
         int ret;
-	
-	if ( ! str ) {
-	        *value = NULL;
+        
+        if ( ! str ) {
+                *value = NULL;
                 return 0;
-	}
+        }
 
-	ret = idmef_value_new_string(value, str);
-	if ( ret < 0 )
-		return ret;
+        ret = idmef_value_new_string(value, str);
+        if ( ret < 0 )
+                return ret;
 
-	idmef_value_dont_have_own_data(*value);
+        idmef_value_dont_have_own_data(*value);
 
-	return 0;
+        return 0;
 }
 
 
@@ -101,38 +101,38 @@ static int get_value_from_string(idmef_value_t **value, prelude_string_t *str)
 static int get_value_from_data(idmef_value_t **value, idmef_data_t *data)
 {
         int ret;
-	
-	if ( ! data ) {
-	        *value = NULL;
+        
+        if ( ! data ) {
+                *value = NULL;
                 return 0;
-	}
+        }
 
-	ret = idmef_value_new_data(value, data);
-	if ( ret < 0 )
-		return ret;
+        ret = idmef_value_new_data(value, data);
+        if ( ret < 0 )
+                return ret;
 
-	idmef_value_dont_have_own_data(*value);
+        idmef_value_dont_have_own_data(*value);
 
-	return 0;
+        return 0;
 }
 
 
 static int get_value_from_time(idmef_value_t **value, idmef_time_t *time)
 {
         int ret;
-	
-	if ( ! time ) {
-	        *value = NULL;
+        
+        if ( ! time ) {
+                *value = NULL;
                 return 0;
-	}
+        }
 
-	ret = idmef_value_new_time(value, time);
-	if ( ret < 0 )
-		return ret;
+        ret = idmef_value_new_time(value, time);
+        if ( ret < 0 )
+                return ret;
 
-	idmef_value_dont_have_own_data(*value);
+        idmef_value_dont_have_own_data(*value);
 
-	return 0;
+        return 0;
 }
 
 
@@ -141,34 +141,34 @@ static void list_insert(prelude_list_t *head, prelude_list_t *item, int pos)
         int i = 0;
         prelude_list_t *tmp;
         
-	if ( pos == IDMEF_LIST_APPEND || pos == -1 /* FIXME: deprecated */ )
-	        prelude_list_add_tail(head, item);
+        if ( pos == IDMEF_LIST_APPEND || pos == -1 /* FIXME: deprecated */ )
+                prelude_list_add_tail(head, item);
 
-	else if ( pos == IDMEF_LIST_PREPEND || pos == 0 /* FIXME: deprecated */ )
-	        prelude_list_add(head, item);
+        else if ( pos == IDMEF_LIST_PREPEND || pos == 0 /* FIXME: deprecated */ )
+                prelude_list_add(head, item);
 
-	else if ( pos > 0 ) {
+        else if ( pos > 0 ) {
                 prelude_list_for_each(head, tmp) {
-		        if ( i == pos )
-			        break;
+                        if ( i == pos )
+                                break;
                         i++;
                 }
 
-		prelude_list_add_tail(tmp, item);
+                prelude_list_add_tail(tmp, item);
         }
 
-	else if ( pos < 0 ) {
-		pos = -pos;
-		pos--;
+        else if ( pos < 0 ) {
+                pos = -pos;
+                pos--;
 
-	        prelude_list_for_each_reversed(head, tmp) {
-		        if ( i == pos )
-			        break;
+                prelude_list_for_each_reversed(head, tmp) {
+                        if ( i == pos )
+                                break;
                         i++;
                 }
 
-		prelude_list_add(tmp, item);
-	}
+                prelude_list_add(tmp, item);
+        }
 }
 
 
@@ -1746,15 +1746,15 @@ struct idmef_message {
  */
 int idmef_additional_data_new(idmef_additional_data_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	prelude_list_init(&(*ret)->list);
+        prelude_list_init(&(*ret)->list);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	return 0;
+        return 0;
 
 }
 
@@ -1769,18 +1769,18 @@ int idmef_additional_data_new(idmef_additional_data_t **ret)
  */
 idmef_additional_data_t *idmef_additional_data_ref(idmef_additional_data_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_additional_data_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_additional_data_t *ptr = p;
+        idmef_additional_data_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return idmef_value_new_enum_from_numeric((idmef_value_t **) childptr, 
@@ -1790,29 +1790,29 @@ int idmef_additional_data_get_child(void *p, idmef_class_child_id_t child, void 
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->meaning);        
                 case 2:
                        return get_value_from_data((idmef_value_t **) childptr, & ptr->data);
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_additional_data_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_additional_data_t *ptr = p;
+        idmef_additional_data_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_additional_data_new_type(ptr, (idmef_additional_data_type_t **) ret);
+                case 0:
+                        return idmef_additional_data_new_type(ptr, (idmef_additional_data_type_t **) ret);
 
-		case 1:
-			return idmef_additional_data_new_meaning(ptr, (prelude_string_t **) ret);
+                case 1:
+                        return idmef_additional_data_new_meaning(ptr, (prelude_string_t **) ret);
 
-		case 2:
-			return idmef_additional_data_new_data(ptr, (idmef_data_t **) ret);
+                case 2:
+                        return idmef_additional_data_new_data(ptr, (idmef_data_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_additional_data_destroy_internal(idmef_additional_data_t *ptr)
@@ -1821,15 +1821,15 @@ static void idmef_additional_data_destroy_internal(idmef_additional_data_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
-	if ( ptr->meaning ) {
-		prelude_string_destroy(ptr->meaning);
-		ptr->meaning = NULL;
-	}
+        if ( ptr->meaning ) {
+                prelude_string_destroy(ptr->meaning);
+                ptr->meaning = NULL;
+        }
 
-	idmef_data_destroy_internal(&ptr->data);
+        idmef_data_destroy_internal(&ptr->data);
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -1842,10 +1842,10 @@ static void idmef_additional_data_destroy_internal(idmef_additional_data_t *ptr)
 
 void idmef_additional_data_destroy(idmef_additional_data_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_additional_data_destroy_internal(ptr);
+        idmef_additional_data_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -1859,7 +1859,7 @@ void idmef_additional_data_destroy(idmef_additional_data_t *ptr)
  */
 idmef_additional_data_type_t idmef_additional_data_get_type(idmef_additional_data_t *ptr)
 {
-	return ptr->type;
+        return ptr->type;
 }
 
 /**
@@ -1874,7 +1874,7 @@ idmef_additional_data_type_t idmef_additional_data_get_type(idmef_additional_dat
 
 void idmef_additional_data_set_type(idmef_additional_data_t *ptr, idmef_additional_data_type_t type)
 {
-	ptr->type = type;
+        ptr->type = type;
 }
 
 /**
@@ -1890,7 +1890,7 @@ void idmef_additional_data_set_type(idmef_additional_data_t *ptr, idmef_addition
 int idmef_additional_data_new_type(idmef_additional_data_t *ptr, idmef_additional_data_type_t **ret)
 {
         *ret = &ptr->type;
-	return 0;
+        return 0;
 }
 
 /**
@@ -1903,7 +1903,7 @@ int idmef_additional_data_new_type(idmef_additional_data_t *ptr, idmef_additiona
  */
 prelude_string_t *idmef_additional_data_get_meaning(idmef_additional_data_t *ptr)
 {
-	return ptr->meaning;
+        return ptr->meaning;
 }
 
 /**
@@ -1918,10 +1918,10 @@ prelude_string_t *idmef_additional_data_get_meaning(idmef_additional_data_t *ptr
 
 void idmef_additional_data_set_meaning(idmef_additional_data_t *ptr, prelude_string_t *meaning)
 {
-	if ( ptr->meaning )
-		prelude_string_destroy(ptr->meaning);
+        if ( ptr->meaning )
+                prelude_string_destroy(ptr->meaning);
 
-	ptr->meaning = meaning;
+        ptr->meaning = meaning;
 }
 
 /**
@@ -1938,15 +1938,15 @@ int idmef_additional_data_new_meaning(idmef_additional_data_t *ptr, prelude_stri
 {
         int retval;
 
-	if ( ptr->meaning )
-		prelude_string_destroy(ptr->meaning);
-		
-	retval = prelude_string_new(&ptr->meaning);
+        if ( ptr->meaning )
+                prelude_string_destroy(ptr->meaning);
+                
+        retval = prelude_string_new(&ptr->meaning);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->meaning;
-	return 0;
+        return 0;
 }
 
 /**
@@ -1959,7 +1959,7 @@ int idmef_additional_data_new_meaning(idmef_additional_data_t *ptr, prelude_stri
  */
 idmef_data_t *idmef_additional_data_get_data(idmef_additional_data_t *ptr)
 {
-	return &ptr->data;
+        return &ptr->data;
 }
 
 /**
@@ -1977,7 +1977,7 @@ void idmef_additional_data_set_data(idmef_additional_data_t *ptr, idmef_data_t *
         idmef_data_destroy_internal(&ptr->data);
         if ( data ) {
                 memcpy(&ptr->data, data, sizeof (ptr->data));
-	        free(data);
+                free(data);
         }
 }
 
@@ -1993,10 +1993,10 @@ void idmef_additional_data_set_data(idmef_additional_data_t *ptr, idmef_data_t *
  */
 int idmef_additional_data_new_data(idmef_additional_data_t *ptr, idmef_data_t **ret)
 {
-	idmef_data_destroy_internal(&ptr->data);
+        idmef_data_destroy_internal(&ptr->data);
 
         *ret = &ptr->data;
-	return 0;
+        return 0;
 }
 
 /**
@@ -2009,15 +2009,15 @@ int idmef_additional_data_new_data(idmef_additional_data_t *ptr, idmef_data_t **
  */
 int idmef_reference_new(idmef_reference_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	prelude_list_init(&(*ret)->list);
+        prelude_list_init(&(*ret)->list);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	return 0;
+        return 0;
 
 }
 
@@ -2032,18 +2032,18 @@ int idmef_reference_new(idmef_reference_t **ret)
  */
 idmef_reference_t *idmef_reference_ref(idmef_reference_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_reference_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_reference_t *ptr = p;
+        idmef_reference_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return idmef_value_new_enum_from_numeric((idmef_value_t **) childptr, 
@@ -2055,32 +2055,32 @@ int idmef_reference_get_child(void *p, idmef_class_child_id_t child, void **chil
                        return get_value_from_string((idmef_value_t **) childptr, & ptr->url);        
                 case 3:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->meaning);
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_reference_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_reference_t *ptr = p;
+        idmef_reference_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_reference_new_origin(ptr, (idmef_reference_origin_t **) ret);
+                case 0:
+                        return idmef_reference_new_origin(ptr, (idmef_reference_origin_t **) ret);
 
-		case 1:
-			return idmef_reference_new_name(ptr, (prelude_string_t **) ret);
+                case 1:
+                        return idmef_reference_new_name(ptr, (prelude_string_t **) ret);
 
-		case 2:
-			return idmef_reference_new_url(ptr, (prelude_string_t **) ret);
+                case 2:
+                        return idmef_reference_new_url(ptr, (prelude_string_t **) ret);
 
-		case 3:
-			return idmef_reference_new_meaning(ptr, (prelude_string_t **) ret);
+                case 3:
+                        return idmef_reference_new_meaning(ptr, (prelude_string_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_reference_destroy_internal(idmef_reference_t *ptr)
@@ -2089,17 +2089,17 @@ static void idmef_reference_destroy_internal(idmef_reference_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
-	prelude_string_destroy_internal(&ptr->name);
+        prelude_string_destroy_internal(&ptr->name);
 
-	prelude_string_destroy_internal(&ptr->url);
+        prelude_string_destroy_internal(&ptr->url);
 
-	if ( ptr->meaning ) {
-		prelude_string_destroy(ptr->meaning);
-		ptr->meaning = NULL;
-	}
+        if ( ptr->meaning ) {
+                prelude_string_destroy(ptr->meaning);
+                ptr->meaning = NULL;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -2112,10 +2112,10 @@ static void idmef_reference_destroy_internal(idmef_reference_t *ptr)
 
 void idmef_reference_destroy(idmef_reference_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_reference_destroy_internal(ptr);
+        idmef_reference_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -2129,7 +2129,7 @@ void idmef_reference_destroy(idmef_reference_t *ptr)
  */
 idmef_reference_origin_t idmef_reference_get_origin(idmef_reference_t *ptr)
 {
-	return ptr->origin;
+        return ptr->origin;
 }
 
 /**
@@ -2144,7 +2144,7 @@ idmef_reference_origin_t idmef_reference_get_origin(idmef_reference_t *ptr)
 
 void idmef_reference_set_origin(idmef_reference_t *ptr, idmef_reference_origin_t origin)
 {
-	ptr->origin = origin;
+        ptr->origin = origin;
 }
 
 /**
@@ -2160,7 +2160,7 @@ void idmef_reference_set_origin(idmef_reference_t *ptr, idmef_reference_origin_t
 int idmef_reference_new_origin(idmef_reference_t *ptr, idmef_reference_origin_t **ret)
 {
         *ret = &ptr->origin;
-	return 0;
+        return 0;
 }
 
 /**
@@ -2173,7 +2173,7 @@ int idmef_reference_new_origin(idmef_reference_t *ptr, idmef_reference_origin_t 
  */
 prelude_string_t *idmef_reference_get_name(idmef_reference_t *ptr)
 {
-	return &ptr->name;
+        return &ptr->name;
 }
 
 /**
@@ -2191,7 +2191,7 @@ void idmef_reference_set_name(idmef_reference_t *ptr, prelude_string_t *name)
         prelude_string_destroy_internal(&ptr->name);
         if ( name ) {
                 memcpy(&ptr->name, name, sizeof (ptr->name));
-	        free(name);
+                free(name);
         }
 }
 
@@ -2207,10 +2207,10 @@ void idmef_reference_set_name(idmef_reference_t *ptr, prelude_string_t *name)
  */
 int idmef_reference_new_name(idmef_reference_t *ptr, prelude_string_t **ret)
 {
-	prelude_string_destroy_internal(&ptr->name);
+        prelude_string_destroy_internal(&ptr->name);
 
         *ret = &ptr->name;
-	return 0;
+        return 0;
 }
 
 /**
@@ -2223,7 +2223,7 @@ int idmef_reference_new_name(idmef_reference_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_reference_get_url(idmef_reference_t *ptr)
 {
-	return &ptr->url;
+        return &ptr->url;
 }
 
 /**
@@ -2241,7 +2241,7 @@ void idmef_reference_set_url(idmef_reference_t *ptr, prelude_string_t *url)
         prelude_string_destroy_internal(&ptr->url);
         if ( url ) {
                 memcpy(&ptr->url, url, sizeof (ptr->url));
-	        free(url);
+                free(url);
         }
 }
 
@@ -2257,10 +2257,10 @@ void idmef_reference_set_url(idmef_reference_t *ptr, prelude_string_t *url)
  */
 int idmef_reference_new_url(idmef_reference_t *ptr, prelude_string_t **ret)
 {
-	prelude_string_destroy_internal(&ptr->url);
+        prelude_string_destroy_internal(&ptr->url);
 
         *ret = &ptr->url;
-	return 0;
+        return 0;
 }
 
 /**
@@ -2273,7 +2273,7 @@ int idmef_reference_new_url(idmef_reference_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_reference_get_meaning(idmef_reference_t *ptr)
 {
-	return ptr->meaning;
+        return ptr->meaning;
 }
 
 /**
@@ -2288,10 +2288,10 @@ prelude_string_t *idmef_reference_get_meaning(idmef_reference_t *ptr)
 
 void idmef_reference_set_meaning(idmef_reference_t *ptr, prelude_string_t *meaning)
 {
-	if ( ptr->meaning )
-		prelude_string_destroy(ptr->meaning);
+        if ( ptr->meaning )
+                prelude_string_destroy(ptr->meaning);
 
-	ptr->meaning = meaning;
+        ptr->meaning = meaning;
 }
 
 /**
@@ -2308,15 +2308,15 @@ int idmef_reference_new_meaning(idmef_reference_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->meaning )
-		prelude_string_destroy(ptr->meaning);
-		
-	retval = prelude_string_new(&ptr->meaning);
+        if ( ptr->meaning )
+                prelude_string_destroy(ptr->meaning);
+                
+        retval = prelude_string_new(&ptr->meaning);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->meaning;
-	return 0;
+        return 0;
 }
 
 /**
@@ -2329,16 +2329,16 @@ int idmef_reference_new_meaning(idmef_reference_t *ptr, prelude_string_t **ret)
  */
 int idmef_classification_new(idmef_classification_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	prelude_list_init(&(*ret)->reference_list);
+        prelude_list_init(&(*ret)->reference_list);
     
 
-	return 0;
+        return 0;
 
 }
 
@@ -2353,45 +2353,45 @@ int idmef_classification_new(idmef_classification_t **ret)
  */
 idmef_classification_t *idmef_classification_ref(idmef_classification_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_classification_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_classification_t *ptr = p;
+        idmef_classification_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
                 case 1:
                        return get_value_from_string((idmef_value_t **) childptr, & ptr->text);
-		case 2:
+                case 2:
                         *childptr = &ptr->reference_list;
-			return 0;
+                        return 0;
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_classification_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_classification_t *ptr = p;
+        idmef_classification_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_classification_new_ident(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_classification_new_ident(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_classification_new_text(ptr, (prelude_string_t **) ret);
+                case 1:
+                        return idmef_classification_new_text(ptr, (prelude_string_t **) ret);
 
-		case 2: {
+                case 2: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -2423,36 +2423,36 @@ int idmef_classification_new_child(void *p, idmef_class_child_id_t child, int n,
                         }
 
                         return idmef_classification_new_reference(ptr, (idmef_reference_t **) ret, n);
-		}
+                }
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_classification_destroy_internal(idmef_classification_t *ptr)
 {
 
-	if ( ptr->ident ) {
-		prelude_string_destroy(ptr->ident);
-		ptr->ident = NULL;
-	}
+        if ( ptr->ident ) {
+                prelude_string_destroy(ptr->ident);
+                ptr->ident = NULL;
+        }
 
-	prelude_string_destroy_internal(&ptr->text);
+        prelude_string_destroy_internal(&ptr->text);
 
-	{
-		prelude_list_t *n, *tmp;
-		idmef_reference_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                idmef_reference_t *entry;
 
-		prelude_list_for_each_safe(&ptr->reference_list, tmp, n) {
-			entry = prelude_list_entry(tmp, idmef_reference_t, list);
+                prelude_list_for_each_safe(&ptr->reference_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_reference_t, list);
                         prelude_list_del_init(&entry->list);
-			idmef_reference_destroy(entry);
-		}
-	}
+                        idmef_reference_destroy(entry);
+                }
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -2465,10 +2465,10 @@ static void idmef_classification_destroy_internal(idmef_classification_t *ptr)
 
 void idmef_classification_destroy(idmef_classification_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_classification_destroy_internal(ptr);
+        idmef_classification_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -2482,7 +2482,7 @@ void idmef_classification_destroy(idmef_classification_t *ptr)
  */
 prelude_string_t *idmef_classification_get_ident(idmef_classification_t *ptr)
 {
-	return ptr->ident;
+        return ptr->ident;
 }
 
 /**
@@ -2497,10 +2497,10 @@ prelude_string_t *idmef_classification_get_ident(idmef_classification_t *ptr)
 
 void idmef_classification_set_ident(idmef_classification_t *ptr, prelude_string_t *ident)
 {
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
 
-	ptr->ident = ident;
+        ptr->ident = ident;
 }
 
 /**
@@ -2517,15 +2517,15 @@ int idmef_classification_new_ident(idmef_classification_t *ptr, prelude_string_t
 {
         int retval;
 
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
-		
-	retval = prelude_string_new(&ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
+                
+        retval = prelude_string_new(&ptr->ident);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->ident;
-	return 0;
+        return 0;
 }
 
 /**
@@ -2538,7 +2538,7 @@ int idmef_classification_new_ident(idmef_classification_t *ptr, prelude_string_t
  */
 prelude_string_t *idmef_classification_get_text(idmef_classification_t *ptr)
 {
-	return &ptr->text;
+        return &ptr->text;
 }
 
 /**
@@ -2556,7 +2556,7 @@ void idmef_classification_set_text(idmef_classification_t *ptr, prelude_string_t
         prelude_string_destroy_internal(&ptr->text);
         if ( text ) {
                 memcpy(&ptr->text, text, sizeof (ptr->text));
-	        free(text);
+                free(text);
         }
 }
 
@@ -2572,10 +2572,10 @@ void idmef_classification_set_text(idmef_classification_t *ptr, prelude_string_t
  */
 int idmef_classification_new_text(idmef_classification_t *ptr, prelude_string_t **ret)
 {
-	prelude_string_destroy_internal(&ptr->text);
+        prelude_string_destroy_internal(&ptr->text);
 
         *ret = &ptr->text;
-	return 0;
+        return 0;
 }
 
 /**
@@ -2659,15 +2659,15 @@ int idmef_classification_new_reference(idmef_classification_t *ptr, idmef_refere
  */
 int idmef_user_id_new(idmef_user_id_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	prelude_list_init(&(*ret)->list);
+        prelude_list_init(&(*ret)->list);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	return 0;
+        return 0;
 
 }
 
@@ -2682,18 +2682,18 @@ int idmef_user_id_new(idmef_user_id_t **ret)
  */
 idmef_user_id_t *idmef_user_id_ref(idmef_user_id_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_user_id_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_user_id_t *ptr = p;
+        idmef_user_id_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
@@ -2706,37 +2706,37 @@ int idmef_user_id_get_child(void *p, idmef_class_child_id_t child, void **childp
                 case 3:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->name);
                 case 4:
-	               return (ptr->number_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->number) : 0;
+                       return (ptr->number_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->number) : 0;
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_user_id_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_user_id_t *ptr = p;
+        idmef_user_id_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_user_id_new_ident(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_user_id_new_ident(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_user_id_new_type(ptr, (idmef_user_id_type_t **) ret);
+                case 1:
+                        return idmef_user_id_new_type(ptr, (idmef_user_id_type_t **) ret);
 
-		case 2:
-			return idmef_user_id_new_tty(ptr, (prelude_string_t **) ret);
+                case 2:
+                        return idmef_user_id_new_tty(ptr, (prelude_string_t **) ret);
 
-		case 3:
-			return idmef_user_id_new_name(ptr, (prelude_string_t **) ret);
+                case 3:
+                        return idmef_user_id_new_name(ptr, (prelude_string_t **) ret);
 
-		case 4:
-			return idmef_user_id_new_number(ptr, (uint32_t **) ret);
+                case 4:
+                        return idmef_user_id_new_number(ptr, (uint32_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_user_id_destroy_internal(idmef_user_id_t *ptr)
@@ -2745,23 +2745,23 @@ static void idmef_user_id_destroy_internal(idmef_user_id_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
-	if ( ptr->ident ) {
-		prelude_string_destroy(ptr->ident);
-		ptr->ident = NULL;
-	}
+        if ( ptr->ident ) {
+                prelude_string_destroy(ptr->ident);
+                ptr->ident = NULL;
+        }
 
-	if ( ptr->tty ) {
-		prelude_string_destroy(ptr->tty);
-		ptr->tty = NULL;
-	}
+        if ( ptr->tty ) {
+                prelude_string_destroy(ptr->tty);
+                ptr->tty = NULL;
+        }
 
-	if ( ptr->name ) {
-		prelude_string_destroy(ptr->name);
-		ptr->name = NULL;
-	}
+        if ( ptr->name ) {
+                prelude_string_destroy(ptr->name);
+                ptr->name = NULL;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -2774,10 +2774,10 @@ static void idmef_user_id_destroy_internal(idmef_user_id_t *ptr)
 
 void idmef_user_id_destroy(idmef_user_id_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_user_id_destroy_internal(ptr);
+        idmef_user_id_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -2791,7 +2791,7 @@ void idmef_user_id_destroy(idmef_user_id_t *ptr)
  */
 prelude_string_t *idmef_user_id_get_ident(idmef_user_id_t *ptr)
 {
-	return ptr->ident;
+        return ptr->ident;
 }
 
 /**
@@ -2806,10 +2806,10 @@ prelude_string_t *idmef_user_id_get_ident(idmef_user_id_t *ptr)
 
 void idmef_user_id_set_ident(idmef_user_id_t *ptr, prelude_string_t *ident)
 {
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
 
-	ptr->ident = ident;
+        ptr->ident = ident;
 }
 
 /**
@@ -2826,15 +2826,15 @@ int idmef_user_id_new_ident(idmef_user_id_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
-		
-	retval = prelude_string_new(&ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
+                
+        retval = prelude_string_new(&ptr->ident);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->ident;
-	return 0;
+        return 0;
 }
 
 /**
@@ -2847,7 +2847,7 @@ int idmef_user_id_new_ident(idmef_user_id_t *ptr, prelude_string_t **ret)
  */
 idmef_user_id_type_t idmef_user_id_get_type(idmef_user_id_t *ptr)
 {
-	return ptr->type;
+        return ptr->type;
 }
 
 /**
@@ -2862,7 +2862,7 @@ idmef_user_id_type_t idmef_user_id_get_type(idmef_user_id_t *ptr)
 
 void idmef_user_id_set_type(idmef_user_id_t *ptr, idmef_user_id_type_t type)
 {
-	ptr->type = type;
+        ptr->type = type;
 }
 
 /**
@@ -2878,7 +2878,7 @@ void idmef_user_id_set_type(idmef_user_id_t *ptr, idmef_user_id_type_t type)
 int idmef_user_id_new_type(idmef_user_id_t *ptr, idmef_user_id_type_t **ret)
 {
         *ret = &ptr->type;
-	return 0;
+        return 0;
 }
 
 /**
@@ -2891,7 +2891,7 @@ int idmef_user_id_new_type(idmef_user_id_t *ptr, idmef_user_id_type_t **ret)
  */
 prelude_string_t *idmef_user_id_get_tty(idmef_user_id_t *ptr)
 {
-	return ptr->tty;
+        return ptr->tty;
 }
 
 /**
@@ -2906,10 +2906,10 @@ prelude_string_t *idmef_user_id_get_tty(idmef_user_id_t *ptr)
 
 void idmef_user_id_set_tty(idmef_user_id_t *ptr, prelude_string_t *tty)
 {
-	if ( ptr->tty )
-		prelude_string_destroy(ptr->tty);
+        if ( ptr->tty )
+                prelude_string_destroy(ptr->tty);
 
-	ptr->tty = tty;
+        ptr->tty = tty;
 }
 
 /**
@@ -2926,15 +2926,15 @@ int idmef_user_id_new_tty(idmef_user_id_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->tty )
-		prelude_string_destroy(ptr->tty);
-		
-	retval = prelude_string_new(&ptr->tty);
+        if ( ptr->tty )
+                prelude_string_destroy(ptr->tty);
+                
+        retval = prelude_string_new(&ptr->tty);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->tty;
-	return 0;
+        return 0;
 }
 
 /**
@@ -2947,7 +2947,7 @@ int idmef_user_id_new_tty(idmef_user_id_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_user_id_get_name(idmef_user_id_t *ptr)
 {
-	return ptr->name;
+        return ptr->name;
 }
 
 /**
@@ -2962,10 +2962,10 @@ prelude_string_t *idmef_user_id_get_name(idmef_user_id_t *ptr)
 
 void idmef_user_id_set_name(idmef_user_id_t *ptr, prelude_string_t *name)
 {
-	if ( ptr->name )
-		prelude_string_destroy(ptr->name);
+        if ( ptr->name )
+                prelude_string_destroy(ptr->name);
 
-	ptr->name = name;
+        ptr->name = name;
 }
 
 /**
@@ -2982,15 +2982,15 @@ int idmef_user_id_new_name(idmef_user_id_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->name )
-		prelude_string_destroy(ptr->name);
-		
-	retval = prelude_string_new(&ptr->name);
+        if ( ptr->name )
+                prelude_string_destroy(ptr->name);
+                
+        retval = prelude_string_new(&ptr->name);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->name;
-	return 0;
+        return 0;
 }
 
 /**
@@ -3003,7 +3003,7 @@ int idmef_user_id_new_name(idmef_user_id_t *ptr, prelude_string_t **ret)
  */
 uint32_t *idmef_user_id_get_number(idmef_user_id_t *ptr)
 {
-	return ptr->number_is_set ? &ptr->number : NULL;
+        return ptr->number_is_set ? &ptr->number : NULL;
 }
 
 /**
@@ -3018,8 +3018,8 @@ uint32_t *idmef_user_id_get_number(idmef_user_id_t *ptr)
 
 void idmef_user_id_set_number(idmef_user_id_t *ptr, uint32_t number)
 {
-	ptr->number = number;
-	ptr->number_is_set = 1;
+        ptr->number = number;
+        ptr->number_is_set = 1;
 }
 
 
@@ -3041,10 +3041,10 @@ void idmef_user_id_unset_number(idmef_user_id_t *ptr)
  */
 int idmef_user_id_new_number(idmef_user_id_t *ptr, uint32_t **ret)
 {
-	ptr->number_is_set = 1;
+        ptr->number_is_set = 1;
 
         *ret = &ptr->number;
-	return 0;
+        return 0;
 }
 
 /**
@@ -3057,16 +3057,16 @@ int idmef_user_id_new_number(idmef_user_id_t *ptr, uint32_t **ret)
  */
 int idmef_user_new(idmef_user_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	prelude_list_init(&(*ret)->user_id_list);
+        prelude_list_init(&(*ret)->user_id_list);
     
 
-	return 0;
+        return 0;
 
 }
 
@@ -3081,18 +3081,18 @@ int idmef_user_new(idmef_user_t **ret)
  */
 idmef_user_t *idmef_user_ref(idmef_user_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_user_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_user_t *ptr = p;
+        idmef_user_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
@@ -3100,28 +3100,28 @@ int idmef_user_get_child(void *p, idmef_class_child_id_t child, void **childptr)
                        return idmef_value_new_enum_from_numeric((idmef_value_t **) childptr, 
                                                                 IDMEF_CLASS_ID_USER_CATEGORY, ptr->category);
 
-		case 2:
+                case 2:
                         *childptr = &ptr->user_id_list;
-			return 0;
+                        return 0;
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_user_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_user_t *ptr = p;
+        idmef_user_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_user_new_ident(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_user_new_ident(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_user_new_category(ptr, (idmef_user_category_t **) ret);
+                case 1:
+                        return idmef_user_new_category(ptr, (idmef_user_category_t **) ret);
 
-		case 2: {
+                case 2: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -3153,34 +3153,34 @@ int idmef_user_new_child(void *p, idmef_class_child_id_t child, int n, void **re
                         }
 
                         return idmef_user_new_user_id(ptr, (idmef_user_id_t **) ret, n);
-		}
+                }
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_user_destroy_internal(idmef_user_t *ptr)
 {
 
-	if ( ptr->ident ) {
-		prelude_string_destroy(ptr->ident);
-		ptr->ident = NULL;
-	}
+        if ( ptr->ident ) {
+                prelude_string_destroy(ptr->ident);
+                ptr->ident = NULL;
+        }
 
-	{
-		prelude_list_t *n, *tmp;
-		idmef_user_id_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                idmef_user_id_t *entry;
 
-		prelude_list_for_each_safe(&ptr->user_id_list, tmp, n) {
-			entry = prelude_list_entry(tmp, idmef_user_id_t, list);
+                prelude_list_for_each_safe(&ptr->user_id_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_user_id_t, list);
                         prelude_list_del_init(&entry->list);
-			idmef_user_id_destroy(entry);
-		}
-	}
+                        idmef_user_id_destroy(entry);
+                }
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -3193,10 +3193,10 @@ static void idmef_user_destroy_internal(idmef_user_t *ptr)
 
 void idmef_user_destroy(idmef_user_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_user_destroy_internal(ptr);
+        idmef_user_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -3210,7 +3210,7 @@ void idmef_user_destroy(idmef_user_t *ptr)
  */
 prelude_string_t *idmef_user_get_ident(idmef_user_t *ptr)
 {
-	return ptr->ident;
+        return ptr->ident;
 }
 
 /**
@@ -3225,10 +3225,10 @@ prelude_string_t *idmef_user_get_ident(idmef_user_t *ptr)
 
 void idmef_user_set_ident(idmef_user_t *ptr, prelude_string_t *ident)
 {
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
 
-	ptr->ident = ident;
+        ptr->ident = ident;
 }
 
 /**
@@ -3245,15 +3245,15 @@ int idmef_user_new_ident(idmef_user_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
-		
-	retval = prelude_string_new(&ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
+                
+        retval = prelude_string_new(&ptr->ident);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->ident;
-	return 0;
+        return 0;
 }
 
 /**
@@ -3266,7 +3266,7 @@ int idmef_user_new_ident(idmef_user_t *ptr, prelude_string_t **ret)
  */
 idmef_user_category_t idmef_user_get_category(idmef_user_t *ptr)
 {
-	return ptr->category;
+        return ptr->category;
 }
 
 /**
@@ -3281,7 +3281,7 @@ idmef_user_category_t idmef_user_get_category(idmef_user_t *ptr)
 
 void idmef_user_set_category(idmef_user_t *ptr, idmef_user_category_t category)
 {
-	ptr->category = category;
+        ptr->category = category;
 }
 
 /**
@@ -3297,7 +3297,7 @@ void idmef_user_set_category(idmef_user_t *ptr, idmef_user_category_t category)
 int idmef_user_new_category(idmef_user_t *ptr, idmef_user_category_t **ret)
 {
         *ret = &ptr->category;
-	return 0;
+        return 0;
 }
 
 /**
@@ -3381,15 +3381,15 @@ int idmef_user_new_user_id(idmef_user_t *ptr, idmef_user_id_t **ret, int pos)
  */
 int idmef_address_new(idmef_address_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	prelude_list_init(&(*ret)->list);
+        prelude_list_init(&(*ret)->list);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	return 0;
+        return 0;
 
 }
 
@@ -3404,18 +3404,18 @@ int idmef_address_new(idmef_address_t **ret)
  */
 idmef_address_t *idmef_address_ref(idmef_address_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_address_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_address_t *ptr = p;
+        idmef_address_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
@@ -3426,44 +3426,44 @@ int idmef_address_get_child(void *p, idmef_class_child_id_t child, void **childp
                 case 2:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->vlan_name);
                 case 3:
-	               return (ptr->vlan_num_is_set) ? idmef_value_new_int32((idmef_value_t **) childptr, ptr->vlan_num) : 0;
+                       return (ptr->vlan_num_is_set) ? idmef_value_new_int32((idmef_value_t **) childptr, ptr->vlan_num) : 0;
         
                 case 4:
                        return get_value_from_string((idmef_value_t **) childptr, & ptr->address);        
                 case 5:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->netmask);
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_address_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_address_t *ptr = p;
+        idmef_address_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_address_new_ident(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_address_new_ident(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_address_new_category(ptr, (idmef_address_category_t **) ret);
+                case 1:
+                        return idmef_address_new_category(ptr, (idmef_address_category_t **) ret);
 
-		case 2:
-			return idmef_address_new_vlan_name(ptr, (prelude_string_t **) ret);
+                case 2:
+                        return idmef_address_new_vlan_name(ptr, (prelude_string_t **) ret);
 
-		case 3:
-			return idmef_address_new_vlan_num(ptr, (int32_t **) ret);
+                case 3:
+                        return idmef_address_new_vlan_num(ptr, (int32_t **) ret);
 
-		case 4:
-			return idmef_address_new_address(ptr, (prelude_string_t **) ret);
+                case 4:
+                        return idmef_address_new_address(ptr, (prelude_string_t **) ret);
 
-		case 5:
-			return idmef_address_new_netmask(ptr, (prelude_string_t **) ret);
+                case 5:
+                        return idmef_address_new_netmask(ptr, (prelude_string_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_address_destroy_internal(idmef_address_t *ptr)
@@ -3472,25 +3472,25 @@ static void idmef_address_destroy_internal(idmef_address_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
-	if ( ptr->ident ) {
-		prelude_string_destroy(ptr->ident);
-		ptr->ident = NULL;
-	}
+        if ( ptr->ident ) {
+                prelude_string_destroy(ptr->ident);
+                ptr->ident = NULL;
+        }
 
-	if ( ptr->vlan_name ) {
-		prelude_string_destroy(ptr->vlan_name);
-		ptr->vlan_name = NULL;
-	}
+        if ( ptr->vlan_name ) {
+                prelude_string_destroy(ptr->vlan_name);
+                ptr->vlan_name = NULL;
+        }
 
-	prelude_string_destroy_internal(&ptr->address);
+        prelude_string_destroy_internal(&ptr->address);
 
-	if ( ptr->netmask ) {
-		prelude_string_destroy(ptr->netmask);
-		ptr->netmask = NULL;
-	}
+        if ( ptr->netmask ) {
+                prelude_string_destroy(ptr->netmask);
+                ptr->netmask = NULL;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -3503,10 +3503,10 @@ static void idmef_address_destroy_internal(idmef_address_t *ptr)
 
 void idmef_address_destroy(idmef_address_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_address_destroy_internal(ptr);
+        idmef_address_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -3520,7 +3520,7 @@ void idmef_address_destroy(idmef_address_t *ptr)
  */
 prelude_string_t *idmef_address_get_ident(idmef_address_t *ptr)
 {
-	return ptr->ident;
+        return ptr->ident;
 }
 
 /**
@@ -3535,10 +3535,10 @@ prelude_string_t *idmef_address_get_ident(idmef_address_t *ptr)
 
 void idmef_address_set_ident(idmef_address_t *ptr, prelude_string_t *ident)
 {
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
 
-	ptr->ident = ident;
+        ptr->ident = ident;
 }
 
 /**
@@ -3555,15 +3555,15 @@ int idmef_address_new_ident(idmef_address_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
-		
-	retval = prelude_string_new(&ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
+                
+        retval = prelude_string_new(&ptr->ident);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->ident;
-	return 0;
+        return 0;
 }
 
 /**
@@ -3576,7 +3576,7 @@ int idmef_address_new_ident(idmef_address_t *ptr, prelude_string_t **ret)
  */
 idmef_address_category_t idmef_address_get_category(idmef_address_t *ptr)
 {
-	return ptr->category;
+        return ptr->category;
 }
 
 /**
@@ -3591,7 +3591,7 @@ idmef_address_category_t idmef_address_get_category(idmef_address_t *ptr)
 
 void idmef_address_set_category(idmef_address_t *ptr, idmef_address_category_t category)
 {
-	ptr->category = category;
+        ptr->category = category;
 }
 
 /**
@@ -3607,7 +3607,7 @@ void idmef_address_set_category(idmef_address_t *ptr, idmef_address_category_t c
 int idmef_address_new_category(idmef_address_t *ptr, idmef_address_category_t **ret)
 {
         *ret = &ptr->category;
-	return 0;
+        return 0;
 }
 
 /**
@@ -3620,7 +3620,7 @@ int idmef_address_new_category(idmef_address_t *ptr, idmef_address_category_t **
  */
 prelude_string_t *idmef_address_get_vlan_name(idmef_address_t *ptr)
 {
-	return ptr->vlan_name;
+        return ptr->vlan_name;
 }
 
 /**
@@ -3635,10 +3635,10 @@ prelude_string_t *idmef_address_get_vlan_name(idmef_address_t *ptr)
 
 void idmef_address_set_vlan_name(idmef_address_t *ptr, prelude_string_t *vlan_name)
 {
-	if ( ptr->vlan_name )
-		prelude_string_destroy(ptr->vlan_name);
+        if ( ptr->vlan_name )
+                prelude_string_destroy(ptr->vlan_name);
 
-	ptr->vlan_name = vlan_name;
+        ptr->vlan_name = vlan_name;
 }
 
 /**
@@ -3655,15 +3655,15 @@ int idmef_address_new_vlan_name(idmef_address_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->vlan_name )
-		prelude_string_destroy(ptr->vlan_name);
-		
-	retval = prelude_string_new(&ptr->vlan_name);
+        if ( ptr->vlan_name )
+                prelude_string_destroy(ptr->vlan_name);
+                
+        retval = prelude_string_new(&ptr->vlan_name);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->vlan_name;
-	return 0;
+        return 0;
 }
 
 /**
@@ -3676,7 +3676,7 @@ int idmef_address_new_vlan_name(idmef_address_t *ptr, prelude_string_t **ret)
  */
 int32_t *idmef_address_get_vlan_num(idmef_address_t *ptr)
 {
-	return ptr->vlan_num_is_set ? &ptr->vlan_num : NULL;
+        return ptr->vlan_num_is_set ? &ptr->vlan_num : NULL;
 }
 
 /**
@@ -3691,8 +3691,8 @@ int32_t *idmef_address_get_vlan_num(idmef_address_t *ptr)
 
 void idmef_address_set_vlan_num(idmef_address_t *ptr, int32_t vlan_num)
 {
-	ptr->vlan_num = vlan_num;
-	ptr->vlan_num_is_set = 1;
+        ptr->vlan_num = vlan_num;
+        ptr->vlan_num_is_set = 1;
 }
 
 
@@ -3714,10 +3714,10 @@ void idmef_address_unset_vlan_num(idmef_address_t *ptr)
  */
 int idmef_address_new_vlan_num(idmef_address_t *ptr, int32_t **ret)
 {
-	ptr->vlan_num_is_set = 1;
+        ptr->vlan_num_is_set = 1;
 
         *ret = &ptr->vlan_num;
-	return 0;
+        return 0;
 }
 
 /**
@@ -3730,7 +3730,7 @@ int idmef_address_new_vlan_num(idmef_address_t *ptr, int32_t **ret)
  */
 prelude_string_t *idmef_address_get_address(idmef_address_t *ptr)
 {
-	return &ptr->address;
+        return &ptr->address;
 }
 
 /**
@@ -3748,7 +3748,7 @@ void idmef_address_set_address(idmef_address_t *ptr, prelude_string_t *address)
         prelude_string_destroy_internal(&ptr->address);
         if ( address ) {
                 memcpy(&ptr->address, address, sizeof (ptr->address));
-	        free(address);
+                free(address);
         }
 }
 
@@ -3764,10 +3764,10 @@ void idmef_address_set_address(idmef_address_t *ptr, prelude_string_t *address)
  */
 int idmef_address_new_address(idmef_address_t *ptr, prelude_string_t **ret)
 {
-	prelude_string_destroy_internal(&ptr->address);
+        prelude_string_destroy_internal(&ptr->address);
 
         *ret = &ptr->address;
-	return 0;
+        return 0;
 }
 
 /**
@@ -3780,7 +3780,7 @@ int idmef_address_new_address(idmef_address_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_address_get_netmask(idmef_address_t *ptr)
 {
-	return ptr->netmask;
+        return ptr->netmask;
 }
 
 /**
@@ -3795,10 +3795,10 @@ prelude_string_t *idmef_address_get_netmask(idmef_address_t *ptr)
 
 void idmef_address_set_netmask(idmef_address_t *ptr, prelude_string_t *netmask)
 {
-	if ( ptr->netmask )
-		prelude_string_destroy(ptr->netmask);
+        if ( ptr->netmask )
+                prelude_string_destroy(ptr->netmask);
 
-	ptr->netmask = netmask;
+        ptr->netmask = netmask;
 }
 
 /**
@@ -3815,15 +3815,15 @@ int idmef_address_new_netmask(idmef_address_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->netmask )
-		prelude_string_destroy(ptr->netmask);
-		
-	retval = prelude_string_new(&ptr->netmask);
+        if ( ptr->netmask )
+                prelude_string_destroy(ptr->netmask);
+                
+        retval = prelude_string_new(&ptr->netmask);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->netmask;
-	return 0;
+        return 0;
 }
 
 /**
@@ -3836,19 +3836,19 @@ int idmef_address_new_netmask(idmef_address_t *ptr, prelude_string_t **ret)
  */
 int idmef_process_new(idmef_process_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	prelude_list_init(&(*ret)->arg_list);
+        prelude_list_init(&(*ret)->arg_list);
     
 
-	prelude_list_init(&(*ret)->env_list);
+        prelude_list_init(&(*ret)->env_list);
     
 
-	return 0;
+        return 0;
 
 }
 
@@ -3863,60 +3863,60 @@ int idmef_process_new(idmef_process_t **ret)
  */
 idmef_process_t *idmef_process_ref(idmef_process_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_process_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_process_t *ptr = p;
+        idmef_process_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
                 case 1:
                        return get_value_from_string((idmef_value_t **) childptr, & ptr->name);
                 case 2:
-	               return (ptr->pid_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->pid) : 0;
+                       return (ptr->pid_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->pid) : 0;
         
                 case 3:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->path);
-		case 4:
+                case 4:
                         *childptr = &ptr->arg_list;
-			return 0;
+                        return 0;
 
-		case 5:
+                case 5:
                         *childptr = &ptr->env_list;
-			return 0;
+                        return 0;
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_process_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_process_t *ptr = p;
+        idmef_process_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_process_new_ident(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_process_new_ident(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_process_new_name(ptr, (prelude_string_t **) ret);
+                case 1:
+                        return idmef_process_new_name(ptr, (prelude_string_t **) ret);
 
-		case 2:
-			return idmef_process_new_pid(ptr, (uint32_t **) ret);
+                case 2:
+                        return idmef_process_new_pid(ptr, (uint32_t **) ret);
 
-		case 3:
-			return idmef_process_new_path(ptr, (prelude_string_t **) ret);
+                case 3:
+                        return idmef_process_new_path(ptr, (prelude_string_t **) ret);
 
-		case 4: {
+                case 4: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -3948,9 +3948,9 @@ int idmef_process_new_child(void *p, idmef_class_child_id_t child, int n, void *
                         }
 
                         return idmef_process_new_arg(ptr, (prelude_string_t **) ret, n);
-		}
+                }
 
-		case 5: {
+                case 5: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -3982,52 +3982,52 @@ int idmef_process_new_child(void *p, idmef_class_child_id_t child, int n, void *
                         }
 
                         return idmef_process_new_env(ptr, (prelude_string_t **) ret, n);
-		}
+                }
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_process_destroy_internal(idmef_process_t *ptr)
 {
 
-	if ( ptr->ident ) {
-		prelude_string_destroy(ptr->ident);
-		ptr->ident = NULL;
-	}
+        if ( ptr->ident ) {
+                prelude_string_destroy(ptr->ident);
+                ptr->ident = NULL;
+        }
 
-	prelude_string_destroy_internal(&ptr->name);
+        prelude_string_destroy_internal(&ptr->name);
 
-	if ( ptr->path ) {
-		prelude_string_destroy(ptr->path);
-		ptr->path = NULL;
-	}
+        if ( ptr->path ) {
+                prelude_string_destroy(ptr->path);
+                ptr->path = NULL;
+        }
 
-	{
-		prelude_list_t *n, *tmp;
-		prelude_string_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                prelude_string_t *entry;
 
-		prelude_list_for_each_safe(&ptr->arg_list, tmp, n) {
-			entry = prelude_list_entry(tmp, prelude_string_t, list);
+                prelude_list_for_each_safe(&ptr->arg_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, prelude_string_t, list);
                         prelude_list_del_init(&entry->list);
-			prelude_string_destroy(entry);
-		}
-	}
+                        prelude_string_destroy(entry);
+                }
+        }
 
-	{
-		prelude_list_t *n, *tmp;
-		prelude_string_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                prelude_string_t *entry;
 
-		prelude_list_for_each_safe(&ptr->env_list, tmp, n) {
-			entry = prelude_list_entry(tmp, prelude_string_t, list);
+                prelude_list_for_each_safe(&ptr->env_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, prelude_string_t, list);
                         prelude_list_del_init(&entry->list);
-			prelude_string_destroy(entry);
-		}
-	}
+                        prelude_string_destroy(entry);
+                }
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -4040,10 +4040,10 @@ static void idmef_process_destroy_internal(idmef_process_t *ptr)
 
 void idmef_process_destroy(idmef_process_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_process_destroy_internal(ptr);
+        idmef_process_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -4057,7 +4057,7 @@ void idmef_process_destroy(idmef_process_t *ptr)
  */
 prelude_string_t *idmef_process_get_ident(idmef_process_t *ptr)
 {
-	return ptr->ident;
+        return ptr->ident;
 }
 
 /**
@@ -4072,10 +4072,10 @@ prelude_string_t *idmef_process_get_ident(idmef_process_t *ptr)
 
 void idmef_process_set_ident(idmef_process_t *ptr, prelude_string_t *ident)
 {
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
 
-	ptr->ident = ident;
+        ptr->ident = ident;
 }
 
 /**
@@ -4092,15 +4092,15 @@ int idmef_process_new_ident(idmef_process_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
-		
-	retval = prelude_string_new(&ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
+                
+        retval = prelude_string_new(&ptr->ident);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->ident;
-	return 0;
+        return 0;
 }
 
 /**
@@ -4113,7 +4113,7 @@ int idmef_process_new_ident(idmef_process_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_process_get_name(idmef_process_t *ptr)
 {
-	return &ptr->name;
+        return &ptr->name;
 }
 
 /**
@@ -4131,7 +4131,7 @@ void idmef_process_set_name(idmef_process_t *ptr, prelude_string_t *name)
         prelude_string_destroy_internal(&ptr->name);
         if ( name ) {
                 memcpy(&ptr->name, name, sizeof (ptr->name));
-	        free(name);
+                free(name);
         }
 }
 
@@ -4147,10 +4147,10 @@ void idmef_process_set_name(idmef_process_t *ptr, prelude_string_t *name)
  */
 int idmef_process_new_name(idmef_process_t *ptr, prelude_string_t **ret)
 {
-	prelude_string_destroy_internal(&ptr->name);
+        prelude_string_destroy_internal(&ptr->name);
 
         *ret = &ptr->name;
-	return 0;
+        return 0;
 }
 
 /**
@@ -4163,7 +4163,7 @@ int idmef_process_new_name(idmef_process_t *ptr, prelude_string_t **ret)
  */
 uint32_t *idmef_process_get_pid(idmef_process_t *ptr)
 {
-	return ptr->pid_is_set ? &ptr->pid : NULL;
+        return ptr->pid_is_set ? &ptr->pid : NULL;
 }
 
 /**
@@ -4178,8 +4178,8 @@ uint32_t *idmef_process_get_pid(idmef_process_t *ptr)
 
 void idmef_process_set_pid(idmef_process_t *ptr, uint32_t pid)
 {
-	ptr->pid = pid;
-	ptr->pid_is_set = 1;
+        ptr->pid = pid;
+        ptr->pid_is_set = 1;
 }
 
 
@@ -4201,10 +4201,10 @@ void idmef_process_unset_pid(idmef_process_t *ptr)
  */
 int idmef_process_new_pid(idmef_process_t *ptr, uint32_t **ret)
 {
-	ptr->pid_is_set = 1;
+        ptr->pid_is_set = 1;
 
         *ret = &ptr->pid;
-	return 0;
+        return 0;
 }
 
 /**
@@ -4217,7 +4217,7 @@ int idmef_process_new_pid(idmef_process_t *ptr, uint32_t **ret)
  */
 prelude_string_t *idmef_process_get_path(idmef_process_t *ptr)
 {
-	return ptr->path;
+        return ptr->path;
 }
 
 /**
@@ -4232,10 +4232,10 @@ prelude_string_t *idmef_process_get_path(idmef_process_t *ptr)
 
 void idmef_process_set_path(idmef_process_t *ptr, prelude_string_t *path)
 {
-	if ( ptr->path )
-		prelude_string_destroy(ptr->path);
+        if ( ptr->path )
+                prelude_string_destroy(ptr->path);
 
-	ptr->path = path;
+        ptr->path = path;
 }
 
 /**
@@ -4252,15 +4252,15 @@ int idmef_process_new_path(idmef_process_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->path )
-		prelude_string_destroy(ptr->path);
-		
-	retval = prelude_string_new(&ptr->path);
+        if ( ptr->path )
+                prelude_string_destroy(ptr->path);
+                
+        retval = prelude_string_new(&ptr->path);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->path;
-	return 0;
+        return 0;
 }
 
 /**
@@ -4415,16 +4415,16 @@ int idmef_process_new_env(idmef_process_t *ptr, prelude_string_t **ret, int pos)
  */
 int idmef_web_service_new(idmef_web_service_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	prelude_list_init(&(*ret)->arg_list);
+        prelude_list_init(&(*ret)->arg_list);
     
 
-	return 0;
+        return 0;
 
 }
 
@@ -4439,18 +4439,18 @@ int idmef_web_service_new(idmef_web_service_t **ret)
  */
 idmef_web_service_t *idmef_web_service_ref(idmef_web_service_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_web_service_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_web_service_t *ptr = p;
+        idmef_web_service_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr, & ptr->url);        
@@ -4458,31 +4458,31 @@ int idmef_web_service_get_child(void *p, idmef_class_child_id_t child, void **ch
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->cgi);        
                 case 2:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->http_method);
-		case 3:
+                case 3:
                         *childptr = &ptr->arg_list;
-			return 0;
+                        return 0;
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_web_service_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_web_service_t *ptr = p;
+        idmef_web_service_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_web_service_new_url(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_web_service_new_url(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_web_service_new_cgi(ptr, (prelude_string_t **) ret);
+                case 1:
+                        return idmef_web_service_new_cgi(ptr, (prelude_string_t **) ret);
 
-		case 2:
-			return idmef_web_service_new_http_method(ptr, (prelude_string_t **) ret);
+                case 2:
+                        return idmef_web_service_new_http_method(ptr, (prelude_string_t **) ret);
 
-		case 3: {
+                case 3: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -4514,41 +4514,41 @@ int idmef_web_service_new_child(void *p, idmef_class_child_id_t child, int n, vo
                         }
 
                         return idmef_web_service_new_arg(ptr, (prelude_string_t **) ret, n);
-		}
+                }
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_web_service_destroy_internal(idmef_web_service_t *ptr)
 {
 
-	prelude_string_destroy_internal(&ptr->url);
+        prelude_string_destroy_internal(&ptr->url);
 
-	if ( ptr->cgi ) {
-		prelude_string_destroy(ptr->cgi);
-		ptr->cgi = NULL;
-	}
+        if ( ptr->cgi ) {
+                prelude_string_destroy(ptr->cgi);
+                ptr->cgi = NULL;
+        }
 
-	if ( ptr->http_method ) {
-		prelude_string_destroy(ptr->http_method);
-		ptr->http_method = NULL;
-	}
+        if ( ptr->http_method ) {
+                prelude_string_destroy(ptr->http_method);
+                ptr->http_method = NULL;
+        }
 
-	{
-		prelude_list_t *n, *tmp;
-		prelude_string_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                prelude_string_t *entry;
 
-		prelude_list_for_each_safe(&ptr->arg_list, tmp, n) {
-			entry = prelude_list_entry(tmp, prelude_string_t, list);
+                prelude_list_for_each_safe(&ptr->arg_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, prelude_string_t, list);
                         prelude_list_del_init(&entry->list);
-			prelude_string_destroy(entry);
-		}
-	}
+                        prelude_string_destroy(entry);
+                }
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -4561,10 +4561,10 @@ static void idmef_web_service_destroy_internal(idmef_web_service_t *ptr)
 
 void idmef_web_service_destroy(idmef_web_service_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_web_service_destroy_internal(ptr);
+        idmef_web_service_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -4578,7 +4578,7 @@ void idmef_web_service_destroy(idmef_web_service_t *ptr)
  */
 prelude_string_t *idmef_web_service_get_url(idmef_web_service_t *ptr)
 {
-	return &ptr->url;
+        return &ptr->url;
 }
 
 /**
@@ -4596,7 +4596,7 @@ void idmef_web_service_set_url(idmef_web_service_t *ptr, prelude_string_t *url)
         prelude_string_destroy_internal(&ptr->url);
         if ( url ) {
                 memcpy(&ptr->url, url, sizeof (ptr->url));
-	        free(url);
+                free(url);
         }
 }
 
@@ -4612,10 +4612,10 @@ void idmef_web_service_set_url(idmef_web_service_t *ptr, prelude_string_t *url)
  */
 int idmef_web_service_new_url(idmef_web_service_t *ptr, prelude_string_t **ret)
 {
-	prelude_string_destroy_internal(&ptr->url);
+        prelude_string_destroy_internal(&ptr->url);
 
         *ret = &ptr->url;
-	return 0;
+        return 0;
 }
 
 /**
@@ -4628,7 +4628,7 @@ int idmef_web_service_new_url(idmef_web_service_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_web_service_get_cgi(idmef_web_service_t *ptr)
 {
-	return ptr->cgi;
+        return ptr->cgi;
 }
 
 /**
@@ -4643,10 +4643,10 @@ prelude_string_t *idmef_web_service_get_cgi(idmef_web_service_t *ptr)
 
 void idmef_web_service_set_cgi(idmef_web_service_t *ptr, prelude_string_t *cgi)
 {
-	if ( ptr->cgi )
-		prelude_string_destroy(ptr->cgi);
+        if ( ptr->cgi )
+                prelude_string_destroy(ptr->cgi);
 
-	ptr->cgi = cgi;
+        ptr->cgi = cgi;
 }
 
 /**
@@ -4663,15 +4663,15 @@ int idmef_web_service_new_cgi(idmef_web_service_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->cgi )
-		prelude_string_destroy(ptr->cgi);
-		
-	retval = prelude_string_new(&ptr->cgi);
+        if ( ptr->cgi )
+                prelude_string_destroy(ptr->cgi);
+                
+        retval = prelude_string_new(&ptr->cgi);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->cgi;
-	return 0;
+        return 0;
 }
 
 /**
@@ -4684,7 +4684,7 @@ int idmef_web_service_new_cgi(idmef_web_service_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_web_service_get_http_method(idmef_web_service_t *ptr)
 {
-	return ptr->http_method;
+        return ptr->http_method;
 }
 
 /**
@@ -4699,10 +4699,10 @@ prelude_string_t *idmef_web_service_get_http_method(idmef_web_service_t *ptr)
 
 void idmef_web_service_set_http_method(idmef_web_service_t *ptr, prelude_string_t *http_method)
 {
-	if ( ptr->http_method )
-		prelude_string_destroy(ptr->http_method);
+        if ( ptr->http_method )
+                prelude_string_destroy(ptr->http_method);
 
-	ptr->http_method = http_method;
+        ptr->http_method = http_method;
 }
 
 /**
@@ -4719,15 +4719,15 @@ int idmef_web_service_new_http_method(idmef_web_service_t *ptr, prelude_string_t
 {
         int retval;
 
-	if ( ptr->http_method )
-		prelude_string_destroy(ptr->http_method);
-		
-	retval = prelude_string_new(&ptr->http_method);
+        if ( ptr->http_method )
+                prelude_string_destroy(ptr->http_method);
+                
+        retval = prelude_string_new(&ptr->http_method);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->http_method;
-	return 0;
+        return 0;
 }
 
 /**
@@ -4811,13 +4811,13 @@ int idmef_web_service_new_arg(idmef_web_service_t *ptr, prelude_string_t **ret, 
  */
 int idmef_snmp_service_new(idmef_snmp_service_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	return 0;
+        return 0;
 
 }
 
@@ -4832,18 +4832,18 @@ int idmef_snmp_service_new(idmef_snmp_service_t **ret)
  */
 idmef_snmp_service_t *idmef_snmp_service_ref(idmef_snmp_service_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_snmp_service_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_snmp_service_t *ptr = p;
+        idmef_snmp_service_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->oid);        
@@ -4857,75 +4857,75 @@ int idmef_snmp_service_get_child(void *p, idmef_class_child_id_t child, void **c
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->context_engine_id);        
                 case 5:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->command);
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_snmp_service_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_snmp_service_t *ptr = p;
+        idmef_snmp_service_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_snmp_service_new_oid(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_snmp_service_new_oid(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_snmp_service_new_community(ptr, (prelude_string_t **) ret);
+                case 1:
+                        return idmef_snmp_service_new_community(ptr, (prelude_string_t **) ret);
 
-		case 2:
-			return idmef_snmp_service_new_security_name(ptr, (prelude_string_t **) ret);
+                case 2:
+                        return idmef_snmp_service_new_security_name(ptr, (prelude_string_t **) ret);
 
-		case 3:
-			return idmef_snmp_service_new_context_name(ptr, (prelude_string_t **) ret);
+                case 3:
+                        return idmef_snmp_service_new_context_name(ptr, (prelude_string_t **) ret);
 
-		case 4:
-			return idmef_snmp_service_new_context_engine_id(ptr, (prelude_string_t **) ret);
+                case 4:
+                        return idmef_snmp_service_new_context_engine_id(ptr, (prelude_string_t **) ret);
 
-		case 5:
-			return idmef_snmp_service_new_command(ptr, (prelude_string_t **) ret);
+                case 5:
+                        return idmef_snmp_service_new_command(ptr, (prelude_string_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_snmp_service_destroy_internal(idmef_snmp_service_t *ptr)
 {
 
-	if ( ptr->oid ) {
-		prelude_string_destroy(ptr->oid);
-		ptr->oid = NULL;
-	}
+        if ( ptr->oid ) {
+                prelude_string_destroy(ptr->oid);
+                ptr->oid = NULL;
+        }
 
-	if ( ptr->community ) {
-		prelude_string_destroy(ptr->community);
-		ptr->community = NULL;
-	}
+        if ( ptr->community ) {
+                prelude_string_destroy(ptr->community);
+                ptr->community = NULL;
+        }
 
-	if ( ptr->security_name ) {
-		prelude_string_destroy(ptr->security_name);
-		ptr->security_name = NULL;
-	}
+        if ( ptr->security_name ) {
+                prelude_string_destroy(ptr->security_name);
+                ptr->security_name = NULL;
+        }
 
-	if ( ptr->context_name ) {
-		prelude_string_destroy(ptr->context_name);
-		ptr->context_name = NULL;
-	}
+        if ( ptr->context_name ) {
+                prelude_string_destroy(ptr->context_name);
+                ptr->context_name = NULL;
+        }
 
-	if ( ptr->context_engine_id ) {
-		prelude_string_destroy(ptr->context_engine_id);
-		ptr->context_engine_id = NULL;
-	}
+        if ( ptr->context_engine_id ) {
+                prelude_string_destroy(ptr->context_engine_id);
+                ptr->context_engine_id = NULL;
+        }
 
-	if ( ptr->command ) {
-		prelude_string_destroy(ptr->command);
-		ptr->command = NULL;
-	}
+        if ( ptr->command ) {
+                prelude_string_destroy(ptr->command);
+                ptr->command = NULL;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -4938,10 +4938,10 @@ static void idmef_snmp_service_destroy_internal(idmef_snmp_service_t *ptr)
 
 void idmef_snmp_service_destroy(idmef_snmp_service_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_snmp_service_destroy_internal(ptr);
+        idmef_snmp_service_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -4955,7 +4955,7 @@ void idmef_snmp_service_destroy(idmef_snmp_service_t *ptr)
  */
 prelude_string_t *idmef_snmp_service_get_oid(idmef_snmp_service_t *ptr)
 {
-	return ptr->oid;
+        return ptr->oid;
 }
 
 /**
@@ -4970,10 +4970,10 @@ prelude_string_t *idmef_snmp_service_get_oid(idmef_snmp_service_t *ptr)
 
 void idmef_snmp_service_set_oid(idmef_snmp_service_t *ptr, prelude_string_t *oid)
 {
-	if ( ptr->oid )
-		prelude_string_destroy(ptr->oid);
+        if ( ptr->oid )
+                prelude_string_destroy(ptr->oid);
 
-	ptr->oid = oid;
+        ptr->oid = oid;
 }
 
 /**
@@ -4990,15 +4990,15 @@ int idmef_snmp_service_new_oid(idmef_snmp_service_t *ptr, prelude_string_t **ret
 {
         int retval;
 
-	if ( ptr->oid )
-		prelude_string_destroy(ptr->oid);
-		
-	retval = prelude_string_new(&ptr->oid);
+        if ( ptr->oid )
+                prelude_string_destroy(ptr->oid);
+                
+        retval = prelude_string_new(&ptr->oid);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->oid;
-	return 0;
+        return 0;
 }
 
 /**
@@ -5011,7 +5011,7 @@ int idmef_snmp_service_new_oid(idmef_snmp_service_t *ptr, prelude_string_t **ret
  */
 prelude_string_t *idmef_snmp_service_get_community(idmef_snmp_service_t *ptr)
 {
-	return ptr->community;
+        return ptr->community;
 }
 
 /**
@@ -5026,10 +5026,10 @@ prelude_string_t *idmef_snmp_service_get_community(idmef_snmp_service_t *ptr)
 
 void idmef_snmp_service_set_community(idmef_snmp_service_t *ptr, prelude_string_t *community)
 {
-	if ( ptr->community )
-		prelude_string_destroy(ptr->community);
+        if ( ptr->community )
+                prelude_string_destroy(ptr->community);
 
-	ptr->community = community;
+        ptr->community = community;
 }
 
 /**
@@ -5046,15 +5046,15 @@ int idmef_snmp_service_new_community(idmef_snmp_service_t *ptr, prelude_string_t
 {
         int retval;
 
-	if ( ptr->community )
-		prelude_string_destroy(ptr->community);
-		
-	retval = prelude_string_new(&ptr->community);
+        if ( ptr->community )
+                prelude_string_destroy(ptr->community);
+                
+        retval = prelude_string_new(&ptr->community);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->community;
-	return 0;
+        return 0;
 }
 
 /**
@@ -5067,7 +5067,7 @@ int idmef_snmp_service_new_community(idmef_snmp_service_t *ptr, prelude_string_t
  */
 prelude_string_t *idmef_snmp_service_get_security_name(idmef_snmp_service_t *ptr)
 {
-	return ptr->security_name;
+        return ptr->security_name;
 }
 
 /**
@@ -5082,10 +5082,10 @@ prelude_string_t *idmef_snmp_service_get_security_name(idmef_snmp_service_t *ptr
 
 void idmef_snmp_service_set_security_name(idmef_snmp_service_t *ptr, prelude_string_t *security_name)
 {
-	if ( ptr->security_name )
-		prelude_string_destroy(ptr->security_name);
+        if ( ptr->security_name )
+                prelude_string_destroy(ptr->security_name);
 
-	ptr->security_name = security_name;
+        ptr->security_name = security_name;
 }
 
 /**
@@ -5102,15 +5102,15 @@ int idmef_snmp_service_new_security_name(idmef_snmp_service_t *ptr, prelude_stri
 {
         int retval;
 
-	if ( ptr->security_name )
-		prelude_string_destroy(ptr->security_name);
-		
-	retval = prelude_string_new(&ptr->security_name);
+        if ( ptr->security_name )
+                prelude_string_destroy(ptr->security_name);
+                
+        retval = prelude_string_new(&ptr->security_name);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->security_name;
-	return 0;
+        return 0;
 }
 
 /**
@@ -5123,7 +5123,7 @@ int idmef_snmp_service_new_security_name(idmef_snmp_service_t *ptr, prelude_stri
  */
 prelude_string_t *idmef_snmp_service_get_context_name(idmef_snmp_service_t *ptr)
 {
-	return ptr->context_name;
+        return ptr->context_name;
 }
 
 /**
@@ -5138,10 +5138,10 @@ prelude_string_t *idmef_snmp_service_get_context_name(idmef_snmp_service_t *ptr)
 
 void idmef_snmp_service_set_context_name(idmef_snmp_service_t *ptr, prelude_string_t *context_name)
 {
-	if ( ptr->context_name )
-		prelude_string_destroy(ptr->context_name);
+        if ( ptr->context_name )
+                prelude_string_destroy(ptr->context_name);
 
-	ptr->context_name = context_name;
+        ptr->context_name = context_name;
 }
 
 /**
@@ -5158,15 +5158,15 @@ int idmef_snmp_service_new_context_name(idmef_snmp_service_t *ptr, prelude_strin
 {
         int retval;
 
-	if ( ptr->context_name )
-		prelude_string_destroy(ptr->context_name);
-		
-	retval = prelude_string_new(&ptr->context_name);
+        if ( ptr->context_name )
+                prelude_string_destroy(ptr->context_name);
+                
+        retval = prelude_string_new(&ptr->context_name);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->context_name;
-	return 0;
+        return 0;
 }
 
 /**
@@ -5179,7 +5179,7 @@ int idmef_snmp_service_new_context_name(idmef_snmp_service_t *ptr, prelude_strin
  */
 prelude_string_t *idmef_snmp_service_get_context_engine_id(idmef_snmp_service_t *ptr)
 {
-	return ptr->context_engine_id;
+        return ptr->context_engine_id;
 }
 
 /**
@@ -5194,10 +5194,10 @@ prelude_string_t *idmef_snmp_service_get_context_engine_id(idmef_snmp_service_t 
 
 void idmef_snmp_service_set_context_engine_id(idmef_snmp_service_t *ptr, prelude_string_t *context_engine_id)
 {
-	if ( ptr->context_engine_id )
-		prelude_string_destroy(ptr->context_engine_id);
+        if ( ptr->context_engine_id )
+                prelude_string_destroy(ptr->context_engine_id);
 
-	ptr->context_engine_id = context_engine_id;
+        ptr->context_engine_id = context_engine_id;
 }
 
 /**
@@ -5214,15 +5214,15 @@ int idmef_snmp_service_new_context_engine_id(idmef_snmp_service_t *ptr, prelude_
 {
         int retval;
 
-	if ( ptr->context_engine_id )
-		prelude_string_destroy(ptr->context_engine_id);
-		
-	retval = prelude_string_new(&ptr->context_engine_id);
+        if ( ptr->context_engine_id )
+                prelude_string_destroy(ptr->context_engine_id);
+                
+        retval = prelude_string_new(&ptr->context_engine_id);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->context_engine_id;
-	return 0;
+        return 0;
 }
 
 /**
@@ -5235,7 +5235,7 @@ int idmef_snmp_service_new_context_engine_id(idmef_snmp_service_t *ptr, prelude_
  */
 prelude_string_t *idmef_snmp_service_get_command(idmef_snmp_service_t *ptr)
 {
-	return ptr->command;
+        return ptr->command;
 }
 
 /**
@@ -5250,10 +5250,10 @@ prelude_string_t *idmef_snmp_service_get_command(idmef_snmp_service_t *ptr)
 
 void idmef_snmp_service_set_command(idmef_snmp_service_t *ptr, prelude_string_t *command)
 {
-	if ( ptr->command )
-		prelude_string_destroy(ptr->command);
+        if ( ptr->command )
+                prelude_string_destroy(ptr->command);
 
-	ptr->command = command;
+        ptr->command = command;
 }
 
 /**
@@ -5270,15 +5270,15 @@ int idmef_snmp_service_new_command(idmef_snmp_service_t *ptr, prelude_string_t *
 {
         int retval;
 
-	if ( ptr->command )
-		prelude_string_destroy(ptr->command);
-		
-	retval = prelude_string_new(&ptr->command);
+        if ( ptr->command )
+                prelude_string_destroy(ptr->command);
+                
+        retval = prelude_string_new(&ptr->command);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->command;
-	return 0;
+        return 0;
 }
 
 /**
@@ -5291,13 +5291,13 @@ int idmef_snmp_service_new_command(idmef_snmp_service_t *ptr, prelude_string_t *
  */
 int idmef_service_new(idmef_service_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	return 0;
+        return 0;
 
 }
 
@@ -5312,138 +5312,138 @@ int idmef_service_new(idmef_service_t **ret)
  */
 idmef_service_t *idmef_service_ref(idmef_service_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_service_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_service_t *ptr = p;
+        idmef_service_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);
                 case 1:
-	               return (ptr->ip_version_is_set) ? idmef_value_new_uint8((idmef_value_t **) childptr, ptr->ip_version) : 0;
+                       return (ptr->ip_version_is_set) ? idmef_value_new_uint8((idmef_value_t **) childptr, ptr->ip_version) : 0;
 
                 case 2:
-	               return (ptr->iana_protocol_number_is_set) ? idmef_value_new_uint8((idmef_value_t **) childptr, ptr->iana_protocol_number) : 0;
+                       return (ptr->iana_protocol_number_is_set) ? idmef_value_new_uint8((idmef_value_t **) childptr, ptr->iana_protocol_number) : 0;
         
                 case 3:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->iana_protocol_name);        
                 case 4:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->name);
                 case 5:
-	               return (ptr->port_is_set) ? idmef_value_new_uint16((idmef_value_t **) childptr, ptr->port) : 0;
+                       return (ptr->port_is_set) ? idmef_value_new_uint16((idmef_value_t **) childptr, ptr->port) : 0;
         
                 case 6:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->portlist);        
                 case 7:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->protocol);
-		case 8:
+                case 8:
                         *childptr = ( ptr->type == IDMEF_SERVICE_TYPE_WEB ) ? ptr->specific.web_service : NULL;
-			return 0;   	   
+                        return 0;          
 
-		case 9:
+                case 9:
                         *childptr = ( ptr->type == IDMEF_SERVICE_TYPE_SNMP ) ? ptr->specific.snmp_service : NULL;
-			return 0;   	   
+                        return 0;          
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_service_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_service_t *ptr = p;
+        idmef_service_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_service_new_ident(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_service_new_ident(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_service_new_ip_version(ptr, (uint8_t **) ret);
+                case 1:
+                        return idmef_service_new_ip_version(ptr, (uint8_t **) ret);
 
-		case 2:
-			return idmef_service_new_iana_protocol_number(ptr, (uint8_t **) ret);
+                case 2:
+                        return idmef_service_new_iana_protocol_number(ptr, (uint8_t **) ret);
 
-		case 3:
-			return idmef_service_new_iana_protocol_name(ptr, (prelude_string_t **) ret);
+                case 3:
+                        return idmef_service_new_iana_protocol_name(ptr, (prelude_string_t **) ret);
 
-		case 4:
-			return idmef_service_new_name(ptr, (prelude_string_t **) ret);
+                case 4:
+                        return idmef_service_new_name(ptr, (prelude_string_t **) ret);
 
-		case 5:
-			return idmef_service_new_port(ptr, (uint16_t **) ret);
+                case 5:
+                        return idmef_service_new_port(ptr, (uint16_t **) ret);
 
-		case 6:
-			return idmef_service_new_portlist(ptr, (prelude_string_t **) ret);
+                case 6:
+                        return idmef_service_new_portlist(ptr, (prelude_string_t **) ret);
 
-		case 7:
-			return idmef_service_new_protocol(ptr, (prelude_string_t **) ret);
+                case 7:
+                        return idmef_service_new_protocol(ptr, (prelude_string_t **) ret);
 
-		case 8:
-			return idmef_service_new_web_service(ptr, (idmef_web_service_t **) ret);
+                case 8:
+                        return idmef_service_new_web_service(ptr, (idmef_web_service_t **) ret);
 
-		case 9:
-			return idmef_service_new_snmp_service(ptr, (idmef_snmp_service_t **) ret);
+                case 9:
+                        return idmef_service_new_snmp_service(ptr, (idmef_snmp_service_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_service_destroy_internal(idmef_service_t *ptr)
 {
 
-	if ( ptr->ident ) {
-		prelude_string_destroy(ptr->ident);
-		ptr->ident = NULL;
-	}
+        if ( ptr->ident ) {
+                prelude_string_destroy(ptr->ident);
+                ptr->ident = NULL;
+        }
 
-	if ( ptr->iana_protocol_name ) {
-		prelude_string_destroy(ptr->iana_protocol_name);
-		ptr->iana_protocol_name = NULL;
-	}
+        if ( ptr->iana_protocol_name ) {
+                prelude_string_destroy(ptr->iana_protocol_name);
+                ptr->iana_protocol_name = NULL;
+        }
 
-	if ( ptr->name ) {
-		prelude_string_destroy(ptr->name);
-		ptr->name = NULL;
-	}
+        if ( ptr->name ) {
+                prelude_string_destroy(ptr->name);
+                ptr->name = NULL;
+        }
 
-	if ( ptr->portlist ) {
-		prelude_string_destroy(ptr->portlist);
-		ptr->portlist = NULL;
-	}
+        if ( ptr->portlist ) {
+                prelude_string_destroy(ptr->portlist);
+                ptr->portlist = NULL;
+        }
 
-	if ( ptr->protocol ) {
-		prelude_string_destroy(ptr->protocol);
-		ptr->protocol = NULL;
-	}
+        if ( ptr->protocol ) {
+                prelude_string_destroy(ptr->protocol);
+                ptr->protocol = NULL;
+        }
 
-	switch ( ptr->type ) {
+        switch ( ptr->type ) {
 
-		case IDMEF_SERVICE_TYPE_WEB:
-			idmef_web_service_destroy(ptr->specific.web_service);
-			ptr->specific.web_service = NULL;
-			break;
+                case IDMEF_SERVICE_TYPE_WEB:
+                        idmef_web_service_destroy(ptr->specific.web_service);
+                        ptr->specific.web_service = NULL;
+                        break;
 
-		case IDMEF_SERVICE_TYPE_SNMP:
-			idmef_snmp_service_destroy(ptr->specific.snmp_service);
-			ptr->specific.snmp_service = NULL;
-			break;
+                case IDMEF_SERVICE_TYPE_SNMP:
+                        idmef_snmp_service_destroy(ptr->specific.snmp_service);
+                        ptr->specific.snmp_service = NULL;
+                        break;
 
-		default:
-			break;
-	}
+                default:
+                        break;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -5456,10 +5456,10 @@ static void idmef_service_destroy_internal(idmef_service_t *ptr)
 
 void idmef_service_destroy(idmef_service_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_service_destroy_internal(ptr);
+        idmef_service_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -5473,7 +5473,7 @@ void idmef_service_destroy(idmef_service_t *ptr)
  */
 prelude_string_t *idmef_service_get_ident(idmef_service_t *ptr)
 {
-	return ptr->ident;
+        return ptr->ident;
 }
 
 /**
@@ -5488,10 +5488,10 @@ prelude_string_t *idmef_service_get_ident(idmef_service_t *ptr)
 
 void idmef_service_set_ident(idmef_service_t *ptr, prelude_string_t *ident)
 {
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
 
-	ptr->ident = ident;
+        ptr->ident = ident;
 }
 
 /**
@@ -5508,15 +5508,15 @@ int idmef_service_new_ident(idmef_service_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
-		
-	retval = prelude_string_new(&ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
+                
+        retval = prelude_string_new(&ptr->ident);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->ident;
-	return 0;
+        return 0;
 }
 
 /**
@@ -5529,7 +5529,7 @@ int idmef_service_new_ident(idmef_service_t *ptr, prelude_string_t **ret)
  */
 uint8_t *idmef_service_get_ip_version(idmef_service_t *ptr)
 {
-	return ptr->ip_version_is_set ? &ptr->ip_version : NULL;
+        return ptr->ip_version_is_set ? &ptr->ip_version : NULL;
 }
 
 /**
@@ -5544,8 +5544,8 @@ uint8_t *idmef_service_get_ip_version(idmef_service_t *ptr)
 
 void idmef_service_set_ip_version(idmef_service_t *ptr, uint8_t ip_version)
 {
-	ptr->ip_version = ip_version;
-	ptr->ip_version_is_set = 1;
+        ptr->ip_version = ip_version;
+        ptr->ip_version_is_set = 1;
 }
 
 
@@ -5567,10 +5567,10 @@ void idmef_service_unset_ip_version(idmef_service_t *ptr)
  */
 int idmef_service_new_ip_version(idmef_service_t *ptr, uint8_t **ret)
 {
-	ptr->ip_version_is_set = 1;
+        ptr->ip_version_is_set = 1;
 
         *ret = &ptr->ip_version;
-	return 0;
+        return 0;
 }
 
 /**
@@ -5583,7 +5583,7 @@ int idmef_service_new_ip_version(idmef_service_t *ptr, uint8_t **ret)
  */
 uint8_t *idmef_service_get_iana_protocol_number(idmef_service_t *ptr)
 {
-	return ptr->iana_protocol_number_is_set ? &ptr->iana_protocol_number : NULL;
+        return ptr->iana_protocol_number_is_set ? &ptr->iana_protocol_number : NULL;
 }
 
 /**
@@ -5598,8 +5598,8 @@ uint8_t *idmef_service_get_iana_protocol_number(idmef_service_t *ptr)
 
 void idmef_service_set_iana_protocol_number(idmef_service_t *ptr, uint8_t iana_protocol_number)
 {
-	ptr->iana_protocol_number = iana_protocol_number;
-	ptr->iana_protocol_number_is_set = 1;
+        ptr->iana_protocol_number = iana_protocol_number;
+        ptr->iana_protocol_number_is_set = 1;
 }
 
 
@@ -5621,10 +5621,10 @@ void idmef_service_unset_iana_protocol_number(idmef_service_t *ptr)
  */
 int idmef_service_new_iana_protocol_number(idmef_service_t *ptr, uint8_t **ret)
 {
-	ptr->iana_protocol_number_is_set = 1;
+        ptr->iana_protocol_number_is_set = 1;
 
         *ret = &ptr->iana_protocol_number;
-	return 0;
+        return 0;
 }
 
 /**
@@ -5637,7 +5637,7 @@ int idmef_service_new_iana_protocol_number(idmef_service_t *ptr, uint8_t **ret)
  */
 prelude_string_t *idmef_service_get_iana_protocol_name(idmef_service_t *ptr)
 {
-	return ptr->iana_protocol_name;
+        return ptr->iana_protocol_name;
 }
 
 /**
@@ -5652,10 +5652,10 @@ prelude_string_t *idmef_service_get_iana_protocol_name(idmef_service_t *ptr)
 
 void idmef_service_set_iana_protocol_name(idmef_service_t *ptr, prelude_string_t *iana_protocol_name)
 {
-	if ( ptr->iana_protocol_name )
-		prelude_string_destroy(ptr->iana_protocol_name);
+        if ( ptr->iana_protocol_name )
+                prelude_string_destroy(ptr->iana_protocol_name);
 
-	ptr->iana_protocol_name = iana_protocol_name;
+        ptr->iana_protocol_name = iana_protocol_name;
 }
 
 /**
@@ -5672,15 +5672,15 @@ int idmef_service_new_iana_protocol_name(idmef_service_t *ptr, prelude_string_t 
 {
         int retval;
 
-	if ( ptr->iana_protocol_name )
-		prelude_string_destroy(ptr->iana_protocol_name);
-		
-	retval = prelude_string_new(&ptr->iana_protocol_name);
+        if ( ptr->iana_protocol_name )
+                prelude_string_destroy(ptr->iana_protocol_name);
+                
+        retval = prelude_string_new(&ptr->iana_protocol_name);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->iana_protocol_name;
-	return 0;
+        return 0;
 }
 
 /**
@@ -5693,7 +5693,7 @@ int idmef_service_new_iana_protocol_name(idmef_service_t *ptr, prelude_string_t 
  */
 prelude_string_t *idmef_service_get_name(idmef_service_t *ptr)
 {
-	return ptr->name;
+        return ptr->name;
 }
 
 /**
@@ -5708,10 +5708,10 @@ prelude_string_t *idmef_service_get_name(idmef_service_t *ptr)
 
 void idmef_service_set_name(idmef_service_t *ptr, prelude_string_t *name)
 {
-	if ( ptr->name )
-		prelude_string_destroy(ptr->name);
+        if ( ptr->name )
+                prelude_string_destroy(ptr->name);
 
-	ptr->name = name;
+        ptr->name = name;
 }
 
 /**
@@ -5728,15 +5728,15 @@ int idmef_service_new_name(idmef_service_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->name )
-		prelude_string_destroy(ptr->name);
-		
-	retval = prelude_string_new(&ptr->name);
+        if ( ptr->name )
+                prelude_string_destroy(ptr->name);
+                
+        retval = prelude_string_new(&ptr->name);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->name;
-	return 0;
+        return 0;
 }
 
 /**
@@ -5749,7 +5749,7 @@ int idmef_service_new_name(idmef_service_t *ptr, prelude_string_t **ret)
  */
 uint16_t *idmef_service_get_port(idmef_service_t *ptr)
 {
-	return ptr->port_is_set ? &ptr->port : NULL;
+        return ptr->port_is_set ? &ptr->port : NULL;
 }
 
 /**
@@ -5764,8 +5764,8 @@ uint16_t *idmef_service_get_port(idmef_service_t *ptr)
 
 void idmef_service_set_port(idmef_service_t *ptr, uint16_t port)
 {
-	ptr->port = port;
-	ptr->port_is_set = 1;
+        ptr->port = port;
+        ptr->port_is_set = 1;
 }
 
 
@@ -5787,10 +5787,10 @@ void idmef_service_unset_port(idmef_service_t *ptr)
  */
 int idmef_service_new_port(idmef_service_t *ptr, uint16_t **ret)
 {
-	ptr->port_is_set = 1;
+        ptr->port_is_set = 1;
 
         *ret = &ptr->port;
-	return 0;
+        return 0;
 }
 
 /**
@@ -5803,7 +5803,7 @@ int idmef_service_new_port(idmef_service_t *ptr, uint16_t **ret)
  */
 prelude_string_t *idmef_service_get_portlist(idmef_service_t *ptr)
 {
-	return ptr->portlist;
+        return ptr->portlist;
 }
 
 /**
@@ -5818,10 +5818,10 @@ prelude_string_t *idmef_service_get_portlist(idmef_service_t *ptr)
 
 void idmef_service_set_portlist(idmef_service_t *ptr, prelude_string_t *portlist)
 {
-	if ( ptr->portlist )
-		prelude_string_destroy(ptr->portlist);
+        if ( ptr->portlist )
+                prelude_string_destroy(ptr->portlist);
 
-	ptr->portlist = portlist;
+        ptr->portlist = portlist;
 }
 
 /**
@@ -5838,15 +5838,15 @@ int idmef_service_new_portlist(idmef_service_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->portlist )
-		prelude_string_destroy(ptr->portlist);
-		
-	retval = prelude_string_new(&ptr->portlist);
+        if ( ptr->portlist )
+                prelude_string_destroy(ptr->portlist);
+                
+        retval = prelude_string_new(&ptr->portlist);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->portlist;
-	return 0;
+        return 0;
 }
 
 /**
@@ -5859,7 +5859,7 @@ int idmef_service_new_portlist(idmef_service_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_service_get_protocol(idmef_service_t *ptr)
 {
-	return ptr->protocol;
+        return ptr->protocol;
 }
 
 /**
@@ -5874,10 +5874,10 @@ prelude_string_t *idmef_service_get_protocol(idmef_service_t *ptr)
 
 void idmef_service_set_protocol(idmef_service_t *ptr, prelude_string_t *protocol)
 {
-	if ( ptr->protocol )
-		prelude_string_destroy(ptr->protocol);
+        if ( ptr->protocol )
+                prelude_string_destroy(ptr->protocol);
 
-	ptr->protocol = protocol;
+        ptr->protocol = protocol;
 }
 
 /**
@@ -5894,15 +5894,15 @@ int idmef_service_new_protocol(idmef_service_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->protocol )
-		prelude_string_destroy(ptr->protocol);
-		
-	retval = prelude_string_new(&ptr->protocol);
+        if ( ptr->protocol )
+                prelude_string_destroy(ptr->protocol);
+                
+        retval = prelude_string_new(&ptr->protocol);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->protocol;
-	return 0;
+        return 0;
 }
 
 /** 
@@ -5915,7 +5915,7 @@ int idmef_service_new_protocol(idmef_service_t *ptr, prelude_string_t **ret)
  */
 idmef_service_type_t idmef_service_get_type(idmef_service_t *ptr)
 {
-	return ptr->type;
+        return ptr->type;
 }
 
 /** 
@@ -5928,7 +5928,7 @@ idmef_service_type_t idmef_service_get_type(idmef_service_t *ptr)
  */
 idmef_web_service_t *idmef_service_get_web_service(idmef_service_t *ptr)
 {
-	return (ptr->type == IDMEF_SERVICE_TYPE_WEB) ? ptr->specific.web_service : NULL;
+        return (ptr->type == IDMEF_SERVICE_TYPE_WEB) ? ptr->specific.web_service : NULL;
 }
 
 /**
@@ -5942,22 +5942,22 @@ idmef_web_service_t *idmef_service_get_web_service(idmef_service_t *ptr)
  */
 void idmef_service_set_web_service(idmef_service_t *ptr, idmef_web_service_t *web_service)
 {
-	switch ( ptr->type ) {
+        switch ( ptr->type ) {
 
-		case IDMEF_SERVICE_TYPE_WEB:
-			idmef_web_service_destroy(ptr->specific.web_service);
-			break;
+                case IDMEF_SERVICE_TYPE_WEB:
+                        idmef_web_service_destroy(ptr->specific.web_service);
+                        break;
 
-		case IDMEF_SERVICE_TYPE_SNMP:
-			idmef_snmp_service_destroy(ptr->specific.snmp_service);
-			break;
+                case IDMEF_SERVICE_TYPE_SNMP:
+                        idmef_snmp_service_destroy(ptr->specific.snmp_service);
+                        break;
 
-		default:
-			break;
-	}
+                default:
+                        break;
+        }
 
-	ptr->specific.web_service = web_service;
-	ptr->type = IDMEF_SERVICE_TYPE_WEB;
+        ptr->specific.web_service = web_service;
+        ptr->type = IDMEF_SERVICE_TYPE_WEB;
 }
 
 /**
@@ -5974,28 +5974,28 @@ int idmef_service_new_web_service(idmef_service_t *ptr, idmef_web_service_t **re
 {
         int retval;
 
-	switch ( ptr->type ) {
+        switch ( ptr->type ) {
 
-		case IDMEF_SERVICE_TYPE_WEB:
+                case IDMEF_SERVICE_TYPE_WEB:
                         *ret = ptr->specific.web_service;
-			return 0;
+                        return 0;
 
-		case IDMEF_SERVICE_TYPE_SNMP:
-			idmef_snmp_service_destroy(ptr->specific.snmp_service);
-			break;
+                case IDMEF_SERVICE_TYPE_SNMP:
+                        idmef_snmp_service_destroy(ptr->specific.snmp_service);
+                        break;
 
-		default:
-			break;
-	}
+                default:
+                        break;
+        }
 
         retval = idmef_web_service_new(ret);
         if ( retval < 0 )
                 return retval;
 
-	ptr->type = IDMEF_SERVICE_TYPE_WEB;
+        ptr->type = IDMEF_SERVICE_TYPE_WEB;
         ptr->specific.web_service = *ret;
 
-	return 0;
+        return 0;
 }
 
 /** 
@@ -6008,7 +6008,7 @@ int idmef_service_new_web_service(idmef_service_t *ptr, idmef_web_service_t **re
  */
 idmef_snmp_service_t *idmef_service_get_snmp_service(idmef_service_t *ptr)
 {
-	return (ptr->type == IDMEF_SERVICE_TYPE_SNMP) ? ptr->specific.snmp_service : NULL;
+        return (ptr->type == IDMEF_SERVICE_TYPE_SNMP) ? ptr->specific.snmp_service : NULL;
 }
 
 /**
@@ -6022,22 +6022,22 @@ idmef_snmp_service_t *idmef_service_get_snmp_service(idmef_service_t *ptr)
  */
 void idmef_service_set_snmp_service(idmef_service_t *ptr, idmef_snmp_service_t *snmp_service)
 {
-	switch ( ptr->type ) {
+        switch ( ptr->type ) {
 
-		case IDMEF_SERVICE_TYPE_WEB:
-			idmef_web_service_destroy(ptr->specific.web_service);
-			break;
+                case IDMEF_SERVICE_TYPE_WEB:
+                        idmef_web_service_destroy(ptr->specific.web_service);
+                        break;
 
-		case IDMEF_SERVICE_TYPE_SNMP:
-			idmef_snmp_service_destroy(ptr->specific.snmp_service);
-			break;
+                case IDMEF_SERVICE_TYPE_SNMP:
+                        idmef_snmp_service_destroy(ptr->specific.snmp_service);
+                        break;
 
-		default:
-			break;
-	}
+                default:
+                        break;
+        }
 
-	ptr->specific.snmp_service = snmp_service;
-	ptr->type = IDMEF_SERVICE_TYPE_SNMP;
+        ptr->specific.snmp_service = snmp_service;
+        ptr->type = IDMEF_SERVICE_TYPE_SNMP;
 }
 
 /**
@@ -6054,28 +6054,28 @@ int idmef_service_new_snmp_service(idmef_service_t *ptr, idmef_snmp_service_t **
 {
         int retval;
 
-	switch ( ptr->type ) {
+        switch ( ptr->type ) {
 
-		case IDMEF_SERVICE_TYPE_WEB:
-			idmef_web_service_destroy(ptr->specific.web_service);
-			break;
+                case IDMEF_SERVICE_TYPE_WEB:
+                        idmef_web_service_destroy(ptr->specific.web_service);
+                        break;
 
-		case IDMEF_SERVICE_TYPE_SNMP:
+                case IDMEF_SERVICE_TYPE_SNMP:
                         *ret = ptr->specific.snmp_service;
-			return 0;
+                        return 0;
 
-		default:
-			break;
-	}
+                default:
+                        break;
+        }
 
         retval = idmef_snmp_service_new(ret);
         if ( retval < 0 )
                 return retval;
 
-	ptr->type = IDMEF_SERVICE_TYPE_SNMP;
+        ptr->type = IDMEF_SERVICE_TYPE_SNMP;
         ptr->specific.snmp_service = *ret;
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -6088,16 +6088,16 @@ int idmef_service_new_snmp_service(idmef_service_t *ptr, idmef_snmp_service_t **
  */
 int idmef_node_new(idmef_node_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	prelude_list_init(&(*ret)->address_list);
+        prelude_list_init(&(*ret)->address_list);
     
 
-	return 0;
+        return 0;
 
 }
 
@@ -6112,18 +6112,18 @@ int idmef_node_new(idmef_node_t **ret)
  */
 idmef_node_t *idmef_node_ref(idmef_node_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_node_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_node_t *ptr = p;
+        idmef_node_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
@@ -6135,34 +6135,34 @@ int idmef_node_get_child(void *p, idmef_class_child_id_t child, void **childptr)
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->location);        
                 case 3:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->name);
-		case 4:
+                case 4:
                         *childptr = &ptr->address_list;
-			return 0;
+                        return 0;
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_node_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_node_t *ptr = p;
+        idmef_node_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_node_new_ident(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_node_new_ident(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_node_new_category(ptr, (idmef_node_category_t **) ret);
+                case 1:
+                        return idmef_node_new_category(ptr, (idmef_node_category_t **) ret);
 
-		case 2:
-			return idmef_node_new_location(ptr, (prelude_string_t **) ret);
+                case 2:
+                        return idmef_node_new_location(ptr, (prelude_string_t **) ret);
 
-		case 3:
-			return idmef_node_new_name(ptr, (prelude_string_t **) ret);
+                case 3:
+                        return idmef_node_new_name(ptr, (prelude_string_t **) ret);
 
-		case 4: {
+                case 4: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -6194,44 +6194,44 @@ int idmef_node_new_child(void *p, idmef_class_child_id_t child, int n, void **re
                         }
 
                         return idmef_node_new_address(ptr, (idmef_address_t **) ret, n);
-		}
+                }
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_node_destroy_internal(idmef_node_t *ptr)
 {
 
-	if ( ptr->ident ) {
-		prelude_string_destroy(ptr->ident);
-		ptr->ident = NULL;
-	}
+        if ( ptr->ident ) {
+                prelude_string_destroy(ptr->ident);
+                ptr->ident = NULL;
+        }
 
-	if ( ptr->location ) {
-		prelude_string_destroy(ptr->location);
-		ptr->location = NULL;
-	}
+        if ( ptr->location ) {
+                prelude_string_destroy(ptr->location);
+                ptr->location = NULL;
+        }
 
-	if ( ptr->name ) {
-		prelude_string_destroy(ptr->name);
-		ptr->name = NULL;
-	}
+        if ( ptr->name ) {
+                prelude_string_destroy(ptr->name);
+                ptr->name = NULL;
+        }
 
-	{
-		prelude_list_t *n, *tmp;
-		idmef_address_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                idmef_address_t *entry;
 
-		prelude_list_for_each_safe(&ptr->address_list, tmp, n) {
-			entry = prelude_list_entry(tmp, idmef_address_t, list);
+                prelude_list_for_each_safe(&ptr->address_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_address_t, list);
                         prelude_list_del_init(&entry->list);
-			idmef_address_destroy(entry);
-		}
-	}
+                        idmef_address_destroy(entry);
+                }
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -6244,10 +6244,10 @@ static void idmef_node_destroy_internal(idmef_node_t *ptr)
 
 void idmef_node_destroy(idmef_node_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_node_destroy_internal(ptr);
+        idmef_node_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -6261,7 +6261,7 @@ void idmef_node_destroy(idmef_node_t *ptr)
  */
 prelude_string_t *idmef_node_get_ident(idmef_node_t *ptr)
 {
-	return ptr->ident;
+        return ptr->ident;
 }
 
 /**
@@ -6276,10 +6276,10 @@ prelude_string_t *idmef_node_get_ident(idmef_node_t *ptr)
 
 void idmef_node_set_ident(idmef_node_t *ptr, prelude_string_t *ident)
 {
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
 
-	ptr->ident = ident;
+        ptr->ident = ident;
 }
 
 /**
@@ -6296,15 +6296,15 @@ int idmef_node_new_ident(idmef_node_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
-		
-	retval = prelude_string_new(&ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
+                
+        retval = prelude_string_new(&ptr->ident);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->ident;
-	return 0;
+        return 0;
 }
 
 /**
@@ -6317,7 +6317,7 @@ int idmef_node_new_ident(idmef_node_t *ptr, prelude_string_t **ret)
  */
 idmef_node_category_t idmef_node_get_category(idmef_node_t *ptr)
 {
-	return ptr->category;
+        return ptr->category;
 }
 
 /**
@@ -6332,7 +6332,7 @@ idmef_node_category_t idmef_node_get_category(idmef_node_t *ptr)
 
 void idmef_node_set_category(idmef_node_t *ptr, idmef_node_category_t category)
 {
-	ptr->category = category;
+        ptr->category = category;
 }
 
 /**
@@ -6348,7 +6348,7 @@ void idmef_node_set_category(idmef_node_t *ptr, idmef_node_category_t category)
 int idmef_node_new_category(idmef_node_t *ptr, idmef_node_category_t **ret)
 {
         *ret = &ptr->category;
-	return 0;
+        return 0;
 }
 
 /**
@@ -6361,7 +6361,7 @@ int idmef_node_new_category(idmef_node_t *ptr, idmef_node_category_t **ret)
  */
 prelude_string_t *idmef_node_get_location(idmef_node_t *ptr)
 {
-	return ptr->location;
+        return ptr->location;
 }
 
 /**
@@ -6376,10 +6376,10 @@ prelude_string_t *idmef_node_get_location(idmef_node_t *ptr)
 
 void idmef_node_set_location(idmef_node_t *ptr, prelude_string_t *location)
 {
-	if ( ptr->location )
-		prelude_string_destroy(ptr->location);
+        if ( ptr->location )
+                prelude_string_destroy(ptr->location);
 
-	ptr->location = location;
+        ptr->location = location;
 }
 
 /**
@@ -6396,15 +6396,15 @@ int idmef_node_new_location(idmef_node_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->location )
-		prelude_string_destroy(ptr->location);
-		
-	retval = prelude_string_new(&ptr->location);
+        if ( ptr->location )
+                prelude_string_destroy(ptr->location);
+                
+        retval = prelude_string_new(&ptr->location);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->location;
-	return 0;
+        return 0;
 }
 
 /**
@@ -6417,7 +6417,7 @@ int idmef_node_new_location(idmef_node_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_node_get_name(idmef_node_t *ptr)
 {
-	return ptr->name;
+        return ptr->name;
 }
 
 /**
@@ -6432,10 +6432,10 @@ prelude_string_t *idmef_node_get_name(idmef_node_t *ptr)
 
 void idmef_node_set_name(idmef_node_t *ptr, prelude_string_t *name)
 {
-	if ( ptr->name )
-		prelude_string_destroy(ptr->name);
+        if ( ptr->name )
+                prelude_string_destroy(ptr->name);
 
-	ptr->name = name;
+        ptr->name = name;
 }
 
 /**
@@ -6452,15 +6452,15 @@ int idmef_node_new_name(idmef_node_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->name )
-		prelude_string_destroy(ptr->name);
-		
-	retval = prelude_string_new(&ptr->name);
+        if ( ptr->name )
+                prelude_string_destroy(ptr->name);
+                
+        retval = prelude_string_new(&ptr->name);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->name;
-	return 0;
+        return 0;
 }
 
 /**
@@ -6544,15 +6544,15 @@ int idmef_node_new_address(idmef_node_t *ptr, idmef_address_t **ret, int pos)
  */
 int idmef_source_new(idmef_source_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	prelude_list_init(&(*ret)->list);
+        prelude_list_init(&(*ret)->list);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	return 0;
+        return 0;
 
 }
 
@@ -6567,18 +6567,18 @@ int idmef_source_new(idmef_source_t **ret)
  */
 idmef_source_t *idmef_source_ref(idmef_source_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_source_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_source_t *ptr = p;
+        idmef_source_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
@@ -6588,57 +6588,57 @@ int idmef_source_get_child(void *p, idmef_class_child_id_t child, void **childpt
         
                 case 2:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->interface);
-		case 3:
+                case 3:
                         *childptr = ptr->node;
                         return 0;
 
-		case 4:
+                case 4:
                         *childptr = ptr->user;
                         return 0;
 
-		case 5:
+                case 5:
                         *childptr = ptr->process;
                         return 0;
 
-		case 6:
+                case 6:
                         *childptr = ptr->service;
                         return 0;
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_source_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_source_t *ptr = p;
+        idmef_source_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_source_new_ident(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_source_new_ident(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_source_new_spoofed(ptr, (idmef_source_spoofed_t **) ret);
+                case 1:
+                        return idmef_source_new_spoofed(ptr, (idmef_source_spoofed_t **) ret);
 
-		case 2:
-			return idmef_source_new_interface(ptr, (prelude_string_t **) ret);
+                case 2:
+                        return idmef_source_new_interface(ptr, (prelude_string_t **) ret);
 
-		case 3:
-			return idmef_source_new_node(ptr, (idmef_node_t **) ret);
+                case 3:
+                        return idmef_source_new_node(ptr, (idmef_node_t **) ret);
 
-		case 4:
-			return idmef_source_new_user(ptr, (idmef_user_t **) ret);
+                case 4:
+                        return idmef_source_new_user(ptr, (idmef_user_t **) ret);
 
-		case 5:
-			return idmef_source_new_process(ptr, (idmef_process_t **) ret);
+                case 5:
+                        return idmef_source_new_process(ptr, (idmef_process_t **) ret);
 
-		case 6:
-			return idmef_source_new_service(ptr, (idmef_service_t **) ret);
+                case 6:
+                        return idmef_source_new_service(ptr, (idmef_service_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_source_destroy_internal(idmef_source_t *ptr)
@@ -6647,38 +6647,38 @@ static void idmef_source_destroy_internal(idmef_source_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
-	if ( ptr->ident ) {
-		prelude_string_destroy(ptr->ident);
-		ptr->ident = NULL;
-	}
+        if ( ptr->ident ) {
+                prelude_string_destroy(ptr->ident);
+                ptr->ident = NULL;
+        }
 
-	if ( ptr->interface ) {
-		prelude_string_destroy(ptr->interface);
-		ptr->interface = NULL;
-	}
+        if ( ptr->interface ) {
+                prelude_string_destroy(ptr->interface);
+                ptr->interface = NULL;
+        }
 
-	if ( ptr->node ) {
-		idmef_node_destroy(ptr->node);
-		ptr->node = NULL;
-	}
+        if ( ptr->node ) {
+                idmef_node_destroy(ptr->node);
+                ptr->node = NULL;
+        }
 
-	if ( ptr->user ) {
-		idmef_user_destroy(ptr->user);
-		ptr->user = NULL;
-	}
+        if ( ptr->user ) {
+                idmef_user_destroy(ptr->user);
+                ptr->user = NULL;
+        }
 
-	if ( ptr->process ) {
-		idmef_process_destroy(ptr->process);
-		ptr->process = NULL;
-	}
+        if ( ptr->process ) {
+                idmef_process_destroy(ptr->process);
+                ptr->process = NULL;
+        }
 
-	if ( ptr->service ) {
-		idmef_service_destroy(ptr->service);
-		ptr->service = NULL;
-	}
+        if ( ptr->service ) {
+                idmef_service_destroy(ptr->service);
+                ptr->service = NULL;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -6691,10 +6691,10 @@ static void idmef_source_destroy_internal(idmef_source_t *ptr)
 
 void idmef_source_destroy(idmef_source_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_source_destroy_internal(ptr);
+        idmef_source_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -6708,7 +6708,7 @@ void idmef_source_destroy(idmef_source_t *ptr)
  */
 prelude_string_t *idmef_source_get_ident(idmef_source_t *ptr)
 {
-	return ptr->ident;
+        return ptr->ident;
 }
 
 /**
@@ -6723,10 +6723,10 @@ prelude_string_t *idmef_source_get_ident(idmef_source_t *ptr)
 
 void idmef_source_set_ident(idmef_source_t *ptr, prelude_string_t *ident)
 {
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
 
-	ptr->ident = ident;
+        ptr->ident = ident;
 }
 
 /**
@@ -6743,15 +6743,15 @@ int idmef_source_new_ident(idmef_source_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
-		
-	retval = prelude_string_new(&ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
+                
+        retval = prelude_string_new(&ptr->ident);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->ident;
-	return 0;
+        return 0;
 }
 
 /**
@@ -6764,7 +6764,7 @@ int idmef_source_new_ident(idmef_source_t *ptr, prelude_string_t **ret)
  */
 idmef_source_spoofed_t idmef_source_get_spoofed(idmef_source_t *ptr)
 {
-	return ptr->spoofed;
+        return ptr->spoofed;
 }
 
 /**
@@ -6779,7 +6779,7 @@ idmef_source_spoofed_t idmef_source_get_spoofed(idmef_source_t *ptr)
 
 void idmef_source_set_spoofed(idmef_source_t *ptr, idmef_source_spoofed_t spoofed)
 {
-	ptr->spoofed = spoofed;
+        ptr->spoofed = spoofed;
 }
 
 /**
@@ -6795,7 +6795,7 @@ void idmef_source_set_spoofed(idmef_source_t *ptr, idmef_source_spoofed_t spoofe
 int idmef_source_new_spoofed(idmef_source_t *ptr, idmef_source_spoofed_t **ret)
 {
         *ret = &ptr->spoofed;
-	return 0;
+        return 0;
 }
 
 /**
@@ -6808,7 +6808,7 @@ int idmef_source_new_spoofed(idmef_source_t *ptr, idmef_source_spoofed_t **ret)
  */
 prelude_string_t *idmef_source_get_interface(idmef_source_t *ptr)
 {
-	return ptr->interface;
+        return ptr->interface;
 }
 
 /**
@@ -6823,10 +6823,10 @@ prelude_string_t *idmef_source_get_interface(idmef_source_t *ptr)
 
 void idmef_source_set_interface(idmef_source_t *ptr, prelude_string_t *interface)
 {
-	if ( ptr->interface )
-		prelude_string_destroy(ptr->interface);
+        if ( ptr->interface )
+                prelude_string_destroy(ptr->interface);
 
-	ptr->interface = interface;
+        ptr->interface = interface;
 }
 
 /**
@@ -6843,15 +6843,15 @@ int idmef_source_new_interface(idmef_source_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->interface )
-		prelude_string_destroy(ptr->interface);
-		
-	retval = prelude_string_new(&ptr->interface);
+        if ( ptr->interface )
+                prelude_string_destroy(ptr->interface);
+                
+        retval = prelude_string_new(&ptr->interface);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->interface;
-	return 0;
+        return 0;
 }
 
 /**
@@ -6864,7 +6864,7 @@ int idmef_source_new_interface(idmef_source_t *ptr, prelude_string_t **ret)
  */
 idmef_node_t *idmef_source_get_node(idmef_source_t *ptr)
 {
-	return ptr->node;
+        return ptr->node;
 }
 
 /**
@@ -6879,10 +6879,10 @@ idmef_node_t *idmef_source_get_node(idmef_source_t *ptr)
 
 void idmef_source_set_node(idmef_source_t *ptr, idmef_node_t *node)
 {
-	if ( ptr->node )
-		idmef_node_destroy(ptr->node);
+        if ( ptr->node )
+                idmef_node_destroy(ptr->node);
 
-	ptr->node = node;
+        ptr->node = node;
 }
 
 /**
@@ -6899,11 +6899,11 @@ int idmef_source_new_node(idmef_source_t *ptr, idmef_node_t **ret)
 {
         int retval;
 
-	if ( ! ptr->node )
-		retval = idmef_node_new(&ptr->node);
+        if ( ! ptr->node )
+                retval = idmef_node_new(&ptr->node);
 
         *ret = ptr->node;
-	return 0;
+        return 0;
 }
 
 /**
@@ -6916,7 +6916,7 @@ int idmef_source_new_node(idmef_source_t *ptr, idmef_node_t **ret)
  */
 idmef_user_t *idmef_source_get_user(idmef_source_t *ptr)
 {
-	return ptr->user;
+        return ptr->user;
 }
 
 /**
@@ -6931,10 +6931,10 @@ idmef_user_t *idmef_source_get_user(idmef_source_t *ptr)
 
 void idmef_source_set_user(idmef_source_t *ptr, idmef_user_t *user)
 {
-	if ( ptr->user )
-		idmef_user_destroy(ptr->user);
+        if ( ptr->user )
+                idmef_user_destroy(ptr->user);
 
-	ptr->user = user;
+        ptr->user = user;
 }
 
 /**
@@ -6951,11 +6951,11 @@ int idmef_source_new_user(idmef_source_t *ptr, idmef_user_t **ret)
 {
         int retval;
 
-	if ( ! ptr->user )
-		retval = idmef_user_new(&ptr->user);
+        if ( ! ptr->user )
+                retval = idmef_user_new(&ptr->user);
 
         *ret = ptr->user;
-	return 0;
+        return 0;
 }
 
 /**
@@ -6968,7 +6968,7 @@ int idmef_source_new_user(idmef_source_t *ptr, idmef_user_t **ret)
  */
 idmef_process_t *idmef_source_get_process(idmef_source_t *ptr)
 {
-	return ptr->process;
+        return ptr->process;
 }
 
 /**
@@ -6983,10 +6983,10 @@ idmef_process_t *idmef_source_get_process(idmef_source_t *ptr)
 
 void idmef_source_set_process(idmef_source_t *ptr, idmef_process_t *process)
 {
-	if ( ptr->process )
-		idmef_process_destroy(ptr->process);
+        if ( ptr->process )
+                idmef_process_destroy(ptr->process);
 
-	ptr->process = process;
+        ptr->process = process;
 }
 
 /**
@@ -7003,11 +7003,11 @@ int idmef_source_new_process(idmef_source_t *ptr, idmef_process_t **ret)
 {
         int retval;
 
-	if ( ! ptr->process )
-		retval = idmef_process_new(&ptr->process);
+        if ( ! ptr->process )
+                retval = idmef_process_new(&ptr->process);
 
         *ret = ptr->process;
-	return 0;
+        return 0;
 }
 
 /**
@@ -7020,7 +7020,7 @@ int idmef_source_new_process(idmef_source_t *ptr, idmef_process_t **ret)
  */
 idmef_service_t *idmef_source_get_service(idmef_source_t *ptr)
 {
-	return ptr->service;
+        return ptr->service;
 }
 
 /**
@@ -7035,10 +7035,10 @@ idmef_service_t *idmef_source_get_service(idmef_source_t *ptr)
 
 void idmef_source_set_service(idmef_source_t *ptr, idmef_service_t *service)
 {
-	if ( ptr->service )
-		idmef_service_destroy(ptr->service);
+        if ( ptr->service )
+                idmef_service_destroy(ptr->service);
 
-	ptr->service = service;
+        ptr->service = service;
 }
 
 /**
@@ -7055,11 +7055,11 @@ int idmef_source_new_service(idmef_source_t *ptr, idmef_service_t **ret)
 {
         int retval;
 
-	if ( ! ptr->service )
-		retval = idmef_service_new(&ptr->service);
+        if ( ! ptr->service )
+                retval = idmef_service_new(&ptr->service);
 
         *ret = ptr->service;
-	return 0;
+        return 0;
 }
 
 /**
@@ -7072,18 +7072,18 @@ int idmef_source_new_service(idmef_source_t *ptr, idmef_service_t **ret)
  */
 int idmef_file_access_new(idmef_file_access_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	prelude_list_init(&(*ret)->list);
+        prelude_list_init(&(*ret)->list);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	prelude_list_init(&(*ret)->permission_list);
+        prelude_list_init(&(*ret)->permission_list);
     
 
-	return 0;
+        return 0;
 
 }
 
@@ -7098,42 +7098,42 @@ int idmef_file_access_new(idmef_file_access_t **ret)
  */
 idmef_file_access_t *idmef_file_access_ref(idmef_file_access_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_file_access_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_file_access_t *ptr = p;
+        idmef_file_access_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
 
-		case 0:
+                case 0:
                         *childptr = &ptr->user_id;
                         return 0;
 
-		case 1:
+                case 1:
                         *childptr = &ptr->permission_list;
-			return 0;
+                        return 0;
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_file_access_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_file_access_t *ptr = p;
+        idmef_file_access_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_file_access_new_user_id(ptr, (idmef_user_id_t **) ret);
+                case 0:
+                        return idmef_file_access_new_user_id(ptr, (idmef_user_id_t **) ret);
 
-		case 1: {
+                case 1: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -7165,11 +7165,11 @@ int idmef_file_access_new_child(void *p, idmef_class_child_id_t child, int n, vo
                         }
 
                         return idmef_file_access_new_permission(ptr, (prelude_string_t **) ret, n);
-		}
+                }
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_file_access_destroy_internal(idmef_file_access_t *ptr)
@@ -7178,21 +7178,21 @@ static void idmef_file_access_destroy_internal(idmef_file_access_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
-	idmef_user_id_destroy_internal(&ptr->user_id);
+        idmef_user_id_destroy_internal(&ptr->user_id);
 
-	{
-		prelude_list_t *n, *tmp;
-		prelude_string_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                prelude_string_t *entry;
 
-		prelude_list_for_each_safe(&ptr->permission_list, tmp, n) {
-			entry = prelude_list_entry(tmp, prelude_string_t, list);
+                prelude_list_for_each_safe(&ptr->permission_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, prelude_string_t, list);
                         prelude_list_del_init(&entry->list);
-			prelude_string_destroy(entry);
-		}
-	}
+                        prelude_string_destroy(entry);
+                }
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -7205,10 +7205,10 @@ static void idmef_file_access_destroy_internal(idmef_file_access_t *ptr)
 
 void idmef_file_access_destroy(idmef_file_access_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_file_access_destroy_internal(ptr);
+        idmef_file_access_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -7222,7 +7222,7 @@ void idmef_file_access_destroy(idmef_file_access_t *ptr)
  */
 idmef_user_id_t *idmef_file_access_get_user_id(idmef_file_access_t *ptr)
 {
-	return &ptr->user_id;
+        return &ptr->user_id;
 }
 
 /**
@@ -7240,7 +7240,7 @@ void idmef_file_access_set_user_id(idmef_file_access_t *ptr, idmef_user_id_t *us
         idmef_user_id_destroy_internal(&ptr->user_id);
         if ( user_id ) {
                 memcpy(&ptr->user_id, user_id, sizeof (ptr->user_id));
-	        free(user_id);
+                free(user_id);
         }
 }
 
@@ -7258,7 +7258,7 @@ int idmef_file_access_new_user_id(idmef_file_access_t *ptr, idmef_user_id_t **re
 {        
         prelude_list_init(&ptr->user_id.list);
         *ret = &ptr->user_id;
-	return 0;
+        return 0;
 }
 
 /**
@@ -7342,13 +7342,13 @@ int idmef_file_access_new_permission(idmef_file_access_t *ptr, prelude_string_t 
  */
 int idmef_inode_new(idmef_inode_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	return 0;
+        return 0;
 
 }
 
@@ -7363,80 +7363,80 @@ int idmef_inode_new(idmef_inode_t **ret)
  */
 idmef_inode_t *idmef_inode_ref(idmef_inode_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_inode_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_inode_t *ptr = p;
+        idmef_inode_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_time((idmef_value_t **) childptr,  ptr->change_time);
                 case 1:
-	               return (ptr->number_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->number) : 0;
+                       return (ptr->number_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->number) : 0;
 
                 case 2:
-	               return (ptr->major_device_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->major_device) : 0;
+                       return (ptr->major_device_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->major_device) : 0;
 
                 case 3:
-	               return (ptr->minor_device_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->minor_device) : 0;
+                       return (ptr->minor_device_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->minor_device) : 0;
 
                 case 4:
-	               return (ptr->c_major_device_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->c_major_device) : 0;
+                       return (ptr->c_major_device_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->c_major_device) : 0;
 
                 case 5:
-	               return (ptr->c_minor_device_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->c_minor_device) : 0;
+                       return (ptr->c_minor_device_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->c_minor_device) : 0;
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_inode_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_inode_t *ptr = p;
+        idmef_inode_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_inode_new_change_time(ptr, (idmef_time_t **) ret);
+                case 0:
+                        return idmef_inode_new_change_time(ptr, (idmef_time_t **) ret);
 
-		case 1:
-			return idmef_inode_new_number(ptr, (uint32_t **) ret);
+                case 1:
+                        return idmef_inode_new_number(ptr, (uint32_t **) ret);
 
-		case 2:
-			return idmef_inode_new_major_device(ptr, (uint32_t **) ret);
+                case 2:
+                        return idmef_inode_new_major_device(ptr, (uint32_t **) ret);
 
-		case 3:
-			return idmef_inode_new_minor_device(ptr, (uint32_t **) ret);
+                case 3:
+                        return idmef_inode_new_minor_device(ptr, (uint32_t **) ret);
 
-		case 4:
-			return idmef_inode_new_c_major_device(ptr, (uint32_t **) ret);
+                case 4:
+                        return idmef_inode_new_c_major_device(ptr, (uint32_t **) ret);
 
-		case 5:
-			return idmef_inode_new_c_minor_device(ptr, (uint32_t **) ret);
+                case 5:
+                        return idmef_inode_new_c_minor_device(ptr, (uint32_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_inode_destroy_internal(idmef_inode_t *ptr)
 {
 
-	if ( ptr->change_time ) {
-		idmef_time_destroy(ptr->change_time);
-		ptr->change_time = NULL;
-	}
+        if ( ptr->change_time ) {
+                idmef_time_destroy(ptr->change_time);
+                ptr->change_time = NULL;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -7449,10 +7449,10 @@ static void idmef_inode_destroy_internal(idmef_inode_t *ptr)
 
 void idmef_inode_destroy(idmef_inode_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_inode_destroy_internal(ptr);
+        idmef_inode_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -7466,7 +7466,7 @@ void idmef_inode_destroy(idmef_inode_t *ptr)
  */
 idmef_time_t *idmef_inode_get_change_time(idmef_inode_t *ptr)
 {
-	return ptr->change_time;
+        return ptr->change_time;
 }
 
 /**
@@ -7481,10 +7481,10 @@ idmef_time_t *idmef_inode_get_change_time(idmef_inode_t *ptr)
 
 void idmef_inode_set_change_time(idmef_inode_t *ptr, idmef_time_t *change_time)
 {
-	if ( ptr->change_time )
-		idmef_time_destroy(ptr->change_time);
+        if ( ptr->change_time )
+                idmef_time_destroy(ptr->change_time);
 
-	ptr->change_time = change_time;
+        ptr->change_time = change_time;
 }
 
 /**
@@ -7501,15 +7501,15 @@ int idmef_inode_new_change_time(idmef_inode_t *ptr, idmef_time_t **ret)
 {
         int retval;
 
-	if ( ptr->change_time )
-		idmef_time_destroy(ptr->change_time);
-		
-	retval = idmef_time_new(&ptr->change_time);
+        if ( ptr->change_time )
+                idmef_time_destroy(ptr->change_time);
+                
+        retval = idmef_time_new(&ptr->change_time);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->change_time;
-	return 0;
+        return 0;
 }
 
 /**
@@ -7522,7 +7522,7 @@ int idmef_inode_new_change_time(idmef_inode_t *ptr, idmef_time_t **ret)
  */
 uint32_t *idmef_inode_get_number(idmef_inode_t *ptr)
 {
-	return ptr->number_is_set ? &ptr->number : NULL;
+        return ptr->number_is_set ? &ptr->number : NULL;
 }
 
 /**
@@ -7537,8 +7537,8 @@ uint32_t *idmef_inode_get_number(idmef_inode_t *ptr)
 
 void idmef_inode_set_number(idmef_inode_t *ptr, uint32_t number)
 {
-	ptr->number = number;
-	ptr->number_is_set = 1;
+        ptr->number = number;
+        ptr->number_is_set = 1;
 }
 
 
@@ -7560,10 +7560,10 @@ void idmef_inode_unset_number(idmef_inode_t *ptr)
  */
 int idmef_inode_new_number(idmef_inode_t *ptr, uint32_t **ret)
 {
-	ptr->number_is_set = 1;
+        ptr->number_is_set = 1;
 
         *ret = &ptr->number;
-	return 0;
+        return 0;
 }
 
 /**
@@ -7576,7 +7576,7 @@ int idmef_inode_new_number(idmef_inode_t *ptr, uint32_t **ret)
  */
 uint32_t *idmef_inode_get_major_device(idmef_inode_t *ptr)
 {
-	return ptr->major_device_is_set ? &ptr->major_device : NULL;
+        return ptr->major_device_is_set ? &ptr->major_device : NULL;
 }
 
 /**
@@ -7591,8 +7591,8 @@ uint32_t *idmef_inode_get_major_device(idmef_inode_t *ptr)
 
 void idmef_inode_set_major_device(idmef_inode_t *ptr, uint32_t major_device)
 {
-	ptr->major_device = major_device;
-	ptr->major_device_is_set = 1;
+        ptr->major_device = major_device;
+        ptr->major_device_is_set = 1;
 }
 
 
@@ -7614,10 +7614,10 @@ void idmef_inode_unset_major_device(idmef_inode_t *ptr)
  */
 int idmef_inode_new_major_device(idmef_inode_t *ptr, uint32_t **ret)
 {
-	ptr->major_device_is_set = 1;
+        ptr->major_device_is_set = 1;
 
         *ret = &ptr->major_device;
-	return 0;
+        return 0;
 }
 
 /**
@@ -7630,7 +7630,7 @@ int idmef_inode_new_major_device(idmef_inode_t *ptr, uint32_t **ret)
  */
 uint32_t *idmef_inode_get_minor_device(idmef_inode_t *ptr)
 {
-	return ptr->minor_device_is_set ? &ptr->minor_device : NULL;
+        return ptr->minor_device_is_set ? &ptr->minor_device : NULL;
 }
 
 /**
@@ -7645,8 +7645,8 @@ uint32_t *idmef_inode_get_minor_device(idmef_inode_t *ptr)
 
 void idmef_inode_set_minor_device(idmef_inode_t *ptr, uint32_t minor_device)
 {
-	ptr->minor_device = minor_device;
-	ptr->minor_device_is_set = 1;
+        ptr->minor_device = minor_device;
+        ptr->minor_device_is_set = 1;
 }
 
 
@@ -7668,10 +7668,10 @@ void idmef_inode_unset_minor_device(idmef_inode_t *ptr)
  */
 int idmef_inode_new_minor_device(idmef_inode_t *ptr, uint32_t **ret)
 {
-	ptr->minor_device_is_set = 1;
+        ptr->minor_device_is_set = 1;
 
         *ret = &ptr->minor_device;
-	return 0;
+        return 0;
 }
 
 /**
@@ -7684,7 +7684,7 @@ int idmef_inode_new_minor_device(idmef_inode_t *ptr, uint32_t **ret)
  */
 uint32_t *idmef_inode_get_c_major_device(idmef_inode_t *ptr)
 {
-	return ptr->c_major_device_is_set ? &ptr->c_major_device : NULL;
+        return ptr->c_major_device_is_set ? &ptr->c_major_device : NULL;
 }
 
 /**
@@ -7699,8 +7699,8 @@ uint32_t *idmef_inode_get_c_major_device(idmef_inode_t *ptr)
 
 void idmef_inode_set_c_major_device(idmef_inode_t *ptr, uint32_t c_major_device)
 {
-	ptr->c_major_device = c_major_device;
-	ptr->c_major_device_is_set = 1;
+        ptr->c_major_device = c_major_device;
+        ptr->c_major_device_is_set = 1;
 }
 
 
@@ -7722,10 +7722,10 @@ void idmef_inode_unset_c_major_device(idmef_inode_t *ptr)
  */
 int idmef_inode_new_c_major_device(idmef_inode_t *ptr, uint32_t **ret)
 {
-	ptr->c_major_device_is_set = 1;
+        ptr->c_major_device_is_set = 1;
 
         *ret = &ptr->c_major_device;
-	return 0;
+        return 0;
 }
 
 /**
@@ -7738,7 +7738,7 @@ int idmef_inode_new_c_major_device(idmef_inode_t *ptr, uint32_t **ret)
  */
 uint32_t *idmef_inode_get_c_minor_device(idmef_inode_t *ptr)
 {
-	return ptr->c_minor_device_is_set ? &ptr->c_minor_device : NULL;
+        return ptr->c_minor_device_is_set ? &ptr->c_minor_device : NULL;
 }
 
 /**
@@ -7753,8 +7753,8 @@ uint32_t *idmef_inode_get_c_minor_device(idmef_inode_t *ptr)
 
 void idmef_inode_set_c_minor_device(idmef_inode_t *ptr, uint32_t c_minor_device)
 {
-	ptr->c_minor_device = c_minor_device;
-	ptr->c_minor_device_is_set = 1;
+        ptr->c_minor_device = c_minor_device;
+        ptr->c_minor_device_is_set = 1;
 }
 
 
@@ -7776,10 +7776,10 @@ void idmef_inode_unset_c_minor_device(idmef_inode_t *ptr)
  */
 int idmef_inode_new_c_minor_device(idmef_inode_t *ptr, uint32_t **ret)
 {
-	ptr->c_minor_device_is_set = 1;
+        ptr->c_minor_device_is_set = 1;
 
         *ret = &ptr->c_minor_device;
-	return 0;
+        return 0;
 }
 
 /**
@@ -7792,15 +7792,15 @@ int idmef_inode_new_c_minor_device(idmef_inode_t *ptr, uint32_t **ret)
  */
 int idmef_checksum_new(idmef_checksum_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	prelude_list_init(&(*ret)->list);
+        prelude_list_init(&(*ret)->list);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	return 0;
+        return 0;
 
 }
 
@@ -7815,18 +7815,18 @@ int idmef_checksum_new(idmef_checksum_t **ret)
  */
 idmef_checksum_t *idmef_checksum_ref(idmef_checksum_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_checksum_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_checksum_t *ptr = p;
+        idmef_checksum_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr, & ptr->value);        
@@ -7836,29 +7836,29 @@ int idmef_checksum_get_child(void *p, idmef_class_child_id_t child, void **child
                        return idmef_value_new_enum_from_numeric((idmef_value_t **) childptr, 
                                                                 IDMEF_CLASS_ID_CHECKSUM_ALGORITHM, ptr->algorithm);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_checksum_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_checksum_t *ptr = p;
+        idmef_checksum_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_checksum_new_value(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_checksum_new_value(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_checksum_new_key(ptr, (prelude_string_t **) ret);
+                case 1:
+                        return idmef_checksum_new_key(ptr, (prelude_string_t **) ret);
 
-		case 2:
-			return idmef_checksum_new_algorithm(ptr, (idmef_checksum_algorithm_t **) ret);
+                case 2:
+                        return idmef_checksum_new_algorithm(ptr, (idmef_checksum_algorithm_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_checksum_destroy_internal(idmef_checksum_t *ptr)
@@ -7867,15 +7867,15 @@ static void idmef_checksum_destroy_internal(idmef_checksum_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
-	prelude_string_destroy_internal(&ptr->value);
+        prelude_string_destroy_internal(&ptr->value);
 
-	if ( ptr->key ) {
-		prelude_string_destroy(ptr->key);
-		ptr->key = NULL;
-	}
+        if ( ptr->key ) {
+                prelude_string_destroy(ptr->key);
+                ptr->key = NULL;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -7888,10 +7888,10 @@ static void idmef_checksum_destroy_internal(idmef_checksum_t *ptr)
 
 void idmef_checksum_destroy(idmef_checksum_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_checksum_destroy_internal(ptr);
+        idmef_checksum_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -7905,7 +7905,7 @@ void idmef_checksum_destroy(idmef_checksum_t *ptr)
  */
 prelude_string_t *idmef_checksum_get_value(idmef_checksum_t *ptr)
 {
-	return &ptr->value;
+        return &ptr->value;
 }
 
 /**
@@ -7923,7 +7923,7 @@ void idmef_checksum_set_value(idmef_checksum_t *ptr, prelude_string_t *value)
         prelude_string_destroy_internal(&ptr->value);
         if ( value ) {
                 memcpy(&ptr->value, value, sizeof (ptr->value));
-	        free(value);
+                free(value);
         }
 }
 
@@ -7939,10 +7939,10 @@ void idmef_checksum_set_value(idmef_checksum_t *ptr, prelude_string_t *value)
  */
 int idmef_checksum_new_value(idmef_checksum_t *ptr, prelude_string_t **ret)
 {
-	prelude_string_destroy_internal(&ptr->value);
+        prelude_string_destroy_internal(&ptr->value);
 
         *ret = &ptr->value;
-	return 0;
+        return 0;
 }
 
 /**
@@ -7955,7 +7955,7 @@ int idmef_checksum_new_value(idmef_checksum_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_checksum_get_key(idmef_checksum_t *ptr)
 {
-	return ptr->key;
+        return ptr->key;
 }
 
 /**
@@ -7970,10 +7970,10 @@ prelude_string_t *idmef_checksum_get_key(idmef_checksum_t *ptr)
 
 void idmef_checksum_set_key(idmef_checksum_t *ptr, prelude_string_t *key)
 {
-	if ( ptr->key )
-		prelude_string_destroy(ptr->key);
+        if ( ptr->key )
+                prelude_string_destroy(ptr->key);
 
-	ptr->key = key;
+        ptr->key = key;
 }
 
 /**
@@ -7990,15 +7990,15 @@ int idmef_checksum_new_key(idmef_checksum_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->key )
-		prelude_string_destroy(ptr->key);
-		
-	retval = prelude_string_new(&ptr->key);
+        if ( ptr->key )
+                prelude_string_destroy(ptr->key);
+                
+        retval = prelude_string_new(&ptr->key);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->key;
-	return 0;
+        return 0;
 }
 
 /**
@@ -8011,7 +8011,7 @@ int idmef_checksum_new_key(idmef_checksum_t *ptr, prelude_string_t **ret)
  */
 idmef_checksum_algorithm_t idmef_checksum_get_algorithm(idmef_checksum_t *ptr)
 {
-	return ptr->algorithm;
+        return ptr->algorithm;
 }
 
 /**
@@ -8026,7 +8026,7 @@ idmef_checksum_algorithm_t idmef_checksum_get_algorithm(idmef_checksum_t *ptr)
 
 void idmef_checksum_set_algorithm(idmef_checksum_t *ptr, idmef_checksum_algorithm_t algorithm)
 {
-	ptr->algorithm = algorithm;
+        ptr->algorithm = algorithm;
 }
 
 /**
@@ -8042,7 +8042,7 @@ void idmef_checksum_set_algorithm(idmef_checksum_t *ptr, idmef_checksum_algorith
 int idmef_checksum_new_algorithm(idmef_checksum_t *ptr, idmef_checksum_algorithm_t **ret)
 {
         *ret = &ptr->algorithm;
-	return 0;
+        return 0;
 }
 
 /**
@@ -8055,24 +8055,24 @@ int idmef_checksum_new_algorithm(idmef_checksum_t *ptr, idmef_checksum_algorithm
  */
 int idmef_file_new(idmef_file_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	prelude_list_init(&(*ret)->list);
+        prelude_list_init(&(*ret)->list);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	prelude_list_init(&(*ret)->file_access_list);
+        prelude_list_init(&(*ret)->file_access_list);
     
 
-	prelude_list_init(&(*ret)->linkage_list);
+        prelude_list_init(&(*ret)->linkage_list);
     
 
-	prelude_list_init(&(*ret)->checksum_list);
+        prelude_list_init(&(*ret)->checksum_list);
     
 
-	return 0;
+        return 0;
 
 }
 
@@ -8087,18 +8087,18 @@ int idmef_file_new(idmef_file_t **ret)
  */
 idmef_file_t *idmef_file_ref(idmef_file_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_file_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_file_t *ptr = p;
+        idmef_file_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
@@ -8113,26 +8113,26 @@ int idmef_file_get_child(void *p, idmef_class_child_id_t child, void **childptr)
                 case 5:
                        return get_value_from_time((idmef_value_t **) childptr,  ptr->access_time);
                 case 6:
-	               return (ptr->data_size_is_set) ? idmef_value_new_uint64((idmef_value_t **) childptr, ptr->data_size) : 0;
+                       return (ptr->data_size_is_set) ? idmef_value_new_uint64((idmef_value_t **) childptr, ptr->data_size) : 0;
 
                 case 7:
-	               return (ptr->disk_size_is_set) ? idmef_value_new_uint64((idmef_value_t **) childptr, ptr->disk_size) : 0;
+                       return (ptr->disk_size_is_set) ? idmef_value_new_uint64((idmef_value_t **) childptr, ptr->disk_size) : 0;
 
-		case 8:
+                case 8:
                         *childptr = &ptr->file_access_list;
-			return 0;
+                        return 0;
 
-		case 9:
+                case 9:
                         *childptr = &ptr->linkage_list;
-			return 0;
+                        return 0;
 
-		case 10:
+                case 10:
                         *childptr = ptr->inode;
                         return 0;
 
-		case 11:
+                case 11:
                         *childptr = &ptr->checksum_list;
-			return 0;
+                        return 0;
         
                 case 12:
                        return idmef_value_new_enum_from_numeric((idmef_value_t **) childptr, 
@@ -8146,42 +8146,42 @@ int idmef_file_get_child(void *p, idmef_class_child_id_t child, void **childptr)
         
                 case 14:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->file_type);
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_file_t *ptr = p;
+        idmef_file_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_file_new_ident(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_file_new_ident(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_file_new_name(ptr, (prelude_string_t **) ret);
+                case 1:
+                        return idmef_file_new_name(ptr, (prelude_string_t **) ret);
 
-		case 2:
-			return idmef_file_new_path(ptr, (prelude_string_t **) ret);
+                case 2:
+                        return idmef_file_new_path(ptr, (prelude_string_t **) ret);
 
-		case 3:
-			return idmef_file_new_create_time(ptr, (idmef_time_t **) ret);
+                case 3:
+                        return idmef_file_new_create_time(ptr, (idmef_time_t **) ret);
 
-		case 4:
-			return idmef_file_new_modify_time(ptr, (idmef_time_t **) ret);
+                case 4:
+                        return idmef_file_new_modify_time(ptr, (idmef_time_t **) ret);
 
-		case 5:
-			return idmef_file_new_access_time(ptr, (idmef_time_t **) ret);
+                case 5:
+                        return idmef_file_new_access_time(ptr, (idmef_time_t **) ret);
 
-		case 6:
-			return idmef_file_new_data_size(ptr, (uint64_t **) ret);
+                case 6:
+                        return idmef_file_new_data_size(ptr, (uint64_t **) ret);
 
-		case 7:
-			return idmef_file_new_disk_size(ptr, (uint64_t **) ret);
+                case 7:
+                        return idmef_file_new_disk_size(ptr, (uint64_t **) ret);
 
-		case 8: {
+                case 8: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -8213,9 +8213,9 @@ int idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **re
                         }
 
                         return idmef_file_new_file_access(ptr, (idmef_file_access_t **) ret, n);
-		}
+                }
 
-		case 9: {
+                case 9: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -8247,12 +8247,12 @@ int idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **re
                         }
 
                         return idmef_file_new_linkage(ptr, (idmef_linkage_t **) ret, n);
-		}
+                }
 
-		case 10:
-			return idmef_file_new_inode(ptr, (idmef_inode_t **) ret);
+                case 10:
+                        return idmef_file_new_inode(ptr, (idmef_inode_t **) ret);
 
-		case 11: {
+                case 11: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -8284,20 +8284,20 @@ int idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **re
                         }
 
                         return idmef_file_new_checksum(ptr, (idmef_checksum_t **) ret, n);
-		}
+                }
 
-		case 12:
-			return idmef_file_new_category(ptr, (idmef_file_category_t **) ret);
+                case 12:
+                        return idmef_file_new_category(ptr, (idmef_file_category_t **) ret);
 
-		case 13:
-			return idmef_file_new_fstype(ptr, (idmef_file_fstype_t **) ret);
+                case 13:
+                        return idmef_file_new_fstype(ptr, (idmef_file_fstype_t **) ret);
 
-		case 14:
-			return idmef_file_new_file_type(ptr, (prelude_string_t **) ret);
+                case 14:
+                        return idmef_file_new_file_type(ptr, (prelude_string_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_file_destroy_internal(idmef_file_t *ptr)
@@ -8306,75 +8306,75 @@ static void idmef_file_destroy_internal(idmef_file_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
-	if ( ptr->ident ) {
-		prelude_string_destroy(ptr->ident);
-		ptr->ident = NULL;
-	}
+        if ( ptr->ident ) {
+                prelude_string_destroy(ptr->ident);
+                ptr->ident = NULL;
+        }
 
-	prelude_string_destroy_internal(&ptr->name);
+        prelude_string_destroy_internal(&ptr->name);
 
-	prelude_string_destroy_internal(&ptr->path);
+        prelude_string_destroy_internal(&ptr->path);
 
-	if ( ptr->create_time ) {
-		idmef_time_destroy(ptr->create_time);
-		ptr->create_time = NULL;
-	}
+        if ( ptr->create_time ) {
+                idmef_time_destroy(ptr->create_time);
+                ptr->create_time = NULL;
+        }
 
-	if ( ptr->modify_time ) {
-		idmef_time_destroy(ptr->modify_time);
-		ptr->modify_time = NULL;
-	}
+        if ( ptr->modify_time ) {
+                idmef_time_destroy(ptr->modify_time);
+                ptr->modify_time = NULL;
+        }
 
-	if ( ptr->access_time ) {
-		idmef_time_destroy(ptr->access_time);
-		ptr->access_time = NULL;
-	}
+        if ( ptr->access_time ) {
+                idmef_time_destroy(ptr->access_time);
+                ptr->access_time = NULL;
+        }
 
-	{
-		prelude_list_t *n, *tmp;
-		idmef_file_access_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                idmef_file_access_t *entry;
 
-		prelude_list_for_each_safe(&ptr->file_access_list, tmp, n) {
-			entry = prelude_list_entry(tmp, idmef_file_access_t, list);
+                prelude_list_for_each_safe(&ptr->file_access_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_file_access_t, list);
                         prelude_list_del_init(&entry->list);
-			idmef_file_access_destroy(entry);
-		}
-	}
+                        idmef_file_access_destroy(entry);
+                }
+        }
 
-	{
-		prelude_list_t *n, *tmp;
-		idmef_linkage_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                idmef_linkage_t *entry;
 
-		prelude_list_for_each_safe(&ptr->linkage_list, tmp, n) {
-			entry = prelude_list_entry(tmp, idmef_linkage_t, list);
+                prelude_list_for_each_safe(&ptr->linkage_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_linkage_t, list);
                         prelude_list_del_init(&entry->list);
-			idmef_linkage_destroy(entry);
-		}
-	}
+                        idmef_linkage_destroy(entry);
+                }
+        }
 
-	if ( ptr->inode ) {
-		idmef_inode_destroy(ptr->inode);
-		ptr->inode = NULL;
-	}
+        if ( ptr->inode ) {
+                idmef_inode_destroy(ptr->inode);
+                ptr->inode = NULL;
+        }
 
-	{
-		prelude_list_t *n, *tmp;
-		idmef_checksum_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                idmef_checksum_t *entry;
 
-		prelude_list_for_each_safe(&ptr->checksum_list, tmp, n) {
-			entry = prelude_list_entry(tmp, idmef_checksum_t, list);
+                prelude_list_for_each_safe(&ptr->checksum_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_checksum_t, list);
                         prelude_list_del_init(&entry->list);
-			idmef_checksum_destroy(entry);
-		}
-	}
+                        idmef_checksum_destroy(entry);
+                }
+        }
 
-	if ( ptr->file_type ) {
-		prelude_string_destroy(ptr->file_type);
-		ptr->file_type = NULL;
-	}
+        if ( ptr->file_type ) {
+                prelude_string_destroy(ptr->file_type);
+                ptr->file_type = NULL;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -8387,10 +8387,10 @@ static void idmef_file_destroy_internal(idmef_file_t *ptr)
 
 void idmef_file_destroy(idmef_file_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_file_destroy_internal(ptr);
+        idmef_file_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -8404,7 +8404,7 @@ void idmef_file_destroy(idmef_file_t *ptr)
  */
 prelude_string_t *idmef_file_get_ident(idmef_file_t *ptr)
 {
-	return ptr->ident;
+        return ptr->ident;
 }
 
 /**
@@ -8419,10 +8419,10 @@ prelude_string_t *idmef_file_get_ident(idmef_file_t *ptr)
 
 void idmef_file_set_ident(idmef_file_t *ptr, prelude_string_t *ident)
 {
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
 
-	ptr->ident = ident;
+        ptr->ident = ident;
 }
 
 /**
@@ -8439,15 +8439,15 @@ int idmef_file_new_ident(idmef_file_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
-		
-	retval = prelude_string_new(&ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
+                
+        retval = prelude_string_new(&ptr->ident);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->ident;
-	return 0;
+        return 0;
 }
 
 /**
@@ -8460,7 +8460,7 @@ int idmef_file_new_ident(idmef_file_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_file_get_name(idmef_file_t *ptr)
 {
-	return &ptr->name;
+        return &ptr->name;
 }
 
 /**
@@ -8478,7 +8478,7 @@ void idmef_file_set_name(idmef_file_t *ptr, prelude_string_t *name)
         prelude_string_destroy_internal(&ptr->name);
         if ( name ) {
                 memcpy(&ptr->name, name, sizeof (ptr->name));
-	        free(name);
+                free(name);
         }
 }
 
@@ -8494,10 +8494,10 @@ void idmef_file_set_name(idmef_file_t *ptr, prelude_string_t *name)
  */
 int idmef_file_new_name(idmef_file_t *ptr, prelude_string_t **ret)
 {
-	prelude_string_destroy_internal(&ptr->name);
+        prelude_string_destroy_internal(&ptr->name);
 
         *ret = &ptr->name;
-	return 0;
+        return 0;
 }
 
 /**
@@ -8510,7 +8510,7 @@ int idmef_file_new_name(idmef_file_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_file_get_path(idmef_file_t *ptr)
 {
-	return &ptr->path;
+        return &ptr->path;
 }
 
 /**
@@ -8528,7 +8528,7 @@ void idmef_file_set_path(idmef_file_t *ptr, prelude_string_t *path)
         prelude_string_destroy_internal(&ptr->path);
         if ( path ) {
                 memcpy(&ptr->path, path, sizeof (ptr->path));
-	        free(path);
+                free(path);
         }
 }
 
@@ -8544,10 +8544,10 @@ void idmef_file_set_path(idmef_file_t *ptr, prelude_string_t *path)
  */
 int idmef_file_new_path(idmef_file_t *ptr, prelude_string_t **ret)
 {
-	prelude_string_destroy_internal(&ptr->path);
+        prelude_string_destroy_internal(&ptr->path);
 
         *ret = &ptr->path;
-	return 0;
+        return 0;
 }
 
 /**
@@ -8560,7 +8560,7 @@ int idmef_file_new_path(idmef_file_t *ptr, prelude_string_t **ret)
  */
 idmef_time_t *idmef_file_get_create_time(idmef_file_t *ptr)
 {
-	return ptr->create_time;
+        return ptr->create_time;
 }
 
 /**
@@ -8575,10 +8575,10 @@ idmef_time_t *idmef_file_get_create_time(idmef_file_t *ptr)
 
 void idmef_file_set_create_time(idmef_file_t *ptr, idmef_time_t *create_time)
 {
-	if ( ptr->create_time )
-		idmef_time_destroy(ptr->create_time);
+        if ( ptr->create_time )
+                idmef_time_destroy(ptr->create_time);
 
-	ptr->create_time = create_time;
+        ptr->create_time = create_time;
 }
 
 /**
@@ -8595,15 +8595,15 @@ int idmef_file_new_create_time(idmef_file_t *ptr, idmef_time_t **ret)
 {
         int retval;
 
-	if ( ptr->create_time )
-		idmef_time_destroy(ptr->create_time);
-		
-	retval = idmef_time_new(&ptr->create_time);
+        if ( ptr->create_time )
+                idmef_time_destroy(ptr->create_time);
+                
+        retval = idmef_time_new(&ptr->create_time);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->create_time;
-	return 0;
+        return 0;
 }
 
 /**
@@ -8616,7 +8616,7 @@ int idmef_file_new_create_time(idmef_file_t *ptr, idmef_time_t **ret)
  */
 idmef_time_t *idmef_file_get_modify_time(idmef_file_t *ptr)
 {
-	return ptr->modify_time;
+        return ptr->modify_time;
 }
 
 /**
@@ -8631,10 +8631,10 @@ idmef_time_t *idmef_file_get_modify_time(idmef_file_t *ptr)
 
 void idmef_file_set_modify_time(idmef_file_t *ptr, idmef_time_t *modify_time)
 {
-	if ( ptr->modify_time )
-		idmef_time_destroy(ptr->modify_time);
+        if ( ptr->modify_time )
+                idmef_time_destroy(ptr->modify_time);
 
-	ptr->modify_time = modify_time;
+        ptr->modify_time = modify_time;
 }
 
 /**
@@ -8651,15 +8651,15 @@ int idmef_file_new_modify_time(idmef_file_t *ptr, idmef_time_t **ret)
 {
         int retval;
 
-	if ( ptr->modify_time )
-		idmef_time_destroy(ptr->modify_time);
-		
-	retval = idmef_time_new(&ptr->modify_time);
+        if ( ptr->modify_time )
+                idmef_time_destroy(ptr->modify_time);
+                
+        retval = idmef_time_new(&ptr->modify_time);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->modify_time;
-	return 0;
+        return 0;
 }
 
 /**
@@ -8672,7 +8672,7 @@ int idmef_file_new_modify_time(idmef_file_t *ptr, idmef_time_t **ret)
  */
 idmef_time_t *idmef_file_get_access_time(idmef_file_t *ptr)
 {
-	return ptr->access_time;
+        return ptr->access_time;
 }
 
 /**
@@ -8687,10 +8687,10 @@ idmef_time_t *idmef_file_get_access_time(idmef_file_t *ptr)
 
 void idmef_file_set_access_time(idmef_file_t *ptr, idmef_time_t *access_time)
 {
-	if ( ptr->access_time )
-		idmef_time_destroy(ptr->access_time);
+        if ( ptr->access_time )
+                idmef_time_destroy(ptr->access_time);
 
-	ptr->access_time = access_time;
+        ptr->access_time = access_time;
 }
 
 /**
@@ -8707,15 +8707,15 @@ int idmef_file_new_access_time(idmef_file_t *ptr, idmef_time_t **ret)
 {
         int retval;
 
-	if ( ptr->access_time )
-		idmef_time_destroy(ptr->access_time);
-		
-	retval = idmef_time_new(&ptr->access_time);
+        if ( ptr->access_time )
+                idmef_time_destroy(ptr->access_time);
+                
+        retval = idmef_time_new(&ptr->access_time);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->access_time;
-	return 0;
+        return 0;
 }
 
 /**
@@ -8728,7 +8728,7 @@ int idmef_file_new_access_time(idmef_file_t *ptr, idmef_time_t **ret)
  */
 uint64_t *idmef_file_get_data_size(idmef_file_t *ptr)
 {
-	return ptr->data_size_is_set ? &ptr->data_size : NULL;
+        return ptr->data_size_is_set ? &ptr->data_size : NULL;
 }
 
 /**
@@ -8743,8 +8743,8 @@ uint64_t *idmef_file_get_data_size(idmef_file_t *ptr)
 
 void idmef_file_set_data_size(idmef_file_t *ptr, uint64_t data_size)
 {
-	ptr->data_size = data_size;
-	ptr->data_size_is_set = 1;
+        ptr->data_size = data_size;
+        ptr->data_size_is_set = 1;
 }
 
 
@@ -8766,10 +8766,10 @@ void idmef_file_unset_data_size(idmef_file_t *ptr)
  */
 int idmef_file_new_data_size(idmef_file_t *ptr, uint64_t **ret)
 {
-	ptr->data_size_is_set = 1;
+        ptr->data_size_is_set = 1;
 
         *ret = &ptr->data_size;
-	return 0;
+        return 0;
 }
 
 /**
@@ -8782,7 +8782,7 @@ int idmef_file_new_data_size(idmef_file_t *ptr, uint64_t **ret)
  */
 uint64_t *idmef_file_get_disk_size(idmef_file_t *ptr)
 {
-	return ptr->disk_size_is_set ? &ptr->disk_size : NULL;
+        return ptr->disk_size_is_set ? &ptr->disk_size : NULL;
 }
 
 /**
@@ -8797,8 +8797,8 @@ uint64_t *idmef_file_get_disk_size(idmef_file_t *ptr)
 
 void idmef_file_set_disk_size(idmef_file_t *ptr, uint64_t disk_size)
 {
-	ptr->disk_size = disk_size;
-	ptr->disk_size_is_set = 1;
+        ptr->disk_size = disk_size;
+        ptr->disk_size_is_set = 1;
 }
 
 
@@ -8820,10 +8820,10 @@ void idmef_file_unset_disk_size(idmef_file_t *ptr)
  */
 int idmef_file_new_disk_size(idmef_file_t *ptr, uint64_t **ret)
 {
-	ptr->disk_size_is_set = 1;
+        ptr->disk_size_is_set = 1;
 
         *ret = &ptr->disk_size;
-	return 0;
+        return 0;
 }
 
 /**
@@ -8978,7 +8978,7 @@ int idmef_file_new_linkage(idmef_file_t *ptr, idmef_linkage_t **ret, int pos)
  */
 idmef_inode_t *idmef_file_get_inode(idmef_file_t *ptr)
 {
-	return ptr->inode;
+        return ptr->inode;
 }
 
 /**
@@ -8993,10 +8993,10 @@ idmef_inode_t *idmef_file_get_inode(idmef_file_t *ptr)
 
 void idmef_file_set_inode(idmef_file_t *ptr, idmef_inode_t *inode)
 {
-	if ( ptr->inode )
-		idmef_inode_destroy(ptr->inode);
+        if ( ptr->inode )
+                idmef_inode_destroy(ptr->inode);
 
-	ptr->inode = inode;
+        ptr->inode = inode;
 }
 
 /**
@@ -9013,11 +9013,11 @@ int idmef_file_new_inode(idmef_file_t *ptr, idmef_inode_t **ret)
 {
         int retval;
 
-	if ( ! ptr->inode )
-		retval = idmef_inode_new(&ptr->inode);
+        if ( ! ptr->inode )
+                retval = idmef_inode_new(&ptr->inode);
 
         *ret = ptr->inode;
-	return 0;
+        return 0;
 }
 
 /**
@@ -9101,7 +9101,7 @@ int idmef_file_new_checksum(idmef_file_t *ptr, idmef_checksum_t **ret, int pos)
  */
 idmef_file_category_t idmef_file_get_category(idmef_file_t *ptr)
 {
-	return ptr->category;
+        return ptr->category;
 }
 
 /**
@@ -9116,7 +9116,7 @@ idmef_file_category_t idmef_file_get_category(idmef_file_t *ptr)
 
 void idmef_file_set_category(idmef_file_t *ptr, idmef_file_category_t category)
 {
-	ptr->category = category;
+        ptr->category = category;
 }
 
 /**
@@ -9132,7 +9132,7 @@ void idmef_file_set_category(idmef_file_t *ptr, idmef_file_category_t category)
 int idmef_file_new_category(idmef_file_t *ptr, idmef_file_category_t **ret)
 {
         *ret = &ptr->category;
-	return 0;
+        return 0;
 }
 
 /**
@@ -9145,7 +9145,7 @@ int idmef_file_new_category(idmef_file_t *ptr, idmef_file_category_t **ret)
  */
 idmef_file_fstype_t *idmef_file_get_fstype(idmef_file_t *ptr)
 {
-	return ptr->fstype_is_set ? &ptr->fstype : NULL;
+        return ptr->fstype_is_set ? &ptr->fstype : NULL;
 }
 
 /**
@@ -9160,8 +9160,8 @@ idmef_file_fstype_t *idmef_file_get_fstype(idmef_file_t *ptr)
 
 void idmef_file_set_fstype(idmef_file_t *ptr, idmef_file_fstype_t fstype)
 {
-	ptr->fstype = fstype;
-	ptr->fstype_is_set = 1;
+        ptr->fstype = fstype;
+        ptr->fstype_is_set = 1;
 }
 
 
@@ -9183,10 +9183,10 @@ void idmef_file_unset_fstype(idmef_file_t *ptr)
  */
 int idmef_file_new_fstype(idmef_file_t *ptr, idmef_file_fstype_t **ret)
 {
-	ptr->fstype_is_set = 1;
+        ptr->fstype_is_set = 1;
 
         *ret = &ptr->fstype;
-	return 0;
+        return 0;
 }
 
 /**
@@ -9199,7 +9199,7 @@ int idmef_file_new_fstype(idmef_file_t *ptr, idmef_file_fstype_t **ret)
  */
 prelude_string_t *idmef_file_get_file_type(idmef_file_t *ptr)
 {
-	return ptr->file_type;
+        return ptr->file_type;
 }
 
 /**
@@ -9214,10 +9214,10 @@ prelude_string_t *idmef_file_get_file_type(idmef_file_t *ptr)
 
 void idmef_file_set_file_type(idmef_file_t *ptr, prelude_string_t *file_type)
 {
-	if ( ptr->file_type )
-		prelude_string_destroy(ptr->file_type);
+        if ( ptr->file_type )
+                prelude_string_destroy(ptr->file_type);
 
-	ptr->file_type = file_type;
+        ptr->file_type = file_type;
 }
 
 /**
@@ -9234,15 +9234,15 @@ int idmef_file_new_file_type(idmef_file_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->file_type )
-		prelude_string_destroy(ptr->file_type);
-		
-	retval = prelude_string_new(&ptr->file_type);
+        if ( ptr->file_type )
+                prelude_string_destroy(ptr->file_type);
+                
+        retval = prelude_string_new(&ptr->file_type);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->file_type;
-	return 0;
+        return 0;
 }
 
 /**
@@ -9255,15 +9255,15 @@ int idmef_file_new_file_type(idmef_file_t *ptr, prelude_string_t **ret)
  */
 int idmef_linkage_new(idmef_linkage_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	prelude_list_init(&(*ret)->list);
+        prelude_list_init(&(*ret)->list);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	return 0;
+        return 0;
 
 }
 
@@ -9278,18 +9278,18 @@ int idmef_linkage_new(idmef_linkage_t **ret)
  */
 idmef_linkage_t *idmef_linkage_ref(idmef_linkage_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_linkage_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_linkage_t *ptr = p;
+        idmef_linkage_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return idmef_value_new_enum_from_numeric((idmef_value_t **) childptr, 
@@ -9299,36 +9299,36 @@ int idmef_linkage_get_child(void *p, idmef_class_child_id_t child, void **childp
                        return get_value_from_string((idmef_value_t **) childptr, & ptr->name);        
                 case 2:
                        return get_value_from_string((idmef_value_t **) childptr, & ptr->path);
-		case 3:
+                case 3:
                         *childptr = ptr->file;
                         return 0;
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_linkage_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_linkage_t *ptr = p;
+        idmef_linkage_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_linkage_new_category(ptr, (idmef_linkage_category_t **) ret);
+                case 0:
+                        return idmef_linkage_new_category(ptr, (idmef_linkage_category_t **) ret);
 
-		case 1:
-			return idmef_linkage_new_name(ptr, (prelude_string_t **) ret);
+                case 1:
+                        return idmef_linkage_new_name(ptr, (prelude_string_t **) ret);
 
-		case 2:
-			return idmef_linkage_new_path(ptr, (prelude_string_t **) ret);
+                case 2:
+                        return idmef_linkage_new_path(ptr, (prelude_string_t **) ret);
 
-		case 3:
-			return idmef_linkage_new_file(ptr, (idmef_file_t **) ret);
+                case 3:
+                        return idmef_linkage_new_file(ptr, (idmef_file_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_linkage_destroy_internal(idmef_linkage_t *ptr)
@@ -9337,17 +9337,17 @@ static void idmef_linkage_destroy_internal(idmef_linkage_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
-	prelude_string_destroy_internal(&ptr->name);
+        prelude_string_destroy_internal(&ptr->name);
 
-	prelude_string_destroy_internal(&ptr->path);
+        prelude_string_destroy_internal(&ptr->path);
 
-	if ( ptr->file ) {
-		idmef_file_destroy(ptr->file);
-		ptr->file = NULL;
-	}
+        if ( ptr->file ) {
+                idmef_file_destroy(ptr->file);
+                ptr->file = NULL;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -9360,10 +9360,10 @@ static void idmef_linkage_destroy_internal(idmef_linkage_t *ptr)
 
 void idmef_linkage_destroy(idmef_linkage_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_linkage_destroy_internal(ptr);
+        idmef_linkage_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -9377,7 +9377,7 @@ void idmef_linkage_destroy(idmef_linkage_t *ptr)
  */
 idmef_linkage_category_t idmef_linkage_get_category(idmef_linkage_t *ptr)
 {
-	return ptr->category;
+        return ptr->category;
 }
 
 /**
@@ -9392,7 +9392,7 @@ idmef_linkage_category_t idmef_linkage_get_category(idmef_linkage_t *ptr)
 
 void idmef_linkage_set_category(idmef_linkage_t *ptr, idmef_linkage_category_t category)
 {
-	ptr->category = category;
+        ptr->category = category;
 }
 
 /**
@@ -9408,7 +9408,7 @@ void idmef_linkage_set_category(idmef_linkage_t *ptr, idmef_linkage_category_t c
 int idmef_linkage_new_category(idmef_linkage_t *ptr, idmef_linkage_category_t **ret)
 {
         *ret = &ptr->category;
-	return 0;
+        return 0;
 }
 
 /**
@@ -9421,7 +9421,7 @@ int idmef_linkage_new_category(idmef_linkage_t *ptr, idmef_linkage_category_t **
  */
 prelude_string_t *idmef_linkage_get_name(idmef_linkage_t *ptr)
 {
-	return &ptr->name;
+        return &ptr->name;
 }
 
 /**
@@ -9439,7 +9439,7 @@ void idmef_linkage_set_name(idmef_linkage_t *ptr, prelude_string_t *name)
         prelude_string_destroy_internal(&ptr->name);
         if ( name ) {
                 memcpy(&ptr->name, name, sizeof (ptr->name));
-	        free(name);
+                free(name);
         }
 }
 
@@ -9455,10 +9455,10 @@ void idmef_linkage_set_name(idmef_linkage_t *ptr, prelude_string_t *name)
  */
 int idmef_linkage_new_name(idmef_linkage_t *ptr, prelude_string_t **ret)
 {
-	prelude_string_destroy_internal(&ptr->name);
+        prelude_string_destroy_internal(&ptr->name);
 
         *ret = &ptr->name;
-	return 0;
+        return 0;
 }
 
 /**
@@ -9471,7 +9471,7 @@ int idmef_linkage_new_name(idmef_linkage_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_linkage_get_path(idmef_linkage_t *ptr)
 {
-	return &ptr->path;
+        return &ptr->path;
 }
 
 /**
@@ -9489,7 +9489,7 @@ void idmef_linkage_set_path(idmef_linkage_t *ptr, prelude_string_t *path)
         prelude_string_destroy_internal(&ptr->path);
         if ( path ) {
                 memcpy(&ptr->path, path, sizeof (ptr->path));
-	        free(path);
+                free(path);
         }
 }
 
@@ -9505,10 +9505,10 @@ void idmef_linkage_set_path(idmef_linkage_t *ptr, prelude_string_t *path)
  */
 int idmef_linkage_new_path(idmef_linkage_t *ptr, prelude_string_t **ret)
 {
-	prelude_string_destroy_internal(&ptr->path);
+        prelude_string_destroy_internal(&ptr->path);
 
         *ret = &ptr->path;
-	return 0;
+        return 0;
 }
 
 /**
@@ -9521,7 +9521,7 @@ int idmef_linkage_new_path(idmef_linkage_t *ptr, prelude_string_t **ret)
  */
 idmef_file_t *idmef_linkage_get_file(idmef_linkage_t *ptr)
 {
-	return ptr->file;
+        return ptr->file;
 }
 
 /**
@@ -9536,10 +9536,10 @@ idmef_file_t *idmef_linkage_get_file(idmef_linkage_t *ptr)
 
 void idmef_linkage_set_file(idmef_linkage_t *ptr, idmef_file_t *file)
 {
-	if ( ptr->file )
-		idmef_file_destroy(ptr->file);
+        if ( ptr->file )
+                idmef_file_destroy(ptr->file);
 
-	ptr->file = file;
+        ptr->file = file;
 }
 
 /**
@@ -9556,11 +9556,11 @@ int idmef_linkage_new_file(idmef_linkage_t *ptr, idmef_file_t **ret)
 {
         int retval;
 
-	if ( ! ptr->file )
-		retval = idmef_file_new(&ptr->file);
+        if ( ! ptr->file )
+                retval = idmef_file_new(&ptr->file);
 
         *ret = ptr->file;
-	return 0;
+        return 0;
 }
 
 /**
@@ -9573,18 +9573,18 @@ int idmef_linkage_new_file(idmef_linkage_t *ptr, idmef_file_t **ret)
  */
 int idmef_target_new(idmef_target_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	prelude_list_init(&(*ret)->list);
+        prelude_list_init(&(*ret)->list);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	prelude_list_init(&(*ret)->file_list);
+        prelude_list_init(&(*ret)->file_list);
     
 
-	return 0;
+        return 0;
 
 }
 
@@ -9599,18 +9599,18 @@ int idmef_target_new(idmef_target_t **ret)
  */
 idmef_target_t *idmef_target_ref(idmef_target_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_target_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_target_t *ptr = p;
+        idmef_target_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
@@ -9620,59 +9620,59 @@ int idmef_target_get_child(void *p, idmef_class_child_id_t child, void **childpt
         
                 case 2:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->interface);
-		case 3:
+                case 3:
                         *childptr = ptr->node;
                         return 0;
 
-		case 4:
+                case 4:
                         *childptr = ptr->user;
                         return 0;
 
-		case 5:
+                case 5:
                         *childptr = ptr->process;
                         return 0;
 
-		case 6:
+                case 6:
                         *childptr = ptr->service;
                         return 0;
 
-		case 7:
+                case 7:
                         *childptr = &ptr->file_list;
-			return 0;
+                        return 0;
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_target_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_target_t *ptr = p;
+        idmef_target_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_target_new_ident(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_target_new_ident(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_target_new_decoy(ptr, (idmef_target_decoy_t **) ret);
+                case 1:
+                        return idmef_target_new_decoy(ptr, (idmef_target_decoy_t **) ret);
 
-		case 2:
-			return idmef_target_new_interface(ptr, (prelude_string_t **) ret);
+                case 2:
+                        return idmef_target_new_interface(ptr, (prelude_string_t **) ret);
 
-		case 3:
-			return idmef_target_new_node(ptr, (idmef_node_t **) ret);
+                case 3:
+                        return idmef_target_new_node(ptr, (idmef_node_t **) ret);
 
-		case 4:
-			return idmef_target_new_user(ptr, (idmef_user_t **) ret);
+                case 4:
+                        return idmef_target_new_user(ptr, (idmef_user_t **) ret);
 
-		case 5:
-			return idmef_target_new_process(ptr, (idmef_process_t **) ret);
+                case 5:
+                        return idmef_target_new_process(ptr, (idmef_process_t **) ret);
 
-		case 6:
-			return idmef_target_new_service(ptr, (idmef_service_t **) ret);
+                case 6:
+                        return idmef_target_new_service(ptr, (idmef_service_t **) ret);
 
-		case 7: {
+                case 7: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -9704,11 +9704,11 @@ int idmef_target_new_child(void *p, idmef_class_child_id_t child, int n, void **
                         }
 
                         return idmef_target_new_file(ptr, (idmef_file_t **) ret, n);
-		}
+                }
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_target_destroy_internal(idmef_target_t *ptr)
@@ -9717,49 +9717,49 @@ static void idmef_target_destroy_internal(idmef_target_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
-	if ( ptr->ident ) {
-		prelude_string_destroy(ptr->ident);
-		ptr->ident = NULL;
-	}
+        if ( ptr->ident ) {
+                prelude_string_destroy(ptr->ident);
+                ptr->ident = NULL;
+        }
 
-	if ( ptr->interface ) {
-		prelude_string_destroy(ptr->interface);
-		ptr->interface = NULL;
-	}
+        if ( ptr->interface ) {
+                prelude_string_destroy(ptr->interface);
+                ptr->interface = NULL;
+        }
 
-	if ( ptr->node ) {
-		idmef_node_destroy(ptr->node);
-		ptr->node = NULL;
-	}
+        if ( ptr->node ) {
+                idmef_node_destroy(ptr->node);
+                ptr->node = NULL;
+        }
 
-	if ( ptr->user ) {
-		idmef_user_destroy(ptr->user);
-		ptr->user = NULL;
-	}
+        if ( ptr->user ) {
+                idmef_user_destroy(ptr->user);
+                ptr->user = NULL;
+        }
 
-	if ( ptr->process ) {
-		idmef_process_destroy(ptr->process);
-		ptr->process = NULL;
-	}
+        if ( ptr->process ) {
+                idmef_process_destroy(ptr->process);
+                ptr->process = NULL;
+        }
 
-	if ( ptr->service ) {
-		idmef_service_destroy(ptr->service);
-		ptr->service = NULL;
-	}
+        if ( ptr->service ) {
+                idmef_service_destroy(ptr->service);
+                ptr->service = NULL;
+        }
 
-	{
-		prelude_list_t *n, *tmp;
-		idmef_file_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                idmef_file_t *entry;
 
-		prelude_list_for_each_safe(&ptr->file_list, tmp, n) {
-			entry = prelude_list_entry(tmp, idmef_file_t, list);
+                prelude_list_for_each_safe(&ptr->file_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_file_t, list);
                         prelude_list_del_init(&entry->list);
-			idmef_file_destroy(entry);
-		}
-	}
+                        idmef_file_destroy(entry);
+                }
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -9772,10 +9772,10 @@ static void idmef_target_destroy_internal(idmef_target_t *ptr)
 
 void idmef_target_destroy(idmef_target_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_target_destroy_internal(ptr);
+        idmef_target_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -9789,7 +9789,7 @@ void idmef_target_destroy(idmef_target_t *ptr)
  */
 prelude_string_t *idmef_target_get_ident(idmef_target_t *ptr)
 {
-	return ptr->ident;
+        return ptr->ident;
 }
 
 /**
@@ -9804,10 +9804,10 @@ prelude_string_t *idmef_target_get_ident(idmef_target_t *ptr)
 
 void idmef_target_set_ident(idmef_target_t *ptr, prelude_string_t *ident)
 {
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
 
-	ptr->ident = ident;
+        ptr->ident = ident;
 }
 
 /**
@@ -9824,15 +9824,15 @@ int idmef_target_new_ident(idmef_target_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->ident )
-		prelude_string_destroy(ptr->ident);
-		
-	retval = prelude_string_new(&ptr->ident);
+        if ( ptr->ident )
+                prelude_string_destroy(ptr->ident);
+                
+        retval = prelude_string_new(&ptr->ident);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->ident;
-	return 0;
+        return 0;
 }
 
 /**
@@ -9845,7 +9845,7 @@ int idmef_target_new_ident(idmef_target_t *ptr, prelude_string_t **ret)
  */
 idmef_target_decoy_t idmef_target_get_decoy(idmef_target_t *ptr)
 {
-	return ptr->decoy;
+        return ptr->decoy;
 }
 
 /**
@@ -9860,7 +9860,7 @@ idmef_target_decoy_t idmef_target_get_decoy(idmef_target_t *ptr)
 
 void idmef_target_set_decoy(idmef_target_t *ptr, idmef_target_decoy_t decoy)
 {
-	ptr->decoy = decoy;
+        ptr->decoy = decoy;
 }
 
 /**
@@ -9876,7 +9876,7 @@ void idmef_target_set_decoy(idmef_target_t *ptr, idmef_target_decoy_t decoy)
 int idmef_target_new_decoy(idmef_target_t *ptr, idmef_target_decoy_t **ret)
 {
         *ret = &ptr->decoy;
-	return 0;
+        return 0;
 }
 
 /**
@@ -9889,7 +9889,7 @@ int idmef_target_new_decoy(idmef_target_t *ptr, idmef_target_decoy_t **ret)
  */
 prelude_string_t *idmef_target_get_interface(idmef_target_t *ptr)
 {
-	return ptr->interface;
+        return ptr->interface;
 }
 
 /**
@@ -9904,10 +9904,10 @@ prelude_string_t *idmef_target_get_interface(idmef_target_t *ptr)
 
 void idmef_target_set_interface(idmef_target_t *ptr, prelude_string_t *interface)
 {
-	if ( ptr->interface )
-		prelude_string_destroy(ptr->interface);
+        if ( ptr->interface )
+                prelude_string_destroy(ptr->interface);
 
-	ptr->interface = interface;
+        ptr->interface = interface;
 }
 
 /**
@@ -9924,15 +9924,15 @@ int idmef_target_new_interface(idmef_target_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->interface )
-		prelude_string_destroy(ptr->interface);
-		
-	retval = prelude_string_new(&ptr->interface);
+        if ( ptr->interface )
+                prelude_string_destroy(ptr->interface);
+                
+        retval = prelude_string_new(&ptr->interface);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->interface;
-	return 0;
+        return 0;
 }
 
 /**
@@ -9945,7 +9945,7 @@ int idmef_target_new_interface(idmef_target_t *ptr, prelude_string_t **ret)
  */
 idmef_node_t *idmef_target_get_node(idmef_target_t *ptr)
 {
-	return ptr->node;
+        return ptr->node;
 }
 
 /**
@@ -9960,10 +9960,10 @@ idmef_node_t *idmef_target_get_node(idmef_target_t *ptr)
 
 void idmef_target_set_node(idmef_target_t *ptr, idmef_node_t *node)
 {
-	if ( ptr->node )
-		idmef_node_destroy(ptr->node);
+        if ( ptr->node )
+                idmef_node_destroy(ptr->node);
 
-	ptr->node = node;
+        ptr->node = node;
 }
 
 /**
@@ -9980,11 +9980,11 @@ int idmef_target_new_node(idmef_target_t *ptr, idmef_node_t **ret)
 {
         int retval;
 
-	if ( ! ptr->node )
-		retval = idmef_node_new(&ptr->node);
+        if ( ! ptr->node )
+                retval = idmef_node_new(&ptr->node);
 
         *ret = ptr->node;
-	return 0;
+        return 0;
 }
 
 /**
@@ -9997,7 +9997,7 @@ int idmef_target_new_node(idmef_target_t *ptr, idmef_node_t **ret)
  */
 idmef_user_t *idmef_target_get_user(idmef_target_t *ptr)
 {
-	return ptr->user;
+        return ptr->user;
 }
 
 /**
@@ -10012,10 +10012,10 @@ idmef_user_t *idmef_target_get_user(idmef_target_t *ptr)
 
 void idmef_target_set_user(idmef_target_t *ptr, idmef_user_t *user)
 {
-	if ( ptr->user )
-		idmef_user_destroy(ptr->user);
+        if ( ptr->user )
+                idmef_user_destroy(ptr->user);
 
-	ptr->user = user;
+        ptr->user = user;
 }
 
 /**
@@ -10032,11 +10032,11 @@ int idmef_target_new_user(idmef_target_t *ptr, idmef_user_t **ret)
 {
         int retval;
 
-	if ( ! ptr->user )
-		retval = idmef_user_new(&ptr->user);
+        if ( ! ptr->user )
+                retval = idmef_user_new(&ptr->user);
 
         *ret = ptr->user;
-	return 0;
+        return 0;
 }
 
 /**
@@ -10049,7 +10049,7 @@ int idmef_target_new_user(idmef_target_t *ptr, idmef_user_t **ret)
  */
 idmef_process_t *idmef_target_get_process(idmef_target_t *ptr)
 {
-	return ptr->process;
+        return ptr->process;
 }
 
 /**
@@ -10064,10 +10064,10 @@ idmef_process_t *idmef_target_get_process(idmef_target_t *ptr)
 
 void idmef_target_set_process(idmef_target_t *ptr, idmef_process_t *process)
 {
-	if ( ptr->process )
-		idmef_process_destroy(ptr->process);
+        if ( ptr->process )
+                idmef_process_destroy(ptr->process);
 
-	ptr->process = process;
+        ptr->process = process;
 }
 
 /**
@@ -10084,11 +10084,11 @@ int idmef_target_new_process(idmef_target_t *ptr, idmef_process_t **ret)
 {
         int retval;
 
-	if ( ! ptr->process )
-		retval = idmef_process_new(&ptr->process);
+        if ( ! ptr->process )
+                retval = idmef_process_new(&ptr->process);
 
         *ret = ptr->process;
-	return 0;
+        return 0;
 }
 
 /**
@@ -10101,7 +10101,7 @@ int idmef_target_new_process(idmef_target_t *ptr, idmef_process_t **ret)
  */
 idmef_service_t *idmef_target_get_service(idmef_target_t *ptr)
 {
-	return ptr->service;
+        return ptr->service;
 }
 
 /**
@@ -10116,10 +10116,10 @@ idmef_service_t *idmef_target_get_service(idmef_target_t *ptr)
 
 void idmef_target_set_service(idmef_target_t *ptr, idmef_service_t *service)
 {
-	if ( ptr->service )
-		idmef_service_destroy(ptr->service);
+        if ( ptr->service )
+                idmef_service_destroy(ptr->service);
 
-	ptr->service = service;
+        ptr->service = service;
 }
 
 /**
@@ -10136,11 +10136,11 @@ int idmef_target_new_service(idmef_target_t *ptr, idmef_service_t **ret)
 {
         int retval;
 
-	if ( ! ptr->service )
-		retval = idmef_service_new(&ptr->service);
+        if ( ! ptr->service )
+                retval = idmef_service_new(&ptr->service);
 
         *ret = ptr->service;
-	return 0;
+        return 0;
 }
 
 /**
@@ -10224,15 +10224,15 @@ int idmef_target_new_file(idmef_target_t *ptr, idmef_file_t **ret, int pos)
  */
 int idmef_analyzer_new(idmef_analyzer_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	prelude_list_init(&(*ret)->list);
+        prelude_list_init(&(*ret)->list);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	return 0;
+        return 0;
 
 }
 
@@ -10247,18 +10247,18 @@ int idmef_analyzer_new(idmef_analyzer_t **ret)
  */
 idmef_analyzer_t *idmef_analyzer_ref(idmef_analyzer_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_analyzer_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_analyzer_t *ptr = p;
+        idmef_analyzer_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->analyzerid);        
@@ -10276,58 +10276,58 @@ int idmef_analyzer_get_child(void *p, idmef_class_child_id_t child, void **child
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->ostype);        
                 case 7:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->osversion);
-		case 8:
+                case 8:
                         *childptr = ptr->node;
                         return 0;
 
-		case 9:
+                case 9:
                         *childptr = ptr->process;
                         return 0;
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_analyzer_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_analyzer_t *ptr = p;
+        idmef_analyzer_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_analyzer_new_analyzerid(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_analyzer_new_analyzerid(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_analyzer_new_name(ptr, (prelude_string_t **) ret);
+                case 1:
+                        return idmef_analyzer_new_name(ptr, (prelude_string_t **) ret);
 
-		case 2:
-			return idmef_analyzer_new_manufacturer(ptr, (prelude_string_t **) ret);
+                case 2:
+                        return idmef_analyzer_new_manufacturer(ptr, (prelude_string_t **) ret);
 
-		case 3:
-			return idmef_analyzer_new_model(ptr, (prelude_string_t **) ret);
+                case 3:
+                        return idmef_analyzer_new_model(ptr, (prelude_string_t **) ret);
 
-		case 4:
-			return idmef_analyzer_new_version(ptr, (prelude_string_t **) ret);
+                case 4:
+                        return idmef_analyzer_new_version(ptr, (prelude_string_t **) ret);
 
-		case 5:
-			return idmef_analyzer_new_class(ptr, (prelude_string_t **) ret);
+                case 5:
+                        return idmef_analyzer_new_class(ptr, (prelude_string_t **) ret);
 
-		case 6:
-			return idmef_analyzer_new_ostype(ptr, (prelude_string_t **) ret);
+                case 6:
+                        return idmef_analyzer_new_ostype(ptr, (prelude_string_t **) ret);
 
-		case 7:
-			return idmef_analyzer_new_osversion(ptr, (prelude_string_t **) ret);
+                case 7:
+                        return idmef_analyzer_new_osversion(ptr, (prelude_string_t **) ret);
 
-		case 8:
-			return idmef_analyzer_new_node(ptr, (idmef_node_t **) ret);
+                case 8:
+                        return idmef_analyzer_new_node(ptr, (idmef_node_t **) ret);
 
-		case 9:
-			return idmef_analyzer_new_process(ptr, (idmef_process_t **) ret);
+                case 9:
+                        return idmef_analyzer_new_process(ptr, (idmef_process_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_analyzer_destroy_internal(idmef_analyzer_t *ptr)
@@ -10336,58 +10336,58 @@ static void idmef_analyzer_destroy_internal(idmef_analyzer_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
-	if ( ptr->analyzerid ) {
-		prelude_string_destroy(ptr->analyzerid);
-		ptr->analyzerid = NULL;
-	}
+        if ( ptr->analyzerid ) {
+                prelude_string_destroy(ptr->analyzerid);
+                ptr->analyzerid = NULL;
+        }
 
-	if ( ptr->name ) {
-		prelude_string_destroy(ptr->name);
-		ptr->name = NULL;
-	}
+        if ( ptr->name ) {
+                prelude_string_destroy(ptr->name);
+                ptr->name = NULL;
+        }
 
-	if ( ptr->manufacturer ) {
-		prelude_string_destroy(ptr->manufacturer);
-		ptr->manufacturer = NULL;
-	}
+        if ( ptr->manufacturer ) {
+                prelude_string_destroy(ptr->manufacturer);
+                ptr->manufacturer = NULL;
+        }
 
-	if ( ptr->model ) {
-		prelude_string_destroy(ptr->model);
-		ptr->model = NULL;
-	}
+        if ( ptr->model ) {
+                prelude_string_destroy(ptr->model);
+                ptr->model = NULL;
+        }
 
-	if ( ptr->version ) {
-		prelude_string_destroy(ptr->version);
-		ptr->version = NULL;
-	}
+        if ( ptr->version ) {
+                prelude_string_destroy(ptr->version);
+                ptr->version = NULL;
+        }
 
-	if ( ptr->class ) {
-		prelude_string_destroy(ptr->class);
-		ptr->class = NULL;
-	}
+        if ( ptr->class ) {
+                prelude_string_destroy(ptr->class);
+                ptr->class = NULL;
+        }
 
-	if ( ptr->ostype ) {
-		prelude_string_destroy(ptr->ostype);
-		ptr->ostype = NULL;
-	}
+        if ( ptr->ostype ) {
+                prelude_string_destroy(ptr->ostype);
+                ptr->ostype = NULL;
+        }
 
-	if ( ptr->osversion ) {
-		prelude_string_destroy(ptr->osversion);
-		ptr->osversion = NULL;
-	}
+        if ( ptr->osversion ) {
+                prelude_string_destroy(ptr->osversion);
+                ptr->osversion = NULL;
+        }
 
-	if ( ptr->node ) {
-		idmef_node_destroy(ptr->node);
-		ptr->node = NULL;
-	}
+        if ( ptr->node ) {
+                idmef_node_destroy(ptr->node);
+                ptr->node = NULL;
+        }
 
-	if ( ptr->process ) {
-		idmef_process_destroy(ptr->process);
-		ptr->process = NULL;
-	}
+        if ( ptr->process ) {
+                idmef_process_destroy(ptr->process);
+                ptr->process = NULL;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -10400,10 +10400,10 @@ static void idmef_analyzer_destroy_internal(idmef_analyzer_t *ptr)
 
 void idmef_analyzer_destroy(idmef_analyzer_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_analyzer_destroy_internal(ptr);
+        idmef_analyzer_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -10417,7 +10417,7 @@ void idmef_analyzer_destroy(idmef_analyzer_t *ptr)
  */
 prelude_string_t *idmef_analyzer_get_analyzerid(idmef_analyzer_t *ptr)
 {
-	return ptr->analyzerid;
+        return ptr->analyzerid;
 }
 
 /**
@@ -10432,10 +10432,10 @@ prelude_string_t *idmef_analyzer_get_analyzerid(idmef_analyzer_t *ptr)
 
 void idmef_analyzer_set_analyzerid(idmef_analyzer_t *ptr, prelude_string_t *analyzerid)
 {
-	if ( ptr->analyzerid )
-		prelude_string_destroy(ptr->analyzerid);
+        if ( ptr->analyzerid )
+                prelude_string_destroy(ptr->analyzerid);
 
-	ptr->analyzerid = analyzerid;
+        ptr->analyzerid = analyzerid;
 }
 
 /**
@@ -10452,15 +10452,15 @@ int idmef_analyzer_new_analyzerid(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->analyzerid )
-		prelude_string_destroy(ptr->analyzerid);
-		
-	retval = prelude_string_new(&ptr->analyzerid);
+        if ( ptr->analyzerid )
+                prelude_string_destroy(ptr->analyzerid);
+                
+        retval = prelude_string_new(&ptr->analyzerid);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->analyzerid;
-	return 0;
+        return 0;
 }
 
 /**
@@ -10473,7 +10473,7 @@ int idmef_analyzer_new_analyzerid(idmef_analyzer_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_analyzer_get_name(idmef_analyzer_t *ptr)
 {
-	return ptr->name;
+        return ptr->name;
 }
 
 /**
@@ -10488,10 +10488,10 @@ prelude_string_t *idmef_analyzer_get_name(idmef_analyzer_t *ptr)
 
 void idmef_analyzer_set_name(idmef_analyzer_t *ptr, prelude_string_t *name)
 {
-	if ( ptr->name )
-		prelude_string_destroy(ptr->name);
+        if ( ptr->name )
+                prelude_string_destroy(ptr->name);
 
-	ptr->name = name;
+        ptr->name = name;
 }
 
 /**
@@ -10508,15 +10508,15 @@ int idmef_analyzer_new_name(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->name )
-		prelude_string_destroy(ptr->name);
-		
-	retval = prelude_string_new(&ptr->name);
+        if ( ptr->name )
+                prelude_string_destroy(ptr->name);
+                
+        retval = prelude_string_new(&ptr->name);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->name;
-	return 0;
+        return 0;
 }
 
 /**
@@ -10529,7 +10529,7 @@ int idmef_analyzer_new_name(idmef_analyzer_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_analyzer_get_manufacturer(idmef_analyzer_t *ptr)
 {
-	return ptr->manufacturer;
+        return ptr->manufacturer;
 }
 
 /**
@@ -10544,10 +10544,10 @@ prelude_string_t *idmef_analyzer_get_manufacturer(idmef_analyzer_t *ptr)
 
 void idmef_analyzer_set_manufacturer(idmef_analyzer_t *ptr, prelude_string_t *manufacturer)
 {
-	if ( ptr->manufacturer )
-		prelude_string_destroy(ptr->manufacturer);
+        if ( ptr->manufacturer )
+                prelude_string_destroy(ptr->manufacturer);
 
-	ptr->manufacturer = manufacturer;
+        ptr->manufacturer = manufacturer;
 }
 
 /**
@@ -10564,15 +10564,15 @@ int idmef_analyzer_new_manufacturer(idmef_analyzer_t *ptr, prelude_string_t **re
 {
         int retval;
 
-	if ( ptr->manufacturer )
-		prelude_string_destroy(ptr->manufacturer);
-		
-	retval = prelude_string_new(&ptr->manufacturer);
+        if ( ptr->manufacturer )
+                prelude_string_destroy(ptr->manufacturer);
+                
+        retval = prelude_string_new(&ptr->manufacturer);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->manufacturer;
-	return 0;
+        return 0;
 }
 
 /**
@@ -10585,7 +10585,7 @@ int idmef_analyzer_new_manufacturer(idmef_analyzer_t *ptr, prelude_string_t **re
  */
 prelude_string_t *idmef_analyzer_get_model(idmef_analyzer_t *ptr)
 {
-	return ptr->model;
+        return ptr->model;
 }
 
 /**
@@ -10600,10 +10600,10 @@ prelude_string_t *idmef_analyzer_get_model(idmef_analyzer_t *ptr)
 
 void idmef_analyzer_set_model(idmef_analyzer_t *ptr, prelude_string_t *model)
 {
-	if ( ptr->model )
-		prelude_string_destroy(ptr->model);
+        if ( ptr->model )
+                prelude_string_destroy(ptr->model);
 
-	ptr->model = model;
+        ptr->model = model;
 }
 
 /**
@@ -10620,15 +10620,15 @@ int idmef_analyzer_new_model(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->model )
-		prelude_string_destroy(ptr->model);
-		
-	retval = prelude_string_new(&ptr->model);
+        if ( ptr->model )
+                prelude_string_destroy(ptr->model);
+                
+        retval = prelude_string_new(&ptr->model);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->model;
-	return 0;
+        return 0;
 }
 
 /**
@@ -10641,7 +10641,7 @@ int idmef_analyzer_new_model(idmef_analyzer_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_analyzer_get_version(idmef_analyzer_t *ptr)
 {
-	return ptr->version;
+        return ptr->version;
 }
 
 /**
@@ -10656,10 +10656,10 @@ prelude_string_t *idmef_analyzer_get_version(idmef_analyzer_t *ptr)
 
 void idmef_analyzer_set_version(idmef_analyzer_t *ptr, prelude_string_t *version)
 {
-	if ( ptr->version )
-		prelude_string_destroy(ptr->version);
+        if ( ptr->version )
+                prelude_string_destroy(ptr->version);
 
-	ptr->version = version;
+        ptr->version = version;
 }
 
 /**
@@ -10676,15 +10676,15 @@ int idmef_analyzer_new_version(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->version )
-		prelude_string_destroy(ptr->version);
-		
-	retval = prelude_string_new(&ptr->version);
+        if ( ptr->version )
+                prelude_string_destroy(ptr->version);
+                
+        retval = prelude_string_new(&ptr->version);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->version;
-	return 0;
+        return 0;
 }
 
 /**
@@ -10697,7 +10697,7 @@ int idmef_analyzer_new_version(idmef_analyzer_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_analyzer_get_class(idmef_analyzer_t *ptr)
 {
-	return ptr->class;
+        return ptr->class;
 }
 
 /**
@@ -10712,10 +10712,10 @@ prelude_string_t *idmef_analyzer_get_class(idmef_analyzer_t *ptr)
 
 void idmef_analyzer_set_class(idmef_analyzer_t *ptr, prelude_string_t *class_str)
 {
-	if ( ptr->class )
-		prelude_string_destroy(ptr->class);
+        if ( ptr->class )
+                prelude_string_destroy(ptr->class);
 
-	ptr->class = class_str;
+        ptr->class = class_str;
 }
 
 /**
@@ -10732,15 +10732,15 @@ int idmef_analyzer_new_class(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->class )
-		prelude_string_destroy(ptr->class);
-		
-	retval = prelude_string_new(&ptr->class);
+        if ( ptr->class )
+                prelude_string_destroy(ptr->class);
+                
+        retval = prelude_string_new(&ptr->class);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->class;
-	return 0;
+        return 0;
 }
 
 /**
@@ -10753,7 +10753,7 @@ int idmef_analyzer_new_class(idmef_analyzer_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_analyzer_get_ostype(idmef_analyzer_t *ptr)
 {
-	return ptr->ostype;
+        return ptr->ostype;
 }
 
 /**
@@ -10768,10 +10768,10 @@ prelude_string_t *idmef_analyzer_get_ostype(idmef_analyzer_t *ptr)
 
 void idmef_analyzer_set_ostype(idmef_analyzer_t *ptr, prelude_string_t *ostype)
 {
-	if ( ptr->ostype )
-		prelude_string_destroy(ptr->ostype);
+        if ( ptr->ostype )
+                prelude_string_destroy(ptr->ostype);
 
-	ptr->ostype = ostype;
+        ptr->ostype = ostype;
 }
 
 /**
@@ -10788,15 +10788,15 @@ int idmef_analyzer_new_ostype(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->ostype )
-		prelude_string_destroy(ptr->ostype);
-		
-	retval = prelude_string_new(&ptr->ostype);
+        if ( ptr->ostype )
+                prelude_string_destroy(ptr->ostype);
+                
+        retval = prelude_string_new(&ptr->ostype);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->ostype;
-	return 0;
+        return 0;
 }
 
 /**
@@ -10809,7 +10809,7 @@ int idmef_analyzer_new_ostype(idmef_analyzer_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_analyzer_get_osversion(idmef_analyzer_t *ptr)
 {
-	return ptr->osversion;
+        return ptr->osversion;
 }
 
 /**
@@ -10824,10 +10824,10 @@ prelude_string_t *idmef_analyzer_get_osversion(idmef_analyzer_t *ptr)
 
 void idmef_analyzer_set_osversion(idmef_analyzer_t *ptr, prelude_string_t *osversion)
 {
-	if ( ptr->osversion )
-		prelude_string_destroy(ptr->osversion);
+        if ( ptr->osversion )
+                prelude_string_destroy(ptr->osversion);
 
-	ptr->osversion = osversion;
+        ptr->osversion = osversion;
 }
 
 /**
@@ -10844,15 +10844,15 @@ int idmef_analyzer_new_osversion(idmef_analyzer_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->osversion )
-		prelude_string_destroy(ptr->osversion);
-		
-	retval = prelude_string_new(&ptr->osversion);
+        if ( ptr->osversion )
+                prelude_string_destroy(ptr->osversion);
+                
+        retval = prelude_string_new(&ptr->osversion);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->osversion;
-	return 0;
+        return 0;
 }
 
 /**
@@ -10865,7 +10865,7 @@ int idmef_analyzer_new_osversion(idmef_analyzer_t *ptr, prelude_string_t **ret)
  */
 idmef_node_t *idmef_analyzer_get_node(idmef_analyzer_t *ptr)
 {
-	return ptr->node;
+        return ptr->node;
 }
 
 /**
@@ -10880,10 +10880,10 @@ idmef_node_t *idmef_analyzer_get_node(idmef_analyzer_t *ptr)
 
 void idmef_analyzer_set_node(idmef_analyzer_t *ptr, idmef_node_t *node)
 {
-	if ( ptr->node )
-		idmef_node_destroy(ptr->node);
+        if ( ptr->node )
+                idmef_node_destroy(ptr->node);
 
-	ptr->node = node;
+        ptr->node = node;
 }
 
 /**
@@ -10900,11 +10900,11 @@ int idmef_analyzer_new_node(idmef_analyzer_t *ptr, idmef_node_t **ret)
 {
         int retval;
 
-	if ( ! ptr->node )
-		retval = idmef_node_new(&ptr->node);
+        if ( ! ptr->node )
+                retval = idmef_node_new(&ptr->node);
 
         *ret = ptr->node;
-	return 0;
+        return 0;
 }
 
 /**
@@ -10917,7 +10917,7 @@ int idmef_analyzer_new_node(idmef_analyzer_t *ptr, idmef_node_t **ret)
  */
 idmef_process_t *idmef_analyzer_get_process(idmef_analyzer_t *ptr)
 {
-	return ptr->process;
+        return ptr->process;
 }
 
 /**
@@ -10932,10 +10932,10 @@ idmef_process_t *idmef_analyzer_get_process(idmef_analyzer_t *ptr)
 
 void idmef_analyzer_set_process(idmef_analyzer_t *ptr, idmef_process_t *process)
 {
-	if ( ptr->process )
-		idmef_process_destroy(ptr->process);
+        if ( ptr->process )
+                idmef_process_destroy(ptr->process);
 
-	ptr->process = process;
+        ptr->process = process;
 }
 
 /**
@@ -10952,11 +10952,11 @@ int idmef_analyzer_new_process(idmef_analyzer_t *ptr, idmef_process_t **ret)
 {
         int retval;
 
-	if ( ! ptr->process )
-		retval = idmef_process_new(&ptr->process);
+        if ( ! ptr->process )
+                retval = idmef_process_new(&ptr->process);
 
         *ret = ptr->process;
-	return 0;
+        return 0;
 }
 
 /**
@@ -10969,15 +10969,15 @@ int idmef_analyzer_new_process(idmef_analyzer_t *ptr, idmef_process_t **ret)
  */
 int idmef_alertident_new(idmef_alertident_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	prelude_list_init(&(*ret)->list);
+        prelude_list_init(&(*ret)->list);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	return 0;
+        return 0;
 
 }
 
@@ -10992,43 +10992,43 @@ int idmef_alertident_new(idmef_alertident_t **ret)
  */
 idmef_alertident_t *idmef_alertident_ref(idmef_alertident_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_alertident_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_alertident_t *ptr = p;
+        idmef_alertident_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr, & ptr->alertident);        
                 case 1:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->analyzerid);
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_alertident_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_alertident_t *ptr = p;
+        idmef_alertident_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_alertident_new_alertident(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_alertident_new_alertident(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_alertident_new_analyzerid(ptr, (prelude_string_t **) ret);
+                case 1:
+                        return idmef_alertident_new_analyzerid(ptr, (prelude_string_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_alertident_destroy_internal(idmef_alertident_t *ptr)
@@ -11037,15 +11037,15 @@ static void idmef_alertident_destroy_internal(idmef_alertident_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
-	prelude_string_destroy_internal(&ptr->alertident);
+        prelude_string_destroy_internal(&ptr->alertident);
 
-	if ( ptr->analyzerid ) {
-		prelude_string_destroy(ptr->analyzerid);
-		ptr->analyzerid = NULL;
-	}
+        if ( ptr->analyzerid ) {
+                prelude_string_destroy(ptr->analyzerid);
+                ptr->analyzerid = NULL;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -11058,10 +11058,10 @@ static void idmef_alertident_destroy_internal(idmef_alertident_t *ptr)
 
 void idmef_alertident_destroy(idmef_alertident_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_alertident_destroy_internal(ptr);
+        idmef_alertident_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -11075,7 +11075,7 @@ void idmef_alertident_destroy(idmef_alertident_t *ptr)
  */
 prelude_string_t *idmef_alertident_get_alertident(idmef_alertident_t *ptr)
 {
-	return &ptr->alertident;
+        return &ptr->alertident;
 }
 
 /**
@@ -11093,7 +11093,7 @@ void idmef_alertident_set_alertident(idmef_alertident_t *ptr, prelude_string_t *
         prelude_string_destroy_internal(&ptr->alertident);
         if ( alertident ) {
                 memcpy(&ptr->alertident, alertident, sizeof (ptr->alertident));
-	        free(alertident);
+                free(alertident);
         }
 }
 
@@ -11109,10 +11109,10 @@ void idmef_alertident_set_alertident(idmef_alertident_t *ptr, prelude_string_t *
  */
 int idmef_alertident_new_alertident(idmef_alertident_t *ptr, prelude_string_t **ret)
 {
-	prelude_string_destroy_internal(&ptr->alertident);
+        prelude_string_destroy_internal(&ptr->alertident);
 
         *ret = &ptr->alertident;
-	return 0;
+        return 0;
 }
 
 /**
@@ -11125,7 +11125,7 @@ int idmef_alertident_new_alertident(idmef_alertident_t *ptr, prelude_string_t **
  */
 prelude_string_t *idmef_alertident_get_analyzerid(idmef_alertident_t *ptr)
 {
-	return ptr->analyzerid;
+        return ptr->analyzerid;
 }
 
 /**
@@ -11140,10 +11140,10 @@ prelude_string_t *idmef_alertident_get_analyzerid(idmef_alertident_t *ptr)
 
 void idmef_alertident_set_analyzerid(idmef_alertident_t *ptr, prelude_string_t *analyzerid)
 {
-	if ( ptr->analyzerid )
-		prelude_string_destroy(ptr->analyzerid);
+        if ( ptr->analyzerid )
+                prelude_string_destroy(ptr->analyzerid);
 
-	ptr->analyzerid = analyzerid;
+        ptr->analyzerid = analyzerid;
 }
 
 /**
@@ -11160,15 +11160,15 @@ int idmef_alertident_new_analyzerid(idmef_alertident_t *ptr, prelude_string_t **
 {
         int retval;
 
-	if ( ptr->analyzerid )
-		prelude_string_destroy(ptr->analyzerid);
-		
-	retval = prelude_string_new(&ptr->analyzerid);
+        if ( ptr->analyzerid )
+                prelude_string_destroy(ptr->analyzerid);
+                
+        retval = prelude_string_new(&ptr->analyzerid);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->analyzerid;
-	return 0;
+        return 0;
 }
 
 /**
@@ -11181,13 +11181,13 @@ int idmef_alertident_new_analyzerid(idmef_alertident_t *ptr, prelude_string_t **
  */
 int idmef_impact_new(idmef_impact_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	return 0;
+        return 0;
 
 }
 
@@ -11202,18 +11202,18 @@ int idmef_impact_new(idmef_impact_t **ret)
  */
 idmef_impact_t *idmef_impact_ref(idmef_impact_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_impact_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_impact_t *ptr = p;
+        idmef_impact_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        if ( ! ptr->severity_is_set )
@@ -11233,44 +11233,44 @@ int idmef_impact_get_child(void *p, idmef_class_child_id_t child, void **childpt
         
                 case 3:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->description);
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_impact_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_impact_t *ptr = p;
+        idmef_impact_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_impact_new_severity(ptr, (idmef_impact_severity_t **) ret);
+                case 0:
+                        return idmef_impact_new_severity(ptr, (idmef_impact_severity_t **) ret);
 
-		case 1:
-			return idmef_impact_new_completion(ptr, (idmef_impact_completion_t **) ret);
+                case 1:
+                        return idmef_impact_new_completion(ptr, (idmef_impact_completion_t **) ret);
 
-		case 2:
-			return idmef_impact_new_type(ptr, (idmef_impact_type_t **) ret);
+                case 2:
+                        return idmef_impact_new_type(ptr, (idmef_impact_type_t **) ret);
 
-		case 3:
-			return idmef_impact_new_description(ptr, (prelude_string_t **) ret);
+                case 3:
+                        return idmef_impact_new_description(ptr, (prelude_string_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_impact_destroy_internal(idmef_impact_t *ptr)
 {
 
-	if ( ptr->description ) {
-		prelude_string_destroy(ptr->description);
-		ptr->description = NULL;
-	}
+        if ( ptr->description ) {
+                prelude_string_destroy(ptr->description);
+                ptr->description = NULL;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -11283,10 +11283,10 @@ static void idmef_impact_destroy_internal(idmef_impact_t *ptr)
 
 void idmef_impact_destroy(idmef_impact_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_impact_destroy_internal(ptr);
+        idmef_impact_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -11300,7 +11300,7 @@ void idmef_impact_destroy(idmef_impact_t *ptr)
  */
 idmef_impact_severity_t *idmef_impact_get_severity(idmef_impact_t *ptr)
 {
-	return ptr->severity_is_set ? &ptr->severity : NULL;
+        return ptr->severity_is_set ? &ptr->severity : NULL;
 }
 
 /**
@@ -11315,8 +11315,8 @@ idmef_impact_severity_t *idmef_impact_get_severity(idmef_impact_t *ptr)
 
 void idmef_impact_set_severity(idmef_impact_t *ptr, idmef_impact_severity_t severity)
 {
-	ptr->severity = severity;
-	ptr->severity_is_set = 1;
+        ptr->severity = severity;
+        ptr->severity_is_set = 1;
 }
 
 
@@ -11338,10 +11338,10 @@ void idmef_impact_unset_severity(idmef_impact_t *ptr)
  */
 int idmef_impact_new_severity(idmef_impact_t *ptr, idmef_impact_severity_t **ret)
 {
-	ptr->severity_is_set = 1;
+        ptr->severity_is_set = 1;
 
         *ret = &ptr->severity;
-	return 0;
+        return 0;
 }
 
 /**
@@ -11354,7 +11354,7 @@ int idmef_impact_new_severity(idmef_impact_t *ptr, idmef_impact_severity_t **ret
  */
 idmef_impact_completion_t *idmef_impact_get_completion(idmef_impact_t *ptr)
 {
-	return ptr->completion_is_set ? &ptr->completion : NULL;
+        return ptr->completion_is_set ? &ptr->completion : NULL;
 }
 
 /**
@@ -11369,8 +11369,8 @@ idmef_impact_completion_t *idmef_impact_get_completion(idmef_impact_t *ptr)
 
 void idmef_impact_set_completion(idmef_impact_t *ptr, idmef_impact_completion_t completion)
 {
-	ptr->completion = completion;
-	ptr->completion_is_set = 1;
+        ptr->completion = completion;
+        ptr->completion_is_set = 1;
 }
 
 
@@ -11392,10 +11392,10 @@ void idmef_impact_unset_completion(idmef_impact_t *ptr)
  */
 int idmef_impact_new_completion(idmef_impact_t *ptr, idmef_impact_completion_t **ret)
 {
-	ptr->completion_is_set = 1;
+        ptr->completion_is_set = 1;
 
         *ret = &ptr->completion;
-	return 0;
+        return 0;
 }
 
 /**
@@ -11408,7 +11408,7 @@ int idmef_impact_new_completion(idmef_impact_t *ptr, idmef_impact_completion_t *
  */
 idmef_impact_type_t idmef_impact_get_type(idmef_impact_t *ptr)
 {
-	return ptr->type;
+        return ptr->type;
 }
 
 /**
@@ -11423,7 +11423,7 @@ idmef_impact_type_t idmef_impact_get_type(idmef_impact_t *ptr)
 
 void idmef_impact_set_type(idmef_impact_t *ptr, idmef_impact_type_t type)
 {
-	ptr->type = type;
+        ptr->type = type;
 }
 
 /**
@@ -11439,7 +11439,7 @@ void idmef_impact_set_type(idmef_impact_t *ptr, idmef_impact_type_t type)
 int idmef_impact_new_type(idmef_impact_t *ptr, idmef_impact_type_t **ret)
 {
         *ret = &ptr->type;
-	return 0;
+        return 0;
 }
 
 /**
@@ -11452,7 +11452,7 @@ int idmef_impact_new_type(idmef_impact_t *ptr, idmef_impact_type_t **ret)
  */
 prelude_string_t *idmef_impact_get_description(idmef_impact_t *ptr)
 {
-	return ptr->description;
+        return ptr->description;
 }
 
 /**
@@ -11467,10 +11467,10 @@ prelude_string_t *idmef_impact_get_description(idmef_impact_t *ptr)
 
 void idmef_impact_set_description(idmef_impact_t *ptr, prelude_string_t *description)
 {
-	if ( ptr->description )
-		prelude_string_destroy(ptr->description);
+        if ( ptr->description )
+                prelude_string_destroy(ptr->description);
 
-	ptr->description = description;
+        ptr->description = description;
 }
 
 /**
@@ -11487,15 +11487,15 @@ int idmef_impact_new_description(idmef_impact_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->description )
-		prelude_string_destroy(ptr->description);
-		
-	retval = prelude_string_new(&ptr->description);
+        if ( ptr->description )
+                prelude_string_destroy(ptr->description);
+                
+        retval = prelude_string_new(&ptr->description);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->description;
-	return 0;
+        return 0;
 }
 
 /**
@@ -11508,15 +11508,15 @@ int idmef_impact_new_description(idmef_impact_t *ptr, prelude_string_t **ret)
  */
 int idmef_action_new(idmef_action_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	prelude_list_init(&(*ret)->list);
+        prelude_list_init(&(*ret)->list);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	return 0;
+        return 0;
 
 }
 
@@ -11531,18 +11531,18 @@ int idmef_action_new(idmef_action_t **ret)
  */
 idmef_action_t *idmef_action_ref(idmef_action_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_action_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_action_t *ptr = p;
+        idmef_action_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return idmef_value_new_enum_from_numeric((idmef_value_t **) childptr, 
@@ -11550,26 +11550,26 @@ int idmef_action_get_child(void *p, idmef_class_child_id_t child, void **childpt
         
                 case 1:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->description);
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_action_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_action_t *ptr = p;
+        idmef_action_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_action_new_category(ptr, (idmef_action_category_t **) ret);
+                case 0:
+                        return idmef_action_new_category(ptr, (idmef_action_category_t **) ret);
 
-		case 1:
-			return idmef_action_new_description(ptr, (prelude_string_t **) ret);
+                case 1:
+                        return idmef_action_new_description(ptr, (prelude_string_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_action_destroy_internal(idmef_action_t *ptr)
@@ -11578,13 +11578,13 @@ static void idmef_action_destroy_internal(idmef_action_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
-	if ( ptr->description ) {
-		prelude_string_destroy(ptr->description);
-		ptr->description = NULL;
-	}
+        if ( ptr->description ) {
+                prelude_string_destroy(ptr->description);
+                ptr->description = NULL;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -11597,10 +11597,10 @@ static void idmef_action_destroy_internal(idmef_action_t *ptr)
 
 void idmef_action_destroy(idmef_action_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_action_destroy_internal(ptr);
+        idmef_action_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -11614,7 +11614,7 @@ void idmef_action_destroy(idmef_action_t *ptr)
  */
 idmef_action_category_t idmef_action_get_category(idmef_action_t *ptr)
 {
-	return ptr->category;
+        return ptr->category;
 }
 
 /**
@@ -11629,7 +11629,7 @@ idmef_action_category_t idmef_action_get_category(idmef_action_t *ptr)
 
 void idmef_action_set_category(idmef_action_t *ptr, idmef_action_category_t category)
 {
-	ptr->category = category;
+        ptr->category = category;
 }
 
 /**
@@ -11645,7 +11645,7 @@ void idmef_action_set_category(idmef_action_t *ptr, idmef_action_category_t cate
 int idmef_action_new_category(idmef_action_t *ptr, idmef_action_category_t **ret)
 {
         *ret = &ptr->category;
-	return 0;
+        return 0;
 }
 
 /**
@@ -11658,7 +11658,7 @@ int idmef_action_new_category(idmef_action_t *ptr, idmef_action_category_t **ret
  */
 prelude_string_t *idmef_action_get_description(idmef_action_t *ptr)
 {
-	return ptr->description;
+        return ptr->description;
 }
 
 /**
@@ -11673,10 +11673,10 @@ prelude_string_t *idmef_action_get_description(idmef_action_t *ptr)
 
 void idmef_action_set_description(idmef_action_t *ptr, prelude_string_t *description)
 {
-	if ( ptr->description )
-		prelude_string_destroy(ptr->description);
+        if ( ptr->description )
+                prelude_string_destroy(ptr->description);
 
-	ptr->description = description;
+        ptr->description = description;
 }
 
 /**
@@ -11693,15 +11693,15 @@ int idmef_action_new_description(idmef_action_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->description )
-		prelude_string_destroy(ptr->description);
-		
-	retval = prelude_string_new(&ptr->description);
+        if ( ptr->description )
+                prelude_string_destroy(ptr->description);
+                
+        retval = prelude_string_new(&ptr->description);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->description;
-	return 0;
+        return 0;
 }
 
 /**
@@ -11714,13 +11714,13 @@ int idmef_action_new_description(idmef_action_t *ptr, prelude_string_t **ret)
  */
 int idmef_confidence_new(idmef_confidence_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	return 0;
+        return 0;
 
 }
 
@@ -11735,18 +11735,18 @@ int idmef_confidence_new(idmef_confidence_t **ret)
  */
 idmef_confidence_t *idmef_confidence_ref(idmef_confidence_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_confidence_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_confidence_t *ptr = p;
+        idmef_confidence_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return idmef_value_new_enum_from_numeric((idmef_value_t **) childptr, 
@@ -11754,33 +11754,33 @@ int idmef_confidence_get_child(void *p, idmef_class_child_id_t child, void **chi
         
                 case 1:
                        return idmef_value_new_float((idmef_value_t **) childptr, ptr->confidence);
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_confidence_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_confidence_t *ptr = p;
+        idmef_confidence_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_confidence_new_rating(ptr, (idmef_confidence_rating_t **) ret);
+                case 0:
+                        return idmef_confidence_new_rating(ptr, (idmef_confidence_rating_t **) ret);
 
-		case 1:
-			return idmef_confidence_new_confidence(ptr, (float **) ret);
+                case 1:
+                        return idmef_confidence_new_confidence(ptr, (float **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_confidence_destroy_internal(idmef_confidence_t *ptr)
 {
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -11793,10 +11793,10 @@ static void idmef_confidence_destroy_internal(idmef_confidence_t *ptr)
 
 void idmef_confidence_destroy(idmef_confidence_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_confidence_destroy_internal(ptr);
+        idmef_confidence_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -11810,7 +11810,7 @@ void idmef_confidence_destroy(idmef_confidence_t *ptr)
  */
 idmef_confidence_rating_t idmef_confidence_get_rating(idmef_confidence_t *ptr)
 {
-	return ptr->rating;
+        return ptr->rating;
 }
 
 /**
@@ -11825,7 +11825,7 @@ idmef_confidence_rating_t idmef_confidence_get_rating(idmef_confidence_t *ptr)
 
 void idmef_confidence_set_rating(idmef_confidence_t *ptr, idmef_confidence_rating_t rating)
 {
-	ptr->rating = rating;
+        ptr->rating = rating;
 }
 
 /**
@@ -11841,7 +11841,7 @@ void idmef_confidence_set_rating(idmef_confidence_t *ptr, idmef_confidence_ratin
 int idmef_confidence_new_rating(idmef_confidence_t *ptr, idmef_confidence_rating_t **ret)
 {
         *ret = &ptr->rating;
-	return 0;
+        return 0;
 }
 
 /**
@@ -11854,7 +11854,7 @@ int idmef_confidence_new_rating(idmef_confidence_t *ptr, idmef_confidence_rating
  */
 float idmef_confidence_get_confidence(idmef_confidence_t *ptr)
 {
-	return ptr->confidence;
+        return ptr->confidence;
 }
 
 /**
@@ -11869,7 +11869,7 @@ float idmef_confidence_get_confidence(idmef_confidence_t *ptr)
 
 void idmef_confidence_set_confidence(idmef_confidence_t *ptr, float confidence)
 {
-	ptr->confidence = confidence;
+        ptr->confidence = confidence;
 }
 
 /**
@@ -11885,7 +11885,7 @@ void idmef_confidence_set_confidence(idmef_confidence_t *ptr, float confidence)
 int idmef_confidence_new_confidence(idmef_confidence_t *ptr, float **ret)
 {
         *ret = &ptr->confidence;
-	return 0;
+        return 0;
 }
 
 /**
@@ -11898,16 +11898,16 @@ int idmef_confidence_new_confidence(idmef_confidence_t *ptr, float **ret)
  */
 int idmef_assessment_new(idmef_assessment_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	prelude_list_init(&(*ret)->action_list);
+        prelude_list_init(&(*ret)->action_list);
     
 
-	return 0;
+        return 0;
 
 }
 
@@ -11922,46 +11922,46 @@ int idmef_assessment_new(idmef_assessment_t **ret)
  */
 idmef_assessment_t *idmef_assessment_ref(idmef_assessment_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_assessment_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_assessment_t *ptr = p;
+        idmef_assessment_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
 
-		case 0:
+                case 0:
                         *childptr = ptr->impact;
                         return 0;
 
-		case 1:
+                case 1:
                         *childptr = &ptr->action_list;
-			return 0;
+                        return 0;
 
-		case 2:
+                case 2:
                         *childptr = ptr->confidence;
                         return 0;
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_assessment_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_assessment_t *ptr = p;
+        idmef_assessment_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_assessment_new_impact(ptr, (idmef_impact_t **) ret);
+                case 0:
+                        return idmef_assessment_new_impact(ptr, (idmef_impact_t **) ret);
 
-		case 1: {
+                case 1: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -11993,42 +11993,42 @@ int idmef_assessment_new_child(void *p, idmef_class_child_id_t child, int n, voi
                         }
 
                         return idmef_assessment_new_action(ptr, (idmef_action_t **) ret, n);
-		}
+                }
 
-		case 2:
-			return idmef_assessment_new_confidence(ptr, (idmef_confidence_t **) ret);
+                case 2:
+                        return idmef_assessment_new_confidence(ptr, (idmef_confidence_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_assessment_destroy_internal(idmef_assessment_t *ptr)
 {
 
-	if ( ptr->impact ) {
-		idmef_impact_destroy(ptr->impact);
-		ptr->impact = NULL;
-	}
+        if ( ptr->impact ) {
+                idmef_impact_destroy(ptr->impact);
+                ptr->impact = NULL;
+        }
 
-	{
-		prelude_list_t *n, *tmp;
-		idmef_action_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                idmef_action_t *entry;
 
-		prelude_list_for_each_safe(&ptr->action_list, tmp, n) {
-			entry = prelude_list_entry(tmp, idmef_action_t, list);
+                prelude_list_for_each_safe(&ptr->action_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_action_t, list);
                         prelude_list_del_init(&entry->list);
-			idmef_action_destroy(entry);
-		}
-	}
+                        idmef_action_destroy(entry);
+                }
+        }
 
-	if ( ptr->confidence ) {
-		idmef_confidence_destroy(ptr->confidence);
-		ptr->confidence = NULL;
-	}
+        if ( ptr->confidence ) {
+                idmef_confidence_destroy(ptr->confidence);
+                ptr->confidence = NULL;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -12041,10 +12041,10 @@ static void idmef_assessment_destroy_internal(idmef_assessment_t *ptr)
 
 void idmef_assessment_destroy(idmef_assessment_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_assessment_destroy_internal(ptr);
+        idmef_assessment_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -12058,7 +12058,7 @@ void idmef_assessment_destroy(idmef_assessment_t *ptr)
  */
 idmef_impact_t *idmef_assessment_get_impact(idmef_assessment_t *ptr)
 {
-	return ptr->impact;
+        return ptr->impact;
 }
 
 /**
@@ -12073,10 +12073,10 @@ idmef_impact_t *idmef_assessment_get_impact(idmef_assessment_t *ptr)
 
 void idmef_assessment_set_impact(idmef_assessment_t *ptr, idmef_impact_t *impact)
 {
-	if ( ptr->impact )
-		idmef_impact_destroy(ptr->impact);
+        if ( ptr->impact )
+                idmef_impact_destroy(ptr->impact);
 
-	ptr->impact = impact;
+        ptr->impact = impact;
 }
 
 /**
@@ -12093,11 +12093,11 @@ int idmef_assessment_new_impact(idmef_assessment_t *ptr, idmef_impact_t **ret)
 {
         int retval;
 
-	if ( ! ptr->impact )
-		retval = idmef_impact_new(&ptr->impact);
+        if ( ! ptr->impact )
+                retval = idmef_impact_new(&ptr->impact);
 
         *ret = ptr->impact;
-	return 0;
+        return 0;
 }
 
 /**
@@ -12181,7 +12181,7 @@ int idmef_assessment_new_action(idmef_assessment_t *ptr, idmef_action_t **ret, i
  */
 idmef_confidence_t *idmef_assessment_get_confidence(idmef_assessment_t *ptr)
 {
-	return ptr->confidence;
+        return ptr->confidence;
 }
 
 /**
@@ -12196,10 +12196,10 @@ idmef_confidence_t *idmef_assessment_get_confidence(idmef_assessment_t *ptr)
 
 void idmef_assessment_set_confidence(idmef_assessment_t *ptr, idmef_confidence_t *confidence)
 {
-	if ( ptr->confidence )
-		idmef_confidence_destroy(ptr->confidence);
+        if ( ptr->confidence )
+                idmef_confidence_destroy(ptr->confidence);
 
-	ptr->confidence = confidence;
+        ptr->confidence = confidence;
 }
 
 /**
@@ -12216,11 +12216,11 @@ int idmef_assessment_new_confidence(idmef_assessment_t *ptr, idmef_confidence_t 
 {
         int retval;
 
-	if ( ! ptr->confidence )
-		retval = idmef_confidence_new(&ptr->confidence);
+        if ( ! ptr->confidence )
+                retval = idmef_confidence_new(&ptr->confidence);
 
         *ret = ptr->confidence;
-	return 0;
+        return 0;
 }
 
 /**
@@ -12233,16 +12233,16 @@ int idmef_assessment_new_confidence(idmef_assessment_t *ptr, idmef_confidence_t 
  */
 int idmef_tool_alert_new(idmef_tool_alert_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	prelude_list_init(&(*ret)->alertident_list);
+        prelude_list_init(&(*ret)->alertident_list);
     
 
-	return 0;
+        return 0;
 
 }
 
@@ -12257,45 +12257,45 @@ int idmef_tool_alert_new(idmef_tool_alert_t **ret)
  */
 idmef_tool_alert_t *idmef_tool_alert_ref(idmef_tool_alert_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_tool_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_tool_alert_t *ptr = p;
+        idmef_tool_alert_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr, & ptr->name);        
                 case 1:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->command);
-		case 2:
+                case 2:
                         *childptr = &ptr->alertident_list;
-			return 0;
+                        return 0;
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_tool_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_tool_alert_t *ptr = p;
+        idmef_tool_alert_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_tool_alert_new_name(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_tool_alert_new_name(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_tool_alert_new_command(ptr, (prelude_string_t **) ret);
+                case 1:
+                        return idmef_tool_alert_new_command(ptr, (prelude_string_t **) ret);
 
-		case 2: {
+                case 2: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -12327,36 +12327,36 @@ int idmef_tool_alert_new_child(void *p, idmef_class_child_id_t child, int n, voi
                         }
 
                         return idmef_tool_alert_new_alertident(ptr, (idmef_alertident_t **) ret, n);
-		}
+                }
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_tool_alert_destroy_internal(idmef_tool_alert_t *ptr)
 {
 
-	prelude_string_destroy_internal(&ptr->name);
+        prelude_string_destroy_internal(&ptr->name);
 
-	if ( ptr->command ) {
-		prelude_string_destroy(ptr->command);
-		ptr->command = NULL;
-	}
+        if ( ptr->command ) {
+                prelude_string_destroy(ptr->command);
+                ptr->command = NULL;
+        }
 
-	{
-		prelude_list_t *n, *tmp;
-		idmef_alertident_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                idmef_alertident_t *entry;
 
-		prelude_list_for_each_safe(&ptr->alertident_list, tmp, n) {
-			entry = prelude_list_entry(tmp, idmef_alertident_t, list);
+                prelude_list_for_each_safe(&ptr->alertident_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_alertident_t, list);
                         prelude_list_del_init(&entry->list);
-			idmef_alertident_destroy(entry);
-		}
-	}
+                        idmef_alertident_destroy(entry);
+                }
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -12369,10 +12369,10 @@ static void idmef_tool_alert_destroy_internal(idmef_tool_alert_t *ptr)
 
 void idmef_tool_alert_destroy(idmef_tool_alert_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_tool_alert_destroy_internal(ptr);
+        idmef_tool_alert_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -12386,7 +12386,7 @@ void idmef_tool_alert_destroy(idmef_tool_alert_t *ptr)
  */
 prelude_string_t *idmef_tool_alert_get_name(idmef_tool_alert_t *ptr)
 {
-	return &ptr->name;
+        return &ptr->name;
 }
 
 /**
@@ -12404,7 +12404,7 @@ void idmef_tool_alert_set_name(idmef_tool_alert_t *ptr, prelude_string_t *name)
         prelude_string_destroy_internal(&ptr->name);
         if ( name ) {
                 memcpy(&ptr->name, name, sizeof (ptr->name));
-	        free(name);
+                free(name);
         }
 }
 
@@ -12420,10 +12420,10 @@ void idmef_tool_alert_set_name(idmef_tool_alert_t *ptr, prelude_string_t *name)
  */
 int idmef_tool_alert_new_name(idmef_tool_alert_t *ptr, prelude_string_t **ret)
 {
-	prelude_string_destroy_internal(&ptr->name);
+        prelude_string_destroy_internal(&ptr->name);
 
         *ret = &ptr->name;
-	return 0;
+        return 0;
 }
 
 /**
@@ -12436,7 +12436,7 @@ int idmef_tool_alert_new_name(idmef_tool_alert_t *ptr, prelude_string_t **ret)
  */
 prelude_string_t *idmef_tool_alert_get_command(idmef_tool_alert_t *ptr)
 {
-	return ptr->command;
+        return ptr->command;
 }
 
 /**
@@ -12451,10 +12451,10 @@ prelude_string_t *idmef_tool_alert_get_command(idmef_tool_alert_t *ptr)
 
 void idmef_tool_alert_set_command(idmef_tool_alert_t *ptr, prelude_string_t *command)
 {
-	if ( ptr->command )
-		prelude_string_destroy(ptr->command);
+        if ( ptr->command )
+                prelude_string_destroy(ptr->command);
 
-	ptr->command = command;
+        ptr->command = command;
 }
 
 /**
@@ -12471,15 +12471,15 @@ int idmef_tool_alert_new_command(idmef_tool_alert_t *ptr, prelude_string_t **ret
 {
         int retval;
 
-	if ( ptr->command )
-		prelude_string_destroy(ptr->command);
-		
-	retval = prelude_string_new(&ptr->command);
+        if ( ptr->command )
+                prelude_string_destroy(ptr->command);
+                
+        retval = prelude_string_new(&ptr->command);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->command;
-	return 0;
+        return 0;
 }
 
 /**
@@ -12563,16 +12563,16 @@ int idmef_tool_alert_new_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t 
  */
 int idmef_correlation_alert_new(idmef_correlation_alert_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	prelude_list_init(&(*ret)->alertident_list);
+        prelude_list_init(&(*ret)->alertident_list);
     
 
-	return 0;
+        return 0;
 
 }
 
@@ -12587,40 +12587,40 @@ int idmef_correlation_alert_new(idmef_correlation_alert_t **ret)
  */
 idmef_correlation_alert_t *idmef_correlation_alert_ref(idmef_correlation_alert_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_correlation_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_correlation_alert_t *ptr = p;
+        idmef_correlation_alert_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr, & ptr->name);
-		case 1:
+                case 1:
                         *childptr = &ptr->alertident_list;
-			return 0;
+                        return 0;
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_correlation_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_correlation_alert_t *ptr = p;
+        idmef_correlation_alert_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_correlation_alert_new_name(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_correlation_alert_new_name(ptr, (prelude_string_t **) ret);
 
-		case 1: {
+                case 1: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -12652,31 +12652,31 @@ int idmef_correlation_alert_new_child(void *p, idmef_class_child_id_t child, int
                         }
 
                         return idmef_correlation_alert_new_alertident(ptr, (idmef_alertident_t **) ret, n);
-		}
+                }
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_correlation_alert_destroy_internal(idmef_correlation_alert_t *ptr)
 {
 
-	prelude_string_destroy_internal(&ptr->name);
+        prelude_string_destroy_internal(&ptr->name);
 
-	{
-		prelude_list_t *n, *tmp;
-		idmef_alertident_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                idmef_alertident_t *entry;
 
-		prelude_list_for_each_safe(&ptr->alertident_list, tmp, n) {
-			entry = prelude_list_entry(tmp, idmef_alertident_t, list);
+                prelude_list_for_each_safe(&ptr->alertident_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_alertident_t, list);
                         prelude_list_del_init(&entry->list);
-			idmef_alertident_destroy(entry);
-		}
-	}
+                        idmef_alertident_destroy(entry);
+                }
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -12689,10 +12689,10 @@ static void idmef_correlation_alert_destroy_internal(idmef_correlation_alert_t *
 
 void idmef_correlation_alert_destroy(idmef_correlation_alert_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_correlation_alert_destroy_internal(ptr);
+        idmef_correlation_alert_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -12706,7 +12706,7 @@ void idmef_correlation_alert_destroy(idmef_correlation_alert_t *ptr)
  */
 prelude_string_t *idmef_correlation_alert_get_name(idmef_correlation_alert_t *ptr)
 {
-	return &ptr->name;
+        return &ptr->name;
 }
 
 /**
@@ -12724,7 +12724,7 @@ void idmef_correlation_alert_set_name(idmef_correlation_alert_t *ptr, prelude_st
         prelude_string_destroy_internal(&ptr->name);
         if ( name ) {
                 memcpy(&ptr->name, name, sizeof (ptr->name));
-	        free(name);
+                free(name);
         }
 }
 
@@ -12740,10 +12740,10 @@ void idmef_correlation_alert_set_name(idmef_correlation_alert_t *ptr, prelude_st
  */
 int idmef_correlation_alert_new_name(idmef_correlation_alert_t *ptr, prelude_string_t **ret)
 {
-	prelude_string_destroy_internal(&ptr->name);
+        prelude_string_destroy_internal(&ptr->name);
 
         *ret = &ptr->name;
-	return 0;
+        return 0;
 }
 
 /**
@@ -12827,13 +12827,13 @@ int idmef_correlation_alert_new_alertident(idmef_correlation_alert_t *ptr, idmef
  */
 int idmef_overflow_alert_new(idmef_overflow_alert_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	return 0;
+        return 0;
 
 }
 
@@ -12848,63 +12848,63 @@ int idmef_overflow_alert_new(idmef_overflow_alert_t **ret)
  */
 idmef_overflow_alert_t *idmef_overflow_alert_ref(idmef_overflow_alert_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_overflow_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_overflow_alert_t *ptr = p;
+        idmef_overflow_alert_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr, & ptr->program);
                 case 1:
-	               return (ptr->size_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->size) : 0;
+                       return (ptr->size_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->size) : 0;
         
                 case 2:
                        return get_value_from_data((idmef_value_t **) childptr,  ptr->buffer);
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_overflow_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_overflow_alert_t *ptr = p;
+        idmef_overflow_alert_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_overflow_alert_new_program(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_overflow_alert_new_program(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_overflow_alert_new_size(ptr, (uint32_t **) ret);
+                case 1:
+                        return idmef_overflow_alert_new_size(ptr, (uint32_t **) ret);
 
-		case 2:
-			return idmef_overflow_alert_new_buffer(ptr, (idmef_data_t **) ret);
+                case 2:
+                        return idmef_overflow_alert_new_buffer(ptr, (idmef_data_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_overflow_alert_destroy_internal(idmef_overflow_alert_t *ptr)
 {
 
-	prelude_string_destroy_internal(&ptr->program);
+        prelude_string_destroy_internal(&ptr->program);
 
-	if ( ptr->buffer ) {
-		idmef_data_destroy(ptr->buffer);
-		ptr->buffer = NULL;
-	}
+        if ( ptr->buffer ) {
+                idmef_data_destroy(ptr->buffer);
+                ptr->buffer = NULL;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -12917,10 +12917,10 @@ static void idmef_overflow_alert_destroy_internal(idmef_overflow_alert_t *ptr)
 
 void idmef_overflow_alert_destroy(idmef_overflow_alert_t *ptr)
 {
-	if ( --ptr->refcount )
-		return;
+        if ( --ptr->refcount )
+                return;
 
-	idmef_overflow_alert_destroy_internal(ptr);
+        idmef_overflow_alert_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -12934,7 +12934,7 @@ void idmef_overflow_alert_destroy(idmef_overflow_alert_t *ptr)
  */
 prelude_string_t *idmef_overflow_alert_get_program(idmef_overflow_alert_t *ptr)
 {
-	return &ptr->program;
+        return &ptr->program;
 }
 
 /**
@@ -12952,7 +12952,7 @@ void idmef_overflow_alert_set_program(idmef_overflow_alert_t *ptr, prelude_strin
         prelude_string_destroy_internal(&ptr->program);
         if ( program ) {
                 memcpy(&ptr->program, program, sizeof (ptr->program));
-	        free(program);
+                free(program);
         }
 }
 
@@ -12968,10 +12968,10 @@ void idmef_overflow_alert_set_program(idmef_overflow_alert_t *ptr, prelude_strin
  */
 int idmef_overflow_alert_new_program(idmef_overflow_alert_t *ptr, prelude_string_t **ret)
 {
-	prelude_string_destroy_internal(&ptr->program);
+        prelude_string_destroy_internal(&ptr->program);
 
         *ret = &ptr->program;
-	return 0;
+        return 0;
 }
 
 /**
@@ -12984,7 +12984,7 @@ int idmef_overflow_alert_new_program(idmef_overflow_alert_t *ptr, prelude_string
  */
 uint32_t *idmef_overflow_alert_get_size(idmef_overflow_alert_t *ptr)
 {
-	return ptr->size_is_set ? &ptr->size : NULL;
+        return ptr->size_is_set ? &ptr->size : NULL;
 }
 
 /**
@@ -12999,8 +12999,8 @@ uint32_t *idmef_overflow_alert_get_size(idmef_overflow_alert_t *ptr)
 
 void idmef_overflow_alert_set_size(idmef_overflow_alert_t *ptr, uint32_t size)
 {
-	ptr->size = size;
-	ptr->size_is_set = 1;
+        ptr->size = size;
+        ptr->size_is_set = 1;
 }
 
 
@@ -13022,10 +13022,10 @@ void idmef_overflow_alert_unset_size(idmef_overflow_alert_t *ptr)
  */
 int idmef_overflow_alert_new_size(idmef_overflow_alert_t *ptr, uint32_t **ret)
 {
-	ptr->size_is_set = 1;
+        ptr->size_is_set = 1;
 
         *ret = &ptr->size;
-	return 0;
+        return 0;
 }
 
 /**
@@ -13038,7 +13038,7 @@ int idmef_overflow_alert_new_size(idmef_overflow_alert_t *ptr, uint32_t **ret)
  */
 idmef_data_t *idmef_overflow_alert_get_buffer(idmef_overflow_alert_t *ptr)
 {
-	return ptr->buffer;
+        return ptr->buffer;
 }
 
 /**
@@ -13053,10 +13053,10 @@ idmef_data_t *idmef_overflow_alert_get_buffer(idmef_overflow_alert_t *ptr)
 
 void idmef_overflow_alert_set_buffer(idmef_overflow_alert_t *ptr, idmef_data_t *buffer)
 {
-	if ( ptr->buffer )
-		idmef_data_destroy(ptr->buffer);
+        if ( ptr->buffer )
+                idmef_data_destroy(ptr->buffer);
 
-	ptr->buffer = buffer;
+        ptr->buffer = buffer;
 }
 
 /**
@@ -13073,15 +13073,15 @@ int idmef_overflow_alert_new_buffer(idmef_overflow_alert_t *ptr, idmef_data_t **
 {
         int retval;
 
-	if ( ptr->buffer )
-		idmef_data_destroy(ptr->buffer);
-		
-	retval = idmef_data_new(&ptr->buffer);
+        if ( ptr->buffer )
+                idmef_data_destroy(ptr->buffer);
+                
+        retval = idmef_data_new(&ptr->buffer);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->buffer;
-	return 0;
+        return 0;
 }
 
 /**
@@ -13094,43 +13094,43 @@ int idmef_overflow_alert_new_buffer(idmef_overflow_alert_t *ptr, idmef_data_t **
  */
 int idmef_alert_new(idmef_alert_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	prelude_list_init(&(*ret)->analyzer_list);
+        prelude_list_init(&(*ret)->analyzer_list);
     
 
-	prelude_list_init(&(*ret)->source_list);
+        prelude_list_init(&(*ret)->source_list);
     
 
-	prelude_list_init(&(*ret)->target_list);
+        prelude_list_init(&(*ret)->target_list);
     
 
-	prelude_list_init(&(*ret)->additional_data_list);
+        prelude_list_init(&(*ret)->additional_data_list);
     
 
-	return 0;
+        return 0;
 
 }
 
 int idmef_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_alert_t *ptr = p;
+        idmef_alert_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->messageid);
-		case 1:
+                case 1:
                         *childptr = &ptr->analyzer_list;
-			return 0;
+                        return 0;
         
                 case 2:
                        return get_value_from_time((idmef_value_t **) childptr, & ptr->create_time);
-		case 3:
+                case 3:
                         *childptr = ptr->classification;
                         return 0;
         
@@ -13138,49 +13138,49 @@ int idmef_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr
                        return get_value_from_time((idmef_value_t **) childptr,  ptr->detect_time);        
                 case 5:
                        return get_value_from_time((idmef_value_t **) childptr,  ptr->analyzer_time);
-		case 6:
+                case 6:
                         *childptr = &ptr->source_list;
-			return 0;
+                        return 0;
 
-		case 7:
+                case 7:
                         *childptr = &ptr->target_list;
-			return 0;
+                        return 0;
 
-		case 8:
+                case 8:
                         *childptr = ptr->assessment;
                         return 0;
 
-		case 9:
+                case 9:
                         *childptr = &ptr->additional_data_list;
-			return 0;
+                        return 0;
 
-		case 10:
+                case 10:
                         *childptr = ( ptr->type == IDMEF_ALERT_TYPE_TOOL ) ? ptr->detail.tool_alert : NULL;
-			return 0;   	   
+                        return 0;          
 
-		case 11:
+                case 11:
                         *childptr = ( ptr->type == IDMEF_ALERT_TYPE_CORRELATION ) ? ptr->detail.correlation_alert : NULL;
-			return 0;   	   
+                        return 0;          
 
-		case 12:
+                case 12:
                         *childptr = ( ptr->type == IDMEF_ALERT_TYPE_OVERFLOW ) ? ptr->detail.overflow_alert : NULL;
-			return 0;   	   
+                        return 0;          
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_alert_t *ptr = p;
+        idmef_alert_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_alert_new_messageid(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_alert_new_messageid(ptr, (prelude_string_t **) ret);
 
-		case 1: {
+                case 1: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -13212,21 +13212,21 @@ int idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         }
 
                         return idmef_alert_new_analyzer(ptr, (idmef_analyzer_t **) ret, n);
-		}
+                }
 
-		case 2:
-			return idmef_alert_new_create_time(ptr, (idmef_time_t **) ret);
+                case 2:
+                        return idmef_alert_new_create_time(ptr, (idmef_time_t **) ret);
 
-		case 3:
-			return idmef_alert_new_classification(ptr, (idmef_classification_t **) ret);
+                case 3:
+                        return idmef_alert_new_classification(ptr, (idmef_classification_t **) ret);
 
-		case 4:
-			return idmef_alert_new_detect_time(ptr, (idmef_time_t **) ret);
+                case 4:
+                        return idmef_alert_new_detect_time(ptr, (idmef_time_t **) ret);
 
-		case 5:
-			return idmef_alert_new_analyzer_time(ptr, (idmef_time_t **) ret);
+                case 5:
+                        return idmef_alert_new_analyzer_time(ptr, (idmef_time_t **) ret);
 
-		case 6: {
+                case 6: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -13258,9 +13258,9 @@ int idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         }
 
                         return idmef_alert_new_source(ptr, (idmef_source_t **) ret, n);
-		}
+                }
 
-		case 7: {
+                case 7: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -13292,12 +13292,12 @@ int idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         }
 
                         return idmef_alert_new_target(ptr, (idmef_target_t **) ret, n);
-		}
+                }
 
-		case 8:
-			return idmef_alert_new_assessment(ptr, (idmef_assessment_t **) ret);
+                case 8:
+                        return idmef_alert_new_assessment(ptr, (idmef_assessment_t **) ret);
 
-		case 9: {
+                case 9: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -13329,119 +13329,119 @@ int idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         }
 
                         return idmef_alert_new_additional_data(ptr, (idmef_additional_data_t **) ret, n);
-		}
+                }
 
-		case 10:
-			return idmef_alert_new_tool_alert(ptr, (idmef_tool_alert_t **) ret);
+                case 10:
+                        return idmef_alert_new_tool_alert(ptr, (idmef_tool_alert_t **) ret);
 
-		case 11:
-			return idmef_alert_new_correlation_alert(ptr, (idmef_correlation_alert_t **) ret);
+                case 11:
+                        return idmef_alert_new_correlation_alert(ptr, (idmef_correlation_alert_t **) ret);
 
-		case 12:
-			return idmef_alert_new_overflow_alert(ptr, (idmef_overflow_alert_t **) ret);
+                case 12:
+                        return idmef_alert_new_overflow_alert(ptr, (idmef_overflow_alert_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_alert_destroy_internal(idmef_alert_t *ptr)
 {
 
-	if ( ptr->messageid ) {
-		prelude_string_destroy(ptr->messageid);
-		ptr->messageid = NULL;
-	}
+        if ( ptr->messageid ) {
+                prelude_string_destroy(ptr->messageid);
+                ptr->messageid = NULL;
+        }
 
-	{
-		prelude_list_t *n, *tmp;
-		idmef_analyzer_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                idmef_analyzer_t *entry;
 
-		prelude_list_for_each_safe(&ptr->analyzer_list, tmp, n) {
-			entry = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                prelude_list_for_each_safe(&ptr->analyzer_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_analyzer_t, list);
                         prelude_list_del_init(&entry->list);
-			idmef_analyzer_destroy(entry);
-		}
-	}
+                        idmef_analyzer_destroy(entry);
+                }
+        }
 
-	idmef_time_destroy_internal(&ptr->create_time);
+        idmef_time_destroy_internal(&ptr->create_time);
 
-	if ( ptr->classification ) {
-		idmef_classification_destroy(ptr->classification);
-		ptr->classification = NULL;
-	}
+        if ( ptr->classification ) {
+                idmef_classification_destroy(ptr->classification);
+                ptr->classification = NULL;
+        }
 
-	if ( ptr->detect_time ) {
-		idmef_time_destroy(ptr->detect_time);
-		ptr->detect_time = NULL;
-	}
+        if ( ptr->detect_time ) {
+                idmef_time_destroy(ptr->detect_time);
+                ptr->detect_time = NULL;
+        }
 
-	if ( ptr->analyzer_time ) {
-		idmef_time_destroy(ptr->analyzer_time);
-		ptr->analyzer_time = NULL;
-	}
+        if ( ptr->analyzer_time ) {
+                idmef_time_destroy(ptr->analyzer_time);
+                ptr->analyzer_time = NULL;
+        }
 
-	{
-		prelude_list_t *n, *tmp;
-		idmef_source_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                idmef_source_t *entry;
 
-		prelude_list_for_each_safe(&ptr->source_list, tmp, n) {
-			entry = prelude_list_entry(tmp, idmef_source_t, list);
+                prelude_list_for_each_safe(&ptr->source_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_source_t, list);
                         prelude_list_del_init(&entry->list);
-			idmef_source_destroy(entry);
-		}
-	}
+                        idmef_source_destroy(entry);
+                }
+        }
 
-	{
-		prelude_list_t *n, *tmp;
-		idmef_target_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                idmef_target_t *entry;
 
-		prelude_list_for_each_safe(&ptr->target_list, tmp, n) {
-			entry = prelude_list_entry(tmp, idmef_target_t, list);
+                prelude_list_for_each_safe(&ptr->target_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_target_t, list);
                         prelude_list_del_init(&entry->list);
-			idmef_target_destroy(entry);
-		}
-	}
+                        idmef_target_destroy(entry);
+                }
+        }
 
-	if ( ptr->assessment ) {
-		idmef_assessment_destroy(ptr->assessment);
-		ptr->assessment = NULL;
-	}
+        if ( ptr->assessment ) {
+                idmef_assessment_destroy(ptr->assessment);
+                ptr->assessment = NULL;
+        }
 
-	{
-		prelude_list_t *n, *tmp;
-		idmef_additional_data_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                idmef_additional_data_t *entry;
 
-		prelude_list_for_each_safe(&ptr->additional_data_list, tmp, n) {
-			entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                prelude_list_for_each_safe(&ptr->additional_data_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
                         prelude_list_del_init(&entry->list);
-			idmef_additional_data_destroy(entry);
-		}
-	}
+                        idmef_additional_data_destroy(entry);
+                }
+        }
 
-	switch ( ptr->type ) {
+        switch ( ptr->type ) {
 
-		case IDMEF_ALERT_TYPE_TOOL:
-			idmef_tool_alert_destroy(ptr->detail.tool_alert);
-			ptr->detail.tool_alert = NULL;
-			break;
+                case IDMEF_ALERT_TYPE_TOOL:
+                        idmef_tool_alert_destroy(ptr->detail.tool_alert);
+                        ptr->detail.tool_alert = NULL;
+                        break;
 
-		case IDMEF_ALERT_TYPE_CORRELATION:
-			idmef_correlation_alert_destroy(ptr->detail.correlation_alert);
-			ptr->detail.correlation_alert = NULL;
-			break;
+                case IDMEF_ALERT_TYPE_CORRELATION:
+                        idmef_correlation_alert_destroy(ptr->detail.correlation_alert);
+                        ptr->detail.correlation_alert = NULL;
+                        break;
 
-		case IDMEF_ALERT_TYPE_OVERFLOW:
-			idmef_overflow_alert_destroy(ptr->detail.overflow_alert);
-			ptr->detail.overflow_alert = NULL;
-			break;
+                case IDMEF_ALERT_TYPE_OVERFLOW:
+                        idmef_overflow_alert_destroy(ptr->detail.overflow_alert);
+                        ptr->detail.overflow_alert = NULL;
+                        break;
 
-		default:
-			break;
-	}
+                default:
+                        break;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -13454,7 +13454,7 @@ static void idmef_alert_destroy_internal(idmef_alert_t *ptr)
 
 void idmef_alert_destroy(idmef_alert_t *ptr)
 {
-	idmef_alert_destroy_internal(ptr);
+        idmef_alert_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -13468,7 +13468,7 @@ void idmef_alert_destroy(idmef_alert_t *ptr)
  */
 prelude_string_t *idmef_alert_get_messageid(idmef_alert_t *ptr)
 {
-	return ptr->messageid;
+        return ptr->messageid;
 }
 
 /**
@@ -13483,10 +13483,10 @@ prelude_string_t *idmef_alert_get_messageid(idmef_alert_t *ptr)
 
 void idmef_alert_set_messageid(idmef_alert_t *ptr, prelude_string_t *messageid)
 {
-	if ( ptr->messageid )
-		prelude_string_destroy(ptr->messageid);
+        if ( ptr->messageid )
+                prelude_string_destroy(ptr->messageid);
 
-	ptr->messageid = messageid;
+        ptr->messageid = messageid;
 }
 
 /**
@@ -13503,15 +13503,15 @@ int idmef_alert_new_messageid(idmef_alert_t *ptr, prelude_string_t **ret)
 {
         int retval;
 
-	if ( ptr->messageid )
-		prelude_string_destroy(ptr->messageid);
-		
-	retval = prelude_string_new(&ptr->messageid);
+        if ( ptr->messageid )
+                prelude_string_destroy(ptr->messageid);
+                
+        retval = prelude_string_new(&ptr->messageid);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->messageid;
-	return 0;
+        return 0;
 }
 
 /**
@@ -13595,7 +13595,7 @@ int idmef_alert_new_analyzer(idmef_alert_t *ptr, idmef_analyzer_t **ret, int pos
  */
 idmef_time_t *idmef_alert_get_create_time(idmef_alert_t *ptr)
 {
-	return &ptr->create_time;
+        return &ptr->create_time;
 }
 
 /**
@@ -13613,7 +13613,7 @@ void idmef_alert_set_create_time(idmef_alert_t *ptr, idmef_time_t *create_time)
         idmef_time_destroy_internal(&ptr->create_time);
         if ( create_time ) {
                 memcpy(&ptr->create_time, create_time, sizeof (ptr->create_time));
-	        free(create_time);
+                free(create_time);
         }
 }
 
@@ -13629,10 +13629,10 @@ void idmef_alert_set_create_time(idmef_alert_t *ptr, idmef_time_t *create_time)
  */
 int idmef_alert_new_create_time(idmef_alert_t *ptr, idmef_time_t **ret)
 {
-	idmef_time_destroy_internal(&ptr->create_time);
+        idmef_time_destroy_internal(&ptr->create_time);
 
         *ret = &ptr->create_time;
-	return 0;
+        return 0;
 }
 
 /**
@@ -13645,7 +13645,7 @@ int idmef_alert_new_create_time(idmef_alert_t *ptr, idmef_time_t **ret)
  */
 idmef_classification_t *idmef_alert_get_classification(idmef_alert_t *ptr)
 {
-	return ptr->classification;
+        return ptr->classification;
 }
 
 /**
@@ -13660,10 +13660,10 @@ idmef_classification_t *idmef_alert_get_classification(idmef_alert_t *ptr)
 
 void idmef_alert_set_classification(idmef_alert_t *ptr, idmef_classification_t *classification)
 {
-	if ( ptr->classification )
-		idmef_classification_destroy(ptr->classification);
+        if ( ptr->classification )
+                idmef_classification_destroy(ptr->classification);
 
-	ptr->classification = classification;
+        ptr->classification = classification;
 }
 
 /**
@@ -13680,11 +13680,11 @@ int idmef_alert_new_classification(idmef_alert_t *ptr, idmef_classification_t **
 {
         int retval;
 
-	if ( ! ptr->classification )
-		retval = idmef_classification_new(&ptr->classification);
+        if ( ! ptr->classification )
+                retval = idmef_classification_new(&ptr->classification);
 
         *ret = ptr->classification;
-	return 0;
+        return 0;
 }
 
 /**
@@ -13697,7 +13697,7 @@ int idmef_alert_new_classification(idmef_alert_t *ptr, idmef_classification_t **
  */
 idmef_time_t *idmef_alert_get_detect_time(idmef_alert_t *ptr)
 {
-	return ptr->detect_time;
+        return ptr->detect_time;
 }
 
 /**
@@ -13712,10 +13712,10 @@ idmef_time_t *idmef_alert_get_detect_time(idmef_alert_t *ptr)
 
 void idmef_alert_set_detect_time(idmef_alert_t *ptr, idmef_time_t *detect_time)
 {
-	if ( ptr->detect_time )
-		idmef_time_destroy(ptr->detect_time);
+        if ( ptr->detect_time )
+                idmef_time_destroy(ptr->detect_time);
 
-	ptr->detect_time = detect_time;
+        ptr->detect_time = detect_time;
 }
 
 /**
@@ -13732,15 +13732,15 @@ int idmef_alert_new_detect_time(idmef_alert_t *ptr, idmef_time_t **ret)
 {
         int retval;
 
-	if ( ptr->detect_time )
-		idmef_time_destroy(ptr->detect_time);
-		
-	retval = idmef_time_new(&ptr->detect_time);
+        if ( ptr->detect_time )
+                idmef_time_destroy(ptr->detect_time);
+                
+        retval = idmef_time_new(&ptr->detect_time);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->detect_time;
-	return 0;
+        return 0;
 }
 
 /**
@@ -13753,7 +13753,7 @@ int idmef_alert_new_detect_time(idmef_alert_t *ptr, idmef_time_t **ret)
  */
 idmef_time_t *idmef_alert_get_analyzer_time(idmef_alert_t *ptr)
 {
-	return ptr->analyzer_time;
+        return ptr->analyzer_time;
 }
 
 /**
@@ -13768,10 +13768,10 @@ idmef_time_t *idmef_alert_get_analyzer_time(idmef_alert_t *ptr)
 
 void idmef_alert_set_analyzer_time(idmef_alert_t *ptr, idmef_time_t *analyzer_time)
 {
-	if ( ptr->analyzer_time )
-		idmef_time_destroy(ptr->analyzer_time);
+        if ( ptr->analyzer_time )
+                idmef_time_destroy(ptr->analyzer_time);
 
-	ptr->analyzer_time = analyzer_time;
+        ptr->analyzer_time = analyzer_time;
 }
 
 /**
@@ -13788,15 +13788,15 @@ int idmef_alert_new_analyzer_time(idmef_alert_t *ptr, idmef_time_t **ret)
 {
         int retval;
 
-	if ( ptr->analyzer_time )
-		idmef_time_destroy(ptr->analyzer_time);
-		
-	retval = idmef_time_new(&ptr->analyzer_time);
+        if ( ptr->analyzer_time )
+                idmef_time_destroy(ptr->analyzer_time);
+                
+        retval = idmef_time_new(&ptr->analyzer_time);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->analyzer_time;
-	return 0;
+        return 0;
 }
 
 /**
@@ -13951,7 +13951,7 @@ int idmef_alert_new_target(idmef_alert_t *ptr, idmef_target_t **ret, int pos)
  */
 idmef_assessment_t *idmef_alert_get_assessment(idmef_alert_t *ptr)
 {
-	return ptr->assessment;
+        return ptr->assessment;
 }
 
 /**
@@ -13966,10 +13966,10 @@ idmef_assessment_t *idmef_alert_get_assessment(idmef_alert_t *ptr)
 
 void idmef_alert_set_assessment(idmef_alert_t *ptr, idmef_assessment_t *assessment)
 {
-	if ( ptr->assessment )
-		idmef_assessment_destroy(ptr->assessment);
+        if ( ptr->assessment )
+                idmef_assessment_destroy(ptr->assessment);
 
-	ptr->assessment = assessment;
+        ptr->assessment = assessment;
 }
 
 /**
@@ -13986,11 +13986,11 @@ int idmef_alert_new_assessment(idmef_alert_t *ptr, idmef_assessment_t **ret)
 {
         int retval;
 
-	if ( ! ptr->assessment )
-		retval = idmef_assessment_new(&ptr->assessment);
+        if ( ! ptr->assessment )
+                retval = idmef_assessment_new(&ptr->assessment);
 
         *ret = ptr->assessment;
-	return 0;
+        return 0;
 }
 
 /**
@@ -14074,7 +14074,7 @@ int idmef_alert_new_additional_data(idmef_alert_t *ptr, idmef_additional_data_t 
  */
 idmef_alert_type_t idmef_alert_get_type(idmef_alert_t *ptr)
 {
-	return ptr->type;
+        return ptr->type;
 }
 
 /** 
@@ -14087,7 +14087,7 @@ idmef_alert_type_t idmef_alert_get_type(idmef_alert_t *ptr)
  */
 idmef_tool_alert_t *idmef_alert_get_tool_alert(idmef_alert_t *ptr)
 {
-	return (ptr->type == IDMEF_ALERT_TYPE_TOOL) ? ptr->detail.tool_alert : NULL;
+        return (ptr->type == IDMEF_ALERT_TYPE_TOOL) ? ptr->detail.tool_alert : NULL;
 }
 
 /**
@@ -14101,26 +14101,26 @@ idmef_tool_alert_t *idmef_alert_get_tool_alert(idmef_alert_t *ptr)
  */
 void idmef_alert_set_tool_alert(idmef_alert_t *ptr, idmef_tool_alert_t *tool_alert)
 {
-	switch ( ptr->type ) {
+        switch ( ptr->type ) {
 
-		case IDMEF_ALERT_TYPE_TOOL:
-			idmef_tool_alert_destroy(ptr->detail.tool_alert);
-			break;
+                case IDMEF_ALERT_TYPE_TOOL:
+                        idmef_tool_alert_destroy(ptr->detail.tool_alert);
+                        break;
 
-		case IDMEF_ALERT_TYPE_CORRELATION:
-			idmef_correlation_alert_destroy(ptr->detail.correlation_alert);
-			break;
+                case IDMEF_ALERT_TYPE_CORRELATION:
+                        idmef_correlation_alert_destroy(ptr->detail.correlation_alert);
+                        break;
 
-		case IDMEF_ALERT_TYPE_OVERFLOW:
-			idmef_overflow_alert_destroy(ptr->detail.overflow_alert);
-			break;
+                case IDMEF_ALERT_TYPE_OVERFLOW:
+                        idmef_overflow_alert_destroy(ptr->detail.overflow_alert);
+                        break;
 
-		default:
-			break;
-	}
+                default:
+                        break;
+        }
 
-	ptr->detail.tool_alert = tool_alert;
-	ptr->type = IDMEF_ALERT_TYPE_TOOL;
+        ptr->detail.tool_alert = tool_alert;
+        ptr->type = IDMEF_ALERT_TYPE_TOOL;
 }
 
 /**
@@ -14137,32 +14137,32 @@ int idmef_alert_new_tool_alert(idmef_alert_t *ptr, idmef_tool_alert_t **ret)
 {
         int retval;
 
-	switch ( ptr->type ) {
+        switch ( ptr->type ) {
 
-		case IDMEF_ALERT_TYPE_TOOL:
+                case IDMEF_ALERT_TYPE_TOOL:
                         *ret = ptr->detail.tool_alert;
-			return 0;
+                        return 0;
 
-		case IDMEF_ALERT_TYPE_CORRELATION:
-			idmef_correlation_alert_destroy(ptr->detail.correlation_alert);
-			break;
+                case IDMEF_ALERT_TYPE_CORRELATION:
+                        idmef_correlation_alert_destroy(ptr->detail.correlation_alert);
+                        break;
 
-		case IDMEF_ALERT_TYPE_OVERFLOW:
-			idmef_overflow_alert_destroy(ptr->detail.overflow_alert);
-			break;
+                case IDMEF_ALERT_TYPE_OVERFLOW:
+                        idmef_overflow_alert_destroy(ptr->detail.overflow_alert);
+                        break;
 
-		default:
-			break;
-	}
+                default:
+                        break;
+        }
 
         retval = idmef_tool_alert_new(ret);
         if ( retval < 0 )
                 return retval;
 
-	ptr->type = IDMEF_ALERT_TYPE_TOOL;
+        ptr->type = IDMEF_ALERT_TYPE_TOOL;
         ptr->detail.tool_alert = *ret;
 
-	return 0;
+        return 0;
 }
 
 /** 
@@ -14175,7 +14175,7 @@ int idmef_alert_new_tool_alert(idmef_alert_t *ptr, idmef_tool_alert_t **ret)
  */
 idmef_correlation_alert_t *idmef_alert_get_correlation_alert(idmef_alert_t *ptr)
 {
-	return (ptr->type == IDMEF_ALERT_TYPE_CORRELATION) ? ptr->detail.correlation_alert : NULL;
+        return (ptr->type == IDMEF_ALERT_TYPE_CORRELATION) ? ptr->detail.correlation_alert : NULL;
 }
 
 /**
@@ -14189,26 +14189,26 @@ idmef_correlation_alert_t *idmef_alert_get_correlation_alert(idmef_alert_t *ptr)
  */
 void idmef_alert_set_correlation_alert(idmef_alert_t *ptr, idmef_correlation_alert_t *correlation_alert)
 {
-	switch ( ptr->type ) {
+        switch ( ptr->type ) {
 
-		case IDMEF_ALERT_TYPE_TOOL:
-			idmef_tool_alert_destroy(ptr->detail.tool_alert);
-			break;
+                case IDMEF_ALERT_TYPE_TOOL:
+                        idmef_tool_alert_destroy(ptr->detail.tool_alert);
+                        break;
 
-		case IDMEF_ALERT_TYPE_CORRELATION:
-			idmef_correlation_alert_destroy(ptr->detail.correlation_alert);
-			break;
+                case IDMEF_ALERT_TYPE_CORRELATION:
+                        idmef_correlation_alert_destroy(ptr->detail.correlation_alert);
+                        break;
 
-		case IDMEF_ALERT_TYPE_OVERFLOW:
-			idmef_overflow_alert_destroy(ptr->detail.overflow_alert);
-			break;
+                case IDMEF_ALERT_TYPE_OVERFLOW:
+                        idmef_overflow_alert_destroy(ptr->detail.overflow_alert);
+                        break;
 
-		default:
-			break;
-	}
+                default:
+                        break;
+        }
 
-	ptr->detail.correlation_alert = correlation_alert;
-	ptr->type = IDMEF_ALERT_TYPE_CORRELATION;
+        ptr->detail.correlation_alert = correlation_alert;
+        ptr->type = IDMEF_ALERT_TYPE_CORRELATION;
 }
 
 /**
@@ -14225,32 +14225,32 @@ int idmef_alert_new_correlation_alert(idmef_alert_t *ptr, idmef_correlation_aler
 {
         int retval;
 
-	switch ( ptr->type ) {
+        switch ( ptr->type ) {
 
-		case IDMEF_ALERT_TYPE_TOOL:
-			idmef_tool_alert_destroy(ptr->detail.tool_alert);
-			break;
+                case IDMEF_ALERT_TYPE_TOOL:
+                        idmef_tool_alert_destroy(ptr->detail.tool_alert);
+                        break;
 
-		case IDMEF_ALERT_TYPE_CORRELATION:
+                case IDMEF_ALERT_TYPE_CORRELATION:
                         *ret = ptr->detail.correlation_alert;
-			return 0;
+                        return 0;
 
-		case IDMEF_ALERT_TYPE_OVERFLOW:
-			idmef_overflow_alert_destroy(ptr->detail.overflow_alert);
-			break;
+                case IDMEF_ALERT_TYPE_OVERFLOW:
+                        idmef_overflow_alert_destroy(ptr->detail.overflow_alert);
+                        break;
 
-		default:
-			break;
-	}
+                default:
+                        break;
+        }
 
         retval = idmef_correlation_alert_new(ret);
         if ( retval < 0 )
                 return retval;
 
-	ptr->type = IDMEF_ALERT_TYPE_CORRELATION;
+        ptr->type = IDMEF_ALERT_TYPE_CORRELATION;
         ptr->detail.correlation_alert = *ret;
 
-	return 0;
+        return 0;
 }
 
 /** 
@@ -14263,7 +14263,7 @@ int idmef_alert_new_correlation_alert(idmef_alert_t *ptr, idmef_correlation_aler
  */
 idmef_overflow_alert_t *idmef_alert_get_overflow_alert(idmef_alert_t *ptr)
 {
-	return (ptr->type == IDMEF_ALERT_TYPE_OVERFLOW) ? ptr->detail.overflow_alert : NULL;
+        return (ptr->type == IDMEF_ALERT_TYPE_OVERFLOW) ? ptr->detail.overflow_alert : NULL;
 }
 
 /**
@@ -14277,26 +14277,26 @@ idmef_overflow_alert_t *idmef_alert_get_overflow_alert(idmef_alert_t *ptr)
  */
 void idmef_alert_set_overflow_alert(idmef_alert_t *ptr, idmef_overflow_alert_t *overflow_alert)
 {
-	switch ( ptr->type ) {
+        switch ( ptr->type ) {
 
-		case IDMEF_ALERT_TYPE_TOOL:
-			idmef_tool_alert_destroy(ptr->detail.tool_alert);
-			break;
+                case IDMEF_ALERT_TYPE_TOOL:
+                        idmef_tool_alert_destroy(ptr->detail.tool_alert);
+                        break;
 
-		case IDMEF_ALERT_TYPE_CORRELATION:
-			idmef_correlation_alert_destroy(ptr->detail.correlation_alert);
-			break;
+                case IDMEF_ALERT_TYPE_CORRELATION:
+                        idmef_correlation_alert_destroy(ptr->detail.correlation_alert);
+                        break;
 
-		case IDMEF_ALERT_TYPE_OVERFLOW:
-			idmef_overflow_alert_destroy(ptr->detail.overflow_alert);
-			break;
+                case IDMEF_ALERT_TYPE_OVERFLOW:
+                        idmef_overflow_alert_destroy(ptr->detail.overflow_alert);
+                        break;
 
-		default:
-			break;
-	}
+                default:
+                        break;
+        }
 
-	ptr->detail.overflow_alert = overflow_alert;
-	ptr->type = IDMEF_ALERT_TYPE_OVERFLOW;
+        ptr->detail.overflow_alert = overflow_alert;
+        ptr->type = IDMEF_ALERT_TYPE_OVERFLOW;
 }
 
 /**
@@ -14313,32 +14313,32 @@ int idmef_alert_new_overflow_alert(idmef_alert_t *ptr, idmef_overflow_alert_t **
 {
         int retval;
 
-	switch ( ptr->type ) {
+        switch ( ptr->type ) {
 
-		case IDMEF_ALERT_TYPE_TOOL:
-			idmef_tool_alert_destroy(ptr->detail.tool_alert);
-			break;
+                case IDMEF_ALERT_TYPE_TOOL:
+                        idmef_tool_alert_destroy(ptr->detail.tool_alert);
+                        break;
 
-		case IDMEF_ALERT_TYPE_CORRELATION:
-			idmef_correlation_alert_destroy(ptr->detail.correlation_alert);
-			break;
+                case IDMEF_ALERT_TYPE_CORRELATION:
+                        idmef_correlation_alert_destroy(ptr->detail.correlation_alert);
+                        break;
 
-		case IDMEF_ALERT_TYPE_OVERFLOW:
+                case IDMEF_ALERT_TYPE_OVERFLOW:
                         *ret = ptr->detail.overflow_alert;
-			return 0;
+                        return 0;
 
-		default:
-			break;
-	}
+                default:
+                        break;
+        }
 
         retval = idmef_overflow_alert_new(ret);
         if ( retval < 0 )
                 return retval;
 
-	ptr->type = IDMEF_ALERT_TYPE_OVERFLOW;
+        ptr->type = IDMEF_ALERT_TYPE_OVERFLOW;
         ptr->detail.overflow_alert = *ret;
 
-	return 0;
+        return 0;
 }
 
 /**
@@ -14351,60 +14351,60 @@ int idmef_alert_new_overflow_alert(idmef_alert_t *ptr, idmef_overflow_alert_t **
  */
 int idmef_heartbeat_new(idmef_heartbeat_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	prelude_list_init(&(*ret)->analyzer_list);
+        prelude_list_init(&(*ret)->analyzer_list);
     
 
-	prelude_list_init(&(*ret)->additional_data_list);
+        prelude_list_init(&(*ret)->additional_data_list);
     
 
-	return 0;
+        return 0;
 
 }
 
 int idmef_heartbeat_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_heartbeat_t *ptr = p;
+        idmef_heartbeat_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->messageid);
-		case 1:
+                case 1:
                         *childptr = &ptr->analyzer_list;
-			return 0;
+                        return 0;
         
                 case 2:
                        return get_value_from_time((idmef_value_t **) childptr, & ptr->create_time);        
                 case 3:
                        return get_value_from_time((idmef_value_t **) childptr,  ptr->analyzer_time);
                 case 4:
-	               return (ptr->heartbeat_interval_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->heartbeat_interval) : 0;
+                       return (ptr->heartbeat_interval_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->heartbeat_interval) : 0;
 
-		case 5:
+                case 5:
                         *childptr = &ptr->additional_data_list;
-			return 0;
+                        return 0;
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_heartbeat_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_heartbeat_t *ptr = p;
+        idmef_heartbeat_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_heartbeat_new_messageid(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_heartbeat_new_messageid(ptr, (prelude_string_t **) ret);
 
-		case 1: {
+                case 1: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -14436,18 +14436,18 @@ int idmef_heartbeat_new_child(void *p, idmef_class_child_id_t child, int n, void
                         }
 
                         return idmef_heartbeat_new_analyzer(ptr, (idmef_analyzer_t **) ret, n);
-		}
+                }
 
-		case 2:
-			return idmef_heartbeat_new_create_time(ptr, (idmef_time_t **) ret);
+                case 2:
+                        return idmef_heartbeat_new_create_time(ptr, (idmef_time_t **) ret);
 
-		case 3:
-			return idmef_heartbeat_new_analyzer_time(ptr, (idmef_time_t **) ret);
+                case 3:
+                        return idmef_heartbeat_new_analyzer_time(ptr, (idmef_time_t **) ret);
 
-		case 4:
-			return idmef_heartbeat_new_heartbeat_interval(ptr, (uint32_t **) ret);
+                case 4:
+                        return idmef_heartbeat_new_heartbeat_interval(ptr, (uint32_t **) ret);
 
-		case 5: {
+                case 5: {
                         int i = 0;
                         prelude_list_t *tmp;
 
@@ -14479,52 +14479,52 @@ int idmef_heartbeat_new_child(void *p, idmef_class_child_id_t child, int n, void
                         }
 
                         return idmef_heartbeat_new_additional_data(ptr, (idmef_additional_data_t **) ret, n);
-		}
+                }
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_heartbeat_destroy_internal(idmef_heartbeat_t *ptr)
 {
 
-	if ( ptr->messageid ) {
-		prelude_string_destroy(ptr->messageid);
-		ptr->messageid = NULL;
-	}
+        if ( ptr->messageid ) {
+                prelude_string_destroy(ptr->messageid);
+                ptr->messageid = NULL;
+        }
 
-	{
-		prelude_list_t *n, *tmp;
-		idmef_analyzer_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                idmef_analyzer_t *entry;
 
-		prelude_list_for_each_safe(&ptr->analyzer_list, tmp, n) {
-			entry = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                prelude_list_for_each_safe(&ptr->analyzer_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_analyzer_t, list);
                         prelude_list_del_init(&entry->list);
-			idmef_analyzer_destroy(entry);
-		}
-	}
+                        idmef_analyzer_destroy(entry);
+                }
+        }
 
-	idmef_time_destroy_internal(&ptr->create_time);
+        idmef_time_destroy_internal(&ptr->create_time);
 
-	if ( ptr->analyzer_time ) {
-		idmef_time_destroy(ptr->analyzer_time);
-		ptr->analyzer_time = NULL;
-	}
+        if ( ptr->analyzer_time ) {
+                idmef_time_destroy(ptr->analyzer_time);
+                ptr->analyzer_time = NULL;
+        }
 
-	{
-		prelude_list_t *n, *tmp;
-		idmef_additional_data_t *entry;
+        {
+                prelude_list_t *n, *tmp;
+                idmef_additional_data_t *entry;
 
-		prelude_list_for_each_safe(&ptr->additional_data_list, tmp, n) {
-			entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                prelude_list_for_each_safe(&ptr->additional_data_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
                         prelude_list_del_init(&entry->list);
-			idmef_additional_data_destroy(entry);
-		}
-	}
+                        idmef_additional_data_destroy(entry);
+                }
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -14537,7 +14537,7 @@ static void idmef_heartbeat_destroy_internal(idmef_heartbeat_t *ptr)
 
 void idmef_heartbeat_destroy(idmef_heartbeat_t *ptr)
 {
-	idmef_heartbeat_destroy_internal(ptr);
+        idmef_heartbeat_destroy_internal(ptr);
         free(ptr);
 }
 
@@ -14551,7 +14551,7 @@ void idmef_heartbeat_destroy(idmef_heartbeat_t *ptr)
  */
 prelude_string_t *idmef_heartbeat_get_messageid(idmef_heartbeat_t *ptr)
 {
-	return ptr->messageid;
+        return ptr->messageid;
 }
 
 /**
@@ -14566,10 +14566,10 @@ prelude_string_t *idmef_heartbeat_get_messageid(idmef_heartbeat_t *ptr)
 
 void idmef_heartbeat_set_messageid(idmef_heartbeat_t *ptr, prelude_string_t *messageid)
 {
-	if ( ptr->messageid )
-		prelude_string_destroy(ptr->messageid);
+        if ( ptr->messageid )
+                prelude_string_destroy(ptr->messageid);
 
-	ptr->messageid = messageid;
+        ptr->messageid = messageid;
 }
 
 /**
@@ -14586,15 +14586,15 @@ int idmef_heartbeat_new_messageid(idmef_heartbeat_t *ptr, prelude_string_t **ret
 {
         int retval;
 
-	if ( ptr->messageid )
-		prelude_string_destroy(ptr->messageid);
-		
-	retval = prelude_string_new(&ptr->messageid);
+        if ( ptr->messageid )
+                prelude_string_destroy(ptr->messageid);
+                
+        retval = prelude_string_new(&ptr->messageid);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->messageid;
-	return 0;
+        return 0;
 }
 
 /**
@@ -14678,7 +14678,7 @@ int idmef_heartbeat_new_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t **ret,
  */
 idmef_time_t *idmef_heartbeat_get_create_time(idmef_heartbeat_t *ptr)
 {
-	return &ptr->create_time;
+        return &ptr->create_time;
 }
 
 /**
@@ -14696,7 +14696,7 @@ void idmef_heartbeat_set_create_time(idmef_heartbeat_t *ptr, idmef_time_t *creat
         idmef_time_destroy_internal(&ptr->create_time);
         if ( create_time ) {
                 memcpy(&ptr->create_time, create_time, sizeof (ptr->create_time));
-	        free(create_time);
+                free(create_time);
         }
 }
 
@@ -14712,10 +14712,10 @@ void idmef_heartbeat_set_create_time(idmef_heartbeat_t *ptr, idmef_time_t *creat
  */
 int idmef_heartbeat_new_create_time(idmef_heartbeat_t *ptr, idmef_time_t **ret)
 {
-	idmef_time_destroy_internal(&ptr->create_time);
+        idmef_time_destroy_internal(&ptr->create_time);
 
         *ret = &ptr->create_time;
-	return 0;
+        return 0;
 }
 
 /**
@@ -14728,7 +14728,7 @@ int idmef_heartbeat_new_create_time(idmef_heartbeat_t *ptr, idmef_time_t **ret)
  */
 idmef_time_t *idmef_heartbeat_get_analyzer_time(idmef_heartbeat_t *ptr)
 {
-	return ptr->analyzer_time;
+        return ptr->analyzer_time;
 }
 
 /**
@@ -14743,10 +14743,10 @@ idmef_time_t *idmef_heartbeat_get_analyzer_time(idmef_heartbeat_t *ptr)
 
 void idmef_heartbeat_set_analyzer_time(idmef_heartbeat_t *ptr, idmef_time_t *analyzer_time)
 {
-	if ( ptr->analyzer_time )
-		idmef_time_destroy(ptr->analyzer_time);
+        if ( ptr->analyzer_time )
+                idmef_time_destroy(ptr->analyzer_time);
 
-	ptr->analyzer_time = analyzer_time;
+        ptr->analyzer_time = analyzer_time;
 }
 
 /**
@@ -14763,15 +14763,15 @@ int idmef_heartbeat_new_analyzer_time(idmef_heartbeat_t *ptr, idmef_time_t **ret
 {
         int retval;
 
-	if ( ptr->analyzer_time )
-		idmef_time_destroy(ptr->analyzer_time);
-		
-	retval = idmef_time_new(&ptr->analyzer_time);
+        if ( ptr->analyzer_time )
+                idmef_time_destroy(ptr->analyzer_time);
+                
+        retval = idmef_time_new(&ptr->analyzer_time);
         if ( retval < 0 )
                return retval;
 
         *ret = ptr->analyzer_time;
-	return 0;
+        return 0;
 }
 
 /**
@@ -14784,7 +14784,7 @@ int idmef_heartbeat_new_analyzer_time(idmef_heartbeat_t *ptr, idmef_time_t **ret
  */
 uint32_t *idmef_heartbeat_get_heartbeat_interval(idmef_heartbeat_t *ptr)
 {
-	return ptr->heartbeat_interval_is_set ? &ptr->heartbeat_interval : NULL;
+        return ptr->heartbeat_interval_is_set ? &ptr->heartbeat_interval : NULL;
 }
 
 /**
@@ -14799,8 +14799,8 @@ uint32_t *idmef_heartbeat_get_heartbeat_interval(idmef_heartbeat_t *ptr)
 
 void idmef_heartbeat_set_heartbeat_interval(idmef_heartbeat_t *ptr, uint32_t heartbeat_interval)
 {
-	ptr->heartbeat_interval = heartbeat_interval;
-	ptr->heartbeat_interval_is_set = 1;
+        ptr->heartbeat_interval = heartbeat_interval;
+        ptr->heartbeat_interval_is_set = 1;
 }
 
 
@@ -14822,10 +14822,10 @@ void idmef_heartbeat_unset_heartbeat_interval(idmef_heartbeat_t *ptr)
  */
 int idmef_heartbeat_new_heartbeat_interval(idmef_heartbeat_t *ptr, uint32_t **ret)
 {
-	ptr->heartbeat_interval_is_set = 1;
+        ptr->heartbeat_interval_is_set = 1;
 
         *ret = &ptr->heartbeat_interval;
-	return 0;
+        return 0;
 }
 
 /**
@@ -14909,13 +14909,13 @@ int idmef_heartbeat_new_additional_data(idmef_heartbeat_t *ptr, idmef_additional
  */
 int idmef_message_new(idmef_message_t **ret)
 {
-	*ret = calloc(1, sizeof(**ret));
-	if ( ! *ret )
-		return prelude_error_from_errno(errno);
+        *ret = calloc(1, sizeof(**ret));
+        if ( ! *ret )
+                return prelude_error_from_errno(errno);
 
-	(*ret)->refcount = 1;
+        (*ret)->refcount = 1;
 
-	return 0;
+        return 0;
 
 }
 
@@ -14930,77 +14930,77 @@ int idmef_message_new(idmef_message_t **ret)
  */
 idmef_message_t *idmef_message_ref(idmef_message_t *ptr)
 {
-	ptr->refcount++;
+        ptr->refcount++;
 
-	return ptr;
+        return ptr;
 }
 
 int idmef_message_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
-	idmef_message_t *ptr = p;
+        idmef_message_t *ptr = p;
 
         *childptr = NULL;
-	
-	switch ( child ) {
+        
+        switch ( child ) {
         
                 case 0:
                        return get_value_from_string((idmef_value_t **) childptr, & ptr->version);
-		case 1:
+                case 1:
                         *childptr = ( ptr->type == IDMEF_MESSAGE_TYPE_ALERT ) ? ptr->message.alert : NULL;
-			return 0;   	   
+                        return 0;          
 
-		case 2:
+                case 2:
                         *childptr = ( ptr->type == IDMEF_MESSAGE_TYPE_HEARTBEAT ) ? ptr->message.heartbeat : NULL;
-			return 0;   	   
+                        return 0;          
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 int idmef_message_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
-	idmef_message_t *ptr = p;
+        idmef_message_t *ptr = p;
     
-	switch ( child ) {
+        switch ( child ) {
 
-		case 0:
-			return idmef_message_new_version(ptr, (prelude_string_t **) ret);
+                case 0:
+                        return idmef_message_new_version(ptr, (prelude_string_t **) ret);
 
-		case 1:
-			return idmef_message_new_alert(ptr, (idmef_alert_t **) ret);
+                case 1:
+                        return idmef_message_new_alert(ptr, (idmef_alert_t **) ret);
 
-		case 2:
-			return idmef_message_new_heartbeat(ptr, (idmef_heartbeat_t **) ret);
+                case 2:
+                        return idmef_message_new_heartbeat(ptr, (idmef_heartbeat_t **) ret);
 
-		default:
-			return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
-	}
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+        }
 }
 
 static void idmef_message_destroy_internal(idmef_message_t *ptr)
 {
 
-	prelude_string_destroy_internal(&ptr->version);
+        prelude_string_destroy_internal(&ptr->version);
 
-	switch ( ptr->type ) {
+        switch ( ptr->type ) {
 
-		case IDMEF_MESSAGE_TYPE_ALERT:
-			idmef_alert_destroy(ptr->message.alert);
-			ptr->message.alert = NULL;
-			break;
+                case IDMEF_MESSAGE_TYPE_ALERT:
+                        idmef_alert_destroy(ptr->message.alert);
+                        ptr->message.alert = NULL;
+                        break;
 
-		case IDMEF_MESSAGE_TYPE_HEARTBEAT:
-			idmef_heartbeat_destroy(ptr->message.heartbeat);
-			ptr->message.heartbeat = NULL;
-			break;
+                case IDMEF_MESSAGE_TYPE_HEARTBEAT:
+                        idmef_heartbeat_destroy(ptr->message.heartbeat);
+                        ptr->message.heartbeat = NULL;
+                        break;
 
-		default:
-			break;
-	}
+                default:
+                        break;
+        }
 
 
-	/* free() should be done by the caller */
+        /* free() should be done by the caller */
 }
 
 /**
@@ -15013,7 +15013,7 @@ static void idmef_message_destroy_internal(idmef_message_t *ptr)
  */
 prelude_string_t *idmef_message_get_version(idmef_message_t *ptr)
 {
-	return &ptr->version;
+        return &ptr->version;
 }
 
 /**
@@ -15031,7 +15031,7 @@ void idmef_message_set_version(idmef_message_t *ptr, prelude_string_t *version)
         prelude_string_destroy_internal(&ptr->version);
         if ( version ) {
                 memcpy(&ptr->version, version, sizeof (ptr->version));
-	        free(version);
+                free(version);
         }
 }
 
@@ -15047,10 +15047,10 @@ void idmef_message_set_version(idmef_message_t *ptr, prelude_string_t *version)
  */
 int idmef_message_new_version(idmef_message_t *ptr, prelude_string_t **ret)
 {
-	prelude_string_destroy_internal(&ptr->version);
+        prelude_string_destroy_internal(&ptr->version);
 
         *ret = &ptr->version;
-	return 0;
+        return 0;
 }
 
 /** 
@@ -15063,7 +15063,7 @@ int idmef_message_new_version(idmef_message_t *ptr, prelude_string_t **ret)
  */
 idmef_message_type_t idmef_message_get_type(idmef_message_t *ptr)
 {
-	return ptr->type;
+        return ptr->type;
 }
 
 /** 
@@ -15076,7 +15076,7 @@ idmef_message_type_t idmef_message_get_type(idmef_message_t *ptr)
  */
 idmef_alert_t *idmef_message_get_alert(idmef_message_t *ptr)
 {
-	return (ptr->type == IDMEF_MESSAGE_TYPE_ALERT) ? ptr->message.alert : NULL;
+        return (ptr->type == IDMEF_MESSAGE_TYPE_ALERT) ? ptr->message.alert : NULL;
 }
 
 /**
@@ -15090,22 +15090,22 @@ idmef_alert_t *idmef_message_get_alert(idmef_message_t *ptr)
  */
 void idmef_message_set_alert(idmef_message_t *ptr, idmef_alert_t *alert)
 {
-	switch ( ptr->type ) {
+        switch ( ptr->type ) {
 
-		case IDMEF_MESSAGE_TYPE_ALERT:
-			idmef_alert_destroy(ptr->message.alert);
-			break;
+                case IDMEF_MESSAGE_TYPE_ALERT:
+                        idmef_alert_destroy(ptr->message.alert);
+                        break;
 
-		case IDMEF_MESSAGE_TYPE_HEARTBEAT:
-			idmef_heartbeat_destroy(ptr->message.heartbeat);
-			break;
+                case IDMEF_MESSAGE_TYPE_HEARTBEAT:
+                        idmef_heartbeat_destroy(ptr->message.heartbeat);
+                        break;
 
-		default:
-			break;
-	}
+                default:
+                        break;
+        }
 
-	ptr->message.alert = alert;
-	ptr->type = IDMEF_MESSAGE_TYPE_ALERT;
+        ptr->message.alert = alert;
+        ptr->type = IDMEF_MESSAGE_TYPE_ALERT;
 }
 
 /**
@@ -15122,28 +15122,28 @@ int idmef_message_new_alert(idmef_message_t *ptr, idmef_alert_t **ret)
 {
         int retval;
 
-	switch ( ptr->type ) {
+        switch ( ptr->type ) {
 
-		case IDMEF_MESSAGE_TYPE_ALERT:
+                case IDMEF_MESSAGE_TYPE_ALERT:
                         *ret = ptr->message.alert;
-			return 0;
+                        return 0;
 
-		case IDMEF_MESSAGE_TYPE_HEARTBEAT:
-			idmef_heartbeat_destroy(ptr->message.heartbeat);
-			break;
+                case IDMEF_MESSAGE_TYPE_HEARTBEAT:
+                        idmef_heartbeat_destroy(ptr->message.heartbeat);
+                        break;
 
-		default:
-			break;
-	}
+                default:
+                        break;
+        }
 
         retval = idmef_alert_new(ret);
         if ( retval < 0 )
                 return retval;
 
-	ptr->type = IDMEF_MESSAGE_TYPE_ALERT;
+        ptr->type = IDMEF_MESSAGE_TYPE_ALERT;
         ptr->message.alert = *ret;
 
-	return 0;
+        return 0;
 }
 
 /** 
@@ -15156,7 +15156,7 @@ int idmef_message_new_alert(idmef_message_t *ptr, idmef_alert_t **ret)
  */
 idmef_heartbeat_t *idmef_message_get_heartbeat(idmef_message_t *ptr)
 {
-	return (ptr->type == IDMEF_MESSAGE_TYPE_HEARTBEAT) ? ptr->message.heartbeat : NULL;
+        return (ptr->type == IDMEF_MESSAGE_TYPE_HEARTBEAT) ? ptr->message.heartbeat : NULL;
 }
 
 /**
@@ -15170,22 +15170,22 @@ idmef_heartbeat_t *idmef_message_get_heartbeat(idmef_message_t *ptr)
  */
 void idmef_message_set_heartbeat(idmef_message_t *ptr, idmef_heartbeat_t *heartbeat)
 {
-	switch ( ptr->type ) {
+        switch ( ptr->type ) {
 
-		case IDMEF_MESSAGE_TYPE_ALERT:
-			idmef_alert_destroy(ptr->message.alert);
-			break;
+                case IDMEF_MESSAGE_TYPE_ALERT:
+                        idmef_alert_destroy(ptr->message.alert);
+                        break;
 
-		case IDMEF_MESSAGE_TYPE_HEARTBEAT:
-			idmef_heartbeat_destroy(ptr->message.heartbeat);
-			break;
+                case IDMEF_MESSAGE_TYPE_HEARTBEAT:
+                        idmef_heartbeat_destroy(ptr->message.heartbeat);
+                        break;
 
-		default:
-			break;
-	}
+                default:
+                        break;
+        }
 
-	ptr->message.heartbeat = heartbeat;
-	ptr->type = IDMEF_MESSAGE_TYPE_HEARTBEAT;
+        ptr->message.heartbeat = heartbeat;
+        ptr->type = IDMEF_MESSAGE_TYPE_HEARTBEAT;
 }
 
 /**
@@ -15202,28 +15202,28 @@ int idmef_message_new_heartbeat(idmef_message_t *ptr, idmef_heartbeat_t **ret)
 {
         int retval;
 
-	switch ( ptr->type ) {
+        switch ( ptr->type ) {
 
-		case IDMEF_MESSAGE_TYPE_ALERT:
-			idmef_alert_destroy(ptr->message.alert);
-			break;
+                case IDMEF_MESSAGE_TYPE_ALERT:
+                        idmef_alert_destroy(ptr->message.alert);
+                        break;
 
-		case IDMEF_MESSAGE_TYPE_HEARTBEAT:
+                case IDMEF_MESSAGE_TYPE_HEARTBEAT:
                         *ret = ptr->message.heartbeat;
-			return 0;
+                        return 0;
 
-		default:
-			break;
-	}
+                default:
+                        break;
+        }
 
         retval = idmef_heartbeat_new(ret);
         if ( retval < 0 )
                 return retval;
 
-	ptr->type = IDMEF_MESSAGE_TYPE_HEARTBEAT;
+        ptr->type = IDMEF_MESSAGE_TYPE_HEARTBEAT;
         ptr->message.heartbeat = *ret;
 
-	return 0;
+        return 0;
 }
 
 void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg)
