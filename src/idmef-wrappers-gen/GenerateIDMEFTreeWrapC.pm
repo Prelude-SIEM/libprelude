@@ -170,26 +170,37 @@ static int get_value_from_time(idmef_value_t **value, idmef_time_t *time)
 
 static void list_insert(prelude_list_t *head, prelude_list_t *item, int pos)
 {
+        int i = 0;
         prelude_list_t *tmp;
         
-        if ( pos < 0 )
-                prelude_list_add_tail(head, item);
+	if ( pos == IDMEF_LIST_APPEND || pos == -1 /* FIXME: deprecated */ )
+	        prelude_list_add_tail(head, item);
 
-        else if ( pos == 0 )
+	else if ( pos == IDMEF_LIST_PREPEND || pos == 0 /* FIXME: deprecated */ )
 	        prelude_list_add(head, item);
 
-        else {
-	        int i = 0;
-
+	else if ( pos > 0 ) {
                 prelude_list_for_each(head, tmp) {
 		        if ( i == pos )
 			        break;
-
                         i++;
                 }
 
-                prelude_list_add_tail(tmp, item);
+		prelude_list_add_tail(tmp, item);
         }
+
+	else if ( pos < 0 ) {
+		pos = -pos;
+		pos--;
+
+	        prelude_list_for_each_reversed(head, tmp) {
+		        if ( i == pos )
+			        break;
+                        i++;
+                }
+
+		prelude_list_add(tmp, item);
+	}
 }
 
 ");
@@ -397,18 +408,32 @@ int idmef_$struct->{short_typename}_new_child(void *p, idmef_class_child_id_t ch
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_$struct->{short_typename}_new_$field->{short_name}(ptr, ($field->{typename} **) ret, n);
 
-                        prelude_list_for_each(&ptr->$field->{name}, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, $field->{typename}, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->$field->{name}, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, $field->{typename}, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->$field->{name}, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, $field->{typename}, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_$struct->{short_typename}_new_$field->{short_name}(ptr, ($field->{typename} **) ret, n);
 		\}
@@ -993,7 +1018,8 @@ $field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name
  *
  * Add \@object to position \@pos of \@ptr list of #$field->{typename} object.
  *
- * If \@pos is -1, \@object will be inserted at the tail of the list.
+ * If \@pos is #IDMEF_LIST_APPEND, \@object will be inserted at the tail of the list.
+ * If \@pos is #IDMEF_LIST_PREPEND, \@object will be inserted at the head of the list.
  */
 void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object, int pos)
 \{
@@ -1014,7 +1040,8 @@ void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename
  * \@ptr list of #$field->{typename} object. The created #$field->{typename} object is
  * stored in \@ret.
  *
- * If \@pos is -1, the new #$field->{typename} children will be inserted at the tail of the list.
+ * If \@pos is #IDMEF_LIST_APPEND, \@object will be inserted at the tail of the list.
+ * If \@pos is #IDMEF_LIST_PREPEND, \@object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */

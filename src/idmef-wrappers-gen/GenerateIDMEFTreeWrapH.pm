@@ -68,6 +68,11 @@ sub	header
 #ifdef __cplusplus
   extern \"C\" \{
 #endif
+
+
+#define IDMEF_LIST_APPEND  INT_MAX
+#define IDMEF_LIST_PREPEND (INT_MAX - 1)
+
 ");
 }
 

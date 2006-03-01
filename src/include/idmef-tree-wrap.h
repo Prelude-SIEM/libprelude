@@ -37,6 +37,11 @@
 #ifdef __cplusplus
   extern "C" {
 #endif
+
+
+#define IDMEF_LIST_APPEND  INT_MAX
+#define IDMEF_LIST_PREPEND (INT_MAX - 1)
+
 typedef enum {
         IDMEF_ADDITIONAL_DATA_TYPE_ERROR = -1,
         IDMEF_ADDITIONAL_DATA_TYPE_STRING = 0,

@@ -138,26 +138,37 @@ static int get_value_from_time(idmef_value_t **value, idmef_time_t *time)
 
 static void list_insert(prelude_list_t *head, prelude_list_t *item, int pos)
 {
+        int i = 0;
         prelude_list_t *tmp;
         
-        if ( pos < 0 )
-                prelude_list_add_tail(head, item);
+	if ( pos == IDMEF_LIST_APPEND || pos == -1 /* FIXME: deprecated */ )
+	        prelude_list_add_tail(head, item);
 
-        else if ( pos == 0 )
+	else if ( pos == IDMEF_LIST_PREPEND || pos == 0 /* FIXME: deprecated */ )
 	        prelude_list_add(head, item);
 
-        else {
-	        int i = 0;
-
+	else if ( pos > 0 ) {
                 prelude_list_for_each(head, tmp) {
 		        if ( i == pos )
 			        break;
-
                         i++;
                 }
 
-                prelude_list_add_tail(tmp, item);
+		prelude_list_add_tail(tmp, item);
         }
+
+	else if ( pos < 0 ) {
+		pos = -pos;
+		pos--;
+
+	        prelude_list_for_each_reversed(head, tmp) {
+		        if ( i == pos )
+			        break;
+                        i++;
+                }
+
+		prelude_list_add(tmp, item);
+	}
 }
 
 
@@ -2384,18 +2395,32 @@ int idmef_classification_new_child(void *p, idmef_class_child_id_t child, int n,
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_classification_new_reference(ptr, (idmef_reference_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->reference_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, idmef_reference_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->reference_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, idmef_reference_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->reference_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, idmef_reference_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_classification_new_reference(ptr, (idmef_reference_t **) ret, n);
 		}
@@ -2583,7 +2608,8 @@ idmef_reference_t *idmef_classification_get_next_reference(idmef_classification_
  *
  * Add @object to position @pos of @ptr list of #idmef_reference_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_classification_set_reference(idmef_classification_t *ptr, idmef_reference_t *object, int pos)
 {
@@ -2604,7 +2630,8 @@ void idmef_classification_set_reference(idmef_classification_t *ptr, idmef_refer
  * @ptr list of #idmef_reference_t object. The created #idmef_reference_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #idmef_reference_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -3098,18 +3125,32 @@ int idmef_user_new_child(void *p, idmef_class_child_id_t child, int n, void **re
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_user_new_user_id(ptr, (idmef_user_id_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->user_id_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, idmef_user_id_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->user_id_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, idmef_user_id_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->user_id_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, idmef_user_id_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_user_new_user_id(ptr, (idmef_user_id_t **) ret, n);
 		}
@@ -3289,7 +3330,8 @@ idmef_user_id_t *idmef_user_get_next_user_id(idmef_user_t *ptr, idmef_user_id_t 
  *
  * Add @object to position @pos of @ptr list of #idmef_user_id_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_user_set_user_id(idmef_user_t *ptr, idmef_user_id_t *object, int pos)
 {
@@ -3310,7 +3352,8 @@ void idmef_user_set_user_id(idmef_user_t *ptr, idmef_user_id_t *object, int pos)
  * @ptr list of #idmef_user_id_t object. The created #idmef_user_id_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #idmef_user_id_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -3877,18 +3920,32 @@ int idmef_process_new_child(void *p, idmef_class_child_id_t child, int n, void *
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_process_new_arg(ptr, (prelude_string_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->arg_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, prelude_string_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->arg_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->arg_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_process_new_arg(ptr, (prelude_string_t **) ret, n);
 		}
@@ -3897,18 +3954,32 @@ int idmef_process_new_child(void *p, idmef_class_child_id_t child, int n, void *
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_process_new_env(ptr, (prelude_string_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->env_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, prelude_string_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->env_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->env_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_process_new_env(ptr, (prelude_string_t **) ret, n);
 		}
@@ -4222,7 +4293,8 @@ prelude_string_t *idmef_process_get_next_arg(idmef_process_t *ptr, prelude_strin
  *
  * Add @object to position @pos of @ptr list of #prelude_string_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_process_set_arg(idmef_process_t *ptr, prelude_string_t *object, int pos)
 {
@@ -4243,7 +4315,8 @@ void idmef_process_set_arg(idmef_process_t *ptr, prelude_string_t *object, int p
  * @ptr list of #prelude_string_t object. The created #prelude_string_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #prelude_string_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -4291,7 +4364,8 @@ prelude_string_t *idmef_process_get_next_env(idmef_process_t *ptr, prelude_strin
  *
  * Add @object to position @pos of @ptr list of #prelude_string_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_process_set_env(idmef_process_t *ptr, prelude_string_t *object, int pos)
 {
@@ -4312,7 +4386,8 @@ void idmef_process_set_env(idmef_process_t *ptr, prelude_string_t *object, int p
  * @ptr list of #prelude_string_t object. The created #prelude_string_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #prelude_string_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -4411,18 +4486,32 @@ int idmef_web_service_new_child(void *p, idmef_class_child_id_t child, int n, vo
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_web_service_new_arg(ptr, (prelude_string_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->arg_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, prelude_string_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->arg_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->arg_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_web_service_new_arg(ptr, (prelude_string_t **) ret, n);
 		}
@@ -4671,7 +4760,8 @@ prelude_string_t *idmef_web_service_get_next_arg(idmef_web_service_t *ptr, prelu
  *
  * Add @object to position @pos of @ptr list of #prelude_string_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_web_service_set_arg(idmef_web_service_t *ptr, prelude_string_t *object, int pos)
 {
@@ -4692,7 +4782,8 @@ void idmef_web_service_set_arg(idmef_web_service_t *ptr, prelude_string_t *objec
  * @ptr list of #prelude_string_t object. The created #prelude_string_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #prelude_string_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -6075,18 +6166,32 @@ int idmef_node_new_child(void *p, idmef_class_child_id_t child, int n, void **re
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_node_new_address(ptr, (idmef_address_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->address_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, idmef_address_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->address_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, idmef_address_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->address_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, idmef_address_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_node_new_address(ptr, (idmef_address_t **) ret, n);
 		}
@@ -6388,7 +6493,8 @@ idmef_address_t *idmef_node_get_next_address(idmef_node_t *ptr, idmef_address_t 
  *
  * Add @object to position @pos of @ptr list of #idmef_address_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_node_set_address(idmef_node_t *ptr, idmef_address_t *object, int pos)
 {
@@ -6409,7 +6515,8 @@ void idmef_node_set_address(idmef_node_t *ptr, idmef_address_t *object, int pos)
  * @ptr list of #idmef_address_t object. The created #idmef_address_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #idmef_address_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -7030,18 +7137,32 @@ int idmef_file_access_new_child(void *p, idmef_class_child_id_t child, int n, vo
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_file_access_new_permission(ptr, (prelude_string_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->permission_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, prelude_string_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->permission_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->permission_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, prelude_string_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_file_access_new_permission(ptr, (prelude_string_t **) ret, n);
 		}
@@ -7170,7 +7291,8 @@ prelude_string_t *idmef_file_access_get_next_permission(idmef_file_access_t *ptr
  *
  * Add @object to position @pos of @ptr list of #prelude_string_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_file_access_set_permission(idmef_file_access_t *ptr, prelude_string_t *object, int pos)
 {
@@ -7191,7 +7313,8 @@ void idmef_file_access_set_permission(idmef_file_access_t *ptr, prelude_string_t
  * @ptr list of #prelude_string_t object. The created #prelude_string_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #prelude_string_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -8062,18 +8185,32 @@ int idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **re
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_file_new_file_access(ptr, (idmef_file_access_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->file_access_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, idmef_file_access_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->file_access_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, idmef_file_access_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->file_access_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, idmef_file_access_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_file_new_file_access(ptr, (idmef_file_access_t **) ret, n);
 		}
@@ -8082,18 +8219,32 @@ int idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **re
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_file_new_linkage(ptr, (idmef_linkage_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->linkage_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, idmef_linkage_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->linkage_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, idmef_linkage_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->linkage_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, idmef_linkage_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_file_new_linkage(ptr, (idmef_linkage_t **) ret, n);
 		}
@@ -8105,18 +8256,32 @@ int idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **re
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_file_new_checksum(ptr, (idmef_checksum_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->checksum_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, idmef_checksum_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->checksum_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, idmef_checksum_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->checksum_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, idmef_checksum_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_file_new_checksum(ptr, (idmef_checksum_t **) ret, n);
 		}
@@ -8691,7 +8856,8 @@ idmef_file_access_t *idmef_file_get_next_file_access(idmef_file_t *ptr, idmef_fi
  *
  * Add @object to position @pos of @ptr list of #idmef_file_access_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_file_set_file_access(idmef_file_t *ptr, idmef_file_access_t *object, int pos)
 {
@@ -8712,7 +8878,8 @@ void idmef_file_set_file_access(idmef_file_t *ptr, idmef_file_access_t *object, 
  * @ptr list of #idmef_file_access_t object. The created #idmef_file_access_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #idmef_file_access_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -8760,7 +8927,8 @@ idmef_linkage_t *idmef_file_get_next_linkage(idmef_file_t *ptr, idmef_linkage_t 
  *
  * Add @object to position @pos of @ptr list of #idmef_linkage_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_file_set_linkage(idmef_file_t *ptr, idmef_linkage_t *object, int pos)
 {
@@ -8781,7 +8949,8 @@ void idmef_file_set_linkage(idmef_file_t *ptr, idmef_linkage_t *object, int pos)
  * @ptr list of #idmef_linkage_t object. The created #idmef_linkage_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #idmef_linkage_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -8881,7 +9050,8 @@ idmef_checksum_t *idmef_file_get_next_checksum(idmef_file_t *ptr, idmef_checksum
  *
  * Add @object to position @pos of @ptr list of #idmef_checksum_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_file_set_checksum(idmef_file_t *ptr, idmef_checksum_t *object, int pos)
 {
@@ -8902,7 +9072,8 @@ void idmef_file_set_checksum(idmef_file_t *ptr, idmef_checksum_t *object, int po
  * @ptr list of #idmef_checksum_t object. The created #idmef_checksum_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #idmef_checksum_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -9505,18 +9676,32 @@ int idmef_target_new_child(void *p, idmef_class_child_id_t child, int n, void **
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_target_new_file(ptr, (idmef_file_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->file_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, idmef_file_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->file_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, idmef_file_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->file_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, idmef_file_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_target_new_file(ptr, (idmef_file_t **) ret, n);
 		}
@@ -9988,7 +10173,8 @@ idmef_file_t *idmef_target_get_next_file(idmef_target_t *ptr, idmef_file_t *obje
  *
  * Add @object to position @pos of @ptr list of #idmef_file_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_target_set_file(idmef_target_t *ptr, idmef_file_t *object, int pos)
 {
@@ -10009,7 +10195,8 @@ void idmef_target_set_file(idmef_target_t *ptr, idmef_file_t *object, int pos)
  * @ptr list of #idmef_file_t object. The created #idmef_file_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #idmef_file_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -11778,18 +11965,32 @@ int idmef_assessment_new_child(void *p, idmef_class_child_id_t child, int n, voi
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_assessment_new_action(ptr, (idmef_action_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->action_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, idmef_action_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->action_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, idmef_action_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->action_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, idmef_action_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_assessment_new_action(ptr, (idmef_action_t **) ret, n);
 		}
@@ -11929,7 +12130,8 @@ idmef_action_t *idmef_assessment_get_next_action(idmef_assessment_t *ptr, idmef_
  *
  * Add @object to position @pos of @ptr list of #idmef_action_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_assessment_set_action(idmef_assessment_t *ptr, idmef_action_t *object, int pos)
 {
@@ -11950,7 +12152,8 @@ void idmef_assessment_set_action(idmef_assessment_t *ptr, idmef_action_t *object
  * @ptr list of #idmef_action_t object. The created #idmef_action_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #idmef_action_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -12096,18 +12299,32 @@ int idmef_tool_alert_new_child(void *p, idmef_class_child_id_t child, int n, voi
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_tool_alert_new_alertident(ptr, (idmef_alertident_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->alertident_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, idmef_alertident_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->alertident_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->alertident_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_tool_alert_new_alertident(ptr, (idmef_alertident_t **) ret, n);
 		}
@@ -12295,7 +12512,8 @@ idmef_alertident_t *idmef_tool_alert_get_next_alertident(idmef_tool_alert_t *ptr
  *
  * Add @object to position @pos of @ptr list of #idmef_alertident_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_tool_alert_set_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t *object, int pos)
 {
@@ -12316,7 +12534,8 @@ void idmef_tool_alert_set_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t
  * @ptr list of #idmef_alertident_t object. The created #idmef_alertident_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #idmef_alertident_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -12405,18 +12624,32 @@ int idmef_correlation_alert_new_child(void *p, idmef_class_child_id_t child, int
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_correlation_alert_new_alertident(ptr, (idmef_alertident_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->alertident_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, idmef_alertident_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->alertident_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->alertident_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_correlation_alert_new_alertident(ptr, (idmef_alertident_t **) ret, n);
 		}
@@ -12543,7 +12776,8 @@ idmef_alertident_t *idmef_correlation_alert_get_next_alertident(idmef_correlatio
  *
  * Add @object to position @pos of @ptr list of #idmef_alertident_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_correlation_alert_set_alertident(idmef_correlation_alert_t *ptr, idmef_alertident_t *object, int pos)
 {
@@ -12564,7 +12798,8 @@ void idmef_correlation_alert_set_alertident(idmef_correlation_alert_t *ptr, idme
  * @ptr list of #idmef_alertident_t object. The created #idmef_alertident_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #idmef_alertident_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -12949,18 +13184,32 @@ int idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_alert_new_analyzer(ptr, (idmef_analyzer_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->analyzer_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, idmef_analyzer_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->analyzer_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->analyzer_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_alert_new_analyzer(ptr, (idmef_analyzer_t **) ret, n);
 		}
@@ -12981,18 +13230,32 @@ int idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_alert_new_source(ptr, (idmef_source_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->source_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, idmef_source_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->source_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, idmef_source_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->source_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, idmef_source_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_alert_new_source(ptr, (idmef_source_t **) ret, n);
 		}
@@ -13001,18 +13264,32 @@ int idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_alert_new_target(ptr, (idmef_target_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->target_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, idmef_target_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->target_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, idmef_target_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->target_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, idmef_target_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_alert_new_target(ptr, (idmef_target_t **) ret, n);
 		}
@@ -13024,18 +13301,32 @@ int idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_alert_new_additional_data(ptr, (idmef_additional_data_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->additional_data_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, idmef_additional_data_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->additional_data_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->additional_data_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_alert_new_additional_data(ptr, (idmef_additional_data_t **) ret, n);
 		}
@@ -13253,7 +13544,8 @@ idmef_analyzer_t *idmef_alert_get_next_analyzer(idmef_alert_t *ptr, idmef_analyz
  *
  * Add @object to position @pos of @ptr list of #idmef_analyzer_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_alert_set_analyzer(idmef_alert_t *ptr, idmef_analyzer_t *object, int pos)
 {
@@ -13274,7 +13566,8 @@ void idmef_alert_set_analyzer(idmef_alert_t *ptr, idmef_analyzer_t *object, int 
  * @ptr list of #idmef_analyzer_t object. The created #idmef_analyzer_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #idmef_analyzer_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -13536,7 +13829,8 @@ idmef_source_t *idmef_alert_get_next_source(idmef_alert_t *ptr, idmef_source_t *
  *
  * Add @object to position @pos of @ptr list of #idmef_source_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_alert_set_source(idmef_alert_t *ptr, idmef_source_t *object, int pos)
 {
@@ -13557,7 +13851,8 @@ void idmef_alert_set_source(idmef_alert_t *ptr, idmef_source_t *object, int pos)
  * @ptr list of #idmef_source_t object. The created #idmef_source_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #idmef_source_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -13605,7 +13900,8 @@ idmef_target_t *idmef_alert_get_next_target(idmef_alert_t *ptr, idmef_target_t *
  *
  * Add @object to position @pos of @ptr list of #idmef_target_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_alert_set_target(idmef_alert_t *ptr, idmef_target_t *object, int pos)
 {
@@ -13626,7 +13922,8 @@ void idmef_alert_set_target(idmef_alert_t *ptr, idmef_target_t *object, int pos)
  * @ptr list of #idmef_target_t object. The created #idmef_target_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #idmef_target_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -13726,7 +14023,8 @@ idmef_additional_data_t *idmef_alert_get_next_additional_data(idmef_alert_t *ptr
  *
  * Add @object to position @pos of @ptr list of #idmef_additional_data_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_alert_set_additional_data(idmef_alert_t *ptr, idmef_additional_data_t *object, int pos)
 {
@@ -13747,7 +14045,8 @@ void idmef_alert_set_additional_data(idmef_alert_t *ptr, idmef_additional_data_t
  * @ptr list of #idmef_additional_data_t object. The created #idmef_additional_data_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #idmef_additional_data_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -14109,18 +14408,32 @@ int idmef_heartbeat_new_child(void *p, idmef_class_child_id_t child, int n, void
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_heartbeat_new_analyzer(ptr, (idmef_analyzer_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->analyzer_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, idmef_analyzer_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->analyzer_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->analyzer_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_heartbeat_new_analyzer(ptr, (idmef_analyzer_t **) ret, n);
 		}
@@ -14138,18 +14451,32 @@ int idmef_heartbeat_new_child(void *p, idmef_class_child_id_t child, int n, void
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n < 0 )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
                                return idmef_heartbeat_new_additional_data(ptr, (idmef_additional_data_t **) ret, n);
 
-                        prelude_list_for_each(&ptr->additional_data_list, tmp) {
-                               if ( i++ == n ) {
-                                       *ret = prelude_list_entry(tmp, idmef_additional_data_t, list);
-                                       return 0;
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->additional_data_list, tmp) {                
+                                       if ( i++ == n ) {
+                                               *ret = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                               return 0;
+                                       }
                                }
-                        }
 
-                        if ( i != n )
-                              return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+                
+                               prelude_list_for_each_reversed(&ptr->additional_data_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               *ret = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
 
                         return idmef_heartbeat_new_additional_data(ptr, (idmef_additional_data_t **) ret, n);
 		}
@@ -14300,7 +14627,8 @@ idmef_analyzer_t *idmef_heartbeat_get_next_analyzer(idmef_heartbeat_t *ptr, idme
  *
  * Add @object to position @pos of @ptr list of #idmef_analyzer_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_heartbeat_set_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t *object, int pos)
 {
@@ -14321,7 +14649,8 @@ void idmef_heartbeat_set_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t *obje
  * @ptr list of #idmef_analyzer_t object. The created #idmef_analyzer_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #idmef_analyzer_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
@@ -14529,7 +14858,8 @@ idmef_additional_data_t *idmef_heartbeat_get_next_additional_data(idmef_heartbea
  *
  * Add @object to position @pos of @ptr list of #idmef_additional_data_t object.
  *
- * If @pos is -1, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  */
 void idmef_heartbeat_set_additional_data(idmef_heartbeat_t *ptr, idmef_additional_data_t *object, int pos)
 {
@@ -14550,7 +14880,8 @@ void idmef_heartbeat_set_additional_data(idmef_heartbeat_t *ptr, idmef_additiona
  * @ptr list of #idmef_additional_data_t object. The created #idmef_additional_data_t object is
  * stored in @ret.
  *
- * If @pos is -1, the new #idmef_additional_data_t children will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_APPEND, @object will be inserted at the tail of the list.
+ * If @pos is #IDMEF_LIST_PREPEND, @object will be inserted at the head of the list.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
