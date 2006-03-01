@@ -458,7 +458,8 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
                         else if ( strncmp(ptr2 + 1, ">>", 2) == 0 )
                                 index = IDMEF_LIST_APPEND;
 
-                        else    index = strtol(ptr2 + 1, NULL, 0);
+                        else if ( strncmp(ptr2 + 1, "*", 1) != 0 )
+                                index = strtol(ptr2 + 1, NULL, 0);
                 }
                 
                 child = idmef_class_find_child(class, ptr);
