@@ -1,3 +1,58 @@
+* 2006-03-02, libprelude-0.9.6:
+
+	- Implement workaround for buggy libtool that will fail 
+	  looking up symbol with preopening enabled in case the 
+          libtool archive is missing. Lot of distribution package 
+	  seem to suffer from this. 
+
+	- idmef-path API improvement, allow user to specify negative 
+	  index to address the list in reverse. Developer are now 
+	  supposed to use IDMEF_LIST_APPEND (in place of index -1) and 
+          IDMEF_LIST_PREPEND (in place of 0) on listed object operation.
+	
+	- idmef-path API improvement: support for (<<) and (>>) listed 
+	  object index, meaning to prepend the object / to append it,
+	  as well as (*) meaning to retrieve all object from a list. This 
+	  deprecate the usage of (-1) previously used for appending. 
+
+	- Fix deconnection problem in client reading mode.
+
+	- Improve option parsing: option value can now be provided using
+          --option=value. This format is now a requirement for option that
+          use an optional argument. Provide arguments information in the 
+          option help. 
+
+	- Fix deadlock on asynchronous prelude-client destruction.
+
+	- Definitely fix the problem where prelude-adduser will, on some system, 
+	  listen to Ipv6 IP address as the default: we now bind every address 
+	  returned by getaddrinfo(). 
+
+	- Fix crash in case of successive call to prelude_init(), prelude_deinit(), 
+	  then prelude_init() again.
+
+	- Introduce --passwd and --passwd-file option for prelude-adduser 
+	  register and registration-server mode, allowing to specify one shot 
+	  password on the command line, from a file, or from stdin.
+
+	- Verbose error handling for prelude-adduser.
+
+	- Fix perl bindings, make them more robust by adding type checking, and fix
+	  memory leak.
+
+	- Fix parsing of string based broken down time criterion. 
+
+	- Handle configuration file containing \r.
+
+	- Fix prelude_read_multiline2() return value (fix Prelude-Manager
+	  idmef-criteria-filter plugin).
+
+	- Fix a bug in per thread error handling code which resulted in NULL
+	  error to be returned in case an application thread exited.
+
+	- Various bug fixes.
+
+
 * 2006-02-06, libprelude-0.9.5:
 
 	- More TLS cleanup.

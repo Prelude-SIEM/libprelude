@@ -91,9 +91,14 @@ getaddrinfo (const char *restrict nodename,
     /* FIXME: Support other socktype. */
     return EAI_SOCKTYPE; /* FIXME: Better return code? */
 
-  if (!nodename)
+  if ( ! nodename ) {
+          if ( ! (hints->ai_flags & AI_PASSIVE) )
+                  return EAI_NONAME;
+          
+          nodename = (hint->ai_family == AF_INET6) ? "::" : "0.0.0.0";
+  }
+  
     /* FIXME: Support server bind mode. */
-    return EAI_NONAME;
 
   if (servname)
     {

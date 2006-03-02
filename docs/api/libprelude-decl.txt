@@ -307,6 +307,14 @@ typedef struct {
 #define prelude_linked_object_get_object(object)  \
         (void *) prelude_list_entry(object, prelude_linked_object_t, _list)
 </MACRO>
+<MACRO>
+<NAME>IDMEF_LIST_APPEND</NAME>
+#define IDMEF_LIST_APPEND  INT_MAX
+</MACRO>
+<MACRO>
+<NAME>IDMEF_LIST_PREPEND</NAME>
+#define IDMEF_LIST_PREPEND (INT_MAX - 1)
+</MACRO>
 <ENUM>
 <NAME>idmef_additional_data_type_t</NAME>
 typedef enum {
@@ -5701,6 +5709,16 @@ int error
 prelude_client_t *client
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_client_new_msgbuf</NAME>
+<RETURNS>int </RETURNS>
+prelude_client_t *client, prelude_msgbuf_t **msgbuf
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_client_handle_msg_default</NAME>
+<RETURNS>int </RETURNS>
+prelude_client_t *client, prelude_msg_t *msg, prelude_msgbuf_t *msgbuf
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_client_get_setup_error</NAME>
 <RETURNS>const char *</RETURNS>
 prelude_client_t *client
@@ -6191,6 +6209,11 @@ prelude_connection_pool_t *pool, void *data
 prelude_connection_pool_t *pool
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_connection_pool_recv</NAME>
+<RETURNS>int </RETURNS>
+prelude_connection_pool_t *pool, int timeout, prelude_connection_t **outconn, prelude_msg_t **outmsg
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_connection_pool_check_event</NAME>
 <RETURNS>int </RETURNS>
 prelude_connection_pool_t *pool, int timeout,int (*event_cb)(prelude_connection_pool_t *pool,prelude_connection_pool_event_t event,prelude_connection_t *cnx, void *extra), void *extra
@@ -6491,7 +6514,7 @@ typedef struct prelude_list {
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_INT64_MIN</NAME>
-#define PRELUDE_INT64_MIN              (-__INT64_SUFFIX(9223372036854775807) - 1)
+#define PRELUDE_INT64_MIN              (-__PRELUDE_INT64_SUFFIX(9223372036854775807) - 1)
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_INT8_MAX</NAME>
@@ -6507,7 +6530,7 @@ typedef struct prelude_list {
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_INT64_MAX</NAME>
-#define PRELUDE_INT64_MAX              (__INT64_SUFFIX(9223372036854775807))
+#define PRELUDE_INT64_MAX              (__PRELUDE_INT64_SUFFIX(9223372036854775807))
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_UINT8_MAX</NAME>
@@ -6523,7 +6546,7 @@ typedef struct prelude_list {
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_UINT64_MAX</NAME>
-#define PRELUDE_UINT64_MAX             (__UINT64_SUFFIX(18446744073709551615))
+#define PRELUDE_UINT64_MAX             (__PRELUDE_UINT64_SUFFIX(18446744073709551615))
 </MACRO>
 <MACRO>
 <NAME>PRELUDE_INTMAX_MIN</NAME>

@@ -374,3 +374,24 @@ is interrupted by a signal.
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_client_new_msgbuf ##### -->
+<para>
+
+</para>
+
+@client: 
+@msgbuf: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_client_handle_msg_default ##### -->
+<para>
+
+</para>
+
+@client: 
+@msg: 
+@msgbuf: 
+@Returns: 
+
+

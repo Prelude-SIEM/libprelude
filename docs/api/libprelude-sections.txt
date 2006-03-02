@@ -27,6 +27,8 @@ prelude_linked_object_get_object
 
 <SECTION>
 <FILE>idmef-tree-wrap</FILE>
+IDMEF_LIST_APPEND
+IDMEF_LIST_PREPEND
 idmef_additional_data_type_t
 idmef_additional_data_type_to_numeric
 idmef_additional_data_type_to_string
@@ -1134,6 +1136,8 @@ prelude_client_print_setup_error
 prelude_client_get_setup_error
 prelude_client_is_setup_needed
 prelude_client_get_profile
+prelude_client_new_msgbuf
+prelude_client_handle_msg_default
 </SECTION>
 
 <SECTION>
@@ -1245,6 +1249,7 @@ prelude_connection_pool_set_required_permission
 prelude_connection_pool_set_data
 prelude_connection_pool_get_data
 prelude_connection_pool_check_event
+prelude_connection_pool_recv
 prelude_connection_pool_set_global_event_handler
 prelude_connection_pool_set_event_handler
 </SECTION>

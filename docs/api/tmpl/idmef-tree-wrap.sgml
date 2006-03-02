@@ -94,6 +94,20 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### MACRO IDMEF_LIST_APPEND ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO IDMEF_LIST_PREPEND ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### ENUM idmef_additional_data_type_t ##### -->
 <para>
 
