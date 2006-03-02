@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
+#include <limits.h>
 
 #include "prelude.h"
 #include "prelude-log.h"
@@ -38,20 +39,30 @@
 #include "idmef-tree-wrap.h"
 %}
 
-%include idmef-value-class-mapping.i
 
-/*
- * Primitives types
- */
+%constant int IDMEF_LIST_APPEND = IDMEF_LIST_APPEND;
+%constant int IDMEF_LIST_PREPEND = IDMEF_LIST_PREPEND;
+
+
+%include "prelude-inttypes.h"
 
 typedef char int8_t;
 typedef unsigned char uint8_t;
+
 typedef short int16_t;
 typedef unsigned short uint16_t;
+
 typedef int int32_t;
 typedef unsigned int uint32_t;
-typedef long long int64_t;
-typedef unsigned long long uint64_t;
+
+#ifdef __PRELUDE_HAVE_64BIT_LONG
+  typedef long int64_t;
+  typedef unsigned long uint64_t;
+#else
+  typedef long long int64_t;
+  typedef unsigned long long uint64_t;
+#endif
+
 typedef unsigned int prelude_bool_t;
 
 
@@ -64,6 +75,9 @@ typedef unsigned int prelude_bool_t;
 	$3 = &tmp_value;
 };
 
+
+
+%include idmef-value-class-mapping.i
 
 
 #ifdef SWIGPYTHON
@@ -176,6 +190,7 @@ typedef unsigned int prelude_bool_t;
 %ignore idmef_path_new_v;
 %ignore prelude_string_vprintf;
 %ignore _prelude_log_v;
+
 
 %include "prelude.h"
 %include "prelude-client.h"
