@@ -63,8 +63,6 @@ typedef unsigned int uint32_t;
   typedef unsigned long long uint64_t;
 #endif
 
-typedef unsigned int prelude_bool_t;
-
 
 
 %typemap(in, numinputs=0) (uint64_t *source_id, uint32_t *request_id, void **value) (uint64_t tmp_source_id, uint32_t tmp_request_id, void *tmp_value) {
