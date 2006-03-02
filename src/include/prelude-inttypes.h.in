@@ -41,10 +41,10 @@
 @__PRELUDE_64BIT_FORMAT_PREFIX@
 
 #ifdef __PRELUDE_HAVE_64BIT_LONG
- #define __PRELUDE_UINT64_SUFFIX(x) x ## L
+ #define __PRELUDE_INT64_SUFFIX(x) x ## L
  #define __PRELUDE_UINT64_SUFFIX(x) x ## UL
 #else
- #define __PRELUDE_UINT64_SUFFIX(x) x ## LL
+ #define __PRELUDE_INT64_SUFFIX(x) x ## LL
  #define __PRELUDE_UINT64_SUFFIX(x) x ##ULL
 #endif
 
