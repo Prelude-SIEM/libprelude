@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "strndup.h"
 #include "idmef.h"
 #include "common.h"
 #include "idmef-criteria-string.yac.h"
@@ -49,21 +50,6 @@ void yyset_out(FILE *out_str);
 int yyget_debug(void);
 void yyset_debug(int bdebug);
 int yylex_destroy(void);
-
-
-static char *yy_strndup(const char *str, size_t len)
-{
-       char *ptr;
-
-       len = MIN(len, strlen(str));
-
-       ptr = malloc(len + 1);
-       if ( ! ptr )
-              return NULL;
-
-       ptr[len] = '\0';
-       return memcpy(ptr, str, len);
-}
 
 
 
@@ -143,13 +129,13 @@ substr\*		{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING_NOCASE; }
 \)			{ return ')'; }
 
 <IDMEF_VALUE>{SQSTRING}	{
-				yylval.str = escape_str(yy_strndup(yytext + 1, yyleng - 2));
+				yylval.str = escape_str(strndup(yytext + 1, yyleng - 2));
 				yy_pop_state();
 				return TOK_IDMEF_VALUE;
 			}
 
 <IDMEF_VALUE>{DQSTRING}	{
-				yylval.str = escape_str(yy_strndup(yytext + 1, yyleng - 2));
+				yylval.str = escape_str(strndup(yytext + 1, yyleng - 2));
 				yy_pop_state();
 				return TOK_IDMEF_VALUE;
 			}
