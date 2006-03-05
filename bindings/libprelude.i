@@ -212,6 +212,7 @@ typedef unsigned int uint32_t;
 %include "prelude-message-id.h"
 %include "prelude-log.h"
 %include "prelude-msgbuf.h"
+%include "prelude-timer.h"
 
 typedef signed int prelude_error_t;
 
