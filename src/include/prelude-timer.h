@@ -75,15 +75,6 @@ void prelude_timer_destroy(prelude_timer_t *timer);
 
 
 /*
- * Return the time elapsed by timer 'timer'
- * from the last time it was reset'd or started.
- *
- * Store the result in a timeval structure given as argument.
- */
-void prelude_timer_elapsed(prelude_timer_t *timer, struct timeval *tv);
-
-
-/*
  * Wake up time that need it.
  * This function should be called every second to work properly.
  */
