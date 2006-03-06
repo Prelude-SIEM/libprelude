@@ -314,8 +314,6 @@ if test x$gnutls != xyes; then
 	AC_MSG_ERROR(libgnutls is required in order to build libprelude.)
 fi
 
-libprelude_libs="$LIBGNUTLS_LIBS $COMMON_LIBS"
-
 old_LIBS=$LIBS
 old_CPPFLAGS=$CPPFLAGS
 LIBS="$LIBGNUTLS_LIBS"
@@ -362,6 +360,23 @@ if test x$srp_available = xno; then
    LIBS=$old_LIBS
    CPPFLAGS=$old_CPPFLAGS
 fi
+
+
+
+
+dnl **************************************************
+dnl * Check for Gcrypt.                              *
+dnl **************************************************
+
+AM_PATH_LIBGCRYPT(1:1.1.94,,
+        AC_MSG_ERROR([[
+***
+*** libgcrypt was not found. You may want to get it from
+*** ftp://ftp.gnupg.org/gcrypt/libgcrypt/
+***
+]])) 
+
+libprelude_libs="$libprelude_libs $LIBGNUTLS_LIBS $LIBGCRYPT_LIBS $COMMON_LIBS"
 
 
 dnl **************************************************
