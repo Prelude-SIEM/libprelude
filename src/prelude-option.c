@@ -551,8 +551,7 @@ static int parse_option(prelude_option_t *root_optlist, prelude_option_t *optlis
         *value = strchr(*option, '=');
         if ( ! *value )
                 *option = strdup(*option);
-        
-        if ( *value ) {
+        else {
                 *option = strndup(*option, strcspn(*option, "="));
                 (*value)++;
         }
@@ -598,6 +597,7 @@ static int parse_argument(void *context, prelude_list_t *cb_list,
 
                 if ( ! opt ) {
                         if ( depth ) {
+                                free(option);
                                 (*argv_index)--;
                                 return 0;
                         }
