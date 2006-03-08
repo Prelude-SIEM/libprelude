@@ -267,11 +267,11 @@ static int intercept_plugin_activation_option(prelude_option_t *opt, const char 
                 ret = create_instance(&pi, pe, optarg, NULL);
                 if ( ret < 0 )
                         return ret;
-                
+
                 ret = pi->entry->create_instance(opt, optarg, err, pi);
                 if ( ret < 0 )
                         return ret;
-
+                
                 ret = prelude_option_new_context(opt, &octx, optarg, pi);
                 if ( ret < 0 ) {
                         destroy_instance(pi);
@@ -549,21 +549,25 @@ int prelude_plugin_new_instance(prelude_plugin_instance_t **pi,
                 ret = create_instance(pi, pe, name, data);
                 if ( ret < 0 )
                         return ret;
-                
-                ret = pe->create_instance(pe->root_opt, name, NULL, *pi);
-                if ( ret < 0 )
-                        return ret;
-                
-                ret = prelude_option_new_context(pe->root_opt, &octx, name, *pi);
-                if ( ret < 0 ) {
-                        destroy_instance(*pi);
-                        return ret;
+
+                if ( pe->create_instance ) {
+                        ret = pe->create_instance(pe->root_opt, name, NULL, *pi);
+                        if ( ret < 0 )
+                                return ret;
+                }
+
+                if ( pe->root_opt ) {
+                        ret = prelude_option_new_context(pe->root_opt, &octx, name, *pi);
+                        if ( ret < 0 ) {
+                                destroy_instance(*pi);
+                                return ret;
+                        }
                 }
                 
                 if ( ! pe->commit_instance )
                         ret = prelude_plugin_instance_subscribe(*pi);
         }
-        
+
         return ret;
 }
 
