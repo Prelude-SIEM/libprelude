@@ -1653,7 +1653,6 @@ prelude_timer_init
 prelude_timer_init_list
 prelude_timer_reset
 prelude_timer_destroy
-prelude_timer_elapsed
 prelude_timer_wake_up
 prelude_timer_flush
 prelude_timer_lock_critical_region

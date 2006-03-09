@@ -1,3 +1,18 @@
+* 2006-03-09, libprelude-0.9.7:
+
+	- Fix an issue with system using both IP v4 and v6 interfaces which
+	  doesn't allow binding both 0.0.0.0 and :: .
+
+	- Add autoconf detection for libgcrypt: this fix a build issue for 
+	  distribution shipping with broken libgnutls-config script.
+
+	- Generate Perl and Python bindings for the prelude-timer API.
+
+	- Fix for upcoming plugin that doesn't provide an activation option.
+
+	- Various bug fixes.
+
+
 * 2006-03-03, libprelude-0.9.6.1:
 	
 	- Flex generated file build fix for FreeBSD / NetBSD.

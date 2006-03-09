@@ -6725,7 +6725,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.6.1"
+#define LIBPRELUDE_VERSION "0.9.7"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
@@ -7958,11 +7958,6 @@ prelude_timer_t *timer
 <NAME>prelude_timer_destroy</NAME>
 <RETURNS>void </RETURNS>
 prelude_timer_t *timer
-</FUNCTION>
-<FUNCTION>
-<NAME>prelude_timer_elapsed</NAME>
-<RETURNS>void </RETURNS>
-prelude_timer_t *timer, struct timeval *tv
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_timer_wake_up</NAME>
