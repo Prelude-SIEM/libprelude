@@ -240,7 +240,9 @@ static void *async_thread(void *arg)
 
 static void async_exit(void)  
 {
-        prelude_log(PRELUDE_LOG_INFO, "Waiting for asynchronous operation to complete.\n");
+        if ( ! prelude_list_is_empty(&joblist) )
+                prelude_log(PRELUDE_LOG_INFO, "Waiting for asynchronous operation to complete.\n");
+
         prelude_async_exit();
 }
 
