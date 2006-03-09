@@ -244,9 +244,9 @@ static int setup_server(const char *addr, unsigned int port, struct pollfd *pfd,
 {
         size_t i = 0;
         char buf[1024];
-        int sock, ret, on = 1;
         struct addrinfo hints, *ai, *ai_start;
-
+        int sock, ret, on = 1, prev_family = PF_UNSPEC;
+        
         snprintf(buf, sizeof(buf), "%u", port);
         memset(&hints, 0, sizeof(hints));
 
@@ -266,8 +266,7 @@ static int setup_server(const char *addr, unsigned int port, struct pollfd *pfd,
                 return -1;
         }
         
-        ai_start = ai;
-        while ( ai && i < *size ) {
+        for ( ai_start = ai; ai && i < *size; ai = ai->ai_next ) {
                 inet_ntop(ai->ai_family, prelude_sockaddr_get_inaddr(ai->ai_addr), buf, sizeof(buf));
                 
                 fprintf(stderr, "  - Waiting for peers install request on %s:%u...\n",
@@ -275,35 +274,50 @@ static int setup_server(const char *addr, unsigned int port, struct pollfd *pfd,
 
                 sock = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
                 if ( sock < 0 ) {
-                        perror("socket");
+                        fprintf(stderr, "could not open socket for '%s': %s.\n", buf, strerror(errno));
                         break;
                 }
         
                 ret = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(int));
-                if ( ret < 0 ) {
-                        perror("setsockopt");
-                        break;
-                }
-
+                if ( ret < 0 )
+                        fprintf(stderr, "could not set SO_REUSEADDR: %s.\n", strerror(errno));
+                
                 ret = bind(sock, ai->ai_addr, ai->ai_addrlen);
                 if ( ret < 0 ) {
-                        perror("bind");
+                        close(sock);
+                        
+                        /*
+                         * More information on this at:
+                         * http://lists.debian.org/debian-ipv6/2001/01/msg00031.html
+                         */                        
+                        if ( errno == EADDRINUSE && ! addr && prev_family != PF_UNSPEC && ai->ai_family != prev_family ) {
+                                ret = 0;
+                                continue;
+                        }
+                        
+                        fprintf(stderr, "could not bind to '%s': %s.\n", buf, strerror(errno));
                         break;
                 }
 
                 ret = listen(sock, 1);
                 if ( ret < 0 ) {
-                        perror("listen");
+                        close(sock);
+                        fprintf(stderr, "could not listen on '%s': %s.\n", buf, strerror(errno));
                         break;
                 }
 
                 pfd[i].fd = sock;
                 pfd[i].events = POLLIN;
+                prev_family = ai->ai_family;
                 
-                ai = ai->ai_next;
                 i++;
         }
 
+        if ( i == 0 ) {
+                fprintf(stderr, "could not find any address to listen on.\n");
+                return -1;
+        }
+        
         freeaddrinfo(ai_start);
         *size = i;
         
