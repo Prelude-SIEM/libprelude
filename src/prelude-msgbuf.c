@@ -70,7 +70,7 @@ static int do_send_msg_async(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
         int ret;
 
         ret = msgbuf->send_msg(msgbuf, msg);
-        if ( ret < 0 )
+        if ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN )
                 return ret;
 
         msgbuf->msg = NULL;
