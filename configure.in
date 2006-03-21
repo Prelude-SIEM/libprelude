@@ -10,7 +10,7 @@ AC_CANONICAL_TARGET([])
 libprelude_major=0
 libprelude_minor=9
 libprelude_micro=7
-#libprelude_patchlevel=
+libprelude_patchlevel=.1
 
 dnl version and release information
 libprelude_version=$libprelude_major.$libprelude_minor.$libprelude_micro$libprelude_patchlevel
