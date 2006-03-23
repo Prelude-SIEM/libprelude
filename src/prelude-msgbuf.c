@@ -72,9 +72,11 @@ static int do_send_msg_async(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
         ret = msgbuf->send_msg(msgbuf, msg);
         if ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN )
                 return ret;
-
-        msgbuf->msg = NULL;
         
+        ret = prelude_msg_dynamic_new(&msgbuf->msg, default_send_msg_cb, msgbuf);
+        if ( ret < 0 )
+                return ret;
+
         return 0;
 }
 
@@ -111,11 +113,6 @@ static int default_send_msg_cb(prelude_msg_t **msg, void *data)
  */
 int prelude_msgbuf_set(prelude_msgbuf_t *msgbuf, uint8_t tag, uint32_t len, const void *data)
 {
-        int ret;
-        
-        if ( ! msgbuf->msg && msgbuf->flags & PRELUDE_MSGBUF_FLAGS_ASYNC )
-                ret = prelude_msg_dynamic_new(&msgbuf->msg, default_send_msg_cb, msgbuf);
-        
         return prelude_msg_set(msgbuf->msg, tag, len, data);
 }
 
