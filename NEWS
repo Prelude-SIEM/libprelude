@@ -1,3 +1,8 @@
+* 2006-03-24, libprelude-0.9.7.2:
+
+	- Fix regression introduced in prelude-msgbuf.
+
+
 * 2006-03-21, libprelude-0.9.7.1:
 
 	- Fix Perl/Python bindings uint64 handling on 32 bits machine.

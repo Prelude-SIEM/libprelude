@@ -43,8 +43,7 @@ prelude-log
 @level: 
 @fmt: 
 @Varargs: 
-<!-- # Unused Parameters # -->
-@...: 
+@...:
 
 
 <!-- ##### FUNCTION prelude_log_debug ##### -->
@@ -55,8 +54,7 @@ prelude-log
 @level: 
 @fmt: 
 @Varargs: 
-<!-- # Unused Parameters # -->
-@...: 
+@...:
 
 
 <!-- ##### MACRO prelude_log_v ##### -->
