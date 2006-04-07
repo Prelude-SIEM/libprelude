@@ -485,7 +485,9 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
 		/* The last object may not be a structure */
 		class = idmef_class_get_child_class(class, child);
                 if ( class < 0 && ! is_last )
-                        return -1;
+                        return prelude_error_verbose(PRELUDE_ERROR_GENERIC,
+                                                     "IDMEF element '%s' is a leaf and thus has no child '%s'",
+                                                     ptr, endptr + 1);
                 
 		path->elem[depth].class = class;
                 path->elem[depth].value_type = idmef_class_get_child_value_type(class, child);
@@ -518,9 +520,9 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
 int idmef_path_new_fast(idmef_path_t **path, const char *buffer)
 {
         int ret;
-
+        
 	ret = idmef_path_create(path, buffer);
-	if ( ret < 0 )
+        if ( ret < 0 )
 		return ret;
         
 	if ( ret == 1 ) {
