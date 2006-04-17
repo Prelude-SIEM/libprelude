@@ -14,7 +14,7 @@ AC_DEFUN([AM_PATH_LIBGNUTLS_EXTRA],
 dnl Get the cflags and libraries from the libgnutls-extra-config script
 dnl
 AC_ARG_WITH(libgnutls-extra-prefix,
-          [  --with-libgnutls-extra-prefix=PFX   Prefix where libgnutls-extra is installed (optional)],
+	    AC_HELP_STRING(--with-libgnutls-extra-prefix=PFX, [Prefix where libgnutls-extra is installed (optional)]),
           libgnutls_extra_config_prefix="$withval", libgnutls_extra_config_prefix="")
 
   if test x$libgnutls_extra_config_prefix != x ; then
