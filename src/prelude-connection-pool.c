@@ -1191,7 +1191,7 @@ static int connection_pool_check_event(prelude_connection_pool_t *pool, int time
 
         ret = select(pool->nfd, &rfds, NULL, NULL, tvptr);
         if ( ret < 0 )
-                return prelude_error_from_errno(ret);
+                return prelude_error_from_errno(errno);
 
         else if ( ret == 0 )
                 return 0;
