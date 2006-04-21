@@ -76,8 +76,10 @@ const children_list_t idmef_web_service_children_list[] = {
 
 const children_list_t idmef_snmp_service_children_list[] = {
         { "oid", 0, IDMEF_VALUE_TYPE_STRING, 0 },
-        { "community", 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "message_processing_model", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
+        { "security_model", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
         { "security_name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "security_level", 0, IDMEF_VALUE_TYPE_UINT32, 0 },
         { "context_name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "context_engine_id", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "command", 0, IDMEF_VALUE_TYPE_STRING, 0 },

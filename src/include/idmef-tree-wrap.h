@@ -452,8 +452,10 @@ int idmef_web_service_new_arg(idmef_web_service_t *ptr, prelude_string_t **ret, 
  * struct {
  *         REFCOUNT;
  *         prelude_string_t *oid;
- *         prelude_string_t *community;
+ *         OPTIONAL_INT(uint32_t, message_processing_model);
+ *         OPTIONAL_INT(uint32_t, security_model);
  *         prelude_string_t *security_name;
+ *         OPTIONAL_INT(uint32_t, security_level);
  *         prelude_string_t *context_name;
  *         prelude_string_t *context_engine_id;
  *         prelude_string_t *command;
@@ -473,13 +475,24 @@ prelude_string_t *idmef_snmp_service_get_oid(idmef_snmp_service_t *ptr);
 void idmef_snmp_service_set_oid(idmef_snmp_service_t *ptr, prelude_string_t *oid);
 int idmef_snmp_service_new_oid(idmef_snmp_service_t *ptr, prelude_string_t **ret);
 
-prelude_string_t *idmef_snmp_service_get_community(idmef_snmp_service_t *ptr);
-void idmef_snmp_service_set_community(idmef_snmp_service_t *ptr, prelude_string_t *community);
-int idmef_snmp_service_new_community(idmef_snmp_service_t *ptr, prelude_string_t **ret);
+void idmef_snmp_service_unset_message_processing_model(idmef_snmp_service_t *ptr);
+uint32_t *idmef_snmp_service_get_message_processing_model(idmef_snmp_service_t *ptr);
+void idmef_snmp_service_set_message_processing_model(idmef_snmp_service_t *ptr, uint32_t message_processing_model);
+int idmef_snmp_service_new_message_processing_model(idmef_snmp_service_t *ptr, uint32_t **ret);
+
+void idmef_snmp_service_unset_security_model(idmef_snmp_service_t *ptr);
+uint32_t *idmef_snmp_service_get_security_model(idmef_snmp_service_t *ptr);
+void idmef_snmp_service_set_security_model(idmef_snmp_service_t *ptr, uint32_t security_model);
+int idmef_snmp_service_new_security_model(idmef_snmp_service_t *ptr, uint32_t **ret);
 
 prelude_string_t *idmef_snmp_service_get_security_name(idmef_snmp_service_t *ptr);
 void idmef_snmp_service_set_security_name(idmef_snmp_service_t *ptr, prelude_string_t *security_name);
 int idmef_snmp_service_new_security_name(idmef_snmp_service_t *ptr, prelude_string_t **ret);
+
+void idmef_snmp_service_unset_security_level(idmef_snmp_service_t *ptr);
+uint32_t *idmef_snmp_service_get_security_level(idmef_snmp_service_t *ptr);
+void idmef_snmp_service_set_security_level(idmef_snmp_service_t *ptr, uint32_t security_level);
+int idmef_snmp_service_new_security_level(idmef_snmp_service_t *ptr, uint32_t **ret);
 
 prelude_string_t *idmef_snmp_service_get_context_name(idmef_snmp_service_t *ptr);
 void idmef_snmp_service_set_context_name(idmef_snmp_service_t *ptr, prelude_string_t *context_name);

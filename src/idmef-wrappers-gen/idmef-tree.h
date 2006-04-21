@@ -315,8 +315,10 @@ struct {
 struct {
         REFCOUNT;
         prelude_string_t *oid;
-        prelude_string_t *community;
+        OPTIONAL_INT(uint32_t, message_processing_model);
+        OPTIONAL_INT(uint32_t, security_model);
         prelude_string_t *security_name;
+        OPTIONAL_INT(uint32_t, security_level);
         prelude_string_t *context_name;
         prelude_string_t *context_engine_id;
         prelude_string_t *command;

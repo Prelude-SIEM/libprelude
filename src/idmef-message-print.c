@@ -846,15 +846,29 @@ void idmef_snmp_service_print(idmef_snmp_service_t *ptr, prelude_io_t *fd)
 	}
 
 	{
-		prelude_string_t *field;
-                const char tmp[] = "community: ";
+		uint32_t *field;
+                const char tmp[] = "message_processing_model: ";
 
-		field = idmef_snmp_service_get_community(ptr);
+		field = idmef_snmp_service_get_message_processing_model(ptr);
 
 		if ( field ) {
 			print_indent(fd);
 			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
+			print_uint32(*field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
+
+	{
+		uint32_t *field;
+                const char tmp[] = "security_model: ";
+
+		field = idmef_snmp_service_get_security_model(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_uint32(*field, fd);
 			prelude_io_write(fd, "\n", sizeof("\n") - 1);
 		}
 	}
@@ -869,6 +883,20 @@ void idmef_snmp_service_print(idmef_snmp_service_t *ptr, prelude_io_t *fd)
 			print_indent(fd);
 			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
 			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
+
+	{
+		uint32_t *field;
+                const char tmp[] = "security_level: ";
+
+		field = idmef_snmp_service_get_security_level(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_uint32(*field, fd);
 			prelude_io_write(fd, "\n", sizeof("\n") - 1);
 		}
 	}

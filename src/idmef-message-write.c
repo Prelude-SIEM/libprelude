@@ -587,14 +587,43 @@ int idmef_snmp_service_write(idmef_snmp_service_t *snmp_service, prelude_msgbuf_
         if ( ret < 0 )
                 return ret;
 
-        ret = prelude_string_write(idmef_snmp_service_get_community(snmp_service), msg, IDMEF_MSG_SNMP_SERVICE_COMMUNITY);
-        if ( ret < 0 )
-                return ret;
 
+	{
+		uint32_t *tmp;
+
+		tmp = idmef_snmp_service_get_message_processing_model(snmp_service);
+		if ( tmp ) {
+			ret = uint32_write(*tmp, msg, IDMEF_MSG_SNMP_SERVICE_MESSAGE_PROCESSING_MODEL);
+                        if ( ret < 0 )
+                                return ret;
+		}
+	}
+
+	{
+		uint32_t *tmp;
+
+		tmp = idmef_snmp_service_get_security_model(snmp_service);
+		if ( tmp ) {
+			ret = uint32_write(*tmp, msg, IDMEF_MSG_SNMP_SERVICE_SECURITY_MODEL);
+                        if ( ret < 0 )
+                                return ret;
+		}
+	}
         ret = prelude_string_write(idmef_snmp_service_get_security_name(snmp_service), msg, IDMEF_MSG_SNMP_SERVICE_SECURITY_NAME);
         if ( ret < 0 )
                 return ret;
 
+
+	{
+		uint32_t *tmp;
+
+		tmp = idmef_snmp_service_get_security_level(snmp_service);
+		if ( tmp ) {
+			ret = uint32_write(*tmp, msg, IDMEF_MSG_SNMP_SERVICE_SECURITY_LEVEL);
+                        if ( ret < 0 )
+                                return ret;
+		}
+	}
         ret = prelude_string_write(idmef_snmp_service_get_context_name(snmp_service), msg, IDMEF_MSG_SNMP_SERVICE_CONTEXT_NAME);
         if ( ret < 0 )
                 return ret;

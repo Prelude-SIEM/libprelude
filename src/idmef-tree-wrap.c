@@ -582,8 +582,10 @@ struct idmef_web_service {
 struct idmef_snmp_service { 
          REFCOUNT;
          prelude_string_t *oid;
-         prelude_string_t *community;
+         OPTIONAL_INT(uint32_t, message_processing_model);
+         OPTIONAL_INT(uint32_t, security_model);
          prelude_string_t *security_name;
+         OPTIONAL_INT(uint32_t, security_level);
          prelude_string_t *context_name;
          prelude_string_t *context_engine_id;
          prelude_string_t *command;
@@ -4846,16 +4848,23 @@ int idmef_snmp_service_get_child(void *p, idmef_class_child_id_t child, void **c
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->oid);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->oid);
                 case 1:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->community);        
+                       return (ptr->message_processing_model_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->message_processing_model) : 0;
+
                 case 2:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->security_name);        
+                       return (ptr->security_model_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->security_model) : 0;
+        
                 case 3:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->context_name);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->security_name);
                 case 4:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->context_engine_id);        
+                       return (ptr->security_level_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->security_level) : 0;
+        
                 case 5:
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->context_name);        
+                case 6:
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->context_engine_id);        
+                case 7:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->command);
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
@@ -4872,18 +4881,24 @@ int idmef_snmp_service_new_child(void *p, idmef_class_child_id_t child, int n, v
                         return idmef_snmp_service_new_oid(ptr, (prelude_string_t **) ret);
 
                 case 1:
-                        return idmef_snmp_service_new_community(ptr, (prelude_string_t **) ret);
+                        return idmef_snmp_service_new_message_processing_model(ptr, (uint32_t **) ret);
 
                 case 2:
-                        return idmef_snmp_service_new_security_name(ptr, (prelude_string_t **) ret);
+                        return idmef_snmp_service_new_security_model(ptr, (uint32_t **) ret);
 
                 case 3:
-                        return idmef_snmp_service_new_context_name(ptr, (prelude_string_t **) ret);
+                        return idmef_snmp_service_new_security_name(ptr, (prelude_string_t **) ret);
 
                 case 4:
-                        return idmef_snmp_service_new_context_engine_id(ptr, (prelude_string_t **) ret);
+                        return idmef_snmp_service_new_security_level(ptr, (uint32_t **) ret);
 
                 case 5:
+                        return idmef_snmp_service_new_context_name(ptr, (prelude_string_t **) ret);
+
+                case 6:
+                        return idmef_snmp_service_new_context_engine_id(ptr, (prelude_string_t **) ret);
+
+                case 7:
                         return idmef_snmp_service_new_command(ptr, (prelude_string_t **) ret);
 
                 default:
@@ -4897,11 +4912,6 @@ static void idmef_snmp_service_destroy_internal(idmef_snmp_service_t *ptr)
         if ( ptr->oid ) {
                 prelude_string_destroy(ptr->oid);
                 ptr->oid = NULL;
-        }
-
-        if ( ptr->community ) {
-                prelude_string_destroy(ptr->community);
-                ptr->community = NULL;
         }
 
         if ( ptr->security_name ) {
@@ -5002,58 +5012,110 @@ int idmef_snmp_service_new_oid(idmef_snmp_service_t *ptr, prelude_string_t **ret
 }
 
 /**
- * *idmef_snmp_service_get_community:
+ * *idmef_snmp_service_get_message_processing_model:
  * @ptr: pointer to a #idmef_snmp_service_t object.
  *
- * Get community children of the #idmef_snmp_service_t object.
+ * Get message_processing_model children of the #idmef_snmp_service_t object.
  *
- * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
+ * Returns: a pointer to a uint32_t object, or NULL if the children object is not set.
  */
-prelude_string_t *idmef_snmp_service_get_community(idmef_snmp_service_t *ptr)
+uint32_t *idmef_snmp_service_get_message_processing_model(idmef_snmp_service_t *ptr)
 {
-        return ptr->community;
+        return ptr->message_processing_model_is_set ? &ptr->message_processing_model : NULL;
 }
 
 /**
- * idmef_snmp_service_set_community:
+ * idmef_snmp_service_set_message_processing_model:
  * @ptr: pointer to a #idmef_snmp_service_t object.
- * @community: pointer to a #prelude_string_t object.
+ * @message_processing_model: pointer to a #uint32_t object.
  *
- * Set @community object as a children of @ptr.
- * if @ptr already contain an @community object, then it is destroyed,
- * and updated to point to the provided @community object.
+ * Set @message_processing_model object as a children of @ptr.
+ * if @ptr already contain an @message_processing_model object, then it is destroyed,
+ * and updated to point to the provided @message_processing_model object.
  */
 
-void idmef_snmp_service_set_community(idmef_snmp_service_t *ptr, prelude_string_t *community)
+void idmef_snmp_service_set_message_processing_model(idmef_snmp_service_t *ptr, uint32_t message_processing_model)
 {
-        if ( ptr->community )
-                prelude_string_destroy(ptr->community);
-
-        ptr->community = community;
+        ptr->message_processing_model = message_processing_model;
+        ptr->message_processing_model_is_set = 1;
 }
 
+
+void idmef_snmp_service_unset_message_processing_model(idmef_snmp_service_t *ptr)
+{
+        ptr->message_processing_model_is_set = 0;
+}
+
+
 /**
- * idmef_snmp_service_new_community:
+ * idmef_snmp_service_new_message_processing_model:
  * @ptr: pointer to a #idmef_snmp_service_t object.
- * @ret: pointer to an address where to store the created #prelude_string_t object.
+ * @ret: pointer to an address where to store the created #uint32_t object.
  *
- * Create a new community object, children of #idmef_snmp_service_t.
- * If @ptr already contain a #prelude_string_t object, then it is destroyed.
+ * Create a new message_processing_model object, children of #idmef_snmp_service_t.
+ * If @ptr already contain a #uint32_t object, then it is destroyed.
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int idmef_snmp_service_new_community(idmef_snmp_service_t *ptr, prelude_string_t **ret)
+int idmef_snmp_service_new_message_processing_model(idmef_snmp_service_t *ptr, uint32_t **ret)
 {
-        int retval;
+        ptr->message_processing_model_is_set = 1;
 
-        if ( ptr->community )
-                prelude_string_destroy(ptr->community);
-                
-        retval = prelude_string_new(&ptr->community);
-        if ( retval < 0 )
-               return retval;
+        *ret = &ptr->message_processing_model;
+        return 0;
+}
 
-        *ret = ptr->community;
+/**
+ * *idmef_snmp_service_get_security_model:
+ * @ptr: pointer to a #idmef_snmp_service_t object.
+ *
+ * Get security_model children of the #idmef_snmp_service_t object.
+ *
+ * Returns: a pointer to a uint32_t object, or NULL if the children object is not set.
+ */
+uint32_t *idmef_snmp_service_get_security_model(idmef_snmp_service_t *ptr)
+{
+        return ptr->security_model_is_set ? &ptr->security_model : NULL;
+}
+
+/**
+ * idmef_snmp_service_set_security_model:
+ * @ptr: pointer to a #idmef_snmp_service_t object.
+ * @security_model: pointer to a #uint32_t object.
+ *
+ * Set @security_model object as a children of @ptr.
+ * if @ptr already contain an @security_model object, then it is destroyed,
+ * and updated to point to the provided @security_model object.
+ */
+
+void idmef_snmp_service_set_security_model(idmef_snmp_service_t *ptr, uint32_t security_model)
+{
+        ptr->security_model = security_model;
+        ptr->security_model_is_set = 1;
+}
+
+
+void idmef_snmp_service_unset_security_model(idmef_snmp_service_t *ptr)
+{
+        ptr->security_model_is_set = 0;
+}
+
+
+/**
+ * idmef_snmp_service_new_security_model:
+ * @ptr: pointer to a #idmef_snmp_service_t object.
+ * @ret: pointer to an address where to store the created #uint32_t object.
+ *
+ * Create a new security_model object, children of #idmef_snmp_service_t.
+ * If @ptr already contain a #uint32_t object, then it is destroyed.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
+int idmef_snmp_service_new_security_model(idmef_snmp_service_t *ptr, uint32_t **ret)
+{
+        ptr->security_model_is_set = 1;
+
+        *ret = &ptr->security_model;
         return 0;
 }
 
@@ -5110,6 +5172,60 @@ int idmef_snmp_service_new_security_name(idmef_snmp_service_t *ptr, prelude_stri
                return retval;
 
         *ret = ptr->security_name;
+        return 0;
+}
+
+/**
+ * *idmef_snmp_service_get_security_level:
+ * @ptr: pointer to a #idmef_snmp_service_t object.
+ *
+ * Get security_level children of the #idmef_snmp_service_t object.
+ *
+ * Returns: a pointer to a uint32_t object, or NULL if the children object is not set.
+ */
+uint32_t *idmef_snmp_service_get_security_level(idmef_snmp_service_t *ptr)
+{
+        return ptr->security_level_is_set ? &ptr->security_level : NULL;
+}
+
+/**
+ * idmef_snmp_service_set_security_level:
+ * @ptr: pointer to a #idmef_snmp_service_t object.
+ * @security_level: pointer to a #uint32_t object.
+ *
+ * Set @security_level object as a children of @ptr.
+ * if @ptr already contain an @security_level object, then it is destroyed,
+ * and updated to point to the provided @security_level object.
+ */
+
+void idmef_snmp_service_set_security_level(idmef_snmp_service_t *ptr, uint32_t security_level)
+{
+        ptr->security_level = security_level;
+        ptr->security_level_is_set = 1;
+}
+
+
+void idmef_snmp_service_unset_security_level(idmef_snmp_service_t *ptr)
+{
+        ptr->security_level_is_set = 0;
+}
+
+
+/**
+ * idmef_snmp_service_new_security_level:
+ * @ptr: pointer to a #idmef_snmp_service_t object.
+ * @ret: pointer to an address where to store the created #uint32_t object.
+ *
+ * Create a new security_level object, children of #idmef_snmp_service_t.
+ * If @ptr already contain a #uint32_t object, then it is destroyed.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
+int idmef_snmp_service_new_security_level(idmef_snmp_service_t *ptr, uint32_t **ret)
+{
+        ptr->security_level_is_set = 1;
+
+        *ret = &ptr->security_level;
         return 0;
 }
 
