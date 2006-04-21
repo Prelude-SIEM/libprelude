@@ -459,6 +459,11 @@ int idmef_web_service_new_arg(idmef_web_service_t *ptr, prelude_string_t **ret, 
  *         prelude_string_t *context_name;
  *         prelude_string_t *context_engine_id;
  *         prelude_string_t *command;
+ * 
+ * 
+ * 
+ * 
+ *         prelude_string_t *community;
  * } TYPE_ID(idmef_snmp_service_t, 15);
  */
 
@@ -505,6 +510,10 @@ int idmef_snmp_service_new_context_engine_id(idmef_snmp_service_t *ptr, prelude_
 prelude_string_t *idmef_snmp_service_get_command(idmef_snmp_service_t *ptr);
 void idmef_snmp_service_set_command(idmef_snmp_service_t *ptr, prelude_string_t *command);
 int idmef_snmp_service_new_command(idmef_snmp_service_t *ptr, prelude_string_t **ret);
+
+prelude_string_t *idmef_snmp_service_get_community(idmef_snmp_service_t *ptr);
+void idmef_snmp_service_set_community(idmef_snmp_service_t *ptr, prelude_string_t *community);
+int idmef_snmp_service_new_community(idmef_snmp_service_t *ptr, prelude_string_t **ret);
 
 typedef enum {
         IDMEF_SERVICE_TYPE_ERROR = -1,

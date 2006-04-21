@@ -590,6 +590,11 @@ struct idmef_snmp_service {
          prelude_string_t *context_engine_id;
          prelude_string_t *command;
  
+ 
+ 
+ 
+         prelude_string_t *community;
+ 
 };
 
 
@@ -4865,7 +4870,9 @@ int idmef_snmp_service_get_child(void *p, idmef_class_child_id_t child, void **c
                 case 6:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->context_engine_id);        
                 case 7:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->command);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->command);        
+                case 8:
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->community);
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
         }
@@ -4901,6 +4908,9 @@ int idmef_snmp_service_new_child(void *p, idmef_class_child_id_t child, int n, v
                 case 7:
                         return idmef_snmp_service_new_command(ptr, (prelude_string_t **) ret);
 
+                case 8:
+                        return idmef_snmp_service_new_community(ptr, (prelude_string_t **) ret);
+
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
         }
@@ -4932,6 +4942,11 @@ static void idmef_snmp_service_destroy_internal(idmef_snmp_service_t *ptr)
         if ( ptr->command ) {
                 prelude_string_destroy(ptr->command);
                 ptr->command = NULL;
+        }
+
+        if ( ptr->community ) {
+                prelude_string_destroy(ptr->community);
+                ptr->community = NULL;
         }
 
 
@@ -5394,6 +5409,62 @@ int idmef_snmp_service_new_command(idmef_snmp_service_t *ptr, prelude_string_t *
                return retval;
 
         *ret = ptr->command;
+        return 0;
+}
+
+/**
+ * *idmef_snmp_service_get_community:
+ * @ptr: pointer to a #idmef_snmp_service_t object.
+ *
+ * Get community children of the #idmef_snmp_service_t object.
+ *
+ * Returns: a pointer to a prelude_string_t object, or NULL if the children object is not set.
+ */
+prelude_string_t *idmef_snmp_service_get_community(idmef_snmp_service_t *ptr)
+{
+        return ptr->community;
+}
+
+/**
+ * idmef_snmp_service_set_community:
+ * @ptr: pointer to a #idmef_snmp_service_t object.
+ * @community: pointer to a #prelude_string_t object.
+ *
+ * Set @community object as a children of @ptr.
+ * if @ptr already contain an @community object, then it is destroyed,
+ * and updated to point to the provided @community object.
+ */
+
+void idmef_snmp_service_set_community(idmef_snmp_service_t *ptr, prelude_string_t *community)
+{
+        if ( ptr->community )
+                prelude_string_destroy(ptr->community);
+
+        ptr->community = community;
+}
+
+/**
+ * idmef_snmp_service_new_community:
+ * @ptr: pointer to a #idmef_snmp_service_t object.
+ * @ret: pointer to an address where to store the created #prelude_string_t object.
+ *
+ * Create a new community object, children of #idmef_snmp_service_t.
+ * If @ptr already contain a #prelude_string_t object, then it is destroyed.
+ *
+ * Returns: 0 on success, or a negative value if an error occured.
+ */
+int idmef_snmp_service_new_community(idmef_snmp_service_t *ptr, prelude_string_t **ret)
+{
+        int retval;
+
+        if ( ptr->community )
+                prelude_string_destroy(ptr->community);
+                
+        retval = prelude_string_new(&ptr->community);
+        if ( retval < 0 )
+               return retval;
+
+        *ret = ptr->community;
         return 0;
 }
 

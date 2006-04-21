@@ -83,6 +83,7 @@ const children_list_t idmef_snmp_service_children_list[] = {
         { "context_name", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "context_engine_id", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { "command", 0, IDMEF_VALUE_TYPE_STRING, 0 },
+        { "community", 0, IDMEF_VALUE_TYPE_STRING, 0 },
         { NULL, 0, 0, 0 }
 };
 

@@ -943,6 +943,20 @@ void idmef_snmp_service_print(idmef_snmp_service_t *ptr, prelude_io_t *fd)
 		}
 	}
 
+	{
+		prelude_string_t *field;
+                const char tmp[] = "community: ";
+
+		field = idmef_snmp_service_get_community(ptr);
+
+		if ( field ) {
+			print_indent(fd);
+			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+			print_string(field, fd);
+			prelude_io_write(fd, "\n", sizeof("\n") - 1);
+		}
+	}
+
         indent -= 8;
 }
 

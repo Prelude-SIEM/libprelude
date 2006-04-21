@@ -636,6 +636,10 @@ int idmef_snmp_service_write(idmef_snmp_service_t *snmp_service, prelude_msgbuf_
         if ( ret < 0 )
                 return ret;
 
+        ret = prelude_string_write(idmef_snmp_service_get_community(snmp_service), msg, IDMEF_MSG_SNMP_SERVICE_COMMUNITY);
+        if ( ret < 0 )
+                return ret;
+
         return prelude_msgbuf_set(msg, IDMEF_MSG_END_OF_TAG, 0, NULL);
 }
 
