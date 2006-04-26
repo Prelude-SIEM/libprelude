@@ -77,7 +77,7 @@ static int anon_check_passwd(prelude_io_t *fd)
                 return -1;
         }
         
-        if ( strcmp(rbuf, one_shot_passwd) == 0 )  {
+        if ( strcmp((char *) rbuf, one_shot_passwd) == 0 )  {
                 result = "OK";
                 fprintf(stderr, "  - Anonymous authentication one-shot password check successful.\n");
         } else {        
