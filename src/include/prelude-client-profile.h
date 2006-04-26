@@ -48,39 +48,39 @@ int prelude_client_profile_new(prelude_client_profile_t **ret, const char *name)
 
 void prelude_client_profile_destroy(prelude_client_profile_t *cp);
 
-void prelude_client_profile_get_config_filename(prelude_client_profile_t *cp, char *buf, size_t size);
+void prelude_client_profile_get_config_filename(const prelude_client_profile_t *cp, char *buf, size_t size);
 
-void prelude_client_profile_get_analyzerid_filename(prelude_client_profile_t *cp, char *buf, size_t size);
+void prelude_client_profile_get_analyzerid_filename(const prelude_client_profile_t *cp, char *buf, size_t size);
 
-void prelude_client_profile_get_tls_key_filename(prelude_client_profile_t *cp, char *buf, size_t size);
+void prelude_client_profile_get_tls_key_filename(const prelude_client_profile_t *cp, char *buf, size_t size);
 
-void prelude_client_profile_get_tls_server_ca_cert_filename(prelude_client_profile_t *cp, char *buf, size_t size);
+void prelude_client_profile_get_tls_server_ca_cert_filename(const prelude_client_profile_t *cp, char *buf, size_t size);
 
-void prelude_client_profile_get_tls_server_keycert_filename(prelude_client_profile_t *cp, char *buf, size_t size);
+void prelude_client_profile_get_tls_server_keycert_filename(const prelude_client_profile_t *cp, char *buf, size_t size);
 
-void prelude_client_profile_get_tls_server_crl_filename(prelude_client_profile_t *cp, char *buf, size_t size);
+void prelude_client_profile_get_tls_server_crl_filename(const prelude_client_profile_t *cp, char *buf, size_t size);
          
-void prelude_client_profile_get_tls_client_keycert_filename(prelude_client_profile_t *cp, char *buf, size_t size);
+void prelude_client_profile_get_tls_client_keycert_filename(const prelude_client_profile_t *cp, char *buf, size_t size);
 
-void prelude_client_profile_get_tls_client_trusted_cert_filename(prelude_client_profile_t *cp, char *buf, size_t size);
+void prelude_client_profile_get_tls_client_trusted_cert_filename(const prelude_client_profile_t *cp, char *buf, size_t size);
 
-void prelude_client_profile_get_backup_dirname(prelude_client_profile_t *cp, char *buf, size_t size);
+void prelude_client_profile_get_backup_dirname(const prelude_client_profile_t *cp, char *buf, size_t size);
 
-void prelude_client_profile_get_profile_dirname(prelude_client_profile_t *cp, char *buf, size_t size);
+void prelude_client_profile_get_profile_dirname(const prelude_client_profile_t *cp, char *buf, size_t size);
 
 void prelude_client_profile_set_uid(prelude_client_profile_t *cp, uid_t uid);
 
-uid_t prelude_client_profile_get_uid(prelude_client_profile_t *cp);
+uid_t prelude_client_profile_get_uid(const prelude_client_profile_t *cp);
 
 void prelude_client_profile_set_gid(prelude_client_profile_t *cp, uid_t gid);
 
-gid_t prelude_client_profile_get_gid(prelude_client_profile_t *cp);
+gid_t prelude_client_profile_get_gid(const prelude_client_profile_t *cp);
 
 int prelude_client_profile_set_name(prelude_client_profile_t *cp, const char *name);
 
-const char *prelude_client_profile_get_name(prelude_client_profile_t *cp);
+const char *prelude_client_profile_get_name(const prelude_client_profile_t *cp);
 
-uint64_t prelude_client_profile_get_analyzerid(prelude_client_profile_t *cp);
+uint64_t prelude_client_profile_get_analyzerid(const prelude_client_profile_t *cp);
 
 void prelude_client_profile_set_analyzerid(prelude_client_profile_t *cp, uint64_t analyzerid);
 

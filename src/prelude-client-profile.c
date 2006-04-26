@@ -102,7 +102,7 @@ static int get_profile_analyzerid(prelude_client_profile_t *cp)
  *
  * Writes the filename used to store @cp unique and permanent analyzer ident.
  */
-void prelude_client_profile_get_analyzerid_filename(prelude_client_profile_t *cp, char *buf, size_t size) 
+void prelude_client_profile_get_analyzerid_filename(const prelude_client_profile_t *cp, char *buf, size_t size) 
 {
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/analyzerid", cp->name);
 }
@@ -117,7 +117,7 @@ void prelude_client_profile_get_analyzerid_filename(prelude_client_profile_t *cp
  *
  * Writes the filename used to store @cp configuration template.
  */
-void prelude_client_profile_get_config_filename(prelude_client_profile_t *cp, char *buf, size_t size) 
+void prelude_client_profile_get_config_filename(const prelude_client_profile_t *cp, char *buf, size_t size) 
 {
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/config", cp->name);
 }
@@ -132,7 +132,7 @@ void prelude_client_profile_get_config_filename(prelude_client_profile_t *cp, ch
  *
  * Writes the filename used to store @cp private key.
  */
-void prelude_client_profile_get_tls_key_filename(prelude_client_profile_t *cp, char *buf, size_t size) 
+void prelude_client_profile_get_tls_key_filename(const prelude_client_profile_t *cp, char *buf, size_t size) 
 {
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/key", cp->name);
 }
@@ -148,7 +148,7 @@ void prelude_client_profile_get_tls_key_filename(prelude_client_profile_t *cp, c
  * Writes the filename used to store @cp related CA certificate.
  * This only apply to @cp receiving connection from analyzer (server).
  */
-void prelude_client_profile_get_tls_server_ca_cert_filename(prelude_client_profile_t *cp, char *buf, size_t size) 
+void prelude_client_profile_get_tls_server_ca_cert_filename(const prelude_client_profile_t *cp, char *buf, size_t size) 
 {
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/server.ca", cp->name);
 }
@@ -164,7 +164,7 @@ void prelude_client_profile_get_tls_server_ca_cert_filename(prelude_client_profi
  * Writes the filename used to store certificate for @cp server.
  * This only apply to @cp receiving connection from analyzer (server).
  */
-void prelude_client_profile_get_tls_server_keycert_filename(prelude_client_profile_t *cp, char *buf, size_t size) 
+void prelude_client_profile_get_tls_server_keycert_filename(const prelude_client_profile_t *cp, char *buf, size_t size) 
 {
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/server.keycrt", cp->name);
 }
@@ -180,7 +180,7 @@ void prelude_client_profile_get_tls_server_keycert_filename(prelude_client_profi
  * Writes the filename used to store CRL for @cp server.
  * This only apply to @cp receiving connection from analyzer (server).
  */
-void prelude_client_profile_get_tls_server_crl_filename(prelude_client_profile_t *cp, char *buf, size_t size) 
+void prelude_client_profile_get_tls_server_crl_filename(const prelude_client_profile_t *cp, char *buf, size_t size) 
 {
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/server.crl", cp->name);
 }
@@ -196,7 +196,7 @@ void prelude_client_profile_get_tls_server_crl_filename(prelude_client_profile_t
  * Writes the filename used to store peers public certificates that @cp trust.
  * This only apply to client connecting to a peer.
  */
-void prelude_client_profile_get_tls_client_trusted_cert_filename(prelude_client_profile_t *cp, char *buf, size_t size) 
+void prelude_client_profile_get_tls_client_trusted_cert_filename(const prelude_client_profile_t *cp, char *buf, size_t size) 
 {
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/client.trusted", cp->name);
 }
@@ -213,7 +213,7 @@ void prelude_client_profile_get_tls_client_trusted_cert_filename(prelude_client_
  * Writes the filename used to store public certificate for @cp private key.
  * This only apply to client connecting to a peer.
  */
-void prelude_client_profile_get_tls_client_keycert_filename(prelude_client_profile_t *cp, char *buf, size_t size) 
+void prelude_client_profile_get_tls_client_keycert_filename(const prelude_client_profile_t *cp, char *buf, size_t size) 
 {
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/client.keycrt", cp->name);
 }
@@ -229,7 +229,7 @@ void prelude_client_profile_get_tls_client_keycert_filename(prelude_client_profi
  * Writes the directory name where message sent by @cp will be stored,
  * in case writing the message to the peer fail.
  */
-void prelude_client_profile_get_backup_dirname(prelude_client_profile_t *cp, char *buf, size_t size) 
+void prelude_client_profile_get_backup_dirname(const prelude_client_profile_t *cp, char *buf, size_t size) 
 {
         snprintf(buf, size, PRELUDE_SPOOL_DIR "/%s", cp->name);
 }
@@ -243,7 +243,7 @@ void prelude_client_profile_get_backup_dirname(prelude_client_profile_t *cp, cha
  *
  * Writes the directory name where the profile for @client is stored.
  */
-void prelude_client_profile_get_profile_dirname(prelude_client_profile_t *cp, char *buf, size_t size) 
+void prelude_client_profile_get_profile_dirname(const prelude_client_profile_t *cp, char *buf, size_t size) 
 {
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s", cp->name);
 }
@@ -339,7 +339,7 @@ void prelude_client_profile_destroy(prelude_client_profile_t *cp)
  *
  * Returns: the UID associated used by @cp.
  */
-uid_t prelude_client_profile_get_uid(prelude_client_profile_t *cp)
+uid_t prelude_client_profile_get_uid(const prelude_client_profile_t *cp)
 {
         return cp->uid;
 }
@@ -368,7 +368,7 @@ void prelude_client_profile_set_uid(prelude_client_profile_t *cp, uid_t uid)
  *
  * Returns: the GID associated used by @cp.
  */
-gid_t prelude_client_profile_get_gid(prelude_client_profile_t *cp)
+gid_t prelude_client_profile_get_gid(const prelude_client_profile_t *cp)
 {
         return cp->gid;
 }
@@ -411,7 +411,7 @@ void prelude_client_profile_set_analyzerid(prelude_client_profile_t *cp, uint64_
  *
  * Returns: the analyzer ident used by @cp.
  */
-uint64_t prelude_client_profile_get_analyzerid(prelude_client_profile_t *cp)
+uint64_t prelude_client_profile_get_analyzerid(const prelude_client_profile_t *cp)
 {
         return cp->analyzerid;
 }
@@ -426,7 +426,7 @@ uint64_t prelude_client_profile_get_analyzerid(prelude_client_profile_t *cp)
  *
  * Returns: the name used by @cp.
  */
-const char *prelude_client_profile_get_name(prelude_client_profile_t *cp)
+const char *prelude_client_profile_get_name(const prelude_client_profile_t *cp)
 {
         return cp->name;
 }
