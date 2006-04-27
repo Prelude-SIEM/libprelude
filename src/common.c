@@ -478,7 +478,8 @@ int _idmef_message_assign_missing(prelude_client_t *client, idmef_message_t *msg
                 if ( ! idmef_alert_get_messageid(alert) )
                         idmef_alert_set_messageid(alert, get_message_ident(ident));
 
-                if ( ! idmef_alert_get_create_time(alert) ) {
+                time = idmef_alert_get_create_time(alert);
+                if ( idmef_time_get_sec(time) == 0 ) {
                         ret = idmef_time_new_from_gettimeofday(&time);
                         if ( ret < 0 )
                                 return ret;
@@ -492,7 +493,8 @@ int _idmef_message_assign_missing(prelude_client_t *client, idmef_message_t *msg
                 if ( ! idmef_heartbeat_get_messageid(heartbeat) )
                         idmef_heartbeat_set_messageid(heartbeat, get_message_ident(ident));
 
-                if ( ! idmef_heartbeat_get_create_time(heartbeat) ) {
+                time = idmef_heartbeat_get_create_time(heartbeat);
+                if ( idmef_time_get_sec(time) == 0 ) {
                         ret = idmef_time_new_from_gettimeofday(&time);
                         if ( ret < 0 )
                                 return ret;
