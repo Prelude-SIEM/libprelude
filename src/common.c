@@ -146,7 +146,7 @@ void *_prelude_realloc(void *ptr, size_t size)
 int prelude_read_multiline(FILE *fd, unsigned int *line, char *buf, size_t size) 
 {
         size_t i;
-
+        
         if ( ! fgets(buf, size, fd) )
                 return prelude_error(PRELUDE_ERROR_EOF);
 
@@ -159,14 +159,16 @@ int prelude_read_multiline(FILE *fd, unsigned int *line, char *buf, size_t size)
                 
         if ( buf[i] == '#' )
                 return prelude_read_multiline(fd, line, buf, size);
-                
-        i = strlen(buf);
-
-        while ( --i > 0 && (buf[i] == ' ' || buf[i] == '\n' || buf[i] == '\r' ) );
+        
+        for ( i = strlen(buf) - 1; (buf[i] == ' ' || buf[i] == '\n' || buf[i] == '\r'); i-- ) {
+                buf[i] = 0;
+                if ( i == 0 )
+                        break;
+        }
         
         if ( buf[i] == '\\' )
                 return prelude_read_multiline(fd, line, buf + i, size - i);
-                
+              
         return 0;
 }
 
