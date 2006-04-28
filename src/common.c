@@ -162,7 +162,7 @@ int prelude_read_multiline(FILE *fd, unsigned int *line, char *buf, size_t size)
                 
         i = strlen(buf);
 
-        while ( --i > 0 && (buf[i] == ' ' || buf[i] == '\n') );
+        while ( --i > 0 && (buf[i] == ' ' || buf[i] == '\n' || buf[i] == '\r' ) );
         
         if ( buf[i] == '\\' )
                 return prelude_read_multiline(fd, line, buf + i, size - i);
