@@ -151,15 +151,15 @@ static int option_ret_error(prelude_error_code_t code, prelude_string_t *err, co
 
 
 
-static int cmp_option(prelude_option_t *opt, const char *optname, prelude_option_type_t type)
+static int cmp_option(prelude_option_t *opt, const char *optname, size_t optnamelen, prelude_option_type_t type)
 {
         if ( ! (opt->type & type) )
                 return -1;
         
-        if ( opt->longopt && strcasecmp(opt->longopt, optname) == 0 )
+        if ( opt->longopt && strncasecmp(optname, opt->longopt, optnamelen) == 0 && strlen(opt->longopt) == optnamelen )
                 return 0;
-                
-        if ( strlen(optname) == 1 && opt->shortopt == *optname )
+        
+        if ( optnamelen == 1 && opt->shortopt == *optname )
                 return 0;
 
         return -1;
@@ -171,8 +171,8 @@ static int cmp_option(prelude_option_t *opt, const char *optname, prelude_option
 /*
  * Search an option of a given name in the given option list.
  */
-static prelude_option_t *search_option(prelude_option_t *root, const char *optname,
-                                       prelude_option_type_t type, int walk_children) 
+static prelude_option_t *search_option_fast(prelude_option_t *root, const char *optname, size_t optnamelen,
+                                            prelude_option_type_t type, prelude_bool_t walk_children) 
 {
         int cmp;
         prelude_list_t *tmp;
@@ -191,17 +191,23 @@ static prelude_option_t *search_option(prelude_option_t *root, const char *optna
                 item = prelude_linked_object_get_object(tmp);
                 
                 if ( walk_children || (! item->longopt && ! item->shortopt) ) {
-                        ret = search_option(item, optname, type, walk_children);
+                        ret = search_option_fast(item, optname, optnamelen, type, walk_children);
                         if ( ret )
                                 return ret;
                 }
                 
-                cmp = cmp_option(item, optname, type);
+                cmp = cmp_option(item, optname, optnamelen, type);
                 if ( cmp == 0 )
                         return item;
         }
         
         return NULL;
+}
+
+static prelude_option_t *search_option(prelude_option_t *root, const char *optname,
+                                       prelude_option_type_t type, prelude_bool_t walk_children)
+{
+        return search_option_fast(root, optname, strcspn(optname, "="), type, walk_children);
 }
 
 
@@ -423,7 +429,7 @@ static int get_missing_options(void *context, config_t *cfg, const char *filenam
         char *section = NULL, *entry = NULL, *value = NULL;
         
         while ( (config_get_next(cfg, &section, &entry, &value, line)) == 0 ) {                
-                opt = search_option(rootlist, (section && ! entry) ? section : entry, PRELUDE_OPTION_TYPE_CFG, 0);
+                opt = search_option(rootlist, (section && ! entry) ? section : entry, PRELUDE_OPTION_TYPE_CFG, FALSE);
                                 
                 if ( ! opt && entry && value && strcmp(entry, "include") == 0 ) {
 
@@ -555,8 +561,9 @@ static int parse_option(prelude_option_t *root_optlist, prelude_option_t *optlis
                 *option = strndup(*option, strcspn(*option, "="));
                 (*value)++;
         }
-
-        *opt = search_option(optlist, *option, PRELUDE_OPTION_TYPE_CLI, 0);                
+        
+        *opt = search_option(optlist, *option, PRELUDE_OPTION_TYPE_CLI, FALSE);
+        
         if ( root_optlist != _prelude_generic_optlist &&
              (tmp = search_option(_prelude_generic_optlist, *option, ~0, FALSE)) ) {
                 *opt = tmp;
@@ -588,7 +595,7 @@ static int parse_argument(void *context, prelude_list_t *cb_list,
         
         while ( *argv_index < (*argc - *unhandled_index) ) {                
                 ret = parse_option(root_optlist, optlist, argc, argv, argv_index,
-                                   unhandled, unhandled_index, &option, &arg, &opt, &ignore);
+                                   unhandled, unhandled_index, &option, &arg, &opt, &ignore);                
                 if ( ret < 0 )
                         break;
                 
@@ -614,7 +621,7 @@ static int parse_argument(void *context, prelude_list_t *cb_list,
                 ret = check_option(opt, arg, err);
                 if ( ret < 0 )
                         return ret;
-                
+
                 if ( ! ignore ) {
                         ret = call_option_cb(context, &cbitem, cb_list, opt, arg, err, SET_FROM_CLI);
                         if ( ret < 0 )
@@ -632,9 +639,9 @@ static int parse_argument(void *context, prelude_list_t *cb_list,
 
                         if ( ret < 0 )
                                 return ret;
+
+                        ignore = FALSE;
                 }
-                
-                ignore = FALSE;
         }
         
         return 0;
