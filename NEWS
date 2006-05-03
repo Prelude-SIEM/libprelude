@@ -1,3 +1,25 @@
+* 2006-05-03, libprelude-0.9.8:
+
+	- Improve idmef-path error reporting.
+
+	- Rework configure script so that it use --with[out] in
+	  place of --(en|dis)able where we deal with external dependencies. 
+
+	- Rework configure script so that --with[out] work as expected (enabling and
+	  disabling the feature, explicit error if "with" feature is explicitly 
+	  specified but the feature it is unavailable, etc).
+
+	- Rework SNMPService class for IDMEF draft 16 compliance.
+
+	- Make sure we set alert CreateTime if the caller did not do it for us.
+
+	- Fix handling of \r\n terminated line.
+
+	- Ignore character that are part of the option value when comparing 
+          option specified using --option=value. Fix handling of parent option. 
+          (#150).
+
+
 * 2006-03-24, libprelude-0.9.7.2:
 
 	- Fix regression introduced in prelude-msgbuf.

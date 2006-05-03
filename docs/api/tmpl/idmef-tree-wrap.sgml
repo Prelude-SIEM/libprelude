@@ -1929,6 +1929,114 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_snmp_service_get_message_processing_model ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_security_level ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_security_model ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_new_message_processing_model ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@ret: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_new_security_level ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@ret: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_new_security_model ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@ret: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_set_message_processing_model ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@message_processing_model: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_set_security_level ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@security_level: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_set_security_model ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@security_model: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_unset_message_processing_model ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_unset_security_level ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_unset_security_model ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
 <!-- ##### ENUM idmef_service_type_t ##### -->
 <para>
 
