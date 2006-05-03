@@ -49,6 +49,7 @@ AC_SUBST([LTALLOCA])
   gl_SIZE_MAX
   gl_FUNC_SNPRINTF
   gl_TYPE_SOCKLEN_T
+  gt_TYPE_SSIZE_T
   AM_STDBOOL_H
   gl_STRCASE
   gl_FUNC_STRCASESTR
@@ -154,6 +155,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/snprintf.m4
   m4/socklen.m4
   m4/sockpfaf.m4
+  m4/ssize_t.m4
   m4/stdbool.m4
   m4/stdint_h.m4
   m4/strcase.m4

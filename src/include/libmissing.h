@@ -31,6 +31,13 @@
 
 #include "config.h"
 
+#include <alloca.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <time.h>
 #include "ftw_.h"
 #include "getaddrinfo.h"
 #include "gettext.h"
@@ -38,11 +45,13 @@
 #include "minmax.h"
 #include "pathmax.h"
 #include "regex.h"
+#include "size_max.h"
 #include "snprintf.h"
 #include "strcase.h"
 #include "strcasestr.h"
 #include "strdup.h"
 #include "strndup.h"
+#include "strnlen.h"
 #include "strnlen1.h"
 #include "strpbrk.h"
 #include "strsep.h"
@@ -51,9 +60,11 @@
 #include "vasnprintf.h"
 #include "vsnprintf.h"
 #include "xsize.h"
-#include <alloca.h>
-#include <stdbool.h>
-#include <string.h>
-#include <time.h>
+#if HAVE_WCHAR_H && HAVE_WCTYPE_H
+# include "mbchar.h"
+#endif
+#if HAVE_MBRTOWC
+# include "mbuiter.h"
+#endif
 
 #endif /* _LIBPRELUDE_LIBMISSING_H */
