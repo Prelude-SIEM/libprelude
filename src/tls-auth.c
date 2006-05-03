@@ -90,7 +90,8 @@ static int read_auth_result(prelude_io_t *fd)
 static int verify_certificate(gnutls_session session)
 {
         time_t now;
-	int ret, status, alert = 0;
+	int ret, alert = 0;
+        unsigned int status;
         const prelude_error_code_t code = PRELUDE_ERROR_PROFILE;
         
 	ret = gnutls_certificate_verify_peers2(session, &status);
