@@ -106,7 +106,7 @@ PyObject *swig_python_data(idmef_data_t *data)
 
 %typemap(in) const unsigned char * {
 	if ( PyString_Check($input) )
-		$1 = PyString_AsString($input);
+		$1 = (unsigned char *) PyString_AsString($input);
 
 	else {
 		PyErr_Format(PyExc_TypeError,
@@ -118,7 +118,10 @@ PyObject *swig_python_data(idmef_data_t *data)
 
 
 %typemap(out) unsigned char *idmef_data_get_byte_string {
-	$result = $1 ? PyString_FromString($1) : Py_BuildValue((char *) "");
+	if ( $1 ) 
+		$result = PyString_FromStringAndSize((char *) $1, idmef_data_get_len(arg1));
+	else
+		$result = Py_BuildValue((char *) "");
 };
 
 
@@ -188,7 +191,7 @@ PyObject *swig_python_data(idmef_data_t *data)
     		return NULL;
   	}
 
-	$1 = PyString_AsString($input);
+	$1 = (unsigned char *) PyString_AsString($input);
 	$2 = PyString_Size($input);
 };
 
@@ -198,7 +201,7 @@ PyObject *swig_python_data(idmef_data_t *data)
     		return NULL;
   	}
 
-	$1 = PyString_AsString($input);
+	$1 = (unsigned char *) PyString_AsString($input);
 	$2 = PyString_Size($input);	
 };
 
