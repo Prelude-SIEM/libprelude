@@ -1122,6 +1122,7 @@ $enum->{typename} idmef_$enum->{short_typename}_to_numeric(const char *name)
     foreach my $field ( @{ $enum->{field_list} } ) {
 	my $fullname = 'IDMEF_' . uc($enum->{short_typename});
 	my $fieldname = $field->{name};
+
 	$fieldname =~ s/^${fullname}_//;
 	$fieldname = lc($fieldname);
 	$fieldname =~ tr/_/-/;
@@ -1165,12 +1166,19 @@ const char *idmef_$enum->{short_typename}_to_string($enum->{typename} val)
 	if ( $cnt == 0 && $field->{value} != 0 ) {
 	    $self->output("{ 0, NULL },");
 	}
-	
-	my $fullname = 'IDMEF_' . uc($enum->{short_typename});
-	my $fieldname = $field->{name};
-	$fieldname =~ s/^${fullname}_//;
-	$fieldname = lc($fieldname);
-	$fieldname =~ tr/_/-/;
+
+	my $fieldname;
+
+	if ( $field->{text} ) {
+	    $fieldname = $field->{text};
+	} else {
+	    my $fullname = 'IDMEF_' . uc($enum->{short_typename});
+	    
+	    $fieldname = $field->{name};
+	    $fieldname =~ s/^${fullname}_//;
+	    $fieldname = lc($fieldname);
+	    $fieldname =~ tr/_/-/;
+        }
 
 	$self->output("
                 { $field->{name}, \"$fieldname\" },");

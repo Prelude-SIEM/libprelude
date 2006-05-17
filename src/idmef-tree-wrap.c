@@ -895,16 +895,16 @@ const char *idmef_checksum_algorithm_to_string(idmef_checksum_algorithm_t val)
               idmef_checksum_algorithm_t val;
               const char *name;
         } tbl[] = {{ 0, NULL },
-                { IDMEF_CHECKSUM_ALGORITHM_MD4, "md4" },
-                { IDMEF_CHECKSUM_ALGORITHM_MD5, "md5" },
-                { IDMEF_CHECKSUM_ALGORITHM_SHA1, "sha1" },
-                { IDMEF_CHECKSUM_ALGORITHM_SHA2_256, "sha2-256" },
-                { IDMEF_CHECKSUM_ALGORITHM_SHA2_384, "sha2-384" },
-                { IDMEF_CHECKSUM_ALGORITHM_SHA2_512, "sha2-512" },
-                { IDMEF_CHECKSUM_ALGORITHM_CRC_32, "crc-32" },
-                { IDMEF_CHECKSUM_ALGORITHM_HAVAL, "haval" },
-                { IDMEF_CHECKSUM_ALGORITHM_TIGER, "tiger" },
-                { IDMEF_CHECKSUM_ALGORITHM_GOST, "gost" },
+                { IDMEF_CHECKSUM_ALGORITHM_MD4, "MD4" },
+                { IDMEF_CHECKSUM_ALGORITHM_MD5, "MD5" },
+                { IDMEF_CHECKSUM_ALGORITHM_SHA1, "SHA1" },
+                { IDMEF_CHECKSUM_ALGORITHM_SHA2_256, "SHA2-256" },
+                { IDMEF_CHECKSUM_ALGORITHM_SHA2_384, "SHA2-384" },
+                { IDMEF_CHECKSUM_ALGORITHM_SHA2_512, "SHA2-512" },
+                { IDMEF_CHECKSUM_ALGORITHM_CRC_32, "CRC-32" },
+                { IDMEF_CHECKSUM_ALGORITHM_HAVAL, "Haval" },
+                { IDMEF_CHECKSUM_ALGORITHM_TIGER, "Tiger" },
+                { IDMEF_CHECKSUM_ALGORITHM_GOST, "Gost" },
         };
 
         if ( val < 0 || val >= (sizeof(tbl) / sizeof(*tbl)) )

@@ -350,6 +350,8 @@ sub	parse_enum
     my	$typename;
     my	$value;
     my	$name;
+    my  $text;
+    my  $empty;
     my	$id;
 
     ($enum->{prefix}) = $line =~ /^\s*ENUM\((\w*)\)/;
@@ -357,9 +359,11 @@ sub	parse_enum
     while ( defined($line = $self->get_line) ) {
 	push(@{ $enum->{desc} }, $line);
 
-	if ( ($name, $value) = $line =~ /^\s*(\w+)\s*\=\s*(\d+)/ ) {
-	    push(@field_list, { name => $name, value => $value });
-	    $self->debug("parse enum field name:$name value:$value\n");
+	if ( ($name, $empty, $text, $value) = $line =~ /^\s*([^\( ]+)(\(([^\)]+)*\))?\s*\=\s*(\d+)/ ) {
+	    push(@field_list, { name => $name, text => $text, value => $value });
+	    
+	    $text = $text || "";
+	    $self->debug("parse enum field name:'$name' text:'$text' value:'$value'\n");
 	    
 	} elsif ( ($typename, $id) = $line =~ /^\}\s*TYPE_ID\(\s*(\w+)\s*,\s*(\d+)\s*\)/ ) {
 	    $enum->{typename} = $typename;
