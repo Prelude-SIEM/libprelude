@@ -268,7 +268,10 @@ sub	enum
 	    $self->output("\} $enum->{typename};\n");
 
 	} else {
-	    $self->output("$_\n");
+	    my $val = $_;
+	    
+	    $val =~ s/\(.*\)//;
+	    $self->output("$val\n");
 	}
 
 	$cnt++;
