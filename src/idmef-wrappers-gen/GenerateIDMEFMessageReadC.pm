@@ -356,7 +356,7 @@ int idmef_$struct->{short_typename}_read($struct->{typename} *$struct->{short_ty
 				return 0;
 
 			default:
-				return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG);
+				return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_TAG, \"Unknown tag while reading " . $struct->{typename} . ": '%u'\", tag);
 		\}
 
 	\}
