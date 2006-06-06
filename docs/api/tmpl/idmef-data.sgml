@@ -164,8 +164,6 @@ idmef-data
 @ptr: 
 @len: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@nd: 
 
 
 <!-- ##### FUNCTION idmef_data_new_ptr_dup_fast ##### -->
@@ -178,8 +176,6 @@ idmef-data
 @ptr: 
 @len: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@nd: 
 
 
 <!-- ##### FUNCTION idmef_data_new_ptr_nodup_fast ##### -->
@@ -192,8 +188,6 @@ idmef-data
 @ptr: 
 @len: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@nd: 
 
 
 <!-- ##### FUNCTION idmef_data_set_ptr_ref_fast ##### -->
@@ -285,8 +279,6 @@ idmef-data
 @ptr: 
 @len: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@idmef_data: 
 
 
 <!-- ##### FUNCTION idmef_data_set_char_string_nodup_fast ##### -->
@@ -298,8 +290,6 @@ idmef-data
 @ptr: 
 @len: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@idmef_data: 
 
 
 <!-- ##### FUNCTION idmef_data_new_char_string_ref ##### -->
@@ -340,8 +330,6 @@ idmef-data
 @data: 
 @ptr: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@idmef_data: 
 
 
 <!-- ##### FUNCTION idmef_data_set_char_string_dup ##### -->
@@ -352,8 +340,6 @@ idmef-data
 @data: 
 @ptr: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@idmef_data: 
 
 
 <!-- ##### FUNCTION idmef_data_set_char_string_nodup ##### -->
@@ -364,8 +350,6 @@ idmef-data
 @data: 
 @ptr: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@idmef_data: 
 
 
 <!-- ##### MACRO idmef_data_set_char_string_constant ##### -->
@@ -375,9 +359,6 @@ idmef-data
 
 @string: 
 @str: 
-<!-- # Unused Parameters # -->
-@idmef_data: 
-@data: 
 
 
 <!-- ##### FUNCTION idmef_data_new_byte_string_ref ##### -->
@@ -422,8 +403,6 @@ idmef-data
 @ptr: 
 @len: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@idmef_data: 
 
 
 <!-- ##### FUNCTION idmef_data_set_byte_string_dup ##### -->
@@ -435,8 +414,6 @@ idmef-data
 @ptr: 
 @len: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@idmef_data: 
 
 
 <!-- ##### FUNCTION idmef_data_set_byte_string_nodup ##### -->
@@ -448,8 +425,6 @@ idmef-data
 @ptr: 
 @len: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@idmef_data: 
 
 
 <!-- ##### FUNCTION idmef_data_destroy ##### -->

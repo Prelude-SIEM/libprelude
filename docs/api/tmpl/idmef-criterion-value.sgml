@@ -62,8 +62,6 @@ idmef-criterion-value
 @value: 
 @op: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@operator: 
 
 
 <!-- ##### FUNCTION idmef_criterion_value_new_from_string ##### -->
@@ -76,8 +74,6 @@ idmef-criterion-value
 @value: 
 @op: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@operator: 
 
 
 <!-- ##### FUNCTION idmef_criterion_value_new_broken_down_time ##### -->
@@ -138,8 +134,6 @@ idmef-criterion-value
 @value: 
 @op: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@operator: 
 
 
 <!-- ##### FUNCTION idmef_criterion_value_get_value ##### -->

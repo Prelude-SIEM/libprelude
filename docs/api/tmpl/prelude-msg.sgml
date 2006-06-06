@@ -129,9 +129,6 @@ prelude-msgbuf
 @flush_msg_cb: 
 @data: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@tag: 
-@priority: 
 
 
 <!-- ##### FUNCTION prelude_msg_new ##### -->

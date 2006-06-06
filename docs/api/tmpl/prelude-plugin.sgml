@@ -110,8 +110,6 @@ prelude-plugin
 @opt: 
 @commit: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@plugin: 
 
 
 <!-- ##### FUNCTION prelude_plugin_instance_subscribe ##### -->
@@ -325,6 +323,8 @@ prelude-plugin
 @member: 
 @...: 
 @arg...:
+@...:
+@...:
 @...:
 @...:
 @...:

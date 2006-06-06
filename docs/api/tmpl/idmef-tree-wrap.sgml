@@ -4788,8 +4788,6 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 @ptr: 
 @class_str: 
-<!-- # Unused Parameters # -->
-@class: 
 
 
 <!-- ##### FUNCTION idmef_analyzer_new_class ##### -->

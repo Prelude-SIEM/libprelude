@@ -210,8 +210,6 @@ set_idmef_path(idmef, "alert.source(0).node.address(0).address", "127.0.0.1");
 @depth: 
 @index: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@number: 
 
 
 <!-- ##### FUNCTION idmef_path_undefine_index ##### -->
@@ -300,8 +298,6 @@ set_idmef_path(idmef, "alert.source(0).node.address(0).address", "127.0.0.1");
 
 @path: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_path_get_name ##### -->
@@ -312,8 +308,6 @@ set_idmef_path(idmef, "alert.source(0).node.address(0).address", "127.0.0.1");
 @path: 
 @depth: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_path_is_ambiguous ##### -->
@@ -323,8 +317,6 @@ set_idmef_path(idmef, "alert.source(0).node.address(0).address", "127.0.0.1");
 
 @path: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_path_has_lists ##### -->
@@ -334,8 +326,6 @@ set_idmef_path(idmef, "alert.source(0).node.address(0).address", "127.0.0.1");
 
 @path: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@object: 
 
 
 <!-- ##### FUNCTION idmef_path_is_list ##### -->

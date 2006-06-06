@@ -62,8 +62,6 @@ if ( ret &lt; 0 ) {
 
 @req_version: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@rq_version: 
 
 
 <!-- ##### FUNCTION prelude_thread_init ##### -->

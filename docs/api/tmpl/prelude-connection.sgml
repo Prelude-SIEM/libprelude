@@ -77,8 +77,6 @@ prelude-connection
 @profile: 
 @permission: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@capability: 
 
 
 <!-- ##### FUNCTION prelude_connection_forward ##### -->

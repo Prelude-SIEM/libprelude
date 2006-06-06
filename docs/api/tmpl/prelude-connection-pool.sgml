@@ -104,8 +104,6 @@ idmef_message_read()
 
 @pool: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@new: 
 
 
 <!-- ##### FUNCTION prelude_connection_pool_new ##### -->
@@ -117,8 +115,6 @@ idmef_message_read()
 @cp: 
 @permission: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@capability: 
 
 
 <!-- ##### FUNCTION prelude_connection_pool_get_connection_list ##### -->
@@ -264,8 +260,6 @@ idmef_message_read()
 @pool: 
 @wanted_events: 
 @callback: 
-<!-- # Unused Parameters # -->
-@events: 
 
 
 <!-- ##### FUNCTION prelude_connection_pool_set_event_handler ##### -->
@@ -276,7 +270,5 @@ idmef_message_read()
 @pool: 
 @wanted_events: 
 @callback: 
-<!-- # Unused Parameters # -->
-@events: 
 
 

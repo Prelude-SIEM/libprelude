@@ -1,3 +1,14 @@
+* 2006-06-06, libprelude-0.9.9:
+
+	- Correct IDMEF v16 checksum algorithms letter case.
+
+	- Fix FreeBSD build.
+
+	- Detailed, verbose error reporting when failing to read IDMEF message.
+
+	- Detailed, verbose error reporting for unsupported value operation.
+
+
 * 2006-05-03, libprelude-0.9.8:
 
 	- Improve idmef-path error reporting.

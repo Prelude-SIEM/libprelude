@@ -233,9 +233,6 @@ is interrupted by a signal.
 @client: 
 @profile: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@config: 
-@capability: 
 
 
 <!-- ##### FUNCTION prelude_client_get_analyzer ##### -->

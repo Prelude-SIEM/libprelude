@@ -373,8 +373,6 @@ idmef-value
 @list: 
 @item: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@new: 
 
 
 <!-- ##### FUNCTION idmef_value_is_list ##### -->
@@ -528,8 +526,6 @@ idmef-value
 @val2: 
 @op: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@operator: 
 
 
 <!-- ##### FUNCTION idmef_value_check_operator ##### -->
@@ -540,8 +536,6 @@ idmef-value
 @value: 
 @op: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@operator: 
 
 
 <!-- ##### FUNCTION idmef_value_destroy ##### -->
