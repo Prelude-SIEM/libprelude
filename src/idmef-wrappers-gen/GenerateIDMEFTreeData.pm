@@ -142,8 +142,8 @@ const object_data_t object_data[] = \{
 		      "idmef_$obj->{short_typename}_new_child, ",
 		      "NULL, ",
 		      "NULL, ",
-		      "idmef_$obj->{short_typename}_copy, ",
-		      "idmef_$obj->{short_typename}_clone \}, ",
+		      "(void *) idmef_$obj->{short_typename}_copy, ",
+		      "(void *) idmef_$obj->{short_typename}_clone \}, ",
 		      "/* ID: $obj->{id} */\n") if ( $obj->{obj_type} == &OBJ_STRUCT );
 
 	$self->output("        \{ ",
@@ -151,8 +151,8 @@ const object_data_t object_data[] = \{
 		      "NULL, ", 
 		      "NULL, ", 
 		      "NULL, ",
-		      "idmef_$obj->{short_typename}_to_numeric, ",
-		      "idmef_$obj->{short_typename}_to_string, ",
+		      "(void *) idmef_$obj->{short_typename}_to_numeric, ",
+		      "(void *) idmef_$obj->{short_typename}_to_string, ",
 		      "NULL, ",
 		      "NULL, ",
 		      "\}, ",

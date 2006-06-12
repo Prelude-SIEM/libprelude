@@ -505,7 +505,7 @@ int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct
                 prelude_list_t *n, *tmp;
                 $field->{typename} *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->$field->{name}, tmp, n) \{
+                prelude_list_for_each_safe(&src->$field->{name}, tmp, n) \{
                         entry = prelude_list_entry(tmp, $field->{typename}, list);
                         $clone_func(entry, &new);
                         prelude_list_add_tail(&dst->$field->{name}, &new->list);
@@ -515,14 +515,14 @@ int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct
 
         } elsif ( $field->{metatype} & &METATYPE_UNION ) {
             $self->output("
-        switch ( ptr->$field->{var} ) {
+        switch ( src->$field->{var} ) {
 ");
 
             foreach my $member ( @{ $field->{member_list} } ) {
 
                 $self->output("
                 case $member->{value}:
-                        idmef_$member->{short_typename}_clone(ptr->$field->{name}.$member->{name}, &dst->$field->{name}.$member->{name});
+                        idmef_$member->{short_typename}_clone(src->$field->{name}.$member->{name}, &dst->$field->{name}.$member->{name});
                         break;
 ");
             }
@@ -534,22 +534,22 @@ int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct
         } elsif ( $field->{metatype} & &METATYPE_STRUCT ) {
             if ( $field->{ptr} ) {
                 $self->output("
-        if ( ptr->$field->{name} )
-                ${clone_func}(ptr->$field->{name}, &dst->$field->{name});
+        if ( src->$field->{name} )
+                ${clone_func}(src->$field->{name}, &dst->$field->{name});
 ");
             } else {
                 $self->output("
-        $copy_func(&ptr->$field->{name}, &dst->$field->{name});
+        $copy_func(&src->$field->{name}, &dst->$field->{name});
 ");
             }
 	} else {
             if ( $field->{metatype} & &METATYPE_OPTIONAL_INT ) {
                         $self->output("
-        dst->$field->{name}_is_set = ptr->$field->{name}_is_set;
+        dst->$field->{name}_is_set = src->$field->{name}_is_set;
 ");
 	    }
 	    $self->output("
-        dst->$field->{name} = ptr->$field->{name};
+        dst->$field->{name} = src->$field->{name};
 ");
 	}
     }

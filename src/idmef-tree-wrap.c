@@ -2021,12 +2021,12 @@ int idmef_additional_data_new_data(idmef_additional_data_t *ptr, idmef_data_t **
 int idmef_additional_data_copy(const idmef_additional_data_t *src, idmef_additional_data_t *dst)
 {
 
-        dst->type = ptr->type;
+        dst->type = src->type;
 
-        if ( ptr->meaning )
-                prelude_string_clone(ptr->meaning, &dst->meaning);
+        if ( src->meaning )
+                prelude_string_clone(src->meaning, &dst->meaning);
 
-        idmef_data_copy(&ptr->data, &dst->data);
+        idmef_data_copy(&src->data, &dst->data);
 
         return 0;
 }
@@ -2383,14 +2383,14 @@ int idmef_reference_new_meaning(idmef_reference_t *ptr, prelude_string_t **ret)
 int idmef_reference_copy(const idmef_reference_t *src, idmef_reference_t *dst)
 {
 
-        dst->origin = ptr->origin;
+        dst->origin = src->origin;
 
-        prelude_string_copy(&ptr->name, &dst->name);
+        prelude_string_copy(&src->name, &dst->name);
 
-        prelude_string_copy(&ptr->url, &dst->url);
+        prelude_string_copy(&src->url, &dst->url);
 
-        if ( ptr->meaning )
-                prelude_string_clone(ptr->meaning, &dst->meaning);
+        if ( src->meaning )
+                prelude_string_clone(src->meaning, &dst->meaning);
 
         return 0;
 }
@@ -2757,16 +2757,16 @@ int idmef_classification_new_reference(idmef_classification_t *ptr, idmef_refere
 int idmef_classification_copy(const idmef_classification_t *src, idmef_classification_t *dst)
 {
 
-        if ( ptr->ident )
-                prelude_string_clone(ptr->ident, &dst->ident);
+        if ( src->ident )
+                prelude_string_clone(src->ident, &dst->ident);
 
-        prelude_string_copy(&ptr->text, &dst->text);
+        prelude_string_copy(&src->text, &dst->text);
 
         {
                 prelude_list_t *n, *tmp;
                 idmef_reference_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->reference_list, tmp, n) {
+                prelude_list_for_each_safe(&src->reference_list, tmp, n) {
                         entry = prelude_list_entry(tmp, idmef_reference_t, list);
                         idmef_reference_clone(entry, &new);
                         prelude_list_add_tail(&dst->reference_list, &new->list);
@@ -3206,20 +3206,20 @@ int idmef_user_id_new_number(idmef_user_id_t *ptr, uint32_t **ret)
 int idmef_user_id_copy(const idmef_user_id_t *src, idmef_user_id_t *dst)
 {
 
-        if ( ptr->ident )
-                prelude_string_clone(ptr->ident, &dst->ident);
+        if ( src->ident )
+                prelude_string_clone(src->ident, &dst->ident);
 
-        dst->type = ptr->type;
+        dst->type = src->type;
 
-        if ( ptr->tty )
-                prelude_string_clone(ptr->tty, &dst->tty);
+        if ( src->tty )
+                prelude_string_clone(src->tty, &dst->tty);
 
-        if ( ptr->name )
-                prelude_string_clone(ptr->name, &dst->name);
+        if ( src->name )
+                prelude_string_clone(src->name, &dst->name);
 
-        dst->number_is_set = ptr->number_is_set;
+        dst->number_is_set = src->number_is_set;
 
-        dst->number = ptr->number;
+        dst->number = src->number;
 
         return 0;
 }
@@ -3580,16 +3580,16 @@ int idmef_user_new_user_id(idmef_user_t *ptr, idmef_user_id_t **ret, int pos)
 int idmef_user_copy(const idmef_user_t *src, idmef_user_t *dst)
 {
 
-        if ( ptr->ident )
-                prelude_string_clone(ptr->ident, &dst->ident);
+        if ( src->ident )
+                prelude_string_clone(src->ident, &dst->ident);
 
-        dst->category = ptr->category;
+        dst->category = src->category;
 
         {
                 prelude_list_t *n, *tmp;
                 idmef_user_id_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->user_id_list, tmp, n) {
+                prelude_list_for_each_safe(&src->user_id_list, tmp, n) {
                         entry = prelude_list_entry(tmp, idmef_user_id_t, list);
                         idmef_user_id_clone(entry, &new);
                         prelude_list_add_tail(&dst->user_id_list, &new->list);
@@ -4086,22 +4086,22 @@ int idmef_address_new_netmask(idmef_address_t *ptr, prelude_string_t **ret)
 int idmef_address_copy(const idmef_address_t *src, idmef_address_t *dst)
 {
 
-        if ( ptr->ident )
-                prelude_string_clone(ptr->ident, &dst->ident);
+        if ( src->ident )
+                prelude_string_clone(src->ident, &dst->ident);
 
-        dst->category = ptr->category;
+        dst->category = src->category;
 
-        if ( ptr->vlan_name )
-                prelude_string_clone(ptr->vlan_name, &dst->vlan_name);
+        if ( src->vlan_name )
+                prelude_string_clone(src->vlan_name, &dst->vlan_name);
 
-        dst->vlan_num_is_set = ptr->vlan_num_is_set;
+        dst->vlan_num_is_set = src->vlan_num_is_set;
 
-        dst->vlan_num = ptr->vlan_num;
+        dst->vlan_num = src->vlan_num;
 
-        prelude_string_copy(&ptr->address, &dst->address);
+        prelude_string_copy(&src->address, &dst->address);
 
-        if ( ptr->netmask )
-                prelude_string_clone(ptr->netmask, &dst->netmask);
+        if ( src->netmask )
+                prelude_string_clone(src->netmask, &dst->netmask);
 
         return 0;
 }
@@ -4717,23 +4717,23 @@ int idmef_process_new_env(idmef_process_t *ptr, prelude_string_t **ret, int pos)
 int idmef_process_copy(const idmef_process_t *src, idmef_process_t *dst)
 {
 
-        if ( ptr->ident )
-                prelude_string_clone(ptr->ident, &dst->ident);
+        if ( src->ident )
+                prelude_string_clone(src->ident, &dst->ident);
 
-        prelude_string_copy(&ptr->name, &dst->name);
+        prelude_string_copy(&src->name, &dst->name);
 
-        dst->pid_is_set = ptr->pid_is_set;
+        dst->pid_is_set = src->pid_is_set;
 
-        dst->pid = ptr->pid;
+        dst->pid = src->pid;
 
-        if ( ptr->path )
-                prelude_string_clone(ptr->path, &dst->path);
+        if ( src->path )
+                prelude_string_clone(src->path, &dst->path);
 
         {
                 prelude_list_t *n, *tmp;
                 prelude_string_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->arg_list, tmp, n) {
+                prelude_list_for_each_safe(&src->arg_list, tmp, n) {
                         entry = prelude_list_entry(tmp, prelude_string_t, list);
                         prelude_string_clone(entry, &new);
                         prelude_list_add_tail(&dst->arg_list, &new->list);
@@ -4744,7 +4744,7 @@ int idmef_process_copy(const idmef_process_t *src, idmef_process_t *dst)
                 prelude_list_t *n, *tmp;
                 prelude_string_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->env_list, tmp, n) {
+                prelude_list_for_each_safe(&src->env_list, tmp, n) {
                         entry = prelude_list_entry(tmp, prelude_string_t, list);
                         prelude_string_clone(entry, &new);
                         prelude_list_add_tail(&dst->env_list, &new->list);
@@ -5182,19 +5182,19 @@ int idmef_web_service_new_arg(idmef_web_service_t *ptr, prelude_string_t **ret, 
 int idmef_web_service_copy(const idmef_web_service_t *src, idmef_web_service_t *dst)
 {
 
-        prelude_string_copy(&ptr->url, &dst->url);
+        prelude_string_copy(&src->url, &dst->url);
 
-        if ( ptr->cgi )
-                prelude_string_clone(ptr->cgi, &dst->cgi);
+        if ( src->cgi )
+                prelude_string_clone(src->cgi, &dst->cgi);
 
-        if ( ptr->http_method )
-                prelude_string_clone(ptr->http_method, &dst->http_method);
+        if ( src->http_method )
+                prelude_string_clone(src->http_method, &dst->http_method);
 
         {
                 prelude_list_t *n, *tmp;
                 prelude_string_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->arg_list, tmp, n) {
+                prelude_list_for_each_safe(&src->arg_list, tmp, n) {
                         entry = prelude_list_entry(tmp, prelude_string_t, list);
                         prelude_string_clone(entry, &new);
                         prelude_list_add_tail(&dst->arg_list, &new->list);
@@ -5896,35 +5896,35 @@ int idmef_snmp_service_new_community(idmef_snmp_service_t *ptr, prelude_string_t
 int idmef_snmp_service_copy(const idmef_snmp_service_t *src, idmef_snmp_service_t *dst)
 {
 
-        if ( ptr->oid )
-                prelude_string_clone(ptr->oid, &dst->oid);
+        if ( src->oid )
+                prelude_string_clone(src->oid, &dst->oid);
 
-        dst->message_processing_model_is_set = ptr->message_processing_model_is_set;
+        dst->message_processing_model_is_set = src->message_processing_model_is_set;
 
-        dst->message_processing_model = ptr->message_processing_model;
+        dst->message_processing_model = src->message_processing_model;
 
-        dst->security_model_is_set = ptr->security_model_is_set;
+        dst->security_model_is_set = src->security_model_is_set;
 
-        dst->security_model = ptr->security_model;
+        dst->security_model = src->security_model;
 
-        if ( ptr->security_name )
-                prelude_string_clone(ptr->security_name, &dst->security_name);
+        if ( src->security_name )
+                prelude_string_clone(src->security_name, &dst->security_name);
 
-        dst->security_level_is_set = ptr->security_level_is_set;
+        dst->security_level_is_set = src->security_level_is_set;
 
-        dst->security_level = ptr->security_level;
+        dst->security_level = src->security_level;
 
-        if ( ptr->context_name )
-                prelude_string_clone(ptr->context_name, &dst->context_name);
+        if ( src->context_name )
+                prelude_string_clone(src->context_name, &dst->context_name);
 
-        if ( ptr->context_engine_id )
-                prelude_string_clone(ptr->context_engine_id, &dst->context_engine_id);
+        if ( src->context_engine_id )
+                prelude_string_clone(src->context_engine_id, &dst->context_engine_id);
 
-        if ( ptr->command )
-                prelude_string_clone(ptr->command, &dst->command);
+        if ( src->command )
+                prelude_string_clone(src->command, &dst->command);
 
-        if ( ptr->community )
-                prelude_string_clone(ptr->community, &dst->community);
+        if ( src->community )
+                prelude_string_clone(src->community, &dst->community);
 
         return 0;
 }
@@ -6758,41 +6758,41 @@ int idmef_service_new_snmp_service(idmef_service_t *ptr, idmef_snmp_service_t **
 int idmef_service_copy(const idmef_service_t *src, idmef_service_t *dst)
 {
 
-        if ( ptr->ident )
-                prelude_string_clone(ptr->ident, &dst->ident);
+        if ( src->ident )
+                prelude_string_clone(src->ident, &dst->ident);
 
-        dst->ip_version_is_set = ptr->ip_version_is_set;
+        dst->ip_version_is_set = src->ip_version_is_set;
 
-        dst->ip_version = ptr->ip_version;
+        dst->ip_version = src->ip_version;
 
-        dst->iana_protocol_number_is_set = ptr->iana_protocol_number_is_set;
+        dst->iana_protocol_number_is_set = src->iana_protocol_number_is_set;
 
-        dst->iana_protocol_number = ptr->iana_protocol_number;
+        dst->iana_protocol_number = src->iana_protocol_number;
 
-        if ( ptr->iana_protocol_name )
-                prelude_string_clone(ptr->iana_protocol_name, &dst->iana_protocol_name);
+        if ( src->iana_protocol_name )
+                prelude_string_clone(src->iana_protocol_name, &dst->iana_protocol_name);
 
-        if ( ptr->name )
-                prelude_string_clone(ptr->name, &dst->name);
+        if ( src->name )
+                prelude_string_clone(src->name, &dst->name);
 
-        dst->port_is_set = ptr->port_is_set;
+        dst->port_is_set = src->port_is_set;
 
-        dst->port = ptr->port;
+        dst->port = src->port;
 
-        if ( ptr->portlist )
-                prelude_string_clone(ptr->portlist, &dst->portlist);
+        if ( src->portlist )
+                prelude_string_clone(src->portlist, &dst->portlist);
 
-        if ( ptr->protocol )
-                prelude_string_clone(ptr->protocol, &dst->protocol);
+        if ( src->protocol )
+                prelude_string_clone(src->protocol, &dst->protocol);
 
-        switch ( ptr->type ) {
+        switch ( src->type ) {
 
                 case IDMEF_SERVICE_TYPE_WEB:
-                        idmef_web_service_clone(ptr->specific.web_service, &dst->specific.web_service);
+                        idmef_web_service_clone(src->specific.web_service, &dst->specific.web_service);
                         break;
 
                 case IDMEF_SERVICE_TYPE_SNMP:
-                        idmef_snmp_service_clone(ptr->specific.snmp_service, &dst->specific.snmp_service);
+                        idmef_snmp_service_clone(src->specific.snmp_service, &dst->specific.snmp_service);
                         break;
 
                 default:
@@ -7290,22 +7290,22 @@ int idmef_node_new_address(idmef_node_t *ptr, idmef_address_t **ret, int pos)
 int idmef_node_copy(const idmef_node_t *src, idmef_node_t *dst)
 {
 
-        if ( ptr->ident )
-                prelude_string_clone(ptr->ident, &dst->ident);
+        if ( src->ident )
+                prelude_string_clone(src->ident, &dst->ident);
 
-        dst->category = ptr->category;
+        dst->category = src->category;
 
-        if ( ptr->location )
-                prelude_string_clone(ptr->location, &dst->location);
+        if ( src->location )
+                prelude_string_clone(src->location, &dst->location);
 
-        if ( ptr->name )
-                prelude_string_clone(ptr->name, &dst->name);
+        if ( src->name )
+                prelude_string_clone(src->name, &dst->name);
 
         {
                 prelude_list_t *n, *tmp;
                 idmef_address_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->address_list, tmp, n) {
+                prelude_list_for_each_safe(&src->address_list, tmp, n) {
                         entry = prelude_list_entry(tmp, idmef_address_t, list);
                         idmef_address_clone(entry, &new);
                         prelude_list_add_tail(&dst->address_list, &new->list);
@@ -7875,25 +7875,25 @@ int idmef_source_new_service(idmef_source_t *ptr, idmef_service_t **ret)
 int idmef_source_copy(const idmef_source_t *src, idmef_source_t *dst)
 {
 
-        if ( ptr->ident )
-                prelude_string_clone(ptr->ident, &dst->ident);
+        if ( src->ident )
+                prelude_string_clone(src->ident, &dst->ident);
 
-        dst->spoofed = ptr->spoofed;
+        dst->spoofed = src->spoofed;
 
-        if ( ptr->interface )
-                prelude_string_clone(ptr->interface, &dst->interface);
+        if ( src->interface )
+                prelude_string_clone(src->interface, &dst->interface);
 
-        if ( ptr->node )
-                idmef_node_clone(ptr->node, &dst->node);
+        if ( src->node )
+                idmef_node_clone(src->node, &dst->node);
 
-        if ( ptr->user )
-                idmef_user_clone(ptr->user, &dst->user);
+        if ( src->user )
+                idmef_user_clone(src->user, &dst->user);
 
-        if ( ptr->process )
-                idmef_process_clone(ptr->process, &dst->process);
+        if ( src->process )
+                idmef_process_clone(src->process, &dst->process);
 
-        if ( ptr->service )
-                idmef_service_clone(ptr->service, &dst->service);
+        if ( src->service )
+                idmef_service_clone(src->service, &dst->service);
 
         return 0;
 }
@@ -8200,13 +8200,13 @@ int idmef_file_access_new_permission(idmef_file_access_t *ptr, prelude_string_t 
 int idmef_file_access_copy(const idmef_file_access_t *src, idmef_file_access_t *dst)
 {
 
-        idmef_user_id_copy(&ptr->user_id, &dst->user_id);
+        idmef_user_id_copy(&src->user_id, &dst->user_id);
 
         {
                 prelude_list_t *n, *tmp;
                 prelude_string_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->permission_list, tmp, n) {
+                prelude_list_for_each_safe(&src->permission_list, tmp, n) {
                         entry = prelude_list_entry(tmp, prelude_string_t, list);
                         prelude_string_clone(entry, &new);
                         prelude_list_add_tail(&dst->permission_list, &new->list);
@@ -8698,28 +8698,28 @@ int idmef_inode_new_c_minor_device(idmef_inode_t *ptr, uint32_t **ret)
 int idmef_inode_copy(const idmef_inode_t *src, idmef_inode_t *dst)
 {
 
-        if ( ptr->change_time )
-                idmef_time_clone(ptr->change_time, &dst->change_time);
+        if ( src->change_time )
+                idmef_time_clone(src->change_time, &dst->change_time);
 
-        dst->number_is_set = ptr->number_is_set;
+        dst->number_is_set = src->number_is_set;
 
-        dst->number = ptr->number;
+        dst->number = src->number;
 
-        dst->major_device_is_set = ptr->major_device_is_set;
+        dst->major_device_is_set = src->major_device_is_set;
 
-        dst->major_device = ptr->major_device;
+        dst->major_device = src->major_device;
 
-        dst->minor_device_is_set = ptr->minor_device_is_set;
+        dst->minor_device_is_set = src->minor_device_is_set;
 
-        dst->minor_device = ptr->minor_device;
+        dst->minor_device = src->minor_device;
 
-        dst->c_major_device_is_set = ptr->c_major_device_is_set;
+        dst->c_major_device_is_set = src->c_major_device_is_set;
 
-        dst->c_major_device = ptr->c_major_device;
+        dst->c_major_device = src->c_major_device;
 
-        dst->c_minor_device_is_set = ptr->c_minor_device_is_set;
+        dst->c_minor_device_is_set = src->c_minor_device_is_set;
 
-        dst->c_minor_device = ptr->c_minor_device;
+        dst->c_minor_device = src->c_minor_device;
 
         return 0;
 }
@@ -9019,12 +9019,12 @@ int idmef_checksum_new_algorithm(idmef_checksum_t *ptr, idmef_checksum_algorithm
 int idmef_checksum_copy(const idmef_checksum_t *src, idmef_checksum_t *dst)
 {
 
-        prelude_string_copy(&ptr->value, &dst->value);
+        prelude_string_copy(&src->value, &dst->value);
 
-        if ( ptr->key )
-                prelude_string_clone(ptr->key, &dst->key);
+        if ( src->key )
+                prelude_string_clone(src->key, &dst->key);
 
-        dst->algorithm = ptr->algorithm;
+        dst->algorithm = src->algorithm;
 
         return 0;
 }
@@ -10261,35 +10261,35 @@ int idmef_file_new_file_type(idmef_file_t *ptr, prelude_string_t **ret)
 int idmef_file_copy(const idmef_file_t *src, idmef_file_t *dst)
 {
 
-        if ( ptr->ident )
-                prelude_string_clone(ptr->ident, &dst->ident);
+        if ( src->ident )
+                prelude_string_clone(src->ident, &dst->ident);
 
-        prelude_string_copy(&ptr->name, &dst->name);
+        prelude_string_copy(&src->name, &dst->name);
 
-        prelude_string_copy(&ptr->path, &dst->path);
+        prelude_string_copy(&src->path, &dst->path);
 
-        if ( ptr->create_time )
-                idmef_time_clone(ptr->create_time, &dst->create_time);
+        if ( src->create_time )
+                idmef_time_clone(src->create_time, &dst->create_time);
 
-        if ( ptr->modify_time )
-                idmef_time_clone(ptr->modify_time, &dst->modify_time);
+        if ( src->modify_time )
+                idmef_time_clone(src->modify_time, &dst->modify_time);
 
-        if ( ptr->access_time )
-                idmef_time_clone(ptr->access_time, &dst->access_time);
+        if ( src->access_time )
+                idmef_time_clone(src->access_time, &dst->access_time);
 
-        dst->data_size_is_set = ptr->data_size_is_set;
+        dst->data_size_is_set = src->data_size_is_set;
 
-        dst->data_size = ptr->data_size;
+        dst->data_size = src->data_size;
 
-        dst->disk_size_is_set = ptr->disk_size_is_set;
+        dst->disk_size_is_set = src->disk_size_is_set;
 
-        dst->disk_size = ptr->disk_size;
+        dst->disk_size = src->disk_size;
 
         {
                 prelude_list_t *n, *tmp;
                 idmef_file_access_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->file_access_list, tmp, n) {
+                prelude_list_for_each_safe(&src->file_access_list, tmp, n) {
                         entry = prelude_list_entry(tmp, idmef_file_access_t, list);
                         idmef_file_access_clone(entry, &new);
                         prelude_list_add_tail(&dst->file_access_list, &new->list);
@@ -10300,35 +10300,35 @@ int idmef_file_copy(const idmef_file_t *src, idmef_file_t *dst)
                 prelude_list_t *n, *tmp;
                 idmef_linkage_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->linkage_list, tmp, n) {
+                prelude_list_for_each_safe(&src->linkage_list, tmp, n) {
                         entry = prelude_list_entry(tmp, idmef_linkage_t, list);
                         idmef_linkage_clone(entry, &new);
                         prelude_list_add_tail(&dst->linkage_list, &new->list);
                 }
         }
 
-        if ( ptr->inode )
-                idmef_inode_clone(ptr->inode, &dst->inode);
+        if ( src->inode )
+                idmef_inode_clone(src->inode, &dst->inode);
 
         {
                 prelude_list_t *n, *tmp;
                 idmef_checksum_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->checksum_list, tmp, n) {
+                prelude_list_for_each_safe(&src->checksum_list, tmp, n) {
                         entry = prelude_list_entry(tmp, idmef_checksum_t, list);
                         idmef_checksum_clone(entry, &new);
                         prelude_list_add_tail(&dst->checksum_list, &new->list);
                 }
         }
 
-        dst->category = ptr->category;
+        dst->category = src->category;
 
-        dst->fstype_is_set = ptr->fstype_is_set;
+        dst->fstype_is_set = src->fstype_is_set;
 
-        dst->fstype = ptr->fstype;
+        dst->fstype = src->fstype;
 
-        if ( ptr->file_type )
-                prelude_string_clone(ptr->file_type, &dst->file_type);
+        if ( src->file_type )
+                prelude_string_clone(src->file_type, &dst->file_type);
 
         return 0;
 }
@@ -10683,14 +10683,14 @@ int idmef_linkage_new_file(idmef_linkage_t *ptr, idmef_file_t **ret)
 int idmef_linkage_copy(const idmef_linkage_t *src, idmef_linkage_t *dst)
 {
 
-        dst->category = ptr->category;
+        dst->category = src->category;
 
-        prelude_string_copy(&ptr->name, &dst->name);
+        prelude_string_copy(&src->name, &dst->name);
 
-        prelude_string_copy(&ptr->path, &dst->path);
+        prelude_string_copy(&src->path, &dst->path);
 
-        if ( ptr->file )
-                idmef_file_clone(ptr->file, &dst->file);
+        if ( src->file )
+                idmef_file_clone(src->file, &dst->file);
 
         return 0;
 }
@@ -11378,31 +11378,31 @@ int idmef_target_new_file(idmef_target_t *ptr, idmef_file_t **ret, int pos)
 int idmef_target_copy(const idmef_target_t *src, idmef_target_t *dst)
 {
 
-        if ( ptr->ident )
-                prelude_string_clone(ptr->ident, &dst->ident);
+        if ( src->ident )
+                prelude_string_clone(src->ident, &dst->ident);
 
-        dst->decoy = ptr->decoy;
+        dst->decoy = src->decoy;
 
-        if ( ptr->interface )
-                prelude_string_clone(ptr->interface, &dst->interface);
+        if ( src->interface )
+                prelude_string_clone(src->interface, &dst->interface);
 
-        if ( ptr->node )
-                idmef_node_clone(ptr->node, &dst->node);
+        if ( src->node )
+                idmef_node_clone(src->node, &dst->node);
 
-        if ( ptr->user )
-                idmef_user_clone(ptr->user, &dst->user);
+        if ( src->user )
+                idmef_user_clone(src->user, &dst->user);
 
-        if ( ptr->process )
-                idmef_process_clone(ptr->process, &dst->process);
+        if ( src->process )
+                idmef_process_clone(src->process, &dst->process);
 
-        if ( ptr->service )
-                idmef_service_clone(ptr->service, &dst->service);
+        if ( src->service )
+                idmef_service_clone(src->service, &dst->service);
 
         {
                 prelude_list_t *n, *tmp;
                 idmef_file_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->file_list, tmp, n) {
+                prelude_list_for_each_safe(&src->file_list, tmp, n) {
                         entry = prelude_list_entry(tmp, idmef_file_t, list);
                         idmef_file_clone(entry, &new);
                         prelude_list_add_tail(&dst->file_list, &new->list);
@@ -12189,35 +12189,35 @@ int idmef_analyzer_new_process(idmef_analyzer_t *ptr, idmef_process_t **ret)
 int idmef_analyzer_copy(const idmef_analyzer_t *src, idmef_analyzer_t *dst)
 {
 
-        if ( ptr->analyzerid )
-                prelude_string_clone(ptr->analyzerid, &dst->analyzerid);
+        if ( src->analyzerid )
+                prelude_string_clone(src->analyzerid, &dst->analyzerid);
 
-        if ( ptr->name )
-                prelude_string_clone(ptr->name, &dst->name);
+        if ( src->name )
+                prelude_string_clone(src->name, &dst->name);
 
-        if ( ptr->manufacturer )
-                prelude_string_clone(ptr->manufacturer, &dst->manufacturer);
+        if ( src->manufacturer )
+                prelude_string_clone(src->manufacturer, &dst->manufacturer);
 
-        if ( ptr->model )
-                prelude_string_clone(ptr->model, &dst->model);
+        if ( src->model )
+                prelude_string_clone(src->model, &dst->model);
 
-        if ( ptr->version )
-                prelude_string_clone(ptr->version, &dst->version);
+        if ( src->version )
+                prelude_string_clone(src->version, &dst->version);
 
-        if ( ptr->class )
-                prelude_string_clone(ptr->class, &dst->class);
+        if ( src->class )
+                prelude_string_clone(src->class, &dst->class);
 
-        if ( ptr->ostype )
-                prelude_string_clone(ptr->ostype, &dst->ostype);
+        if ( src->ostype )
+                prelude_string_clone(src->ostype, &dst->ostype);
 
-        if ( ptr->osversion )
-                prelude_string_clone(ptr->osversion, &dst->osversion);
+        if ( src->osversion )
+                prelude_string_clone(src->osversion, &dst->osversion);
 
-        if ( ptr->node )
-                idmef_node_clone(ptr->node, &dst->node);
+        if ( src->node )
+                idmef_node_clone(src->node, &dst->node);
 
-        if ( ptr->process )
-                idmef_process_clone(ptr->process, &dst->process);
+        if ( src->process )
+                idmef_process_clone(src->process, &dst->process);
 
         return 0;
 }
@@ -12466,10 +12466,10 @@ int idmef_alertident_new_analyzerid(idmef_alertident_t *ptr, prelude_string_t **
 int idmef_alertident_copy(const idmef_alertident_t *src, idmef_alertident_t *dst)
 {
 
-        prelude_string_copy(&ptr->alertident, &dst->alertident);
+        prelude_string_copy(&src->alertident, &dst->alertident);
 
-        if ( ptr->analyzerid )
-                prelude_string_clone(ptr->analyzerid, &dst->analyzerid);
+        if ( src->analyzerid )
+                prelude_string_clone(src->analyzerid, &dst->analyzerid);
 
         return 0;
 }
@@ -12833,18 +12833,18 @@ int idmef_impact_new_description(idmef_impact_t *ptr, prelude_string_t **ret)
 int idmef_impact_copy(const idmef_impact_t *src, idmef_impact_t *dst)
 {
 
-        dst->severity_is_set = ptr->severity_is_set;
+        dst->severity_is_set = src->severity_is_set;
 
-        dst->severity = ptr->severity;
+        dst->severity = src->severity;
 
-        dst->completion_is_set = ptr->completion_is_set;
+        dst->completion_is_set = src->completion_is_set;
 
-        dst->completion = ptr->completion;
+        dst->completion = src->completion;
 
-        dst->type = ptr->type;
+        dst->type = src->type;
 
-        if ( ptr->description )
-                prelude_string_clone(ptr->description, &dst->description);
+        if ( src->description )
+                prelude_string_clone(src->description, &dst->description);
 
         return 0;
 }
@@ -13087,10 +13087,10 @@ int idmef_action_new_description(idmef_action_t *ptr, prelude_string_t **ret)
 int idmef_action_copy(const idmef_action_t *src, idmef_action_t *dst)
 {
 
-        dst->category = ptr->category;
+        dst->category = src->category;
 
-        if ( ptr->description )
-                prelude_string_clone(ptr->description, &dst->description);
+        if ( src->description )
+                prelude_string_clone(src->description, &dst->description);
 
         return 0;
 }
@@ -13311,9 +13311,9 @@ int idmef_confidence_new_confidence(idmef_confidence_t *ptr, float **ret)
 int idmef_confidence_copy(const idmef_confidence_t *src, idmef_confidence_t *dst)
 {
 
-        dst->rating = ptr->rating;
+        dst->rating = src->rating;
 
-        dst->confidence = ptr->confidence;
+        dst->confidence = src->confidence;
 
         return 0;
 }
@@ -13685,22 +13685,22 @@ int idmef_assessment_new_confidence(idmef_assessment_t *ptr, idmef_confidence_t 
 int idmef_assessment_copy(const idmef_assessment_t *src, idmef_assessment_t *dst)
 {
 
-        if ( ptr->impact )
-                idmef_impact_clone(ptr->impact, &dst->impact);
+        if ( src->impact )
+                idmef_impact_clone(src->impact, &dst->impact);
 
         {
                 prelude_list_t *n, *tmp;
                 idmef_action_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->action_list, tmp, n) {
+                prelude_list_for_each_safe(&src->action_list, tmp, n) {
                         entry = prelude_list_entry(tmp, idmef_action_t, list);
                         idmef_action_clone(entry, &new);
                         prelude_list_add_tail(&dst->action_list, &new->list);
                 }
         }
 
-        if ( ptr->confidence )
-                idmef_confidence_clone(ptr->confidence, &dst->confidence);
+        if ( src->confidence )
+                idmef_confidence_clone(src->confidence, &dst->confidence);
 
         return 0;
 }
@@ -14067,16 +14067,16 @@ int idmef_tool_alert_new_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t 
 int idmef_tool_alert_copy(const idmef_tool_alert_t *src, idmef_tool_alert_t *dst)
 {
 
-        prelude_string_copy(&ptr->name, &dst->name);
+        prelude_string_copy(&src->name, &dst->name);
 
-        if ( ptr->command )
-                prelude_string_clone(ptr->command, &dst->command);
+        if ( src->command )
+                prelude_string_clone(src->command, &dst->command);
 
         {
                 prelude_list_t *n, *tmp;
                 idmef_alertident_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->alertident_list, tmp, n) {
+                prelude_list_for_each_safe(&src->alertident_list, tmp, n) {
                         entry = prelude_list_entry(tmp, idmef_alertident_t, list);
                         idmef_alertident_clone(entry, &new);
                         prelude_list_add_tail(&dst->alertident_list, &new->list);
@@ -14382,13 +14382,13 @@ int idmef_correlation_alert_new_alertident(idmef_correlation_alert_t *ptr, idmef
 int idmef_correlation_alert_copy(const idmef_correlation_alert_t *src, idmef_correlation_alert_t *dst)
 {
 
-        prelude_string_copy(&ptr->name, &dst->name);
+        prelude_string_copy(&src->name, &dst->name);
 
         {
                 prelude_list_t *n, *tmp;
                 idmef_alertident_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->alertident_list, tmp, n) {
+                prelude_list_for_each_safe(&src->alertident_list, tmp, n) {
                         entry = prelude_list_entry(tmp, idmef_alertident_t, list);
                         idmef_alertident_clone(entry, &new);
                         prelude_list_add_tail(&dst->alertident_list, &new->list);
@@ -14697,14 +14697,14 @@ int idmef_overflow_alert_new_buffer(idmef_overflow_alert_t *ptr, idmef_data_t **
 int idmef_overflow_alert_copy(const idmef_overflow_alert_t *src, idmef_overflow_alert_t *dst)
 {
 
-        prelude_string_copy(&ptr->program, &dst->program);
+        prelude_string_copy(&src->program, &dst->program);
 
-        dst->size_is_set = ptr->size_is_set;
+        dst->size_is_set = src->size_is_set;
 
-        dst->size = ptr->size;
+        dst->size = src->size;
 
-        if ( ptr->buffer )
-                idmef_data_clone(ptr->buffer, &dst->buffer);
+        if ( src->buffer )
+                idmef_data_clone(src->buffer, &dst->buffer);
 
         return 0;
 }
@@ -15998,36 +15998,36 @@ int idmef_alert_new_overflow_alert(idmef_alert_t *ptr, idmef_overflow_alert_t **
 int idmef_alert_copy(const idmef_alert_t *src, idmef_alert_t *dst)
 {
 
-        if ( ptr->messageid )
-                prelude_string_clone(ptr->messageid, &dst->messageid);
+        if ( src->messageid )
+                prelude_string_clone(src->messageid, &dst->messageid);
 
         {
                 prelude_list_t *n, *tmp;
                 idmef_analyzer_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->analyzer_list, tmp, n) {
+                prelude_list_for_each_safe(&src->analyzer_list, tmp, n) {
                         entry = prelude_list_entry(tmp, idmef_analyzer_t, list);
                         idmef_analyzer_clone(entry, &new);
                         prelude_list_add_tail(&dst->analyzer_list, &new->list);
                 }
         }
 
-        idmef_time_copy(&ptr->create_time, &dst->create_time);
+        idmef_time_copy(&src->create_time, &dst->create_time);
 
-        if ( ptr->classification )
-                idmef_classification_clone(ptr->classification, &dst->classification);
+        if ( src->classification )
+                idmef_classification_clone(src->classification, &dst->classification);
 
-        if ( ptr->detect_time )
-                idmef_time_clone(ptr->detect_time, &dst->detect_time);
+        if ( src->detect_time )
+                idmef_time_clone(src->detect_time, &dst->detect_time);
 
-        if ( ptr->analyzer_time )
-                idmef_time_clone(ptr->analyzer_time, &dst->analyzer_time);
+        if ( src->analyzer_time )
+                idmef_time_clone(src->analyzer_time, &dst->analyzer_time);
 
         {
                 prelude_list_t *n, *tmp;
                 idmef_source_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->source_list, tmp, n) {
+                prelude_list_for_each_safe(&src->source_list, tmp, n) {
                         entry = prelude_list_entry(tmp, idmef_source_t, list);
                         idmef_source_clone(entry, &new);
                         prelude_list_add_tail(&dst->source_list, &new->list);
@@ -16038,39 +16038,39 @@ int idmef_alert_copy(const idmef_alert_t *src, idmef_alert_t *dst)
                 prelude_list_t *n, *tmp;
                 idmef_target_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->target_list, tmp, n) {
+                prelude_list_for_each_safe(&src->target_list, tmp, n) {
                         entry = prelude_list_entry(tmp, idmef_target_t, list);
                         idmef_target_clone(entry, &new);
                         prelude_list_add_tail(&dst->target_list, &new->list);
                 }
         }
 
-        if ( ptr->assessment )
-                idmef_assessment_clone(ptr->assessment, &dst->assessment);
+        if ( src->assessment )
+                idmef_assessment_clone(src->assessment, &dst->assessment);
 
         {
                 prelude_list_t *n, *tmp;
                 idmef_additional_data_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->additional_data_list, tmp, n) {
+                prelude_list_for_each_safe(&src->additional_data_list, tmp, n) {
                         entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
                         idmef_additional_data_clone(entry, &new);
                         prelude_list_add_tail(&dst->additional_data_list, &new->list);
                 }
         }
 
-        switch ( ptr->type ) {
+        switch ( src->type ) {
 
                 case IDMEF_ALERT_TYPE_TOOL:
-                        idmef_tool_alert_clone(ptr->detail.tool_alert, &dst->detail.tool_alert);
+                        idmef_tool_alert_clone(src->detail.tool_alert, &dst->detail.tool_alert);
                         break;
 
                 case IDMEF_ALERT_TYPE_CORRELATION:
-                        idmef_correlation_alert_clone(ptr->detail.correlation_alert, &dst->detail.correlation_alert);
+                        idmef_correlation_alert_clone(src->detail.correlation_alert, &dst->detail.correlation_alert);
                         break;
 
                 case IDMEF_ALERT_TYPE_OVERFLOW:
-                        idmef_overflow_alert_clone(ptr->detail.overflow_alert, &dst->detail.overflow_alert);
+                        idmef_overflow_alert_clone(src->detail.overflow_alert, &dst->detail.overflow_alert);
                         break;
 
                 default:
@@ -16670,34 +16670,34 @@ int idmef_heartbeat_new_additional_data(idmef_heartbeat_t *ptr, idmef_additional
 int idmef_heartbeat_copy(const idmef_heartbeat_t *src, idmef_heartbeat_t *dst)
 {
 
-        if ( ptr->messageid )
-                prelude_string_clone(ptr->messageid, &dst->messageid);
+        if ( src->messageid )
+                prelude_string_clone(src->messageid, &dst->messageid);
 
         {
                 prelude_list_t *n, *tmp;
                 idmef_analyzer_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->analyzer_list, tmp, n) {
+                prelude_list_for_each_safe(&src->analyzer_list, tmp, n) {
                         entry = prelude_list_entry(tmp, idmef_analyzer_t, list);
                         idmef_analyzer_clone(entry, &new);
                         prelude_list_add_tail(&dst->analyzer_list, &new->list);
                 }
         }
 
-        idmef_time_copy(&ptr->create_time, &dst->create_time);
+        idmef_time_copy(&src->create_time, &dst->create_time);
 
-        if ( ptr->analyzer_time )
-                idmef_time_clone(ptr->analyzer_time, &dst->analyzer_time);
+        if ( src->analyzer_time )
+                idmef_time_clone(src->analyzer_time, &dst->analyzer_time);
 
-        dst->heartbeat_interval_is_set = ptr->heartbeat_interval_is_set;
+        dst->heartbeat_interval_is_set = src->heartbeat_interval_is_set;
 
-        dst->heartbeat_interval = ptr->heartbeat_interval;
+        dst->heartbeat_interval = src->heartbeat_interval;
 
         {
                 prelude_list_t *n, *tmp;
                 idmef_additional_data_t *entry, *new;
 
-                prelude_list_for_each_safe(&ptr->additional_data_list, tmp, n) {
+                prelude_list_for_each_safe(&src->additional_data_list, tmp, n) {
                         entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
                         idmef_additional_data_clone(entry, &new);
                         prelude_list_add_tail(&dst->additional_data_list, &new->list);
@@ -17066,16 +17066,16 @@ int idmef_message_new_heartbeat(idmef_message_t *ptr, idmef_heartbeat_t **ret)
 int idmef_message_copy(const idmef_message_t *src, idmef_message_t *dst)
 {
 
-        prelude_string_copy(&ptr->version, &dst->version);
+        prelude_string_copy(&src->version, &dst->version);
 
-        switch ( ptr->type ) {
+        switch ( src->type ) {
 
                 case IDMEF_MESSAGE_TYPE_ALERT:
-                        idmef_alert_clone(ptr->message.alert, &dst->message.alert);
+                        idmef_alert_clone(src->message.alert, &dst->message.alert);
                         break;
 
                 case IDMEF_MESSAGE_TYPE_HEARTBEAT:
-                        idmef_heartbeat_clone(ptr->message.heartbeat, &dst->message.heartbeat);
+                        idmef_heartbeat_clone(src->message.heartbeat, &dst->message.heartbeat);
                         break;
 
                 default:
