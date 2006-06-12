@@ -292,6 +292,8 @@ typedef struct {
 	int (*new_child)(void *ptr, idmef_class_child_id_t child, int n, void **ret);
 	int (*to_numeric)(const char *name);
 	const char *(*to_string)(int val);
+        int (*copy)(const void *src, void *dst);
+        int (*clone)(const void *src, void **dst);
 } object_data_t;
 
 
@@ -299,56 +301,56 @@ const object_data_t object_data[] = {
         { "(unassigned)", NULL, NULL, NULL }, /* ID: 0 */
         { "(unassigned)", NULL, NULL, NULL }, /* ID: 1 */
         { "(unassigned)", NULL, NULL, NULL }, /* ID: 2 */
-        { "additional_data_type", NULL, NULL, NULL, idmef_additional_data_type_to_numeric, idmef_additional_data_type_to_string}, /* ID: 3 */
-        { "additional_data", idmef_additional_data_children_list, idmef_additional_data_get_child, idmef_additional_data_new_child, NULL, NULL }, /* ID: 4 */
-        { "reference_origin", NULL, NULL, NULL, idmef_reference_origin_to_numeric, idmef_reference_origin_to_string}, /* ID: 5 */
-        { "classification", idmef_classification_children_list, idmef_classification_get_child, idmef_classification_new_child, NULL, NULL }, /* ID: 6 */
-        { "user_id_type", NULL, NULL, NULL, idmef_user_id_type_to_numeric, idmef_user_id_type_to_string}, /* ID: 7 */
-        { "user_id", idmef_user_id_children_list, idmef_user_id_get_child, idmef_user_id_new_child, NULL, NULL }, /* ID: 8 */
-        { "user_category", NULL, NULL, NULL, idmef_user_category_to_numeric, idmef_user_category_to_string}, /* ID: 9 */
-        { "user", idmef_user_children_list, idmef_user_get_child, idmef_user_new_child, NULL, NULL }, /* ID: 10 */
-        { "address_category", NULL, NULL, NULL, idmef_address_category_to_numeric, idmef_address_category_to_string}, /* ID: 11 */
-        { "address", idmef_address_children_list, idmef_address_get_child, idmef_address_new_child, NULL, NULL }, /* ID: 12 */
-        { "process", idmef_process_children_list, idmef_process_get_child, idmef_process_new_child, NULL, NULL }, /* ID: 13 */
-        { "web_service", idmef_web_service_children_list, idmef_web_service_get_child, idmef_web_service_new_child, NULL, NULL }, /* ID: 14 */
-        { "snmp_service", idmef_snmp_service_children_list, idmef_snmp_service_get_child, idmef_snmp_service_new_child, NULL, NULL }, /* ID: 15 */
-        { "service_type", NULL, NULL, NULL, idmef_service_type_to_numeric, idmef_service_type_to_string}, /* ID: 16 */
-        { "service", idmef_service_children_list, idmef_service_get_child, idmef_service_new_child, NULL, NULL }, /* ID: 17 */
-        { "node_category", NULL, NULL, NULL, idmef_node_category_to_numeric, idmef_node_category_to_string}, /* ID: 18 */
-        { "node", idmef_node_children_list, idmef_node_get_child, idmef_node_new_child, NULL, NULL }, /* ID: 19 */
-        { "source_spoofed", NULL, NULL, NULL, idmef_source_spoofed_to_numeric, idmef_source_spoofed_to_string}, /* ID: 20 */
-        { "source", idmef_source_children_list, idmef_source_get_child, idmef_source_new_child, NULL, NULL }, /* ID: 21 */
-        { "file_access", idmef_file_access_children_list, idmef_file_access_get_child, idmef_file_access_new_child, NULL, NULL }, /* ID: 22 */
-        { "inode", idmef_inode_children_list, idmef_inode_get_child, idmef_inode_new_child, NULL, NULL }, /* ID: 23 */
-        { "file_category", NULL, NULL, NULL, idmef_file_category_to_numeric, idmef_file_category_to_string}, /* ID: 24 */
-        { "file_fstype", NULL, NULL, NULL, idmef_file_fstype_to_numeric, idmef_file_fstype_to_string}, /* ID: 25 */
-        { "file", idmef_file_children_list, idmef_file_get_child, idmef_file_new_child, NULL, NULL }, /* ID: 26 */
-        { "linkage_category", NULL, NULL, NULL, idmef_linkage_category_to_numeric, idmef_linkage_category_to_string}, /* ID: 27 */
-        { "linkage", idmef_linkage_children_list, idmef_linkage_get_child, idmef_linkage_new_child, NULL, NULL }, /* ID: 28 */
-        { "target_decoy", NULL, NULL, NULL, idmef_target_decoy_to_numeric, idmef_target_decoy_to_string}, /* ID: 29 */
-        { "target", idmef_target_children_list, idmef_target_get_child, idmef_target_new_child, NULL, NULL }, /* ID: 30 */
-        { "analyzer", idmef_analyzer_children_list, idmef_analyzer_get_child, idmef_analyzer_new_child, NULL, NULL }, /* ID: 31 */
-        { "alertident", idmef_alertident_children_list, idmef_alertident_get_child, idmef_alertident_new_child, NULL, NULL }, /* ID: 32 */
-        { "impact_severity", NULL, NULL, NULL, idmef_impact_severity_to_numeric, idmef_impact_severity_to_string}, /* ID: 33 */
-        { "impact_completion", NULL, NULL, NULL, idmef_impact_completion_to_numeric, idmef_impact_completion_to_string}, /* ID: 34 */
-        { "impact_type", NULL, NULL, NULL, idmef_impact_type_to_numeric, idmef_impact_type_to_string}, /* ID: 35 */
-        { "impact", idmef_impact_children_list, idmef_impact_get_child, idmef_impact_new_child, NULL, NULL }, /* ID: 36 */
-        { "action_category", NULL, NULL, NULL, idmef_action_category_to_numeric, idmef_action_category_to_string}, /* ID: 37 */
-        { "action", idmef_action_children_list, idmef_action_get_child, idmef_action_new_child, NULL, NULL }, /* ID: 38 */
-        { "confidence_rating", NULL, NULL, NULL, idmef_confidence_rating_to_numeric, idmef_confidence_rating_to_string}, /* ID: 39 */
-        { "confidence", idmef_confidence_children_list, idmef_confidence_get_child, idmef_confidence_new_child, NULL, NULL }, /* ID: 40 */
-        { "assessment", idmef_assessment_children_list, idmef_assessment_get_child, idmef_assessment_new_child, NULL, NULL }, /* ID: 41 */
-        { "tool_alert", idmef_tool_alert_children_list, idmef_tool_alert_get_child, idmef_tool_alert_new_child, NULL, NULL }, /* ID: 42 */
-        { "correlation_alert", idmef_correlation_alert_children_list, idmef_correlation_alert_get_child, idmef_correlation_alert_new_child, NULL, NULL }, /* ID: 43 */
-        { "overflow_alert", idmef_overflow_alert_children_list, idmef_overflow_alert_get_child, idmef_overflow_alert_new_child, NULL, NULL }, /* ID: 44 */
-        { "alert_type", NULL, NULL, NULL, idmef_alert_type_to_numeric, idmef_alert_type_to_string}, /* ID: 45 */
-        { "alert", idmef_alert_children_list, idmef_alert_get_child, idmef_alert_new_child, NULL, NULL }, /* ID: 46 */
-        { "heartbeat", idmef_heartbeat_children_list, idmef_heartbeat_get_child, idmef_heartbeat_new_child, NULL, NULL }, /* ID: 47 */
-        { "message_type", NULL, NULL, NULL, idmef_message_type_to_numeric, idmef_message_type_to_string}, /* ID: 48 */
-        { "message", idmef_message_children_list, idmef_message_get_child, idmef_message_new_child, NULL, NULL }, /* ID: 49 */
-        { "reference", idmef_reference_children_list, idmef_reference_get_child, idmef_reference_new_child, NULL, NULL }, /* ID: 50 */
+        { "additional_data_type", NULL, NULL, NULL, idmef_additional_data_type_to_numeric, idmef_additional_data_type_to_string, NULL, NULL, }, /* ID: 3 */
+        { "additional_data", idmef_additional_data_children_list, idmef_additional_data_get_child, idmef_additional_data_new_child, NULL, NULL, idmef_additional_data_copy, idmef_additional_data_clone }, /* ID: 4 */
+        { "reference_origin", NULL, NULL, NULL, idmef_reference_origin_to_numeric, idmef_reference_origin_to_string, NULL, NULL, }, /* ID: 5 */
+        { "classification", idmef_classification_children_list, idmef_classification_get_child, idmef_classification_new_child, NULL, NULL, idmef_classification_copy, idmef_classification_clone }, /* ID: 6 */
+        { "user_id_type", NULL, NULL, NULL, idmef_user_id_type_to_numeric, idmef_user_id_type_to_string, NULL, NULL, }, /* ID: 7 */
+        { "user_id", idmef_user_id_children_list, idmef_user_id_get_child, idmef_user_id_new_child, NULL, NULL, idmef_user_id_copy, idmef_user_id_clone }, /* ID: 8 */
+        { "user_category", NULL, NULL, NULL, idmef_user_category_to_numeric, idmef_user_category_to_string, NULL, NULL, }, /* ID: 9 */
+        { "user", idmef_user_children_list, idmef_user_get_child, idmef_user_new_child, NULL, NULL, idmef_user_copy, idmef_user_clone }, /* ID: 10 */
+        { "address_category", NULL, NULL, NULL, idmef_address_category_to_numeric, idmef_address_category_to_string, NULL, NULL, }, /* ID: 11 */
+        { "address", idmef_address_children_list, idmef_address_get_child, idmef_address_new_child, NULL, NULL, idmef_address_copy, idmef_address_clone }, /* ID: 12 */
+        { "process", idmef_process_children_list, idmef_process_get_child, idmef_process_new_child, NULL, NULL, idmef_process_copy, idmef_process_clone }, /* ID: 13 */
+        { "web_service", idmef_web_service_children_list, idmef_web_service_get_child, idmef_web_service_new_child, NULL, NULL, idmef_web_service_copy, idmef_web_service_clone }, /* ID: 14 */
+        { "snmp_service", idmef_snmp_service_children_list, idmef_snmp_service_get_child, idmef_snmp_service_new_child, NULL, NULL, idmef_snmp_service_copy, idmef_snmp_service_clone }, /* ID: 15 */
+        { "service_type", NULL, NULL, NULL, idmef_service_type_to_numeric, idmef_service_type_to_string, NULL, NULL, }, /* ID: 16 */
+        { "service", idmef_service_children_list, idmef_service_get_child, idmef_service_new_child, NULL, NULL, idmef_service_copy, idmef_service_clone }, /* ID: 17 */
+        { "node_category", NULL, NULL, NULL, idmef_node_category_to_numeric, idmef_node_category_to_string, NULL, NULL, }, /* ID: 18 */
+        { "node", idmef_node_children_list, idmef_node_get_child, idmef_node_new_child, NULL, NULL, idmef_node_copy, idmef_node_clone }, /* ID: 19 */
+        { "source_spoofed", NULL, NULL, NULL, idmef_source_spoofed_to_numeric, idmef_source_spoofed_to_string, NULL, NULL, }, /* ID: 20 */
+        { "source", idmef_source_children_list, idmef_source_get_child, idmef_source_new_child, NULL, NULL, idmef_source_copy, idmef_source_clone }, /* ID: 21 */
+        { "file_access", idmef_file_access_children_list, idmef_file_access_get_child, idmef_file_access_new_child, NULL, NULL, idmef_file_access_copy, idmef_file_access_clone }, /* ID: 22 */
+        { "inode", idmef_inode_children_list, idmef_inode_get_child, idmef_inode_new_child, NULL, NULL, idmef_inode_copy, idmef_inode_clone }, /* ID: 23 */
+        { "file_category", NULL, NULL, NULL, idmef_file_category_to_numeric, idmef_file_category_to_string, NULL, NULL, }, /* ID: 24 */
+        { "file_fstype", NULL, NULL, NULL, idmef_file_fstype_to_numeric, idmef_file_fstype_to_string, NULL, NULL, }, /* ID: 25 */
+        { "file", idmef_file_children_list, idmef_file_get_child, idmef_file_new_child, NULL, NULL, idmef_file_copy, idmef_file_clone }, /* ID: 26 */
+        { "linkage_category", NULL, NULL, NULL, idmef_linkage_category_to_numeric, idmef_linkage_category_to_string, NULL, NULL, }, /* ID: 27 */
+        { "linkage", idmef_linkage_children_list, idmef_linkage_get_child, idmef_linkage_new_child, NULL, NULL, idmef_linkage_copy, idmef_linkage_clone }, /* ID: 28 */
+        { "target_decoy", NULL, NULL, NULL, idmef_target_decoy_to_numeric, idmef_target_decoy_to_string, NULL, NULL, }, /* ID: 29 */
+        { "target", idmef_target_children_list, idmef_target_get_child, idmef_target_new_child, NULL, NULL, idmef_target_copy, idmef_target_clone }, /* ID: 30 */
+        { "analyzer", idmef_analyzer_children_list, idmef_analyzer_get_child, idmef_analyzer_new_child, NULL, NULL, idmef_analyzer_copy, idmef_analyzer_clone }, /* ID: 31 */
+        { "alertident", idmef_alertident_children_list, idmef_alertident_get_child, idmef_alertident_new_child, NULL, NULL, idmef_alertident_copy, idmef_alertident_clone }, /* ID: 32 */
+        { "impact_severity", NULL, NULL, NULL, idmef_impact_severity_to_numeric, idmef_impact_severity_to_string, NULL, NULL, }, /* ID: 33 */
+        { "impact_completion", NULL, NULL, NULL, idmef_impact_completion_to_numeric, idmef_impact_completion_to_string, NULL, NULL, }, /* ID: 34 */
+        { "impact_type", NULL, NULL, NULL, idmef_impact_type_to_numeric, idmef_impact_type_to_string, NULL, NULL, }, /* ID: 35 */
+        { "impact", idmef_impact_children_list, idmef_impact_get_child, idmef_impact_new_child, NULL, NULL, idmef_impact_copy, idmef_impact_clone }, /* ID: 36 */
+        { "action_category", NULL, NULL, NULL, idmef_action_category_to_numeric, idmef_action_category_to_string, NULL, NULL, }, /* ID: 37 */
+        { "action", idmef_action_children_list, idmef_action_get_child, idmef_action_new_child, NULL, NULL, idmef_action_copy, idmef_action_clone }, /* ID: 38 */
+        { "confidence_rating", NULL, NULL, NULL, idmef_confidence_rating_to_numeric, idmef_confidence_rating_to_string, NULL, NULL, }, /* ID: 39 */
+        { "confidence", idmef_confidence_children_list, idmef_confidence_get_child, idmef_confidence_new_child, NULL, NULL, idmef_confidence_copy, idmef_confidence_clone }, /* ID: 40 */
+        { "assessment", idmef_assessment_children_list, idmef_assessment_get_child, idmef_assessment_new_child, NULL, NULL, idmef_assessment_copy, idmef_assessment_clone }, /* ID: 41 */
+        { "tool_alert", idmef_tool_alert_children_list, idmef_tool_alert_get_child, idmef_tool_alert_new_child, NULL, NULL, idmef_tool_alert_copy, idmef_tool_alert_clone }, /* ID: 42 */
+        { "correlation_alert", idmef_correlation_alert_children_list, idmef_correlation_alert_get_child, idmef_correlation_alert_new_child, NULL, NULL, idmef_correlation_alert_copy, idmef_correlation_alert_clone }, /* ID: 43 */
+        { "overflow_alert", idmef_overflow_alert_children_list, idmef_overflow_alert_get_child, idmef_overflow_alert_new_child, NULL, NULL, idmef_overflow_alert_copy, idmef_overflow_alert_clone }, /* ID: 44 */
+        { "alert_type", NULL, NULL, NULL, idmef_alert_type_to_numeric, idmef_alert_type_to_string, NULL, NULL, }, /* ID: 45 */
+        { "alert", idmef_alert_children_list, idmef_alert_get_child, idmef_alert_new_child, NULL, NULL, idmef_alert_copy, idmef_alert_clone }, /* ID: 46 */
+        { "heartbeat", idmef_heartbeat_children_list, idmef_heartbeat_get_child, idmef_heartbeat_new_child, NULL, NULL, idmef_heartbeat_copy, idmef_heartbeat_clone }, /* ID: 47 */
+        { "message_type", NULL, NULL, NULL, idmef_message_type_to_numeric, idmef_message_type_to_string, NULL, NULL, }, /* ID: 48 */
+        { "message", idmef_message_children_list, idmef_message_get_child, idmef_message_new_child, NULL, NULL, idmef_message_copy, idmef_message_clone }, /* ID: 49 */
+        { "reference", idmef_reference_children_list, idmef_reference_get_child, idmef_reference_new_child, NULL, NULL, idmef_reference_copy, idmef_reference_clone }, /* ID: 50 */
         { "(unassigned)", NULL, NULL, NULL }, /* ID: 51 */
-        { "checksum", idmef_checksum_children_list, idmef_checksum_get_child, idmef_checksum_new_child, NULL, NULL }, /* ID: 52 */
-        { "checksum_algorithm", NULL, NULL, NULL, idmef_checksum_algorithm_to_numeric, idmef_checksum_algorithm_to_string}, /* ID: 53 */
+        { "checksum", idmef_checksum_children_list, idmef_checksum_get_child, idmef_checksum_new_child, NULL, NULL, idmef_checksum_copy, idmef_checksum_clone }, /* ID: 52 */
+        { "checksum_algorithm", NULL, NULL, NULL, idmef_checksum_algorithm_to_numeric, idmef_checksum_algorithm_to_string, NULL, NULL, }, /* ID: 53 */
         { NULL, NULL, NULL, NULL }
 };

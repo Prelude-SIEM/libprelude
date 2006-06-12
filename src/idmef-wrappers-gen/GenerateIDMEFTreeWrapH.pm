@@ -118,6 +118,8 @@ sub	struct_constructor
     my	$struct = shift;
 
     $self->output("int idmef_$struct->{short_typename}_new($struct->{typename} **ret);\n");
+    $self->output("int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct->{typename} *dst);\n");
+    $self->output("int idmef_$struct->{short_typename}_clone($struct->{typename} *src, $struct->{typename} **dst);\n");
 }
 
 sub	struct_ref

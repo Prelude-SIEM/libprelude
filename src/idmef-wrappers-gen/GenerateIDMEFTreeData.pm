@@ -119,6 +119,8 @@ typedef struct \{
 	int (*new_child)(void *ptr, idmef_class_child_id_t child, int n, void **ret);
 	int (*to_numeric)(const char *name);
 	const char *(*to_string)(int val);
+        int (*copy)(const void *src, void *dst);
+        int (*clone)(const void *src, void **dst);
 \} object_data_t;
 
 
@@ -139,7 +141,9 @@ const object_data_t object_data[] = \{
 		      "idmef_$obj->{short_typename}_get_child, ",
 		      "idmef_$obj->{short_typename}_new_child, ",
 		      "NULL, ",
-		      "NULL \}, ",
+		      "NULL, ",
+		      "idmef_$obj->{short_typename}_copy, ",
+		      "idmef_$obj->{short_typename}_clone \}, ",
 		      "/* ID: $obj->{id} */\n") if ( $obj->{obj_type} == &OBJ_STRUCT );
 
 	$self->output("        \{ ",
@@ -148,7 +152,9 @@ const object_data_t object_data[] = \{
 		      "NULL, ", 
 		      "NULL, ",
 		      "idmef_$obj->{short_typename}_to_numeric, ",
-		      "idmef_$obj->{short_typename}_to_string",
+		      "idmef_$obj->{short_typename}_to_string, ",
+		      "NULL, ",
+		      "NULL, ",
 		      "\}, ",
 		      "/* ID: $obj->{id} */\n") if ( $obj->{obj_type} == &OBJ_ENUM );
     }

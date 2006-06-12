@@ -77,6 +77,9 @@
 #define IDENT(name) uint64_t name
 
 
+#define prelude_string_copy(src, dst) if ( ! prelude_string_is_empty(src) ) prelude_string_copy_dup(src, dst)
+#define idmef_data_copy idmef_data_copy_dup
+
 
 static int get_value_from_string(idmef_value_t **value, prelude_string_t *str)
 {
@@ -1983,7 +1986,7 @@ void idmef_additional_data_set_data(idmef_additional_data_t *ptr, idmef_data_t *
 {
         idmef_data_destroy_internal(&ptr->data);
         if ( data ) {
-                memcpy(&ptr->data, data, sizeof (ptr->data));
+                memcpy(&ptr->data, data, sizeof(ptr->data));
                 free(data);
         }
 }
@@ -2004,6 +2007,48 @@ int idmef_additional_data_new_data(idmef_additional_data_t *ptr, idmef_data_t **
 
         *ret = &ptr->data;
         return 0;
+}
+
+/**
+ * idmef_additional_data_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_additional_data_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_additional_data_copy(const idmef_additional_data_t *src, idmef_additional_data_t *dst)
+{
+
+        dst->type = ptr->type;
+
+        if ( ptr->meaning )
+                prelude_string_clone(ptr->meaning, &dst->meaning);
+
+        idmef_data_copy(&ptr->data, &dst->data);
+
+        return 0;
+}
+
+/**
+ * idmef_additional_data_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_additional_data_clone(idmef_additional_data_t *src, idmef_additional_data_t **dst)
+{
+        int ret;
+
+        ret = idmef_additional_data_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_additional_data_copy(src, *dst);
 }
 
 /**
@@ -2197,7 +2242,7 @@ void idmef_reference_set_name(idmef_reference_t *ptr, prelude_string_t *name)
 {
         prelude_string_destroy_internal(&ptr->name);
         if ( name ) {
-                memcpy(&ptr->name, name, sizeof (ptr->name));
+                memcpy(&ptr->name, name, sizeof(ptr->name));
                 free(name);
         }
 }
@@ -2247,7 +2292,7 @@ void idmef_reference_set_url(idmef_reference_t *ptr, prelude_string_t *url)
 {
         prelude_string_destroy_internal(&ptr->url);
         if ( url ) {
-                memcpy(&ptr->url, url, sizeof (ptr->url));
+                memcpy(&ptr->url, url, sizeof(ptr->url));
                 free(url);
         }
 }
@@ -2324,6 +2369,50 @@ int idmef_reference_new_meaning(idmef_reference_t *ptr, prelude_string_t **ret)
 
         *ret = ptr->meaning;
         return 0;
+}
+
+/**
+ * idmef_reference_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_reference_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_reference_copy(const idmef_reference_t *src, idmef_reference_t *dst)
+{
+
+        dst->origin = ptr->origin;
+
+        prelude_string_copy(&ptr->name, &dst->name);
+
+        prelude_string_copy(&ptr->url, &dst->url);
+
+        if ( ptr->meaning )
+                prelude_string_clone(ptr->meaning, &dst->meaning);
+
+        return 0;
+}
+
+/**
+ * idmef_reference_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_reference_clone(idmef_reference_t *src, idmef_reference_t **dst)
+{
+        int ret;
+
+        ret = idmef_reference_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_reference_copy(src, *dst);
 }
 
 /**
@@ -2562,7 +2651,7 @@ void idmef_classification_set_text(idmef_classification_t *ptr, prelude_string_t
 {
         prelude_string_destroy_internal(&ptr->text);
         if ( text ) {
-                memcpy(&ptr->text, text, sizeof (ptr->text));
+                memcpy(&ptr->text, text, sizeof(ptr->text));
                 free(text);
         }
 }
@@ -2655,6 +2744,57 @@ int idmef_classification_new_reference(idmef_classification_t *ptr, idmef_refere
         return 0;
 }
 
+
+/**
+ * idmef_classification_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_classification_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_classification_copy(const idmef_classification_t *src, idmef_classification_t *dst)
+{
+
+        if ( ptr->ident )
+                prelude_string_clone(ptr->ident, &dst->ident);
+
+        prelude_string_copy(&ptr->text, &dst->text);
+
+        {
+                prelude_list_t *n, *tmp;
+                idmef_reference_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->reference_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_reference_t, list);
+                        idmef_reference_clone(entry, &new);
+                        prelude_list_add_tail(&dst->reference_list, &new->list);
+                }
+        }
+
+        return 0;
+}
+
+/**
+ * idmef_classification_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_classification_clone(idmef_classification_t *src, idmef_classification_t **dst)
+{
+        int ret;
+
+        ret = idmef_classification_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_classification_copy(src, *dst);
+}
 
 /**
  * idmef_user_id_new:
@@ -3055,6 +3195,56 @@ int idmef_user_id_new_number(idmef_user_id_t *ptr, uint32_t **ret)
 }
 
 /**
+ * idmef_user_id_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_user_id_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_user_id_copy(const idmef_user_id_t *src, idmef_user_id_t *dst)
+{
+
+        if ( ptr->ident )
+                prelude_string_clone(ptr->ident, &dst->ident);
+
+        dst->type = ptr->type;
+
+        if ( ptr->tty )
+                prelude_string_clone(ptr->tty, &dst->tty);
+
+        if ( ptr->name )
+                prelude_string_clone(ptr->name, &dst->name);
+
+        dst->number_is_set = ptr->number_is_set;
+
+        dst->number = ptr->number;
+
+        return 0;
+}
+
+/**
+ * idmef_user_id_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_user_id_clone(idmef_user_id_t *src, idmef_user_id_t **dst)
+{
+        int ret;
+
+        ret = idmef_user_id_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_user_id_copy(src, *dst);
+}
+
+/**
  * idmef_user_new:
  * @ret: Pointer where to store the created #idmef_user_t object.
  *
@@ -3377,6 +3567,57 @@ int idmef_user_new_user_id(idmef_user_t *ptr, idmef_user_id_t **ret, int pos)
         return 0;
 }
 
+
+/**
+ * idmef_user_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_user_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_user_copy(const idmef_user_t *src, idmef_user_t *dst)
+{
+
+        if ( ptr->ident )
+                prelude_string_clone(ptr->ident, &dst->ident);
+
+        dst->category = ptr->category;
+
+        {
+                prelude_list_t *n, *tmp;
+                idmef_user_id_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->user_id_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_user_id_t, list);
+                        idmef_user_id_clone(entry, &new);
+                        prelude_list_add_tail(&dst->user_id_list, &new->list);
+                }
+        }
+
+        return 0;
+}
+
+/**
+ * idmef_user_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_user_clone(idmef_user_t *src, idmef_user_t **dst)
+{
+        int ret;
+
+        ret = idmef_user_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_user_copy(src, *dst);
+}
 
 /**
  * idmef_address_new:
@@ -3754,7 +3995,7 @@ void idmef_address_set_address(idmef_address_t *ptr, prelude_string_t *address)
 {
         prelude_string_destroy_internal(&ptr->address);
         if ( address ) {
-                memcpy(&ptr->address, address, sizeof (ptr->address));
+                memcpy(&ptr->address, address, sizeof(ptr->address));
                 free(address);
         }
 }
@@ -3831,6 +4072,58 @@ int idmef_address_new_netmask(idmef_address_t *ptr, prelude_string_t **ret)
 
         *ret = ptr->netmask;
         return 0;
+}
+
+/**
+ * idmef_address_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_address_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_address_copy(const idmef_address_t *src, idmef_address_t *dst)
+{
+
+        if ( ptr->ident )
+                prelude_string_clone(ptr->ident, &dst->ident);
+
+        dst->category = ptr->category;
+
+        if ( ptr->vlan_name )
+                prelude_string_clone(ptr->vlan_name, &dst->vlan_name);
+
+        dst->vlan_num_is_set = ptr->vlan_num_is_set;
+
+        dst->vlan_num = ptr->vlan_num;
+
+        prelude_string_copy(&ptr->address, &dst->address);
+
+        if ( ptr->netmask )
+                prelude_string_clone(ptr->netmask, &dst->netmask);
+
+        return 0;
+}
+
+/**
+ * idmef_address_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_address_clone(idmef_address_t *src, idmef_address_t **dst)
+{
+        int ret;
+
+        ret = idmef_address_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_address_copy(src, *dst);
 }
 
 /**
@@ -4137,7 +4430,7 @@ void idmef_process_set_name(idmef_process_t *ptr, prelude_string_t *name)
 {
         prelude_string_destroy_internal(&ptr->name);
         if ( name ) {
-                memcpy(&ptr->name, name, sizeof (ptr->name));
+                memcpy(&ptr->name, name, sizeof(ptr->name));
                 free(name);
         }
 }
@@ -4413,6 +4706,75 @@ int idmef_process_new_env(idmef_process_t *ptr, prelude_string_t **ret, int pos)
 
 
 /**
+ * idmef_process_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_process_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_process_copy(const idmef_process_t *src, idmef_process_t *dst)
+{
+
+        if ( ptr->ident )
+                prelude_string_clone(ptr->ident, &dst->ident);
+
+        prelude_string_copy(&ptr->name, &dst->name);
+
+        dst->pid_is_set = ptr->pid_is_set;
+
+        dst->pid = ptr->pid;
+
+        if ( ptr->path )
+                prelude_string_clone(ptr->path, &dst->path);
+
+        {
+                prelude_list_t *n, *tmp;
+                prelude_string_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->arg_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, prelude_string_t, list);
+                        prelude_string_clone(entry, &new);
+                        prelude_list_add_tail(&dst->arg_list, &new->list);
+                }
+        }
+
+        {
+                prelude_list_t *n, *tmp;
+                prelude_string_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->env_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, prelude_string_t, list);
+                        prelude_string_clone(entry, &new);
+                        prelude_list_add_tail(&dst->env_list, &new->list);
+                }
+        }
+
+        return 0;
+}
+
+/**
+ * idmef_process_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_process_clone(idmef_process_t *src, idmef_process_t **dst)
+{
+        int ret;
+
+        ret = idmef_process_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_process_copy(src, *dst);
+}
+
+/**
  * idmef_web_service_new:
  * @ret: Pointer where to store the created #idmef_web_service_t object.
  *
@@ -4602,7 +4964,7 @@ void idmef_web_service_set_url(idmef_web_service_t *ptr, prelude_string_t *url)
 {
         prelude_string_destroy_internal(&ptr->url);
         if ( url ) {
-                memcpy(&ptr->url, url, sizeof (ptr->url));
+                memcpy(&ptr->url, url, sizeof(ptr->url));
                 free(url);
         }
 }
@@ -4807,6 +5169,60 @@ int idmef_web_service_new_arg(idmef_web_service_t *ptr, prelude_string_t **ret, 
         return 0;
 }
 
+
+/**
+ * idmef_web_service_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_web_service_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_web_service_copy(const idmef_web_service_t *src, idmef_web_service_t *dst)
+{
+
+        prelude_string_copy(&ptr->url, &dst->url);
+
+        if ( ptr->cgi )
+                prelude_string_clone(ptr->cgi, &dst->cgi);
+
+        if ( ptr->http_method )
+                prelude_string_clone(ptr->http_method, &dst->http_method);
+
+        {
+                prelude_list_t *n, *tmp;
+                prelude_string_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->arg_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, prelude_string_t, list);
+                        prelude_string_clone(entry, &new);
+                        prelude_list_add_tail(&dst->arg_list, &new->list);
+                }
+        }
+
+        return 0;
+}
+
+/**
+ * idmef_web_service_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_web_service_clone(idmef_web_service_t *src, idmef_web_service_t **dst)
+{
+        int ret;
+
+        ret = idmef_web_service_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_web_service_copy(src, *dst);
+}
 
 /**
  * idmef_snmp_service_new:
@@ -5466,6 +5882,71 @@ int idmef_snmp_service_new_community(idmef_snmp_service_t *ptr, prelude_string_t
 
         *ret = ptr->community;
         return 0;
+}
+
+/**
+ * idmef_snmp_service_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_snmp_service_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_snmp_service_copy(const idmef_snmp_service_t *src, idmef_snmp_service_t *dst)
+{
+
+        if ( ptr->oid )
+                prelude_string_clone(ptr->oid, &dst->oid);
+
+        dst->message_processing_model_is_set = ptr->message_processing_model_is_set;
+
+        dst->message_processing_model = ptr->message_processing_model;
+
+        dst->security_model_is_set = ptr->security_model_is_set;
+
+        dst->security_model = ptr->security_model;
+
+        if ( ptr->security_name )
+                prelude_string_clone(ptr->security_name, &dst->security_name);
+
+        dst->security_level_is_set = ptr->security_level_is_set;
+
+        dst->security_level = ptr->security_level;
+
+        if ( ptr->context_name )
+                prelude_string_clone(ptr->context_name, &dst->context_name);
+
+        if ( ptr->context_engine_id )
+                prelude_string_clone(ptr->context_engine_id, &dst->context_engine_id);
+
+        if ( ptr->command )
+                prelude_string_clone(ptr->command, &dst->command);
+
+        if ( ptr->community )
+                prelude_string_clone(ptr->community, &dst->community);
+
+        return 0;
+}
+
+/**
+ * idmef_snmp_service_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_snmp_service_clone(idmef_snmp_service_t *src, idmef_snmp_service_t **dst)
+{
+        int ret;
+
+        ret = idmef_snmp_service_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_snmp_service_copy(src, *dst);
 }
 
 /**
@@ -6266,6 +6747,82 @@ int idmef_service_new_snmp_service(idmef_service_t *ptr, idmef_snmp_service_t **
 }
 
 /**
+ * idmef_service_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_service_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_service_copy(const idmef_service_t *src, idmef_service_t *dst)
+{
+
+        if ( ptr->ident )
+                prelude_string_clone(ptr->ident, &dst->ident);
+
+        dst->ip_version_is_set = ptr->ip_version_is_set;
+
+        dst->ip_version = ptr->ip_version;
+
+        dst->iana_protocol_number_is_set = ptr->iana_protocol_number_is_set;
+
+        dst->iana_protocol_number = ptr->iana_protocol_number;
+
+        if ( ptr->iana_protocol_name )
+                prelude_string_clone(ptr->iana_protocol_name, &dst->iana_protocol_name);
+
+        if ( ptr->name )
+                prelude_string_clone(ptr->name, &dst->name);
+
+        dst->port_is_set = ptr->port_is_set;
+
+        dst->port = ptr->port;
+
+        if ( ptr->portlist )
+                prelude_string_clone(ptr->portlist, &dst->portlist);
+
+        if ( ptr->protocol )
+                prelude_string_clone(ptr->protocol, &dst->protocol);
+
+        switch ( ptr->type ) {
+
+                case IDMEF_SERVICE_TYPE_WEB:
+                        idmef_web_service_clone(ptr->specific.web_service, &dst->specific.web_service);
+                        break;
+
+                case IDMEF_SERVICE_TYPE_SNMP:
+                        idmef_snmp_service_clone(ptr->specific.snmp_service, &dst->specific.snmp_service);
+                        break;
+
+                default:
+                        break;
+        }
+
+        return 0;
+}
+
+/**
+ * idmef_service_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_service_clone(idmef_service_t *src, idmef_service_t **dst)
+{
+        int ret;
+
+        ret = idmef_service_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_service_copy(src, *dst);
+}
+
+/**
  * idmef_node_new:
  * @ret: Pointer where to store the created #idmef_node_t object.
  *
@@ -6720,6 +7277,63 @@ int idmef_node_new_address(idmef_node_t *ptr, idmef_address_t **ret, int pos)
         return 0;
 }
 
+
+/**
+ * idmef_node_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_node_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_node_copy(const idmef_node_t *src, idmef_node_t *dst)
+{
+
+        if ( ptr->ident )
+                prelude_string_clone(ptr->ident, &dst->ident);
+
+        dst->category = ptr->category;
+
+        if ( ptr->location )
+                prelude_string_clone(ptr->location, &dst->location);
+
+        if ( ptr->name )
+                prelude_string_clone(ptr->name, &dst->name);
+
+        {
+                prelude_list_t *n, *tmp;
+                idmef_address_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->address_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_address_t, list);
+                        idmef_address_clone(entry, &new);
+                        prelude_list_add_tail(&dst->address_list, &new->list);
+                }
+        }
+
+        return 0;
+}
+
+/**
+ * idmef_node_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_node_clone(idmef_node_t *src, idmef_node_t **dst)
+{
+        int ret;
+
+        ret = idmef_node_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_node_copy(src, *dst);
+}
 
 /**
  * idmef_source_new:
@@ -7250,6 +7864,61 @@ int idmef_source_new_service(idmef_source_t *ptr, idmef_service_t **ret)
 }
 
 /**
+ * idmef_source_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_source_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_source_copy(const idmef_source_t *src, idmef_source_t *dst)
+{
+
+        if ( ptr->ident )
+                prelude_string_clone(ptr->ident, &dst->ident);
+
+        dst->spoofed = ptr->spoofed;
+
+        if ( ptr->interface )
+                prelude_string_clone(ptr->interface, &dst->interface);
+
+        if ( ptr->node )
+                idmef_node_clone(ptr->node, &dst->node);
+
+        if ( ptr->user )
+                idmef_user_clone(ptr->user, &dst->user);
+
+        if ( ptr->process )
+                idmef_process_clone(ptr->process, &dst->process);
+
+        if ( ptr->service )
+                idmef_service_clone(ptr->service, &dst->service);
+
+        return 0;
+}
+
+/**
+ * idmef_source_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_source_clone(idmef_source_t *src, idmef_source_t **dst)
+{
+        int ret;
+
+        ret = idmef_source_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_source_copy(src, *dst);
+}
+
+/**
  * idmef_file_access_new:
  * @ret: Pointer where to store the created #idmef_file_access_t object.
  *
@@ -7426,7 +8095,7 @@ void idmef_file_access_set_user_id(idmef_file_access_t *ptr, idmef_user_id_t *us
 {
         idmef_user_id_destroy_internal(&ptr->user_id);
         if ( user_id ) {
-                memcpy(&ptr->user_id, user_id, sizeof (ptr->user_id));
+                memcpy(&ptr->user_id, user_id, sizeof(ptr->user_id));
                 free(user_id);
         }
 }
@@ -7518,6 +8187,54 @@ int idmef_file_access_new_permission(idmef_file_access_t *ptr, prelude_string_t 
         return 0;
 }
 
+
+/**
+ * idmef_file_access_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_file_access_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_file_access_copy(const idmef_file_access_t *src, idmef_file_access_t *dst)
+{
+
+        idmef_user_id_copy(&ptr->user_id, &dst->user_id);
+
+        {
+                prelude_list_t *n, *tmp;
+                prelude_string_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->permission_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, prelude_string_t, list);
+                        prelude_string_clone(entry, &new);
+                        prelude_list_add_tail(&dst->permission_list, &new->list);
+                }
+        }
+
+        return 0;
+}
+
+/**
+ * idmef_file_access_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_file_access_clone(idmef_file_access_t *src, idmef_file_access_t **dst)
+{
+        int ret;
+
+        ret = idmef_file_access_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_file_access_copy(src, *dst);
+}
 
 /**
  * idmef_inode_new:
@@ -7970,6 +8687,64 @@ int idmef_inode_new_c_minor_device(idmef_inode_t *ptr, uint32_t **ret)
 }
 
 /**
+ * idmef_inode_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_inode_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_inode_copy(const idmef_inode_t *src, idmef_inode_t *dst)
+{
+
+        if ( ptr->change_time )
+                idmef_time_clone(ptr->change_time, &dst->change_time);
+
+        dst->number_is_set = ptr->number_is_set;
+
+        dst->number = ptr->number;
+
+        dst->major_device_is_set = ptr->major_device_is_set;
+
+        dst->major_device = ptr->major_device;
+
+        dst->minor_device_is_set = ptr->minor_device_is_set;
+
+        dst->minor_device = ptr->minor_device;
+
+        dst->c_major_device_is_set = ptr->c_major_device_is_set;
+
+        dst->c_major_device = ptr->c_major_device;
+
+        dst->c_minor_device_is_set = ptr->c_minor_device_is_set;
+
+        dst->c_minor_device = ptr->c_minor_device;
+
+        return 0;
+}
+
+/**
+ * idmef_inode_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_inode_clone(idmef_inode_t *src, idmef_inode_t **dst)
+{
+        int ret;
+
+        ret = idmef_inode_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_inode_copy(src, *dst);
+}
+
+/**
  * idmef_checksum_new:
  * @ret: Pointer where to store the created #idmef_checksum_t object.
  *
@@ -8109,7 +8884,7 @@ void idmef_checksum_set_value(idmef_checksum_t *ptr, prelude_string_t *value)
 {
         prelude_string_destroy_internal(&ptr->value);
         if ( value ) {
-                memcpy(&ptr->value, value, sizeof (ptr->value));
+                memcpy(&ptr->value, value, sizeof(ptr->value));
                 free(value);
         }
 }
@@ -8230,6 +9005,48 @@ int idmef_checksum_new_algorithm(idmef_checksum_t *ptr, idmef_checksum_algorithm
 {
         *ret = &ptr->algorithm;
         return 0;
+}
+
+/**
+ * idmef_checksum_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_checksum_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_checksum_copy(const idmef_checksum_t *src, idmef_checksum_t *dst)
+{
+
+        prelude_string_copy(&ptr->value, &dst->value);
+
+        if ( ptr->key )
+                prelude_string_clone(ptr->key, &dst->key);
+
+        dst->algorithm = ptr->algorithm;
+
+        return 0;
+}
+
+/**
+ * idmef_checksum_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_checksum_clone(idmef_checksum_t *src, idmef_checksum_t **dst)
+{
+        int ret;
+
+        ret = idmef_checksum_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_checksum_copy(src, *dst);
 }
 
 /**
@@ -8664,7 +9481,7 @@ void idmef_file_set_name(idmef_file_t *ptr, prelude_string_t *name)
 {
         prelude_string_destroy_internal(&ptr->name);
         if ( name ) {
-                memcpy(&ptr->name, name, sizeof (ptr->name));
+                memcpy(&ptr->name, name, sizeof(ptr->name));
                 free(name);
         }
 }
@@ -8714,7 +9531,7 @@ void idmef_file_set_path(idmef_file_t *ptr, prelude_string_t *path)
 {
         prelude_string_destroy_internal(&ptr->path);
         if ( path ) {
-                memcpy(&ptr->path, path, sizeof (ptr->path));
+                memcpy(&ptr->path, path, sizeof(ptr->path));
                 free(path);
         }
 }
@@ -9433,6 +10250,110 @@ int idmef_file_new_file_type(idmef_file_t *ptr, prelude_string_t **ret)
 }
 
 /**
+ * idmef_file_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_file_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_file_copy(const idmef_file_t *src, idmef_file_t *dst)
+{
+
+        if ( ptr->ident )
+                prelude_string_clone(ptr->ident, &dst->ident);
+
+        prelude_string_copy(&ptr->name, &dst->name);
+
+        prelude_string_copy(&ptr->path, &dst->path);
+
+        if ( ptr->create_time )
+                idmef_time_clone(ptr->create_time, &dst->create_time);
+
+        if ( ptr->modify_time )
+                idmef_time_clone(ptr->modify_time, &dst->modify_time);
+
+        if ( ptr->access_time )
+                idmef_time_clone(ptr->access_time, &dst->access_time);
+
+        dst->data_size_is_set = ptr->data_size_is_set;
+
+        dst->data_size = ptr->data_size;
+
+        dst->disk_size_is_set = ptr->disk_size_is_set;
+
+        dst->disk_size = ptr->disk_size;
+
+        {
+                prelude_list_t *n, *tmp;
+                idmef_file_access_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->file_access_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_file_access_t, list);
+                        idmef_file_access_clone(entry, &new);
+                        prelude_list_add_tail(&dst->file_access_list, &new->list);
+                }
+        }
+
+        {
+                prelude_list_t *n, *tmp;
+                idmef_linkage_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->linkage_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_linkage_t, list);
+                        idmef_linkage_clone(entry, &new);
+                        prelude_list_add_tail(&dst->linkage_list, &new->list);
+                }
+        }
+
+        if ( ptr->inode )
+                idmef_inode_clone(ptr->inode, &dst->inode);
+
+        {
+                prelude_list_t *n, *tmp;
+                idmef_checksum_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->checksum_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_checksum_t, list);
+                        idmef_checksum_clone(entry, &new);
+                        prelude_list_add_tail(&dst->checksum_list, &new->list);
+                }
+        }
+
+        dst->category = ptr->category;
+
+        dst->fstype_is_set = ptr->fstype_is_set;
+
+        dst->fstype = ptr->fstype;
+
+        if ( ptr->file_type )
+                prelude_string_clone(ptr->file_type, &dst->file_type);
+
+        return 0;
+}
+
+/**
+ * idmef_file_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_file_clone(idmef_file_t *src, idmef_file_t **dst)
+{
+        int ret;
+
+        ret = idmef_file_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_file_copy(src, *dst);
+}
+
+/**
  * idmef_linkage_new:
  * @ret: Pointer where to store the created #idmef_linkage_t object.
  *
@@ -9625,7 +10546,7 @@ void idmef_linkage_set_name(idmef_linkage_t *ptr, prelude_string_t *name)
 {
         prelude_string_destroy_internal(&ptr->name);
         if ( name ) {
-                memcpy(&ptr->name, name, sizeof (ptr->name));
+                memcpy(&ptr->name, name, sizeof(ptr->name));
                 free(name);
         }
 }
@@ -9675,7 +10596,7 @@ void idmef_linkage_set_path(idmef_linkage_t *ptr, prelude_string_t *path)
 {
         prelude_string_destroy_internal(&ptr->path);
         if ( path ) {
-                memcpy(&ptr->path, path, sizeof (ptr->path));
+                memcpy(&ptr->path, path, sizeof(ptr->path));
                 free(path);
         }
 }
@@ -9748,6 +10669,50 @@ int idmef_linkage_new_file(idmef_linkage_t *ptr, idmef_file_t **ret)
 
         *ret = ptr->file;
         return 0;
+}
+
+/**
+ * idmef_linkage_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_linkage_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_linkage_copy(const idmef_linkage_t *src, idmef_linkage_t *dst)
+{
+
+        dst->category = ptr->category;
+
+        prelude_string_copy(&ptr->name, &dst->name);
+
+        prelude_string_copy(&ptr->path, &dst->path);
+
+        if ( ptr->file )
+                idmef_file_clone(ptr->file, &dst->file);
+
+        return 0;
+}
+
+/**
+ * idmef_linkage_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_linkage_clone(idmef_linkage_t *src, idmef_linkage_t **dst)
+{
+        int ret;
+
+        ret = idmef_linkage_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_linkage_copy(src, *dst);
 }
 
 /**
@@ -10400,6 +11365,72 @@ int idmef_target_new_file(idmef_target_t *ptr, idmef_file_t **ret, int pos)
         return 0;
 }
 
+
+/**
+ * idmef_target_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_target_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_target_copy(const idmef_target_t *src, idmef_target_t *dst)
+{
+
+        if ( ptr->ident )
+                prelude_string_clone(ptr->ident, &dst->ident);
+
+        dst->decoy = ptr->decoy;
+
+        if ( ptr->interface )
+                prelude_string_clone(ptr->interface, &dst->interface);
+
+        if ( ptr->node )
+                idmef_node_clone(ptr->node, &dst->node);
+
+        if ( ptr->user )
+                idmef_user_clone(ptr->user, &dst->user);
+
+        if ( ptr->process )
+                idmef_process_clone(ptr->process, &dst->process);
+
+        if ( ptr->service )
+                idmef_service_clone(ptr->service, &dst->service);
+
+        {
+                prelude_list_t *n, *tmp;
+                idmef_file_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->file_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_file_t, list);
+                        idmef_file_clone(entry, &new);
+                        prelude_list_add_tail(&dst->file_list, &new->list);
+                }
+        }
+
+        return 0;
+}
+
+/**
+ * idmef_target_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_target_clone(idmef_target_t *src, idmef_target_t **dst)
+{
+        int ret;
+
+        ret = idmef_target_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_target_copy(src, *dst);
+}
 
 /**
  * idmef_analyzer_new:
@@ -11147,6 +12178,71 @@ int idmef_analyzer_new_process(idmef_analyzer_t *ptr, idmef_process_t **ret)
 }
 
 /**
+ * idmef_analyzer_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_analyzer_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_analyzer_copy(const idmef_analyzer_t *src, idmef_analyzer_t *dst)
+{
+
+        if ( ptr->analyzerid )
+                prelude_string_clone(ptr->analyzerid, &dst->analyzerid);
+
+        if ( ptr->name )
+                prelude_string_clone(ptr->name, &dst->name);
+
+        if ( ptr->manufacturer )
+                prelude_string_clone(ptr->manufacturer, &dst->manufacturer);
+
+        if ( ptr->model )
+                prelude_string_clone(ptr->model, &dst->model);
+
+        if ( ptr->version )
+                prelude_string_clone(ptr->version, &dst->version);
+
+        if ( ptr->class )
+                prelude_string_clone(ptr->class, &dst->class);
+
+        if ( ptr->ostype )
+                prelude_string_clone(ptr->ostype, &dst->ostype);
+
+        if ( ptr->osversion )
+                prelude_string_clone(ptr->osversion, &dst->osversion);
+
+        if ( ptr->node )
+                idmef_node_clone(ptr->node, &dst->node);
+
+        if ( ptr->process )
+                idmef_process_clone(ptr->process, &dst->process);
+
+        return 0;
+}
+
+/**
+ * idmef_analyzer_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_analyzer_clone(idmef_analyzer_t *src, idmef_analyzer_t **dst)
+{
+        int ret;
+
+        ret = idmef_analyzer_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_analyzer_copy(src, *dst);
+}
+
+/**
  * idmef_alertident_new:
  * @ret: Pointer where to store the created #idmef_alertident_t object.
  *
@@ -11279,7 +12375,7 @@ void idmef_alertident_set_alertident(idmef_alertident_t *ptr, prelude_string_t *
 {
         prelude_string_destroy_internal(&ptr->alertident);
         if ( alertident ) {
-                memcpy(&ptr->alertident, alertident, sizeof (ptr->alertident));
+                memcpy(&ptr->alertident, alertident, sizeof(ptr->alertident));
                 free(alertident);
         }
 }
@@ -11356,6 +12452,46 @@ int idmef_alertident_new_analyzerid(idmef_alertident_t *ptr, prelude_string_t **
 
         *ret = ptr->analyzerid;
         return 0;
+}
+
+/**
+ * idmef_alertident_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_alertident_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_alertident_copy(const idmef_alertident_t *src, idmef_alertident_t *dst)
+{
+
+        prelude_string_copy(&ptr->alertident, &dst->alertident);
+
+        if ( ptr->analyzerid )
+                prelude_string_clone(ptr->analyzerid, &dst->analyzerid);
+
+        return 0;
+}
+
+/**
+ * idmef_alertident_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_alertident_clone(idmef_alertident_t *src, idmef_alertident_t **dst)
+{
+        int ret;
+
+        ret = idmef_alertident_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_alertident_copy(src, *dst);
 }
 
 /**
@@ -11686,6 +12822,54 @@ int idmef_impact_new_description(idmef_impact_t *ptr, prelude_string_t **ret)
 }
 
 /**
+ * idmef_impact_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_impact_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_impact_copy(const idmef_impact_t *src, idmef_impact_t *dst)
+{
+
+        dst->severity_is_set = ptr->severity_is_set;
+
+        dst->severity = ptr->severity;
+
+        dst->completion_is_set = ptr->completion_is_set;
+
+        dst->completion = ptr->completion;
+
+        dst->type = ptr->type;
+
+        if ( ptr->description )
+                prelude_string_clone(ptr->description, &dst->description);
+
+        return 0;
+}
+
+/**
+ * idmef_impact_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_impact_clone(idmef_impact_t *src, idmef_impact_t **dst)
+{
+        int ret;
+
+        ret = idmef_impact_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_impact_copy(src, *dst);
+}
+
+/**
  * idmef_action_new:
  * @ret: Pointer where to store the created #idmef_action_t object.
  *
@@ -11892,6 +13076,46 @@ int idmef_action_new_description(idmef_action_t *ptr, prelude_string_t **ret)
 }
 
 /**
+ * idmef_action_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_action_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_action_copy(const idmef_action_t *src, idmef_action_t *dst)
+{
+
+        dst->category = ptr->category;
+
+        if ( ptr->description )
+                prelude_string_clone(ptr->description, &dst->description);
+
+        return 0;
+}
+
+/**
+ * idmef_action_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_action_clone(idmef_action_t *src, idmef_action_t **dst)
+{
+        int ret;
+
+        ret = idmef_action_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_action_copy(src, *dst);
+}
+
+/**
  * idmef_confidence_new:
  * @ret: Pointer where to store the created #idmef_confidence_t object.
  *
@@ -12073,6 +13297,45 @@ int idmef_confidence_new_confidence(idmef_confidence_t *ptr, float **ret)
 {
         *ret = &ptr->confidence;
         return 0;
+}
+
+/**
+ * idmef_confidence_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_confidence_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_confidence_copy(const idmef_confidence_t *src, idmef_confidence_t *dst)
+{
+
+        dst->rating = ptr->rating;
+
+        dst->confidence = ptr->confidence;
+
+        return 0;
+}
+
+/**
+ * idmef_confidence_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_confidence_clone(idmef_confidence_t *src, idmef_confidence_t **dst)
+{
+        int ret;
+
+        ret = idmef_confidence_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_confidence_copy(src, *dst);
 }
 
 /**
@@ -12411,6 +13674,58 @@ int idmef_assessment_new_confidence(idmef_assessment_t *ptr, idmef_confidence_t 
 }
 
 /**
+ * idmef_assessment_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_assessment_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_assessment_copy(const idmef_assessment_t *src, idmef_assessment_t *dst)
+{
+
+        if ( ptr->impact )
+                idmef_impact_clone(ptr->impact, &dst->impact);
+
+        {
+                prelude_list_t *n, *tmp;
+                idmef_action_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->action_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_action_t, list);
+                        idmef_action_clone(entry, &new);
+                        prelude_list_add_tail(&dst->action_list, &new->list);
+                }
+        }
+
+        if ( ptr->confidence )
+                idmef_confidence_clone(ptr->confidence, &dst->confidence);
+
+        return 0;
+}
+
+/**
+ * idmef_assessment_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_assessment_clone(idmef_assessment_t *src, idmef_assessment_t **dst)
+{
+        int ret;
+
+        ret = idmef_assessment_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_assessment_copy(src, *dst);
+}
+
+/**
  * idmef_tool_alert_new:
  * @ret: Pointer where to store the created #idmef_tool_alert_t object.
  *
@@ -12590,7 +13905,7 @@ void idmef_tool_alert_set_name(idmef_tool_alert_t *ptr, prelude_string_t *name)
 {
         prelude_string_destroy_internal(&ptr->name);
         if ( name ) {
-                memcpy(&ptr->name, name, sizeof (ptr->name));
+                memcpy(&ptr->name, name, sizeof(ptr->name));
                 free(name);
         }
 }
@@ -12739,6 +14054,57 @@ int idmef_tool_alert_new_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t 
         return 0;
 }
 
+
+/**
+ * idmef_tool_alert_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_tool_alert_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_tool_alert_copy(const idmef_tool_alert_t *src, idmef_tool_alert_t *dst)
+{
+
+        prelude_string_copy(&ptr->name, &dst->name);
+
+        if ( ptr->command )
+                prelude_string_clone(ptr->command, &dst->command);
+
+        {
+                prelude_list_t *n, *tmp;
+                idmef_alertident_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->alertident_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_alertident_t, list);
+                        idmef_alertident_clone(entry, &new);
+                        prelude_list_add_tail(&dst->alertident_list, &new->list);
+                }
+        }
+
+        return 0;
+}
+
+/**
+ * idmef_tool_alert_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_tool_alert_clone(idmef_tool_alert_t *src, idmef_tool_alert_t **dst)
+{
+        int ret;
+
+        ret = idmef_tool_alert_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_tool_alert_copy(src, *dst);
+}
 
 /**
  * idmef_correlation_alert_new:
@@ -12910,7 +14276,7 @@ void idmef_correlation_alert_set_name(idmef_correlation_alert_t *ptr, prelude_st
 {
         prelude_string_destroy_internal(&ptr->name);
         if ( name ) {
-                memcpy(&ptr->name, name, sizeof (ptr->name));
+                memcpy(&ptr->name, name, sizeof(ptr->name));
                 free(name);
         }
 }
@@ -13003,6 +14369,54 @@ int idmef_correlation_alert_new_alertident(idmef_correlation_alert_t *ptr, idmef
         return 0;
 }
 
+
+/**
+ * idmef_correlation_alert_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_correlation_alert_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_correlation_alert_copy(const idmef_correlation_alert_t *src, idmef_correlation_alert_t *dst)
+{
+
+        prelude_string_copy(&ptr->name, &dst->name);
+
+        {
+                prelude_list_t *n, *tmp;
+                idmef_alertident_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->alertident_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_alertident_t, list);
+                        idmef_alertident_clone(entry, &new);
+                        prelude_list_add_tail(&dst->alertident_list, &new->list);
+                }
+        }
+
+        return 0;
+}
+
+/**
+ * idmef_correlation_alert_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_correlation_alert_clone(idmef_correlation_alert_t *src, idmef_correlation_alert_t **dst)
+{
+        int ret;
+
+        ret = idmef_correlation_alert_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_correlation_alert_copy(src, *dst);
+}
 
 /**
  * idmef_overflow_alert_new:
@@ -13138,7 +14552,7 @@ void idmef_overflow_alert_set_program(idmef_overflow_alert_t *ptr, prelude_strin
 {
         prelude_string_destroy_internal(&ptr->program);
         if ( program ) {
-                memcpy(&ptr->program, program, sizeof (ptr->program));
+                memcpy(&ptr->program, program, sizeof(ptr->program));
                 free(program);
         }
 }
@@ -13269,6 +14683,50 @@ int idmef_overflow_alert_new_buffer(idmef_overflow_alert_t *ptr, idmef_data_t **
 
         *ret = ptr->buffer;
         return 0;
+}
+
+/**
+ * idmef_overflow_alert_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_overflow_alert_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_overflow_alert_copy(const idmef_overflow_alert_t *src, idmef_overflow_alert_t *dst)
+{
+
+        prelude_string_copy(&ptr->program, &dst->program);
+
+        dst->size_is_set = ptr->size_is_set;
+
+        dst->size = ptr->size;
+
+        if ( ptr->buffer )
+                idmef_data_clone(ptr->buffer, &dst->buffer);
+
+        return 0;
+}
+
+/**
+ * idmef_overflow_alert_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_overflow_alert_clone(idmef_overflow_alert_t *src, idmef_overflow_alert_t **dst)
+{
+        int ret;
+
+        ret = idmef_overflow_alert_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_overflow_alert_copy(src, *dst);
 }
 
 /**
@@ -13799,7 +15257,7 @@ void idmef_alert_set_create_time(idmef_alert_t *ptr, idmef_time_t *create_time)
 {
         idmef_time_destroy_internal(&ptr->create_time);
         if ( create_time ) {
-                memcpy(&ptr->create_time, create_time, sizeof (ptr->create_time));
+                memcpy(&ptr->create_time, create_time, sizeof(ptr->create_time));
                 free(create_time);
         }
 }
@@ -14529,6 +15987,120 @@ int idmef_alert_new_overflow_alert(idmef_alert_t *ptr, idmef_overflow_alert_t **
 }
 
 /**
+ * idmef_alert_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_alert_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_alert_copy(const idmef_alert_t *src, idmef_alert_t *dst)
+{
+
+        if ( ptr->messageid )
+                prelude_string_clone(ptr->messageid, &dst->messageid);
+
+        {
+                prelude_list_t *n, *tmp;
+                idmef_analyzer_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->analyzer_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                        idmef_analyzer_clone(entry, &new);
+                        prelude_list_add_tail(&dst->analyzer_list, &new->list);
+                }
+        }
+
+        idmef_time_copy(&ptr->create_time, &dst->create_time);
+
+        if ( ptr->classification )
+                idmef_classification_clone(ptr->classification, &dst->classification);
+
+        if ( ptr->detect_time )
+                idmef_time_clone(ptr->detect_time, &dst->detect_time);
+
+        if ( ptr->analyzer_time )
+                idmef_time_clone(ptr->analyzer_time, &dst->analyzer_time);
+
+        {
+                prelude_list_t *n, *tmp;
+                idmef_source_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->source_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_source_t, list);
+                        idmef_source_clone(entry, &new);
+                        prelude_list_add_tail(&dst->source_list, &new->list);
+                }
+        }
+
+        {
+                prelude_list_t *n, *tmp;
+                idmef_target_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->target_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_target_t, list);
+                        idmef_target_clone(entry, &new);
+                        prelude_list_add_tail(&dst->target_list, &new->list);
+                }
+        }
+
+        if ( ptr->assessment )
+                idmef_assessment_clone(ptr->assessment, &dst->assessment);
+
+        {
+                prelude_list_t *n, *tmp;
+                idmef_additional_data_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->additional_data_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                        idmef_additional_data_clone(entry, &new);
+                        prelude_list_add_tail(&dst->additional_data_list, &new->list);
+                }
+        }
+
+        switch ( ptr->type ) {
+
+                case IDMEF_ALERT_TYPE_TOOL:
+                        idmef_tool_alert_clone(ptr->detail.tool_alert, &dst->detail.tool_alert);
+                        break;
+
+                case IDMEF_ALERT_TYPE_CORRELATION:
+                        idmef_correlation_alert_clone(ptr->detail.correlation_alert, &dst->detail.correlation_alert);
+                        break;
+
+                case IDMEF_ALERT_TYPE_OVERFLOW:
+                        idmef_overflow_alert_clone(ptr->detail.overflow_alert, &dst->detail.overflow_alert);
+                        break;
+
+                default:
+                        break;
+        }
+
+        return 0;
+}
+
+/**
+ * idmef_alert_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_alert_clone(idmef_alert_t *src, idmef_alert_t **dst)
+{
+        int ret;
+
+        ret = idmef_alert_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_alert_copy(src, *dst);
+}
+
+/**
  * idmef_heartbeat_new:
  * @ret: Pointer where to store the created #idmef_heartbeat_t object.
  *
@@ -14882,7 +16454,7 @@ void idmef_heartbeat_set_create_time(idmef_heartbeat_t *ptr, idmef_time_t *creat
 {
         idmef_time_destroy_internal(&ptr->create_time);
         if ( create_time ) {
-                memcpy(&ptr->create_time, create_time, sizeof (ptr->create_time));
+                memcpy(&ptr->create_time, create_time, sizeof(ptr->create_time));
                 free(create_time);
         }
 }
@@ -15087,6 +16659,75 @@ int idmef_heartbeat_new_additional_data(idmef_heartbeat_t *ptr, idmef_additional
 
 
 /**
+ * idmef_heartbeat_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_heartbeat_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_heartbeat_copy(const idmef_heartbeat_t *src, idmef_heartbeat_t *dst)
+{
+
+        if ( ptr->messageid )
+                prelude_string_clone(ptr->messageid, &dst->messageid);
+
+        {
+                prelude_list_t *n, *tmp;
+                idmef_analyzer_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->analyzer_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                        idmef_analyzer_clone(entry, &new);
+                        prelude_list_add_tail(&dst->analyzer_list, &new->list);
+                }
+        }
+
+        idmef_time_copy(&ptr->create_time, &dst->create_time);
+
+        if ( ptr->analyzer_time )
+                idmef_time_clone(ptr->analyzer_time, &dst->analyzer_time);
+
+        dst->heartbeat_interval_is_set = ptr->heartbeat_interval_is_set;
+
+        dst->heartbeat_interval = ptr->heartbeat_interval;
+
+        {
+                prelude_list_t *n, *tmp;
+                idmef_additional_data_t *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->additional_data_list, tmp, n) {
+                        entry = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                        idmef_additional_data_clone(entry, &new);
+                        prelude_list_add_tail(&dst->additional_data_list, &new->list);
+                }
+        }
+
+        return 0;
+}
+
+/**
+ * idmef_heartbeat_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_heartbeat_clone(idmef_heartbeat_t *src, idmef_heartbeat_t **dst)
+{
+        int ret;
+
+        ret = idmef_heartbeat_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_heartbeat_copy(src, *dst);
+}
+
+/**
  * idmef_message_new:
  * @ret: Pointer where to store the created #idmef_message_t object.
  *
@@ -15217,7 +16858,7 @@ void idmef_message_set_version(idmef_message_t *ptr, prelude_string_t *version)
 {
         prelude_string_destroy_internal(&ptr->version);
         if ( version ) {
-                memcpy(&ptr->version, version, sizeof (ptr->version));
+                memcpy(&ptr->version, version, sizeof(ptr->version));
                 free(version);
         }
 }
@@ -15411,6 +17052,57 @@ int idmef_message_new_heartbeat(idmef_message_t *ptr, idmef_heartbeat_t **ret)
         ptr->message.heartbeat = *ret;
 
         return 0;
+}
+
+/**
+ * idmef_message_copy:
+ * @src: Source of the copy.
+ * @dst: Where to copy the object.
+ *
+ * Copy a new #idmef_message_t object from @src to @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_message_copy(const idmef_message_t *src, idmef_message_t *dst)
+{
+
+        prelude_string_copy(&ptr->version, &dst->version);
+
+        switch ( ptr->type ) {
+
+                case IDMEF_MESSAGE_TYPE_ALERT:
+                        idmef_alert_clone(ptr->message.alert, &dst->message.alert);
+                        break;
+
+                case IDMEF_MESSAGE_TYPE_HEARTBEAT:
+                        idmef_heartbeat_clone(ptr->message.heartbeat, &dst->message.heartbeat);
+                        break;
+
+                default:
+                        break;
+        }
+
+        return 0;
+}
+
+/**
+ * idmef_message_clone:
+ * @src: Object to be cloned.
+ * @dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of @src, and store it in @dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_message_clone(idmef_message_t *src, idmef_message_t **dst)
+{
+        int ret;
+
+        ret = idmef_message_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_message_copy(src, *dst);
 }
 
 void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg)

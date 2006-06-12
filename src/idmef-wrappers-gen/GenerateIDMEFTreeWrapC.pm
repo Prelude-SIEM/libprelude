@@ -109,6 +109,9 @@ sub     header
 #define IDENT(name) uint64_t name
 
 
+#define prelude_string_copy(src, dst) if ( ! prelude_string_is_empty(src) ) prelude_string_copy_dup(src, dst)
+#define idmef_data_copy idmef_data_copy_dup
+
 
 static int get_value_from_string(idmef_value_t **value, prelude_string_t *str)
 {
@@ -466,6 +469,129 @@ int idmef_$struct->{short_typename}_new_child(void *p, idmef_class_child_id_t ch
 ");
 }
 
+
+sub     struct_copy 
+{
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
+
+    $self->output("
+/**
+ * idmef_$struct->{short_typename}_copy:
+ * \@src: Source of the copy.
+ * \@dst: Where to copy the object.
+ *
+ * Copy a new #$struct->{typename} object from \@src to \@dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct->{typename} *dst)
+\{
+");
+
+    foreach my $field ( @{ $struct->{field_list} } ) {
+        my $clone_func = "$field->{short_typename}_clone";
+	my $copy_func = "$field->{short_typename}_copy";
+
+        if ( ! ($field->{metatype} & &METATYPE_PRIMITIVE) ) {
+            $clone_func = "idmef_${clone_func}";
+	    $copy_func = "idmef_${copy_func}";
+        }
+        
+        if ( $field->{metatype} & &METATYPE_LIST ) {
+            $self->output("
+        \{
+                prelude_list_t *n, *tmp;
+                $field->{typename} *entry, *new;
+
+                prelude_list_for_each_safe(&ptr->$field->{name}, tmp, n) \{
+                        entry = prelude_list_entry(tmp, $field->{typename}, list);
+                        $clone_func(entry, &new);
+                        prelude_list_add_tail(&dst->$field->{name}, &new->list);
+                \}
+        \}
+");
+
+        } elsif ( $field->{metatype} & &METATYPE_UNION ) {
+            $self->output("
+        switch ( ptr->$field->{var} ) {
+");
+
+            foreach my $member ( @{ $field->{member_list} } ) {
+
+                $self->output("
+                case $member->{value}:
+                        idmef_$member->{short_typename}_clone(ptr->$field->{name}.$member->{name}, &dst->$field->{name}.$member->{name});
+                        break;
+");
+            }
+            $self->output("
+                default:
+                        break;
+        }
+");
+        } elsif ( $field->{metatype} & &METATYPE_STRUCT ) {
+            if ( $field->{ptr} ) {
+                $self->output("
+        if ( ptr->$field->{name} )
+                ${clone_func}(ptr->$field->{name}, &dst->$field->{name});
+");
+            } else {
+                $self->output("
+        $copy_func(&ptr->$field->{name}, &dst->$field->{name});
+");
+            }
+	} else {
+            if ( $field->{metatype} & &METATYPE_OPTIONAL_INT ) {
+                        $self->output("
+        dst->$field->{name}_is_set = ptr->$field->{name}_is_set;
+");
+	    }
+	    $self->output("
+        dst->$field->{name} = ptr->$field->{name};
+");
+	}
+    }
+
+    $self->output("
+        return 0;
+\}
+");
+}
+
+
+
+sub     struct_clone 
+{
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
+
+    $self->output("
+/**
+ * idmef_$struct->{short_typename}_clone:
+ * \@src: Object to be cloned.
+ * \@dst: Address where to store the pointer to the cloned object.
+ *
+ * Create a copy of \@src, and store it in \@dst.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int idmef_$struct->{short_typename}_clone($struct->{typename} *src, $struct->{typename} **dst)
+\{
+        int ret;
+
+        ret = idmef_$struct->{short_typename}_new(dst);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_$struct->{short_typename}_copy(src, *dst);
+\}
+");
+}
+
+
 sub     struct_destroy_internal
 {
     my  $self = shift;
@@ -743,7 +869,7 @@ void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr
 \{
         ${destroy_internal_func}(&ptr->$field->{name});
         if ( $field_name ) {
-                memcpy(&ptr->$field->{name}, $field_name, sizeof (ptr->$field->{name}));
+                memcpy(&ptr->$field->{name}, $field_name, sizeof(ptr->$field->{name}));
                 free($field->{name});
         }
 \}
@@ -1096,6 +1222,8 @@ sub	struct_func
     $self->struct_destroy_internal($tree, $struct);
     $self->struct_destroy($tree, $struct);
     $self->struct_fields($tree, $struct);
+    $self->struct_copy($tree, $struct);
+    $self->struct_clone($tree, $struct);
 }
 
 sub	enum
