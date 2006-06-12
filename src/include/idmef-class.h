@@ -70,4 +70,12 @@ const char *idmef_class_get_name(idmef_class_id_t classid);
 
 const char *idmef_class_get_child_name(idmef_class_id_t classid, idmef_class_child_id_t child);
 
+
+/*
+ *
+ */
+int idmef_class_copy(idmef_class_id_t class, const void *src, void *dst);
+
+int idmef_class_clone(idmef_class_id_t class, const void *src, void **dst);
+
 #endif /* _LIBPRELUDE_IDMEF_CLASS_H */

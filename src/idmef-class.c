@@ -161,6 +161,24 @@ int idmef_class_new_child(void *ptr, idmef_class_id_t class, idmef_class_child_i
 
 
 
+int idmef_class_copy(idmef_class_id_t class, const void *src, void *dst)
+{
+        if ( class < 0 )
+                return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
+
+        return object_data[class].copy(src, dst);
+}
+
+
+
+int idmef_class_clone(idmef_class_id_t class, const void *src, void **dst)
+{
+        if ( class < 0 )
+                return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
+
+        return object_data[class].clone(src, dst);
+}
+
 
 const char *idmef_class_get_name(idmef_class_id_t class)
 {
