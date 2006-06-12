@@ -76,7 +76,6 @@ int idmef_additional_data_set_byte_string_nodup(idmef_additional_data_t *ad, uns
 /*
  * copy / clone / destroy
  */
-int idmef_additional_data_clone(idmef_additional_data_t *src, idmef_additional_data_t **dst);
 int idmef_additional_data_copy_ref(idmef_additional_data_t *src, idmef_additional_data_t *dst);
 int idmef_additional_data_copy_dup(idmef_additional_data_t *src, idmef_additional_data_t *dst);
 

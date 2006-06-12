@@ -399,26 +399,6 @@ int idmef_additional_data_copy_dup(idmef_additional_data_t *src, idmef_additiona
 
 
 
-
-int idmef_additional_data_clone(idmef_additional_data_t *src, idmef_additional_data_t **dst)
-{
-        int ret;
-        
-        ret = idmef_additional_data_new(dst);
-        if ( ret < 0 )
-                return ret;
-
-        ret = idmef_additional_data_copy_dup(src, *dst);
-	if ( ret < 0 ) {
-		idmef_additional_data_destroy(*dst);
-		return ret;
-	}
-
-        return ret;
-}
-
-
-
 size_t idmef_additional_data_get_len(idmef_additional_data_t *data)
 {
         return idmef_data_get_len(idmef_additional_data_get_data(data));
