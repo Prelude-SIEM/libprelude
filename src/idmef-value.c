@@ -497,6 +497,20 @@ static int idmef_value_enum_clone(const idmef_value_t *val, idmef_value_t **dst)
 }
 
 
+static int idmef_value_class_clone(const idmef_value_t *val, idmef_value_t **dst)
+{
+        int ret;
+        
+	ret = idmef_value_create(dst, IDMEF_VALUE_TYPE_CLASS);
+	if ( ret < 0 )
+		return ret;
+
+	(*dst)->class = val->class;
+        return idmef_class_clone(val->class, val->type.data.object_val, &(*dst)->type.data.object_val);
+}
+
+
+
 int idmef_value_clone(const idmef_value_t *val, idmef_value_t **dst)
 {
         int ret;
@@ -507,6 +521,9 @@ int idmef_value_clone(const idmef_value_t *val, idmef_value_t **dst)
 	if ( val->type.id == IDMEF_VALUE_TYPE_ENUM )
 		return idmef_value_enum_clone(val, dst);
 
+        if ( val->type.id == IDMEF_VALUE_TYPE_CLASS )
+                return idmef_value_class_clone(val, dst);
+        
 	ret = idmef_value_create(dst, val->type.id);
 	if ( ret < 0 )
 		return ret;
@@ -576,7 +593,10 @@ int idmef_value_print(const idmef_value_t *val, prelude_io_t *fd)
 
 
 int idmef_value_get(const idmef_value_t *val, void *res)
-{        
+{
+        if ( val->type.id == IDMEF_VALUE_TYPE_CLASS )
+                return idmef_class_copy(val->class, val->type.data.object_val, res);
+                
         return idmef_value_type_copy(&val->type, res);
 }
 
