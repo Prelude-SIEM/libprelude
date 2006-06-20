@@ -91,6 +91,8 @@ void *idmef_value_get_object(const idmef_value_t *value);
 
 int idmef_value_iterate(idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra);
 
+int idmef_value_iterate_reversed(idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra);
+         
 idmef_value_t *idmef_value_get_nth(idmef_value_t *val, int n);
 
 int idmef_value_get_count(const idmef_value_t *val);

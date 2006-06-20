@@ -412,7 +412,8 @@ void *idmef_value_get_object(const idmef_value_t *value)
 
 
 
-int idmef_value_iterate(idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra)
+int idmef_value_iterate(idmef_value_t *value,
+                        int (*callback)(idmef_value_t *ptr, void *extra), void *extra)
 {
 	int i, ret;
 
@@ -423,12 +424,31 @@ int idmef_value_iterate(idmef_value_t *value, int (*callback)(idmef_value_t *ptr
                 
                 ret = callback(value->list[i], extra);
                 if ( ret < 0 )
-                        return -1;
+                        return ret;
         }
 		
 	return 0;
 }
 
+
+
+int idmef_value_iterate_reversed(idmef_value_t *value,
+                                 int (*callback)(idmef_value_t *ptr, void *extra), void *extra)
+{
+	int i, ret;
+
+        if ( ! value->list )
+                return callback(value, extra);
+        
+        for ( i = value->list_elems - 1; i >= 0; i-- ) {
+                
+                ret = callback(value->list[i], extra);
+                if ( ret < 0 )
+                        return ret;
+        }
+		
+	return 0;
+}
 
 
 
