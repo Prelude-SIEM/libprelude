@@ -180,6 +180,17 @@ int idmef_class_clone(idmef_class_id_t class, const void *src, void **dst)
 }
 
 
+
+int idmef_class_destroy(idmef_class_id_t class, void *obj)
+{
+        if ( class < 0 )
+                return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
+        
+        object_data[class].destroy(obj);
+}
+
+
+
 const char *idmef_class_get_name(idmef_class_id_t class)
 {
 	return (class < 0) ? NULL : object_data[class].name;
