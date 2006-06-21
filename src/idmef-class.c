@@ -187,6 +187,8 @@ int idmef_class_destroy(idmef_class_id_t class, void *obj)
                 return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
         
         object_data[class].destroy(obj);
+
+        return 0;
 }
 
 

@@ -74,10 +74,10 @@ const char *idmef_class_get_child_name(idmef_class_id_t classid, idmef_class_chi
 /*
  *
  */
-int idmef_class_copy(idmef_class_id_t class, const void *src, void *dst);
+int idmef_class_copy(idmef_class_id_t classid, const void *src, void *dst);
 
-int idmef_class_clone(idmef_class_id_t class, const void *src, void **dst);
+int idmef_class_clone(idmef_class_id_t classid, const void *src, void **dst);
 
-int idmef_class_destroy(idmef_class_id_t class, void *obj);
+int idmef_class_destroy(idmef_class_id_t classid, void *obj);
 
 #endif /* _LIBPRELUDE_IDMEF_CLASS_H */
