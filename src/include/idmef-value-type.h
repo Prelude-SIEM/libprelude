@@ -98,6 +98,8 @@ int idmef_value_type_compare(const idmef_value_type_t *type1, const idmef_value_
 
 int idmef_value_type_check_operator(const idmef_value_type_t *type, idmef_criterion_operator_t op);
 
+const char *idmef_value_type_to_string(idmef_value_type_id_t type);
+         
 #ifdef __cplusplus
  }
 #endif

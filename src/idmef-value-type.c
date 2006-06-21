@@ -451,11 +451,11 @@ static int is_type_valid(idmef_value_type_id_t type)
 
 
 
-static const char *type_id_to_string(idmef_value_type_id_t type)
+const char *idmef_value_type_to_string(idmef_value_type_id_t type)
 {
         return ops_tbl[type].name;
-        
 }
+
 
 
 int idmef_value_type_clone(const idmef_value_type_t *src, idmef_value_type_t *dst)
@@ -471,7 +471,7 @@ int idmef_value_type_clone(const idmef_value_type_t *src, idmef_value_type_t *ds
         if ( ! ops_tbl[dst->id].clone )
                 return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_CLONE_UNAVAILABLE,
                                              "Object type '%s' does not support clone operation",
-                                             type_id_to_string(dst->id));
+                                             idmef_value_type_to_string(dst->id));
         
         return ops_tbl[dst->id].clone(src, dst, ops_tbl[dst->id].len);
 }
@@ -490,7 +490,7 @@ int idmef_value_type_copy(const idmef_value_type_t *src, void *dst)
         if ( ! ops_tbl[src->id].copy )
                 return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COPY_UNAVAILABLE,
                                              "Object type '%s' does not support copy operation",
-                                             type_id_to_string(src->id));
+                                             idmef_value_type_to_string(src->id));
         
         return ops_tbl[src->id].copy(src, dst, ops_tbl[src->id].len);
 }
@@ -516,7 +516,7 @@ int idmef_value_type_compare(const idmef_value_type_t *type1,
         if ( ! ops_tbl[type1->id].compare )
                 return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_UNAVAILABLE,
                                              "Object type '%s' does not support compare operation",
-                                             type_id_to_string(type1->id));
+                                             idmef_value_type_to_string(type1->id));
         
         ret = ops_tbl[type1->id].compare(type1, type2, ops_tbl[type1->id].len, op & ~IDMEF_CRITERION_OPERATOR_NOT);
         if ( op & IDMEF_CRITERION_OPERATOR_NOT )
@@ -539,7 +539,7 @@ int idmef_value_type_read(idmef_value_type_t *dst, const char *buf)
         if ( ! ops_tbl[dst->id].read )
                 return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_READ_UNAVAILABLE,
                                              "Object type '%s' does not support read operation",
-                                             type_id_to_string(dst->id));
+                                             idmef_value_type_to_string(dst->id));
         
         ret = ops_tbl[dst->id].read(dst, buf);
         return (ret < 0) ? ret : 0;
@@ -559,7 +559,7 @@ int idmef_value_type_write(const idmef_value_type_t *src, prelude_string_t *out)
         if ( ! ops_tbl[src->id].write )
                 return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_WRITE_UNAVAILABLE,
                                              "Object type '%s' does not support write operation",
-                                             type_id_to_string(src->id));
+                                             idmef_value_type_to_string(src->id));
         
         return ops_tbl[src->id].write(src, out);
 }
@@ -596,7 +596,5 @@ int idmef_value_type_check_operator(const idmef_value_type_t *type, idmef_criter
         
         return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CRITERION_UNSUPPORTED_OPERATOR,
                                      "Object type '%s' does not support operator '%s'",
-                                     type_id_to_string(type->id), idmef_criterion_operator_to_string(op));
-        
-        return prelude_error(PRELUDE_ERROR_IDMEF_CRITERION_UNSUPPORTED_OPERATOR);
+                                     idmef_value_type_to_string(type->id), idmef_criterion_operator_to_string(op));
 }
