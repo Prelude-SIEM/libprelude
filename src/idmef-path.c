@@ -381,7 +381,6 @@ static int _idmef_path_set(idmef_path_t *path, idmef_message_t *message, idmef_v
 
 static int unroll_listed_value(idmef_value_t *value, void *extra)
 {
-        int ret;
         value_list_t *val = extra;
         
         if ( idmef_value_is_list(value) )
