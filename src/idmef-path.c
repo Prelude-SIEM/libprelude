@@ -59,6 +59,7 @@
 #define INDEX_FORBIDDEN (INT_MIN + 1)
 
 
+
 typedef struct idmef_path_element {
 
         int index;
@@ -79,6 +80,18 @@ struct idmef_path {
         
         idmef_path_element_t elem[MAX_DEPTH];
 };
+
+
+typedef struct {
+        int index;
+        idmef_path_t *path;
+        idmef_message_t *message;
+        prelude_bool_t reversed;
+        prelude_bool_t delete_list;
+} value_list_t;
+
+
+static int do_idmef_value_iterate(idmef_value_t *value, value_list_t *vl);
 
 
 static prelude_bool_t flush_cache = FALSE;
@@ -312,6 +325,87 @@ int idmef_path_get(idmef_path_t *path, idmef_message_t *message, idmef_value_t *
 
 
 
+static int _idmef_path_set(idmef_path_t *path, idmef_message_t *message, idmef_value_t *value, prelude_bool_t *delete_list)
+{
+        int i, ret, index;
+        void *ptr, *child;
+        idmef_value_type_id_t tid;
+        idmef_path_element_t *elem;
+        idmef_class_id_t class, parent_class;
+        
+        ptr = message;
+        parent_class = class = IDMEF_CLASS_ID_MESSAGE;
+        
+        for ( i = 0; i < path->depth; i++ ) {
+                elem = &path->elem[i];
+                
+                index = elem->index;
+
+                /*
+                 * We don't want to allow the user to set a single field within a listed
+                 * object without specifying the object index: alert.source.interface = "blah".
+                 */
+                if ( i + 1 < path->depth && index == INDEX_UNDEFINED && idmef_class_is_child_list(class, elem->position) )
+                        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_PATH_MISS_INDEX,
+                                                     "IDMEF path element '%s' need indexing",
+                                                     idmef_class_get_name(elem->class));
+
+                if ( index == INDEX_UNDEFINED && idmef_class_is_child_list(class, elem->position) ) {
+                        index = IDMEF_LIST_APPEND;
+                        if ( *delete_list ) {
+                                *delete_list = FALSE;
+                                idmef_class_destroy(class, ptr);
+                        }
+                }
+                
+                ret = idmef_class_new_child(ptr, class, elem->position, index, &child);
+                if ( ret < 0 )
+                        return ret;
+                
+                ptr = child;
+                parent_class = class;
+                
+                class = idmef_class_get_child_class(class, elem->position);                
+                assert( ! (class < 0 && i < path->depth - 1) );
+        }
+
+        tid = idmef_class_get_child_value_type(parent_class, path->elem[path->depth - 1].position);
+        if ( tid != idmef_value_get_type(value) )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "IDMEF path copy of type '%s' to '%s' is forbidden",
+                                             idmef_value_type_to_string(idmef_value_get_type(value)),
+                                             idmef_value_type_to_string(tid));
+        
+        return idmef_value_get(value, ptr);
+}
+
+
+static int unroll_listed_value(idmef_value_t *value, void *extra)
+{
+        int ret;
+        value_list_t *val = extra;
+        
+        if ( idmef_value_is_list(value) )
+                return do_idmef_value_iterate(value, extra);
+
+        return _idmef_path_set(val->path, val->message, value, &val->delete_list);
+}
+
+
+static int do_idmef_value_iterate(idmef_value_t *value, value_list_t *vl)
+{
+        int ret;
+
+        if ( vl->reversed )
+                ret = idmef_value_iterate_reversed(value, unroll_listed_value, vl);
+        else
+                ret = idmef_value_iterate(value, unroll_listed_value, vl);
+
+        return ret;
+}
+
+
+
+
 /**
  * idmef_path_set:
  * @path: Pointer to a #idmef_path_t object.
@@ -324,41 +418,26 @@ int idmef_path_get(idmef_path_t *path, idmef_message_t *message, idmef_value_t *
  */
 int idmef_path_set(idmef_path_t *path, idmef_message_t *message, idmef_value_t *value)
 {
-        int i, ret;
-        void *ptr, *child;
-        idmef_value_type_id_t tid;
-        idmef_path_element_t *elem;
-        idmef_class_id_t class, parent_class;
+        prelude_bool_t delete_list = TRUE;
+        idmef_path_element_t *elem = &path->elem[path->depth - 1];
         
-        ptr = message;
-        parent_class = class = IDMEF_CLASS_ID_MESSAGE;
-        
-        for ( i = 0; i < path->depth; i++ ) {
-                elem = &path->elem[i];
+        /*
+         * Allow raw list copy (example: alert.source = alert.source,
+         * alert.source(>>) = alert.source, alert.source(<<) = alert.source.
+         */
+        if ( idmef_value_is_list(value) ) {
+                value_list_t vl;
                 
-                if ( elem->index == INDEX_UNDEFINED && idmef_class_is_child_list(class, elem->position) )
-                        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_PATH_MISS_INDEX,
-                                                     "IDMEF path element '%s' need indexing",
-                                                     idmef_class_get_name(elem->class));
-                
-                ret = idmef_class_new_child(ptr, class, elem->position, elem->index, &child);
-                if ( ret < 0 )
-                        return ret;
-                
-                ptr = child;
-                parent_class = class;
-                
-                class = idmef_class_get_child_class(class, elem->position);                
-                if ( class < 0 && i < path->depth - 1 )
-                        abort();
+                vl.path = path;
+                vl.message = message;
+                vl.delete_list = TRUE;
+                vl.reversed = (elem->index == IDMEF_LIST_PREPEND) ? TRUE : FALSE;
+                                        
+                return do_idmef_value_iterate(value, &vl);
         }
 
-        tid = idmef_class_get_child_value_type(parent_class, path->elem[path->depth - 1].position);
-        
-        if ( idmef_value_get_type(value) != tid )
-                abort();
-        
-        return idmef_value_get(value, ptr);
+                
+        return _idmef_path_set(path, message, value, &delete_list);
 }
 
 
