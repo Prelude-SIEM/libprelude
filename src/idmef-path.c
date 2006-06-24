@@ -545,12 +545,13 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
                         return child;
                 
                 path->elem[depth].position = child;
-                
+
+                if ( ptr2 )
+                        *ptr2 = '(';
+
                 if ( index == INDEX_UNDEFINED )
                         path->elem[depth].index = idmef_class_is_child_list(class, child) ? INDEX_UNDEFINED : INDEX_FORBIDDEN;
-                else {
-                        *ptr2 = '(';
-                        
+                else {                        
                         if ( ! idmef_class_is_child_list(class, child) )
                                 return prelude_error_verbose(PRELUDE_ERROR_IDMEF_PATH_INDEX_FORBIDDEN,
                                                              "Invalid IDMEF path element '%s': indexing not supported", ptr);
