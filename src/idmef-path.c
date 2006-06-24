@@ -354,7 +354,7 @@ static int _idmef_path_set(idmef_path_t *path, idmef_message_t *message, idmef_v
                         index = IDMEF_LIST_APPEND;
                         if ( *delete_list ) {
                                 *delete_list = FALSE;
-                                idmef_class_destroy(class, ptr);
+                                idmef_class_destroy(idmef_class_get_child_class(class, elem->position), ptr);
                         }
                 }
                 
