@@ -301,26 +301,25 @@ static int idmef_path_get_internal(idmef_value_t **value, idmef_path_t *path,
                 *value = parent;
                 return 1;
         }
-
+        
         return (ret = idmef_value_new_class(value, parent_class, parent) < 0) ? ret : 1;
 }
 
 
-
-/**
- * idmef_path_get:
- * @path: Pointer to a #idmef_path_t object.
- * @message: Pointer to a #idmef_message_t object.
- * @ret: Address where to store the retrieved #idmef_value_t.
- *
- * This function retrieves the value for @path within @message,
- * and stores it into the provided @ret address of type #idmef_value_t.
- *
- * Returns: The number of element retrieved, or a negative value if an error occured.
- */
-int idmef_path_get(idmef_path_t *path, idmef_message_t *message, idmef_value_t **ret)
+static void delete_listed_child(void *parent, idmef_class_id_t class, idmef_path_element_t *elem)
 {
-        return idmef_path_get_internal(ret, path, 0, message, IDMEF_CLASS_ID_MESSAGE);
+        int ret;
+        void *obj;
+        prelude_list_t *head, *tmp, *bkp;
+
+        ret = idmef_class_get_child(parent, class, elem->position, (void *) &head);
+        if ( ret < 0 )
+                return;
+         
+         prelude_list_for_each_safe(head, tmp, bkp) {
+                 obj = prelude_linked_object_get_object(tmp);
+                 idmef_class_destroy(idmef_class_get_child_class(class, elem->position), obj);
+         }
 }
 
 
@@ -354,7 +353,7 @@ static int _idmef_path_set(idmef_path_t *path, idmef_message_t *message, idmef_v
                         index = IDMEF_LIST_APPEND;
                         if ( *delete_list ) {
                                 *delete_list = FALSE;
-                                idmef_class_destroy(idmef_class_get_child_class(class, elem->position), ptr);
+                                delete_listed_child(ptr, class, elem);
                         }
                 }
                 
@@ -402,6 +401,24 @@ static int do_idmef_value_iterate(idmef_value_t *value, value_list_t *vl)
         return ret;
 }
 
+
+
+
+/**
+ * idmef_path_get:
+ * @path: Pointer to a #idmef_path_t object.
+ * @message: Pointer to a #idmef_message_t object.
+ * @ret: Address where to store the retrieved #idmef_value_t.
+ *
+ * This function retrieves the value for @path within @message,
+ * and stores it into the provided @ret address of type #idmef_value_t.
+ *
+ * Returns: The number of element retrieved, or a negative value if an error occured.
+ */
+int idmef_path_get(idmef_path_t *path, idmef_message_t *message, idmef_value_t **ret)
+{
+        return idmef_path_get_internal(ret, path, 0, message, IDMEF_CLASS_ID_MESSAGE);
+}
 
 
 
