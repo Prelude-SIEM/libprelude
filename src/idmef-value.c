@@ -80,10 +80,9 @@ struct idmef_value {
         int list_elems;
         int list_max;
         int refcount;
-        int own_data;
+        prelude_bool_t own_data;
         idmef_value_t **list;
         idmef_value_type_t type;
-        idmef_class_id_t class;
 };
 
 
@@ -108,9 +107,9 @@ static int idmef_value_create(idmef_value_t **ret, idmef_value_type_id_t type_id
                 return prelude_error_from_errno(errno);
         
         (*ret)->refcount = 1;
-        (*ret)->own_data = 1;
+        (*ret)->own_data = TRUE;
         (*ret)->type.id = type_id;
-                
+        
         return 0;
 }
 
@@ -135,12 +134,20 @@ idmef_value_get_decl(INT32, int32, int32_t)
 idmef_value_get_decl(UINT32, uint32, uint32_t)
 idmef_value_get_decl(INT64, int64, int64_t)
 idmef_value_get_decl(UINT64, uint64, uint64_t)
-idmef_value_get_decl(ENUM, enum, int)
 idmef_value_get_decl(FLOAT, float, float)
 idmef_value_get_decl(DOUBLE, double, double)
 idmef_value_get_decl(STRING, string, prelude_string_t *)
 idmef_value_get_decl(DATA, data, idmef_data_t *)
 idmef_value_get_decl(TIME, time, idmef_time_t *)
+
+
+int idmef_value_get_enum(const idmef_value_t *value)
+{
+        if ( value->type.id != IDMEF_VALUE_TYPE_ENUM )
+                return 0;
+
+        return value->type.data.enum_val.value;
+}
 
 
 
@@ -152,7 +159,7 @@ int idmef_value_new_string(idmef_value_t **value, prelude_string_t *string)
 	if ( ret < 0 )
 		return ret;
 	
-	(*value)->type.data.string_val = string;
+	(*value)->type.data.string_val = prelude_string_ref(string);
 	
 	return ret;
 }
@@ -167,7 +174,7 @@ int idmef_value_new_time(idmef_value_t **value, idmef_time_t *time)
 	if ( ret < 0 )
 		return ret;
 
-	(*value)->type.data.time_val = time;
+	(*value)->type.data.time_val = idmef_time_ref(time);
 
 	return ret;
 }
@@ -182,7 +189,7 @@ int idmef_value_new_data(idmef_value_t **value, idmef_data_t *data)
 	if ( ret < 0 )
 		return ret;
 
-	(*value)->type.data.data_val = data;
+	(*value)->type.data.data_val = idmef_data_ref(data);
 
 	return ret;
 }
@@ -197,9 +204,10 @@ int idmef_value_new_class(idmef_value_t **value, idmef_class_id_t class, void *o
 	ret = idmef_value_create(value, IDMEF_VALUE_TYPE_CLASS);
         if ( ret < 0 )
 		return ret;
-        
-	(*value)->class = class;
-	(*value)->type.data.object_val = object;
+
+        idmef_class_ref(class, object);
+	(*value)->type.data.class_val.object = object;
+        (*value)->type.data.class_val.class_id = class;
         
 	return ret;
 }
@@ -213,9 +221,9 @@ int idmef_value_new_enum_from_numeric(idmef_value_t **value, idmef_class_id_t cl
 	ret = idmef_value_create(value, IDMEF_VALUE_TYPE_ENUM);
 	if ( ret < 0 )
 		return ret;
-        
-	(*value)->class = class;
-	(*value)->type.data.enum_val = val;
+
+        (*value)->type.data.enum_val.value = val;
+	(*value)->type.data.enum_val.class_id = class;
 
 	return ret;
 }
@@ -237,10 +245,14 @@ int idmef_value_new_enum_from_string(idmef_value_t **value, idmef_class_id_t cla
 
 int idmef_value_new_enum(idmef_value_t **value, idmef_class_id_t class, const char *buf)
 {
+        int ret;
+
         if ( string_isdigit(buf) == 0 )
-                return idmef_value_new_enum_from_numeric(value, class, atoi(buf));
+                ret = idmef_value_new_enum_from_numeric(value, class, atoi(buf));
         else
-		return idmef_value_new_enum_from_string(value, class, buf);
+		ret = idmef_value_new_enum_from_string(value, class, buf);
+        
+        return ret;
 }
 
 
@@ -287,7 +299,7 @@ int idmef_value_list_add(idmef_value_t *list, idmef_value_t *item)
 
 prelude_bool_t idmef_value_is_list(const idmef_value_t *list)
 {
-	return (list->list ? TRUE : FALSE);
+	return (list->list) ? TRUE : FALSE;
 }
 
 
@@ -398,15 +410,20 @@ idmef_value_type_id_t idmef_value_get_type(const idmef_value_t *value)
 
 idmef_class_id_t idmef_value_get_class(const idmef_value_t *value)
 {
-	return (value->type.id == IDMEF_VALUE_TYPE_CLASS ||
-                value->type.id == IDMEF_VALUE_TYPE_ENUM) ? value->class : -1;
+        if ( value->type.id == IDMEF_VALUE_TYPE_CLASS )
+                return value->type.data.class_val.class_id;
+
+        else if ( value->type.id == IDMEF_VALUE_TYPE_ENUM )
+                return value->type.data.enum_val.class_id;
+
+        return -1;
 }
 
 
 
 void *idmef_value_get_object(const idmef_value_t *value)
 {
-	return (value->type.id == IDMEF_VALUE_TYPE_CLASS) ? value->type.data.object_val : NULL;
+	return (value->type.id == IDMEF_VALUE_TYPE_CLASS) ? value->type.data.class_val.object : NULL;
         
 }
 
@@ -502,35 +519,6 @@ static int idmef_value_list_clone(const idmef_value_t *val, idmef_value_t **dst)
 
 
 
-static int idmef_value_enum_clone(const idmef_value_t *val, idmef_value_t **dst)
-{
-        int ret;
-        
-	ret = idmef_value_create(dst, IDMEF_VALUE_TYPE_ENUM);
-	if ( ret < 0 )
-		return ret;
-
-	(*dst)->class = val->class;
-	(*dst)->type.data.enum_val = val->type.data.enum_val;
-
-	return 0;
-}
-
-
-static int idmef_value_class_clone(const idmef_value_t *val, idmef_value_t **dst)
-{
-        int ret;
-        
-	ret = idmef_value_create(dst, IDMEF_VALUE_TYPE_CLASS);
-	if ( ret < 0 )
-		return ret;
-
-	(*dst)->class = val->class;
-        return idmef_class_clone(val->class, val->type.data.object_val, &(*dst)->type.data.object_val);
-}
-
-
-
 int idmef_value_clone(const idmef_value_t *val, idmef_value_t **dst)
 {
         int ret;
@@ -538,12 +526,6 @@ int idmef_value_clone(const idmef_value_t *val, idmef_value_t **dst)
 	if ( val->list )
 		return idmef_value_list_clone(val, dst);
 
-	if ( val->type.id == IDMEF_VALUE_TYPE_ENUM )
-		return idmef_value_enum_clone(val, dst);
-
-        if ( val->type.id == IDMEF_VALUE_TYPE_CLASS )
-                return idmef_value_class_clone(val, dst);
-        
 	ret = idmef_value_create(dst, val->type.id);
 	if ( ret < 0 )
 		return ret;
@@ -568,16 +550,7 @@ idmef_value_t *idmef_value_ref(idmef_value_t *val)
 
 int idmef_value_to_string(const idmef_value_t *val, prelude_string_t *out)
 {
-	int ret;
-        const char *str;
-        
-	if ( idmef_value_get_type(val) == IDMEF_VALUE_TYPE_ENUM ) {
-                str = idmef_class_enum_to_string(idmef_value_get_class(val), idmef_value_get_enum(val));
-                ret = prelude_string_cat(out, str);
-	} else
-		ret = idmef_value_type_write(&val->type, out);
-
-	return ret;
+        return idmef_value_type_write(&val->type, out);
 }
 
 
@@ -585,38 +558,25 @@ int idmef_value_to_string(const idmef_value_t *val, prelude_string_t *out)
 int idmef_value_print(const idmef_value_t *val, prelude_io_t *fd)
 {
         int ret;
-        const char *str;
         prelude_string_t *out;
         
-        if ( idmef_value_get_type(val) == IDMEF_VALUE_TYPE_ENUM ) {
-                str = idmef_class_enum_to_string(idmef_value_get_class(val), idmef_value_get_enum(val));
-                ret = prelude_io_write(fd, str, strlen(str));
+        ret = prelude_string_new(&out);
+        if ( ret < 0 )
+                return ret;
+
+        ret = idmef_value_type_write(&val->type, out);
+        if ( ret < 0 ) {
+                prelude_string_destroy(out);
+                return ret;
         }
 
-        else {
-                ret = prelude_string_new(&out);
-                if ( ret < 0 )
-                        return ret;
-
-                ret = idmef_value_type_write(&val->type, out);
-                if ( ret < 0 ) {
-                        prelude_string_destroy(out);
-                        return ret;
-                }
-
-                ret = prelude_io_write(fd, prelude_string_get_string(out), prelude_string_get_len(out));
-        }
-
-        return ret;
+        return prelude_io_write(fd, prelude_string_get_string(out), prelude_string_get_len(out));
 }
 
 
 
 int idmef_value_get(const idmef_value_t *val, void *res)
-{
-        if ( val->type.id == IDMEF_VALUE_TYPE_CLASS )
-                return idmef_class_copy(val->class, val->type.data.object_val, res);
-                
+{                
         return idmef_value_type_copy(&val->type, res);
 }
 
@@ -713,9 +673,9 @@ void idmef_value_destroy(idmef_value_t *val)
 	/*
          * Actual destructor starts here
          */
-	if ( val->own_data )
-		idmef_value_type_destroy(&val->type);
-
+        if ( val->own_data )
+                idmef_value_type_destroy(&val->type);
+        
 	free(val);
 }
 
