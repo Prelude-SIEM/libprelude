@@ -208,10 +208,8 @@ static int idmef_path_get_list_internal(idmef_value_t **value_list,
                         ret = idmef_path_get_internal(&value, path, depth, tmp, parent_class);
                 else {                        
                         ret = idmef_value_new(&value, path->elem[depth - 1].value_type, tmp);                        
-                        if ( ret == 0 ) {
-                                idmef_value_dont_have_own_data(value);
+                        if ( ret == 0 )
                                 ret = 1;
-                        }
                 }
 
                 if ( ret == 0 )
@@ -301,7 +299,7 @@ static int idmef_path_get_internal(idmef_value_t **value, idmef_path_t *path,
                 *value = parent;
                 return 1;
         }
-        
+
         return (ret = idmef_value_new_class(value, parent_class, parent) < 0) ? ret : 1;
 }
 
