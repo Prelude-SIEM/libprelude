@@ -121,6 +121,7 @@ typedef struct \{
 	const char *(*to_string)(int val);
         int (*copy)(const void *src, void *dst);
         int (*clone)(const void *src, void **dst);
+        void *(*ref)(void *src);
         void (*destroy)(void *obj);
 \} object_data_t;
 
@@ -145,6 +146,7 @@ const object_data_t object_data[] = \{
 		      "NULL, ",
 		      "(void *) idmef_$obj->{short_typename}_copy, ",
 		      "(void *) idmef_$obj->{short_typename}_clone, ",
+		      "(void *) idmef_$obj->{short_typename}_ref, ",
                       "(void *) idmef_$obj->{short_typename}_destroy \}, ",
 		      "/* ID: $obj->{id} */\n") if ( $obj->{obj_type} == &OBJ_STRUCT );
 
@@ -155,6 +157,7 @@ const object_data_t object_data[] = \{
 		      "NULL, ",
 		      "(void *) idmef_$obj->{short_typename}_to_numeric, ",
 		      "(void *) idmef_$obj->{short_typename}_to_string, ",
+		      "NULL, ",
 		      "NULL, ",
 		      "NULL, ",
 		      "\}, ",
