@@ -329,11 +329,13 @@ int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message
         if ( ret < 0 )
                 return ret;
         
-        if ( ret == 0 ) 
+        if ( ret == 0 )
 		return (criterion->operator == IDMEF_CRITERION_OPERATOR_NULL) ? 1 : 0;
         
-        if ( ! criterion->value )
+        if ( ! criterion->value ) {
+                idmef_value_destroy(value);
                 return (criterion->operator == (IDMEF_CRITERION_OPERATOR_NULL|IDMEF_CRITERION_OPERATOR_NOT)) ? 1 : 0;
+        }
         
         ret = idmef_criterion_value_match(criterion->value, value, criterion->operator);
         idmef_value_destroy(value);
