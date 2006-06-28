@@ -157,7 +157,6 @@ GENERIC_TWO_BASES_RW_FUNC("%u", "%x", uint32, uint32_t)
 GENERIC_TWO_BASES_RW_FUNC("%" PRELUDE_PRId64, "%" PRELUDE_PRIx64, int64, int64_t)
 GENERIC_TWO_BASES_RW_FUNC("%" PRELUDE_PRIu64, "%" PRELUDE_PRIx64, uint64, uint64_t)
 
-GENERIC_ONE_BASE_RW_FUNC("%d", "%d", enum, enum)
 GENERIC_ONE_BASE_RW_FUNC("%f", "%f", float, float)
 GENERIC_ONE_BASE_RW_FUNC("%lf", "%f", double, double)
 
@@ -203,6 +202,37 @@ static int generic_compare(const idmef_value_type_t *t1, const idmef_value_type_
         return -1;
 }
 
+
+
+/*
+ * Enum specific
+ */
+static int enum_copy(const idmef_value_type_t *src, void *dst, size_t size)
+{
+        *(int *)dst = src->data.enum_val.value;
+        return 0;
+}
+
+
+static int enum_read(idmef_value_type_t *dst, const char *buf)
+{
+        int ret;
+        
+        ret = sscanf(buf, "%d", &(dst)->data.enum_val.value);
+
+        return (ret == 1) ? 0 : prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE, "Reading enum value failed");
+}
+
+
+
+static int enum_write(const idmef_value_type_t *src, prelude_string_t *out)
+{
+        const char *str;
+        
+        str = idmef_class_enum_to_string(src->data.enum_val.class_id, src->data.enum_val.value);
+
+        return prelude_string_cat(out, str);
+}
 
 
 
@@ -405,6 +435,28 @@ static void data_destroy(idmef_value_type_t *type)
 
 
 
+/*
+ *
+ */
+static int class_copy(const idmef_value_type_t *src, void *dst, size_t size)
+{
+        return idmef_class_copy(src->data.class_val.class_id, src->data.class_val.object, dst);
+}
+
+
+static int class_clone(const idmef_value_type_t *src, idmef_value_type_t *dst, size_t size)
+{
+        dst->data.class_val.class_id = src->data.class_val.class_id;
+        return idmef_class_clone(src->data.class_val.class_id, src->data.class_val.object, &dst->data.class_val.object);
+}
+
+                        
+static void class_destroy(idmef_value_type_t *type)
+{
+        idmef_class_destroy(type->data.class_val.class_id, type->data.class_val.object);
+}
+
+
 static const idmef_value_type_operation_t ops_tbl[] = {
         { "unknown", 0, 0, NULL, NULL, NULL, NULL, NULL, NULL                     },
         { "int8", sizeof(int8_t), INTEGER_OPERATOR, generic_copy,
@@ -433,10 +485,10 @@ static const idmef_value_type_operation_t ops_tbl[] = {
           time_clone, time_destroy, time_compare, time_read, time_write           }, 
         { "data", 0, DATA_OPERATOR, data_copy,
           data_clone, data_destroy, data_compare, data_read, data_write           },
-        { "enum", sizeof(idmef_value_type_id_t), INTEGER_OPERATOR, generic_copy,
+        { "enum", sizeof(idmef_value_type_id_t), INTEGER_OPERATOR, enum_copy,
           generic_clone, NULL, generic_compare, enum_read, enum_write,            },
         { "list", 0, 0, NULL, NULL, NULL, NULL, NULL, NULL                        },
-        { "class", 0, CLASS_OPERATOR, NULL, NULL, NULL, NULL, NULL, NULL          },
+        { "class", 0, CLASS_OPERATOR, class_copy, class_clone, class_destroy, NULL, NULL, NULL },
 };
 
 

@@ -52,7 +52,17 @@ typedef enum {
         IDMEF_VALUE_TYPE_CLASS   =  16
 } idmef_value_type_id_t;
 
+                  
+typedef struct {
+        void *object;
+        int class_id;
+} idmef_value_type_class_t;
 
+typedef struct {
+        int value;
+        int class_id;
+} idmef_value_type_enum_t;
+         
 
 typedef union {
 	int8_t int8_val;
@@ -68,9 +78,9 @@ typedef union {
         prelude_string_t *string_val;
         idmef_time_t *time_val;
         idmef_data_t *data_val;
-        void *object_val;
         prelude_list_t list_val;
-        int enum_val;
+        idmef_value_type_enum_t enum_val;
+        idmef_value_type_class_t class_val;
 } idmef_value_type_data_t;
 
 
