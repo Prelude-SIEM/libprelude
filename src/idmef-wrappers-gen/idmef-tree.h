@@ -787,6 +787,7 @@ ENUM(idmef) {
 
 
 struct {
+        REFCOUNT;
         prelude_string_t *messageid;
 
         LISTED_OBJECT(analyzer_list, idmef_analyzer_t);
@@ -819,6 +820,8 @@ struct {
  * Heartbeat class
  */
 struct {
+        REFCOUNT;
+        
         prelude_string_t *messageid;
         LISTED_OBJECT(analyzer_list, idmef_analyzer_t);
 

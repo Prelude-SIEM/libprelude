@@ -1591,6 +1591,7 @@ const char *idmef_alert_type_to_string(idmef_alert_type_t val);
 
 /*
  * struct {
+ *         REFCOUNT;
  *         prelude_string_t *messageid;
  * 
  *         LISTED_OBJECT(analyzer_list, idmef_analyzer_t);
@@ -1622,6 +1623,7 @@ typedef struct idmef_alert idmef_alert_t;
 int idmef_alert_new(idmef_alert_t **ret);
 int idmef_alert_copy(const idmef_alert_t *src, idmef_alert_t *dst);
 int idmef_alert_clone(idmef_alert_t *src, idmef_alert_t **dst);
+idmef_alert_t *idmef_alert_ref(idmef_alert_t *ptr);
 int idmef_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
 
@@ -1683,6 +1685,8 @@ int idmef_alert_new_overflow_alert(idmef_alert_t *ptr, idmef_overflow_alert_t **
 
 /*
  * struct {
+ *         REFCOUNT;
+ * 
  *         prelude_string_t *messageid;
  *         LISTED_OBJECT(analyzer_list, idmef_analyzer_t);
  * 
@@ -1700,6 +1704,7 @@ typedef struct idmef_heartbeat idmef_heartbeat_t;
 int idmef_heartbeat_new(idmef_heartbeat_t **ret);
 int idmef_heartbeat_copy(const idmef_heartbeat_t *src, idmef_heartbeat_t *dst);
 int idmef_heartbeat_clone(idmef_heartbeat_t *src, idmef_heartbeat_t **dst);
+idmef_heartbeat_t *idmef_heartbeat_ref(idmef_heartbeat_t *ptr);
 int idmef_heartbeat_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int idmef_heartbeat_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
 

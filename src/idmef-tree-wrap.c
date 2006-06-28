@@ -81,7 +81,7 @@
 #define idmef_data_copy idmef_data_copy_dup
 
 
-static int get_value_from_string(idmef_value_t **value, prelude_string_t *str)
+static int get_value_from_string(idmef_value_t **value, prelude_string_t *str, prelude_bool_t is_ptr)
 {
         int ret;
         
@@ -94,14 +94,15 @@ static int get_value_from_string(idmef_value_t **value, prelude_string_t *str)
         if ( ret < 0 )
                 return ret;
 
-        idmef_value_dont_have_own_data(*value);
+	if ( ! is_ptr )
+	        idmef_value_dont_have_own_data(*value);
 
         return 0;
 }
 
 
 
-static int get_value_from_data(idmef_value_t **value, idmef_data_t *data)
+static int get_value_from_data(idmef_value_t **value, idmef_data_t *data, prelude_bool_t is_ptr)
 {
         int ret;
         
@@ -114,13 +115,14 @@ static int get_value_from_data(idmef_value_t **value, idmef_data_t *data)
         if ( ret < 0 )
                 return ret;
 
-        idmef_value_dont_have_own_data(*value);
+	if ( ! is_ptr )
+                idmef_value_dont_have_own_data(*value);
 
         return 0;
 }
 
 
-static int get_value_from_time(idmef_value_t **value, idmef_time_t *time)
+static int get_value_from_time(idmef_value_t **value, idmef_time_t *time, prelude_bool_t is_ptr)
 {
         int ret;
         
@@ -133,7 +135,8 @@ static int get_value_from_time(idmef_value_t **value, idmef_time_t *time)
         if ( ret < 0 )
                 return ret;
 
-        idmef_value_dont_have_own_data(*value);
+	if ( ! is_ptr )
+                idmef_value_dont_have_own_data(*value);
 
         return 0;
 }
@@ -1640,6 +1643,7 @@ const char *idmef_alert_type_to_string(idmef_alert_type_t val)
 
 
 struct idmef_alert { 
+         REFCOUNT;
          prelude_string_t *messageid;
  
          LISTED_OBJECT(analyzer_list, idmef_analyzer_t);
@@ -1668,6 +1672,8 @@ struct idmef_alert {
 
 
 struct idmef_heartbeat { 
+         REFCOUNT;
+ 
          prelude_string_t *messageid;
          LISTED_OBJECT(analyzer_list, idmef_analyzer_t);
  
@@ -1797,9 +1803,9 @@ int idmef_additional_data_get_child(void *p, idmef_class_child_id_t child, void 
                                                                 IDMEF_CLASS_ID_ADDITIONAL_DATA_TYPE, ptr->type);
         
                 case 1:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->meaning);        
-                case 2:
-                       return get_value_from_data((idmef_value_t **) childptr, & ptr->data);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->meaning, TRUE);        
+                case 2:                       
+                       return get_value_from_data((idmef_value_t **) childptr, & ptr->data, FALSE);
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
         }
@@ -2102,11 +2108,11 @@ int idmef_reference_get_child(void *p, idmef_class_child_id_t child, void **chil
                                                                 IDMEF_CLASS_ID_REFERENCE_ORIGIN, ptr->origin);
         
                 case 1:
-                       return get_value_from_string((idmef_value_t **) childptr, & ptr->name);        
+                       return get_value_from_string((idmef_value_t **) childptr, & ptr->name, FALSE);        
                 case 2:
-                       return get_value_from_string((idmef_value_t **) childptr, & ptr->url);        
+                       return get_value_from_string((idmef_value_t **) childptr, & ptr->url, FALSE);        
                 case 3:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->meaning);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->meaning, TRUE);
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
         }
@@ -2463,9 +2469,9 @@ int idmef_classification_get_child(void *p, idmef_class_child_id_t child, void *
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident, TRUE);        
                 case 1:
-                       return get_value_from_string((idmef_value_t **) childptr, & ptr->text);
+                       return get_value_from_string((idmef_value_t **) childptr, & ptr->text, FALSE);
                 case 2:
                         *childptr = &ptr->reference_list;
                         return 0;
@@ -2843,15 +2849,15 @@ int idmef_user_id_get_child(void *p, idmef_class_child_id_t child, void **childp
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident, TRUE);        
                 case 1:
                        return idmef_value_new_enum_from_numeric((idmef_value_t **) childptr, 
                                                                 IDMEF_CLASS_ID_USER_ID_TYPE, ptr->type);
         
                 case 2:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->tty);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->tty, TRUE);        
                 case 3:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->name);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->name, TRUE);
                 case 4:
                        return (ptr->number_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->number) : 0;
 
@@ -3292,7 +3298,7 @@ int idmef_user_get_child(void *p, idmef_class_child_id_t child, void **childptr)
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident, TRUE);        
                 case 1:
                        return idmef_value_new_enum_from_numeric((idmef_value_t **) childptr, 
                                                                 IDMEF_CLASS_ID_USER_CATEGORY, ptr->category);
@@ -3666,20 +3672,20 @@ int idmef_address_get_child(void *p, idmef_class_child_id_t child, void **childp
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident, TRUE);        
                 case 1:
                        return idmef_value_new_enum_from_numeric((idmef_value_t **) childptr, 
                                                                 IDMEF_CLASS_ID_ADDRESS_CATEGORY, ptr->category);
         
                 case 2:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->vlan_name);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->vlan_name, TRUE);
                 case 3:
                        return (ptr->vlan_num_is_set) ? idmef_value_new_int32((idmef_value_t **) childptr, ptr->vlan_num) : 0;
         
                 case 4:
-                       return get_value_from_string((idmef_value_t **) childptr, & ptr->address);        
+                       return get_value_from_string((idmef_value_t **) childptr, & ptr->address, FALSE);        
                 case 5:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->netmask);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->netmask, TRUE);
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
         }
@@ -4177,14 +4183,14 @@ int idmef_process_get_child(void *p, idmef_class_child_id_t child, void **childp
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident, TRUE);        
                 case 1:
-                       return get_value_from_string((idmef_value_t **) childptr, & ptr->name);
+                       return get_value_from_string((idmef_value_t **) childptr, & ptr->name, FALSE);
                 case 2:
                        return (ptr->pid_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->pid) : 0;
         
                 case 3:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->path);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->path, TRUE);
                 case 4:
                         *childptr = &ptr->arg_list;
                         return 0;
@@ -4822,11 +4828,11 @@ int idmef_web_service_get_child(void *p, idmef_class_child_id_t child, void **ch
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr, & ptr->url);        
+                       return get_value_from_string((idmef_value_t **) childptr, & ptr->url, FALSE);        
                 case 1:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->cgi);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->cgi, TRUE);        
                 case 2:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->http_method);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->http_method, TRUE);
                 case 3:
                         *childptr = &ptr->arg_list;
                         return 0;
@@ -5269,7 +5275,7 @@ int idmef_snmp_service_get_child(void *p, idmef_class_child_id_t child, void **c
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->oid);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->oid, TRUE);
                 case 1:
                        return (ptr->message_processing_model_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->message_processing_model) : 0;
 
@@ -5277,18 +5283,18 @@ int idmef_snmp_service_get_child(void *p, idmef_class_child_id_t child, void **c
                        return (ptr->security_model_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->security_model) : 0;
         
                 case 3:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->security_name);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->security_name, TRUE);
                 case 4:
                        return (ptr->security_level_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->security_level) : 0;
         
                 case 5:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->context_name);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->context_name, TRUE);        
                 case 6:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->context_engine_id);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->context_engine_id, TRUE);        
                 case 7:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->command);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->command, TRUE);        
                 case 8:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->community);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->community, TRUE);
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
         }
@@ -5994,7 +6000,7 @@ int idmef_service_get_child(void *p, idmef_class_child_id_t child, void **childp
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident, TRUE);
                 case 1:
                        return (ptr->ip_version_is_set) ? idmef_value_new_uint8((idmef_value_t **) childptr, ptr->ip_version) : 0;
 
@@ -6002,16 +6008,16 @@ int idmef_service_get_child(void *p, idmef_class_child_id_t child, void **childp
                        return (ptr->iana_protocol_number_is_set) ? idmef_value_new_uint8((idmef_value_t **) childptr, ptr->iana_protocol_number) : 0;
         
                 case 3:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->iana_protocol_name);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->iana_protocol_name, TRUE);        
                 case 4:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->name);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->name, TRUE);
                 case 5:
                        return (ptr->port_is_set) ? idmef_value_new_uint16((idmef_value_t **) childptr, ptr->port) : 0;
         
                 case 6:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->portlist);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->portlist, TRUE);        
                 case 7:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->protocol);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->protocol, TRUE);
                 case 8:
                         *childptr = ( ptr->type == IDMEF_SERVICE_TYPE_WEB ) ? ptr->specific.web_service : NULL;
                         return 0;          
@@ -6870,15 +6876,15 @@ int idmef_node_get_child(void *p, idmef_class_child_id_t child, void **childptr)
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident, TRUE);        
                 case 1:
                        return idmef_value_new_enum_from_numeric((idmef_value_t **) childptr, 
                                                                 IDMEF_CLASS_ID_NODE_CATEGORY, ptr->category);
         
                 case 2:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->location);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->location, TRUE);        
                 case 3:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->name);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->name, TRUE);
                 case 4:
                         *childptr = &ptr->address_list;
                         return 0;
@@ -7382,13 +7388,13 @@ int idmef_source_get_child(void *p, idmef_class_child_id_t child, void **childpt
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident, TRUE);        
                 case 1:
                        return idmef_value_new_enum_from_numeric((idmef_value_t **) childptr, 
                                                                 IDMEF_CLASS_ID_SOURCE_SPOOFED, ptr->spoofed);
         
                 case 2:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->interface);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->interface, TRUE);
                 case 3:
                         *childptr = ptr->node;
                         return 0;
@@ -8281,7 +8287,7 @@ int idmef_inode_get_child(void *p, idmef_class_child_id_t child, void **childptr
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_time((idmef_value_t **) childptr,  ptr->change_time);
+                       return get_value_from_time((idmef_value_t **) childptr,  ptr->change_time, TRUE);
                 case 1:
                        return (ptr->number_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->number) : 0;
 
@@ -8791,9 +8797,9 @@ int idmef_checksum_get_child(void *p, idmef_class_child_id_t child, void **child
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr, & ptr->value);        
+                       return get_value_from_string((idmef_value_t **) childptr, & ptr->value, FALSE);        
                 case 1:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->key);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->key, TRUE);        
                 case 2:
                        return idmef_value_new_enum_from_numeric((idmef_value_t **) childptr, 
                                                                 IDMEF_CLASS_ID_CHECKSUM_ALGORITHM, ptr->algorithm);
@@ -9105,17 +9111,17 @@ int idmef_file_get_child(void *p, idmef_class_child_id_t child, void **childptr)
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident, TRUE);        
                 case 1:
-                       return get_value_from_string((idmef_value_t **) childptr, & ptr->name);        
+                       return get_value_from_string((idmef_value_t **) childptr, & ptr->name, FALSE);        
                 case 2:
-                       return get_value_from_string((idmef_value_t **) childptr, & ptr->path);        
+                       return get_value_from_string((idmef_value_t **) childptr, & ptr->path, FALSE);        
                 case 3:
-                       return get_value_from_time((idmef_value_t **) childptr,  ptr->create_time);        
+                       return get_value_from_time((idmef_value_t **) childptr,  ptr->create_time, TRUE);        
                 case 4:
-                       return get_value_from_time((idmef_value_t **) childptr,  ptr->modify_time);        
+                       return get_value_from_time((idmef_value_t **) childptr,  ptr->modify_time, TRUE);        
                 case 5:
-                       return get_value_from_time((idmef_value_t **) childptr,  ptr->access_time);
+                       return get_value_from_time((idmef_value_t **) childptr,  ptr->access_time, TRUE);
                 case 6:
                        return (ptr->data_size_is_set) ? idmef_value_new_uint64((idmef_value_t **) childptr, ptr->data_size) : 0;
 
@@ -9149,7 +9155,7 @@ int idmef_file_get_child(void *p, idmef_class_child_id_t child, void **childptr)
                                                                 IDMEF_CLASS_ID_FILE_FSTYPE, ptr->fstype);
         
                 case 14:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->file_type);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->file_type, TRUE);
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
         }
@@ -10404,9 +10410,9 @@ int idmef_linkage_get_child(void *p, idmef_class_child_id_t child, void **childp
                                                                 IDMEF_CLASS_ID_LINKAGE_CATEGORY, ptr->category);
         
                 case 1:
-                       return get_value_from_string((idmef_value_t **) childptr, & ptr->name);        
+                       return get_value_from_string((idmef_value_t **) childptr, & ptr->name, FALSE);        
                 case 2:
-                       return get_value_from_string((idmef_value_t **) childptr, & ptr->path);
+                       return get_value_from_string((idmef_value_t **) childptr, & ptr->path, FALSE);
                 case 3:
                         *childptr = ptr->file;
                         return 0;
@@ -10765,13 +10771,13 @@ int idmef_target_get_child(void *p, idmef_class_child_id_t child, void **childpt
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ident, TRUE);        
                 case 1:
                        return idmef_value_new_enum_from_numeric((idmef_value_t **) childptr, 
                                                                 IDMEF_CLASS_ID_TARGET_DECOY, ptr->decoy);
         
                 case 2:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->interface);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->interface, TRUE);
                 case 3:
                         *childptr = ptr->node;
                         return 0;
@@ -11479,21 +11485,21 @@ int idmef_analyzer_get_child(void *p, idmef_class_child_id_t child, void **child
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->analyzerid);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->analyzerid, TRUE);        
                 case 1:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->name);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->name, TRUE);        
                 case 2:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->manufacturer);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->manufacturer, TRUE);        
                 case 3:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->model);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->model, TRUE);        
                 case 4:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->version);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->version, TRUE);        
                 case 5:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->class);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->class, TRUE);        
                 case 6:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ostype);        
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->ostype, TRUE);        
                 case 7:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->osversion);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->osversion, TRUE);
                 case 8:
                         *childptr = ptr->node;
                         return 0;
@@ -12289,9 +12295,9 @@ int idmef_alertident_get_child(void *p, idmef_class_child_id_t child, void **chi
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr, & ptr->alertident);        
+                       return get_value_from_string((idmef_value_t **) childptr, & ptr->alertident, FALSE);        
                 case 1:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->analyzerid);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->analyzerid, TRUE);
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
         }
@@ -12555,7 +12561,7 @@ int idmef_impact_get_child(void *p, idmef_class_child_id_t child, void **childpt
                                                                 IDMEF_CLASS_ID_IMPACT_TYPE, ptr->type);
         
                 case 3:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->description);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->description, TRUE);
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
         }
@@ -12920,7 +12926,7 @@ int idmef_action_get_child(void *p, idmef_class_child_id_t child, void **childpt
                                                                 IDMEF_CLASS_ID_ACTION_CATEGORY, ptr->category);
         
                 case 1:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->description);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->description, TRUE);
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
         }
@@ -13773,9 +13779,9 @@ int idmef_tool_alert_get_child(void *p, idmef_class_child_id_t child, void **chi
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr, & ptr->name);        
+                       return get_value_from_string((idmef_value_t **) childptr, & ptr->name, FALSE);        
                 case 1:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->command);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->command, TRUE);
                 case 2:
                         *childptr = &ptr->alertident_list;
                         return 0;
@@ -14154,7 +14160,7 @@ int idmef_correlation_alert_get_child(void *p, idmef_class_child_id_t child, voi
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr, & ptr->name);
+                       return get_value_from_string((idmef_value_t **) childptr, & ptr->name, FALSE);
                 case 1:
                         *childptr = &ptr->alertident_list;
                         return 0;
@@ -14463,12 +14469,12 @@ int idmef_overflow_alert_get_child(void *p, idmef_class_child_id_t child, void *
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr, & ptr->program);
+                       return get_value_from_string((idmef_value_t **) childptr, & ptr->program, FALSE);
                 case 1:
                        return (ptr->size_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->size) : 0;
         
-                case 2:
-                       return get_value_from_data((idmef_value_t **) childptr,  ptr->buffer);
+                case 2:                       
+                       return get_value_from_data((idmef_value_t **) childptr,  ptr->buffer, TRUE);
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
         }
@@ -14743,6 +14749,8 @@ int idmef_alert_new(idmef_alert_t **ret)
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
 
+        (*ret)->refcount = 1;
+
         prelude_list_init(&(*ret)->analyzer_list);
     
 
@@ -14759,6 +14767,22 @@ int idmef_alert_new(idmef_alert_t **ret)
 
 }
 
+/**
+ * idmef_alert_ref:
+ * @ptr: pointer to a #idmef_alert_t object.
+ *
+ * Increase @ptr reference count, so that it can be referenced
+ * multiple time.
+ *
+ * Returns: a pointer to @ptr.
+ */
+idmef_alert_t *idmef_alert_ref(idmef_alert_t *ptr)
+{
+        ptr->refcount++;
+
+        return ptr;
+}
+
 int idmef_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_alert_t *ptr = p;
@@ -14768,21 +14792,21 @@ int idmef_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->messageid);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->messageid, TRUE);
                 case 1:
                         *childptr = &ptr->analyzer_list;
                         return 0;
         
                 case 2:
-                       return get_value_from_time((idmef_value_t **) childptr, & ptr->create_time);
+                       return get_value_from_time((idmef_value_t **) childptr, & ptr->create_time, FALSE);
                 case 3:
                         *childptr = ptr->classification;
                         return 0;
         
                 case 4:
-                       return get_value_from_time((idmef_value_t **) childptr,  ptr->detect_time);        
+                       return get_value_from_time((idmef_value_t **) childptr,  ptr->detect_time, TRUE);        
                 case 5:
-                       return get_value_from_time((idmef_value_t **) childptr,  ptr->analyzer_time);
+                       return get_value_from_time((idmef_value_t **) childptr,  ptr->analyzer_time, TRUE);
                 case 6:
                         *childptr = &ptr->source_list;
                         return 0;
@@ -15099,6 +15123,9 @@ static void idmef_alert_destroy_internal(idmef_alert_t *ptr)
 
 void idmef_alert_destroy(idmef_alert_t *ptr)
 {
+        if ( --ptr->refcount )
+                return;
+
         idmef_alert_destroy_internal(ptr);
         free(ptr);
 }
@@ -16114,6 +16141,8 @@ int idmef_heartbeat_new(idmef_heartbeat_t **ret)
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
 
+        (*ret)->refcount = 1;
+
         prelude_list_init(&(*ret)->analyzer_list);
     
 
@@ -16122,6 +16151,22 @@ int idmef_heartbeat_new(idmef_heartbeat_t **ret)
 
         return 0;
 
+}
+
+/**
+ * idmef_heartbeat_ref:
+ * @ptr: pointer to a #idmef_heartbeat_t object.
+ *
+ * Increase @ptr reference count, so that it can be referenced
+ * multiple time.
+ *
+ * Returns: a pointer to @ptr.
+ */
+idmef_heartbeat_t *idmef_heartbeat_ref(idmef_heartbeat_t *ptr)
+{
+        ptr->refcount++;
+
+        return ptr;
 }
 
 int idmef_heartbeat_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -16133,15 +16178,15 @@ int idmef_heartbeat_get_child(void *p, idmef_class_child_id_t child, void **chil
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr,  ptr->messageid);
+                       return get_value_from_string((idmef_value_t **) childptr,  ptr->messageid, TRUE);
                 case 1:
                         *childptr = &ptr->analyzer_list;
                         return 0;
         
                 case 2:
-                       return get_value_from_time((idmef_value_t **) childptr, & ptr->create_time);        
+                       return get_value_from_time((idmef_value_t **) childptr, & ptr->create_time, FALSE);        
                 case 3:
-                       return get_value_from_time((idmef_value_t **) childptr,  ptr->analyzer_time);
+                       return get_value_from_time((idmef_value_t **) childptr,  ptr->analyzer_time, TRUE);
                 case 4:
                        return (ptr->heartbeat_interval_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->heartbeat_interval) : 0;
 
@@ -16296,6 +16341,9 @@ static void idmef_heartbeat_destroy_internal(idmef_heartbeat_t *ptr)
 
 void idmef_heartbeat_destroy(idmef_heartbeat_t *ptr)
 {
+        if ( --ptr->refcount )
+                return;
+
         idmef_heartbeat_destroy_internal(ptr);
         free(ptr);
 }
@@ -16772,7 +16820,7 @@ int idmef_message_get_child(void *p, idmef_class_child_id_t child, void **childp
         switch ( child ) {
         
                 case 0:
-                       return get_value_from_string((idmef_value_t **) childptr, & ptr->version);
+                       return get_value_from_string((idmef_value_t **) childptr, & ptr->version, FALSE);
                 case 1:
                         *childptr = ( ptr->type == IDMEF_MESSAGE_TYPE_ALERT ) ? ptr->message.alert : NULL;
                         return 0;          

@@ -113,7 +113,7 @@ sub     header
 #define idmef_data_copy idmef_data_copy_dup
 
 
-static int get_value_from_string(idmef_value_t **value, prelude_string_t *str)
+static int get_value_from_string(idmef_value_t **value, prelude_string_t *str, prelude_bool_t is_ptr)
 {
         int ret;
         
@@ -126,14 +126,15 @@ static int get_value_from_string(idmef_value_t **value, prelude_string_t *str)
         if ( ret < 0 )
                 return ret;
 
-        idmef_value_dont_have_own_data(*value);
+	if ( ! is_ptr )
+	        idmef_value_dont_have_own_data(*value);
 
         return 0;
 }
 
 
 
-static int get_value_from_data(idmef_value_t **value, idmef_data_t *data)
+static int get_value_from_data(idmef_value_t **value, idmef_data_t *data, prelude_bool_t is_ptr)
 {
         int ret;
         
@@ -146,13 +147,14 @@ static int get_value_from_data(idmef_value_t **value, idmef_data_t *data)
         if ( ret < 0 )
                 return ret;
 
-        idmef_value_dont_have_own_data(*value);
+	if ( ! is_ptr )
+                idmef_value_dont_have_own_data(*value);
 
         return 0;
 }
 
 
-static int get_value_from_time(idmef_value_t **value, idmef_time_t *time)
+static int get_value_from_time(idmef_value_t **value, idmef_time_t *time, prelude_bool_t is_ptr)
 {
         int ret;
         
@@ -165,7 +167,8 @@ static int get_value_from_time(idmef_value_t **value, idmef_time_t *time)
         if ( ret < 0 )
                 return ret;
 
-        idmef_value_dont_have_own_data(*value);
+	if ( ! is_ptr )
+                idmef_value_dont_have_own_data(*value);
 
         return 0;
 }
@@ -349,17 +352,20 @@ int idmef_$struct->{short_typename}_get_child(void *p, idmef_class_child_id_t ch
 
             if ( $field->{typename} eq "prelude_string_t" ) {
                 my $refer = $field->{ptr} ? "" : "&";
+		my $owned = $field->{ptr} ? "TRUE" : "FALSE";
                 $self->output("
-                       return get_value_from_string((idmef_value_t **) childptr, $refer ptr->$field->{name});");
+                       return get_value_from_string((idmef_value_t **) childptr, $refer ptr->$field->{name}, $owned);");
             } 
             elsif ( $field->{typename} eq "idmef_data_t" ) {
                 my $refer = $field->{ptr} ? "" : "&";
-                $self->output("
-                       return get_value_from_data((idmef_value_t **) childptr, $refer ptr->$field->{name});");
+		my $owned = $field->{ptr} ? "TRUE" : "FALSE";
+                $self->output("                       
+                       return get_value_from_data((idmef_value_t **) childptr, $refer ptr->$field->{name}, $owned);");
             } elsif ( $field->{typename} eq "idmef_time_t" ) {
                 my $refer = $field->{ptr} ? "" : "&";
+		my $owned = $field->{ptr} ? "TRUE" : "FALSE";
                 $self->output("
-                       return get_value_from_time((idmef_value_t **) childptr, $refer ptr->$field->{name});");
+                       return get_value_from_time((idmef_value_t **) childptr, $refer ptr->$field->{name}, $owned);");
             } 
 
             else {
