@@ -78,6 +78,8 @@ int idmef_class_copy(idmef_class_id_t classid, const void *src, void *dst);
 
 int idmef_class_clone(idmef_class_id_t classid, const void *src, void **dst);
 
+int idmef_class_ref(idmef_class_id_t classid, void *obj);
+
 int idmef_class_destroy(idmef_class_id_t classid, void *obj);
 
 #endif /* _LIBPRELUDE_IDMEF_CLASS_H */

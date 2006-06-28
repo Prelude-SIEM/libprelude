@@ -193,6 +193,17 @@ int idmef_class_destroy(idmef_class_id_t class, void *obj)
 
 
 
+int idmef_class_ref(idmef_class_id_t class, void *obj)
+{
+        if ( class < 0 )
+                return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
+        
+        object_data[class].ref(obj);
+
+        return 0;
+}
+
+
 const char *idmef_class_get_name(idmef_class_id_t class)
 {
 	return (class < 0) ? NULL : object_data[class].name;
