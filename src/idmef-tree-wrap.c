@@ -209,7 +209,7 @@ idmef_additional_data_type_t idmef_additional_data_type_to_numeric(const char *n
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for additional_data_type", name);
 }	
 
 /**
@@ -282,7 +282,7 @@ idmef_reference_origin_t idmef_reference_origin_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for reference_origin", name);
 }	
 
 /**
@@ -364,7 +364,7 @@ idmef_user_id_type_t idmef_user_id_type_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for user_id_type", name);
 }	
 
 /**
@@ -432,7 +432,7 @@ idmef_user_category_t idmef_user_category_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for user_category", name);
 }	
 
 /**
@@ -505,7 +505,7 @@ idmef_address_category_t idmef_address_category_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for address_category", name);
 }	
 
 /**
@@ -627,7 +627,7 @@ idmef_service_type_t idmef_service_type_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for service_type", name);
 }	
 
 /**
@@ -711,7 +711,7 @@ idmef_node_category_t idmef_node_category_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for node_category", name);
 }	
 
 /**
@@ -784,7 +784,7 @@ idmef_source_spoofed_t idmef_source_spoofed_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for source_spoofed", name);
 }	
 
 /**
@@ -884,7 +884,7 @@ idmef_checksum_algorithm_t idmef_checksum_algorithm_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for checksum_algorithm", name);
 }	
 
 /**
@@ -952,7 +952,7 @@ idmef_file_category_t idmef_file_category_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for file_category", name);
 }	
 
 /**
@@ -1009,7 +1009,7 @@ idmef_file_fstype_t idmef_file_fstype_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for file_fstype", name);
 }	
 
 /**
@@ -1101,7 +1101,7 @@ idmef_linkage_category_t idmef_linkage_category_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for linkage_category", name);
 }	
 
 /**
@@ -1168,7 +1168,7 @@ idmef_target_decoy_t idmef_target_decoy_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for target_decoy", name);
 }	
 
 /**
@@ -1271,7 +1271,7 @@ idmef_impact_severity_t idmef_impact_severity_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for impact_severity", name);
 }	
 
 /**
@@ -1322,7 +1322,7 @@ idmef_impact_completion_t idmef_impact_completion_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for impact_completion", name);
 }	
 
 /**
@@ -1375,7 +1375,7 @@ idmef_impact_type_t idmef_impact_type_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for impact_type", name);
 }	
 
 /**
@@ -1442,7 +1442,7 @@ idmef_action_category_t idmef_action_category_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for action_category", name);
 }	
 
 /**
@@ -1506,7 +1506,7 @@ idmef_confidence_rating_t idmef_confidence_rating_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for confidence_rating", name);
 }	
 
 /**
@@ -1612,7 +1612,7 @@ idmef_alert_type_t idmef_alert_type_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for alert_type", name);
 }	
 
 /**
@@ -1708,7 +1708,7 @@ idmef_message_type_t idmef_message_type_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, "Unknown enumeration value '%s' for message_type", name);
 }	
 
 /**

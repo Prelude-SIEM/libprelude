@@ -1279,7 +1279,7 @@ $enum->{typename} idmef_$enum->{short_typename}_to_numeric(const char *name)
                         return tbl[i].val;
         }
 
-        return prelude_error(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING);
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_UNKNOWN_ENUM_STRING, \"Unknown enumeration value '%s' for $enum->{short_typename}\", name);
 \}	
 ");
 
