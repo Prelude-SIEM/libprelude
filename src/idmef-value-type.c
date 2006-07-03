@@ -228,7 +228,7 @@ static int enum_read(idmef_value_type_t *dst, const char *buf)
 static int enum_write(const idmef_value_type_t *src, prelude_string_t *out)
 {
         const char *str;
-        
+
         str = idmef_class_enum_to_string(src->data.enum_val.class_id, src->data.enum_val.value);
 
         return prelude_string_cat(out, str);
@@ -485,7 +485,7 @@ static const idmef_value_type_operation_t ops_tbl[] = {
           time_clone, time_destroy, time_compare, time_read, time_write           }, 
         { "data", 0, DATA_OPERATOR, data_copy,
           data_clone, data_destroy, data_compare, data_read, data_write           },
-        { "enum", sizeof(idmef_value_type_id_t), INTEGER_OPERATOR, enum_copy,
+        { "enum", sizeof(idmef_value_type_enum_t), INTEGER_OPERATOR, enum_copy,
           generic_clone, NULL, generic_compare, enum_read, enum_write,            },
         { "list", 0, 0, NULL, NULL, NULL, NULL, NULL, NULL                        },
         { "class", 0, CLASS_OPERATOR, class_copy, class_clone, class_destroy, NULL, NULL, NULL },
