@@ -21,6 +21,7 @@ EXTRA_DIST =
 BUILT_SOURCES =
 SUFFIXES =
 MOSTLYCLEANFILES =
+MOSTLYCLEANDIRS =
 CLEANFILES =
 DISTCLEANFILES =
 MAINTAINERCLEANFILES =
@@ -157,9 +158,7 @@ sys/socket.h: socket_.h
 	cp $(srcdir)/socket_.h $@-t
 	mv $@-t $@
 MOSTLYCLEANFILES += sys/socket.h sys/socket.h-t
-
-mostlyclean-local:
-	-rmdir sys 2>/dev/null
+MOSTLYCLEANDIRS += sys
 
 ## end   gnulib module sys_socket
 
@@ -181,11 +180,25 @@ libmissing_la_SOURCES += vsnprintf.h
 
 ## end   gnulib module vsnprintf
 
+## begin gnulib module wcwidth
+
+libmissing_la_SOURCES += wcwidth.h
+
+## end   gnulib module wcwidth
+
 ## begin gnulib module xsize
 
 libmissing_la_SOURCES += xsize.h
 
 ## end   gnulib module xsize
 
+
+mostlyclean-local:
+	@test -z "$(MOSTLYCLEANDIRS)" || \
+	  for dir in $(MOSTLYCLEANDIRS); do \
+	    if test -d $$dir; then \
+	      echo "rmdir $$dir"; rmdir $$dir; \
+	    fi; \
+	  done
 
 # Makefile.am ends here
