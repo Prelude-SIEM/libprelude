@@ -159,7 +159,7 @@ int idmef_value_new_string(idmef_value_t **value, prelude_string_t *string)
 	if ( ret < 0 )
 		return ret;
 	
-	(*value)->type.data.string_val = prelude_string_ref(string);
+	(*value)->type.data.string_val = string;
 	
 	return ret;
 }
@@ -174,7 +174,7 @@ int idmef_value_new_time(idmef_value_t **value, idmef_time_t *time)
 	if ( ret < 0 )
 		return ret;
 
-	(*value)->type.data.time_val = idmef_time_ref(time);
+	(*value)->type.data.time_val = time;
 
 	return ret;
 }
@@ -189,7 +189,7 @@ int idmef_value_new_data(idmef_value_t **value, idmef_data_t *data)
 	if ( ret < 0 )
 		return ret;
 
-	(*value)->type.data.data_val = idmef_data_ref(data);
+	(*value)->type.data.data_val = data;
 
 	return ret;
 }
@@ -204,8 +204,7 @@ int idmef_value_new_class(idmef_value_t **value, idmef_class_id_t class, void *o
 	ret = idmef_value_create(value, IDMEF_VALUE_TYPE_CLASS);
         if ( ret < 0 )
 		return ret;
-
-        idmef_class_ref(class, object);
+        
 	(*value)->type.data.class_val.object = object;
         (*value)->type.data.class_val.class_id = class;
         

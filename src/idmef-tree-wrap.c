@@ -96,6 +96,8 @@ static int get_value_from_string(idmef_value_t **value, prelude_string_t *str, p
 
 	if ( ! is_ptr )
 	        idmef_value_dont_have_own_data(*value);
+	else
+	        prelude_string_ref(str);
 
         return 0;
 }
@@ -117,6 +119,8 @@ static int get_value_from_data(idmef_value_t **value, idmef_data_t *data, prelud
 
 	if ( ! is_ptr )
                 idmef_value_dont_have_own_data(*value);
+	else
+	        idmef_data_ref(data);
 
         return 0;
 }
@@ -137,6 +141,8 @@ static int get_value_from_time(idmef_value_t **value, idmef_time_t *time, prelud
 
 	if ( ! is_ptr )
                 idmef_value_dont_have_own_data(*value);
+	else
+	        idmef_time_ref(time);
 
         return 0;
 }
