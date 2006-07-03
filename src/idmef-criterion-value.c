@@ -398,7 +398,13 @@ static int value_to_string(const idmef_criterion_value_t *cv, prelude_string_t *
 
 static int value_clone(const idmef_criterion_value_t *cv, idmef_criterion_value_t *dst)
 {
-        return idmef_value_clone(cv->value, (idmef_value_t **) &dst->value);
+        int ret;
+        idmef_value_t *res;
+        
+        ret = idmef_value_clone(cv->value, &res);
+        dst->value = res;
+
+        return ret;
 }
 
 
