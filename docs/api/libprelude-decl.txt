@@ -352,19 +352,19 @@ typedef struct idmef_additional_data idmef_additional_data_t;
 idmef_additional_data_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_additional_data_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_additional_data_t *src, idmef_additional_data_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_additional_data_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_additional_data_t *src, idmef_additional_data_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_additional_data_ref</NAME>
 <RETURNS>idmef_additional_data_t *</RETURNS>
 idmef_additional_data_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_destroy</NAME>
@@ -448,19 +448,19 @@ typedef struct idmef_reference idmef_reference_t;
 idmef_reference_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_reference_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_reference_t *src, idmef_reference_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_reference_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_reference_t *src, idmef_reference_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_reference_ref</NAME>
 <RETURNS>idmef_reference_t *</RETURNS>
 idmef_reference_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_reference_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_reference_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_destroy</NAME>
@@ -537,19 +537,19 @@ typedef struct idmef_classification idmef_classification_t;
 idmef_classification_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_classification_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_classification_t *src, idmef_classification_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_classification_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_classification_t *src, idmef_classification_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_classification_ref</NAME>
 <RETURNS>idmef_classification_t *</RETURNS>
 idmef_classification_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_classification_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_classification_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_destroy</NAME>
@@ -634,19 +634,19 @@ typedef struct idmef_user_id idmef_user_id_t;
 idmef_user_id_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_user_id_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_user_id_t *src, idmef_user_id_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_user_id_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_user_id_t *src, idmef_user_id_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_user_id_ref</NAME>
 <RETURNS>idmef_user_id_t *</RETURNS>
 idmef_user_id_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_user_id_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_user_id_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_destroy</NAME>
@@ -762,19 +762,19 @@ typedef struct idmef_user idmef_user_t;
 idmef_user_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_user_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_user_t *src, idmef_user_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_user_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_user_t *src, idmef_user_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_user_ref</NAME>
 <RETURNS>idmef_user_t *</RETURNS>
 idmef_user_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_user_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_user_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_destroy</NAME>
@@ -867,19 +867,19 @@ typedef struct idmef_address idmef_address_t;
 idmef_address_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_address_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_address_t *src, idmef_address_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_address_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_address_t *src, idmef_address_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_address_ref</NAME>
 <RETURNS>idmef_address_t *</RETURNS>
 idmef_address_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_address_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_address_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_destroy</NAME>
@@ -991,19 +991,19 @@ typedef struct idmef_process idmef_process_t;
 idmef_process_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_process_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_process_t *src, idmef_process_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_process_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_process_t *src, idmef_process_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_process_ref</NAME>
 <RETURNS>idmef_process_t *</RETURNS>
 idmef_process_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_process_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_process_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_destroy</NAME>
@@ -1115,19 +1115,19 @@ typedef struct idmef_web_service idmef_web_service_t;
 idmef_web_service_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_web_service_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_web_service_t *src, idmef_web_service_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_web_service_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_web_service_t *src, idmef_web_service_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_web_service_ref</NAME>
 <RETURNS>idmef_web_service_t *</RETURNS>
 idmef_web_service_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_web_service_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_web_service_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_destroy</NAME>
@@ -1204,19 +1204,19 @@ typedef struct idmef_snmp_service idmef_snmp_service_t;
 idmef_snmp_service_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_snmp_service_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_snmp_service_t *src, idmef_snmp_service_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_snmp_service_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_snmp_service_t *src, idmef_snmp_service_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_snmp_service_ref</NAME>
 <RETURNS>idmef_snmp_service_t *</RETURNS>
 idmef_snmp_service_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_snmp_service_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_snmp_service_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_destroy</NAME>
@@ -1402,19 +1402,19 @@ typedef struct idmef_service idmef_service_t;
 idmef_service_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_service_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_service_t *src, idmef_service_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_service_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_service_t *src, idmef_service_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_service_ref</NAME>
 <RETURNS>idmef_service_t *</RETURNS>
 idmef_service_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_service_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_service_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_destroy</NAME>
@@ -1630,19 +1630,19 @@ typedef struct idmef_node idmef_node_t;
 idmef_node_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_node_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_node_t *src, idmef_node_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_node_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_node_t *src, idmef_node_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_node_ref</NAME>
 <RETURNS>idmef_node_t *</RETURNS>
 idmef_node_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_node_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_node_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_destroy</NAME>
@@ -1753,19 +1753,19 @@ typedef struct idmef_source idmef_source_t;
 idmef_source_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_source_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_source_t *src, idmef_source_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_source_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_source_t *src, idmef_source_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_source_ref</NAME>
 <RETURNS>idmef_source_t *</RETURNS>
 idmef_source_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_source_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_source_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_destroy</NAME>
@@ -1887,19 +1887,19 @@ typedef struct idmef_file_access idmef_file_access_t;
 idmef_file_access_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_file_access_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_file_access_t *src, idmef_file_access_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_file_access_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_file_access_t *src, idmef_file_access_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_file_access_ref</NAME>
 <RETURNS>idmef_file_access_t *</RETURNS>
 idmef_file_access_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_file_access_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_file_access_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_access_destroy</NAME>
@@ -1946,19 +1946,19 @@ typedef struct idmef_inode idmef_inode_t;
 idmef_inode_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_inode_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_inode_t *src, idmef_inode_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_inode_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_inode_t *src, idmef_inode_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_inode_ref</NAME>
 <RETURNS>idmef_inode_t *</RETURNS>
 idmef_inode_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_inode_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_inode_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_destroy</NAME>
@@ -2120,19 +2120,19 @@ typedef struct idmef_checksum idmef_checksum_t;
 idmef_checksum_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_checksum_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_checksum_t *src, idmef_checksum_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_checksum_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_checksum_t *src, idmef_checksum_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_checksum_ref</NAME>
 <RETURNS>idmef_checksum_t *</RETURNS>
 idmef_checksum_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_checksum_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_checksum_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_checksum_destroy</NAME>
@@ -2238,19 +2238,19 @@ typedef struct idmef_file idmef_file_t;
 idmef_file_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_file_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_file_t *src, idmef_file_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_file_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_file_t *src, idmef_file_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_file_ref</NAME>
 <RETURNS>idmef_file_t *</RETURNS>
 idmef_file_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_file_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_file_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_destroy</NAME>
@@ -2525,19 +2525,19 @@ idmef_linkage_category_t val
 idmef_linkage_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_linkage_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_linkage_t *src, idmef_linkage_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_linkage_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_linkage_t *src, idmef_linkage_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_linkage_ref</NAME>
 <RETURNS>idmef_linkage_t *</RETURNS>
 idmef_linkage_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_linkage_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_linkage_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_destroy</NAME>
@@ -2633,19 +2633,19 @@ typedef struct idmef_target idmef_target_t;
 idmef_target_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_target_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_target_t *src, idmef_target_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_target_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_target_t *src, idmef_target_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_target_ref</NAME>
 <RETURNS>idmef_target_t *</RETURNS>
 idmef_target_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_target_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_target_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_destroy</NAME>
@@ -2782,19 +2782,19 @@ typedef struct idmef_analyzer idmef_analyzer_t;
 idmef_analyzer_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_analyzer_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_analyzer_t *src, idmef_analyzer_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_analyzer_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_analyzer_t *src, idmef_analyzer_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_analyzer_ref</NAME>
 <RETURNS>idmef_analyzer_t *</RETURNS>
 idmef_analyzer_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_analyzer_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_analyzer_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_destroy</NAME>
@@ -2961,19 +2961,19 @@ typedef struct idmef_alertident idmef_alertident_t;
 idmef_alertident_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_alertident_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_alertident_t *src, idmef_alertident_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_alertident_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_alertident_t *src, idmef_alertident_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_alertident_ref</NAME>
 <RETURNS>idmef_alertident_t *</RETURNS>
 idmef_alertident_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_alertident_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_alertident_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alertident_destroy</NAME>
@@ -3080,19 +3080,19 @@ typedef struct idmef_impact idmef_impact_t;
 idmef_impact_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_impact_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_impact_t *src, idmef_impact_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_impact_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_impact_t *src, idmef_impact_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_impact_ref</NAME>
 <RETURNS>idmef_impact_t *</RETURNS>
 idmef_impact_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_impact_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_impact_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_destroy</NAME>
@@ -3199,19 +3199,19 @@ typedef struct idmef_action idmef_action_t;
 idmef_action_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_action_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_action_t *src, idmef_action_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_action_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_action_t *src, idmef_action_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_action_ref</NAME>
 <RETURNS>idmef_action_t *</RETURNS>
 idmef_action_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_action_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_action_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_action_destroy</NAME>
@@ -3278,19 +3278,19 @@ typedef struct idmef_confidence idmef_confidence_t;
 idmef_confidence_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_confidence_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_confidence_t *src, idmef_confidence_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_confidence_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_confidence_t *src, idmef_confidence_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_confidence_ref</NAME>
 <RETURNS>idmef_confidence_t *</RETURNS>
 idmef_confidence_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_confidence_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_confidence_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_confidence_destroy</NAME>
@@ -3337,19 +3337,19 @@ typedef struct idmef_assessment idmef_assessment_t;
 idmef_assessment_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_assessment_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_assessment_t *src, idmef_assessment_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_assessment_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_assessment_t *src, idmef_assessment_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_assessment_ref</NAME>
 <RETURNS>idmef_assessment_t *</RETURNS>
 idmef_assessment_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_assessment_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_assessment_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_destroy</NAME>
@@ -3411,19 +3411,19 @@ typedef struct idmef_tool_alert idmef_tool_alert_t;
 idmef_tool_alert_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_tool_alert_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_tool_alert_t *src, idmef_tool_alert_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_tool_alert_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_tool_alert_t *src, idmef_tool_alert_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_tool_alert_ref</NAME>
 <RETURNS>idmef_tool_alert_t *</RETURNS>
 idmef_tool_alert_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_tool_alert_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_tool_alert_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_destroy</NAME>
@@ -3485,19 +3485,19 @@ typedef struct idmef_correlation_alert idmef_correlation_alert_t;
 idmef_correlation_alert_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_correlation_alert_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_correlation_alert_t *src, idmef_correlation_alert_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_correlation_alert_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_correlation_alert_t *src, idmef_correlation_alert_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_correlation_alert_ref</NAME>
 <RETURNS>idmef_correlation_alert_t *</RETURNS>
 idmef_correlation_alert_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_correlation_alert_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_correlation_alert_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_correlation_alert_destroy</NAME>
@@ -3544,19 +3544,19 @@ typedef struct idmef_overflow_alert idmef_overflow_alert_t;
 idmef_overflow_alert_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_overflow_alert_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_overflow_alert_t *src, idmef_overflow_alert_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_overflow_alert_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_overflow_alert_t *src, idmef_overflow_alert_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_overflow_alert_ref</NAME>
 <RETURNS>idmef_overflow_alert_t *</RETURNS>
 idmef_overflow_alert_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_overflow_alert_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_overflow_alert_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_destroy</NAME>
@@ -3643,14 +3643,19 @@ typedef struct idmef_alert idmef_alert_t;
 idmef_alert_t **ret
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_alert_get_child</NAME>
+<NAME>idmef_alert_copy</NAME>
 <RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
+const idmef_alert_t *src, idmef_alert_t *dst
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_alert_new_child</NAME>
+<NAME>idmef_alert_clone</NAME>
 <RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
+idmef_alert_t *src, idmef_alert_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_alert_ref</NAME>
+<RETURNS>idmef_alert_t *</RETURNS>
+idmef_alert_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_destroy</NAME>
@@ -3867,14 +3872,19 @@ typedef struct idmef_heartbeat idmef_heartbeat_t;
 idmef_heartbeat_t **ret
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_heartbeat_get_child</NAME>
+<NAME>idmef_heartbeat_copy</NAME>
 <RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
+const idmef_heartbeat_t *src, idmef_heartbeat_t *dst
 </FUNCTION>
 <FUNCTION>
-<NAME>idmef_heartbeat_new_child</NAME>
+<NAME>idmef_heartbeat_clone</NAME>
 <RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
+idmef_heartbeat_t *src, idmef_heartbeat_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_heartbeat_ref</NAME>
+<RETURNS>idmef_heartbeat_t *</RETURNS>
+idmef_heartbeat_t *ptr
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_destroy</NAME>
@@ -4004,19 +4014,19 @@ typedef struct idmef_message idmef_message_t;
 idmef_message_t **ret
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_message_copy</NAME>
+<RETURNS>int </RETURNS>
+const idmef_message_t *src, idmef_message_t *dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_message_clone</NAME>
+<RETURNS>int </RETURNS>
+idmef_message_t *src, idmef_message_t **dst
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_message_ref</NAME>
 <RETURNS>idmef_message_t *</RETURNS>
 idmef_message_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_message_get_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, void **childptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_message_new_child</NAME>
-<RETURNS>int </RETURNS>
-void *p, idmef_class_child_id_t child, int n, void **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_destroy</NAME>
@@ -6785,7 +6795,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.9"
+#define LIBPRELUDE_VERSION "0.9.10"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
@@ -7390,196 +7400,6 @@ idmef_criterion_value_t *cv
 <RETURNS>idmef_criterion_value_type_t </RETURNS>
 idmef_criterion_value_t *cv
 </FUNCTION>
-<ENUM>
-<NAME>idmef_message_to_path_flags_t</NAME>
-typedef enum {
-        IDMEF_MESSAGE_TO_PATH_EMULATE_LAST_INDEX = 0x01,
-} idmef_message_to_path_flags_t;
-</ENUM>
-<TYPEDEF>
-<NAME>idmef_message_to_path_t</NAME>
-typedef struct idmef_message_to_path idmef_message_to_path_t;
-</TYPEDEF>
-<FUNCTION>
-<NAME>idmef_message_to_path_set_flags</NAME>
-<RETURNS>void </RETURNS>
-idmef_message_to_path_t *handler, idmef_message_to_path_flags_t flags
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_message_to_path_new</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t **ret
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_message_to_path_destroy</NAME>
-<RETURNS>void </RETURNS>
-idmef_message_to_path_t *pt
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_message_to_path_get_data</NAME>
-<RETURNS>void *</RETURNS>
-idmef_message_to_path_t *pt
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_message_to_path_set_data</NAME>
-<RETURNS>void </RETURNS>
-idmef_message_to_path_t *pt, void *data
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_message_to_path_set_callback</NAME>
-<RETURNS>void </RETURNS>
-idmef_message_to_path_t *pt,int (*cb)(idmef_message_to_path_t *pt, const char *path, const idmef_value_t *value)
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_additional_data_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_reference_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_reference_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_classification_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_classification_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_user_id_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_user_id_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_user_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_user_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_address_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_address_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_process_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_process_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_web_service_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_web_service_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_snmp_service_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_snmp_service_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_service_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_service_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_node_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_node_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_source_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_source_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_file_access_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_file_access_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_inode_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_inode_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_checksum_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_checksum_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_file_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_file_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_linkage_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_linkage_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_target_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_target_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_analyzer_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_analyzer_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_alertident_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_alertident_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_impact_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_impact_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_action_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_action_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_confidence_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_confidence_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_assessment_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_assessment_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_tool_alert_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_tool_alert_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_correlation_alert_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_correlation_alert_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_overflow_alert_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_overflow_alert_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_alert_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_alert_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_heartbeat_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_heartbeat_t *ptr
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_message_to_path</NAME>
-<RETURNS>int </RETURNS>
-idmef_message_to_path_t *handler, idmef_message_t *ptr
-</FUNCTION>
 <TYPEDEF>
 <NAME>idmef_path_t</NAME>
 typedef struct idmef_path idmef_path_t;
@@ -7773,11 +7593,6 @@ idmef_additional_data_t **ad, unsigned char *data, size_t len
 <NAME>idmef_additional_data_set_byte_string_nodup</NAME>
 <RETURNS>int </RETURNS>
 idmef_additional_data_t *ad, unsigned char *data, size_t len
-</FUNCTION>
-<FUNCTION>
-<NAME>idmef_additional_data_clone</NAME>
-<RETURNS>int </RETURNS>
-idmef_additional_data_t *src, idmef_additional_data_t **dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_copy_ref</NAME>
@@ -8260,6 +8075,11 @@ const idmef_value_t *value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_iterate</NAME>
+<RETURNS>int </RETURNS>
+idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_value_iterate_reversed</NAME>
 <RETURNS>int </RETURNS>
 idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra
 </FUNCTION>

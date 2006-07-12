@@ -67,7 +67,6 @@
     <xi:include href="xml/prelude-list.xml"/>
     <xi:include href="xml/prelude-inttypes.xml"/>
     <xi:include href="xml/prelude-option-wide.xml"/>
-    <xi:include href="xml/prelude-extract.xml"/>
     <xi:include href="xml/prelude-timer.xml"/>
   </chapter>
 </book>

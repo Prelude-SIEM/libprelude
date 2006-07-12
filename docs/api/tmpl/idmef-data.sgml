@@ -154,31 +154,7 @@ idmef-data
 @f: 
 
 
-<!-- ##### FUNCTION idmef_data_new_ptr_ref_fast ##### -->
-<para>
-
-</para>
-
-@data: 
-@type: 
-@ptr: 
-@len: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_data_new_ptr_dup_fast ##### -->
-<para>
-
-</para>
-
-@data: 
-@type: 
-@ptr: 
-@len: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_data_new_ptr_nodup_fast ##### -->
+<!-- ##### FUNCTION idmef_data_set_ptr_dup_fast ##### -->
 <para>
 
 </para>
@@ -202,7 +178,7 @@ idmef-data
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_data_set_ptr_dup_fast ##### -->
+<!-- ##### FUNCTION idmef_data_set_ptr_nodup_fast ##### -->
 <para>
 
 </para>
@@ -214,7 +190,31 @@ idmef-data
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_data_set_ptr_nodup_fast ##### -->
+<!-- ##### FUNCTION idmef_data_new_ptr_dup_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@type: 
+@ptr: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_new_ptr_ref_fast ##### -->
+<para>
+
+</para>
+
+@data: 
+@type: 
+@ptr: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_new_ptr_nodup_fast ##### -->
 <para>
 
 </para>

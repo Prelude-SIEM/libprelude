@@ -449,6 +449,17 @@ idmef-value
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_value_iterate_reversed ##### -->
+<para>
+
+</para>
+
+@value: 
+@callback: 
+@extra: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_value_get_nth ##### -->
 <para>
 

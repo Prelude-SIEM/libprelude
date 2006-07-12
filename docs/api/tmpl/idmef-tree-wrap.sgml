@@ -159,35 +159,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_additional_data_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_additional_data_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_additional_data_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_additional_data_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -329,35 +326,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_reference_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_reference_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_reference_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_reference_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -496,35 +490,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_classification_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_classification_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_classification_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_classification_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_classification_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -670,35 +661,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_user_id_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_user_id_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_user_id_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_user_id_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -901,35 +889,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_user_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_user_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_user_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_user_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -1083,35 +1068,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_address_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_address_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_address_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_address_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_address_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -1314,35 +1296,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_process_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_process_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_process_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_process_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_process_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -1551,35 +1530,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_web_service_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_web_service_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_web_service_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_web_service_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -1721,35 +1697,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_snmp_service_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_snmp_service_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_snmp_service_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_snmp_service_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -1789,7 +1762,15 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_snmp_service_get_community ##### -->
+<!-- ##### FUNCTION idmef_snmp_service_unset_message_processing_model ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_message_processing_model ##### -->
 <para>
 
 </para>
@@ -1798,16 +1779,52 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_snmp_service_set_community ##### -->
+<!-- ##### FUNCTION idmef_snmp_service_set_message_processing_model ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@community: 
+@message_processing_model: 
 
 
-<!-- ##### FUNCTION idmef_snmp_service_new_community ##### -->
+<!-- ##### FUNCTION idmef_snmp_service_new_message_processing_model ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@ret: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_unset_security_model ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_security_model ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_set_security_model ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@security_model: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_new_security_model ##### -->
 <para>
 
 </para>
@@ -1836,6 +1853,42 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 
 <!-- ##### FUNCTION idmef_snmp_service_new_security_name ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@ret: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_unset_security_level ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_get_security_level ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_set_security_level ##### -->
+<para>
+
+</para>
+
+@ptr: 
+@security_level: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_new_security_level ##### -->
 <para>
 
 </para>
@@ -1929,7 +1982,7 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_snmp_service_get_message_processing_model ##### -->
+<!-- ##### FUNCTION idmef_snmp_service_get_community ##### -->
 <para>
 
 </para>
@@ -1938,25 +1991,16 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_snmp_service_get_security_level ##### -->
+<!-- ##### FUNCTION idmef_snmp_service_set_community ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
+@community: 
 
 
-<!-- ##### FUNCTION idmef_snmp_service_get_security_model ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_snmp_service_new_message_processing_model ##### -->
+<!-- ##### FUNCTION idmef_snmp_service_new_community ##### -->
 <para>
 
 </para>
@@ -1964,77 +2008,6 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @ptr: 
 @ret: 
 @Returns: 
-
-
-<!-- ##### FUNCTION idmef_snmp_service_new_security_level ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@ret: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_snmp_service_new_security_model ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@ret: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_snmp_service_set_message_processing_model ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@message_processing_model: 
-
-
-<!-- ##### FUNCTION idmef_snmp_service_set_security_level ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@security_level: 
-
-
-<!-- ##### FUNCTION idmef_snmp_service_set_security_model ##### -->
-<para>
-
-</para>
-
-@ptr: 
-@security_model: 
-
-
-<!-- ##### FUNCTION idmef_snmp_service_unset_message_processing_model ##### -->
-<para>
-
-</para>
-
-@ptr: 
-
-
-<!-- ##### FUNCTION idmef_snmp_service_unset_security_level ##### -->
-<para>
-
-</para>
-
-@ptr: 
-
-
-<!-- ##### FUNCTION idmef_snmp_service_unset_security_model ##### -->
-<para>
-
-</para>
-
-@ptr: 
 
 
 <!-- ##### ENUM idmef_service_type_t ##### -->
@@ -2080,35 +2053,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_service_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_service_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_service_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_service_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -2486,35 +2456,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_node_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_node_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_node_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_node_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_node_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -2712,35 +2679,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_source_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_source_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_source_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_source_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_source_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -2963,35 +2927,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_file_access_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_access_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_file_access_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_file_access_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_file_access_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -3077,35 +3038,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_inode_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_inode_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_inode_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_inode_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_inode_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -3381,35 +3339,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_checksum_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_checksum_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_checksum_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_checksum_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_checksum_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -3582,35 +3537,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_file_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_file_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_file_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_file_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -4115,35 +4067,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_linkage_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_linkage_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_linkage_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_linkage_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_linkage_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -4310,35 +4259,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_target_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_target_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_target_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_target_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_target_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -4592,35 +4538,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_analyzer_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_analyzer_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_analyzer_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_analyzer_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_analyzer_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -4927,35 +4870,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_alertident_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_alertident_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_alertident_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_alertident_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_alertident_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -5125,35 +5065,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_impact_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_impact_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_impact_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_impact_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_impact_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -5337,35 +5274,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_action_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_action_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_action_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_action_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_action_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -5477,35 +5411,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_confidence_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_confidence_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_confidence_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_confidence_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_confidence_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -5588,35 +5519,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_assessment_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_assessment_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_assessment_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_assessment_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_assessment_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -5730,35 +5658,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_tool_alert_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_tool_alert_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_tool_alert_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_tool_alert_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_tool_alert_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -5872,35 +5797,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_correlation_alert_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_correlation_alert_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_correlation_alert_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_correlation_alert_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_correlation_alert_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -5986,35 +5908,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_overflow_alert_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_overflow_alert_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_overflow_alert_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_overflow_alert_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_overflow_alert_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 
@@ -6162,26 +6081,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_alert_get_child ##### -->
+<!-- ##### FUNCTION idmef_alert_copy ##### -->
 <para>
 
 </para>
 
-@p: 
-@child: 
-@childptr: 
+@src: 
+@dst: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_alert_new_child ##### -->
+<!-- ##### FUNCTION idmef_alert_clone ##### -->
 <para>
 
 </para>
 
-@p: 
-@child: 
-@n: 
-@ret: 
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_alert_ref ##### -->
+<para>
+
+</para>
+
+@ptr: 
 @Returns: 
 
 
@@ -6593,26 +6518,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_heartbeat_get_child ##### -->
+<!-- ##### FUNCTION idmef_heartbeat_copy ##### -->
 <para>
 
 </para>
 
-@p: 
-@child: 
-@childptr: 
+@src: 
+@dst: 
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_heartbeat_new_child ##### -->
+<!-- ##### FUNCTION idmef_heartbeat_clone ##### -->
 <para>
 
 </para>
 
-@p: 
-@child: 
-@n: 
-@ret: 
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_heartbeat_ref ##### -->
+<para>
+
+</para>
+
+@ptr: 
 @Returns: 
 
 
@@ -6848,35 +6779,32 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_message_copy ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_message_clone ##### -->
+<para>
+
+</para>
+
+@src: 
+@dst: 
+@Returns: 
+
+
 <!-- ##### FUNCTION idmef_message_ref ##### -->
 <para>
 
 </para>
 
 @ptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_message_get_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@childptr: 
-@Returns: 
-
-
-<!-- ##### FUNCTION idmef_message_new_child ##### -->
-<para>
-
-</para>
-
-@p: 
-@child: 
-@n: 
-@ret: 
 @Returns: 
 
 

@@ -1,3 +1,22 @@
+* 2006-07-12, libprelude-0.9.10:
+
+	- Fix memory leak with some specific criteria.
+
+	- Fix IDMEF path integrity problem when using listed (*) path.
+
+	- Multiple error reporting improvement.
+
+	- API improvement: implement copy and clone function for all IDMEF object.
+
+	- API improvement: allow overwriting/prepending/appending list of value
+	  through IDMEF path.
+
+	- API improvement: allow refcounting IDMEF Alert and Heartbeat object.
+
+	- API improvement: Make idmef-value memory handling more intuitive by
+	  automating IDMEF object refcounting.
+
+
 * 2006-06-06, libprelude-0.9.9:
 
 	- Correct IDMEF v16 checksum algorithms letter case.

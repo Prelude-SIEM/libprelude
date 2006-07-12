@@ -178,16 +178,6 @@ idmef-additional-data
 @Returns: 
 
 
-<!-- ##### FUNCTION idmef_additional_data_clone ##### -->
-<para>
-
-</para>
-
-@src: 
-@dst: 
-@Returns: 
-
-
 <!-- ##### FUNCTION idmef_additional_data_copy_ref ##### -->
 <para>
 
