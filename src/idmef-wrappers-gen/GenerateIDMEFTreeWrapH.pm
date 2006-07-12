@@ -141,7 +141,7 @@ sub	struct_get_child
     my	$struct = shift;
     my	$n = 0;
 
-    $self->output("int idmef_$struct->{short_typename}_get_child(void *p, idmef_class_child_id_t child, void **childptr);\n");
+    $self->output("int _idmef_$struct->{short_typename}_get_child(void *p, idmef_class_child_id_t child, void **childptr);\n");
 }
 
 sub	struct_new_child
@@ -151,7 +151,7 @@ sub	struct_new_child
     my	$struct = shift;
     my	$n = 0;
 
-    $self->output("int idmef_$struct->{short_typename}_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);\n");
+    $self->output("int _idmef_$struct->{short_typename}_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);\n");
     $self->output("\n");
 }
 

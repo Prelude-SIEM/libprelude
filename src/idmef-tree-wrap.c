@@ -1796,7 +1796,7 @@ idmef_additional_data_t *idmef_additional_data_ref(idmef_additional_data_t *ptr)
         return ptr;
 }
 
-int idmef_additional_data_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_additional_data_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_additional_data_t *ptr = p;
 
@@ -1817,7 +1817,7 @@ int idmef_additional_data_get_child(void *p, idmef_class_child_id_t child, void 
         }
 }
 
-int idmef_additional_data_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_additional_data_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_additional_data_t *ptr = p;
     
@@ -2101,7 +2101,7 @@ idmef_reference_t *idmef_reference_ref(idmef_reference_t *ptr)
         return ptr;
 }
 
-int idmef_reference_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_reference_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_reference_t *ptr = p;
 
@@ -2124,7 +2124,7 @@ int idmef_reference_get_child(void *p, idmef_class_child_id_t child, void **chil
         }
 }
 
-int idmef_reference_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_reference_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_reference_t *ptr = p;
     
@@ -2466,7 +2466,7 @@ idmef_classification_t *idmef_classification_ref(idmef_classification_t *ptr)
         return ptr;
 }
 
-int idmef_classification_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_classification_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_classification_t *ptr = p;
 
@@ -2487,7 +2487,7 @@ int idmef_classification_get_child(void *p, idmef_class_child_id_t child, void *
         }
 }
 
-int idmef_classification_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_classification_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_classification_t *ptr = p;
     
@@ -2846,7 +2846,7 @@ idmef_user_id_t *idmef_user_id_ref(idmef_user_id_t *ptr)
         return ptr;
 }
 
-int idmef_user_id_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_user_id_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_user_id_t *ptr = p;
 
@@ -2872,7 +2872,7 @@ int idmef_user_id_get_child(void *p, idmef_class_child_id_t child, void **childp
         }
 }
 
-int idmef_user_id_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_user_id_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_user_id_t *ptr = p;
     
@@ -3295,7 +3295,7 @@ idmef_user_t *idmef_user_ref(idmef_user_t *ptr)
         return ptr;
 }
 
-int idmef_user_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_user_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_user_t *ptr = p;
 
@@ -3318,7 +3318,7 @@ int idmef_user_get_child(void *p, idmef_class_child_id_t child, void **childptr)
         }
 }
 
-int idmef_user_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_user_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_user_t *ptr = p;
     
@@ -3669,7 +3669,7 @@ idmef_address_t *idmef_address_ref(idmef_address_t *ptr)
         return ptr;
 }
 
-int idmef_address_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_address_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_address_t *ptr = p;
 
@@ -3697,7 +3697,7 @@ int idmef_address_get_child(void *p, idmef_class_child_id_t child, void **childp
         }
 }
 
-int idmef_address_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_address_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_address_t *ptr = p;
     
@@ -4180,7 +4180,7 @@ idmef_process_t *idmef_process_ref(idmef_process_t *ptr)
         return ptr;
 }
 
-int idmef_process_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_process_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_process_t *ptr = p;
 
@@ -4210,7 +4210,7 @@ int idmef_process_get_child(void *p, idmef_class_child_id_t child, void **childp
         }
 }
 
-int idmef_process_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_process_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_process_t *ptr = p;
     
@@ -4825,7 +4825,7 @@ idmef_web_service_t *idmef_web_service_ref(idmef_web_service_t *ptr)
         return ptr;
 }
 
-int idmef_web_service_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_web_service_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_web_service_t *ptr = p;
 
@@ -4848,7 +4848,7 @@ int idmef_web_service_get_child(void *p, idmef_class_child_id_t child, void **ch
         }
 }
 
-int idmef_web_service_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_web_service_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_web_service_t *ptr = p;
     
@@ -5272,7 +5272,7 @@ idmef_snmp_service_t *idmef_snmp_service_ref(idmef_snmp_service_t *ptr)
         return ptr;
 }
 
-int idmef_snmp_service_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_snmp_service_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_snmp_service_t *ptr = p;
 
@@ -5306,7 +5306,7 @@ int idmef_snmp_service_get_child(void *p, idmef_class_child_id_t child, void **c
         }
 }
 
-int idmef_snmp_service_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_snmp_service_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_snmp_service_t *ptr = p;
     
@@ -5997,7 +5997,7 @@ idmef_service_t *idmef_service_ref(idmef_service_t *ptr)
         return ptr;
 }
 
-int idmef_service_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_service_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_service_t *ptr = p;
 
@@ -6037,7 +6037,7 @@ int idmef_service_get_child(void *p, idmef_class_child_id_t child, void **childp
         }
 }
 
-int idmef_service_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_service_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_service_t *ptr = p;
     
@@ -6873,7 +6873,7 @@ idmef_node_t *idmef_node_ref(idmef_node_t *ptr)
         return ptr;
 }
 
-int idmef_node_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_node_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_node_t *ptr = p;
 
@@ -6900,7 +6900,7 @@ int idmef_node_get_child(void *p, idmef_class_child_id_t child, void **childptr)
         }
 }
 
-int idmef_node_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_node_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_node_t *ptr = p;
     
@@ -7385,7 +7385,7 @@ idmef_source_t *idmef_source_ref(idmef_source_t *ptr)
         return ptr;
 }
 
-int idmef_source_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_source_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_source_t *ptr = p;
 
@@ -7422,7 +7422,7 @@ int idmef_source_get_child(void *p, idmef_class_child_id_t child, void **childpt
         }
 }
 
-int idmef_source_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_source_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_source_t *ptr = p;
     
@@ -7971,7 +7971,7 @@ idmef_file_access_t *idmef_file_access_ref(idmef_file_access_t *ptr)
         return ptr;
 }
 
-int idmef_file_access_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_file_access_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_file_access_t *ptr = p;
 
@@ -7992,7 +7992,7 @@ int idmef_file_access_get_child(void *p, idmef_class_child_id_t child, void **ch
         }
 }
 
-int idmef_file_access_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_file_access_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_file_access_t *ptr = p;
     
@@ -8284,7 +8284,7 @@ idmef_inode_t *idmef_inode_ref(idmef_inode_t *ptr)
         return ptr;
 }
 
-int idmef_inode_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_inode_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_inode_t *ptr = p;
 
@@ -8314,7 +8314,7 @@ int idmef_inode_get_child(void *p, idmef_class_child_id_t child, void **childptr
         }
 }
 
-int idmef_inode_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_inode_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_inode_t *ptr = p;
     
@@ -8794,7 +8794,7 @@ idmef_checksum_t *idmef_checksum_ref(idmef_checksum_t *ptr)
         return ptr;
 }
 
-int idmef_checksum_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_checksum_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_checksum_t *ptr = p;
 
@@ -8815,7 +8815,7 @@ int idmef_checksum_get_child(void *p, idmef_class_child_id_t child, void **child
         }
 }
 
-int idmef_checksum_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_checksum_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_checksum_t *ptr = p;
     
@@ -9108,7 +9108,7 @@ idmef_file_t *idmef_file_ref(idmef_file_t *ptr)
         return ptr;
 }
 
-int idmef_file_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_file_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_file_t *ptr = p;
 
@@ -9167,7 +9167,7 @@ int idmef_file_get_child(void *p, idmef_class_child_id_t child, void **childptr)
         }
 }
 
-int idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_file_t *ptr = p;
     
@@ -10403,7 +10403,7 @@ idmef_linkage_t *idmef_linkage_ref(idmef_linkage_t *ptr)
         return ptr;
 }
 
-int idmef_linkage_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_linkage_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_linkage_t *ptr = p;
 
@@ -10428,7 +10428,7 @@ int idmef_linkage_get_child(void *p, idmef_class_child_id_t child, void **childp
         }
 }
 
-int idmef_linkage_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_linkage_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_linkage_t *ptr = p;
     
@@ -10768,7 +10768,7 @@ idmef_target_t *idmef_target_ref(idmef_target_t *ptr)
         return ptr;
 }
 
-int idmef_target_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_target_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_target_t *ptr = p;
 
@@ -10809,7 +10809,7 @@ int idmef_target_get_child(void *p, idmef_class_child_id_t child, void **childpt
         }
 }
 
-int idmef_target_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_target_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_target_t *ptr = p;
     
@@ -11482,7 +11482,7 @@ idmef_analyzer_t *idmef_analyzer_ref(idmef_analyzer_t *ptr)
         return ptr;
 }
 
-int idmef_analyzer_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_analyzer_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_analyzer_t *ptr = p;
 
@@ -11519,7 +11519,7 @@ int idmef_analyzer_get_child(void *p, idmef_class_child_id_t child, void **child
         }
 }
 
-int idmef_analyzer_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_analyzer_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_analyzer_t *ptr = p;
     
@@ -12292,7 +12292,7 @@ idmef_alertident_t *idmef_alertident_ref(idmef_alertident_t *ptr)
         return ptr;
 }
 
-int idmef_alertident_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_alertident_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_alertident_t *ptr = p;
 
@@ -12309,7 +12309,7 @@ int idmef_alertident_get_child(void *p, idmef_class_child_id_t child, void **chi
         }
 }
 
-int idmef_alertident_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_alertident_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_alertident_t *ptr = p;
     
@@ -12542,7 +12542,7 @@ idmef_impact_t *idmef_impact_ref(idmef_impact_t *ptr)
         return ptr;
 }
 
-int idmef_impact_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_impact_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_impact_t *ptr = p;
 
@@ -12573,7 +12573,7 @@ int idmef_impact_get_child(void *p, idmef_class_child_id_t child, void **childpt
         }
 }
 
-int idmef_impact_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_impact_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_impact_t *ptr = p;
     
@@ -12919,7 +12919,7 @@ idmef_action_t *idmef_action_ref(idmef_action_t *ptr)
         return ptr;
 }
 
-int idmef_action_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_action_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_action_t *ptr = p;
 
@@ -12938,7 +12938,7 @@ int idmef_action_get_child(void *p, idmef_class_child_id_t child, void **childpt
         }
 }
 
-int idmef_action_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_action_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_action_t *ptr = p;
     
@@ -13163,7 +13163,7 @@ idmef_confidence_t *idmef_confidence_ref(idmef_confidence_t *ptr)
         return ptr;
 }
 
-int idmef_confidence_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_confidence_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_confidence_t *ptr = p;
 
@@ -13182,7 +13182,7 @@ int idmef_confidence_get_child(void *p, idmef_class_child_id_t child, void **chi
         }
 }
 
-int idmef_confidence_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_confidence_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_confidence_t *ptr = p;
     
@@ -13389,7 +13389,7 @@ idmef_assessment_t *idmef_assessment_ref(idmef_assessment_t *ptr)
         return ptr;
 }
 
-int idmef_assessment_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_assessment_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_assessment_t *ptr = p;
 
@@ -13414,7 +13414,7 @@ int idmef_assessment_get_child(void *p, idmef_class_child_id_t child, void **chi
         }
 }
 
-int idmef_assessment_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_assessment_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_assessment_t *ptr = p;
     
@@ -13776,7 +13776,7 @@ idmef_tool_alert_t *idmef_tool_alert_ref(idmef_tool_alert_t *ptr)
         return ptr;
 }
 
-int idmef_tool_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_tool_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_tool_alert_t *ptr = p;
 
@@ -13797,7 +13797,7 @@ int idmef_tool_alert_get_child(void *p, idmef_class_child_id_t child, void **chi
         }
 }
 
-int idmef_tool_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_tool_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_tool_alert_t *ptr = p;
     
@@ -14157,7 +14157,7 @@ idmef_correlation_alert_t *idmef_correlation_alert_ref(idmef_correlation_alert_t
         return ptr;
 }
 
-int idmef_correlation_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_correlation_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_correlation_alert_t *ptr = p;
 
@@ -14176,7 +14176,7 @@ int idmef_correlation_alert_get_child(void *p, idmef_class_child_id_t child, voi
         }
 }
 
-int idmef_correlation_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_correlation_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_correlation_alert_t *ptr = p;
     
@@ -14466,7 +14466,7 @@ idmef_overflow_alert_t *idmef_overflow_alert_ref(idmef_overflow_alert_t *ptr)
         return ptr;
 }
 
-int idmef_overflow_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_overflow_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_overflow_alert_t *ptr = p;
 
@@ -14486,7 +14486,7 @@ int idmef_overflow_alert_get_child(void *p, idmef_class_child_id_t child, void *
         }
 }
 
-int idmef_overflow_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_overflow_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_overflow_alert_t *ptr = p;
     
@@ -14789,7 +14789,7 @@ idmef_alert_t *idmef_alert_ref(idmef_alert_t *ptr)
         return ptr;
 }
 
-int idmef_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_alert_t *ptr = p;
 
@@ -14846,7 +14846,7 @@ int idmef_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr
         }
 }
 
-int idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_alert_t *ptr = p;
     
@@ -16175,7 +16175,7 @@ idmef_heartbeat_t *idmef_heartbeat_ref(idmef_heartbeat_t *ptr)
         return ptr;
 }
 
-int idmef_heartbeat_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_heartbeat_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_heartbeat_t *ptr = p;
 
@@ -16205,7 +16205,7 @@ int idmef_heartbeat_get_child(void *p, idmef_class_child_id_t child, void **chil
         }
 }
 
-int idmef_heartbeat_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_heartbeat_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_heartbeat_t *ptr = p;
     
@@ -16817,7 +16817,7 @@ idmef_message_t *idmef_message_ref(idmef_message_t *ptr)
         return ptr;
 }
 
-int idmef_message_get_child(void *p, idmef_class_child_id_t child, void **childptr)
+int _idmef_message_get_child(void *p, idmef_class_child_id_t child, void **childptr)
 {
         idmef_message_t *ptr = p;
 
@@ -16840,7 +16840,7 @@ int idmef_message_get_child(void *p, idmef_class_child_id_t child, void **childp
         }
 }
 
-int idmef_message_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
+int _idmef_message_new_child(void *p, idmef_class_child_id_t child, int n, void **ret)
 {
         idmef_message_t *ptr = p;
     
