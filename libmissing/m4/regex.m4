@@ -1,4 +1,4 @@
-#serial 36
+#serial 37
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005,
 # 2006 Free Software Foundation, Inc.
@@ -28,7 +28,7 @@ AC_DEFUN([gl_REGEX],
   yes|no) ac_use_included_regex=$with_included_regex
 	;;
   '')
-    # If the system regex support is good enough that it passes the the
+    # If the system regex support is good enough that it passes the
     # following run test, then default to *not* using the included regex.c.
     # If cross compiling, assume the test would fail and use the included
     # regex.c.  The first failing regular expression is from `Spencer ere
@@ -166,5 +166,6 @@ AC_DEFUN([gl_PREREQ_REGEX],
   AC_REQUIRE([gl_C_RESTRICT])
   AC_REQUIRE([AM_LANGINFO_CODESET])
   AC_CHECK_HEADERS_ONCE([locale.h wchar.h wctype.h])
-  AC_CHECK_FUNCS_ONCE([isblank mbrtowc mempcpy wcrtomb wcscoll])
+  AC_CHECK_FUNCS_ONCE([mbrtowc mempcpy wcrtomb wcscoll])
+  AC_CHECK_DECLS([isblank], [], [], [#include <ctype.h>])
 ])
