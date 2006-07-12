@@ -81,7 +81,7 @@ static int cmp_certificate_dn(gnutls_x509_crt crt, uint64_t wanted_dn, uint64_t 
 static int remove_old_certificate(const char *filename, uint64_t dn, uint64_t issuer_dn)
 {
         int ret;
-        char buf[65536], outf[1024];
+        char buf[65536], outf[1024], *datap;
         FILE *fd, *wfd;
         gnutls_datum data;
         gnutls_x509_crt crt;
@@ -109,7 +109,8 @@ static int remove_old_certificate(const char *filename, uint64_t dn, uint64_t is
                 prelude_string_sprintf(out, "-----BEGIN CERTIFICATE-----\n%s-----END CERTIFICATE-----\n", buf);
                 
                 data.size = prelude_string_get_len(out);
-                prelude_string_get_string_released(out, (char **) &data.data);
+                prelude_string_get_string_released(out, &datap);
+                data.data = (unsigned char *) datap;
                 
                 ret = gnutls_x509_crt_init(&crt);
                 if ( ret < 0 )
