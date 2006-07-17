@@ -376,7 +376,7 @@ static const char *libtool_is_buggy(const char *pname, const char *sym, char *ou
                         out[i] = '_';
         }
 
-        snprintf(out + i, sizeof(out) - i, "_LTX_%s", sym);
+        snprintf(out + i, size - i, "_LTX_%s", sym);
 
         return out;
 }
