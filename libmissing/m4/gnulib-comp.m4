@@ -149,6 +149,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/memchr.m4
   m4/minmax.m4
   m4/mktime.m4
+  m4/onceonly_2_57.m4
   m4/pathmax.m4
   m4/regex.m4
   m4/restrict.m4
