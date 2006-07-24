@@ -577,7 +577,7 @@ AC_ARG_WITH(swig, AC_HELP_STRING(--with-swig@<:@=PATH@:>@, Re-generate perl/pyth
             [swig_required=true; if test x$withval = xyes; then with_swig="swig"; fi], with_swig="swig")
 
 if test x$with_swig != xno; then
-   AC_PATH_PROG(SWIG, `basename $with_swig`, no, $PATH:`dirname $with_swig`)
+   AC_PATH_PROG(SWIG, `basename $with_swig`, no, `dirname $with_swig`:$PATH)
 
    if test x$SWIG = xno; then
       if test x$swig_required = xtrue; then
@@ -598,7 +598,7 @@ AC_ARG_WITH(perl, AC_HELP_STRING(--with-perl@<:@=PATH@:>@, Enable support for pe
 
 if test x$with_perl != xno; then
 
-   AC_PATH_PROG(PERL, `basename $with_perl`, no, $PATH:`dirname $with_perl`)
+   AC_PATH_PROG(PERL, `basename $with_perl`, no, `dirname $with_perl`:$PATH)
 
    if test x$PERL = xno; then
       if test x$perl_required = xtrue; then
@@ -625,7 +625,7 @@ AC_ARG_WITH(python, AC_HELP_STRING(--with-python@<:@=PATH@:>@, Enable support fo
 
 if test x$with_python != xno; then
 
-   AC_PATH_PROG(PYTHON, `basename $with_python`, no, $PATH:`dirname $with_python`)
+   AC_PATH_PROG(PYTHON, `basename $with_python`, no, `dirname $with_python`:$PATH)
    if test x$PYTHON = xno; then
       if test x$python_required = xtrue; then 
          AC_MSG_ERROR([Could not find $with_python binary])
