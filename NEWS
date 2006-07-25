@@ -1,3 +1,15 @@
+* 2006-07-25, libprelude-0.9.10.1:
+
+	- Fix checking for swig/perl/python when full path to the 
+	  application is specified.
+
+	- Fix OpenBSD getaddrinfo() AI_ADDRCONFIG issue (apply to 
+	  some other system as well).
+
+	- Fix workaround for system with broken libtool, 
+	  that prevented the use of plugin (#168).
+
+
 * 2006-07-12, libprelude-0.9.10:
 
 	- Fix memory leak with some specific criteria.
