@@ -37,14 +37,13 @@
 #include "idmef-message-print.h"
 #include "idmef-additional-data.h"
 #include "idmef-tree-wrap.h"
+#include "prelude-inttypes.h"
 %}
 
 
 %constant int IDMEF_LIST_APPEND = IDMEF_LIST_APPEND;
 %constant int IDMEF_LIST_PREPEND = IDMEF_LIST_PREPEND;
 
-
-%include "prelude-inttypes.h"
 
 typedef char int8_t;
 typedef unsigned char uint8_t;
