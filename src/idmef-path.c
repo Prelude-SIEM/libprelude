@@ -30,6 +30,7 @@
 #include <sys/types.h>
 #include <stdarg.h>
 #include <limits.h>
+#include <assert.h>
 
 #include "prelude-thread.h"
 #include "prelude-hash.h"
