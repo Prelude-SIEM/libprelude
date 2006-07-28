@@ -1,3 +1,12 @@
+* 2006-07-28, libprelude-0.9.10.2:
+
+	- Fix undefined assert() reference.
+
+	- Fix FreeBSD warnings.
+
+	- Fix possible bindings compilation warnings/problem.
+
+
 * 2006-07-25, libprelude-0.9.10.1:
 
 	- Fix checking for swig/perl/python when full path to the 
