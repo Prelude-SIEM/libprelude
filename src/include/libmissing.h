@@ -59,6 +59,7 @@
 #include "timegm.h"
 #include "vasnprintf.h"
 #include "vsnprintf.h"
+#include "wcwidth.h"
 #include "xsize.h"
 #if HAVE_WCHAR_H && HAVE_WCTYPE_H
 # include "mbchar.h"
