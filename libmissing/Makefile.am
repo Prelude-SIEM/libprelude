@@ -48,6 +48,21 @@ MOSTLYCLEANFILES += alloca.h alloca.h-t
 
 ## end   gnulib module alloca-opt
 
+## begin gnulib module arpa_inet
+
+BUILT_SOURCES += $(ARPA_INET_H)
+
+# We need the following in order to create <arpa/inet.h> when the system
+# doesn't have one.
+arpa/inet.h:
+	test -d arpa || mkdir arpa
+	echo '#include <sys/socket.h>' >$@-t
+	mv $@-t $@
+MOSTLYCLEANFILES += arpa/inet.h arpa/inet.h-t
+MOSTLYCLEANDIRS += arpa
+
+## end   gnulib module arpa_inet
+
 ## begin gnulib module ftw
 
 libmissing_la_SOURCES += ftw_.h
@@ -89,6 +104,21 @@ libmissing_la_SOURCES += mbuiter.h
 libmissing_la_SOURCES += minmax.h
 
 ## end   gnulib module minmax
+
+## begin gnulib module netinet_in
+
+BUILT_SOURCES += $(NETINET_IN_H)
+
+# We need the following in order to create <netinet/in.h> when the system
+# doesn't have one.
+netinet/in.h:
+	test -d netinet || mkdir netinet
+	echo '#include <sys/socket.h>' >$@-t
+	mv $@-t $@
+MOSTLYCLEANFILES += netinet/in.h netinet/in.h-t
+MOSTLYCLEANDIRS += netinet
+
+## end   gnulib module netinet_in
 
 ## begin gnulib module size_max
 

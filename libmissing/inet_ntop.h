@@ -17,14 +17,8 @@
 
 #include <sys/types.h>
 #include <sys/socket.h>
-
-#if HAVE_NETINET_IN_H
-# include <netinet/in.h>
-#endif
-
-#if HAVE_ARPA_INET_H
-# include <arpa/inet.h>
-#endif
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 /* Converts an internet address from internal format to a printable,
    presentable format.

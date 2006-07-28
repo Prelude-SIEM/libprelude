@@ -34,6 +34,7 @@ LTALLOCA=`echo "$ALLOCA" | sed 's/\.[^.]* /.lo /g;s/\.[^.]*$/.lo/'`
 changequote([, ])dnl
 AC_SUBST([LTALLOCA])
   gl_FUNC_ALLOCA
+  gl_HEADER_ARPA_INET
   dnl gl_USE_SYSTEM_EXTENSIONS must be added quite early to configure.ac.
   gl_FUNC_FTW
   gl_GETADDRINFO
@@ -44,6 +45,7 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_MEMCHR
   gl_MINMAX
   gl_FUNC_MKTIME
+  gl_HEADER_NETINET_IN
   gl_PATHMAX
   gl_REGEX
   gl_C_RESTRICT
@@ -133,6 +135,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/wcwidth.h
   lib/xsize.h
   m4/alloca.m4
+  m4/arpa_inet_h.m4
   m4/codeset.m4
   m4/eoverflow.m4
   m4/extensions.m4
@@ -149,6 +152,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/memchr.m4
   m4/minmax.m4
   m4/mktime.m4
+  m4/netinet_in_h.m4
   m4/onceonly_2_57.m4
   m4/pathmax.m4
   m4/regex.m4
