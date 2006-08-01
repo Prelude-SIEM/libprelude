@@ -17604,7 +17604,6 @@ int idmef_alert_compare(const idmef_alert_t *obj1, const idmef_alert_t *obj2)
 {
         int ret = 0;
 
-        printf("%p %p\n", obj1, obj2);
         if ( obj1 == NULL && obj2 == NULL )
                 return 0;
 
@@ -17673,9 +17672,8 @@ int idmef_alert_compare(const idmef_alert_t *obj1, const idmef_alert_t *obj2)
                                 entry2 = prelude_list_entry(tmp2, idmef_source_t, list);
                                 break;
                         }
-                        
+                     
                         ret = idmef_source_compare(entry1, entry2);
-                        printf("compare %p %p ret = %d\n", entry1, entry2, ret);
                         if ( ret != 0 )
                                 return ret;
 
