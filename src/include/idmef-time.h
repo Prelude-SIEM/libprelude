@@ -87,6 +87,8 @@ int32_t idmef_time_get_gmt_offset(const idmef_time_t *time);
 int idmef_time_to_string(const idmef_time_t *time, prelude_string_t *out);
 int idmef_time_to_ntpstamp(const idmef_time_t *time, prelude_string_t *out);
 
+int idmef_time_compare(const idmef_time_t *time1, const idmef_time_t *time2);
+         
 #ifdef __cplusplus
  }
 #endif

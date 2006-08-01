@@ -107,7 +107,6 @@ prelude_bool_t prelude_string_is_empty(const prelude_string_t *string);
 
 void prelude_string_clear(prelude_string_t *string);
 
-
 /*
  * string operation
  */
@@ -117,6 +116,7 @@ int prelude_string_ncat(prelude_string_t *dst, const char *str, size_t len);
 int prelude_string_sprintf(prelude_string_t *string, const char *fmt, ...);
 int prelude_string_vprintf(prelude_string_t *string, const char *fmt, va_list ap);
 
+int prelude_string_compare(const prelude_string_t *str1, const prelude_string_t *str2);
                                                          
 #define prelude_string_set_constant(string, str) 			\
 	prelude_string_set_ref_fast((string), (str), sizeof((str)) - 1)

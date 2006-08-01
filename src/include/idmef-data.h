@@ -161,6 +161,8 @@ int idmef_data_to_string(const idmef_data_t *data, prelude_string_t *out);
 
 void idmef_data_destroy_internal(idmef_data_t *data);
 
+int idmef_data_compare(const idmef_data_t *data1, const idmef_data_t *data2);
+         
 #ifdef __cplusplus
  }
 #endif

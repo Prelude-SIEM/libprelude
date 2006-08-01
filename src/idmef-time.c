@@ -709,3 +709,30 @@ void idmef_time_destroy(idmef_time_t *time)
 }
 
 
+
+/**
+ * idmef_time_compare:
+ * @time1: Pointer to an #idmef_time_t object to compare with @time2.
+ * @time2: Pointer to an #idmef_time_t object to compare with @time1.
+ *
+ * Returns: 0 if @time1 and @time2 match, -1 otherwise.
+ */
+int idmef_time_compare(const idmef_time_t *time1, const idmef_time_t *time2)
+{        
+        if ( ! time1 && ! time2 )
+                return 0;
+
+        else if ( ! time1 || ! time2 )
+                return -1;
+        
+        else if ( time1->sec != time2->sec )
+                return -1;
+
+        else if ( time1->usec != time2->usec )
+                return -1;
+
+        else if ( time1->gmt_offset != time2->gmt_offset )
+                return -1;
+
+        return 0;
+}
