@@ -120,6 +120,7 @@ sub	struct_constructor
     $self->output("int idmef_$struct->{short_typename}_new($struct->{typename} **ret);\n");
     $self->output("int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct->{typename} *dst);\n");
     $self->output("int idmef_$struct->{short_typename}_clone($struct->{typename} *src, $struct->{typename} **dst);\n");
+    $self->output("int idmef_$struct->{short_typename}_compare(const $struct->{typename} *obj1, const $struct->{typename} *obj2);\n");
 }
 
 sub	struct_ref

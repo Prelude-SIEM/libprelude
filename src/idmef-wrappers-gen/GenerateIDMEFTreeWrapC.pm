@@ -604,6 +604,125 @@ int idmef_$struct->{short_typename}_clone($struct->{typename} *src, $struct->{ty
 }
 
 
+sub     struct_cmp 
+{
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
+
+    $self->output("
+/**
+ * idmef_$struct->{short_typename}_compare:
+ * \@obj1: Object to compare with \@obj2.
+ * \@obj2: Object to compare with \@obj1.
+ *
+ * Compare \@obj1 with \@obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_$struct->{short_typename}_compare(const $struct->{typename} *obj1, const $struct->{typename} *obj2)
+\{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+");
+
+    foreach my $field ( @{ $struct->{field_list} } ) {
+        my $compare_func = "$field->{short_typename}_compare";
+
+        if ( ! ($field->{metatype} & &METATYPE_PRIMITIVE) ) {
+            $compare_func = "idmef_${compare_func}";
+        }
+        
+        if ( $field->{metatype} & &METATYPE_LIST ) {
+            $self->output("
+        \{
+                prelude_list_t *tmp1, *tmp2;
+                $field->{typename} *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do \{
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->$field->{name}, tmp1) \{
+                                entry1 = prelude_list_entry(tmp1, $field->{typename}, list);
+                                break;
+                        \}
+
+                        prelude_list_for_each_continue(&obj2->$field->{name}, tmp2) \{
+                                entry2 = prelude_list_entry(tmp2, $field->{typename}, list);
+                                break;
+                        \}
+                     
+                        ret = $compare_func(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                \} while ( entry1 && entry2 );
+        \}
+");
+
+        } elsif ( $field->{metatype} & &METATYPE_UNION ) {
+            $self->output("
+        if ( obj1->$field->{var} != obj2->$field->{var} )
+                return -1;
+
+        switch ( obj1->$field->{var} ) {
+");
+
+            foreach my $member ( @{ $field->{member_list} } ) {
+
+                $self->output("
+                case $member->{value}:
+                        ret = idmef_$member->{short_typename}_compare(obj1->$field->{name}.$member->{name}, obj2->$field->{name}.$member->{name});
+                        break;
+");
+            }
+            $self->output("
+                default:
+                        break;
+        }
+");
+        } elsif ( $field->{metatype} & &METATYPE_STRUCT ) {
+            if ( $field->{ptr} ) {
+                $self->output("
+        ret = $compare_func(obj1->$field->{name}, obj2->$field->{name});
+        if ( ret != 0 )
+                return ret;
+");
+            } else {
+                $self->output("
+        ret = $compare_func(&obj1->$field->{name}, &obj2->$field->{name});
+        if ( ret != 0 )
+                return ret;
+");
+            }
+	} else {
+            if ( $field->{metatype} & &METATYPE_OPTIONAL_INT ) {
+                        $self->output("
+        if ( obj1->$field->{name}_is_set != obj2->$field->{name}_is_set )
+                return -1;
+");
+	    }
+	    $self->output("
+        if ( obj1->$field->{name} != obj2->$field->{name} )
+                return -1;
+");
+	}
+    }
+
+    $self->output("
+        return ret;
+\}
+");
+}
+
+
+
 sub     struct_destroy_internal
 {
     my  $self = shift;
@@ -1236,6 +1355,7 @@ sub	struct_func
     $self->struct_fields($tree, $struct);
     $self->struct_copy($tree, $struct);
     $self->struct_clone($tree, $struct);
+    $self->struct_cmp($tree, $struct);
 }
 
 sub	enum

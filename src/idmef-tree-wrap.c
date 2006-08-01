@@ -2064,6 +2064,39 @@ int idmef_additional_data_clone(idmef_additional_data_t *src, idmef_additional_d
 }
 
 /**
+ * idmef_additional_data_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_additional_data_compare(const idmef_additional_data_t *obj1, const idmef_additional_data_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        if ( obj1->type != obj2->type )
+                return -1;
+
+        ret = prelude_string_compare(obj1->meaning, obj2->meaning);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_data_compare(&obj1->data, &obj2->data);
+        if ( ret != 0 )
+                return ret;
+
+        return ret;
+}
+
+/**
  * idmef_reference_new:
  * @ret: Pointer where to store the created #idmef_reference_t object.
  *
@@ -2425,6 +2458,43 @@ int idmef_reference_clone(idmef_reference_t *src, idmef_reference_t **dst)
                 return ret;
 
         return idmef_reference_copy(src, *dst);
+}
+
+/**
+ * idmef_reference_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_reference_compare(const idmef_reference_t *obj1, const idmef_reference_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        if ( obj1->origin != obj2->origin )
+                return -1;
+
+        ret = prelude_string_compare(&obj1->name, &obj2->name);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(&obj1->url, &obj2->url);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->meaning, obj2->meaning);
+        if ( ret != 0 )
+                return ret;
+
+        return ret;
 }
 
 /**
@@ -2806,6 +2876,61 @@ int idmef_classification_clone(idmef_classification_t *src, idmef_classification
                 return ret;
 
         return idmef_classification_copy(src, *dst);
+}
+
+/**
+ * idmef_classification_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_classification_compare(const idmef_classification_t *obj1, const idmef_classification_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(obj1->ident, obj2->ident);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(&obj1->text, &obj2->text);
+        if ( ret != 0 )
+                return ret;
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                idmef_reference_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->reference_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, idmef_reference_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->reference_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, idmef_reference_t, list);
+                                break;
+                        }
+                     
+                        ret = idmef_reference_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        return ret;
 }
 
 /**
@@ -3257,6 +3382,49 @@ int idmef_user_id_clone(idmef_user_id_t *src, idmef_user_id_t **dst)
 }
 
 /**
+ * idmef_user_id_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_user_id_compare(const idmef_user_id_t *obj1, const idmef_user_id_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(obj1->ident, obj2->ident);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->type != obj2->type )
+                return -1;
+
+        ret = prelude_string_compare(obj1->tty, obj2->tty);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->name, obj2->name);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->number_is_set != obj2->number_is_set )
+                return -1;
+
+        if ( obj1->number != obj2->number )
+                return -1;
+
+        return ret;
+}
+
+/**
  * idmef_user_new:
  * @ret: Pointer where to store the created #idmef_user_t object.
  *
@@ -3629,6 +3797,60 @@ int idmef_user_clone(idmef_user_t *src, idmef_user_t **dst)
                 return ret;
 
         return idmef_user_copy(src, *dst);
+}
+
+/**
+ * idmef_user_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_user_compare(const idmef_user_t *obj1, const idmef_user_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(obj1->ident, obj2->ident);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->category != obj2->category )
+                return -1;
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                idmef_user_id_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->user_id_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, idmef_user_id_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->user_id_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, idmef_user_id_t, list);
+                                break;
+                        }
+                     
+                        ret = idmef_user_id_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        return ret;
 }
 
 /**
@@ -4136,6 +4358,53 @@ int idmef_address_clone(idmef_address_t *src, idmef_address_t **dst)
                 return ret;
 
         return idmef_address_copy(src, *dst);
+}
+
+/**
+ * idmef_address_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_address_compare(const idmef_address_t *obj1, const idmef_address_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(obj1->ident, obj2->ident);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->category != obj2->category )
+                return -1;
+
+        ret = prelude_string_compare(obj1->vlan_name, obj2->vlan_name);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->vlan_num_is_set != obj2->vlan_num_is_set )
+                return -1;
+
+        if ( obj1->vlan_num != obj2->vlan_num )
+                return -1;
+
+        ret = prelude_string_compare(&obj1->address, &obj2->address);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->netmask, obj2->netmask);
+        if ( ret != 0 )
+                return ret;
+
+        return ret;
 }
 
 /**
@@ -4787,6 +5056,96 @@ int idmef_process_clone(idmef_process_t *src, idmef_process_t **dst)
 }
 
 /**
+ * idmef_process_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_process_compare(const idmef_process_t *obj1, const idmef_process_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(obj1->ident, obj2->ident);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(&obj1->name, &obj2->name);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->pid_is_set != obj2->pid_is_set )
+                return -1;
+
+        if ( obj1->pid != obj2->pid )
+                return -1;
+
+        ret = prelude_string_compare(obj1->path, obj2->path);
+        if ( ret != 0 )
+                return ret;
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                prelude_string_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->arg_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, prelude_string_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->arg_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, prelude_string_t, list);
+                                break;
+                        }
+                     
+                        ret = prelude_string_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                prelude_string_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->env_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, prelude_string_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->env_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, prelude_string_t, list);
+                                break;
+                        }
+                     
+                        ret = prelude_string_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        return ret;
+}
+
+/**
  * idmef_web_service_new:
  * @ret: Pointer where to store the created #idmef_web_service_t object.
  *
@@ -5234,6 +5593,65 @@ int idmef_web_service_clone(idmef_web_service_t *src, idmef_web_service_t **dst)
                 return ret;
 
         return idmef_web_service_copy(src, *dst);
+}
+
+/**
+ * idmef_web_service_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_web_service_compare(const idmef_web_service_t *obj1, const idmef_web_service_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(&obj1->url, &obj2->url);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->cgi, obj2->cgi);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->http_method, obj2->http_method);
+        if ( ret != 0 )
+                return ret;
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                prelude_string_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->arg_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, prelude_string_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->arg_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, prelude_string_t, list);
+                                break;
+                        }
+                     
+                        ret = prelude_string_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        return ret;
 }
 
 /**
@@ -5959,6 +6377,70 @@ int idmef_snmp_service_clone(idmef_snmp_service_t *src, idmef_snmp_service_t **d
                 return ret;
 
         return idmef_snmp_service_copy(src, *dst);
+}
+
+/**
+ * idmef_snmp_service_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_snmp_service_compare(const idmef_snmp_service_t *obj1, const idmef_snmp_service_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(obj1->oid, obj2->oid);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->message_processing_model_is_set != obj2->message_processing_model_is_set )
+                return -1;
+
+        if ( obj1->message_processing_model != obj2->message_processing_model )
+                return -1;
+
+        if ( obj1->security_model_is_set != obj2->security_model_is_set )
+                return -1;
+
+        if ( obj1->security_model != obj2->security_model )
+                return -1;
+
+        ret = prelude_string_compare(obj1->security_name, obj2->security_name);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->security_level_is_set != obj2->security_level_is_set )
+                return -1;
+
+        if ( obj1->security_level != obj2->security_level )
+                return -1;
+
+        ret = prelude_string_compare(obj1->context_name, obj2->context_name);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->context_engine_id, obj2->context_engine_id);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->command, obj2->command);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->community, obj2->community);
+        if ( ret != 0 )
+                return ret;
+
+        return ret;
 }
 
 /**
@@ -6835,6 +7317,83 @@ int idmef_service_clone(idmef_service_t *src, idmef_service_t **dst)
 }
 
 /**
+ * idmef_service_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_service_compare(const idmef_service_t *obj1, const idmef_service_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(obj1->ident, obj2->ident);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->ip_version_is_set != obj2->ip_version_is_set )
+                return -1;
+
+        if ( obj1->ip_version != obj2->ip_version )
+                return -1;
+
+        if ( obj1->iana_protocol_number_is_set != obj2->iana_protocol_number_is_set )
+                return -1;
+
+        if ( obj1->iana_protocol_number != obj2->iana_protocol_number )
+                return -1;
+
+        ret = prelude_string_compare(obj1->iana_protocol_name, obj2->iana_protocol_name);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->name, obj2->name);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->port_is_set != obj2->port_is_set )
+                return -1;
+
+        if ( obj1->port != obj2->port )
+                return -1;
+
+        ret = prelude_string_compare(obj1->portlist, obj2->portlist);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->protocol, obj2->protocol);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->type != obj2->type )
+                return -1;
+
+        switch ( obj1->type ) {
+
+                case IDMEF_SERVICE_TYPE_WEB:
+                        ret = idmef_web_service_compare(obj1->specific.web_service, obj2->specific.web_service);
+                        break;
+
+                case IDMEF_SERVICE_TYPE_SNMP:
+                        ret = idmef_snmp_service_compare(obj1->specific.snmp_service, obj2->specific.snmp_service);
+                        break;
+
+                default:
+                        break;
+        }
+
+        return ret;
+}
+
+/**
  * idmef_node_new:
  * @ret: Pointer where to store the created #idmef_node_t object.
  *
@@ -7345,6 +7904,68 @@ int idmef_node_clone(idmef_node_t *src, idmef_node_t **dst)
                 return ret;
 
         return idmef_node_copy(src, *dst);
+}
+
+/**
+ * idmef_node_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_node_compare(const idmef_node_t *obj1, const idmef_node_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(obj1->ident, obj2->ident);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->category != obj2->category )
+                return -1;
+
+        ret = prelude_string_compare(obj1->location, obj2->location);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->name, obj2->name);
+        if ( ret != 0 )
+                return ret;
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                idmef_address_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->address_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, idmef_address_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->address_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, idmef_address_t, list);
+                                break;
+                        }
+                     
+                        ret = idmef_address_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        return ret;
 }
 
 /**
@@ -7931,6 +8552,55 @@ int idmef_source_clone(idmef_source_t *src, idmef_source_t **dst)
 }
 
 /**
+ * idmef_source_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_source_compare(const idmef_source_t *obj1, const idmef_source_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(obj1->ident, obj2->ident);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->spoofed != obj2->spoofed )
+                return -1;
+
+        ret = prelude_string_compare(obj1->interface, obj2->interface);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_node_compare(obj1->node, obj2->node);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_user_compare(obj1->user, obj2->user);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_process_compare(obj1->process, obj2->process);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_service_compare(obj1->service, obj2->service);
+        if ( ret != 0 )
+                return ret;
+
+        return ret;
+}
+
+/**
  * idmef_file_access_new:
  * @ret: Pointer where to store the created #idmef_file_access_t object.
  *
@@ -8246,6 +8916,57 @@ int idmef_file_access_clone(idmef_file_access_t *src, idmef_file_access_t **dst)
                 return ret;
 
         return idmef_file_access_copy(src, *dst);
+}
+
+/**
+ * idmef_file_access_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_file_access_compare(const idmef_file_access_t *obj1, const idmef_file_access_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = idmef_user_id_compare(&obj1->user_id, &obj2->user_id);
+        if ( ret != 0 )
+                return ret;
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                prelude_string_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->permission_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, prelude_string_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->permission_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, prelude_string_t, list);
+                                break;
+                        }
+                     
+                        ret = prelude_string_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        return ret;
 }
 
 /**
@@ -8757,6 +9478,62 @@ int idmef_inode_clone(idmef_inode_t *src, idmef_inode_t **dst)
 }
 
 /**
+ * idmef_inode_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_inode_compare(const idmef_inode_t *obj1, const idmef_inode_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = idmef_time_compare(obj1->change_time, obj2->change_time);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->number_is_set != obj2->number_is_set )
+                return -1;
+
+        if ( obj1->number != obj2->number )
+                return -1;
+
+        if ( obj1->major_device_is_set != obj2->major_device_is_set )
+                return -1;
+
+        if ( obj1->major_device != obj2->major_device )
+                return -1;
+
+        if ( obj1->minor_device_is_set != obj2->minor_device_is_set )
+                return -1;
+
+        if ( obj1->minor_device != obj2->minor_device )
+                return -1;
+
+        if ( obj1->c_major_device_is_set != obj2->c_major_device_is_set )
+                return -1;
+
+        if ( obj1->c_major_device != obj2->c_major_device )
+                return -1;
+
+        if ( obj1->c_minor_device_is_set != obj2->c_minor_device_is_set )
+                return -1;
+
+        if ( obj1->c_minor_device != obj2->c_minor_device )
+                return -1;
+
+        return ret;
+}
+
+/**
  * idmef_checksum_new:
  * @ret: Pointer where to store the created #idmef_checksum_t object.
  *
@@ -9059,6 +9836,39 @@ int idmef_checksum_clone(idmef_checksum_t *src, idmef_checksum_t **dst)
                 return ret;
 
         return idmef_checksum_copy(src, *dst);
+}
+
+/**
+ * idmef_checksum_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_checksum_compare(const idmef_checksum_t *obj1, const idmef_checksum_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(&obj1->value, &obj2->value);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->key, obj2->key);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->algorithm != obj2->algorithm )
+                return -1;
+
+        return ret;
 }
 
 /**
@@ -10366,6 +11176,156 @@ int idmef_file_clone(idmef_file_t *src, idmef_file_t **dst)
 }
 
 /**
+ * idmef_file_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_file_compare(const idmef_file_t *obj1, const idmef_file_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(obj1->ident, obj2->ident);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(&obj1->name, &obj2->name);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(&obj1->path, &obj2->path);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_time_compare(obj1->create_time, obj2->create_time);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_time_compare(obj1->modify_time, obj2->modify_time);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_time_compare(obj1->access_time, obj2->access_time);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->data_size_is_set != obj2->data_size_is_set )
+                return -1;
+
+        if ( obj1->data_size != obj2->data_size )
+                return -1;
+
+        if ( obj1->disk_size_is_set != obj2->disk_size_is_set )
+                return -1;
+
+        if ( obj1->disk_size != obj2->disk_size )
+                return -1;
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                idmef_file_access_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->file_access_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, idmef_file_access_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->file_access_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, idmef_file_access_t, list);
+                                break;
+                        }
+                     
+                        ret = idmef_file_access_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                idmef_linkage_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->linkage_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, idmef_linkage_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->linkage_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, idmef_linkage_t, list);
+                                break;
+                        }
+                     
+                        ret = idmef_linkage_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        ret = idmef_inode_compare(obj1->inode, obj2->inode);
+        if ( ret != 0 )
+                return ret;
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                idmef_checksum_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->checksum_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, idmef_checksum_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->checksum_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, idmef_checksum_t, list);
+                                break;
+                        }
+                     
+                        ret = idmef_checksum_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        if ( obj1->category != obj2->category )
+                return -1;
+
+        if ( obj1->fstype_is_set != obj2->fstype_is_set )
+                return -1;
+
+        if ( obj1->fstype != obj2->fstype )
+                return -1;
+
+        ret = prelude_string_compare(obj1->file_type, obj2->file_type);
+        if ( ret != 0 )
+                return ret;
+
+        return ret;
+}
+
+/**
  * idmef_linkage_new:
  * @ret: Pointer where to store the created #idmef_linkage_t object.
  *
@@ -10725,6 +11685,43 @@ int idmef_linkage_clone(idmef_linkage_t *src, idmef_linkage_t **dst)
                 return ret;
 
         return idmef_linkage_copy(src, *dst);
+}
+
+/**
+ * idmef_linkage_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_linkage_compare(const idmef_linkage_t *obj1, const idmef_linkage_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        if ( obj1->category != obj2->category )
+                return -1;
+
+        ret = prelude_string_compare(&obj1->name, &obj2->name);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(&obj1->path, &obj2->path);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_file_compare(obj1->file, obj2->file);
+        if ( ret != 0 )
+                return ret;
+
+        return ret;
 }
 
 /**
@@ -11442,6 +12439,80 @@ int idmef_target_clone(idmef_target_t *src, idmef_target_t **dst)
                 return ret;
 
         return idmef_target_copy(src, *dst);
+}
+
+/**
+ * idmef_target_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_target_compare(const idmef_target_t *obj1, const idmef_target_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(obj1->ident, obj2->ident);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->decoy != obj2->decoy )
+                return -1;
+
+        ret = prelude_string_compare(obj1->interface, obj2->interface);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_node_compare(obj1->node, obj2->node);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_user_compare(obj1->user, obj2->user);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_process_compare(obj1->process, obj2->process);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_service_compare(obj1->service, obj2->service);
+        if ( ret != 0 )
+                return ret;
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                idmef_file_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->file_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, idmef_file_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->file_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, idmef_file_t, list);
+                                break;
+                        }
+                     
+                        ret = idmef_file_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        return ret;
 }
 
 /**
@@ -12255,6 +13326,68 @@ int idmef_analyzer_clone(idmef_analyzer_t *src, idmef_analyzer_t **dst)
 }
 
 /**
+ * idmef_analyzer_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_analyzer_compare(const idmef_analyzer_t *obj1, const idmef_analyzer_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(obj1->analyzerid, obj2->analyzerid);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->name, obj2->name);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->manufacturer, obj2->manufacturer);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->model, obj2->model);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->version, obj2->version);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->class, obj2->class);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->ostype, obj2->ostype);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->osversion, obj2->osversion);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_node_compare(obj1->node, obj2->node);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_process_compare(obj1->process, obj2->process);
+        if ( ret != 0 )
+                return ret;
+
+        return ret;
+}
+
+/**
  * idmef_alertident_new:
  * @ret: Pointer where to store the created #idmef_alertident_t object.
  *
@@ -12504,6 +13637,36 @@ int idmef_alertident_clone(idmef_alertident_t *src, idmef_alertident_t **dst)
                 return ret;
 
         return idmef_alertident_copy(src, *dst);
+}
+
+/**
+ * idmef_alertident_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_alertident_compare(const idmef_alertident_t *obj1, const idmef_alertident_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(&obj1->alertident, &obj2->alertident);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->analyzerid, obj2->analyzerid);
+        if ( ret != 0 )
+                return ret;
+
+        return ret;
 }
 
 /**
@@ -12882,6 +14045,47 @@ int idmef_impact_clone(idmef_impact_t *src, idmef_impact_t **dst)
 }
 
 /**
+ * idmef_impact_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_impact_compare(const idmef_impact_t *obj1, const idmef_impact_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        if ( obj1->severity_is_set != obj2->severity_is_set )
+                return -1;
+
+        if ( obj1->severity != obj2->severity )
+                return -1;
+
+        if ( obj1->completion_is_set != obj2->completion_is_set )
+                return -1;
+
+        if ( obj1->completion != obj2->completion )
+                return -1;
+
+        if ( obj1->type != obj2->type )
+                return -1;
+
+        ret = prelude_string_compare(obj1->description, obj2->description);
+        if ( ret != 0 )
+                return ret;
+
+        return ret;
+}
+
+/**
  * idmef_action_new:
  * @ret: Pointer where to store the created #idmef_action_t object.
  *
@@ -13128,6 +14332,35 @@ int idmef_action_clone(idmef_action_t *src, idmef_action_t **dst)
 }
 
 /**
+ * idmef_action_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_action_compare(const idmef_action_t *obj1, const idmef_action_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        if ( obj1->category != obj2->category )
+                return -1;
+
+        ret = prelude_string_compare(obj1->description, obj2->description);
+        if ( ret != 0 )
+                return ret;
+
+        return ret;
+}
+
+/**
  * idmef_confidence_new:
  * @ret: Pointer where to store the created #idmef_confidence_t object.
  *
@@ -13348,6 +14581,34 @@ int idmef_confidence_clone(idmef_confidence_t *src, idmef_confidence_t **dst)
                 return ret;
 
         return idmef_confidence_copy(src, *dst);
+}
+
+/**
+ * idmef_confidence_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_confidence_compare(const idmef_confidence_t *obj1, const idmef_confidence_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        if ( obj1->rating != obj2->rating )
+                return -1;
+
+        if ( obj1->confidence != obj2->confidence )
+                return -1;
+
+        return ret;
 }
 
 /**
@@ -13738,6 +14999,61 @@ int idmef_assessment_clone(idmef_assessment_t *src, idmef_assessment_t **dst)
 }
 
 /**
+ * idmef_assessment_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_assessment_compare(const idmef_assessment_t *obj1, const idmef_assessment_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = idmef_impact_compare(obj1->impact, obj2->impact);
+        if ( ret != 0 )
+                return ret;
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                idmef_action_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->action_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, idmef_action_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->action_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, idmef_action_t, list);
+                                break;
+                        }
+                     
+                        ret = idmef_action_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        ret = idmef_confidence_compare(obj1->confidence, obj2->confidence);
+        if ( ret != 0 )
+                return ret;
+
+        return ret;
+}
+
+/**
  * idmef_tool_alert_new:
  * @ret: Pointer where to store the created #idmef_tool_alert_t object.
  *
@@ -14119,6 +15435,61 @@ int idmef_tool_alert_clone(idmef_tool_alert_t *src, idmef_tool_alert_t **dst)
 }
 
 /**
+ * idmef_tool_alert_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_tool_alert_compare(const idmef_tool_alert_t *obj1, const idmef_tool_alert_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(&obj1->name, &obj2->name);
+        if ( ret != 0 )
+                return ret;
+
+        ret = prelude_string_compare(obj1->command, obj2->command);
+        if ( ret != 0 )
+                return ret;
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                idmef_alertident_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->alertident_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, idmef_alertident_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->alertident_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, idmef_alertident_t, list);
+                                break;
+                        }
+                     
+                        ret = idmef_alertident_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        return ret;
+}
+
+/**
  * idmef_correlation_alert_new:
  * @ret: Pointer where to store the created #idmef_correlation_alert_t object.
  *
@@ -14431,6 +15802,57 @@ int idmef_correlation_alert_clone(idmef_correlation_alert_t *src, idmef_correlat
 }
 
 /**
+ * idmef_correlation_alert_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_correlation_alert_compare(const idmef_correlation_alert_t *obj1, const idmef_correlation_alert_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(&obj1->name, &obj2->name);
+        if ( ret != 0 )
+                return ret;
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                idmef_alertident_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->alertident_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, idmef_alertident_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->alertident_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, idmef_alertident_t, list);
+                                break;
+                        }
+                     
+                        ret = idmef_alertident_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        return ret;
+}
+
+/**
  * idmef_overflow_alert_new:
  * @ret: Pointer where to store the created #idmef_overflow_alert_t object.
  *
@@ -14739,6 +16161,42 @@ int idmef_overflow_alert_clone(idmef_overflow_alert_t *src, idmef_overflow_alert
                 return ret;
 
         return idmef_overflow_alert_copy(src, *dst);
+}
+
+/**
+ * idmef_overflow_alert_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_overflow_alert_compare(const idmef_overflow_alert_t *obj1, const idmef_overflow_alert_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(&obj1->program, &obj2->program);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->size_is_set != obj2->size_is_set )
+                return -1;
+
+        if ( obj1->size != obj2->size )
+                return -1;
+
+        ret = idmef_data_compare(obj1->buffer, obj2->buffer);
+        if ( ret != 0 )
+                return ret;
+
+        return ret;
 }
 
 /**
@@ -16134,6 +17592,175 @@ int idmef_alert_clone(idmef_alert_t *src, idmef_alert_t **dst)
 }
 
 /**
+ * idmef_alert_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_alert_compare(const idmef_alert_t *obj1, const idmef_alert_t *obj2)
+{
+        int ret = 0;
+
+        printf("%p %p\n", obj1, obj2);
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(obj1->messageid, obj2->messageid);
+        if ( ret != 0 )
+                return ret;
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                idmef_analyzer_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->analyzer_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, idmef_analyzer_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->analyzer_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, idmef_analyzer_t, list);
+                                break;
+                        }
+                     
+                        ret = idmef_analyzer_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        ret = idmef_time_compare(&obj1->create_time, &obj2->create_time);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_classification_compare(obj1->classification, obj2->classification);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_time_compare(obj1->detect_time, obj2->detect_time);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_time_compare(obj1->analyzer_time, obj2->analyzer_time);
+        if ( ret != 0 )
+                return ret;
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                idmef_source_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->source_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, idmef_source_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->source_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, idmef_source_t, list);
+                                break;
+                        }
+                        
+                        ret = idmef_source_compare(entry1, entry2);
+                        printf("compare %p %p ret = %d\n", entry1, entry2, ret);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                idmef_target_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->target_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, idmef_target_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->target_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, idmef_target_t, list);
+                                break;
+                        }
+                     
+                        ret = idmef_target_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        ret = idmef_assessment_compare(obj1->assessment, obj2->assessment);
+        if ( ret != 0 )
+                return ret;
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                idmef_additional_data_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->additional_data_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, idmef_additional_data_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->additional_data_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, idmef_additional_data_t, list);
+                                break;
+                        }
+                     
+                        ret = idmef_additional_data_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        if ( obj1->type != obj2->type )
+                return -1;
+
+        switch ( obj1->type ) {
+
+                case IDMEF_ALERT_TYPE_TOOL:
+                        ret = idmef_tool_alert_compare(obj1->detail.tool_alert, obj2->detail.tool_alert);
+                        break;
+
+                case IDMEF_ALERT_TYPE_CORRELATION:
+                        ret = idmef_correlation_alert_compare(obj1->detail.correlation_alert, obj2->detail.correlation_alert);
+                        break;
+
+                case IDMEF_ALERT_TYPE_OVERFLOW:
+                        ret = idmef_overflow_alert_compare(obj1->detail.overflow_alert, obj2->detail.overflow_alert);
+                        break;
+
+                default:
+                        break;
+        }
+
+        return ret;
+}
+
+/**
  * idmef_heartbeat_new:
  * @ret: Pointer where to store the created #idmef_heartbeat_t object.
  *
@@ -16782,6 +18409,96 @@ int idmef_heartbeat_clone(idmef_heartbeat_t *src, idmef_heartbeat_t **dst)
 }
 
 /**
+ * idmef_heartbeat_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_heartbeat_compare(const idmef_heartbeat_t *obj1, const idmef_heartbeat_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(obj1->messageid, obj2->messageid);
+        if ( ret != 0 )
+                return ret;
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                idmef_analyzer_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->analyzer_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, idmef_analyzer_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->analyzer_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, idmef_analyzer_t, list);
+                                break;
+                        }
+                     
+                        ret = idmef_analyzer_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        ret = idmef_time_compare(&obj1->create_time, &obj2->create_time);
+        if ( ret != 0 )
+                return ret;
+
+        ret = idmef_time_compare(obj1->analyzer_time, obj2->analyzer_time);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->heartbeat_interval_is_set != obj2->heartbeat_interval_is_set )
+                return -1;
+
+        if ( obj1->heartbeat_interval != obj2->heartbeat_interval )
+                return -1;
+
+        {
+                prelude_list_t *tmp1, *tmp2;
+                idmef_additional_data_t *entry1, *entry2;
+
+                tmp1 = tmp2 = NULL;
+                do {
+                        entry1 = entry2 = NULL;
+
+                        prelude_list_for_each_continue(&obj1->additional_data_list, tmp1) {
+                                entry1 = prelude_list_entry(tmp1, idmef_additional_data_t, list);
+                                break;
+                        }
+
+                        prelude_list_for_each_continue(&obj2->additional_data_list, tmp2) {
+                                entry2 = prelude_list_entry(tmp2, idmef_additional_data_t, list);
+                                break;
+                        }
+                     
+                        ret = idmef_additional_data_compare(entry1, entry2);
+                        if ( ret != 0 )
+                                return ret;
+
+                } while ( entry1 && entry2 );
+        }
+
+        return ret;
+}
+
+/**
  * idmef_message_new:
  * @ret: Pointer where to store the created #idmef_message_t object.
  *
@@ -17157,6 +18874,49 @@ int idmef_message_clone(idmef_message_t *src, idmef_message_t **dst)
                 return ret;
 
         return idmef_message_copy(src, *dst);
+}
+
+/**
+ * idmef_message_compare:
+ * @obj1: Object to compare with @obj2.
+ * @obj2: Object to compare with @obj1.
+ *
+ * Compare @obj1 with @obj2.
+ *
+ * Returns: 0 on match, a negative value on comparison failure.
+ */
+int idmef_message_compare(const idmef_message_t *obj1, const idmef_message_t *obj2)
+{
+        int ret = 0;
+
+        if ( obj1 == NULL && obj2 == NULL )
+                return 0;
+
+        else if ( obj1 == NULL || obj2 == NULL )
+                return -1;
+
+        ret = prelude_string_compare(&obj1->version, &obj2->version);
+        if ( ret != 0 )
+                return ret;
+
+        if ( obj1->type != obj2->type )
+                return -1;
+
+        switch ( obj1->type ) {
+
+                case IDMEF_MESSAGE_TYPE_ALERT:
+                        ret = idmef_alert_compare(obj1->message.alert, obj2->message.alert);
+                        break;
+
+                case IDMEF_MESSAGE_TYPE_HEARTBEAT:
+                        ret = idmef_heartbeat_compare(obj1->message.heartbeat, obj2->message.heartbeat);
+                        break;
+
+                default:
+                        break;
+        }
+
+        return ret;
 }
 
 void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg)

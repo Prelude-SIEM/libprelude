@@ -121,6 +121,7 @@ typedef struct \{
 	const char *(*to_string)(int val);
         int (*copy)(const void *src, void *dst);
         int (*clone)(const void *src, void **dst);
+        int (*compare)(const void *obj1, const void *obj2);
         void *(*ref)(void *src);
         void (*destroy)(void *obj);
 \} object_data_t;
@@ -132,7 +133,7 @@ const object_data_t object_data[] = \{
     foreach my $obj ( sort { $a->{id} <=> $b->{id} } map { ($_->{obj_type} != &OBJ_PRE_DECLARED ? $_ : () ) } @{ $tree->{obj_list} } ) {
 
 	for ( my $i = $last_id + 1; $i < $obj->{id}; $i++ ) {
-	    $self->output("        \{ \"(unassigned)\", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL \}, /* ID: $i */\n");
+	    $self->output("        \{ \"(unassigned)\", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL \}, /* ID: $i */\n");
 	}
 
 	$last_id = $obj->{id};
@@ -146,6 +147,7 @@ const object_data_t object_data[] = \{
 		      "NULL, ",
 		      "(void *) idmef_$obj->{short_typename}_copy, ",
 		      "(void *) idmef_$obj->{short_typename}_clone, ",
+		      "(void *) idmef_$obj->{short_typename}_compare, ",
 		      "(void *) idmef_$obj->{short_typename}_ref, ",
                       "(void *) idmef_$obj->{short_typename}_destroy \}, ",
 		      "/* ID: $obj->{id} */\n") if ( $obj->{obj_type} == &OBJ_STRUCT );
