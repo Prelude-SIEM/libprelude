@@ -290,7 +290,7 @@ static int idmef_path_get_internal(idmef_value_t **value, idmef_path_t *path,
                 if ( which == INDEX_FORBIDDEN )
                         return idmef_path_get_internal(value, path, depth + 1, child, child_class);
                 
-                if ( which == INDEX_UNDEFINED )
+                if ( which == INDEX_UNDEFINED || which == IDMEF_LIST_APPEND || which == IDMEF_LIST_PREPEND )
                         return idmef_path_get_list_internal(value, path, depth + 1, child, child_class);
                 
                 return idmef_path_get_nth_internal(value, path, depth + 1, child, child_class, which);
