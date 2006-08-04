@@ -85,7 +85,7 @@ struct idmef_path {
 
 typedef struct {
         int index;
-        idmef_path_t *path;
+        const idmef_path_t *path;
         idmef_message_t *message;
         prelude_bool_t reversed;
         prelude_bool_t delete_list;
@@ -185,12 +185,12 @@ static int build_name(idmef_path_t *path)
 
 
 
-static int idmef_path_get_internal(idmef_value_t **ret, idmef_path_t *path, unsigned int depth,
-                                   void *parent, idmef_class_id_t parent_class);
+static int idmef_path_get_internal(idmef_value_t **ret, const idmef_path_t *path,
+                                   unsigned int depth, void *parent, idmef_class_id_t parent_class);
 
 
 static int idmef_path_get_list_internal(idmef_value_t **value_list,
-                                        idmef_path_t *path, int depth,
+                                        const idmef_path_t *path, int depth,
                                         prelude_list_t *list, idmef_class_id_t parent_class)
 {
         int ret;
@@ -238,7 +238,7 @@ static int idmef_path_get_list_internal(idmef_value_t **value_list,
 
 
 
-static int idmef_path_get_nth_internal(idmef_value_t **value, idmef_path_t *path,
+static int idmef_path_get_nth_internal(idmef_value_t **value, const idmef_path_t *path,
                                        unsigned int depth, prelude_list_t *list,
                                        idmef_class_id_t parent_class, int which)
 {
@@ -265,7 +265,7 @@ static int idmef_path_get_nth_internal(idmef_value_t **value, idmef_path_t *path
 
 
 
-static int idmef_path_get_internal(idmef_value_t **value, idmef_path_t *path,
+static int idmef_path_get_internal(idmef_value_t **value, const idmef_path_t *path,
                                    unsigned int depth, void *parent, idmef_class_id_t parent_class)
 {
         void *child;
@@ -327,7 +327,7 @@ static void delete_listed_child(void *parent, idmef_class_id_t class, idmef_path
 
 
 
-static int _idmef_path_set(idmef_path_t *path, idmef_message_t *message, idmef_value_t *value, prelude_bool_t *delete_list)
+static int _idmef_path_set(const idmef_path_t *path, idmef_message_t *message, idmef_value_t *value, prelude_bool_t *delete_list)
 {
         int i, ret, index;
         void *ptr, *child;
@@ -418,7 +418,7 @@ static int do_idmef_value_iterate(idmef_value_t *value, value_list_t *vl)
  *
  * Returns: The number of element retrieved, or a negative value if an error occured.
  */
-int idmef_path_get(idmef_path_t *path, idmef_message_t *message, idmef_value_t **ret)
+int idmef_path_get(const idmef_path_t *path, idmef_message_t *message, idmef_value_t **ret)
 {
         return idmef_path_get_internal(ret, path, 0, message, IDMEF_CLASS_ID_MESSAGE);
 }
@@ -435,7 +435,7 @@ int idmef_path_get(idmef_path_t *path, idmef_message_t *message, idmef_value_t *
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
-int idmef_path_set(idmef_path_t *path, idmef_message_t *message, idmef_value_t *value)
+int idmef_path_set(const idmef_path_t *path, idmef_message_t *message, idmef_value_t *value)
 {
         prelude_bool_t delete_list = TRUE;
         idmef_path_element_t *elem = &path->elem[path->depth - 1];
