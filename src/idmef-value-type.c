@@ -376,17 +376,8 @@ static int data_compare(const idmef_value_type_t *t1, const idmef_value_type_t *
                         size_t len, idmef_criterion_operator_t op)
 {
         int ret;
-        size_t len1, len2;
-        idmef_data_t *d1 = t1->data.data_val, *d2 = t2->data.data_val;
         
-        len1 = idmef_data_get_len(d1);
-        len2 = idmef_data_get_len(d2);
-
-        if ( len1 == len2 )
-                ret = memcmp(idmef_data_get_data(d1), idmef_data_get_data(d2), len2);
-        else 
-                ret = (len1 > len2) ? 1 : -1;   
-        
+        ret = idmef_data_compare(t1->data.data_val, t2->data.data_val);        
         if ( ret == 0 && op & IDMEF_CRITERION_OPERATOR_EQUAL )
                 return 0;
 
