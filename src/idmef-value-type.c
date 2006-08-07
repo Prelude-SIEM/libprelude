@@ -40,7 +40,8 @@
 #include "idmef-value-type.h"
 
 
-#define CLASS_OPERATOR  IDMEF_CRITERION_OPERATOR_NULL|IDMEF_CRITERION_OPERATOR_NOT
+#define CLASS_OPERATOR  IDMEF_CRITERION_OPERATOR_NULL|IDMEF_CRITERION_OPERATOR_NOT| \
+                        IDMEF_CRITERION_OPERATOR_EQUAL
 
 #define DATA_OPERATOR    IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT| \
                          IDMEF_CRITERION_OPERATOR_LESSER|IDMEF_CRITERION_OPERATOR_GREATER
@@ -438,6 +439,14 @@ static void data_destroy(idmef_value_type_t *type)
 /*
  *
  */
+static int class_compare(const idmef_value_type_t *c1,
+                         const idmef_value_type_t *c2, size_t len, idmef_criterion_operator_t op)
+{
+        return idmef_class_compare(c1->data.class_val.class_id,
+                                   c1->data.class_val.object, c2->data.class_val.object);
+}
+
+
 static int class_copy(const idmef_value_type_t *src, void *dst, size_t size)
 {
         return idmef_class_copy(src->data.class_val.class_id, src->data.class_val.object, dst);
@@ -488,7 +497,8 @@ static const idmef_value_type_operation_t ops_tbl[] = {
         { "enum", sizeof(idmef_value_type_enum_t), INTEGER_OPERATOR, enum_copy,
           generic_clone, NULL, generic_compare, enum_read, enum_write,            },
         { "list", 0, 0, NULL, NULL, NULL, NULL, NULL, NULL                        },
-        { "class", 0, CLASS_OPERATOR, class_copy, class_clone, class_destroy, NULL, NULL, NULL },
+        { "class", 0, CLASS_OPERATOR, class_copy,
+          class_clone, class_destroy, class_compare, NULL, NULL                   },
 };
 
 
