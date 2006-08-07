@@ -243,16 +243,16 @@ static int enum_write(const idmef_value_type_t *src, prelude_string_t *out)
 static int time_compare(const idmef_value_type_t *t1, const idmef_value_type_t *t2,
                         size_t size, idmef_criterion_operator_t op)
 {
-	double time1 = idmef_time_get_sec(t1->data.time_val) + idmef_time_get_usec(t1->data.time_val) * 1e-6;
-	double time2 = idmef_time_get_sec(t2->data.time_val) + idmef_time_get_usec(t2->data.time_val) * 1e-6;
+        int ret;
 
-        if ( op & IDMEF_CRITERION_OPERATOR_EQUAL && time1 == time2 )
+        ret = idmef_time_compare(t1->data.time_val, t2->data.time_val);
+        if ( op & IDMEF_CRITERION_OPERATOR_EQUAL && ret == 0 )
                 return 0;
         
-        else if ( op & IDMEF_CRITERION_OPERATOR_LESSER && time1 < time2 )
+        else if ( op & IDMEF_CRITERION_OPERATOR_LESSER && ret < 0 )
                 return 0;
 
-        else if ( op & IDMEF_CRITERION_OPERATOR_GREATER && time1 > time2 )
+        else if ( op & IDMEF_CRITERION_OPERATOR_GREATER && ret > 0 )
                 return 0;
 
         return -1;
