@@ -181,6 +181,16 @@ int idmef_class_clone(idmef_class_id_t class, const void *src, void **dst)
 
 
 
+int idmef_class_compare(idmef_class_id_t class, const void *c1, const void *c2)
+{
+        if ( class < 0 )
+                return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
+
+        return object_data[class].compare(c1, c2);
+}
+
+
+
 int idmef_class_destroy(idmef_class_id_t class, void *obj)
 {
         if ( class < 0 )
