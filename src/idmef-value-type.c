@@ -312,11 +312,17 @@ static void time_destroy(idmef_value_type_t *type)
 static int string_compare(const idmef_value_type_t *t1, const idmef_value_type_t *t2,
                           size_t size, idmef_criterion_operator_t op)
 {
-        const char *s1, *s2;
+        const char *s1 = NULL, *s2 = NULL;
+
+        if ( t1->data.string_val )
+                s1 = prelude_string_get_string(t1->data.string_val);
+
+        if ( t2->data.string_val )
+                s2 = prelude_string_get_string(t2->data.string_val);
+
+        if ( ! s1 || ! s2 )
+                return (s1) ? 1 : -1;
         
-        s1 = prelude_string_get_string(t1->data.string_val);
-        s2 = prelude_string_get_string(t2->data.string_val);
-                
         if ( op == (IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE) && strcasecmp(s1, s2) == 0 )
                 return 0;
         
@@ -572,8 +578,11 @@ int idmef_value_type_compare(const idmef_value_type_t *type1,
                                              idmef_value_type_to_string(type1->id));
         
         ret = ops_tbl[type1->id].compare(type1, type2, ops_tbl[type1->id].len, op & ~IDMEF_CRITERION_OPERATOR_NOT);
+        if ( ret < 0 ) /* not an error -> no match */
+                ret = 1; 
+        
         if ( op & IDMEF_CRITERION_OPERATOR_NOT )
-                return (ret == 0) ? -1 : 0;
+                return (ret == 0) ? 1 : 0;
         else
                 return ret;
 }
