@@ -235,6 +235,11 @@ PyObject *swig_python_data(idmef_data_t *data)
 };
 
 
+%typemap(out) FUNC_NO_ERROR {
+	$result = PyInt_FromLong($1);
+};
+
+
 %typemap(out) int {
 	if ( $1 < 0 ) {
 		swig_python_raise_exception($1);
@@ -243,6 +248,8 @@ PyObject *swig_python_data(idmef_data_t *data)
 		$result = PyInt_FromLong($1);
 	}
 };
+
+
 
 %typemap(out) int32_t {
         $result = PyInt_FromLong($1);
@@ -392,6 +399,48 @@ PyObject *swig_python_data(idmef_data_t *data)
 	if ( SWIG_ConvertPtr($input, (void **)&arg$argnum, $1_descriptor, SWIG_POINTER_EXCEPTION|0) )
 		return NULL;
 }
+
+
+/*
+ *
+ */
+%apply FUNC_NO_ERROR {
+	int idmef_additional_data_compare,
+	int idmef_reference_compare,
+	int idmef_classification_compare,
+	int idmef_user_id_compare,
+	int idmef_user_compare,
+	int idmef_address_compare,
+	int idmef_process_compare,
+	int idmef_web_service_compare,
+	int idmef_snmp_service_compare,
+	int idmef_service_compare,
+	int idmef_node_compare,
+	int idmef_source_compare,
+	int idmef_file_access_compare,
+	int idmef_inode_compare,
+	int idmef_linkage_compare,
+	int idmef_checksum_compare,
+	int idmef_file_compare,
+	int idmef_target_compare,
+	int idmef_analyzer_compare,
+	int idmef_alertident_compare,
+	int idmef_impact_compare,
+	int idmef_action_compare,
+	int idmef_confidence_compare,
+	int idmef_assessment_compare,
+	int idmef_tool_alert_compare,
+	int idmef_correlation_alert_compare,
+	int idmef_overflow_alert_compare,
+	int idmef_alert_compare,
+	int idmef_heartbeat_compare,
+	int idmef_message_compare,
+	int prelude_string_compare,
+	int idmef_data_compare,
+	int idmef_time_compare,
+	int idmef_path_compare,
+	int idmef_path_ncompare
+};
 
 
 %pythoncode %{
