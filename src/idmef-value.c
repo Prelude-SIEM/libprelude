@@ -584,23 +584,26 @@ int idmef_value_get(const idmef_value_t *val, void *res)
 static int idmef_value_match_internal(idmef_value_t *val1, void *extra)
 {
         int ret;
-	idmef_value_t *val2;
         compare_t *compare = extra;
-	idmef_criterion_operator_t operator;
-
+        
         if ( idmef_value_is_list(val1) )
-                return idmef_value_iterate(val1, idmef_value_match_internal, extra);
+                ret = idmef_value_iterate(val1, idmef_value_match_internal, extra);
         
-	val2 = compare->val2;
-	operator = compare->operator;
+        else if ( compare->val2 && idmef_value_is_list(compare->val2) ) {
+                ret = idmef_value_match(compare->val2, val1, compare->operator);
+                if ( ret < 0 )
+                        return ret;
 
-        assert(! val1 || ! val2 || val1->type.id == val2->type.id);
-                
-        ret = idmef_value_type_compare(&val1->type, &val2->type, operator);        
-        if ( ret == 0 )
-                compare->match++;
+                compare->match += ret;
+        }
+
+        else {
+                ret = idmef_value_type_compare(&val1->type, &compare->val2->type, compare->operator);
+                if ( ret == 0 )
+                        compare->match++;
+        }
         
-        return 0;
+        return ret;
 }
 
 
@@ -624,7 +627,7 @@ int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_
 	compare.val2 = val2;
 	compare.operator = op;
         
-	ret = idmef_value_iterate(val1, idmef_value_match_internal, &compare);        
+	ret = idmef_value_iterate(val1, idmef_value_match_internal, &compare);
         if ( ret < 0 )
                 return ret;
         
