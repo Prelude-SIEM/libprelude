@@ -416,34 +416,6 @@ static void value_destroy(idmef_criterion_value_t *cv)
 
 
 
-/*
- *
- */
-static int do_match_cb(idmef_value_t *value, void *extra)
-{
-        int ret;
-        struct match_cb *mcb = extra;
-        idmef_criterion_value_t *cv = mcb->cv;
-        idmef_criterion_operator_t operator = mcb->operator;
-
-        if ( idmef_value_is_list(value) )
-                return idmef_value_iterate(value, do_match_cb, mcb);
-
-        /*
-         * In case we are matching against a list of values,
-         * a single mach is considered as a match. If the match fails
-         * we keep trying.
-         */
-        ret = cv->match(cv, operator, value);
-        if ( ret < 0 )
-                return ret;
-
-        if ( ret > 0 )
-                mcb->match++;
-        
-        return 0;
-}
-
 
 void idmef_criterion_value_destroy(idmef_criterion_value_t *value)
 {
@@ -496,18 +468,7 @@ int idmef_criterion_value_to_string(idmef_criterion_value_t *cv, prelude_string_
 int idmef_criterion_value_match(idmef_criterion_value_t *cv, idmef_value_t *value,
                                 idmef_criterion_operator_t op)
 {
-        int ret;
-        struct match_cb mcb;
-
-        mcb.cv = cv;
-        mcb.match = 0;
-        mcb.operator = op;
-        
-        ret = idmef_value_iterate(value, do_match_cb, &mcb);        
-        if ( ret < 0 )
-                return ret;
-        
-        return mcb.match;
+        return idmef_value_match(value, cv->value, op);
 }
 
 
