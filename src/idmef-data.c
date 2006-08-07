@@ -607,13 +607,13 @@ int idmef_data_compare(const idmef_data_t *data1, const idmef_data_t *data2)
 
         else if ( ! data1 || ! data2 )
                 return (data1) ? 1 : -1;
+
+        if ( data1->type != data2->type )
+                return -1;
         
         if ( data1->len != data2->len )
                 return (data1->len > data2->len) ? 1 : -1;
         
-        else if ( data1->type != data2->type )
-                return -1;
-
         if ( data1->type == IDMEF_DATA_TYPE_CHAR_STRING || data1->type == IDMEF_DATA_TYPE_BYTE_STRING )
                 return memcmp(data1->data.ro_data, data2->data.ro_data, data1->len);
         else
