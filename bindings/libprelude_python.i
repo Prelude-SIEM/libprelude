@@ -103,6 +103,7 @@ PyObject *swig_python_data(idmef_data_t *data)
 	}
 };
 
+%typemap(freearg) const char * "";
 
 %typemap(in) const unsigned char * {
 	if ( PyString_Check($input) )
