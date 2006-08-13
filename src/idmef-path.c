@@ -309,7 +309,7 @@ static int idmef_path_get_internal(idmef_value_t **value, const idmef_path_t *pa
 }
 
 
-static void delete_listed_child(void *parent, idmef_class_id_t class, idmef_path_element_t *elem)
+static void delete_listed_child(void *parent, idmef_class_id_t class, const idmef_path_element_t *elem)
 {
         int ret;
         void *obj;
@@ -332,7 +332,7 @@ static int _idmef_path_set(const idmef_path_t *path, idmef_message_t *message, i
         int i, ret, index;
         void *ptr, *child;
         idmef_value_type_id_t tid;
-        idmef_path_element_t *elem;
+        const idmef_path_element_t *elem;
         idmef_class_id_t class, parent_class;
         
         ptr = message;
@@ -438,7 +438,7 @@ int idmef_path_get(const idmef_path_t *path, idmef_message_t *message, idmef_val
 int idmef_path_set(const idmef_path_t *path, idmef_message_t *message, idmef_value_t *value)
 {
         prelude_bool_t delete_list = TRUE;
-        idmef_path_element_t *elem = &path->elem[path->depth - 1];
+        const idmef_path_element_t *elem = &path->elem[path->depth - 1];
         
         /*
          * Allow raw list copy (example: alert.source = alert.source,
