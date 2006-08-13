@@ -100,8 +100,6 @@ sub	struct
 	    $self->output("        \{ \"$name\", $list, $object, $object_type \},\n");
 	}
     }
-
-    $self->output("        { NULL, 0, 0, 0 }\n");
     $self->output("\};\n\n");
 }
 
@@ -114,6 +112,7 @@ sub	footer
     $self->output("
 typedef struct \{
 	const char *name;
+        size_t children_list_elem;
 	const children_list_t *children_list;
 	int (*get_child)(void *ptr, idmef_class_child_id_t child, void **ret);
 	int (*new_child)(void *ptr, idmef_class_child_id_t child, int n, void **ret);
@@ -133,13 +132,14 @@ const object_data_t object_data[] = \{
     foreach my $obj ( sort { $a->{id} <=> $b->{id} } map { ($_->{obj_type} != &OBJ_PRE_DECLARED ? $_ : () ) } @{ $tree->{obj_list} } ) {
 
 	for ( my $i = $last_id + 1; $i < $obj->{id}; $i++ ) {
-	    $self->output("        \{ \"(unassigned)\", NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL \}, /* ID: $i */\n");
+	    $self->output("        \{ \"(unassigned)\", 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL \}, /* ID: $i */\n");
 	}
 
 	$last_id = $obj->{id};
 
 	$self->output("        \{ ",
 		      "\"$obj->{short_typename}\", ",
+		      "sizeof(idmef_$obj->{short_typename}_children_list) / sizeof(*idmef_$obj->{short_typename}_children_list), ",
 		      "idmef_$obj->{short_typename}_children_list, ",
 		      "_idmef_$obj->{short_typename}_get_child, ",
 		      "_idmef_$obj->{short_typename}_new_child, ",
@@ -154,6 +154,7 @@ const object_data_t object_data[] = \{
 
 	$self->output("        \{ ",
 		      "\"$obj->{short_typename}\", ",
+		      "0, ",
 		      "NULL, ", 
 		      "NULL, ", 
 		      "NULL, ",
@@ -167,7 +168,7 @@ const object_data_t object_data[] = \{
 		      "/* ID: $obj->{id} */\n") if ( $obj->{obj_type} == &OBJ_ENUM );
     }
 
-    $self->output("        \{ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL \}\n");
+    $self->output("        \{ NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL \}\n");
     $self->output("};\n");
 }
 

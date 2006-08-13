@@ -1813,7 +1813,7 @@ int _idmef_additional_data_get_child(void *p, idmef_class_child_id_t child, void
                 case 2:                       
                        return get_value_from_data((idmef_value_t **) childptr, & ptr->data, FALSE);
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -1833,7 +1833,7 @@ int _idmef_additional_data_new_child(void *p, idmef_class_child_id_t child, int 
                         return idmef_additional_data_new_data(ptr, (idmef_data_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -2153,7 +2153,7 @@ int _idmef_reference_get_child(void *p, idmef_class_child_id_t child, void **chi
                 case 3:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->meaning, TRUE);
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -2176,7 +2176,7 @@ int _idmef_reference_new_child(void *p, idmef_class_child_id_t child, int n, voi
                         return idmef_reference_new_meaning(ptr, (prelude_string_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -2553,7 +2553,7 @@ int _idmef_classification_get_child(void *p, idmef_class_child_id_t child, void 
                         return 0;
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -2604,7 +2604,7 @@ int _idmef_classification_new_child(void *p, idmef_class_child_id_t child, int n
                 }
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -2993,7 +2993,7 @@ int _idmef_user_id_get_child(void *p, idmef_class_child_id_t child, void **child
                        return (ptr->number_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->number) : 0;
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -3019,7 +3019,7 @@ int _idmef_user_id_new_child(void *p, idmef_class_child_id_t child, int n, void 
                         return idmef_user_id_new_number(ptr, (uint32_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -3482,7 +3482,7 @@ int _idmef_user_get_child(void *p, idmef_class_child_id_t child, void **childptr
                         return 0;
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -3533,7 +3533,7 @@ int _idmef_user_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                 }
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -3915,7 +3915,7 @@ int _idmef_address_get_child(void *p, idmef_class_child_id_t child, void **child
                 case 5:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->netmask, TRUE);
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -3944,7 +3944,7 @@ int _idmef_address_new_child(void *p, idmef_class_child_id_t child, int n, void 
                         return idmef_address_new_netmask(ptr, (prelude_string_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -4475,7 +4475,7 @@ int _idmef_process_get_child(void *p, idmef_class_child_id_t child, void **child
                         return 0;
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -4566,7 +4566,7 @@ int _idmef_process_new_child(void *p, idmef_class_child_id_t child, int n, void 
                 }
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -5203,7 +5203,7 @@ int _idmef_web_service_get_child(void *p, idmef_class_child_id_t child, void **c
                         return 0;
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -5257,7 +5257,7 @@ int _idmef_web_service_new_child(void *p, idmef_class_child_id_t child, int n, v
                 }
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -5720,7 +5720,7 @@ int _idmef_snmp_service_get_child(void *p, idmef_class_child_id_t child, void **
                 case 8:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->community, TRUE);
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -5758,7 +5758,7 @@ int _idmef_snmp_service_new_child(void *p, idmef_class_child_id_t child, int n, 
                         return idmef_snmp_service_new_community(ptr, (prelude_string_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -6515,7 +6515,7 @@ int _idmef_service_get_child(void *p, idmef_class_child_id_t child, void **child
                         return 0;          
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -6556,7 +6556,7 @@ int _idmef_service_new_child(void *p, idmef_class_child_id_t child, int n, void 
                         return idmef_service_new_snmp_service(ptr, (idmef_snmp_service_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -7455,7 +7455,7 @@ int _idmef_node_get_child(void *p, idmef_class_child_id_t child, void **childptr
                         return 0;
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -7512,7 +7512,7 @@ int _idmef_node_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                 }
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -8039,7 +8039,7 @@ int _idmef_source_get_child(void *p, idmef_class_child_id_t child, void **childp
                         return 0;
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -8071,7 +8071,7 @@ int _idmef_source_new_child(void *p, idmef_class_child_id_t child, int n, void *
                         return idmef_source_new_service(ptr, (idmef_service_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -8658,7 +8658,7 @@ int _idmef_file_access_get_child(void *p, idmef_class_child_id_t child, void **c
                         return 0;
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -8706,7 +8706,7 @@ int _idmef_file_access_new_child(void *p, idmef_class_child_id_t child, int n, v
                 }
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -9031,7 +9031,7 @@ int _idmef_inode_get_child(void *p, idmef_class_child_id_t child, void **childpt
                        return (ptr->c_minor_device_is_set) ? idmef_value_new_uint32((idmef_value_t **) childptr, ptr->c_minor_device) : 0;
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -9060,7 +9060,7 @@ int _idmef_inode_new_child(void *p, idmef_class_child_id_t child, int n, void **
                         return idmef_inode_new_c_minor_device(ptr, (uint32_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -9588,7 +9588,7 @@ int _idmef_checksum_get_child(void *p, idmef_class_child_id_t child, void **chil
                                                                 IDMEF_CLASS_ID_CHECKSUM_ALGORITHM, ptr->algorithm);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -9608,7 +9608,7 @@ int _idmef_checksum_new_child(void *p, idmef_class_child_id_t child, int n, void
                         return idmef_checksum_new_algorithm(ptr, (idmef_checksum_algorithm_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -9973,7 +9973,7 @@ int _idmef_file_get_child(void *p, idmef_class_child_id_t child, void **childptr
                 case 14:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->file_type, TRUE);
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -10122,7 +10122,7 @@ int _idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         return idmef_file_new_file_type(ptr, (prelude_string_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -11384,7 +11384,7 @@ int _idmef_linkage_get_child(void *p, idmef_class_child_id_t child, void **child
                         return 0;
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -11407,7 +11407,7 @@ int _idmef_linkage_new_child(void *p, idmef_class_child_id_t child, int n, void 
                         return idmef_linkage_new_file(ptr, (idmef_file_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -11802,7 +11802,7 @@ int _idmef_target_get_child(void *p, idmef_class_child_id_t child, void **childp
                         return 0;
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -11868,7 +11868,7 @@ int _idmef_target_new_child(void *p, idmef_class_child_id_t child, int n, void *
                 }
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -12586,7 +12586,7 @@ int _idmef_analyzer_get_child(void *p, idmef_class_child_id_t child, void **chil
                         return 0;
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -12627,7 +12627,7 @@ int _idmef_analyzer_new_child(void *p, idmef_class_child_id_t child, int n, void
                         return idmef_analyzer_new_process(ptr, (idmef_process_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -13438,7 +13438,7 @@ int _idmef_alertident_get_child(void *p, idmef_class_child_id_t child, void **ch
                 case 1:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->analyzerid, TRUE);
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -13455,7 +13455,7 @@ int _idmef_alertident_new_child(void *p, idmef_class_child_id_t child, int n, vo
                         return idmef_alertident_new_analyzerid(ptr, (prelude_string_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -13732,7 +13732,7 @@ int _idmef_impact_get_child(void *p, idmef_class_child_id_t child, void **childp
                 case 3:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->description, TRUE);
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -13755,7 +13755,7 @@ int _idmef_impact_new_child(void *p, idmef_class_child_id_t child, int n, void *
                         return idmef_impact_new_description(ptr, (prelude_string_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -14138,7 +14138,7 @@ int _idmef_action_get_child(void *p, idmef_class_child_id_t child, void **childp
                 case 1:
                        return get_value_from_string((idmef_value_t **) childptr,  ptr->description, TRUE);
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -14155,7 +14155,7 @@ int _idmef_action_new_child(void *p, idmef_class_child_id_t child, int n, void *
                         return idmef_action_new_description(ptr, (prelude_string_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -14411,7 +14411,7 @@ int _idmef_confidence_get_child(void *p, idmef_class_child_id_t child, void **ch
                 case 1:
                        return idmef_value_new_float((idmef_value_t **) childptr, ptr->confidence);
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -14428,7 +14428,7 @@ int _idmef_confidence_new_child(void *p, idmef_class_child_id_t child, int n, vo
                         return idmef_confidence_new_confidence(ptr, (float **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -14671,7 +14671,7 @@ int _idmef_assessment_get_child(void *p, idmef_class_child_id_t child, void **ch
                         return 0;
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -14722,7 +14722,7 @@ int _idmef_assessment_new_child(void *p, idmef_class_child_id_t child, int n, vo
                         return idmef_assessment_new_confidence(ptr, (idmef_confidence_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -15109,7 +15109,7 @@ int _idmef_tool_alert_get_child(void *p, idmef_class_child_id_t child, void **ch
                         return 0;
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -15160,7 +15160,7 @@ int _idmef_tool_alert_new_child(void *p, idmef_class_child_id_t child, int n, vo
                 }
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -15543,7 +15543,7 @@ int _idmef_correlation_alert_get_child(void *p, idmef_class_child_id_t child, vo
                         return 0;
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -15591,7 +15591,7 @@ int _idmef_correlation_alert_new_child(void *p, idmef_class_child_id_t child, in
                 }
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -15904,7 +15904,7 @@ int _idmef_overflow_alert_get_child(void *p, idmef_class_child_id_t child, void 
                 case 2:                       
                        return get_value_from_data((idmef_value_t **) childptr,  ptr->buffer, TRUE);
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -15924,7 +15924,7 @@ int _idmef_overflow_alert_new_child(void *p, idmef_class_child_id_t child, int n
                         return idmef_overflow_alert_new_buffer(ptr, (idmef_data_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -16300,7 +16300,7 @@ int _idmef_alert_get_child(void *p, idmef_class_child_id_t child, void **childpt
                         return 0;          
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -16474,7 +16474,7 @@ int _idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **
                         return idmef_alert_new_overflow_alert(ptr, (idmef_overflow_alert_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -17826,7 +17826,7 @@ int _idmef_heartbeat_get_child(void *p, idmef_class_child_id_t child, void **chi
                         return 0;
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -17917,7 +17917,7 @@ int _idmef_heartbeat_new_child(void *p, idmef_class_child_id_t child, int n, voi
                 }
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -18551,7 +18551,7 @@ int _idmef_message_get_child(void *p, idmef_class_child_id_t child, void **child
                         return 0;          
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 
@@ -18571,7 +18571,7 @@ int _idmef_message_new_child(void *p, idmef_class_child_id_t child, int n, void 
                         return idmef_message_new_heartbeat(ptr, (idmef_heartbeat_t **) ret);
 
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         }
 }
 

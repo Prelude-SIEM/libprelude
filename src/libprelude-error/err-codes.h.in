@@ -58,9 +58,9 @@
 31	PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_MISMATCH	Can not compare data of different type
 32	PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE	Could not parse IDMEF value
 
-33	PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN	Unknown IDMEF type or child specified
-34	PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD	Unknown IDMEF child specified
-35	PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_NAME	Unknown IDMEF element name
+33	PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN	Unknown IDMEF class specified
+34	PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD	Unknown IDMEF child specified
+35	PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_NAME	Unknown IDMEF element name
 
 36	PRELUDE_ERROR_IDMEF_PATH_LENGTH		IDMEF path name too long
 37	PRELUDE_ERROR_IDMEF_PATH_DEPTH		IDMEF path maximum depth exceeded
@@ -91,7 +91,10 @@
 58	PRELUDE_ERROR_TLS_WARNING_ALERT		TLS layer returned a warning alert
 59	PRELUDE_ERROR_TLS_FATAL_ALERT		TLS layer returned a fatal alert
 
-#60 to 16381 are free to be used.
+60	PRELUDE_ERROR_IDMEF_CLASS_CHILD_NOT_CLASS	IDMEF child is not a class
+
+
+#61 to 16381 are free to be used.
 
 16382	PRELUDE_ERROR_UNKNOWN_ERRNO		Unknown system error
 

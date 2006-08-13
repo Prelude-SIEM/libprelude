@@ -49,10 +49,43 @@
 #include "idmef-path.h"
 
 
+
+static inline int is_class_valid(idmef_class_id_t class)
+{
+        if ( class < 0 || class >= sizeof(object_data) / sizeof(*object_data) )
+                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN, "Unknown IDMEF class '%d'", (int) class);
+
+        return 0;
+}
+
+
+static inline int is_child_valid(idmef_class_id_t class, idmef_class_child_id_t child)
+{
+        int ret;
+
+        ret = is_class_valid(class);
+        if ( ret < 0 )
+                return ret;
+                
+	if ( child < 0 || child >= object_data[class].children_list_elem )
+		return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD, "Unknown IDMEF child '%d' for class '%s'",
+                                             (int) child, object_data[class].name);
+        
+        return 0;
+}
+
+
+
+
 idmef_class_child_id_t idmef_class_find_child(idmef_class_id_t class, const char *name)
 {
+        int ret;
         idmef_class_child_id_t i;
 	const children_list_t *list;
+
+        ret = is_class_valid(class);
+        if ( ret < 0 )
+                return ret;
                 
 	list = object_data[class].children_list;
                 
@@ -60,7 +93,7 @@ idmef_class_child_id_t idmef_class_find_child(idmef_class_id_t class, const char
 		if ( strcasecmp(list[i].name, name) == 0)
 			return i;
 
-	return prelude_error_verbose(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_NAME, "Unknown IDMEF element '%s'", name);
+	return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD, "Unknown IDMEF child '%s'", name);
 }
 
 
@@ -68,20 +101,26 @@ idmef_class_child_id_t idmef_class_find_child(idmef_class_id_t class, const char
 
 prelude_bool_t idmef_class_is_child_list(idmef_class_id_t class, idmef_class_child_id_t child)
 {
-	if ( class < 0 || child < 0 )
-		return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
-	
-	return object_data[class].children_list[child].list;
+        int ret;
+
+        ret = is_child_valid(class, child);
+        if ( ret < 0 )
+                return ret;
+        
+        return object_data[class].children_list[child].list;
 }
 
 
 
 
 idmef_value_type_id_t idmef_class_get_child_value_type(idmef_class_id_t class, idmef_class_child_id_t child)
-{        
-	if ( class < 0 || child < 0 || ! object_data[class].children_list )
-		return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
-                
+{
+        int ret;
+        
+        ret = is_child_valid(class, child);
+        if ( ret < 0 )
+                return ret;
+        
         return object_data[class].children_list[child].type;
 }
 
@@ -90,27 +129,31 @@ idmef_value_type_id_t idmef_class_get_child_value_type(idmef_class_id_t class, i
 
 idmef_class_id_t idmef_class_get_child_class(idmef_class_id_t class, idmef_class_child_id_t child)
 {
+        int ret;
 	const children_list_t *c;
-
-	if ( class < 0 || child < 0 )
-		return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
-	
-	c = &object_data[class].children_list[child];
         
-        return (c->type == IDMEF_VALUE_TYPE_CLASS || c->type == IDMEF_VALUE_TYPE_ENUM ) ? c->class : -1;
+        ret = is_child_valid(class, child);
+        if ( ret < 0 )
+                return ret;
+
+        c = &object_data[class].children_list[child];
+        if ( c->type != IDMEF_VALUE_TYPE_CLASS && c->type != IDMEF_VALUE_TYPE_ENUM )
+                return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_CHILD_NOT_CLASS);
+        
+        return c->class;
 }
 
 
 
 const char *idmef_class_get_child_name(idmef_class_id_t class, idmef_class_child_id_t child)
 {
-	if ( class < 0 || child < 0 )
-		return NULL;
+        int ret;
 
-        if ( ! object_data[class].children_list )
+        ret = is_child_valid(class, child);
+        if ( ret < 0 )
                 return NULL;
         
-	return object_data[class].children_list[child].name;
+        return object_data[class].children_list[child].name;
 }
 
 
@@ -123,27 +166,36 @@ idmef_class_id_t idmef_class_find(const char *name)
 	for ( i = 0; object_data[i].name != NULL; i++ )
 		if ( strcasecmp(object_data[i].name, name) == 0 )
 			return i;
-        
-	return -1;
+
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_NAME, "Unknown IDMEF class '%s'", name);
 }
 
 
 int idmef_class_enum_to_numeric(idmef_class_id_t class, const char *val)
 {
-    	return (class < 0) ? prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN) : object_data[class].to_numeric(val);
+        int ret;
+
+        ret = is_class_valid(class);
+        if ( ret < 0 )
+                return ret;
+        
+    	return object_data[class].to_numeric(val);
 }
 
 
 const char *idmef_class_enum_to_string(idmef_class_id_t class, int val)
 {
-	return (class < 0) ? NULL : object_data[class].to_string(val);
+	return (is_class_valid(class) < 0) ? NULL : object_data[class].to_string(val);
 }
 
 
 int idmef_class_get_child(void *ptr, idmef_class_id_t class, idmef_class_child_id_t child, void **childptr)
 {
-	if ( class < 0 || child < 0 )
-		return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
+        int ret;
+        
+        ret = is_child_valid(class, child);
+        if ( ret < 0 )
+                return ret;
         
 	return object_data[class].get_child(ptr, child, childptr);
 }
@@ -153,9 +205,12 @@ int idmef_class_get_child(void *ptr, idmef_class_id_t class, idmef_class_child_i
 
 int idmef_class_new_child(void *ptr, idmef_class_id_t class, idmef_class_child_id_t child, int n, void **childptr)
 {
-	if ( class < 0 || child < 0 )
-                return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
-
+        int ret;
+        
+        ret = is_child_valid(class, child);
+        if ( ret < 0 )
+                return ret;
+        
 	return object_data[class].new_child(ptr, child, n, childptr);
 }
 
@@ -163,8 +218,11 @@ int idmef_class_new_child(void *ptr, idmef_class_id_t class, idmef_class_child_i
 
 int idmef_class_copy(idmef_class_id_t class, const void *src, void *dst)
 {
-        if ( class < 0 )
-                return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
+        int ret;
+
+        ret = is_class_valid(class);
+        if ( ret < 0 )
+                return ret;
 
         return object_data[class].copy(src, dst);
 }
@@ -173,8 +231,11 @@ int idmef_class_copy(idmef_class_id_t class, const void *src, void *dst)
 
 int idmef_class_clone(idmef_class_id_t class, const void *src, void **dst)
 {
-        if ( class < 0 )
-                return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
+        int ret;
+
+        ret = is_class_valid(class);
+        if ( ret < 0 )
+                return ret;
 
         return object_data[class].clone(src, dst);
 }
@@ -183,9 +244,12 @@ int idmef_class_clone(idmef_class_id_t class, const void *src, void **dst)
 
 int idmef_class_compare(idmef_class_id_t class, const void *c1, const void *c2)
 {
-        if ( class < 0 )
-                return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
+        int ret;
 
+        ret = is_class_valid(class);
+        if ( ret < 0 )
+                return ret;
+        
         return object_data[class].compare(c1, c2);
 }
 
@@ -193,8 +257,11 @@ int idmef_class_compare(idmef_class_id_t class, const void *c1, const void *c2)
 
 int idmef_class_destroy(idmef_class_id_t class, void *obj)
 {
-        if ( class < 0 )
-                return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
+        int ret;
+
+        ret = is_class_valid(class);
+        if ( ret < 0 )
+                return ret;
         
         object_data[class].destroy(obj);
 
@@ -205,8 +272,11 @@ int idmef_class_destroy(idmef_class_id_t class, void *obj)
 
 int idmef_class_ref(idmef_class_id_t class, void *obj)
 {
-        if ( class < 0 )
-                return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN);
+        int ret;
+
+        ret = is_class_valid(class);
+        if ( ret < 0 )
+                return ret;
         
         object_data[class].ref(obj);
 
@@ -216,5 +286,8 @@ int idmef_class_ref(idmef_class_id_t class, void *obj)
 
 const char *idmef_class_get_name(idmef_class_id_t class)
 {
-	return (class < 0) ? NULL : object_data[class].name;
+        if ( is_class_valid(class) < 0 )
+                return NULL;
+        
+	return object_data[class].name;
 }

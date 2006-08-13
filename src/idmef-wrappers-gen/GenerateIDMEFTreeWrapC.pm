@@ -394,7 +394,7 @@ int _idmef_$struct->{short_typename}_get_child(void *p, idmef_class_child_id_t c
 
     $self->output("
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         \}
 \}
 ");
@@ -475,7 +475,7 @@ int _idmef_$struct->{short_typename}_new_child(void *p, idmef_class_child_id_t c
 
     $self->output("
                 default:
-                        return prelude_error(PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD);
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
         \}
 \}
 ");
