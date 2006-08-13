@@ -153,13 +153,13 @@ static void list_insert(prelude_list_t *head, prelude_list_t *item, int pos)
         int i = 0;
         prelude_list_t *tmp;
         
-        if ( pos == IDMEF_LIST_APPEND || pos == -1 /* FIXME: deprecated */ )
+        if ( pos == IDMEF_LIST_APPEND )
                 prelude_list_add_tail(head, item);
 
-        else if ( pos == IDMEF_LIST_PREPEND || pos == 0 /* FIXME: deprecated */ )
+        else if ( pos == IDMEF_LIST_PREPEND )
                 prelude_list_add(head, item);
 
-        else if ( pos > 0 ) {
+        else if ( pos >= 0 ) {
                 prelude_list_for_each(head, tmp) {
                         if ( i == pos )
                                 break;
@@ -2573,7 +2573,7 @@ int _idmef_classification_new_child(void *p, idmef_class_child_id_t child, int n
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_classification_new_reference(ptr, (idmef_reference_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -3502,7 +3502,7 @@ int _idmef_user_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_user_new_user_id(ptr, (idmef_user_id_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -4501,7 +4501,7 @@ int _idmef_process_new_child(void *p, idmef_class_child_id_t child, int n, void 
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_process_new_arg(ptr, (prelude_string_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -4535,7 +4535,7 @@ int _idmef_process_new_child(void *p, idmef_class_child_id_t child, int n, void 
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_process_new_env(ptr, (prelude_string_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -5226,7 +5226,7 @@ int _idmef_web_service_new_child(void *p, idmef_class_child_id_t child, int n, v
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_web_service_new_arg(ptr, (prelude_string_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -7481,7 +7481,7 @@ int _idmef_node_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_node_new_address(ptr, (idmef_address_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -8675,7 +8675,7 @@ int _idmef_file_access_new_child(void *p, idmef_class_child_id_t child, int n, v
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_file_access_new_permission(ptr, (prelude_string_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -10011,7 +10011,7 @@ int _idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_file_new_file_access(ptr, (idmef_file_access_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -10045,7 +10045,7 @@ int _idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_file_new_linkage(ptr, (idmef_linkage_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -10082,7 +10082,7 @@ int _idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **r
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_file_new_checksum(ptr, (idmef_checksum_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -11837,7 +11837,7 @@ int _idmef_target_new_child(void *p, idmef_class_child_id_t child, int n, void *
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_target_new_file(ptr, (idmef_file_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -14688,7 +14688,7 @@ int _idmef_assessment_new_child(void *p, idmef_class_child_id_t child, int n, vo
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_assessment_new_action(ptr, (idmef_action_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -15129,7 +15129,7 @@ int _idmef_tool_alert_new_child(void *p, idmef_class_child_id_t child, int n, vo
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_tool_alert_new_alertident(ptr, (idmef_alertident_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -15560,7 +15560,7 @@ int _idmef_correlation_alert_new_child(void *p, idmef_class_child_id_t child, in
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_correlation_alert_new_alertident(ptr, (idmef_alertident_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -16317,7 +16317,7 @@ int _idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_alert_new_analyzer(ptr, (idmef_analyzer_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -16363,7 +16363,7 @@ int _idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_alert_new_source(ptr, (idmef_source_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -16397,7 +16397,7 @@ int _idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_alert_new_target(ptr, (idmef_target_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -16434,7 +16434,7 @@ int _idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_alert_new_additional_data(ptr, (idmef_additional_data_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -17843,7 +17843,7 @@ int _idmef_heartbeat_new_child(void *p, idmef_class_child_id_t child, int n, voi
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_heartbeat_new_analyzer(ptr, (idmef_analyzer_t **) ret, n);
 
                         if ( n >= 0 ) {
@@ -17886,7 +17886,7 @@ int _idmef_heartbeat_new_child(void *p, idmef_class_child_id_t child, int n, voi
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_heartbeat_new_additional_data(ptr, (idmef_additional_data_t **) ret, n);
 
                         if ( n >= 0 ) {

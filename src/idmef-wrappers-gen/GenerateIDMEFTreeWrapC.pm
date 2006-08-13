@@ -185,13 +185,13 @@ static void list_insert(prelude_list_t *head, prelude_list_t *item, int pos)
         int i = 0;
         prelude_list_t *tmp;
         
-        if ( pos == IDMEF_LIST_APPEND || pos == -1 /* FIXME: deprecated */ )
+        if ( pos == IDMEF_LIST_APPEND )
                 prelude_list_add_tail(head, item);
 
-        else if ( pos == IDMEF_LIST_PREPEND || pos == 0 /* FIXME: deprecated */ )
+        else if ( pos == IDMEF_LIST_PREPEND )
                 prelude_list_add(head, item);
 
-        else if ( pos > 0 ) {
+        else if ( pos >= 0 ) {
                 prelude_list_for_each(head, tmp) {
                         if ( i == pos )
                                 break;
@@ -423,7 +423,7 @@ int _idmef_$struct->{short_typename}_new_child(void *p, idmef_class_child_id_t c
                         int i = 0;
                         prelude_list_t *tmp;
 
-                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND || n == -1 /* FIXME: deprecated */ )
+                        if ( n == IDMEF_LIST_APPEND || n == IDMEF_LIST_PREPEND )
                                return idmef_$struct->{short_typename}_new_$field->{short_name}(ptr, ($field->{typename} **) ret, n);
 
                         if ( n >= 0 ) {
