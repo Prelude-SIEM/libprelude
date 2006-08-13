@@ -205,7 +205,7 @@ static int idmef_path_get_list_internal(idmef_value_t **value_list,
         prelude_list_for_each(list, tmp) {
                 value = NULL;
 
-                if ( parent_class != -1 )
+                if ( parent_class >= 0 )
                         ret = idmef_path_get_internal(&value, path, depth, tmp, parent_class);
                 else {                        
                         ret = idmef_value_new(&value, path->elem[depth - 1].value_type, tmp);
@@ -283,7 +283,7 @@ static int idmef_path_get_internal(idmef_value_t **value, const idmef_path_t *pa
                 
                 if ( ! child )
                         return 0;
-                
+
                 child_class = idmef_class_get_child_class(parent_class, child_id);                
                 which = path->elem[depth].index;
 
@@ -296,7 +296,7 @@ static int idmef_path_get_internal(idmef_value_t **value, const idmef_path_t *pa
                 return idmef_path_get_nth_internal(value, path, depth + 1, child, child_class, which);
         }
 
-        if ( parent_class == -1 || path->elem[path->depth - 1].value_type == IDMEF_VALUE_TYPE_ENUM ) {
+        if ( parent_class < 0 || path->elem[path->depth - 1].value_type == IDMEF_VALUE_TYPE_ENUM ) {
                 *value = parent;
                 return 1;
         }
@@ -366,7 +366,7 @@ static int _idmef_path_set(const idmef_path_t *path, idmef_message_t *message, i
                 
                 ptr = child;
                 parent_class = class;
-                
+
                 class = idmef_class_get_child_class(class, elem->position);                
                 assert( ! (class < 0 && i < path->depth - 1) );
         }
@@ -532,6 +532,7 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
         char *endptr, *ptr, *ptr2;
         idmef_class_child_id_t child = 0;
         idmef_class_id_t class, prev_class = 0;
+        idmef_value_type_id_t vtype;
         
         len = strlen(buffer) + 1;
         if ( len >= sizeof(path->name) )
@@ -581,25 +582,20 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
 
                 prev_class = class;
 
-                /* The last object may not be a structure */
-                class = idmef_class_get_child_class(class, child);
-                if ( class < 0 && ! is_last )
+                /* The last object may not be a structure */                
+                vtype = path->elem[depth].value_type = idmef_class_get_child_value_type(class, child);
+                if ( vtype != IDMEF_VALUE_TYPE_CLASS && vtype != IDMEF_VALUE_TYPE_ENUM && ! is_last )
                         return prelude_error_verbose(PRELUDE_ERROR_GENERIC,
                                                      "IDMEF element '%s' is a leaf and thus has no child '%s'",
                                                      ptr, endptr + 1);
-                
-                path->elem[depth].class = class;
-                path->elem[depth].value_type = idmef_class_get_child_value_type(class, child);
-                
+
+                class = path->elem[depth].class = idmef_class_get_child_class(class, child);
                 if ( ++depth == MAX_DEPTH )
                         return prelude_error(PRELUDE_ERROR_IDMEF_PATH_DEPTH);
                 
         } while ( ! is_last );
         
         path->depth = depth;
-
-        path->elem[depth - 1].class = idmef_class_get_child_class(prev_class, child);
-        path->elem[depth - 1].value_type = idmef_class_get_child_value_type(prev_class, child);
         
         return 0;
 }
@@ -938,8 +934,8 @@ int idmef_path_make_child(idmef_path_t *path, const char *child_name, unsigned i
                 path->elem[path->depth - 1].index = (index < 0) ? INDEX_UNDEFINED : index;
         else
                 path->elem[path->depth - 1].index = INDEX_FORBIDDEN;
-        
-        path->elem[path->depth - 1].class = idmef_class_get_child_class(class, child);
+
+        path->elem[path->depth - 1].class = idmef_class_get_child_class(class, child);        
         path->elem[path->depth - 1].value_type = idmef_class_get_child_value_type(class, child);
              
         return 0;
@@ -1192,7 +1188,7 @@ const char *idmef_path_get_name(const idmef_path_t *path, int depth)
         
         elem = &path->elem[depth];
         
-        if ( elem->class == -1 || elem->value_type == IDMEF_VALUE_TYPE_ENUM )
+        if ( elem->class < 0 || elem->value_type == IDMEF_VALUE_TYPE_ENUM )
                 ret = idmef_class_get_child_name(path->elem[depth - 1].class, elem->position);
         else
                 ret = idmef_class_get_name(elem->class);
