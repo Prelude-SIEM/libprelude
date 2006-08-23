@@ -43,13 +43,10 @@
 #if defined HAVE_WCTYPE_H || defined _LIBC
 # include <wctype.h>
 #endif /* HAVE_WCTYPE_H || _LIBC */
-#if defined HAVE_STDINT_H || defined _LIBC
-# include <stdint.h>
-#endif /* HAVE_STDINT_H || _LIBC */
+#include <stdint.h>
 #if defined _LIBC
 # include <bits/libc-lock.h>
 #else
-# define __libc_lock_define(CLASS,NAME)
 # define __libc_lock_init(NAME) do { } while (0)
 # define __libc_lock_lock(NAME) do { } while (0)
 # define __libc_lock_unlock(NAME) do { } while (0)
@@ -711,7 +708,9 @@ struct re_dfa_t
 #ifdef DEBUG
   char* re_str;
 #endif
+#ifdef _LIBC
   __libc_lock_define (, lock)
+#endif
 };
 
 #define re_node_set_init_empty(set) memset (set, '\0', sizeof (re_node_set))

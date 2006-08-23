@@ -32,11 +32,14 @@
 #include "config.h"
 
 #include <alloca.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/types.h>
 #include <time.h>
 #include "ftw_.h"
 #include "getaddrinfo.h"
@@ -61,11 +64,12 @@
 #include "vsnprintf.h"
 #include "wcwidth.h"
 #include "xsize.h"
-#if HAVE_WCHAR_H && HAVE_WCTYPE_H
+#if HAVE_WCHAR_H
 # include "mbchar.h"
 #endif
 #if HAVE_MBRTOWC
 # include "mbuiter.h"
 #endif
+
 
 #endif /* _LIBPRELUDE_LIBMISSING_H */

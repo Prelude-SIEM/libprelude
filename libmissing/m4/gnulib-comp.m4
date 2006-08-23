@@ -19,6 +19,8 @@
 # any checks for libraries, header files, types and library functions.
 AC_DEFUN([gl_EARLY],
 [
+  m4_pattern_forbid([^gl_[A-Z]])dnl the gnulib macro namespace
+  m4_pattern_allow([^gl_ES$])dnl a valid locale name
   AC_REQUIRE([AC_PROG_RANLIB])
   AC_REQUIRE([AC_GNU_SOURCE])
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
@@ -48,12 +50,12 @@ AC_SUBST([LTALLOCA])
   gl_HEADER_NETINET_IN
   gl_PATHMAX
   gl_REGEX
-  gl_C_RESTRICT
   gl_SIZE_MAX
   gl_FUNC_SNPRINTF
   gl_TYPE_SOCKLEN_T
   gt_TYPE_SSIZE_T
   AM_STDBOOL_H
+  gl_STDINT_H
   gl_STRCASE
   gl_FUNC_STRCASESTR
   gl_FUNC_STRDUP
@@ -107,6 +109,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/snprintf.h
   lib/socket_.h
   lib/stdbool_.h
+  lib/stdint_.h
   lib/strcase.h
   lib/strcasecmp.c
   lib/strcasestr.c
@@ -134,6 +137,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/vsnprintf.h
   lib/wcwidth.h
   lib/xsize.h
+  m4/absolute-header.m4
   m4/alloca.m4
   m4/arpa_inet_h.m4
   m4/codeset.m4
@@ -156,7 +160,6 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/onceonly_2_57.m4
   m4/pathmax.m4
   m4/regex.m4
-  m4/restrict.m4
   m4/signed.m4
   m4/size_max.m4
   m4/snprintf.m4
@@ -164,6 +167,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/sockpfaf.m4
   m4/ssize_t.m4
   m4/stdbool.m4
+  m4/stdint.m4
   m4/stdint_h.m4
   m4/strcase.m4
   m4/strcasestr.m4

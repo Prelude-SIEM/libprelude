@@ -488,27 +488,34 @@ re_string_skip_chars (re_string_t *pstr, Idx new_raw_idx, wint_t *last_wc)
   mbstate_t prev_st;
   Idx rawbuf_idx;
   size_t mbclen;
-  wchar_t wc = 0;
+  wint_t wc = WEOF;
 
   /* Skip the characters which are not necessary to check.  */
   for (rawbuf_idx = pstr->raw_mbs_idx + pstr->valid_raw_len;
        rawbuf_idx < new_raw_idx;)
     {
+      wchar_t wc2;
       Idx remain_len;
       remain_len = pstr->len - rawbuf_idx;
       prev_st = pstr->cur_state;
-      mbclen = mbrtowc (&wc, (const char *) pstr->raw_mbs + rawbuf_idx,
+      mbclen = mbrtowc (&wc2, (const char *) pstr->raw_mbs + rawbuf_idx,
 			remain_len, &pstr->cur_state);
       if (BE (mbclen == (size_t) -2 || mbclen == (size_t) -1 || mbclen == 0, 0))
 	{
-	  /* We treat these cases as a singlebyte character.  */
+	  /* We treat these cases as a single byte character.  */
+	  if (mbclen == 0 || remain_len == 0)
+	    wc = L'\0';
+	  else
+	    wc = *(unsigned char *) (pstr->raw_mbs + rawbuf_idx);
 	  mbclen = 1;
 	  pstr->cur_state = prev_st;
 	}
+      else
+	wc = wc2;
       /* Then proceed the next character.  */
       rawbuf_idx += mbclen;
     }
-  *last_wc = (wint_t) wc;
+  *last_wc = wc;
   return rawbuf_idx;
 }
 #endif /* RE_ENABLE_I18N  */
@@ -627,7 +634,6 @@ re_string_reconstruct (re_string_t *pstr, Idx idx, int eflags)
 	    }
 #endif
 	  pstr->valid_len = 0;
-	  pstr->valid_raw_len = 0;
 #ifdef RE_ENABLE_I18N
 	  if (pstr->mb_cur_max > 1)
 	    {
@@ -690,6 +696,16 @@ re_string_reconstruct (re_string_t *pstr, Idx idx, int eflags)
 
 	      if (wc == WEOF)
 		pstr->valid_len = re_string_skip_chars (pstr, idx, &wc) - idx;
+	      if (wc == WEOF)
+		pstr->tip_context
+		  = re_string_context_at (pstr, pstr->valid_raw_len - 1, eflags);
+	      else
+		pstr->tip_context = ((BE (pstr->word_ops_used != 0, 0)
+				      && IS_WIDE_WORD_CHAR (wc))
+				     ? CONTEXT_WORD
+				     : ((IS_WIDE_NEWLINE (wc)
+					 && pstr->newline_anchor)
+					? CONTEXT_NEWLINE : 0));
 	      if (BE (pstr->valid_len, 0))
 		{
 		  for (wcs_idx = 0; wcs_idx < pstr->valid_len; ++wcs_idx)
@@ -698,17 +714,12 @@ re_string_reconstruct (re_string_t *pstr, Idx idx, int eflags)
 		    memset (pstr->mbs, -1, pstr->valid_len);
 		}
 	      pstr->valid_raw_len = pstr->valid_len;
-	      pstr->tip_context = ((BE (pstr->word_ops_used != 0, 0)
-				    && IS_WIDE_WORD_CHAR (wc))
-				   ? CONTEXT_WORD
-				   : ((IS_WIDE_NEWLINE (wc)
-				       && pstr->newline_anchor)
-				      ? CONTEXT_NEWLINE : 0));
 	    }
 	  else
 #endif /* RE_ENABLE_I18N */
 	    {
 	      int c = pstr->raw_mbs[pstr->raw_mbs_idx + offset - 1];
+	      pstr->valid_raw_len = 0;
 	      if (pstr->trans)
 		c = pstr->trans[c];
 	      pstr->tip_context = (bitset_contain (pstr->word_char, c)
