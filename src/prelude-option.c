@@ -259,13 +259,13 @@ static int process_cfg_file(void *context, prelude_list_t *cblist, prelude_optio
         
         prelude_log_debug(3, "Using configuration file: %s.\n", filename);
         
-        ret = config_open(&cfg, filename);
+        ret = _config_open(&cfg, filename);
         if ( ret < 0 )
                 return ret;
         
         ret = get_missing_options(context, cfg, filename, cblist, optlist, &line, 0, err);
         
-        config_close(cfg);
+        _config_close(cfg);
 
         return ret;
 }
@@ -428,7 +428,7 @@ static int get_missing_options(void *context, config_t *cfg, const char *filenam
         struct cb_list *cbitem;
         char *section = NULL, *entry = NULL, *value = NULL;
         
-        while ( (config_get_next(cfg, &section, &entry, &value, line)) == 0 ) {                
+        while ( (_config_get_next(cfg, &section, &entry, &value, line)) == 0 ) {                
                 opt = search_option(rootlist, (section && ! entry) ? section : entry, PRELUDE_OPTION_TYPE_CFG, FALSE);
                                 
                 if ( ! opt && entry && value && strcmp(entry, "include") == 0 ) {

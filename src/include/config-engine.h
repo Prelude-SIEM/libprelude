@@ -26,20 +26,20 @@
 
 typedef struct config config_t;
 
-int config_get_next(config_t *cfg, char **section,
-                    char **entry, char **value, unsigned int *line);
+int _config_get_next(config_t *cfg, char **section,
+                     char **entry, char **value, unsigned int *line);
 
-int config_get_section(config_t *cfg, const char *section, unsigned int *line);
+int _config_get_section(config_t *cfg, const char *section, unsigned int *line);
 
-char *config_get(config_t *cfg, const char *section, const char *entry, unsigned int *line);
+char *_config_get(config_t *cfg, const char *section, const char *entry, unsigned int *line);
 
-int config_set(config_t *cfg, const char *section, const char *entry, const char *val, unsigned int *line);
+int _config_set(config_t *cfg, const char *section, const char *entry, const char *val, unsigned int *line);
 
-int config_open(config_t **ret, const char *filename);
+int _config_open(config_t **ret, const char *filename);
 
-int config_close(config_t *cfg);
+int _config_close(config_t *cfg);
 
-int config_del(config_t *cfg, const char *section, const char *entry);
+int _config_del(config_t *cfg, const char *section, const char *entry);
 
 #endif /* _LIBPRELUDE_CONFIG_ENGINE_H */
 

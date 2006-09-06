@@ -612,7 +612,7 @@ static int new_section_line(config_t *cfg, const char *section,
 
 
 /**
- * config_set:
+ * _config_set:
  * @cfg: Configuration file identifier.
  * @section: Section where the entry should be set.
  * @entry: Entry to set.
@@ -625,7 +625,7 @@ static int new_section_line(config_t *cfg, const char *section,
  *
  * Returns: 0 on success, -1 otherwise.
  */
-int config_set(config_t *cfg, const char *section, const char *entry, const char *val, unsigned int *index) 
+int _config_set(config_t *cfg, const char *section, const char *entry, const char *val, unsigned int *index) 
 {
         int ret;
                 
@@ -642,7 +642,7 @@ int config_set(config_t *cfg, const char *section, const char *entry, const char
 
 
 
-int config_del(config_t *cfg, const char *section, const char *entry)
+int _config_del(config_t *cfg, const char *section, const char *entry)
 {
         int start, end;
         char *tmp, *value;
@@ -688,7 +688,7 @@ static const char *get_variable_content(config_t *cfg, const char *variable)
                 /*
                  * Other variable (declared in the configuration file).
                  */
-                ptr = config_get(cfg, NULL, variable, &line);
+                ptr = _config_get(cfg, NULL, variable, &line);
 
         return ptr;
 }
@@ -697,7 +697,7 @@ static const char *get_variable_content(config_t *cfg, const char *variable)
 
 
 /*
- * config_get_next:
+ * _config_get_next:
  * @cfg: Configuration file identifier.
  * @section: Pointer address where the current section should be stored.
  * @entry: Pointer address where the current entry should be stored.
@@ -716,7 +716,7 @@ static const char *get_variable_content(config_t *cfg, const char *variable)
  *
  * Returns: 0 on success, -1 if there is nothing more to read.
  */
-int config_get_next(config_t *cfg, char **section, char **entry, char **value, unsigned int *line)
+int _config_get_next(config_t *cfg, char **section, char **entry, char **value, unsigned int *line)
 {
         char *ptr;
         
@@ -751,7 +751,7 @@ int config_get_next(config_t *cfg, char **section, char **entry, char **value, u
 
 
 /**
- * config_get_section:
+ * _config_get_section:
  * @cfg: Configuration file identifier.
  * @section: Section we are searching.
  * @line: Pointer to a line number we should start the search at.
@@ -761,7 +761,7 @@ int config_get_next(config_t *cfg, char **section, char **entry, char **value, u
  *
  * Returns: 0 if the section was found, -1 otherwise.
  */
-int config_get_section(config_t *cfg, const char *section, unsigned int *line) 
+int _config_get_section(config_t *cfg, const char *section, unsigned int *line) 
 {
         int ret;
         
@@ -782,7 +782,7 @@ int config_get_section(config_t *cfg, const char *section, unsigned int *line)
 
 
 /*
- * config_get:
+ * _config_get:
  * @cfg: Configuration file identifier.
  * @section: Section to gather the entry from.
  * @entry: Entry to gather the value from.
@@ -803,7 +803,7 @@ int config_get_section(config_t *cfg, const char *section, unsigned int *line)
  * Returns: The entry value on success, an empty string if the entry
  * exists but has no value, NULL on error.
  */
-char *config_get(config_t *cfg, const char *section, const char *entry, unsigned int *line) 
+char *_config_get(config_t *cfg, const char *section, const char *entry, unsigned int *line) 
 {
         int ret;
         const char *var;
@@ -840,7 +840,7 @@ char *config_get(config_t *cfg, const char *section, const char *entry, unsigned
 
 
 /**
- * config_close:
+ * _config_close:
  * @cfg: Configuration file identifier.
  *
  * Close the 'cfg' object, used to access the configuration file.
@@ -848,7 +848,7 @@ char *config_get(config_t *cfg, const char *section, const char *entry, unsigned
  *
  * Returns: 0 on success, -1 otherwise.
  */
-int config_close(config_t *cfg) 
+int _config_close(config_t *cfg) 
 {
         int ret = 0;
 
@@ -870,7 +870,7 @@ int config_close(config_t *cfg)
 
 
 /**
- * config_open:
+ * _config_open:
  * @new: Pointer address where to store the new #config_t object.
  * @filename: The configuration file.
  *
@@ -880,7 +880,7 @@ int config_close(config_t *cfg)
  *
  * Returns: 0 on success, negative value otherwise.
  */
-int config_open(config_t **new, const char *filename) 
+int _config_open(config_t **new, const char *filename) 
 {
         int ret;
         config_t *cfg;

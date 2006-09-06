@@ -1329,14 +1329,14 @@ static int read_tls_setting(void)
         unsigned int line;
         char buf[128], *ptr;
         
-        ret = config_open(&cfg, TLS_CONFIG);
+        ret = _config_open(&cfg, TLS_CONFIG);
         if ( ret < 0 ) {
                 prelude_perror(ret, "could not open %s", TLS_CONFIG);
                 return -1;
         }
 
         line = 0;
-        ptr = config_get(cfg, NULL, "generated-key-size", &line);
+        ptr = _config_get(cfg, NULL, "generated-key-size", &line);
         if ( ! ptr ) {
                 fprintf(stderr, "%s: couldn't find \"generated-key-size\" setting.\n", TLS_CONFIG);
                 goto err;
@@ -1346,7 +1346,7 @@ static int read_tls_setting(void)
         free(ptr);
 
         line = 0;
-        ptr = config_get(cfg, NULL, "authority-certificate-lifetime", &line);
+        ptr = _config_get(cfg, NULL, "authority-certificate-lifetime", &line);
         if ( ! ptr ) {
                 fprintf(stderr, "%s: couldn't find \"authority-certificate-lifetime\" setting.\n", TLS_CONFIG);
                 goto err;
@@ -1356,7 +1356,7 @@ static int read_tls_setting(void)
         free(ptr);
 
         line = 0;
-        ptr = config_get(cfg, NULL, "generated-certificate-lifetime", &line);
+        ptr = _config_get(cfg, NULL, "generated-certificate-lifetime", &line);
         if ( ! ptr ) {
                 fprintf(stderr, "%s: couldn't find \"generated-certificate-lifetime\" setting.\n", TLS_CONFIG);
                 goto err;
@@ -1375,7 +1375,7 @@ static int read_tls_setting(void)
                 lifetime_to_str(buf, sizeof(buf), generated_certificate_lifetime));
 
   err:        
-        config_close(cfg);
+        _config_close(cfg);
         
         return (ptr) ? 0 : -1;
 }
