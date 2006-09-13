@@ -60,6 +60,11 @@
 #define INDEX_FORBIDDEN (INT_MIN + 1)
 
 
+void _idmef_path_cache_lock(void);
+void _idmef_path_cache_reinit(void);
+void _idmef_path_cache_unlock(void);
+void _idmef_path_cache_destroy(void);
+
 
 typedef struct idmef_path_element {
 
