@@ -16,6 +16,7 @@ noinst_LTLIBRARIES = libmissing.la
 
 libmissing_la_SOURCES =
 libmissing_la_LIBADD = @LTLIBOBJS@
+libmissing_la_LDFLAGS = $(AM_LDFLAGS)
 noinst_HEADERS =
 EXTRA_DIST =
 BUILT_SOURCES =
@@ -42,8 +43,8 @@ EXTRA_DIST += alloca_.h
 # We need the following in order to create <alloca.h> when the system
 # doesn't have one that works with the given compiler.
 alloca.h: alloca_.h
-	cp $(srcdir)/alloca_.h $@-t
-	mv $@-t $@
+	cp -f $(srcdir)/alloca_.h $@-t
+	mv -f $@-t $@
 MOSTLYCLEANFILES += alloca.h alloca.h-t
 
 ## end   gnulib module alloca-opt
@@ -56,6 +57,7 @@ BUILT_SOURCES += $(ARPA_INET_H)
 # doesn't have one.
 arpa/inet.h:
 	test -d arpa || mkdir arpa
+	rm -f $@-t $@
 	echo '#include <sys/socket.h>' >$@-t
 	mv $@-t $@
 MOSTLYCLEANFILES += arpa/inet.h arpa/inet.h-t
@@ -113,6 +115,7 @@ BUILT_SOURCES += $(NETINET_IN_H)
 # doesn't have one.
 netinet/in.h:
 	test -d netinet || mkdir netinet
+	rm -f $@-t $@
 	echo '#include <sys/socket.h>' >$@-t
 	mv $@-t $@
 MOSTLYCLEANFILES += netinet/in.h netinet/in.h-t
@@ -152,6 +155,7 @@ EXTRA_DIST += stdbool_.h
 # We need the following in order to create <stdbool.h> when the system
 # doesn't have one that works.
 stdbool.h: stdbool_.h
+	rm -f $@-t $@
 	sed -e 's/@''HAVE__BOOL''@/$(HAVE__BOOL)/g' < $(srcdir)/stdbool_.h > $@-t
 	mv $@-t $@
 MOSTLYCLEANFILES += stdbool.h stdbool.h-t
@@ -166,10 +170,11 @@ EXTRA_DIST += stdint_.h
 # We need the following in order to create <stdint.h> when the system
 # doesn't have one that works with the given compiler.
 stdint.h: stdint_.h
+	rm -f $@-t $@
 	sed -e 's/@''HAVE_WCHAR_H''@/$(HAVE_WCHAR_H)/g' \
 	    -e 's/@''HAVE_STDINT_H''@/$(HAVE_STDINT_H)/g' \
-	    -e 's/@''HAVE_SYS_TYPES_H''@/$(HAVE_SYS_TYPES_H)/g' \
 	    -e 's|@''ABSOLUTE_STDINT_H''@|$(ABSOLUTE_STDINT_H)|g' \
+	    -e 's/@''HAVE_SYS_TYPES_H''@/$(HAVE_SYS_TYPES_H)/g' \
 	    -e 's/@''HAVE_INTTYPES_H''@/$(HAVE_INTTYPES_H)/g' \
 	    -e 's/@''HAVE_SYS_INTTYPES_H''@/$(HAVE_SYS_INTTYPES_H)/g' \
 	    -e 's/@''HAVE_SYS_BITYPES_H''@/$(HAVE_SYS_BITYPES_H)/g' \
@@ -250,8 +255,8 @@ EXTRA_DIST += socket_.h
 # doesn't have one that works with the given compiler.
 sys/socket.h: socket_.h
 	test -d sys || mkdir sys
-	cp $(srcdir)/socket_.h $@-t
-	mv $@-t $@
+	cp -f $(srcdir)/socket_.h $@-t
+	mv -f $@-t $@
 MOSTLYCLEANFILES += sys/socket.h sys/socket.h-t
 MOSTLYCLEANDIRS += sys
 
@@ -301,5 +306,3 @@ mostlyclean-local: mostlyclean-generic
 	      echo "rmdir $$dir"; rmdir $$dir; \
 	    fi; \
 	  done
-
-# Makefile.am ends here
