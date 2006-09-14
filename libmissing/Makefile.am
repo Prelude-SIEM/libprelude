@@ -15,7 +15,7 @@ AUTOMAKE_OPTIONS = 1.5 gnits no-dependencies
 noinst_LTLIBRARIES = libmissing.la
 
 libmissing_la_SOURCES =
-libmissing_la_LIBADD = @LTLIBOBJS@
+libmissing_la_LIBADD = $(LTLIBOBJS)
 libmissing_la_LDFLAGS = $(AM_LDFLAGS)
 noinst_HEADERS =
 EXTRA_DIST =
