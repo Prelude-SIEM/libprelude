@@ -83,8 +83,11 @@ int idmef_additional_data_copy(const idmef_additional_data_t *src, idmef_additio
 int idmef_additional_data_clone(idmef_additional_data_t *src, idmef_additional_data_t **dst);
 int idmef_additional_data_compare(const idmef_additional_data_t *obj1, const idmef_additional_data_t *obj2);
 idmef_additional_data_t *idmef_additional_data_ref(idmef_additional_data_t *ptr);
+
+#ifndef SWIG
 int _idmef_additional_data_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_additional_data_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_additional_data_destroy(idmef_additional_data_t *ptr);
 idmef_additional_data_type_t idmef_additional_data_get_type(idmef_additional_data_t *ptr);
@@ -136,8 +139,11 @@ int idmef_reference_copy(const idmef_reference_t *src, idmef_reference_t *dst);
 int idmef_reference_clone(idmef_reference_t *src, idmef_reference_t **dst);
 int idmef_reference_compare(const idmef_reference_t *obj1, const idmef_reference_t *obj2);
 idmef_reference_t *idmef_reference_ref(idmef_reference_t *ptr);
+
+#ifndef SWIG
 int _idmef_reference_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_reference_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_reference_destroy(idmef_reference_t *ptr);
 idmef_reference_origin_t idmef_reference_get_origin(idmef_reference_t *ptr);
@@ -176,8 +182,11 @@ int idmef_classification_copy(const idmef_classification_t *src, idmef_classific
 int idmef_classification_clone(idmef_classification_t *src, idmef_classification_t **dst);
 int idmef_classification_compare(const idmef_classification_t *obj1, const idmef_classification_t *obj2);
 idmef_classification_t *idmef_classification_ref(idmef_classification_t *ptr);
+
+#ifndef SWIG
 int _idmef_classification_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_classification_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_classification_destroy(idmef_classification_t *ptr);
 prelude_string_t *idmef_classification_get_ident(idmef_classification_t *ptr);
@@ -230,8 +239,11 @@ int idmef_user_id_copy(const idmef_user_id_t *src, idmef_user_id_t *dst);
 int idmef_user_id_clone(idmef_user_id_t *src, idmef_user_id_t **dst);
 int idmef_user_id_compare(const idmef_user_id_t *obj1, const idmef_user_id_t *obj2);
 idmef_user_id_t *idmef_user_id_ref(idmef_user_id_t *ptr);
+
+#ifndef SWIG
 int _idmef_user_id_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_user_id_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_user_id_destroy(idmef_user_id_t *ptr);
 prelude_string_t *idmef_user_id_get_ident(idmef_user_id_t *ptr);
@@ -286,8 +298,11 @@ int idmef_user_copy(const idmef_user_t *src, idmef_user_t *dst);
 int idmef_user_clone(idmef_user_t *src, idmef_user_t **dst);
 int idmef_user_compare(const idmef_user_t *obj1, const idmef_user_t *obj2);
 idmef_user_t *idmef_user_ref(idmef_user_t *ptr);
+
+#ifndef SWIG
 int _idmef_user_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_user_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_user_destroy(idmef_user_t *ptr);
 prelude_string_t *idmef_user_get_ident(idmef_user_t *ptr);
@@ -349,8 +364,11 @@ int idmef_address_copy(const idmef_address_t *src, idmef_address_t *dst);
 int idmef_address_clone(idmef_address_t *src, idmef_address_t **dst);
 int idmef_address_compare(const idmef_address_t *obj1, const idmef_address_t *obj2);
 idmef_address_t *idmef_address_ref(idmef_address_t *ptr);
+
+#ifndef SWIG
 int _idmef_address_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_address_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_address_destroy(idmef_address_t *ptr);
 prelude_string_t *idmef_address_get_ident(idmef_address_t *ptr);
@@ -401,8 +419,11 @@ int idmef_process_copy(const idmef_process_t *src, idmef_process_t *dst);
 int idmef_process_clone(idmef_process_t *src, idmef_process_t **dst);
 int idmef_process_compare(const idmef_process_t *obj1, const idmef_process_t *obj2);
 idmef_process_t *idmef_process_ref(idmef_process_t *ptr);
+
+#ifndef SWIG
 int _idmef_process_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_process_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_process_destroy(idmef_process_t *ptr);
 prelude_string_t *idmef_process_get_ident(idmef_process_t *ptr);
@@ -450,8 +471,11 @@ int idmef_web_service_copy(const idmef_web_service_t *src, idmef_web_service_t *
 int idmef_web_service_clone(idmef_web_service_t *src, idmef_web_service_t **dst);
 int idmef_web_service_compare(const idmef_web_service_t *obj1, const idmef_web_service_t *obj2);
 idmef_web_service_t *idmef_web_service_ref(idmef_web_service_t *ptr);
+
+#ifndef SWIG
 int _idmef_web_service_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_web_service_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_web_service_destroy(idmef_web_service_t *ptr);
 prelude_string_t *idmef_web_service_get_url(idmef_web_service_t *ptr);
@@ -499,8 +523,11 @@ int idmef_snmp_service_copy(const idmef_snmp_service_t *src, idmef_snmp_service_
 int idmef_snmp_service_clone(idmef_snmp_service_t *src, idmef_snmp_service_t **dst);
 int idmef_snmp_service_compare(const idmef_snmp_service_t *obj1, const idmef_snmp_service_t *obj2);
 idmef_snmp_service_t *idmef_snmp_service_ref(idmef_snmp_service_t *ptr);
+
+#ifndef SWIG
 int _idmef_snmp_service_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_snmp_service_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_snmp_service_destroy(idmef_snmp_service_t *ptr);
 prelude_string_t *idmef_snmp_service_get_oid(idmef_snmp_service_t *ptr);
@@ -586,8 +613,11 @@ int idmef_service_copy(const idmef_service_t *src, idmef_service_t *dst);
 int idmef_service_clone(idmef_service_t *src, idmef_service_t **dst);
 int idmef_service_compare(const idmef_service_t *obj1, const idmef_service_t *obj2);
 idmef_service_t *idmef_service_ref(idmef_service_t *ptr);
+
+#ifndef SWIG
 int _idmef_service_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_service_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_service_destroy(idmef_service_t *ptr);
 prelude_string_t *idmef_service_get_ident(idmef_service_t *ptr);
@@ -677,8 +707,11 @@ int idmef_node_copy(const idmef_node_t *src, idmef_node_t *dst);
 int idmef_node_clone(idmef_node_t *src, idmef_node_t **dst);
 int idmef_node_compare(const idmef_node_t *obj1, const idmef_node_t *obj2);
 idmef_node_t *idmef_node_ref(idmef_node_t *ptr);
+
+#ifndef SWIG
 int _idmef_node_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_node_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_node_destroy(idmef_node_t *ptr);
 prelude_string_t *idmef_node_get_ident(idmef_node_t *ptr);
@@ -740,8 +773,11 @@ int idmef_source_copy(const idmef_source_t *src, idmef_source_t *dst);
 int idmef_source_clone(idmef_source_t *src, idmef_source_t **dst);
 int idmef_source_compare(const idmef_source_t *obj1, const idmef_source_t *obj2);
 idmef_source_t *idmef_source_ref(idmef_source_t *ptr);
+
+#ifndef SWIG
 int _idmef_source_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_source_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_source_destroy(idmef_source_t *ptr);
 prelude_string_t *idmef_source_get_ident(idmef_source_t *ptr);
@@ -792,8 +828,11 @@ int idmef_file_access_copy(const idmef_file_access_t *src, idmef_file_access_t *
 int idmef_file_access_clone(idmef_file_access_t *src, idmef_file_access_t **dst);
 int idmef_file_access_compare(const idmef_file_access_t *obj1, const idmef_file_access_t *obj2);
 idmef_file_access_t *idmef_file_access_ref(idmef_file_access_t *ptr);
+
+#ifndef SWIG
 int _idmef_file_access_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_file_access_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_file_access_destroy(idmef_file_access_t *ptr);
 idmef_user_id_t *idmef_file_access_get_user_id(idmef_file_access_t *ptr);
@@ -826,8 +865,11 @@ int idmef_inode_copy(const idmef_inode_t *src, idmef_inode_t *dst);
 int idmef_inode_clone(idmef_inode_t *src, idmef_inode_t **dst);
 int idmef_inode_compare(const idmef_inode_t *obj1, const idmef_inode_t *obj2);
 idmef_inode_t *idmef_inode_ref(idmef_inode_t *ptr);
+
+#ifndef SWIG
 int _idmef_inode_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_inode_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_inode_destroy(idmef_inode_t *ptr);
 idmef_time_t *idmef_inode_get_change_time(idmef_inode_t *ptr);
@@ -901,8 +943,11 @@ int idmef_checksum_copy(const idmef_checksum_t *src, idmef_checksum_t *dst);
 int idmef_checksum_clone(idmef_checksum_t *src, idmef_checksum_t **dst);
 int idmef_checksum_compare(const idmef_checksum_t *obj1, const idmef_checksum_t *obj2);
 idmef_checksum_t *idmef_checksum_ref(idmef_checksum_t *ptr);
+
+#ifndef SWIG
 int _idmef_checksum_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_checksum_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_checksum_destroy(idmef_checksum_t *ptr);
 prelude_string_t *idmef_checksum_get_value(idmef_checksum_t *ptr);
@@ -987,8 +1032,11 @@ int idmef_file_copy(const idmef_file_t *src, idmef_file_t *dst);
 int idmef_file_clone(idmef_file_t *src, idmef_file_t **dst);
 int idmef_file_compare(const idmef_file_t *obj1, const idmef_file_t *obj2);
 idmef_file_t *idmef_file_ref(idmef_file_t *ptr);
+
+#ifndef SWIG
 int _idmef_file_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_file_destroy(idmef_file_t *ptr);
 prelude_string_t *idmef_file_get_ident(idmef_file_t *ptr);
@@ -1088,8 +1136,11 @@ int idmef_linkage_copy(const idmef_linkage_t *src, idmef_linkage_t *dst);
 int idmef_linkage_clone(idmef_linkage_t *src, idmef_linkage_t **dst);
 int idmef_linkage_compare(const idmef_linkage_t *obj1, const idmef_linkage_t *obj2);
 idmef_linkage_t *idmef_linkage_ref(idmef_linkage_t *ptr);
+
+#ifndef SWIG
 int _idmef_linkage_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_linkage_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_linkage_destroy(idmef_linkage_t *ptr);
 idmef_linkage_category_t idmef_linkage_get_category(idmef_linkage_t *ptr);
@@ -1147,8 +1198,11 @@ int idmef_target_copy(const idmef_target_t *src, idmef_target_t *dst);
 int idmef_target_clone(idmef_target_t *src, idmef_target_t **dst);
 int idmef_target_compare(const idmef_target_t *obj1, const idmef_target_t *obj2);
 idmef_target_t *idmef_target_ref(idmef_target_t *ptr);
+
+#ifndef SWIG
 int _idmef_target_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_target_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_target_destroy(idmef_target_t *ptr);
 prelude_string_t *idmef_target_get_ident(idmef_target_t *ptr);
@@ -1213,8 +1267,11 @@ int idmef_analyzer_copy(const idmef_analyzer_t *src, idmef_analyzer_t *dst);
 int idmef_analyzer_clone(idmef_analyzer_t *src, idmef_analyzer_t **dst);
 int idmef_analyzer_compare(const idmef_analyzer_t *obj1, const idmef_analyzer_t *obj2);
 idmef_analyzer_t *idmef_analyzer_ref(idmef_analyzer_t *ptr);
+
+#ifndef SWIG
 int _idmef_analyzer_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_analyzer_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_analyzer_destroy(idmef_analyzer_t *ptr);
 prelude_string_t *idmef_analyzer_get_analyzerid(idmef_analyzer_t *ptr);
@@ -1278,8 +1335,11 @@ int idmef_alertident_copy(const idmef_alertident_t *src, idmef_alertident_t *dst
 int idmef_alertident_clone(idmef_alertident_t *src, idmef_alertident_t **dst);
 int idmef_alertident_compare(const idmef_alertident_t *obj1, const idmef_alertident_t *obj2);
 idmef_alertident_t *idmef_alertident_ref(idmef_alertident_t *ptr);
+
+#ifndef SWIG
 int _idmef_alertident_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_alertident_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_alertident_destroy(idmef_alertident_t *ptr);
 prelude_string_t *idmef_alertident_get_alertident(idmef_alertident_t *ptr);
@@ -1350,8 +1410,11 @@ int idmef_impact_copy(const idmef_impact_t *src, idmef_impact_t *dst);
 int idmef_impact_clone(idmef_impact_t *src, idmef_impact_t **dst);
 int idmef_impact_compare(const idmef_impact_t *obj1, const idmef_impact_t *obj2);
 idmef_impact_t *idmef_impact_ref(idmef_impact_t *ptr);
+
+#ifndef SWIG
 int _idmef_impact_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_impact_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_impact_destroy(idmef_impact_t *ptr);
 void idmef_impact_unset_severity(idmef_impact_t *ptr);
@@ -1405,8 +1468,11 @@ int idmef_action_copy(const idmef_action_t *src, idmef_action_t *dst);
 int idmef_action_clone(idmef_action_t *src, idmef_action_t **dst);
 int idmef_action_compare(const idmef_action_t *obj1, const idmef_action_t *obj2);
 idmef_action_t *idmef_action_ref(idmef_action_t *ptr);
+
+#ifndef SWIG
 int _idmef_action_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_action_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_action_destroy(idmef_action_t *ptr);
 idmef_action_category_t idmef_action_get_category(idmef_action_t *ptr);
@@ -1449,8 +1515,11 @@ int idmef_confidence_copy(const idmef_confidence_t *src, idmef_confidence_t *dst
 int idmef_confidence_clone(idmef_confidence_t *src, idmef_confidence_t **dst);
 int idmef_confidence_compare(const idmef_confidence_t *obj1, const idmef_confidence_t *obj2);
 idmef_confidence_t *idmef_confidence_ref(idmef_confidence_t *ptr);
+
+#ifndef SWIG
 int _idmef_confidence_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_confidence_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_confidence_destroy(idmef_confidence_t *ptr);
 idmef_confidence_rating_t idmef_confidence_get_rating(idmef_confidence_t *ptr);
@@ -1481,8 +1550,11 @@ int idmef_assessment_copy(const idmef_assessment_t *src, idmef_assessment_t *dst
 int idmef_assessment_clone(idmef_assessment_t *src, idmef_assessment_t **dst);
 int idmef_assessment_compare(const idmef_assessment_t *obj1, const idmef_assessment_t *obj2);
 idmef_assessment_t *idmef_assessment_ref(idmef_assessment_t *ptr);
+
+#ifndef SWIG
 int _idmef_assessment_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_assessment_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_assessment_destroy(idmef_assessment_t *ptr);
 idmef_impact_t *idmef_assessment_get_impact(idmef_assessment_t *ptr);
@@ -1517,8 +1589,11 @@ int idmef_tool_alert_copy(const idmef_tool_alert_t *src, idmef_tool_alert_t *dst
 int idmef_tool_alert_clone(idmef_tool_alert_t *src, idmef_tool_alert_t **dst);
 int idmef_tool_alert_compare(const idmef_tool_alert_t *obj1, const idmef_tool_alert_t *obj2);
 idmef_tool_alert_t *idmef_tool_alert_ref(idmef_tool_alert_t *ptr);
+
+#ifndef SWIG
 int _idmef_tool_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_tool_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_tool_alert_destroy(idmef_tool_alert_t *ptr);
 prelude_string_t *idmef_tool_alert_get_name(idmef_tool_alert_t *ptr);
@@ -1552,8 +1627,11 @@ int idmef_correlation_alert_copy(const idmef_correlation_alert_t *src, idmef_cor
 int idmef_correlation_alert_clone(idmef_correlation_alert_t *src, idmef_correlation_alert_t **dst);
 int idmef_correlation_alert_compare(const idmef_correlation_alert_t *obj1, const idmef_correlation_alert_t *obj2);
 idmef_correlation_alert_t *idmef_correlation_alert_ref(idmef_correlation_alert_t *ptr);
+
+#ifndef SWIG
 int _idmef_correlation_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_correlation_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_correlation_alert_destroy(idmef_correlation_alert_t *ptr);
 prelude_string_t *idmef_correlation_alert_get_name(idmef_correlation_alert_t *ptr);
@@ -1584,8 +1662,11 @@ int idmef_overflow_alert_copy(const idmef_overflow_alert_t *src, idmef_overflow_
 int idmef_overflow_alert_clone(idmef_overflow_alert_t *src, idmef_overflow_alert_t **dst);
 int idmef_overflow_alert_compare(const idmef_overflow_alert_t *obj1, const idmef_overflow_alert_t *obj2);
 idmef_overflow_alert_t *idmef_overflow_alert_ref(idmef_overflow_alert_t *ptr);
+
+#ifndef SWIG
 int _idmef_overflow_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_overflow_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_overflow_alert_destroy(idmef_overflow_alert_t *ptr);
 prelude_string_t *idmef_overflow_alert_get_program(idmef_overflow_alert_t *ptr);
@@ -1652,8 +1733,11 @@ int idmef_alert_copy(const idmef_alert_t *src, idmef_alert_t *dst);
 int idmef_alert_clone(idmef_alert_t *src, idmef_alert_t **dst);
 int idmef_alert_compare(const idmef_alert_t *obj1, const idmef_alert_t *obj2);
 idmef_alert_t *idmef_alert_ref(idmef_alert_t *ptr);
+
+#ifndef SWIG
 int _idmef_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_alert_destroy(idmef_alert_t *ptr);
 prelude_string_t *idmef_alert_get_messageid(idmef_alert_t *ptr);
@@ -1734,8 +1818,11 @@ int idmef_heartbeat_copy(const idmef_heartbeat_t *src, idmef_heartbeat_t *dst);
 int idmef_heartbeat_clone(idmef_heartbeat_t *src, idmef_heartbeat_t **dst);
 int idmef_heartbeat_compare(const idmef_heartbeat_t *obj1, const idmef_heartbeat_t *obj2);
 idmef_heartbeat_t *idmef_heartbeat_ref(idmef_heartbeat_t *ptr);
+
+#ifndef SWIG
 int _idmef_heartbeat_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_heartbeat_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_heartbeat_destroy(idmef_heartbeat_t *ptr);
 prelude_string_t *idmef_heartbeat_get_messageid(idmef_heartbeat_t *ptr);
@@ -1800,8 +1887,11 @@ int idmef_message_copy(const idmef_message_t *src, idmef_message_t *dst);
 int idmef_message_clone(idmef_message_t *src, idmef_message_t **dst);
 int idmef_message_compare(const idmef_message_t *obj1, const idmef_message_t *obj2);
 idmef_message_t *idmef_message_ref(idmef_message_t *ptr);
+
+#ifndef SWIG
 int _idmef_message_get_child(void *p, idmef_class_child_id_t child, void **childptr);
 int _idmef_message_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);
+#endif
 
 void idmef_message_destroy(idmef_message_t *ptr);
 prelude_string_t *idmef_message_get_version(idmef_message_t *ptr);

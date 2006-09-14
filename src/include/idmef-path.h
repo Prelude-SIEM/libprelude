@@ -81,7 +81,17 @@ int idmef_path_has_lists(idmef_path_t *path);
 prelude_bool_t idmef_path_is_list(idmef_path_t *path, int depth);
          
 unsigned int idmef_path_get_depth(const idmef_path_t *path);
-         
+
+#ifndef SWIG         
+void _idmef_path_cache_lock(void);
+
+void _idmef_path_cache_reinit(void);
+
+void _idmef_path_cache_unlock(void);
+
+void _idmef_path_cache_destroy(void);
+#endif
+
 #ifdef __cplusplus
  }
 #endif

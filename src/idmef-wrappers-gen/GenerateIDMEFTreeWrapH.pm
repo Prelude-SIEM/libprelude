@@ -153,7 +153,6 @@ sub	struct_new_child
     my	$n = 0;
 
     $self->output("int _idmef_$struct->{short_typename}_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);\n");
-    $self->output("\n");
 }
 
 sub	struct_destroy
@@ -250,8 +249,12 @@ sub	struct
     $self->struct_definition($tree, $struct);
     $self->struct_constructor($tree, $struct);
     $self->struct_ref($tree, $struct);
+
+    $self->output("\n#ifndef SWIG\n");
     $self->struct_get_child($tree, $struct);
     $self->struct_new_child($tree, $struct);
+    $self->output("#endif\n\n");
+
     $self->struct_destroy($tree, $struct);
     $self->struct_fields($tree, $struct);
 }
