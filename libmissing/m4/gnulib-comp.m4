@@ -1,3 +1,4 @@
+# DO NOT EDIT! GENERATED AUTOMATICALLY!
 # Copyright (C) 2004-2006 Free Software Foundation, Inc.
 #
 # This file is free software, distributed under the terms of the GNU
@@ -32,6 +33,7 @@ AC_DEFUN([gl_INIT],
 [
   AM_CONDITIONAL([GL_COND_LIBTOOL], [true])
   gl_cond_libtool=true
+  gl_source_base='libmissing'
 changequote(,)dnl
 LTALLOCA=`echo "$ALLOCA" | sed 's/\.[^.]* /.lo /g;s/\.[^.]*$/.lo/'`
 changequote([, ])dnl

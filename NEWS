@@ -1,3 +1,31 @@
+* 2006-10-10, libprelude-0.9.11:
+
+	- Hook class comparison function. Accept NULL, equal, not equal operator. 
+
+	- Introduce better error checking in the idmef-class API, which is now 
+	  considered public and might be used by external application. Rename 
+	  error code to reflect the API. 
+
+	- Change to the way IDMEF listed element are handled. Specifying negative 
+	  number as the position of the element from the low level API now allow 
+	  to position the element at the specified (reversed) index. Using the 
+	  high level API a negative index permit to address a list of element 
+	  backward (replace an element). 
+
+	- Build fixes for SWIG > 1.3.27.
+
+	- Modify idmef_value_match() so that it always unroll listed value 
+	  (do it for both val1 and val2. Remove assertion, and let 
+	  idmef_value_type_compare() return an error code in case there is an issue.
+
+	- Handle path using IDMEF_LIST_APPEND or IDMEF_LIST_PREPEND as 
+	  path using an undefined list index on idmef_path_get() call. 
+
+	- Make criteria parser accept (*) list index.
+
+	- Implement comparison function for all IDMEF object.
+
+
 * 2006-07-28, libprelude-0.9.10.2:
 
 	- Fix undefined assert() reference.

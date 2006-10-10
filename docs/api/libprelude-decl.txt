@@ -55,9 +55,9 @@ typedef enum {
     PRELUDE_ERROR_IDMEF_VALUE_TYPE_WRITE_UNAVAILABLE = 30,
     PRELUDE_ERROR_IDMEF_VALUE_TYPE_COMPARE_MISMATCH = 31,
     PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE = 32,
-    PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN = 33,
-    PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_CHILD = 34,
-    PRELUDE_ERROR_IDMEF_TYPE_UNKNOWN_NAME = 35,
+    PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN = 33,
+    PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD = 34,
+    PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_NAME = 35,
     PRELUDE_ERROR_IDMEF_PATH_LENGTH = 36,
     PRELUDE_ERROR_IDMEF_PATH_DEPTH = 37,
     PRELUDE_ERROR_IDMEF_PATH_PARENT_ROOT = 38,
@@ -81,6 +81,7 @@ typedef enum {
     PRELUDE_ERROR_IDMEF_CRITERION_INVALID_REGEX = 57,
     PRELUDE_ERROR_TLS_WARNING_ALERT = 58,
     PRELUDE_ERROR_TLS_FATAL_ALERT = 59,
+    PRELUDE_ERROR_IDMEF_CLASS_CHILD_NOT_CLASS = 60,
     PRELUDE_ERROR_UNKNOWN_ERRNO = 16382,
     PRELUDE_ERROR_E2BIG = PRELUDE_ERROR_SYSTEM_ERROR | 0,
     PRELUDE_ERROR_EACCES = PRELUDE_ERROR_SYSTEM_ERROR | 1,
@@ -362,6 +363,11 @@ const idmef_additional_data_t *src, idmef_additional_data_t *dst
 idmef_additional_data_t *src, idmef_additional_data_t **dst
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_additional_data_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_additional_data_t *obj1, const idmef_additional_data_t *obj2
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_additional_data_ref</NAME>
 <RETURNS>idmef_additional_data_t *</RETURNS>
 idmef_additional_data_t *ptr
@@ -458,6 +464,11 @@ const idmef_reference_t *src, idmef_reference_t *dst
 idmef_reference_t *src, idmef_reference_t **dst
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_reference_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_reference_t *obj1, const idmef_reference_t *obj2
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_reference_ref</NAME>
 <RETURNS>idmef_reference_t *</RETURNS>
 idmef_reference_t *ptr
@@ -545,6 +556,11 @@ const idmef_classification_t *src, idmef_classification_t *dst
 <NAME>idmef_classification_clone</NAME>
 <RETURNS>int </RETURNS>
 idmef_classification_t *src, idmef_classification_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_classification_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_classification_t *obj1, const idmef_classification_t *obj2
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_ref</NAME>
@@ -642,6 +658,11 @@ const idmef_user_id_t *src, idmef_user_id_t *dst
 <NAME>idmef_user_id_clone</NAME>
 <RETURNS>int </RETURNS>
 idmef_user_id_t *src, idmef_user_id_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_user_id_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_user_id_t *obj1, const idmef_user_id_t *obj2
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_ref</NAME>
@@ -772,6 +793,11 @@ const idmef_user_t *src, idmef_user_t *dst
 idmef_user_t *src, idmef_user_t **dst
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_user_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_user_t *obj1, const idmef_user_t *obj2
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_user_ref</NAME>
 <RETURNS>idmef_user_t *</RETURNS>
 idmef_user_t *ptr
@@ -875,6 +901,11 @@ const idmef_address_t *src, idmef_address_t *dst
 <NAME>idmef_address_clone</NAME>
 <RETURNS>int </RETURNS>
 idmef_address_t *src, idmef_address_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_address_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_address_t *obj1, const idmef_address_t *obj2
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_ref</NAME>
@@ -1001,6 +1032,11 @@ const idmef_process_t *src, idmef_process_t *dst
 idmef_process_t *src, idmef_process_t **dst
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_process_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_process_t *obj1, const idmef_process_t *obj2
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_process_ref</NAME>
 <RETURNS>idmef_process_t *</RETURNS>
 idmef_process_t *ptr
@@ -1125,6 +1161,11 @@ const idmef_web_service_t *src, idmef_web_service_t *dst
 idmef_web_service_t *src, idmef_web_service_t **dst
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_web_service_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_web_service_t *obj1, const idmef_web_service_t *obj2
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_web_service_ref</NAME>
 <RETURNS>idmef_web_service_t *</RETURNS>
 idmef_web_service_t *ptr
@@ -1212,6 +1253,11 @@ const idmef_snmp_service_t *src, idmef_snmp_service_t *dst
 <NAME>idmef_snmp_service_clone</NAME>
 <RETURNS>int </RETURNS>
 idmef_snmp_service_t *src, idmef_snmp_service_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_snmp_service_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_snmp_service_t *obj1, const idmef_snmp_service_t *obj2
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_ref</NAME>
@@ -1410,6 +1456,11 @@ const idmef_service_t *src, idmef_service_t *dst
 <NAME>idmef_service_clone</NAME>
 <RETURNS>int </RETURNS>
 idmef_service_t *src, idmef_service_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_service_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_service_t *obj1, const idmef_service_t *obj2
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_ref</NAME>
@@ -1640,6 +1691,11 @@ const idmef_node_t *src, idmef_node_t *dst
 idmef_node_t *src, idmef_node_t **dst
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_node_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_node_t *obj1, const idmef_node_t *obj2
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_node_ref</NAME>
 <RETURNS>idmef_node_t *</RETURNS>
 idmef_node_t *ptr
@@ -1761,6 +1817,11 @@ const idmef_source_t *src, idmef_source_t *dst
 <NAME>idmef_source_clone</NAME>
 <RETURNS>int </RETURNS>
 idmef_source_t *src, idmef_source_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_source_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_source_t *obj1, const idmef_source_t *obj2
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_ref</NAME>
@@ -1897,6 +1958,11 @@ const idmef_file_access_t *src, idmef_file_access_t *dst
 idmef_file_access_t *src, idmef_file_access_t **dst
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_file_access_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_file_access_t *obj1, const idmef_file_access_t *obj2
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_file_access_ref</NAME>
 <RETURNS>idmef_file_access_t *</RETURNS>
 idmef_file_access_t *ptr
@@ -1954,6 +2020,11 @@ const idmef_inode_t *src, idmef_inode_t *dst
 <NAME>idmef_inode_clone</NAME>
 <RETURNS>int </RETURNS>
 idmef_inode_t *src, idmef_inode_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_inode_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_inode_t *obj1, const idmef_inode_t *obj2
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_ref</NAME>
@@ -2130,6 +2201,11 @@ const idmef_checksum_t *src, idmef_checksum_t *dst
 idmef_checksum_t *src, idmef_checksum_t **dst
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_checksum_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_checksum_t *obj1, const idmef_checksum_t *obj2
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_checksum_ref</NAME>
 <RETURNS>idmef_checksum_t *</RETURNS>
 idmef_checksum_t *ptr
@@ -2246,6 +2322,11 @@ const idmef_file_t *src, idmef_file_t *dst
 <NAME>idmef_file_clone</NAME>
 <RETURNS>int </RETURNS>
 idmef_file_t *src, idmef_file_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_file_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_file_t *obj1, const idmef_file_t *obj2
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_ref</NAME>
@@ -2535,6 +2616,11 @@ const idmef_linkage_t *src, idmef_linkage_t *dst
 idmef_linkage_t *src, idmef_linkage_t **dst
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_linkage_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_linkage_t *obj1, const idmef_linkage_t *obj2
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_linkage_ref</NAME>
 <RETURNS>idmef_linkage_t *</RETURNS>
 idmef_linkage_t *ptr
@@ -2641,6 +2727,11 @@ const idmef_target_t *src, idmef_target_t *dst
 <NAME>idmef_target_clone</NAME>
 <RETURNS>int </RETURNS>
 idmef_target_t *src, idmef_target_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_target_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_target_t *obj1, const idmef_target_t *obj2
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_ref</NAME>
@@ -2790,6 +2881,11 @@ const idmef_analyzer_t *src, idmef_analyzer_t *dst
 <NAME>idmef_analyzer_clone</NAME>
 <RETURNS>int </RETURNS>
 idmef_analyzer_t *src, idmef_analyzer_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_analyzer_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_analyzer_t *obj1, const idmef_analyzer_t *obj2
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_ref</NAME>
@@ -2971,6 +3067,11 @@ const idmef_alertident_t *src, idmef_alertident_t *dst
 idmef_alertident_t *src, idmef_alertident_t **dst
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_alertident_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_alertident_t *obj1, const idmef_alertident_t *obj2
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_alertident_ref</NAME>
 <RETURNS>idmef_alertident_t *</RETURNS>
 idmef_alertident_t *ptr
@@ -3088,6 +3189,11 @@ const idmef_impact_t *src, idmef_impact_t *dst
 <NAME>idmef_impact_clone</NAME>
 <RETURNS>int </RETURNS>
 idmef_impact_t *src, idmef_impact_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_impact_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_impact_t *obj1, const idmef_impact_t *obj2
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_ref</NAME>
@@ -3209,6 +3315,11 @@ const idmef_action_t *src, idmef_action_t *dst
 idmef_action_t *src, idmef_action_t **dst
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_action_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_action_t *obj1, const idmef_action_t *obj2
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_action_ref</NAME>
 <RETURNS>idmef_action_t *</RETURNS>
 idmef_action_t *ptr
@@ -3288,6 +3399,11 @@ const idmef_confidence_t *src, idmef_confidence_t *dst
 idmef_confidence_t *src, idmef_confidence_t **dst
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_confidence_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_confidence_t *obj1, const idmef_confidence_t *obj2
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_confidence_ref</NAME>
 <RETURNS>idmef_confidence_t *</RETURNS>
 idmef_confidence_t *ptr
@@ -3345,6 +3461,11 @@ const idmef_assessment_t *src, idmef_assessment_t *dst
 <NAME>idmef_assessment_clone</NAME>
 <RETURNS>int </RETURNS>
 idmef_assessment_t *src, idmef_assessment_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_assessment_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_assessment_t *obj1, const idmef_assessment_t *obj2
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_ref</NAME>
@@ -3421,6 +3542,11 @@ const idmef_tool_alert_t *src, idmef_tool_alert_t *dst
 idmef_tool_alert_t *src, idmef_tool_alert_t **dst
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_tool_alert_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_tool_alert_t *obj1, const idmef_tool_alert_t *obj2
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_tool_alert_ref</NAME>
 <RETURNS>idmef_tool_alert_t *</RETURNS>
 idmef_tool_alert_t *ptr
@@ -3495,6 +3621,11 @@ const idmef_correlation_alert_t *src, idmef_correlation_alert_t *dst
 idmef_correlation_alert_t *src, idmef_correlation_alert_t **dst
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_correlation_alert_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_correlation_alert_t *obj1, const idmef_correlation_alert_t *obj2
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_correlation_alert_ref</NAME>
 <RETURNS>idmef_correlation_alert_t *</RETURNS>
 idmef_correlation_alert_t *ptr
@@ -3552,6 +3683,11 @@ const idmef_overflow_alert_t *src, idmef_overflow_alert_t *dst
 <NAME>idmef_overflow_alert_clone</NAME>
 <RETURNS>int </RETURNS>
 idmef_overflow_alert_t *src, idmef_overflow_alert_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_overflow_alert_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_overflow_alert_t *obj1, const idmef_overflow_alert_t *obj2
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_ref</NAME>
@@ -3651,6 +3787,11 @@ const idmef_alert_t *src, idmef_alert_t *dst
 <NAME>idmef_alert_clone</NAME>
 <RETURNS>int </RETURNS>
 idmef_alert_t *src, idmef_alert_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_alert_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_alert_t *obj1, const idmef_alert_t *obj2
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_ref</NAME>
@@ -3882,6 +4023,11 @@ const idmef_heartbeat_t *src, idmef_heartbeat_t *dst
 idmef_heartbeat_t *src, idmef_heartbeat_t **dst
 </FUNCTION>
 <FUNCTION>
+<NAME>idmef_heartbeat_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_heartbeat_t *obj1, const idmef_heartbeat_t *obj2
+</FUNCTION>
+<FUNCTION>
 <NAME>idmef_heartbeat_ref</NAME>
 <RETURNS>idmef_heartbeat_t *</RETURNS>
 idmef_heartbeat_t *ptr
@@ -4022,6 +4168,11 @@ const idmef_message_t *src, idmef_message_t *dst
 <NAME>idmef_message_clone</NAME>
 <RETURNS>int </RETURNS>
 idmef_message_t *src, idmef_message_t **dst
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_message_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_message_t *obj1, const idmef_message_t *obj2
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_ref</NAME>
@@ -5268,6 +5419,11 @@ prelude_string_t *string, const char *fmt, ...
 <NAME>prelude_string_vprintf</NAME>
 <RETURNS>int </RETURNS>
 prelude_string_t *string, const char *fmt, va_list ap
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_string_compare</NAME>
+<RETURNS>int </RETURNS>
+const prelude_string_t *str1, const prelude_string_t *str2
 </FUNCTION>
 <MACRO>
 <NAME>prelude_string_set_constant</NAME>
@@ -6795,7 +6951,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.10.2"
+#define LIBPRELUDE_VERSION "0.9.11"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
@@ -6853,6 +7009,66 @@ prelude_client_t *client, prelude_msg_t *msg, prelude_msgbuf_t *reply
 <RETURNS>int </RETURNS>
 prelude_msg_t *msg, uint64_t *source_id, uint32_t *request_id, void **value
 </FUNCTION>
+<MACRO>
+<NAME>PRELUDE_ERROR_SOURCE_DEFAULT</NAME>
+#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_IDMEF_TREE_WRAP
+</MACRO>
+<MACRO>
+<NAME>LISTED_OBJECT</NAME>
+#define LISTED_OBJECT(name, type) prelude_list_t name
+</MACRO>
+<MACRO>
+<NAME>IS_LISTED</NAME>
+#define IS_LISTED prelude_list_t list
+</MACRO>
+<MACRO>
+<NAME>UNION</NAME>
+#define UNION(type, var) type var; union
+</MACRO>
+<MACRO>
+<NAME>UNION_MEMBER</NAME>
+#define UNION_MEMBER(value, type, name) type name
+</MACRO>
+<MACRO>
+<NAME>ENUM</NAME>
+#define ENUM(...) typedef enum
+</MACRO>
+<MACRO>
+<NAME>PRE_DECLARE</NAME>
+#define PRE_DECLARE(type, class)
+</MACRO>
+<MACRO>
+<NAME>TYPE_ID</NAME>
+#define TYPE_ID(type, id) type
+</MACRO>
+<MACRO>
+<NAME>PRIMITIVE_TYPE</NAME>
+#define PRIMITIVE_TYPE(type)
+</MACRO>
+<MACRO>
+<NAME>PRIMITIVE_TYPE_STRUCT</NAME>
+#define PRIMITIVE_TYPE_STRUCT(type)
+</MACRO>
+<MACRO>
+<NAME>HIDE</NAME>
+#define HIDE(type, name) type name
+</MACRO>
+<MACRO>
+<NAME>REFCOUNT</NAME>
+#define REFCOUNT int refcount
+</MACRO>
+<MACRO>
+<NAME>DYNAMIC_IDENT</NAME>
+#define DYNAMIC_IDENT(x) uint64_t x
+</MACRO>
+<MACRO>
+<NAME>OPTIONAL_INT</NAME>
+#define OPTIONAL_INT(type, name) type name; unsigned int name ## _is_set:1
+</MACRO>
+<MACRO>
+<NAME>IDENT</NAME>
+#define IDENT(name) uint64_t name
+</MACRO>
 <ENUM>
 <NAME>idmef_criterion_operator_t</NAME>
 typedef enum {
@@ -6879,11 +7095,9 @@ typedef enum {
         IDMEF_CRITERION_OPERATOR_REGEX_NOCASE      = IDMEF_CRITERION_OPERATOR_REGEX|IDMEF_CRITERION_OPERATOR_NOCASE,
         IDMEF_CRITERION_OPERATOR_NOT_REGEX         = IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_REGEX,
         IDMEF_CRITERION_OPERATOR_NOT_REGEX_NOCASE  = IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_REGEX_NOCASE,
-
         
         IDMEF_CRITERION_OPERATOR_NULL              = 0x0020,
         IDMEF_CRITERION_OPERATOR_NOT_NULL          = IDMEF_CRITERION_OPERATOR_NULL|IDMEF_CRITERION_OPERATOR_NOT
-        
 } idmef_criterion_operator_t;
 </ENUM>
 <TYPEDEF>
@@ -7317,6 +7531,11 @@ const idmef_data_t *data, prelude_string_t *out
 <RETURNS>void </RETURNS>
 idmef_data_t *data
 </FUNCTION>
+<FUNCTION>
+<NAME>idmef_data_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_data_t *data1, const idmef_data_t *data2
+</FUNCTION>
 <TYPEDEF>
 <NAME>idmef_criterion_value_t</NAME>
 typedef struct idmef_criterion_value idmef_criterion_value_t;
@@ -7407,12 +7626,12 @@ typedef struct idmef_path idmef_path_t;
 <FUNCTION>
 <NAME>idmef_path_get</NAME>
 <RETURNS>int </RETURNS>
-idmef_path_t *path, idmef_message_t *message, idmef_value_t **ret
+const idmef_path_t *path, idmef_message_t *message, idmef_value_t **ret
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_path_set</NAME>
 <RETURNS>int </RETURNS>
-idmef_path_t *path, idmef_message_t *message, idmef_value_t *value
+const idmef_path_t *path, idmef_message_t *message, idmef_value_t *value
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_path_new</NAME>
@@ -7777,6 +7996,11 @@ const idmef_time_t *time, prelude_string_t *out
 <NAME>idmef_time_to_ntpstamp</NAME>
 <RETURNS>int </RETURNS>
 const idmef_time_t *time, prelude_string_t *out
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_time_compare</NAME>
+<RETURNS>int </RETURNS>
+const idmef_time_t *time1, const idmef_time_t *time2
 </FUNCTION>
 <STRUCT>
 <NAME>prelude_timer_t</NAME>
