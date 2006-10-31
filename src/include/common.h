@@ -46,6 +46,8 @@ int prelude_parse_address(const char *str, char **addr, unsigned int *port);
 
 uint64_t prelude_hton64(uint64_t val);
 
+uint32_t prelude_htonf(float fval);
+
 time_t prelude_timegm(struct tm *tm);
 
 int prelude_get_gmt_offset(long *gmt_offset);

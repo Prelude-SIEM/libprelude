@@ -114,10 +114,8 @@ static inline int uint16_write(uint16_t data, prelude_msgbuf_t *msg, uint8_t tag
 
 static inline int float_write(float data, prelude_msgbuf_t *msg, uint8_t tag)
 {
-	if ( data == 0.0 )
-		return 0;
-
-	return prelude_msgbuf_set(msg, tag, sizeof (data), &data);
+        uint32_t tmp = prelude_htonf(data);
+	return prelude_msgbuf_set(msg, tag, sizeof(tmp), &tmp);
 }
 
 

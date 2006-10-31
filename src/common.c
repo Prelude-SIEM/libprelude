@@ -246,6 +246,18 @@ uint64_t prelude_hton64(uint64_t val)
 }
 
 
+uint32_t prelude_htonf(float fval)
+{
+        uint32_t tmp;
+        union {
+                float fval;
+                uint32_t ival;
+        } val;
+                
+        val.fval = fval;
+
+        return htonl(val.ival);
+}
 
 
 static void normalize_path(char *path) 

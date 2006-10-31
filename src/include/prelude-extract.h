@@ -133,7 +133,14 @@ static inline uint32_t prelude_extract_uint32(const void *buf)
 
 static inline float prelude_extract_float(const void *buf) 
 {
-        return ntohl(prelude_align_uint32(buf));
+        union {
+                float fval;
+                uint32_t ival;
+        } val;
+
+        val.ival = ntohl(prelude_align_uint32(buf));
+        
+        return val.fval;
 }
 
 
