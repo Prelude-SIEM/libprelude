@@ -231,7 +231,7 @@ static inline int prelude_extract_uint64_safe(uint64_t *out, const void *buf, si
 
 static inline int prelude_extract_float_safe(float *out, const void *buf, size_t len)
 {
-	if ( len != sizeof(*out) )
+	if ( len != sizeof(uint32_t) ) /* We pack float as an uint32_t */
 		return prelude_error_make(PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_FLOAT);
 
 	*out = prelude_extract_float(buf);
