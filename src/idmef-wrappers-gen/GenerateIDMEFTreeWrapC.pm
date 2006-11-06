@@ -109,8 +109,17 @@ sub     header
 #define IDENT(name) uint64_t name
 
 
-#define prelude_string_copy(src, dst) if ( ! prelude_string_is_empty(src) ) prelude_string_copy_dup(src, dst)
 #define idmef_data_copy idmef_data_copy_dup
+
+
+static int prelude_string_copy(const prelude_string_t *src, prelude_string_t *dst) 
+{
+        if ( ! prelude_string_is_empty(src) )
+	       return prelude_string_copy_dup(src, dst);
+	    
+        return 0;
+}
+
 
 
 static int get_value_from_string(idmef_value_t **value, prelude_string_t *str, prelude_bool_t is_ptr)
@@ -500,6 +509,9 @@ sub     struct_copy
  */
 int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct->{typename} *dst)
 \{
+        int ret;
+
+        ret = 0;
 ");
 
     foreach my $field ( @{ $struct->{field_list} } ) {
@@ -534,7 +546,7 @@ int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct
 
                 $self->output("
                 case $member->{value}:
-                        idmef_$member->{short_typename}_clone(src->$field->{name}.$member->{name}, &dst->$field->{name}.$member->{name});
+                        ret = idmef_$member->{short_typename}_clone(src->$field->{name}.$member->{name}, &dst->$field->{name}.$member->{name});
                         break;
 ");
             }
@@ -542,16 +554,26 @@ int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct
                 default:
                         break;
         }
+
+        if ( ret < 0 )
+               return ret;
+
+        dst->$field->{var} = src->$field->{var};
 ");
         } elsif ( $field->{metatype} & &METATYPE_STRUCT ) {
             if ( $field->{ptr} ) {
                 $self->output("
-        if ( src->$field->{name} )
-                ${clone_func}(src->$field->{name}, &dst->$field->{name});
+        if ( src->$field->{name} ) {
+                ret = ${clone_func}(src->$field->{name}, &dst->$field->{name});
+                if ( ret < 0 )
+                        return ret;
+        }
 ");
             } else {
                 $self->output("
-        $copy_func(&src->$field->{name}, &dst->$field->{name});
+        ret = $copy_func(&src->$field->{name}, &dst->$field->{name});
+        if ( ret < 0 )
+                return ret;
 ");
             }
 	} else {
