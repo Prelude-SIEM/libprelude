@@ -83,7 +83,6 @@ struct idmef_path {
 
 
 typedef struct {
-        int index;
         const idmef_path_t *path;
         idmef_message_t *message;
         prelude_bool_t reversed;
