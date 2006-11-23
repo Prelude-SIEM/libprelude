@@ -130,10 +130,10 @@ static int verify_certificate(gnutls_session session)
         now = time(NULL);
         
         if ( gnutls_certificate_activation_time_peers(session) > now )
-                ret = prelude_error_verbose(code, "TLS server certificate not yet activated.\n");
+                ret = prelude_error_verbose(code, "TLS server certificate not yet activated");
 
         if ( gnutls_certificate_expiration_time_peers(session) < now )
-                ret = prelude_error_verbose(code, "TLS server certificate expired.\n");
+                ret = prelude_error_verbose(code, "TLS server certificate expired");
         
         if ( ret < 0 )
                 gnutls_alert_send(session, GNUTLS_AL_FATAL, alert);
