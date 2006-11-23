@@ -128,7 +128,8 @@ static int auth_error(prelude_connection_t *cnx,
         ret = prelude_error_verbose_make(prelude_error_get_source(error), prelude_error_get_code(error), "%s.\n\n"
                  "In order to register this sensor, please run:\n"
                  "prelude-adduser register %s \"%s\" %s --uid %d --gid %d",
-                 buf, prelude_client_profile_get_name(cp), prelude_string_get_string(out), cnx->daddr,
+                 buf, prelude_client_profile_get_name(cp), prelude_string_get_string(out),
+                 (cnx->sa->sa_family == AF_UNIX) ? "<manager address>" : cnx->daddr,
                  prelude_client_profile_get_uid(cp), prelude_client_profile_get_gid(cp));
                  
         prelude_string_destroy(out);
