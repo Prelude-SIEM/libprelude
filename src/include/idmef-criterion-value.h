@@ -40,8 +40,7 @@ typedef enum {
          
 #include "idmef-criteria.h"
 #include "idmef-value.h"
-#include <time.h>
-         
+ 
 
 int idmef_criterion_value_new(idmef_criterion_value_t **cv);
 
