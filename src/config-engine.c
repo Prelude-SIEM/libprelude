@@ -501,17 +501,25 @@ static int sync_and_free_file_content(config_t *cfg)
 {
         FILE *fd;
         unsigned int i;
-        
+        size_t ret, len;
+
         fd = fopen(cfg->filename, "w");
         if ( ! fd ) 
                 return prelude_error_verbose(prelude_error_code_from_errno(errno), "could not open '%s' for writing: %s",
                                              cfg->filename, strerror(errno));
         
         for ( i = 0; i < cfg->elements; i++ ) {
+                len = strlen(cfg->content[i]);
                 
-                fwrite(cfg->content[i], 1, strlen(cfg->content[i]), fd);
-                if ( i + 1 != cfg->elements )
-                        fwrite("\n", 1, 1, fd);
+                ret = fwrite(cfg->content[i], 1, len, fd);
+                if ( ret != len && ferror(fd) )
+                        prelude_log(PRELUDE_LOG_ERR, "error writing content to '%s': %s", cfg->filename, strerror(errno));
+                
+                if ( i + 1 != cfg->elements ) {
+                        ret = fwrite("\n", 1, 1, fd);
+                        if ( ret != 1 && ferror(fd) )
+                                prelude_log(PRELUDE_LOG_ERR, "error writing content to '%s': %s", cfg->filename, strerror(errno));
+                }
                 
                 free(cfg->content[i]);
         }
