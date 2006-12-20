@@ -179,7 +179,11 @@ int prelude_daemonize(const char *lockfile)
         }
         
         setsid();
-        chdir("/");
+        
+        ret = chdir("/");
+        if ( ret < 0 ) 
+                prelude_log(PRELUDE_LOG_ERR, "could not change working directory to '/': %s.\n", strerror(errno));
+                
         umask(0);
         
         fclose(stdin);
