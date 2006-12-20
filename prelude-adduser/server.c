@@ -378,14 +378,14 @@ static int srp_callback(gnutls_session session, const char *username, gnutls_dat
 int server_create(prelude_client_profile_t *cp, const char *addr, unsigned int port,
                   prelude_bool_t keepalive, const char *pass, gnutls_x509_privkey key, gnutls_x509_crt cacrt, gnutls_x509_crt crt) 
 {
+        int sock;
         size_t size;
-        int sock, ret;
         struct pollfd pfd[128];
         gnutls_dh_params dh_params;
 
-        one_shot_passwd = pass;
-
 #ifndef GNUTLS_SRP_DISABLED
+        int ret;
+        
         ret = gnutls_srp_allocate_server_credentials(&srpcred);
         if ( ret < 0 ) {
                 fprintf(stderr, "error creating SRP credentials: %s.\n", gnutls_strerror(ret));
@@ -394,7 +394,8 @@ int server_create(prelude_client_profile_t *cp, const char *addr, unsigned int p
         
         gnutls_srp_set_server_credentials_function(srpcred, srp_callback);
 #endif
-        
+
+        one_shot_passwd = pass;
         gnutls_anon_allocate_server_credentials(&anoncred);
         
         fprintf(stderr, "\n  - Generating %d bits Diffie-Hellman key for anonymous authentication...", ANON_DH_BITS);
