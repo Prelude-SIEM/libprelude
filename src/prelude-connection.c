@@ -28,7 +28,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/poll.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -271,7 +270,13 @@ static int start_inet_connection(prelude_connection_t *cnx,
 {
         socklen_t len;
         int sock, ret, tmp;
+#ifdef HAVE_IPV6
+        struct sockaddr_in6 addr;
+        uint16_t *port = &addr.sin6_port;
+#else
         struct sockaddr_in addr;
+        uint16_t *port = &addr.sin_port;
+#endif
         
         sock = generic_connect(cnx->sa, cnx->salen);
         if ( sock < 0 )
@@ -298,8 +303,14 @@ static int start_inet_connection(prelude_connection_t *cnx,
         if ( ret < 0 )
                 ret = prelude_error_verbose(PRELUDE_ERROR_SYSTEM_ERROR, "getsockname failed: %s", strerror(errno));
         else {
-                cnx->saddr = strdup(inet_ntoa(addr.sin_addr));
-                cnx->sport = ntohs(addr.sin_port);
+                char buf[512];
+                
+                if ( inet_ntop(((struct sockaddr *)&addr)->sa_family, prelude_sockaddr_get_inaddr((struct sockaddr *) &addr), buf, sizeof(buf)) )
+                        cnx->saddr = strdup(buf);
+                else
+                        cnx->saddr = NULL;
+                        
+                cnx->sport = ntohs(*port);
         }
         
         return ret;
