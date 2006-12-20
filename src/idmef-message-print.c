@@ -29,7 +29,6 @@
 #include "libmissing.h"
 
 #include <stdio.h>
-#include <time.h>
 
 #include "idmef.h"
 #include "idmef-tree-wrap.h"
