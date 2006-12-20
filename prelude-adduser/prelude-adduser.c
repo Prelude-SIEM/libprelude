@@ -402,39 +402,60 @@ static int create_template_config_file(prelude_client_profile_t *profile)
 {
         int ret;
         FILE *fd, *tfd;
-        char buf[1024];
+        size_t len, wlen;
+        char filename[PATH_MAX], buf[8192];
 
-        prelude_client_profile_get_config_filename(profile, buf, sizeof(buf));
+        prelude_client_profile_get_config_filename(profile, filename, sizeof(filename));
         
-        ret = access(buf, F_OK);
+        ret = access(filename, F_OK);
         if ( ret == 0 ) {
-                chown(buf, prelude_client_profile_get_uid(profile), prelude_client_profile_get_gid(profile));
+                ret = chown(filename, prelude_client_profile_get_uid(profile), prelude_client_profile_get_gid(profile));
+                if ( ret < 0 ) 
+                        fprintf(stderr, "error changing '%s' ownership: %s.\n", filename, strerror(errno));
+                
                 return 0;
         }
         
         tfd = fopen(PRELUDE_CONFIG_DIR "/default/idmef-client.conf", "r");
         if ( ! tfd ) {
-                fprintf(stderr, "could not open template configuration file: %s.\n", strerror(errno));
+                fprintf(stderr, "could not open '" PRELUDE_CONFIG_DIR "/default/idmef-client.conf' for writing: %s.\n", strerror(errno));
                 return -1;
         }
         
-        fd = fopen(buf, "w");
+        fd = fopen(filename, "w");
         if ( ! fd ) {
                 fclose(tfd);
-                fprintf(stderr, "could not open sensor configuration file: %s.\n", strerror(errno));
+                fprintf(stderr, "could not open '%s' for writing: %s.\n", filename, strerror(errno));
                 return -1;
         }
 
-        fchmod(fileno(fd), S_IRUSR|S_IWUSR|S_IRGRP);
-        fchown(fileno(fd), prelude_client_profile_get_uid(profile), prelude_client_profile_get_gid(profile));
-        
-        while ( fgets(buf, sizeof(buf), tfd) )
-                fwrite(buf, 1, strlen(buf), fd);
+        ret = fchmod(fileno(fd), S_IRUSR|S_IWUSR|S_IRGRP);
+        if ( ret < 0 )
+                fprintf(stderr, "error changing '%s' permission: %s.\n", filename, strerror(errno));
+                 
+        ret = fchown(fileno(fd), prelude_client_profile_get_uid(profile), prelude_client_profile_get_gid(profile));
+        if ( ret < 0 ) 
+                fprintf(stderr, "error changing '%s' ownership: %s.\n", filename, strerror(errno));
+                
+        while ( fgets(buf, sizeof(buf), tfd) ) {
+                len = strlen(buf);
+                
+                wlen = fwrite(buf, 1, len, fd);
+                if ( wlen != len && ferror(fd) ) {
+                        fprintf(stderr, "error writing to '%s': %s.\n", filename, strerror(errno));
+                        ret = -1;
+                        goto err;
+                }
+        }
 
+     err:
         fclose(fd);
         fclose(tfd);
         
-        return 0;
+        if ( ret < 0 )
+                unlink(buf);
+                
+        return ret;
 }
 
 
