@@ -99,6 +99,28 @@ AC_SUBST(libprelude_cflags)
 AC_SUBST(prelude_adduser_libs)
 
 
+dnl **********************************************************
+dnl * Check for platform specific flags                      *
+dnl **********************************************************
+AC_MSG_CHECKING(for platform-specific compiler flags)
+
+case "$host_os" in
+ darwin*)
+        #
+        # It may be called "cc", but it's really a GCC derivative
+        # with a problematic special precompiler and precompiled
+        # headers; turn off the special precompiler, as some
+        # apparently-legal code won't compile with its precompiled
+        # headers.
+        #
+        AC_MSG_RESULT(Darwin: adding -no-cpp-precomp)
+	AX_CFLAGS_GCC_OPTION(-no-cpp-precomp)
+        ;;
+ *)
+        AC_MSG_RESULT(none needed)
+        ;;
+esac
+
 
 dnl **********************************************************
 dnl * Checks to see if ANSI C99 CPP variable __func__ works. *
@@ -625,10 +647,10 @@ AX_CFLAGS_GCC_OPTION(-Wcast-qual)
 AX_CFLAGS_GCC_OPTION(-Wcast-align)
 AX_CFLAGS_GCC_OPTION(-Wnested-externs)
 AX_CFLAGS_GCC_OPTION(-Wunused)
+
 if test x$buggy_pthread_initializers = xyes; then 
    AX_CFLAGS_GCC_OPTION(-Wno-missing-braces)
 fi
-
 
 AC_CONFIG_FILES([
 
