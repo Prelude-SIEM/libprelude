@@ -31,36 +31,22 @@
 
 #include "config.h"
 
+#include <poll.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 #include "ftw_.h"
 #include "getaddrinfo.h"
-#include "gettext.h"
 #include "inet_ntop.h"
 #include "minmax.h"
 #include "pathmax.h"
 #include "regex.h"
-#include "size_max.h"
 #include "snprintf.h"
 #include "strcase.h"
 #include "strcasestr.h"
 #include "strdup.h"
 #include "strndup.h"
-#include "strnlen.h"
-#include "strnlen1.h"
-#include "strpbrk.h"
 #include "strsep.h"
-#include "time_r.h"
 #include "timegm.h"
-#include "vasnprintf.h"
 #include "vsnprintf.h"
-#include "wcwidth.h"
-#include "xsize.h"
-
-#if HAVE_WCHAR_H
-# include "mbchar.h"
-#endif
-#if HAVE_MBRTOWC
-# include "mbuiter.h"
-#endif
-
 
 #endif /* _LIBPRELUDE_LIBMISSING_H */
