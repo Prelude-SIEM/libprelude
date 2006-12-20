@@ -6927,6 +6927,326 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_action_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_additional_data_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_address_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_alert_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_alertident_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_analyzer_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_assessment_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_checksum_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_classification_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_confidence_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_correlation_alert_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_data_compare ##### -->
+<para>
+
+</para>
+
+@data1: 
+@data2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_access_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_file_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_heartbeat_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_impact_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_inode_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_linkage_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_message_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_node_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_overflow_alert_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_process_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_reference_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_service_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_snmp_service_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_source_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_target_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_time_compare ##### -->
+<para>
+
+</para>
+
+@time1: 
+@time2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_tool_alert_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_user_id_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_web_service_compare ##### -->
+<para>
+
+</para>
+
+@obj1: 
+@obj2: 
+@Returns: 
+
+
 <!-- ##### MACRO IDMEF_CLASS_ID_ADDITIONAL_DATA_TYPE ##### -->
 <para>
 

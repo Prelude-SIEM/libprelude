@@ -338,3 +338,13 @@ prelude-string
 @str: 
 
 
+<!-- ##### FUNCTION prelude_string_compare ##### -->
+<para>
+
+</para>
+
+@str1: 
+@str2: 
+@Returns: 
+
+

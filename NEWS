@@ -1,3 +1,23 @@
+* 2006-12-20, libprelude-0.9.12:
+
+        - Correctly pack and unpack float value when sending/receiving.
+
+        - More error checking on IDMEF object copy. 
+        
+        - Fix a crash that occured when destroying a copied object.
+
+        - Correct registration warning when using AF_UNIX socket.
+         
+        - Compile on systems lacking poll(). 
+        
+        - IpV6 compatibility fixes.
+        
+        - Fix OS X compilation issues.
+        
+        - Various portability fixes.
+
+
+
 * 2006-10-10, libprelude-0.9.11:
 
 	- Hook class comparison function. Accept NULL, equal, not equal operator. 
