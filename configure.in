@@ -568,8 +568,13 @@ if test x$with_perl != xno; then
       
       with_perl=no
    else
-      perl_includedir="`$PERL -e 'use Config; print $Config{archlib}'`/CORE"
-      AC_CHECK_FILE($perl_includedir/perl.h, with_perl=yes, with_perl=no)
+      PERL_CFLAGS="-I`$PERL -e 'use Config; print $Config{archlib}'`/CORE"
+      
+      old_CPPFLAGS="$CPPFLAGS"
+      CPPFLAGS="$CPPFLAGS $PERL_CFLAGS"
+      
+      AC_CHECK_HEADER(EXTERN.h, [AC_CHECK_HEADER(perl.h, with_perl=yes, with_perl=no, [#include <EXTERN.h>])], with_perl=no)
+      CPPFLAGS="$old_CPPFLAGS"
    fi
 fi
 
@@ -594,9 +599,11 @@ if test x$with_python != xno; then
 
       with_python=no
    else
-      python_includedir=`$PYTHON -c 'from distutils.sysconfig import get_python_inc
-print get_python_inc()'`
-      AC_CHECK_FILE($python_includedir/Python.h, with_python=yes, with_python=no)
+      old_CPPFLAGS="$CPPFLAGS"
+      CPPFLAGS="-I`$PYTHON -c 'from distutils.sysconfig import get_python_inc; print get_python_inc()'`"
+      
+      AC_CHECK_HEADER(Python.h, with_python=yes, with_python=no)
+      CPPFLAGS="$old_CPPFLAGS"
    fi
 fi
 
