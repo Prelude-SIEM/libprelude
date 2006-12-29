@@ -185,6 +185,7 @@ typedef enum {
 %ignore idmef_path_new_v;
 %ignore prelude_string_vprintf;
 %ignore _prelude_log_v;
+%ignore prelude_error_verbose_make_v;
 
 
 %include "prelude.h"
@@ -210,10 +211,6 @@ typedef enum {
 %include "prelude-log.h"
 %include "prelude-msgbuf.h"
 %include "prelude-timer.h"
+%include "prelude-error.h"
 
 typedef signed int prelude_error_t;
-
-const char *prelude_strerror(prelude_error_t err);
-const char *prelude_strsource(prelude_error_t err);
-int prelude_error_code_to_errno(prelude_error_code_t code);
-
