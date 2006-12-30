@@ -21,6 +21,8 @@
 *
 *****/
 
+#define inline 
+
 %{
 #include <stdio.h>
 #include <string.h>
@@ -56,6 +58,9 @@ typedef unsigned int uint32_t;
 
 typedef long long int64_t;
 typedef unsigned long long uint64_t;
+
+%ignore prelude_error_t;
+typedef signed int prelude_error_t;
 
 typedef enum { 
 	PRELUDE_BOOL_TRUE = TRUE, 
