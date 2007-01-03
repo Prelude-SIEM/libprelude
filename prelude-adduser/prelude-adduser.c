@@ -55,6 +55,7 @@
 
 #include "common.h"
 #include "config-engine.h"
+#include "prelude.h"
 #include "prelude-error.h"
 #include "prelude-inttypes.h"
 #include "prelude-client.h"
@@ -1111,7 +1112,7 @@ static int register_cmd(int argc, char **argv)
         if ( ret < 0 )
                 return -1;
         
-        fprintf(stderr, "\n- Registering analyzer %s to %s:%u.\n\n", argv[3], addr, port);
+        fprintf(stderr, "\n- Registering analyzer %s to %s:%u.\n\n", argv[2], addr, port);
         
         fprintf(stderr,
                 "  You now need to start \"prelude-adduser\" on the server host where\n"
@@ -1434,6 +1435,12 @@ int main(int argc, char **argv)
                 if ( *argv[k] == '-' )
                         break;
 
+        /*
+         * We don't need to initialize the libprelude library, however
+         * we do so in order to benefit from LIBPRELUDE_TLS_DEBUG.
+         */
+        prelude_init(NULL, NULL);
+        
         ret = -1;
         gnutls_global_init();
 
