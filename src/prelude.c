@@ -46,6 +46,14 @@ extern prelude_option_t *_prelude_generic_optlist;
 extern pthread_mutex_t _criteria_parse_mutex;
 
 
+
+static void tls_log_func(int level, const char *data)
+{
+        prelude_log(PRELUDE_LOG_INFO, data);
+}
+
+
+
 static void prepare_fork_cb(void)
 {
         _idmef_path_cache_lock();
@@ -145,6 +153,12 @@ int prelude_init(int *argc, char **argv)
         if ( env )
                 prelude_log_set_debug_level(atoi(env));
 
+        env = getenv("LIBPRELUDE_TLS_DEBUG");
+        if ( env ) {
+                gnutls_global_set_log_level(atoi(env));
+                gnutls_global_set_log_function(tls_log_func);
+        }
+        
         env = getenv("LIBPRELUDE_LOGFILE");
         if ( env )
                 prelude_log_set_logfile(env);
