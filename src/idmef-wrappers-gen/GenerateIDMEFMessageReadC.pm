@@ -110,7 +110,7 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, uint3
 \{
         int ret;
 	uint8_t tag;
-	idmef_data_type_t type;
+	idmef_data_type_t type = 0;
 
         ret = prelude_extract_uint32_safe(&type, buf, len);
 	if ( ret < 0 )
@@ -124,7 +124,7 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, uint3
 
 	switch ( type ) \{
 	case IDMEF_DATA_TYPE_CHAR: \{
-		uint8_t tmp;
+		uint8_t tmp = 0;
   
                 ret = prelude_extract_uint8_safe(&tmp, buf, len);
 		if ( ret < 0 )
@@ -135,7 +135,7 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, uint3
 	\}
 
 	case IDMEF_DATA_TYPE_BYTE: \{
-		uint8_t tmp;
+		uint8_t tmp = 0;
 
                 ret = prelude_extract_uint8_safe(&tmp, buf, len);
 		if ( ret < 0 )
@@ -146,7 +146,7 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, uint3
 	\}
 
 	case IDMEF_DATA_TYPE_UINT32: \{
-		uint32_t tmp;
+		uint32_t tmp = 0;
 
                 ret = prelude_extract_uint32_safe(&tmp, buf, len);
 		if ( ret < 0 )
@@ -157,7 +157,7 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, uint3
 	\}
 
 	case IDMEF_DATA_TYPE_UINT64: \{
-		uint64_t tmp;
+		uint64_t tmp = 0;
 
                 ret = prelude_extract_uint64_safe(&tmp, buf, len);
                 if ( ret < 0 )
@@ -168,7 +168,7 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, uint3
 	\}
 
 	case IDMEF_DATA_TYPE_FLOAT: \{
-		float tmp;
+		float tmp = 0;
 
                 ret = prelude_extract_float_safe(&tmp, buf, len);
 		if ( ret < 0 )
@@ -184,7 +184,7 @@ static inline int prelude_extract_data_safe(idmef_data_t **out, void *buf, uint3
         \}
 
 	case IDMEF_DATA_TYPE_CHAR_STRING: \{
-		const char *tmp;
+		const char *tmp = NULL;
 
                 ret = prelude_extract_characters_safe(&tmp, buf, len);
 		if ( ret < 0 )
@@ -212,6 +212,7 @@ sub	struct_field_normal
     my	$struct = shift;
     my	$field = shift;
     my	$ptr = ($field->{metatype} & (&METATYPE_STRUCT | &METATYPE_LIST)) ? "*" : "";
+    my  $init = ($field->{metatype} & (&METATYPE_STRUCT | &METATYPE_LIST)) ? "NULL" : "0";
     my	$type = shift || $field->{value_type};
     my	$var_type = shift || "$field->{typename}";
     my	$extra_msg = "";
@@ -220,7 +221,7 @@ sub	struct_field_normal
 
     $self->output("
 			case IDMEF_MSG_",  uc($struct->{short_typename}), "_", uc($field->{short_name}), ": \{
-                                ${var_type} ${ptr}tmp;
+                                ${var_type} ${ptr}tmp = ${init};
 
                                 ret = prelude_extract_${type}_safe(&tmp, buf, len${extra_msg});
                                 if ( ret < 0 )
@@ -251,7 +252,7 @@ sub	struct_field_struct
     $self->output("
 			case IDMEF_MSG_",  uc($field->{short_typename}), "_TAG", ": \{
                                 int ret;
-				$field->{typename} *tmp;
+				$field->{typename} *tmp = NULL;
 ");
 
     if ( $field->{metatype} & &METATYPE_LIST ) {
