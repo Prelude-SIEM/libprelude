@@ -581,6 +581,19 @@ fi
 AM_CONDITIONAL(HAVE_PERL, test x$with_perl = xyes)
 
 
+PERL_INSTALLDIRS="site"
+
+AC_ARG_WITH(perl-installdirs, AC_HELP_STRING(--with-perl-installdirs=@<:@site|vendor@:>@, Specify where to install the Perl module @<:@default=site@:>@),
+            PERL_INSTALLDIRS="$withval")
+
+if test x$PERL_INSTALLDIRS != xsite && test x$PERL_INSTALLDIRS != xvendor; then
+        AC_MSG_ERROR(Invalid value for --with-perl-installdirs: only "site" or "vendor" supported.)
+fi
+
+PERL_EXTRA_PARAMS="INSTALLDIRS=$PERL_INSTALLDIRS"
+AC_SUBST(PERL_EXTRA_PARAMS)
+
+
 dnl **************************************************
 dnl * Python support                                 *
 dnl **************************************************
