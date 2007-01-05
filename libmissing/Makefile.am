@@ -1,6 +1,6 @@
 ## DO NOT EDIT! GENERATED AUTOMATICALLY!
 ## Process this file with automake to produce Makefile.in.
-# Copyright (C) 2004-2006 Free Software Foundation, Inc.
+# Copyright (C) 2004-2007 Free Software Foundation, Inc.
 #
 # This file is free software, distributed under the terms of the GNU
 # General Public License.  As a special exception to the GNU General
@@ -412,6 +412,28 @@ EXTRA_DIST += vsnprintf.c vsnprintf.h
 EXTRA_libmissing_la_SOURCES += vsnprintf.c
 
 ## end   gnulib module vsnprintf
+
+## begin gnulib module wctype
+
+BUILT_SOURCES += $(WCTYPE_H)
+
+# We need the following in order to create <wctype.h> when the system
+# doesn't have one that works with the given compiler.
+wctype.h: wctype_.h
+	rm -f $@-t $@
+	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
+	  sed -e 's/@''HAVE_WCTYPE_H''@/$(HAVE_WCTYPE_H)/g' \
+	      -e 's|@''ABSOLUTE_WCTYPE_H''@|$(ABSOLUTE_WCTYPE_H)|g' \
+	      -e 's/@''HAVE_WCTYPE_CTMP_BUG''@/$(HAVE_WCTYPE_CTMP_BUG)/g' \
+	      -e 's/@''HAVE_WINT_T''@/$(HAVE_WINT_T)/g' \
+	      < $(srcdir)/wctype_.h; \
+	} > $@-t
+	mv $@-t $@
+MOSTLYCLEANFILES += wctype.h wctype.h-t
+
+EXTRA_DIST += wctype_.h
+
+## end   gnulib module wctype
 
 ## begin gnulib module wcwidth
 

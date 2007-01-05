@@ -1,5 +1,5 @@
 # DO NOT EDIT! GENERATED AUTOMATICALLY!
-# Copyright (C) 2004-2006 Free Software Foundation, Inc.
+# Copyright (C) 2004-2007 Free Software Foundation, Inc.
 #
 # This file is free software, distributed under the terms of the GNU
 # General Public License.  As a special exception to the GNU General
@@ -39,46 +39,129 @@ AC_DEFUN([gl_INIT],
   AM_CONDITIONAL([GL_COND_LIBTOOL], [true])
   gl_cond_libtool=true
   gl_source_base='libmissing'
+    AC_DEFINE([GNULIB_ABSOLUTE_HEADER], [1],
+      [Define to 1 when using the gnulib module absolute-header.])
+    AC_DEFINE([GNULIB_ALLOCA], [1],
+      [Define to 1 when using the gnulib module alloca.])
 changequote(,)dnl
 LTALLOCA=`echo "$ALLOCA" | sed 's/\.[^.]* /.lo /g;s/\.[^.]*$/.lo/'`
 changequote([, ])dnl
 AC_SUBST([LTALLOCA])
   gl_FUNC_ALLOCA
+    AC_DEFINE([GNULIB_ALLOCA_OPT], [1],
+      [Define to 1 when using the gnulib module alloca-opt.])
   gl_HEADER_ARPA_INET
+    AC_DEFINE([GNULIB_ARPA_INET], [1],
+      [Define to 1 when using the gnulib module arpa_inet.])
   dnl gl_USE_SYSTEM_EXTENSIONS must be added quite early to configure.ac.
+    AC_DEFINE([GNULIB_EXTENSIONS], [1],
+      [Define to 1 when using the gnulib module extensions.])
   gl_FUNC_FTW
+    AC_DEFINE([GNULIB_FTW], [1],
+      [Define to 1 when using the gnulib module ftw.])
   gl_GETADDRINFO
+    AC_DEFINE([GNULIB_GETADDRINFO], [1],
+      [Define to 1 when using the gnulib module getaddrinfo.])
+    AC_DEFINE([GNULIB_GETTEXT_H], [1],
+      [Define to 1 when using the gnulib module gettext-h.])
   gl_INET_NTOP
+    AC_DEFINE([GNULIB_INET_NTOP], [1],
+      [Define to 1 when using the gnulib module inet_ntop.])
   AC_FUNC_MALLOC
+    AC_DEFINE([GNULIB_MALLOC], [1],
+      [Define to 1 when using the gnulib module malloc.])
   gl_MBCHAR
+    AC_DEFINE([GNULIB_MBCHAR], [1],
+      [Define to 1 when using the gnulib module mbchar.])
   gl_MBITER
+    AC_DEFINE([GNULIB_MBUITER], [1],
+      [Define to 1 when using the gnulib module mbuiter.])
   gl_FUNC_MEMCHR
+    AC_DEFINE([GNULIB_MEMCHR], [1],
+      [Define to 1 when using the gnulib module memchr.])
   gl_MINMAX
+    AC_DEFINE([GNULIB_MINMAX], [1],
+      [Define to 1 when using the gnulib module minmax.])
   gl_FUNC_MKTIME
+    AC_DEFINE([GNULIB_MKTIME], [1],
+      [Define to 1 when using the gnulib module mktime.])
   gl_HEADER_NETINET_IN
+    AC_DEFINE([GNULIB_NETINET_IN], [1],
+      [Define to 1 when using the gnulib module netinet_in.])
   gl_PATHMAX
+    AC_DEFINE([GNULIB_PATHMAX], [1],
+      [Define to 1 when using the gnulib module pathmax.])
   gl_FUNC_POLL
+    AC_DEFINE([GNULIB_POLL], [1],
+      [Define to 1 when using the gnulib module poll.])
   gl_REGEX
+    AC_DEFINE([GNULIB_REGEX], [1],
+      [Define to 1 when using the gnulib module regex.])
   gl_SIZE_MAX
+    AC_DEFINE([GNULIB_SIZE_MAX], [1],
+      [Define to 1 when using the gnulib module size_max.])
   gl_FUNC_SNPRINTF
+    AC_DEFINE([GNULIB_SNPRINTF], [1],
+      [Define to 1 when using the gnulib module snprintf.])
   gl_TYPE_SOCKLEN_T
+    AC_DEFINE([GNULIB_SOCKLEN], [1],
+      [Define to 1 when using the gnulib module socklen.])
   gt_TYPE_SSIZE_T
+    AC_DEFINE([GNULIB_SSIZE_T], [1],
+      [Define to 1 when using the gnulib module ssize_t.])
   AM_STDBOOL_H
+    AC_DEFINE([GNULIB_STDBOOL], [1],
+      [Define to 1 when using the gnulib module stdbool.])
   gl_STDINT_H
+    AC_DEFINE([GNULIB_STDINT], [1],
+      [Define to 1 when using the gnulib module stdint.])
   gl_STRCASE
+    AC_DEFINE([GNULIB_STRCASE], [1],
+      [Define to 1 when using the gnulib module strcase.])
   gl_FUNC_STRCASESTR
+    AC_DEFINE([GNULIB_STRCASESTR], [1],
+      [Define to 1 when using the gnulib module strcasestr.])
   gl_FUNC_STRDUP
+    AC_DEFINE([GNULIB_STRDUP], [1],
+      [Define to 1 when using the gnulib module strdup.])
   gl_FUNC_STRNDUP
+    AC_DEFINE([GNULIB_STRNDUP], [1],
+      [Define to 1 when using the gnulib module strndup.])
   gl_FUNC_STRNLEN
+    AC_DEFINE([GNULIB_STRNLEN], [1],
+      [Define to 1 when using the gnulib module strnlen.])
+    AC_DEFINE([GNULIB_STRNLEN1], [1],
+      [Define to 1 when using the gnulib module strnlen1.])
   gl_FUNC_STRPBRK
+    AC_DEFINE([GNULIB_STRPBRK], [1],
+      [Define to 1 when using the gnulib module strpbrk.])
   gl_FUNC_STRSEP
+    AC_DEFINE([GNULIB_STRSEP], [1],
+      [Define to 1 when using the gnulib module strsep.])
   gl_HEADER_SYS_SOCKET
+    AC_DEFINE([GNULIB_SYS_SOCKET], [1],
+      [Define to 1 when using the gnulib module sys_socket.])
   gl_TIME_R
+    AC_DEFINE([GNULIB_TIME_R], [1],
+      [Define to 1 when using the gnulib module time_r.])
   gl_FUNC_TIMEGM
+    AC_DEFINE([GNULIB_TIMEGM], [1],
+      [Define to 1 when using the gnulib module timegm.])
   gl_FUNC_VASNPRINTF
+    AC_DEFINE([GNULIB_VASNPRINTF], [1],
+      [Define to 1 when using the gnulib module vasnprintf.])
   gl_FUNC_VSNPRINTF
+    AC_DEFINE([GNULIB_VSNPRINTF], [1],
+      [Define to 1 when using the gnulib module vsnprintf.])
+  gl_WCTYPE_H
+    AC_DEFINE([GNULIB_WCTYPE], [1],
+      [Define to 1 when using the gnulib module wctype.])
   gl_FUNC_WCWIDTH
+    AC_DEFINE([GNULIB_WCWIDTH], [1],
+      [Define to 1 when using the gnulib module wcwidth.])
   gl_XSIZE
+    AC_DEFINE([GNULIB_XSIZE], [1],
+      [Define to 1 when using the gnulib module xsize.])
   m4_popdef([AC_LIBSOURCES])
   m4_popdef([AC_REPLACE_FUNCS])
   m4_popdef([AC_LIBOBJ])
@@ -178,6 +261,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/vasnprintf.h
   lib/vsnprintf.c
   lib/vsnprintf.h
+  lib/wctype_.h
   lib/wcwidth.h
   lib/xsize.h
   m4/absolute-header.m4
@@ -226,6 +310,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/vasnprintf.m4
   m4/vsnprintf.m4
   m4/wchar_t.m4
+  m4/wctype.m4
   m4/wcwidth.m4
   m4/wint_t.m4
   m4/xsize.m4
