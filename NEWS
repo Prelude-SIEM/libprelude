@@ -1,3 +1,8 @@
+* 2007-01-08, libprelude-0.9.12.2:
+
+        - Fix make installation error when Perl bindings are disabled.
+        
+        
 * 2007-01-05, libprelude-0.9.12.1:
 
         - Ability to debug TLS communication through a new LIBPRELUDE_TLS_DEBUG 
