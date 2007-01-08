@@ -25,7 +25,7 @@ if HAVE_PERL
 #
 perl-makefile:
 	cd perl && LANG="" DESTDIR=$(DESTDIR) LIBDIR=$(libdir) $(PERL) Makefile.PL @PERL_EXTRA_PARAMS@
-else:
+else
 perl-makefile:
 endif
 
