@@ -29,13 +29,15 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
-#include <sys/ioctl.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <termios.h>
 #include <gnutls/gnutls.h>
 
 #include "prelude-inttypes.h"
+
+#ifdef HAVE_SYS_IOCTL_H
+# include <sys/ioctl.h>
+#endif
 
 #ifdef HAVE_SYS_FILIO_H
 # include <sys/filio.h>
@@ -57,6 +59,9 @@
 # define MIN(x, y) ((x) < (y) ? (x) : (y))
 #endif
 
+#ifdef WIN32
+# define ioctl ioctlsocket
+#endif
 
 struct prelude_io {
 
