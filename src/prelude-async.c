@@ -217,21 +217,24 @@ static prelude_async_object_t *get_next_job(void)
 
 static void *async_thread(void *arg) 
 {
+        prelude_async_object_t *obj;
+        
+#ifndef WIN32
         int ret;
         sigset_t set;
-        prelude_async_object_t *obj;
         
         ret = sigfillset(&set);
         if ( ret < 0 ) {
-                prelude_log(PRELUDE_LOG_ERR, "sigfillset returned an error.\n");
+                prelude_log(PRELUDE_LOG_ERR, "sigfillset error: %s.\n", strerror(errno));
                 return NULL;
         }
         
         ret = pthread_sigmask(SIG_BLOCK, &set, NULL);
         if ( ret < 0 ) {
-                prelude_log(PRELUDE_LOG_ERR, "pthread_sigmask returned an error.\n");
+                prelude_log(PRELUDE_LOG_ERR, "pthread_sigmask error: %s.\n", strerror(errno));
                 return NULL;
         }
+#endif
 
         while ( 1 ) {
                 

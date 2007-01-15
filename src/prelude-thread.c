@@ -201,7 +201,11 @@ int prelude_thread_join(pthread_t th, void **thread_return)
 
 int prelude_thread_sigmask(int how, const sigset_t *newmask, sigset_t *oldmask)
 {
+#ifdef WIN32
+        return 0;
+#else
         THR_FUNC(pthread_sigmask(how, newmask, oldmask));
+#endif
 }
 
 
