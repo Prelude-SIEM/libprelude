@@ -30,7 +30,13 @@
 #include <limits.h>
 #include <string.h>
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <errno.h>
+
+#ifndef WIN32
+# include <sys/mman.h>
+#endif
 
 #include "prelude-error.h"
 #include "idmef.h"
@@ -516,4 +522,48 @@ int _idmef_message_assign_missing(prelude_client_t *client, idmef_message_t *msg
         }
 
         return 0;
+}
+
+
+#define WIN32
+int _prelude_load_file(const char *filename, unsigned char **fdata, size_t *outsize)
+{
+        int ret, fd;
+        struct stat st;
+                
+        fd = open(filename, O_RDONLY);
+        if ( fd < 0 )
+                return prelude_error_verbose(PRELUDE_ERROR_PROFILE, "could not open '%s' for reading", filename);
+                
+        ret = fstat(fd, &st);
+        if ( ret < 0 )
+                return prelude_error_from_errno(errno);
+
+        *outsize = st.st_size;               
+
+#ifndef WIN32
+        *fdata = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
+        if ( *fdata == MAP_FAILED )
+                return prelude_error_from_errno(errno);
+#else
+        *fdata = malloc(st.st_size);
+        if ( ! *fdata )
+                return prelude_error_from_errno(errno);
+                
+        if ( read(fd, *fdata, st.st_size) != st.st_size ) {
+                free(*fdata);
+                return prelude_error_from_errno(errno);
+        }
+#endif
+        return 0;
+}
+
+
+void _prelude_unload_file(unsigned char *fdata, size_t size)
+{
+#ifndef WIN32
+        munmap(fdata, size);
+#else
+        free(fdata);
+#endif
 }

@@ -34,7 +34,7 @@
 #include <sys/types.h>
 
 #ifdef WIN32
-# include <WinSock2.h>
+# include <winsock2.h>
 #else
 # include <sys/socket.h>
 # include <netinet/in.h> 
@@ -69,5 +69,9 @@ int _prelude_get_file_name_and_path(const char *str, char **name, char **path);
 prelude_msg_priority_t _idmef_impact_severity_to_msg_priority(idmef_impact_severity_t severity);
 
 int _idmef_message_assign_missing(prelude_client_t *client, idmef_message_t *msg);
+
+int _prelude_load_file(const char *filename, unsigned char **fdata, size_t *outsize);
+
+void _prelude_unload_file(unsigned char *fdata, size_t size);
 
 #endif /* _LIBPRELUDE_COMMON_H */
