@@ -37,6 +37,12 @@
 #include "prelude-client-profile.h"
 #include "tls-auth.h"
 
+#ifdef WIN32
+# define geteuid(x) (0)
+# define getegid(x) (0)
+#endif
+
+
 #define PRELUDE_PROFILE_DIR PRELUDE_CONFIG_DIR "/profile"
 
 
