@@ -49,6 +49,11 @@
 #include "idmef-tree-wrap.h"
 #include "libmissing.h"
 
+#ifdef WIN32
+# undef interface
+#endif
+
+
 #define LISTED_OBJECT(name, type) prelude_list_t name
 
 #define IS_LISTED prelude_list_t list
