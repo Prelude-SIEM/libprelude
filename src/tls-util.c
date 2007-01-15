@@ -29,7 +29,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/mman.h>
 #include <fcntl.h>
 
 #include <gnutls/gnutls.h>
@@ -93,57 +92,22 @@ static int load_individual_cert(FILE *fd, gnutls_datum *key, gnutls_certificate_
 }
 
 
-
-int tls_load_file(const char *filename, gnutls_datum *data)
-{
-        int ret, fd;
-        struct stat st;
-
-        fd = open(filename, O_RDONLY);
-        if ( fd < 0 )
-                return prelude_error_verbose(PRELUDE_ERROR_PROFILE, "could not open '%s' for reading", filename);
-        
-        ret = fstat(fd, &st);
-        if ( ret < 0 ) {
-                close(fd);
-                return prelude_error_from_errno(errno);
-        }
-        
-        data->data = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
-        if ( data->data == MAP_FAILED ) {
-                close(fd);
-                return prelude_error_from_errno(errno);
-        }
-
-        close(fd);
-        data->size = st.st_size;
-        
-        return 0;
-}
-
-
-
-void tls_unload_file(gnutls_datum *data)
-{
-        munmap(data->data, data->size);
-}
-
-
-
-
 int tls_certificates_load(const char *keyfile, const char *certfile, gnutls_certificate_credentials cred)
 {
         int ret;
         FILE *fd;
+        size_t size;
         gnutls_datum key;
 
-        ret = tls_load_file(keyfile, &key);
+        ret = _prelude_load_file(keyfile, &key.data, &size);
         if ( ret < 0 )
                 return ret;
         
+        key.size = (unsigned int) size;
+        
         fd = fopen(certfile, "r");
         if ( ! fd ) {
-                tls_unload_file(&key);
+                _prelude_unload_file(key.data, key.size);
                 return prelude_error_verbose(PRELUDE_ERROR_PROFILE, "could not open '%s' for reading", certfile);
         }
         
@@ -151,7 +115,7 @@ int tls_certificates_load(const char *keyfile, const char *certfile, gnutls_cert
         if ( ret < 0 )
                 ret = prelude_error_from_errno(errno);
         
-        tls_unload_file(&key);
+        _prelude_unload_file(key.data, key.size);
         fclose(fd);
         
         return ret;
