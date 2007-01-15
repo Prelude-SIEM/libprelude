@@ -42,6 +42,10 @@
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_FAILOVER
 #include "prelude-error.h"
 
+#ifdef WIN32
+# define mkdir(x, y) mkdir(x)
+#endif
+
 
 struct prelude_failover {
         char *directory;
