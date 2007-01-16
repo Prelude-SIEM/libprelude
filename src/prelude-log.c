@@ -27,7 +27,12 @@
 #include <string.h>
 #include <stdarg.h>
 #include <errno.h>
-#include <syslog.h>
+
+#ifndef WIN32
+# include <syslog.h>
+#else
+# include <windows.h>
+#endif
 
 #include "prelude-log.h"
 #include "prelude-error.h"
@@ -62,11 +67,36 @@ static void do_log_print(prelude_log_t level, const char *str)
 }
 
 
+#ifdef WIN32
+static void syslog_win32(int priority, const char *log)
+{
+        static HANDLE event_source = NULL;
+
+        if ( ! event_source )
+                event_source = RegisterEventSource(NULL, TEXT("Prelude"));
+
+        ReportEvent(event_source,    /* handle of event source */
+                    (WORD)priority,  /* event type */
+                    0,               /* event category */
+                    0,               /* event ID */
+                    NULL,            /* current user's SID */
+                    1,               /* strings in szMsg */
+                    0,               /* no bytes of raw data */
+                    &log,            /* array of error strings */
+                    NULL);           /* no raw data */
+}
+#endif
+
 
 static void do_log_syslog(prelude_log_t level, const char *str)
 {
         while (*str == '\n' ) str++;
+
+#ifndef WIN32
         syslog(level, "%s", str);
+#else
+        syslog_win32(level, str);
+#endif
 }
 
 
