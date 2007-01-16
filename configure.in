@@ -646,8 +646,7 @@ AC_TYPE_SIZE_T
 AC_HEADER_TIME
 
 dnl Needed for FIONREAD under solaris
-AC_CHECK_HEADERS(sys/filio.h)
-AC_CHECK_HEADERS(sys/ioctl.h)
+AC_CHECK_HEADERS_ONCE(sys/filio.h sys/ioctl.h sys/un.h)
 
 
 prelude_config_dir=$sysconfdir/prelude

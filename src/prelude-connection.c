@@ -28,18 +28,22 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
-#include <netinet/in.h>
-#include <sys/un.h>
 #include <fcntl.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <netinet/tcp.h>
 #include <signal.h>
 #include <gnutls/gnutls.h>
+
+#ifdef HAVE_SYS_UN_H
+# include <sys/un.h>
+#endif
+
+#ifdef HAVE_SYS_IOCTL_H
+# include <sys/ioctl.h>
+#endif
 
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_CONNECTION
 #include "prelude-error.h"
@@ -196,6 +200,7 @@ static int generic_connect(struct sockaddr *sa, socklen_t salen)
 	if ( sock < 0 ) 
 		return prelude_error_from_errno(errno);
         
+#ifndef WIN32
         fcntl(sock, F_SETFD, fcntl(sock, F_GETFD) | FD_CLOEXEC);
                 
         ret = fcntl(sock, F_SETOWN, getpid());
@@ -203,8 +208,8 @@ static int generic_connect(struct sockaddr *sa, socklen_t salen)
                 close(sock);
                 return prelude_error_from_errno(errno);
         }
-
-        ret = setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE, &on, sizeof(int));
+#endif
+        ret = setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE, (void *) &on, sizeof(int));
         if ( ret < 0 )
                 prelude_log(PRELUDE_LOG_ERR, "could not set SO_KEEPALIVE socket option: %s.\n", strerror(errno)); 
        
@@ -318,7 +323,7 @@ static int start_inet_connection(prelude_connection_t *cnx,
 
 
 
-
+#ifndef WIN32
 static int start_unix_connection(prelude_connection_t *cnx,
                                  prelude_connection_permission_t reqperms, prelude_client_profile_t *profile) 
 {
@@ -338,23 +343,27 @@ static int start_unix_connection(prelude_connection_t *cnx,
         
         return ret;
 }
-
+#endif
 
 
 
 static int do_connect(prelude_connection_t *cnx,
                       prelude_connection_permission_t reqperms, prelude_client_profile_t *profile) 
 {
-        int ret;
-        
-        if ( cnx->sa->sa_family == AF_UNIX ) {
-                prelude_log(PRELUDE_LOG_INFO, "- Connecting to %s (UNIX) prelude Manager server.\n",
-                            ((struct sockaddr_un *) cnx->sa)->sun_path);
-		ret = start_unix_connection(cnx, reqperms, profile);
-        } else {
+        int ret = 0;
+  
+        if ( cnx->sa->sa_family != AF_UNIX ) {
                 prelude_log(PRELUDE_LOG_INFO, "- Connecting to %s prelude Manager server.\n", cnx->daddr);
                 ret = start_inet_connection(cnx, reqperms, profile);
         }
+        
+#ifndef WIN32
+        else {
+                prelude_log(PRELUDE_LOG_INFO, "- Connecting to %s (UNIX) prelude Manager server.\n",
+                            ((struct sockaddr_un *) cnx->sa)->sun_path);
+		ret = start_unix_connection(cnx, reqperms, profile);
+        }
+#endif
         
         return ret;
 }
@@ -405,7 +414,6 @@ static void destroy_connection_fd(prelude_connection_t *cnx)
         if ( cnx->state & PRELUDE_CONNECTION_OWN_FD )
                 prelude_io_destroy(cnx->fd);
 }
-
 
 
 static prelude_bool_t is_unix_addr(prelude_connection_t *cnx, const char *addr)
@@ -471,12 +479,18 @@ static int do_getaddrinfo(prelude_connection_t *cnx, struct addrinfo **ai, const
 static int resolve_addr(prelude_connection_t *cnx, const char *addr) 
 {
         struct addrinfo *ai;
-        struct sockaddr_un *un;
         int ret, ai_family, ai_addrlen;
-        
-        if ( ! addr || is_unix_addr(cnx, addr) ) {
+#ifndef WIN32
+        struct sockaddr_un *un;
+#endif
+
+        if ( is_unix_addr(cnx, addr) ) {
+#ifdef WIN32
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "UNIX socket are not supported under this environment");
+#else
                 ai_family = AF_UNIX;
                 ai_addrlen = sizeof(*un);
+#endif
         }
 
         else {
@@ -502,10 +516,12 @@ static int resolve_addr(prelude_connection_t *cnx, const char *addr)
                 freeaddrinfo(ai);
         }
 
+#ifndef WIN32
         else {
                 un = (struct sockaddr_un *) cnx->sa;
                 strncpy(un->sun_path, cnx->daddr, sizeof(un->sun_path));
         }
+#endif
         
         return 0;
 }
@@ -538,8 +554,10 @@ int prelude_connection_new(prelude_connection_t **out, const char *addr)
 {
         int ret;
         prelude_connection_t *new;
-        
+      
+#ifndef WIN32  
         signal(SIGPIPE, SIG_IGN);
+#endif
 
         new = calloc(1, sizeof(*new));
         if ( ! new )
