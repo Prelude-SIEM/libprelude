@@ -525,7 +525,6 @@ int _idmef_message_assign_missing(prelude_client_t *client, idmef_message_t *msg
 }
 
 
-#define WIN32
 int _prelude_load_file(const char *filename, unsigned char **fdata, size_t *outsize)
 {
         int ret, fd;
@@ -543,18 +542,25 @@ int _prelude_load_file(const char *filename, unsigned char **fdata, size_t *outs
 
 #ifndef WIN32
         *fdata = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
-        if ( *fdata == MAP_FAILED )
+        if ( *fdata == MAP_FAILED ) {
+                close(fd);
                 return prelude_error_from_errno(errno);
+        }
 #else
         *fdata = malloc(st.st_size);
-        if ( ! *fdata )
+        if ( ! *fdata ) {
+                close(fd);
                 return prelude_error_from_errno(errno);
-                
+        }
+        
         if ( read(fd, *fdata, st.st_size) != st.st_size ) {
                 free(*fdata);
+                close(fd);
                 return prelude_error_from_errno(errno);
         }
 #endif
+        close(fd);
+        
         return 0;
 }
 
