@@ -5,7 +5,8 @@ AC_CONFIG_SRCDIR([src])
 
 
 AC_PREREQ(2.59)
-AC_CANONICAL_TARGET([])
+AC_CANONICAL_HOST
+AC_CANONICAL_TARGET
 
 libprelude_major=0
 libprelude_minor=9
@@ -67,6 +68,16 @@ AC_SUBST(INCLTDL)
 AC_SUBST(LIBLTDL)
 AC_SUBST(LIBADD_DL)
 
+
+# We need to compile and run a program on the build machine.
+AC_MSG_CHECKING(for cc for build)
+if test "$cross_compiling" = "yes"; then
+  CC_FOR_BUILD="${CC_FOR_BUILD-cc}"
+else
+  CC_FOR_BUILD="${CC_FOR_BUILD-$CC}"
+fi
+AC_MSG_RESULT($CC_FOR_BUILD)
+AC_ARG_VAR(CC_FOR_BUILD,[build system C compiler])
 
 AC_SYS_LARGEFILE
 AX_CREATE_PRELUDE_INTTYPES_H(src/include/prelude-inttypes.h)
