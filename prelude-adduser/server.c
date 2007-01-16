@@ -276,7 +276,7 @@ static int setup_server(const char *addr, unsigned int port, struct pollfd *pfd,
                         break;
                 }
         
-                ret = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(int));
+                ret = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (void *) &on, sizeof(int));
                 if ( ret < 0 )
                         fprintf(stderr, "could not set SO_REUSEADDR: %s.\n", strerror(errno));
                 

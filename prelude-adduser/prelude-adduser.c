@@ -34,8 +34,11 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <pwd.h>
-#include <grp.h>
+
+#ifndef WIN32
+# include <pwd.h>
+# include <grp.h>
+#endif
 
 #if TIME_WITH_SYS_TIME
 # include <sys/time.h>
@@ -65,6 +68,15 @@
 #include "server.h"
 #include "tls-register.h"
 
+
+#ifdef WIN32
+# define chown(x, y, z) (0)
+# define fchown(x, y, z) (0)
+# define fchmod(x, y) (0)
+# define getuid(x) (0)
+# define getgid(x) (0)
+# define mkdir(x, y) mkdir(x)
+#endif
 
 #define TLS_CONFIG PRELUDE_CONFIG_DIR "/default/tls.conf"
 
@@ -233,6 +245,7 @@ static void print_revoke_help(void)
 }
 
 
+#ifndef WIN32
 static int set_uid(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         uid_t uid;
@@ -286,7 +299,7 @@ static int set_gid(prelude_option_t *opt, const char *optarg, prelude_string_t *
 
         return 0;
 }
-
+#endif
 
 
 static int set_server_keepalive(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
@@ -365,11 +378,13 @@ static int set_server_listen_address(prelude_option_t *opt, const char *optarg, 
 
 static void setup_permission_options(prelude_option_t *parent)
 {
+#ifndef WIN32
         prelude_option_add(parent, NULL, PRELUDE_OPTION_TYPE_CLI, 'u', "uid",
                            NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_uid, NULL);
 
         prelude_option_add(parent, NULL, PRELUDE_OPTION_TYPE_CLI, 'g', "gid",
                            NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_gid, NULL);
+#endif
 }
 
 
@@ -1448,7 +1463,9 @@ int main(int argc, char **argv)
         gnutls_global_init_extra();
 #endif
 
+#ifndef WIN32
         signal(SIGPIPE, SIG_IGN);
+#endif
         
         for ( i = 0; tbl[i].cmd; i++ ) {
                 if ( strcmp(tbl[i].cmd, argv[1]) != 0 )

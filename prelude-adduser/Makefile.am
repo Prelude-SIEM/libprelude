@@ -4,7 +4,6 @@ AM_CPPFLAGS = 	-I$(top_builddir)/src/include -I$(top_srcdir)/src/include -I$(top
 
 bin_PROGRAMS = prelude-adduser
 prelude_adduser_LDADD = $(top_builddir)/src/config-engine.lo \
-			$(top_builddir)/src/tls-util.lo \
 			$(top_builddir)/src/variable.lo \
 		        $(top_builddir)/src/libprelude.la \
 			@PRELUDE_ADDUSER_LIBS@ \

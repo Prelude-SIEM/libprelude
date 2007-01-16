@@ -27,7 +27,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <termios.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -39,8 +38,12 @@
 #include "prelude-client.h"
 #include "prelude-error.h"
 #include "tls-register.h"
-#include "tls-util.h"
+#include "common.h"
 
+
+#ifdef WIN32
+# define fchown(x, y, z) (0)
+#endif
 
 extern int server_confirm;
 extern int generated_key_size;
@@ -226,10 +229,14 @@ static ssize_t safe_write(int fd, const unsigned char *buf, size_t size)
 
 static int save_buf(const char *filename, uid_t uid, gid_t gid, const unsigned char *buf, size_t size)
 {
-        int fd, ret;
         ssize_t sret;
+        int fd, ret, flags = 0;
         
-        fd = open(filename, O_CREAT|O_WRONLY|O_APPEND, S_IRUSR|S_IWUSR|S_IRGRP);
+#ifndef WIN32
+        flags |= S_IRGRP;
+#endif
+        
+        fd = open(filename, O_CREAT|O_WRONLY|O_APPEND, S_IRUSR|S_IWUSR|flags);
         if ( fd < 0 ) {
                 fprintf(stderr, "couldn't open %s for writing: %s.\n", filename, strerror(errno));
                 return -1;
@@ -413,7 +420,7 @@ static gnutls_x509_privkey generate_private_key(void)
         fprintf(stderr, "      [Increasing system activity will speed-up the process.]\n\n");
         
         fprintf(stderr, "    - Generating %d bits RSA private key... ", generated_key_size);
-        tcdrain(STDERR_FILENO);
+        fflush(stderr);
 
         ret = gnutls_x509_privkey_generate(key, GNUTLS_PK_RSA, generated_key_size, 0);
         if ( ret < 0 ) {
@@ -521,6 +528,7 @@ static gnutls_x509_privkey gen_crypto(prelude_client_profile_t *cp,
 gnutls_x509_privkey tls_load_privkey(prelude_client_profile_t *cp)
 {
         int ret;
+        size_t size;
         gnutls_datum data;
         char filename[256];
         gnutls_x509_privkey key;
@@ -534,14 +542,16 @@ gnutls_x509_privkey tls_load_privkey(prelude_client_profile_t *cp)
                                   prelude_client_profile_get_gid(cp));
         }
 
-        ret = tls_load_file(filename, &data);
+        ret = _prelude_load_file(filename, &data.data, &size);
         if ( ret < 0 )
                 return NULL;
+        
+        data.size = (unsigned int) size;
         
         gnutls_x509_privkey_init(&key);
         gnutls_x509_privkey_import(key, &data, GNUTLS_X509_FMT_PEM);
 
-        tls_unload_file(&data);
+        _prelude_unload_file(data.data, size);
         
         return key;
 }
@@ -773,6 +783,7 @@ int tls_request_certificate(prelude_client_profile_t *cp, prelude_io_t *fd,
 int tls_load_ca_certificate(prelude_client_profile_t *cp, gnutls_x509_privkey key, gnutls_x509_crt *crt)
 {
         int ret;
+        size_t dsize;
         gnutls_datum data;
         char filename[256];
         unsigned char buf[65535];
@@ -782,10 +793,11 @@ int tls_load_ca_certificate(prelude_client_profile_t *cp, gnutls_x509_privkey ke
 
         ret = access(filename, F_OK);
         if ( ret == 0 ) {
-                ret = tls_load_file(filename, &data);
+                ret = _prelude_load_file(filename, &data.data, &dsize);
                 if ( ret < 0 )
                         return -1;
         
+                data.size = (unsigned int) dsize;
                 gnutls_x509_crt_init(crt);
 
                 ret = gnutls_x509_crt_import(*crt, &data, GNUTLS_X509_FMT_PEM);
@@ -794,7 +806,7 @@ int tls_load_ca_certificate(prelude_client_profile_t *cp, gnutls_x509_privkey ke
                         return -1;
                 }
                 
-                tls_unload_file(&data);
+                _prelude_unload_file(data.data, dsize);
 
                 return 0;
         }
@@ -832,21 +844,22 @@ int tls_load_ca_signed_certificate(prelude_client_profile_t *cp,
         char filename[256];
         gnutls_x509_crq crq;
         unsigned char buf[65535];
-        size_t size = sizeof(buf);
+        size_t size = sizeof(buf), dsize;
         
         prelude_client_profile_get_tls_server_keycert_filename(cp, filename, sizeof(filename));
 
         ret = access(filename, F_OK);
         if ( ret == 0 ) {                
-                ret = tls_load_file(filename, &data);
+                ret = _prelude_load_file(filename, &data.data, &dsize);
                 if ( ret < 0 )
                         return -1;
         
+                data.size = (unsigned int) dsize;
                 gnutls_x509_crt_init(crt);
 
                 ret = gnutls_x509_crt_import(*crt, &data, GNUTLS_X509_FMT_PEM);
                 if ( ret == 0 ) {                
-                        tls_unload_file(&data);
+                        _prelude_unload_file(data.data, dsize);
                         return 0;
                 }
         }
@@ -884,7 +897,7 @@ int tls_revoke_analyzer(prelude_client_profile_t *cp, gnutls_x509_privkey key,
                         gnutls_x509_crt crt, uint64_t revoked_analyzerid)
 {
         int ret, i;
-        size_t len;
+        size_t len, dsize;
         gnutls_datum data;
         gnutls_x509_crl crl;
         uint64_t analyzerid;
@@ -895,10 +908,12 @@ int tls_revoke_analyzer(prelude_client_profile_t *cp, gnutls_x509_privkey key,
 
         ret = access(crlfile, R_OK);
         if ( ret == 0 ) {
-                ret = tls_load_file(crlfile, &data);
+                ret = _prelude_load_file(crlfile, &data.data, &dsize);
                 if ( ret < 0 )
                         return -1;
 
+                data.size = (unsigned int) dsize;
+                
                 ret = gnutls_x509_crl_import(crl, &data, GNUTLS_X509_FMT_PEM);
                 if ( ret < 0 ) {
                         fprintf(stderr, "error importing CRL: %s.\n", gnutls_strerror(ret));
