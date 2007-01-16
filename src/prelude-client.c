@@ -29,13 +29,15 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/utsname.h>
 #include <fcntl.h>
 #include <assert.h>
 #include <errno.h>
+
+#ifndef WIN32
+# include <sys/utsname.h>
+#endif
 
 #include <gcrypt.h>
 #include <gnutls/gnutls.h>
@@ -139,34 +141,19 @@ static int client_write_cb(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
 
 static int generate_md5sum(const char *filename, prelude_string_t *out)
 {
-        void *data;
-        int ret, fd;
+        int ret;
         size_t len, i;
-        struct stat st;
-        unsigned char digest[16];
+        unsigned char digest[16], *data;
+        
+        ret = _prelude_load_file(filename, &data, &len);
+        if ( ret < 0 )
+                return ret;
+                
+        gcry_md_hash_buffer(GCRY_MD_MD5, digest, data, len);
+        _prelude_unload_file(data, len);
         
         len = gcry_md_get_algo_dlen(GCRY_MD_MD5);
         assert(len == sizeof(digest));
-        
-        fd = open(filename, O_RDONLY);
-        if ( fd < 0 )
-                return prelude_error_from_errno(errno);
-        
-        ret = fstat(fd, &st);
-        if ( ret < 0 || ! S_ISREG(st.st_mode) ) {
-                close(fd);
-                return prelude_error_from_errno(errno);
-        }
-        
-        data = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-        if ( data == MAP_FAILED ) {
-                close(fd);
-                return prelude_error_from_errno(errno);
-        }
-        
-        gcry_md_hash_buffer(GCRY_MD_MD5, digest, data, st.st_size);
-        munmap(data, st.st_size);
-        close(fd);
         
         for ( i = 0; i < len; i++ ) {
                 ret = prelude_string_sprintf(out, "%.2x", digest[i]);
@@ -282,11 +269,51 @@ static void setup_heartbeat_timer(prelude_client_t *client, int expire)
 }
 
 
+#ifndef WIN32
+static int get_sys_info(idmef_analyzer_t *analyzer)
+{
+        int ret;
+        struct utsname uts;
+        prelude_string_t *str;
+        
+        if ( uname(&uts) < 0 )
+                return prelude_error_from_errno(errno);
+
+        ret = prelude_string_new_dup(&str, uts.sysname);
+        if ( ret < 0 )
+                return ret;
+        
+        idmef_analyzer_set_ostype(analyzer, str);
+
+        ret = prelude_string_new_dup(&str, uts.release);
+        if ( ret < 0 )
+                return ret;
+        
+        idmef_analyzer_set_osversion(analyzer, str);
+        
+        return 0;
+}
+
+#else
+
+static int get_sys_info(idmef_analyzer_t *analyzer)
+{
+        int ret;
+        prelude_string_t *str;
+        
+        ret = prelude_string_new_constant(&str, "Windows");
+        if ( ret < 0 )
+                return ret;
+        
+        idmef_analyzer_set_ostype(analyzer, str);
+
+        return 0;
+}
+#endif
 
 static int fill_client_infos(prelude_client_t *client, const char *program) 
 {
         int ret;
-        struct utsname uts;
         prelude_string_t *str, *md5;
 	idmef_process_t *process;
         char buf[PATH_MAX], *name, *path;
@@ -297,21 +324,11 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
                 return ret;
         
 	idmef_analyzer_set_analyzerid(client->analyzer, str);
-        if ( uname(&uts) < 0 )
-                return prelude_error_from_errno(errno);
-
-        ret = prelude_string_new_dup(&str, uts.sysname);
+        
+        ret = get_sys_info(client->analyzer);
         if ( ret < 0 )
                 return ret;
-        
-        idmef_analyzer_set_ostype(client->analyzer, str);
-
-        ret = prelude_string_new_dup(&str, uts.release);
-        if ( ret < 0 )
-                return ret;
-        
-	idmef_analyzer_set_osversion(client->analyzer, str);
-
+                
         ret = idmef_analyzer_new_process(client->analyzer, &process);
         if ( ret < 0 ) 
                 return ret;
