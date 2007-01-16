@@ -107,6 +107,25 @@
 #define PRELUDE_UINTMAX_MAX            UINT64_MAX
 
 
+/* 
+ * Tandem NonStop R series and compatible platforms released before
+ * July 2005 support %Ld but not %lld.  
+ */
+# if defined _TNS_R_TARGET
+#  define _LONG_LONG_FORMAT_PREFIX "L"
+# else
+#  define _LONG_LONG_FORMAT_PREFIX "ll"
+# endif
+
+#if PRELUDE_INT64_MAX == LONG_MAX
+# define __PRELUDE_64BIT_FORMAT_PREFIX "l"
+#elif defined _MSC_VER || defined __MINGW32__
+# define __PRELUDE_64BIT_FORMAT_PREFIX "I64"
+#elif @HAVE_LONG_LONG_INT@ && LONG_MAX >> 30 == 1
+# define __PRELUDE_64BIT_FORMAT_PREFIX _LONG_LONG_FORMAT_PREFIX
+#endif
+
+
 
 /*
  * format specifier
