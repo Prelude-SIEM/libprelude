@@ -529,6 +529,7 @@ int _prelude_load_file(const char *filename, unsigned char **fdata, size_t *outs
 {
         int ret, fd;
         struct stat st;
+        unsigned char *dataptr;
                 
         fd = open(filename, O_RDONLY);
         if ( fd < 0 )
@@ -541,23 +542,38 @@ int _prelude_load_file(const char *filename, unsigned char **fdata, size_t *outs
         *outsize = st.st_size;               
 
 #ifndef WIN32
-        *fdata = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
-        if ( *fdata == MAP_FAILED ) {
+        dataptr = *fdata = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
+        if ( dataptr == MAP_FAILED ) {
                 close(fd);
                 return prelude_error_from_errno(errno);
         }
 #else
-        *fdata = malloc(st.st_size);
-        if ( ! *fdata ) {
+        dataptr = *fdata = malloc(st.st_size);
+        if ( ! dataptr ) {
                 close(fd);
                 return prelude_error_from_errno(errno);
         }
         
-        if ( read(fd, *fdata, st.st_size) != st.st_size ) {
-                free(*fdata);
-                close(fd);
-                return prelude_error_from_errno(errno);
-        }
+        _setmode(fd, O_BINARY);
+        
+        do {
+                ssize_t len;
+                
+                len = read(fd, dataptr, st.st_size);
+                if ( len < 0 ) {
+                        if ( errno == EINTR )
+                                continue;
+                                
+                        close(fd);
+                        free(*fdata);
+    
+                        return prelude_error_from_errno(errno);
+                }
+                
+                dataptr += len;
+                st.st_size -= len;
+        } while ( st.st_size > 0 );
+
 #endif
         close(fd);
         
