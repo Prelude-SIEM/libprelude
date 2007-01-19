@@ -14,6 +14,7 @@ CLEANFILES = err-sources.h err-codes.h code-to-errno.h code-from-errno.h \
 nodist_include_HEADERS = prelude-error.h
 
 noinst_LTLIBRARIES = libprelude-error.la
+libprelude_error_la_LDFLAGS = -no-undefined
 libprelude_error_la_SOURCES = prelude-error.h strsource.c strerror.c perror.c code-to-errno.c code-from-errno.c
 
 err-sources.h: Makefile mkstrtable.awk err-sources.h.in
