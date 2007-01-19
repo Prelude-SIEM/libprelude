@@ -533,7 +533,7 @@ int _prelude_load_file(const char *filename, unsigned char **fdata, size_t *outs
                 
         fd = open(filename, O_RDONLY);
         if ( fd < 0 )
-                return prelude_error_verbose(PRELUDE_ERROR_PROFILE, "could not open '%s' for reading", filename);
+                return prelude_error_from_errno(errno);
                 
         ret = fstat(fd, &st);
         if ( ret < 0 )
