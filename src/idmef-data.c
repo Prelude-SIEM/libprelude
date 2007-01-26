@@ -358,49 +358,39 @@ prelude_bool_t idmef_data_is_empty(const idmef_data_t *data)
 
 static int bytes_to_string(prelude_string_t *out, const unsigned char *src, size_t size)
 {
-        size_t i;
-        int ret = 0;
-        unsigned char c;
+        char c;
+        int ret;
+        static const char b64tbl[64] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-        for ( i = 0; i < size; i++ ) {
-                c = src[i];
-                
-                if ( c >= 32 && c <= 127 ) {
-                        ret = prelude_string_ncat(out, (char *) &c, 1);
-                        if ( ret < 0 )
-                                return ret;
-                        
-                        continue;
-                }
-
-                switch ( c ) {
-                case '\\':
-                        ret = prelude_string_cat(out, "\\\\");
-                        break;
-
-                case '\r':
-                        ret = prelude_string_cat(out, "\\r");
-                        break;
-
-                case '\n':
-                        ret = prelude_string_cat(out, "\\n");
-                        break;
-
-                case '\t':
-                        ret = prelude_string_cat(out, "\\t");
-                        break;
-
-                default:
-                        ret = prelude_string_cat(out, "\\x%02x");
-                        break;
-                }
-
+        while ( size ) {
+                ret = prelude_string_ncat(out, &b64tbl[src[0] >> 2], 1);
                 if ( ret < 0 )
                         return ret;
+                
+                c = b64tbl[((src[0] << 4) + ((--size) ? src[1] >> 4 : 0)) & 0x3f];
+
+                ret = prelude_string_ncat(out, &c, 1);
+                if ( ret < 0 )
+                        return ret;
+                        
+                c = (size) ? b64tbl[((src[1] << 2) + ((--size) ? src[2] >> 6 : 0)) & 0x3f] : '=';
+                
+                ret = prelude_string_ncat(out, &c, 1);
+                if ( ret < 0 )
+                        return ret;
+               
+                c = (size && size--) ? b64tbl[src[2] & 0x3f] : '=';
+                
+                ret = prelude_string_ncat(out, &c, 1);
+                if ( ret < 0 )
+                        return ret;
+                
+                src += 3;        
         }
-        
-        return ret;
+
+        return 0;
 }
+
 
 
 
