@@ -60,6 +60,7 @@
 # include <inttypes.h>
 #endif
 
+#include <limits.h>
 
 #ifndef TRUE
 # define TRUE 1
