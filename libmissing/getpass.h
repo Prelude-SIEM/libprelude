@@ -1,5 +1,6 @@
-/* Searching in a string.
-   Copyright (C) 2001-2002 Free Software Foundation, Inc.
+/* getpass.h -- Read a password of arbitrary length from /dev/tty or stdin.
+   Copyright (C) 2004 Free Software Foundation, Inc.
+   Contributed by Simon Josefsson <jas@extundo.com>, 2004.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -15,14 +16,16 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
-#if HAVE_STRPBRK
+#ifndef GETPASS_H
+# define GETPASS_H
 
-/* Get strpbrk() declaration.  */
-#include <string.h>
+/* Get getpass declaration, if available.  */
+# include <unistd.h>
 
-#else
+# if defined HAVE_DECL_GETPASS && !HAVE_DECL_GETPASS
+/* Read a password of arbitrary length from /dev/tty or stdin.  */
+char *getpass (const char *prompt);
 
-/* Find the first occurrence in S of any character in ACCEPT.  */
-extern char *strpbrk (const char *s, const char *accept);
+# endif
 
-#endif
+#endif /* GETPASS_H */

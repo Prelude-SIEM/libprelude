@@ -1,5 +1,5 @@
-/* strdup.h -- duplicate a string
-   Copyright (C) 2004, 2006 Free Software Foundation, Inc.
+/* Searching in a string.
+   Copyright (C) 2001-2003, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -15,25 +15,13 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
-#ifndef STRDUP_H_
-#define STRDUP_H_
+#ifndef GNULIB_STRPTIME_H_
+#define GNULIB_STRPTIME_H_
 
-/* Get strdup declaration, if available.  */
-#include <string.h>
-
-#ifdef __cplusplus
-extern "C" {
+#if HAVE_STRPTIME
+# include <time.h>
+#else
+extern char *strptime(const char *s, const char *format, struct tm *tm);
 #endif
 
-
-#if defined HAVE_DECL_STRDUP && !HAVE_DECL_STRDUP && !defined strdup
-/* Duplicate S, returning an identical malloc'd string.  */
-extern char *strdup (const char *s);
 #endif
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* STRDUP_H_ */

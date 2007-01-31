@@ -1,5 +1,6 @@
-/* Case-insensitive searching in a string.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+/* A substitute for ISO C99 <wchar.h>, for platforms that have issues.
+
+   Copyright (C) 2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -15,16 +16,27 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/* Written by Eric Blake.  */
 
-/* Find the first occurrence of NEEDLE in HAYSTACK, using case-insensitive
-   comparison.
-   Note: This function may, in multibyte locales, return success even if
-   strlen (haystack) < strlen (needle) !  */
-extern char *strcasestr (const char *haystack, const char *needle);
+/*
+ * ISO C 99 <wchar.h> for platforms that have issues.
+ * <http://www.opengroup.org/susv3xbd/wchar.h.html>
+ *
+ * For now, this just ensures proper prerequisite inclusion order.
+ */
 
-#ifdef __cplusplus
-}
-#endif
+#ifndef _GL_WCHAR_H
+#define _GL_WCHAR_H
+
+/* Tru64 with Desktop Toolkit C has a bug: <stdio.h> must be included before
+   <wchar.h>.
+   BSD/OS 4.0.1 has a bug: <stddef.h>, <stdio.h> and <time.h> must be
+   included before <wchar.h>.  */
+#include <stddef.h>
+#include <stdio.h>
+#include <time.h>
+
+/* Include the original <wchar.h>.  */
+#include @ABSOLUTE_WCHAR_H@
+
+#endif /* _GL_WCHAR_H */
