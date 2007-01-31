@@ -32,20 +32,21 @@
 #include "config.h"
 
 #include <poll.h>
+#include <string.h>
 #include <sys/types.h>
+#include <sys/time.h>
+#include <time.h>
 #include <sys/socket.h>
 #include "ftw_.h"
 #include "getaddrinfo.h"
+#include "getpass.h"
 #include "inet_ntop.h"
 #include "minmax.h"
 #include "pathmax.h"
 #include "regex.h"
 #include "snprintf.h"
-#include "strcase.h"
-#include "strcasestr.h"
-#include "strdup.h"
-#include "strndup.h"
-#include "strsep.h"
+#include "strptime.h"
+#include "time_r.h"
 #include "timegm.h"
 #include "vsnprintf.h"
 
