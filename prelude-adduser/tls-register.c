@@ -81,72 +81,81 @@ static int cmp_certificate_dn(gnutls_x509_crt crt, uint64_t wanted_dn, uint64_t 
 }
 
 
+static char *const_to_char(const char *ptr)
+{
+        union {
+                char *rw;
+                const char *ro;
+        } hack;
+        
+        hack.ro = ptr;
+        
+        return hack.rw;
+}
+
+
+
 static int remove_old_certificate(const char *filename, uint64_t dn, uint64_t issuer_dn)
 {
         int ret;
-        char buf[65536], outf[1024], *datap;
-        FILE *fd, *wfd;
-        gnutls_datum data;
+        char buf[65536];
+        unsigned char *data, *datap;
+        size_t size;
+        FILE *fd;
+        gnutls_datum datum;
         gnutls_x509_crt crt;
         prelude_string_t *out;
         prelude_string_new(&out);
         
-        snprintf(outf, sizeof(outf), "%s.tmp", filename);
-        
-        fd = fopen(filename, "r");
+        ret = _prelude_load_file(filename, &data, &size);
+        if ( ret < 0 && prelude_error_get_code(ret) != PRELUDE_ERROR_ENOENT )
+                return ret;
+                
+        unlink(filename);
+
+        fd = fopen(filename, "w");
         if ( ! fd )
                 return 0;
         
-        wfd = fopen(outf, "w");
-        if ( ! wfd ) {
-                fprintf(stderr, "could not open '%s': %s.\n", outf, strerror(errno));
-                fclose(fd);
-                return -1;
-        }
-        
+        datap = data;
         while ( 1 ) {
-                ret = fscanf(fd, "-----BEGIN CERTIFICATE-----\n%65535[^-]%*[^\n]\n", buf);
+                ret = sscanf((const char *) data, "-----BEGIN CERTIFICATE-----\n%65535[^-]%*[^\n]\n", buf);
                 if ( ret != 1 )
                         break;
                                 
                 prelude_string_sprintf(out, "-----BEGIN CERTIFICATE-----\n%s-----END CERTIFICATE-----\n", buf);
                 
-                data.size = prelude_string_get_len(out);
-                prelude_string_get_string_released(out, &datap);
-                data.data = (unsigned char *) datap;
+                datum.size = prelude_string_get_len(out);
+                datum.data = (unsigned char *) const_to_char(prelude_string_get_string(out));
+                data += datum.size;
                 
                 ret = gnutls_x509_crt_init(&crt);
                 if ( ret < 0 )
                         return -1;
                 
-                ret = gnutls_x509_crt_import(crt, &data, GNUTLS_X509_FMT_PEM);
+                ret = gnutls_x509_crt_import(crt, &datum, GNUTLS_X509_FMT_PEM);
                 if ( ret < 0 ) {
-                        printf("error parsing certificate: %s\n", gnutls_strerror(ret));
+                        fprintf(stderr, "error importing certificate: %s\n", gnutls_strerror(ret));
                         return -1;
                 }
 
                 ret = cmp_certificate_dn(crt, dn, issuer_dn);
-                if ( ret != 0 )
-                        fwrite(data.data, 1, data.size, wfd);
-                else
+                if ( ret == 0 )
                         fprintf(stderr, "  - Removing old certificate with subject=%"
                                 PRELUDE_PRIu64 " issuer=%" PRELUDE_PRIu64 ".\n", dn, issuer_dn);
+                else {
+                        if ( fwrite(datum.data, 1, datum.size, fd) != datum.size )
+                                fprintf(stderr, "error writing certificate: %s\n", strerror(errno));
+                }
                 
                 prelude_string_clear(out);
                 gnutls_x509_crt_deinit(crt);
-                free(data.data);
         }
 
         fclose(fd);
-        fclose(wfd);
+        _prelude_unload_file(datap, size);
         prelude_string_destroy(out);
         
-        ret = rename(outf, filename);
-        if ( ret < 0 ) {
-                fprintf(stderr, "could not rename '%s' to '%s': %s.\n", outf, filename, strerror(errno));
-                return ret;
-        }
-                
         return 0;
 }
 
@@ -189,7 +198,7 @@ static int remove_old(const char *filename, unsigned char *buf, size_t size)
         
         ret = remove_old_certificate(filename, dn, issuer_dn);
         if ( ret < 0 )
-                return -1;
+                return ret;
 
  err:
         gnutls_x509_crt_deinit(crt);
@@ -543,8 +552,10 @@ gnutls_x509_privkey tls_load_privkey(prelude_client_profile_t *cp)
         }
 
         ret = _prelude_load_file(filename, &data.data, &size);
-        if ( ret < 0 )
+        if ( ret < 0 ) {
+                fprintf(stderr, "could not load '%s': %s.\n", filename, prelude_strerror(ret));
                 return NULL;
+        }
         
         data.size = (unsigned int) size;
         
@@ -748,11 +759,11 @@ int tls_request_certificate(prelude_client_profile_t *cp, prelude_io_t *fd,
         prelude_client_profile_get_tls_client_keycert_filename(cp, buf, sizeof(buf));
         ret = remove_old(buf, rbuf, rsize);
         if ( ret < 0 )
-                return -1;
+                return ret;
         
         ret = save_buf(buf, prelude_client_profile_get_uid(cp), prelude_client_profile_get_gid(cp), rbuf, rsize);
         if ( ret < 0 ) 
-                return -1;
+                return ret;
 
         free(rbuf);
         
@@ -761,17 +772,17 @@ int tls_request_certificate(prelude_client_profile_t *cp, prelude_io_t *fd,
         rsize = prelude_io_read_delimited(fd, &rbuf);
         if ( rsize < 0 ) {
                 prelude_perror(rsize, "error receiving server certificate");
-                return -1;
+                return rsize;
         }
         
         prelude_client_profile_get_tls_client_trusted_cert_filename(cp, buf, sizeof(buf));
         ret = remove_old(buf, rbuf, rsize);
         if ( ret < 0 )
-                return -1;
+                return ret;
         
         ret = save_buf(buf, prelude_client_profile_get_uid(cp), prelude_client_profile_get_gid(cp), rbuf, rsize);
         if ( ret < 0 ) 
-                return -1;
+                return ret;
 
         free(rbuf);
         
