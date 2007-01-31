@@ -46,9 +46,11 @@ static int get_path_infos(const char *path, struct stat *st, int *flag)
                 
         else if ( S_ISDIR(st->st_mode) )
                 *flag = FTW_D;
-        
+
+#ifdef S_ISLNK        
         else if ( S_ISLNK(st->st_mode) )
                 *flag = FTW_SL;
+#endif
 
         return ret;
 }
