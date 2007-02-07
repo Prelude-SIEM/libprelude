@@ -45,7 +45,7 @@ changequote([, ])dnl
 AC_SUBST([LTALLOCA])
   gl_FUNC_ALLOCA
   gl_HEADER_ARPA_INET
-  dnl gl_USE_SYSTEM_EXTENSIONS must be added quite early to configure.ac.
+  AC_PROG_MKDIR_P
   gl_FUNC_FTW
   gl_GETADDRINFO
   gl_FUNC_GETDELIM
@@ -54,12 +54,10 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_GETTIMEOFDAY
   gl_INET_NTOP
   AC_FUNC_MALLOC
-  gl_MBCHAR
-  gl_MBITER
-  gl_FUNC_MEMCHR
   gl_MINMAX
   gl_FUNC_MKTIME
   gl_HEADER_NETINET_IN
+  AC_PROG_MKDIR_P
   gl_PATHMAX
   gl_FUNC_POLL
   gl_REGEX
@@ -71,13 +69,19 @@ AC_SUBST([LTALLOCA])
   gl_STDINT_H
   gl_STRCASE
   gl_FUNC_STRCASESTR
+  gl_STRING_MODULE_INDICATOR([strcasestr])
   gl_FUNC_STRDUP
+  gl_STRING_MODULE_INDICATOR([strdup])
   gl_HEADER_STRING_H
   gl_FUNC_STRNDUP
+  gl_STRING_MODULE_INDICATOR([strndup])
   gl_FUNC_STRNLEN
+  gl_STRING_MODULE_INDICATOR([strnlen])
   gl_FUNC_STRPBRK
+  gl_STRING_MODULE_INDICATOR([strpbrk])
   gl_FUNC_STRPTIME
   gl_FUNC_STRSEP
+  gl_STRING_MODULE_INDICATOR([strsep])
   gl_HEADER_SYS_SELECT
   AC_PROG_MKDIR_P
   gl_HEADER_SYS_SOCKET
@@ -90,7 +94,6 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_VSNPRINTF
   gl_WCHAR_H
   gl_WCTYPE_H
-  gl_FUNC_WCWIDTH
   gl_XSIZE
   m4_popdef([AC_LIBSOURCES])
   m4_popdef([AC_REPLACE_FUNCS])
@@ -132,6 +135,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/alloca.c
   lib/alloca_.h
   lib/asnprintf.c
+  lib/dummy.c
   lib/ftw.c
   lib/ftw_.h
   lib/gai_strerror.c
@@ -148,10 +152,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/inet_ntop.c
   lib/inet_ntop.h
   lib/malloc.c
-  lib/mbchar.c
-  lib/mbchar.h
-  lib/mbuiter.h
-  lib/memchr.c
   lib/minmax.h
   lib/mktime.c
   lib/pathmax.h
@@ -180,8 +180,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/strncasecmp.c
   lib/strndup.c
   lib/strnlen.c
-  lib/strnlen1.c
-  lib/strnlen1.h
   lib/strpbrk.c
   lib/strptime.c
   lib/strptime.h
@@ -197,7 +195,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/vsnprintf.h
   lib/wchar_.h
   lib/wctype_.h
-  lib/wcwidth.h
   lib/xsize.h
   m4/absolute-header.m4
   m4/alloca.m4
@@ -217,10 +214,6 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/inttypes_h.m4
   m4/longdouble.m4
   m4/longlong.m4
-  m4/mbchar.m4
-  m4/mbiter.m4
-  m4/mbrtowc.m4
-  m4/memchr.m4
   m4/minmax.m4
   m4/mktime.m4
   m4/netinet_in_h.m4
@@ -250,13 +243,13 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/sys_time_h.m4
   m4/time_r.m4
   m4/timegm.m4
+  m4/tm_gmtoff.m4
   m4/ulonglong.m4
   m4/vasnprintf.m4
   m4/vsnprintf.m4
   m4/wchar.m4
   m4/wchar_t.m4
   m4/wctype.m4
-  m4/wcwidth.m4
   m4/wint_t.m4
   m4/xsize.m4
 ])

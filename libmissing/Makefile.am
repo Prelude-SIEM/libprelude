@@ -70,7 +70,7 @@ BUILT_SOURCES += $(ARPA_INET_H)
 # We need the following in order to create <arpa/inet.h> when the system
 # doesn't have one.
 arpa/inet.h:
-	test -d arpa || mkdir arpa
+	@MKDIR_P@ arpa
 	rm -f $@-t $@
 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
 	  echo '#include <sys/socket.h>'; \
@@ -160,29 +160,6 @@ EXTRA_libmissing_la_SOURCES += malloc.c
 
 ## end   gnulib module malloc
 
-## begin gnulib module mbchar
-
-libmissing_la_SOURCES += mbchar.c
-
-EXTRA_DIST += mbchar.h
-
-## end   gnulib module mbchar
-
-## begin gnulib module mbuiter
-
-libmissing_la_SOURCES += mbuiter.h
-
-## end   gnulib module mbuiter
-
-## begin gnulib module memchr
-
-
-EXTRA_DIST += memchr.c
-
-EXTRA_libmissing_la_SOURCES += memchr.c
-
-## end   gnulib module memchr
-
 ## begin gnulib module minmax
 
 libmissing_la_SOURCES += minmax.h
@@ -205,7 +182,7 @@ BUILT_SOURCES += $(NETINET_IN_H)
 # We need the following in order to create <netinet/in.h> when the system
 # doesn't have one.
 netinet/in.h:
-	test -d netinet || mkdir netinet
+	@MKDIR_P@ netinet
 	rm -f $@-t $@
 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
 	  echo '#include <sys/socket.h>'; \
@@ -360,11 +337,35 @@ string.h: string_.h
 	rm -f $@-t $@
 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */' && \
 	  sed -e 's|@''ABSOLUTE_STRING_H''@|$(ABSOLUTE_STRING_H)|g' \
+	      -e 's|@''GNULIB_MBSCHR''@|$(GNULIB_MBSCHR)|g' \
+	      -e 's|@''GNULIB_MBSRCHR''@|$(GNULIB_MBSRCHR)|g' \
+	      -e 's|@''GNULIB_MBSSTR''@|$(GNULIB_MBSSTR)|g' \
+	      -e 's|@''GNULIB_MBSCASECMP''@|$(GNULIB_MBSCASECMP)|g' \
+	      -e 's|@''GNULIB_MBSCASESTR''@|$(GNULIB_MBSCASESTR)|g' \
+	      -e 's|@''GNULIB_MBSCSPN''@|$(GNULIB_MBSCSPN)|g' \
+	      -e 's|@''GNULIB_MBSPBRK''@|$(GNULIB_MBSPBRK)|g' \
+	      -e 's|@''GNULIB_MBSSPN''@|$(GNULIB_MBSSPN)|g' \
+	      -e 's|@''GNULIB_MBSSEP''@|$(GNULIB_MBSSEP)|g' \
+	      -e 's|@''GNULIB_MBSTOK_R''@|$(GNULIB_MBSTOK_R)|g' \
+	      -e 's|@''GNULIB_MEMMEM''@|$(GNULIB_MEMMEM)|g' \
+	      -e 's|@''GNULIB_MEMPCPY''@|$(GNULIB_MEMPCPY)|g' \
+	      -e 's|@''GNULIB_MEMRCHR''@|$(GNULIB_MEMRCHR)|g' \
+	      -e 's|@''GNULIB_STPCPY''@|$(GNULIB_STPCPY)|g' \
+	      -e 's|@''GNULIB_STPNCPY''@|$(GNULIB_STPNCPY)|g' \
+	      -e 's|@''GNULIB_STRCHRNUL''@|$(GNULIB_STRCHRNUL)|g' \
+	      -e 's|@''GNULIB_STRDUP''@|$(GNULIB_STRDUP)|g' \
+	      -e 's|@''GNULIB_STRNDUP''@|$(GNULIB_STRNDUP)|g' \
+	      -e 's|@''GNULIB_STRNLEN''@|$(GNULIB_STRNLEN)|g' \
+	      -e 's|@''GNULIB_STRPBRK''@|$(GNULIB_STRPBRK)|g' \
+	      -e 's|@''GNULIB_STRSEP''@|$(GNULIB_STRSEP)|g' \
+	      -e 's|@''GNULIB_STRCASESTR''@|$(GNULIB_STRCASESTR)|g' \
+	      -e 's|@''GNULIB_STRTOK_R''@|$(GNULIB_STRTOK_R)|g' \
 	      -e 's|@''HAVE_DECL_MEMMEM''@|$(HAVE_DECL_MEMMEM)|g' \
 	      -e 's|@''HAVE_MEMPCPY''@|$(HAVE_MEMPCPY)|g' \
 	      -e 's|@''HAVE_DECL_MEMRCHR''@|$(HAVE_DECL_MEMRCHR)|g' \
 	      -e 's|@''HAVE_STPCPY''@|$(HAVE_STPCPY)|g' \
 	      -e 's|@''HAVE_STPNCPY''@|$(HAVE_STPNCPY)|g' \
+	      -e 's|@''HAVE_STRCASECMP''@|$(HAVE_STRCASECMP)|g' \
 	      -e 's|@''HAVE_DECL_STRNCASECMP''@|$(HAVE_DECL_STRNCASECMP)|g' \
 	      -e 's|@''HAVE_STRCHRNUL''@|$(HAVE_STRCHRNUL)|g' \
 	      -e 's|@''HAVE_DECL_STRDUP''@|$(HAVE_DECL_STRDUP)|g' \
@@ -373,10 +374,8 @@ string.h: string_.h
 	      -e 's|@''HAVE_DECL_STRNLEN''@|$(HAVE_DECL_STRNLEN)|g' \
 	      -e 's|@''HAVE_STRPBRK''@|$(HAVE_STRPBRK)|g' \
 	      -e 's|@''HAVE_STRSEP''@|$(HAVE_STRSEP)|g' \
+	      -e 's|@''HAVE_STRCASESTR''@|$(HAVE_STRCASESTR)|g' \
 	      -e 's|@''HAVE_DECL_STRTOK_R''@|$(HAVE_DECL_STRTOK_R)|g' \
-	      -e 's|@''REPLACE_STRCASECMP''@|$(REPLACE_STRCASECMP)|g' \
-	      -e 's|@''REPLACE_STRSTR''@|$(REPLACE_STRSTR)|g' \
-	      -e 's|@''REPLACE_STRCASESTR''@|$(REPLACE_STRCASESTR)|g' \
 	      < $(srcdir)/string_.h; \
 	} > $@-t
 	mv $@-t $@
@@ -403,12 +402,6 @@ EXTRA_DIST += strnlen.c
 EXTRA_libmissing_la_SOURCES += strnlen.c
 
 ## end   gnulib module strnlen
-
-## begin gnulib module strnlen1
-
-libmissing_la_SOURCES += strnlen1.h strnlen1.c
-
-## end   gnulib module strnlen1
 
 ## begin gnulib module strpbrk
 
@@ -574,17 +567,17 @@ EXTRA_DIST += wctype_.h
 
 ## end   gnulib module wctype
 
-## begin gnulib module wcwidth
-
-libmissing_la_SOURCES += wcwidth.h
-
-## end   gnulib module wcwidth
-
 ## begin gnulib module xsize
 
 libmissing_la_SOURCES += xsize.h
 
 ## end   gnulib module xsize
+
+## begin gnulib module dummy
+
+libmissing_la_SOURCES += dummy.c
+
+## end   gnulib module dummy
 
 
 mostlyclean-local: mostlyclean-generic

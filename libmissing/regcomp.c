@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+   Copyright (C) 2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -542,17 +542,13 @@ regerror (int errcode, const regex_t *_Restrict_ preg,
 
   if (BE (errbuf_size != 0, 1))
     {
+      size_t cpy_size = msg_size;
       if (BE (msg_size > errbuf_size, 0))
 	{
-#if defined HAVE_MEMPCPY || defined _LIBC
-	  *((char *) __mempcpy (errbuf, msg, errbuf_size - 1)) = '\0';
-#else
-	  memcpy (errbuf, msg, errbuf_size - 1);
-	  errbuf[errbuf_size - 1] = 0;
-#endif
+	  cpy_size = errbuf_size - 1;
+	  errbuf[cpy_size] = '\0';
 	}
-      else
-	memcpy (errbuf, msg, msg_size);
+      memcpy (errbuf, msg, cpy_size);
     }
 
   return msg_size;
@@ -3074,7 +3070,7 @@ parse_bracket_exp (re_string_t *regexp, re_dfa_t *dfa, re_token_t *token,
 #endif /* not RE_ENABLE_I18N */
       non_match = true;
       if (syntax & RE_HAT_LISTS_NOT_NEWLINE)
-	bitset_set (sbcset, '\0');
+	bitset_set (sbcset, '\n');
       re_string_skip_bytes (regexp, token_len); /* Skip a token.  */
       token_len = peek_token_bracket (token, regexp, syntax);
       if (BE (token->type == END_OF_RE, 0))
@@ -3605,10 +3601,6 @@ build_charclass_op (re_dfa_t *dfa, RE_TRANSLATE_TYPE trans,
   if (non_match)
     {
 #ifdef RE_ENABLE_I18N
-      /*
-      if (syntax & RE_HAT_LISTS_NOT_NEWLINE)
-	bitset_set(cset->sbcset, '\0');
-      */
       mbcset->non_match = 1;
 #endif /* not RE_ENABLE_I18N */
     }
