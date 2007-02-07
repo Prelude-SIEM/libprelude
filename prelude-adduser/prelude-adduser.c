@@ -179,8 +179,10 @@ static void print_registration_server_help(void)
         
         fprintf(stderr, "Valid options:\n");
 
+#ifndef WIN32
         fprintf(stderr, "\t--uid=UID\t\t: UID or user to use to setup 'receiving' analyzer files.\n");
         fprintf(stderr, "\t--gid=GID\t\t: GID or group to use to setup 'receiving' analyzer files.\n");
+#endif        
         fprintf(stderr, "\t--prompt\t\t: Prompt for a password instead of auto generating it.\n");
         fprintf(stderr, "\t--passwd=PASSWD\t\t: Use provided password instead of auto generating it.\n");
         fprintf(stderr, "\t--passwd-file=-|FILE\t: Read password from file instead of auto generating it (- for stdin).\n");
@@ -202,8 +204,10 @@ static void print_register_help(void)
                 "receiving analyzer (like a Manager) through the specified registration-server.\n\n");
         
         fprintf(stderr, "Valid options:\n");
+#ifndef WIN32
         fprintf(stderr, "\t--uid=UID\t\t: UID or user to use to setup analyzer files.\n");
         fprintf(stderr, "\t--gid=GID\t\t: GID or group to use to setup analyzer files.\n");
+#endif        
         fprintf(stderr, "\t--passwd=PASSWD\t\t: Use provided password instead of prompting it.\n");
         fprintf(stderr, "\t--passwd-file=-|FILE\t: Read password from file instead of prompting it (- for stdin).\n");
 }
@@ -215,9 +219,11 @@ static void print_add_help(void)
         fprintf(stderr, "add: Setup a new analyzer.\n");
         fprintf(stderr, "usage: add <analyzer profile> [options]\n\n");
 
+#ifndef WIN32
         fprintf(stderr, "Valid options:\n");
         fprintf(stderr, "\t--uid=UID\t\t: UID or user to use to setup analyzer files.\n");
         fprintf(stderr, "\t--gid=GID\t\t: GID or group to use to setup analyzer files.\n");
+#endif
 }
 
 
@@ -227,9 +233,11 @@ static void print_chown_help(void)
         fprintf(stderr, "chown: Change analyzer owner.\n");
         fprintf(stderr, "usage: chown <analyzer profile> [--uid UID] [--gid GID]\n\n");
 
+#ifndef WIN32
         fprintf(stderr, "Valid options:\n");
         fprintf(stderr, "\t--uid=UID\t\t: UID or user to use to setup analyzer files.\n");
         fprintf(stderr, "\t--gid=GID\t\t: GID to group to use to setup analyzer files.\n");
+#endif
 }
 
 
@@ -239,9 +247,11 @@ static void print_revoke_help(void)
         fprintf(stderr, "revoke: Revoke access to <profile> for the given analyzerID.\n");
         fprintf(stderr, "usage: revoke <profile> <analyzerID> [options]\n\n");
 
+#ifndef WIN32
         fprintf(stderr, "Valid options:\n");
         fprintf(stderr, "\t--uid=UID\t\t: UID or user to use to setup analyzer files.\n");
         fprintf(stderr, "\t--gid=GID\t\t: GID to group to use to setup analyzer files.\n");
+#endif
 }
 
 
@@ -565,10 +575,11 @@ static gnutls_session new_tls_session(int sock, char *passwd)
         gnutls_anon_client_credentials anoncred;
 
         const int kx_priority[] = {
+                GNUTLS_KX_ANON_DH,
 #ifndef GNUTLS_SRP_DISABLED
                 GNUTLS_KX_SRP, GNUTLS_KX_SRP_DSS, GNUTLS_KX_SRP_RSA,
 #endif
-                GNUTLS_KX_ANON_DH, 0
+                0
         };
 
         union {

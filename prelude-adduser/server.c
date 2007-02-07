@@ -101,10 +101,11 @@ static gnutls_session new_tls_session(int sock)
         int ret;
         gnutls_session session;
         const int kx_priority[] = {
+                GNUTLS_KX_ANON_DH,
 #ifndef GNUTLS_SRP_DISABLED
                 GNUTLS_KX_SRP, GNUTLS_KX_SRP_DSS, GNUTLS_KX_SRP_RSA,
 #endif
-                GNUTLS_KX_ANON_DH, 0 };
+                0 };
         union {
                 int fd;
                 void *ptr;
