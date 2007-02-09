@@ -23,6 +23,7 @@
 *****/
      
 %{
+#define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_IDMEF_CRITERIA
         
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,6 +55,9 @@ extern void yylex_destroy(void);
 static void yyerror(char *s);
 extern void *yy_scan_string(const char *);
 extern void yy_delete_buffer(void *);
+void _idmef_criteria_string_init_lexer(void);
+
+#define YYERROR_VERBOSE
 
 %}
 
@@ -69,6 +73,9 @@ extern void yy_delete_buffer(void *);
 
 %token <str> TOK_IDMEF_VALUE
 %token <str> TOK_IDMEF_PATH
+
+%destructor { free ($$); } TOK_IDMEF_VALUE TOK_IDMEF_PATH
+%destructor { idmef_criteria_destroy($$); } criteria
 
 %token TOK_RELATION_SUBSTRING
 %token TOK_RELATION_SUBSTRING_NOCASE
@@ -101,7 +108,8 @@ extern void yy_delete_buffer(void *);
 %type <criterion> criterion
 %type <relation> relation
 %type <operator> operator
-     
+
+
 /* Grammar follows */
 %%
 
@@ -240,6 +248,8 @@ relation:
 | TOK_RELATION_NOT_EQUAL            { $$ = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT; }
 | TOK_RELATION_NOT_EQUAL_NOCASE     { $$ = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE|IDMEF_CRITERION_OPERATOR_NOT; }
 | TOK_RELATION_IS_NULL              { $$ = IDMEF_CRITERION_OPERATOR_NULL; }
+| TOK_ERROR                         { real_ret = prelude_error_verbose(PRELUDE_ERROR_IDMEF_CRITERIA_PARSE, 
+                                                                       "Criteria parser reported: Invalid operator '%s'", $$); YYERROR; }
 ;
 
 operator:       TOK_OPERATOR_AND		{ $$ = operator_and; }
@@ -257,7 +267,6 @@ static void yyerror(char *s)  /* Called by yyparse on error */
 }
 
 
-
 int idmef_criteria_new_from_string(idmef_criteria_t **new_criteria, const char *str)
 {
         int ret;
@@ -273,13 +282,15 @@ int idmef_criteria_new_from_string(idmef_criteria_t **new_criteria, const char *
 	yy_delete_buffer(state);
 
         if ( ret != 0 ) {
+                _idmef_criteria_string_init_lexer();
+                
                 if ( real_ret )
                         ret = real_ret;
                 else
                         ret = prelude_error_make(PRELUDE_ERROR_SOURCE_IDMEF_CRITERIA, PRELUDE_ERROR_IDMEF_CRITERIA_PARSE);
-
-                if ( processed_criteria )
-			idmef_criteria_destroy(processed_criteria);
+	
+	        if ( processed_criteria )
+	                idmef_criteria_destroy(processed_criteria);
 	}
 
         else *new_criteria = processed_criteria;

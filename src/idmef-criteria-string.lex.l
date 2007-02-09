@@ -160,5 +160,17 @@ substr\*		{ yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING_NOCASE; }
 
 .			{
 				/* invalid token */
+				yylval.str = strdup(yytext);
 				return TOK_ERROR;
 			}
+
+
+
+%%
+
+void _idmef_criteria_string_init_lexer(void);
+
+void _idmef_criteria_string_init_lexer(void)
+{
+        BEGIN INITIAL;
+}
