@@ -1,8 +1,8 @@
 SUBDIRS = libprelude-error include
 
 AM_CPPFLAGS = \
--I$(srcdir)/include -I$(top_builddir)/src/include -I$(srcdir)/libprelude-error	\
--I$(top_srcdir)/libmissing @INCLTDL@ @libprelude_cflags@ @LIBGNUTLS_CFLAGS@ @LIBGCRYPT_CFLAGS@	\
+-I$(srcdir)/include -I$(top_builddir) -I$(top_builddir)/src/include -I$(srcdir)/libprelude-error	\
+-I$(top_builddir)/libmissing -I$(top_srcdir)/libmissing @INCLTDL@ @libprelude_cflags@ @LIBGNUTLS_CFLAGS@ @LIBGCRYPT_CFLAGS@	\
 -DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\" -DPRELUDE_SPOOL_DIR=\"@prelude_spool_dir@\"
 
 
@@ -61,16 +61,16 @@ libprelude_la_SOURCES = 		\
 
 IDMEF_CRITERIA_STRING_LEX_O=idmef-criteria-string.lex.o
 $(IDMEF_CRITERIA_STRING_LEX_O): idmef-criteria-string.lex.c
-	$(MAKE) idmef-criteria-string.lex.o CFLAGS="$(CFLAGS) -include $(top_srcdir)/config.h" IDMEF_CRITERIA_STRING_LEX_O=dummy-idmef-criteria-string.lex.o
+	$(MAKE) idmef-criteria-string.lex.o CFLAGS="$(CFLAGS) -include $(top_builddir)/config.h" IDMEF_CRITERIA_STRING_LEX_O=dummy-idmef-criteria-string.lex.o
 
 IDMEF_CRITERIA_STRING_LEX_LO=idmef-criteria-string.lex.lo
 $(IDMEF_CRITERIA_STRING_LEX_LO): idmef-criteria-string.lex.c
-	$(MAKE) idmef-criteria-string.lex.lo CFLAGS="$(CFLAGS) -include $(top_srcdir)/config.h" IDMEF_CRITERIA_STRING_LEX_LO=dummy-idmef-criteria-string.lex.lo
+	$(MAKE) idmef-criteria-string.lex.lo CFLAGS="$(CFLAGS) -include $(top_builddir)/config.h" IDMEF_CRITERIA_STRING_LEX_LO=dummy-idmef-criteria-string.lex.lo
 
 IDMEF_CRITERIA_STRING_YAC_O=idmef-criteria-string.yac.o
 $(IDMEF_CRITERIA_STRING_YAC_O): idmef-criteria-string.yac.c
-	$(MAKE) idmef-criteria-string.yac.o CFLAGS="$(CFLAGS) -include $(top_srcdir)/config.h" IDMEF_CRITERIA_STRING_YAC_O=dummy-idmef-criteria-string.yac.o
+	$(MAKE) idmef-criteria-string.yac.o CFLAGS="$(CFLAGS) -include $(top_builddir)/config.h" IDMEF_CRITERIA_STRING_YAC_O=dummy-idmef-criteria-string.yac.o
 
 IDMEF_CRITERIA_STRING_YAC_LO=idmef-criteria-string.yac.lo
 $(IDMEF_CRITERIA_STRING_YAC_LO): idmef-criteria-string.yac.c
-	$(MAKE) idmef-criteria-string.yac.lo CFLAGS="$(CFLAGS) -include $(top_srcdir)/config.h" IDMEF_CRITERIA_STRING_YAC_LO=dummy-idmef-criteria-string.yac.lo
+	$(MAKE) idmef-criteria-string.yac.lo CFLAGS="$(CFLAGS) -include $(top_builddir)/config.h" IDMEF_CRITERIA_STRING_YAC_LO=dummy-idmef-criteria-string.yac.lo

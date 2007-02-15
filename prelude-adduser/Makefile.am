@@ -1,4 +1,4 @@
-AM_CPPFLAGS = 	-I$(top_builddir)/src/include -I$(top_srcdir)/src/include -I$(top_srcdir)/libmissing 	\
+AM_CPPFLAGS = 	-I$(top_builddir)/src/include -I$(top_srcdir)/src/include -I$(top_builddir)/libmissing -I$(top_srcdir)/libmissing 	\
 		-I$(top_builddir)/src/libprelude-error @libprelude_cflags@ @LIBGNUTLS_CFLAGS@		\
 		@PRELUDE_ADDUSER_CFLAGS@ -DPRELUDE_CONFIG_DIR=\"@prelude_config_dir@\"
 
