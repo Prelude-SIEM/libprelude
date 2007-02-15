@@ -444,7 +444,7 @@ static int create_template_config_file(prelude_client_profile_t *profile)
         
         tfd = fopen(PRELUDE_CONFIG_DIR "/default/idmef-client.conf", "r");
         if ( ! tfd ) {
-                fprintf(stderr, "could not open '" PRELUDE_CONFIG_DIR "/default/idmef-client.conf' for writing: %s.\n", strerror(errno));
+                fprintf(stderr, "could not open '" PRELUDE_CONFIG_DIR "/default/idmef-client.conf' for reading: %s.\n", strerror(errno));
                 return -1;
         }
         
