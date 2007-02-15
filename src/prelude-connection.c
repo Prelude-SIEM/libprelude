@@ -873,7 +873,9 @@ int prelude_connection_permission_new_from_string(prelude_connection_permission_
 
         tmp = buf;
         while ( (tptr = strsep(&tmp, ":")) ) {
-
+                if ( ! tmp )
+                        continue;
+                        
                 while ( *tptr == ' ' ) tptr++;
                 if ( ! *tptr )
                         continue;
