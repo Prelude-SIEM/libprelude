@@ -82,15 +82,19 @@ static int get_absolute_filename(const char *lockfile)
 
 static int lockfile_get_exclusive(const char *lockfile) 
 {
-        int ret, fd;
+        int fd;
+#ifndef WIN32
+        int ret;
         struct flock lock;
+#endif
 
         fd = open(lockfile, O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR);
         if ( fd < 0 )
                 return prelude_error_from_errno(errno);
-        
+
+#ifndef WIN32        
         fcntl(fd, F_SETFD, fcntl(fd, F_GETFD) | FD_CLOEXEC);
-        
+ 
         lock.l_type = F_WRLCK;    /* write lock */
         lock.l_start = 0;         /* from offset 0 */
         lock.l_whence = SEEK_SET; /* at the beginning of the file */
@@ -104,6 +108,7 @@ static int lockfile_get_exclusive(const char *lockfile)
                 close(fd);
                 return prelude_error_from_errno(errno);
         }
+#endif
 
         /*
          * lock is now held until program exits.
@@ -115,13 +120,17 @@ static int lockfile_get_exclusive(const char *lockfile)
 
 static int lockfile_write_pid(int fd, pid_t pid) 
 {
-        int ret;
+        int ret = -1;
         char buf[50];
 
         /*
          * Resets file size to 0.
          */
+#ifdef HAVE_FTRUNCATE
         ret = ftruncate(fd, 0);
+#elif HAVE_CHSIZE
+        ret = chsize(fd, 0);
+#endif
         if ( ret < 0 )
                 return prelude_error_from_errno(errno);
         
@@ -163,6 +172,17 @@ int prelude_daemonize(const char *lockfile)
                         return fd;
         }
         
+#ifdef WIN32
+        prelude_log(PRELUDE_LOG_ERR, "Daemonize call unsupported in this environment.\n");
+        
+        if ( lockfile ) {
+                pid = getpid();
+                
+                ret = lockfile_write_pid(fd, pid);
+                if ( ret < 0 )
+                        return ret;
+        }
+#else        
         pid = fork();
         if ( pid < 0 )
                 return prelude_error_from_errno(errno);
@@ -189,6 +209,7 @@ int prelude_daemonize(const char *lockfile)
         fclose(stdin);
         fclose(stdout);
         fclose(stderr);
+#endif
         
         /*
          * We want the lock to be unlinked upon normal exit.
