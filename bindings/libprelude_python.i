@@ -33,11 +33,13 @@ void swig_python_raise_exception(int error)
 	exception_class = PyObject_GetAttrString(module, "PreludeError");
 	exception = PyObject_CallFunction(exception_class, "i", error);
 
-	PyErr_SetObject(exception_class, exception);
+	if ( exception ) {
+		PyErr_SetObject(exception_class, exception);
+		Py_DECREF(exception);
+	}
 
 	Py_DECREF(module);
 	Py_DECREF(exception_class);
-	Py_DECREF(exception);
 }
 
 PyObject *swig_python_string(prelude_string_t *string)
