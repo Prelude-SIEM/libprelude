@@ -44,6 +44,7 @@ LTALLOCA=`echo "$ALLOCA" | sed 's/\.[^.]* /.lo /g;s/\.[^.]*$/.lo/'`
 changequote([, ])dnl
 AC_SUBST([LTALLOCA])
   gl_FUNC_ALLOCA
+  gl_ALLOCSA
   gl_HEADER_ARPA_INET
   AC_PROG_MKDIR_P
   gl_FUNC_FTW
@@ -53,6 +54,7 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_GETPASS
   gl_FUNC_GETTIMEOFDAY
   gl_INET_NTOP
+  gl_LOCALCHARSET
   AC_FUNC_MALLOC
   gl_MINMAX
   gl_FUNC_MKTIME
@@ -88,6 +90,7 @@ AC_SUBST([LTALLOCA])
   AC_PROG_MKDIR_P
   gl_HEADER_SYS_TIME_H
   AC_PROG_MKDIR_P
+  gl_HEADER_TIME_H
   gl_TIME_R
   gl_FUNC_TIMEGM
   gl_FUNC_VASNPRINTF
@@ -132,10 +135,14 @@ AC_DEFUN([gl_LIBSOURCES],
 # This macro records the list of files which have been installed by
 # gnulib-tool and may be removed by future gnulib-tool invocations.
 AC_DEFUN([gl_FILE_LIST], [
+  build-aux/link-warning.h
   lib/alloca.c
   lib/alloca_.h
+  lib/allocsa.c
+  lib/allocsa.h
+  lib/allocsa.valgrind
   lib/asnprintf.c
-  lib/dummy.c
+  lib/config.charset
   lib/ftw.c
   lib/ftw_.h
   lib/gai_strerror.c
@@ -151,6 +158,8 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/gettimeofday.c
   lib/inet_ntop.c
   lib/inet_ntop.h
+  lib/localcharset.c
+  lib/localcharset.h
   lib/malloc.c
   lib/minmax.h
   lib/mktime.c
@@ -161,6 +170,8 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/printf-args.h
   lib/printf-parse.c
   lib/printf-parse.h
+  lib/ref-add.sin
+  lib/ref-del.sin
   lib/regcomp.c
   lib/regex.c
   lib/regex.h
@@ -182,13 +193,11 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/strnlen.c
   lib/strpbrk.c
   lib/strptime.c
-  lib/strptime.h
   lib/strsep.c
   lib/sys_time_.h
+  lib/time_.h
   lib/time_r.c
-  lib/time_r.h
   lib/timegm.c
-  lib/timegm.h
   lib/vasnprintf.c
   lib/vasnprintf.h
   lib/vsnprintf.c
@@ -198,8 +207,10 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/xsize.h
   m4/absolute-header.m4
   m4/alloca.m4
+  m4/allocsa.m4
   m4/arpa_inet_h.m4
   m4/codeset.m4
+  m4/eealloc.m4
   m4/eoverflow.m4
   m4/extensions.m4
   m4/ftw.m4
@@ -208,10 +219,12 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/getline.m4
   m4/getpass.m4
   m4/gettimeofday.m4
+  m4/glibc21.m4
   m4/gnulib-common.m4
   m4/inet_ntop.m4
   m4/intmax_t.m4
   m4/inttypes_h.m4
+  m4/localcharset.m4
   m4/longdouble.m4
   m4/longlong.m4
   m4/minmax.m4
@@ -241,6 +254,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/sys_select_h.m4
   m4/sys_socket_h.m4
   m4/sys_time_h.m4
+  m4/time_h.m4
   m4/time_r.m4
   m4/timegm.m4
   m4/tm_gmtoff.m4

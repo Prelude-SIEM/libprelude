@@ -63,6 +63,14 @@ EXTRA_DIST += alloca_.h
 
 ## end   gnulib module alloca-opt
 
+## begin gnulib module allocsa
+
+libmissing_la_SOURCES += allocsa.h allocsa.c
+
+EXTRA_DIST += allocsa.valgrind
+
+## end   gnulib module allocsa
+
 ## begin gnulib module arpa_inet
 
 BUILT_SOURCES += $(ARPA_INET_H)
@@ -80,6 +88,62 @@ MOSTLYCLEANFILES += arpa/inet.h arpa/inet.h-t
 MOSTLYCLEANDIRS += arpa
 
 ## end   gnulib module arpa_inet
+
+## begin gnulib module configmake
+
+# Retrieve values of the variables through 'configure' followed by
+# 'make', not directly through 'configure', so that a user who
+# sets some of these variables consistently on the 'make' command
+# line gets correct results.
+#
+# One advantage of this approach, compared to the classical
+# approach of adding -DLIBDIR=\"$(libdir)\" etc. to AM_CPPFLAGS,
+# is that it protects against the use of undefined variables.
+# If, say, $(libdir) is not set in the Makefile, LIBDIR is not
+# defined by this module, and code using LIBDIR gives a
+# compilation error.
+#
+# Another advantage is that 'make' output is shorter.
+#
+# Listed in the same order as the GNU makefile conventions.
+# The Automake-defined pkg* macros are appended, in the order
+# listed in the Automake 1.10a+ documentation.
+configmake.h: Makefile
+	rm -f $@-t $@
+	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
+	  echo '#define PREFIX "$(prefix)"'; \
+	  echo '#define EXEC_PREFIX "$(exec_prefix)"'; \
+	  echo '#define BINDIR "$(bindir)"'; \
+	  echo '#define SBINDIR "$(sbindir)"'; \
+	  echo '#define LIBEXECDIR "$(libexecdir)"'; \
+	  echo '#define DATAROOTDIR "$(datarootdir)"'; \
+	  echo '#define DATADIR "$(datadir)"'; \
+	  echo '#define SYSCONFDIR "$(sysconfdir)"'; \
+	  echo '#define SHAREDSTATEDIR "$(sharedstatedir)"'; \
+	  echo '#define LOCALSTATEDIR "$(localstatedir)"'; \
+	  echo '#define INCLUDEDIR "$(includedir)"'; \
+	  echo '#define OLDINCLUDEDIR "$(oldincludedir)"'; \
+	  echo '#define DOCDIR "$(docdir)"'; \
+	  echo '#define INFODIR "$(infodir)"'; \
+	  echo '#define HTMLDIR "$(htmldir)"'; \
+	  echo '#define DVIDIR "$(dvidir)"'; \
+	  echo '#define PDFDIR "$(pdfdir)"'; \
+	  echo '#define PSDIR "$(psdir)"'; \
+	  echo '#define LIBDIR "$(libdir)"'; \
+	  echo '#define LISPDIR "$(lispdir)"'; \
+	  echo '#define LOCALEDIR "$(localedir)"'; \
+	  echo '#define MANDIR "$(mandir)"'; \
+	  echo '#define MANEXT "$(manext)"'; \
+	  echo '#define PKGDATADIR "$(pkgdatadir)"'; \
+	  echo '#define PKGINCLUDEDIR "$(pkgincludedir)"'; \
+	  echo '#define PKGLIBDIR "$(pkglibdir)"'; \
+	  echo '#define PKGLIBEXECDIR "$(pkglibexecdir)"'; \
+	} | sed '/""/d' > $@-t
+	mv $@-t $@
+BUILT_SOURCES += configmake.h
+CLEANFILES += configmake.h configmake.h-t
+
+## end   gnulib module configmake
 
 ## begin gnulib module ftw
 
@@ -150,6 +214,70 @@ EXTRA_DIST += inet_ntop.c inet_ntop.h
 EXTRA_libmissing_la_SOURCES += inet_ntop.c
 
 ## end   gnulib module inet_ntop
+
+## begin gnulib module link-warning
+
+LINK_WARNING_H=$(top_srcdir)/./link-warning.h
+
+## end   gnulib module link-warning
+
+## begin gnulib module localcharset
+
+libmissing_la_SOURCES += localcharset.h localcharset.c
+
+# We need the following in order to install a simple file in $(libdir)
+# which is shared with other installed packages. We use a list of referencing
+# packages so that "make uninstall" will remove the file if and only if it
+# is not used by another installed package.
+# On systems with glibc-2.1 or newer, the file is redundant, therefore we
+# avoid installing it.
+
+all-local: charset.alias ref-add.sed ref-del.sed
+
+charset_alias = $(DESTDIR)$(libdir)/charset.alias
+charset_tmp = $(DESTDIR)$(libdir)/charset.tmp
+install-exec-local: all-local
+	test $(GLIBC21) != no || $(mkinstalldirs) $(DESTDIR)$(libdir)
+	if test -f $(charset_alias); then \
+	  sed -f ref-add.sed $(charset_alias) > $(charset_tmp) ; \
+	  $(INSTALL_DATA) $(charset_tmp) $(charset_alias) ; \
+	  rm -f $(charset_tmp) ; \
+	else \
+	  if test $(GLIBC21) = no; then \
+	    sed -f ref-add.sed charset.alias > $(charset_tmp) ; \
+	    $(INSTALL_DATA) $(charset_tmp) $(charset_alias) ; \
+	    rm -f $(charset_tmp) ; \
+	  fi ; \
+	fi
+
+uninstall-local: all-local
+	if test -f $(charset_alias); then \
+	  sed -f ref-del.sed $(charset_alias) > $(charset_tmp); \
+	  if grep '^# Packages using this file: $$' $(charset_tmp) \
+	      > /dev/null; then \
+	    rm -f $(charset_alias); \
+	  else \
+	    $(INSTALL_DATA) $(charset_tmp) $(charset_alias); \
+	  fi; \
+	  rm -f $(charset_tmp); \
+	fi
+
+charset.alias: config.charset
+	rm -f t-$@ $@
+	$(SHELL) $(srcdir)/config.charset '$(host)' > t-$@
+	mv t-$@ $@
+
+SUFFIXES += .sed .sin
+.sin.sed:
+	rm -f t-$@ $@
+	sed -e '/^#/d' -e 's/@''PACKAGE''@/$(PACKAGE)/g' $< > t-$@
+	mv t-$@ $@
+
+CLEANFILES += charset.alias ref-add.sed ref-del.sed
+
+EXTRA_DIST += config.charset ref-add.sin ref-del.sin
+
+## end   gnulib module localcharset
 
 ## begin gnulib module malloc
 
@@ -337,10 +465,13 @@ string.h: string_.h
 	rm -f $@-t $@
 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */' && \
 	  sed -e 's|@''ABSOLUTE_STRING_H''@|$(ABSOLUTE_STRING_H)|g' \
+	      -e 's|@''GNULIB_MBSLEN''@|$(GNULIB_MBSLEN)|g' \
 	      -e 's|@''GNULIB_MBSCHR''@|$(GNULIB_MBSCHR)|g' \
 	      -e 's|@''GNULIB_MBSRCHR''@|$(GNULIB_MBSRCHR)|g' \
 	      -e 's|@''GNULIB_MBSSTR''@|$(GNULIB_MBSSTR)|g' \
 	      -e 's|@''GNULIB_MBSCASECMP''@|$(GNULIB_MBSCASECMP)|g' \
+	      -e 's|@''GNULIB_MBSNCASECMP''@|$(GNULIB_MBSNCASECMP)|g' \
+	      -e 's|@''GNULIB_MBSPCASECMP''@|$(GNULIB_MBSPCASECMP)|g' \
 	      -e 's|@''GNULIB_MBSCASESTR''@|$(GNULIB_MBSCASESTR)|g' \
 	      -e 's|@''GNULIB_MBSCSPN''@|$(GNULIB_MBSCSPN)|g' \
 	      -e 's|@''GNULIB_MBSPBRK''@|$(GNULIB_MBSPBRK)|g' \
@@ -376,6 +507,7 @@ string.h: string_.h
 	      -e 's|@''HAVE_STRSEP''@|$(HAVE_STRSEP)|g' \
 	      -e 's|@''HAVE_STRCASESTR''@|$(HAVE_STRCASESTR)|g' \
 	      -e 's|@''HAVE_DECL_STRTOK_R''@|$(HAVE_DECL_STRTOK_R)|g' \
+	      -e '/definition of GL_LINK_WARNING/r $(LINK_WARNING_H)' \
 	      < $(srcdir)/string_.h; \
 	} > $@-t
 	mv $@-t $@
@@ -415,7 +547,7 @@ EXTRA_libmissing_la_SOURCES += strpbrk.c
 ## begin gnulib module strptime
 
 
-EXTRA_DIST += strptime.c strptime.h
+EXTRA_DIST += strptime.c
 
 EXTRA_libmissing_la_SOURCES += strptime.c
 
@@ -490,10 +622,35 @@ EXTRA_DIST += sys_time_.h
 
 ## end   gnulib module sys_time
 
+## begin gnulib module time
+
+BUILT_SOURCES += time.h
+
+# We need the following in order to create <time.h> when the system
+# doesn't have one that works with the given compiler.
+time.h: time_.h
+	rm -f $@-t $@
+	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */' && \
+	  sed -e 's|@ABSOLUTE_TIME_H''@|$(ABSOLUTE_TIME_H)|g' \
+ 	      -e 's|@REPLACE_LOCALTIME_R''@|$(REPLACE_LOCALTIME_R)|g' \
+ 	      -e 's|@REPLACE_NANOSLEEP''@|$(REPLACE_NANOSLEEP)|g' \
+ 	      -e 's|@REPLACE_STRPTIME''@|$(REPLACE_STRPTIME)|g' \
+ 	      -e 's|@REPLACE_TIMEGM''@|$(REPLACE_TIMEGM)|g' \
+ 	      -e 's|@SYS_TIME_H_DEFINES_STRUCT_TIMESPEC''@|$(SYS_TIME_H_DEFINES_STRUCT_TIMESPEC)|g' \
+ 	      -e 's|@TIME_H_DEFINES_STRUCT_TIMESPEC''@|$(TIME_H_DEFINES_STRUCT_TIMESPEC)|g' \
+	      < $(srcdir)/time_.h; \
+	} > $@-t
+	mv $@-t $@
+MOSTLYCLEANFILES += time.h time.h-t
+
+EXTRA_DIST += time_.h
+
+## end   gnulib module time
+
 ## begin gnulib module time_r
 
 
-EXTRA_DIST += time_r.c time_r.h
+EXTRA_DIST += time_r.c
 
 EXTRA_libmissing_la_SOURCES += time_r.c
 
@@ -502,7 +659,7 @@ EXTRA_libmissing_la_SOURCES += time_r.c
 ## begin gnulib module timegm
 
 
-EXTRA_DIST += timegm.c timegm.h
+EXTRA_DIST += timegm.c
 
 EXTRA_libmissing_la_SOURCES += timegm.c
 
@@ -572,12 +729,6 @@ EXTRA_DIST += wctype_.h
 libmissing_la_SOURCES += xsize.h
 
 ## end   gnulib module xsize
-
-## begin gnulib module dummy
-
-libmissing_la_SOURCES += dummy.c
-
-## end   gnulib module dummy
 
 
 mostlyclean-local: mostlyclean-generic

@@ -45,9 +45,6 @@
 #include "pathmax.h"
 #include "regex.h"
 #include "snprintf.h"
-#include "strptime.h"
-#include "time_r.h"
-#include "timegm.h"
 #include "vsnprintf.h"
 
 #endif /* _LIBPRELUDE_LIBMISSING_H */
