@@ -45,7 +45,7 @@
 # endif
 #endif
 
-#include "ltdl.h"
+#include <ltdl.h>
 
 #include "prelude-log.h"
 #include "variable.h"
