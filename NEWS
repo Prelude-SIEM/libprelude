@@ -1,3 +1,31 @@
+* 2007-02-20, libprelude-0.9.13:
+
+	- Fix a crash with Python bindings upon signal reception (Fix #200).
+
+	- New --with-system-ltdl configure switch. The default is now to use the 
+	  system wide ltdl library if it is available, unless specified otherwise 
+	  (Fix #199).
+
+	- Prevent NULL pointer dereference if no permission is specified after the 
+	  permission type (Fix #197).
+
+	- Upon IDMEFCriteria parsing error, recover from broken parser stater (Fix #195).
+	  
+	- Detailed error reporting on IDMEFCriteria parsing error.
+
+	- Fix string and possible criteria leak on IDMEFCriteria syntax error.
+
+	- Prefer anonymous authentication rather than SRP. We do this because there
+	  are compatibility issue with SRP between different GnuTLS version
+	  (Should fix #187).
+
+	- When dumping AdditionalData of type byte-string to string, encode the data using base64.
+
+        - Win32 compatibility fixes.
+        
+        - Cross compilation fixes.
+        
+
 * 2007-01-08, libprelude-0.9.12.2:
 
         - Fix make installation error when Perl bindings are disabled.
