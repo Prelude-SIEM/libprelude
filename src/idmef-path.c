@@ -671,7 +671,7 @@ int idmef_path_new_v(idmef_path_t **path, const char *format, va_list args)
 
         ret = vsnprintf(buffer, sizeof(buffer), format, args);
         if ( ret < 0 || ret > sizeof(buffer) - 1 )
-                return prelude_error_from_errno(PRELUDE_ERROR_IDMEF_PATH_LENGTH);
+                return prelude_error(PRELUDE_ERROR_IDMEF_PATH_LENGTH);
 
         return idmef_path_new_fast(path, buffer);
 }
@@ -830,11 +830,11 @@ int idmef_path_set_index(idmef_path_t *path, unsigned int depth, unsigned int in
         if ( ret < 0 ) 
                 return ret;
 
+        path->elem[depth].index = index;
+        
         ret = build_name(path);
         if ( ret < 0 )
                 return ret;
-        
-        path->elem[depth].index = index;
 
         return 0;
 }
@@ -1105,7 +1105,7 @@ idmef_path_t *idmef_path_ref(idmef_path_t *path)
  *
  * Returns: TRUE if the object is ambiguous, FALSE otherwise.
  */
-prelude_bool_t idmef_path_is_ambiguous(idmef_path_t *path)
+prelude_bool_t idmef_path_is_ambiguous(const idmef_path_t *path)
 {
         int i;
         
@@ -1125,7 +1125,7 @@ prelude_bool_t idmef_path_is_ambiguous(idmef_path_t *path)
  *
  * Returns: the number of listed element within @path.
  */
-int idmef_path_has_lists(idmef_path_t *path)
+int idmef_path_has_lists(const idmef_path_t *path)
 {
         int i, ret = 0;
 
@@ -1139,7 +1139,7 @@ int idmef_path_has_lists(idmef_path_t *path)
 
 
 
-prelude_bool_t idmef_path_is_list(idmef_path_t *path, int depth)
+prelude_bool_t idmef_path_is_list(const idmef_path_t *path, int depth)
 {
         if ( depth < 0 )
                 depth = path->depth - 1;

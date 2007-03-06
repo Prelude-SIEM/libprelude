@@ -74,11 +74,11 @@ idmef_path_t *idmef_path_ref(idmef_path_t *path);
 
 const char *idmef_path_get_name(const idmef_path_t *path, int depth);
 
-prelude_bool_t idmef_path_is_ambiguous(idmef_path_t *path);
+prelude_bool_t idmef_path_is_ambiguous(const idmef_path_t *path);
 
-int idmef_path_has_lists(idmef_path_t *path);
+int idmef_path_has_lists(const idmef_path_t *path);
 
-prelude_bool_t idmef_path_is_list(idmef_path_t *path, int depth);
+prelude_bool_t idmef_path_is_list(const idmef_path_t *path, int depth);
          
 unsigned int idmef_path_get_depth(const idmef_path_t *path);
 
