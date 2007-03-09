@@ -231,7 +231,9 @@ static int enum_write(const idmef_value_type_t *src, prelude_string_t *out)
         const char *str;
 
         str = idmef_class_enum_to_string(src->data.enum_val.class_id, src->data.enum_val.value);
-
+        if ( ! str ) 
+                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_PARSE, "Enumeration conversion from numeric to string failed");
+                
         return prelude_string_cat(out, str);
 }
 
