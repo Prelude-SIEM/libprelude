@@ -179,13 +179,25 @@ int idmef_class_enum_to_numeric(idmef_class_id_t class, const char *val)
         if ( ret < 0 )
                 return ret;
         
+        if ( ! object_data[class].to_numeric )
+                return -1;
+                
     	return object_data[class].to_numeric(val);
 }
 
 
 const char *idmef_class_enum_to_string(idmef_class_id_t class, int val)
 {
-	return (is_class_valid(class) < 0) ? NULL : object_data[class].to_string(val);
+        int ret;
+        
+        ret = is_class_valid(class);
+        if ( ret < 0 )
+                return NULL;
+                
+        if ( ! object_data[class].to_string )
+                return NULL;
+                
+	return object_data[class].to_string(val);
 }
 
 
