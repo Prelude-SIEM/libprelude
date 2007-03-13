@@ -41,6 +41,19 @@
  extern "C" {
 #endif
 
+#ifndef __attribute__
+/* This feature is available in gcc versions 2.5 and later.  */
+# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__
+#  define __attribute__(Spec) /* empty */
+# endif
+/* The __-protected variants of `format' and `printf' attributes
+   are accepted by gcc versions 2.6.4 (effectively 2.7) and later.  */
+# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 7)
+#  define __format__ format
+#  define __printf__ printf
+# endif
+#endif
+
 
 /*
  * This is inspired from the GPG error interface.
@@ -108,6 +121,10 @@ static inline prelude_error_t prelude_error(prelude_error_code_t code)
 
 static prelude_error_t prelude_error_verbose_make_v(prelude_error_source_t source, 
 						    prelude_error_code_t code, const char *fmt, va_list ap)
+                                                    __attribute__ ((__format__ (__printf__, 3, 0)));
+
+static prelude_error_t prelude_error_verbose_make_v(prelude_error_source_t source, 
+						    prelude_error_code_t code, const char *fmt, va_list ap)
 {
 	int ret;
 	prelude_string_t *str;
@@ -135,6 +152,10 @@ static prelude_error_t prelude_error_verbose_make_v(prelude_error_source_t sourc
 
 static inline prelude_error_t prelude_error_verbose_make(prelude_error_source_t source,
 						         prelude_error_code_t code, const char *fmt, ...)
+						         __attribute__ ((__format__ (__printf__, 3, 4)));
+ 
+static inline prelude_error_t prelude_error_verbose_make(prelude_error_source_t source,
+						         prelude_error_code_t code, const char *fmt, ...)
 {
 	int ret;
 	va_list ap;
@@ -147,7 +168,9 @@ static inline prelude_error_t prelude_error_verbose_make(prelude_error_source_t 
 }
 
 
-
+static inline prelude_error_t prelude_error_verbose(prelude_error_code_t code, const char *fmt, ...) 
+                                                    __attribute__ ((__format__ (__printf__, 2, 3)));
+                                                    
 static inline prelude_error_t prelude_error_verbose(prelude_error_code_t code, const char *fmt, ...)
 {
 	int ret;
@@ -186,7 +209,7 @@ static inline prelude_bool_t prelude_error_is_verbose(prelude_error_t err)
 }
 
 
-void prelude_perror(prelude_error_t err, const char *fmt, ...);
+void prelude_perror(prelude_error_t err, const char *fmt, ...) __attribute__ ((__format__ (__printf__, 2, 3)));
 
 const char *prelude_strerror(prelude_error_t err);
 

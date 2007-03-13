@@ -37,6 +37,20 @@
  extern "C" {
 #endif
 
+#ifndef __attribute__
+/* This feature is available in gcc versions 2.5 and later.  */
+# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__
+#  define __attribute__(Spec) /* empty */
+# endif
+/* The __-protected variants of `format' and `printf' attributes
+   are accepted by gcc versions 2.6.4 (effectively 2.7) and later.  */
+# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 7)
+#  define __format__ format
+#  define __printf__ printf
+# endif
+#endif
+
+
 struct prelude_string {
 	prelude_list_t list;
 
@@ -113,8 +127,11 @@ void prelude_string_clear(prelude_string_t *string);
 int prelude_string_cat(prelude_string_t *dst, const char *str);
 int prelude_string_ncat(prelude_string_t *dst, const char *str, size_t len);
 
-int prelude_string_sprintf(prelude_string_t *string, const char *fmt, ...);
-int prelude_string_vprintf(prelude_string_t *string, const char *fmt, va_list ap);
+int prelude_string_sprintf(prelude_string_t *string, const char *fmt, ...)
+                           __attribute__ ((__format__ (__printf__, 2, 3)));
+                           
+int prelude_string_vprintf(prelude_string_t *string, const char *fmt, va_list ap)
+                           __attribute__ ((__format__ (__printf__, 2, 0)));
 
 int prelude_string_compare(const prelude_string_t *str1, const prelude_string_t *str2);
                                                          
