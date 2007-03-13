@@ -256,7 +256,7 @@ inline static int slice_message_header(prelude_msg_t *msg, unsigned char *hdrbuf
 
         if ( (msg->hdr.datalen + tmp) >= max_message_size )
                 return prelude_error_verbose(PRELUDE_ERROR_INVAL_LENGTH, "maximum message size exceeded: %lu > %lu",
-                                             (msg->hdr.datalen + tmp), max_message_size);
+                                             (size_t) (msg->hdr.datalen + tmp), max_message_size);
         
         msg->hdr.datalen += prelude_extract_uint32(hdrbuf + 4);
         

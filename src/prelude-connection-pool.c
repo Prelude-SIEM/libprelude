@@ -386,7 +386,7 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
                 snprintf(name, sizeof(name), "0x%" PRELUDE_PRIx64, prelude_connection_get_peer_analyzerid(cnx->cnx));
         
         prelude_log(PRELUDE_LOG_INFO,
-                    "- Flushing %u message to %s (%u erased due to quota)...\n",
+                    "- Flushing %u message to %s (%lu erased due to quota)...\n",
                     available, name, prelude_failover_get_deleted_msg_count(failover));
 
         do {
@@ -420,7 +420,7 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
                 
         } while ( 1 );
 
-        prelude_log(PRELUDE_LOG_WARN, "- %s from failover: %u/%u messages flushed (%u bytes).\n",
+        prelude_log(PRELUDE_LOG_WARN, "- %s from failover: %u/%u messages flushed (%lu bytes).\n",
                     (count == available) ? "Recovered" : "Failed recovering", count, available, totsize);
         
         return ret;
