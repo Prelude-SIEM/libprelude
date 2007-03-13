@@ -536,11 +536,18 @@ int _prelude_load_file(const char *filename, unsigned char **fdata, size_t *outs
                 return prelude_error_from_errno(errno);
                 
         ret = fstat(fd, &st);
-        if ( ret < 0 )
+        if ( ret < 0 ) {
+                close(fd);
                 return prelude_error_from_errno(errno);
+        }
 
-        *outsize = st.st_size;               
-
+        if ( st.st_size == 0 ) {
+                close(fd);
+                return prelude_error_verbose(prelude_error_code_from_errno(EINVAL), "could not load '%s': empty file", filename);
+        }
+        
+        *outsize = st.st_size;
+        
 #ifndef WIN32
         dataptr = *fdata = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
         if ( dataptr == MAP_FAILED ) {
