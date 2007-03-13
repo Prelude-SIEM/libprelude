@@ -105,23 +105,39 @@ static int remove_old_certificate(const char *filename, uint64_t dn, uint64_t is
         gnutls_datum datum;
         gnutls_x509_crt crt;
         prelude_string_t *out;
-        prelude_string_new(&out);
-        
+                        
         ret = _prelude_load_file(filename, &data, &size);
-        if ( ret < 0 && prelude_error_get_code(ret) != PRELUDE_ERROR_ENOENT )
+        if ( ret < 0 ) {
+                if ( prelude_error_get_code(ret) == PRELUDE_ERROR_ENOENT )
+                        return 0;
+
+                fprintf(stderr, "error loading '%s': %s.\n", filename, prelude_strerror(ret));
                 return ret;
+        }
+
+        ret = prelude_string_new(&out);
+        if ( ret < 0 ) {
+                _prelude_unload_file(data, size);
+                return ret;
+        }
                 
         unlink(filename);
 
         fd = fopen(filename, "w");
-        if ( ! fd )
-                return 0;
+        if ( ! fd ) {
+                fprintf(stderr, "error opening '%s' for writing: %s.\n", filename, strerror(errno));
+                _prelude_unload_file(data, size);
+                prelude_string_destroy(out);
+                return -1;
+        }
         
         datap = data;
         while ( 1 ) {
                 ret = sscanf((const char *) data, "-----BEGIN CERTIFICATE-----\n%65535[^-]%*[^\n]\n", buf);
-                if ( ret != 1 )
+                if ( ret != 1 ) {
+                        ret = 0;
                         break;
+                }
                                 
                 prelude_string_sprintf(out, "-----BEGIN CERTIFICATE-----\n%s-----END CERTIFICATE-----\n", buf);
                 
@@ -131,12 +147,12 @@ static int remove_old_certificate(const char *filename, uint64_t dn, uint64_t is
                 
                 ret = gnutls_x509_crt_init(&crt);
                 if ( ret < 0 )
-                        return -1;
+                        break;
                 
                 ret = gnutls_x509_crt_import(crt, &datum, GNUTLS_X509_FMT_PEM);
                 if ( ret < 0 ) {
                         fprintf(stderr, "error importing certificate: %s\n", gnutls_strerror(ret));
-                        return -1;
+                        break;
                 }
 
                 ret = cmp_certificate_dn(crt, dn, issuer_dn);
@@ -156,7 +172,7 @@ static int remove_old_certificate(const char *filename, uint64_t dn, uint64_t is
         _prelude_unload_file(datap, size);
         prelude_string_destroy(out);
         
-        return 0;
+        return ret;
 }
 
 
@@ -805,8 +821,10 @@ int tls_load_ca_certificate(prelude_client_profile_t *cp, gnutls_x509_privkey ke
         ret = access(filename, F_OK);
         if ( ret == 0 ) {
                 ret = _prelude_load_file(filename, &data.data, &dsize);
-                if ( ret < 0 )
-                        return -1;
+                if ( ret < 0 ) {
+                        fprintf(stderr, "error loading '%s': %s.\n", filename, prelude_strerror(ret));
+                        return ret;
+                }
         
                 data.size = (unsigned int) dsize;
                 gnutls_x509_crt_init(crt);
@@ -862,8 +880,10 @@ int tls_load_ca_signed_certificate(prelude_client_profile_t *cp,
         ret = access(filename, F_OK);
         if ( ret == 0 ) {                
                 ret = _prelude_load_file(filename, &data.data, &dsize);
-                if ( ret < 0 )
+                if ( ret < 0 ) {
+                        fprintf(stderr, "error loading '%s': %s.\n", filename, prelude_strerror(ret));
                         return -1;
+                }
         
                 data.size = (unsigned int) dsize;
                 gnutls_x509_crt_init(crt);
@@ -920,8 +940,10 @@ int tls_revoke_analyzer(prelude_client_profile_t *cp, gnutls_x509_privkey key,
         ret = access(crlfile, R_OK);
         if ( ret == 0 ) {
                 ret = _prelude_load_file(crlfile, &data.data, &dsize);
-                if ( ret < 0 )
-                        return -1;
+                if ( ret < 0 ) {
+                        fprintf(stderr, "error loading '%s': %s.\n", crlfile, prelude_strerror(ret));
+                        return ret;
+                }
 
                 data.size = (unsigned int) dsize;
                 
