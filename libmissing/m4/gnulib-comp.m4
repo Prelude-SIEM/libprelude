@@ -56,6 +56,8 @@ AC_SUBST([LTALLOCA])
   gl_INET_NTOP
   gl_LOCALCHARSET
   AC_FUNC_MALLOC
+  gl_FUNC_MEMMEM
+  gl_STRING_MODULE_INDICATOR([memmem])
   gl_MINMAX
   gl_FUNC_MKTIME
   gl_HEADER_NETINET_IN
@@ -65,10 +67,12 @@ AC_SUBST([LTALLOCA])
   gl_REGEX
   gl_SIZE_MAX
   gl_FUNC_SNPRINTF
+  gl_STDIO_MODULE_INDICATOR([snprintf])
   gl_TYPE_SOCKLEN_T
   gt_TYPE_SSIZE_T
   AM_STDBOOL_H
   gl_STDINT_H
+  gl_STDIO_H
   gl_STRCASE
   gl_FUNC_STRCASESTR
   gl_STRING_MODULE_INDICATOR([strcasestr])
@@ -95,6 +99,7 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_TIMEGM
   gl_FUNC_VASNPRINTF
   gl_FUNC_VSNPRINTF
+  gl_STDIO_MODULE_INDICATOR([vsnprintf])
   gl_WCHAR_H
   gl_WCTYPE_H
   gl_XSIZE
@@ -161,8 +166,10 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/localcharset.c
   lib/localcharset.h
   lib/malloc.c
+  lib/memmem.c
   lib/minmax.h
   lib/mktime.c
+  lib/netinet_in_.h
   lib/pathmax.h
   lib/poll.c
   lib/poll_.h
@@ -180,10 +187,10 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/regexec.c
   lib/size_max.h
   lib/snprintf.c
-  lib/snprintf.h
   lib/socket_.h
   lib/stdbool_.h
   lib/stdint_.h
+  lib/stdio_.h
   lib/strcasecmp.c
   lib/strcasestr.c
   lib/strdup.c
@@ -194,6 +201,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/strpbrk.c
   lib/strptime.c
   lib/strsep.c
+  lib/sys_select_.h
   lib/sys_time_.h
   lib/time_.h
   lib/time_r.c
@@ -201,7 +209,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/vasnprintf.c
   lib/vasnprintf.h
   lib/vsnprintf.c
-  lib/vsnprintf.h
   lib/wchar_.h
   lib/wctype_.h
   lib/xsize.h
@@ -227,6 +234,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/localcharset.m4
   m4/longdouble.m4
   m4/longlong.m4
+  m4/memmem.m4
   m4/minmax.m4
   m4/mktime.m4
   m4/netinet_in_h.m4
@@ -242,6 +250,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/stdbool.m4
   m4/stdint.m4
   m4/stdint_h.m4
+  m4/stdio_h.m4
   m4/strcase.m4
   m4/strcasestr.m4
   m4/strdup.m4

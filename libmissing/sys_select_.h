@@ -1,5 +1,4 @@
-/* Provide a more complete sys/time.h.
-
+/* Substitute for <sys/select.h>.
    Copyright (C) 2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -16,29 +15,23 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
-/* Written by Paul Eggert.  */
+#ifndef _GL_SYS_SELECT_H
+#define _GL_SYS_SELECT_H
 
-#ifndef _gl_SYS_TIME_H
-#define _gl_SYS_TIME_H
+#if @HAVE_SYS_SELECT_H@
 
-#if @HAVE_SYS_TIME_H@
-# include @ABSOLUTE_SYS_TIME_H@
+/* On many platforms, <sys/select.h> assumes prior inclusion of
+   <sys/types.h>.  */
+
+# include <sys/types.h>
+# include @ABSOLUTE_SYS_SELECT_H@
+
 #else
-# include <time.h>
+
+/* A platform that lacks <sys/select.h>.  */
+
+# include <sys/socket.h>
+
 #endif
 
-#if ! @HAVE_STRUCT_TIMEVAL@
-struct timeval
-{
-  time_t tv_sec;
-  long int tv_usec;
-};
-#endif
-
-#if @REPLACE_GETTIMEOFDAY@
-# undef gettimeofday
-# define gettimeofday rpl_gettimeofday
-int gettimeofday (struct timeval *restrict, void *restrict);
-#endif
-
-#endif /* _gl_SYS_TIME_H */
+#endif /* _GL_SYS_SELECT_H */
