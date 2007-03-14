@@ -259,6 +259,7 @@ int idmef_time_set_from_ntpstamp(idmef_time_t *time, const char *buf)
 
 	time->sec = tv.tv_sec;
         time->usec = tv.tv_usec;
+        time->gmt_offset = 0;
 
         return 0;
 }
