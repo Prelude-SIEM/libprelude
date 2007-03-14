@@ -420,8 +420,8 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
                 
         } while ( 1 );
 
-        prelude_log(PRELUDE_LOG_WARN, "- %s from failover: %u/%u messages flushed (%lu bytes).\n",
-                    (count == available) ? "Recovered" : "Failed recovering", count, available, totsize);
+        prelude_log(PRELUDE_LOG_WARN, "- %s from failover: %u/%u messages flushed (%" PRELUDE_PRIu64 " bytes).\n",
+                    (count == available) ? "Recovered" : "Failed recovering", count, available, (uint64_t) totsize);
         
         return ret;
 }
