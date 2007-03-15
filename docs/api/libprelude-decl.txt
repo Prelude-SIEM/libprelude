@@ -4632,7 +4632,7 @@ typedef enum {
 <MACRO>
 <NAME>prelude_log</NAME>
 #define prelude_log(level, ...) \
-        _prelude_log(level, __FILE__, __PRELUDE_FUNC__, __LINE__, __VA_ARGS__)
+        _prelude_log(level, __FILE__, __PRELUDE_FUNC__, __LINE__, __VA_ARGS__) 
 </MACRO>
 <MACRO>
 <NAME>prelude_log_debug</NAME>
@@ -7656,17 +7656,17 @@ const idmef_path_t *path, int depth
 <FUNCTION>
 <NAME>idmef_path_is_ambiguous</NAME>
 <RETURNS>prelude_bool_t </RETURNS>
-idmef_path_t *path
+const idmef_path_t *path
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_path_has_lists</NAME>
 <RETURNS>int </RETURNS>
-idmef_path_t *path
+const idmef_path_t *path
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_path_is_list</NAME>
 <RETURNS>prelude_bool_t </RETURNS>
-idmef_path_t *path, int depth
+const idmef_path_t *path, int depth
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_path_get_depth</NAME>
