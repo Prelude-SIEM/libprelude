@@ -389,19 +389,18 @@ static int data_compare(const idmef_value_type_t *t1, const idmef_value_type_t *
 
         if ( t1->data.data_val )
                 s1 = idmef_data_get_data(t1->data.data_val);
-                s1_len = idmef_data_get_len(t1->data.data_val);
 
-        if ( t2->data.string_val ) {
+        if ( t2->data.string_val )
                 s2 = idmef_data_get_data(t2->data.data_val);
-                s2_len = idmef_data_get_len(t2->data.data_val);
-        }
         
         if ( ! s1 || ! s2 )
-                return (s1) ? 1 : -1;
-                
+                return (s1) ? 1 : -1;                
         
-        if ( op & IDMEF_CRITERION_OPERATOR_SUBSTR ) 
+        if ( op & IDMEF_CRITERION_OPERATOR_SUBSTR ) {
+                s1_len = idmef_data_get_len(t1->data.data_val);
+                s2_len = idmef_data_get_len(t2->data.data_val);
                 return ( memmem(s1, s1_len, s2, s2_len) ) ? 0 : -1;
+        }
         
         ret = idmef_data_compare(t1->data.data_val, t2->data.data_val);        
         if ( ret == 0 && op & IDMEF_CRITERION_OPERATOR_EQUAL )
