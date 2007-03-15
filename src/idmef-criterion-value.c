@@ -504,7 +504,7 @@ int idmef_criterion_value_match(idmef_criterion_value_t *cv, idmef_value_t *valu
                                 idmef_criterion_operator_t op)
 {
         if ( cv->type == IDMEF_CRITERION_VALUE_TYPE_VALUE )
-                return idmef_value_match(value, cb->value, op);
+                return idmef_value_match(value, cv->value, op);
         else {        
                 int ret;
                 struct match_cb mcb;
