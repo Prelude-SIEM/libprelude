@@ -1,3 +1,23 @@
+* 2007-03-15, libprelude-0.9.13.1:
+
+        - Implement substring and regexp matching for IDMEF AdditionalData type.
+
+        - When the compiler support it, add format string check capability 
+          to variable number of arguments function declaration.
+
+        - Fix prelude-adduser regression introduced in libprelude-0.9.13.
+
+        - Fix a regression introduced in [8381] preventing broken down time and regex match to work.
+
+        - Fix a bug when manually setting an IDMEF path index.
+        
+        - Prevent invalid pointer dereference when passed invalid enumeration class.
+                          
+        - Initialize GMT offset when setting a time from an NTP string.
+        
+        - Various bug fixes.
+        
+
 * 2007-02-20, libprelude-0.9.13:
 
 	- Fix a crash with Python bindings upon signal reception (Fix #200).
