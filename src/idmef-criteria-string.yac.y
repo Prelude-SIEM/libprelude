@@ -249,7 +249,7 @@ relation:
 | TOK_RELATION_NOT_EQUAL_NOCASE     { $$ = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE|IDMEF_CRITERION_OPERATOR_NOT; }
 | TOK_RELATION_IS_NULL              { $$ = IDMEF_CRITERION_OPERATOR_NULL; }
 | TOK_ERROR                         { real_ret = prelude_error_verbose(PRELUDE_ERROR_IDMEF_CRITERIA_PARSE, 
-                                                                       "Criteria parser reported: Invalid operator '%s'", $$); YYERROR; }
+                                                                       "Criteria parser reported: Invalid operator found"); YYERROR; }
 ;
 
 operator:       TOK_OPERATOR_AND		{ $$ = operator_and; }
