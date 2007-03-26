@@ -733,12 +733,16 @@ int idmef_$struct->{short_typename}_compare(const $struct->{typename} *obj1, con
                         $self->output("
         if ( obj1->$field->{name}_is_set != obj2->$field->{name}_is_set )
                 return -1;
+                
+        if ( obj1->$field->{name}_is_set && obj1->$field->{name} != obj2->$field->{name} )
+                return -1;
 ");
-	    }
-	    $self->output("
+	    } else {
+	        $self->output("
         if ( obj1->$field->{name} != obj2->$field->{name} )
                 return -1;
 ");
+            }
 	}
     }
 

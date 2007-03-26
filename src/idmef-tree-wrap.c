@@ -3469,8 +3469,8 @@ int idmef_user_id_compare(const idmef_user_id_t *obj1, const idmef_user_id_t *ob
 
         if ( obj1->number_is_set != obj2->number_is_set )
                 return -1;
-
-        if ( obj1->number != obj2->number )
+                
+        if ( obj1->number_is_set && obj1->number != obj2->number )
                 return -1;
 
         return ret;
@@ -4464,8 +4464,8 @@ int idmef_address_compare(const idmef_address_t *obj1, const idmef_address_t *ob
 
         if ( obj1->vlan_num_is_set != obj2->vlan_num_is_set )
                 return -1;
-
-        if ( obj1->vlan_num != obj2->vlan_num )
+                
+        if ( obj1->vlan_num_is_set && obj1->vlan_num != obj2->vlan_num )
                 return -1;
 
         ret = prelude_string_compare(&obj1->address, &obj2->address);
@@ -5167,8 +5167,8 @@ int idmef_process_compare(const idmef_process_t *obj1, const idmef_process_t *ob
 
         if ( obj1->pid_is_set != obj2->pid_is_set )
                 return -1;
-
-        if ( obj1->pid != obj2->pid )
+                
+        if ( obj1->pid_is_set && obj1->pid != obj2->pid )
                 return -1;
 
         ret = prelude_string_compare(obj1->path, obj2->path);
@@ -6519,14 +6519,14 @@ int idmef_snmp_service_compare(const idmef_snmp_service_t *obj1, const idmef_snm
 
         if ( obj1->message_processing_model_is_set != obj2->message_processing_model_is_set )
                 return -1;
-
-        if ( obj1->message_processing_model != obj2->message_processing_model )
+                
+        if ( obj1->message_processing_model_is_set && obj1->message_processing_model != obj2->message_processing_model )
                 return -1;
 
         if ( obj1->security_model_is_set != obj2->security_model_is_set )
                 return -1;
-
-        if ( obj1->security_model != obj2->security_model )
+                
+        if ( obj1->security_model_is_set && obj1->security_model != obj2->security_model )
                 return -1;
 
         ret = prelude_string_compare(obj1->security_name, obj2->security_name);
@@ -6535,8 +6535,8 @@ int idmef_snmp_service_compare(const idmef_snmp_service_t *obj1, const idmef_snm
 
         if ( obj1->security_level_is_set != obj2->security_level_is_set )
                 return -1;
-
-        if ( obj1->security_level != obj2->security_level )
+                
+        if ( obj1->security_level_is_set && obj1->security_level != obj2->security_level )
                 return -1;
 
         ret = prelude_string_compare(obj1->context_name, obj2->context_name);
@@ -7479,14 +7479,14 @@ int idmef_service_compare(const idmef_service_t *obj1, const idmef_service_t *ob
 
         if ( obj1->ip_version_is_set != obj2->ip_version_is_set )
                 return -1;
-
-        if ( obj1->ip_version != obj2->ip_version )
+                
+        if ( obj1->ip_version_is_set && obj1->ip_version != obj2->ip_version )
                 return -1;
 
         if ( obj1->iana_protocol_number_is_set != obj2->iana_protocol_number_is_set )
                 return -1;
-
-        if ( obj1->iana_protocol_number != obj2->iana_protocol_number )
+                
+        if ( obj1->iana_protocol_number_is_set && obj1->iana_protocol_number != obj2->iana_protocol_number )
                 return -1;
 
         ret = prelude_string_compare(obj1->iana_protocol_name, obj2->iana_protocol_name);
@@ -7499,8 +7499,8 @@ int idmef_service_compare(const idmef_service_t *obj1, const idmef_service_t *ob
 
         if ( obj1->port_is_set != obj2->port_is_set )
                 return -1;
-
-        if ( obj1->port != obj2->port )
+                
+        if ( obj1->port_is_set && obj1->port != obj2->port )
                 return -1;
 
         ret = prelude_string_compare(obj1->portlist, obj2->portlist);
@@ -9684,32 +9684,32 @@ int idmef_inode_compare(const idmef_inode_t *obj1, const idmef_inode_t *obj2)
 
         if ( obj1->number_is_set != obj2->number_is_set )
                 return -1;
-
-        if ( obj1->number != obj2->number )
+                
+        if ( obj1->number_is_set && obj1->number != obj2->number )
                 return -1;
 
         if ( obj1->major_device_is_set != obj2->major_device_is_set )
                 return -1;
-
-        if ( obj1->major_device != obj2->major_device )
+                
+        if ( obj1->major_device_is_set && obj1->major_device != obj2->major_device )
                 return -1;
 
         if ( obj1->minor_device_is_set != obj2->minor_device_is_set )
                 return -1;
-
-        if ( obj1->minor_device != obj2->minor_device )
+                
+        if ( obj1->minor_device_is_set && obj1->minor_device != obj2->minor_device )
                 return -1;
 
         if ( obj1->c_major_device_is_set != obj2->c_major_device_is_set )
                 return -1;
-
-        if ( obj1->c_major_device != obj2->c_major_device )
+                
+        if ( obj1->c_major_device_is_set && obj1->c_major_device != obj2->c_major_device )
                 return -1;
 
         if ( obj1->c_minor_device_is_set != obj2->c_minor_device_is_set )
                 return -1;
-
-        if ( obj1->c_minor_device != obj2->c_minor_device )
+                
+        if ( obj1->c_minor_device_is_set && obj1->c_minor_device != obj2->c_minor_device )
                 return -1;
 
         return ret;
@@ -11435,14 +11435,14 @@ int idmef_file_compare(const idmef_file_t *obj1, const idmef_file_t *obj2)
 
         if ( obj1->data_size_is_set != obj2->data_size_is_set )
                 return -1;
-
-        if ( obj1->data_size != obj2->data_size )
+                
+        if ( obj1->data_size_is_set && obj1->data_size != obj2->data_size )
                 return -1;
 
         if ( obj1->disk_size_is_set != obj2->disk_size_is_set )
                 return -1;
-
-        if ( obj1->disk_size != obj2->disk_size )
+                
+        if ( obj1->disk_size_is_set && obj1->disk_size != obj2->disk_size )
                 return -1;
 
         {
@@ -11529,8 +11529,8 @@ int idmef_file_compare(const idmef_file_t *obj1, const idmef_file_t *obj2)
 
         if ( obj1->fstype_is_set != obj2->fstype_is_set )
                 return -1;
-
-        if ( obj1->fstype != obj2->fstype )
+                
+        if ( obj1->fstype_is_set && obj1->fstype != obj2->fstype )
                 return -1;
 
         ret = prelude_string_compare(obj1->file_type, obj2->file_type);
@@ -14358,14 +14358,14 @@ int idmef_impact_compare(const idmef_impact_t *obj1, const idmef_impact_t *obj2)
 
         if ( obj1->severity_is_set != obj2->severity_is_set )
                 return -1;
-
-        if ( obj1->severity != obj2->severity )
+                
+        if ( obj1->severity_is_set && obj1->severity != obj2->severity )
                 return -1;
 
         if ( obj1->completion_is_set != obj2->completion_is_set )
                 return -1;
-
-        if ( obj1->completion != obj2->completion )
+                
+        if ( obj1->completion_is_set && obj1->completion != obj2->completion )
                 return -1;
 
         if ( obj1->type != obj2->type )
@@ -16520,8 +16520,8 @@ int idmef_overflow_alert_compare(const idmef_overflow_alert_t *obj1, const idmef
 
         if ( obj1->size_is_set != obj2->size_is_set )
                 return -1;
-
-        if ( obj1->size != obj2->size )
+                
+        if ( obj1->size_is_set && obj1->size != obj2->size )
                 return -1;
 
         ret = idmef_data_compare(obj1->buffer, obj2->buffer);
@@ -18832,8 +18832,8 @@ int idmef_heartbeat_compare(const idmef_heartbeat_t *obj1, const idmef_heartbeat
 
         if ( obj1->heartbeat_interval_is_set != obj2->heartbeat_interval_is_set )
                 return -1;
-
-        if ( obj1->heartbeat_interval != obj2->heartbeat_interval )
+                
+        if ( obj1->heartbeat_interval_is_set && obj1->heartbeat_interval != obj2->heartbeat_interval )
                 return -1;
 
         {
