@@ -129,9 +129,7 @@ static void do_log_v(prelude_log_t level, const char *file,
                 if ( len < 0 || len >= sizeof(buf) )
                         return;
                 
-                ret = vsnprintf(buf + len, sizeof(buf) - len, fmt, ap);
-                if ( ret < 0 || (ret + len) >= sizeof(buf) )
-                        return;
+                vsnprintf(buf + len, sizeof(buf) - len, fmt, ap);
         }
 
         if ( need_to_log(level, log_level) )
