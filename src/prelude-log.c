@@ -111,8 +111,8 @@ static inline prelude_bool_t need_to_log(prelude_log_t level, prelude_log_t cur)
 static void do_log_v(prelude_log_t level, const char *file,
                      const char *function, int line, const char *fmt, va_list ap)
 {
+        ssize_t len;
         char buf[1024];
-        ssize_t ret, len;
         
         if ( level >= PRELUDE_LOG_DEBUG || level == PRELUDE_LOG_ERR ) {
 
