@@ -148,6 +148,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/allocsa.valgrind
   lib/asnprintf.c
   lib/config.charset
+  lib/float+.h
   lib/ftw.c
   lib/ftw_.h
   lib/gai_strerror.c
