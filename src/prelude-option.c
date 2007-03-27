@@ -121,6 +121,7 @@ static int warnings_flags = PRELUDE_OPTION_WARNING_OPTION|PRELUDE_OPTION_WARNING
 
 
 
+
 static void option_err(int flag, const char *fmt, ...) 
 {
         if ( warnings_flags & flag ) {
@@ -457,11 +458,11 @@ static int get_missing_options(void *context, config_t *cfg, const char *filenam
                                                 
                         if ( section && ! entry )
                                 option_err(PRELUDE_OPTION_WARNING_OPTION,
-                                           "%s:%d: invalid section : \"%s\".\n", filename, *line, section, depth);
+                                           "%s:%d: invalid section : \"%s\".\n", filename, *line, section);
                         else
                                 option_err(PRELUDE_OPTION_WARNING_ARG,
-                                           "%s:%d: invalid option \"%s\" in \"%s\" section at depth %d.\n",
-                                           filename, *line, entry, (section) ? section : "global", depth);
+                                           "%s:%d: invalid option \"%s\" in \"%s\" section.\n",
+                                           filename, *line, entry, (section) ? section : "global");
 
                         continue;
                 }
