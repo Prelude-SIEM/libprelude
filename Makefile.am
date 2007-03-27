@@ -2,9 +2,9 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --without-system-ltdl
 ACLOCAL_AMFLAGS = -I m4 -I libmissing/m4
 
 if HAVE_SYSTEM_LIBLTDL
-SUBDIRS = libltdl libmissing m4 src prelude-adduser bindings docs
-else
 SUBDIRS = libmissing m4 src prelude-adduser bindings docs
+else
+SUBDIRS = libltdl libmissing m4 src prelude-adduser bindings docs
 endif
 
 EXTRA_DIST = HACKING.README LICENSE.README client.conf global.conf idmef-client.conf tls.conf

@@ -293,14 +293,14 @@ fi
 
 if test x$have_system_ltdl != xyes; then
         with_ltdl_type="Convenience"
-	AC_CONFIG_SUBDIRS(libltdl)
 else
         with_ltdl_type="System"
         INCLTDL="-I$with_system_ltdl/include"
         LIBLTDL="-L$with_system_ltdl/lib -lltdl"
 fi
 
-AM_CONDITIONAL(HAVE_SYSTEM_LIBLTDL, test x$have_system_ltdl != xyes)
+AC_CONFIG_SUBDIRS(libltdl)
+AM_CONDITIONAL(HAVE_SYSTEM_LIBLTDL, test x$have_system_ltdl = xyes)
 AC_SUBST(INCLTDL)
 AC_SUBST(LIBLTDL)
 AC_SUBST(LIBADD_DL)
