@@ -43,7 +43,6 @@ prelude-log
 @level: 
 @fmt: 
 @Varargs: 
-@...:
 
 
 <!-- ##### FUNCTION prelude_log_debug ##### -->
@@ -54,7 +53,6 @@ prelude-log
 @level: 
 @fmt: 
 @Varargs: 
-@...:
 
 
 <!-- ##### MACRO prelude_log_v ##### -->

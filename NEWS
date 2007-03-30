@@ -1,3 +1,14 @@
+* 2007-03-30, libprelude-0.9.13.2:
+
+	- Improve error reporting with the central option interface.
+
+	- Fix a bug when comparing IDMEF object with optional fields.
+
+	- Fix a problem with the logger, where large log entry wouldn't be logged.
+
+	- Fix distclean target.
+
+
 * 2007-03-15, libprelude-0.9.13.1:
 
         - Implement substring and regexp matching for IDMEF AdditionalData type.
