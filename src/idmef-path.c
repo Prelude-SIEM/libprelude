@@ -294,7 +294,7 @@ static int idmef_path_get_internal(idmef_value_t **value, const idmef_path_t *pa
                 return idmef_path_get_nth_internal(value, path, depth + 1, child, child_class, which);
         }
 
-        if ( parent_class < 0 || path->elem[path->depth - 1].value_type == IDMEF_VALUE_TYPE_ENUM ) {
+        if ( parent_class < 0 || (path->depth > 0 && path->elem[path->depth - 1].value_type == IDMEF_VALUE_TYPE_ENUM) ) {
                 *value = parent;
                 return 1;
         }
