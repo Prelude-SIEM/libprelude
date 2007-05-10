@@ -76,11 +76,16 @@ sub	header
 
 static inline int extract_string_safe_f(const char *f, int line, prelude_string_t **out, char *buf, size_t len)
 \{
+        int ret;
+        
         /*
-         * we use len - 1 since len is supposed to include \0 to avoid making a dup.
+         * we use len - 1 since len is supposed to include \\0 to avoid making a dup.
          */
-
-        return prelude_string_new_ref_fast(out, buf, len - 1);
+        ret = prelude_string_new_ref_fast(out, buf, len - 1);
+        if ( ret < 0 )
+                ret = prelude_error_verbose(prelude_error_get_code(ret), \"%s:%d could not extract IDMEF string: %s\", f, line, prelude_strerror(ret));
+        
+        return ret;
 \}
 
 
