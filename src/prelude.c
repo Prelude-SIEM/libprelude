@@ -49,7 +49,7 @@ extern pthread_mutex_t _criteria_parse_mutex;
 
 static void tls_log_func(int level, const char *data)
 {
-        prelude_log(PRELUDE_LOG_INFO, data);
+        prelude_log(PRELUDE_LOG_INFO, "%s", data);
 }
 
 

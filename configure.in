@@ -710,6 +710,9 @@ AX_CFLAGS_GCC_OPTION(-Wcast-qual)
 AX_CFLAGS_GCC_OPTION(-Wcast-align)
 AX_CFLAGS_GCC_OPTION(-Wnested-externs)
 AX_CFLAGS_GCC_OPTION(-Wunused)
+AX_CFLAGS_GCC_OPTION(-Wformat)
+AX_CFLAGS_GCC_OPTION(-Wformat-security)
+
 
 if test x$buggy_pthread_initializers = xyes; then 
    AX_CFLAGS_GCC_OPTION(-Wno-missing-braces)

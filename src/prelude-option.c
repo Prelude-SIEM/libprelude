@@ -143,7 +143,7 @@ static int option_ret_error(prelude_error_code_t code, prelude_string_t *err, co
         va_start(ap, fmt);
         
         prelude_string_vprintf(err, fmt, ap);
-        ret = prelude_error_verbose(code, prelude_string_get_string(err));
+        ret = prelude_error_verbose(code, "%s", prelude_string_get_string(err));
 
         va_end(ap);
 
