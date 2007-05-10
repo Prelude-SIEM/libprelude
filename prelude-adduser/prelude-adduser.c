@@ -330,6 +330,7 @@ static int set_passwd(prelude_option_t *opt, const char *optarg, prelude_string_
 static int set_passwd_file(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         FILE *fd;
+        size_t len;
         char buf[1024], *ptr;
 
         prompt_passwd = FALSE;
@@ -353,8 +354,12 @@ static int set_passwd_file(prelude_option_t *opt, const char *optarg, prelude_st
         if ( ! ptr )
                 return -1;
 
+        len = strlen(buf);
+        if ( buf[len - 1] == '\n' )
+                buf[len - 1] = 0;
+                
         one_shot_passwd = strdup(buf);
-                                
+        
         return 0;
 }
 
