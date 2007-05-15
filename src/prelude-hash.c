@@ -32,7 +32,7 @@
 #include "prelude-hash.h"
 
 
-#define	HASH_DEFAULT_SIZE	16
+#define	HASH_DEFAULT_SIZE	128
 
 
 
@@ -66,7 +66,7 @@ static unsigned int default_hash_func(const void *key)
         if ( hv )
                 for ( ptr += 1; *ptr; ptr++ )
                         hv = (hv << 5) - hv + *ptr;
-        
+       
         return hv;
         
 }
@@ -128,16 +128,27 @@ int prelude_hash_new(prelude_hash_t **nhash,
                      void (*key_destroy_func)(void *),
                      void (*value_destroy_func)(void *))
 {
+        return prelude_hash_new2(nhash, HASH_DEFAULT_SIZE, hash_func, key_cmp_func, key_destroy_func, value_destroy_func);
+}
+
+
+
+int prelude_hash_new2(prelude_hash_t **nhash, size_t size,
+                      unsigned int (*hash_func)(const void *),
+                      int (*key_cmp_func)(const void *, const void *),
+                      void (*key_destroy_func)(void *),
+                      void (*value_destroy_func)(void *))
+{
+        size_t i;
         prelude_hash_t *hash;
-        int cnt;
 
         *nhash = hash = calloc(1, sizeof (*hash));
         if ( ! hash )
                 return prelude_error_from_errno(errno);
 
-        hash->lists_size = HASH_DEFAULT_SIZE;
+        hash->lists_size = size;
 
-	hash->lists = calloc(hash->lists_size, sizeof(*hash->lists));
+	hash->lists = malloc(hash->lists_size * sizeof(*hash->lists));
 	if ( ! hash->lists ) {
 		free(hash);
 		return prelude_error_from_errno(errno);
@@ -148,8 +159,8 @@ int prelude_hash_new(prelude_hash_t **nhash,
 	hash->key_destroy_func = key_destroy_func;
 	hash->value_destroy_func = value_destroy_func;
 
-	for ( cnt = 0; cnt < hash->lists_size; cnt++ )
-		prelude_list_init(hash->lists + cnt);
+	for ( i = 0; i < hash->lists_size; i++ )
+		prelude_list_init(hash->lists + i);
 
 	return 0;
 }
@@ -177,7 +188,7 @@ void prelude_hash_destroy(prelude_hash_t *hash)
 		}
 	}
 
-	free(hash->lists);
+        free(hash->lists);
 	free(hash);
 }
 

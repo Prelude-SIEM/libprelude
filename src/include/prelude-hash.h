@@ -36,6 +36,12 @@ int prelude_hash_new(prelude_hash_t **hash,
                      void (*key_destroy_func)(void *),
                      void (*value_destroy_func)(void *));
 
+int prelude_hash_new2(prelude_hash_t **hash, size_t size,
+                      unsigned int (*hash_func)(const void *),
+                      int (*key_cmp_func)(const void *, const void *),
+                      void (*key_destroy_func)(void *),
+                     void (*value_destroy_func)(void *));
+                     
 void prelude_hash_destroy(prelude_hash_t *hash);
 
 int prelude_hash_set(prelude_hash_t *hash, void *key, void *value);
