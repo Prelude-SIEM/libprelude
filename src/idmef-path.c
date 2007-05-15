@@ -53,8 +53,9 @@
 
 
 
-#define MAX_DEPTH     16
-#define MAX_NAME_LEN 128
+#define MAX_DEPTH                16
+#define MAX_NAME_LEN            128
+#define HASH_DEFAULT_SIZE       128
 
 #define INDEX_UNDEFINED INT_MIN
 #define INDEX_FORBIDDEN (INT_MIN + 1)
@@ -137,7 +138,7 @@ static int initialize_path_cache_if_needed(void)
         if ( cached_path )
                 return 0;
                         
-        return prelude_hash_new(&cached_path, NULL, NULL, NULL, flush_cache_if_wanted);
+        return prelude_hash_new2(&cached_path, HASH_DEFAULT_SIZE, NULL, NULL, NULL, flush_cache_if_wanted);
 }
 
 
