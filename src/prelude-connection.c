@@ -201,7 +201,7 @@ static int is_tcp_connection_still_established(prelude_io_t *pio)
 
 
 #ifndef WIN32
-static void set_socket_option(int sock, const char *name, int option, int value)
+static void set_socket_option(int sock, const char *name, int level, int option, int value)
 {       
         int ret;
         
@@ -213,11 +213,12 @@ static void set_socket_option(int sock, const char *name, int option, int value)
                 return;        
         }
  
-        ret = setsockopt(sock, IPPROTO_TCP, option, (void *) &value, sizeof(value));
+        ret = setsockopt(sock, level, option, (void *) &value, sizeof(value));
         if ( ret < 0 )
                 prelude_log(PRELUDE_LOG_ERR, "could not set '%s' socket option: %s.\n", name, strerror(errno));
 }
 #endif
+
 
 
 /*
@@ -226,7 +227,7 @@ static void set_socket_option(int sock, const char *name, int option, int value)
  */
 static int generic_connect(struct sockaddr *sa, socklen_t salen)
 {
-        int ret, sock, value;
+        int ret, sock;
         
         sock = socket(sa->sa_family, SOCK_STREAM, 0);
 	if ( sock < 0 ) 
@@ -241,30 +242,28 @@ static int generic_connect(struct sockaddr *sa, socklen_t salen)
                 return prelude_error_from_errno(errno);
         }
                 
-        value = 1;
-        ret = setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE, (void *) &value, sizeof(value));
-        if ( ret < 0 )
-                prelude_log(PRELUDE_LOG_ERR, "could not set SO_KEEPALIVE socket option: %s.\n", strerror(errno)); 
+        set_socket_option(sock, "SO_KEEPALIVE", SOL_SOCKET, SO_KEEPALIVE, 1);
 
 # ifdef TCP_KEEPIDLE
-        set_socket_option(sock, "tcp-keepalive-time", TCP_KEEPIDLE, _prelude_connection_keepalive_time);
+        set_socket_option(sock, "tcp-keepalive-time", IPPROTO_TCP, TCP_KEEPIDLE, _prelude_connection_keepalive_time);
 # else
-        set_socket_option(sock, "tcp-keepalive-time", -1, _prelude_connection_keepalive_time);
+        set_socket_option(sock, "tcp-keepalive-time", IPPROTO_TCP, -1, _prelude_connection_keepalive_time);
 # endif
 
 # ifdef TCP_KEEPINTVL
-        set_socket_option(sock, "tcp-keepalive-intvl", TCP_KEEPINTVL, _prelude_connection_keepalive_intvl);
+        set_socket_option(sock, "tcp-keepalive-intvl", IPPROTO_TCP, TCP_KEEPINTVL, _prelude_connection_keepalive_intvl);
 # else
-        set_socket_option(sock, "tcp-keepalive-intvl", -1, _prelude_connection_keepalive_intvl);
+        set_socket_option(sock, "tcp-keepalive-intvl", IPPROTO_TCP, -1, _prelude_connection_keepalive_intvl);
 # endif
 
 # ifdef TCP_KEEPCNT
-        set_socket_option(sock, "tcp-keepalive-probes", TCP_KEEPCNT, _prelude_connection_keepalive_probes);
+        set_socket_option(sock, "tcp-keepalive-probes", IPPROTO_TCP, TCP_KEEPCNT, _prelude_connection_keepalive_probes);
 # else
-        set_socket_option(sock, "tcp-keepalive-probes", -1, _prelude_connection_keepalive_probes);
+        set_socket_option(sock, "tcp-keepalive-probes", IPPROTO_TCP, -1, _prelude_connection_keepalive_probes);
 # endif
 
 #endif
+        
         ret = connect(sock, sa, salen);
 	if ( ret < 0 ) {
                 close(sock);
