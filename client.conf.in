@@ -17,3 +17,36 @@
 # message locally).
 
 server-addr = 127.0.0.1
+
+
+# The following settings instruct the operating system when to consider 
+# a connection dead in case sent data is left unacknowledged.
+#
+# Theses option are operating system specific, and might not work on 
+# certain platform. In case you modify these settings on an unsupported 
+# system, a warning message will be issued when the agent starts.
+#
+# Under Linux, the default system wide configuration is:
+# tcp-keepalive-time   = 7200
+# tcp-keepalive-probes = 9
+# tcp-keepalive-intvl  = 75
+#
+# tcp-keepalive-time represents the interval between the last data packet 
+# acknowleged by the peer, and the first keepalive probe.
+#
+# tcp-keepalive-probes represent the number of not acknowledged probes to 
+# send before considering the connection dead.
+#
+# tcp-keepalive-intvl represents the interval between subsequent keepalive 
+# probes.
+#
+# The average time to notice a dead connection can be calculated using:
+# tcp-keepalive-time + (tcp-keepalive-probes * tcp-keepalive-intvl)
+#
+# Here is an example configuration:
+# tcp-keepalive-time   = 60
+# tcp-keepalive-probes = 3
+# tcp-keepalive-intvl  = 10
+#
+# Using the above settings, a dead connection will be detected within 90 seconds.
+

@@ -688,7 +688,7 @@ AC_HEADER_TIME
 AC_TYPE_LONG_LONG_INT
 
 dnl Needed for FIONREAD under solaris
-AC_CHECK_HEADERS_ONCE(sys/filio.h sys/ioctl.h sys/un.h)
+AC_CHECK_HEADERS_ONCE(sys/filio.h sys/ioctl.h sys/un.h netinet/tcp.h)
 
 AC_CHECK_FUNCS(ftruncate chsize)
 

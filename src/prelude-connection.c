@@ -45,6 +45,10 @@
 # include <sys/ioctl.h>
 #endif
 
+#ifdef HAVE_NETINET_TCP_H
+# include <netinet/tcp.h> /* TCP keepalive stuff */
+#endif
+
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_CONNECTION
 #include "prelude-error.h"
 
@@ -77,6 +81,15 @@
 #define UNIX_SOCKET "/tmp/.prelude-unix"
 
 
+/*
+ * FIXME: we need a high level configuration object allowing
+ * to fetch per-client settings easily.
+ */
+int _prelude_connection_keepalive_time = 0;
+int _prelude_connection_keepalive_probes = 0;
+int _prelude_connection_keepalive_intvl = 0;
+
+
 
 struct prelude_connection {
         PRELUDE_LINKED_OBJECT;
@@ -89,7 +102,7 @@ struct prelude_connection {
         
         socklen_t salen;
         struct sockaddr *sa;
-        
+                
         prelude_io_t *fd;
         uint64_t peer_analyzerid;
         prelude_connection_permission_t permission;
@@ -187,6 +200,25 @@ static int is_tcp_connection_still_established(prelude_io_t *pio)
 
 
 
+#ifndef WIN32
+static void set_socket_option(int sock, const char *name, int option, int value)
+{       
+        int ret;
+        
+        if ( ! value )
+                return;
+                
+        if ( option < 0 ) {
+                prelude_log(PRELUDE_LOG_ERR, "'%s' socket option is unavailable on this system.\n", name);
+                return;        
+        }
+ 
+        ret = setsockopt(sock, IPPROTO_TCP, option, (void *) &value, sizeof(value));
+        if ( ret < 0 )
+                prelude_log(PRELUDE_LOG_ERR, "could not set '%s' socket option: %s.\n", name, strerror(errno));
+}
+#endif
+
 
 /*
  * Connect to the specified address in a generic manner
@@ -194,7 +226,7 @@ static int is_tcp_connection_still_established(prelude_io_t *pio)
  */
 static int generic_connect(struct sockaddr *sa, socklen_t salen)
 {
-        int ret, sock, on = 1;
+        int ret, sock, value;
         
         sock = socket(sa->sa_family, SOCK_STREAM, 0);
 	if ( sock < 0 ) 
@@ -208,11 +240,31 @@ static int generic_connect(struct sockaddr *sa, socklen_t salen)
                 close(sock);
                 return prelude_error_from_errno(errno);
         }
-#endif
-        ret = setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE, (void *) &on, sizeof(int));
+                
+        value = 1;
+        ret = setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE, (void *) &value, sizeof(value));
         if ( ret < 0 )
                 prelude_log(PRELUDE_LOG_ERR, "could not set SO_KEEPALIVE socket option: %s.\n", strerror(errno)); 
-       
+
+# ifdef TCP_KEEPIDLE
+        set_socket_option(sock, "tcp-keepalive-time", TCP_KEEPIDLE, _prelude_connection_keepalive_time);
+# else
+        set_socket_option(sock, "tcp-keepalive-time", -1, _prelude_connection_keepalive_time);
+# endif
+
+# ifdef TCP_KEEPINTVL
+        set_socket_option(sock, "tcp-keepalive-intvl", TCP_KEEPINTVL, _prelude_connection_keepalive_intvl);
+# else
+        set_socket_option(sock, "tcp-keepalive-intvl", -1, _prelude_connection_keepalive_intvl);
+# endif
+
+# ifdef TCP_KEEPCNT
+        set_socket_option(sock, "tcp-keepalive-probes", TCP_KEEPCNT, _prelude_connection_keepalive_probes);
+# else
+        set_socket_option(sock, "tcp-keepalive-probes", -1, _prelude_connection_keepalive_probes);
+# endif
+
+#endif
         ret = connect(sock, sa, salen);
 	if ( ret < 0 ) {
                 close(sock);
@@ -950,3 +1002,5 @@ prelude_connection_permission_t prelude_connection_get_permission(prelude_connec
 {
         return conn->permission;
 }
+
+

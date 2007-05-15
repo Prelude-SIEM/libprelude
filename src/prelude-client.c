@@ -127,6 +127,9 @@ struct prelude_client {
 
 extern int _prelude_internal_argc;
 extern char *_prelude_internal_argv[1024];
+extern int _prelude_connection_keepalive_time;
+extern int _prelude_connection_keepalive_probes;
+extern int _prelude_connection_keepalive_intvl;
 prelude_option_t *_prelude_generic_optlist = NULL;
 
 
@@ -764,6 +767,26 @@ static int set_manager_addr(prelude_option_t *opt, const char *optarg, prelude_s
 }
 
 
+static int set_tcp_keepalive_time(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
+{
+        _prelude_connection_keepalive_time = atoi(optarg);
+        return 0;
+}
+
+
+static int set_tcp_keepalive_probes(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
+{
+        _prelude_connection_keepalive_probes = atoi(optarg);
+        return 0;
+}
+
+
+static int set_tcp_keepalive_intvl(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
+{
+        _prelude_connection_keepalive_intvl = atoi(optarg);
+        return 0;
+}
+
 
 static int set_heartbeat_interval(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
@@ -889,10 +912,29 @@ int _prelude_client_register_options(void)
         if ( ret < 0 )
                 return ret;
         
-        ret = prelude_option_add(root_list, NULL, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG
+        ret = prelude_option_add(root_list, &opt, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG
                                  |PRELUDE_OPTION_TYPE_WIDE, 0, "server-addr",
-                                 "Address where this sensor should report to (addr:port)",
+                                 "Address where this agent should report events to (addr:port)",
                                  PRELUDE_OPTION_ARGUMENT_REQUIRED, set_manager_addr, get_manager_addr);
+        if ( ret < 0 )
+                return ret;
+        prelude_option_set_priority(opt, PRELUDE_OPTION_PRIORITY_LAST);
+
+        ret = prelude_option_add(root_list, NULL, PRELUDE_OPTION_TYPE_CFG, 0, 
+                                 "tcp-keepalive-time", "Interval between the last data packet sent and the first keepalive probe",
+                                 PRELUDE_OPTION_ARGUMENT_REQUIRED, set_tcp_keepalive_time, NULL);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_option_add(root_list, NULL, PRELUDE_OPTION_TYPE_CFG, 0, 
+                                 "tcp-keepalive-probes", "Number of not acknowledged probes to send before considering the connection dead",
+                                 PRELUDE_OPTION_ARGUMENT_REQUIRED, set_tcp_keepalive_probes, NULL);
+        if ( ret < 0 )
+                return ret;
+
+        ret = prelude_option_add(root_list, NULL, PRELUDE_OPTION_TYPE_CFG, 0, 
+                                 "tcp-keepalive-intvl", "Interval between subsequential keepalive probes",
+                                 PRELUDE_OPTION_ARGUMENT_REQUIRED, set_tcp_keepalive_intvl, NULL);
         if ( ret < 0 )
                 return ret;
         
