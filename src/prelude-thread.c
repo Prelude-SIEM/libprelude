@@ -227,6 +227,12 @@ int prelude_thread_init(void *nil)
 void _prelude_thread_deinit(void)
 {
         if ( use_thread ) {
+                char *previous;
+                
+                previous = pthread_getspecific(thread_error_key);
+                if ( previous )
+                        free(previous);
+                        
                 pthread_key_delete(thread_error_key);
                 need_init = TRUE;
         }
