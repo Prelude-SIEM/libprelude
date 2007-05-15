@@ -27,6 +27,7 @@ AC_DEFUN([gl_EARLY],
   AC_REQUIRE([AC_PROG_RANLIB])
   AC_REQUIRE([AC_GNU_SOURCE])
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
+  AC_REQUIRE([AC_FUNC_FSEEKO])
 ])
 
 # This macro should be invoked from ./configure.in, in the section
@@ -47,11 +48,15 @@ AC_SUBST([LTALLOCA])
   gl_ALLOCSA
   gl_HEADER_ARPA_INET
   AC_PROG_MKDIR_P
+  gl_FUNC_FSEEKO
+  gl_STDIO_MODULE_INDICATOR([fseeko])
   gl_FUNC_FTW
   gl_GETADDRINFO
   gl_FUNC_GETDELIM
   gl_FUNC_GETLINE
   gl_FUNC_GETPASS
+  AC_SUBST([LIBINTL])
+  AC_SUBST([LTLIBINTL])
   gl_FUNC_GETTIMEOFDAY
   gl_INET_NTOP
   gl_LOCALCHARSET
@@ -148,7 +153,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/allocsa.valgrind
   lib/asnprintf.c
   lib/config.charset
-  lib/float+.h
   lib/ftw.c
   lib/ftw_.h
   lib/gai_strerror.c
@@ -188,7 +192,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/regexec.c
   lib/size_max.h
   lib/snprintf.c
-  lib/socket_.h
   lib/stdbool_.h
   lib/stdint_.h
   lib/stdio_.h
@@ -203,6 +206,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/strptime.c
   lib/strsep.c
   lib/sys_select_.h
+  lib/sys_socket_.h
   lib/sys_time_.h
   lib/time_.h
   lib/time_r.c
@@ -221,6 +225,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/eealloc.m4
   m4/eoverflow.m4
   m4/extensions.m4
+  m4/fseeko.m4
   m4/ftw.m4
   m4/getaddrinfo.m4
   m4/getdelim.m4
@@ -233,7 +238,6 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/intmax_t.m4
   m4/inttypes_h.m4
   m4/localcharset.m4
-  m4/longdouble.m4
   m4/longlong.m4
   m4/memmem.m4
   m4/minmax.m4

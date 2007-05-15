@@ -126,16 +126,11 @@ extern int getaddrinfo (const char *restrict nodename,
 extern void freeaddrinfo (struct addrinfo *ai);
 #endif
 
-
-#if !HAVE_DECL_GAI_STRERROR || !HAVE_GAI_STRERROR
+#if !HAVE_DECL_GAI_STRERROR
 /* Convert error return from getaddrinfo() to a string.
    For more details, see the POSIX:2001 specification
    <http://www.opengroup.org/susv3xsh/gai_strerror.html>.  */
-#undef gai_strerror
-#define gai_strerror rpl_gai_strerror
-
 extern const char *gai_strerror (int ecode);
-
 #endif
 
 #if !HAVE_DECL_GETNAMEINFO

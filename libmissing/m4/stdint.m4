@@ -1,4 +1,4 @@
-# stdint.m4 serial 22
+# stdint.m4 serial 23
 dnl Copyright (C) 2001-2002, 2004-2007 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -66,8 +66,8 @@ AC_DEFUN([gl_STDINT_H],
       [gl_cv_header_working_stdint_h],
       [gl_cv_header_working_stdint_h=no
        AC_COMPILE_IFELSE([
-         AC_LANG_PROGRAM([[
-#include <stddef.h>
+         AC_LANG_PROGRAM([gl_STDINT_INCLUDES
+         [
 #define __STDC_LIMIT_MACROS 1 /* to make it work also in C++ mode */
 #define __STDC_CONSTANT_MACROS 1 /* to make it work also in C++ mode */
 #include ABSOLUTE_STDINT_H
@@ -143,11 +143,11 @@ uintptr_t h = UINTPTR_MAX;
 intmax_t i = INTMAX_MAX;
 uintmax_t j = UINTMAX_MAX;
 struct s {
-  int check_PTRDIFF: PTRDIFF_MIN < 0 && 0 < PTRDIFF_MAX ? 1 : -1;
-  int check_SIG_ATOMIC: SIG_ATOMIC_MIN <= 0 && 0 < SIG_ATOMIC_MAX ? 1 : -1;
-  int check_SIZE: 0 < SIZE_MAX ? 1 : -1;
-  int check_WCHAR: WCHAR_MIN <= 0 && 0 < WCHAR_MAX ? 1 : -1;
-  int check_WINT: WINT_MIN <= 0 && 0 < WINT_MAX ? 1 : -1;
+  int check_PTRDIFF: PTRDIFF_MIN < (ptrdiff_t) 0 && (ptrdiff_t) 0 < PTRDIFF_MAX ? 1 : -1;
+  int check_SIG_ATOMIC: SIG_ATOMIC_MIN <= (sig_atomic_t) 0 && (sig_atomic_t) 0 < SIG_ATOMIC_MAX ? 1 : -1;
+  int check_SIZE: (size_t) 0 < SIZE_MAX ? 1 : -1;
+  int check_WCHAR: WCHAR_MIN <= (wchar_t) 0 && (wchar_t) 0 < WCHAR_MAX ? 1 : -1;
+  int check_WINT: WINT_MIN <= (wint_t) 0 && (wint_t) 0 < WINT_MAX ? 1 : -1;
 
   /* Detect bugs in glibc 2.4 and Solaris 10 stdint.h, among others.  */
   int check_UINT8_C:

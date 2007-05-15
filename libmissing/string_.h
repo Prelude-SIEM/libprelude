@@ -16,6 +16,10 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
+#if defined __DECC && __DECC_VER >= 60000000
+# include_next <string.h>
+#endif
+
 #ifndef _GL_STRING_H
 #define _GL_STRING_H
 
@@ -25,7 +29,9 @@
 # pragma GCC system_header
 #endif
 
-#include @ABSOLUTE_STRING_H@
+#if !(defined __DECC && __DECC_VER >= 60000000)
+# include @ABSOLUTE_STRING_H@
+#endif
 
 
 /* The definition of GL_LINK_WARNING is copied here.  */
