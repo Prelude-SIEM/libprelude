@@ -1,3 +1,20 @@
+* 2007-05-15, libprelude-0.9.14:
+
+        - Implement TCP keepalive settings on platform that support it,
+          check client.conf for details.
+        
+        - When reading prelude-adduser password from a file, remove 
+          newline at the end of the string (fix #221).
+        
+        - When we fail to read an IDMEF message, provide more information 
+          about the place where the error happened. 
+
+        - Fix an issue with idmef_path_get() on empty path (pointing to the 
+          root message). 
+                
+        - Various bug fixes and minor API improvements.        
+        
+        
 * 2007-03-30, libprelude-0.9.13.2:
 
 	- Improve error reporting with the central option interface.

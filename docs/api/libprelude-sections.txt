@@ -1255,6 +1255,7 @@ prelude_plugin_run
 <FILE>prelude-hash</FILE>
 prelude_hash_t
 prelude_hash_new
+prelude_hash_new2
 prelude_hash_destroy
 prelude_hash_set
 prelude_hash_get

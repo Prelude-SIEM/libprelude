@@ -6272,6 +6272,11 @@ typedef struct prelude_hash prelude_hash_t;
 prelude_hash_t **hash,unsigned int (*hash_func)(const void *),int (*key_cmp_func)(const void *, const void *),void (*key_destroy_func)(void *),void (*value_destroy_func)(void *)
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_hash_new2</NAME>
+<RETURNS>int </RETURNS>
+prelude_hash_t **hash, size_t size,unsigned int (*hash_func)(const void *),int (*key_cmp_func)(const void *, const void *),void (*key_destroy_func)(void *),void (*value_destroy_func)(void *)
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_hash_destroy</NAME>
 <RETURNS>void </RETURNS>
 prelude_hash_t *hash
@@ -6951,7 +6956,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.13.2"
+#define LIBPRELUDE_VERSION "0.9.14"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
