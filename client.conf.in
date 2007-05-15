@@ -31,8 +31,8 @@ server-addr = 127.0.0.1
 # tcp-keepalive-probes = 9
 # tcp-keepalive-intvl  = 75
 #
-# tcp-keepalive-time represents the interval between the last data packet 
-# acknowleged by the peer, and the first keepalive probe.
+# tcp-keepalive-time represents the number of seconds the connection needs 
+# to be idle before TCP begins sending out keep-alive probes.
 #
 # tcp-keepalive-probes represent the number of not acknowledged probes to 
 # send before considering the connection dead.
