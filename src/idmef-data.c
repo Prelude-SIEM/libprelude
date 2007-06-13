@@ -45,31 +45,31 @@
 #define IDMEF_DATA_OWN_DATA       0x2
 
 
-#define IDMEF_DATA_DECL(idmef_data_type, c_type, name)		\
-int idmef_data_new_ ## name(idmef_data_t **nd, c_type val)     	\
-{								\
-        int ret;              					\
-								\
-        ret = idmef_data_new(nd);	       			\
-        if ( ret < 0 )						\
-                return ret;					\
-								\
-        idmef_data_set_ ## name(*nd, val);			\
-								\
-        return ret;						\
-}								\
-								\
-void idmef_data_set_ ## name(idmef_data_t *ptr, c_type val)	\
-{								\
-        idmef_data_destroy_internal(ptr);			\
-        ptr->type = idmef_data_type;				\
-        ptr->len = sizeof(val);					\
-	ptr->data.name ## _data = val;				\
-}								\
-								\
-c_type idmef_data_get_ ## name(const idmef_data_t *ptr)		\
-{								\
-	return ptr->data.name ## _data;				\
+#define IDMEF_DATA_DECL(idmef_data_type, c_type, name)                \
+int idmef_data_new_ ## name(idmef_data_t **nd, c_type val)            \
+{                                                                     \
+        int ret;                                                      \
+                                                                      \
+        ret = idmef_data_new(nd);                                     \
+        if ( ret < 0 )                                                \
+                return ret;                                           \
+                                                                      \
+        idmef_data_set_ ## name(*nd, val);                            \
+                                                                      \
+        return ret;                                                   \
+}                                                                     \
+                                                                      \
+void idmef_data_set_ ## name(idmef_data_t *ptr, c_type val)           \
+{                                                                     \
+        idmef_data_destroy_internal(ptr);                             \
+        ptr->type = idmef_data_type;                                  \
+        ptr->len = sizeof(val);                                       \
+        ptr->data.name ## _data = val;                                \
+}                                                                     \
+                                                                      \
+c_type idmef_data_get_ ## name(const idmef_data_t *ptr)               \
+{                                                                     \
+        return ptr->data.name ## _data;                               \
 }
 
 
@@ -104,49 +104,49 @@ idmef_data_t *idmef_data_ref(idmef_data_t *data)
 
 int idmef_data_set_ptr_ref_fast(idmef_data_t *data, idmef_data_type_t type, const void *ptr, size_t len)
 {
-	idmef_data_destroy_internal(data);
+        idmef_data_destroy_internal(data);
 
-	data->type = type;
-	data->data.ro_data = ptr;
-	data->len = len;
-	
-	return 0;
+        data->type = type;
+        data->data.ro_data = ptr;
+        data->len = len;
+
+        return 0;
 }
 
 
 
 int idmef_data_set_ptr_dup_fast(idmef_data_t *data, idmef_data_type_t type, const void *ptr, size_t len)
 {
-	void *new;
+        void *new;
 
-	idmef_data_destroy_internal(data);
+        idmef_data_destroy_internal(data);
 
-	new = malloc(len);
-	if ( ! new )
-		return -1;
+        new = malloc(len);
+        if ( ! new )
+                return -1;
 
-	memcpy(new, ptr, len);
+        memcpy(new, ptr, len);
 
-	data->type = type;
-	data->data.rw_data = new;
-	data->len = len;
-	data->flags |= IDMEF_DATA_OWN_DATA;
+        data->type = type;
+        data->data.rw_data = new;
+        data->len = len;
+        data->flags |= IDMEF_DATA_OWN_DATA;
 
-	return 0;
+        return 0;
 }
 
 
 
 int idmef_data_set_ptr_nodup_fast(idmef_data_t *data, idmef_data_type_t type, void *ptr, size_t len)
 {
-	idmef_data_destroy_internal(data);
+        idmef_data_destroy_internal(data);
 
-	data->type = type;
-	data->data.rw_data= ptr;
-	data->len = len;
-	data->flags |= IDMEF_DATA_OWN_DATA;
+        data->type = type;
+        data->data.rw_data= ptr;
+        data->len = len;
+        data->flags |= IDMEF_DATA_OWN_DATA;
 
-	return 0;
+        return 0;
 }
 
 
@@ -154,16 +154,16 @@ int idmef_data_set_ptr_nodup_fast(idmef_data_t *data, idmef_data_type_t type, vo
 int idmef_data_new_ptr_ref_fast(idmef_data_t **data, idmef_data_type_t type, const void *ptr, size_t len)
 {
         int ret;
-        
-	ret = idmef_data_new(data);
-	if ( ret < 0 )
-		return ret;
+
+        ret = idmef_data_new(data);
+        if ( ret < 0 )
+                return ret;
 
         ret = idmef_data_set_ptr_ref_fast(*data, type, ptr, len);
         if ( ret < 0 )
-		idmef_data_destroy(*data);
+                idmef_data_destroy(*data);
 
-	return ret;
+        return ret;
 }
 
 
@@ -173,12 +173,12 @@ int idmef_data_new_ptr_dup_fast(idmef_data_t **data, idmef_data_type_t type, con
         int ret;
 
         ret = idmef_data_new(data);
-	if ( ret < 0 )
-		return ret;
+        if ( ret < 0 )
+                return ret;
 
         ret = idmef_data_set_ptr_dup_fast(*data, type, ptr, len);
         if ( ret < 0 )
-		idmef_data_destroy(*data);
+                idmef_data_destroy(*data);
 
         return ret;
 }
@@ -188,14 +188,14 @@ int idmef_data_new_ptr_dup_fast(idmef_data_t **data, idmef_data_type_t type, con
 int idmef_data_new_ptr_nodup_fast(idmef_data_t **data, idmef_data_type_t type, void *ptr, size_t len)
 {
         int ret;
-        
+
         ret = idmef_data_new(data);
-	if ( ret < 0 )
-		return ret;
+        if ( ret < 0 )
+                return ret;
 
         ret = idmef_data_set_ptr_nodup_fast(*data, type, ptr, len);
         if ( ret < 0 )
-		idmef_data_destroy(*data);
+                idmef_data_destroy(*data);
 
         return ret;
 }
@@ -216,7 +216,7 @@ int idmef_data_copy_ref(const idmef_data_t *src, idmef_data_t *dst)
 {
         idmef_data_destroy_internal(dst);
 
-	dst->type = src->type;
+        dst->type = src->type;
         dst->len = src->len;
         dst->data = src->data;
         dst->flags &= ~IDMEF_DATA_OWN_DATA;
@@ -241,19 +241,19 @@ int idmef_data_copy_dup(const idmef_data_t *src, idmef_data_t *dst)
 {
         idmef_data_destroy_internal(dst);
 
-	dst->type = src->type;
-	dst->flags |= IDMEF_DATA_OWN_DATA;
-	dst->len = src->len;
+        dst->type = src->type;
+        dst->flags |= IDMEF_DATA_OWN_DATA;
+        dst->len = src->len;
 
-	if ( src->type == IDMEF_DATA_TYPE_CHAR_STRING || src->type == IDMEF_DATA_TYPE_BYTE_STRING ) {
-		dst->data.rw_data = malloc(src->len);
-		if ( ! dst->data.rw_data )
-			return -1;
-                
-		memcpy(dst->data.rw_data, src->data.ro_data, src->len);
-	} else {
-		dst->data = src->data;
-	}
+        if ( src->type == IDMEF_DATA_TYPE_CHAR_STRING || src->type == IDMEF_DATA_TYPE_BYTE_STRING ) {
+                dst->data.rw_data = malloc(src->len);
+                if ( ! dst->data.rw_data )
+                        return -1;
+
+                memcpy(dst->data.rw_data, src->data.ro_data, src->len);
+        } else {
+                dst->data = src->data;
+        }
 
         return 0;
 }
@@ -269,24 +269,24 @@ int idmef_data_clone(const idmef_data_t *src, idmef_data_t **dst)
                 return ret;
 
         ret = idmef_data_copy_dup(src, *dst);
-	if ( ret < 0 )
+        if ( ret < 0 )
                 idmef_data_destroy(*dst);
-        
-	return ret;
+
+        return ret;
 }
 
 
 
 const char *idmef_data_get_char_string(const idmef_data_t *data)
 {
-	return data->data.ro_data;
+        return data->data.ro_data;
 }
 
 
 
 const unsigned char *idmef_data_get_byte_string(const idmef_data_t *data)
 {
-	return data->data.ro_data;
+        return data->data.ro_data;
 }
 
 
@@ -299,7 +299,7 @@ const unsigned char *idmef_data_get_byte_string(const idmef_data_t *data)
  */
 idmef_data_type_t idmef_data_get_type(const idmef_data_t *data)
 {
-	return data->type;
+        return data->type;
 }
 
 
@@ -327,18 +327,18 @@ size_t idmef_data_get_len(const idmef_data_t *data)
  */
 const void *idmef_data_get_data(const idmef_data_t *data)
 {
-	switch ( data->type ) {
-	case IDMEF_DATA_TYPE_UNKNOWN:
-		return NULL;
+        switch ( data->type ) {
+        case IDMEF_DATA_TYPE_UNKNOWN:
+                return NULL;
 
-	case IDMEF_DATA_TYPE_CHAR_STRING: case IDMEF_DATA_TYPE_BYTE_STRING:
-		return data->data.ro_data;
+        case IDMEF_DATA_TYPE_CHAR_STRING: case IDMEF_DATA_TYPE_BYTE_STRING:
+                return data->data.ro_data;
 
-	default:
-		return &data->data;
-	}
+        default:
+                return &data->data;
+        }
 
-	return NULL;
+        return NULL;
 }
 
 
@@ -366,26 +366,26 @@ static int bytes_to_string(prelude_string_t *out, const unsigned char *src, size
                 ret = prelude_string_ncat(out, &b64tbl[src[0] >> 2], 1);
                 if ( ret < 0 )
                         return ret;
-                
+
                 c = b64tbl[((src[0] << 4) + ((--size) ? src[1] >> 4 : 0)) & 0x3f];
 
                 ret = prelude_string_ncat(out, &c, 1);
                 if ( ret < 0 )
                         return ret;
-                        
+
                 c = (size) ? b64tbl[((src[1] << 2) + ((--size) ? src[2] >> 6 : 0)) & 0x3f] : '=';
-                
+
                 ret = prelude_string_ncat(out, &c, 1);
                 if ( ret < 0 )
                         return ret;
-               
+
                 c = (size && size--) ? b64tbl[src[2] & 0x3f] : '=';
-                
+
                 ret = prelude_string_ncat(out, &c, 1);
                 if ( ret < 0 )
                         return ret;
-                
-                src += 3;        
+
+                src += 3;
         }
 
         return 0;
@@ -406,45 +406,45 @@ static int bytes_to_string(prelude_string_t *out, const unsigned char *src, size
  */
 int idmef_data_to_string(const idmef_data_t *data, prelude_string_t *out)
 {
-	int ret = 0;
+        int ret = 0;
 
-	switch ( data->type ) {
-	case IDMEF_DATA_TYPE_UNKNOWN:
-		return 0;
+        switch ( data->type ) {
+        case IDMEF_DATA_TYPE_UNKNOWN:
+                return 0;
 
-	case IDMEF_DATA_TYPE_CHAR:
-		ret = prelude_string_sprintf(out, "%c", data->data.char_data);
-		break;
+        case IDMEF_DATA_TYPE_CHAR:
+                ret = prelude_string_sprintf(out, "%c", data->data.char_data);
+                break;
 
-	case IDMEF_DATA_TYPE_BYTE:
+        case IDMEF_DATA_TYPE_BYTE:
                 /*
                  * %hh convertion specifier is not portable.
                  */
-		ret = prelude_string_sprintf(out, "%u", (unsigned int) data->data.byte_data);
-		break;
+                ret = prelude_string_sprintf(out, "%u", (unsigned int) data->data.byte_data);
+                break;
 
-	case IDMEF_DATA_TYPE_UINT32:
-		ret = prelude_string_sprintf(out, "%u", data->data.uint32_data);
-		break;
+        case IDMEF_DATA_TYPE_UINT32:
+                ret = prelude_string_sprintf(out, "%u", data->data.uint32_data);
+                break;
 
-	case IDMEF_DATA_TYPE_UINT64:
-		ret = prelude_string_sprintf(out, "%" PRELUDE_PRIu64, data->data.uint64_data);
-		break;
+        case IDMEF_DATA_TYPE_UINT64:
+                ret = prelude_string_sprintf(out, "%" PRELUDE_PRIu64, data->data.uint64_data);
+                break;
 
-	case IDMEF_DATA_TYPE_FLOAT:
-		ret = prelude_string_sprintf(out, "%f", data->data.float_data);
-		break;
+        case IDMEF_DATA_TYPE_FLOAT:
+                ret = prelude_string_sprintf(out, "%f", data->data.float_data);
+                break;
 
-	case IDMEF_DATA_TYPE_CHAR_STRING:
-		ret = prelude_string_sprintf(out, "%s", (const char *) data->data.ro_data);
-		break;
+        case IDMEF_DATA_TYPE_CHAR_STRING:
+                ret = prelude_string_sprintf(out, "%s", (const char *) data->data.ro_data);
+                break;
 
-	case IDMEF_DATA_TYPE_BYTE_STRING:
-		ret = bytes_to_string(out, data->data.ro_data, data->len);
-		break;
-	}
+        case IDMEF_DATA_TYPE_BYTE_STRING:
+                ret = bytes_to_string(out, data->data.ro_data, data->len);
+                break;
+        }
 
-	return ret;
+        return ret;
 }
 
 
@@ -454,9 +454,9 @@ int idmef_data_to_string(const idmef_data_t *data, prelude_string_t *out)
  *  from idmef-tree-wrap.c
  */
 void idmef_data_destroy_internal(idmef_data_t *ptr)
-{        
+{
         if ( (ptr->type == IDMEF_DATA_TYPE_CHAR_STRING || ptr->type == IDMEF_DATA_TYPE_BYTE_STRING) &&
-	     ptr->flags & IDMEF_DATA_OWN_DATA ) {
+             ptr->flags & IDMEF_DATA_OWN_DATA ) {
                 free(ptr->data.rw_data);
                 ptr->data.rw_data = NULL;
         }
@@ -480,9 +480,9 @@ void idmef_data_destroy(idmef_data_t *data)
 {
         if ( --data->refcount )
                 return;
-        
+
         idmef_data_destroy_internal(data);
-        
+
         if ( data->flags & IDMEF_DATA_OWN_STRUCTURE )
                 free(data);
 }
@@ -555,37 +555,37 @@ int idmef_data_set_char_string_nodup(idmef_data_t *data, char *ptr)
  */
 int idmef_data_new_byte_string_ref(idmef_data_t **data, const unsigned char *ptr, size_t len)
 {
-	return idmef_data_new_ptr_ref_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
+        return idmef_data_new_ptr_ref_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
 }
 
 
 int idmef_data_new_byte_string_dup(idmef_data_t **data, const unsigned char *ptr, size_t len)
 {
-	return idmef_data_new_ptr_dup_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
+        return idmef_data_new_ptr_dup_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
 }
 
 
 int idmef_data_new_byte_string_nodup(idmef_data_t **data, unsigned char *ptr, size_t len)
 {
-	return idmef_data_new_ptr_nodup_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
+        return idmef_data_new_ptr_nodup_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
 }
 
 
 int idmef_data_set_byte_string_ref(idmef_data_t *data, const unsigned char *ptr, size_t len)
 {
-	return idmef_data_set_ptr_ref_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
+        return idmef_data_set_ptr_ref_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
 }
 
 
 int idmef_data_set_byte_string_dup(idmef_data_t *data, const unsigned char *ptr, size_t len)
 {
-	return idmef_data_set_ptr_dup_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
+        return idmef_data_set_ptr_dup_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
 }
 
 
 int idmef_data_set_byte_string_nodup(idmef_data_t *data, unsigned char *ptr, size_t len)
 {
-	return idmef_data_set_ptr_nodup_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
+        return idmef_data_set_ptr_nodup_fast(data, IDMEF_DATA_TYPE_BYTE_STRING, ptr, len);
 }
 
 
@@ -597,10 +597,10 @@ int idmef_data_compare(const idmef_data_t *data1, const idmef_data_t *data2)
 
         else if ( ! data1 || ! data2 )
                 return (data1) ? 1 : -1;
-        
+
         else if ( data1->len != data2->len )
                 return (data1->len > data2->len) ? 1 : -1;
-        
+
         else if ( data1->type != data2->type )
                 return -1;
 
