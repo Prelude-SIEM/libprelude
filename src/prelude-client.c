@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2004,2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.
@@ -89,37 +89,37 @@
 
 
 struct prelude_client {
-        
+
         int flags;
         int status;
-                
+
         prelude_connection_permission_t permission;
-        
+
         /*
          * information about the user/group this analyzer is running as
          */
         prelude_client_profile_t *profile;
-        
+
         /*
          * name, analyzerid, and config file for this analyzer.
-         */        
+         */
         char *md5sum;
         char *config_filename;
         prelude_bool_t config_external;
-        
+
         idmef_analyzer_t *analyzer;
-        
+
         prelude_connection_pool_t *cpool;
         prelude_timer_t heartbeat_timer;
 
-        
+
         prelude_msgbuf_t *msgbuf;
         pthread_mutex_t msgbuf_lock;
-        
+
         prelude_ident_t *unique_ident;
 
         prelude_option_t *config_file_opt;
-        
+
         void (*heartbeat_cb)(prelude_client_t *client, idmef_message_t *heartbeat);
 };
 
@@ -147,23 +147,23 @@ static int generate_md5sum(const char *filename, prelude_string_t *out)
         int ret;
         size_t len, i;
         unsigned char digest[16], *data;
-        
+
         ret = _prelude_load_file(filename, &data, &len);
         if ( ret < 0 )
                 return ret;
-                
+
         gcry_md_hash_buffer(GCRY_MD_MD5, digest, data, len);
         _prelude_unload_file(data, len);
-        
+
         len = gcry_md_get_algo_dlen(GCRY_MD_MD5);
         assert(len == sizeof(digest));
-        
+
         for ( i = 0; i < len; i++ ) {
                 ret = prelude_string_sprintf(out, "%.2x", digest[i]);
                 if ( ret < 0 )
                         return ret;
         }
-        
+
         return 0;
 }
 
@@ -173,7 +173,7 @@ static int add_hb_data(idmef_heartbeat_t *hb, prelude_string_t *meaning, const c
 {
         int ret;
         idmef_additional_data_t *ad;
-        
+
         ret = idmef_heartbeat_new_additional_data(hb, &ad, -1);
         if ( ret < 0 )
                 return ret;
@@ -199,7 +199,7 @@ static const char *client_get_status(prelude_client_t *client)
 
         abort();
 }
-        
+
 
 
 
@@ -211,49 +211,49 @@ static void heartbeat_expire_cb(void *data)
         idmef_message_t *message;
         idmef_heartbeat_t *heartbeat;
         prelude_client_t *client = data;
-        
+
         ret = idmef_message_new(&message);
         if ( ret < 0 ) {
                 prelude_perror(ret, "error creating new IDMEF message");
                 goto out;
         }
-        
+
         ret = idmef_message_new_heartbeat(message, &heartbeat);
         if ( ret < 0 ) {
                 prelude_perror(ret, "error creating new IDMEF heartbeat.\n");
                 goto out;
         }
-        
+
         idmef_heartbeat_set_heartbeat_interval(heartbeat, prelude_timer_get_expire(&client->heartbeat_timer));
-        
+
         ret = prelude_string_new_constant(&str, "Analyzer status");
         if ( ret < 0 )
                 return;
-        
+
         add_hb_data(heartbeat, str, client_get_status(client));
 
         if ( client->md5sum ) {
                 ret = prelude_string_new_constant(&str, "Analyzer md5sum");
                 if ( ret < 0 )
                         return;
-                
+
                 add_hb_data(heartbeat, str, client->md5sum);
         }
-                
+
         ret = idmef_time_new_from_gettimeofday(&time);
         if ( ret < 0 )
                 return;
-        
+
         idmef_heartbeat_set_create_time(heartbeat, time);
         idmef_heartbeat_set_analyzer(heartbeat, idmef_analyzer_ref(client->analyzer), IDMEF_LIST_PREPEND);
-        
+
         if ( client->heartbeat_cb ) {
                 client->heartbeat_cb(client, message);
                 goto out;
         }
 
         prelude_client_send_idmef(client, message);
-        
+
   out:
         idmef_message_destroy(message);
 
@@ -278,22 +278,22 @@ static int get_sys_info(idmef_analyzer_t *analyzer)
         int ret;
         struct utsname uts;
         prelude_string_t *str;
-        
+
         if ( uname(&uts) < 0 )
                 return prelude_error_from_errno(errno);
 
         ret = prelude_string_new_dup(&str, uts.sysname);
         if ( ret < 0 )
                 return ret;
-        
+
         idmef_analyzer_set_ostype(analyzer, str);
 
         ret = prelude_string_new_dup(&str, uts.release);
         if ( ret < 0 )
                 return ret;
-        
+
         idmef_analyzer_set_osversion(analyzer, str);
-        
+
         return 0;
 }
 
@@ -303,41 +303,41 @@ static int get_sys_info(idmef_analyzer_t *analyzer)
 {
         int ret;
         prelude_string_t *str;
-        
+
         ret = prelude_string_new_constant(&str, "Windows");
         if ( ret < 0 )
                 return ret;
-        
+
         idmef_analyzer_set_ostype(analyzer, str);
 
         return 0;
 }
 #endif
 
-static int fill_client_infos(prelude_client_t *client, const char *program) 
+static int fill_client_infos(prelude_client_t *client, const char *program)
 {
         int ret;
         prelude_string_t *str, *md5;
-	idmef_process_t *process;
+        idmef_process_t *process;
         char buf[PATH_MAX], *name, *path;
 
         snprintf(buf, sizeof(buf), "%" PRELUDE_PRIu64, prelude_client_profile_get_analyzerid(client->profile));
         ret = prelude_string_new_dup(&str, buf);
         if ( ret < 0 )
                 return ret;
-        
-	idmef_analyzer_set_analyzerid(client->analyzer, str);
-        
+
+        idmef_analyzer_set_analyzerid(client->analyzer, str);
+
         ret = get_sys_info(client->analyzer);
         if ( ret < 0 )
                 return ret;
-                
+
         ret = idmef_analyzer_new_process(client->analyzer, &process);
-        if ( ret < 0 ) 
+        if ( ret < 0 )
                 return ret;
 
-	idmef_process_set_pid(process, getpid());
-        
+        idmef_process_set_pid(process, getpid());
+
         if ( ! program )
                 return 0;
 
@@ -348,7 +348,7 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
                 ret = prelude_string_new_nodup(&str, name);
                 if ( ret < 0 )
                         return ret;
-                
+
                 idmef_process_set_name(process, str);
         }
 
@@ -360,38 +360,38 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
                 ret = prelude_string_sprintf(str, "%s/%s", path, name);
                 if ( ret < 0 )
                         return ret;
-                
+
                 ret = prelude_string_new(&md5);
                 if ( ret < 0 )
                         return ret;
-                
+
                 ret = generate_md5sum(prelude_string_get_string(str), md5);
                 if ( ret < 0 )
                         return ret;
-        
+
                 ret = prelude_string_get_string_released(md5, &client->md5sum);
                 prelude_string_destroy(md5);
         }
-        
+
         if ( path )
                 free(path); /* copied above */
-        
+
         return ret;
 }
 
 
 
 
-static int set_node_address_category(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context) 
+static int set_node_address_category(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         idmef_address_category_t category;
 
-        category = idmef_address_category_to_numeric(optarg);        
-        if ( category < 0 ) 
+        category = idmef_address_category_to_numeric(optarg);
+        if ( category < 0 )
                 return category;
-        
+
         idmef_address_set_category(context, category);
-        
+
         return 0;
 }
 
@@ -405,13 +405,13 @@ static int get_node_address_category(prelude_option_t *opt, prelude_string_t *ou
 
 
 
-static int set_node_address_vlan_num(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context) 
+static int set_node_address_vlan_num(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         if ( ! optarg )
                 idmef_address_unset_vlan_num(context);
         else
                 idmef_address_set_vlan_num(context, atoi(optarg));
-        
+
         return 0;
 }
 
@@ -430,19 +430,19 @@ static int get_node_address_vlan_num(prelude_option_t *opt, prelude_string_t *ou
 
 
 
-static int set_node_address_vlan_name(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context) 
+static int set_node_address_vlan_name(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         int ret;
         prelude_string_t *str = NULL;
-        
+
         if ( optarg ) {
                 ret = prelude_string_new_dup(&str, optarg);
                 if ( ret < 0 )
                         return ret;
         }
-        
+
         idmef_address_set_vlan_name(context, str);
-                
+
         return 0;
 }
 
@@ -451,7 +451,7 @@ static int set_node_address_vlan_name(prelude_option_t *opt, const char *optarg,
 static int get_node_address_vlan_name(prelude_option_t *opt, prelude_string_t *out, void *context)
 {
         prelude_string_t *str;
-        
+
         str = idmef_address_get_vlan_name(context);
         if ( ! str )
                 return 0;
@@ -461,7 +461,7 @@ static int get_node_address_vlan_name(prelude_option_t *opt, prelude_string_t *o
 
 
 
-static int set_node_address_address(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context) 
+static int set_node_address_address(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         int ret;
         prelude_string_t *str = NULL;
@@ -471,7 +471,7 @@ static int set_node_address_address(prelude_option_t *opt, const char *optarg, p
                 if ( ret < 0 )
                         return ret;
         }
-        
+
         idmef_address_set_address(context, str);
         return 0;
 }
@@ -491,7 +491,7 @@ static int get_node_address_address(prelude_option_t *opt, prelude_string_t *out
 
 
 
-static int set_node_address_netmask(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context) 
+static int set_node_address_netmask(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         int ret;
         prelude_string_t *str = NULL;
@@ -501,7 +501,7 @@ static int set_node_address_netmask(prelude_option_t *opt, const char *optarg, p
                 if ( ret < 0 )
                         return ret;
         }
-        
+
         idmef_address_set_netmask(context, str);
         return 0;
 }
@@ -511,7 +511,7 @@ static int set_node_address_netmask(prelude_option_t *opt, const char *optarg, p
 static int get_node_address_netmask(prelude_option_t *opt, prelude_string_t *out, void *context)
 {
         prelude_string_t *str;
-        
+
         str = idmef_address_get_netmask(context);
         if ( ! str )
                 return 0;
@@ -521,7 +521,7 @@ static int get_node_address_netmask(prelude_option_t *opt, prelude_string_t *out
 
 
 
-static int set_node_address(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context) 
+static int set_node_address(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         int ret;
         idmef_node_t *node;
@@ -531,11 +531,11 @@ static int set_node_address(prelude_option_t *opt, const char *optarg, prelude_s
 
         if ( prelude_option_search_context(opt, optarg) )
                 return 0;
-        
+
         ret = idmef_analyzer_new_node(ptr->analyzer, &node);
         if ( ret < 0 )
                 return ret;
-        
+
         ret = idmef_node_new_address(node, &addr, -1);
         if ( ret < 0 )
                 return -1;
@@ -548,15 +548,15 @@ static int set_node_address(prelude_option_t *opt, const char *optarg, prelude_s
 static int destroy_node_address(prelude_option_t *opt, prelude_string_t *out, void *context)
 {
         idmef_address_t *addr = context;
-        
+
         idmef_address_destroy(addr);
-        
+
         return 0;
 }
 
 
 
-static int set_node_category(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context) 
+static int set_node_category(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         int ret;
         idmef_node_t *node;
@@ -566,11 +566,11 @@ static int set_node_category(prelude_option_t *opt, const char *optarg, prelude_
         category = idmef_node_category_to_numeric(optarg);
         if ( category < 0 )
                 return category;
-        
+
         ret = idmef_analyzer_new_node(ptr->analyzer, &node);
         if ( ret < 0 )
                 return -1;
-        
+
         idmef_node_set_category(node, category);
         return 0;
 }
@@ -582,10 +582,10 @@ static int get_node_category(prelude_option_t *opt, prelude_string_t *out, void 
         const char *category;
         prelude_client_t *client = context;
         idmef_node_t *node = idmef_analyzer_get_node(client->analyzer);
-        
+
         if ( ! node )
                 return 0;
-        
+
         category = idmef_node_category_to_string(idmef_node_get_category(node));
         if ( ! category )
                 return -1;
@@ -601,7 +601,7 @@ static int set_node_location(prelude_option_t *opt, const char *optarg, prelude_
         idmef_node_t *node;
         prelude_string_t *str = NULL;
         prelude_client_t *ptr = context;
-        
+
         ret = idmef_analyzer_new_node(ptr->analyzer, &node);
         if ( ret < 0 )
                 return ret;
@@ -611,9 +611,9 @@ static int set_node_location(prelude_option_t *opt, const char *optarg, prelude_
                 if ( ret < 0 )
                         return ret;
         }
-        
+
         idmef_node_set_location(node, str);
-        
+
         return 0;
 }
 
@@ -624,7 +624,7 @@ static int get_node_location(prelude_option_t *opt, prelude_string_t *out, void 
         prelude_string_t *str;
         prelude_client_t *client = context;
         idmef_node_t *node = idmef_analyzer_get_node(client->analyzer);
-        
+
         if ( ! node )
                 return 0;
 
@@ -637,23 +637,23 @@ static int get_node_location(prelude_option_t *opt, prelude_string_t *out, void 
 
 
 
-static int set_node_name(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context) 
+static int set_node_name(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         int ret;
         idmef_node_t *node;
         prelude_string_t *str = NULL;
         prelude_client_t *ptr = context;
-        
+
         ret = idmef_analyzer_new_node(ptr->analyzer, &node);
         if ( ret < 0 )
                 return ret;
-        
+
         if ( optarg ) {
                 ret = prelude_string_new_dup(&str, optarg);
                 if ( ret < 0 )
                         return ret;
         }
-                
+
         idmef_node_set_name(node, str);
 
         return 0;
@@ -666,7 +666,7 @@ static int get_node_name(prelude_option_t *opt, prelude_string_t *out, void *con
         prelude_string_t *str;
         prelude_client_t *client = context;
         idmef_node_t *node = idmef_analyzer_get_node(client->analyzer);
-        
+
         if ( ! node )
                 return 0;
 
@@ -701,14 +701,14 @@ static int set_analyzer_name(prelude_option_t *opt, const char *optarg, prelude_
         prelude_string_t *str = NULL;
         prelude_client_t *ptr = context;
 
-        if ( optarg ) {                
+        if ( optarg ) {
                 ret = prelude_string_new_dup(&str, optarg);
                 if ( ret < 0 )
                         return ret;
         }
-        
+
         idmef_analyzer_set_name(ptr->analyzer, str);
-        return 0;        
+        return 0;
 }
 
 
@@ -716,10 +716,10 @@ static int set_analyzer_name(prelude_option_t *opt, const char *optarg, prelude_
 static int get_manager_addr(prelude_option_t *opt, prelude_string_t *out, void *context)
 {
         prelude_client_t *ptr = context;
-        
+
         if ( ! ptr->cpool || ! prelude_connection_pool_get_connection_string(ptr->cpool) )
                 return 0;
-        
+
         return prelude_string_cat(out, prelude_connection_pool_get_connection_string(ptr->cpool));
 }
 
@@ -733,23 +733,23 @@ static int connection_pool_event_cb(prelude_connection_pool_t *pool,
         prelude_client_t *client;
         prelude_msgbuf_t *msgbuf;
         prelude_msg_t *msg = NULL;
-        
+
         if ( event != PRELUDE_CONNECTION_POOL_EVENT_INPUT )
                 return 0;
 
         do {
                 ret = prelude_connection_recv(conn, &msg);
         } while ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN );
-                
+
         if ( ret < 0 )
                 return ret;
 
         client = prelude_connection_pool_get_data(pool);
-        
+
         ret = prelude_connection_new_msgbuf(conn, &msgbuf);
         if ( ret < 0 )
                 return ret;
-                
+
         ret = prelude_client_handle_msg_default(client, msg, msgbuf);
 
         prelude_msg_destroy(msg);
@@ -791,12 +791,12 @@ static int set_tcp_keepalive_intvl(prelude_option_t *opt, const char *optarg, pr
 static int set_heartbeat_interval(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         prelude_client_t *ptr = context;
-        
+
         setup_heartbeat_timer(ptr, atoi(optarg));
 
         if ( ptr->status == CLIENT_STATUS_RUNNING )
                 prelude_timer_reset(&ptr->heartbeat_timer);
-        
+
         return 0;
 }
 
@@ -804,7 +804,7 @@ static int set_heartbeat_interval(prelude_option_t *opt, const char *optarg, pre
 
 static int get_heartbeat_interval(prelude_option_t *opt, prelude_string_t *out, void *context)
 {
-        prelude_client_t *ptr = context;       
+        prelude_client_t *ptr = context;
         return prelude_string_sprintf(out, "%u", ptr->heartbeat_timer.expire);
 }
 
@@ -816,21 +816,21 @@ static int set_profile(prelude_option_t *opt, const char *optarg, prelude_string
         int ret;
         char buf[512];
         prelude_client_t *client = context;
-        
+
         ret = prelude_client_profile_set_name(client->profile, optarg);
         if ( ret < 0 )
                 return ret;
 
         if ( client->config_external == TRUE )
                 return 0;
-        
+
         prelude_client_profile_get_config_filename(client->profile, buf, sizeof(buf));
 
         if ( client->config_filename )
                 free(client->config_filename);
-        
+
         client->config_filename = strdup(buf);
-        
+
         return 0;
 }
 
@@ -840,25 +840,25 @@ static void _prelude_client_destroy(prelude_client_t *client)
 {
         if ( client->profile )
                 prelude_client_profile_destroy(client->profile);
-        
+
         if ( client->md5sum )
                 free(client->md5sum);
-        
+
         if ( client->msgbuf )
                 prelude_msgbuf_destroy(client->msgbuf);
-        
+
         if ( client->analyzer )
                 idmef_analyzer_destroy(client->analyzer);
 
         if ( client->config_filename )
                 free(client->config_filename);
-        
+
         if ( client->cpool )
                 prelude_connection_pool_destroy(client->cpool);
-        
+
         if ( client->unique_ident )
                 prelude_ident_destroy(client->unique_ident);
-        
+
         free(client);
 }
 
@@ -868,16 +868,16 @@ static int handle_client_error(prelude_client_t *client, int error)
 {
         prelude_error_code_t code;
         prelude_error_source_t source;
-        
+
         code = prelude_error_get_code(error);
         source = prelude_error_get_source(error);
-        
+
         if ( error < 0 && (code == PRELUDE_ERROR_PROFILE || source == PRELUDE_ERROR_SOURCE_CONFIG_ENGINE) ) {
                 char *tmp = strdup(_prelude_thread_get_error());
                 error = prelude_error_verbose(code, "%s\n%s", tmp, prelude_client_get_setup_error(client));
                 free(tmp);
         }
-        
+
         return error;
 }
 
@@ -896,14 +896,14 @@ int _prelude_client_register_options(void)
                                  "prelude", "Prelude generic options", PRELUDE_OPTION_ARGUMENT_NONE, NULL, NULL);
         if ( ret < 0 )
                 return ret;
-        
+
         ret = prelude_option_add(root_list, &opt, PRELUDE_OPTION_TYPE_CLI, 0, "profile",
                                  "Profile to use for this analyzer", PRELUDE_OPTION_ARGUMENT_REQUIRED,
                                  set_profile, NULL);
         if ( ret < 0 )
                 return ret;
         prelude_option_set_priority(opt, PRELUDE_OPTION_PRIORITY_IMMEDIATE);
-        
+
         ret = prelude_option_add(root_list, NULL, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG
                                  |PRELUDE_OPTION_TYPE_WIDE, 0, "heartbeat-interval",
                                  "Number of seconds between two heartbeat",
@@ -911,7 +911,7 @@ int _prelude_client_register_options(void)
                                  set_heartbeat_interval, get_heartbeat_interval);
         if ( ret < 0 )
                 return ret;
-        
+
         ret = prelude_option_add(root_list, &opt, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG
                                  |PRELUDE_OPTION_TYPE_WIDE, 0, "server-addr",
                                  "Address where this agent should report events to (addr:port)",
@@ -920,88 +920,88 @@ int _prelude_client_register_options(void)
                 return ret;
         prelude_option_set_priority(opt, PRELUDE_OPTION_PRIORITY_LAST);
 
-        ret = prelude_option_add(root_list, NULL, PRELUDE_OPTION_TYPE_CFG, 0, 
+        ret = prelude_option_add(root_list, NULL, PRELUDE_OPTION_TYPE_CFG, 0,
                                  "tcp-keepalive-time", "Interval between the last data packet sent and the first keepalive probe",
                                  PRELUDE_OPTION_ARGUMENT_REQUIRED, set_tcp_keepalive_time, NULL);
         if ( ret < 0 )
                 return ret;
 
-        ret = prelude_option_add(root_list, NULL, PRELUDE_OPTION_TYPE_CFG, 0, 
+        ret = prelude_option_add(root_list, NULL, PRELUDE_OPTION_TYPE_CFG, 0,
                                  "tcp-keepalive-probes", "Number of not acknowledged probes to send before considering the connection dead",
                                  PRELUDE_OPTION_ARGUMENT_REQUIRED, set_tcp_keepalive_probes, NULL);
         if ( ret < 0 )
                 return ret;
 
-        ret = prelude_option_add(root_list, NULL, PRELUDE_OPTION_TYPE_CFG, 0, 
+        ret = prelude_option_add(root_list, NULL, PRELUDE_OPTION_TYPE_CFG, 0,
                                  "tcp-keepalive-intvl", "Interval between subsequential keepalive probes",
                                  PRELUDE_OPTION_ARGUMENT_REQUIRED, set_tcp_keepalive_intvl, NULL);
         if ( ret < 0 )
                 return ret;
-        
+
         ret = prelude_option_add(root_list, NULL, PRELUDE_OPTION_TYPE_CLI|PRELUDE_OPTION_TYPE_CFG|
                                  PRELUDE_OPTION_TYPE_WIDE, 0, "analyzer-name", "Name for this analyzer",
                                  PRELUDE_OPTION_ARGUMENT_OPTIONAL, set_analyzer_name, get_analyzer_name);
         if ( ret < 0 )
                 return ret;
-        
+
         ret = prelude_option_add(root_list, NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-name",
                                  "Name of the equipment", PRELUDE_OPTION_ARGUMENT_OPTIONAL,
                                  set_node_name, get_node_name);
         if ( ret < 0 )
                 return ret;
-        
+
         ret = prelude_option_add(root_list, NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-location",
-                                 "Location of the equipment", PRELUDE_OPTION_ARGUMENT_OPTIONAL, 
+                                 "Location of the equipment", PRELUDE_OPTION_ARGUMENT_OPTIONAL,
                                  set_node_location, get_node_location);
         if ( ret < 0 )
                 return ret;
-        
+
         ret = prelude_option_add(root_list, NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "node-category",
                                  NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_node_category, get_node_category);
         if ( ret < 0 )
                 return ret;
-        
+
         ret = prelude_option_add(root_list, &opt, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE
                                  |PRELUDE_OPTION_TYPE_CONTEXT, 0, "node-address",
                                  "Network or hardware address of the equipment",
                                  PRELUDE_OPTION_ARGUMENT_OPTIONAL, set_node_address, NULL);
         if ( ret < 0 )
                 return ret;
-        
+
         prelude_option_set_destroy_callback(opt, destroy_node_address);
-        
+
         ret = prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "address",
-                                 "Address information", PRELUDE_OPTION_ARGUMENT_OPTIONAL, 
+                                 "Address information", PRELUDE_OPTION_ARGUMENT_OPTIONAL,
                                  set_node_address_address, get_node_address_address);
         if ( ret < 0 )
                 return ret;
-        
+
         ret = prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "netmask",
-                                 "Network mask for the address, if appropriate", PRELUDE_OPTION_ARGUMENT_OPTIONAL, 
+                                 "Network mask for the address, if appropriate", PRELUDE_OPTION_ARGUMENT_OPTIONAL,
                                  set_node_address_netmask, get_node_address_netmask);
         if ( ret < 0 )
                 return ret;
-        
+
         ret = prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "category",
-                                 "Type of address represented", PRELUDE_OPTION_ARGUMENT_REQUIRED, 
+                                 "Type of address represented", PRELUDE_OPTION_ARGUMENT_REQUIRED,
                                  set_node_address_category, get_node_address_category);
         if ( ret < 0 )
                 return ret;
-        
+
         ret = prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "vlan-name",
-                                 "Name of the Virtual LAN to which the address belongs", 
+                                 "Name of the Virtual LAN to which the address belongs",
                                  PRELUDE_OPTION_ARGUMENT_OPTIONAL, set_node_address_vlan_name,
                                  get_node_address_vlan_name);
         if ( ret < 0 )
                 return ret;
-        
+
         ret = prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_WIDE, 0, "vlan-num",
-                                 "Number of the Virtual LAN to which the address belongs", 
+                                 "Number of the Virtual LAN to which the address belongs",
                                  PRELUDE_OPTION_ARGUMENT_OPTIONAL, set_node_address_vlan_num,
                                  get_node_address_vlan_num);
         if ( ret < 0 )
                 return ret;
-        
+
         return 0;
 }
 
@@ -1021,17 +1021,17 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
 {
         int ret;
         prelude_client_t *new;
-        
+
         new = calloc(1, sizeof(*new));
         if ( ! new )
                 return prelude_error_from_errno(errno);
-        
+
         prelude_thread_mutex_init(&new->msgbuf_lock, NULL);
         prelude_timer_init_list(&new->heartbeat_timer);
 
         new->flags = PRELUDE_CLIENT_FLAGS_HEARTBEAT|PRELUDE_CLIENT_FLAGS_CONNECT;
         new->permission = PRELUDE_CONNECTION_PERMISSION_IDMEF_WRITE;
-        
+
         ret = idmef_analyzer_new(&new->analyzer);
         if ( ret < 0 ) {
                 _prelude_client_destroy(new);
@@ -1045,15 +1045,15 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
                 _prelude_client_destroy(new);
                 return ret;
         }
-        
+
         set_profile(NULL, profile, NULL, new);
-        
+
         ret = prelude_ident_new(&new->unique_ident);
         if ( ret < 0 ) {
                 _prelude_client_destroy(new);
                 return ret;
         }
-        
+
         ret = prelude_connection_pool_new(&new->cpool, new->profile, new->permission);
         if ( ret < 0 )
                 return ret;
@@ -1063,18 +1063,18 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
                                           PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT | PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER);
         prelude_connection_pool_set_event_handler(new->cpool, PRELUDE_CONNECTION_POOL_EVENT_INPUT, connection_pool_event_cb);
 
-        
+
         setup_heartbeat_timer(new, DEFAULT_HEARTBEAT_INTERVAL);
 
-        
+
         ret = prelude_client_new_msgbuf(new, &new->msgbuf);
         if ( ret < 0 ) {
                 _prelude_client_destroy(new);
                 return ret;
         }
-                
+
         *client = new;
-        
+
         return 0;
 }
 
@@ -1100,21 +1100,21 @@ int prelude_client_init(prelude_client_t *client)
         int ret;
         prelude_string_t *err;
         prelude_option_warning_t old_warnings;
-        
+
         prelude_option_set_warnings(0, &old_warnings);
-                
+
         ret = prelude_option_read(_prelude_generic_optlist, (const char **)&client->config_filename,
                                   &_prelude_internal_argc, _prelude_internal_argv, &err, client);
-        
+
         prelude_option_set_warnings(old_warnings, NULL);
-        
+
         if ( ret < 0 )
                 return handle_client_error(client, ret);
 
         ret = _prelude_client_profile_init(client->profile);
         if ( ret < 0 )
                 return handle_client_error(client, ret);
-        
+
         ret = fill_client_infos(client, _prelude_internal_argv[0]);
         if ( ret < 0 )
                 return handle_client_error(client, ret);
@@ -1143,7 +1143,7 @@ int prelude_client_start(prelude_client_t *client)
 {
         int ret;
         void *credentials;
-        
+
         if ( ! client->md5sum ) {
                 /*
                  * if prelude_client_init() was not called
@@ -1152,20 +1152,20 @@ int prelude_client_start(prelude_client_t *client)
                 if ( ret < 0 )
                         return ret;
         }
-        
+
         if ( client->flags & PRELUDE_CLIENT_FLAGS_CONNECT ) {
                 if ( ! client->cpool )
                         return prelude_error(PRELUDE_ERROR_CONNECTION_STRING);
-                
-                ret = prelude_client_profile_get_credentials(client->profile, &credentials);                
+
+                ret = prelude_client_profile_get_credentials(client->profile, &credentials);
                 if ( ret < 0 )
                         return handle_client_error(client, ret);
-                
+
                 ret = prelude_connection_pool_init(client->cpool);
                 if ( ret < 0 )
                         return handle_client_error(client, ret);
         }
-        
+
         if ( (client->cpool || client->heartbeat_cb) && client->flags & PRELUDE_CLIENT_FLAGS_HEARTBEAT ) {
                 client->status = CLIENT_STATUS_STARTING;
                 /*
@@ -1174,7 +1174,7 @@ int prelude_client_start(prelude_client_t *client)
                 heartbeat_expire_cb(client);
                 client->status = CLIENT_STATUS_RUNNING;
         }
-                
+
         return 0;
 }
 
@@ -1213,7 +1213,7 @@ void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
 {
         if ( client->flags & PRELUDE_CLIENT_FLAGS_ASYNC_SEND )
                 prelude_connection_pool_broadcast_async(client->cpool, msg);
-        else 
+        else
                 prelude_connection_pool_broadcast(client->cpool, msg);
 }
 
@@ -1230,13 +1230,13 @@ void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
  * was set using prelude_client_set_flags().
  */
 void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg)
-{        
+{
         /*
          * we need to hold a lock since asynchronous heartbeat
          * could write the message buffer at the same time we do.
          */
         prelude_thread_mutex_lock(&client->msgbuf_lock);
-        
+
         _idmef_message_assign_missing(client, msg);
         idmef_message_write(msg, client->msgbuf);
         prelude_msgbuf_mark_end(client->msgbuf);
@@ -1272,7 +1272,7 @@ prelude_connection_pool_t *prelude_client_get_connection_pool(prelude_client_t *
  * this to be automated by prelude_client_init().
  */
 void prelude_client_set_connection_pool(prelude_client_t *client, prelude_connection_pool_t *pool)
-{        
+{
         client->cpool = pool;
 }
 
@@ -1312,12 +1312,12 @@ void prelude_client_set_heartbeat_cb(prelude_client_t *client,
 void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status_t status)
 {
         prelude_timer_destroy(&client->heartbeat_timer);
-        
+
         if ( status == PRELUDE_CLIENT_EXIT_STATUS_SUCCESS && client->flags & PRELUDE_CLIENT_FLAGS_HEARTBEAT ) {
                 client->status = CLIENT_STATUS_EXITING;
                 heartbeat_expire_cb(client);
         }
-        
+
         _prelude_client_destroy(client);
 }
 
@@ -1345,17 +1345,17 @@ int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t fl
         int ret = 0;
 
         client->flags = flags;
-                
+
         if ( flags & PRELUDE_CLIENT_FLAGS_ASYNC_TIMER ) {
                 ret = prelude_async_init();
-                prelude_async_set_flags(PRELUDE_ASYNC_FLAGS_TIMER);       
+                prelude_async_set_flags(PRELUDE_ASYNC_FLAGS_TIMER);
         }
-        
+
         if ( flags & PRELUDE_CLIENT_FLAGS_ASYNC_SEND ) {
                 ret = prelude_async_init();
                 prelude_msgbuf_set_flags(client->msgbuf, PRELUDE_MSGBUF_FLAGS_ASYNC);
         }
-        
+
         return ret;
 }
 
@@ -1406,7 +1406,7 @@ void prelude_client_set_required_permission(prelude_client_t *client, prelude_co
 {
         if ( permission & PRELUDE_CONNECTION_PERMISSION_IDMEF_READ )
                 prelude_connection_pool_set_event_handler(client->cpool, 0, NULL);
-        
+
         client->permission = permission;
         prelude_connection_pool_set_required_permission(client->cpool, permission);
 }
@@ -1442,16 +1442,16 @@ const char *prelude_client_get_config_filename(prelude_client_t *client)
  * Returns: 0 on success, -1 if an error occured.
  */
 int prelude_client_set_config_filename(prelude_client_t *client, const char *filename)
-{        
+{
         if ( client->config_filename )
                 free(client->config_filename);
-        
+
         client->config_filename = strdup(filename);
         if ( ! client->config_filename )
                 return prelude_error_from_errno(errno);
 
         client->config_external = TRUE;
-        
+
         return 0;
 }
 
@@ -1501,14 +1501,14 @@ const char *prelude_client_get_setup_error(prelude_client_t *client)
         ret = prelude_string_new(&out);
         if ( ret < 0 )
                 return NULL;
-        
-        if ( client->flags & PRELUDE_CLIENT_FLAGS_CONNECT ) { 
+
+        if ( client->flags & PRELUDE_CLIENT_FLAGS_CONNECT ) {
                 ret = prelude_string_new(&perm);
                 if ( ret < 0 ) {
                         prelude_string_destroy(out);
                         return NULL;
                 }
-                
+
                 prelude_connection_permission_to_string(client->permission, perm);
 
                 ret = prelude_string_sprintf(out, "\nProfile '%s' does not exist. In order to create it, please run:\n"
@@ -1517,10 +1517,10 @@ const char *prelude_client_get_setup_error(prelude_client_t *client)
                                              prelude_client_profile_get_name(client->profile),
                                              prelude_string_get_string(perm),
                                              prelude_client_profile_get_uid(client->profile),
-                                             prelude_client_profile_get_gid(client->profile));                
+                                             prelude_client_profile_get_gid(client->profile));
 
                 prelude_string_destroy(perm);
-                
+
         } else {
                 ret = prelude_string_sprintf(out, "\nProfile '%s' does not exist. In order to create it, please run:\n"
                                              "prelude-adduser add %s --uid %d --gid %d",
@@ -1535,13 +1535,13 @@ const char *prelude_client_get_setup_error(prelude_client_t *client)
 
         _prelude_thread_set_error(prelude_string_get_string(out));
         prelude_string_destroy(out);
-                
+
         return _prelude_thread_get_error();
 }
 
 
 
-void prelude_client_print_setup_error(prelude_client_t *client) 
+void prelude_client_print_setup_error(prelude_client_t *client)
 {
         prelude_log(PRELUDE_LOG_WARN, "%s\n\n", prelude_client_get_setup_error(client));
 }
@@ -1552,11 +1552,11 @@ int prelude_client_handle_msg_default(prelude_client_t *client, prelude_msg_t *m
 {
         int ret;
         uint8_t tag;
-        
+
         tag = prelude_msg_get_tag(msg);
         if ( tag != PRELUDE_MSG_OPTION_REQUEST )
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "Unexpected message type '%d' received", tag);
-        
+
         /*
          * lock, handle the request, send reply.
          */
@@ -1564,9 +1564,9 @@ int prelude_client_handle_msg_default(prelude_client_t *client, prelude_msg_t *m
 
         ret = prelude_option_process_request(client, msg, msgbuf);
         prelude_msgbuf_mark_end(client->msgbuf);
-        
+
         prelude_thread_mutex_unlock(&client->msgbuf_lock);
-        
+
         return ret;
 }
 
