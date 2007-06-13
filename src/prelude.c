@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2004,2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2004,2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.
@@ -83,7 +83,7 @@ static void slice_arguments(int *argc, char **argv)
         int i;
         char *ptr;
         prelude_option_t *rootopt, *opt, *bkp = NULL;
-        
+
         _prelude_client_register_options();
 
         if ( ! argc || ! argv )
@@ -93,36 +93,36 @@ static void slice_arguments(int *argc, char **argv)
         _prelude_internal_argv[_prelude_internal_argc++] = argv[0];
 
         for ( i = 0; i < *argc && _prelude_internal_argc + 1 < sizeof(_prelude_internal_argv) / sizeof(char *); i++ ) {
-                                
+
                 ptr = argv[i];
                 if ( *ptr != '-' )
                         continue;
-                
+
                 while ( *ptr == '-' ) ptr++;
-                
+
                 opt = prelude_option_search(rootopt, ptr, PRELUDE_OPTION_TYPE_CLI, FALSE);
                 if ( ! opt ) {
                         if ( bkp )
                                 rootopt = bkp;
                         continue;
                 }
-                        
+
                 if ( prelude_option_has_optlist(opt) ) {
                         rootopt = opt;
                         bkp = _prelude_generic_optlist;
                 }
-                
+
                 _prelude_internal_argv[_prelude_internal_argc++] = argv[i];
-                
+
                 if ( (i + 1) == *argc )
                         break;
-                
+
                 if ( prelude_option_get_has_arg(opt) == PRELUDE_OPTION_ARGUMENT_NONE )
                         continue;
-                
+
                 if ( *argv[i + 1] == '-' )
                         continue;
-                
+
                 _prelude_internal_argv[_prelude_internal_argc++] = argv[i + 1];
         }
 }
@@ -133,7 +133,7 @@ static void slice_arguments(int *argc, char **argv)
  * prelude_init:
  * @argc: Address of the argc parameter of your main() function.
  * @argv: Address of the argv parameter of your main() function.
- * 
+ *
  * Call this function before using any other Prelude functions in your applications.
  * It will initialize everything needed to operate the library and parses some standard
  * command line options. @argc and @argv are adjusted accordingly so your own code will
@@ -145,10 +145,10 @@ int prelude_init(int *argc, char **argv)
 {
         int ret;
         const char *env;
-        
+
         if ( libprelude_refcount++ > 0 )
                 return 0;
-        
+
         env = getenv("LIBPRELUDE_DEBUG");
         if ( env )
                 prelude_log_set_debug_level(atoi(env));
@@ -158,24 +158,24 @@ int prelude_init(int *argc, char **argv)
                 gnutls_global_set_log_level(atoi(env));
                 gnutls_global_set_log_function(tls_log_func);
         }
-        
+
         env = getenv("LIBPRELUDE_LOGFILE");
         if ( env )
                 prelude_log_set_logfile(env);
-        
+
         _prelude_thread_in_use();
-        
+
         if ( ! getcwd(_prelude_init_cwd, sizeof(_prelude_init_cwd)) )
                 return prelude_error_from_errno(errno);
-        
+
         ret = _prelude_timer_init();
         if ( ret < 0 )
                 return ret;
-                
+
         ret = prelude_thread_atfork(prepare_fork_cb, parent_fork_cb, child_fork_cb);
         if ( ret != 0 )
                 return prelude_error_from_errno(ret);
-        
+
         slice_arguments(argc, argv);
 
         return 0;
@@ -193,13 +193,13 @@ void prelude_deinit(void)
 {
         prelude_list_t *iter = NULL;
         prelude_plugin_generic_t *plugin;
-        
+
         if ( --libprelude_refcount != 0 )
                 return;
-        
+
         while ( (plugin = prelude_plugin_get_next(NULL, &iter)) )
                 prelude_plugin_unload(plugin);
-        
+
         _idmef_path_cache_destroy();
         prelude_option_destroy(NULL);
         gnutls_global_deinit();
@@ -228,15 +228,15 @@ const char *prelude_check_version(const char *req_version)
 
         if ( ! req_version )
                 return VERSION;
-        
+
         ret = sscanf(VERSION, "%d.%d.%d", &major, &minor, &micro);
         if ( ret != 3 )
                 return NULL;
-        
+
         ret = sscanf(req_version, "%d.%d.%d", &rq_major, &rq_minor, &rq_micro);
         if ( ret != 3 )
                 return NULL;
-        
+
         if ( major > rq_major
              || (major == rq_major && minor > rq_minor)
              || (major == rq_major && minor == rq_minor && micro > rq_micro)
