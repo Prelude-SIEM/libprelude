@@ -90,7 +90,7 @@ static void syslog_win32(int priority, const char *log)
 
 static void do_log_syslog(prelude_log_t level, const char *str)
 {
-        int slevel;
+        int slevel = LOG_INFO;
 
         if ( level == PRELUDE_LOG_CRIT )
                 slevel = LOG_CRIT;
