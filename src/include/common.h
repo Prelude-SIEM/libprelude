@@ -31,16 +31,34 @@
 #include "idmef.h"
 #include "prelude-msg.h"
 #include "prelude-inttypes.h"
+#include "prelude-log.h"
 #include <sys/types.h>
 
 #ifdef WIN32
 # include <winsock2.h>
 #else
 # include <sys/socket.h>
-# include <netinet/in.h> 
+# include <netinet/in.h>
 #endif
 
 #include <time.h>
+
+
+#define prelude_return_val_if_fail(cond, val) do {                               \
+        if ( ! (cond) ) {                                                        \
+                prelude_log(PRELUDE_LOG_CRIT, "assertion '%s' failed\n", #cond); \
+                return val;                                                      \
+        }                                                                        \
+} while(0)
+
+
+#define prelude_return_if_fail(cond) do {                                        \
+        if ( ! (cond) ) {                                                        \
+                prelude_log(PRELUDE_LOG_CRIT, "assertion '%s' failed\n", #cond); \
+                return;                                                          \
+        }                                                                        \
+} while(0)
+
 
 int prelude_parse_address(const char *str, char **addr, unsigned int *port);
 
@@ -73,5 +91,6 @@ int _idmef_message_assign_missing(prelude_client_t *client, idmef_message_t *msg
 int _prelude_load_file(const char *filename, unsigned char **fdata, size_t *outsize);
 
 void _prelude_unload_file(unsigned char *fdata, size_t size);
+
 
 #endif /* _LIBPRELUDE_COMMON_H */
