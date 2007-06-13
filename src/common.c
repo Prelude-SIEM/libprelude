@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002-2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2002-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann@prelude-ids.com>
 *
 * This file is part of the Prelude library.
@@ -75,19 +75,19 @@ static int find_absolute_path(const char *cwd, const char *file, char **path)
         char buf[PATH_MAX];
         const char *ptr;
         char *pathenv = strdup(getenv("PATH")), *old = pathenv;
-        
+
         while ( (ptr = strsep(&pathenv, ":")) ) {
 
                 ret = strcmp(ptr, ".");
                 if ( ret == 0 )
                         ptr = cwd;
-                        
+
                 snprintf(buf, sizeof(buf), "%s/%s", ptr, file);
 
                 ret = access(buf, F_OK);
                 if ( ret < 0 )
                         continue;
-                
+
                 *path = strdup(ptr);
                 free(old);
 
@@ -95,7 +95,7 @@ static int find_absolute_path(const char *cwd, const char *file, char **path)
         }
 
         free(old);
-        
+
         return -1;
 }
 
@@ -126,7 +126,7 @@ static int find_absolute_path(const char *cwd, const char *file, char **path)
  *
  * Returns: a pointer to the newly allocated memory.
  */
-void *_prelude_realloc(void *ptr, size_t size) 
+void *_prelude_realloc(void *ptr, size_t size)
 {
         if ( ptr == NULL )
                 return malloc(size);
@@ -148,32 +148,32 @@ void *_prelude_realloc(void *ptr, size_t size)
  *
  * Returns: 0 on success, -1 if an error occured.
  */
-int prelude_read_multiline(FILE *fd, unsigned int *line, char *buf, size_t size) 
+int prelude_read_multiline(FILE *fd, unsigned int *line, char *buf, size_t size)
 {
         size_t i;
-        
+
         if ( ! fgets(buf, size, fd) )
                 return prelude_error(PRELUDE_ERROR_EOF);
 
         (*line)++;
-         
+
         /*
          * We don't want to handle multilines in case this is a comment.
          */
         for ( i = 0; buf[i] != '\0' && isspace((int) buf[i]); i++ );
-                
+
         if ( buf[i] == '#' )
                 return prelude_read_multiline(fd, line, buf, size);
-        
+
         for ( i = strlen(buf) - 1; (buf[i] == ' ' || buf[i] == '\n' || buf[i] == '\r'); i-- ) {
                 buf[i] = 0;
                 if ( i == 0 )
                         break;
         }
-        
+
         if ( buf[i] == '\\' )
                 return prelude_read_multiline(fd, line, buf + i, size - i);
-              
+
         return 0;
 }
 
@@ -189,11 +189,11 @@ int prelude_read_multiline(FILE *fd, unsigned int *line, char *buf, size_t size)
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
-int prelude_read_multiline2(FILE *fd, unsigned int *line, prelude_string_t *out) 
+int prelude_read_multiline2(FILE *fd, unsigned int *line, prelude_string_t *out)
 {
         int ret;
         char buf[8192];
-        
+
         prelude_string_clear(out);
 
         do {
@@ -204,10 +204,10 @@ int prelude_read_multiline2(FILE *fd, unsigned int *line, prelude_string_t *out)
                 ret = prelude_string_cat(out, buf);
                 if ( ret < 0 )
                         break;
-                
+
                 if ( buf[strlen(buf) - 1 ] == '\n' )
                         break;
-                
+
         } while ( 1 );
 
         return 0;
@@ -225,28 +225,28 @@ int prelude_read_multiline2(FILE *fd, unsigned int *line, prelude_string_t *out)
  *
  * Returns: @val in the network bytes order.
  */
-uint64_t prelude_hton64(uint64_t val) 
+uint64_t prelude_hton64(uint64_t val)
 {
         uint64_t tmp;
-        
+
 #ifdef PRELUDE_WORDS_BIGENDIAN
         tmp = val;
 #else
-	union {
-		uint64_t val64;
-		uint32_t val32[2];
-	} combo_r, combo_w;
-		
-	combo_r.val64 = val;
-	
+        union {
+                uint64_t val64;
+                uint32_t val32[2];
+        } combo_r, combo_w;
+
+        combo_r.val64 = val;
+
         /*
          * Puts in network byte order
          */
-	combo_w.val32[0] = htonl(combo_r.val32[1]);
-	combo_w.val32[1] = htonl(combo_r.val32[0]);
-	tmp = combo_w.val64;
+        combo_w.val32[0] = htonl(combo_r.val32[1]);
+        combo_w.val32[1] = htonl(combo_r.val32[0]);
+        tmp = combo_w.val64;
 #endif
-        
+
         return tmp;
 }
 
@@ -257,22 +257,22 @@ uint32_t prelude_htonf(float fval)
                 float fval;
                 uint32_t ival;
         } val;
-                
+
         val.fval = fval;
 
         return htonl(val.ival);
 }
 
 
-static void normalize_path(char *path) 
+static void normalize_path(char *path)
 {
         int cnt;
         char *ptr, *end;
-        
+
         while ( (ptr = strstr(path, "./")) ) {
-                
+
                 end = ptr + 2;
-                
+
                 if ( ptr == path || *(ptr - 1) != '.' ) {
                         memmove(ptr, end, strlen(end) + 1);
                         continue;
@@ -280,10 +280,10 @@ static void normalize_path(char *path)
 
                 cnt = 0;
                 while ( ptr != path ) {
-                        
+
                         if ( *(ptr - 1) == '/' && ++cnt == 2 )
                                 break;
-                        
+
                         ptr--;
                 }
 
@@ -296,10 +296,10 @@ static void normalize_path(char *path)
 int _prelude_get_file_name_and_path(const char *str, char **name, char **path)
 {
         int ret = 0;
-	char *ptr, pathname[PATH_MAX] = { 0 };
-        
+        char *ptr, pathname[PATH_MAX] = { 0 };
+
         ptr = strrchr(str, '/');
-        if ( ! ptr ) {                
+        if ( ! ptr ) {
                 ret = find_absolute_path(_prelude_init_cwd, str, path);
                 if ( ret < 0 )
                         return ret;
@@ -314,27 +314,27 @@ int _prelude_get_file_name_and_path(const char *str, char **name, char **path)
                 if ( ret < 0 || ret >= sizeof(pathname) )
                         return prelude_error_from_errno(errno);
         }
-        
+
         strncat(pathname, str, sizeof(pathname) - strlen(pathname));
         normalize_path(pathname);
-                
+
         ret = access(pathname, F_OK);
         if ( ret < 0 )
                 return prelude_error_from_errno(errno);
 
         ptr = strrchr(pathname, '/');
-        
+
         *path = strndup(pathname, ptr - pathname);
         if ( ! *path )
                 return prelude_error_from_errno(errno);
-        
+
         *name = strdup(ptr + 1);
         if ( ! *name ) {
                 free(*path);
                 return prelude_error_from_errno(errno);
         }
-        
-	return 0;
+
+        return 0;
 }
 
 
@@ -348,9 +348,9 @@ int prelude_get_gmt_offset_from_time(const time_t *utc, long *gmtoff)
                 return prelude_error_from_errno(errno);
 
         local = timegm(&lt);
-        
+
         *gmtoff = local - *utc;
-        
+
         return 0;
 }
 
@@ -371,9 +371,9 @@ int prelude_get_gmt_offset_from_tm(struct tm *tm, long *gmtoff)
         local = mktime(tm);
         if ( local == (time_t) -1 )
                 return prelude_error_from_errno(errno);
-        
+
         *gmtoff = utc - mktime(tm);
-        
+
         return 0;
 }
 
@@ -394,7 +394,7 @@ time_t prelude_timegm(struct tm *tm)
 
 
 
-void *prelude_sockaddr_get_inaddr(struct sockaddr *sa) 
+void *prelude_sockaddr_get_inaddr(struct sockaddr *sa)
 {
         void *ret = NULL;
         union {
@@ -413,7 +413,7 @@ void *prelude_sockaddr_get_inaddr(struct sockaddr *sa)
         else if ( sa->sa_family == AF_INET6 )
                 ret = &val.sa6->sin6_addr;
 #endif
-        
+
         return ret;
 }
 
@@ -423,7 +423,7 @@ int prelude_parse_address(const char *str, char **addr, unsigned int *port)
 {
         char *input, *endptr = NULL;
         char *ptr, *port_ptr;
-                
+
         ptr = strchr(str, '[');
         if ( ! ptr ) {
                 input = strdup(str);
@@ -438,13 +438,13 @@ int prelude_parse_address(const char *str, char **addr, unsigned int *port)
                         free(input);
                         return -1;
                 }
-                
+
                 *ptr = 0;
                 port_ptr = ptr + 1;
         }
 
         *addr = input;
-        
+
         ptr = strrchr(port_ptr, ':');
         if ( ptr ) {
                 *port = strtoul(ptr + 1, &endptr, 10);
@@ -452,7 +452,7 @@ int prelude_parse_address(const char *str, char **addr, unsigned int *port)
                         free(input);
                         return -1;
                 }
-                
+
                 *ptr = 0;
         }
 
@@ -465,7 +465,7 @@ int prelude_parse_address(const char *str, char **addr, unsigned int *port)
  * keep this function consistant with idmef_impact_severity_t value.
  */
 prelude_msg_priority_t _idmef_impact_severity_to_msg_priority(idmef_impact_severity_t severity)
-{        
+{
         static const prelude_msg_priority_t priority[] = {
                 PRELUDE_MSG_PRIORITY_NONE, /* not bound                         */
                 PRELUDE_MSG_PRIORITY_LOW,  /* IDMEF_IMPACT_SEVERITY_LOW    -> 1 */
@@ -473,10 +473,10 @@ prelude_msg_priority_t _idmef_impact_severity_to_msg_priority(idmef_impact_sever
                 PRELUDE_MSG_PRIORITY_HIGH, /* IDMEF_IMPACT_SEVERITY_HIGH   -> 3 */
                 PRELUDE_MSG_PRIORITY_LOW   /* IDMEF_IMPACT_SEVERITY_INFO   -> 4 */
         };
-                
+
         if ( severity >= (sizeof(priority) / sizeof(*priority)) )
                 return PRELUDE_MSG_PRIORITY_NONE;
-        
+
         return priority[severity];
 }
 
@@ -489,10 +489,10 @@ int _idmef_message_assign_missing(prelude_client_t *client, idmef_message_t *msg
         idmef_alert_t *alert;
         idmef_heartbeat_t *heartbeat;
         prelude_ident_t *ident = prelude_client_get_unique_ident(client);
-        
+
         if ( idmef_message_get_type(msg) == IDMEF_MESSAGE_TYPE_ALERT ) {
                 alert = idmef_message_get_alert(msg);
-                
+
                 if ( ! idmef_alert_get_messageid(alert) )
                         idmef_alert_set_messageid(alert, get_message_ident(ident));
 
@@ -504,8 +504,8 @@ int _idmef_message_assign_missing(prelude_client_t *client, idmef_message_t *msg
 
                         idmef_alert_set_create_time(alert, time);
                 }
-                
-        } else {       
+
+        } else {
                 heartbeat = idmef_message_get_heartbeat(msg);
 
                 if ( ! idmef_heartbeat_get_messageid(heartbeat) )
@@ -530,11 +530,11 @@ int _prelude_load_file(const char *filename, unsigned char **fdata, size_t *outs
         int ret, fd;
         struct stat st;
         unsigned char *dataptr;
-                
+
         fd = open(filename, O_RDONLY);
         if ( fd < 0 )
                 return prelude_error_from_errno(errno);
-                
+
         ret = fstat(fd, &st);
         if ( ret < 0 ) {
                 close(fd);
@@ -545,9 +545,9 @@ int _prelude_load_file(const char *filename, unsigned char **fdata, size_t *outs
                 close(fd);
                 return prelude_error_verbose(prelude_error_code_from_errno(EINVAL), "could not load '%s': empty file", filename);
         }
-        
+
         *outsize = st.st_size;
-        
+
 #ifndef WIN32
         dataptr = *fdata = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
         if ( dataptr == MAP_FAILED ) {
@@ -560,30 +560,30 @@ int _prelude_load_file(const char *filename, unsigned char **fdata, size_t *outs
                 close(fd);
                 return prelude_error_from_errno(errno);
         }
-        
+
         _setmode(fd, O_BINARY);
-        
+
         do {
                 ssize_t len;
-                
+
                 len = read(fd, dataptr, st.st_size);
                 if ( len < 0 ) {
                         if ( errno == EINTR )
                                 continue;
-                                
+
                         close(fd);
                         free(*fdata);
-    
+
                         return prelude_error_from_errno(errno);
                 }
-                
+
                 dataptr += len;
                 st.st_size -= len;
         } while ( st.st_size > 0 );
 
 #endif
         close(fd);
-        
+
         return 0;
 }
 
