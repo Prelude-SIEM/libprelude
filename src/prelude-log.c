@@ -90,12 +90,29 @@ static void syslog_win32(int priority, const char *log)
 
 static void do_log_syslog(prelude_log_t level, const char *str)
 {
+        int slevel;
+
+        if ( level == PRELUDE_LOG_CRIT )
+                slevel = LOG_CRIT;
+
+        else if ( level == PRELUDE_LOG_ERR )
+                slevel = LOG_ERR;
+
+        else if ( level == PRELUDE_LOG_WARN )
+                slevel = LOG_WARNING;
+
+        else if ( level == PRELUDE_LOG_INFO )
+                slevel = LOG_INFO;
+
+        else if ( level >= PRELUDE_LOG_DEBUG )
+                slevel = LOG_DEBUG;
+
         while (*str == '\n' ) str++;
 
 #ifndef WIN32
-        syslog(level, "%s", str);
+        syslog(slevel, "%s", str);
 #else
-        syslog_win32(level, str);
+        syslog_win32(slevel, str);
 #endif
 }
 
@@ -107,6 +124,26 @@ static inline prelude_bool_t need_to_log(prelude_log_t level, prelude_log_t cur)
 }
 
 
+static const char *level_to_string(prelude_log_t level)
+{
+        if ( level >= PRELUDE_LOG_DEBUG )
+                return "DEBUG";
+
+        else if ( level == PRELUDE_LOG_ERR )
+                return "ERROR";
+
+        else if ( level == PRELUDE_LOG_INFO )
+                return "INFO";
+
+        else if ( level == PRELUDE_LOG_WARN )
+                return "WARNING";
+
+        else if ( level == PRELUDE_LOG_CRIT )
+                return "CRITICAL";
+
+        return "";
+}
+
 
 static void do_log_v(prelude_log_t level, const char *file,
                      const char *function, int line, const char *fmt, va_list ap)
@@ -114,10 +151,10 @@ static void do_log_v(prelude_log_t level, const char *file,
         ssize_t len;
         char buf[1024];
 
-        if ( level >= PRELUDE_LOG_DEBUG || level == PRELUDE_LOG_ERR ) {
+        if ( level == PRELUDE_LOG_CRIT || level == PRELUDE_LOG_ERR || level >= PRELUDE_LOG_DEBUG ) {
 
-                len = snprintf(buf, sizeof(buf), "%s%s:%s:%d: ", (global_prefix) ?
-                               global_prefix : "", file, function, line);
+                len = snprintf(buf, sizeof(buf), "** (process:%d): %s **: %s:%d: %s: ",
+                               getpid(), level_to_string(level), file, line, function);
                 if ( len < 0 || len >= sizeof(buf) )
                         return;
 
@@ -125,7 +162,7 @@ static void do_log_v(prelude_log_t level, const char *file,
         }
 
         else {
-                len = snprintf(buf, sizeof(buf), "%s", (global_prefix) ? global_prefix : "");
+                len = snprintf(buf, sizeof(buf), "** (process:%d): %s **: ", getpid(), level_to_string(level));
                 if ( len < 0 || len >= sizeof(buf) )
                         return;
 

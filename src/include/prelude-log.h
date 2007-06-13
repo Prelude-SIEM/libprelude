@@ -1,4 +1,5 @@
 /*****
+*
 * Copyright (C) 2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
@@ -51,10 +52,11 @@
 
 
 typedef enum {
-        PRELUDE_LOG_ERR  =  0,
-        PRELUDE_LOG_WARN =  1,
-        PRELUDE_LOG_INFO =  2,
-        PRELUDE_LOG_DEBUG = 3
+        PRELUDE_LOG_CRIT  = -1,
+        PRELUDE_LOG_ERR   =  0,
+        PRELUDE_LOG_WARN  =  1,
+        PRELUDE_LOG_INFO  =  2,
+        PRELUDE_LOG_DEBUG  = 3
 } prelude_log_t;
 
 
