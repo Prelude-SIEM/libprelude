@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2004-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.
@@ -52,7 +52,7 @@
 
 
 struct prelude_string {
-	prelude_list_t list;
+        prelude_list_t list;
 
         int flags;
         int refcount;
@@ -61,7 +61,7 @@ struct prelude_string {
                 char *rwbuf;
                 const char *robuf;
         } data;
-        
+
         size_t size;
         size_t index;
 };
@@ -129,20 +129,20 @@ int prelude_string_ncat(prelude_string_t *dst, const char *str, size_t len);
 
 int prelude_string_sprintf(prelude_string_t *string, const char *fmt, ...)
                            __attribute__ ((__format__ (__printf__, 2, 3)));
-                           
+
 int prelude_string_vprintf(prelude_string_t *string, const char *fmt, va_list ap)
                            __attribute__ ((__format__ (__printf__, 2, 0)));
 
 int prelude_string_compare(const prelude_string_t *str1, const prelude_string_t *str2);
-                                                         
-#define prelude_string_set_constant(string, str) 			\
-	prelude_string_set_ref_fast((string), (str), sizeof((str)) - 1)
 
-#define prelude_string_new_constant(string, str)	            	\
-	prelude_string_new_ref_fast((string), (str), sizeof((str)) - 1)
+#define prelude_string_set_constant(string, str)                         \
+        prelude_string_set_ref_fast((string), (str), sizeof((str)) - 1)
+
+#define prelude_string_new_constant(string, str)                         \
+        prelude_string_new_ref_fast((string), (str), sizeof((str)) - 1)
 
 #ifdef __cplusplus
  }
 #endif
-         
+
 #endif /* _LIBPRELUDE_PRELUDE_STRING_H */
