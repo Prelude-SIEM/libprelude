@@ -78,7 +78,7 @@ struct idmef_path {
         char name[MAX_NAME_LEN];
         int refcount;
         unsigned int depth;
-        
+
         idmef_path_element_t elem[MAX_DEPTH];
 };
 
@@ -137,7 +137,7 @@ static int initialize_path_cache_if_needed(void)
 {
         if ( cached_path )
                 return 0;
-                        
+
         return prelude_hash_new2(&cached_path, HASH_DEFAULT_SIZE, NULL, NULL, NULL, flush_cache_if_wanted);
 }
 
@@ -149,8 +149,8 @@ static int build_name(idmef_path_t *path)
         const char *name;
         char buf[16] = { 0 };
         idmef_class_id_t class;
-        
-        /* 
+
+        /*
          * we don't need prelude_thread_mutex_{,un}lock since the path has no name
          * it means that it is not in the cache and thus, not shared
          */
@@ -158,7 +158,7 @@ static int build_name(idmef_path_t *path)
         class = IDMEF_CLASS_ID_MESSAGE;
 
         for ( i = 0; i < path->depth; i++ ) {
-                
+
                 if ( i > 0 )
                         strncat(path->name, ".", sizeof(path->name) - strlen(path->name));
 
@@ -196,17 +196,17 @@ static int idmef_path_get_list_internal(idmef_value_t **value_list,
         prelude_list_t *tmp;
         idmef_value_t *value;
         unsigned int cnt = 0;
-        
+
         ret = idmef_value_new_list(value_list);
         if ( ret < 0 )
                 return ret;
-        
+
         prelude_list_for_each(list, tmp) {
                 value = NULL;
 
                 if ( parent_class >= 0 )
                         ret = idmef_path_get_internal(&value, path, depth, tmp, parent_class);
-                else {                        
+                else {
                         ret = idmef_value_new(&value, path->elem[depth - 1].value_type, tmp);
                         if ( ret == 0 ) {
                                 idmef_value_dont_have_own_data(value);
@@ -216,12 +216,12 @@ static int idmef_path_get_list_internal(idmef_value_t **value_list,
 
                 if ( ret == 0 )
                         continue;
-                
+
                 if ( ret < 0 ) {
                         idmef_value_destroy(*value_list);
                         return ret;
                 }
-                
+
                 ret = idmef_value_list_add(*value_list, value);
                 if ( ret < 0 ) {
                         idmef_value_destroy(*value_list);
@@ -233,7 +233,7 @@ static int idmef_path_get_list_internal(idmef_value_t **value_list,
 
         if ( ! cnt )
                 idmef_value_destroy(*value_list);
-        
+
         return cnt;
 }
 
@@ -247,20 +247,20 @@ static int idmef_path_get_nth_internal(idmef_value_t **value, const idmef_path_t
         prelude_list_t *tmp;
 
         if ( which >= 0 ) {
-                prelude_list_for_each(list, tmp) {                
+                prelude_list_for_each(list, tmp) {
                         if ( cnt++ == which )
                                 return idmef_path_get_internal(value, path, depth, tmp, parent_class);
                 }
-        } else {                
+        } else {
                 which = -which;
                 which--; /* With negative value, -1 is the base, translate to 0 */
-                
-                prelude_list_for_each_reversed(list, tmp) {                
+
+                prelude_list_for_each_reversed(list, tmp) {
                         if ( cnt++ == which )
                                 return idmef_path_get_internal(value, path, depth, tmp, parent_class);
                 }
         }
-        
+
         return 0;
 }
 
@@ -273,27 +273,27 @@ static int idmef_path_get_internal(idmef_value_t **value, const idmef_path_t *pa
         int ret, which;
         idmef_class_id_t child_class;
         idmef_class_child_id_t child_id;
-        
+
         if ( depth < path->depth ) {
 
                 child_id = path->elem[depth].position;
 
                 ret = idmef_class_get_child(parent, parent_class, child_id, &child);
-                if ( ret < 0 ) 
+                if ( ret < 0 )
                         return ret;
-                
+
                 if ( ! child )
                         return 0;
 
-                child_class = idmef_class_get_child_class(parent_class, child_id);                
+                child_class = idmef_class_get_child_class(parent_class, child_id);
                 which = path->elem[depth].index;
 
                 if ( which == INDEX_FORBIDDEN )
                         return idmef_path_get_internal(value, path, depth + 1, child, child_class);
-                
+
                 if ( which == INDEX_UNDEFINED || which == IDMEF_LIST_APPEND || which == IDMEF_LIST_PREPEND )
                         return idmef_path_get_list_internal(value, path, depth + 1, child, child_class);
-                
+
                 return idmef_path_get_nth_internal(value, path, depth + 1, child, child_class, which);
         }
 
@@ -305,7 +305,7 @@ static int idmef_path_get_internal(idmef_value_t **value, const idmef_path_t *pa
         ret = (ret = idmef_value_new_class(value, parent_class, parent) < 0) ? ret : 1;
         if ( ret == 1 )
                 idmef_class_ref(parent_class, parent);
-        
+
         return ret;
 }
 
@@ -319,7 +319,7 @@ static void delete_listed_child(void *parent, idmef_class_id_t class, const idme
         ret = idmef_class_get_child(parent, class, elem->position, (void *) &head);
         if ( ret < 0 )
                 return;
-         
+
          prelude_list_for_each_safe(head, tmp, bkp) {
                  obj = prelude_linked_object_get_object(tmp);
                  idmef_class_destroy(idmef_class_get_child_class(class, elem->position), obj);
@@ -335,13 +335,13 @@ static int _idmef_path_set(const idmef_path_t *path, idmef_message_t *message, i
         idmef_value_type_id_t tid;
         const idmef_path_element_t *elem;
         idmef_class_id_t class, parent_class;
-        
+
         ptr = message;
         parent_class = class = IDMEF_CLASS_ID_MESSAGE;
-        
+
         for ( i = 0; i < path->depth; i++ ) {
                 elem = &path->elem[i];
-                
+
                 index = elem->index;
 
                 /*
@@ -360,15 +360,15 @@ static int _idmef_path_set(const idmef_path_t *path, idmef_message_t *message, i
                                 delete_listed_child(ptr, class, elem);
                         }
                 }
-                
+
                 ret = idmef_class_new_child(ptr, class, elem->position, index, &child);
                 if ( ret < 0 )
                         return ret;
-                
+
                 ptr = child;
                 parent_class = class;
 
-                class = idmef_class_get_child_class(class, elem->position);                
+                class = idmef_class_get_child_class(class, elem->position);
                 assert( ! (class < 0 && i < path->depth - 1) );
         }
 
@@ -377,7 +377,7 @@ static int _idmef_path_set(const idmef_path_t *path, idmef_message_t *message, i
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "IDMEF path copy of type '%s' to '%s' is forbidden",
                                              idmef_value_type_to_string(idmef_value_get_type(value)),
                                              idmef_value_type_to_string(tid));
-        
+
         return idmef_value_get(value, ptr);
 }
 
@@ -385,7 +385,7 @@ static int _idmef_path_set(const idmef_path_t *path, idmef_message_t *message, i
 static int unroll_listed_value(idmef_value_t *value, void *extra)
 {
         value_list_t *val = extra;
-        
+
         if ( idmef_value_is_list(value) )
                 return do_idmef_value_iterate(value, extra);
 
@@ -440,23 +440,23 @@ int idmef_path_set(const idmef_path_t *path, idmef_message_t *message, idmef_val
 {
         prelude_bool_t delete_list = TRUE;
         const idmef_path_element_t *elem = &path->elem[path->depth - 1];
-        
+
         /*
          * Allow raw list copy (example: alert.source = alert.source,
          * alert.source(>>) = alert.source, alert.source(<<) = alert.source.
          */
         if ( idmef_value_is_list(value) ) {
                 value_list_t vl;
-                
+
                 vl.path = path;
                 vl.message = message;
                 vl.delete_list = TRUE;
                 vl.reversed = (elem->index == IDMEF_LIST_PREPEND) ? TRUE : FALSE;
-                                        
+
                 return do_idmef_value_iterate(value, &vl);
         }
 
-                
+
         return _idmef_path_set(path, message, value, &delete_list);
 }
 
@@ -479,20 +479,20 @@ static int idmef_path_create(idmef_path_t **path, const char *buffer)
                 prelude_thread_mutex_unlock(&cached_path_mutex);
                 return ret;
         }
-        
+
         *path = prelude_hash_get(cached_path, buffer);
         prelude_thread_mutex_unlock(&cached_path_mutex);
 
         if ( *path )
                 return 1;
-        
-        *path = calloc(1, sizeof(**path));        
+
+        *path = calloc(1, sizeof(**path));
         if ( ! *path )
                 return prelude_error_from_errno(errno);
 
         (*path)->refcount = 1;
         prelude_thread_mutex_init(&(*path)->mutex, NULL);
-        
+
         return 0;
 }
 
@@ -503,19 +503,19 @@ static int idmef_path_create(idmef_path_t **path, const char *buffer)
  * return 0 if reading an object.
  * return -1 if there is no more things to read.
  */
-static int parse_path_token(char **sptr, char **out) 
+static int parse_path_token(char **sptr, char **out)
 {
         char *buf = *sptr, *ptr;
 
-        if ( *buf == '\0' ) 
+        if ( *buf == '\0' )
                 *buf++ = '.';
-        
+
         *out = buf;
-        
+
         ptr = strchr(buf, '.');
-        if ( ! ptr ) 
+        if ( ! ptr )
                 return -1;
-        
+
         *ptr = '\0';
         *sptr = ptr;
 
@@ -534,7 +534,7 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
         idmef_class_child_id_t child = 0;
         idmef_class_id_t class, prev_class = 0;
         idmef_value_type_id_t vtype;
-        
+
         len = strlen(buffer) + 1;
         if ( len >= sizeof(path->name) )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_LENGTH);
@@ -544,28 +544,28 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
         ptr = NULL;
         endptr = path->name;
         class = IDMEF_CLASS_ID_MESSAGE;
-        
+
         do {
                 index = INDEX_UNDEFINED;
                 is_last = parse_path_token(&endptr, &ptr);
-                                
+
                 ptr2 = strchr(ptr, '(');
                 if ( ptr2 ) {
                         *ptr2 = '\0';
                         if ( strncmp(ptr2 + 1, "<<", 2) == 0 )
                                 index = IDMEF_LIST_PREPEND;
-                        
+
                         else if ( strncmp(ptr2 + 1, ">>", 2) == 0 )
                                 index = IDMEF_LIST_APPEND;
 
                         else if ( strncmp(ptr2 + 1, "*", 1) != 0 )
                                 index = strtol(ptr2 + 1, NULL, 0);
                 }
-                
+
                 child = idmef_class_find_child(class, ptr);
-                if ( child < 0 ) 
+                if ( child < 0 )
                         return child;
-                
+
                 path->elem[depth].position = child;
 
                 if ( ptr2 )
@@ -573,17 +573,17 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
 
                 if ( index == INDEX_UNDEFINED )
                         path->elem[depth].index = idmef_class_is_child_list(class, child) ? INDEX_UNDEFINED : INDEX_FORBIDDEN;
-                else {                        
+                else {
                         if ( ! idmef_class_is_child_list(class, child) )
                                 return prelude_error_verbose(PRELUDE_ERROR_IDMEF_PATH_INDEX_FORBIDDEN,
                                                              "Invalid IDMEF path element '%s': indexing not supported", ptr);
-                        
+
                         path->elem[depth].index = index;
                 }
 
                 prev_class = class;
 
-                /* The last object may not be a structure */                
+                /* The last object may not be a structure */
                 vtype = path->elem[depth].value_type = idmef_class_get_child_value_type(class, child);
                 if ( vtype != IDMEF_VALUE_TYPE_CLASS && vtype != IDMEF_VALUE_TYPE_ENUM && ! is_last )
                         return prelude_error_verbose(PRELUDE_ERROR_GENERIC,
@@ -593,11 +593,11 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
                 class = path->elem[depth].class = idmef_class_get_child_class(class, child);
                 if ( ++depth == MAX_DEPTH )
                         return prelude_error(PRELUDE_ERROR_IDMEF_PATH_DEPTH);
-                
+
         } while ( ! is_last );
-        
+
         path->depth = depth;
-        
+
         return 0;
 }
 
@@ -616,16 +616,16 @@ static int idmef_path_parse_new(idmef_path_t *path, const char *buffer)
 int idmef_path_new_fast(idmef_path_t **path, const char *buffer)
 {
         int ret;
-        
+
         ret = idmef_path_create(path, buffer);
         if ( ret < 0 )
                 return ret;
-        
+
         if ( ret == 1 ) {
                 idmef_path_ref(*path);
                 return 0;
         }
-        
+
         if ( *buffer == '\0' )
                 (*path)->elem[0].class = IDMEF_CLASS_ID_MESSAGE;
         else {
@@ -638,15 +638,15 @@ int idmef_path_new_fast(idmef_path_t **path, const char *buffer)
         }
 
         prelude_thread_mutex_lock(&cached_path_mutex);
-        
+
         if ( prelude_hash_set(cached_path, (*path)->name, *path) < 0 ) {
-                
+
                 prelude_thread_mutex_destroy(&(*path)->mutex);
                 free(*path);
                 prelude_thread_mutex_unlock(&cached_path_mutex);
                 return ret;
         }
-        
+
         prelude_thread_mutex_unlock(&cached_path_mutex);
 
         idmef_path_ref(*path);
@@ -696,7 +696,7 @@ int idmef_path_new(idmef_path_t **path, const char *format, ...)
 {
         int ret;
         va_list args;
-        
+
         va_start(args, format);
         ret = idmef_path_new_v(path, format, args);
         va_end(args);
@@ -720,10 +720,10 @@ idmef_class_id_t idmef_path_get_class(const idmef_path_t *path, int depth)
 {
         if ( depth < 0 )
                 depth = path->depth - 1;
-        
+
         if ( path->depth == 0 && depth < 0 )
                 return IDMEF_CLASS_ID_MESSAGE;
-        
+
         return path->elem[depth].class;
 }
 
@@ -747,7 +747,7 @@ idmef_value_type_id_t idmef_path_get_value_type(const idmef_path_t *path, int de
 
         if ( path->depth == 0 && depth < 0 )
                 return IDMEF_VALUE_TYPE_CLASS;
-                
+
         return path->elem[depth].value_type;
 }
 
@@ -756,9 +756,9 @@ idmef_value_type_id_t idmef_path_get_value_type(const idmef_path_t *path, int de
 static inline int invalidate(idmef_path_t *path)
 {
         int ret;
-                
+
         prelude_thread_mutex_lock(&path->mutex);
-        
+
         if ( path->refcount == 1 ) {
                 prelude_thread_mutex_unlock(&path->mutex);
                 return 0; /* not cached */
@@ -789,7 +789,7 @@ static inline int invalidate(idmef_path_t *path)
                 prelude_thread_mutex_lock(&cached_path_mutex);
                 ret = prelude_hash_elem_destroy(cached_path, path->name);
                 prelude_thread_mutex_unlock(&cached_path_mutex);
-                
+
                 if ( ret == 0 )
                         path->refcount--;  /* path was present in a hash */
                 else {
@@ -819,22 +819,22 @@ static inline int invalidate(idmef_path_t *path)
 int idmef_path_set_index(idmef_path_t *path, unsigned int depth, unsigned int index)
 {
         int ret;
-        
+
         if ( depth > MAX_DEPTH || depth > path->depth )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_DEPTH);
-        
+
         if ( index == INDEX_FORBIDDEN )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_INDEX_RESERVED);
-        
+
         if ( path->elem[depth].index == INDEX_FORBIDDEN )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_INDEX_FORBIDDEN);
 
         ret = invalidate(path);
-        if ( ret < 0 ) 
+        if ( ret < 0 )
                 return ret;
 
         path->elem[depth].index = index;
-        
+
         ret = build_name(path);
         if ( ret < 0 )
                 return ret;
@@ -874,16 +874,16 @@ int idmef_path_undefine_index(idmef_path_t *path, unsigned int depth)
  * Returns: The element index, or a negative value if an error occured.
  */
 int idmef_path_get_index(const idmef_path_t *path, unsigned int depth)
-{        
+{
         if ( depth > (path->depth - 1) )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_DEPTH);
-        
+
         if ( path->elem[depth].index == INDEX_UNDEFINED )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_INDEX_UNDEFINED);
-        
+
         if ( path->elem[depth].index == INDEX_FORBIDDEN )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_INDEX_FORBIDDEN);
-        
+
         return path->elem[depth].index;
 }
 
@@ -908,23 +908,23 @@ int idmef_path_make_child(idmef_path_t *path, const char *child_name, unsigned i
         char buf[16] = { 0 };
         idmef_class_id_t class;
         idmef_class_child_id_t child;
-        
+
         if ( path->depth > MAX_DEPTH - 1 )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_DEPTH);
 
         class = idmef_path_get_class(path, -1);
-        
-        child = idmef_class_find_child(class, child_name);        
+
+        child = idmef_class_find_child(class, child_name);
         if ( child < 0 )
                 return child;
 
         ret = invalidate(path);
         if ( ret < 0 )
                 return ret;
-        
+
         if ( index >= 0 && idmef_class_is_child_list(class, child) )
              snprintf(buf, sizeof(buf), "(%d)", index);
-        
+
         snprintf(path->name + strlen(path->name), sizeof(path->name) - strlen(path->name), "%s%s%s",
                  (path->depth > 0) ? "." : "", child_name, buf);
 
@@ -936,9 +936,9 @@ int idmef_path_make_child(idmef_path_t *path, const char *child_name, unsigned i
         else
                 path->elem[path->depth - 1].index = INDEX_FORBIDDEN;
 
-        path->elem[path->depth - 1].class = idmef_class_get_child_class(class, child);        
+        path->elem[path->depth - 1].class = idmef_class_get_child_class(class, child);
         path->elem[path->depth - 1].value_type = idmef_class_get_child_value_type(class, child);
-             
+
         return 0;
 }
 
@@ -956,7 +956,7 @@ int idmef_path_make_parent(idmef_path_t *path)
 {
         int ret;
         char *ptr;
-        
+
         if ( path->depth == 0 )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_PARENT_ROOT);
 
@@ -970,7 +970,7 @@ int idmef_path_make_parent(idmef_path_t *path)
                 ptr = strrchr(path->name, '.');
                 if ( ! ptr )
                         ptr = path->name; /* top-level path */
-                
+
                 *ptr = '\0';
         }
 
@@ -986,14 +986,14 @@ int idmef_path_make_parent(idmef_path_t *path)
  * Destroys the provided @path object.
  */
 void idmef_path_destroy(idmef_path_t *path)
-{        
+{
         prelude_thread_mutex_lock(&path->mutex);
-        
+
         if ( --path->refcount ) {
                 prelude_thread_mutex_unlock(&path->mutex);
                 return;
         }
-        
+
         prelude_thread_mutex_unlock(&path->mutex);
         prelude_thread_mutex_destroy(&path->mutex);
         free(path);
@@ -1014,12 +1014,12 @@ void idmef_path_destroy(idmef_path_t *path)
 int idmef_path_ncompare(const idmef_path_t *p1, const idmef_path_t *p2, unsigned int depth)
 {
         unsigned int i;
-        
+
         for ( i = 0; i < depth; i++ ) {
-                
+
                 if ( p1->elem[i].index != p2->elem[i].index )
                         return -1;
-                
+
                 if ( p1->elem[i].position - p2->elem[i].position )
                         return -1;
         }
@@ -1067,9 +1067,9 @@ int idmef_path_clone(const idmef_path_t *src, idmef_path_t **dst)
         (*dst)->refcount = 1;
         (*dst)->depth = src->depth;
 
-        strncpy((*dst)->name, src->name, sizeof(src->name)); 
+        strncpy((*dst)->name, src->name, sizeof(src->name));
         memcpy((*dst)->elem, src->elem, src->depth * sizeof(idmef_path_element_t));
-        
+
         prelude_thread_mutex_init(&((*dst)->mutex), NULL);
 
         return 0;
@@ -1089,7 +1089,7 @@ int idmef_path_clone(const idmef_path_t *src, idmef_path_t **dst)
  * Returns: The provided @path is returned.
  */
 idmef_path_t *idmef_path_ref(idmef_path_t *path)
-{        
+{
         prelude_thread_mutex_lock(&path->mutex);
         path->refcount++;
         prelude_thread_mutex_unlock(&path->mutex);
@@ -1111,7 +1111,7 @@ idmef_path_t *idmef_path_ref(idmef_path_t *path)
 prelude_bool_t idmef_path_is_ambiguous(const idmef_path_t *path)
 {
         int i;
-        
+
         for ( i = 0; i < path->depth; i++ ) {
                 if ( path->elem[i].index == INDEX_UNDEFINED )
                         return TRUE;
@@ -1136,7 +1136,7 @@ int idmef_path_has_lists(const idmef_path_t *path)
                 if ( path->elem[i].index != INDEX_FORBIDDEN )
                         ret++;
         }
-        
+
         return ret;
 }
 
@@ -1183,17 +1183,17 @@ const char *idmef_path_get_name(const idmef_path_t *path, int depth)
 {
         const char *ret;
         const idmef_path_element_t *elem;
-        
+
         if ( depth < 0 )
                 return path->name;
-        
+
         elem = &path->elem[depth];
-        
+
         if ( elem->class < 0 || elem->value_type == IDMEF_VALUE_TYPE_ENUM )
                 ret = idmef_class_get_child_name(path->elem[depth - 1].class, elem->position);
         else
                 ret = idmef_class_get_name(elem->class);
-        
+
         return ret;
 }
 
@@ -1212,7 +1212,7 @@ void _idmef_path_cache_lock(void)
 void _idmef_path_cache_reinit(void)
 {
         prelude_thread_mutex_init(&cached_path_mutex, NULL);
-        
+
         if ( cached_path )
                 prelude_hash_iterate(cached_path, path_reinit_cb);
 }
