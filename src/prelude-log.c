@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001,2002,2003,2004,2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2001-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.
@@ -54,7 +54,7 @@ static void (*global_log_cb)(prelude_log_t level, const char *str) = do_log_prin
 
 
 static inline FILE *get_out_fd(prelude_log_t level)
-{        
+{
         return (level < PRELUDE_LOG_INFO) ? stderr : stdout;
 }
 
@@ -113,14 +113,14 @@ static void do_log_v(prelude_log_t level, const char *file,
 {
         ssize_t len;
         char buf[1024];
-        
+
         if ( level >= PRELUDE_LOG_DEBUG || level == PRELUDE_LOG_ERR ) {
 
                 len = snprintf(buf, sizeof(buf), "%s%s:%s:%d: ", (global_prefix) ?
                                global_prefix : "", file, function, line);
                 if ( len < 0 || len >= sizeof(buf) )
                         return;
-                
+
                 vsnprintf(buf + len, sizeof(buf) - len, fmt, ap);
         }
 
@@ -128,13 +128,13 @@ static void do_log_v(prelude_log_t level, const char *file,
                 len = snprintf(buf, sizeof(buf), "%s", (global_prefix) ? global_prefix : "");
                 if ( len < 0 || len >= sizeof(buf) )
                         return;
-                
+
                 vsnprintf(buf + len, sizeof(buf) - len, fmt, ap);
         }
 
         if ( need_to_log(level, log_level) )
                 global_log_cb(level, buf);
-        
+
         else if ( need_to_log(level, debug_level) ) {
                 if ( debug_logfile )
                         fprintf(debug_logfile, "%s", buf);
@@ -146,11 +146,11 @@ static void do_log_v(prelude_log_t level, const char *file,
 
 
 void _prelude_log_v(prelude_log_t level, const char *file,
-                    const char *function, int line, const char *fmt, va_list ap) 
+                    const char *function, int line, const char *fmt, va_list ap)
 {
         if ( ! need_to_log(level, log_level) && ! need_to_log(level, debug_level) )
                 return;
-        
+
         do_log_v(level, file, function, line, fmt, ap);
 }
 
@@ -169,15 +169,15 @@ void _prelude_log_v(prelude_log_t level, const char *file,
  * Use the #log macro defined in prelude-log.h
  */
 void _prelude_log(prelude_log_t level, const char *file,
-                  const char *function, int line, const char *fmt, ...) 
+                  const char *function, int line, const char *fmt, ...)
 {
         va_list ap;
-        
+
         if ( ! need_to_log(level, log_level) && ! need_to_log(level, debug_level) )
                 return;
-        
+
         va_start(ap, fmt);
-        do_log_v(level, file, function, line, fmt, ap);        
+        do_log_v(level, file, function, line, fmt, ap);
         va_end(ap);
 }
 
@@ -187,7 +187,7 @@ void _prelude_log(prelude_log_t level, const char *file,
  * prelude_log_set_flags:
  * @flags:
  */
-void prelude_log_set_flags(prelude_log_flags_t flags) 
+void prelude_log_set_flags(prelude_log_flags_t flags)
 {
         if ( flags & PRELUDE_LOG_FLAGS_QUIET )
                 log_level = PRELUDE_LOG_WARN;
@@ -196,7 +196,7 @@ void prelude_log_set_flags(prelude_log_flags_t flags)
                 global_log_cb = do_log_syslog;
         else
                 global_log_cb = do_log_print;
-        
+
         log_flags = flags;
 }
 
@@ -228,14 +228,14 @@ void prelude_log_set_debug_level(int level)
  * Tell the Prelude standard logger to add @prefix before logging
  * a line.
  */
-void prelude_log_set_prefix(char *prefix) 
+void prelude_log_set_prefix(char *prefix)
 {
         global_prefix = prefix;
 }
 
 
 
-char *prelude_log_get_prefix(void) 
+char *prelude_log_get_prefix(void)
 {
         return global_prefix;
 }
@@ -263,12 +263,12 @@ int prelude_log_set_logfile(const char *filename)
                 debug_logfile = NULL;
         }
 
-        else {        
+        else {
                 debug_logfile = fopen(filename, "a");
                 if ( ! debug_logfile )
                         return prelude_error_from_errno(errno);
         }
-        
+
         return 0;
 }
 
@@ -284,7 +284,7 @@ void prelude_log(prelude_log_t level, const char *fmt, ...)
         _prelude_log_v(level, "", "", 0, fmt, ap);
         va_end(ap);
 }
-         
+
 
 void prelude_log_debug(prelude_log_t level, const char *fmt, ...)
 {

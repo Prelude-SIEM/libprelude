@@ -1,12 +1,11 @@
 /*****
-*
-* Copyright (C) 2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.
 *
 * This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by 
+* it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2, or (at your option)
 * any later version.
 *
@@ -65,37 +64,37 @@ typedef enum {
 } prelude_log_flags_t;
 
 
-         
+
 void _prelude_log_v(prelude_log_t level, const char *file,
-                    const char *function, int line, const char *fmt, va_list ap) 
+                    const char *function, int line, const char *fmt, va_list ap)
                     __attribute__ ((__format__ (__printf__, 5, 0)));
 
 void _prelude_log(prelude_log_t level, const char *file,
-                  const char *function, int line, const char *fmt, ...) 
+                  const char *function, int line, const char *fmt, ...)
                   __attribute__ ((__format__ (__printf__, 5, 6)));
 
-         
+
 #ifdef HAVE_VARIADIC_MACROS
-         
+
 #define prelude_log(level, ...) \
-        _prelude_log(level, __FILE__, __PRELUDE_FUNC__, __LINE__, __VA_ARGS__) 
-        
+        _prelude_log(level, __FILE__, __PRELUDE_FUNC__, __LINE__, __VA_ARGS__)
+
 #define prelude_log_debug(level, ...) \
         _prelude_log(PRELUDE_LOG_DEBUG + level, __FILE__, __PRELUDE_FUNC__, __LINE__, __VA_ARGS__)
 #else
 
-void prelude_log(prelude_log_t level, const char *fmt, ...) 
+void prelude_log(prelude_log_t level, const char *fmt, ...)
                  __attribute__ ((__format__ (__printf__, 2, 3)));
-                 
-void prelude_log_debug(prelude_log_t level, const char *fmt, ...) 
+
+void prelude_log_debug(prelude_log_t level, const char *fmt, ...)
                        __attribute__ ((__format__ (__printf__, 2, 3)));
 
 #endif
 
-         
+
 #define prelude_log_v(level, fmt, ap) \
         _prelude_log_v(level, __FILE__, __PRELUDE_FUNC__, __LINE__, fmt, ap)
-         
+
 #define prelude_log_debug_v(level, fmt, ap) \
         _prelude_log_v(PRELUDE_LOG_DEBUG + level, __FILE__, __PRELUDE_FUNC__, __LINE__, fmt, ap)
 
@@ -119,5 +118,5 @@ int prelude_log_set_logfile(const char *filename);
 #ifdef __cplusplus
  }
 #endif
-         
+
 #endif /* _LIBPRELUDE_PRELUDE_LOG_H */
