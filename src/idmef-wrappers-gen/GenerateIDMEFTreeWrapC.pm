@@ -80,6 +80,7 @@ sub     header
 
 #include \"idmef-tree-wrap.h\"
 #include \"libmissing.h\"
+#include \"common.h\"
 
 #ifdef WIN32
 # undef interface
@@ -119,6 +120,8 @@ sub     header
 
 static int prelude_string_copy(const prelude_string_t *src, prelude_string_t *dst)
 {
+        prelude_return_val_if_fail(src && dst, -1);
+
         if ( ! prelude_string_is_empty(src) )
                return prelude_string_copy_dup(src, dst);
 
@@ -312,6 +315,7 @@ int _idmef_$struct->{short_typename}_get_child(void *p, idmef_class_child_id_t c
 \{
         $struct->{typename} *ptr = p;
 
+        prelude_return_val_if_fail(p, -1);
         *childptr = NULL;
 
         switch ( child ) \{
@@ -426,6 +430,8 @@ int _idmef_$struct->{short_typename}_new_child(void *p, idmef_class_child_id_t c
 \{
         $struct->{typename} *ptr = p;
 
+        prelude_return_val_if_fail(p, -1);
+
         switch ( child ) \{
 ");
 
@@ -515,6 +521,8 @@ sub     struct_copy
 int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct->{typename} *dst)
 \{
         int ret;
+
+        prelude_return_val_if_fail(src && dst, -1);
 
         ret = 0;
 ");
@@ -620,6 +628,8 @@ sub     struct_clone
 int idmef_$struct->{short_typename}_clone($struct->{typename} *src, $struct->{typename} **dst)
 \{
         int ret;
+
+        prelude_return_val_if_fail(src, -1);
 
         ret = idmef_$struct->{short_typename}_new(dst);
         if ( ret < 0 )
@@ -763,6 +773,7 @@ sub     struct_destroy_internal
     $self->output("
 static void idmef_$struct->{short_typename}_destroy_internal($struct->{typename} *ptr)
 \{
+        prelude_return_if_fail(ptr);
 ");
 
     $self->output("
@@ -866,6 +877,8 @@ sub     struct_destroy
         $self->output("
 void idmef_$struct->{short_typename}_destroy($struct->{typename} *ptr)
 \{
+        prelude_return_if_fail(ptr);
+
         if ( --ptr->refcount )
                 return;
 
@@ -878,6 +891,8 @@ void idmef_$struct->{short_typename}_destroy($struct->{typename} *ptr)
         $self->output("
 void idmef_$struct->{short_typename}_destroy($struct->{typename} *ptr)
 \{
+        prelude_return_if_fail(ptr);
+
         idmef_$struct->{short_typename}_destroy_internal(ptr);
         free(ptr);
 \}
@@ -905,6 +920,7 @@ sub     struct_ref
  */
 $struct->{typename} *idmef_$struct->{short_typename}_ref($struct->{typename} *ptr)
 \{
+        prelude_return_val_if_fail(ptr, NULL);
         ptr->refcount++;
 
         return ptr;
@@ -951,7 +967,9 @@ sub     struct_field_normal
  * Returns: a pointer to a $field->{typename} object, or NULL if the children object is not set.
  */
 $field->{typename} ${ptr}idmef_$struct->{short_typename}_get_${name}($struct->{typename} *ptr)
-\{");
+\{
+        prelude_return_val_if_fail(ptr, 0); /* FIXME */
+");
 
     if ( $field->{metatype} & &METATYPE_OPTIONAL_INT ) {
         $self->output("
@@ -994,6 +1012,7 @@ $field->{typename} ${ptr}idmef_$struct->{short_typename}_get_${name}($struct->{t
         $self->output("
 void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} $field_name)
 \{
+        prelude_return_if_fail(ptr);
         ptr->$field->{name} = $field_name;
         ptr->$field->{name}_is_set = 1;
 \}
@@ -1001,6 +1020,7 @@ void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr
 
 void idmef_$struct->{short_typename}_unset_$field->{name}($struct->{typename} *ptr)
 \{
+        prelude_return_if_fail(ptr);
         ptr->$field->{name}_is_set = 0;
 \}
 
@@ -1015,6 +1035,8 @@ void idmef_$struct->{short_typename}_unset_$field->{name}($struct->{typename} *p
             $self->output("
 void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} *$field_name)
 \{
+        prelude_return_if_fail(ptr);
+
         if ( ptr->$field->{name} )
                 ${destroy_func}(ptr->$field->{name});
 
@@ -1029,6 +1051,8 @@ void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr
             $self->output("
 void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} *$field_name)
 \{
+        prelude_return_if_fail(ptr);
+
         ${destroy_internal_func}(&ptr->$field->{name});
         if ( $field_name ) {
                 memcpy(&ptr->$field->{name}, $field_name, sizeof(ptr->$field->{name}));
@@ -1042,10 +1066,14 @@ void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr
             $self->output("
 void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} $field_name)
 \{
+        prelude_return_if_fail(ptr);
+
         if ( ptr->$field->{name} )
                 free(ptr->$field->{name});
 
         ptr->$field->{name} = malloc(sizeof (*ptr->$field->{name}));
+        prelude_return_if_fail(ptr->$field->{name});
+
         *ptr->$field->{name} = $field_name;
 \}
 ");
@@ -1054,6 +1082,7 @@ void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr
             $self->output("
 void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr, $field->{typename} $field_name)
 \{
+        prelude_return_if_fail(ptr);
         ptr->$field->{name} = $field_name;
 \}
 ");
@@ -1076,7 +1105,10 @@ void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr
  * Returns: 0 on success, or a negative value if an error occured.
  */
 int idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr, $field->{typename} **ret)
-\{");
+\{
+        prelude_return_val_if_fail(ptr, -1);
+
+");
     if ( $field->{metatype} & &METATYPE_OPTIONAL_INT ) {
         $self->output("
         ptr->$field->{name}_is_set = 1;
@@ -1160,6 +1192,7 @@ sub     struct_field_union
  */
 $field->{typename} idmef_$struct->{short_typename}_get_$field->{var}($struct->{typename} *ptr)
 \{
+        prelude_return_val_if_fail(ptr, -1);
         return ptr->$field->{var};
 \}
 ");
@@ -1176,6 +1209,7 @@ $field->{typename} idmef_$struct->{short_typename}_get_$field->{var}($struct->{t
  */
 $member->{typename} *idmef_$struct->{short_typename}_get_$member->{name}($struct->{typename} *ptr)
 \{
+        prelude_return_val_if_fail(ptr, NULL);
         return (ptr->$field->{var} == $member->{value}) ? ptr->$field->{name}.$member->{name} : NULL;
 \}
 "
@@ -1193,6 +1227,8 @@ $member->{typename} *idmef_$struct->{short_typename}_get_$member->{name}($struct
  */
 void idmef_$struct->{short_typename}_set_$member->{name}($struct->{typename} *ptr, $member->{typename} *$member->{name})
 \{
+        prelude_return_if_fail(ptr);
+
         switch ( ptr->$field->{var} ) \{
 ");
         foreach my $member ( @{ $field->{member_list} } ) {
@@ -1227,6 +1263,8 @@ void idmef_$struct->{short_typename}_set_$member->{name}($struct->{typename} *pt
 int idmef_$struct->{short_typename}_new_$member->{name}($struct->{typename} *ptr, $member->{typename} **ret)
 \{
         int retval;
+
+        prelude_return_val_if_fail(ptr, -1);
 
         switch ( ptr->$field->{var} ) \{
 ");
@@ -1291,6 +1329,8 @@ $field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name
 \{
         prelude_list_t *tmp = (object) ? &object->list : NULL;
 
+        prelude_return_val_if_fail(ptr, NULL);
+
         prelude_list_for_each_continue(&ptr->$field->{name}, tmp)
                 return prelude_list_entry(tmp, $field->{typename}, list);
 
@@ -1311,6 +1351,8 @@ $field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name
  */
 void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object, int pos)
 \{
+        prelude_return_if_fail(ptr && object);
+
         if ( ! prelude_list_is_empty(&object->list) )
                 prelude_list_del_init(&object->list);
 
@@ -1336,6 +1378,8 @@ void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename
 int idmef_$struct->{short_typename}_new_$field->{short_name}($struct->{typename} *ptr, $field->{typename} **ret, int pos)
 \{
         int retval;
+
+        prelude_return_val_if_fail(ptr, -1);
 
         retval = $new_field_function;
         if ( retval < 0 )
@@ -1431,6 +1475,8 @@ $enum->{typename} idmef_$enum->{short_typename}_to_numeric(const char *name)
    $self->output("
         };
 
+        prelude_return_val_if_fail(name, -1);
+
         for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
                 if ( strcasecmp(name, tbl[i].name) == 0 )
                         return tbl[i].val;
@@ -1502,12 +1548,14 @@ sub footer
     $self->output("
 void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg)
 \{
+        prelude_return_if_fail(message);
         message->pmsg = msg;
 \}
 
 
 prelude_msg_t *idmef_message_get_pmsg(idmef_message_t *message)
 \{
+        prelude_return_val_if_fail(message, NULL);
         return message->pmsg;
 \}
 
@@ -1521,6 +1569,8 @@ prelude_msg_t *idmef_message_get_pmsg(idmef_message_t *message)
  */
 void idmef_message_destroy(idmef_message_t *ptr)
 \{
+        prelude_return_if_fail(ptr);
+
         if ( --ptr->refcount )
                 return;
 
