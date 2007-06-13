@@ -1,12 +1,12 @@
 /*****
 *
-* Copyright (C) 2001,2002,2003,2004,2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2001-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.
 *
 * This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by 
+* it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2, or (at your option)
 * any later version.
 *
@@ -93,20 +93,20 @@ int _prelude_connection_keepalive_intvl = 0;
 
 struct prelude_connection {
         PRELUDE_LINKED_OBJECT;
-        
+
         char *saddr;
         unsigned int sport;
 
         char *daddr;
         unsigned int dport;
-        
+
         socklen_t salen;
         struct sockaddr *sa;
-                
+
         prelude_io_t *fd;
         uint64_t peer_analyzerid;
         prelude_connection_permission_t permission;
-        
+
         void *data;
 
         prelude_connection_state_t state;
@@ -114,8 +114,8 @@ struct prelude_connection {
 
 
 
-static int connection_write_msgbuf(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg) 
-{        
+static int connection_write_msgbuf(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
+{
         return prelude_connection_send(prelude_msgbuf_get_data(msgbuf), msg);
 }
 
@@ -123,7 +123,7 @@ static int connection_write_msgbuf(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
 
 static int auth_error(prelude_connection_t *cnx,
                       prelude_connection_permission_t reqperms,
-                      prelude_client_profile_t *cp, prelude_error_t error, const char *fmt, ...) 
+                      prelude_client_profile_t *cp, prelude_error_t error, const char *fmt, ...)
 {
         int ret;
         va_list ap;
@@ -132,7 +132,7 @@ static int auth_error(prelude_connection_t *cnx,
 
         prelude_string_new(&out);
         prelude_connection_permission_to_string(reqperms, out);
-                
+
         tmp = strrchr(cnx->daddr, ':');
         if ( tmp )
                 *tmp = '\0';
@@ -140,14 +140,14 @@ static int auth_error(prelude_connection_t *cnx,
         va_start(ap, fmt);
         vsnprintf(buf, sizeof(buf), fmt, ap);
         va_end(ap);
-        
+
         ret = prelude_error_verbose_make(prelude_error_get_source(error), prelude_error_get_code(error), "%s.\n\n"
                  "In order to register this sensor, please run:\n"
                  "prelude-adduser register %s \"%s\" %s --uid %d --gid %d",
                  buf, prelude_client_profile_get_name(cp), prelude_string_get_string(out),
                  (cnx->sa->sa_family == AF_UNIX) ? "<manager address>" : cnx->daddr,
                  prelude_client_profile_get_uid(cp), prelude_client_profile_get_gid(cp));
-                 
+
         prelude_string_destroy(out);
         if ( tmp )
                 *tmp = ':';
@@ -170,49 +170,49 @@ static int auth_error(prelude_connection_t *cnx,
 static int is_tcp_connection_still_established(prelude_io_t *pio)
 {
         int pending, ret;
-	struct pollfd pfd;
-        
-	pfd.events = POLLIN;
-	pfd.fd = prelude_io_get_fd(pio);
+        struct pollfd pfd;
 
-	ret = poll(&pfd, 1, 0);
-	if ( ret < 0 )
+        pfd.events = POLLIN;
+        pfd.fd = prelude_io_get_fd(pio);
+
+        ret = poll(&pfd, 1, 0);
+        if ( ret < 0 )
                 return prelude_error_from_errno(errno);
 
-	if ( ret == 0 )
-		return 0;
+        if ( ret == 0 )
+                return 0;
 
-	if ( pfd.revents & POLLERR || pfd.revents & POLLHUP )
+        if ( pfd.revents & POLLERR || pfd.revents & POLLHUP )
                 return prelude_error_from_errno(EPIPE);
 
-	if ( ! (pfd.revents & POLLIN) )
-		return 0;
+        if ( ! (pfd.revents & POLLIN) )
+                return 0;
 
-	/*
-	 * Get the number of bytes to read
-	 */
-        pending = prelude_io_pending(pio);        
-	if ( pending <= 0 )
-		return prelude_error_from_errno(EPIPE);
+        /*
+         * Get the number of bytes to read
+         */
+        pending = prelude_io_pending(pio);
+        if ( pending <= 0 )
+                return prelude_error_from_errno(EPIPE);
 
-	return 0;
+        return 0;
 }
 
 
 
 #ifndef WIN32
 static void set_socket_option(int sock, const char *name, int level, int option, int value)
-{       
+{
         int ret;
-        
+
         if ( ! value )
                 return;
-                
+
         if ( option < 0 ) {
                 prelude_log(PRELUDE_LOG_ERR, "'%s' socket option is unavailable on this system.\n", name);
-                return;        
+                return;
         }
- 
+
         ret = setsockopt(sock, level, option, (void *) &value, sizeof(value));
         if ( ret < 0 )
                 prelude_log(PRELUDE_LOG_ERR, "could not set '%s' socket option: %s.\n", name, strerror(errno));
@@ -228,20 +228,20 @@ static void set_socket_option(int sock, const char *name, int level, int option,
 static int generic_connect(struct sockaddr *sa, socklen_t salen)
 {
         int ret, sock;
-        
+
         sock = socket(sa->sa_family, SOCK_STREAM, 0);
-	if ( sock < 0 ) 
-		return prelude_error_from_errno(errno);
-        
+        if ( sock < 0 )
+                return prelude_error_from_errno(errno);
+
 #ifndef WIN32
         fcntl(sock, F_SETFD, fcntl(sock, F_GETFD) | FD_CLOEXEC);
-                
+
         ret = fcntl(sock, F_SETOWN, getpid());
         if ( ret < 0 ) {
                 close(sock);
                 return prelude_error_from_errno(errno);
         }
-                
+
         set_socket_option(sock, "SO_KEEPALIVE", SOL_SOCKET, SO_KEEPALIVE, 1);
 
 # ifdef TCP_KEEPIDLE
@@ -263,14 +263,14 @@ static int generic_connect(struct sockaddr *sa, socklen_t salen)
 # endif
 
 #endif
-        
+
         ret = connect(sock, sa, salen);
-	if ( ret < 0 ) {
+        if ( ret < 0 ) {
                 close(sock);
                 return prelude_error_from_errno(errno);
-	}
-        
-	return sock;
+        }
+
+        return sock;
 }
 
 
@@ -282,7 +282,7 @@ static int handle_authentication(prelude_connection_t *cnx,
 {
         int ret;
         prelude_string_t *gbuf, *wbuf;
-        
+
         ret = tls_auth_connection(cp, cnx->fd, crypt, &cnx->peer_analyzerid, &cnx->permission);
         if ( ret < 0 )
                 return auth_error(cnx, reqperms, cp, ret, "%s", prelude_strerror(ret));
@@ -291,23 +291,23 @@ static int handle_authentication(prelude_connection_t *cnx,
                 ret = prelude_string_new(&gbuf);
                 if ( ret < 0 )
                         goto err;
-                
+
                 ret = prelude_string_new(&wbuf);
                 if ( ret < 0 ) {
                         prelude_string_destroy(gbuf);
                         goto err;
                 }
-                                
+
                 prelude_connection_permission_to_string(cnx->permission, gbuf);
                 prelude_connection_permission_to_string(reqperms, wbuf);
-                
+
                 ret = auth_error(cnx, reqperms, cp, prelude_error(PRELUDE_ERROR_PROFILE),
                                  "Insufficient credentials: got '%s' but at least '%s' required",
                                  prelude_string_get_string(gbuf), prelude_string_get_string(wbuf));
-                
+
                 prelude_string_destroy(gbuf);
                 prelude_string_destroy(wbuf);
-                
+
         err:
                 return ret;
         }
@@ -322,7 +322,7 @@ static int handle_authentication(prelude_connection_t *cnx,
 
 
 static int start_inet_connection(prelude_connection_t *cnx,
-                                 prelude_connection_permission_t reqperms, prelude_client_profile_t *profile) 
+                                 prelude_connection_permission_t reqperms, prelude_client_profile_t *profile)
 {
         socklen_t len;
         int sock, ret, tmp;
@@ -333,26 +333,26 @@ static int start_inet_connection(prelude_connection_t *cnx,
         struct sockaddr_in addr;
         uint16_t *port = &addr.sin_port;
 #endif
-        
+
         sock = generic_connect(cnx->sa, cnx->salen);
         if ( sock < 0 )
                 return sock;
 
         prelude_io_set_sys_io(cnx->fd, sock);
-        
+
         ret = handle_authentication(cnx, reqperms, profile, 1);
         if ( ret < 0 ) {
-                do {                        
+                do {
                         tmp = prelude_io_close(cnx->fd);
                 } while ( tmp < 0 && ! prelude_io_is_error_fatal(cnx->fd, tmp) );
-                
+
                 return ret;
         }
-        
+
         /*
          * Get information about the connection,
          * because the sensor might want to know source addr/port used.
-         */        
+         */
         len = sizeof(addr);
 
         ret = getsockname(sock, (struct sockaddr *) &addr, &len);
@@ -360,15 +360,15 @@ static int start_inet_connection(prelude_connection_t *cnx,
                 ret = prelude_error_verbose(PRELUDE_ERROR_SYSTEM_ERROR, "getsockname failed: %s", strerror(errno));
         else {
                 char buf[512];
-                
+
                 if ( inet_ntop(((struct sockaddr *)&addr)->sa_family, prelude_sockaddr_get_inaddr((struct sockaddr *) &addr), buf, sizeof(buf)) )
                         cnx->saddr = strdup(buf);
                 else
                         cnx->saddr = NULL;
-                        
+
                 cnx->sport = ntohs(*port);
         }
-        
+
         return ret;
 }
 
@@ -376,22 +376,22 @@ static int start_inet_connection(prelude_connection_t *cnx,
 
 #ifndef WIN32
 static int start_unix_connection(prelude_connection_t *cnx,
-                                 prelude_connection_permission_t reqperms, prelude_client_profile_t *profile) 
+                                 prelude_connection_permission_t reqperms, prelude_client_profile_t *profile)
 {
         int ret, sock, tmp;
-        
+
         sock = generic_connect(cnx->sa, cnx->salen);
         if ( sock < 0 )
                 return sock;
-        
+
         prelude_io_set_sys_io(cnx->fd, sock);
-        
+
         ret = handle_authentication(cnx, reqperms, profile, 0);
         if ( ret < 0 )
                 do {
                         tmp = prelude_io_close(cnx->fd);
                 } while ( tmp < 0 && ! prelude_io_is_error_fatal(cnx->fd, tmp) );
-        
+
         return ret;
 }
 #endif
@@ -399,45 +399,45 @@ static int start_unix_connection(prelude_connection_t *cnx,
 
 
 static int do_connect(prelude_connection_t *cnx,
-                      prelude_connection_permission_t reqperms, prelude_client_profile_t *profile) 
+                      prelude_connection_permission_t reqperms, prelude_client_profile_t *profile)
 {
         int ret = 0;
-  
+
         if ( cnx->sa->sa_family != AF_UNIX ) {
                 prelude_log(PRELUDE_LOG_INFO, "- Connecting to %s prelude Manager server.\n", cnx->daddr);
                 ret = start_inet_connection(cnx, reqperms, profile);
         }
-        
+
 #ifndef WIN32
         else {
                 prelude_log(PRELUDE_LOG_INFO, "- Connecting to %s (UNIX) prelude Manager server.\n",
                             ((struct sockaddr_un *) cnx->sa)->sun_path);
-		ret = start_unix_connection(cnx, reqperms, profile);
+                ret = start_unix_connection(cnx, reqperms, profile);
         }
 #endif
-        
+
         return ret;
 }
 
 
 
 
-static int close_connection_fd(prelude_connection_t *cnx) 
+static int close_connection_fd(prelude_connection_t *cnx)
 {
         int ret;
-        
+
         if ( ! (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) )
                 return -1;
-        
+
         ret = prelude_io_close(cnx->fd);
         if ( ret < 0 )
                 return ret;
-        
+
         if ( cnx->saddr ) {
                 free(cnx->saddr);
                 cnx->saddr = NULL;
         }
-        
+
         cnx->state &= ~PRELUDE_CONNECTION_STATE_ESTABLISHED;
 
         return 0;
@@ -448,11 +448,11 @@ static int close_connection_fd(prelude_connection_t *cnx)
 static int close_connection_fd_block(prelude_connection_t *cnx)
 {
         int ret;
-        
+
         do {
                 ret = close_connection_fd(cnx);
         } while ( ret < 0 && ! prelude_io_is_error_fatal(cnx->fd, ret) );
-        
+
         return ret;
 }
 
@@ -461,7 +461,7 @@ static int close_connection_fd_block(prelude_connection_t *cnx)
 static void destroy_connection_fd(prelude_connection_t *cnx)
 {
         close_connection_fd_block(cnx);
-        
+
         if ( cnx->state & PRELUDE_CONNECTION_OWN_FD )
                 prelude_io_destroy(cnx->fd);
 }
@@ -471,17 +471,17 @@ static prelude_bool_t is_unix_addr(prelude_connection_t *cnx, const char *addr)
 {
         int ret;
         const char *ptr;
-        
+
         ret = strncmp(addr, "unix", 4);
         if ( ret != 0 )
                 return FALSE;
-        
+
         ptr = strchr(addr, ':');
         if ( ptr && *(ptr + 1) )
                 cnx->daddr = strdup(ptr + 1);
         else
                 cnx->daddr = strdup(UNIX_SOCKET);
-        
+
         return TRUE;
 }
 
@@ -497,18 +497,18 @@ static int do_getaddrinfo(prelude_connection_t *cnx, struct addrinfo **ai, const
         ret = prelude_parse_address(addr_string, &addr, &port);
         if ( ret < 0 )
                 return ret;
-        
+
         memset(&hints, 0, sizeof(hints));
         snprintf(buf, sizeof(buf), "%u", port);
 
 #ifdef AI_ADDRCONFIG
         hints.ai_flags = AI_ADDRCONFIG;
 #endif
-        
+
         hints.ai_family = PF_UNSPEC;
         hints.ai_socktype = SOCK_STREAM;
         hints.ai_protocol = IPPROTO_TCP;
-        
+
         ret = getaddrinfo(addr, buf, &hints, ai);
         if ( ret != 0 ) {
                 ret = prelude_error_verbose(PRELUDE_ERROR_CANT_RESOLVE, "could not resolve '%s': %s",
@@ -516,18 +516,18 @@ static int do_getaddrinfo(prelude_connection_t *cnx, struct addrinfo **ai, const
                 free(addr);
                 return ret;
         }
-        
+
         snprintf(buf, sizeof(buf), "%s:%d", addr, port);
         free(addr);
-        
+
         cnx->daddr = strdup(buf);
-        
+
         return 0;
 }
 
 
 
-static int resolve_addr(prelude_connection_t *cnx, const char *addr) 
+static int resolve_addr(prelude_connection_t *cnx, const char *addr)
 {
         struct addrinfo *ai;
         int ret, ai_family, ai_addrlen;
@@ -561,7 +561,7 @@ static int resolve_addr(prelude_connection_t *cnx, const char *addr)
 
         cnx->salen = ai_addrlen;
         cnx->sa->sa_family = ai_family;
-                
+
         if ( ai_family != AF_UNIX ) {
                 memcpy(cnx->sa, ai->ai_addr, ai->ai_addrlen);
                 freeaddrinfo(ai);
@@ -573,7 +573,7 @@ static int resolve_addr(prelude_connection_t *cnx, const char *addr)
                 strncpy(un->sun_path, cnx->daddr, sizeof(un->sun_path));
         }
 #endif
-        
+
         return 0;
 }
 
@@ -589,10 +589,10 @@ static int resolve_addr(prelude_connection_t *cnx, const char *addr)
  * manner. Use prelude_connection_close() if you want to close the
  * connection in a non blocking manner prior prelude_connection_destroy().
  */
-void prelude_connection_destroy(prelude_connection_t *conn) 
+void prelude_connection_destroy(prelude_connection_t *conn)
 {
         destroy_connection_fd(conn);
-        
+
         free(conn->daddr);
         free(conn->sa);
         free(conn);
@@ -605,15 +605,15 @@ int prelude_connection_new(prelude_connection_t **out, const char *addr)
 {
         int ret;
         prelude_connection_t *new;
-      
-#ifndef WIN32  
+
+#ifndef WIN32
         signal(SIGPIPE, SIG_IGN);
 #endif
 
         new = calloc(1, sizeof(*new));
         if ( ! new )
                 return prelude_error_from_errno(errno);
-        
+
         ret = prelude_io_new(&new->fd);
         if ( ret < 0 ) {
                 free(new);
@@ -621,35 +621,35 @@ int prelude_connection_new(prelude_connection_t **out, const char *addr)
         }
 
         if ( addr ) {
-                ret = resolve_addr(new, addr);                
+                ret = resolve_addr(new, addr);
                 if ( ret < 0 ) {
                         prelude_io_destroy(new->fd);
                         free(new);
                         return ret;
                 }
         }
-        
+
         new->state = PRELUDE_CONNECTION_OWN_FD;
-        
+
         *out = new;
-        
+
         return 0;
 }
 
 
 
-void prelude_connection_set_fd_ref(prelude_connection_t *cnx, prelude_io_t *fd) 
-{        
-        destroy_connection_fd(cnx);        
+void prelude_connection_set_fd_ref(prelude_connection_t *cnx, prelude_io_t *fd)
+{
+        destroy_connection_fd(cnx);
         cnx->fd = fd;
         cnx->state &= ~PRELUDE_CONNECTION_OWN_FD;
 }
 
 
 
-void prelude_connection_set_fd_nodup(prelude_connection_t *cnx, prelude_io_t *fd) 
-{        
-        destroy_connection_fd(cnx);        
+void prelude_connection_set_fd_nodup(prelude_connection_t *cnx, prelude_io_t *fd)
+{
+        destroy_connection_fd(cnx);
         cnx->fd = fd;
         cnx->state |= PRELUDE_CONNECTION_OWN_FD;
 }
@@ -662,13 +662,13 @@ int prelude_connection_connect(prelude_connection_t *conn,
 {
         int ret;
         prelude_msg_t *msg;
-        
+
         close_connection_fd_block(conn);
-        
+
         ret = do_connect(conn, permission, profile);
-        if ( ret < 0 ) 
+        if ( ret < 0 )
                 return ret;
-        
+
         ret = prelude_msg_new(&msg, 1, sizeof(uint8_t), PRELUDE_MSG_CONNECTION_CAPABILITY, 0);
         if ( ret < 0 )
                 goto err;
@@ -681,41 +681,41 @@ int prelude_connection_connect(prelude_connection_t *conn,
                 goto err;
 
         conn->state |= PRELUDE_CONNECTION_STATE_ESTABLISHED;
-        
+
         return ret;
-        
+
  err:
         close_connection_fd_block(conn);
-        
+
         return ret;
 }
 
 
 
 
-int prelude_connection_close(prelude_connection_t *cnx) 
-{        
+int prelude_connection_close(prelude_connection_t *cnx)
+{
         return close_connection_fd(cnx);
 }
 
 
 
 
-int prelude_connection_send(prelude_connection_t *cnx, prelude_msg_t *msg) 
+int prelude_connection_send(prelude_connection_t *cnx, prelude_msg_t *msg)
 {
         ssize_t ret;
-        
+
         if ( ! (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) )
                 return -1;
 
         ret = prelude_msg_write(msg, cnx->fd);
-        if ( ret < 0 )                
+        if ( ret < 0 )
                 return ret;
 
         ret = is_tcp_connection_still_established(cnx->fd);
         if ( ret < 0 )
                 return ret;
-        
+
         return ret;
 }
 
@@ -729,7 +729,7 @@ int prelude_connection_recv(prelude_connection_t *cnx, prelude_msg_t **msg)
         if ( ! (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) )
                 return -1;
 
-        ret = prelude_msg_read(msg, cnx->fd);        
+        ret = prelude_msg_read(msg, cnx->fd);
         if ( ret < 0 )
                 return ret;
 
@@ -737,11 +737,11 @@ int prelude_connection_recv(prelude_connection_t *cnx, prelude_msg_t **msg)
         if ( tag == PRELUDE_MSG_IDMEF && !(cnx->permission & PRELUDE_CONNECTION_PERMISSION_IDMEF_READ) )
                 return prelude_error_verbose(PRELUDE_ERROR_PROFILE,
                                              "Insufficient credentials for receiving IDMEF message");
-        
+
         if ( tag == PRELUDE_MSG_OPTION_REQUEST && !(cnx->permission & PRELUDE_CONNECTION_PERMISSION_ADMIN_READ) )
                 return prelude_error_verbose(PRELUDE_ERROR_PROFILE,
                                              "Insufficient credentials for receiving administrative message");
-        
+
         return ret;
 }
 
@@ -755,7 +755,7 @@ int prelude_connection_recv(prelude_connection_t *cnx, prelude_msg_t **msg)
  * Returns: A pointer to the #prelude_io_t object used for
  * communicating with the peer.
  */
-prelude_io_t *prelude_connection_get_fd(prelude_connection_t *cnx) 
+prelude_io_t *prelude_connection_get_fd(prelude_connection_t *cnx)
 {
         return cnx->fd;
 }
@@ -769,7 +769,7 @@ prelude_io_t *prelude_connection_get_fd(prelude_connection_t *cnx)
  *
  * Returns: the local address used to connect.
  */
-const char *prelude_connection_get_local_addr(prelude_connection_t *cnx) 
+const char *prelude_connection_get_local_addr(prelude_connection_t *cnx)
 {
         return cnx->saddr;
 }
@@ -783,7 +783,7 @@ const char *prelude_connection_get_local_addr(prelude_connection_t *cnx)
  *
  * Returns: the local port used to connect.
  */
-unsigned int prelude_connection_get_local_port(prelude_connection_t *cnx) 
+unsigned int prelude_connection_get_local_port(prelude_connection_t *cnx)
 {
         return cnx->sport;
 }
@@ -797,14 +797,14 @@ unsigned int prelude_connection_get_local_port(prelude_connection_t *cnx)
  *
  * Returns: 0 if the connection associated with @cnx is alive, -1 otherwise.
  */
-prelude_bool_t prelude_connection_is_alive(prelude_connection_t *cnx) 
+prelude_bool_t prelude_connection_is_alive(prelude_connection_t *cnx)
 {
         return (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) ? TRUE : FALSE;
 }
 
 
 
-void prelude_connection_set_state(prelude_connection_t *cnx, prelude_connection_state_t state) 
+void prelude_connection_set_state(prelude_connection_t *cnx, prelude_connection_state_t state)
 {
         cnx->state = state;
 }
@@ -820,27 +820,27 @@ prelude_connection_state_t prelude_connection_get_state(prelude_connection_t *cn
 
 
 
-ssize_t prelude_connection_forward(prelude_connection_t *cnx, prelude_io_t *src, size_t count) 
+ssize_t prelude_connection_forward(prelude_connection_t *cnx, prelude_io_t *src, size_t count)
 {
         ssize_t ret;
 
         if ( ! (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) )
                 return -1;
-        
+
         ret = prelude_io_forward(cnx->fd, src, count);
         if ( ret < 0 )
                 return ret;
-        
+
         ret = is_tcp_connection_still_established(cnx->fd);
         if ( ret < 0 )
                 return ret;
-        
+
         return 0;
 }
 
 
 
-const char *prelude_connection_get_default_socket_filename(void) 
+const char *prelude_connection_get_default_socket_filename(void)
 {
         return UNIX_SOCKET;
 }
@@ -876,14 +876,14 @@ void prelude_connection_set_peer_analyzerid(prelude_connection_t *cnx, uint64_t 
 int prelude_connection_new_msgbuf(prelude_connection_t *connection, prelude_msgbuf_t **msgbuf)
 {
         int ret;
-        
+
         ret = prelude_msgbuf_new(msgbuf);
         if ( ret < 0 )
                 return ret;
 
         prelude_msgbuf_set_data(*msgbuf, connection);
         prelude_msgbuf_set_callback(*msgbuf, connection_write_msgbuf);
-        
+
         return 0;
 }
 
@@ -918,7 +918,7 @@ int prelude_connection_permission_new_from_string(prelude_connection_permission_
                 { "admin", PRELUDE_CONNECTION_PERMISSION_ADMIN_READ, PRELUDE_CONNECTION_PERMISSION_ADMIN_WRITE },
                 { NULL, 0 },
         };
-        
+
         *out = 0;
         strncpy(buf, permission, sizeof(buf));
 
@@ -926,11 +926,11 @@ int prelude_connection_permission_new_from_string(prelude_connection_permission_
         while ( (tptr = strsep(&tmp, ":")) ) {
                 if ( ! tmp )
                         continue;
-                        
+
                 while ( *tptr == ' ' ) tptr++;
                 if ( ! *tptr )
                         continue;
-                                
+
                 for ( i = 0; tbl[i].name; i++ ) {
                         if ( strcmp(tbl[i].name, tptr) != 0 )
                                 continue;
@@ -940,21 +940,21 @@ int prelude_connection_permission_new_from_string(prelude_connection_permission_
 
                 if ( ! tbl[i].name )
                         return prelude_error_verbose(PRELUDE_ERROR_UNKNOWN_PERMISSION_TYPE, "unknown permission type '%s'", tptr);
-                
+
                 while ( *tmp == ' ' )
                         tmp++;
-                                        
+
                 while ( (c = *tmp++) ) {
-                        
+
                         if ( c == 'r' )
                                 *out |= tbl[i].val_read;
-                        
+
                         else if ( c == 'w' )
                                 *out |= tbl[i].val_write;
-                        
+
                         else if ( c == ' ' )
                                 break;
-                        
+
                         else return prelude_error_verbose(PRELUDE_ERROR_UNKNOWN_PERMISSION_BIT, "unknown permission bit: '%c'", c);
                 }
         }
@@ -977,21 +977,21 @@ int prelude_connection_permission_to_string(prelude_connection_permission_t perm
         };
 
         for ( i = 0; i < (sizeof(tbl) / sizeof(*tbl)); i++ ) {
-                
+
                 if ( ! (permission & (tbl[i].val_read|tbl[i].val_write)) )
                         continue;
-                
+
                 ret = prelude_string_sprintf(out, "%s%s:", (! prelude_string_is_empty(out)) ? " " : "", tbl[i].name);
                 if ( ret < 0 )
                         return ret;
-                                
+
                 if ( (permission & tbl[i].val_read) == tbl[i].val_read )
                         prelude_string_cat(out, "r");
-                
+
                 if ( (permission & tbl[i].val_write) == tbl[i].val_write )
                         prelude_string_cat(out, "w");
         }
-        
+
         return 0;
 }
 
