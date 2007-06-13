@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001, 2002, 2003, 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2001-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.
@@ -57,8 +57,8 @@
 
 /*
  * On POSIX systems where clock_gettime() is available, the symbol
- * _POSIX_TIMERS should be defined to a value greater than 0. 
- * 
+ * _POSIX_TIMERS should be defined to a value greater than 0.
+ *
  * However, some architecture (example True64), define it as:
  * #define _POSIX_TIMERS
  *
@@ -99,10 +99,10 @@ static volatile sig_atomic_t is_initialized = FALSE;
 
 
 
-static prelude_bool_t timer_need_wake_up(struct timespec *now, struct timespec *start) 
+static prelude_bool_t timer_need_wake_up(struct timespec *now, struct timespec *start)
 {
         time_t diff = now->tv_sec - start->tv_sec;
-        
+
         if ( diff > 1 || (diff == 1 && now->tv_nsec >= start->tv_nsec) )
                 return TRUE;
 
@@ -114,7 +114,7 @@ static void get_time(struct timespec *ts)
 {
 #if _POSIX_TIMERS - 0 > 0
         int ret;
-        
+
         ret = clock_gettime(COND_CLOCK_TYPE, ts);
         if ( ret < 0 )
                 prelude_log(PRELUDE_LOG_ERR, "clock_gettime: %s.\n", strerror(errno));
@@ -123,7 +123,7 @@ static void get_time(struct timespec *ts)
         struct timeval now;
 
         gettimeofday(&now, NULL);
-        
+
         ts->tv_sec = now.tv_sec;
         ts->tv_nsec = now.tv_usec * 1000;
 #endif
@@ -131,17 +131,17 @@ static void get_time(struct timespec *ts)
 
 
 
-static void wait_timer_and_data(void) 
+static void wait_timer_and_data(void)
 {
         int ret;
         struct timespec ts;
         prelude_async_flags_t old_async_flags;
         prelude_bool_t no_job_available = TRUE;
         static struct timespec last_wake_up = { 0, 0 };
-        
+
         while ( no_job_available ) {
                 ret = 0;
-                
+
                 pthread_mutex_lock(&mutex);
                 old_async_flags = async_flags;
 
@@ -153,15 +153,15 @@ static void wait_timer_and_data(void)
 
                 while ( (no_job_available = prelude_list_is_empty(&joblist)) &&
                         ! stop_processing && async_flags == old_async_flags && ret != ETIMEDOUT ) {
-                        
+
                         ret = pthread_cond_timedwait(&cond, &mutex, &ts);
                 }
-                
+
                 if ( no_job_available && stop_processing ) {
                         pthread_mutex_unlock(&mutex);
                         pthread_exit(NULL);
                 }
-                
+
                 pthread_mutex_unlock(&mutex);
 
                 get_time(&ts);
@@ -176,14 +176,14 @@ static void wait_timer_and_data(void)
 
 
 
-static void wait_data(void) 
+static void wait_data(void)
 {
         prelude_async_flags_t old_async_flags;
-        
+
         pthread_mutex_lock(&mutex);
         old_async_flags = async_flags;
-        
-        while ( prelude_list_is_empty(&joblist) && ! stop_processing && async_flags == old_async_flags ) 
+
+        while ( prelude_list_is_empty(&joblist) && ! stop_processing && async_flags == old_async_flags )
                 pthread_cond_wait(&cond, &mutex);
 
         if ( prelude_list_is_empty(&joblist) && stop_processing ) {
@@ -202,13 +202,13 @@ static prelude_async_object_t *get_next_job(void)
         prelude_async_object_t *obj = NULL;
 
         pthread_mutex_lock(&mutex);
-        
+
         prelude_list_for_each(&joblist, tmp) {
                 obj = prelude_linked_object_get_object(tmp);
                 prelude_linked_object_del((prelude_linked_object_t *) obj);
                 break;
         }
-        
+
         pthread_mutex_unlock(&mutex);
 
         return obj;
@@ -216,20 +216,20 @@ static prelude_async_object_t *get_next_job(void)
 
 
 
-static void *async_thread(void *arg) 
+static void *async_thread(void *arg)
 {
         prelude_async_object_t *obj;
-        
+
 #ifndef WIN32
         int ret;
         sigset_t set;
-        
+
         ret = sigfillset(&set);
         if ( ret < 0 ) {
                 prelude_log(PRELUDE_LOG_ERR, "sigfillset error: %s.\n", strerror(errno));
                 return NULL;
         }
-        
+
         ret = pthread_sigmask(SIG_BLOCK, &set, NULL);
         if ( ret < 0 ) {
                 prelude_log(PRELUDE_LOG_ERR, "pthread_sigmask error: %s.\n", strerror(errno));
@@ -238,12 +238,12 @@ static void *async_thread(void *arg)
 #endif
 
         while ( 1 ) {
-                
+
                 if ( async_flags & PRELUDE_ASYNC_FLAGS_TIMER )
                         wait_timer_and_data();
                 else
                         wait_data();
-                
+
                 while ( (obj = get_next_job()) )
                         obj->_async_func(obj, obj->_async_data);
         }
@@ -252,7 +252,7 @@ static void *async_thread(void *arg)
 
 
 
-static void async_exit(void)  
+static void async_exit(void)
 {
         if ( ! prelude_list_is_empty(&joblist) )
                 prelude_log(PRELUDE_LOG_INFO, "Waiting for asynchronous operation to complete.\n");
@@ -298,7 +298,7 @@ static int do_init_async(void)
                 prelude_log(PRELUDE_LOG_ERR, "error initializing condition attribute: %s.\n", strerror(ret));
                 return ret;
         }
-        
+
 #if defined(HAVE_PTHREAD_CONDATTR_SETCLOCK) && _POSIX_TIMERS - 0 > 0
         ret = pthread_condattr_setclock(&attr, COND_CLOCK_TYPE);
         if ( ret != 0 ) {
@@ -306,7 +306,7 @@ static int do_init_async(void)
                 return ret;
         }
 #endif
-        
+
         ret = pthread_cond_init(&cond, &attr);
         if ( ret != 0 ) {
                 prelude_log(PRELUDE_LOG_ERR, "error creating condition: %s.\n", strerror(ret));
@@ -319,24 +319,24 @@ static int do_init_async(void)
                 return ret;
         }
 
-                  
+
 #ifdef HAVE_PTHREAD_ATFORK
         {
                 static volatile sig_atomic_t fork_handler_registered = FALSE;
-                
+
                 if ( ! fork_handler_registered ) {
                         fork_handler_registered = TRUE;
                         pthread_atfork(prepare_fork_cb, parent_fork_cb, child_fork_cb);
                 }
         }
 #endif
-        
+
         ret = pthread_create(&thread, NULL, async_thread, NULL);
         if ( ret != 0 ) {
                 prelude_log(PRELUDE_LOG_ERR, "error creating asynchronous thread: %s.\n", strerror(ret));
                 return ret;
         }
-        
+
         return atexit(async_exit);
 }
 
@@ -345,14 +345,14 @@ static int do_init_async(void)
 /**
  * prelude_async_set_flags:
  * @flags: flags you want to set
- * 
+ *
  * Sets flags to the asynchronous subsystem.
  *
  */
-void prelude_async_set_flags(prelude_async_flags_t flags) 
+void prelude_async_set_flags(prelude_async_flags_t flags)
 {
         pthread_mutex_lock(&mutex);
-        
+
         async_flags = flags;
         pthread_cond_signal(&cond);
 
@@ -363,12 +363,12 @@ void prelude_async_set_flags(prelude_async_flags_t flags)
 
 /**
  * prelude_async_get_flags:
- * 
+ *
  * Retrieves flags from the asynchronous subsystem
  *
  * Returns: asynchronous flags
  */
-prelude_async_flags_t prelude_async_get_flags(void) 
+prelude_async_flags_t prelude_async_get_flags(void)
 {
         return async_flags;
 }
@@ -382,15 +382,15 @@ prelude_async_flags_t prelude_async_get_flags(void)
  *
  * Returns: 0 on success, -1 if an error occured.
  */
-int prelude_async_init(void) 
+int prelude_async_init(void)
 {
         if ( ! is_initialized ) {
                 assert(_prelude_thread_in_use() == TRUE);
-                
-                is_initialized = TRUE;                
+
+                is_initialized = TRUE;
                 return do_init_async();
         }
-        
+
         return 0;
 }
 
@@ -402,11 +402,11 @@ int prelude_async_init(void)
  *
  * Adds @obj to the asynchronous processing list.
  */
-void prelude_async_add(prelude_async_object_t *obj) 
-{        
+void prelude_async_add(prelude_async_object_t *obj)
+{
         pthread_mutex_lock(&mutex);
-        
-        prelude_linked_object_add_tail(&joblist, (prelude_linked_object_t *) obj);        
+
+        prelude_linked_object_add_tail(&joblist, (prelude_linked_object_t *) obj);
         pthread_cond_signal(&cond);
 
         pthread_mutex_unlock(&mutex);
@@ -420,7 +420,7 @@ void prelude_async_add(prelude_async_object_t *obj)
  *
  * Deletes @obj from the asynchronous processing list.
  */
-void prelude_async_del(prelude_async_object_t *obj) 
+void prelude_async_del(prelude_async_object_t *obj)
 {
         pthread_mutex_lock(&mutex);
         prelude_linked_object_del((prelude_linked_object_t *) obj);
@@ -431,12 +431,12 @@ void prelude_async_del(prelude_async_object_t *obj)
 
 
 void prelude_async_exit(void)
-{        
+{
         pthread_mutex_lock(&mutex);
 
         stop_processing = TRUE;
         pthread_cond_signal(&cond);
-        
+
         pthread_mutex_unlock(&mutex);
 
         pthread_join(thread, NULL);
