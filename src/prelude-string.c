@@ -201,8 +201,10 @@ int prelude_string_new(prelude_string_t **string)
  *
  * Returns: @string.
  */
-prelude_string_t *prelude_string_ref(prelude_string_t *data)
+prelude_string_t *prelude_string_ref(prelude_string_t *string)
 {
+        prelude_return_val_if_fail(string, NULL);
+
         data->refcount++;
         return data;
 }
@@ -224,6 +226,8 @@ prelude_string_t *prelude_string_ref(prelude_string_t *data)
 int prelude_string_new_dup_fast(prelude_string_t **string, const char *str, size_t len)
 {
         int ret;
+
+        prelude_return_val_if_fail(str, -1);
 
         ret = check_string(str, len);
         if ( ret < 0 )
@@ -258,6 +262,7 @@ int prelude_string_new_dup_fast(prelude_string_t **string, const char *str, size
  */
 int prelude_string_new_dup(prelude_string_t **string, const char *str)
 {
+        prelude_return_val_if_fail(str, -1);
         return prelude_string_new_dup_fast(string, str, strlen(str));
 }
 
@@ -278,6 +283,8 @@ int prelude_string_new_dup(prelude_string_t **string, const char *str)
 int prelude_string_new_nodup_fast(prelude_string_t **string, char *str, size_t len)
 {
         int ret;
+
+        prelude_return_val_if_fail(str, -1);
 
         ret = check_string(str, len);
         if ( ret < 0 )
@@ -310,6 +317,7 @@ int prelude_string_new_nodup_fast(prelude_string_t **string, char *str, size_t l
  */
 int prelude_string_new_nodup(prelude_string_t **string, char *str)
 {
+        prelude_return_val_if_fail(str, -1);
         return prelude_string_new_nodup_fast(string, str, strlen(str));
 }
 
@@ -329,6 +337,8 @@ int prelude_string_new_nodup(prelude_string_t **string, char *str)
 int prelude_string_new_ref_fast(prelude_string_t **string, const char *buf, size_t len)
 {
         int ret;
+
+        prelude_return_val_if_fail(buf, -1);
 
         ret = check_string(buf, len);
         if ( ret < 0 )
@@ -359,6 +369,7 @@ int prelude_string_new_ref_fast(prelude_string_t **string, const char *buf, size
  */
 int prelude_string_new_ref(prelude_string_t **string, const char *str)
 {
+        prelude_return_val_if_fail(str, -1);
         return prelude_string_new_ref_fast(string, str, strlen(str));
 }
 
@@ -378,6 +389,8 @@ int prelude_string_new_ref(prelude_string_t **string, const char *str)
 int prelude_string_set_dup_fast(prelude_string_t *string, const char *buf, size_t len)
 {
         int ret;
+
+        prelude_return_val_if_fail(string && buf, -1);
 
         ret = check_string(buf, len);
         if ( ret < 0 )
@@ -409,6 +422,7 @@ int prelude_string_set_dup_fast(prelude_string_t *string, const char *buf, size_
  */
 int prelude_string_set_dup(prelude_string_t *string, const char *buf)
 {
+        prelude_return_val_if_fail(string && buf, -1);
         return prelude_string_set_dup_fast(string, buf, strlen(buf));
 }
 
@@ -428,6 +442,8 @@ int prelude_string_set_dup(prelude_string_t *string, const char *buf)
 int prelude_string_set_nodup_fast(prelude_string_t *string, char *buf, size_t len)
 {
         int ret;
+
+        prelude_return_val_if_fail(string && buf, -1);
 
         ret = check_string(buf, len);
         if ( ret < 0 )
@@ -459,6 +475,7 @@ int prelude_string_set_nodup_fast(prelude_string_t *string, char *buf, size_t le
  */
 int prelude_string_set_nodup(prelude_string_t *string, char *buf)
 {
+        prelude_return_val_if_fail(string && buf, -1);
         return prelude_string_set_nodup_fast(string, buf, strlen(buf));
 }
 
@@ -478,6 +495,8 @@ int prelude_string_set_nodup(prelude_string_t *string, char *buf)
 int prelude_string_set_ref_fast(prelude_string_t *string, const char *buf, size_t len)
 {
         int ret;
+
+        prelude_return_val_if_fail(string && buf, -1);
 
         ret = check_string(buf, len);
         if ( ret < 0 )
@@ -508,6 +527,7 @@ int prelude_string_set_ref_fast(prelude_string_t *string, const char *buf, size_
  */
 int prelude_string_set_ref(prelude_string_t *string, const char *buf)
 {
+        prelude_return_val_if_fail(string && buf, -1);
         return prelude_string_set_ref_fast(string, buf, strlen(buf));
 }
 
@@ -526,6 +546,8 @@ int prelude_string_set_ref(prelude_string_t *string, const char *buf)
  */
 int prelude_string_copy_ref(const prelude_string_t *src, prelude_string_t *dst)
 {
+        prelude_return_val_if_fail(src && dst, -1);
+
         prelude_string_destroy_internal(dst);
 
         dst->size = src->size;
@@ -550,7 +572,9 @@ int prelude_string_copy_ref(const prelude_string_t *src, prelude_string_t *dst)
  */
 int prelude_string_copy_dup(const prelude_string_t *src, prelude_string_t *dst)
 {
-        prelude_string_destroy_internal(dst);
+        prelude_return_val_if_fail(src && dst, -1);
+
+        prelude_string_destroy_internal(src && dst, -1);
 
         dst->data.rwbuf = malloc(src->size);
         if ( ! dst->data.rwbuf )
@@ -580,6 +604,8 @@ int prelude_string_copy_dup(const prelude_string_t *src, prelude_string_t *dst)
 int prelude_string_clone(const prelude_string_t *src, prelude_string_t **dst)
 {
         int ret;
+
+        prelude_return_val_if_fail(src, -1);
 
         ret = prelude_string_new(dst);
         if ( ret < 0 )
@@ -612,6 +638,7 @@ int prelude_string_clone(const prelude_string_t *src, prelude_string_t **dst)
  */
 size_t prelude_string_get_len(const prelude_string_t *string)
 {
+        prelude_return_val_if_fail(string, 0);
         return string->index;
 }
 
@@ -630,6 +657,7 @@ size_t prelude_string_get_len(const prelude_string_t *string)
  */
 const char *prelude_string_get_string_or_default(const prelude_string_t *string, const char *def)
 {
+        prelude_return_val_if_fail(string, NULL);
         return string->data.robuf ? string->data.robuf : def;
 }
 
@@ -647,6 +675,7 @@ const char *prelude_string_get_string_or_default(const prelude_string_t *string,
  */
 const char *prelude_string_get_string(const prelude_string_t *string)
 {
+        prelude_return_val_if_fail(string, NULL);
         return string ? string->data.robuf : NULL;
 }
 
@@ -665,6 +694,7 @@ const char *prelude_string_get_string(const prelude_string_t *string)
  */
 int prelude_string_get_string_released(prelude_string_t *string, char **outptr)
 {
+        prelude_return_val_if_fail(string, -1);
         *outptr = NULL;
 
         if ( ! string->index )
@@ -702,6 +732,7 @@ int prelude_string_get_string_released(prelude_string_t *string, char **outptr)
  */
 prelude_bool_t prelude_string_is_empty(const prelude_string_t *string)
 {
+        prelude_return_val_if_fail(string, TRUE);
         return (string->index == 0) ? TRUE : FALSE;
 }
 
@@ -713,6 +744,8 @@ prelude_bool_t prelude_string_is_empty(const prelude_string_t *string)
  */
 void prelude_string_destroy_internal(prelude_string_t *string)
 {
+        prelude_return_if_fail(string);
+
         if ( (string->flags & PRELUDE_STRING_OWN_DATA) && string->data.rwbuf ) {
                 free(string->data.rwbuf);
                 string->data.rwbuf = NULL;
@@ -737,6 +770,8 @@ void prelude_string_destroy_internal(prelude_string_t *string)
  */
 void prelude_string_destroy(prelude_string_t *string)
 {
+        prelude_return_if_fail(string);
+
         if ( --string->refcount )
                 return;
 
@@ -768,6 +803,8 @@ int prelude_string_vprintf(prelude_string_t *string, const char *fmt, va_list ap
 {
         int ret;
         va_list bkp;
+
+        prelude_return_val_if_fail(string && fmt, -1);
 
         if ( ! (string->flags & PRELUDE_STRING_CAN_REALLOC) ) {
 
@@ -825,6 +862,8 @@ int prelude_string_sprintf(prelude_string_t *string, const char *fmt, ...)
         int ret;
         va_list ap;
 
+        prelude_return_val_if_fail(string && fmt, -1);
+
         va_start(ap, fmt);
         ret = prelude_string_vprintf(string, fmt, ap);
         va_end(ap);
@@ -849,6 +888,8 @@ int prelude_string_sprintf(prelude_string_t *string, const char *fmt, ...)
 int prelude_string_ncat(prelude_string_t *dst, const char *str, size_t len)
 {
         int ret;
+
+        prelude_return_val_if_fail(dst && str, -1);
 
         if ( dst->flags & PRELUDE_STRING_CAN_REALLOC && len < (dst->size - dst->index) ) {
 
@@ -885,6 +926,7 @@ int prelude_string_ncat(prelude_string_t *dst, const char *str, size_t len)
  */
 int prelude_string_cat(prelude_string_t *dst, const char *str)
 {
+        prelude_return_val_if_fail(dst && str, -1);
         return prelude_string_ncat(dst, str, strlen(str));
 }
 
@@ -899,6 +941,8 @@ int prelude_string_cat(prelude_string_t *dst, const char *str)
  */
 void prelude_string_clear(prelude_string_t *string)
 {
+        prelude_return_if_fail(string);
+
         string->index = 0;
 
         if ( string->data.rwbuf && string->flags & PRELUDE_STRING_OWN_DATA )
