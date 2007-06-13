@@ -156,7 +156,7 @@ static int handle_gnutls_error(gnutls_session session, int ret)
 
         else if ( ret == GNUTLS_E_FATAL_ALERT_RECEIVED ) {
                 last_alert = gnutls_alert_get(session);
-                prelude_log(PRELUDE_LOG_ERR, "- TLS: received fatal alert: %s.\n", gnutls_alert_get_name(last_alert));
+                prelude_log(PRELUDE_LOG_WARN, "- TLS: received fatal alert: %s.\n", gnutls_alert_get_name(last_alert));
                 return -1;
         }
 
