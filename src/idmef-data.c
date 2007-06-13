@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2003, 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2003-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 *
 * This file is part of the Prelude library.
@@ -31,6 +31,7 @@
 #include "prelude-error.h"
 #include "prelude-inttypes.h"
 #include "prelude-string.h"
+#include "common.h"
 #include "idmef-data.h"
 
 
@@ -61,6 +62,7 @@ int idmef_data_new_ ## name(idmef_data_t **nd, c_type val)            \
                                                                       \
 void idmef_data_set_ ## name(idmef_data_t *ptr, c_type val)           \
 {                                                                     \
+        prelude_return_if_fail(ptr);                                  \
         idmef_data_destroy_internal(ptr);                             \
         ptr->type = idmef_data_type;                                  \
         ptr->len = sizeof(val);                                       \
@@ -96,6 +98,8 @@ int idmef_data_new(idmef_data_t **data)
 
 idmef_data_t *idmef_data_ref(idmef_data_t *data)
 {
+        prelude_return_val_if_fail(data, NULL);
+
         data->refcount++;
         return data;
 }
@@ -104,6 +108,8 @@ idmef_data_t *idmef_data_ref(idmef_data_t *data)
 
 int idmef_data_set_ptr_ref_fast(idmef_data_t *data, idmef_data_type_t type, const void *ptr, size_t len)
 {
+        prelude_return_val_if_fail(data && ptr, -1);
+
         idmef_data_destroy_internal(data);
 
         data->type = type;
@@ -118,6 +124,8 @@ int idmef_data_set_ptr_ref_fast(idmef_data_t *data, idmef_data_type_t type, cons
 int idmef_data_set_ptr_dup_fast(idmef_data_t *data, idmef_data_type_t type, const void *ptr, size_t len)
 {
         void *new;
+
+        prelude_return_val_if_fail(data && ptr, -1);
 
         idmef_data_destroy_internal(data);
 
@@ -139,6 +147,8 @@ int idmef_data_set_ptr_dup_fast(idmef_data_t *data, idmef_data_type_t type, cons
 
 int idmef_data_set_ptr_nodup_fast(idmef_data_t *data, idmef_data_type_t type, void *ptr, size_t len)
 {
+        prelude_return_val_if_fail(data && ptr, -1);
+
         idmef_data_destroy_internal(data);
 
         data->type = type;
@@ -214,6 +224,8 @@ int idmef_data_new_ptr_nodup_fast(idmef_data_t **data, idmef_data_type_t type, v
  */
 int idmef_data_copy_ref(const idmef_data_t *src, idmef_data_t *dst)
 {
+        prelude_return_val_if_fail(src && dst, -1);
+
         idmef_data_destroy_internal(dst);
 
         dst->type = src->type;
@@ -239,6 +251,8 @@ int idmef_data_copy_ref(const idmef_data_t *src, idmef_data_t *dst)
  */
 int idmef_data_copy_dup(const idmef_data_t *src, idmef_data_t *dst)
 {
+        prelude_return_val_if_fail(src && dst, -1);
+
         idmef_data_destroy_internal(dst);
 
         dst->type = src->type;
@@ -264,6 +278,8 @@ int idmef_data_clone(const idmef_data_t *src, idmef_data_t **dst)
 {
         int ret;
 
+        prelude_return_val_if_fail(src, -1);
+
         ret = idmef_data_new(dst);
         if ( ret < 0 )
                 return ret;
@@ -279,6 +295,7 @@ int idmef_data_clone(const idmef_data_t *src, idmef_data_t **dst)
 
 const char *idmef_data_get_char_string(const idmef_data_t *data)
 {
+        prelude_return_val_if_fail(data, NULL);
         return data->data.ro_data;
 }
 
@@ -286,6 +303,7 @@ const char *idmef_data_get_char_string(const idmef_data_t *data)
 
 const unsigned char *idmef_data_get_byte_string(const idmef_data_t *data)
 {
+        prelude_return_val_if_fail(data, NULL);
         return data->data.ro_data;
 }
 
@@ -299,6 +317,7 @@ const unsigned char *idmef_data_get_byte_string(const idmef_data_t *data)
  */
 idmef_data_type_t idmef_data_get_type(const idmef_data_t *data)
 {
+        prelude_return_val_if_fail(data, -1);
         return data->type;
 }
 
@@ -313,6 +332,7 @@ idmef_data_type_t idmef_data_get_type(const idmef_data_t *data)
  */
 size_t idmef_data_get_len(const idmef_data_t *data)
 {
+        prelude_return_val_if_fail(data, 0);
         return data->len;
 }
 
@@ -327,6 +347,8 @@ size_t idmef_data_get_len(const idmef_data_t *data)
  */
 const void *idmef_data_get_data(const idmef_data_t *data)
 {
+        prelude_return_val_if_fail(data, NULL);
+
         switch ( data->type ) {
         case IDMEF_DATA_TYPE_UNKNOWN:
                 return NULL;
@@ -351,6 +373,7 @@ const void *idmef_data_get_data(const idmef_data_t *data)
  */
 prelude_bool_t idmef_data_is_empty(const idmef_data_t *data)
 {
+        prelude_return_val_if_fail(data, TRUE);
         return (data->len == 0) ? TRUE : FALSE;
 }
 
@@ -408,6 +431,8 @@ int idmef_data_to_string(const idmef_data_t *data, prelude_string_t *out)
 {
         int ret = 0;
 
+        prelude_return_val_if_fail(data && out, -1);
+
         switch ( data->type ) {
         case IDMEF_DATA_TYPE_UNKNOWN:
                 return 0;
@@ -455,6 +480,8 @@ int idmef_data_to_string(const idmef_data_t *data, prelude_string_t *out)
  */
 void idmef_data_destroy_internal(idmef_data_t *ptr)
 {
+        prelude_return_if_fail(ptr);
+
         if ( (ptr->type == IDMEF_DATA_TYPE_CHAR_STRING || ptr->type == IDMEF_DATA_TYPE_BYTE_STRING) &&
              ptr->flags & IDMEF_DATA_OWN_DATA ) {
                 free(ptr->data.rw_data);
@@ -478,6 +505,8 @@ void idmef_data_destroy_internal(idmef_data_t *ptr)
  */
 void idmef_data_destroy(idmef_data_t *data)
 {
+        prelude_return_if_fail(data);
+
         if ( --data->refcount )
                 return;
 
@@ -521,31 +550,37 @@ int idmef_data_set_char_string_nodup_fast(idmef_data_t *data, char *ptr, size_t 
 
 int idmef_data_new_char_string_ref(idmef_data_t **data, const char *ptr)
 {
+        prelude_return_val_if_fail(ptr, -1);
         return idmef_data_new_char_string_ref_fast(data, ptr, strlen(ptr));
 }
 
 int idmef_data_new_char_string_dup(idmef_data_t **data, const char *ptr)
 {
+        prelude_return_val_if_fail(ptr, -1);
         return idmef_data_new_char_string_dup_fast(data, ptr, strlen(ptr));
 }
 
 int idmef_data_new_char_string_nodup(idmef_data_t **data, char *ptr)
 {
+        prelude_return_val_if_fail(ptr, -1);
         return idmef_data_new_char_string_nodup_fast(data, ptr, strlen(ptr));
 }
 
 int idmef_data_set_char_string_ref(idmef_data_t *data, const char *ptr)
 {
+        prelude_return_val_if_fail(data && ptr, -1);
         return idmef_data_set_char_string_ref_fast(data, ptr, strlen(ptr));
 }
 
 int idmef_data_set_char_string_dup(idmef_data_t *data, const char *ptr)
 {
+        prelude_return_val_if_fail(data && ptr, -1);
         return idmef_data_set_char_string_dup_fast(data, ptr, strlen(ptr));
 }
 
 int idmef_data_set_char_string_nodup(idmef_data_t *data, char *ptr)
 {
+        prelude_return_val_if_fail(data && ptr, -1);
         return idmef_data_set_char_string_nodup_fast(data, ptr, strlen(ptr));
 }
 
