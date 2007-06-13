@@ -205,8 +205,8 @@ prelude_string_t *prelude_string_ref(prelude_string_t *string)
 {
         prelude_return_val_if_fail(string, NULL);
 
-        data->refcount++;
-        return data;
+        string->refcount++;
+        return string;
 }
 
 
@@ -574,7 +574,7 @@ int prelude_string_copy_dup(const prelude_string_t *src, prelude_string_t *dst)
 {
         prelude_return_val_if_fail(src && dst, -1);
 
-        prelude_string_destroy_internal(src && dst, -1);
+        prelude_string_destroy_internal(dst);
 
         dst->data.rwbuf = malloc(src->size);
         if ( ! dst->data.rwbuf )
