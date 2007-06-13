@@ -3,11 +3,11 @@ ACLOCAL_AMFLAGS = -I m4 -I libmissing/m4
 
 if HAVE_SYSTEM_LIBLTDL
 SUBDIRS = libmissing m4 src prelude-adduser bindings docs
-DIST_SUBDIRS=$(SUBDIRS)
 else
 SUBDIRS = libltdl libmissing m4 src prelude-adduser bindings docs
-DIST_SUBDIRS=$(SUBDIRS)
 endif
+
+DIST_SUBDIRS=$(SUBDIRS)
 
 EXTRA_DIST = HACKING.README LICENSE.README client.conf global.conf idmef-client.conf tls.conf
 
