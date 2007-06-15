@@ -62,14 +62,14 @@
 typedef struct cnx_list {
         struct cnx *and;
         struct cnx_list *or;
-        
+
         /*
          * If dead is non zero,
-         * it means one of the client in the list is down. 
+         * it means one of the client in the list is down.
          */
         unsigned int dead;
         unsigned int total;
-        
+
         prelude_connection_pool_t *parent;
 } cnx_list_t;
 
@@ -78,14 +78,14 @@ typedef struct cnx_list {
 typedef struct cnx {
         prelude_list_t list;
         struct cnx *and;
-        
+
         /*
          * Timer for client reconnection.
          */
-        prelude_timer_t timer;        
+        prelude_timer_t timer;
         prelude_failover_t *failover;
         prelude_bool_t is_dead;
-        
+
         /*
          * Pointer on a client object.
          */
@@ -100,17 +100,17 @@ typedef struct cnx {
 
 
 struct prelude_connection_pool {
-        
+
         cnx_list_t *or_list;
         prelude_failover_t *failover;
-        
+
         int nfd;
         fd_set fds;
         int refcount;
-        
+
         char *connection_string;
         prelude_connection_permission_t permission;
-        
+
         prelude_client_profile_t *client_profile;
         prelude_connection_pool_flags_t flags;
         prelude_bool_t connection_string_changed;
@@ -124,12 +124,12 @@ struct prelude_connection_pool {
         prelude_list_t int_cnx;
 
         void *data;
-        
+
         prelude_connection_pool_event_t wanted_event;
-        
+
         int (*global_event_handler)(prelude_connection_pool_t *pool,
                                     prelude_connection_pool_event_t event);
-        
+
         int (*event_handler)(prelude_connection_pool_t *pool,
                              prelude_connection_pool_event_t event,
                              prelude_connection_t *connection);
@@ -159,11 +159,11 @@ static int get_connection_backup_path(prelude_connection_t *cn, const char *path
         char c, buf[512];
         const char *addr;
         prelude_string_t *str;
-        
+
         ret = prelude_string_new_dup(&str, path);
         if ( ret < 0 )
                 return ret;
-        
+
         prelude_string_cat(str, "/");
 
         /*
@@ -177,11 +177,11 @@ static int get_connection_backup_path(prelude_connection_t *cn, const char *path
         else {
                 snprintf(buf, sizeof(buf), "%s:%u",
                          prelude_connection_get_peer_addr(cn), prelude_connection_get_peer_port(cn));
-                
+
                 while ( (c = *addr++) ) {
                         if ( c == '/' )
                                 c = '_';
-                        
+
                         prelude_string_ncat(str, &c, 1);
                 }
         }
@@ -200,7 +200,7 @@ static void notify_event(prelude_connection_pool_t *pool,
 {
         if ( ! (event & pool->wanted_event) )
                 return;
-        
+
         if ( pool->event_handler )
                 pool->event_handler(pool, event, connection);
 
@@ -211,7 +211,7 @@ static void notify_event(prelude_connection_pool_t *pool,
 
 
 static void init_cnx_timer(cnx_t *cnx)
-{        
+{
         if ( cnx->parent->parent->flags & PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT )
                 prelude_timer_init(&cnx->timer);
 }
@@ -222,21 +222,21 @@ static void connection_list_destroy(cnx_list_t *clist)
 {
         void *bkp;
         cnx_t *cnx;
-        
+
         for ( ; clist != NULL; clist = bkp ) {
-                
+
                 for ( cnx = clist->and; cnx != NULL; cnx = bkp ) {
                         bkp = cnx->and;
 
                         prelude_timer_destroy(&cnx->timer);
-                        
+
                         prelude_list_del(&cnx->list);
-                        
+
                         prelude_connection_destroy(cnx->cnx);
 
                         if ( cnx->failover )
                                 prelude_failover_destroy(cnx->failover);
-                        
+
                         free(cnx);
                 }
 
@@ -258,15 +258,15 @@ static void notify_dead(cnx_t *cnx, prelude_error_t error, prelude_bool_t init_t
                 return;
 
         code = prelude_error_get_code(error);
-        
+
         if ( ! init_time || code != PRELUDE_ERROR_PROFILE )
                 prelude_log(PRELUDE_LOG_WARN, "%sconnection error with %s: %s\n",
                             (pool->flags & PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER) ? "Failover enabled: " : "",
                             prelude_connection_get_peer_addr(cnx->cnx), prelude_strerror(error));
-        
+
         clist->dead++;
         cnx->is_dead = TRUE;
-        
+
         init_cnx_timer(cnx);
 
         if ( pool->event_handler && pool->wanted_event & PRELUDE_CONNECTION_POOL_EVENT_DEAD )
@@ -283,7 +283,7 @@ static void notify_dead(cnx_t *cnx, prelude_error_t error, prelude_bool_t init_t
 
 
 
-static void expand_timeout(prelude_timer_t *timer) 
+static void expand_timeout(prelude_timer_t *timer)
 {
         if ( prelude_timer_get_expire(timer) < MAXIMUM_EXPIRATION_TIME )
                 prelude_timer_set_expire(timer, prelude_timer_get_expire(timer) * 2);
@@ -294,7 +294,7 @@ static void expand_timeout(prelude_timer_t *timer)
 static void check_for_data_cb(void *arg)
 {
         prelude_connection_pool_t *pool = arg;
-        
+
         prelude_connection_pool_check_event(pool, 0, NULL, NULL);
         prelude_timer_reset(&pool->timer);
 }
@@ -303,7 +303,7 @@ static void check_for_data_cb(void *arg)
 static int failover_save_msg(prelude_failover_t *failover, prelude_msg_t *msg)
 {
         int ret;
-        
+
         ret = prelude_failover_save_msg(failover, msg);
         if ( ret < 0 )
                 prelude_log(PRELUDE_LOG_WARN, "failover error: %s.\n", prelude_strerror(ret));
@@ -318,17 +318,17 @@ static void broadcast_message(prelude_msg_t *msg, cnx_t *cnx)
 
         if ( ! cnx )
                 return;
-        
+
         if ( prelude_connection_is_alive(cnx->cnx) ) {
-                
-                ret = do_send(cnx->cnx, msg);                
+
+                ret = do_send(cnx->cnx, msg);
                 if ( ret < 0 )
                         notify_dead(cnx, ret, FALSE);
         }
 
         if ( ret < 0 && cnx->failover )
                 failover_save_msg(cnx->failover, msg);
-        
+
         broadcast_message(msg, cnx->and);
 }
 
@@ -338,11 +338,11 @@ static void broadcast_message(prelude_msg_t *msg, cnx_t *cnx)
  * Returns 0 on sucess, -1 on a new failure,
  * -2 on an already signaled failure.
  */
-static int walk_manager_lists(prelude_connection_pool_t *pool, prelude_msg_t *msg) 
+static int walk_manager_lists(prelude_connection_pool_t *pool, prelude_msg_t *msg)
 {
         int ret = 0;
         cnx_list_t *or;
-        
+
         for ( or = pool->or_list; or != NULL; or = or->or ) {
 
                 /*
@@ -353,13 +353,13 @@ static int walk_manager_lists(prelude_connection_pool_t *pool, prelude_msg_t *ms
                         continue;
                 }
 
-                broadcast_message(msg, or->and);                
+                broadcast_message(msg, or->and);
                 return 0;
         }
 
         if ( pool->failover )
                 failover_save_msg(pool->failover, msg);
-        
+
         return ret;
 }
 
@@ -375,30 +375,30 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
 
         if ( ! failover )
                 return 0;
-        
-        available = prelude_failover_get_available_msg_count(failover);        
-        if ( ! available ) 
+
+        available = prelude_failover_get_available_msg_count(failover);
+        if ( ! available )
                 return 0;
 
         if ( clist )
                 snprintf(name, sizeof(name), "any");
         else
                 snprintf(name, sizeof(name), "0x%" PRELUDE_PRIx64, prelude_connection_get_peer_analyzerid(cnx->cnx));
-        
+
         prelude_log(PRELUDE_LOG_INFO,
                     "- Flushing %u message to %s (%lu erased due to quota)...\n",
                     available, name, prelude_failover_get_deleted_msg_count(failover));
 
         do {
-                size = prelude_failover_get_saved_msg(failover, &msg);                
+                size = prelude_failover_get_saved_msg(failover, &msg);
                 if ( size < 0 )
                         continue;
-				
+
                 if ( size == 0 )
                         break;
 
                 if ( clist ) {
-                        broadcast_message(msg, clist->and);                        
+                        broadcast_message(msg, clist->and);
                         if ( clist->dead )
                                 ret = -1;
                 } else {
@@ -414,15 +414,15 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
 
                 if ( ret < 0 )
                         break;
-                
+
                 count++;
                 totsize += size;
-                
+
         } while ( 1 );
 
         prelude_log(PRELUDE_LOG_WARN, "- %s from failover: %u/%u messages flushed (%" PRELUDE_PRIu64 " bytes).\n",
                     (count == available) ? "Recovered" : "Failed recovering", count, available, (uint64_t) totsize);
-        
+
         return ret;
 }
 
@@ -432,18 +432,18 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
 /*
  * Function called back when one of the client reconnection timer expires.
  */
-static void connection_timer_expire(void *data) 
+static void connection_timer_expire(void *data)
 {
         int ret, fd;
         cnx_t *cnx = data;
         prelude_connection_pool_t *pool = cnx->parent->parent;
-        
+
         ret = prelude_connection_connect(cnx->cnx, pool->client_profile, pool->permission);
         if ( ret < 0 ) {
                 prelude_log(PRELUDE_LOG_WARN, "%sconnection error with %s: %s\n",
                             (pool->flags & PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER) ? "Failover enabled: " : "",
                             prelude_connection_get_peer_addr(cnx->cnx), prelude_strerror(ret));
-                                
+
                 /*
                  * Connection failed:
                  * expand the current timeout and reset the timer.
@@ -458,12 +458,12 @@ static void connection_timer_expire(void *data)
                  * is dead, emit backuped report.
                  */
                 cnx->parent->dead--;
-                cnx->is_dead = FALSE;		
+                cnx->is_dead = FALSE;
                 prelude_timer_destroy(&cnx->timer);
                 prelude_timer_set_expire(&cnx->timer, INITIAL_EXPIRATION_TIME);
 
                 notify_event(pool, PRELUDE_CONNECTION_POOL_EVENT_ALIVE, cnx->cnx);
-                                
+
                 ret = failover_flush(cnx->failover, NULL, cnx);
                 if ( ret < 0 )
                         return;
@@ -473,13 +473,13 @@ static void connection_timer_expire(void *data)
                         if ( ret < 0 )
                                 return;
                 }
-                
-		/*
-		 * put the fd in fdset to read from manager.
-		 */
+
+                /*
+                 * put the fd in fdset to read from manager.
+                 */
                 fd = prelude_io_get_fd(prelude_connection_get_fd(cnx->cnx));
                 assert(fd < FD_SETSIZE);
-                
+
                 FD_SET(fd, &pool->fds);
                 pool->nfd = MAX(fd + 1, pool->nfd);
         }
@@ -489,12 +489,12 @@ static void connection_timer_expire(void *data)
 
 
 static int new_connection(cnx_t **ncnx, prelude_client_profile_t *cp, cnx_list_t *clist,
-                          prelude_connection_t *cnx, prelude_connection_pool_flags_t flags) 
+                          prelude_connection_t *cnx, prelude_connection_pool_flags_t flags)
 {
         cnx_t *new;
         int state, fd, ret;
         char *dirname, buf[256];
-        
+
         new = malloc(sizeof(*new));
         if ( ! new )
                 return prelude_error_from_errno(errno);
@@ -503,7 +503,7 @@ static int new_connection(cnx_t **ncnx, prelude_client_profile_t *cp, cnx_list_t
         new->parent = clist;
         new->is_dead = FALSE;
         prelude_timer_init_list(&new->timer);
-        
+
         if ( flags & PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT ) {
                 prelude_timer_set_data(&new->timer, new);
                 prelude_timer_set_expire(&new->timer, INITIAL_EXPIRATION_TIME);
@@ -516,7 +516,7 @@ static int new_connection(cnx_t **ncnx, prelude_client_profile_t *cp, cnx_list_t
                 ret = get_connection_backup_path(cnx, buf, &dirname);
                 if ( ret < 0 )
                         return ret;
-        
+
                 ret = prelude_failover_new(&new->failover, dirname);
                 free(dirname);
                 if ( ret < 0 ) {
@@ -524,27 +524,27 @@ static int new_connection(cnx_t **ncnx, prelude_client_profile_t *cp, cnx_list_t
                         return ret;
                 }
         }
-        
+
         state = prelude_connection_get_state(cnx);
         if ( state & PRELUDE_CONNECTION_STATE_ESTABLISHED ) {
                 fd = prelude_io_get_fd(prelude_connection_get_fd(cnx));
                 assert(fd < FD_SETSIZE);
-                
+
                 FD_SET(fd, &clist->parent->fds);
                 clist->parent->nfd = MAX(fd + 1, clist->parent->nfd);
         }
-        
+
         new->cnx = cnx;
         new->and = NULL;
-        
+
         if ( state & PRELUDE_CONNECTION_STATE_ESTABLISHED )
                 ret = failover_flush(new->failover, NULL, new);
-        
+
         prelude_list_add(&clist->parent->int_cnx, &new->list);
         prelude_linked_object_add(&clist->parent->all_cnx, (prelude_linked_object_t *) cnx);
 
         *ncnx = new;
-        
+
         return 0;
 }
 
@@ -553,39 +553,39 @@ static int new_connection(cnx_t **ncnx, prelude_client_profile_t *cp, cnx_list_t
 
 static int new_connection_from_address(cnx_t **new,
                                        prelude_client_profile_t *cp, cnx_list_t *clist,
-                                       char *addr, prelude_connection_pool_flags_t flags) 
+                                       char *addr, prelude_connection_pool_flags_t flags)
 {
         int ret, cret;
         prelude_connection_t *cnx;
         prelude_connection_pool_event_t event;
         prelude_connection_pool_t *pool = clist->parent;
-                
-        ret = prelude_connection_new(&cnx, addr);        
+
+        ret = prelude_connection_new(&cnx, addr);
         if ( ret < 0 )
                 return ret;
 
         event = PRELUDE_CONNECTION_POOL_EVENT_ALIVE;
-        
+
         cret = prelude_connection_connect(cnx, clist->parent->client_profile, clist->parent->permission);
         if ( cret < 0 )
                 event = PRELUDE_CONNECTION_POOL_EVENT_DEAD;
-        
+
         ret = new_connection(new, cp, clist, cnx, flags);
         if ( ret < 0 ) {
                 prelude_connection_destroy(cnx);
                 return ret;
         }
-        
+
         if ( cret < 0 ) {
                 notify_dead(*new, cret, TRUE);
-                
+
                 if ( prelude_error_get_code(cret) == PRELUDE_ERROR_PROFILE )
                         return cret;
         }
-        
+
         if ( pool->event_handler && pool->wanted_event & event )
                 pool->event_handler(pool, event, cnx);
-        
+
         return 0;
 }
 
@@ -595,24 +595,24 @@ static int new_connection_from_address(cnx_t **new,
 /*
  * Creates a list (boolean AND) of connections.
  */
-static int create_connection_list(cnx_list_t **new, prelude_connection_pool_t *pool) 
+static int create_connection_list(cnx_list_t **new, prelude_connection_pool_t *pool)
 {
         *new = calloc(1, sizeof(**new));
         if ( ! *new )
                 return prelude_error_from_errno(errno);
 
         (*new)->parent = pool;
-        
+
         return 0;
 }
 
 
 
-static char *parse_config_string(char **line) 
+static char *parse_config_string(char **line)
 {
         char *out, *str = *line;
-        
-        if ( ! *line ) 
+
+        if ( ! *line )
                 return NULL;
 
         /*
@@ -622,22 +622,22 @@ static char *parse_config_string(char **line)
 
         /*
          * save it
-         */ 
+         */
         out = str;
 
         /*
          * walk until end of word.
          */
         while ( *str != '\0' && *str != ' ' ) str++;
-        
+
         if ( *str == ' ' ) {
                 *str = '\0';
                 *line = str + 1;
         }
 
-        else if ( *str == '\0' )                 
+        else if ( *str == '\0' )
                 *line = NULL;
-        
+
         return out;
 }
 
@@ -648,7 +648,7 @@ static char *parse_config_string(char **line)
  * Parse Manager configuration line:
  * x.x.x.x && y.y.y.y || z.z.z.z
  */
-static int parse_config_line(prelude_connection_pool_t *pool) 
+static int parse_config_line(prelude_connection_pool_t *pool)
 {
         int ret;
         cnx_t **cnx;
@@ -658,19 +658,19 @@ static int parse_config_line(prelude_connection_pool_t *pool)
         ret = create_connection_list(&pool->or_list, pool);
         if ( ret < 0 )
                 return ret;
-        
+
         clist = pool->or_list;
         cnx = &clist->and;
-        
-        while ( 1 ) {                
+
+        while ( 1 ) {
                 ptr = parse_config_string(&cfgline);
-                
+
                 /*
                  * If we meet end of line or "||",
                  * it means we just finished adding a AND list.
                  */
                 if ( ! ptr || (ret = strcmp(ptr, "||") == 0) ) {
-                                                                        
+
                         /*
                          * end of line ?
                          */
@@ -678,7 +678,7 @@ static int parse_config_line(prelude_connection_pool_t *pool)
                                 break;
 
                         /*
-                         * we met the || operator, prepare a new list. 
+                         * we met the || operator, prepare a new list.
                          */
                         ret = create_connection_list(&clist->or, pool);
                         if ( ret < 0 )
@@ -688,11 +688,11 @@ static int parse_config_line(prelude_connection_pool_t *pool)
                         cnx = &clist->and;
                         continue;
                 }
-                
+
                 ret = strcmp(ptr, "&&");
                 if ( ret == 0 )
                         continue;
-                
+
                 ret = new_connection_from_address(cnx, pool->client_profile, clist, ptr, pool->flags);
                 if ( ret < 0 )
                         return ret;
@@ -700,14 +700,14 @@ static int parse_config_line(prelude_connection_pool_t *pool)
                 clist->total++;
                 cnx = &(*cnx)->and;
         }
-                
+
         return 0;
 }
 
 
 
 
-static cnx_t *search_cnx(prelude_connection_pool_t *pool, prelude_connection_t *cnx) 
+static cnx_t *search_cnx(prelude_connection_pool_t *pool, prelude_connection_t *cnx)
 {
         cnx_t *c;
         cnx_list_t *clist;
@@ -715,7 +715,7 @@ static cnx_t *search_cnx(prelude_connection_pool_t *pool, prelude_connection_t *
         for ( clist = pool->or_list; clist != NULL; clist = clist->or ) {
 
                 for ( c = clist->and; c != NULL; c = c->and ) {
-                        
+
                         if ( c->cnx == cnx )
                                 return c;
                 }
@@ -727,11 +727,11 @@ static cnx_t *search_cnx(prelude_connection_pool_t *pool, prelude_connection_t *
 
 
 
-static void broadcast_async_cb(void *obj, void *data) 
+static void broadcast_async_cb(void *obj, void *data)
 {
         prelude_msg_t *msg = obj;
         prelude_connection_pool_t *pool = data;
-        
+
         prelude_connection_pool_broadcast(pool, msg);
         prelude_msg_destroy(msg);
 
@@ -748,7 +748,7 @@ static void broadcast_async_cb(void *obj, void *data)
  *
  * Sends the message contained in @msg to all the connection in @pool.
  */
-void prelude_connection_pool_broadcast(prelude_connection_pool_t *pool, prelude_msg_t *msg) 
+void prelude_connection_pool_broadcast(prelude_connection_pool_t *pool, prelude_msg_t *msg)
 {
         walk_manager_lists(pool, msg);
 }
@@ -765,10 +765,10 @@ void prelude_connection_pool_broadcast(prelude_connection_pool_t *pool, prelude_
  * in @pool asynchronously. After the request is processed,
  * the @msg message will be freed.
  */
-void prelude_connection_pool_broadcast_async(prelude_connection_pool_t *pool, prelude_msg_t *msg) 
+void prelude_connection_pool_broadcast_async(prelude_connection_pool_t *pool, prelude_msg_t *msg)
 {
         pool->refcount++;
-        
+
         prelude_async_set_callback((prelude_async_object_t *) msg, &broadcast_async_cb);
         prelude_async_set_data((prelude_async_object_t *) msg, pool);
         prelude_async_add((prelude_async_object_t *) msg);
@@ -791,22 +791,22 @@ int prelude_connection_pool_init(prelude_connection_pool_t *pool)
         int ret;
         cnx_list_t *clist;
         char dirname[512], buf[512];
-        
-        if ( ! pool->failover && (pool->flags & PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER) ) {          
-                prelude_client_profile_get_backup_dirname(pool->client_profile, buf, sizeof(buf));        
+
+        if ( ! pool->failover && (pool->flags & PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER) ) {
+                prelude_client_profile_get_backup_dirname(pool->client_profile, buf, sizeof(buf));
                 snprintf(dirname, sizeof(dirname), "%s/global", buf);
 
-                ret = prelude_failover_new(&pool->failover, dirname);                
+                ret = prelude_failover_new(&pool->failover, dirname);
                 if ( ret < 0 )
                         return ret;
         }
-        
+
         if ( ! pool->connection_string_changed || ! pool->connection_string )
                 return prelude_error(PRELUDE_ERROR_CONNECTION_STRING);
-        
-        pool->connection_string_changed = FALSE;        
+
+        pool->connection_string_changed = FALSE;
         connection_list_destroy(pool->or_list);
-        
+
         pool->nfd = 0;
         pool->or_list = NULL;
         prelude_list_init(&pool->all_cnx);
@@ -814,32 +814,32 @@ int prelude_connection_pool_init(prelude_connection_pool_t *pool)
         ret = parse_config_line(pool);
         if ( ret < 0 || ! pool->or_list )
                 return ret;
-        
+
         for ( clist = pool->or_list; clist != NULL; clist = clist->or ) {
-                                
+
                 if ( clist->dead )
                         continue;
-                
+
                 if ( pool->failover ) {
                         ret = failover_flush(pool->failover, clist, NULL);
                         if ( ret == 0 )
                                 break;
                 }
         }
-                
+
         if ( pool->global_event_handler )
                 pool->global_event_handler(pool, 0);
-        
+
         if ( ret < 0 )
                 prelude_log(PRELUDE_LOG_WARN, "Can't contact configured Manager - Enabling failsafe mode.\n");
-                        
-        if ( pool->wanted_event & PRELUDE_CONNECTION_POOL_EVENT_INPUT ) {                
+
+        if ( pool->wanted_event & PRELUDE_CONNECTION_POOL_EVENT_INPUT ) {
                 prelude_timer_set_data(&pool->timer, pool);
                 prelude_timer_set_expire(&pool->timer, 1);
                 prelude_timer_set_callback(&pool->timer, check_for_data_cb);
                 prelude_timer_init(&pool->timer);
         }
-        
+
         return 0;
 }
 
@@ -860,22 +860,22 @@ int prelude_connection_pool_new(prelude_connection_pool_t **ret,
                                 prelude_connection_permission_t permission)
 {
         prelude_connection_pool_t *new;
-        
+
         *ret = new = calloc(1, sizeof(*new));
-        if ( ! new ) 
+        if ( ! new )
                 return prelude_error_from_errno(errno);
-                
+
         FD_ZERO(&new->fds);
         new->refcount = 1;
         new->client_profile = cp;
         new->permission = permission;
         new->connection_string_changed = FALSE;
         new->flags = PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER;
-        
+
         prelude_list_init(&new->all_cnx);
         prelude_list_init(&new->int_cnx);
         prelude_timer_init_list(&new->timer);
-        
+
         return 0;
 }
 
@@ -887,18 +887,18 @@ int prelude_connection_pool_new(prelude_connection_pool_t **ret,
  *
  * Destroys @pool and all connections handled.
  */
-void prelude_connection_pool_destroy(prelude_connection_pool_t *pool) 
-{        
+void prelude_connection_pool_destroy(prelude_connection_pool_t *pool)
+{
         if ( --pool->refcount != 0 )
                 return;
-        
+
         prelude_timer_destroy(&pool->timer);
-                
+
         if ( pool->connection_string )
                 free(pool->connection_string);
-        
+
         connection_list_destroy(pool->or_list);
-        
+
         if ( pool->failover )
                 prelude_failover_destroy(pool->failover);
 
@@ -920,13 +920,13 @@ int prelude_connection_pool_add_connection(prelude_connection_pool_t *pool, prel
 {
         int ret;
         cnx_t **c;
-        
+
         if ( ! pool->or_list ) {
                 ret = create_connection_list(&pool->or_list, pool);
-                if ( ret < 0 ) 
+                if ( ret < 0 )
                         return ret;
         }
-        
+
         for ( c = &pool->or_list->and; (*c); c = &(*c)->and );
 
         ret = new_connection(c, pool->client_profile, pool->or_list, cnx, pool->flags);
@@ -940,7 +940,7 @@ int prelude_connection_pool_add_connection(prelude_connection_pool_t *pool, prel
                 if ( ret < 0 )
                         return ret;
         }
-        
+
         return 0;
 }
 
@@ -960,7 +960,7 @@ int prelude_connection_pool_add_connection(prelude_connection_pool_t *pool, prel
 void prelude_connection_pool_set_global_event_handler(prelude_connection_pool_t *pool,
                                                       prelude_connection_pool_event_t wanted_events,
                                                       int (*callback)(prelude_connection_pool_t *pool,
-                                                                      prelude_connection_pool_event_t events)) 
+                                                                      prelude_connection_pool_event_t events))
 {
         pool->wanted_event = wanted_events;
         pool->global_event_handler = callback;
@@ -995,7 +995,7 @@ void prelude_connection_pool_set_event_handler(prelude_connection_pool_t *pool,
  *
  * Returns: The list of connections handled by @pool.
  */
-prelude_list_t *prelude_connection_pool_get_connection_list(prelude_connection_pool_t *pool) 
+prelude_list_t *prelude_connection_pool_get_connection_list(prelude_connection_pool_t *pool)
 {
         return &pool->all_cnx;
 }
@@ -1020,7 +1020,7 @@ prelude_list_t *prelude_connection_pool_get_connection_list(prelude_connection_p
 int prelude_connection_pool_set_connection_dead(prelude_connection_pool_t *pool, prelude_connection_t *cnx)
 {
         cnx_t *c;
-        
+
         c = search_cnx(pool, cnx);
         if ( ! c )
                 return -1;
@@ -1031,7 +1031,7 @@ int prelude_connection_pool_set_connection_dead(prelude_connection_pool_t *pool,
         c->is_dead = TRUE;
         c->parent->dead++;
         init_cnx_timer(c);
-                
+
         return 0;
 }
 
@@ -1052,31 +1052,31 @@ int prelude_connection_pool_set_connection_dead(prelude_connection_pool_t *pool,
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
-int prelude_connection_pool_set_connection_alive(prelude_connection_pool_t *pool, prelude_connection_t *cnx) 
+int prelude_connection_pool_set_connection_alive(prelude_connection_pool_t *pool, prelude_connection_t *cnx)
 {
         int ret;
         cnx_t *c;
-        
+
         c = search_cnx(pool, cnx);
         if ( ! c )
                 return -1;
-        
+
         if ( c->parent->dead == 0 )
                 return 0;
 
         c->parent->dead--;
         c->is_dead = FALSE;
-        
+
         ret = failover_flush(c->failover, NULL, c);
         if ( ret < 0 )
                 return ret;
-        
+
         if ( c->parent->dead == 0 && pool->failover ) {
                 ret = failover_flush(pool->failover, c->parent, NULL);
                 if ( ret < 0 )
                         return ret;
         }
-                        
+
         return 0;
 }
 
@@ -1089,7 +1089,7 @@ int prelude_connection_pool_set_connection_alive(prelude_connection_pool_t *pool
  *
  * Sets the connection string for @pool. The connection string should be
  * in the form of : "address". Special operand like || (OR) and && (AND),
- * are also accepted: "address && address". 
+ * are also accepted: "address && address".
  *
  * Where && means that alert sent using @pool will go to both configured
  * addresses, and || means that if the left address fails, the right address
@@ -1102,14 +1102,14 @@ int prelude_connection_pool_set_connection_alive(prelude_connection_pool_t *pool
 int prelude_connection_pool_set_connection_string(prelude_connection_pool_t *pool, const char *cfgstr)
 {
         char *new;
-        
+
         new = strdup(cfgstr);
         if ( ! new )
                 return prelude_error_from_errno(errno);
 
         if ( pool->connection_string )
                 free(pool->connection_string);
-        
+
         pool->connection_string = new;
         pool->connection_string_changed = TRUE;
 
@@ -1180,7 +1180,7 @@ static int connection_pool_check_event(prelude_connection_pool_t *pool, int time
         prelude_list_t *tmp;
         struct timeval tv, *tvptr = NULL;
         prelude_connection_pool_event_t global_event = 0;
-        
+
         if ( timeout >= 0 ) {
                 tvptr = &tv;
                 tv.tv_sec = timeout;
@@ -1195,13 +1195,13 @@ static int connection_pool_check_event(prelude_connection_pool_t *pool, int time
 
         else if ( ret == 0 )
                 return 0;
-        
-        prelude_list_for_each(&pool->int_cnx, tmp) {                
+
+        prelude_list_for_each(&pool->int_cnx, tmp) {
                 cnx = prelude_list_entry(tmp, cnx_t, list);
-                
+
                 if ( ! prelude_connection_is_alive(cnx->cnx) )
                         continue;
-                                
+
                 ret = FD_ISSET(prelude_io_get_fd(prelude_connection_get_fd(cnx->cnx)), &rfds);
                 if ( ! ret )
                         continue;
@@ -1216,19 +1216,19 @@ static int connection_pool_check_event(prelude_connection_pool_t *pool, int time
                                 do {
                                         ret = prelude_connection_recv(cnx->cnx, outmsg);
                                 } while ( ret < 0 && prelude_error_get_code(ret) == PRELUDE_ERROR_EAGAIN );
-                        
+
                                 if ( ret < 0 ) {
                                         global_event |= PRELUDE_CONNECTION_POOL_EVENT_DEAD;
                                         notify_dead(cnx, ret, FALSE);
-                                                                
+
                                         i--;
                                         continue;
                                 }
                         }
-                        
+
                         break;
                 }
-                
+
                 else if ( event_cb ) {
                         ret = event_cb(pool, PRELUDE_CONNECTION_POOL_EVENT_INPUT, cnx->cnx, extra);
                         if ( ret < 0 ) {
@@ -1248,10 +1248,10 @@ static int connection_pool_check_event(prelude_connection_pool_t *pool, int time
 
         if ( global_event & pool->wanted_event && pool->global_event_handler )
                 pool->global_event_handler(pool, global_event);
-        
+
         if ( pool->connection_string_changed )
                 prelude_connection_pool_init(pool);
-        
+
         return i;
 }
 
@@ -1293,7 +1293,7 @@ int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int tim
  * @timeout: Time to wait for an event.
  * @outconn: Pointer where the connection where an event happened should be stored.
  * @outmsg: Pointer where the next message that will be read should be stored.
- * 
+ *
  * This function queries the set of connections available in @pool to see if
  * events are waiting to be handled. If timeout is zero, then this function
  * will return immediatly in case there is no event to be handled.
