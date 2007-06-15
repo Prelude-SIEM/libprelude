@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2003, 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2003-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
 * Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 *
@@ -21,17 +21,17 @@
 * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *****/
-     
+
 %{
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_IDMEF_CRITERIA
-        
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <stdarg.h>
 #include <ctype.h>
-        
+
 #include "prelude-thread.h"
 #include "prelude-log.h"
 #include "prelude-error.h"
@@ -45,10 +45,10 @@ static int real_ret = 0;
 static idmef_criteria_t *processed_criteria;
 pthread_mutex_t _criteria_parse_mutex = PTHREAD_MUTEX_INITIALIZER;
 
- 
+
 #define operator_or 1
 #define operator_and 2
- 
+
 extern int yylex(void);
 extern void yylex_init(void);
 extern void yylex_destroy(void);
@@ -62,12 +62,12 @@ void _idmef_criteria_string_init_lexer(void);
 %}
 
 %union {
-	char *str;
+        char *str;
         int operator;
-	idmef_criterion_t *criterion;
-	idmef_criteria_t *criteria;
-	idmef_criterion_operator_t relation;
-}     
+        idmef_criterion_t *criterion;
+        idmef_criteria_t *criteria;
+        idmef_criterion_operator_t relation;
+}
 
 /* BISON Declarations */
 
@@ -113,121 +113,121 @@ void _idmef_criteria_string_init_lexer(void);
 /* Grammar follows */
 %%
 
-input: criteria					{
-							processed_criteria = $1;
-						}
+input: criteria                                        {
+                                                        processed_criteria = $1;
+                                                }
 ;
 
-criteria:	criteria_base			{
-							$$ = $1;
-						}
-	| criteria operator criteria_base	{                                                        
+criteria:        criteria_base                        {
+                                                        $$ = $1;
+                                                }
+        | criteria operator criteria_base        {
                                                         if ( $2 == operator_or ) {
                                                                 idmef_criteria_or_criteria($1, $3);
                                                         } else {
                                                                 idmef_criteria_and_criteria($1, $3);
                                                         }
-                                                        
+
                                                         $$ = $1;
-						}
+                                                }
 ;
 
-criteria_base:	criterion			{
-							idmef_criteria_t *criteria;
+criteria_base:        criterion                        {
+                                                        idmef_criteria_t *criteria;
 
-							real_ret = idmef_criteria_new(&criteria);
-							if ( real_ret < 0 )
-								YYABORT;
+                                                        real_ret = idmef_criteria_new(&criteria);
+                                                        if ( real_ret < 0 )
+                                                                YYABORT;
 
                                                         idmef_criteria_set_criterion(criteria, $1);
-							$$ = criteria;
-                                                        
-						}
-	| '(' criteria ')'			{
-							$$ = $2;
-						}
+                                                        $$ = criteria;
+
+                                                }
+        | '(' criteria ')'                        {
+                                                        $$ = $2;
+                                                }
 ;
 
 criterion: TOK_IDMEF_PATH relation TOK_IDMEF_VALUE {
-							idmef_path_t *path = NULL;
-							idmef_criterion_value_t *value = NULL;
-							idmef_criterion_operator_t operator = $2;
-							idmef_criterion_t *criterion;
+                                                        idmef_path_t *path = NULL;
+                                                        idmef_criterion_value_t *value = NULL;
+                                                        idmef_criterion_operator_t operator = $2;
+                                                        idmef_criterion_t *criterion;
 
-							real_ret = idmef_path_new_fast(&path, $1);
-							if ( real_ret < 0 ) {
-								free($1);
-								free($3);
-								YYABORT;
-							}
-                                                        
-							real_ret = idmef_criterion_value_new_from_string(&value, path, $3, operator);
-							if ( real_ret < 0 ) {
-								free($1);
-								free($3);
-								idmef_path_destroy(path);
-								YYABORT;
-							}
+                                                        real_ret = idmef_path_new_fast(&path, $1);
+                                                        if ( real_ret < 0 ) {
+                                                                free($1);
+                                                                free($3);
+                                                                YYABORT;
+                                                        }
 
-							real_ret = idmef_criterion_new(&criterion, path, value, operator);
-							if ( real_ret < 0 ) {
-								free($1);
-								free($3);
-								idmef_path_destroy(path);
-								idmef_criterion_value_destroy(value);
-								YYABORT;
-							}
+                                                        real_ret = idmef_criterion_value_new_from_string(&value, path, $3, operator);
+                                                        if ( real_ret < 0 ) {
+                                                                free($1);
+                                                                free($3);
+                                                                idmef_path_destroy(path);
+                                                                YYABORT;
+                                                        }
 
-							free($1);
-							free($3);
-                                                        
-							$$ = criterion;
-						}
-	| TOK_IDMEF_PATH				{
-							idmef_path_t *path;
-							idmef_criterion_t *criterion;
-                                                        
-							real_ret = idmef_path_new_fast(&path, $1);
-							if ( real_ret < 0 ) {
-								free($1);
-								YYABORT;
-							}
+                                                        real_ret = idmef_criterion_new(&criterion, path, value, operator);
+                                                        if ( real_ret < 0 ) {
+                                                                free($1);
+                                                                free($3);
+                                                                idmef_path_destroy(path);
+                                                                idmef_criterion_value_destroy(value);
+                                                                YYABORT;
+                                                        }
 
-							real_ret = idmef_criterion_new(&criterion, path, NULL,
+                                                        free($1);
+                                                        free($3);
+
+                                                        $$ = criterion;
+                                                }
+        | TOK_IDMEF_PATH                                {
+                                                        idmef_path_t *path;
+                                                        idmef_criterion_t *criterion;
+
+                                                        real_ret = idmef_path_new_fast(&path, $1);
+                                                        if ( real_ret < 0 ) {
+                                                                free($1);
+                                                                YYABORT;
+                                                        }
+
+                                                        real_ret = idmef_criterion_new(&criterion, path, NULL,
                                                                                        IDMEF_CRITERION_OPERATOR_NOT|
                                                                                        IDMEF_CRITERION_OPERATOR_NULL);
-							if ( real_ret < 0 ) {
-								free($1);
-								idmef_path_destroy(path);
-								YYABORT;
-							}
+                                                        if ( real_ret < 0 ) {
+                                                                free($1);
+                                                                idmef_path_destroy(path);
+                                                                YYABORT;
+                                                        }
 
-							free($1);
+                                                        free($1);
 
-							$$ = criterion;
-						}
-	| TOK_RELATION_IS_NULL TOK_IDMEF_PATH	{
-							idmef_path_t *path;
-							idmef_criterion_t *criterion;
+                                                        $$ = criterion;
+                                                }
+        | TOK_RELATION_IS_NULL TOK_IDMEF_PATH        {
+                                                        idmef_path_t *path;
+                                                        idmef_criterion_t *criterion;
 
-							real_ret = idmef_path_new_fast(&path, $2);
-							if ( real_ret < 0) {
-								free($2);
-								YYABORT;
-							}
+                                                        real_ret = idmef_path_new_fast(&path, $2);
+                                                        if ( real_ret < 0) {
+                                                                free($2);
+                                                                YYABORT;
+                                                        }
 
-							real_ret = idmef_criterion_new(&criterion, path, NULL,
+                                                        real_ret = idmef_criterion_new(&criterion, path, NULL,
                                                                                        IDMEF_CRITERION_OPERATOR_NULL);
-							if ( real_ret < 0 ) {
-								free($2);
-								idmef_path_destroy(path);
-								YYABORT;
-							}
+                                                        if ( real_ret < 0 ) {
+                                                                free($2);
+                                                                idmef_path_destroy(path);
+                                                                YYABORT;
+                                                        }
 
-							free($2);
+                                                        free($2);
 
-							$$ = criterion;
-						}
+                                                        $$ = criterion;
+                                                }
 ;
 
 relation:
@@ -248,12 +248,12 @@ relation:
 | TOK_RELATION_NOT_EQUAL            { $$ = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT; }
 | TOK_RELATION_NOT_EQUAL_NOCASE     { $$ = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE|IDMEF_CRITERION_OPERATOR_NOT; }
 | TOK_RELATION_IS_NULL              { $$ = IDMEF_CRITERION_OPERATOR_NULL; }
-| TOK_ERROR                         { real_ret = prelude_error_verbose(PRELUDE_ERROR_IDMEF_CRITERIA_PARSE, 
+| TOK_ERROR                         { real_ret = prelude_error_verbose(PRELUDE_ERROR_IDMEF_CRITERIA_PARSE,
                                                                        "Criteria parser reported: Invalid operator found"); YYERROR; }
 ;
 
-operator:       TOK_OPERATOR_AND		{ $$ = operator_and; }
-       |	TOK_OPERATOR_OR		        { $$ = operator_or; }
+operator:       TOK_OPERATOR_AND                { $$ = operator_and; }
+       |        TOK_OPERATOR_OR                        { $$ = operator_or; }
 ;
 
 %%
@@ -270,32 +270,32 @@ static void yyerror(char *s)  /* Called by yyparse on error */
 int idmef_criteria_new_from_string(idmef_criteria_t **new_criteria, const char *str)
 {
         int ret;
-	void *state;
-        
-	prelude_thread_mutex_lock(&_criteria_parse_mutex);
+        void *state;
+
+        prelude_thread_mutex_lock(&_criteria_parse_mutex);
 
         real_ret = 0;
-	processed_criteria = NULL;
-        
-	state = yy_scan_string(str);
-	ret = yyparse();
-	yy_delete_buffer(state);
+        processed_criteria = NULL;
+
+        state = yy_scan_string(str);
+        ret = yyparse();
+        yy_delete_buffer(state);
 
         if ( ret != 0 ) {
                 _idmef_criteria_string_init_lexer();
-                
+
                 if ( real_ret )
                         ret = real_ret;
                 else
                         ret = prelude_error_make(PRELUDE_ERROR_SOURCE_IDMEF_CRITERIA, PRELUDE_ERROR_IDMEF_CRITERIA_PARSE);
-	
-	        if ( processed_criteria )
-	                idmef_criteria_destroy(processed_criteria);
-	}
+
+                if ( processed_criteria )
+                        idmef_criteria_destroy(processed_criteria);
+        }
 
         else *new_criteria = processed_criteria;
 
-	prelude_thread_mutex_unlock(&_criteria_parse_mutex);
+        prelude_thread_mutex_unlock(&_criteria_parse_mutex);
 
-	return ret;
+        return ret;
 }
