@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2003,2004,2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2003-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 *
 * This file is part of the Prelude library.
@@ -73,7 +73,7 @@ static char *parse_time_ymd(struct tm *tm, const char *buf)
          */
         while ( isspace((int) *ptr) )
                 ptr++;
-        
+
         if ( *ptr == 'T' )
                 ptr++;
 
@@ -118,7 +118,7 @@ static int parse_time_gmt(struct tm *tm, int32_t *gmtoff, const char *buf)
          */
         if ( *buf == 'Z' )
                 return 0;
-        
+
         ret = sscanf(buf + 1, "%2u:%2u", &offset_hour, &offset_min);
         if ( ret != 2 )
                 return -1;
@@ -126,18 +126,18 @@ static int parse_time_gmt(struct tm *tm, int32_t *gmtoff, const char *buf)
         if ( *buf == '+' ) {
                 tm->tm_min -= offset_min;
                 tm->tm_hour -= offset_hour;
-		*gmtoff = offset_hour * 3600 + offset_min * 60;
+                *gmtoff = offset_hour * 3600 + offset_min * 60;
         }
 
         else if ( *buf == '-' ) {
                 tm->tm_min += offset_min;
                 tm->tm_hour += offset_hour;
-		*gmtoff = - (offset_hour * 3600 + offset_min * 60);
+                *gmtoff = - (offset_hour * 3600 + offset_min * 60);
         }
-        
+
         else
                 return -1;
-        
+
         return 0;
 }
 
@@ -163,14 +163,14 @@ int idmef_time_set_from_string(idmef_time_t *time, const char *buf)
         char *ptr;
         struct tm tm;
         int is_localtime = 1, ret;
-        
+
         memset(&tm, 0, sizeof(tm));
         tm.tm_isdst = -1;
 
         ptr = parse_time_ymd(&tm, buf);
         if ( ! ptr )
                 return -1;
-        
+
         if ( *ptr ) {
                 ptr = parse_time_hmsu(&tm, &time->usec, ptr);
                 if ( ! ptr )
@@ -212,7 +212,7 @@ int idmef_time_set_from_string(idmef_time_t *time, const char *buf)
 int idmef_time_new_from_string(idmef_time_t **time, const char *buf)
 {
         int ret;
-        
+
         ret = idmef_time_new(time);
         if ( ret < 0 )
                 return ret;
@@ -243,12 +243,12 @@ int idmef_time_set_from_ntpstamp(idmef_time_t *time, const char *buf)
         struct timeval tv;
         unsigned ts_mask = TS_MASK;
         unsigned ts_roundbit = TS_ROUNDBIT;
-        
-        
+
+
         if ( sscanf(buf, "%x.%x", &ts.l_ui, &ts.l_uf) < 2 )
                 return -1;
 
-        /* 
+        /*
          * This transformation is a reverse form of the one found in
          *  idmef_get_ntp_timestamp()
          */
@@ -257,7 +257,7 @@ int idmef_time_set_from_ntpstamp(idmef_time_t *time, const char *buf)
         ts.l_uf &= ts_mask;
         TSTOTV(&ts, &tv);
 
-	time->sec = tv.tv_sec;
+        time->sec = tv.tv_sec;
         time->usec = tv.tv_usec;
         time->gmt_offset = 0;
 
@@ -284,7 +284,7 @@ int idmef_time_to_ntpstamp(const idmef_time_t *time, prelude_string_t *out)
         unsigned ts_roundbit = TS_ROUNDBIT;     /* defaults to 20 bits (us) */
         int ret;
 
-	tv.tv_sec = idmef_time_get_sec(time);
+        tv.tv_sec = idmef_time_get_sec(time);
         tv.tv_usec = idmef_time_get_usec(time);
 
         sTVTOTS(&tv, &ts);
@@ -292,7 +292,7 @@ int idmef_time_to_ntpstamp(const idmef_time_t *time, prelude_string_t *out)
         ts.l_ui += JAN_1970;                    /* make it time since 1900 */
         ts.l_uf += ts_roundbit;
         ts.l_uf &= ts_mask;
-        
+
         ret = prelude_string_sprintf(out, "0x%08lx.0x%08lx", (unsigned long) ts.l_ui, (unsigned long) ts.l_uf);
 
         return ret;
@@ -316,15 +316,15 @@ int idmef_time_to_string(const idmef_time_t *time, prelude_string_t *out)
         struct tm utc;
         uint32_t hour_off, min_off, sec_off;
 
-	t = time->sec + time->gmt_offset;	
+        t = time->sec + time->gmt_offset;
 
         if ( ! gmtime_r((const time_t *) &t, &utc) )
                 return prelude_error_from_errno(errno);
 
-	hour_off = time->gmt_offset / 3600;
-	min_off = time->gmt_offset % 3600 / 60;
-	sec_off = time->gmt_offset % 60;
-        
+        hour_off = time->gmt_offset / 3600;
+        min_off = time->gmt_offset % 3600 / 60;
+        sec_off = time->gmt_offset % 60;
+
         return prelude_string_sprintf(out, "%d-%.2d-%.2dT%.2d:%.2d:%.2d.%02u%+.2d:%.2d",
                                       utc.tm_year + 1900, utc.tm_mon + 1, utc.tm_mday,
                                       utc.tm_hour, utc.tm_min, utc.tm_sec, idmef_time_get_usec(time),
@@ -358,7 +358,7 @@ int idmef_time_new_from_ntpstamp(idmef_time_t **time, const char *buf)
                 return ret;
         }
 
-        return 0; 
+        return 0;
 }
 
 
@@ -403,7 +403,7 @@ int idmef_time_set_from_timeval(idmef_time_t *time, const struct timeval *tv)
 int idmef_time_new_from_timeval(idmef_time_t **time, const struct timeval *tv)
 {
         int ret;
-	
+
         ret = idmef_time_new(time);
         if ( ret < 0 )
                 return ret;
@@ -489,9 +489,9 @@ int idmef_time_new(idmef_time_t **time)
         *time = calloc(1, sizeof(**time));
         if ( ! *time )
                 return prelude_error_from_errno(errno);
-        
+
         (*time)->refcount = 1;
-        
+
         return 0;
 }
 
@@ -509,12 +509,12 @@ int idmef_time_new(idmef_time_t **time)
 int idmef_time_clone(const idmef_time_t *src, idmef_time_t **dst)
 {
         int ret;
-        
+
         ret = idmef_time_new(dst);
         if ( ret < 0 )
                 return ret;
 
-	return idmef_time_copy(src, *dst);
+        return idmef_time_copy(src, *dst);
 }
 
 
@@ -530,12 +530,12 @@ int idmef_time_clone(const idmef_time_t *src, idmef_time_t **dst)
  */
 void idmef_time_set_from_time(idmef_time_t *time, const time_t *t)
 {
-	long gmtoff;
+        long gmtoff;
 
-	prelude_get_gmt_offset_from_time(t, &gmtoff);
-	
-	time->gmt_offset = (int32_t) gmtoff;
-	time->sec = *t;
+        prelude_get_gmt_offset_from_time(t, &gmtoff);
+
+        time->gmt_offset = (int32_t) gmtoff;
+        time->sec = *t;
 }
 
 
@@ -680,8 +680,8 @@ int idmef_time_copy(const idmef_time_t *src, idmef_time_t *dst)
 {
         dst->sec = src->sec;
         dst->usec = src->usec;
-	dst->gmt_offset = src->gmt_offset;
-        
+        dst->gmt_offset = src->gmt_offset;
+
         return 0;
 }
 
@@ -722,7 +722,7 @@ void idmef_time_destroy(idmef_time_t *time)
 int idmef_time_compare(const idmef_time_t *time1, const idmef_time_t *time2)
 {
         double t1, t2;
-        
+
         if ( ! time1 && ! time2 )
                 return 0;
 
