@@ -1308,7 +1308,7 @@ int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int tim
                                                         prelude_connection_pool_event_t event,
                                                         prelude_connection_t *cnx, void *extra), void *extra)
 {
-        prelude_return_val_if_fail(pool && event_cb, -1);
+        prelude_return_val_if_fail(pool, -1);
         return connection_pool_check_event(pool, timeout, event_cb, extra, NULL, NULL);
 }
 
