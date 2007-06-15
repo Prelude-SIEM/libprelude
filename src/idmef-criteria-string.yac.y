@@ -272,6 +272,8 @@ int idmef_criteria_new_from_string(idmef_criteria_t **new_criteria, const char *
         int ret;
         void *state;
 
+        prelude_return_val_if_fail(str, -1);
+
         prelude_thread_mutex_lock(&_criteria_parse_mutex);
 
         real_ret = 0;
