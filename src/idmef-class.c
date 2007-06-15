@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002, 2003, 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2002-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 * Author: Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
 *
@@ -66,11 +66,11 @@ static inline int is_child_valid(idmef_class_id_t class, idmef_class_child_id_t 
         ret = is_class_valid(class);
         if ( ret < 0 )
                 return ret;
-                
-	if ( child < 0 || child >= object_data[class].children_list_elem )
-		return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD, "Unknown IDMEF child '%d' for class '%s'",
+
+        if ( child < 0 || child >= object_data[class].children_list_elem )
+                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD, "Unknown IDMEF child '%d' for class '%s'",
                                              (int) child, object_data[class].name);
-        
+
         return 0;
 }
 
@@ -81,19 +81,19 @@ idmef_class_child_id_t idmef_class_find_child(idmef_class_id_t class, const char
 {
         int ret;
         idmef_class_child_id_t i;
-	const children_list_t *list;
+        const children_list_t *list;
 
         ret = is_class_valid(class);
         if ( ret < 0 )
                 return ret;
-                
-	list = object_data[class].children_list;
-                
-	for ( i = 0; list[i].name; i++ )                
-		if ( strcasecmp(list[i].name, name) == 0)
-			return i;
 
-	return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD, "Unknown IDMEF child '%s'", name);
+        list = object_data[class].children_list;
+
+        for ( i = 0; list[i].name; i++ )
+                if ( strcasecmp(list[i].name, name) == 0)
+                        return i;
+
+        return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD, "Unknown IDMEF child '%s'", name);
 }
 
 
@@ -106,7 +106,7 @@ prelude_bool_t idmef_class_is_child_list(idmef_class_id_t class, idmef_class_chi
         ret = is_child_valid(class, child);
         if ( ret < 0 )
                 return ret;
-        
+
         return object_data[class].children_list[child].list;
 }
 
@@ -116,11 +116,11 @@ prelude_bool_t idmef_class_is_child_list(idmef_class_id_t class, idmef_class_chi
 idmef_value_type_id_t idmef_class_get_child_value_type(idmef_class_id_t class, idmef_class_child_id_t child)
 {
         int ret;
-        
+
         ret = is_child_valid(class, child);
         if ( ret < 0 )
                 return ret;
-        
+
         return object_data[class].children_list[child].type;
 }
 
@@ -130,8 +130,8 @@ idmef_value_type_id_t idmef_class_get_child_value_type(idmef_class_id_t class, i
 idmef_class_id_t idmef_class_get_child_class(idmef_class_id_t class, idmef_class_child_id_t child)
 {
         int ret;
-	const children_list_t *c;
-        
+        const children_list_t *c;
+
         ret = is_child_valid(class, child);
         if ( ret < 0 )
                 return ret;
@@ -139,7 +139,7 @@ idmef_class_id_t idmef_class_get_child_class(idmef_class_id_t class, idmef_class
         c = &object_data[class].children_list[child];
         if ( c->type != IDMEF_VALUE_TYPE_CLASS && c->type != IDMEF_VALUE_TYPE_ENUM )
                 return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_CHILD_NOT_CLASS);
-        
+
         return c->class;
 }
 
@@ -152,7 +152,7 @@ const char *idmef_class_get_child_name(idmef_class_id_t class, idmef_class_child
         ret = is_child_valid(class, child);
         if ( ret < 0 )
                 return NULL;
-        
+
         return object_data[class].children_list[child].name;
 }
 
@@ -161,11 +161,11 @@ const char *idmef_class_get_child_name(idmef_class_id_t class, idmef_class_child
 
 idmef_class_id_t idmef_class_find(const char *name)
 {
-	idmef_class_id_t i;
-	
-	for ( i = 0; object_data[i].name != NULL; i++ )
-		if ( strcasecmp(object_data[i].name, name) == 0 )
-			return i;
+        idmef_class_id_t i;
+
+        for ( i = 0; object_data[i].name != NULL; i++ )
+                if ( strcasecmp(object_data[i].name, name) == 0 )
+                        return i;
 
         return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_NAME, "Unknown IDMEF class '%s'", name);
 }
@@ -178,38 +178,38 @@ int idmef_class_enum_to_numeric(idmef_class_id_t class, const char *val)
         ret = is_class_valid(class);
         if ( ret < 0 )
                 return ret;
-        
+
         if ( ! object_data[class].to_numeric )
                 return -1;
-                
-    	return object_data[class].to_numeric(val);
+
+            return object_data[class].to_numeric(val);
 }
 
 
 const char *idmef_class_enum_to_string(idmef_class_id_t class, int val)
 {
         int ret;
-        
+
         ret = is_class_valid(class);
         if ( ret < 0 )
                 return NULL;
-                
+
         if ( ! object_data[class].to_string )
                 return NULL;
-                
-	return object_data[class].to_string(val);
+
+        return object_data[class].to_string(val);
 }
 
 
 int idmef_class_get_child(void *ptr, idmef_class_id_t class, idmef_class_child_id_t child, void **childptr)
 {
         int ret;
-        
+
         ret = is_child_valid(class, child);
         if ( ret < 0 )
                 return ret;
-        
-	return object_data[class].get_child(ptr, child, childptr);
+
+        return object_data[class].get_child(ptr, child, childptr);
 }
 
 
@@ -218,12 +218,12 @@ int idmef_class_get_child(void *ptr, idmef_class_id_t class, idmef_class_child_i
 int idmef_class_new_child(void *ptr, idmef_class_id_t class, idmef_class_child_id_t child, int n, void **childptr)
 {
         int ret;
-        
+
         ret = is_child_valid(class, child);
         if ( ret < 0 )
                 return ret;
-        
-	return object_data[class].new_child(ptr, child, n, childptr);
+
+        return object_data[class].new_child(ptr, child, n, childptr);
 }
 
 
@@ -261,7 +261,7 @@ int idmef_class_compare(idmef_class_id_t class, const void *c1, const void *c2)
         ret = is_class_valid(class);
         if ( ret < 0 )
                 return ret;
-        
+
         return object_data[class].compare(c1, c2);
 }
 
@@ -274,7 +274,7 @@ int idmef_class_destroy(idmef_class_id_t class, void *obj)
         ret = is_class_valid(class);
         if ( ret < 0 )
                 return ret;
-        
+
         object_data[class].destroy(obj);
 
         return 0;
@@ -289,7 +289,7 @@ int idmef_class_ref(idmef_class_id_t class, void *obj)
         ret = is_class_valid(class);
         if ( ret < 0 )
                 return ret;
-        
+
         object_data[class].ref(obj);
 
         return 0;
@@ -300,6 +300,6 @@ const char *idmef_class_get_name(idmef_class_id_t class)
 {
         if ( is_class_valid(class) < 0 )
                 return NULL;
-        
-	return object_data[class].name;
+
+        return object_data[class].name;
 }
