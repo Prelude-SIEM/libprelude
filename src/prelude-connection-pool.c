@@ -1371,6 +1371,6 @@ void prelude_connection_pool_set_data(prelude_connection_pool_t *pool, void *dat
  */
 void *prelude_connection_pool_get_data(prelude_connection_pool_t *pool)
 {
-        prelude_return_if_fail(pool);
+        prelude_return_val_if_fail(pool, NULL);
         return pool->data;
 }
