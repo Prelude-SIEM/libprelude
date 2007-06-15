@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2003-2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2003-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
@@ -102,14 +102,14 @@ static int string_isdigit(const char *s)
 
 static int idmef_value_create(idmef_value_t **ret, idmef_value_type_id_t type_id)
 {
-        *ret = calloc(1, sizeof(**ret));        
+        *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
-        
+
         (*ret)->refcount = 1;
         (*ret)->own_data = TRUE;
         (*ret)->type.id = type_id;
-        
+
         return 0;
 }
 
@@ -154,14 +154,14 @@ int idmef_value_get_enum(const idmef_value_t *value)
 int idmef_value_new_string(idmef_value_t **value, prelude_string_t *string)
 {
         int ret;
-        
-	ret = idmef_value_create(value, IDMEF_VALUE_TYPE_STRING);
-	if ( ret < 0 )
-		return ret;
-	
-	(*value)->type.data.string_val = string;
-	
-	return ret;
+
+        ret = idmef_value_create(value, IDMEF_VALUE_TYPE_STRING);
+        if ( ret < 0 )
+                return ret;
+
+        (*value)->type.data.string_val = string;
+
+        return ret;
 }
 
 
@@ -170,13 +170,13 @@ int idmef_value_new_time(idmef_value_t **value, idmef_time_t *time)
 {
         int ret;
 
-	ret = idmef_value_create(value, IDMEF_VALUE_TYPE_TIME);
-	if ( ret < 0 )
-		return ret;
+        ret = idmef_value_create(value, IDMEF_VALUE_TYPE_TIME);
+        if ( ret < 0 )
+                return ret;
 
-	(*value)->type.data.time_val = time;
+        (*value)->type.data.time_val = time;
 
-	return ret;
+        return ret;
 }
 
 
@@ -185,13 +185,13 @@ int idmef_value_new_data(idmef_value_t **value, idmef_data_t *data)
 {
         int ret;
 
-	ret = idmef_value_create(value, IDMEF_VALUE_TYPE_DATA);
-	if ( ret < 0 )
-		return ret;
+        ret = idmef_value_create(value, IDMEF_VALUE_TYPE_DATA);
+        if ( ret < 0 )
+                return ret;
 
-	(*value)->type.data.data_val = data;
+        (*value)->type.data.data_val = data;
 
-	return ret;
+        return ret;
 }
 
 
@@ -200,44 +200,44 @@ int idmef_value_new_data(idmef_value_t **value, idmef_data_t *data)
 int idmef_value_new_class(idmef_value_t **value, idmef_class_id_t class, void *object)
 {
         int ret;
-        
-	ret = idmef_value_create(value, IDMEF_VALUE_TYPE_CLASS);
+
+        ret = idmef_value_create(value, IDMEF_VALUE_TYPE_CLASS);
         if ( ret < 0 )
-		return ret;
-        
-	(*value)->type.data.class_val.object = object;
+                return ret;
+
+        (*value)->type.data.class_val.object = object;
         (*value)->type.data.class_val.class_id = class;
-        
-	return ret;
+
+        return ret;
 }
 
 
 
 int idmef_value_new_enum_from_numeric(idmef_value_t **value, idmef_class_id_t class, int val)
 {
-	int ret;
-						
-	ret = idmef_value_create(value, IDMEF_VALUE_TYPE_ENUM);
-	if ( ret < 0 )
-		return ret;
+        int ret;
+
+        ret = idmef_value_create(value, IDMEF_VALUE_TYPE_ENUM);
+        if ( ret < 0 )
+                return ret;
 
         (*value)->type.data.enum_val.value = val;
-	(*value)->type.data.enum_val.class_id = class;
+        (*value)->type.data.enum_val.class_id = class;
 
-	return ret;
+        return ret;
 }
 
 
 
 int idmef_value_new_enum_from_string(idmef_value_t **value, idmef_class_id_t class, const char *buf)
 {
-    	int ret;
+            int ret;
 
-    	ret = idmef_class_enum_to_numeric(class, buf);
-  	if ( ret < 0 )
-	    	return ret;
-	
-	return idmef_value_new_enum_from_numeric(value, class, ret);
+            ret = idmef_class_enum_to_numeric(class, buf);
+          if ( ret < 0 )
+                    return ret;
+
+        return idmef_value_new_enum_from_numeric(value, class, ret);
 }
 
 
@@ -249,8 +249,8 @@ int idmef_value_new_enum(idmef_value_t **value, idmef_class_id_t class, const ch
         if ( string_isdigit(buf) == 0 )
                 ret = idmef_value_new_enum_from_numeric(value, class, atoi(buf));
         else
-		ret = idmef_value_new_enum_from_string(value, class, buf);
-        
+                ret = idmef_value_new_enum_from_string(value, class, buf);
+
         return ret;
 }
 
@@ -259,53 +259,53 @@ int idmef_value_new_enum(idmef_value_t **value, idmef_class_id_t class, const ch
 int idmef_value_new_list(idmef_value_t **value)
 {
         int ret;
-        
-	ret = idmef_value_create(value, IDMEF_VALUE_TYPE_LIST);
-	if ( ret < 0 )
-		return ret;
 
-	(*value)->list = malloc(CHUNK_SIZE * sizeof(idmef_value_t *));
-	if ( ! (*value)->list ) {
+        ret = idmef_value_create(value, IDMEF_VALUE_TYPE_LIST);
+        if ( ret < 0 )
+                return ret;
+
+        (*value)->list = malloc(CHUNK_SIZE * sizeof(idmef_value_t *));
+        if ( ! (*value)->list ) {
                 free(*value);
-	    	return prelude_error_from_errno(errno);
+                    return prelude_error_from_errno(errno);
         }
-        
-	(*value)->list_elems = 0;
-	(*value)->list_max = CHUNK_SIZE - 1;
 
-	return 0;	
+        (*value)->list_elems = 0;
+        (*value)->list_max = CHUNK_SIZE - 1;
+
+        return 0;
 }
 
 
 
 int idmef_value_list_add(idmef_value_t *list, idmef_value_t *item)
-{        
-	if ( list->list_elems == list->list_max ) {
-                
-		list->list = realloc(list->list, (list->list_max + 1 + CHUNK_SIZE) * sizeof(idmef_value_t *));
-	        if ( ! list->list )
+{
+        if ( list->list_elems == list->list_max ) {
+
+                list->list = realloc(list->list, (list->list_max + 1 + CHUNK_SIZE) * sizeof(idmef_value_t *));
+                if ( ! list->list )
                         return prelude_error_from_errno(errno);
 
                 list->list_max += CHUNK_SIZE;
-	}
-        
-	list->list[list->list_elems++] = item;
-	
-	return 0;
+        }
+
+        list->list[list->list_elems++] = item;
+
+        return 0;
 }
 
 
 
 prelude_bool_t idmef_value_is_list(const idmef_value_t *list)
 {
-	return (list->list) ? TRUE : FALSE;
+        return (list->list) ? TRUE : FALSE;
 }
 
 
 
 prelude_bool_t idmef_value_list_is_empty(const idmef_value_t *list)
-{	
-    	return (list->list_elems) ? FALSE : TRUE;
+{
+            return (list->list_elems) ? FALSE : TRUE;
 }
 
 
@@ -314,10 +314,10 @@ prelude_bool_t idmef_value_list_is_empty(const idmef_value_t *list)
 int idmef_value_new(idmef_value_t **value, idmef_value_type_id_t type, void *ptr)
 {
         int ret;
-        
-    	ret = idmef_value_create(value, type);
-    	if ( ret < 0 )
-	    	return ret;
+
+            ret = idmef_value_create(value, type);
+            if ( ret < 0 )
+                    return ret;
 
         (*value)->type.data.data_val = ptr;
 
@@ -329,18 +329,18 @@ int idmef_value_new(idmef_value_t **value, idmef_value_type_id_t type, void *ptr
 int idmef_value_new_from_string(idmef_value_t **value, idmef_value_type_id_t type, const char *buf)
 {
         int ret;
-        
-    	ret = idmef_value_create(value, type);
-    	if ( ret < 0 )
-	    	return ret;
-        
+
+            ret = idmef_value_create(value, type);
+            if ( ret < 0 )
+                    return ret;
+
         ret = idmef_value_type_read(&(*value)->type, buf);
         if ( ret < 0 ) {
                 free(*value);
                 return ret;
         }
-                
-	return 0;
+
+        return 0;
 }
 
 
@@ -349,22 +349,22 @@ int idmef_value_new_from_path(idmef_value_t **value, idmef_path_t *path, const c
 {
         int ret;
         idmef_class_id_t class;
-    	idmef_value_type_id_t value_type;
-        		
-	value_type = idmef_path_get_value_type(path, -1);
+            idmef_value_type_id_t value_type;
+
+        value_type = idmef_path_get_value_type(path, -1);
         if ( value_type < 0 )
                 return value_type;
 
         if ( value_type != IDMEF_VALUE_TYPE_ENUM )
                 ret = idmef_value_new_from_string(value, value_type, buf);
         else {
-                class = idmef_path_get_class(path, -1);                
+                class = idmef_path_get_class(path, -1);
                 if ( class < 0 )
                         return class;
-                
+
                 ret = idmef_value_new_enum(value, class, buf);
         }
-        
+
         return ret;
 }
 
@@ -372,15 +372,15 @@ int idmef_value_new_from_path(idmef_value_t **value, idmef_path_t *path, const c
 
 static int idmef_value_set_own_data(idmef_value_t *value, prelude_bool_t own_data)
 {
-	int cnt;
+        int cnt;
 
         if ( ! value->list )
                 value->own_data = own_data;
 
         else for ( cnt = 0 ; cnt < value->list_elems; cnt++ )
                 idmef_value_set_own_data(value->list[cnt], own_data);
-	
-	return 0;
+
+        return 0;
 }
 
 
@@ -388,21 +388,21 @@ static int idmef_value_set_own_data(idmef_value_t *value, prelude_bool_t own_dat
 
 int idmef_value_have_own_data(idmef_value_t *value)
 {
-	return idmef_value_set_own_data(value, TRUE);
+        return idmef_value_set_own_data(value, TRUE);
 }
 
 
 
 int idmef_value_dont_have_own_data(idmef_value_t *value)
 {
-	return idmef_value_set_own_data(value, FALSE);
+        return idmef_value_set_own_data(value, FALSE);
 }
 
 
 
 idmef_value_type_id_t idmef_value_get_type(const idmef_value_t *value)
 {
-	return value->type.id;
+        return value->type.id;
 }
 
 
@@ -422,8 +422,8 @@ idmef_class_id_t idmef_value_get_class(const idmef_value_t *value)
 
 void *idmef_value_get_object(const idmef_value_t *value)
 {
-	return (value->type.id == IDMEF_VALUE_TYPE_CLASS) ? value->type.data.class_val.object : NULL;
-        
+        return (value->type.id == IDMEF_VALUE_TYPE_CLASS) ? value->type.data.class_val.object : NULL;
+
 }
 
 
@@ -431,19 +431,19 @@ void *idmef_value_get_object(const idmef_value_t *value)
 int idmef_value_iterate(idmef_value_t *value,
                         int (*callback)(idmef_value_t *ptr, void *extra), void *extra)
 {
-	int i, ret;
+        int i, ret;
 
         if ( ! value->list )
                 return callback(value, extra);
-        
+
         for ( i = 0; i < value->list_elems; i++ ) {
-                
+
                 ret = callback(value->list[i], extra);
                 if ( ret < 0 )
                         return ret;
         }
-		
-	return 0;
+
+        return 0;
 }
 
 
@@ -451,29 +451,29 @@ int idmef_value_iterate(idmef_value_t *value,
 int idmef_value_iterate_reversed(idmef_value_t *value,
                                  int (*callback)(idmef_value_t *ptr, void *extra), void *extra)
 {
-	int i, ret;
+        int i, ret;
 
         if ( ! value->list )
                 return callback(value, extra);
-        
+
         for ( i = value->list_elems - 1; i >= 0; i-- ) {
-                
+
                 ret = callback(value->list[i], extra);
                 if ( ret < 0 )
                         return ret;
         }
-		
-	return 0;
+
+        return 0;
 }
 
 
 
 idmef_value_t *idmef_value_get_nth(idmef_value_t *val, int n)
-{	
-	if ( ! val->list )
-	    	return (n == 0) ? val : NULL;
-        
-	return (n >= 0 && n < val->list_elems) ? val->list[n] : NULL;
+{
+        if ( ! val->list )
+                    return (n == 0) ? val : NULL;
+
+        return (n >= 0 && n < val->list_elems) ? val->list[n] : NULL;
 }
 
 
@@ -481,7 +481,7 @@ idmef_value_t *idmef_value_get_nth(idmef_value_t *val, int n)
 
 int idmef_value_get_count(const idmef_value_t *val)
 {
-	return val->list ? val->list_elems : 1;
+        return val->list ? val->list_elems : 1;
 }
 
 
@@ -490,30 +490,30 @@ int idmef_value_get_count(const idmef_value_t *val)
 static int idmef_value_list_clone(const idmef_value_t *val, idmef_value_t **dst)
 {
         int cnt, ret;
-        
-	ret = idmef_value_create(dst, val->type.id);
-	if ( ret < 0 )
-		return ret;
 
-	(*dst)->list_elems = val->list_elems;
-	(*dst)->list_max = val->list_max;
-	(*dst)->list = malloc(((*dst)->list_elems + 1) * sizeof((*dst)->list));
+        ret = idmef_value_create(dst, val->type.id);
+        if ( ret < 0 )
+                return ret;
 
-	for ( cnt = 0; cnt < (*dst)->list_elems; cnt++ ) {
+        (*dst)->list_elems = val->list_elems;
+        (*dst)->list_max = val->list_max;
+        (*dst)->list = malloc(((*dst)->list_elems + 1) * sizeof((*dst)->list));
+
+        for ( cnt = 0; cnt < (*dst)->list_elems; cnt++ ) {
 
                 ret = idmef_value_clone(val->list[cnt], &((*dst)->list[cnt]));
-		if ( ret < 0 ) {
-			while ( --cnt >= 0 )
-				idmef_value_destroy((*dst)->list[cnt]);
+                if ( ret < 0 ) {
+                        while ( --cnt >= 0 )
+                                idmef_value_destroy((*dst)->list[cnt]);
                 }
 
                 free((*dst)->list);
                 free(*dst);
-                
-                return -1;
-	}
 
-	return 0;
+                return -1;
+        }
+
+        return 0;
 }
 
 
@@ -521,28 +521,28 @@ static int idmef_value_list_clone(const idmef_value_t *val, idmef_value_t **dst)
 int idmef_value_clone(const idmef_value_t *val, idmef_value_t **dst)
 {
         int ret;
-        
-	if ( val->list )
-		return idmef_value_list_clone(val, dst);
 
-	ret = idmef_value_create(dst, val->type.id);
-	if ( ret < 0 )
-		return ret;
-	
+        if ( val->list )
+                return idmef_value_list_clone(val, dst);
+
+        ret = idmef_value_create(dst, val->type.id);
+        if ( ret < 0 )
+                return ret;
+
         ret = idmef_value_type_clone(&val->type, &(*dst)->type);
         if ( ret < 0 )
                 free(*dst);
-        
-	return ret;
+
+        return ret;
 }
 
 
 
 idmef_value_t *idmef_value_ref(idmef_value_t *val)
-{	
-	val->refcount++;
-	
-	return val;
+{
+        val->refcount++;
+
+        return val;
 }
 
 
@@ -558,7 +558,7 @@ int idmef_value_print(const idmef_value_t *val, prelude_io_t *fd)
 {
         int ret;
         prelude_string_t *out;
-        
+
         ret = prelude_string_new(&out);
         if ( ret < 0 )
                 return ret;
@@ -575,7 +575,7 @@ int idmef_value_print(const idmef_value_t *val, prelude_io_t *fd)
 
 
 int idmef_value_get(const idmef_value_t *val, void *res)
-{                
+{
         return idmef_value_type_copy(&val->type, res);
 }
 
@@ -585,10 +585,10 @@ static int idmef_value_match_internal(idmef_value_t *val1, void *extra)
 {
         int ret;
         compare_t *compare = extra;
-        
+
         if ( idmef_value_is_list(val1) )
                 ret = idmef_value_iterate(val1, idmef_value_match_internal, extra);
-        
+
         else if ( compare->val2 && idmef_value_is_list(compare->val2) ) {
                 ret = idmef_value_match(compare->val2, val1, compare->operator);
                 if ( ret < 0 )
@@ -602,7 +602,7 @@ static int idmef_value_match_internal(idmef_value_t *val1, void *extra)
                 if ( ret == 0 )
                         compare->match++;
         }
-        
+
         return ret;
 }
 
@@ -621,16 +621,16 @@ static int idmef_value_match_internal(idmef_value_t *val1, void *extra)
 int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_operator_t op)
 {
         int ret;
-	compare_t compare;
+        compare_t compare;
 
         compare.match = 0;
-	compare.val2 = val2;
-	compare.operator = op;
-        
-	ret = idmef_value_iterate(val1, idmef_value_match_internal, &compare);
+        compare.val2 = val2;
+        compare.operator = op;
+
+        ret = idmef_value_iterate(val1, idmef_value_match_internal, &compare);
         if ( ret < 0 )
                 return ret;
-        
+
         return compare.match;
 }
 
@@ -660,24 +660,24 @@ int idmef_value_check_operator(const idmef_value_t *value, idmef_criterion_opera
  */
 void idmef_value_destroy(idmef_value_t *val)
 {
-	int i;
-        
-	if ( --val->refcount )
-	    	return;
-        
-	if ( val->list ) {
-		for ( i = 0; i < val->list_elems; i++ )
-                        idmef_value_destroy(val->list[i]);
-                
-		free(val->list);
-	}
+        int i;
 
-	/*
+        if ( --val->refcount )
+                    return;
+
+        if ( val->list ) {
+                for ( i = 0; i < val->list_elems; i++ )
+                        idmef_value_destroy(val->list[i]);
+
+                free(val->list);
+        }
+
+        /*
          * Actual destructor starts here
          */
         if ( val->own_data )
                 idmef_value_type_destroy(&val->type);
-        
-	free(val);
+
+        free(val);
 }
 
