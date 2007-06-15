@@ -36,6 +36,7 @@
 #include "prelude-error.h"
 #include "prelude-client-profile.h"
 #include "tls-auth.h"
+#include "common.h"
 
 #ifdef WIN32
 # define geteuid(x) (0)
@@ -110,6 +111,7 @@ static int get_profile_analyzerid(prelude_client_profile_t *cp)
  */
 void prelude_client_profile_get_analyzerid_filename(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        prelude_return_if_fail(cp && buf);
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/analyzerid", cp->name);
 }
 
@@ -125,6 +127,7 @@ void prelude_client_profile_get_analyzerid_filename(const prelude_client_profile
  */
 void prelude_client_profile_get_config_filename(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        prelude_return_if_fail(cp && buf);
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/config", cp->name);
 }
 
@@ -140,6 +143,7 @@ void prelude_client_profile_get_config_filename(const prelude_client_profile_t *
  */
 void prelude_client_profile_get_tls_key_filename(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        prelude_return_if_fail(cp && buf);
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/key", cp->name);
 }
 
@@ -156,6 +160,7 @@ void prelude_client_profile_get_tls_key_filename(const prelude_client_profile_t 
  */
 void prelude_client_profile_get_tls_server_ca_cert_filename(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        prelude_return_if_fail(cp && buf);
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/server.ca", cp->name);
 }
 
@@ -172,6 +177,7 @@ void prelude_client_profile_get_tls_server_ca_cert_filename(const prelude_client
  */
 void prelude_client_profile_get_tls_server_keycert_filename(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        prelude_return_if_fail(cp && buf);
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/server.keycrt", cp->name);
 }
 
@@ -188,6 +194,7 @@ void prelude_client_profile_get_tls_server_keycert_filename(const prelude_client
  */
 void prelude_client_profile_get_tls_server_crl_filename(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        prelude_return_if_fail(cp && buf);
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/server.crl", cp->name);
 }
 
@@ -204,6 +211,7 @@ void prelude_client_profile_get_tls_server_crl_filename(const prelude_client_pro
  */
 void prelude_client_profile_get_tls_client_trusted_cert_filename(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        prelude_return_if_fail(cp && buf);
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/client.trusted", cp->name);
 }
 
@@ -221,6 +229,7 @@ void prelude_client_profile_get_tls_client_trusted_cert_filename(const prelude_c
  */
 void prelude_client_profile_get_tls_client_keycert_filename(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        prelude_return_if_fail(cp && buf);
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s/client.keycrt", cp->name);
 }
 
@@ -237,6 +246,7 @@ void prelude_client_profile_get_tls_client_keycert_filename(const prelude_client
  */
 void prelude_client_profile_get_backup_dirname(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        prelude_return_if_fail(cp && buf);
         snprintf(buf, size, PRELUDE_SPOOL_DIR "/%s", cp->name);
 }
 
@@ -251,6 +261,7 @@ void prelude_client_profile_get_backup_dirname(const prelude_client_profile_t *c
  */
 void prelude_client_profile_get_profile_dirname(const prelude_client_profile_t *cp, char *buf, size_t size)
 {
+        prelude_return_if_fail(cp && buf);
         snprintf(buf, size, PRELUDE_PROFILE_DIR "/%s", cp->name);
 }
 
@@ -272,6 +283,8 @@ int _prelude_client_profile_new(prelude_client_profile_t **ret)
 int _prelude_client_profile_init(prelude_client_profile_t *cp)
 {
         int ret;
+
+        prelude_return_val_if_fail(cp, -1);
 
         ret = get_profile_analyzerid(cp);
         if ( ret < 0 )
@@ -296,6 +309,8 @@ int prelude_client_profile_new(prelude_client_profile_t **ret, const char *name)
 {
         int retval;
         prelude_client_profile_t *cp;
+
+        prelude_return_val_if_fail(name, -1);
 
         retval = _prelude_client_profile_new(&cp);
         if ( retval < 0 )
@@ -326,6 +341,8 @@ int prelude_client_profile_new(prelude_client_profile_t **ret, const char *name)
  */
 void prelude_client_profile_destroy(prelude_client_profile_t *cp)
 {
+        prelude_return_if_fail(cp);
+
         if ( cp->credentials )
                 gnutls_certificate_free_credentials(cp->credentials);
 
@@ -347,6 +364,7 @@ void prelude_client_profile_destroy(prelude_client_profile_t *cp)
  */
 uid_t prelude_client_profile_get_uid(const prelude_client_profile_t *cp)
 {
+        prelude_return_val_if_fail(cp, 0);
         return cp->uid;
 }
 
@@ -361,6 +379,7 @@ uid_t prelude_client_profile_get_uid(const prelude_client_profile_t *cp)
  */
 void prelude_client_profile_set_uid(prelude_client_profile_t *cp, uid_t uid)
 {
+        prelude_return_if_fail(cp);
         cp->uid = uid;
 }
 
@@ -376,6 +395,7 @@ void prelude_client_profile_set_uid(prelude_client_profile_t *cp, uid_t uid)
  */
 gid_t prelude_client_profile_get_gid(const prelude_client_profile_t *cp)
 {
+        prelude_return_val_if_fail(cp, 0);
         return cp->gid;
 }
 
@@ -390,6 +410,7 @@ gid_t prelude_client_profile_get_gid(const prelude_client_profile_t *cp)
  */
 void prelude_client_profile_set_gid(prelude_client_profile_t *cp, gid_t gid)
 {
+        prelude_return_if_fail(cp);
         cp->gid = gid;
 }
 
@@ -404,6 +425,7 @@ void prelude_client_profile_set_gid(prelude_client_profile_t *cp, gid_t gid)
  */
 void prelude_client_profile_set_analyzerid(prelude_client_profile_t *cp, uint64_t analyzerid)
 {
+        prelude_return_if_fail(cp);
         cp->analyzerid = analyzerid;
 }
 
@@ -419,6 +441,7 @@ void prelude_client_profile_set_analyzerid(prelude_client_profile_t *cp, uint64_
  */
 uint64_t prelude_client_profile_get_analyzerid(const prelude_client_profile_t *cp)
 {
+        prelude_return_val_if_fail(cp, 0);
         return cp->analyzerid;
 }
 
@@ -434,6 +457,7 @@ uint64_t prelude_client_profile_get_analyzerid(const prelude_client_profile_t *c
  */
 const char *prelude_client_profile_get_name(const prelude_client_profile_t *cp)
 {
+        prelude_return_val_if_fail(cp, NULL);
         return cp->name;
 }
 
@@ -449,6 +473,8 @@ const char *prelude_client_profile_get_name(const prelude_client_profile_t *cp)
  */
 int prelude_client_profile_set_name(prelude_client_profile_t *cp, const char *name)
 {
+        prelude_return_val_if_fail(cp && name, -1);
+
         if ( cp->name )
                 free(cp->name);
 
@@ -473,6 +499,8 @@ int prelude_client_profile_set_name(prelude_client_profile_t *cp, const char *na
 int prelude_client_profile_get_credentials(prelude_client_profile_t *cp, void **credentials)
 {
         int ret;
+
+        prelude_return_val_if_fail(cp, -1);
 
         if ( cp->credentials ) {
                 *credentials = cp->credentials;
