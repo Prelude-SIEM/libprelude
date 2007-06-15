@@ -443,6 +443,7 @@ static ssize_t copy_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
  */
 ssize_t prelude_io_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
 {
+        prelude_return_val_if_fail(dst && src, -1);
         return copy_forward(dst, src, count);
 }
 
@@ -475,6 +476,7 @@ ssize_t prelude_io_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
  */
 ssize_t prelude_io_read(prelude_io_t *pio, void *buf, size_t count)
 {
+        prelude_return_val_if_fail(pio && buf, -1);
         return pio->read(pio, buf, count);
 }
 
@@ -510,6 +512,8 @@ ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count)
         struct pollfd pfd;
         ssize_t n = 0, ret;
         unsigned char *in = buf;
+
+        prelude_return_val_if_fail(pio && buf, -1);
 
         pfd.fd = prelude_io_get_fd(pio);
         pfd.events = POLLIN;
@@ -562,6 +566,8 @@ ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf)
         size_t count;
         uint16_t msglen;
 
+        prelude_return_val_if_fail(pio, -1);
+
         ret = prelude_io_read_wait(pio, &msglen, sizeof(msglen));
         if ( ret <= 0 )
                 return ret;
@@ -604,6 +610,7 @@ ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf)
  */
 ssize_t prelude_io_write(prelude_io_t *pio, const void *buf, size_t count)
 {
+        prelude_return_val_if_fail(pio && buf, -1);
         return pio->write(pio, buf, count);
 }
 
@@ -635,6 +642,8 @@ ssize_t prelude_io_write_delimited(prelude_io_t *pio, const void *buf, uint16_t 
 {
         int ret;
         uint16_t nlen;
+
+        prelude_return_val_if_fail(pio && buf, -1);
 
         nlen = htons(count);
 
@@ -669,6 +678,7 @@ ssize_t prelude_io_write_delimited(prelude_io_t *pio, const void *buf, uint16_t 
  */
 int prelude_io_close(prelude_io_t *pio)
 {
+        prelude_return_val_if_fail(pio, -1);
         return pio->close(pio);
 }
 
@@ -704,6 +714,8 @@ int prelude_io_new(prelude_io_t **ret)
  */
 void prelude_io_set_file_io(prelude_io_t *pio, FILE *fdptr)
 {
+        prelude_return_if_fail(pio && fdptr);
+
         pio->fd = fileno(fdptr);
         pio->fd_ptr = fdptr;
         pio->read = file_read;
@@ -730,6 +742,8 @@ void prelude_io_set_tls_io(prelude_io_t *pio, void *tls)
                 int fd;
         } data;
 
+        prelude_return_if_fail(pio && tls);
+
         data.ptr = gnutls_transport_get_ptr(tls);
         pio->fd = data.fd;
 
@@ -753,6 +767,8 @@ void prelude_io_set_tls_io(prelude_io_t *pio, void *tls)
  */
 void prelude_io_set_sys_io(prelude_io_t *pio, int fd)
 {
+        prelude_return_if_fail(pio);
+
         pio->fd = fd;
         pio->fd_ptr = NULL;
         pio->read = sys_read;
@@ -765,6 +781,8 @@ void prelude_io_set_sys_io(prelude_io_t *pio, int fd)
 
 int prelude_io_set_buffer_io(prelude_io_t *pio)
 {
+        prelude_return_val_if_fail(pio, -1);
+
         pio->fd_ptr = NULL;
         pio->size = pio->rindex = 0;
 
@@ -786,6 +804,7 @@ int prelude_io_set_buffer_io(prelude_io_t *pio)
  */
 int prelude_io_get_fd(prelude_io_t *pio)
 {
+        prelude_return_val_if_fail(pio, -1);
         return pio->fd;
 }
 
@@ -799,6 +818,7 @@ int prelude_io_get_fd(prelude_io_t *pio)
  */
 void *prelude_io_get_fdptr(prelude_io_t *pio)
 {
+        prelude_return_val_if_fail(pio, NULL);
         return pio->fd_ptr;
 }
 
@@ -812,6 +832,7 @@ void *prelude_io_get_fdptr(prelude_io_t *pio)
  */
 void prelude_io_destroy(prelude_io_t *pio)
 {
+        prelude_return_if_fail(pio);
         free(pio);
 }
 
@@ -830,6 +851,7 @@ void prelude_io_destroy(prelude_io_t *pio)
  */
 ssize_t prelude_io_pending(prelude_io_t *pio)
 {
+        prelude_return_val_if_fail(pio, -1);
         return pio->pending(pio);
 }
 
@@ -848,6 +870,8 @@ ssize_t prelude_io_pending(prelude_io_t *pio)
 prelude_bool_t prelude_io_is_error_fatal(prelude_io_t *pio, int error)
 {
         prelude_error_code_t code;
+
+        prelude_return_val_if_fail(pio, FALSE);
 
         if ( ! error )
                 return FALSE;
