@@ -27,6 +27,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <errno.h>
+#include <time.h>
 
 #ifndef WIN32
 # include <syslog.h>
@@ -145,38 +146,55 @@ static const char *level_to_string(prelude_log_t level)
 }
 
 
+static ssize_t get_header(prelude_log_t level, char *buf, size_t size)
+{
+        int ret;
+        struct tm *t;
+        size_t len = 0;
+        time_t now = time(NULL);
+
+        buf[0] = 0;
+
+        if ( ! (log_flags & PRELUDE_LOG_FLAGS_SYSLOG) ) {
+                t = localtime(&now);
+                if ( t )
+                        len = strftime(buf, size, "%d %b %H:%M:%S ", t);
+        }
+
+        ret = snprintf(buf + len, size - len, "(process:%d) %s: ", getpid(), level_to_string(level));
+        if ( ret < 0 || ret >= (size - len) )
+                return -1;
+
+        return (size_t) len + ret;
+}
+
+
 static void do_log_v(prelude_log_t level, const char *file,
                      const char *function, int line, const char *fmt, va_list ap)
 {
-        ssize_t len;
+        int ret;
         char buf[1024];
+        ssize_t len = 0;
 
-        if ( level == PRELUDE_LOG_CRIT || level == PRELUDE_LOG_ERR || level >= PRELUDE_LOG_DEBUG ) {
-
-                len = snprintf(buf, sizeof(buf), "** (process:%d): %s **: %s:%d: %s: ",
-                               getpid(), level_to_string(level), file, line, function);
-                if ( len < 0 || len >= sizeof(buf) )
+        if ( global_log_cb == do_log_print || global_log_cb == do_log_syslog ) {
+                len = get_header(level, buf, sizeof(buf));
+                if ( len < 0 )
                         return;
-
-                vsnprintf(buf + len, sizeof(buf) - len, fmt, ap);
         }
 
-        else {
-                len = snprintf(buf, sizeof(buf), "** (process:%d): %s **: ", getpid(), level_to_string(level));
-                if ( len < 0 || len >= sizeof(buf) )
-                        return;
+        ret = vsnprintf(buf + len, sizeof(buf) - len, fmt, ap);
+        if ( ret < 0 || ret >= (sizeof(buf) - len) )
+                return;
 
-                vsnprintf(buf + len, sizeof(buf) - len, fmt, ap);
+        if ( level <= PRELUDE_LOG_ERR || level >= PRELUDE_LOG_DEBUG ) {
+                for ( len += ret; buf[len - 1] == '\n' ; len-- );
+                snprintf(buf + len, sizeof(buf) - len, " (%s:%d %s)\n", file, line, function);
         }
 
-        if ( need_to_log(level, log_level) )
+        if ( need_to_log(level, log_level) || need_to_log(level, debug_level) ) {
                 global_log_cb(level, buf);
-
-        else if ( need_to_log(level, debug_level) ) {
                 if ( debug_logfile )
                         fprintf(debug_logfile, "%s", buf);
-                else
-                        global_log_cb(level, buf);
         }
 }
 
