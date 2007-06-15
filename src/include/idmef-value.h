@@ -1,8 +1,9 @@
 /*****
 *
-* Copyright (C) 2002, 2003, 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2002-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 * Author: Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
+* Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.
 *
@@ -92,7 +93,7 @@ void *idmef_value_get_object(const idmef_value_t *value);
 int idmef_value_iterate(idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra);
 
 int idmef_value_iterate_reversed(idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra);
-         
+
 idmef_value_t *idmef_value_get_nth(idmef_value_t *val, int n);
 
 int idmef_value_get_count(const idmef_value_t *val);
@@ -116,5 +117,5 @@ void idmef_value_destroy(idmef_value_t *val);
 #ifdef __cplusplus
  }
 #endif
-         
+
 #endif /* _LIBPRELUDE_IDMEF_VALUE_H */
