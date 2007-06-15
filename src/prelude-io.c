@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001-2004 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2001-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.
@@ -67,10 +67,10 @@ struct prelude_io {
 
         int fd;
         void *fd_ptr;
-        
+
         size_t size;
         size_t rindex;
-        
+
         int (*close)(prelude_io_t *pio);
         ssize_t (*read)(prelude_io_t *pio, void *buf, size_t count);
         ssize_t (*write)(prelude_io_t *pio, const void *buf, size_t count);
@@ -91,7 +91,7 @@ static ssize_t buffer_read(prelude_io_t *pio, void *buf, size_t count)
 
         memcpy(buf, (unsigned char *) pio->fd_ptr + pio->rindex, count);
         pio->rindex += count;
-        
+
         return count;
 }
 
@@ -100,19 +100,19 @@ static ssize_t buffer_read(prelude_io_t *pio, void *buf, size_t count)
 static ssize_t buffer_write(prelude_io_t *pio, const void *buf, size_t count)
 {
         unsigned char *new;
-        
+
         if ( pio->size + count <= pio->size )
                 return -1;
-        
+
         new = _prelude_realloc(pio->fd_ptr, pio->size + count);
         if ( ! new )
                 return prelude_error_from_errno(errno);
-        
+
         memcpy(new + pio->size, buf, count);
 
         pio->fd_ptr = new;
         pio->size += count;
-        
+
         return count;
 }
 
@@ -142,17 +142,17 @@ static ssize_t buffer_pending(prelude_io_t *pio)
 /*
  * System IO functions.
  */
-static ssize_t sys_read(prelude_io_t *pio, void *buf, size_t count) 
+static ssize_t sys_read(prelude_io_t *pio, void *buf, size_t count)
 {
         ssize_t ret;
 
         do {
                 ret = read(pio->fd, buf, count);
         } while ( ret < 0 && errno == EINTR );
-        
+
         if ( ret == 0 )
                 return prelude_error(PRELUDE_ERROR_EOF);
-        
+
         if ( ret < 0 ) {
 #ifdef ECONNRESET
                 if ( errno == ECONNRESET )
@@ -160,42 +160,42 @@ static ssize_t sys_read(prelude_io_t *pio, void *buf, size_t count)
 #endif
                 return prelude_error_from_errno(errno);
         }
-        
+
         return ret;
 }
 
 
 
-static ssize_t sys_write(prelude_io_t *pio, const void *buf, size_t count) 
+static ssize_t sys_write(prelude_io_t *pio, const void *buf, size_t count)
 {
         ssize_t ret;
-        
+
         do {
                 ret = write(pio->fd, buf, count);
         } while ( ret < 0 && errno == EINTR );
 
         if ( ret < 0 )
                 return prelude_error_from_errno(errno);
-        
+
         return ret;
 }
 
 
 
-static int sys_close(prelude_io_t *pio) 
+static int sys_close(prelude_io_t *pio)
 {
         int ret;
-        
+
         do {
                 ret = close(pio->fd);
         } while ( ret < 0 && errno == EINTR );
-        
+
         return (ret >= 0) ? ret : prelude_error_from_errno(errno);
 }
 
 
 
-static ssize_t sys_pending(prelude_io_t *pio) 
+static ssize_t sys_pending(prelude_io_t *pio)
 {
         long ret = 0;
 
@@ -211,23 +211,23 @@ static ssize_t sys_pending(prelude_io_t *pio)
 /*
  * Buffered IO functions.
  */
-static ssize_t file_read(prelude_io_t *pio, void *buf, size_t count) 
+static ssize_t file_read(prelude_io_t *pio, void *buf, size_t count)
 {
-        FILE *fd; 
+        FILE *fd;
         size_t ret;
 
         /*
          * ferror / clearerror can be macro that might dereference fd_ptr.
          */
         fd = pio->fd_ptr;
-        
-        ret = fread(buf, count, 1, fd);        
-        if ( ret <= 0 ) {        
+
+        ret = fread(buf, count, 1, fd);
+        if ( ret <= 0 ) {
                 ret = ferror(fd) ? prelude_error_from_errno(errno) : prelude_error(PRELUDE_ERROR_EOF);
                 clearerr(fd);
                 return ret;
         }
-        
+
         /*
          * fread return the number of *item* read.
          */
@@ -236,10 +236,10 @@ static ssize_t file_read(prelude_io_t *pio, void *buf, size_t count)
 
 
 
-static ssize_t file_write(prelude_io_t *pio, const void *buf, size_t count) 
+static ssize_t file_write(prelude_io_t *pio, const void *buf, size_t count)
 {
         size_t ret;
-        
+
         ret = fwrite(buf, count, 1, pio->fd_ptr);
         if ( ret <= 0 )
                 return ret;
@@ -252,7 +252,7 @@ static ssize_t file_write(prelude_io_t *pio, const void *buf, size_t count)
 
 
 
-static int file_close(prelude_io_t *pio) 
+static int file_close(prelude_io_t *pio)
 {
         return fclose(pio->fd_ptr);
 }
@@ -287,7 +287,7 @@ static int tls_check_error(prelude_io_t *pio, int error)
                 alert = gnutls_alert_get_name(gnutls_alert_get(pio->fd_ptr));
                 ret = prelude_error_verbose(PRELUDE_ERROR_TLS_WARNING_ALERT, "TLS warning alert from peer: %s", alert);
                 break;
-        
+
         case GNUTLS_E_FATAL_ALERT_RECEIVED:
                 alert = gnutls_alert_get_name(gnutls_alert_get(pio->fd_ptr));
                 ret = prelude_error_verbose(PRELUDE_ERROR_TLS_FATAL_ALERT, "TLS fatal alert from peer: %s", alert);
@@ -299,10 +299,10 @@ static int tls_check_error(prelude_io_t *pio, int error)
                 ret = prelude_error(PRELUDE_ERROR_EOF);
                 break;
 
-        default:                
+        default:
                 ret = prelude_error_verbose(PRELUDE_ERROR_TLS, "TLS: %s", gnutls_strerror(error));
         }
-        
+
         /*
          * If the error is fatal, deinitialize the session and revert
          * to system IO. The caller is then expected to call prelude_io_close()
@@ -321,54 +321,54 @@ static int tls_check_error(prelude_io_t *pio, int error)
 
 
 
-static ssize_t tls_read(prelude_io_t *pio, void *buf, size_t count) 
+static ssize_t tls_read(prelude_io_t *pio, void *buf, size_t count)
 {
         ssize_t ret;
-        
+
         do {
                 ret = gnutls_record_recv(pio->fd_ptr, buf, count);
         } while ( ret < 0 && ret == GNUTLS_E_INTERRUPTED );
 
-        if ( ret < 0 )                
+        if ( ret < 0 )
                 return tls_check_error(pio, ret);
-        
+
         if ( ret == 0 )
                 return prelude_error(PRELUDE_ERROR_EOF);
-        
+
         return ret;
 }
 
 
 
-static ssize_t tls_write(prelude_io_t *pio, const void *buf, size_t count) 
+static ssize_t tls_write(prelude_io_t *pio, const void *buf, size_t count)
 {
         ssize_t ret;
 
-        do {        
-                ret = gnutls_record_send(pio->fd_ptr, buf, count);         
+        do {
+                ret = gnutls_record_send(pio->fd_ptr, buf, count);
         } while ( ret < 0 && ret == GNUTLS_E_INTERRUPTED );
 
         if ( ret < 0 )
                 return tls_check_error(pio, ret);
-        
+
         return ret;
 }
 
 
 
-static int tls_close(prelude_io_t *pio) 
+static int tls_close(prelude_io_t *pio)
 {
         int ret;
-        
+
         do {
-                ret = gnutls_bye(pio->fd_ptr, GNUTLS_SHUT_RDWR);        
+                ret = gnutls_bye(pio->fd_ptr, GNUTLS_SHUT_RDWR);
         } while ( ret < 0 && ret == GNUTLS_E_INTERRUPTED );
-        
+
         if ( ret < 0 )
                 return tls_check_error(pio, ret);
 
         gnutls_deinit(pio->fd_ptr);
-        
+
         /*
          * this is not expected to fail
          */
@@ -381,15 +381,15 @@ static int tls_close(prelude_io_t *pio)
 static ssize_t tls_pending(prelude_io_t *pio)
 {
         ssize_t ret;
-        
+
         ret = gnutls_record_check_pending(pio->fd_ptr);
         if ( ret > 0 )
                 return ret;
-        
+
         ret = sys_pending(pio);
         if ( ret > 0 )
                 return ret;
-        
+
         return 0;
 }
 
@@ -398,29 +398,29 @@ static ssize_t tls_pending(prelude_io_t *pio)
 /*
  * Forward data from one fd to another using copy.
  */
-static ssize_t copy_forward(prelude_io_t *dst, prelude_io_t *src, size_t count) 
+static ssize_t copy_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
 {
         int ret;
         size_t scount;
         unsigned char buf[8192];
 
         scount = count;
-        
+
         while ( count ) {
-                
+
                 ret = (count < sizeof(buf)) ? count : sizeof(buf);
-                
+
                 ret = prelude_io_read(src, buf, ret);
-                if ( ret <= 0 ) 
+                if ( ret <= 0 )
                         return ret;
 
                 count -= ret;
-                
+
                 ret = prelude_io_write(dst, buf, ret);
-                if ( ret < 0 ) 
+                if ( ret < 0 )
                         return ret;
         }
-        
+
         return scount;
 }
 
@@ -441,7 +441,7 @@ static ssize_t copy_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
  * Returns: If the transfer was successful, the number of bytes written
  * to @dst is returned.  On error, -1 is returned, and errno is set appropriately.
  */
-ssize_t prelude_io_forward(prelude_io_t *dst, prelude_io_t *src, size_t count) 
+ssize_t prelude_io_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
 {
         return copy_forward(dst, src, count);
 }
@@ -473,7 +473,7 @@ ssize_t prelude_io_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
  * On error, a negative value is returned. In this case it is left unspecified
  * whether the file position (if any) changes.
  */
-ssize_t prelude_io_read(prelude_io_t *pio, void *buf, size_t count) 
+ssize_t prelude_io_read(prelude_io_t *pio, void *buf, size_t count)
 {
         return pio->read(pio, buf, count);
 }
@@ -505,7 +505,7 @@ ssize_t prelude_io_read(prelude_io_t *pio, void *buf, size_t count)
  * On error, -1 is returned, and errno is set appropriately. In this
  * case it is left unspecified whether the file position (if any) changes.
  */
-ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count) 
+ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count)
 {
         struct pollfd pfd;
         ssize_t n = 0, ret;
@@ -513,28 +513,28 @@ ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count)
 
         pfd.fd = prelude_io_get_fd(pio);
         pfd.events = POLLIN;
-        
+
         do {
-                ret = poll(&pfd, 1, -1);                
+                ret = poll(&pfd, 1, -1);
                 if ( ret < 0 )
                         return prelude_error_from_errno(errno);
 
                 if ( ! (pfd.revents & POLLIN) )
                         return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "expected POLLIN event");
-                
+
                 ret = prelude_io_read(pio, &in[n], count - n);
                 if ( ret < 0 )
                         return ret;
 
                 n += ret;
-                
+
         } while ( n != count );
-        
+
         return n;
 }
 
 
-                       
+
 /**
  * prelude_io_read_delimited:
  * @pio: Pointer to a #prelude_io_t object.
@@ -551,17 +551,17 @@ ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count)
  * handled internally. So you don't have to check for EINTR.
  *
  * Returns: On success, the number of bytes read is returned (zero
- * indicates end of file). 
+ * indicates end of file).
  *
  * On error, -1 is returned, and errno is set appropriately. In this
  * case it is left unspecified whether the file position (if any) changes.
  */
-ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf) 
+ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf)
 {
         ssize_t ret;
         size_t count;
         uint16_t msglen;
-        
+
         ret = prelude_io_read_wait(pio, &msglen, sizeof(msglen));
         if ( ret <= 0 )
                 return ret;
@@ -571,11 +571,11 @@ ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf)
         *buf = malloc(count);
         if ( ! *buf )
                 return prelude_error_from_errno(errno);
-        
+
         ret = prelude_io_read_wait(pio, *buf, count);
         if ( ret < 0 )
                 return ret;
-        
+
         return count;
 }
 
@@ -602,7 +602,7 @@ ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf)
  * to a regular file, 0 will be returned without causing any other effect.
  * For a special file, the results are not portable.
  */
-ssize_t prelude_io_write(prelude_io_t *pio, const void *buf, size_t count) 
+ssize_t prelude_io_write(prelude_io_t *pio, const void *buf, size_t count)
 {
         return pio->write(pio, buf, count);
 }
@@ -631,17 +631,17 @@ ssize_t prelude_io_write(prelude_io_t *pio, const void *buf, size_t count)
  * indicates nothing was written). On error, -1 is returned, and errno
  * is set appropriately.
  */
-ssize_t prelude_io_write_delimited(prelude_io_t *pio, const void *buf, uint16_t count) 
+ssize_t prelude_io_write_delimited(prelude_io_t *pio, const void *buf, uint16_t count)
 {
         int ret;
         uint16_t nlen;
-        
+
         nlen = htons(count);
-        
+
         ret = prelude_io_write(pio, &nlen, sizeof(nlen));
-        if ( ret <= 0 ) 
+        if ( ret <= 0 )
                 return ret;
-        
+
         ret = prelude_io_write(pio, buf, count);
         if ( ret <= 0 )
                 return ret;
@@ -683,12 +683,12 @@ int prelude_io_close(prelude_io_t *pio)
  *
  * Returns: 0 on success, or a negative value if an error occur.
  */
-int prelude_io_new(prelude_io_t **ret) 
+int prelude_io_new(prelude_io_t **ret)
 {
         *ret = malloc(sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
-        
+
         return 0;
 }
 
@@ -702,7 +702,7 @@ int prelude_io_new(prelude_io_t **ret)
  * Setup the @pio object to work with file I/O function.
  * The @pio object is then associated with @fd.
  */
-void prelude_io_set_file_io(prelude_io_t *pio, FILE *fdptr) 
+void prelude_io_set_file_io(prelude_io_t *pio, FILE *fdptr)
 {
         pio->fd = fileno(fdptr);
         pio->fd_ptr = fdptr;
@@ -723,16 +723,16 @@ void prelude_io_set_file_io(prelude_io_t *pio, FILE *fdptr)
  * Setup the @pio object to work with TLS based I/O function.
  * The @pio object is then associated with @tls.
  */
-void prelude_io_set_tls_io(prelude_io_t *pio, void *tls) 
+void prelude_io_set_tls_io(prelude_io_t *pio, void *tls)
 {
         union {
                 void *ptr;
                 int fd;
         } data;
-        
+
         data.ptr = gnutls_transport_get_ptr(tls);
         pio->fd = data.fd;
-        
+
         pio->fd_ptr = tls;
         pio->read = tls_read;
         pio->write = tls_write;
@@ -751,8 +751,8 @@ void prelude_io_set_tls_io(prelude_io_t *pio, void *tls)
  * Setup the @pio object to work with system based I/O function.
  * The @pio object is then associated with @fd.
  */
-void prelude_io_set_sys_io(prelude_io_t *pio, int fd) 
-{        
+void prelude_io_set_sys_io(prelude_io_t *pio, int fd)
+{
         pio->fd = fd;
         pio->fd_ptr = NULL;
         pio->read = sys_read;
@@ -767,12 +767,12 @@ int prelude_io_set_buffer_io(prelude_io_t *pio)
 {
         pio->fd_ptr = NULL;
         pio->size = pio->rindex = 0;
-        
+
         pio->read = buffer_read;
         pio->write = buffer_write;
         pio->close = buffer_close;
         pio->pending = buffer_pending;
-        
+
         return 0;
 }
 
@@ -784,7 +784,7 @@ int prelude_io_set_buffer_io(prelude_io_t *pio)
  *
  * Returns: The FD associated with this object.
  */
-int prelude_io_get_fd(prelude_io_t *pio) 
+int prelude_io_get_fd(prelude_io_t *pio)
 {
         return pio->fd;
 }
@@ -797,7 +797,7 @@ int prelude_io_get_fd(prelude_io_t *pio)
  *
  * Returns: Pointer associated with this object (file, tls, buffer, or NULL).
  */
-void *prelude_io_get_fdptr(prelude_io_t *pio) 
+void *prelude_io_get_fdptr(prelude_io_t *pio)
 {
         return pio->fd_ptr;
 }
@@ -810,8 +810,8 @@ void *prelude_io_get_fdptr(prelude_io_t *pio)
  *
  * Destroy the @pio object.
  */
-void prelude_io_destroy(prelude_io_t *pio) 
-{        
+void prelude_io_destroy(prelude_io_t *pio)
+{
         free(pio);
 }
 
@@ -826,7 +826,7 @@ void prelude_io_destroy(prelude_io_t *pio)
  * be read on an TLS or socket fd.
  *
  * Returns: Number of byte waiting to be read on @pio, or -1
- * if @pio is not of type TLS or socket. 
+ * if @pio is not of type TLS or socket.
  */
 ssize_t prelude_io_pending(prelude_io_t *pio)
 {
@@ -851,10 +851,10 @@ prelude_bool_t prelude_io_is_error_fatal(prelude_io_t *pio, int error)
 
         if ( ! error )
                 return FALSE;
-        
+
         code = prelude_error_get_code(error);
         if ( code == PRELUDE_ERROR_EAGAIN || code == PRELUDE_ERROR_EINTR || code == PRELUDE_ERROR_TLS_WARNING_ALERT )
                 return FALSE;
-        
+
         return TRUE;
 }
