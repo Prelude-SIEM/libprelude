@@ -50,7 +50,7 @@
 #include "idmef-path.h"
 #include "prelude-string.h"
 #include "prelude-linked-object.h"
-
+#include "common.h"
 
 
 #define MAX_DEPTH                16
@@ -974,7 +974,7 @@ int idmef_path_make_parent(idmef_path_t *path)
         int ret;
         char *ptr;
 
-        prelude_return_val_if_fail(path);
+        prelude_return_val_if_fail(path, -1);
 
         if ( path->depth == 0 )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_PARENT_ROOT);
