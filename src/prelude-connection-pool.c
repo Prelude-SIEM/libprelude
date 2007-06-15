@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2001,2002,2003,2004,2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2001-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.
@@ -386,7 +386,7 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
                 snprintf(name, sizeof(name), "0x%" PRELUDE_PRIx64, prelude_connection_get_peer_analyzerid(cnx->cnx));
 
         prelude_log(PRELUDE_LOG_INFO,
-                    "- Flushing %u message to %s (%lu erased due to quota)...\n",
+                    "Flushing %u message to %s (%lu erased due to quota)...\n",
                     available, name, prelude_failover_get_deleted_msg_count(failover));
 
         do {
@@ -420,7 +420,7 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
 
         } while ( 1 );
 
-        prelude_log(PRELUDE_LOG_WARN, "- %s from failover: %u/%u messages flushed (%" PRELUDE_PRIu64 " bytes).\n",
+        prelude_log(PRELUDE_LOG_WARN, "%s from failover: %u/%u messages flushed (%" PRELUDE_PRIu64 " bytes).\n",
                     (count == available) ? "Recovered" : "Failed recovering", count, available, (uint64_t) totsize);
 
         return ret;
@@ -750,6 +750,7 @@ static void broadcast_async_cb(void *obj, void *data)
  */
 void prelude_connection_pool_broadcast(prelude_connection_pool_t *pool, prelude_msg_t *msg)
 {
+        prelude_return_if_fail(pool && msg);
         walk_manager_lists(pool, msg);
 }
 
@@ -767,6 +768,8 @@ void prelude_connection_pool_broadcast(prelude_connection_pool_t *pool, prelude_
  */
 void prelude_connection_pool_broadcast_async(prelude_connection_pool_t *pool, prelude_msg_t *msg)
 {
+        prelude_return_if_fail(pool && msg);
+
         pool->refcount++;
 
         prelude_async_set_callback((prelude_async_object_t *) msg, &broadcast_async_cb);
@@ -791,6 +794,8 @@ int prelude_connection_pool_init(prelude_connection_pool_t *pool)
         int ret;
         cnx_list_t *clist;
         char dirname[512], buf[512];
+
+        prelude_return_val_if_fail(pool, -1);
 
         if ( ! pool->failover && (pool->flags & PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER) ) {
                 prelude_client_profile_get_backup_dirname(pool->client_profile, buf, sizeof(buf));
@@ -861,6 +866,8 @@ int prelude_connection_pool_new(prelude_connection_pool_t **ret,
 {
         prelude_connection_pool_t *new;
 
+        prelude_return_val_if_fail(cp, -1);
+
         *ret = new = calloc(1, sizeof(*new));
         if ( ! new )
                 return prelude_error_from_errno(errno);
@@ -889,6 +896,8 @@ int prelude_connection_pool_new(prelude_connection_pool_t **ret,
  */
 void prelude_connection_pool_destroy(prelude_connection_pool_t *pool)
 {
+        prelude_return_if_fail(pool);
+
         if ( --pool->refcount != 0 )
                 return;
 
@@ -920,6 +929,8 @@ int prelude_connection_pool_add_connection(prelude_connection_pool_t *pool, prel
 {
         int ret;
         cnx_t **c;
+
+        prelude_return_val_if_fail(pool && cnx, -1);
 
         if ( ! pool->or_list ) {
                 ret = create_connection_list(&pool->or_list, pool);
@@ -962,6 +973,8 @@ void prelude_connection_pool_set_global_event_handler(prelude_connection_pool_t 
                                                       int (*callback)(prelude_connection_pool_t *pool,
                                                                       prelude_connection_pool_event_t events))
 {
+        prelude_return_if_fail(pool);
+
         pool->wanted_event = wanted_events;
         pool->global_event_handler = callback;
 }
@@ -983,6 +996,8 @@ void prelude_connection_pool_set_event_handler(prelude_connection_pool_t *pool,
                                                                prelude_connection_pool_event_t events,
                                                                prelude_connection_t *cnx))
 {
+        prelude_return_if_fail(pool);
+
         pool->wanted_event = wanted_events;
         pool->event_handler = callback;
 }
@@ -997,6 +1012,7 @@ void prelude_connection_pool_set_event_handler(prelude_connection_pool_t *pool,
  */
 prelude_list_t *prelude_connection_pool_get_connection_list(prelude_connection_pool_t *pool)
 {
+        prelude_return_val_if_fail(pool, NULL);
         return &pool->all_cnx;
 }
 
@@ -1020,6 +1036,8 @@ prelude_list_t *prelude_connection_pool_get_connection_list(prelude_connection_p
 int prelude_connection_pool_set_connection_dead(prelude_connection_pool_t *pool, prelude_connection_t *cnx)
 {
         cnx_t *c;
+
+        prelude_return_val_if_fail(pool && cnx, -1);
 
         c = search_cnx(pool, cnx);
         if ( ! c )
@@ -1056,6 +1074,8 @@ int prelude_connection_pool_set_connection_alive(prelude_connection_pool_t *pool
 {
         int ret;
         cnx_t *c;
+
+        prelude_return_val_if_fail(pool && cnx, -1);
 
         c = search_cnx(pool, cnx);
         if ( ! c )
@@ -1103,6 +1123,8 @@ int prelude_connection_pool_set_connection_string(prelude_connection_pool_t *poo
 {
         char *new;
 
+        prelude_return_val_if_fail(pool && cfgstr, -1);
+
         new = strdup(cfgstr);
         if ( ! new )
                 return prelude_error_from_errno(errno);
@@ -1128,6 +1150,7 @@ int prelude_connection_pool_set_connection_string(prelude_connection_pool_t *poo
  */
 const char *prelude_connection_pool_get_connection_string(prelude_connection_pool_t *pool)
 {
+        prelude_return_val_if_fail(pool, NULL);
         return pool->connection_string;
 }
 
@@ -1142,6 +1165,7 @@ const char *prelude_connection_pool_get_connection_string(prelude_connection_poo
  */
 void prelude_connection_pool_set_flags(prelude_connection_pool_t *pool, prelude_connection_pool_flags_t flags)
 {
+        prelude_return_if_fail(pool);
         pool->flags = flags;
 }
 
@@ -1149,6 +1173,7 @@ void prelude_connection_pool_set_flags(prelude_connection_pool_t *pool, prelude_
 
 void prelude_connection_pool_set_required_permission(prelude_connection_pool_t *pool, prelude_connection_permission_t req_perm)
 {
+        prelude_return_if_fail(pool);
         pool->permission = req_perm;
 }
 
@@ -1163,6 +1188,7 @@ void prelude_connection_pool_set_required_permission(prelude_connection_pool_t *
  */
 prelude_connection_pool_flags_t prelude_connection_pool_get_flags(prelude_connection_pool_t *pool)
 {
+        prelude_return_val_if_fail(pool, -1);
         return pool->flags;
 }
 
@@ -1282,6 +1308,7 @@ int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int tim
                                                         prelude_connection_pool_event_t event,
                                                         prelude_connection_t *cnx, void *extra), void *extra)
 {
+        prelude_return_val_if_fail(pool && event_cb, -1);
         return connection_pool_check_event(pool, timeout, event_cb, extra, NULL, NULL);
 }
 
@@ -1310,6 +1337,7 @@ int prelude_connection_pool_check_event(prelude_connection_pool_t *pool, int tim
  */
 int prelude_connection_pool_recv(prelude_connection_pool_t *pool, int timeout, prelude_connection_t **outconn, prelude_msg_t **outmsg)
 {
+        prelude_return_val_if_fail(pool, -1);
         return connection_pool_check_event(pool, timeout, NULL, NULL, outconn, outmsg);
 }
 
@@ -1326,6 +1354,7 @@ int prelude_connection_pool_recv(prelude_connection_pool_t *pool, int timeout, p
  */
 void prelude_connection_pool_set_data(prelude_connection_pool_t *pool, void *data)
 {
+        prelude_return_if_fail(pool);
         pool->data = data;
 }
 
@@ -1342,5 +1371,6 @@ void prelude_connection_pool_set_data(prelude_connection_pool_t *pool, void *dat
  */
 void *prelude_connection_pool_get_data(prelude_connection_pool_t *pool)
 {
+        prelude_return_if_fail(pool);
         return pool->data;
 }
