@@ -70,32 +70,32 @@ int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
                         idmef_criterion_value_t *value, idmef_criterion_operator_t op);
 
 void idmef_criterion_destroy(idmef_criterion_t *criterion);
-int idmef_criterion_clone(idmef_criterion_t *criterion, idmef_criterion_t **dst);
+int idmef_criterion_clone(const idmef_criterion_t *criterion, idmef_criterion_t **dst);
 int idmef_criterion_print(const idmef_criterion_t *criterion, prelude_io_t *fd);
 int idmef_criterion_to_string(const idmef_criterion_t *criterion, prelude_string_t *out);
-idmef_path_t *idmef_criterion_get_path(idmef_criterion_t *criterion);
-idmef_criterion_value_t *idmef_criterion_get_value(idmef_criterion_t *criterion);
-idmef_criterion_operator_t idmef_criterion_get_operator(idmef_criterion_t *criterion);
-int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message);
+idmef_path_t *idmef_criterion_get_path(const idmef_criterion_t *criterion);
+idmef_criterion_value_t *idmef_criterion_get_value(const idmef_criterion_t *criterion);
+idmef_criterion_operator_t idmef_criterion_get_operator(const idmef_criterion_t *criterion);
+int idmef_criterion_match(const idmef_criterion_t *criterion, idmef_message_t *message);
 
 int idmef_criteria_new(idmef_criteria_t **criteria);
 void idmef_criteria_destroy(idmef_criteria_t *criteria);
 int idmef_criteria_clone(idmef_criteria_t *src, idmef_criteria_t **dst);
-int idmef_criteria_print(idmef_criteria_t *criteria, prelude_io_t *fd);
-int idmef_criteria_to_string(idmef_criteria_t *criteria, prelude_string_t *out);
-prelude_bool_t idmef_criteria_is_criterion(idmef_criteria_t *criteria);
-idmef_criterion_t *idmef_criteria_get_criterion(idmef_criteria_t *criteria);
+int idmef_criteria_print(const idmef_criteria_t *criteria, prelude_io_t *fd);
+int idmef_criteria_to_string(const idmef_criteria_t *criteria, prelude_string_t *out);
+prelude_bool_t idmef_criteria_is_criterion(const idmef_criteria_t *criteria);
+idmef_criterion_t *idmef_criteria_get_criterion(const idmef_criteria_t *criteria);
 void idmef_criteria_set_criterion(idmef_criteria_t *criteria, idmef_criterion_t *criterion);
 
 void idmef_criteria_or_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2);
 
 int idmef_criteria_and_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2);
 
-int idmef_criteria_match(idmef_criteria_t *criteria, idmef_message_t *message);
+int idmef_criteria_match(const idmef_criteria_t *criteria, idmef_message_t *message);
 
-idmef_criteria_t *idmef_criteria_get_or(idmef_criteria_t *criteria);
+idmef_criteria_t *idmef_criteria_get_or(const idmef_criteria_t *criteria);
 
-idmef_criteria_t *idmef_criteria_get_and(idmef_criteria_t *criteria);
+idmef_criteria_t *idmef_criteria_get_and(const idmef_criteria_t *criteria);
 
 int idmef_criteria_new_from_string(idmef_criteria_t **criteria, const char *str);
 
