@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2004-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.
@@ -42,16 +42,16 @@
 
 
 struct idmef_criterion {
-	idmef_path_t *path;
-	idmef_criterion_value_t *value;
-	idmef_criterion_operator_t operator;
+        idmef_path_t *path;
+        idmef_criterion_value_t *value;
+        idmef_criterion_operator_t operator;
 };
 
 
 struct idmef_criteria {
-	prelude_list_t list;
-        
-	idmef_criterion_t *criterion;
+        prelude_list_t list;
+
+        idmef_criterion_t *criterion;
         struct idmef_criteria *or;
         struct idmef_criteria *and;
 };
@@ -85,17 +85,17 @@ const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t op)
                 { IDMEF_CRITERION_OPERATOR_REGEX_NOCASE, "~*"        },
                 { IDMEF_CRITERION_OPERATOR_NOT_REGEX, "!~"           },
                 { IDMEF_CRITERION_OPERATOR_NOT_REGEX_NOCASE, "!~*"   },
-                                
+
                 { IDMEF_CRITERION_OPERATOR_SUBSTR, "<>"              },
                 { IDMEF_CRITERION_OPERATOR_SUBSTR_NOCASE, "<>*"      },
                 { IDMEF_CRITERION_OPERATOR_NOT_SUBSTR, "!<>"         },
                 { IDMEF_CRITERION_OPERATOR_NOT_SUBSTR_NOCASE, "!<>*" },
-                
+
                 { IDMEF_CRITERION_OPERATOR_NOT_NULL, "!"             },
                 { IDMEF_CRITERION_OPERATOR_NULL, ""                  },
         };
 
-        for ( i = 0; tbl[i].operator != 0; i++ ) 
+        for ( i = 0; tbl[i].operator != 0; i++ )
                 if ( op == tbl[i].operator )
                         return tbl[i].name;
 
@@ -122,16 +122,16 @@ int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
 {
         if ( ! value && ! (op & IDMEF_CRITERION_OPERATOR_NULL) )
                 return -1;
-        
-	*criterion = calloc(1, sizeof(**criterion));
-	if ( ! *criterion )
-		return prelude_error_from_errno(errno);
 
-	(*criterion)->path = path;
-	(*criterion)->value = value;
-	(*criterion)->operator = op;
+        *criterion = calloc(1, sizeof(**criterion));
+        if ( ! *criterion )
+                return prelude_error_from_errno(errno);
 
-	return 0;
+        (*criterion)->path = path;
+        (*criterion)->value = value;
+        (*criterion)->operator = op;
+
+        return 0;
 }
 
 
@@ -144,12 +144,12 @@ int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
  */
 void idmef_criterion_destroy(idmef_criterion_t *criterion)
 {
-	idmef_path_destroy(criterion->path);
+        idmef_path_destroy(criterion->path);
 
-	if ( criterion->value ) /* can be NULL if operator is is_null or is_not_null */
-		idmef_criterion_value_destroy(criterion->value);
+        if ( criterion->value ) /* can be NULL if operator is is_null or is_not_null */
+                idmef_criterion_value_destroy(criterion->value);
 
-	free(criterion);
+        free(criterion);
 }
 
 
@@ -166,29 +166,29 @@ void idmef_criterion_destroy(idmef_criterion_t *criterion)
 int idmef_criterion_clone(idmef_criterion_t *criterion, idmef_criterion_t **dst)
 {
         int ret;
-	idmef_path_t *path;
-	idmef_criterion_value_t *value = NULL;
+        idmef_path_t *path;
+        idmef_criterion_value_t *value = NULL;
 
-	ret = idmef_path_clone(criterion->path, &path);
-	if ( ret < 0 )
-		return ret;
+        ret = idmef_path_clone(criterion->path, &path);
+        if ( ret < 0 )
+                return ret;
 
-	if ( criterion->value ) {
-		ret = idmef_criterion_value_clone(criterion->value, &value);
-		if ( ret < 0 ) {
-			idmef_path_destroy(path);
-			return ret;
-		}
-	} 
+        if ( criterion->value ) {
+                ret = idmef_criterion_value_clone(criterion->value, &value);
+                if ( ret < 0 ) {
+                        idmef_path_destroy(path);
+                        return ret;
+                }
+        }
 
-	ret = idmef_criterion_new(dst, path, value, criterion->operator);
-	if ( ret < 0 ) {
-		idmef_path_destroy(path);
-		idmef_criterion_value_destroy(value);
-		return ret;
-	}
+        ret = idmef_criterion_new(dst, path, value, criterion->operator);
+        if ( ret < 0 ) {
+                idmef_path_destroy(path);
+                idmef_criterion_value_destroy(value);
+                return ret;
+        }
 
-	return 0;
+        return 0;
 }
 
 
@@ -250,7 +250,7 @@ int idmef_criterion_to_string(const idmef_criterion_t *criterion, prelude_string
         assert(operator);
 
         name = idmef_path_get_name(criterion->path, -1);
-        
+
         if ( ! criterion->value )
                 return prelude_string_sprintf(out, "%s %s", operator, name);
 
@@ -271,7 +271,7 @@ int idmef_criterion_to_string(const idmef_criterion_t *criterion, prelude_string
  */
 idmef_path_t *idmef_criterion_get_path(idmef_criterion_t *criterion)
 {
-	return criterion->path;
+        return criterion->path;
 }
 
 
@@ -288,7 +288,7 @@ idmef_path_t *idmef_criterion_get_path(idmef_criterion_t *criterion)
  */
 idmef_criterion_value_t *idmef_criterion_get_value(idmef_criterion_t *criterion)
 {
-	return criterion ? criterion->value : NULL;
+        return criterion ? criterion->value : NULL;
 }
 
 
@@ -323,26 +323,26 @@ idmef_criterion_operator_t idmef_criterion_get_operator(idmef_criterion_t *crite
 int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message)
 {
         int ret;
-	idmef_value_t *value;
-	
-	ret = idmef_path_get(criterion->path, message, &value);
+        idmef_value_t *value;
+
+        ret = idmef_path_get(criterion->path, message, &value);
         if ( ret < 0 )
                 return ret;
-        
+
         if ( ret == 0 )
-		return (criterion->operator == IDMEF_CRITERION_OPERATOR_NULL) ? 1 : 0;
-        
+                return (criterion->operator == IDMEF_CRITERION_OPERATOR_NULL) ? 1 : 0;
+
         if ( ! criterion->value ) {
                 idmef_value_destroy(value);
                 return (criterion->operator == (IDMEF_CRITERION_OPERATOR_NULL|IDMEF_CRITERION_OPERATOR_NOT)) ? 1 : 0;
         }
-        
+
         ret = idmef_criterion_value_match(criterion->value, value, criterion->operator);
         idmef_value_destroy(value);
 
         if ( ret < 0 )
                 return ret;
-        
+
         return (ret > 0) ? 1 : 0;
 }
 
@@ -359,13 +359,13 @@ int idmef_criterion_match(idmef_criterion_t *criterion, idmef_message_t *message
 int idmef_criteria_new(idmef_criteria_t **criteria)
 {
         *criteria = calloc(1, sizeof(**criteria));
-	if ( ! *criteria )
-		return prelude_error_from_errno(errno);
+        if ( ! *criteria )
+                return prelude_error_from_errno(errno);
 
         (*criteria)->or = NULL;
         (*criteria)->and = NULL;
 
-	return 0;
+        return 0;
 }
 
 
@@ -378,16 +378,16 @@ int idmef_criteria_new(idmef_criteria_t **criteria)
  */
 void idmef_criteria_destroy(idmef_criteria_t *criteria)
 {
-	if ( criteria->criterion )
-		idmef_criterion_destroy(criteria->criterion);
+        if ( criteria->criterion )
+                idmef_criterion_destroy(criteria->criterion);
 
-	if ( criteria->or )
-		idmef_criteria_destroy(criteria->or);
+        if ( criteria->or )
+                idmef_criteria_destroy(criteria->or);
 
-	if ( criteria->and )
-		idmef_criteria_destroy(criteria->and);
-        
-	free(criteria);
+        if ( criteria->and )
+                idmef_criteria_destroy(criteria->and);
+
+        free(criteria);
 }
 
 
@@ -405,35 +405,35 @@ int idmef_criteria_clone(idmef_criteria_t *src, idmef_criteria_t **dst)
 {
         int ret;
         idmef_criteria_t *new;
-        
+
         new = *dst = malloc(sizeof(*new));
         if ( ! new )
                 return prelude_error_from_errno(errno);
 
         memcpy(new, src, sizeof(*new));
 
-	if ( src->or ) {
-		ret = idmef_criteria_clone(src->or, &new->or);
-		if ( ret < 0 ) {
-			idmef_criteria_destroy(new);
-			return ret;
-		}
-	}
+        if ( src->or ) {
+                ret = idmef_criteria_clone(src->or, &new->or);
+                if ( ret < 0 ) {
+                        idmef_criteria_destroy(new);
+                        return ret;
+                }
+        }
 
-	if ( src->and ) {
-		ret = idmef_criteria_clone(src->and, &new->and);
-		if ( ret < 0 ) {
-			idmef_criteria_destroy(new);
-			return ret;
-		}
-	}
-        
+        if ( src->and ) {
+                ret = idmef_criteria_clone(src->and, &new->and);
+                if ( ret < 0 ) {
+                        idmef_criteria_destroy(new);
+                        return ret;
+                }
+        }
+
         ret = idmef_criterion_clone(src->criterion, &new->criterion);
         if ( ret < 0 ) {
                 idmef_criteria_destroy(new);
                 return ret;
         }
-        
+
         return 0;
 }
 
@@ -476,40 +476,40 @@ int idmef_criteria_print(idmef_criteria_t *criteria, prelude_io_t *fd)
 
 int idmef_criteria_to_string(idmef_criteria_t *criteria, prelude_string_t *out)
 {
-	if ( ! criteria )
-		return -1;
+        if ( ! criteria )
+                return -1;
 
-	if ( criteria->or )
+        if ( criteria->or )
                 prelude_string_sprintf(out, "((");
 
         idmef_criterion_to_string(criteria->criterion, out);
-        
+
         if ( criteria->and ) {
                 prelude_string_sprintf(out, " && ");
-		idmef_criteria_to_string(criteria->and, out);
+                idmef_criteria_to_string(criteria->and, out);
         }
-        
+
         if ( criteria->or ) {
                 prelude_string_sprintf(out, ") || (");
-		idmef_criteria_to_string(criteria->or, out);
+                idmef_criteria_to_string(criteria->or, out);
                 prelude_string_sprintf(out, "))");
         }
-        
-	return 0;
+
+        return 0;
 }
 
 
 
 prelude_bool_t idmef_criteria_is_criterion(idmef_criteria_t *criteria)
 {
-	return (criteria->criterion != NULL) ? TRUE : FALSE;
+        return (criteria->criterion != NULL) ? TRUE : FALSE;
 }
 
 
 
 idmef_criterion_t *idmef_criteria_get_criterion(idmef_criteria_t *criteria)
 {
-	return criteria->criterion;
+        return criteria->criterion;
 }
 
 
@@ -517,12 +517,12 @@ idmef_criterion_t *idmef_criteria_get_criterion(idmef_criteria_t *criteria)
 void idmef_criteria_or_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2)
 {
         idmef_criteria_t *last = NULL;
-        
+
         while ( criteria ) {
                 last = criteria;
                 criteria = criteria->or;
         }
-        
+
         last->or = criteria2;
 }
 
@@ -532,23 +532,23 @@ int idmef_criteria_and_criteria(idmef_criteria_t *criteria, idmef_criteria_t *cr
 {
         int ret;
         idmef_criteria_t *new, *last = NULL;
-        
+
         while ( criteria ) {
                 last = criteria;
-                
+
                 if ( criteria->or ) {
                         ret = idmef_criteria_clone(criteria2, &new);
                         if ( ret < 0 )
                                 return ret;
-                        
+
                         ret = idmef_criteria_and_criteria(criteria->or, new);
                         if ( ret < 0 )
                                 return ret;
                 }
-                
+
                 criteria = criteria->and;
         }
-        
+
         last->and = criteria2;
 
         return 0;
@@ -578,18 +578,18 @@ int idmef_criteria_match(idmef_criteria_t *criteria, idmef_message_t *message)
 {
         int ret;
         idmef_criteria_t *next;
-        
+
         ret = idmef_criterion_match(criteria->criterion, message);
         if ( ret < 0 )
                 return ret;
-        
+
         if ( ret == 0 )
                 next = criteria->or;
         else
                 next = criteria->and;
-        
+
         if ( ! next )
                 return ret;
-                
+
         return idmef_criteria_match(next, message);
 }
