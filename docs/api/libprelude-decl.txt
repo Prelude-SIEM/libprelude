@@ -4616,10 +4616,11 @@ pthread_t th, void **thread_return
 <ENUM>
 <NAME>prelude_log_t</NAME>
 typedef enum {
-        PRELUDE_LOG_ERR  =  0,
-        PRELUDE_LOG_WARN =  1,
-        PRELUDE_LOG_INFO =  2,
-        PRELUDE_LOG_DEBUG = 3
+        PRELUDE_LOG_CRIT  = -1,
+        PRELUDE_LOG_ERR   =  0,
+        PRELUDE_LOG_WARN  =  1,
+        PRELUDE_LOG_INFO  =  2,
+        PRELUDE_LOG_DEBUG  = 3
 } prelude_log_t;
 </ENUM>
 <ENUM>
@@ -4632,7 +4633,7 @@ typedef enum {
 <MACRO>
 <NAME>prelude_log</NAME>
 #define prelude_log(level, ...) \
-        _prelude_log(level, __FILE__, __PRELUDE_FUNC__, __LINE__, __VA_ARGS__) 
+        _prelude_log(level, __FILE__, __PRELUDE_FUNC__, __LINE__, __VA_ARGS__)
 </MACRO>
 <MACRO>
 <NAME>prelude_log_debug</NAME>
@@ -5260,7 +5261,7 @@ prelude_connection_permission_t *out, const char *buf
 <STRUCT>
 <NAME>prelude_string</NAME>
 struct prelude_string {
-	prelude_list_t list;
+        prelude_list_t list;
 
         int flags;
         int refcount;
@@ -5269,7 +5270,7 @@ struct prelude_string {
                 char *rwbuf;
                 const char *robuf;
         } data;
-        
+
 </STRUCT>
 <TYPEDEF>
 <NAME>prelude_string_t</NAME>
@@ -5427,13 +5428,13 @@ const prelude_string_t *str1, const prelude_string_t *str2
 </FUNCTION>
 <MACRO>
 <NAME>prelude_string_set_constant</NAME>
-#define prelude_string_set_constant(string, str) 			\
-	prelude_string_set_ref_fast((string), (str), sizeof((str)) - 1)
+#define prelude_string_set_constant(string, str)                         \
+        prelude_string_set_ref_fast((string), (str), sizeof((str)) - 1)
 </MACRO>
 <MACRO>
 <NAME>prelude_string_new_constant</NAME>
-#define prelude_string_new_constant(string, str)	            	\
-	prelude_string_new_ref_fast((string), (str), sizeof((str)) - 1)
+#define prelude_string_new_constant(string, str)                         \
+        prelude_string_new_ref_fast((string), (str), sizeof((str)) - 1)
 </MACRO>
 <FUNCTION>
 <NAME>idmef_additional_data_print</NAME>
@@ -7024,23 +7025,23 @@ typedef enum {
         IDMEF_CRITERION_OPERATOR_EQUAL_NOCASE      = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE,
         IDMEF_CRITERION_OPERATOR_NOT_EQUAL         = IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_EQUAL,
         IDMEF_CRITERION_OPERATOR_NOT_EQUAL_NOCASE  = IDMEF_CRITERION_OPERATOR_NOT_EQUAL|IDMEF_CRITERION_OPERATOR_EQUAL_NOCASE,
-        
+
         IDMEF_CRITERION_OPERATOR_LESSER            = 0x0002,
         IDMEF_CRITERION_OPERATOR_LESSER_OR_EQUAL   = IDMEF_CRITERION_OPERATOR_LESSER|IDMEF_CRITERION_OPERATOR_EQUAL,
 
         IDMEF_CRITERION_OPERATOR_GREATER           = 0x0004,
         IDMEF_CRITERION_OPERATOR_GREATER_OR_EQUAL  = IDMEF_CRITERION_OPERATOR_GREATER|IDMEF_CRITERION_OPERATOR_EQUAL,
-        
+
         IDMEF_CRITERION_OPERATOR_SUBSTR            = 0x0008,
         IDMEF_CRITERION_OPERATOR_SUBSTR_NOCASE     = IDMEF_CRITERION_OPERATOR_SUBSTR|IDMEF_CRITERION_OPERATOR_NOCASE,
         IDMEF_CRITERION_OPERATOR_NOT_SUBSTR        = IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_SUBSTR,
         IDMEF_CRITERION_OPERATOR_NOT_SUBSTR_NOCASE = IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_SUBSTR_NOCASE,
-        
+
         IDMEF_CRITERION_OPERATOR_REGEX             = 0x0010,
         IDMEF_CRITERION_OPERATOR_REGEX_NOCASE      = IDMEF_CRITERION_OPERATOR_REGEX|IDMEF_CRITERION_OPERATOR_NOCASE,
         IDMEF_CRITERION_OPERATOR_NOT_REGEX         = IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_REGEX,
         IDMEF_CRITERION_OPERATOR_NOT_REGEX_NOCASE  = IDMEF_CRITERION_OPERATOR_NOT|IDMEF_CRITERION_OPERATOR_REGEX_NOCASE,
-        
+
         IDMEF_CRITERION_OPERATOR_NULL              = 0x0020,
         IDMEF_CRITERION_OPERATOR_NOT_NULL          = IDMEF_CRITERION_OPERATOR_NULL|IDMEF_CRITERION_OPERATOR_NOT
 } idmef_criterion_operator_t;
@@ -7071,7 +7072,7 @@ idmef_criterion_t *criterion
 <FUNCTION>
 <NAME>idmef_criterion_clone</NAME>
 <RETURNS>int </RETURNS>
-idmef_criterion_t *criterion, idmef_criterion_t **dst
+const idmef_criterion_t *criterion, idmef_criterion_t **dst
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_print</NAME>
@@ -7086,22 +7087,22 @@ const idmef_criterion_t *criterion, prelude_string_t *out
 <FUNCTION>
 <NAME>idmef_criterion_get_path</NAME>
 <RETURNS>idmef_path_t *</RETURNS>
-idmef_criterion_t *criterion
+const idmef_criterion_t *criterion
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_get_value</NAME>
 <RETURNS>idmef_criterion_value_t *</RETURNS>
-idmef_criterion_t *criterion
+const idmef_criterion_t *criterion
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_get_operator</NAME>
 <RETURNS>idmef_criterion_operator_t </RETURNS>
-idmef_criterion_t *criterion
+const idmef_criterion_t *criterion
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criterion_match</NAME>
 <RETURNS>int </RETURNS>
-idmef_criterion_t *criterion, idmef_message_t *message
+const idmef_criterion_t *criterion, idmef_message_t *message
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_new</NAME>
@@ -7121,22 +7122,22 @@ idmef_criteria_t *src, idmef_criteria_t **dst
 <FUNCTION>
 <NAME>idmef_criteria_print</NAME>
 <RETURNS>int </RETURNS>
-idmef_criteria_t *criteria, prelude_io_t *fd
+const idmef_criteria_t *criteria, prelude_io_t *fd
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_to_string</NAME>
 <RETURNS>int </RETURNS>
-idmef_criteria_t *criteria, prelude_string_t *out
+const idmef_criteria_t *criteria, prelude_string_t *out
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_is_criterion</NAME>
 <RETURNS>prelude_bool_t </RETURNS>
-idmef_criteria_t *criteria
+const idmef_criteria_t *criteria
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_get_criterion</NAME>
 <RETURNS>idmef_criterion_t *</RETURNS>
-idmef_criteria_t *criteria
+const idmef_criteria_t *criteria
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_set_criterion</NAME>
@@ -7156,17 +7157,17 @@ idmef_criteria_t *criteria, idmef_criteria_t *criteria2
 <FUNCTION>
 <NAME>idmef_criteria_match</NAME>
 <RETURNS>int </RETURNS>
-idmef_criteria_t *criteria, idmef_message_t *message
+const idmef_criteria_t *criteria, idmef_message_t *message
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_get_or</NAME>
 <RETURNS>idmef_criteria_t *</RETURNS>
-idmef_criteria_t *criteria
+const idmef_criteria_t *criteria
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_get_and</NAME>
 <RETURNS>idmef_criteria_t *</RETURNS>
-idmef_criteria_t *criteria
+const idmef_criteria_t *criteria
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_criteria_new_from_string</NAME>

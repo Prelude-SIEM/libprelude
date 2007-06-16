@@ -117,6 +117,8 @@ void prelude_log_set_callback(void log_cb(prelude_log_t level, const char *str))
 
 int prelude_log_set_logfile(const char *filename);
 
+void _prelude_log_set_abort_level(prelude_log_t level);
+
 #ifdef __cplusplus
  }
 #endif

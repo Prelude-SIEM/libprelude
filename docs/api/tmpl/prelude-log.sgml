@@ -22,6 +22,7 @@ prelude-log
 
 </para>
 
+@PRELUDE_LOG_CRIT: 
 @PRELUDE_LOG_ERR: 
 @PRELUDE_LOG_WARN: 
 @PRELUDE_LOG_INFO: 

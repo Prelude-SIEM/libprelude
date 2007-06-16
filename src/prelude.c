@@ -163,6 +163,11 @@ int prelude_init(int *argc, char **argv)
         if ( env )
                 prelude_log_set_logfile(env);
 
+        env = getenv("LIBPRELUDE_ABORT");
+        if ( env )
+                _prelude_log_set_abort_level((*env) ? atoi(env) : PRELUDE_LOG_CRIT);
+
+
         _prelude_thread_in_use();
 
         if ( ! getcwd(_prelude_init_cwd, sizeof(_prelude_init_cwd)) )

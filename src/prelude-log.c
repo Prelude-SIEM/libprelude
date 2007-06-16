@@ -24,6 +24,7 @@
 #include "libmissing.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
 #include <errno.h>
@@ -44,6 +45,8 @@ static void do_log_print(prelude_log_t level, const char *str);
 
 
 static int debug_level = 0;
+static int raise_abort_level = 0;
+prelude_bool_t raise_abort_set = FALSE;
 static int log_level = PRELUDE_LOG_INFO;
 
 
@@ -234,6 +237,9 @@ void _prelude_log(prelude_log_t level, const char *file,
         va_start(ap, fmt);
         do_log_v(level, file, function, line, fmt, ap);
         va_end(ap);
+
+        if ( raise_abort_set && level == raise_abort_level )
+                abort();
 }
 
 
@@ -325,6 +331,13 @@ int prelude_log_set_logfile(const char *filename)
         }
 
         return 0;
+}
+
+
+void _prelude_log_set_abort_level(prelude_log_t level)
+{
+        raise_abort_set = TRUE;
+        raise_abort_level = level;
 }
 
 
