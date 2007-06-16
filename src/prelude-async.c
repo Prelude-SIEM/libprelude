@@ -254,10 +254,7 @@ static void *async_thread(void *arg)
 
 static void async_exit(void)
 {
-        if ( ! prelude_list_is_empty(&joblist) )
-                prelude_log(PRELUDE_LOG_INFO, "Waiting for asynchronous operation to complete.\n");
-
-        prelude_async_exit();
+        stop_processing = 1;
 }
 
 
@@ -388,6 +385,8 @@ int prelude_async_init(void)
                 assert(_prelude_thread_in_use() == TRUE);
 
                 is_initialized = TRUE;
+                stop_processing = FALSE;
+
                 return do_init_async();
         }
 
@@ -429,17 +428,27 @@ void prelude_async_del(prelude_async_object_t *obj)
 
 
 
-
 void prelude_async_exit(void)
 {
+        prelude_bool_t has_job;
+
+        if ( ! is_initialized )
+                return;
+
         pthread_mutex_lock(&mutex);
 
         stop_processing = TRUE;
         pthread_cond_signal(&cond);
+        has_job = ! prelude_list_is_empty(&joblist);
 
         pthread_mutex_unlock(&mutex);
+
+        if ( has_job )
+                prelude_log(PRELUDE_LOG_INFO, "Waiting for asynchronous operation to complete.\n");
 
         pthread_join(thread, NULL);
         pthread_cond_destroy(&cond);
         pthread_mutex_destroy(&mutex);
+
+        is_initialized = FALSE;
 }
