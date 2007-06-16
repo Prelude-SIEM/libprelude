@@ -676,7 +676,7 @@ const char *prelude_string_get_string_or_default(const prelude_string_t *string,
 const char *prelude_string_get_string(const prelude_string_t *string)
 {
         prelude_return_val_if_fail(string, NULL);
-        return string ? string->data.robuf : NULL;
+        return string->data.robuf;
 }
 
 
