@@ -103,7 +103,7 @@ struct prelude_client {
         /*
          * name, analyzerid, and config file for this analyzer.
          */
-        char *md5sum;
+        char *sha1sum;
         char *config_filename;
         prelude_bool_t config_external;
 
@@ -143,20 +143,20 @@ static int client_write_cb(prelude_msgbuf_t *msgbuf, prelude_msg_t *msg)
 
 
 
-static int generate_md5sum(const char *filename, prelude_string_t *out)
+static int generate_sha1sum(const char *filename, prelude_string_t *out)
 {
         int ret;
         size_t len, i;
-        unsigned char digest[16], *data;
+        unsigned char digest[20], *data;
 
         ret = _prelude_load_file(filename, &data, &len);
         if ( ret < 0 )
                 return ret;
 
-        gcry_md_hash_buffer(GCRY_MD_MD5, digest, data, len);
+        gcry_md_hash_buffer(GCRY_MD_SHA1, digest, data, len);
         _prelude_unload_file(data, len);
 
-        len = gcry_md_get_algo_dlen(GCRY_MD_MD5);
+        len = gcry_md_get_algo_dlen(GCRY_MD_SHA1);
         assert(len == sizeof(digest));
 
         for ( i = 0; i < len; i++ ) {
@@ -233,12 +233,12 @@ static void heartbeat_expire_cb(void *data)
 
         add_hb_data(heartbeat, str, client_get_status(client));
 
-        if ( client->md5sum ) {
-                ret = prelude_string_new_constant(&str, "Analyzer md5sum");
+        if ( client->sha1sum ) {
+                ret = prelude_string_new_constant(&str, "Analyzer SHA1");
                 if ( ret < 0 )
                         goto out;
 
-                add_hb_data(heartbeat, str, client->md5sum);
+                add_hb_data(heartbeat, str, client->sha1sum);
         }
 
         ret = idmef_time_new_from_gettimeofday(&time);
@@ -318,7 +318,7 @@ static int get_sys_info(idmef_analyzer_t *analyzer)
 static int fill_client_infos(prelude_client_t *client, const char *program)
 {
         int ret;
-        prelude_string_t *str, *md5;
+        prelude_string_t *str, *sha1;
         idmef_process_t *process;
         char buf[PATH_MAX], *name, *path;
 
@@ -362,16 +362,16 @@ static int fill_client_infos(prelude_client_t *client, const char *program)
                 if ( ret < 0 )
                         return ret;
 
-                ret = prelude_string_new(&md5);
+                ret = prelude_string_new(&sha1);
                 if ( ret < 0 )
                         return ret;
 
-                ret = generate_md5sum(prelude_string_get_string(str), md5);
+                ret = generate_sha1sum(prelude_string_get_string(str), sha1);
                 if ( ret < 0 )
                         return ret;
 
-                ret = prelude_string_get_string_released(md5, &client->md5sum);
-                prelude_string_destroy(md5);
+                ret = prelude_string_get_string_released(sha1, &client->sha1sum);
+                prelude_string_destroy(sha1);
         }
 
         if ( path )
@@ -842,8 +842,8 @@ static void _prelude_client_destroy(prelude_client_t *client)
         if ( client->profile )
                 prelude_client_profile_destroy(client->profile);
 
-        if ( client->md5sum )
-                free(client->md5sum);
+        if ( client->sha1sum )
+                free(client->sha1sum);
 
         if ( client->msgbuf )
                 prelude_msgbuf_destroy(client->msgbuf);
@@ -1154,7 +1154,7 @@ int prelude_client_start(prelude_client_t *client)
 
         prelude_return_val_if_fail(client, -1);
 
-        if ( ! client->md5sum ) {
+        if ( ! client->sha1sum ) {
                 /*
                  * if prelude_client_init() was not called
                  */
