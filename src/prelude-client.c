@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2004,2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2004-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.
@@ -108,6 +108,7 @@ struct prelude_client {
         prelude_bool_t config_external;
 
         idmef_analyzer_t *analyzer;
+        idmef_analyzer_t *_analyzer_copy;
 
         prelude_connection_pool_t *cpool;
         prelude_timer_t heartbeat_timer;
@@ -228,24 +229,24 @@ static void heartbeat_expire_cb(void *data)
 
         ret = prelude_string_new_constant(&str, "Analyzer status");
         if ( ret < 0 )
-                return;
+                goto out;
 
         add_hb_data(heartbeat, str, client_get_status(client));
 
         if ( client->md5sum ) {
                 ret = prelude_string_new_constant(&str, "Analyzer md5sum");
                 if ( ret < 0 )
-                        return;
+                        goto out;
 
                 add_hb_data(heartbeat, str, client->md5sum);
         }
 
         ret = idmef_time_new_from_gettimeofday(&time);
         if ( ret < 0 )
-                return;
+                goto out;
 
         idmef_heartbeat_set_create_time(heartbeat, time);
-        idmef_heartbeat_set_analyzer(heartbeat, idmef_analyzer_ref(client->analyzer), IDMEF_LIST_PREPEND);
+        idmef_heartbeat_set_analyzer(heartbeat, idmef_analyzer_ref(client->_analyzer_copy), IDMEF_LIST_PREPEND);
 
         if ( client->heartbeat_cb ) {
                 client->heartbeat_cb(client, message);
@@ -850,6 +851,9 @@ static void _prelude_client_destroy(prelude_client_t *client)
         if ( client->analyzer )
                 idmef_analyzer_destroy(client->analyzer);
 
+        if ( client->_analyzer_copy )
+                idmef_analyzer_destroy(client->_analyzer_copy);
+
         if ( client->config_filename )
                 free(client->config_filename);
 
@@ -1022,6 +1026,8 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
         int ret;
         prelude_client_t *new;
 
+        prelude_return_val_if_fail(profile, -1);
+
         new = calloc(1, sizeof(*new));
         if ( ! new )
                 return prelude_error_from_errno(errno);
@@ -1101,6 +1107,8 @@ int prelude_client_init(prelude_client_t *client)
         prelude_string_t *err;
         prelude_option_warning_t old_warnings;
 
+        prelude_return_val_if_fail(client, -1);
+
         prelude_option_set_warnings(0, &old_warnings);
 
         ret = prelude_option_read(_prelude_generic_optlist, (const char **)&client->config_filename,
@@ -1144,6 +1152,8 @@ int prelude_client_start(prelude_client_t *client)
         int ret;
         void *credentials;
 
+        prelude_return_val_if_fail(client, -1);
+
         if ( ! client->md5sum ) {
                 /*
                  * if prelude_client_init() was not called
@@ -1166,7 +1176,12 @@ int prelude_client_start(prelude_client_t *client)
                         return handle_client_error(client, ret);
         }
 
+
         if ( (client->cpool || client->heartbeat_cb) && client->flags & PRELUDE_CLIENT_FLAGS_HEARTBEAT ) {
+                ret = idmef_analyzer_clone(client->analyzer, &client->_analyzer_copy);
+                if ( ret < 0 )
+                        return ret;
+
                 client->status = CLIENT_STATUS_STARTING;
                 /*
                  * this will reset, and thus initialize the timer.
@@ -1192,6 +1207,7 @@ int prelude_client_start(prelude_client_t *client)
  */
 idmef_analyzer_t *prelude_client_get_analyzer(prelude_client_t *client)
 {
+        prelude_return_val_if_fail(client, NULL);
         return client->analyzer;
 }
 
@@ -1211,6 +1227,8 @@ idmef_analyzer_t *prelude_client_get_analyzer(prelude_client_t *client)
  */
 void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
 {
+        prelude_return_if_fail(client && msg);
+
         if ( client->flags & PRELUDE_CLIENT_FLAGS_ASYNC_SEND )
                 prelude_connection_pool_broadcast_async(client->cpool, msg);
         else
@@ -1231,6 +1249,8 @@ void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
  */
 void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg)
 {
+        prelude_return_if_fail(client && msg);
+
         /*
          * we need to hold a lock since asynchronous heartbeat
          * could write the message buffer at the same time we do.
@@ -1257,6 +1277,7 @@ void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg)
  */
 prelude_connection_pool_t *prelude_client_get_connection_pool(prelude_client_t *client)
 {
+        prelude_return_val_if_fail(client, NULL);
         return client->cpool;
 }
 
@@ -1273,6 +1294,7 @@ prelude_connection_pool_t *prelude_client_get_connection_pool(prelude_client_t *
  */
 void prelude_client_set_connection_pool(prelude_client_t *client, prelude_connection_pool_t *pool)
 {
+        prelude_return_if_fail(client && pool);
         client->cpool = pool;
 }
 
@@ -1289,6 +1311,7 @@ void prelude_client_set_connection_pool(prelude_client_t *client, prelude_connec
 void prelude_client_set_heartbeat_cb(prelude_client_t *client,
                                      void (*cb)(prelude_client_t *client, idmef_message_t *hb))
 {
+        prelude_return_if_fail(client && cb);
         client->heartbeat_cb = cb;
 }
 
@@ -1311,6 +1334,8 @@ void prelude_client_set_heartbeat_cb(prelude_client_t *client,
  */
 void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status_t status)
 {
+        prelude_return_if_fail(client);
+
         prelude_timer_destroy(&client->heartbeat_timer);
 
         if ( status == PRELUDE_CLIENT_EXIT_STATUS_SUCCESS && client->flags & PRELUDE_CLIENT_FLAGS_HEARTBEAT ) {
@@ -1344,6 +1369,8 @@ int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t fl
 {
         int ret = 0;
 
+        prelude_return_val_if_fail(client, -1);
+
         client->flags = flags;
 
         if ( flags & PRELUDE_CLIENT_FLAGS_ASYNC_TIMER ) {
@@ -1372,6 +1399,7 @@ int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t fl
  */
 prelude_client_flags_t prelude_client_get_flags(prelude_client_t *client)
 {
+        prelude_return_val_if_fail(client, -1);
         return client->flags;
 }
 
@@ -1385,6 +1413,7 @@ prelude_client_flags_t prelude_client_get_flags(prelude_client_t *client)
  */
 prelude_connection_permission_t prelude_client_get_required_permission(prelude_client_t *client)
 {
+        prelude_return_val_if_fail(client, -1);
         return client->permission;
 }
 
@@ -1404,6 +1433,8 @@ prelude_connection_permission_t prelude_client_get_required_permission(prelude_c
  */
 void prelude_client_set_required_permission(prelude_client_t *client, prelude_connection_permission_t permission)
 {
+        prelude_return_if_fail(client);
+
         if ( permission & PRELUDE_CONNECTION_PERMISSION_IDMEF_READ )
                 prelude_connection_pool_set_event_handler(client->cpool, 0, NULL);
 
@@ -1424,6 +1455,7 @@ void prelude_client_set_required_permission(prelude_client_t *client, prelude_co
  */
 const char *prelude_client_get_config_filename(prelude_client_t *client)
 {
+        prelude_return_val_if_fail(client, NULL);
         return client->config_filename;
 }
 
@@ -1443,6 +1475,8 @@ const char *prelude_client_get_config_filename(prelude_client_t *client)
  */
 int prelude_client_set_config_filename(prelude_client_t *client, const char *filename)
 {
+        prelude_return_val_if_fail(client && filename, -1);
+
         if ( client->config_filename )
                 free(client->config_filename);
 
@@ -1459,6 +1493,7 @@ int prelude_client_set_config_filename(prelude_client_t *client, const char *fil
 
 prelude_ident_t *prelude_client_get_unique_ident(prelude_client_t *client)
 {
+        prelude_return_val_if_fail(client, NULL);
         return client->unique_ident;
 }
 
@@ -1466,6 +1501,7 @@ prelude_ident_t *prelude_client_get_unique_ident(prelude_client_t *client)
 
 prelude_client_profile_t *prelude_client_get_profile(prelude_client_t *client)
 {
+        prelude_return_val_if_fail(client, NULL);
         return client->profile;
 }
 
@@ -1497,6 +1533,8 @@ const char *prelude_client_get_setup_error(prelude_client_t *client)
 {
         int ret;
         prelude_string_t *out, *perm;
+
+        prelude_return_val_if_fail(client, NULL);
 
         ret = prelude_string_new(&out);
         if ( ret < 0 )
@@ -1543,6 +1581,7 @@ const char *prelude_client_get_setup_error(prelude_client_t *client)
 
 void prelude_client_print_setup_error(prelude_client_t *client)
 {
+        prelude_return_if_fail(client);
         prelude_log(PRELUDE_LOG_WARN, "%s\n\n", prelude_client_get_setup_error(client));
 }
 
@@ -1552,6 +1591,8 @@ int prelude_client_handle_msg_default(prelude_client_t *client, prelude_msg_t *m
 {
         int ret;
         uint8_t tag;
+
+        prelude_return_val_if_fail(client && msg && msgbuf, -1);
 
         tag = prelude_msg_get_tag(msg);
         if ( tag != PRELUDE_MSG_OPTION_REQUEST )
@@ -1575,6 +1616,8 @@ int prelude_client_handle_msg_default(prelude_client_t *client, prelude_msg_t *m
 int prelude_client_new_msgbuf(prelude_client_t *client, prelude_msgbuf_t **msgbuf)
 {
         int ret;
+
+        prelude_return_val_if_fail(client, -1);
 
         ret = prelude_msgbuf_new(msgbuf);
         if ( ret < 0 )
