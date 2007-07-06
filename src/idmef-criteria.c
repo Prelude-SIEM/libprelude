@@ -338,8 +338,12 @@ int idmef_criterion_match(const idmef_criterion_t *criterion, idmef_message_t *m
         if ( ret < 0 )
                 return ret;
 
-        if ( ret == 0 )
+        if ( ret == 0 ) {
+                if ( criterion->value && criterion->operator & IDMEF_CRITERION_OPERATOR_NOT )
+                        return 1;
+
                 return (criterion->operator == IDMEF_CRITERION_OPERATOR_NULL) ? 1 : 0;
+        }
 
         if ( ! criterion->value ) {
                 idmef_value_destroy(value);
