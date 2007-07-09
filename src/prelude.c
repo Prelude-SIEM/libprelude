@@ -86,7 +86,10 @@ static void slice_arguments(int *argc, char **argv)
 
         _prelude_client_register_options();
 
-        if ( ! argc || ! argv )
+        _prelude_internal_argc = 0;
+        _prelude_internal_argv[0] = NULL;
+
+        if ( ! argc || ! argv || *argc < 1 )
                 return;
 
         rootopt = _prelude_generic_optlist;
