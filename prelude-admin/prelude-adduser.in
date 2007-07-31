@@ -1,0 +1,16 @@
+#!/bin/sh
+# @configure_input@
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+bindir=@bindir@
+libdir=@libdir@
+datadir=@datadir@
+
+echo "*"
+echo "* WARNING: prelude-adduser is deprecated and will be removed in the future."
+echo "* WARNING: Please use 'prelude-admin' instead."
+echo "*"
+
+$bindir/prelude-admin $@
+

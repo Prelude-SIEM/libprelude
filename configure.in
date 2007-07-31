@@ -737,6 +737,7 @@ src/include/Makefile
 src/include/prelude.h
 src/include/prelude-inttypes.h
 
+prelude-admin/prelude-adduser
 prelude-admin/Makefile
 
 docs/Makefile
