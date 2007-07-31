@@ -99,7 +99,7 @@ AC_SUBST(LDFLAGS)
 
 AC_SUBST(libprelude_libs)
 AC_SUBST(libprelude_cflags)
-AC_SUBST(prelude_adduser_libs)
+AC_SUBST(prelude_admin_libs)
 
 
 dnl **********************************************************
@@ -332,8 +332,8 @@ AC_CHECK_LIB(gnutls, gnutls_srp_verifier, srp_available=yes, srp_available=no)
 LIBS=$old_LIBS
 CPPFLAGS=$old_CPPFLAGS
 
-AC_SUBST(PRELUDE_ADDUSER_LIBS)
-AC_SUBST(PRELUDE_ADDUSER_CFLAGS)
+AC_SUBST(PRELUDE_ADMIN_LIBS)
+AC_SUBST(PRELUDE_ADMIN_CFLAGS)
 
 if test x$srp_available = xno; then
    dnl **************************************************
@@ -355,8 +355,8 @@ if test x$srp_available = xno; then
 
    AC_CHECK_LIB(gnutls-extra, gnutls_srp_verifier, srp_available=yes, AC_DEFINE_UNQUOTED(GNUTLS_SRP_DISABLED, , Define whether SRP support is disabled))
    if test x$srp_available = xyes; then
-         PRELUDE_ADDUSER_CFLAGS="-DNEED_GNUTLS_EXTRA $LIBGNUTLS_EXTRA_CFLAGS"
-	 PRELUDE_ADDUSER_LIBS="$LIBGNUTLS_EXTRA_LIBS $COMMON_LIBS"
+         PRELUDE_ADMIN_CFLAGS="-DNEED_GNUTLS_EXTRA $LIBGNUTLS_EXTRA_CFLAGS"
+	 PRELUDE_ADMIN_LIBS="$LIBGNUTLS_EXTRA_LIBS $COMMON_LIBS"
    fi
 
    LIBS=$old_LIBS
@@ -737,7 +737,7 @@ src/include/Makefile
 src/include/prelude.h
 src/include/prelude-inttypes.h
 
-prelude-adduser/Makefile
+prelude-admin/Makefile
 
 docs/Makefile
 docs/api/Makefile

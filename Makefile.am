@@ -2,9 +2,9 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --without-system-ltdl
 ACLOCAL_AMFLAGS = -I m4 -I libmissing/m4
 
 if HAVE_SYSTEM_LIBLTDL
-SUBDIRS = libmissing m4 src prelude-adduser bindings docs
+SUBDIRS = libmissing m4 src prelude-admin bindings docs
 else
-SUBDIRS = libltdl libmissing m4 src prelude-adduser bindings docs
+SUBDIRS = libltdl libmissing m4 src prelude-admin bindings docs
 endif
 
 DIST_SUBDIRS=$(SUBDIRS)
