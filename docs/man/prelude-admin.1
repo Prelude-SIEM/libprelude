@@ -1,0 +1,153 @@
+.TH "prelude-admin" 1 "19 June 2007"
+.SH NAME
+prelude-admin \- Manage agents accounts
+
+.SH SYNOPSIS
+.B prelude-admin 
+<subcommand> [options] [args]
+
+.B prelude-admin add <profile name> [--uid UID] [--gid GID]
+
+.B prelude-admin chown <profile name> [--uid UID] [--gid GID]
+
+.B prelude-admin del <profile name>
+
+.B prelude-admin rename <profile name> <profile name>
+
+.B prelude-admin register <profile name> <wanted permission> <registration-server address> [--uid UID] [--gid GID] [--passwd=PASSWD>] [--passwd-file=<FILE>]
+
+.B prelude-admin registration-server <profile name> [--uid UID] [--gid GID] [--prompt] [--passwd=PASSWD>] [--passwd-file=<FILE>] [--keepalive] [--no-confirm] [--listen]
+
+.B prelude-admin revoke <profile> <analyzerID> [--uid UID] [--gid GID]
+
+.SH DESCRIPTION
+In order for an agent to communicate with a manager, it must be registered. Registration involves several steps:
+ - Allocating an unique identity for the agent
+ - Creating directory to be used by the agent (example: failover purpose)
+ - Registering to a remote 'prelude-manager': get a signed X509 certificate that will allow communication between agent and manager using the specified permissions. 
+
+All these informations are stored in an agent profile. 
+
+An agent profile is identified by its name. When an agent is started, it will load the profile of the same name as the program itself, that is, if your agent is named "prelude-lml", the agent will load the profile named "prelude-lml". 
+
+The name of the profile can be overriden using the '--prelude --profile name_of_my_profile' command line option. It is possible to define the profile name so that you can have several instances of one agent running with different permissions, using different profiles. 
+
+Note that profiles are not specific to agents, but are used in all programs of the Prelude suite (agents, managers, etc).
+
+If you are not sure which permission your agent should get, just start it and default permissions will be displayed.
+
+.SH OPTIONS
+
+.B <profile name>
+is the default name of the agent you are installing or your own defined name.
+
+If you start your agent without prior registration, a warning is displayed including the default profile name on how to register the agent. 
+
+.B <requested permission>
+is the permission your agent needs. It is composed of permission attributes (idmef or admin) and access type: read/write (r/w). By default, an agent need permissions for writing IDMEF to a manager, and reading administrative command sent to it. That is : "idmef:w admin:r".
+
+.B <manager address>
+is the address of the prelude-manager you wish to register. this can either be its IP address or its hostname. If you made a local installation, you can write localhost to connect via unix socket.
+
+Remember to use the correct uid/gid when registering your agent. For instance, if you want to register snort (running with snort euid / egid), use --uid snort --gid snort. 
+
+.TP 5
+.B add <analyzer profile>
+Setup a new agent user.
+
+.B --uid=UID
+UID or user to use to setup agent files.
+
+.B --gid=GID
+GID or group to use to setup agent files.
+.TP
+
+
+.B chown <analyzer profile>
+Change analyzer owner.
+
+.B --uid=UID
+UID or user to use to setup agent files.
+
+.B --gid=GID
+GID or group to use to setup agent files.
+.TP
+
+
+.B del <analyzer profile>
+The delete command will remove the agent files created through "add" command. Once this is done, the analyzer can't be used unless "register" or "add" is called again.
+.TP
+
+
+.B rename <analyzer profile> <analyzer profile>
+Rename an existing analyzer.
+.TP
+
+
+.B register <profile name> <wanted permission> <registration-server address>
+Register an analyzer.
+
+Register and create the analyzer basic setup if needed.
+It will also configure communication of this analyzer with a
+receiving analyzer (like a Manager) through the specified registration-server.
+
+.B --uid=UID
+UID or user to use to setup analyzer files.
+
+.B --gid=GID
+GID or group to use to setup analyzer files.
+
+.B --passwd=PASSWD
+Use provided password instead of prompting it.
+
+.B --passwd-file=-|FILE
+Read password from file instead of prompting it (- for stdin).
+.TP
+
+
+.B registration-server <profile name>
+Start a registration server to register agents.
+This is used in order to register 'sending' analyzer to 'receiving'
+analyzer. <profile name> should be set to the profile name of the
+'receiving' analyzer, the one where 'sending' analyzer will register to.
+
+.B --uid=UID
+UID or user to use to setup 'receiving' analyzer files.
+
+.B --gid=GID
+GID or group to use to setup 'receiving' analyzer files.
+
+.B --prompt
+Prompt for a password instead of auto generating it.
+
+.B --passwd=PASSWD
+Use provided password instead of auto generating it.
+
+.B --passwd-file=-|FILE
+Read password from file instead of auto generating it (- for stdin).
+
+.B --keepalive
+Register analyzer in an infinite loop.
+
+.B --no-confirm
+Do not ask for confirmation on agent registration.
+
+.B --listen
+Address to listen on for registration request (default is any:5553).
+.TP
+
+.B revoke <profile name>
+Revoke access to <profile> for the given analyzerID.
+
+.B --uid=UID
+UID or user to use to setup analyzer files.
+
+.B --gid=GID
+GID to group to use to setup analyzer files.
+.TP
+
+.B --help
+Print help
+
+.SH AUTHOR
+This man page has been written by Frederic Motte
