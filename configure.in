@@ -742,7 +742,7 @@ prelude-admin/Makefile
 
 docs/Makefile
 docs/api/Makefile
-docs/man/Makefile
+docs/manpages/Makefile
 
 bindings/Makefile
 bindings/perl/Makefile.PL

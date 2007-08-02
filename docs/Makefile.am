@@ -1,1 +1,1 @@
-SUBDIRS = api man
+SUBDIRS = api manpages
