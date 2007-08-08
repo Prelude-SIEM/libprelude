@@ -1,12 +1,12 @@
 /*****
 *
-* Copyright (C) 1999 - 2004 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 1999-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.
 *
 * This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by 
+* it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2, or (at your option)
 * any later version.
 *
@@ -43,7 +43,7 @@ static char slockfile[PATH_MAX];
 
 
 
-static void lockfile_unlink(void) 
+static void lockfile_unlink(void)
 {
         int ret;
 
@@ -55,14 +55,14 @@ static void lockfile_unlink(void)
 
 
 
-static int get_absolute_filename(const char *lockfile)  
+static int get_absolute_filename(const char *lockfile)
 {
         if ( *lockfile == '/' )
                 snprintf(slockfile, sizeof(slockfile), "%s", lockfile);
 
         else {
                 char dir[PATH_MAX];
-                
+
                 /*
                  * if lockfile is a relative path,
                  * deletion on exit() will not work because of the chdir("/") call.
@@ -70,17 +70,17 @@ static int get_absolute_filename(const char *lockfile)
                  */
                 if ( ! getcwd(dir, sizeof(dir)) )
                         return prelude_error_from_errno(errno);
-                
+
                 snprintf(slockfile, sizeof(slockfile), "%s/%s", dir, lockfile);
         }
-        
+
         return 0;
 }
 
 
 
 
-static int lockfile_get_exclusive(const char *lockfile) 
+static int lockfile_get_exclusive(const char *lockfile)
 {
         int fd;
 #ifndef WIN32
@@ -92,19 +92,19 @@ static int lockfile_get_exclusive(const char *lockfile)
         if ( fd < 0 )
                 return prelude_error_from_errno(errno);
 
-#ifndef WIN32        
+#ifndef WIN32
         fcntl(fd, F_SETFD, fcntl(fd, F_GETFD) | FD_CLOEXEC);
- 
+
         lock.l_type = F_WRLCK;    /* write lock */
         lock.l_start = 0;         /* from offset 0 */
         lock.l_whence = SEEK_SET; /* at the beginning of the file */
         lock.l_len = 0;           /* until EOF */
-        
+
         ret = fcntl(fd, F_SETLK, &lock);
         if ( ret < 0 ) {
                 if ( errno == EACCES || errno == EAGAIN )
                         return prelude_error(PRELUDE_ERROR_DAEMONIZE_LOCK_HELD);
-                
+
                 close(fd);
                 return prelude_error_from_errno(errno);
         }
@@ -113,12 +113,12 @@ static int lockfile_get_exclusive(const char *lockfile)
         /*
          * lock is now held until program exits.
          */
-        return fd;     
+        return fd;
 }
 
 
 
-static int lockfile_write_pid(int fd, pid_t pid) 
+static int lockfile_write_pid(int fd, pid_t pid)
 {
         int ret = -1;
         char buf[50];
@@ -133,9 +133,9 @@ static int lockfile_write_pid(int fd, pid_t pid)
 #endif
         if ( ret < 0 )
                 return prelude_error_from_errno(errno);
-        
+
         snprintf(buf, sizeof(buf), "%d\n", (int) pid);
-        
+
         ret = write(fd, buf, strlen(buf));
         if ( ret < 0 )
                 return prelude_error_from_errno(errno);
@@ -159,30 +159,30 @@ static int lockfile_write_pid(int fd, pid_t pid)
  */
 int prelude_daemonize(const char *lockfile)
 {
-	pid_t pid;
+        pid_t pid;
         int fd = 0, ret;
-        
+
         if ( lockfile ) {
                 ret = get_absolute_filename(lockfile);
                 if ( ret < 0 )
                         return ret;
-                
+
                 fd = lockfile_get_exclusive(slockfile);
                 if ( fd < 0 )
                         return fd;
         }
-        
+
 #ifdef WIN32
         prelude_log(PRELUDE_LOG_ERR, "Daemonize call unsupported in this environment.\n");
-        
+
         if ( lockfile ) {
                 pid = getpid();
-                
+
                 ret = lockfile_write_pid(fd, pid);
                 if ( ret < 0 )
                         return ret;
         }
-#else        
+#else
         pid = fork();
         if ( pid < 0 )
                 return prelude_error_from_errno(errno);
@@ -194,27 +194,27 @@ int prelude_daemonize(const char *lockfile)
                         if ( ret < 0 )
                                 return ret;
                 }
-                
+
                 _exit(0);
         }
-        
+
         setsid();
-        
+
         ret = chdir("/");
-        if ( ret < 0 ) 
+        if ( ret < 0 )
                 prelude_log(PRELUDE_LOG_ERR, "could not change working directory to '/': %s.\n", strerror(errno));
-                
+
         umask(0);
-        
+
         fclose(stdin);
         fclose(stdout);
         fclose(stderr);
 #endif
-        
+
         /*
          * We want the lock to be unlinked upon normal exit.
          */
-        if ( lockfile ) 
+        if ( lockfile )
                 atexit(lockfile_unlink);
 
         return 0;
