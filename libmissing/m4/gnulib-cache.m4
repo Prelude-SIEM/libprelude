@@ -23,6 +23,7 @@ gl_MODULES([ftw getaddrinfo getpass gettimeofday inet_ntop memmem minmax pathmax
 gl_AVOID([])
 gl_SOURCE_BASE([libmissing])
 gl_M4_BASE([libmissing/m4])
+gl_PO_BASE([])
 gl_DOC_BASE([libmissing/doc])
 gl_TESTS_BASE([tests])
 gl_LIB([libmissing])
@@ -30,3 +31,4 @@ gl_LGPL
 gl_MAKEFILE_NAME([])
 gl_LIBTOOL
 gl_MACRO_PREFIX([gl])
+gl_PO_DOMAIN([])

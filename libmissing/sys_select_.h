@@ -16,17 +16,22 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
 #ifndef _GL_SYS_SELECT_H
-#define _GL_SYS_SELECT_H
 
 #if @HAVE_SYS_SELECT_H@
 
 /* On many platforms, <sys/select.h> assumes prior inclusion of
    <sys/types.h>.  */
-
 # include <sys/types.h>
-# include @ABSOLUTE_SYS_SELECT_H@
 
-#else
+/* The include_next requires a split double-inclusion guard.  */
+# @INCLUDE_NEXT@ @NEXT_SYS_SELECT_H@
+
+#endif
+
+#ifndef _GL_SYS_SELECT_H
+#define _GL_SYS_SELECT_H
+
+#if !@HAVE_SYS_SELECT_H@
 
 /* A platform that lacks <sys/select.h>.  */
 
@@ -34,4 +39,5 @@
 
 #endif
 
+#endif /* _GL_SYS_SELECT_H */
 #endif /* _GL_SYS_SELECT_H */

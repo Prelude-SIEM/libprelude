@@ -45,9 +45,9 @@ LTALLOCA=`echo "$ALLOCA" | sed 's/\.[^.]* /.lo /g;s/\.[^.]*$/.lo/'`
 changequote([, ])dnl
 AC_SUBST([LTALLOCA])
   gl_FUNC_ALLOCA
-  gl_ALLOCSA
   gl_HEADER_ARPA_INET
   AC_PROG_MKDIR_P
+  gl_FLOAT_H
   gl_FUNC_FSEEKO
   gl_STDIO_MODULE_INDICATOR([fseeko])
   gl_FUNC_FTW
@@ -60,7 +60,10 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_GETTIMEOFDAY
   gl_INET_NTOP
   gl_LOCALCHARSET
+  gl_FUNC_LSEEK
+  gl_UNISTD_MODULE_INDICATOR([lseek])
   AC_FUNC_MALLOC
+  gl_MALLOCA
   gl_FUNC_MEMMEM
   gl_STRING_MODULE_INDICATOR([memmem])
   gl_MINMAX
@@ -102,6 +105,7 @@ AC_SUBST([LTALLOCA])
   gl_HEADER_TIME_H
   gl_TIME_R
   gl_FUNC_TIMEGM
+  gl_UNISTD_H
   gl_FUNC_VASNPRINTF
   gl_FUNC_VSNPRINTF
   gl_STDIO_MODULE_INDICATOR([vsnprintf])
@@ -148,11 +152,11 @@ AC_DEFUN([gl_FILE_LIST], [
   build-aux/link-warning.h
   lib/alloca.c
   lib/alloca_.h
-  lib/allocsa.c
-  lib/allocsa.h
-  lib/allocsa.valgrind
   lib/asnprintf.c
   lib/config.charset
+  lib/float+.h
+  lib/float_.h
+  lib/fseeko.c
   lib/ftw.c
   lib/ftw_.h
   lib/gai_strerror.c
@@ -170,7 +174,11 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/inet_ntop.h
   lib/localcharset.c
   lib/localcharset.h
+  lib/lseek.c
   lib/malloc.c
+  lib/malloca.c
+  lib/malloca.h
+  lib/malloca.valgrind
   lib/memmem.c
   lib/minmax.h
   lib/mktime.c
@@ -211,20 +219,20 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/time_.h
   lib/time_r.c
   lib/timegm.c
+  lib/unistd_.h
   lib/vasnprintf.c
   lib/vasnprintf.h
   lib/vsnprintf.c
   lib/wchar_.h
   lib/wctype_.h
   lib/xsize.h
-  m4/absolute-header.m4
   m4/alloca.m4
-  m4/allocsa.m4
   m4/arpa_inet_h.m4
   m4/codeset.m4
   m4/eealloc.m4
   m4/eoverflow.m4
   m4/extensions.m4
+  m4/float_h.m4
   m4/fseeko.m4
   m4/ftw.m4
   m4/getaddrinfo.m4
@@ -234,11 +242,14 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/gettimeofday.m4
   m4/glibc21.m4
   m4/gnulib-common.m4
+  m4/include_next.m4
   m4/inet_ntop.m4
   m4/intmax_t.m4
   m4/inttypes_h.m4
   m4/localcharset.m4
   m4/longlong.m4
+  m4/lseek.m4
+  m4/malloca.m4
   m4/memmem.m4
   m4/minmax.m4
   m4/mktime.m4
@@ -273,6 +284,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/timegm.m4
   m4/tm_gmtoff.m4
   m4/ulonglong.m4
+  m4/unistd_h.m4
   m4/vasnprintf.m4
   m4/vsnprintf.m4
   m4/wchar.m4
