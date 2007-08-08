@@ -43,18 +43,6 @@ static char slockfile[PATH_MAX];
 
 
 
-static void lockfile_unlink(void)
-{
-        int ret;
-
-        ret = unlink(slockfile);
-        if ( ret < 0 )
-                prelude_log(PRELUDE_LOG_ERR, "couldn't delete lockfile %s.\n", slockfile);
-}
-
-
-
-
 static int get_absolute_filename(const char *lockfile)
 {
         if ( *lockfile == '/' )
@@ -103,7 +91,8 @@ static int lockfile_get_exclusive(const char *lockfile)
         ret = fcntl(fd, F_SETLK, &lock);
         if ( ret < 0 ) {
                 if ( errno == EACCES || errno == EAGAIN )
-                        return prelude_error(PRELUDE_ERROR_DAEMONIZE_LOCK_HELD);
+                        return prelude_error_verbose(PRELUDE_ERROR_DAEMONIZE_LOCK_HELD,
+                                                     "'%s' lock is held by another process", slockfile);
 
                 close(fd);
                 return prelude_error_from_errno(errno);
@@ -166,10 +155,6 @@ int prelude_daemonize(const char *lockfile)
                 ret = get_absolute_filename(lockfile);
                 if ( ret < 0 )
                         return ret;
-
-                fd = lockfile_get_exclusive(slockfile);
-                if ( fd < 0 )
-                        return fd;
         }
 
 #ifdef WIN32
@@ -187,15 +172,17 @@ int prelude_daemonize(const char *lockfile)
         if ( pid < 0 )
                 return prelude_error_from_errno(errno);
 
-        else if ( pid ) {
-
-                if ( lockfile ) {
-                        ret = lockfile_write_pid(fd, pid);
-                        if ( ret < 0 )
-                                return ret;
-                }
-
+        else if ( pid )
                 _exit(0);
+
+        if ( lockfile ) {
+                fd = lockfile_get_exclusive(slockfile);
+                if ( fd < 0 )
+                        return fd;
+
+                ret = lockfile_write_pid(fd, pid);
+                if ( ret < 0 )
+                        return ret;
         }
 
         setsid();
@@ -210,12 +197,6 @@ int prelude_daemonize(const char *lockfile)
         fclose(stdout);
         fclose(stderr);
 #endif
-
-        /*
-         * We want the lock to be unlinked upon normal exit.
-         */
-        if ( lockfile )
-                atexit(lockfile_unlink);
 
         return 0;
 }
