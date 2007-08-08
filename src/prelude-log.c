@@ -41,7 +41,22 @@
 #include "prelude-inttypes.h"
 
 
-static void do_log_print(prelude_log_t level, const char *str);
+#if ! defined (PRELUDE_VA_COPY)
+
+# if defined (__GNUC__) && defined (__PPC__) && (defined (_CALL_SYSV) || defined (_WIN32))
+#  define PRELUDE_VA_COPY(ap1, ap2)     (*(ap1) = *(ap2))
+
+# elif defined (PRELUDE_VA_COPY_AS_ARRAY)
+#  define PRELUDE_VA_COPY(ap1, ap2)     memmove ((ap1), (ap2), sizeof(va_list))
+
+# else /* va_list is a pointer */
+#  define PRELUDE_VA_COPY(ap1, ap2)     ((ap1) = (ap2))
+
+# endif
+#endif
+
+
+static int do_log_print(prelude_log_t level, const char *str);
 
 
 static int debug_level = 0;
@@ -49,26 +64,12 @@ static int raise_abort_level = 0;
 prelude_bool_t raise_abort_set = FALSE;
 static int log_level = PRELUDE_LOG_INFO;
 
-
 static char *global_prefix = NULL;
+
 static FILE *debug_logfile = NULL;
 static prelude_log_flags_t log_flags = 0;
-static void (*global_log_cb)(prelude_log_t level, const char *str) = do_log_print;
-
-
-
-static inline FILE *get_out_fd(prelude_log_t level)
-{
-        return (level < PRELUDE_LOG_INFO) ? stderr : stdout;
-}
-
-
-
-static void do_log_print(prelude_log_t level, const char *str)
-{
-        FILE *out = get_out_fd(level);
-        fprintf(out, "%s", str);
-}
+static int (*global_log_cb)(prelude_log_t level, const char *str) = do_log_print;
+static void (*external_log_cb)(prelude_log_t level, const char *str) = NULL;
 
 
 #ifdef WIN32
@@ -92,7 +93,7 @@ static void syslog_win32(int priority, const char *log)
 #endif
 
 
-static void do_log_syslog(prelude_log_t level, const char *str)
+static int do_log_syslog(prelude_log_t level, const char *str)
 {
         int slevel = LOG_INFO;
 
@@ -118,8 +119,36 @@ static void do_log_syslog(prelude_log_t level, const char *str)
 #else
         syslog_win32(slevel, str);
 #endif
+
+        return 0;
 }
 
+
+static inline FILE *get_out_fd(prelude_log_t level)
+{
+        return (level < PRELUDE_LOG_INFO) ? stderr : stdout;
+}
+
+
+
+static int do_log_print(prelude_log_t level, const char *str)
+{
+        int ret;
+        FILE *out = get_out_fd(level);
+
+        ret = fprintf(out, "%s", str);
+        if ( ret < 0 && errno == EBADF )
+                return -1;
+
+        return 0;
+}
+
+
+static int do_log_external(prelude_log_t level, const char *str)
+{
+        external_log_cb(level, str);
+        return 0;
+}
 
 
 static inline prelude_bool_t need_to_log(prelude_log_t level, prelude_log_t cur)
@@ -162,11 +191,15 @@ static ssize_t get_header(prelude_log_t level, char *buf, size_t size)
                 t = localtime(&now);
                 if ( t )
                         len = strftime(buf, size, "%d %b %H:%M:%S ", t);
-        }
 
-        ret = snprintf(buf + len, size - len, "(process:%d) %s: ", getpid(), level_to_string(level));
-        if ( ret < 0 || ret >= (size - len) )
-                return -1;
+                ret = snprintf(buf + len, size - len, "(process:%d) %s: ", getpid(), level_to_string(level));
+                if ( ret < 0 || ret >= (size - len) )
+                        return -1;
+        } else {
+                ret = snprintf(buf + len, size - len, "%s: ", level_to_string(level));
+                if ( ret < 0 || ret >= (size - len) )
+                        return -1;
+        }
 
         return (size_t) len + ret;
 }
@@ -176,6 +209,7 @@ static void do_log_v(prelude_log_t level, const char *file,
                      const char *function, int line, const char *fmt, va_list ap)
 {
         int ret;
+        va_list bkp;
         char buf[1024];
         ssize_t len = 0;
 
@@ -185,9 +219,11 @@ static void do_log_v(prelude_log_t level, const char *file,
                         return;
         }
 
+        PRELUDE_VA_COPY(bkp, ap);
+
         ret = vsnprintf(buf + len, sizeof(buf) - len, fmt, ap);
         if ( ret < 0 || ret >= (sizeof(buf) - len) )
-                return;
+                goto out;
 
         if ( level <= PRELUDE_LOG_ERR || level >= PRELUDE_LOG_DEBUG ) {
                 for ( len += ret; buf[len - 1] == '\n' ; len-- );
@@ -195,10 +231,19 @@ static void do_log_v(prelude_log_t level, const char *file,
         }
 
         if ( need_to_log(level, log_level) || need_to_log(level, debug_level) ) {
-                global_log_cb(level, buf);
+                ret = global_log_cb(level, buf);
+                if ( ret < 0 && global_log_cb == do_log_print ) {
+                        prelude_log_set_flags(PRELUDE_LOG_FLAGS_SYSLOG);
+                        do_log_v(level, file, function, line, fmt, bkp);
+                        goto out;
+                }
+
                 if ( debug_logfile )
                         fprintf(debug_logfile, "%s", buf);
         }
+
+out:
+        va_end(bkp);
 }
 
 
@@ -312,7 +357,8 @@ char *prelude_log_get_prefix(void)
  */
 void prelude_log_set_callback(void log_cb(prelude_log_t level, const char *str))
 {
-        global_log_cb = log_cb;
+        external_log_cb = log_cb;
+        global_log_cb = do_log_external;
 }
 
 
