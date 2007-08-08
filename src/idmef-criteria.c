@@ -69,7 +69,10 @@ const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t op)
                 const char *name;
         } tbl[] = {
                 { IDMEF_CRITERION_OPERATOR_EQUAL,     "="            },
+                { IDMEF_CRITERION_OPERATOR_EQUAL_NOCASE, "=*"        },
+
                 { IDMEF_CRITERION_OPERATOR_NOT_EQUAL, "!="           },
+                { IDMEF_CRITERION_OPERATOR_NOT_EQUAL_NOCASE, "!=*"   },
 
                 { IDMEF_CRITERION_OPERATOR_LESSER, "<"               },
                 { IDMEF_CRITERION_OPERATOR_GREATER, ">"              },
