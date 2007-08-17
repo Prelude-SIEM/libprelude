@@ -220,6 +220,7 @@ static ssize_t file_read(prelude_io_t *pio, void *buf, size_t count)
          * ferror / clearerror can be macro that might dereference fd_ptr.
          */
         fd = pio->fd_ptr;
+        prelude_return_val_if_fail(fd, -1);
 
         ret = fread(buf, count, 1, fd);
         if ( ret <= 0 ) {
@@ -240,6 +241,8 @@ static ssize_t file_write(prelude_io_t *pio, const void *buf, size_t count)
 {
         size_t ret;
 
+        prelude_return_val_if_fail(pio->fd_ptr, -1);
+
         ret = fwrite(buf, count, 1, pio->fd_ptr);
         if ( ret <= 0 )
                 return ret;
@@ -254,6 +257,7 @@ static ssize_t file_write(prelude_io_t *pio, const void *buf, size_t count)
 
 static int file_close(prelude_io_t *pio)
 {
+        prelude_return_val_if_fail(pio->fd_ptr, -1);
         return fclose(pio->fd_ptr);
 }
 
@@ -476,7 +480,7 @@ ssize_t prelude_io_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
  */
 ssize_t prelude_io_read(prelude_io_t *pio, void *buf, size_t count)
 {
-        prelude_return_val_if_fail(pio && buf, -1);
+        prelude_return_val_if_fail(pio && pio->read && buf, -1);
         return pio->read(pio, buf, count);
 }
 
@@ -610,7 +614,7 @@ ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf)
  */
 ssize_t prelude_io_write(prelude_io_t *pio, const void *buf, size_t count)
 {
-        prelude_return_val_if_fail(pio && buf, -1);
+        prelude_return_val_if_fail(pio && pio->write && buf, -1);
         return pio->write(pio, buf, count);
 }
 
@@ -678,7 +682,7 @@ ssize_t prelude_io_write_delimited(prelude_io_t *pio, const void *buf, uint16_t 
  */
 int prelude_io_close(prelude_io_t *pio)
 {
-        prelude_return_val_if_fail(pio, -1);
+        prelude_return_val_if_fail(pio && pio->close, -1);
         return pio->close(pio);
 }
 
@@ -695,7 +699,7 @@ int prelude_io_close(prelude_io_t *pio)
  */
 int prelude_io_new(prelude_io_t **ret)
 {
-        *ret = malloc(sizeof(**ret));
+        *ret = calloc(1, sizeof(**ret));
         if ( ! *ret )
                 return prelude_error_from_errno(errno);
 
