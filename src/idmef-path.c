@@ -1154,7 +1154,7 @@ prelude_bool_t idmef_path_is_ambiguous(const idmef_path_t *path)
 
 
 /**
- * idmef_path_has_list:
+ * idmef_path_has_lists:
  * @path: Pointer to an #idmef_path_t object.
  *
  * Returns: the number of listed element within @path.
