@@ -80,6 +80,15 @@ static int get_profile_analyzerid(prelude_client_profile_t *cp)
         FILE *fd;
         char *ptr, filename[256], buf[256];
 
+        prelude_client_profile_get_profile_dirname(cp, filename, sizeof(filename));
+        if ( access(filename, R_OK|X_OK) < 0 ) {
+                if ( errno == ENOENT )
+                        return prelude_error_verbose(PRELUDE_ERROR_PROFILE, "profile '%s' does not exist", cp->name);
+
+                else if ( errno == EACCES )
+                        return prelude_error_verbose(PRELUDE_ERROR_PROFILE, "could not open profile '%s': insufficient permission", cp->name);
+        }
+
         prelude_client_profile_get_analyzerid_filename(cp, filename, sizeof(filename));
 
         fd = fopen(filename, "r");
