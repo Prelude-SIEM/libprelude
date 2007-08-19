@@ -46,6 +46,7 @@
 
 
 struct match_cb {
+        unsigned int nmatch;
         unsigned int match;
         idmef_criterion_value_t *cv;
         idmef_criterion_operator_t operator;
@@ -436,17 +437,14 @@ static int do_match_cb(idmef_value_t *value, void *extra)
         if ( idmef_value_is_list(value) )
                 return idmef_value_iterate(value, do_match_cb, mcb);
 
-        /*
-         * In case we are matching against a list of values,
-         * a single mach is considered as a match. If the match fails
-         * we keep trying.
-         */
         ret = cv->match(cv, operator, value);
         if ( ret < 0 )
                 return ret;
 
         if ( ret > 0 )
                 mcb->match++;
+        else
+                mcb->nmatch++;
 
         return 0;
 }
@@ -503,22 +501,28 @@ int idmef_criterion_value_to_string(idmef_criterion_value_t *cv, prelude_string_
 int idmef_criterion_value_match(idmef_criterion_value_t *cv, idmef_value_t *value,
                                 idmef_criterion_operator_t op)
 {
-        if ( cv->type == IDMEF_CRITERION_VALUE_TYPE_VALUE )
-                return idmef_value_match(value, cv->value, op);
-        else {
-                int ret;
-                struct match_cb mcb;
+        int ret;
+        struct match_cb mcb;
 
-                mcb.cv = cv;
-                mcb.match = 0;
-                mcb.operator = op;
+        mcb.cv = cv;
+        mcb.operator = op;
+        mcb.match = mcb.nmatch = 0;
 
-                ret = idmef_value_iterate(value, do_match_cb, &mcb);
-                if ( ret < 0 )
-                        return ret;
+        ret = idmef_value_iterate(value, do_match_cb, &mcb);
+        if ( ret < 0 )
+                return ret;
 
-                return mcb.match;
-        }
+        /*
+         * When comparing a path to a value using a negative operator, if the
+         * excluded value was found at least once, return a negative match.
+         *
+         * This is required since the 'match' value might also be positive
+         * in case the path contain a list of value.
+         */
+        if ( op & IDMEF_CRITERION_OPERATOR_NOT && mcb.nmatch > 0 )
+                return 0;
+
+        return mcb.match;
 }
 
 
