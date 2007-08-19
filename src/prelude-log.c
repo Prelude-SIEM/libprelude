@@ -36,6 +36,7 @@
 # include <windows.h>
 #endif
 
+#include "common.h"
 #include "prelude-log.h"
 #include "prelude-error.h"
 #include "prelude-inttypes.h"
@@ -386,6 +387,42 @@ void _prelude_log_set_abort_level(prelude_log_t level)
         raise_abort_level = level;
 }
 
+
+int _prelude_log_set_abort_level_from_string(const char *level)
+{
+        int i;
+        char *eptr;
+        long lvalue;
+        struct {
+                const char *prefix;
+                prelude_log_t level;
+        } tbl[] = {
+                { "CRIT",  PRELUDE_LOG_CRIT  },
+                { "ERR",   PRELUDE_LOG_ERR   },
+                { "WARN",  PRELUDE_LOG_WARN  },
+                { "INFO",  PRELUDE_LOG_INFO  },
+                { "DEBUG", PRELUDE_LOG_DEBUG }
+        };
+
+        prelude_return_val_if_fail(level != NULL, -1);
+
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strncasecmp(tbl[i].prefix, level, strlen(tbl[i].prefix)) == 0 ) {
+                        _prelude_log_set_abort_level(tbl[i].level);
+                        return 0;
+                }
+        }
+
+        lvalue = strtol(level, &eptr, 10);
+        if ( eptr != (level + strlen(level)) || lvalue == LONG_MIN || lvalue == LONG_MAX ) {
+                prelude_log(PRELUDE_LOG_WARN, "Invalid abort level specified: '%s'.\n", level);
+                return -1;
+        }
+
+        _prelude_log_set_abort_level(lvalue);
+
+        return 0;
+}
 
 
 #ifndef HAVE_VARIADIC_MACROS
