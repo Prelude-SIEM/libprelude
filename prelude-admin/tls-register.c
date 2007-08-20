@@ -34,6 +34,7 @@
 
 #include <gnutls/gnutls.h>
 #include <gnutls/x509.h>
+#include <gcrypt.h>
 
 #include "prelude-client.h"
 #include "prelude-error.h"
