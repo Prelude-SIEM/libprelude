@@ -65,13 +65,16 @@
 #include "tls-auth.h"
 
 
-#define CLIENT_STATUS_STARTING 0
+#define CLIENT_STATUS_NEED_INIT 0
+#define CLIENT_STATUS_INIT_DONE 1
+
+#define CLIENT_STATUS_STARTING 2
 #define CLIENT_STATUS_STARTING_STR "starting"
 
-#define CLIENT_STATUS_RUNNING  1
+#define CLIENT_STATUS_RUNNING  3
 #define CLIENT_STATUS_RUNNING_STR "running"
 
-#define CLIENT_STATUS_EXITING  2
+#define CLIENT_STATUS_EXITING  4
 #define CLIENT_STATUS_EXITING_STR "exiting"
 
 
@@ -1127,6 +1130,8 @@ int prelude_client_init(prelude_client_t *client)
         if ( ret < 0 )
                 return handle_client_error(client, ret);
 
+        client->status = CLIENT_STATUS_INIT_DONE;
+
         return 0;
 }
 
@@ -1154,7 +1159,7 @@ int prelude_client_start(prelude_client_t *client)
 
         prelude_return_val_if_fail(client, -1);
 
-        if ( ! client->sha1sum ) {
+        if ( client->status == CLIENT_STATUS_NEED_INIT ) {
                 /*
                  * if prelude_client_init() was not called
                  */
