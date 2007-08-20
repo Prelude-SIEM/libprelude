@@ -294,7 +294,7 @@ static void print_print_help(void)
 {
         fprintf(stderr,
 "Usage  : print <file>\n"
-"Example: print /path/to/file\n\n"
+"Example: print /path/to/file1 /path/to/file2 /path/to/fileN\n\n"
 
 "Print the messages within a Prelude IDMEF binary file (example: failover file)\n"
 "to stdout using an human readable format.\n\n"
@@ -311,10 +311,11 @@ static void print_send_help(void)
 {
         fprintf(stderr,
 "Usage  : send <analyzer profile> <file> [Prelude-Manager address]\n"
-"Example: send prelude-lml /path/to/data\n"
+"Example: send prelude-lml /path/to/file1 /path/to/file2 /path/to/fileN\n"
 "\n"
-"Send the content of <file> (supposed to be Prelude messages in binary format)\n"
-"using the specified analyzer profile.\n"
+"Send the messages within a Prelude IDMEF binary file (example: failover file)\n"
+"to the specified Prelude-Manager address. The specified profile is used for\n"
+"authentication.\n\n"
 "\n"
 "Options:\n"
 "  --offset=OFFSET : Skip processing until 'offset' events.\n"
