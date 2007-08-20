@@ -51,7 +51,6 @@ extern int authority_certificate_lifetime;
 extern int generated_certificate_lifetime;
 
 
-
 static int cmp_certificate_dn(gnutls_x509_crt crt, uint64_t wanted_dn, uint64_t wanted_issuer_dn)
 {
         int ret;
@@ -157,7 +156,7 @@ static int remove_old_certificate(const char *filename, uint64_t dn, uint64_t is
 
                 ret = cmp_certificate_dn(crt, dn, issuer_dn);
                 if ( ret == 0 )
-                        fprintf(stderr, "  - Removing old certificate with subject=%"
+                        prelude_log_debug(1, "Removing old certificate with subject=%"
                                 PRELUDE_PRIu64 " issuer=%" PRELUDE_PRIu64 ".\n", dn, issuer_dn);
                 else {
                         if ( fwrite(datum.data, 1, datum.size, fd) != datum.size )
@@ -430,6 +429,17 @@ static gnutls_x509_crt generate_ca_certificate(prelude_client_profile_t *cp, gnu
 
 
 
+static void entropy_progress_cb(void *cb_data, const char *what, int printchar, int current, int total)
+{
+        //printf("\nwhat='%s' printchar='%c' current='%d' total='%d\n", what, printchar, current, total);
+        if ( printchar == '\n')
+                printchar = 'O';
+
+        fprintf(stderr, "%c", printchar);
+        fflush(stderr);
+}
+
+
 static gnutls_x509_privkey generate_private_key(void)
 {
         int ret;
@@ -441,10 +451,11 @@ static gnutls_x509_privkey generate_private_key(void)
                 return NULL;
         }
 
-        fprintf(stderr, "    - Generating RSA private key... This might take a very long time.\n");
-        fprintf(stderr, "      [Increasing system activity will speed-up the process.]\n\n");
+        gcry_set_progress_handler(entropy_progress_cb, NULL);
 
-        fprintf(stderr, "    - Generating %d bits RSA private key... ", generated_key_size);
+        fprintf(stderr, "Generating %d bits RSA private key... This might take a very long time.\n", generated_key_size);
+        fprintf(stderr, "[Increasing system activity will speed-up the process].\n");
+        fprintf(stderr, "Generation in progress... ");
         fflush(stderr);
 
         ret = gnutls_x509_privkey_generate(key, GNUTLS_PK_RSA, generated_key_size, 0);
@@ -454,7 +465,8 @@ static gnutls_x509_privkey generate_private_key(void)
                 return NULL;
         }
 
-        printf("Done.\n\n");
+
+        fprintf(stderr, "\n\n");
 
         return key;
 }
@@ -591,7 +603,7 @@ static char ask_req_confirmation(void)
         char c;
 
         do {
-                fprintf(stderr, "    Approve registration [y/n]: ");
+                fprintf(stderr, "Approve registration? [y/n]: ");
 
                 c = 0;
                 while ( (ret = getchar()) != '\n' )
@@ -608,7 +620,7 @@ static char ask_req_confirmation(void)
 
 
 
-static int check_req(prelude_io_t *fd, gnutls_x509_crq crq, uint64_t *analyzerid)
+static int check_req(const char *srcinfo, prelude_io_t *fd, gnutls_x509_crq crq, uint64_t *analyzerid)
 {
         int ret;
         size_t size;
@@ -644,8 +656,9 @@ static int check_req(prelude_io_t *fd, gnutls_x509_crq crq, uint64_t *analyzerid
                 return -1;
         }
 
-        fprintf(stderr, "  - Analyzer with ID=\"%" PRELUDE_PRIu64 "\" ask for registration with permission=\"%s\".\n",
+        fprintf(stderr, "Registration request for analyzerID=\"%" PRELUDE_PRIu64 "\" permission=\"%s\".\n",
                 *analyzerid, prelude_string_get_string(out));
+
 
         if ( server_confirm ) {
                 c = ask_req_confirmation();
@@ -655,9 +668,6 @@ static int check_req(prelude_io_t *fd, gnutls_x509_crq crq, uint64_t *analyzerid
                 }
         }
 
-        fprintf(stderr, "    Registering analyzer \"%" PRELUDE_PRIu64 "\" with permission \"%s\".\n", *analyzerid,
-                prelude_string_get_string(out));
-
         prelude_string_destroy(out);
 
         return 0;
@@ -665,7 +675,7 @@ static int check_req(prelude_io_t *fd, gnutls_x509_crq crq, uint64_t *analyzerid
 
 
 
-int tls_handle_certificate_request(prelude_client_profile_t *cp, prelude_io_t *fd,
+int tls_handle_certificate_request(const char *srcinfo, prelude_client_profile_t *cp, prelude_io_t *fd,
                                    gnutls_x509_privkey cakey, gnutls_x509_crt cacrt,
                                    gnutls_x509_crt crt)
 {
@@ -681,7 +691,7 @@ int tls_handle_certificate_request(prelude_client_profile_t *cp, prelude_io_t *f
         /*
          * Read the client CRQ and generate a certificate for it.
          */
-        fprintf(stderr, "  - Waiting for client certificate request.\n");
+        prelude_log_debug(1, "Waiting for client certificate request.\n");
         ret = prelude_io_read_delimited(fd, &rbuf);
         if ( ret < 0 ) {
                 prelude_perror(ret, "error receiving client certificate request");
@@ -694,14 +704,14 @@ int tls_handle_certificate_request(prelude_client_profile_t *cp, prelude_io_t *f
         gnutls_x509_crq_import(crq, &data, GNUTLS_X509_FMT_PEM);
         free(rbuf);
 
-        ret = check_req(fd, crq, &analyzerid);
+        ret = check_req(srcinfo, fd, crq, &analyzerid);
         if ( ret < 0 )
                 return ret;
 
         /*
          * Generate a CA signed certificate for this CRQ.
          */
-        fprintf(stderr, "  - Generating signed certificate for client.\n");
+        prelude_log_debug(1, "Generating signed certificate for client.\n");
 
         gencrt = generate_signed_certificate(cp, analyzerid, cacrt, cakey, crq);
         if ( ! gencrt ) {
@@ -724,7 +734,7 @@ int tls_handle_certificate_request(prelude_client_profile_t *cp, prelude_io_t *f
         /*
          * write our own certificate back to the client.
          */
-        fprintf(stderr, "  - Sending server certificate to client.\n");
+        prelude_log_debug(1, "Sending server certificate to client.\n");
 
         size = sizeof(buf);
         gnutls_x509_crt_export(crt, GNUTLS_X509_FMT_PEM, buf, &size);
@@ -751,7 +761,7 @@ int tls_request_certificate(prelude_client_profile_t *cp, prelude_io_t *fd,
         gnutls_x509_crq crq;
         size_t size = sizeof(buf);
 
-        fprintf(stderr, "  - Sending certificate request.\n");
+        prelude_log_debug(1, "Sending certificate request.\n");
 
         crq = generate_certificate_request(cp, permission, key, (unsigned char *) buf, &size);
         if ( ! crq )
@@ -765,7 +775,7 @@ int tls_request_certificate(prelude_client_profile_t *cp, prelude_io_t *fd,
                 return -1;
         }
 
-        fprintf(stderr, "  - Receiving signed certificate.\n");
+        prelude_log_debug(1, "Receiving signed certificate.\n");
         rsize = prelude_io_read_delimited(fd, &rbuf);
         if ( rsize < 0 ) {
                 prelude_perror(rsize, "error receiving CA-signed certificate");
@@ -783,7 +793,7 @@ int tls_request_certificate(prelude_client_profile_t *cp, prelude_io_t *fd,
 
         free(rbuf);
 
-        fprintf(stderr, "  - Receiving CA certificate.\n");
+        prelude_log_debug(1, "Receiving CA certificate.\n");
 
         rsize = prelude_io_read_delimited(fd, &rbuf);
         if ( rsize < 0 ) {
@@ -806,43 +816,38 @@ int tls_request_certificate(prelude_client_profile_t *cp, prelude_io_t *fd,
 }
 
 
-
-int tls_load_ca_certificate(prelude_client_profile_t *cp, gnutls_x509_privkey key, gnutls_x509_crt *crt)
+static int crt_import(gnutls_x509_crt *crt, const char *filename)
 {
         int ret;
         size_t dsize;
         gnutls_datum data;
-        char filename[256];
-        unsigned char buf[65535];
-        size_t size = sizeof(buf);
 
-        prelude_client_profile_get_tls_server_ca_cert_filename(cp, filename, sizeof(filename));
-
-        ret = access(filename, F_OK);
-        if ( ret == 0 ) {
-                ret = _prelude_load_file(filename, &data.data, &dsize);
-                if ( ret < 0 ) {
-                        fprintf(stderr, "error loading '%s': %s.\n", filename, prelude_strerror(ret));
-                        return ret;
-                }
-
-                data.size = (unsigned int) dsize;
-                gnutls_x509_crt_init(crt);
-
-                ret = gnutls_x509_crt_import(*crt, &data, GNUTLS_X509_FMT_PEM);
-                if ( ret < 0 ) {
-                        fprintf(stderr, "error importing certificate: %s.\n", gnutls_strerror(ret));
-                        return -1;
-                }
-
-                _prelude_unload_file(data.data, dsize);
-
-                return 0;
+        ret = _prelude_load_file(filename, &data.data, &dsize);
+        if ( ret < 0 ) {
+                fprintf(stderr, "error loading '%s': %s.\n", filename, prelude_strerror(ret));
+                return ret;
         }
 
-        *crt = generate_ca_certificate(cp, key);
-        if ( ! *crt )
-                return -1;
+        data.size = (unsigned int) dsize;
+        gnutls_x509_crt_init(crt);
+
+        ret = gnutls_x509_crt_import(*crt, &data, GNUTLS_X509_FMT_PEM);
+        if ( ret < 0 )
+                fprintf(stderr, "error importing certificate: %s.\n", gnutls_strerror(ret));
+
+        _prelude_unload_file(data.data, dsize);
+        return ret;
+}
+
+
+
+static int crt_export(prelude_client_profile_t *cp, gnutls_x509_crt *crt, const char *filename)
+{
+        int ret;
+        size_t size;
+        unsigned char buf[65535];
+
+        size = sizeof(buf);
 
         ret = gnutls_x509_crt_export(*crt, GNUTLS_X509_FMT_PEM, buf, &size);
         if ( ret < 0 ) {
@@ -862,6 +867,29 @@ int tls_load_ca_certificate(prelude_client_profile_t *cp, gnutls_x509_privkey ke
 }
 
 
+int tls_load_ca_certificate(prelude_client_profile_t *cp, gnutls_x509_privkey key, gnutls_x509_crt *crt)
+{
+        int ret;
+        char filename[256];
+
+        prelude_client_profile_get_tls_server_ca_cert_filename(cp, filename, sizeof(filename));
+
+        ret = access(filename, F_OK);
+        if ( ret == 0 )
+                return crt_import(crt, filename);
+
+        *crt = generate_ca_certificate(cp, key);
+        if ( ! *crt )
+                return -1;
+
+        ret = crt_export(cp, crt, filename);
+        if ( ret < 0 )
+                gnutls_x509_crt_deinit(*crt);
+
+        return ret;
+}
+
+
 
 int tls_load_ca_signed_certificate(prelude_client_profile_t *cp,
                                    gnutls_x509_privkey cakey,
@@ -869,31 +897,16 @@ int tls_load_ca_signed_certificate(prelude_client_profile_t *cp,
                                    gnutls_x509_crt *crt)
 {
         int ret;
-        gnutls_datum data;
         char filename[256];
         gnutls_x509_crq crq;
         unsigned char buf[65535];
-        size_t size = sizeof(buf), dsize;
+        size_t size = sizeof(buf);
 
         prelude_client_profile_get_tls_server_keycert_filename(cp, filename, sizeof(filename));
 
         ret = access(filename, F_OK);
-        if ( ret == 0 ) {
-                ret = _prelude_load_file(filename, &data.data, &dsize);
-                if ( ret < 0 ) {
-                        fprintf(stderr, "error loading '%s': %s.\n", filename, prelude_strerror(ret));
-                        return -1;
-                }
-
-                data.size = (unsigned int) dsize;
-                gnutls_x509_crt_init(crt);
-
-                ret = gnutls_x509_crt_import(*crt, &data, GNUTLS_X509_FMT_PEM);
-                if ( ret == 0 ) {
-                        _prelude_unload_file(data.data, dsize);
-                        return 0;
-                }
-        }
+        if ( ret == 0 )
+                return crt_import(crt, filename);
 
         crq = generate_certificate_request(cp, 0, cakey, buf, &size);
         if ( ! crq )
@@ -903,23 +916,11 @@ int tls_load_ca_signed_certificate(prelude_client_profile_t *cp,
         if ( ! *crt )
                 return -1;
 
-        size = sizeof(buf);
-
-        ret = gnutls_x509_crt_export(*crt, GNUTLS_X509_FMT_PEM, buf, &size);
-        if ( ret < 0 ) {
-                fprintf(stderr, "error exporting self-signed certificate: %s.\n", gnutls_strerror(ret));
+        ret = crt_export(cp, crt, filename);
+        if ( ret < 0 )
                 gnutls_x509_crt_deinit(*crt);
-                return -1;
-        }
 
-        ret = save_buf(filename, prelude_client_profile_get_uid(cp), prelude_client_profile_get_gid(cp), buf, size);
-        if ( ret < 0 ) {
-                fprintf(stderr, "error saving private key certificate.\n");
-                gnutls_x509_crt_deinit(*crt);
-                return -1;
-        }
-
-        return 0;
+        return ret;
 }
 
 
@@ -958,10 +959,8 @@ int tls_revoke_analyzer(prelude_client_profile_t *cp, gnutls_x509_privkey key,
                 len = sizeof(analyzerid);
                 gnutls_x509_crl_get_crt_serial(crl, i, (unsigned char *) &analyzerid, &len, NULL);
 
-                if ( analyzerid == revoked_analyzerid ) {
-                        fprintf(stderr, "  - AnalyzerID %" PRELUDE_PRIu64 " already revoked.\n", revoked_analyzerid);
+                if ( analyzerid == revoked_analyzerid )
                         return 0;
-                }
         }
 
         ret = gnutls_x509_crl_set_crt_serial(crl, &revoked_analyzerid, sizeof(revoked_analyzerid), time(NULL));
@@ -998,5 +997,5 @@ int tls_revoke_analyzer(prelude_client_profile_t *cp, gnutls_x509_privkey key,
                 return -1;
         }
 
-        return 0;
+        return 1;
 }
