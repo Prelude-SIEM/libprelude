@@ -574,11 +574,10 @@ gnutls_x509_privkey tls_load_privkey(prelude_client_profile_t *cp)
         prelude_client_profile_get_tls_key_filename(cp, filename, sizeof(filename));
 
         ret = access(filename, F_OK);
-        if ( ret < 0 ) {
+        if ( ret < 0 )
                 return gen_crypto(cp, filename,
                                   prelude_client_profile_get_uid(cp),
                                   prelude_client_profile_get_gid(cp));
-        }
 
         ret = _prelude_load_file(filename, &data.data, &size);
         if ( ret < 0 ) {
