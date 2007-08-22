@@ -107,6 +107,46 @@ int generated_certificate_lifetime = 0;
 static int64_t offset = -1, count = -1;
 
 
+static int chown_cb(const char *filename, const struct stat *st, int flag)
+{
+        int ret;
+        uid_t uid;
+        gid_t gid;
+
+        uid = uid_set ? prelude_client_profile_get_uid(profile) : -1;
+        gid = gid_set ? prelude_client_profile_get_gid(profile) : -1;
+
+        ret = chown(filename, uid, gid);
+        if ( ret < 0 )
+                fprintf(stderr, "could not change '%s' to UID:%d GID:%d: %s.\n\n", filename, (int) uid, (int) gid, strerror(errno));
+
+        return ret;
+}
+
+
+static int do_chown(const char *name)
+{
+        int ret;
+        char dirname[PATH_MAX];
+
+        prelude_client_profile_get_profile_dirname(profile, dirname, sizeof(dirname));
+        ret = ftw(dirname, chown_cb, 10);
+        if ( ret < 0 )
+                return -1;
+
+        prelude_client_profile_get_backup_dirname(profile, dirname, sizeof(dirname));
+        ret = ftw(dirname, chown_cb, 10);
+        if ( ret < 0 )
+                return -1;
+
+        fprintf(stderr, "Changed '%s' ownership to UID:%d GID:%d.\n", name,
+                uid_set ? (int) prelude_client_profile_get_uid(profile) : -1,
+                gid_set ? (int) prelude_client_profile_get_gid(profile) : -1);
+
+        return 0;
+}
+
+
 
 static void permission_warning(void)
 {
@@ -127,10 +167,10 @@ static void permission_warning(void)
 
 
 
-static void change_permission_warning(int exist_uid, int exist_gid)
+static int change_permission(int exist_uid, int exist_gid)
 {
         fprintf(stderr,
-"* WARNING: A profile named %s already exist with permission UID:%d, GID:%d.\n"
+"* WARNING: A profile named '%s' already exist with permission UID:%d, GID:%d.\n"
 "* If you continue, '%s' permission will be updated to UID:%d, GID:%d.\n"
 "* [Please press enter if this is what you intend to do]\n",
                 prelude_client_profile_get_name(profile), exist_uid, exist_gid,
@@ -138,6 +178,8 @@ static void change_permission_warning(int exist_uid, int exist_gid)
                 (int) prelude_client_profile_get_uid(profile), (int) prelude_client_profile_get_gid(profile));
 
         while ( getchar() != '\n' );
+
+        return do_chown(prelude_client_profile_get_name(profile));
 }
 
 
@@ -620,13 +662,8 @@ static int create_template_config_file(prelude_client_profile_t *profile)
         prelude_client_profile_get_config_filename(profile, filename, sizeof(filename));
 
         ret = access(filename, F_OK);
-        if ( ret == 0 ) {
-                ret = chown(filename, prelude_client_profile_get_uid(profile), prelude_client_profile_get_gid(profile));
-                if ( ret < 0 )
-                        fprintf(stderr, "error changing '%s' ownership: %s.\n", filename, strerror(errno));
-
+        if ( ret == 0 )
                 return 0;
-        }
 
         tfd = fopen(PRELUDE_CONFIG_DIR "/default/idmef-client.conf", "r");
         if ( ! tfd ) {
@@ -939,37 +976,37 @@ static int setup_analyzer_files(prelude_client_profile_t *profile, uint64_t *ana
 static int ask_one_shot_password(char **buf, const char *ask, ...)
 {
         int ret;
+        va_list ap;
         char *pass1, *pass2;
         char str[1024], askbuf[1024];
-        va_list ap;
 
         va_start(ap, ask);
         vsnprintf(askbuf, sizeof(askbuf), ask, ap);
         va_end(ap);
 
+        do
+        {
+                snprintf(str, sizeof(str), "Enter %s: ", askbuf);
+                pass1 = getpass(str);
+                if ( ! pass1 || ! (pass1 = strdup(pass1)) )
+                        return -1;
 
-        snprintf(str, sizeof(str), "Enter %s: ", askbuf);
-        pass1 = getpass(str);
-        if ( ! pass1 || ! (pass1 = strdup(pass1)) )
-                return -1;
+                snprintf(str, sizeof(str), "Confirm %s: ", askbuf);
+                pass2 = getpass(str);
+                if ( ! pass2 )
+                        return -1;
 
-        snprintf(str, sizeof(str), "Confirm %s: ", askbuf);
-        pass2 = getpass(str);
-        if ( ! pass2 )
-                return -1;
+                ret = strcmp(pass1, pass2);
+                memset(pass2, 0, strlen(pass2));
 
-        ret = strcmp(pass1, pass2);
-        memset(pass2, 0, strlen(pass2));
+                if ( ret == 0 ) {
+                        *buf = pass1;
+                        return 0;
+                }
 
-        if ( ret == 0 ) {
-                *buf = pass1;
-                return 0;
-        }
-
-        memset(pass1, 0, strlen(pass1));
-        free(pass1);
-
-        return ask_one_shot_password(buf, ask);
+                memset(pass1, 0, strlen(pass1));
+                free(pass1);
+        } while ( TRUE );
 }
 
 
@@ -1127,10 +1164,9 @@ static int get_existing_profile_owner(const char *buf)
 
         ret = stat(buf, &st);
         if ( ret < 0 ) {
-                if ( errno == ENOENT )
-                        return 0;
+                if ( errno != ENOENT )
+                        fprintf(stderr, "error stating %s: %s.\n", buf, strerror(errno));
 
-                fprintf(stderr, "error stating %s: %s.\n", buf, strerror(errno));
                 return -1;
         }
 
@@ -1141,15 +1177,10 @@ static int get_existing_profile_owner(const char *buf)
                 prelude_client_profile_set_gid(profile, st.st_gid);
 
         if ( (uid_set && st.st_uid != prelude_client_profile_get_uid(profile)) ||
-             (gid_set && st.st_gid != prelude_client_profile_get_gid(profile)) ) {
-                change_permission_warning(st.st_uid, st.st_gid);
-                return 0;
-        }
+             (gid_set && st.st_gid != prelude_client_profile_get_gid(profile)) )
+                return change_permission(st.st_uid, st.st_gid);
 
         uid_set = gid_set = TRUE;
-        prelude_client_profile_set_uid(profile, st.st_uid);
-        prelude_client_profile_set_gid(profile, st.st_gid);
-
         return 0;
 }
 
@@ -1159,25 +1190,24 @@ static int add_analyzer(const char *name, uint64_t *analyzerid, gnutls_x509_priv
                         gnutls_x509_crt *crt, gnutls_x509_crt *ca_crt)
 {
         int ret;
-        char buf[256];
+        char buf[PATH_MAX];
 
         prelude_client_profile_set_name(profile, name);
         prelude_client_profile_get_profile_dirname(profile, buf, sizeof(buf));
 
-        get_existing_profile_owner(buf);
+        ret = get_existing_profile_owner(buf);
+        if ( ret < 0 ) {
+                if ( errno != ENOENT )
+                        return -1;
 
-        if ( ! uid_set || ! gid_set ) {
-                if ( ! uid_set )
-                        prelude_client_profile_set_uid(profile, getuid());
-
-                if ( ! gid_set )
-                        prelude_client_profile_set_gid(profile, getgid());
-
-                prelude_client_profile_get_backup_dirname(profile, buf, sizeof(buf));
-
-                ret = access(buf, W_OK);
-                if ( ret < 0 )
+                if ( ! uid_set || ! gid_set ) {
                         permission_warning();
+                        if ( ! uid_set )
+                                prelude_client_profile_set_uid(profile, getuid());
+
+                        if ( ! gid_set )
+                                prelude_client_profile_set_gid(profile, getgid());
+                }
         }
 
         ret = setup_analyzer_files(profile, analyzerid, key, crt);
@@ -1248,28 +1278,9 @@ out:
 
 
 
-static int chown_cb(const char *filename, const struct stat *st, int flag)
-{
-        int ret;
-        uid_t uid;
-        gid_t gid;
-
-        uid = uid_set ? prelude_client_profile_get_uid(profile) : -1;
-        gid = gid_set ? prelude_client_profile_get_gid(profile) : -1;
-
-        ret = chown(filename, uid, gid);
-        if ( ret < 0 )
-                fprintf(stderr, "could not change '%s' to UID:%d GID:%d: %s.\n\n", filename, (int) uid, (int) gid, strerror(errno));
-
-        return ret;
-}
-
-
-
 static int chown_cmd(int argc, char **argv)
 {
         int ret, i;
-        char dirname[1024];
         prelude_option_t *opt;
         prelude_string_t *err;
 
@@ -1301,21 +1312,7 @@ static int chown_cmd(int argc, char **argv)
                 return -1;
         }
 
-        prelude_client_profile_get_profile_dirname(profile, dirname, sizeof(dirname));
-        ret = ftw(dirname, chown_cb, 10);
-        if ( ret < 0 )
-                return -1;
-
-        prelude_client_profile_get_backup_dirname(profile, dirname, sizeof(dirname));
-        ret = ftw(dirname, chown_cb, 10);
-        if ( ret < 0 )
-                return -1;
-
-        fprintf(stderr, "Changed '%s' ownership to UID:%d GID:%d.\n", argv[i],
-                uid_set ? (int) prelude_client_profile_get_uid(profile) : -1,
-                gid_set ? (int) prelude_client_profile_get_gid(profile) : -1);
-
-        return 0;
+        return do_chown(argv[i]);
 }
 
 
