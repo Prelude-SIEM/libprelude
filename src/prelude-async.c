@@ -131,7 +131,7 @@ static void get_time(struct timespec *ts)
 
 
 
-static void wait_timer_and_data(void)
+static int wait_timer_and_data(void)
 {
         int ret;
         struct timespec ts;
@@ -159,7 +159,7 @@ static void wait_timer_and_data(void)
 
                 if ( no_job_available && stop_processing ) {
                         pthread_mutex_unlock(&mutex);
-                        pthread_exit(NULL);
+                        return -1;
                 }
 
                 pthread_mutex_unlock(&mutex);
@@ -171,12 +171,14 @@ static void wait_timer_and_data(void)
                         last_wake_up.tv_nsec = ts.tv_nsec;
                 }
         }
+
+        return 0;
 }
 
 
 
 
-static void wait_data(void)
+static int wait_data(void)
 {
         prelude_async_flags_t old_async_flags;
 
@@ -188,10 +190,12 @@ static void wait_data(void)
 
         if ( prelude_list_is_empty(&joblist) && stop_processing ) {
                 pthread_mutex_unlock(&mutex);
-                pthread_exit(NULL);
+                return -1;
         }
 
         pthread_mutex_unlock(&mutex);
+
+        return 0;
 }
 
 
@@ -218,10 +222,10 @@ static prelude_async_object_t *get_next_job(void)
 
 static void *async_thread(void *arg)
 {
+        int ret;
         prelude_async_object_t *obj;
 
 #ifndef WIN32
-        int ret;
         sigset_t set;
 
         ret = sigfillset(&set);
@@ -240,21 +244,29 @@ static void *async_thread(void *arg)
         while ( 1 ) {
 
                 if ( async_flags & PRELUDE_ASYNC_FLAGS_TIMER )
-                        wait_timer_and_data();
+                        ret = wait_timer_and_data();
                 else
-                        wait_data();
+                        ret = wait_data();
+
+                if ( ret < 0 ) {
+                        /*
+                         * On some implementation (namely, recent Linux + glibc version),
+                         * calling pthread_exit() from a shared library and joining the thread from
+                         * an atexit callback result in a deadlock.
+                         *
+                         * Appear to be related to:
+                         * http://sources.redhat.com/bugzilla/show_bug.cgi?id=654
+                         *
+                         * Simply returning from the thread seems to fix this problem.
+                         */
+                        break;
+                }
 
                 while ( (obj = get_next_job()) )
                         obj->_async_func(obj, obj->_async_data);
         }
-}
 
-
-
-
-static void async_exit(void)
-{
-        stop_processing = 1;
+        return NULL;
 }
 
 
@@ -334,7 +346,16 @@ static int do_init_async(void)
                 return ret;
         }
 
-        return atexit(async_exit);
+        /*
+         * There is a problem with OpenBSD, where using atexit() from a multithread
+         * application result in a deadlock. No workaround has been found at the moment.
+         *
+         */
+#if ! defined(__OpenBSD__)
+        return atexit(prelude_async_exit);
+#else
+        return 0;
+#endif
 }
 
 
