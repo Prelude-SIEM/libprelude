@@ -177,7 +177,7 @@ int prelude_init(int *argc, char **argv)
         _prelude_thread_in_use();
 
         if ( ! getcwd(_prelude_init_cwd, sizeof(_prelude_init_cwd)) )
-                return prelude_error_from_errno(errno);
+                _prelude_init_cwd[0] = 0;
 
         ret = _prelude_timer_init();
         if ( ret < 0 )

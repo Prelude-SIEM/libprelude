@@ -79,8 +79,12 @@ static int find_absolute_path(const char *cwd, const char *file, char **path)
         while ( (ptr = strsep(&pathenv, ":")) ) {
 
                 ret = strcmp(ptr, ".");
-                if ( ret == 0 )
+                if ( ret == 0 ) {
+                        if ( *cwd == 0 )
+                                continue;
+
                         ptr = cwd;
+                }
 
                 snprintf(buf, sizeof(buf), "%s/%s", ptr, file);
 
@@ -309,8 +313,13 @@ int _prelude_get_file_name_and_path(const char *str, char **name, char **path)
         }
 
         if ( *str != '/' ) {
-                ret = snprintf(pathname, sizeof(pathname), "%s%c", _prelude_init_cwd,
-                               (_prelude_init_cwd[strlen(_prelude_init_cwd) - 1] != '/') ? '/' : '\0');
+                char needsep = 0;
+                size_t cwdlen = strlen(_prelude_init_cwd);
+
+                if ( cwdlen )
+                        needsep = (_prelude_init_cwd[cwdlen - 1] != '/' ) ? '/' : '\0';
+
+                ret = snprintf(pathname, sizeof(pathname), "%s%c", _prelude_init_cwd, needsep);
                 if ( ret < 0 || ret >= sizeof(pathname) )
                         return prelude_error_from_errno(errno);
         }
