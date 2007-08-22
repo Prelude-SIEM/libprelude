@@ -37,10 +37,10 @@ prelude-config.h: $(top_builddir)/config.h
 # Spool directory for report saving is mode 
 
 install-data-local:
-	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_spool_dir);
+	$(INSTALL) -d -m 711 $(DESTDIR)$(prelude_spool_dir);
 	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_config_dir);
 	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_config_dir)/default;
-	$(INSTALL) -d -m 755 $(DESTDIR)$(prelude_config_dir)/profile;
+	$(INSTALL) -d -m 711 $(DESTDIR)$(prelude_config_dir)/profile;
 	@if test -f $(DESTDIR)$(prelude_config_dir)/default/client.conf; then							\
 		echo;														\
 		echo "********************************************************************************";          		\
