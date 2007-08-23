@@ -1,2 +1,2 @@
-man_MANS = prelude-admin.1
+dist_man_MANS = prelude-admin.1
 
