@@ -216,7 +216,7 @@ static int journal_check(prelude_failover_t *failover, failover_journal_entry_t 
                 return -1;
         }
 
-        prelude_log_debug(7, "rindex=%" PRELUDE_PRIu64 " size=%lu\n", jentry->value.rindex, wst->st_size);
+        prelude_log_debug(7, "rindex=%" PRELUDE_PRIu64 " size=%" PRELUDE_PRIu64 "\n", jentry->value.rindex, wst->st_size);
         if ( jentry->value.rindex > wst->st_size ) {
                 /*
                  * Latest journal entry has a read index that is higher than the size
@@ -269,7 +269,7 @@ static int journal_read_last_entry(prelude_failover_t *failover,
                 if ( ret < 0 )
                         return ret;
 
-                prelude_log_debug(7, "[%lu] found jentry with count=%" PRELUDE_PRIu64 " rindex=%" PRELUDE_PRIu64 "\n", offset, jentry->value.count, jentry->value.rindex);
+                prelude_log_debug(7, "[%" PRELUDE_PRIu64 "] found jentry with count=%" PRELUDE_PRIu64 " rindex=%" PRELUDE_PRIu64 "\n", offset, jentry->value.count, jentry->value.rindex);
 
                 ret = journal_check(failover, jentry, wst);
 
