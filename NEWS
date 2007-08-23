@@ -1,3 +1,56 @@
+* 2007-08-23, libprelude-0.9.15:
+
+- prelude-adduser has been renamed to prelude-admin, and now include command
+  to print or send files containing binary IDMEF data.
+
+- Brand new failover implementation,  Feature a real 'journaling' log, allowing
+  to restart where we were interupted. Allow multiple process to write to the
+  same failover, and is chroot safe.
+
+- prelude-admin manpage, thanks to Frederic Motte <fred at ubixis com>.
+
+- Use SHA1 in place of MD5 for Analyzer checksum.
+
+- Do not set TCP option on UNIX socket, avoid un-necessary warning.
+
+- New measure all over the public interface to protect against bad API usage,
+  when a function is not used correctly, a critical warning is triggered.
+
+- [logging]: New PRELUDE_LOG_CRIT logging priority.
+
+- [logging]: Correctly map Prelude log level to Syslog priority.
+
+- [logging]: Improved logging format (include timestamp, level, process pid).
+
+- [logging]: New LIBPRELUDE_ABORT variable, useful if you'd like libprelude to
+  abord on critical assertion.
+
+- [logging]: Automatically switch to syslog mode if we detect stdout/stderr
+  closure.
+
+- [IDMEF-Criteria]: When we try to match a value against a path that is not
+  part of a message using a 'not' operator, the match should succeed (Example:
+  alert.classification.text != 'stuff' should match if the message has no
+  classification object).
+
+- [IDMEF-Criteria]: When matching multiple listed values within the same path
+  using a 'not' operator, return an explicit 'no match' if the provided
+  comparison value was found at least once.
+
+- [IDMEF-Path] (fix #251): Fixes NULL pointer dereference when the last element
+  of an IDMEF path to an enumeration is not the enumeration itself (Sébastien
+  Tricaud <toady at gscore.org>
+
+- Fix a possible race condition with the internal libprelude reference to the
+  program idmef_analyzer_t when asynchronous timer were used.
+
+- Workaround possible deadlock at exit on OpenBSD, Linux Glibc.
+
+- Only configure libltdl if it is required.
+
+- Various bug fixes, minor enhancements.
+
+
 * 2007-05-15, libprelude-0.9.14:
 
         - Implement TCP keepalive settings on platform that support it,

@@ -88,3 +88,39 @@ prelude-failover
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_failover_commit ##### -->
+<para>
+
+</para>
+
+@failover: 
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_failover_disable_transaction ##### -->
+<para>
+
+</para>
+
+@failover: 
+
+
+<!-- ##### FUNCTION prelude_failover_enable_transaction ##### -->
+<para>
+
+</para>
+
+@failover: 
+
+
+<!-- ##### FUNCTION prelude_failover_rollback ##### -->
+<para>
+
+</para>
+
+@failover: 
+@msg: 
+@Returns: 
+
+

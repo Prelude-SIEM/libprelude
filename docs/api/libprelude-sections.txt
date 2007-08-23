@@ -1273,6 +1273,10 @@ prelude_failover_save_msg
 prelude_failover_get_saved_msg
 prelude_failover_get_deleted_msg_count
 prelude_failover_get_available_msg_count
+prelude_failover_commit
+prelude_failover_disable_transaction
+prelude_failover_enable_transaction
+prelude_failover_rollback
 </SECTION>
 
 <SECTION>

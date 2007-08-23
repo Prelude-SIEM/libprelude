@@ -6341,6 +6341,26 @@ prelude_failover_t *failover
 <RETURNS>unsigned long </RETURNS>
 prelude_failover_t *failover
 </FUNCTION>
+<FUNCTION>
+<NAME>prelude_failover_enable_transaction</NAME>
+<RETURNS>void </RETURNS>
+prelude_failover_t *failover
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_failover_disable_transaction</NAME>
+<RETURNS>void </RETURNS>
+prelude_failover_t *failover
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_failover_commit</NAME>
+<RETURNS>int </RETURNS>
+prelude_failover_t *failover, prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_failover_rollback</NAME>
+<RETURNS>int </RETURNS>
+prelude_failover_t *failover, prelude_msg_t *msg
+</FUNCTION>
 <ENUM>
 <NAME>prelude_connection_pool_flags_t</NAME>
 typedef enum {
@@ -6957,7 +6977,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.14"
+#define LIBPRELUDE_VERSION "0.9.15"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
