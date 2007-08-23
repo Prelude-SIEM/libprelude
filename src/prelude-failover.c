@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2004,2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.
@@ -28,11 +28,17 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <ctype.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
 #include <fcntl.h>
 #include <errno.h>
+
+#include <assert.h>
+#include <gcrypt.h>
+
+#include "common.h"
 
 #include "prelude-log.h"
 #include "prelude-io.h"
@@ -47,153 +53,418 @@
 #endif
 
 
+#define FAILOVER_CHECKSUM_SIZE       4
+#define FAILOVER_JOURNAL_ENTRY_SIZE 20
+
 struct prelude_failover {
-        char *directory;
-        prelude_io_t *fd;
-        
-        size_t cur_size;
-        size_t size_limit;
-        int prev_was_a_fragment;
-        
-        /*
-         * Newer allocated index for a saved message.
-         */
-        unsigned long newer_index;
+        int jfd;
+        prelude_io_t *wfd;
+        prelude_io_t *rfd;
 
-        /*
-         * Older allocated index for a saved message.
-         */
-        unsigned long older_index;
+        uint64_t count;
+        uint64_t rindex;
 
-        /*
-         *
-         */
-        size_t to_be_deleted_size;
+        prelude_bool_t transaction_enabled;
 };
 
 
+typedef union {
+        struct {
+                uint64_t count;
+                uint64_t rindex;
+                unsigned char checksum[FAILOVER_CHECKSUM_SIZE];
+        } value;
+        unsigned char data[FAILOVER_JOURNAL_ENTRY_SIZE];
+} failover_journal_entry_t;
 
 
-static int open_failover_fd(prelude_failover_t *failover,
-                            char *filename, size_t size, unsigned long index, int flags)
+
+static void mask_signal(sigset_t *oldmask)
 {
-        int fd;
+        sigset_t newmask;
 
-        snprintf(filename, size, "%s/%lu", failover->directory, index);
-        
-        fd = open(filename, flags, S_IRUSR|S_IWUSR);        
-        if ( fd < 0 )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "could not open '%s' for writing: %s", filename, strerror(errno));
-        
-        prelude_io_set_sys_io(failover->fd, fd);
+        prelude_return_if_fail( sigfillset(&newmask) == 0 );
+        prelude_return_if_fail( pthread_sigmask(SIG_BLOCK, &newmask, oldmask) == 0 );
+}
+
+
+static void unmask_signal(sigset_t *oldmask)
+{
+        prelude_return_if_fail( pthread_sigmask(SIG_SETMASK, oldmask, NULL) == 0 );
+}
+
+
+static void journal_checksum(failover_journal_entry_t *fj, unsigned char *digest, size_t digest_size)
+{
+        size_t len;
+
+        len = gcry_md_get_algo_dlen(GCRY_MD_CRC32);
+        assert(len == digest_size);
+
+        gcry_md_hash_buffer(GCRY_MD_CRC32, digest, fj->data, sizeof(fj->data) - FAILOVER_CHECKSUM_SIZE);
+}
+
+
+static int journal_write(prelude_failover_t *failover)
+{
+        ssize_t ret;
+        size_t rcount = 0;
+        failover_journal_entry_t fj;
+
+        fj.value.count = failover->count;
+        fj.value.rindex = failover->rindex;
+        journal_checksum(&fj, fj.value.checksum, sizeof(fj.value.checksum));
+
+        do {
+                ret = write(failover->jfd, fj.data + rcount, sizeof(fj.data) - rcount);
+                if ( ret < 0 ) {
+                        ret = prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error writing failover journal: %s", strerror(errno));
+                        break;
+                }
+
+                rcount += ret;
+        } while ( ret >= 0 && rcount != sizeof(fj.data) );
+
+        return ret;
+}
+
+
+static int truncate_failover(prelude_failover_t *failover)
+{
+        off_t off;
+        sigset_t oldmask;
+        int ret = 0, wfd, rfd;
+
+        wfd = prelude_io_get_fd(failover->wfd);
+        rfd = prelude_io_get_fd(failover->rfd);
+
+        mask_signal(&oldmask);
+
+        /*
+         * Crash before messages truncate: journal is not updated but on restart
+         * rindex equal the size of the file (previous journal update) -> truncate message.
+         */
+
+        ret = ftruncate(wfd, 0);
+        if ( ret != 0 ) {
+                ret = prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error truncating failover: %s", strerror(errno));
+                goto error;
+        }
+
+        /*
+         * Crash after messages truncate, but before journal update: on restart
+         * wfd is zero: journal is truncated.
+         */
+        ret = ftruncate(failover->jfd, 0);
+        if ( ret != 0 ) {
+                ret = prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error truncating failover journal: %s", strerror(errno));
+                goto error;
+        }
+
+        off = lseek(rfd, 0, SEEK_SET);
+        if ( off == (off_t) -1 ) {
+                ret = prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error setting failover read position: %s", strerror(errno));
+                goto error;
+        }
+
+        off = lseek(failover->jfd, 0, SEEK_SET);
+        if ( off == (off_t) -1 ) {
+                ret = prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error setting failover journal position: %s", strerror(errno));
+                goto error;
+        }
+
+        failover->count = failover->rindex = 0;
+        journal_write(failover);
+
+error:
+        unmask_signal(&oldmask);
+        return ret;
+}
+
+
+static int journal_read(prelude_failover_t *failover, failover_journal_entry_t *ent)
+{
+        ssize_t ret;
+        size_t count = 0;
+
+        do {
+                ret = read(failover->jfd, ent->data + count, sizeof(ent->data) - count);
+                if ( ret < 0 ) {
+                        ret = prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error reading failover journal: %s", strerror(errno));
+                        break;
+                }
+
+                count += ret;
+
+        } while ( count != sizeof(ent->data) );
+
+        return ret;
+}
+
+
+
+static int journal_check(prelude_failover_t *failover, failover_journal_entry_t *jentry, struct stat *wst)
+{
+        int ret;
+        unsigned char digest[FAILOVER_CHECKSUM_SIZE];
+
+        journal_checksum(jentry, digest, sizeof(digest));
+
+        ret = memcmp(digest, jentry->value.checksum, sizeof(digest));
+        if ( ret != 0 ) {
+                prelude_log(PRELUDE_LOG_WARN, "Failover: incorrect CRC in journal entry, skipping.\n");
+                return -1;
+        }
+
+        prelude_log_debug(7, "rindex=%" PRELUDE_PRIu64 " size=%lu\n", jentry->value.rindex, wst->st_size);
+        if ( jentry->value.rindex > wst->st_size ) {
+                /*
+                 * Latest journal entry has a read index that is higher than the size
+                 * of our data file. This mean that the data file is corrupted, and we
+                 * cannot recover message after the rindex value. We start over.
+                 */
+                prelude_log(PRELUDE_LOG_WARN, "Failover: data file corrupted, %" PRELUDE_PRIu64 " messages truncated.\n",
+                            jentry->value.count);
+
+                jentry->value.rindex = jentry->value.count = 0;
+                truncate_failover(failover);
+                return 0;
+        }
+
+        else if ( jentry->value.rindex == wst->st_size ) {
+                /*
+                 * Read-Index and size are the same, but file was not truncated.
+                 */
+                jentry->value.rindex = jentry->value.count = 0;
+                truncate_failover(failover);
+        }
 
         return 0;
 }
 
 
+static int journal_read_last_entry(prelude_failover_t *failover,
+                                   failover_journal_entry_t *jentry, struct stat *jst, struct stat *wst)
+{
+        int ret, garbage;
+        off_t lret, offset = jst->st_size;
+
+        garbage = offset % FAILOVER_JOURNAL_ENTRY_SIZE;
+        if ( garbage != 0 ) {
+                /*
+                 * The journal is corrupted, not on the correct boundary.
+                 */
+                prelude_log(PRELUDE_LOG_WARN, "Failover: journal corrupted, recovering from invalid boundary.\n");
+                offset -= garbage;
+        }
+
+        do {
+                offset -= FAILOVER_JOURNAL_ENTRY_SIZE;
+
+                lret = lseek(failover->jfd, offset, SEEK_SET);
+                if ( lret == (off_t) -1 )
+                        return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error seeking to end of journal: %s", strerror(errno));
+
+                ret = journal_read(failover, jentry);
+                if ( ret < 0 )
+                        return ret;
+
+                prelude_log_debug(7, "[%lu] found jentry with count=%" PRELUDE_PRIu64 " rindex=%" PRELUDE_PRIu64 "\n", offset, jentry->value.count, jentry->value.rindex);
+
+                ret = journal_check(failover, jentry, wst);
+
+        } while ( offset > 0 && ret != 0 );
+
+        if ( ret != 0 ) {
+                truncate_failover(failover);
+                return 0;
+        }
+
+        return ret;
+}
 
 
-static int get_current_directory_index(prelude_failover_t *failover, const char *dirname) 
+
+static int journal_initialize(prelude_failover_t *failover, const char *filename)
 {
         int ret;
+        off_t off;
+        struct stat jst, wst;
+        failover_journal_entry_t jentry;
+
+        failover->jfd = open(filename, O_CREAT|O_RDWR, S_IRUSR|S_IWUSR);
+        if ( failover->jfd < 0 )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "could not open '%s': %s", filename, strerror(errno));
+
+        ret = fstat(failover->jfd, &jst);
+        if ( ret < 0 )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "could not stat failover journal: %s", strerror(errno));
+
+        ret = fstat(prelude_io_get_fd(failover->wfd), &wst);
+        if ( ret < 0 )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "could not stat failover journal: %s", strerror(errno));
+
+        if ( jst.st_size == 0 && wst.st_size > 0 ) {
+                truncate_failover(failover);
+                prelude_log(PRELUDE_LOG_WARN, "Failover inconsistency: message data with no journal.\n");
+                return 0;
+        }
+
+        else if ( jst.st_size == 0 && wst.st_size == 0 )
+                return 0;
+
+        memset(&jentry.value, 0, sizeof(jentry.value));
+
+        ret = journal_read_last_entry(failover, &jentry, &jst, &wst);
+        if ( ret < 0 )
+                return ret;
+
+        failover->count = jentry.value.count;
+        failover->rindex = jentry.value.rindex;
+
+        off = lseek(prelude_io_get_fd(failover->rfd), failover->rindex, SEEK_SET);
+        if ( off == (off_t) -1 )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error setting failover read offset: %s", strerror(errno));
+
+        return 0;
+}
+
+
+static int lock_cmd(int fd, int cmd, int type)
+{
+        int ret;
+        struct flock lock;
+
+        lock.l_type = type;    /* write lock */
+        lock.l_start = 0;         /* from offset 0 */
+        lock.l_whence = SEEK_SET; /* at the beginning of the file */
+        lock.l_len = 0;           /* until EOF */
+
+        ret = fcntl(fd, cmd, &lock);
+        if ( ret < 0 ) {
+                if ( errno == EAGAIN || errno == EACCES )
+                        return 0;
+
+                return prelude_error_from_errno(errno);
+        }
+
+        return 1;
+}
+
+
+
+static int open_exclusive(const char *filename, int flags, int *fd)
+{
+        int ret;
+
+        *fd = open(filename, flags, S_IRUSR|S_IWUSR);
+        if ( *fd < 0 )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error opening '%s': %s", filename, strerror(errno));
+
+        ret = lock_cmd(*fd, F_SETLK, F_RDLCK|F_WRLCK);
+        if ( ret <= 0 )
+                close(*fd);
+
+        return ret;
+}
+
+
+static int get_failover_data_filename_and_fd(const char *dirname, char *filename, size_t size)
+{
         DIR *dir;
-        struct stat st;
-        unsigned long tmp;
-        char filename[256];
-        struct dirent *item;
-        
+        int i = 0, fd, ret = 0;
+        struct dirent *de;
+
         dir = opendir(dirname);
         if ( ! dir )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "could not open directory '%s': %s", dirname, strerror(errno));
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error opening '%s': %s", dirname, strerror(errno));
 
-        failover->older_index = ~0;
+        while ( (de = readdir(dir)) && ret != 1 ) {
 
-        while ( (item = readdir(dir)) ) {
-
-                ret = sscanf(item->d_name, "%lu", &tmp);
-                if ( ret != 1 )
+                if ( de->d_reclen <= 4 || ! isdigit(de->d_name[4]) )
                         continue;
-                
-                snprintf(filename, sizeof(filename), "%s/%s", dirname, item->d_name);
-                
-                ret = stat(filename, &st);
-                if ( ret < 0 )
-                        return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error stating '%s': %s", filename, strerror(errno));
 
-                failover->cur_size += st.st_size;
-                
-                failover->older_index = MIN(failover->older_index, tmp);
-                failover->newer_index = MAX(failover->newer_index, tmp + 1);
+                if ( strncmp(de->d_name, "data", 4) != 0 || strchr(de->d_name, '.') )
+                        continue;
+
+                ret = snprintf(filename, size, "%s/%s", dirname, de->d_name);
+                if ( ret < 0 || ret >= size )
+                        continue;
+
+                ret = open_exclusive(filename, O_CREAT|O_WRONLY|O_APPEND, &fd);
+                if ( ret < 0 )
+                        return ret;
+        }
+
+        while ( ret != 1 ) {
+                ret = snprintf(filename, size, "%s/data%d", dirname, i++);
+                if ( ret < 0 || ret >= size )
+                        continue;
+
+                ret = open_exclusive(filename, O_CREAT|O_WRONLY|O_APPEND, &fd);
+                if ( ret < 0 )
+                        return ret;
+
         }
 
         closedir(dir);
 
-        if ( failover->older_index == ~0 )
-                failover->older_index = 1;
+        return fd;
+}
 
-        if ( ! failover->newer_index )
-                failover->newer_index = 1;
-        
+
+int prelude_failover_commit(prelude_failover_t *failover, prelude_msg_t *msg)
+{
+        /*
+         * Make sure that we don't go down zero. This might happen with a message
+         * data file with more message than what the journal specified.
+         */
+        if ( failover->count > 0 )
+                failover->count--;
+
+        failover->rindex += prelude_msg_get_len(msg);
+        journal_write(failover);
+
         return 0;
 }
 
 
+int prelude_failover_rollback(prelude_failover_t *failover, prelude_msg_t *msg)
+{
+        off_t off;
+
+        off = lseek(prelude_io_get_fd(failover->rfd), - prelude_msg_get_len(msg), SEEK_CUR);
+        if ( off == (off_t) -1 )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error setting failover read position: %s", strerror(errno));
+
+        return 0;
+}
 
 
-static int failover_apply_quota(prelude_failover_t *failover, prelude_msg_t *new, unsigned long older_index)
+ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg_t **msg)
 {
         int ret;
-        struct stat st;
-        char filename[256];
 
-        if ( (failover->cur_size + prelude_msg_get_len(new)) <= failover->size_limit ) {
-                failover->older_index = older_index;
-                return 0;
+        *msg = NULL;
+
+        ret = prelude_msg_read(msg, failover->rfd);
+        if ( ret < 0 ) {
+                uint64_t bkp = failover->count;
+
+                truncate_failover(failover);
+
+                if ( prelude_error_get_code(ret) == PRELUDE_ERROR_EOF )
+                        return 0;
+                else
+                        return prelude_error_verbose(PRELUDE_ERROR_GENERIC,
+                                                     "%" PRELUDE_PRIu64 " messages failed to recover: %s",
+                                                     bkp, prelude_strerror(ret));
         }
-        
-        /*
-         * check length of the oldest entry.
-         */
-        snprintf(filename, sizeof(filename), "%s/%lu", failover->directory, older_index);
-        
-        ret = stat(filename, &st);
-        if ( ret < 0 )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error stating '%s': %s", filename, strerror(errno));
-        
-        unlink(filename);
-        failover->cur_size -= st.st_size;
-                
-        return failover_apply_quota(failover, new, older_index + 1);
-}
 
+        if ( ! failover->transaction_enabled )
+                prelude_failover_commit(failover, *msg);
 
-
-
-static void delete_current(prelude_failover_t *failover)
-{
-        char filename[256];
-
-        if ( (failover->older_index - 1) == 0 )
-                return;
-        
-        snprintf(filename, sizeof(filename), "%s/%lu", failover->directory, failover->older_index - 1);
-        unlink(filename);
-        
-        failover->cur_size -= failover->to_be_deleted_size;
-}
-
-
-
-static ssize_t get_file_size(const char *filename)
-{
-	int ret;
-	struct stat st;
-
-	ret = stat(filename, &st);
-	if ( ret < 0 ) 
-		return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error stating '%s': %s", filename, strerror(errno));
-
-	return st.st_size;
+        return prelude_msg_get_len(*msg);
 }
 
 
@@ -201,121 +472,85 @@ static ssize_t get_file_size(const char *filename)
 int prelude_failover_save_msg(prelude_failover_t *failover, prelude_msg_t *msg)
 {
         int ret;
-        ssize_t size;
-        char filename[256];
-        int flags = O_CREAT|O_EXCL|O_WRONLY;
-                                              
-        if ( failover->size_limit ) {
-                ret = failover_apply_quota(failover, msg, failover->older_index);
-                if ( ret < 0 )
-                        return ret;
-        }
-        
-        if ( failover->prev_was_a_fragment ) {
-                failover->newer_index--;
-                flags = O_APPEND|O_WRONLY;
-        }
-        
-        ret = open_failover_fd(failover, filename, sizeof(filename), failover->newer_index, flags);        
-        if ( ret < 0 ) 
-                return ret;
-        
+        sigset_t oldset;
+
+        mask_signal(&oldset);
+
         do {
-                size = prelude_msg_write(msg, failover->fd);
-        } while ( size < 0 && errno == EINTR );
-        
-        prelude_io_close(failover->fd);
+                ret = prelude_msg_write(msg, failover->wfd);
+        } while ( ret < 0 && errno == EINTR );
 
-        if ( size < 0 ) {
-                unlink(filename);
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error writing message to '%s': %s",
-                                             filename, prelude_strerror((prelude_error_t) size));
+        if ( ret < 0 )
+                goto error;
+
+        if ( ! prelude_msg_is_fragment(msg) ) {
+                failover->count++;
+                journal_write(failover);
         }
-        
-        failover->cur_size += size;
-                
-        failover->newer_index++;
-        failover->prev_was_a_fragment = prelude_msg_is_fragment(msg);
-        
-        return 0;
+
+error:
+        unmask_signal(&oldset);
+
+        return ret;
 }
 
 
 
-
-ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg_t **msg)
-{
-        int ret;
-        ssize_t size;
-        char filename[256];
-        
-        delete_current(failover);
-        
-        if ( failover->older_index == failover->newer_index ) {
-                failover->older_index = failover->newer_index = 1;
-                return 0;
-        }
-
-        ret = open_failover_fd(failover, filename, sizeof(filename), failover->older_index, O_RDONLY);
-        if ( ret < 0 ) {
-                failover->older_index++;
-                failover->to_be_deleted_size = get_file_size(filename);
-                return ret;
-        }
-
-        *msg = NULL;
-        ret = prelude_msg_read(msg, failover->fd);
-        prelude_io_close(failover->fd);
-        
-        if ( ret < 0 ) {
-                ret = prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error reading message index '%lu': %s",
-                                            failover->older_index, prelude_strerror(ret));
-
-                failover->older_index++;
-                failover->to_be_deleted_size = get_file_size(filename);
-                return ret;
-        }
-
-        failover->older_index++;
-        size = prelude_msg_get_len(*msg);
-        failover->to_be_deleted_size = size;
-
-        return size;
-}
-
-
-
-        
 int prelude_failover_new(prelude_failover_t **out, const char *dirname)
 {
-        int ret;
+        size_t flen;
+        int ret, wfd, rfd;
+        char filename[PATH_MAX];
         prelude_failover_t *new;
-        
+
+        ret = mkdir(dirname, S_IRWXU|S_IRWXG);
+        if ( ret < 0 && errno != EEXIST )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "could not create directory '%s': %s", dirname, strerror(errno));
+
+        wfd = get_failover_data_filename_and_fd(dirname, filename, sizeof(filename));
+        if ( wfd < 0 )
+                return wfd;
+
+        rfd = open(filename, O_RDONLY);
+        if ( rfd < 0 ) {
+                close(wfd);
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "could not open '%s' for reading: %s", filename, strerror(errno));
+        }
+
         new = calloc(1, sizeof(*new));
         if ( ! new )
                 return prelude_error_from_errno(errno);
-        
-        ret = prelude_io_new(&new->fd);
+
+        new->jfd = -1;
+
+        ret = prelude_io_new(&new->wfd);
         if ( ret < 0 ) {
+                close(rfd);
+                close(wfd);
                 free(new);
                 return ret;
         }
-        
-        new->directory = strdup(dirname);
-        if ( ! new->directory ) {
-                prelude_io_destroy(new->fd);
+
+        ret = prelude_io_new(&new->rfd);
+        if ( ret < 0 ) {
+                close(rfd);
+                close(wfd);
                 free(new);
-                return prelude_error_from_errno(errno);
+                return ret;
         }
 
-        ret = mkdir(dirname, S_IRWXU|S_IRWXG);
-        if ( ret < 0 && errno != EEXIST ) {
+        prelude_io_set_sys_io(new->wfd, wfd);
+        prelude_io_set_sys_io(new->rfd, rfd);
+
+        flen = strlen(filename);
+
+        ret = snprintf(filename + flen, sizeof(filename) - flen, ".journal");
+        if ( ret < 0 || ret >= (sizeof(filename) - flen) ) {
                 prelude_failover_destroy(new);
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC,
-                                             "could not create directory '%s': %s", dirname, strerror(errno));
+                return -1;
         }
-        
-        ret = get_current_directory_index(new, dirname);
+
+        ret = journal_initialize(new, filename);
         if ( ret < 0 ) {
                 prelude_failover_destroy(new);
                 return ret;
@@ -330,30 +565,51 @@ int prelude_failover_new(prelude_failover_t **out, const char *dirname)
 
 void prelude_failover_destroy(prelude_failover_t *failover)
 {
-        prelude_io_destroy(failover->fd);
-        free(failover->directory);
+        close(failover->jfd);
+
+        if ( failover->wfd ) {
+                prelude_io_close(failover->wfd);
+                prelude_io_destroy(failover->wfd);
+        }
+
+        if ( failover->rfd ) {
+                prelude_io_close(failover->rfd);
+                prelude_io_destroy(failover->rfd);
+        }
+
         free(failover);
 }
 
 
 
-
-void prelude_failover_set_quota(prelude_failover_t *failover, size_t limit) 
+void prelude_failover_set_quota(prelude_failover_t *failover, size_t limit)
 {
-        failover->size_limit = limit;
+        /* FIXME: quota */
 }
 
 
 
 unsigned long prelude_failover_get_deleted_msg_count(prelude_failover_t *failover)
 {
-        unsigned long available = prelude_failover_get_available_msg_count(failover);
-        return (failover->newer_index - 1) - available;
+        /* FIXME: quota */
+        return 0;
 }
 
 
 
 unsigned long prelude_failover_get_available_msg_count(prelude_failover_t *failover)
 {
-        return failover->newer_index - failover->older_index;
+        return (unsigned long) failover->count;
+}
+
+
+void prelude_failover_enable_transaction(prelude_failover_t *failover)
+{
+        failover->transaction_enabled = TRUE;
+}
+
+
+void prelude_failover_disable_transaction(prelude_failover_t *failover)
+{
+        failover->transaction_enabled = FALSE;
 }

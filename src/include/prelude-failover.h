@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2004, 2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2004-2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.
@@ -43,6 +43,14 @@ ssize_t prelude_failover_get_saved_msg(prelude_failover_t *failover, prelude_msg
 unsigned long prelude_failover_get_deleted_msg_count(prelude_failover_t *failover);
 
 unsigned long prelude_failover_get_available_msg_count(prelude_failover_t *failover);
+
+void prelude_failover_enable_transaction(prelude_failover_t *failover);
+
+void prelude_failover_disable_transaction(prelude_failover_t *failover);
+
+int prelude_failover_commit(prelude_failover_t *failover, prelude_msg_t *msg);
+
+int prelude_failover_rollback(prelude_failover_t *failover, prelude_msg_t *msg);
 
 #ifdef __cplusplus
  }
