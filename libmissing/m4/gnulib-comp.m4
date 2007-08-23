@@ -53,7 +53,9 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_FTW
   gl_GETADDRINFO
   gl_FUNC_GETDELIM
+  gl_STDIO_MODULE_INDICATOR([getdelim])
   gl_FUNC_GETLINE
+  gl_STDIO_MODULE_INDICATOR([getline])
   gl_FUNC_GETPASS
   AC_SUBST([LIBINTL])
   AC_SUBST([LTLIBINTL])
@@ -163,9 +165,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/getaddrinfo.c
   lib/getaddrinfo.h
   lib/getdelim.c
-  lib/getdelim.h
   lib/getline.c
-  lib/getline.h
   lib/getpass.c
   lib/getpass.h
   lib/gettext.h
