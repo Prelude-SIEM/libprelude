@@ -391,11 +391,13 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
 
         do {
                 size = prelude_failover_get_saved_msg(failover, &msg);
-                if ( size < 0 )
-                        continue;
-
                 if ( size == 0 )
                         break;
+
+                if ( size < 0 ) {
+                        prelude_log(PRELUDE_LOG_ERR, "error reading message from failover: %s", prelude_strerror(size));
+                        break;
+                }
 
                 if ( clist ) {
                         broadcast_message(msg, clist->and);
@@ -420,8 +422,8 @@ static int failover_flush(prelude_failover_t *failover, cnx_list_t *clist, cnx_t
 
         } while ( 1 );
 
-        prelude_log(PRELUDE_LOG_WARN, "%s from failover: %u/%u messages flushed (%" PRELUDE_PRIu64 " bytes).\n",
-                    (count == available) ? "Recovered" : "Failed recovering", count, available, (uint64_t) totsize);
+        prelude_log(PRELUDE_LOG_WARN, "Failover recovery: %u/%u messages flushed (%" PRELUDE_PRIu64 " bytes).\n",
+                    count, available, (uint64_t) totsize);
 
         return ret;
 }
@@ -1202,7 +1204,7 @@ static int connection_pool_check_event(prelude_connection_pool_t *pool, int time
 {
         cnx_t *cnx;
         fd_set rfds;
-        int ret, i = 0;
+        int ret, i = 0, fd;
         prelude_list_t *tmp;
         struct timeval tv, *tvptr = NULL;
         prelude_connection_pool_event_t global_event = 0;
@@ -1228,7 +1230,10 @@ static int connection_pool_check_event(prelude_connection_pool_t *pool, int time
                 if ( ! prelude_connection_is_alive(cnx->cnx) )
                         continue;
 
-                ret = FD_ISSET(prelude_io_get_fd(prelude_connection_get_fd(cnx->cnx)), &rfds);
+                fd = prelude_io_get_fd(prelude_connection_get_fd(cnx->cnx));
+                assert(fd < FD_SETSIZE);
+
+                ret = FD_ISSET(fd, &rfds);
                 if ( ! ret )
                         continue;
 
