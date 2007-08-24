@@ -352,8 +352,8 @@ static void print_print_help(void)
 static void print_send_help(void)
 {
         fprintf(stderr,
-"Usage  : send <analyzer profile> <file> [Prelude-Manager address]\n"
-"Example: send prelude-lml /path/to/file1 /path/to/file2 /path/to/fileN\n"
+"Usage  : send <analyzer profile> <Prelude-Manager address> <file>\n"
+"Example: send prelude-lml 192.168.0.1 /path/to/file1 /path/to/file2 /path/to/fileN\n"
 "\n"
 "Send the messages within a Prelude IDMEF binary file (example: failover file)\n"
 "to the specified Prelude-Manager address. The specified profile is used for\n"
