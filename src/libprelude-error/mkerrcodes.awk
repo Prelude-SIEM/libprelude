@@ -54,7 +54,6 @@
 # as is trailing whitespace.
 
 BEGIN {
-  FS="[ \t]+PRELUDE_ERROR_";
   print "/* Output of mkerrcodes.awk.  DO NOT EDIT.  */";
   print "";
   header = 1;
@@ -85,7 +84,7 @@ header {
   if (/^$/)
     next;
 
-    print "  { " $1 ", \"PRELUDE_ERROR_" $2 "\" },";
+  print "  { " $1 ", \"" $2 "\" },";
 }
 
 END {
