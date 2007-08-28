@@ -67,9 +67,6 @@
 
 
 
-#define check_string(str, len) check_string_f(__FUNCTION__, __LINE__, (str), (len))
-
-
 
 #if ! defined (PRELUDE_VA_COPY)
 
@@ -86,21 +83,15 @@
 #endif
 
 
-
-inline static int check_string_f(const char *f, int l, const char *str, size_t len)
-{
-        if ( (len + 1) < len ) {
-                prelude_log(PRELUDE_LOG_WARN, "%s:%d: warning, wrap around detected.\n", f, l);
-                return prelude_error_verbose(PRELUDE_ERROR_INVAL_LENGTH, "string warning: wrap around would occur");
-        }
-
-        if ( str[len] != 0 ) {
-                prelude_log(PRELUDE_LOG_WARN, "%s:%d: warning, string is not NULL terminated.\n", f, l);
-                return prelude_error_verbose(PRELUDE_ERROR_STRING_NOT_NULL_TERMINATED, "string warning: not nul terminated");
-        }
-
-        return 0;
-}
+#define STRING_RETURN_IF_INVALID(str, len) do {                                                                \
+        prelude_return_val_if_fail((len + 1) > len,                                                            \
+                                    prelude_error_verbose(PRELUDE_ERROR_INVAL_LENGTH,                          \
+                                                          "string length warning: wrap around would occur"));  \
+                                                                                                               \
+        prelude_return_val_if_fail(str[len] == 0,                                                              \
+                                   prelude_error_verbose(PRELUDE_ERROR_STRING_NOT_NULL_TERMINATED,             \
+                                                         "string warning: not nul terminated"));               \
+} while(0)
 
 
 static int string_buf_alloc(prelude_string_t *string, size_t len)
@@ -228,10 +219,7 @@ int prelude_string_new_dup_fast(prelude_string_t **string, const char *str, size
         int ret;
 
         prelude_return_val_if_fail(str, -1);
-
-        ret = check_string(str, len);
-        if ( ret < 0 )
-                return ret;
+        STRING_RETURN_IF_INVALID(str, len);
 
         ret = prelude_string_new(string);
         if ( ret < 0 )
@@ -286,9 +274,7 @@ int prelude_string_new_nodup_fast(prelude_string_t **string, char *str, size_t l
 
         prelude_return_val_if_fail(str, -1);
 
-        ret = check_string(str, len);
-        if ( ret < 0 )
-                return ret;
+        STRING_RETURN_IF_INVALID(str, len);
 
         ret = prelude_string_new(string);
         if ( ret < 0 )
@@ -339,10 +325,7 @@ int prelude_string_new_ref_fast(prelude_string_t **string, const char *buf, size
         int ret;
 
         prelude_return_val_if_fail(buf, -1);
-
-        ret = check_string(buf, len);
-        if ( ret < 0 )
-                return ret;
+        STRING_RETURN_IF_INVALID(buf, len);
 
         ret = prelude_string_new(string);
         if ( ret < 0 )
@@ -391,10 +374,7 @@ int prelude_string_set_dup_fast(prelude_string_t *string, const char *buf, size_
         int ret;
 
         prelude_return_val_if_fail(string && buf, -1);
-
-        ret = check_string(buf, len);
-        if ( ret < 0 )
-                return ret;
+        STRING_RETURN_IF_INVALID(buf, len);
 
         prelude_string_destroy_internal(string);
 
@@ -441,13 +421,8 @@ int prelude_string_set_dup(prelude_string_t *string, const char *buf)
  */
 int prelude_string_set_nodup_fast(prelude_string_t *string, char *buf, size_t len)
 {
-        int ret;
-
         prelude_return_val_if_fail(string && buf, -1);
-
-        ret = check_string(buf, len);
-        if ( ret < 0 )
-                return ret;
+        STRING_RETURN_IF_INVALID(buf, len);
 
         prelude_string_destroy_internal(string);
 
@@ -494,13 +469,8 @@ int prelude_string_set_nodup(prelude_string_t *string, char *buf)
  */
 int prelude_string_set_ref_fast(prelude_string_t *string, const char *buf, size_t len)
 {
-        int ret;
-
         prelude_return_val_if_fail(string && buf, -1);
-
-        ret = check_string(buf, len);
-        if ( ret < 0 )
-                return ret;
+        STRING_RETURN_IF_INVALID(buf, len);
 
         prelude_string_destroy_internal(string);
 
@@ -572,7 +542,7 @@ int prelude_string_copy_ref(const prelude_string_t *src, prelude_string_t *dst)
  */
 int prelude_string_copy_dup(const prelude_string_t *src, prelude_string_t *dst)
 {
-        prelude_return_val_if_fail(src && dst, -1);
+        prelude_return_val_if_fail(src && src->size && dst, -1);
 
         prelude_string_destroy_internal(dst);
 
@@ -605,7 +575,7 @@ int prelude_string_clone(const prelude_string_t *src, prelude_string_t **dst)
 {
         int ret;
 
-        prelude_return_val_if_fail(src, -1);
+        prelude_return_val_if_fail(src && src->size, -1);
 
         ret = prelude_string_new(dst);
         if ( ret < 0 )
