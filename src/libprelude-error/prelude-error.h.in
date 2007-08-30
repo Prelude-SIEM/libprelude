@@ -61,7 +61,7 @@
  * Bit 1 of prelude_error_t remain set (negative value).
  * Bit 2 to 9 are set to the source of the error.
  * Bit 10 specify whether there is a verbose error available.
- * Bit 11 to 16 are unspecified.
+ * Bit 11 to 15 are unspecified.
  * Bit 16 to 32 are set to the code of the error.
  */
 
@@ -70,15 +70,11 @@
 
 typedef enum {
 @include err-sources.in
-
-	PRELUDE_ERROR_SOURCE_DIM = 256
 } prelude_error_source_t;
 
 typedef enum {
 @include err-codes.in
-@include errnos.in	
-
-	PRELUDE_ERROR_CODE_DIM = 65536
+@include errnos.in
 } prelude_error_code_t;
 
 
@@ -86,128 +82,19 @@ typedef enum {
  #define PRELUDE_ERROR_SOURCE_DEFAULT  PRELUDE_ERROR_SOURCE_UNKNOWN
 #endif
 
-#define PRELUDE_ERROR_CODE_MASK       (PRELUDE_ERROR_CODE_DIM - 1)
-#define PRELUDE_ERROR_SOURCE_MASK     (PRELUDE_ERROR_SOURCE_DIM - 1)
-#define PRELUDE_ERROR_SOURCE_SHIFT    23
-
-#define PRELUDE_ERROR_VERBOSE_SHIFT  22
-#define PRELUDE_ERROR_VERBOSE_MASK   (1)
-
 typedef signed int prelude_error_t;
 
+prelude_bool_t prelude_error_is_verbose(prelude_error_t err);
+
+prelude_error_code_t prelude_error_get_code(prelude_error_t error);
+
+prelude_error_source_t prelude_error_get_source(prelude_error_t error);
 
 prelude_error_code_t prelude_error_code_from_errno(int err);
 
+prelude_error_t prelude_error_make(prelude_error_source_t source, prelude_error_code_t code);
 
-static inline prelude_error_t prelude_error_make(prelude_error_source_t source, prelude_error_code_t code)
-{
-	return (code == PRELUDE_ERROR_NO_ERROR) ? PRELUDE_ERROR_GENERIC : -((source << PRELUDE_ERROR_SOURCE_SHIFT) | code);
-}
-
-
-static inline prelude_error_t prelude_error_make_from_errno(prelude_error_source_t source, int err)
-{
-	prelude_error_code_t code = prelude_error_code_from_errno(err);
-	return (code == PRELUDE_ERROR_NO_ERROR) ? PRELUDE_ERROR_GENERIC : -((source << PRELUDE_ERROR_SOURCE_SHIFT) | code);
-}
-
-
-static inline prelude_error_t prelude_error(prelude_error_code_t code)
-{
-        return prelude_error_make(PRELUDE_ERROR_SOURCE_DEFAULT, code);
-}
-
-
-
-static prelude_error_t prelude_error_verbose_make_v(prelude_error_source_t source, 
-						    prelude_error_code_t code, const char *fmt, va_list ap)
-                                                    __attribute__ ((__format__ (__printf__, 3, 0)));
-
-static prelude_error_t prelude_error_verbose_make_v(prelude_error_source_t source, 
-						    prelude_error_code_t code, const char *fmt, va_list ap)
-{
-	int ret;
-	prelude_string_t *str;
-
-	ret = prelude_string_new(&str);
-	if ( ret < 0 )
-		return ret;
-
-	ret = prelude_string_vprintf(str, fmt, ap);
-	if ( ret < 0 ) {
-		prelude_string_destroy(str);
-		return ret;
-	}
-
-	ret = _prelude_thread_set_error(prelude_string_get_string(str));
-	prelude_string_destroy(str);
-	
-	if ( ret < 0 )
-		return ret;
-
-	return -(-prelude_error_make(source, code) | (1 << PRELUDE_ERROR_VERBOSE_SHIFT));
-}
-
-	
-
-static inline prelude_error_t prelude_error_verbose_make(prelude_error_source_t source,
-						         prelude_error_code_t code, const char *fmt, ...)
-						         __attribute__ ((__format__ (__printf__, 3, 4)));
- 
-static inline prelude_error_t prelude_error_verbose_make(prelude_error_source_t source,
-						         prelude_error_code_t code, const char *fmt, ...)
-{
-	int ret;
-	va_list ap;
-
-	va_start(ap, fmt);
-	ret = prelude_error_verbose_make_v(source, code, fmt, ap);
-	va_end(ap);
-
-	return ret;
-}
-
-
-static inline prelude_error_t prelude_error_verbose(prelude_error_code_t code, const char *fmt, ...) 
-                                                    __attribute__ ((__format__ (__printf__, 2, 3)));
-                                                    
-static inline prelude_error_t prelude_error_verbose(prelude_error_code_t code, const char *fmt, ...)
-{
-	int ret;
-	va_list ap;
-
-	va_start(ap, fmt);
-	ret = prelude_error_verbose_make_v(PRELUDE_ERROR_SOURCE_DEFAULT, code, fmt, ap);
-	va_end(ap);
-
-	return ret;
-}
-
-
-
-static inline prelude_error_code_t prelude_error_get_code(prelude_error_t error)
-{
-        return (prelude_error_code_t) ((-error) & PRELUDE_ERROR_CODE_MASK);
-}
-
-
-static inline prelude_error_source_t prelude_error_get_source(prelude_error_t error)
-{
-        return (prelude_error_source_t) (((-error) >> PRELUDE_ERROR_SOURCE_SHIFT) & PRELUDE_ERROR_SOURCE_MASK);
-}
-
-
-static inline prelude_error_t prelude_error_from_errno(int err)
-{
-        return prelude_error_make(PRELUDE_ERROR_SOURCE_DEFAULT, prelude_error_code_from_errno(err));
-}
-
-
-static inline prelude_bool_t prelude_error_is_verbose(prelude_error_t err)
-{
-	return (((-err) >> PRELUDE_ERROR_VERBOSE_SHIFT) & PRELUDE_ERROR_VERBOSE_MASK) ? PRELUDE_BOOL_TRUE : PRELUDE_BOOL_FALSE;
-}
-
+prelude_error_t prelude_error_make_from_errno(prelude_error_source_t source, int err);
 
 void prelude_perror(prelude_error_t err, const char *fmt, ...) __attribute__ ((__format__ (__printf__, 2, 3)));
 
@@ -216,6 +103,44 @@ const char *prelude_strerror(prelude_error_t err);
 const char *prelude_strsource(prelude_error_t err);
 
 int prelude_error_code_to_errno(prelude_error_code_t code);
+
+prelude_error_t prelude_error_verbose_make_v(prelude_error_source_t source,
+                                             prelude_error_code_t code, const char *fmt, va_list ap)
+                                             __attribute__ ((__format__ (__printf__, 3, 0)));
+
+prelude_error_t prelude_error_verbose_make(prelude_error_source_t source,
+                                           prelude_error_code_t code, const char *fmt, ...)
+                                           __attribute__ ((__format__ (__printf__, 3, 4)));
+
+
+static inline prelude_error_t prelude_error(prelude_error_code_t code)
+{
+        return prelude_error_make(PRELUDE_ERROR_SOURCE_DEFAULT, code);
+}
+
+
+static inline prelude_error_t prelude_error_verbose(prelude_error_code_t code, const char *fmt, ...)
+                                                    __attribute__ ((__format__ (__printf__, 2, 3)));
+
+static inline prelude_error_t prelude_error_verbose(prelude_error_code_t code, const char *fmt, ...)
+{
+        int ret;
+        va_list ap;
+
+        va_start(ap, fmt);
+        ret = prelude_error_verbose_make_v(PRELUDE_ERROR_SOURCE_DEFAULT, code, fmt, ap);
+        va_end(ap);
+
+        return ret;
+}
+
+
+
+static inline prelude_error_t prelude_error_from_errno(int err)
+{
+        return prelude_error_make(PRELUDE_ERROR_SOURCE_DEFAULT, prelude_error_code_from_errno(err));
+}
+
 
 #ifdef __cplusplus
  }
