@@ -617,7 +617,7 @@ int idmef_path_new_fast(idmef_path_t **path, const char *buffer)
 {
         int ret;
 
-        prelude_return_val_if_fail(buffer, -1);
+        prelude_return_val_if_fail(buffer, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         ret = idmef_path_create(path, buffer);
         if ( ret < 0 )
@@ -674,7 +674,7 @@ int idmef_path_new_v(idmef_path_t **path, const char *format, va_list args)
         int ret;
         char buffer[MAX_NAME_LEN];
 
-        prelude_return_val_if_fail(format, -1);
+        prelude_return_val_if_fail(format, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         ret = vsnprintf(buffer, sizeof(buffer), format, args);
         if ( ret < 0 || ret > sizeof(buffer) - 1 )
@@ -701,7 +701,7 @@ int idmef_path_new(idmef_path_t **path, const char *format, ...)
         int ret;
         va_list args;
 
-        prelude_return_val_if_fail(format, -1);
+        prelude_return_val_if_fail(format, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         va_start(args, format);
         ret = idmef_path_new_v(path, format, args);
@@ -724,7 +724,7 @@ int idmef_path_new(idmef_path_t **path, const char *format, ...)
  */
 idmef_class_id_t idmef_path_get_class(const idmef_path_t *path, int depth)
 {
-        prelude_return_val_if_fail(path, -1);
+        prelude_return_val_if_fail(path, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( depth < 0 )
                 depth = path->depth - 1;
@@ -750,7 +750,7 @@ idmef_class_id_t idmef_path_get_class(const idmef_path_t *path, int depth)
  */
 idmef_value_type_id_t idmef_path_get_value_type(const idmef_path_t *path, int depth)
 {
-        prelude_return_val_if_fail(path, -1);
+        prelude_return_val_if_fail(path, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( depth < 0 )
                 depth = path->depth - 1;
@@ -830,7 +830,7 @@ int idmef_path_set_index(idmef_path_t *path, unsigned int depth, unsigned int in
 {
         int ret;
 
-        prelude_return_val_if_fail(path, -1);
+        prelude_return_val_if_fail(path, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( depth > MAX_DEPTH || depth > path->depth )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_DEPTH);
@@ -870,7 +870,7 @@ int idmef_path_set_index(idmef_path_t *path, unsigned int depth, unsigned int in
  */
 int idmef_path_undefine_index(idmef_path_t *path, unsigned int depth)
 {
-        prelude_return_val_if_fail(path, -1);
+        prelude_return_val_if_fail(path, prelude_error(PRELUDE_ERROR_ASSERTION));
         return idmef_path_set_index(path, depth, INDEX_UNDEFINED);
 }
 
@@ -888,7 +888,7 @@ int idmef_path_undefine_index(idmef_path_t *path, unsigned int depth)
  */
 int idmef_path_get_index(const idmef_path_t *path, unsigned int depth)
 {
-        prelude_return_val_if_fail(path, -1);
+        prelude_return_val_if_fail(path, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( depth > (path->depth - 1) )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_DEPTH);
@@ -924,7 +924,7 @@ int idmef_path_make_child(idmef_path_t *path, const char *child_name, unsigned i
         idmef_class_id_t class;
         idmef_class_child_id_t child;
 
-        prelude_return_val_if_fail(path && child_name, -1);
+        prelude_return_val_if_fail(path && child_name, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( path->depth > MAX_DEPTH - 1 )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_DEPTH);
@@ -974,7 +974,7 @@ int idmef_path_make_parent(idmef_path_t *path)
         int ret;
         char *ptr;
 
-        prelude_return_val_if_fail(path, -1);
+        prelude_return_val_if_fail(path, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( path->depth == 0 )
                 return prelude_error(PRELUDE_ERROR_IDMEF_PATH_PARENT_ROOT);
@@ -1036,7 +1036,7 @@ int idmef_path_ncompare(const idmef_path_t *p1, const idmef_path_t *p2, unsigned
 {
         unsigned int i;
 
-        prelude_return_val_if_fail(p1 && p2, -1);
+        prelude_return_val_if_fail(p1 && p2, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         for ( i = 0; i < depth; i++ ) {
 
@@ -1063,7 +1063,7 @@ int idmef_path_ncompare(const idmef_path_t *p1, const idmef_path_t *p2, unsigned
  */
 int idmef_path_compare(const idmef_path_t *p1, const idmef_path_t *p2)
 {
-        prelude_return_val_if_fail(p1 && p2, -1);
+        prelude_return_val_if_fail(p1 && p2, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( p1->depth != p2->depth )
                 return -1;
@@ -1085,7 +1085,7 @@ int idmef_path_compare(const idmef_path_t *p1, const idmef_path_t *p2)
  */
 int idmef_path_clone(const idmef_path_t *src, idmef_path_t **dst)
 {
-        prelude_return_val_if_fail(src, -1);
+        prelude_return_val_if_fail(src, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         *dst = calloc(1, sizeof(**dst));
         if ( ! *dst )

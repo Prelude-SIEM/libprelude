@@ -293,7 +293,7 @@ int _prelude_client_profile_init(prelude_client_profile_t *cp)
 {
         int ret;
 
-        prelude_return_val_if_fail(cp, -1);
+        prelude_return_val_if_fail(cp, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         ret = get_profile_analyzerid(cp);
         if ( ret < 0 )
@@ -319,7 +319,7 @@ int prelude_client_profile_new(prelude_client_profile_t **ret, const char *name)
         int retval;
         prelude_client_profile_t *cp;
 
-        prelude_return_val_if_fail(name, -1);
+        prelude_return_val_if_fail(name, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         retval = _prelude_client_profile_new(&cp);
         if ( retval < 0 )
@@ -482,7 +482,7 @@ const char *prelude_client_profile_get_name(const prelude_client_profile_t *cp)
  */
 int prelude_client_profile_set_name(prelude_client_profile_t *cp, const char *name)
 {
-        prelude_return_val_if_fail(cp && name, -1);
+        prelude_return_val_if_fail(cp && name, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( cp->name )
                 free(cp->name);
@@ -509,7 +509,7 @@ int prelude_client_profile_get_credentials(prelude_client_profile_t *cp, void **
 {
         int ret;
 
-        prelude_return_val_if_fail(cp, -1);
+        prelude_return_val_if_fail(cp, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( cp->credentials ) {
                 *credentials = cp->credentials;

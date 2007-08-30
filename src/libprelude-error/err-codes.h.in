@@ -92,6 +92,7 @@
 59	PRELUDE_ERROR_TLS_FATAL_ALERT		TLS layer returned a fatal alert
 
 60	PRELUDE_ERROR_IDMEF_CLASS_CHILD_NOT_CLASS	IDMEF child is not a class
+61	PRELUDE_ERROR_ASSERTION			Critical assertion occurred
 
 
 #61 to 16381 are free to be used.

@@ -220,7 +220,7 @@ static ssize_t file_read(prelude_io_t *pio, void *buf, size_t count)
          * ferror / clearerror can be macro that might dereference fd_ptr.
          */
         fd = pio->fd_ptr;
-        prelude_return_val_if_fail(fd, -1);
+        prelude_return_val_if_fail(fd, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         ret = fread(buf, count, 1, fd);
         if ( ret <= 0 ) {
@@ -241,7 +241,7 @@ static ssize_t file_write(prelude_io_t *pio, const void *buf, size_t count)
 {
         size_t ret;
 
-        prelude_return_val_if_fail(pio->fd_ptr, -1);
+        prelude_return_val_if_fail(pio->fd_ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         ret = fwrite(buf, count, 1, pio->fd_ptr);
         if ( ret <= 0 )
@@ -257,7 +257,7 @@ static ssize_t file_write(prelude_io_t *pio, const void *buf, size_t count)
 
 static int file_close(prelude_io_t *pio)
 {
-        prelude_return_val_if_fail(pio->fd_ptr, -1);
+        prelude_return_val_if_fail(pio->fd_ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
         return fclose(pio->fd_ptr);
 }
 
@@ -447,7 +447,7 @@ static ssize_t copy_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
  */
 ssize_t prelude_io_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
 {
-        prelude_return_val_if_fail(dst && src, -1);
+        prelude_return_val_if_fail(dst && src, prelude_error(PRELUDE_ERROR_ASSERTION));
         return copy_forward(dst, src, count);
 }
 
@@ -480,7 +480,7 @@ ssize_t prelude_io_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
  */
 ssize_t prelude_io_read(prelude_io_t *pio, void *buf, size_t count)
 {
-        prelude_return_val_if_fail(pio && pio->read && buf, -1);
+        prelude_return_val_if_fail(pio && pio->read && buf, prelude_error(PRELUDE_ERROR_ASSERTION));
         return pio->read(pio, buf, count);
 }
 
@@ -517,7 +517,7 @@ ssize_t prelude_io_read_wait(prelude_io_t *pio, void *buf, size_t count)
         ssize_t n = 0, ret;
         unsigned char *in = buf;
 
-        prelude_return_val_if_fail(pio && buf, -1);
+        prelude_return_val_if_fail(pio && buf, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         pfd.fd = prelude_io_get_fd(pio);
         pfd.events = POLLIN;
@@ -570,7 +570,7 @@ ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf)
         size_t count;
         uint16_t msglen;
 
-        prelude_return_val_if_fail(pio, -1);
+        prelude_return_val_if_fail(pio, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         ret = prelude_io_read_wait(pio, &msglen, sizeof(msglen));
         if ( ret <= 0 )
@@ -614,7 +614,7 @@ ssize_t prelude_io_read_delimited(prelude_io_t *pio, unsigned char **buf)
  */
 ssize_t prelude_io_write(prelude_io_t *pio, const void *buf, size_t count)
 {
-        prelude_return_val_if_fail(pio && pio->write && buf, -1);
+        prelude_return_val_if_fail(pio && pio->write && buf, prelude_error(PRELUDE_ERROR_ASSERTION));
         return pio->write(pio, buf, count);
 }
 
@@ -647,7 +647,7 @@ ssize_t prelude_io_write_delimited(prelude_io_t *pio, const void *buf, uint16_t 
         int ret;
         uint16_t nlen;
 
-        prelude_return_val_if_fail(pio && buf, -1);
+        prelude_return_val_if_fail(pio && buf, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         nlen = htons(count);
 
@@ -682,7 +682,7 @@ ssize_t prelude_io_write_delimited(prelude_io_t *pio, const void *buf, uint16_t 
  */
 int prelude_io_close(prelude_io_t *pio)
 {
-        prelude_return_val_if_fail(pio && pio->close, -1);
+        prelude_return_val_if_fail(pio && pio->close, prelude_error(PRELUDE_ERROR_ASSERTION));
         return pio->close(pio);
 }
 
@@ -785,7 +785,7 @@ void prelude_io_set_sys_io(prelude_io_t *pio, int fd)
 
 int prelude_io_set_buffer_io(prelude_io_t *pio)
 {
-        prelude_return_val_if_fail(pio, -1);
+        prelude_return_val_if_fail(pio, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         pio->fd_ptr = NULL;
         pio->size = pio->rindex = 0;
@@ -808,7 +808,7 @@ int prelude_io_set_buffer_io(prelude_io_t *pio)
  */
 int prelude_io_get_fd(prelude_io_t *pio)
 {
-        prelude_return_val_if_fail(pio, -1);
+        prelude_return_val_if_fail(pio, prelude_error(PRELUDE_ERROR_ASSERTION));
         return pio->fd;
 }
 
@@ -855,7 +855,7 @@ void prelude_io_destroy(prelude_io_t *pio)
  */
 ssize_t prelude_io_pending(prelude_io_t *pio)
 {
-        prelude_return_val_if_fail(pio, -1);
+        prelude_return_val_if_fail(pio, prelude_error(PRELUDE_ERROR_ASSERTION));
         return pio->pending(pio);
 }
 

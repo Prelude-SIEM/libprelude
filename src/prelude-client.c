@@ -1029,7 +1029,7 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
         int ret;
         prelude_client_t *new;
 
-        prelude_return_val_if_fail(profile, -1);
+        prelude_return_val_if_fail(profile, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         new = calloc(1, sizeof(*new));
         if ( ! new )
@@ -1110,7 +1110,7 @@ int prelude_client_init(prelude_client_t *client)
         prelude_string_t *err;
         prelude_option_warning_t old_warnings;
 
-        prelude_return_val_if_fail(client, -1);
+        prelude_return_val_if_fail(client, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         prelude_option_set_warnings(0, &old_warnings);
 
@@ -1157,7 +1157,7 @@ int prelude_client_start(prelude_client_t *client)
         int ret;
         void *credentials;
 
-        prelude_return_val_if_fail(client, -1);
+        prelude_return_val_if_fail(client, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( client->status == CLIENT_STATUS_NEED_INIT ) {
                 /*
@@ -1374,7 +1374,7 @@ int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t fl
 {
         int ret = 0;
 
-        prelude_return_val_if_fail(client, -1);
+        prelude_return_val_if_fail(client, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         client->flags = flags;
 
@@ -1404,7 +1404,7 @@ int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t fl
  */
 prelude_client_flags_t prelude_client_get_flags(prelude_client_t *client)
 {
-        prelude_return_val_if_fail(client, -1);
+        prelude_return_val_if_fail(client, prelude_error(PRELUDE_ERROR_ASSERTION));
         return client->flags;
 }
 
@@ -1418,7 +1418,7 @@ prelude_client_flags_t prelude_client_get_flags(prelude_client_t *client)
  */
 prelude_connection_permission_t prelude_client_get_required_permission(prelude_client_t *client)
 {
-        prelude_return_val_if_fail(client, -1);
+        prelude_return_val_if_fail(client, prelude_error(PRELUDE_ERROR_ASSERTION));
         return client->permission;
 }
 
@@ -1480,7 +1480,7 @@ const char *prelude_client_get_config_filename(prelude_client_t *client)
  */
 int prelude_client_set_config_filename(prelude_client_t *client, const char *filename)
 {
-        prelude_return_val_if_fail(client && filename, -1);
+        prelude_return_val_if_fail(client && filename, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( client->config_filename )
                 free(client->config_filename);
@@ -1597,7 +1597,7 @@ int prelude_client_handle_msg_default(prelude_client_t *client, prelude_msg_t *m
         int ret;
         uint8_t tag;
 
-        prelude_return_val_if_fail(client && msg && msgbuf, -1);
+        prelude_return_val_if_fail(client && msg && msgbuf, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         tag = prelude_msg_get_tag(msg);
         if ( tag != PRELUDE_MSG_OPTION_REQUEST )
@@ -1622,7 +1622,7 @@ int prelude_client_new_msgbuf(prelude_client_t *client, prelude_msgbuf_t **msgbu
 {
         int ret;
 
-        prelude_return_val_if_fail(client, -1);
+        prelude_return_val_if_fail(client, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         ret = prelude_msgbuf_new(msgbuf);
         if ( ret < 0 )

@@ -404,7 +404,7 @@ int _prelude_log_set_abort_level_from_string(const char *level)
                 { "DEBUG", PRELUDE_LOG_DEBUG }
         };
 
-        prelude_return_val_if_fail(level != NULL, -1);
+        prelude_return_val_if_fail(level != NULL, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
                 if ( strncasecmp(tbl[i].prefix, level, strlen(tbl[i].prefix)) == 0 ) {

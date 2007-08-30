@@ -120,7 +120,7 @@ sub     header
 
 static int prelude_string_copy(const prelude_string_t *src, prelude_string_t *dst)
 {
-        prelude_return_val_if_fail(src && dst, -1);
+        prelude_return_val_if_fail(src && dst, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! prelude_string_is_empty(src) )
                return prelude_string_copy_dup(src, dst);
@@ -315,7 +315,7 @@ int _idmef_$struct->{short_typename}_get_child(void *p, idmef_class_child_id_t c
 \{
         $struct->{typename} *ptr = p;
 
-        prelude_return_val_if_fail(p, -1);
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
         *childptr = NULL;
 
         switch ( child ) \{
@@ -430,7 +430,7 @@ int _idmef_$struct->{short_typename}_new_child(void *p, idmef_class_child_id_t c
 \{
         $struct->{typename} *ptr = p;
 
-        prelude_return_val_if_fail(p, -1);
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         switch ( child ) \{
 ");
@@ -522,7 +522,7 @@ int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct
 \{
         int ret;
 
-        prelude_return_val_if_fail(src && dst, -1);
+        prelude_return_val_if_fail(src && dst, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         ret = 0;
 ");
@@ -629,7 +629,7 @@ int idmef_$struct->{short_typename}_clone($struct->{typename} *src, $struct->{ty
 \{
         int ret;
 
-        prelude_return_val_if_fail(src, -1);
+        prelude_return_val_if_fail(src, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         ret = idmef_$struct->{short_typename}_new(dst);
         if ( ret < 0 )
@@ -1106,7 +1106,7 @@ void idmef_$struct->{short_typename}_set_$field->{name}($struct->{typename} *ptr
  */
 int idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr, $field->{typename} **ret)
 \{
-        prelude_return_val_if_fail(ptr, -1);
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
 ");
     if ( $field->{metatype} & &METATYPE_OPTIONAL_INT ) {
@@ -1192,7 +1192,7 @@ sub     struct_field_union
  */
 $field->{typename} idmef_$struct->{short_typename}_get_$field->{var}($struct->{typename} *ptr)
 \{
-        prelude_return_val_if_fail(ptr, -1);
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
         return ptr->$field->{var};
 \}
 ");
@@ -1264,7 +1264,7 @@ int idmef_$struct->{short_typename}_new_$member->{name}($struct->{typename} *ptr
 \{
         int retval;
 
-        prelude_return_val_if_fail(ptr, -1);
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         switch ( ptr->$field->{var} ) \{
 ");
@@ -1379,7 +1379,7 @@ int idmef_$struct->{short_typename}_new_$field->{short_name}($struct->{typename}
 \{
         int retval;
 
-        prelude_return_val_if_fail(ptr, -1);
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         retval = $new_field_function;
         if ( retval < 0 )
@@ -1475,7 +1475,7 @@ $enum->{typename} idmef_$enum->{short_typename}_to_numeric(const char *name)
    $self->output("
         };
 
-        prelude_return_val_if_fail(name, -1);
+        prelude_return_val_if_fail(name, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
                 if ( strcasecmp(name, tbl[i].name) == 0 )
