@@ -236,23 +236,12 @@ static int plugin_desactivate(prelude_option_t *opt, prelude_string_t *out, void
                 return -1;
         }
 
-        if ( ! pi->entry->plugin->destroy )
-                return -1;
+        if ( pi->entry->plugin->destroy ) {
+                pi->entry->plugin->destroy(pi, out);
+                pi->entry->plugin->destroy = NULL; /* prevent unsubscribe from destroying it again */
+        }
 
-        /*
-         * destroy plugin data.
-         */
-        pi->entry->plugin->destroy(pi, out);
-
-        /*
-         * unsubscribe the plugin, only if it is subscribed
-         */
-        if ( pi->already_subscribed )
-                prelude_plugin_instance_unsubscribe(pi);
-        else
-                destroy_instance(pi);
-
-        return 0;
+        return prelude_plugin_instance_unsubscribe(pi);
 }
 
 
@@ -611,8 +600,22 @@ int prelude_plugin_instance_subscribe(prelude_plugin_instance_t *pi)
  * Returns: 0 on success, -1 if an error occured.
  */
 int prelude_plugin_instance_unsubscribe(prelude_plugin_instance_t *pi)
+
 {
-        if ( pi->entry->unsubscribe )
+        int ret;
+
+        if ( pi->entry->plugin->destroy ) {
+                prelude_string_t *tmp;
+
+                ret = prelude_string_new(&tmp);
+                if ( ret < 0 )
+                        return ret;
+
+                pi->entry->plugin->destroy(pi, tmp);
+                prelude_string_destroy(tmp);
+        }
+
+        if ( pi->already_subscribed && pi->entry->unsubscribe )
                 pi->entry->unsubscribe(pi);
 
         destroy_instance(pi);
