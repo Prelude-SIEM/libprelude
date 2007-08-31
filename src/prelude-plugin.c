@@ -237,8 +237,26 @@ static int plugin_desactivate(prelude_option_t *opt, prelude_string_t *out, void
         }
 
         if ( pi->entry->plugin->destroy ) {
+                int ret;
+                prelude_bool_t need_free = FALSE;
+
+                if ( ! out ) {
+                        ret = prelude_string_new(&out);
+                        if ( ret < 0 )
+                                return ret;
+
+                        need_free = TRUE;
+                }
+
                 pi->entry->plugin->destroy(pi, out);
-                pi->entry->plugin->destroy = NULL; /* prevent unsubscribe from destroying it again */
+                if ( need_free )
+                        prelude_string_destroy(out);
+
+
+                /*
+                 * prevent unsubscribe from destroying it again
+                 */
+                pi->entry->plugin->destroy = NULL;
         }
 
         return prelude_plugin_instance_unsubscribe(pi);
