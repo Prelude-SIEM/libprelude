@@ -312,8 +312,8 @@ static int read_option_list(prelude_msg_t *msg, prelude_option_t *opt, uint64_t 
         int ret;
         void *buf;
         uint8_t tag;
-        const char *tmp;
-        uint32_t dlen, tmpint;
+        const char *tmp = NULL;
+        uint32_t dlen, tmpint = 0;
         prelude_option_t *newopt;
 
         if ( ! opt )
