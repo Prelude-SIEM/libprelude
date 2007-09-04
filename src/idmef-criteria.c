@@ -44,8 +44,6 @@ struct idmef_criterion {
 
 
 struct idmef_criteria {
-        prelude_list_t list;
-
         idmef_criterion_t *criterion;
         struct idmef_criteria *or;
         struct idmef_criteria *and;
@@ -430,7 +428,7 @@ int idmef_criteria_clone(idmef_criteria_t *src, idmef_criteria_t **dst)
         if ( ! new )
                 return prelude_error_from_errno(errno);
 
-        memcpy(new, src, sizeof(*new));
+        new->or = new->and = NULL;
 
         if ( src->or ) {
                 ret = idmef_criteria_clone(src->or, &new->or);
