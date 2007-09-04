@@ -23,8 +23,6 @@ typedef enum {
     PRELUDE_ERROR_SOURCE_IDMEF_CRITERIA = 15,
     PRELUDE_ERROR_SOURCE_IDMEF_VALUE_TYPE = 16,
     PRELUDE_ERROR_SOURCE_PRELUDEDB = 255,
-
-	PRELUDE_ERROR_SOURCE_DIM = 256
 } prelude_error_source_t;
 </ENUM>
 <ENUM>
@@ -82,6 +80,7 @@ typedef enum {
     PRELUDE_ERROR_TLS_WARNING_ALERT = 58,
     PRELUDE_ERROR_TLS_FATAL_ALERT = 59,
     PRELUDE_ERROR_IDMEF_CLASS_CHILD_NOT_CLASS = 60,
+    PRELUDE_ERROR_ASSERTION = 61,
     PRELUDE_ERROR_UNKNOWN_ERRNO = 16382,
     PRELUDE_ERROR_E2BIG = PRELUDE_ERROR_SYSTEM_ERROR | 0,
     PRELUDE_ERROR_EACCES = PRELUDE_ERROR_SYSTEM_ERROR | 1,
@@ -224,38 +223,31 @@ typedef enum {
     PRELUDE_ERROR_EWOULDBLOCK = PRELUDE_ERROR_SYSTEM_ERROR | 138,
     PRELUDE_ERROR_EXDEV = PRELUDE_ERROR_SYSTEM_ERROR | 139,
     PRELUDE_ERROR_EXFULL = PRELUDE_ERROR_SYSTEM_ERROR | 140,
-
-	PRELUDE_ERROR_CODE_DIM = 65536
 } prelude_error_code_t;
 </ENUM>
 <MACRO>
 <NAME>PRELUDE_ERROR_SOURCE_DEFAULT</NAME>
  #define PRELUDE_ERROR_SOURCE_DEFAULT  PRELUDE_ERROR_SOURCE_UNKNOWN
 </MACRO>
-<MACRO>
-<NAME>PRELUDE_ERROR_CODE_MASK</NAME>
-#define PRELUDE_ERROR_CODE_MASK       (PRELUDE_ERROR_CODE_DIM - 1)
-</MACRO>
-<MACRO>
-<NAME>PRELUDE_ERROR_SOURCE_MASK</NAME>
-#define PRELUDE_ERROR_SOURCE_MASK     (PRELUDE_ERROR_SOURCE_DIM - 1)
-</MACRO>
-<MACRO>
-<NAME>PRELUDE_ERROR_SOURCE_SHIFT</NAME>
-#define PRELUDE_ERROR_SOURCE_SHIFT    23
-</MACRO>
-<MACRO>
-<NAME>PRELUDE_ERROR_VERBOSE_SHIFT</NAME>
-#define PRELUDE_ERROR_VERBOSE_SHIFT  22
-</MACRO>
-<MACRO>
-<NAME>PRELUDE_ERROR_VERBOSE_MASK</NAME>
-#define PRELUDE_ERROR_VERBOSE_MASK   (1)
-</MACRO>
 <TYPEDEF>
 <NAME>prelude_error_t</NAME>
 typedef signed int prelude_error_t;
 </TYPEDEF>
+<FUNCTION>
+<NAME>prelude_error_is_verbose</NAME>
+<RETURNS>prelude_bool_t </RETURNS>
+prelude_error_t error
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_get_code</NAME>
+<RETURNS>prelude_error_code_t </RETURNS>
+prelude_error_t error
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_get_source</NAME>
+<RETURNS>prelude_error_source_t </RETURNS>
+prelude_error_t error
+</FUNCTION>
 <FUNCTION>
 <NAME>prelude_error_code_from_errno</NAME>
 <RETURNS>prelude_error_code_t </RETURNS>
@@ -263,18 +255,18 @@ int err
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_error_make</NAME>
-<RETURNS>return </RETURNS>
-PRELUDE_ERROR_SOURCE_DEFAULT, code
+<RETURNS>prelude_error_t </RETURNS>
+prelude_error_source_t source, prelude_error_code_t code
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_error_make</NAME>
-<RETURNS>return </RETURNS>
-PRELUDE_ERROR_SOURCE_DEFAULT, prelude_error_code_from_errno(err)
+<NAME>prelude_error_make_from_errno</NAME>
+<RETURNS>prelude_error_t </RETURNS>
+prelude_error_source_t source, int err
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_perror</NAME>
 <RETURNS>void </RETURNS>
-prelude_error_t err, const char *fmt, ...
+prelude_error_t error, const char *fmt, ...
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_strerror</NAME>
@@ -290,6 +282,26 @@ prelude_error_t err
 <NAME>prelude_error_code_to_errno</NAME>
 <RETURNS>int </RETURNS>
 prelude_error_code_t code
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_verbose_make_v</NAME>
+<RETURNS>prelude_error_t </RETURNS>
+prelude_error_source_t source,prelude_error_code_t code, const char *fmt, va_list ap
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_verbose_make</NAME>
+<RETURNS>prelude_error_t </RETURNS>
+prelude_error_source_t source,prelude_error_code_t code, const char *fmt, ...
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return </RETURNS>
+PRELUDE_ERROR_SOURCE_DEFAULT, code
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_error_make</NAME>
+<RETURNS>return </RETURNS>
+PRELUDE_ERROR_SOURCE_DEFAULT, prelude_error_code_from_errno(err)
 </FUNCTION>
 <MACRO>
 <NAME>PRELUDE_LINKED_OBJECT</NAME>
@@ -6977,7 +6989,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.15.1"
+#define LIBPRELUDE_VERSION "0.9.15.2"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>

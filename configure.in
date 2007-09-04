@@ -11,7 +11,7 @@ AC_CANONICAL_TARGET
 libprelude_major=0
 libprelude_minor=9
 libprelude_micro=15
-libprelude_patchlevel=.1
+libprelude_patchlevel=.2
 
 dnl version and release information
 libprelude_version=$libprelude_major.$libprelude_minor.$libprelude_micro$libprelude_patchlevel
@@ -20,7 +20,7 @@ libprelude_version=$libprelude_major.$libprelude_minor.$libprelude_micro$libprel
 dnl library soname 
 dnl check http://sources.redhat.com/autobook/autobook/autobook_91.html#SEC91
 libprelude_current=13
-libprelude_revision=1
+libprelude_revision=2
 libprelude_age=11
 
 libprelude_soname=$libprelude_current:$libprelude_revision:$libprelude_age

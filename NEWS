@@ -1,3 +1,20 @@
+ * 2007-09-04, libprelude-0.9.15.2:
+
+- Write the children PID into specified pidfile (fixes #257).
+
+- Fix double free on idmef_criterion_value_t cloned regexp object (thanks
+  to Helmut Azbest <helmut.azbest at gmail.com>).
+
+- Allow Python thread to run, while entering libprelude C function.
+
+- Return PRELUDE_ERROR_ASSERTION when API check fail, in place of PRELUDE_ERROR_GENERIC.
+
+- Make prelude_plugin_unsubcribe() work as expected (call the plugin
+  instance destroy function).
+
+- Various bug fixes, minor enhancements.
+
+
 * 2007-08-29, libprelude-0.9.15.1:
 
 - Fix build error on system that use native awk implementation in place of GNU awk
