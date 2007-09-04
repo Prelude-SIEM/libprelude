@@ -63,6 +63,7 @@ struct regex_value {
 struct idmef_criterion_value {
 
         void *value;
+        prelude_bool_t value_need_free;
         idmef_criterion_value_type_t type;
 
         int (*clone)(const idmef_criterion_value_t *cv, idmef_criterion_value_t *dst);
@@ -273,12 +274,12 @@ static int btime_print(const idmef_criterion_value_t *cv, prelude_io_t *fd)
 
 static int btime_clone(const idmef_criterion_value_t *src, idmef_criterion_value_t *dst)
 {
-        dst->value = malloc(sizeof(struct tm));
-        if ( ! dst->value )
-                return prelude_error_from_errno(errno);
-
-        memcpy(dst->value, src->value, sizeof(struct tm));
-
+        /*
+         * The API does not allow to change the value of an existing
+         * idmef_criterion_value_t object, so we can simply regerence the source.
+         */
+        dst->value_need_free = FALSE;
+        dst->value = src->value;
         return 0;
 }
 
@@ -286,7 +287,8 @@ static int btime_clone(const idmef_criterion_value_t *src, idmef_criterion_value
 
 static void btime_destroy(idmef_criterion_value_t *cv)
 {
-        free(cv->value);
+        if ( cv->value_need_free )
+                free(cv->value);
 }
 
 
@@ -349,20 +351,12 @@ static int regex_to_string(const idmef_criterion_value_t *cv, prelude_string_t *
 
 static int regex_clone(const idmef_criterion_value_t *src, idmef_criterion_value_t *dst)
 {
-        struct regex_value *drv, *srv = src->value;
-
-        dst->value = drv = malloc(sizeof(*drv));
-        if ( ! drv )
-                return prelude_error_from_errno(errno);
-
-        memcpy(drv, srv, sizeof(*drv));
-
-        drv->regex_string = strdup(srv->regex_string);
-        if ( ! drv->regex_string ) {
-                free(drv);
-                return prelude_error_from_errno(errno);
-        }
-
+        /*
+         * The API does not allow to change the value of an existing
+         * idmef_criterion_value_t object, so we can simply regerence the source.
+         */
+        dst->value_need_free = FALSE;
+        dst->value = src->value;
         return 0;
 }
 
@@ -370,7 +364,12 @@ static int regex_clone(const idmef_criterion_value_t *src, idmef_criterion_value
 
 static void regex_destroy(idmef_criterion_value_t *cv)
 {
-        struct regex_value *rv = cv->value;
+        struct regex_value *rv;
+
+        if ( ! cv->value_need_free )
+                return;
+
+        rv = cv->value;
 
         free(rv->regex_string);
         regfree(&rv->regex);
@@ -532,6 +531,8 @@ int idmef_criterion_value_new(idmef_criterion_value_t **cv)
         *cv = calloc(1, sizeof(**cv));
         if ( ! *cv )
                 return prelude_error_from_errno(errno);
+
+        (*cv)->value_need_free = TRUE;
 
         return 0;
 }
