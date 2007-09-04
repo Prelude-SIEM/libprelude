@@ -167,6 +167,12 @@ PyObject *swig_python_data(idmef_data_t *data)
 /**
  * Prelude specific typemaps
  */
+%exception {
+   Py_BEGIN_ALLOW_THREADS
+   $function
+   Py_END_ALLOW_THREADS
+}
+
 
 %typemap(in) (char *data, size_t len) {
 	if ( ! PyString_Check($input) ) {
