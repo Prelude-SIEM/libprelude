@@ -25,12 +25,30 @@
 #define PRELUDE_ERROR_VERBOSE_MASK    (1)
 
 
+/**
+ * prelude_error_make:
+ * @source: Error source.
+ * @code: Error code.
+ *
+ * Create a new #prelude_error_t error using @source and @code.
+ *
+ * Returns: The created #prelude_error_t integer.
+ */
 prelude_error_t prelude_error_make(prelude_error_source_t source, prelude_error_code_t code)
 {
         return (code == PRELUDE_ERROR_NO_ERROR) ? code : -((source << PRELUDE_ERROR_SOURCE_SHIFT) | code);
 }
 
 
+/**
+ * prelude_error_make_from_errno:
+ * @source: Error source.
+ * @err: errno value.
+ *
+ * Create a new #prelude_error_t error using @source and @errno.
+ *
+ * Returns: The created #prelude_error_t integer.
+ */
 prelude_error_t prelude_error_make_from_errno(prelude_error_source_t source, int err)
 {
         prelude_error_code_t code = prelude_error_code_from_errno(err);
@@ -39,6 +57,18 @@ prelude_error_t prelude_error_make_from_errno(prelude_error_source_t source, int
 
 
 
+/**
+ * prelude_error_verbose_make_v:
+ * @source: Error source.
+ * @code: Error code.
+ * @fmt: Format string.
+ * @ap: Argument list.
+ *
+ * Create a new error using @source and @code, using the detailed error message
+ * specified within @fmt.
+ *
+ * Returns: The created #prelude_error_t integer.
+ */
 prelude_error_t prelude_error_verbose_make_v(prelude_error_source_t source,
                                              prelude_error_code_t code, const char *fmt, va_list ap)
 {
@@ -70,6 +100,18 @@ prelude_error_t prelude_error_verbose_make_v(prelude_error_source_t source,
 
 
 
+/**
+ * prelude_error_verbose_make:
+ * @source: Error source.
+ * @code: Error code.
+ * @fmt: Format string.
+ * @...: Argument list.
+ *
+ * Create a new error using @source and @code, using the detailed error message
+ * specified within @fmt.
+ *
+ * Returns: The created #prelude_error_t integer.
+ */
 prelude_error_t prelude_error_verbose_make(prelude_error_source_t source,
                                            prelude_error_code_t code, const char *fmt, ...)
 {
@@ -84,6 +126,12 @@ prelude_error_t prelude_error_verbose_make(prelude_error_source_t source,
 }
 
 
+/**
+ * prelude_error_get_code:
+ * @error: A #prelude_error_t return value.
+ *
+ * Returns: the #prelude_code_t code contained within the @prelude_error_t integer.
+ */
 prelude_error_code_t prelude_error_get_code(prelude_error_t error)
 {
         error = -error;
@@ -91,6 +139,12 @@ prelude_error_code_t prelude_error_get_code(prelude_error_t error)
 }
 
 
+/**
+ * prelude_error_get_source:
+ * @error: A #prelude_error_t return value.
+ *
+ * Returns: the #prelude_source_t source contained within the @prelude_error_t integer.
+ */
 prelude_error_source_t prelude_error_get_source(prelude_error_t error)
 {
         error = -error;
@@ -98,6 +152,12 @@ prelude_error_source_t prelude_error_get_source(prelude_error_t error)
 }
 
 
+/**
+ * prelude_error_is_verbose:
+ * @error: A #prelude_error_t return value.
+ *
+ * Returns: #PRELUDE_BOOL_TRUE if there is a detailed message for this error, #PRELUDE_BOOL_FALSE otherwise.
+ */
 prelude_bool_t prelude_error_is_verbose(prelude_error_t error)
 {
         error = -error;
@@ -105,14 +165,20 @@ prelude_bool_t prelude_error_is_verbose(prelude_error_t error)
 }
 
 
-prelude_error_code_t prelude_error_code_from_errno(int errnum)
+/**
+ * prelude_error_code_from_errno:
+ * @err: errno value.
+ *
+ * Returns: the #prelude_error_code_t value corresponding to @err.
+ */
+prelude_error_code_t prelude_error_code_from_errno(int err)
 {
         int idx;
 
-        if ( ! errnum )
+        if ( ! err )
                 return PRELUDE_ERROR_NO_ERROR;
 
-        idx = errno_to_idx(errnum);
+        idx = errno_to_idx(err);
         if ( idx < 0 )
                 return PRELUDE_ERROR_UNKNOWN_ERRNO;
 
@@ -120,6 +186,12 @@ prelude_error_code_t prelude_error_code_from_errno(int errnum)
 }
 
 
+/**
+ * prelude_error_code_to_errno:
+ * @code: Error code.
+ *
+ * Returns: the errno value corresponding to @code.
+ */
 int prelude_error_code_to_errno(prelude_error_code_t code)
 {
         if ( ! (code & PRELUDE_ERROR_SYSTEM_ERROR) )
@@ -134,6 +206,15 @@ int prelude_error_code_to_errno(prelude_error_code_t code)
 }
 
 
+
+/**
+ * prelude_perror:
+ * @error: A #prelude_error_t return value.
+ * @fmt: Format string.
+ * @...: Argument list.
+ *
+ * Print the error to stderr, or to syslog() in case stderr is unavailable.
+ */
 void prelude_perror(prelude_error_t error, const char *fmt, ...)
 {
         va_list ap;

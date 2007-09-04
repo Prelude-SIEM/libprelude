@@ -84,7 +84,7 @@ typedef enum {
 
 typedef signed int prelude_error_t;
 
-prelude_bool_t prelude_error_is_verbose(prelude_error_t err);
+prelude_bool_t prelude_error_is_verbose(prelude_error_t error);
 
 prelude_error_code_t prelude_error_get_code(prelude_error_t error);
 
@@ -96,7 +96,7 @@ prelude_error_t prelude_error_make(prelude_error_source_t source, prelude_error_
 
 prelude_error_t prelude_error_make_from_errno(prelude_error_source_t source, int err);
 
-void prelude_perror(prelude_error_t err, const char *fmt, ...) __attribute__ ((__format__ (__printf__, 2, 3)));
+void prelude_perror(prelude_error_t error, const char *fmt, ...) __attribute__ ((__format__ (__printf__, 2, 3)));
 
 const char *prelude_strerror(prelude_error_t err);
 
