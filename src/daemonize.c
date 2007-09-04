@@ -180,7 +180,7 @@ int prelude_daemonize(const char *lockfile)
                 if ( fd < 0 )
                         return fd;
 
-                ret = lockfile_write_pid(fd, pid);
+                ret = lockfile_write_pid(fd, getpid());
                 if ( ret < 0 )
                         return ret;
         }
