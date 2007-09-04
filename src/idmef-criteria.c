@@ -539,16 +539,12 @@ idmef_criterion_t *idmef_criteria_get_criterion(const idmef_criteria_t *criteria
 
 void idmef_criteria_or_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2)
 {
-        idmef_criteria_t *last = NULL;
-
         prelude_return_if_fail(criteria && criteria2);
 
-        while ( criteria ) {
-                last = criteria;
+        while ( criteria->or )
                 criteria = criteria->or;
-        }
 
-        last->or = criteria2;
+        criteria->or = criteria2;
 }
 
 
