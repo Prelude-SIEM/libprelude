@@ -36,6 +36,7 @@
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_CONNECTION
 #include "prelude-error.h"
 
+#include "common.h"
 #include "prelude-log.h"
 #include "prelude-client.h"
 #include "prelude-message-id.h"
@@ -251,7 +252,12 @@ int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int cryp
 int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *cred)
 {
         int ret;
-        char keyfile[256], certfile[256];
+        size_t size;
+        gnutls_datum data;
+        gnutls_x509_privkey key;
+        char keyfile[PATH_MAX], certfile[PATH_MAX];
+
+        *cred = NULL;
 
         if ( _prelude_thread_in_use() )
                 gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread);
@@ -262,25 +268,59 @@ int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *
                                                   "TLS initialization failed: %s", gnutls_strerror(ret));
 
         prelude_client_profile_get_tls_key_filename(cp, keyfile, sizeof(keyfile));
+        ret = access(keyfile, F_OK);
+        if ( ret < 0 )
+                return prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_PROFILE,
+                                                  "access to %s failed: %s", keyfile, strerror(errno));
+
         prelude_client_profile_get_tls_client_keycert_filename(cp, certfile, sizeof(certfile));
-
-        gnutls_certificate_allocate_credentials(cred);
-
         ret = access(certfile, F_OK);
         if ( ret < 0 )
                 return prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_PROFILE,
                                                   "access to %s failed: %s", certfile, strerror(errno));
 
-        ret = tls_certificates_load(keyfile, certfile, *cred);
+        ret = _prelude_load_file(keyfile, &data.data, &size);
         if ( ret < 0 )
                 return ret;
+        data.size = (unsigned int) size;
+
+        ret = gnutls_x509_privkey_init(&key);
+        if ( ret < 0 ) {
+                _prelude_unload_file(data.data, data.size);
+                return prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS,
+                                                  "Error initializing X509 private key: %s", gnutls_strerror(ret));
+        }
+
+        ret = gnutls_x509_privkey_import(key, &data, GNUTLS_X509_FMT_PEM);
+        if ( ret < 0 ) {
+                ret = prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS,
+                                                 "Error importing X509 private key: %s", gnutls_strerror(ret));
+                goto err;
+        }
+
+        ret = gnutls_certificate_allocate_credentials(cred);
+        if ( ret < 0 ) {
+                ret = prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS,
+                                                 "Error initializing TLS credentials: %s", gnutls_strerror(ret));
+                goto err;
+        }
+
+        ret = tls_certificates_load(key, certfile, *cred);
+        if ( ret < 0 )
+                goto err;
 
         prelude_client_profile_get_tls_client_trusted_cert_filename(cp, certfile, sizeof(certfile));
-
         ret = gnutls_certificate_set_x509_trust_file(*cred, certfile, GNUTLS_X509_FMT_PEM);
         if ( ret < 0 )
-                return prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_PROFILE,
-                                                  "could not set x509 trust file '%s': %s", certfile, gnutls_strerror(ret));
+                ret = prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_PROFILE,
+                                                 "could not set x509 trust file '%s': %s", certfile, gnutls_strerror(ret));
 
-        return 0;
+   err:
+        if ( ret < 0 && *cred )
+                gnutls_certificate_free_credentials(*cred);
+
+        gnutls_x509_privkey_deinit(key);
+        _prelude_unload_file(data.data, data.size);
+
+        return ret;
 }

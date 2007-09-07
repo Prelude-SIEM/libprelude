@@ -29,10 +29,13 @@ void tls_unload_file(gnutls_datum *data);
 
 int tls_load_file(const char *filename, gnutls_datum *data);
 
-int tls_certificates_load(const char *keyfile, const char *certfile, gnutls_certificate_credentials cred);
+int tls_certificates_load(gnutls_x509_privkey key, const char *certfile, gnutls_certificate_credentials cred);
 
 int tls_certificate_get_peer_analyzerid(gnutls_session session, uint64_t *analyzerid);
 
 int tls_certificate_get_permission(gnutls_session session, prelude_connection_permission_t *permission);
+
+int _prelude_tls_crt_list_import(gnutls_x509_crt *certs, unsigned int *cmax,
+                                 const gnutls_datum *data, gnutls_x509_crt_fmt format, unsigned int flags);
 
 #endif

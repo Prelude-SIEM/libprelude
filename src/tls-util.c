@@ -42,82 +42,109 @@
 #include "prelude-client.h"
 #include "tls-util.h"
 
-/*
- * can be:
- * -----BEGIN CERTIFICATE-----
- * -----BEGIN X509 CERTIFICATE-----
- */
 
-#define BEGIN_STR       "-----BEGIN "
-#define END_STR         "-----END "
+#ifndef HAVE_GNUTLS_X509_CRT_LIST_IMPORT
 
+#define X509_BEGIN_STR1 "-----BEGIN X509 CERTIFICATE"
+#define X509_BEGIN_STR2 "-----BEGIN CERTIFICATE"
 
-
-static int load_individual_cert(FILE *fd, gnutls_datum *key, gnutls_certificate_credentials cred)
+int _prelude_tls_crt_list_import(gnutls_x509_crt *certs, unsigned int *cmax,
+                                 const gnutls_datum *indata, gnutls_x509_crt_fmt format, unsigned int flags)
 {
-        size_t len;
-        char buf[65535];
-        gnutls_datum cert;
-        int ret = -1, got_start = 0;
-        
-        cert.data = (unsigned char *) buf;
-        
-        for ( cert.size = 0;
-              cert.size < sizeof(buf) && fgets(buf + cert.size, sizeof(buf) - cert.size, fd);
-              cert.size += len ) {
+        int ret;
+        size_t skiplen;
+        gnutls_datum data;
+        unsigned int i = 0;
+        unsigned char *ptr;
 
-                len = strlen(buf + cert.size);
-                
-                if ( ! got_start && strstr(buf + cert.size, BEGIN_STR) ) {
-                        got_start = 1;                        
-                        continue;
+        data.size = indata->size;
+        data.data = indata->data;
+
+        while ( i < *cmax || ! certs ) {
+                skiplen = sizeof(X509_BEGIN_STR1) - 1;
+                ptr = memmem(data.data, data.size, X509_BEGIN_STR1, skiplen);
+                if ( ! ptr ) {
+                        skiplen = sizeof(X509_BEGIN_STR2) - 1;
+                        ptr = memmem(data.data, data.size, X509_BEGIN_STR2, skiplen);
                 }
 
-                if ( ! strstr(buf + cert.size, END_STR) ) 
-                        continue;
-                
-                cert.size += len;
+                if ( ! ptr )
+                        break;
 
-                ret = gnutls_certificate_set_x509_key_mem(cred, &cert, key, GNUTLS_X509_FMT_PEM);
-                if ( ret < 0 ) {
-                        ret = prelude_error_verbose(PRELUDE_ERROR_PROFILE, "error importing certificate: %s", gnutls_strerror(ret));
-                        goto out;
+                data.data = ptr;
+                data.size = data.size - (ptr - data.data);
+
+                if ( ! certs )
+                        i++;
+                else {
+                        ret = gnutls_x509_crt_init(&certs[i]);
+                        if ( ret < 0 )
+                                goto err;
+
+                        ret = gnutls_x509_crt_import(certs[i++], &data, format);
+                        if ( ret < 0 )
+                                goto err;
                 }
-                
-                len = cert.size = 0;
+
+                data.data += skiplen;
+                data.size -= skiplen;
         }
 
-  out:
+        *cmax = i;
+        return i;
+
+   err:
+        *cmax = 0;
+        while ( i-- >= 0 )
+                gnutls_x509_crt_deinit(certs[i]);
+
         return ret;
 }
 
+#else
 
-int tls_certificates_load(const char *keyfile, const char *certfile, gnutls_certificate_credentials cred)
+int _prelude_tls_crt_list_import(gnutls_x509_crt *certs, unsigned int *cmax,
+                                 const gnutls_datum *indata, gnutls_x509_crt_fmt format, unsigned int flags)
+{
+        return gnutls_x509_crt_list_import(certs, cmax, indata, format, flags);
+}
+
+#endif
+
+
+int tls_certificates_load(gnutls_x509_privkey key, const char *certfname, gnutls_certificate_credentials cred)
 {
         int ret;
-        FILE *fd;
         size_t size;
-        gnutls_datum key;
+        gnutls_datum certfile;
+        unsigned int cert_max, i;
+        gnutls_x509_crt certs[1024];
 
-        ret = _prelude_load_file(keyfile, &key.data, &size);
+        ret = _prelude_load_file(certfname, &certfile.data, &size);
         if ( ret < 0 )
                 return ret;
-        
-        key.size = (unsigned int) size;
-        
-        fd = fopen(certfile, "r");
-        if ( ! fd ) {
-                _prelude_unload_file(key.data, key.size);
-                return prelude_error_verbose(PRELUDE_ERROR_PROFILE, "could not open '%s' for reading", certfile);
+        certfile.size = (unsigned int) size;
+
+        cert_max = sizeof(certs) / sizeof(*certs);
+        ret = _prelude_tls_crt_list_import(certs, &cert_max, &certfile, GNUTLS_X509_FMT_PEM, GNUTLS_X509_CRT_LIST_IMPORT_FAIL_IF_EXCEED);
+        if ( ret < 0 ) {
+                ret = prelude_error_verbose(PRELUDE_ERROR_PROFILE, "error importing certificate listing: %s", gnutls_strerror(ret));
+                goto err;
         }
-        
-        ret = load_individual_cert(fd, &key, cred);
-        if ( ret < 0 )
-                ret = prelude_error_from_errno(errno);
-        
-        _prelude_unload_file(key.data, key.size);
-        fclose(fd);
-        
+
+        for ( i = 0; i < cert_max; i++) {
+                ret = gnutls_certificate_set_x509_key(cred, &certs[i], 1, key);
+                gnutls_x509_crt_deinit(certs[i]);
+
+                if ( ret < 0 ) {
+                        ret = prelude_error_verbose(PRELUDE_ERROR_PROFILE, "error importing certificate: %s", gnutls_strerror(ret));
+                        break;
+                }
+        }
+
+err:
+        _prelude_unload_file(certfile.data, certfile.size);
+
         return ret;
 }
 
@@ -131,21 +158,21 @@ int tls_certificate_get_peer_analyzerid(gnutls_session session, uint64_t *analyz
         size_t size = sizeof(buf);
         unsigned int cert_list_size;
         const gnutls_datum *cert_list;
-        
+
         cert_list = gnutls_certificate_get_peers(session, &cert_list_size);
-        if ( ! cert_list || cert_list_size != 1 ) 
+        if ( ! cert_list || cert_list_size != 1 )
                 return prelude_error_verbose(PRELUDE_ERROR_TLS, "invalid number of peer certificate: %d", cert_list_size);
-        
+
         ret = gnutls_x509_crt_init(&cert);
         if ( ret < 0 )
                 return prelude_error_verbose(PRELUDE_ERROR_TLS, "%s", gnutls_strerror(ret));
-        
+
         ret = gnutls_x509_crt_import(cert, &cert_list[0], GNUTLS_X509_FMT_DER);
         if ( ret < 0) {
                 gnutls_x509_crt_deinit(cert);
                 return prelude_error_verbose(PRELUDE_ERROR_TLS, "error importing certificate: %s", gnutls_strerror(ret));
         }
-        
+
         size = sizeof(buf);
         ret = gnutls_x509_crt_get_dn_by_oid(cert, GNUTLS_OID_X520_DN_QUALIFIER, 0, 0, buf, &size);
         if ( ret < 0 ) {
@@ -158,9 +185,9 @@ int tls_certificate_get_peer_analyzerid(gnutls_session session, uint64_t *analyz
                 gnutls_x509_crt_deinit(cert);
                 return prelude_error_verbose(PRELUDE_ERROR_TLS, "certificate analyzerid '%s' is invalid", buf);
         }
-        
+
         gnutls_x509_crt_deinit(cert);
-        
+
         return 0;
 }
 
@@ -174,27 +201,27 @@ int tls_certificate_get_permission(gnutls_session session,
         gnutls_x509_crt cert;
         size_t size = sizeof(buf);
         const gnutls_datum *data;
-        
+
         data = gnutls_certificate_get_ours(session);
         if ( ! data )
                 return prelude_error_verbose(PRELUDE_ERROR_TLS, "could not get own certificate");
-        
+
         ret = gnutls_x509_crt_init(&cert);
         if ( ret < 0 )
                 return prelude_error_verbose(PRELUDE_ERROR_TLS, "error initializing certificate: %s", gnutls_strerror(ret));
-        
+
         ret = gnutls_x509_crt_import(cert, data, GNUTLS_X509_FMT_DER);
         if ( ret < 0 ) {
                 gnutls_x509_crt_deinit(cert);
                 return prelude_error_verbose(PRELUDE_ERROR_TLS, "error importing certificate: %s", gnutls_strerror(ret));
         }
-        
+
         ret = gnutls_x509_crt_get_dn_by_oid(cert, GNUTLS_OID_X520_COMMON_NAME, 0, 0, buf, &size);
         if ( ret < 0 ) {
                 gnutls_x509_crt_deinit(cert);
                 return prelude_error_verbose(PRELUDE_ERROR_TLS, "could not get certificate CN field: %s", gnutls_strerror(ret));
         }
-        
+
         ret = sscanf(buf, "%d", &tmp);
         if ( ret != 1 ) {
                 gnutls_x509_crt_deinit(cert);
@@ -203,6 +230,6 @@ int tls_certificate_get_permission(gnutls_session session,
 
         *permission = (prelude_connection_permission_t) tmp;
         gnutls_x509_crt_deinit(cert);
-        
+
         return 0;
 }
