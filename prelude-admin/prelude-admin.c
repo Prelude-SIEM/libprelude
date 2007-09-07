@@ -34,6 +34,7 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <dirent.h>
 
 #ifndef WIN32
 # include <pwd.h>
@@ -94,9 +95,10 @@ struct cmdtbl {
 static const char *myprogname;
 static unsigned int port = 5553;
 static PRELUDE_LIST(rm_dir_list);
+static prelude_option_t *parentopt;
 static prelude_client_profile_t *profile;
-static char *addr = NULL, *one_shot_passwd = NULL;
-static prelude_bool_t gid_set = FALSE, uid_set = FALSE;
+static char *addr = NULL, *one_shot_passwd = NULL, *arg_command = NULL;
+static prelude_bool_t gid_set = FALSE, uid_set = FALSE, detailed_listing = FALSE;
 static prelude_bool_t prompt_passwd = FALSE, server_keepalive = FALSE, pass_from_stdin = FALSE;
 
 
@@ -332,6 +334,23 @@ static void print_revoke_help(void)
 }
 
 
+static void print_list_help(void)
+{
+        fprintf(stderr,
+"Usage  : list\n"
+"Example: list -l\n\n"
+
+"Print the list of available profile, their permissions, and the certificate\n"
+"issuer analyzerID.\n\n"
+
+"Options:\n"
+"  -l --long : Print detailed listing (include uid/gid, profile analyzerID).\n"
+
+"\n");
+}
+
+
+
 static void print_print_help(void)
 {
         fprintf(stderr,
@@ -538,27 +557,40 @@ static int set_ca_cert_lifetime(prelude_option_t *opt, const char *optarg, prelu
 }
 
 
-static void setup_permission_options(prelude_option_t *parent)
+static int set_long_listing(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
+{
+        detailed_listing = TRUE;
+        return 0;
+}
+
+
+static void setup_permission_options(void)
 {
 #ifndef WIN32
-        prelude_option_add(parent, NULL, PRELUDE_OPTION_TYPE_CLI, 'u', "uid",
+        prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 'u', "uid",
                            NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_uid, NULL);
 
-        prelude_option_add(parent, NULL, PRELUDE_OPTION_TYPE_CLI, 'g', "gid",
+        prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 'g', "gid",
                            NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_gid, NULL);
 #endif
 }
 
 
-static void setup_read_options(prelude_option_t *parent)
+static void setup_read_options(void)
 {
-        prelude_option_add(parent, NULL, PRELUDE_OPTION_TYPE_CLI, 'o', "offset",
+        prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 'o', "offset",
                            NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_offset, NULL);
 
-        prelude_option_add(parent, NULL, PRELUDE_OPTION_TYPE_CLI, 'c', "count",
+        prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 'c', "count",
                            NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_count, NULL);
 }
 
+
+static void setup_list_options(void)
+{
+        prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 'l', "long",
+                           NULL, PRELUDE_OPTION_ARGUMENT_NONE, set_long_listing, NULL);
+}
 
 
 static int read_tls_setting(void)
@@ -612,17 +644,17 @@ static int read_tls_setting(void)
 
 
 
-static void setup_tls_options(prelude_option_t *parent)
+static void setup_tls_options(void)
 {
         read_tls_setting();
 
-        prelude_option_add(parent, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "key-len",
+        prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "key-len",
                            NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_key_len, NULL);
 
-        prelude_option_add(parent, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "cert-lifetime",
+        prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "cert-lifetime",
                            NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_cert_lifetime, NULL);
 
-        prelude_option_add(parent, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "ca-cert-lifetime",
+        prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "ca-cert-lifetime",
                            NULL, PRELUDE_OPTION_ARGUMENT_REQUIRED, set_ca_cert_lifetime, NULL);
 }
 
@@ -1090,6 +1122,11 @@ static int delete_profile(prelude_client_profile_t *profile)
         char buf[PATH_MAX];
 
         prelude_client_profile_get_profile_dirname(profile, buf, sizeof(buf));
+        if ( access(buf, F_OK) < 0 ) {
+                fprintf(stderr, "Could not find profile '%s'.\n", prelude_client_profile_get_name(profile));
+                return -1;
+        }
+
         ret = delete_dir(buf);
         if ( ret < 0 )
                 return ret;
@@ -1106,16 +1143,23 @@ static int delete_profile(prelude_client_profile_t *profile)
 
 static int rename_cmd(int argc, char **argv)
 {
-        int ret;
+        int ret, i;
+        prelude_string_t *err;
         const char *sname, *dname;
         char spath[256], dpath[256];
         prelude_client_profile_t *sprofile, *dprofile;
 
-        if ( argc != 4 )
+        i = ret = prelude_option_read(parentopt, NULL, &argc, argv, &err, NULL);
+        if ( ret < 0 ) {
+                prelude_perror(ret, "Option error");
+                return -1;
+        }
+
+        if ( argc - i != 2 )
                 return -2;
 
-        sname = argv[2];
-        dname = argv[3];
+        sname = argv[i];
+        dname = argv[i + 1];
 
         ret = prelude_client_profile_new(&sprofile, sname);
         if ( ret < 0 ) {
@@ -1200,8 +1244,10 @@ static int add_analyzer(const char *name, uint64_t *analyzerid, gnutls_x509_priv
                 if ( errno != ENOENT )
                         return -1;
 
-                if ( ! uid_set || ! gid_set ) {
+                if ( ! uid_set && ! gid_set )
                         permission_warning();
+
+                if ( ! uid_set || ! gid_set ) {
                         if ( ! uid_set )
                                 prelude_client_profile_set_uid(profile, getuid());
 
@@ -1232,19 +1278,15 @@ static int add_cmd(int argc, char **argv)
         int ret, i;
         uint64_t analyzerid;
         prelude_string_t *err;
-        prelude_option_t *opt;
         gnutls_x509_privkey key;
         gnutls_x509_crt ca_crt, crt;
         prelude_client_profile_t *testprofile;
 
         ret = _prelude_client_profile_new(&profile);
-        ret = prelude_option_new(NULL, &opt);
-        setup_permission_options(opt);
-        setup_tls_options(opt);
+        setup_permission_options();
+        setup_tls_options();
 
-        i = ret = prelude_option_read(opt, NULL, &argc, argv, &err, NULL);
-        prelude_option_destroy(opt);
-
+        i = ret = prelude_option_read(parentopt, NULL, &argc, argv, &err, NULL);
         if ( ret < 0 ) {
                 prelude_perror(ret, "Option error");
                 return -1;
@@ -1281,31 +1323,25 @@ out:
 static int chown_cmd(int argc, char **argv)
 {
         int ret, i;
-        prelude_option_t *opt;
         prelude_string_t *err;
 
-        if ( argc < 2 )
-                return -2;
+        _prelude_client_profile_new(&profile);
 
-        ret = prelude_client_profile_new(&profile, argv[1]);
-        if ( ret < 0 ) {
-                fprintf(stderr, "Error loading analyzer profile '%s': %s.\n\n", argv[1], prelude_strerror(ret));
-                return -1;
-        }
-
-        ret = prelude_option_new(NULL, &opt);
-        setup_permission_options(opt);
-
-        i = ret = prelude_option_read(opt, NULL, &argc, argv, &err, NULL);
-        prelude_option_destroy(opt);
-
+        setup_permission_options();
+        i = ret = prelude_option_read(parentopt, NULL, &argc, argv, &err, NULL);
         if ( ret < 0 ) {
                 prelude_perror(ret, "Option error");
-                return -1;
+                return -2;
         }
 
-        if ( argc - ret != 1 )
+        if ( argc - i < 1 )
+                return -2;
+
+        ret = prelude_client_profile_set_name(profile, argv[i]);
+        if ( ret < 0 ) {
+                fprintf(stderr, "Error loading analyzer profile '%s': %s.\n\n", argv[i], prelude_strerror(ret));
                 return -1;
+        }
 
         if ( ! uid_set && ! gid_set ) {
                 fprintf(stderr, "Option --uid or --gid should be provided to change the profile permission.\n\n");
@@ -1318,14 +1354,25 @@ static int chown_cmd(int argc, char **argv)
 
 static int del_cmd(int argc, char **argv)
 {
-        int ret;
+        int ret, i;
+        prelude_string_t *err;
 
-        if ( argc < 2 )
+        i = ret = prelude_option_read(parentopt, NULL, &argc, argv, &err, NULL);
+        if ( ret < 0 )
+                return ret;
+
+        if ( argc - i <= 0 )
                 return -2;
 
-        ret = prelude_client_profile_new(&profile, argv[1]);
+        ret = _prelude_client_profile_new(&profile);
         if ( ret < 0 ) {
-                fprintf(stderr, "Error loading analyzer profile '%s': %s.\n", argv[1], prelude_strerror(ret));
+                fprintf(stderr, "Error creating analyzer profile: %s.\n", prelude_strerror(ret));
+                return -1;
+        }
+
+        ret = prelude_client_profile_set_name(profile, argv[i]);
+        if ( ret < 0 ) {
+                fprintf(stderr, "Error setting analyzer profile name: %s.\n", prelude_strerror(ret));
                 return -1;
         }
 
@@ -1333,7 +1380,7 @@ static int del_cmd(int argc, char **argv)
         if ( ret < 0 )
                 return ret;
 
-        fprintf(stderr, "Successfully deleted analyzer profile '%s'.\n", argv[1]);
+        fprintf(stderr, "Successfully deleted analyzer profile '%s'.\n", argv[i]);
 
         return 0;
 }
@@ -1345,26 +1392,22 @@ static int register_cmd(int argc, char **argv)
         int ret, i;
         prelude_io_t *fd;
         uint64_t analyzerid;
-        prelude_option_t *opt;
         prelude_string_t *err;
         gnutls_x509_privkey key;
         gnutls_x509_crt crt, ca_crt;
         prelude_connection_permission_t permission_bits;
 
         ret = _prelude_client_profile_new(&profile);
-        ret = prelude_option_new(NULL, &opt);
-        setup_permission_options(opt);
-        setup_tls_options(opt);
+        setup_permission_options();
+        setup_tls_options();
 
-        prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "passwd", NULL,
+        prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "passwd", NULL,
                            PRELUDE_OPTION_ARGUMENT_REQUIRED, set_passwd, NULL);
 
-        prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "passwd-file", NULL,
+        prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "passwd-file", NULL,
                            PRELUDE_OPTION_ARGUMENT_REQUIRED, set_passwd_file, NULL);
 
-        i = ret = prelude_option_read(opt, NULL, &argc, argv, &err, NULL);
-        prelude_option_destroy(opt);
-
+        i = ret = prelude_option_read(parentopt, NULL, &argc, argv, &err, NULL);
         if ( ret < 0 ) {
                 prelude_perror(ret, "Option error");
                 return -1;
@@ -1459,43 +1502,39 @@ static int registration_server_cmd(int argc, char **argv)
         int ret, i;
         uint64_t analyzerid;
         prelude_string_t *err;
-        prelude_option_t *opt;
         gnutls_x509_privkey key;
         gnutls_x509_crt ca_crt, crt;
 
         ret = _prelude_client_profile_new(&profile);
-        ret = prelude_option_new(NULL, &opt);
 
-        prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 'k', "keepalive", NULL,
+        prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 'k', "keepalive", NULL,
                            PRELUDE_OPTION_ARGUMENT_NONE, set_server_keepalive, NULL);
 
-        prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "passwd", NULL,
+        prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "passwd", NULL,
                            PRELUDE_OPTION_ARGUMENT_REQUIRED, set_passwd, NULL);
 
-        prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "passwd-file", NULL,
+        prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 0, "passwd-file", NULL,
                            PRELUDE_OPTION_ARGUMENT_REQUIRED, set_passwd_file, NULL);
 
-        prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 'p', "prompt", NULL,
+        prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 'p', "prompt", NULL,
                            PRELUDE_OPTION_ARGUMENT_NONE, set_prompt_passwd, NULL);
 
-        prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 'n', "no-confirm", NULL,
+        prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 'n', "no-confirm", NULL,
                            PRELUDE_OPTION_ARGUMENT_NONE, set_server_no_confirm, NULL);
 
-        prelude_option_add(opt, NULL, PRELUDE_OPTION_TYPE_CLI, 'l', "listen", NULL,
+        prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 'l', "listen", NULL,
                            PRELUDE_OPTION_ARGUMENT_REQUIRED, set_server_listen_address, NULL);
 
-        setup_permission_options(opt);
-        setup_tls_options(opt);
+        setup_permission_options();
+        setup_tls_options();
 
-        i = ret = prelude_option_read(opt, NULL, &argc, argv, &err, NULL);
-        prelude_option_destroy(opt);
-
+        i = ret = prelude_option_read(parentopt, NULL, &argc, argv, &err, NULL);
         if ( ret < 0 ) {
                 prelude_perror(ret, "Option error");
                 return -1;
         }
 
-        if ( argc -i < 1 )
+        if ( argc - i < 1 )
                 return -2;
 
         if ( pass_from_stdin )
@@ -1538,18 +1577,25 @@ static int registration_server_cmd(int argc, char **argv)
 
 static int revoke_cmd(int argc, char **argv)
 {
-        int ret;
+        int ret, i;
         char *eptr = NULL;
         uint64_t analyzerid;
+        prelude_string_t *err;
         gnutls_x509_privkey key;
         gnutls_x509_crt ca_crt, crt;
 
-        if ( argc < 3 )
+        i = ret = prelude_option_read(parentopt, NULL, &argc, argv, &err, NULL);
+        if ( ret < 0 ) {
+                prelude_perror(ret, "Option error");
+                return -1;
+        }
+
+        if ( argc - i < 2 )
                 return -2;
 
-        ret = prelude_client_profile_new(&profile, argv[1]);
+        ret = prelude_client_profile_new(&profile, argv[i]);
         if ( ret < 0 ) {
-                fprintf(stderr, "Error opening profile '%s': %s.\n", argv[1], prelude_strerror(ret));
+                fprintf(stderr, "Error opening profile '%s': %s.\n", argv[i], prelude_strerror(ret));
                 return -1;
         }
 
@@ -1565,18 +1611,18 @@ static int revoke_cmd(int argc, char **argv)
         if ( ret < 0 )
                 return -1;
 
-        analyzerid = strtoull(argv[2], &eptr, 0);
-        if ( eptr != argv[2] + strlen(argv[2]) ) {
-                fprintf(stderr, "Invalid analyzerid: '%s'.\n", argv[2]);
+        analyzerid = strtoull(argv[i + 1], &eptr, 0);
+        if ( eptr != argv[i + 1] + strlen(argv[i + 1]) ) {
+                fprintf(stderr, "Invalid analyzerid: '%s'.\n", argv[i + 1]);
                 return -1;
         }
 
         ret = tls_revoke_analyzer(profile, key, crt, analyzerid);
         if ( ret == 0 )
-                fprintf(stderr, "AnalyzerID '%s' already revoked from profile '%s'.\n", argv[2], argv[1]);
+                fprintf(stderr, "AnalyzerID '%s' already revoked from profile '%s'.\n", argv[i + 1], argv[i]);
 
         else if ( ret == 1 )
-                fprintf(stderr, "Successfully revoked analyzerID '%s' from profile '%s'.\n", argv[2], argv[1]);
+                fprintf(stderr, "Successfully revoked analyzerID '%s' from profile '%s'.\n", argv[i + 1], argv[i]);
 
         return ret;
 }
@@ -1646,14 +1692,10 @@ static int print_cmd(int argc, char **argv)
         FILE *fd;
         int i, ret;
         prelude_string_t *str;
-        prelude_option_t *opt;
         prelude_io_t *io, *out;
 
-        ret = prelude_option_new(NULL, &opt);
-        setup_read_options(opt);
-
-        i = ret = prelude_option_read(opt, NULL, &argc, argv, &str, NULL);
-        prelude_option_destroy(opt);
+        setup_read_options();
+        i = ret = prelude_option_read(parentopt, NULL, &argc, argv, &str, NULL);
 
         if ( ret < 0 ) {
                 prelude_perror(ret, "Option error");
@@ -1709,17 +1751,13 @@ static int send_cmd(int argc, char **argv)
         int ret, i;
         prelude_io_t *io;
         prelude_string_t *str;
-        prelude_option_t *opt;
         prelude_client_t *client;
         prelude_connection_pool_t *pool;
         prelude_connection_pool_flags_t flags;
 
-        ret = prelude_option_new(NULL, &opt);
-        setup_read_options(opt);
+        setup_read_options();
 
-        i = ret = prelude_option_read(opt, NULL, &argc, argv, &str, NULL);
-        prelude_option_destroy(opt);
-
+        i = ret = prelude_option_read(parentopt, NULL, &argc, argv, &str, NULL);
         if ( ret < 0 ) {
                 prelude_perror(ret, "Option error");
                 return -1;
@@ -1732,7 +1770,7 @@ static int send_cmd(int argc, char **argv)
         if ( ret < 0 )
                 return ret;
 
-        ret = prelude_client_new(&client, argv[1]);
+        ret = prelude_client_new(&client, argv[i]);
         if ( ret < 0 )
                 return ret;
 
@@ -1747,7 +1785,7 @@ static int send_cmd(int argc, char **argv)
 
         flags &= ~(PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT|PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER);
         prelude_connection_pool_set_flags(pool, flags);
-        prelude_connection_pool_set_connection_string(pool, argv[2]);
+        prelude_connection_pool_set_connection_string(pool, argv[i + 1]);
 
         ret = prelude_client_start(client);
         if ( ret < 0 ) {
@@ -1755,7 +1793,7 @@ static int send_cmd(int argc, char **argv)
                 return ret;
         }
 
-        for ( i = 3 ; i < argc; i++ ) {
+        for ( i += 2; i < argc; i++ ) {
                 fd = fopen(argv[i], "r");
                 if ( ! fd ) {
                         fprintf(stderr, "error opening '%s' for reading: %s.\n", argv[i], strerror(errno));
@@ -1775,7 +1813,261 @@ static int send_cmd(int argc, char **argv)
 }
 
 
-static int print_help(struct cmdtbl *tbl, size_t size)
+static PRELUDE_LIST(print_list);
+
+typedef struct {
+        prelude_list_t list;
+        unsigned int sub;
+        char *name;
+        char *uid;
+        char *gid;
+        char *analyzerid;
+        char *permission;
+        char *tanalyzerid;
+} print_entry_t;
+
+
+static void print_info(const char *info, unsigned int pad)
+{
+        int i;
+        size_t len = strlen(info);
+
+        printf("%s", info);
+
+        if ( pad < len ) {
+                if ( pad != 0 )
+                        putchar(' ');
+                return;
+        }
+
+        pad -= strlen(info);
+        for ( i = 0; i < pad; i++ )
+                putchar(' ');
+}
+
+
+static void print_add(unsigned int sub, const char *name, const char *uid, const char *gid,
+                      const char *analyzerid, const char *perm, const char *tanalyzerid)
+{
+        print_entry_t *ent = malloc(sizeof(*ent));
+
+        ent->sub = sub;
+        ent->name = strdup(name);
+        ent->uid = strdup(uid);
+        ent->gid = strdup(gid);
+        ent->analyzerid = strdup(analyzerid);
+        ent->permission = strdup(perm);
+        ent->tanalyzerid = strdup(tanalyzerid);
+
+        prelude_list_add_tail(&print_list, &ent->list);
+}
+
+
+static void print_added(void)
+{
+        int i;
+        print_entry_t *ent;
+        prelude_list_t *tmp, *bkp;
+        unsigned int mtotal = 0, mpartial = 0;
+        unsigned int mlen_name = 0, mlen_uid = 0, mlen_gid = 0, mlen_analyzerid = 0, mlen_tanalyzerid = 0, mlen_perm = 0;
+
+        prelude_list_for_each(&print_list, tmp) {
+                ent = prelude_list_entry(tmp, print_entry_t, list);
+
+                mlen_name = MAX(mlen_name, strlen(ent->name));
+                mlen_uid = MAX(mlen_uid, strlen(ent->uid));
+                mlen_gid = MAX(mlen_gid, strlen(ent->gid));
+                mlen_analyzerid = MAX(mlen_analyzerid, strlen(ent->analyzerid));
+                mlen_tanalyzerid = MAX(mlen_tanalyzerid, strlen(ent->tanalyzerid));
+                mlen_perm = MAX(mlen_perm, strlen(ent->permission));
+        }
+
+        print_info("Profile", ++mlen_name);
+        if ( detailed_listing ) {
+                print_info("UID", ++mlen_uid);
+                print_info("GID", ++mlen_gid);
+                print_info("AnalyzerID", ++mlen_analyzerid);
+                mtotal += mlen_uid + mlen_gid + mlen_analyzerid;
+                mpartial = mlen_uid + mlen_gid + mlen_analyzerid;
+        }
+
+        print_info("Permission", ++mlen_perm);
+        printf("Issuer AnalyzerID\n");
+
+        mpartial += mlen_name;
+        mtotal += mlen_name + mlen_perm + ++mlen_tanalyzerid;
+
+        for ( i = 0; i < mtotal; i++)
+                putchar('-');
+        putchar('\n');
+
+        prelude_list_for_each_safe(&print_list, tmp, bkp) {
+                ent = prelude_list_entry(tmp, print_entry_t, list);
+
+                if ( ent->sub > 0 ) {
+                        print_info("", mpartial);
+                } else {
+                        print_info(ent->name, mlen_name);
+                        if ( detailed_listing ) {
+                                print_info(ent->uid, mlen_uid);
+                                print_info(ent->gid, mlen_gid);
+                                print_info(ent->analyzerid, mlen_analyzerid);
+                        }
+                }
+
+                print_info(ent->permission, mlen_perm);
+                printf("%s\n", ent->tanalyzerid);
+
+                free(ent->name);
+                free(ent->uid);
+                free(ent->gid);
+                free(ent->analyzerid);
+                free(ent->permission);
+                free(ent->tanalyzerid);
+
+                prelude_list_del(&ent->list);
+                free(ent);
+        }
+}
+
+
+static int list_cmd(int argc, char **argv)
+{
+        FILE *fd;
+        DIR *dir;
+        size_t size;
+        struct stat st;
+        struct dirent *dh;
+        struct group *gr;
+        struct passwd *pw;
+        gnutls_datum data;
+        prelude_string_t *str;
+        unsigned int cert_max;
+        int ret, i, permission;
+        gnutls_x509_crt certs[1024];
+        char buf[1024], analyzerid[128], uidbuf[128], gidbuf[128];
+
+        setup_list_options();
+        i = ret = prelude_option_read(parentopt, NULL, &argc, argv, &str, NULL);
+
+        dir = opendir(PRELUDE_CONFIG_DIR "/profile");
+        if ( ! dir ) {
+                fprintf(stderr, "could not open '%s': %s.\n", PRELUDE_CONFIG_DIR "/profile", strerror(errno));
+                return -1;
+        }
+
+        ret = prelude_string_new(&str);
+        if ( ret < 0 ) {
+                closedir(dir);
+                return ret;
+        }
+
+        while ( (dh = readdir(dir)) ) {
+                if ( strcmp(dh->d_name, ".") == 0 || strcmp(dh->d_name, "..") == 0 )
+                        continue;
+
+                snprintf(buf, sizeof(buf), PRELUDE_CONFIG_DIR "/profile/%s", dh->d_name);
+
+                ret = stat(buf, &st);
+                if ( ret < 0 ) {
+                        if ( errno != EACCES )
+                                fprintf(stderr, "error stating '%s': %s.\n", buf, strerror(errno));
+                        continue;
+                }
+
+                pw = getpwuid(st.st_uid);
+                if ( ! pw )
+                        snprintf(uidbuf, sizeof(uidbuf), "%d", st.st_uid);
+                else
+                        snprintf(uidbuf, sizeof(uidbuf), "%s", pw->pw_name);
+
+                gr = getgrgid(st.st_gid);
+                if ( ! gr )
+                        snprintf(gidbuf, sizeof(gidbuf), "%d", st.st_gid);
+                else
+                        snprintf(gidbuf, sizeof(gidbuf), "%s", gr->gr_name);
+
+                snprintf(buf, sizeof(buf), PRELUDE_CONFIG_DIR "/profile/%s/analyzerid", dh->d_name);
+                fd = fopen(buf, "r");
+                if ( ! fd )
+                        snprintf(analyzerid, sizeof(analyzerid), "n/a");
+                else {
+                        if ( (! fgets(analyzerid, sizeof(analyzerid), fd)) || (size = strlen(analyzerid)) <= 0 ) {
+                                fprintf(stderr, "failed to read analyzerID.\n");
+                                continue;
+                        }
+
+                        fclose(fd);
+                        analyzerid[size - 1] = 0;
+                }
+
+                snprintf(buf, sizeof(buf), PRELUDE_CONFIG_DIR "/profile/%s/client.keycrt", dh->d_name);
+                ret = _prelude_load_file(buf, &data.data, &size);
+                if ( ret < 0 ) {
+                        print_add(0, dh->d_name, uidbuf, gidbuf, analyzerid, "n/a", "n/a");
+                        continue;
+                }
+
+                data.size = (unsigned int) size;
+                cert_max = sizeof(certs) / sizeof(*certs);
+                ret = _prelude_tls_crt_list_import(certs, &cert_max, &data, GNUTLS_X509_FMT_PEM, 0);
+                if ( ret < 0 ) {
+                        fprintf(stderr, "error importing certificate listing: %s.\n", gnutls_strerror(ret));
+                        continue;
+                }
+
+                for ( i = 0; i < cert_max; i++ ) {
+
+                        size = sizeof(buf);
+                        ret = gnutls_x509_crt_get_dn_by_oid(certs[i], GNUTLS_OID_X520_COMMON_NAME, 0, 0, buf, &size);
+                        if ( ret < 0 ) {
+                                fprintf(stderr, "error reading certificate CN: %s.\n", gnutls_strerror(ret));
+                                continue;
+                        }
+
+                        ret = sscanf(buf, "%d", (int *) &permission);
+                        if ( ret != 1 )
+                                continue;
+
+                        size = sizeof(buf);
+                        ret = gnutls_x509_crt_get_issuer_dn_by_oid(certs[i], GNUTLS_OID_X520_DN_QUALIFIER, 0, 0, buf, &size);
+                        if ( ret < 0 ) {
+                                fprintf(stderr, "error reading certificate DN: %s.\n", gnutls_strerror(ret));
+                                continue;
+                        }
+
+                        prelude_connection_permission_to_string(permission, str);
+                        print_add(i, dh->d_name, uidbuf, gidbuf, analyzerid, prelude_string_get_string(str), buf);
+                        prelude_string_clear(str);
+
+                        gnutls_x509_crt_deinit(certs[i]);
+                }
+        }
+
+        closedir(dir);
+        prelude_string_destroy(str);
+
+        print_added();
+
+        return 0;
+}
+
+
+static const struct cmdtbl tbl[] = {
+        { "add", 1, add_cmd, print_add_help                                                 },
+        { "chown", 1, chown_cmd, print_chown_help                                           },
+        { "del", 1, del_cmd, print_delete_help                                              },
+        { "list", 0, list_cmd, print_list_help                                              },
+        { "print", 1, print_cmd, print_print_help                                           },
+        { "rename", 2, rename_cmd, print_rename_help                                        },
+        { "register", 3, register_cmd, print_register_help                                  },
+        { "registration-server", 1, registration_server_cmd, print_registration_server_help },
+        { "revoke", 2, revoke_cmd, print_revoke_help                                        },
+        { "send", 3, send_cmd, print_send_help                                              },
+};
+
+
+static int print_help(void)
 {
         int i;
 
@@ -1783,37 +2075,46 @@ static int print_help(struct cmdtbl *tbl, size_t size)
         fprintf(stderr, "Type \"%s <subcommand>\" for help on a specific subcommand.\n\n", myprogname);
         fprintf(stderr, "Available subcommands:\n");
 
-        for ( i = 0; i < size; i++ )
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ )
                 fprintf(stderr, " %s\n", tbl[i].cmd);
 
         exit(1);
 }
 
 
+static int print_detailed_help(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
+{
+        int i;
+
+        for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
+                if ( strcmp(arg_command, tbl[i].cmd) == 0 ) {
+                        tbl[i].help_func();
+                        exit(0);
+                }
+        }
+
+        print_help();
+        exit(0);
+}
+
 
 int main(int argc, char **argv)
 {
         int i, ret = -1;
         const char *slash;
-        struct cmdtbl tbl[] = {
-                { "add", 1, add_cmd, print_add_help                                                 },
-                { "chown", 1, chown_cmd, print_chown_help                                           },
-                { "del", 1, del_cmd, print_delete_help                                              },
-                { "print", 1, print_cmd, print_print_help                                           },
-                { "rename", 2, rename_cmd, print_rename_help                                        },
-                { "register", 3, register_cmd, print_register_help                                  },
-                { "registration-server", 1, registration_server_cmd, print_registration_server_help },
-                { "revoke", 2, revoke_cmd, print_revoke_help                                        },
-                { "send", 3, send_cmd, print_send_help                                              },
-        };
 
         slash = strrchr(argv[0], '/');
         myprogname = slash ? slash + 1 : argv[0];
 
-        if ( argc == 1 )
-                print_help(tbl, sizeof(tbl) / sizeof(*tbl));
+        if ( argc < 2 )
+                print_help();
 
+        arg_command = argv[1];
         prelude_init(NULL, NULL);
+
+        ret = prelude_option_new(NULL, &parentopt);
+        prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 'h', "help",
+                           NULL, PRELUDE_OPTION_ARGUMENT_NONE, print_detailed_help, NULL);
 
         ret = -1;
         gnutls_global_init();
@@ -1844,7 +2145,7 @@ int main(int argc, char **argv)
         gnutls_global_deinit();
 
         if ( i == sizeof(tbl) / sizeof(*tbl) )
-                print_help(tbl, i);
+                print_help();
 
         return ret;
 }
