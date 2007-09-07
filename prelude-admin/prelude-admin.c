@@ -1090,7 +1090,7 @@ static int del_cb(const char *filename, const struct stat *st, int flag)
         int ret;
 
         if ( flag != FTW_F )
-                return add_to_rm_dir_list(filename);
+                return (flag == FTW_DNR) ? -1 : add_to_rm_dir_list(filename);
 
         ret = unlink(filename);
         if ( ret < 0 )
@@ -1370,17 +1370,19 @@ static int del_cmd(int argc, char **argv)
                 return -1;
         }
 
-        ret = prelude_client_profile_set_name(profile, argv[i]);
-        if ( ret < 0 ) {
-                fprintf(stderr, "Error setting analyzer profile name: %s.\n", prelude_strerror(ret));
-                return -1;
+        for ( ; i < argc; i++ ) {
+                ret = prelude_client_profile_set_name(profile, argv[i]);
+                if ( ret < 0 ) {
+                        fprintf(stderr, "Error setting analyzer profile name: %s.\n", prelude_strerror(ret));
+                        return -1;
+                }
+
+                ret = delete_profile(profile);
+                if ( ret < 0 )
+                        return ret;
+
+                fprintf(stderr, "Successfully deleted analyzer profile '%s'.\n", argv[i]);
         }
-
-        ret = delete_profile(profile);
-        if ( ret < 0 )
-                return ret;
-
-        fprintf(stderr, "Successfully deleted analyzer profile '%s'.\n", argv[i]);
 
         return 0;
 }
