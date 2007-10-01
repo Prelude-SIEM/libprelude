@@ -165,9 +165,9 @@ static void print_time(idmef_time_t *t, prelude_io_t *fd)
         struct tm _tm;
         char tmp[32], buf[128];
 
-        _time = idmef_time_get_sec(t);
+        _time = idmef_time_get_sec(t) + idmef_time_get_gmt_offset(t);
 
-        if ( ! localtime_r(&_time, &_tm) )
+        if ( ! gmtime_r(&_time, &_tm) )
                 return;
 
         len = strftime(tmp, sizeof(tmp), \"%d/%m/%Y %H:%M:%S\", &_tm);
