@@ -1,6 +1,6 @@
-/* malloc() function that is glibc compatible.
+/* realloc() function that is glibc compatible.
 
-   Copyright (C) 1997, 1998, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
@@ -19,10 +19,10 @@
 /* written by Jim Meyering and Bruno Haible */
 
 #include <config.h>
-/* Only the AC_FUNC_MALLOC macro defines 'malloc' already in config.h.  */
-#ifdef malloc
-# define NEED_MALLOC_GNU
-# undef malloc
+/* Only the AC_FUNC_REALLOC macro defines 'realloc' already in config.h.  */
+#ifdef realloc
+# define NEED_REALLOC_GNU
+# undef realloc
 #endif
 
 /* Specification.  */
@@ -30,25 +30,33 @@
 
 #include <errno.h>
 
-/* Call the system's malloc below.  */
+/* Call the system's malloc and realloc below.  */
 #undef malloc
+#undef realloc
 
-/* Allocate an N-byte block of memory from the heap.
-   If N is zero, allocate a 1-byte block.  */
+/* Change the size of an allocated block of memory P to N bytes,
+   with error checking.  If N is zero, change it to 1.  If P is NULL,
+   use malloc.  */
 
 void *
-rpl_malloc (size_t n)
+rpl_realloc (void *p, size_t n)
 {
   void *result;
 
-#ifdef NEED_MALLOC_GNU
+#ifdef NEED_REALLOC_GNU
   if (n == 0)
-    n = 1;
+    {
+      n = 1;
+
+      /* In theory realloc might fail, so don't rely on it to free.  */
+      free (p);
+      p = NULL;
+    }
 #endif
 
-  result = malloc (n);
+  result = (p == NULL ? malloc (n) : realloc (p, n));
 
-#if !HAVE_MALLOC_POSIX
+#if !HAVE_REALLOC_POSIX
   if (result == NULL)
     errno = ENOMEM;
 #endif
