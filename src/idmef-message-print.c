@@ -1,7 +1,7 @@
 
 /*****
 *
-* Copyright (C) 2004,2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2004-2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 * Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 *
@@ -39,19 +39,19 @@ static int indent = 0;
 
 static void print_indent(prelude_io_t *fd)
 {
-	int cnt;
+        int cnt;
 
-	for ( cnt = 0; cnt < indent; cnt++ )
-		prelude_io_write(fd, " ", 1);
+        for ( cnt = 0; cnt < indent; cnt++ )
+                prelude_io_write(fd, " ", 1);
 }
 
 
 
 static void print_string(prelude_string_t *string, prelude_io_t *fd)
 {
-	const char *s;
+        const char *s;
 
-	s = prelude_string_get_string(string);
+        s = prelude_string_get_string(string);
         if ( ! s )
                 s = "<empty>";
 
@@ -64,8 +64,8 @@ static void print_uint8(uint8_t i, prelude_io_t *fd)
 {
         int len;
         char buf[sizeof("255")];
-	
-        /* 
+
+        /*
          * %hh convertion specifier is not portable.
          */
         len = snprintf(buf, sizeof(buf), "%u", (unsigned int) i);
@@ -78,7 +78,7 @@ static void print_uint16(uint16_t i, prelude_io_t *fd)
         int len;
         char buf[sizeof("65535")];
 
-	len = snprintf(buf, sizeof(buf), "%hu", i);
+        len = snprintf(buf, sizeof(buf), "%hu", i);
         prelude_io_write(fd, buf, len);
 }
 
@@ -88,7 +88,7 @@ static void print_int32(int32_t i, prelude_io_t *fd)
         int len;
         char buf[sizeof("4294967296")];
 
-	len = snprintf(buf, sizeof(buf), "%d", i);
+        len = snprintf(buf, sizeof(buf), "%d", i);
         prelude_io_write(fd, buf, len);
 }
 
@@ -98,7 +98,7 @@ static void print_uint32(uint32_t i, prelude_io_t *fd)
         int len;
         char buf[sizeof("4294967296")];
 
-	len = snprintf(buf, sizeof(buf), "%u", i);
+        len = snprintf(buf, sizeof(buf), "%u", i);
         prelude_io_write(fd, buf, len);
 }
 
@@ -109,7 +109,7 @@ static void print_uint64(uint64_t i, prelude_io_t *fd)
         int len;
         char buf[sizeof("18446744073709551616")];
 
-	len = snprintf(buf, sizeof(buf), "%" PRELUDE_PRIu64, i);
+        len = snprintf(buf, sizeof(buf), "%" PRELUDE_PRIu64, i);
         prelude_io_write(fd, buf, len);
 }
 
@@ -120,7 +120,7 @@ static void print_float(float f, prelude_io_t *fd)
         int len;
         char buf[32];
 
-	len = snprintf(buf, sizeof(buf), "%f", f);
+        len = snprintf(buf, sizeof(buf), "%f", f);
         prelude_io_write(fd, buf, len);
 }
 
@@ -131,22 +131,22 @@ static void print_time(idmef_time_t *t, prelude_io_t *fd)
 {
         int len;
         time_t _time;
-	struct tm _tm;
-	char tmp[32], buf[128];
+        struct tm _tm;
+        char tmp[32], buf[128];
 
-	_time = idmef_time_get_sec(t);
+        _time = idmef_time_get_sec(t);
 
-	if ( ! localtime_r(&_time, &_tm) )
-		return;
-        
+        if ( ! localtime_r(&_time, &_tm) )
+                return;
+
         len = strftime(tmp, sizeof(tmp), "%d/%m/%Y %H:%M:%S", &_tm);
-        if ( len == 0 ) 
+        if ( len == 0 )
                 return;
 
         len = snprintf(buf, sizeof(buf), "%s.%u %+.2d:%.2d",
                        tmp, idmef_time_get_usec(t), idmef_time_get_gmt_offset(t) / 3600,
                        idmef_time_get_gmt_offset(t) % 3600 / 60);
-   
+
         prelude_io_write(fd, buf, len);
 }
 
@@ -164,9 +164,9 @@ static int print_data(idmef_data_t *data, prelude_io_t *fd)
                 return ret;
 
         ret = idmef_data_to_string(data, out);
-	if ( ret < 0 ) {
+        if ( ret < 0 ) {
                 prelude_string_destroy(out);
-		return ret;
+                return ret;
         }
 
         prelude_io_write(fd, prelude_string_get_string(out), prelude_string_get_len(out));
@@ -182,7 +182,7 @@ static void print_enum(const char *s, int i, prelude_io_t *fd)
         int len;
         char buf[512];
 
-	len = snprintf(buf, sizeof(buf), "%s (%d)", s, i);
+        len = snprintf(buf, sizeof(buf), "%s (%d)", s, i);
         prelude_io_write(fd, buf, len);
 }
 
@@ -197,51 +197,51 @@ static void print_enum(const char *s, int i, prelude_io_t *fd)
  */
 void idmef_additional_data_print(idmef_additional_data_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		int i = idmef_additional_data_get_type(ptr);
+        {
+                int i = idmef_additional_data_get_type(ptr);
 
 
 
-		{
-			print_indent(fd);
-			prelude_io_write(fd, "type: ", sizeof("type: ") - 1);
-			print_enum(idmef_additional_data_type_to_string(i), i, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "type: ", sizeof("type: ") - 1);
+                        print_enum(idmef_additional_data_type_to_string(i), i, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
         }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "meaning: ";
 
-		field = idmef_additional_data_get_meaning(ptr);
+                field = idmef_additional_data_get_meaning(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		idmef_data_t *field;
+        {
+                idmef_data_t *field;
                 const char tmp[] = "data: ";
 
-		field = idmef_additional_data_get_data(ptr);
+                field = idmef_additional_data_get_data(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_data(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_data(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
         indent -= 8;
 }
@@ -256,65 +256,65 @@ void idmef_additional_data_print(idmef_additional_data_t *ptr, prelude_io_t *fd)
  */
 void idmef_reference_print(idmef_reference_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		int i = idmef_reference_get_origin(ptr);
+        {
+                int i = idmef_reference_get_origin(ptr);
 
 
 
-		{
-			print_indent(fd);
-			prelude_io_write(fd, "origin: ", sizeof("origin: ") - 1);
-			print_enum(idmef_reference_origin_to_string(i), i, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "origin: ", sizeof("origin: ") - 1);
+                        print_enum(idmef_reference_origin_to_string(i), i, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
         }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "name: ";
 
-		field = idmef_reference_get_name(ptr);
+                field = idmef_reference_get_name(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "url: ";
 
-		field = idmef_reference_get_url(ptr);
+                field = idmef_reference_get_url(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "meaning: ";
 
-		field = idmef_reference_get_meaning(ptr);
+                field = idmef_reference_get_meaning(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
         indent -= 8;
 }
@@ -329,54 +329,54 @@ void idmef_reference_print(idmef_reference_t *ptr, prelude_io_t *fd)
  */
 void idmef_classification_print(idmef_classification_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "ident: ";
 
-		field = idmef_classification_get_ident(ptr);
+                field = idmef_classification_get_ident(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "text: ";
 
-		field = idmef_classification_get_text(ptr);
+                field = idmef_classification_get_text(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		idmef_reference_t *elem = NULL;
-		int cnt = 0, len;
+                idmef_reference_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_classification_get_next_reference(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_classification_get_next_reference(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "reference(%d): \n", cnt);
-			prelude_io_write(fd, buf, len);
-			idmef_reference_print(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        idmef_reference_print(elem, fd);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
         indent -= 8;
 }
@@ -391,79 +391,79 @@ void idmef_classification_print(idmef_classification_t *ptr, prelude_io_t *fd)
  */
 void idmef_user_id_print(idmef_user_id_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "ident: ";
 
-		field = idmef_user_id_get_ident(ptr);
+                field = idmef_user_id_get_ident(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
-
-	{
-		int i = idmef_user_id_get_type(ptr);
-
-
-
-		{
-			print_indent(fd);
-			prelude_io_write(fd, "type: ", sizeof("type: ") - 1);
-			print_enum(idmef_user_id_type_to_string(i), i, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
         }
 
-	{
-		prelude_string_t *field;
+        {
+                int i = idmef_user_id_get_type(ptr);
+
+
+
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "type: ", sizeof("type: ") - 1);
+                        print_enum(idmef_user_id_type_to_string(i), i, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
+
+        {
+                prelude_string_t *field;
                 const char tmp[] = "tty: ";
 
-		field = idmef_user_id_get_tty(ptr);
+                field = idmef_user_id_get_tty(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "name: ";
 
-		field = idmef_user_id_get_name(ptr);
+                field = idmef_user_id_get_name(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		uint32_t *field;
+        {
+                uint32_t *field;
                 const char tmp[] = "number: ";
 
-		field = idmef_user_id_get_number(ptr);
+                field = idmef_user_id_get_number(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint32(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_uint32(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
         indent -= 8;
 }
@@ -478,53 +478,53 @@ void idmef_user_id_print(idmef_user_id_t *ptr, prelude_io_t *fd)
  */
 void idmef_user_print(idmef_user_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "ident: ";
 
-		field = idmef_user_get_ident(ptr);
+                field = idmef_user_get_ident(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
-
-	{
-		int i = idmef_user_get_category(ptr);
-
-
-
-		{
-			print_indent(fd);
-			prelude_io_write(fd, "category: ", sizeof("category: ") - 1);
-			print_enum(idmef_user_category_to_string(i), i, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
         }
 
-	{
-                char buf[128];
-		idmef_user_id_t *elem = NULL;
-		int cnt = 0, len;
+        {
+                int i = idmef_user_get_category(ptr);
 
-		while ( (elem = idmef_user_get_next_user_id(ptr, elem)) ) {
-			print_indent(fd);
+
+
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "category: ", sizeof("category: ") - 1);
+                        print_enum(idmef_user_category_to_string(i), i, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
+
+        {
+                char buf[128];
+                idmef_user_id_t *elem = NULL;
+                int cnt = 0, len;
+
+                while ( (elem = idmef_user_get_next_user_id(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "user_id(%d): \n", cnt);
-			prelude_io_write(fd, buf, len);
-			idmef_user_id_print(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        idmef_user_id_print(elem, fd);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
         indent -= 8;
 }
@@ -539,93 +539,93 @@ void idmef_user_print(idmef_user_t *ptr, prelude_io_t *fd)
  */
 void idmef_address_print(idmef_address_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "ident: ";
 
-		field = idmef_address_get_ident(ptr);
+                field = idmef_address_get_ident(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
-
-	{
-		int i = idmef_address_get_category(ptr);
-
-
-
-		{
-			print_indent(fd);
-			prelude_io_write(fd, "category: ", sizeof("category: ") - 1);
-			print_enum(idmef_address_category_to_string(i), i, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
         }
 
-	{
-		prelude_string_t *field;
+        {
+                int i = idmef_address_get_category(ptr);
+
+
+
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "category: ", sizeof("category: ") - 1);
+                        print_enum(idmef_address_category_to_string(i), i, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
+
+        {
+                prelude_string_t *field;
                 const char tmp[] = "vlan_name: ";
 
-		field = idmef_address_get_vlan_name(ptr);
+                field = idmef_address_get_vlan_name(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		int32_t *field;
+        {
+                int32_t *field;
                 const char tmp[] = "vlan_num: ";
 
-		field = idmef_address_get_vlan_num(ptr);
+                field = idmef_address_get_vlan_num(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_int32(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_int32(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "address: ";
 
-		field = idmef_address_get_address(ptr);
+                field = idmef_address_get_address(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "netmask: ";
 
-		field = idmef_address_get_netmask(ptr);
+                field = idmef_address_get_netmask(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
         indent -= 8;
 }
@@ -640,100 +640,100 @@ void idmef_address_print(idmef_address_t *ptr, prelude_io_t *fd)
  */
 void idmef_process_print(idmef_process_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "ident: ";
 
-		field = idmef_process_get_ident(ptr);
+                field = idmef_process_get_ident(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "name: ";
 
-		field = idmef_process_get_name(ptr);
+                field = idmef_process_get_name(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		uint32_t *field;
+        {
+                uint32_t *field;
                 const char tmp[] = "pid: ";
 
-		field = idmef_process_get_pid(ptr);
+                field = idmef_process_get_pid(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint32(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_uint32(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "path: ";
 
-		field = idmef_process_get_path(ptr);
+                field = idmef_process_get_path(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		prelude_string_t *elem = NULL;
-		int cnt = 0, len;
+                prelude_string_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_process_get_next_arg(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_process_get_next_arg(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "arg(%d): ", cnt);
-			prelude_io_write(fd, buf, len);
-			print_string(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        print_string(elem, fd);
                         prelude_io_write(fd, "\n", sizeof("\n") - 1);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		prelude_string_t *elem = NULL;
-		int cnt = 0, len;
+                prelude_string_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_process_get_next_env(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_process_get_next_env(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "env(%d): ", cnt);
-			prelude_io_write(fd, buf, len);
-			print_string(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        print_string(elem, fd);
                         prelude_io_write(fd, "\n", sizeof("\n") - 1);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
         indent -= 8;
 }
@@ -748,69 +748,69 @@ void idmef_process_print(idmef_process_t *ptr, prelude_io_t *fd)
  */
 void idmef_web_service_print(idmef_web_service_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "url: ";
 
-		field = idmef_web_service_get_url(ptr);
+                field = idmef_web_service_get_url(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "cgi: ";
 
-		field = idmef_web_service_get_cgi(ptr);
+                field = idmef_web_service_get_cgi(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "http_method: ";
 
-		field = idmef_web_service_get_http_method(ptr);
+                field = idmef_web_service_get_http_method(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		prelude_string_t *elem = NULL;
-		int cnt = 0, len;
+                prelude_string_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_web_service_get_next_arg(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_web_service_get_next_arg(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "arg(%d): ", cnt);
-			prelude_io_write(fd, buf, len);
-			print_string(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        print_string(elem, fd);
                         prelude_io_write(fd, "\n", sizeof("\n") - 1);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
         indent -= 8;
 }
@@ -825,136 +825,136 @@ void idmef_web_service_print(idmef_web_service_t *ptr, prelude_io_t *fd)
  */
 void idmef_snmp_service_print(idmef_snmp_service_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "oid: ";
 
-		field = idmef_snmp_service_get_oid(ptr);
+                field = idmef_snmp_service_get_oid(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		uint32_t *field;
+        {
+                uint32_t *field;
                 const char tmp[] = "message_processing_model: ";
 
-		field = idmef_snmp_service_get_message_processing_model(ptr);
+                field = idmef_snmp_service_get_message_processing_model(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint32(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_uint32(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		uint32_t *field;
+        {
+                uint32_t *field;
                 const char tmp[] = "security_model: ";
 
-		field = idmef_snmp_service_get_security_model(ptr);
+                field = idmef_snmp_service_get_security_model(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint32(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_uint32(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "security_name: ";
 
-		field = idmef_snmp_service_get_security_name(ptr);
+                field = idmef_snmp_service_get_security_name(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		uint32_t *field;
+        {
+                uint32_t *field;
                 const char tmp[] = "security_level: ";
 
-		field = idmef_snmp_service_get_security_level(ptr);
+                field = idmef_snmp_service_get_security_level(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint32(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_uint32(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "context_name: ";
 
-		field = idmef_snmp_service_get_context_name(ptr);
+                field = idmef_snmp_service_get_context_name(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "context_engine_id: ";
 
-		field = idmef_snmp_service_get_context_engine_id(ptr);
+                field = idmef_snmp_service_get_context_engine_id(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "command: ";
 
-		field = idmef_snmp_service_get_command(ptr);
+                field = idmef_snmp_service_get_command(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "community: ";
 
-		field = idmef_snmp_service_get_community(ptr);
+                field = idmef_snmp_service_get_community(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
         indent -= 8;
 }
@@ -969,139 +969,139 @@ void idmef_snmp_service_print(idmef_snmp_service_t *ptr, prelude_io_t *fd)
  */
 void idmef_service_print(idmef_service_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "ident: ";
 
-		field = idmef_service_get_ident(ptr);
+                field = idmef_service_get_ident(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		uint8_t *field;
+        {
+                uint8_t *field;
                 const char tmp[] = "ip_version: ";
 
-		field = idmef_service_get_ip_version(ptr);
+                field = idmef_service_get_ip_version(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint8(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_uint8(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		uint8_t *field;
+        {
+                uint8_t *field;
                 const char tmp[] = "iana_protocol_number: ";
 
-		field = idmef_service_get_iana_protocol_number(ptr);
+                field = idmef_service_get_iana_protocol_number(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint8(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_uint8(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "iana_protocol_name: ";
 
-		field = idmef_service_get_iana_protocol_name(ptr);
+                field = idmef_service_get_iana_protocol_name(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "name: ";
 
-		field = idmef_service_get_name(ptr);
+                field = idmef_service_get_name(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		uint16_t *field;
+        {
+                uint16_t *field;
                 const char tmp[] = "port: ";
 
-		field = idmef_service_get_port(ptr);
+                field = idmef_service_get_port(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint16(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_uint16(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "portlist: ";
 
-		field = idmef_service_get_portlist(ptr);
+                field = idmef_service_get_portlist(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "protocol: ";
 
-		field = idmef_service_get_protocol(ptr);
+                field = idmef_service_get_protocol(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	switch ( idmef_service_get_type(ptr) ) {
-	case IDMEF_SERVICE_TYPE_WEB:
-		print_indent(fd);
+        switch ( idmef_service_get_type(ptr) ) {
+        case IDMEF_SERVICE_TYPE_WEB:
+                print_indent(fd);
                 prelude_io_write(fd, "web_service:\n", sizeof("web_service:\n") - 1);
-		idmef_web_service_print(idmef_service_get_web_service(ptr), fd);
-		break;
+                idmef_web_service_print(idmef_service_get_web_service(ptr), fd);
+                break;
  
-	case IDMEF_SERVICE_TYPE_SNMP:
-		print_indent(fd);
+        case IDMEF_SERVICE_TYPE_SNMP:
+                print_indent(fd);
                 prelude_io_write(fd, "snmp_service:\n", sizeof("snmp_service:\n") - 1);
-		idmef_snmp_service_print(idmef_service_get_snmp_service(ptr), fd);
-		break;
+                idmef_snmp_service_print(idmef_service_get_snmp_service(ptr), fd);
+                break;
  
-	default:
-		break;
-	}
+        default:
+                break;
+        }
 
         indent -= 8;
 }
@@ -1116,81 +1116,81 @@ void idmef_service_print(idmef_service_t *ptr, prelude_io_t *fd)
  */
 void idmef_node_print(idmef_node_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "ident: ";
 
-		field = idmef_node_get_ident(ptr);
+                field = idmef_node_get_ident(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
-
-	{
-		int i = idmef_node_get_category(ptr);
-
-
-
-		{
-			print_indent(fd);
-			prelude_io_write(fd, "category: ", sizeof("category: ") - 1);
-			print_enum(idmef_node_category_to_string(i), i, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
         }
 
-	{
-		prelude_string_t *field;
+        {
+                int i = idmef_node_get_category(ptr);
+
+
+
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "category: ", sizeof("category: ") - 1);
+                        print_enum(idmef_node_category_to_string(i), i, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
+
+        {
+                prelude_string_t *field;
                 const char tmp[] = "location: ";
 
-		field = idmef_node_get_location(ptr);
+                field = idmef_node_get_location(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "name: ";
 
-		field = idmef_node_get_name(ptr);
+                field = idmef_node_get_name(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		idmef_address_t *elem = NULL;
-		int cnt = 0, len;
+                idmef_address_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_node_get_next_address(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_node_get_next_address(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "address(%d): \n", cnt);
-			prelude_io_write(fd, buf, len);
-			idmef_address_print(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        idmef_address_print(elem, fd);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
         indent -= 8;
 }
@@ -1205,99 +1205,99 @@ void idmef_node_print(idmef_node_t *ptr, prelude_io_t *fd)
  */
 void idmef_source_print(idmef_source_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "ident: ";
 
-		field = idmef_source_get_ident(ptr);
+                field = idmef_source_get_ident(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
-
-	{
-		int i = idmef_source_get_spoofed(ptr);
-
-
-
-		{
-			print_indent(fd);
-			prelude_io_write(fd, "spoofed: ", sizeof("spoofed: ") - 1);
-			print_enum(idmef_source_spoofed_to_string(i), i, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
         }
 
-	{
-		prelude_string_t *field;
+        {
+                int i = idmef_source_get_spoofed(ptr);
+
+
+
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "spoofed: ", sizeof("spoofed: ") - 1);
+                        print_enum(idmef_source_spoofed_to_string(i), i, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
+
+        {
+                prelude_string_t *field;
                 const char tmp[] = "interface: ";
 
-		field = idmef_source_get_interface(ptr);
+                field = idmef_source_get_interface(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		idmef_node_t *field;
+        {
+                idmef_node_t *field;
 
-		field = idmef_source_get_node(ptr);
+                field = idmef_source_get_node(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "node:\n", sizeof("node:\n") - 1);
-			idmef_node_print(field, fd);
-		}
-	}	
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, "node:\n", sizeof("node:\n") - 1);
+                        idmef_node_print(field, fd);
+                }
+        }
 
-	{
-		idmef_user_t *field;
+        {
+                idmef_user_t *field;
 
-		field = idmef_source_get_user(ptr);
+                field = idmef_source_get_user(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "user:\n", sizeof("user:\n") - 1);
-			idmef_user_print(field, fd);
-		}
-	}	
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, "user:\n", sizeof("user:\n") - 1);
+                        idmef_user_print(field, fd);
+                }
+        }
 
-	{
-		idmef_process_t *field;
+        {
+                idmef_process_t *field;
 
-		field = idmef_source_get_process(ptr);
+                field = idmef_source_get_process(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "process:\n", sizeof("process:\n") - 1);
-			idmef_process_print(field, fd);
-		}
-	}	
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, "process:\n", sizeof("process:\n") - 1);
+                        idmef_process_print(field, fd);
+                }
+        }
 
-	{
-		idmef_service_t *field;
+        {
+                idmef_service_t *field;
 
-		field = idmef_source_get_service(ptr);
+                field = idmef_source_get_service(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "service:\n", sizeof("service:\n") - 1);
-			idmef_service_print(field, fd);
-		}
-	}	
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, "service:\n", sizeof("service:\n") - 1);
+                        idmef_service_print(field, fd);
+                }
+        }
 
         indent -= 8;
 }
@@ -1312,39 +1312,39 @@ void idmef_source_print(idmef_source_t *ptr, prelude_io_t *fd)
  */
 void idmef_file_access_print(idmef_file_access_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		idmef_user_id_t *field;
+        {
+                idmef_user_id_t *field;
 
-		field = idmef_file_access_get_user_id(ptr);
+                field = idmef_file_access_get_user_id(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "user_id:\n", sizeof("user_id:\n") - 1);
-			idmef_user_id_print(field, fd);
-		}
-	}	
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, "user_id:\n", sizeof("user_id:\n") - 1);
+                        idmef_user_id_print(field, fd);
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		prelude_string_t *elem = NULL;
-		int cnt = 0, len;
+                prelude_string_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_file_access_get_next_permission(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_file_access_get_next_permission(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "permission(%d): ", cnt);
-			prelude_io_write(fd, buf, len);
-			print_string(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        print_string(elem, fd);
                         prelude_io_write(fd, "\n", sizeof("\n") - 1);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
         indent -= 8;
 }
@@ -1359,94 +1359,94 @@ void idmef_file_access_print(idmef_file_access_t *ptr, prelude_io_t *fd)
  */
 void idmef_inode_print(idmef_inode_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		idmef_time_t *field;
+        {
+                idmef_time_t *field;
                 const char tmp[] = "change_time: ";
 
-		field = idmef_inode_get_change_time(ptr);
+                field = idmef_inode_get_change_time(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_time(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_time(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		uint32_t *field;
+        {
+                uint32_t *field;
                 const char tmp[] = "number: ";
 
-		field = idmef_inode_get_number(ptr);
+                field = idmef_inode_get_number(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint32(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_uint32(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		uint32_t *field;
+        {
+                uint32_t *field;
                 const char tmp[] = "major_device: ";
 
-		field = idmef_inode_get_major_device(ptr);
+                field = idmef_inode_get_major_device(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint32(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_uint32(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		uint32_t *field;
+        {
+                uint32_t *field;
                 const char tmp[] = "minor_device: ";
 
-		field = idmef_inode_get_minor_device(ptr);
+                field = idmef_inode_get_minor_device(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint32(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_uint32(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		uint32_t *field;
+        {
+                uint32_t *field;
                 const char tmp[] = "c_major_device: ";
 
-		field = idmef_inode_get_c_major_device(ptr);
+                field = idmef_inode_get_c_major_device(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint32(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_uint32(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		uint32_t *field;
+        {
+                uint32_t *field;
                 const char tmp[] = "c_minor_device: ";
 
-		field = idmef_inode_get_c_minor_device(ptr);
+                field = idmef_inode_get_c_minor_device(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint32(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_uint32(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
         indent -= 8;
 }
@@ -1461,50 +1461,50 @@ void idmef_inode_print(idmef_inode_t *ptr, prelude_io_t *fd)
  */
 void idmef_checksum_print(idmef_checksum_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "value: ";
 
-		field = idmef_checksum_get_value(ptr);
+                field = idmef_checksum_get_value(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "key: ";
 
-		field = idmef_checksum_get_key(ptr);
+                field = idmef_checksum_get_key(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		int i = idmef_checksum_get_algorithm(ptr);
+        {
+                int i = idmef_checksum_get_algorithm(ptr);
 
 
 
-		{
-			print_indent(fd);
-			prelude_io_write(fd, "algorithm: ", sizeof("algorithm: ") - 1);
-			print_enum(idmef_checksum_algorithm_to_string(i), i, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "algorithm: ", sizeof("algorithm: ") - 1);
+                        print_enum(idmef_checksum_algorithm_to_string(i), i, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
         }
 
         indent -= 8;
@@ -1520,224 +1520,224 @@ void idmef_checksum_print(idmef_checksum_t *ptr, prelude_io_t *fd)
  */
 void idmef_file_print(idmef_file_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "ident: ";
 
-		field = idmef_file_get_ident(ptr);
+                field = idmef_file_get_ident(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "name: ";
 
-		field = idmef_file_get_name(ptr);
+                field = idmef_file_get_name(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "path: ";
 
-		field = idmef_file_get_path(ptr);
+                field = idmef_file_get_path(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		idmef_time_t *field;
+        {
+                idmef_time_t *field;
                 const char tmp[] = "create_time: ";
 
-		field = idmef_file_get_create_time(ptr);
+                field = idmef_file_get_create_time(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_time(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_time(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		idmef_time_t *field;
+        {
+                idmef_time_t *field;
                 const char tmp[] = "modify_time: ";
 
-		field = idmef_file_get_modify_time(ptr);
+                field = idmef_file_get_modify_time(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_time(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_time(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		idmef_time_t *field;
+        {
+                idmef_time_t *field;
                 const char tmp[] = "access_time: ";
 
-		field = idmef_file_get_access_time(ptr);
+                field = idmef_file_get_access_time(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_time(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_time(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		uint64_t *field;
+        {
+                uint64_t *field;
                 const char tmp[] = "data_size: ";
 
-		field = idmef_file_get_data_size(ptr);
+                field = idmef_file_get_data_size(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint64(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_uint64(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		uint64_t *field;
+        {
+                uint64_t *field;
                 const char tmp[] = "disk_size: ";
 
-		field = idmef_file_get_disk_size(ptr);
+                field = idmef_file_get_disk_size(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint64(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_uint64(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		idmef_file_access_t *elem = NULL;
-		int cnt = 0, len;
+                idmef_file_access_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_file_get_next_file_access(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_file_get_next_file_access(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "file_access(%d): \n", cnt);
-			prelude_io_write(fd, buf, len);
-			idmef_file_access_print(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        idmef_file_access_print(elem, fd);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		idmef_linkage_t *elem = NULL;
-		int cnt = 0, len;
+                idmef_linkage_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_file_get_next_linkage(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_file_get_next_linkage(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "linkage(%d): \n", cnt);
-			prelude_io_write(fd, buf, len);
-			idmef_linkage_print(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        idmef_linkage_print(elem, fd);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
-	{
-		idmef_inode_t *field;
+        {
+                idmef_inode_t *field;
 
-		field = idmef_file_get_inode(ptr);
+                field = idmef_file_get_inode(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "inode:\n", sizeof("inode:\n") - 1);
-			idmef_inode_print(field, fd);
-		}
-	}	
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, "inode:\n", sizeof("inode:\n") - 1);
+                        idmef_inode_print(field, fd);
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		idmef_checksum_t *elem = NULL;
-		int cnt = 0, len;
+                idmef_checksum_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_file_get_next_checksum(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_file_get_next_checksum(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "checksum(%d): \n", cnt);
-			prelude_io_write(fd, buf, len);
-			idmef_checksum_print(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        idmef_checksum_print(elem, fd);
 
-			cnt++;
-		}
-	}
-
-	{
-		int i = idmef_file_get_category(ptr);
-
-
-
-		{
-			print_indent(fd);
-			prelude_io_write(fd, "category: ", sizeof("category: ") - 1);
-			print_enum(idmef_file_category_to_string(i), i, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
+                        cnt++;
+                }
         }
 
-	{
-		int *i = idmef_file_get_fstype(ptr);
+        {
+                int i = idmef_file_get_category(ptr);
 
 
-		if ( i )
 
-
-		{
-			print_indent(fd);
-			prelude_io_write(fd, "fstype: ", sizeof("fstype: ") - 1);
-			print_enum(idmef_file_fstype_to_string(*i), *i, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "category: ", sizeof("category: ") - 1);
+                        print_enum(idmef_file_category_to_string(i), i, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
         }
 
-	{
-		prelude_string_t *field;
+        {
+                int *i = idmef_file_get_fstype(ptr);
+
+
+                if ( i )
+
+
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "fstype: ", sizeof("fstype: ") - 1);
+                        print_enum(idmef_file_fstype_to_string(*i), *i, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
+
+        {
+                prelude_string_t *field;
                 const char tmp[] = "file_type: ";
 
-		field = idmef_file_get_file_type(ptr);
+                field = idmef_file_get_file_type(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
         indent -= 8;
 }
@@ -1752,63 +1752,63 @@ void idmef_file_print(idmef_file_t *ptr, prelude_io_t *fd)
  */
 void idmef_linkage_print(idmef_linkage_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		int i = idmef_linkage_get_category(ptr);
+        {
+                int i = idmef_linkage_get_category(ptr);
 
 
 
-		{
-			print_indent(fd);
-			prelude_io_write(fd, "category: ", sizeof("category: ") - 1);
-			print_enum(idmef_linkage_category_to_string(i), i, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "category: ", sizeof("category: ") - 1);
+                        print_enum(idmef_linkage_category_to_string(i), i, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
         }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "name: ";
 
-		field = idmef_linkage_get_name(ptr);
+                field = idmef_linkage_get_name(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "path: ";
 
-		field = idmef_linkage_get_path(ptr);
+                field = idmef_linkage_get_path(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		idmef_file_t *field;
+        {
+                idmef_file_t *field;
 
-		field = idmef_linkage_get_file(ptr);
+                field = idmef_linkage_get_file(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "file:\n", sizeof("file:\n") - 1);
-			idmef_file_print(field, fd);
-		}
-	}	
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, "file:\n", sizeof("file:\n") - 1);
+                        idmef_file_print(field, fd);
+                }
+        }
 
         indent -= 8;
 }
@@ -1823,115 +1823,115 @@ void idmef_linkage_print(idmef_linkage_t *ptr, prelude_io_t *fd)
  */
 void idmef_target_print(idmef_target_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "ident: ";
 
-		field = idmef_target_get_ident(ptr);
+                field = idmef_target_get_ident(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
-
-	{
-		int i = idmef_target_get_decoy(ptr);
-
-
-
-		{
-			print_indent(fd);
-			prelude_io_write(fd, "decoy: ", sizeof("decoy: ") - 1);
-			print_enum(idmef_target_decoy_to_string(i), i, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
         }
 
-	{
-		prelude_string_t *field;
+        {
+                int i = idmef_target_get_decoy(ptr);
+
+
+
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "decoy: ", sizeof("decoy: ") - 1);
+                        print_enum(idmef_target_decoy_to_string(i), i, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
+
+        {
+                prelude_string_t *field;
                 const char tmp[] = "interface: ";
 
-		field = idmef_target_get_interface(ptr);
+                field = idmef_target_get_interface(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		idmef_node_t *field;
+        {
+                idmef_node_t *field;
 
-		field = idmef_target_get_node(ptr);
+                field = idmef_target_get_node(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "node:\n", sizeof("node:\n") - 1);
-			idmef_node_print(field, fd);
-		}
-	}	
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, "node:\n", sizeof("node:\n") - 1);
+                        idmef_node_print(field, fd);
+                }
+        }
 
-	{
-		idmef_user_t *field;
+        {
+                idmef_user_t *field;
 
-		field = idmef_target_get_user(ptr);
+                field = idmef_target_get_user(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "user:\n", sizeof("user:\n") - 1);
-			idmef_user_print(field, fd);
-		}
-	}	
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, "user:\n", sizeof("user:\n") - 1);
+                        idmef_user_print(field, fd);
+                }
+        }
 
-	{
-		idmef_process_t *field;
+        {
+                idmef_process_t *field;
 
-		field = idmef_target_get_process(ptr);
+                field = idmef_target_get_process(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "process:\n", sizeof("process:\n") - 1);
-			idmef_process_print(field, fd);
-		}
-	}	
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, "process:\n", sizeof("process:\n") - 1);
+                        idmef_process_print(field, fd);
+                }
+        }
 
-	{
-		idmef_service_t *field;
+        {
+                idmef_service_t *field;
 
-		field = idmef_target_get_service(ptr);
+                field = idmef_target_get_service(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "service:\n", sizeof("service:\n") - 1);
-			idmef_service_print(field, fd);
-		}
-	}	
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, "service:\n", sizeof("service:\n") - 1);
+                        idmef_service_print(field, fd);
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		idmef_file_t *elem = NULL;
-		int cnt = 0, len;
+                idmef_file_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_target_get_next_file(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_target_get_next_file(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "file(%d): \n", cnt);
-			prelude_io_write(fd, buf, len);
-			idmef_file_print(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        idmef_file_print(elem, fd);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
         indent -= 8;
 }
@@ -1946,146 +1946,146 @@ void idmef_target_print(idmef_target_t *ptr, prelude_io_t *fd)
  */
 void idmef_analyzer_print(idmef_analyzer_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "analyzerid: ";
 
-		field = idmef_analyzer_get_analyzerid(ptr);
+                field = idmef_analyzer_get_analyzerid(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "name: ";
 
-		field = idmef_analyzer_get_name(ptr);
+                field = idmef_analyzer_get_name(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "manufacturer: ";
 
-		field = idmef_analyzer_get_manufacturer(ptr);
+                field = idmef_analyzer_get_manufacturer(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "model: ";
 
-		field = idmef_analyzer_get_model(ptr);
+                field = idmef_analyzer_get_model(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "version: ";
 
-		field = idmef_analyzer_get_version(ptr);
+                field = idmef_analyzer_get_version(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "class: ";
 
-		field = idmef_analyzer_get_class(ptr);
+                field = idmef_analyzer_get_class(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "ostype: ";
 
-		field = idmef_analyzer_get_ostype(ptr);
+                field = idmef_analyzer_get_ostype(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "osversion: ";
 
-		field = idmef_analyzer_get_osversion(ptr);
+                field = idmef_analyzer_get_osversion(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		idmef_node_t *field;
+        {
+                idmef_node_t *field;
 
-		field = idmef_analyzer_get_node(ptr);
+                field = idmef_analyzer_get_node(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "node:\n", sizeof("node:\n") - 1);
-			idmef_node_print(field, fd);
-		}
-	}	
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, "node:\n", sizeof("node:\n") - 1);
+                        idmef_node_print(field, fd);
+                }
+        }
 
-	{
-		idmef_process_t *field;
+        {
+                idmef_process_t *field;
 
-		field = idmef_analyzer_get_process(ptr);
+                field = idmef_analyzer_get_process(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "process:\n", sizeof("process:\n") - 1);
-			idmef_process_print(field, fd);
-		}
-	}	
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, "process:\n", sizeof("process:\n") - 1);
+                        idmef_process_print(field, fd);
+                }
+        }
 
         indent -= 8;
 }
@@ -2100,38 +2100,38 @@ void idmef_analyzer_print(idmef_analyzer_t *ptr, prelude_io_t *fd)
  */
 void idmef_alertident_print(idmef_alertident_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "alertident: ";
 
-		field = idmef_alertident_get_alertident(ptr);
+                field = idmef_alertident_get_alertident(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "analyzerid: ";
 
-		field = idmef_alertident_get_analyzerid(ptr);
+                field = idmef_alertident_get_analyzerid(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
         indent -= 8;
 }
@@ -2146,67 +2146,67 @@ void idmef_alertident_print(idmef_alertident_t *ptr, prelude_io_t *fd)
  */
 void idmef_impact_print(idmef_impact_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		int *i = idmef_impact_get_severity(ptr);
+        {
+                int *i = idmef_impact_get_severity(ptr);
 
 
-		if ( i )
+                if ( i )
 
 
-		{
-			print_indent(fd);
-			prelude_io_write(fd, "severity: ", sizeof("severity: ") - 1);
-			print_enum(idmef_impact_severity_to_string(*i), *i, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "severity: ", sizeof("severity: ") - 1);
+                        print_enum(idmef_impact_severity_to_string(*i), *i, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
         }
 
-	{
-		int *i = idmef_impact_get_completion(ptr);
+        {
+                int *i = idmef_impact_get_completion(ptr);
 
 
-		if ( i )
+                if ( i )
 
 
-		{
-			print_indent(fd);
-			prelude_io_write(fd, "completion: ", sizeof("completion: ") - 1);
-			print_enum(idmef_impact_completion_to_string(*i), *i, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "completion: ", sizeof("completion: ") - 1);
+                        print_enum(idmef_impact_completion_to_string(*i), *i, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
         }
 
-	{
-		int i = idmef_impact_get_type(ptr);
+        {
+                int i = idmef_impact_get_type(ptr);
 
 
 
-		{
-			print_indent(fd);
-			prelude_io_write(fd, "type: ", sizeof("type: ") - 1);
-			print_enum(idmef_impact_type_to_string(i), i, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "type: ", sizeof("type: ") - 1);
+                        print_enum(idmef_impact_type_to_string(i), i, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
         }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "description: ";
 
-		field = idmef_impact_get_description(ptr);
+                field = idmef_impact_get_description(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
         indent -= 8;
 }
@@ -2221,37 +2221,37 @@ void idmef_impact_print(idmef_impact_t *ptr, prelude_io_t *fd)
  */
 void idmef_action_print(idmef_action_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		int i = idmef_action_get_category(ptr);
+        {
+                int i = idmef_action_get_category(ptr);
 
 
 
-		{
-			print_indent(fd);
-			prelude_io_write(fd, "category: ", sizeof("category: ") - 1);
-			print_enum(idmef_action_category_to_string(i), i, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "category: ", sizeof("category: ") - 1);
+                        print_enum(idmef_action_category_to_string(i), i, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
         }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "description: ";
 
-		field = idmef_action_get_description(ptr);
+                field = idmef_action_get_description(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
         indent -= 8;
 }
@@ -2266,28 +2266,28 @@ void idmef_action_print(idmef_action_t *ptr, prelude_io_t *fd)
  */
 void idmef_confidence_print(idmef_confidence_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		int i = idmef_confidence_get_rating(ptr);
+        {
+                int i = idmef_confidence_get_rating(ptr);
 
 
 
-		{
-			print_indent(fd);
-			prelude_io_write(fd, "rating: ", sizeof("rating: ") - 1);
-			print_enum(idmef_confidence_rating_to_string(i), i, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
+                {
+                        print_indent(fd);
+                        prelude_io_write(fd, "rating: ", sizeof("rating: ") - 1);
+                        print_enum(idmef_confidence_rating_to_string(i), i, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
         }
 
-	print_indent(fd);
-	prelude_io_write(fd, "confidence: ", sizeof("confidence: ") - 1);
-	print_float(idmef_confidence_get_confidence(ptr), fd);
-	prelude_io_write(fd, "\n", sizeof("\n") - 1);
+        print_indent(fd);
+        prelude_io_write(fd, "confidence: ", sizeof("confidence: ") - 1);
+        print_float(idmef_confidence_get_confidence(ptr), fd);
+        prelude_io_write(fd, "\n", sizeof("\n") - 1);
 
         indent -= 8;
 }
@@ -2302,50 +2302,50 @@ void idmef_confidence_print(idmef_confidence_t *ptr, prelude_io_t *fd)
  */
 void idmef_assessment_print(idmef_assessment_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		idmef_impact_t *field;
+        {
+                idmef_impact_t *field;
 
-		field = idmef_assessment_get_impact(ptr);
+                field = idmef_assessment_get_impact(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "impact:\n", sizeof("impact:\n") - 1);
-			idmef_impact_print(field, fd);
-		}
-	}	
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, "impact:\n", sizeof("impact:\n") - 1);
+                        idmef_impact_print(field, fd);
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		idmef_action_t *elem = NULL;
-		int cnt = 0, len;
+                idmef_action_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_assessment_get_next_action(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_assessment_get_next_action(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "action(%d): \n", cnt);
-			prelude_io_write(fd, buf, len);
-			idmef_action_print(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        idmef_action_print(elem, fd);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
-	{
-		idmef_confidence_t *field;
+        {
+                idmef_confidence_t *field;
 
-		field = idmef_assessment_get_confidence(ptr);
+                field = idmef_assessment_get_confidence(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "confidence:\n", sizeof("confidence:\n") - 1);
-			idmef_confidence_print(field, fd);
-		}
-	}	
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, "confidence:\n", sizeof("confidence:\n") - 1);
+                        idmef_confidence_print(field, fd);
+                }
+        }
 
         indent -= 8;
 }
@@ -2360,54 +2360,54 @@ void idmef_assessment_print(idmef_assessment_t *ptr, prelude_io_t *fd)
  */
 void idmef_tool_alert_print(idmef_tool_alert_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "name: ";
 
-		field = idmef_tool_alert_get_name(ptr);
+                field = idmef_tool_alert_get_name(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "command: ";
 
-		field = idmef_tool_alert_get_command(ptr);
+                field = idmef_tool_alert_get_command(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		idmef_alertident_t *elem = NULL;
-		int cnt = 0, len;
+                idmef_alertident_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_tool_alert_get_next_alertident(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_tool_alert_get_next_alertident(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "alertident(%d): \n", cnt);
-			prelude_io_write(fd, buf, len);
-			idmef_alertident_print(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        idmef_alertident_print(elem, fd);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
         indent -= 8;
 }
@@ -2422,40 +2422,40 @@ void idmef_tool_alert_print(idmef_tool_alert_t *ptr, prelude_io_t *fd)
  */
 void idmef_correlation_alert_print(idmef_correlation_alert_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "name: ";
 
-		field = idmef_correlation_alert_get_name(ptr);
+                field = idmef_correlation_alert_get_name(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		idmef_alertident_t *elem = NULL;
-		int cnt = 0, len;
+                idmef_alertident_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_correlation_alert_get_next_alertident(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_correlation_alert_get_next_alertident(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "alertident(%d): \n", cnt);
-			prelude_io_write(fd, buf, len);
-			idmef_alertident_print(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        idmef_alertident_print(elem, fd);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
         indent -= 8;
 }
@@ -2470,52 +2470,52 @@ void idmef_correlation_alert_print(idmef_correlation_alert_t *ptr, prelude_io_t 
  */
 void idmef_overflow_alert_print(idmef_overflow_alert_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "program: ";
 
-		field = idmef_overflow_alert_get_program(ptr);
+                field = idmef_overflow_alert_get_program(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		uint32_t *field;
+        {
+                uint32_t *field;
                 const char tmp[] = "size: ";
 
-		field = idmef_overflow_alert_get_size(ptr);
+                field = idmef_overflow_alert_get_size(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint32(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_uint32(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		idmef_data_t *field;
+        {
+                idmef_data_t *field;
                 const char tmp[] = "buffer: ";
 
-		field = idmef_overflow_alert_get_buffer(ptr);
+                field = idmef_overflow_alert_get_buffer(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_data(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_data(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
         indent -= 8;
 }
@@ -2530,177 +2530,177 @@ void idmef_overflow_alert_print(idmef_overflow_alert_t *ptr, prelude_io_t *fd)
  */
 void idmef_alert_print(idmef_alert_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "messageid: ";
 
-		field = idmef_alert_get_messageid(ptr);
+                field = idmef_alert_get_messageid(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		idmef_analyzer_t *elem = NULL;
-		int cnt = 0, len;
+                idmef_analyzer_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_alert_get_next_analyzer(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_alert_get_next_analyzer(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "analyzer(%d): \n", cnt);
-			prelude_io_write(fd, buf, len);
-			idmef_analyzer_print(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        idmef_analyzer_print(elem, fd);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
-	{
-		idmef_time_t *field;
+        {
+                idmef_time_t *field;
                 const char tmp[] = "create_time: ";
 
-		field = idmef_alert_get_create_time(ptr);
+                field = idmef_alert_get_create_time(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_time(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_time(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		idmef_classification_t *field;
+        {
+                idmef_classification_t *field;
 
-		field = idmef_alert_get_classification(ptr);
+                field = idmef_alert_get_classification(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "classification:\n", sizeof("classification:\n") - 1);
-			idmef_classification_print(field, fd);
-		}
-	}	
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, "classification:\n", sizeof("classification:\n") - 1);
+                        idmef_classification_print(field, fd);
+                }
+        }
 
-	{
-		idmef_time_t *field;
+        {
+                idmef_time_t *field;
                 const char tmp[] = "detect_time: ";
 
-		field = idmef_alert_get_detect_time(ptr);
+                field = idmef_alert_get_detect_time(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_time(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_time(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		idmef_time_t *field;
+        {
+                idmef_time_t *field;
                 const char tmp[] = "analyzer_time: ";
 
-		field = idmef_alert_get_analyzer_time(ptr);
+                field = idmef_alert_get_analyzer_time(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_time(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_time(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		idmef_source_t *elem = NULL;
-		int cnt = 0, len;
+                idmef_source_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_alert_get_next_source(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_alert_get_next_source(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "source(%d): \n", cnt);
-			prelude_io_write(fd, buf, len);
-			idmef_source_print(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        idmef_source_print(elem, fd);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		idmef_target_t *elem = NULL;
-		int cnt = 0, len;
+                idmef_target_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_alert_get_next_target(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_alert_get_next_target(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "target(%d): \n", cnt);
-			prelude_io_write(fd, buf, len);
-			idmef_target_print(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        idmef_target_print(elem, fd);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
-	{
-		idmef_assessment_t *field;
+        {
+                idmef_assessment_t *field;
 
-		field = idmef_alert_get_assessment(ptr);
+                field = idmef_alert_get_assessment(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, "assessment:\n", sizeof("assessment:\n") - 1);
-			idmef_assessment_print(field, fd);
-		}
-	}	
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, "assessment:\n", sizeof("assessment:\n") - 1);
+                        idmef_assessment_print(field, fd);
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		idmef_additional_data_t *elem = NULL;
-		int cnt = 0, len;
+                idmef_additional_data_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_alert_get_next_additional_data(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_alert_get_next_additional_data(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "additional_data(%d): \n", cnt);
-			prelude_io_write(fd, buf, len);
-			idmef_additional_data_print(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        idmef_additional_data_print(elem, fd);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
-	switch ( idmef_alert_get_type(ptr) ) {
-	case IDMEF_ALERT_TYPE_TOOL:
-		print_indent(fd);
+        switch ( idmef_alert_get_type(ptr) ) {
+        case IDMEF_ALERT_TYPE_TOOL:
+                print_indent(fd);
                 prelude_io_write(fd, "tool_alert:\n", sizeof("tool_alert:\n") - 1);
-		idmef_tool_alert_print(idmef_alert_get_tool_alert(ptr), fd);
-		break;
+                idmef_tool_alert_print(idmef_alert_get_tool_alert(ptr), fd);
+                break;
  
-	case IDMEF_ALERT_TYPE_CORRELATION:
-		print_indent(fd);
+        case IDMEF_ALERT_TYPE_CORRELATION:
+                print_indent(fd);
                 prelude_io_write(fd, "correlation_alert:\n", sizeof("correlation_alert:\n") - 1);
-		idmef_correlation_alert_print(idmef_alert_get_correlation_alert(ptr), fd);
-		break;
+                idmef_correlation_alert_print(idmef_alert_get_correlation_alert(ptr), fd);
+                break;
  
-	case IDMEF_ALERT_TYPE_OVERFLOW:
-		print_indent(fd);
+        case IDMEF_ALERT_TYPE_OVERFLOW:
+                print_indent(fd);
                 prelude_io_write(fd, "overflow_alert:\n", sizeof("overflow_alert:\n") - 1);
-		idmef_overflow_alert_print(idmef_alert_get_overflow_alert(ptr), fd);
-		break;
+                idmef_overflow_alert_print(idmef_alert_get_overflow_alert(ptr), fd);
+                break;
  
-	default:
-		break;
-	}
+        default:
+                break;
+        }
 
         indent -= 8;
 }
@@ -2715,98 +2715,98 @@ void idmef_alert_print(idmef_alert_t *ptr, prelude_io_t *fd)
  */
 void idmef_heartbeat_print(idmef_heartbeat_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
         indent += 8;
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "messageid: ";
 
-		field = idmef_heartbeat_get_messageid(ptr);
+                field = idmef_heartbeat_get_messageid(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		idmef_analyzer_t *elem = NULL;
-		int cnt = 0, len;
+                idmef_analyzer_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_heartbeat_get_next_analyzer(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_heartbeat_get_next_analyzer(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "analyzer(%d): \n", cnt);
-			prelude_io_write(fd, buf, len);
-			idmef_analyzer_print(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        idmef_analyzer_print(elem, fd);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
-	{
-		idmef_time_t *field;
+        {
+                idmef_time_t *field;
                 const char tmp[] = "create_time: ";
 
-		field = idmef_heartbeat_get_create_time(ptr);
+                field = idmef_heartbeat_get_create_time(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_time(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_time(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		idmef_time_t *field;
+        {
+                idmef_time_t *field;
                 const char tmp[] = "analyzer_time: ";
 
-		field = idmef_heartbeat_get_analyzer_time(ptr);
+                field = idmef_heartbeat_get_analyzer_time(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_time(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_time(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
-		uint32_t *field;
+        {
+                uint32_t *field;
                 const char tmp[] = "heartbeat_interval: ";
 
-		field = idmef_heartbeat_get_heartbeat_interval(ptr);
+                field = idmef_heartbeat_get_heartbeat_interval(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_uint32(*field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_uint32(*field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	{
+        {
                 char buf[128];
-		idmef_additional_data_t *elem = NULL;
-		int cnt = 0, len;
+                idmef_additional_data_t *elem = NULL;
+                int cnt = 0, len;
 
-		while ( (elem = idmef_heartbeat_get_next_additional_data(ptr, elem)) ) {
-			print_indent(fd);
+                while ( (elem = idmef_heartbeat_get_next_additional_data(ptr, elem)) ) {
+                        print_indent(fd);
 
                         len = snprintf(buf, sizeof(buf), "additional_data(%d): \n", cnt);
-			prelude_io_write(fd, buf, len);
-			idmef_additional_data_print(elem, fd);
+                        prelude_io_write(fd, buf, len);
+                        idmef_additional_data_print(elem, fd);
 
-			cnt++;
-		}
-	}
+                        cnt++;
+                }
+        }
 
         indent -= 8;
 }
@@ -2821,38 +2821,38 @@ void idmef_heartbeat_print(idmef_heartbeat_t *ptr, prelude_io_t *fd)
  */
 void idmef_message_print(idmef_message_t *ptr, prelude_io_t *fd)
 {
-	if ( ! ptr )
-		return;
+        if ( ! ptr )
+                return;
 
 
-	{
-		prelude_string_t *field;
+        {
+                prelude_string_t *field;
                 const char tmp[] = "version: ";
 
-		field = idmef_message_get_version(ptr);
+                field = idmef_message_get_version(ptr);
 
-		if ( field ) {
-			print_indent(fd);
-			prelude_io_write(fd, tmp, sizeof(tmp) - 1);
-			print_string(field, fd);
-			prelude_io_write(fd, "\n", sizeof("\n") - 1);
-		}
-	}
+                if ( field ) {
+                        print_indent(fd);
+                        prelude_io_write(fd, tmp, sizeof(tmp) - 1);
+                        print_string(field, fd);
+                        prelude_io_write(fd, "\n", sizeof("\n") - 1);
+                }
+        }
 
-	switch ( idmef_message_get_type(ptr) ) {
-	case IDMEF_MESSAGE_TYPE_ALERT:
-		print_indent(fd);
+        switch ( idmef_message_get_type(ptr) ) {
+        case IDMEF_MESSAGE_TYPE_ALERT:
+                print_indent(fd);
                 prelude_io_write(fd, "alert:\n", sizeof("alert:\n") - 1);
-		idmef_alert_print(idmef_message_get_alert(ptr), fd);
-		break;
+                idmef_alert_print(idmef_message_get_alert(ptr), fd);
+                break;
  
-	case IDMEF_MESSAGE_TYPE_HEARTBEAT:
-		print_indent(fd);
+        case IDMEF_MESSAGE_TYPE_HEARTBEAT:
+                print_indent(fd);
                 prelude_io_write(fd, "heartbeat:\n", sizeof("heartbeat:\n") - 1);
-		idmef_heartbeat_print(idmef_message_get_heartbeat(ptr), fd);
-		break;
+                idmef_heartbeat_print(idmef_message_get_heartbeat(ptr), fd);
+                break;
  
-	default:
-		break;
-	}
+        default:
+                break;
+        }
 }
