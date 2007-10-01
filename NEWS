@@ -1,4 +1,20 @@
- * 2007-09-04, libprelude-0.9.15.2:
+* 2007-10-01, libprelude-0.9.16:
+
+- Implement prelude-admin list [-l] command, which provide the ability to list
+  existing profile name, permission, registration permission, analyzerID, and
+  Issuer analyzerid.
+
+- Implement multiple analyzer deletion in prelude-admin.
+
+- Correct printing of IDMEF time field using non local GMT offset.
+
+- Patch to avoid struct typespec redefinition, due to variable mispelling.
+  This fixes a compilation problem on OpenBSD 3.8.
+
+- Various bug fixes.
+
+
+* 2007-09-04, libprelude-0.9.15.2:
 
 - Write the children PID into specified pidfile (fixes #257).
 
