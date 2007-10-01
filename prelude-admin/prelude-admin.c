@@ -337,7 +337,7 @@ static void print_revoke_help(void)
 static void print_list_help(void)
 {
         fprintf(stderr,
-"Usage  : list\n"
+"Usage  : list [-l]\n"
 "Example: list -l\n\n"
 
 "Print the list of available profile, their permissions, and the certificate\n"
