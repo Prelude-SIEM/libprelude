@@ -1555,7 +1555,7 @@ const char *prelude_client_get_setup_error(prelude_client_t *client)
                 prelude_connection_permission_to_string(client->permission, perm);
 
                 ret = prelude_string_sprintf(out, "\nProfile '%s' does not exist. In order to create it, please run:\n"
-                                             "prelude-admin register %s \"%s\" <manager address> --uid %d --gid %d",
+                                             "prelude-admin register \"%s\" \"%s\" <manager address> --uid %d --gid %d",
                                              prelude_client_profile_get_name(client->profile),
                                              prelude_client_profile_get_name(client->profile),
                                              prelude_string_get_string(perm),
@@ -1566,7 +1566,7 @@ const char *prelude_client_get_setup_error(prelude_client_t *client)
 
         } else {
                 ret = prelude_string_sprintf(out, "\nProfile '%s' does not exist. In order to create it, please run:\n"
-                                             "prelude-admin add %s --uid %d --gid %d",
+                                             "prelude-admin add \"%s\" --uid %d --gid %d",
                                              prelude_client_profile_get_name(client->profile),
                                              prelude_client_profile_get_name(client->profile),
                                              prelude_client_profile_get_uid(client->profile),
