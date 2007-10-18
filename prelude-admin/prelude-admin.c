@@ -69,7 +69,6 @@
 #ifdef WIN32
 # define chown(x, y, z) (0)
 # define fchown(x, y, z) (0)
-# define fchmod(x, y) (0)
 # define getuid(x) (0)
 # define getgid(x) (0)
 # define mkdir(x, y) mkdir(x)
@@ -710,10 +709,6 @@ static int create_template_config_file(prelude_client_profile_t *profile)
                 return -1;
         }
 
-        ret = fchmod(fileno(fd), S_IRUSR|S_IWUSR|S_IRGRP);
-        if ( ret < 0 )
-                fprintf(stderr, "error changing '%s' permission: %s.\n", filename, strerror(errno));
-
         ret = fchown(fileno(fd), prelude_client_profile_get_uid(profile), prelude_client_profile_get_gid(profile));
         if ( ret < 0 )
                 fprintf(stderr, "error changing '%s' ownership: %s.\n", filename, strerror(errno));
@@ -761,10 +756,6 @@ static int register_sensor_ident(const char *name, uint64_t *ident)
         ret = fchown(fileno(fd), prelude_client_profile_get_uid(profile), prelude_client_profile_get_gid(profile));
         if ( ret < 0 )
                 fprintf(stderr, "couldn't change %s owner.\n", filename);
-
-        ret = fchmod(fileno(fd), S_IRUSR|S_IWUSR|S_IRGRP);
-        if ( ret < 0 )
-                fprintf(stderr, "couldn't make ident file readable for all.\n");
 
         if ( already_exist == 0 ) {
                 if ( ! fgets(buf, sizeof(buf), fd) ) {
@@ -2128,6 +2119,8 @@ int main(int argc, char **argv)
 #ifndef WIN32
         signal(SIGPIPE, SIG_IGN);
 #endif
+
+        umask(S_IWGRP|S_IRWXO);
 
         for ( i = 0; i < sizeof(tbl) / sizeof(*tbl); i++ ) {
                 if ( strcmp(tbl[i].cmd, argv[1]) != 0 )
