@@ -651,7 +651,8 @@ int prelude_connection_new(prelude_connection_t **out, const char *addr)
 
 void prelude_connection_set_fd_ref(prelude_connection_t *cnx, prelude_io_t *fd)
 {
-        prelude_return_if_fail(cnx && fd);
+        prelude_return_if_fail(cnx);
+        prelude_return_if_fail(fd);
 
         destroy_connection_fd(cnx);
         cnx->fd = fd;
@@ -662,8 +663,9 @@ void prelude_connection_set_fd_ref(prelude_connection_t *cnx, prelude_io_t *fd)
 
 void prelude_connection_set_fd_nodup(prelude_connection_t *cnx, prelude_io_t *fd)
 {
-        prelude_return_if_fail(cnx && fd);
-
+        prelude_return_if_fail(cnx);
+        prelude_return_if_fail(fd);
+        
         destroy_connection_fd(cnx);
         cnx->fd = fd;
         cnx->state |= PRELUDE_CONNECTION_OWN_FD;
@@ -678,7 +680,9 @@ int prelude_connection_connect(prelude_connection_t *conn,
         int ret;
         prelude_msg_t *msg;
 
-        prelude_return_val_if_fail(conn && profile, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(conn, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(profile, prelude_error(PRELUDE_ERROR_ASSERTION));
+
         close_connection_fd_block(conn);
 
         ret = do_connect(conn, permission, profile);
@@ -722,7 +726,8 @@ int prelude_connection_send(prelude_connection_t *cnx, prelude_msg_t *msg)
 {
         ssize_t ret;
 
-        prelude_return_val_if_fail(cnx && msg, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(cnx, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(msg, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) )
                 return -1;
@@ -851,7 +856,8 @@ ssize_t prelude_connection_forward(prelude_connection_t *cnx, prelude_io_t *src,
 {
         ssize_t ret;
 
-        prelude_return_val_if_fail(cnx && src, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(cnx, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(src, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) )
                 return -1;
@@ -956,7 +962,8 @@ int prelude_connection_permission_new_from_string(prelude_connection_permission_
                 { NULL, 0 },
         };
 
-        prelude_return_val_if_fail(out && permission, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(out, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(permission, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         *out = 0;
         strncpy(buf, permission, sizeof(buf));
