@@ -298,7 +298,7 @@ int idmef_value_new_list(idmef_value_t **value)
 int idmef_value_list_add(idmef_value_t *list, idmef_value_t *item)
 {
         prelude_return_val_if_fail(list, prelude_error(PRELUDE_ERROR_ASSERTION));
-	prelude_return_val_if_fail(item, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(item, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( list->list_elems == list->list_max ) {
 
@@ -378,7 +378,7 @@ int idmef_value_new_from_path(idmef_value_t **value, idmef_path_t *path, const c
         idmef_value_type_id_t value_type;
 
         prelude_return_val_if_fail(path, prelude_error(PRELUDE_ERROR_ASSERTION));
-	prelude_return_val_if_fail(buf, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(buf, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         value_type = idmef_path_get_value_type(path, -1);
         if ( value_type < 0 )
@@ -468,7 +468,7 @@ int idmef_value_iterate(idmef_value_t *value,
         int i, ret;
 
         prelude_return_val_if_fail(value, prelude_error(PRELUDE_ERROR_ASSERTION));
-	prelude_return_val_if_fail(callback, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(callback, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! value->list )
                 return callback(value, extra);
@@ -491,7 +491,7 @@ int idmef_value_iterate_reversed(idmef_value_t *value,
         int i, ret;
 
         prelude_return_val_if_fail(value, prelude_error(PRELUDE_ERROR_ASSERTION)); 
-	prelude_return_val_if_fail(callback, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(callback, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! value->list )
                 return callback(value, extra);
@@ -597,7 +597,7 @@ idmef_value_t *idmef_value_ref(idmef_value_t *val)
 int idmef_value_to_string(const idmef_value_t *val, prelude_string_t *out)
 {
         prelude_return_val_if_fail(val, prelude_error(PRELUDE_ERROR_ASSERTION));
-	prelude_return_val_if_fail(out, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(out, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         return idmef_value_type_write(&val->type, out);
 }
@@ -610,7 +610,7 @@ int idmef_value_print(const idmef_value_t *val, prelude_io_t *fd)
         prelude_string_t *out;
 
         prelude_return_val_if_fail(val, prelude_error(PRELUDE_ERROR_ASSERTION));
-	prelude_return_val_if_fail(fd, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(fd, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         ret = prelude_string_new(&out);
         if ( ret < 0 )
@@ -680,7 +680,7 @@ int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_
         compare_t compare;
 
         prelude_return_val_if_fail(val1, prelude_error(PRELUDE_ERROR_ASSERTION));
-	prelude_return_val_if_fail(val2, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(val2, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         compare.match = 0;
         compare.val2 = val2;
