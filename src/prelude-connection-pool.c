@@ -752,7 +752,9 @@ static void broadcast_async_cb(void *obj, void *data)
  */
 void prelude_connection_pool_broadcast(prelude_connection_pool_t *pool, prelude_msg_t *msg)
 {
-        prelude_return_if_fail(pool && msg);
+        prelude_return_if_fail(pool);
+        prelude_return_if_fail(msg);
+
         walk_manager_lists(pool, msg);
 }
 
@@ -770,8 +772,9 @@ void prelude_connection_pool_broadcast(prelude_connection_pool_t *pool, prelude_
  */
 void prelude_connection_pool_broadcast_async(prelude_connection_pool_t *pool, prelude_msg_t *msg)
 {
-        prelude_return_if_fail(pool && msg);
-
+        prelude_return_if_fail(pool);
+        prelude_return_if_fail(msg);
+        
         pool->refcount++;
 
         prelude_async_set_callback((prelude_async_object_t *) msg, &broadcast_async_cb);
@@ -932,7 +935,8 @@ int prelude_connection_pool_add_connection(prelude_connection_pool_t *pool, prel
         int ret;
         cnx_t **c;
 
-        prelude_return_val_if_fail(pool && cnx, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(pool, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(cnx, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! pool->or_list ) {
                 ret = create_connection_list(&pool->or_list, pool);
@@ -1039,7 +1043,8 @@ int prelude_connection_pool_set_connection_dead(prelude_connection_pool_t *pool,
 {
         cnx_t *c;
 
-        prelude_return_val_if_fail(pool && cnx, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(pool, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(cnx, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         c = search_cnx(pool, cnx);
         if ( ! c )
@@ -1077,7 +1082,8 @@ int prelude_connection_pool_set_connection_alive(prelude_connection_pool_t *pool
         int ret;
         cnx_t *c;
 
-        prelude_return_val_if_fail(pool && cnx, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(pool, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(cnx, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         c = search_cnx(pool, cnx);
         if ( ! c )
@@ -1125,7 +1131,8 @@ int prelude_connection_pool_set_connection_string(prelude_connection_pool_t *poo
 {
         char *new;
 
-        prelude_return_val_if_fail(pool && cfgstr, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(pool, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(cfgstr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         new = strdup(cfgstr);
         if ( ! new )
