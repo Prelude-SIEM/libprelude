@@ -373,7 +373,8 @@ int prelude_string_set_dup_fast(prelude_string_t *string, const char *buf, size_
 {
         int ret;
 
-        prelude_return_val_if_fail(string && buf, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(string, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(buf, prelude_error(PRELUDE_ERROR_ASSERTION));
         STRING_RETURN_IF_INVALID(buf, len);
 
         prelude_string_destroy_internal(string);
@@ -402,7 +403,8 @@ int prelude_string_set_dup_fast(prelude_string_t *string, const char *buf, size_
  */
 int prelude_string_set_dup(prelude_string_t *string, const char *buf)
 {
-        prelude_return_val_if_fail(string && buf, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(string, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(buf, prelude_error(PRELUDE_ERROR_ASSERTION));
         return prelude_string_set_dup_fast(string, buf, strlen(buf));
 }
 
@@ -421,7 +423,8 @@ int prelude_string_set_dup(prelude_string_t *string, const char *buf)
  */
 int prelude_string_set_nodup_fast(prelude_string_t *string, char *buf, size_t len)
 {
-        prelude_return_val_if_fail(string && buf, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(string, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(buf, prelude_error(PRELUDE_ERROR_ASSERTION));
         STRING_RETURN_IF_INVALID(buf, len);
 
         prelude_string_destroy_internal(string);
@@ -450,7 +453,9 @@ int prelude_string_set_nodup_fast(prelude_string_t *string, char *buf, size_t le
  */
 int prelude_string_set_nodup(prelude_string_t *string, char *buf)
 {
-        prelude_return_val_if_fail(string && buf, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(string, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(buf, prelude_error(PRELUDE_ERROR_ASSERTION));
+        
         return prelude_string_set_nodup_fast(string, buf, strlen(buf));
 }
 
@@ -469,7 +474,8 @@ int prelude_string_set_nodup(prelude_string_t *string, char *buf)
  */
 int prelude_string_set_ref_fast(prelude_string_t *string, const char *buf, size_t len)
 {
-        prelude_return_val_if_fail(string && buf, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(string, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(buf, prelude_error(PRELUDE_ERROR_ASSERTION));
         STRING_RETURN_IF_INVALID(buf, len);
 
         prelude_string_destroy_internal(string);
@@ -497,7 +503,9 @@ int prelude_string_set_ref_fast(prelude_string_t *string, const char *buf, size_
  */
 int prelude_string_set_ref(prelude_string_t *string, const char *buf)
 {
-        prelude_return_val_if_fail(string && buf, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(string, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(buf, prelude_error(PRELUDE_ERROR_ASSERTION));
+        
         return prelude_string_set_ref_fast(string, buf, strlen(buf));
 }
 
@@ -516,7 +524,8 @@ int prelude_string_set_ref(prelude_string_t *string, const char *buf)
  */
 int prelude_string_copy_ref(const prelude_string_t *src, prelude_string_t *dst)
 {
-        prelude_return_val_if_fail(src && dst, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(src, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(dst, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         prelude_string_destroy_internal(dst);
 
@@ -542,7 +551,9 @@ int prelude_string_copy_ref(const prelude_string_t *src, prelude_string_t *dst)
  */
 int prelude_string_copy_dup(const prelude_string_t *src, prelude_string_t *dst)
 {
-        prelude_return_val_if_fail(src && src->size && dst, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(src, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(src->size, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(dst, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         prelude_string_destroy_internal(dst);
 
@@ -575,7 +586,8 @@ int prelude_string_clone(const prelude_string_t *src, prelude_string_t **dst)
 {
         int ret;
 
-        prelude_return_val_if_fail(src && src->size, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(src, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(src->size, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         ret = prelude_string_new(dst);
         if ( ret < 0 )
@@ -774,7 +786,8 @@ int prelude_string_vprintf(prelude_string_t *string, const char *fmt, va_list ap
         int ret;
         va_list bkp;
 
-        prelude_return_val_if_fail(string && fmt, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(string, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(fmt, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! (string->flags & PRELUDE_STRING_CAN_REALLOC) ) {
 
@@ -832,7 +845,8 @@ int prelude_string_sprintf(prelude_string_t *string, const char *fmt, ...)
         int ret;
         va_list ap;
 
-        prelude_return_val_if_fail(string && fmt, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(string, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(fmt, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         va_start(ap, fmt);
         ret = prelude_string_vprintf(string, fmt, ap);
@@ -859,7 +873,8 @@ int prelude_string_ncat(prelude_string_t *dst, const char *str, size_t len)
 {
         int ret;
 
-        prelude_return_val_if_fail(dst && str, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(dst, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(str, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( dst->flags & PRELUDE_STRING_CAN_REALLOC && len < (dst->size - dst->index) ) {
 
@@ -896,7 +911,9 @@ int prelude_string_ncat(prelude_string_t *dst, const char *str, size_t len)
  */
 int prelude_string_cat(prelude_string_t *dst, const char *str)
 {
-        prelude_return_val_if_fail(dst && str, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(dst, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(str, prelude_error(PRELUDE_ERROR_ASSERTION));
+        
         return prelude_string_ncat(dst, str, strlen(str));
 }
 
