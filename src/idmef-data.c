@@ -109,7 +109,7 @@ idmef_data_t *idmef_data_ref(idmef_data_t *data)
 int idmef_data_set_ptr_ref_fast(idmef_data_t *data, idmef_data_type_t type, const void *ptr, size_t len)
 {
         prelude_return_val_if_fail(data, prelude_error(PRELUDE_ERROR_ASSERTION));
-	prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         idmef_data_destroy_internal(data);
 
@@ -127,7 +127,7 @@ int idmef_data_set_ptr_dup_fast(idmef_data_t *data, idmef_data_type_t type, cons
         void *new;
 
         prelude_return_val_if_fail(data, prelude_error(PRELUDE_ERROR_ASSERTION));
-	prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         idmef_data_destroy_internal(data);
 
@@ -150,7 +150,7 @@ int idmef_data_set_ptr_dup_fast(idmef_data_t *data, idmef_data_type_t type, cons
 int idmef_data_set_ptr_nodup_fast(idmef_data_t *data, idmef_data_type_t type, void *ptr, size_t len)
 {
         prelude_return_val_if_fail(data, prelude_error(PRELUDE_ERROR_ASSERTION));
-	prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         idmef_data_destroy_internal(data);
 
@@ -228,7 +228,7 @@ int idmef_data_new_ptr_nodup_fast(idmef_data_t **data, idmef_data_type_t type, v
 int idmef_data_copy_ref(const idmef_data_t *src, idmef_data_t *dst)
 {
         prelude_return_val_if_fail(src, prelude_error(PRELUDE_ERROR_ASSERTION));
-	prelude_return_val_if_fail(dst, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(dst, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         idmef_data_destroy_internal(dst);
 
@@ -256,7 +256,7 @@ int idmef_data_copy_ref(const idmef_data_t *src, idmef_data_t *dst)
 int idmef_data_copy_dup(const idmef_data_t *src, idmef_data_t *dst)
 {
         prelude_return_val_if_fail(src, prelude_error(PRELUDE_ERROR_ASSERTION));
-	prelude_return_val_if_fail(dst, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(dst, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         idmef_data_destroy_internal(dst);
 
@@ -437,7 +437,7 @@ int idmef_data_to_string(const idmef_data_t *data, prelude_string_t *out)
         int ret = 0;
 
         prelude_return_val_if_fail(data, prelude_error(PRELUDE_ERROR_ASSERTION));
-	prelude_return_val_if_fail(out, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(out, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         switch ( data->type ) {
         case IDMEF_DATA_TYPE_UNKNOWN:
@@ -575,7 +575,7 @@ int idmef_data_new_char_string_nodup(idmef_data_t **data, char *ptr)
 int idmef_data_set_char_string_ref(idmef_data_t *data, const char *ptr)
 {
         prelude_return_val_if_fail(data, prelude_error(PRELUDE_ERROR_ASSERTION));
-	prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         return idmef_data_set_char_string_ref_fast(data, ptr, strlen(ptr));
 }
@@ -583,7 +583,7 @@ int idmef_data_set_char_string_ref(idmef_data_t *data, const char *ptr)
 int idmef_data_set_char_string_dup(idmef_data_t *data, const char *ptr)
 {
         prelude_return_val_if_fail(data, prelude_error(PRELUDE_ERROR_ASSERTION)); 
-	prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         return idmef_data_set_char_string_dup_fast(data, ptr, strlen(ptr));
 }
@@ -591,7 +591,7 @@ int idmef_data_set_char_string_dup(idmef_data_t *data, const char *ptr)
 int idmef_data_set_char_string_nodup(idmef_data_t *data, char *ptr)
 {
         prelude_return_val_if_fail(data, prelude_error(PRELUDE_ERROR_ASSERTION)); 
-	prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         return idmef_data_set_char_string_nodup_fast(data, ptr, strlen(ptr));
 }
