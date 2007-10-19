@@ -1232,7 +1232,8 @@ idmef_analyzer_t *prelude_client_get_analyzer(prelude_client_t *client)
  */
 void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
 {
-        prelude_return_if_fail(client && msg);
+        prelude_return_if_fail(client);
+        prelude_return_if_fail(msg);
 
         if ( client->flags & PRELUDE_CLIENT_FLAGS_ASYNC_SEND )
                 prelude_connection_pool_broadcast_async(client->cpool, msg);
@@ -1254,7 +1255,8 @@ void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg)
  */
 void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg)
 {
-        prelude_return_if_fail(client && msg);
+        prelude_return_if_fail(client);
+        prelude_return_if_fail(msg);
 
         /*
          * we need to hold a lock since asynchronous heartbeat
@@ -1299,7 +1301,9 @@ prelude_connection_pool_t *prelude_client_get_connection_pool(prelude_client_t *
  */
 void prelude_client_set_connection_pool(prelude_client_t *client, prelude_connection_pool_t *pool)
 {
-        prelude_return_if_fail(client && pool);
+        prelude_return_if_fail(client);
+        prelude_return_if_fail(pool);
+
         client->cpool = pool;
 }
 
@@ -1316,7 +1320,9 @@ void prelude_client_set_connection_pool(prelude_client_t *client, prelude_connec
 void prelude_client_set_heartbeat_cb(prelude_client_t *client,
                                      void (*cb)(prelude_client_t *client, idmef_message_t *hb))
 {
-        prelude_return_if_fail(client && cb);
+        prelude_return_if_fail(client);
+        prelude_return_if_fail(cb);
+
         client->heartbeat_cb = cb;
 }
 
@@ -1480,7 +1486,8 @@ const char *prelude_client_get_config_filename(prelude_client_t *client)
  */
 int prelude_client_set_config_filename(prelude_client_t *client, const char *filename)
 {
-        prelude_return_val_if_fail(client && filename, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(client, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(filename, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( client->config_filename )
                 free(client->config_filename);
@@ -1597,7 +1604,9 @@ int prelude_client_handle_msg_default(prelude_client_t *client, prelude_msg_t *m
         int ret;
         uint8_t tag;
 
-        prelude_return_val_if_fail(client && msg && msgbuf, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(client, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(msg, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(msgbuf, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         tag = prelude_msg_get_tag(msg);
         if ( tag != PRELUDE_MSG_OPTION_REQUEST )
