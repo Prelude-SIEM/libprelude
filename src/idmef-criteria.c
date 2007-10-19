@@ -117,8 +117,7 @@ int idmef_criterion_new(idmef_criterion_t **criterion, idmef_path_t *path,
                         idmef_criterion_value_t *value, idmef_criterion_operator_t op)
 {
         prelude_return_val_if_fail(path != NULL, prelude_error(PRELUDE_ERROR_ASSERTION));
-        prelude_return_val_if_fail( ! (value == NULL), prelude_error(PRELUDE_ERROR_ASSERTION));
-	prelude_return_val_if_fail( ! (op & IDMEF_CRITERION_OPERATOR_NULL), prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(! (value == NULL && ! (op & IDMEF_CRITERION_OPERATOR_NULL)), prelude_error(PRELUDE_ERROR_ASSERTION));
 
         *criterion = calloc(1, sizeof(**criterion));
         if ( ! *criterion )
