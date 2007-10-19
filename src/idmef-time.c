@@ -164,7 +164,8 @@ int idmef_time_set_from_string(idmef_time_t *time, const char *buf)
         struct tm tm;
         int is_localtime = 1, ret;
 
-        prelude_return_val_if_fail(time && buf, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(time, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(buf, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         memset(&tm, 0, sizeof(tm));
         tm.tm_isdst = -1;
@@ -248,7 +249,8 @@ int idmef_time_set_from_ntpstamp(idmef_time_t *time, const char *buf)
         unsigned ts_mask = TS_MASK;
         unsigned ts_roundbit = TS_ROUNDBIT;
 
-        prelude_return_val_if_fail(time && buf, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(time, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(buf, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( sscanf(buf, "%x.%x", &ts.l_ui, &ts.l_uf) < 2 )
                 return -1;
@@ -289,7 +291,8 @@ int idmef_time_to_ntpstamp(const idmef_time_t *time, prelude_string_t *out)
         unsigned ts_roundbit = TS_ROUNDBIT;     /* defaults to 20 bits (us) */
         int ret;
 
-        prelude_return_val_if_fail(time && out, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(time, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(out, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         tv.tv_sec = idmef_time_get_sec(time);
         tv.tv_usec = idmef_time_get_usec(time);
@@ -323,7 +326,8 @@ int idmef_time_to_string(const idmef_time_t *time, prelude_string_t *out)
         struct tm utc;
         uint32_t hour_off, min_off, sec_off;
 
-        prelude_return_val_if_fail(time && out, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(time, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(out, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         t = time->sec + time->gmt_offset;
 
@@ -388,7 +392,8 @@ int idmef_time_set_from_timeval(idmef_time_t *time, const struct timeval *tv)
         int ret;
         long gmtoff;
 
-        prelude_return_val_if_fail(time && tv, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(time, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(tv, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         ret = prelude_get_gmt_offset_from_time((const time_t *) &tv->tv_sec, &gmtoff);
         if ( ret < 0 )
@@ -553,7 +558,8 @@ void idmef_time_set_from_time(idmef_time_t *time, const time_t *t)
 {
         long gmtoff;
 
-        prelude_return_if_fail(time && t);
+        prelude_return_if_fail(time);
+        prelude_return_if_fail(t);
 
         prelude_get_gmt_offset_from_time(t, &gmtoff);
 
@@ -709,7 +715,8 @@ uint32_t idmef_time_get_usec(const idmef_time_t *time)
  */
 int idmef_time_copy(const idmef_time_t *src, idmef_time_t *dst)
 {
-        prelude_return_val_if_fail(src && dst, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(src, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(dst, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         dst->sec = src->sec;
         dst->usec = src->usec;
