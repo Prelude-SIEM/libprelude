@@ -913,19 +913,19 @@ sub     struct_ref
     $self->output("
 /**
  * idmef_$struct->{short_typename}_ref:
- * \@ptr: pointer to a #$struct->{typename} object.
+ * \@$struct->{short_typename}: pointer to a #$struct->{typename} object.
  *
- * Increase \@ptr reference count, so that it can be referenced
+ * Increase \@$struct->{short_typename} reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to \@ptr.
+ * Returns: a pointer to \@$struct->{short_typename}.
  */
-$struct->{typename} *idmef_$struct->{short_typename}_ref($struct->{typename} *ptr)
+$struct->{typename} *idmef_$struct->{short_typename}_ref($struct->{typename} *$struct->{short_typename})
 \{
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail($struct->{short_typename}, NULL);
+        $struct->{short_typename}->refcount++;
 
-        return ptr;
+        return $struct->{short_typename};
 \}
 ");
 }

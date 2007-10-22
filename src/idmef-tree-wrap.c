@@ -1840,19 +1840,19 @@ int idmef_additional_data_new(idmef_additional_data_t **ret)
 
 /**
  * idmef_additional_data_ref:
- * @ptr: pointer to a #idmef_additional_data_t object.
+ * @additional_data: pointer to a #idmef_additional_data_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @additional_data reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @additional_data.
  */
-idmef_additional_data_t *idmef_additional_data_ref(idmef_additional_data_t *ptr)
+idmef_additional_data_t *idmef_additional_data_ref(idmef_additional_data_t *additional_data)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(additional_data, NULL);
+        additional_data->refcount++;
 
-        return ptr;
+        return additional_data;
 }
 
 int _idmef_additional_data_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -2218,19 +2218,19 @@ int idmef_reference_new(idmef_reference_t **ret)
 
 /**
  * idmef_reference_ref:
- * @ptr: pointer to a #idmef_reference_t object.
+ * @reference: pointer to a #idmef_reference_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @reference reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @reference.
  */
-idmef_reference_t *idmef_reference_ref(idmef_reference_t *ptr)
+idmef_reference_t *idmef_reference_ref(idmef_reference_t *reference)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(reference, NULL);
+        reference->refcount++;
 
-        return ptr;
+        return reference;
 }
 
 int _idmef_reference_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -2669,19 +2669,19 @@ int idmef_classification_new(idmef_classification_t **ret)
 
 /**
  * idmef_classification_ref:
- * @ptr: pointer to a #idmef_classification_t object.
+ * @classification: pointer to a #idmef_classification_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @classification reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @classification.
  */
-idmef_classification_t *idmef_classification_ref(idmef_classification_t *ptr)
+idmef_classification_t *idmef_classification_ref(idmef_classification_t *classification)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(classification, NULL);
+        classification->refcount++;
 
-        return ptr;
+        return classification;
 }
 
 int _idmef_classification_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -3145,19 +3145,19 @@ int idmef_user_id_new(idmef_user_id_t **ret)
 
 /**
  * idmef_user_id_ref:
- * @ptr: pointer to a #idmef_user_id_t object.
+ * @user_id: pointer to a #idmef_user_id_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @user_id reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @user_id.
  */
-idmef_user_id_t *idmef_user_id_ref(idmef_user_id_t *ptr)
+idmef_user_id_t *idmef_user_id_ref(idmef_user_id_t *user_id)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(user_id, NULL);
+        user_id->refcount++;
 
-        return ptr;
+        return user_id;
 }
 
 int _idmef_user_id_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -3695,19 +3695,19 @@ int idmef_user_new(idmef_user_t **ret)
 
 /**
  * idmef_user_ref:
- * @ptr: pointer to a #idmef_user_t object.
+ * @user: pointer to a #idmef_user_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @user reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @user.
  */
-idmef_user_t *idmef_user_ref(idmef_user_t *ptr)
+idmef_user_t *idmef_user_ref(idmef_user_t *user)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(user, NULL);
+        user->refcount++;
 
-        return ptr;
+        return user;
 }
 
 int _idmef_user_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -4161,19 +4161,19 @@ int idmef_address_new(idmef_address_t **ret)
 
 /**
  * idmef_address_ref:
- * @ptr: pointer to a #idmef_address_t object.
+ * @address: pointer to a #idmef_address_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @address reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @address.
  */
-idmef_address_t *idmef_address_ref(idmef_address_t *ptr)
+idmef_address_t *idmef_address_ref(idmef_address_t *address)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(address, NULL);
+        address->refcount++;
 
-        return ptr;
+        return address;
 }
 
 int _idmef_address_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -4786,19 +4786,19 @@ int idmef_process_new(idmef_process_t **ret)
 
 /**
  * idmef_process_ref:
- * @ptr: pointer to a #idmef_process_t object.
+ * @process: pointer to a #idmef_process_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @process reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @process.
  */
-idmef_process_t *idmef_process_ref(idmef_process_t *ptr)
+idmef_process_t *idmef_process_ref(idmef_process_t *process)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(process, NULL);
+        process->refcount++;
 
-        return ptr;
+        return process;
 }
 
 int _idmef_process_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -5586,19 +5586,19 @@ int idmef_web_service_new(idmef_web_service_t **ret)
 
 /**
  * idmef_web_service_ref:
- * @ptr: pointer to a #idmef_web_service_t object.
+ * @web_service: pointer to a #idmef_web_service_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @web_service reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @web_service.
  */
-idmef_web_service_t *idmef_web_service_ref(idmef_web_service_t *ptr)
+idmef_web_service_t *idmef_web_service_ref(idmef_web_service_t *web_service)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(web_service, NULL);
+        web_service->refcount++;
 
-        return ptr;
+        return web_service;
 }
 
 int _idmef_web_service_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -6143,19 +6143,19 @@ int idmef_snmp_service_new(idmef_snmp_service_t **ret)
 
 /**
  * idmef_snmp_service_ref:
- * @ptr: pointer to a #idmef_snmp_service_t object.
+ * @snmp_service: pointer to a #idmef_snmp_service_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @snmp_service reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @snmp_service.
  */
-idmef_snmp_service_t *idmef_snmp_service_ref(idmef_snmp_service_t *ptr)
+idmef_snmp_service_t *idmef_snmp_service_ref(idmef_snmp_service_t *snmp_service)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(snmp_service, NULL);
+        snmp_service->refcount++;
 
-        return ptr;
+        return snmp_service;
 }
 
 int _idmef_snmp_service_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -7028,19 +7028,19 @@ int idmef_service_new(idmef_service_t **ret)
 
 /**
  * idmef_service_ref:
- * @ptr: pointer to a #idmef_service_t object.
+ * @service: pointer to a #idmef_service_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @service reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @service.
  */
-idmef_service_t *idmef_service_ref(idmef_service_t *ptr)
+idmef_service_t *idmef_service_ref(idmef_service_t *service)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(service, NULL);
+        service->refcount++;
 
-        return ptr;
+        return service;
 }
 
 int _idmef_service_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -8083,19 +8083,19 @@ int idmef_node_new(idmef_node_t **ret)
 
 /**
  * idmef_node_ref:
- * @ptr: pointer to a #idmef_node_t object.
+ * @node: pointer to a #idmef_node_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @node reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @node.
  */
-idmef_node_t *idmef_node_ref(idmef_node_t *ptr)
+idmef_node_t *idmef_node_ref(idmef_node_t *node)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(node, NULL);
+        node->refcount++;
 
-        return ptr;
+        return node;
 }
 
 int _idmef_node_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -8715,19 +8715,19 @@ int idmef_source_new(idmef_source_t **ret)
 
 /**
  * idmef_source_ref:
- * @ptr: pointer to a #idmef_source_t object.
+ * @source: pointer to a #idmef_source_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @source reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @source.
  */
-idmef_source_t *idmef_source_ref(idmef_source_t *ptr)
+idmef_source_t *idmef_source_ref(idmef_source_t *source)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(source, NULL);
+        source->refcount++;
 
-        return ptr;
+        return source;
 }
 
 int _idmef_source_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -9431,19 +9431,19 @@ int idmef_file_access_new(idmef_file_access_t **ret)
 
 /**
  * idmef_file_access_ref:
- * @ptr: pointer to a #idmef_file_access_t object.
+ * @file_access: pointer to a #idmef_file_access_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @file_access reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @file_access.
  */
-idmef_file_access_t *idmef_file_access_ref(idmef_file_access_t *ptr)
+idmef_file_access_t *idmef_file_access_ref(idmef_file_access_t *file_access)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(file_access, NULL);
+        file_access->refcount++;
 
-        return ptr;
+        return file_access;
 }
 
 int _idmef_file_access_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -9826,19 +9826,19 @@ int idmef_inode_new(idmef_inode_t **ret)
 
 /**
  * idmef_inode_ref:
- * @ptr: pointer to a #idmef_inode_t object.
+ * @inode: pointer to a #idmef_inode_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @inode reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @inode.
  */
-idmef_inode_t *idmef_inode_ref(idmef_inode_t *ptr)
+idmef_inode_t *idmef_inode_ref(idmef_inode_t *inode)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(inode, NULL);
+        inode->refcount++;
 
-        return ptr;
+        return inode;
 }
 
 int _idmef_inode_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -10452,19 +10452,19 @@ int idmef_checksum_new(idmef_checksum_t **ret)
 
 /**
  * idmef_checksum_ref:
- * @ptr: pointer to a #idmef_checksum_t object.
+ * @checksum: pointer to a #idmef_checksum_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @checksum reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @checksum.
  */
-idmef_checksum_t *idmef_checksum_ref(idmef_checksum_t *ptr)
+idmef_checksum_t *idmef_checksum_ref(idmef_checksum_t *checksum)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(checksum, NULL);
+        checksum->refcount++;
 
-        return ptr;
+        return checksum;
 }
 
 int _idmef_checksum_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -10839,19 +10839,19 @@ int idmef_file_new(idmef_file_t **ret)
 
 /**
  * idmef_file_ref:
- * @ptr: pointer to a #idmef_file_t object.
+ * @file: pointer to a #idmef_file_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @file reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @file.
  */
-idmef_file_t *idmef_file_ref(idmef_file_t *ptr)
+idmef_file_t *idmef_file_ref(idmef_file_t *file)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(file, NULL);
+        file->refcount++;
 
-        return ptr;
+        return file;
 }
 
 int _idmef_file_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -12425,19 +12425,19 @@ int idmef_linkage_new(idmef_linkage_t **ret)
 
 /**
  * idmef_linkage_ref:
- * @ptr: pointer to a #idmef_linkage_t object.
+ * @linkage: pointer to a #idmef_linkage_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @linkage reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @linkage.
  */
-idmef_linkage_t *idmef_linkage_ref(idmef_linkage_t *ptr)
+idmef_linkage_t *idmef_linkage_ref(idmef_linkage_t *linkage)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(linkage, NULL);
+        linkage->refcount++;
 
-        return ptr;
+        return linkage;
 }
 
 int _idmef_linkage_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -12876,19 +12876,19 @@ int idmef_target_new(idmef_target_t **ret)
 
 /**
  * idmef_target_ref:
- * @ptr: pointer to a #idmef_target_t object.
+ * @target: pointer to a #idmef_target_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @target reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @target.
  */
-idmef_target_t *idmef_target_ref(idmef_target_t *ptr)
+idmef_target_t *idmef_target_ref(idmef_target_t *target)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(target, NULL);
+        target->refcount++;
 
-        return ptr;
+        return target;
 }
 
 int _idmef_target_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -13752,19 +13752,19 @@ int idmef_analyzer_new(idmef_analyzer_t **ret)
 
 /**
  * idmef_analyzer_ref:
- * @ptr: pointer to a #idmef_analyzer_t object.
+ * @analyzer: pointer to a #idmef_analyzer_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @analyzer reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @analyzer.
  */
-idmef_analyzer_t *idmef_analyzer_ref(idmef_analyzer_t *ptr)
+idmef_analyzer_t *idmef_analyzer_ref(idmef_analyzer_t *analyzer)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(analyzer, NULL);
+        analyzer->refcount++;
 
-        return ptr;
+        return analyzer;
 }
 
 int _idmef_analyzer_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -14739,19 +14739,19 @@ int idmef_alertident_new(idmef_alertident_t **ret)
 
 /**
  * idmef_alertident_ref:
- * @ptr: pointer to a #idmef_alertident_t object.
+ * @alertident: pointer to a #idmef_alertident_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @alertident reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @alertident.
  */
-idmef_alertident_t *idmef_alertident_ref(idmef_alertident_t *ptr)
+idmef_alertident_t *idmef_alertident_ref(idmef_alertident_t *alertident)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(alertident, NULL);
+        alertident->refcount++;
 
-        return ptr;
+        return alertident;
 }
 
 int _idmef_alertident_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -15053,19 +15053,19 @@ int idmef_impact_new(idmef_impact_t **ret)
 
 /**
  * idmef_impact_ref:
- * @ptr: pointer to a #idmef_impact_t object.
+ * @impact: pointer to a #idmef_impact_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @impact reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @impact.
  */
-idmef_impact_t *idmef_impact_ref(idmef_impact_t *ptr)
+idmef_impact_t *idmef_impact_ref(idmef_impact_t *impact)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(impact, NULL);
+        impact->refcount++;
 
-        return ptr;
+        return impact;
 }
 
 int _idmef_impact_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -15516,19 +15516,19 @@ int idmef_action_new(idmef_action_t **ret)
 
 /**
  * idmef_action_ref:
- * @ptr: pointer to a #idmef_action_t object.
+ * @action: pointer to a #idmef_action_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @action reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @action.
  */
-idmef_action_t *idmef_action_ref(idmef_action_t *ptr)
+idmef_action_t *idmef_action_ref(idmef_action_t *action)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(action, NULL);
+        action->refcount++;
 
-        return ptr;
+        return action;
 }
 
 int _idmef_action_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -15820,19 +15820,19 @@ int idmef_confidence_new(idmef_confidence_t **ret)
 
 /**
  * idmef_confidence_ref:
- * @ptr: pointer to a #idmef_confidence_t object.
+ * @confidence: pointer to a #idmef_confidence_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @confidence reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @confidence.
  */
-idmef_confidence_t *idmef_confidence_ref(idmef_confidence_t *ptr)
+idmef_confidence_t *idmef_confidence_ref(idmef_confidence_t *confidence)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(confidence, NULL);
+        confidence->refcount++;
 
-        return ptr;
+        return confidence;
 }
 
 int _idmef_confidence_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -16101,19 +16101,19 @@ int idmef_assessment_new(idmef_assessment_t **ret)
 
 /**
  * idmef_assessment_ref:
- * @ptr: pointer to a #idmef_assessment_t object.
+ * @assessment: pointer to a #idmef_assessment_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @assessment reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @assessment.
  */
-idmef_assessment_t *idmef_assessment_ref(idmef_assessment_t *ptr)
+idmef_assessment_t *idmef_assessment_ref(idmef_assessment_t *assessment)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(assessment, NULL);
+        assessment->refcount++;
 
-        return ptr;
+        return assessment;
 }
 
 int _idmef_assessment_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -16585,19 +16585,19 @@ int idmef_tool_alert_new(idmef_tool_alert_t **ret)
 
 /**
  * idmef_tool_alert_ref:
- * @ptr: pointer to a #idmef_tool_alert_t object.
+ * @tool_alert: pointer to a #idmef_tool_alert_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @tool_alert reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @tool_alert.
  */
-idmef_tool_alert_t *idmef_tool_alert_ref(idmef_tool_alert_t *ptr)
+idmef_tool_alert_t *idmef_tool_alert_ref(idmef_tool_alert_t *tool_alert)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(tool_alert, NULL);
+        tool_alert->refcount++;
 
-        return ptr;
+        return tool_alert;
 }
 
 int _idmef_tool_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -17062,19 +17062,19 @@ int idmef_correlation_alert_new(idmef_correlation_alert_t **ret)
 
 /**
  * idmef_correlation_alert_ref:
- * @ptr: pointer to a #idmef_correlation_alert_t object.
+ * @correlation_alert: pointer to a #idmef_correlation_alert_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @correlation_alert reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @correlation_alert.
  */
-idmef_correlation_alert_t *idmef_correlation_alert_ref(idmef_correlation_alert_t *ptr)
+idmef_correlation_alert_t *idmef_correlation_alert_ref(idmef_correlation_alert_t *correlation_alert)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(correlation_alert, NULL);
+        correlation_alert->refcount++;
 
-        return ptr;
+        return correlation_alert;
 }
 
 int _idmef_correlation_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -17453,19 +17453,19 @@ int idmef_overflow_alert_new(idmef_overflow_alert_t **ret)
 
 /**
  * idmef_overflow_alert_ref:
- * @ptr: pointer to a #idmef_overflow_alert_t object.
+ * @overflow_alert: pointer to a #idmef_overflow_alert_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @overflow_alert reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @overflow_alert.
  */
-idmef_overflow_alert_t *idmef_overflow_alert_ref(idmef_overflow_alert_t *ptr)
+idmef_overflow_alert_t *idmef_overflow_alert_ref(idmef_overflow_alert_t *overflow_alert)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(overflow_alert, NULL);
+        overflow_alert->refcount++;
 
-        return ptr;
+        return overflow_alert;
 }
 
 int _idmef_overflow_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -17853,19 +17853,19 @@ int idmef_alert_new(idmef_alert_t **ret)
 
 /**
  * idmef_alert_ref:
- * @ptr: pointer to a #idmef_alert_t object.
+ * @alert: pointer to a #idmef_alert_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @alert reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @alert.
  */
-idmef_alert_t *idmef_alert_ref(idmef_alert_t *ptr)
+idmef_alert_t *idmef_alert_ref(idmef_alert_t *alert)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(alert, NULL);
+        alert->refcount++;
 
-        return ptr;
+        return alert;
 }
 
 int _idmef_alert_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -19529,19 +19529,19 @@ int idmef_heartbeat_new(idmef_heartbeat_t **ret)
 
 /**
  * idmef_heartbeat_ref:
- * @ptr: pointer to a #idmef_heartbeat_t object.
+ * @heartbeat: pointer to a #idmef_heartbeat_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @heartbeat reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @heartbeat.
  */
-idmef_heartbeat_t *idmef_heartbeat_ref(idmef_heartbeat_t *ptr)
+idmef_heartbeat_t *idmef_heartbeat_ref(idmef_heartbeat_t *heartbeat)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(heartbeat, NULL);
+        heartbeat->refcount++;
 
-        return ptr;
+        return heartbeat;
 }
 
 int _idmef_heartbeat_get_child(void *p, idmef_class_child_id_t child, void **childptr)
@@ -20326,19 +20326,19 @@ int idmef_message_new(idmef_message_t **ret)
 
 /**
  * idmef_message_ref:
- * @ptr: pointer to a #idmef_message_t object.
+ * @message: pointer to a #idmef_message_t object.
  *
- * Increase @ptr reference count, so that it can be referenced
+ * Increase @message reference count, so that it can be referenced
  * multiple time.
  *
- * Returns: a pointer to @ptr.
+ * Returns: a pointer to @message.
  */
-idmef_message_t *idmef_message_ref(idmef_message_t *ptr)
+idmef_message_t *idmef_message_ref(idmef_message_t *message)
 {
-        prelude_return_val_if_fail(ptr, NULL);
-        ptr->refcount++;
+        prelude_return_val_if_fail(message, NULL);
+        message->refcount++;
 
-        return ptr;
+        return message;
 }
 
 int _idmef_message_get_child(void *p, idmef_class_child_id_t child, void **childptr)
