@@ -120,7 +120,8 @@ sub     header
 
 static int prelude_string_copy(const prelude_string_t *src, prelude_string_t *dst)
 {
-        prelude_return_val_if_fail(src && dst, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(src, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(dst, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! prelude_string_is_empty(src) )
                return prelude_string_copy_dup(src, dst);
@@ -522,7 +523,8 @@ int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct
 \{
         int ret;
 
-        prelude_return_val_if_fail(src && dst, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(src, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(dst, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         ret = 0;
 ");
@@ -1351,7 +1353,8 @@ $field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name
  */
 void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object, int pos)
 \{
-        prelude_return_if_fail(ptr && object);
+        prelude_return_if_fail(ptr);
+        prelude_return_if_fail(object);
 
         if ( ! prelude_list_is_empty(&object->list) )
                 prelude_list_del_init(&object->list);
