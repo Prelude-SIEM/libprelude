@@ -1730,6 +1730,8 @@ int idmef_heartbeat_write(idmef_heartbeat_t *heartbeat, prelude_msgbuf_t *msg)
         if ( ! heartbeat )
                 return 0;
 
+        prelude_msg_set_priority(prelude_msgbuf_get_msg(msg), PRELUDE_MSG_PRIORITY_HIGH);
+
         ret = prelude_msgbuf_set(msg, IDMEF_MSG_HEARTBEAT_TAG, 0, NULL);
         if ( ret < 0 )
                 return ret;

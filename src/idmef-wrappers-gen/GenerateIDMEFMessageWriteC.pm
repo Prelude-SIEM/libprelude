@@ -355,6 +355,10 @@ int idmef_$struct->{short_typename}_write($struct->{typename} *$struct->{short_t
                   " " x 16, "return 0;",
                   "\n\n");
 
+    if ( $struct->{typename} eq "idmef_heartbeat_t" ) {
+        $self->output(" " x 8, "prelude_msg_set_priority(prelude_msgbuf_get_msg(msg), PRELUDE_MSG_PRIORITY_HIGH);\n\n");
+    }
+
     if ( ! $struct->{toplevel} ) {
         $self->output(" " x 8, "ret = prelude_msgbuf_set(msg, ", "IDMEF_MSG_" . uc($struct->{short_typename}) . "_TAG", ", 0, NULL);\n",
 " " x 8, "if ( ret < 0 )\n", " " x 16, "return ret;\n");
