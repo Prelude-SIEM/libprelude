@@ -98,19 +98,24 @@ static volatile sig_atomic_t is_initialized = FALSE;
 
 
 
-
-static prelude_bool_t timer_need_wake_up(struct timespec *now, struct timespec *start)
+static int timespec_elapsed(struct timespec *end, struct timespec *start)
 {
-        time_t diff = now->tv_sec - start->tv_sec;
+        int diff = end->tv_sec - start->tv_sec;
 
-        if ( diff > 1 || (diff == 1 && now->tv_nsec >= start->tv_nsec) )
-                return TRUE;
+        if ( end->tv_nsec < start->tv_nsec )
+                diff -= 1;
 
-        return FALSE;
+        return diff;
 }
 
 
-static void get_time(struct timespec *ts)
+static prelude_bool_t timespec_expired(struct timespec *end, struct timespec *start)
+{
+        return ( timespec_elapsed(end, start) ) ? TRUE : FALSE;
+}
+
+
+static struct timespec *get_timespec(struct timespec *ts)
 {
 #if _POSIX_TIMERS - 0 > 0
         int ret;
@@ -127,6 +132,8 @@ static void get_time(struct timespec *ts)
         ts->tv_sec = now.tv_sec;
         ts->tv_nsec = now.tv_usec * 1000;
 #endif
+
+        return ts;
 }
 
 
@@ -135,9 +142,12 @@ static int wait_timer_and_data(void)
 {
         int ret;
         struct timespec ts;
+        static struct timespec last_wakeup;
         prelude_async_flags_t old_async_flags;
         prelude_bool_t no_job_available = TRUE;
-        static struct timespec last_wake_up = { 0, 0 };
+
+        get_timespec(&last_wakeup);
+        last_wakeup.tv_sec--;
 
         while ( no_job_available ) {
                 ret = 0;
@@ -145,11 +155,8 @@ static int wait_timer_and_data(void)
                 pthread_mutex_lock(&mutex);
                 old_async_flags = async_flags;
 
-                /*
-                 * Setup the condition timer to one second.
-                 */
-                get_time(&ts);
-                ts.tv_sec++;
+                ts.tv_sec = last_wakeup.tv_sec + 1;
+                ts.tv_nsec = last_wakeup.tv_nsec;
 
                 while ( (no_job_available = prelude_list_is_empty(&joblist)) &&
                         ! stop_processing && async_flags == old_async_flags && ret != ETIMEDOUT ) {
@@ -164,11 +171,10 @@ static int wait_timer_and_data(void)
 
                 pthread_mutex_unlock(&mutex);
 
-                get_time(&ts);
-                if ( ret == ETIMEDOUT || timer_need_wake_up(&ts, &last_wake_up) ) {
+                if ( ret == ETIMEDOUT || timespec_expired(get_timespec(&ts), &last_wakeup) ) {
                         prelude_timer_wake_up();
-                        last_wake_up.tv_sec = ts.tv_sec;
-                        last_wake_up.tv_nsec = ts.tv_nsec;
+                        last_wakeup.tv_sec = ts.tv_sec;
+                        last_wakeup.tv_nsec = ts.tv_nsec;
                 }
         }
 
