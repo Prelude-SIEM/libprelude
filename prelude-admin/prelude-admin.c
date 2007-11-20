@@ -2006,7 +2006,7 @@ static int list_cmd(int argc, char **argv)
 
                 data.size = (unsigned int) size;
                 cert_max = sizeof(certs) / sizeof(*certs);
-                ret = _prelude_tls_crt_list_import(certs, &cert_max, &data, GNUTLS_X509_FMT_PEM, 0);
+                ret = _prelude_tls_crt_list_import(certs, &cert_max, &data, GNUTLS_X509_FMT_PEM);
                 if ( ret < 0 ) {
                         fprintf(stderr, "error importing certificate listing: %s.\n", gnutls_strerror(ret));
                         continue;

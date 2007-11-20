@@ -49,7 +49,7 @@
 #define X509_BEGIN_STR2 "-----BEGIN CERTIFICATE"
 
 int _prelude_tls_crt_list_import(gnutls_x509_crt *certs, unsigned int *cmax,
-                                 const gnutls_datum *indata, gnutls_x509_crt_fmt format, unsigned int flags)
+                                 const gnutls_datum *indata, gnutls_x509_crt_fmt format)
 {
         int ret;
         size_t skiplen;
@@ -104,9 +104,9 @@ int _prelude_tls_crt_list_import(gnutls_x509_crt *certs, unsigned int *cmax,
 #else
 
 int _prelude_tls_crt_list_import(gnutls_x509_crt *certs, unsigned int *cmax,
-                                 const gnutls_datum *indata, gnutls_x509_crt_fmt format, unsigned int flags)
+                                 const gnutls_datum *indata, gnutls_x509_crt_fmt format)
 {
-        return gnutls_x509_crt_list_import(certs, cmax, indata, format, flags);
+        return gnutls_x509_crt_list_import(certs, cmax, indata, format, GNUTLS_X509_CRT_LIST_IMPORT_FAIL_IF_EXCEED);
 }
 
 #endif
@@ -126,7 +126,7 @@ int tls_certificates_load(gnutls_x509_privkey key, const char *certfname, gnutls
         certfile.size = (unsigned int) size;
 
         cert_max = sizeof(certs) / sizeof(*certs);
-        ret = _prelude_tls_crt_list_import(certs, &cert_max, &certfile, GNUTLS_X509_FMT_PEM, GNUTLS_X509_CRT_LIST_IMPORT_FAIL_IF_EXCEED);
+        ret = _prelude_tls_crt_list_import(certs, &cert_max, &certfile, GNUTLS_X509_FMT_PEM);
         if ( ret < 0 ) {
                 ret = prelude_error_verbose(PRELUDE_ERROR_PROFILE, "error importing certificate listing: %s", gnutls_strerror(ret));
                 goto err;
