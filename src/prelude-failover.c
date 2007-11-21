@@ -330,12 +330,12 @@ static int journal_initialize(prelude_failover_t *failover, const char *filename
 }
 
 
-static int lock_cmd(int fd, int cmd, int type)
+static int lock_cmd(const char *filename, int fd, int cmd, int type)
 {
         int ret;
         struct flock lock;
 
-        lock.l_type = type;    /* write lock */
+        lock.l_type = type;       /* write lock */
         lock.l_start = 0;         /* from offset 0 */
         lock.l_whence = SEEK_SET; /* at the beginning of the file */
         lock.l_len = 0;           /* until EOF */
@@ -345,7 +345,8 @@ static int lock_cmd(int fd, int cmd, int type)
                 if ( errno == EAGAIN || errno == EACCES )
                         return 0;
 
-                return prelude_error_from_errno(errno);
+                return prelude_error_verbose(prelude_error_code_from_errno(errno), "error locking '%s': %s",
+                                             filename, strerror(errno));
         }
 
         return 1;
@@ -361,7 +362,7 @@ static int open_exclusive(const char *filename, int flags, int *fd)
         if ( *fd < 0 )
                 return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "error opening '%s': %s", filename, strerror(errno));
 
-        ret = lock_cmd(*fd, F_SETLK, F_RDLCK|F_WRLCK);
+        ret = lock_cmd(filename, *fd, F_SETLK, F_RDLCK|F_WRLCK);
         if ( ret <= 0 )
                 close(*fd);
 
