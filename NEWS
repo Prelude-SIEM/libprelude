@@ -1,3 +1,23 @@
+* 2007-11-22, libprelude-0.9.16.1:
+
+- Heartbeat are now sent as high priority messages.
+
+- Fix compilation issue on system with old GnuTLS version (close #268).
+
+- Propagate the CC environment variable for bindings compilation 
+  (fix #264), by Pierre Chifflier <p.chifflier@inl.fr>.
+
+- More explicit assertion on invalid API usage, thanks to 
+  Sebastien Tricaud <toady@inl.fr>.
+
+- Appropriatly set the process umask before creating analyzer 
+  profile / failover files and directories (Fix possible loading
+  problem with certain umask).
+
+- Various bug fixes and minor enhancements.
+
+
+
 * 2007-10-01, libprelude-0.9.16:
 
 - Implement prelude-admin list [-l] command, which provide the ability to list
