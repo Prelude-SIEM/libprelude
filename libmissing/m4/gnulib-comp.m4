@@ -64,6 +64,7 @@ AC_SUBST([LTALLOCA])
   gl_FUNC_LSEEK
   gl_UNISTD_MODULE_INDICATOR([lseek])
   AC_FUNC_MALLOC
+  AC_DEFINE([GNULIB_MALLOC_GNU], 1, [Define to indicate the 'malloc' module.])
   gl_FUNC_MALLOC_POSIX
   gl_STDLIB_MODULE_INDICATOR([malloc-posix])
   gl_MALLOCA
@@ -151,13 +152,17 @@ AC_DEFUN([gl_REPLACE_FUNCS], [
   AC_CHECK_FUNCS([$1], , [gl_LIBOBJ($ac_func)])
 ])
 
-# Like AC_LIBSOURCES, except check for typos now.
-# We rely on EXTRA_lib..._SOURCES instead.
+# Like AC_LIBSOURCES, except the directory where the source file is
+# expected is derived from the gnulib-tool parametrization,
+# and alloca is special cased (for the alloca-opt module).
+# We could also entirely rely on EXTRA_lib..._SOURCES.
 AC_DEFUN([gl_LIBSOURCES], [
   m4_foreach([_gl_NAME], [$1], [
-    m4_syscmd([test -r libmissing/]_gl_NAME[ || test ! -d libmissing])dnl
-    m4_if(m4_sysval, [0], [],
-      [AC_FATAL([missing libmissing/]_gl_NAME)])
+    m4_if(_gl_NAME, [alloca.c], [], [
+      m4_syscmd([test -r libmissing/]_gl_NAME[ || test ! -d libmissing])dnl
+      m4_if(m4_sysval, [0], [],
+        [AC_FATAL([missing libmissing/]_gl_NAME)])
+    ])
   ])
 ])
 
@@ -166,11 +171,11 @@ AC_DEFUN([gl_LIBSOURCES], [
 AC_DEFUN([gl_FILE_LIST], [
   build-aux/link-warning.h
   lib/alloca.c
-  lib/alloca_.h
+  lib/alloca.in.h
   lib/asnprintf.c
   lib/config.charset
   lib/float+.h
-  lib/float_.h
+  lib/float.in.h
   lib/fseeko.c
   lib/ftw.c
   lib/ftw_.h
@@ -195,10 +200,10 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/memmem.c
   lib/minmax.h
   lib/mktime.c
-  lib/netinet_in_.h
+  lib/netinet_in.in.h
   lib/pathmax.h
   lib/poll.c
-  lib/poll_.h
+  lib/poll.in.h
   lib/printf-args.c
   lib/printf-args.h
   lib/printf-parse.c
@@ -214,32 +219,32 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/regexec.c
   lib/size_max.h
   lib/snprintf.c
-  lib/stdbool_.h
-  lib/stdint_.h
-  lib/stdio_.h
-  lib/stdlib_.h
+  lib/stdbool.in.h
+  lib/stdint.in.h
+  lib/stdio.in.h
+  lib/stdlib.in.h
   lib/strcasecmp.c
   lib/strcasestr.c
   lib/strdup.c
-  lib/string_.h
+  lib/string.in.h
   lib/strncasecmp.c
   lib/strndup.c
   lib/strnlen.c
   lib/strpbrk.c
   lib/strptime.c
   lib/strsep.c
-  lib/sys_select_.h
-  lib/sys_socket_.h
-  lib/sys_time_.h
-  lib/time_.h
+  lib/sys_select.in.h
+  lib/sys_socket.in.h
+  lib/sys_time.in.h
+  lib/time.in.h
   lib/time_r.c
   lib/timegm.c
-  lib/unistd_.h
+  lib/unistd.in.h
   lib/vasnprintf.c
   lib/vasnprintf.h
   lib/vsnprintf.c
-  lib/wchar_.h
-  lib/wctype_.h
+  lib/wchar.in.h
+  lib/wctype.in.h
   lib/xsize.h
   m4/absolute-header.m4
   m4/alloca.m4
@@ -302,7 +307,6 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/time_r.m4
   m4/timegm.m4
   m4/tm_gmtoff.m4
-  m4/ulonglong.m4
   m4/unistd_h.m4
   m4/vasnprintf.m4
   m4/vsnprintf.m4

@@ -3,7 +3,7 @@
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as published by
-   the Free Software Foundation; either version 2.1, or (at your option)
+   the Free Software Foundation; either version 2, or (at your option)
    any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -90,6 +90,10 @@ rpl_fseeko (FILE *fp, off_t offset, int whence)
        || fp->__bufpos == fp->__bufstart)
       && ((fp->__modeflags & (__FLAG_READONLY | __FLAG_READING)) == 0
 	  || fp->__bufpos == fp->__bufread))
+#elif defined __QNX__               /* QNX */
+  if ((fp->_Mode & _MWRITE ? fp->_Next == fp->_Buf : fp->_Next == fp->_Rend)
+      && fp->_Rback == fp->_Back + sizeof (fp->_Back)
+      && fp->_Rsave == NULL)
 #else
   #error "Please port gnulib fseeko.c to your platform! Look at the code in fpurge.c, then report this to bug-gnulib."
 #endif
