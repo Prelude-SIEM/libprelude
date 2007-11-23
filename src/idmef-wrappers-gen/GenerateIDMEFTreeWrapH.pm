@@ -134,7 +134,7 @@ sub	struct_ref
 
     $struct->{refcount} or return;
 
-    $self->output("$struct->{typename} *idmef_$struct->{short_typename}_ref($struct->{typename} *ptr);\n");
+    $self->output("$struct->{typename} *idmef_$struct->{short_typename}_ref($struct->{typename} *$struct->{short_typename});\n");
 
 }
 

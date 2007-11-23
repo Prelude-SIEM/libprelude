@@ -382,7 +382,7 @@ const idmef_additional_data_t *obj1, const idmef_additional_data_t *obj2
 <FUNCTION>
 <NAME>idmef_additional_data_ref</NAME>
 <RETURNS>idmef_additional_data_t *</RETURNS>
-idmef_additional_data_t *ptr
+idmef_additional_data_t *additional_data
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_additional_data_destroy</NAME>
@@ -483,7 +483,7 @@ const idmef_reference_t *obj1, const idmef_reference_t *obj2
 <FUNCTION>
 <NAME>idmef_reference_ref</NAME>
 <RETURNS>idmef_reference_t *</RETURNS>
-idmef_reference_t *ptr
+idmef_reference_t *reference
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_reference_destroy</NAME>
@@ -577,7 +577,7 @@ const idmef_classification_t *obj1, const idmef_classification_t *obj2
 <FUNCTION>
 <NAME>idmef_classification_ref</NAME>
 <RETURNS>idmef_classification_t *</RETURNS>
-idmef_classification_t *ptr
+idmef_classification_t *classification
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_destroy</NAME>
@@ -679,7 +679,7 @@ const idmef_user_id_t *obj1, const idmef_user_id_t *obj2
 <FUNCTION>
 <NAME>idmef_user_id_ref</NAME>
 <RETURNS>idmef_user_id_t *</RETURNS>
-idmef_user_id_t *ptr
+idmef_user_id_t *user_id
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_id_destroy</NAME>
@@ -812,7 +812,7 @@ const idmef_user_t *obj1, const idmef_user_t *obj2
 <FUNCTION>
 <NAME>idmef_user_ref</NAME>
 <RETURNS>idmef_user_t *</RETURNS>
-idmef_user_t *ptr
+idmef_user_t *user
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_destroy</NAME>
@@ -922,7 +922,7 @@ const idmef_address_t *obj1, const idmef_address_t *obj2
 <FUNCTION>
 <NAME>idmef_address_ref</NAME>
 <RETURNS>idmef_address_t *</RETURNS>
-idmef_address_t *ptr
+idmef_address_t *address
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_address_destroy</NAME>
@@ -1051,7 +1051,7 @@ const idmef_process_t *obj1, const idmef_process_t *obj2
 <FUNCTION>
 <NAME>idmef_process_ref</NAME>
 <RETURNS>idmef_process_t *</RETURNS>
-idmef_process_t *ptr
+idmef_process_t *process
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_destroy</NAME>
@@ -1180,7 +1180,7 @@ const idmef_web_service_t *obj1, const idmef_web_service_t *obj2
 <FUNCTION>
 <NAME>idmef_web_service_ref</NAME>
 <RETURNS>idmef_web_service_t *</RETURNS>
-idmef_web_service_t *ptr
+idmef_web_service_t *web_service
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_destroy</NAME>
@@ -1274,7 +1274,7 @@ const idmef_snmp_service_t *obj1, const idmef_snmp_service_t *obj2
 <FUNCTION>
 <NAME>idmef_snmp_service_ref</NAME>
 <RETURNS>idmef_snmp_service_t *</RETURNS>
-idmef_snmp_service_t *ptr
+idmef_snmp_service_t *snmp_service
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_snmp_service_destroy</NAME>
@@ -1477,7 +1477,7 @@ const idmef_service_t *obj1, const idmef_service_t *obj2
 <FUNCTION>
 <NAME>idmef_service_ref</NAME>
 <RETURNS>idmef_service_t *</RETURNS>
-idmef_service_t *ptr
+idmef_service_t *service
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_service_destroy</NAME>
@@ -1710,7 +1710,7 @@ const idmef_node_t *obj1, const idmef_node_t *obj2
 <FUNCTION>
 <NAME>idmef_node_ref</NAME>
 <RETURNS>idmef_node_t *</RETURNS>
-idmef_node_t *ptr
+idmef_node_t *node
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_destroy</NAME>
@@ -1838,7 +1838,7 @@ const idmef_source_t *obj1, const idmef_source_t *obj2
 <FUNCTION>
 <NAME>idmef_source_ref</NAME>
 <RETURNS>idmef_source_t *</RETURNS>
-idmef_source_t *ptr
+idmef_source_t *source
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_source_destroy</NAME>
@@ -1977,7 +1977,7 @@ const idmef_file_access_t *obj1, const idmef_file_access_t *obj2
 <FUNCTION>
 <NAME>idmef_file_access_ref</NAME>
 <RETURNS>idmef_file_access_t *</RETURNS>
-idmef_file_access_t *ptr
+idmef_file_access_t *file_access
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_access_destroy</NAME>
@@ -2041,7 +2041,7 @@ const idmef_inode_t *obj1, const idmef_inode_t *obj2
 <FUNCTION>
 <NAME>idmef_inode_ref</NAME>
 <RETURNS>idmef_inode_t *</RETURNS>
-idmef_inode_t *ptr
+idmef_inode_t *inode
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_inode_destroy</NAME>
@@ -2220,7 +2220,7 @@ const idmef_checksum_t *obj1, const idmef_checksum_t *obj2
 <FUNCTION>
 <NAME>idmef_checksum_ref</NAME>
 <RETURNS>idmef_checksum_t *</RETURNS>
-idmef_checksum_t *ptr
+idmef_checksum_t *checksum
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_checksum_destroy</NAME>
@@ -2343,7 +2343,7 @@ const idmef_file_t *obj1, const idmef_file_t *obj2
 <FUNCTION>
 <NAME>idmef_file_ref</NAME>
 <RETURNS>idmef_file_t *</RETURNS>
-idmef_file_t *ptr
+idmef_file_t *file
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_destroy</NAME>
@@ -2635,7 +2635,7 @@ const idmef_linkage_t *obj1, const idmef_linkage_t *obj2
 <FUNCTION>
 <NAME>idmef_linkage_ref</NAME>
 <RETURNS>idmef_linkage_t *</RETURNS>
-idmef_linkage_t *ptr
+idmef_linkage_t *linkage
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_linkage_destroy</NAME>
@@ -2748,7 +2748,7 @@ const idmef_target_t *obj1, const idmef_target_t *obj2
 <FUNCTION>
 <NAME>idmef_target_ref</NAME>
 <RETURNS>idmef_target_t *</RETURNS>
-idmef_target_t *ptr
+idmef_target_t *target
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_destroy</NAME>
@@ -2902,7 +2902,7 @@ const idmef_analyzer_t *obj1, const idmef_analyzer_t *obj2
 <FUNCTION>
 <NAME>idmef_analyzer_ref</NAME>
 <RETURNS>idmef_analyzer_t *</RETURNS>
-idmef_analyzer_t *ptr
+idmef_analyzer_t *analyzer
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_analyzer_destroy</NAME>
@@ -3086,7 +3086,7 @@ const idmef_alertident_t *obj1, const idmef_alertident_t *obj2
 <FUNCTION>
 <NAME>idmef_alertident_ref</NAME>
 <RETURNS>idmef_alertident_t *</RETURNS>
-idmef_alertident_t *ptr
+idmef_alertident_t *alertident
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alertident_destroy</NAME>
@@ -3210,7 +3210,7 @@ const idmef_impact_t *obj1, const idmef_impact_t *obj2
 <FUNCTION>
 <NAME>idmef_impact_ref</NAME>
 <RETURNS>idmef_impact_t *</RETURNS>
-idmef_impact_t *ptr
+idmef_impact_t *impact
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_impact_destroy</NAME>
@@ -3334,7 +3334,7 @@ const idmef_action_t *obj1, const idmef_action_t *obj2
 <FUNCTION>
 <NAME>idmef_action_ref</NAME>
 <RETURNS>idmef_action_t *</RETURNS>
-idmef_action_t *ptr
+idmef_action_t *action
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_action_destroy</NAME>
@@ -3418,7 +3418,7 @@ const idmef_confidence_t *obj1, const idmef_confidence_t *obj2
 <FUNCTION>
 <NAME>idmef_confidence_ref</NAME>
 <RETURNS>idmef_confidence_t *</RETURNS>
-idmef_confidence_t *ptr
+idmef_confidence_t *confidence
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_confidence_destroy</NAME>
@@ -3482,7 +3482,7 @@ const idmef_assessment_t *obj1, const idmef_assessment_t *obj2
 <FUNCTION>
 <NAME>idmef_assessment_ref</NAME>
 <RETURNS>idmef_assessment_t *</RETURNS>
-idmef_assessment_t *ptr
+idmef_assessment_t *assessment
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_destroy</NAME>
@@ -3561,7 +3561,7 @@ const idmef_tool_alert_t *obj1, const idmef_tool_alert_t *obj2
 <FUNCTION>
 <NAME>idmef_tool_alert_ref</NAME>
 <RETURNS>idmef_tool_alert_t *</RETURNS>
-idmef_tool_alert_t *ptr
+idmef_tool_alert_t *tool_alert
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_destroy</NAME>
@@ -3640,7 +3640,7 @@ const idmef_correlation_alert_t *obj1, const idmef_correlation_alert_t *obj2
 <FUNCTION>
 <NAME>idmef_correlation_alert_ref</NAME>
 <RETURNS>idmef_correlation_alert_t *</RETURNS>
-idmef_correlation_alert_t *ptr
+idmef_correlation_alert_t *correlation_alert
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_correlation_alert_destroy</NAME>
@@ -3704,7 +3704,7 @@ const idmef_overflow_alert_t *obj1, const idmef_overflow_alert_t *obj2
 <FUNCTION>
 <NAME>idmef_overflow_alert_ref</NAME>
 <RETURNS>idmef_overflow_alert_t *</RETURNS>
-idmef_overflow_alert_t *ptr
+idmef_overflow_alert_t *overflow_alert
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_overflow_alert_destroy</NAME>
@@ -3808,7 +3808,7 @@ const idmef_alert_t *obj1, const idmef_alert_t *obj2
 <FUNCTION>
 <NAME>idmef_alert_ref</NAME>
 <RETURNS>idmef_alert_t *</RETURNS>
-idmef_alert_t *ptr
+idmef_alert_t *alert
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_destroy</NAME>
@@ -4042,7 +4042,7 @@ const idmef_heartbeat_t *obj1, const idmef_heartbeat_t *obj2
 <FUNCTION>
 <NAME>idmef_heartbeat_ref</NAME>
 <RETURNS>idmef_heartbeat_t *</RETURNS>
-idmef_heartbeat_t *ptr
+idmef_heartbeat_t *heartbeat
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_destroy</NAME>
@@ -4189,7 +4189,7 @@ const idmef_message_t *obj1, const idmef_message_t *obj2
 <FUNCTION>
 <NAME>idmef_message_ref</NAME>
 <RETURNS>idmef_message_t *</RETURNS>
-idmef_message_t *ptr
+idmef_message_t *message
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_message_destroy</NAME>
@@ -6696,6 +6696,10 @@ idmef_heartbeat_t *heartbeat, prelude_msg_t *msg
 <RETURNS>int </RETURNS>
 idmef_message_t *message, prelude_msg_t *msg
 </FUNCTION>
+<TYPEDEF>
+<NAME>bufpool_t</NAME>
+typedef struct bufpool bufpool_t;
+</TYPEDEF>
 <MACRO>
 <NAME>PRELUDE_LIST</NAME>
 #define PRELUDE_LIST(item) prelude_list_t (item) = { &(item), &(item) }
@@ -6989,7 +6993,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.16"
+#define LIBPRELUDE_VERSION "0.9.16.1"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
