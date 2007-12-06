@@ -39,11 +39,26 @@ AC_PATH_PROG(GREP, grep, no)
 
 AC_PROG_CC
 AC_PROG_CPP
+
+dnl this is extracted from acx_pthread, we need to run that part
+dnl before gl_EARLY is called.
+dnl
+if test x"$GCC" != xyes; then
+	AC_CHECK_PROGS(CC, xlc_r cc_r, ${CC})
+else
+	CC="$CC"
+fi
+
+
+BINDINGS_CC="$CC"
+AC_SUBST(BINDINGS_CC)
+
 gl_EARLY
 
 
+dnl
 dnl Checks for programs.
-
+dnl
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 AC_C_INLINE
@@ -61,7 +76,9 @@ AC_PROG_LIBTOOL
 AC_SUBST(CFLAGS)
 
 
-# We need to compile and run a program on the build machine.
+dnl
+dnl When cross compiling, we need to compile and run a program on the build machine.
+dnl
 AC_MSG_CHECKING(for cc for build)
 if test "$cross_compiling" = "yes"; then
   CC_FOR_BUILD="${CC_FOR_BUILD-cc}"
