@@ -1973,13 +1973,13 @@ static int list_cmd(int argc, char **argv)
 
                 pw = getpwuid(st.st_uid);
                 if ( ! pw )
-                        snprintf(uidbuf, sizeof(uidbuf), "%d", st.st_uid);
+                        snprintf(uidbuf, sizeof(uidbuf), "%d", (int) st.st_uid);
                 else
                         snprintf(uidbuf, sizeof(uidbuf), "%s", pw->pw_name);
 
                 gr = getgrgid(st.st_gid);
                 if ( ! gr )
-                        snprintf(gidbuf, sizeof(gidbuf), "%d", st.st_gid);
+                        snprintf(gidbuf, sizeof(gidbuf), "%d", (int) st.st_gid);
                 else
                         snprintf(gidbuf, sizeof(gidbuf), "%s", gr->gr_name);
 

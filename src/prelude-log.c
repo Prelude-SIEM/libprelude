@@ -193,7 +193,7 @@ static ssize_t get_header(prelude_log_t level, char *buf, size_t size)
                 if ( t )
                         len = strftime(buf, size, "%d %b %H:%M:%S ", t);
 
-                ret = snprintf(buf + len, size - len, "(process:%d) %s: ", getpid(), level_to_string(level));
+                ret = snprintf(buf + len, size - len, "(process:%d) %s: ", (int) getpid(), level_to_string(level));
                 if ( ret < 0 || ret >= (size - len) )
                         return -1;
         } else {

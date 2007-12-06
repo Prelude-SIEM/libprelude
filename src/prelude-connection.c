@@ -146,7 +146,7 @@ static int auth_error(prelude_connection_t *cnx,
                  "prelude-admin register %s \"%s\" %s --uid %d --gid %d",
                  buf, prelude_client_profile_get_name(cp), prelude_string_get_string(out),
                  (cnx->sa->sa_family == AF_UNIX) ? "<manager address>" : cnx->daddr,
-                 prelude_client_profile_get_uid(cp), prelude_client_profile_get_gid(cp));
+                 (int) prelude_client_profile_get_uid(cp), (int) prelude_client_profile_get_gid(cp));
 
         prelude_string_destroy(out);
         if ( tmp )
@@ -665,7 +665,7 @@ void prelude_connection_set_fd_nodup(prelude_connection_t *cnx, prelude_io_t *fd
 {
         prelude_return_if_fail(cnx);
         prelude_return_if_fail(fd);
-        
+
         destroy_connection_fd(cnx);
         cnx->fd = fd;
         cnx->state |= PRELUDE_CONNECTION_OWN_FD;

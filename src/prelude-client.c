@@ -1566,8 +1566,8 @@ const char *prelude_client_get_setup_error(prelude_client_t *client)
                                              prelude_client_profile_get_name(client->profile),
                                              prelude_client_profile_get_name(client->profile),
                                              prelude_string_get_string(perm),
-                                             prelude_client_profile_get_uid(client->profile),
-                                             prelude_client_profile_get_gid(client->profile));
+                                             (int) prelude_client_profile_get_uid(client->profile),
+                                             (int) prelude_client_profile_get_gid(client->profile));
 
                 prelude_string_destroy(perm);
 
@@ -1576,8 +1576,8 @@ const char *prelude_client_get_setup_error(prelude_client_t *client)
                                              "prelude-admin add \"%s\" --uid %d --gid %d",
                                              prelude_client_profile_get_name(client->profile),
                                              prelude_client_profile_get_name(client->profile),
-                                             prelude_client_profile_get_uid(client->profile),
-                                             prelude_client_profile_get_gid(client->profile));
+                                             (int) prelude_client_profile_get_uid(client->profile),
+                                             (int) prelude_client_profile_get_gid(client->profile));
         }
 
         if ( ret < 0 )
