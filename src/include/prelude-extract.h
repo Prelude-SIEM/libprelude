@@ -65,7 +65,7 @@ static inline uint16_t prelude_align_uint16(const void *buf)
 
 
 
-static inline int32_t prelude_align_int32(const void *buf) 
+static inline int32_t prelude_align_int32(const void *buf)
 {
         return  byte(int32_t, buf, 0) << 24 | byte(int32_t, buf, 1) << 16 |
                 byte(int32_t, buf, 2) <<  8 | byte(int32_t, buf, 3);
@@ -73,14 +73,14 @@ static inline int32_t prelude_align_int32(const void *buf)
 
 
 
-static inline uint32_t prelude_align_uint32(const void *buf) 
+static inline uint32_t prelude_align_uint32(const void *buf)
 {
         return  byte(uint32_t, buf, 0) << 24 | byte(uint32_t, buf, 1) << 16 |
                 byte(uint32_t, buf, 2) <<  8 | byte(uint32_t, buf, 3);
 }
 
 
-static inline uint64_t prelude_align_uint64(const void *buf) 
+static inline uint64_t prelude_align_uint64(const void *buf)
 {
         return  byte(uint64_t, buf, 0) << 56 | byte(uint64_t, buf, 1) << 48 | byte(uint64_t, buf, 2) << 40 |
                 byte(uint64_t, buf, 3) << 32 | byte(uint64_t, buf, 4) << 24 | byte(uint64_t, buf, 5) << 16 |
@@ -110,28 +110,28 @@ static inline float prelude_align_float(const void *buf)
 #include "idmef-data.h"
 
 
-static inline uint16_t prelude_extract_uint16(const void *buf) 
+static inline uint16_t prelude_extract_uint16(const void *buf)
 {
         return ntohs(prelude_align_uint16(buf));
 }
 
 
 
-static inline int32_t prelude_extract_int32(const void *buf) 
+static inline int32_t prelude_extract_int32(const void *buf)
 {
         return ntohl(prelude_align_int32(buf));
 }
 
 
 
-static inline uint32_t prelude_extract_uint32(const void *buf) 
+static inline uint32_t prelude_extract_uint32(const void *buf)
 {
         return ntohl(prelude_align_uint32(buf));
 }
 
 
 
-static inline float prelude_extract_float(const void *buf) 
+static inline float prelude_extract_float(const void *buf)
 {
         union {
                 float fval;
@@ -139,16 +139,16 @@ static inline float prelude_extract_float(const void *buf)
         } val;
 
         val.ival = ntohl(prelude_align_float(buf));
-        
+
         return val.fval;
 }
 
 
 
-static inline uint64_t prelude_extract_uint64(const void *buf) 
-{    
+static inline uint64_t prelude_extract_uint64(const void *buf)
+{
 #ifdef PRELUDE_WORDS_BIGENDIAN
-        
+
         return prelude_align_uint64(buf);
 
 #else
@@ -168,9 +168,9 @@ static inline uint64_t prelude_extract_uint64(const void *buf)
 
 
 /*
- * Theses function check the buffer size for safety. 
+ * Theses function check the buffer size for safety.
  */
-static inline int prelude_extract_uint8_safe(uint8_t *out, const void *buf, size_t len) 
+static inline int prelude_extract_uint8_safe(uint8_t *out, const void *buf, size_t len)
 {
         if ( len != sizeof(uint8_t) )
                 return prelude_error_make(PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT8);
@@ -181,7 +181,7 @@ static inline int prelude_extract_uint8_safe(uint8_t *out, const void *buf, size
 }
 
 
-static inline int prelude_extract_uint16_safe(uint16_t *out, const void *buf, size_t len) 
+static inline int prelude_extract_uint16_safe(uint16_t *out, const void *buf, size_t len)
 {
         if ( len != sizeof(uint16_t) )
                 return prelude_error_make(PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT16);
@@ -193,7 +193,7 @@ static inline int prelude_extract_uint16_safe(uint16_t *out, const void *buf, si
 
 
 
-static inline int prelude_extract_uint32_safe(uint32_t *out, const void *buf, size_t len) 
+static inline int prelude_extract_uint32_safe(uint32_t *out, const void *buf, size_t len)
 {
         if ( len != sizeof(uint32_t) )
                 return prelude_error_make(PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT32);
@@ -205,23 +205,23 @@ static inline int prelude_extract_uint32_safe(uint32_t *out, const void *buf, si
 
 
 
-static inline int prelude_extract_int32_safe(int32_t *out, const void *buf, size_t len) 
+static inline int prelude_extract_int32_safe(int32_t *out, const void *buf, size_t len)
 {
         if ( len != sizeof(int32_t) )
                 return prelude_error_make(PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT32);
 
         *out = prelude_extract_int32(buf);
-	
+
         return 0;
 }
 
 
 
-static inline int prelude_extract_uint64_safe(uint64_t *out, const void *buf, size_t len) 
+static inline int prelude_extract_uint64_safe(uint64_t *out, const void *buf, size_t len)
 {
         if ( len != sizeof(uint64_t) )
                 return prelude_error_make(PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_INT64);
-        
+
         *out = prelude_extract_uint64(buf);
 
         return 0;
@@ -231,24 +231,24 @@ static inline int prelude_extract_uint64_safe(uint64_t *out, const void *buf, si
 
 static inline int prelude_extract_float_safe(float *out, const void *buf, size_t len)
 {
-	if ( len != sizeof(uint32_t) ) /* We pack float as an uint32_t */
-		return prelude_error_make(PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_FLOAT);
+        if ( len != sizeof(uint32_t) ) /* We pack float as an uint32_t */
+                return prelude_error_make(PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_FLOAT);
 
-	*out = prelude_extract_float(buf);
+        *out = prelude_extract_float(buf);
 
-	return 0;
+        return 0;
 }
 
 
 
 static inline int prelude_extract_characters_safe(const char **out, char *buf, size_t len)
 {
-	if ( len < 2 || buf[len - 1] != '\0' )
+        if ( len < 2 || buf[len - 1] != '\0' )
                 return prelude_error_make(PRELUDE_ERROR_SOURCE_EXTRACT, PRELUDE_ERROR_INVAL_CHAR);
 
-	*out = buf;
+        *out = buf;
 
-	return 0;
+        return 0;
 }
 
 #endif /* _LIBPRELUDE_EXTRACT_H */
