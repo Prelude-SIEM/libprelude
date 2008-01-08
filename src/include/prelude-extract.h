@@ -138,7 +138,7 @@ static inline float prelude_extract_float(const void *buf)
                 uint32_t ival;
         } val;
 
-        val.ival = ntohl(prelude_align_float(buf));
+        val.ival = ntohl(prelude_align_uint32(buf));
 
         return val.fval;
 }
