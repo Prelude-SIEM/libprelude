@@ -1318,8 +1318,8 @@ sub     struct_field_list
     $self->output("
 /**
  * idmef_$struct->{short_typename}_get_next_$field->{short_name}:
- * \@ptr: pointer to a #$struct->{typename} object.
- * \@object: pointer to a #$field->{typename} object.
+ * \@$struct->{short_typename}: pointer to a #$struct->{typename} object.
+ * \@$field->{short_typename}_cur: pointer to a #$field->{typename} object.
  *
  * Get the next #$field->{typename} object listed in \@ptr.
  * When iterating over the $field->{typename} object listed in \@ptr,
@@ -1327,13 +1327,13 @@ sub     struct_field_list
  *
  * Returns: the next #$field->{typename} in the list.
  */
-$field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object)
+$field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name}($struct->{typename} *$struct->{short_typename}, $field->{typename} *$field->{short_typename}_cur)
 \{
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = ($field->{short_typename}_cur) ? &$field->{short_typename}_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail($struct->{short_typename}, NULL);
 
-        prelude_list_for_each_continue(&ptr->$field->{name}, tmp)
+        prelude_list_for_each_continue(&$struct->{short_typename}->$field->{name}, tmp)
                 return prelude_list_entry(tmp, $field->{typename}, list);
 
         return NULL;

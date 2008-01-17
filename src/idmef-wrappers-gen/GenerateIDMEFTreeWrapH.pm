@@ -223,7 +223,7 @@ sub	struct_field_list
     my	$field = shift;
 
     $self->output(
-"$field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object);
+"$field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name}($struct->{typename} *$struct->{short_typename}, $field->{typename} *$field->{short_typename}_cur);
 void idmef_$struct->{short_typename}_set_$field->{short_name}($struct->{typename} *ptr, $field->{typename} *object, int pos);
 int idmef_$struct->{short_typename}_new_$field->{short_name}($struct->{typename} *ptr, $field->{typename} **ret, int pos);
 

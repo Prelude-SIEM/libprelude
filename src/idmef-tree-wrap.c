@@ -2926,8 +2926,8 @@ int idmef_classification_new_text(idmef_classification_t *ptr, prelude_string_t 
 
 /**
  * idmef_classification_get_next_reference:
- * @ptr: pointer to a #idmef_classification_t object.
- * @object: pointer to a #idmef_reference_t object.
+ * @classification: pointer to a #idmef_classification_t object.
+ * @reference_cur: pointer to a #idmef_reference_t object.
  *
  * Get the next #idmef_reference_t object listed in @ptr.
  * When iterating over the idmef_reference_t object listed in @ptr,
@@ -2935,13 +2935,13 @@ int idmef_classification_new_text(idmef_classification_t *ptr, prelude_string_t 
  *
  * Returns: the next #idmef_reference_t in the list.
  */
-idmef_reference_t *idmef_classification_get_next_reference(idmef_classification_t *ptr, idmef_reference_t *object)
+idmef_reference_t *idmef_classification_get_next_reference(idmef_classification_t *classification, idmef_reference_t *reference_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (reference_cur) ? &reference_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(classification, NULL);
 
-        prelude_list_for_each_continue(&ptr->reference_list, tmp)
+        prelude_list_for_each_continue(&classification->reference_list, tmp)
                 return prelude_list_entry(tmp, idmef_reference_t, list);
 
         return NULL;
@@ -3945,8 +3945,8 @@ int idmef_user_new_category(idmef_user_t *ptr, idmef_user_category_t **ret)
 
 /**
  * idmef_user_get_next_user_id:
- * @ptr: pointer to a #idmef_user_t object.
- * @object: pointer to a #idmef_user_id_t object.
+ * @user: pointer to a #idmef_user_t object.
+ * @user_id_cur: pointer to a #idmef_user_id_t object.
  *
  * Get the next #idmef_user_id_t object listed in @ptr.
  * When iterating over the idmef_user_id_t object listed in @ptr,
@@ -3954,13 +3954,13 @@ int idmef_user_new_category(idmef_user_t *ptr, idmef_user_category_t **ret)
  *
  * Returns: the next #idmef_user_id_t in the list.
  */
-idmef_user_id_t *idmef_user_get_next_user_id(idmef_user_t *ptr, idmef_user_id_t *object)
+idmef_user_id_t *idmef_user_get_next_user_id(idmef_user_t *user, idmef_user_id_t *user_id_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (user_id_cur) ? &user_id_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(user, NULL);
 
-        prelude_list_for_each_continue(&ptr->user_id_list, tmp)
+        prelude_list_for_each_continue(&user->user_id_list, tmp)
                 return prelude_list_entry(tmp, idmef_user_id_t, list);
 
         return NULL;
@@ -5232,8 +5232,8 @@ int idmef_process_new_path(idmef_process_t *ptr, prelude_string_t **ret)
 
 /**
  * idmef_process_get_next_arg:
- * @ptr: pointer to a #idmef_process_t object.
- * @object: pointer to a #prelude_string_t object.
+ * @process: pointer to a #idmef_process_t object.
+ * @prelude_string_cur: pointer to a #prelude_string_t object.
  *
  * Get the next #prelude_string_t object listed in @ptr.
  * When iterating over the prelude_string_t object listed in @ptr,
@@ -5241,13 +5241,13 @@ int idmef_process_new_path(idmef_process_t *ptr, prelude_string_t **ret)
  *
  * Returns: the next #prelude_string_t in the list.
  */
-prelude_string_t *idmef_process_get_next_arg(idmef_process_t *ptr, prelude_string_t *object)
+prelude_string_t *idmef_process_get_next_arg(idmef_process_t *process, prelude_string_t *prelude_string_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (prelude_string_cur) ? &prelude_string_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(process, NULL);
 
-        prelude_list_for_each_continue(&ptr->arg_list, tmp)
+        prelude_list_for_each_continue(&process->arg_list, tmp)
                 return prelude_list_entry(tmp, prelude_string_t, list);
 
         return NULL;
@@ -5310,8 +5310,8 @@ int idmef_process_new_arg(idmef_process_t *ptr, prelude_string_t **ret, int pos)
 
 /**
  * idmef_process_get_next_env:
- * @ptr: pointer to a #idmef_process_t object.
- * @object: pointer to a #prelude_string_t object.
+ * @process: pointer to a #idmef_process_t object.
+ * @prelude_string_cur: pointer to a #prelude_string_t object.
  *
  * Get the next #prelude_string_t object listed in @ptr.
  * When iterating over the prelude_string_t object listed in @ptr,
@@ -5319,13 +5319,13 @@ int idmef_process_new_arg(idmef_process_t *ptr, prelude_string_t **ret, int pos)
  *
  * Returns: the next #prelude_string_t in the list.
  */
-prelude_string_t *idmef_process_get_next_env(idmef_process_t *ptr, prelude_string_t *object)
+prelude_string_t *idmef_process_get_next_env(idmef_process_t *process, prelude_string_t *prelude_string_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (prelude_string_cur) ? &prelude_string_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(process, NULL);
 
-        prelude_list_for_each_continue(&ptr->env_list, tmp)
+        prelude_list_for_each_continue(&process->env_list, tmp)
                 return prelude_list_entry(tmp, prelude_string_t, list);
 
         return NULL;
@@ -5916,8 +5916,8 @@ int idmef_web_service_new_http_method(idmef_web_service_t *ptr, prelude_string_t
 
 /**
  * idmef_web_service_get_next_arg:
- * @ptr: pointer to a #idmef_web_service_t object.
- * @object: pointer to a #prelude_string_t object.
+ * @web_service: pointer to a #idmef_web_service_t object.
+ * @prelude_string_cur: pointer to a #prelude_string_t object.
  *
  * Get the next #prelude_string_t object listed in @ptr.
  * When iterating over the prelude_string_t object listed in @ptr,
@@ -5925,13 +5925,13 @@ int idmef_web_service_new_http_method(idmef_web_service_t *ptr, prelude_string_t
  *
  * Returns: the next #prelude_string_t in the list.
  */
-prelude_string_t *idmef_web_service_get_next_arg(idmef_web_service_t *ptr, prelude_string_t *object)
+prelude_string_t *idmef_web_service_get_next_arg(idmef_web_service_t *web_service, prelude_string_t *prelude_string_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (prelude_string_cur) ? &prelude_string_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(web_service, NULL);
 
-        prelude_list_for_each_continue(&ptr->arg_list, tmp)
+        prelude_list_for_each_continue(&web_service->arg_list, tmp)
                 return prelude_list_entry(tmp, prelude_string_t, list);
 
         return NULL;
@@ -8479,8 +8479,8 @@ int idmef_node_new_name(idmef_node_t *ptr, prelude_string_t **ret)
 
 /**
  * idmef_node_get_next_address:
- * @ptr: pointer to a #idmef_node_t object.
- * @object: pointer to a #idmef_address_t object.
+ * @node: pointer to a #idmef_node_t object.
+ * @address_cur: pointer to a #idmef_address_t object.
  *
  * Get the next #idmef_address_t object listed in @ptr.
  * When iterating over the idmef_address_t object listed in @ptr,
@@ -8488,13 +8488,13 @@ int idmef_node_new_name(idmef_node_t *ptr, prelude_string_t **ret)
  *
  * Returns: the next #idmef_address_t in the list.
  */
-idmef_address_t *idmef_node_get_next_address(idmef_node_t *ptr, idmef_address_t *object)
+idmef_address_t *idmef_node_get_next_address(idmef_node_t *node, idmef_address_t *address_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (address_cur) ? &address_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(node, NULL);
 
-        prelude_list_for_each_continue(&ptr->address_list, tmp)
+        prelude_list_for_each_continue(&node->address_list, tmp)
                 return prelude_list_entry(tmp, idmef_address_t, list);
 
         return NULL;
@@ -9619,8 +9619,8 @@ int idmef_file_access_new_user_id(idmef_file_access_t *ptr, idmef_user_id_t **re
 
 /**
  * idmef_file_access_get_next_permission:
- * @ptr: pointer to a #idmef_file_access_t object.
- * @object: pointer to a #prelude_string_t object.
+ * @file_access: pointer to a #idmef_file_access_t object.
+ * @prelude_string_cur: pointer to a #prelude_string_t object.
  *
  * Get the next #prelude_string_t object listed in @ptr.
  * When iterating over the prelude_string_t object listed in @ptr,
@@ -9628,13 +9628,13 @@ int idmef_file_access_new_user_id(idmef_file_access_t *ptr, idmef_user_id_t **re
  *
  * Returns: the next #prelude_string_t in the list.
  */
-prelude_string_t *idmef_file_access_get_next_permission(idmef_file_access_t *ptr, prelude_string_t *object)
+prelude_string_t *idmef_file_access_get_next_permission(idmef_file_access_t *file_access, prelude_string_t *prelude_string_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (prelude_string_cur) ? &prelude_string_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(file_access, NULL);
 
-        prelude_list_for_each_continue(&ptr->permission_list, tmp)
+        prelude_list_for_each_continue(&file_access->permission_list, tmp)
                 return prelude_list_entry(tmp, prelude_string_t, list);
 
         return NULL;
@@ -11652,8 +11652,8 @@ int idmef_file_new_disk_size(idmef_file_t *ptr, uint64_t **ret)
 
 /**
  * idmef_file_get_next_file_access:
- * @ptr: pointer to a #idmef_file_t object.
- * @object: pointer to a #idmef_file_access_t object.
+ * @file: pointer to a #idmef_file_t object.
+ * @file_access_cur: pointer to a #idmef_file_access_t object.
  *
  * Get the next #idmef_file_access_t object listed in @ptr.
  * When iterating over the idmef_file_access_t object listed in @ptr,
@@ -11661,13 +11661,13 @@ int idmef_file_new_disk_size(idmef_file_t *ptr, uint64_t **ret)
  *
  * Returns: the next #idmef_file_access_t in the list.
  */
-idmef_file_access_t *idmef_file_get_next_file_access(idmef_file_t *ptr, idmef_file_access_t *object)
+idmef_file_access_t *idmef_file_get_next_file_access(idmef_file_t *file, idmef_file_access_t *file_access_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (file_access_cur) ? &file_access_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(file, NULL);
 
-        prelude_list_for_each_continue(&ptr->file_access_list, tmp)
+        prelude_list_for_each_continue(&file->file_access_list, tmp)
                 return prelude_list_entry(tmp, idmef_file_access_t, list);
 
         return NULL;
@@ -11730,8 +11730,8 @@ int idmef_file_new_file_access(idmef_file_t *ptr, idmef_file_access_t **ret, int
 
 /**
  * idmef_file_get_next_linkage:
- * @ptr: pointer to a #idmef_file_t object.
- * @object: pointer to a #idmef_linkage_t object.
+ * @file: pointer to a #idmef_file_t object.
+ * @linkage_cur: pointer to a #idmef_linkage_t object.
  *
  * Get the next #idmef_linkage_t object listed in @ptr.
  * When iterating over the idmef_linkage_t object listed in @ptr,
@@ -11739,13 +11739,13 @@ int idmef_file_new_file_access(idmef_file_t *ptr, idmef_file_access_t **ret, int
  *
  * Returns: the next #idmef_linkage_t in the list.
  */
-idmef_linkage_t *idmef_file_get_next_linkage(idmef_file_t *ptr, idmef_linkage_t *object)
+idmef_linkage_t *idmef_file_get_next_linkage(idmef_file_t *file, idmef_linkage_t *linkage_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (linkage_cur) ? &linkage_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(file, NULL);
 
-        prelude_list_for_each_continue(&ptr->linkage_list, tmp)
+        prelude_list_for_each_continue(&file->linkage_list, tmp)
                 return prelude_list_entry(tmp, idmef_linkage_t, list);
 
         return NULL;
@@ -11867,8 +11867,8 @@ int idmef_file_new_inode(idmef_file_t *ptr, idmef_inode_t **ret)
 
 /**
  * idmef_file_get_next_checksum:
- * @ptr: pointer to a #idmef_file_t object.
- * @object: pointer to a #idmef_checksum_t object.
+ * @file: pointer to a #idmef_file_t object.
+ * @checksum_cur: pointer to a #idmef_checksum_t object.
  *
  * Get the next #idmef_checksum_t object listed in @ptr.
  * When iterating over the idmef_checksum_t object listed in @ptr,
@@ -11876,13 +11876,13 @@ int idmef_file_new_inode(idmef_file_t *ptr, idmef_inode_t **ret)
  *
  * Returns: the next #idmef_checksum_t in the list.
  */
-idmef_checksum_t *idmef_file_get_next_checksum(idmef_file_t *ptr, idmef_checksum_t *object)
+idmef_checksum_t *idmef_file_get_next_checksum(idmef_file_t *file, idmef_checksum_t *checksum_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (checksum_cur) ? &checksum_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(file, NULL);
 
-        prelude_list_for_each_continue(&ptr->checksum_list, tmp)
+        prelude_list_for_each_continue(&file->checksum_list, tmp)
                 return prelude_list_entry(tmp, idmef_checksum_t, list);
 
         return NULL;
@@ -13486,8 +13486,8 @@ int idmef_target_new_service(idmef_target_t *ptr, idmef_service_t **ret)
 
 /**
  * idmef_target_get_next_file:
- * @ptr: pointer to a #idmef_target_t object.
- * @object: pointer to a #idmef_file_t object.
+ * @target: pointer to a #idmef_target_t object.
+ * @file_cur: pointer to a #idmef_file_t object.
  *
  * Get the next #idmef_file_t object listed in @ptr.
  * When iterating over the idmef_file_t object listed in @ptr,
@@ -13495,13 +13495,13 @@ int idmef_target_new_service(idmef_target_t *ptr, idmef_service_t **ret)
  *
  * Returns: the next #idmef_file_t in the list.
  */
-idmef_file_t *idmef_target_get_next_file(idmef_target_t *ptr, idmef_file_t *object)
+idmef_file_t *idmef_target_get_next_file(idmef_target_t *target, idmef_file_t *file_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (file_cur) ? &file_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(target, NULL);
 
-        prelude_list_for_each_continue(&ptr->file_list, tmp)
+        prelude_list_for_each_continue(&target->file_list, tmp)
                 return prelude_list_entry(tmp, idmef_file_t, list);
 
         return NULL;
@@ -16304,8 +16304,8 @@ int idmef_assessment_new_impact(idmef_assessment_t *ptr, idmef_impact_t **ret)
 
 /**
  * idmef_assessment_get_next_action:
- * @ptr: pointer to a #idmef_assessment_t object.
- * @object: pointer to a #idmef_action_t object.
+ * @assessment: pointer to a #idmef_assessment_t object.
+ * @action_cur: pointer to a #idmef_action_t object.
  *
  * Get the next #idmef_action_t object listed in @ptr.
  * When iterating over the idmef_action_t object listed in @ptr,
@@ -16313,13 +16313,13 @@ int idmef_assessment_new_impact(idmef_assessment_t *ptr, idmef_impact_t **ret)
  *
  * Returns: the next #idmef_action_t in the list.
  */
-idmef_action_t *idmef_assessment_get_next_action(idmef_assessment_t *ptr, idmef_action_t *object)
+idmef_action_t *idmef_assessment_get_next_action(idmef_assessment_t *assessment, idmef_action_t *action_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (action_cur) ? &action_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(assessment, NULL);
 
-        prelude_list_for_each_continue(&ptr->action_list, tmp)
+        prelude_list_for_each_continue(&assessment->action_list, tmp)
                 return prelude_list_entry(tmp, idmef_action_t, list);
 
         return NULL;
@@ -16842,8 +16842,8 @@ int idmef_tool_alert_new_command(idmef_tool_alert_t *ptr, prelude_string_t **ret
 
 /**
  * idmef_tool_alert_get_next_alertident:
- * @ptr: pointer to a #idmef_tool_alert_t object.
- * @object: pointer to a #idmef_alertident_t object.
+ * @tool_alert: pointer to a #idmef_tool_alert_t object.
+ * @alertident_cur: pointer to a #idmef_alertident_t object.
  *
  * Get the next #idmef_alertident_t object listed in @ptr.
  * When iterating over the idmef_alertident_t object listed in @ptr,
@@ -16851,13 +16851,13 @@ int idmef_tool_alert_new_command(idmef_tool_alert_t *ptr, prelude_string_t **ret
  *
  * Returns: the next #idmef_alertident_t in the list.
  */
-idmef_alertident_t *idmef_tool_alert_get_next_alertident(idmef_tool_alert_t *ptr, idmef_alertident_t *object)
+idmef_alertident_t *idmef_tool_alert_get_next_alertident(idmef_tool_alert_t *tool_alert, idmef_alertident_t *alertident_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (alertident_cur) ? &alertident_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(tool_alert, NULL);
 
-        prelude_list_for_each_continue(&ptr->alertident_list, tmp)
+        prelude_list_for_each_continue(&tool_alert->alertident_list, tmp)
                 return prelude_list_entry(tmp, idmef_alertident_t, list);
 
         return NULL;
@@ -17246,8 +17246,8 @@ int idmef_correlation_alert_new_name(idmef_correlation_alert_t *ptr, prelude_str
 
 /**
  * idmef_correlation_alert_get_next_alertident:
- * @ptr: pointer to a #idmef_correlation_alert_t object.
- * @object: pointer to a #idmef_alertident_t object.
+ * @correlation_alert: pointer to a #idmef_correlation_alert_t object.
+ * @alertident_cur: pointer to a #idmef_alertident_t object.
  *
  * Get the next #idmef_alertident_t object listed in @ptr.
  * When iterating over the idmef_alertident_t object listed in @ptr,
@@ -17255,13 +17255,13 @@ int idmef_correlation_alert_new_name(idmef_correlation_alert_t *ptr, prelude_str
  *
  * Returns: the next #idmef_alertident_t in the list.
  */
-idmef_alertident_t *idmef_correlation_alert_get_next_alertident(idmef_correlation_alert_t *ptr, idmef_alertident_t *object)
+idmef_alertident_t *idmef_correlation_alert_get_next_alertident(idmef_correlation_alert_t *correlation_alert, idmef_alertident_t *alertident_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (alertident_cur) ? &alertident_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(correlation_alert, NULL);
 
-        prelude_list_for_each_continue(&ptr->alertident_list, tmp)
+        prelude_list_for_each_continue(&correlation_alert->alertident_list, tmp)
                 return prelude_list_entry(tmp, idmef_alertident_t, list);
 
         return NULL;
@@ -18286,8 +18286,8 @@ int idmef_alert_new_messageid(idmef_alert_t *ptr, prelude_string_t **ret)
 
 /**
  * idmef_alert_get_next_analyzer:
- * @ptr: pointer to a #idmef_alert_t object.
- * @object: pointer to a #idmef_analyzer_t object.
+ * @alert: pointer to a #idmef_alert_t object.
+ * @analyzer_cur: pointer to a #idmef_analyzer_t object.
  *
  * Get the next #idmef_analyzer_t object listed in @ptr.
  * When iterating over the idmef_analyzer_t object listed in @ptr,
@@ -18295,13 +18295,13 @@ int idmef_alert_new_messageid(idmef_alert_t *ptr, prelude_string_t **ret)
  *
  * Returns: the next #idmef_analyzer_t in the list.
  */
-idmef_analyzer_t *idmef_alert_get_next_analyzer(idmef_alert_t *ptr, idmef_analyzer_t *object)
+idmef_analyzer_t *idmef_alert_get_next_analyzer(idmef_alert_t *alert, idmef_analyzer_t *analyzer_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (analyzer_cur) ? &analyzer_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(alert, NULL);
 
-        prelude_list_for_each_continue(&ptr->analyzer_list, tmp)
+        prelude_list_for_each_continue(&alert->analyzer_list, tmp)
                 return prelude_list_entry(tmp, idmef_analyzer_t, list);
 
         return NULL;
@@ -18606,8 +18606,8 @@ int idmef_alert_new_analyzer_time(idmef_alert_t *ptr, idmef_time_t **ret)
 
 /**
  * idmef_alert_get_next_source:
- * @ptr: pointer to a #idmef_alert_t object.
- * @object: pointer to a #idmef_source_t object.
+ * @alert: pointer to a #idmef_alert_t object.
+ * @source_cur: pointer to a #idmef_source_t object.
  *
  * Get the next #idmef_source_t object listed in @ptr.
  * When iterating over the idmef_source_t object listed in @ptr,
@@ -18615,13 +18615,13 @@ int idmef_alert_new_analyzer_time(idmef_alert_t *ptr, idmef_time_t **ret)
  *
  * Returns: the next #idmef_source_t in the list.
  */
-idmef_source_t *idmef_alert_get_next_source(idmef_alert_t *ptr, idmef_source_t *object)
+idmef_source_t *idmef_alert_get_next_source(idmef_alert_t *alert, idmef_source_t *source_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (source_cur) ? &source_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(alert, NULL);
 
-        prelude_list_for_each_continue(&ptr->source_list, tmp)
+        prelude_list_for_each_continue(&alert->source_list, tmp)
                 return prelude_list_entry(tmp, idmef_source_t, list);
 
         return NULL;
@@ -18684,8 +18684,8 @@ int idmef_alert_new_source(idmef_alert_t *ptr, idmef_source_t **ret, int pos)
 
 /**
  * idmef_alert_get_next_target:
- * @ptr: pointer to a #idmef_alert_t object.
- * @object: pointer to a #idmef_target_t object.
+ * @alert: pointer to a #idmef_alert_t object.
+ * @target_cur: pointer to a #idmef_target_t object.
  *
  * Get the next #idmef_target_t object listed in @ptr.
  * When iterating over the idmef_target_t object listed in @ptr,
@@ -18693,13 +18693,13 @@ int idmef_alert_new_source(idmef_alert_t *ptr, idmef_source_t **ret, int pos)
  *
  * Returns: the next #idmef_target_t in the list.
  */
-idmef_target_t *idmef_alert_get_next_target(idmef_alert_t *ptr, idmef_target_t *object)
+idmef_target_t *idmef_alert_get_next_target(idmef_alert_t *alert, idmef_target_t *target_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (target_cur) ? &target_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(alert, NULL);
 
-        prelude_list_for_each_continue(&ptr->target_list, tmp)
+        prelude_list_for_each_continue(&alert->target_list, tmp)
                 return prelude_list_entry(tmp, idmef_target_t, list);
 
         return NULL;
@@ -18821,8 +18821,8 @@ int idmef_alert_new_assessment(idmef_alert_t *ptr, idmef_assessment_t **ret)
 
 /**
  * idmef_alert_get_next_additional_data:
- * @ptr: pointer to a #idmef_alert_t object.
- * @object: pointer to a #idmef_additional_data_t object.
+ * @alert: pointer to a #idmef_alert_t object.
+ * @additional_data_cur: pointer to a #idmef_additional_data_t object.
  *
  * Get the next #idmef_additional_data_t object listed in @ptr.
  * When iterating over the idmef_additional_data_t object listed in @ptr,
@@ -18830,13 +18830,13 @@ int idmef_alert_new_assessment(idmef_alert_t *ptr, idmef_assessment_t **ret)
  *
  * Returns: the next #idmef_additional_data_t in the list.
  */
-idmef_additional_data_t *idmef_alert_get_next_additional_data(idmef_alert_t *ptr, idmef_additional_data_t *object)
+idmef_additional_data_t *idmef_alert_get_next_additional_data(idmef_alert_t *alert, idmef_additional_data_t *additional_data_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (additional_data_cur) ? &additional_data_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(alert, NULL);
 
-        prelude_list_for_each_continue(&ptr->additional_data_list, tmp)
+        prelude_list_for_each_continue(&alert->additional_data_list, tmp)
                 return prelude_list_entry(tmp, idmef_additional_data_t, list);
 
         return NULL;
@@ -19794,8 +19794,8 @@ int idmef_heartbeat_new_messageid(idmef_heartbeat_t *ptr, prelude_string_t **ret
 
 /**
  * idmef_heartbeat_get_next_analyzer:
- * @ptr: pointer to a #idmef_heartbeat_t object.
- * @object: pointer to a #idmef_analyzer_t object.
+ * @heartbeat: pointer to a #idmef_heartbeat_t object.
+ * @analyzer_cur: pointer to a #idmef_analyzer_t object.
  *
  * Get the next #idmef_analyzer_t object listed in @ptr.
  * When iterating over the idmef_analyzer_t object listed in @ptr,
@@ -19803,13 +19803,13 @@ int idmef_heartbeat_new_messageid(idmef_heartbeat_t *ptr, prelude_string_t **ret
  *
  * Returns: the next #idmef_analyzer_t in the list.
  */
-idmef_analyzer_t *idmef_heartbeat_get_next_analyzer(idmef_heartbeat_t *ptr, idmef_analyzer_t *object)
+idmef_analyzer_t *idmef_heartbeat_get_next_analyzer(idmef_heartbeat_t *heartbeat, idmef_analyzer_t *analyzer_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (analyzer_cur) ? &analyzer_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(heartbeat, NULL);
 
-        prelude_list_for_each_continue(&ptr->analyzer_list, tmp)
+        prelude_list_for_each_continue(&heartbeat->analyzer_list, tmp)
                 return prelude_list_entry(tmp, idmef_analyzer_t, list);
 
         return NULL;
@@ -20053,8 +20053,8 @@ int idmef_heartbeat_new_heartbeat_interval(idmef_heartbeat_t *ptr, uint32_t **re
 
 /**
  * idmef_heartbeat_get_next_additional_data:
- * @ptr: pointer to a #idmef_heartbeat_t object.
- * @object: pointer to a #idmef_additional_data_t object.
+ * @heartbeat: pointer to a #idmef_heartbeat_t object.
+ * @additional_data_cur: pointer to a #idmef_additional_data_t object.
  *
  * Get the next #idmef_additional_data_t object listed in @ptr.
  * When iterating over the idmef_additional_data_t object listed in @ptr,
@@ -20062,13 +20062,13 @@ int idmef_heartbeat_new_heartbeat_interval(idmef_heartbeat_t *ptr, uint32_t **re
  *
  * Returns: the next #idmef_additional_data_t in the list.
  */
-idmef_additional_data_t *idmef_heartbeat_get_next_additional_data(idmef_heartbeat_t *ptr, idmef_additional_data_t *object)
+idmef_additional_data_t *idmef_heartbeat_get_next_additional_data(idmef_heartbeat_t *heartbeat, idmef_additional_data_t *additional_data_cur)
 {
-        prelude_list_t *tmp = (object) ? &object->list : NULL;
+        prelude_list_t *tmp = (additional_data_cur) ? &additional_data_cur->list : NULL;
 
-        prelude_return_val_if_fail(ptr, NULL);
+        prelude_return_val_if_fail(heartbeat, NULL);
 
-        prelude_list_for_each_continue(&ptr->additional_data_list, tmp)
+        prelude_list_for_each_continue(&heartbeat->additional_data_list, tmp)
                 return prelude_list_entry(tmp, idmef_additional_data_t, list);
 
         return NULL;
