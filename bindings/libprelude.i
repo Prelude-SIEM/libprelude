@@ -139,7 +139,6 @@ typedef enum {
 	idmef_message_t **
 };
 
-
 /*
  * Check for nil input
  */
@@ -185,6 +184,27 @@ typedef enum {
 	idmef_time_t *,
         idmef_data_t *
 };
+
+/* the following typemaps are used to allow NULL pointers to be passed
+ * to _get_next_* functions
+ */
+%apply SWIGTYPE *LISTEDPARAM {
+        idmef_reference_t *reference_cur,
+        idmef_user_id_t *user_id_cur,
+        prelude_string_t *prelude_string_cur,
+        idmef_address_t *address_cur,
+        idmef_file_access_t *file_access_cur,
+        idmef_linkage_t *linkage_cur,
+        idmef_checksum_t *checksum_cur,
+        idmef_file_t *file_cur,
+        idmef_action_t *action_cur,
+        idmef_alertident_t *alertident_cur,
+        idmef_analyzer_t *analyzer_cur,
+        idmef_source_t *source_cur,
+        idmef_target_t *target_cur,
+        idmef_additional_data_t *additional_data_cur
+};
+
 
 
 %ignore idmef_path_new_v;

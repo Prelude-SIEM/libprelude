@@ -74,6 +74,21 @@ SV *swig_perl_data(idmef_data_t *data)
 
 %}
 
+
+/* This typemap is used to allow NULL pointers in _get_next_* functions
+ */
+%typemap(in) SWIGTYPE *LISTEDPARAM {
+	if ( ! SvOK($input) ) {
+                $1 = NULL;
+	} else {
+		if ( SWIG_ConvertPtr($input, (void **)&$1, $1_descriptor, 0) ) {
+			croak("Expected type $1_type for argument $argnum.");
+			return;
+		}
+	}
+}
+
+
 %typemap(in) char **argv {
 	AV *tempav;
 	I32 len;

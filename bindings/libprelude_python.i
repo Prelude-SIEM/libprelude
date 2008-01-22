@@ -93,6 +93,18 @@ PyObject *swig_python_data(idmef_data_t *data)
 };
 
 
+/* This typemap is used to allow NULL pointers in _get_next_* functions
+ */
+%typemap(in) SWIGTYPE *LISTEDPARAM {
+	if ( $input == Py_None ) {
+		$1 = NULL;
+	} else {
+		if ( SWIG_ConvertPtr($input, (void **)&$1, $1_descriptor, SWIG_POINTER_EXCEPTION|0) )
+			return NULL;
+	}
+};
+
+
 %typemap(in) const char * {
 	if ( $input == Py_None )
 		$1 = NULL;
