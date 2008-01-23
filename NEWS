@@ -1,3 +1,16 @@
+* 2008-01-23, libprelude-0.9.16.2:
+
+- Fix bindings for IDMEF 'get_next' functions.
+
+- Make sure we use no additional GnuLib compiler flags when building
+  bindings, this fix bindings compilation failure on some architecture 
+  (Solaris). 
+
+- FreeBSD compilation fixes.
+
+- Solaris compilation fixes.
+
+
 * 2007-11-22, libprelude-0.9.16.1:
 
 - Heartbeat are now sent as high priority messages.
