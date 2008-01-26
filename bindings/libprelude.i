@@ -205,6 +205,29 @@ typedef enum {
         idmef_additional_data_t *additional_data_cur
 };
 
+/* For functions returning pointer to integer, return the integer
+ * or the NULL equivalent directly
+ */
+%apply INTPOINTER * {
+        int8_t *,
+        int16_t *,
+        int32_t *
+};
+
+%apply UINTPOINTER * {
+        uint8_t *,
+        uint16_t *,
+        uint32_t *
+};
+
+%apply INT64POINTER * {
+        int64_t *
+};
+
+%apply UINT64POINTER * {
+        uint64_t *
+};
+
 
 
 %ignore idmef_path_new_v;

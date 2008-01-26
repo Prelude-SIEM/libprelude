@@ -179,6 +179,42 @@ SV *swig_perl_data(idmef_data_t *data)
     	argvi++;
 };
 
+%typemap(out) INTPOINTER * {
+	if ( $1 != NULL ) {
+		$result = newSViv(*$1);
+	} else {
+		SvREFCNT_inc (& PL_sv_undef);
+		$result = &PL_sv_undef;
+	}
+}
+
+%typemap(out) UINTPOINTER * {
+	if ( $1 != NULL ) {
+		$result = newSVuv(*$1);
+	} else {
+		SvREFCNT_inc (& PL_sv_undef);
+		$result = &PL_sv_undef;
+	}
+}
+
+%typemap(out) INT64POINTER * {
+	if ( $1 != NULL ) {
+		$result = newSViv(*$1);
+	} else {
+		SvREFCNT_inc (& PL_sv_undef);
+		$result = &PL_sv_undef;
+	}
+}
+
+%typemap(out) UINT64POINTER * {
+	if ( $1 != NULL ) {
+		$result = newSVuv(*$1);
+	} else {
+		SvREFCNT_inc (& PL_sv_undef);
+		$result = &PL_sv_undef;
+	}
+}
+
 
 
 %typemap(argout) (uint64_t *source_id, uint32_t *request_id, void **value) {

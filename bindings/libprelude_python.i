@@ -92,6 +92,38 @@ PyObject *swig_python_data(idmef_data_t *data)
 	$result = PyLong_FromUnsignedLong($1);
 };
 
+%typemap(out) INTPOINTER * {
+	if ($1 != NULL) {
+		$result = PyLong_FromLong(*$1);
+	} else {
+		$result = Py_None;
+	}
+};
+
+%typemap(out) UINTPOINTER * {
+	if ($1 != NULL) {
+		$result = PyLong_FromUnsignedLong(*$1);
+	} else {
+		$result = Py_None;
+	}
+};
+
+%typemap(out) INT64POINTER * {
+	if ($1 != NULL) {
+		$result = PyLong_FromLongLong(*$1);
+	} else {
+		$result = Py_None;
+	}
+};
+
+%typemap(out) UINT64POINTER * {
+	if ($1 != NULL) {
+		$result = PyLong_FromUnsignedLongLong(*$1);
+	} else {
+		$result = Py_None;
+	}
+};
+
 
 /* This typemap is used to allow NULL pointers in _get_next_* functions
  */
