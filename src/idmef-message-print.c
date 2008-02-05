@@ -182,6 +182,9 @@ static void print_enum(const char *s, int i, prelude_io_t *fd)
         int len;
         char buf[512];
 
+        if ( ! s )
+                s = "<invalid enum value>";
+
         len = snprintf(buf, sizeof(buf), "%s (%d)", s, i);
         prelude_io_write(fd, buf, len);
 }
