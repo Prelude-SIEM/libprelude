@@ -25,6 +25,10 @@
 #ifndef _LIBPRELUDE_IDMEF_CLASS_H
 #define _LIBPRELUDE_IDMEF_CLASS_H
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 typedef int idmef_class_id_t;
 typedef int idmef_class_child_id_t;
 
@@ -83,5 +87,9 @@ int idmef_class_compare(idmef_class_id_t classid, const void *c1, const void *c2
 int idmef_class_ref(idmef_class_id_t classid, void *obj);
 
 int idmef_class_destroy(idmef_class_id_t classid, void *obj);
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif /* _LIBPRELUDE_IDMEF_CLASS_H */
