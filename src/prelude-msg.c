@@ -1,12 +1,12 @@
 /*****
 *
-* Copyright (C) 2001,2002,2003,2004,2005 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2001-2006,2007,2008 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.
 *
 * This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by 
+* it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2, or (at your option)
 * any later version.
 *
@@ -80,12 +80,12 @@ struct prelude_msg {
         PRELUDE_ASYNC_OBJECT;
 
         int refcount;
-        
+
         uint32_t read_index;
         uint32_t header_index;
         uint32_t write_index;
         uint32_t fd_write_index;
-        
+
         prelude_msg_hdr_t hdr;
         unsigned char hdrbuf[PRELUDE_MSG_HDR_SIZE];
         unsigned char *payload;
@@ -102,10 +102,10 @@ static size_t max_message_size = 1024 * 1024;
 
 
 
-static int call_alloc_cb(prelude_msg_t **msg) 
+static int call_alloc_cb(prelude_msg_t **msg)
 {
         int ret;
-        
+
         ret = (*msg)->flush_msg_cb(msg, (*msg)->send_msg_data);
         if ( ret < 0 )
                 return ret;
@@ -122,30 +122,30 @@ static int call_alloc_cb(prelude_msg_t **msg)
         (*msg)->header_index = 0;
         (*msg)->write_index = PRELUDE_MSG_HDR_SIZE;
         (*msg)->hdr.is_fragment = 0;
-        
+
         return 0;
 }
 
 
 
-static void write_message_header(prelude_msg_t *msg) 
+static void write_message_header(prelude_msg_t *msg)
 {
         uint32_t dlen;
         struct timeval tv;
         uint32_t hdr_offset = msg->header_index;
-        
+
         dlen = htonl(msg->write_index - msg->header_index - PRELUDE_MSG_HDR_SIZE);
-        
+
         msg->payload[hdr_offset++] = PRELUDE_MSG_VERSION;
         msg->payload[hdr_offset++] = msg->hdr.tag;
         msg->payload[hdr_offset++] = msg->hdr.priority;
         msg->payload[hdr_offset++] = msg->hdr.is_fragment;
 
         gettimeofday(&tv, NULL);
-                
+
         msg->hdr.tv_sec = htonl(tv.tv_sec);
         msg->hdr.tv_usec = htonl(tv.tv_usec);
-        
+
         memcpy(&msg->payload[hdr_offset], &dlen, sizeof(dlen));
         memcpy(&msg->payload[hdr_offset + 4], &msg->hdr.tv_sec, sizeof(msg->hdr.tv_sec));
         memcpy(&msg->payload[hdr_offset + 8], &msg->hdr.tv_usec, sizeof(msg->hdr.tv_usec));
@@ -154,17 +154,17 @@ static void write_message_header(prelude_msg_t *msg)
 
 
 
-static int set_data(prelude_msg_t **m, const void *buf, size_t size) 
+static int set_data(prelude_msg_t **m, const void *buf, size_t size)
 {
         int ret;
         size_t remaining;
         prelude_msg_t *msg = *m;
 
-        remaining = (msg->hdr.datalen - msg->write_index);        
+        remaining = (msg->hdr.datalen - msg->write_index);
         assert(msg->flush_msg_cb != NULL || remaining >= size);
-        
+
         if ( size > remaining ) {
-                
+
                 /*
                  * there is not enough free buffer space to store the whole
                  * data in the message. Store what we can, and call the message
@@ -172,11 +172,11 @@ static int set_data(prelude_msg_t **m, const void *buf, size_t size)
                  * and allocate a new one.
                  */
                 memcpy(msg->payload + msg->write_index, buf, remaining);
-                
+
                 size -= remaining;
                 msg->write_index += remaining;
                 buf = (const uint8_t *) buf + remaining;
-                
+
                 /*
                  * this is a fragment of message.
                  */
@@ -189,7 +189,7 @@ static int set_data(prelude_msg_t **m, const void *buf, size_t size)
                 ret = call_alloc_cb(m);
                 if ( ret < 0 )
                         return ret;
-                                
+
                 return set_data(m, buf, size);
         }
 
@@ -202,13 +202,13 @@ static int set_data(prelude_msg_t **m, const void *buf, size_t size)
 
 
 
-inline static int read_message_data(unsigned char *dst, size_t *size, prelude_io_t *fd) 
+inline static int read_message_data(unsigned char *dst, size_t *size, prelude_io_t *fd)
 {
         ssize_t ret;
         size_t count = *size;
 
         *size = 0;
-        
+
         /*
          * Read the whole header.
          */
@@ -216,11 +216,11 @@ inline static int read_message_data(unsigned char *dst, size_t *size, prelude_io
                 ret = prelude_io_read(fd, dst + *size, count - *size);
                 if ( ret < 0 )
                         return ret;
-                
+
                 *size += ret;
 
         } while ( *size != count );
-                
+
         return 0;
 }
 
@@ -228,10 +228,10 @@ inline static int read_message_data(unsigned char *dst, size_t *size, prelude_io
 
 
 
-inline static int slice_message_header(prelude_msg_t *msg, unsigned char *hdrbuf) 
+inline static int slice_message_header(prelude_msg_t *msg, unsigned char *hdrbuf)
 {
         uint32_t tmp;
-        
+
         if ( ! msg->hdr.datalen ) {
                 /*
                  * tag and priority are set on first fragment only.
@@ -247,26 +247,26 @@ inline static int slice_message_header(prelude_msg_t *msg, unsigned char *hdrbuf
          */
         if ( msg->hdr.priority == PRELUDE_MSG_PRIORITY_NONE )
                 msg->hdr.priority = hdrbuf[2];
-        
+
         msg->hdr.is_fragment = hdrbuf[3];
         tmp = prelude_extract_uint32(hdrbuf + 4);
-        
+
         if ( (msg->hdr.datalen + tmp) <= msg->hdr.datalen )
                 return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
 
         if ( (msg->hdr.datalen + tmp) >= max_message_size )
                 return prelude_error_verbose(PRELUDE_ERROR_INVAL_LENGTH, "maximum message size exceeded: %" PRELUDE_PRIu64 " > %" PRELUDE_PRIu64,
                                              (uint64_t) (msg->hdr.datalen + tmp), (uint64_t) max_message_size);
-        
+
         msg->hdr.datalen += prelude_extract_uint32(hdrbuf + 4);
-        
+
         return 0;
 }
 
 
 
 
-static int read_message_header(prelude_msg_t **msgptr, prelude_io_t *fd) 
+static int read_message_header(prelude_msg_t **msgptr, prelude_io_t *fd)
 {
         int ret;
         size_t count;
@@ -275,13 +275,13 @@ static int read_message_header(prelude_msg_t **msgptr, prelude_io_t *fd)
         unsigned char *hdrptr = &msg->hdrbuf[msg->header_index];
 
         count = PRELUDE_MSG_HDR_SIZE - msg->header_index;
-        
+
         ret = read_message_data(hdrptr, &count, fd);
         msg->header_index += count;
-        
+
         if ( ret < 0 )
                 return ret;
-        
+
         /*
          * we have a full header. Move it from our buffer
          * into a real header structure.
@@ -290,22 +290,22 @@ static int read_message_header(prelude_msg_t **msgptr, prelude_io_t *fd)
         ret = slice_message_header(msg, msg->hdrbuf);
         if ( ret < 0 )
                 return ret;
-        
+
         /*
          * sanity check. An attacker could arrange to make datalen
          * wrap arround by specifying an odd dlen in a fragment header.
          */
         if ( (msg->hdr.datalen + PRELUDE_MSG_HDR_SIZE) <= old_dlen )
                 return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
-        
+
         /*
          * Check protocol version.
          */
         if ( msg->hdr.version != PRELUDE_MSG_VERSION )
                 return prelude_error_verbose(PRELUDE_ERROR_PROTOCOL_VERSION, "invalid protocol version '%d' (expected %d)",
                                              msg->hdr.version, PRELUDE_MSG_VERSION);
-        
-        msg->write_index = msg->hdr.datalen + PRELUDE_MSG_HDR_SIZE; 
+
+        msg->write_index = msg->hdr.datalen + PRELUDE_MSG_HDR_SIZE;
 
         /*
          * allocate our data buffer. We also want our buffer to be able to contain an
@@ -318,19 +318,19 @@ static int read_message_header(prelude_msg_t **msgptr, prelude_io_t *fd)
 
         *msgptr = msg;
         msg->payload = ((unsigned char *) msg) + sizeof(*msg);
-                
+
         return 0;
 }
 
 
 
 
-static int read_message_content(prelude_msg_t **m, prelude_io_t *fd) 
+static int read_message_content(prelude_msg_t **m, prelude_io_t *fd)
 {
         int ret;
         size_t count;
         prelude_msg_t *msg = *m;
-        
+
         count = (msg->hdr.datalen + PRELUDE_MSG_HDR_SIZE) - msg->read_index;
 
         ret = read_message_data(&msg->payload[msg->read_index], &count, fd);
@@ -341,7 +341,7 @@ static int read_message_content(prelude_msg_t **m, prelude_io_t *fd)
                  * there is still data to be read.
                  */
                 return ret;
-                
+
         if ( msg->hdr.is_fragment ) {
                 /*
                  * We just finished reading one fragment (not the last one).
@@ -352,7 +352,7 @@ static int read_message_content(prelude_msg_t **m, prelude_io_t *fd)
                 return prelude_msg_read(m, fd);
         }
 
-        
+
         /*
          * we now have a full message.
          *
@@ -368,7 +368,7 @@ static int read_message_content(prelude_msg_t **m, prelude_io_t *fd)
         msg->hdr.is_fragment = 0;
         msg->header_index = 0;
         msg->read_index = PRELUDE_MSG_HDR_SIZE;
-        
+
         return ret;
 }
 
@@ -389,10 +389,10 @@ static int read_message_content(prelude_msg_t **m, prelude_io_t *fd)
  * error if an error occured. Take particular attention to #PRELUDE_ERROR_EAGAIN
  * and PRELUDE_ERROR_EOF.
  */
-int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio) 
+int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
 {
         int ret = 0;
-        
+
         /*
          * *msg is NULL,
          * this mean the caller want to work on a new message.
@@ -446,7 +446,7 @@ int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
                  */
                 *msg = NULL;
         }
-        
+
         return ret;
 }
 
@@ -465,10 +465,10 @@ int prelude_msg_read(prelude_msg_t **msg, prelude_io_t *pio)
  * @len is updated to contain the len of the data chunk.
  * @buf is updated to point on the data chunk.
  *
- * Returns: 0 on success, or a #prelude_error_t value on error. 
+ * Returns: 0 on success, or a #prelude_error_t value on error.
  */
-int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf) 
-{        
+int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf)
+{
         if ( msg->read_index == (msg->hdr.datalen + PRELUDE_MSG_HDR_SIZE) ) {
                 /*
                  * no more sub - messages in the buffer.
@@ -482,7 +482,7 @@ int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf)
          */
         if ( msg->read_index > (msg->hdr.datalen + PRELUDE_MSG_HDR_SIZE - 5) )
                 return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
-        
+
         /*
          * slice wanted data.
          */
@@ -492,19 +492,19 @@ int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf)
 
         if ( ! *len )
                 return 0;
-        
+
         /*
          * bound check again, against specified len.
          */
         if ( (msg->read_index + *len) <= msg->read_index )
                 return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
-        
+
         if ( (msg->read_index + *len) > (msg->hdr.datalen + PRELUDE_MSG_HDR_SIZE) )
                 return prelude_error(PRELUDE_ERROR_INVAL_LENGTH);
-        
+
         *buf = &msg->payload[msg->read_index];
         msg->read_index += *len;
-        
+
         return 0;
 }
 
@@ -523,7 +523,7 @@ int prelude_msg_get(prelude_msg_t *msg, uint8_t *tag, uint32_t *len, void **buf)
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src) 
+int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src)
 {
         ssize_t ret;
         uint32_t dlen = htonl(msg->hdr.datalen);
@@ -535,15 +535,15 @@ int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src
         buf[3] = msg->hdr.is_fragment;
 
         memcpy(&buf[4], &dlen, sizeof(dlen));
-                      
+
         ret = prelude_io_write(dst, buf, sizeof(buf));
         if ( ret < 0 )
                 return ret;
-        
+
         ret = prelude_io_forward(dst, src, msg->hdr.datalen);
         if ( ret < 0 )
                 return ret;
-        
+
         return 0;
 }
 
@@ -561,42 +561,42 @@ int prelude_msg_forward(prelude_msg_t *msg, prelude_io_t *dst, prelude_io_t *src
  *
  * Returns: 0 on success, or a negative value if an error occured.
  */
-int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst) 
+int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst)
 {
         ssize_t ret;
         uint32_t dlen = msg->write_index;
-        
+
         /*
          * no need to send... There's no data in this message.
          */
-        if ( msg->write_index - PRELUDE_MSG_HDR_SIZE <= 0 ) 
+        if ( msg->write_index - PRELUDE_MSG_HDR_SIZE <= 0 )
                 return 0;
-        
+
         /*
          * if the message header index is 0 (write called, without
          * prelude_msg_mark_end() first), mark end of the message
          * cause the caller didn't do it in this case.
          */
-        if ( msg->header_index == 0 ) 
+        if ( msg->header_index == 0 )
                 write_message_header(msg);
-        
+
         /*
          * in this case, prelude_msg_mark_end() was called.
          */
         else if ( ! msg->hdr.is_fragment )
                 dlen -= PRELUDE_MSG_HDR_SIZE;
-        
+
         ret = prelude_io_write(dst, msg->payload + msg->fd_write_index, dlen - msg->fd_write_index);
         if ( ret < 0 )
                 return ret;
-        
+
         msg->fd_write_index += ret;
-        
+
         if ( msg->fd_write_index == dlen ) {
                 msg->fd_write_index = 0;
                 return 0;
         }
-        
+
         return prelude_error(PRELUDE_ERROR_EAGAIN);
 }
 
@@ -609,13 +609,13 @@ int prelude_msg_write(prelude_msg_t *msg, prelude_io_t *dst)
  *
  * Recycle @msg so you can write at it again, even
  * thought it was written.
- */ 
-void prelude_msg_recycle(prelude_msg_t *msg) 
+ */
+void prelude_msg_recycle(prelude_msg_t *msg)
 {
         msg->header_index = 0;
         msg->write_index = PRELUDE_MSG_HDR_SIZE;
         msg->payload = (unsigned char *) msg + sizeof(*msg);
-                        
+
         if ( msg->read_index )
                 msg->read_index = PRELUDE_MSG_HDR_SIZE;
 }
@@ -632,16 +632,16 @@ void prelude_msg_recycle(prelude_msg_t *msg)
 void prelude_msg_mark_end(prelude_msg_t *msg)
 {
         int ret;
-        
-        if ( msg->write_index - msg->header_index - PRELUDE_MSG_HDR_SIZE <= 0 ) 
+
+        if ( msg->write_index - msg->header_index - PRELUDE_MSG_HDR_SIZE <= 0 )
                 return;
 
         write_message_header(msg);
-                
+
         if ( msg->write_index + PRELUDE_MSG_HDR_SIZE + MINIMUM_FRAGMENT_DATA_SIZE > msg->hdr.datalen ) {
 
                 ret = call_alloc_cb(&msg);
-                if ( ret < 0 ) 
+                if ( ret < 0 )
                         return;
         } else {
                 msg->header_index = msg->write_index;
@@ -666,21 +666,21 @@ void prelude_msg_mark_end(prelude_msg_t *msg)
  * available. You might check the return value mostly if using a dynamic message
  * through prelude_msg_dynamic_new()
  */
-int prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *data) 
+int prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *data)
 {
         int ret;
         uint32_t l;
 
         l = htonl(len);
-        
+
         ret = set_data(&msg, &tag, sizeof(tag));
         if ( ret < 0 )
                 return ret;
-        
+
         ret = set_data(&msg, &l, sizeof(l));
         if ( ret < 0 )
                 return ret;
-        
+
         return set_data(&msg, data, len);
 }
 
@@ -702,25 +702,25 @@ int prelude_msg_set(prelude_msg_t *msg, uint8_t tag, uint32_t len, const void *d
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
-int prelude_msg_new(prelude_msg_t **ret, size_t msgcount, size_t msglen, uint8_t tag, prelude_msg_priority_t priority) 
+int prelude_msg_new(prelude_msg_t **ret, size_t msgcount, size_t msglen, uint8_t tag, prelude_msg_priority_t priority)
 {
         size_t len;
         prelude_msg_t *msg;
-        
+
         len = msglen;
-        
+
         /*
          * 5 bytes of header by chunks :
          * - 1 byte:  tag
          * - 4 bytes: len
-         */ 
+         */
         len += msgcount * 5;
-        
+
         /*
          * For alert header.
          */
-        len += PRELUDE_MSG_HDR_SIZE;        
-        
+        len += PRELUDE_MSG_HDR_SIZE;
+
         msg = malloc(sizeof(prelude_msg_t) + len);
         if ( ! msg )
                 return prelude_error_from_errno(errno);
@@ -740,7 +740,7 @@ int prelude_msg_new(prelude_msg_t **ret, size_t msgcount, size_t msglen, uint8_t
         msg->flush_msg_cb = NULL;
 
         *ret = msg;
-        
+
         return 0;
 }
 
@@ -763,10 +763,10 @@ int prelude_msg_new(prelude_msg_t **ret, size_t msgcount, size_t msglen, uint8_t
  *
  * Returns: 0 on success, a negative value if an error occured.
  */
-int prelude_msg_dynamic_new(prelude_msg_t **ret, int (*flush_msg_cb)(prelude_msg_t **msg, void *data), void *data) 
+int prelude_msg_dynamic_new(prelude_msg_t **ret, int (*flush_msg_cb)(prelude_msg_t **msg, void *data), void *data)
 {
         prelude_msg_t *msg;
-        
+
         msg = malloc(sizeof(prelude_msg_t) + MSGBUF_SIZE);
         if ( ! msg )
                 return prelude_error_from_errno(errno);
@@ -779,7 +779,7 @@ int prelude_msg_dynamic_new(prelude_msg_t **ret, int (*flush_msg_cb)(prelude_msg
         msg->hdr.datalen = MSGBUF_SIZE;
 
         msg->payload = (unsigned char *) msg + sizeof(prelude_msg_t);
-        
+
         msg->header_index = 0;
         msg->send_msg_data = data;
         msg->read_index = 0;
@@ -788,7 +788,7 @@ int prelude_msg_dynamic_new(prelude_msg_t **ret, int (*flush_msg_cb)(prelude_msg
         msg->fd_write_index = 0;
 
         *ret = msg;
-        
+
         return 0;
 }
 
@@ -800,7 +800,7 @@ int prelude_msg_dynamic_new(prelude_msg_t **ret, int (*flush_msg_cb)(prelude_msg
  *
  * Tag @msg.
  */
-void prelude_msg_set_tag(prelude_msg_t *msg, uint8_t tag) 
+void prelude_msg_set_tag(prelude_msg_t *msg, uint8_t tag)
 {
         msg->hdr.tag = tag;
 }
@@ -814,7 +814,7 @@ void prelude_msg_set_tag(prelude_msg_t *msg, uint8_t tag)
  *
  * Associate @priority with @msg.
  */
-void prelude_msg_set_priority(prelude_msg_t *msg, prelude_msg_priority_t priority) 
+void prelude_msg_set_priority(prelude_msg_t *msg, prelude_msg_priority_t priority)
 {
         msg->hdr.priority = priority;
 }
@@ -845,7 +845,7 @@ uint8_t prelude_msg_get_tag(prelude_msg_t *msg)
  *
  * Returns: A priority.
  */
-prelude_msg_priority_t prelude_msg_get_priority(prelude_msg_t *msg) 
+prelude_msg_priority_t prelude_msg_get_priority(prelude_msg_t *msg)
 {
         return msg->hdr.priority;
 }
@@ -862,7 +862,7 @@ prelude_msg_priority_t prelude_msg_get_priority(prelude_msg_t *msg)
  *
  * Returns: Len of the message.
  */
-uint32_t prelude_msg_get_datalen(prelude_msg_t *msg) 
+uint32_t prelude_msg_get_datalen(prelude_msg_t *msg)
 {
         return msg->hdr.datalen;
 }
@@ -878,7 +878,7 @@ uint32_t prelude_msg_get_datalen(prelude_msg_t *msg)
  *
  * Returns: Len of the message.
  */
-uint32_t prelude_msg_get_len(prelude_msg_t *msg) 
+uint32_t prelude_msg_get_len(prelude_msg_t *msg)
 {
         return msg->write_index;
 }
@@ -893,7 +893,7 @@ uint32_t prelude_msg_get_len(prelude_msg_t *msg)
  * prelude_msg_destroy() destroy the #prelude_msg_t object pointed
  * to by @msg. All the ressources for this message are freed.
  */
-void prelude_msg_destroy(prelude_msg_t *msg) 
+void prelude_msg_destroy(prelude_msg_t *msg)
 {
         if ( --msg->refcount == 0 )
                 free(msg);
@@ -910,7 +910,7 @@ void prelude_msg_destroy(prelude_msg_t *msg)
  * prelude_msg_set_callback() allow to change the callback used
  * to flush a message created with prelude_msg_dynamic_new().
  */
-void prelude_msg_set_callback(prelude_msg_t *msg, int (*flush_msg_cb)(prelude_msg_t **msg, void *data)) 
+void prelude_msg_set_callback(prelude_msg_t *msg, int (*flush_msg_cb)(prelude_msg_t **msg, void *data))
 {
         msg->flush_msg_cb = flush_msg_cb;
 }
@@ -925,7 +925,7 @@ void prelude_msg_set_callback(prelude_msg_t *msg, int (*flush_msg_cb)(prelude_ms
  * prelude_msg_set_data() allow to change the data passed
  * to the message sending callback.
  */
-void prelude_msg_set_data(prelude_msg_t *msg, void *data) 
+void prelude_msg_set_data(prelude_msg_t *msg, void *data)
 {
         msg->send_msg_data = data;
 }
