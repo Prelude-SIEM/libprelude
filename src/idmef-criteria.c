@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2004-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2004-2006,2007,2008 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
 * This file is part of the Prelude library.
@@ -212,7 +212,7 @@ int idmef_criterion_print(const idmef_criterion_t *criterion, prelude_io_t *fd)
         prelude_string_t *out;
 
         prelude_return_val_if_fail(criterion, prelude_error(PRELUDE_ERROR_ASSERTION));
-	prelude_return_val_if_fail(fd, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(fd, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         ret = prelude_string_new(&out);
         if ( ret < 0 )
@@ -504,7 +504,7 @@ int idmef_criteria_print(const idmef_criteria_t *criteria, prelude_io_t *fd)
 int idmef_criteria_to_string(const idmef_criteria_t *criteria, prelude_string_t *out)
 {
         prelude_return_val_if_fail(criteria, prelude_error(PRELUDE_ERROR_ASSERTION));
-	prelude_return_val_if_fail(out, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(out, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( criteria->or )
                 prelude_string_sprintf(out, "((");
@@ -546,7 +546,7 @@ idmef_criterion_t *idmef_criteria_get_criterion(const idmef_criteria_t *criteria
 void idmef_criteria_or_criteria(idmef_criteria_t *criteria, idmef_criteria_t *criteria2)
 {
         prelude_return_if_fail(criteria);
-	prelude_return_if_fail(criteria2);
+        prelude_return_if_fail(criteria2);
 
         while ( criteria->or )
                 criteria = criteria->or;
@@ -561,8 +561,8 @@ int idmef_criteria_and_criteria(idmef_criteria_t *criteria, idmef_criteria_t *cr
         int ret;
         idmef_criteria_t *new, *last = NULL;
 
-        prelude_return_val_if_fail(criteria, prelude_error(PRELUDE_ERROR_ASSERTION)); 
-	prelude_return_val_if_fail(criteria2, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(criteria, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(criteria2, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         while ( criteria ) {
                 last = criteria;
@@ -591,7 +591,7 @@ int idmef_criteria_and_criteria(idmef_criteria_t *criteria, idmef_criteria_t *cr
 void idmef_criteria_set_criterion(idmef_criteria_t *criteria, idmef_criterion_t *criterion)
 {
         prelude_return_if_fail(criteria);
-	prelude_return_if_fail(criterion);
+        prelude_return_if_fail(criterion);
 
         criteria->criterion = criterion;
 }
