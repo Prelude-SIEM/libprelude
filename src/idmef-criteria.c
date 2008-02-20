@@ -87,8 +87,8 @@ const char *idmef_criterion_operator_to_string(idmef_criterion_operator_t op)
                 { IDMEF_CRITERION_OPERATOR_NOT_SUBSTR, "!<>"         },
                 { IDMEF_CRITERION_OPERATOR_NOT_SUBSTR_NOCASE, "!<>*" },
 
-                { IDMEF_CRITERION_OPERATOR_NOT_NULL, "!"             },
-                { IDMEF_CRITERION_OPERATOR_NULL, ""                  },
+                { IDMEF_CRITERION_OPERATOR_NOT_NULL, ""              },
+                { IDMEF_CRITERION_OPERATOR_NULL, "!"                 },
         };
 
         for ( i = 0; tbl[i].operator != 0; i++ )
@@ -259,7 +259,7 @@ int idmef_criterion_to_string(const idmef_criterion_t *criterion, prelude_string
         name = idmef_path_get_name(criterion->path, -1);
 
         if ( ! criterion->value )
-                return prelude_string_sprintf(out, "%s %s", operator, name);
+                return prelude_string_sprintf(out, "%s%s%s", operator, (*operator) ? " " : "", name);
 
         prelude_string_sprintf(out, "%s %s ", name, operator);
 
