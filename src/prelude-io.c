@@ -449,7 +449,7 @@ ssize_t prelude_io_forward(prelude_io_t *dst, prelude_io_t *src, size_t count)
 {
         prelude_return_val_if_fail(dst, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(src, prelude_error(PRELUDE_ERROR_ASSERTION));
-        
+
         return copy_forward(dst, src, count);
 }
 
@@ -623,7 +623,7 @@ ssize_t prelude_io_write(prelude_io_t *pio, const void *buf, size_t count)
         prelude_return_val_if_fail(pio, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(pio->write, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(buf, prelude_error(PRELUDE_ERROR_ASSERTION));
-        
+
         return pio->write(pio, buf, count);
 }
 
@@ -694,7 +694,7 @@ int prelude_io_close(prelude_io_t *pio)
 {
         prelude_return_val_if_fail(pio, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(pio->close, prelude_error(PRELUDE_ERROR_ASSERTION));
-        
+
         return pio->close(pio);
 }
 
@@ -899,4 +899,63 @@ prelude_bool_t prelude_io_is_error_fatal(prelude_io_t *pio, int error)
                 return FALSE;
 
         return TRUE;
+}
+
+
+
+/**
+ * prelude_io_set_write_callback:
+ * @pio: Pointer to a #prelude_io_t object.
+ * @write: Callback function to be called on prelude_io_write().
+ *
+ * Set an user defined write callback function to be called on
+ * prelude_io_write().
+ */
+void prelude_io_set_write_callback(prelude_io_t *pio, ssize_t (*write)(prelude_io_t *io, const void *buf, size_t count))
+{
+        pio->write = write;
+}
+
+
+/**
+ * prelude_io_set_read_callback:
+ * @pio: Pointer to a #prelude_io_t object.
+ * @write: Callback function to be called on prelude_io_read().
+ *
+ * Set an user defined read callback function to be called on
+ * prelude_io_read().
+ */
+void prelude_io_set_read_callback(prelude_io_t *pio, ssize_t (*read)(prelude_io_t *io, void *buf, size_t count))
+{
+        pio->read = read;
+}
+
+
+
+/**
+ * prelude_io_set_pending_callback:
+ * @pio: Pointer to a #prelude_io_t object.
+ * @write: Callback function to be called on prelude_io_pending().
+ *
+ * Set an user defined read callback function to be called on
+ * prelude_io_pending().
+ */
+void prelude_io_set_pending_callback(prelude_io_t *pio, ssize_t (*pending)(prelude_io_t *io))
+{
+        pio->pending = pending;
+}
+
+
+
+/**
+ * prelude_io_set_fdptr:
+ * @pio: Pointer to a #prelude_io_t object.
+ * @ptr: Pointer to user defined data.
+ *
+ * Set an user defined pointer that might be retrieved using
+ * prelude_io_get_fdptr().
+ */
+void prelude_io_set_fdptr(prelude_io_t *pio, void *ptr)
+{
+        pio->fd_ptr = ptr;
 }

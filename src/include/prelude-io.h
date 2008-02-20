@@ -31,7 +31,7 @@
 #ifdef HAVE_CONFIG_H
 # include "config.h"
 #endif
-          
+
 #include <stdio.h>
 #include <unistd.h>
 #include "prelude-inttypes.h"
@@ -53,6 +53,15 @@ void prelude_io_set_tls_io(prelude_io_t *pio, void *tls);
 void prelude_io_set_sys_io(prelude_io_t *pio, int fd);
 
 int prelude_io_set_buffer_io(prelude_io_t *pio);
+
+
+/*
+ *
+ */
+void prelude_io_set_fdptr(prelude_io_t *pio, void *ptr);
+void prelude_io_set_write_callback(prelude_io_t *pio, ssize_t (*write)(prelude_io_t *io, const void *buf, size_t count));
+void prelude_io_set_read_callback(prelude_io_t *pio, ssize_t (*read)(prelude_io_t *io, void *buf, size_t count));
+void prelude_io_set_pending_callback(prelude_io_t *pio, ssize_t (*pending)(prelude_io_t *io));
 
 
 /*
@@ -81,9 +90,9 @@ void *prelude_io_get_fdptr(prelude_io_t *pio);
 ssize_t prelude_io_pending(prelude_io_t *pio);
 
 prelude_bool_t prelude_io_is_error_fatal(prelude_io_t *pio, int error);
-          
+
 #ifdef __cplusplus
   }
 #endif
-        
+
 #endif /* _LIBPRELUDE_PRELUDE_IO_H */
