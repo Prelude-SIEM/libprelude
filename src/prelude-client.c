@@ -1349,7 +1349,10 @@ void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status
 
         prelude_timer_destroy(&client->heartbeat_timer);
 
-        if ( status == PRELUDE_CLIENT_EXIT_STATUS_SUCCESS && client->flags & PRELUDE_CLIENT_FLAGS_HEARTBEAT ) {
+        if ( client->status >= CLIENT_STATUS_STARTING     &&
+             status == PRELUDE_CLIENT_EXIT_STATUS_SUCCESS &&
+             client->flags & PRELUDE_CLIENT_FLAGS_HEARTBEAT ) {
+
                 client->status = CLIENT_STATUS_EXITING;
                 heartbeat_expire_cb(client);
         }
