@@ -456,6 +456,9 @@ static int close_connection_fd_block(prelude_connection_t *cnx)
 {
         int ret;
 
+        if ( ! (cnx->state & PRELUDE_CONNECTION_STATE_ESTABLISHED) )
+                return -1;
+
         do {
                 ret = close_connection_fd(cnx);
         } while ( ret < 0 && ! prelude_io_is_error_fatal(cnx->fd, ret) );
