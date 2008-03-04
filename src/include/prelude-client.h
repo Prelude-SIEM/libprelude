@@ -38,7 +38,8 @@ typedef enum {
         PRELUDE_CLIENT_FLAGS_ASYNC_SEND  = 0x01,
         PRELUDE_CLIENT_FLAGS_ASYNC_TIMER = 0x02,
         PRELUDE_CLIENT_FLAGS_HEARTBEAT   = 0x04,
-        PRELUDE_CLIENT_FLAGS_CONNECT     = 0x08
+        PRELUDE_CLIENT_FLAGS_CONNECT     = 0x08,
+        PRELUDE_CLIENT_FLAGS_AUTOCONFIG  = 0x10
 } prelude_client_flags_t;
 
 
@@ -91,9 +92,9 @@ prelude_bool_t prelude_client_is_setup_needed(int error);
 prelude_client_profile_t *prelude_client_get_profile(prelude_client_t *client);
 
 int prelude_client_new_msgbuf(prelude_client_t *client, prelude_msgbuf_t **msgbuf);
-         
+
 int prelude_client_handle_msg_default(prelude_client_t *client, prelude_msg_t *msg, prelude_msgbuf_t *msgbuf);
-        
+
 int _prelude_client_register_options(void);
 
 /*
@@ -102,10 +103,10 @@ int _prelude_client_register_options(void);
 const char *prelude_client_get_setup_error(prelude_client_t *client);
 
 void prelude_client_print_setup_error(prelude_client_t *client);
-         
+
 
 #ifdef __cplusplus
  }
 #endif
-         
+
 #endif

@@ -830,10 +830,8 @@ static int set_profile(prelude_option_t *opt, const char *optarg, prelude_string
 
         prelude_client_profile_get_config_filename(client->profile, buf, sizeof(buf));
 
-        if ( client->config_filename )
-                free(client->config_filename);
-
-        client->config_filename = strdup(buf);
+        prelude_client_set_config_filename(client, buf);
+        client->config_external = FALSE;
 
         return 0;
 }
@@ -1038,7 +1036,7 @@ int prelude_client_new(prelude_client_t **client, const char *profile)
         prelude_thread_mutex_init(&new->msgbuf_lock, NULL);
         prelude_timer_init_list(&new->heartbeat_timer);
 
-        new->flags = PRELUDE_CLIENT_FLAGS_HEARTBEAT|PRELUDE_CLIENT_FLAGS_CONNECT;
+        new->flags = PRELUDE_CLIENT_FLAGS_HEARTBEAT|PRELUDE_CLIENT_FLAGS_CONNECT|PRELUDE_CLIENT_FLAGS_AUTOCONFIG;
         new->permission = PRELUDE_CONNECTION_PERMISSION_IDMEF_WRITE;
 
         ret = idmef_analyzer_new(&new->analyzer);
@@ -1397,6 +1395,9 @@ int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t fl
                 prelude_msgbuf_set_flags(client->msgbuf, PRELUDE_MSGBUF_FLAGS_ASYNC);
         }
 
+        if ( ! (flags & PRELUDE_CLIENT_FLAGS_AUTOCONFIG) )
+                prelude_client_set_config_filename(client, NULL);
+
         return ret;
 }
 
@@ -1490,14 +1491,20 @@ const char *prelude_client_get_config_filename(prelude_client_t *client)
 int prelude_client_set_config_filename(prelude_client_t *client, const char *filename)
 {
         prelude_return_val_if_fail(client, prelude_error(PRELUDE_ERROR_ASSERTION));
-        prelude_return_val_if_fail(filename, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        if ( client->config_filename )
+        if ( client->config_filename ) {
                 free(client->config_filename);
+                client->config_filename = NULL;
+        }
 
-        client->config_filename = strdup(filename);
-        if ( ! client->config_filename )
-                return prelude_error_from_errno(errno);
+        if ( ! filename )
+                client->flags &= ~PRELUDE_CLIENT_FLAGS_AUTOCONFIG;
+
+        else {
+                client->config_filename = strdup(filename);
+                if ( ! client->config_filename )
+                        return prelude_error_from_errno(errno);
+        }
 
         client->config_external = TRUE;
 
