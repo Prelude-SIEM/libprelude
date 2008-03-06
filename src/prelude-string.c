@@ -455,7 +455,7 @@ int prelude_string_set_nodup(prelude_string_t *string, char *buf)
 {
         prelude_return_val_if_fail(string, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(buf, prelude_error(PRELUDE_ERROR_ASSERTION));
-        
+
         return prelude_string_set_nodup_fast(string, buf, strlen(buf));
 }
 
@@ -505,7 +505,7 @@ int prelude_string_set_ref(prelude_string_t *string, const char *buf)
 {
         prelude_return_val_if_fail(string, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(buf, prelude_error(PRELUDE_ERROR_ASSERTION));
-        
+
         return prelude_string_set_ref_fast(string, buf, strlen(buf));
 }
 
@@ -552,20 +552,21 @@ int prelude_string_copy_ref(const prelude_string_t *src, prelude_string_t *dst)
 int prelude_string_copy_dup(const prelude_string_t *src, prelude_string_t *dst)
 {
         prelude_return_val_if_fail(src, prelude_error(PRELUDE_ERROR_ASSERTION));
-        prelude_return_val_if_fail(src->size, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(dst, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         prelude_string_destroy_internal(dst);
-
-        dst->data.rwbuf = malloc(src->size);
-        if ( ! dst->data.rwbuf )
-                return prelude_error_from_errno(errno);
 
         dst->size = src->size;
         dst->index = src->index;
         dst->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
 
-        string_buf_copy(dst, src->data.robuf, src->index);
+        if ( src->size ) {
+                dst->data.rwbuf = malloc(src->size);
+                if ( ! dst->data.rwbuf )
+                        return prelude_error_from_errno(errno);
+
+                string_buf_copy(dst, src->data.robuf, src->index);
+        }
 
         return 0;
 }
@@ -593,17 +594,19 @@ int prelude_string_clone(const prelude_string_t *src, prelude_string_t **dst)
         if ( ret < 0 )
                 return ret;
 
-        (*dst)->data.rwbuf = malloc(src->size);
-        if ( ! (*dst)->data.rwbuf ) {
-                free(*dst);
-                return prelude_error_from_errno(errno);
-        }
-
         (*dst)->size = src->size;
         (*dst)->index = src->index;
         (*dst)->flags |= PRELUDE_STRING_OWN_DATA|PRELUDE_STRING_CAN_REALLOC;
 
-        string_buf_copy(*dst, src->data.robuf, src->index);
+        if ( src->size ) {
+                (*dst)->data.rwbuf = malloc(src->size);
+                if ( ! (*dst)->data.rwbuf ) {
+                        prelude_string_destroy(*dst);
+                        return prelude_error_from_errno(errno);
+                }
+
+                string_buf_copy(*dst, src->data.robuf, src->index);
+        }
 
         return 0;
 }
@@ -728,11 +731,10 @@ void prelude_string_destroy_internal(prelude_string_t *string)
 {
         prelude_return_if_fail(string);
 
-        if ( (string->flags & PRELUDE_STRING_OWN_DATA) && string->data.rwbuf ) {
+        if ( (string->flags & PRELUDE_STRING_OWN_DATA) && string->data.rwbuf )
                 free(string->data.rwbuf);
-                string->data.rwbuf = NULL;
-        }
 
+        string->data.rwbuf = NULL;
         string->index = string->size = 0;
 
         /*
@@ -913,7 +915,7 @@ int prelude_string_cat(prelude_string_t *dst, const char *str)
 {
         prelude_return_val_if_fail(dst, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(str, prelude_error(PRELUDE_ERROR_ASSERTION));
-        
+
         return prelude_string_ncat(dst, str, strlen(str));
 }
 
