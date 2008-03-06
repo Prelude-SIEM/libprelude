@@ -68,7 +68,7 @@ while test $# -gt 0; do
 
     --libs)
       libdirs=-L@libdir@
-      echo $libdirs -lprelude @libprelude_libs@ @LIBADD_DL@ @PTHREAD_LIBS@
+      echo $libdirs -lprelude @LIBPRELUDE_LIBS@ @LIBADD_DL@ @PTHREAD_LIBS@
       ;;
 
     *)

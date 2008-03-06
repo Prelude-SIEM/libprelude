@@ -9,7 +9,7 @@ endif
 
 DIST_SUBDIRS=$(SUBDIRS)
 
-EXTRA_DIST = HACKING.README LICENSE.README client.conf global.conf idmef-client.conf tls.conf
+EXTRA_DIST = HACKING.README LICENSE.README tls.conf
 
 bin_SCRIPTS = $(top_builddir)/libprelude-config
 
@@ -50,9 +50,9 @@ install-data-local:
                 echo;														\
                 echo "********************************************************************************";			\
 		echo;														\
-		$(INSTALL) -m 644 $(top_srcdir)/client.conf $(DESTDIR)$(prelude_config_dir)/default/client.conf-dist;		\
+		$(INSTALL) -m 644 $(top_builddir)/client.conf $(DESTDIR)$(prelude_config_dir)/default/client.conf-dist;		\
         else															\
-                $(INSTALL) -m 644 $(top_srcdir)/client.conf $(DESTDIR)$(prelude_config_dir)/default;				\
+                $(INSTALL) -m 644 $(top_builddir)/client.conf $(DESTDIR)$(prelude_config_dir)/default;				\
         fi
 
 	@if test -f $(DESTDIR)$(prelude_config_dir)/default/global.conf; then							\
@@ -64,9 +64,9 @@ install-data-local:
                 echo;														\
                 echo "********************************************************************************";			\
 		echo;														\
-		$(INSTALL) -m 644 $(top_srcdir)/global.conf $(DESTDIR)$(prelude_config_dir)/default/global.conf-dist;		\
+		$(INSTALL) -m 644 $(top_builddir)/global.conf $(DESTDIR)$(prelude_config_dir)/default/global.conf-dist;		\
         else															\
-                $(INSTALL) -m 644 $(top_srcdir)/global.conf $(DESTDIR)$(prelude_config_dir)/default;				\
+                $(INSTALL) -m 644 $(top_builddir)/global.conf $(DESTDIR)$(prelude_config_dir)/default;				\
         fi															
 
 	@if test -f $(DESTDIR)$(prelude_config_dir)/default/idmef-client.conf; then						\
@@ -78,9 +78,9 @@ install-data-local:
                 echo;														\
                 echo "********************************************************************************";			\
 		echo;														\
-		$(INSTALL) -m 644 $(top_srcdir)/idmef-client.conf $(DESTDIR)$(prelude_config_dir)/default/idmef-client.conf-dist; \
+		$(INSTALL) -m 644 $(top_builddir)/idmef-client.conf $(DESTDIR)$(prelude_config_dir)/default/idmef-client.conf-dist; \
         else															\
-                $(INSTALL) -m 644 $(top_srcdir)/idmef-client.conf $(DESTDIR)$(prelude_config_dir)/default;			\
+                $(INSTALL) -m 644 $(top_builddir)/idmef-client.conf $(DESTDIR)$(prelude_config_dir)/default;			\
         fi
 
 	@if test -f $(DESTDIR)$(prelude_config_dir)/default/tls.conf; then							\

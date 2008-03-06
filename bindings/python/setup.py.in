@@ -82,4 +82,4 @@ setup(name="prelude",
                              ["_prelude.c"],
                              extra_compile_args=split_args("-DHAVE_CONFIG_H -I@top_builddir@ -I@top_srcdir@/src/include -I@top_builddir@/src/include -I@top_builddir@/src/libprelude-error -I@top_srcdir@/bindings @PTHREAD_CFLAGS@"),
                              library_dirs=[ "@top_builddir@/src/.libs/" ],
-                             extra_link_args=split_args("-lprelude @PTHREAD_CFLAGS@ @libprelude_libs@"))])
+                             extra_link_args=split_args("-lprelude @PTHREAD_CFLAGS@ @LIBPRELUDE_LIBS@ @LIBADD_DL@ @PTHREAD_LIBS@"))])

@@ -6,7 +6,7 @@ use Cwd "abs_path";
 
 my %attributs = (NAME => 'Prelude',
 		 INC => '-I@top_srcdir@ -I@top_builddir@/src/include -I@top_srcdir@/src/include -I@top_builddir@/src/libprelude-error @PTHREAD_CFLAGS@',
-		 LIBS => ["-L@top_builddir@/src/.libs -lprelude", "-L$ENV{LIBDIR} -lprelude @libprelude_libs@ @LIBADD_DL@ @PTHREAD_LIBS@" ],
+		 LIBS => ["-L@top_builddir@/src/.libs -lprelude", "-L$ENV{LIBDIR} -lprelude @LIBPRELUDE_LIBS@ @LIBADD_DL@ @PTHREAD_LIBS@" ],
 		 LDDLFLAGS => "-L@top_builddir@/src/.libs @PTHREAD_CFLAGS@ $Config{lddlflags}");
 
 if ( abs_path("@top_srcdir@") ne abs_path("@top_builddir@") ) {

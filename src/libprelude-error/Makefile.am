@@ -1,5 +1,5 @@
 includedir = $(prefix)/include/libprelude
-DEFS = -I$(top_srcdir)/libmissing -I$(top_srcdir)/src/include -I$(top_builddir)/src/include
+AM_CPPFLAGS = @PTHREAD_CFLAGS@ @PCFLAGS@ -I$(top_srcdir)/libmissing -I$(top_srcdir)/src/include -I$(top_builddir)/src/include
 
 EXTRA_DIST = mkstrtable.awk err-sources.h.in err-codes.h.in \
 	mkerrnos.awk errnos.in mkerrcodes.awk mkerrcodes1.awk mkerrcodes2.awk mkerrcodes.c \
@@ -14,7 +14,8 @@ CLEANFILES = err-sources.h err-codes.h code-to-errno.h code-from-errno.h \
 nodist_include_HEADERS = prelude-error.h
 
 noinst_LTLIBRARIES = libprelude-error.la
-libprelude_error_la_LDFLAGS = -no-undefined
+libprelude_error_la_LIBADD  = @PTHREAD_LIBS@
+libprelude_error_la_LDFLAGS = @PTHREAD_CFLAGS@ -no-undefined
 libprelude_error_la_SOURCES = prelude-error.h prelude-error.c strsource.c strerror.c
 
 err-sources.h: Makefile mkstrtable.awk err-sources.h.in
