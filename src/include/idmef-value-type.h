@@ -6,7 +6,7 @@
 * This file is part of the Prelude library.
 *
 * This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by 
+* it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2, or (at your option)
 * any later version.
 *
@@ -34,8 +34,8 @@
 typedef enum {
         IDMEF_VALUE_TYPE_ERROR   =  -1,
         IDMEF_VALUE_TYPE_UNKNOWN =   0,
-	IDMEF_VALUE_TYPE_INT8	 =   1,
-	IDMEF_VALUE_TYPE_UINT8   =   2,
+        IDMEF_VALUE_TYPE_INT8    =   1,
+        IDMEF_VALUE_TYPE_UINT8   =   2,
         IDMEF_VALUE_TYPE_INT16   =   3,
         IDMEF_VALUE_TYPE_UINT16  =   4,
         IDMEF_VALUE_TYPE_INT32   =   5,
@@ -52,7 +52,7 @@ typedef enum {
         IDMEF_VALUE_TYPE_CLASS   =  16
 } idmef_value_type_id_t;
 
-                  
+
 typedef struct {
         void *object;
         int class_id;
@@ -62,12 +62,12 @@ typedef struct {
         int value;
         int class_id;
 } idmef_value_type_enum_t;
-         
+
 
 typedef union {
-	int8_t int8_val;
-	uint8_t uint8_val;
-	int16_t int16_val;
+        int8_t int8_val;
+        uint8_t uint8_val;
+        int16_t int16_val;
         uint16_t uint16_val;
         int32_t int32_val;
         uint32_t uint32_val;
@@ -109,9 +109,9 @@ int idmef_value_type_compare(const idmef_value_type_t *type1, const idmef_value_
 int idmef_value_type_check_operator(const idmef_value_type_t *type, idmef_criterion_operator_t op);
 
 const char *idmef_value_type_to_string(idmef_value_type_id_t type);
-         
+
 #ifdef __cplusplus
  }
 #endif
-         
+
 #endif
