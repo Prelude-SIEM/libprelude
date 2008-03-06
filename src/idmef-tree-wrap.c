@@ -138,7 +138,7 @@ static int get_value_from_data(idmef_value_t **value, idmef_data_t *data, prelud
                 return 0;
         }
 
-        if ( is_ptr ) {
+        if ( ! is_ptr ) {
                 ret = idmef_data_clone(data, &data);
                 if ( ret < 0 )
                         return ret;
@@ -166,7 +166,7 @@ static int get_value_from_time(idmef_value_t **value, idmef_time_t *time, prelud
                 return 0;
         }
 
-        if ( is_ptr ) {
+        if ( ! is_ptr ) {
                 ret = idmef_time_clone(time, &time);
                 if ( ret < 0 )
                         return ret;
