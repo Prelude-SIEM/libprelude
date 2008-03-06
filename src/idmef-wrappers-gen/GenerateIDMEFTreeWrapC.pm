@@ -140,13 +140,19 @@ static int get_value_from_string(idmef_value_t **value, prelude_string_t *str, p
                 return 0;
         }
 
-        ret = idmef_value_new_string(value, str);
-        if ( ret < 0 )
-                return ret;
+        if ( ! is_ptr ) {
+                ret = prelude_string_clone(str, &str);
+                if ( ret < 0 )
+                        return ret;
+        }
 
-        if ( ! is_ptr )
-                idmef_value_dont_have_own_data(*value);
-        else
+        ret = idmef_value_new_string(value, str);
+        if ( ret < 0 ) {
+                prelude_string_destroy(str);
+                return ret;
+        }
+
+        if ( is_ptr )
                 prelude_string_ref(str);
 
         return 0;
@@ -163,13 +169,19 @@ static int get_value_from_data(idmef_value_t **value, idmef_data_t *data, prelud
                 return 0;
         }
 
-        ret = idmef_value_new_data(value, data);
-        if ( ret < 0 )
-                return ret;
+        if ( is_ptr ) {
+                ret = idmef_data_clone(data, &data);
+                if ( ret < 0 )
+                        return ret;
+        }
 
-        if ( ! is_ptr )
-                idmef_value_dont_have_own_data(*value);
-        else
+        ret = idmef_value_new_data(value, data);
+        if ( ret < 0 ) {
+                idmef_data_destroy(data);
+                return ret;
+        }
+
+        if ( is_ptr )
                 idmef_data_ref(data);
 
         return 0;
@@ -185,13 +197,19 @@ static int get_value_from_time(idmef_value_t **value, idmef_time_t *time, prelud
                 return 0;
         }
 
-        ret = idmef_value_new_time(value, time);
-        if ( ret < 0 )
-                return ret;
+        if ( is_ptr ) {
+                ret = idmef_time_clone(time, &time);
+                if ( ret < 0 )
+                        return ret;
+        }
 
-        if ( ! is_ptr )
-                idmef_value_dont_have_own_data(*value);
-        else
+        ret = idmef_value_new_time(value, time);
+        if ( ret < 0 ) {
+                idmef_time_destroy(time);
+                return ret;
+        }
+
+        if ( is_ptr )
                 idmef_time_ref(time);
 
         return 0;
