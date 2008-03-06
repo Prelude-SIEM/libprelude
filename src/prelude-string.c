@@ -588,7 +588,6 @@ int prelude_string_clone(const prelude_string_t *src, prelude_string_t **dst)
         int ret;
 
         prelude_return_val_if_fail(src, prelude_error(PRELUDE_ERROR_ASSERTION));
-        prelude_return_val_if_fail(src->size, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         ret = prelude_string_new(dst);
         if ( ret < 0 )
