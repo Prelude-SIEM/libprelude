@@ -74,6 +74,7 @@ AM_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
 AC_SUBST(CFLAGS)
+AC_SUBST(PCFLAGS)
 
 
 dnl
@@ -114,8 +115,8 @@ fi
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
-AC_SUBST(libprelude_libs)
-AC_SUBST(libprelude_cflags)
+AC_SUBST(LIBPRELUDE_LIBS)
+AC_SUBST(LIBPRELUDE_CFLAGS)
 AC_SUBST(prelude_admin_libs)
 
 
@@ -134,7 +135,7 @@ case "$host_os" in
         # headers.
         #
         AC_MSG_RESULT(Darwin: adding -no-cpp-precomp)
-	AX_CFLAGS_GCC_OPTION(-no-cpp-precomp)
+	AX_CFLAGS_GCC_OPTION(-no-cpp-precomp, PCFLAGS)
         ;;
  *)
         AC_MSG_RESULT(none needed)
@@ -215,10 +216,6 @@ fi
 
 
 dnl Export pthread stuff wide for libmissing and libprelude-error
-
-LIBS="$LIBS $PTHREAD_LIBS"
-CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
-LDFLAGS="$LDFLAGS $PTHREAD_CFLAGS"
 CC="$PTHREAD_CC"
 
 
@@ -397,7 +394,8 @@ AM_PATH_LIBGCRYPT(1:1.1.94,,
 ***
 ]])) 
 
-libprelude_libs="$libprelude_libs $LIBGNUTLS_LIBS $LIBGCRYPT_LIBS $COMMON_LIBS"
+
+LIBPRELUDE_LIBS="$LIBPRELUDE_LIBS $LIBGNUTLS_LIBS $LIBGCRYPT_LIBS $COMMON_LIBS"
 
 
 dnl **************************************************
@@ -720,17 +718,17 @@ AC_SUBST(prelude_config_dir)
 AC_SUBST(prelude_ident_file)
 
 
-AX_CFLAGS_GCC_OPTION(-Wall)
-AX_CFLAGS_GCC_OPTION(-Wstrict-prototypes)
-AX_CFLAGS_GCC_OPTION(-Wmissing-prototypes)
-AX_CFLAGS_GCC_OPTION(-Wmissing-declarations)
-AX_CFLAGS_GCC_OPTION(-Wbad-function-cast)
-AX_CFLAGS_GCC_OPTION(-Wcast-qual)
-AX_CFLAGS_GCC_OPTION(-Wcast-align)
-AX_CFLAGS_GCC_OPTION(-Wnested-externs)
-AX_CFLAGS_GCC_OPTION(-Wunused)
-AX_CFLAGS_GCC_OPTION(-Wformat)
-AX_CFLAGS_GCC_OPTION(-Wformat-security)
+AX_CFLAGS_GCC_OPTION(-Wall, PCFLAGS)
+AX_CFLAGS_GCC_OPTION(-Wstrict-prototypes, PCFLAGS)
+AX_CFLAGS_GCC_OPTION(-Wmissing-prototypes, PCFLAGS)
+AX_CFLAGS_GCC_OPTION(-Wmissing-declarations, PCFLAGS)
+AX_CFLAGS_GCC_OPTION(-Wbad-function-cast, PCFLAGS)
+AX_CFLAGS_GCC_OPTION(-Wcast-qual, PCFLAGS)
+AX_CFLAGS_GCC_OPTION(-Wcast-align, PCFLAGS)
+AX_CFLAGS_GCC_OPTION(-Wnested-externs, PCFLAGS)
+AX_CFLAGS_GCC_OPTION(-Wunused, PCFLAGS)
+AX_CFLAGS_GCC_OPTION(-Wformat, PCFLAGS)
+AX_CFLAGS_GCC_OPTION(-Wformat-security, PCFLAGS)
 
 
 if test x$buggy_pthread_initializers = xyes; then 
