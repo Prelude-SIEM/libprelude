@@ -207,10 +207,20 @@ static int idmef_path_get_list_internal(idmef_value_t **value_list,
                 if ( parent_class >= 0 )
                         ret = idmef_path_get_internal(&value, path, depth, tmp, parent_class);
                 else {
-                        ret = idmef_value_new(&value, path->elem[depth - 1].value_type, tmp);
+                        idmef_value_type_id_t type = path->elem[depth - 1].value_type;
+
+                        ret = idmef_value_new(&value, type, tmp);
                         if ( ret == 0 ) {
-                                idmef_value_dont_have_own_data(value);
-                                ret = 1;
+                                idmef_value_type_t vt;
+
+                                vt.id = type;
+                                vt.data.string_val = (void *) tmp;
+
+                                ret = idmef_value_type_ref(&vt);
+                                if ( ret < 0 )
+                                        idmef_value_destroy(value);
+                                else
+                                        ret = 1;
                         }
                 }
 
@@ -871,7 +881,7 @@ int idmef_path_set_index(idmef_path_t *path, unsigned int depth, unsigned int in
 int idmef_path_undefine_index(idmef_path_t *path, unsigned int depth)
 {
         prelude_return_val_if_fail(path, prelude_error(PRELUDE_ERROR_ASSERTION));
-        
+
         return idmef_path_set_index(path, depth, INDEX_UNDEFINED);
 }
 
@@ -925,7 +935,7 @@ int idmef_path_make_child(idmef_path_t *path, const char *child_name, unsigned i
         idmef_class_id_t class;
         idmef_class_child_id_t child;
 
-        prelude_return_val_if_fail(path, prelude_error(PRELUDE_ERROR_ASSERTION)); 
+        prelude_return_val_if_fail(path, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(child_name, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( path->depth > MAX_DEPTH - 1 )
