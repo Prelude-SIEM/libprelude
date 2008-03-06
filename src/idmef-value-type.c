@@ -101,6 +101,7 @@ typedef struct {
 
         int (*copy)(const idmef_value_type_t *src, void *dst, size_t size);
         int (*clone)(const idmef_value_type_t *src, idmef_value_type_t *dst, size_t size);
+        int (*ref)(const idmef_value_type_t *src);
 
         void (*destroy)(idmef_value_type_t *type);
         int (*compare)(const idmef_value_type_t *t1, const idmef_value_type_t *t2, size_t size, idmef_criterion_operator_t op);
@@ -300,6 +301,12 @@ static int time_clone(const idmef_value_type_t *src, idmef_value_type_t *dst, si
 }
 
 
+static int time_ref(const idmef_value_type_t *src)
+{
+        idmef_time_ref(src->data.time_val);
+        return 0;
+}
+
 
 static void time_destroy(idmef_value_type_t *type)
 {
@@ -354,6 +361,12 @@ static int string_copy(const idmef_value_type_t *src, void *dst, size_t size)
         return prelude_string_copy_dup(src->data.string_val, dst);
 }
 
+
+static int string_ref(const idmef_value_type_t *src)
+{
+        prelude_string_ref(src->data.string_val);
+        return 0;
+}
 
 
 static int string_clone(const idmef_value_type_t *src, idmef_value_type_t *dst, size_t size)
@@ -445,6 +458,12 @@ static int data_clone(const idmef_value_type_t *src, idmef_value_type_t *dst, si
 }
 
 
+static int data_ref(const idmef_value_type_t *src)
+{
+        idmef_data_ref(src->data.data_val);
+        return 0;
+}
+
 
 static void data_destroy(idmef_value_type_t *type)
 {
@@ -477,6 +496,12 @@ static int class_clone(const idmef_value_type_t *src, idmef_value_type_t *dst, s
 }
 
 
+static int class_ref(const idmef_value_type_t *src)
+{
+        return idmef_class_ref(src->data.class_val.class_id, src->data.class_val.object);
+}
+
+
 static void class_destroy(idmef_value_type_t *type)
 {
         idmef_class_destroy(type->data.class_val.class_id, type->data.class_val.object);
@@ -484,38 +509,38 @@ static void class_destroy(idmef_value_type_t *type)
 
 
 static const idmef_value_type_operation_t ops_tbl[] = {
-        { "unknown", 0, 0, NULL, NULL, NULL, NULL, NULL, NULL                     },
+        { "unknown", 0, 0, NULL, NULL, NULL, NULL, NULL, NULL                           },
         { "int8", sizeof(int8_t), INTEGER_OPERATOR, generic_copy,
-          generic_clone, NULL, generic_compare, int8_read, int8_write             },
+          generic_clone, NULL, NULL, generic_compare, int8_read, int8_write             },
         { "uint8", sizeof(uint8_t), INTEGER_OPERATOR, generic_copy,
-          generic_clone, NULL, generic_compare, uint8_read, uint8_write           },
+          generic_clone, NULL, NULL, generic_compare, uint8_read, uint8_write           },
         { "int16", sizeof(int16_t), INTEGER_OPERATOR, generic_copy,
-          generic_clone, NULL, generic_compare, int16_read, int16_write           },
+          generic_clone, NULL, NULL, generic_compare, int16_read, int16_write           },
         { "uint16", sizeof(uint16_t), INTEGER_OPERATOR, generic_copy,
-          generic_clone, NULL, generic_compare, uint16_read, uint16_write         },
+          generic_clone, NULL, NULL, generic_compare, uint16_read, uint16_write         },
         { "int32", sizeof(int32_t), INTEGER_OPERATOR, generic_copy,
-          generic_clone, NULL, generic_compare, int32_read, int32_write           },
+          generic_clone, NULL, NULL, generic_compare, int32_read, int32_write           },
         { "uint32", sizeof(uint32_t), INTEGER_OPERATOR, generic_copy,
-          generic_clone, NULL, generic_compare, uint32_read, uint32_write         },
+          generic_clone, NULL, NULL, generic_compare, uint32_read, uint32_write         },
         { "int64", sizeof(int64_t), INTEGER_OPERATOR, generic_copy,
-          generic_clone, NULL, generic_compare, int64_read, int64_write           },
+          generic_clone, NULL, NULL, generic_compare, int64_read, int64_write           },
         { "uint64", sizeof(uint64_t), INTEGER_OPERATOR, generic_copy,
-          generic_clone, NULL, generic_compare, uint64_read, uint64_write         },
+          generic_clone, NULL, NULL, generic_compare, uint64_read, uint64_write         },
         { "float", sizeof(float), INTEGER_OPERATOR, generic_copy,
-          generic_clone, NULL, generic_compare, float_read, float_write           },
+          generic_clone, NULL, NULL, generic_compare, float_read, float_write           },
         { "double", sizeof(double), INTEGER_OPERATOR, generic_copy,
-          generic_clone, NULL, generic_compare, double_read, double_write         },
-        { "string", 0, STRING_OPERATOR, string_copy,
-          string_clone, string_destroy, string_compare, string_read, string_write },
-        { "time", 0, TIME_OPERATOR, time_copy,
-          time_clone, time_destroy, time_compare, time_read, time_write           },
-        { "data", 0, DATA_OPERATOR, data_copy,
-          data_clone, data_destroy, data_compare, data_read, data_write           },
+          generic_clone, NULL, NULL, generic_compare, double_read, double_write         },
+        { "string", 0, STRING_OPERATOR, string_copy, string_clone,
+          string_ref, string_destroy, string_compare, string_read, string_write         },
+        { "time", 0, TIME_OPERATOR, time_copy, time_clone,
+          time_ref, time_destroy, time_compare, time_read, time_write                   },
+        { "data", 0, DATA_OPERATOR, data_copy, data_clone,
+          data_ref, data_destroy, data_compare, data_read, data_write                   },
         { "enum", sizeof(idmef_value_type_enum_t), INTEGER_OPERATOR, enum_copy,
-          generic_clone, NULL, generic_compare, enum_read, enum_write,            },
-        { "list", 0, 0, NULL, NULL, NULL, NULL, NULL, NULL                        },
-        { "class", 0, CLASS_OPERATOR, class_copy,
-          class_clone, class_destroy, class_compare, NULL, NULL                   },
+          generic_clone, NULL, NULL, generic_compare, enum_read, enum_write,            },
+        { "list", 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL                        },
+        { "class", 0, CLASS_OPERATOR, class_copy, class_clone,
+          class_ref, class_destroy, class_compare, NULL, NULL                   },
 };
 
 
@@ -575,6 +600,22 @@ int idmef_value_type_copy(const idmef_value_type_t *src, void *dst)
 }
 
 
+
+int idmef_value_type_ref(const idmef_value_type_t *vt)
+{
+        int ret;
+
+        ret = is_type_valid(vt->id);
+        if ( ret < 0 )
+                return ret;
+
+        if ( ! ops_tbl[vt->id].ref )
+                return prelude_error_verbose(PRELUDE_ERROR_IDMEF_VALUE_TYPE_REF_UNAVAILABLE,
+                                             "Object type '%s' does not support ref operation",
+                                             idmef_value_type_to_string(vt->id));
+
+        return ops_tbl[vt->id].ref(vt);
+}
 
 
 int idmef_value_type_compare(const idmef_value_type_t *type1,

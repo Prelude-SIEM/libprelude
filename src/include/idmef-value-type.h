@@ -92,6 +92,7 @@ typedef struct {
 
 #include "idmef-criteria.h"
 
+int idmef_value_type_ref(const idmef_value_type_t *src);
 
 int idmef_value_type_copy(const idmef_value_type_t *src, void *dst);
 
