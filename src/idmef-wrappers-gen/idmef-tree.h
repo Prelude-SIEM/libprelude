@@ -431,7 +431,7 @@ struct {
         IS_LISTED;
         REFCOUNT;
         
-        idmef_user_id_t user_id;
+        REQUIRED(idmef_user_id_t, *user_id);
         LISTED_OBJECT(permission_list, prelude_string_t);
 } TYPE_ID(idmef_file_access_t, 22);
 
@@ -560,7 +560,7 @@ struct {
         idmef_linkage_category_t category;
         prelude_string_t name;
         prelude_string_t path;
-        idmef_file_t *file;
+        REQUIRED(idmef_file_t, *file);
 } TYPE_ID(idmef_linkage_t, 28);
 
 
@@ -793,7 +793,7 @@ struct {
         LISTED_OBJECT(analyzer_list, idmef_analyzer_t);
         
         idmef_time_t create_time;
-        idmef_classification_t *classification;
+        REQUIRED(idmef_classification_t, *classification);
         idmef_time_t *detect_time;
         idmef_time_t *analyzer_time;
         

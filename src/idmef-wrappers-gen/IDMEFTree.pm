@@ -199,7 +199,48 @@ sub	parse_struct
 
 	    $self->debug("parse direct struct field metatype:normal name:$name typename:$typename ptr:", $ptr ? "yes" : "no", "\n");
 
-	} elsif ( ($typename, $ptr, $name) = $line =~ /^\s*(\w+)\s+(\**)(\w+)\;/ ) {
+	} 
+
+        elsif ( ($typename, $ptr, $name) = $line =~ /^\s*REQUIRED\((\w+)\s*,\s*(\**)(\w+)\)\;/ ) {
+            my $metatype;
+            my $short_typename;
+            my $value_type;
+
+            if ( defined $self->{primitives}->{$typename} ) {
+                $metatype = $self->{primitives}->{$typename};
+                $short_typename = $typename;
+                $short_typename =~ s/_t$//;
+                $value_type = get_value_type($short_typename);
+
+            } elsif ( defined $self->{structs}->{$typename} ) {
+                $metatype = &METATYPE_STRUCT;
+                $short_typename = get_idmef_name($typename);
+
+            } elsif ( defined $self->{enums}->{$typename} ) {
+                $metatype = &METATYPE_ENUM;
+                $short_typename = get_idmef_name($typename);
+
+            } elsif ( defined $self->{pre_declareds}->{$typename} ) {
+                $metatype = $self->{pre_declareds}->{$typename}->{metatype};
+                $short_typename = get_idmef_name($typename);
+
+            }
+
+            push(@field_list, { metatype => &METATYPE_NORMAL | $metatype,
+                                typename => $typename,
+                                short_typename => $short_typename,
+                                value_type => $value_type,
+                                name => $name,
+                                short_name => $name,
+                                ptr => ($ptr ? 1 : 0),
+				required => 1,
+                                dynamic_ident => 0 });
+
+            $self->debug("parse struct field metatype:normal name:$name typename:$typename ptr:", ($ptr ? 1 : 0) ? "yes" : "no", "\n");
+
+        } 
+
+	elsif ( ($typename, $ptr, $name) = $line =~ /^\s*(\w+)\s+(\**)(\w+)\;/ ) {
 	    my $metatype;
 	    my $short_typename;
 	    my $value_type;

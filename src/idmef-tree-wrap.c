@@ -75,6 +75,7 @@
 #define HIDE(type, name) type name
 
 #define REFCOUNT int refcount
+#define REQUIRED(type, name) type name
 
 #define DYNAMIC_IDENT(x) uint64_t x
 
@@ -893,7 +894,7 @@ struct idmef_file_access {
          IS_LISTED;
          REFCOUNT;
  
-         idmef_user_id_t user_id;
+         REQUIRED(idmef_user_id_t, *user_id);
          LISTED_OBJECT(permission_list, prelude_string_t);
  
 };
@@ -1206,7 +1207,7 @@ struct idmef_linkage {
          idmef_linkage_category_t category;
          prelude_string_t name;
          prelude_string_t path;
-         idmef_file_t *file;
+         REQUIRED(idmef_file_t, *file);
  
 };
 
@@ -1729,7 +1730,7 @@ struct idmef_alert {
          LISTED_OBJECT(analyzer_list, idmef_analyzer_t);
  
          idmef_time_t create_time;
-         idmef_classification_t *classification;
+         REQUIRED(idmef_classification_t, *classification);
          idmef_time_t *detect_time;
          idmef_time_t *analyzer_time;
  
@@ -9108,8 +9109,11 @@ int idmef_source_new_node(idmef_source_t *ptr, idmef_node_t **ret)
 
         int retval;
 
-        if ( ! ptr->node )
+        if ( ! ptr->node ) {
                 retval = idmef_node_new(&ptr->node);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->node;
         return 0;
@@ -9167,8 +9171,11 @@ int idmef_source_new_user(idmef_source_t *ptr, idmef_user_t **ret)
 
         int retval;
 
-        if ( ! ptr->user )
+        if ( ! ptr->user ) {
                 retval = idmef_user_new(&ptr->user);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->user;
         return 0;
@@ -9226,8 +9233,11 @@ int idmef_source_new_process(idmef_source_t *ptr, idmef_process_t **ret)
 
         int retval;
 
-        if ( ! ptr->process )
+        if ( ! ptr->process ) {
                 retval = idmef_process_new(&ptr->process);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->process;
         return 0;
@@ -9285,8 +9295,11 @@ int idmef_source_new_service(idmef_source_t *ptr, idmef_service_t **ret)
 
         int retval;
 
-        if ( ! ptr->service )
+        if ( ! ptr->service ) {
                 retval = idmef_service_new(&ptr->service);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->service;
         return 0;
@@ -9443,6 +9456,16 @@ int idmef_file_access_new(idmef_file_access_t **ret)
         prelude_list_init(&(*ret)->permission_list);
 
 
+        {
+                int retval = idmef_user_id_new(&(*ret)->user_id);
+
+                if ( retval < 0 ) {
+                        idmef_file_access_destroy(*ret);
+                        *ret = NULL;
+                        return retval;
+                }
+        }
+
         return 0;
 
 }
@@ -9474,7 +9497,7 @@ int _idmef_file_access_get_child(void *p, idmef_class_child_id_t child, void **c
         switch ( child ) {
 
                 case 0:
-                        *childptr = &ptr->user_id;
+                        *childptr = ptr->user_id;
                         return 0;
 
                 case 1:
@@ -9543,7 +9566,10 @@ static void idmef_file_access_destroy_internal(idmef_file_access_t *ptr)
        if ( ! prelude_list_is_empty(&ptr->list) )
                prelude_list_del_init(&ptr->list);
     
-        idmef_user_id_destroy_internal(&ptr->user_id);
+        if ( ptr->user_id ) {
+                idmef_user_id_destroy(ptr->user_id);
+                ptr->user_id = NULL;
+        }
 
         {
                 prelude_list_t *n, *tmp;
@@ -9591,7 +9617,7 @@ idmef_user_id_t *idmef_file_access_get_user_id(idmef_file_access_t *ptr)
 {
         prelude_return_val_if_fail(ptr, 0); /* FIXME */
 
-        return &ptr->user_id;
+        return ptr->user_id;
 }
 
 /**
@@ -9608,11 +9634,10 @@ void idmef_file_access_set_user_id(idmef_file_access_t *ptr, idmef_user_id_t *us
 {
         prelude_return_if_fail(ptr);
 
-        idmef_user_id_destroy_internal(&ptr->user_id);
-        if ( user_id ) {
-                memcpy(&ptr->user_id, user_id, sizeof(ptr->user_id));
-                free(user_id);
-        }
+        if ( ptr->user_id )
+                idmef_user_id_destroy(ptr->user_id);
+
+        ptr->user_id = user_id;
 }
 
 /**
@@ -9630,8 +9655,15 @@ int idmef_file_access_new_user_id(idmef_file_access_t *ptr, idmef_user_id_t **re
         prelude_return_val_if_fail(ptr, prelude_error(PRELUDE_ERROR_ASSERTION));
 
 
-        prelude_list_init(&ptr->user_id.list);
-        *ret = &ptr->user_id;
+        int retval;
+
+        if ( ! ptr->user_id ) {
+                retval = idmef_user_id_new(&ptr->user_id);
+                if ( retval < 0 )
+                        return retval;
+        }
+
+        *ret = ptr->user_id;
         return 0;
 }
 
@@ -9731,7 +9763,7 @@ int idmef_file_access_copy(const idmef_file_access_t *src, idmef_file_access_t *
 
         ret = 0;
 
-        ret = idmef_user_id_copy(&src->user_id, &dst->user_id);
+        ret = idmef_user_id_copy(src->user_id, dst->user_id);
         if ( ret < 0 )
                 return ret;
 
@@ -9790,7 +9822,7 @@ int idmef_file_access_compare(const idmef_file_access_t *obj1, const idmef_file_
         else if ( obj1 == NULL || obj2 == NULL )
                 return -1;
 
-        ret = idmef_user_id_compare(&obj1->user_id, &obj2->user_id);
+        ret = idmef_user_id_compare(obj1->user_id, obj2->user_id);
         if ( ret != 0 )
                 return ret;
 
@@ -11876,8 +11908,11 @@ int idmef_file_new_inode(idmef_file_t *ptr, idmef_inode_t **ret)
 
         int retval;
 
-        if ( ! ptr->inode )
+        if ( ! ptr->inode ) {
                 retval = idmef_inode_new(&ptr->inode);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->inode;
         return 0;
@@ -12437,6 +12472,16 @@ int idmef_linkage_new(idmef_linkage_t **ret)
 
         (*ret)->refcount = 1;
 
+        {
+                int retval = idmef_file_new(&(*ret)->file);
+
+                if ( retval < 0 ) {
+                        idmef_linkage_destroy(*ret);
+                        *ret = NULL;
+                        return retval;
+                }
+        }
+
         return 0;
 
 }
@@ -12764,8 +12809,11 @@ int idmef_linkage_new_file(idmef_linkage_t *ptr, idmef_file_t **ret)
 
         int retval;
 
-        if ( ! ptr->file )
+        if ( ! ptr->file ) {
                 retval = idmef_file_new(&ptr->file);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->file;
         return 0;
@@ -12799,11 +12847,9 @@ int idmef_linkage_copy(const idmef_linkage_t *src, idmef_linkage_t *dst)
         if ( ret < 0 )
                 return ret;
 
-        if ( src->file ) {
-                ret = idmef_file_clone(src->file, &dst->file);
-                if ( ret < 0 )
-                        return ret;
-        }
+        ret = idmef_file_copy(src->file, dst->file);
+        if ( ret < 0 )
+                return ret;
 
         return 0;
 }
@@ -13318,8 +13364,11 @@ int idmef_target_new_node(idmef_target_t *ptr, idmef_node_t **ret)
 
         int retval;
 
-        if ( ! ptr->node )
+        if ( ! ptr->node ) {
                 retval = idmef_node_new(&ptr->node);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->node;
         return 0;
@@ -13377,8 +13426,11 @@ int idmef_target_new_user(idmef_target_t *ptr, idmef_user_t **ret)
 
         int retval;
 
-        if ( ! ptr->user )
+        if ( ! ptr->user ) {
                 retval = idmef_user_new(&ptr->user);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->user;
         return 0;
@@ -13436,8 +13488,11 @@ int idmef_target_new_process(idmef_target_t *ptr, idmef_process_t **ret)
 
         int retval;
 
-        if ( ! ptr->process )
+        if ( ! ptr->process ) {
                 retval = idmef_process_new(&ptr->process);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->process;
         return 0;
@@ -13495,8 +13550,11 @@ int idmef_target_new_service(idmef_target_t *ptr, idmef_service_t **ret)
 
         int retval;
 
-        if ( ! ptr->service )
+        if ( ! ptr->service ) {
                 retval = idmef_service_new(&ptr->service);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->service;
         return 0;
@@ -14502,8 +14560,11 @@ int idmef_analyzer_new_node(idmef_analyzer_t *ptr, idmef_node_t **ret)
 
         int retval;
 
-        if ( ! ptr->node )
+        if ( ! ptr->node ) {
                 retval = idmef_node_new(&ptr->node);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->node;
         return 0;
@@ -14561,8 +14622,11 @@ int idmef_analyzer_new_process(idmef_analyzer_t *ptr, idmef_process_t **ret)
 
         int retval;
 
-        if ( ! ptr->process )
+        if ( ! ptr->process ) {
                 retval = idmef_process_new(&ptr->process);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->process;
         return 0;
@@ -16313,8 +16377,11 @@ int idmef_assessment_new_impact(idmef_assessment_t *ptr, idmef_impact_t **ret)
 
         int retval;
 
-        if ( ! ptr->impact )
+        if ( ! ptr->impact ) {
                 retval = idmef_impact_new(&ptr->impact);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->impact;
         return 0;
@@ -16450,8 +16517,11 @@ int idmef_assessment_new_confidence(idmef_assessment_t *ptr, idmef_confidence_t 
 
         int retval;
 
-        if ( ! ptr->confidence )
+        if ( ! ptr->confidence ) {
                 retval = idmef_confidence_new(&ptr->confidence);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->confidence;
         return 0;
@@ -17865,6 +17935,18 @@ int idmef_alert_new(idmef_alert_t **ret)
         prelude_list_init(&(*ret)->additional_data_list);
 
 
+        idmef_time_set_from_gettimeofday(&(*ret)->create_time);
+
+        {
+                int retval = idmef_classification_new(&(*ret)->classification);
+
+                if ( retval < 0 ) {
+                        idmef_alert_destroy(*ret);
+                        *ret = NULL;
+                        return retval;
+                }
+        }
+
         return 0;
 
 }
@@ -18489,8 +18571,11 @@ int idmef_alert_new_classification(idmef_alert_t *ptr, idmef_classification_t **
 
         int retval;
 
-        if ( ! ptr->classification )
+        if ( ! ptr->classification ) {
                 retval = idmef_classification_new(&ptr->classification);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->classification;
         return 0;
@@ -18830,8 +18915,11 @@ int idmef_alert_new_assessment(idmef_alert_t *ptr, idmef_assessment_t **ret)
 
         int retval;
 
-        if ( ! ptr->assessment )
+        if ( ! ptr->assessment ) {
                 retval = idmef_assessment_new(&ptr->assessment);
+                if ( retval < 0 )
+                        return retval;
+        }
 
         *ret = ptr->assessment;
         return 0;
@@ -19247,11 +19335,9 @@ int idmef_alert_copy(const idmef_alert_t *src, idmef_alert_t *dst)
         if ( ret < 0 )
                 return ret;
 
-        if ( src->classification ) {
-                ret = idmef_classification_clone(src->classification, &dst->classification);
-                if ( ret < 0 )
-                        return ret;
-        }
+        ret = idmef_classification_copy(src->classification, dst->classification);
+        if ( ret < 0 )
+                return ret;
 
         if ( src->detect_time ) {
                 ret = idmef_time_clone(src->detect_time, &dst->detect_time);
@@ -19540,6 +19626,8 @@ int idmef_heartbeat_new(idmef_heartbeat_t **ret)
 
         prelude_list_init(&(*ret)->additional_data_list);
 
+
+        idmef_time_set_from_gettimeofday(&(*ret)->create_time);
 
         return 0;
 
@@ -20780,6 +20868,7 @@ int idmef_message_compare(const idmef_message_t *obj1, const idmef_message_t *ob
 
         return ret;
 }
+
 
 void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg)
 {

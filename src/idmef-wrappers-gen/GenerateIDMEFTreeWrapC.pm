@@ -107,6 +107,7 @@ sub     header
 #define HIDE(type, name) type name
 
 #define REFCOUNT int refcount
+#define REQUIRED(type, name) type name
 
 #define DYNAMIC_IDENT(x) uint64_t x
 
@@ -308,13 +309,51 @@ int idmef_$struct->{short_typename}_new($struct->{typename} **ret)
 ");
     }
 
+
     foreach my $field ( map { $_->{metatype} & &METATYPE_LIST ? $_ : () } @{ $struct->{field_list} } ) {
+
         $self->output("
         prelude_list_init(&(*ret)->$field->{name});
 
 ");
 
     }
+
+    foreach my $field ( @{ $struct->{field_list} } ) {
+        if ( $field->{typename} eq "idmef_time_t" and ! $field->{ptr} ) {
+                $self->output("
+        idmef_time_set_from_gettimeofday(&(*ret)->$field->{name});
+");
+        }
+
+	my $prefix = "";
+
+	if ( $field->{typename} ne "prelude_string_t" and !($field->{metatype} & (&METATYPE_PRIMITIVE)) ) {
+		$prefix = "idmef_";
+	}
+
+	if ( $field->{required} ) {
+		$self->output("
+        {
+");
+	if ( $field->{name} eq "version" ) {	
+		$self->output("                int retval = prelude_string_new_ref_fast(&(*ret)->$field->{name}, \"1.0\", 3);");
+	} else {
+		$self->output("                int retval = $prefix$field->{short_typename}_new(&(*ret)->$field->{name});\n");
+	}
+
+	$self->output("
+                if ( retval < 0 ) {
+                        idmef_$struct->{short_typename}_destroy(*ret);
+                        *ret = NULL;
+                        return retval;
+                }
+        }
+");
+	}
+
+    }
+
     $self->output("
         return 0;
 
@@ -594,7 +633,16 @@ int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct
         dst->$field->{var} = src->$field->{var};
 ");
         } elsif ( $field->{metatype} & &METATYPE_STRUCT ) {
-            if ( $field->{ptr} ) {
+	    if ( $field->{required} ) {
+		$self->output("
+        ret = ${copy_func}(src->$field->{name}, dst->$field->{name});
+        if ( ret < 0 )
+                return ret;
+");
+
+	    }
+
+            elsif ( $field->{ptr} ) {
                 $self->output("
         if ( src->$field->{name} ) {
                 ret = ${clone_func}(src->$field->{name}, &dst->$field->{name});
@@ -1173,8 +1221,11 @@ int idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr, $field
                 $self->output("
         int retval;
 
-        if ( ! ptr->$field->{name} )
+        if ( ! ptr->$field->{name} ) {
                 retval = idmef_$field->{short_typename}_new(&ptr->$field->{name});
+                if ( retval < 0 )
+                        return retval;
+        }
 ");
             } else {
                 if ( $tree->{objs}->{$field->{typename}}->{is_listed} ) {
@@ -1567,6 +1618,7 @@ sub footer
     my $self = shift;
 
     $self->output("
+
 void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg)
 \{
         prelude_return_if_fail(message);
