@@ -1302,6 +1302,9 @@ void prelude_client_set_connection_pool(prelude_client_t *client, prelude_connec
         prelude_return_if_fail(client);
         prelude_return_if_fail(pool);
 
+        if ( client->cpool )
+                prelude_connection_pool_destroy(client->cpool);
+
         client->cpool = pool;
 }
 
