@@ -49,13 +49,10 @@ static void print_indent(prelude_io_t *fd)
 
 static void print_string(prelude_string_t *string, prelude_io_t *fd)
 {
-        const char *s;
-
-        s = prelude_string_get_string(string);
-        if ( ! s )
-                s = "<empty>";
-
-        prelude_io_write(fd, s, prelude_string_get_len(string));
+        if ( prelude_string_is_empty(string) )
+                prelude_io_write(fd, "<empty>", 7);
+        else
+                prelude_io_write(fd, prelude_string_get_string(string), prelude_string_get_len(string));
 }
 
 
