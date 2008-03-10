@@ -1918,6 +1918,35 @@ int _idmef_additional_data_new_child(void *p, idmef_class_child_id_t child, int 
         }
 }
 
+int _idmef_additional_data_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_additional_data_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        ptr->type = 0;
+                        return 0;
+
+                case 1:
+                        if ( ptr->meaning ) {
+                                prelude_string_destroy(ptr->meaning);
+                                ptr->meaning = NULL;
+                        }
+
+                        return 0;
+
+                case 2:
+                        idmef_data_destroy_internal(&ptr->data);
+                        return 0;
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
 static void idmef_additional_data_destroy_internal(idmef_additional_data_t *ptr)
 {
         prelude_return_if_fail(ptr);
@@ -2295,6 +2324,39 @@ int _idmef_reference_new_child(void *p, idmef_class_child_id_t child, int n, voi
 
                 case 3:
                         return idmef_reference_new_meaning(ptr, (prelude_string_t **) ret);
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
+int _idmef_reference_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_reference_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        ptr->origin = 0;
+                        return 0;
+
+                case 1:
+                        prelude_string_destroy_internal(&ptr->name);
+                        return 0;
+
+                case 2:
+                        prelude_string_destroy_internal(&ptr->url);
+                        return 0;
+
+                case 3:
+                        if ( ptr->meaning ) {
+                                prelude_string_destroy(ptr->meaning);
+                                ptr->meaning = NULL;
+                        }
+
+                        return 0;
 
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
@@ -2778,6 +2840,62 @@ int _idmef_classification_new_child(void *p, idmef_class_child_id_t child, int n
         }
 }
 
+int _idmef_classification_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_classification_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        if ( ptr->ident ) {
+                                prelude_string_destroy(ptr->ident);
+                                ptr->ident = NULL;
+                        }
+
+                        return 0;
+
+                case 1:
+                        prelude_string_destroy_internal(&ptr->text);
+                        return 0;
+
+                case 2: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->reference_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, idmef_reference_t, list);
+                                               idmef_reference_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->reference_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, idmef_reference_t, list);
+                                               idmef_reference_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
 static void idmef_classification_destroy_internal(idmef_classification_t *ptr)
 {
         prelude_return_if_fail(ptr);
@@ -3228,6 +3346,51 @@ int _idmef_user_id_new_child(void *p, idmef_class_child_id_t child, int n, void 
 
                 case 4:
                         return idmef_user_id_new_number(ptr, (uint32_t **) ret);
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
+int _idmef_user_id_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_user_id_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        if ( ptr->ident ) {
+                                prelude_string_destroy(ptr->ident);
+                                ptr->ident = NULL;
+                        }
+
+                        return 0;
+
+                case 1:
+                        ptr->type = 0;
+                        return 0;
+
+                case 2:
+                        if ( ptr->tty ) {
+                                prelude_string_destroy(ptr->tty);
+                                ptr->tty = NULL;
+                        }
+
+                        return 0;
+
+                case 3:
+                        if ( ptr->name ) {
+                                prelude_string_destroy(ptr->name);
+                                ptr->name = NULL;
+                        }
+
+                        return 0;
+
+                case 4:
+                        ptr->number_is_set = 0;
+                        return 0;
 
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
@@ -3806,6 +3969,62 @@ int _idmef_user_new_child(void *p, idmef_class_child_id_t child, int n, void **r
         }
 }
 
+int _idmef_user_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_user_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        if ( ptr->ident ) {
+                                prelude_string_destroy(ptr->ident);
+                                ptr->ident = NULL;
+                        }
+
+                        return 0;
+
+                case 1:
+                        ptr->category = 0;
+                        return 0;
+
+                case 2: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->user_id_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, idmef_user_id_t, list);
+                                               idmef_user_id_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->user_id_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, idmef_user_id_t, list);
+                                               idmef_user_id_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
 static void idmef_user_destroy_internal(idmef_user_t *ptr)
 {
         prelude_return_if_fail(ptr);
@@ -4249,6 +4468,55 @@ int _idmef_address_new_child(void *p, idmef_class_child_id_t child, int n, void 
 
                 case 5:
                         return idmef_address_new_netmask(ptr, (prelude_string_t **) ret);
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
+int _idmef_address_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_address_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        if ( ptr->ident ) {
+                                prelude_string_destroy(ptr->ident);
+                                ptr->ident = NULL;
+                        }
+
+                        return 0;
+
+                case 1:
+                        ptr->category = 0;
+                        return 0;
+
+                case 2:
+                        if ( ptr->vlan_name ) {
+                                prelude_string_destroy(ptr->vlan_name);
+                                ptr->vlan_name = NULL;
+                        }
+
+                        return 0;
+
+                case 3:
+                        ptr->vlan_num_is_set = 0;
+                        return 0;
+
+                case 4:
+                        prelude_string_destroy_internal(&ptr->address);
+                        return 0;
+
+                case 5:
+                        if ( ptr->netmask ) {
+                                prelude_string_destroy(ptr->netmask);
+                                ptr->netmask = NULL;
+                        }
+
+                        return 0;
 
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
@@ -4937,6 +5205,105 @@ int _idmef_process_new_child(void *p, idmef_class_child_id_t child, int n, void 
                         }
 
                         return idmef_process_new_env(ptr, (prelude_string_t **) ret, n);
+                }
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
+int _idmef_process_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_process_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        if ( ptr->ident ) {
+                                prelude_string_destroy(ptr->ident);
+                                ptr->ident = NULL;
+                        }
+
+                        return 0;
+
+                case 1:
+                        prelude_string_destroy_internal(&ptr->name);
+                        return 0;
+
+                case 2:
+                        ptr->pid_is_set = 0;
+                        return 0;
+
+                case 3:
+                        if ( ptr->path ) {
+                                prelude_string_destroy(ptr->path);
+                                ptr->path = NULL;
+                        }
+
+                        return 0;
+
+                case 4: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->arg_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, prelude_string_t, list);
+                                               prelude_string_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->arg_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, prelude_string_t, list);
+                                               prelude_string_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                case 5: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->env_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, prelude_string_t, list);
+                                               prelude_string_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->env_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, prelude_string_t, list);
+                                               prelude_string_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
                 }
 
                 default:
@@ -5700,6 +6067,70 @@ int _idmef_web_service_new_child(void *p, idmef_class_child_id_t child, int n, v
         }
 }
 
+int _idmef_web_service_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_web_service_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        prelude_string_destroy_internal(&ptr->url);
+                        return 0;
+
+                case 1:
+                        if ( ptr->cgi ) {
+                                prelude_string_destroy(ptr->cgi);
+                                ptr->cgi = NULL;
+                        }
+
+                        return 0;
+
+                case 2:
+                        if ( ptr->http_method ) {
+                                prelude_string_destroy(ptr->http_method);
+                                ptr->http_method = NULL;
+                        }
+
+                        return 0;
+
+                case 3: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->arg_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, prelude_string_t, list);
+                                               prelude_string_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->arg_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, prelude_string_t, list);
+                                               prelude_string_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
 static void idmef_web_service_destroy_internal(idmef_web_service_t *ptr)
 {
         prelude_return_if_fail(ptr);
@@ -6246,6 +6677,79 @@ int _idmef_snmp_service_new_child(void *p, idmef_class_child_id_t child, int n, 
 
                 case 8:
                         return idmef_snmp_service_new_community(ptr, (prelude_string_t **) ret);
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
+int _idmef_snmp_service_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_snmp_service_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        if ( ptr->oid ) {
+                                prelude_string_destroy(ptr->oid);
+                                ptr->oid = NULL;
+                        }
+
+                        return 0;
+
+                case 1:
+                        ptr->message_processing_model_is_set = 0;
+                        return 0;
+
+                case 2:
+                        ptr->security_model_is_set = 0;
+                        return 0;
+
+                case 3:
+                        if ( ptr->security_name ) {
+                                prelude_string_destroy(ptr->security_name);
+                                ptr->security_name = NULL;
+                        }
+
+                        return 0;
+
+                case 4:
+                        ptr->security_level_is_set = 0;
+                        return 0;
+
+                case 5:
+                        if ( ptr->context_name ) {
+                                prelude_string_destroy(ptr->context_name);
+                                ptr->context_name = NULL;
+                        }
+
+                        return 0;
+
+                case 6:
+                        if ( ptr->context_engine_id ) {
+                                prelude_string_destroy(ptr->context_engine_id);
+                                ptr->context_engine_id = NULL;
+                        }
+
+                        return 0;
+
+                case 7:
+                        if ( ptr->command ) {
+                                prelude_string_destroy(ptr->command);
+                                ptr->command = NULL;
+                        }
+
+                        return 0;
+
+                case 8:
+                        if ( ptr->community ) {
+                                prelude_string_destroy(ptr->community);
+                                ptr->community = NULL;
+                        }
+
+                        return 0;
 
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
@@ -7140,6 +7644,91 @@ int _idmef_service_new_child(void *p, idmef_class_child_id_t child, int n, void 
 
                 case 9:
                         return idmef_service_new_snmp_service(ptr, (idmef_snmp_service_t **) ret);
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
+int _idmef_service_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_service_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        if ( ptr->ident ) {
+                                prelude_string_destroy(ptr->ident);
+                                ptr->ident = NULL;
+                        }
+
+                        return 0;
+
+                case 1:
+                        ptr->ip_version_is_set = 0;
+                        return 0;
+
+                case 2:
+                        ptr->iana_protocol_number_is_set = 0;
+                        return 0;
+
+                case 3:
+                        if ( ptr->iana_protocol_name ) {
+                                prelude_string_destroy(ptr->iana_protocol_name);
+                                ptr->iana_protocol_name = NULL;
+                        }
+
+                        return 0;
+
+                case 4:
+                        if ( ptr->name ) {
+                                prelude_string_destroy(ptr->name);
+                                ptr->name = NULL;
+                        }
+
+                        return 0;
+
+                case 5:
+                        ptr->port_is_set = 0;
+                        return 0;
+
+                case 6:
+                        if ( ptr->portlist ) {
+                                prelude_string_destroy(ptr->portlist);
+                                ptr->portlist = NULL;
+                        }
+
+                        return 0;
+
+                case 7:
+                        if ( ptr->protocol ) {
+                                prelude_string_destroy(ptr->protocol);
+                                ptr->protocol = NULL;
+                        }
+
+                        return 0;
+
+                case 8:
+                        if (  ptr->type != IDMEF_SERVICE_TYPE_WEB )
+                                return 0;
+
+                        idmef_web_service_destroy(ptr->specific.web_service);
+                        ptr->specific.web_service = NULL;
+                        ptr->type = 0;
+
+                        return 0;
+
+                case 9:
+                        if (  ptr->type != IDMEF_SERVICE_TYPE_SNMP )
+                                return 0;
+
+                        idmef_snmp_service_destroy(ptr->specific.snmp_service);
+                        ptr->specific.snmp_service = NULL;
+                        ptr->type = 0;
+
+                        return 0;
 
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
@@ -8204,6 +8793,78 @@ int _idmef_node_new_child(void *p, idmef_class_child_id_t child, int n, void **r
         }
 }
 
+int _idmef_node_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_node_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        if ( ptr->ident ) {
+                                prelude_string_destroy(ptr->ident);
+                                ptr->ident = NULL;
+                        }
+
+                        return 0;
+
+                case 1:
+                        ptr->category = 0;
+                        return 0;
+
+                case 2:
+                        if ( ptr->location ) {
+                                prelude_string_destroy(ptr->location);
+                                ptr->location = NULL;
+                        }
+
+                        return 0;
+
+                case 3:
+                        if ( ptr->name ) {
+                                prelude_string_destroy(ptr->name);
+                                ptr->name = NULL;
+                        }
+
+                        return 0;
+
+                case 4: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->address_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, idmef_address_t, list);
+                                               idmef_address_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->address_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, idmef_address_t, list);
+                                               idmef_address_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
 static void idmef_node_destroy_internal(idmef_node_t *ptr)
 {
         prelude_return_if_fail(ptr);
@@ -8815,6 +9476,71 @@ int _idmef_source_new_child(void *p, idmef_class_child_id_t child, int n, void *
 
                 case 6:
                         return idmef_source_new_service(ptr, (idmef_service_t **) ret);
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
+int _idmef_source_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_source_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        if ( ptr->ident ) {
+                                prelude_string_destroy(ptr->ident);
+                                ptr->ident = NULL;
+                        }
+
+                        return 0;
+
+                case 1:
+                        ptr->spoofed = 0;
+                        return 0;
+
+                case 2:
+                        if ( ptr->interface ) {
+                                prelude_string_destroy(ptr->interface);
+                                ptr->interface = NULL;
+                        }
+
+                        return 0;
+
+                case 3:
+                        if ( ptr->node ) {
+                                idmef_node_destroy(ptr->node);
+                                ptr->node = NULL;
+                        }
+
+                        return 0;
+
+                case 4:
+                        if ( ptr->user ) {
+                                idmef_user_destroy(ptr->user);
+                                ptr->user = NULL;
+                        }
+
+                        return 0;
+
+                case 5:
+                        if ( ptr->process ) {
+                                idmef_process_destroy(ptr->process);
+                                ptr->process = NULL;
+                        }
+
+                        return 0;
+
+                case 6:
+                        if ( ptr->service ) {
+                                idmef_service_destroy(ptr->service);
+                                ptr->service = NULL;
+                        }
+
+                        return 0;
 
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
@@ -9559,6 +10285,58 @@ int _idmef_file_access_new_child(void *p, idmef_class_child_id_t child, int n, v
         }
 }
 
+int _idmef_file_access_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_file_access_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        if ( ptr->user_id ) {
+                                idmef_user_id_destroy(ptr->user_id);
+                                ptr->user_id = NULL;
+                        }
+
+                        return 0;
+
+                case 1: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->permission_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, prelude_string_t, list);
+                                               prelude_string_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->permission_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, prelude_string_t, list);
+                                               prelude_string_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
 static void idmef_file_access_destroy_internal(idmef_file_access_t *ptr)
 {
         prelude_return_if_fail(ptr);
@@ -9947,6 +10725,47 @@ int _idmef_inode_new_child(void *p, idmef_class_child_id_t child, int n, void **
 
                 case 5:
                         return idmef_inode_new_c_minor_device(ptr, (uint32_t **) ret);
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
+int _idmef_inode_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_inode_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        if ( ptr->change_time ) {
+                                idmef_time_destroy(ptr->change_time);
+                                ptr->change_time = NULL;
+                        }
+
+                        return 0;
+
+                case 1:
+                        ptr->number_is_set = 0;
+                        return 0;
+
+                case 2:
+                        ptr->major_device_is_set = 0;
+                        return 0;
+
+                case 3:
+                        ptr->minor_device_is_set = 0;
+                        return 0;
+
+                case 4:
+                        ptr->c_major_device_is_set = 0;
+                        return 0;
+
+                case 5:
+                        ptr->c_minor_device_is_set = 0;
+                        return 0;
 
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
@@ -10561,6 +11380,35 @@ int _idmef_checksum_new_child(void *p, idmef_class_child_id_t child, int n, void
         }
 }
 
+int _idmef_checksum_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_checksum_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        prelude_string_destroy_internal(&ptr->value);
+                        return 0;
+
+                case 1:
+                        if ( ptr->key ) {
+                                prelude_string_destroy(ptr->key);
+                                ptr->key = NULL;
+                        }
+
+                        return 0;
+
+                case 2:
+                        ptr->algorithm = 0;
+                        return 0;
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
 static void idmef_checksum_destroy_internal(idmef_checksum_t *ptr)
 {
         prelude_return_if_fail(ptr);
@@ -11109,6 +11957,184 @@ int _idmef_file_new_child(void *p, idmef_class_child_id_t child, int n, void **r
 
                 case 14:
                         return idmef_file_new_file_type(ptr, (prelude_string_t **) ret);
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
+int _idmef_file_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_file_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        if ( ptr->ident ) {
+                                prelude_string_destroy(ptr->ident);
+                                ptr->ident = NULL;
+                        }
+
+                        return 0;
+
+                case 1:
+                        prelude_string_destroy_internal(&ptr->name);
+                        return 0;
+
+                case 2:
+                        prelude_string_destroy_internal(&ptr->path);
+                        return 0;
+
+                case 3:
+                        if ( ptr->create_time ) {
+                                idmef_time_destroy(ptr->create_time);
+                                ptr->create_time = NULL;
+                        }
+
+                        return 0;
+
+                case 4:
+                        if ( ptr->modify_time ) {
+                                idmef_time_destroy(ptr->modify_time);
+                                ptr->modify_time = NULL;
+                        }
+
+                        return 0;
+
+                case 5:
+                        if ( ptr->access_time ) {
+                                idmef_time_destroy(ptr->access_time);
+                                ptr->access_time = NULL;
+                        }
+
+                        return 0;
+
+                case 6:
+                        ptr->data_size_is_set = 0;
+                        return 0;
+
+                case 7:
+                        ptr->disk_size_is_set = 0;
+                        return 0;
+
+                case 8: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->file_access_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, idmef_file_access_t, list);
+                                               idmef_file_access_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->file_access_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, idmef_file_access_t, list);
+                                               idmef_file_access_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                case 9: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->linkage_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, idmef_linkage_t, list);
+                                               idmef_linkage_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->linkage_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, idmef_linkage_t, list);
+                                               idmef_linkage_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                case 10:
+                        if ( ptr->inode ) {
+                                idmef_inode_destroy(ptr->inode);
+                                ptr->inode = NULL;
+                        }
+
+                        return 0;
+
+                case 11: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->checksum_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, idmef_checksum_t, list);
+                                               idmef_checksum_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->checksum_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, idmef_checksum_t, list);
+                                               idmef_checksum_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                case 12:
+                        ptr->category = 0;
+                        return 0;
+
+                case 13:
+                        ptr->fstype_is_set = 0;
+                        return 0;
+
+                case 14:
+                        if ( ptr->file_type ) {
+                                prelude_string_destroy(ptr->file_type);
+                                ptr->file_type = NULL;
+                        }
+
+                        return 0;
 
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
@@ -12554,6 +13580,39 @@ int _idmef_linkage_new_child(void *p, idmef_class_child_id_t child, int n, void 
         }
 }
 
+int _idmef_linkage_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_linkage_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        ptr->category = 0;
+                        return 0;
+
+                case 1:
+                        prelude_string_destroy_internal(&ptr->name);
+                        return 0;
+
+                case 2:
+                        prelude_string_destroy_internal(&ptr->path);
+                        return 0;
+
+                case 3:
+                        if ( ptr->file ) {
+                                idmef_file_destroy(ptr->file);
+                                ptr->file = NULL;
+                        }
+
+                        return 0;
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
 static void idmef_linkage_destroy_internal(idmef_linkage_t *ptr)
 {
         prelude_return_if_fail(ptr);
@@ -13058,6 +14117,102 @@ int _idmef_target_new_child(void *p, idmef_class_child_id_t child, int n, void *
                         }
 
                         return idmef_target_new_file(ptr, (idmef_file_t **) ret, n);
+                }
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
+int _idmef_target_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_target_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        if ( ptr->ident ) {
+                                prelude_string_destroy(ptr->ident);
+                                ptr->ident = NULL;
+                        }
+
+                        return 0;
+
+                case 1:
+                        ptr->decoy = 0;
+                        return 0;
+
+                case 2:
+                        if ( ptr->interface ) {
+                                prelude_string_destroy(ptr->interface);
+                                ptr->interface = NULL;
+                        }
+
+                        return 0;
+
+                case 3:
+                        if ( ptr->node ) {
+                                idmef_node_destroy(ptr->node);
+                                ptr->node = NULL;
+                        }
+
+                        return 0;
+
+                case 4:
+                        if ( ptr->user ) {
+                                idmef_user_destroy(ptr->user);
+                                ptr->user = NULL;
+                        }
+
+                        return 0;
+
+                case 5:
+                        if ( ptr->process ) {
+                                idmef_process_destroy(ptr->process);
+                                ptr->process = NULL;
+                        }
+
+                        return 0;
+
+                case 6:
+                        if ( ptr->service ) {
+                                idmef_service_destroy(ptr->service);
+                                ptr->service = NULL;
+                        }
+
+                        return 0;
+
+                case 7: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->file_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, idmef_file_t, list);
+                                               idmef_file_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->file_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, idmef_file_t, list);
+                                               idmef_file_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
                 }
 
                 default:
@@ -13918,6 +15073,99 @@ int _idmef_analyzer_new_child(void *p, idmef_class_child_id_t child, int n, void
 
                 case 9:
                         return idmef_analyzer_new_process(ptr, (idmef_process_t **) ret);
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
+int _idmef_analyzer_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_analyzer_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        if ( ptr->analyzerid ) {
+                                prelude_string_destroy(ptr->analyzerid);
+                                ptr->analyzerid = NULL;
+                        }
+
+                        return 0;
+
+                case 1:
+                        if ( ptr->name ) {
+                                prelude_string_destroy(ptr->name);
+                                ptr->name = NULL;
+                        }
+
+                        return 0;
+
+                case 2:
+                        if ( ptr->manufacturer ) {
+                                prelude_string_destroy(ptr->manufacturer);
+                                ptr->manufacturer = NULL;
+                        }
+
+                        return 0;
+
+                case 3:
+                        if ( ptr->model ) {
+                                prelude_string_destroy(ptr->model);
+                                ptr->model = NULL;
+                        }
+
+                        return 0;
+
+                case 4:
+                        if ( ptr->version ) {
+                                prelude_string_destroy(ptr->version);
+                                ptr->version = NULL;
+                        }
+
+                        return 0;
+
+                case 5:
+                        if ( ptr->class ) {
+                                prelude_string_destroy(ptr->class);
+                                ptr->class = NULL;
+                        }
+
+                        return 0;
+
+                case 6:
+                        if ( ptr->ostype ) {
+                                prelude_string_destroy(ptr->ostype);
+                                ptr->ostype = NULL;
+                        }
+
+                        return 0;
+
+                case 7:
+                        if ( ptr->osversion ) {
+                                prelude_string_destroy(ptr->osversion);
+                                ptr->osversion = NULL;
+                        }
+
+                        return 0;
+
+                case 8:
+                        if ( ptr->node ) {
+                                idmef_node_destroy(ptr->node);
+                                ptr->node = NULL;
+                        }
+
+                        return 0;
+
+                case 9:
+                        if ( ptr->process ) {
+                                idmef_process_destroy(ptr->process);
+                                ptr->process = NULL;
+                        }
+
+                        return 0;
 
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
@@ -14873,6 +16121,31 @@ int _idmef_alertident_new_child(void *p, idmef_class_child_id_t child, int n, vo
         }
 }
 
+int _idmef_alertident_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_alertident_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        prelude_string_destroy_internal(&ptr->alertident);
+                        return 0;
+
+                case 1:
+                        if ( ptr->analyzerid ) {
+                                prelude_string_destroy(ptr->analyzerid);
+                                ptr->analyzerid = NULL;
+                        }
+
+                        return 0;
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
 static void idmef_alertident_destroy_internal(idmef_alertident_t *ptr)
 {
         prelude_return_if_fail(ptr);
@@ -15201,6 +16474,39 @@ int _idmef_impact_new_child(void *p, idmef_class_child_id_t child, int n, void *
 
                 case 3:
                         return idmef_impact_new_description(ptr, (prelude_string_t **) ret);
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
+int _idmef_impact_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_impact_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        ptr->severity_is_set = 0;
+                        return 0;
+
+                case 1:
+                        ptr->completion_is_set = 0;
+                        return 0;
+
+                case 2:
+                        ptr->type = 0;
+                        return 0;
+
+                case 3:
+                        if ( ptr->description ) {
+                                prelude_string_destroy(ptr->description);
+                                ptr->description = NULL;
+                        }
+
+                        return 0;
 
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
@@ -15652,6 +16958,31 @@ int _idmef_action_new_child(void *p, idmef_class_child_id_t child, int n, void *
         }
 }
 
+int _idmef_action_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_action_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        ptr->category = 0;
+                        return 0;
+
+                case 1:
+                        if ( ptr->description ) {
+                                prelude_string_destroy(ptr->description);
+                                ptr->description = NULL;
+                        }
+
+                        return 0;
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
 static void idmef_action_destroy_internal(idmef_action_t *ptr)
 {
         prelude_return_if_fail(ptr);
@@ -15950,6 +17281,23 @@ int _idmef_confidence_new_child(void *p, idmef_class_child_id_t child, int n, vo
 
                 case 1:
                         return idmef_confidence_new_confidence(ptr, (float **) ret);
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
+int _idmef_confidence_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_confidence_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        ptr->rating = 0;
+                        return 0;
 
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
@@ -16271,6 +17619,66 @@ int _idmef_assessment_new_child(void *p, idmef_class_child_id_t child, int n, vo
 
                 case 2:
                         return idmef_assessment_new_confidence(ptr, (idmef_confidence_t **) ret);
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
+int _idmef_assessment_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_assessment_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        if ( ptr->impact ) {
+                                idmef_impact_destroy(ptr->impact);
+                                ptr->impact = NULL;
+                        }
+
+                        return 0;
+
+                case 1: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->action_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, idmef_action_t, list);
+                                               idmef_action_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->action_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, idmef_action_t, list);
+                                               idmef_action_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                case 2:
+                        if ( ptr->confidence ) {
+                                idmef_confidence_destroy(ptr->confidence);
+                                ptr->confidence = NULL;
+                        }
+
+                        return 0;
 
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
@@ -16763,6 +18171,62 @@ int _idmef_tool_alert_new_child(void *p, idmef_class_child_id_t child, int n, vo
         }
 }
 
+int _idmef_tool_alert_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_tool_alert_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        prelude_string_destroy_internal(&ptr->name);
+                        return 0;
+
+                case 1:
+                        if ( ptr->command ) {
+                                prelude_string_destroy(ptr->command);
+                                ptr->command = NULL;
+                        }
+
+                        return 0;
+
+                case 2: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->alertident_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                               idmef_alertident_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->alertident_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                               idmef_alertident_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
 static void idmef_tool_alert_destroy_internal(idmef_tool_alert_t *ptr)
 {
         prelude_return_if_fail(ptr);
@@ -17235,6 +18699,54 @@ int _idmef_correlation_alert_new_child(void *p, idmef_class_child_id_t child, in
         }
 }
 
+int _idmef_correlation_alert_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_correlation_alert_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        prelude_string_destroy_internal(&ptr->name);
+                        return 0;
+
+                case 1: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->alertident_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                               idmef_alertident_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->alertident_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, idmef_alertident_t, list);
+                                               idmef_alertident_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
 static void idmef_correlation_alert_destroy_internal(idmef_correlation_alert_t *ptr)
 {
         prelude_return_if_fail(ptr);
@@ -17593,6 +19105,35 @@ int _idmef_overflow_alert_new_child(void *p, idmef_class_child_id_t child, int n
 
                 case 2:
                         return idmef_overflow_alert_new_buffer(ptr, (idmef_data_t **) ret);
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
+int _idmef_overflow_alert_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_overflow_alert_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        prelude_string_destroy_internal(&ptr->program);
+                        return 0;
+
+                case 1:
+                        ptr->size_is_set = 0;
+                        return 0;
+
+                case 2:
+                        if ( ptr->buffer ) {
+                                idmef_data_destroy(ptr->buffer);
+                                ptr->buffer = NULL;
+                        }
+
+                        return 0;
 
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
@@ -18196,6 +19737,217 @@ int _idmef_alert_new_child(void *p, idmef_class_child_id_t child, int n, void **
 
                 case 12:
                         return idmef_alert_new_overflow_alert(ptr, (idmef_overflow_alert_t **) ret);
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
+int _idmef_alert_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_alert_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        if ( ptr->messageid ) {
+                                prelude_string_destroy(ptr->messageid);
+                                ptr->messageid = NULL;
+                        }
+
+                        return 0;
+
+                case 1: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->analyzer_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                               idmef_analyzer_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->analyzer_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                               idmef_analyzer_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                case 2:
+                        idmef_time_destroy_internal(&ptr->create_time);
+                        return 0;
+
+                case 3:
+                        if ( ptr->classification ) {
+                                idmef_classification_destroy(ptr->classification);
+                                ptr->classification = NULL;
+                        }
+
+                        return 0;
+
+                case 4:
+                        if ( ptr->detect_time ) {
+                                idmef_time_destroy(ptr->detect_time);
+                                ptr->detect_time = NULL;
+                        }
+
+                        return 0;
+
+                case 5:
+                        if ( ptr->analyzer_time ) {
+                                idmef_time_destroy(ptr->analyzer_time);
+                                ptr->analyzer_time = NULL;
+                        }
+
+                        return 0;
+
+                case 6: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->source_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, idmef_source_t, list);
+                                               idmef_source_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->source_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, idmef_source_t, list);
+                                               idmef_source_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                case 7: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->target_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, idmef_target_t, list);
+                                               idmef_target_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->target_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, idmef_target_t, list);
+                                               idmef_target_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                case 8:
+                        if ( ptr->assessment ) {
+                                idmef_assessment_destroy(ptr->assessment);
+                                ptr->assessment = NULL;
+                        }
+
+                        return 0;
+
+                case 9: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->additional_data_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                               idmef_additional_data_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->additional_data_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                               idmef_additional_data_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                case 10:
+                        if (  ptr->type != IDMEF_ALERT_TYPE_TOOL )
+                                return 0;
+
+                        idmef_tool_alert_destroy(ptr->detail.tool_alert);
+                        ptr->detail.tool_alert = NULL;
+                        ptr->type = 0;
+
+                        return 0;
+
+                case 11:
+                        if (  ptr->type != IDMEF_ALERT_TYPE_CORRELATION )
+                                return 0;
+
+                        idmef_correlation_alert_destroy(ptr->detail.correlation_alert);
+                        ptr->detail.correlation_alert = NULL;
+                        ptr->type = 0;
+
+                        return 0;
+
+                case 12:
+                        if (  ptr->type != IDMEF_ALERT_TYPE_OVERFLOW )
+                                return 0;
+
+                        idmef_overflow_alert_destroy(ptr->detail.overflow_alert);
+                        ptr->detail.overflow_alert = NULL;
+                        ptr->type = 0;
+
+                        return 0;
 
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
@@ -19774,6 +21526,105 @@ int _idmef_heartbeat_new_child(void *p, idmef_class_child_id_t child, int n, voi
         }
 }
 
+int _idmef_heartbeat_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_heartbeat_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        if ( ptr->messageid ) {
+                                prelude_string_destroy(ptr->messageid);
+                                ptr->messageid = NULL;
+                        }
+
+                        return 0;
+
+                case 1: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->analyzer_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                               idmef_analyzer_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->analyzer_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, idmef_analyzer_t, list);
+                                               idmef_analyzer_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                case 2:
+                        idmef_time_destroy_internal(&ptr->create_time);
+                        return 0;
+
+                case 3:
+                        if ( ptr->analyzer_time ) {
+                                idmef_time_destroy(ptr->analyzer_time);
+                                ptr->analyzer_time = NULL;
+                        }
+
+                        return 0;
+
+                case 4:
+                        ptr->heartbeat_interval_is_set = 0;
+                        return 0;
+
+                case 5: {
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->additional_data_list, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                               idmef_additional_data_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->additional_data_list, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, idmef_additional_data_t, list);
+                                               idmef_additional_data_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                }
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
 static void idmef_heartbeat_destroy_internal(idmef_heartbeat_t *ptr)
 {
         prelude_return_if_fail(ptr);
@@ -20487,6 +22338,43 @@ int _idmef_message_new_child(void *p, idmef_class_child_id_t child, int n, void 
 
                 case 2:
                         return idmef_message_new_heartbeat(ptr, (idmef_heartbeat_t **) ret);
+
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        }
+}
+
+int _idmef_message_destroy_child(void *p, idmef_class_child_id_t child, int n)
+{
+        idmef_message_t *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) {
+
+                case 0:
+                        prelude_string_destroy_internal(&ptr->version);
+                        return 0;
+
+                case 1:
+                        if (  ptr->type != IDMEF_MESSAGE_TYPE_ALERT )
+                                return 0;
+
+                        idmef_alert_destroy(ptr->message.alert);
+                        ptr->message.alert = NULL;
+                        ptr->type = 0;
+
+                        return 0;
+
+                case 2:
+                        if (  ptr->type != IDMEF_MESSAGE_TYPE_HEARTBEAT )
+                                return 0;
+
+                        idmef_heartbeat_destroy(ptr->message.heartbeat);
+                        ptr->message.heartbeat = NULL;
+                        ptr->type = 0;
+
+                        return 0;
 
                 default:
                         return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);

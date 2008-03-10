@@ -25,9 +25,9 @@ use Generate;
 use strict;
 use IDMEFTree;
 
-sub	header
+sub     header
 {
-    my	$self = shift;
+    my  $self = shift;
 
     $self->output("
 /*****
@@ -80,9 +80,9 @@ sub	header
 ");
 }
 
-sub	footer
+sub     footer
 {
-    my	$self = shift;
+    my  $self = shift;
 
     $self->output("
 void idmef_message_set_pmsg(idmef_message_t *message, prelude_msg_t *msg);
@@ -99,11 +99,11 @@ prelude_msg_t *idmef_message_get_pmsg(idmef_message_t *message);
     $self->output("#endif /* _LIBPRELUDE_IDMEF_TREE_WRAP */\n");
 }
 
-sub	struct_definition
+sub     struct_definition
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$struct = shift;
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
 
     $self->output("\n\n/*\n");
     $self->output(" * $_\n") foreach ( @{ $struct->{desc} } );
@@ -114,11 +114,11 @@ typedef struct idmef_$struct->{short_typename} $struct->{typename};
 ") unless ( $tree->{pre_declareds}->{$struct->{typename}} );
 }
 
-sub	struct_constructor
+sub     struct_constructor
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$struct = shift;
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
 
     $self->output("int idmef_$struct->{short_typename}_new($struct->{typename} **ret);\n");
     $self->output("int idmef_$struct->{short_typename}_copy(const $struct->{typename} *src, $struct->{typename} *dst);\n");
@@ -126,11 +126,11 @@ sub	struct_constructor
     $self->output("int idmef_$struct->{short_typename}_compare(const $struct->{typename} *obj1, const $struct->{typename} *obj2);\n");
 }
 
-sub	struct_ref
+sub     struct_ref
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$struct = shift;
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
 
     $struct->{refcount} or return;
 
@@ -138,50 +138,60 @@ sub	struct_ref
 
 }
 
-sub	struct_get_child
+sub     struct_destroy_child
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$struct = shift;
-    my	$n = 0;
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
+    my  $n = 0;
+
+    $self->output("int _idmef_$struct->{short_typename}_destroy_child(void *p, idmef_class_child_id_t child, int n);\n");
+}
+
+sub     struct_get_child
+{
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
+    my  $n = 0;
 
     $self->output("int _idmef_$struct->{short_typename}_get_child(void *p, idmef_class_child_id_t child, void **childptr);\n");
 }
 
-sub	struct_new_child
+sub     struct_new_child
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$struct = shift;
-    my	$n = 0;
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
+    my  $n = 0;
 
     $self->output("int _idmef_$struct->{short_typename}_new_child(void *p, idmef_class_child_id_t child, int n, void **ret);\n");
 }
 
-sub	struct_destroy
+sub     struct_destroy
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$struct = shift;
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
 
     $self->output("void idmef_$struct->{short_typename}_destroy($struct->{typename} *ptr);\n");
 }
 
-sub	struct_field_normal
+sub     struct_field_normal
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$struct = shift;
-    my	$field = shift;
-    my	$name = shift || $field->{name};
-    my	$ptr = "";
-    my	$refer = "";
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
+    my  $field = shift;
+    my  $name = shift || $field->{name};
+    my  $ptr = "";
+    my  $refer = "";
 
     $ptr = "*", $refer = "*" if ( $field->{metatype} & &METATYPE_STRUCT );
     $refer = "*" if ( $field->{metatype} & &METATYPE_OPTIONAL_INT );
 
     if ( $field->{metatype} & &METATYPE_OPTIONAL_INT ) {
-	$self->output("void idmef_$struct->{short_typename}_unset_${name}($struct->{typename} *ptr);\n");
+        $self->output("void idmef_$struct->{short_typename}_unset_${name}($struct->{typename} *ptr);\n");
     }
 
     $self->output("$field->{typename} ${refer}idmef_$struct->{short_typename}_get_${name}($struct->{typename} *ptr);\n");
@@ -189,38 +199,38 @@ sub	struct_field_normal
     my $field_name = ($name eq "class") ? "class_str" : $name;
 
     $self->output("void idmef_$struct->{short_typename}_set_${name}($struct->{typename} *ptr, $field->{typename} ${ptr}${field_name});\n");
-        
+
     $self->output("int idmef_$struct->{short_typename}_new_${name}($struct->{typename} *ptr, $field->{typename} **ret);\n");
-	    
+
     $self->output("\n");
 }
 
-sub	struct_field_union
+sub     struct_field_union
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$struct = shift;
-    my	$field = shift;
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
+    my  $field = shift;
 
     $self->output("$field->{typename} idmef_$struct->{short_typename}_get_$field->{var}($struct->{typename} *ptr);\n");
 
     foreach my $member ( @{ $field->{member_list} } ) {
-	$self->struct_field_normal($tree, $struct, 
-				   { metatype => &METATYPE_STRUCT,
-				     name => "$field->{name}.$member->{name}",
-				     typename => $member->{typename},
-				     short_typename => $member->{short_typename},
-				     ptr => $member->{ptr}
-				   }, $member->{name});
+        $self->struct_field_normal($tree, $struct,
+                                   { metatype => &METATYPE_STRUCT,
+                                     name => "$field->{name}.$member->{name}",
+                                     typename => $member->{typename},
+                                     short_typename => $member->{short_typename},
+                                     ptr => $member->{ptr}
+                                   }, $member->{name});
     }
 }
 
-sub	struct_field_list
+sub     struct_field_list
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$struct = shift;
-    my	$field = shift;
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
+    my  $field = shift;
 
     $self->output(
 "$field->{typename} *idmef_$struct->{short_typename}_get_next_$field->{short_name}($struct->{typename} *$struct->{short_typename}, $field->{typename} *$field->{short_typename}_cur);
@@ -230,24 +240,24 @@ int idmef_$struct->{short_typename}_new_$field->{short_name}($struct->{typename}
 ");
 }
 
-sub	struct_fields
+sub     struct_fields
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$struct = shift;
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
 
     foreach my $field ( @{ $struct->{field_list} } ) {
-	$self->struct_field_normal($tree, $struct, $field) if ( $field->{metatype} & &METATYPE_NORMAL );
- 	$self->struct_field_list($tree, $struct, $field) if ( $field->{metatype} & &METATYPE_LIST );
- 	$self->struct_field_union($tree, $struct, $field) if ( $field->{metatype} & &METATYPE_UNION );
+        $self->struct_field_normal($tree, $struct, $field) if ( $field->{metatype} & &METATYPE_NORMAL );
+        $self->struct_field_list($tree, $struct, $field) if ( $field->{metatype} & &METATYPE_LIST );
+        $self->struct_field_union($tree, $struct, $field) if ( $field->{metatype} & &METATYPE_UNION );
     }
 }
 
-sub	struct
+sub     struct
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$struct = shift;
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
 
     $self->struct_definition($tree, $struct);
     $self->struct_constructor($tree, $struct);
@@ -256,34 +266,35 @@ sub	struct
     $self->output("\n#ifndef SWIG\n");
     $self->struct_get_child($tree, $struct);
     $self->struct_new_child($tree, $struct);
+    $self->struct_destroy_child($tree, $struct);
     $self->output("#endif\n\n");
 
     $self->struct_destroy($tree, $struct);
     $self->struct_fields($tree, $struct);
 }
 
-sub	enum
+sub     enum
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$enum = shift;
-    my	$cnt = 0;
+    my  $self = shift;
+    my  $tree = shift;
+    my  $enum = shift;
+    my  $cnt = 0;
 
     foreach ( @{ $enum->{desc} } ) {
-	if ( $cnt == 0 ) {
-	    $self->output("typedef enum {\n");
+        if ( $cnt == 0 ) {
+            $self->output("typedef enum {\n");
 
-	} elsif ( $cnt + 1 == @{ $enum->{desc} } ) {
-	    $self->output("\} $enum->{typename};\n");
+        } elsif ( $cnt + 1 == @{ $enum->{desc} } ) {
+            $self->output("\} $enum->{typename};\n");
 
-	} else {
-	    my $val = $_;
-	    
-	    $val =~ s/\(.*\)//;
-	    $self->output("$val\n");
-	}
+        } else {
+            my $val = $_;
 
-	$cnt++;
+            $val =~ s/\(.*\)//;
+            $self->output("$val\n");
+        }
+
+        $cnt++;
     }
 
     $self->output("\n\n");
@@ -292,11 +303,11 @@ sub	enum
     $self->output("\n\n");
 }
 
-sub	pre_declared
+sub     pre_declared
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$pre_declared = shift;
+    my  $self = shift;
+    my  $tree = shift;
+    my  $pre_declared = shift;
 
     if ( $pre_declared->{metatype} & &METATYPE_STRUCT ) {
     $self->output("
@@ -311,14 +322,14 @@ typedef enum idmef_$pre_declared->{short_typename} $pre_declared->{typename};
     }
 }
 
-sub	obj
+sub     obj
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$obj = shift;
+    my  $self = shift;
+    my  $tree = shift;
+    my  $obj = shift;
 
     push(@{ $self->{type_list} }, [ "IDMEF_CLASS_ID_" . uc("$obj->{short_typename}") => $obj->{id} ])
-	if ( $obj->{obj_type} != &OBJ_PRE_DECLARED );
+        if ( $obj->{obj_type} != &OBJ_PRE_DECLARED );
 }
 
 1;

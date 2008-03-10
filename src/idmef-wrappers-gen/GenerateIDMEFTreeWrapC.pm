@@ -476,6 +476,158 @@ int _idmef_$struct->{short_typename}_get_child(void *p, idmef_class_child_id_t c
 ");
 }
 
+
+
+sub     struct_destroy_child
+{
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
+    my  $n = 0;
+
+    $self->output("
+int _idmef_$struct->{short_typename}_destroy_child(void *p, idmef_class_child_id_t child, int n)
+\{
+        $struct->{typename} *ptr = p;
+
+        prelude_return_val_if_fail(p, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        switch ( child ) \{
+");
+
+    foreach my $field ( @{ $struct->{field_list} } ) {
+
+        if ( $field->{metatype} & &METATYPE_LIST ) {
+                my $type = "";
+
+                if ( $field->{typename} eq "idmef_time_t" ||
+                     $field->{typename} eq "idmef_data_t" ||
+                     $field->{typename} eq "prelude_string_t" ) {
+                        $type = "$field->{short_typename}"
+                } else {
+                        $type = "idmef_$field->{short_typename}"
+                }
+
+            $self->output("
+                case $n: \{
+                        int i = 0;
+                        prelude_list_t *tmp;
+
+                        if ( n >= 0 ) {
+                               prelude_list_for_each(&ptr->$field->{name}, tmp) {
+                                       if ( i++ == n ) {
+                                               void *b = prelude_list_entry(tmp, $field->{typename}, list);
+                                               ${type}_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != n )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        } else {
+                               int pos = (-n) - 1; /* With negative value, -1 is the base, translate to 0 */
+
+                               prelude_list_for_each_reversed(&ptr->$field->{name}, tmp) {
+                                       if ( i++ == pos ) {
+                                               void *b = prelude_list_entry(tmp, $field->{typename}, list);
+                                               ${type}_destroy(b);
+                                               return 0;
+                                       }
+                               }
+
+                               if ( i != pos )
+                                       return prelude_error(PRELUDE_ERROR_IDMEF_TREE_INDEX_UNDEFINED);
+                        }
+                \}
+");
+        } elsif ( $field->{metatype} & &METATYPE_UNION ) {
+
+            foreach my $member ( @{ $field->{member_list} } ) {
+                $self->output("
+                case $n:
+                        if (  ptr->$field->{var} != $member->{value} )
+                                return 0;
+
+                        idmef_$member->{short_typename}_destroy(ptr->$field->{name}.$member->{name});
+                        ptr->$field->{name}.$member->{name} = NULL;
+                        ptr->$field->{var} = 0;
+
+                        return 0;
+");
+                $n++;
+            }
+
+        } elsif ( $field->{metatype} & &METATYPE_NORMAL ) {
+            if ( $field->{metatype} & &METATYPE_OPTIONAL_INT ) {
+                $self->output("
+                case $n:
+                        ptr->$field->{name}_is_set = 0;
+                        return 0;
+");
+            }
+
+            elsif ( $field->{ptr} ) {
+                my $type = "";
+
+                if ( $field->{typename} eq "idmef_time_t" ||
+                     $field->{typename} eq "idmef_data_t" ||
+                     $field->{typename} eq "prelude_string_t" ) {
+                        $type = "$field->{short_typename}"
+                } else {
+                        $type = "idmef_$field->{short_typename}"
+                }
+
+                $self->output("
+                case $n:
+                        if ( ptr->$field->{name} ) {
+                                ${type}_destroy(ptr->$field->{name});
+                                ptr->$field->{name} = NULL;
+                        }
+
+                        return 0;
+");
+            }
+
+            else {
+                my $code = "";
+
+                if ( $field->{metatype} & &METATYPE_ENUM)  {
+                        $code = "ptr->$field->{name} = 0";
+                }
+
+                elsif ( ! ($field->{metatype} & &METATYPE_STRUCT) ) {
+                        $n++;
+                        next;
+                }
+                elsif ( $field->{typename} eq "idmef_time_t" ||
+                     $field->{typename} eq "idmef_data_t" ||
+                     $field->{typename} eq "prelude_string_t" ) {
+                        $code = "$field->{short_typename}_destroy_internal(&ptr->$field->{name})"
+                } else {
+                        $code = "idmef_$field->{short_typename}_destroy_internal(&ptr->$field->{name})"
+                }
+
+                $self->output("
+                case $n:
+                        ${code};
+                        return 0;
+");
+            }
+
+        }
+
+        $n++;
+    }
+
+    $self->output("
+                default:
+                        return prelude_error(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD);
+        \}
+\}
+");
+}
+
+
 sub     struct_new_child
 {
     my  $self = shift;
@@ -1497,6 +1649,7 @@ sub        struct_func
     $self->struct_ref($tree, $struct);
     $self->struct_get_child($tree, $struct);
     $self->struct_new_child($tree, $struct);
+    $self->struct_destroy_child($tree, $struct);
     $self->struct_destroy_internal($tree, $struct);
     $self->struct_destroy($tree, $struct);
     $self->struct_fields($tree, $struct);
