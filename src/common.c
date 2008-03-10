@@ -493,8 +493,6 @@ prelude_msg_priority_t _idmef_impact_severity_to_msg_priority(idmef_impact_sever
 
 int _idmef_message_assign_missing(prelude_client_t *client, idmef_message_t *msg)
 {
-        int ret;
-        idmef_time_t *time;
         idmef_alert_t *alert;
         idmef_heartbeat_t *heartbeat;
         prelude_ident_t *ident = prelude_client_get_unique_ident(client);
