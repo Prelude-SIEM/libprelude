@@ -368,8 +368,13 @@ static int tls_close(prelude_io_t *pio)
                 ret = gnutls_bye(pio->fd_ptr, GNUTLS_SHUT_RDWR);
         } while ( ret < 0 && ret == GNUTLS_E_INTERRUPTED );
 
-        if ( ret < 0 )
-                return tls_check_error(pio, ret);
+        if ( ret < 0 ) {
+                ret = tls_check_error(pio, ret);
+                if ( prelude_io_is_error_fatal(pio, ret) )
+                        sys_close(pio);
+
+                return ret;
+        }
 
         gnutls_deinit(pio->fd_ptr);
 
