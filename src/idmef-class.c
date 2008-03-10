@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2002-2006,2007,2008 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 * Author: Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
 *
@@ -88,12 +88,12 @@ idmef_class_child_id_t idmef_class_find_child(idmef_class_id_t class, const char
                 return ret;
 
         list = object_data[class].children_list;
-	
-	if ( list ) {
-		for ( i = 0; list[i].name; i++ )
-			if ( strcasecmp(list[i].name, name) == 0)
-				return i;
-	}
+
+        if ( list ) {
+                for ( i = 0; list[i].name; i++ )
+                        if ( strcasecmp(list[i].name, name) == 0)
+                                return i;
+        }
 
         return prelude_error_verbose(PRELUDE_ERROR_IDMEF_CLASS_UNKNOWN_CHILD, "Unknown IDMEF child '%s'", name);
 }
