@@ -32,6 +32,10 @@
 #include "prelude-string.h"
 #include "prelude-msgbuf.h"
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 int idmef_additional_data_write(idmef_additional_data_t *additional_data, prelude_msgbuf_t *msg);
 int idmef_reference_write(idmef_reference_t *reference, prelude_msgbuf_t *msg);
 int idmef_classification_write(idmef_classification_t *classification, prelude_msgbuf_t *msg);
@@ -62,5 +66,10 @@ int idmef_overflow_alert_write(idmef_overflow_alert_t *overflow_alert, prelude_m
 int idmef_alert_write(idmef_alert_t *alert, prelude_msgbuf_t *msg);
 int idmef_heartbeat_write(idmef_heartbeat_t *heartbeat, prelude_msgbuf_t *msg);
 int idmef_message_write(idmef_message_t *message, prelude_msgbuf_t *msg);
+
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif /* _LIBPRELUDE_IDMEF_MESSAGE_WRITE_H */

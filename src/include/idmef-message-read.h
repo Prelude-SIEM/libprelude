@@ -31,6 +31,10 @@
 #include "prelude-inttypes.h"
 #include "prelude-msgbuf.h"
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 
 int idmef_additional_data_read(idmef_additional_data_t *additional_data, prelude_msg_t *msg);
 
@@ -91,5 +95,10 @@ int idmef_alert_read(idmef_alert_t *alert, prelude_msg_t *msg);
 int idmef_heartbeat_read(idmef_heartbeat_t *heartbeat, prelude_msg_t *msg);
 
 int idmef_message_read(idmef_message_t *message, prelude_msg_t *msg);
+
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif /* _LIBPRELUDE_IDMEF_MESSAGE_READ_H */

@@ -25,9 +25,9 @@ use Generate;
 use strict;
 use IDMEFTree;
 
-sub	header
+sub     header
 {
-     my	$self = shift;
+     my $self = shift;
 
      $self->output("
 /*****
@@ -63,23 +63,32 @@ sub	header
 #include \"prelude-string.h\"
 #include \"prelude-msgbuf.h\"
 
+#ifdef __cplusplus
+ extern \"C\" {
+#endif
+
 ");
 }
 
-sub	footer
+sub     footer
 {
-    my	$self = shift;
+    my  $self = shift;
 
     $self->output("
+
+#ifdef __cplusplus
+ }
+#endif
+
 #endif /* _LIBPRELUDE_IDMEF_MESSAGE_WRITE_H */
 ");
 }
 
-sub	struct
+sub     struct
 {
-    my	$self = shift;
-    my	$tree = shift;
-    my	$struct = shift;
+    my  $self = shift;
+    my  $tree = shift;
+    my  $struct = shift;
 
     $self->output("int idmef_$struct->{short_typename}_write($struct->{typename} *$struct->{short_typename}, prelude_msgbuf_t *msg);\n");
 }

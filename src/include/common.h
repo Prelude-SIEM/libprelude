@@ -43,6 +43,9 @@
 
 #include <time.h>
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 #define prelude_return_val_if_fail(cond, val) do {                               \
         if ( ! (cond) ) {                                                        \
@@ -92,5 +95,8 @@ int _prelude_load_file(const char *filename, unsigned char **fdata, size_t *outs
 
 void _prelude_unload_file(unsigned char *fdata, size_t size);
 
+#ifdef __cplusplus
+ }
+#endif
 
 #endif /* _LIBPRELUDE_COMMON_H */

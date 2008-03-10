@@ -43,6 +43,10 @@
 
 #include <string.h> /* for memmove */
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
 
 /*
  * Using memmove make the generated code substencially slower,
@@ -250,5 +254,9 @@ static inline int prelude_extract_characters_safe(const char **out, char *buf, s
 
         return 0;
 }
+
+#ifdef __cplusplus
+ }
+#endif
 
 #endif /* _LIBPRELUDE_EXTRACT_H */
