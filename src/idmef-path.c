@@ -330,18 +330,27 @@ static void delete_listed_child(void *parent, idmef_class_id_t class, const idme
         if ( ret < 0 )
                 return;
 
-         prelude_list_for_each_safe(head, tmp, bkp) {
-                 obj = prelude_linked_object_get_object(tmp);
-                 idmef_class_destroy(idmef_class_get_child_class(class, elem->position), obj);
-         }
-}
+        prelude_list_for_each_safe(head, tmp, bkp) {
+                obj = prelude_linked_object_get_object(tmp);
 
+                /*
+                 * The object might be referenced from other place than
+                 * this message, in which case idmef_class_destroy()
+                 * will only decrease it's reference count.
+                 *
+                 * We manually call prelude_list_del_init() in order to
+                 * disassociate the object from the message.
+                 */
+                prelude_list_del_init(tmp);
+                idmef_class_destroy(idmef_class_get_child_class(class, elem->position), obj);
+        }
+}
 
 
 static int _idmef_path_set(const idmef_path_t *path, idmef_message_t *message, idmef_value_t *value, prelude_bool_t *delete_list)
 {
+        void *ptr;
         int i, ret, index;
-        void *ptr, *child;
         idmef_value_type_id_t tid;
         const idmef_path_element_t *elem;
         idmef_class_id_t class, parent_class;
@@ -351,7 +360,6 @@ static int _idmef_path_set(const idmef_path_t *path, idmef_message_t *message, i
 
         for ( i = 0; i < path->depth; i++ ) {
                 elem = &path->elem[i];
-
                 index = elem->index;
 
                 /*
@@ -368,19 +376,28 @@ static int _idmef_path_set(const idmef_path_t *path, idmef_message_t *message, i
                         if ( *delete_list ) {
                                 *delete_list = FALSE;
                                 delete_listed_child(ptr, class, elem);
+
+                                if ( ! value )
+                                        return 0;
                         }
                 }
 
-                ret = idmef_class_new_child(ptr, class, elem->position, index, &child);
-                if ( ret < 0 )
-                        return ret;
-
-                ptr = child;
                 parent_class = class;
 
-                class = idmef_class_get_child_class(class, elem->position);
-                assert( ! (class < 0 && i < path->depth - 1) );
+                if ( value || i < (path->depth - 1) ) {
+                        ret = idmef_class_new_child(ptr, class, elem->position, index, &ptr);
+                        if ( ret < 0 )
+                                return ret;
+
+                        class = idmef_class_get_child_class(class, elem->position);
+                        assert( ! (class < 0 && i < path->depth - 1) );
+                }
         }
+
+        if ( ! value )
+                return idmef_class_destroy_child(ptr, parent_class,
+                                                 path->elem[path->depth - 1].position,
+                                                 path->elem[path->depth - 1].index);
 
         tid = idmef_class_get_child_value_type(parent_class, path->elem[path->depth - 1].position);
         if ( tid != idmef_value_get_type(value) )
@@ -449,19 +466,21 @@ int idmef_path_get(const idmef_path_t *path, idmef_message_t *message, idmef_val
 int idmef_path_set(const idmef_path_t *path, idmef_message_t *message, idmef_value_t *value)
 {
         prelude_bool_t delete_list = TRUE;
-        const idmef_path_element_t *elem = &path->elem[path->depth - 1];
+
+        if ( path->depth < 1 )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "Path with depth of 0 are not allowed");
 
         /*
          * Allow raw list copy (example: alert.source = alert.source,
          * alert.source(>>) = alert.source, alert.source(<<) = alert.source.
          */
-        if ( idmef_value_is_list(value) ) {
+        if ( value && idmef_value_is_list(value) ) {
                 value_list_t vl;
 
                 vl.path = path;
                 vl.message = message;
                 vl.delete_list = TRUE;
-                vl.reversed = (elem->index == IDMEF_LIST_PREPEND) ? TRUE : FALSE;
+                vl.reversed = (path->elem[path->depth - 1].index == IDMEF_LIST_PREPEND) ? TRUE : FALSE;
 
                 return do_idmef_value_iterate(value, &vl);
         }
