@@ -59,6 +59,8 @@ int idmef_class_get_child(void *ptr, idmef_class_id_t classid, idmef_class_child
 
 int idmef_class_new_child(void *ptr, idmef_class_id_t classid, idmef_class_child_id_t child, int n, void **childptr);
 
+int idmef_class_destroy_child(void *ptr, idmef_class_id_t classid, idmef_class_child_id_t child, int n);
+
 
 /*
  *

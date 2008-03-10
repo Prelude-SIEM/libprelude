@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002-2006,2007,2008 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2002-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 * Author: Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
 *
@@ -228,6 +228,18 @@ int idmef_class_new_child(void *ptr, idmef_class_id_t class, idmef_class_child_i
         return object_data[class].new_child(ptr, child, n, childptr);
 }
 
+
+
+int idmef_class_destroy_child(void *ptr, idmef_class_id_t class, idmef_class_child_id_t child, int n)
+{
+        int ret;
+
+        ret = is_child_valid(class, child);
+        if ( ret < 0 )
+                return ret;
+
+        return object_data[class].destroy_child(ptr, child, n);
+}
 
 
 int idmef_class_copy(idmef_class_id_t class, const void *src, void *dst)
