@@ -52,14 +52,14 @@ while test $# -gt 0; do
       if test @includedir@ != /usr/include ; then
         includes=-I@includedir@
       fi
-      echo @libprelude_cflags@ $includes
+      echo @LIBPRELUDE_CFLAGS@ $includes
       ;;
 
     --pthread-cflags)
       if test @includedir@ != /usr/include ; then
         includes=-I@includedir@
       fi
-      echo @PTHREAD_CFLAGS@ @libprelude_cflags@ $includes
+      echo @PTHREAD_CFLAGS@ @LIBPRELUDE_CFLAGS@ $includes
       ;;
 
     --ldflags)
