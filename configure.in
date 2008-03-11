@@ -663,8 +663,8 @@ AC_SUBST(PRELUDE_ADMIN_LIBS)
 AS_AC_EXPAND(SYSCONFDIR, $sysconfdir)
 AS_AC_EXPAND(LOCALSTATEDIR, $localstatedir)
 
-AC_DEFINE_UNQUOTED(PRELUDE_SPOOL_DIR, "$LOCALSTATEDIR/prelude", Prelude spool directory)
-AC_DEFINE_UNQUOTED(PRELUDE_CONFIG_DIR, "$SYSCONFDIR/spool/prelude", Prelude config directory)
+AC_DEFINE_UNQUOTED(PRELUDE_SPOOL_DIR, "$LOCALSTATEDIR/spool/prelude", Prelude spool directory)
+AC_DEFINE_UNQUOTED(PRELUDE_CONFIG_DIR, "$SYSCONFDIR/prelude", Prelude config directory)
 
 
 AC_CONFIG_FILES([
