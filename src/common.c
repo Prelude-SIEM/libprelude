@@ -58,7 +58,7 @@ static prelude_string_t *get_message_ident(prelude_ident_t *ident)
         if ( ret < 0 )
                 return NULL;
 
-        ret = prelude_string_sprintf(str, "%" PRELUDE_PRIu64, prelude_ident_inc(ident));
+        ret = prelude_ident_generate(ident, str);
         if ( ret < 0 ) {
                 prelude_string_destroy(str);
                 return NULL;
