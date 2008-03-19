@@ -200,7 +200,7 @@ int prelude_ident_generate(prelude_ident_t *ident, prelude_string_t *out)
 {
         uuidgen(ident);
 
-        return prelude_string_sprintf(out, "%8.8x-%4.4x-%4.4x-%2.2x%2.2x\n",
+        return prelude_string_sprintf(out, "%8.8x-%4.4x-%4.4x-%2.2x%2.2x",
                                       ident->uuid.time_low, ident->uuid.time_mid,
                                       ident->uuid.time_hi_and_version,
                                       ident->uuid.clock_seq_hi_and_reserved,
