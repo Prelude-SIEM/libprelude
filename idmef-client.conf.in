@@ -1,2 +1,2 @@
-include = @prelude_config_dir@/default/global.conf
-include = @prelude_config_dir@/default/client.conf
+include = @PRELUDE_CONFIG_DIR@/default/global.conf
+include = @PRELUDE_CONFIG_DIR@/default/client.conf
