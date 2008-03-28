@@ -138,12 +138,11 @@ static struct timespec *get_timespec(struct timespec *ts)
 
 
 
-static int wait_timer_and_data(void)
+static int wait_timer_and_data(prelude_async_flags_t *flags)
 {
         int ret;
         struct timespec ts;
         static struct timespec last_wakeup;
-        prelude_async_flags_t old_async_flags;
         prelude_bool_t no_job_available = TRUE;
 
         get_timespec(&last_wakeup);
@@ -153,13 +152,12 @@ static int wait_timer_and_data(void)
                 ret = 0;
 
                 pthread_mutex_lock(&mutex);
-                old_async_flags = async_flags;
 
                 ts.tv_sec = last_wakeup.tv_sec + 1;
                 ts.tv_nsec = last_wakeup.tv_nsec;
 
                 while ( (no_job_available = prelude_list_is_empty(&joblist)) &&
-                        ! stop_processing && async_flags == old_async_flags && ret != ETIMEDOUT ) {
+                        ! stop_processing && async_flags == *flags && ret != ETIMEDOUT ) {
 
                         ret = pthread_cond_timedwait(&cond, &mutex, &ts);
                 }
@@ -169,6 +167,7 @@ static int wait_timer_and_data(void)
                         return -1;
                 }
 
+                *flags = async_flags;
                 pthread_mutex_unlock(&mutex);
 
                 if ( ret == ETIMEDOUT || timespec_expired(get_timespec(&ts), &last_wakeup) ) {
@@ -184,14 +183,11 @@ static int wait_timer_and_data(void)
 
 
 
-static int wait_data(void)
+static int wait_data(prelude_async_flags_t *flags)
 {
-        prelude_async_flags_t old_async_flags;
-
         pthread_mutex_lock(&mutex);
-        old_async_flags = async_flags;
 
-        while ( prelude_list_is_empty(&joblist) && ! stop_processing && async_flags == old_async_flags )
+        while ( prelude_list_is_empty(&joblist) && ! stop_processing && async_flags == *flags )
                 pthread_cond_wait(&cond, &mutex);
 
         if ( prelude_list_is_empty(&joblist) && stop_processing ) {
@@ -199,6 +195,7 @@ static int wait_data(void)
                 return -1;
         }
 
+        *flags = async_flags;
         pthread_mutex_unlock(&mutex);
 
         return 0;
@@ -230,6 +227,7 @@ static void *async_thread(void *arg)
 {
         int ret;
         prelude_async_object_t *obj;
+        prelude_async_flags_t nflags = async_flags;
 
 #ifndef WIN32
         sigset_t set;
@@ -249,10 +247,10 @@ static void *async_thread(void *arg)
 
         while ( 1 ) {
 
-                if ( async_flags & PRELUDE_ASYNC_FLAGS_TIMER )
-                        ret = wait_timer_and_data();
+                if ( nflags & PRELUDE_ASYNC_FLAGS_TIMER )
+                        ret = wait_timer_and_data(&nflags);
                 else
-                        ret = wait_data();
+                        ret = wait_data(&nflags);
 
                 if ( ret < 0 ) {
                         /*
