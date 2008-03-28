@@ -1389,13 +1389,13 @@ int prelude_client_set_flags(prelude_client_t *client, prelude_client_flags_t fl
         client->flags = flags;
 
         if ( flags & PRELUDE_CLIENT_FLAGS_ASYNC_TIMER ) {
-                ret = prelude_async_init();
                 prelude_async_set_flags(PRELUDE_ASYNC_FLAGS_TIMER);
+                ret = prelude_async_init();
         }
 
         if ( flags & PRELUDE_CLIENT_FLAGS_ASYNC_SEND ) {
-                ret = prelude_async_init();
                 prelude_msgbuf_set_flags(client->msgbuf, PRELUDE_MSGBUF_FLAGS_ASYNC);
+                ret = prelude_async_init();
         }
 
         if ( ! (flags & PRELUDE_CLIENT_FLAGS_AUTOCONFIG) )
