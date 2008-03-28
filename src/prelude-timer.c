@@ -6,7 +6,7 @@
 * This file is part of the Prelude library.
 *
 * This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by 
+* it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2, or (at your option)
 * any later version.
 *
@@ -50,7 +50,7 @@ static void child_fork_cb(void)
 }
 
 
-inline static void timer_lock_list(void) 
+inline static void timer_lock_list(void)
 {
         if ( prelude_async_get_flags() & PRELUDE_ASYNC_FLAGS_TIMER )
                 prelude_thread_mutex_lock(&mutex);
@@ -58,7 +58,7 @@ inline static void timer_lock_list(void)
 
 
 
-inline static void timer_unlock_list(void) 
+inline static void timer_unlock_list(void)
 {
         if ( prelude_async_get_flags() & PRELUDE_ASYNC_FLAGS_TIMER )
                 prelude_thread_mutex_unlock(&mutex);
@@ -71,7 +71,7 @@ inline static void timer_unlock_list(void)
  * Return the time elapsed by a timer 'timer' from now,
  * to the time it was created / reset.
  */
-static time_t time_elapsed(prelude_timer_t *timer, time_t now) 
+static time_t time_elapsed(prelude_timer_t *timer, time_t now)
 {
         return now - timer->start_time;
 }
@@ -94,18 +94,18 @@ static time_t time_remaining(prelude_timer_t *timer, time_t now)
  *
  * All expired timer should be destroyed.
  */
-static int wake_up_if_needed(prelude_timer_t *timer, time_t now) 
+static int wake_up_if_needed(prelude_timer_t *timer, time_t now)
 {
         assert(timer->start_time != -1);
-        
+
         if ( now == -1 || time_elapsed(timer, now) >= prelude_timer_get_expire(timer) ) {
                 timer->start_time = -1;
-                
+
                 prelude_timer_get_callback(timer)(prelude_timer_get_data(timer));
-                
+
                 return 0;
         }
-        
+
         return -1;
 }
 
@@ -116,14 +116,14 @@ static prelude_timer_t *get_next_timer(void)
 {
         prelude_list_t *tmp;
         prelude_timer_t *timer = NULL;
-        
+
         prelude_thread_mutex_lock(&mutex);
-        
+
         prelude_list_for_each(&timer_list, tmp) {
                 timer = prelude_list_entry(tmp, prelude_timer_t, list);
                 break;
         }
-        
+
         prelude_thread_mutex_unlock(&mutex);
 
         return timer;
@@ -135,11 +135,11 @@ static prelude_timer_t *get_next_timer(void)
  * Walk the list of timer,
  * call the wake_up_if_need_function on each timer.
  */
-static void walk_and_wake_up_timer(time_t now) 
+static void walk_and_wake_up_timer(time_t now)
 {
         int ret, woke = 0;
         prelude_timer_t *timer;
-        
+
         while ( (timer = get_next_timer()) ) {
 
                 ret = wake_up_if_needed(timer, now);
@@ -158,12 +158,12 @@ static void walk_and_wake_up_timer(time_t now)
  * search the timer list forward for the timer entry
  * that should be before our inserted timer.
  */
-static prelude_list_t *search_previous_forward(prelude_timer_t *timer, time_t expire) 
+static prelude_list_t *search_previous_forward(prelude_timer_t *timer, time_t expire)
 {
         int hop = 0;
         prelude_timer_t *cur;
         prelude_list_t *tmp, *prev = NULL;
-        
+
         prelude_list_for_each(&timer_list, tmp) {
                 cur = prelude_list_entry(tmp, prelude_timer_t, list);
 
@@ -176,7 +176,7 @@ static prelude_list_t *search_previous_forward(prelude_timer_t *timer, time_t ex
                          * save and continue.
                          */
                         prev = tmp;
-                        continue; 
+                        continue;
                 }
 
                 else if ( (cur->start_time + cur->expire) == expire ) {
@@ -190,7 +190,7 @@ static prelude_list_t *search_previous_forward(prelude_timer_t *timer, time_t ex
 
                 else if ( (cur->start_time + cur->expire) > expire ) {
                         /*
-                         * we found a timer expiring after us. We can return 
+                         * we found a timer expiring after us. We can return
                          * the previously saved entry.
                          */
                         prelude_log_debug(5, "[expire=%d] found forward in %d hop at %p\n", timer->expire, hop, cur);
@@ -213,16 +213,16 @@ static prelude_list_t *search_previous_forward(prelude_timer_t *timer, time_t ex
  * search the timer list backward for the timer entry
  * that should be before our inserted timer.
  */
-static prelude_list_t *search_previous_backward(prelude_timer_t *timer, time_t expire) 
+static prelude_list_t *search_previous_backward(prelude_timer_t *timer, time_t expire)
 {
         int hop = 0;
         prelude_timer_t *cur;
         prelude_list_t *tmp;
-        
+
         for ( tmp = timer_list.prev; tmp != &timer_list; tmp = tmp->prev ) {
-                
+
                 cur = prelude_list_entry(tmp, prelude_timer_t, list);
-                
+
                 if ( (cur->start_time + cur->expire) <= expire ) {
                         prelude_log_debug(5, "[expire=%d] found backward in %d hop at %p\n", timer->expire, hop + 1, cur);
                         assert(tmp);
@@ -242,7 +242,7 @@ static prelude_list_t *search_previous_backward(prelude_timer_t *timer, time_t e
 
 
 
-inline static prelude_timer_t *get_first_timer(void) 
+inline static prelude_timer_t *get_first_timer(void)
 {
         return prelude_list_entry(timer_list.next, prelude_timer_t, list);
 }
@@ -250,7 +250,7 @@ inline static prelude_timer_t *get_first_timer(void)
 
 
 
-inline static prelude_timer_t *get_last_timer(void) 
+inline static prelude_timer_t *get_last_timer(void)
 {
         return prelude_list_entry(timer_list.prev, prelude_timer_t, list);
 }
@@ -262,7 +262,7 @@ inline static prelude_timer_t *get_last_timer(void)
  * - expire is > than first_expire.
  * - expire is < than last_expire.
  */
-static prelude_list_t *search_previous_timer(prelude_timer_t *timer) 
+static prelude_list_t *search_previous_timer(prelude_timer_t *timer)
 {
         time_t expire;
         prelude_timer_t *last, *first;
@@ -281,7 +281,7 @@ static prelude_list_t *search_previous_timer(prelude_timer_t *timer)
                 prelude_log_debug(5, "[expire=%d] found without search (insert last)\n", timer->expire);
                 return timer_list.prev;
         }
-        
+
         /*
          * timer we want to insert expire before (or at the same time), the known
          * to be expiring first timer. This mean we should insert the new timer at
@@ -295,11 +295,11 @@ static prelude_list_t *search_previous_timer(prelude_timer_t *timer)
 
         /*
          * we now know we expire after the first expiring timer,
-         * but before the last expiring one. 
+         * but before the last expiring one.
          *
          * compute expiration time for current, last, and first timer.
          */
-        expire = timer->expire + timer->start_time;        
+        expire = timer->expire + timer->start_time;
         last_remaining = time_remaining(last, timer->start_time);
         first_remaining = time_remaining(first, timer->start_time);
 
@@ -320,7 +320,7 @@ static prelude_list_t *search_previous_timer(prelude_timer_t *timer)
 
 
 
-static void timer_destroy_unlocked(prelude_timer_t *timer) 
+static void timer_destroy_unlocked(prelude_timer_t *timer)
 {
         if ( ! prelude_list_is_empty(&timer->list) ) {
                 count--;
@@ -331,13 +331,13 @@ static void timer_destroy_unlocked(prelude_timer_t *timer)
 
 
 
-static void timer_init_unlocked(prelude_timer_t *timer) 
+static void timer_init_unlocked(prelude_timer_t *timer)
 {
         prelude_list_t *prev;
 
         count++;
         timer->start_time = time(NULL);
-        
+
         if ( ! prelude_list_is_empty(&timer_list) )
                 prev = search_previous_timer(timer);
         else
@@ -386,10 +386,10 @@ void prelude_timer_init_list(prelude_timer_t *timer)
  *
  * Reset timer 'timer', as if it was just started.
  */
-void prelude_timer_reset(prelude_timer_t *timer) 
+void prelude_timer_reset(prelude_timer_t *timer)
 {
         timer_lock_list();
-        
+
         timer_destroy_unlocked(timer);
         timer_init_unlocked(timer);
 
@@ -402,11 +402,11 @@ void prelude_timer_reset(prelude_timer_t *timer)
 /**
  * prelude_timer_destroy:
  * @timer: the timer to destroy.
- * 
+ *
  * Destroy the timer 'timer',
  * this remove it from the active timer list.
  */
-void prelude_timer_destroy(prelude_timer_t *timer) 
+void prelude_timer_destroy(prelude_timer_t *timer)
 {
         timer_lock_list();
         timer_destroy_unlocked(timer);
@@ -422,10 +422,10 @@ void prelude_timer_destroy(prelude_timer_t *timer)
  * Wake up timer that need it.
  * This function should be called every second to work properly.
  */
-void prelude_timer_wake_up(void) 
+void prelude_timer_wake_up(void)
 {
         time_t now = time(NULL);
-        
+
         walk_and_wake_up_timer(now);
 }
 
@@ -437,7 +437,7 @@ void prelude_timer_wake_up(void)
  *
  * Expire every timer.
  */
-void prelude_timer_flush(void) 
+void prelude_timer_flush(void)
 {
         walk_and_wake_up_timer(-1);
 }
@@ -450,7 +450,7 @@ void prelude_timer_flush(void)
  *
  * Deactivate timer wake-up until timer_unlock_critical_region() is called.
  */
-void prelude_timer_lock_critical_region(void) 
+void prelude_timer_lock_critical_region(void)
 {
         timer_lock_list();
 }
@@ -462,7 +462,7 @@ void prelude_timer_lock_critical_region(void)
  *
  * Reactivate timer wake-up after timer_lock_critical_regions() has been called.
  */
-void prelude_timer_unlock_critical_region(void) 
+void prelude_timer_unlock_critical_region(void)
 {
         timer_unlock_list();
 }
@@ -481,7 +481,7 @@ int _prelude_timer_init(void)
                                     prelude_timer_unlock_critical_region, child_fork_cb);
         if ( ret != 0 )
                 return prelude_error_from_errno(ret);
-        
+
         return 0;
 }
 
