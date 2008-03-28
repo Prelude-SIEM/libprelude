@@ -38,7 +38,6 @@
 #include "prelude-timer.h"
 
 
-static unsigned int count = 0;
 static PRELUDE_LIST(timer_list);
 static pthread_mutex_t mutex;
 
@@ -52,16 +51,14 @@ static void child_fork_cb(void)
 
 inline static void timer_lock_list(void)
 {
-        if ( prelude_async_get_flags() & PRELUDE_ASYNC_FLAGS_TIMER )
-                prelude_thread_mutex_lock(&mutex);
+        prelude_thread_mutex_lock(&mutex);
 }
 
 
 
 inline static void timer_unlock_list(void)
 {
-        if ( prelude_async_get_flags() & PRELUDE_ASYNC_FLAGS_TIMER )
-                prelude_thread_mutex_unlock(&mutex);
+        prelude_thread_mutex_unlock(&mutex);
 }
 
 
@@ -149,7 +146,7 @@ static void walk_and_wake_up_timer(time_t now)
                 woke++;
         }
 
-        prelude_log_debug(5, "woke up %d/%d timer\n", woke, count);
+        prelude_log_debug(5, "woke up %d timer\n", woke);
 }
 
 
@@ -288,7 +285,6 @@ static prelude_list_t *search_previous_timer(prelude_timer_t *timer)
          * the beginning of the list.
          */
         if ( timer->expire <= time_remaining(first, timer->start_time) ) {
-                assert(&timer_list);
                 prelude_log_debug(5, "[expire=%d] found without search (insert first)\n", timer->expire);
                 return &timer_list;
         }
@@ -322,10 +318,8 @@ static prelude_list_t *search_previous_timer(prelude_timer_t *timer)
 
 static void timer_destroy_unlocked(prelude_timer_t *timer)
 {
-        if ( ! prelude_list_is_empty(&timer->list) ) {
-                count--;
+        if ( ! prelude_list_is_empty(&timer->list) )
                 prelude_list_del_init(&timer->list);
-        }
 }
 
 
@@ -335,7 +329,6 @@ static void timer_init_unlocked(prelude_timer_t *timer)
 {
         prelude_list_t *prev;
 
-        count++;
         timer->start_time = time(NULL);
 
         if ( ! prelude_list_is_empty(&timer_list) )
