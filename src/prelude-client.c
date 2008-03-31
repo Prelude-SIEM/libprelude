@@ -206,15 +206,13 @@ static const char *client_get_status(prelude_client_t *client)
 
 
 
-
-static void heartbeat_expire_cb(void *data)
+static void gen_heartbeat(prelude_client_t *client)
 {
         int ret;
         idmef_time_t *time;
         prelude_string_t *str;
         idmef_message_t *message;
         idmef_heartbeat_t *heartbeat;
-        prelude_client_t *client = data;
 
         ret = idmef_message_new(&message);
         if ( ret < 0 ) {
@@ -260,12 +258,18 @@ static void heartbeat_expire_cb(void *data)
 
   out:
         idmef_message_destroy(message);
+}
+
+
+static void heartbeat_expire_cb(void *data)
+{
+        prelude_client_t *client = data;
+
+        gen_heartbeat(client);
 
         if ( client->status != CLIENT_STATUS_EXITING )
                 prelude_timer_reset(&client->heartbeat_timer);
 }
-
-
 
 
 static void setup_heartbeat_timer(prelude_client_t *client, int expire)
@@ -1181,16 +1185,21 @@ int prelude_client_start(prelude_client_t *client)
 
 
         if ( (client->cpool || client->heartbeat_cb) && client->flags & PRELUDE_CLIENT_FLAGS_HEARTBEAT ) {
+
+                client->status = CLIENT_STATUS_STARTING;
+                client->_analyzer_copy = client->analyzer;
+                gen_heartbeat(client);
+
+                /*
+                 * We use a copy of the analyzer object from the timer,
+                 * since it might be run asynchronously.
+                 */
                 ret = idmef_analyzer_clone(client->analyzer, &client->_analyzer_copy);
                 if ( ret < 0 )
                         return ret;
 
-                client->status = CLIENT_STATUS_STARTING;
-                /*
-                 * this will reset, and thus initialize the timer.
-                 */
-                heartbeat_expire_cb(client);
                 client->status = CLIENT_STATUS_RUNNING;
+                prelude_timer_init(&client->heartbeat_timer);
         }
 
         return 0;
