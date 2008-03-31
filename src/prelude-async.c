@@ -87,7 +87,7 @@ static PRELUDE_LIST(joblist);
 
 
 static prelude_bool_t stop_processing = FALSE;
-static prelude_async_flags_t flags = 0, thr_flags = 0;
+static prelude_async_flags_t gflags = 0, thr_flags = 0;
 
 
 static pthread_t thread;
@@ -167,7 +167,7 @@ static int wait_timer_and_data(void)
                 ts.tv_sec = last_wakeup.tv_sec + 1;
                 ts.tv_nsec = last_wakeup.tv_nsec;
 
-                while ( (job = get_next_job()) == NULL && ! stop_processing && thr_flags == flags && ret != ETIMEDOUT )
+                while ( (job = get_next_job()) == NULL && ! stop_processing && thr_flags == gflags && ret != ETIMEDOUT )
                         ret = pthread_cond_timedwait(&cond, &mutex, &ts);
 
                 if ( ! job && stop_processing ) {
@@ -175,8 +175,8 @@ static int wait_timer_and_data(void)
                         return -1;
                 }
 
-                else if ( thr_flags != flags ) {
-                        thr_flags = flags;
+                else if ( thr_flags != gflags ) {
+                        thr_flags = gflags;
                         fl_change = TRUE;
                 }
                 pthread_mutex_unlock(&mutex);
@@ -203,7 +203,7 @@ static int wait_data(void)
         do {
                 pthread_mutex_lock(&mutex);
 
-                while ( ! (job = get_next_job()) && ! stop_processing && thr_flags == flags )
+                while ( ! (job = get_next_job()) && ! stop_processing && thr_flags == gflags )
                         pthread_cond_wait(&cond, &mutex);
 
                 if ( ! job && stop_processing ) {
@@ -211,8 +211,8 @@ static int wait_data(void)
                         return -1;
                 }
 
-                else if ( thr_flags != flags ) {
-                        thr_flags = flags;
+                else if ( thr_flags != gflags ) {
+                        thr_flags = gflags;
                         fl_change = TRUE;
                 }
 
@@ -231,6 +231,8 @@ static int wait_data(void)
 static void *async_thread(void *arg)
 {
         int ret;
+
+        thr_flags = gflags;
 
 #ifndef WIN32
         sigset_t set;
@@ -374,7 +376,7 @@ void prelude_async_set_flags(prelude_async_flags_t flags)
 {
         pthread_mutex_lock(&mutex);
 
-        flags = flags;
+        gflags = flags;
         pthread_cond_signal(&cond);
 
         pthread_mutex_unlock(&mutex);
@@ -391,7 +393,7 @@ void prelude_async_set_flags(prelude_async_flags_t flags)
  */
 prelude_async_flags_t prelude_async_get_flags(void)
 {
-        return flags;
+        return gflags;
 }
 
 
