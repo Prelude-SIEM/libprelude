@@ -437,17 +437,16 @@ static int close_connection_fd(prelude_connection_t *cnx)
                 return -1;
 
         ret = prelude_io_close(cnx->fd);
-        if ( ret < 0 )
-                return ret;
+        if ( ret >= 0 || prelude_io_is_error_fatal(cnx->fd, ret) ) {
+                if ( cnx->saddr ) {
+                        free(cnx->saddr);
+                        cnx->saddr = NULL;
+                }
 
-        if ( cnx->saddr ) {
-                free(cnx->saddr);
-                cnx->saddr = NULL;
+                cnx->state &= ~PRELUDE_CONNECTION_STATE_ESTABLISHED;
         }
 
-        cnx->state &= ~PRELUDE_CONNECTION_STATE_ESTABLISHED;
-
-        return 0;
+        return ret;
 }
 
 
