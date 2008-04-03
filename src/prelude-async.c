@@ -86,14 +86,13 @@
 static PRELUDE_LIST(joblist);
 
 
+static prelude_async_flags_t async_flags = 0;
 static prelude_bool_t stop_processing = FALSE;
-static prelude_async_flags_t flags = 0, thr_flags = 0;
 
 
 static pthread_t thread;
 static pthread_cond_t cond;
 static pthread_mutex_t mutex;
-static struct timespec last_wakeup;
 
 static volatile sig_atomic_t is_initialized = FALSE;
 
@@ -138,92 +137,88 @@ static struct timespec *get_timespec(struct timespec *ts)
 }
 
 
-static prelude_async_object_t *get_next_job(void)
-{
-        prelude_async_object_t *obj;
 
-        if ( prelude_list_is_empty(&joblist) )
-                obj = NULL;
-        else {
-                obj = prelude_linked_object_get_object(joblist.next);
-                prelude_linked_object_del((prelude_linked_object_t *) obj);
-        }
-
-        return obj;
-}
-
-
-static int wait_timer_and_data(void)
+static int wait_timer_and_data(prelude_async_flags_t *flags)
 {
         int ret;
         struct timespec ts;
-        prelude_async_object_t *job;
-        prelude_bool_t fl_change = FALSE;
+        static struct timespec last_wakeup;
+        prelude_bool_t no_job_available = TRUE;
 
-        do {
+        get_timespec(&last_wakeup);
+        last_wakeup.tv_sec--;
+
+        while ( no_job_available ) {
                 ret = 0;
+
                 pthread_mutex_lock(&mutex);
 
                 ts.tv_sec = last_wakeup.tv_sec + 1;
                 ts.tv_nsec = last_wakeup.tv_nsec;
 
-                while ( (job = get_next_job()) == NULL && ! stop_processing && thr_flags == flags && ret != ETIMEDOUT )
-                        ret = pthread_cond_timedwait(&cond, &mutex, &ts);
+                while ( (no_job_available = prelude_list_is_empty(&joblist)) &&
+                        ! stop_processing && async_flags == *flags && ret != ETIMEDOUT ) {
 
-                if ( ! job && stop_processing ) {
+                        ret = pthread_cond_timedwait(&cond, &mutex, &ts);
+                }
+
+                if ( no_job_available && stop_processing ) {
                         pthread_mutex_unlock(&mutex);
                         return -1;
                 }
 
-                else if ( thr_flags != flags ) {
-                        thr_flags = flags;
-                        fl_change = TRUE;
-                }
+                *flags = async_flags;
                 pthread_mutex_unlock(&mutex);
-
-                if ( job )
-                        job->_async_func(job, job->_async_data);
 
                 if ( ret == ETIMEDOUT || timespec_expired(get_timespec(&ts), &last_wakeup) ) {
                         prelude_timer_wake_up();
                         last_wakeup.tv_sec = ts.tv_sec;
                         last_wakeup.tv_nsec = ts.tv_nsec;
                 }
-        } while ( ! fl_change );
+        }
 
         return 0;
 }
 
 
-static int wait_data(void)
+
+
+static int wait_data(prelude_async_flags_t *flags)
 {
-        prelude_async_object_t *job;
-        prelude_bool_t fl_change = FALSE;
+        pthread_mutex_lock(&mutex);
 
-        do {
-                pthread_mutex_lock(&mutex);
+        while ( prelude_list_is_empty(&joblist) && ! stop_processing && async_flags == *flags )
+                pthread_cond_wait(&cond, &mutex);
 
-                while ( ! (job = get_next_job()) && ! stop_processing && thr_flags == flags )
-                        pthread_cond_wait(&cond, &mutex);
-
-                if ( ! job && stop_processing ) {
-                        pthread_mutex_unlock(&mutex);
-                        return -1;
-                }
-
-                else if ( thr_flags != flags ) {
-                        thr_flags = flags;
-                        fl_change = TRUE;
-                }
-
+        if ( prelude_list_is_empty(&joblist) && stop_processing ) {
                 pthread_mutex_unlock(&mutex);
+                return -1;
+        }
 
-                if ( job )
-                        job->_async_func(job, job->_async_data);
-
-        } while ( ! fl_change );
+        *flags = async_flags;
+        pthread_mutex_unlock(&mutex);
 
         return 0;
+}
+
+
+
+static prelude_async_object_t *get_next_job(void)
+{
+        prelude_list_t *tmp;
+        prelude_async_object_t *obj = NULL;
+
+        pthread_mutex_lock(&mutex);
+
+        prelude_list_for_each(&joblist, tmp) {
+                obj = prelude_linked_object_get_object(tmp);
+                prelude_linked_object_del((prelude_linked_object_t *) obj);
+                break;
+        }
+
+        pthread_mutex_unlock(&mutex);
+
+        return obj;
 }
 
 
@@ -231,6 +226,8 @@ static int wait_data(void)
 static void *async_thread(void *arg)
 {
         int ret;
+        prelude_async_object_t *obj;
+        prelude_async_flags_t nflags = async_flags;
 
 #ifndef WIN32
         sigset_t set;
@@ -248,26 +245,30 @@ static void *async_thread(void *arg)
         }
 #endif
 
-        get_timespec(&last_wakeup);
-        last_wakeup.tv_sec--;
+        while ( 1 ) {
 
-        do {
-                if ( thr_flags & PRELUDE_ASYNC_FLAGS_TIMER )
-                        ret = wait_timer_and_data();
+                if ( nflags & PRELUDE_ASYNC_FLAGS_TIMER )
+                        ret = wait_timer_and_data(&nflags);
                 else
-                        ret = wait_data();
-        } while ( ret >= 0 );
+                        ret = wait_data(&nflags);
 
-        /*
-         * On some implementation (namely, recent Linux + glibc version),
-         * calling pthread_exit() from a shared library and joining the thread from
-         * an atexit callback result in a deadlock.
-         *
-         * Appear to be related to:
-         * http://sources.redhat.com/bugzilla/show_bug.cgi?id=654
-         *
-         * Simply returning from the thread seems to fix this problem.
-         */
+                if ( ret < 0 ) {
+                        /*
+                         * On some implementation (namely, recent Linux + glibc version),
+                         * calling pthread_exit() from a shared library and joining the thread from
+                         * an atexit callback result in a deadlock.
+                         *
+                         * Appear to be related to:
+                         * http://sources.redhat.com/bugzilla/show_bug.cgi?id=654
+                         *
+                         * Simply returning from the thread seems to fix this problem.
+                         */
+                        break;
+                }
+
+                while ( (obj = get_next_job()) )
+                        obj->_async_func(obj, obj->_async_data);
+        }
 
         return NULL;
 }
@@ -374,7 +375,7 @@ void prelude_async_set_flags(prelude_async_flags_t flags)
 {
         pthread_mutex_lock(&mutex);
 
-        flags = flags;
+        async_flags = flags;
         pthread_cond_signal(&cond);
 
         pthread_mutex_unlock(&mutex);
@@ -391,7 +392,7 @@ void prelude_async_set_flags(prelude_async_flags_t flags)
  */
 prelude_async_flags_t prelude_async_get_flags(void)
 {
-        return flags;
+        return async_flags;
 }
 
 
