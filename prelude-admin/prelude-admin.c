@@ -1155,6 +1155,16 @@ static int rename_cmd(int argc, char **argv)
         sname = argv[i];
         dname = argv[i + 1];
 
+        if ( *sname == '\0' ) {
+                fprintf(stderr, "Empty source profile name provided: '%s'.\n", argv[i]);
+                return -1;
+        }
+
+        if ( *dname == '\0' ) {
+                fprintf(stderr, "Empty target profile name provided: '%s'.\n", argv[i]);
+                return -1;
+        }
+
         ret = prelude_client_profile_new(&sprofile, sname);
         if ( ret < 0 ) {
                 fprintf(stderr, "Error opening profile '%s': %s\n", sname, prelude_strerror(ret));
@@ -1289,6 +1299,11 @@ static int add_cmd(int argc, char **argv)
         if ( argc - ret != 1 )
                 return -2;
 
+        if ( *argv[i] == '\0' ) {
+                fprintf(stderr, "Empty profile name provided: '%s'.\n", argv[i]);
+                return -1;
+        }
+
         ret = prelude_client_profile_new(&testprofile, argv[i]);
         if ( ret == 0 ) {
                 fprintf(stderr, "Could not create already existing profile '%s'.\n", argv[i]);
@@ -1331,6 +1346,11 @@ static int chown_cmd(int argc, char **argv)
         if ( argc - i < 1 )
                 return -2;
 
+        if ( *argv[i] == '\0' ) {
+                fprintf(stderr, "Empty profile name provided: '%s'.\n", argv[i]);
+                return -1;
+        }
+
         ret = prelude_client_profile_set_name(profile, argv[i]);
         if ( ret < 0 ) {
                 fprintf(stderr, "Error loading analyzer profile '%s': %s.\n\n", argv[i], prelude_strerror(ret));
@@ -1366,7 +1386,7 @@ static int del_cmd(int argc, char **argv)
 
         for ( ; i < argc; i++ ) {
                 if ( *argv[i] == '\0' ) {
-                        fprintf(stderr, "Invalid empty profile name provided: '%s'.\n", argv[i]);
+                        fprintf(stderr, "Empty profile name provided: '%s'.\n", argv[i]);
                         return -1;
                 }
 
@@ -1416,6 +1436,11 @@ static int register_cmd(int argc, char **argv)
 
         if ( argc - i < 3 )
                 return -2;
+
+        if ( *argv[i] == '\0' ) {
+                fprintf(stderr, "Empty profile name provided: '%s'.\n", argv[i]);
+                return -1;
+        }
 
         ret = prelude_connection_permission_new_from_string(&permission_bits, argv[i + 1]);
         if ( ret < 0 ) {
@@ -1538,6 +1563,11 @@ static int registration_server_cmd(int argc, char **argv)
         if ( argc - i < 1 )
                 return -2;
 
+        if ( *argv[i] == '\0' ) {
+                fprintf(stderr, "Empty profile name provided: '%s'.\n", argv[i]);
+                return -1;
+        }
+
         if ( pass_from_stdin )
                 fprintf(stderr, "Warning: registration confirmation disabled as a result of reading from a pipe.\n\n");
 
@@ -1593,6 +1623,11 @@ static int revoke_cmd(int argc, char **argv)
 
         if ( argc - i < 2 )
                 return -2;
+
+        if ( *argv[i] == '\0' ) {
+                fprintf(stderr, "Empty profile name provided: '%s'.\n", argv[i]);
+                return -1;
+        }
 
         ret = prelude_client_profile_new(&profile, argv[i]);
         if ( ret < 0 ) {
@@ -1766,6 +1801,11 @@ static int send_cmd(int argc, char **argv)
 
         if ( argc - i < 3 )
                 return -2;
+
+        if ( *argv[i] == '\0' ) {
+                fprintf(stderr, "Empty profile name provided: '%s'.\n", argv[i]);
+                return -1;
+        }
 
         ret = prelude_io_new(&io);
         if ( ret < 0 )
