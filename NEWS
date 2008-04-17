@@ -3,8 +3,8 @@
 - Fix bindings for IDMEF 'get_next' functions.
 
 - Make sure we use no additional GnuLib compiler flags when building
-  bindings, this fix bindings compilation failure on some architecture 
-  (Solaris). 
+  bindings, this fix bindings compilation failure on some architecture
+  (Solaris).
 
 - FreeBSD compilation fixes.
 
@@ -17,13 +17,13 @@
 
 - Fix compilation issue on system with old GnuTLS version (close #268).
 
-- Propagate the CC environment variable for bindings compilation 
+- Propagate the CC environment variable for bindings compilation
   (fix #264), by Pierre Chifflier <p.chifflier@inl.fr>.
 
-- More explicit assertion on invalid API usage, thanks to 
+- More explicit assertion on invalid API usage, thanks to
   Sebastien Tricaud <toady@inl.fr>.
 
-- Appropriatly set the process umask before creating analyzer 
+- Appropriatly set the process umask before creating analyzer
   profile / failover files and directories (Fix possible loading
   problem with certain umask).
 
@@ -134,35 +134,35 @@
 
         - Implement TCP keepalive settings on platform that support it,
           check client.conf for details.
-        
-        - When reading prelude-adduser password from a file, remove 
-          newline at the end of the string (fix #221).
-        
-        - When we fail to read an IDMEF message, provide more information 
-          about the place where the error happened. 
 
-        - Fix an issue with idmef_path_get() on empty path (pointing to the 
-          root message). 
-                
-        - Various bug fixes and minor API improvements.        
-        
-        
+        - When reading prelude-adduser password from a file, remove
+          newline at the end of the string (fix #221).
+
+        - When we fail to read an IDMEF message, provide more information
+          about the place where the error happened.
+
+        - Fix an issue with idmef_path_get() on empty path (pointing to the
+          root message).
+
+        - Various bug fixes and minor API improvements.
+
+
 * 2007-03-30, libprelude-0.9.13.2:
 
-	- Improve error reporting with the central option interface.
+        - Improve error reporting with the central option interface.
 
-	- Fix a bug when comparing IDMEF object with optional fields.
+        - Fix a bug when comparing IDMEF object with optional fields.
 
-	- Fix a problem with the logger, where large log entry wouldn't be logged.
+        - Fix a problem with the logger, where large log entry wouldn't be logged.
 
-	- Fix distclean target.
+        - Fix distclean target.
 
 
 * 2007-03-15, libprelude-0.9.13.1:
 
         - Implement substring and regexp matching for IDMEF AdditionalData type.
 
-        - When the compiler support it, add format string check capability 
+        - When the compiler support it, add format string check capability
           to variable number of arguments function declaration.
 
         - Fix prelude-adduser regression introduced in libprelude-0.9.13.
@@ -170,61 +170,61 @@
         - Fix a regression introduced in [8381] preventing broken down time and regex match to work.
 
         - Fix a bug when manually setting an IDMEF path index.
-        
+
         - Prevent invalid pointer dereference when passed invalid enumeration class.
-                          
+
         - Initialize GMT offset when setting a time from an NTP string.
-        
+
         - Various bug fixes.
-        
+
 
 * 2007-02-20, libprelude-0.9.13:
 
-	- Fix a crash with Python bindings upon signal reception (Fix #200).
+        - Fix a crash with Python bindings upon signal reception (Fix #200).
 
-	- New --with-system-ltdl configure switch. The default is now to use the 
-	  system wide ltdl library if it is available, unless specified otherwise 
-	  (Fix #199).
+        - New --with-system-ltdl configure switch. The default is now to use the
+          system wide ltdl library if it is available, unless specified otherwise
+          (Fix #199).
 
-	- Prevent NULL pointer dereference if no permission is specified after the 
-	  permission type (Fix #197).
+        - Prevent NULL pointer dereference if no permission is specified after the
+          permission type (Fix #197).
 
-	- Upon IDMEFCriteria parsing error, recover from broken parser stater (Fix #195).
-	  
-	- Detailed error reporting on IDMEFCriteria parsing error.
+        - Upon IDMEFCriteria parsing error, recover from broken parser stater (Fix #195).
 
-	- Fix string and possible criteria leak on IDMEFCriteria syntax error.
+        - Detailed error reporting on IDMEFCriteria parsing error.
 
-	- Prefer anonymous authentication rather than SRP. We do this because there
-	  are compatibility issue with SRP between different GnuTLS version
-	  (Should fix #187).
+        - Fix string and possible criteria leak on IDMEFCriteria syntax error.
 
-	- When dumping AdditionalData of type byte-string to string, encode the data using base64.
+        - Prefer anonymous authentication rather than SRP. We do this because there
+          are compatibility issue with SRP between different GnuTLS version
+          (Should fix #187).
+
+        - When dumping AdditionalData of type byte-string to string, encode the data using base64.
 
         - Win32 compatibility fixes.
-        
+
         - Cross compilation fixes.
-        
+
 
 * 2007-01-08, libprelude-0.9.12.2:
 
         - Fix make installation error when Perl bindings are disabled.
-        
-        
+
+
 * 2007-01-05, libprelude-0.9.12.1:
 
-        - Ability to debug TLS communication through a new LIBPRELUDE_TLS_DEBUG 
+        - Ability to debug TLS communication through a new LIBPRELUDE_TLS_DEBUG
           environment variable.
-        
+
         - Prevent binding generation error when using old SWIG version.
-        
+
         - Generate bindings for the error handling API.
-        
-        - Small Perl/Python detection improvement. Fix #182. 
-        
+
+        - Small Perl/Python detection improvement. Fix #182.
+
         - Fix bindings compilation when using make -j.
-        
-        - New configure --with-perl-installdirs flags: might be used to override 
+
+        - New configure --with-perl-installdirs flags: might be used to override
           default site perl installation.
 
 
@@ -232,830 +232,830 @@
 
         - Correctly pack and unpack float value when sending/receiving.
 
-        - More error checking on IDMEF object copy. 
-        
+        - More error checking on IDMEF object copy.
+
         - Fix a crash that occured when destroying a copied object.
 
         - Correct registration warning when using AF_UNIX socket.
-         
-        - Compile on systems lacking poll(). 
-        
+
+        - Compile on systems lacking poll().
+
         - IpV6 compatibility fixes.
-        
+
         - Fix OS X compilation issues.
-        
+
         - Various portability fixes.
 
 
 
 * 2006-10-10, libprelude-0.9.11:
 
-	- Hook class comparison function. Accept NULL, equal, not equal operator. 
+        - Hook class comparison function. Accept NULL, equal, not equal operator.
 
-	- Introduce better error checking in the idmef-class API, which is now 
-	  considered public and might be used by external application. Rename 
-	  error code to reflect the API. 
+        - Introduce better error checking in the idmef-class API, which is now
+          considered public and might be used by external application. Rename
+          error code to reflect the API.
 
-	- Change to the way IDMEF listed element are handled. Specifying negative 
-	  number as the position of the element from the low level API now allow 
-	  to position the element at the specified (reversed) index. Using the 
-	  high level API a negative index permit to address a list of element 
-	  backward (replace an element). 
+        - Change to the way IDMEF listed element are handled. Specifying negative
+          number as the position of the element from the low level API now allow
+          to position the element at the specified (reversed) index. Using the
+          high level API a negative index permit to address a list of element
+          backward (replace an element).
 
-	- Build fixes for SWIG > 1.3.27.
+        - Build fixes for SWIG > 1.3.27.
 
-	- Modify idmef_value_match() so that it always unroll listed value 
-	  (do it for both val1 and val2. Remove assertion, and let 
-	  idmef_value_type_compare() return an error code in case there is an issue.
+        - Modify idmef_value_match() so that it always unroll listed value
+          (do it for both val1 and val2. Remove assertion, and let
+          idmef_value_type_compare() return an error code in case there is an issue.
 
-	- Handle path using IDMEF_LIST_APPEND or IDMEF_LIST_PREPEND as 
-	  path using an undefined list index on idmef_path_get() call. 
+        - Handle path using IDMEF_LIST_APPEND or IDMEF_LIST_PREPEND as
+          path using an undefined list index on idmef_path_get() call.
 
-	- Make criteria parser accept (*) list index.
+        - Make criteria parser accept (*) list index.
 
-	- Implement comparison function for all IDMEF object.
+        - Implement comparison function for all IDMEF object.
 
 
 * 2006-07-28, libprelude-0.9.10.2:
 
-	- Fix undefined assert() reference.
+        - Fix undefined assert() reference.
 
-	- Fix FreeBSD warnings.
+        - Fix FreeBSD warnings.
 
-	- Fix possible bindings compilation warnings/problem.
+        - Fix possible bindings compilation warnings/problem.
 
 
 * 2006-07-25, libprelude-0.9.10.1:
 
-	- Fix checking for swig/perl/python when full path to the 
-	  application is specified.
+        - Fix checking for swig/perl/python when full path to the
+          application is specified.
 
-	- Fix OpenBSD getaddrinfo() AI_ADDRCONFIG issue (apply to 
-	  some other system as well).
+        - Fix OpenBSD getaddrinfo() AI_ADDRCONFIG issue (apply to
+          some other system as well).
 
-	- Fix workaround for system with broken libtool, 
-	  that prevented the use of plugin (#168).
+        - Fix workaround for system with broken libtool,
+          that prevented the use of plugin (#168).
 
 
 * 2006-07-12, libprelude-0.9.10:
 
-	- Fix memory leak with some specific criteria.
+        - Fix memory leak with some specific criteria.
 
-	- Fix IDMEF path integrity problem when using listed (*) path.
+        - Fix IDMEF path integrity problem when using listed (*) path.
 
-	- Multiple error reporting improvement.
+        - Multiple error reporting improvement.
 
-	- API improvement: implement copy and clone function for all IDMEF object.
+        - API improvement: implement copy and clone function for all IDMEF object.
 
-	- API improvement: allow overwriting/prepending/appending list of value
-	  through IDMEF path.
+        - API improvement: allow overwriting/prepending/appending list of value
+          through IDMEF path.
 
-	- API improvement: allow refcounting IDMEF Alert and Heartbeat object.
+        - API improvement: allow refcounting IDMEF Alert and Heartbeat object.
 
-	- API improvement: Make idmef-value memory handling more intuitive by
-	  automating IDMEF object refcounting.
+        - API improvement: Make idmef-value memory handling more intuitive by
+          automating IDMEF object refcounting.
 
 
 * 2006-06-06, libprelude-0.9.9:
 
-	- Correct IDMEF v16 checksum algorithms letter case.
+        - Correct IDMEF v16 checksum algorithms letter case.
 
-	- Fix FreeBSD build.
+        - Fix FreeBSD build.
 
-	- Detailed, verbose error reporting when failing to read IDMEF message.
+        - Detailed, verbose error reporting when failing to read IDMEF message.
 
-	- Detailed, verbose error reporting for unsupported value operation.
+        - Detailed, verbose error reporting for unsupported value operation.
 
 
 * 2006-05-03, libprelude-0.9.8:
 
-	- Improve idmef-path error reporting.
+        - Improve idmef-path error reporting.
 
-	- Rework configure script so that it use --with[out] in
-	  place of --(en|dis)able where we deal with external dependencies. 
+        - Rework configure script so that it use --with[out] in
+          place of --(en|dis)able where we deal with external dependencies.
 
-	- Rework configure script so that --with[out] work as expected (enabling and
-	  disabling the feature, explicit error if "with" feature is explicitly 
-	  specified but the feature it is unavailable, etc).
+        - Rework configure script so that --with[out] work as expected (enabling and
+          disabling the feature, explicit error if "with" feature is explicitly
+          specified but the feature it is unavailable, etc).
 
-	- Rework SNMPService class for IDMEF draft 16 compliance.
+        - Rework SNMPService class for IDMEF draft 16 compliance.
 
-	- Make sure we set alert CreateTime if the caller did not do it for us.
+        - Make sure we set alert CreateTime if the caller did not do it for us.
 
-	- Fix handling of \r\n terminated line.
+        - Fix handling of \r\n terminated line.
 
-	- Ignore character that are part of the option value when comparing 
-          option specified using --option=value. Fix handling of parent option. 
+        - Ignore character that are part of the option value when comparing
+          option specified using --option=value. Fix handling of parent option.
           (#150).
 
 
 * 2006-03-24, libprelude-0.9.7.2:
 
-	- Fix regression introduced in prelude-msgbuf.
+        - Fix regression introduced in prelude-msgbuf.
 
 
 * 2006-03-21, libprelude-0.9.7.1:
 
-	- Fix Perl/Python bindings uint64 handling on 32 bits machine.
+        - Fix Perl/Python bindings uint64 handling on 32 bits machine.
 
-	- Handle EAGAIN error from the asynchronous callback.
+        - Handle EAGAIN error from the asynchronous callback.
 
-	- Better prelude-message buffer allocation scheme, which might
-	  prevent some memory fragmentation problem.
+        - Better prelude-message buffer allocation scheme, which might
+          prevent some memory fragmentation problem.
 
 
 * 2006-03-09, libprelude-0.9.7:
 
-	- Fix an issue with system using both IP v4 and v6 interfaces which
-	  doesn't allow binding both 0.0.0.0 and :: .
+        - Fix an issue with system using both IP v4 and v6 interfaces which
+          doesn't allow binding both 0.0.0.0 and :: .
 
-	- Add autoconf detection for libgcrypt: this fix a build issue for 
-	  distribution shipping with broken libgnutls-config script.
+        - Add autoconf detection for libgcrypt: this fix a build issue for
+          distribution shipping with broken libgnutls-config script.
 
-	- Generate Perl and Python bindings for the prelude-timer API.
+        - Generate Perl and Python bindings for the prelude-timer API.
 
-	- Fix for upcoming plugin that doesn't provide an activation option.
+        - Fix for upcoming plugin that doesn't provide an activation option.
 
-	- Various bug fixes.
+        - Various bug fixes.
 
 
 * 2006-03-03, libprelude-0.9.6.1:
-	
-	- Flex generated file build fix for FreeBSD / NetBSD.
+
+        - Flex generated file build fix for FreeBSD / NetBSD.
 
 
 * 2006-03-02, libprelude-0.9.6:
 
-	- Implement workaround for buggy libtool that will fail 
-	  looking up symbol with preopening enabled in case the 
-          libtool archive is missing. Lot of distribution package 
-	  seem to suffer from this. 
+        - Implement workaround for buggy libtool that will fail
+          looking up symbol with preopening enabled in case the
+          libtool archive is missing. Lot of distribution package
+          seem to suffer from this.
 
-	- idmef-path API improvement, allow user to specify negative 
-	  index to address the list in reverse. Developer are now 
-	  supposed to use IDMEF_LIST_APPEND (in place of index -1) and 
+        - idmef-path API improvement, allow user to specify negative
+          index to address the list in reverse. Developer are now
+          supposed to use IDMEF_LIST_APPEND (in place of index -1) and
           IDMEF_LIST_PREPEND (in place of 0) on listed object operation.
-	
-	- idmef-path API improvement: support for (<<) and (>>) listed 
-	  object index, meaning to prepend the object / to append it,
-	  as well as (*) meaning to retrieve all object from a list. This 
-	  deprecate the usage of (-1) previously used for appending. 
 
-	- Fix deconnection problem in client reading mode.
+        - idmef-path API improvement: support for (<<) and (>>) listed
+          object index, meaning to prepend the object / to append it,
+          as well as (*) meaning to retrieve all object from a list. This
+          deprecate the usage of (-1) previously used for appending.
 
-	- Improve option parsing: option value can now be provided using
+        - Fix deconnection problem in client reading mode.
+
+        - Improve option parsing: option value can now be provided using
           --option=value. This format is now a requirement for option that
-          use an optional argument. Provide arguments information in the 
-          option help. 
+          use an optional argument. Provide arguments information in the
+          option help.
 
-	- Fix deadlock on asynchronous prelude-client destruction.
+        - Fix deadlock on asynchronous prelude-client destruction.
 
-	- Definitely fix the problem where prelude-adduser will, on some system, 
-	  listen to Ipv6 IP address as the default: we now bind every address 
-	  returned by getaddrinfo(). 
+        - Definitely fix the problem where prelude-adduser will, on some system,
+          listen to Ipv6 IP address as the default: we now bind every address
+          returned by getaddrinfo().
 
-	- Fix crash in case of successive call to prelude_init(), prelude_deinit(), 
-	  then prelude_init() again.
+        - Fix crash in case of successive call to prelude_init(), prelude_deinit(),
+          then prelude_init() again.
 
-	- Introduce --passwd and --passwd-file option for prelude-adduser 
-	  register and registration-server mode, allowing to specify one shot 
-	  password on the command line, from a file, or from stdin.
+        - Introduce --passwd and --passwd-file option for prelude-adduser
+          register and registration-server mode, allowing to specify one shot
+          password on the command line, from a file, or from stdin.
 
-	- Verbose error handling for prelude-adduser.
+        - Verbose error handling for prelude-adduser.
 
-	- Fix perl bindings, make them more robust by adding type checking, and fix
-	  memory leak.
+        - Fix perl bindings, make them more robust by adding type checking, and fix
+          memory leak.
 
-	- Fix parsing of string based broken down time criterion. 
+        - Fix parsing of string based broken down time criterion.
 
-	- Handle configuration file containing \r.
+        - Handle configuration file containing \r.
 
-	- Fix prelude_read_multiline2() return value (fix Prelude-Manager
-	  idmef-criteria-filter plugin).
+        - Fix prelude_read_multiline2() return value (fix Prelude-Manager
+          idmef-criteria-filter plugin).
 
-	- Fix a bug in per thread error handling code which resulted in NULL
-	  error to be returned in case an application thread exited.
+        - Fix a bug in per thread error handling code which resulted in NULL
+          error to be returned in case an application thread exited.
 
-	- Various bug fixes.
+        - Various bug fixes.
 
 
 * 2006-02-06, libprelude-0.9.5:
 
-	- More TLS cleanup.
+        - More TLS cleanup.
 
-	- Application can now report error without using specific prelude_client
-	  error reporting function.
+        - Application can now report error without using specific prelude_client
+          error reporting function.
 
-	- More work and improved verbose error reporting.
+        - More work and improved verbose error reporting.
 
-	- Fix compilation problem with prelude_error_is_verbose() (#130).
+        - Fix compilation problem with prelude_error_is_verbose() (#130).
 
-	- Fix OpenBSD compilation problem.
+        - Fix OpenBSD compilation problem.
 
 
 * 2006-01-30, libprelude-0.9.4:
 
-	- Some useful API addition.
+        - Some useful API addition.
 
-	- Much improved, verbose error reporting.
+        - Much improved, verbose error reporting.
 
-	- Cleaned up TLS handling, various bugfix.
+        - Cleaned up TLS handling, various bugfix.
 
-	- In case an error occur when verifying the peer certificate,
-	  notify the peer about the failure.
+        - In case an error occur when verifying the peer certificate,
+          notify the peer about the failure.
 
 
 * 2005-01-09, libprelude-0.9.3:
 
-	- Implement analyzer revocation in prelude-adduser. This will require an upcoming 
-	  prelude-manager update so that revoked analyzer are denied to connect.
+        - Implement analyzer revocation in prelude-adduser. This will require an upcoming
+          prelude-manager update so that revoked analyzer are denied to connect.
 
-	- Make prelude-adduser use GnuTLS anonymous authentication in case SRP is not 
-	  available. This is becoming a requirement since some distribution disable SRP 
-	  support because of patent issue. 
-	  We keep using SRP by default if both prelude-adduser instance has it.
+        - Make prelude-adduser use GnuTLS anonymous authentication in case SRP is not
+          available. This is becoming a requirement since some distribution disable SRP
+          support because of patent issue.
+          We keep using SRP by default if both prelude-adduser instance has it.
 
-	- Fix 0.9.2 regression, with a crash when providing prelude-adduser with option.
+        - Fix 0.9.2 regression, with a crash when providing prelude-adduser with option.
 
-	- Fix potential OpenBSD compilation issue due to a missing dependencie in the 
-	  GnuLib inet_ntop module.
+        - Fix potential OpenBSD compilation issue due to a missing dependencie in the
+          GnuLib inet_ntop module.
 
 
 * 2005-01-06, libprelude-0.9.2:
 
-	- Fix FreeBSD and OpenBSD build.
+        - Fix FreeBSD and OpenBSD build.
 
-	- Avoid modifying the argv array, move unhandled option at the end (#116).
+        - Avoid modifying the argv array, move unhandled option at the end (#116).
 
-	- Handle special '--' option code.	
+        - Handle special '--' option code.
 
-	- Fix license notice, stating clearly that linking from a program
-	  using a GPL compatible license is allowed. Required for Debian package 
-	  inclusion.
+        - Fix license notice, stating clearly that linking from a program
+          using a GPL compatible license is allowed. Required for Debian package
+          inclusion.
 
-	- Various bugfix.
+        - Various bugfix.
 
 
 * 2005-12-13, libprelude-0.9.1:
-	
-	- Take care of assigning a default CreateTime field if the caller
-	  did not already take care of it. 
 
-	- Workaround invalid library run path added through MakeMaker generated Makefile.
+        - Take care of assigning a default CreateTime field if the caller
+          did not already take care of it.
+
+        - Workaround invalid library run path added through MakeMaker generated Makefile.
 
         - Fix Perl bindings Makefile generated with DESTDIR appended twice.
 
-	- When compiling against recent GnuTLS version, don't link prelude-adduser to
-	  libgnutls-extra since, SRP symbols were moved to libgnutls.
+        - When compiling against recent GnuTLS version, don't link prelude-adduser to
+          libgnutls-extra since, SRP symbols were moved to libgnutls.
 
-	- If the user is running a modified GnuTLS version with the SRP API removed
-	  (namely, this happen on Fedora), warn the user that he should install GnuTLS 
-	  from source, and that he might want to open a ticket on RedHat bug tracker 
-	  about it.
+        - If the user is running a modified GnuTLS version with the SRP API removed
+          (namely, this happen on Fedora), warn the user that he should install GnuTLS
+          from source, and that he might want to open a ticket on RedHat bug tracker
+          about it.
 
-	- Fix a problem where "MissingFunctionMacros" was reported instead of the function name
-	  on error.
+        - Fix a problem where "MissingFunctionMacros" was reported instead of the function name
+          on error.
 
-	- Set keepalive option for the Prelude client socket.
+        - Set keepalive option for the Prelude client socket.
 
-	- Make option printing buffered.
+        - Make option printing buffered.
 
-	- Various bugfix.
+        - Various bugfix.
 
 
 * 2005-09-20, libprelude-0.9.0:
 
-	- 0.9.0 final.
+        - 0.9.0 final.
 
-	- Make Perl/Python bindings more fault tolerant.
+        - Make Perl/Python bindings more fault tolerant.
 
 
 * 2005-09-15, libprelude-0.9.0-rc16:
 
-	- Fix compilation issue on system where __FUNCTION__ is missing
-	  (Example: Solaris 9).
+        - Fix compilation issue on system where __FUNCTION__ is missing
+          (Example: Solaris 9).
 
-	- Perl bindings would fail to compile if perl was compiled using
-	  the platform (non gcc) compiler.
+        - Perl bindings would fail to compile if perl was compiled using
+          the platform (non gcc) compiler.
 
-	- Fix a lot of bugs with Perl bindings.
+        - Fix a lot of bugs with Perl bindings.
 
-	- Fix compilation failure on Solaris 9 (#99)
+        - Fix compilation failure on Solaris 9 (#99)
 
-	- Fix warnings.
+        - Fix warnings.
 
 
 * 2005-09-08, libprelude-0.9.0-rc15:
 
-	- Fix OpenBSD compilation issue.
+        - Fix OpenBSD compilation issue.
 
-	- Fix crash when using connection pool with no failover.
+        - Fix crash when using connection pool with no failover.
 
-	- Fix libprelude-error source generation issue under some locale.
+        - Fix libprelude-error source generation issue under some locale.
 
-	- Make IDMEF AdditionalData helper available from the SWIG bindings.
+        - Make IDMEF AdditionalData helper available from the SWIG bindings.
 
-	- Filter out prelude-config.h exported definition.
+        - Filter out prelude-config.h exported definition.
 
 
 * 2005-08-25, libprelude-0.9.0-rc14:
 
-	- Fix Python exception on NULL data.
+        - Fix Python exception on NULL data.
 
-	- Only use pthread when needed (Example: avoid Perl interpreter failure).
+        - Only use pthread when needed (Example: avoid Perl interpreter failure).
 
 
 * 2005-08-17, libprelude-0.9.0-rc13:
 
-	- Fix compilation problem on system where ferror/clearerror are 
-	  declared as macro.
+        - Fix compilation problem on system where ferror/clearerror are
+          declared as macro.
 
 
 * 2005-08-17, libprelude-0.9.0-rc12:
 
-	- Workaround for system without variadic macros.
+        - Workaround for system without variadic macros.
 
-	- 64 bit conversion specifier detection: fix integer truncation issue
-	  on system that did not support %llu.
+        - 64 bit conversion specifier detection: fix integer truncation issue
+          on system that did not support %llu.
 
-	- Fix compilation issue on system without va_copy().
+        - Fix compilation issue on system without va_copy().
 
-	- Change connection port number (5554) to IANA reserved Prelude port number (4690).
+        - Change connection port number (5554) to IANA reserved Prelude port number (4690).
 
-	- Record full analyzer process path, as per IDMEFv14 recommandation.
+        - Record full analyzer process path, as per IDMEFv14 recommandation.
 
-	- More IDMEF Criteria operator. Allow case insensitive match.
+        - More IDMEF Criteria operator. Allow case insensitive match.
 
 
 
 * 2005-08-01, libprelude-0.9.0-rc11:
 
-	- Better TLS error reporting.
+        - Better TLS error reporting.
 
-	- SWIG API usage correction for portability.
+        - SWIG API usage correction for portability.
 
-	- Fix crash on destroy in case no failover was created.
+        - Fix crash on destroy in case no failover was created.
 
-	- Fix memory issue with prelude_string_vprintf() on some platform	
-	  with specific va_list handling.
+        - Fix memory issue with prelude_string_vprintf() on some platform
+          with specific va_list handling.
 
-	- prelude-adduser --gid did not lookup the group name GID correctly.
+        - prelude-adduser --gid did not lookup the group name GID correctly.
 
 
 
 * 2005-07-14, libprelude-0.9.0-rc10:
 
-	- Fix a typo that could lead to 100% application CPU usage
-	  on Linux that was introduced in rc9 when using the monotonic clock.
+        - Fix a typo that could lead to 100% application CPU usage
+          on Linux that was introduced in rc9 when using the monotonic clock.
 
-	- Avoid failing if we can not lookup the path of the calling
-	  program.
+        - Avoid failing if we can not lookup the path of the calling
+          program.
 
-	- Better path resolution for the calling program.
+        - Better path resolution for the calling program.
 
-	- Fix compilation failure on system without pthread_atfork
-	  introduced in rc9.
+        - Fix compilation failure on system without pthread_atfork
+          introduced in rc9.
 
 
 
 * 2005-07-07, libprelude-0.9.0-rc9:
 
-	- Improve prelude-async and prelude-timer thread safety. Use
-	  a monotonic clock if available. Fix pthread problem due to
-	  broken behavior with fork handler on FreeBSD.
+        - Improve prelude-async and prelude-timer thread safety. Use
+          a monotonic clock if available. Fix pthread problem due to
+          broken behavior with fork handler on FreeBSD.
 
-	- Ability for the user to set the LIBPRELUDE_LOGFILE environment
-	  variable, defining a place where all prelude log goes.
+        - Ability for the user to set the LIBPRELUDE_LOGFILE environment
+          variable, defining a place where all prelude log goes.
 
-	- Add the prelude-adduser "chown" command, allowing to change
-	  an existing analyzer UID/GID.
+        - Add the prelude-adduser "chown" command, allowing to change
+          an existing analyzer UID/GID.
 
-	- Make prelude-adduser not reset the profile UID/GID when
-	  used on an existing profile (example: you are not required to 
-	  specify --uid and --gid anymore for each call to registration-server).	
+        - Make prelude-adduser not reset the profile UID/GID when
+          used on an existing profile (example: you are not required to
+          specify --uid and --gid anymore for each call to registration-server).
 
-	- Fix a timer assertion in case we reconnected fine, 
-	  but we failed flushing the failover pool. Only flush the
-	  global failover when all connection are up.
+        - Fix a timer assertion in case we reconnected fine,
+          but we failed flushing the failover pool. Only flush the
+          global failover when all connection are up.
 
-	- Include missing Prelude.pm in the distributed tarball.
+        - Include missing Prelude.pm in the distributed tarball.
 
-	- Introduce broken down time criteria.	
+        - Introduce broken down time criteria.
 
-	- GCC4 warning fixes, 64 bits warnings fix, distcheck fix on 64 
-	  bits platform using lib64. More C89 friendlyness.
+        - GCC4 warning fixes, 64 bits warnings fix, distcheck fix on 64
+          bits platform using lib64. More C89 friendlyness.
 
-	- Fix printing of usecond.
+        - Fix printing of usecond.
 
-	- Various bugfix.
+        - Various bugfix.
 
 
 * 2005-05-27, libprelude-0.9.0-rc8:
 
-	- Avoid AI family mixup on prelude-adduser connection registration.
+        - Avoid AI family mixup on prelude-adduser connection registration.
 
-	- Fix some bug in the configuration parser.
+        - Fix some bug in the configuration parser.
 
 
 * 2005-05-26, libprelude-0.9.0-rc7:
 
-	- Correct IDMEF criteria value escaping. Criteria containing
-	  single or double quote should now behave as expected.
+        - Correct IDMEF criteria value escaping. Criteria containing
+          single or double quote should now behave as expected.
 
-	- Make it possible to unset implicitly embedded IDMEF structure.
+        - Make it possible to unset implicitly embedded IDMEF structure.
 
-	- Fix GnuLib FTW module for architecture lacking it.
-	
-	- Fix some memory leak.
+        - Fix GnuLib FTW module for architecture lacking it.
 
-	- Various bugfix.
+        - Fix some memory leak.
+
+        - Various bugfix.
 
 
 * 2005-05-18, libprelude-0.9.0-rc6:
 
-	- Fix compilation problem on system lacking the FTS interface.
+        - Fix compilation problem on system lacking the FTS interface.
 
-	- Fix compilation problem on some MacOSX system.
+        - Fix compilation problem on some MacOSX system.
 
-	- Move generation of the Prelude configuration template from sensor
-	  first launch to prelude-adduser. More intuitive to the user.
+        - Move generation of the Prelude configuration template from sensor
+          first launch to prelude-adduser. More intuitive to the user.
 
-	- You can now use the LIBPRELUDE_DEBUG environment variable to specify
-	  a libprelude debug level.
+        - You can now use the LIBPRELUDE_DEBUG environment variable to specify
+          a libprelude debug level.
 
-	- Fix problem with prelude-adduser register/registration-server on
-	  machine where ipv6 is enabled but no interface actually use it. It
-	  happened that prelude-adduser would use an incorrect address family.
+        - Fix problem with prelude-adduser register/registration-server on
+          machine where ipv6 is enabled but no interface actually use it. It
+          happened that prelude-adduser would use an incorrect address family.
 
-	- Make idmef_message_print report GMT offset.
+        - Make idmef_message_print report GMT offset.
 
-	- Avoid unportable convertion specifier, this was causing issue mainly
-	  on Solaris system. 
+        - Avoid unportable convertion specifier, this was causing issue mainly
+          on Solaris system.
 
-	- Fix handling of GMT time. Stop messing with environment variable.
-	  People who has been experiencing issue with GMT offset or time should
-	  try this release.
+        - Fix handling of GMT time. Stop messing with environment variable.
+          People who has been experiencing issue with GMT offset or time should
+          try this release.
 
-	- Fix parsing time on Solaris. This resulted in wrong database query
-	  from Prewikka.
+        - Fix parsing time on Solaris. This resulted in wrong database query
+          from Prewikka.
 
-	- Various bugfix
+        - Various bugfix
 
 
 
 * 2005-05-01, libprelude-0.9.0-rc5:
-	
-	- Make permission parser more tolerant.
-	
-	- Make prelude-adduser dump an error when permission can not be parsed.
 
-	- Allow address formated using [address]:port, this is especially usefull
-	  for people on IPv6 network.
+        - Make permission parser more tolerant.
 
-	- Make prelude-adduser's registration server provide a --listen option so
-	  that the user can specify where to listen for registration.
+        - Make prelude-adduser dump an error when permission can not be parsed.
 
-	- Fix a potential deadlock for sensor using asynchronous heartbeat without
-	  asynchronous message.
+        - Allow address formated using [address]:port, this is especially usefull
+          for people on IPv6 network.
 
-	- Map value returned by idmef_value_get_object() so that they can be accessed
-	  directly by the perl/python binding.
-	  
-	- Add missing file->file_type IDMEFv14 field.
+        - Make prelude-adduser's registration server provide a --listen option so
+          that the user can specify where to listen for registration.
 
-	- Various bugfix.
-	
-	
+        - Fix a potential deadlock for sensor using asynchronous heartbeat without
+          asynchronous message.
+
+        - Map value returned by idmef_value_get_object() so that they can be accessed
+          directly by the perl/python binding.
+
+        - Add missing file->file_type IDMEFv14 field.
+
+        - Various bugfix.
+
+
 * 2005-04-17, libprelude-0.9.0-rc4:
 
-	- Fix an issue with the prelude-adduser 'add' command not creating all
-	  files needed for a Manager. Resulting in later client authentication
-	  failure.
+        - Fix an issue with the prelude-adduser 'add' command not creating all
+          files needed for a Manager. Resulting in later client authentication
+          failure.
 
-	- Don't treat negative GMT offset as an error in Python bindings.
+        - Don't treat negative GMT offset as an error in Python bindings.
 
-	- Better socklen_t datatype check. Fix compilation on NetBSD system.
+        - Better socklen_t datatype check. Fix compilation on NetBSD system.
 
-	- Use fts in place of ftw for portability (Fix prelude-adduser on MacOSX).
+        - Use fts in place of ftw for portability (Fix prelude-adduser on MacOSX).
 
-	- Fix possible double free on recursive message read error (fragmented message).
+        - Fix possible double free on recursive message read error (fragmented message).
 
-	- Fix GMT offset issue on OpenBSD machine. Include compatibility code for machine
-	  that does not support setenv/unsetenv.
+        - Fix GMT offset issue on OpenBSD machine. Include compatibility code for machine
+          that does not support setenv/unsetenv.
 
-	- Fix compilation problem on system where libprelude-0.8 is installed due to the
-	  library inclusion path.
+        - Fix compilation problem on system where libprelude-0.8 is installed due to the
+          library inclusion path.
 
-	- IDMEF text output beautification.
-	
+        - IDMEF text output beautification.
+
 
 * 2005-04-09, libprelude-0.9.0-rc3:
 
-	- Change to the plugin infrastructure to check the API version
-	  a given plugin was compiled with.
+        - Change to the plugin infrastructure to check the API version
+          a given plugin was compiled with.
 
-	- Make analyzer deletion work on all architecture.
+        - Make analyzer deletion work on all architecture.
 
-	- Fix bindings Makefile so that they can be used with BSD make.
+        - Fix bindings Makefile so that they can be used with BSD make.
 
-	- Stop using pcreposix for IDMEF criteria matching, always rely 
-          on POSIX regex. The way pcreposix define it's symbol make it impossible 
-          to use it from a library if the final program isn't linked against 
+        - Stop using pcreposix for IDMEF criteria matching, always rely
+          on POSIX regex. The way pcreposix define it's symbol make it impossible
+          to use it from a library if the final program isn't linked against
           libpcreposix (example: python / perl program using libprelude bindings).
 
-	- Better incorrect IDMEF criteria detection.
+        - Better incorrect IDMEF criteria detection.
 
-	- Fix some compilation warnings.
-	
-	- Fix OpenBSD/MacOSX/Irix compilation.
+        - Fix some compilation warnings.
 
-	- Fix compilation on system that lack pthread_atfork().
+        - Fix OpenBSD/MacOSX/Irix compilation.
 
-	- Correct IDMEF value operator check.
+        - Fix compilation on system that lack pthread_atfork().
 
-	- Better IDMEF criteria error return value.
+        - Correct IDMEF value operator check.
+
+        - Better IDMEF criteria error return value.
 
 
 * 2005-03-31, libprelude-0.9.0-rc2:
 
-	- Fix Python/Perl bindings linking order. Was linking to old version of the library
-	  on system where old libprelude-0.8 was installed.
+        - Fix Python/Perl bindings linking order. Was linking to old version of the library
+          on system where old libprelude-0.8 was installed.
 
-	- Fix an issue with the Perl bindings on make clean.
-	
+        - Fix an issue with the Perl bindings on make clean.
+
 
 * 2005-03-29, libprelude-0.9.0-rc1:
 
-	Note: due to several years of work and the habit of working with the new 
-	version, it is hard to remind all the enhancement made in this release.
-	Please bear with us and try it for yourself :-)
+        Note: due to several years of work and the habit of working with the new
+        version, it is hard to remind all the enhancement made in this release.
+        Please bear with us and try it for yourself :-)
 
-	- The Prelude framework has been stabilized, and a lot of consistency work 
-	  has been going on.  The C API should remain mostly stable at this point, 
-	  and we now offer Python and Perl bindings for interacting with Prelude. 
-	  
-	- C++ applications should now be able to compile with the library. New and 
-	  powerful API like idmef-path (defining a path within an IDMEF message tree, 
-	  assigning / retrieving it) and IDMEF criteria filtering has been introduced. 
+        - The Prelude framework has been stabilized, and a lot of consistency work
+          has been going on.  The C API should remain mostly stable at this point,
+          and we now offer Python and Perl bindings for interacting with Prelude.
 
-	- IDMEF draft 14 compliance.
-	- Support for IDMEF optionnal integer in events.
-	- A lot of work happened with the the IDWG to fix known IDMEF issue.
-	- Message routing across distributed Manager for remote sensors administration.
+        - C++ applications should now be able to compile with the library. New and
+          powerful API like idmef-path (defining a path within an IDMEF message tree,
+          assigning / retrieving it) and IDMEF criteria filtering has been introduced.
 
-	- The failover subsystem, used when the communication with a Prelude-Manager goes down, 
-	  now support transaction and quota.
-	
-	- Message unique identity generation now done on the sensor side, and fully optional 
-	  per IDMEF specifications.
+        - IDMEF draft 14 compliance.
+        - Support for IDMEF optionnal integer in events.
+        - A lot of work happened with the the IDWG to fix known IDMEF issue.
+        - Message routing across distributed Manager for remote sensors administration.
 
-	- Support Ipv6 for client/manager connectivity.
+        - The failover subsystem, used when the communication with a Prelude-Manager goes down,
+          now support transaction and quota.
 
-	- Use GnuTLS instead of OpenSSL. Authentication is now always done through TLS, and 
-	  the encryption later can be dropped if the connection is local.
+        - Message unique identity generation now done on the sensor side, and fully optional
+          per IDMEF specifications.
 
-	- Usage of a single tool for sensor registration using SRP (Secure Remote Passwor protocol).
+        - Support Ipv6 for client/manager connectivity.
 
-	- Allow multiple analyzer instance through the use of profiles.
+        - Use GnuTLS instead of OpenSSL. Authentication is now always done through TLS, and
+          the encryption later can be dropped if the connection is local.
 
-	- Clean error handling. Application can now check the return value using
-	  prelude_perror(), prelude_strerror(), and prelude_strsource().
+        - Usage of a single tool for sensor registration using SRP (Secure Remote Passwor protocol).
 
-	- It is now possible to remotely query and set sensors options.
-	
-	- Make the plugin API allow different instance of one plugin to be loaded.
+        - Allow multiple analyzer instance through the use of profiles.
 
-	- Allow recursive configuration file inclusion.
+        - Clean error handling. Application can now check the return value using
+          prelude_perror(), prelude_strerror(), and prelude_strsource().
 
-	- You can now define filesystem quota for failover.
+        - It is now possible to remotely query and set sensors options.
 
-	- Changed the way AND of manager work:
-	  When using {{ manager_addr = x.x.x.x && y.y.y.y }}, the emission used to stop if emission to x.x.x.x failed. 
-	  However, from a practical point of view, people who use AND of manager for redondancy want both manager to 
-  	  receive exactly the same messages, even if one of the Manager fail.
+        - Make the plugin API allow different instance of one plugin to be loaded.
 
-	  Thus, in case emission x.x.x.x fail, we still want to emit the message to y.y.y.y, 
-	  and save the failed message associating them to x.x.x.x manager, for later emission.
+        - Allow recursive configuration file inclusion.
 
-	- Heartbeat now carry a status and an interval.
+        - You can now define filesystem quota for failover.
 
-	- Use GnuLib for enhenced portability.
-	
+        - Changed the way AND of manager work:
+          When using {{ manager_addr = x.x.x.x && y.y.y.y }}, the emission used to stop if emission to x.x.x.x failed.
+          However, from a practical point of view, people who use AND of manager for redondancy want both manager to
+          receive exactly the same messages, even if one of the Manager fail.
+
+          Thus, in case emission x.x.x.x fail, we still want to emit the message to y.y.y.y,
+          and save the failed message associating them to x.x.x.x manager, for later emission.
+
+        - Heartbeat now carry a status and an interval.
+
+        - Use GnuLib for enhenced portability.
+
 
 * 2003-12-09, libprelude-0.8.10:
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
-	  use a newer libtool version (fix an OpenBSD) problem.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>:
+          use a newer libtool version (fix an OpenBSD) problem.
 
 * 2003-12-05, libprelude-0.8.9:
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
-	  Use version-info to set library soname to something
-	  meaningful. 
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>:
+          Use version-info to set library soname to something
+          meaningful.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
-	  Implement prelude_io_pending() function that return
-	  wether there are byte waiting to be read or not. Take
-	  care of the OpenSSL internal buffer.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>:
+          Implement prelude_io_pending() function that return
+          wether there are byte waiting to be read or not. Take
+          care of the OpenSSL internal buffer.
 
-	- Nicolas Delon <delon.nicolas@wanadoo.fr>:
-	  Add a new prelude-io type dedicated to socket operation. 
-	  Enable checking of connection state with theses. This fix
-	  a bug where a connection breakage would only be noticed
-	  on the second alert send.
+        - Nicolas Delon <delon.nicolas@wanadoo.fr>:
+          Add a new prelude-io type dedicated to socket operation.
+          Enable checking of connection state with theses. This fix
+          a bug where a connection breakage would only be noticed
+          on the second alert send.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
-	  Make sensor-adduser work if not called by root.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>:
+          Make sensor-adduser work if not called by root.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
-	  Allow sensor-adduser to be called without the --uid 
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>:
+          Allow sensor-adduser to be called without the --uid
           option, but print a big warning telling that sensor added without
           a provided UID will have to be run using the registration UID.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
-	  Set generated certificate to start being valid one day 
-	  before of the current time. This can avoid problem in case 
-	  one of the machine involved in the communication doesn't have it's 
-	  time set right.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>:
+          Set generated certificate to start being valid one day
+          before of the current time. This can avoid problem in case
+          one of the machine involved in the communication doesn't have it's
+          time set right.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
-	  Allow a children option to access it's parent option through
-	  a new function in the prelude-getopt API.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>:
+          Allow a children option to access it's parent option through
+          a new function in the prelude-getopt API.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
-	  Fix yet another plugin loading problem on OpenBSD.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>:
+          Fix yet another plugin loading problem on OpenBSD.
 
 * 2003-10-21, libprelude-0.8.8:
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
-	  Work around problem with desynchronized ident that 
-	  people were getting in case of machine or manager crash.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>:
+          Work around problem with desynchronized ident that
+          people were getting in case of machine or manager crash.
 
-	- Nicolas Delon <delon.nicolas@wanadoo.fr>:
-	  Fix a memory leak affecting prelude-lml.
+        - Nicolas Delon <delon.nicolas@wanadoo.fr>:
+          Fix a memory leak affecting prelude-lml.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>:
-	  Fix a bug that could result in linking to the wrong 
-	  version of libprelude being linked when dual libprelude 
-	  version were installed.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>:
+          Fix a bug that could result in linking to the wrong
+          version of libprelude being linked when dual libprelude
+          version were installed.
 
-	- Stephane Loeuillet <stephane.loeuillet@tiscali.fr>:
-	  README update.
+        - Stephane Loeuillet <stephane.loeuillet@tiscali.fr>:
+          README update.
 
 * 2003-09-30, libprelude-0.8.7:
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  Fix a crash on system without getaddrinfo().
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Fix a crash on system without getaddrinfo().
 
 * 2003-09-21, libprelude-0.8.6:
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  Re-establish post 0.8.5 behavior of defaulting to enable
-	  asynchronous timer.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Re-establish post 0.8.5 behavior of defaulting to enable
+          asynchronous timer.
 
         - Yoann Vandoorselaere <yoann@prelude-ids.org>
           Handle tool, overflow, and correlation alert.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  Make the operation of gathering/executing a timer atomic. 
-	  Merge part of the HEAD code and avoid locking in case
-	  asynchronous timer aren't used.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Make the operation of gathering/executing a timer atomic.
+          Merge part of the HEAD code and avoid locking in case
+          asynchronous timer aren't used.
 
         - Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
-	  Add AC_PROG_CPP so the preprocessor is detected before the OpenSSL
-	  presence test, so the OpenSSL detection works correctly.
+          Add AC_PROG_CPP so the preprocessor is detected before the OpenSSL
+          presence test, so the OpenSSL detection works correctly.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  Use pthread_join() instead of pthread_cancel().
-	  The behavior of pthread_cancel too much depend on the architecture.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Use pthread_join() instead of pthread_cancel().
+          The behavior of pthread_cancel too much depend on the architecture.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  Add a --pthread-cflags option to libprelude-config in order to
-	  avoid non threaded program to compile with pthread related option
-	  which might slow down program execution due to extra locking used
-	  by libc.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Add a --pthread-cflags option to libprelude-config in order to
+          avoid non threaded program to compile with pthread related option
+          which might slow down program execution due to extra locking used
+          by libc.
 
-	- Sylvain Gil <prelude-code@tootella.org>
-	  Fix libprelude compilation under MacOSX.
+        - Sylvain Gil <prelude-code@tootella.org>
+          Fix libprelude compilation under MacOSX.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  Forbid multiline comment. (Fix #0000078).
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Forbid multiline comment. (Fix #0000078).
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  Fix GCC strict-aliasing warning.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Fix GCC strict-aliasing warning.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  Provide the ability for a prelude-client to connect using both
-	  IPv4 and IPv6. Also, the prelude-client code has been reworked 
-	  so that connection using UNIX and TCP socket share more code.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Provide the ability for a prelude-client to connect using both
+          IPv4 and IPv6. Also, the prelude-client code has been reworked
+          so that connection using UNIX and TCP socket share more code.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  Implementation of the prelude_inet API providing IPv4/IPv6 lookup
-	  function, as well as their fallback if IPv6 support is not present.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Implementation of the prelude_inet API providing IPv4/IPv6 lookup
+          function, as well as their fallback if IPv6 support is not present.
 
 * 2003-04-28, libprelude-0.8.5:
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  Explicitly permit linking with OpenSSL so that Debian
-	  package might be distributed.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Explicitly permit linking with OpenSSL so that Debian
+          package might be distributed.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  Fix AC_DATATYPE_GENERIC so that it can find valid socklen_t
-	  replacement.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Fix AC_DATATYPE_GENERIC so that it can find valid socklen_t
+          replacement.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  Fix a possible SIGSEGV on client that doesn't use prelude-getopt.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Fix a possible SIGSEGV on client that doesn't use prelude-getopt.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  Fix a priority problem when assigning a variable, that
-	  could lead to a SIGSEGV.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Fix a priority problem when assigning a variable, that
+          could lead to a SIGSEGV.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  Fix compilation with OpenSSL 0.9.7.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Fix compilation with OpenSSL 0.9.7.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  prelude-getopt doesn't need to modify the argv array
-	  anymore. The application might want to still use it.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          prelude-getopt doesn't need to modify the argv array
+          anymore. The application might want to still use it.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  Fix a bug where option would not be printed if option 
-	  flags was set to zero.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Fix a bug where option would not be printed if option
+          flags was set to zero.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  Fix a possible NULL strcmp that would result in a SIGSEGV 
-	  for option without longname.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Fix a possible NULL strcmp that would result in a SIGSEGV
+          for option without longname.
 
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  Fix a possible NULL pointer dereference in the Prelude 
- 	  configuration engine.
-	
-	- Yoann Vandoorselaere <yoann@prelude-ids.org>
-	  When starting as a deamon close stdin, stdout, and stderr.
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          Fix a possible NULL pointer dereference in the Prelude
+          configuration engine.
 
-	- Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
-	  Make arbitrary length certificate work correctly, and fix
-	  a possible sensor-adduser SIGSEGV. 
+        - Yoann Vandoorselaere <yoann@prelude-ids.org>
+          When starting as a deamon close stdin, stdout, and stderr.
+
+        - Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
+          Make arbitrary length certificate work correctly, and fix
+          a possible sensor-adduser SIGSEGV.
 
 * 2002-09-23, libprelude-0.8.4:
-	
-	- Correct the way we enable/disable OpenSSL support.
-	  (Yoann Vandoorselaere).
 
-	- Workaround system that doesn't define socklen_t. This
-	  make libprelude compile on Solaris.
-	  (Yoann Vandoorselaere).
+        - Correct the way we enable/disable OpenSSL support.
+          (Yoann Vandoorselaere).
 
-	- Fix a possible NULL free in case the manager client 
-	  creation fail.
-	  (Yoann Vandoorselaere).
+        - Workaround system that doesn't define socklen_t. This
+          make libprelude compile on Solaris.
+          (Yoann Vandoorselaere).
 
-	- Fix potential signed/unsigned integer problems.
-	  (Guillaume Pelat).
+        - Fix a possible NULL free in case the manager client
+          creation fail.
+          (Yoann Vandoorselaere).
+
+        - Fix potential signed/unsigned integer problems.
+          (Guillaume Pelat).
 
 * 2002-09-10, libprelude-0.8.3:
-	- Make sensor-adduser do exact compareason on sensor name,
-	  so that two sensor with the same prefix can't be confused.
-	  (Yoann Vandoorselaere).
+        - Make sensor-adduser do exact compareason on sensor name,
+          so that two sensor with the same prefix can't be confused.
+          (Yoann Vandoorselaere).
 
-	- If we're running on a big endian system, don't send uninitialized
-	  64bits value.
-	  (Yoann Vandoorselaere).
+        - If we're running on a big endian system, don't send uninitialized
+          64bits value.
+          (Yoann Vandoorselaere).
 
-	- Handle error correctly when processing option from the config
-	  file. Assorted cleanup.
-	  (Yoann Vandoorselaere)
+        - Handle error correctly when processing option from the config
+          file. Assorted cleanup.
+          (Yoann Vandoorselaere)
 
-	- Fix possible file descriptor leak when handling error.
-	  (Guillaume Pelat).	
+        - Fix possible file descriptor leak when handling error.
+          (Guillaume Pelat).
 
 * 2002-08-29, libprelude-0.8.2:
-	- Correct check for OpenSSL, and profiling, so that
-	  you won't end up disabling OpenSSL with 
-	  --enable-ssl=yes.				  (Yoann Vandoorselaere).
+        - Correct check for OpenSSL, and profiling, so that
+          you won't end up disabling OpenSSL with
+          --enable-ssl=yes.                               (Yoann Vandoorselaere).
 
-	- Fix an infinite loop when asking for SSL setup
-	  confirmation.                                   (Sebastien Guilbaud).
+        - Fix an infinite loop when asking for SSL setup
+          confirmation.                                   (Sebastien Guilbaud).
 
-	- Don't provide an empty string to option callback
-	  when there is no argument.                      (Yoann Vandoorselaere).
+        - Don't provide an empty string to option callback
+          when there is no argument.                      (Yoann Vandoorselaere).
 
 * 2002-08-26, libprelude-0.8.1:
-	- Act as a LIFO when subscribing a plugin, so that
-	  a plugin loading another, both subscribing from
-	  plugin_init() won't end up with undefined result (Yoann Vandoorselaere).
+        - Act as a LIFO when subscribing a plugin, so that
+          a plugin loading another, both subscribing from
+          plugin_init() won't end up with undefined result (Yoann Vandoorselaere).
 
-	- Delete plugin entry on plugin loading error. 
-	  Fix a possible SIGSEGV.                          (Yoann Vandoorselaere).
+        - Delete plugin entry on plugin loading error.
+          Fix a possible SIGSEGV.                          (Yoann Vandoorselaere).
 
-	- Fix possible NULL pointer dereference when 
-	  searching for a plugin.			   (Yoann Vandoorselaere).
-	
-	- Remove some unused function			   (Guillaume Pelat).
+        - Fix possible NULL pointer dereference when
+          searching for a plugin.                          (Yoann Vandoorselaere).
 
-	- Fix possible recursive loop when asking 
-	  information to the user in sensor-adduser.       (Guillaume Pelat).
+        - Remove some unused function                      (Guillaume Pelat).
 
-	- Free username on error when authenticating.      (Guillaume Pelat).
-	
-	- Always nul terminate socket filename (handle
-	  case where the filename is too long).            (Guillaume Pelat).
+        - Fix possible recursive loop when asking
+          information to the user in sensor-adduser.       (Guillaume Pelat).
+
+        - Free username on error when authenticating.      (Guillaume Pelat).
+
+        - Always nul terminate socket filename (handle
+          case where the filename is too long).            (Guillaume Pelat).
