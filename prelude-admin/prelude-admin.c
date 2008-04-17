@@ -1365,6 +1365,11 @@ static int del_cmd(int argc, char **argv)
         }
 
         for ( ; i < argc; i++ ) {
+                if ( *argv[i] == '\0' ) {
+                        fprintf(stderr, "Invalid empty profile name provided: '%s'.\n", argv[i]);
+                        return -1;
+                }
+
                 ret = prelude_client_profile_set_name(profile, argv[i]);
                 if ( ret < 0 ) {
                         fprintf(stderr, "Error setting analyzer profile name: %s.\n", prelude_strerror(ret));
