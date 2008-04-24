@@ -1,5 +1,5 @@
 # DO NOT EDIT! GENERATED AUTOMATICALLY!
-# Copyright (C) 2004-2007 Free Software Foundation, Inc.
+# Copyright (C) 2002-2008 Free Software Foundation, Inc.
 #
 # This file is free software, distributed under the terms of the GNU
 # General Public License.  As a special exception to the GNU General
@@ -38,7 +38,9 @@ AC_DEFUN([gl_INIT],
   m4_pushdef([AC_LIBOBJ], m4_defn([gl_LIBOBJ]))
   m4_pushdef([AC_REPLACE_FUNCS], m4_defn([gl_REPLACE_FUNCS]))
   m4_pushdef([AC_LIBSOURCES], m4_defn([gl_LIBSOURCES]))
+  gl_COMMON
   gl_source_base='libmissing'
+  gl_EOVERFLOW
 changequote(,)dnl
 LTALLOCA=`echo "$ALLOCA" | sed 's/\.[^.]* /.lo /g;s/\.[^.]*$/.lo/'`
 changequote([, ])dnl
@@ -60,6 +62,7 @@ AC_SUBST([LTALLOCA])
   AC_SUBST([LTLIBINTL])
   gl_FUNC_GETTIMEOFDAY
   gl_INET_NTOP
+  gl_ARPA_INET_MODULE_INDICATOR([inet_ntop])
   gl_LOCALCHARSET
   LOCALCHARSET_TESTS_ENVIRONMENT="CHARSETALIASDIR=\"\$(top_builddir)/$gl_source_base\""
   AC_SUBST([LOCALCHARSET_TESTS_ENVIRONMENT])
@@ -147,6 +150,7 @@ AC_SUBST([LTALLOCA])
   m4_pushdef([AC_LIBOBJ], m4_defn([gltests_LIBOBJ]))
   m4_pushdef([AC_REPLACE_FUNCS], m4_defn([gltests_REPLACE_FUNCS]))
   m4_pushdef([AC_LIBSOURCES], m4_defn([gltests_LIBSOURCES]))
+  gl_COMMON
   gl_source_base='tests'
   m4_popdef([AC_LIBSOURCES])
   m4_popdef([AC_REPLACE_FUNCS])
@@ -243,6 +247,7 @@ AC_DEFUN([gl_FILE_LIST], [
   build-aux/link-warning.h
   lib/alloca.c
   lib/alloca.in.h
+  lib/arpa_inet.in.h
   lib/asnprintf.c
   lib/config.charset
   lib/float+.h
@@ -318,7 +323,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/wchar.in.h
   lib/wctype.in.h
   lib/xsize.h
-  m4/absolute-header.m4
   m4/alloca.m4
   m4/arpa_inet_h.m4
   m4/codeset.m4
@@ -342,15 +346,17 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/longlong.m4
   m4/lseek.m4
   m4/malloc.m4
+  m4/mbstate_t.m4
   m4/memchr.m4
   m4/memcmp.m4
   m4/memmem.m4
   m4/minmax.m4
   m4/mktime.m4
   m4/netinet_in_h.m4
-  m4/onceonly_2_57.m4
+  m4/onceonly.m4
   m4/pathmax.m4
   m4/poll.m4
+  m4/printf.m4
   m4/realloc.m4
   m4/regex.m4
   m4/size_max.m4
