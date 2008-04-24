@@ -17,15 +17,6 @@ prelude-string
 <!-- ##### SECTION Stability_Level ##### -->
 
 
-<!-- ##### STRUCT prelude_string ##### -->
-<para>
-
-</para>
-
-@list: 
-@flags: 
-@refcount: 
-
 <!-- ##### TYPEDEF prelude_string_t ##### -->
 <para>
 

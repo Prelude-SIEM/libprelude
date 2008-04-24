@@ -76,6 +76,42 @@ prelude-io
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_io_set_fdptr ##### -->
+<para>
+
+</para>
+
+@pio: 
+@ptr: 
+
+
+<!-- ##### FUNCTION prelude_io_set_pending_callback ##### -->
+<para>
+
+</para>
+
+@pio: 
+@pending: 
+
+
+<!-- ##### FUNCTION prelude_io_set_read_callback ##### -->
+<para>
+
+</para>
+
+@pio: 
+@read: 
+
+
+<!-- ##### FUNCTION prelude_io_set_write_callback ##### -->
+<para>
+
+</para>
+
+@pio: 
+@write: 
+
+
 <!-- ##### FUNCTION prelude_io_close ##### -->
 <para>
 

@@ -32,12 +32,13 @@ prelude-ident
 @Returns: 
 
 
-<!-- ##### FUNCTION prelude_ident_dec ##### -->
+<!-- ##### FUNCTION prelude_ident_generate ##### -->
 <para>
 
 </para>
 
 @ident: 
+@out: 
 @Returns: 
 
 

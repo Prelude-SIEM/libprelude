@@ -220,3 +220,66 @@ prelude-msgbuf
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_msg_destroy ##### -->
+<para>
+
+</para>
+
+@msg: 
+
+
+<!-- ##### FUNCTION prelude_msg_get_time ##### -->
+<para>
+
+</para>
+
+@msg: 
+@tv: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msg_is_empty ##### -->
+<para>
+
+</para>
+
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msg_is_fragment ##### -->
+<para>
+
+</para>
+
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msg_ref ##### -->
+<para>
+
+</para>
+
+@msg: 
+@Returns: 
+
+
+<!-- ##### FUNCTION prelude_msg_set_callback ##### -->
+<para>
+
+</para>
+
+@msg: 
+@flush_msg_cb: 
+
+
+<!-- ##### FUNCTION prelude_msg_set_data ##### -->
+<para>
+
+</para>
+
+@msg: 
+@data: 
+
+

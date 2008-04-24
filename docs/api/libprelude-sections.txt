@@ -1,5 +1,7 @@
 <SECTION>
 <FILE>prelude-error</FILE>
+PRELUDE_ERROR_SOURCE_DEFAULT
+PRELUDE_ERROR_SYSTEM_ERROR
 prelude_error_source_t
 prelude_error_code_t
 prelude_error_t
@@ -855,6 +857,10 @@ prelude_io_set_file_io
 prelude_io_set_tls_io
 prelude_io_set_sys_io
 prelude_io_set_buffer_io
+prelude_io_set_fdptr
+prelude_io_set_pending_callback
+prelude_io_set_read_callback
+prelude_io_set_write_callback
 prelude_io_close
 prelude_io_read
 prelude_io_read_wait
@@ -925,6 +931,13 @@ prelude_msg_get_tag
 prelude_msg_get_priority
 prelude_msg_get_len
 prelude_msg_get_datalen
+prelude_msg_destroy
+prelude_msg_get_time
+prelude_msg_is_empty
+prelude_msg_is_fragment
+prelude_msg_ref
+prelude_msg_set_callback
+prelude_msg_set_data
 </SECTION>
 
 <SECTION>
@@ -1027,7 +1040,6 @@ prelude_connection_permission_new_from_string
 
 <SECTION>
 <FILE>prelude-string</FILE>
-prelude_string
 prelude_string_t
 prelude_string_new
 prelude_string_new_nodup
@@ -1151,7 +1163,7 @@ idmef_message_write
 <FILE>prelude-ident</FILE>
 prelude_ident_t
 prelude_ident_inc
-prelude_ident_dec
+prelude_ident_generate
 prelude_ident_destroy
 prelude_ident_new
 </SECTION>
@@ -1287,6 +1299,7 @@ prelude_connection_pool_broadcast
 prelude_connection_pool_broadcast_async
 prelude_connection_pool_init
 prelude_connection_pool_new
+prelude_connection_pool_ref
 prelude_connection_pool_get_connection_list
 prelude_connection_pool_add_connection
 prelude_connection_pool_set_connection_dead
@@ -1620,7 +1633,6 @@ idmef_additional_data_data_to_string
 
 <SECTION>
 <FILE>idmef-time</FILE>
-idmef_time
 idmef_time_t
 idmef_time_ref
 idmef_time_new

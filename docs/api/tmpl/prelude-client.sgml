@@ -173,6 +173,7 @@ is interrupted by a signal.
 @PRELUDE_CLIENT_FLAGS_ASYNC_TIMER: 
 @PRELUDE_CLIENT_FLAGS_HEARTBEAT: 
 @PRELUDE_CLIENT_FLAGS_CONNECT: 
+@PRELUDE_CLIENT_FLAGS_AUTOCONFIG: 
 
 <!-- ##### TYPEDEF prelude_client_t ##### -->
 <para>

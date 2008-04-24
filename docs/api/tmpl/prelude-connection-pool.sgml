@@ -117,6 +117,15 @@ idmef_message_read()
 @Returns: 
 
 
+<!-- ##### FUNCTION prelude_connection_pool_ref ##### -->
+<para>
+
+</para>
+
+@pool: 
+@Returns: 
+
+
 <!-- ##### FUNCTION prelude_connection_pool_get_connection_list ##### -->
 <para>
 
@@ -235,7 +244,7 @@ idmef_message_read()
 
 @pool: 
 @timeout: 
-@outconn: 
+@outcon: 
 @outmsg: 
 @Returns: 
 

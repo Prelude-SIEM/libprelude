@@ -81,6 +81,7 @@ typedef enum {
     PRELUDE_ERROR_TLS_FATAL_ALERT = 59,
     PRELUDE_ERROR_IDMEF_CLASS_CHILD_NOT_CLASS = 60,
     PRELUDE_ERROR_ASSERTION = 61,
+    PRELUDE_ERROR_IDMEF_VALUE_TYPE_REF_UNAVAILABLE = 62,
     PRELUDE_ERROR_UNKNOWN_ERRNO = 16382,
     PRELUDE_ERROR_E2BIG = PRELUDE_ERROR_SYSTEM_ERROR | 0,
     PRELUDE_ERROR_EACCES = PRELUDE_ERROR_SYSTEM_ERROR | 1,
@@ -617,7 +618,7 @@ idmef_classification_t *ptr, prelude_string_t **ret
 <FUNCTION>
 <NAME>idmef_classification_get_next_reference</NAME>
 <RETURNS>idmef_reference_t *</RETURNS>
-idmef_classification_t *ptr, idmef_reference_t *object
+idmef_classification_t *classification, idmef_reference_t *reference_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_classification_set_reference</NAME>
@@ -852,7 +853,7 @@ idmef_user_t *ptr, idmef_user_category_t **ret
 <FUNCTION>
 <NAME>idmef_user_get_next_user_id</NAME>
 <RETURNS>idmef_user_id_t *</RETURNS>
-idmef_user_t *ptr, idmef_user_id_t *object
+idmef_user_t *user, idmef_user_id_t *user_id_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_user_set_user_id</NAME>
@@ -1126,7 +1127,7 @@ idmef_process_t *ptr, prelude_string_t **ret
 <FUNCTION>
 <NAME>idmef_process_get_next_arg</NAME>
 <RETURNS>prelude_string_t *</RETURNS>
-idmef_process_t *ptr, prelude_string_t *object
+idmef_process_t *process, prelude_string_t *prelude_string_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_set_arg</NAME>
@@ -1141,7 +1142,7 @@ idmef_process_t *ptr, prelude_string_t **ret, int pos
 <FUNCTION>
 <NAME>idmef_process_get_next_env</NAME>
 <RETURNS>prelude_string_t *</RETURNS>
-idmef_process_t *ptr, prelude_string_t *object
+idmef_process_t *process, prelude_string_t *prelude_string_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_process_set_env</NAME>
@@ -1235,7 +1236,7 @@ idmef_web_service_t *ptr, prelude_string_t **ret
 <FUNCTION>
 <NAME>idmef_web_service_get_next_arg</NAME>
 <RETURNS>prelude_string_t *</RETURNS>
-idmef_web_service_t *ptr, prelude_string_t *object
+idmef_web_service_t *web_service, prelude_string_t *prelude_string_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_web_service_set_arg</NAME>
@@ -1780,7 +1781,7 @@ idmef_node_t *ptr, prelude_string_t **ret
 <FUNCTION>
 <NAME>idmef_node_get_next_address</NAME>
 <RETURNS>idmef_address_t *</RETURNS>
-idmef_node_t *ptr, idmef_address_t *object
+idmef_node_t *node, idmef_address_t *address_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_node_set_address</NAME>
@@ -2002,7 +2003,7 @@ idmef_file_access_t *ptr, idmef_user_id_t **ret
 <FUNCTION>
 <NAME>idmef_file_access_get_next_permission</NAME>
 <RETURNS>prelude_string_t *</RETURNS>
-idmef_file_access_t *ptr, prelude_string_t *object
+idmef_file_access_t *file_access, prelude_string_t *prelude_string_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_access_set_permission</NAME>
@@ -2483,7 +2484,7 @@ idmef_file_t *ptr, uint64_t **ret
 <FUNCTION>
 <NAME>idmef_file_get_next_file_access</NAME>
 <RETURNS>idmef_file_access_t *</RETURNS>
-idmef_file_t *ptr, idmef_file_access_t *object
+idmef_file_t *file, idmef_file_access_t *file_access_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_set_file_access</NAME>
@@ -2498,7 +2499,7 @@ idmef_file_t *ptr, idmef_file_access_t **ret, int pos
 <FUNCTION>
 <NAME>idmef_file_get_next_linkage</NAME>
 <RETURNS>idmef_linkage_t *</RETURNS>
-idmef_file_t *ptr, idmef_linkage_t *object
+idmef_file_t *file, idmef_linkage_t *linkage_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_set_linkage</NAME>
@@ -2528,7 +2529,7 @@ idmef_file_t *ptr, idmef_inode_t **ret
 <FUNCTION>
 <NAME>idmef_file_get_next_checksum</NAME>
 <RETURNS>idmef_checksum_t *</RETURNS>
-idmef_file_t *ptr, idmef_checksum_t *object
+idmef_file_t *file, idmef_checksum_t *checksum_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_file_set_checksum</NAME>
@@ -2863,7 +2864,7 @@ idmef_target_t *ptr, idmef_service_t **ret
 <FUNCTION>
 <NAME>idmef_target_get_next_file</NAME>
 <RETURNS>idmef_file_t *</RETURNS>
-idmef_target_t *ptr, idmef_file_t *object
+idmef_target_t *target, idmef_file_t *file_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_target_set_file</NAME>
@@ -3507,7 +3508,7 @@ idmef_assessment_t *ptr, idmef_impact_t **ret
 <FUNCTION>
 <NAME>idmef_assessment_get_next_action</NAME>
 <RETURNS>idmef_action_t *</RETURNS>
-idmef_assessment_t *ptr, idmef_action_t *object
+idmef_assessment_t *assessment, idmef_action_t *action_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_assessment_set_action</NAME>
@@ -3601,7 +3602,7 @@ idmef_tool_alert_t *ptr, prelude_string_t **ret
 <FUNCTION>
 <NAME>idmef_tool_alert_get_next_alertident</NAME>
 <RETURNS>idmef_alertident_t *</RETURNS>
-idmef_tool_alert_t *ptr, idmef_alertident_t *object
+idmef_tool_alert_t *tool_alert, idmef_alertident_t *alertident_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_tool_alert_set_alertident</NAME>
@@ -3665,7 +3666,7 @@ idmef_correlation_alert_t *ptr, prelude_string_t **ret
 <FUNCTION>
 <NAME>idmef_correlation_alert_get_next_alertident</NAME>
 <RETURNS>idmef_alertident_t *</RETURNS>
-idmef_correlation_alert_t *ptr, idmef_alertident_t *object
+idmef_correlation_alert_t *correlation_alert, idmef_alertident_t *alertident_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_correlation_alert_set_alertident</NAME>
@@ -3833,7 +3834,7 @@ idmef_alert_t *ptr, prelude_string_t **ret
 <FUNCTION>
 <NAME>idmef_alert_get_next_analyzer</NAME>
 <RETURNS>idmef_analyzer_t *</RETURNS>
-idmef_alert_t *ptr, idmef_analyzer_t *object
+idmef_alert_t *alert, idmef_analyzer_t *analyzer_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_set_analyzer</NAME>
@@ -3908,7 +3909,7 @@ idmef_alert_t *ptr, idmef_time_t **ret
 <FUNCTION>
 <NAME>idmef_alert_get_next_source</NAME>
 <RETURNS>idmef_source_t *</RETURNS>
-idmef_alert_t *ptr, idmef_source_t *object
+idmef_alert_t *alert, idmef_source_t *source_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_set_source</NAME>
@@ -3923,7 +3924,7 @@ idmef_alert_t *ptr, idmef_source_t **ret, int pos
 <FUNCTION>
 <NAME>idmef_alert_get_next_target</NAME>
 <RETURNS>idmef_target_t *</RETURNS>
-idmef_alert_t *ptr, idmef_target_t *object
+idmef_alert_t *alert, idmef_target_t *target_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_set_target</NAME>
@@ -3953,7 +3954,7 @@ idmef_alert_t *ptr, idmef_assessment_t **ret
 <FUNCTION>
 <NAME>idmef_alert_get_next_additional_data</NAME>
 <RETURNS>idmef_additional_data_t *</RETURNS>
-idmef_alert_t *ptr, idmef_additional_data_t *object
+idmef_alert_t *alert, idmef_additional_data_t *additional_data_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_alert_set_additional_data</NAME>
@@ -4067,7 +4068,7 @@ idmef_heartbeat_t *ptr, prelude_string_t **ret
 <FUNCTION>
 <NAME>idmef_heartbeat_get_next_analyzer</NAME>
 <RETURNS>idmef_analyzer_t *</RETURNS>
-idmef_heartbeat_t *ptr, idmef_analyzer_t *object
+idmef_heartbeat_t *heartbeat, idmef_analyzer_t *analyzer_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_set_analyzer</NAME>
@@ -4132,7 +4133,7 @@ idmef_heartbeat_t *ptr, uint32_t **ret
 <FUNCTION>
 <NAME>idmef_heartbeat_get_next_additional_data</NAME>
 <RETURNS>idmef_additional_data_t *</RETURNS>
-idmef_heartbeat_t *ptr, idmef_additional_data_t *object
+idmef_heartbeat_t *heartbeat, idmef_additional_data_t *additional_data_cur
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_heartbeat_set_additional_data</NAME>
@@ -4491,6 +4492,26 @@ prelude_io_t *pio, int fd
 prelude_io_t *pio
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_io_set_fdptr</NAME>
+<RETURNS>void </RETURNS>
+prelude_io_t *pio, void *ptr
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_io_set_write_callback</NAME>
+<RETURNS>void </RETURNS>
+prelude_io_t *pio, ssize_t (*write)(prelude_io_t *io, const void *buf, size_t count)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_io_set_read_callback</NAME>
+<RETURNS>void </RETURNS>
+prelude_io_t *pio, ssize_t (*read)(prelude_io_t *io, void *buf, size_t count)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_io_set_pending_callback</NAME>
+<RETURNS>void </RETURNS>
+prelude_io_t *pio, ssize_t (*pending)(prelude_io_t *io)
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_io_close</NAME>
 <RETURNS>int </RETURNS>
 prelude_io_t *pio
@@ -4798,6 +4819,41 @@ prelude_msg_t *msg
 <FUNCTION>
 <NAME>prelude_msg_get_datalen</NAME>
 <RETURNS>uint32_t </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_get_time</NAME>
+<RETURNS>struct timeval *</RETURNS>
+prelude_msg_t *msg, struct timeval *tv
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_is_empty</NAME>
+<RETURNS>int </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_is_fragment</NAME>
+<RETURNS>int </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_destroy</NAME>
+<RETURNS>void </RETURNS>
+prelude_msg_t *msg
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_set_callback</NAME>
+<RETURNS>void </RETURNS>
+prelude_msg_t *msg, int (*flush_msg_cb)(prelude_msg_t **msg, void *data)
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_set_data</NAME>
+<RETURNS>void </RETURNS>
+prelude_msg_t *msg, void *data
+</FUNCTION>
+<FUNCTION>
+<NAME>prelude_msg_ref</NAME>
+<RETURNS>prelude_msg_t *</RETURNS>
 prelude_msg_t *msg
 </FUNCTION>
 <ENUM>
@@ -5270,20 +5326,6 @@ prelude_connection_permission_t perm, prelude_string_t *out
 <RETURNS>int </RETURNS>
 prelude_connection_permission_t *out, const char *buf
 </FUNCTION>
-<STRUCT>
-<NAME>prelude_string</NAME>
-struct prelude_string {
-        prelude_list_t list;
-
-        int flags;
-        int refcount;
-
-        union {
-                char *rwbuf;
-                const char *robuf;
-        } data;
-
-</STRUCT>
 <TYPEDEF>
 <NAME>prelude_string_t</NAME>
 typedef struct prelude_string prelude_string_t;
@@ -5813,12 +5855,12 @@ idmef_message_t *message, prelude_msgbuf_t *msg
 typedef struct prelude_ident prelude_ident_t;
 </TYPEDEF>
 <FUNCTION>
-<NAME>prelude_ident_inc</NAME>
-<RETURNS>uint64_t </RETURNS>
-prelude_ident_t *ident
+<NAME>prelude_ident_generate</NAME>
+<RETURNS>int </RETURNS>
+prelude_ident_t *ident, prelude_string_t *out
 </FUNCTION>
 <FUNCTION>
-<NAME>prelude_ident_dec</NAME>
+<NAME>prelude_ident_inc</NAME>
 <RETURNS>uint64_t </RETURNS>
 prelude_ident_t *ident
 </FUNCTION>
@@ -5845,7 +5887,8 @@ typedef enum {
         PRELUDE_CLIENT_FLAGS_ASYNC_SEND  = 0x01,
         PRELUDE_CLIENT_FLAGS_ASYNC_TIMER = 0x02,
         PRELUDE_CLIENT_FLAGS_HEARTBEAT   = 0x04,
-        PRELUDE_CLIENT_FLAGS_CONNECT     = 0x08
+        PRELUDE_CLIENT_FLAGS_CONNECT     = 0x08,
+        PRELUDE_CLIENT_FLAGS_AUTOCONFIG  = 0x10
 } prelude_client_flags_t;
 </ENUM>
 <TYPEDEF>
@@ -6448,6 +6491,11 @@ prelude_connection_pool_t *pool
 prelude_connection_pool_t *pool
 </FUNCTION>
 <FUNCTION>
+<NAME>prelude_connection_pool_ref</NAME>
+<RETURNS>prelude_connection_pool_t *</RETURNS>
+prelude_connection_pool_t *pool
+</FUNCTION>
+<FUNCTION>
 <NAME>prelude_connection_pool_get_flags</NAME>
 <RETURNS>prelude_connection_pool_flags_t </RETURNS>
 prelude_connection_pool_t *pool
@@ -6475,7 +6523,7 @@ prelude_connection_pool_t *pool
 <FUNCTION>
 <NAME>prelude_connection_pool_recv</NAME>
 <RETURNS>int </RETURNS>
-prelude_connection_pool_t *pool, int timeout, prelude_connection_t **outconn, prelude_msg_t **outmsg
+prelude_connection_pool_t *pool, int timeout, prelude_connection_t **outcon, prelude_msg_t **outmsg
 </FUNCTION>
 <FUNCTION>
 <NAME>prelude_connection_pool_check_event</NAME>
@@ -6696,10 +6744,6 @@ idmef_heartbeat_t *heartbeat, prelude_msg_t *msg
 <RETURNS>int </RETURNS>
 idmef_message_t *message, prelude_msg_t *msg
 </FUNCTION>
-<TYPEDEF>
-<NAME>bufpool_t</NAME>
-typedef struct bufpool bufpool_t;
-</TYPEDEF>
 <MACRO>
 <NAME>PRELUDE_LIST</NAME>
 #define PRELUDE_LIST(item) prelude_list_t (item) = { &(item), &(item) }
@@ -6993,7 +7037,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.16.1"
+#define LIBPRELUDE_VERSION "0.9.17"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
@@ -7845,16 +7889,6 @@ idmef_additional_data_t *data
 <RETURNS>int </RETURNS>
 idmef_additional_data_t *ad, prelude_string_t *out
 </FUNCTION>
-<STRUCT>
-<NAME>idmef_time</NAME>
-struct idmef_time {
-        /* <private> */
-        int refcount;
-        uint32_t sec;
-        uint32_t usec;
-        int32_t gmt_offset;
-};
-</STRUCT>
 <TYPEDEF>
 <NAME>idmef_time_t</NAME>
 typedef struct idmef_time idmef_time_t;

@@ -588,8 +588,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@classification: 
+@reference_cur: 
 @Returns: 
 
 
@@ -987,8 +987,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@user: 
+@user_id_cur: 
 @Returns: 
 
 
@@ -1458,8 +1458,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@process: 
+@prelude_string_cur: 
 @Returns: 
 
 
@@ -1489,8 +1489,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@process: 
+@prelude_string_cur: 
 @Returns: 
 
 
@@ -1656,8 +1656,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@web_service: 
+@prelude_string_cur: 
 @Returns: 
 
 
@@ -2610,8 +2610,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@node: 
+@address_cur: 
 @Returns: 
 
 
@@ -2997,8 +2997,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@file_access: 
+@prelude_string_cur: 
 @Returns: 
 
 
@@ -3819,8 +3819,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@file: 
+@file_access_cur: 
 @Returns: 
 
 
@@ -3850,8 +3850,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@file: 
+@linkage_cur: 
 @Returns: 
 
 
@@ -3909,8 +3909,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@file: 
+@checksum_cur: 
 @Returns: 
 
 
@@ -4497,8 +4497,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@target: 
+@file_cur: 
 @Returns: 
 
 
@@ -5589,8 +5589,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@assessment: 
+@action_cur: 
 @Returns: 
 
 
@@ -5756,8 +5756,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@tool_alert: 
+@alertident_cur: 
 @Returns: 
 
 
@@ -5867,8 +5867,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@correlation_alert: 
+@alertident_cur: 
 @Returns: 
 
 
@@ -6151,8 +6151,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@alert: 
+@analyzer_cur: 
 @Returns: 
 
 
@@ -6294,8 +6294,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@alert: 
+@source_cur: 
 @Returns: 
 
 
@@ -6325,8 +6325,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@alert: 
+@target_cur: 
 @Returns: 
 
 
@@ -6384,8 +6384,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@alert: 
+@additional_data_cur: 
 @Returns: 
 
 
@@ -6588,8 +6588,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@heartbeat: 
+@analyzer_cur: 
 @Returns: 
 
 
@@ -6711,8 +6711,8 @@ void snort_alert_prelude(Packet *p, char *msg, void *data, Event *event)
 
 </para>
 
-@ptr: 
-@object: 
+@heartbeat: 
+@additional_data_cur: 
 @Returns: 
 
 
