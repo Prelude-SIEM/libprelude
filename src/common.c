@@ -127,8 +127,6 @@ static int find_absolute_path(const char *cwd, const char *file, char **path)
  * request fails. If size was equal to 0, either NULL or a pointer suitable to be
  * passed to free() is returned.  If  realloc() fails, the original block is left
  * untouched - it is not freed nor moved.
- *
- * Returns: a pointer to the newly allocated memory.
  */
 void *_prelude_realloc(void *ptr, size_t size)
 {

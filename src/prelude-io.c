@@ -925,7 +925,7 @@ void prelude_io_set_write_callback(prelude_io_t *pio, ssize_t (*write)(prelude_i
 /**
  * prelude_io_set_read_callback:
  * @pio: Pointer to a #prelude_io_t object.
- * @write: Callback function to be called on prelude_io_read().
+ * @read: Callback function to be called on prelude_io_read().
  *
  * Set an user defined read callback function to be called on
  * prelude_io_read().
@@ -940,7 +940,7 @@ void prelude_io_set_read_callback(prelude_io_t *pio, ssize_t (*read)(prelude_io_
 /**
  * prelude_io_set_pending_callback:
  * @pio: Pointer to a #prelude_io_t object.
- * @write: Callback function to be called on prelude_io_pending().
+ * @pending: Callback function to be called on prelude_io_pending().
  *
  * Set an user defined read callback function to be called on
  * prelude_io_pending().
