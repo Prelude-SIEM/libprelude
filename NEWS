@@ -1,3 +1,44 @@
+* 2008-04-24, libprelude-0.9.17:
+
+- Implement RFC 4122 UUIDv1 identifier generation, more resistant to
+  duplicate than our previous implementation in case of clock skew, or
+  multiple client with the same analyzerid sending alert in parallel.
+
+- You can now provide NULL value to idmef_path_set() in order to
+  destroy existing value within an IDMEF message.
+
+- Unify memory handling of value retrieval through idmef_path_t. This
+  allow the user to retrieve and keep any values, even through the 
+  associated IDMEF message is freed.
+
+- Build system cleanup, enable RELRO when possible.
+
+- Implement PRELUDE_CLIENT_FLAGS_AUTOCONFIG, which is set by default,
+  but that applications might unset in order for their client not to
+  read the default profile/global configuration.
+
+- Fix possible assertion when destroying un-started prelude-client.
+
+- Improvement to the prelude-io API, the user might now hook its own
+  handling function.
+
+- Fix dumping of (not) NULL criteria operator to string. Remove
+  gratuitous space insertion when dumping criteria.
+
+- Headers fixes for C++ build.
+
+- Fix printing and cloning of empty IDMEF string.
+
+- In IDMEF to string convertion code, print <invalid enum value> in
+  place of NULL on invalid enumeration value.
+
+- Bindings fixes for optional integer retrieval, by Pierre Chifflier
+  <p.chifflier@inl.fr>
+
+- Various bug fixes.
+
+
+
 * 2008-01-23, libprelude-0.9.16.2:
 
 - Fix bindings for IDMEF 'get_next' functions.
