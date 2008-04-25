@@ -300,7 +300,6 @@ again:
                 if ( ! FD_ISSET(fd, &rfds) )
                         continue;
 
-                printf("FD IS AVAILABLE FOR READING\n");
                 i++;
                 global_event |= PRELUDE_CONNECTION_POOL_EVENT_INPUT;
 
