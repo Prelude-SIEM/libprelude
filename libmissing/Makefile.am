@@ -165,7 +165,7 @@ EXTRA_DIST += float.in.h
 ## begin gnulib module fseeko
 
 
-EXTRA_DIST += fseeko.c
+EXTRA_DIST += fseeko.c stdio-impl.h
 
 EXTRA_libmissing_la_SOURCES += fseeko.c
 
@@ -240,6 +240,13 @@ EXTRA_DIST += inet_ntop.c inet_ntop.h
 EXTRA_libmissing_la_SOURCES += inet_ntop.c
 
 ## end   gnulib module inet_ntop
+
+## begin gnulib module intprops
+
+
+EXTRA_DIST += intprops.h
+
+## end   gnulib module intprops
 
 ## begin gnulib module link-warning
 
