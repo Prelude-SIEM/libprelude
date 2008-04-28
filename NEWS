@@ -1,3 +1,9 @@
+* 2008-04-28, libprelude-0.9.17.1:
+
+- Remove debug spew, thanks Pierre Chifflier <p.chifflier@inl.fr>
+  for pointing that out.
+
+
 * 2008-04-24, libprelude-0.9.17:
 
 - Implement RFC 4122 UUIDv1 identifier generation, more resistant to
