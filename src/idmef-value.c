@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2003-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2003-2006,2007,2008 PreludeIDS Technologies. All Rights Reserved.
 * Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
 *
@@ -461,8 +461,20 @@ void *idmef_value_get_object(const idmef_value_t *value)
 }
 
 
+inline static idmef_value_t *value_ro2rw(const idmef_value_t *value)
+{
+        union {
+                idmef_value_t *rw;
+                const idmef_value_t *ro;
+        } val;
 
-int idmef_value_iterate(idmef_value_t *value,
+        val.ro = value;
+
+        return val.rw;
+}
+
+
+int idmef_value_iterate(const idmef_value_t *value,
                         int (*callback)(idmef_value_t *ptr, void *extra), void *extra)
 {
         int i, ret;
@@ -471,7 +483,7 @@ int idmef_value_iterate(idmef_value_t *value,
         prelude_return_val_if_fail(callback, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! value->list )
-                return callback(value, extra);
+                return callback(value_ro2rw(value), extra);
 
         for ( i = 0; i < value->list_elems; i++ ) {
 
@@ -485,16 +497,16 @@ int idmef_value_iterate(idmef_value_t *value,
 
 
 
-int idmef_value_iterate_reversed(idmef_value_t *value,
+int idmef_value_iterate_reversed(const idmef_value_t *value,
                                  int (*callback)(idmef_value_t *ptr, void *extra), void *extra)
 {
         int i, ret;
 
-        prelude_return_val_if_fail(value, prelude_error(PRELUDE_ERROR_ASSERTION)); 
+        prelude_return_val_if_fail(value, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(callback, prelude_error(PRELUDE_ERROR_ASSERTION));
 
         if ( ! value->list )
-                return callback(value, extra);
+                return callback(value_ro2rw(value), extra);
 
         for ( i = value->list_elems - 1; i >= 0; i-- ) {
 
@@ -508,12 +520,12 @@ int idmef_value_iterate_reversed(idmef_value_t *value,
 
 
 
-idmef_value_t *idmef_value_get_nth(idmef_value_t *val, int n)
+idmef_value_t *idmef_value_get_nth(const idmef_value_t *val, int n)
 {
         prelude_return_val_if_fail(val, NULL);
 
         if ( ! val->list )
-                    return (n == 0) ? val : NULL;
+                return (n == 0) ? value_ro2rw(val) : NULL;
 
         return (n >= 0 && n < val->list_elems) ? val->list[n] : NULL;
 }

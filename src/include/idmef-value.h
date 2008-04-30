@@ -1,6 +1,6 @@
 /*****
 *
-* Copyright (C) 2002-2005,2006,2007 PreludeIDS Technologies. All Rights Reserved.
+* Copyright (C) 2002-2006,2007,2008 PreludeIDS Technologies. All Rights Reserved.
 * Author: Nicolas Delon <nicolas.delon@prelude-ids.com>
 * Author: Krzysztof Zaraska <kzaraska@student.uci.agh.edu.pl>
 * Author: Yoann Vandoorselaere <yoann.v@prelude-ids.com>
@@ -90,11 +90,11 @@ idmef_class_id_t idmef_value_get_class(const idmef_value_t *value);
 
 void *idmef_value_get_object(const idmef_value_t *value);
 
-int idmef_value_iterate(idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra);
+int idmef_value_iterate(const idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra);
 
-int idmef_value_iterate_reversed(idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra);
+int idmef_value_iterate_reversed(const idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra);
 
-idmef_value_t *idmef_value_get_nth(idmef_value_t *val, int n);
+idmef_value_t *idmef_value_get_nth(const idmef_value_t *val, int n);
 
 int idmef_value_get_count(const idmef_value_t *val);
 
