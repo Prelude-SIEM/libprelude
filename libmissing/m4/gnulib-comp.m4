@@ -265,8 +265,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/gettext.h
   lib/gettimeofday.c
   lib/inet_ntop.c
-  lib/inet_ntop.h
-  lib/intprops.h
   lib/localcharset.c
   lib/localcharset.h
   lib/lseek.c

@@ -8,6 +8,8 @@ dnl From Simon Josefsson.
 
 AC_DEFUN([gl_HEADER_SYS_SOCKET],
 [
+  AC_REQUIRE([AC_C_INLINE])
+
   AC_CACHE_CHECK([whether <sys/socket.h> is self-contained],
     [gl_cv_header_sys_socket_h_selfcontained],
     [
