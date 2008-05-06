@@ -1,3 +1,9 @@
+* 2008-05-06, libprelude-0.9.17.2:
+
+- Fix unresolved symbols on some architecture, thanks 
+  Robin Gruyters <r.gruyters@yirdis.nl> for pointing out this issue.
+
+
 * 2008-04-28, libprelude-0.9.17.1:
 
 - Remove debug spew, thanks Pierre Chifflier <p.chifflier@inl.fr>
