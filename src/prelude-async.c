@@ -82,6 +82,30 @@
 # endif
 #endif
 
+#ifdef USE_POSIX_THREADS_WEAK
+# pragma weak pthread_create
+# pragma weak pthread_join
+# pragma weak pthread_sigmask
+
+# ifdef HAVE_PTHREAD_ATFORK
+#  pragma weak pthread_atfork
+# endif
+
+# pragma weak pthread_mutex_init
+# pragma weak pthread_mutex_lock
+# pragma weak pthread_mutex_unlock
+# pragma weak pthread_mutex_destroy
+
+# pragma weak pthread_cond_init
+# pragma weak pthread_cond_wait
+# pragma weak pthread_cond_signal
+# pragma weak pthread_cond_timedwait
+# pragma weak pthread_cond_destroy
+
+# pragma weak pthread_condattr_init
+# pragma weak pthread_condattr_setclock
+#endif
+
 
 static PRELUDE_LIST(joblist);
 

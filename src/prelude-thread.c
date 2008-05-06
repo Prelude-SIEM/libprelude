@@ -42,6 +42,44 @@
 
 #ifdef USE_POSIX_THREADS_WEAK
 
+# pragma weak pthread_create
+# pragma weak pthread_join
+# pragma weak pthread_sigmask
+# pragma weak pthread_once
+# pragma weak pthread_exit
+
+# ifdef HAVE_PTHREAD_ATFORK
+#  pragma weak pthread_atfork
+# endif
+
+# pragma weak pthread_mutex_init
+# pragma weak pthread_mutex_lock
+# pragma weak pthread_mutex_unlock
+# pragma weak pthread_mutex_destroy
+
+# pragma weak pthread_mutexattr_init
+# pragma weak pthread_mutexattr_settype
+# pragma weak pthread_mutexattr_destroy
+
+# pragma weak pthread_cond_init
+# pragma weak pthread_cond_wait
+# pragma weak pthread_cond_signal
+# pragma weak pthread_cond_broadcast
+# pragma weak pthread_cond_timedwait
+# pragma weak pthread_cond_destroy
+
+# pragma weak pthread_condattr_init
+# pragma weak pthread_condattr_setclock
+
+# pragma weak pthread_getspecific
+# pragma weak pthread_setspecific
+
+# pragma weak pthread_key_delete
+
+# ifndef pthread_self
+#  pragma weak pthread_self
+# endif
+
 # if !PTHREAD_IN_USE_DETECTION_HARD
 #  pragma weak pthread_cancel
 #  define __prelude_thread_in_use() (pthread_cancel != NULL)
