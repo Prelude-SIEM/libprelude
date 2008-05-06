@@ -91,7 +91,7 @@ static void thread_init_if_needed(void)
 {
         if ( ! need_init )
                 return;
-        
+
         pthread_key_create(&thread_error_key, thread_error_key_destroy);
         need_init = FALSE;
 }
@@ -171,7 +171,7 @@ int prelude_thread_cond_destroy(pthread_cond_t *cond)
 }
 
 
-int prelude_thread_condattr_init(pthread_condattr_t *attr) 
+int prelude_thread_condattr_init(pthread_condattr_t *attr)
 {
         THR_FUNC(pthread_condattr_init(attr));
 }
@@ -228,15 +228,15 @@ void _prelude_thread_deinit(void)
 {
         if ( use_thread ) {
                 char *previous;
-                
+
                 previous = pthread_getspecific(thread_error_key);
                 if ( previous )
                         free(previous);
-                        
+
                 pthread_key_delete(thread_error_key);
                 need_init = TRUE;
         }
-        
+
         else if ( shared_error_buffer ) {
                 free(shared_error_buffer);
                 shared_error_buffer = NULL;
@@ -262,9 +262,9 @@ static prelude_bool_t _prelude_thread_hard_in_use(void)
         int ret;
         void *retval;
         pthread_t thread;
-                
+
         ret = pthread_create(&thread, NULL, dummy_thread_func, NULL);
-        if ( ret != 0 ) 
+        if ( ret != 0 )
                 /* we're using libc stubs */
                 return FALSE;
 
@@ -274,7 +274,7 @@ static prelude_bool_t _prelude_thread_hard_in_use(void)
         ret = pthread_join(thread, &retval);
         if ( ret != 0 )
                 abort();
-        
+
         return TRUE;
 }
 
@@ -285,18 +285,18 @@ static prelude_bool_t _prelude_thread_hard_in_use(void)
 prelude_bool_t _prelude_thread_in_use(void)
 {
         static prelude_bool_t tested = FALSE;
-        
+
         if ( tested ) {
                 thread_init_if_needed();
                 return use_thread;
         }
-        
+
         use_thread = __prelude_thread_in_use();
         tested = TRUE;
 
         prelude_log(PRELUDE_LOG_DEBUG, "[init] thread used=%d\n", use_thread);
         thread_init_if_needed();
-        
+
         return use_thread;
 }
 
@@ -305,10 +305,10 @@ int _prelude_thread_set_error(const char *error)
 {
         char *previous;
 
-        if ( ! use_thread ) {                
+        if ( ! use_thread ) {
                 if ( shared_error_buffer )
                         free(shared_error_buffer);
-                
+
                 shared_error_buffer = strdup(error);
         }
 
@@ -316,17 +316,17 @@ int _prelude_thread_set_error(const char *error)
                 previous = pthread_getspecific(thread_error_key);
                 if ( previous )
                         free(previous);
-                
+
                 pthread_setspecific(thread_error_key, strdup(error));
         }
-        
+
         return 0;
 }
 
 
 
 const char *_prelude_thread_get_error(void)
-{        
+{
         if ( use_thread )
                 return pthread_getspecific(thread_error_key);
         else
