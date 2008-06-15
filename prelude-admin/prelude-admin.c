@@ -2157,8 +2157,13 @@ int main(int argc, char **argv)
         prelude_option_add(parentopt, NULL, PRELUDE_OPTION_TYPE_CLI, 'h', "help",
                            NULL, PRELUDE_OPTION_ARGUMENT_NONE, print_detailed_help, NULL);
 
+        ret = gnutls_global_init();
+        if ( ret < 0 ) {
+                fprintf(stderr, "TLS initialization failed: %s", gnutls_strerror(ret));
+                return -1;
+        }
+
         ret = -1;
-        gnutls_global_init();
 
 #ifdef NEED_GNUTLS_EXTRA
         gnutls_global_init_extra();
