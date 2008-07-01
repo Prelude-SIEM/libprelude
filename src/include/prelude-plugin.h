@@ -56,6 +56,8 @@ typedef struct {
  * Hack for plugin preloading,
  * without having the end program depend on ltdl.
  */
+#define lt_preloaded_symbols lt__PROGRAM__LTX_preloaded_symbols
+
 extern const void *lt_preloaded_symbols[];
 
 #define PRELUDE_PLUGIN_SET_PRELOADED_SYMBOLS()                     \
