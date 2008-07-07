@@ -51,6 +51,10 @@ void yyset_debug(int bdebug);
 int yylex_destroy(void);
 
 
+static prelude_bool_t in_parenthesis = FALSE;
+
+static void do_push(void);
+static void do_pop(void);
 
 static char *escape_str(char *str)
 {
@@ -72,7 +76,6 @@ static char *escape_str(char *str)
         return str;
 }
 
-
 %}
 
 IDMEF_PATH      ([a-zA-Z0-9_\-]+(\(\-?[0-9\*]+\))?\.?)+
@@ -83,41 +86,15 @@ BLANK           [ \t\n]+
 %option noyywrap
 %option stack
 
-%x IDMEF_VALUE
+%x HAS_PATH
 
 %%
 
-substr                  { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING; }
-\!substr                { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_SUBSTRING; }
-substr\*                { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING_NOCASE; }
-\!substr\*              { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_SUBSTRING_NOCASE; }
-
 {IDMEF_PATH}            {
                                 yylval.str = strdup(yytext);
+                                yy_push_state(HAS_PATH);
                                 return TOK_IDMEF_PATH;
                         }
-
-\<\>                    { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING; }
-\<\>\*                  { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTRING_NOCASE; }
-\!\<\>                  { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_SUBSTRING; }
-\!\<\>\*                { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_SUBSTRING_NOCASE; }
-
-\>                      { yy_push_state(IDMEF_VALUE); return TOK_RELATION_GREATER; }
-\>\=                    { yy_push_state(IDMEF_VALUE); return TOK_RELATION_GREATER_OR_EQUAL; }
-\<                      { yy_push_state(IDMEF_VALUE); return TOK_RELATION_LESS; }
-\<\=                    { yy_push_state(IDMEF_VALUE); return TOK_RELATION_LESS_OR_EQUAL; }
-
-\~                      { yy_push_state(IDMEF_VALUE); return TOK_RELATION_REGEXP; }
-\~\*                    { yy_push_state(IDMEF_VALUE); return TOK_RELATION_REGEXP_NOCASE; }
-\!\~                    { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_REGEXP; }
-\!\~\*                  { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_REGEXP_NOCASE; }
-
-\=\=                    { yy_push_state(IDMEF_VALUE); return TOK_RELATION_EQUAL; }
-\=                      { yy_push_state(IDMEF_VALUE); return TOK_RELATION_EQUAL; }
-\=\*                    { yy_push_state(IDMEF_VALUE); return TOK_RELATION_EQUAL_NOCASE; }
-\!\=                    { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_EQUAL; }
-\!\=\*                  { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_EQUAL_NOCASE; }
-\!                      { return TOK_RELATION_IS_NULL; }
 
 \&\&                    { return TOK_OPERATOR_AND; }
 \&                      { return TOK_OPERATOR_AND; }
@@ -126,33 +103,6 @@ substr\*                { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTR
 
 \(                      { return '('; }
 \)                      { return ')'; }
-
-<IDMEF_VALUE>{SQSTRING} {
-                                yylval.str = escape_str(strndup(yytext + 1, yyleng - 2));
-                                yy_pop_state();
-                                return TOK_IDMEF_VALUE;
-                        }
-
-<IDMEF_VALUE>{DQSTRING} {
-                                yylval.str = escape_str(strndup(yytext + 1, yyleng - 2));
-                                yy_pop_state();
-                                return TOK_IDMEF_VALUE;
-                        }
-
-<IDMEF_VALUE>[^ \t\(\)\&\|]+ {
-                                yylval.str = escape_str(strdup(yytext));
-                                yy_pop_state();
-                                return TOK_IDMEF_VALUE;
-                        }
-
-<IDMEF_VALUE>{BLANK}    {
-                                /* nop */;
-                        }
-
-<IDMEF_VALUE>.          {
-                                /* invalid token */
-                                return TOK_ERROR;
-                        }
 
 {BLANK}                 {
                                 /* nop */;
@@ -165,6 +115,70 @@ substr\*                { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTR
                         }
 
 
+<HAS_PATH>\<\>                    { do_push(); return TOK_RELATION_SUBSTRING; }
+<HAS_PATH>\<\>\*                  { do_push(); return TOK_RELATION_SUBSTRING_NOCASE; }
+<HAS_PATH>\!\<\>                  { do_push(); return TOK_RELATION_NOT_SUBSTRING; }
+<HAS_PATH>\!\<\>\*                { do_push(); return TOK_RELATION_NOT_SUBSTRING_NOCASE; }
+
+<HAS_PATH>\>                      { do_push(); return TOK_RELATION_GREATER; }
+<HAS_PATH>\>\=                    { do_push(); return TOK_RELATION_GREATER_OR_EQUAL; }
+<HAS_PATH>\<                      { do_push(); return TOK_RELATION_LESS; }
+<HAS_PATH>\<\=                    { do_push(); return TOK_RELATION_LESS_OR_EQUAL; }
+
+<HAS_PATH>\~                      { do_push(); return TOK_RELATION_REGEXP; }
+<HAS_PATH>\~\*                    { do_push(); return TOK_RELATION_REGEXP_NOCASE; }
+<HAS_PATH>\!\~                    { do_push(); return TOK_RELATION_NOT_REGEXP; }
+<HAS_PATH>\!\~\*                  { do_push(); return TOK_RELATION_NOT_REGEXP_NOCASE; }
+
+<HAS_PATH>\=\=                    { do_push(); return TOK_RELATION_EQUAL; }
+<HAS_PATH>\=                      { do_push(); return TOK_RELATION_EQUAL; }
+<HAS_PATH>\=\*                    { do_push(); return TOK_RELATION_EQUAL_NOCASE; }
+<HAS_PATH>\!\=                    { do_push(); return TOK_RELATION_NOT_EQUAL; }
+<HAS_PATH>\!\=\*                  { do_push(); return TOK_RELATION_NOT_EQUAL_NOCASE; }
+<HAS_PATH>\!                      { return TOK_RELATION_IS_NULL; }
+
+<HAS_PATH>\&\&                    { return TOK_OPERATOR_AND; }
+<HAS_PATH>\&                      { return TOK_OPERATOR_AND; }
+<HAS_PATH>\|\|                    { return TOK_OPERATOR_OR; }
+<HAS_PATH>\|                      { return TOK_OPERATOR_OR; }
+
+
+<HAS_PATH>\(            {
+                                in_parenthesis = TRUE;
+                                return '(';
+                        }
+
+<HAS_PATH>\)            {
+                                in_parenthesis = FALSE;
+                                do_pop();
+                                return ')';
+                        }
+
+<HAS_PATH>{SQSTRING}    {
+                                yylval.str = escape_str(strndup(yytext + 1, yyleng - 2));
+
+                                if ( ! in_parenthesis )
+                                        yy_pop_state();
+
+                                return TOK_IDMEF_VALUE;
+                        }
+
+<HAS_PATH>{DQSTRING}    {
+                                yylval.str = escape_str(strndup(yytext + 1, yyleng - 2));
+                                do_pop();
+                                return TOK_IDMEF_VALUE;
+                        }
+
+
+<HAS_PATH>[^\&\|\(\) ]+ {
+                                yylval.str = escape_str(strdup(yytext));
+                                do_pop();
+                                return TOK_IDMEF_VALUE;
+                        }
+
+<HAS_PATH>{BLANK}       {
+                                /* nop */;
+                        }
 
 %%
 
@@ -174,3 +188,19 @@ void _idmef_criteria_string_init_lexer(void)
 {
         BEGIN INITIAL;
 }
+
+
+
+
+static void do_push(void)
+{
+}
+
+
+static void do_pop(void)
+{
+        if ( ! in_parenthesis ) {
+                yy_pop_state();
+        }
+}
+
