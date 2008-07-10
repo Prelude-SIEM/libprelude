@@ -611,7 +611,6 @@ void idmef_criteria_set_criterion(idmef_criteria_t *criteria, idmef_criterion_t 
 int idmef_criteria_match(const idmef_criteria_t *criteria, idmef_message_t *message)
 {
         int ret;
-        idmef_criteria_t *next;
 
         prelude_return_val_if_fail(criteria, prelude_error(PRELUDE_ERROR_ASSERTION));
         prelude_return_val_if_fail(message, prelude_error(PRELUDE_ERROR_ASSERTION));
@@ -620,13 +619,11 @@ int idmef_criteria_match(const idmef_criteria_t *criteria, idmef_message_t *mess
         if ( ret < 0 )
                 return ret;
 
-        if ( ret == 0 )
-                next = criteria->or;
-        else
-                next = criteria->and;
+        if ( ret == 1 && criteria->and )
+                ret = idmef_criteria_match(criteria->and, message);
 
-        if ( ! next )
-                return ret;
+        if ( ret == 0 && criteria->or )
+                ret = idmef_criteria_match(criteria->or, message);
 
-        return idmef_criteria_match(next, message);
+        return ret;
 }
