@@ -6,7 +6,7 @@
 * This file is part of the Prelude library.
 *
 * This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by 
+* it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2, or (at your option)
 * any later version.
 *
@@ -45,12 +45,12 @@ static PRELUDE_LIST(variable_list);
 
 
 
-static variable_t *search_entry(const char *variable) 
+static variable_t *search_entry(const char *variable)
 {
         int ret;
         prelude_list_t *tmp;
         variable_t *item = NULL;
-        
+
         prelude_list_for_each(&variable_list, tmp) {
                 item = prelude_list_entry(tmp, variable_t, list);
 
@@ -66,7 +66,7 @@ static variable_t *search_entry(const char *variable)
 
 
 
-static int create_entry(char *variable, char *value)
+static int create_entry(const char *variable, const char *value)
 {
         variable_t *item;
 
@@ -74,10 +74,20 @@ static int create_entry(char *variable, char *value)
         if ( ! item )
                 return prelude_error_from_errno(errno);
 
-        item->variable = variable;
-        item->value = value;
+        item->variable = strdup(variable);
+        if ( ! item->variable ) {
+                free(item);
+                return prelude_error_from_errno(errno);
+        }
 
-        prelude_list_add(&item->list, &variable_list);
+        item->value = strdup(value);
+        if ( ! item->value ) {
+                free(item->variable);
+                free(item);
+                return prelude_error_from_errno(errno);
+        }
+
+        prelude_list_add_tail(&variable_list, &item->list);
 
         return 0;
 }
@@ -93,12 +103,12 @@ static int create_entry(char *variable, char *value)
  *
  * Returns: Value of the variable, or NULL if the variable is not set.
  */
-char *variable_get(const char *variable) 
+char *variable_get(const char *variable)
 {
         variable_t *item;
 
         item = search_entry(variable);
-        
+
         return ( item ) ? item->value : NULL;
 }
 
@@ -115,7 +125,7 @@ char *variable_get(const char *variable)
  *
  * Returns: 0 on success, -1 on error.
  */
-int variable_set(char *variable, char *value) 
+int variable_set(const char *variable, const char *value)
 {
         int ret = -1;
         variable_t *item;
@@ -123,8 +133,12 @@ int variable_set(char *variable, char *value)
         item = search_entry(variable);
         if ( ! item )
                 ret = create_entry(variable, value);
-        else
-                item->value = value;
+        else {
+                if ( item->value )
+                        free(item->value);
+
+                item->value = strdup(value);
+        }
 
         return ( ret == 0 || item ) ? 0 : -1;
 }
@@ -140,7 +154,7 @@ int variable_set(char *variable, char *value)
  *
  * Returns: 0 on success, -1 if variable could not be found.
  */
-int variable_unset(const char *variable) 
+int variable_unset(const char *variable)
 {
         variable_t *item;
 
@@ -149,7 +163,7 @@ int variable_unset(const char *variable)
                 return -1;
 
         prelude_list_del(&item->list);
-        
+
         free(item->variable);
         free(item->value);
         free(item);

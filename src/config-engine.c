@@ -311,10 +311,54 @@ static int strip_value(char **out, const char *in, size_t tlen)
 
 
 
+static int value_resolve_variable(const char *ptr, char **out_p)
+{
+        int i, ret;
+        char buf[512];
+        const char *tmp;
+        prelude_string_t *out;
+
+        ret = prelude_string_new(&out);
+        if ( ret < 0 )
+                return ret;
+
+        while ( *ptr ) {
+                if ( *ptr == '$' ) {
+                        tmp = ptr;
+                        i = 0;
+
+                        do {
+                                buf[i++] = *ptr++;
+                        } while ( *ptr && *ptr != ' ' && *ptr != '$' && i < sizeof(buf) - 1);
+
+                        buf[i] = 0;
+
+                        if ( ! variable_get(buf + 1) )
+                                ptr = tmp;
+                        else {
+                                prelude_string_cat(out, variable_get(buf + 1));
+                                continue;
+                        }
+                }
+
+                prelude_string_ncat(out, ptr, 1);
+                ptr++;
+        }
+
+        ret = prelude_string_get_string_released(out, out_p);
+        prelude_string_destroy(out);
+
+        return ret;
+}
+
+
+
+
 static int parse_buffer(const char *str, char **entry, char **value)
 {
         int ret;
         size_t len;
+        char *val;
         const char *ptr;
 
         *value = *entry = NULL;
@@ -331,7 +375,19 @@ static int parse_buffer(const char *str, char **entry, char **value)
         if ( ! ptr )
                 return 0;
 
-        return strip_value(value, ptr + 1, strlen(ptr + 1));
+        ret = strip_value(&val, ptr + 1, strlen(ptr + 1));
+        if ( ret < 0 )
+                return ret;
+
+        ret = value_resolve_variable(val, value);
+        free_val(&val);
+        if ( ret < 0 )
+                return ret;
+
+        if ( **entry == '$' )
+                ret = variable_set((*entry) + 1, *value);
+
+        return ret;
 }
 
 
@@ -726,6 +782,7 @@ static const char *get_variable_content(config_t *cfg, const char *variable)
  */
 int _config_get_next(config_t *cfg, char **section, char **entry, char **value, unsigned int *line)
 {
+        int ret;
         char *ptr;
 
         free_val(entry);
@@ -746,8 +803,15 @@ int _config_get_next(config_t *cfg, char **section, char **entry, char **value, 
 
                 if ( is_section(ptr) )
                         return parse_section_buffer(ptr, section, value, FALSE);
-                else
-                        return parse_buffer(ptr, entry, value);
+
+                ret = parse_buffer(ptr, entry, value);
+                if ( ret >= 0 && **entry == '$' ) {
+                        free_val(entry);
+                        free_val(value);
+                        continue;
+                }
+
+                return ret;
         }
 
         (*line)--;
