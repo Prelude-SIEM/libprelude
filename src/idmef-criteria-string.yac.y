@@ -250,13 +250,17 @@ value:
 
 
 multiple_value:
-        value operator multiple_value {
+        multiple_value operator multiple_value {
                 if ( $2 == operator_or )
                         idmef_criteria_or_criteria($1, $3);
                 else
                         idmef_criteria_and_criteria($1, $3);
 
                 $$ = $1;
+        }
+
+        | '(' multiple_value ')' {
+                $$ = $2;
         }
 
         | value {
@@ -297,7 +301,7 @@ static void yyerror(char *s)  /* Called by yyparse on error */
 {
         real_ret = prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_IDMEF_CRITERIA,
                                               PRELUDE_ERROR_IDMEF_CRITERIA_PARSE,
-                                              "Criteria parser reported: %s", s);
+                                              "IDMEF-Criteria parser: %s", s);
 }
 
 

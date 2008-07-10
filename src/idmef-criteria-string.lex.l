@@ -49,9 +49,10 @@ void yyset_out(FILE *out_str);
 int yyget_debug(void);
 void yyset_debug(int bdebug);
 int yylex_destroy(void);
+static void do_pop(void);
 
 
-static prelude_bool_t inp = FALSE;
+static unsigned int inp = 0;
 
 
 static char *escape_str(char *str)
@@ -161,15 +162,12 @@ substr\*                { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTR
                         }
 
 <IDMEF_VALUE>\(         {
-                                inp = TRUE;
+                                inp++;
                                 return '(';
                         }
 
 <IDMEF_VALUE>\)         {
-                                if ( inp )
-                                        yy_pop_state();
-
-                                inp = FALSE;
+                                do_pop();
                                 return ')';
                         }
 
@@ -197,10 +195,16 @@ substr\*                { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTR
 
 %%
 
+static void do_pop(void)
+{
+        if ( --inp == 0 )
+                yy_pop_state();
+}
+
 void _idmef_criteria_string_init_lexer(void);
 
 void _idmef_criteria_string_init_lexer(void)
 {
-        inp = FALSE;
+        inp = 0;
         BEGIN INITIAL;
 }
