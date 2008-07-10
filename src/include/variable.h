@@ -6,7 +6,7 @@
 * This file is part of the Prelude library.
 *
 * This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by 
+* it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2, or (at your option)
 * any later version.
 *
@@ -26,7 +26,7 @@
 #ifndef _LIBPRELUDE_RULES_VARIABLE_H
 #define _LIBPRELUDE_RULES_VARIABLE_H
 
-int variable_set(char *variable, char *value);
+int variable_set(const char *variable, const char *value);
 int variable_unset(const char *variable);
 char *variable_get(const char *variable);
 
