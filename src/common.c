@@ -152,31 +152,63 @@ void *_prelude_realloc(void *ptr, size_t size)
  */
 int prelude_read_multiline(FILE *fd, unsigned int *line, char *buf, size_t size)
 {
-        size_t i;
+        size_t i, j, len;
+        prelude_bool_t eol, has_data = FALSE, miss_eol=FALSE;
 
-        if ( ! fgets(buf, size, fd) )
-                return prelude_error(PRELUDE_ERROR_EOF);
+        while ( size > 1 ) {
+                if ( ! fgets(buf, size, fd) )
+                        return (has_data) ? 0 : prelude_error(PRELUDE_ERROR_EOF);
 
-        (*line)++;
+                len = strlen(buf);
+                if ( ! len )
+                        continue;
 
-        /*
-         * We don't want to handle multilines in case this is a comment.
-         */
-        for ( i = 0; buf[i] != '\0' && isspace((int) buf[i]); i++ );
+                eol = FALSE;
+                for ( i = len - 1; isspace((int) buf[i]); i-- ) {
 
-        if ( buf[i] == '#' )
-                return prelude_read_multiline(fd, line, buf, size);
+                        if ( buf[i] == '\n' || buf[i] == '\r' ) {
+                                buf[i] = 0;
+                                if ( ! eol ) {
+                                        eol = TRUE;
+                                        (*line)++;
+                                }
+                        }
 
-        for ( i = strlen(buf) - 1; (buf[i] == ' ' || buf[i] == '\n' || buf[i] == '\r'); i-- ) {
-                buf[i] = 0;
-                if ( i == 0 )
-                        break;
+                        if ( i == 0 )
+                                break;
+                }
+
+                if ( miss_eol && eol && i == 0 )
+                        continue;
+
+                /*
+                 * We don't want to handle multilines in case this is a comment.
+                 */
+                for ( j = 0; buf[j] != '\0' && isspace((int) buf[j]); j++ );
+                if ( buf[j] == '#' )
+                        continue;
+
+                /*
+                 * Multiline found, continue reading.
+                 */
+                if ( buf[i] != '\\' ) {
+                        if ( eol )
+                                return 0;
+
+                        if ( len == size - 1 )
+                                break;
+
+                        has_data = TRUE;
+                }
+
+                if ( ! eol )
+                        miss_eol = TRUE;
+
+                buf += i;
+                size -= i;
         }
 
-        if ( buf[i] == '\\' )
-                return prelude_read_multiline(fd, line, buf + i, size - i);
-
-        return 0;
+        return prelude_error_verbose(PRELUDE_ERROR_EINVAL, "buffer is too small to store input line");
 }
 
 
@@ -193,26 +225,27 @@ int prelude_read_multiline(FILE *fd, unsigned int *line, char *buf, size_t size)
  */
 int prelude_read_multiline2(FILE *fd, unsigned int *line, prelude_string_t *out)
 {
-        int ret;
+        int ret, r;
         char buf[8192];
 
         prelude_string_clear(out);
 
         do {
                 ret = prelude_read_multiline(fd, line, buf, sizeof(buf));
-                if ( ret < 0 )
-                        return ret;
+                if ( ret < 0 && (r = prelude_error_get_code(ret)) != PRELUDE_ERROR_EINVAL ) {
+                        if ( r == PRELUDE_ERROR_EOF && ! prelude_string_is_empty(out) )
+                                ret = 0;
 
-                ret = prelude_string_cat(out, buf);
-                if ( ret < 0 )
                         break;
+                }
 
-                if ( buf[strlen(buf) - 1 ] == '\n' )
-                        break;
+                r = prelude_string_cat(out, buf);
+                if ( r < 0 )
+                        return r;
 
-        } while ( 1 );
+        } while ( ret < 0 );
 
-        return 0;
+        return ret;
 }
 
 
