@@ -1,3 +1,5 @@
+# wctype.m4 serial 2
+
 dnl A placeholder for ISO C99 <wctype.h>, for platforms that lack it.
 
 dnl Copyright (C) 2006-2008 Free Software Foundation, Inc.
@@ -41,14 +43,13 @@ AC_DEFUN([gl_WCTYPE_H],
                       #include <wchar.h>
                       #include <wctype.h>
                       int main () { return iswprint ('x') == 0; }],
-            [gl_cv_func_iswcntrl_works=yes], [gl_cv_func_iswcntrl_works=no])
-        ],
-        [
-          AC_TRY_COMPILE([#include <stdlib.h>
+            [gl_cv_func_iswcntrl_works=yes], [gl_cv_func_iswcntrl_works=no],
+            [AC_TRY_COMPILE([#include <stdlib.h>
                           #if __GNU_LIBRARY__ == 1
                           Linux libc5 i18n is broken.
-                          #endif],
-            [gl_cv_func_iswcntrl_works=yes], [gl_cv_func_iswcntrl_works=no])
+                          #endif], [],
+              [gl_cv_func_iswcntrl_works=yes], [gl_cv_func_iswcntrl_works=no])
+            ])
         ])
       if test $gl_cv_func_iswcntrl_works = yes; then
         WCTYPE_H=

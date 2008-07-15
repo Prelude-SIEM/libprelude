@@ -19,7 +19,30 @@
 
 # Specification in the form of a few gnulib-tool.m4 macro invocations:
 gl_LOCAL_DIR([])
-gl_MODULES([ftw getaddrinfo getpass gettimeofday inet_ntop lseek memmem minmax pathmax poll regex snprintf socklen strcase strcasestr strdup strndup strptime strsep time_r timegm vsnprintf])
+gl_MODULES([
+  ftw
+  getaddrinfo
+  getpass
+  gettimeofday
+  inet_ntop
+  lseek
+  memmem
+  minmax
+  pathmax
+  poll
+  regex
+  snprintf
+  socklen
+  strcase
+  strcasestr
+  strdup
+  strndup
+  strptime
+  strsep
+  time_r
+  timegm
+  vsnprintf
+])
 gl_AVOID([])
 gl_SOURCE_BASE([libmissing])
 gl_M4_BASE([libmissing/m4])
