@@ -120,7 +120,7 @@ substr\*                { yy_push_state(IDMEF_VALUE); return TOK_RELATION_SUBSTR
 \=\*                    { yy_push_state(IDMEF_VALUE); return TOK_RELATION_EQUAL_NOCASE; }
 \!\=                    { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_EQUAL; }
 \!\=\*                  { yy_push_state(IDMEF_VALUE); return TOK_RELATION_NOT_EQUAL_NOCASE; }
-\!                      { return TOK_RELATION_IS_NULL; }
+\!                      { return TOK_NOT; }
 
 \&\&                    { return TOK_OPERATOR_AND; }
 \&                      { return TOK_OPERATOR_AND; }

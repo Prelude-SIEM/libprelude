@@ -105,35 +105,34 @@ err:
 
 /* BISON Declarations */
 
-%token <str> TOK_IDMEF_VALUE
-%token <str> TOK_IDMEF_PATH
+%token <str> TOK_IDMEF_VALUE "<IDMEF-Value>"
+%token <str> TOK_IDMEF_PATH "<IDMEF-Path>"
 
 %destructor { free ($$); } TOK_IDMEF_VALUE TOK_IDMEF_PATH
 %destructor { idmef_criteria_destroy($$); } criteria
 
-%token TOK_RELATION_SUBSTRING
-%token TOK_RELATION_SUBSTRING_NOCASE
-%token TOK_RELATION_NOT_SUBSTRING
-%token TOK_RELATION_NOT_SUBSTRING_NOCASE
+%token TOK_RELATION_SUBSTRING "<>"
+%token TOK_RELATION_SUBSTRING_NOCASE "<>*"
+%token TOK_RELATION_NOT_SUBSTRING "!<>"
+%token TOK_RELATION_NOT_SUBSTRING_NOCASE "!<>*"
 
-%token TOK_RELATION_REGEXP
-%token TOK_RELATION_REGEXP_NOCASE
-%token TOK_RELATION_NOT_REGEXP
-%token TOK_RELATION_NOT_REGEXP_NOCASE
+%token TOK_RELATION_REGEXP "~"
+%token TOK_RELATION_REGEXP_NOCASE "~*"
+%token TOK_RELATION_NOT_REGEXP "!~"
+%token TOK_RELATION_NOT_REGEXP_NOCASE "!~*"
 
-%token TOK_RELATION_GREATER
-%token TOK_RELATION_GREATER_OR_EQUAL
-%token TOK_RELATION_LESS
-%token TOK_RELATION_LESS_OR_EQUAL
-%token TOK_RELATION_EQUAL
-%token TOK_RELATION_EQUAL_NOCASE
-%token TOK_RELATION_NOT_EQUAL
-%token TOK_RELATION_NOT_EQUAL_NOCASE
+%token TOK_RELATION_GREATER ">"
+%token TOK_RELATION_GREATER_OR_EQUAL ">="
+%token TOK_RELATION_LESS "<"
+%token TOK_RELATION_LESS_OR_EQUAL "<="
+%token TOK_RELATION_EQUAL "="
+%token TOK_RELATION_EQUAL_NOCASE "=*"
+%token TOK_RELATION_NOT_EQUAL "!="
+%token TOK_RELATION_NOT_EQUAL_NOCASE "!=*"
 
-%token TOK_RELATION_IS_NULL
-
-%token TOK_OPERATOR_AND
-%token TOK_OPERATOR_OR
+%token TOK_NOT "!"
+%token TOK_OPERATOR_AND "&&"
+%token TOK_OPERATOR_OR "||"
 
 %token TOK_ERROR
 
@@ -177,8 +176,18 @@ criteria_base:
                 $$ = $1;
         }
 
+        | TOK_NOT criterion {
+                idmef_criteria_set_negation($2, TRUE);
+                $$ = $2;
+        }
+
         | '(' criteria ')' {
                 $$ = $2;
+        }
+
+        | TOK_NOT '(' criteria ')' {
+                idmef_criteria_set_negation($3, TRUE);
+                $$ = $3;
         }
 ;
 
@@ -202,7 +211,7 @@ criterion:
                 $$ = criteria;
         }
 
-        | TOK_RELATION_IS_NULL path {
+        | TOK_NOT path {
                 idmef_criteria_t *criteria;
 
                 real_ret = create_criteria(&criteria, $2, NULL, IDMEF_CRITERION_OPERATOR_NULL);
@@ -286,7 +295,7 @@ relation:
 | TOK_RELATION_EQUAL_NOCASE         { cur_operator = $$ = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE; }
 | TOK_RELATION_NOT_EQUAL            { cur_operator = $$ = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOT; }
 | TOK_RELATION_NOT_EQUAL_NOCASE     { cur_operator = $$ = IDMEF_CRITERION_OPERATOR_EQUAL|IDMEF_CRITERION_OPERATOR_NOCASE|IDMEF_CRITERION_OPERATOR_NOT; }
-| TOK_RELATION_IS_NULL              { cur_operator = $$ = IDMEF_CRITERION_OPERATOR_NULL; }
+| TOK_NOT                           { cur_operator = $$ = IDMEF_CRITERION_OPERATOR_NULL; }
 | TOK_ERROR                         { real_ret = prelude_error_verbose(PRELUDE_ERROR_IDMEF_CRITERIA_PARSE,
                                                                        "Criteria parser reported: Invalid operator found"); YYERROR; }
 ;
