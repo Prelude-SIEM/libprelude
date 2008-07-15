@@ -29,7 +29,6 @@
 #include <string.h>
 #include <sys/types.h>
 #include <stdarg.h>
-#include <assert.h>
 
 #define PRELUDE_ERROR_SOURCE_DEFAULT PRELUDE_ERROR_SOURCE_IDMEF_CRITERIA
 #include "prelude.h"
@@ -44,6 +43,7 @@ struct idmef_criterion {
 
 
 struct idmef_criteria {
+        prelude_bool_t negated;
         idmef_criterion_t *criterion;
         struct idmef_criteria *or;
         struct idmef_criteria *and;
@@ -428,11 +428,12 @@ int idmef_criteria_clone(idmef_criteria_t *src, idmef_criteria_t **dst)
 
         prelude_return_val_if_fail(src, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        new = *dst = malloc(sizeof(*new));
-        if ( ! new )
-                return prelude_error_from_errno(errno);
+        ret = idmef_criteria_new(dst);
+        if ( ret < 0 )
+                return ret;
 
-        new->or = new->and = NULL;
+        new = *dst;
+        new->negated = src->negated;
 
         if ( src->or ) {
                 ret = idmef_criteria_clone(src->or, &new->or);
@@ -586,6 +587,18 @@ int idmef_criteria_and_criteria(idmef_criteria_t *criteria, idmef_criteria_t *cr
 }
 
 
+void idmef_criteria_set_negation(idmef_criteria_t *criteria, prelude_bool_t negate)
+{
+        prelude_return_if_fail(criteria);
+        criteria->negated = negate;
+}
+
+
+prelude_bool_t idmef_criteria_get_negation(const idmef_criteria_t *criteria)
+{
+        prelude_return_val_if_fail(criteria, FALSE);
+        return criteria->negated;
+}
 
 
 void idmef_criteria_set_criterion(idmef_criteria_t *criteria, idmef_criterion_t *criterion)
@@ -625,5 +638,8 @@ int idmef_criteria_match(const idmef_criteria_t *criteria, idmef_message_t *mess
         if ( ret == 0 && criteria->or )
                 ret = idmef_criteria_match(criteria->or, message);
 
-        return ret;
+        if ( ret < 0 )
+                return ret;
+
+        return (criteria->negated) ? !ret : ret;
 }

@@ -99,6 +99,10 @@ idmef_criteria_t *idmef_criteria_get_and(const idmef_criteria_t *criteria);
 
 int idmef_criteria_new_from_string(idmef_criteria_t **criteria, const char *str);
 
+void idmef_criteria_set_negation(idmef_criteria_t *criteria, prelude_bool_t negate);
+
+prelude_bool_t idmef_criteria_get_negation(const idmef_criteria_t *criteria);
+
 #ifdef __cplusplus
  }
 #endif
