@@ -176,11 +176,6 @@ criteria_base:
                 $$ = $1;
         }
 
-        | TOK_NOT criterion {
-                idmef_criteria_set_negation($2, TRUE);
-                $$ = $2;
-        }
-
         | '(' criteria ')' {
                 $$ = $2;
         }
