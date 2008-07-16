@@ -336,11 +336,11 @@ int idmef_$struct->{short_typename}_new($struct->{typename} **ret)
                 $self->output("
         {
 ");
-        if ( $field->{name} eq "version" ) {
-                $self->output("                int retval = prelude_string_new_ref_fast(&(*ret)->$field->{name}, \"1.0\", 3);");
-        } else {
+        #if ( $field->{name} eq "version" ) {
+                #$self->output("                int retval = prelude_string_new_ref_fast(&(*ret)->$field->{name}, \"1.0\", 3);");
+        #} else {
                 $self->output("                int retval = $prefix$field->{short_typename}_new(&(*ret)->$field->{name});\n");
-        }
+        #}
 
         $self->output("
                 if ( retval < 0 ) {

@@ -22688,7 +22688,8 @@ int idmef_message_new(idmef_message_t **ret)
         (*ret)->refcount = 1;
 
         {
-                int retval = prelude_string_new_ref_fast(&(*ret)->version, "1.0", 3);
+                int retval = prelude_string_new(&(*ret)->version);
+
                 if ( retval < 0 ) {
                         idmef_message_destroy(*ret);
                         *ret = NULL;
