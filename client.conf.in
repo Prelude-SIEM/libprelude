@@ -1,7 +1,7 @@
 [prelude]
 
 # This is the default configuration for program client of a manager
-# (sensors and agents) that use libprelude. 
+# (sensors and agents) that use libprelude.
 #
 # Entry in this configuration file might be overriden by entry directly
 # provided by the sensors/agents configuration file.
@@ -12,18 +12,18 @@
 # server-addr = x.x.x.x:port || y.y.y.y && z.z.z.z
 #
 # This mean the emission should occur on x.x.x.x:port or, if it fail,
-# on y.y.y.y and z.z.z.z (if one of the two host in the AND fail, 
-# the emission will be considered as failed involving saving the 
+# on y.y.y.y and z.z.z.z (if one of the two host in the AND fail,
+# the emission will be considered as failed involving saving the
 # message locally).
 
 server-addr = 127.0.0.1
 
 
-# The following settings instruct the operating system when to consider 
+# The following settings instruct the operating system when to consider
 # a connection dead in case sent data is left unacknowledged.
 #
-# Theses option are operating system specific, and might not work on 
-# certain platform. In case you modify these settings on an unsupported 
+# Theses option are operating system specific, and might not work on
+# certain platform. In case you modify these settings on an unsupported
 # system, a warning message will be issued when the agent starts.
 #
 # Under Linux, the default system wide configuration is:
@@ -31,14 +31,14 @@ server-addr = 127.0.0.1
 # tcp-keepalive-probes = 9
 # tcp-keepalive-intvl  = 75
 #
-# tcp-keepalive-time represents the number of seconds the connection needs 
-# to be idle before TCP begins sending out keep-alive probes.
+# tcp-keepalive-time represents the number of seconds the connection
+# needs to be idle before TCP begins sending out keep-alive probes.
 #
-# tcp-keepalive-probes represent the number of not acknowledged probes to 
-# send before considering the connection dead.
+# tcp-keepalive-probes represent the number of not acknowledged probes
+# to send before considering the connection dead.
 #
-# tcp-keepalive-intvl represents the interval between subsequent keepalive 
-# probes.
+# tcp-keepalive-intvl represents the interval between subsequent
+# keepalive probes.
 #
 # The average time to notice a dead connection can be calculated using:
 # tcp-keepalive-time + (tcp-keepalive-probes * tcp-keepalive-intvl)
@@ -48,5 +48,34 @@ server-addr = 127.0.0.1
 # tcp-keepalive-probes = 3
 # tcp-keepalive-intvl  = 10
 #
-# Using the above settings, a dead connection will be detected within 90 seconds.
+# Using the above settings, a dead connection will be detected within
+# 90 seconds.
 
+
+#
+# TLS options (only available with GnuTLS 2.2.0 or higher):
+#
+# Sets priorities for the ciphers, key exchange methods, macs and
+# compression methods.
+#
+# "NORMAL" option enables all "secure" ciphersuites. The 256-bit
+# ciphers are included as a fallback only. The ciphers are sorted by
+# security margin.
+#
+# "SECURE128" flag enables all "secure" ciphersuites with ciphers up to
+# 128 bits, sorted by security margin.
+#
+# "SECURE256" flag enables all "secure" ciphersuites including the 256
+# bit ciphers, sorted by security margin.
+#
+# "EXPORT" all the ciphersuites are enabled, including the low-security
+# 40 bit ciphers.
+#
+# "NONE" nothing is enabled. This disables even protocols and
+# compression methods.
+#
+# Note that much more settings might be enabled or disabled using this
+# option: please see gnutls_priority_init(3) for more details.
+#
+# The default settings is "NORMAL".
+# tls-options = NORMAL

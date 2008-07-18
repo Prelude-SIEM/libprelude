@@ -50,6 +50,18 @@
 GCRY_THREAD_OPTION_PTHREAD_IMPL;
 
 
+
+#ifdef HAVE_GNUTLS_STRING_PRIORITY
+
+static gnutls_priority_t tls_priority;
+static prelude_bool_t priority_set = FALSE;
+
+#endif
+
+
+static prelude_bool_t gnutls_initialized = FALSE;
+
+
 static int read_auth_result(prelude_io_t *fd)
 {
         int ret;
@@ -184,19 +196,95 @@ static void *fd_to_ptr(int fd)
 
 
 
+static void set_default_priority(gnutls_session session)
+{
+#ifdef HAVE_GNUTLS_STRING_PRIORITY
+        gnutls_priority_set(session, tls_priority);
+#else
+        const int c_prio[] = { GNUTLS_COMP_NULL, 0 };
+
+        gnutls_set_default_priority(session);
+
+        /*
+         * We override the default compression method since in early GnuTLS
+         * version, DEFLATE would be the default, and NULL would not be
+         * available.
+         */
+        gnutls_compression_set_priority(session, c_prio);
+#endif
+}
+
+
+
+static int init_gnutls(void)
+{
+        int ret;
+
+        if ( gnutls_initialized )
+                return 0;
+
+        ret = gnutls_global_init();
+        if ( ret < 0 )
+                return prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS,
+                                                  "TLS initialization failed: %s", gnutls_strerror(ret));
+
+        gnutls_initialized = TRUE;
+
+        return 0;
+}
+
+
+int tls_auth_init_priority(const char *tlsopts)
+{
+        int ret;
+
+        ret = init_gnutls();
+        if ( ret < 0 )
+                return ret;
+
+#ifdef HAVE_GNUTLS_STRING_PRIORITY
+        {
+                const char *errptr;
+
+                ret = gnutls_priority_init(&tls_priority, (tlsopts) ? tlsopts : "NORMAL", &errptr);
+                if ( ret < 0 )
+                        return prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS,
+                                                          "TLS options '%s': %s", errptr, gnutls_strerror(ret));
+        }
+#else
+        if ( tlsopts )
+                return prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS,
+                                                  "settings TLS options require GnuTLS 2.2.0 or above.\n");
+#endif
+
+        priority_set = TRUE;
+
+        return 0;
+}
+
+
 int tls_auth_connection(prelude_client_profile_t *cp, prelude_io_t *io, int crypt,
                         uint64_t *analyzerid, prelude_connection_permission_t *permission)
 {
-        int ret, fd;
         void *cred;
+        int ret, fd;
         gnutls_session session;
+
+        if ( ! priority_set ) {
+                ret = tls_auth_init_priority(NULL);
+                if ( ret < 0 )
+                        return ret;
+        }
 
         ret = prelude_client_profile_get_credentials(cp, &cred);
         if ( ret < 0 )
                 return ret;
 
-        gnutls_init(&session, GNUTLS_CLIENT);
-        gnutls_set_default_priority(session);
+        ret = gnutls_init(&session, GNUTLS_CLIENT);
+        if ( ret < 0 )
+                return prelude_error_verbose(PRELUDE_ERROR_PROFILE, "TLS initialization error: %s", gnutls_strerror(ret));
+
+        set_default_priority(session);
         gnutls_credentials_set(session, GNUTLS_CRD_CERTIFICATE, cred);
 
         fd = prelude_io_get_fd(io);
@@ -262,10 +350,9 @@ int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *
         if ( _prelude_thread_in_use() )
                 gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread);
 
-        ret = gnutls_global_init();
+        ret = init_gnutls();
         if ( ret < 0 )
-                return prelude_error_verbose_make(PRELUDE_ERROR_SOURCE_CLIENT, PRELUDE_ERROR_TLS,
-                                                  "TLS initialization failed: %s", gnutls_strerror(ret));
+                return ret;
 
         prelude_client_profile_get_tls_key_filename(cp, keyfile, sizeof(keyfile));
         ret = access(keyfile, F_OK);
@@ -323,4 +410,20 @@ int tls_auth_init(prelude_client_profile_t *cp, gnutls_certificate_credentials *
         _prelude_unload_file(data.data, data.size);
 
         return ret;
+}
+
+
+void tls_auth_deinit(void)
+{
+#ifdef HAVE_GNUTLS_STRING_PRIORITY
+        if ( priority_set ) {
+                gnutls_priority_deinit(tls_priority);
+                priority_set = FALSE;
+        }
+#endif
+
+        if ( gnutls_initialized ) {
+                gnutls_global_deinit();
+                gnutls_initialized = FALSE;
+        }
 }

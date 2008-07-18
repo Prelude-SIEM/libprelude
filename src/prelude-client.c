@@ -796,6 +796,11 @@ static int set_tcp_keepalive_intvl(prelude_option_t *opt, const char *optarg, pr
 }
 
 
+static int set_tls_options(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
+{
+        return tls_auth_init_priority(optarg);
+}
+
 static int set_heartbeat_interval(prelude_option_t *opt, const char *optarg, prelude_string_t *err, void *context)
 {
         prelude_client_t *ptr = context;
@@ -928,6 +933,12 @@ int _prelude_client_register_options(void)
         if ( ret < 0 )
                 return ret;
         prelude_option_set_priority(opt, PRELUDE_OPTION_PRIORITY_LAST);
+
+        ret = prelude_option_add(root_list, &opt, PRELUDE_OPTION_TYPE_CFG|PRELUDE_OPTION_TYPE_CLI, 0, "tls-options",
+                                 "TLS ciphers, key exchange methods, protocols, macs, and compression options",
+                                 PRELUDE_OPTION_ARGUMENT_REQUIRED, set_tls_options, NULL);
+        if ( ret < 0 )
+                return ret;
 
         ret = prelude_option_add(root_list, NULL, PRELUDE_OPTION_TYPE_CFG, 0,
                                  "tcp-keepalive-time", "Interval between the last data packet sent and the first keepalive probe",
