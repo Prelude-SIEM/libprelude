@@ -1488,6 +1488,8 @@ idmef_criteria_match
 idmef_criteria_get_or
 idmef_criteria_get_and
 idmef_criteria_new_from_string
+idmef_criteria_get_negation
+idmef_criteria_set_negation
 </SECTION>
 
 <SECTION>

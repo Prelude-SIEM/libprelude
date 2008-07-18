@@ -7037,7 +7037,7 @@ typedef enum {
 </TYPEDEF>
 <MACRO>
 <NAME>LIBPRELUDE_VERSION</NAME>
-#define LIBPRELUDE_VERSION "0.9.17"
+#define LIBPRELUDE_VERSION "0.9.18"
 </MACRO>
 <FUNCTION>
 <NAME>prelude_init</NAME>
@@ -7253,6 +7253,16 @@ const idmef_criteria_t *criteria
 <NAME>idmef_criteria_new_from_string</NAME>
 <RETURNS>int </RETURNS>
 idmef_criteria_t **criteria, const char *str
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_criteria_set_negation</NAME>
+<RETURNS>void </RETURNS>
+idmef_criteria_t *criteria, prelude_bool_t negate
+</FUNCTION>
+<FUNCTION>
+<NAME>idmef_criteria_get_negation</NAME>
+<RETURNS>prelude_bool_t </RETURNS>
+const idmef_criteria_t *criteria
 </FUNCTION>
 <ENUM>
 <NAME>idmef_data_type_t</NAME>
@@ -8316,17 +8326,17 @@ const idmef_value_t *value
 <FUNCTION>
 <NAME>idmef_value_iterate</NAME>
 <RETURNS>int </RETURNS>
-idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra
+const idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_iterate_reversed</NAME>
 <RETURNS>int </RETURNS>
-idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra
+const idmef_value_t *value, int (*callback)(idmef_value_t *ptr, void *extra), void *extra
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_nth</NAME>
 <RETURNS>idmef_value_t *</RETURNS>
-idmef_value_t *val, int n
+const idmef_value_t *val, int n
 </FUNCTION>
 <FUNCTION>
 <NAME>idmef_value_get_count</NAME>

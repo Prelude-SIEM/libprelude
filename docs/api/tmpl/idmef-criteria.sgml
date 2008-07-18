@@ -282,3 +282,21 @@ idmef-criteria
 @Returns: 
 
 
+<!-- ##### FUNCTION idmef_criteria_get_negation ##### -->
+<para>
+
+</para>
+
+@criteria: 
+@Returns: 
+
+
+<!-- ##### FUNCTION idmef_criteria_set_negation ##### -->
+<para>
+
+</para>
+
+@criteria: 
+@negate: 
+
+

@@ -1,3 +1,39 @@
+* 2008-07-18, libprelude-0.9.18:
+
+- Add support for newer GnuTLS 2.2.0 session priority functions. When
+  the option is available, the user might specify TLS settings through
+  the "tls-options" configuration entry.
+
+- Workaround a GnuTLS issue where the client wouldn't be able
+  to negotiate a supported compression protocol with the server (#299).
+
+- Implement variable substitution in Prelude configuration files.
+
+- Allow IDMEF criteria with multiples values for a single path,
+  as can be seen in the following example:
+    
+  alert.classification.text = (A || B || C || D)
+    
+  This will be internally translated to the original criteria language:
+  alert.classification.text = A || alert.classification.text = B || alert.classification.text = C || alert.classification.text = D
+
+- Implement negation of idmef-criteria, allowing to write criteria like:
+  ! (alert.classification.text = A || alert.classification.text = B)
+
+- Fix an IDMEF-Criteria matching problem, where the match function would
+  not attempt to match a OR after multiple consecutive AND that failed. 
+  Thanks Alexander Afonyashin <firm(at)iname.com> for pointing out the problem.
+
+- Never use non-pointer field, always use the "required" keyword. Fix
+  API consistency issue, that could lead to unexpected behavior.
+
+- Fix multiples problem with prelude_read_multiline / prelude_read_multiline2,
+  (fix a problem with prelude-manager idmef-criteria that wouldn't read 
+   external ruleset).
+
+- Error out if GnuTLS initialization fail.
+
+
 * 2008-05-06, libprelude-0.9.17.2:
 
 - Fix unresolved symbols on some architecture, thanks 
