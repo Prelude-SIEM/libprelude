@@ -36,6 +36,7 @@
 #include "prelude-timer.h"
 #include "prelude-thread.h"
 #include "variable.h"
+#include "tls-auth.h"
 
 
 int _prelude_internal_argc = 0;
