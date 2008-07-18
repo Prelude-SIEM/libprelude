@@ -29,5 +29,6 @@
 int variable_set(const char *variable, const char *value);
 int variable_unset(const char *variable);
 char *variable_get(const char *variable);
+void variable_unset_all(void);
 
 #endif /* _LIBPRELUDE_RULES_VARIABLE_H */

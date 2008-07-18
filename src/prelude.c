@@ -35,6 +35,7 @@
 #include "prelude-log.h"
 #include "prelude-timer.h"
 #include "prelude-thread.h"
+#include "variable.h"
 
 
 int _prelude_internal_argc = 0;
@@ -213,6 +214,9 @@ void prelude_deinit(void)
 
         _idmef_path_cache_destroy();
         prelude_option_destroy(NULL);
+        variable_unset_all();
+
+        tls_auth_deinit();
         gnutls_global_deinit();
 
         _prelude_thread_deinit();

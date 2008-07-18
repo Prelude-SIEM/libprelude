@@ -93,6 +93,14 @@ static int create_entry(const char *variable, const char *value)
 }
 
 
+static void destroy_variable(variable_t *item)
+{
+        prelude_list_del(&item->list);
+
+        free(item->variable);
+        free(item->value);
+        free(item);
+}
 
 
 /**
@@ -162,16 +170,20 @@ int variable_unset(const char *variable)
         if ( ! item )
                 return -1;
 
-        prelude_list_del(&item->list);
-
-        free(item->variable);
-        free(item->value);
-        free(item);
+        destroy_variable(item);
 
         return 0;
 }
 
 
 
+void variable_unset_all(void)
+{
+        variable_t *item;
+        prelude_list_t *tmp, *bkp;
 
-
+        prelude_list_for_each_safe(&variable_list, tmp, bkp) {
+                item = prelude_list_entry(tmp, variable_t, list);
+                destroy_variable(item);
+        }
+}
