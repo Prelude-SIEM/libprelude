@@ -54,11 +54,10 @@ GCRY_THREAD_OPTION_PTHREAD_IMPL;
 #ifdef HAVE_GNUTLS_STRING_PRIORITY
 
 static gnutls_priority_t tls_priority;
-static prelude_bool_t priority_set = FALSE;
 
 #endif
 
-
+static prelude_bool_t priority_set = FALSE;
 static prelude_bool_t gnutls_initialized = FALSE;
 
 
