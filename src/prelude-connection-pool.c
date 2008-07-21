@@ -289,7 +289,7 @@ again:
         if ( ret == 0 )
                 return 0;
 
-        prelude_thread_mutex_lock(&pool->mutex);
+        /* FIXME: prelude_thread_mutex_lock(&pool->mutex); */
 
         for ( or = pool->or_list; or != NULL; or = or->or ) {
         for ( cnx = or->and; cnx != NULL; cnx = cnx->and ) {
@@ -311,7 +311,7 @@ again:
                         i--;
         }}
 
-        prelude_thread_mutex_unlock(&pool->mutex);
+        /* FIXME: prelude_thread_mutex_unlock(&pool->mutex); */
         global_event_handler(pool, global_event);
 
         if ( pool->connection_string_changed )
