@@ -1,3 +1,15 @@
+* 2008-07-21, libprelude-0.9.18.1:
+
+- Temporarily disable mutex locking while calling event handler, since
+  we really need recursive mutex support for this task.
+
+- Fix possible application compilation breakage when including prelude-timer.h:
+  include time.h for time_t definition, fix #301.
+    
+- Fix compilation error with GnuTLS < 2.2.0 (fix #302).
+    
+
+
 * 2008-07-18, libprelude-0.9.18:
 
 - Add support for newer GnuTLS 2.2.0 session priority functions. When
