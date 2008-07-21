@@ -24,6 +24,18 @@
 #ifndef _LIBPRELUDE_PRELUDE_TIMER_H
 #define _LIBPRELUDE_PRELUDE_TIMER_H
 
+#include "prelude-config.h"
+ 
+#if TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else
+# if HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else
+#  include <time.h>
+# endif
+#endif
 
 #include "prelude-list.h"
 
