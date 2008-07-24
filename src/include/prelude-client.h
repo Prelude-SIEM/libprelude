@@ -75,9 +75,13 @@ prelude_connection_permission_t prelude_client_get_required_permission(prelude_c
 
 void prelude_client_send_msg(prelude_client_t *client, prelude_msg_t *msg);
 
+int prelude_client_recv_msg(prelude_client_t *client, int timeout, prelude_msg_t **msg);
+
 void prelude_client_set_heartbeat_cb(prelude_client_t *client, void (*cb)(prelude_client_t *client, idmef_message_t *hb));
 
 void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg);
+
+int prelude_client_recv_idmef(prelude_client_t *client, int timeout, idmef_message_t **idmef);
 
 void prelude_client_destroy(prelude_client_t *client, prelude_client_exit_status_t status);
 

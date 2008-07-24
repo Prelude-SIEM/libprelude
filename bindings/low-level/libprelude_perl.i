@@ -49,13 +49,13 @@ SV *swig_perl_data(idmef_data_t *data)
 	switch ( idmef_data_get_type(data) ) {
 	case IDMEF_DATA_TYPE_CHAR: 
 	case IDMEF_DATA_TYPE_BYTE:
-		return newSVpv(idmef_data_get_data(data), 1);
+		return newSVpv((const char *)idmef_data_get_data(data), 1);
 
 	case IDMEF_DATA_TYPE_CHAR_STRING: 
-		return newSVpv(idmef_data_get_data(data), idmef_data_get_len(data) - 1);
+		return newSVpv((const char *)idmef_data_get_data(data), idmef_data_get_len(data) - 1);
 
 	case IDMEF_DATA_TYPE_BYTE_STRING:
-		return newSVpv(idmef_data_get_data(data), idmef_data_get_len(data));
+		return newSVpv((const char *)idmef_data_get_data(data), idmef_data_get_len(data));
 
 	case IDMEF_DATA_TYPE_UINT32:
 		return newSVpvf("%d", idmef_data_get_uint32(data));

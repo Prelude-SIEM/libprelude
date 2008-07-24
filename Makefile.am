@@ -1,4 +1,4 @@
-DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --without-system-ltdl
+DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --without-system-ltdl --enable-easy-bindings
 ACLOCAL_AMFLAGS = -I m4 -I libmissing/m4
 
 if HAVE_SYSTEM_LIBLTDL

@@ -57,13 +57,13 @@ PyObject *swig_python_data(idmef_data_t *data)
 	switch ( idmef_data_get_type(data) ) {
 	case IDMEF_DATA_TYPE_CHAR: 
 	case IDMEF_DATA_TYPE_BYTE:
-		return PyString_FromStringAndSize(idmef_data_get_data(data), 1);
+		return PyString_FromStringAndSize((const char *)idmef_data_get_data(data), 1);
 
 	case IDMEF_DATA_TYPE_CHAR_STRING: 
-		return PyString_FromStringAndSize(idmef_data_get_data(data), idmef_data_get_len(data) - 1);
+		return PyString_FromStringAndSize((const char *)idmef_data_get_data(data), idmef_data_get_len(data) - 1);
 
 	case IDMEF_DATA_TYPE_BYTE_STRING:
-		return PyString_FromStringAndSize(idmef_data_get_data(data), idmef_data_get_len(data));
+		return PyString_FromStringAndSize((const char *)idmef_data_get_data(data), idmef_data_get_len(data));
 
 	case IDMEF_DATA_TYPE_UINT32:
 		return PyLong_FromLongLong(idmef_data_get_uint32(data));

@@ -42,6 +42,16 @@
 #include "idmef-value-type.h"
 
 #define CHUNK_SIZE 16
+#define FLOAT_TOLERANCE 0.0001
+
+
+#ifndef MAX
+# define MAX(x, y) ((x) > (y) ? (x) : (y))
+#endif
+
+#ifndef ABS
+# define ABS(x) (((x) < 0) ? -(x) : (x))
+#endif
 
 
 #define idmef_value_new_decl(mtype, vname, vtype)                    \
@@ -58,6 +68,21 @@ int idmef_value_new_ ## vname (idmef_value_t **value, vtype val) {   \
 }
 
 
+#define idmef_value_set_decl(mtype, vname, vtype)                    \
+int idmef_value_set_ ## vname (idmef_value_t *value, vtype val)      \
+{                                                                    \
+        prelude_return_val_if_fail(value, prelude_error(PRELUDE_ERROR_ASSERTION)); \
+                                                                     \
+        if ( value->own_data )                                       \
+                idmef_value_type_destroy(&value->type);              \
+                                                                     \
+        value->type.id = IDMEF_VALUE_TYPE_ ## mtype;                 \
+        value->type.data. vname ## _val = val;                       \
+        value->own_data = TRUE;                                      \
+                                                                     \
+        return 0;                                                    \
+}
+
 #define idmef_value_get_decl(mtype, vname, vtype)                \
 vtype idmef_value_get_ ## vname (const idmef_value_t *val)       \
 {                                                                \
@@ -68,6 +93,77 @@ vtype idmef_value_get_ ## vname (const idmef_value_t *val)       \
                                                                  \
         return val->type.data. vname ## _val;                    \
 }
+
+
+#define idmef_value_decl(mtype, vname, vtype)     \
+        idmef_value_new_decl(mtype, vname, vtype) \
+        idmef_value_get_decl(mtype, vname, vtype) \
+        idmef_value_set_decl(mtype, vname, vtype)
+
+
+
+#define CASTCHK(ntype, fval, src, dst)                                             \
+  if ( ! (src == dst && (src < 1) == (dst < 1)) )                                  \
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC,                \
+                        "Value '%" fval "' is incompatible with output type '%s'", \
+                        src, idmef_value_type_to_string(ntype))
+
+
+
+#define FLOATCHK(ntype, fval, src, dst)                                            \
+        if ( reldif(src, dst) > FLOAT_TOLERANCE )                                  \
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC,                \
+                        "Value '%" fval "' is incompatible with output type '%s'", \
+                        src, idmef_value_type_to_string(ntype))
+
+
+#define VALUE_CAST_CHECK(v, itype_t, itype, iformat, ntype) do {      \
+        itype_t src = idmef_value_get_ ##itype(value);                \
+                                                                      \
+        if ( ntype == IDMEF_VALUE_TYPE_INT8 ) {                       \
+                idmef_value_set_int8(value, src);                     \
+                CASTCHK(ntype, iformat, src, v->type.data.int8_val);  \
+                                                                      \
+        } else if ( ntype == IDMEF_VALUE_TYPE_UINT8 ) {               \
+                idmef_value_set_uint8(value, src);                    \
+                CASTCHK(ntype, iformat, src, v->type.data.uint8_val); \
+                                                                      \
+        } else if ( ntype == IDMEF_VALUE_TYPE_INT16 ) {               \
+                idmef_value_set_int16(value, src);                    \
+                CASTCHK(ntype, iformat, src, v->type.data.int16_val); \
+                                                                      \
+        } else if ( ntype == IDMEF_VALUE_TYPE_UINT16 ) {              \
+                idmef_value_set_uint16(value, src);                   \
+                CASTCHK(ntype, iformat, src, v->type.data.uint16_val);\
+                                                                      \
+        } else if ( ntype == IDMEF_VALUE_TYPE_INT32 ) {               \
+                idmef_value_set_int32(value, src);                    \
+                CASTCHK(ntype, iformat, src, v->type.data.int32_val); \
+                                                                      \
+        } else if ( ntype == IDMEF_VALUE_TYPE_UINT32 ) {              \
+                idmef_value_set_uint32(value, src);                   \
+                CASTCHK(ntype, iformat, src, v->type.data.uint32_val);\
+                                                                      \
+        } else if ( ntype == IDMEF_VALUE_TYPE_INT64 ) {               \
+                idmef_value_set_int64(value, src);                    \
+                CASTCHK(ntype, iformat, src, v->type.data.int64_val); \
+                                                                      \
+        } else if ( ntype == IDMEF_VALUE_TYPE_UINT64 ) {              \
+                idmef_value_set_uint64(value, src);                   \
+                CASTCHK(ntype, iformat, src, v->type.data.uint64_val);\
+                                                                      \
+        } else if ( ntype == IDMEF_VALUE_TYPE_FLOAT ) {               \
+                idmef_value_set_float(value, src);                    \
+                FLOATCHK(ntype, iformat, src, v->type.data.float_val);\
+                                                                      \
+        } else if ( ntype == IDMEF_VALUE_TYPE_DOUBLE ) {              \
+                idmef_value_set_double(value, src);                   \
+                FLOATCHK(ntype, iformat, src, v->type.data.double_val); \
+                                                                      \
+        } else return prelude_error_verbose(PRELUDE_ERROR_GENERIC,    \
+                                          "Unable to handle output type '%s' for integer cast", \
+                                           idmef_value_type_to_string(ntype));                  \
+} while(0)
 
 
 
@@ -89,6 +185,21 @@ struct idmef_value {
 };
 
 
+/*
+ * Returns the relative difference of two real numbers: 0.0 if they are
+ * exactly the same, otherwise, the ratio of the difference to the
+ * larger of the two.
+ */
+static double reldif(double a, double b)
+{
+        double c = ABS(a);
+        double d = ABS(b);
+
+        d = MAX(c, d);
+
+        return d == 0.0 ? 0.0 : ABS(a - b) / d;
+}
+
 
 static int string_isdigit(const char *s)
 {
@@ -100,7 +211,6 @@ static int string_isdigit(const char *s)
 
         return 0;
 }
-
 
 
 static int idmef_value_create(idmef_value_t **ret, idmef_value_type_id_t type_id)
@@ -118,30 +228,20 @@ static int idmef_value_create(idmef_value_t **ret, idmef_value_type_id_t type_id
 
 
 
-idmef_value_new_decl(INT8, int8, int8_t)
-idmef_value_new_decl(UINT8, uint8, uint8_t)
-idmef_value_new_decl(INT16, int16, int16_t)
-idmef_value_new_decl(UINT16, uint16, uint16_t)
-idmef_value_new_decl(INT32, int32, int32_t)
-idmef_value_new_decl(UINT32, uint32, uint32_t)
-idmef_value_new_decl(INT64, int64, int64_t)
-idmef_value_new_decl(UINT64, uint64, uint64_t)
-idmef_value_new_decl(FLOAT, float, float)
-idmef_value_new_decl(DOUBLE, double, double)
+idmef_value_decl(INT8, int8, int8_t)
+idmef_value_decl(UINT8, uint8, uint8_t)
+idmef_value_decl(INT16, int16, int16_t)
+idmef_value_decl(UINT16, uint16, uint16_t)
+idmef_value_decl(INT32, int32, int32_t)
+idmef_value_decl(UINT32, uint32, uint32_t)
+idmef_value_decl(INT64, int64, int64_t)
+idmef_value_decl(UINT64, uint64, uint64_t)
+idmef_value_decl(FLOAT, float, float)
+idmef_value_decl(DOUBLE, double, double)
+idmef_value_decl(STRING, string, prelude_string_t *)
+idmef_value_decl(DATA, data, idmef_data_t *)
+idmef_value_decl(TIME, time, idmef_time_t *)
 
-idmef_value_get_decl(INT8, int8, int8_t)
-idmef_value_get_decl(UINT8, uint8, uint8_t)
-idmef_value_get_decl(INT16, int16, int16_t)
-idmef_value_get_decl(UINT16, uint16, uint16_t)
-idmef_value_get_decl(INT32, int32, int32_t)
-idmef_value_get_decl(UINT32, uint32, uint32_t)
-idmef_value_get_decl(INT64, int64, int64_t)
-idmef_value_get_decl(UINT64, uint64, uint64_t)
-idmef_value_get_decl(FLOAT, float, float)
-idmef_value_get_decl(DOUBLE, double, double)
-idmef_value_get_decl(STRING, string, prelude_string_t *)
-idmef_value_get_decl(DATA, data, idmef_data_t *)
-idmef_value_get_decl(TIME, time, idmef_time_t *)
 
 
 int idmef_value_get_enum(const idmef_value_t *value)
@@ -155,57 +255,20 @@ int idmef_value_get_enum(const idmef_value_t *value)
 }
 
 
-
-int idmef_value_new_string(idmef_value_t **value, prelude_string_t *string)
+int idmef_value_set_class(idmef_value_t *value, idmef_class_id_t class, void *object)
 {
-        int ret;
+        prelude_return_val_if_fail(value, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(object, prelude_error(PRELUDE_ERROR_ASSERTION));
 
-        prelude_return_val_if_fail(string, prelude_error(PRELUDE_ERROR_ASSERTION));
+        if ( value->own_data )
+                idmef_value_type_destroy(&value->type);
 
-        ret = idmef_value_create(value, IDMEF_VALUE_TYPE_STRING);
-        if ( ret < 0 )
-                return ret;
+        value->own_data = TRUE;
+        value->type.data.class_val.object = object;
+        value->type.data.class_val.class_id = class;
 
-        (*value)->type.data.string_val = string;
-
-        return ret;
+        return 0;
 }
-
-
-
-int idmef_value_new_time(idmef_value_t **value, idmef_time_t *time)
-{
-        int ret;
-
-        prelude_return_val_if_fail(time, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-        ret = idmef_value_create(value, IDMEF_VALUE_TYPE_TIME);
-        if ( ret < 0 )
-                return ret;
-
-        (*value)->type.data.time_val = time;
-
-        return ret;
-}
-
-
-
-int idmef_value_new_data(idmef_value_t **value, idmef_data_t *data)
-{
-        int ret;
-
-        prelude_return_val_if_fail(data, prelude_error(PRELUDE_ERROR_ASSERTION));
-
-        ret = idmef_value_create(value, IDMEF_VALUE_TYPE_DATA);
-        if ( ret < 0 )
-                return ret;
-
-        (*value)->type.data.data_val = data;
-
-        return ret;
-}
-
-
 
 
 int idmef_value_new_class(idmef_value_t **value, idmef_class_id_t class, void *object)
@@ -225,6 +288,52 @@ int idmef_value_new_class(idmef_value_t **value, idmef_class_id_t class, void *o
 }
 
 
+int idmef_value_set_enum_from_numeric(idmef_value_t *value, idmef_class_id_t class, int val)
+{
+        prelude_return_val_if_fail(value, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        if ( value->own_data )
+                idmef_value_type_destroy(&value->type);
+
+        value->own_data = TRUE;
+        value->type.id = IDMEF_VALUE_TYPE_ENUM;
+        value->type.data.enum_val.value = val;
+        value->type.data.enum_val.class_id = class;
+
+        return 0;
+}
+
+
+int idmef_value_set_enum_from_string(idmef_value_t *value, idmef_class_id_t class, const char *buf)
+{
+        int ret;
+
+        prelude_return_val_if_fail(value, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(buf, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        ret = idmef_class_enum_to_numeric(class, buf);
+        if ( ret < 0 )
+                return ret;
+
+        return idmef_value_set_enum_from_numeric(value, class, ret);
+}
+
+
+int idmef_value_set_enum(idmef_value_t *value, idmef_class_id_t class, const char *buf)
+{
+        int ret;
+
+        prelude_return_val_if_fail(value, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(buf, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        if ( string_isdigit(buf) == 0 )
+                ret = idmef_value_set_enum_from_numeric(value, class, atoi(buf));
+        else
+                ret = idmef_value_set_enum_from_string(value, class, buf);
+
+        return ret;
+}
+
 
 int idmef_value_new_enum_from_numeric(idmef_value_t **value, idmef_class_id_t class, int val)
 {
@@ -239,7 +348,6 @@ int idmef_value_new_enum_from_numeric(idmef_value_t **value, idmef_class_id_t cl
 
         return ret;
 }
-
 
 
 int idmef_value_new_enum_from_string(idmef_value_t **value, idmef_class_id_t class, const char *buf)
@@ -270,7 +378,6 @@ int idmef_value_new_enum(idmef_value_t **value, idmef_class_id_t class, const ch
 
         return ret;
 }
-
 
 
 int idmef_value_new_list(idmef_value_t **value)
@@ -756,3 +863,288 @@ void idmef_value_destroy(idmef_value_t *val)
         free(val);
 }
 
+
+static int cast_to_data(idmef_value_t *input)
+{
+        int ret;
+        idmef_data_t *data;
+        idmef_value_type_id_t vtype = idmef_value_get_type(input);
+
+        if ( vtype == IDMEF_VALUE_TYPE_STRING ) {
+                prelude_string_t *str = idmef_value_get_string(input);
+
+                ret = idmef_data_new_char_string_dup_fast(&data, prelude_string_get_string(str), prelude_string_get_len(str));
+                if ( ret < 0 )
+                        return ret;
+
+                return idmef_value_set_data(input, data);
+        }
+
+        else if ( vtype == IDMEF_VALUE_TYPE_INT8 ) {
+                ret = idmef_data_new_uint32(&data, idmef_value_get_int8(input));
+                if ( ret < 0 )
+                        return ret;
+
+                return idmef_value_set_data(input, data);
+        }
+
+        else if ( vtype == IDMEF_VALUE_TYPE_UINT8 ) {
+                ret = idmef_data_new_uint32(&data, idmef_value_get_uint8(input));
+                if ( ret < 0 )
+                        return ret;
+
+                return idmef_value_set_data(input, data);
+        }
+
+        else if ( vtype == IDMEF_VALUE_TYPE_INT16 ) {
+                ret = idmef_data_new_uint32(&data, idmef_value_get_int16(input));
+                if ( ret < 0 )
+                        return ret;
+
+                return idmef_value_set_data(input, data);
+        }
+
+        else if ( vtype == IDMEF_VALUE_TYPE_UINT16 ) {
+                ret = idmef_data_new_uint32(&data, idmef_value_get_uint16(input));
+                if ( ret < 0 )
+                        return ret;
+
+                return idmef_value_set_data(input, data);
+        }
+
+        else if ( vtype == IDMEF_VALUE_TYPE_INT32 ) {
+                ret = idmef_data_new_uint32(&data, idmef_value_get_int32(input));
+                if ( ret < 0 )
+                        return ret;
+
+                return idmef_value_set_data(input, data);
+        }
+
+        else if ( vtype == IDMEF_VALUE_TYPE_UINT32 ) {
+                ret = idmef_data_new_uint32(&data, idmef_value_get_uint32(input));
+                if ( ret < 0 )
+                        return ret;
+
+                return idmef_value_set_data(input, data);
+        }
+
+        else if ( vtype == IDMEF_VALUE_TYPE_INT64 ) {
+                ret = idmef_data_new_uint64(&data, idmef_value_get_int64(input));
+                if ( ret < 0 )
+                        return ret;
+
+                return idmef_value_set_data(input, data);
+        }
+
+        else if ( vtype == IDMEF_VALUE_TYPE_UINT64 ) {
+                ret = idmef_data_new_uint64(&data, idmef_value_get_uint64(input));
+                if ( ret < 0 )
+                        return ret;
+
+                return idmef_value_set_data(input, data);
+        }
+
+        else if ( vtype == IDMEF_VALUE_TYPE_FLOAT ) {
+                int64_t v = idmef_value_get_float(input);
+
+                if ( v == idmef_value_get_float(input) )
+                        ret = idmef_data_new_uint64(&data, v);
+                else
+                        ret = idmef_data_new_float(&data, idmef_value_get_float(input));
+
+                if ( ret < 0 )
+                        return ret;
+
+                return idmef_value_set_data(input, data);
+        }
+
+        else if ( vtype == IDMEF_VALUE_TYPE_DOUBLE ) {
+                int64_t v = idmef_value_get_double(input);
+
+                if ( v == idmef_value_get_double(input) )
+                        ret = idmef_data_new_uint64(&data, v);
+                else
+                        ret = idmef_data_new_float(&data, idmef_value_get_double(input));
+
+                if ( ret < 0 )
+                        return ret;
+
+                return idmef_value_set_data(input, data);
+        }
+
+        return -1;
+}
+
+
+static int cast_to_time(idmef_value_t *value)
+{
+        int ret = -1;
+        idmef_time_t *time;
+
+        if ( idmef_value_get_type(value) == IDMEF_VALUE_TYPE_STRING ) {
+                ret = idmef_time_new_from_string(&time, prelude_string_get_string(idmef_value_get_string(value)));
+                if ( ret < 0 )
+                        return ret;
+
+                idmef_value_set_time(value, time);
+        }
+
+        else if ( idmef_value_get_type(value) == IDMEF_VALUE_TYPE_INT32 ||
+                  idmef_value_get_type(value) == IDMEF_VALUE_TYPE_UINT32 ) {
+                time_t val = idmef_value_get_uint32(value);
+
+                ret = idmef_time_new_from_time(&time, &val);
+                if ( ret < 0 )
+                        return ret;
+
+                idmef_value_set_time(value, time);
+        }
+
+        else if ( idmef_value_get_type(value) == IDMEF_VALUE_TYPE_INT64 ||
+                  idmef_value_get_type(value) == IDMEF_VALUE_TYPE_UINT64 ) {
+                time_t val = idmef_value_get_uint64(value);
+
+                ret = idmef_time_new_from_time(&time, &val);
+                if ( ret < 0 )
+                        return ret;
+
+                idmef_value_set_time(value, time);
+        }
+
+        return ret;
+}
+
+
+
+static int cast_to_string(idmef_value_t *value)
+{
+        int ret;
+        prelude_string_t *out;
+
+        ret = prelude_string_new(&out);
+        if ( ret < 0 )
+                return ret;
+
+        ret = idmef_value_type_write(&value->type, out);
+        if ( ret < 0 ) {
+                prelude_string_destroy(out);
+                return ret;
+        }
+
+        idmef_value_type_destroy(&value->type);
+        idmef_value_set_string(value, out);
+
+        return 0;
+}
+
+
+
+static int cast_from_string(idmef_value_t *value, idmef_value_type_id_t ntype)
+{
+        int ret;
+        idmef_value_type_t vt;
+        prelude_string_t *str = idmef_value_get_string(value);
+
+        vt.id = ntype;
+
+        ret = idmef_value_type_read(&vt, prelude_string_get_string(str));
+        if ( ret < 0 )
+                return ret;
+
+        idmef_value_type_destroy(&value->type);
+        memcpy(&value->type, &vt, sizeof(value->type));
+
+        return 0;
+}
+
+
+
+int _idmef_value_cast(idmef_value_t *value, idmef_value_type_id_t ntype, idmef_class_id_t id)
+{
+        prelude_return_val_if_fail(value, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        prelude_log_debug(3, "converting '%s' to '%s'.\n",
+                          idmef_value_type_to_string(idmef_value_get_type(value)),
+                          idmef_value_type_to_string(ntype));
+
+        if ( ntype == IDMEF_VALUE_TYPE_DATA )
+                return cast_to_data(value);
+
+        else if ( ntype == IDMEF_VALUE_TYPE_TIME )
+                return cast_to_time(value);
+
+        else if ( ntype == IDMEF_VALUE_TYPE_STRING )
+                return cast_to_string(value);
+
+        else if ( ntype == IDMEF_VALUE_TYPE_ENUM && idmef_value_get_type(value) == IDMEF_VALUE_TYPE_STRING ) {
+                prelude_string_t *str = idmef_value_get_string(value);
+                return idmef_value_set_enum_from_string(value, id, prelude_string_get_string(str));
+        }
+
+        else if ( value->type.id == IDMEF_VALUE_TYPE_INT8 )
+                VALUE_CAST_CHECK(value, int8_t, int8, PRELUDE_PRId8, ntype);
+
+        else if ( value->type.id == IDMEF_VALUE_TYPE_UINT8 )
+                VALUE_CAST_CHECK(value, uint8_t, uint8, PRELUDE_PRIu8, ntype);
+
+        else if ( value->type.id == IDMEF_VALUE_TYPE_INT16 )
+                VALUE_CAST_CHECK(value, int16_t, int16, PRELUDE_PRId16, ntype);
+
+        else if ( value->type.id == IDMEF_VALUE_TYPE_UINT16 )
+                VALUE_CAST_CHECK(value, uint16_t, uint16, PRELUDE_PRIu16, ntype);
+
+        else if ( value->type.id == IDMEF_VALUE_TYPE_INT32 )
+                VALUE_CAST_CHECK(value, int32_t, int32, PRELUDE_PRId32, ntype);
+
+        else if ( value->type.id == IDMEF_VALUE_TYPE_UINT32 )
+                VALUE_CAST_CHECK(value, uint32_t, uint32, PRELUDE_PRIu32, ntype);
+
+        else if ( value->type.id == IDMEF_VALUE_TYPE_INT64 )
+                VALUE_CAST_CHECK(value, int64_t, int64, PRELUDE_PRId64, ntype);
+
+        else if ( value->type.id == IDMEF_VALUE_TYPE_UINT64 )
+                VALUE_CAST_CHECK(value, uint64_t, uint64, PRELUDE_PRIu64, ntype);
+
+        else if ( value->type.id == IDMEF_VALUE_TYPE_FLOAT )
+                VALUE_CAST_CHECK(value, float, float, "f", ntype);
+
+        else if ( value->type.id == IDMEF_VALUE_TYPE_DOUBLE )
+                VALUE_CAST_CHECK(value, double, double, "f", ntype);
+
+        else if ( value->type.id == IDMEF_VALUE_TYPE_STRING )
+                return cast_from_string(value, ntype);
+
+        else return prelude_error_verbose(PRELUDE_ERROR_GENERIC,
+                                          "Unable to cast input type '%s' to '%s'",
+                                           idmef_value_type_to_string(value->type.id),
+                                           idmef_value_type_to_string(ntype));
+
+        return 0;
+}
+
+
+
+int _idmef_value_copy_internal(const idmef_value_t *val,
+                               idmef_value_type_id_t res_type, idmef_class_id_t res_id, void *res)
+{
+        int ret;
+
+        prelude_return_val_if_fail(val, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(res, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        if ( res_type == val->type.id )
+                ret = idmef_value_type_copy(&val->type, res);
+        else {
+                idmef_value_t copy;
+
+                memcpy(&copy, val, sizeof(copy));
+
+                ret = _idmef_value_cast(&copy, res_type, res_id);
+                if ( ret < 0 )
+                        return ret;
+
+                ret = idmef_value_type_copy(&copy.type, res);
+        }
+
+        return ret;
+}

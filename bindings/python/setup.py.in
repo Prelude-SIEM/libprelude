@@ -5,7 +5,7 @@ import shutil
 from distutils.sysconfig import get_python_lib
 from distutils.core import setup, Extension
 
-FILES_TO_BE_COPIED = ("_prelude.c", "prelude.py")
+FILES_TO_BE_COPIED = ("_PreludeEasy.cxx", "PreludeEasy.py")
 
 
 def split_args(s):
@@ -54,7 +54,7 @@ def uninstall():
     else:
         prefix = "@prefix@"
     
-    for f in "prelude.py", "prelude.pyc", "_prelude.so":
+    for f in "PreludeEasy.py", "PreludeEasy.pyc", "_PreludeEasy.so":
         file = get_root() + "/" + get_python_lib(prefix=prefix) + "/" + f
         exists(file) and os.remove(file)
 
@@ -75,11 +75,11 @@ commands = {
 if len(sys.argv) > 1 and commands.has_key(sys.argv[1]):
     commands[sys.argv[1]]()
 
-setup(name="prelude",
-      package_dir={'prelude': '@top_srcdir@/bindings/python'},
-      py_modules=["prelude"],
-      ext_modules=[Extension("_prelude",
-                             ["_prelude.c"],
-                             extra_compile_args=split_args("-DHAVE_CONFIG_H -I@top_builddir@ -I@top_srcdir@/src/include -I@top_builddir@/src/include -I@top_builddir@/src/libprelude-error -I@top_srcdir@/bindings @PTHREAD_CFLAGS@"),
-                             library_dirs=[ "@top_builddir@/src/.libs/" ],
-                             extra_link_args=split_args("-lprelude @PTHREAD_CFLAGS@ @LIBPRELUDE_LIBS@ @LIBADD_DL@ @PTHREAD_LIBS@"))])
+setup(name="PreludeEasy",
+      package_dir={'PreludeEasy': '@top_srcdir@/bindings/python'},
+      py_modules=["PreludeEasy"],
+      ext_modules=[Extension("_PreludeEasy",
+                             ["_PreludeEasy.cxx"],
+                             extra_compile_args=split_args("-DHAVE_CONFIG_H -I@top_builddir@ -I@top_srcdir@/src/include -I@top_builddir@/src/include -I@top_builddir@/src/libprelude-error -I@top_srcdir@/bindings/c++/include @PTHREAD_CFLAGS@"),
+                             library_dirs=[ "@top_builddir@/src/.libs/", "@top_builddir@/bindings/c++/.libs/" ],
+                             extra_link_args=split_args("-lpreludecpp -lprelude @PTHREAD_CFLAGS@ @LIBPRELUDE_LIBS@ @LIBADD_DL@ @PTHREAD_LIBS@"))])

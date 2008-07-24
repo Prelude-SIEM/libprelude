@@ -33,8 +33,8 @@ void *swig_idmef_value_get_descriptor(idmef_value_t *value)
         unsigned int i = 0;
         idmef_class_id_t wanted_class = idmef_value_get_class(value);
 	const struct {
-	        idmef_class_id_t class;
-	        const char *typename;
+	        idmef_class_id_t classid;
+	        const char *classname;
 	} tbl[] = {
                 { IDMEF_CLASS_ID_ADDITIONAL_DATA, "idmef_additional_data_t *" },
                 { IDMEF_CLASS_ID_CLASSIFICATION, "idmef_classification_t *" },
@@ -69,9 +69,9 @@ void *swig_idmef_value_get_descriptor(idmef_value_t *value)
                 { 0, NULL }
         };
 
-        for ( i = 0; tbl[i].typename != NULL; i++ ) {
-                if ( tbl[i].class == wanted_class )
-		        return SWIG_TypeQuery(tbl[i].typename);
+        for ( i = 0; tbl[i].classname != NULL; i++ ) {
+                if ( tbl[i].classid == wanted_class )
+		        return SWIG_TypeQuery(tbl[i].classname);
         }
 
         return NULL;

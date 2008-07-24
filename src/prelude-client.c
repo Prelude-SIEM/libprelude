@@ -1292,6 +1292,95 @@ void prelude_client_send_idmef(prelude_client_t *client, idmef_message_t *msg)
 
 
 /**
+ * prelude_client_recv_msg:
+ * @client: Pointer to a #prelude_client_t object.
+ * @timeout: Number of millisecond to wait for a message.
+ * @msg: Pointer where the received #prelude_msg_t should be stored.
+ *
+ * Wait @timeout second for a message on @client connection pool.
+ *
+ * A @timeout of -1, mean prelude_client_recv_msg() will block until
+ * a message is received. A @timeout of 0 mean that it will return
+ * immediatly.
+ *
+ * Returns: 0 on timeout, a negative value on error, 1 on success.
+ */
+int prelude_client_recv_msg(prelude_client_t *client, int timeout, prelude_msg_t **msg)
+{
+        int ret;
+        prelude_msg_t *m = NULL;
+        prelude_connection_t *con;
+
+        prelude_return_val_if_fail(client, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(msg, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        ret = prelude_connection_pool_recv(client->cpool, timeout, &con, &m);
+        if ( ret <= 0 )
+                return ret;
+
+        ret = prelude_client_handle_msg_default(client, m, client->msgbuf);
+        if ( ret == 0 ) {
+                prelude_msg_destroy(m);
+                return 0;
+        }
+
+        *msg = m;
+        return 1;
+}
+
+
+
+/**
+ * prelude_client_recv_idmef:
+ * @client: Pointer to a #prelude_client_t object.
+ * @timeout: Number of second to wait for a message.
+ * @idmef: Pointer where the received #idmef_message_t should be stored.
+ *
+ * Wait @timeout second for a message on @client connection pool.
+ *
+ * A @timeout of -1, mean prelude_client_recv_idmef() will block until
+ * a message is received. A @timeout of 0 mean that it will return
+ * immediatly.
+ *
+ * Returns: 0 on timeout, a negative value on error, 1 on success.
+ */
+int prelude_client_recv_idmef(prelude_client_t *client, int timeout, idmef_message_t **idmef)
+{
+        int ret;
+        prelude_msg_t *msg = NULL;
+
+        prelude_return_val_if_fail(client, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(idmef, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        if ( ! (client->permission & PRELUDE_CONNECTION_PERMISSION_IDMEF_READ) )
+                return prelude_error_verbose(PRELUDE_ERROR_GENERIC,
+                                             "Client should use 'idmef:r' permission to read IDMEF message");
+
+        ret = prelude_client_recv_msg(client, timeout, &msg);
+        if ( ret <= 0 )
+                return ret;
+
+        ret = idmef_message_new(idmef);
+        if ( ret < 0 ) {
+                prelude_msg_destroy(msg);
+                return ret;
+        }
+
+        ret = idmef_message_read(*idmef, msg);
+        if ( ret < 0 ) {
+                prelude_msg_destroy(msg);
+                idmef_message_destroy(*idmef);
+                return ret;
+        }
+
+        idmef_message_set_pmsg(*idmef, msg);
+
+        return 1;
+}
+
+
+
+/**
  * prelude_client_get_connection_pool:
  * @client: pointer to a #prelude_client_t object.
  *

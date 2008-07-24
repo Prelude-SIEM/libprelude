@@ -94,6 +94,8 @@ int _prelude_connection_keepalive_intvl = 0;
 struct prelude_connection {
         PRELUDE_LINKED_OBJECT;
 
+        int refcount;
+
         char *saddr;
         unsigned int sport;
 
@@ -602,6 +604,9 @@ void prelude_connection_destroy(prelude_connection_t *conn)
 {
         prelude_return_if_fail(conn);
 
+        if ( --conn->refcount > 0 )
+                return;
+
         destroy_connection_fd(conn);
 
         free(conn->daddr);
@@ -626,6 +631,8 @@ int prelude_connection_new(prelude_connection_t **out, const char *addr)
         new = calloc(1, sizeof(*new));
         if ( ! new )
                 return prelude_error_from_errno(errno);
+
+        new->refcount = 1;
 
         ret = prelude_io_new(&new->fd);
         if ( ret < 0 ) {
@@ -1054,3 +1061,21 @@ prelude_connection_permission_t prelude_connection_get_permission(prelude_connec
 }
 
 
+/**
+ * prelude_connection_ref:
+ * @conn: Pointer to a #prelude_connection_t object to reference.
+ *
+ * Increases @conn reference count.
+ *
+ * prelude_connection_destroy() will decrease the refcount until it
+ * reaches 0, at which point @conn will be destroyed.
+ *
+ * Returns: @conn.
+ */
+prelude_connection_t *prelude_connection_ref(prelude_connection_t *conn)
+{
+        prelude_return_val_if_fail(conn, NULL);
+
+        conn->refcount++;
+        return conn;
+}

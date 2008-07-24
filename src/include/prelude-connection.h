@@ -52,6 +52,8 @@ typedef struct prelude_connection prelude_connection_t;
 
 void prelude_connection_destroy(prelude_connection_t *conn);
 
+prelude_connection_t *prelude_connection_ref(prelude_connection_t *conn);
+
 int prelude_connection_send(prelude_connection_t *cnx, prelude_msg_t *msg);
 
 int prelude_connection_recv(prelude_connection_t *cnx, prelude_msg_t **outmsg);
@@ -105,6 +107,8 @@ int prelude_connection_new_msgbuf(prelude_connection_t *connection, prelude_msgb
 int prelude_connection_permission_to_string(prelude_connection_permission_t perm, prelude_string_t *out);
 
 int prelude_connection_permission_new_from_string(prelude_connection_permission_t *out, const char *buf);
+
+prelude_connection_t *prelude_connection_ref(prelude_connection_t *conn);
 
 #ifdef __cplusplus
  }

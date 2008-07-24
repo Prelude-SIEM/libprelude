@@ -43,6 +43,7 @@ struct idmef_criterion {
 
 
 struct idmef_criteria {
+        int refcount;
         prelude_bool_t negated;
         idmef_criterion_t *criterion;
         struct idmef_criteria *or;
@@ -382,6 +383,7 @@ int idmef_criteria_new(idmef_criteria_t **criteria)
 
         (*criteria)->or = NULL;
         (*criteria)->and = NULL;
+        (*criteria)->refcount = 1;
 
         return 0;
 }
@@ -398,6 +400,9 @@ void idmef_criteria_destroy(idmef_criteria_t *criteria)
 {
         prelude_return_if_fail(criteria);
 
+        if ( --criteria->refcount )
+                return;
+
         if ( criteria->criterion )
                 idmef_criterion_destroy(criteria->criterion);
 
@@ -410,6 +415,26 @@ void idmef_criteria_destroy(idmef_criteria_t *criteria)
         free(criteria);
 }
 
+
+
+/**
+ * idmef_criteria_ref:
+ * @criteria: Pointer to a #idmef_criteria_t object to reference.
+ *
+ * Increases @criteria reference count.
+ *
+ * idmef_criteria_destroy() will decrease the refcount until it reaches
+ * 0, at which point @criteria will be destroyed.
+ *
+ * Returns: @criteria.
+ */
+idmef_criteria_t *idmef_criteria_ref(idmef_criteria_t *criteria)
+{
+        prelude_return_val_if_fail(criteria, NULL);
+
+        criteria->refcount++;
+        return criteria;
+}
 
 
 /**

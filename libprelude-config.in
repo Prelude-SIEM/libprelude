@@ -4,9 +4,10 @@ prefix=@prefix@
 prelude_conf_prefix=@PRELUDE_CONFIG_DIR@
 exec_prefix=@exec_prefix@
 exec_prefix_set=no
+cpp_set=no
 
 usage="\
-Usage: libprelude-config [--prefix[=DIR]] [--exec-prefix[=DIR]] [--config-prefix] [--version] [--libs] [--ldflags] [--cflags] [--pthread-cflags]"
+Usage: libprelude-config [--prefix[=DIR]] [--exec-prefix[=DIR]] [--config-prefix] [--version] [--c++] [--libs] [--ldflags] [--cflags] [--pthread-cflags]"
 
 if test $# -eq 0; then
       echo "${usage}" 1>&2
@@ -66,9 +67,18 @@ while test $# -gt 0; do
       echo @PTHREAD_CFLAGS@
       ;;
 
+    --c++)
+      cpp_set=yes
+      ;;
+
     --libs)
       libdirs=-L@libdir@
-      echo $libdirs -lprelude @LIBPRELUDE_LIBS@ @LIBADD_DL@ @PTHREAD_LIBS@
+      cpplibs=""
+      if test $cpp_set = yes; then
+	      cpplibs="-lpreludecpp"
+      fi
+
+      echo $libdirs $cpplibs -lprelude @LIBPRELUDE_LIBS@ @LIBADD_DL@ @PTHREAD_LIBS@
       ;;
 
     *)

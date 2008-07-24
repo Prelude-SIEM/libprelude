@@ -34,6 +34,9 @@ use GenerateIDMEFMessageIdH;
 use GenerateIDMEFMessagePrintC;
 use GenerateIDMEFMessagePrintH;
 use GenerateIDMEFValueClassSwigMapping;
+use GenerateIDMEFTreeWrapCxx;
+use GenerateIDMEFTreeWrapHxx;
+
 
 sub	target_need_update
 {
@@ -105,8 +108,17 @@ my @generator_list = ({ source => 'GenerateIDMEFTreeWrapC.pm',
 			func => sub { new GenerateIDMEFMessageIdH(-filename => shift) } },
 
 		      { source => 'GenerateIDMEFValueClasstSwigMapping.pm',
-			target => '../../bindings/idmef-value-class-mapping.i',
-			func => sub { new GenerateIDMEFValueClassSwigMapping(-filename => shift) } }
+			target => '../../bindings/low-level/idmef-value-class-mapping.i',
+			func => sub { new GenerateIDMEFValueClassSwigMapping(-filename => shift) } },
+
+		      { source => 'GenerateIDMEFTreeWrapCxx.pm',
+			target => '../../bindings/c++/idmef-tree-wrap.cxx',
+			func => sub { new GenerateIDMEFTreeWrapCxx(-filename => shift) } },
+
+                      { source => 'GenerateIDMEFTreeWrapHxx.pm',
+                        target => '../../bindings/c++/include/idmef-tree-wrap.hxx',
+                        func => sub { new GenerateIDMEFTreeWrapHxx(-filename => shift) } },
+
 		      );
 
 $idmef_tree = new IDMEFTree(-filename => "idmef-tree.h",

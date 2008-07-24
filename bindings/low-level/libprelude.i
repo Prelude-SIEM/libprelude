@@ -81,7 +81,7 @@ typedef enum {
 
 
 #ifdef SWIGPYTHON
-%include libprelude_python.i
+%include libprelude-python.i
 #endif /* ! SWIGPYTHON */
 
 

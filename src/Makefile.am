@@ -46,6 +46,7 @@ libprelude_la_SOURCES = 		\
 	idmef-criteria-string.lex.l	\
 	idmef-criterion-value.c		\
 	idmef-data.c			\
+	idmef-message-helpers.c		\
 	idmef-message-print.c		\
 	idmef-message-read.c		\
 	idmef-message-write.c		\

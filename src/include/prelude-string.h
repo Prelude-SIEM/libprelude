@@ -136,10 +136,10 @@ int prelude_string_vprintf(prelude_string_t *string, const char *fmt, va_list ap
 int prelude_string_compare(const prelude_string_t *str1, const prelude_string_t *str2);
 
 #define prelude_string_set_constant(string, str)                         \
-        prelude_string_set_ref_fast((string), (str), sizeof((str)) - 1)
+        prelude_string_set_ref_fast((string), (str), strlen((str)))
 
 #define prelude_string_new_constant(string, str)                         \
-        prelude_string_new_ref_fast((string), (str), sizeof((str)) - 1)
+        prelude_string_new_ref_fast((string), (str), strlen((str)))
 
 #ifdef __cplusplus
  }

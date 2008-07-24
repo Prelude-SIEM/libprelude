@@ -58,6 +58,24 @@ int idmef_value_new_enum(idmef_value_t **value, idmef_class_id_t classid, const 
 int idmef_value_new_enum_from_string(idmef_value_t **value, idmef_class_id_t classid, const char *buf);
 int idmef_value_new_enum_from_numeric(idmef_value_t **value, idmef_class_id_t classid, int val);
 
+int idmef_value_set_int8(idmef_value_t *value, int8_t val);
+int idmef_value_set_uint8(idmef_value_t *value, uint8_t val);
+int idmef_value_set_int16(idmef_value_t *value, int16_t val);
+int idmef_value_set_uint16(idmef_value_t *value, uint16_t val);
+int idmef_value_set_int32(idmef_value_t *value, int32_t val);
+int idmef_value_set_uint32(idmef_value_t *value, uint32_t val);
+int idmef_value_set_int64(idmef_value_t *value, int64_t val);
+int idmef_value_set_uint64(idmef_value_t *value, uint64_t val);
+int idmef_value_set_float(idmef_value_t *value, float val);
+int idmef_value_set_double(idmef_value_t *value, double val);
+int idmef_value_set_string(idmef_value_t *value, prelude_string_t *string);
+int idmef_value_set_time(idmef_value_t *value, idmef_time_t *time);
+int idmef_value_set_data(idmef_value_t *value, idmef_data_t *data);
+int idmef_value_set_enum(idmef_value_t *value, idmef_class_id_t classid, const char *buf);
+int idmef_value_set_enum_from_string(idmef_value_t *value, idmef_class_id_t classid, const char *buf);
+int idmef_value_set_enum_from_numeric(idmef_value_t *value, idmef_class_id_t classid, int no);
+int idmef_value_set_class(idmef_value_t *value, idmef_class_id_t classid, void *ptr);
+
 int idmef_value_new(idmef_value_t **value, idmef_value_type_id_t type, void *ptr);
 int idmef_value_new_from_path(idmef_value_t **value, idmef_path_t *path, const char *buf);
 int idmef_value_new_from_string(idmef_value_t **value, idmef_value_type_id_t type, const char *buf);
@@ -113,6 +131,14 @@ int idmef_value_match(idmef_value_t *val1, idmef_value_t *val2, idmef_criterion_
 int idmef_value_check_operator(const idmef_value_t *value, idmef_criterion_operator_t op);
 
 void idmef_value_destroy(idmef_value_t *val);
+
+#ifndef SWIG
+
+int _idmef_value_copy_internal(const idmef_value_t *val,
+                               idmef_value_type_id_t res_type, idmef_class_id_t res_id, void *res);
+
+int _idmef_value_cast(idmef_value_t *val, idmef_value_type_id_t target_type, idmef_class_id_t enum_class);
+#endif
 
 #ifdef __cplusplus
  }

@@ -973,3 +973,19 @@ prelude_msg_t *prelude_msg_ref(prelude_msg_t *msg)
         msg->refcount++;
         return msg;
 }
+
+
+
+const unsigned char *prelude_msg_get_message_data(prelude_msg_t *msg)
+{
+        /*
+         * if the message header index is 0 (write called, without
+         * prelude_msg_mark_end() first), mark end of the message
+         * cause the caller didn't do it in this case.
+         */
+        if ( msg->header_index == 0 )
+                write_message_header(msg);
+
+        return msg->payload + msg->fd_write_index;
+}
+

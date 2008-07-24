@@ -346,7 +346,6 @@ static void delete_listed_child(void *parent, idmef_class_id_t class, const idme
         }
 }
 
-
 static int _idmef_path_set(const idmef_path_t *path, idmef_message_t *message, idmef_value_t *value, prelude_bool_t *delete_list)
 {
         void *ptr;
@@ -400,12 +399,7 @@ static int _idmef_path_set(const idmef_path_t *path, idmef_message_t *message, i
                                                  path->elem[path->depth - 1].index);
 
         tid = idmef_class_get_child_value_type(parent_class, path->elem[path->depth - 1].position);
-        if ( tid != idmef_value_get_type(value) )
-                return prelude_error_verbose(PRELUDE_ERROR_GENERIC, "IDMEF path copy of type '%s' to '%s' is forbidden",
-                                             idmef_value_type_to_string(idmef_value_get_type(value)),
-                                             idmef_value_type_to_string(tid));
-
-        return idmef_value_get(value, ptr);
+        return _idmef_value_copy_internal(value, tid, class, ptr);
 }
 
 

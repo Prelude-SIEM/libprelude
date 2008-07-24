@@ -30,7 +30,7 @@
 #ifdef __cplusplus
  extern "C" {
 #endif
-         
+
 typedef struct prelude_msg prelude_msg_t;
 
 
@@ -82,6 +82,8 @@ uint32_t prelude_msg_get_len(prelude_msg_t *msg);
 
 uint32_t prelude_msg_get_datalen(prelude_msg_t *msg);
 
+const unsigned char *prelude_msg_get_message_data(prelude_msg_t *msg);
+
 struct timeval *prelude_msg_get_time(prelude_msg_t *msg, struct timeval *tv);
 
 int prelude_msg_is_empty(prelude_msg_t *msg);
@@ -99,5 +101,5 @@ prelude_msg_t *prelude_msg_ref(prelude_msg_t *msg);
 #ifdef __cplusplus
  }
 #endif
-         
+
 #endif /* _LIBPRELUDE_PRELUDE_MESSAGE_H */
