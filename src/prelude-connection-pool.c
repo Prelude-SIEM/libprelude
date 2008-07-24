@@ -652,22 +652,22 @@ static int new_connection(cnx_t **ncnx, prelude_client_profile_t *cp, cnx_list_t
                           prelude_connection_t *cnx, prelude_connection_pool_flags_t flags)
 {
         int ret;
-        cnx_t *new;
+        cnx_t *nc;
         char *dirname, buf[PATH_MAX];
 
-        *ncnx = new = malloc(sizeof(*new));
-        if ( ! new )
+        nc = malloc(sizeof(*nc));
+        if ( ! nc )
                 return prelude_error_from_errno(errno);
 
-        new->msg = NULL;
-        new->failover = NULL;
-        new->parent = clist;
-        prelude_timer_init_list(&new->timer);
+        nc->msg = NULL;
+        nc->failover = NULL;
+        nc->parent = clist;
+        prelude_timer_init_list(&nc->timer);
 
         if ( flags & PRELUDE_CONNECTION_POOL_FLAGS_RECONNECT ) {
-                prelude_timer_set_data(&new->timer, new);
-                prelude_timer_set_expire(&new->timer, INITIAL_EXPIRATION_TIME);
-                prelude_timer_set_callback(&new->timer, connection_timer_expire);
+                prelude_timer_set_data(&nc->timer, nc);
+                prelude_timer_set_expire(&nc->timer, INITIAL_EXPIRATION_TIME);
+                prelude_timer_set_callback(&nc->timer, connection_timer_expire);
         }
 
         if ( flags & PRELUDE_CONNECTION_POOL_FLAGS_FAILOVER ) {
@@ -675,22 +675,25 @@ static int new_connection(cnx_t **ncnx, prelude_client_profile_t *cp, cnx_list_t
 
                 ret = get_connection_backup_path(cnx, buf, &dirname);
                 if ( ret < 0 )
-                        return ret;
+                        goto err;
 
-                ret = prelude_failover_new(&new->failover, dirname);
+                ret = prelude_failover_new(&nc->failover, dirname);
                 free(dirname);
-                if ( ret < 0 ) {
-                        free(new);
-                        return ret;
-                }
+                if ( ret < 0 )
+                        goto err;
         }
 
-        new->cnx = cnx;
-        new->and = NULL;
+        nc->cnx = cnx;
+        nc->and = NULL;
         clist->total++;
         prelude_linked_object_add(&clist->parent->all_cnx, (prelude_linked_object_t *) cnx);
+        *ncnx = nc;
 
         return 0;
+
+    err:
+        free(nc);
+        return ret;
 }
 
 
