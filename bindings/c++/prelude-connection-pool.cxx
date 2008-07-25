@@ -104,6 +104,12 @@ void ConnectionPool::AddConnection(Connection con)
 }
 
 
+void ConnectionPool::DelConnection(Connection con)
+{
+        prelude_connection_pool_del_connection(_pool, con);
+}
+
+
 void ConnectionPool::SetConnectionDead(Connection &con)
 {
         prelude_connection_pool_set_connection_dead(_pool, con);

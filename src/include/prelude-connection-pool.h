@@ -60,6 +60,8 @@ prelude_list_t *prelude_connection_pool_get_connection_list(prelude_connection_p
 
 int prelude_connection_pool_add_connection(prelude_connection_pool_t *pool, prelude_connection_t *cnx);
 
+int prelude_connection_pool_del_connection(prelude_connection_pool_t *pool, prelude_connection_t *cnx);
+
 int prelude_connection_pool_set_connection_dead(prelude_connection_pool_t *pool, prelude_connection_t *cnx);
 int prelude_connection_pool_set_connection_alive(prelude_connection_pool_t *pool, prelude_connection_t *cnx);
 

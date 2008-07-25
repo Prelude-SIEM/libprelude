@@ -390,6 +390,18 @@ static void init_cnx_timer(cnx_t *cnx)
 }
 
 
+static void destroy_connection_single(cnx_t *cnx)
+{
+        prelude_timer_destroy(&cnx->timer);
+        prelude_connection_destroy(cnx->cnx);
+
+        if ( cnx->failover )
+                prelude_failover_destroy(cnx->failover);
+
+        free(cnx);
+}
+
+
 static void connection_list_destroy(cnx_list_t *clist)
 {
         void *bkp;
@@ -399,14 +411,7 @@ static void connection_list_destroy(cnx_list_t *clist)
 
                 for ( cnx = clist->and; cnx != NULL; cnx = bkp ) {
                         bkp = cnx->and;
-
-                        prelude_timer_destroy(&cnx->timer);
-                        prelude_connection_destroy(cnx->cnx);
-
-                        if ( cnx->failover )
-                                prelude_failover_destroy(cnx->failover);
-
-                        free(cnx);
+                        destroy_connection_single(cnx);
                 }
 
                 bkp = clist->or;
@@ -1143,6 +1148,40 @@ int prelude_connection_pool_add_connection(prelude_connection_pool_t *pool, prel
                 if ( ret < 0 )
                         goto out;
         }
+
+out:
+        prelude_thread_mutex_unlock(&pool->mutex);
+        return ret;
+}
+
+
+
+/**
+ * prelude_connection_pool_del_connection:
+ * @pool: Pointer to a #prelude_connection_pool_t object.
+ * @cnx: Pointer to a #prelude_connection_t object to remove from @pool.
+ *
+ * Remove @cnx from @pool of connections.
+ *
+ * Returns: 0 on success, a negative value if an error occured.
+ */
+int prelude_connection_pool_del_connection(prelude_connection_pool_t *pool, prelude_connection_t *cnx)
+{
+        cnx_t *c;
+        int ret = 0;
+
+        prelude_return_val_if_fail(pool, prelude_error(PRELUDE_ERROR_ASSERTION));
+        prelude_return_val_if_fail(cnx, prelude_error(PRELUDE_ERROR_ASSERTION));
+
+        prelude_thread_mutex_lock(&pool->mutex);
+
+        c = search_cnx(pool, cnx);
+        if ( ! c ) {
+                ret = prelude_error_verbose(PRELUDE_ERROR_GENERIC, "Connection is not within pool");
+                goto out;
+        }
+
+        destroy_connection_single(c);
 
 out:
         prelude_thread_mutex_unlock(&pool->mutex);

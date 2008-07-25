@@ -53,6 +53,8 @@ namespace Prelude {
                 void *GetData();
 
                 void AddConnection(Prelude::Connection con);
+                void DelConnection(Prelude::Connection con);
+
                 void SetConnectionAlive(Prelude::Connection &con);
                 void SetConnectionDead(Prelude::Connection &con);
 
