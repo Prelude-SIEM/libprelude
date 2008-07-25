@@ -10,7 +10,7 @@ PreludeEasy_la_LIBADD = $(top_builddir)/bindings/c++/.libs/libpreludecpp.la
 PreludeEasy_la_HEADERS: $(top_builddir)/config.h
 nodist_PreludeEasy_la_SOURCES = PreludeEasy.cxx
 
-PreludeEasy.cxx: $(top_srcdir)/bindings/libpreludecpp.i libpreludecpp-ruby.i 
+PreludeEasy.cxx: $(top_srcdir)/bindings/c++/include/*.hxx $(top_srcdir)/bindings/libpreludecpp.i libpreludecpp-ruby.i 
 if HAVE_SWIG
 	$(SWIG) -c++ -I$(top_srcdir)/bindings -I$(top_srcdir)/bindings/c++/include -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -ruby -o $@ $(top_srcdir)/bindings/libpreludecpp.i
 endif

@@ -1,16 +1,3 @@
-BINDING_DEPENDS = \
-	c++/include/idmef.hxx \
-	c++/include/idmef-criteria.hxx \
-	c++/include/idmef-path.hxx \
-	c++/include/idmef-time.hxx \
-	c++/include/idmef-value.hxx \
-        c++/include/prelude.hxx \
-	c++/include/prelude-client.hxx \
-	c++/include/prelude-client-profile.hxx \
-	c++/include/prelude-connection-pool.hxx \
-	c++/include/prelude-connection.hxx \
-	c++/include/prelude-error.hxx 
-
 SUBDIRS = c++ low-level lua python ruby
 
 EXTRA_DIST = libpreludecpp.i libpreludecpp-perl.i \
@@ -37,7 +24,7 @@ else
 perl-makefile:
 endif
 
-perl/PreludeEasy.cxx: libpreludecpp.i libpreludecpp-perl.i $(BINDING_DEPENDS)
+perl/PreludeEasy.cxx: $(top_srcdir)/bindings/c++/include/*.hxx libpreludecpp.i libpreludecpp-perl.i
 if HAVE_SWIG
 	$(SWIG) -c++ -I$(top_srcdir)/bindings -I$(top_srcdir)/bindings/c++/include -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -perl5 -o $@ libpreludecpp.i
 endif
