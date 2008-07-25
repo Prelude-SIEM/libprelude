@@ -552,7 +552,7 @@ dnl **************************************************
 
 
 AM_PATH_RUBY(,with_ruby=yes, with_ruby=no)
-AM_CONDITIONAL([HAVE_RUBY], [test x$HAVE_RUBY = xyes])
+AM_CONDITIONAL([HAVE_RUBY], [test x$with_ruby = xyes])
 
 
 dnl **************************************************
