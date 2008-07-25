@@ -12,7 +12,7 @@ _PreludeEasy_la_LIBADD = $(top_builddir)/bindings/c++/.libs/libpreludecpp.la
 _PreludeEasy_la_HEADERS: $(top_builddir)/config.h
 nodist__PreludeEasy_la_SOURCES = _PreludeEasy.cxx
 
-_PreludeEasy.cxx PreludeEasy.py: $(top_srcdir)/bindings/libpreludecpp.i libpreludecpp-python.i 
+_PreludeEasy.cxx PreludeEasy.py: $(top_srcdir)/bindings/c++/include/*.hxx $(top_srcdir)/bindings/libpreludecpp.i libpreludecpp-python.i 
 if HAVE_SWIG
 	$(SWIG) -c++ -I$(top_srcdir)/bindings -I$(top_srcdir)/bindings/c++/include -I$(top_srcdir)/src/include -I$(top_srcdir)/src/libprelude-error -python -o $@ ../libpreludecpp.i
 endif
