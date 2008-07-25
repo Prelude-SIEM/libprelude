@@ -2,6 +2,12 @@
 %template() std::list<Prelude::IDMEFValue>;
 %template() std::list<Prelude::Connection>;
 
+# Exception map
+%typemap(throws) Prelude::PreludeError %{
+        SWIG_exception(SWIG_RuntimeError, $1.what());
+%};
+
+
 # Conversion not allowed
 %ignore *::operator =;
 %ignore *::operator int() const;

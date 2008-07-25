@@ -1,3 +1,8 @@
+# Exception map
+%typemap(throws) Prelude::PreludeError %{
+        SWIG_exception(SWIG_RuntimeError, $1.what());
+%};
+
 # Lua overloading fixes
 %ignore IDMEFCriteria(std::string const &);
 %ignore IDMEFValue(int8_t);
