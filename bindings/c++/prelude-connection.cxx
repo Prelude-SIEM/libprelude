@@ -82,7 +82,11 @@ void Connection::Close()
 
 void Connection::Connect(ClientProfile &cp, int permission)
 {
-        prelude_connection_connect(_con, cp, (prelude_connection_permission_t) permission);
+        int ret;
+
+        ret = prelude_connection_connect(_con, cp, (prelude_connection_permission_t) permission);
+        if ( ret < 0 )
+                throw PreludeError(ret);
 }
 
 
@@ -152,11 +156,29 @@ unsigned int Connection::GetPeerPort()
 }
 
 
+int Connection::GetFd()
+{
+        return prelude_io_get_fd(prelude_connection_get_fd(_con));
+}
+
+
+Prelude::IDMEF Connection::RecvIDMEF()
+{
+        int ret;
+        idmef_message_t *idmef;
+
+        ret = prelude_connection_recv_idmef(_con, &idmef);
+        if ( ret < 0 )
+                throw PreludeError(ret);
+
+        return IDMEF(idmef);
+}
+
+
 bool Connection::IsAlive()
 {
         return prelude_connection_is_alive(_con);
 }
-
 
 Connection &Connection::operator=(const Connection &con)
 {

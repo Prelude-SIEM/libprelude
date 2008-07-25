@@ -26,8 +26,11 @@
 
 #include "prelude-connection.h"
 #include "prelude-client-profile.hxx"
+#include "idmef.hxx"
 
 namespace Prelude {
+        class IDMEF;
+
         class Connection {
             private:
                 prelude_connection_t *_con;
@@ -61,6 +64,9 @@ namespace Prelude {
                 unsigned int GetPeerPort();
 
                 bool IsAlive();
+
+                int GetFd();
+                Prelude::IDMEF RecvIDMEF();
 
                 Connection & operator=(const Connection &con);
                 operator prelude_connection_t *();

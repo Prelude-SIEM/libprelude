@@ -110,6 +110,7 @@ struct prelude_connection {
         prelude_connection_permission_t permission;
 
         void *data;
+        prelude_msg_t *msg;
 
         prelude_connection_state_t state;
 };
@@ -781,6 +782,43 @@ int prelude_connection_recv(prelude_connection_t *cnx, prelude_msg_t **msg)
 }
 
 
+int prelude_connection_recv_idmef(prelude_connection_t *con, idmef_message_t **idmef)
+{
+        int ret;
+
+        ret = prelude_connection_recv(con, &con->msg);
+        if ( ret < 0 ) {
+                if ( prelude_error_get_code(ret) != PRELUDE_ERROR_EAGAIN )
+                        con->msg = NULL;
+
+                return ret;
+        }
+        if ( prelude_msg_get_tag(con->msg) != PRELUDE_MSG_IDMEF ) {
+                prelude_msg_destroy(con->msg);
+                con->msg = NULL;
+                return prelude_error_from_errno(EINVAL);
+        }
+
+        ret = idmef_message_new(idmef);
+        if ( ret < 0 ) {
+                prelude_msg_destroy(con->msg);
+                con->msg = NULL;
+                return ret;
+        }
+
+        ret = idmef_message_read(*idmef, con->msg);
+        if ( ret < 0 ) {
+                idmef_message_destroy(*idmef);
+                prelude_msg_destroy(con->msg);
+                con->msg = NULL;
+                return ret;
+        }
+
+        idmef_message_set_pmsg(*idmef, con->msg);
+        con->msg = NULL;
+
+        return ret;
+}
 
 
 /**

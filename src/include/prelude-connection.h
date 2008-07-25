@@ -35,7 +35,6 @@ typedef enum {
         PRELUDE_CONNECTION_PERMISSION_ADMIN_WRITE     = 0x08  /* client might issue OPTION request        */
 } prelude_connection_permission_t;
 
-
 typedef enum {
         PRELUDE_CONNECTION_STATE_ESTABLISHED     = 0x01
 } prelude_connection_state_t;
@@ -48,6 +47,7 @@ typedef struct prelude_connection prelude_connection_t;
 #include "prelude-msgbuf.h"
 #include "prelude-string.h"
 #include "prelude-client-profile.h"
+#include "idmef.h"
 
 
 void prelude_connection_destroy(prelude_connection_t *conn);
@@ -57,6 +57,8 @@ prelude_connection_t *prelude_connection_ref(prelude_connection_t *conn);
 int prelude_connection_send(prelude_connection_t *cnx, prelude_msg_t *msg);
 
 int prelude_connection_recv(prelude_connection_t *cnx, prelude_msg_t **outmsg);
+
+int prelude_connection_recv_idmef(prelude_connection_t *con, idmef_message_t **idmef);
 
 int prelude_connection_connect(prelude_connection_t *cnx,
                                prelude_client_profile_t *profile,
