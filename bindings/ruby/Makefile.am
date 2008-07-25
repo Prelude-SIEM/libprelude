@@ -1,5 +1,5 @@
-if HAVE_RUBY
 if HAVE_EASY_BINDINGS
+if HAVE_RUBY
 
 EXTRA_DIST = libpreludecpp-ruby.i PreludeEasy.cxx
 
