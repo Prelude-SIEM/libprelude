@@ -5,7 +5,6 @@
 #include <iostream>
 #include "idmef-value.hxx"
 #include "idmef-time.hxx"
-#include "prelude-client.hxx"
 
 namespace Prelude
 {
