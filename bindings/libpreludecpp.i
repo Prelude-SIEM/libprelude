@@ -151,8 +151,6 @@ int IDMEFValue_to_SWIG(const IDMEFValue &result, TARGET_LANGUAGE_OUTPUT_TYPE ret
 %newobject ClientProfile::GetTlsClientTrustedCertFilename;
 %newobject ClientProfile::GetBackupDirname;
 %newobject ClientProfile::GetProfileDirname;
-%newobject Client::Get;
-%newobject IDMEF::GetMessageID;
 
 %ignore Prelude::IDMEFValue::operator int8_t() const;
 %ignore Prelude::IDMEFValue::operator uint8_t() const;
