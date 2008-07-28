@@ -320,9 +320,9 @@ int idmef_$struct->{short_typename}_new($struct->{typename} **ret)
     }
 
     foreach my $field ( @{ $struct->{field_list} } ) {
-        if ( $field->{typename} eq "idmef_time_t" and ! $field->{ptr} ) {
+        if ( $field->{typename} eq "idmef_time_t" and $field->{name} eq "create_time" and ($struct->{short_typename} eq "alert" or $struct->{short_typename} eq "heartbeat") ) {
                 $self->output("
-        idmef_time_set_from_gettimeofday(&(*ret)->$field->{name});
+        idmef_time_set_from_gettimeofday((*ret)->$field->{name});
 ");
         }
 
